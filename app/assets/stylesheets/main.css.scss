@@ -1,0 +1,35 @@
+body {
+    padding-top: 66px;
+    padding-bottom: 40px;
+}
+.header-nav-li {
+    padding-top: 13px;
+}
+.h5-narrow {
+    margin: 0px 0;
+}
+a:hover, a:focus {
+    text-decoration: none;
+}
+.underlined {
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
+}
+.navbar-inner-breadcrumb {
+    min-height: 36px;
+    height: 36px;
+}
+.centered {
+    text-align: center;
+}
+.footer-nav-li {
+    padding-top: 6px;
+}
+.footer-nav-brand {
+    display: block;
+    padding: 2px 0px 2px 0px;
+    font-size: 20px;
+    font-weight: 200;
+    color: #777777;
+    text-shadow: 0 1px 0 #ffffff;
+}
