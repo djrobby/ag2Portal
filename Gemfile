@@ -37,7 +37,12 @@ gem 'jquery-rails'
 # To use debugger
 # gem 'debugger'
 
+# Foreign required gems
 gem "devise"
 gem "cancan"
 gem "rolify"
 gem "bootstrap-sass"
+gem 'simple_form'
+
+# Own required gems
+gem 'ag2_admin', :path => 'ag2Admin'

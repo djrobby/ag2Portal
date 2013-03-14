@@ -1,5 +1,5 @@
 <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </a>
-<img src="/assets//icon/ag2Portal.png" class="brand" width="48" height="48" alt="ag2Portal" />
+<img src=<%= content_for?(:icon) ? content_for(:icon) : "/assets/icon/ag2Portal.png" %> class="brand" width="48" height="48" alt=<%= content_for?(:alt) ? content_for(:alt) : "ag2Portal" %> />
 <div class="nav-collapse">
   <!-- Nav -->
     <ul class="nav">
@@ -33,11 +33,11 @@
     <p class="navbar-text pull-right">
         <% if user_signed_in? %>
         Logged in as <strong><%= current_user.email %></strong>.
-        <%= link_to 'Edit profile', edit_user_registration_path, :class => 'navbar-link' %> |
-        <%= link_to "Logout", destroy_user_session_path, method: :delete, :class => 'navbar-link'  %>
+        <%= link_to 'Edit profile', main_app.edit_user_registration_path, :class => 'navbar-link' %> |
+        <%= link_to "Logout", main_app.destroy_user_session_path, method: :delete, :class => 'navbar-link'  %>
         <% else %>
-        <%= link_to "Sign up", new_user_registration_path, :class => 'navbar-link'  %> |
-        <%= link_to "Login", new_user_session_path, :class => 'navbar-link'  %>
+        <%= link_to "Sign up", main_app.new_user_registration_path, :class => 'navbar-link'  %> |
+        <%= link_to "Login", main_app.new_user_session_path, :class => 'navbar-link'  %>
         <% end %>
     </p>
 </div><!--/.nav-collapse -->
