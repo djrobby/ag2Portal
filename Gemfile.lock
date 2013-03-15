@@ -1,5 +1,5 @@
 PATH
-  remote: ag2Admin
+  remote: engines/ag2Admin
   specs:
     ag2_admin (0.0.1)
       rails (~> 3.2.12)

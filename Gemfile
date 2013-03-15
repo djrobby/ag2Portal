@@ -45,4 +45,4 @@ gem "bootstrap-sass"
 gem 'simple_form'
 
 # Own required gems
-gem 'ag2_admin', :path => 'ag2Admin'
+gem 'ag2_admin', :path => 'engines/ag2Admin'
