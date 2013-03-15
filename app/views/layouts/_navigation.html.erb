@@ -2,42 +2,57 @@
 <img src=<%= content_for?(:icon) ? content_for(:icon) : "/assets/icon/ag2Portal.png" %> class="brand" width="48" height="48" alt=<%= content_for?(:alt) ? content_for(:alt) : "ag2Portal" %> />
 <div class="nav-collapse">
   <!-- Nav -->
-    <ul class="nav">
-        <li class="header-nav-li">
-            <a href="/"><i class="icon-home"></i> Inicio</a>
+  <ul class="nav">                      <!-- Home -->
+    <li class="header-nav-li">
+      <a href="/"><i class="icon-home"></i> Inicio</a>
+    </li>
+    <li class="dropdown header-nav-li"> <!-- Services -->
+      <a href="#"
+      class="dropdown-toggle"
+      data-toggle="dropdown"><i class="icon-wrench"></i> Herramientas <b class="caret"></b> </a>
+      <ul class="dropdown-menu">
+        <li>
+          <a href="#"><i class="icon-inbox"></i> Blog</a>
         </li>
-        <li class="dropdown header-nav-li">
-            <a href="#"
-            class="dropdown-toggle"
-            data-toggle="dropdown"><i class="icon-wrench"></i> Servicios <b class="caret"></b> </a>
-            <ul class="dropdown-menu">
-                <li>
-                    <a href="#"><i class="icon-globe"></i> E-mail</a>
-                </li>
-                <li>
-                    <a href="#"><i class="icon-calendar"></i> Calendar</a>
-                </li>
-                <li>
-                    <a href="#"><i class="icon-question-sign"></i> Help</a>
-                </li>
-            </ul>
+        <li>
+          <a href="#"><i class="icon-list"></i> Directorio</a>
         </li>
-        <li class="header-nav-li">
-            <a href="#about"><i class="icon-info-sign"></i> A cerca de</a>
+        <li class="divider"></li>
+        <li>
+          <a href="#"><i class="icon-hdd"></i> ag2Db</a>
         </li>
-        <li class="header-nav-li">
-            <a href="#contact"><i class="icon-comment"></i> Contacto</a>
+        <li>
+          <a href="<%= ag2_admin.root_path %>"><i class="icon-cog"></i> ag2Admin</a>
         </li>
-    </ul><!-- /.nav -->
-    <!-- User profile area -->
-    <p class="navbar-text pull-right">
-        <% if user_signed_in? %>
-        Logged in as <strong><%= current_user.email %></strong>.
-        <%= link_to 'Edit profile', main_app.edit_user_registration_path, :class => 'navbar-link' %> |
-        <%= link_to "Logout", main_app.destroy_user_session_path, method: :delete, :class => 'navbar-link'  %>
-        <% else %>
-        <%= link_to "Sign up", main_app.new_user_registration_path, :class => 'navbar-link'  %> |
-        <%= link_to "Login", main_app.new_user_session_path, :class => 'navbar-link'  %>
-        <% end %>
-    </p>
+      </ul>
+    </li>
+    <li class="dropdown header-nav-li"> <!-- Help -->
+      <a href="#"
+      class="dropdown-toggle"
+      data-toggle="dropdown"><i class="icon-question-sign"></i> Ayuda <b class="caret"></b> </a>
+      <ul class="dropdown-menu">
+        <li>
+          <a href="#contact"><i class="icon-comment"></i> Contacto</a>
+        </li>
+        <li class="divider"></li>
+        <li>
+          <a href="#"><i class="icon-question-sign"></i> Gu&iacute;a</a>
+        </li>
+        <li>
+          <a href="#about"><i class="icon-info-sign"></i> A cerca de</a>
+        </li>
+      </ul>
+    </li>
+  </ul><!-- /.nav -->
+  <!-- User profile area -->
+  <p class="navbar-text pull-right">
+    <% if user_signed_in? %>
+    Logged in as <strong><%= current_user.email %></strong>.
+    <%= link_to 'Edit profile', main_app.edit_user_registration_path, :class => 'navbar-link' %> |
+    <%= link_to "Logout", main_app.destroy_user_session_path, method: :delete, :class => 'navbar-link'  %>
+    <% else %>
+    <%= link_to "Sign up", main_app.new_user_registration_path, :class => 'navbar-link'  %> |
+    <%= link_to "Login", main_app.new_user_session_path, :class => 'navbar-link'  %>
+    <% end %>
+  </p>
 </div><!--/.nav-collapse -->

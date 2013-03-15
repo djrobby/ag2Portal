@@ -4,6 +4,12 @@ PATH
     ag2_admin (0.0.1)
       rails (~> 3.2.12)
 
+PATH
+  remote: engines/ag2Human
+  specs:
+    ag2_human (0.0.1)
+      rails (~> 3.2.12)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -127,6 +133,7 @@ PLATFORMS
 
 DEPENDENCIES
   ag2_admin!
+  ag2_human!
   bootstrap-sass
   cancan
   coffee-rails (~> 3.2.1)
