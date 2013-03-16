@@ -1,5 +1,16 @@
-<p id="notice"><%= notice %></p>
+<%= render '/layouts/ag2_admin/usersbreadcrumb' %>
 
+<p id="notice">
+  <%= notice %>
+</p>
+
+<h3><%= @user.name %></h3>
+<p>
+  Email: <%= @user.email if @user.email %>
+</p>
+<p>
+  Registered: <%= @user.created_at.to_date if @user.created_at.to_date %>
+</p>
 
 <%= link_to 'Edit', edit_user_path(@user) %> |
-<%= link_to 'Back', users_path %>
+<%= link_to 'Users', users_path %>

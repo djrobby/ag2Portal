@@ -1,17 +1,4 @@
-<% content_for :title, "aGestiona2 | ag2Admin" %>
-<% content_for :icon, "/assets/icon/ag2Admin.png" %>
-<% content_for :alt, "ag2Admin" %>
-
-<!-- Breadcrumb -->
-<ul class="breadcrumb">
-  <li>
-    <a href="<%= main_app.root_path %>"><i class="icon-home"></i></a><span class="divider">></span>
-  </li>
-  <li>
-    ag2Admin
-  </li>
-  <a class="close" href="<%= main_app.root_path %>">&#215;</a>
-</ul>
+<%= render '/layouts/ag2_admin/adminbreadcrumb' %>
 
 <!-- Apps Thumbnails -->
 <ul class="thumbnails">
