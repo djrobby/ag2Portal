@@ -62,4 +62,5 @@ Ag2Portal::Application.routes.draw do
   
   # Engines
   mount Ag2Admin::Engine => "/ag2_admin"
+  mount Ag2Human::Engine => "/ag2_human"
 end

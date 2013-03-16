@@ -10,37 +10,24 @@
   <li>
     ag2Admin
   </li>
+  <a class="close" href="<%= main_app.root_path %>">&#215;</a>
 </ul>
 
 <!-- Apps Thumbnails -->
 <ul class="thumbnails">
-    <!-- Apps 1 -->
-    <li class="span4">
-        <a href="<%= users_path %>" class="thumbnail centered"><img src="/assets/pict/ag2Users.png" alt="ag2Users" /><h5 class="h5-narrow">ag2Users</h5></a>
-    </li>
-    <li class="span4">
-        <a data-toggle="modal" href="#notfound" class="thumbnail centered"><img src="/assets/pict/ag2Apps.png" alt="ag2Apps" /><h5 class="h5-narrow">ag2Apps</h5></a>
-    </li>
-    <li class="span4">
-        <a data-toggle="modal" href="#notfound" class="thumbnail centered"><img src="/assets/pict/ag2Sites.png" alt="ag2Sites" /><h5 class="h5-narrow">ag2Sites</h5></a>
-    </li>
+  <!-- Apps 1 -->
+  <li class="span4">
+    <a href="<%= users_path %>" class="thumbnail centered"><img src="/assets/pict/ag2Users.png" alt="ag2Users" /><h5 class="h5-narrow">ag2Users</h5></a>
+  </li>
+  <li class="span4">
+    <a data-toggle="modal" href="#notfound" class="thumbnail centered"><img src="/assets/pict/ag2Apps.png" alt="ag2Apps" /><h5 class="h5-narrow">ag2Apps</h5></a>
+  </li>
+  <li class="span4">
+    <a data-toggle="modal" href="#notfound" class="thumbnail centered"><img src="/assets/pict/ag2Sites.png" alt="ag2Sites" /><h5 class="h5-narrow">ag2Sites</h5></a>
+  </li>
 </ul><!-- /.thumbnails -->
 
+<!--<%= button_to "Regresar", main_app.root_path, :class => "btn btn-primary", :method => "get" %>-->
+
 <!-- Modals -->
-<div class="container">
-    <div id="notfound" class="modal hide fade in" style="display: none; ">
-        <div class="modal-header">
-            <a class="close" data-dismiss="modal">×</a>
-            <h3>aGestiona2: Advertencia</h3>
-        </div>
-        <div class="modal-body">
-            <h4>El recurso solicitado no est&aacute; disponible.</h4>
-            <p>
-                La aplicaci&oacute;n o el sitio web requerido no se ha encontrado. Recibir&aacute; una notificaci&oacute;n cuando el recurso se encuentre operativo.
-            </p>
-        </div>
-        <div class="modal-footer">
-            <a href="#" class="btn btn-primary" data-dismiss="modal">Cerrar</a>
-        </div>
-    </div>
-</div>
+<%= render '/layouts/notfound' %>
