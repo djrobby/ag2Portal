@@ -1,0 +1,15 @@
+<%= render '/layouts/ag2_admin/usersbreadcrumb' %>
+
+<h3>Edit Role</h3>
+
+<%= simple_form_for @role do |f| %>
+<%= f.error_notification %>
+<%= display_base_errors resource %>
+<%= f.input :name, :required => true, :autofocus => true %>
+<%= f.button :submit, 'Update', :class => 'btn-primary' %>
+<% end %>
+
+<p></p>
+
+<%= link_to 'Show', @role %> |
+<%= link_to 'Roles', roles_path %>

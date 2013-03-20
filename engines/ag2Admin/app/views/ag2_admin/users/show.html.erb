@@ -24,8 +24,8 @@
   <tr>
     <td>Signed in count:</td>
     <td><%= @user.sign_in_count %></td>
-    <td></td>
-    <td></td>
+    <td>Role:</td>
+    <td><%= @user.roles.first.name.titleize unless @user.roles.first.nil? %></td>
   </tr>
   <tr>
     <td>Current signed in at:</td>

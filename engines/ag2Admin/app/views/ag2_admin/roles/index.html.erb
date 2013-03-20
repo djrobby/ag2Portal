@@ -1,0 +1,27 @@
+<%= render '/layouts/ag2_admin/usersbreadcrumb' %>
+
+<h3>Roles</h3>
+<div class="span4">
+  <table class="table table-condensed table-striped">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Registered</th>
+        <th></th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @roles.each do |role| %>
+      <tr>
+        <td><%= link_to role.name.titleize, role %></td>
+        <td><%= role.created_at.to_date %></td>
+        <td><%= link_to 'Edit', edit_role_path(role), :class => 'btn btn-mini' %></td>
+        <td><%= link_to("Delete role", user_path(role), :data => { :confirm => "Are you sure?" }, :method => :delete, :class => 'btn btn-mini') %></td>
+      </tr>
+      <% end %>
+    </tbody>
+  </table>
+  <%= link_to 'New Role', new_role_path, :class => 'btn btn-primary' %>
+  <%= link_to 'Users', users_path, :class => 'btn btn-primary' %>
+</div>

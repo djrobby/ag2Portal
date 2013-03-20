@@ -9,7 +9,8 @@
 <%= f.input :name, :required => true %>
 <%= f.input :password, :required => true %>
 <%= f.input :password_confirmation, :required => true %>
-<%= f.button :submit, 'Sign up', :class => 'btn-primary' %>
+<%= f.input :role_ids, :collection => Role.all, :label_method => lambda {|t| t.name.titleize} %>
+<%= f.button :submit, 'Create user', :class => 'btn-primary' %>
 <% end %>
 
 <%= link_to 'Users', users_path %>

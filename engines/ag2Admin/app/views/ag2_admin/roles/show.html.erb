@@ -1,0 +1,28 @@
+<%= render '/layouts/ag2_admin/usersbreadcrumb' %>
+
+<h3><%= @role.name.titleize %></h3>
+<table class="table"
+<tbody>
+  <tr>
+    <td>Id:</td>
+    <td><%= @role.id %></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>Created at:</td>
+    <td><%= @role.created_at %></td>
+    <td>Updated at:</td>
+    <td><%= @role.updated_at %></td>
+  </tr>
+  <tr>
+    <td>Resource id:</td>
+    <td><%= @role.resource_id %></td>
+    <td>Resource type:</td>
+    <td><%= @role.resource_type %></td>
+  </tr>
+</tbody>
+</table>
+
+<%= link_to 'Edit', edit_role_path(@role) %> |
+<%= link_to 'Roles', roles_path %>
