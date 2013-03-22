@@ -36,7 +36,7 @@ a:hover, a:focus {
 
 /* Login */
 .signin {
-  background-color: #fafafa;
+  background-color: #f2f2f2;
   padding: 20px;
   margin: 0 -20px; /* negative indent the amount of the padding to maintain the grid system */
   -webkit-border-radius: 6px 6px 6px 6px;
@@ -54,4 +54,10 @@ a:hover, a:focus {
   line-height: 20px;
   color: #da4f49;
   text-rendering: optimizelegibility;
+}
+.signin-field {
+  width: 96%;
+}
+.signin-label {
+  font-weight: bold;
 }
