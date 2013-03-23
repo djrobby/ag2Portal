@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><%= content_for?(:title) ? yield(:title) : "aGestiona2 | ag2Portal" %></title>
-    <meta name="description" content="aGestiona2 ag2Portal">
+    <title><%= content_for?(:title) ? yield(:title) : "aGestiona2 | Sign up" %></title>
+    <meta name="description" content="aGestiona2 SignUp">
     <meta name="author" content="Nestor Rodriguez (SPSI) para AYG">
     <%= stylesheet_link_tag    "application", :media => "all" %>
     <%= javascript_include_tag "application" %>
@@ -16,7 +16,7 @@
     <header class="navbar navbar-fixed-top">
       <nav class="navbar-inner">
         <div class="container">
-          <%= render '/layouts/navigation' %>
+          <%= render '/layouts/registrationhead' %>
         </div>
       </nav>
     </header>
@@ -33,7 +33,7 @@
     <footer class="navbar navbar-fixed-bottom">
       <div class="navbar-inner">
         <div class="container">
-          <%= render '/layouts/footernav' %>
+          <%= render '/layouts/sessionfoot' %>
         </div>
       </div>
     </footer>

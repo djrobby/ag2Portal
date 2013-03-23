@@ -1,6 +1,6 @@
 <div class="row">
     <div class="span12" style="padding-top: 5px">
-        <h3 class="signin-h3">Sign in</h3>
+        <h3 class="sign-h3">Inicia sesi&oacute;n</h3>
     </div>
 </div>
 <div class="row">
@@ -8,10 +8,10 @@
         <br />
         Hola
     </div>
-    <div class="span4 signin">
+    <div class="span4 sign">
         <%= simple_form_for(resource, :as => resource_name, :url => session_path(resource_name), :html => {:class =>  'form-inline' }) do |f| %>
-        <%= f.input :email, :autofocus => true, :input_html => { :class => 'signin-field' }, :label_html => { :class => 'signin-label' } %>
-        <%= f.input :password, :input_html => { :class => 'signin-field' }, :label_html => { :class => 'signin-label' } %>
+        <%= f.input :email, :autofocus => true, :input_html => { :class => 'sign-field' }, :label_html => { :class => 'sign-label' } %>
+        <%= f.input :password, :input_html => { :class => 'sign-field' }, :label_html => { :class => 'sign-label' } %>
         <%= f.input :remember_me, label: false, inline_label: 'Remember me', :as => :boolean if devise_mapping.rememberable? %>
         <div align="center">
             <%= f.button :submit, "Sign in", :class => 'btn-primary' %>
