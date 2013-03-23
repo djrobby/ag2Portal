@@ -1,12 +1,35 @@
 <img class="footer-nav-brand pull-left" src="/assets/icon/aGestiona2.png" width="165" height="48" alt="aGestiona2" />
 <ul class="nav pull-right">
-    <li class="footer-nav-li">
+  <li class="dropdown footer-nav-li">
+    <!-- Global web sites -->
+    <a href="#"
+    class="dropdown-toggle"
+    data-toggle="dropdown"><i class="icon-globe"></i> Sitios <b class="caret"></b> </a>
+    <ul class="dropdown-menu">
+      <li>
         <a href="http://www.aguasdeguadix.com" target="_blank"><i class="icon-globe"></i> aguasdeguadix.com</a>
-    </li>
-    <li class="footer-nav-li">
+      </li>
+      <li>
         <a href="http://www.elsur.es" target="_blank"><i class="icon-globe"></i> elsur.es</a>
-    </li>
-    <li class="footer-nav-li">
+      </li>
+      <li>
         <a href="http://www.aguaygestion.es" target="_blank"><i class="icon-globe"></i> aguaygestion.es</a>
-    </li>
+      </li>
+    </ul>
+  </li>
+  <li class="footer-nav-li">
+    <a href="#" onclick="javascript:DisplaySizeInfo();"><%= session[:resolution]%></a>
+  </li>
 </ul>
+
+<!--
+  <li class="footer-nav-li">
+    <a href="http://www.aguasdeguadix.com" target="_blank"><i class="icon-globe"></i> aguasdeguadix.com</a>
+  </li>
+  <li class="footer-nav-li">
+    <a href="http://www.elsur.es" target="_blank"><i class="icon-globe"></i> elsur.es</a>
+  </li>
+  <li class="footer-nav-li">
+    <a href="http://www.aguaygestion.es" target="_blank"><i class="icon-globe"></i> aguaygestion.es</a>
+  </li>
+-->

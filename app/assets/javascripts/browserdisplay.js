@@ -22,10 +22,30 @@ function Move(pwidth, pheight) {
   window.moveTo(x, y);
 }
 
-function ScreenSize() {
+function ScreenSize(_show) {
   var screenW = screen.width;
   var screenH = screen.height;
-  window.alert('Resolucion de Pantalla: ' + screenW + 'x' + screenH);
+  var message = 'Medida de Pantalla:\t' + screenW + 'x' + screenH;
+  if (_show != 0)
+    window.alert(message);
+  else
+    return message;
+}
+
+function WindowSize(_show) {
+  var screenW = $(window).width();
+  var screenH = $(window).height();
+  var message = 'Medida de Ventana:\t' + screenW + 'x' + screenH;
+  if (_show != 0)
+    window.alert(message);
+  else
+    return message;
+}
+
+function DisplaySizeInfo() {
+  var screenM = ScreenSize(0);
+  var windowM = WindowSize(0);
+  window.alert(screenM + '\n' + windowM);
 }
 
 function CloseUponResolution(screenW, screenH) {
@@ -34,13 +54,26 @@ function CloseUponResolution(screenW, screenH) {
   }
 }
 
-//  Wake up function:
-function RedirectUponResolution(screenW, screenH) {
-  var toPage = "error";
+//  Wake up functions:
+function RedirectUponScreenResolution(screenW, screenH) {
+  var toPage = "icon";
   if ((screen.width < 1024) || (screen.height < 768)) {
     return toPage;
   }
   if ((screen.width >= screenW) && (screen.height >= screenH)) {
+    toPage = "default";
+  } else {
+    toPage = "lowres";
+  }
+  return toPage;
+}
+
+function RedirectUponWindowResolution(screenW, screenH) {
+  var toPage = "icon";
+  if (($(window).width() < 1024) || ($(window).height() < 768)) {
+    return toPage;
+  }
+  if (($(window).width() >= screenW) && ($(window).height() >= screenH)) {
     toPage = "default";
   } else {
     toPage = "lowres";
