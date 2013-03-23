@@ -17,7 +17,7 @@
         // Default resolution for this site: 1280x1024 or more
         // Default site home page: home#index
         // LowRes site home page: lowres#index
-        defaultPage = RedirectUponResolution(1280, 1024);
+        defaultPage = RedirectUponResolution(1280, 900);
         if (defaultPage == "error") {
           window.alert('Error:\nThe current display resolution (' + screen.width + 'x' + screen.height + ') is not supported!\nResolution must be greater than 1024x768.');
           window.close();
