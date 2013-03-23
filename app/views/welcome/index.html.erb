@@ -19,7 +19,7 @@
         // LowRes site home page: lowres#index
         defaultPage = RedirectUponResolution(1280, 1024);
         if (defaultPage == "error") {
-          window.alert('Error:\nThe current display resolution (' + screen.width + 'x' + screen.height + ') is not supported!');
+          window.alert('Error:\nThe current display resolution (' + screen.width + 'x' + screen.height + ') is not supported!\nResolution must be greater than 1024x768.');
           window.close();
         } else {
           if (defaultPage == "default") {
@@ -32,9 +32,6 @@
       }
       // -->
     </script>
-
   </head>
-  <body>
-    hola
-  </body>
+  <body></body>
 </html>
