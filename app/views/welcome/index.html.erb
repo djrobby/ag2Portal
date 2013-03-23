@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Cache-Control" content="no-cache" />
+    <title>aGestiona2</title>
+
+    <script src="/assets/browserdisplay.js" type="text/javascript"></script>
+
+    <script language="javascript" type="text/javascript">
+      <!--
+      var defaultPage;
+
+      window.onload = function() {
+        // Min resolution for this site: 1024x768
+        // LowRes resolution for this site: 1280x1024 or less
+        // Default resolution for this site: 1280x1024 or more
+        // Default site home page: home#index
+        // LowRes site home page: lowres#index
+        defaultPage = RedirectUponResolution(1280, 1024);
+        if (defaultPage == "error") {
+          window.alert('Error:\nThe current display resolution (' + screen.width + 'x' + screen.height + ') is not supported!');
+          window.close();
+        } else {
+          if (defaultPage == "default") {
+            window.location.href = "/home/index";
+          } else {
+            // window.alert('Warning:\nThe current display resolution (' + screen.width + 'x' + screen.height + ') is not recommended!\n(Will be redirected to low-res site).');
+            window.location.href = "/lowres/index";
+          }
+        }
+      }
+      // -->
+    </script>
+
+  </head>
+  <body>
+    hola
+  </body>
+</html>
