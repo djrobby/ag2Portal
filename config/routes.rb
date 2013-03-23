@@ -1,4 +1,6 @@
 Ag2Portal::Application.routes.draw do
+  get "icores/index"
+
   get "lowres/index"
 
   get "welcome/index"
