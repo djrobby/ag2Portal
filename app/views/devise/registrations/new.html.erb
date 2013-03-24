@@ -5,8 +5,26 @@
 </div>
 <div class="row">
   <div class="span8">
-    <br />
-    Registro
+    <div class="sign-description">
+      <br />
+      &iquest;Nuevo/a en aGestiona2?
+      <br />
+      <br />
+      <p>
+        Con una cuenta de aGestiona2, puedes acceder a todas las aplicaciones y sitios
+        que el servicio pone a tu disposici&oacute;n, para trabajar desde cualquier sitio y
+        desde cualquier dispositivo. &iquest;A qu&eacute; esperas?
+      <p>
+        Indica los datos que te solicita el cuadro de registro para crear tu nueva cuenta.
+        &iquest;Qu&eacute; ya tienes una? Pues entonces, <a href=<%= main_app.new_user_session_path %>>inicia sesi&oacute;n</a> para acceder.
+      </p>
+      <p>
+        aGestiona2&reg; es la plataforma de servicios de Agua y Gesti&oacute;n. &iquest;Deseas <a href="#">saber m&aacute;s</a>?
+      </p>
+      <p class="shrinked">
+        Recuerda que todos los datos solicitados son obligatorios.
+      </p>
+    </div>
   </div>
   <div class="span4 sign">
     <%= simple_form_for(resource, :as => resource_name, :url => registration_path(resource_name), :html => {:class => 'form-inline' }) do |f| %>

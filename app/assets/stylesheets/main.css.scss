@@ -20,10 +20,13 @@ a:hover, a:focus {
     height: 36px;
 }
 .centered {
-    text-align: center;
+  text-align: center;
+}
+.shrinked {
+  font-size: smaller;
 }
 .footer-nav-li {
-    padding-top: 6px;
+  padding-top: 6px;
 }
 .footer-nav-brand {
     display: block;
@@ -60,4 +63,8 @@ a:hover, a:focus {
 }
 .sign-label {
   font-weight: bold;
+}
+.sign-description {
+  /* top right bottom left */
+  margin-right: 20px;
 }

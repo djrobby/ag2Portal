@@ -1,23 +1,37 @@
 <div class="row">
-    <div class="span12" style="padding-top: 5px">
-        <h3 class="sign-h3">Inicia tu sesi&oacute;n</h3>
-    </div>
+  <div class="span12" style="padding-top: 5px">
+    <h3 class="sign-h3">Inicia tu sesi&oacute;n</h3>
+  </div>
 </div>
 <div class="row">
-    <div class="span8">
-        <br />
-        Hola
+  <div class="span8">
+    <div class="sign-description">
+      <br />
+      Bienvenido/a.
+      <br />
+      <br />
+      <p>
+        Inicia sesi&oacute;n en tu cuenta a trav&eacute;s del cuadro de credenciales
+        o <a href="<%= main_app.new_user_registration_path %>">crea una cuenta</a> ya mismo.
+      </p>
+      <p>
+        aGestiona2&reg; es la plataforma de servicios de Agua y Gesti&oacute;n. &iquest;Deseas <a href="#">saber m&aacute;s</a>?
+      </p>
+      <p class="shrinked">
+        Recuerda que todos los datos solicitados son obligatorios.
+      </p>
     </div>
-    <div class="span4 sign">
-        <%= simple_form_for(resource, :as => resource_name, :url => session_path(resource_name), :html => {:class =>  'form-inline' }) do |f| %>
-        <%= f.input :email, :autofocus => true, :input_html => { :class => 'sign-field' }, :label_html => { :class => 'sign-label' } %>
-        <%= f.input :password, :input_html => { :class => 'sign-field' }, :label_html => { :class => 'sign-label' } %>
-        <%= f.input :remember_me, label: false, inline_label: 'Remember me', :as => :boolean if devise_mapping.rememberable? %>
-        <div align="center">
-            <%= f.button :submit, "Sign in", :class => 'btn-primary' %>
-            <%= link_to 'No, thanks', main_app.root_path, :class => 'btn btn-primary' %>
-        </div>
-        <% end %>
-        <%= render "devise/shared/links" %>
+  </div>
+  <div class="span4 sign">
+    <%= simple_form_for(resource, :as => resource_name, :url => session_path(resource_name), :html => {:class =>  'form-inline' }) do |f| %>
+    <%= f.input :email, :autofocus => true, :input_html => { :class => 'sign-field' }, :label_html => { :class => 'sign-label' } %>
+    <%= f.input :password, :input_html => { :class => 'sign-field' }, :label_html => { :class => 'sign-label' } %>
+    <%= f.input :remember_me, label: false, inline_label: 'Remember me', :as => :boolean if devise_mapping.rememberable? %>
+    <div align="center">
+      <%= f.button :submit, "Sign in", :class => 'btn-primary' %>
+      <%= link_to 'No, thanks', main_app.root_path, :class => 'btn btn-primary' %>
     </div>
+    <% end %>
+    <%= render "devise/shared/links" %>
+  </div>
 </div>
