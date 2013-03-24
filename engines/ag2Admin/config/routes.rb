@@ -5,6 +5,8 @@ Ag2Admin::Engine.routes.draw do
   
   resources :users
   resources :roles
+  resources :companies
+  resources :offices
    
   root :to => 'home#index'
 end

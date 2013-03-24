@@ -2,11 +2,6 @@
 
 <h3>New Role</h3>
 
-<%= simple_form_for @role do |f| %>
-<%= f.error_notification %>
-<%= display_base_errors resource %>
-<%= f.input :name, :required => true, :autofocus => true %>
-<%= f.button :submit, 'Create role', :class => 'btn-primary' %>
-<% end %>
+<%= render 'form' %>
 
-<%= link_to 'Roles', roles_path %>
+<%= link_to 'Back to Roles', roles_path %>

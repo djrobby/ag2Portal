@@ -17,11 +17,13 @@
         <td><%= link_to role.name.titleize, role %></td>
         <td><%= role.created_at.to_date %></td>
         <td><%= link_to 'Edit', edit_role_path(role), :class => 'btn btn-mini' %></td>
-        <td><%= link_to("Delete role", user_path(role), :data => { :confirm => "Are you sure?" }, :method => :delete, :class => 'btn btn-mini') %></td>
+        <td><%= link_to("Delete", role, :data => { :confirm => "Are you sure?" }, :method => :delete, :class => 'btn btn-mini') %></td>
       </tr>
       <% end %>
     </tbody>
   </table>
   <%= link_to 'New Role', new_role_path, :class => 'btn btn-primary' %>
-  <%= link_to 'Users', users_path, :class => 'btn btn-primary' %>
+  <br />
+  <br />
+  <%= link_to 'Back to Users', users_path %>
 </div>

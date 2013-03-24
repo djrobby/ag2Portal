@@ -1,0 +1,24 @@
+<%= render '/layouts/ag2_admin/officesbreadcrumb' %>
+
+<h3><%= @office.name %></h3>
+<table class="table"
+<tbody>
+<tr>
+<td>Id:</td>
+<td><%= @office.id %></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Created at:</td>
+<td><%= @office.created_at %></td>
+<td>Updated at:</td>
+<td><%= @office.updated_at %></td>
+</tr>
+</tbody>
+</table>
+
+<%= link_to 'Edit Office', edit_office_path(@office), :class => 'btn btn-primary' %>
+  <br />
+  <br />
+  <%= link_to 'Back to Offices', offices_path %>

@@ -1,0 +1,32 @@
+<%= render '/layouts/ag2_admin/officesbreadcrumb' %>
+
+<h3>Offices</h3>
+<div class="span8">
+  <table class="table table-condensed table-striped">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Company Id</th>
+        <th>Registered</th>
+        <th></th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @offices.each do |office| %>
+      <tr>
+        <td><%= link_to office.name, office %></td>
+        <td><%= office.company_id %></td>
+        <td><%= office.created_at.to_date %></td>
+        <td><%= link_to 'Edit', edit_office_path(office), :class => 'btn btn-mini' %></td>
+        <td><%= link_to("Delete", office, :data => { :confirm => "Are you sure?" }, :method => :delete, :class => 'btn btn-mini') %></td>
+      </tr>
+      <% end %>
+    </tbody>
+  </table>
+  <%= link_to 'New Office', new_office_path, :class => 'btn btn-primary' %>
+  <br />
+  <br />
+  <%= link_to 'Go to ag2Companies', companies_path %> |
+  <%= link_to 'Back to ag2Admin', ag2_admin.root_path %>
+</div>

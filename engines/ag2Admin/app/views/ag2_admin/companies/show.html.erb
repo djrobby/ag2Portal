@@ -1,0 +1,24 @@
+<%= render '/layouts/ag2_admin/companiesbreadcrumb' %>
+
+<h3><%= @company.name %></h3>
+<table class="table"
+<tbody>
+<tr>
+<td>Id:</td>
+<td><%= @company.id %></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Created at:</td>
+<td><%= @company.created_at %></td>
+<td>Updated at:</td>
+<td><%= @company.updated_at %></td>
+</tr>
+</tbody>
+</table>
+
+<%= link_to 'Edit Company', edit_company_path(@company), :class => 'btn btn-primary' %>
+  <br />
+  <br />
+  <%= link_to 'Back to Companies', companies_path %>
