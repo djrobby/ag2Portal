@@ -23,6 +23,18 @@
   </li>
   <li class="span4">
     <% if (session[:resolution] == "LD")%>
+    <a data-toggle="modal" href="#notfound" class="thumbnail centered"><img src="/assets/icon/ag2Offices.png" width="48" height="48" alt="ag2Offices" /><h5 class="h5-narrow">ag2Offices</h5></a>
+    <% elsif session[:resolution] == "SD" %>
+    <a data-toggle="modal" href="#notfound" class="thumbnail centered"><img src="/assets/pict/ag2/ag2Offices.png" width="96" height="96" alt="ag2Offices" /><h5 class="h5-narrow">ag2Offices</h5></a>
+    <% else %>
+    <a data-toggle="modal" href="#notfound" class="thumbnail centered"><img src="/assets/pict/ag2Offices.png" width="128" height="128" alt="ag2Offices" /><h5 class="h5-narrow">ag2Offices</h5></a>
+    <% end %>
+  </li>
+</ul><!-- /.thumbnails -->
+<ul class="thumbnails">
+  <!-- Apps 2 -->
+  <li class="span4">
+    <% if (session[:resolution] == "LD")%>
     <a data-toggle="modal" href="#notfound" class="thumbnail centered"><img src="/assets/icon/ag2Apps.png" width="48" height="48" alt="ag2Apps" /><h5 class="h5-narrow">ag2Apps</h5></a>
     <% elsif session[:resolution] == "SD" %>
     <a data-toggle="modal" href="#notfound" class="thumbnail centered"><img src="/assets/pict/ag2/ag2Apps.png" width="96" height="96" alt="ag2Apps" /><h5 class="h5-narrow">ag2Apps</h5></a>
@@ -30,9 +42,6 @@
     <a data-toggle="modal" href="#notfound" class="thumbnail centered"><img src="/assets/pict/ag2Apps.png" width="128" height="128" alt="ag2Apps" /><h5 class="h5-narrow">ag2Apps</h5></a>
     <% end %>
   </li>
-</ul><!-- /.thumbnails -->
-<ul class="thumbnails">
-  <!-- Apps 1 -->
   <li class="span4">
     <% if (session[:resolution] == "LD")%>
     <a data-toggle="modal" href="#notfound" class="thumbnail centered"><img src="/assets/icon/ag2Sites.png" alt="ag2Sites" /><h5 class="h5-narrow">ag2Sites</h5></a>
@@ -44,20 +53,11 @@
   </li>
   <li class="span4">
     <% if (session[:resolution] == "LD")%>
-    <a data-toggle="modal" href="#notfound" class="thumbnail centered"><img src="/assets/icon/ag2Db.png" width="48" height="48" alt="ag2Db" /><h5 class="h5-narrow">ag2Db</h5></a>
+    <a href="<%= ag2_admin.config_path %>" class="thumbnail centered"><img src="/assets/icon/ag2Admin.png" alt="ag2Config" /><h5 class="h5-narrow">ag2Config</h5></a>
     <% elsif session[:resolution] == "SD" %>
-    <a data-toggle="modal" href="#notfound" class="thumbnail centered"><img src="/assets/pict/ag2/ag2Db.png" width="96" height="96" alt="ag2Db" /><h5 class="h5-narrow">ag2Db</h5></a>
+    <a href="<%= ag2_admin.config_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/ag2Admin.png" width="96" height="96" alt="ag2Config" /><h5 class="h5-narrow">ag2Config</h5></a>
     <% else %>
-    <a data-toggle="modal" href="#notfound" class="thumbnail centered"><img src="/assets/pict/ag2Db.png" width="128" height="128" alt="ag2Db" /><h5 class="h5-narrow">ag2Db</h5></a>
-    <% end %>
-  </li>
-  <li class="span4">
-    <% if (session[:resolution] == "LD")%>
-    <a data-toggle="modal" href="#notfound" class="thumbnail centered"><img src="/assets/icon/ag2Admin.png" alt="ag2Config" /><h5 class="h5-narrow">ag2Config</h5></a>
-    <% elsif session[:resolution] == "SD" %>
-    <a data-toggle="modal" href="#notfound" class="thumbnail centered"><img src="/assets/pict/ag2/ag2Admin.png" width="96" height="96" alt="ag2Config" /><h5 class="h5-narrow">ag2Config</h5></a>
-    <% else %>
-    <a data-toggle="modal" href="#notfound" class="thumbnail centered"><img src="/assets/pict/ag2Admin.png" width="128" height="128" alt="ag2Config" /><h5 class="h5-narrow">ag2Config</h5></a>
+    <a href="<%= ag2_admin.config_path %>" class="thumbnail centered"><img src="/assets/pict/ag2Admin.png" width="128" height="128" alt="ag2Config" /><h5 class="h5-narrow">ag2Config</h5></a>
     <% end %>
   </li>
 </ul><!-- /.thumbnails -->
