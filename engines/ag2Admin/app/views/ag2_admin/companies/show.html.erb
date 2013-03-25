@@ -22,10 +22,11 @@
   <br />
   <br />
 
-  <h4><%= @company.name %> Offices</h4>
+  <h4>Company Offices</h4>
   <table class="table table-condensed table-striped">
     <thead>
       <tr>
+        <th>Id</th>
         <th>Name</th>
         <th>Registered</th>
       </tr>
@@ -33,6 +34,7 @@
     <tbody>
       <% @offices.each do |office| %>
       <tr>
+        <td><%= office.id %></td>
         <td><%= office.name %></td>
         <td><%= office.created_at.to_date %></td>
       </tr>

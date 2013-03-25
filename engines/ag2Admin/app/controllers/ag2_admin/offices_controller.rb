@@ -2,49 +2,57 @@ require_dependency "ag2_admin/application_controller"
 
 module Ag2Admin
   class OfficesController < ApplicationController
+    def internal
+      @companies = Company.all
+    end
+
     # GET /offices
     # GET /offices.json
     def index
+      internal 
       @offices = Office.all
-  
+
       respond_to do |format|
         format.html # index.html.erb
         format.json { render json: @offices }
       end
     end
-  
+
     # GET /offices/1
     # GET /offices/1.json
     def show
       @office = Office.find(params[:id])
-  
+
       respond_to do |format|
         format.html # show.html.erb
         format.json { render json: @office }
       end
     end
-  
+
     # GET /offices/new
     # GET /offices/new.json
     def new
+      internal
       @office = Office.new
-  
+
       respond_to do |format|
         format.html # new.html.erb
         format.json { render json: @office }
       end
     end
-  
+
     # GET /offices/1/edit
     def edit
+      internal
       @office = Office.find(params[:id])
     end
-  
+
     # POST /offices
     # POST /offices.json
     def create
+      internal
       @office = Office.new(params[:office])
-  
+
       respond_to do |format|
         if @office.save
           format.html { redirect_to @office, notice: 'Office was successfully created.' }
@@ -55,12 +63,13 @@ module Ag2Admin
         end
       end
     end
-  
+
     # PUT /offices/1
     # PUT /offices/1.json
     def update
+      internal
       @office = Office.find(params[:id])
-  
+
       respond_to do |format|
         if @office.update_attributes(params[:office])
           format.html { redirect_to @office, notice: 'Office was successfully updated.' }
@@ -71,13 +80,13 @@ module Ag2Admin
         end
       end
     end
-  
+
     # DELETE /offices/1
     # DELETE /offices/1.json
     def destroy
       @office = Office.find(params[:id])
       @office.destroy
-  
+
       respond_to do |format|
         format.html { redirect_to offices_url }
         format.json { head :no_content }

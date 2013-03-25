@@ -6,8 +6,8 @@
 <tr>
 <td>Id:</td>
 <td><%= @office.id %></td>
-<td></td>
-<td></td>
+<td>Company:</td>
+<td><%= Company.find(@office.company).name unless @office.company.nil? %></td>
 </tr>
 <tr>
 <td>Created at:</td>
