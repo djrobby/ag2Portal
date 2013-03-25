@@ -21,4 +21,23 @@
 <%= link_to 'Edit Company', edit_company_path(@company), :class => 'btn btn-primary' %>
   <br />
   <br />
+
+  <h4><%= @company.name %> Offices</h4>
+  <table class="table table-condensed table-striped">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Registered</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @offices.each do |office| %>
+      <tr>
+        <td><%= office.name %></td>
+        <td><%= office.created_at.to_date %></td>
+      </tr>
+      <% end %>
+    </tbody>
+  </table>
+
   <%= link_to 'Back to Companies', companies_path %>
