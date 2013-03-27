@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130326185123) do
+ActiveRecord::Schema.define(:version => 20130327104056) do
 
   create_table "companies", :force => true do |t|
     t.string   "name"
@@ -31,6 +31,15 @@ ActiveRecord::Schema.define(:version => 20130326185123) do
   add_index "offices", ["company_id"], :name => "index_offices_on_company_id"
   add_index "offices", ["office_code"], :name => "index_offices_on_office_code"
 
+  create_table "provinces", :force => true do |t|
+    t.string   "name"
+    t.string   "ine_cpro"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "provinces", ["ine_cpro"], :name => "index_provinces_on_ine_cpro"
+
   create_table "roles", :force => true do |t|
     t.string   "name"
     t.integer  "resource_id"
@@ -41,6 +50,18 @@ ActiveRecord::Schema.define(:version => 20130326185123) do
 
   add_index "roles", ["name", "resource_type", "resource_id"], :name => "index_roles_on_name_and_resource_type_and_resource_id"
   add_index "roles", ["name"], :name => "index_roles_on_name"
+
+  create_table "towns", :force => true do |t|
+    t.string   "name"
+    t.string   "ine_cmun"
+    t.string   "ine_dc"
+    t.integer  "province_id"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+  end
+
+  add_index "towns", ["ine_cmun"], :name => "index_towns_on_ine_cmun"
+  add_index "towns", ["province_id"], :name => "index_towns_on_province_id"
 
   create_table "users", :force => true do |t|
     t.string   "email",                  :default => "", :null => false

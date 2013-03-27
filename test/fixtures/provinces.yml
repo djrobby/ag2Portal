@@ -1,0 +1,9 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  name: MyString
+  ine_cpro: MyString
+
+two:
+  name: MyString
+  ine_cpro: MyString

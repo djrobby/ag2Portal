@@ -1,0 +1,49 @@
+<%= render '/layouts/ag2_admin/provincesbreadcrumb' %>
+
+<h3><%= @province.name %></h3>
+<table class="table"
+<tbody>
+<tr>
+<td>Id:</td>
+<td><%= @province.id %></td>
+<td>INE CPro:</td>
+<td><%= @province.ine_cpro %></td>
+</tr>
+<tr>
+<td>Created at:</td>
+<td><%= @province.created_at %></td>
+<td>Updated at:</td>
+<td><%= @province.updated_at %></td>
+</tr>
+</tbody>
+</table>
+
+<%= link_to 'Edit Province', edit_province_path(@province), :class => 'btn btn-primary' %>
+  <br />
+  <br />
+
+  <% if (@towns.count > 0) %>
+  <h4>Province Towns</h4>
+  <table class="table table-condensed table-striped">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>INE CMun</th>
+        <th>INE Dc</th>
+        <th>Registered</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @towns.each do |town| %>
+      <tr>
+        <td><%= town.name %></td>
+        <td><%= town.ine_cmun %></td>
+        <td><%= town.ine_dc %></td>
+        <td><%= town.created_at.to_date %></td>
+      </tr>
+      <% end %>
+    </tbody>
+  </table>
+  <% end %>
+
+  <%= link_to 'Back to Provinces', provinces_path %>

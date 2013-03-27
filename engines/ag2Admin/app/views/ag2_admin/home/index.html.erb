@@ -61,6 +61,45 @@
     <% end %>
   </li>
 </ul><!-- /.thumbnails -->
+<ul class="thumbnails">
+  <!-- Apps 3 -->
+  <li class="span3">
+    <% if (session[:resolution] == "LD")%>
+    <a href="<%= provinces_path %>" class="thumbnail centered"><img src="/assets/icon/ag2Provinces.png" width="48" height="48" alt="ag2Provinces" /><h5 class="h5-narrow">ag2Provinces</h5></a>
+    <% elsif session[:resolution] == "SD" %>
+    <a href="<%= provinces_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/ag2Provinces72.png" width="72" height="72" alt="ag2Provinces" /><h5 class="h5-narrow">ag2Provinces</h5></a>
+    <% else %>
+    <a href="<%= provinces_path %>" class="thumbnail centered"><img src="/assets/pict/ag2Provinces96.png" width="96" height="96" alt="ag2Provinces" /><h5 class="h5-narrow">ag2Provinces</h5></a>
+    <% end %>
+  </li>
+  <li class="span3">
+    <% if (session[:resolution] == "LD")%>
+    <a href="<%= towns_path %>" class="thumbnail centered"><img src="/assets/icon/ag2Towns.png" width="48" height="48" alt="ag2Towns" /><h5 class="h5-narrow">ag2Towns</h5></a>
+    <% elsif session[:resolution] == "SD" %>
+    <a href="<%= towns_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/ag2Towns72.png" width="72" height="72" alt="ag2Towns" /><h5 class="h5-narrow">ag2Towns</h5></a>
+    <% else %>
+    <a href="<%= towns_path %>" class="thumbnail centered"><img src="/assets/pict/ag2Towns96.png" width="96" height="96" alt="ag2Towns" /><h5 class="h5-narrow">ag2Towns</h5></a>
+    <% end %>
+  </li>
+  <li class="span3">
+    <% if (session[:resolution] == "LD")%>
+    <a data-toggle="modal" href="#notfound" class="thumbnail centered"><img src="/assets/icon/NotAvailable.png" width="48" height="48" alt="NotAvailable" /><h5 class="h5-narrow">Not Available</h5></a>
+    <% elsif session[:resolution] == "SD" %>
+    <a data-toggle="modal" href="#notfound" class="thumbnail centered"><img src="/assets/pict/ag2/NotAvailable72.png" width="72" height="72" alt="NotAvailable" /><h5 class="h5-narrow">Not Available</h5></a>
+    <% else %>
+    <a data-toggle="modal" href="#notfound" class="thumbnail centered"><img src="/assets/pict/NotAvailable96.png" width="96" height="96" alt="NotAvailable" /><h5 class="h5-narrow">Not Available</h5></a>
+    <% end %>
+  </li>
+  <li class="span3">
+    <% if (session[:resolution] == "LD")%>
+    <a data-toggle="modal" href="#notfound" class="thumbnail centered"><img src="/assets/icon/NotAvailable.png" width="48" height="48" alt="NotAvailable" /><h5 class="h5-narrow">Not Available</h5></a>
+    <% elsif session[:resolution] == "SD" %>
+    <a data-toggle="modal" href="#notfound" class="thumbnail centered"><img src="/assets/pict/ag2/NotAvailable72.png" width="72" height="72" alt="NotAvailable" /><h5 class="h5-narrow">Not Available</h5></a>
+    <% else %>
+    <a data-toggle="modal" href="#notfound" class="thumbnail centered"><img src="/assets/pict/NotAvailable96.png" width="96" height="96" alt="NotAvailable" /><h5 class="h5-narrow">Not Available</h5></a>
+    <% end %>
+  </li>
+</ul><!-- /.thumbnails -->
 
 <!--<%= button_to "Regresar", main_app.root_path, :class => "btn btn-primary", :method => "get" %>-->
 
