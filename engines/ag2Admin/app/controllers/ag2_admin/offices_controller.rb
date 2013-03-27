@@ -2,14 +2,14 @@ require_dependency "ag2_admin/application_controller"
 
 module Ag2Admin
   class OfficesController < ApplicationController
-    def internal
-      @companies = Company.all
-    end
+#    def internal
+#      @companies = Company.all
+#    end
 
     # GET /offices
     # GET /offices.json
     def index
-      internal 
+#      internal 
       @offices = Office.all
 
       respond_to do |format|
@@ -32,7 +32,7 @@ module Ag2Admin
     # GET /offices/new
     # GET /offices/new.json
     def new
-      internal
+#      internal
       @office = Office.new
 
       respond_to do |format|
@@ -43,14 +43,14 @@ module Ag2Admin
 
     # GET /offices/1/edit
     def edit
-      internal
+#      internal
       @office = Office.find(params[:id])
     end
 
     # POST /offices
     # POST /offices.json
     def create
-      internal
+#      internal
       @office = Office.new(params[:office])
 
       respond_to do |format|
@@ -67,7 +67,7 @@ module Ag2Admin
     # PUT /offices/1
     # PUT /offices/1.json
     def update
-      internal
+#      internal
       @office = Office.find(params[:id])
 
       respond_to do |format|

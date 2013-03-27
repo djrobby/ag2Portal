@@ -3,5 +3,13 @@
 <%= display_base_errors resource %>
 <%= f.input :name, :required => true, :autofocus => true %>
 <%= f.input :fiscal_id, :required => true %>
+<%= f.input :street_name %>
+<%= f.input :street_number %>
+<%= f.input :building %>
+<%= f.input :floor %>
+<%= f.input :floor_office %>
+<%= f.input :zipcode %>
+<%= f.association :town %>
+<%= f.input :province, disabled: true %>
 <%= f.button :submit, :class => 'btn-primary' %>
 <% end %>

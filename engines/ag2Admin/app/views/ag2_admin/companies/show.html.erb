@@ -22,6 +22,7 @@
   <br />
   <br />
 
+  <% if (@offices.count > 0) %>
   <h4>Company Offices</h4>
   <table class="table table-condensed table-striped">
     <thead>
@@ -41,5 +42,6 @@
       <% end %>
     </tbody>
   </table>
+  <% end %>
 
   <%= link_to 'Back to Companies', companies_path %>

@@ -17,7 +17,7 @@ module Ag2Admin
     # GET /provinces/1.json
     def show
       @province = Province.find(params[:id])
-      @towns = @province.towns
+      @towns = @province.towns.order("name")
   
       respond_to do |format|
         format.html # show.html.erb

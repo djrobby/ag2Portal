@@ -4,8 +4,8 @@ class Town < ActiveRecord::Base
 
   validates :name,  :presence => true
   validates :province_id,  :presence => true
-  validates :ine_cmun, :presence => true,
-                       :length => { :minimum => 3 }
-  validates :ine_dc, :presence => true,
-                       :length => { :minimum => 1 }
+  validates :ine_cmun, :length => { :minimum => 3 }
+  validates :ine_dc, :length => { :minimum => 1 }
+
+  has_many :companies
 end

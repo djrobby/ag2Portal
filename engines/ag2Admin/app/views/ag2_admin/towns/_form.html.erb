@@ -4,6 +4,6 @@
 <%= f.input :name, :required => true, :autofocus => true %>
 <%= f.input :ine_cmun, :required => true %>
 <%= f.input :ine_dc, :required => true %>
-<%= f.input :province_id, :collection => @provinces, :required => true %>
+<%= f.association :province, :required => true %>
 <%= f.button :submit, :class => 'btn-primary' %>
 <% end %>

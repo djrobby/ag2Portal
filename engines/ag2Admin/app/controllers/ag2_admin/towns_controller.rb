@@ -2,14 +2,9 @@ require_dependency "ag2_admin/application_controller"
 
 module Ag2Admin
   class TownsController < ApplicationController
-    def internal
-      @provinces = Province.all
-    end
-    
     # GET /towns
     # GET /towns.json
     def index
-      internal 
       @towns = Town.all
   
       respond_to do |format|
@@ -32,7 +27,6 @@ module Ag2Admin
     # GET /towns/new
     # GET /towns/new.json
     def new
-      internal 
       @town = Town.new
   
       respond_to do |format|
@@ -43,14 +37,12 @@ module Ag2Admin
   
     # GET /towns/1/edit
     def edit
-      internal 
       @town = Town.find(params[:id])
     end
   
     # POST /towns
     # POST /towns.json
     def create
-      internal 
       @town = Town.new(params[:town])
   
       respond_to do |format|
@@ -67,7 +59,6 @@ module Ag2Admin
     # PUT /towns/1
     # PUT /towns/1.json
     def update
-      internal 
       @town = Town.find(params[:id])
   
       respond_to do |format|

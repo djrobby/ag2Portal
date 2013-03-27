@@ -11,25 +11,14 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130327182854) do
+ActiveRecord::Schema.define(:version => 20130327104056) do
 
   create_table "companies", :force => true do |t|
     t.string   "name"
     t.string   "fiscal_id"
-    t.datetime "created_at",    :null => false
-    t.datetime "updated_at",    :null => false
-    t.string   "street_name"
-    t.string   "street_number"
-    t.string   "building"
-    t.integer  "floor"
-    t.string   "floor_office"
-    t.integer  "town_id"
-    t.integer  "province_id"
-    t.string   "zipcode"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
-
-  add_index "companies", ["province_id"], :name => "index_companies_on_province_id"
-  add_index "companies", ["town_id"], :name => "index_companies_on_town_id"
 
   create_table "offices", :force => true do |t|
     t.string   "name"
