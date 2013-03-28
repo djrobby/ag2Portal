@@ -2,6 +2,7 @@ require_dependency "ag2_admin/application_controller"
 
 module Ag2Admin
   class ZipcodesController < ApplicationController
+    # Update hidden province text field at view
     def update_province_textfield
       @town = Town.find(params[:id])
       @province = Province.find(@town.province)

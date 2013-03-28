@@ -7,12 +7,10 @@
       if (town == "")
         town = "0";
       jQuery.getJSON('update_province_textfield/' + town, function(data) {
-        $("#category_textbox").val(data.name);
         $("#zipcode_province_id").val(data.id);
       })
       return false;
     });
-
   })
 </script>
 
@@ -20,8 +18,7 @@
 <%= f.error_notification %>
 <%= display_base_errors resource %>
 <%= f.input :zipcode, :required => true, :autofocus => true %>
-<%= f.association :town, :required => true %>
-<input type="text" size="57" id="category_textbox">
-<%= f.input :province_id %>
+<%= f.association :town %>
+<%= f.input :province_id, :as => :hidden %>
 <%= f.button :submit, :class => 'btn-primary' %>
 <% end %>
