@@ -1,0 +1,35 @@
+<%= render '/layouts/ag2_admin/zipcodesbreadcrumb' %>
+
+<h3>Zip Codes</h3>
+<div class="span8">
+  <table class="table table-condensed table-striped">
+    <thead>
+      <tr>
+        <th>Zipcode</th>
+        <th>Town</th>
+        <th>Province</th>
+        <th>Registered</th>
+        <th></th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @zipcodes.each do |zipcode| %>
+      <tr>
+        <td><%= link_to zipcode.zipcode, zipcode %></td>
+        <td><%= Town.find(zipcode.town).name unless zipcode.town.nil? %></td>
+        <td><%= Province.find(zipcode.province).name unless zipcode.province.nil? %></td>
+        <td><%= zipcode.created_at.to_date %></td>
+        <td><%= link_to 'Edit', edit_zipcode_path(zipcode), :class => 'btn btn-mini' %></td>
+        <td><%= link_to("Delete", zipcode, :data => { :confirm => "Are you sure?" }, :method => :delete, :class => 'btn btn-mini') %></td>
+      </tr>
+      <% end %>
+    </tbody>
+  </table>
+  <%= link_to 'New Zipcode', new_zipcode_path, :class => 'btn btn-primary' %>
+  <br />
+  <br />
+  <%= link_to 'Go to ag2Provinces', provinces_path %> |
+  <%= link_to 'Go to ag2Towns', towns_path %> |
+  <%= link_to 'Back to ag2Admin', ag2_admin.root_path %>
+</div>

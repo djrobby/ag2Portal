@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130327182854) do
+ActiveRecord::Schema.define(:version => 20130328063312) do
 
   create_table "companies", :force => true do |t|
     t.string   "name"
@@ -99,5 +99,17 @@ ActiveRecord::Schema.define(:version => 20130327182854) do
   end
 
   add_index "users_roles", ["user_id", "role_id"], :name => "index_users_roles_on_user_id_and_role_id"
+
+  create_table "zipcodes", :force => true do |t|
+    t.string   "zipcode"
+    t.integer  "town_id"
+    t.integer  "province_id"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+  end
+
+  add_index "zipcodes", ["province_id"], :name => "index_zipcodes_on_province_id"
+  add_index "zipcodes", ["town_id"], :name => "index_zipcodes_on_town_id"
+  add_index "zipcodes", ["zipcode"], :name => "index_zipcodes_on_zipcode"
 
 end

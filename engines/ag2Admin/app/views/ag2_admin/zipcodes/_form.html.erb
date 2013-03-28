@@ -1,0 +1,27 @@
+<script>
+  jQuery(function($) {
+    // when the #zipcode_town_id field changes
+    $("#zipcode_town_id").change(function() {
+      // make a POST call and replace the content
+      var town = $('select#zipcode_town_id :selected').val();
+      if (town == "")
+        town = "0";
+      jQuery.getJSON('update_province_textfield/' + town, function(data) {
+        $("#category_textbox").val(data.name);
+        $("#zipcode_province_id").val(data.id);
+      })
+      return false;
+    });
+
+  })
+</script>
+
+<%= simple_form_for @zipcode do |f| %>
+<%= f.error_notification %>
+<%= display_base_errors resource %>
+<%= f.input :zipcode, :required => true, :autofocus => true %>
+<%= f.association :town, :required => true %>
+<input type="text" size="57" id="category_textbox">
+<%= f.input :province_id %>
+<%= f.button :submit, :class => 'btn-primary' %>
+<% end %>

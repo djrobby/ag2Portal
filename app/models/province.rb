@@ -5,5 +5,6 @@ class Province < ActiveRecord::Base
   validates :ine_cpro, :length => { :minimum => 2 }
                        
   has_many :towns
+  has_many :zipcodes
   has_many :companies
 end

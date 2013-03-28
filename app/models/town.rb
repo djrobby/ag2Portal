@@ -8,4 +8,8 @@ class Town < ActiveRecord::Base
   validates :ine_dc, :length => { :minimum => 1 }
 
   has_many :companies
+  has_many :zipcodes
+  def to_label
+    "#{name} (#{province.name})"
+  end
 end
