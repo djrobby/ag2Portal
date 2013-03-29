@@ -1,13 +1,35 @@
 <%= render '/layouts/ag2_admin/companiesbreadcrumb' %>
 
 <h3><%= @company.name %></h3>
-<table class="table"
+<table class="table">
 <tbody>
 <tr>
 <td>Id:</td>
 <td><%= @company.id %></td>
+<td>Fiscal Id:</td>
+<td><%= @company.fiscal_id %></td>
+</tr>
+<tr>
+<td>Address:</td>
+<td>
+<%= @company.street_type.street_type_code.titleize %>. <%= @company.street_name %> <%= @company.street_number %>
+<% if !@company.building.nil? %>
+<%= @company.building %>
+<% end %>
+<% if !@company.floor.nil? %>
+<%= @company.floor %>&ordm;
+<% end %>
+<% if !@company.floor_office.nil? %>
+<%= @company.floor_office %>
+<% end %>
+</td>
 <td></td>
 <td></td>
+</tr>
+<td>Town:</td>
+<td><%= @company.town.name %></td>
+<td>Province:</td>
+<td><%= @company.zipcode.zipcode %> <%= @company.province.name %></td>
 </tr>
 <tr>
 <td>Created at:</td>

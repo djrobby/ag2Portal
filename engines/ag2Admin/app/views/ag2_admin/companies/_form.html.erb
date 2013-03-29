@@ -27,19 +27,27 @@
   })
 </script>
 
-<%= simple_form_for @company do |f| %>
+<%= simple_form_for @company, :html => {:class => 'span12 two-columns-form form-vertical well' } do |f| %>
 <%= f.error_notification %>
 <%= display_base_errors resource %>
-<%= f.input :name, :required => true, :autofocus => true %>
-<%= f.input :fiscal_id, :required => true %>
-<%= f.association :street_type, collection: StreetType.all(order: 'street_type_code') %>
-<%= f.input :street_name %>
-<%= f.input :street_number %>
-<%= f.input :building %>
-<%= f.input :floor %>
-<%= f.input :floor_office %>
-<%= f.association :zipcode, collection: Zipcode.all(order: 'zipcode') %>
-<%= f.association :town, collection: Town.all(order: 'name') %>
-<%= f.association :province, collection: Province.all(order: 'name')%>
-<%= f.button :submit, :class => 'btn-primary' %>
+<div class="span6 form-column">
+  <%= f.input :name, :required => true, :autofocus => true, :input_html => { :class => 'x-large-text-field' } %>
+  <%= f.input :fiscal_id, :required => true %>
+  <%= f.association :street_type, collection: StreetType.all(order: 'street_type_code') %>
+  <%= f.input :street_name, :input_html => { :class => 'large-text-field' } %>
+  <%= f.input :street_number, :input_html => { :class => 'x-small-text-field number-text-field' } %>
+  <%= f.input :building, :input_html => { :class => 'large-text-field' } %>
+  <%= f.input :floor, :input_html => { :class => 'x-small-text-field number-text-field' } %>
+  <%= f.input :floor_office, :input_html => { :class => 'x-small-text-field number-text-field' } %>
+</div>
+<div class="span6 form-column">
+  <%= f.association :zipcode, collection: Zipcode.all(order: 'zipcode'), :input_html => { :class => 'large-text-field' } %>
+  <%= f.association :town, collection: Town.all(order: 'name'), :input_html => { :class => 'large-text-field' } %>
+  <%= f.association :province, collection: Province.all(order: 'name'), :input_html => { :class => 'large-text-field' } %>
+</div>
+<div class="span12 form-column">
+  <%= f.button :submit, :class => 'btn-primary' %>
+  <br />
+  <br />
+</div>
 <% end %>

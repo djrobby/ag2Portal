@@ -68,3 +68,38 @@ a:hover, a:focus {
   /* top right bottom left */
   margin-right: 20px;
 }
+
+/* One column Form (default) */
+.default-form {
+  margin: 0;
+}
+
+/* Two columns Form (well) */
+.two-columns-form {
+  margin: 0;
+  padding: 13px 0 0 0;
+}
+.two-columns-form .form-column {
+  margin: 0;
+  padding-left: 10px;
+}
+
+/* Forms: Text fields */
+.x-large-text-field {
+  width: 96%;
+}
+.large-text-field {
+  width: 64%;
+}
+.mid-text-field {
+  width: 48%;
+}
+.small-text-field {
+  width: 24%;
+}
+.x-small-text-field {
+  width: 12%;
+}
+.number-text-field {
+  text-align: right;
+}
