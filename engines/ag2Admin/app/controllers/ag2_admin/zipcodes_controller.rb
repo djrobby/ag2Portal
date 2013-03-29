@@ -2,8 +2,8 @@ require_dependency "ag2_admin/application_controller"
 
 module Ag2Admin
   class ZipcodesController < ApplicationController
-    # Update hidden province text field at view
-    def update_province_textfield
+    # Update hidden province text field at view from town select
+    def update_province_textfield_from_town
       @town = Town.find(params[:id])
       @province = Province.find(@town.province)
   
@@ -16,7 +16,7 @@ module Ag2Admin
     # GET /zipcodes
     # GET /zipcodes.json
     def index
-      @zipcodes = Zipcode.all
+      @zipcodes = Zipcode.order('zipcode').all
   
       respond_to do |format|
         format.html # index.html.erb

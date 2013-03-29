@@ -8,4 +8,7 @@ class Zipcode < ActiveRecord::Base
   validates :province_id,  :presence => true
 
   has_many :companies
+  def to_label
+    "#{zipcode} - #{town.name} (#{province.name})"
+  end
 end

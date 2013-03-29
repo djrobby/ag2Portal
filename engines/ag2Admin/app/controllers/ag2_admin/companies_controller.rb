@@ -2,15 +2,27 @@ require_dependency "ag2_admin/application_controller"
 
 module Ag2Admin
   class CompaniesController < ApplicationController
-    # Update hidden province text field at view
-    def update_province_textfield
-      #@company = Company.find(params[:id])
+    # Update hidden province text field at view from town select
+    def update_province_textfield_from_town
       @town = Town.find(params[:id])
       @province = Province.find(@town.province)
-  
+
       respond_to do |format|
         format.html # update_province_textfield.html.erb does not exist! JSON only
         format.json { render json: @province }
+      end
+    end
+
+    # Update hidden province and town text fields at view from zip code select
+    def update_province_textfield_from_zipcode
+      @zipcode = Zipcode.find(params[:id])
+      @town = Town.find(@zipcode.town)
+      @province = Province.find(@town.province)
+      @json_data = { "town_id" => @town.id, "province_id" => @province.id }
+    
+      respond_to do |format|
+        format.html # update_province_textfield.html.erb does not exist! JSON only
+        format.json { render json: @json_data }
       end
     end
 
@@ -51,11 +63,6 @@ module Ag2Admin
     # GET /companies/1/edit
     def edit
       @company = Company.find(params[:id])
-      if @company.province_id.nil?
-        @towns = Town.order("name").all
-      else
-        @towns = Town.where(:province_id => @company.province_id)
-      end
     end
 
     # POST /companies

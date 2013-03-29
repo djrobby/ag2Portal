@@ -5,7 +5,7 @@ module Ag2Admin
     # GET /street_types
     # GET /street_types.json
     def index
-      @street_types = StreetType.all
+      @street_types = StreetType.order('street_type_code').all
   
       respond_to do |format|
         format.html # index.html.erb

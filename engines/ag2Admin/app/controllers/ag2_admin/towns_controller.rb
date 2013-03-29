@@ -5,7 +5,7 @@ module Ag2Admin
     # GET /towns
     # GET /towns.json
     def index
-      @towns = Town.all
+      @towns = Town.order('name').all
   
       respond_to do |format|
         format.html # index.html.erb

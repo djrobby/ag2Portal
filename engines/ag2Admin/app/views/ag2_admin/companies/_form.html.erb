@@ -5,9 +5,22 @@
       // make a POST call and replace the content
       var company = $('select#company_town_id :selected').val();
       if (company == "")
-        town = "0";
-      jQuery.getJSON('update_province_textfield/' + company, function(data) {
+        company = "0";
+      jQuery.getJSON('update_province_textfield_from_town/' + company, function(data) {
         $("#company_province_id").val(data.id);
+      })
+      return false;
+    });
+
+    // when the #company_zipcode_id field changes
+    $("#company_zipcode_id").change(function() {
+      // make a POST call and replace the content
+      var company = $('select#company_zipcode_id :selected').val();
+      if (company == "")
+        company = "0";
+      jQuery.getJSON('update_province_textfield_from_zipcode/' + company, function(data) {
+        $("#company_town_id").val(data.town_id);
+        $("#company_province_id").val(data.province_id);
       })
       return false;
     });
@@ -19,14 +32,14 @@
 <%= display_base_errors resource %>
 <%= f.input :name, :required => true, :autofocus => true %>
 <%= f.input :fiscal_id, :required => true %>
-<%= f.association :street_type %>
+<%= f.association :street_type, collection: StreetType.all(order: 'street_type_code') %>
 <%= f.input :street_name %>
 <%= f.input :street_number %>
 <%= f.input :building %>
 <%= f.input :floor %>
 <%= f.input :floor_office %>
-<%= f.association :zipcode %>
-<%= f.association :town %>
-<%= f.input :province_id %>
+<%= f.association :zipcode, collection: Zipcode.all(order: 'zipcode') %>
+<%= f.association :town, collection: Town.all(order: 'name') %>
+<%= f.association :province, collection: Province.all(order: 'name')%>
 <%= f.button :submit, :class => 'btn-primary' %>
 <% end %>

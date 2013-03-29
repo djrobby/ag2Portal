@@ -92,11 +92,11 @@
   </li>
   <li class="span3">
     <% if (session[:resolution] == "LD")%>
-    <a href="<%= zipcodes_path %>" class="thumbnail centered"><img src="/assets/icon/ag2StreetTypes.png" width="48" height="48" alt="ag2StreetTypes" /><h5 class="h5-narrow">ag2StreetTypes</h5></a>
+    <a href="<%= street_types_path %>" class="thumbnail centered"><img src="/assets/icon/ag2StreetTypes.png" width="48" height="48" alt="ag2StreetTypes" /><h5 class="h5-narrow">ag2StreetTypes</h5></a>
     <% elsif session[:resolution] == "SD" %>
-    <a href="<%= zipcodes_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/ag2StreetTypes72.png" width="72" height="72" alt="ag2StreetTypes" /><h5 class="h5-narrow">ag2StreetTypes</h5></a>
+    <a href="<%= street_types_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/ag2StreetTypes72.png" width="72" height="72" alt="ag2StreetTypes" /><h5 class="h5-narrow">ag2StreetTypes</h5></a>
     <% else %>
-    <a href="<%= zipcodes_path %>" class="thumbnail centered"><img src="/assets/pict/ag2StreetTypes96.png" width="96" height="96" alt="ag2StreetTypes" /><h5 class="h5-narrow">ag2StreetTypes</h5></a>
+    <a href="<%= street_types_path %>" class="thumbnail centered"><img src="/assets/pict/ag2StreetTypes96.png" width="96" height="96" alt="ag2StreetTypes" /><h5 class="h5-narrow">ag2StreetTypes</h5></a>
     <% end %>
   </li>
 </ul><!-- /.thumbnails -->

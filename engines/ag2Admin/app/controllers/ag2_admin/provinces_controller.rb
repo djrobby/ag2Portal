@@ -5,7 +5,7 @@ module Ag2Admin
     # GET /provinces
     # GET /provinces.json
     def index
-      @provinces = Province.all
+      @provinces = Province.order('name').all
   
       respond_to do |format|
         format.html # index.html.erb

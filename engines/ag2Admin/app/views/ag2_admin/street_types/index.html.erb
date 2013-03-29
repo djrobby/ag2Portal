@@ -16,7 +16,7 @@
       <% @street_types.each do |street_type| %>
       <tr>
         <td><%= link_to street_type.street_type_code, street_type %></td>
-        <td><%= street_type.street_type_description %></td>
+        <td><%= street_type.street_type_description.titleize %></td>
         <td><%= street_type.created_at.to_date %></td>
         <td><%= link_to 'Edit', edit_street_type_path(street_type), :class => 'btn btn-mini' %></td>
         <td><%= link_to("Delete", street_type, :data => { :confirm => "Are you sure?" }, :method => :delete, :class => 'btn btn-mini') %></td>
@@ -24,7 +24,7 @@
       <% end %>
     </tbody>
   </table>
-  <%= link_to 'New Province', new_street_type_path, :class => 'btn btn-primary' %>
+  <%= link_to 'New Street type', new_street_type_path, :class => 'btn btn-primary' %>
   <br />
   <br />
   <%= link_to 'Go to ag2Towns', towns_path %> |

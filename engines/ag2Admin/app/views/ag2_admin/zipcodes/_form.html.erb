@@ -6,7 +6,7 @@
       var town = $('select#zipcode_town_id :selected').val();
       if (town == "")
         town = "0";
-      jQuery.getJSON('update_province_textfield/' + town, function(data) {
+      jQuery.getJSON('update_province_textfield_from_town/' + town, function(data) {
         $("#zipcode_province_id").val(data.id);
       })
       return false;
@@ -18,7 +18,7 @@
 <%= f.error_notification %>
 <%= display_base_errors resource %>
 <%= f.input :zipcode, :required => true, :autofocus => true %>
-<%= f.association :town %>
-<%= f.input :province_id, :as => :hidden %>
+<%= f.association :town, collection: Town.all(order: 'name') %>
+<%= f.association :province, collection: Province.all(order: 'name') %>
 <%= f.button :submit, :class => 'btn-primary' %>
 <% end %>

@@ -3,6 +3,6 @@
 <%= display_base_errors resource %>
 <%= f.input :name, :required => true, :autofocus => true %>
 <%= f.input :office_code, :required => true %>
-<%= f.association :company, :required => true %>
+<%= f.association :company, collection: Company.all(order: 'name') %>
 <%= f.button :submit, :class => 'btn-primary' %>
 <% end %>
