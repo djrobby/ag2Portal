@@ -3,8 +3,8 @@
 <%= display_base_errors resource %>
 <div class="span6 form-column">
   <%= f.input :name, :required => true, :autofocus => true, :input_html => { :class => 'x-large-text-field' } %>
-  <%= f.input :ine_cmun, :required => true, :input_html => { :class => 'x-small-text-field number-text-field' } %>
-  <%= f.input :ine_dc, :required => true, :input_html => { :class => 'x-small-text-field number-text-field' } %>
+  <%= f.input :ine_cmun, :required => true, :input_html => { :class => 'x-small-text-field number-text-field', :maxlength => 3 } %>
+  <%= f.input :ine_dc, :required => true, :input_html => { :class => 'x-small-text-field number-text-field', :maxlength => 1 } %>
 </div>
 <div class="span6 form-column">
   <%= f.association :province, collection: Province.all(order: 'name'), :input_html => { :class => 'large-text-field' } %>

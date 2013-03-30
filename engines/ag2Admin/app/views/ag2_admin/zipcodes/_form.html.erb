@@ -14,19 +14,13 @@
   })
 </script>
 
-<%= simple_form_for @zipcode, :html => {:class => 'span12 two-columns-form form-vertical well' } do |f| %>
+<%= simple_form_for @zipcode, :html => {:class => 'form-vertical well' } do |f| %>
 <%= f.error_notification %>
 <%= display_base_errors resource %>
-<div class="span6 form-column">
-  <%= f.input :zipcode, :required => true, :autofocus => true, :input_html => { :class => 'x-small-text-field number-text-field' } %>
+<%= f.input :zipcode, :required => true, :autofocus => true, :input_html => { :class => 'small-text-field' }, :label_html => { :class => 'form-label' } %>
+<div>
+  <label class="multi-field-label-two"> <%= f.association :town, collection: Town.all(order: 'name'), :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.association :province, collection: Province.all(order: 'name'), :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
 </div>
-<div class="span6 form-column">
-  <%= f.association :town, collection: Town.all(order: 'name'), :input_html => { :class => 'large-text-field' } %>
-  <%= f.association :province, collection: Province.all(order: 'name'), :input_html => { :class => 'large-text-field' } %>
-</div>
-<div class="span12 form-column">
-  <%= f.button :submit, :class => 'btn-primary' %>
-  <br />
-  <br />
-</div>
+<%= f.button :submit, :class => 'btn-primary' %>
 <% end %>

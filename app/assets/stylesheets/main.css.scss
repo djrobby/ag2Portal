@@ -1,17 +1,23 @@
+/*
+ * Globals
+ */
 body {
 }
+#main {
+  padding-bottom: 56px;
+}
 .header-nav-li {
-    padding-top: 13px;
+  padding-top: 13px;
 }
 .h5-narrow {
-    margin: 0px 0;
+  margin: 0px 0;
 }
 a:hover, a:focus {
-    text-decoration: none;
+  text-decoration: none;
 }
 .underlined {
-    border-bottom-width: 1px;
-    border-bottom-style: solid;
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
 }
 .centered {
   text-align: center;
@@ -23,15 +29,17 @@ a:hover, a:focus {
   padding-top: 6px;
 }
 .footer-nav-brand {
-    display: block;
-    padding: 2px 0px 2px 0px;
-    font-size: 20px;
-    font-weight: 200;
-    color: #777777;
-    text-shadow: 0 1px 0 #ffffff;
+  display: block;
+  padding: 2px 0px 2px 0px;
+  font-size: 20px;
+  font-weight: 200;
+  color: #777777;
+  text-shadow: 0 1px 0 #ffffff;
 }
 
-/* Users */
+/*
+ * User sessions and registrations
+ */
 .sign {
   background-color: #f2f2f2;
   padding: 20px;
@@ -63,31 +71,12 @@ a:hover, a:focus {
   margin-right: 20px;
 }
 
-/* Default one column Form (well) */
-.default-form {
-  margin: 0;
-  padding: 13px 0 0 0;
-}
-/* for span12 */
-.default-form .form-column {
-  margin: 0;
-  padding-left: 10px;
-}
-
-/* Two columns Form (well) */
-.two-columns-form {
-  margin: 0;
-  padding: 13px 0 0 0;
-}
-/* for span6 */
-.two-columns-form .form-column {
-  margin: 0;
-  padding-left: 10px;
-}
-
-/* Forms: Text fields */
+/*
+ * Forms (SimpleForm)
+ */
+/* Form text fields */
 .x-large-text-field {
-  width: 96%;
+  width: 97%;
 }
 .large-text-field {
   width: 72%;
@@ -103,4 +92,25 @@ a:hover, a:focus {
 }
 .number-text-field {
   text-align: right;
+}
+/* Multi-field form text fields (inside label tag) */
+.multi-field-label-two {
+  display: inline-block;
+  width: 49.82%;
+}
+.multi-field-label-three {
+  display: inline-block;
+  width: 33.09%;
+}
+.multi-field-label-three-thinner {
+  display: inline-block;
+  width: 23.09%;
+}
+.multi-field-label-three-wider {
+  display: inline-block;
+  width: 53.09%;
+}
+/* Form labels */
+.form-label {
+  font-weight: bold;
 }
