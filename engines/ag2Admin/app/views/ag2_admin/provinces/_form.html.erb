@@ -1,7 +1,11 @@
-<%= simple_form_for @province do |f| %>
+<%= simple_form_for @province, :html => {:class => 'span12 default-form form-vertical well' } do |f| %>
 <%= f.error_notification %>
 <%= display_base_errors resource %>
-<%= f.input :name, :required => true, :autofocus => true %>
-<%= f.input :ine_cpro, :required => true %>
-<%= f.button :submit, :class => 'btn-primary' %>
+<div class="span12 form-column">
+  <%= f.input :name, :required => true, :autofocus => true, :input_html => { :class => 'large-text-field' } %>
+  <%= f.input :ine_cpro, :required => true, :input_html => { :class => 'x-small-text-field' } %>
+  <%= f.button :submit, :class => 'btn-primary' %>
+  <br />
+  <br />
+</div>
 <% end %>

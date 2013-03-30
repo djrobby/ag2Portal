@@ -69,9 +69,15 @@ a:hover, a:focus {
   margin-right: 20px;
 }
 
-/* One column Form (default) */
+/* Default one column Form (well) */
 .default-form {
   margin: 0;
+  padding: 13px 0 0 0;
+}
+/* for span12 */
+.default-form .form-column {
+  margin: 0;
+  padding-left: 10px;
 }
 
 /* Two columns Form (well) */
@@ -79,6 +85,7 @@ a:hover, a:focus {
   margin: 0;
   padding: 13px 0 0 0;
 }
+/* for span6 */
 .two-columns-form .form-column {
   margin: 0;
   padding-left: 10px;
@@ -89,7 +96,7 @@ a:hover, a:focus {
   width: 96%;
 }
 .large-text-field {
-  width: 64%;
+  width: 72%;
 }
 .mid-text-field {
   width: 48%;
