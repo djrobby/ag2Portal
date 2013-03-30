@@ -22,21 +22,23 @@
       </nav>
     </header>
     <!-- Main container -->
-    <div class="container">
-      <div class="row">
-        <div class="span12">
-          <%= render '/layouts/messages' %>
-          <%= yield %>
+    <div id="main" role="main">
+      <div class="container">
+        <div class="row">
+          <div class="span12">
+            <%= render '/layouts/messages' %>
+            <%= yield %>
+          </div>
         </div>
       </div>
-    </div>
-    <!-- Footer NavBar -->
-    <footer class="navbar navbar-fixed-bottom">
-      <div class="navbar-inner">
-        <div class="container">
-          <%= render '/layouts/footernav' %>
+      <!-- Footer NavBar -->
+      <footer class="navbar navbar-fixed-bottom">
+        <div class="navbar-inner">
+          <div class="container">
+            <%= render '/layouts/footernav' %>
+          </div>
         </div>
-      </div>
-    </footer>
+      </footer>
+    </div><!-- /#main -->
   </body>
 </html>

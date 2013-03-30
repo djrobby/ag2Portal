@@ -12,7 +12,7 @@
       <a href="#"
       class="dropdown-toggle"
       data-toggle="dropdown"><i class="icon-wrench"></i> Herramientas <b class="caret"></b> </a>
-      <ul class="dropdown-menu">
+      <ul class="dropdown-menu" role="menu">
         <li>
           <a href="#"><i class="icon-inbox"></i> Blog</a>
         </li>
@@ -30,7 +30,7 @@
       <a href="#"
       class="dropdown-toggle"
       data-toggle="dropdown"><i class="icon-question-sign"></i> Ayuda <b class="caret"></b> </a>
-      <ul class="dropdown-menu">
+      <ul class="dropdown-menu" role="menu">
         <li>
           <a href="#contact"><i class="icon-comment"></i> Contacto</a>
         </li>
@@ -47,12 +47,11 @@
   <!-- User profile area -->
   <p class="navbar-text pull-right">
     <% if user_signed_in? %>
-    Logged in as <strong><%= current_user.email %></strong>.
-    <%= link_to 'Edit profile', main_app.edit_user_registration_path, :class => 'navbar-link' %> |
-    <%= link_to "Logout", main_app.destroy_user_session_path, method: :delete, :class => 'navbar-link'  %>
+    <a href="<%= main_app.edit_user_registration_path %>" class="navbar-link"><i class="icon-edit"></i> Edit profile</a> |
+    <a href="<%= main_app.destroy_user_session_path %>" class="navbar-link" data-method="delete" rel="nofollow"><i class="icon-off"></i></a> <strong><%= current_user.email %></strong>
     <% else %>
-    <%= link_to "Sign up", main_app.new_user_registration_path, :class => 'navbar-link'  %> |
-    <%= link_to "Login", main_app.new_user_session_path, :class => 'navbar-link'  %>
+    <a href="<%= main_app.new_user_registration_path %>" class="navbar-link"><i class="icon-pencil"></i> Sign up</a> |
+    <a href="<%= main_app.new_user_session_path %>" class="navbar-link"><i class="icon-user"></i> Login</a>
     <% end %>
   </p>
 </div><!--/.nav-collapse -->
