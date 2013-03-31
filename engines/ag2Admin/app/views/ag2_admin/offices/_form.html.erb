@@ -1,10 +1,78 @@
+<script>
+  jQuery(function($) {
+    // when the #office_town_id field changes
+    $("#office_town_id").change(function() {
+      // make a POST call and replace the content
+      var office = $('select#office_town_id :selected').val();
+      if (office == "")
+        office = "0";
+      jQuery.getJSON('update_province_textfield_from_town/' + office, function(data) {
+        $("#office_province_id").val(data.id);
+      })
+      return false;
+    });
+
+    // when the #company_zipcode_id field changes
+    $("#office_zipcode_id").change(function() {
+      // make a POST call and replace the content
+      var office = $('select#office_zipcode_id :selected').val();
+      var code = $('#office_office_code').val();
+      if (office == "")
+        office = "0";
+      jQuery.getJSON('update_province_textfield_from_zipcode/' + office, function(data) {
+        $("#office_town_id").val(data.town_id);
+        $("#office_province_id").val(data.province_id);
+        if (code == "")
+          $("#office_office_code").val(data.zipcode);
+      })
+      return false;
+    });
+
+    // when #generate_code_btn is clicked
+    $("#generate_code_btn").click(function() {
+      // make a POST call and replace the content
+      var office = $('select#office_zipcode_id :selected').val();
+      if (office == "")
+        office = "0";
+      jQuery.getJSON('update_code_textfield_from_zipcode/' + office, function(data) {
+        $("#office_office_code").val(data.zipcode);
+      })
+      return false;
+    });
+  })
+</script>
+
 <%= simple_form_for @office, :html => {:class => 'form-vertical well' } do |f| %>
 <%= f.error_notification %>
 <%= display_base_errors resource %>
 <%= f.input :name, :required => true, :autofocus => true, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %>
+<%= f.association :company, collection: Company.all(order: 'name'), :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %>
 <div>
-  <label class="multi-field-label-two"> <%= f.input :office_code, :required => true, :input_html => { :class => 'mid-text-field' }, :label_html => { :class => 'form-label' } %> </label>
-  <label class="multi-field-label-two"> <%= f.association :company, collection: Company.all(order: 'name'), :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.input :office_code, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.input :phone, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
 </div>
-<%= f.button :submit, :class => 'btn-primary' %>
+<div>
+  <label class="multi-field-label-two"><%= f.input :fax, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %></label>
+  <label class="multi-field-label-two"><%= f.input :cellular, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %></label>
+</div>
+<div>
+  <label class="multi-field-label-three-thinner"> <%= f.association :street_type, collection: StreetType.all(order: 'street_type_code'), :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-three-wider"> <%= f.input :street_name, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-three-thinner"> <%= f.input :street_number, :input_html => { :class => 'large-text-field number-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+</div>
+<div>
+  <label class="multi-field-label-three-wider"> <%= f.input :building, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-three-thinner"> <%= f.input :floor, :input_html => { :class => 'large-text-field number-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-three-thinner"> <%= f.input :floor_office, :input_html => { :class => 'large-text-field number-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+</div>
+<div>
+  <label class="multi-field-label-three"> <%= f.association :zipcode, collection: Zipcode.all(order: 'zipcode'), :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-three"> <%= f.association :town, collection: Town.all(order: 'name'), :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-three"> <%= f.association :province, collection: Province.all(order: 'name'), :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+</div>
+<%= f.input :email, :input_html => { :class => 'large-text-field' }, :label_html => { :class => 'form-label' } %>
+<div>
+  <label class="multi-field-label-two"> <%= f.button :submit, :class => 'btn-primary' %> </label>
+  <label style="float: right"> <a href="#" id="generate_code_btn" class="btn btn-warning">Generate Office code</a> </label>
+</div>
 <% end %>

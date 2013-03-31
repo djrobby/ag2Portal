@@ -36,7 +36,7 @@
     <tbody>
       <% @towns.each do |town| %>
       <tr>
-        <td><%= town.name %></td>
+        <td><%= link_to town.name, town %></td>
         <td><%= town.ine_cmun %></td>
         <td><%= town.ine_dc %></td>
         <td><%= town.created_at.to_date %></td>

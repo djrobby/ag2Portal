@@ -2,68 +2,88 @@
 
 <h3><%= @company.name %></h3>
 <table class="table">
-<tbody>
-<tr>
-<td>Id:</td>
-<td><%= @company.id %></td>
-<td>Fiscal Id:</td>
-<td><%= @company.fiscal_id %></td>
-</tr>
-<tr>
-<td>Address:</td>
-<td>
-<%= @company.street_type.street_type_code.titleize %>. <%= @company.street_name %> <%= @company.street_number %>
-<% if !@company.building.nil? %>
-<%= @company.building %>
-<% end %>
-<% if !@company.floor.nil? %>
-<%= @company.floor %>&ordm;
-<% end %>
-<% if !@company.floor_office.nil? %>
-<%= @company.floor_office %>
-<% end %>
-</td>
-<td></td>
-<td></td>
-</tr>
-<td>Town:</td>
-<td><%= @company.town.name %></td>
-<td>Province:</td>
-<td><%= @company.zipcode.zipcode %> <%= @company.province.name %></td>
-</tr>
-<tr>
-<td>Created at:</td>
-<td><%= @company.created_at %></td>
-<td>Updated at:</td>
-<td><%= @company.updated_at %></td>
-</tr>
-</tbody>
+  <tbody>
+    <tr>
+      <td>Id:</td>
+      <td><%= @company.id %></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Fiscal Id:</td>
+      <td><%= @company.fiscal_id %></td>
+      <td>Phone:</td>
+      <td><%= @company.phone %></td>
+    </tr>
+    <tr>
+      <td>Fax:</td>
+      <td><%= @company.fax %></td>
+      <td>Cellular:</td>
+      <td><%= @company.cellular %></td>
+    </tr>
+    <tr>
+      <td>Address:</td>
+      <td> <%= @company.street_type.street_type_code.titleize %>. <%= @company.street_name %> <%= @company.street_number %>
+      <% if !@company.building.nil? %>
+      <%= @company.building.titleize %>
+      <% end %>
+      <% if !@company.floor.nil? %>
+      <%= @company.floor %>&ordm;
+      <% end %>
+      <% if !@company.floor_office.nil? %>
+      <%= @company.floor_office %>
+      <% end %> </td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Town:</td>
+      <td><%= @company.town.name %></td>
+      <td>Province:</td>
+      <td><%= @company.province.name %></td>
+    </tr>
+    <tr>
+      <td>Zip Code:</td>
+      <td><%= @company.zipcode.zipcode %></td>
+      <td>Email:</td>
+      <td><%= @company.email %></td>
+    </tr>
+    <tr>
+      <td>Created at:</td>
+      <td><%= @company.created_at %></td>
+      <td>Updated at:</td>
+      <td><%= @company.updated_at %></td>
+    </tr>
+  </tbody>
 </table>
 
 <%= link_to 'Edit Company', edit_company_path(@company), :class => 'btn btn-primary' %>
-  <br />
-  <br />
+<br />
+<br />
 
-  <% if (@offices.count > 0) %>
-  <h4>Company Offices</h4>
-  <table class="table table-condensed table-striped">
-    <thead>
-      <tr>
-        <th>Id</th>
-        <th>Name</th>
-        <th>Registered</th>
-      </tr>
-    </thead>
-    <tbody>
-      <% @offices.each do |office| %>
-      <tr>
-        <td><%= office.id %></td>
-        <td><%= office.name %></td>
-        <td><%= office.created_at.to_date %></td>
-      </tr>
-      <% end %>
-    </tbody>
-  </table>
-  <% end %>
+<% if (@offices.count > 0) %>
+<h4>Company Offices</h4>
+<table class="table table-condensed table-striped">
+  <thead>
+    <tr>
+      <th>Id</th>
+      <th>Name</th>
+      <th>Code</th>
+      <th>Registered</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @offices.each do |office| %>
+    <!-- Modal (/layouts/ag_admin/_officeinfo.html.erb) -->
+    <tr>
+      <td><%= office.id %></td>
+      <td><%= link_to office.name, office %></td>
+      <td><%= office.office_code %></td>
+      <td><%= office.created_at.to_date %></td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
+<% end %>
 
-  <%= link_to 'Back to Companies', companies_path %>
+<%= link_to 'Back to Companies', companies_path %>

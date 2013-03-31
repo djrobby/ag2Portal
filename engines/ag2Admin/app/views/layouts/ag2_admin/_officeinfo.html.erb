@@ -1,0 +1,23 @@
+<!-- Modal Office info -->
+<!-- Usage => Put this code into each: <%= render :partial => 'layouts/ag2_admin/officeinfo', :locals => { :office => office } %>-->
+
+<div class="container">
+  <div id="officeinfo" class="modal hide fade in" style="display: none; ">
+    <div class="modal-header">
+      <a class="close" data-dismiss="modal">×</a>
+      <h3><%= office.name %></h3>
+    </div>
+    <div class="modal-body">
+      <p>
+        <%= office.office_code%>
+      </p>
+      <p>
+        <%= office.office_code%>
+      </p>
+    </div>
+    <div class="modal-footer">
+      <%= link_to "Show", office, :class => 'btn btn-primary' %>
+      <a href="#" class="btn btn-primary" data-dismiss="modal">Close</a>
+    </div>
+  </div>
+</div>

@@ -6,6 +6,41 @@ module Ag2Admin
 #      @companies = Company.all
 #    end
 
+    # Update office code at view from zip code select (button from edit or new)
+    def update_code_textfield_from_zipcode
+      @zipcode = Zipcode.find(params[:id])
+      @json_data = { "zipcode" => @zipcode.zipcode }
+    
+      respond_to do |format|
+        format.html # update_code_textfield_from_zipcode.html.erb does not exist! JSON only
+        format.json { render json: @json_data }
+      end
+    end
+    
+    # Update province text field at view from town select
+    def update_province_textfield_from_town
+      @town = Town.find(params[:id])
+      @province = Province.find(@town.province)
+
+      respond_to do |format|
+        format.html # update_province_textfield.html.erb does not exist! JSON only
+        format.json { render json: @province }
+      end
+    end
+
+    # Update province and town text fields at view from zip code select
+    def update_province_textfield_from_zipcode
+      @zipcode = Zipcode.find(params[:id])
+      @town = Town.find(@zipcode.town)
+      @province = Province.find(@town.province)
+      @json_data = { "town_id" => @town.id, "province_id" => @province.id, "zipcode" => @zipcode.zipcode }
+    
+      respond_to do |format|
+        format.html # update_province_textfield.html.erb does not exist! JSON only
+        format.json { render json: @json_data }
+      end
+    end
+
     # GET /offices
     # GET /offices.json
     def index

@@ -7,6 +7,7 @@ class StreetType < ActiveRecord::Base
                                       :uniqueness => true
   before_validation :street_type_code_to_uppercase
 
+  has_many :towns
   has_many :companies
   def street_type_code_to_uppercase
     self[:street_type_code].upcase!

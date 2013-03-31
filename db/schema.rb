@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130328200830) do
+ActiveRecord::Schema.define(:version => 20130331094919) do
 
   create_table "companies", :force => true do |t|
     t.string   "name"
@@ -27,8 +27,13 @@ ActiveRecord::Schema.define(:version => 20130328200830) do
     t.integer  "zipcode_id"
     t.integer  "town_id"
     t.integer  "province_id"
+    t.string   "phone"
+    t.string   "fax"
+    t.string   "cellular"
+    t.string   "email"
   end
 
+  add_index "companies", ["fiscal_id"], :name => "index_companies_on_fiscal_id"
   add_index "companies", ["province_id"], :name => "index_companies_on_province_id"
   add_index "companies", ["street_type_id"], :name => "index_companies_on_street_type_id"
   add_index "companies", ["town_id"], :name => "index_companies_on_town_id"
@@ -37,13 +42,30 @@ ActiveRecord::Schema.define(:version => 20130328200830) do
   create_table "offices", :force => true do |t|
     t.string   "name"
     t.integer  "company_id"
-    t.datetime "created_at",  :null => false
-    t.datetime "updated_at",  :null => false
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
     t.string   "office_code"
+    t.integer  "street_type_id"
+    t.string   "street_name"
+    t.string   "street_number"
+    t.string   "building"
+    t.integer  "floor"
+    t.string   "floor_office"
+    t.integer  "zipcode_id"
+    t.integer  "town_id"
+    t.integer  "province_id"
+    t.string   "phone"
+    t.string   "fax"
+    t.string   "cellular"
+    t.string   "email"
   end
 
   add_index "offices", ["company_id"], :name => "index_offices_on_company_id"
   add_index "offices", ["office_code"], :name => "index_offices_on_office_code"
+  add_index "offices", ["province_id"], :name => "index_offices_on_province_id"
+  add_index "offices", ["street_type_id"], :name => "index_offices_on_street_type_id"
+  add_index "offices", ["town_id"], :name => "index_offices_on_town_id"
+  add_index "offices", ["zipcode_id"], :name => "index_offices_on_zipcode_id"
 
   create_table "provinces", :force => true do |t|
     t.string   "name"
