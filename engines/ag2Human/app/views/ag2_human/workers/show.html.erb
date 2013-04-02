@@ -6,14 +6,26 @@
 <tr>
 <td>Id:</td>
 <td><%= @worker.id %></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
 <td>Worker Code:</td>
 <td><%= @worker.worker_code unless @worker.worker_code.nil? %></td>
+<td>Fiscal Id:</td>
+<td><%= @worker.fiscal_id %></td>
 </tr>
 <tr>
 <td>Office</td>
 <td><%= Office.find(@worker.office).name unless @worker.office.nil? %></td>
 <td>Company:</td>
 <td><%= Company.find(@worker.company).name unless @worker.company.nil? %></td>
+</tr>
+<tr>
+<td>Starting at:</td>
+<td><%= @worker.starting_at unless @worker.starting_at.nil? %></td>
+<td>Ending at:</td>
+<td><%= @worker.ending_at unless @worker.ending_at.nil? %></td>
 </tr>
 <tr>
 <td>Phone:</td>

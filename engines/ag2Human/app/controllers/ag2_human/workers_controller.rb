@@ -2,6 +2,17 @@ require_dependency "ag2_human/application_controller"
 
 module Ag2Human
   class WorkersController < ApplicationController
+    # Update company text field at view from office select
+    def update_company_textfield_from_office
+      @office = Office.find(params[:id])
+      @company = Company.find(@office.company)
+
+      respond_to do |format|
+        format.html # update_company_textfield_from_office.html.erb does not exist! JSON only
+        format.json { render json: @company }
+      end
+    end
+
     # Update worker code at view from last_name and first_name (button from edit or new)
     def update_code_textfield_from_name
       fullname = params[:id]
@@ -9,7 +20,7 @@ module Ag2Human
       @json_data = { "code" => code }
     
       respond_to do |format|
-        format.html # update_code_textfield_from_zipcode.html.erb does not exist! JSON only
+        format.html # update_code_textfield_from_name.html.erb does not exist! JSON only
         format.json { render json: @json_data }
       end
     end
@@ -20,7 +31,7 @@ module Ag2Human
       @province = Province.find(@town.province)
 
       respond_to do |format|
-        format.html # update_province_textfield.html.erb does not exist! JSON only
+        format.html # update_province_textfield_from_town.html.erb does not exist! JSON only
         format.json { render json: @province }
       end
     end
@@ -33,7 +44,7 @@ module Ag2Human
       @json_data = { "town_id" => @town.id, "province_id" => @province.id }
     
       respond_to do |format|
-        format.html # update_province_textfield.html.erb does not exist! JSON only
+        format.html # update_province_textfield_from_zipcode.html.erb does not exist! JSON only
         format.json { render json: @json_data }
       end
     end

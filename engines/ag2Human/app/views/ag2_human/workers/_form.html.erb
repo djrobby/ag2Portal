@@ -1,4 +1,8 @@
 <script>
+  $(document).ready(function() {
+    $('.date_picker').datepicker();  
+  })
+  
   jQuery(function($) {
     // when the #worker_town_id field changes
     $("#worker_town_id").change(function() {
@@ -36,6 +40,18 @@
       })
       return false;
     });
+
+    // when the #worker_office_id field changes
+    $("#worker_office_id").change(function() {
+      // make a POST call and replace the content
+      var worker = $('select#worker_office_id :selected').val();
+      if (worker == "")
+        worker = "0";
+      jQuery.getJSON('update_company_textfield_from_office/' + worker, function(data) {
+        $("#worker_company_id").val(data.id);
+      })
+      return false;
+    });
   })
 </script>
 
@@ -44,9 +60,17 @@
 <%= display_base_errors resource %>
 <div>
   <label class="multi-field-label-two"> <%= f.input :last_name, :required => true, :autofocus => true, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
-  <label class="multi-field-label-two"> <%= f.input :first_name, :required => true, :autofocus => true, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.input :first_name, :required => true, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
 </div>
- <%= f.input :worker_code, :input_html => { :class => 'mid-text-field' }, :label_html => { :class => 'form-label' } %>
+<div>
+  <label class="multi-field-label-two"> <%= f.input :worker_code, :input_html => { :class => 'mid-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.input :fiscal_id, :input_html => { :class => 'mid-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+</div>
+
+<div>
+  <label class="multi-field-label-two"> <%= f.input :starting_at, :as => :string, :input_html => { :class => 'mid-text-field date_picker' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.input :ending_at, :as => :string, :input_html => { :class => 'mid-text-field date_picker' }, :label_html => { :class => 'form-label' } %> </label>
+</div>
 <div>
   <label class="multi-field-label-two"> <%= f.association :office, collection: Office.all(order: 'name'), :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
   <label class="multi-field-label-two"> <%= f.association :company, collection: Company.all(order: 'name'), :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
