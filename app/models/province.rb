@@ -7,4 +7,6 @@ class Province < ActiveRecord::Base
   has_many :towns
   has_many :zipcodes
   has_many :companies
+  has_many :offices
+  has_many :workers
 end

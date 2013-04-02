@@ -10,6 +10,7 @@ class Town < ActiveRecord::Base
   has_many :towns
   has_many :companies
   has_many :zipcodes
+  has_many :workers
   def to_label
     "#{name} (#{province.name})"
   end

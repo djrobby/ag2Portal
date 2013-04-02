@@ -1,0 +1,36 @@
+<%= render '/layouts/ag2_human/cardsbreadcrumb' %>
+
+<h3>Workers</h3>
+<div class="span10">
+  <table class="table table-condensed table-striped">
+    <thead>
+      <tr>
+        <th>Code</th>
+        <th>Full Name</th>
+        <th>Company</th>
+        <th>Office</th>
+        <th>Registered</th>
+        <th></th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @workers.each do |worker| %>
+      <tr>
+        <td><%= link_to worker.worker_code, worker %></td>
+        <td><%= worker.last_name %> + ' ' <%= worker.first_name %></td>
+        <td><%= Company.find(worker.company).name unless worker.company.nil? %></td>
+        <td><%= Office.find(worker.office).name unless worker.office.nil? %></td>
+        <td><%= worker.created_at.to_date %></td>
+        <td><%= link_to 'Edit', edit_worker_path(worker), :class => 'btn btn-mini' %></td>
+        <td><%= link_to("Delete", worker, :data => { :confirm => "Are you sure?" }, :method => :delete, :class => 'btn btn-mini') %></td>
+      </tr>
+      <% end %>
+    </tbody>
+  </table>
+  <%= link_to 'New Worker', new_worker_path, :class => 'btn btn-primary' %>
+  <br />
+  <br />
+  <%= link_to 'Go to ag2TimeRecord', workers_path %> |
+  <%= link_to 'Back to ag2Human', ag2_human.root_path %>
+</div>

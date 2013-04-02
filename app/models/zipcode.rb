@@ -9,6 +9,7 @@ class Zipcode < ActiveRecord::Base
 
   has_many :towns
   has_many :companies
+  has_many :workers
   def to_label
     "#{zipcode} - #{town.name} (#{province.name})"
   end

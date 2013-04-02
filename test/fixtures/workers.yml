@@ -1,0 +1,47 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  first_name: MyString
+  last_name: MyString
+  worker_code: MyString
+  fiscal_id: MyString
+  user: 
+  company: 
+  office: 
+  starting_at: 2013-04-02
+  ending_at: 2013-04-02
+  street_type: 
+  street_name: MyString
+  street_number: MyString
+  building: MyString
+  floor: 1
+  floor_office: MyString
+  zipcode: 
+  town: 
+  province: 
+  phone: MyString
+  cellular: MyString
+  email: MyString
+
+two:
+  first_name: MyString
+  last_name: MyString
+  worker_code: MyString
+  fiscal_id: MyString
+  user: 
+  company: 
+  office: 
+  starting_at: 2013-04-02
+  ending_at: 2013-04-02
+  street_type: 
+  street_name: MyString
+  street_number: MyString
+  building: MyString
+  floor: 1
+  floor_office: MyString
+  zipcode: 
+  town: 
+  province: 
+  phone: MyString
+  cellular: MyString
+  email: MyString

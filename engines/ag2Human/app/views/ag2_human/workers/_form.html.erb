@@ -1,0 +1,78 @@
+<script>
+  jQuery(function($) {
+    // when the #worker_town_id field changes
+    $("#worker_town_id").change(function() {
+      // make a POST call and replace the content
+      var worker = $('select#worker_town_id :selected').val();
+      if (worker == "")
+        worker = "0";
+      jQuery.getJSON('update_province_textfield_from_town/' + worker, function(data) {
+        $("#worker_province_id").val(data.id);
+      })
+      return false;
+    });
+
+    // when the #worker_zipcode_id field changes
+    $("#worker_zipcode_id").change(function() {
+      // make a POST call and replace the content
+      var worker = $('select#worker_zipcode_id :selected').val();
+      if (worker == "")
+        worker = "0";
+      jQuery.getJSON('update_province_textfield_from_zipcode/' + worker, function(data) {
+        $("#worker_town_id").val(data.town_id);
+        $("#worker_province_id").val(data.province_id);
+      })
+      return false;
+    });
+
+    // when #generate_code_btn is clicked
+    $("#generate_code_btn").click(function() {
+      // make a POST call and replace the content
+      var worker = $('#worker_last_name').val() + '$' + $('#worker_first_name').val();
+      if (worker == "")
+        worker = "LLNN$F";
+      jQuery.getJSON('update_code_textfield_from_name/' + worker, function(data) {
+        $("#worker_worker_code").val(data.code);
+      })
+      return false;
+    });
+  })
+</script>
+
+<%= simple_form_for @worker, :html => {:class => 'form-vertical well' } do |f| %>
+<%= f.error_notification %>
+<%= display_base_errors resource %>
+<div>
+  <label class="multi-field-label-two"> <%= f.input :last_name, :required => true, :autofocus => true, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.input :first_name, :required => true, :autofocus => true, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+</div>
+ <%= f.input :worker_code, :input_html => { :class => 'mid-text-field' }, :label_html => { :class => 'form-label' } %>
+<div>
+  <label class="multi-field-label-two"> <%= f.association :office, collection: Office.all(order: 'name'), :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.association :company, collection: Company.all(order: 'name'), :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+</div>
+<div>
+  <label class="multi-field-label-two"> <%= f.input :phone, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-two"><%= f.input :cellular, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %></label>
+</div>
+<div>
+  <label class="multi-field-label-three-thinner"> <%= f.association :street_type, collection: StreetType.all(order: 'street_type_code'), :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-three-wider"> <%= f.input :street_name, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-three-thinner"> <%= f.input :street_number, :input_html => { :class => 'large-text-field number-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+</div>
+<div>
+  <label class="multi-field-label-three-wider"> <%= f.input :building, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-three-thinner"> <%= f.input :floor, :input_html => { :class => 'large-text-field number-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-three-thinner"> <%= f.input :floor_office, :input_html => { :class => 'large-text-field number-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+</div>
+<div>
+  <label class="multi-field-label-three"> <%= f.association :zipcode, collection: Zipcode.all(order: 'zipcode'), :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-three"> <%= f.association :town, collection: Town.all(order: 'name'), :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-three"> <%= f.association :province, collection: Province.all(order: 'name'), :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+</div>
+<%= f.input :email, :input_html => { :class => 'large-text-field' }, :label_html => { :class => 'form-label' } %>
+<div>
+  <label class="multi-field-label-two"> <%= f.button :submit, :class => 'btn-primary' %> </label>
+  <label style="float: right"> <a href="#" id="generate_code_btn" class="btn btn-warning">Generate Worker code</a> </label>
+</div>
+<% end %>

@@ -15,9 +15,11 @@ class Company < ActiveRecord::Base
   validates :zipcode_id,      :presence => true
   validates :town_id,         :presence => true
   validates :province_id,     :presence => true
+
   before_validation :fields_to_uppercase
 
   has_many :offices
+  has_many :workers
   def fields_to_uppercase
     self[:fiscal_id].upcase!
   end

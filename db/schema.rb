@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130331094919) do
+ActiveRecord::Schema.define(:version => 20130402080132) do
 
   create_table "companies", :force => true do |t|
     t.string   "name"
@@ -133,6 +133,42 @@ ActiveRecord::Schema.define(:version => 20130331094919) do
   end
 
   add_index "users_roles", ["user_id", "role_id"], :name => "index_users_roles_on_user_id_and_role_id"
+
+  create_table "workers", :force => true do |t|
+    t.string   "first_name"
+    t.string   "last_name"
+    t.string   "worker_code"
+    t.string   "fiscal_id"
+    t.integer  "user_id"
+    t.integer  "company_id"
+    t.integer  "office_id"
+    t.date     "starting_at"
+    t.date     "ending_at"
+    t.integer  "street_type_id"
+    t.string   "street_name"
+    t.string   "street_number"
+    t.string   "building"
+    t.integer  "floor"
+    t.string   "floor_office"
+    t.integer  "zipcode_id"
+    t.integer  "town_id"
+    t.integer  "province_id"
+    t.string   "phone"
+    t.string   "cellular"
+    t.string   "email"
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
+  end
+
+  add_index "workers", ["company_id"], :name => "index_workers_on_company_id"
+  add_index "workers", ["fiscal_id"], :name => "index_workers_on_fiscal_id"
+  add_index "workers", ["office_id"], :name => "index_workers_on_office_id"
+  add_index "workers", ["province_id"], :name => "index_workers_on_province_id"
+  add_index "workers", ["street_type_id"], :name => "index_workers_on_street_type_id"
+  add_index "workers", ["town_id"], :name => "index_workers_on_town_id"
+  add_index "workers", ["user_id"], :name => "index_workers_on_user_id"
+  add_index "workers", ["worker_code"], :name => "index_workers_on_worker_code"
+  add_index "workers", ["zipcode_id"], :name => "index_workers_on_zipcode_id"
 
   create_table "zipcodes", :force => true do |t|
     t.string   "zipcode"

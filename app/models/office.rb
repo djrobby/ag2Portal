@@ -18,6 +18,8 @@ class Office < ActiveRecord::Base
   validates :zipcode_id,      :presence => true
   validates :town_id,         :presence => true
   validates :province_id,     :presence => true
+
+  has_many :workers
   def to_label
     "#{name} (#{company.name})"
   end
