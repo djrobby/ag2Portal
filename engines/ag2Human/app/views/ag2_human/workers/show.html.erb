@@ -1,19 +1,19 @@
-<%= render '/layouts/ag2_admin/officesbreadcrumb' %>
+<%= render '/layouts/ag2_human/cardsbreadcrumb' %>
 
-<h3><%= @worker.last_name %> + ' ' + <%= @worker.first_name %></h3>
+<h3><%= @worker.last_name %>, <%= @worker.first_name %></h3>
 <table class="table"
 <tbody>
 <tr>
 <td>Id:</td>
 <td><%= @worker.id %></td>
-<td></td>
-<td></td>
-</tr>
-<tr>
 <td>Worker Code:</td>
 <td><%= @worker.worker_code unless @worker.worker_code.nil? %></td>
+</tr>
+<tr>
 <td>Fiscal Id:</td>
 <td><%= @worker.fiscal_id %></td>
+<td>User:</td>
+<td><%= User.find(@worker.user).name unless @worker.user.nil? %></td>
 </tr>
 <tr>
 <td>Office</td>
@@ -36,13 +36,13 @@
 <tr>
 <td>Address:</td>
 <td> <%= @worker.street_type.street_type_code.titleize  %>. <%= @worker.street_name %> <%= @worker.street_number %>
-<% if @worker.building.nil? %>
+<% if !@worker.building.nil? %>
 <%= @worker.building.titleize %>
 <% end %>
-<% if @worker.floor.nil? %>
+<% if !@worker.floor.nil? %>
 <%= @worker.floor %>&ordm;
 <% end %>
-<% if @worker.floor_office.nil? %>
+<% if !@worker.floor_office.nil? %>
 <%= @worker.floor_office %>
 <% end %> </td>
 <td></td>

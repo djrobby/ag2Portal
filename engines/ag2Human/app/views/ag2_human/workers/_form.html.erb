@@ -1,8 +1,10 @@
 <script>
+  var text_field_color;
+
   $(document).ready(function() {
-    $('.date_picker').datepicker();  
+    $('.date_picker').datepicker();
+    text_field_color = $("#worker_last_name").css('color')
   })
-  
   jQuery(function($) {
     // when the #worker_town_id field changes
     $("#worker_town_id").change(function() {
@@ -33,10 +35,14 @@
     $("#generate_code_btn").click(function() {
       // make a POST call and replace the content
       var worker = $('#worker_last_name').val() + '$' + $('#worker_first_name').val();
-      if (worker == "")
-        worker = "LLNN$F";
+      if ((worker == "") || (worker == "$"))
+        worker = "LL NN$FI";
       jQuery.getJSON('update_code_textfield_from_name/' + worker, function(data) {
         $("#worker_worker_code").val(data.code);
+        if ($("#worker_worker_code").val() == "$err")
+          $("#worker_worker_code").css('color', 'red');
+        else
+          $("#worker_worker_code").css('color', text_field_color);
       })
       return false;
     });
@@ -49,6 +55,44 @@
         worker = "0";
       jQuery.getJSON('update_company_textfield_from_office/' + worker, function(data) {
         $("#worker_company_id").val(data.id);
+      })
+      return false;
+    });
+
+    // when the #worker_user_id field changes
+    $("#worker_user_id").change(function() {
+      // make a POST call and replace the content
+      var worker = $('select#worker_user_id :selected').val();
+      if (worker == "")
+        worker = "0";
+      jQuery.getJSON('update_email_textfield_from_user/' + worker, function(data) {
+        $("#worker_email").val(data.email);
+      })
+      return false;
+    });
+
+    // when the #worker_worker_code field changes
+    $("#worker_worker_code").change(function() {
+      // replace the color
+      $("#worker_worker_code").css('color', text_field_color);
+    });
+
+    // when #to_uppercase_btn is clicked
+    $("#to_uppercase_btn").click(function() {
+      // make a POST call and replace the content
+      var last = $('#worker_last_name').val();
+      var first = $('#worker_first_name').val();
+      var code = $('#worker_worker_code').val();
+      var fiscal = $('#worker_fiscal_id').val();
+      jQuery.getJSON('update_textfields_to_uppercase/' + last + '/' + first + '/' + code + '/' + fiscal, function(data) {
+        $("#worker_last_name").val(data.last);
+        $("#worker_first_name").val(data.first);
+        $("#worker_worker_code").val(data.code);
+        $("#worker_fiscal_id").val(data.fiscal);
+        if ($("#worker_worker_code").val() == "$err")
+          $("#worker_worker_code").css('color', 'red');
+        else
+          $("#worker_worker_code").css('color', text_field_color);
       })
       return false;
     });
@@ -77,7 +121,7 @@
 </div>
 <div>
   <label class="multi-field-label-two"> <%= f.input :phone, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
-  <label class="multi-field-label-two"><%= f.input :cellular, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %></label>
+  <label class="multi-field-label-two"><%= f.input :cellular, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
 </div>
 <div>
   <label class="multi-field-label-three-thinner"> <%= f.association :street_type, collection: StreetType.all(order: 'street_type_code'), :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
@@ -94,9 +138,17 @@
   <label class="multi-field-label-three"> <%= f.association :town, collection: Town.all(order: 'name'), :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
   <label class="multi-field-label-three"> <%= f.association :province, collection: Province.all(order: 'name'), :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
 </div>
-<%= f.input :email, :input_html => { :class => 'large-text-field' }, :label_html => { :class => 'form-label' } %>
 <div>
-  <label class="multi-field-label-two"> <%= f.button :submit, :class => 'btn-primary' %> </label>
-  <label style="float: right"> <a href="#" id="generate_code_btn" class="btn btn-warning">Generate Worker code</a> </label>
+  <label class="multi-field-label-two"> <%= f.association :user, collection: User.all(order: 'name'), :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.input :email, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
 </div>
+<table class="form-table">
+  <tbody>
+    <tr class="form-tr">
+      <td class="form-td-three left-winged"> <%= f.button :submit, :class => 'btn-primary' %> </td>
+      <td class="form-td-three centered"><a href="#" id="to_uppercase_btn" class="btn btn-warning">To Upper case</a></td>
+      <td class="form-td-three right-winged"><a href="#" id="generate_code_btn" class="btn btn-warning">Worker code</a></td>
+    </tr>
+  </tbody>
+</table>
 <% end %>

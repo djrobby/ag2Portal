@@ -22,6 +22,12 @@ a:hover, a:focus {
 .centered {
   text-align: center;
 }
+.left-winged {
+  text-align: left;
+}
+.right-winged {
+  text-align: right;
+}
 .shrinked {
   font-size: smaller;
 }
@@ -113,4 +119,17 @@ a:hover, a:focus {
 /* Form labels */
 .form-label {
   font-weight: bold;
+}
+/* Form tables */
+.form-table {
+  width: 100%;
+}
+.form-tr {
+  width: 100%;
+}
+.form-td-two {
+  width: 50%;
+}
+.form-td-three {
+  width: 33%;
 }

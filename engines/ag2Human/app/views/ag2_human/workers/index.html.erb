@@ -1,7 +1,7 @@
 <%= render '/layouts/ag2_human/cardsbreadcrumb' %>
 
 <h3>Workers</h3>
-<div class="span10">
+<div class="span12">
   <table class="table table-condensed table-striped">
     <thead>
       <tr>
@@ -18,7 +18,7 @@
       <% @workers.each do |worker| %>
       <tr>
         <td><%= link_to worker.worker_code, worker %></td>
-        <td><%= worker.last_name %> + ' ' <%= worker.first_name %></td>
+        <td><%= worker.last_name %>, <%= worker.first_name %></td>
         <td><%= Company.find(worker.company).name unless worker.company.nil? %></td>
         <td><%= Office.find(worker.office).name unless worker.office.nil? %></td>
         <td><%= worker.created_at.to_date %></td>

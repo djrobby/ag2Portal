@@ -13,4 +13,7 @@ class User < ActiveRecord::Base
   validates :name,  :presence => true
 
   has_one :worker
+  def to_label
+    "#{name} (#{email})"
+  end
 end

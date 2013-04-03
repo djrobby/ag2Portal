@@ -71,8 +71,12 @@
   <label class="multi-field-label-three"> <%= f.association :province, collection: Province.all(order: 'name'), :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
 </div>
 <%= f.input :email, :input_html => { :class => 'large-text-field' }, :label_html => { :class => 'form-label' } %>
-<div>
-  <label class="multi-field-label-two"> <%= f.button :submit, :class => 'btn-primary' %> </label>
-  <label style="float: right"> <a href="#" id="generate_code_btn" class="btn btn-warning">Generate Office code</a> </label>
-</div>
+<table class="form-table">
+  <tbody>
+    <tr class="form-tr">
+      <td class="form-td-two left-winged"> <%= f.button :submit, :class => 'btn-primary' %> </td>
+      <td class="form-td-two right-winged"><a href="#" id="generate_code_btn" class="btn btn-warning">Office code</a></td>
+    </tr>
+  </tbody>
+</table>
 <% end %>
