@@ -1,0 +1,31 @@
+<%= render '/layouts/ag2_admin/appsbreadcrumb' %>
+
+<h3>Sites</h3>
+<div class="span7">
+  <table class="table table-condensed table-striped">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Path</th>
+        <th>Site</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @apps.each do |app| %>
+      <tr>
+        <td><%= link_to app.name, app %></td>
+        <td><%= app.path %></td>
+        <td><%= Site.find(app.site).name unless app.site.nil? %></td>
+        <td><%= link_to 'Edit', edit_app_path(app), :class => 'btn btn-mini' %>
+        <%= link_to("Delete", app, :data => { :confirm => "Are you sure?" }, :method => :delete, :class => 'btn btn-mini') %> </td>
+      </tr>
+      <% end %>
+    </tbody>
+  </table>
+  <%= link_to 'New App', new_app_path, :class => 'btn btn-primary' %>
+  <br />
+  <br />
+  <%= link_to 'Go to ag2Sites', sites_path %> |
+  <%= link_to 'Back to ag2Admin', ag2_admin.root_path %>
+</div>

@@ -11,7 +11,21 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130404094642) do
+ActiveRecord::Schema.define(:version => 20130404190503) do
+
+  create_table "apps", :force => true do |t|
+    t.string   "name"
+    t.string   "description"
+    t.integer  "site_id"
+    t.string   "path"
+    t.string   "pict_file"
+    t.string   "icon_file"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+  end
+
+  add_index "apps", ["name"], :name => "index_apps_on_name"
+  add_index "apps", ["site_id"], :name => "index_apps_on_site_id"
 
   create_table "companies", :force => true do |t|
     t.string   "name"
@@ -86,6 +100,18 @@ ActiveRecord::Schema.define(:version => 20130404094642) do
 
   add_index "roles", ["name", "resource_type", "resource_id"], :name => "index_roles_on_name_and_resource_type_and_resource_id"
   add_index "roles", ["name"], :name => "index_roles_on_name"
+
+  create_table "sites", :force => true do |t|
+    t.string   "name"
+    t.string   "description"
+    t.string   "path"
+    t.string   "pict_file"
+    t.string   "icon_file"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+  end
+
+  add_index "sites", ["name"], :name => "index_sites_on_name"
 
   create_table "street_types", :force => true do |t|
     t.string   "street_type_code"

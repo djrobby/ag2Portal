@@ -26,6 +26,8 @@ Ag2Admin::Engine.routes.draw do
   resources :towns
   resources :zipcodes
   resources :street_types
+  resources :sites
+  resources :apps
 
   root :to => 'home#index'
 end

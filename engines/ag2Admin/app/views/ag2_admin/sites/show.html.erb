@@ -1,0 +1,57 @@
+<%= render '/layouts/ag2_admin/sitesbreadcrumb' %>
+
+<h3><%= @site.name %></h3>
+<table class="table">
+  <tbody>
+    <tr>
+      <td>Id:</td>
+      <td><%= @site.id %></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Description:</td>
+      <td><%= @site.description %></td>
+      <td>Path</td>
+      <td><%= @site.path %></td>
+    </tr>
+    <tr>
+      <td>Picture:</td>
+      <td><%= @site.pict_file %></td>
+      <td>Icon:</td>
+      <td><%= @site.icon_file %></td>
+    </tr>
+    <tr>
+      <td>Created at:</td>
+      <td><%= @site.created_at %></td>
+      <td>Updated at:</td>
+      <td><%= @site.updated_at %></td>
+    </tr>
+  </tbody>
+</table>
+
+<%= link_to 'Edit Site', edit_site_path(@site), :class => 'btn btn-primary' %>
+<br />
+<br />
+
+<% if (@apps.count > 0) %>
+<h4>Site Apps</h4>
+<table class="table table-condensed table-striped">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Path</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @apps.each do |app| %>
+    <tr>
+      <td><%= link_to app.name, app %></td>
+      <td><%= app.path %></td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
+<% end %>
+
+<%= link_to 'Back to Sites', sites_path %>

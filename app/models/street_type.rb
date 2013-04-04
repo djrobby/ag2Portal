@@ -15,7 +15,6 @@ class StreetType < ActiveRecord::Base
   end
 
   def to_label
-    #"#{street_type_description.titleize} (#{street_type_code})"
     "#{street_type_code} (#{street_type_description.titleize})"
   end
 end

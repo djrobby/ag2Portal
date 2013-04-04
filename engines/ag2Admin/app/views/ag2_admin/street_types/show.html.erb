@@ -1,24 +1,24 @@
 <%= render '/layouts/ag2_admin/streettypesbreadcrumb' %>
 
 <h3>Street type <%= @street_type.street_type_code %></h3>
-<table class="table"
-<tbody>
-<tr>
-<td>Id:</td>
-<td><%= @street_type.id %></td>
-<td>Description:</td>
-<td><%= @street_type.street_type_description.titleize %></td>
-</tr>
-<tr>
-<td>Created at:</td>
-<td><%= @street_type.created_at %></td>
-<td>Updated at:</td>
-<td><%= @street_type.updated_at %></td>
-</tr>
-</tbody>
+<table class="table">
+  <tbody>
+    <tr>
+      <td>Id:</td>
+      <td><%= @street_type.id %></td>
+      <td>Description:</td>
+      <td><%= @street_type.street_type_description.titleize %></td>
+    </tr>
+    <tr>
+      <td>Created at:</td>
+      <td><%= @street_type.created_at %></td>
+      <td>Updated at:</td>
+      <td><%= @street_type.updated_at %></td>
+    </tr>
+  </tbody>
 </table>
 
 <%= link_to 'Edit Street type', edit_street_type_path(@street_type), :class => 'btn btn-primary' %>
-  <br />
-  <br />
-  <%= link_to 'Back to Street types', street_types_path %>
+<br />
+<br />
+<%= link_to 'Back to Street types', street_types_path %>

@@ -1,31 +1,31 @@
 <%= render '/layouts/ag2_admin/townsbreadcrumb' %>
 
 <h3><%= @town.name %></h3>
-<table class="table"
-<tbody>
-<tr>
-<td>Id:</td>
-<td><%= @town.id %></td>
-<td>Province:</td>
-<td><%= Province.find(@town.province).name unless @town.province.nil? %></td>
-</tr>
-<tr>
-<td>INE CMun:</td>
-<td><%= @town.ine_cmun %></td>
-<td>INE Dc</td>
-<td><%= @town.ine_dc %></td>
-</tr>
-<tr>
-<td>Created at:</td>
-<td><%= @town.created_at %></td>
-<td>Updated at:</td>
-<td><%= @town.updated_at %></td>
-</tr>
-</tbody>
+<table class="table">
+  <tbody>
+    <tr>
+      <td>Id:</td>
+      <td><%= @town.id %></td>
+      <td>Province:</td>
+      <td><%= Province.find(@town.province).name unless @town.province.nil? %></td>
+    </tr>
+    <tr>
+      <td>INE CMun:</td>
+      <td><%= @town.ine_cmun %></td>
+      <td>INE Dc:</td>
+      <td><%= @town.ine_dc %></td>
+    </tr>
+    <tr>
+      <td>Created at:</td>
+      <td><%= @town.created_at %></td>
+      <td>Updated at:</td>
+      <td><%= @town.updated_at %></td>
+    </tr>
+  </tbody>
 </table>
 
 <%= link_to 'Edit Town', edit_town_path(@town), :class => 'btn btn-primary' %>
-  <br />
-  <br />
-  <%= link_to 'Show Province', @town.province %> |
-  <%= link_to 'Back to Towns', towns_path %>
+<br />
+<br />
+<%= link_to 'Show Province', @town.province %> |
+<%= link_to 'Back to Towns', towns_path %>

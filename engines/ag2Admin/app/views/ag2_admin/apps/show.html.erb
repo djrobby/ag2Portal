@@ -1,0 +1,37 @@
+<%= render '/layouts/ag2_admin/appsbreadcrumb' %>
+
+<h3><%= @app.name %></h3>
+<table class="table">
+  <tbody>
+    <tr>
+      <td>Id:</td>
+      <td><%= @app.id %></td>
+      <td>Site:</td>
+      <td><%= Site.find(@app.site).name unless @app.site.nil? %></td>
+    </tr>
+    <tr>
+      <td>Description:</td>
+      <td><%= @app.description %></td>
+      <td>Path</td>
+      <td><%= @app.path %></td>
+    </tr>
+    <tr>
+      <td>Picture:</td>
+      <td><%= @app.pict_file %></td>
+      <td>Icon:</td>
+      <td><%= @app.icon_file %></td>
+    </tr>
+    <tr>
+      <td>Created at:</td>
+      <td><%= @app.created_at %></td>
+      <td>Updated at:</td>
+      <td><%= @app.updated_at %></td>
+    </tr>
+  </tbody>
+</table>
+
+<%= link_to 'Edit App', edit_app_path(@app), :class => 'btn btn-primary' %>
+<br />
+<br />
+<%= link_to 'Show Site', @app.site %> |
+<%= link_to 'Back to Apps', apps_path %>

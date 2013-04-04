@@ -1,64 +1,64 @@
 <%= render '/layouts/ag2_admin/officesbreadcrumb' %>
 
 <h3><%= @office.name %></h3>
-<table class="table"
-<tbody>
-<tr>
-<td>Id:</td>
-<td><%= @office.id %></td>
-<td>Company:</td>
-<td><%= Company.find(@office.company).name unless @office.company.nil? %></td>
-</tr>
-<tr>
-<td>Office Code:</td>
-<td><%= @office.office_code unless @office.office_code.nil? %></td>
-<td>Phone:</td>
-<td><%= @office.phone %></td>
-</tr>
-<tr>
-<td>Fax:</td>
-<td><%= @office.fax %></td>
-<td>Cellular:</td>
-<td><%= @office.cellular %></td>
-</tr>
-<tr>
-<td>Address:</td>
-<td> <%= @office.street_type.street_type_code.titleize  %>. <%= @office.street_name %> <%= @office.street_number %>
-<% if !@office.building.nil? %>
-<%= @office.building.titleize %>
-<% end %>
-<% if !@office.floor.nil? %>
-<%= @office.floor %>&ordm;
-<% end %>
-<% if !@office.floor_office.nil? %>
-<%= @office.floor_office %>
-<% end %> </td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>Town:</td>
-<td><%= @office.town.name %></td>
-<td>Province:</td>
-<td><%= @office.province.name %></td>
-</tr>
-<tr>
-<td>Zip Code:</td>
-<td><%= @office.zipcode.zipcode %></td>
-<td>Email:</td>
-<td><%= @office.email %></td>
-</tr>
-<tr>
-<td>Created at:</td>
-<td><%= @office.created_at %></td>
-<td>Updated at:</td>
-<td><%= @office.updated_at %></td>
-</tr>
-</tbody>
+<table class="table">
+  <tbody>
+    <tr>
+      <td>Id:</td>
+      <td><%= @office.id %></td>
+      <td>Company:</td>
+      <td><%= Company.find(@office.company).name unless @office.company.nil? %></td>
+    </tr>
+    <tr>
+      <td>Office Code:</td>
+      <td><%= @office.office_code unless @office.office_code.nil? %></td>
+      <td>Phone:</td>
+      <td><%= @office.phone %></td>
+    </tr>
+    <tr>
+      <td>Fax:</td>
+      <td><%= @office.fax %></td>
+      <td>Cellular:</td>
+      <td><%= @office.cellular %></td>
+    </tr>
+    <tr>
+      <td>Address:</td>
+      <td> <%= @office.street_type.street_type_code.titleize  %>. <%= @office.street_name %> <%= @office.street_number %>
+      <% if !@office.building.nil? %>
+      <%= @office.building.titleize %>
+      <% end %>
+      <% if !@office.floor.nil? %>
+      <%= @office.floor %>&ordm;
+      <% end %>
+      <% if !@office.floor_office.nil? %>
+      <%= @office.floor_office %>
+      <% end %> </td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Town:</td>
+      <td><%= @office.town.name %></td>
+      <td>Province:</td>
+      <td><%= @office.province.name %></td>
+    </tr>
+    <tr>
+      <td>Zip Code:</td>
+      <td><%= @office.zipcode.zipcode %></td>
+      <td>Email:</td>
+      <td><%= @office.email %></td>
+    </tr>
+    <tr>
+      <td>Created at:</td>
+      <td><%= @office.created_at %></td>
+      <td>Updated at:</td>
+      <td><%= @office.updated_at %></td>
+    </tr>
+  </tbody>
 </table>
 
 <%= link_to 'Edit Office', edit_office_path(@office), :class => 'btn btn-primary' %>
-  <br />
-  <br />
-  <%= link_to 'Show Company', @office.company %> |
-  <%= link_to 'Back to Offices', offices_path %>
+<br />
+<br />
+<%= link_to 'Show Company', @office.company %> |
+<%= link_to 'Back to Offices', offices_path %>
