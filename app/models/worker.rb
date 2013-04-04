@@ -10,7 +10,8 @@ class Worker < ActiveRecord::Base
                   :fiscal_id, :floor, :floor_office, :last_name, :phone,
                   :starting_at, :street_name, :street_number, :worker_code,
                   :user_id, :company_id, :office_id, :street_type_id,
-                  :zipcode_id, :town_id, :province_id
+                  :zipcode_id, :town_id, :province_id, :avatar
+  has_attached_file :avatar, :styles => { :medium => "96x96>", :small => "64x64>" }, :default_url => "/images/missing/:style/user.png"
 
   validates :first_name,      :presence => true,
                               :length => { :minimum => 2 }

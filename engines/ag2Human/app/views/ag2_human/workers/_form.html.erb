@@ -142,6 +142,7 @@
   <label class="multi-field-label-two"> <%= f.association :user, collection: User.all(order: 'name'), :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
   <label class="multi-field-label-two"> <%= f.input :email, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
 </div>
+<%= f.input :avatar, :as => :file, :label_html => { :class => 'form-label' } %>
 <table class="form-table">
   <tbody>
     <tr class="form-tr">
