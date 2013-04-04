@@ -16,6 +16,7 @@ module Ag2Admin
     # GET /provinces/1
     # GET /provinces/1.json
     def show
+      @breadcrumb = 'read'
       @province = Province.find(params[:id])
       @towns = @province.towns.order("name")
   
@@ -28,6 +29,7 @@ module Ag2Admin
     # GET /provinces/new
     # GET /provinces/new.json
     def new
+      @breadcrumb = 'create'
       @province = Province.new
   
       respond_to do |format|
@@ -38,12 +40,14 @@ module Ag2Admin
   
     # GET /provinces/1/edit
     def edit
+      @breadcrumb = 'update'
       @province = Province.find(params[:id])
     end
   
     # POST /provinces
     # POST /provinces.json
     def create
+      @breadcrumb = 'create'
       @province = Province.new(params[:province])
   
       respond_to do |format|
@@ -60,6 +64,7 @@ module Ag2Admin
     # PUT /provinces/1
     # PUT /provinces/1.json
     def update
+      @breadcrumb = 'update'
       @province = Province.find(params[:id])
   
       respond_to do |format|

@@ -41,6 +41,9 @@ module Ag2Admin
       end
     end
 
+    #
+    # Default Methods
+    #
     # GET /offices
     # GET /offices.json
     def index
@@ -56,6 +59,7 @@ module Ag2Admin
     # GET /offices/1
     # GET /offices/1.json
     def show
+      @breadcrumb = 'read'
       @office = Office.find(params[:id])
 
       respond_to do |format|
@@ -68,6 +72,7 @@ module Ag2Admin
     # GET /offices/new.json
     def new
 #      internal
+      @breadcrumb = 'create'
       @office = Office.new
 
       respond_to do |format|
@@ -79,6 +84,7 @@ module Ag2Admin
     # GET /offices/1/edit
     def edit
 #      internal
+      @breadcrumb = 'update'
       @office = Office.find(params[:id])
     end
 
@@ -86,6 +92,7 @@ module Ag2Admin
     # POST /offices.json
     def create
 #      internal
+      @breadcrumb = 'create'
       @office = Office.new(params[:office])
 
       respond_to do |format|
@@ -103,6 +110,7 @@ module Ag2Admin
     # PUT /offices/1.json
     def update
 #      internal
+      @breadcrumb = 'update'
       @office = Office.find(params[:id])
 
       respond_to do |format|

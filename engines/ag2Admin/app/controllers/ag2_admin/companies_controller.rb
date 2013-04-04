@@ -26,6 +26,9 @@ module Ag2Admin
       end
     end
 
+    #
+    # Default Methods
+    #
     # GET /companies
     # GET /companies.json
     def index
@@ -40,6 +43,7 @@ module Ag2Admin
     # GET /companies/1
     # GET /companies/1.json
     def show
+      @breadcrumb = 'read'
       @company = Company.find(params[:id])
       @offices = @company.offices
 
@@ -52,6 +56,7 @@ module Ag2Admin
     # GET /companies/new
     # GET /companies/new.json
     def new
+      @breadcrumb = 'create'
       @company = Company.new
 
       respond_to do |format|
@@ -62,12 +67,14 @@ module Ag2Admin
 
     # GET /companies/1/edit
     def edit
+      @breadcrumb = 'update'
       @company = Company.find(params[:id])
     end
 
     # POST /companies
     # POST /companies.json
     def create
+      @breadcrumb = 'create'
       @company = Company.new(params[:company])
 
       respond_to do |format|
@@ -84,6 +91,7 @@ module Ag2Admin
     # PUT /companies/1
     # PUT /companies/1.json
     def update
+      @breadcrumb = 'update'
       @company = Company.find(params[:id])
 
       respond_to do |format|

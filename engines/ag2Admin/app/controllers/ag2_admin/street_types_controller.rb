@@ -16,6 +16,7 @@ module Ag2Admin
     # GET /street_types/1
     # GET /street_types/1.json
     def show
+      @breadcrumb = 'read'
       @street_type = StreetType.find(params[:id])
   
       respond_to do |format|
@@ -27,6 +28,7 @@ module Ag2Admin
     # GET /street_types/new
     # GET /street_types/new.json
     def new
+      @breadcrumb = 'create'
       @street_type = StreetType.new
   
       respond_to do |format|
@@ -37,12 +39,14 @@ module Ag2Admin
   
     # GET /street_types/1/edit
     def edit
+      @breadcrumb = 'update'
       @street_type = StreetType.find(params[:id])
     end
   
     # POST /street_types
     # POST /street_types.json
     def create
+      @breadcrumb = 'create'
       @street_type = StreetType.new(params[:street_type])
   
       respond_to do |format|
@@ -59,6 +63,7 @@ module Ag2Admin
     # PUT /street_types/1
     # PUT /street_types/1.json
     def update
+      @breadcrumb = 'update'
       @street_type = StreetType.find(params[:id])
   
       respond_to do |format|

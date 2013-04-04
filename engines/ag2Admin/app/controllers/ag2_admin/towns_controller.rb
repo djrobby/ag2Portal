@@ -16,6 +16,7 @@ module Ag2Admin
     # GET /towns/1
     # GET /towns/1.json
     def show
+      @breadcrumb = 'read'
       @town = Town.find(params[:id])
   
       respond_to do |format|
@@ -27,6 +28,7 @@ module Ag2Admin
     # GET /towns/new
     # GET /towns/new.json
     def new
+      @breadcrumb = 'create'
       @town = Town.new
   
       respond_to do |format|
@@ -37,12 +39,14 @@ module Ag2Admin
   
     # GET /towns/1/edit
     def edit
+      @breadcrumb = 'update'
       @town = Town.find(params[:id])
     end
   
     # POST /towns
     # POST /towns.json
     def create
+      @breadcrumb = 'create'
       @town = Town.new(params[:town])
   
       respond_to do |format|
@@ -59,6 +63,7 @@ module Ag2Admin
     # PUT /towns/1
     # PUT /towns/1.json
     def update
+      @breadcrumb = 'update'
       @town = Town.find(params[:id])
   
       respond_to do |format|

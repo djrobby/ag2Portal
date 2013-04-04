@@ -9,8 +9,23 @@
   <li>
     <a href="<%= ag2_admin.root_path %>">ag2Admin</a><span class="divider">></span>
   </li>
+  <% if @street_types %>
   <li>
     ag2StreetTypes
   </li>
+  <% end %>
+  <% if @street_type %>
+  <li>
+    <a href="<%= street_types_path %>">ag2StreetTypes</a><span class="divider">></span>
+  </li>
+  <% if @breadcrumb == 'read' || @breadcrumb == 'update' %>
+  <%= @street_type.street_type_description %>
+  <% end %>
+  <% if @breadcrumb == 'create' %>
+  <li>
+    New
+  </li>
+  <% end %>
+  <% end %>
   <a class="close" href="<%= ag2_admin.root_path %>">&#215;</a>
 </ul>

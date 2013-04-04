@@ -105,6 +105,9 @@ module Ag2Human
       end
     end
 
+    #
+    # Default Methods
+    #
     # GET /workers
     # GET /workers.json
     def index
@@ -119,6 +122,7 @@ module Ag2Human
     # GET /workers/1
     # GET /workers/1.json
     def show
+      @breadcrumb = 'read'
       @worker = Worker.find(params[:id])
 
       respond_to do |format|
@@ -130,6 +134,7 @@ module Ag2Human
     # GET /workers/new
     # GET /workers/new.json
     def new
+      @breadcrumb = 'create'
       @worker = Worker.new
 
       respond_to do |format|
@@ -140,12 +145,14 @@ module Ag2Human
 
     # GET /workers/1/edit
     def edit
+      @breadcrumb = 'update'
       @worker = Worker.find(params[:id])
     end
 
     # POST /workers
     # POST /workers.json
     def create
+      @breadcrumb = 'create'
       @worker = Worker.new(params[:worker])
 
       respond_to do |format|
@@ -162,6 +169,7 @@ module Ag2Human
     # PUT /workers/1
     # PUT /workers/1.json
     def update
+      @breadcrumb = 'update'
       @worker = Worker.find(params[:id])
 
       respond_to do |format|

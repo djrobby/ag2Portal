@@ -27,6 +27,7 @@ module Ag2Admin
     # GET /zipcodes/1
     # GET /zipcodes/1.json
     def show
+      @breadcrumb = 'read'
       @zipcode = Zipcode.find(params[:id])
   
       respond_to do |format|
@@ -38,6 +39,7 @@ module Ag2Admin
     # GET /zipcodes/new
     # GET /zipcodes/new.json
     def new
+      @breadcrumb = 'create'
       @zipcode = Zipcode.new
   
       respond_to do |format|
@@ -48,12 +50,14 @@ module Ag2Admin
   
     # GET /zipcodes/1/edit
     def edit
+      @breadcrumb = 'update'
       @zipcode = Zipcode.find(params[:id])
     end
   
     # POST /zipcodes
     # POST /zipcodes.json
     def create
+      @breadcrumb = 'create'
       @zipcode = Zipcode.new(params[:zipcode])
   
       respond_to do |format|
@@ -70,6 +74,7 @@ module Ag2Admin
     # PUT /zipcodes/1
     # PUT /zipcodes/1.json
     def update
+      @breadcrumb = 'update'
       @zipcode = Zipcode.find(params[:id])
   
       respond_to do |format|

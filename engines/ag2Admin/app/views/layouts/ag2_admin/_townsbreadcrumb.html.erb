@@ -10,8 +10,23 @@
   <li>
     <a href="<%= ag2_admin.root_path %>">ag2Admin</a><span class="divider">></span>
   </li>
+  <% if @towns %>
   <li>
     ag2Towns
   </li>
+  <% end %>
+  <% if @town %>
+  <li>
+    <a href="<%= towns_path %>">ag2Towns</a><span class="divider">></span>
+  </li>
+  <% if @breadcrumb == 'read' || @breadcrumb == 'update' %>
+  <%= @town.name %>
+  <% end %>
+  <% if @breadcrumb == 'create' %>
+  <li>
+    New
+  </li>
+  <% end %>
+  <% end %>
   <a class="close" href="<%= ag2_admin.root_path %>">&#215;</a>
 </ul>

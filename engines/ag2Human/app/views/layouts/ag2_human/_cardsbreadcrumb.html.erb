@@ -10,8 +10,23 @@
   <li>
     <a href="<%= ag2_human.root_path %>">ag2Human</a><span class="divider">></span>
   </li>
+  <% if @workers %>
   <li>
     ag2Cards
   </li>
+  <% end %>
+  <% if @worker %>
+  <li>
+    <a href="<%= workers_path %>">ag2Cards</a><span class="divider">></span>
+  </li>
+  <% if @breadcrumb == 'read' || @breadcrumb == 'update' %>
+  <%= @worker.last_name %>
+  <% end %>
+  <% if @breadcrumb == 'create' %>
+  <li>
+    New
+  </li>
+  <% end %>
+  <% end %>
   <a class="close" href="<%= ag2_human.root_path %>">&#215;</a>
 </ul>
