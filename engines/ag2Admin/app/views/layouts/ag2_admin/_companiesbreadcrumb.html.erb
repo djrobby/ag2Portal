@@ -20,7 +20,7 @@
     <a href="<%= companies_path %>">ag2Companies</a><span class="divider">></span>
   </li>
   <% if @breadcrumb == 'read' || @breadcrumb == 'update' %>
-  <%= @company.name %>
+  <%= @company.fiscal_id %>
   <% end %>
   <% if @breadcrumb == 'create' %>
   <li>

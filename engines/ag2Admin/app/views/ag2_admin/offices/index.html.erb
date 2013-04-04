@@ -1,27 +1,24 @@
 <%= render '/layouts/ag2_admin/officesbreadcrumb' %>
 
 <h3>Offices</h3>
-<div class="span10">
+<div class="span9">
   <table class="table table-condensed table-striped">
     <thead>
       <tr>
-        <th>Id</th>
+        <th>Code</th>
         <th>Name</th>
         <th>Company</th>
-        <th>Registered</th>
-        <th></th>
         <th></th>
       </tr>
     </thead>
     <tbody>
       <% @offices.each do |office| %>
       <tr>
-        <td><%= office.id %></td>
-        <td><%= link_to office.name, office %></td>
+        <td><%= link_to office.office_code, office %></td>
+        <td><%= office.name %></td>
         <td><%= Company.find(office.company).name unless office.company.nil? %></td>
-        <td><%= office.created_at.to_date %></td>
-        <td><%= link_to 'Edit', edit_office_path(office), :class => 'btn btn-mini' %></td>
-        <td><%= link_to("Delete", office, :data => { :confirm => "Are you sure?" }, :method => :delete, :class => 'btn btn-mini') %></td>
+        <td><%= link_to 'Edit', edit_office_path(office), :class => 'btn btn-mini' %>
+        <%= link_to("Delete", office, :data => { :confirm => "Are you sure?" }, :method => :delete, :class => 'btn btn-mini') %> </td>
       </tr>
       <% end %>
     </tbody>

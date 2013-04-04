@@ -19,7 +19,7 @@
     <a href="<%= street_types_path %>">ag2StreetTypes</a><span class="divider">></span>
   </li>
   <% if @breadcrumb == 'read' || @breadcrumb == 'update' %>
-  <%= @street_type.street_type_description %>
+  <%= @street_type.street_type_code %>
   <% end %>
   <% if @breadcrumb == 'create' %>
   <li>

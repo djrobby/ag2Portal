@@ -20,7 +20,7 @@
     <a href="<%= offices_path %>">ag2Offices</a><span class="divider">></span>
   </li>
   <% if @breadcrumb == 'read' || @breadcrumb == 'update' %>
-  <%= @office.name %>
+  <%= @office.office_code %>
   <% end %>
   <% if @breadcrumb == 'create' %>
   <li>

@@ -1,16 +1,13 @@
 <%= render '/layouts/ag2_admin/usersbreadcrumb' %>
 
 <h3>Users</h3>
-<div class="span9">
+<div class="span8">
   <table class="table table-condensed table-striped">
     <thead>
       <tr>
         <th>Email</th>
         <th>Username</th>
-        <th>Registered</th>
         <th>Role</th>
-        <th></th>
-        <th></th>
         <th></th>
       </tr>
     </thead>
@@ -19,16 +16,17 @@
       <tr>
         <td><%= link_to user.email, user %></td>
         <td><%= user.name %></td>
-        <td><%= user.created_at.to_date %></td>
         <td><%= user.roles.first.name.titleize unless user.roles.first.nil? %></td>
-        <td><a data-toggle="modal" href="#role-options-<%= user.id %>" class="btn btn-mini" type="button">Role</a> <%= render user %> </td>
-        <td><%= link_to 'Edit', edit_user_path(user), :class => 'btn btn-mini' %></td>
-        <td><%= link_to("Delete", user_path(user), :data => { :confirm => "Are you sure?" }, :method => :delete, :class => 'btn btn-mini') unless user == current_user %></td>
+        <td><a data-toggle="modal" href="#role-options-<%= user.id %>" class="btn btn-mini" type="button">Role</a> <%= render user %>
+        <%= link_to 'Edit', edit_user_path(user), :class => 'btn btn-mini' %>
+        <%= link_to("Delete", user_path(user), :data => { :confirm => "Are you sure?" }, :method => :delete, :class => 'btn btn-mini') unless user == current_user %> </td>
       </tr>
       <% end %>
     </tbody>
   </table>
-  <%= link_to 'New User', new_user_path, :class => 'btn btn-primary' %><br /><br />
+  <%= link_to 'New User', new_user_path, :class => 'btn btn-primary' %>
+  <br />
+  <br />
   <%= link_to 'Go to Roles', roles_path %> |
   <%= link_to 'Back to ag2Admin', ag2_admin.root_path %>
 </div>
