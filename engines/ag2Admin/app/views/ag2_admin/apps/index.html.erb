@@ -15,7 +15,7 @@
       <% @apps.each do |app| %>
       <tr>
         <td><%= link_to app.name, app %></td>
-        <td><%= app.path %></td>
+        <td><%= app.site.path %>/<%= app.path %></td>
         <td><%= Site.find(app.site).name unless app.site.nil? %></td>
         <td><%= link_to 'Edit', edit_app_path(app), :class => 'btn btn-mini' %>
         <%= link_to("Delete", app, :data => { :confirm => "Are you sure?" }, :method => :delete, :class => 'btn btn-mini') %> </td>
