@@ -31,6 +31,45 @@
     <% end %>
   </li>
 </ul><!-- /.thumbnails -->
+<ul class="thumbnails">
+  <!-- Apps 2 -->
+  <li class="span3">
+    <% if (session[:resolution] == "LD")%>
+    <a href="<%= workers_path %>" class="thumbnail centered"><img src="/assets/icon/Table.png" width="48" height="48" alt="Professional Groups" /><h5 class="h5-narrow">Professional Groups</h5></a>
+    <% elsif session[:resolution] == "SD" %>
+    <a href="<%= workers_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/Table.png" width="72" height="72" alt="Professional Groups" /><h5 class="h5-narrow">Professional Groups</h5></a>
+    <% else %>
+    <a href="<%= workers_path %>" class="thumbnail centered"><img src="/assets/pict/Table.png" width="96" height="96" alt="Professional Groups" /><h5 class="h5-narrow">Professional Groups</h5></a>
+    <% end %>
+  </li>
+  <li class="span3">
+    <% if (session[:resolution] == "LD")%>
+    <a href="<%= workers_path %>" class="thumbnail centered"><img src="/assets/icon/Table.png" width="48" height="48" alt="Collective Agreements" /><h5 class="h5-narrow">Collective Agreements</h5></a>
+    <% elsif session[:resolution] == "SD" %>
+    <a href="<%= workers_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/Table.png" width="72" height="72" alt="Collective Agreements" /><h5 class="h5-narrow">Collective Agreements</h5></a>
+    <% else %>
+    <a href="<%= workers_path %>" class="thumbnail centered"><img src="/assets/pict/Table.png" width="96" height="96" alt="Collective Agreements" /><h5 class="h5-narrow">Collective Agreements</h5></a>
+    <% end %>
+  </li>
+  <li class="span3">
+    <% if (session[:resolution] == "LD")%>
+    <a href="<%= workers_path %>" class="thumbnail centered"><img src="/assets/icon/Table.png" width="48" height="48" alt="Degree Types" /><h5 class="h5-narrow">Degree Types</h5></a>
+    <% elsif session[:resolution] == "SD" %>
+    <a href="<%= workers_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/Table.png" width="72" height="72" alt="Degree Types" /><h5 class="h5-narrow">Degree Types</h5></a>
+    <% else %>
+    <a href="<%= workers_path %>" class="thumbnail centered"><img src="/assets/pict/Table.png" width="96" height="96" alt="Degree Types" /><h5 class="h5-narrow">Degree Types</h5></a>
+    <% end %>
+  </li>
+  <li class="span3">
+    <% if (session[:resolution] == "LD")%>
+    <a href="<%= workers_path %>" class="thumbnail centered"><img src="/assets/icon/Table.png" width="48" height="48" alt="Contract Types" /><h5 class="h5-narrow">Contract Types</h5></a>
+    <% elsif session[:resolution] == "SD" %>
+    <a href="<%= workers_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/Table.png" width="72" height="72" alt="Contract Types" /><h5 class="h5-narrow">Contract Types</h5></a>
+    <% else %>
+    <a href="<%= workers_path %>" class="thumbnail centered"><img src="/assets/pict/Table.png" width="96" height="96" alt="Contract Types" /><h5 class="h5-narrow">Contract Types</h5></a>
+    <% end %>
+  </li>
+</ul><!-- /.thumbnails -->
 
 <!-- Modals -->
 <%= render '/layouts/notfound' %>
