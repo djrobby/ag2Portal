@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130404190503) do
+ActiveRecord::Schema.define(:version => 20130405194133) do
 
   create_table "apps", :force => true do |t|
     t.string   "name"
@@ -26,6 +26,15 @@ ActiveRecord::Schema.define(:version => 20130404190503) do
 
   add_index "apps", ["name"], :name => "index_apps_on_name"
   add_index "apps", ["site_id"], :name => "index_apps_on_site_id"
+
+  create_table "collective_agreements", :force => true do |t|
+    t.string   "name"
+    t.string   "ca_code"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "collective_agreements", ["ca_code"], :name => "index_collective_agreements_on_ca_code"
 
   create_table "companies", :force => true do |t|
     t.string   "name"
@@ -52,6 +61,24 @@ ActiveRecord::Schema.define(:version => 20130404190503) do
   add_index "companies", ["street_type_id"], :name => "index_companies_on_street_type_id"
   add_index "companies", ["town_id"], :name => "index_companies_on_town_id"
   add_index "companies", ["zipcode_id"], :name => "index_companies_on_zipcode_id"
+
+  create_table "contract_types", :force => true do |t|
+    t.string   "name"
+    t.string   "ct_code"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "contract_types", ["ct_code"], :name => "index_contract_types_on_ct_code"
+
+  create_table "degree_types", :force => true do |t|
+    t.string   "name"
+    t.string   "dt_code"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "degree_types", ["dt_code"], :name => "index_degree_types_on_dt_code"
 
   create_table "offices", :force => true do |t|
     t.string   "name"
@@ -80,6 +107,15 @@ ActiveRecord::Schema.define(:version => 20130404190503) do
   add_index "offices", ["street_type_id"], :name => "index_offices_on_street_type_id"
   add_index "offices", ["town_id"], :name => "index_offices_on_town_id"
   add_index "offices", ["zipcode_id"], :name => "index_offices_on_zipcode_id"
+
+  create_table "professional_groups", :force => true do |t|
+    t.string   "name"
+    t.string   "pg_code"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "professional_groups", ["pg_code"], :name => "index_professional_groups_on_pg_code"
 
   create_table "provinces", :force => true do |t|
     t.string   "name"
@@ -160,6 +196,12 @@ ActiveRecord::Schema.define(:version => 20130404190503) do
 
   add_index "users_roles", ["user_id", "role_id"], :name => "index_users_roles_on_user_id_and_role_id"
 
+  create_table "worker_types", :force => true do |t|
+    t.string   "description"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+  end
+
   create_table "workers", :force => true do |t|
     t.string   "first_name"
     t.string   "last_name"
@@ -182,22 +224,45 @@ ActiveRecord::Schema.define(:version => 20130404190503) do
     t.string   "phone"
     t.string   "cellular"
     t.string   "email"
-    t.datetime "created_at",          :null => false
-    t.datetime "updated_at",          :null => false
+    t.datetime "created_at",                :null => false
+    t.datetime "updated_at",                :null => false
     t.string   "avatar_file_name"
     t.string   "avatar_content_type"
     t.integer  "avatar_file_size"
     t.datetime "avatar_updated_at"
+    t.integer  "professional_group_id"
+    t.integer  "collective_agreement_id"
+    t.integer  "degree_type_id"
+    t.integer  "contract_type_id"
+    t.date     "born_on"
+    t.date     "issue_starting_at"
+    t.string   "affiliation_id"
+    t.string   "contribution_account_code"
+    t.string   "position"
+    t.integer  "worker_type_id"
+    t.string   "corp_phone"
+    t.string   "corp_cellular_long"
+    t.string   "corp_cellular_short"
   end
 
+  add_index "workers", ["affiliation_id"], :name => "index_workers_on_affiliation_id"
+  add_index "workers", ["collective_agreement_id"], :name => "index_workers_on_collective_agreement_id"
   add_index "workers", ["company_id"], :name => "index_workers_on_company_id"
+  add_index "workers", ["contract_type_id"], :name => "index_workers_on_contract_type_id"
+  add_index "workers", ["contribution_account_code"], :name => "index_workers_on_contribution_account_code"
+  add_index "workers", ["corp_cellular_long"], :name => "index_workers_on_corp_cellular_long"
+  add_index "workers", ["corp_cellular_short"], :name => "index_workers_on_corp_cellular_short"
+  add_index "workers", ["corp_phone"], :name => "index_workers_on_corp_phone"
+  add_index "workers", ["degree_type_id"], :name => "index_workers_on_degree_type_id"
   add_index "workers", ["fiscal_id"], :name => "index_workers_on_fiscal_id"
   add_index "workers", ["office_id"], :name => "index_workers_on_office_id"
+  add_index "workers", ["professional_group_id"], :name => "index_workers_on_professional_group_id"
   add_index "workers", ["province_id"], :name => "index_workers_on_province_id"
   add_index "workers", ["street_type_id"], :name => "index_workers_on_street_type_id"
   add_index "workers", ["town_id"], :name => "index_workers_on_town_id"
   add_index "workers", ["user_id"], :name => "index_workers_on_user_id"
   add_index "workers", ["worker_code"], :name => "index_workers_on_worker_code"
+  add_index "workers", ["worker_type_id"], :name => "index_workers_on_worker_type_id"
   add_index "workers", ["zipcode_id"], :name => "index_workers_on_zipcode_id"
 
   create_table "zipcodes", :force => true do |t|
