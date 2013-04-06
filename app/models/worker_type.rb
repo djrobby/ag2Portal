@@ -4,4 +4,7 @@ class WorkerType < ActiveRecord::Base
   validates :description, :presence => true
   
   has_many :workers
+  def to_label
+    "#{description}"
+  end
 end

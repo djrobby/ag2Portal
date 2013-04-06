@@ -20,22 +20,61 @@
       <td><%= User.find(@worker.user).name unless @worker.user.nil? %></td>
     </tr>
     <tr>
-      <td>Office</td>
-      <td><%= Office.find(@worker.office).name unless @worker.office.nil? %></td>
-      <td>Company:</td>
-      <td><%= Company.find(@worker.company).name unless @worker.company.nil? %></td>
-    </tr>
-    <tr>
       <td>Starting at:</td>
       <td><%= @worker.starting_at unless @worker.starting_at.nil? %></td>
       <td>Ending at:</td>
       <td><%= @worker.ending_at unless @worker.ending_at.nil? %></td>
     </tr>
     <tr>
-      <td>Phone:</td>
-      <td><%= @worker.phone %></td>
-      <td>Cellular:</td>
-      <td><%= @worker.cellular %></td>
+      <td>Issue starting at:</td>
+      <td><%= @worker.issue_starting_at unless @worker.starting_at.nil? %></td>
+      <td>Borned on:</td>
+      <td><%= @worker.borned_on unless @worker.borned_on.nil? %></td>
+    </tr>
+    <tr>
+      <td>Office:</td>
+      <td><%= Office.find(@worker.office).name unless @worker.office.nil? %></td>
+      <td>Company:</td>
+      <td><%= Company.find(@worker.company).name unless @worker.company.nil? %></td>
+    </tr>
+    <tr>
+      <td>Contract Type:</td>
+      <td><%= ContractType.find(@worker.contract_type).name unless @worker.contract_type.nil? %></td>
+      <td>Collective AGMT:</td>
+      <td><%= CollectiveAgreement.find(@worker.collective_agreement).name unless @worker.collective_agreement.nil? %></td>
+    </tr>
+    <tr>
+      <td>Pro Group:</td>
+      <td><%= ProfessionalGroup.find(@worker.professional_group).name unless @worker.professional_group.nil? %></td>
+      <td>Degree Type:</td>
+      <td><%= DegreeType.find(@worker.degree_type).name unless @worker.degree_type.nil? %></td>
+    </tr>
+    <tr>
+      <td>Worker Type:</td>
+      <td><%= WorkerType.find(@worker.worker_type).description unless @worker.worker_type.nil? %></td>
+      <td>Position:</td>
+      <td><%= @worker.position unless @worker.position.nil? %></td>
+    </tr>
+    <tr>
+      <td>Affiliation #:</td>
+      <td><%= @worker.affiliation_id %></td>
+      <td>Contribution Account:</td>
+      <td><%= @worker.contribution_account_code unless @worker.contribution_account_code.nil? %></td>
+    </tr>
+    <tr>
+      <td>Corp Phone:</td>
+      <td><%= @worker.corp_phone %></td>
+      <td>Corp Cellular:</td>
+      <td><%= @worker.corp_cellular_long %>
+      <% if !@worker.corp_cellular_short.nil? %>
+      (<%= @worker.corp_cellular_short %>)
+      <% end %> </td>
+    </tr>
+    <tr>
+      <td>Own Phone:</td>
+      <td><%= @worker.own_phone %></td>
+      <td>Own Cellular:</td>
+      <td><%= @worker.own_cellular %></td>
     </tr>
     <tr>
       <td>Address:</td>

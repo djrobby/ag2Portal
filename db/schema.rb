@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130406074557) do
+ActiveRecord::Schema.define(:version => 20130406163506) do
 
   create_table "apps", :force => true do |t|
     t.string   "name"
@@ -221,8 +221,8 @@ ActiveRecord::Schema.define(:version => 20130406074557) do
     t.integer  "zipcode_id"
     t.integer  "town_id"
     t.integer  "province_id"
-    t.string   "phone"
-    t.string   "cellular"
+    t.string   "own_phone"
+    t.string   "own_cellular"
     t.string   "email"
     t.datetime "created_at",                :null => false
     t.datetime "updated_at",                :null => false
@@ -234,7 +234,7 @@ ActiveRecord::Schema.define(:version => 20130406074557) do
     t.integer  "collective_agreement_id"
     t.integer  "degree_type_id"
     t.integer  "contract_type_id"
-    t.date     "born_on"
+    t.date     "borned_on"
     t.date     "issue_starting_at"
     t.string   "affiliation_id"
     t.string   "contribution_account_code"
