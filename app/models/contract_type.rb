@@ -1,7 +1,7 @@
-class ProfessionalGroups < ActiveRecord::Base
-  attr_accessible :name, :pg_code
+class ContractType < ActiveRecord::Base
+  attr_accessible :ct_code, :name
 
-  validates :pg_code, :presence => true,
+  validates :ct_code, :presence => true,
                       :length => { :minimum => 2 },
                       :uniqueness => true
   validates :name,    :presence => true

@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class CollectiveAgreementsTest < ActiveSupport::TestCase
+class CollectiveAgreementTest < ActiveSupport::TestCase
   # test "the truth" do
   #   assert true
   # end

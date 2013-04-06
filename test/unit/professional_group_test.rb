@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class ProfessionalGroupsTest < ActiveSupport::TestCase
+class ProfessionalGroupTest < ActiveSupport::TestCase
   # test "the truth" do
   #   assert true
   # end

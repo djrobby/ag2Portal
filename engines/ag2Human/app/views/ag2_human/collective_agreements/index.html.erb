@@ -1,0 +1,21 @@
+<h1>Listing collective_agreements</h1>
+
+<table>
+  <tr>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @collective_agreements.each do |collective_agreement| %>
+  <tr>
+    <td><%= link_to 'Show', collective_agreement %></td>
+    <td><%= link_to 'Edit', edit_collective_agreement_path(collective_agreement) %></td>
+    <td><%= link_to 'Destroy', collective_agreement, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Collective agreement', new_collective_agreement_path %>

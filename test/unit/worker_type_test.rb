@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class DegreeTypesTest < ActiveSupport::TestCase
+class WorkerTypeTest < ActiveSupport::TestCase
   # test "the truth" do
   #   assert true
   # end

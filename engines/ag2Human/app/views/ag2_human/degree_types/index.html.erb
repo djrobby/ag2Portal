@@ -1,0 +1,21 @@
+<h1>Listing degree_types</h1>
+
+<table>
+  <tr>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @degree_types.each do |degree_type| %>
+  <tr>
+    <td><%= link_to 'Show', degree_type %></td>
+    <td><%= link_to 'Edit', edit_degree_type_path(degree_type) %></td>
+    <td><%= link_to 'Destroy', degree_type, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Degree type', new_degree_type_path %>

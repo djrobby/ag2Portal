@@ -1,4 +1,4 @@
-class DegreeTypes < ActiveRecord::Base
+class DegreeType < ActiveRecord::Base
   attr_accessible :dt_code, :name
 
   validates :dt_code, :presence => true,

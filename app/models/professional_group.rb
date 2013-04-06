@@ -1,7 +1,7 @@
-class CollectiveAgreements < ActiveRecord::Base
-  attr_accessible :ca_code, :name
+class ProfessionalGroup < ActiveRecord::Base
+  attr_accessible :name, :pg_code
 
-  validates :ca_code, :presence => true,
+  validates :pg_code, :presence => true,
                       :length => { :minimum => 2 },
                       :uniqueness => true
   validates :name,    :presence => true

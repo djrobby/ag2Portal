@@ -1,0 +1,32 @@
+<% content_for :title, "aGestiona2 | ag2Human | ag2Tables" %>
+<% content_for :icon, "/assets/icon/TableA.png" %>
+<% content_for :alt, "ag2Tables" %>
+
+<!-- Breadcrumb -->
+<ul class="breadcrumb">
+  <li>
+    <a href="<%= main_app.root_path %>"><i class="icon-home"></i></a><span class="divider">></span>
+  </li>
+  <li>
+    <a href="<%= ag2_human.root_path %>">ag2Human</a><span class="divider">></span>
+  </li>
+  <% if @worker_types %>
+  <li>
+    Worker Types
+  </li>
+  <% end %>
+  <% if @worker_type %>
+  <li>
+    <a href="<%= worker_types_path %>">Worker Types</a><span class="divider">></span>
+  </li>
+  <% if @breadcrumb == 'read' || @breadcrumb == 'update' %>
+  <%= @worker_type.description %>
+  <% end %>
+  <% if @breadcrumb == 'create' %>
+  <li>
+    New
+  </li>
+  <% end %>
+  <% end %>
+  <a class="close" href="<%= ag2_human.root_path %>">&#215;</a>
+</ul>

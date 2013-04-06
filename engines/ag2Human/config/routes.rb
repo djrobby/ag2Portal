@@ -16,6 +16,11 @@ Ag2Human::Engine.routes.draw do
   match 'workers/:id/update_textfields_to_uppercase/:last/:first/:code/:fiscal', :controller => 'workers', :action => 'update_textfields_to_uppercase'
 
   resources :workers
+  resources :collective_agreements
+  resources :contract_types
+  resources :degree_types
+  resources :professional_groups
+  resources :worker_types
    
   root :to => 'home#index'
 end

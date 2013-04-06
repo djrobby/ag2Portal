@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class ContractTypesTest < ActiveSupport::TestCase
+class DegreeTypeTest < ActiveSupport::TestCase
   # test "the truth" do
   #   assert true
   # end
