@@ -12,12 +12,12 @@
   </li>
   <% if @collective_agreements %>
   <li>
-    Collective Agreements
+    Collective agmts
   </li>
   <% end %>
   <% if @collective_agreement %>
   <li>
-    <a href="<%= collective_agreements_path %>">Collective Agreements</a><span class="divider">></span>
+    <a href="<%= collective_agreements_path %>">Collective agmts</a><span class="divider">></span>
   </li>
   <% if @breadcrumb == 'read' || @breadcrumb == 'update' %>
   <%= @collective_agreement.ca_code %>

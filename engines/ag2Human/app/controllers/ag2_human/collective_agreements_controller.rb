@@ -18,6 +18,7 @@ module Ag2Human
     def show
       @breadcrumb = 'read'
       @collective_agreement = CollectiveAgreement.find(params[:id])
+      @workers = @collective_agreement.workers
   
       respond_to do |format|
         format.html # show.html.erb

@@ -20,7 +20,7 @@
     <a href="<%= workers_path %>">ag2Workers</a><span class="divider">></span>
   </li>
   <% if @breadcrumb == 'read' || @breadcrumb == 'update' %>
-  <%= @worker.last_name %>
+  <%= @worker.worker_code %>
   <% end %>
   <% if @breadcrumb == 'create' %>
   <li>

@@ -1,21 +1,27 @@
-<h1>Listing worker_types</h1>
+<%= render '/layouts/ag2_human/wtypesbreadcrumb' %>
 
-<table>
-  <tr>
-    <th></th>
-    <th></th>
-    <th></th>
-  </tr>
-
-<% @worker_types.each do |worker_type| %>
-  <tr>
-    <td><%= link_to 'Show', worker_type %></td>
-    <td><%= link_to 'Edit', edit_worker_type_path(worker_type) %></td>
-    <td><%= link_to 'Destroy', worker_type, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-  </tr>
-<% end %>
-</table>
-
-<br />
-
-<%= link_to 'New Worker type', new_worker_type_path %>
+<h3>Worker types</h3>
+<div class="span7">
+  <table class="table table-condensed table-striped">
+    <thead>
+      <tr>
+        <th>Description</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @worker_types.each do |t| %>
+      <tr>
+        <td><%= link_to t.description, t %></td>
+        <td><%= link_to 'Edit', edit_worker_type_path(t), :class => 'btn btn-mini' %>
+        <%= link_to("Delete", t, :data => { :confirm => "Are you sure?" }, :method => :delete, :class => 'btn btn-mini') %> </td>
+      </tr>
+      <% end %>
+    </tbody>
+  </table>
+  <%= link_to 'New Worker type', new_worker_type_path, :class => 'btn btn-primary' %>
+  <br />
+  <br />
+  <%= link_to 'Go to ag2Workers', workers_path %> |
+  <%= link_to 'Back to ag2Human', ag2_human.root_path %>
+</div>

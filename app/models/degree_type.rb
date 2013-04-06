@@ -6,5 +6,14 @@ class DegreeType < ActiveRecord::Base
                       :uniqueness => true
   validates :name,    :presence => true
   
+  before_validation :fields_to_uppercase
+
   has_many :workers
+  def fields_to_uppercase
+    self[:dt_code].upcase!
+  end
+
+  def to_label
+    "#{name} (#{dt_code})"
+  end
 end

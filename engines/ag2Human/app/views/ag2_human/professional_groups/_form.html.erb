@@ -1,17 +1,7 @@
-<%= form_for(@professional_group) do |f| %>
-  <% if @professional_group.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@professional_group.errors.count, "error") %> prohibited this professional_group from being saved:</h2>
-
-      <ul>
-      <% @professional_group.errors.full_messages.each do |msg| %>
-        <li><%= msg %></li>
-      <% end %>
-      </ul>
-    </div>
-  <% end %>
-
-  <div class="actions">
-    <%= f.submit %>
-  </div>
+<%= simple_form_for @professional_group, :html => {:class => 'form-vertical well' } do |f| %>
+<%= f.error_notification %>
+<%= display_base_errors resource %>
+<%= f.input :pg_code, :autofocus => true, :input_html => { :class => 'mid-text-field' }, :label_html => { :class => 'form-label' } %>
+<%= f.input :name, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %>
+<%= f.button :submit, :class => 'btn-primary' %>
 <% end %>

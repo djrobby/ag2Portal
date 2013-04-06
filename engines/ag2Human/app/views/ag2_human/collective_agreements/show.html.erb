@@ -1,5 +1,49 @@
-<p id="notice"><%= notice %></p>
+<%= render '/layouts/ag2_human/cagreementsbreadcrumb' %>
 
+<h3>Collective agreement</h3>
+<table class="table">
+  <tbody>
+    <tr>
+      <td>Id:</td>
+      <td><%= @collective_agreement.id %></td>
+      <td>Code:</td>
+      <td><%= @collective_agreement.ca_code unless @collective_agreement.ca_code.nil? %></td>
+    </tr>
+    <tr>
+      <td>Name:</td>
+      <td><%= @collective_agreement.name %></td>
+      <td></td>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
 
-<%= link_to 'Edit', edit_collective_agreement_path(@collective_agreement) %> |
-<%= link_to 'Back', collective_agreements_path %>
+<%= link_to 'Edit Collective agreement', edit_collective_agreement_path(@collective_agreement), :class => 'btn btn-primary' %>
+<br />
+<br />
+
+<% if (@workers.count > 0) %>
+<h4>Collective AGMT Workers</h4>
+<table class="table table-condensed table-striped">
+  <thead>
+    <tr>
+      <th>Code</th>
+      <th>Full Name</th>
+      <th>Company</th>
+      <th>Office</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @workers.each do |w| %>
+    <tr>
+      <td><%= link_to w.worker_code, w %></td>
+      <td><%= w.last_name %>, <%= w.first_name %></td>
+      <td><%= Company.find(w.company).name unless w.company.nil? %></td>
+      <td><%= Office.find(w.office).name unless w.office.nil? %></td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
+<% end %>
+
+<%= link_to 'Back to Collective agreements', collective_agreements_path %>

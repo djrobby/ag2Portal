@@ -18,6 +18,7 @@ module Ag2Human
     def show
       @breadcrumb = 'read'
       @worker_type = WorkerType.find(params[:id])
+      @workers = @worker_type.workers
   
       respond_to do |format|
         format.html # show.html.erb

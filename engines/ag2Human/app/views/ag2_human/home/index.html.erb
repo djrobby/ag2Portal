@@ -33,42 +33,53 @@
 </ul><!-- /.thumbnails -->
 <ul class="thumbnails">
   <!-- Apps 2 -->
-  <li class="span3">
+  <li class="span1"></li>
+  <li class="span2">
     <% if (session[:resolution] == "LD")%>
-    <a href="<%= professional_groups_path %>" class="thumbnail centered"><img src="/assets/icon/TableA.png" width="48" height="48" alt="Professional Groups" /><h5 class="h5-narrow">Professional Groups</h5></a>
+    <a href="<%= professional_groups_path %>" class="thumbnail centered"><img src="/assets/icon/TableA.png" width="48" height="48" alt="ag2Tables" /><h5 class="h5-narrow">Pro Groups</h5></a>
     <% elsif session[:resolution] == "SD" %>
-    <a href="<%= professional_groups_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/TableA72.png" width="72" height="72" alt="Professional Groups" /><h5 class="h5-narrow">Professional Groups</h5></a>
+    <a href="<%= professional_groups_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/TableA72.png" width="72" height="72" alt="ag2Tables" /><h5 class="h5-narrow">Pro Groups</h5></a>
     <% else %>
-    <a href="<%= professional_groups_path %>" class="thumbnail centered"><img src="/assets/pict/TableA96.png" width="96" height="96" alt="Professional Groups" /><h5 class="h5-narrow">Professional Groups</h5></a>
+    <a href="<%= professional_groups_path %>" class="thumbnail centered"><img src="/assets/pict/TableA96.png" width="96" height="96" alt="ag2Tables" /><h5 class="h5-narrow">Pro Groups</h5></a>
     <% end %>
   </li>
-  <li class="span3">
+  <li class="span2">
     <% if (session[:resolution] == "LD")%>
-    <a href="<%= collective_agreements_path %>" class="thumbnail centered"><img src="/assets/icon/TableA.png" width="48" height="48" alt="Collective Agreements" /><h5 class="h5-narrow">Collective Agreements</h5></a>
+    <a href="<%= collective_agreements_path %>" class="thumbnail centered"><img src="/assets/icon/TableA.png" width="48" height="48" alt="ag2Tables" /><h5 class="h5-narrow">Collective AGMTs</h5></a>
     <% elsif session[:resolution] == "SD" %>
-    <a href="<%= collective_agreements_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/TableA72.png" width="72" height="72" alt="Collective Agreements" /><h5 class="h5-narrow">Collective Agreements</h5></a>
+    <a href="<%= collective_agreements_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/TableA72.png" width="72" height="72" alt="ag2Tables" /><h5 class="h5-narrow">Collective AGMTs</h5></a>
     <% else %>
-    <a href="<%= collective_agreements_path %>" class="thumbnail centered"><img src="/assets/pict/TableA96.png" width="96" height="96" alt="Collective Agreements" /><h5 class="h5-narrow">Collective Agreements</h5></a>
+    <a href="<%= collective_agreements_path %>" class="thumbnail centered"><img src="/assets/pict/TableA96.png" width="96" height="96" alt="ag2Tables" /><h5 class="h5-narrow">Collective AGMTs</h5></a>
     <% end %>
   </li>
-  <li class="span3">
+  <li class="span2">
     <% if (session[:resolution] == "LD")%>
-    <a href="<%= degree_types_path %>" class="thumbnail centered"><img src="/assets/icon/TableA.png" width="48" height="48" alt="Degree Types" /><h5 class="h5-narrow">Degree Types</h5></a>
+    <a href="<%= degree_types_path %>" class="thumbnail centered"><img src="/assets/icon/TableA.png" width="48" height="48" alt="ag2Tables" /><h5 class="h5-narrow">Degree Types</h5></a>
     <% elsif session[:resolution] == "SD" %>
-    <a href="<%= degree_types_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/TableA72.png" width="72" height="72" alt="Degree Types" /><h5 class="h5-narrow">Degree Types</h5></a>
+    <a href="<%= degree_types_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/TableA72.png" width="72" height="72" alt="ag2Tables" /><h5 class="h5-narrow">Degree Types</h5></a>
     <% else %>
-    <a href="<%= degree_types_path %>" class="thumbnail centered"><img src="/assets/pict/TableA96.png" width="96" height="96" alt="Degree Types" /><h5 class="h5-narrow">Degree Types</h5></a>
+    <a href="<%= degree_types_path %>" class="thumbnail centered"><img src="/assets/pict/TableA96.png" width="96" height="96" alt="ag2Tables" /><h5 class="h5-narrow">Degree Types</h5></a>
     <% end %>
   </li>
-  <li class="span3">
+  <li class="span2">
     <% if (session[:resolution] == "LD")%>
-    <a href="<%= contract_types_path %>" class="thumbnail centered"><img src="/assets/icon/TableA.png" width="48" height="48" alt="Contract Types" /><h5 class="h5-narrow">Contract Types</h5></a>
+    <a href="<%= contract_types_path %>" class="thumbnail centered"><img src="/assets/icon/TableA.png" width="48" height="48" alt="ag2Tables" /><h5 class="h5-narrow">Contract Types</h5></a>
     <% elsif session[:resolution] == "SD" %>
-    <a href="<%= contract_types_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/TableA72.png" width="72" height="72" alt="Contract Types" /><h5 class="h5-narrow">Contract Types</h5></a>
+    <a href="<%= contract_types_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/TableA72.png" width="72" height="72" alt="ag2Tables" /><h5 class="h5-narrow">Contract Types</h5></a>
     <% else %>
-    <a href="<%= contract_types_path %>" class="thumbnail centered"><img src="/assets/pict/TableA96.png" width="96" height="96" alt="Contract Types" /><h5 class="h5-narrow">Contract Types</h5></a>
+    <a href="<%= contract_types_path %>" class="thumbnail centered"><img src="/assets/pict/TableA96.png" width="96" height="96" alt="ag2Tables" /><h5 class="h5-narrow">Contract Types</h5></a>
     <% end %>
   </li>
+  <li class="span2">
+    <% if (session[:resolution] == "LD")%>
+    <a href="<%= worker_types_path %>" class="thumbnail centered"><img src="/assets/icon/TableA.png" width="48" height="48" alt="ag2Tables" /><h5 class="h5-narrow">Worker Types</h5></a>
+    <% elsif session[:resolution] == "SD" %>
+    <a href="<%= worker_types_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/TableA72.png" width="72" height="72" alt="ag2Tables" /><h5 class="h5-narrow">Worker Types</h5></a>
+    <% else %>
+    <a href="<%= worker_types_path %>" class="thumbnail centered"><img src="/assets/pict/TableA96.png" width="96" height="96" alt="ag2Tables" /><h5 class="h5-narrow">Worker Types</h5></a>
+    <% end %>
+  </li>
+  <li class="span1"></li>
 </ul><!-- /.thumbnails -->
 
 <!-- Modals -->

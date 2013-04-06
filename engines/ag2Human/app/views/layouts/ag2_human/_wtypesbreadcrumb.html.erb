@@ -12,12 +12,12 @@
   </li>
   <% if @worker_types %>
   <li>
-    Worker Types
+    Worker types
   </li>
   <% end %>
   <% if @worker_type %>
   <li>
-    <a href="<%= worker_types_path %>">Worker Types</a><span class="divider">></span>
+    <a href="<%= worker_types_path %>">Worker types</a><span class="divider">></span>
   </li>
   <% if @breadcrumb == 'read' || @breadcrumb == 'update' %>
   <%= @worker_type.description %>

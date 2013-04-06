@@ -5,75 +5,75 @@
 <%= image_tag @worker.avatar.url(:medium) %> <!-- medium image size --> <% else %>
 <%= image_tag @worker.avatar.url %> <!-- big image size --> <% end %>
 <%= @worker.last_name %>, <%= @worker.first_name %> </h3>
-<table class="table"
-<tbody>
-<tr>
-<td>Id:</td>
-<td><%= @worker.id %></td>
-<td>Worker Code:</td>
-<td><%= @worker.worker_code unless @worker.worker_code.nil? %></td>
-</tr>
-<tr>
-<td>Fiscal Id:</td>
-<td><%= @worker.fiscal_id %></td>
-<td>User:</td>
-<td><%= User.find(@worker.user).name unless @worker.user.nil? %></td>
-</tr>
-<tr>
-<td>Office</td>
-<td><%= Office.find(@worker.office).name unless @worker.office.nil? %></td>
-<td>Company:</td>
-<td><%= Company.find(@worker.company).name unless @worker.company.nil? %></td>
-</tr>
-<tr>
-<td>Starting at:</td>
-<td><%= @worker.starting_at unless @worker.starting_at.nil? %></td>
-<td>Ending at:</td>
-<td><%= @worker.ending_at unless @worker.ending_at.nil? %></td>
-</tr>
-<tr>
-<td>Phone:</td>
-<td><%= @worker.phone %></td>
-<td>Cellular:</td>
-<td><%= @worker.cellular %></td>
-</tr>
-<tr>
-<td>Address:</td>
-<td> <%= @worker.street_type.street_type_code.titleize  %>. <%= @worker.street_name %> <%= @worker.street_number %>
-<% if !@worker.building.nil? %>
-<%= @worker.building.titleize %>
-<% end %>
-<% if !@worker.floor.nil? %>
-<%= @worker.floor %>&ordm;
-<% end %>
-<% if !@worker.floor_office.nil? %>
-<%= @worker.floor_office %>
-<% end %> </td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>Town:</td>
-<td><%= @worker.town.name %></td>
-<td>Province:</td>
-<td><%= @worker.province.name %></td>
-</tr>
-<tr>
-<td>Zip Code:</td>
-<td><%= @worker.zipcode.zipcode %></td>
-<td>Email:</td>
-<td><%= @worker.email %></td>
-</tr>
-<tr>
-<td>Created at:</td>
-<td><%= @worker.created_at %></td>
-<td>Updated at:</td>
-<td><%= @worker.updated_at %></td>
-</tr>
-</tbody>
+<table class="table">
+  <tbody>
+    <tr>
+      <td>Id:</td>
+      <td><%= @worker.id %></td>
+      <td>Worker Code:</td>
+      <td><%= @worker.worker_code unless @worker.worker_code.nil? %></td>
+    </tr>
+    <tr>
+      <td>Fiscal Id:</td>
+      <td><%= @worker.fiscal_id %></td>
+      <td>User:</td>
+      <td><%= User.find(@worker.user).name unless @worker.user.nil? %></td>
+    </tr>
+    <tr>
+      <td>Office</td>
+      <td><%= Office.find(@worker.office).name unless @worker.office.nil? %></td>
+      <td>Company:</td>
+      <td><%= Company.find(@worker.company).name unless @worker.company.nil? %></td>
+    </tr>
+    <tr>
+      <td>Starting at:</td>
+      <td><%= @worker.starting_at unless @worker.starting_at.nil? %></td>
+      <td>Ending at:</td>
+      <td><%= @worker.ending_at unless @worker.ending_at.nil? %></td>
+    </tr>
+    <tr>
+      <td>Phone:</td>
+      <td><%= @worker.phone %></td>
+      <td>Cellular:</td>
+      <td><%= @worker.cellular %></td>
+    </tr>
+    <tr>
+      <td>Address:</td>
+      <td> <%= @worker.street_type.street_type_code.titleize  %>. <%= @worker.street_name %> <%= @worker.street_number %>
+      <% if !@worker.building.nil? %>
+      <%= @worker.building.titleize %>
+      <% end %>
+      <% if !@worker.floor.nil? %>
+      <%= @worker.floor %>&ordm;
+      <% end %>
+      <% if !@worker.floor_office.nil? %>
+      <%= @worker.floor_office %>
+      <% end %> </td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Town:</td>
+      <td><%= @worker.town.name %></td>
+      <td>Province:</td>
+      <td><%= @worker.province.name %></td>
+    </tr>
+    <tr>
+      <td>Zip Code:</td>
+      <td><%= @worker.zipcode.zipcode %></td>
+      <td>Email:</td>
+      <td><%= @worker.email %></td>
+    </tr>
+    <tr>
+      <td>Created at:</td>
+      <td><%= @worker.created_at %></td>
+      <td>Updated at:</td>
+      <td><%= @worker.updated_at %></td>
+    </tr>
+  </tbody>
 </table>
 
 <%= link_to 'Edit Worker', edit_worker_path(@worker), :class => 'btn btn-primary' %>
-  <br />
-  <br />
-  <%= link_to 'Back to Workers', workers_path %>
+<br />
+<br />
+<%= link_to 'Back to Workers', workers_path %>

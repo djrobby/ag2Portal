@@ -5,6 +5,15 @@ class ProfessionalGroup < ActiveRecord::Base
                       :length => { :minimum => 2 },
                       :uniqueness => true
   validates :name,    :presence => true
+
+  before_validation :fields_to_uppercase
   
   has_many :workers
+  def fields_to_uppercase
+    self[:pg_code].upcase!
+  end
+
+  def to_label
+    "#{name} (#{pg_code})"
+  end
 end

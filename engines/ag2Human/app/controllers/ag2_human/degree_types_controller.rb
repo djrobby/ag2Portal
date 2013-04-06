@@ -18,6 +18,7 @@ module Ag2Human
     def show
       @breadcrumb = 'read'
       @degree_type = DegreeType.find(params[:id])
+      @workers = @degree_type.workers
   
       respond_to do |format|
         format.html # show.html.erb

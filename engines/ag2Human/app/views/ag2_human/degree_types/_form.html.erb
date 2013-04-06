@@ -1,17 +1,7 @@
-<%= form_for(@degree_type) do |f| %>
-  <% if @degree_type.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@degree_type.errors.count, "error") %> prohibited this degree_type from being saved:</h2>
-
-      <ul>
-      <% @degree_type.errors.full_messages.each do |msg| %>
-        <li><%= msg %></li>
-      <% end %>
-      </ul>
-    </div>
-  <% end %>
-
-  <div class="actions">
-    <%= f.submit %>
-  </div>
+<%= simple_form_for @degree_type, :html => {:class => 'form-vertical well' } do |f| %>
+<%= f.error_notification %>
+<%= display_base_errors resource %>
+<%= f.input :dt_code, :autofocus => true, :input_html => { :class => 'mid-text-field' }, :label_html => { :class => 'form-label' } %>
+<%= f.input :name, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %>
+<%= f.button :submit, :class => 'btn-primary' %>
 <% end %>

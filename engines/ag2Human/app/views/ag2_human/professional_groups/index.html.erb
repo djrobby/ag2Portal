@@ -1,21 +1,29 @@
-<h1>Listing professional_groups</h1>
+<%= render '/layouts/ag2_human/pgroupsbreadcrumb' %>
 
-<table>
-  <tr>
-    <th></th>
-    <th></th>
-    <th></th>
-  </tr>
-
-<% @professional_groups.each do |professional_group| %>
-  <tr>
-    <td><%= link_to 'Show', professional_group %></td>
-    <td><%= link_to 'Edit', edit_professional_group_path(professional_group) %></td>
-    <td><%= link_to 'Destroy', professional_group, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-  </tr>
-<% end %>
-</table>
-
-<br />
-
-<%= link_to 'New Professional group', new_professional_group_path %>
+<h3>Professional groups</h3>
+<div class="span7">
+  <table class="table table-condensed table-striped">
+    <thead>
+      <tr>
+        <th>Code</th>
+        <th>Name</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @professional_groups.each do |t| %>
+      <tr>
+        <td><%= link_to t.pg_code, t %></td>
+        <td><%= t.name %></td>
+        <td><%= link_to 'Edit', edit_professional_group_path(t), :class => 'btn btn-mini' %>
+        <%= link_to("Delete", t, :data => { :confirm => "Are you sure?" }, :method => :delete, :class => 'btn btn-mini') %> </td>
+      </tr>
+      <% end %>
+    </tbody>
+  </table>
+  <%= link_to 'New Proffesional group', new_professional_group_path, :class => 'btn btn-primary' %>
+  <br />
+  <br />
+  <%= link_to 'Go to ag2Workers', workers_path %> |
+  <%= link_to 'Back to ag2Human', ag2_human.root_path %>
+</div>

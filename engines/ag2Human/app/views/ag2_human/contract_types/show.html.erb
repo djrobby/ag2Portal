@@ -1,5 +1,49 @@
-<p id="notice"><%= notice %></p>
+<%= render '/layouts/ag2_human/ctypesbreadcrumb' %>
 
+<h3>Contract type</h3>
+<table class="table">
+  <tbody>
+    <tr>
+      <td>Id:</td>
+      <td><%= @contract_type.id %></td>
+      <td>Code:</td>
+      <td><%= @contract_type.ct_code unless @contract_type.ct_code.nil? %></td>
+    </tr>
+    <tr>
+      <td>Name:</td>
+      <td><%= @contract_type.name %></td>
+      <td></td>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
 
-<%= link_to 'Edit', edit_contract_type_path(@contract_type) %> |
-<%= link_to 'Back', contract_types_path %>
+<%= link_to 'Edit Contract type', edit_contract_type_path(@contract_type), :class => 'btn btn-primary' %>
+<br />
+<br />
+
+<% if (@workers.count > 0) %>
+<h4>Contract type Workers</h4>
+<table class="table table-condensed table-striped">
+  <thead>
+    <tr>
+      <th>Code</th>
+      <th>Full Name</th>
+      <th>Company</th>
+      <th>Office</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @workers.each do |w| %>
+    <tr>
+      <td><%= link_to w.worker_code, w %></td>
+      <td><%= w.last_name %>, <%= w.first_name %></td>
+      <td><%= Company.find(w.company).name unless w.company.nil? %></td>
+      <td><%= Office.find(w.office).name unless w.office.nil? %></td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
+<% end %>
+
+<%= link_to 'Back to Contract types', contract_types_path %>
