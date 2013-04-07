@@ -1,3 +1,5 @@
+<% session[:return_to] = nil %>
+<% session[:return_to_url] = nil %>
 <%= render '/layouts/ag2_human/wtypesbreadcrumb' %>
 
 <h3>Worker types</h3>
@@ -12,7 +14,7 @@
     <tbody>
       <% @worker_types.each do |t| %>
       <tr>
-        <td><%= link_to t.description, t %></td>
+        <td><%= link_to t.description.titleize, t %></td>
         <td><%= link_to 'Edit', edit_worker_type_path(t), :class => 'btn btn-mini' %>
         <%= link_to("Delete", t, :data => { :confirm => "Are you sure?" }, :method => :delete, :class => 'btn btn-mini') %> </td>
       </tr>

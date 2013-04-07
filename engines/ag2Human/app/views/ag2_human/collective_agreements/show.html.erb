@@ -15,6 +15,12 @@
       <td></td>
       <td></td>
     </tr>
+    <tr>
+      <td>Created at:</td>
+      <td><%= @collective_agreement.created_at.utc.getlocal.strftime("%d/%m/%Y %H:%M:%S") %></td>
+      <td>Updated at:</td>
+      <td><%= @collective_agreement.updated_at.utc.getlocal.strftime("%d/%m/%Y %H:%M:%S") %></td>
+    </tr>
   </tbody>
 </table>
 
@@ -34,6 +40,8 @@
     </tr>
   </thead>
   <tbody>
+    <% session[:return_to] = 'Collective agreement' %>
+    <% session[:return_to_url] = "#{request.protocol}#{request.host_with_port}#{request.fullpath}" %>
     <% @workers.each do |w| %>
     <tr>
       <td><%= link_to w.worker_code, w %></td>

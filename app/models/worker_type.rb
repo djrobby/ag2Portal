@@ -5,6 +5,6 @@ class WorkerType < ActiveRecord::Base
   
   has_many :workers
   def to_label
-    "#{description}"
+    "#{description.titleize}"
   end
 end

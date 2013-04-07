@@ -21,15 +21,15 @@
     </tr>
     <tr>
       <td>Starting at:</td>
-      <td><%= @worker.starting_at unless @worker.starting_at.nil? %></td>
+      <td><%= @worker.starting_at.strftime("%d/%m/%Y") unless @worker.starting_at.nil? %></td>
       <td>Ending at:</td>
-      <td><%= @worker.ending_at unless @worker.ending_at.nil? %></td>
+      <td><%= @worker.ending_at.strftime("%d/%m/%Y") unless @worker.ending_at.nil? %></td>
     </tr>
     <tr>
       <td>Issue starting at:</td>
-      <td><%= @worker.issue_starting_at unless @worker.starting_at.nil? %></td>
+      <td><%= @worker.issue_starting_at.strftime("%d/%m/%Y") unless @worker.issue_starting_at.nil? %></td>
       <td>Borned on:</td>
-      <td><%= @worker.borned_on unless @worker.borned_on.nil? %></td>
+      <td><%= @worker.borned_on.strftime("%d/%m/%Y") unless @worker.borned_on.nil? %></td>
     </tr>
     <tr>
       <td>Office:</td>
@@ -51,7 +51,7 @@
     </tr>
     <tr>
       <td>Worker Type:</td>
-      <td><%= WorkerType.find(@worker.worker_type).description unless @worker.worker_type.nil? %></td>
+      <td><%= WorkerType.find(@worker.worker_type).description.titleize unless @worker.worker_type.nil? %></td>
       <td>Position:</td>
       <td><%= @worker.position unless @worker.position.nil? %></td>
     </tr>
@@ -105,9 +105,9 @@
     </tr>
     <tr>
       <td>Created at:</td>
-      <td><%= @worker.created_at %></td>
+      <td><%= @worker.created_at.utc.getlocal.strftime("%d/%m/%Y %H:%M:%S") %></td>
       <td>Updated at:</td>
-      <td><%= @worker.updated_at %></td>
+      <td><%= @worker.updated_at.utc.getlocal.strftime("%d/%m/%Y %H:%M:%S") %></td>
     </tr>
   </tbody>
 </table>
@@ -115,4 +115,9 @@
 <%= link_to 'Edit Worker', edit_worker_path(@worker), :class => 'btn btn-primary' %>
 <br />
 <br />
+<% if session[:return_to] && session[:return_to_url] %>
+<a href="<%= session[:return_to_url] %>">Back to <%= session[:return_to] %></a> |
+<% session[:return_to] = nil %>
+<% session[:return_to_url] = nil %>
+<% end %>
 <%= link_to 'Back to Workers', workers_path %>

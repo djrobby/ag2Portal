@@ -2,7 +2,10 @@
   var text_field_color;
 
   $(document).ready(function() {
-    $('.date_picker').datepicker();
+    $('.date_picker').datepicker({
+      format : 'dd/mm/yyyy',
+      weekStart : 1
+    });
     text_field_color = $("#worker_last_name").css('color')
   })
   jQuery(function($) {
@@ -111,12 +114,12 @@
   <label class="multi-field-label-two"> <%= f.input :fiscal_id, :input_html => { :class => 'mid-text-field' }, :label_html => { :class => 'form-label' } %> </label>
 </div>
 <div>
-  <label class="multi-field-label-two"> <%= f.input :starting_at, :as => :string, :input_html => { :class => 'mid-text-field date_picker' }, :label_html => { :class => 'form-label' } %> </label>
-  <label class="multi-field-label-two"> <%= f.input :ending_at, :as => :string, :input_html => { :class => 'mid-text-field date_picker' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.input :starting_at, :start_year => Time.now.year - 100, :end_year => Time.now.year + 100, :as => :string, :input_html => { :value => (f.object.starting_at.strftime("%d/%m/%Y") if f.object.starting_at), :class => 'mid-text-field date_picker' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.input :ending_at, :start_year => Time.now.year - 100, :end_year => Time.now.year + 100, :as => :string, :input_html => { :value => (f.object.ending_at.strftime("%d/%m/%Y") if f.object.ending_at), :class => 'mid-text-field date_picker' }, :label_html => { :class => 'form-label' } %> </label>
 </div>
 <div>
-  <label class="multi-field-label-two"> <%= f.input :issue_starting_at, :as => :string, :input_html => { :class => 'mid-text-field date_picker' }, :label_html => { :class => 'form-label' } %> </label>
-  <label class="multi-field-label-two"> <%= f.input :borned_on, :as => :string, :input_html => { :class => 'mid-text-field date_picker' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.input :issue_starting_at, :start_year => Time.now.year - 100, :end_year => Time.now.year + 100, :as => :string, :input_html => { :value => (f.object.issue_starting_at.strftime("%d/%m/%Y") if f.object.issue_starting_at), :class => 'mid-text-field date_picker' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.input :borned_on, :start_year => Time.now.year - 100, :end_year => Time.now.year + 100, :as => :string, :input_html => { :value => (f.object.borned_on.strftime("%d/%m/%Y") if f.object.borned_on), :class => 'mid-text-field date_picker' }, :label_html => { :class => 'form-label' } %> </label>
 </div>
 <div>
   <label class="multi-field-label-two"> <%= f.association :office, collection: Office.all(order: 'name'), :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
@@ -131,7 +134,7 @@
   <label class="multi-field-label-two"> <%= f.association :degree_type, collection: DegreeType.all(order: 'name'), :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
 </div>
 <div>
-  <label class="multi-field-label-two"> <%= f.association :worker_type, collection: WorkerType.all(order: 'description'), :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.association :worker_type, collection: WorkerType.all(order: 'description'), :as => :radio_buttons, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
   <label class="multi-field-label-two"> <%= f.input :position, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
 </div>
 <div>
