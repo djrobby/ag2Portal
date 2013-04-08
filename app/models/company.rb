@@ -25,5 +25,6 @@ class Company < ActiveRecord::Base
   has_many :corp_contacts
   def fields_to_uppercase
     self[:fiscal_id].upcase!
+    self[:invoice_code].upcase!
   end
 end

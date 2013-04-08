@@ -57,6 +57,24 @@
   </tbody>
 </table>
 
+<h4>Company Invoices Info</h4>
+<table class="table table-condensed">
+  <tbody>
+    <tr>
+      <td>Code:</td>
+      <td><%= @company.invoice_code %></td>
+      <td>Left Margin:</td>
+      <td><%= @company.invoice_left_margin %></td>
+    </tr>
+    <tr>
+      <td>Header:</td>
+      <td><%= @company.invoice_header %></td>
+      <td>Footer:</td>
+      <td><%= @company.invoice_footer %></td>
+    </tr>
+  </tbody>
+</table>
+
 <%= link_to 'Edit Company', edit_company_path(@company), :class => 'btn btn-primary' %>
 <br />
 <br />

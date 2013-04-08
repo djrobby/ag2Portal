@@ -1,5 +1,52 @@
-<p id="notice"><%= notice %></p>
+<%= render '/layouts/ag2_directory/corpcontactsbreadcrumb' %>
 
+<h3> <% if session[:resolution] == "LD" %>
+<%= image_tag @corp_contact.avatar.url(:small) %> <!-- small image size --> <% elsif session[:resolution] == "SD" %>
+<%= image_tag @corp_contact.avatar.url(:medium) %> <!-- medium image size --> <% else %>
+<%= image_tag @corp_contact.avatar.url %> <!-- big image size --> <% end %>
+<%= @corp_contact.last_name %>, <%= @corp_contact.first_name %> </h3>
+<table class="table">
+  <tbody>
+    <tr>
+      <td>Office:</td>
+      <td><%= Office.find(@corp_contact.office).name unless @corp_contact.office.nil? %></td>
+      <td>Company:</td>
+      <td><%= Company.find(@corp_contact.company).name unless @corp_contact.company.nil? %></td>
+    </tr>
+    <tr>
+      <td>Position:</td>
+      <td><%= @corp_contact.position unless @corp_contact.position.nil? %></td>
+      <td>Department:</td>
+      <td><%= Department.find(@corp_contact.department).name unless @corp_contact.department.nil? %></td>
+    </tr>
+    <tr>
+      <td>Corp Phone:</td>
+      <td><%= @corp_contact.corp_phone %>
+      <% if @corp_contact.corp_extension.nil? %>
+      (<%= @corp_contact.corp_extension %>)
+      <% end %> </td>
+      <td>Corp Cellular:</td>
+      <td><%= @corp_contact.corp_cellular_long %>
+      <% if @corp_contact.corp_cellular_short.nil? %>
+      (<%= @corp_contact.corp_cellular_short %>)
+      <% end %> </td>
+    </tr>
+    <tr>
+      <td>Email:</td>
+      <td><%= @corp_contact.email %></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Created at:</td>
+      <td><%= @corp_contact.created_at.utc.getlocal.strftime("%d/%m/%Y %H:%M:%S") %></td>
+      <td>Updated at:</td>
+      <td><%= @corp_contact.updated_at.utc.getlocal.strftime("%d/%m/%Y %H:%M:%S") %></td>
+    </tr>
+  </tbody>
+</table>
 
-<%= link_to 'Edit', edit_corp_contact_path(@corp_contact) %> |
-<%= link_to 'Back', corp_contacts_path %>
+<%= link_to 'Edit Contact', edit_corp_contact_path(@corp_contact), :class => 'btn btn-primary' %>
+<br />
+<br />
+<%= link_to 'Back to Corporate Contacts', corp_contacts_path %>

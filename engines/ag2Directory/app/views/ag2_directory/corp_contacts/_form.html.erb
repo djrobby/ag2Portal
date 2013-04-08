@@ -1,17 +1,43 @@
-<%= form_for(@corp_contact) do |f| %>
-  <% if @corp_contact.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@corp_contact.errors.count, "error") %> prohibited this corp_contact from being saved:</h2>
+<script>
+  jQuery(function($) {
+    // when the #corp_contact_office_id field changes
+    $("#corp_contact_office_id").change(function() {
+      // make a POST call and replace the content
+      var contact = $('select#corp_contact_office_id :selected').val();
+      if (contact == "")
+        contact = "0";
+      jQuery.getJSON('update_company_textfield_from_office/' + contact, function(data) {
+        $("#corp_contact_company_id").val(data.id);
+      })
+      return false;
+    });
+  })
+</script>
 
-      <ul>
-      <% @corp_contact.errors.full_messages.each do |msg| %>
-        <li><%= msg %></li>
-      <% end %>
-      </ul>
-    </div>
-  <% end %>
-
-  <div class="actions">
-    <%= f.submit %>
-  </div>
+<%= simple_form_for @corp_contact, :html => { :class => 'form-vertical well' } do |f| %>
+<%= f.error_notification %>
+<%= display_base_errors resource %>
+<div>
+  <label class="multi-field-label-two"> <%= f.input :last_name, :required => true, :autofocus => true, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.input :first_name, :required => true, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+</div>
+<div>
+  <label class="multi-field-label-two"> <%= f.association :office, collection: Office.all(order: 'name'), :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.association :company, collection: Company.all(order: 'name'), :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+</div>
+<div>
+  <label class="multi-field-label-two"> <%= f.input :position, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.association :department, collection: Department.all(order: 'name'), :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+</div>
+<%= f.input :email, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %>
+<div>
+  <label class="multi-field-label-two"> <%= f.input :corp_phone, :input_html => { :class => 'large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.input :corp_extension, :input_html => { :class => 'large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+</div>
+<div>
+  <label class="multi-field-label-two"> <%= f.input :corp_cellular_long, :input_html => { :class => 'large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.input :corp_cellular_short, :input_html => { :class => 'large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+</div>
+<%= f.input :avatar, :as => :file, :label_html => { :class => 'form-label' } %>
+<%= f.button :submit, :class => 'btn-primary' %>
 <% end %>

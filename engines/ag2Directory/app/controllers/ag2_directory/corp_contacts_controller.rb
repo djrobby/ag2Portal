@@ -2,6 +2,20 @@ require_dependency "ag2_directory/application_controller"
 
 module Ag2Directory
   class CorpContactsController < ApplicationController
+    # Update company text field at view from office select
+    def update_company_textfield_from_office
+      @office = Office.find(params[:id])
+      @company = Company.find(@office.company)
+
+      respond_to do |format|
+        format.html # update_company_textfield_from_office.html.erb does not exist! JSON only
+        format.json { render json: @company }
+      end
+    end
+
+    #
+    # Default Methods
+    #
     # GET /corp_contacts
     # GET /corp_contacts.json
     def index
@@ -16,6 +30,7 @@ module Ag2Directory
     # GET /corp_contacts/1
     # GET /corp_contacts/1.json
     def show
+      @breadcrumb = 'read'
       @corp_contact = CorpContact.find(params[:id])
   
       respond_to do |format|
@@ -27,6 +42,7 @@ module Ag2Directory
     # GET /corp_contacts/new
     # GET /corp_contacts/new.json
     def new
+      @breadcrumb = 'create'
       @corp_contact = CorpContact.new
   
       respond_to do |format|
@@ -37,12 +53,14 @@ module Ag2Directory
   
     # GET /corp_contacts/1/edit
     def edit
+      @breadcrumb = 'update'
       @corp_contact = CorpContact.find(params[:id])
     end
   
     # POST /corp_contacts
     # POST /corp_contacts.json
     def create
+      @breadcrumb = 'create'
       @corp_contact = CorpContact.new(params[:corp_contact])
   
       respond_to do |format|
@@ -59,6 +77,7 @@ module Ag2Directory
     # PUT /corp_contacts/1
     # PUT /corp_contacts/1.json
     def update
+      @breadcrumb = 'update'
       @corp_contact = CorpContact.find(params[:id])
   
       respond_to do |format|
