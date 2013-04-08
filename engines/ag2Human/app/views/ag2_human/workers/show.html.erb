@@ -50,6 +50,12 @@
       <td><%= DegreeType.find(@worker.degree_type).name unless @worker.degree_type.nil? %></td>
     </tr>
     <tr>
+      <td>Department:</td>
+      <td><%= Department.find(@worker.department).name unless @worker.department.nil? %></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
       <td>Worker Type:</td>
       <td><%= WorkerType.find(@worker.worker_type).description.titleize unless @worker.worker_type.nil? %></td>
       <td>Position:</td>
@@ -63,7 +69,10 @@
     </tr>
     <tr>
       <td>Corp Phone:</td>
-      <td><%= @worker.corp_phone %></td>
+      <td><%= @worker.corp_phone %>
+      <% if !@worker.corp_extension.nil? %>
+      (<%= @worker.corp_extension %>)
+      <% end %> </td>
       <td>Corp Cellular:</td>
       <td><%= @worker.corp_cellular_long %>
       <% if !@worker.corp_cellular_short.nil? %>

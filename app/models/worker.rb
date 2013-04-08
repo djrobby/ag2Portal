@@ -11,6 +11,7 @@ class Worker < ActiveRecord::Base
   belongs_to :degree_type
   belongs_to :professional_group
   belongs_to :worker_type
+  belongs_to :department
   attr_accessible :building, :own_cellular, :email, :ending_at, :first_name,
                   :fiscal_id, :floor, :floor_office, :last_name, :own_phone,
                   :starting_at, :street_name, :street_number, :worker_code,
@@ -20,7 +21,8 @@ class Worker < ActiveRecord::Base
                   :degree_type_id, :contract_type_id, :worker_type_id,
                   :borned_on, :issue_starting_at, :affiliation_id,
                   :contribution_account_code, :position, :corp_phone,
-                  :corp_cellular_long, :corp_cellular_short
+                  :corp_cellular_long, :corp_cellular_short, :corp_extension,
+                  :department_id
   has_attached_file :avatar, :styles => { :medium => "96x96>", :small => "64x64>" }, :default_url => "/images/missing/:style/user.png"
 
   validates :first_name,                :presence => true,

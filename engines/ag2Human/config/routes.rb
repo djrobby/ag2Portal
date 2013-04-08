@@ -21,6 +21,7 @@ Ag2Human::Engine.routes.draw do
   resources :degree_types
   resources :professional_groups
   resources :worker_types
+  resources :departments
    
   root :to => 'home#index'
 end

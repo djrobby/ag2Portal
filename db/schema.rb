@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130406163506) do
+ActiveRecord::Schema.define(:version => 20130408142804) do
 
   create_table "apps", :force => true do |t|
     t.string   "name"
@@ -39,8 +39,8 @@ ActiveRecord::Schema.define(:version => 20130406163506) do
   create_table "companies", :force => true do |t|
     t.string   "name"
     t.string   "fiscal_id"
-    t.datetime "created_at",     :null => false
-    t.datetime "updated_at",     :null => false
+    t.datetime "created_at",          :null => false
+    t.datetime "updated_at",          :null => false
     t.integer  "street_type_id"
     t.string   "street_name"
     t.string   "street_number"
@@ -54,9 +54,14 @@ ActiveRecord::Schema.define(:version => 20130406163506) do
     t.string   "fax"
     t.string   "cellular"
     t.string   "email"
+    t.string   "invoice_code"
+    t.string   "invoice_header"
+    t.string   "invoice_footer"
+    t.string   "invoice_left_margin"
   end
 
   add_index "companies", ["fiscal_id"], :name => "index_companies_on_fiscal_id"
+  add_index "companies", ["invoice_code"], :name => "index_companies_on_invoice_code"
   add_index "companies", ["province_id"], :name => "index_companies_on_province_id"
   add_index "companies", ["street_type_id"], :name => "index_companies_on_street_type_id"
   add_index "companies", ["town_id"], :name => "index_companies_on_town_id"
@@ -71,6 +76,37 @@ ActiveRecord::Schema.define(:version => 20130406163506) do
 
   add_index "contract_types", ["ct_code"], :name => "index_contract_types_on_ct_code"
 
+  create_table "corp_contacts", :force => true do |t|
+    t.string   "first_name"
+    t.string   "last_name"
+    t.integer  "company_id"
+    t.integer  "office_id"
+    t.integer  "department_id"
+    t.string   "position"
+    t.string   "email"
+    t.string   "corp_phone"
+    t.string   "corp_extension"
+    t.string   "corp_cellular_long"
+    t.string   "corp_cellular_short"
+    t.datetime "created_at",          :null => false
+    t.datetime "updated_at",          :null => false
+    t.string   "avatar_file_name"
+    t.string   "avatar_content_type"
+    t.integer  "avatar_file_size"
+    t.datetime "avatar_updated_at"
+  end
+
+  add_index "corp_contacts", ["company_id"], :name => "index_corp_contacts_on_company_id"
+  add_index "corp_contacts", ["corp_cellular_long"], :name => "index_corp_contacts_on_corp_cellular_long"
+  add_index "corp_contacts", ["corp_cellular_short"], :name => "index_corp_contacts_on_corp_cellular_short"
+  add_index "corp_contacts", ["corp_extension"], :name => "index_corp_contacts_on_corp_extension"
+  add_index "corp_contacts", ["corp_phone"], :name => "index_corp_contacts_on_corp_phone"
+  add_index "corp_contacts", ["department_id"], :name => "index_corp_contacts_on_department_id"
+  add_index "corp_contacts", ["email"], :name => "index_corp_contacts_on_email"
+  add_index "corp_contacts", ["first_name"], :name => "index_corp_contacts_on_first_name"
+  add_index "corp_contacts", ["last_name"], :name => "index_corp_contacts_on_last_name"
+  add_index "corp_contacts", ["office_id"], :name => "index_corp_contacts_on_office_id"
+
   create_table "degree_types", :force => true do |t|
     t.string   "name"
     t.string   "dt_code"
@@ -79,6 +115,12 @@ ActiveRecord::Schema.define(:version => 20130406163506) do
   end
 
   add_index "degree_types", ["dt_code"], :name => "index_degree_types_on_dt_code"
+
+  create_table "departments", :force => true do |t|
+    t.string   "name"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
 
   create_table "offices", :force => true do |t|
     t.string   "name"
@@ -243,6 +285,8 @@ ActiveRecord::Schema.define(:version => 20130406163506) do
     t.string   "corp_phone"
     t.string   "corp_cellular_long"
     t.string   "corp_cellular_short"
+    t.string   "corp_extension"
+    t.integer  "department_id"
   end
 
   add_index "workers", ["affiliation_id"], :name => "index_workers_on_affiliation_id"
@@ -252,8 +296,10 @@ ActiveRecord::Schema.define(:version => 20130406163506) do
   add_index "workers", ["contribution_account_code"], :name => "index_workers_on_contribution_account_code"
   add_index "workers", ["corp_cellular_long"], :name => "index_workers_on_corp_cellular_long"
   add_index "workers", ["corp_cellular_short"], :name => "index_workers_on_corp_cellular_short"
+  add_index "workers", ["corp_extension"], :name => "index_workers_on_corp_extension"
   add_index "workers", ["corp_phone"], :name => "index_workers_on_corp_phone"
   add_index "workers", ["degree_type_id"], :name => "index_workers_on_degree_type_id"
+  add_index "workers", ["department_id"], :name => "index_workers_on_department_id"
   add_index "workers", ["fiscal_id"], :name => "index_workers_on_fiscal_id"
   add_index "workers", ["office_id"], :name => "index_workers_on_office_id"
   add_index "workers", ["professional_group_id"], :name => "index_workers_on_professional_group_id"

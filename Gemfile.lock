@@ -5,6 +5,12 @@ PATH
       rails (~> 3.2.12)
 
 PATH
+  remote: engines/ag2Directory
+  specs:
+    ag2_directory (0.0.1)
+      rails (~> 3.2.12)
+
+PATH
   remote: engines/ag2Human
   specs:
     ag2_human (0.0.1)
@@ -143,6 +149,7 @@ PLATFORMS
 
 DEPENDENCIES
   ag2_admin!
+  ag2_directory!
   ag2_human!
   bootstrap-sass
   cancan

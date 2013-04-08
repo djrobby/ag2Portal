@@ -133,6 +133,7 @@
   <label class="multi-field-label-two"> <%= f.association :professional_group, collection: ProfessionalGroup.all(order: 'name'), :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
   <label class="multi-field-label-two"> <%= f.association :degree_type, collection: DegreeType.all(order: 'name'), :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
 </div>
+<label class="multi-field-label-two"> <%= f.association :department, collection: Department.all(order: 'name'), :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
 <div>
   <label class="multi-field-label-two"> <%= f.association :worker_type, collection: WorkerType.all(order: 'description'), :as => :radio_buttons, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
   <label class="multi-field-label-two"> <%= f.input :position, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
@@ -142,9 +143,12 @@
   <label class="multi-field-label-two"> <%= f.input :contribution_account_code, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
 </div>
 <div>
-  <label class="multi-field-label-three"> <%= f.input :corp_phone, :input_html => { :class => 'large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
-  <label class="multi-field-label-three"> <%= f.input :corp_cellular_long, :input_html => { :class => 'large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
-  <label class="multi-field-label-three"> <%= f.input :corp_cellular_short, :input_html => { :class => 'large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.input :corp_phone, :input_html => { :class => 'large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.input :corp_extension, :input_html => { :class => 'large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+</div>
+<div>
+  <label class="multi-field-label-two"> <%= f.input :corp_cellular_long, :input_html => { :class => 'large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.input :corp_cellular_short, :input_html => { :class => 'large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
 </div>
 <div>
   <label class="multi-field-label-two"> <%= f.input :own_phone, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>

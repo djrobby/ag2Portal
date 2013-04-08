@@ -1,4 +1,5 @@
 module Ag2Directory
-  class ApplicationController < ActionController::Base
+  class ApplicationController < ::ApplicationController
+    layout 'layouts/application'
   end
 end

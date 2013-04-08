@@ -1,0 +1,32 @@
+<% content_for :title, "aGestiona2 | Share Contacts" %>
+<% content_for :icon, "/assets/icon/ag2Contacts.png" %>
+<% content_for :alt, "ag2Contacts" %>
+
+<!-- Breadcrumb -->
+<ul class="breadcrumb">
+  <li>
+    <a href="<%= main_app.root_path %>"><i class="icon-home"></i></a><span class="divider">></span>
+  </li>
+  <li>
+    <a href="<%= ag2_directory.root_path %>">ag2Directory</a><span class="divider">></span>
+  </li>
+  <% if @share_contacts %>
+  <li>
+    Share contacts
+  </li>
+  <% end %>
+  <% if @share_contact %>
+  <li>
+    <a href="<%= share_contacts_path %>">Share contacts</a><span class="divider">></span>
+  </li>
+  <% if @breadcrumb == 'read' || @breadcrumb == 'update' %>
+  <%= @share_contact.last_name %>
+  <% end %>
+  <% if @breadcrumb == 'create' %>
+  <li>
+    New
+  </li>
+  <% end %>
+  <% end %>
+  <a class="close" href="<%= ag2_directory.root_path %>">&#215;</a>
+</ul>

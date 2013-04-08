@@ -1,0 +1,32 @@
+<% content_for :title, "aGestiona2 | Corporate Contacts" %>
+<% content_for :icon, "/assets/icon/ag2Directory.png" %>
+<% content_for :alt, "ag2Contacts" %>
+
+<!-- Breadcrumb -->
+<ul class="breadcrumb">
+  <li>
+    <a href="<%= main_app.root_path %>"><i class="icon-home"></i></a><span class="divider">></span>
+  </li>
+  <li>
+    <a href="<%= ag2_directory.root_path %>">ag2Directory</a><span class="divider">></span>
+  </li>
+  <% if @corp_contacts %>
+  <li>
+    Corporate contacts
+  </li>
+  <% end %>
+  <% if @corp_contact %>
+  <li>
+    <a href="<%= corp_contacts_path %>">Corporate contacts</a><span class="divider">></span>
+  </li>
+  <% if @breadcrumb == 'read' || @breadcrumb == 'update' %>
+  <%= @corp_contact.last_name %>
+  <% end %>
+  <% if @breadcrumb == 'create' %>
+  <li>
+    New
+  </li>
+  <% end %>
+  <% end %>
+  <a class="close" href="<%= ag2_directory.root_path %>">&#215;</a>
+</ul>

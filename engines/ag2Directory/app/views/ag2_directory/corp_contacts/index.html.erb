@@ -1,0 +1,21 @@
+<h1>Listing corp_contacts</h1>
+
+<table>
+  <tr>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @corp_contacts.each do |corp_contact| %>
+  <tr>
+    <td><%= link_to 'Show', corp_contact %></td>
+    <td><%= link_to 'Edit', edit_corp_contact_path(corp_contact) %></td>
+    <td><%= link_to 'Destroy', corp_contact, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Corp contact', new_corp_contact_path %>

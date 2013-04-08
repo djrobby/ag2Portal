@@ -47,4 +47,5 @@ gem 'paperclip'
 
 # Own required gems
 gem 'ag2_admin', :path => 'engines/ag2Admin'
+gem 'ag2_directory', :path => 'engines/ag2Directory'
 gem 'ag2_human', :path => 'engines/ag2Human'

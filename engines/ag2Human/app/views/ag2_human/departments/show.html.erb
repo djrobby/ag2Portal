@@ -1,0 +1,51 @@
+<%= render '/layouts/ag2_human/departmentsbreadcrumb' %>
+
+<h3>Department</h3>
+<table class="table">
+  <tbody>
+    <tr>
+      <td>Id:</td>
+      <td><%= @department.id %></td>
+      <td>Description:</td>
+      <td><%= @department.name %></td>
+    </tr>
+    <tr>
+      <td>Created at:</td>
+      <td><%= @department.created_at.utc.getlocal.strftime("%d/%m/%Y %H:%M:%S") %></td>
+      <td>Updated at:</td>
+      <td><%= @department.updated_at.utc.getlocal.strftime("%d/%m/%Y %H:%M:%S") %></td>
+    </tr>
+  </tbody>
+</table>
+
+<%= link_to 'Edit Department', edit_department_path(@department), :class => 'btn btn-primary' %>
+<br />
+<br />
+
+<% if (@workers.count > 0) %>
+<h4>Department Workers</h4>
+<table class="table table-condensed table-striped">
+  <thead>
+    <tr>
+      <th>Code</th>
+      <th>Full Name</th>
+      <th>Company</th>
+      <th>Office</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% session[:return_to] = 'Department' %>
+    <% session[:return_to_url] = "#{request.protocol}#{request.host_with_port}#{request.fullpath}" %>
+    <% @workers.each do |w| %>
+    <tr>
+      <td><%= link_to w.worker_code, w %></td>
+      <td><%= w.last_name %>, <%= w.first_name %></td>
+      <td><%= Company.find(w.company).name unless w.company.nil? %></td>
+      <td><%= Office.find(w.office).name unless w.office.nil? %></td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
+<% end %>
+
+<%= link_to 'Back to Departments', departments_path %>
