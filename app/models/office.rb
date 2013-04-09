@@ -20,7 +20,7 @@ class Office < ActiveRecord::Base
   validates :province_id,     :presence => true
 
   has_many :workers
-  has_many :corp_contacts
+  has_many :corp_contacts, :order => 'last_name, first_name'
   def to_label
     "#{name} (#{company.name})"
   end

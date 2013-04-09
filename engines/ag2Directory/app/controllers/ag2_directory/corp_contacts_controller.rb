@@ -20,6 +20,7 @@ module Ag2Directory
     # GET /corp_contacts.json
     def index
       @corp_contacts = CorpContact.all
+      @companies = Company.order('name').all(:include => [:offices, :corp_contacts])
   
       respond_to do |format|
         format.html # index.html.erb
