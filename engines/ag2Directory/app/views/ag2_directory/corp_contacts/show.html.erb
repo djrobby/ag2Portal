@@ -22,12 +22,12 @@
     <tr>
       <td>Corp Phone:</td>
       <td><%= @corp_contact.corp_phone %>
-      <% if @corp_contact.corp_extension.nil? %>
+      <% if !@corp_contact.corp_extension.nil? %>
       (<%= @corp_contact.corp_extension %>)
       <% end %> </td>
       <td>Corp Cellular:</td>
       <td><%= @corp_contact.corp_cellular_long %>
-      <% if @corp_contact.corp_cellular_short.nil? %>
+      <% if !@corp_contact.corp_cellular_short.nil? %>
       (<%= @corp_contact.corp_cellular_short %>)
       <% end %> </td>
     </tr>

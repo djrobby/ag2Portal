@@ -20,7 +20,7 @@
     <a href="<%= departments_path %>">Departments</a><span class="divider">></span>
   </li>
   <% if @breadcrumb == 'read' || @breadcrumb == 'update' %>
-  <%= @department.name %>
+  <%= @department.code %>
   <% end %>
   <% if @breadcrumb == 'create' %>
   <li>

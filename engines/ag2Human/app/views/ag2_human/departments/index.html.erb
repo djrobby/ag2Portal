@@ -14,7 +14,8 @@
     <tbody>
       <% @departments.each do |t| %>
       <tr>
-        <td><%= link_to t.name, t %></td>
+        <td><%= link_to t.code, t %></td>
+        <td><%= t.name %></td>
         <td><%= link_to 'Edit', edit_department_path(t), :class => 'btn btn-mini' %>
         <%= link_to("Delete", t, :data => { :confirm => "Are you sure?" }, :method => :delete, :class => 'btn btn-mini') %> </td>
       </tr>
