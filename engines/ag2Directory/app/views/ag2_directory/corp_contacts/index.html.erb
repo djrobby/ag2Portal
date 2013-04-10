@@ -2,18 +2,23 @@
 
 <h3>Corporate Contacts</h3>
 <% @companies.each do |company| %>
-<h4><%= company.name %></h4>
+<h4 class="blue-band"><%= company.name + ' | ' + company.fiscal_id %></h4>
 <% company.offices.sort_by{ |office| office.name }.each do |office| %>
 <% if (office.corp_contacts.count > 0) %>
-<h5><%= office.name %></h5>
-<% end %>
-<% office.corp_contacts.each do |contact| %>
-<table class="table table-condensed table-striped shrinked">
+<h5 class="yellow-band"><%= office.name %></h5>
+<table class="table table-condensed table-striped shrinked fixed">
+  <col width="23%" /> <!-- Name -->
+  <col width="13%" /> <!-- Position -->
+  <col width="8%" /> <!-- Department -->
+  <col width="14%" /> <!-- Phone -->
+  <col width="14%" /> <!-- Cellular -->
+  <col width="20%" /> <!-- Email -->
+  <col width="8%" />  <!-- Buttons -->
   <thead>
     <tr>
       <th>Full Name</th>
       <th>Position</th>
-      <th>Department</th>
+      <th>Dept</th>
       <th>Phone</th>
       <th>Cellular</th>
       <th>Email</th>
@@ -21,6 +26,7 @@
     </tr>
   </thead>
   <tbody>
+    <% office.corp_contacts.each do |contact| %>
     <tr>
       <td><%= link_to contact.last_name + ', ' + contact.first_name, contact %></td>
       <td><%= contact.position unless contact.position.nil? %></td>
@@ -34,48 +40,15 @@
       (<%= contact.corp_cellular_short %>)
       <% end %> </td>
       <td><%= contact.email %></td>
-      <td><%= link_to 'Edit', edit_corp_contact_path(contact), :class => 'btn btn-mini' %>
-      <%= link_to("Delete", contact, :data => { :confirm => "Are you sure?" }, :method => :delete, :class => 'btn btn-mini') %> </td>
-    </tr>
-  </tbody>
-</table>
-<% end %>
-<% end %>
-<% end %>
-
-<table class="table table-condensed table-striped shrinked">
-  <thead>
-    <tr>
-      <th>Full Name</th>
-      <th>Position</th>
-      <th>Department</th>
-      <th>Phone</th>
-      <th>Cellular</th>
-      <th>Email</th>
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @corp_contacts.each do |contact| %>
-    <tr>
-      <td><%= link_to contact.last_name + ', ' + contact.first_name, contact %></td>
-      <td><%= contact.position unless contact.position.nil? %></td>
-      <td><%= Department.find(contact.department).code unless contact.department.nil? %></td>
-      <td><%= contact.corp_phone unless contact.corp_phone.nil? %>
-      <% if !contact.corp_extension.nil? %>
-      (<%= contact.corp_extension %>)
-      <% end %> </td>
-      <td><%= contact.corp_cellular_long unless contact.corp_cellular_long.nil? %>
-      <% if !contact.corp_cellular_short.nil? %>
-      (<%= contact.corp_cellular_short %>)
-      <% end %> </td>
-      <td><%= contact.email %></td>
-      <td><%= link_to 'Edit', edit_corp_contact_path(contact), :class => 'btn btn-mini' %>
-      <%= link_to("Delete", contact, :data => { :confirm => "Are you sure?" }, :method => :delete, :class => 'btn btn-mini') %> </td>
+      <td><%= link_to edit_corp_contact_path(contact), :class => 'btn btn-mini' do %> <i class="icon-edit"></i> <% end %>
+      <%= link_to(contact, :data => { :confirm => "Are you sure?" }, :method => :delete, :class => 'btn btn-mini') do %> <i class="icon-trash"></i> <% end %> </td>
     </tr>
     <% end %>
   </tbody>
 </table>
+<% end %>
+<% end %>
+<% end %>
 
 <%= link_to 'New Contact', new_corp_contact_path, :class => 'btn btn-primary' %>
 <br />

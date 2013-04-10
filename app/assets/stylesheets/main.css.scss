@@ -1,4 +1,9 @@
 /*
+ * Info
+ *  top right bottom left
+ */
+
+/*
  * Globals
  */
 body {
@@ -45,6 +50,18 @@ a:hover, a:focus {
   color: #777777;
   text-shadow: 0 1px 0 #ffffff;
 }
+.blue-band {
+  background-color: #0066b2;
+  color: white;
+  padding: 5px 4px 5px 4px;
+  margin: 0;
+}
+.yellow-band {
+  background-color: #f8960c;
+  color: white;   
+  padding: 3px 4px 3px 4px; 
+  margin: 0;
+}
 
 /*
  * User sessions and registrations
@@ -76,7 +93,6 @@ a:hover, a:focus {
   font-weight: bold;
 }
 .sign-description {
-  /* top right bottom left */
   margin-right: 20px;
 }
 
@@ -135,4 +151,15 @@ a:hover, a:focus {
 }
 .form-td-three {
   width: 33%;
+}
+
+/*
+ * Tables
+ */
+/* Fixed table */
+table.fixed {
+  table-layout: fixed;
+}
+table.fixed td {
+  overflow: hidden;
 }
