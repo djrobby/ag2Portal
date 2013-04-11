@@ -17,8 +17,8 @@
         <td><%= link_to office.office_code, office %></td>
         <td><%= office.name %></td>
         <td><%= Company.find(office.company).name unless office.company.nil? %></td>
-        <td><%= link_to 'Edit', edit_office_path(office), :class => 'btn btn-mini' %>
-        <%= link_to("Delete", office, :data => { :confirm => "Are you sure?" }, :method => :delete, :class => 'btn btn-mini') %> </td>
+        <td><%= link_to edit_office_path(office), :class => 'btn btn-mini' do %> <i class="icon-edit"></i> <% end %>
+        <%= link_to(office, :data => { :confirm => "Are you sure?" }, :method => :delete, :class => 'btn btn-mini') do %> <i class="icon-trash"></i> <% end %> </td>
       </tr>
       <% end %>
     </tbody>

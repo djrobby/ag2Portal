@@ -15,8 +15,8 @@
       <tr>
         <td><%= link_to company.fiscal_id, company %></td>
         <td><%= company.name %></td>
-        <td><%= link_to 'Edit', edit_company_path(company), :class => 'btn btn-mini' %>
-        <%= link_to("Delete", company, :data => { :confirm => "Are you sure?" }, :method => :delete, :class => 'btn btn-mini') %> </td>
+        <td><%= link_to edit_company_path(company), :class => 'btn btn-mini' do %> <i class="icon-edit"></i> <% end %>
+        <%= link_to(company, :data => { :confirm => "Are you sure?" }, :method => :delete, :class => 'btn btn-mini') do %> <i class="icon-trash"></i> <% end %> </td>
       </tr>
       <% end %>
     </tbody>

@@ -15,8 +15,8 @@
       <tr>
         <td><%= link_to t.ct_code, t %></td>
         <td><%= t.name %></td>
-        <td><%= link_to 'Edit', edit_contract_type_path(t), :class => 'btn btn-mini' %>
-        <%= link_to("Delete", t, :data => { :confirm => "Are you sure?" }, :method => :delete, :class => 'btn btn-mini') %> </td>
+        <td><%= link_to edit_contract_type_path(t), :class => 'btn btn-mini' do %> <i class="icon-edit"></i> <% end %>
+        <%= link_to(t, :data => { :confirm => "Are you sure?" }, :method => :delete, :class => 'btn btn-mini') do %> <i class="icon-trash"></i> <% end %> </td>
       </tr>
       <% end %>
     </tbody>

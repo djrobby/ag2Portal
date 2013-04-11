@@ -15,8 +15,8 @@
       <tr>
         <td><%= link_to province.name, province %></td>
         <td><%= province.ine_cpro %></td>
-        <td><%= link_to 'Edit', edit_province_path(province), :class => 'btn btn-mini' %>
-        <%= link_to("Delete", province, :data => { :confirm => "Are you sure?" }, :method => :delete, :class => 'btn btn-mini') %> </td>
+        <td><%= link_to edit_province_path(province), :class => 'btn btn-mini'  do %> <i class="icon-edit"></i> <% end %>
+        <%= link_to(province, :data => { :confirm => "Are you sure?" }, :method => :delete, :class => 'btn btn-mini') do %> <i class="icon-trash"></i> <% end %> </td>
       </tr>
       <% end %>
     </tbody>

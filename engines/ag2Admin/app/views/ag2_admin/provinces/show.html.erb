@@ -11,9 +11,9 @@
     </tr>
     <tr>
       <td>Created at:</td>
-      <td><%= @province.created_at %></td>
+      <td><%= @province.created_at.utc.getlocal.strftime("%d/%m/%Y %H:%M:%S") %></td>
       <td>Updated at:</td>
-      <td><%= @province.updated_at %></td>
+      <td><%= @province.updated_at.utc.getlocal.strftime("%d/%m/%Y %H:%M:%S") %></td>
     </tr>
   </tbody>
 </table>

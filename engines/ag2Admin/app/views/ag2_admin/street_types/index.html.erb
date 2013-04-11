@@ -15,8 +15,8 @@
       <tr>
         <td><%= link_to street_type.street_type_code, street_type %></td>
         <td><%= street_type.street_type_description.titleize %></td>
-        <td><%= link_to 'Edit', edit_street_type_path(street_type), :class => 'btn btn-mini' %>
-        <%= link_to("Delete", street_type, :data => { :confirm => "Are you sure?" }, :method => :delete, :class => 'btn btn-mini') %> </td>
+        <td><%= link_to edit_street_type_path(street_type), :class => 'btn btn-mini' do %> <i class="icon-edit"></i> <% end %>
+        <%= link_to(street_type, :data => { :confirm => "Are you sure?" }, :method => :delete, :class => 'btn btn-mini') do %> <i class="icon-trash"></i> <% end %> </td>
       </tr>
       <% end %>
     </tbody>

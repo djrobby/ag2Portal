@@ -11,9 +11,9 @@
     </tr>
     <tr>
       <td>Created at:</td>
-      <td><%= @street_type.created_at %></td>
+      <td><%= @street_type.created_at.utc.getlocal.strftime("%d/%m/%Y %H:%M:%S") %></td>
       <td>Updated at:</td>
-      <td><%= @street_type.updated_at %></td>
+      <td><%= @street_type.updated_at.utc.getlocal.strftime("%d/%m/%Y %H:%M:%S") %></td>
     </tr>
   </tbody>
 </table>

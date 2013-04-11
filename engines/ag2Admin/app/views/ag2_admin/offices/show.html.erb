@@ -50,9 +50,9 @@
     </tr>
     <tr>
       <td>Created at:</td>
-      <td><%= @office.created_at %></td>
+      <td><%= @office.created_at.utc.getlocal.strftime("%d/%m/%Y %H:%M:%S") %></td>
       <td>Updated at:</td>
-      <td><%= @office.updated_at %></td>
+      <td><%= @office.updated_at.utc.getlocal.strftime("%d/%m/%Y %H:%M:%S") %></td>
     </tr>
   </tbody>
 </table>

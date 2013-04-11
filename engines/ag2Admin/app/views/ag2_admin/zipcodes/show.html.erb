@@ -1,30 +1,30 @@
 <%= render '/layouts/ag2_admin/zipcodesbreadcrumb' %>
 
 <h3>Zip code <%= @zipcode.zipcode %></h3>
-<table class="table"
-<tbody>
-<tr>
-<td>Id:</td>
-<td><%= @zipcode.id %></td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>Town:</td>
-<td><%= Town.find(@zipcode.town).name unless @zipcode.town.nil? %></td>
-<td>Province:</td>
-<td><%= Province.find(@zipcode.province).name unless @zipcode.province.nil? %></td>
-</tr>
-<tr>
-<td>Created at:</td>
-<td><%= @zipcode.created_at %></td>
-<td>Updated at:</td>
-<td><%= @zipcode.updated_at %></td>
-</tr>
-</tbody>
+<table class="table">
+  <tbody>
+    <tr>
+      <td>Id:</td>
+      <td><%= @zipcode.id %></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Town:</td>
+      <td><%= Town.find(@zipcode.town).name unless @zipcode.town.nil? %></td>
+      <td>Province:</td>
+      <td><%= Province.find(@zipcode.province).name unless @zipcode.province.nil? %></td>
+    </tr>
+    <tr>
+      <td>Created at:</td>
+      <td><%= @zipcode.created_at.utc.getlocal.strftime("%d/%m/%Y %H:%M:%S") %></td>
+      <td>Updated at:</td>
+      <td><%= @zipcode.updated_at.utc.getlocal.strftime("%d/%m/%Y %H:%M:%S") %></td>
+    </tr>
+  </tbody>
 </table>
 
 <%= link_to 'Edit Zipcode', edit_zipcode_path(@zipcode), :class => 'btn btn-primary' %>
-  <br />
-  <br />
-  <%= link_to 'Back to Zipcodes', zipcodes_path %>
+<br />
+<br />
+<%= link_to 'Back to Zipcodes', zipcodes_path %>

@@ -2,18 +2,24 @@
 
 <h3>Corporate Contacts</h3>
 <% @companies.each do |company| %>
-<h4 class="blue-band"><%= company.name + ' | ' + company.fiscal_id %></h4>
+<h4 class="blue-band"> <%= company.name %> | <i class="icon-hand-right icon-white"></i> <%= company.fiscal_id  %> | <i class="icon-bell icon-white"></i> <%= company.phone %> <i class="icon-headphones icon-white"></i> <%= company.cellular %> </h4>
 <% company.offices.sort_by{ |office| office.name }.each do |office| %>
-<% if (office.corp_contacts.count > 0) %>
-<h5 class="yellow-band"><%= office.name %></h5>
+<% if (office.corp_contacts.count > 0) %><h5 class="yellow-band"> <%= office.name %> | <i class="icon-hand-right icon-white"></i><%= office.office_code  %> | <i class="icon-bell icon-white"></i><%= office.phone %> <i class="icon-headphones icon-white"></i> <%= company.cellular %> </h5>
 <table class="table table-condensed table-striped shrinked fixed">
-  <col width="23%" /> <!-- Name -->
-  <col width="13%" /> <!-- Position -->
-  <col width="8%" /> <!-- Department -->
-  <col width="14%" /> <!-- Phone -->
-  <col width="14%" /> <!-- Cellular -->
-  <col width="20%" /> <!-- Email -->
-  <col width="8%" />  <!-- Buttons -->
+  <col width="23%" />
+  <!-- Name -->
+  <col width="13%" />
+  <!-- Position -->
+  <col width="8%" />
+  <!-- Department -->
+  <col width="14%" />
+  <!-- Phone -->
+  <col width="14%" />
+  <!-- Cellular -->
+  <col width="20%" />
+  <!-- Email -->
+  <col width="8%" />
+  <!-- Buttons -->
   <thead>
     <tr>
       <th>Full Name</th>
@@ -45,12 +51,11 @@
     </tr>
     <% end %>
   </tbody>
-</table>
-<% end %>
+</table> <% end %>
 <% end %>
 <% end %>
 
 <%= link_to 'New Contact', new_corp_contact_path, :class => 'btn btn-primary' %>
 <br />
 <br />
-<%= link_to 'Back to ag2Directory', ag2_directory.root_path %>
+<%= link_to 'Back to ag2Directory', ag2_directory.root_path %> 

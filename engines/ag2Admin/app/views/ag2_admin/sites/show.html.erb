@@ -23,9 +23,9 @@
     </tr>
     <tr>
       <td>Created at:</td>
-      <td><%= @site.created_at %></td>
+      <td><%= @site.created_at.utc.getlocal.strftime("%d/%m/%Y %H:%M:%S") %></td>
       <td>Updated at:</td>
-      <td><%= @site.updated_at %></td>
+      <td><%= @site.updated_at.utc.getlocal.strftime("%d/%m/%Y %H:%M:%S") %></td>
     </tr>
   </tbody>
 </table>
@@ -47,7 +47,7 @@
     <% @apps.each do |app| %>
     <tr>
       <td><%= link_to app.name, app %></td>
-      <td><%= app.path %></td>
+      <td><%= @site.path %>/<%= app.path %></td>
     </tr>
     <% end %>
   </tbody>

@@ -15,8 +15,8 @@
       <tr>
         <td><%= link_to site.name, site %></td>
         <td><%= site.path %></td>
-        <td><%= link_to 'Edit', edit_site_path(site), :class => 'btn btn-mini' %>
-        <%= link_to("Delete", site, :data => { :confirm => "Are you sure?" }, :method => :delete, :class => 'btn btn-mini') %> </td>
+        <td><%= link_to edit_site_path(site), :class => 'btn btn-mini' do %> <i class="icon-edit"></i> <% end %>
+        <%= link_to(site, :data => { :confirm => "Are you sure?" }, :method => :delete, :class => 'btn btn-mini') do %> <i class="icon-trash"></i> <% end %> </td>
       </tr>
       <% end %>
     </tbody>
