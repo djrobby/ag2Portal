@@ -62,6 +62,14 @@ a:hover, a:focus {
   padding: 3px 4px 3px 4px; 
   margin: 0;
 }
+.blue-separator {
+  background-color: #0066b2;
+  color: #0066b2;
+}
+.yellow-separator {
+  background-color: #f8960c;
+  color: #f8960c;   
+}
 
 /*
  * User sessions and registrations
@@ -162,4 +170,56 @@ table.fixed {
 }
 table.fixed td {
   overflow: hidden;
+}
+
+/*
+ * Icons
+ */
+.icon-phone-white {
+  display: inline-block;
+  width: 8px;
+  height: 14px;
+  margin-top: 1px;
+  *margin-right: .3em;
+  line-height: 14px;
+  vertical-align: text-top;
+  background-image: image-url("icon/glyph/white/halflings/phone.png");
+  background-position: 0px 0px;
+  background-repeat: no-repeat;
+}
+.icon-phone-black {
+  display: inline-block;
+  width: 8px;
+  height: 14px;
+  margin-top: 1px;
+  *margin-right: .3em;
+  line-height: 14px;
+  vertical-align: text-top;
+  background-image: image-url("icon/glyph/black/halflings/phone.png");
+  background-position: 0px 0px;
+  background-repeat: no-repeat;
+}
+.icon-iphone-white {
+  display: inline-block;
+  width: 8px;
+  height: 14px;
+  margin-top: 1px;
+  *margin-right: .3em;
+  line-height: 14px;
+  vertical-align: text-top;
+  background-image: image-url("icon/glyph/white/halflings/iphone.png");
+  background-position: 0px 0px;
+  background-repeat: no-repeat;
+}
+.icon-iphone-black {
+  display: inline-block;
+  width: 8px;
+  height: 14px;
+  margin-top: 1px;
+  *margin-right: .3em;
+  line-height: 14px;
+  vertical-align: text-top;
+  background-image: image-url("icon/glyph/black/halflings/iphone.png");
+  background-position: 0px 0px;
+  background-repeat: no-repeat;
 }

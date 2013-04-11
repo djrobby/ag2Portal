@@ -2,24 +2,71 @@
 
 <h3>Corporate Contacts</h3>
 <% @companies.each do |company| %>
-<h4 class="blue-band"> <%= company.name %> | <i class="icon-hand-right icon-white"></i> <%= company.fiscal_id  %> | <i class="icon-bell icon-white"></i> <%= company.phone %> <i class="icon-headphones icon-white"></i> <%= company.cellular %> </h4>
+<h4 class="blue-band">
+  <%= company.name %>
+  <span class="blue-separator">| </span><i class="icon-hand-right icon-white"></i>
+  <%= company.fiscal_id  %>
+  <span class="blue-separator">| </span><i class="icon-phone-white"></i>
+  <% if !company.phone.nil? && company.phone != '' %>
+  <%= company.phone %>
+  <% else %>
+  ...
+  <% end %>
+  <span class="blue-separator">| </span><i class="icon-iphone-white"></i>
+  <% if !company.cellular.nil? && company.cellular != '' %>
+  <%= company.cellular %>
+  <% else %>
+  ...
+  <% end %>
+</h4>
 <% company.offices.sort_by{ |office| office.name }.each do |office| %>
-<% if (office.corp_contacts.count > 0) %><h5 class="yellow-band"> <%= office.name %> | <i class="icon-hand-right icon-white"></i><%= office.office_code  %> | <i class="icon-bell icon-white"></i><%= office.phone %> <i class="icon-headphones icon-white"></i> <%= company.cellular %> </h5>
+<% if (office.corp_contacts.count > 0) %>
+<h5 class="yellow-band">
+  <%= office.name %>
+  <span class="yellow-separator">| </span><i class="icon-hand-right"></i>
+  <%= office.office_code  %>
+  <span class="yellow-separator">| </span><i class="icon-phone-black"></i>
+  <% if !office.phone.nil? && office.phone != '' %>
+  <%= office.phone %>
+  <% else %>
+  ...
+  <% end %>
+  <span class="yellow-separator">| </span><i class="icon-iphone-black"></i> 
+  <% if !office.cellular.nil? && office.cellular != '' %>
+  <%= office.cellular %>
+  <% else %>
+  ...
+  <% end %>
+  <span class="yellow-separator">| </span><i class="icon-road"></i> 
+  <%= office.street_type.street_type_code.titleize  %>. <%= office.street_name %> <%= office.street_number %>
+  <% if !office.building.nil? %>
+  <%= office.building.titleize %>
+  <% end %>
+  <% if !office.floor.nil? %>
+  <%= office.floor %>&ordm;
+  <% end %>
+  <% if !office.floor_office.nil? %>
+  <%= office.floor_office %>
+  <% end %>-
+  <%= office.town.name %>,
+  <%= office.zipcode.zipcode %>
+  <%= office.province.name %>
+</h5>
 <table class="table table-condensed table-striped shrinked fixed">
-  <col width="23%" />
   <!-- Name -->
-  <col width="13%" />
+  <col width="23%" />
   <!-- Position -->
-  <col width="8%" />
+  <col width="13%" />
   <!-- Department -->
-  <col width="14%" />
+  <col width="8%" />
   <!-- Phone -->
   <col width="14%" />
   <!-- Cellular -->
-  <col width="20%" />
+  <col width="14%" />
   <!-- Email -->
-  <col width="8%" />
+  <col width="20%" />
   <!-- Buttons -->
+  <col width="8%" />
   <thead>
     <tr>
       <th>Full Name</th>
