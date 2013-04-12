@@ -50,26 +50,6 @@ a:hover, a:focus {
   color: #777777;
   text-shadow: 0 1px 0 #ffffff;
 }
-.blue-band {
-  background-color: #0066b2;
-  color: white;
-  padding: 5px 4px 5px 4px;
-  margin: 0;
-}
-.yellow-band {
-  background-color: #f8960c;
-  color: white;   
-  padding: 3px 4px 3px 4px; 
-  margin: 0;
-}
-.blue-separator {
-  background-color: #0066b2;
-  color: #0066b2;
-}
-.yellow-separator {
-  background-color: #f8960c;
-  color: #f8960c;   
-}
 
 /*
  * User sessions and registrations
@@ -162,14 +142,67 @@ a:hover, a:focus {
 }
 
 /*
+ * Bands
+ */
+.blue-band {
+  background-color: #0066b2;
+  color: white;
+  padding: 5px 4px 5px 4px; 
+  margin: 0;
+}
+.yellow-band {
+  background-color: #f8960c;
+  color: white;   
+  padding: 3px 4px 3px 4px; 
+  margin: 0;
+}
+.blue-separator {
+  background-color: #0066b2;
+  color: #0066b2;
+}
+.yellow-separator {
+  background-color: #f8960c;
+  color: #f8960c;   
+}
+
+/*
  * Tables
  */
 /* Fixed table */
+.joint {
+  margin: 0;
+}
 table.fixed {
   table-layout: fixed;
 }
 table.fixed td {
   overflow: hidden;
+}
+.blue-row {
+  background-color: #0066b2;
+  color: white;
+  margin: 0;
+  font-size: 17.5px;
+  font-family: inherit;
+  font-weight: bold;
+  line-height: 20px;
+  text-rendering: optimizelegibility;
+}
+.yellow-row {
+  background-color: #f8960c;
+  color: white;   
+  margin: 0;
+  font-size: 14px;
+  font-family: inherit;
+  font-weight: bold;
+  line-height: 20px;
+  text-rendering: optimizelegibility;
+}
+.blue-row .blue-padded {
+  padding: 5px 4px 5px 4px;   
+}
+.yellow-row .yellow-padded {
+  padding: 3px 4px 3px 4px; 
 }
 
 /*
