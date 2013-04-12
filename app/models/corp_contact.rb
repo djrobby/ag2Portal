@@ -13,4 +13,8 @@ class CorpContact < ActiveRecord::Base
   validates :company_id,  :presence => true
   validates :office_id,   :presence => true
   validates :email,       :presence => true
+
+  searchable do
+    text :first_name, :last_name, :corp_cellular_long, :corp_cellular_short, :corp_extension, :corp_phone, :email
+  end
 end

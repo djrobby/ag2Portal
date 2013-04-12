@@ -13,6 +13,19 @@ module Ag2Directory
       end
     end
 
+    # Search contacts
+    def search
+      @search = CorpContact.search do
+        fulltext params[:search]
+      end
+      @corp_contacts = @search.results
+      
+      respond_to do |format|
+        format.html # search.html.erb
+        format.json { render json: @corp_contacts }
+      end
+    end
+    
     #
     # Default Methods
     #
@@ -21,49 +34,49 @@ module Ag2Directory
     def index
       @corp_contacts = CorpContact.all
       @companies = Company.order('name').all(:include => [:offices, :corp_contacts])
-  
+
       respond_to do |format|
         format.html # index.html.erb
         format.json { render json: @corp_contacts }
       end
     end
-  
+
     # GET /corp_contacts/1
     # GET /corp_contacts/1.json
     def show
       @breadcrumb = 'read'
       @corp_contact = CorpContact.find(params[:id])
-  
+
       respond_to do |format|
         format.html # show.html.erb
         format.json { render json: @corp_contact }
       end
     end
-  
+
     # GET /corp_contacts/new
     # GET /corp_contacts/new.json
     def new
       @breadcrumb = 'create'
       @corp_contact = CorpContact.new
-  
+
       respond_to do |format|
         format.html # new.html.erb
         format.json { render json: @corp_contact }
       end
     end
-  
+
     # GET /corp_contacts/1/edit
     def edit
       @breadcrumb = 'update'
       @corp_contact = CorpContact.find(params[:id])
     end
-  
+
     # POST /corp_contacts
     # POST /corp_contacts.json
     def create
       @breadcrumb = 'create'
       @corp_contact = CorpContact.new(params[:corp_contact])
-  
+
       respond_to do |format|
         if @corp_contact.save
           format.html { redirect_to @corp_contact, notice: 'Corp contact was successfully created.' }
@@ -74,13 +87,13 @@ module Ag2Directory
         end
       end
     end
-  
+
     # PUT /corp_contacts/1
     # PUT /corp_contacts/1.json
     def update
       @breadcrumb = 'update'
       @corp_contact = CorpContact.find(params[:id])
-  
+
       respond_to do |format|
         if @corp_contact.update_attributes(params[:corp_contact])
           format.html { redirect_to @corp_contact, notice: 'Corp contact was successfully updated.' }
@@ -91,13 +104,13 @@ module Ag2Directory
         end
       end
     end
-  
+
     # DELETE /corp_contacts/1
     # DELETE /corp_contacts/1.json
     def destroy
       @corp_contact = CorpContact.find(params[:id])
       @corp_contact.destroy
-  
+
       respond_to do |format|
         format.html { redirect_to corp_contacts_url }
         format.json { head :no_content }

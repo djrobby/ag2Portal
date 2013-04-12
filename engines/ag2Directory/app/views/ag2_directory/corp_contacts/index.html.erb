@@ -2,6 +2,13 @@
 
 <h3>Corporate Contacts</h3>
 
+<%= form_tag corp_contacts_search_path, :method => :get do %>
+  <p>
+    <%= text_field_tag :search, params[:search] %>
+    <%= submit_tag "Search", :name => nil %>
+  </p>
+<% end %>
+
 <% @companies.each do |company| %>
 <!-- Company -->
 <h4 class="blue-band">
@@ -111,4 +118,4 @@
 <%= link_to 'New Contact', new_corp_contact_path, :class => 'btn btn-primary' %>
 <br />
 <br />
-<%= link_to 'Back to ag2Directory', ag2_directory.root_path %> 
+<%= link_to 'Back to ag2Directory', ag2_directory.root_path %>
