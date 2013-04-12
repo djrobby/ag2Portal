@@ -7,7 +7,6 @@ gem 'rails', '3.2.12'
 
 gem 'mysql2'
 
-
 # Gems used only for assets and not required
 # in production environments by default.
 group :assets do
@@ -18,6 +17,12 @@ group :assets do
   # gem 'therubyracer', :platforms => :ruby
 
   gem 'uglifier', '>= 1.0.3'
+end
+
+# Gems used only for development and not required
+# in production environments by default.
+group :development do
+  gem 'sunspot_solr'
 end
 
 gem 'jquery-rails'
