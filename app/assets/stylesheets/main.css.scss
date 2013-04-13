@@ -164,6 +164,22 @@ a:hover, a:focus {
   background-color: #f8960c;
   color: #f8960c;   
 }
+.title-band-with-search {
+  background-color: inherit;
+  color: inherit;
+  margin: 0px 0px -10px 0px;
+}
+.title-band-with-search h3 {
+  margin: 0;
+  font-size: 24.5px;
+  font-family: inherit;
+  font-weight: bold;
+  text-rendering: optimizelegibility;
+}
+.title-band-with-search form {
+  vertical-align: center;
+  text-align: right;
+}
 
 /*
  * Tables

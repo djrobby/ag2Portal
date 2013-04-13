@@ -1,13 +1,17 @@
 <%= render '/layouts/ag2_directory/corpcontactsbreadcrumb' %>
 
-<h3>Corporate Contacts</h3>
-
-<%= form_tag corp_contacts_search_path, :method => :get do %>
-  <p>
-    <%= text_field_tag :search, params[:search] %>
-    <%= submit_tag "Search", :name => nil %>
-  </p>
-<% end %>
+<div class="title-band-with-search">
+  <div style="float: left">
+    <h3>Corporate Contacts</h3>
+  </div>
+  <div>
+    <%= form_tag corp_contacts_search_path, :method => :get, :class => 'form-search form-inline' do %>
+        <%= text_field_tag :search, params[:search], :class => 'search-query' %>
+        <%= submit_tag "Search", :name => nil, :class => 'btn' %>
+    <% end %>
+  </div>
+<br />
+</div>
 
 <% @companies.each do |company| %>
 <!-- Company -->

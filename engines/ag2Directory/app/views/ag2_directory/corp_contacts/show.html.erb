@@ -22,12 +22,12 @@
     <tr>
       <td>Corp Phone:</td>
       <td><%= @corp_contact.corp_phone %>
-      <% if !@corp_contact.corp_extension.nil? %>
+      <% if !@corp_contact.corp_extension.nil? && @corp_contact.corp_extension != '' %>
       (<%= @corp_contact.corp_extension %>)
       <% end %> </td>
       <td>Corp Cellular:</td>
       <td><%= @corp_contact.corp_cellular_long %>
-      <% if !@corp_contact.corp_cellular_short.nil? %>
+      <% if !@corp_contact.corp_cellular_short.nil? && @corp_contact.corp_cellular_short != '' %>
       (<%= @corp_contact.corp_cellular_short %>)
       <% end %> </td>
     </tr>
@@ -49,9 +49,11 @@
 <%= link_to 'Edit Contact', edit_corp_contact_path(@corp_contact), :class => 'btn btn-primary' %>
 <br />
 <br />
+<!-- Without model render
 <% if session[:return_to] && session[:return_to_url] %>
 <a href="<%= session[:return_to_url] %>">Back to <%= session[:return_to] %></a> |
 <% session[:return_to] = nil %>
 <% session[:return_to_url] = nil %>
 <% end %>
+-->
 <%= link_to 'Back to Corporate Contacts', corp_contacts_path %>

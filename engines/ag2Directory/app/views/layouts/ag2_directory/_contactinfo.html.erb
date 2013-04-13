@@ -1,0 +1,45 @@
+<div class="container">
+  <div id="contactinfo<%= contact.id.to_s %>" class="modal hide fade in" style="display: none; ">
+    <div class="modal-header">
+      <a class="close" data-dismiss="modal">×</a>
+      <h4> <% if session[:resolution] == "LD" %>
+      <%= image_tag contact.avatar.url(:small) %> <!-- small image size --> <% elsif session[:resolution] == "SD" %>
+      <%= image_tag contact.avatar.url(:medium) %> <!-- medium image size --> <% else %>
+      <%= image_tag contact.avatar.url %> <!-- big image size --> <% end %>
+      <%= contact.last_name %>, <%= contact.first_name %> </h4>
+    </div>
+    <div class="modal-body">
+      <p>
+        <%= contact.position unless contact.position.nil? %> &#8226;
+        <%= Department.find(contact.department).name unless contact.department.nil? %>
+      </p>
+      <p>
+        <%= Office.find(contact.office).name unless contact.office.nil? %> &#8226;
+        <%= Company.find(contact.company).name unless contact.company.nil? %>
+      </p>
+      <p>
+        <span style="font-weight: bold;">
+          <i class="icon-phone-black"></i>
+          <%= contact.corp_phone %>
+          <% if !contact.corp_extension.nil? && contact.corp_extension != '' %>
+            (<%= contact.corp_extension %>)
+          <% end %> &#8226;
+          <i class="icon-iphone-black"></i>
+          <%= contact.corp_cellular_long %>
+          <% if !contact.corp_cellular_short.nil? && contact.corp_cellular_short != '' %>
+            (<%= contact.corp_cellular_short %>)
+          <% end %>
+        </span>
+      <p>
+        <span style="color: #0066b2;">
+          <i class="icon-envelope"></i>
+          <%= contact.email unless contact.email.nil? %>
+        </span>
+      </p>
+      </p>
+    </div>
+    <div class="modal-footer">
+      <a href="#" class="btn btn-primary" data-dismiss="modal">Close</a>
+    </div>
+  </div>
+</div>
