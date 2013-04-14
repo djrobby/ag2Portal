@@ -111,7 +111,11 @@ module Ag2Human
     # GET /workers
     # GET /workers.json
     def index
-      @workers = Worker.all
+      #@workers = Worker.all
+      @search = Worker.search do
+        fulltext params[:search]
+      end
+      @workers = @search.results
 
       respond_to do |format|
         format.html # index.html.erb

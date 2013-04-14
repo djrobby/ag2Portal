@@ -1,0 +1,12 @@
+<div class="title-band-with-search">
+  <div style="float: left">
+    <h3><%= title %></h3>
+  </div>
+  <div>
+    <%= form_tag path, :method => :get, :class => 'form-search' do %>
+        <%= text_field_tag :search, params[:search], :class => 'search-query' %>
+        <%= submit_tag "Search", :name => nil, :class => 'btn' %>
+        <%= image_submit_tag "Search", :name => nil, :class => 'btn' %>
+    <% end %>
+  </div>
+</div>

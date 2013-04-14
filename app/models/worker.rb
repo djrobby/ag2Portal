@@ -58,4 +58,8 @@ class Worker < ActiveRecord::Base
     self[:fiscal_id].upcase!
     self[:worker_code].upcase!
   end
+
+  searchable do
+    text :worker_code, :first_name, :last_name, :corp_cellular_long, :corp_cellular_short, :corp_extension, :corp_phone, :email, :fiscal_id
+  end
 end
