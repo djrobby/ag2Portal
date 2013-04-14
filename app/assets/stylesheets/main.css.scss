@@ -17,7 +17,8 @@ body {
 .h5-narrow {
   margin: 0px 0;
 }
-a:hover, a:focus {
+a:hover,
+a:focus {
   text-decoration: none;
 }
 .underlined {
@@ -150,14 +151,26 @@ a:hover, a:focus {
   padding: 5px 4px 5px 4px; 
   margin: 0;
 }
+.blue-band a {
+  color: #ffffff;
+}
+.blue-band a:hover {
+  color: #f8960c;
+}
+.blue-separator {
+  background-color: #0066b2;
+  color: #0066b2;
+}
 .yellow-band {
   background-color: #f8960c;
   color: white;   
   padding: 3px 4px 3px 4px; 
   margin: 0;
 }
-.blue-separator {
-  background-color: #0066b2;
+.yellow-band a {
+  color: #ffffff;
+}
+.yellow-band a:hover {
   color: #0066b2;
 }
 .yellow-separator {
