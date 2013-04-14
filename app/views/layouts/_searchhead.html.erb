@@ -5,8 +5,7 @@
   <div>
     <%= form_tag path, :method => :get, :class => 'form-search' do %>
         <%= text_field_tag :search, params[:search], :class => 'search-query' %>
-        <%= submit_tag "Search", :name => nil, :class => 'btn' %>
-        <%= image_submit_tag "Search", :name => nil, :class => 'btn' %>
+        <%= image_submit_tag("/assets/icon/glyph/black/halflings/search.png", :name => nil, :class => 'btn') %>
     <% end %>
   </div>
 </div>

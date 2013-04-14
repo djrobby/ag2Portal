@@ -90,8 +90,7 @@
   </thead>
   <tbody>
     <% @offices.each do |office| %>
-    <!-- Modal (/layouts/ag_admin/_officeinfo.html.erb) -->
-    <!-- <%= render :partial => 'layouts/ag2_admin/officeinfo', :locals => { :office => office } %> -->
+    <!-- Modal (/layouts/ag_admin/_officeinfo.html.erb) Implementation (ag_directory/corp_contacts/search) -->
     <tr>
       <!-- Modal: <td><a data-toggle="modal" href="#officeinfo"><%= office.office_code %></a></td> -->
       <td><%= link_to office.office_code, office %></td>

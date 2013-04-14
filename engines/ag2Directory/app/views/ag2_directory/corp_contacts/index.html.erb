@@ -3,8 +3,10 @@
 
 <% @companies.each do |company| %>
 <!-- Company -->
+<%= render :partial => 'layouts/companyinfo', :locals => { :company => company } %>
 <h4 class="blue-band">
-  <%= company.name %>
+  <a data-toggle="modal" href="#companyinfo<%= company.id.to_s %>"><%= company.name %></a>
+  <!-- <%= company.name %> -->
   <span class="blue-separator">| </span><i class="icon-hand-right icon-white"></i>
   <%= company.fiscal_id  %>
   <span class="blue-separator">| </span><i class="icon-phone-white"></i>
@@ -24,8 +26,10 @@
 <% company.offices.sort_by{ |office| office.name }.each do |office| %>
 <% if (office.corp_contacts.count > 0) %>
 <!-- Office -->
+<%= render :partial => 'layouts/officeinfo', :locals => { :office => office } %>
 <h5 class="yellow-band">
-  <%= office.name %>
+  <a data-toggle="modal" href="#officeinfo<%= office.id.to_s %>"><%= office.name %></a>
+  <!-- <%= office.name %> -->
   <span class="yellow-separator">| </span><i class="icon-hand-right"></i>
   <%= office.office_code  %>
   <span class="yellow-separator">| </span><i class="icon-phone-black"></i>

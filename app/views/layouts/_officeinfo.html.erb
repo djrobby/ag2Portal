@@ -1,0 +1,50 @@
+<div class="container">
+  <div id="officeinfo<%= office.id.to_s %>" class="modal hide fade in" style="display: none; ">
+    <div class="modal-header">
+      <a class="close" data-dismiss="modal">×</a>
+      <h4><%= office.name %></h4>
+    </div>
+    <div class="modal-body">
+      <p>
+        <i class="icon-hand-right"></i>
+        <%= office.office_code %>
+      </p>
+      <p>
+        <%= office.street_type.street_type_code.titleize %>. <%= office.street_name %> <%= office.street_number %>
+        <% if !office.building.nil? %>
+        <%= office.building.titleize %>
+        <% end %>
+        <% if !office.floor.nil? %>
+        <%= office.floor %>&ordm;
+        <% end %>
+        <% if !office.floor_office.nil? %>
+        <%= office.floor_office %>
+        <% end %>
+      </p>
+      <p>
+        <%= office.town.name %> &#8226;
+        <%= office.zipcode.zipcode %> &#8226;
+        <%= office.province.name %>
+      </p>
+      <p>
+        <span style="font-weight: bold;">
+          <i class="icon-phone-black"></i>
+          <%= office.phone unless office.phone.nil? %> &#8226;
+          <i class="icon-print"></i>
+          <%= office.fax unless office.fax.nil? %> &#8226;
+          <i class="icon-iphone-black"></i>
+          <%= office.cellular unless office.cellular.nil? %>
+        </span>
+      </p>
+      <p>
+        <span style="color: #0066b2;">
+          <i class="icon-envelope"></i>
+          <%= office.email unless office.email.nil? %>
+        </span>
+      </p>
+    </div>
+    <div class="modal-footer">
+      <a href="#" class="btn btn-primary" data-dismiss="modal">Close</a>
+    </div>
+  </div>
+</div>
