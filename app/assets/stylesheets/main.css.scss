@@ -40,6 +40,9 @@ a:focus {
 .x-shrinked {
   font-size: x-small;
 }
+.bolded {
+  font-weight: bold;
+}
 .footer-nav-li {
   padding-top: 6px;
 }
@@ -85,6 +88,36 @@ a:focus {
   margin-right: 20px;
 }
 
+/*
+ * Data import
+ */
+.import-box {
+  background-color: #f2f2f2;
+  padding: 20px;
+  margin: 0 -20px; /* negative indent the amount of the padding to maintain the grid system */
+  -webkit-border-radius: 6px 6px 6px 6px;
+  -moz-border-radius: 6px 6px 6px 6px;
+  border-radius: 6px 6px 6px 6px;
+  -webkit-box-shadow: 0 1px 2px rgba(0,0,0,.15);
+  -moz-box-shadow: 0 1px 2px rgba(0,0,0,.15);
+  box-shadow: 0 1px 2px rgba(0,0,0,.15);
+  border: 1px solid #d4d4d4;
+}
+.import-h3 {
+  margin: 10px 0;
+  font-family: inherit;
+  font-weight: bold;
+  line-height: 20px;
+  color: #62b135;
+  text-rendering: optimizelegibility;
+}
+.import-description {
+  margin-right: 30px;
+}
+.import-caution {
+  font-weight: bold;
+  color: #da4f49;  
+}
 /*
  * Forms (SimpleForm)
  */

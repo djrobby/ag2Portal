@@ -1,6 +1,9 @@
 Ag2Directory::Engine.routes.draw do
   get "home/index"
 
+  # Route to import
+  match 'import' => 'import#index', :as => :import
+
   # Routes to search
   match '/corp_contacts/search', :controller => 'corp_contacts', :action => 'search'
 

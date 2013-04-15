@@ -1,0 +1,36 @@
+<%= render '/layouts/ag2_directory/importbreadcrumb' %>
+
+<div class="row">
+  <div class="span12">
+    <h3 class="import-h3">ag2DataImport</h3>
+  </div>
+</div>
+<div class="row">
+  <div class="span8">
+    <div class="import-description">
+      <h4>Corporate Contacts Updater</h4>
+      <br />
+      <p>
+        ag2DataImport will add new contacts or update existing ones,
+        using the Workers current data. This procedure do not destroy
+        any existing contacts data.
+      </p>
+      <p class="bolded">
+        This operation may take a while: Do not interrupt it once starts up!
+      </p>
+    </div>
+  </div>
+  <div class="span4 import-box">
+    <div align="center">
+      <p class="import-caution">
+        Caution!
+      </p>
+      <p>
+        This action cannot be undone!<br />
+        Are you sure to proceed?
+      </p>
+      <%= link_to 'Yes, go ahead', ag2_directory.root_path, :class => 'btn btn-primary' %>
+      <%= link_to 'No, thanks', ag2_directory.root_path, :class => 'btn btn-primary' %>
+    </div>
+  </div>
+</div>

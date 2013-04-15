@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130409164806) do
+ActiveRecord::Schema.define(:version => 20130415175908) do
 
   create_table "apps", :force => true do |t|
     t.string   "name"
@@ -94,6 +94,7 @@ ActiveRecord::Schema.define(:version => 20130409164806) do
     t.string   "avatar_content_type"
     t.integer  "avatar_file_size"
     t.datetime "avatar_updated_at"
+    t.integer  "worker_id"
   end
 
   add_index "corp_contacts", ["company_id"], :name => "index_corp_contacts_on_company_id"
@@ -106,6 +107,7 @@ ActiveRecord::Schema.define(:version => 20130409164806) do
   add_index "corp_contacts", ["first_name"], :name => "index_corp_contacts_on_first_name"
   add_index "corp_contacts", ["last_name"], :name => "index_corp_contacts_on_last_name"
   add_index "corp_contacts", ["office_id"], :name => "index_corp_contacts_on_office_id"
+  add_index "corp_contacts", ["worker_id"], :name => "index_corp_contacts_on_worker_id"
 
   create_table "degree_types", :force => true do |t|
     t.string   "name"
