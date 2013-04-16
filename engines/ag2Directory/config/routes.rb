@@ -1,7 +1,7 @@
 Ag2Directory::Engine.routes.draw do
   get "home/index"
 
-  # Route to import
+  # Routes to import
   match 'import' => 'import#index', :as => :import
 
   # Routes to search
@@ -10,6 +10,8 @@ Ag2Directory::Engine.routes.draw do
   # Routes for jQuery POSTs
   match 'corp_contacts/update_company_textfield_from_office/:id', :controller => 'corp_contacts', :action => 'update_company_textfield_from_office'
   match 'corp_contacts/:id/update_company_textfield_from_office/:id', :controller => 'corp_contacts', :action => 'update_company_textfield_from_office'
+  match 'corp_contacts/:id/update_company_textfield_from_office/:id', :controller => 'corp_contacts', :action => 'update_company_textfield_from_office'
+  match 'data_import', :controller => 'import', :action => 'data_import'
 
   resources :corp_contacts
 

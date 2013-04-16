@@ -1,3 +1,32 @@
+<script>
+  var percentage = 0;
+
+  $(document).ready(function() {
+    $("#progressbar").css("width", "0%")
+  });
+
+  jQuery(function($) {
+    // when the #input_text field changes
+    $("#input_text").change(function() {
+      percentage += 20;
+      $("#progressbar").css("width", percentage + "%")
+    });
+
+    // when #data_import_btn is clicked
+    $("#data_import_btn").click(function() {
+      // make a POST call and executes action
+      jQuery.getJSON('data_import', function(data) {
+        if (data.Percentage)
+          $("#progressbar").css("width", data.Percentage + "%")
+        else
+          alert(data.DataImport);
+        //$("#office_office_code").val(data.zipcode);
+      })
+      return false;
+    });
+  })
+</script>
+
 <%= render '/layouts/ag2_directory/importbreadcrumb' %>
 
 <div class="row">
@@ -11,9 +40,9 @@
       <h4>Corporate Contacts Updater</h4>
       <br />
       <p>
-        ag2DataImport will add new contacts or update existing ones,
+        ag2DataImport will add new Contacts or update existing ones,
         using the Workers current data. This procedure do not destroy
-        any existing contacts data.
+        any existing Contacts data.
       </p>
       <p class="bolded">
         This operation may take a while: Do not interrupt it once starts up!
@@ -26,11 +55,17 @@
         Caution!
       </p>
       <p>
-        This action cannot be undone!<br />
+        This action cannot be undone!
+        <br />
         Are you sure to proceed?
       </p>
-      <%= link_to 'Yes, go ahead', ag2_directory.root_path, :class => 'btn btn-primary' %>
-      <%= link_to 'No, thanks', ag2_directory.root_path, :class => 'btn btn-primary' %>
+      <input type="text" id="input_text" name="first" value="" />
+      <br />
+      <a href="#" id="data_import_btn" class="btn btn-primary">Yes, go ahead</a>
+      <a href="<%= ag2_directory.root_path %>" id="exit_btn" class="btn btn-primary">No, thanks</a>
+      <div class="progress progress-striped active" id="progressouter">
+        <div class="bar" id="progressbar" style="width: 50%;"></div>
+      </div>
     </div>
   </div>
 </div>
