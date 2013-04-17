@@ -70,12 +70,12 @@
     <tr>
       <td>Corp Phone:</td>
       <td><%= @worker.corp_phone %>
-      <% if !@worker.corp_extension.nil? %>
+      <% if !@worker.corp_extension.nil? && @worker.corp_extension != '' %>
       (<%= @worker.corp_extension %>)
       <% end %> </td>
       <td>Corp Cellular:</td>
       <td><%= @worker.corp_cellular_long %>
-      <% if !@worker.corp_cellular_short.nil? %>
+      <% if !@worker.corp_cellular_short.nil? && @worker.corp_cellular_short != '' %>
       (<%= @worker.corp_cellular_short %>)
       <% end %> </td>
     </tr>

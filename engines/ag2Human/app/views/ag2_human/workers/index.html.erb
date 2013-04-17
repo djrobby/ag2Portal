@@ -1,3 +1,5 @@
+<% session[:return_to] = nil %>
+<% session[:return_to_url] = nil %>
 <%= render '/layouts/ag2_human/workersbreadcrumb' %>
 <%= render :partial => '/layouts/searchhead', :locals => { :title => 'Workers', :path => workers_path } %>
 

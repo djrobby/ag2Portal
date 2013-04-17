@@ -20,10 +20,6 @@
     </tr>
   </thead>
   <tbody>
-    <!-- Without modal render
-    <% session[:return_to] = 'last Contacts found' %>
-    <% session[:return_to_url] = "#{request.protocol}#{request.host_with_port}#{request.fullpath}" %>
-    -->
     <% @corp_contacts.each do |contact| %>
     <%= render :partial => 'layouts/ag2_directory/contactinfo', :locals => { :contact => contact } %>
     <tr>
