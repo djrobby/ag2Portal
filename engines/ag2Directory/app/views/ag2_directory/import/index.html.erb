@@ -1,26 +1,23 @@
 <script>
-  var percentage = 0;
-
   $(document).ready(function() {
-    $("#progressbar").css("width", "0%")
+    //$("#progressbar").css("width", "0%");
+    $("#message_area").children().hide();
   });
 
   jQuery(function($) {
-    // when the #input_text field changes
-    $("#input_text").change(function() {
-      percentage += 20;
-      $("#progressbar").css("width", percentage + "%")
-    });
-
     // when #data_import_btn is clicked
     $("#data_import_btn").click(function() {
+      $('#message_area').children().show();
+      $('#buttons').children().hide();
       // make a POST call and executes action
       jQuery.getJSON('data_import', function(data) {
-        if (data.Percentage)
-          $("#progressbar").css("width", data.Percentage + "%")
-        else
-          alert(data.DataImport);
-        //$("#office_office_code").val(data.zipcode);
+        $(".modal-body > p").text(data.DataImport);
+        $("#importinfo").modal("show");
+        //$("#message").html('<%= link_to 'Back to ag2Directory', ag2_directory.root_path %>');
+        $("#data_import_btn").text("Try again");
+        $('#buttons').children().show();
+        $('#message_area').children().hide();
+        //$("#progressbar").hide();
       })
       return false;
     });
@@ -28,6 +25,7 @@
 </script>
 
 <%= render '/layouts/ag2_directory/importbreadcrumb' %>
+<%= render '/layouts/importinfo' %>
 
 <div class="row">
   <div class="span12">
@@ -59,12 +57,14 @@
         <br />
         Are you sure to proceed?
       </p>
-      <input type="text" id="input_text" name="first" value="" />
+      <div id="buttons">
+        <a href="#" id="data_import_btn" class="btn btn-primary">Yes, go ahead</a>
+        <a href="<%= ag2_directory.root_path %>" id="exit_btn" class="btn btn-primary">No, thanks</a>
+      </div>
       <br />
-      <a href="#" id="data_import_btn" class="btn btn-primary">Yes, go ahead</a>
-      <a href="<%= ag2_directory.root_path %>" id="exit_btn" class="btn btn-primary">No, thanks</a>
-      <div class="progress progress-striped active" id="progressouter">
-        <div class="bar" id="progressbar" style="width: 50%;"></div>
+      <div id="message_area">
+        <span id="message">Wait, importing...</span>
+        <div id="progressbar" class="bert2-green-progress"></div>
       </div>
     </div>
   </div>

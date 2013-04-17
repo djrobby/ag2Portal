@@ -318,3 +318,139 @@ table.fixed td {
   background-position: 0px 0px;
   background-repeat: no-repeat;
 }
+
+/*
+ * Progress indicators
+ */
+div.bert2-black-progress {
+  position: inherit;
+  display: none;
+  width: 128px;
+  height: 15px;
+  background-image: image-url('ani/bert2_black.gif');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-color: inherit;
+}
+div.bert2-blue-progress {
+  position: inherit;
+  display: none;
+  width: 128px;
+  height: 15px;
+  background-image: image-url('ani/bert2_blue.gif');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-color: inherit;
+}
+div.bert2-green-progress {
+  position: inherit;
+  display: none;
+  width: 128px;
+  height: 15px;
+  background-image: image-url('ani/bert2_green.gif');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-color: inherit;
+}
+div.bar-black-progress {
+  position: inherit;
+  display: none;
+  width: 220px;
+  height: 19px;
+  background-image: image-url('ani/bar_black.gif');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-color: inherit;
+}
+div.bar-blue-progress {
+  position: inherit;
+  display: none;
+  width: 220px;
+  height: 19px;
+  background-image: image-url('ani/bar_blue.gif');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-color: inherit;
+}
+div.bar-green-progress {
+  position: inherit;
+  display: none;
+  width: 220px;
+  height: 19px;
+  background-image: image-url('ani/bar_green.gif');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-color: inherit;
+}
+div.indicator-black-progress {
+  position: inherit;
+  display: none;
+  width: 32px;
+  height: 32px;
+  background-image: image-url('ani/indicator_black.gif');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-color: inherit;
+}
+div.indicator-blue-progress {
+  position: inherit;
+  display: none;
+  width: 32px;
+  height: 32px;
+  background-image: image-url('ani/indicator_blue.gif');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-color: inherit;
+}
+div.indicator-green-progress {
+  position: inherit;
+  display: none;
+  width: 32px;
+  height: 32px;
+  background-image: image-url('ani/indicator_green.gif');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-color: inherit;
+}
+div.indicator-black-progress-bordered {
+  position: inherit;
+  display: visible;
+  width: 48px;
+  height: 48px;
+  background-image: image-url('ani/indicator_green.gif');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-color: inherit;
+  border: 1px solid #000000;
+  -moz-border-radius:    10px;
+  -webkit-border-radius: 10px;
+  border-radius:         10px;
+}
+div.indicator-blue-progress-bordered {
+  position: inherit;
+  display: visible;
+  width: 48px;
+  height: 48px;
+  background-image: image-url('ani/indicator_green.gif');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-color: inherit;
+  border: 1px solid #0e90d2;
+  -moz-border-radius:    10px;
+  -webkit-border-radius: 10px;
+  border-radius:         10px;
+}
+div.indicator-green-progress-bordered {
+  position: inherit;
+  display: visible;
+  width: 48px;
+  height: 48px;
+  background-image: image-url('ani/indicator_green.gif');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-color: inherit;
+  border: 1px solid #62b135;
+  -moz-border-radius:    10px;
+  -webkit-border-radius: 10px;
+  border-radius:         10px;
+}

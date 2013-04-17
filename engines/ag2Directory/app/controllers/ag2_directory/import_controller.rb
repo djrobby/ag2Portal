@@ -6,11 +6,10 @@ module Ag2Directory
     end
     
     def data_import
-      @json_data = { "Percentage" => "50" }
+      message = "Corporate Contacts Updater finished succesfully.".html_safe
+      sleep 2
+      @json_data = { "DataImport" => message }
       render json: @json_data
-
-      #@json_data = { "DataImport" => "OK" }
-      #render json: @json_data
     end
   end
 end
