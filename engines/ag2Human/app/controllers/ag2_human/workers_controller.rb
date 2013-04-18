@@ -115,7 +115,7 @@ module Ag2Human
       @search = Worker.search do
         fulltext params[:search]
       end
-      @workers = @search.results
+      @workers = @search.results.sort_by{ |worker| worker.worker_code }
 
       respond_to do |format|
         format.html # index.html.erb

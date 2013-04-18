@@ -18,7 +18,7 @@ module Ag2Directory
       @search = CorpContact.search do
         fulltext params[:search]
       end
-      @corp_contacts = @search.results
+      @corp_contacts = @search.results.sort_by{ |contact| [ contact.last_name, contact.first_name ] }
       
       respond_to do |format|
         format.html # search.html.erb
