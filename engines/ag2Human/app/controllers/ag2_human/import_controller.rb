@@ -1,12 +1,12 @@
-require_dependency "ag2_directory/application_controller"
+require_dependency "ag2_human/application_controller"
 
-module Ag2Directory
+module Ag2Human
   class ImportController < ApplicationController
     def index
     end
 
     def data_import
-      message = "Corporate Contacts Updater finished succesfully.".html_safe
+      message = "Workers Updater finished succesfully.".html_safe
       @json_data = { "DataImport" => message, "Result" => "OK" }
 
       @workers = Worker.all
@@ -20,7 +20,7 @@ module Ag2Directory
         end
         update_contact(@contact, worker)
         if !@contact.save
-          message = "Error: Corporate Contacts Updater finished unexpectedly!".html_safe
+          message = "Error: Workers Updater finished unexpectedly!".html_safe
           @json_data = { "DataImport" => message, "Result" => "ERROR" }
           render json: @json_data
         end

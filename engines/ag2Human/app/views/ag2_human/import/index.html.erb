@@ -14,7 +14,7 @@
         $(".modal-body > p").text(data.DataImport);
         $("#importinfo").modal("show");
         if (data.Result == 'OK') {
-          $("#message").html('<%= link_to 'Do you want to see the updated contacts?', corp_contacts_path %>');
+          $("#message").html('<%= link_to 'Do you want to see the updated workers?', workers_path %>');
           $("#progressbar").hide();
         }
         else {
@@ -28,7 +28,7 @@
   })
 </script>
 
-<%= render '/layouts/ag2_directory/importbreadcrumb' %>
+<%= render '/layouts/ag2_human/importbreadcrumb' %>
 <%= render '/layouts/importinfo' %>
 
 <div class="row">
@@ -39,12 +39,12 @@
 <div class="row">
   <div class="span8">
     <div class="import-description">
-      <h4>Corporate Contacts Updater</h4>
+      <h4>Workers Updater</h4>
       <br />
       <p>
-        ag2DataImport will add new Contacts or update existing ones,
-        using the Workers current data. This procedure do not destroy
-        any existing Contacts data.
+        ag2DataImport will add new Workers or update existing ones,
+        using external update data. This procedure do not destroy
+        any existing Workers data.
       </p>
       <p class="bolded">
         This operation may take a while: Do not interrupt it once starts up!
@@ -63,7 +63,7 @@
       </p>
       <div id="buttons">
         <a href="#" id="data_import_btn" class="btn btn-primary">Yes, go ahead</a>
-        <a href="<%= ag2_directory.root_path %>" id="exit_btn" class="btn btn-primary">No, thanks</a>
+        <a href="<%= ag2_human.root_path %>" id="exit_btn" class="btn btn-primary">No, thanks</a>
       </div>
       <br />
       <div id="message_area">
