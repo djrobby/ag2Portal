@@ -106,6 +106,47 @@ module Ag2Human
     end
 
     #
+    # Advanced search workers
+    # DO NOT use strings as queries to avoid SQL injection exploits!
+    #
+    def search
+      company = params[:Company]
+      office = params[:Office]
+      
+      has_company = !company.nil? && company != ""
+      has_office = !office.nil? && office != ""
+
+      @search = Worker.search do
+        fulltext params[:search]
+        if has_company
+          with :company_id, company
+        end
+        if has_office
+          with :office_id, office
+        end
+      end
+      @workers = @search.results.sort_by{ |worker| worker.worker_code }
+      
+=begin
+      case
+      when !has_company && !has_office
+        @workers = Worker.order('worker_code').all
+      when has_company && !has_office
+        @workers = Worker.order('worker_code').where("company_id = ?", company)
+      when !has_company && has_office
+        @workers = Worker.order('worker_code').where("office_id = ?", office)
+      when has_company && has_office
+        @workers = Worker.order('worker_code').where("company_id = ? AND office_id = ?", company, office)
+      end
+=end
+      
+      respond_to do |format|
+        format.html # search.html.erb
+        format.json { render json: @workers }
+      end
+    end
+
+    #
     # Default Methods
     #
     # GET /workers

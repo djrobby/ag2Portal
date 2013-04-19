@@ -4,6 +4,9 @@ Ag2Human::Engine.routes.draw do
   # Routes to import
   match 'import' => 'import#index', :as => :import
 
+  # Routes to search (advanced)
+  match '/workers/search', :controller => 'workers', :action => 'search'
+
   # Routes for jQuery POSTs
   match 'workers/update_province_textfield_from_town/:id', :controller => 'workers', :action => 'update_province_textfield_from_town'
   match 'workers/:id/update_province_textfield_from_town/:id', :controller => 'workers', :action => 'update_province_textfield_from_town'

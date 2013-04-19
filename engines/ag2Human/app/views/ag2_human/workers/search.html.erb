@@ -1,0 +1,54 @@
+<% session[:return_to] = nil %>
+<% session[:return_to_url] = nil %>
+<%= render '/layouts/ag2_human/workersbreadcrumb' %>
+
+<h3>Workers Advanced Search</h3>
+
+<div class="container-fluid">
+  <div class="row-fluid">
+
+    <div class="span3">
+      <div class="well sidebar-nav">
+        <%= form_tag "search", :method => 'get' do %>
+        <%= label_tag "Office", nil, :class => 'form-label' %>
+        <%= select_tag "Office", options_from_collection_for_select(Office.all, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked' %>
+        <%= label_tag "Company", nil, :class => 'form-label' %>
+        <%= select_tag "Company", options_from_collection_for_select(Company.all, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked' %>
+        <%= label_tag "Others", nil, :class => 'form-label' %>
+        <%= text_field_tag :search, params[:search], :class =>  'x-large-text-field shrinked' %>
+        <%= submit_tag "Apply Filter", :class => 'btn btn-primary' %>
+        <% end %>
+        <%= link_to 'Back to Workers', workers_path %>
+      </div><!-- /.sidebar-nav -->
+    </div><!-- /.span3 -->
+
+    <div class="span9">
+      <table class="table table-condensed table-striped shrinked">
+        <thead>
+          <tr>
+            <th>Code</th>
+            <th>Full Name</th>
+            <th>Company</th>
+            <th>Office</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% session[:return_to] = 'Advanced Search' %>
+          <% session[:return_to_url] = "#{request.protocol}#{request.host_with_port}#{request.fullpath}" %>
+          <% @workers.each do |worker| %>
+          <tr>
+            <td><%= link_to worker.worker_code, worker %></td>
+            <td><%= worker.last_name %>, <%= worker.first_name %></td>
+            <td><%= Company.find(worker.company).name unless worker.company.nil? %></td>
+            <td><%= Office.find(worker.office).name unless worker.office.nil? %></td>
+            <td><%= link_to edit_worker_path(worker), :class => 'btn btn-mini' do %> <i class="icon-edit"></i> <% end %>
+            <%= link_to(worker, :data => { :confirm => "Are you sure?" }, :method => :delete, :class => 'btn btn-mini') do %> <i class="icon-trash"></i> <% end %> </td>
+          </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div><!-- /.span9 -->
+  </div><!-- /.row-fluid -->
+</div><!-- /.container-fluid -->
+

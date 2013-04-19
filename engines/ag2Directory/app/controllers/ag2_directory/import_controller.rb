@@ -41,6 +41,7 @@ module Ag2Directory
       contact.corp_extension = worker.corp_extension unless worker.corp_extension.nil?
       contact.corp_cellular_long = worker.corp_cellular_long unless worker.corp_cellular_long.nil?
       contact.corp_cellular_short = worker.corp_cellular_short unless worker.corp_cellular_short.nil?
+      contact.avatar = worker.avatar unless worker.avatar.nil?
     end
   end
 end

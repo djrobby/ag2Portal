@@ -1,7 +1,7 @@
 <% session[:return_to] = nil %>
 <% session[:return_to_url] = nil %>
 <%= render '/layouts/ag2_human/workersbreadcrumb' %>
-<%= render :partial => '/layouts/searchhead', :locals => { :title => 'Workers', :path => workers_path } %>
+<%= render :partial => '/layouts/searchadvancedhead', :locals => { :title => 'Workers', :path => workers_path, :target => workers_search_path } %>
 
 <div class="span11">
   <table class="table table-condensed table-striped">
