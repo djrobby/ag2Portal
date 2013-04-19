@@ -232,7 +232,19 @@ a:focus {
   vertical-align: center;
   text-align: right;
 }
-
+#letters {
+  margin: 0;
+  padding: 0 0 2px 0;
+  list-style-type: none;
+  align: center;
+  text-align: center;
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
+  border-bottom-color: #e3e3e3;
+}
+#letters li {
+  display: inline;
+}
 /*
  * Tables
  */

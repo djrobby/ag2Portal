@@ -4,6 +4,7 @@
 <%= render :partial => '/layouts/searchadvancedhead', :locals => { :title => 'Workers', :path => workers_path, :target => workers_search_path } %>
 
 <div class="span11">
+  <%= render :partial => '/layouts/lettershead', :locals => { :controller => "workers", :action => "index" } %>
   <table class="table table-condensed table-striped">
     <thead>
       <tr>

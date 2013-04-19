@@ -106,15 +106,16 @@ module Ag2Human
     end
 
     #
-    # Advanced search workers
+    # Advanced searchers
     # DO NOT use strings as queries to avoid SQL injection exploits!
     #
     def search
       company = params[:Company]
       office = params[:Office]
-      
+      letter = params[:letter]
       has_company = !company.nil? && company != ""
       has_office = !office.nil? && office != ""
+      has_letter = !letter.nil? && letter != ""
 
       @search = Worker.search do
         fulltext params[:search]
@@ -125,7 +126,11 @@ module Ag2Human
           with :office_id, office
         end
       end
-      @workers = @search.results.sort_by{ |worker| worker.worker_code }
+      if !has_letter
+        @workers = @search.results.sort_by{ |worker| worker.worker_code }
+      else
+        @workers = Worker.order('worker_code').where("last_name LIKE ?", "#{letter}%")
+      end
       
 =begin
       case
@@ -152,11 +157,16 @@ module Ag2Human
     # GET /workers
     # GET /workers.json
     def index
-      #@workers = Worker.all
+      letter = params[:letter]
+      has_letter = !letter.nil? && letter != ""
       @search = Worker.search do
         fulltext params[:search]
       end
-      @workers = @search.results.sort_by{ |worker| worker.worker_code }
+      if !has_letter
+        @workers = @search.results.sort_by{ |worker| worker.worker_code }
+      else
+        @workers = Worker.order('worker_code').where("last_name LIKE ?", letter + "%")
+      end
 
       respond_to do |format|
         format.html # index.html.erb

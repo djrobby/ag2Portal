@@ -1,0 +1,11 @@
+<ul id="letters">
+  <% letters.each_with_index do |l, i| %>
+  <li>
+    <% if i < 25 %>
+    <%= link_to l, :controller => controller, :action => action, :letter => l %> |
+    <% else %>
+    <%= link_to l, :controller => controller, :action => action, :letter => l %>
+    <% end %>
+  </li>
+  <% end %>
+</ul>
