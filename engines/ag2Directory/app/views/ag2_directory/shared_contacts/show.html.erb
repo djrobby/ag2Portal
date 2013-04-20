@@ -1,0 +1,78 @@
+<%= render '/layouts/ag2_directory/sharedcontactsbreadcrumb' %>
+
+<h3>Contact</h3>
+<table class="table">
+  <tbody>
+    <tr>
+      <td>Id:</td>
+      <td><%= @shared_contact.id %></td>
+      <td>Full Name:</td>
+      <td><%= @shared_contact.last_name %>, <%= @shared_contact.first_name %></td>
+    </tr>
+    <tr>
+      <td>Company:</td>
+      <td><%= @shared_contact.company unless @shared_contact.company.blank? %></td>
+      <td>Fiscal Id:</td>
+      <td><%= @shared_contact.fiscal_id unless @shared_contact.fiscal_id.blank? %></td>
+    </tr>
+    <tr>
+      <td>Phone:</td>
+      <td><%= @shared_contact.phone %>
+      <% if !@shared_contact.extension.blank? %>
+      (<%= @shared_contact.extension %>)
+      <% end %> </td>
+      <td>Fax:</td>
+      <td><%= @shared_contact.fax %></td>
+    </tr>
+    <tr>
+      <td>Cellular:</td>
+      <td><%= @shared_contact.cellular %></td>
+      <td>Email:</td>
+      <td><%= @shared_contact.email %></td>
+    </tr>
+    <tr>
+      <td>Address:</td>
+      <td> <%= @shared_contact.street_type.street_type_code.titleize %>. <%= @shared_contact.street_name %> <%= @shared_contact.street_number %>
+      <% if !@shared_contact.building.blank? %>
+      <%= @shared_contact.building.titleize %>
+      <% end %>
+      <% if !@shared_contact.floor.blank? %>
+      <%= @shared_contact.floor %>&ordm;
+      <% end %>
+      <% if !@shared_contact.floor_office.blank? %>
+      <%= @shared_contact.floor_office %>
+      <% end %> </td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Town:</td>
+      <td><%= @shared_contact.town.name %></td>
+      <td>Province:</td>
+      <td><%= @shared_contact.province.name %></td>
+    </tr>
+    <tr>
+      <td>Zip Code:</td>
+      <td><%= @shared_contact.zipcode.zipcode %></td>
+      <td>Country:</td>
+      <td><%= @shared_contact.country.name %></td>
+    </tr>
+    <tr>
+      <td>Position:</td>
+      <td><%= @shared_contact.position unless @shared_contact.position.blank? %></td>
+      <td>Type:</td>
+      <td><%= @shared_contact.shared_contact_type.name %></td>
+    </tr>
+    <tr>
+      <td>Created at:</td>
+      <td><%= @shared_contact.created_at.utc.getlocal.strftime("%d/%m/%Y %H:%M:%S") %></td>
+      <td>Updated at:</td>
+      <td><%= @shared_contact.updated_at.utc.getlocal.strftime("%d/%m/%Y %H:%M:%S") %></td>
+    </tr>
+  </tbody>
+</table>
+
+<%= link_to 'Edit Contact', edit_share_contact_path(@shared_contact), :class => 'btn btn-primary' %>
+<br />
+<br />
+<%= link_to 'Back to Shared Contacts', share_contacts_path %>

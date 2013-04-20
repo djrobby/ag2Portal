@@ -11,13 +11,13 @@
   <span class="blue-separator">| </span><i class="icon-hand-right icon-white"></i>
   <%= company.fiscal_id  %>
   <span class="blue-separator">| </span><i class="icon-phone-white"></i>
-  <% if !company.phone.nil? && company.phone != '' %>
+  <% if !company.phone.blank? %>
   <%= company.phone %>
   <% else %>
   ...
   <% end %>
   <span class="blue-separator">| </span><i class="icon-iphone-white"></i>
-  <% if !company.cellular.nil? && company.cellular != '' %>
+  <% if !company.cellular.blank? %>
   <%= company.cellular %>
   <% else %>
   ...
@@ -34,26 +34,26 @@
   <span class="yellow-separator">| </span><i class="icon-hand-right"></i>
   <%= office.office_code  %>
   <span class="yellow-separator">| </span><i class="icon-phone-black"></i>
-  <% if !office.phone.nil? && office.phone != '' %>
+  <% if !office.phone.blank? %>
   <%= office.phone %>
   <% else %>
   ...
   <% end %>
   <span class="yellow-separator">| </span><i class="icon-iphone-black"></i> 
-  <% if !office.cellular.nil? && office.cellular != '' %>
+  <% if !office.cellular.blank? %>
   <%= office.cellular %>
   <% else %>
   ...
   <% end %>
   <span class="yellow-separator">| </span><i class="icon-road"></i> 
   <%= office.street_type.street_type_code.titleize  %>. <%= office.street_name %> <%= office.street_number %>
-  <% if !office.building.nil? %>
+  <% if !office.building.blank? %>
   <%= office.building.titleize %>
   <% end %>
-  <% if !office.floor.nil? %>
+  <% if !office.floor.blank? %>
   <%= office.floor %>&ordm;
   <% end %>
-  <% if !office.floor_office.nil? %>
+  <% if !office.floor_office.blank? %>
   <%= office.floor_office %>
   <% end %>-
   <%= office.town.name %>,
@@ -92,14 +92,14 @@
     <% office.corp_contacts.each do |contact| %>
     <tr>
       <td><%= link_to contact.last_name + ', ' + contact.first_name, contact %></td>
-      <td><%= contact.position unless contact.position.nil? %></td>
-      <td><%= Department.find(contact.department).code unless contact.department.nil? %></td>
-      <td><%= contact.corp_phone unless contact.corp_phone.nil? %>
-      <% if !contact.corp_extension.nil? && contact.corp_extension != '' %>
+      <td><%= contact.position unless contact.position.blank? %></td>
+      <td><%= Department.find(contact.department).code unless contact.department.blank? %></td>
+      <td><%= contact.corp_phone unless contact.corp_phone.blank? %>
+      <% if !contact.corp_extension.blank? %>
       (<%= contact.corp_extension %>)
       <% end %> </td>
-      <td><%= contact.corp_cellular_long unless contact.corp_cellular_long.nil? %>
-      <% if !contact.corp_cellular_short.nil? && contact.corp_cellular_short != '' %>
+      <td><%= contact.corp_cellular_long unless contact.corp_cellular_long.blank? %>
+      <% if !contact.corp_cellular_short.blank? %>
       (<%= contact.corp_cellular_short %>)
       <% end %> </td>
       <td><%= contact.email %></td>

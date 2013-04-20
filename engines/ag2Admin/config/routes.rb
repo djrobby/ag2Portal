@@ -28,6 +28,7 @@ Ag2Admin::Engine.routes.draw do
   resources :street_types
   resources :sites
   resources :apps
+  resources :countries
 
   root :to => 'home#index'
 end

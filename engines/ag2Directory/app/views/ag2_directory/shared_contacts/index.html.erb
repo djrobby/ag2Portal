@@ -1,0 +1,41 @@
+<%= render '/layouts/ag2_directory/sharedcontactsbreadcrumb' %>
+<%= render :partial => '/layouts/searchhead', :locals => { :title => 'Shared Contacts', :path => shared_contacts_path } %>
+
+<div class="span11">
+  <%= render :partial => '/layouts/lettershead', :locals => { :controller => "shared_contacts", :action => "index" } %>
+  <table class="table table-condensed table-striped shrinked">
+    <thead>
+      <tr>
+        <th>Company</th>
+        <th>Full Name</th>
+        <th>Position</th>
+        <th>Phone</th>
+        <th>Cellular</th>
+        <th>Email</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @shared_contacts.each do |contact| %>
+      <tr>
+        <td><%= contact.company %></td>
+        <td><%= contact.last_name + ', ' + contact.first_name %></td>
+        <td><%= contact.position unless contact.position.blank? %></td>
+        <td><%= contact.phone unless contact.phone.blank? %>
+        <% if !contact.extension.blank? %>
+        (<%= contact.extension %>)
+        <% end %> </td>
+        <td><%= contact.cellular unless contact.cellular.blank? %></td>
+        <td><%= contact.email %></td>
+        <td><%= link_to contact, :class => 'btn btn-mini' do %> <i class="icon-eye-open"></i> <% end %>
+        <%= link_to edit_shared_contact_path(contact), :class => 'btn btn-mini' do %> <i class="icon-edit"></i> <% end %>
+        <%= link_to(contact, :data => { :confirm => "Are you sure?" }, :method => :delete, :class => 'btn btn-mini') do %> <i class="icon-trash"></i> <% end %> </td>
+      </tr>
+      <% end %>
+    </tbody>
+  </table>
+  <%= link_to 'New Contact', new_shared_contact_path, :class => 'btn btn-primary' %>
+  <br />
+  <br />
+  <%= link_to 'Back to ag2Directory', ag2_directory.root_path %>
+</div>

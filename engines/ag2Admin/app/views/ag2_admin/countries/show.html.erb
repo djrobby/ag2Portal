@@ -1,0 +1,24 @@
+<%= render '/layouts/ag2_admin/countriesbreadcrumb' %>
+
+<h3>Country</h3>
+<table class="table">
+  <tbody>
+    <tr>
+      <td>Id:</td>
+      <td><%= @country.id %></td>
+      <td>Name:</td>
+      <td><%= @country.name %></td>
+    </tr>
+    <tr>
+      <td>Created at:</td>
+      <td><%= @country.created_at.utc.getlocal.strftime("%d/%m/%Y %H:%M:%S") %></td>
+      <td>Updated at:</td>
+      <td><%= @country.updated_at.utc.getlocal.strftime("%d/%m/%Y %H:%M:%S") %></td>
+    </tr>
+  </tbody>
+</table>
+
+<%= link_to 'Edit Country', edit_country_path(@country), :class => 'btn btn-primary' %>
+<br />
+<br />
+<%= link_to 'Back to Countries', countries_path %>

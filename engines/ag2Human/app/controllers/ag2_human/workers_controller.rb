@@ -113,21 +113,18 @@ module Ag2Human
     def search
       company = params[:Company]
       office = params[:Office]
-      has_company = !company.nil? && company != ""
-      has_office = !office.nil? && office != ""
       letter = params[:letter]
-      has_letter = !letter.nil? && letter != ""
 
       @search = Worker.search do
         fulltext params[:search]
-        if has_company
+        if !company.blank?
           with :company_id, company
         end
-        if has_office
+        if !office.blank?
           with :office_id, office
         end
       end
-      if !has_letter || letter == "%"
+      if letter.blank? || letter == "%"
         @workers = @search.results.sort_by{ |worker| worker.worker_code }
       else
         @workers = Worker.order('worker_code').where("last_name LIKE ?", "#{letter}%")
@@ -160,11 +157,11 @@ module Ag2Human
     def index
       #@workers = Worker.all
       letter = params[:letter]
-      has_letter = !letter.nil? && letter != ""
+      
       @search = Worker.search do
         fulltext params[:search]
       end
-      if !has_letter || letter == "%"
+      if letter.blank? || letter == "%"
         @workers = @search.results.sort_by{ |worker| worker.worker_code }
       else
         @workers = Worker.order('worker_code').where("last_name LIKE ?", letter + "%")

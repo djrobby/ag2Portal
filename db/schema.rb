@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130415175908) do
+ActiveRecord::Schema.define(:version => 20130420102053) do
 
   create_table "apps", :force => true do |t|
     t.string   "name"
@@ -109,6 +109,12 @@ ActiveRecord::Schema.define(:version => 20130415175908) do
   add_index "corp_contacts", ["office_id"], :name => "index_corp_contacts_on_office_id"
   add_index "corp_contacts", ["worker_id"], :name => "index_corp_contacts_on_worker_id"
 
+  create_table "countries", :force => true do |t|
+    t.string   "name"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
   create_table "degree_types", :force => true do |t|
     t.string   "name"
     t.string   "dt_code"
@@ -183,6 +189,52 @@ ActiveRecord::Schema.define(:version => 20130415175908) do
 
   add_index "roles", ["name", "resource_type", "resource_id"], :name => "index_roles_on_name_and_resource_type_and_resource_id"
   add_index "roles", ["name"], :name => "index_roles_on_name"
+
+  create_table "shared_contact_types", :force => true do |t|
+    t.string   "name"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  create_table "shared_contacts", :force => true do |t|
+    t.string   "first_name"
+    t.string   "last_name"
+    t.string   "company"
+    t.string   "fiscal_id"
+    t.string   "position"
+    t.integer  "street_type_id"
+    t.string   "street_name"
+    t.string   "street_number"
+    t.string   "building"
+    t.integer  "floor"
+    t.string   "floor_office"
+    t.integer  "zipcode_id"
+    t.integer  "town_id"
+    t.integer  "province_id"
+    t.integer  "country_id"
+    t.string   "phone"
+    t.string   "extension"
+    t.string   "fax"
+    t.string   "cellular"
+    t.string   "email"
+    t.integer  "shared_contact_type_id"
+    t.datetime "created_at",             :null => false
+    t.datetime "updated_at",             :null => false
+  end
+
+  add_index "shared_contacts", ["cellular"], :name => "index_shared_contacts_on_cellular"
+  add_index "shared_contacts", ["company"], :name => "index_shared_contacts_on_company"
+  add_index "shared_contacts", ["country_id"], :name => "index_shared_contacts_on_country_id"
+  add_index "shared_contacts", ["email"], :name => "index_shared_contacts_on_email"
+  add_index "shared_contacts", ["first_name"], :name => "index_shared_contacts_on_first_name"
+  add_index "shared_contacts", ["fiscal_id"], :name => "index_shared_contacts_on_fiscal_id"
+  add_index "shared_contacts", ["last_name"], :name => "index_shared_contacts_on_last_name"
+  add_index "shared_contacts", ["phone"], :name => "index_shared_contacts_on_phone"
+  add_index "shared_contacts", ["province_id"], :name => "index_shared_contacts_on_province_id"
+  add_index "shared_contacts", ["shared_contact_type_id"], :name => "index_shared_contacts_on_shared_contact_type_id"
+  add_index "shared_contacts", ["street_type_id"], :name => "index_shared_contacts_on_street_type_id"
+  add_index "shared_contacts", ["town_id"], :name => "index_shared_contacts_on_town_id"
+  add_index "shared_contacts", ["zipcode_id"], :name => "index_shared_contacts_on_zipcode_id"
 
   create_table "sites", :force => true do |t|
     t.string   "name"

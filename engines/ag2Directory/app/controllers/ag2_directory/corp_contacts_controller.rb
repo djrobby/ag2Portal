@@ -20,12 +20,11 @@ module Ag2Directory
     # Search contacts
     def search
       letter = params[:letter]
-      has_letter = !letter.nil? && letter != ""
       
       @search = CorpContact.search do
         fulltext params[:search]
       end
-      if !has_letter || letter == "%"
+      if letter.blank? || letter == "%"
         @corp_contacts = @search.results.sort_by{ |contact| [ contact.last_name, contact.first_name ] }
       else
         @corp_contacts = CorpContact.order('last_name, first_name').where("last_name LIKE ?", "#{letter}%")

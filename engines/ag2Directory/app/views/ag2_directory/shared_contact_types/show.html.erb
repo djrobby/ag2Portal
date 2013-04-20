@@ -1,0 +1,24 @@
+<%= render '/layouts/ag2_directory/sharedcontacttypesbreadcrumb' %>
+
+<h3>Contact Type</h3>
+<table class="table">
+  <tbody>
+    <tr>
+      <td>Id:</td>
+      <td><%= @shared_contact_type.id %></td>
+      <td>Name:</td>
+      <td><%= @shared_contact_type.name %></td>
+    </tr>
+    <tr>
+      <td>Created at:</td>
+      <td><%= @shared_contact_type.created_at.utc.getlocal.strftime("%d/%m/%Y %H:%M:%S") %></td>
+      <td>Updated at:</td>
+      <td><%= @shared_contact_type.updated_at.utc.getlocal.strftime("%d/%m/%Y %H:%M:%S") %></td>
+    </tr>
+  </tbody>
+</table>
+
+<%= link_to 'Edit contact Type', edit_shared_contact_type_path(@shared_contact_type), :class => 'btn btn-primary' %>
+<br />
+<br />
+<%= link_to 'Back to Shared contact Types', shared_contact_types_path %>

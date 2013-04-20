@@ -9,4 +9,5 @@ class Province < ActiveRecord::Base
   has_many :companies
   has_many :offices
   has_many :workers
+  has_many :shared_contacts
 end
