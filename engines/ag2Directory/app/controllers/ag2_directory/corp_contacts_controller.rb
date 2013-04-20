@@ -13,12 +13,23 @@ module Ag2Directory
       end
     end
 
+    #
+    # Advanced searchers
+    # DO NOT use strings as queries to avoid SQL injection exploits!
+    #
     # Search contacts
     def search
+      letter = params[:letter]
+      has_letter = !letter.nil? && letter != ""
+      
       @search = CorpContact.search do
         fulltext params[:search]
       end
-      @corp_contacts = @search.results.sort_by{ |contact| [ contact.last_name, contact.first_name ] }
+      if !has_letter || letter == "%"
+        @corp_contacts = @search.results.sort_by{ |contact| [ contact.last_name, contact.first_name ] }
+      else
+        @corp_contacts = CorpContact.order('last_name, first_name').where("last_name LIKE ?", "#{letter}%")
+      end      
       
       respond_to do |format|
         format.html # search.html.erb
@@ -32,7 +43,7 @@ module Ag2Directory
     # GET /corp_contacts
     # GET /corp_contacts.json
     def index
-      @corp_contacts = CorpContact.all
+      #@corp_contacts = CorpContact.all
       @companies = Company.order('name').all(:include => [:offices, :corp_contacts])
 
       respond_to do |format|

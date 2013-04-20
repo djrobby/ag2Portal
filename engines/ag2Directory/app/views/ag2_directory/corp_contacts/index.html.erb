@@ -1,5 +1,6 @@
 <%= render '/layouts/ag2_directory/corpcontactsbreadcrumb' %>
 <%= render :partial => '/layouts/searchhead', :locals => { :title => 'Corporate Contacts', :path => corp_contacts_search_path } %>
+<%= render :partial => '/layouts/lettershead', :locals => { :controller => "corp_contacts", :action => "search" } %>
 
 <% @companies.each do |company| %>
 <!-- Company -->
