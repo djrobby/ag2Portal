@@ -10,6 +10,9 @@
 # Ignore the default SQLite database.
 /db/*.sqlite3
 
+# Ignore solr.
+/solr
+
 # Ignore all logfiles and tempfiles.
 /log/*.log
 /tmp
@@ -106,6 +109,3 @@ RCS
 RCSLOG
 SCCS
 _$*
-
-# Ignore solr.
-/solr
