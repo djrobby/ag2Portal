@@ -16,6 +16,7 @@ module Ag2Admin
     # GET /users/1
     # GET /users/1.json
     def show
+      @breadcrumb = 'read'
       @user = User.find(params[:id])
   
       respond_to do |format|
@@ -27,6 +28,7 @@ module Ag2Admin
     # GET /users/new
     # GET /users/new.json
     def new
+      @breadcrumb = 'create'
       @user = User.new
   
       respond_to do |format|
@@ -37,12 +39,14 @@ module Ag2Admin
   
     # GET /users/1/edit
     def edit
+      @breadcrumb = 'update'
       @user = User.find(params[:id])
     end
   
     # POST /users
     # POST /users.json
     def create
+      @breadcrumb = 'create'
       @user = User.new(params[:user])
   
       respond_to do |format|
@@ -59,6 +63,7 @@ module Ag2Admin
     # PUT /users/1
     # PUT /users/1.json
     def update
+      @breadcrumb = 'update'
       @user = User.find(params[:id])
   
       respond_to do |format|

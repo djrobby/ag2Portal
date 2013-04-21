@@ -16,6 +16,7 @@ module Ag2Admin
     # GET /roles/1
     # GET /roles/1.json
     def show
+      @breadcrumb = 'read'
       @role = Role.find(params[:id])
   
       respond_to do |format|
@@ -27,6 +28,7 @@ module Ag2Admin
     # GET /roles/new
     # GET /roles/new.json
     def new
+      @breadcrumb = 'create'
       @role = Role.new
   
       respond_to do |format|
@@ -37,12 +39,14 @@ module Ag2Admin
   
     # GET /roles/1/edit
     def edit
+      @breadcrumb = 'update'
       @role = Role.find(params[:id])
     end
   
     # POST /roles
     # POST /roles.json
     def create
+      @breadcrumb = 'create'
       @role = Role.new(params[:role])
   
       respond_to do |format|
@@ -59,6 +63,7 @@ module Ag2Admin
     # PUT /roles/1
     # PUT /roles/1.json
     def update
+      @breadcrumb = 'update'
       @role = Role.find(params[:id])
   
       respond_to do |format|

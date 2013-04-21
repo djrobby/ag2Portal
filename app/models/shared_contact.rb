@@ -21,7 +21,13 @@ class SharedContact < ActiveRecord::Base
   validates :country_id,              :presence => true
   validates :shared_contact_type_id,  :presence => true
 
+  before_validation :fields_to_uppercase
+
   searchable do
     text :first_name, :last_name, :company, :fiscal_id, :cellular, :phone, :email
+  end
+
+  def fields_to_uppercase
+    self[:fiscal_id].upcase!
   end
 end

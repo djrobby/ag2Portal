@@ -8,7 +8,7 @@
       <tr>
         <th>Company</th>
         <th>Full Name</th>
-        <th>Position</th>
+        <th>Type</th>
         <th>Phone</th>
         <th>Cellular</th>
         <th>Email</th>
@@ -20,7 +20,7 @@
       <tr>
         <td><%= contact.company %></td>
         <td><%= contact.last_name + ', ' + contact.first_name %></td>
-        <td><%= contact.position unless contact.position.blank? %></td>
+        <td><%= contact.shared_contact_type.name unless contact.shared_contact_type.blank? %></td>
         <td><%= contact.phone unless contact.phone.blank? %>
         <% if !contact.extension.blank? %>
         (<%= contact.extension %>)
@@ -37,5 +37,6 @@
   <%= link_to 'New Contact', new_shared_contact_path, :class => 'btn btn-primary' %>
   <br />
   <br />
+  <%= link_to 'Go to Shared contact Types', shared_contact_types_path %> |
   <%= link_to 'Back to ag2Directory', ag2_directory.root_path %>
 </div>
