@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130420102053) do
+ActiveRecord::Schema.define(:version => 20130422101517) do
 
   create_table "apps", :force => true do |t|
     t.string   "name"
@@ -114,6 +114,16 @@ ActiveRecord::Schema.define(:version => 20130420102053) do
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end
+
+  create_table "data_import_configs", :force => true do |t|
+    t.string   "name"
+    t.string   "source"
+    t.string   "target"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "data_import_configs", ["name"], :name => "index_data_import_configs_on_name"
 
   create_table "degree_types", :force => true do |t|
     t.string   "name"

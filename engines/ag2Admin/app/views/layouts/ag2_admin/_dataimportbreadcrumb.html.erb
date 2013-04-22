@@ -1,0 +1,35 @@
+<% content_for :title, "aGestiona2 | ag2DataImport" %>
+<% content_for :icon, "/assets/icon/ag2DataImport.png" %>
+<% content_for :alt, "ag2DataImport" %>
+
+<!-- Breadcrumb -->
+<ul class="breadcrumb">
+  <li>
+    <a href="<%= main_app.root_path %>"><i class="icon-home"></i></a><span class="divider">></span>
+  </li>
+  <li>
+    <a href="<%= ag2_admin.root_path %>">ag2Admin</a><span class="divider">></span>
+  </li>
+  <li>
+    <a href="<%= ag2_admin.config_path %>">ag2Config</a><span class="divider">></span>
+  </li>
+  <% if @data_import_configs %>
+  <li>
+    ag2DataImport
+  </li>
+  <% end %>
+  <% if @data_import_config %>
+  <li>
+    <a href="<%= data_import_configs_path %>">ag2DataImport</a><span class="divider">></span>
+  </li>
+  <% if @breadcrumb == 'read' || @breadcrumb == 'update' %>
+  Config
+  <% end %>
+  <% if @breadcrumb == 'create' %>
+  <li>
+    New
+  </li>
+  <% end %>
+  <% end %>
+  <a class="close" href="<%= ag2_admin.root_path %>">&#215;</a>
+</ul>

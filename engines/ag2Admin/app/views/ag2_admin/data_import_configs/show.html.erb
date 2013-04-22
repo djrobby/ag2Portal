@@ -1,0 +1,30 @@
+<%= render '/layouts/ag2_admin/dataimportbreadcrumb' %>
+
+<h3>Config</h3>
+<table class="table">
+  <tbody>
+    <tr>
+      <td>Id:</td>
+      <td><%= @data_import_config.id %></td>
+      <td>Name:</td>
+      <td><%= @data_import_config.name %></td>
+    </tr>
+    <tr>
+      <td>Source:</td>
+      <td><%= @data_import_config.source %></td>
+      <td>({Rails.root})Target:</td>
+      <td><%= @data_import_config.target %></td>
+    </tr>
+    <tr>
+      <td>Created at:</td>
+      <td><%= @data_import_config.created_at.utc.getlocal.strftime("%d/%m/%Y %H:%M:%S") %></td>
+      <td>Updated at:</td>
+      <td><%= @data_import_config.updated_at.utc.getlocal.strftime("%d/%m/%Y %H:%M:%S") %></td>
+    </tr>
+  </tbody>
+</table>
+
+<%= link_to 'Edit Config', edit_data_import_config_path(@data_import_config), :class => 'btn btn-primary' %>
+<br />
+<br />
+<%= link_to 'Back to Data Import Configs', data_import_configs_path %>

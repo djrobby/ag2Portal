@@ -1,25 +1,51 @@
 require_dependency "ag2_human/application_controller"
+require "dbf"
 
 module Ag2Human
   class ImportController < ApplicationController
     def index
     end
 
+    #
+    # Import DBF files from external source
+    #
     def data_import
       message = "Workers Updater finished succesfully.".html_safe
       @json_data = { "DataImport" => message, "Result" => "OK" }
-
-      @workers = Worker.all
-
-      @workers.each do |worker|
-        @contact = CorpContact.find_by_worker_id(worker)
-        if @contact.nil?
-          # Add new contact from worker
-          @contact = CorpContact.new
-          @contact.worker_id = worker.id
+      
+      # Copy 'empresa.dbf' file
+      data_import_config = DataImportConfig.find_by_name('workers')
+      source = data_import_config.source + 'Emp/'
+      target = Rails.root.to_s + data_import_config.target
+      create_target_dir(target)
+      FileUtils.cp(Dir[source + 'empresa.dbf'], target)
+      # Loop thru 'empresa' records
+      empresa = DBF::Table.new(target + "empresa.dbf")
+      empresa.each do |record|
+        company = Company.find_by_fiscal_id(record.ccif)
+        if !company.nil?
+          # Copy 'trabaja.dbf' file for current 'empresa'
+          source = data_import_config.source + 'Emp' + record.ccodemp + '/'
+          target = target + 'Emp' + record.ccodemp + '/'
+          create_target_dir(target)
+          FileUtils.cp(Dir[source + 'trabaja.dbf'], target)
         end
-        update_contact(@contact, worker)
-        if !@contact.save
+      end
+      
+      render json: @json_data
+
+=begin
+      @sources = Worker.all
+
+      @sources.each do |source|
+        @worker = Worker.find_by_worker_id(source)
+        if @worker.nil?
+          # Add new worker from source
+          @worker = Worker.new
+          @worker.worker_id = source.id
+        end
+        update_worker(@worker, source)
+        if @worker.save
           message = "Error: Workers Updater finished unexpectedly!".html_safe
           @json_data = { "DataImport" => message, "Result" => "ERROR" }
           render json: @json_data
@@ -27,20 +53,27 @@ module Ag2Human
       end
       sleep 1
       render json: @json_data
+=end
     end
 
-    def update_contact(contact, worker)
-      contact.first_name = worker.first_name unless worker.first_name.nil?
-      contact.last_name = worker.last_name unless worker.last_name.nil?
-      contact.company_id = worker.company_id unless worker.company_id.nil?
-      contact.office_id = worker.office_id unless worker.office_id.nil?
-      contact.department_id = worker.department_id unless worker.department_id.nil?
-      contact.position = worker.position unless worker.position.nil?
-      contact.email = worker.email unless worker.email.nil?
-      contact.corp_phone = worker.corp_phone unless worker.corp_phone.nil?
-      contact.corp_extension = worker.corp_extension unless worker.corp_extension.nil?
-      contact.corp_cellular_long = worker.corp_cellular_long unless worker.corp_cellular_long.nil?
-      contact.corp_cellular_short = worker.corp_cellular_short unless worker.corp_cellular_short.nil?
+    def create_target_dir(dir)
+      if !File.exist?(dir) || !File.directory?(dir)
+        FileUtils.mkdir(dir)
+      end
+    end
+    
+    def update_worker(worker, source)
+      worker.first_name = source.first_name unless source.first_name.nil?
+      worker.last_name = source.last_name unless source.last_name.nil?
+      worker.company_id = source.company_id unless source.company_id.nil?
+      worker.office_id = source.office_id unless source.office_id.nil?
+      worker.department_id = source.department_id unless source.department_id.nil?
+      worker.position = source.position unless source.position.nil?
+      worker.email = source.email unless source.email.nil?
+      worker.corp_phone = source.corp_phone unless source.corp_phone.nil?
+      worker.corp_extension = source.corp_extension unless source.corp_extension.nil?
+      worker.corp_cellular_long = source.corp_cellular_long unless source.corp_cellular_long.nil?
+      worker.corp_cellular_short = source.corp_cellular_short unless source.corp_cellular_short.nil?
     end
   end
 end
