@@ -22,7 +22,7 @@ module Ag2Directory
         if !@contact.save
           message = "Error: Corporate Contacts Updater finished unexpectedly!".html_safe
           @json_data = { "DataImport" => message, "Result" => "ERROR" }
-          render json: @json_data
+          break
         end
       end
       sleep 1

@@ -12,29 +12,76 @@ module Ag2Human
     def data_import
       message = "Workers Updater finished succesfully.".html_safe
       @json_data = { "DataImport" => message, "Result" => "OK" }
-      
+
+      # Loop thru 'empresa.dbf' records
+      data_import_config = DataImportConfig.find_by_name('workers')
+      source = source_exist(data_import_config.source, nil)
+      if source.nil?
+        @json_data = { "DataImport" => message, "Result" => "ERROR" }
+        render json: @json_data
+        return
+      end
+      # Loop thru 'empresa' records
+      empresa = DBF::Table.new(source + "empresa.dbf")
+      empresa.each do |e|
+        company = Company.find_by_fiscal_id(e.ccif)
+        if !company.nil?
+          # Loop thru 'trabaja.dbf' records for current 'empresa' record
+          source = source_exist(data_import_config.source, e.ccodemp)
+          if !source.nil?
+            trabaja = DBF::Table.new(source + "trabaja.dbf")
+            trabaja.each do |t|
+              nomina_id = e.ccodemp + '-' + t.ccodtra
+              worker = Worker.find_by_nomina_id(nomina_id)
+              if worker.nil?
+                # Add new worker from source
+                #worker = Worker.new
+                #worker.nomina_id = nomina_id
+              end
+              #update_worker(worker, t)
+              #if !worker.save
+              #  message = "Error: Workers Updater finished unexpectedly!".html_safe
+              #  @json_data = { "DataImport" => message, "Result" => "ERROR" }
+              #  break
+              #end
+            end
+          end
+        end
+      end
+      sleep 1
+      render json: @json_data
+    end
+
+    def commented_code
+=begin      
       # Copy 'empresa.dbf' file
       data_import_config = DataImportConfig.find_by_name('workers')
-      source = data_import_config.source + 'Emp/'
+      source = source_exist(data_import_config.source, nil)
+      if source.nil?
+        @json_data = { "DataImport" => message, "Result" => "ERROR" }
+        render json: @json_data
+      end
       target = Rails.root.to_s + data_import_config.target
       create_target_dir(target)
       FileUtils.cp(Dir[source + 'empresa.dbf'], target)
+      
       # Loop thru 'empresa' records
       empresa = DBF::Table.new(target + "empresa.dbf")
       empresa.each do |record|
         company = Company.find_by_fiscal_id(record.ccif)
         if !company.nil?
           # Copy 'trabaja.dbf' file for current 'empresa'
-          source = data_import_config.source + 'Emp' + record.ccodemp + '/'
-          target = target + 'Emp' + record.ccodemp + '/'
-          create_target_dir(target)
-          FileUtils.cp(Dir[source + 'trabaja.dbf'], target)
+          source = source_exist(data_import_config.source, record.ccodemp)
+          if !source.nil?
+            target = Rails.root.to_s + data_import_config.target + 'Emp' + record.ccodemp + '/'
+            create_target_dir(target)
+            FileUtils.cp(Dir[source + 'trabaja.dbf'], target)
+          end
         end
       end
       
       render json: @json_data
 
-=begin
       @sources = Worker.all
 
       @sources.each do |source|
@@ -56,8 +103,35 @@ module Ag2Human
 =end
     end
 
-    def create_target_dir(dir)
+    def dir_exist(dir)
       if !File.exist?(dir) || !File.directory?(dir)
+        return false
+      else
+        return true
+      end
+    end
+    
+    def source_exist(dir, emp)
+      from = dir + 'Emp'
+      if !emp.nil?
+        from = from + emp
+      end
+      from += '/'
+      if !dir_exist(from)
+        from = dir + 'EMP'
+        if !emp.nil?
+          from = from + emp
+        end
+        from += '/'
+        if !dir_exist(from)
+          from = nil
+        end
+      end
+      return from
+    end
+        
+    def create_target_dir(dir)
+      if !dir_exist(dir)
         FileUtils.mkdir(dir)
       end
     end

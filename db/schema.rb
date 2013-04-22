@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130422101517) do
+ActiveRecord::Schema.define(:version => 20130422181329) do
 
   create_table "apps", :force => true do |t|
     t.string   "name"
@@ -354,6 +354,7 @@ ActiveRecord::Schema.define(:version => 20130422101517) do
     t.string   "corp_cellular_short"
     t.string   "corp_extension"
     t.integer  "department_id"
+    t.string   "nomina_id"
   end
 
   add_index "workers", ["affiliation_id"], :name => "index_workers_on_affiliation_id"
@@ -368,6 +369,7 @@ ActiveRecord::Schema.define(:version => 20130422101517) do
   add_index "workers", ["degree_type_id"], :name => "index_workers_on_degree_type_id"
   add_index "workers", ["department_id"], :name => "index_workers_on_department_id"
   add_index "workers", ["fiscal_id"], :name => "index_workers_on_fiscal_id"
+  add_index "workers", ["nomina_id"], :name => "index_workers_on_nomina_id"
   add_index "workers", ["office_id"], :name => "index_workers_on_office_id"
   add_index "workers", ["professional_group_id"], :name => "index_workers_on_professional_group_id"
   add_index "workers", ["province_id"], :name => "index_workers_on_province_id"
