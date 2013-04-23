@@ -1,0 +1,24 @@
+<%= render '/layouts/ag2_human/trecordtypesbreadcrumb' %>
+
+<h3>TimeRecord Type</h3>
+<table class="table">
+  <tbody>
+    <tr>
+      <td>Id:</td>
+      <td><%= @timerecord_type.id %></td>
+      <td>Name:</td>
+      <td><%= @timerecord_type.name %></td>
+    </tr>
+    <tr>
+      <td>Created at:</td>
+      <td><%= @timerecord_type.created_at.utc.getlocal.strftime("%d/%m/%Y %H:%M:%S") %></td>
+      <td>Updated at:</td>
+      <td><%= @timerecord_type.updated_at.utc.getlocal.strftime("%d/%m/%Y %H:%M:%S") %></td>
+    </tr>
+  </tbody>
+</table>
+
+<%= link_to 'Edit TimeRecord Type', edit_timerecord_type_path(@timerecord_type), :class => 'btn btn-primary' %>
+<br />
+<br />
+<%= link_to 'Back to TimeRecord Types', timerecord_types_path %>

@@ -13,17 +13,17 @@
   <li>
     <a href="<%= ag2_timerecord_path %>">ag2TimeRecord</a><span class="divider">></span>
   </li>
-  <% if @timerecord_codes %>
+  <% if @timerecord_types %>
   <li>
-    TimeRecord Codes
+    TimeRecord Types
   </li>
   <% end %>
-  <% if @timerecord_code %>
+  <% if @timerecord_type %>
   <li>
-    <a href="<%= timerecord_codes_path %>">TimeRecord Codes</a><span class="divider">></span>
+    <a href="<%= timerecord_types_path %>">TimeRecord Types</a><span class="divider">></span>
   </li>
   <% if @breadcrumb == 'read' || @breadcrumb == 'update' %>
-  Code
+  Type
   <% end %>
   <% if @breadcrumb == 'create' %>
   <li>

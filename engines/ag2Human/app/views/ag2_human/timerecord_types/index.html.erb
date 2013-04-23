@@ -1,6 +1,6 @@
-<%= render '/layouts/ag2_human/trecordcodesbreadcrumb' %>
+<%= render '/layouts/ag2_human/trecordtypesbreadcrumb' %>
 
-<h3>TimeRecord Codes</h3>
+<h3>TimeRecord Types</h3>
 <div class="span6">
   <table class="table table-condensed table-striped">
     <thead>
@@ -10,16 +10,16 @@
       </tr>
     </thead>
     <tbody>
-      <% @timerecord_codes.each do |t| %>
+      <% @timerecord_types.each do |t| %>
       <tr>
-        <td><%= link_to t.name.titleize, t %></td>
-        <td><%= link_to edit_timerecord_code_path(t), :class => 'btn btn-mini' do %> <i class="icon-edit"></i> <% end %>
+        <td><%= link_to t.name, t %></td>
+        <td><%= link_to edit_timerecord_type_path(t), :class => 'btn btn-mini' do %> <i class="icon-edit"></i> <% end %>
         <%= link_to(t, :data => { :confirm => "Are you sure?" }, :method => :delete, :class => 'btn btn-mini') do %> <i class="icon-trash"></i> <% end %> </td>
       </tr>
       <% end %>
     </tbody>
   </table>
-  <%= link_to 'New TimeRecord Code', new_timerecord_code_path, :class => 'btn btn-primary' %>
+  <%= link_to 'New TimeRecord Type', new_timerecord_type_path, :class => 'btn btn-primary' %>
   <br />
   <br />
   <%= link_to 'Back to ag2TimeRecord', ag2_human.ag2_timerecord_path %>

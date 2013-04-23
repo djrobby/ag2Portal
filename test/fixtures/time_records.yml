@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  timerecord_date: 2013-04-23
+  timerecord_time: 2013-04-23 13:58:27
+  worker: 
+  timerecord_type: 
+  timerecord_code: 
+
+two:
+  timerecord_date: 2013-04-23
+  timerecord_time: 2013-04-23 13:58:27
+  worker: 
+  timerecord_type: 
+  timerecord_code: 

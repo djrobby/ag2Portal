@@ -1,5 +1,5 @@
 Ag2Human::Engine.routes.draw do
-  get "time_record/index"
+  get "ag2_timerecord/index"
 
   get "home/index"
 
@@ -10,7 +10,7 @@ Ag2Human::Engine.routes.draw do
   match '/workers/search', :controller => 'workers', :action => 'search'
 
   # Routes to time_record
-  match 'time_record' => 'time_record#index', :as => :time_record
+  match 'ag2_timerecord' => 'ag2_timerecord#index', :as => :ag2_timerecord
 
   # Routes for jQuery POSTs
   match 'workers/update_province_textfield_from_town/:id', :controller => 'workers', :action => 'update_province_textfield_from_town'
@@ -35,6 +35,7 @@ Ag2Human::Engine.routes.draw do
   resources :worker_types
   resources :departments
   resources :timerecord_codes
+  resources :timerecord_types
    
   root :to => 'home#index'
 end

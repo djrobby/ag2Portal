@@ -1,7 +1,7 @@
 require_dependency "ag2_human/application_controller"
 
 module Ag2Human
-  class TimeRecordController < ApplicationController
+  class Ag2TimerecordController < ApplicationController
     def index
     end
   end

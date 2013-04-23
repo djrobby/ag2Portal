@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130423071003) do
+ActiveRecord::Schema.define(:version => 20130423115826) do
 
   create_table "apps", :force => true do |t|
     t.string   "name"
@@ -267,6 +267,22 @@ ActiveRecord::Schema.define(:version => 20130423071003) do
 
   add_index "street_types", ["street_type_code"], :name => "index_street_types_on_street_type_code"
 
+  create_table "time_records", :force => true do |t|
+    t.date     "timerecord_date"
+    t.time     "timerecord_time"
+    t.integer  "worker_id"
+    t.integer  "timerecord_type_id"
+    t.integer  "timerecord_code_id"
+    t.datetime "created_at",         :null => false
+    t.datetime "updated_at",         :null => false
+  end
+
+  add_index "time_records", ["timerecord_code_id"], :name => "index_time_records_on_timerecord_code_id"
+  add_index "time_records", ["timerecord_date"], :name => "index_time_records_on_timerecord_date"
+  add_index "time_records", ["timerecord_time"], :name => "index_time_records_on_timerecord_time"
+  add_index "time_records", ["timerecord_type_id"], :name => "index_time_records_on_timerecord_type_id"
+  add_index "time_records", ["worker_id"], :name => "index_time_records_on_worker_id"
+
   create_table "timerecord_codes", :force => true do |t|
     t.string   "name"
     t.datetime "created_at", :null => false
@@ -274,6 +290,14 @@ ActiveRecord::Schema.define(:version => 20130423071003) do
   end
 
   add_index "timerecord_codes", ["name"], :name => "index_timerecord_codes_on_name"
+
+  create_table "timerecord_types", :force => true do |t|
+    t.string   "name"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "timerecord_types", ["name"], :name => "index_timerecord_types_on_name"
 
   create_table "towns", :force => true do |t|
     t.string   "name"

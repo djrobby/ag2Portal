@@ -54,6 +54,8 @@ class Worker < ActiveRecord::Base
   validates :contribution_account_code, :presence => true
 
   before_validation :fields_to_uppercase
+
+  has_many :time_records
   def fields_to_uppercase
     self[:fiscal_id].upcase!
     self[:worker_code].upcase!
