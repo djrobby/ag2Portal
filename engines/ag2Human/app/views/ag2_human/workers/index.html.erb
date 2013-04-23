@@ -1,27 +1,42 @@
-<% session[:return_to] = nil %>
-<% session[:return_to_url] = nil %>
 <%= render '/layouts/ag2_human/workersbreadcrumb' %>
-<%= render :partial => '/layouts/searchadvancedhead', :locals => { :title => 'Workers', :path => workers_path, :target => workers_search_path } %>
 
-<div class="span11">
-  <%= render :partial => '/layouts/lettershead', :locals => { :controller => "workers", :action => "index" } %>
-  <table class="table table-condensed table-striped">
-    <thead>
-      <tr>
-        <th>Code</th>
-        <th>Full Name</th>
-        <th>Company</th>
-        <th>Office</th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody>
-      <%= render @workers %>
-    </tbody>
-  </table>
-  <%= link_to 'New Worker', new_worker_path, :class => 'btn btn-primary' %>
-  <br />
-  <br />
-  <%= link_to 'Go to ag2TimeRecord', workers_path %> |
-  <%= link_to 'Back to ag2Human', ag2_human.root_path %>
-</div>
+<h3>Workers</h3>
+
+<div class="container-fluid">
+  <div class="row-fluid">
+
+    <div class="span3">
+      <div class="well sidebar-nav">
+        <%= form_tag "workers", :method => 'get' do %>
+        <%= label_tag "Office", nil, :class => 'form-label' %>
+        <%= select_tag "Office", options_from_collection_for_select(Office.all, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked' %>
+        <%= label_tag "Company", nil, :class => 'form-label' %>
+        <%= select_tag "Company", options_from_collection_for_select(Company.all, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked' %>
+        <%= label_tag "Others", nil, :class => 'form-label' %>
+        <%= text_field_tag :search, params[:search], :class =>  'x-large-text-field shrinked' %>
+        <%= submit_tag "Apply Filter", :class => 'btn btn-primary' %>
+        <% end %>
+        <%= link_to 'Back to ag2Human', ag2_human.root_path %>
+      </div><!-- /.sidebar-nav -->
+    </div><!-- /.span3 -->
+
+    <div class="span9">
+      <%= render :partial => '/layouts/lettershead', :locals => { :controller => "workers", :action => "index" } %>
+      <table class="table table-condensed table-striped shrinked">
+        <thead>
+          <tr>
+            <th>Code</th>
+            <th>Full Name</th>
+            <th>Company</th>
+            <th>Office</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <%= render @workers %>
+        </tbody>
+      </table>
+    </div><!-- /.span9 -->
+  </div><!-- /.row-fluid -->
+</div><!-- /.container-fluid -->
+

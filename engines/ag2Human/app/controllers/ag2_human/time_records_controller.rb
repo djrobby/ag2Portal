@@ -5,7 +5,26 @@ module Ag2Human
     # GET /time_records
     # GET /time_records.json
     def index
-      @time_records = TimeRecord.all
+      worker = params[:Worker]
+      date = params[:Date]
+      type = params[:Type]
+      code = params[:Code]
+
+      @search = TimeRecord.search do
+        if !worker.blank?
+          with :worker_id, worker
+        end
+        if !date.blank?
+          with :timerecord_date, date
+        end
+        if !type.blank?
+          with :timerecord_type_id, type
+        end
+        if !code.blank?
+          with :timerecord_code_id, code
+        end
+      end
+      @time_records = @search.results.sort_by{ |record| [ record.timerecord_date, record.timerecord_time ] }
   
       respond_to do |format|
         format.html # index.html.erb

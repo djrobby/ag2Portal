@@ -1,13 +1,12 @@
 Ag2Human::Engine.routes.draw do
-  get "ag2_timerecord/index"
-
   get "home/index"
 
   # Routes to import
   match 'import' => 'import#index', :as => :import
 
-  # Routes to search (advanced)
-  match '/workers/search', :controller => 'workers', :action => 'search'
+  # Routes to search (advanced) - ONLY if search view/method is used! -
+  #match '/workers/search', :controller => 'workers', :action => 'search'
+  #match '/time_records/search', :controller => 'time_records', :action => 'search'
 
   # Routes to time_record
   match 'ag2_timerecord' => 'ag2_timerecord#index', :as => :ag2_timerecord

@@ -61,6 +61,14 @@ class Worker < ActiveRecord::Base
     self[:worker_code].upcase!
   end
 
+  def to_label
+    "#{last_name}, #{first_name}"
+  end
+
+  def full_name
+    self.last_name + ", " + self.first_name
+  end
+
   searchable do
     text :worker_code, :first_name, :last_name, :fiscal_id, :affiliation_id, :contribution_account_code,
          :corp_cellular_long, :corp_cellular_short, :corp_extension, :corp_phone, :email

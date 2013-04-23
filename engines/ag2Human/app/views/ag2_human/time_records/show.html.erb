@@ -1,5 +1,36 @@
-<p id="notice"><%= notice %></p>
+<%= render '/layouts/ag2_human/trecordsbreadcrumb' %>
 
+<h3>Time Record</h3>
+<table class="table">
+  <tbody>
+    <tr>
+      <td>Id:</td>
+      <td><%= @time_record.id %></td>
+      <td>Worker:</td>
+      <td><%= Worker.find(@time_record.worker).full_name %></td>
+    </tr>
+    <tr>
+      <td>Date:</td>
+      <td><%= @time_record.timerecord_date.strftime("%d/%m/%Y") %></td>
+      <td>Time:</td>
+      <td><%= @time_record.timerecord_time.strftime("%H:%M") %></td>
+    </tr>
+    <tr>
+      <td>Type:</td>
+      <td><%= TimerecordType.find(@time_record.timerecord_type).name %></td>
+      <td>Code:</td>
+      <td><%= TimerecordCode.find(@time_record.timerecord_code).name.titleize %></td>
+    </tr>
+    <tr>
+      <td>Created at:</td>
+      <td><%= @time_record.created_at.utc.getlocal.strftime("%d/%m/%Y %H:%M:%S") %></td>
+      <td>Updated at:</td>
+      <td><%= @time_record.updated_at.utc.getlocal.strftime("%d/%m/%Y %H:%M:%S") %></td>
+    </tr>
+  </tbody>
+</table>
 
-<%= link_to 'Edit', edit_time_record_path(@time_record) %> |
-<%= link_to 'Back', time_records_path %>
+<%= link_to 'Edit Time Record', edit_time_record_path(@time_record), :class => 'btn btn-primary' %>
+<br />
+<br />
+<%= link_to 'Back to Time Records', time_records_path %>

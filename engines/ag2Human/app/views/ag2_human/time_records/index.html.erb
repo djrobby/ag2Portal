@@ -1,23 +1,66 @@
+<script>
+  $(document).ready(function() {
+    $('.date_picker').datepicker({
+      format : 'dd/mm/yyyy',
+      weekStart : 1
+    });
+  }); 
+</script>
+
 <%= render '/layouts/ag2_human/trecordsbreadcrumb' %>
 
-<h1>Listing time_records</h1>
+<h3>Time Records</h3>
 
-<table>
-  <tr>
-    <th></th>
-    <th></th>
-    <th></th>
-  </tr>
+<div class="container-fluid">
+  <div class="row-fluid">
 
-<% @time_records.each do |time_record| %>
-  <tr>
-    <td><%= link_to 'Show', time_record %></td>
-    <td><%= link_to 'Edit', edit_time_record_path(time_record) %></td>
-    <td><%= link_to 'Destroy', time_record, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-  </tr>
-<% end %>
-</table>
+    <div class="span3">
+      <div class="well sidebar-nav">
+        <%= form_tag "time_records", :method => 'get' do %>
+        <%= label_tag "Worker", nil, :class => 'form-label' %>
+        <%= select_tag "Worker", options_from_collection_for_select(Worker.all, "id", "full_name"), :prompt => "", :class => 'x-large-text-field shrinked' %>
+        <%= label_tag "Date", nil, :class => 'form-label' %>
+        <%= text_field_tag "Date", params[:date], :class =>  'x-large-text-field shrinked date_picker' %>
+        <%= label_tag "Type", nil, :class => 'form-label' %>
+        <%= select_tag "Type", options_from_collection_for_select(TimerecordType.all, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked' %>
+        <%= label_tag "Code", nil, :class => 'form-label' %>
+        <%= select_tag "Code", options_from_collection_for_select(TimerecordCode.all, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked' %>
+        <%= submit_tag "Apply Filter", :class => 'btn btn-primary' %>
+        <% end %>
+        <%= link_to 'New TimeRecord', new_time_record_path, :class => 'btn btn-primary' %>
+        <br />
+        <br />
+        <%= link_to 'Back to ag2TimeRecord', ag2_human.ag2_timerecord_path %>
+      </div><!-- /.sidebar-nav -->
+    </div><!-- /.span3 -->
 
-<br />
-
-<%= link_to 'New Time record', new_time_record_path %>
+    <div class="span9">
+      <table class="table table-condensed table-striped shrinked">
+        <thead>
+          <tr>
+            <th>Worker</th>
+            <th>Date</th>
+            <th>Time</th>
+            <th>Type</th>
+            <th>Code</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @time_records.each do |record| %>
+          <tr>
+            <td><%= Worker.find(record.worker).full_name %></td>
+            <td><%= record.timerecord_date.strftime("%d/%m/%Y") %></td>
+            <td><%= record.timerecord_time.strftime("%H:%M") %></td>
+            <td><%= TimerecordType.find(record.timerecord_type).name %></td>
+            <td><%= TimerecordCode.find(record.timerecord_code).name.titleize %></td>
+            <td><%= link_to record, :class => 'btn btn-mini' do %> <i class="icon-eye-open"></i> <% end %>
+            <%= link_to edit_time_record_path(record), :class => 'btn btn-mini' do %> <i class="icon-edit"></i> <% end %>
+            <%= link_to(record, :data => { :confirm => "Are you sure?" }, :method => :delete, :class => 'btn btn-mini') do %> <i class="icon-trash"></i> <% end %> </td>
+          </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div><!-- /.span9 -->
+  </div><!-- /.row-fluid -->
+</div><!-- /.container-fluid -->

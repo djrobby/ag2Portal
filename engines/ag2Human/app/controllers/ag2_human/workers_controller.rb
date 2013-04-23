@@ -111,6 +111,7 @@ module Ag2Human
     #
     # Search workers
     def search
+=begin
       company = params[:Company]
       office = params[:Office]
       letter = params[:letter]
@@ -130,6 +131,11 @@ module Ag2Human
         @workers = Worker.order('worker_code').where("last_name LIKE ?", "#{letter}%")
       end
       
+      respond_to do |format|
+        format.html # search.html.erb
+        format.json { render json: @workers }
+      end
+=end      
 =begin
       case
       when !has_company && !has_office
@@ -142,11 +148,6 @@ module Ag2Human
         @workers = Worker.order('worker_code').where("company_id = ? AND office_id = ?", company, office)
       end
 =end
-      
-      respond_to do |format|
-        format.html # search.html.erb
-        format.json { render json: @workers }
-      end
     end
 
     #
@@ -156,15 +157,23 @@ module Ag2Human
     # GET /workers.json
     def index
       #@workers = Worker.all
+      company = params[:Company]
+      office = params[:Office]
       letter = params[:letter]
-      
+
       @search = Worker.search do
         fulltext params[:search]
+        if !company.blank?
+          with :company_id, company
+        end
+        if !office.blank?
+          with :office_id, office
+        end
       end
       if letter.blank? || letter == "%"
         @workers = @search.results.sort_by{ |worker| worker.worker_code }
       else
-        @workers = Worker.order('worker_code').where("last_name LIKE ?", letter + "%")
+        @workers = Worker.order('worker_code').where("last_name LIKE ?", "#{letter}%")
       end
 
       respond_to do |format|
