@@ -1,0 +1,35 @@
+<% content_for :title, "aGestiona2 | ag2TimeRecord | Records Management" %>
+<% content_for :icon, "/assets/icon/ag2TimeRecordAdmin.png" %>
+<% content_for :alt, "ag2TimeRecord Records Management" %>
+
+<!-- Breadcrumb -->
+<ul class="breadcrumb">
+  <li>
+    <a href="<%= main_app.root_path %>"><i class="icon-home"></i></a><span class="divider">></span>
+  </li>
+  <li>
+    <a href="<%= ag2_human.root_path %>">ag2Human</a><span class="divider">></span>
+  </li>
+  <li>
+    <a href="<%= ag2_timerecord_path %>">ag2TimeRecord</a><span class="divider">></span>
+  </li>
+  <% if @time_records %>
+  <li>
+    Records Management
+  </li>
+  <% end %>
+  <% if @time_record %>
+  <li>
+    <a href="<%= time_records_path %>">Records Management</a><span class="divider">></span>
+  </li>
+  <% if @breadcrumb == 'read' || @breadcrumb == 'update' %>
+  Record
+  <% end %>
+  <% if @breadcrumb == 'create' %>
+  <li>
+    New
+  </li>
+  <% end %>
+  <% end %>
+  <a class="close" href="<%= ag2_human.root_path %>">&#215;</a>
+</ul>
