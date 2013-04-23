@@ -1,0 +1,35 @@
+<% content_for :title, "aGestiona2 | ag2TimeRecord | Record Codes" %>
+<% content_for :icon, "/assets/icon/TableA.png" %>
+<% content_for :alt, "Record Codes" %>
+
+<!-- Breadcrumb -->
+<ul class="breadcrumb">
+  <li>
+    <a href="<%= main_app.root_path %>"><i class="icon-home"></i></a><span class="divider">></span>
+  </li>
+  <li>
+    <a href="<%= ag2_human.root_path %>">ag2Human</a><span class="divider">></span>
+  </li>
+  <li>
+    <a href="<%= time_record_path %>">ag2TimeRecord</a><span class="divider">></span>
+  </li>
+  <% if @timerecord_codes %>
+  <li>
+    TimeRecord Codes
+  </li>
+  <% end %>
+  <% if @timerecord_code %>
+  <li>
+    <a href="<%= time_record_path %>">TimeRecord Codes</a><span class="divider">></span>
+  </li>
+  <% if @breadcrumb == 'read' || @breadcrumb == 'update' %>
+  <%= @timerecord_code.name %>
+  <% end %>
+  <% if @breadcrumb == 'create' %>
+  <li>
+    New
+  </li>
+  <% end %>
+  <% end %>
+  <a class="close" href="<%= ag2_human.root_path %>">&#215;</a>
+</ul>

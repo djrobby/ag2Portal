@@ -1,0 +1,24 @@
+<%= render '/layouts/ag2_human/trecordcodesbreadcrumb' %>
+
+<h3>TimeRecord Code</h3>
+<table class="table">
+  <tbody>
+    <tr>
+      <td>Id:</td>
+      <td><%= @timerecord_code.id %></td>
+      <td>Name</td>
+      <td><%= @timerecord_code.name.titleize %></td>
+    </tr>
+    <tr>
+      <td>Created at:</td>
+      <td><%= @timerecord_code.created_at.utc.getlocal.strftime("%d/%m/%Y %H:%M:%S") %></td>
+      <td>Updated at:</td>
+      <td><%= @timerecord_code.updated_at.utc.getlocal.strftime("%d/%m/%Y %H:%M:%S") %></td>
+    </tr>
+  </tbody>
+</table>
+
+<%= link_to 'Edit TimeRecord Code', edit_timerecord_code_path(@timerecord_code), :class => 'btn btn-primary' %>
+<br />
+<br />
+<%= link_to 'Back to TimeRecord Codes', timerecord_codes_path %>
