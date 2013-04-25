@@ -16,7 +16,7 @@
   <label class="multi-field-label-two"> <%= f.input :timerecord_time, :label => 'Time', :input_html => { :value => (f.object.timerecord_time.strftime("%H:%M") if f.object.timerecord_time), :class => 'mid-text-field' }, :label_html => { :class => 'form-label' } %> </label>
 </div>
 <div>
-  <label class="multi-field-label-two"> <%= f.association :timerecord_type, :label => 'Type', collection: TimerecordType.all(order: 'id'), :input_html => { :class => 'mid-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.association :timerecord_type, :label => 'Type', collection: TimerecordType.all(order: 'id'), :as => :radio_buttons, :input_html => { :class => 'mid-text-field' }, :label_html => { :class => 'form-label' } %> </label>
   <label class="multi-field-label-two"> <%= f.association :timerecord_code, :label => 'Code', collection: TimerecordCode.all(order: 'name'), :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
 </div>
 <%= f.button :submit, :class => 'btn-primary' %>
