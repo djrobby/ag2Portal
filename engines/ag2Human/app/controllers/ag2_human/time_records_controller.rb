@@ -10,6 +10,9 @@ module Ag2Human
       type = params[:Type]
       code = params[:Code]
 
+      # Must use Sunspot index always for update (reindex) current data (at console, use Sunspot.commit!)
+      TimeRecord.index
+
       @search = TimeRecord.search do
         if !worker.blank?
           with :worker_id, worker
