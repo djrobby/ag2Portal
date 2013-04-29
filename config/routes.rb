@@ -1,28 +1,13 @@
 Ag2Portal::Application.routes.draw do
-  scope "(:locale)", :locale => /en|es/ do
-    # Get
-    get "home/index"
-    
-    # Devise
-    devise_for :users
-    
-    # Root
-    root :to => "home#index"
-  
-    # Engines
-    mount Ag2Admin::Engine => "/ag2_admin"
-    mount Ag2Directory::Engine => "/ag2_directory"
-    mount Ag2Human::Engine => "/ag2_human"
-  end
+  get "icores/index"
 
-  # get "icores/index"
-  # get "lowres/index"
-  # get "welcome/index"
+  get "lowres/index"
 
-  # Index locale
-  # match '/:locale' => 'home#index'
-    
-  # devise_for :users
+  get "welcome/index"
+
+  get "home/index"
+
+  devise_for :users
 
   # The priority is based upon order of creation:
   # first created -> highest priority.
@@ -73,11 +58,16 @@ Ag2Portal::Application.routes.draw do
 
   # You can have the root of your site routed with "root"
   # just remember to delete public/index.html.
-  # root :to => "welcome#index"
+  root :to => "welcome#index"
   
   # See how all your routes lay out with "rake routes"
 
   # This is a legacy wild controller route that's not recommended for RESTful applications.
   # Note: This route will make all actions in every controller accessible via GET requests.
   # match ':controller(/:action(/:id))(.:format)'
+  
+  # Engines
+  mount Ag2Admin::Engine => "/ag2_admin"
+  mount Ag2Directory::Engine => "/ag2_directory"
+  mount Ag2Human::Engine => "/ag2_human"
 end
