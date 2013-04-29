@@ -11,6 +11,30 @@
     <%= javascript_include_tag "application" %>
     <%= csrf_meta_tags %>
     <%= yield(:head) %>
+    <script language="javascript" type="text/javascript">
+      <!--
+      var defaultPage;
+      var resolution;
+
+      window.onload = function() {
+        // Min resolution for this site: 1024x768
+        // LowRes resolution for this site: 1280x900 or less
+        // Default resolution for this site: 1280x900 or more
+        // Default site home page: home#index
+        // LowRes site home page: lowres#index
+        defaultPage = RedirectUponScreenResolution(1280, 900);
+        if (defaultPage == "icon") {
+          resolution = "<% session[:resolution] = 'LD' %>";
+        } else {
+          if (defaultPage == "default") {
+            resolution = "<% session[:resolution] = 'HD' %>";
+          } else {
+            resolution = "<% session[:resolution] = 'SD' %>";
+          }
+        }
+      }
+      // -->
+    </script>
   </head>
   <body>
     <!-- Header NavBar -->

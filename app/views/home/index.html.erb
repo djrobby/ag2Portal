@@ -1,44 +1,103 @@
-<% session[:resolution] = 'HD' %>
 <%= render '/layouts/portalbreadcrumb' %>
 
 <!-- Apps Thumbnails -->
 <ul class="thumbnails">
   <!-- Apps 1 -->
   <li class="span4">
+    <% if (session[:resolution] == "LD") %>
+    <a data-toggle="modal" href="#notfound" class="thumbnail centered"><img src="/assets/icon/ag2Finance.png" width="48" height="48" alt="ag2Finance" /><h5 class="h5-narrow">ag2Finance</h5></a>
+    <% elsif session[:resolution] == "SD" %>
+    <a data-toggle="modal" href="#notfound" class="thumbnail centered"><img src="/assets/pict/ag2/ag2Finance.png" width="96" height="96" alt="ag2Finance" /><h5 class="h5-narrow">ag2Finance</h5></a>
+    <% else %>
     <a data-toggle="modal" href="#notfound" class="thumbnail centered"><img src="/assets/pict/ag2Finance.png" width="128" height="128" alt="ag2Finance" /><h5 class="h5-narrow">ag2Finance</h5></a>
+    <% end %>
   </li>
   <li class="span4">
+    <% if (session[:resolution] == "LD") %>
+    <a data-toggle="modal" href="#notfound" class="thumbnail centered"><img src="/assets/icon/ag2Gest.png" width="48" height="48" alt="ag2Gest" /><h5 class="h5-narrow">ag2Gest</h5></a>
+    <% elsif session[:resolution] == "SD" %>
+    <a data-toggle="modal" href="#notfound" class="thumbnail centered"><img src="/assets/pict/ag2/ag2Gest.png" width="96" height="96" alt="ag2Gest" /><h5 class="h5-narrow">ag2Gest</h5></a>
+    <% else %>
     <a data-toggle="modal" href="#notfound" class="thumbnail centered"><img src="/assets/pict/ag2Gest.png" width="128" height="128" alt="ag2Gest" /><h5 class="h5-narrow">ag2Gest</h5></a>
+    <% end %>
   </li>
   <li class="span4">
+    <% if (session[:resolution] == "LD") %>
+    <a href="<%= ag2_human.root_path %>" class="thumbnail centered"><img src="/assets/icon/ag2Human.png" width="48" height="48" alt="ag2Human" /><h5 class="h5-narrow">ag2Human</h5></a>
+    <% elsif session[:resolution] == "SD" %>
+    <a href="<%= ag2_human.root_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/ag2Human.png" width="96" height="96" alt="ag2Human" /><h5 class="h5-narrow">ag2Human</h5></a>
+    <% else %>
     <a href="<%= ag2_human.root_path %>" class="thumbnail centered"><img src="/assets/pict/ag2Human.png" width="128" height="128" alt="ag2Human" /><h5 class="h5-narrow">ag2Human</h5></a>
+    <% end %>
   </li>
 </ul><!-- /.thumbnails -->
 <ul class="thumbnails">
   <!-- Apps 2 -->
   <li class="span4">
+    <% if (session[:resolution] == "LD") %>
+    <a data-toggle="modal" href="#notfound" class="thumbnail centered"><img src="/assets/icon/ag2Purchase.png" width="48" height="48" alt="ag2Purchase" /><h5 class="h5-narrow">ag2Purchase</h5></a>
+    <% elsif session[:resolution] == "SD" %>
+    <a data-toggle="modal" href="#notfound" class="thumbnail centered"><img src="/assets/pict/ag2/ag2Purchase.png" width="96" height="96" alt="ag2Purchase" /><h5 class="h5-narrow">ag2Purchase</h5></a>
+    <% else %>
     <a data-toggle="modal" href="#notfound" class="thumbnail centered"><img src="/assets/pict/ag2Purchase.png" width="128" height="128" alt="ag2Purchase" /><h5 class="h5-narrow">ag2Purchase</h5></a>
+    <% end %>
   </li>
   <li class="span4">
+    <% if (session[:resolution] == "LD") %>
+    <a data-toggle="modal" href="#notfound" class="thumbnail centered"><img src="/assets/icon/ag2Tech.png" width="48" height="48" alt="ag2Tech" /><h5 class="h5-narrow">ag2Tech</h5></a>
+    <% elsif session[:resolution] == "SD" %>
+    <a data-toggle="modal" href="#notfound" class="thumbnail centered"><img src="/assets/pict/ag2/ag2Tech.png" width="96" height="96" alt="ag2Tech" /><h5 class="h5-narrow">ag2Tech</h5></a>
+    <% else %>
     <a data-toggle="modal" href="#notfound" class="thumbnail centered"><img src="/assets/pict/ag2Tech.png" width="128" height="128" alt="ag2Tech" /><h5 class="h5-narrow">ag2Tech</h5></a>
+    <% end %>
   </li>
   <li class="span4">
+    <% if (session[:resolution] == "LD") %>
+    <a href="https://sites.google.com/a/aguaygestion.com/ag2teamnet" target="_blank" class="thumbnail centered"><img src="/assets/icon/ag2TeamNet.png" width="48" height="48" alt="ag2TeamNet" /><h5 class="h5-narrow">ag2TeamNet</h5></a>
+    <% elsif session[:resolution] == "SD" %>
+    <a href="https://sites.google.com/a/aguaygestion.com/ag2teamnet" target="_blank" class="thumbnail centered"><img src="/assets/pict/ag2/ag2TeamNet.png" width="96" height="96" alt="ag2TeamNet" /><h5 class="h5-narrow">ag2TeamNet</h5></a>
+    <% else %>
     <a href="https://sites.google.com/a/aguaygestion.com/ag2teamnet" target="_blank" class="thumbnail centered"><img src="/assets/pict/ag2TeamNet.png" width="128" height="128" alt="ag2TeamNet" /><h5 class="h5-narrow">ag2TeamNet</h5></a>
+    <% end %>
   </li>
 </ul><!-- /.thumbnails -->
 <ul class="thumbnails">
   <!-- Apps 3 -->
   <li class="span3">
+    <% if (session[:resolution] == "LD") %>
+    <a href="http://mail.google.com/a/aguaygestion.com" target="_blank" class="thumbnail centered"><img src="/assets/icon/google/ag2Mail.png" width="48" height="48" alt="ag2Mail" /><h5 class="h5-narrow">Gmail</h5></a>
+    <% elsif session[:resolution] == "SD" %>
+    <a href="http://mail.google.com/a/aguaygestion.com" target="_blank" class="thumbnail centered"><img src="/assets/pict/ag2/google/ag2Mail.png" width="64" height="64" alt="ag2Mail" /><h5 class="h5-narrow">Gmail</h5></a>
+    <% else %>
     <a href="http://mail.google.com/a/aguaygestion.com" target="_blank" class="thumbnail centered"><img src="/assets/pict/google/ag2Mail.png" width="96" height="96" alt="ag2Mail" /><h5 class="h5-narrow">Gmail</h5></a>
+    <% end %>
   </li>
   <li class="span3">
+    <% if (session[:resolution] == "LD") %>
+    <a href="http://www.google.com/calendar/hosted/aguaygestion.com" target="_blank" class="thumbnail centered"><img src="/assets/icon/google/ag2Calendar.png" width="48" height="48" alt="ag2Calendar" /><h5 class="h5-narrow">Google Calendar</h5></a>
+    <% elsif session[:resolution] == "SD" %>
+    <a href="http://www.google.com/calendar/hosted/aguaygestion.com" target="_blank" class="thumbnail centered"><img src="/assets/pict/ag2/google/ag2Calendar.png" width="64" height="64" alt="ag2Calendar" /><h5 class="h5-narrow">Google Calendar</h5></a>
+    <% else %>
     <a href="http://www.google.com/calendar/hosted/aguaygestion.com" target="_blank" class="thumbnail centered"><img src="/assets/pict/google/ag2Calendar.png" width="96" height="96" alt="ag2Calendar" /><h5 class="h5-narrow">Google Calendar</h5></a>
+    <% end %>
   </li>
   <li class="span3">
+    <% if (session[:resolution] == "LD") %>
+    <a href="http://docs.google.com/a/aguaygestion.com" target="_blank" class="thumbnail centered"><img src="/assets/icon/google/ag2Drive.png" width="48" height="48" alt="ag2Drive" /><h5 class="h5-narrow">Google Drive</h5></a>
+    <% elsif session[:resolution] == "SD" %>
+    <a href="http://docs.google.com/a/aguaygestion.com" target="_blank" class="thumbnail centered"><img src="/assets/pict/ag2/google/ag2Drive.png" width="64" height="64" alt="ag2Drive" /><h5 class="h5-narrow">Google Drive</h5></a>
+    <% else %>
     <a href="http://docs.google.com/a/aguaygestion.com" target="_blank" class="thumbnail centered"><img src="/assets/pict/google/ag2Drive.png" width="96" height="96" alt="ag2Drive" /><h5 class="h5-narrow">Google Drive</h5></a>
+    <% end %>
   </li>
   <li class="span3">
+    <% if (session[:resolution] == "LD") %>
+    <a href="http://www.google.com" target="_blank" class="thumbnail centered"><img src="/assets/icon/google/ag2Search.png" width="48" height="48" alt="ag2Search" /><h5 class="h5-narrow">Google Search</h5></a>
+    <% elsif session[:resolution] == "SD" %>
+    <a href="http://www.google.com" target="_blank" class="thumbnail centered"><img src="/assets/pict/ag2/google/ag2Search.png" width="64" height="64" alt="ag2Search" /><h5 class="h5-narrow">Google Search</h5></a>
+    <% else %>
     <a href="http://www.google.com" target="_blank" class="thumbnail centered"><img src="/assets/pict/google/ag2Search.png" width="96" height="96" alt="ag2Search" /><h5 class="h5-narrow">Google Search</h5></a>
+    <% end %>
   </li>
 </ul><!-- /.thumbnails -->
 
