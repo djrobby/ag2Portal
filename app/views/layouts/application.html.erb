@@ -13,6 +13,8 @@
     <%= yield(:head) %>
   </head>
   <body>
+    <script type="text/javascript">
+            window.I18n = <%= current_translations.to_json.html_safe %></script>
     <!-- Header NavBar -->
     <header class="navbar navbar-fixed-top">
       <nav class="navbar-inner">

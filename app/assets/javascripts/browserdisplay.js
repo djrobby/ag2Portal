@@ -25,7 +25,7 @@ function Move(pwidth, pheight) {
 function ScreenSize(_show) {
 	var screenW = screen.width;
 	var screenH = screen.height;
-	var message = 'Screen size:\t' + screenW + 'x' + screenH;
+	var message = I18n["screen_size"] + ':\t' + screenW + 'x' + screenH;
 	if (_show != 0)
 		window.alert(message);
 	else
@@ -35,7 +35,7 @@ function ScreenSize(_show) {
 function WindowSize(_show) {
 	var screenW = $(window).width();
 	var screenH = $(window).height();
-	var message = 'Window size:\t' + screenW + 'x' + screenH;
+	var message = I18n["window_size"] + ':\t' + screenW + 'x' + screenH;
 	if (_show != 0)
 		window.alert(message);
 	else
