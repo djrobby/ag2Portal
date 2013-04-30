@@ -1,13 +1,15 @@
 Ag2Portal::Application.routes.draw do
   scope "(:locale)", :locale => /en|es/ do
-    # Get
+    # Get for index pages
+    get "icores/index"
+    get "lowres/index"
     get "home/index"
     
     # Devise
     devise_for :users
     
     # Root
-    root :to => "home#index"
+    root :to => "welcome#index"
   
     # Engines
     mount Ag2Admin::Engine => "/ag2_admin"
@@ -15,12 +17,10 @@ Ag2Portal::Application.routes.draw do
     mount Ag2Human::Engine => "/ag2_human"
   end
 
-  # get "icores/index"
-  # get "lowres/index"
-  # get "welcome/index"
-
   # Index locale
-  # match '/:locale' => 'home#index'
+  # match '/:locale' => 'welcome#index'
+
+  # get "welcome/index"
     
   # devise_for :users
 

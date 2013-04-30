@@ -15,16 +15,17 @@
         // Min resolution for this site: 1024x768
         // LowRes resolution for this site: 1280x900 or less
         // Default resolution for this site: 1280x900 or more
-        // Default site home page: home#index
-        // LowRes site home page: lowres#index
+        // Default site home page: home#index (HD)
+        // LowRes site home page: lowres#index (SD)
+        // IcoRes site home page: icores#index (LD)
         defaultPage = RedirectUponScreenResolution(1280, 900);
         if (defaultPage == "icon") {
-          window.location.href = "/icores/index";
+          window.location.href = "<%= I18n.locale %>/icores/index";
         } else {
           if (defaultPage == "default") {
-            window.location.href = "/home/index";
+            window.location.href = "<%= I18n.locale %>/home/index";
           } else {
-            window.location.href = "/lowres/index";
+            window.location.href = "<%= I18n.locale %>/lowres/index";
           }
         }
       }
