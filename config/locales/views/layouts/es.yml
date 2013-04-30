@@ -1,0 +1,11 @@
+es:
+  nav_home: "Inicio"
+  nav_tools: "Herramientas"
+  nav_help: "Ayuda"
+  nav_help_contact: "Contacto"
+  nav_help_guide: "Guía"
+  nav_help_about: "Acerca de"
+  nav_edit_profile: "Editar perfil"
+  nav_sign_up: "Crear cuenta"
+  nav_login: "Iniciar sesión"
+  
