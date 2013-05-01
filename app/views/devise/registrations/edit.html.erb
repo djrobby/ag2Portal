@@ -29,9 +29,9 @@
     <%= simple_form_for(resource, :as => resource_name, :url => registration_path(resource_name), :html => {:class => 'form-inline' }) do |f| %>
     <%= f.input :email, :autofocus => true, :input_html => { :class => 'sign-field' }, :label_html => { :class => 'sign-label' } %>
     <%= f.input :name, :input_html => { :class => 'sign-field' }, :label_html => { :class => 'sign-label' } %>
+    <%= f.input :current_password, :autocomplete => "off", :input_html => { :class => 'sign-field' }, :label_html => { :class => 'sign-label' } %>
     <%= f.input :password, :autocomplete => "off", :input_html => { :class => 'sign-field' }, :label_html => { :class => 'sign-label' } %>
-    <%= f.input :password_confirmation, :input_html => { :class => 'sign-field' }, :label_html => { :class => 'sign-label' } %>
-    <%= f.input :current_password, :input_html => { :class => 'sign-field' }, :label_html => { :class => 'sign-label' } %>
+    <%= f.input :password_confirmation, :autocomplete => "off", :input_html => { :class => 'sign-field' }, :label_html => { :class => 'sign-label' } %>
     <div align="center">
       <%= f.button :submit, I18n.t("submit", :scope => :"devise.registrations.edit"), :class => 'btn-primary' %>
       <a href="<%= main_app.root_path %>" class="btn btn-primary"><%=t :no_thanks %></a>

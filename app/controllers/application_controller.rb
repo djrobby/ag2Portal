@@ -31,11 +31,16 @@ class ApplicationController < ActionController::Base
   end
 
   def layout
-    # turn layout off for session and registration pages:
+    # turn layout off for session and registration pages
+    # and on for the others
     if is_a?(Devise::SessionsController)
       "session"
     elsif is_a?(Devise::RegistrationsController)
-      "registration"
+      if user_signed_in?
+        "profile"
+      else
+        "registration"
+      end
     else
       "application"
     end
