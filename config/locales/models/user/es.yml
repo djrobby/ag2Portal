@@ -1,9 +1,0 @@
-es:
-  activerecord:
-    models:
-      photo: User
-    attributes:
-      user:
-        description: "Description"
-        photo: "Photo"
-        starting_at: "Starting at"
