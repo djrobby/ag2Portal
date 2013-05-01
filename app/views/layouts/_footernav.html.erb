@@ -24,10 +24,10 @@
     data-toggle="dropdown"><i class="icon-flag"></i> <b class="caret"></b> </a>
     <ul class="dropdown-menu" role="menu">
       <li>
-        <a href="/en"><i class="ico-en-us"></i> English - US</a>
+        <a href="<%= url_for( :locale => 'en' ) %>"><i class="ico-en-us"></i> English - US</a>
       </li>
       <li>
-        <a href="/es"><i class="ico-es-es"></i> Espa&ntilde;ol - ES</a>
+        <a href="<%= url_for( :locale => 'es' ) %>"><i class="ico-es-es"></i> Espa&ntilde;ol - ES</a>
       </li>
     </ul>
   </li>

@@ -1,27 +1,26 @@
 <div class="row">
   <div class="span12" style="padding-top: 5px">
-    <h3 class="sign-h3">Edita tu perfil de aGestiona2</h3>
+    <h3 class="sign-h3"><%=t '.title' %></h3>
   </div>
 </div>
 <div class="row">
   <div class="span8">
     <div class="sign-description">
       <br />
-      &iquest;Quieres cambiar tu cuenta de aGestiona2?
+      <%=t '.welcome' %>
       <br />
       <br />
-      Adelante... Indica los datos que te solicita el cuadro de registro para modificar tu cuenta.
-      Tambi&eacute;n puedes cancelar tu cuenta... Pero por qu&eacute; querr&iacute;as hacerlo, &iquest;no?
+      <%=t '.account_edit_m' %>
       </p>
       <p>
-        aGestiona2&reg; es la plataforma de servicios de Agua y Gesti&oacute;n. &iquest;Deseas <a href="#">saber m&aacute;s</a>?
+        <%=t :app_brand_paas_h %><a href="#"><%=t :app_brand_paas_a %></a><%=t :app_brand_paas_t %>
       </p>
       <p class="shrinked">
-        Recuerda que todos los datos solicitados son obligatorios.<br />
-        <u>Adem&aacute;s, debes tener en cuenta que</u>:
+        <%=t :required_data_reminder %><br />
+        <u><%=t :keep_in_mind %></u>:
         <ul class="shrinked">
-          <li>Si es una cuenta de dominio en Google Apps, <u>debes usar las mismas credenciales</u>.</li>
-          <li><b>Nombre</b> <u>debe coincidir exactamente</u> con el nombre de usuario que usas para iniciar sesi&oacute;n.</li>
+          <li><%= t('google_apps_reminder_html') %></li>
+          <li><%= t('user_name_reminder_html') %></li>
         </ul>
       </p>
     </div>
@@ -34,11 +33,11 @@
     <%= f.input :password_confirmation, :input_html => { :class => 'sign-field' }, :label_html => { :class => 'sign-label' } %>
     <%= f.input :current_password, :input_html => { :class => 'sign-field' }, :label_html => { :class => 'sign-label' } %>
     <div align="center">
-      <%= f.button :submit, "Update", :class => 'btn-primary' %>
-      <%= link_to 'No, thanks', main_app.root_path, :class => 'btn btn-primary' %>
+      <%= f.button :submit, I18n.t("submit", :scope => :"devise.registrations.edit"), :class => 'btn-primary' %>
+      <a href="<%= main_app.root_path %>" class="btn btn-primary"><%=t :no_thanks %></a>
     </div>
     <% end %>
-    <%= link_to "Unhappy? Cancel my account", registration_path(resource_name), :data => { :confirm => "Are you sure?" }, :method => :delete %>
+    <%= link_to I18n.t("cancel_account", :scope => :"devise.registrations.edit"), registration_path(resource_name), :data => { :confirm => "Are you sure?" }, :method => :delete %>
     <br />
     <%= render "devise/shared/links" %>
   </div>

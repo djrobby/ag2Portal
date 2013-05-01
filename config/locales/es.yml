@@ -261,3 +261,10 @@ es:
       not_saved:
         one: ! 'Un error ocurrió al tratar de guardar %{resource}:'
         other: ! '%{count} errores ocurrieron al tratar de guardar %{resource}:'
+  app_brand_paas_h: "aGestiona2® es la plataforma de servicios de Agua y Gestión. ¿Deseas "
+  app_brand_paas_a: "saber más"
+  app_brand_paas_t: "?"
+  no_thanks: "No, gracias"
+  required_data_reminder: "Recuerda que todos los datos solicitados son obligatorios."
+  keep_in_mind: "Además, debes tener en cuenta que"
+  close_button: "Cerrar"

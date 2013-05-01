@@ -1,0 +1,36 @@
+es:
+  devise:
+    sessions:
+      new:
+        title: "Inicia tu sesión en aGestiona2"
+        welcome: "Bienvenido/a."
+        login_h: "Inicia sesión en tu cuenta a través del cuadro de credenciales o "
+        login_a: "crea una cuenta"
+        login_t: " ya mismo."
+        remember_me: "No cerrar sesión"
+        submit: "Iniciar sesión"
+    registrations:
+      new:
+        title: "Crea tu cuenta de aGestiona2"
+        welcome: "¿Nuevo/a en aGestiona2?"
+        signup_m: "Con una cuenta de aGestiona2, puedes acceder a todas las aplicaciones y sitios que el servicio pone a tu disposición, para trabajar desde cualquier lugar y desde cualquier dispositivo. ¿A qué esperas?"
+        signup_h: "Indica los datos que te solicita el cuadro de registro para crear tu nueva cuenta. ¿Qué ya tienes una? Pues entonces, "
+        signup_a: "inicia sesión"
+        signup_t: " para acceder."
+        remember_me: "Acepto las condiciones del servicio"
+        submit: "Crear cuenta"
+      edit:
+        title: "Edita tu perfil de aGestiona2"
+        welcome: "¿Quieres cambiar tu cuenta de aGestiona2?"
+        account_edit_m: "Adelante... Indica los datos que te solicita el cuadro de registro para modificar tu cuenta. También puedes cancelar tu cuenta... Pero por qué querrías hacerlo, ¿no?"
+        submit: "Actualizar"
+        cancel_account: "¿Disconforme? Cancelar mi cuenta"
+    shared:
+      goto_signin: "Inicia sesión"
+      goto_signup: "Crea tu cuenta"
+      goto_password: "¿Has olvidado tu contraseña?"
+      goto_confirm_instructions: "¿No has recibido instrucciones de confirmación?"
+      goto_unlock_instructions: "¿No has recibido instrucciones de desbloqueo?"
+      goto_signin_provider: "Incia sesión con #{provider.to_s.titleize}"
+  google_apps_reminder_html: Si es una cuenta de dominio en Google Apps, <u>debes usar las mismas credenciales</u>.
+  user_name_reminder_html: <b>Nombre</b> <u>debe coincidir exactamente</u> con el nombre de usuario que usas para iniciar sesión en tu PC.

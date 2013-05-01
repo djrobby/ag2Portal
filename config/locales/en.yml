@@ -267,3 +267,10 @@ en:
       not_saved:
         one: "1 error prohibited this %{resource} from being saved:"
         other: "%{count} errors prohibited this %{resource} from being saved:"
+  app_brand_paas_h: "aGestiona2® is Agua y Gestión platform as a service. "
+  app_brand_paas_a: "Learn more"
+  app_brand_paas_t: "."
+  no_thanks: "No, thanks"
+  required_data_reminder: "Remember that all requested data are mandatory."
+  keep_in_mind: "Also keep in mind"
+  close_button: "Close"

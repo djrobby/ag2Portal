@@ -2,6 +2,6 @@
 <img src="/assets/icon/aGestiona2.png" class="brand" width="165" height="48" alt="aGestiona2" />
 <div class="nav-collapse">
   <p class="pull-right" style="padding-top: 13px">
-    <%= link_to "Login", main_app.new_user_session_path, :class => 'btn btn-danger'  %>
+    <a href="<%= main_app.new_user_session_path %>" class="btn btn-danger"><%=t :nav_login %></a>
   </p>
 </div><!--/.nav-collapse -->

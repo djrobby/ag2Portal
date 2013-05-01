@@ -1,0 +1,36 @@
+en:
+  devise:
+    sessions:
+      new:
+        title: "Sign in to your aGestiona2 account"
+        welcome: "Welcome."
+        login_h: "Log into your account using the credentials box or "
+        login_a: "sign up"
+        login_t: " right now."
+        remember_me: "Remember me"
+        submit: "Sign in"
+    registrations:
+      new:
+        title: "Create a new aGestiona2 account"
+        welcome: "New in aGestiona2?"
+        signup_m: "With an account of aGestiona2, you can access all applications and sites that the service provides you with, to work from anywhere and from any device. What are you waiting for?"
+        signup_h: "Fill in the information requested in the registration box to create your new account. Already have one? Then, "
+        signup_a: "sign in"
+        signup_t: " to access."
+        remember_me: "I accept service conditions"
+        submit: "Sign up"
+      edit:
+        title: "Edit your profile of aGestiona2"
+        welcome: "Want to change your aGestiona2 account?"
+        account_edit_m: "Go ahead... Fill in the information requested in the registration box to update your account. You can cancel your account too... But, why do that?"
+        submit: "Update"
+        cancel_account: "Unhappy? Cancel my account"
+    shared:
+      goto_signin: "Sign in"
+      goto_signup: "Sign up"
+      goto_password: "Forgot your password?"
+      goto_confirm_instructions: "Didn't receive confirmation instructions?"
+      goto_unlock_instructions: "Didn't receive unlock instructions?"
+      goto_signin_provider: "Sign in with #{provider.to_s.titleize}"
+  google_apps_reminder_html: If it's a domain account in Google Apps, <u>you must use the same credentials</u>.
+  user_name_reminder_html: <b>Name</b> <u>must exactly match</u> the user name you use to log into your PC.
