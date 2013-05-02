@@ -1,0 +1,7 @@
+en:
+  activerecord:
+    models:
+      country: Country
+    attributes:
+      country:
+        name: "Name"

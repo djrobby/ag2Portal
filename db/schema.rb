@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130423115826) do
+ActiveRecord::Schema.define(:version => 20130502130903) do
 
   create_table "apps", :force => true do |t|
     t.string   "name"
@@ -185,9 +185,17 @@ ActiveRecord::Schema.define(:version => 20130423115826) do
     t.string   "ine_cpro"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
+    t.integer  "region_id"
   end
 
   add_index "provinces", ["ine_cpro"], :name => "index_provinces_on_ine_cpro"
+
+  create_table "regions", :force => true do |t|
+    t.string   "name"
+    t.integer  "country_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
 
   create_table "roles", :force => true do |t|
     t.string   "name"
@@ -230,6 +238,7 @@ ActiveRecord::Schema.define(:version => 20130423115826) do
     t.integer  "shared_contact_type_id"
     t.datetime "created_at",             :null => false
     t.datetime "updated_at",             :null => false
+    t.string   "remarks"
   end
 
   add_index "shared_contacts", ["cellular"], :name => "index_shared_contacts_on_cellular"
@@ -365,8 +374,8 @@ ActiveRecord::Schema.define(:version => 20130423115826) do
     t.string   "own_phone"
     t.string   "own_cellular"
     t.string   "email"
-    t.datetime "created_at",                :null => false
-    t.datetime "updated_at",                :null => false
+    t.datetime "created_at",                                                                :null => false
+    t.datetime "updated_at",                                                                :null => false
     t.string   "avatar_file_name"
     t.string   "avatar_content_type"
     t.integer  "avatar_file_size"
@@ -387,6 +396,8 @@ ActiveRecord::Schema.define(:version => 20130423115826) do
     t.string   "corp_extension"
     t.integer  "department_id"
     t.string   "nomina_id"
+    t.decimal  "gross_salary",              :precision => 12, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "variable_salary",           :precision => 12, :scale => 4, :default => 0.0, :null => false
   end
 
   add_index "workers", ["affiliation_id"], :name => "index_workers_on_affiliation_id"

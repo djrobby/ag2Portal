@@ -1,0 +1,8 @@
+en:
+  activerecord:
+    models:
+      collective_agreement: Collective agreement
+    attributes:
+      collective_agreement:
+        ca_code: "Code"
+        name: "Name"

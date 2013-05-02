@@ -1,0 +1,22 @@
+en:
+  activerecord:
+    models:
+      corp_contact: Corporate contact
+    attributes:
+      corp_contact:
+        last_name: "Last name"
+        first_name: "Name"
+        worker_id: "Worker Id"
+        corp_phone: "Phone"
+        corp_extension: "Extension"
+        corp_cellular_long: "Cellular Phone"
+        corp_cellular_short: "Cellular Phone Extension"
+        email: "Email"
+        position: "Position"
+        avatar: "Avatar"
+        company: "Company"
+        company_id: "Company"
+        office: "Office"
+        office_id: "Office"
+        department: "Department"
+        department_id: "Department"

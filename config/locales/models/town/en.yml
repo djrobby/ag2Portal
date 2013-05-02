@@ -1,0 +1,11 @@
+en:
+  activerecord:
+    models:
+      town: Town
+    attributes:
+      town:
+        name: "Name"
+        ine_cmun: "INE Code (without province)"
+        ine_dc: "INE Control Digit"
+        province: "Province"
+        province_id: "Province"

@@ -1,0 +1,8 @@
+en:
+  activerecord:
+    models:
+      street_type: Street type
+    attributes:
+      street_type:
+        street_type_code: "Code"
+        street_type_description: "Description"

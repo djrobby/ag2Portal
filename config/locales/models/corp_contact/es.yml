@@ -1,0 +1,22 @@
+es:
+  activerecord:
+    models:
+      corp_contact: Contacto corporativo
+    attributes:
+      corp_contact:
+        last_name: "Apellidos"
+        first_name: "Nombre"
+        worker_id: "Id Trabajador"
+        corp_phone: "Teléfono"
+        corp_extension: "Extensión"
+        corp_cellular_long: "Teléfono móvil"
+        corp_cellular_short: "Extensión móvil"
+        email: "Email"
+        position: "Puesto"
+        avatar: "Avatar"
+        company: "Empresa"
+        company_id: "Empresa"
+        office: "Oficina"
+        office_id: "Oficina"
+        department: "Departamento"
+        department_id: "Departamento"

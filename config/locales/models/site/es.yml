@@ -1,0 +1,11 @@
+es:
+  activerecord:
+    models:
+      site: Sitio
+    attributes:
+      site:
+        name: "Nombre"
+        description: "Descripción"
+        path: "Ruta"
+        pict_file: "Archivo de imágen"
+        icon_file: "Archivo de icono"

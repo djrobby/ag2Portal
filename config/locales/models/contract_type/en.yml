@@ -1,0 +1,8 @@
+en:
+  activerecord:
+    models:
+      contract_type: Contract Type
+    attributes:
+      contract_type:
+        ct_code: "Code"
+        name: "Name"

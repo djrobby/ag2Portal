@@ -1,0 +1,27 @@
+en:
+  activerecord:
+    models:
+      office: Office
+    attributes:
+      office:
+        name: "Name"
+        office_code: "Office code"
+        company: "Company"
+        company_id: "Company"
+        province: "Province"
+        province_id: "Province"
+        town: "Town"
+        town_id: "Town"
+        zipcode: "Zip Code"
+        zipcode_id: "Zip Code"
+        street_type: "Street Type"
+        street_type_id: "Street Type"
+        street_name: "Street name"
+        street_number: "Number"
+        building: "Building"
+        floor: "Floor"
+        floor_office: "Office"
+        phone: "Phone"
+        fax: "Fax"
+        cellular: "Cellular Phone"
+        email: "Email"

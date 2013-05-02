@@ -1,0 +1,29 @@
+es:
+  activerecord:
+    models:
+      company: Empresa
+    attributes:
+      company:
+        name: "Nombre"
+        fiscal_id: "Id Fiscal (CIF/NIF)"
+        province: "Provincia"
+        province_id: "Provincia"
+        town: "Población"
+        town_id: "Población"
+        zipcode: "Código postal"
+        zipcode_id: "Código Postal"
+        street_type: "Tipo de vía"
+        street_type_id: "Tipo de vía"
+        street_name: "Nombre de vía"
+        street_number: "Nº"
+        building: "Edificio/Bloque"
+        floor: "Planta"
+        floor_office: "Oficina"
+        phone: "Teléfono"
+        fax: "Fax"
+        cellular: "Teléfono móvil"
+        email: "Email"
+        invoice_code: "Código/Serie"
+        invoice_header: "Cabecera de página"
+        invoice_footer: "Pie de página"
+        invoice_left_margin: "Margen izquierdo de página"

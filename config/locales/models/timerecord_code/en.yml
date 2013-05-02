@@ -1,0 +1,7 @@
+en:
+  activerecord:
+    models:
+      timerecord_code: TimeRecord code
+    attributes:
+      timerecord_code:
+        name: "Description"

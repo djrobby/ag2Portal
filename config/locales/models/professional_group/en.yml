@@ -1,0 +1,8 @@
+en:
+  activerecord:
+    models:
+      professional_group: Professional group
+    attributes:
+      professional_group:
+        pg_code: "Code"
+        name: "Name"

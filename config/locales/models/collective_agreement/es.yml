@@ -1,0 +1,8 @@
+es:
+  activerecord:
+    models:
+      collective_agreement: Convenio colectivo
+    attributes:
+      collective_agreement:
+        ca_code: "Código"
+        name: "Nombre"

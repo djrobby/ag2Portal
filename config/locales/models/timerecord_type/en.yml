@@ -1,0 +1,7 @@
+en:
+  activerecord:
+    models:
+      timerecord_type: TimeRecord type
+    attributes:
+      timerecord_type:
+        name: "Type"

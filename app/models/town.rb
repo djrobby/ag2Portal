@@ -7,7 +7,7 @@ class Town < ActiveRecord::Base
   validates :ine_cmun, :length => { :minimum => 3 }
   validates :ine_dc, :length => { :minimum => 1 }
 
-  has_many :towns
+  #has_many :towns
   has_many :companies
   has_many :zipcodes
   has_many :workers

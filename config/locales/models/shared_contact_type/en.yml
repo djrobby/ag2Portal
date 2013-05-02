@@ -1,0 +1,7 @@
+en:
+  activerecord:
+    models:
+      shared_contact_type: Shared contact type
+    attributes:
+      shared_contact_type:
+        name: "Description"

@@ -1,0 +1,29 @@
+en:
+  activerecord:
+    models:
+      company: Company
+    attributes:
+      company:
+        name: "Name"
+        fiscal_id: "Fiscal Id"
+        province: "Province"
+        province_id: "Province"
+        town: "Town"
+        town_id: "Town"
+        zipcode: "Zip Code"
+        zipcode_id: "Zip Code"
+        street_type: "Street Type"
+        street_type_id: "Street Type"
+        street_name: "Street name"
+        street_number: "Number"
+        building: "Building"
+        floor: "Floor"
+        floor_office: "Office"
+        phone: "Phone"
+        fax: "Fax"
+        cellular: "Cellular Phone"
+        email: "Email"
+        invoice_code: "Code"
+        invoice_header: "Page header"
+        invoice_footer: "Page footer"
+        invoice_left_margin: "Page left margin"

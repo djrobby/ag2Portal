@@ -1,0 +1,11 @@
+es:
+  activerecord:
+    models:
+      zipcode: Código postal
+    attributes:
+      zipcode:
+        zipcode: "Código postal"
+        province: "Provincia"
+        province_id: "Provincia"
+        town: "Población"
+        town_id: "Población"

@@ -1,0 +1,8 @@
+es:
+  activerecord:
+    models:
+      contract_type: Tipo de contrato
+    attributes:
+      contract_type:
+        ct_code: "Código"
+        name: "Nombre"

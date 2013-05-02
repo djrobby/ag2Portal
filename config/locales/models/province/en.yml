@@ -1,0 +1,8 @@
+en:
+  activerecord:
+    models:
+      province: Province
+    attributes:
+      province:
+        name: "Name"
+        ine_cpro: "INE Code"

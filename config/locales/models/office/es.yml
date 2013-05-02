@@ -1,0 +1,27 @@
+es:
+  activerecord:
+    models:
+      office: Oficina
+    attributes:
+      office:
+        name: "Nombre"
+        office_code: "Código de oficina"
+        company: "Empresa"
+        company_id: "Empresa"
+        province: "Provincia"
+        province_id: "Provincia"
+        town: "Población"
+        town_id: "Población"
+        zipcode: "Código postal"
+        zipcode_id: "Código Postal"
+        street_type: "Tipo de vía"
+        street_type_id: "Tipo de vía"
+        street_name: "Nombre de vía"
+        street_number: "Nº"
+        building: "Edificio/Bloque"
+        floor: "Planta"
+        floor_office: "Oficina"
+        phone: "Teléfono"
+        fax: "Fax"
+        cellular: "Teléfono móvil"
+        email: "Email"

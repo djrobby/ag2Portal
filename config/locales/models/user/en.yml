@@ -2,11 +2,14 @@ en:
   activerecord:
     models:
       user: User
+      role: Role
     attributes:
       user:
         name: "Name"
         email: "Email"
         password: "Password"
         password_confirmation: "Password confirmation"
-        role_ids: "Role Id"
+        role_ids: "Role"
         current_password: "Current password"
+      role:
+        name: "Name"

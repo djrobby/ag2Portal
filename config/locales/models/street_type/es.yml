@@ -1,0 +1,8 @@
+es:
+  activerecord:
+    models:
+      street_type: Tipo de vía
+    attributes:
+      street_type:
+        street_type_code: "Código"
+        street_type_description: "Descripción"

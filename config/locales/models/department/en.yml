@@ -1,0 +1,8 @@
+en:
+  activerecord:
+    models:
+      department: Department
+    attributes:
+      department:
+        code: "Code"
+        name: "Name"

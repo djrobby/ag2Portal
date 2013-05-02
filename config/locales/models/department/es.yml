@@ -1,0 +1,8 @@
+es:
+  activerecord:
+    models:
+      department: Departmento
+    attributes:
+      department:
+        code: "Código"
+        name: "Nombre"

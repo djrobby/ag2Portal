@@ -1,0 +1,11 @@
+en:
+  activerecord:
+    models:
+      zipcode: Zip code
+    attributes:
+      zipcode:
+        zipcode: "Zip code"
+        province: "Province"
+        province_id: "Province"
+        town: "Town"
+        town_id: "Town"

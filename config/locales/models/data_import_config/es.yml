@@ -1,0 +1,9 @@
+es:
+  activerecord:
+    models:
+      data_import_config: Config
+    attributes:
+      data_import_config:
+        name: "Nombre"
+        source: "Origen"
+        target: "({Rails.root})Destino"

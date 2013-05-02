@@ -1,0 +1,34 @@
+en:
+  activerecord:
+    models:
+      shared_contact: Shared contact
+    attributes:
+      shared_contact:
+        last_name: "Last name"
+        first_name: "Name"
+        fiscal_id: "Fiscal Id"
+        province: "Province"
+        province_id: "Province"
+        town: "Town"
+        town_id: "Town"
+        zipcode: "Zip Code"
+        zipcode_id: "Zip Code"
+        street_type: "Street Type"
+        street_type_id: "Street Type"
+        street_name: "Street name"
+        street_number: "Number"
+        building: "Building"
+        floor: "Floor"
+        floor_office: "Office"
+        country: "Country"
+        country_id: "Country"
+        shared_contact_type: "Contact type"
+        shared_contact_type_id: "Contact type"
+        phone: "Phone"
+        fax: "Fax"
+        extension: "Extension"
+        cellular: "Cellular Phone"
+        email: "Email"
+        company: "Company"
+        position: "Position"
+        remarks: "Remarks"

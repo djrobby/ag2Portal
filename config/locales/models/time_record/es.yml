@@ -1,0 +1,14 @@
+es:
+  activerecord:
+    models:
+      time_record: Marcaje
+    attributes:
+      time_record:
+        timerecord_date: "Fecha"
+        timerecord_time: "Hora"
+        worker: "Trabajador"
+        worker_id: "Trabajador"
+        timerecord_type: "Tipo"
+        timerecord_type_id: "Tipo"
+        timerecord_code: "Código"
+        timerecord_code_id: "Código"

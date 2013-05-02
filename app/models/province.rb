@@ -1,8 +1,10 @@
 class Province < ActiveRecord::Base
-  attr_accessible :ine_cpro, :name
+  belongs_to :region
+  attr_accessible :ine_cpro, :name, :region_id
 
   validates :name,      :presence => true
   validates :ine_cpro,  :length => { :minimum => 2 }
+  validates :region_id, :presence => true
                        
   has_many :towns
   has_many :zipcodes
@@ -10,4 +12,7 @@ class Province < ActiveRecord::Base
   has_many :offices
   has_many :workers
   has_many :shared_contacts
+  def to_label
+    "#{name} (#{region.name})"
+  end
 end

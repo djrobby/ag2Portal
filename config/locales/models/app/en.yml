@@ -1,0 +1,13 @@
+en:
+  activerecord:
+    models:
+      app: App
+    attributes:
+      app:
+        name: "Name"
+        site_id: "Site"
+        site: "Site"
+        description: "Description"
+        path: "Path"
+        pict_file: "Picture file"
+        icon_file: "Icon file"

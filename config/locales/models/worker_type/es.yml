@@ -1,0 +1,7 @@
+es:
+  activerecord:
+    models:
+      worker_type: Tipo de trabajador
+    attributes:
+      worker_type:
+        description: "Descripción"

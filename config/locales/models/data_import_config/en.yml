@@ -1,0 +1,9 @@
+en:
+  activerecord:
+    models:
+      data_import_config: Config
+    attributes:
+      data_import_config:
+        name: "Name"
+        source: "Source"
+        target: "({Rails.root})Target"

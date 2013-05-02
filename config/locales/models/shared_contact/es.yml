@@ -1,0 +1,34 @@
+es:
+  activerecord:
+    models:
+      shared_contact: Contacto compartido
+    attributes:
+      shared_contact:
+        last_name: "Apellidos"
+        first_name: "Nombre"
+        fiscal_id: "Id Fiscal (CIF/NIF)"
+        province: "Provincia"
+        province_id: "Provincia"
+        town: "Población"
+        town_id: "Población"
+        zipcode: "Código postal"
+        zipcode_id: "Código postal"
+        street_type: "Tipo de vía"
+        street_type_id: "Tipo de vía"
+        street_name: "Nombre de vía"
+        street_number: "Nº"
+        building: "Edificio/Bloque"
+        floor: "Planta"
+        floor_office: "Oficina"
+        country: "País"
+        country_id: "País"
+        shared_contact_type: "Tipo de contacto"
+        shared_contact_type_id: "Tipo de contacto"
+        phone: "Teléfono"
+        fax: "Fax"
+        extension: "Extensión"
+        cellular: "Teléfono móvil"
+        email: "Email"
+        company: "Empresa"
+        position: "Cargo"
+        remarks: "Comentarios"
