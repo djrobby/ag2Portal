@@ -20,6 +20,8 @@ en:
         building: "Building"
         floor: "Floor"
         floor_office: "Office"
+        region: "Region"
+        region_id: "Region"
         country: "Country"
         country_id: "Country"
         shared_contact_type: "Contact type"

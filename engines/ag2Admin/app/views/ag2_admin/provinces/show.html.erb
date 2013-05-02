@@ -6,8 +6,14 @@
     <tr>
       <td>Id:</td>
       <td><%= @province.id %></td>
+      <td>Region:</td>
+      <td><%= Region.find(@province.region).name_and_country unless @province.region.nil? %></td>
+    </tr>
+    <tr>
       <td>INE CPro:</td>
       <td><%= @province.ine_cpro %></td>
+      <td></td>
+      <td></td>
     </tr>
     <tr>
       <td>Created at:</td>
@@ -44,4 +50,5 @@
 </table>
 <% end %>
 
+<%= link_to 'Show Region', @province.region %> |
 <%= link_to 'Back to Provinces', provinces_path %>

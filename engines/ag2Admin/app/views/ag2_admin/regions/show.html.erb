@@ -1,0 +1,46 @@
+<%= render '/layouts/ag2_admin/regionsbreadcrumb' %>
+
+<h3><%= @region.name %></h3>
+<table class="table">
+  <tbody>
+    <tr>
+      <td>Id:</td>
+      <td><%= @region.id %></td>
+      <td>Country:</td>
+      <td><%= Country.find(@region.country).name unless @region.country.nil? %></td>
+    </tr>
+    <tr>
+      <td>Created at:</td>
+      <td><%= @region.created_at.utc.getlocal.strftime("%d/%m/%Y %H:%M:%S") %></td>
+      <td>Updated at:</td>
+      <td><%= @region.updated_at.utc.getlocal.strftime("%d/%m/%Y %H:%M:%S") %></td>
+    </tr>
+  </tbody>
+</table>
+
+<%= link_to 'Edit Region', edit_region_path(@region), :class => 'btn btn-primary' %>
+<br />
+<br />
+
+<% if (@provinces.count > 0) %>
+<h4>Region Provinces</h4>
+<table class="table table-condensed table-striped">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>INE CPro</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @provinces.each do |province| %>
+    <tr>
+      <td><%= link_to province.name, province %></td>
+      <td><%= province.ine_cpro %></td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
+<% end %>
+
+<%= link_to 'Show Country', @region.country %> |
+<%= link_to 'Back to Regions', regions_path %>

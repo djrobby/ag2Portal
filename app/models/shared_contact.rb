@@ -4,12 +4,13 @@ class SharedContact < ActiveRecord::Base
   belongs_to :town
   belongs_to :province
   belongs_to :country
+  belongs_to :region
   belongs_to :shared_contact_type
   attr_accessible :building, :cellular, :company, :email, :extension,
                   :fax, :first_name, :fiscal_id, :floor, :floor_office,
                   :last_name, :phone, :position, :street_name, :street_number,
                   :street_type_id, :zipcode_id, :town_id, :province_id,
-                  :country_id, :shared_contact_type_id, :remarks
+                  :country_id, :shared_contact_type_id, :remarks, :region_id
 
   validates :first_name,              :presence => true, :if => "company.blank?"
   validates :last_name,               :presence => true, :if => "company.blank?"
@@ -18,6 +19,7 @@ class SharedContact < ActiveRecord::Base
   validates :zipcode_id,              :presence => true
   validates :town_id,                 :presence => true
   validates :province_id,             :presence => true
+  validates :region_id,               :presence => true
   validates :country_id,              :presence => true
   validates :shared_contact_type_id,  :presence => true
 

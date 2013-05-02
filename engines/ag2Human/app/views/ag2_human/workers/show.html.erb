@@ -52,12 +52,6 @@
     <tr>
       <td>Department:</td>
       <td><%= Department.find(@worker.department).name unless @worker.department.nil? %></td>
-      <td></td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>Worker Type:</td>
-      <td><%= WorkerType.find(@worker.worker_type).description.titleize unless @worker.worker_type.nil? %></td>
       <td>Position:</td>
       <td><%= @worker.position unless @worker.position.nil? %></td>
     </tr>
@@ -66,6 +60,12 @@
       <td><%= @worker.affiliation_id %></td>
       <td>Contribution Account:</td>
       <td><%= @worker.contribution_account_code unless @worker.contribution_account_code.nil? %></td>
+    </tr>
+    <tr>
+      <td>Worker Type:</td>
+      <td><%= WorkerType.find(@worker.worker_type).description.titleize unless @worker.worker_type.nil? %></td>
+      <td>Email:</td>
+      <td><%= @worker.email %></td>
     </tr>
     <tr>
       <td>Corp Phone:</td>
@@ -79,6 +79,30 @@
       (<%= @worker.corp_cellular_short %>)
       <% end %> </td>
     </tr>
+    <tr>
+      <td>Created at:</td>
+      <td><%= @worker.created_at.utc.getlocal.strftime("%d/%m/%Y %H:%M:%S") %></td>
+      <td>Updated at:</td>
+      <td><%= @worker.updated_at.utc.getlocal.strftime("%d/%m/%Y %H:%M:%S") %></td>
+    </tr>
+  </tbody>
+</table>
+
+<h4>Wage Info</h4>
+<table class="table">
+  <tbody>
+    <tr>
+      <td>Gross salary:</td>
+      <td><%= number_to_currency(@worker.gross_salary, :locale => :es) %></td>
+      <td>Variable salary:</td>
+      <td><%= number_to_currency(@worker.variable_salary, :locale => :es) %></td>
+    </tr>
+  </tbody>
+</table>
+
+<h4>Personal Info</h4>
+<table class="table">
+  <tbody>
     <tr>
       <td>Own Phone:</td>
       <td><%= @worker.own_phone %></td>
@@ -97,26 +121,14 @@
       <% if !@worker.floor_office.nil? %>
       <%= @worker.floor_office %>
       <% end %> </td>
-      <td></td>
-      <td></td>
+      <td>Zip Code:</td>
+      <td><%= @worker.zipcode.zipcode %></td>
     </tr>
     <tr>
       <td>Town:</td>
       <td><%= @worker.town.name %></td>
       <td>Province:</td>
-      <td><%= @worker.province.name %></td>
-    </tr>
-    <tr>
-      <td>Zip Code:</td>
-      <td><%= @worker.zipcode.zipcode %></td>
-      <td>Email:</td>
-      <td><%= @worker.email %></td>
-    </tr>
-    <tr>
-      <td>Created at:</td>
-      <td><%= @worker.created_at.utc.getlocal.strftime("%d/%m/%Y %H:%M:%S") %></td>
-      <td>Updated at:</td>
-      <td><%= @worker.updated_at.utc.getlocal.strftime("%d/%m/%Y %H:%M:%S") %></td>
+      <td><%= @worker.province.name_and_region %></td>
     </tr>
   </tbody>
 </table>

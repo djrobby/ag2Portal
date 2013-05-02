@@ -13,7 +13,7 @@ es:
         corp_phone: "Teléfono corporativo"
         corp_extension: "Extensión corporativa"
         corp_cellular_long: "Móvil corporativo"
-        corp_cellular_short: "Extensión móvil corporativa"
+        corp_cellular_short: "Extensión corporativa móvil"
         email: "Email corporativo"
         own_phone: "Teléfono personal"
         own_cellular: "Móvil personal"

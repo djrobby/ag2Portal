@@ -18,6 +18,10 @@ Ag2Directory::Engine.routes.draw do
     match 'shared_contacts/:id/update_province_textfield_from_town/:id', :controller => 'shared_contacts', :action => 'update_province_textfield_from_town'
     match 'shared_contacts/update_province_textfield_from_zipcode/:id', :controller => 'shared_contacts', :action => 'update_province_textfield_from_zipcode'
     match 'shared_contacts/:id/update_province_textfield_from_zipcode/:id', :controller => 'shared_contacts', :action => 'update_province_textfield_from_zipcode'
+    match 'shared_contacts/update_country_textfield_from_region/:id', :controller => 'shared_contacts', :action => 'update_country_textfield_from_region'
+    match 'shared_contacts/:id/update_country_textfield_from_region/:id', :controller => 'shared_contacts', :action => 'update_country_textfield_from_region'
+    match 'shared_contacts/update_region_textfield_from_province/:id', :controller => 'shared_contacts', :action => 'update_region_textfield_from_province'
+    match 'shared_contacts/:id/update_region_textfield_from_province/:id', :controller => 'shared_contacts', :action => 'update_region_textfield_from_province'
 
     # Resources
     resources :corp_contacts

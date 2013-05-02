@@ -152,6 +152,16 @@
   <label class="multi-field-label-two"> <%= f.input :corp_cellular_short, :input_html => { :class => 'large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
 </div>
 <div>
+  <label class="multi-field-label-two"> <%= f.association :user, collection: User.all(order: 'name'), :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.input :email, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+</div>
+<h4>Wage Info</h4>
+<div>
+  <label class="multi-field-label-two"> <%= f.input :gross_salary, :input_html => { :class => 'large-text-field number-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.input :variable_salary, :input_html => { :class => 'large-text-field number-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+</div>
+<h4>Personal Info</h4>
+<div>
   <label class="multi-field-label-two"> <%= f.input :own_phone, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
   <label class="multi-field-label-two"><%= f.input :own_cellular, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
 </div>
@@ -169,10 +179,6 @@
   <label class="multi-field-label-three"> <%= f.association :zipcode, collection: Zipcode.all(order: 'zipcode'), :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
   <label class="multi-field-label-three"> <%= f.association :town, collection: Town.all(order: 'name'), :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
   <label class="multi-field-label-three"> <%= f.association :province, collection: Province.all(order: 'name'), :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
-</div>
-<div>
-  <label class="multi-field-label-two"> <%= f.association :user, collection: User.all(order: 'name'), :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
-  <label class="multi-field-label-two"> <%= f.input :email, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
 </div>
 <%= f.input :avatar, :as => :file, :label_html => { :class => 'form-label' } %>
 <table class="form-table">

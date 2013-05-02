@@ -6,3 +6,5 @@ en:
       province:
         name: "Name"
         ine_cpro: "INE Code"
+        region: "Region"
+        region_id: "Region"

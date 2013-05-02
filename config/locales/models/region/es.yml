@@ -1,0 +1,9 @@
+es:
+  activerecord:
+    models:
+      region: Región
+    attributes:
+      region:
+        name: "Nombre"
+        country: "País"
+        country_id: "País"

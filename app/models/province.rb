@@ -15,4 +15,8 @@ class Province < ActiveRecord::Base
   def to_label
     "#{name} (#{region.name})"
   end
+
+  def name_and_region
+    self.name + " (" + self.region.name + ")"
+  end
 end

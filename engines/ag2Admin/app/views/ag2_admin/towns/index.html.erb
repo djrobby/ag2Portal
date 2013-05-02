@@ -15,7 +15,7 @@
       <% @towns.each do |town| %>
       <tr>
         <td><%= link_to town.name, town %></td>
-        <td><%= Province.find(town.province).name unless town.province.nil? %></td>
+        <td><%= Province.find(town.province).name_and_region unless town.province.nil? %></td>
         <td><%= town.ine_cmun %></td>
         <td><%= link_to edit_town_path(town), :class => 'btn btn-mini' do %> <i class="icon-edit"></i> <% end %>
         <%= link_to(town, :data => { :confirm => "Are you sure?" }, :method => :delete, :class => 'btn btn-mini') do %> <i class="icon-trash"></i> <% end %> </td>

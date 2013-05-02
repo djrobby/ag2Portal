@@ -18,6 +18,7 @@ module Ag2Admin
     def show
       @breadcrumb = 'read'
       @country = Country.find(params[:id])
+      @regions = @country.regions.order("name")
   
       respond_to do |format|
         format.html # show.html.erb

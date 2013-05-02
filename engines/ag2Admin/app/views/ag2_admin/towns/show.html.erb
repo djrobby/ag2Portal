@@ -7,7 +7,7 @@
       <td>Id:</td>
       <td><%= @town.id %></td>
       <td>Province:</td>
-      <td><%= Province.find(@town.province).name unless @town.province.nil? %></td>
+      <td><%= Province.find(@town.province).name_and_region unless @town.province.nil? %></td>
     </tr>
     <tr>
       <td>INE CMun:</td>

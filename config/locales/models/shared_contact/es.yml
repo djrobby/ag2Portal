@@ -20,6 +20,8 @@ es:
         building: "Edificio/Bloque"
         floor: "Planta"
         floor_office: "Oficina"
+        region: "Región"
+        region_id: "Región"
         country: "País"
         country_id: "País"
         shared_contact_type: "Tipo de contacto"

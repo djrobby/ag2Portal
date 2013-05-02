@@ -2,23 +2,52 @@ require_dependency "ag2_directory/application_controller"
 
 module Ag2Directory
   class SharedContactsController < ApplicationController
-    # Update hidden province text field at view from town select
-    def update_province_textfield_from_town
-      @town = Town.find(params[:id])
-      @province = Province.find(@town.province)
+    # Update country text field at view from region select
+    def update_country_textfield_from_region
+      @region = Region.find(params[:id])
+      @country = Country.find(@region.country)
 
       respond_to do |format|
-        format.html # update_province_textfield.html.erb does not exist! JSON only
-        format.json { render json: @province }
+        format.html # update_country_textfield_from_region.html.erb does not exist! JSON only
+        format.json { render json: @country }
       end
     end
 
-    # Update hidden province and town text fields at view from zip code select
+    # Update region and country text fields at view from town select
+    def update_region_textfield_from_province
+      @province = Province.find(params[:id])
+      @region = Region.find(@province.region)
+      @country = Country.find(@region.country)
+      @json_data = { "region_id" => @region.id, "country_id" => @country.id }
+
+      respond_to do |format|
+        format.html # update_province_textfield.html.erb does not exist! JSON only
+        format.json { render json: @json_data }
+      end
+    end
+
+    # Update province, region and country text fields at view from town select
+    def update_province_textfield_from_town
+      @town = Town.find(params[:id])
+      @province = Province.find(@town.province)
+      @region = Region.find(@province.region)
+      @country = Country.find(@region.country)
+      @json_data = { "province_id" => @province.id, "region_id" => @region.id, "country_id" => @country.id }
+
+      respond_to do |format|
+        format.html # update_province_textfield.html.erb does not exist! JSON only
+        format.json { render json: @json_data }
+      end
+    end
+
+    # Update town, province, region and country text fields at view from zip code select
     def update_province_textfield_from_zipcode
       @zipcode = Zipcode.find(params[:id])
       @town = Town.find(@zipcode.town)
       @province = Province.find(@town.province)
-      @json_data = { "town_id" => @town.id, "province_id" => @province.id }
+      @region = Region.find(@province.region)
+      @country = Country.find(@region.country)
+      @json_data = { "town_id" => @town.id, "province_id" => @province.id, "region_id" => @region.id, "country_id" => @country.id }
     
       respond_to do |format|
         format.html # update_province_textfield.html.erb does not exist! JSON only

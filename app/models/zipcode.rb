@@ -7,7 +7,7 @@ class Zipcode < ActiveRecord::Base
   validates :town_id,  :presence => true
   validates :province_id,  :presence => true
 
-  has_many :towns
+  #has_many :towns
   has_many :companies
   has_many :workers
   has_many :shared_contacts

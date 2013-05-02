@@ -2,6 +2,7 @@
 <%= f.error_notification %>
 <%= display_base_errors resource %>
 <%= f.input :name, :required => true, :autofocus => true, :input_html => { :class => 'large-text-field' }, :label_html => { :class => 'form-label' } %>
+<%= f.association :region, collection: Region.all(order: 'name'), :input_html => { :class => 'large-text-field' }, :label_html => { :class => 'form-label' } %>
 <%= f.input :ine_cpro, :required => true, :input_html => { :class => 'x-small-text-field number-text-field', :maxlength => 2 }, :label_html => { :class => 'form-label' } %>
 <%= f.button :submit, :class => 'btn-primary' %>
 <% end %>

@@ -13,7 +13,7 @@
       <td>Town:</td>
       <td><%= Town.find(@zipcode.town).name unless @zipcode.town.nil? %></td>
       <td>Province:</td>
-      <td><%= Province.find(@zipcode.province).name unless @zipcode.province.nil? %></td>
+      <td><%= Province.find(@zipcode.province).name_and_region unless @zipcode.province.nil? %></td>
     </tr>
     <tr>
       <td>Created at:</td>

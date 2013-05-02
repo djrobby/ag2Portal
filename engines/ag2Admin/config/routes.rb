@@ -32,6 +32,7 @@ Ag2Admin::Engine.routes.draw do
     resources :sites
     resources :apps
     resources :countries
+    resources :regions
     resources :data_import_configs
     
     # Root

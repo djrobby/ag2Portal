@@ -1,13 +1,13 @@
 <%= render '/layouts/ag2_admin/countriesbreadcrumb' %>
 
-<h3>Country</h3>
+<h3><%= @country.name %></h3>
 <table class="table">
   <tbody>
     <tr>
       <td>Id:</td>
       <td><%= @country.id %></td>
-      <td>Name:</td>
-      <td><%= @country.name %></td>
+      <td></td>
+      <td></td>
     </tr>
     <tr>
       <td>Created at:</td>
@@ -21,4 +21,23 @@
 <%= link_to 'Edit Country', edit_country_path(@country), :class => 'btn btn-primary' %>
 <br />
 <br />
+
+<% if (@regions.count > 0) %>
+<h4>Country Regions</h4>
+<table class="table table-condensed table-striped">
+  <thead>
+    <tr>
+      <th>Name</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @regions.each do |region| %>
+    <tr>
+      <td><%= link_to region.name, region %></td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
+<% end %>
+
 <%= link_to 'Back to Countries', countries_path %>

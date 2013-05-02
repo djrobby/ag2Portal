@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130502130903) do
+ActiveRecord::Schema.define(:version => 20130502183348) do
 
   create_table "apps", :force => true do |t|
     t.string   "name"
@@ -189,6 +189,7 @@ ActiveRecord::Schema.define(:version => 20130502130903) do
   end
 
   add_index "provinces", ["ine_cpro"], :name => "index_provinces_on_ine_cpro"
+  add_index "provinces", ["region_id"], :name => "index_provinces_on_region_id"
 
   create_table "regions", :force => true do |t|
     t.string   "name"
@@ -239,6 +240,7 @@ ActiveRecord::Schema.define(:version => 20130502130903) do
     t.datetime "created_at",             :null => false
     t.datetime "updated_at",             :null => false
     t.string   "remarks"
+    t.integer  "region_id"
   end
 
   add_index "shared_contacts", ["cellular"], :name => "index_shared_contacts_on_cellular"
@@ -250,6 +252,7 @@ ActiveRecord::Schema.define(:version => 20130502130903) do
   add_index "shared_contacts", ["last_name"], :name => "index_shared_contacts_on_last_name"
   add_index "shared_contacts", ["phone"], :name => "index_shared_contacts_on_phone"
   add_index "shared_contacts", ["province_id"], :name => "index_shared_contacts_on_province_id"
+  add_index "shared_contacts", ["region_id"], :name => "index_shared_contacts_on_region_id"
   add_index "shared_contacts", ["shared_contact_type_id"], :name => "index_shared_contacts_on_shared_contact_type_id"
   add_index "shared_contacts", ["street_type_id"], :name => "index_shared_contacts_on_street_type_id"
   add_index "shared_contacts", ["town_id"], :name => "index_shared_contacts_on_town_id"
