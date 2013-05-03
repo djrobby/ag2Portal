@@ -1,0 +1,18 @@
+es:
+  ag2_directory:
+    shared_contact_types:
+      index:
+        title: "Tipos de contactos compartidos"
+        btn_new: "Nuevo Tipo de contacto"
+        back_to_main_app: "Volver a ag2SharedContacts"
+        back_to_root: "Ir a ag2Directory"
+      show:
+        title: "Tipo de contacto"
+        btn_edit: "Editar Tipo de contacto"
+      edit:
+        title: "Editar Tipo de contacto"
+        btn_show: "Ver Tipo de contacto"
+      new:
+        title: "Nuevo Tipo de contacto"
+      col_name: "Nombre"
+      back_to_main_page: "Volver a Tipos de contactos compartidos"

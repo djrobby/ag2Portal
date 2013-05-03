@@ -1,0 +1,33 @@
+en:
+  ag2_directory:
+    corp_contacts:
+      index:
+        title: "Corporate contacts"
+        btn_new: "New Contact"
+        back_to_root: "Go to ag2Directory"
+      show:
+        title: "Contact"
+        btn_edit: "Edit Contact"
+      edit:
+        title: "Edit Contact"
+        btn_show: "Show Contact"
+      new:
+        title: "New Contact"
+      col_company: "Company"
+      col_name: "Full Name"
+      col_type: "Type"
+      col_phone: "Phone"
+      col_cellular: "Cellular"
+      col_email: "Email"
+      col_fiscal: "Fiscal Id"
+      col_fax: "Fax"
+      col_address: "Address"
+      col_town: "Town"
+      col_province: "Province"
+      col_zipcode: "Zip code"
+      col_country: "Country"
+      col_position: "Position"
+      col_dept: "Dept"
+      col_department: "Department"
+      back_to_main_page: "Back to ag2CorporateContacts"
+        

@@ -1,0 +1,32 @@
+es:
+  ag2_directory:
+    corp_contacts:
+      index:
+        title: "Contactos corporativos"
+        btn_new: "Nuevo Contacto"
+        back_to_root: "Ir a ag2Directory"
+      show:
+        title: "Contacto"
+        btn_edit: "Editar Contacto"
+      edit:
+        title: "Editar Contacto"
+        btn_show: "Ver Contacto"
+      new:
+        title: "Nuevo Contacto"
+      col_company: "Empresa"
+      col_name: "Apellidos y Nombre"
+      col_type: "Tipo"
+      col_phone: "Teléfono"
+      col_cellular: "Móvil"
+      col_email: "Email"
+      col_fiscal: "Id Fiscal (CIF/NIF)"
+      col_fax: "Fax"
+      col_address: "Dirección"
+      col_town: "Población"
+      col_province: "Provincia"
+      col_zipcode: "Código postal"
+      col_country: "País"
+      col_position: "Puesto"
+      col_dept: "Dpto"
+      col_department: "Departamento"
+      back_to_main_page: "Volver a ag2CorporateContacts"

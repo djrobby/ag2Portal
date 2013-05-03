@@ -1,0 +1,32 @@
+en:
+  ag2_directory:
+    shared_contacts:
+      index:
+        title: "Shared contacts"
+        btn_new: "New Contact"
+        go_to_child_app: "Go to Shared contact types"
+        back_to_root: "Go to ag2Directory"
+      show:
+        title: "Contact"
+        btn_edit: "Edit Contact"
+      edit:
+        title: "Edit Contact"
+        btn_show: "Show Contact"
+      new:
+        title: "New Contact"
+      col_company: "Company"
+      col_name: "Full Name"
+      col_type: "Type"
+      col_phone: "Phone"
+      col_cellular: "Cellular"
+      col_email: "Email"
+      col_fiscal: "Fiscal Id"
+      col_fax: "Fax"
+      col_address: "Address"
+      col_town: "Town"
+      col_province: "Province"
+      col_zipcode: "Zip code"
+      col_country: "Country"
+      col_position: "Position"
+      back_to_main_page: "Back to ag2SharedContacts"
+        

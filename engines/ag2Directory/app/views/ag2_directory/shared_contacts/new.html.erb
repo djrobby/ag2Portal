@@ -1,7 +1,7 @@
 <%= render '/layouts/ag2_directory/sharedcontactsbreadcrumb' %>
 
-<h3>New Contact</h3>
+<h3><%=t '.title' %></h3>
 
 <%= render 'form' %>
 
-<%= link_to 'Back to Shared Contacts', shared_contacts_path %>
+<%= link_to I18n.t("back_to_main_page", :scope => :"ag2_directory.shared_contacts"), shared_contacts_path %>

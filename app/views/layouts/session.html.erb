@@ -22,14 +22,16 @@
       </nav>
     </header>
     <!-- Main container -->
-    <div class="container">
-      <div class="row">
-        <div class="span12">
-          <%= render '/layouts/messages' %>
-          <%= yield %>
+    <div id="main" role="main">
+      <div class="container">
+        <div class="row">
+          <div class="span12">
+            <%= render '/layouts/messages' %>
+            <%= yield %>
+          </div>
         </div>
       </div>
-    </div>
+    </div><!-- /#main -->
     <!-- Footer NavBar -->
     <footer class="navbar navbar-fixed-bottom">
       <div class="navbar-inner">

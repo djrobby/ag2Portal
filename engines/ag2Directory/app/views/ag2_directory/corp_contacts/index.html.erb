@@ -1,5 +1,5 @@
 <%= render '/layouts/ag2_directory/corpcontactsbreadcrumb' %>
-<%= render :partial => '/layouts/searchhead', :locals => { :title => 'Corporate Contacts', :path => corp_contacts_search_path } %>
+<%= render :partial => '/layouts/searchhead', :locals => { :title => I18n.t("title", :scope => :"ag2_directory.corp_contacts.index"), :path => corp_contacts_search_path } %>
 <%= render :partial => '/layouts/lettershead', :locals => { :controller => "corp_contacts", :action => "search" } %>
 
 <% @corp_contacts.each do |company| %>
@@ -79,12 +79,12 @@
   <col width="8%" />
   <thead>
     <tr>
-      <th>Full Name</th>
-      <th>Position</th>
-      <th>Dept</th>
-      <th>Phone</th>
-      <th>Cellular</th>
-      <th>Email</th>
+      <th><%=t :"ag2_directory.corp_contacts.col_name" %></th>
+      <th><%=t :"ag2_directory.corp_contacts.col_position" %></th>
+      <th><%=t :"ag2_directory.corp_contacts.col_dept" %></th>
+      <th><%=t :"ag2_directory.corp_contacts.col_phone" %></th>
+      <th><%=t :"ag2_directory.corp_contacts.col_cellular" %></th>
+      <th><%=t :"ag2_directory.corp_contacts.col_email" %></th>
       <th></th>
     </tr>
   </thead>
@@ -104,7 +104,7 @@
       <% end %> </td>
       <td><%= contact.email %></td>
       <td><%= link_to edit_corp_contact_path(contact), :class => 'btn btn-mini' do %> <i class="icon-edit"></i> <% end %>
-      <%= link_to(contact, :data => { :confirm => "Are you sure?" }, :method => :delete, :class => 'btn btn-mini') do %> <i class="icon-trash"></i> <% end %> </td>
+      <%= link_to(contact, :data => { :confirm => I18n.t("are_you_sure") }, :method => :delete, :class => 'btn btn-mini') do %> <i class="icon-trash"></i> <% end %> </td>
     </tr>
     <% end %>
   </tbody>
@@ -112,7 +112,7 @@
 <% end %>
 <% end %>
 
-<%= link_to 'New Contact', new_corp_contact_path, :class => 'btn btn-primary' %>
+<%= link_to I18n.t("btn_new", :scope => :"ag2_directory.corp_contacts.index"), new_corp_contact_path, :class => 'btn btn-primary' %>
 <br />
 <br />
-<%= link_to 'Back to ag2Directory', ag2_directory.root_path %>
+<%= link_to I18n.t("back_to_root", :scope => :"ag2_directory.corp_contacts.index"), ag2_directory.root_path %>

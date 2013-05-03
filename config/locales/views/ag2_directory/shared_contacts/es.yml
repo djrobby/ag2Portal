@@ -1,0 +1,31 @@
+es:
+  ag2_directory:
+    shared_contacts:
+      index:
+        title: "Contactos compartidos"
+        btn_new: "Nuevo Contacto"
+        go_to_child_app: "Ir a Tipos de contactos compartidos"
+        back_to_root: "Ir a ag2Directory"
+      show:
+        title: "Contacto"
+        btn_edit: "Editar Contacto"
+      edit:
+        title: "Editar Contacto"
+        btn_show: "Ver Contacto"
+      new:
+        title: "Nuevo Contacto"
+      col_company: "Empresa"
+      col_name: "Apellidos y Nombre"
+      col_type: "Tipo"
+      col_phone: "Teléfono"
+      col_cellular: "Móvil"
+      col_email: "Email"
+      col_fiscal: "Id Fiscal (CIF/NIF)"
+      col_fax: "Fax"
+      col_address: "Dirección"
+      col_town: "Población"
+      col_province: "Provincia"
+      col_zipcode: "Código postal"
+      col_country: "País"
+      col_position: "Puesto"
+      back_to_main_page: "Volver a ag2SharedContacts"

@@ -1,0 +1,19 @@
+en:
+  ag2_directory:
+    shared_contact_types:
+      index:
+        title: "Shared contact types"
+        btn_new: "New Contact type"
+        back_to_main_app: "Back to ag2SharedContacts"
+        back_to_root: "Go to ag2Directory"
+      show:
+        title: "Contact type"
+        btn_edit: "Edit Contact type"
+      edit:
+        title: "Edit Contact type"
+        btn_show: "Show Contact type"
+      new:
+        title: "New Contact type"
+      col_name: "Name"
+      back_to_main_page: "Back to Shared contact types"
+        

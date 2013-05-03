@@ -1,8 +1,8 @@
 <%= render '/layouts/ag2_directory/sharedcontactsbreadcrumb' %>
 
-<h3>Edit Contact</h3>
+<h3><%=t '.title' %></h3>
 
 <%= render 'form' %>
 
-<%= link_to 'Show Contact', @shared_contact %> |
-<%= link_to 'Back to Shared Contacts', shared_contacts_path %>
+<%= link_to I18n.t("btn_show", :scope => :"ag2_directory.shared_contacts.edit"), @shared_contact %> |
+<%= link_to I18n.t("back_to_main_page", :scope => :"ag2_directory.shared_contacts"), shared_contacts_path %>

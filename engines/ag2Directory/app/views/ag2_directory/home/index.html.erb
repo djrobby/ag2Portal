@@ -5,11 +5,11 @@
   <!-- Apps 1 -->
   <li class="span4">
     <% if (session[:resolution] == "LD")%>
-    <a href="<%= corp_contacts_path %>" class="thumbnail centered"><img src="/assets/icon/ag2Directory.png" width="48" height="48" alt="ag2Contacts" /><h5 class="h5-narrow">Corporate Contacts</h5></a>
+    <a href="<%= corp_contacts_path %>" class="thumbnail centered"><img src="/assets/icon/ag2Directory.png" width="48" height="48" alt="ag2Contacts" /><h5 class="h5-narrow">ag2CorporateContacts</h5></a>
     <% elsif session[:resolution] == "SD" %>
-    <a href="<%= corp_contacts_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/ag2Directory.png" width="96" height="96" alt="ag2Contacts" /><h5 class="h5-narrow">Corporate Contacts</h5></a>
+    <a href="<%= corp_contacts_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/ag2Directory.png" width="96" height="96" alt="ag2Contacts" /><h5 class="h5-narrow">ag2CorporateContacts</h5></a>
     <% else %>
-    <a href="<%= corp_contacts_path %>" class="thumbnail centered"><img src="/assets/pict/ag2Directory.png" width="128" height="128" alt="ag2Contacts" /><h5 class="h5-narrow">Corporate Contacts</h5></a>
+    <a href="<%= corp_contacts_path %>" class="thumbnail centered"><img src="/assets/pict/ag2Directory.png" width="128" height="128" alt="ag2Contacts" /><h5 class="h5-narrow">ag2CorporateContacts</h5></a>
     <% end %>
   </li>
   <li class="span4">
@@ -23,11 +23,11 @@
   </li>
   <li class="span4">
     <% if (session[:resolution] == "LD")%>
-    <a href="<%= shared_contacts_path %>" class="thumbnail centered"><img src="/assets/icon/ag2Contacts.png" width="48" height="48" alt="ag2Contacts" /><h5 class="h5-narrow">Shared Contacts</h5></a>
+    <a href="<%= shared_contacts_path %>" class="thumbnail centered"><img src="/assets/icon/ag2Contacts.png" width="48" height="48" alt="ag2Contacts" /><h5 class="h5-narrow">ag2SharedContacts</h5></a>
     <% elsif session[:resolution] == "SD" %>
-    <a href="<%= shared_contacts_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/ag2Contacts.png" width="96" height="96" alt="ag2Contacts" /><h5 class="h5-narrow">Shared Contacts</h5></a>
+    <a href="<%= shared_contacts_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/ag2Contacts.png" width="96" height="96" alt="ag2Contacts" /><h5 class="h5-narrow">ag2SharedContacts</h5></a>
     <% else %>
-    <a href="<%= shared_contacts_path %>" class="thumbnail centered"><img src="/assets/pict/ag2Contacts.png" width="128" height="128" alt="ag2Contacts" /><h5 class="h5-narrow">Shared Contacts</h5></a>
+    <a href="<%= shared_contacts_path %>" class="thumbnail centered"><img src="/assets/pict/ag2Contacts.png" width="128" height="128" alt="ag2Contacts" /><h5 class="h5-narrow">ag2SharedContacts</h5></a>
     <% end %>
   </li>
 </ul><!-- /.thumbnails -->

@@ -1,37 +1,37 @@
 <%= render '/layouts/ag2_directory/sharedcontactsbreadcrumb' %>
 
-<h3>Contact</h3>
+<h3><%=t '.title' %></h3>
 <table class="table">
   <tbody>
     <tr>
       <td>Id:</td>
       <td><%= @shared_contact.id %></td>
-      <td>Full Name:</td>
+      <td><%=t :"ag2_directory.shared_contacts.col_name" %>:</td>
       <td><%= @shared_contact.last_name %>, <%= @shared_contact.first_name %></td>
     </tr>
     <tr>
-      <td>Company:</td>
+      <td><%=t :"ag2_directory.shared_contacts.col_company" %>:</td>
       <td><%= @shared_contact.company unless @shared_contact.company.blank? %></td>
-      <td>Fiscal Id:</td>
+      <td><%=t :"ag2_directory.shared_contacts.col_fiscal" %>:</td>
       <td><%= @shared_contact.fiscal_id unless @shared_contact.fiscal_id.blank? %></td>
     </tr>
     <tr>
-      <td>Phone:</td>
+      <td><%=t :"ag2_directory.shared_contacts.col_phone" %>:</td>
       <td><%= @shared_contact.phone %>
       <% if !@shared_contact.extension.blank? %>
       (<%= @shared_contact.extension %>)
       <% end %> </td>
-      <td>Fax:</td>
+      <td><%=t :"ag2_directory.shared_contacts.col_fax" %>:</td>
       <td><%= @shared_contact.fax %></td>
     </tr>
     <tr>
-      <td>Cellular:</td>
+      <td><%=t :"ag2_directory.shared_contacts.col_cellular" %>:</td>
       <td><%= @shared_contact.cellular %></td>
-      <td>Email:</td>
+      <td><%=t :"ag2_directory.shared_contacts.col_email" %>:</td>
       <td><%= @shared_contact.email %></td>
     </tr>
     <tr>
-      <td>Address:</td>
+      <td><%=t :"ag2_directory.shared_contacts.col_address" %>:</td>
       <td> <%= @shared_contact.street_type.street_type_code.titleize %>. <%= @shared_contact.street_name %> <%= @shared_contact.street_number %>
       <% if !@shared_contact.building.blank? %>
       <%= @shared_contact.building.titleize %>
@@ -46,33 +46,33 @@
       <td></td>
     </tr>
     <tr>
-      <td>Town:</td>
+      <td><%=t :"ag2_directory.shared_contacts.col_town" %>:</td>
       <td><%= @shared_contact.town.name %></td>
-      <td>Province:</td>
-      <td><%= @shared_contact.province.name %></td>
+      <td><%=t :"ag2_directory.shared_contacts.col_province" %>:</td>
+      <td><%= @shared_contact.province.name_and_region %></td>
     </tr>
     <tr>
-      <td>Zip Code:</td>
+      <td><%=t :"ag2_directory.shared_contacts.col_zipcode" %>:</td>
       <td><%= @shared_contact.zipcode.zipcode %></td>
-      <td>Country:</td>
+      <td><%=t :"ag2_directory.shared_contacts.col_country" %>:</td>
       <td><%= @shared_contact.country.name %></td>
     </tr>
     <tr>
-      <td>Position:</td>
+      <td><%=t :"ag2_directory.shared_contacts.col_position" %>:</td>
       <td><%= @shared_contact.position unless @shared_contact.position.blank? %></td>
-      <td>Type:</td>
+      <td><%=t :"ag2_directory.shared_contacts.col_type" %>:</td>
       <td><%= @shared_contact.shared_contact_type.name %></td>
     </tr>
     <tr>
-      <td>Created at:</td>
+      <td><%=t :created_at %>:</td>
       <td><%= @shared_contact.created_at.utc.getlocal.strftime("%d/%m/%Y %H:%M:%S") %></td>
-      <td>Updated at:</td>
+      <td><%=t :updated_at %>:</td>
       <td><%= @shared_contact.updated_at.utc.getlocal.strftime("%d/%m/%Y %H:%M:%S") %></td>
     </tr>
   </tbody>
 </table>
 
-<%= link_to 'Edit Contact', edit_shared_contact_path(@shared_contact), :class => 'btn btn-primary' %>
+<%= link_to I18n.t("btn_edit", :scope => :"ag2_directory.shared_contacts.show"), edit_shared_contact_path(@shared_contact), :class => 'btn btn-primary' %>
 <br />
 <br />
-<%= link_to 'Back to Shared Contacts', shared_contacts_path %>
+<%= link_to I18n.t("back_to_main_page", :scope => :"ag2_directory.shared_contacts"), shared_contacts_path %>
