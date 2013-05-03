@@ -12,19 +12,19 @@
   </li>
   <% if @contract_types %>
   <li>
-    Contract types
+    <%=t :"ag2_human.breadcrumb.ctypes.items"%>
   </li>
   <% end %>
   <% if @contract_type %>
   <li>
-    <a href="<%= contract_types_path %>">Contract types</a><span class="divider">></span>
+    <a href="<%= contract_types_path %>"><%=t :"ag2_human.breadcrumb.ctypes.items"%></a><span class="divider">></span>
   </li>
   <% if @breadcrumb == 'read' || @breadcrumb == 'update' %>
   <%= @contract_type.ct_code %>
   <% end %>
   <% if @breadcrumb == 'create' %>
   <li>
-    New
+    <%=t :"breadcrumb.new" %>
   </li>
   <% end %>
   <% end %>

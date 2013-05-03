@@ -20,11 +20,11 @@
     <a href="<%= shared_contacts_path %>">ag2SharedContacts</a><span class="divider">></span>
   </li>
   <% if @breadcrumb == 'read' || @breadcrumb == 'update' %>
-  Contact
+  <%=t :"ag2_directory.breadcrumb.sharedcontacts.item"%>
   <% end %>
   <% if @breadcrumb == 'create' %>
   <li>
-    New
+    <%=t :"breadcrumb.new" %>
   </li>
   <% end %>
   <% end %>

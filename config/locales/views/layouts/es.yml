@@ -1,14 +1,19 @@
 es:
-  nav_home: "Inicio"
-  nav_tools: "Herramientas"
-  nav_help: "Ayuda"
-  nav_help_contact: "Contacto"
-  nav_help_guide: "Guía"
-  nav_help_about: "Acerca de"
-  nav_edit_profile: "Edita tu perfil"
-  nav_sign_up: "Crea tu cuenta"
-  nav_login: "Inicia sesión"
-  nav_sign_out: "Cierra sesión"
-  not_found_header: "Advertencia"
-  not_found_body_title: "El recurso solicitado no está disponible."
-  not_found_body_description: "La aplicación o el sitio web requerido no se ha encontrado. Recibirás una notificación cuando el recurso se encuentre operativo."
+  nav:
+    home: "Inicio"
+    tools: "Herramientas"
+    help:
+      help: "Ayuda"
+      contact: "Contacto"
+      guide: "Guía"
+      about: "Acerca de"
+    edit_profile: "Edita tu perfil"
+    sign_up: "Crea tu cuenta"
+    login: "Inicia sesión"
+    sign_out: "Cierra sesión"
+  not_found:
+    header: "Advertencia"
+    body_title: "El recurso solicitado no está disponible."
+    body_description: "La aplicación o el sitio web requerido no se ha encontrado. Recibirás una notificación cuando el recurso se encuentre operativo."
+  breadcrumb:
+    new: "Nuevo"  

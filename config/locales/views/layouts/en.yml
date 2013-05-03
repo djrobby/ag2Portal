@@ -1,14 +1,19 @@
 en:
-  nav_home: "Home"
-  nav_tools: "Tools"
-  nav_help: "Help"
-  nav_help_contact: "Contact"
-  nav_help_guide: "Guide"
-  nav_help_about: "About"
-  nav_edit_profile: "Edit your profile"
-  nav_sign_up: "Sign up"
-  nav_login: "Login"
-  nav_sign_out: "Sign out"
-  not_found_header: "Warning"
-  not_found_body_title: "The requested resource is not available."
-  not_found_body_description: "The application or website requested was not found. You will be notified when the resource is operational."
+  nav:
+    home: "Home"
+    tools: "Tools"
+    help:
+      help: "Help"
+      contact: "Contact"
+      guide: "Guide"
+      about: "About"
+    edit_profile: "Edit your profile"
+    sign_up: "Sign up"
+    login: "Login"
+    sign_out: "Sign out"
+  not_found:
+    header: "Warning"
+    body_title: "The requested resource is not available."
+    body_description: "The application or website requested was not found. You will be notified when the resource is operational."
+  breadcrumb:
+    new: "New"

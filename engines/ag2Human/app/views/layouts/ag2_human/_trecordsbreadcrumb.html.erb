@@ -15,19 +15,19 @@
   </li>
   <% if @time_records %>
   <li>
-    Time Records
+    <%=t :"ag2_human.breadcrumb.trecords.items" %>
   </li>
   <% end %>
   <% if @time_record %>
   <li>
-    <a href="<%= time_records_path %>">Time Records</a><span class="divider">></span>
+    <a href="<%= time_records_path %>"><%=t :"ag2_human.breadcrumb.trecords.items" %></a><span class="divider">></span>
   </li>
   <% if @breadcrumb == 'read' || @breadcrumb == 'update' %>
-  Record
+  <%=t :"ag2_human.breadcrumb.trecords.item" %>
   <% end %>
   <% if @breadcrumb == 'create' %>
   <li>
-    New
+    <%=t :"breadcrumb.new" %>
   </li>
   <% end %>
   <% end %>

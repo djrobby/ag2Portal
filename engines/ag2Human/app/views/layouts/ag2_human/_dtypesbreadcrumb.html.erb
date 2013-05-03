@@ -12,19 +12,19 @@
   </li>
   <% if @degree_types %>
   <li>
-    Degree types
+    <%=t :"ag2_human.breadcrumb.dtypes.items" %>
   </li>
   <% end %>
   <% if @degree_type %>
   <li>
-    <a href="<%= degree_types_path %>">Degree types</a><span class="divider">></span>
+    <a href="<%= degree_types_path %>"><%=t :"ag2_human.breadcrumb.dtypes.items" %></a><span class="divider">></span>
   </li>
   <% if @breadcrumb == 'read' || @breadcrumb == 'update' %>
   <%= @degree_type.dt_code %>
   <% end %>
   <% if @breadcrumb == 'create' %>
   <li>
-    New
+    <%=t :"breadcrumb.new" %>
   </li>
   <% end %>
   <% end %>

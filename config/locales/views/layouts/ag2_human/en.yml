@@ -1,0 +1,24 @@
+en:
+  ag2_human:
+    breadcrumb:
+      cagreements:
+        items: "Collective agmts"
+      ctypes:
+        items: "Contract types"
+      departments:
+        items: "Departments"
+      dtypes:
+        items: "Degree types"
+      pgroups:
+        items: "Pro groups"
+      trecordcodes:
+        items: "TimeRecord Codes"
+        item: "Code"
+      trecords:
+        items: "Time Records"
+        item: "Record"
+      trecordtypes:
+        items: "TimeRecord Types"
+        item: "Type"
+      wtypes:
+        items: "Worker types"

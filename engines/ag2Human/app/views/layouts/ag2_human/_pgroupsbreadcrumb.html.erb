@@ -12,19 +12,19 @@
   </li>
   <% if @professional_groups %>
   <li>
-    Pro groups
+    <%=t :"ag2_human.breadcrumb.pgroups.items" %>
   </li>
   <% end %>
   <% if @professional_group %>
   <li>
-    <a href="<%= professional_groups_path %>">Pro groups</a><span class="divider">></span>
+    <a href="<%= professional_groups_path %>"><%=t :"ag2_human.breadcrumb.pgroups.items" %></a><span class="divider">></span>
   </li>
   <% if @breadcrumb == 'read' || @breadcrumb == 'update' %>
   <%= @professional_group.pg_code %>
   <% end %>
   <% if @breadcrumb == 'create' %>
   <li>
-    New
+    <%=t :"breadcrumb.new" %>
   </li>
   <% end %>
   <% end %>

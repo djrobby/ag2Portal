@@ -1,0 +1,24 @@
+es:
+  ag2_human:
+    breadcrumb:
+      cagreements:
+        items: "Convenios colectivos"
+      ctypes:
+        items: "Tipos de contrato"
+      departments:
+        items: "Departamentos"
+      dtypes:
+        items: "Titulaciones"
+      pgroups:
+        items: "Grupos profesionales"
+      trecordcodes:
+        items: "Códigos de marcaje"
+        item: "Código"
+      trecords:
+        items: "Marcajes"
+        item: "Marcaje"
+      trecordtypes:
+        items: "Tipos de marcaje"
+        item: "Tipo"
+      wtypes:
+        items: "Tipos de trabajador"

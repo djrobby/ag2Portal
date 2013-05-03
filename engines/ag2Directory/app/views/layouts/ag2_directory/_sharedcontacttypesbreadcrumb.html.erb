@@ -15,19 +15,19 @@
   </li>
   <% if @shared_contact_types %>
   <li>
-    Types
+    <%=t :"ag2_directory.breadcrumb.sharedcontacttypes.items"%>
   </li>
   <% end %>
   <% if @shared_contact_type %>
   <li>
-    <a href="<%= shared_contact_types_path %>">Types</a><span class="divider">></span>
+    <a href="<%= shared_contact_types_path %>"><%=t :"ag2_directory.breadcrumb.sharedcontacttypes.items"%></a><span class="divider">></span>
   </li>
   <% if @breadcrumb == 'read' || @breadcrumb == 'update' %>
-  Type
+  <%=t :"ag2_directory.breadcrumb.sharedcontacttypes.item"%>
   <% end %>
   <% if @breadcrumb == 'create' %>
   <li>
-    New
+    <%=t :"breadcrumb.new" %>
   </li>
   <% end %>
   <% end %>

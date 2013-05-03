@@ -1,0 +1,10 @@
+en:
+  ag2_directory:
+    breadcrumb:
+      corpcontacts:
+        item: "Contact"
+      sharedcontacts:
+        item: "Contact"
+      sharedcontacttypes:
+        items: "Types"
+        item: "Type"

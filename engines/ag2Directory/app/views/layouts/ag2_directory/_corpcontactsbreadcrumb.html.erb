@@ -20,11 +20,11 @@
     <a href="<%= corp_contacts_path %>">ag2CorporateContacts</a><span class="divider">></span>
   </li>
   <% if @breadcrumb == 'read' || @breadcrumb == 'update' %>
-  Contact
+  <%=t :"ag2_directory.breadcrumb.corpcontacts.item"%>
   <% end %>
   <% if @breadcrumb == 'create' %>
   <li>
-    New
+    <%=t :"breadcrumb.new" %>
   </li>
   <% end %>
   <% end %>

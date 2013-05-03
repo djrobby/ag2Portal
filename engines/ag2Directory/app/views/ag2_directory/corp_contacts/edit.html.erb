@@ -1,8 +1,8 @@
 <%= render '/layouts/ag2_directory/corpcontactsbreadcrumb' %>
 
-<h3>Edit Contact</h3>
+<h3><%=t '.title' %></h3>
 
 <%= render 'form' %>
 
-<%= link_to 'Show Contact', @corp_contact %> |
-<%= link_to 'Back to ag2CorporateContacts', corp_contacts_path %>
+<%= link_to I18n.t("btn_show", :scope => :"ag2_directory.corp_contacts.edit"), @corp_contact %> |
+<%= link_to I18n.t("back_to_main_page", :scope => :"ag2_directory.corp_contacts"), corp_contacts_path %>

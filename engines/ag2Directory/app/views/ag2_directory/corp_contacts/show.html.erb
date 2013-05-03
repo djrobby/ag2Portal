@@ -8,45 +8,45 @@
 <table class="table">
   <tbody>
     <tr>
-      <td>Office:</td>
+      <td><%=t :"ag2_directory.corp_contacts.col_office" %></td>
       <td><%= Office.find(@corp_contact.office).name unless @corp_contact.office.nil? %></td>
-      <td>Company:</td>
+      <td><%=t :"ag2_directory.corp_contacts.col_company" %></td>
       <td><%= Company.find(@corp_contact.company).name unless @corp_contact.company.nil? %></td>
     </tr>
     <tr>
-      <td>Position:</td>
+      <td><%=t :"ag2_directory.corp_contacts.col_position" %>:</td>
       <td><%= @corp_contact.position unless @corp_contact.position.nil? %></td>
-      <td>Department:</td>
+      <td><%=t :"ag2_directory.corp_contacts.col_department" %>:</td>
       <td><%= Department.find(@corp_contact.department).name unless @corp_contact.department.nil? %></td>
     </tr>
     <tr>
-      <td>Corp Phone:</td>
+      <td><%=t :"ag2_directory.corp_contacts.col_phone" %>:</td>
       <td><%= @corp_contact.corp_phone %>
       <% if !@corp_contact.corp_extension.blank? %>
       (<%= @corp_contact.corp_extension %>)
       <% end %> </td>
-      <td>Corp Cellular:</td>
+      <td><%=t :"ag2_directory.corp_contacts.col_cellular" %>:</td>
       <td><%= @corp_contact.corp_cellular_long %>
       <% if !@corp_contact.corp_cellular_short.blank? %>
       (<%= @corp_contact.corp_cellular_short %>)
       <% end %> </td>
     </tr>
     <tr>
-      <td>Email:</td>
+      <td><%=t :"ag2_directory.corp_contacts.col_email" %>:</td>
       <td><%= @corp_contact.email %></td>
       <td></td>
       <td></td>
     </tr>
     <tr>
-      <td>Created at:</td>
+      <td><%=t :created_at %>:</td>
       <td><%= @corp_contact.created_at.utc.getlocal.strftime("%d/%m/%Y %H:%M:%S") %></td>
-      <td>Updated at:</td>
+      <td><%=t :updated_at %>:</td>
       <td><%= @corp_contact.updated_at.utc.getlocal.strftime("%d/%m/%Y %H:%M:%S") %></td>
     </tr>
   </tbody>
 </table>
 
-<%= link_to 'Edit Contact', edit_corp_contact_path(@corp_contact), :class => 'btn btn-primary' %>
+<%= link_to I18n.t("btn_edit", :scope => :"ag2_directory.corp_contacts.show"), edit_corp_contact_path(@corp_contact), :class => 'btn btn-primary' %>
 <br />
 <br />
-<%= link_to 'Back to ag2CorporateContacts', corp_contacts_path %>
+<%= link_to I18n.t("back_to_main_page", :scope => :"ag2_directory.corp_contacts"), corp_contacts_path %>

@@ -5,13 +5,13 @@
   <ul class="nav">
     <!-- Home -->
     <li class="header-nav-li">
-      <a href="<%= main_app.root_path %>"><i class="icon-home"></i> <%=t :nav_home %></a>
+      <a href="<%= main_app.root_path %>"><i class="icon-home"></i> <%=t :"nav.home" %></a>
     </li>
     <li class="dropdown header-nav-li">
       <!-- Services -->
       <a href="#"
       class="dropdown-toggle"
-      data-toggle="dropdown"><i class="icon-wrench"></i> <%=t :nav_tools %> <b class="caret"></b> </a>
+      data-toggle="dropdown"><i class="icon-wrench"></i> <%=t :"nav.tools" %> <b class="caret"></b> </a>
       <ul class="dropdown-menu" role="menu">
         <li>
           <a href="#"><i class="icon-inbox"></i> Blog</a>
@@ -29,17 +29,17 @@
       <!-- Help -->
       <a href="#"
       class="dropdown-toggle"
-      data-toggle="dropdown"><i class="icon-question-sign"></i> <%=t :nav_help %> <b class="caret"></b> </a>
+      data-toggle="dropdown"><i class="icon-question-sign"></i> <%=t :"nav.help.help" %> <b class="caret"></b> </a>
       <ul class="dropdown-menu" role="menu">
         <li>
-          <a href="#contact"><i class="icon-comment"></i> <%=t :nav_help_contact %></a>
+          <a href="#contact"><i class="icon-comment"></i> <%=t :"nav.help.contact" %></a>
         </li>
         <li class="divider"></li>
         <li>
-          <a href="#"><i class="icon-question-sign"></i> <%=t :nav_help_guide %></a>
+          <a href="#"><i class="icon-question-sign"></i> <%=t :"nav.help.guide" %></a>
         </li>
         <li>
-          <a href="#about"><i class="icon-info-sign"></i> <%=t :nav_help_about %></a>
+          <a href="#about"><i class="icon-info-sign"></i> <%=t :"nav.help.about" %></a>
         </li>
       </ul>
     </li>
@@ -47,11 +47,11 @@
   <!-- User profile area -->
   <p class="navbar-text pull-right">
     <% if user_signed_in? %>
-    <a href="<%= main_app.edit_user_registration_path %>" class="navbar-link"><i class="icon-edit"></i> <%=t :nav_edit_profile %></a> |
+    <a href="<%= main_app.edit_user_registration_path %>" class="navbar-link"><i class="icon-edit"></i> <%=t :"nav.edit_profile" %></a> |
     <a href="<%= main_app.destroy_user_session_path %>" class="navbar-link" data-method="delete" rel="nofollow"><i class="icon-off"></i></a> <strong><%= current_user.email %></strong>
     <% else %>
-    <a href="<%= main_app.new_user_registration_path %>" class="navbar-link"><i class="icon-pencil"></i> <%=t :nav_sign_up %></a> |
-    <a href="<%= main_app.new_user_session_path %>" class="navbar-link"><i class="icon-user"></i> <%=t :nav_login %></a>
+    <a href="<%= main_app.new_user_registration_path %>" class="navbar-link"><i class="icon-pencil"></i> <%=t :"nav.sign_up" %></a> |
+    <a href="<%= main_app.new_user_session_path %>" class="navbar-link"><i class="icon-user"></i> <%=t :"nav.login" %></a>
     <% end %>
   </p>
 </div><!--/.nav-collapse -->
