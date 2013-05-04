@@ -1,8 +1,8 @@
 <%= render '/layouts/ag2_human/trecordcodesbreadcrumb' %>
 
-<h3>Edit TimeRecord Code</h3>
+<h3><%=t '.title' %></h3>
 
 <%= render 'form' %>
 
-<%= link_to 'Show TimeRecord Code', @timerecord_code %> |
-<%= link_to 'Back to TimeRecord Codes', timerecord_codes_path %>
+<%= link_to I18n.t("btn_show", :scope => :"ag2_human.timerecord_codes.edit"), @timerecord_code %> |
+<%= link_to I18n.t("back_to_main_page", :scope => :"ag2_human.timerecord_codes"), timerecord_codes_path %>

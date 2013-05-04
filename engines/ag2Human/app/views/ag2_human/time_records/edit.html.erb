@@ -1,8 +1,8 @@
 <%= render '/layouts/ag2_human/trecordsbreadcrumb' %>
 
-<h3>Edit Time Record</h3>
+<h3><%=t '.title' %></h3>
 
 <%= render 'form' %>
 
-<%= link_to 'Show Time Record', @time_record %> |
-<%= link_to 'Back to Time Records', time_records_path %>
+<%= link_to I18n.t("btn_show", :scope => :"ag2_human.time_records.edit"), @time_record %> |
+<%= link_to I18n.t("back_to_main_page", :scope => :"ag2_human.time_records"), time_records_path %>

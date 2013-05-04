@@ -1,0 +1,18 @@
+en:
+  ag2_human:
+    timerecord_codes:
+      index:
+        title: "TimeRecord codes"
+        btn_new: "New TimeRecord code"
+        back_to_root: "Back to ag2TimeRecord"
+      show:
+        title: "TimeRecord code"
+        btn_edit: "Edit TimeRecord code"
+      edit:
+        title: "Edit TimeRecord code"
+        btn_show: "Show TimeRecord code"
+      new:
+        title: "New TimeRecord code"
+      col_name: "Description"
+      back_to_main_page: "Back to TimeRecord codes"
+        

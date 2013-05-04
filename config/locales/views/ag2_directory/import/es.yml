@@ -1,0 +1,16 @@
+es:
+  ag2_directory:
+    import:
+      index:
+        task: "Actualizador de Contactos Corporativos"
+        description: "ag2DataImport agregará nuevos Contactos o actualizará los ya existentes, utilizando los datos actuales de Trabajadores. Este procedimiento no destruye los datos de los Contactos existentes."
+        do_not_interrupt: "Esta operación puede tardar un rato: ¡No la interrumpas una vez puesta en marcha!"
+        caution: "¡Precaución!"
+        warning: "¡Esta acción no se puede deshacer!"
+        are_you_sure: "¿Estás seguro/a de continuar?"
+        btn_yes: "Sí, adelante"
+        btn_no: "No, gracias"
+        message: "Espera, importando..."
+        go_to_target: "¿Deseas ver a los contactos actualizados?"
+        result_ok_message_html: "Actualizador de Contactos Corporativos ha finalizado con éxito."
+        result_error_message_html: "Error: ¡Actualizador de Contactos Corporativos finalizó inesperadamente!"

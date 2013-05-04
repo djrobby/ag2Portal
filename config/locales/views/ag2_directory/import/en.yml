@@ -1,0 +1,16 @@
+en:
+  ag2_directory:
+    import:
+      index:
+        task: "Corporate Contacts Updater"
+        description: "ag2DataImport will add new Contacts or update existing ones, using the Workers current data. This procedure do not destroy any existing Contacts data."
+        do_not_interrupt: "This operation may take a while: Do not interrupt it once starts up!"
+        caution: "Caution!"
+        warning: "This action cannot be undone!"
+        are_you_sure: "Are you sure to proceed?"
+        btn_yes: "Yes, go ahead"
+        btn_no: "No, thanks"
+        message: "Wait, importing..."
+        go_to_target: "Do you want to see the updated contacts?"
+        result_ok_message_html: "Corporate Contacts Updater finished succesfully."
+        result_error_message_html: "Error: Corporate Contacts Updater finished unexpectedly!"

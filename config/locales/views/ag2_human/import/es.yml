@@ -1,0 +1,16 @@
+es:
+  ag2_human:
+    import:
+      index:
+        task: "Actualizador de Trabajadores"
+        description: "ag2DataImport agregará nuevos Trabajadores o actualizará los ya existentes, usando datos externos actualizados. Este procedimiento no destruye los datos de los Trabajadores existentes."
+        do_not_interrupt: "Esta operación puede tardar un rato: ¡No la interrumpas una vez puesta en marcha!"
+        caution: "¡Precaución!"
+        warning: "¡Esta acción no se puede deshacer!"
+        are_you_sure: "¿Estás seguro/a de continuar?"
+        btn_yes: "Sí, adelante"
+        btn_no: "No, gracias"
+        message: "Espera, importando..."
+        go_to_target: "¿Deseas ver a los trabajadores actualizados?"
+        result_ok_message_html: "Actualizador de Trabajadores ha finalizado con éxito."
+        result_error_message_html: "Error: ¡Actualizador de Trabajadores finalizó inesperadamente!"

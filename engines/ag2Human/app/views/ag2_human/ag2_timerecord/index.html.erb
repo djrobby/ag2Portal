@@ -6,20 +6,20 @@
   <li class="span2"></li>
   <li class="span4">
     <% if (session[:resolution] == "LD")%>
-    <a href="<%= time_records_path %>" class="thumbnail centered"><img src="/assets/icon/ag2TimeRecordAdmin.png" width="48" height="48" alt="Time Records" /><h5 class="h5-narrow">Time Records</h5></a>
+    <a href="<%= time_records_path %>" class="thumbnail centered"><img src="/assets/icon/ag2TimeRecordAdmin.png" width="48" height="48" alt="Time Records" /><h5 class="h5-narrow"><%=t :"ag2_human.ag2_timerecord.index.records" %></h5></a>
     <% elsif session[:resolution] == "SD" %>
-    <a href="<%= time_records_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/ag2TimeRecordAdmin.png" width="96" height="96" alt="Time Records" /><h5 class="h5-narrow">Time Records</h5></a>
+    <a href="<%= time_records_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/ag2TimeRecordAdmin.png" width="96" height="96" alt="Time Records" /><h5 class="h5-narrow"><%=t :"ag2_human.ag2_timerecord.index.records" %></h5></a>
     <% else %>
-    <a href="<%= time_records_path %>" class="thumbnail centered"><img src="/assets/pict/ag2TimeRecordAdmin.png" width="128" height="128" alt="Time Records" /><h5 class="h5-narrow">Time Records</h5></a>
+    <a href="<%= time_records_path %>" class="thumbnail centered"><img src="/assets/pict/ag2TimeRecordAdmin.png" width="128" height="128" alt="Time Records" /><h5 class="h5-narrow"><%=t :"ag2_human.ag2_timerecord.index.records" %></h5></a>
     <% end %>
   </li>
   <li class="span4">
     <% if (session[:resolution] == "LD")%>
-    <a data-toggle="modal" href="#notfound" class="thumbnail centered"><img src="/assets/icon/ag2TimeRecordTrack.png" width="48" height="48" alt="Control Tracking" /><h5 class="h5-narrow">Control&amp;Tracking</h5></a>
+    <a data-toggle="modal" href="#notfound" class="thumbnail centered"><img src="/assets/icon/ag2TimeRecordTrack.png" width="48" height="48" alt="Control Tracking" /><h5 class="h5-narrow"><%=t :"ag2_human.ag2_timerecord.index.control" %></h5></a>
     <% elsif session[:resolution] == "SD" %>
-    <a data-toggle="modal" href="#notfound" class="thumbnail centered"><img src="/assets/pict/ag2/ag2TimeRecordTrack.png" width="96" height="96" alt="Control Tracking" /><h5 class="h5-narrow">Control&amp;Tracking</h5></a>
+    <a data-toggle="modal" href="#notfound" class="thumbnail centered"><img src="/assets/pict/ag2/ag2TimeRecordTrack.png" width="96" height="96" alt="Control Tracking" /><h5 class="h5-narrow"><%=t :"ag2_human.ag2_timerecord.index.control" %></h5></a>
     <% else %>
-    <a data-toggle="modal" href="#notfound" class="thumbnail centered"><img src="/assets/pict/ag2TimeRecordTrack.png" width="128" height="128" alt="Control Tracking" /><h5 class="h5-narrow">Control&amp;Tracking</h5></a>
+    <a data-toggle="modal" href="#notfound" class="thumbnail centered"><img src="/assets/pict/ag2TimeRecordTrack.png" width="128" height="128" alt="Control Tracking" /><h5 class="h5-narrow"><%=t :"ag2_human.ag2_timerecord.index.control" %></h5></a>
     <% end %>
   </li>
   <li class="span2"></li>
@@ -29,20 +29,20 @@
   <li class="span3"></li>
   <li class="span3">
     <% if (session[:resolution] == "LD")%>
-    <a href="<%= timerecord_types_path %>" class="thumbnail centered"><img src="/assets/icon/TableA.png" width="48" height="48" alt="ag2Tables" /><h5 class="h5-narrow">TimeRecord Types</h5></a>
+    <a href="<%= timerecord_types_path %>" class="thumbnail centered"><img src="/assets/icon/TableA.png" width="48" height="48" alt="ag2Tables" /><h5 class="h5-narrow"><%=t :"ag2_human.ag2_timerecord.index.types" %></h5></a>
     <% elsif session[:resolution] == "SD" %>
-    <a href="<%= timerecord_types_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/TableA72.png" width="72" height="72" alt="ag2Tables" /><h5 class="h5-narrow">TimeRecord Types</h5></a>
+    <a href="<%= timerecord_types_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/TableA72.png" width="72" height="72" alt="ag2Tables" /><h5 class="h5-narrow"><%=t :"ag2_human.ag2_timerecord.index.types" %></h5></a>
     <% else %>
-    <a href="<%= timerecord_types_path %>" class="thumbnail centered"><img src="/assets/pict/TableA96.png" width="96" height="96" alt="ag2Tables" /><h5 class="h5-narrow">TimeRecord Types</h5></a>
+    <a href="<%= timerecord_types_path %>" class="thumbnail centered"><img src="/assets/pict/TableA96.png" width="96" height="96" alt="ag2Tables" /><h5 class="h5-narrow"><%=t :"ag2_human.ag2_timerecord.index.types" %></h5></a>
     <% end %>
   </li>
   <li class="span3">
     <% if (session[:resolution] == "LD")%>
-    <a href="<%= timerecord_codes_path %>" class="thumbnail centered"><img src="/assets/icon/TableA.png" width="48" height="48" alt="ag2Tables" /><h5 class="h5-narrow">TimeRecord Codes</h5></a>
+    <a href="<%= timerecord_codes_path %>" class="thumbnail centered"><img src="/assets/icon/TableA.png" width="48" height="48" alt="ag2Tables" /><h5 class="h5-narrow"><%=t :"ag2_human.ag2_timerecord.index.codes" %></h5></a>
     <% elsif session[:resolution] == "SD" %>
-    <a href="<%= timerecord_codes_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/TableA72.png" width="72" height="72" alt="ag2Tables" /><h5 class="h5-narrow">TimeRecord Codes</h5></a>
+    <a href="<%= timerecord_codes_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/TableA72.png" width="72" height="72" alt="ag2Tables" /><h5 class="h5-narrow"><%=t :"ag2_human.ag2_timerecord.index.codes" %></h5></a>
     <% else %>
-    <a href="<%= timerecord_codes_path %>" class="thumbnail centered"><img src="/assets/pict/TableA96.png" width="96" height="96" alt="ag2Tables" /><h5 class="h5-narrow">TimeRecord Codes</h5></a>
+    <a href="<%= timerecord_codes_path %>" class="thumbnail centered"><img src="/assets/pict/TableA96.png" width="96" height="96" alt="ag2Tables" /><h5 class="h5-narrow"><%=t :"ag2_human.ag2_timerecord.index.codes" %></h5></a>
     <% end %>
   </li>
   <li class="span3"></li>

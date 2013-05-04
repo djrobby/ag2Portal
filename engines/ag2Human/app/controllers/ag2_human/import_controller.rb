@@ -10,7 +10,7 @@ module Ag2Human
     # Import DBF files from external source
     #
     def data_import
-      message = "Workers Updater finished succesfully.".html_safe
+      message = I18n.t("result_ok_message_html", :scope => :"ag2_human.import.index")
       @json_data = { "DataImport" => message, "Result" => "OK" }
 
       # Loop thru 'empresa.dbf' records

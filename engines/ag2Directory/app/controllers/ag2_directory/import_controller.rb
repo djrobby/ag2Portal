@@ -6,7 +6,7 @@ module Ag2Directory
     end
 
     def data_import
-      message = "Corporate Contacts Updater finished succesfully.".html_safe
+      message = I18n.t("result_ok_message_html", :scope => :"ag2_directory.import.index")
       @json_data = { "DataImport" => message, "Result" => "OK" }
 
       @workers = Worker.all
@@ -20,7 +20,7 @@ module Ag2Directory
         end
         update_contact(@contact, worker)
         if !@contact.save
-          message = "Error: Corporate Contacts Updater finished unexpectedly!".html_safe
+          message = I18n.t("result_error_message_html", :scope => :"ag2_directory.import.index")
           @json_data = { "DataImport" => message, "Result" => "ERROR" }
           break
         end

@@ -9,7 +9,7 @@
 
 <%= render '/layouts/ag2_human/trecordsbreadcrumb' %>
 
-<h3>Time Records</h3>
+<h3><%=t '.title' %></h3>
 
 <div class="container-fluid">
   <div class="row-fluid">
@@ -17,20 +17,20 @@
     <div class="span3">
       <div class="well sidebar-nav">
         <%= form_tag "time_records", :method => 'get' do %>
-        <%= label_tag "Worker", nil, :class => 'form-label' %>
+        <%= label_tag I18n.t("label_worker", :scope => :"ag2_human.time_records.index"), nil, :class => 'form-label' %>
         <%= select_tag "Worker", options_from_collection_for_select(Worker.all, "id", "full_name"), :prompt => "", :class => 'x-large-text-field shrinked' %>
-        <%= label_tag "Date", nil, :class => 'form-label' %>
+        <%= label_tag I18n.t("label_date", :scope => :"ag2_human.time_records.index"), nil, :class => 'form-label' %>
         <%= text_field_tag "Date", params[:date], :class =>  'x-large-text-field shrinked date_picker' %>
-        <%= label_tag "Type", nil, :class => 'form-label' %>
+        <%= label_tag I18n.t("label_type", :scope => :"ag2_human.time_records.index"), nil, :class => 'form-label' %>
         <%= select_tag "Type", options_from_collection_for_select(TimerecordType.all, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked' %>
-        <%= label_tag "Code", nil, :class => 'form-label' %>
+        <%= label_tag I18n.t("label_code", :scope => :"ag2_human.time_records.index"), nil, :class => 'form-label' %>
         <%= select_tag "Code", options_from_collection_for_select(TimerecordCode.all, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked' %>
-        <%= submit_tag "Apply Filter", :class => 'btn btn-primary' %>
+        <%= submit_tag I18n.t("btn_apply", :scope => :"ag2_human.time_records.index"), :class => 'btn btn-primary' %>
         <% end %>
-        <%= link_to 'New TimeRecord', new_time_record_path, :class => 'btn btn-primary' %>
+        <%= link_to I18n.t("btn_new", :scope => :"ag2_human.time_records.index"), new_time_record_path, :class => 'btn btn-primary' %>
         <br />
         <br />
-        <%= link_to 'Back to ag2TimeRecord', ag2_human.ag2_timerecord_path %>
+        <%= link_to I18n.t("back_to_root", :scope => :"ag2_human.time_records.index"), ag2_human.ag2_timerecord_path %>
       </div><!-- /.sidebar-nav -->
     </div><!-- /.span3 -->
 
@@ -38,11 +38,11 @@
       <table class="table table-condensed table-striped shrinked">
         <thead>
           <tr>
-            <th>Worker</th>
-            <th>Date</th>
-            <th>Time</th>
-            <th>Type</th>
-            <th>Code</th>
+            <th><%=t :"ag2_human.time_records.col_worker" %></th>
+            <th><%=t :"ag2_human.time_records.col_date" %></th>
+            <th><%=t :"ag2_human.time_records.col_time" %></th>
+            <th><%=t :"ag2_human.time_records.col_type" %></th>
+            <th><%=t :"ag2_human.time_records.col_code" %></th>
             <th></th>
           </tr>
         </thead>
@@ -56,7 +56,7 @@
             <td><%= TimerecordCode.find(record.timerecord_code).name.titleize %></td>
             <td><%= link_to record, :class => 'btn btn-mini' do %> <i class="icon-eye-open"></i> <% end %>
             <%= link_to edit_time_record_path(record), :class => 'btn btn-mini' do %> <i class="icon-edit"></i> <% end %>
-            <%= link_to(record, :data => { :confirm => "Are you sure?" }, :method => :delete, :class => 'btn btn-mini') do %> <i class="icon-trash"></i> <% end %> </td>
+            <%= link_to(record, :data => { :confirm => I18n.t("are_you_sure") }, :method => :delete, :class => 'btn btn-mini') do %> <i class="icon-trash"></i> <% end %> </td>
           </tr>
           <% end %>
         </tbody>

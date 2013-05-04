@@ -15,19 +15,19 @@
   </li>
   <% if @roles %>
   <li>
-    Roles
+    <%=t :"ag2_admin.breadcrumb.roles.items" %>
   </li>
   <% end %>
   <% if @role %>
   <li>
-    <a href="<%= roles_path %>">Roles</a><span class="divider">></span>
+    <a href="<%= roles_path %>"><%=t :"ag2_admin.breadcrumb.roles.items" %></a><span class="divider">></span>
   </li>
   <% if @breadcrumb == 'read' || @breadcrumb == 'update' %>
   <%= @role.name.titleize %>
   <% end %>
   <% if @breadcrumb == 'create' %>
   <li>
-    New
+    <%=t :"breadcrumb.new" %>
   </li>
   <% end %>
   <% end %>

@@ -1,0 +1,27 @@
+en:
+  ag2_human:
+    time_records:
+      index:
+        title: "Time records"
+        btn_new: "New Time record"
+        back_to_root: "Back to ag2TimeRecord"
+        label_worker: "Worker"
+        label_date: "Date"
+        label_type: "Type"
+        label_code: "Code"
+        btn_apply: "Apply Filter"
+      show:
+        title: "Time record"
+        btn_edit: "Edit Time record"
+      edit:
+        title: "Edit Time record"
+        btn_show: "Show Time record"
+      new:
+        title: "New Time record"
+      col_worker: "Worker"
+      col_date: "Date"
+      col_time: "Time"
+      col_type: "Type"
+      col_code: "Code"
+      back_to_main_page: "Back to Time records"
+        

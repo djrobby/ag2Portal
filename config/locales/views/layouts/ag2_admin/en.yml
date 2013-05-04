@@ -1,0 +1,5 @@
+en:
+  ag2_admin:
+    breadcrumb:
+      roles:
+        items: "Roles"

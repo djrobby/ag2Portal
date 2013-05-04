@@ -15,5 +15,7 @@ en:
     header: "Warning"
     body_title: "The requested resource is not available."
     body_description: "The application or website requested was not found. You will be notified when the resource is operational."
+  import:
+    message: "Message"
   breadcrumb:
     new: "New"

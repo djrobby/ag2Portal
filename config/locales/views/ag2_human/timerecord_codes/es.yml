@@ -1,0 +1,17 @@
+es:
+  ag2_human:
+    timerecord_codes:
+      index:
+        title: "Códigos de marcaje"
+        btn_new: "Nuevo Código de marcaje"
+        back_to_root: "Volver a ag2TimeRecord"
+      show:
+        title: "Código de marcaje"
+        btn_edit: "Editar Código de marcaje"
+      edit:
+        title: "Editar Código de marcaje"
+        btn_show: "Ver Código de marcaje"
+      new:
+        title: "Nuevo Código de marcaje"
+      col_name: "Descripción"
+      back_to_main_page: "Volver a Códigos de marcaje"

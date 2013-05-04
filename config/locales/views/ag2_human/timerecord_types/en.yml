@@ -1,0 +1,18 @@
+en:
+  ag2_human:
+    timerecord_types:
+      index:
+        title: "TimeRecord types"
+        btn_new: "New TimeRecord type"
+        back_to_root: "Back to ag2TimeRecord"
+      show:
+        title: "TimeRecord type"
+        btn_edit: "Edit TimeRecord type"
+      edit:
+        title: "Edit TimeRecord type"
+        btn_show: "Show TimeRecord type"
+      new:
+        title: "New TimeRecord type"
+      col_name: "Type"
+      back_to_main_page: "Back to TimeRecord types"
+        

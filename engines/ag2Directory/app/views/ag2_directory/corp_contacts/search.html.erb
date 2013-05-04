@@ -25,7 +25,7 @@
     <%= render :partial => 'layouts/ag2_directory/contactinfo', :locals => { :contact => contact } %>
     <tr>
       <td><a data-toggle="modal" href="#contactinfo<%= contact.id.to_s %>"><%= contact.last_name + ', ' + contact.first_name %></a></td>
-      <!-- <td><%= link_to contact.last_name + ', ' + contact.first_name, contact %></td> -->
+      <!-- <td><%#= link_to contact.last_name + ', ' + contact.first_name, contact %></td> -->
       <td><%= contact.corp_phone unless contact.corp_phone.nil? %>
       <% if !contact.corp_extension.blank? %>
       (<%= contact.corp_extension %>)

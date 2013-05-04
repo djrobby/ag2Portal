@@ -14,13 +14,13 @@
         $(".modal-body > p").text(data.DataImport);
         $("#importinfo").modal("show");
         if (data.Result == 'OK') {
-          $("#message").html('<%= link_to 'Do you want to see the updated workers?', workers_path %>');
+          $("#message").html('<%= link_to I18n.t("go_to_target", :scope => :"ag2_human.import.index"), workers_path %>');
           $("#progressbar").hide();
         }
         else {
           $('#message_area').children().hide();
         }
-        $("#data_import_btn").text("Try again");
+        $("#data_import_btn").text(I18n["try_again"]);
         $('#buttons').children().show();
       })
       return false;
@@ -39,35 +39,33 @@
 <div class="row">
   <div class="span8">
     <div class="import-description">
-      <h4>Workers Updater</h4>
+      <h4><%=t '.task' %></h4>
       <br />
       <p>
-        ag2DataImport will add new Workers or update existing ones,
-        using external update data. This procedure do not destroy
-        any existing Workers data.
+        <%=t '.description' %>
       </p>
       <p class="bolded">
-        This operation may take a while: Do not interrupt it once starts up!
+        <%=t '.do_not_interrupt' %>
       </p>
     </div>
   </div>
   <div class="span4 import-box">
     <div align="center">
       <p class="import-caution">
-        Caution!
+        <%=t '.caution' %>
       </p>
       <p>
-        This action cannot be undone!
+        <%=t '.warning' %>
         <br />
-        Are you sure to proceed?
+        <%=t '.are_you_sure' %>
       </p>
       <div id="buttons">
-        <a href="#" id="data_import_btn" class="btn btn-primary">Yes, go ahead</a>
-        <a href="<%= ag2_human.root_path %>" id="exit_btn" class="btn btn-primary">No, thanks</a>
+        <a href="#" id="data_import_btn" class="btn btn-primary"><%=t '.btn_yes' %></a>
+        <a href="<%= ag2_human.root_path %>" id="exit_btn" class="btn btn-primary"><%=t '.btn_no' %></a>
       </div>
       <br />
       <div id="message_area">
-        <span id="message">Wait, importing...</span>
+        <span id="message"><%=t '.message' %></span>
         <div id="progressbar" class="bert2-green-progress"></div>
       </div>
     </div>

@@ -15,5 +15,7 @@ es:
     header: "Advertencia"
     body_title: "El recurso solicitado no está disponible."
     body_description: "La aplicación o el sitio web requerido no se ha encontrado. Recibirás una notificación cuando el recurso se encuentre operativo."
+  import:
+    message: "Mensaje"
   breadcrumb:
     new: "Nuevo"  

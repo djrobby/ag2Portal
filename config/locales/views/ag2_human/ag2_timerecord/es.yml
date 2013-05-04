@@ -1,0 +1,8 @@
+es:
+  ag2_human:
+    ag2_timerecord:
+      index:
+        records: "Marcajes"
+        control: "Control&Seguimiento"
+        types: "Tipos de marcaje"
+        codes: "Códigos de marcaje"

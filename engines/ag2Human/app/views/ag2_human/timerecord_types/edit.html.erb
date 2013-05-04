@@ -1,8 +1,8 @@
 <%= render '/layouts/ag2_human/trecordtypesbreadcrumb' %>
 
-<h3>Edit TimeRecord Type</h3>
+<h3><%=t '.title' %></h3>
 
 <%= render 'form' %>
 
-<%= link_to 'Show TimeRecord Type', @timerecord_type %> |
-<%= link_to 'Back to TimeRecord Types', timerecord_types_path %>
+<%= link_to I18n.t("btn_show", :scope => :"ag2_human.timerecord_types.edit"), @timerecord_type %> |
+<%= link_to I18n.t("back_to_main_page", :scope => :"ag2_human.timerecord_types"), timerecord_types_path %>

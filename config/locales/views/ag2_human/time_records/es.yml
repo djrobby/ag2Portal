@@ -1,0 +1,26 @@
+es:
+  ag2_human:
+    time_records:
+      index:
+        title: "Marcajes"
+        btn_new: "Nuevo Marcaje"
+        back_to_root: "Volver a ag2TimeRecord"
+        label_worker: "Trabajador"
+        label_date: "Fecha"
+        label_type: "Tipo"
+        label_code: "Código"
+        btn_apply: "Aplicar Filtro"
+      show:
+        title: "Marcaje"
+        btn_edit: "Editar Marcaje"
+      edit:
+        title: "Editar Marcaje"
+        btn_show: "Ver Marcaje"
+      new:
+        title: "Nuevo Marcaje"
+      col_worker: "Trabajador"
+      col_date: "Fecha"
+      col_time: "Hora"
+      col_type: "Tipo"
+      col_code: "Código"
+      back_to_main_page: "Volver a Marcajes"
