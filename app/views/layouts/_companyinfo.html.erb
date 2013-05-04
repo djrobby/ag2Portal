@@ -10,6 +10,7 @@
         <%= company.fiscal_id %>
       </p>
       <p>
+        <i class="icon-road"></i>
         <%= company.street_type.street_type_code.titleize %>. <%= company.street_name %> <%= company.street_number %>
         <% if !company.building.nil? %>
         <%= company.building.titleize %>
@@ -19,12 +20,10 @@
         <% end %>
         <% if !company.floor_office.nil? %>
         <%= company.floor_office %>
-        <% end %>
-      </p>
-      <p>
+        <% end %><br />
         <%= company.town.name %> &#8226;
         <%= company.zipcode.zipcode %> &#8226;
-        <%= company.province.name %>
+        <%= company.province.name_and_region %>
       </p>
       <p>
         <span style="font-weight: bold;">

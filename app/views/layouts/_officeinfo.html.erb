@@ -10,6 +10,7 @@
         <%= office.office_code %>
       </p>
       <p>
+        <i class="icon-road"></i>
         <%= office.street_type.street_type_code.titleize %>. <%= office.street_name %> <%= office.street_number %>
         <% if !office.building.nil? %>
         <%= office.building.titleize %>
@@ -19,12 +20,10 @@
         <% end %>
         <% if !office.floor_office.nil? %>
         <%= office.floor_office %>
-        <% end %>
-      </p>
-      <p>
+        <% end %><br />
         <%= office.town.name %> &#8226;
         <%= office.zipcode.zipcode %> &#8226;
-        <%= office.province.name %>
+        <%= office.province.name_and_region %>
       </p>
       <p>
         <span style="font-weight: bold;">

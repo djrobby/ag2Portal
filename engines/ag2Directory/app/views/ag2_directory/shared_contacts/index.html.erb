@@ -17,6 +17,7 @@
     </thead>
     <tbody>
       <% @shared_contacts.each do |contact| %>
+      <%= render :partial => 'layouts/ag2_directory/sharedcontactinfo', :locals => { :contact => contact } %>
       <tr>
         <td><%= contact.company %></td>
         <td><%= contact.last_name + ', ' + contact.first_name %></td>
@@ -27,7 +28,7 @@
         <% end %> </td>
         <td><%= contact.cellular unless contact.cellular.blank? %></td>
         <td><%= contact.email %></td>
-        <td><%= link_to contact, :class => 'btn btn-mini' do %> <i class="icon-eye-open"></i> <% end %>
+        <td><a data-toggle="modal" href="#contactinfo<%= contact.id.to_s %>" class="btn btn-mini"><i class="icon-eye-open"></i></a>
         <%= link_to edit_shared_contact_path(contact), :class => 'btn btn-mini' do %> <i class="icon-edit"></i> <% end %>
         <%= link_to(contact, :data => { :confirm => I18n.t("are_you_sure") }, :method => :delete, :class => 'btn btn-mini') do %> <i class="icon-trash"></i> <% end %> </td>
       </tr>
