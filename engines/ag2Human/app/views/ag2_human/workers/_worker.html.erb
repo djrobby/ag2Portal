@@ -1,8 +1,8 @@
 <tr>
   <td><%= link_to worker.worker_code, worker %></td>
   <td><%= worker.full_name %></td>
-  <td><%= Company.find(worker.company).name unless worker.company.nil? %></td>
-  <td><%= Office.find(worker.office).name unless worker.office.nil? %></td>
-  <td><%= link_to edit_worker_path(worker), :class => 'btn btn-mini' do %> <i class="icon-edit"></i> <% end %>
-  <%= link_to(worker, :data => { :confirm => "Are you sure?" }, :method => :delete, :class => 'btn btn-mini') do %> <i class="icon-trash"></i> <% end %> </td>
+  <td><%= worker.company.name unless worker.company.nil? %></td>
+  <td><%= worker.office.name unless worker.office.nil? %></td>
+  <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => Worker, :path => edit_worker_path(worker) } %>
+  <%= render :partial => '/layouts/crud/delete', :locals => { :model => Worker, :path => worker, :msg => I18n.t("activerecord.models.worker"), :txt => worker.full_name } %> </td>
 </tr>

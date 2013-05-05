@@ -5,7 +5,7 @@ es:
     attributes:
       company:
         name: "Nombre"
-        fiscal_id: "Id Fiscal (CIF/NIF)"
+        fiscal_id: "Id Fiscal CIF/NIF"
         province: "Provincia"
         province_id: "Provincia"
         town: "Población"
@@ -21,7 +21,7 @@ es:
         floor_office: "Oficina"
         phone: "Teléfono"
         fax: "Fax"
-        cellular: "Teléfono móvil"
+        cellular: "Móvil"
         email: "Email"
         invoice_code: "Código/Serie"
         invoice_header: "Cabecera de página"

@@ -13,14 +13,5 @@ en:
         btn_show: "Show Contact"
       new:
         title: "New Contact"
-      col_company: "Company"
-      col_name: "Full Name"
-      col_office: "Office"
-      col_phone: "Phone"
-      col_cellular: "Cellular"
-      col_email: "Email"
-      col_position: "Position"
-      col_dept: "Dept"
-      col_department: "Department"
       back_to_main_page: "Back to ag2CorporateContacts"
         

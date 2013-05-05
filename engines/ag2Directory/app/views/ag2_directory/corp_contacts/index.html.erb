@@ -59,12 +59,12 @@
   <col width="8%" />
   <thead>
     <tr>
-      <th><%= t :"ag2_directory.corp_contacts.col_name" %></th>
-      <th><%= t :"ag2_directory.corp_contacts.col_position" %></th>
-      <th><%= t :"ag2_directory.corp_contacts.col_dept" %></th>
-      <th><%= t :"ag2_directory.corp_contacts.col_phone" %></th>
-      <th><%= t :"ag2_directory.corp_contacts.col_cellular" %></th>
-      <th><%= t :"ag2_directory.corp_contacts.col_email" %></th>
+      <th><%= t :"activerecord.attributes.corp_contact.full_name" %></th>
+      <th><%= t :"activerecord.attributes.corp_contact.position" %></th>
+      <th><%= t :"activerecord.attributes.corp_contact.dept" %></th>
+      <th><%= t :"activerecord.attributes.corp_contact.corp_phone" %></th>
+      <th><%= t :"activerecord.attributes.corp_contact.corp_cellular_long" %></th>
+      <th><%= t :"activerecord.attributes.corp_contact.email" %></th>
       <th></th>
     </tr>
   </thead>
@@ -95,4 +95,4 @@
 <% end %>
 
 <%= render :partial => '/layouts/crud/new', :locals => { :model => CorpContact, :path => new_corp_contact_path, :txt => I18n.t("ag2_directory.corp_contacts.index.btn_new") } %>
-<%= link_to I18n.t("back_to_root", :scope => :"ag2_directory.corp_contacts.index"), ag2_directory.root_path %>
+<%= link_to I18n.t("ag2_directory.corp_contacts.index.back_to_root"), ag2_directory.root_path %>

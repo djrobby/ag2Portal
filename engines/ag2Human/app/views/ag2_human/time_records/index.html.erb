@@ -17,20 +17,18 @@
     <div class="span3">
       <div class="well sidebar-nav">
         <%= form_tag "time_records", :method => 'get' do %>
-        <%= label_tag I18n.t("label_worker", :scope => :"ag2_human.time_records.index"), nil, :class => 'form-label' %>
+        <%= label_tag I18n.t("ag2_human.time_records.index.label_worker"), nil, :class => 'form-label' %>
         <%= select_tag "Worker", options_from_collection_for_select(Worker.all, "id", "full_name"), :prompt => "", :class => 'x-large-text-field shrinked' %>
-        <%= label_tag I18n.t("label_date", :scope => :"ag2_human.time_records.index"), nil, :class => 'form-label' %>
+        <%= label_tag I18n.t("ag2_human.time_records.index.label_date"), nil, :class => 'form-label' %>
         <%= text_field_tag "Date", params[:date], :class =>  'x-large-text-field shrinked date_picker' %>
-        <%= label_tag I18n.t("label_type", :scope => :"ag2_human.time_records.index"), nil, :class => 'form-label' %>
+        <%= label_tag I18n.t("ag2_human.time_records.index.label_type"), nil, :class => 'form-label' %>
         <%= select_tag "Type", options_from_collection_for_select(TimerecordType.all, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked' %>
-        <%= label_tag I18n.t("label_code", :scope => :"ag2_human.time_records.index"), nil, :class => 'form-label' %>
+        <%= label_tag I18n.t("ag2_human.time_records.index.label_code"), nil, :class => 'form-label' %>
         <%= select_tag "Code", options_from_collection_for_select(TimerecordCode.all, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked' %>
-        <%= submit_tag I18n.t("btn_apply", :scope => :"ag2_human.time_records.index"), :class => 'btn btn-primary' %>
+        <%= submit_tag I18n.t("ag2_human.time_records.index.btn_apply"), :class => 'btn btn-primary' %>
         <% end %>
-        <%= link_to I18n.t("btn_new", :scope => :"ag2_human.time_records.index"), new_time_record_path, :class => 'btn btn-primary' %>
-        <br />
-        <br />
-        <%= link_to I18n.t("back_to_root", :scope => :"ag2_human.time_records.index"), ag2_human.ag2_timerecord_path %>
+        <%= render :partial => '/layouts/crud/new', :locals => { :model => TimeRecord, :path => new_time_record_path, :txt => I18n.t("ag2_human.time_records.index.btn_new") } %>
+        <%= link_to I18n.t("ag2_human.time_records.index.back_to_root"), ag2_human.ag2_timerecord_path %>
       </div><!-- /.sidebar-nav -->
     </div><!-- /.span3 -->
 
@@ -38,25 +36,25 @@
       <table class="table table-condensed table-striped shrinked">
         <thead>
           <tr>
-            <th><%=t :"ag2_human.time_records.col_worker" %></th>
-            <th><%=t :"ag2_human.time_records.col_date" %></th>
-            <th><%=t :"ag2_human.time_records.col_time" %></th>
-            <th><%=t :"ag2_human.time_records.col_type" %></th>
-            <th><%=t :"ag2_human.time_records.col_code" %></th>
+            <th><%=t :"activerecord.attributes.time_record.worker" %></th>
+            <th><%=t :"activerecord.attributes.time_record.timerecord_date" %></th>
+            <th><%=t :"activerecord.attributes.time_record.timerecord_time" %></th>
+            <th><%=t :"activerecord.attributes.time_record.timerecord_type" %></th>
+            <th><%=t :"activerecord.attributes.time_record.timerecord_code" %></th>
             <th></th>
           </tr>
         </thead>
         <tbody>
           <% @time_records.each do |record| %>
           <tr>
-            <td><%= Worker.find(record.worker).full_name %></td>
+            <td><%= record.worker.full_name %></td>
             <td><%= record.timerecord_date.strftime("%d/%m/%Y") %></td>
             <td><%= record.timerecord_time.strftime("%H:%M") %></td>
-            <td><%= TimerecordType.find(record.timerecord_type).name %></td>
-            <td><%= TimerecordCode.find(record.timerecord_code).name.titleize %></td>
+            <td><%= record.timerecord_type.name %></td>
+            <td><%= record.timerecord_code.name.titleize %></td>
             <td><%= link_to record, :class => 'btn btn-mini' do %> <i class="icon-eye-open"></i> <% end %>
-            <%= link_to edit_time_record_path(record), :class => 'btn btn-mini' do %> <i class="icon-edit"></i> <% end %>
-            <%= link_to(record, :data => { :confirm => I18n.t("are_you_sure") }, :method => :delete, :class => 'btn btn-mini') do %> <i class="icon-trash"></i> <% end %> </td>
+            <%= render :partial => '/layouts/crud/edit', :locals => { :model => TimeRecord, :path => edit_time_record_path(record) } %>
+            <%= render :partial => '/layouts/crud/delete', :locals => { :model => TimeRecord, :path => record, :msg => I18n.t("activerecord.models.time_record"), :txt => record.worker.full_name + " - " + record.timerecord_date.strftime("%d/%m/%Y") + " " + record.timerecord_time.strftime("%H:%M") } %> </td>
           </tr>
           <% end %>
         </tbody>

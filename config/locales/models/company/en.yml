@@ -21,7 +21,7 @@ en:
         floor_office: "Office"
         phone: "Phone"
         fax: "Fax"
-        cellular: "Cellular Phone"
+        cellular: "Cellular"
         email: "Email"
         invoice_code: "Code"
         invoice_header: "Page header"

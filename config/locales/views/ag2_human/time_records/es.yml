@@ -18,9 +18,4 @@ es:
         btn_show: "Ver Marcaje"
       new:
         title: "Nuevo Marcaje"
-      col_worker: "Trabajador"
-      col_date: "Fecha"
-      col_time: "Hora"
-      col_type: "Tipo"
-      col_code: "Código"
       back_to_main_page: "Volver a Marcajes"

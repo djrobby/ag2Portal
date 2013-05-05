@@ -131,6 +131,10 @@
   <label class="multi-field-label-two"> <%= f.association :collective_agreement, collection: CollectiveAgreement.all(order: 'name'), :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
 </div>
 <div>
+  <label class="multi-field-label-two"> <%= f.input :affiliation_id, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.input :contribution_account_code, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+</div>
+<div>
   <label class="multi-field-label-two"> <%= f.association :professional_group, collection: ProfessionalGroup.all(order: 'name'), :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
   <label class="multi-field-label-two"> <%= f.association :degree_type, collection: DegreeType.all(order: 'name'), :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
 </div>
@@ -138,10 +142,6 @@
 <div>
   <label class="multi-field-label-two"> <%= f.association :worker_type, collection: WorkerType.all(order: 'description'), :as => :radio_buttons, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
   <label class="multi-field-label-two"> <%= f.input :position, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
-</div>
-<div>
-  <label class="multi-field-label-two"> <%= f.input :affiliation_id, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
-  <label class="multi-field-label-two"> <%= f.input :contribution_account_code, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
 </div>
 <div>
   <label class="multi-field-label-two"> <%= f.input :corp_phone, :input_html => { :class => 'large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
@@ -155,12 +155,12 @@
   <label class="multi-field-label-two"> <%= f.association :user, collection: User.all(order: 'name'), :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
   <label class="multi-field-label-two"> <%= f.input :email, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
 </div>
-<h4>Wage Info</h4>
+<h4><%=t 'ag2_human.workers.wage_info' %></h4>
 <div>
   <label class="multi-field-label-two"> <%= f.input :gross_salary, :input_html => { :class => 'large-text-field number-text-field' }, :label_html => { :class => 'form-label' } %> </label>
   <label class="multi-field-label-two"> <%= f.input :variable_salary, :input_html => { :class => 'large-text-field number-text-field' }, :label_html => { :class => 'form-label' } %> </label>
 </div>
-<h4>Personal Info</h4>
+<h4><%=t 'ag2_human.workers.personal_info' %></h4>
 <div>
   <label class="multi-field-label-two"> <%= f.input :own_phone, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
   <label class="multi-field-label-two"><%= f.input :own_cellular, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
@@ -185,8 +185,8 @@
   <tbody>
     <tr class="form-tr">
       <td class="form-td-three left-winged"> <%= f.button :submit, :class => 'btn-primary' %> </td>
-      <td class="form-td-three centered"><a href="#" id="to_uppercase_btn" class="btn btn-warning">To Upper case</a></td>
-      <td class="form-td-three right-winged"><a href="#" id="generate_code_btn" class="btn btn-warning">Worker code</a></td>
+      <td class="form-td-three centered"><a href="#" id="to_uppercase_btn" class="btn btn-warning"><%=t 'ag2_human.workers.to_uppercase_btn' %></a></td>
+      <td class="form-td-three right-winged"><a href="#" id="generate_code_btn" class="btn btn-warning"><%=t 'ag2_human.workers.generate_code_btn' %></a></td>
     </tr>
   </tbody>
 </table>

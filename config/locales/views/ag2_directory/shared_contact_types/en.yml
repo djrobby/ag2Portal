@@ -14,6 +14,5 @@ en:
         btn_show: "Show Contact type"
       new:
         title: "New Contact type"
-      col_name: "Name"
       back_to_main_page: "Back to Shared contact types"
         

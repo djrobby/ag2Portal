@@ -13,6 +13,5 @@ en:
         btn_show: "Show TimeRecord type"
       new:
         title: "New TimeRecord type"
-      col_name: "Type"
       back_to_main_page: "Back to TimeRecord types"
         

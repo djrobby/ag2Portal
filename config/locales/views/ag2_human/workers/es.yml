@@ -1,0 +1,24 @@
+es:
+  ag2_human:
+    workers:
+      index:
+        title: "Trabajadores"
+        btn_new: "Nuevo Trabajador"
+        back_to_root: "Volver a ag2Human"
+        label_office: "Oficina"
+        label_company: "Empresa"
+        label_others: "Otros"
+        btn_apply: "Aplicar Filtro"
+      show:
+        title: "Trabajador"
+        btn_edit: "Editar Trabajador"
+      edit:
+        title: "Editar Trabajador"
+        btn_show: "Ver Trabajador"
+      new:
+        title: "Nuevo Trabajador"
+      back_to_main_page: "Volver a Trabajadores"
+      wage_info: "Información Salarial"
+      personal_info: "Información Personal"
+      to_uppercase_btn: "En Mayúsculas"
+      generate_code_btn: "Código de Trabajador"

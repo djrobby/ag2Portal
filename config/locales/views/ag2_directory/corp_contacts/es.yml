@@ -13,13 +13,4 @@ es:
         btn_show: "Ver Contacto"
       new:
         title: "Nuevo Contacto"
-      col_company: "Empresa"
-      col_name: "Apellidos y Nombre"
-      col_office: "Oficina"
-      col_phone: "Teléfono"
-      col_cellular: "Móvil"
-      col_email: "Email"
-      col_position: "Puesto"
-      col_dept: "Dpto"
-      col_department: "Departamento"
       back_to_main_page: "Volver a ag2CorporateContacts"

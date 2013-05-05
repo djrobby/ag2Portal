@@ -14,10 +14,10 @@
   <col width="30%" />
   <thead>
     <tr>
-      <th><%=t :"ag2_directory.corp_contacts.col_name" %></th>
-      <th><%=t :"ag2_directory.corp_contacts.col_phone" %></th>
-      <th><%=t :"ag2_directory.corp_contacts.col_cellular" %></th>
-      <th><%=t :"ag2_directory.corp_contacts.col_email" %></th>
+      <th><%= t :"activerecord.attributes.corp_contact.full_name" %></th>
+      <th><%= t :"activerecord.attributes.corp_contact.corp_phone" %></th>
+      <th><%= t :"activerecord.attributes.corp_contact.corp_cellular_long" %></th>
+      <th><%= t :"activerecord.attributes.corp_contact.email" %></th>
     </tr>
   </thead>
   <tbody>
@@ -40,4 +40,4 @@
   </tbody>
 </table>
 
-<%= link_to I18n.t("back_to_main_page", :scope => :"ag2_directory.corp_contacts"), corp_contacts_path %>
+<%= link_to I18n.t("ag2_directory.corp_contacts.back_to_main_page"), corp_contacts_path %>

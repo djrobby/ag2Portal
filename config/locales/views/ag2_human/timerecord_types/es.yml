@@ -13,5 +13,4 @@ es:
         btn_show: "Ver Tipo de marcaje"
       new:
         title: "Nuevo Tipo de marcaje"
-      col_name: "Tipo"
       back_to_main_page: "Volver a Tipos de marcaje"

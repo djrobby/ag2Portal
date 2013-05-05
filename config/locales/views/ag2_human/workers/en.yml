@@ -1,0 +1,24 @@
+en:
+  ag2_human:
+    workers:
+      index:
+        title: "Workers"
+        btn_new: "New Worker"
+        back_to_root: "Back to ag2Human"
+        label_office: "Office"
+        label_company: "Company"
+        label_others: "Others"
+        btn_apply: "Apply Filter"
+      show:
+        title: "Worker"
+        btn_edit: "Edit Worker"
+      edit:
+        title: "Edit Worker"
+        btn_show: "Show Worker"
+      new:
+        title: "New Worker"
+      back_to_main_page: "Back to Workers"
+      wage_info: "Wage Info"
+      personal_info: "Personal Info"
+      to_uppercase_btn: "To Uppercase"
+      generate_code_btn: "Worker code"

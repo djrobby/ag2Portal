@@ -1,17 +1,17 @@
 <%= render '/layouts/ag2_directory/sharedcontactsbreadcrumb' %>
-<%= render :partial => '/layouts/searchhead', :locals => { :title => I18n.t("title", :scope => :"ag2_directory.shared_contacts.index"), :path => shared_contacts_path } %>
+<%= render :partial => '/layouts/searchhead', :locals => { :title => I18n.t("ag2_directory.shared_contacts.index.title"), :path => shared_contacts_path } %>
 
 <div class="span11">
   <%= render :partial => '/layouts/lettershead', :locals => { :controller => "shared_contacts", :action => "index" } %>
   <table class="table table-condensed table-striped shrinked">
     <thead>
       <tr>
-        <th><%= t :"ag2_directory.shared_contacts.col_company" %></th>
-        <th><%= t :"ag2_directory.shared_contacts.col_name" %></th>
-        <th><%= t :"ag2_directory.shared_contacts.col_type" %></th>
-        <th><%= t :"ag2_directory.shared_contacts.col_phone" %></th>
-        <th><%= t :"ag2_directory.shared_contacts.col_cellular" %></th>
-        <th><%= t :"ag2_directory.shared_contacts.col_email" %></th>
+        <th><%= t :"activerecord.attributes.shared_contact.company" %></th>
+        <th><%= t :"activerecord.attributes.shared_contact.full_name" %></th>
+        <th><%= t :"activerecord.attributes.shared_contact.shared_contact_type" %></th>
+        <th><%= t :"activerecord.attributes.shared_contact.phone" %></th>
+        <th><%= t :"activerecord.attributes.shared_contact.cellular" %></th>
+        <th><%= t :"activerecord.attributes.shared_contact.email" %></th>
         <th></th>
       </tr>
     </thead>

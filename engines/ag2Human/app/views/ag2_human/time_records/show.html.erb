@@ -6,20 +6,20 @@
     <tr>
       <td>Id:</td>
       <td><%= @time_record.id %></td>
-      <td><%=t :"ag2_human.time_records.col_worker" %>:</td>
-      <td><%= Worker.find(@time_record.worker).full_name %></td>
+      <td><%=t :"activerecord.attributes.time_record.worker" %>:</td>
+      <td><%= @time_record.worker.full_name %></td>
     </tr>
     <tr>
-      <td><%=t :"ag2_human.time_records.col_date" %>:</td>
+      <td><%=t :"activerecord.attributes.time_record.timerecord_date" %>:</td>
       <td><%= @time_record.timerecord_date.strftime("%d/%m/%Y") %></td>
-      <td><%=t :"ag2_human.time_records.col_time" %>:</td>
+      <td><%=t :"activerecord.attributes.time_record.timerecord_time" %>:</td>
       <td><%= @time_record.timerecord_time.strftime("%H:%M") %></td>
     </tr>
     <tr>
-      <td><%=t :"ag2_human.time_records.col_type" %>:</td>
-      <td><%= TimerecordType.find(@time_record.timerecord_type).name %></td>
-      <td><%=t :"ag2_human.time_records.col_code" %>:</td>
-      <td><%= TimerecordCode.find(@time_record.timerecord_code).name.titleize %></td>
+      <td><%=t :"activerecord.attributes.time_record.timerecord_type" %>:</td>
+      <td><%= @time_record.timerecord_type.name %></td>
+      <td><%=t :"activerecord.attributes.time_record.timerecord_code" %>:</td>
+      <td><%= @time_record.timerecord_code.name.titleize %></td>
     </tr>
     <tr>
       <td><%=t :created_at %>:</td>
@@ -30,7 +30,7 @@
   </tbody>
 </table>
 
-<%= link_to I18n.t("btn_edit", :scope => :"ag2_human.time_records.show"), edit_time_record_path(@time_record), :class => 'btn btn-primary' %>
+<%= link_to I18n.t("ag2_human.time_records.show.btn_edit"), edit_time_record_path(@time_record), :class => 'btn btn-primary' %>
 <br />
 <br />
-<%= link_to I18n.t("back_to_main_page", :scope => :"ag2_human.time_records"), time_records_path %>
+<%= link_to I18n.t("ag2_human.time_records.back_to_main_page"), time_records_path %>

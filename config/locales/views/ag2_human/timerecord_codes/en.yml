@@ -13,6 +13,5 @@ en:
         btn_show: "Show TimeRecord code"
       new:
         title: "New TimeRecord code"
-      col_name: "Description"
       back_to_main_page: "Back to TimeRecord codes"
         

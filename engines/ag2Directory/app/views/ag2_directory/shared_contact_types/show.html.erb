@@ -6,7 +6,7 @@
     <tr>
       <td>Id:</td>
       <td><%= @shared_contact_type.id %></td>
-      <td><%=t :"ag2_directory.shared_contact_types.col_name" %>:</td>
+      <td><%=t :"activerecord.attributes.shared_contact_type.name" %>:</td>
       <td><%= @shared_contact_type.name.titleize %></td>
     </tr>
     <tr>
@@ -18,7 +18,7 @@
   </tbody>
 </table>
 
-<%= link_to I18n.t("btn_edit", :scope => :"ag2_directory.shared_contact_types.show"), edit_shared_contact_type_path(@shared_contact_type), :class => 'btn btn-primary' %>
+<%= link_to I18n.t("ag2_directory.shared_contact_types.show.btn_edit"), edit_shared_contact_type_path(@shared_contact_type), :class => 'btn btn-primary' %>
 <br />
 <br />
-<%= link_to I18n.t("back_to_main_page", :scope => :"ag2_directory.shared_contact_types"), shared_contact_types_path %>
+<%= link_to I18n.t("ag2_directory.shared_contact_types.back_to_main_page"), shared_contact_types_path %>

@@ -5,7 +5,7 @@
   <table class="table table-condensed table-striped">
     <thead>
       <tr>
-        <th><%=t :"ag2_directory.shared_contact_types.col_name" %></th>
+        <th><%=t :"activerecord.attributes.shared_contact_type.name" %></th>
         <th></th>
       </tr>
     </thead>
@@ -20,6 +20,6 @@
     </tbody>
   </table>
   <%= render :partial => '/layouts/crud/new', :locals => { :model => SharedContactType, :path => new_shared_contact_type_path, :txt => I18n.t("ag2_directory.shared_contact_types.index.btn_new") } %>
-  <%= link_to I18n.t("back_to_main_app", :scope => :"ag2_directory.shared_contact_types.index"), shared_contacts_path %> |
-  <%= link_to I18n.t("back_to_root", :scope => :"ag2_directory.shared_contact_types.index"), ag2_directory.root_path %>
+  <%= link_to I18n.t("ag2_directory.shared_contact_types.index.back_to_main_app"), shared_contacts_path %> |
+  <%= link_to I18n.t("ag2_directory.shared_contact_types.index.back_to_root"), ag2_directory.root_path %>
 </div>

@@ -10,107 +10,113 @@
     <tr>
       <td>Id:</td>
       <td><%= @worker.id %></td>
-      <td>Worker Code:</td>
+      <td><%=t :"activerecord.attributes.worker.worker_code" %>:</td>
       <td><%= @worker.worker_code unless @worker.worker_code.nil? %></td>
     </tr>
     <tr>
-      <td>Fiscal Id:</td>
+      <td><%=t :"activerecord.attributes.worker.fiscal_id" %>:</td>
       <td><%= @worker.fiscal_id %></td>
-      <td>User:</td>
-      <td><%= User.find(@worker.user).name unless @worker.user.nil? %></td>
+      <td><%=t :"activerecord.attributes.worker.user" %>:</td>
+      <td><%= @worker.user.name unless @worker.user.nil? %></td>
     </tr>
     <tr>
-      <td>Starting at:</td>
+      <td><%=t :"activerecord.attributes.worker.starting_at" %>:</td>
       <td><%= @worker.starting_at.strftime("%d/%m/%Y") unless @worker.starting_at.nil? %></td>
-      <td>Ending at:</td>
+      <td><%=t :"activerecord.attributes.worker.ending_at" %>:</td>
       <td><%= @worker.ending_at.strftime("%d/%m/%Y") unless @worker.ending_at.nil? %></td>
     </tr>
     <tr>
-      <td>Issue starting at:</td>
+      <td><%=t :"activerecord.attributes.worker.issue_starting_at" %>:</td>
       <td><%= @worker.issue_starting_at.strftime("%d/%m/%Y") unless @worker.issue_starting_at.nil? %></td>
-      <td>Borned on:</td>
+      <td><%=t :"activerecord.attributes.worker.borned_on" %>:</td>
       <td><%= @worker.borned_on.strftime("%d/%m/%Y") unless @worker.borned_on.nil? %></td>
     </tr>
     <tr>
-      <td>Office:</td>
-      <td><%= Office.find(@worker.office).name unless @worker.office.nil? %></td>
-      <td>Company:</td>
-      <td><%= Company.find(@worker.company).name unless @worker.company.nil? %></td>
+      <td><%=t :"activerecord.attributes.worker.company" %>:</td>
+      <td><%= @worker.company.name unless @worker.company.nil? %></td>
+      <td><%=t :"activerecord.attributes.worker.office" %>:</td>
+      <td><%= @worker.office.name unless @worker.office.nil? %></td>
     </tr>
     <tr>
-      <td>Contract Type:</td>
-      <td><%= ContractType.find(@worker.contract_type).name unless @worker.contract_type.nil? %></td>
-      <td>Collective AGMT:</td>
-      <td><%= CollectiveAgreement.find(@worker.collective_agreement).name unless @worker.collective_agreement.nil? %></td>
+      <td><%=t :"activerecord.attributes.worker.worker_type" %>:</td>
+      <td><%= @worker.worker_type.description.titleize unless @worker.worker_type.nil? %></td>
+      <td><%=t :"activerecord.attributes.worker.collective_agreement" %>:</td>
+      <td><%= @worker.collective_agreement.name unless @worker.collective_agreement.nil? %></td>
     </tr>
     <tr>
-      <td>Pro Group:</td>
-      <td><%= ProfessionalGroup.find(@worker.professional_group).name unless @worker.professional_group.nil? %></td>
-      <td>Degree Type:</td>
-      <td><%= DegreeType.find(@worker.degree_type).name unless @worker.degree_type.nil? %></td>
+      <td><%=t :"activerecord.attributes.worker.contract_type" %>:</td>
+      <td><%= @worker.contract_type.name unless @worker.contract_type.nil? %></td>
+      <td></td>
+      <td></td>
     </tr>
     <tr>
-      <td>Department:</td>
-      <td><%= Department.find(@worker.department).name unless @worker.department.nil? %></td>
-      <td>Position:</td>
-      <td><%= @worker.position unless @worker.position.nil? %></td>
-    </tr>
-    <tr>
-      <td>Affiliation #:</td>
+      <td><%=t :"activerecord.attributes.worker.affiliation_id" %>:</td>
       <td><%= @worker.affiliation_id %></td>
-      <td>Contribution Account:</td>
+      <td><%=t :"activerecord.attributes.worker.contribution_account_code" %>:</td>
       <td><%= @worker.contribution_account_code unless @worker.contribution_account_code.nil? %></td>
     </tr>
     <tr>
-      <td>Worker Type:</td>
-      <td><%= WorkerType.find(@worker.worker_type).description.titleize unless @worker.worker_type.nil? %></td>
-      <td>Email:</td>
-      <td><%= @worker.email %></td>
+      <td><%=t :"activerecord.attributes.worker.professional_group" %>:</td>
+      <td><%= @worker.professional_group.name unless @worker.professional_group.nil? %></td>
+      <td><%=t :"activerecord.attributes.worker.degree_type" %>:</td>
+      <td><%= @worker.degree_type.name unless @worker.degree_type.nil? %></td>
     </tr>
     <tr>
-      <td>Corp Phone:</td>
+      <td><%=t :"activerecord.attributes.worker.department" %>:</td>
+      <td><%= @worker.department.name unless @worker.department.nil? %></td>
+      <td><%=t :"activerecord.attributes.worker.position" %>:</td>
+      <td><%= @worker.position unless @worker.position.nil? %></td>
+    </tr>
+    <tr>
+      <td><%=t :"activerecord.attributes.worker.corp_phone" %>:</td>
       <td><%= @worker.corp_phone %>
       <% if !@worker.corp_extension.nil? && @worker.corp_extension != '' %>
       (<%= @worker.corp_extension %>)
       <% end %> </td>
-      <td>Corp Cellular:</td>
+      <td><%=t :"activerecord.attributes.worker.corp_cellular_long" %>:</td>
       <td><%= @worker.corp_cellular_long %>
       <% if !@worker.corp_cellular_short.nil? && @worker.corp_cellular_short != '' %>
       (<%= @worker.corp_cellular_short %>)
       <% end %> </td>
     </tr>
     <tr>
-      <td>Created at:</td>
+      <td><%=t :"activerecord.attributes.worker.email" %>:</td>
+      <td><%= @worker.email %></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><%=t :created_at %>:</td>
       <td><%= @worker.created_at.utc.getlocal.strftime("%d/%m/%Y %H:%M:%S") %></td>
-      <td>Updated at:</td>
+      <td><%=t :updated_at %>:</td>
       <td><%= @worker.updated_at.utc.getlocal.strftime("%d/%m/%Y %H:%M:%S") %></td>
     </tr>
   </tbody>
 </table>
 
-<h4>Wage Info</h4>
+<h4><%=t 'ag2_human.workers.wage_info' %></h4>
 <table class="table">
   <tbody>
     <tr>
-      <td>Gross salary:</td>
+      <td><%=t :"activerecord.attributes.worker.gross_salary" %>:</td>
       <td><%= number_to_currency(@worker.gross_salary, :locale => :es) %></td>
-      <td>Variable salary:</td>
+      <td><%=t :"activerecord.attributes.worker.variable_salary" %>:</td>
       <td><%= number_to_currency(@worker.variable_salary, :locale => :es) %></td>
     </tr>
   </tbody>
 </table>
 
-<h4>Personal Info</h4>
+<h4><%=t 'ag2_human.workers.personal_info' %></h4>
 <table class="table">
   <tbody>
     <tr>
-      <td>Own Phone:</td>
+      <td><%=t :"activerecord.attributes.worker.own_phone" %>:</td>
       <td><%= @worker.own_phone %></td>
-      <td>Own Cellular:</td>
+      <td><%=t :"activerecord.attributes.worker.own_cellular" %>:</td>
       <td><%= @worker.own_cellular %></td>
     </tr>
     <tr>
-      <td>Address:</td>
+      <td><%=t :"activerecord.attributes.worker.address" %>:</td>
       <td> <%= @worker.street_type.street_type_code.titleize  %>. <%= @worker.street_name %> <%= @worker.street_number %>
       <% if !@worker.building.nil? %>
       <%= @worker.building.titleize %>
@@ -121,19 +127,19 @@
       <% if !@worker.floor_office.nil? %>
       <%= @worker.floor_office %>
       <% end %> </td>
-      <td>Zip Code:</td>
+      <td><%=t :"activerecord.attributes.worker.zipcode" %>:</td>
       <td><%= @worker.zipcode.zipcode %></td>
     </tr>
     <tr>
-      <td>Town:</td>
+      <td><%=t :"activerecord.attributes.worker.town" %>:</td>
       <td><%= @worker.town.name %></td>
-      <td>Province:</td>
+      <td><%=t :"activerecord.attributes.worker.province" %>:</td>
       <td><%= @worker.province.name_and_region %></td>
     </tr>
   </tbody>
 </table>
 
-<%= link_to 'Edit Worker', edit_worker_path(@worker), :class => 'btn btn-primary' %>
+<%= link_to I18n.t('ag2_human.workers.show.btn_edit'), edit_worker_path(@worker), :class => 'btn btn-primary' %>
 <br />
 <br />
-<%= link_to 'Back to Workers', workers_path %>
+<%= link_to I18n.t('ag2_human.workers.back_to_main_page'), workers_path %>

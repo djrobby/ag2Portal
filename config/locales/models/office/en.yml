@@ -5,7 +5,7 @@ en:
     attributes:
       office:
         name: "Name"
-        office_code: "Office code"
+        office_code: "Code"
         company: "Company"
         company_id: "Company"
         province: "Province"
@@ -23,5 +23,5 @@ en:
         floor_office: "Office"
         phone: "Phone"
         fax: "Fax"
-        cellular: "Cellular Phone"
+        cellular: "Cellular"
         email: "Email"

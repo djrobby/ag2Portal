@@ -18,10 +18,5 @@ en:
         btn_show: "Show Time record"
       new:
         title: "New Time record"
-      col_worker: "Worker"
-      col_date: "Date"
-      col_time: "Time"
-      col_type: "Type"
-      col_code: "Code"
       back_to_main_page: "Back to Time records"
         

@@ -1,6 +1,6 @@
 <%= render '/layouts/ag2_human/workersbreadcrumb' %>
 
-<h3>Workers</h3>
+<h3><%=t '.title' %></h3>
 
 <div class="container-fluid">
   <div class="row-fluid">
@@ -8,17 +8,15 @@
     <div class="span3">
       <div class="well sidebar-nav">
         <%= form_tag "workers", :method => 'get' do %>
-        <%= label_tag "Office", nil, :class => 'form-label' %>
+        <%= label_tag I18n.t("ag2_human.workers.index.label_office"), nil, :class => 'form-label' %>
         <%= select_tag "Office", options_from_collection_for_select(Office.all, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked' %>
-        <%= label_tag "Company", nil, :class => 'form-label' %>
+        <%= label_tag I18n.t("ag2_human.workers.index.label_company"), nil, :class => 'form-label' %>
         <%= select_tag "Company", options_from_collection_for_select(Company.all, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked' %>
-        <%= label_tag "Others", nil, :class => 'form-label' %>
-        <%= text_field_tag :search, params[:search], :class =>  'x-large-text-field shrinked' %>
-        <%= submit_tag "Apply Filter", :class => 'btn btn-primary' %>
+        <%= label_tag I18n.t("ag2_human.workers.index.label_others"), nil, :class => 'form-label' %>
+        <%= text_field_tag :search, params[:search], :class => 'x-large-text-field shrinked' %>
+        <%= submit_tag I18n.t("ag2_human.workers.index.btn_apply"), :class => 'btn btn-primary' %>
         <% end %>
-        <%= link_to 'New Worker', new_worker_path, :class => 'btn btn-primary' %>
-        <br />
-        <br />
+        <%= render :partial => '/layouts/crud/new', :locals => { :model => Worker, :path => new_worker_path, :txt => I18n.t("ag2_human.workers.index.btn_new") } %>
         <%= link_to 'Back to ag2Human', ag2_human.root_path %>
       </div><!-- /.sidebar-nav -->
     </div><!-- /.span3 -->
@@ -28,10 +26,10 @@
       <table class="table table-condensed table-striped shrinked">
         <thead>
           <tr>
-            <th>Code</th>
-            <th>Full Name</th>
-            <th>Company</th>
-            <th>Office</th>
+            <th><%=t :"activerecord.attributes.worker.worker_code" %></th>
+            <th><%=t :"activerecord.attributes.worker.full_name" %></th>
+            <th><%=t :"activerecord.attributes.worker.company" %></th>
+            <th><%=t :"activerecord.attributes.worker.office" %></th>
             <th></th>
           </tr>
         </thead>

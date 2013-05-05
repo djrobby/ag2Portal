@@ -6,38 +6,38 @@
     <tr>
       <td>Id:</td>
       <td><%= @shared_contact.id %></td>
-      <td><%=t :"ag2_directory.shared_contacts.col_fiscal" %>:</td>
+      <td><%=t :"activerecord.attributes.shared_contact.fiscal_id" %>:</td>
       <td><%= @shared_contact.fiscal_id unless @shared_contact.fiscal_id.blank? %></td>
     </tr>
     <tr>
-      <td><%=t :"ag2_directory.shared_contacts.col_company" %>:</td>
+      <td><%=t :"activerecord.attributes.shared_contact.company" %>:</td>
       <td><%= @shared_contact.company unless @shared_contact.company.blank? %></td>
-      <td><%=t :"ag2_directory.shared_contacts.col_name" %>:</td>
+      <td><%=t :"activerecord.attributes.shared_contact.full_name" %>:</td>
       <td><%= @shared_contact.full_name unless @shared_contact.last_name.blank? && @shared_contact.first_name.blank? %></td>
     </tr>
     <tr>
-      <td><%=t :"ag2_directory.shared_contacts.col_position" %>:</td>
+      <td><%=t :"activerecord.attributes.shared_contact.position" %>:</td>
       <td><%= @shared_contact.position unless @shared_contact.position.blank? %></td>
-      <td><%=t :"ag2_directory.shared_contacts.col_type" %>:</td>
+      <td><%=t :"activerecord.attributes.shared_contact.shared_contact_type" %>:</td>
       <td><%= @shared_contact.shared_contact_type.name %></td>
     </tr>
     <tr>
-      <td><%=t :"ag2_directory.shared_contacts.col_phone" %>:</td>
+      <td><%=t :"activerecord.attributes.shared_contact.phone" %>:</td>
       <td><%= @shared_contact.phone %>
       <% if !@shared_contact.extension.blank? %>
       (<%= @shared_contact.extension %>)
       <% end %> </td>
-      <td><%=t :"ag2_directory.shared_contacts.col_fax" %>:</td>
+      <td><%=t :"activerecord.attributes.shared_contact.fax" %>:</td>
       <td><%= @shared_contact.fax %></td>
     </tr>
     <tr>
-      <td><%=t :"ag2_directory.shared_contacts.col_cellular" %>:</td>
+      <td><%=t :"activerecord.attributes.shared_contact.cellular" %>:</td>
       <td><%= @shared_contact.cellular %></td>
-      <td><%=t :"ag2_directory.shared_contacts.col_email" %>:</td>
+      <td><%=t :"activerecord.attributes.shared_contact.email" %>:</td>
       <td><%= @shared_contact.email %></td>
     </tr>
     <tr>
-      <td><%=t :"ag2_directory.shared_contacts.col_address" %>:</td>
+      <td><%=t :"activerecord.attributes.shared_contact.address" %>:</td>
       <td> <%= @shared_contact.street_type.street_type_code.titleize %>. <%= @shared_contact.street_name %> <%= @shared_contact.street_number %>
       <% if !@shared_contact.building.blank? %>
       <%= @shared_contact.building.titleize %>
@@ -52,15 +52,15 @@
       <td></td>
     </tr>
     <tr>
-      <td><%=t :"ag2_directory.shared_contacts.col_town" %>:</td>
+      <td><%=t :"activerecord.attributes.shared_contact.town" %>:</td>
       <td><%= @shared_contact.town.name %></td>
-      <td><%=t :"ag2_directory.shared_contacts.col_province" %>:</td>
+      <td><%=t :"activerecord.attributes.shared_contact.province" %>:</td>
       <td><%= @shared_contact.province.name_and_region %></td>
     </tr>
     <tr>
-      <td><%=t :"ag2_directory.shared_contacts.col_zipcode" %>:</td>
+      <td><%=t :"activerecord.attributes.shared_contact.zipcode" %>:</td>
       <td><%= @shared_contact.zipcode.zipcode %></td>
-      <td><%=t :"ag2_directory.shared_contacts.col_country" %>:</td>
+      <td><%=t :"activerecord.attributes.shared_contact.country" %>:</td>
       <td><%= @shared_contact.country.name %></td>
     </tr>
     <tr>
@@ -72,7 +72,7 @@
   </tbody>
 </table>
 
-<%= link_to I18n.t("btn_edit", :scope => :"ag2_directory.shared_contacts.show"), edit_shared_contact_path(@shared_contact), :class => 'btn btn-primary' %>
+<%= link_to I18n.t("ag2_directory.shared_contacts.show.btn_edit"), edit_shared_contact_path(@shared_contact), :class => 'btn btn-primary' %>
 <br />
 <br />
-<%= link_to I18n.t("back_to_main_page", :scope => :"ag2_directory.shared_contacts"), shared_contacts_path %>
+<%= link_to I18n.t("ag2_directory.shared_contacts.back_to_main_page"), shared_contacts_path %>

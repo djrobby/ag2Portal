@@ -6,7 +6,7 @@
     <tr>
       <td>Id:</td>
       <td><%= @timerecord_type.id %></td>
-      <td><%=t :"ag2_human.timerecord_types.col_name" %>:</td>
+      <td><%=t :"activerecord.attributes.timerecord_type.name" %>:</td>
       <td><%= @timerecord_type.name %></td>
     </tr>
     <tr>
@@ -18,7 +18,7 @@
   </tbody>
 </table>
 
-<%= link_to I18n.t("btn_edit", :scope => :"ag2_human.timerecord_types.show"), edit_timerecord_type_path(@timerecord_type), :class => 'btn btn-primary' %>
+<%= link_to I18n.t("ag2_human.timerecord_types.show.btn_edit"), edit_timerecord_type_path(@timerecord_type), :class => 'btn btn-primary' %>
 <br />
 <br />
-<%= link_to I18n.t("back_to_main_page", :scope => :"ag2_human.timerecord_types"), timerecord_types_path %>
+<%= link_to I18n.t("ag2_human.timerecord_types.back_to_main_page"), timerecord_types_path %>

@@ -14,5 +14,4 @@ es:
         btn_show: "Ver Tipo de contacto"
       new:
         title: "Nuevo Tipo de contacto"
-      col_name: "Nombre"
       back_to_main_page: "Volver a Tipos de contactos compartidos"

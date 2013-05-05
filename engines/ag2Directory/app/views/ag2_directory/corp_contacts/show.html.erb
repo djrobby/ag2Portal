@@ -8,31 +8,31 @@
 <table class="table">
   <tbody>
     <tr>
-      <td><%=t :"ag2_directory.corp_contacts.col_office" %></td>
+      <td><%=t :"activerecord.attributes.corp_contact.office" %></td>
       <td><%= Office.find(@corp_contact.office).name unless @corp_contact.office.nil? %></td>
-      <td><%=t :"ag2_directory.corp_contacts.col_company" %></td>
+      <td><%=t :"activerecord.attributes.corp_contact.company" %></td>
       <td><%= Company.find(@corp_contact.company).name unless @corp_contact.company.nil? %></td>
     </tr>
     <tr>
-      <td><%=t :"ag2_directory.corp_contacts.col_position" %>:</td>
+      <td><%=t :"activerecord.attributes.corp_contact.position" %></td>
       <td><%= @corp_contact.position unless @corp_contact.position.nil? %></td>
-      <td><%=t :"ag2_directory.corp_contacts.col_department" %>:</td>
+      <td><%=t :"activerecord.attributes.corp_contact.department" %></td>
       <td><%= Department.find(@corp_contact.department).name unless @corp_contact.department.nil? %></td>
     </tr>
     <tr>
-      <td><%=t :"ag2_directory.corp_contacts.col_phone" %>:</td>
+      <td><%=t :"activerecord.attributes.corp_contact.corp_phone" %></td>
       <td><%= @corp_contact.corp_phone %>
       <% if !@corp_contact.corp_extension.blank? %>
       (<%= @corp_contact.corp_extension %>)
       <% end %> </td>
-      <td><%=t :"ag2_directory.corp_contacts.col_cellular" %>:</td>
+      <td><%=t :"activerecord.attributes.corp_contact.corp_cellular_long" %></td>
       <td><%= @corp_contact.corp_cellular_long %>
       <% if !@corp_contact.corp_cellular_short.blank? %>
       (<%= @corp_contact.corp_cellular_short %>)
       <% end %> </td>
     </tr>
     <tr>
-      <td><%=t :"ag2_directory.corp_contacts.col_email" %>:</td>
+      <td><%=t :"activerecord.attributes.corp_contact.email" %></td>
       <td><%= @corp_contact.email %></td>
       <td></td>
       <td></td>
