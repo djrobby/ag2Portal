@@ -4,7 +4,7 @@
 <%= image_tag @worker.avatar.url(:small) %> <!-- small image size --> <% elsif session[:resolution] == "SD" %>
 <%= image_tag @worker.avatar.url(:medium) %> <!-- medium image size --> <% else %>
 <%= image_tag @worker.avatar.url %> <!-- big image size --> <% end %>
-<%= @worker.last_name %>, <%= @worker.first_name %> </h3>
+<%= @worker.full_name %> </h3>
 <table class="table">
   <tbody>
     <tr>

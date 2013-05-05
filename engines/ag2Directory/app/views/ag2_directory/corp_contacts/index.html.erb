@@ -5,61 +5,41 @@
 <% @corp_contacts.each do |company| %>
 <!-- Company -->
 <%= render :partial => 'layouts/companyinfo', :locals => { :company => company } %>
-<h4 class="blue-band">
-  <a data-toggle="modal" href="#companyinfo<%= company.id.to_s %>"><%= company.name %></a>
-  <!-- <%= company.name %> -->
-  <span class="blue-separator">| </span><i class="icon-hand-right icon-white"></i>
-  <%= company.fiscal_id  %>
-  <span class="blue-separator">| </span><i class="icon-phone-white"></i>
-  <% if !company.phone.blank? %>
-  <%= company.phone %>
-  <% else %>
-  ...
-  <% end %>
-  <span class="blue-separator">| </span><i class="icon-iphone-white"></i>
-  <% if !company.cellular.blank? %>
-  <%= company.cellular %>
-  <% else %>
-  ...
-  <% end %>
-</h4>
+<h4 class="blue-band"><a data-toggle="modal" href="#companyinfo<%= company.id.to_s %>"><%= company.name %></a><!-- <%= company.name %> --><span class="blue-separator">| </span><i class="icon-hand-right icon-white"></i> <%= company.fiscal_id  %> <span class="blue-separator">| </span><i class="icon-phone-white"></i> <% if !company.phone.blank? %>
+<%= company.phone %>
+<% else %>
+...
+<% end %> <span class="blue-separator">| </span><i class="icon-iphone-white"></i> <% if !company.cellular.blank? %>
+<%= company.cellular %>
+<% else %>
+...
+<% end %> </h4>
 
 <% company.offices.sort_by{ |office| office.name }.each do |office| %>
 <% if (office.corp_contacts.count > 0) %>
 <!-- Office -->
 <%= render :partial => 'layouts/officeinfo', :locals => { :office => office } %>
-<h5 class="yellow-band">
-  <a data-toggle="modal" href="#officeinfo<%= office.id.to_s %>"><%= office.name %></a>
-  <!-- <%= office.name %> -->
-  <span class="yellow-separator">| </span><i class="icon-hand-right"></i>
-  <%= office.office_code  %>
-  <span class="yellow-separator">| </span><i class="icon-phone-black"></i>
-  <% if !office.phone.blank? %>
-  <%= office.phone %>
-  <% else %>
-  ...
-  <% end %>
-  <span class="yellow-separator">| </span><i class="icon-iphone-black"></i> 
-  <% if !office.cellular.blank? %>
-  <%= office.cellular %>
-  <% else %>
-  ...
-  <% end %>
-  <span class="yellow-separator">| </span><i class="icon-road"></i> 
-  <%= office.street_type.street_type_code.titleize  %>. <%= office.street_name %> <%= office.street_number %>
-  <% if !office.building.blank? %>
-  <%= office.building.titleize %>
-  <% end %>
-  <% if !office.floor.blank? %>
-  <%= office.floor %>&ordm;
-  <% end %>
-  <% if !office.floor_office.blank? %>
-  <%= office.floor_office %>
-  <% end %>-
-  <%= office.town.name %>,
-  <%= office.zipcode.zipcode %>
-  <%= office.province.name %>
-</h5>
+<h5 class="yellow-band"><a data-toggle="modal" href="#officeinfo<%= office.id.to_s %>"><%= office.name %></a><!-- <%= office.name %> --><span class="yellow-separator">| </span><i class="icon-hand-right"></i> <%= office.office_code  %> <span class="yellow-separator">| </span><i class="icon-phone-black"></i> <% if !office.phone.blank? %>
+<%= office.phone %>
+<% else %>
+...
+<% end %> <span class="yellow-separator">| </span><i class="icon-iphone-black"></i> <% if !office.cellular.blank? %>
+<%= office.cellular %>
+<% else %>
+...
+<% end %> <span class="yellow-separator">| </span><i class="icon-road"></i> <%= office.street_type.street_type_code.titleize  %>. <%= office.street_name %> <%= office.street_number %>
+<% if !office.building.blank? %>
+<%= office.building.titleize %>
+<% end %>
+<% if !office.floor.blank? %>
+<%= office.floor %>&ordm;
+<% end %>
+<% if !office.floor_office.blank? %>
+<%= office.floor_office %>
+<% end %>-
+<%= office.town.name %>,
+<%= office.zipcode.zipcode %>
+<%= office.province.name %> </h5>
 
 <!-- Contact -->
 <table class="table table-condensed table-striped shrinked fixed">
@@ -79,12 +59,12 @@
   <col width="8%" />
   <thead>
     <tr>
-      <th><%=t :"ag2_directory.corp_contacts.col_name" %></th>
-      <th><%=t :"ag2_directory.corp_contacts.col_position" %></th>
-      <th><%=t :"ag2_directory.corp_contacts.col_dept" %></th>
-      <th><%=t :"ag2_directory.corp_contacts.col_phone" %></th>
-      <th><%=t :"ag2_directory.corp_contacts.col_cellular" %></th>
-      <th><%=t :"ag2_directory.corp_contacts.col_email" %></th>
+      <th><%= t :"ag2_directory.corp_contacts.col_name" %></th>
+      <th><%= t :"ag2_directory.corp_contacts.col_position" %></th>
+      <th><%= t :"ag2_directory.corp_contacts.col_dept" %></th>
+      <th><%= t :"ag2_directory.corp_contacts.col_phone" %></th>
+      <th><%= t :"ag2_directory.corp_contacts.col_cellular" %></th>
+      <th><%= t :"ag2_directory.corp_contacts.col_email" %></th>
       <th></th>
     </tr>
   </thead>
@@ -92,7 +72,7 @@
     <% office.corp_contacts.each do |contact| %>
     <%= render :partial => 'layouts/ag2_directory/corpcontactinfo', :locals => { :contact => contact } %>
     <tr>
-      <td><a data-toggle="modal" href="#contactinfo<%= contact.id.to_s %>"><%= contact.last_name + ', ' + contact.first_name %></a></td>
+      <td><a data-toggle="modal" href="#contactinfo<%= contact.id.to_s %>"><%= contact.full_name %></a></td>
       <!-- <td><%#= link_to contact.last_name + ', ' + contact.first_name, contact %></td> -->
       <td><%= contact.position unless contact.position.blank? %></td>
       <td><%= Department.find(contact.department).code unless contact.department.blank? %></td>
@@ -105,8 +85,8 @@
       (<%= contact.corp_cellular_short %>)
       <% end %> </td>
       <td><%= contact.email %></td>
-      <td><%= link_to edit_corp_contact_path(contact), :class => 'btn btn-mini' do %> <i class="icon-edit"></i> <% end %>
-      <%= link_to(contact, :data => { :confirm => I18n.t("are_you_sure") }, :method => :delete, :class => 'btn btn-mini') do %> <i class="icon-trash"></i> <% end %> </td>
+      <td> <%= render :partial => '/layouts/crud/edit', :locals => { :model => CorpContact, :path => edit_corp_contact_path(contact) } %>
+      <%= render :partial => '/layouts/crud/delete', :locals => { :model => CorpContact, :path => contact, :msg => I18n.t("activerecord.models.corp_contact"), :txt => contact.full_name } %> </td>
     </tr>
     <% end %>
   </tbody>
@@ -114,7 +94,5 @@
 <% end %>
 <% end %>
 
-<%= link_to I18n.t("btn_new", :scope => :"ag2_directory.corp_contacts.index"), new_corp_contact_path, :class => 'btn btn-primary' %>
-<br />
-<br />
+<%= render :partial => '/layouts/crud/new', :locals => { :model => CorpContact, :path => new_corp_contact_path, :txt => I18n.t("ag2_directory.corp_contacts.index.btn_new") } %>
 <%= link_to I18n.t("back_to_root", :scope => :"ag2_directory.corp_contacts.index"), ag2_directory.root_path %>

@@ -13,7 +13,7 @@
       <td><%=t :"ag2_directory.shared_contacts.col_company" %>:</td>
       <td><%= @shared_contact.company unless @shared_contact.company.blank? %></td>
       <td><%=t :"ag2_directory.shared_contacts.col_name" %>:</td>
-      <td><%= @shared_contact.last_name %>, <%= @shared_contact.first_name %></td>
+      <td><%= @shared_contact.full_name unless @shared_contact.last_name.blank? && @shared_contact.first_name.blank? %></td>
     </tr>
     <tr>
       <td><%=t :"ag2_directory.shared_contacts.col_position" %>:</td>

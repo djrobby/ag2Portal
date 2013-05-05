@@ -2,7 +2,7 @@
   <div id="contactinfo<%= contact.id.to_s %>" class="modal hide fade in" style="display: none; ">
     <div class="modal-header">
       <a class="close" data-dismiss="modal">×</a>
-      <h4><%= contact.last_name %>, <%= contact.first_name %></h4>
+      <h4><%= title %></h4>
     </div>
     <div class="modal-body">
       <p>
@@ -11,7 +11,7 @@
         <%= contact.fiscal_id unless contact.fiscal_id.blank? %>
       </p>
       <p>
-        <%= contact.last_name unless contact.last_name.blank? %>, <%= contact.first_name unless contact.first_name.blank? %>
+        <%= contact.full_name unless contact.last_name.blank? && contact.first_name.blank? %>
       </p>
       <p>
         <%= contact.position unless contact.position.blank? %> &#8226;

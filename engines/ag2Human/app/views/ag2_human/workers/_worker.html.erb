@@ -1,6 +1,6 @@
 <tr>
   <td><%= link_to worker.worker_code, worker %></td>
-  <td><%= worker.last_name %>, <%= worker.first_name %></td>
+  <td><%= worker.full_name %></td>
   <td><%= Company.find(worker.company).name unless worker.company.nil? %></td>
   <td><%= Office.find(worker.office).name unless worker.office.nil? %></td>
   <td><%= link_to edit_worker_path(worker), :class => 'btn btn-mini' do %> <i class="icon-edit"></i> <% end %>

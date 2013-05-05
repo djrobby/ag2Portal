@@ -6,21 +6,21 @@
   <table class="table table-condensed table-striped shrinked">
     <thead>
       <tr>
-        <th><%=t :"ag2_directory.shared_contacts.col_company" %></th>
-        <th><%=t :"ag2_directory.shared_contacts.col_name" %></th>
-        <th><%=t :"ag2_directory.shared_contacts.col_type" %></th>
-        <th><%=t :"ag2_directory.shared_contacts.col_phone" %></th>
-        <th><%=t :"ag2_directory.shared_contacts.col_cellular" %></th>
-        <th><%=t :"ag2_directory.shared_contacts.col_email" %></th>
+        <th><%= t :"ag2_directory.shared_contacts.col_company" %></th>
+        <th><%= t :"ag2_directory.shared_contacts.col_name" %></th>
+        <th><%= t :"ag2_directory.shared_contacts.col_type" %></th>
+        <th><%= t :"ag2_directory.shared_contacts.col_phone" %></th>
+        <th><%= t :"ag2_directory.shared_contacts.col_cellular" %></th>
+        <th><%= t :"ag2_directory.shared_contacts.col_email" %></th>
         <th></th>
       </tr>
     </thead>
     <tbody>
       <% @shared_contacts.each do |contact| %>
-      <%= render :partial => 'layouts/ag2_directory/sharedcontactinfo', :locals => { :contact => contact } %>
+      <%= render :partial => 'layouts/ag2_directory/sharedcontactinfo', :locals => { :contact => contact, :title => I18n.t("activerecord.models.shared_contact") } %>
       <tr>
         <td><%= contact.company %></td>
-        <td><%= contact.last_name + ', ' + contact.first_name %></td>
+        <td><%= contact.full_name unless contact.last_name.blank? && contact.first_name.blank? %></td>
         <td><%= contact.shared_contact_type.name unless contact.shared_contact_type.blank? %></td>
         <td><%= contact.phone unless contact.phone.blank? %>
         <% if !contact.extension.blank? %>
@@ -29,15 +29,13 @@
         <td><%= contact.cellular unless contact.cellular.blank? %></td>
         <td><%= contact.email %></td>
         <td><a data-toggle="modal" href="#contactinfo<%= contact.id.to_s %>" class="btn btn-mini"><i class="icon-eye-open"></i></a>
-        <%= link_to edit_shared_contact_path(contact), :class => 'btn btn-mini' do %> <i class="icon-edit"></i> <% end %>
-        <%= link_to(contact, :data => { :confirm => I18n.t("are_you_sure") }, :method => :delete, :class => 'btn btn-mini') do %> <i class="icon-trash"></i> <% end %> </td>
+        <%= render :partial => '/layouts/crud/edit', :locals => { :model => SharedContact, :path => edit_shared_contact_path(contact) } %>
+        <%= render :partial => '/layouts/crud/delete', :locals => { :model => SharedContact, :path => contact, :msg => I18n.t("activerecord.models.shared_contact"), :txt => contact.full_name } %> </td>
       </tr>
       <% end %>
     </tbody>
   </table>
-  <%= link_to I18n.t("btn_new", :scope => :"ag2_directory.shared_contacts.index"), new_shared_contact_path, :class => 'btn btn-primary' %>
-  <br />
-  <br />
+  <%= render :partial => '/layouts/crud/new', :locals => { :model => SharedContact, :path => new_shared_contact_path, :txt => I18n.t("ag2_directory.shared_contacts.index.btn_new") } %>
   <%= link_to I18n.t("go_to_child_app", :scope => :"ag2_directory.shared_contacts.index"), shared_contact_types_path %> |
   <%= link_to I18n.t("back_to_root", :scope => :"ag2_directory.shared_contacts.index"), ag2_directory.root_path %>
 </div>

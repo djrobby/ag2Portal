@@ -9,3 +9,5 @@ en:
   are_you_sure: "Are you sure?"
   created_at: "Created at"
   updated_at: "Updated at"
+  are_you_sure_to_delete: "Are you sure to delete this "
+    

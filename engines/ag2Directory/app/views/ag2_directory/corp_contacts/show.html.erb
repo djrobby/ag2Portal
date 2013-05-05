@@ -4,7 +4,7 @@
 <%= image_tag @corp_contact.avatar.url(:small) %> <!-- small image size --> <% elsif session[:resolution] == "SD" %>
 <%= image_tag @corp_contact.avatar.url(:medium) %> <!-- medium image size --> <% else %>
 <%= image_tag @corp_contact.avatar.url %> <!-- big image size --> <% end %>
-<%= @corp_contact.last_name %>, <%= @corp_contact.first_name %> </h3>
+<%= @corp_contact.full_name %> </h3>
 <table class="table">
   <tbody>
     <tr>

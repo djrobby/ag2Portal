@@ -32,4 +32,8 @@ class SharedContact < ActiveRecord::Base
   def fields_to_uppercase
     self[:fiscal_id].upcase!
   end
+
+  def full_name
+    self.last_name + ", " + self.first_name
+  end
 end

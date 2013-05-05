@@ -6,7 +6,7 @@
       <%= image_tag contact.avatar.url(:small) %> <!-- small image size --> <% elsif session[:resolution] == "SD" %>
       <%= image_tag contact.avatar.url(:medium) %> <!-- medium image size --> <% else %>
       <%= image_tag contact.avatar.url %> <!-- big image size --> <% end %>
-      <%= contact.last_name %>, <%= contact.first_name %> </h4>
+      <%= contact.full_name %> </h4>
     </div>
     <div class="modal-body">
       <p>
