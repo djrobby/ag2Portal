@@ -27,13 +27,7 @@
       <%= render :partial => '/layouts/lettershead', :locals => { :controller => "workers", :action => "index" } %>
       <table class="table table-condensed table-striped shrinked">
         <thead>
-          <tr>
-            <th><%=t :"activerecord.attributes.worker.worker_code" %></th>
-            <th><%=t :"activerecord.attributes.worker.full_name" %></th>
-            <th><%=t :"activerecord.attributes.worker.company" %></th>
-            <th><%=t :"activerecord.attributes.worker.office" %></th>
-            <th></th>
-          </tr>
+          <%= render '/layouts/ag2_human/workersheader' %>
         </thead>
         <tbody>
           <%= render @workers %>

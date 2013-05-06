@@ -9,12 +9,7 @@
       <td><%=t :"activerecord.attributes.shared_contact_type.name" %>:</td>
       <td><%= @shared_contact_type.name.titleize %></td>
     </tr>
-    <tr>
-      <td><%=t :created_at %>:</td>
-      <td><%= @shared_contact_type.created_at.utc.getlocal.strftime("%d/%m/%Y %H:%M:%S") %></td>
-      <td><%=t :updated_at %>:</td>
-      <td><%= @shared_contact_type.updated_at.utc.getlocal.strftime("%d/%m/%Y %H:%M:%S") %></td>
-    </tr>
+    <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @shared_contact_type } %>
   </tbody>
 </table>
 

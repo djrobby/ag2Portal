@@ -85,12 +85,7 @@
       <td></td>
       <td></td>
     </tr>
-    <tr>
-      <td><%=t :created_at %>:</td>
-      <td><%= @worker.created_at.utc.getlocal.strftime("%d/%m/%Y %H:%M:%S") %></td>
-      <td><%=t :updated_at %>:</td>
-      <td><%= @worker.updated_at.utc.getlocal.strftime("%d/%m/%Y %H:%M:%S") %></td>
-    </tr>
+    <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @worker } %>
   </tbody>
 </table>
 

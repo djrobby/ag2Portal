@@ -1,8 +1,8 @@
 <%= render '/layouts/ag2_human/dtypesbreadcrumb' %>
 
-<h3>Edit Degree type</h3>
+<h3><%=t '.title' %></h3>
 
 <%= render 'form' %>
 
-<%= link_to 'Show Degree type', @degree_type %> |
-<%= link_to 'Back to Degree types', degree_types_path %>
+<%= link_to I18n.t('ag2_human.degree_types.edit.btn_show'), @degree_type %> |
+<%= link_to I18n.t('ag2_human.degree_types.back_to_main_page'), degree_types_path %>

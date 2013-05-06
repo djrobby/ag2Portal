@@ -1,57 +1,40 @@
 <%= render '/layouts/ag2_human/dtypesbreadcrumb' %>
 
-<h3>Degree type</h3>
+<h3><%=t '.title' %></h3>
 <table class="table">
   <tbody>
     <tr>
       <td>Id:</td>
       <td><%= @degree_type.id %></td>
-      <td>Code:</td>
+      <td><%=t 'activerecord.attributes.degree_type.dt_code' %>:</td>
       <td><%= @degree_type.dt_code unless @degree_type.dt_code.nil? %></td>
     </tr>
     <tr>
-      <td>Name:</td>
+      <td><%=t 'activerecord.attributes.degree_type.name' %>:</td>
       <td><%= @degree_type.name %></td>
       <td></td>
       <td></td>
     </tr>
-    <tr>
-      <td>Created at:</td>
-      <td><%= @degree_type.created_at.utc.getlocal.strftime("%d/%m/%Y %H:%M:%S") %></td>
-      <td>Updated at:</td>
-      <td><%= @degree_type.updated_at.utc.getlocal.strftime("%d/%m/%Y %H:%M:%S") %></td>
-    </tr>
+    <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @degree_type } %>
   </tbody>
 </table>
 
-<%= link_to 'Edit Degree type', edit_degree_type_path(@degree_type), :class => 'btn btn-primary' %>
+<%= link_to I18n.t('ag2_human.degree_types.show.btn_edit'), edit_degree_type_path(@degree_type), :class => 'btn btn-primary' %>
 <br />
 <br />
 
 <% if (@workers.count > 0) %>
-<h4>Degree type Workers</h4>
+<h4><%=t '.subtable_title' %></h4>
 <table class="table table-condensed table-striped">
   <thead>
-    <tr>
-      <th>Code</th>
-      <th>Full Name</th>
-      <th>Company</th>
-      <th>Office</th>
-    </tr>
+    <%= render '/layouts/ag2_human/workersheader' %>
   </thead>
   <tbody>
-    <% session[:return_to] = 'Degree type' %>
+    <% session[:return_to] = I18n.t('ag2_human.degree_types.show.return_to') %>
     <% session[:return_to_url] = "#{request.protocol}#{request.host_with_port}#{request.fullpath}" %>
-    <% @workers.each do |w| %>
-    <tr>
-      <td><%= link_to w.worker_code, w %></td>
-      <td><%= w.last_name %>, <%= w.first_name %></td>
-      <td><%= Company.find(w.company).name unless w.company.nil? %></td>
-      <td><%= Office.find(w.office).name unless w.office.nil? %></td>
-    </tr>
-    <% end %>
+    <%= render :partial => '/layouts/ag2_human/workers', :locals => { :workers => @workers } %>
   </tbody>
 </table>
 <% end %>
 
-<%= link_to 'Back to Degree types', degree_types_path %>
+<%= link_to I18n.t('ag2_human.degree_types.back_to_main_page'), degree_types_path %>

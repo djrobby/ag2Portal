@@ -1,12 +1,12 @@
 <%= render '/layouts/ag2_human/dtypesbreadcrumb' %>
 
-<h3>Degree types</h3>
+<h3><%=t '.title' %></h3>
 <div class="span7">
   <table class="table table-condensed table-striped">
     <thead>
       <tr>
-        <th>Code</th>
-        <th>Name</th>
+        <th><%=t 'activerecord.attributes.degree_type.ct_code' %></th>
+        <th><%=t 'activerecord.attributes.degree_type.name' %></th>
         <th></th>
       </tr>
     </thead>
@@ -15,15 +15,13 @@
       <tr>
         <td><%= link_to t.dt_code, t %></td>
         <td><%= t.name %></td>
-        <td><%= link_to edit_degree_type_path(t), :class => 'btn btn-mini' do %> <i class="icon-edit"></i> <% end %>
-        <%= link_to(t, :data => { :confirm => "Are you sure?" }, :method => :delete, :class => 'btn btn-mini') do %> <i class="icon-trash"></i> <% end %> </td>
+        <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => DegreeType, :path => edit_degree_type_path(t) } %>
+        <%= render :partial => '/layouts/crud/delete', :locals => { :model => DegreeType, :path => t, :msg => I18n.t("activerecord.models.degree_type"), :txt => t.name } %> </td>
       </tr>
       <% end %>
     </tbody>
   </table>
-  <%= link_to 'New Degree type', new_degree_type_path, :class => 'btn btn-primary' %>
-  <br />
-  <br />
-  <%= link_to 'Go to ag2Workers', workers_path %> |
-  <%= link_to 'Back to ag2Human', ag2_human.root_path %>
+  <%= render :partial => '/layouts/crud/new', :locals => { :model => DegreeType, :path => new_degree_type_path, :txt => I18n.t("ag2_human.degree_types.index.btn_new") } %>
+  <%= link_to I18n.t("ag2_human.degree_types.index.go_to_workers"), workers_path %> |
+  <%= link_to I18n.t("ag2_human.degree_types.index.back_to_root"), ag2_human.root_path %>
 </div>

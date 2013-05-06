@@ -1,57 +1,40 @@
 <%= render '/layouts/ag2_human/departmentsbreadcrumb' %>
 
-<h3>Department</h3>
+<h3><%=t '.title' %></h3>
 <table class="table">
   <tbody>
     <tr>
       <td>Id:</td>
       <td><%= @department.id %></td>
-      <td>Code:</td>
+      <td><%=t 'activerecord.attributes.department.code' %>:</td>
       <td><%= @department.code %></td>
     </tr>
     <tr>
-      <td>Description:</td>
+      <td><%=t 'activerecord.attributes.department.name' %>:</td>
       <td><%= @department.name %></td>
       <td></td>
       <td></td>
     </tr>
-    <tr>
-      <td>Created at:</td>
-      <td><%= @department.created_at.utc.getlocal.strftime("%d/%m/%Y %H:%M:%S") %></td>
-      <td>Updated at:</td>
-      <td><%= @department.updated_at.utc.getlocal.strftime("%d/%m/%Y %H:%M:%S") %></td>
-    </tr>
+    <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @department } %>
   </tbody>
 </table>
 
-<%= link_to 'Edit Department', edit_department_path(@department), :class => 'btn btn-primary' %>
+<%= link_to I18n.t('ag2_human.departments.show.btn_edit'), edit_department_path(@department), :class => 'btn btn-primary' %>
 <br />
 <br />
 
 <% if (@workers.count > 0) %>
-<h4>Department Workers</h4>
+<h4><%=t '.subtable_title' %></h4>
 <table class="table table-condensed table-striped">
   <thead>
-    <tr>
-      <th>Code</th>
-      <th>Full Name</th>
-      <th>Company</th>
-      <th>Office</th>
-    </tr>
+    <%= render '/layouts/ag2_human/workersheader' %>
   </thead>
   <tbody>
-    <% session[:return_to] = 'Department' %>
+    <% session[:return_to] = I18n.t('ag2_human.departments.show.return_to') %>
     <% session[:return_to_url] = "#{request.protocol}#{request.host_with_port}#{request.fullpath}" %>
-    <% @workers.each do |w| %>
-    <tr>
-      <td><%= link_to w.worker_code, w %></td>
-      <td><%= w.last_name %>, <%= w.first_name %></td>
-      <td><%= Company.find(w.company).name unless w.company.nil? %></td>
-      <td><%= Office.find(w.office).name unless w.office.nil? %></td>
-    </tr>
-    <% end %>
+    <%= render :partial => '/layouts/ag2_human/workers', :locals => { :workers => @workers } %>
   </tbody>
 </table>
 <% end %>
 
-<%= link_to 'Back to Departments', departments_path %>
+<%= link_to I18n.t('ag2_human.departments.back_to_main_page'), departments_path %>

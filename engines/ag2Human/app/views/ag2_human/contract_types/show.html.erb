@@ -15,12 +15,7 @@
       <td></td>
       <td></td>
     </tr>
-    <tr>
-      <td><%=t :created_at %>:</td>
-      <td><%= @contract_type.created_at.utc.getlocal.strftime("%d/%m/%Y %H:%M:%S") %></td>
-      <td><%=t :updated_at %>:</td>
-      <td><%= @contract_type.updated_at.utc.getlocal.strftime("%d/%m/%Y %H:%M:%S") %></td>
-    </tr>
+    <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @contract_type } %>
   </tbody>
 </table>
 
@@ -32,24 +27,12 @@
 <h4><%=t '.subtable_title' %></h4>
 <table class="table table-condensed table-striped">
   <thead>
-    <tr>
-      <th><%=t :"activerecord.attributes.worker.worker_code" %></th>
-      <th><%=t :"activerecord.attributes.worker.full_name" %></th>
-      <th><%=t :"activerecord.attributes.worker.company" %></th>
-      <th><%=t :"activerecord.attributes.worker.office" %></th>
-    </tr>
+    <%= render '/layouts/ag2_human/workersheader' %>
   </thead>
   <tbody>
     <% session[:return_to] = I18n.t('ag2_human.contract_types.show.return_to') %>
     <% session[:return_to_url] = "#{request.protocol}#{request.host_with_port}#{request.fullpath}" %>
-    <% @workers.each do |w| %>
-    <tr>
-      <td><%= link_to w.worker_code, w %></td>
-      <td><%= w.last_name %>, <%= w.first_name %></td>
-      <td><%= w.company.name unless w.company.nil? %></td>
-      <td><%= w.office.name unless w.office.nil? %></td>
-    </tr>
-    <% end %>
+    <%= render :partial => '/layouts/ag2_human/workers', :locals => { :workers => @workers } %>
   </tbody>
 </table>
 <% end %>

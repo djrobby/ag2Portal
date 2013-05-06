@@ -1,0 +1,19 @@
+en:
+  ag2_human:
+    departments:
+      index:
+        title: "Departments"
+        btn_new: "New Department"
+        go_to_workers: "Go to ag2Workers"
+        back_to_root: "Back to ag2Human"
+      show:
+        title: "Department"
+        btn_edit: "Edit Department"
+        subtable_title: "Department Workers"
+        return_to: "Back to Department"
+      edit:
+        title: "Edit Department"
+        btn_show: "Show Department"
+      new:
+        title: "New Department"
+      back_to_main_page: "Back to Departments"

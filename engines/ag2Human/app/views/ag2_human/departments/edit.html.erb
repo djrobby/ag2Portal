@@ -1,8 +1,8 @@
 <%= render '/layouts/ag2_human/departmentsbreadcrumb' %>
 
-<h3>Edit Department</h3>
+<h3><%=t '.title' %></h3>
 
 <%= render 'form' %>
 
-<%= link_to 'Show Department', @department %> |
-<%= link_to 'Back to Departments', departments_path %>
+<%= link_to I18n.t('ag2_human.departments.edit.btn_show'), @department %> |
+<%= link_to I18n.t('ag2_human.departments.back_to_main_page'), departments_path %>
