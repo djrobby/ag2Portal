@@ -1,0 +1,19 @@
+es:
+  ag2_human:
+    contract_types:
+      index:
+        title: "Tipos de contrato"
+        btn_new: "Nuevo Tipo de contrato"
+        go_to_workers: "Ir a ag2Workers"
+        back_to_root: "Volver a ag2Human"
+      show:
+        title: "Tipo de contrato"
+        btn_edit: "Editar Tipo de contrato"
+        subtable_title: "Trabajadores del Tipo de contrato"
+        return_to: "Volver a Tipo de contrato"
+      edit:
+        title: "Editar Tipo de contrato"
+        btn_show: "Ver Tipo de contrato"
+      new:
+        title: "Nuevo Tipo de contrato"
+      back_to_main_page: "Volver a Tipos de contrato"

@@ -142,4 +142,7 @@
 <%= link_to I18n.t('ag2_human.workers.show.btn_edit'), edit_worker_path(@worker), :class => 'btn btn-primary' %>
 <br />
 <br />
+<% if !session[:return_to].nil? %>
+<%= link_to session[:return_to], session[:return_to_url] %> |
+<% end %>
 <%= link_to I18n.t('ag2_human.workers.back_to_main_page'), workers_path %>

@@ -1,8 +1,8 @@
 <%= render '/layouts/ag2_human/ctypesbreadcrumb' %>
 
-<h3>Edit Contract type</h3>
+<h3><%=t '.title' %></h3>
 
 <%= render 'form' %>
 
-<%= link_to 'Show Contract type', @contract_type %> |
-<%= link_to 'Back to Contract types', contract_types_path %>
+<%= link_to I18n.t('ag2_human.contract_types.edit.btn_show'), @contract_type %> |
+<%= link_to I18n.t('ag2_human.contract_types.back_to_main_page'), contract_types_path %>

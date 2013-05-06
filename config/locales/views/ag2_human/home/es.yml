@@ -1,0 +1,10 @@
+es:
+  ag2_human:
+    home:
+      index:
+        pro_groups: "Grupos Prfsnales."
+        collective_agmts: "Convenios Colect."
+        degree_types: "Titulaciones"
+        contract_types: "Tipos de Contrato"
+        worker_types: "Tipos Trabajador"
+        departments: "Departamentos"

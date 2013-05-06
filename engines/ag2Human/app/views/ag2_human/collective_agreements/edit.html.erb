@@ -1,8 +1,8 @@
 <%= render '/layouts/ag2_human/cagreementsbreadcrumb' %>
 
-<h3>Edit Collective agreement</h3>
+<h3><%=t '.title' %></h3>
 
 <%= render 'form' %>
 
-<%= link_to 'Show Collective agreement', @collective_agreement %> |
-<%= link_to 'Back to Collective agreements', collective_agreements_path %>
+<%= link_to I18n.t('ag2_human.collective_agreements.edit.btn_show'), @collective_agreement %> |
+<%= link_to I18n.t('ag2_human.collective_agreements.back_to_main_page'), collective_agreements_path %>

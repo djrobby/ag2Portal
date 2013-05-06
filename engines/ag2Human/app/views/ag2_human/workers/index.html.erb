@@ -1,3 +1,5 @@
+<% session[:return_to] = nil %>
+<% session[:return_to_url] = nil %>
 <%= render '/layouts/ag2_human/workersbreadcrumb' %>
 
 <h3><%=t '.title' %></h3>
@@ -17,7 +19,7 @@
         <%= submit_tag I18n.t("ag2_human.workers.index.btn_apply"), :class => 'btn btn-primary' %>
         <% end %>
         <%= render :partial => '/layouts/crud/new', :locals => { :model => Worker, :path => new_worker_path, :txt => I18n.t("ag2_human.workers.index.btn_new") } %>
-        <%= link_to 'Back to ag2Human', ag2_human.root_path %>
+        <%= link_to I18n.t("ag2_human.workers.index.back_to_root"), ag2_human.root_path %>
       </div><!-- /.sidebar-nav -->
     </div><!-- /.span3 -->
 

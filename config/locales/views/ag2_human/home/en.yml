@@ -1,0 +1,10 @@
+en:
+  ag2_human:
+    home:
+      index:
+        pro_groups: "Pro Groups"
+        collective_agmts: "Collective AGMTs"
+        degree_types: "Degree Types"
+        contract_types: "Contract Types"
+        worker_types: "Worker Types"
+        departments: "Departments"

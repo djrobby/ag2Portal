@@ -1,57 +1,57 @@
 <%= render '/layouts/ag2_human/ctypesbreadcrumb' %>
 
-<h3>Contract type</h3>
+<h3><%=t '.title' %></h3>
 <table class="table">
   <tbody>
     <tr>
       <td>Id:</td>
       <td><%= @contract_type.id %></td>
-      <td>Code:</td>
+      <td><%=t 'activerecord.attributes.contract_type.ct_code' %>:</td>
       <td><%= @contract_type.ct_code unless @contract_type.ct_code.nil? %></td>
     </tr>
     <tr>
-      <td>Name:</td>
+      <td><%=t 'activerecord.attributes.contract_type.name' %>:</td>
       <td><%= @contract_type.name %></td>
       <td></td>
       <td></td>
     </tr>
     <tr>
-      <td>Created at:</td>
+      <td><%=t :created_at %>:</td>
       <td><%= @contract_type.created_at.utc.getlocal.strftime("%d/%m/%Y %H:%M:%S") %></td>
-      <td>Updated at:</td>
+      <td><%=t :updated_at %>:</td>
       <td><%= @contract_type.updated_at.utc.getlocal.strftime("%d/%m/%Y %H:%M:%S") %></td>
     </tr>
   </tbody>
 </table>
 
-<%= link_to 'Edit Contract type', edit_contract_type_path(@contract_type), :class => 'btn btn-primary' %>
+<%= link_to I18n.t('ag2_human.contract_types.show.btn_edit'), edit_contract_type_path(@contract_type), :class => 'btn btn-primary' %>
 <br />
 <br />
 
 <% if (@workers.count > 0) %>
-<h4>Contract type Workers</h4>
+<h4><%=t '.subtable_title' %></h4>
 <table class="table table-condensed table-striped">
   <thead>
     <tr>
-      <th>Code</th>
-      <th>Full Name</th>
-      <th>Company</th>
-      <th>Office</th>
+      <th><%=t :"activerecord.attributes.worker.worker_code" %></th>
+      <th><%=t :"activerecord.attributes.worker.full_name" %></th>
+      <th><%=t :"activerecord.attributes.worker.company" %></th>
+      <th><%=t :"activerecord.attributes.worker.office" %></th>
     </tr>
   </thead>
   <tbody>
-    <% session[:return_to] = 'Contract type' %>
+    <% session[:return_to] = I18n.t('ag2_human.contract_types.show.return_to') %>
     <% session[:return_to_url] = "#{request.protocol}#{request.host_with_port}#{request.fullpath}" %>
     <% @workers.each do |w| %>
     <tr>
       <td><%= link_to w.worker_code, w %></td>
       <td><%= w.last_name %>, <%= w.first_name %></td>
-      <td><%= Company.find(w.company).name unless w.company.nil? %></td>
-      <td><%= Office.find(w.office).name unless w.office.nil? %></td>
+      <td><%= w.company.name unless w.company.nil? %></td>
+      <td><%= w.office.name unless w.office.nil? %></td>
     </tr>
     <% end %>
   </tbody>
 </table>
 <% end %>
 
-<%= link_to 'Back to Contract types', contract_types_path %>
+<%= link_to I18n.t('ag2_human.contract_types.back_to_main_page'), contract_types_path %>
