@@ -1,0 +1,19 @@
+es:
+  ag2_human:
+    professional_groups:
+      index:
+        title: "Grupos profesionales"
+        btn_new: "Nuevo Grupo profesional"
+        go_to_workers: "Ir a ag2Workers"
+        back_to_root: "Volver a ag2Human"
+      show:
+        title: "Grupo profesional"
+        btn_edit: "Editar Grupo profesional"
+        subtable_title: "Trabajadores del Grupo profesional"
+        return_to: "Volver a Grupo profesional"
+      edit:
+        title: "Editar Grupo profesional"
+        btn_show: "Ver Grupo profesional"
+      new:
+        title: "Nuevo Grupo profesional"
+      back_to_main_page: "Volver a Grupos profesionales"

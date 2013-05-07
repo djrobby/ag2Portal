@@ -1,8 +1,8 @@
 <%= render '/layouts/ag2_human/wtypesbreadcrumb' %>
 
-<h3>Edit Worker type</h3>
+<h3><%=t '.title' %></h3>
 
 <%= render 'form' %>
 
-<%= link_to 'Show Worker type', @worker_type %> |
-<%= link_to 'Back to Worker types', worker_types_path %>
+<%= link_to I18n.t('ag2_human.worker_types.edit.btn_show'), @worker_type %> |
+<%= link_to I18n.t('ag2_human.worker_types.back_to_main_page'), worker_types_path %>

@@ -6,19 +6,14 @@
     <tr>
       <td>Id:</td>
       <td><%= @worker_type.id %></td>
-      <td>Description:</td>
+      <td><%=t 'activerecord.attributes.worker_type.description' %>:</td>
       <td><%= @worker_type.description.titleize %></td>
     </tr>
-    <tr>
-      <td>Created at:</td>
-      <td><%= @worker_type.created_at.utc.getlocal.strftime("%d/%m/%Y %H:%M:%S") %></td>
-      <td>Updated at:</td>
-      <td><%= @worker_type.updated_at.utc.getlocal.strftime("%d/%m/%Y %H:%M:%S") %></td>
-    </tr>
+    <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @worker_type } %>
   </tbody>
 </table>
 
-<%= link_to 'Edit Worker type', edit_worker_type_path(@worker_type), :class => 'btn btn-primary' %>
+<%= link_to I18n.t('ag2_human.worker_types.show.btn_edit'), edit_worker_type_path(@worker_type), :class => 'btn btn-primary' %>
 <br />
 <br />
 
@@ -26,26 +21,14 @@
 <h4>Worker type Workers</h4>
 <table class="table table-condensed table-striped">
   <thead>
-    <tr>
-      <th>Code</th>
-      <th>Full Name</th>
-      <th>Company</th>
-      <th>Office</th>
-    </tr>
+    <%= render '/layouts/ag2_human/workersheader' %>
   </thead>
   <tbody>
-    <% session[:return_to] = 'Worker type' %>
+    <% session[:return_to] = I18n.t('ag2_human.worker_types.show.return_to') %>
     <% session[:return_to_url] = "#{request.protocol}#{request.host_with_port}#{request.fullpath}" %>
-    <% @workers.each do |w| %>
-    <tr>
-      <td><%= link_to w.worker_code, w %></td>
-      <td><%= w.last_name %>, <%= w.first_name %></td>
-      <td><%= Company.find(w.company).name unless w.company.nil? %></td>
-      <td><%= Office.find(w.office).name unless w.office.nil? %></td>
-    </tr>
-    <% end %>
+    <%= render :partial => '/layouts/ag2_human/workers', :locals => { :workers => @workers } %>
   </tbody>
 </table>
 <% end %>
 
-<%= link_to 'Back to Worker types', worker_types_path %>
+<%= link_to I18n.t('ag2_human.worker_types.back_to_main_page'), worker_types_path %>

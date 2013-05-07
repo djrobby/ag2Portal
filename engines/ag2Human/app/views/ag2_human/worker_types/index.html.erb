@@ -1,13 +1,11 @@
-<% session[:return_to] = nil %>
-<% session[:return_to_url] = nil %>
 <%= render '/layouts/ag2_human/wtypesbreadcrumb' %>
 
-<h3>Worker types</h3>
+<h3><%=t '.title' %></h3>
 <div class="span6">
   <table class="table table-condensed table-striped">
     <thead>
       <tr>
-        <th>Description</th>
+        <th><%=t 'activerecord.attributes.worker_type.description' %></th>
         <th></th>
       </tr>
     </thead>
@@ -15,15 +13,13 @@
       <% @worker_types.each do |t| %>
       <tr>
         <td><%= link_to t.description.titleize, t %></td>
-        <td><%= link_to edit_worker_type_path(t), :class => 'btn btn-mini' do %> <i class="icon-edit"></i> <% end %>
-        <%= link_to(t, :data => { :confirm => "Are you sure?" }, :method => :delete, :class => 'btn btn-mini') do %> <i class="icon-trash"></i> <% end %> </td>
+        <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => WorkerType, :path => edit_worker_type_path(t) } %>
+        <%= render :partial => '/layouts/crud/delete', :locals => { :model => WorkerType, :path => t, :msg => I18n.t("activerecord.models.worker_type"), :txt => t.description } %> </td>
       </tr>
       <% end %>
     </tbody>
   </table>
-  <%= link_to 'New Worker type', new_worker_type_path, :class => 'btn btn-primary' %>
-  <br />
-  <br />
-  <%= link_to 'Go to ag2Workers', workers_path %> |
-  <%= link_to 'Back to ag2Human', ag2_human.root_path %>
+  <%= render :partial => '/layouts/crud/new', :locals => { :model => WorkerType, :path => new_worker_type_path, :txt => I18n.t("ag2_human.worker_types.index.btn_new") } %>
+  <%= link_to I18n.t("ag2_human.worker_types.index.go_to_workers"), workers_path %> |
+  <%= link_to I18n.t("ag2_human.worker_types.index.back_to_root"), ag2_human.root_path %>
 </div>

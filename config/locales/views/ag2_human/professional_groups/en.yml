@@ -1,0 +1,19 @@
+en:
+  ag2_human:
+    professional_groups:
+      index:
+        title: "Professional groups"
+        btn_new: "New Professional group"
+        go_to_workers: "Go to ag2Workers"
+        back_to_root: "Back to ag2Human"
+      show:
+        title: "Professional group"
+        btn_edit: "Edit Professional group"
+        subtable_title: "Professional group Workers"
+        return_to: "Back to Professional group"
+      edit:
+        title: "Edit Professional group"
+        btn_show: "Show Professional group"
+      new:
+        title: "New Professional group"
+      back_to_main_page: "Back to Professional groups"

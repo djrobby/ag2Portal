@@ -1,0 +1,19 @@
+en:
+  ag2_human:
+    worker_types:
+      index:
+        title: "Worker types"
+        btn_new: "New Worker type"
+        go_to_workers: "Go to ag2Workers"
+        back_to_root: "Back to ag2Human"
+      show:
+        title: "Worker type"
+        btn_edit: "Edit Worker type"
+        subtable_title: "Worker type Workers"
+        return_to: "Back to Worker type"
+      edit:
+        title: "Edit Worker type"
+        btn_show: "Show Worker type"
+      new:
+        title: "New Worker type"
+      back_to_main_page: "Back to Worker types"

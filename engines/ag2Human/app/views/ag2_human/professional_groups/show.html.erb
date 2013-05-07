@@ -1,30 +1,25 @@
 <%= render '/layouts/ag2_human/pgroupsbreadcrumb' %>
 
-<h3>Professional group</h3>
+<h3><%=t '.title' %></h3>
 <table class="table">
   <tbody>
     <tr>
       <td>Id:</td>
       <td><%= @professional_group.id %></td>
-      <td>Code:</td>
+      <td><%=t 'activerecord.attributes.professional_group.pg_code' %>:</td>
       <td><%= @professional_group.pg_code unless @professional_group.pg_code.nil? %></td>
     </tr>
     <tr>
-      <td>Name:</td>
+      <td><%=t 'activerecord.attributes.professional_group.name' %>:</td>
       <td><%= @professional_group.name %></td>
       <td></td>
       <td></td>
     </tr>
-    <tr>
-      <td>Created at:</td>
-      <td><%= @professional_group.created_at.utc.getlocal.strftime("%d/%m/%Y %H:%M:%S") %></td>
-      <td>Updated at:</td>
-      <td><%= @professional_group.updated_at.utc.getlocal.strftime("%d/%m/%Y %H:%M:%S") %></td>
-    </tr>
+    <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @professional_group } %>
   </tbody>
 </table>
 
-<%= link_to 'Edit Professional group', edit_professional_group_path(@professional_group), :class => 'btn btn-primary' %>
+<%= link_to I18n.t('ag2_human.professional_groups.show.btn_edit'), edit_professional_group_path(@professional_group), :class => 'btn btn-primary' %>
 <br />
 <br />
 
@@ -32,26 +27,14 @@
 <h4>Professional group Workers</h4>
 <table class="table table-condensed table-striped">
   <thead>
-    <tr>
-      <th>Code</th>
-      <th>Full Name</th>
-      <th>Company</th>
-      <th>Office</th>
-    </tr>
+    <%= render '/layouts/ag2_human/workersheader' %>
   </thead>
   <tbody>
-    <% session[:return_to] = 'Professional group' %>
+    <% session[:return_to] = I18n.t('ag2_human.professional_groups.show.return_to') %>
     <% session[:return_to_url] = "#{request.protocol}#{request.host_with_port}#{request.fullpath}" %>
-    <% @workers.each do |w| %>
-    <tr>
-      <td><%= link_to w.worker_code, w %></td>
-      <td><%= w.last_name %>, <%= w.first_name %></td>
-      <td><%= Company.find(w.company).name unless w.company.nil? %></td>
-      <td><%= Office.find(w.office).name unless w.office.nil? %></td>
-    </tr>
-    <% end %>
+    <%= render :partial => '/layouts/ag2_human/workers', :locals => { :workers => @workers } %>
   </tbody>
 </table>
 <% end %>
 
-<%= link_to 'Back to Professional groups', professional_groups_path %>
+<%= link_to I18n.t('ag2_human.professional_groups.back_to_main_page'), professional_groups_path %>

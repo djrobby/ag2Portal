@@ -15,5 +15,5 @@ es:
         title: "Editar Departmento"
         btn_show: "Ver Departmento"
       new:
-        title: "Nueva Departmento"
+        title: "Nuevo Departmento"
       back_to_main_page: "Volver a Departmentos"
