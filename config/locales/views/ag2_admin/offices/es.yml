@@ -1,0 +1,21 @@
+es:
+  ag2_admin:
+    offices:
+      index:
+        title: "Oficinas"
+        btn_new: "Nueva Oficina"
+        go_to: "Ir a ag2Companies"
+        back_to_root: "Volver a ag2Admin"
+      show:
+        title: "Oficina"
+        btn_edit: "Editar Oficina"
+        subtable_title: "Oficinas de la Empresa"
+        return_to: "Volver a Oficina"
+        show_to: "Ver Empresa"
+      edit:
+        title: "Editar Oficina"
+        btn_show: "Ver Oficina"
+      new:
+        title: "Nueva Empresa"
+      back_to_main_page: "Volver a Oficinas"
+      generate_code_btn: "Código de Oficina"

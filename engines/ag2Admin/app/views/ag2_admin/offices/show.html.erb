@@ -6,23 +6,23 @@
     <tr>
       <td>Id:</td>
       <td><%= @office.id %></td>
-      <td>Company:</td>
-      <td><%= Company.find(@office.company).name unless @office.company.nil? %></td>
+      <td><%=t 'activerecord.attributes.office.company' %>:</td>
+      <td><%= @office.company.name unless @office.company.blank? %></td>
     </tr>
     <tr>
-      <td>Office Code:</td>
+      <td><%=t 'activerecord.attributes.office.office_code' %>:</td>
       <td><%= @office.office_code unless @office.office_code.nil? %></td>
-      <td>Phone:</td>
+      <td><%=t 'activerecord.attributes.office.phone' %>:</td>
       <td><%= @office.phone %></td>
     </tr>
     <tr>
-      <td>Fax:</td>
+      <td><%=t 'activerecord.attributes.office.fax' %>:</td>
       <td><%= @office.fax %></td>
-      <td>Cellular:</td>
+      <td><%=t 'activerecord.attributes.office.cellular' %>:</td>
       <td><%= @office.cellular %></td>
     </tr>
     <tr>
-      <td>Address:</td>
+      <td><%=t 'activerecord.attributes.office.address' %>:</td>
       <td> <%= @office.street_type.street_type_code.titleize  %>. <%= @office.street_name %> <%= @office.street_number %>
       <% if !@office.building.nil? %>
       <%= @office.building.titleize %>
@@ -37,28 +37,23 @@
       <td></td>
     </tr>
     <tr>
-      <td>Town:</td>
+      <td><%=t 'activerecord.attributes.office.town' %>:</td>
       <td><%= @office.town.name %></td>
-      <td>Province:</td>
-      <td><%= @office.province.name %></td>
+      <td><%=t 'activerecord.attributes.office.province' %>:</td>
+      <td><%= @office.province.name_and_region %></td>
     </tr>
     <tr>
-      <td>Zip Code:</td>
+      <td><%=t 'activerecord.attributes.office.zipcode' %>:</td>
       <td><%= @office.zipcode.zipcode %></td>
-      <td>Email:</td>
+      <td><%=t 'activerecord.attributes.office.email' %>:</td>
       <td><%= @office.email %></td>
     </tr>
-    <tr>
-      <td>Created at:</td>
-      <td><%= @office.created_at.utc.getlocal.strftime("%d/%m/%Y %H:%M:%S") %></td>
-      <td>Updated at:</td>
-      <td><%= @office.updated_at.utc.getlocal.strftime("%d/%m/%Y %H:%M:%S") %></td>
-    </tr>
+    <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @office } %>
   </tbody>
 </table>
 
-<%= link_to 'Edit Office', edit_office_path(@office), :class => 'btn btn-primary' %>
+<%= link_to I18n.t('ag2_admin.offices.show.btn_edit'), edit_office_path(@office), :class => 'btn btn-primary' %>
 <br />
 <br />
-<%= link_to 'Show Company', @office.company %> |
-<%= link_to 'Back to Offices', offices_path %>
+<%= link_to I18n.t('ag2_admin.offices.show.show_to'), @office.company %> |
+<%= link_to I18n.t('ag2_admin.offices.back_to_main_page'), offices_path %>

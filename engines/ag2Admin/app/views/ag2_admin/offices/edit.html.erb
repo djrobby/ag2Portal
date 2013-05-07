@@ -1,8 +1,8 @@
 <%= render '/layouts/ag2_admin/officesbreadcrumb' %>
 
-<h3>Edit Office</h3>
+<h3><%=t '.title' %></h3>
 
 <%= render 'form' %>
 
-<%= link_to 'Show Office', @office %> |
-<%= link_to 'Back to Offices', offices_path %>
+<%= link_to I18n.t('ag2_admin.offices.edit.btn_show'), @office %> |
+<%= link_to I18n.t('ag2_admin.offices.back_to_main_page'), offices_path %>

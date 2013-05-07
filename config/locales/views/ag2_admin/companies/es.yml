@@ -1,0 +1,21 @@
+es:
+  ag2_admin:
+    companies:
+      index:
+        title: "Empresas"
+        btn_new: "Nueva Empresa"
+        go_to: "Ir a ag2Offices"
+        back_to_root: "Volver a ag2Admin"
+      show:
+        title: "Empresa"
+        btn_edit: "Editar Empresa"
+        subtable_title: "Oficinas de la Empresa"
+        return_to: "Volver a Empresa"
+        show_to: "Ver Empresa"
+      edit:
+        title: "Editar Empresa"
+        btn_show: "Ver Empresa"
+      new:
+        title: "Nueva Empresa"
+      back_to_main_page: "Volver a Empresas"
+      invoices_info: "Información sobre Facturas de la Empresa"

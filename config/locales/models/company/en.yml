@@ -27,3 +27,4 @@ en:
         invoice_header: "Page header"
         invoice_footer: "Page footer"
         invoice_left_margin: "Page left margin"
+        address: "Address"

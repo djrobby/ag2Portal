@@ -10,19 +10,19 @@
       <td></td>
     </tr>
     <tr>
-      <td>Fiscal Id:</td>
+      <td><%=t 'activerecord.attributes.company.fiscal_id' %>:</td>
       <td><%= @company.fiscal_id %></td>
-      <td>Phone:</td>
+      <td><%=t 'activerecord.attributes.company.phone' %>:</td>
       <td><%= @company.phone %></td>
     </tr>
     <tr>
-      <td>Fax:</td>
+      <td><%=t 'activerecord.attributes.company.fax' %>:</td>
       <td><%= @company.fax %></td>
-      <td>Cellular:</td>
+      <td><%=t 'activerecord.attributes.company.cellular' %>:</td>
       <td><%= @company.cellular %></td>
     </tr>
     <tr>
-      <td>Address:</td>
+      <td><%=t 'activerecord.attributes.company.address' %>:</td>
       <td> <%= @company.street_type.street_type_code.titleize %>. <%= @company.street_name %> <%= @company.street_number %>
       <% if !@company.building.nil? %>
       <%= @company.building.titleize %>
@@ -37,55 +37,50 @@
       <td></td>
     </tr>
     <tr>
-      <td>Town:</td>
+      <td><%=t 'activerecord.attributes.company.town' %>:</td>
       <td><%= @company.town.name %></td>
-      <td>Province:</td>
-      <td><%= @company.province.name %></td>
+      <td><%=t 'activerecord.attributes.company.province' %>:</td>
+      <td><%= @company.province.name_and_region %></td>
     </tr>
     <tr>
-      <td>Zip Code:</td>
+      <td><%=t 'activerecord.attributes.company.zipcode' %>:</td>
       <td><%= @company.zipcode.zipcode %></td>
-      <td>Email:</td>
+      <td><%=t 'activerecord.attributes.company.email' %>:</td>
       <td><%= @company.email %></td>
     </tr>
-    <tr>
-      <td>Created at:</td>
-      <td><%= @company.created_at.utc.getlocal.strftime("%d/%m/%Y %H:%M:%S") %></td>
-      <td>Updated at:</td>
-      <td><%= @company.updated_at.utc.getlocal.strftime("%d/%m/%Y %H:%M:%S") %></td>
-    </tr>
+    <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @company } %>
   </tbody>
 </table>
 
-<h4>Company Invoices Info</h4>
+<h4><%=t 'ag2_admin.companies.invoices_info' %></h4>
 <table class="table table-condensed">
   <tbody>
     <tr>
-      <td>Code:</td>
+      <td><%=t 'activerecord.attributes.company.invoice_code' %>:</td>
       <td><%= @company.invoice_code %></td>
-      <td>Left Margin:</td>
+      <td><%=t 'activerecord.attributes.company.invoice_left_margin' %>:</td>
       <td><%= @company.invoice_left_margin %></td>
     </tr>
     <tr>
-      <td>Header:</td>
+      <td><%=t 'activerecord.attributes.company.invoice_header' %>:</td>
       <td><%= @company.invoice_header %></td>
-      <td>Footer:</td>
+      <td><%=t 'activerecord.attributes.company.invoice_footer' %>:</td>
       <td><%= @company.invoice_footer %></td>
     </tr>
   </tbody>
 </table>
 
-<%= link_to 'Edit Company', edit_company_path(@company), :class => 'btn btn-primary' %>
+<%= link_to I18n.t('ag2_admin.companies.show.btn_edit'), edit_company_path(@company), :class => 'btn btn-primary' %>
 <br />
 <br />
 
 <% if (@offices.count > 0) %>
-<h4>Company Offices</h4>
+<h4><%=t '.subtable_title' %></h4>
 <table class="table table-condensed table-striped">
   <thead>
     <tr>
-      <th>Code</th>
-      <th>Name</th>
+      <th><%=t 'activerecord.attributes.office.office_code' %></th>
+      <th><%=t 'activerecord.attributes.office.name' %></th>
     </tr>
   </thead>
   <tbody>
@@ -101,4 +96,4 @@
 </table>
 <% end %>
 
-<%= link_to 'Back to Companies', companies_path %>
+<%= link_to I18n.t('ag2_admin.companies.back_to_main_page'), companies_path %>

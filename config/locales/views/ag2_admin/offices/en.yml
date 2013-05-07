@@ -1,0 +1,21 @@
+en:
+  ag2_admin:
+    offices:
+      index:
+        title: "Offices"
+        btn_new: "New Office"
+        go_to: "Go to ag2Companies"
+        back_to_root: "Back to ag2Admin"
+      show:
+        title: "Office"
+        btn_edit: "Edit Office"
+        subtable_title: "Company Offices"
+        return_to: "Back to Office"
+        show_to: "Show Company"
+      edit:
+        title: "Edit Office"
+        btn_show: "Show Office"
+      new:
+        title: "New Office"
+      back_to_main_page: "Back to Offices"
+      generate_code_btn: "Office Code"

@@ -1,0 +1,21 @@
+en:
+  ag2_admin:
+    companies:
+      index:
+        title: "Companies"
+        btn_new: "New Company"
+        go_to: "Go to ag2Offices"
+        back_to_root: "Back to ag2Admin"
+      show:
+        title: "Company"
+        btn_edit: "Edit Company"
+        subtable_title: "Company Offices"
+        return_to: "Back to Company"
+        show_to: "Show Company"
+      edit:
+        title: "Edit Company"
+        btn_show: "Show Company"
+      new:
+        title: "New Company"
+      back_to_main_page: "Back to Companies"
+      invoices_info: "Company Invoices Info"
