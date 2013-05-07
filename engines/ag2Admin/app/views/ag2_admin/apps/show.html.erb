@@ -6,32 +6,27 @@
     <tr>
       <td>Id:</td>
       <td><%= @app.id %></td>
-      <td>Site:</td>
-      <td><%= Site.find(@app.site).name unless @app.site.nil? %></td>
+      <td><%=t 'activerecord.attributes.app.site' %>:</td>
+      <td><%= @app.site.name unless @app.site.blank? %></td>
     </tr>
     <tr>
-      <td>Description:</td>
+      <td><%=t 'activerecord.attributes.app.description' %>:</td>
       <td><%= @app.description %></td>
-      <td>Path</td>
+      <td><%=t 'activerecord.attributes.app.path' %>:</td>
       <td><%= @app.site.path %>/<%= @app.path %></td>
     </tr>
     <tr>
-      <td>Picture:</td>
+      <td><%=t 'activerecord.attributes.app.pict_file' %>:</td>
       <td><%= @app.pict_file %></td>
-      <td>Icon:</td>
+      <td><%=t 'activerecord.attributes.app.icon_file' %>:</td>
       <td><%= @app.icon_file %></td>
     </tr>
-    <tr>
-      <td>Created at:</td>
-      <td><%= @app.created_at.utc.getlocal.strftime("%d/%m/%Y %H:%M:%S") %></td>
-      <td>Updated at:</td>
-      <td><%= @app.updated_at.utc.getlocal.strftime("%d/%m/%Y %H:%M:%S") %></td>
-    </tr>
+    <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @app } %>
   </tbody>
 </table>
 
-<%= link_to 'Edit App', edit_app_path(@app), :class => 'btn btn-primary' %>
+<%= link_to I18n.t('ag2_admin.apps.show.btn_edit'), edit_app_path(@app), :class => 'btn btn-primary' %>
 <br />
 <br />
-<%= link_to 'Show Site', @app.site %> |
-<%= link_to 'Back to Apps', apps_path %>
+<%= link_to I18n.t('ag2_admin.apps.show.show_to'), @app.site %> |
+<%= link_to I18n.t('ag2_admin.apps.back_to_main_page'), apps_path %>

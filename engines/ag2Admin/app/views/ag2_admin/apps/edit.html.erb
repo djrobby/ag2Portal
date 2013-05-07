@@ -1,8 +1,8 @@
 <%= render '/layouts/ag2_admin/appsbreadcrumb' %>
 
-<h3>Edit App</h3>
+<h3><%=t '.title' %></h3>
 
 <%= render 'form' %>
 
-<%= link_to 'Show App', @app %> |
-<%= link_to 'Back to Apps', apps_path %>
+<%= link_to I18n.t('ag2_admin.apps.edit.btn_show'), @app %> |
+<%= link_to I18n.t('ag2_admin.apps.back_to_main_page'), apps_path %>

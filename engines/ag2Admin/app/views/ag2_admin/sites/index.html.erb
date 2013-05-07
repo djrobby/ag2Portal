@@ -1,12 +1,12 @@
 <%= render '/layouts/ag2_admin/sitesbreadcrumb' %>
 
-<h3>Sites</h3>
+<h3><%=t '.title' %></h3>
 <div class="span6">
   <table class="table table-condensed table-striped">
     <thead>
       <tr>
-        <th>Name</th>
-        <th>Path</th>
+        <th><%=t 'activerecord.attributes.site.name' %></th>
+        <th><%=t 'activerecord.attributes.site.path' %></th>
         <th></th>
       </tr>
     </thead>
@@ -15,15 +15,13 @@
       <tr>
         <td><%= link_to site.name, site %></td>
         <td><%= site.path %></td>
-        <td><%= link_to edit_site_path(site), :class => 'btn btn-mini' do %> <i class="icon-edit"></i> <% end %>
-        <%= link_to(site, :data => { :confirm => "Are you sure?" }, :method => :delete, :class => 'btn btn-mini') do %> <i class="icon-trash"></i> <% end %> </td>
+        <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => Site, :path => edit_site_path(site) } %>
+        <%= render :partial => '/layouts/crud/delete', :locals => { :model => Site, :path => site, :msg => I18n.t("activerecord.models.site"), :txt => site.name } %> </td>
       </tr>
       <% end %>
     </tbody>
   </table>
-  <%= link_to 'New Site', new_site_path, :class => 'btn btn-primary' %>
-  <br />
-  <br />
-  <%= link_to 'Go to ag2Apps', apps_path %> |
-  <%= link_to 'Back to ag2Admin', ag2_admin.root_path %>
+  <%= render :partial => '/layouts/crud/new', :locals => { :model => Site, :path => new_site_path, :txt => I18n.t("ag2_admin.sites.index.btn_new") } %>
+  <%= link_to I18n.t("ag2_admin.sites.index.go_to"), apps_path %> |
+  <%= link_to I18n.t("ag2_admin.sites.index.back_to_root"), ag2_admin.root_path %>
 </div>

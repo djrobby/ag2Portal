@@ -1,7 +1,7 @@
 en:
   activerecord:
     models:
-      data_import_config: Config
+      data_import_config: Configuration
     attributes:
       data_import_config:
         name: "Name"

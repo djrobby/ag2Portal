@@ -1,0 +1,20 @@
+en:
+  ag2_admin:
+    sites:
+      index:
+        title: "Sites"
+        btn_new: "New Site"
+        go_to: "Go to ag2Apps"
+        back_to_root: "Back to ag2Admin"
+      show:
+        title: "Site"
+        btn_edit: "Edit Site"
+        subtable_title: "Site Apps"
+        return_to: "Back to Site"
+        show_to: "Show Site"
+      edit:
+        title: "Edit Site"
+        btn_show: "Show Site"
+      new:
+        title: "New Site"
+      back_to_main_page: "Back to Sites"

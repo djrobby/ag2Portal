@@ -1,8 +1,8 @@
 <%= render '/layouts/ag2_admin/dataimportbreadcrumb' %>
 
-<h3>Edit Config</h3>
+<h3><%=t '.title' %></h3>
 
 <%= render 'form' %>
 
-<%= link_to 'Show Config', @data_import_config %> |
-<%= link_to 'Back to Data Import Configs', data_import_configs_path %>
+<%= link_to I18n.t('ag2_admin.data_import_configs.edit.btn_show'), @data_import_config %> |
+<%= link_to I18n.t('ag2_admin.data_import_configs.back_to_main_page'), data_import_configs_path %>

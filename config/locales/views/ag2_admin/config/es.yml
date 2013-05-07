@@ -1,0 +1,5 @@
+es:
+  ag2_admin:
+    config:
+      index:
+        configuration: "Configuración"

@@ -1,13 +1,13 @@
 <%= render '/layouts/ag2_admin/dataimportbreadcrumb' %>
 
-<h3>Data Import Configs</h3>
+<h3><%=t '.title' %></h3>
 <div class="span10">
   <table class="table table-condensed table-striped">
     <thead>
       <tr>
-        <th>Name</th>
-        <th>Source</th>
-        <th>({Rails.root})Target</th>
+        <th><%=t 'activerecord.attributes.data_import_config.name' %></th>
+        <th><%=t 'activerecord.attributes.data_import_config.source' %></th>
+        <th><%=t 'activerecord.attributes.data_import_config.target' %></th>
         <th></th>
       </tr>
     </thead>
@@ -15,16 +15,14 @@
       <% @data_import_configs.each do |config| %>
       <tr>
         <td><%= link_to config.name, config %></td>
-        <td><%= config.source unless config.source.nil? %></td>
-        <td><%= config.target unless config.target.nil? %></td>
-        <td><%= link_to edit_data_import_config_path(config), :class => 'btn btn-mini' do %> <i class="icon-edit"></i> <% end %>
-        <%= link_to(config, :data => { :confirm => "Are you sure?" }, :method => :delete, :class => 'btn btn-mini') do %> <i class="icon-trash"></i> <% end %> </td>
+        <td><%= config.source unless config.source.blank? %></td>
+        <td><%= config.target unless config.target.blank? %></td>
+        <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => DataImportConfig, :path => edit_data_import_config_path(config) } %>
+        <%= render :partial => '/layouts/crud/delete', :locals => { :model => DataImportConfig, :path => config, :msg => I18n.t("activerecord.models.data_import_config"), :txt => config.name } %> </td>
       </tr>
       <% end %>
     </tbody>
   </table>
-  <%= link_to 'New Config', new_data_import_config_path, :class => 'btn btn-primary' %>
-  <br />
-  <br />
-  <%= link_to 'Back to ag2Config', ag2_admin.config_path %>
+  <%= render :partial => '/layouts/crud/new', :locals => { :model => DataImportConfig, :path => new_data_import_config_path, :txt => I18n.t("ag2_admin.data_import_configs.index.btn_new") } %>
+  <%= link_to I18n.t("ag2_admin.data_import_configs.index.back_to_root"), ag2_admin.config_path %>
 </div>

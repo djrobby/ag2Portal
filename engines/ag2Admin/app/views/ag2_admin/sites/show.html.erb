@@ -10,37 +10,32 @@
       <td></td>
     </tr>
     <tr>
-      <td>Description:</td>
+      <td><%=t 'activerecord.attributes.site.description' %>:</td>
       <td><%= @site.description %></td>
-      <td>Path</td>
+      <td><%=t 'activerecord.attributes.site.path' %>:</td>
       <td><%= @site.path %></td>
     </tr>
     <tr>
-      <td>Picture:</td>
+      <td><%=t 'activerecord.attributes.site.pict_file' %>:</td>
       <td><%= @site.pict_file %></td>
-      <td>Icon:</td>
+      <td><%=t 'activerecord.attributes.site.icon_file' %>:</td>
       <td><%= @site.icon_file %></td>
     </tr>
-    <tr>
-      <td>Created at:</td>
-      <td><%= @site.created_at.utc.getlocal.strftime("%d/%m/%Y %H:%M:%S") %></td>
-      <td>Updated at:</td>
-      <td><%= @site.updated_at.utc.getlocal.strftime("%d/%m/%Y %H:%M:%S") %></td>
-    </tr>
+    <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @site } %>
   </tbody>
 </table>
 
-<%= link_to 'Edit Site', edit_site_path(@site), :class => 'btn btn-primary' %>
+<%= link_to I18n.t('ag2_admin.sites.show.btn_edit'), edit_site_path(@site), :class => 'btn btn-primary' %>
 <br />
 <br />
 
 <% if (@apps.count > 0) %>
-<h4>Site Apps</h4>
+<h4><%=t '.subtable_title' %></h4>
 <table class="table table-condensed table-striped">
   <thead>
     <tr>
-      <th>Name</th>
-      <th>Path</th>
+      <th><%=t 'activerecord.attributes.app.name' %></th>
+      <th><%=t 'activerecord.attributes.app.path' %></th>
     </tr>
   </thead>
   <tbody>
@@ -54,4 +49,4 @@
 </table>
 <% end %>
 
-<%= link_to 'Back to Sites', sites_path %>
+<%= link_to I18n.t('ag2_admin.sites.back_to_main_page'), sites_path %>

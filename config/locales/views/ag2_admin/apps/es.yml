@@ -1,0 +1,20 @@
+es:
+  ag2_admin:
+    apps:
+      index:
+        title: "Apps"
+        btn_new: "Nueva App"
+        go_to: "Ir a ag2Sites"
+        back_to_root: "Volver a ag2Admin"
+      show:
+        title: "App"
+        btn_edit: "Editar App"
+        subtable_title: "Sitios de la App"
+        return_to: "Volver a App"
+        show_to: "Ver Sitio"
+      edit:
+        title: "Editar App"
+        btn_show: "Ver App"
+      new:
+        title: "Nueva App"
+      back_to_main_page: "Volver a Apps"

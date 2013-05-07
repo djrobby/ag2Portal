@@ -1,7 +1,7 @@
 <%= render '/layouts/ag2_admin/sitesbreadcrumb' %>
 
-<h3>New Site</h3>
+<h3><%=t '.title' %></h3>
 
 <%= render 'form' %>
 
-<%= link_to 'Back to Sites', sites_path %>
+<%= link_to I18n.t('ag2_admin.sites.back_to_main_page'), sites_path %>

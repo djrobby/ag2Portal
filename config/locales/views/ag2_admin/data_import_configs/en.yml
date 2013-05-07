@@ -1,0 +1,16 @@
+en:
+  ag2_admin:
+    data_import_configs:
+      index:
+        title: "ag2DataImport Configurations"
+        btn_new: "New Configuration"
+        back_to_root: "Back to ag2Config"
+      show:
+        title: "Configuration"
+        btn_edit: "Edit Configuration"
+      edit:
+        title: "Edit Configuration"
+        btn_show: "Show Configuration"
+      new:
+        title: "New Configuration"
+      back_to_main_page: "Back to ag2DataImport Configurations"
