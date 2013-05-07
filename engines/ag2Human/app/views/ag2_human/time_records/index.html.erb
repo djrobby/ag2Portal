@@ -17,10 +17,15 @@
     <div class="span3">
       <div class="well sidebar-nav">
         <%= form_tag "time_records", :method => 'get' do %>
+        <!-- Worker -->
         <%= label_tag I18n.t("ag2_human.time_records.index.label_worker"), nil, :class => 'form-label' %>
         <%= select_tag "Worker", options_from_collection_for_select(Worker.all, "id", "full_name"), :prompt => "", :class => 'x-large-text-field shrinked' %>
-        <%= label_tag I18n.t("ag2_human.time_records.index.label_date"), nil, :class => 'form-label' %>
-        <%= text_field_tag "Date", params[:date], :class =>  'x-large-text-field shrinked date_picker' %>
+        <!-- Dates -->
+        <%= label_tag I18n.t("ag2_human.time_records.index.label_from"), nil, :class => 'form-label' %>
+        <%= text_field_tag "From", params[:date], :class =>  'x-large-text-field shrinked date_picker' %>
+        <%= label_tag I18n.t("ag2_human.time_records.index.label_to"), nil, :class => 'form-label' %>
+        <%= text_field_tag "To", params[:date], :class =>  'x-large-text-field shrinked date_picker' %>
+        <!-- Type & Code -->
         <%= label_tag I18n.t("ag2_human.time_records.index.label_type"), nil, :class => 'form-label' %>
         <%= select_tag "Type", options_from_collection_for_select(TimerecordType.all, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked' %>
         <%= label_tag I18n.t("ag2_human.time_records.index.label_code"), nil, :class => 'form-label' %>

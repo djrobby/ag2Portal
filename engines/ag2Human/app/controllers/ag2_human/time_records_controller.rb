@@ -6,7 +6,8 @@ module Ag2Human
     # GET /time_records.json
     def index
       worker = params[:Worker]
-      date = params[:Date]
+      from = params[:From]
+      to = params[:To]
       type = params[:Type]
       code = params[:Code]
 
@@ -17,8 +18,17 @@ module Ag2Human
         if !worker.blank?
           with :worker_id, worker
         end
-        if !date.blank?
-          with :timerecord_date, date
+        if !from.blank?
+          any_of do
+            with(:timerecord_date).greater_than(from)
+            with :timerecord_date, from
+          end
+        end
+        if !to.blank?
+          any_of do
+            with(:timerecord_date).less_than(to)
+            with :timerecord_date, to
+          end
         end
         if !type.blank?
           with :timerecord_type_id, type
