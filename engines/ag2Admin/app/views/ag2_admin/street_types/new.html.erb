@@ -1,7 +1,7 @@
 <%= render '/layouts/ag2_admin/streettypesbreadcrumb' %>
 
-<h3>New Street type</h3>
+<h3><%=t '.title' %></h3>
 
 <%= render 'form' %>
 
-<%= link_to 'Back to Street types', street_types_path %>
+<%= link_to I18n.t('ag2_admin.street_types.back_to_main_page'), street_types_path %>

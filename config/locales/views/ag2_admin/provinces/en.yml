@@ -1,0 +1,21 @@
+en:
+  ag2_admin:
+    provinces:
+      index:
+        title: "Provinces"
+        btn_new: "New Province"
+        go_to_parent: "Go to ag2Regions"
+        go_to_child: "Go to ag2Towns"
+        go_to_link: "Go to ag2ZipCodes"
+        back_to_root: "Back to ag2Admin"
+      show:
+        title: "Province"
+        btn_edit: "Edit Province"
+        subtable_title: "Province Towns"
+        show_to: "Show Region"
+      edit:
+        title: "Edit Province"
+        btn_show: "Show Province"
+      new:
+        title: "New Province"
+      back_to_main_page: "Back to Provinces"

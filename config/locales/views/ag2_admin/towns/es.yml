@@ -1,0 +1,19 @@
+es:
+  ag2_admin:
+    towns:
+      index:
+        title: "Poblaciones"
+        btn_new: "Nueva Población"
+        go_to_parent: "Ir a ag2Provinces"
+        go_to_link: "Ir a ag2ZipCodes"
+        back_to_root: "Volver a ag2Admin"
+      show:
+        title: "Población"
+        btn_edit: "Editar Población"
+        show_to: "Ver Provincia"
+      edit:
+        title: "Editar Población"
+        btn_show: "Ver Población"
+      new:
+        title: "Nueva Población"
+      back_to_main_page: "Volver a Poblaciones"

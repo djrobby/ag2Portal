@@ -64,5 +64,6 @@
   <label class="multi-field-label-two"><%= f.input :invoice_header, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %></label>
   <label class="multi-field-label-two"><%= f.input :invoice_footer, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %></label>
 </div>
+<%= f.input :logo, :as => :file, :label_html => { :class => 'form-label' } %>
 <%= f.button :submit, :class => 'btn-primary' %>
 <% end %>

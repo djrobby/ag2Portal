@@ -1,13 +1,13 @@
 <%= render '/layouts/ag2_admin/zipcodesbreadcrumb' %>
 
-<h3>Zip Codes</h3>
+<h3><%=t '.title' %></h3>
 <div class="span7">
   <table class="table table-condensed table-striped">
     <thead>
       <tr>
-        <th>Zipcode</th>
-        <th>Town</th>
-        <th>Province</th>
+        <th><%=t 'activerecord.attributes.zipcode.zipcode' %></th>
+        <th><%=t 'activerecord.attributes.zipcode.town' %></th>
+        <th><%=t 'activerecord.attributes.zipcode.province' %></th>
         <th></th>
       </tr>
     </thead>
@@ -15,18 +15,16 @@
       <% @zipcodes.each do |zipcode| %>
       <tr>
         <td><%= link_to zipcode.zipcode, zipcode %></td>
-        <td><%= Town.find(zipcode.town).name unless zipcode.town.nil? %></td>
-        <td><%= Province.find(zipcode.province).name_and_region unless zipcode.province.nil? %></td>
-        <td><%= link_to edit_zipcode_path(zipcode), :class => 'btn btn-mini' do %> <i class="icon-edit"></i> <% end %>
-        <%= link_to(zipcode, :data => { :confirm => "Are you sure?" }, :method => :delete, :class => 'btn btn-mini') do %> <i class="icon-trash"></i> <% end %> </td>
+        <td><%= zipcode.town.name unless zipcode.town.blank? %></td>
+        <td><%= zipcode.province.name_and_region unless zipcode.province.blank? %></td>
+        <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => Zipcode, :path => edit_zipcode_path(zipcode) } %>
+        <%= render :partial => '/layouts/crud/delete', :locals => { :model => Zipcode, :path => zipcode, :msg => I18n.t("activerecord.models.zipcode"), :txt => zipcode.zipcode } %> </td>
       </tr>
       <% end %>
     </tbody>
   </table>
-  <%= link_to 'New Zipcode', new_zipcode_path, :class => 'btn btn-primary' %>
-  <br />
-  <br />
-  <%= link_to 'Go to ag2Provinces', provinces_path %> |
-  <%= link_to 'Go to ag2Towns', towns_path %> |
-  <%= link_to 'Back to ag2Admin', ag2_admin.root_path %>
+  <%= render :partial => '/layouts/crud/new', :locals => { :model => Zipcode, :path => new_zipcode_path, :txt => I18n.t("ag2_admin.zipcodes.index.btn_new") } %>
+  <%= link_to I18n.t("ag2_admin.zipcodes.index.go_to_parent"), provinces_path %> |
+  <%= link_to I18n.t("ag2_admin.zipcodes.index.go_to_link"), towns_path %> |
+  <%= link_to I18n.t("ag2_admin.zipcodes.index.back_to_root"), ag2_admin.root_path %>
 </div>

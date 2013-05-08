@@ -1,13 +1,13 @@
 <%= render '/layouts/ag2_admin/townsbreadcrumb' %>
 
-<h3>Towns</h3>
-<div class="span7">
+<h3><%=t '.title' %></h3>
+<div class="span8">
   <table class="table table-condensed table-striped">
     <thead>
       <tr>
-        <th>Name</th>
-        <th>Province</th>
-        <th>INE CMun</th>
+        <th><%=t 'activerecord.attributes.town.name' %></th>
+        <th><%=t 'activerecord.attributes.town.province' %></th>
+        <th><%=t 'activerecord.attributes.town.ine_cmun' %></th>
         <th></th>
       </tr>
     </thead>
@@ -15,18 +15,16 @@
       <% @towns.each do |town| %>
       <tr>
         <td><%= link_to town.name, town %></td>
-        <td><%= Province.find(town.province).name_and_region unless town.province.nil? %></td>
+        <td><%= town.province.name_and_region unless town.province.blank? %></td>
         <td><%= town.ine_cmun %></td>
-        <td><%= link_to edit_town_path(town), :class => 'btn btn-mini' do %> <i class="icon-edit"></i> <% end %>
-        <%= link_to(town, :data => { :confirm => "Are you sure?" }, :method => :delete, :class => 'btn btn-mini') do %> <i class="icon-trash"></i> <% end %> </td>
+        <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => Town, :path => edit_town_path(town) } %>
+        <%= render :partial => '/layouts/crud/delete', :locals => { :model => Town, :path => town, :msg => I18n.t("activerecord.models.town"), :txt => town.name } %> </td>
       </tr>
       <% end %>
     </tbody>
   </table>
-  <%= link_to 'New Town', new_town_path, :class => 'btn btn-primary' %>
-  <br />
-  <br />
-  <%= link_to 'Go to ag2Provinces', provinces_path %> |
-  <%= link_to 'Go to ag2Zipcodes', zipcodes_path %> |
-  <%= link_to 'Back to ag2Admin', ag2_admin.root_path %>
+  <%= render :partial => '/layouts/crud/new', :locals => { :model => Town, :path => new_town_path, :txt => I18n.t("ag2_admin.towns.index.btn_new") } %>
+  <%= link_to I18n.t("ag2_admin.towns.index.go_to_parent"), provinces_path %> |
+  <%= link_to I18n.t("ag2_admin.towns.index.go_to_link"), zipcodes_path %> |
+  <%= link_to I18n.t("ag2_admin.towns.index.back_to_root"), ag2_admin.root_path %>
 </div>

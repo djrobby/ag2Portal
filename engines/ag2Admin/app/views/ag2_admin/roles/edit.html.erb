@@ -1,8 +1,8 @@
 <%= render '/layouts/ag2_admin/rolesbreadcrumb' %>
 
-<h3>Edit Role</h3>
+<h3><%=t '.title' %></h3>
 
 <%= render 'form' %>
 
-<%= link_to 'Show Role', @role %> |
-<%= link_to 'Back to Roles', roles_path %>
+<%= link_to I18n.t('ag2_admin.roles.edit.btn_show'), @role %> |
+<%= link_to I18n.t('ag2_admin.roles.back_to_main_page'), roles_path %>

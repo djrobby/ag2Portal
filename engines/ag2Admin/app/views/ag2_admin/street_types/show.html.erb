@@ -1,24 +1,19 @@
 <%= render '/layouts/ag2_admin/streettypesbreadcrumb' %>
 
-<h3>Street type <%= @street_type.street_type_code %></h3>
+<h3><%=t '.title' %> <%= @street_type.street_type_code %></h3>
 <table class="table">
   <tbody>
     <tr>
       <td>Id:</td>
       <td><%= @street_type.id %></td>
-      <td>Description:</td>
+      <td><%=t 'activerecord.attributes.street_type.street_type_description' %>:</td>
       <td><%= @street_type.street_type_description.titleize %></td>
     </tr>
-    <tr>
-      <td>Created at:</td>
-      <td><%= @street_type.created_at.utc.getlocal.strftime("%d/%m/%Y %H:%M:%S") %></td>
-      <td>Updated at:</td>
-      <td><%= @street_type.updated_at.utc.getlocal.strftime("%d/%m/%Y %H:%M:%S") %></td>
-    </tr>
+    <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @street_type } %>
   </tbody>
 </table>
 
-<%= link_to 'Edit Street type', edit_street_type_path(@street_type), :class => 'btn btn-primary' %>
+<%= link_to I18n.t('ag2_admin.street_types.show.btn_edit'), edit_street_type_path(@street_type), :class => 'btn btn-primary' %>
 <br />
 <br />
-<%= link_to 'Back to Street types', street_types_path %>
+<%= link_to I18n.t('ag2_admin.street_types.back_to_main_page'), street_types_path %>

@@ -1,0 +1,18 @@
+en:
+  ag2_admin:
+    zipcodes:
+      index:
+        title: "ZIP codes"
+        btn_new: "New ZIP code"
+        go_to_parent: "Go to ag2Provinces"
+        go_to_link: "Go to ag2Towns"
+        back_to_root: "Back to ag2Admin"
+      show:
+        title: "ZIP code"
+        btn_edit: "Edit ZIP code"
+      edit:
+        title: "Edit ZIP code"
+        btn_show: "Show ZIP code"
+      new:
+        title: "New ZIP code"
+      back_to_main_page: "Back to ZIP codes"

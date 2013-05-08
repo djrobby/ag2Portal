@@ -6,36 +6,31 @@
     <tr>
       <td>Id:</td>
       <td><%= @province.id %></td>
-      <td>Region:</td>
-      <td><%= Region.find(@province.region).name_and_country unless @province.region.nil? %></td>
+      <td><%=t 'activerecord.attributes.province.region' %>:</td>
+      <td><%= @province.region.name_and_country unless @province.region.blank? %></td>
     </tr>
     <tr>
-      <td>INE CPro:</td>
+      <td><%=t 'activerecord.attributes.province.ine_cpro' %>:</td>
       <td><%= @province.ine_cpro %></td>
       <td></td>
       <td></td>
     </tr>
-    <tr>
-      <td>Created at:</td>
-      <td><%= @province.created_at.utc.getlocal.strftime("%d/%m/%Y %H:%M:%S") %></td>
-      <td>Updated at:</td>
-      <td><%= @province.updated_at.utc.getlocal.strftime("%d/%m/%Y %H:%M:%S") %></td>
-    </tr>
+    <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @province } %>
   </tbody>
 </table>
 
-<%= link_to 'Edit Province', edit_province_path(@province), :class => 'btn btn-primary' %>
+<%= link_to I18n.t('ag2_admin.provinces.show.btn_edit'), edit_province_path(@province), :class => 'btn btn-primary' %>
 <br />
 <br />
 
 <% if (@towns.count > 0) %>
-<h4>Province Towns</h4>
+<h4><%= t '.subtable_title' %></h4>
 <table class="table table-condensed table-striped">
   <thead>
     <tr>
-      <th>Name</th>
-      <th>INE CMun</th>
-      <th>INE Dc</th>
+      <th><%=t 'activerecord.attributes.town.name' %></th>
+      <th><%=t 'activerecord.attributes.town.ine_cmun' %></th>
+      <th><%=t 'activerecord.attributes.town.ine_dc' %></th>
     </tr>
   </thead>
   <tbody>
@@ -50,5 +45,5 @@
 </table>
 <% end %>
 
-<%= link_to 'Show Region', @province.region %> |
-<%= link_to 'Back to Provinces', provinces_path %>
+<%= link_to I18n.t('ag2_admin.provinces.show.show_to'), @province.region %> |
+<%= link_to I18n.t('ag2_admin.provinces.back_to_main_page'), provinces_path %>

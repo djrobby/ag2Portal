@@ -1,0 +1,19 @@
+en:
+  ag2_admin:
+    countries:
+      index:
+        title: "Countries"
+        btn_new: "New Country"
+        go_to: "Go to ag2Regions"
+        back_to_root: "Back to ag2Admin"
+      show:
+        title: "Country"
+        btn_edit: "Edit Country"
+        subtable_title: "Country Regions"
+        show_to: "Show Country"
+      edit:
+        title: "Edit Country"
+        btn_show: "Show Country"
+      new:
+        title: "New Country"
+      back_to_main_page: "Back to Countries"

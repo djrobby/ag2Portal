@@ -1,0 +1,18 @@
+en:
+  ag2_admin:
+    roles:
+      index:
+        title: "Roles"
+        btn_new: "New Role"
+        back_to_main_app: "Back to Users"
+        back_to_root: "Back to ag2Admin"
+      show:
+        title: "Role"
+        btn_edit: "Edit Role"
+        subtable_title: "Role Users"
+      edit:
+        title: "Edit Role"
+        btn_show: "Show Role"
+      new:
+        title: "New Role"
+      back_to_main_page: "Back to Roles"

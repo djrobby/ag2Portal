@@ -1,0 +1,16 @@
+es:
+  ag2_admin:
+    street_types:
+      index:
+        title: "Tipos de vías"
+        btn_new: "Nuevo Tipo de vía"
+        back_to_root: "Volver a ag2Admin"
+      show:
+        title: "Tipo de vía"
+        btn_edit: "Editar Tipo de vía"
+      edit:
+        title: "Editar Tipo de vía"
+        btn_show: "Ver Tipo de vía"
+      new:
+        title: "Nuevo Tipo de vía"
+      back_to_main_page: "Volver a Tipos de vía"

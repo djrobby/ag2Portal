@@ -1,8 +1,8 @@
 <%= render '/layouts/ag2_admin/townsbreadcrumb' %>
 
-<h3>Edit Town</h3>
+<h3><%=t '.title' %></h3>
 
 <%= render 'form' %>
 
-<%= link_to 'Show Town', @town %> |
-<%= link_to 'Back to Towns', towns_path %>
+<%= link_to I18n.t('ag2_admin.towns.edit.btn_show'), @town %> |
+<%= link_to I18n.t('ag2_admin.towns.back_to_main_page'), towns_path %>

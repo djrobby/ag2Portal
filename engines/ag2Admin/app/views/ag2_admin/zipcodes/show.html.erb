@@ -1,6 +1,6 @@
 <%= render '/layouts/ag2_admin/zipcodesbreadcrumb' %>
 
-<h3>Zip code <%= @zipcode.zipcode %></h3>
+<h3><%=t '.title' %> <%= @zipcode.zipcode %></h3>
 <table class="table">
   <tbody>
     <tr>
@@ -10,21 +10,16 @@
       <td></td>
     </tr>
     <tr>
-      <td>Town:</td>
-      <td><%= Town.find(@zipcode.town).name unless @zipcode.town.nil? %></td>
-      <td>Province:</td>
-      <td><%= Province.find(@zipcode.province).name_and_region unless @zipcode.province.nil? %></td>
+      <td><%=t 'activerecord.attributes.zipcode.town' %>:</td>
+      <td><%= @zipcode.town.name unless @zipcode.town.blank? %></td>
+      <td><%=t 'activerecord.attributes.zipcode.province' %>:</td>
+      <td><%= @zipcode.province.name_and_region unless @zipcode.province.blank? %></td>
     </tr>
-    <tr>
-      <td>Created at:</td>
-      <td><%= @zipcode.created_at.utc.getlocal.strftime("%d/%m/%Y %H:%M:%S") %></td>
-      <td>Updated at:</td>
-      <td><%= @zipcode.updated_at.utc.getlocal.strftime("%d/%m/%Y %H:%M:%S") %></td>
-    </tr>
+    <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @zipcode } %>
   </tbody>
 </table>
 
-<%= link_to 'Edit Zipcode', edit_zipcode_path(@zipcode), :class => 'btn btn-primary' %>
+<%= link_to I18n.t('ag2_admin.zipcodes.show.btn_edit'), edit_zipcode_path(@zipcode), :class => 'btn btn-primary' %>
 <br />
 <br />
-<%= link_to 'Back to Zipcodes', zipcodes_path %>
+<%= link_to I18n.t('ag2_admin.zipcodes.back_to_main_page'), zipcodes_path %>

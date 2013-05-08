@@ -9,12 +9,7 @@
       <td></td>
       <td></td>
     </tr>
-    <tr>
-      <td>Created at:</td>
-      <td><%= @role.created_at.utc.getlocal.strftime("%d/%m/%Y %H:%M:%S") %></td>
-      <td>Updated at:</td>
-      <td><%= @role.updated_at.utc.getlocal.strftime("%d/%m/%Y %H:%M:%S") %></td>
-    </tr>
+    <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @role } %>
     <tr>
       <td>Resource id:</td>
       <td><%= @role.resource_id %></td>
@@ -24,7 +19,28 @@
   </tbody>
 </table>
 
-<%= link_to 'Edit Role', edit_role_path(@role), :class => 'btn btn-primary' %>
+<%= link_to I18n.t('ag2_admin.roles.show.btn_edit'), edit_role_path(@role), :class => 'btn btn-primary' %>
 <br />
 <br />
-<%= link_to 'Back to Roles', roles_path %>
+
+<% if (@users.count > 0) %>
+<h4><%=t '.subtable_title' %></h4>
+<table class="table table-condensed table-striped">
+  <thead>
+    <tr>
+      <th><%=t 'activerecord.attributes.user.email' %></th>
+      <th><%=t 'activerecord.attributes.user.name' %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @users.each do |user| %>
+    <tr>
+      <td><%= link_to user.email, user %></td>
+      <td><%= user.name %></td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
+<% end %>
+
+<%= link_to I18n.t('ag2_admin.roles.back_to_main_page'), roles_path %>

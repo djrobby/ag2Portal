@@ -1,8 +1,8 @@
 <%= render '/layouts/ag2_admin/zipcodesbreadcrumb' %>
 
-<h3>Edit Zip Code</h3>
+<h3><%=t '.title' %></h3>
 
 <%= render 'form' %>
 
-<%= link_to 'Show Zipcode', @zipcode %> |
-<%= link_to 'Back to Zipcodes', zipcodes_path %>
+<%= link_to I18n.t('ag2_admin.zipcodes.edit.btn_show'), @zipcode %> |
+<%= link_to I18n.t('ag2_admin.zipcodes.back_to_main_page'), zipcodes_path %>

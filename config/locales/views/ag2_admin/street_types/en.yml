@@ -1,0 +1,16 @@
+en:
+  ag2_admin:
+    street_types:
+      index:
+        title: "Street types"
+        btn_new: "New Street type"
+        back_to_root: "Back to ag2Admin"
+      show:
+        title: "Street type"
+        btn_edit: "Edit Street type"
+      edit:
+        title: "Edit Street type"
+        btn_show: "Show Street type"
+      new:
+        title: "New Street type"
+      back_to_main_page: "Back to Street types"

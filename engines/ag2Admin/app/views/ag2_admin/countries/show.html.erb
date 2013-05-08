@@ -9,25 +9,20 @@
       <td></td>
       <td></td>
     </tr>
-    <tr>
-      <td>Created at:</td>
-      <td><%= @country.created_at.utc.getlocal.strftime("%d/%m/%Y %H:%M:%S") %></td>
-      <td>Updated at:</td>
-      <td><%= @country.updated_at.utc.getlocal.strftime("%d/%m/%Y %H:%M:%S") %></td>
-    </tr>
+    <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @country } %>
   </tbody>
 </table>
 
-<%= link_to 'Edit Country', edit_country_path(@country), :class => 'btn btn-primary' %>
+<%= link_to I18n.t('ag2_admin.countries.show.btn_edit'), edit_country_path(@country), :class => 'btn btn-primary' %>
 <br />
 <br />
 
 <% if (@regions.count > 0) %>
-<h4>Country Regions</h4>
+<h4><%= t '.subtable_title' %></h4>
 <table class="table table-condensed table-striped">
   <thead>
     <tr>
-      <th>Name</th>
+      <th><%= t 'activerecord.attributes.region.name' %></th>
     </tr>
   </thead>
   <tbody>
@@ -40,4 +35,4 @@
 </table>
 <% end %>
 
-<%= link_to 'Back to Countries', countries_path %>
+<%= link_to I18n.t('ag2_admin.countries.back_to_main_page'), countries_path %>

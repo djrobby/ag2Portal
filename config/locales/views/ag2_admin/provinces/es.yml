@@ -1,0 +1,21 @@
+es:
+  ag2_admin:
+    provinces:
+      index:
+        title: "Provincias"
+        btn_new: "Nueva Provincia"
+        go_to_parent: "Ir a ag2Regions"
+        go_to_child: "Ir a ag2Towns"
+        go_to_link: "Ir a ag2ZipCodes"
+        back_to_root: "Volver a ag2Admin"
+      show:
+        title: "Provincia"
+        btn_edit: "Editar Provincia"
+        subtable_title: "Poblaciones de la Provincia"
+        show_to: "Ver Región"
+      edit:
+        title: "Editar Provincia"
+        btn_show: "Ver Provincia"
+      new:
+        title: "Nueva Provincia"
+      back_to_main_page: "Volver a Provincias"

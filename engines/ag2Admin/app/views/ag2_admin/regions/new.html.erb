@@ -1,7 +1,7 @@
 <%= render '/layouts/ag2_admin/regionsbreadcrumb' %>
 
-<h3>New Region</h3>
+<h3><%=t '.title' %></h3>
 
 <%= render 'form' %>
 
-<%= link_to 'Back to Regions', regions_path %>
+<%= link_to I18n.t('ag2_admin.regions.back_to_main_page'), regions_path %>

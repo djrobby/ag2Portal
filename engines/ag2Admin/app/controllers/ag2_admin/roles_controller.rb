@@ -18,6 +18,7 @@ module Ag2Admin
     def show
       @breadcrumb = 'read'
       @role = Role.find(params[:id])
+      @users = @role.users
   
       respond_to do |format|
         format.html # show.html.erb

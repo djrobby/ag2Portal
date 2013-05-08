@@ -27,4 +27,5 @@ es:
         invoice_header: "Cabecera de página"
         invoice_footer: "Pie de página"
         invoice_left_margin: "Margen izquierdo de página"
+        logo: "Logo"
         address: "Dirección"

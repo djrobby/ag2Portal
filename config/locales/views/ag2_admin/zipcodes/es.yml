@@ -1,0 +1,18 @@
+es:
+  ag2_admin:
+    zipcodes:
+      index:
+        title: "Códigos postales"
+        btn_new: "Nuevo Código postal"
+        go_to_parent: "Ir a ag2Provinces"
+        go_to_link: "Ir a ag2Towns"
+        back_to_root: "Volver a ag2Admin"
+      show:
+        title: "Código postal"
+        btn_edit: "Editar Código postal"
+      edit:
+        title: "Editar Código postal"
+        btn_show: "Ver Código postal"
+      new:
+        title: "Nuevo Código postal"
+      back_to_main_page: "Volver a Código postales"

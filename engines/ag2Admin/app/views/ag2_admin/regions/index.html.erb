@@ -1,12 +1,12 @@
 <%= render '/layouts/ag2_admin/regionsbreadcrumb' %>
 
-<h3>Regions</h3>
+<h3><%=t '.title' %></h3>
 <div class="span7">
   <table class="table table-condensed table-striped">
     <thead>
       <tr>
-        <th>Name</th>
-        <th>Country</th>
+        <th><%=t 'activerecord.attributes.region.name' %></th>
+        <th><%=t 'activerecord.attributes.region.country' %></th>
         <th></th>
       </tr>
     </thead>
@@ -14,17 +14,15 @@
       <% @regions.each do |region| %>
       <tr>
         <td><%= link_to region.name, region %></td>
-        <td><%= Country.find(region.country).name unless region.country.nil? %></td>
-        <td><%= link_to edit_region_path(region), :class => 'btn btn-mini'  do %> <i class="icon-edit"></i> <% end %>
-        <%= link_to(region, :data => { :confirm => "Are you sure?" }, :method => :delete, :class => 'btn btn-mini') do %> <i class="icon-trash"></i> <% end %> </td>
+        <td><%= region.country.name unless region.country.blank? %></td>
+        <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => Region, :path => edit_region_path(region) } %>
+        <%= render :partial => '/layouts/crud/delete', :locals => { :model => Region, :path => region, :msg => I18n.t("activerecord.models.region"), :txt => region.name } %> </td>
       </tr>
       <% end %>
     </tbody>
   </table>
-  <%= link_to 'New Region', new_region_path, :class => 'btn btn-primary' %>
-  <br />
-  <br />
-  <%= link_to 'Go to ag2Countries', countries_path %> |
-  <%= link_to 'Go to ag2Provinces', provinces_path %> |
-  <%= link_to 'Back to ag2Admin', ag2_admin.root_path %>
+  <%= render :partial => '/layouts/crud/new', :locals => { :model => Region, :path => new_region_path, :txt => I18n.t("ag2_admin.regions.index.btn_new") } %>
+  <%= link_to I18n.t("ag2_admin.regions.index.go_to_parent"), countries_path %> |
+  <%= link_to I18n.t("ag2_admin.regions.index.go_to_child"), provinces_path %> |
+  <%= link_to I18n.t("ag2_admin.regions.index.back_to_root"), ag2_admin.root_path %>
 </div>

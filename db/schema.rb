@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130502183348) do
+ActiveRecord::Schema.define(:version => 20130508070347) do
 
   create_table "apps", :force => true do |t|
     t.string   "name"
@@ -58,6 +58,10 @@ ActiveRecord::Schema.define(:version => 20130502183348) do
     t.string   "invoice_header"
     t.string   "invoice_footer"
     t.string   "invoice_left_margin"
+    t.string   "logo_file_name"
+    t.string   "logo_content_type"
+    t.integer  "logo_file_size"
+    t.datetime "logo_updated_at"
   end
 
   add_index "companies", ["fiscal_id"], :name => "index_companies_on_fiscal_id"

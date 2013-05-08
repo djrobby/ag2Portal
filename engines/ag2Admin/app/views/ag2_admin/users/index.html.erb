@@ -1,13 +1,13 @@
 <%= render '/layouts/ag2_admin/usersbreadcrumb' %>
 
-<h3>Users</h3>
+<h3><%=t '.title' %></h3>
 <div class="span10">
   <table class="table table-condensed table-striped">
     <thead>
       <tr>
-        <th>Email</th>
-        <th>Username</th>
-        <th>Role</th>
+        <th><%=t 'activerecord.attributes.user.email' %></th>
+        <th><%=t 'activerecord.attributes.user.name' %></th>
+        <th><%=t 'activerecord.attributes.user.role_ids' %></th>
         <th>Current login</th>
         <th>Current IP</th>
         <th></th>
@@ -21,16 +21,14 @@
         <td><%= user.roles.first.name.titleize unless user.roles.first.nil? %></td>
         <td><%= user.current_sign_in_at.utc.getlocal.strftime("%d/%m/%Y %H:%M:%S") unless user.current_sign_in_at.nil? %></td>
         <td><%= user.current_sign_in_ip unless user.current_sign_in_ip.nil? %></td>
-        <td><a data-toggle="modal" href="#role-options-<%= user.id %>" class="btn btn-mini" type="button">Role</a> <%= render user %>
-        <%= link_to edit_user_path(user), :class => 'btn btn-mini' do %> <i class="icon-edit"></i> <% end %>
-        <%= link_to('<i class="icon-trash"></i>'.html_safe, user_path(user), :data => { :confirm => "Are you sure?" }, :method => :delete, :class => 'btn btn-mini') unless user == current_user %> </td>
+        <td><a data-toggle="modal" href="#role-options-<%= user.id %>" class="btn btn-mini" type="button"><%=t 'activerecord.models.role' %></a> <%= render user %>
+        <%= render :partial => '/layouts/crud/edit', :locals => { :model => User, :path => edit_user_path(user) } %>
+        <%= render :partial => '/layouts/crud/delete', :locals => { :model => User, :path => user, :msg => I18n.t("activerecord.models.user"), :txt => user.name } %> </td>
       </tr>
       <% end %>
     </tbody>
   </table>
-  <%= link_to 'New User', new_user_path, :class => 'btn btn-primary' %>
-  <br />
-  <br />
-  <%= link_to 'Go to Roles', roles_path %> |
-  <%= link_to 'Back to ag2Admin', ag2_admin.root_path %>
+  <%= render :partial => '/layouts/crud/new', :locals => { :model => User, :path => new_user_path, :txt => I18n.t("ag2_admin.users.index.btn_new") } %>
+  <%= link_to I18n.t("ag2_admin.users.index.go_to_child"), roles_path %> |
+  <%= link_to I18n.t("ag2_admin.users.index.back_to_root"), ag2_admin.root_path %>
 </div>

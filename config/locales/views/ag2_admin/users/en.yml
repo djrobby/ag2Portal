@@ -1,0 +1,18 @@
+en:
+  ag2_admin:
+    users:
+      index:
+        title: "Users"
+        btn_new: "New User"
+        go_to_child: "Go to Roles"
+        back_to_root: "Back to ag2Admin"
+      show:
+        title: "User"
+        btn_edit: "Edit User"
+        show_to: "Show Rol"
+      edit:
+        title: "Edit User"
+        btn_show: "Show User"
+      new:
+        title: "New User"
+      back_to_main_page: "Back to Users"

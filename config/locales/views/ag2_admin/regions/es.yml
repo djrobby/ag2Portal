@@ -1,0 +1,20 @@
+es:
+  ag2_admin:
+    regions:
+      index:
+        title: "Regiones"
+        btn_new: "Nueva Región"
+        go_to_parent: "Ir a ag2Countries"
+        go_to_child: "Ir a ag2Provinces"
+        back_to_root: "Volver a ag2Admin"
+      show:
+        title: "Región"
+        btn_edit: "Editar Región"
+        subtable_title: "Provincias de la Región"
+        show_to: "Ver País"
+      edit:
+        title: "Editar Región"
+        btn_show: "Ver Región"
+      new:
+        title: "Nueva Región"
+      back_to_main_page: "Volver a Regiones"
