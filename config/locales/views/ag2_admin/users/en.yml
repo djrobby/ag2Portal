@@ -6,6 +6,7 @@ en:
         btn_new: "New User"
         go_to_child: "Go to Roles"
         back_to_root: "Back to ag2Admin"
+        change_role: "Change Role"
       show:
         title: "User"
         btn_edit: "Edit User"
@@ -13,6 +14,7 @@ en:
       edit:
         title: "Edit User"
         btn_show: "Show User"
+        cancel_account: "Cancel this account"
       new:
         title: "New User"
       back_to_main_page: "Back to Users"

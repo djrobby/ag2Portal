@@ -11,9 +11,9 @@
     </tr>
     <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @role } %>
     <tr>
-      <td>Resource id:</td>
+      <td><%=t 'activerecord.attributes.role.resource_id' %>:</td>
       <td><%= @role.resource_id %></td>
-      <td>Resource type:</td>
+      <td><%=t 'activerecord.attributes.role.resource_type' %>:</td>
       <td><%= @role.resource_type %></td>
     </tr>
   </tbody>

@@ -1,6 +1,6 @@
 <%= render '/layouts/ag2_admin/usersbreadcrumb' %>
 
-<h3>New User</h3>
+<h3><%=t '.title' %></h3>
 
 <%= simple_form_for @user do |f| %>
 <%= f.error_notification %>
@@ -10,7 +10,7 @@
 <%= f.input :password, :required => true %>
 <%= f.input :password_confirmation, :required => true %>
 <%= f.input :role_ids, :collection => Role.all, :label_method => lambda {|t| t.name.titleize} %>
-<%= f.button :submit, 'Create user', :class => 'btn-primary' %>
+<%= f.button :submit, nil, :class => 'btn-primary' %>
 <% end %>
 
-<%= link_to 'Back to Users', users_path %>
+<%= link_to I18n.t('ag2_admin.users.back_to_main_page'), users_path %>

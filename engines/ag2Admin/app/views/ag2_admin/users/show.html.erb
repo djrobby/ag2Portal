@@ -4,45 +4,40 @@
 <table class="table">
   <tbody>
     <tr>
-      <td>Username:</td>
-      <td><%= @user.name %></td>
       <td>Id:</td>
       <td><%= @user.id %></td>
+      <td><%=t 'activerecord.attributes.user.name' %>:</td>
+      <td><%= @user.name %></td>
     </tr>
+    <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @user } %>
     <tr>
-      <td>Created at:</td>
-      <td><%= @user.created_at.utc.getlocal.strftime("%d/%m/%Y %H:%M:%S") %></td>
-      <td>Updated at:</td>
-      <td><%= @user.updated_at.utc.getlocal.strftime("%d/%m/%Y %H:%M:%S") %></td>
-    </tr>
-    <tr>
-      <td>Password reseted at:</td>
+      <td><%=t 'activerecord.attributes.user.reset_password_sent_at' %>:</td>
       <td><%= @user.reset_password_sent_at.utc.getlocal.strftime("%d/%m/%Y %H:%M:%S") unless @user.reset_password_sent_at.nil? %></td>
-      <td>Remember created at:</td>
+      <td><%=t 'activerecord.attributes.user.remember_created_at' %>:</td>
       <td><%= @user.remember_created_at.utc.getlocal.strftime("%d/%m/%Y %H:%M:%S") unless @user.remember_created_at.nil? %></td>
     </tr>
     <tr>
-      <td>Signed in count:</td>
+      <td><%=t 'activerecord.attributes.user.sign_in_count' %>:</td>
       <td><%= @user.sign_in_count %></td>
-      <td>Role:</td>
-      <td><%= @user.roles.first.name.titleize unless @user.roles.first.nil? %></td>
+      <td><%=t 'activerecord.attributes.user.role_ids' %>:</td>
+      <td><%= @user.roles.first.name.titleize unless @user.roles.first.blank? %></td>
     </tr>
     <tr>
-      <td>Current signed in at:</td>
+      <td><%=t 'activerecord.attributes.user.current_sign_in_at' %>:</td>
       <td><%= @user.current_sign_in_at.utc.getlocal.strftime("%d/%m/%Y %H:%M:%S") unless @user.current_sign_in_at.nil? %></td>
-      <td>Current signed in IP:</td>
+      <td><%=t 'activerecord.attributes.user.current_sign_in_ip' %>:</td>
       <td><%= @user.current_sign_in_ip %></td>
     </tr>
     <tr>
-      <td>Last signed in at:</td>
+      <td><%=t 'activerecord.attributes.user.last_sign_in_at' %>:</td>
       <td><%= @user.last_sign_in_at.utc.getlocal.strftime("%d/%m/%Y %H:%M:%S") unless @user.last_sign_in_at.nil? %></td>
-      <td>Last signed in IP:</td>
+      <td><%=t 'activerecord.attributes.user.last_sign_in_ip' %>:</td>
       <td><%= @user.last_sign_in_ip %></td>
     </tr>
   </tbody>
 </table>
 
-<%= link_to 'Edit User', edit_user_path(@user), :class => 'btn btn-primary' %>
+<%= link_to I18n.t('ag2_admin.users.show.btn_edit'), edit_user_path(@user), :class => 'btn btn-primary' %>
 <br />
 <br />
-<%= link_to 'Back to Users', users_path %>
+<%= link_to I18n.t('ag2_admin.users.back_to_main_page'), users_path %>

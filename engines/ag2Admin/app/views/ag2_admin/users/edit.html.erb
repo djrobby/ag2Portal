@@ -1,6 +1,6 @@
 <%= render '/layouts/ag2_admin/usersbreadcrumb' %>
 
-<h3>Edit User</h3>
+<h3><%=t '.title' %></h3>
 
 <%= simple_form_for @user do |f| %>
 <%= f.error_notification %>
@@ -9,11 +9,11 @@
 <%= f.input :name, :required => true %>
 <%= f.input :password, :autocomplete => "off", :required => false %>
 <%= f.input :password_confirmation, :required => false %>
-<%= f.button :submit, 'Update', :class => 'btn-primary' %>
-<%= link_to("Cancel this account", user_path(@user), :data => { :confirm => "Are you sure?" }, :method => :delete, :class => 'btn btn-primary') unless @user == current_user %>
+<%= f.button :submit, nil, :class => 'btn-primary' %>
+<%= link_to(I18n.t('ag2_admin.users.edit.cancel_account'), user_path(@user), :data => { :confirm => "Are you sure?" }, :method => :delete, :class => 'btn btn-primary') unless @user == current_user %>
 <% end %>
 
 <p></p>
 
-<%= link_to 'Show User', @user %> |
-<%= link_to 'Back to Users', users_path %>
+<%= link_to I18n.t('ag2_admin.users.edit.btn_show'), @user %> |
+<%= link_to I18n.t('ag2_admin.users.back_to_main_page'), users_path %>
