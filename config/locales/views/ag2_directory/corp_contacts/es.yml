@@ -13,4 +13,6 @@ es:
         btn_show: "Ver Contacto"
       new:
         title: "Nuevo Contacto"
+      search:
+        title: "Contactos encontrados"
       back_to_main_page: "Volver a ag2CorporateContacts"

@@ -9,4 +9,6 @@ es:
   are_you_sure: "¿Estás seguro/a?"
   created_at: "Creado el"
   updated_at: "Actualizado el"
+  created_by: "Creado por"
+  updated_by: "Actualizado por"
   are_you_sure_to_delete: "¿Estás seguro/a de borrar este/a "

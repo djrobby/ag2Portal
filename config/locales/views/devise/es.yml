@@ -25,6 +25,7 @@ es:
         account_edit_m: "Adelante... Indica los datos que te solicita el cuadro de registro para modificar tu cuenta. También puedes cancelar tu cuenta... Pero por qué querrías hacerlo, ¿no?"
         submit: "Actualizar"
         cancel_account: "¿Disconforme? Cancelar mi cuenta"
+        are_you_sure_to_cancel: "¿Estás seguro/a de cancelar tu cuenta?"
     shared:
       goto_signin: "Inicia sesión"
       goto_signup: "Crea tu cuenta"

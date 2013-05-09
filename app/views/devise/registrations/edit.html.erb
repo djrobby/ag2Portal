@@ -37,7 +37,7 @@
       <a href="<%= main_app.root_path %>" class="btn btn-primary"><%=t :no_thanks %></a>
     </div>
     <% end %>
-    <%= link_to I18n.t("cancel_account", :scope => :"devise.registrations.edit"), registration_path(resource_name), :data => { :confirm => "Are you sure?" }, :method => :delete %>
+    <%= link_to I18n.t("devise.registrations.edit.cancel_account"), registration_path(resource_name), :data => { :confirm => I18n.t("devise.registrations.edit.are_you_sure_to_cancel") }, :method => :delete %>
     <br />
     <%= render "devise/shared/links" %>
   </div>

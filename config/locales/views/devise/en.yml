@@ -25,6 +25,7 @@ en:
         account_edit_m: "Go ahead... Fill in the information requested in the registration box to update your account. You can cancel your account too... But, why do that?"
         submit: "Update"
         cancel_account: "Unhappy? Cancel my account"
+        are_you_sure_to_cancel: "Are you sure to cancel your account?"
     shared:
       goto_signin: "Sign in"
       goto_signup: "Sign up"

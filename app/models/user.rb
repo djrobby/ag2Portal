@@ -12,8 +12,14 @@ class User < ActiveRecord::Base
   # attr_accessible :title, :body
   validates :name,  :presence => true
 
+  after_create :assign_default_role
+
   has_one :worker
   def to_label
     "#{name} (#{email})"
+  end
+
+  def assign_default_role
+    add_role(:guest) if self.roles.blank?
   end
 end

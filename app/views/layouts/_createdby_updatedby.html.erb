@@ -1,0 +1,6 @@
+<tr>
+  <td><%= t :created_by %>:</td>
+  <td><%= User.find(ivar.created_by).email if !ivar.created_by.blank? %></td>
+  <td><%= t :updated_by %>:</td>
+  <td><%= User.find(ivar.updated_by).email if !ivar.updated_by.blank? %></td>
+</tr>

@@ -76,6 +76,7 @@ module Ag2Admin
     def create
       @breadcrumb = 'create'
       @company = Company.new(params[:company])
+      @company.created_by = current_user.id if !current_user.nil?
 
       respond_to do |format|
         if @company.save
@@ -93,6 +94,7 @@ module Ag2Admin
     def update
       @breadcrumb = 'update'
       @company = Company.find(params[:id])
+      @company.updated_by = current_user.id if !current_user.nil?
 
       respond_to do |format|
         if @company.update_attributes(params[:company])

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130508070347) do
+ActiveRecord::Schema.define(:version => 20130509105251) do
 
   create_table "apps", :force => true do |t|
     t.string   "name"
@@ -62,6 +62,8 @@ ActiveRecord::Schema.define(:version => 20130508070347) do
     t.string   "logo_content_type"
     t.integer  "logo_file_size"
     t.datetime "logo_updated_at"
+    t.integer  "created_by"
+    t.integer  "updated_by"
   end
 
   add_index "companies", ["fiscal_id"], :name => "index_companies_on_fiscal_id"

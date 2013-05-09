@@ -6,7 +6,8 @@ class Company < ActiveRecord::Base
   attr_accessible :fiscal_id, :name,
                   :street_type_id, :street_name, :street_number, :building, :floor, :floor_office,
                   :zipcode_id, :town_id, :province_id, :phone, :fax, :cellular, :email, :logo,
-                  :invoice_code, :invoice_header, :invoice_footer, :invoice_left_margin
+                  :invoice_code, :invoice_header, :invoice_footer, :invoice_left_margin,
+                  :created_by, :updated_by
   has_attached_file :logo, :styles => { :medium => "120x120>", :small => "80x80>" }, :default_url => "/images/missing/:style/company.png"
 
   validates :name,            :presence => true

@@ -60,6 +60,7 @@
       <td><%= @company.email %></td>
     </tr>
     <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @company } %>
+    <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @company } %>
   </tbody>
 </table>
 

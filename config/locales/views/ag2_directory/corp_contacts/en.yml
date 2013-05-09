@@ -13,5 +13,7 @@ en:
         btn_show: "Show Contact"
       new:
         title: "New Contact"
+      search:
+        title: "Contacts found"
       back_to_main_page: "Back to ag2CorporateContacts"
         
