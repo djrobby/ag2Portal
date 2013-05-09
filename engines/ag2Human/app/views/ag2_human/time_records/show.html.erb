@@ -21,12 +21,8 @@
       <td><%=t :"activerecord.attributes.time_record.timerecord_code" %>:</td>
       <td><%= @time_record.timerecord_code.name.titleize %></td>
     </tr>
-    <tr>
-      <td><%=t :created_at %>:</td>
-      <td><%= @time_record.created_at.utc.getlocal.strftime("%d/%m/%Y %H:%M:%S") %></td>
-      <td><%=t :updated_at %>:</td>
-      <td><%= @time_record.updated_at.utc.getlocal.strftime("%d/%m/%Y %H:%M:%S") %></td>
-    </tr>
+    <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @time_record } %>
+    <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @time_record } %>
   </tbody>
 </table>
 

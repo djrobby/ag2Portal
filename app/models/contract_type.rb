@@ -1,5 +1,6 @@
 class ContractType < ActiveRecord::Base
-  attr_accessible :ct_code, :name
+  attr_accessible :ct_code, :name,
+                  :created_by, :updated_by
 
   validates :ct_code, :presence => true,
                       :length => { :minimum => 2 },

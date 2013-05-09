@@ -1,5 +1,6 @@
 class ProfessionalGroup < ActiveRecord::Base
-  attr_accessible :name, :pg_code
+  attr_accessible :name, :pg_code,
+                  :created_by, :updated_by
 
   validates :pg_code, :presence => true,
                       :length => { :minimum => 2 },

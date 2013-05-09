@@ -10,6 +10,7 @@
       <td><%= @shared_contact_type.name.titleize %></td>
     </tr>
     <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @shared_contact_type } %>
+    <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @shared_contact_type } %>
   </tbody>
 </table>
 

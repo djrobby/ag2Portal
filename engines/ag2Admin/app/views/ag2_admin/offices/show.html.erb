@@ -49,6 +49,7 @@
       <td><%= @office.email %></td>
     </tr>
     <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @office } %>
+    <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @office } %>
   </tbody>
 </table>
 

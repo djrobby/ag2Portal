@@ -1,6 +1,7 @@
 class Region < ActiveRecord::Base
   belongs_to :country
-  attr_accessible :country_id, :name
+  attr_accessible :country_id, :name,
+                  :created_by, :updated_by
 
   validates :name,        :presence => true
   validates :country_id,  :presence => true

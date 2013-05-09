@@ -86,10 +86,11 @@ module Ag2Directory
     def create
       @breadcrumb = 'create'
       @corp_contact = CorpContact.new(params[:corp_contact])
+      @corp_contact.created_by = current_user.id if !current_user.nil?
 
       respond_to do |format|
         if @corp_contact.save
-          format.html { redirect_to @corp_contact, notice: 'Corp contact was successfully created.' }
+          format.html { redirect_to @corp_contact, notice: I18n.t('activerecord.successful.messages.created', :model => @corp_contact.class.model_name.human) }
           format.json { render json: @corp_contact, status: :created, location: @corp_contact }
         else
           format.html { render action: "new" }
@@ -103,10 +104,11 @@ module Ag2Directory
     def update
       @breadcrumb = 'update'
       @corp_contact = CorpContact.find(params[:id])
+      @corp_contact.updated_by = current_user.id if !current_user.nil?
 
       respond_to do |format|
         if @corp_contact.update_attributes(params[:corp_contact])
-          format.html { redirect_to @corp_contact, notice: 'Corp contact was successfully updated.' }
+          format.html { redirect_to @corp_contact, notice: I18n.t('activerecord.successful.messages.updated', :model => @corp_contact.class.model_name.human) }
           format.json { head :no_content }
         else
           format.html { render action: "edit" }

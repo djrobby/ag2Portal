@@ -48,10 +48,11 @@ module Ag2Admin
     def create
       @breadcrumb = 'create'
       @street_type = StreetType.new(params[:street_type])
+      @street_type.created_by = current_user.id if !current_user.nil?
   
       respond_to do |format|
         if @street_type.save
-          format.html { redirect_to @street_type, notice: 'Street type was successfully created.' }
+          format.html { redirect_to @street_type, notice: I18n.t('activerecord.successful.messages.created', :model => @street_type.class.model_name.human) }
           format.json { render json: @street_type, status: :created, location: @street_type }
         else
           format.html { render action: "new" }
@@ -65,10 +66,11 @@ module Ag2Admin
     def update
       @breadcrumb = 'update'
       @street_type = StreetType.find(params[:id])
+      @street_type.updated_by = current_user.id if !current_user.nil?
   
       respond_to do |format|
         if @street_type.update_attributes(params[:street_type])
-          format.html { redirect_to @street_type, notice: 'Street type was successfully updated.' }
+          format.html { redirect_to @street_type, notice: I18n.t('activerecord.successful.messages.updated', :model => @street_type.class.model_name.human) }
           format.json { head :no_content }
         else
           format.html { render action: "edit" }

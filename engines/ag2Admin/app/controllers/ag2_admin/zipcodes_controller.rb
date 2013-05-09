@@ -59,10 +59,11 @@ module Ag2Admin
     def create
       @breadcrumb = 'create'
       @zipcode = Zipcode.new(params[:zipcode])
+      @zipcode.created_by = current_user.id if !current_user.nil?
   
       respond_to do |format|
         if @zipcode.save
-          format.html { redirect_to @zipcode, notice: 'Zipcode was successfully created.' }
+          format.html { redirect_to @zipcode, notice: I18n.t('activerecord.successful.messages.created', :model => @zipcode.class.model_name.human) }
           format.json { render json: @zipcode, status: :created, location: @zipcode }
         else
           format.html { render action: "new" }
@@ -76,10 +77,11 @@ module Ag2Admin
     def update
       @breadcrumb = 'update'
       @zipcode = Zipcode.find(params[:id])
+      @zipcode.updated_by = current_user.id if !current_user.nil?
   
       respond_to do |format|
         if @zipcode.update_attributes(params[:zipcode])
-          format.html { redirect_to @zipcode, notice: 'Zipcode was successfully updated.' }
+          format.html { redirect_to @zipcode, notice: I18n.t('activerecord.successful.messages.updated', :model => @zipcode.class.model_name.human) }
           format.json { head :no_content }
         else
           format.html { render action: "edit" }

@@ -64,6 +64,7 @@
       <td><%= @shared_contact.country.name %></td>
     </tr>
     <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @shared_contact } %>
+    <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @shared_contact } %>
   </tbody>
 </table>
 

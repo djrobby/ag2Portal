@@ -16,6 +16,7 @@
       <td><%= @data_import_config.target %></td>
     </tr>
     <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @data_import_config } %>
+    <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @data_import_config } %>
   </tbody>
 </table>
 

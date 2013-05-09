@@ -48,10 +48,11 @@ module Ag2Human
     def create
       @breadcrumb = 'create'
       @timerecord_code = TimerecordCode.new(params[:timerecord_code])
+      @timerecord_code.created_by = current_user.id if !current_user.nil?
   
       respond_to do |format|
         if @timerecord_code.save
-          format.html { redirect_to @timerecord_code, notice: 'Timerecord code was successfully created.' }
+          format.html { redirect_to @timerecord_code, notice: I18n.t('activerecord.successful.messages.created', :model => @timerecord_code.class.model_name.human) }
           format.json { render json: @timerecord_code, status: :created, location: @timerecord_code }
         else
           format.html { render action: "new" }
@@ -65,10 +66,11 @@ module Ag2Human
     def update
       @breadcrumb = 'update'
       @timerecord_code = TimerecordCode.find(params[:id])
+      @timerecord_code.updated_by = current_user.id if !current_user.nil?
   
       respond_to do |format|
         if @timerecord_code.update_attributes(params[:timerecord_code])
-          format.html { redirect_to @timerecord_code, notice: 'Timerecord code was successfully updated.' }
+          format.html { redirect_to @timerecord_code, notice: I18n.t('activerecord.successful.messages.updated', :model => @timerecord_code.class.model_name.human) }
           format.json { head :no_content }
         else
           format.html { render action: "edit" }

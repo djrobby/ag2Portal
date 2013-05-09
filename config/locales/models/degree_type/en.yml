@@ -1,7 +1,7 @@
 en:
   activerecord:
     models:
-      degree_type: Degree Type
+      degree_type: Degree type
     attributes:
       degree_type:
         dt_code: "Code"

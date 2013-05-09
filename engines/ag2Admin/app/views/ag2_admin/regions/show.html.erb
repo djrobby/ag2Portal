@@ -10,6 +10,7 @@
       <td><%= @region.country.name unless @region.country.blank? %></td>
     </tr>
     <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @region } %>
+    <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @region } %>
   </tbody>
 </table>
 

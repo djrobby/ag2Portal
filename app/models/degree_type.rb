@@ -1,5 +1,6 @@
 class DegreeType < ActiveRecord::Base
-  attr_accessible :dt_code, :name
+  attr_accessible :dt_code, :name,
+                  :created_by, :updated_by
 
   validates :dt_code, :presence => true,
                       :length => { :minimum => 2 },

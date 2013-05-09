@@ -49,10 +49,11 @@ module Ag2Human
     def create
       @breadcrumb = 'create'
       @department = Department.new(params[:department])
+      @department.created_by = current_user.id if !current_user.nil?
   
       respond_to do |format|
         if @department.save
-          format.html { redirect_to @department, notice: 'Department was successfully created.' }
+          format.html { redirect_to @department, notice: I18n.t('activerecord.successful.messages.created', :model => @department.class.model_name.human) }
           format.json { render json: @department, status: :created, location: @department }
         else
           format.html { render action: "new" }
@@ -66,10 +67,11 @@ module Ag2Human
     def update
       @breadcrumb = 'update'
       @department = Department.find(params[:id])
+      @department.updated_by = current_user.id if !current_user.nil?
   
       respond_to do |format|
         if @department.update_attributes(params[:department])
-          format.html { redirect_to @department, notice: 'Department was successfully updated.' }
+          format.html { redirect_to @department, notice: I18n.t('activerecord.successful.messages.updated', :model => @department.class.model_name.human) }
           format.json { head :no_content }
         else
           format.html { render action: "edit" }

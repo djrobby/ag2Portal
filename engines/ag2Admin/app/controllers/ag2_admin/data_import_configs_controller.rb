@@ -48,10 +48,11 @@ module Ag2Admin
     def create
       @breadcrumb = 'create'
       @data_import_config = DataImportConfig.new(params[:data_import_config])
+      @data_import_config.created_by = current_user.id if !current_user.nil?
   
       respond_to do |format|
         if @data_import_config.save
-          format.html { redirect_to @data_import_config, notice: 'Data import config was successfully created.' }
+          format.html { redirect_to @data_import_config, notice: I18n.t('activerecord.successful.messages.created', :model => @data_import_config.class.model_name.human) }
           format.json { render json: @data_import_config, status: :created, location: @data_import_config }
         else
           format.html { render action: "new" }
@@ -65,10 +66,11 @@ module Ag2Admin
     def update
       @breadcrumb = 'update'
       @data_import_config = DataImportConfig.find(params[:id])
+      @data_import_config.updated_by = current_user.id if !current_user.nil?
   
       respond_to do |format|
         if @data_import_config.update_attributes(params[:data_import_config])
-          format.html { redirect_to @data_import_config, notice: 'Data import config was successfully updated.' }
+          format.html { redirect_to @data_import_config, notice: I18n.t('activerecord.successful.messages.updated', :model => @data_import_config.class.model_name.human) }
           format.json { head :no_content }
         else
           format.html { render action: "edit" }

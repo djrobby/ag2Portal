@@ -3,7 +3,8 @@ class TimeRecord < ActiveRecord::Base
   belongs_to :timerecord_type
   belongs_to :timerecord_code
   attr_accessible :timerecord_date, :timerecord_time, :worker_id,
-                  :timerecord_type_id, :timerecord_code_id
+                  :timerecord_type_id, :timerecord_code_id,
+                  :created_by, :updated_by
 
   validates :timerecord_date,     :presence => true
   validates :timerecord_time,     :presence => true

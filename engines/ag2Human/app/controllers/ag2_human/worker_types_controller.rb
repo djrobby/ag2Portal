@@ -49,10 +49,11 @@ module Ag2Human
     def create
       @breadcrumb = 'create'
       @worker_type = WorkerType.new(params[:worker_type])
+      @worker_type.created_by = current_user.id if !current_user.nil?
   
       respond_to do |format|
         if @worker_type.save
-          format.html { redirect_to @worker_type, notice: 'Worker type was successfully created.' }
+          format.html { redirect_to @worker_type, notice: I18n.t('activerecord.successful.messages.created', :model => @worker_type.class.model_name.human) }
           format.json { render json: @worker_type, status: :created, location: @worker_type }
         else
           format.html { render action: "new" }
@@ -66,10 +67,11 @@ module Ag2Human
     def update
       @breadcrumb = 'update'
       @worker_type = WorkerType.find(params[:id])
+      @worker_type.updated_by = current_user.id if !current_user.nil?
   
       respond_to do |format|
         if @worker_type.update_attributes(params[:worker_type])
-          format.html { redirect_to @worker_type, notice: 'Worker type was successfully updated.' }
+          format.html { redirect_to @worker_type, notice: I18n.t('activerecord.successful.messages.updated', :model => @worker_type.class.model_name.human) }
           format.json { head :no_content }
         else
           format.html { render action: "edit" }

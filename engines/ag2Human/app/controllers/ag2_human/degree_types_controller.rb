@@ -49,10 +49,11 @@ module Ag2Human
     def create
       @breadcrumb = 'create'
       @degree_type = DegreeType.new(params[:degree_type])
+      @degree_type.created_by = current_user.id if !current_user.nil?
   
       respond_to do |format|
         if @degree_type.save
-          format.html { redirect_to @degree_type, notice: 'Degree type was successfully created.' }
+          format.html { redirect_to @degree_type, notice: I18n.t('activerecord.successful.messages.created', :model => @degree_type.class.model_name.human) }
           format.json { render json: @degree_type, status: :created, location: @degree_type }
         else
           format.html { render action: "new" }
@@ -66,10 +67,11 @@ module Ag2Human
     def update
       @breadcrumb = 'update'
       @degree_type = DegreeType.find(params[:id])
+      @degree_type.updated_by = current_user.id if !current_user.nil?
   
       respond_to do |format|
         if @degree_type.update_attributes(params[:degree_type])
-          format.html { redirect_to @degree_type, notice: 'Degree type was successfully updated.' }
+          format.html { redirect_to @degree_type, notice: I18n.t('activerecord.successful.messages.updated', :model => @degree_type.class.model_name.human) }
           format.json { head :no_content }
         else
           format.html { render action: "edit" }

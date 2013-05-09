@@ -10,6 +10,7 @@
       <td><%= @street_type.street_type_description.titleize %></td>
     </tr>
     <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @street_type } %>
+    <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @street_type } %>
   </tbody>
 </table>
 

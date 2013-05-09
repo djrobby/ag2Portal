@@ -49,10 +49,11 @@ module Ag2Human
     def create
       @breadcrumb = 'create'
       @contract_type = ContractType.new(params[:contract_type])
+      @contract_type.created_by = current_user.id if !current_user.nil?
   
       respond_to do |format|
         if @contract_type.save
-          format.html { redirect_to @contract_type, notice: 'Contract type was successfully created.' }
+          format.html { redirect_to @contract_type, notice: I18n.t('activerecord.successful.messages.created', :model => @contract_type.class.model_name.human) }
           format.json { render json: @contract_type, status: :created, location: @contract_type }
         else
           format.html { render action: "new" }
@@ -66,10 +67,11 @@ module Ag2Human
     def update
       @breadcrumb = 'update'
       @contract_type = ContractType.find(params[:id])
+      @contract_type.updated_by = current_user.id if !current_user.nil?
   
       respond_to do |format|
         if @contract_type.update_attributes(params[:contract_type])
-          format.html { redirect_to @contract_type, notice: 'Contract type was successfully updated.' }
+          format.html { redirect_to @contract_type, notice: I18n.t('activerecord.successful.messages.updated', :model => @contract_type.class.model_name.human) }
           format.json { head :no_content }
         else
           format.html { render action: "edit" }

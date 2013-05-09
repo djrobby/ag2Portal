@@ -1,7 +1,8 @@
 class Zipcode < ActiveRecord::Base
   belongs_to :town
   belongs_to :province
-  attr_accessible :zipcode, :town_id, :province_id
+  attr_accessible :zipcode, :town_id, :province_id,
+                  :created_by, :updated_by
 
   validates :zipcode,  :presence => true
   validates :town_id,  :presence => true

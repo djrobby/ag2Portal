@@ -16,6 +16,7 @@
       <td><%= @zipcode.province.name_and_region unless @zipcode.province.blank? %></td>
     </tr>
     <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @zipcode } %>
+    <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @company } %>
   </tbody>
 </table>
 

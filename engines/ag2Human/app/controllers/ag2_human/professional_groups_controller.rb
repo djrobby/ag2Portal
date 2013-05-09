@@ -49,10 +49,11 @@ module Ag2Human
     def create
       @breadcrumb = 'create'
       @professional_group = ProfessionalGroup.new(params[:professional_group])
+      @professional_group.created_by = current_user.id if !current_user.nil?
   
       respond_to do |format|
         if @professional_group.save
-          format.html { redirect_to @professional_group, notice: 'Professional group was successfully created.' }
+          format.html { redirect_to @professional_group, notice: I18n.t('activerecord.successful.messages.created', :model => @professional_group.class.model_name.human) }
           format.json { render json: @professional_group, status: :created, location: @professional_group }
         else
           format.html { render action: "new" }
@@ -66,10 +67,11 @@ module Ag2Human
     def update
       @breadcrumb = 'update'
       @professional_group = ProfessionalGroup.find(params[:id])
+      @professional_group.updated_by = current_user.id if !current_user.nil?
   
       respond_to do |format|
         if @professional_group.update_attributes(params[:professional_group])
-          format.html { redirect_to @professional_group, notice: 'Professional group was successfully updated.' }
+          format.html { redirect_to @professional_group, notice: I18n.t('activerecord.successful.messages.updated', :model => @professional_group.class.model_name.human) }
           format.json { head :no_content }
         else
           format.html { render action: "edit" }

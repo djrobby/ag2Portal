@@ -203,6 +203,10 @@ en:
   activerecord:
     errors:
       <<: *errors
+    successful:
+      messages:
+        created: "%{model} was successfully created."
+        updated: "%{model} was successfully updated."
   simple_form:
     "yes": 'Yes'
     "no": 'No'

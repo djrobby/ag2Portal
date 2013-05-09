@@ -49,10 +49,11 @@ module Ag2Human
     def create
       @breadcrumb = 'create'
       @collective_agreement = CollectiveAgreement.new(params[:collective_agreement])
+      @collective_agreement.created_by = current_user.id if !current_user.nil?
   
       respond_to do |format|
         if @collective_agreement.save
-          format.html { redirect_to @collective_agreement, notice: 'Collective agreement was successfully created.' }
+          format.html { redirect_to @collective_agreement, notice: I18n.t('activerecord.successful.messages.created', :model => @collective_agreement.class.model_name.human) }
           format.json { render json: @collective_agreement, status: :created, location: @collective_agreement }
         else
           format.html { render action: "new" }
@@ -66,10 +67,11 @@ module Ag2Human
     def update
       @breadcrumb = 'update'
       @collective_agreement = CollectiveAgreement.find(params[:id])
+      @collective_agreement.updated_by = current_user.id if !current_user.nil?
   
       respond_to do |format|
         if @collective_agreement.update_attributes(params[:collective_agreement])
-          format.html { redirect_to @collective_agreement, notice: 'Collective agreement was successfully updated.' }
+          format.html { redirect_to @collective_agreement, notice: I18n.t('activerecord.successful.messages.updated', :model => @collective_agreement.class.model_name.human) }
           format.json { head :no_content }
         else
           format.html { render action: "edit" }

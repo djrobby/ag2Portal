@@ -49,10 +49,11 @@ module Ag2Admin
     def create
       @breadcrumb = 'create'
       @role = Role.new(params[:role])
+      @role.created_by = current_user.id if !current_user.nil?
   
       respond_to do |format|
         if @role.save
-          format.html { redirect_to @role, notice: 'Role was successfully created.' }
+          format.html { redirect_to @role, notice: I18n.t('activerecord.successful.messages.created', :model => @role.class.model_name.human) }
           format.json { render json: @role, status: :created, location: @role }
         else
           format.html { render action: "new" }
@@ -66,10 +67,11 @@ module Ag2Admin
     def update
       @breadcrumb = 'update'
       @role = Role.find(params[:id])
+      @role.updated_by = current_user.id if !current_user.nil?
   
       respond_to do |format|
         if @role.update_attributes(params[:role])
-          format.html { redirect_to @role, notice: 'Role was successfully updated.' }
+          format.html { redirect_to @role, notice: I18n.t('activerecord.successful.messages.updated', :model => @role.class.model_name.human) }
           format.json { head :no_content }
         else
           format.html { render action: "edit" }

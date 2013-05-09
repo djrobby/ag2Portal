@@ -1,6 +1,7 @@
 class App < ActiveRecord::Base
   belongs_to :site
-  attr_accessible :description, :icon_file, :name, :path, :pict_file, :site_id
+  attr_accessible :description, :icon_file, :name, :path, :pict_file, :site_id,
+                  :created_by, :updated_by
 
   validates :description, :presence => true
   validates :icon_file,   :presence => true

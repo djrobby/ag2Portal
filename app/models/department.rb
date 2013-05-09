@@ -1,5 +1,6 @@
 class Department < ActiveRecord::Base
-  attr_accessible :name, :code
+  attr_accessible :name, :code,
+                  :created_by, :updated_by
 
   validates :name,  :presence => true
   validates :code,  :presence => true,

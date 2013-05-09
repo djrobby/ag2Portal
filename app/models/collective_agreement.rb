@@ -1,5 +1,6 @@
 class CollectiveAgreement < ActiveRecord::Base
-  attr_accessible :ca_code, :name
+  attr_accessible :ca_code, :name,
+                  :created_by, :updated_by
 
   validates :ca_code, :presence => true,
                       :length => { :minimum => 2 },

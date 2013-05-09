@@ -22,6 +22,7 @@
       <td><%= @app.icon_file %></td>
     </tr>
     <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @app } %>
+    <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @app } %>
   </tbody>
 </table>
 

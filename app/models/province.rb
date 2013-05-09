@@ -1,6 +1,7 @@
 class Province < ActiveRecord::Base
   belongs_to :region
-  attr_accessible :ine_cpro, :name, :region_id
+  attr_accessible :ine_cpro, :name, :region_id,
+                  :created_by, :updated_by
 
   validates :name,      :presence => true
   validates :ine_cpro,  :length => { :minimum => 2 }

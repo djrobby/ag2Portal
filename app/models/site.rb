@@ -1,5 +1,6 @@
 class Site < ActiveRecord::Base
-  attr_accessible :description, :icon_file, :name, :path, :pict_file
+  attr_accessible :description, :icon_file, :name, :path, :pict_file,
+                  :created_by, :updated_by
 
   validates :description, :presence => true
   validates :icon_file,   :presence => true

@@ -10,7 +10,8 @@ class SharedContact < ActiveRecord::Base
                   :fax, :first_name, :fiscal_id, :floor, :floor_office,
                   :last_name, :phone, :position, :street_name, :street_number,
                   :street_type_id, :zipcode_id, :town_id, :province_id,
-                  :country_id, :shared_contact_type_id, :remarks, :region_id
+                  :country_id, :shared_contact_type_id, :remarks, :region_id,
+                  :created_by, :updated_by
 
   validates :first_name,              :presence => true, :if => "company.blank?"
   validates :last_name,               :presence => true, :if => "company.blank?"

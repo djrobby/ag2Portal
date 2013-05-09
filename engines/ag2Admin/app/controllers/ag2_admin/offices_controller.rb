@@ -94,10 +94,11 @@ module Ag2Admin
 #      internal
       @breadcrumb = 'create'
       @office = Office.new(params[:office])
+      @office.created_by = current_user.id if !current_user.nil?
 
       respond_to do |format|
         if @office.save
-          format.html { redirect_to @office, notice: 'Office was successfully created.' }
+          format.html { redirect_to @office, notice: I18n.t('activerecord.successful.messages.created', :model => @office.class.model_name.human) }
           format.json { render json: @office, status: :created, location: @office }
         else
           format.html { render action: "new" }
@@ -112,10 +113,11 @@ module Ag2Admin
 #      internal
       @breadcrumb = 'update'
       @office = Office.find(params[:id])
+      @office.updated_by = current_user.id if !current_user.nil?
 
       respond_to do |format|
         if @office.update_attributes(params[:office])
-          format.html { redirect_to @office, notice: 'Office was successfully updated.' }
+          format.html { redirect_to @office, notice: I18n.t('activerecord.successful.messages.updated', :model => @office.class.model_name.human) }
           format.json { head :no_content }
         else
           format.html { render action: "edit" }

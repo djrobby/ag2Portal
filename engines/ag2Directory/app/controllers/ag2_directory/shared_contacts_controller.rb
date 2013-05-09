@@ -114,10 +114,11 @@ module Ag2Directory
     def create
       @breadcrumb = 'create'
       @shared_contact = SharedContact.new(params[:shared_contact])
+      @shared_contact.created_by = current_user.id if !current_user.nil?
   
       respond_to do |format|
         if @shared_contact.save
-          format.html { redirect_to @shared_contact, notice: 'Shared contact was successfully created.' }
+          format.html { redirect_to @shared_contact, notice: I18n.t('activerecord.successful.messages.created', :model => @shared_contact.class.model_name.human) }
           format.json { render json: @shared_contact, status: :created, location: @shared_contact }
         else
           format.html { render action: "new" }
@@ -131,10 +132,11 @@ module Ag2Directory
     def update
       @breadcrumb = 'update'
       @shared_contact = SharedContact.find(params[:id])
+      @shared_contact.updated_by = current_user.id if !current_user.nil?
   
       respond_to do |format|
         if @shared_contact.update_attributes(params[:shared_contact])
-          format.html { redirect_to @shared_contact, notice: 'Shared contact was successfully updated.' }
+          format.html { redirect_to @shared_contact, notice: I18n.t('activerecord.successful.messages.updated', :model => @shared_contact.class.model_name.human) }
           format.json { head :no_content }
         else
           format.html { render action: "edit" }

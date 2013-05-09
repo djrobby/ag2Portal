@@ -5,7 +5,7 @@
       <h3><%=t 'ag2_admin.users.index.change_role' %></h3>
     </div>
     <div class="modal-body">
-      <%= f.input :role_ids, :collection => Role.all, :as => :radio_buttons, :label_method => lambda {|t| t.name.titleize}, :label => false, :item_wrapper_class => 'inline', checked: user.role_ids.first %>
+      <%= f.input :role_ids, :collection => Role.all, :as => :radio_buttons, :label_method => lambda {|t| t.name.titleize}, :label => false, :item_wrapper_class => '', checked: user.role_ids.first %>
     </div>
     <div class="modal-footer">
       <%= f.submit I18n.t('ag2_admin.users.index.change_role'), :class => "btn btn-primary" %>

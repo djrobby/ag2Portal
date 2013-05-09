@@ -49,10 +49,11 @@ module Ag2Admin
     def create
       @breadcrumb = 'create'
       @country = Country.new(params[:country])
+      @country.created_by = current_user.id if !current_user.nil?
   
       respond_to do |format|
         if @country.save
-          format.html { redirect_to @country, notice: 'Country was successfully created.' }
+          format.html { redirect_to @country, notice: I18n.t('activerecord.successful.messages.created', :model => @country.class.model_name.human) }
           format.json { render json: @country, status: :created, location: @country }
         else
           format.html { render action: "new" }
@@ -66,10 +67,11 @@ module Ag2Admin
     def update
       @breadcrumb = 'update'
       @country = Country.find(params[:id])
+      @country.updated_by = current_user.id if !current_user.nil?
   
       respond_to do |format|
         if @country.update_attributes(params[:country])
-          format.html { redirect_to @country, notice: 'Country was successfully updated.' }
+          format.html { redirect_to @country, notice: I18n.t('activerecord.successful.messages.updated', :model => @country.class.model_name.human) }
           format.json { head :no_content }
         else
           format.html { render action: "edit" }

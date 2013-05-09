@@ -197,6 +197,10 @@ es:
   activerecord:
     errors:
       <<: *errors
+    successful:
+      messages:
+        created: "%{model} fue creado/a con éxito."
+        updated: "%{model} fue actualizado/a con éxito."
   simple_form:
     "yes": 'Si'
     "no": 'No'

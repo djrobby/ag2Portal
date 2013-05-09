@@ -3,7 +3,8 @@ class Role < ActiveRecord::Base
   belongs_to :resource, :polymorphic => true
 
   # Setup accessible (or protected) attributes for your model
-  attr_accessible :name
-  
+  attr_accessible :name,
+                  :created_by, :updated_by
+
   scopify
 end

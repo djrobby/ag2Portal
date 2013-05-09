@@ -16,6 +16,7 @@
       <td><%= @town.ine_dc %></td>
     </tr>
     <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @town } %>
+    <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @town } %>
   </tbody>
 </table>
 

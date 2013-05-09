@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130509105251) do
+ActiveRecord::Schema.define(:version => 20130509164130) do
 
   create_table "apps", :force => true do |t|
     t.string   "name"
@@ -22,6 +22,8 @@ ActiveRecord::Schema.define(:version => 20130509105251) do
     t.string   "icon_file"
     t.datetime "created_at",  :null => false
     t.datetime "updated_at",  :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
   end
 
   add_index "apps", ["name"], :name => "index_apps_on_name"
@@ -32,6 +34,8 @@ ActiveRecord::Schema.define(:version => 20130509105251) do
     t.string   "ca_code"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
   end
 
   add_index "collective_agreements", ["ca_code"], :name => "index_collective_agreements_on_ca_code"
@@ -78,6 +82,8 @@ ActiveRecord::Schema.define(:version => 20130509105251) do
     t.string   "ct_code"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
   end
 
   add_index "contract_types", ["ct_code"], :name => "index_contract_types_on_ct_code"
@@ -101,6 +107,8 @@ ActiveRecord::Schema.define(:version => 20130509105251) do
     t.integer  "avatar_file_size"
     t.datetime "avatar_updated_at"
     t.integer  "worker_id"
+    t.integer  "created_by"
+    t.integer  "updated_by"
   end
 
   add_index "corp_contacts", ["company_id"], :name => "index_corp_contacts_on_company_id"
@@ -119,6 +127,8 @@ ActiveRecord::Schema.define(:version => 20130509105251) do
     t.string   "name"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
   end
 
   create_table "data_import_configs", :force => true do |t|
@@ -127,6 +137,8 @@ ActiveRecord::Schema.define(:version => 20130509105251) do
     t.string   "target"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
   end
 
   add_index "data_import_configs", ["name"], :name => "index_data_import_configs_on_name"
@@ -136,6 +148,8 @@ ActiveRecord::Schema.define(:version => 20130509105251) do
     t.string   "dt_code"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
   end
 
   add_index "degree_types", ["dt_code"], :name => "index_degree_types_on_dt_code"
@@ -145,6 +159,8 @@ ActiveRecord::Schema.define(:version => 20130509105251) do
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
     t.string   "code"
+    t.integer  "created_by"
+    t.integer  "updated_by"
   end
 
   add_index "departments", ["code"], :name => "index_departments_on_code"
@@ -168,6 +184,8 @@ ActiveRecord::Schema.define(:version => 20130509105251) do
     t.string   "fax"
     t.string   "cellular"
     t.string   "email"
+    t.integer  "created_by"
+    t.integer  "updated_by"
   end
 
   add_index "offices", ["company_id"], :name => "index_offices_on_company_id"
@@ -182,6 +200,8 @@ ActiveRecord::Schema.define(:version => 20130509105251) do
     t.string   "pg_code"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
   end
 
   add_index "professional_groups", ["pg_code"], :name => "index_professional_groups_on_pg_code"
@@ -192,6 +212,8 @@ ActiveRecord::Schema.define(:version => 20130509105251) do
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
     t.integer  "region_id"
+    t.integer  "created_by"
+    t.integer  "updated_by"
   end
 
   add_index "provinces", ["ine_cpro"], :name => "index_provinces_on_ine_cpro"
@@ -202,6 +224,8 @@ ActiveRecord::Schema.define(:version => 20130509105251) do
     t.integer  "country_id"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
   end
 
   create_table "roles", :force => true do |t|
@@ -210,6 +234,8 @@ ActiveRecord::Schema.define(:version => 20130509105251) do
     t.string   "resource_type"
     t.datetime "created_at",    :null => false
     t.datetime "updated_at",    :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
   end
 
   add_index "roles", ["name", "resource_type", "resource_id"], :name => "index_roles_on_name_and_resource_type_and_resource_id"
@@ -219,6 +245,8 @@ ActiveRecord::Schema.define(:version => 20130509105251) do
     t.string   "name"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
   end
 
   create_table "shared_contacts", :force => true do |t|
@@ -247,6 +275,8 @@ ActiveRecord::Schema.define(:version => 20130509105251) do
     t.datetime "updated_at",             :null => false
     t.string   "remarks"
     t.integer  "region_id"
+    t.integer  "created_by"
+    t.integer  "updated_by"
   end
 
   add_index "shared_contacts", ["cellular"], :name => "index_shared_contacts_on_cellular"
@@ -272,6 +302,8 @@ ActiveRecord::Schema.define(:version => 20130509105251) do
     t.string   "icon_file"
     t.datetime "created_at",  :null => false
     t.datetime "updated_at",  :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
   end
 
   add_index "sites", ["name"], :name => "index_sites_on_name"
@@ -281,6 +313,8 @@ ActiveRecord::Schema.define(:version => 20130509105251) do
     t.string   "street_type_description"
     t.datetime "created_at",              :null => false
     t.datetime "updated_at",              :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
   end
 
   add_index "street_types", ["street_type_code"], :name => "index_street_types_on_street_type_code"
@@ -293,6 +327,8 @@ ActiveRecord::Schema.define(:version => 20130509105251) do
     t.integer  "timerecord_code_id"
     t.datetime "created_at",         :null => false
     t.datetime "updated_at",         :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
   end
 
   add_index "time_records", ["timerecord_code_id"], :name => "index_time_records_on_timerecord_code_id"
@@ -305,6 +341,8 @@ ActiveRecord::Schema.define(:version => 20130509105251) do
     t.string   "name"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
   end
 
   add_index "timerecord_codes", ["name"], :name => "index_timerecord_codes_on_name"
@@ -313,6 +351,8 @@ ActiveRecord::Schema.define(:version => 20130509105251) do
     t.string   "name"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
   end
 
   add_index "timerecord_types", ["name"], :name => "index_timerecord_types_on_name"
@@ -324,6 +364,8 @@ ActiveRecord::Schema.define(:version => 20130509105251) do
     t.integer  "province_id"
     t.datetime "created_at",  :null => false
     t.datetime "updated_at",  :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
   end
 
   add_index "towns", ["ine_cmun"], :name => "index_towns_on_ine_cmun"
@@ -343,6 +385,8 @@ ActiveRecord::Schema.define(:version => 20130509105251) do
     t.datetime "created_at",                             :null => false
     t.datetime "updated_at",                             :null => false
     t.string   "name",                   :default => "", :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true
@@ -359,6 +403,8 @@ ActiveRecord::Schema.define(:version => 20130509105251) do
     t.string   "description"
     t.datetime "created_at",  :null => false
     t.datetime "updated_at",  :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
   end
 
   create_table "workers", :force => true do |t|
@@ -407,6 +453,8 @@ ActiveRecord::Schema.define(:version => 20130509105251) do
     t.string   "nomina_id"
     t.decimal  "gross_salary",              :precision => 12, :scale => 4, :default => 0.0, :null => false
     t.decimal  "variable_salary",           :precision => 12, :scale => 4, :default => 0.0, :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
   end
 
   add_index "workers", ["affiliation_id"], :name => "index_workers_on_affiliation_id"
@@ -438,6 +486,8 @@ ActiveRecord::Schema.define(:version => 20130509105251) do
     t.integer  "province_id"
     t.datetime "created_at",  :null => false
     t.datetime "updated_at",  :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
   end
 
   add_index "zipcodes", ["province_id"], :name => "index_zipcodes_on_province_id"
