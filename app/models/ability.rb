@@ -1,26 +1,60 @@
 class Ability
   include CanCan::Ability
   def initialize(user)
-    user ||= User.new # guest user (not logged in)
+    # user ||= User.new # guest user (not logged in)
     alias_action :create, :read, :update, :destroy, :to => :crud
     alias_action :create, :update, :to => :write
 
-    if user.has_role? :admin
-      # administrator role can manage all
-      can :manage, :all
-    elsif user.has_role? :advanced
-      # advanced role can CRUD all
-      can :crud, :all
-    elsif user.has_role? :user
-      # user role can read, create and update models depending on their permissions
-      can :read, :all
-      can :write, :all
-    elsif user.has_role? :guest
-      # guest role can only read all
-      can :read, :all
-    else
-      # banned role and not logged-in users can't manage anything
+    # Not logged-in users can't manage anything
+    if user.nil?
       cannot :manage, :all
+      return      
+    end
+    
+    # Administrators (administrator role) can manage all
+    if user.has_role? :Administrator
+      can :manage, :all
+      return
+    end
+    
+    # Users can't manage configurations
+    cannot :manage, :app
+    cannot :manage, :data_import_config
+    cannot :manage, :role
+    cannot :manage, :site
+    cannot :manage, :user
+    
+    #
+    # Users according to their roles
+    #
+    # ag2Admin
+    if user.has_role? :ag2Admin_User
+      can :crud, :company
+      can :crud, :country
+      can :crud, :office
+      can :crud, :province
+      can :crud, :region
+      can :crud, :street_type
+      can :crud, :town
+      can :crud, :zipcode
+    elsif user.has_role? :ag2Admin_Guest
+      can :read, :company
+      can :read, :country
+      can :read, :office
+      can :read, :province
+      can :read, :region
+      can :read, :street_type
+      can :read, :town
+      can :read, :zipcode
+    elsif user.has_role? :ag2Admin_Banned
+      can :manage, :company
+      can :manage, :country
+      can :manage, :office
+      can :manage, :province
+      can :manage, :region
+      can :manage, :street_type
+      can :manage, :town
+      can :manage, :zipcode
     end
 
   # Define abilities for the passed in user here. For example:

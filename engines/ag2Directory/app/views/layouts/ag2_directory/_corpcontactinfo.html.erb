@@ -18,7 +18,7 @@
         <%= Company.find(contact.company).name unless contact.company.nil? %>
       </p>
       <p>
-        <span style="font-weight: bold;">
+        <span class="bolded">
           <i class="icon-phone-black"></i>
           <%= contact.corp_phone %>
           <% if !contact.corp_extension.nil? && contact.corp_extension != '' %>

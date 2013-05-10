@@ -21,6 +21,10 @@ class User < ActiveRecord::Base
   end
 
   def assign_default_role
-    add_role(:guest) if self.roles.blank?
+    if self.roles.blank?
+      add_role(:ag2Admin_Guest)
+      add_role(:ag2Directory_Guest)
+      add_role(:ag2Human_Banned)
+    end
   end
 end

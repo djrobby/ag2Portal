@@ -6,11 +6,12 @@ es:
         btn_new: "Nuevo Usuario"
         go_to_child: "Ir a Roles"
         back_to_root: "Volver a ag2Admin"
-        change_role: "Cambiar Rol"
+        btn_role: "Roles"
+        change_role_title: "Roles para %{user}"
+        btn_change_role: "Cambiar Roles"
       show:
         title: "Usuario"
         btn_edit: "Editar Usuario"
-        show_to: "Ver Rol"
       edit:
         title: "Editar Usuario"
         btn_show: "Ver Usuario"

@@ -2,14 +2,15 @@
 
 <h3><%=t '.title' %></h3>
 
-<%= simple_form_for @user do |f| %>
+<%= simple_form_for @user, :html => { :class => 'form-inline well' } do |f| %>
 <%= f.error_notification %>
 <%= display_base_errors resource %>
-<%= f.input :email, :required => true, :autofocus => true %>
-<%= f.input :name, :required => true %>
-<%= f.input :password, :required => true %>
-<%= f.input :password_confirmation, :required => true %>
-<%= f.input :role_ids, :collection => Role.all, :label_method => lambda {|t| t.name.titleize} %>
+<%= f.input :email, :required => true, :autofocus => true, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %>
+<%= f.input :name, :required => true, :label_html => { :class => 'form-label' } %>
+<%= f.input :password, :required => true, :label_html => { :class => 'form-label' } %>
+<%= f.input :password_confirmation, :required => true, :label_html => { :class => 'form-label' } %>
+<%= f.input :role_ids, :collection => Role.all, :as => :check_boxes, :label_method => lambda {|t| t.name.titleize}, :label_html => { :class => 'form-label' }, :item_wrapper_class => 'inline' %>
+<br />
 <%= f.button :submit, nil, :class => 'btn-primary' %>
 <% end %>
 

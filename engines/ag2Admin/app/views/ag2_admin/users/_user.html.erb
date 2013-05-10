@@ -1,14 +1,14 @@
 <div id="role-options-<%= user.id %>" class="modal" style="display: none;">
-  <%= simple_form_for user, :url => user_path(user), :html => {:method => :put, :class => 'form-horizontal' } do |f| %>
+  <%= simple_form_for user, :url => user_path(user), :html => {:method => :put, :class => 'form-inline' } do |f| %>
     <div class="modal-header">
       <a class="close" data-dismiss="modal">&#215;</a>
-      <h3><%=t 'ag2_admin.users.index.change_role' %></h3>
+      <h3><%= I18n.t('ag2_admin.users.index.change_role_title', :user => User.find(user.id).name) %></h3>
     </div>
     <div class="modal-body">
-      <%= f.input :role_ids, :collection => Role.all, :as => :radio_buttons, :label_method => lambda {|t| t.name.titleize}, :label => false, :item_wrapper_class => '', checked: user.role_ids.first %>
+      <%= f.input :role_ids, :collection => Role.all, :as => :check_boxes, :label_method => lambda {|t| t.name}, :label => false, :item_wrapper_class => 'inline' %>
     </div>
     <div class="modal-footer">
-      <%= f.submit I18n.t('ag2_admin.users.index.change_role'), :class => "btn btn-primary" %>
+      <%= f.submit I18n.t('ag2_admin.users.index.btn_change_role'), :class => "btn btn-primary" %>
       <a class="btn btn-primary" data-dismiss="modal" href="#"><%=t :close_button %></a>
     </div>
   <% end %>
