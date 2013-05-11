@@ -2,7 +2,7 @@ class Ability
   include CanCan::Ability
   def initialize(user)
     # user ||= User.new # guest user (not logged in)
-    alias_action :create, :read, :update, :destroy, :to => :crud
+    alias_action :create, :read, :update, :delete, :to => :crud
     alias_action :create, :update, :to => :write
 
     # Not logged-in users can't manage anything
@@ -18,43 +18,92 @@ class Ability
     end
     
     # Users can't manage configurations
-    cannot :manage, :app
-    cannot :manage, :data_import_config
-    cannot :manage, :role
-    cannot :manage, :site
-    cannot :manage, :user
+    cannot :manage, App
+    cannot :manage, DataImportConfig
+    cannot :manage, Role
+    cannot :manage, Site
+    cannot :manage, User
     
     #
     # Users according to their roles
     #
     # ag2Admin
     if user.has_role? :ag2Admin_User
-      can :crud, :company
-      can :crud, :country
-      can :crud, :office
-      can :crud, :province
-      can :crud, :region
-      can :crud, :street_type
-      can :crud, :town
-      can :crud, :zipcode
+      can :crud, Company
+      can :crud, Country
+      can :crud, Office
+      can :crud, Province
+      can :crud, Region
+      can :crud, StreetType
+      can :crud, Town
+      can :crud, Zipcode
     elsif user.has_role? :ag2Admin_Guest
-      can :read, :company
-      can :read, :country
-      can :read, :office
-      can :read, :province
-      can :read, :region
-      can :read, :street_type
-      can :read, :town
-      can :read, :zipcode
+      can :read, Company
+      can :read, Country
+      can :read, Office
+      can :read, Province
+      can :read, Region
+      can :read, StreetType
+      can :read, Town
+      can :read, Zipcode
     elsif user.has_role? :ag2Admin_Banned
-      can :manage, :company
-      can :manage, :country
-      can :manage, :office
-      can :manage, :province
-      can :manage, :region
-      can :manage, :street_type
-      can :manage, :town
-      can :manage, :zipcode
+      cannot :manage, Company
+      cannot :manage, Country
+      cannot :manage, Office
+      cannot :manage, Province
+      cannot :manage, Region
+      cannot :manage, StreetType
+      cannot :manage, Town
+      cannot :manage, Zipcode
+    end
+    # ag2Directory
+    if user.has_role? :ag2Directory_User
+      can :crud, CorpContact
+      can :crud, SharedContactType
+      can :crud, SharedContact
+    elsif user.has_role? :ag2Directory_Guest
+      can :read, CorpContact
+      can :read, SharedContactType
+      can :read, SharedContact
+    elsif user.has_role? :ag2Directory_Banned
+      cannot :manage, CorpContact
+      cannot :manage, SharedContactType
+      cannot :manage, SharedContact
+    end
+    # ag2Human
+    if user.has_role? :ag2Human_User
+      can :crud, CollectiveAgreement
+      can :crud, ContractType
+      can :crud, DegreeType
+      can :crud, Department
+      can :crud, ProfessionalGroup
+      can :crud, TimeRecord
+      can :crud, TimerecordCode
+      can :crud, TimerecordType
+      can :crud, WorkerType
+      can :crud, Worker
+    elsif user.has_role? :ag2Human_Guest
+      can :read, CollectiveAgreement
+      can :read, ContractType
+      can :read, DegreeType
+      can :read, Department
+      can :read, ProfessionalGroup
+      can :read, TimeRecord
+      can :read, TimerecordCode
+      can :read, TimerecordType
+      can :read, WorkerType
+      can :read, Worker
+    elsif user.has_role? :ag2Human_Banned
+      cannot :manage, CollectiveAgreement
+      cannot :manage, ContractType
+      cannot :manage, DegreeType
+      cannot :manage, Department
+      cannot :manage, ProfessionalGroup
+      cannot :manage, TimeRecord
+      cannot :manage, TimerecordCode
+      cannot :manage, TimerecordType
+      cannot :manage, WorkerType
+      cannot :manage, Worker
     end
 
   # Define abilities for the passed in user here. For example:

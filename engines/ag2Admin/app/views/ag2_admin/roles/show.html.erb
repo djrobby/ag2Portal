@@ -20,9 +20,7 @@
   </tbody>
 </table>
 
-<%= link_to I18n.t('ag2_admin.roles.show.btn_edit'), edit_role_path(@role), :class => 'btn btn-primary' %>
-<br />
-<br />
+<%= render :partial => '/layouts/crud/update', :locals => { :model => Role, :path => edit_role_path(@role), :txt => I18n.t('ag2_admin.roles.show.btn_edit') } %>
 
 <% if (@users.count > 0) %>
 <h4><%=t '.subtable_title' %></h4>

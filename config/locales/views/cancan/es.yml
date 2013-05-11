@@ -1,0 +1,3 @@
+es:
+  unauthorized:
+    default: "¡Hey!... No tienes autorización para acceder aquí."

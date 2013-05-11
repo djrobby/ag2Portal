@@ -20,8 +20,6 @@
   </tbody>
 </table>
 
-<%= link_to I18n.t('ag2_admin.towns.show.btn_edit'), edit_town_path(@town), :class => 'btn btn-primary' %>
-<br />
-<br />
+<%= render :partial => '/layouts/crud/update', :locals => { :model => Town, :path => edit_town_path(@town), :txt => I18n.t('ag2_admin.towns.show.btn_edit') } %>
 <%= link_to I18n.t('ag2_admin.towns.show.show_to'), @town.province %> |
 <%= link_to I18n.t('ag2_admin.towns.back_to_main_page'), towns_path %>

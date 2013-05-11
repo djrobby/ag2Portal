@@ -16,11 +16,9 @@
       <td><%= @zipcode.province.name_and_region unless @zipcode.province.blank? %></td>
     </tr>
     <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @zipcode } %>
-    <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @company } %>
+    <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @zipcode } %>
   </tbody>
 </table>
 
-<%= link_to I18n.t('ag2_admin.zipcodes.show.btn_edit'), edit_zipcode_path(@zipcode), :class => 'btn btn-primary' %>
-<br />
-<br />
+<%= render :partial => '/layouts/crud/update', :locals => { :model => Zipcode, :path => edit_zipcode_path(@zipcode), :txt => I18n.t('ag2_admin.zipcodes.show.btn_edit') } %>
 <%= link_to I18n.t('ag2_admin.zipcodes.back_to_main_page'), zipcodes_path %>

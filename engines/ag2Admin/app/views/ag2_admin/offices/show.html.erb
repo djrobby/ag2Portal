@@ -53,8 +53,6 @@
   </tbody>
 </table>
 
-<%= link_to I18n.t('ag2_admin.offices.show.btn_edit'), edit_office_path(@office), :class => 'btn btn-primary' %>
-<br />
-<br />
+<%= render :partial => '/layouts/crud/update', :locals => { :model => Office, :path => edit_office_path(@office), :txt => I18n.t('ag2_admin.offices.show.btn_edit') } %>
 <%= link_to I18n.t('ag2_admin.offices.show.show_to'), @office.company %> |
 <%= link_to I18n.t('ag2_admin.offices.back_to_main_page'), offices_path %>

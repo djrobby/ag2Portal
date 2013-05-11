@@ -14,9 +14,7 @@
   </tbody>
 </table>
 
-<%= link_to I18n.t('ag2_admin.regions.show.btn_edit'), edit_region_path(@region), :class => 'btn btn-primary' %>
-<br />
-<br />
+<%= render :partial => '/layouts/crud/update', :locals => { :model => Region, :path => edit_region_path(@region), :txt => I18n.t('ag2_admin.regions.show.btn_edit') } %>
 
 <% if (@provinces.count > 0) %>
 <h4><%= t '.subtable_title' %></h4>

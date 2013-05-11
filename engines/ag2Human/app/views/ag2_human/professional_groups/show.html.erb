@@ -20,9 +20,7 @@
   </tbody>
 </table>
 
-<%= link_to I18n.t('ag2_human.professional_groups.show.btn_edit'), edit_professional_group_path(@professional_group), :class => 'btn btn-primary' %>
-<br />
-<br />
+<%= render :partial => '/layouts/crud/update', :locals => { :model => ProfessionalGroup, :path => edit_professional_group_path(@professional_group), :txt => I18n.t('ag2_human.professional_groups.show.btn_edit') } %>
 
 <% if (@workers.count > 0) %>
 <h4>Professional group Workers</h4>

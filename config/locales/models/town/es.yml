@@ -6,6 +6,6 @@ es:
       town:
         name: "Nombre"
         ine_cmun: "Código INE (sin provincia)"
-        ine_dc: "INE Dígito de control"
+        ine_dc: "Dígito de control INE"
         province: "Provincia"
         province_id: "Provincia"

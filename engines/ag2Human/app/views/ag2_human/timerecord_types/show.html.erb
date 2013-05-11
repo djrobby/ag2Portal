@@ -14,7 +14,5 @@
   </tbody>
 </table>
 
-<%= link_to I18n.t("ag2_human.timerecord_types.show.btn_edit"), edit_timerecord_type_path(@timerecord_type), :class => 'btn btn-primary' %>
-<br />
-<br />
+<%= render :partial => '/layouts/crud/update', :locals => { :model => TimerecordType, :path => edit_timerecord_type_path(@timerecord_type), :txt => I18n.t('ag2_human.timerecord_types.show.btn_edit') } %>
 <%= link_to I18n.t("ag2_human.timerecord_types.back_to_main_page"), timerecord_types_path %>

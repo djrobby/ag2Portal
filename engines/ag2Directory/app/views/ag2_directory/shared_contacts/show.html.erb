@@ -68,7 +68,5 @@
   </tbody>
 </table>
 
-<%= link_to I18n.t("ag2_directory.shared_contacts.show.btn_edit"), edit_shared_contact_path(@shared_contact), :class => 'btn btn-primary' %>
-<br />
-<br />
+<%= render :partial => '/layouts/crud/update', :locals => { :model => SharedContact, :path => edit_shared_contact_path(@shared_contact), :txt => I18n.t('ag2_directory.shared_contacts.show.btn_edit') } %>
 <%= link_to I18n.t("ag2_directory.shared_contacts.back_to_main_page"), shared_contacts_path %>

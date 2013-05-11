@@ -42,7 +42,5 @@
   </tbody>
 </table>
 
-<%= link_to I18n.t("btn_edit", :scope => :"ag2_directory.corp_contacts.show"), edit_corp_contact_path(@corp_contact), :class => 'btn btn-primary' %>
-<br />
-<br />
+<%= render :partial => '/layouts/crud/update', :locals => { :model => CorpContact, :path => edit_corp_contact_path(@corp_contact), :txt => I18n.t('ag2_directory.corp_contacts.show.btn_edit') } %>
 <%= link_to I18n.t("back_to_main_page", :scope => :"ag2_directory.corp_contacts"), corp_contacts_path %>

@@ -1,0 +1,3 @@
+en:
+  unauthorized:
+    default: "Hey!... You are not authorized to access here."

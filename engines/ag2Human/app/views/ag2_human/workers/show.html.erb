@@ -135,9 +135,7 @@
   </tbody>
 </table>
 
-<%= link_to I18n.t('ag2_human.workers.show.btn_edit'), edit_worker_path(@worker), :class => 'btn btn-primary' %>
-<br />
-<br />
+<%= render :partial => '/layouts/crud/update', :locals => { :model => Worker, :path => edit_worker_path(@worker), :txt => I18n.t('ag2_human.workers.show.btn_edit') } %>
 <% if !session[:return_to].nil? %>
 <%= link_to session[:return_to], session[:return_to_url] %> |
 <% end %>

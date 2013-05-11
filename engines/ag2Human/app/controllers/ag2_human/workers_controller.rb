@@ -2,6 +2,14 @@ require_dependency "ag2_human/application_controller"
 
 module Ag2Human
   class WorkersController < ApplicationController
+    #load_and_authorize_resource
+    skip_load_and_authorize_resource :only => [:update_textfields_to_uppercase,
+                                               :update_email_textfield_from_user,
+                                               :update_company_textfield_from_office,
+                                               :update_code_textfield_from_name,
+                                               :update_province_textfield_from_town,
+                                               :update_province_textfield_from_zipcode]
+    
     # Update worker data to upper case at view (to_uppercase_btn)
     def update_textfields_to_uppercase
       lastname = params[:last].upcase
