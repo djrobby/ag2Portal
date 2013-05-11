@@ -2,6 +2,9 @@ require_dependency "ag2_admin/application_controller"
 
 module Ag2Admin
   class CountriesController < ApplicationController
+    before_filter :authenticate_user!
+    load_and_authorize_resource
+
     # GET /countries
     # GET /countries.json
     def index

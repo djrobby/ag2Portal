@@ -2,6 +2,9 @@ require_dependency "ag2_directory/application_controller"
 
 module Ag2Directory
   class SharedContactTypesController < ApplicationController
+    before_filter :authenticate_user!
+    load_and_authorize_resource
+    
     # GET /shared_contact_types
     # GET /shared_contact_types.json
     def index

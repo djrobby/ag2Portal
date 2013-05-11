@@ -2,6 +2,9 @@ require_dependency "ag2_human/application_controller"
 
 module Ag2Human
   class WorkerTypesController < ApplicationController
+    before_filter :authenticate_user!
+    load_and_authorize_resource
+
     # GET /worker_types
     # GET /worker_types.json
     def index

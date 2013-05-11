@@ -2,6 +2,9 @@ require_dependency "ag2_admin/application_controller"
 
 module Ag2Admin
   class AppsController < ApplicationController
+    before_filter :authenticate_user!
+    load_and_authorize_resource
+
     # GET /apps
     # GET /apps.json
     def index

@@ -5,7 +5,7 @@ class ApplicationController < ActionController::Base
     redirect_to root_url, :alert => exception.message
   end
 
-  before_filter :set_charset
+  # before_filter :set_charset
   before_filter :set_locale
 
   layout :layout
@@ -15,19 +15,25 @@ class ApplicationController < ActionController::Base
     @letters = ('A'..'Z')
   end
 
-  def set_charset
-    # @headers["Content-Type"] = "text/html; charset=utf-8"
-  end
-
   def set_locale
     # I18n.locale = params[:locale] || I18n.default_locale
     I18n.locale = params[:locale] || extract_locale_from_accept_language_header || I18n.default_locale
   end
 
+  def self.default_url_options
+    { :locale => I18n.locale }
+  end
+  
+=begin
   def default_url_options(options={})
     # logger.debug "default_url_options is passed options: #{options.inspect}\n"
     { :locale => I18n.locale }
   end
+
+  def set_charset
+    # @headers["Content-Type"] = "text/html; charset=utf-8"
+  end
+=end
 
   private
 

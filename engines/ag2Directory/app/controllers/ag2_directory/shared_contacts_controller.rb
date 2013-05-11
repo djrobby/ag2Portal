@@ -2,6 +2,13 @@ require_dependency "ag2_directory/application_controller"
 
 module Ag2Directory
   class SharedContactsController < ApplicationController
+    before_filter :authenticate_user!
+    load_and_authorize_resource
+    skip_load_and_authorize_resource :only => [:update_province_textfield_from_town,
+                                               :update_province_textfield_from_zipcode,
+                                               :update_country_textfield_from_region,
+                                               :update_region_textfield_from_province]
+    
     # Update country text field at view from region select
     def update_country_textfield_from_region
       @region = Region.find(params[:id])

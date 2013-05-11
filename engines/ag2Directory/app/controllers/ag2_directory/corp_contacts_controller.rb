@@ -2,6 +2,10 @@ require_dependency "ag2_directory/application_controller"
 
 module Ag2Directory
   class CorpContactsController < ApplicationController
+    before_filter :authenticate_user!
+    load_and_authorize_resource
+    skip_load_and_authorize_resource :only => :update_company_textfield_from_office
+    
     # Update company text field at view from office select
     def update_company_textfield_from_office
       @office = Office.find(params[:id])

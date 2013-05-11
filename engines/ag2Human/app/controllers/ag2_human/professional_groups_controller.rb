@@ -2,6 +2,9 @@ require_dependency "ag2_human/application_controller"
 
 module Ag2Human
   class ProfessionalGroupsController < ApplicationController
+    before_filter :authenticate_user!
+    load_and_authorize_resource
+
     # GET /professional_groups
     # GET /professional_groups.json
     def index

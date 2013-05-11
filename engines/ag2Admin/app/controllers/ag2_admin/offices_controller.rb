@@ -2,6 +2,12 @@ require_dependency "ag2_admin/application_controller"
 
 module Ag2Admin
   class OfficesController < ApplicationController
+    before_filter :authenticate_user!
+    load_and_authorize_resource
+    skip_load_and_authorize_resource :only => [:update_province_textfield_from_town,
+                                               :update_province_textfield_from_zipcode,
+                                               :update_code_textfield_from_zipcode]
+    
 #    def internal
 #      @companies = Company.all
 #    end

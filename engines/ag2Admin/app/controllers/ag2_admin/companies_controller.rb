@@ -2,6 +2,11 @@ require_dependency "ag2_admin/application_controller"
 
 module Ag2Admin
   class CompaniesController < ApplicationController
+    before_filter :authenticate_user!
+    load_and_authorize_resource
+    skip_load_and_authorize_resource :only => [:update_province_textfield_from_town,
+                                               :update_province_textfield_from_zipcode]
+    
     # Update hidden province text field at view from town select
     def update_province_textfield_from_town
       @town = Town.find(params[:id])

@@ -2,7 +2,8 @@ require_dependency "ag2_human/application_controller"
 
 module Ag2Human
   class WorkersController < ApplicationController
-    #load_and_authorize_resource
+    before_filter :authenticate_user!
+    load_and_authorize_resource
     skip_load_and_authorize_resource :only => [:update_textfields_to_uppercase,
                                                :update_email_textfield_from_user,
                                                :update_company_textfield_from_office,

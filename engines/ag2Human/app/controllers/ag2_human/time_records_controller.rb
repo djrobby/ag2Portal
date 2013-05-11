@@ -2,6 +2,9 @@ require_dependency "ag2_human/application_controller"
 
 module Ag2Human
   class TimeRecordsController < ApplicationController
+    before_filter :authenticate_user!
+    load_and_authorize_resource
+
     # GET /time_records
     # GET /time_records.json
     def index

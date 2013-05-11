@@ -2,7 +2,12 @@ require_dependency "ag2_directory/application_controller"
 
 module Ag2Directory
   class ImportController < ApplicationController
+    before_filter :authenticate_user!
+    load_and_authorize_resource :corp_contact
+    skip_load_and_authorize_resource :only => :data_import
+
     def index
+      authorize! :update, CorpContact
     end
 
     def data_import
