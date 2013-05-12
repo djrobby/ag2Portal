@@ -17,5 +17,6 @@ class TimeRecord < ActiveRecord::Base
     integer :timerecord_type_id
     integer :timerecord_code_id
     date :timerecord_date
+    time :timerecord_time
   end
 end

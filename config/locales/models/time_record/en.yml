@@ -1,7 +1,11 @@
 en:
   activerecord:
     models:
-      time_record: Time record
+      time_record:
+        zero:  Time records
+        one:   Time record
+        few:   Time records
+        other: Time records
     attributes:
       time_record:
         timerecord_date: "Date"

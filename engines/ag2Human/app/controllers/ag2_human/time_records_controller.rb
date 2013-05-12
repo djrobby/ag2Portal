@@ -39,8 +39,12 @@ module Ag2Human
         if !code.blank?
           with :timerecord_code_id, code
         end
+        order_by :timerecord_date, :desc
+        order_by :timerecord_time, :desc
+        paginate :page => params[:page] || 1, :per_page => 30
       end
-      @time_records = @search.results.sort_by{ |record| [ record.timerecord_date, record.timerecord_time ] }
+      #@time_records = @search.results.sort_by{ |record| [ record.timerecord_date, record.timerecord_time ] }
+      @time_records = @search.results
   
       respond_to do |format|
         format.html # index.html.erb

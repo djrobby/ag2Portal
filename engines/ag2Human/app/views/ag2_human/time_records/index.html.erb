@@ -9,7 +9,7 @@
 
 <%= render '/layouts/ag2_human/trecordsbreadcrumb' %>
 
-<h3><%=t '.title' %></h3>
+<h3><%= t '.title' %></h3>
 
 <div class="container-fluid">
   <div class="row-fluid">
@@ -41,11 +41,11 @@
       <table class="table table-condensed table-striped shrinked">
         <thead>
           <tr>
-            <th><%=t :"activerecord.attributes.time_record.worker" %></th>
-            <th><%=t :"activerecord.attributes.time_record.timerecord_date" %></th>
-            <th><%=t :"activerecord.attributes.time_record.timerecord_time" %></th>
-            <th><%=t :"activerecord.attributes.time_record.timerecord_type" %></th>
-            <th><%=t :"activerecord.attributes.time_record.timerecord_code" %></th>
+            <th><%= t :"activerecord.attributes.time_record.worker" %></th>
+            <th><%= t :"activerecord.attributes.time_record.timerecord_date" %></th>
+            <th><%= t :"activerecord.attributes.time_record.timerecord_time" %></th>
+            <th><%= t :"activerecord.attributes.time_record.timerecord_type" %></th>
+            <th><%= t :"activerecord.attributes.time_record.timerecord_code" %></th>
             <th></th>
           </tr>
         </thead>
@@ -59,11 +59,17 @@
             <td><%= record.timerecord_code.name.titleize %></td>
             <td><%= link_to record, :class => 'btn btn-mini' do %> <i class="icon-eye-open"></i> <% end %>
             <%= render :partial => '/layouts/crud/edit', :locals => { :model => TimeRecord, :path => edit_time_record_path(record) } %>
-            <%= render :partial => '/layouts/crud/delete', :locals => { :model => TimeRecord, :path => record, :msg => I18n.t("activerecord.models.time_record"), :txt => record.worker.full_name + " - " + record.timerecord_date.strftime("%d/%m/%Y") + " " + record.timerecord_time.strftime("%H:%M") } %> </td>
+            <%= render :partial => '/layouts/crud/delete', :locals => { :model => TimeRecord, :path => record, :msg => I18n.t("activerecord.models.time_record.one"), :txt => record.worker.full_name + " - " + record.timerecord_date.strftime("%d/%m/%Y") + " " + record.timerecord_time.strftime("%H:%M") } %> </td>
           </tr>
           <% end %>
         </tbody>
       </table>
+      <div id="pages">
+        <div class="page_info">
+          <%= page_entries_info @time_records  %>
+        </div>
+        <%= will_paginate @time_records, :container => false %>
+      </div>
     </div><!-- /.span9 -->
   </div><!-- /.row-fluid -->
 </div><!-- /.container-fluid -->

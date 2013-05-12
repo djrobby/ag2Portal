@@ -1,7 +1,11 @@
 es:
   activerecord:
     models:
-      time_record: Marcaje
+      time_record:
+        zero:  Marcajes
+        one:   Marcaje
+        few:   Marcajes
+        other: Marcajes
     attributes:
       time_record:
         timerecord_date: "Fecha"

@@ -1,0 +1,16 @@
+en:
+  will_paginate:
+    previous_label: "&#8592; Previous"
+    next_label: "Next &#8594;"
+    page_gap: "&hellip;"
+    page_entries_info:
+      single_page:
+        zero:  "No %{model} found"
+        one:   "You're viewing 1 %{model}"
+        other: "You're viewing all: %{count} %{model} in total"
+      single_page_html:
+        zero:  "No %{model} found"
+        one:   "You're viewing <b>1</b> %{model}"
+        other: "You're viewing all:<b>&nbsp;%{count}</b> %{model} in total"
+      multi_page: "You're viewing %{from}-%{to} %{model} of %{count} in total"
+      multi_page_html: "You're viewing <b>%{from}&nbsp;-&nbsp;%{to}</b> %{model} of <b>%{count}</b> in total"
