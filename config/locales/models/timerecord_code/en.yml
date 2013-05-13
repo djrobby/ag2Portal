@@ -1,7 +1,11 @@
 en:
   activerecord:
     models:
-      timerecord_code: TimeRecord code
+      timerecord_code:
+        zero:  TimeRecord codes
+        one:   TimeRecord code
+        few:   TimeRecord codes
+        other: TimeRecord codes
     attributes:
       timerecord_code:
         name: "Description"

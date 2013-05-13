@@ -1,7 +1,11 @@
 en:
   activerecord:
     models:
-      company: Company
+      company:
+        zero:  Companies
+        one:   Company
+        few:   Companies
+        other: Companies
     attributes:
       company:
         name: "Name"

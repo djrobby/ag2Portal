@@ -1,7 +1,11 @@
 en:
   activerecord:
     models:
-      zipcode: ZIP code
+      zipcode:
+        zero:  ZIP codes
+        one:   ZIP code
+        few:   ZIP codes
+        other: ZIP codes
     attributes:
       zipcode:
         zipcode: "Zip code"

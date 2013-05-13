@@ -86,7 +86,7 @@
       <% end %> </td>
       <td><%= contact.email %></td>
       <td> <%= render :partial => '/layouts/crud/edit', :locals => { :model => CorpContact, :path => edit_corp_contact_path(contact) } %>
-      <%= render :partial => '/layouts/crud/delete', :locals => { :model => CorpContact, :path => contact, :msg => I18n.t("activerecord.models.corp_contact"), :txt => contact.full_name } %> </td>
+      <%= render :partial => '/layouts/crud/delete', :locals => { :model => CorpContact, :path => contact, :msg => I18n.t("activerecord.models.corp_contact.one"), :txt => contact.full_name } %> </td>
     </tr>
     <% end %>
   </tbody>

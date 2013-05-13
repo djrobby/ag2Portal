@@ -8,7 +8,7 @@ module Ag2Admin
     # GET /sites
     # GET /sites.json
     def index
-      @sites = Site.all
+      @sites = Site.paginate(:page => params[:page], :per_page => per_page)
   
       respond_to do |format|
         format.html # index.html.erb

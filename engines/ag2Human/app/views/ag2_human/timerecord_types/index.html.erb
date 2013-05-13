@@ -14,11 +14,12 @@
       <tr>
         <td><%= link_to t.name, t %></td>
         <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => TimerecordType, :path => edit_timerecord_type_path(t) } %>
-        <%= render :partial => '/layouts/crud/delete', :locals => { :model => TimerecordType, :path => t, :msg => I18n.t("activerecord.models.timerecord_type"), :txt => t.name } %> </td>
+        <%= render :partial => '/layouts/crud/delete', :locals => { :model => TimerecordType, :path => t, :msg => I18n.t("activerecord.models.timerecord_type.one"), :txt => t.name } %> </td>
       </tr>
       <% end %>
     </tbody>
   </table>
+  <%= render :partial => '/layouts/pagination', :locals => { :ivar => @timerecord_types } %>
   <%= render :partial => '/layouts/crud/new', :locals => { :model => TimerecordType, :path => new_timerecord_type_path, :txt => I18n.t("ag2_human.timerecord_types.index.btn_new") } %>
   <%= link_to I18n.t("ag2_human.timerecord_types.index.back_to_root"), ag2_human.ag2_timerecord_path %>
 </div>

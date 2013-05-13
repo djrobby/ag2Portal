@@ -1,7 +1,11 @@
 en:
   activerecord:
     models:
-      town: Town
+      town:
+        zero:  Towns
+        one:   Town
+        few:   Towns
+        other: Towns
     attributes:
       town:
         name: "Name"

@@ -16,11 +16,12 @@
         <td><%= link_to t.pg_code, t %></td>
         <td><%= t.name %></td>
         <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => ProfessionalGroup, :path => edit_professional_group_path(t) } %>
-        <%= render :partial => '/layouts/crud/delete', :locals => { :model => ProfessionalGroup, :path => t, :msg => I18n.t("activerecord.models.professional_group"), :txt => t.name } %> </td>
+        <%= render :partial => '/layouts/crud/delete', :locals => { :model => ProfessionalGroup, :path => t, :msg => I18n.t("activerecord.models.professional_group.one"), :txt => t.name } %> </td>
       </tr>
       <% end %>
     </tbody>
   </table>
+  <%= render :partial => '/layouts/pagination', :locals => { :ivar => @professional_groups } %>
   <%= render :partial => '/layouts/crud/new', :locals => { :model => ProfessionalGroup, :path => new_professional_group_path, :txt => I18n.t("ag2_human.professional_groups.index.btn_new") } %>
   <%= link_to I18n.t("ag2_human.professional_groups.index.go_to_workers"), workers_path %> |
   <%= link_to I18n.t("ag2_human.professional_groups.index.back_to_root"), ag2_human.root_path %>

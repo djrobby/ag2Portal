@@ -1,7 +1,11 @@
 es:
   activerecord:
     models:
-      timerecord_type: Tipo de marcaje
+      timerecord_type:
+        zero:  Tipos de marcaje
+        one:   Tipo de marcaje
+        few:   Tipos de marcaje
+        other: Tipos de marcaje
     attributes:
       timerecord_type:
         name: "Tipo"

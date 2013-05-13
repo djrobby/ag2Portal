@@ -1,8 +1,16 @@
 en:
   activerecord:
     models:
-      user: User
-      role: Role
+      user:
+        zero:  Users
+        one:   User
+        few:   Users
+        other: Users
+      role:
+        zero:  Roles
+        one:   Role
+        few:   Roles
+        other: Roles
     attributes:
       user:
         name: "Name"

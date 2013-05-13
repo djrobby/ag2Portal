@@ -8,7 +8,7 @@ module Ag2Admin
     # GET /street_types
     # GET /street_types.json
     def index
-      @street_types = StreetType.order('street_type_code').all
+      @street_types = StreetType.paginate(:page => params[:page], :per_page => per_page).order('street_type_code')
   
       respond_to do |format|
         format.html # index.html.erb

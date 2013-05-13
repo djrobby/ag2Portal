@@ -16,11 +16,12 @@
         <td><%= link_to t.dt_code, t %></td>
         <td><%= t.name %></td>
         <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => DegreeType, :path => edit_degree_type_path(t) } %>
-        <%= render :partial => '/layouts/crud/delete', :locals => { :model => DegreeType, :path => t, :msg => I18n.t("activerecord.models.degree_type"), :txt => t.name } %> </td>
+        <%= render :partial => '/layouts/crud/delete', :locals => { :model => DegreeType, :path => t, :msg => I18n.t("activerecord.models.degree_type.one"), :txt => t.name } %> </td>
       </tr>
       <% end %>
     </tbody>
   </table>
+  <%= render :partial => '/layouts/pagination', :locals => { :ivar => @degree_types } %>
   <%= render :partial => '/layouts/crud/new', :locals => { :model => DegreeType, :path => new_degree_type_path, :txt => I18n.t("ag2_human.degree_types.index.btn_new") } %>
   <%= link_to I18n.t("ag2_human.degree_types.index.go_to_workers"), workers_path %> |
   <%= link_to I18n.t("ag2_human.degree_types.index.back_to_root"), ag2_human.root_path %>

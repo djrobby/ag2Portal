@@ -8,7 +8,7 @@ module Ag2Human
     # GET /professional_groups
     # GET /professional_groups.json
     def index
-      @professional_groups = ProfessionalGroup.all
+      @professional_groups = ProfessionalGroup.paginate(:page => params[:page], :per_page => per_page).order('pg_code')
   
       respond_to do |format|
         format.html # index.html.erb

@@ -27,11 +27,14 @@ module Ag2Directory
       
       @search = CorpContact.search do
         fulltext params[:search]
+        order_by :last_name, :asc
+        order_by :first_name, :asc
+        paginate :page => params[:page] || 1, :per_page => per_page
       end
       if letter.blank? || letter == "%"
-        @corp_contacts = @search.results.sort_by{ |contact| [ contact.last_name, contact.first_name ] }
+        @corp_contacts = @search.results
       else
-        @corp_contacts = CorpContact.order('last_name, first_name').where("last_name LIKE ?", "#{letter}%")
+        @corp_contacts = CorpContact.where("last_name LIKE ?", "#{letter}%").paginate(:page => params[:page], :per_page => per_page).order('last_name, first_name')
       end      
       
       respond_to do |format|

@@ -21,5 +21,7 @@ class CorpContact < ActiveRecord::Base
 
   searchable do
     text :first_name, :last_name, :corp_cellular_long, :corp_cellular_short, :corp_extension, :corp_phone, :email
+    string :last_name
+    string :first_name
   end
 end

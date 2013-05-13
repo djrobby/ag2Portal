@@ -1,7 +1,11 @@
 en:
   activerecord:
     models:
-      app: Site
+      app:
+        zero:  Sites
+        one:   Site
+        few:   Sites
+        other: Sites
     attributes:
       app:
         name: "Name"

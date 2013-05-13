@@ -14,11 +14,12 @@
       <tr>
         <td><%= link_to role.name, role %></td>
         <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => Role, :path => edit_role_path(role) } %>
-        <%= render :partial => '/layouts/crud/delete', :locals => { :model => Role, :path => role, :msg => I18n.t("activerecord.models.role"), :txt => role.name.titleize } %> </td>
+        <%= render :partial => '/layouts/crud/delete', :locals => { :model => Role, :path => role, :msg => I18n.t("activerecord.models.role.one"), :txt => role.name.titleize } %> </td>
       </tr>
       <% end %>
     </tbody>
   </table>
+  <%= render :partial => '/layouts/pagination', :locals => { :ivar => @roles } %>
   <%= render :partial => '/layouts/crud/new', :locals => { :model => Role, :path => new_role_path, :txt => I18n.t("ag2_admin.roles.index.btn_new") } %>
   <%= link_to I18n.t("ag2_admin.roles.index.back_to_main_app"), users_path %> |
   <%= link_to I18n.t("ag2_admin.roles.index.back_to_root"), ag2_admin.root_path %>

@@ -73,11 +73,17 @@ module Ag2Directory
       
       @search = SharedContact.search do
         fulltext params[:search]
+        order_by :company, :asc
+        order_by :last_name, :asc
+        order_by :first_name, :asc
+        paginate :page => params[:page] || 1, :per_page => per_page
       end
       if letter.blank? || letter == "%"
-        @shared_contacts = @search.results.sort_by{ |contact| [ contact.company, contact.last_name, contact.first_name ] }
+        # @shared_contacts = @search.results.sort_by{ |contact| [ contact.company, contact.last_name, contact.first_name ] }
+        @shared_contacts = @search.results
       else
-        @shared_contacts = SharedContact.order('company', 'last_name, first_name').where("last_name LIKE ?", "#{letter}%")
+        # @shared_contacts = SharedContact.order('company', 'last_name, first_name').where("last_name LIKE ?", "#{letter}%")
+        @shared_contacts = SharedContact.where("last_name LIKE ?", "#{letter}%").paginate(:page => params[:page], :per_page => per_page).order('company', 'last_name, first_name')
       end      
   
       respond_to do |format|

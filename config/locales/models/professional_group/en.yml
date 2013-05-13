@@ -1,7 +1,11 @@
 en:
   activerecord:
     models:
-      professional_group: Professional group
+      professional_group:
+        zero:  Professional groups
+        one:   Professional group
+        few:   Professional groups
+        other: Professional groups
     attributes:
       professional_group:
         pg_code: "Code"

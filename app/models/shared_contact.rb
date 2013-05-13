@@ -28,6 +28,9 @@ class SharedContact < ActiveRecord::Base
 
   searchable do
     text :first_name, :last_name, :company, :fiscal_id, :cellular, :phone, :email
+    string :company
+    string :last_name
+    string :first_name
   end
 
   def fields_to_uppercase

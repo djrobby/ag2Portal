@@ -8,7 +8,7 @@ module Ag2Human
     # GET /degree_types
     # GET /degree_types.json
     def index
-      @degree_types = DegreeType.all
+      @degree_types = DegreeType.paginate(:page => params[:page], :per_page => per_page).order('dt_code')
   
       respond_to do |format|
         format.html # index.html.erb

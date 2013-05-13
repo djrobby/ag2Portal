@@ -16,11 +16,12 @@
         <td><%= link_to company.fiscal_id, company %></td>
         <td><%= company.name %></td>
         <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => Company, :path => edit_company_path(company) } %>
-        <%= render :partial => '/layouts/crud/delete', :locals => { :model => Company, :path => company, :msg => I18n.t("activerecord.models.company"), :txt => company.name } %> </td>
+        <%= render :partial => '/layouts/crud/delete', :locals => { :model => Company, :path => company, :msg => I18n.t("activerecord.models.company.one"), :txt => company.name } %> </td>
       </tr>
       <% end %>
     </tbody>
   </table>
+  <%= render :partial => '/layouts/pagination', :locals => { :ivar => @companies } %>
   <%= render :partial => '/layouts/crud/new', :locals => { :model => Company, :path => new_company_path, :txt => I18n.t("ag2_admin.companies.index.btn_new") } %>
   <%= link_to I18n.t("ag2_admin.companies.index.go_to"), offices_path %> |
   <%= link_to I18n.t("ag2_admin.companies.index.back_to_root"), ag2_admin.root_path %>

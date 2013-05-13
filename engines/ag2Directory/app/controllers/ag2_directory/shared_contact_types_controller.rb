@@ -8,7 +8,7 @@ module Ag2Directory
     # GET /shared_contact_types
     # GET /shared_contact_types.json
     def index
-      @shared_contact_types = SharedContactType.all
+      @shared_contact_types = SharedContactType.paginate(:page => params[:page], :per_page => per_page).order('name')
   
       respond_to do |format|
         format.html # index.html.erb

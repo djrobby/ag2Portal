@@ -64,12 +64,7 @@
           <% end %>
         </tbody>
       </table>
-      <div id="pages">
-        <div class="page_info">
-          <%= page_entries_info @time_records  %>
-        </div>
-        <%= will_paginate @time_records, :container => false %>
-      </div>
+      <%= render :partial => '/layouts/pagination', :locals => { :ivar => @time_records } %>
     </div><!-- /.span9 -->
   </div><!-- /.row-fluid -->
 </div><!-- /.container-fluid -->

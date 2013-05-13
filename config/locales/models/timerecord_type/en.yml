@@ -1,7 +1,11 @@
 en:
   activerecord:
     models:
-      timerecord_type: TimeRecord type
+      timerecord_type:
+        zero:  TimeRecord types
+        one:   TimeRecord type
+        few:   TimeRecord types
+        other: TimeRecord types
     attributes:
       timerecord_type:
         name: "Type"

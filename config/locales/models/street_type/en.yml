@@ -1,7 +1,11 @@
 en:
   activerecord:
     models:
-      street_type: Street type
+      street_type:
+        zero:  Street types
+        one:   Street type
+        few:   Street types
+        other: Street types
     attributes:
       street_type:
         street_type_code: "Code"

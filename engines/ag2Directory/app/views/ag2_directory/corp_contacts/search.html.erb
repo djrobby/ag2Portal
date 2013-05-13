@@ -39,5 +39,6 @@
     <% end %>
   </tbody>
 </table>
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @corp_contacts } %>
 
 <%= link_to I18n.t("ag2_directory.corp_contacts.back_to_main_page"), corp_contacts_path %>

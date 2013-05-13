@@ -1,7 +1,11 @@
 es:
   activerecord:
     models:
-      collective_agreement: Convenio colectivo
+      collective_agreement:
+        zero:  Convenios colectivos
+        one:   Convenio colectivo
+        few:   Convenios colectivos
+        other: Convenios colectivos
     attributes:
       collective_agreement:
         ca_code: "Código"

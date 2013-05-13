@@ -1,7 +1,11 @@
 es:
   activerecord:
     models:
-      province: Provincia
+      province:
+        zero:  Provincias
+        one:   Provincia
+        few:   Provincias
+        other: Provincias
     attributes:
       province:
         name: "Nombre"

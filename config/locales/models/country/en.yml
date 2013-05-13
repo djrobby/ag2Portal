@@ -1,7 +1,11 @@
 en:
   activerecord:
     models:
-      country: Country
+      country:
+        zero:  Countries
+        one:   Country
+        few:   Countries
+        other: Countries
     attributes:
       country:
         name: "Name"

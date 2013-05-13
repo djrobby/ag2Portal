@@ -10,9 +10,20 @@ class ApplicationController < ActionController::Base
 
   layout :layout
   helper_method :letters
+  helper_method :per_page
 
   def letters
     @letters = ('A'..'Z')
+  end
+
+  def per_page
+    if session[:resolution] == "LD"
+      20
+    elsif session[:resolution] == "SD"
+      40
+    else
+      60
+    end
   end
 
   def set_locale
@@ -23,16 +34,16 @@ class ApplicationController < ActionController::Base
   def self.default_url_options
     { :locale => I18n.locale }
   end
-  
-=begin
-  def default_url_options(options={})
-    # logger.debug "default_url_options is passed options: #{options.inspect}\n"
-    { :locale => I18n.locale }
-  end
 
-  def set_charset
-    # @headers["Content-Type"] = "text/html; charset=utf-8"
-  end
+=begin
+def default_url_options(options={})
+# logger.debug "default_url_options is passed options: #{options.inspect}\n"
+{ :locale => I18n.locale }
+end
+
+def set_charset
+# @headers["Content-Type"] = "text/html; charset=utf-8"
+end
 =end
 
   private

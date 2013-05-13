@@ -1,7 +1,11 @@
 es:
   activerecord:
     models:
-      worker_type: Tipo de trabajador
+      worker_type:
+        zero:  Tipos de trabajador
+        one:   Tipo de trabajador
+        few:   Tipos de trabajador
+        other: Tipos de trabajador
     attributes:
       worker_type:
         description: "Descripción"

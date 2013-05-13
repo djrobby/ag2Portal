@@ -21,11 +21,12 @@
         <td><%= user.current_sign_in_ip unless user.current_sign_in_ip.nil? %></td>
         <td><a data-toggle="modal" href="#role-options-<%= user.id %>" class="btn btn-mini" type="button"><%=t 'ag2_admin.users.index.btn_role' %></a> <%= render user %>
         <%= render :partial => '/layouts/crud/edit', :locals => { :model => User, :path => edit_user_path(user) } %>
-        <%= render :partial => '/layouts/crud/delete', :locals => { :model => User, :path => user, :msg => I18n.t("activerecord.models.user"), :txt => user.name } %> </td>
+        <%= render :partial => '/layouts/crud/delete', :locals => { :model => User, :path => user, :msg => I18n.t("activerecord.models.user.one"), :txt => user.name } %> </td>
       </tr>
       <% end %>
     </tbody>
   </table>
+  <%= render :partial => '/layouts/pagination', :locals => { :ivar => @users } %>
   <%= render :partial => '/layouts/crud/new', :locals => { :model => User, :path => new_user_path, :txt => I18n.t("ag2_admin.users.index.btn_new") } %>
   <%= link_to I18n.t("ag2_admin.users.index.go_to_child"), roles_path %> |
   <%= link_to I18n.t("ag2_admin.users.index.back_to_root"), ag2_admin.root_path %>

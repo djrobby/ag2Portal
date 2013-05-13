@@ -14,11 +14,12 @@
       <tr>
         <td><%= link_to t.name.titleize, t %></td>
         <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => TimerecordCode, :path => edit_timerecord_code_path(t) } %>
-        <%= render :partial => '/layouts/crud/delete', :locals => { :model => TimerecordCode, :path => t, :msg => I18n.t("activerecord.models.timerecord_code"), :txt => t.name.titleize } %> </td>
+        <%= render :partial => '/layouts/crud/delete', :locals => { :model => TimerecordCode, :path => t, :msg => I18n.t("activerecord.models.timerecord_code.one"), :txt => t.name.titleize } %> </td>
       </tr>
       <% end %>
     </tbody>
   </table>
+  <%= render :partial => '/layouts/pagination', :locals => { :ivar => @timerecord_codes } %>
   <%= render :partial => '/layouts/crud/new', :locals => { :model => TimerecordCode, :path => new_timerecord_code_path, :txt => I18n.t("ag2_human.timerecord_codes.index.btn_new") } %>
   <%= link_to I18n.t("ag2_human.timerecord_codes.index.back_to_root"), ag2_human.ag2_timerecord_path %>
 </div>

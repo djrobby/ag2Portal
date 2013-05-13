@@ -1,7 +1,11 @@
 en:
   activerecord:
     models:
-      degree_type: Degree type
+      degree_type:
+        zero:  Degree types
+        one:   Degree type
+        few:   Degree types
+        other: Degree types
     attributes:
       degree_type:
         dt_code: "Code"

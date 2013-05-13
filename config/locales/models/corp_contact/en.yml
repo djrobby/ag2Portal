@@ -1,7 +1,11 @@
 en:
   activerecord:
     models:
-      corp_contact: Corporate contact
+      corp_contact:
+        zero:  Corporate contacts
+        one:   Corporate contact
+        few:   Corporate contacts
+        other: Corporate contacts
     attributes:
       corp_contact:
         last_name: "Last name"

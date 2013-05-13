@@ -1,7 +1,11 @@
 es:
   activerecord:
     models:
-      shared_contact: Contacto compartido
+      shared_contact:
+        zero:  Contactos compartidos
+        one:   Contacto compartido
+        few:   Contactos compartidos
+        other: Contactos compartidos
     attributes:
       shared_contact:
         last_name: "Apellidos"

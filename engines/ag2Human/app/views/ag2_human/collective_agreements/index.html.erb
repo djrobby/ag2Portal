@@ -16,11 +16,12 @@
         <td><%= link_to t.ca_code, t %></td>
         <td><%= t.name %></td>
         <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => CollectiveAgreement, :path => edit_collective_agreement_path(t) } %>
-        <%= render :partial => '/layouts/crud/delete', :locals => { :model => CollectiveAgreement, :path => t, :msg => I18n.t("activerecord.models.collective_agreement"), :txt => t.name } %> </td>
+        <%= render :partial => '/layouts/crud/delete', :locals => { :model => CollectiveAgreement, :path => t, :msg => I18n.t("activerecord.models.collective_agreement.one"), :txt => t.name } %> </td>
       </tr>
       <% end %>
     </tbody>
   </table>
+  <%= render :partial => '/layouts/pagination', :locals => { :ivar => @collective_agreements } %>
   <%= render :partial => '/layouts/crud/new', :locals => { :model => CollectiveAgreement, :path => new_collective_agreement_path, :txt => I18n.t("ag2_human.collective_agreements.index.btn_new") } %>
   <%= link_to I18n.t("ag2_human.collective_agreements.index.go_to_workers"), workers_path %> |
   <%= link_to I18n.t("ag2_human.collective_agreements.index.back_to_root"), ag2_human.root_path %>

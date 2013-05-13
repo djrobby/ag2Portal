@@ -18,11 +18,12 @@
         <td><%= province.region.name_and_country unless province.region.blank? %></td>
         <td><%= province.ine_cpro %></td>
         <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => Province, :path => edit_province_path(province) } %>
-        <%= render :partial => '/layouts/crud/delete', :locals => { :model => Province, :path => province, :msg => I18n.t("activerecord.models.province"), :txt => province.name } %> </td>
+        <%= render :partial => '/layouts/crud/delete', :locals => { :model => Province, :path => province, :msg => I18n.t("activerecord.models.province.one"), :txt => province.name } %> </td>
       </tr>
       <% end %>
     </tbody>
   </table>
+  <%= render :partial => '/layouts/pagination', :locals => { :ivar => @provinces } %>
   <%= render :partial => '/layouts/crud/new', :locals => { :model => Province, :path => new_province_path, :txt => I18n.t("ag2_admin.provinces.index.btn_new") } %>
   <%= link_to I18n.t("ag2_admin.provinces.index.go_to_parent"), regions_path %> |
   <%= link_to I18n.t("ag2_admin.provinces.index.go_to_child"), towns_path %> |

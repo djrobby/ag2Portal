@@ -5,12 +5,12 @@ en:
     page_gap: "&hellip;"
     page_entries_info:
       single_page:
-        zero:  "No %{model} found"
+        zero:  "No entries found"
         one:   "You're viewing 1 %{model}"
-        other: "You're viewing all: %{count} %{model} in total"
+        other: "You're viewing %{count} %{model}"
       single_page_html:
-        zero:  "No %{model} found"
+        zero:  "No entries found"
         one:   "You're viewing <b>1</b> %{model}"
-        other: "You're viewing all:<b>&nbsp;%{count}</b> %{model} in total"
-      multi_page: "You're viewing %{from}-%{to} %{model} of %{count} in total"
-      multi_page_html: "You're viewing <b>%{from}&nbsp;-&nbsp;%{to}</b> %{model} of <b>%{count}</b> in total"
+        other: "You're viewing <b>%{count}</b> %{model}"
+      multi_page: "You're viewing %{from}-%{to} of %{count} %{model}"
+      multi_page_html: "You're viewing <b>%{from}&#8211;%{to}</b> of <b>%{count}</b> %{model}"

@@ -8,7 +8,7 @@ module Ag2Human
     # GET /timerecord_codes
     # GET /timerecord_codes.json
     def index
-      @timerecord_codes = TimerecordCode.all
+      @timerecord_codes = TimerecordCode.paginate(:page => params[:page], :per_page => per_page).order('id')
   
       respond_to do |format|
         format.html # index.html.erb

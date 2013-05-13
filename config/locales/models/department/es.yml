@@ -1,7 +1,11 @@
 es:
   activerecord:
     models:
-      department: Departmento
+      department:
+        zero:  Departmentos
+        one:   Departmento
+        few:   Departmentos
+        other: Departmentos
     attributes:
       department:
         code: "Código"

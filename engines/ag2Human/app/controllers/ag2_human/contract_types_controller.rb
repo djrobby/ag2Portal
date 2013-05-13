@@ -8,7 +8,7 @@ module Ag2Human
     # GET /contract_types
     # GET /contract_types.json
     def index
-      @contract_types = ContractType.all
+      @contract_types = ContractType.paginate(:page => params[:page], :per_page => per_page).order('ct_code')
   
       respond_to do |format|
         format.html # index.html.erb

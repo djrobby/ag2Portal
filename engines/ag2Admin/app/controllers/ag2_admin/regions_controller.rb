@@ -8,7 +8,7 @@ module Ag2Admin
     # GET /regions
     # GET /regions.json
     def index
-      @regions = Region.all
+      @regions = Region.paginate(:page => params[:page], :per_page => per_page).order('name')
   
       respond_to do |format|
         format.html # index.html.erb

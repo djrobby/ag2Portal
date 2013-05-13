@@ -8,7 +8,7 @@ module Ag2Admin
     # GET /provinces
     # GET /provinces.json
     def index
-      @provinces = Province.order('name').all
+      @provinces = Province.paginate(:page => params[:page], :per_page => per_page).order('name')
   
       respond_to do |format|
         format.html # index.html.erb

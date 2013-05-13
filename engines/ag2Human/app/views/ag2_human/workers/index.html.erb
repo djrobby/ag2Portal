@@ -33,6 +33,7 @@
           <%= render @workers %>
         </tbody>
       </table>
+      <%= render :partial => '/layouts/pagination', :locals => { :ivar => @workers } %>
     </div><!-- /.span9 -->
   </div><!-- /.row-fluid -->
 </div><!-- /.container-fluid -->

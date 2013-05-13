@@ -1,7 +1,11 @@
 en:
   activerecord:
     models:
-      worker: Worker
+      worker:
+        zero:  Workers
+        one:   Worker
+        few:   Workers
+        other: Workers
     attributes:
       worker:
         last_name: "Last name"

@@ -1,7 +1,11 @@
 es:
   activerecord:
     models:
-      shared_contact_type: Tipo de contacto compartido
+      shared_contact_type:
+        zero:  Tipos de contactos compartidos
+        one:   Tipo de contacto compartido
+        few:   Tipos de contactos compartidos
+        other: Tipos de contactos compartidos
     attributes:
       shared_contact_type:
         name: "Descripción"

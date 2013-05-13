@@ -1,7 +1,11 @@
 es:
   activerecord:
     models:
-      degree_type: Titulación
+      degree_type:
+        zero:  Titulaciones
+        one:   Titulación
+        few:   Titulaciones
+        other: Titulaciones
     attributes:
       degree_type:
         dt_code: "Código"

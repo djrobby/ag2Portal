@@ -20,7 +20,8 @@ module Ag2Admin
     # GET /zipcodes
     # GET /zipcodes.json
     def index
-      @zipcodes = Zipcode.order('zipcode').all
+      # @zipcodes = Zipcode.order('zipcode').all
+      @zipcodes = Zipcode.paginate(:page => params[:page], :per_page => per_page).order('zipcode')
   
       respond_to do |format|
         format.html # index.html.erb

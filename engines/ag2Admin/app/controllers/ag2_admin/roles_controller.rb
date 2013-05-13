@@ -8,7 +8,7 @@ module Ag2Admin
     # GET /roles
     # GET /roles.json
     def index
-      @roles = Role.all
+      @roles = Role.paginate(:page => params[:page], :per_page => per_page)
   
       respond_to do |format|
         format.html # index.html.erb

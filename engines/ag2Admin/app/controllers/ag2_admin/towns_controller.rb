@@ -8,7 +8,7 @@ module Ag2Admin
     # GET /towns
     # GET /towns.json
     def index
-      @towns = Town.order('name').all
+      @towns = Town.paginate(:page => params[:page], :per_page => per_page).order('name')
   
       respond_to do |format|
         format.html # index.html.erb

@@ -14,11 +14,12 @@
       <tr>
         <td><%= link_to t.description.titleize, t %></td>
         <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => WorkerType, :path => edit_worker_type_path(t) } %>
-        <%= render :partial => '/layouts/crud/delete', :locals => { :model => WorkerType, :path => t, :msg => I18n.t("activerecord.models.worker_type"), :txt => t.description } %> </td>
+        <%= render :partial => '/layouts/crud/delete', :locals => { :model => WorkerType, :path => t, :msg => I18n.t("activerecord.models.worker_type.one"), :txt => t.description } %> </td>
       </tr>
       <% end %>
     </tbody>
   </table>
+  <%= render :partial => '/layouts/pagination', :locals => { :ivar => @worker_types } %>
   <%= render :partial => '/layouts/crud/new', :locals => { :model => WorkerType, :path => new_worker_type_path, :txt => I18n.t("ag2_human.worker_types.index.btn_new") } %>
   <%= link_to I18n.t("ag2_human.worker_types.index.go_to_workers"), workers_path %> |
   <%= link_to I18n.t("ag2_human.worker_types.index.back_to_root"), ag2_human.root_path %>

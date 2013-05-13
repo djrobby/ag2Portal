@@ -8,7 +8,7 @@ module Ag2Human
     # GET /worker_types
     # GET /worker_types.json
     def index
-      @worker_types = WorkerType.all
+      @worker_types = WorkerType.paginate(:page => params[:page], :per_page => per_page).order('description')
   
       respond_to do |format|
         format.html # index.html.erb

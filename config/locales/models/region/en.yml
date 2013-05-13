@@ -1,7 +1,11 @@
 en:
   activerecord:
     models:
-      region: Region
+      region:
+        zero:  Regions
+        one:   Region
+        few:   Regions
+        other: Regions
     attributes:
       region:
         name: "Name"

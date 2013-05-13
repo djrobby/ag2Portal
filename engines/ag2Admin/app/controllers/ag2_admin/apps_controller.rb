@@ -8,7 +8,7 @@ module Ag2Admin
     # GET /apps
     # GET /apps.json
     def index
-      @apps = App.all
+      @apps = App.paginate(:page => params[:page], :per_page => per_page)
   
       respond_to do |format|
         format.html # index.html.erb

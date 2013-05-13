@@ -1,7 +1,11 @@
 es:
   activerecord:
     models:
-      site: Sitio
+      site:
+        zero:  Sitios
+        one:   Sitio
+        few:   Sitios
+        other: Sitios
     attributes:
       site:
         name: "Nombre"

@@ -8,7 +8,7 @@ module Ag2Human
     # GET /departments
     # GET /departments.json
     def index
-      @departments = Department.all
+      @departments = Department.paginate(:page => params[:page], :per_page => per_page).order('code')
   
       respond_to do |format|
         format.html # index.html.erb

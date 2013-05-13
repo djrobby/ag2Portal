@@ -1,7 +1,11 @@
 es:
   activerecord:
     models:
-      street_type: Tipo de vía
+      street_type:
+        zero:  Tipos de vía
+        one:   Tipo de vía
+        few:   Tipos de vía
+        other: Tipos de vía
     attributes:
       street_type:
         street_type_code: "Código"

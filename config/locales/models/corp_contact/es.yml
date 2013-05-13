@@ -1,7 +1,11 @@
 es:
   activerecord:
     models:
-      corp_contact: Contacto corporativo
+      corp_contact:
+        zero:  Contactos corporativos
+        one:   Contacto corporativo
+        few:   Contactos corporativos
+        other: Contactos corporativos
     attributes:
       corp_contact:
         last_name: "Apellidos"

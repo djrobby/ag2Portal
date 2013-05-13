@@ -1,7 +1,11 @@
 es:
   activerecord:
     models:
-      professional_group: Grupo profesional
+      professional_group:
+        zero:  Grupos profesionales
+        one:   Grupo profesional
+        few:   Grupos profesionales
+        other: Grupos profesionales
     attributes:
       professional_group:
         pg_code: "Código"

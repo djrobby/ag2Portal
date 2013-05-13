@@ -1,7 +1,11 @@
 es:
   activerecord:
     models:
-      office: Oficina
+      office:
+        zero:  Oficinas
+        one:   Oficina
+        few:   Oficinas
+        other: Oficinas
     attributes:
       office:
         name: "Nombre"

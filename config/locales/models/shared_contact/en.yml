@@ -1,7 +1,11 @@
 en:
   activerecord:
     models:
-      shared_contact: Shared contact
+      shared_contact:
+        zero:  Shared contacts
+        one:   Shared contact
+        few:   Shared contacts
+        other: Shared contacts
     attributes:
       shared_contact:
         last_name: "Last name"

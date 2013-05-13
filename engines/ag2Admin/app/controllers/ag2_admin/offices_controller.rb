@@ -54,7 +54,7 @@ module Ag2Admin
     # GET /offices.json
     def index
 #      internal 
-      @offices = Office.all
+      @offices = Office.paginate(:page => params[:page], :per_page => per_page).order('office_code')
 
       respond_to do |format|
         format.html # index.html.erb

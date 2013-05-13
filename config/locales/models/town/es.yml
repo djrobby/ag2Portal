@@ -1,7 +1,11 @@
 es:
   activerecord:
     models:
-      town: Población
+      town:
+        zero:  Poblaciones
+        one:   Población
+        few:   Poblaciones
+        other: Poblaciones
     attributes:
       town:
         name: "Nombre"

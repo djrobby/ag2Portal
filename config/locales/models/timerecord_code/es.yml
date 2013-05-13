@@ -1,7 +1,11 @@
 es:
   activerecord:
     models:
-      timerecord_code: Código de marcaje
+      timerecord_code:
+        zero:  Códigos de marcaje
+        one:   Código de marcaje
+        few:   Códigos de marcaje
+        other: Códigos de marcaje
     attributes:
       timerecord_code:
         name: "Descripción"

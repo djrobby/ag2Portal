@@ -75,5 +75,6 @@ class Worker < ActiveRecord::Base
          :corp_cellular_long, :corp_cellular_short, :corp_extension, :corp_phone, :email
     integer :company_id
     integer :office_id
+    string :worker_code
   end
 end

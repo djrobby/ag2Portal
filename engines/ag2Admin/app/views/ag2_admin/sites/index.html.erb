@@ -16,11 +16,12 @@
         <td><%= link_to site.name, site %></td>
         <td><%= site.path %></td>
         <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => Site, :path => edit_site_path(site) } %>
-        <%= render :partial => '/layouts/crud/delete', :locals => { :model => Site, :path => site, :msg => I18n.t("activerecord.models.site"), :txt => site.name } %> </td>
+        <%= render :partial => '/layouts/crud/delete', :locals => { :model => Site, :path => site, :msg => I18n.t("activerecord.models.site.one"), :txt => site.name } %> </td>
       </tr>
       <% end %>
     </tbody>
   </table>
+  <%= render :partial => '/layouts/pagination', :locals => { :ivar => @sites } %>
   <%= render :partial => '/layouts/crud/new', :locals => { :model => Site, :path => new_site_path, :txt => I18n.t("ag2_admin.sites.index.btn_new") } %>
   <%= link_to I18n.t("ag2_admin.sites.index.go_to"), apps_path %> |
   <%= link_to I18n.t("ag2_admin.sites.index.back_to_root"), ag2_admin.root_path %>

@@ -37,7 +37,7 @@ module Ag2Admin
     # GET /companies
     # GET /companies.json
     def index
-      @companies = Company.all
+      @companies = Company.paginate(:page => params[:page], :per_page => per_page).order('fiscal_id')
 
       respond_to do |format|
         format.html # index.html.erb

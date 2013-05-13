@@ -1,7 +1,11 @@
 es:
   activerecord:
     models:
-      worker: Trabajador
+      worker:
+        zero:  Trabajadores
+        one:   Trabajador
+        few:   Trabajadores
+        other: Trabajadores
     attributes:
       worker:
         last_name: "Apellidos"

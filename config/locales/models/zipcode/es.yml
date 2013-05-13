@@ -1,7 +1,11 @@
 es:
   activerecord:
     models:
-      zipcode: Código postal
+      zipcode:
+        zero:  Códigos postales
+        one:   Código postal
+        few:   Códigos postales
+        other: Códigos postales
     attributes:
       zipcode:
         zipcode: "Código postal"
