@@ -1,0 +1,8 @@
+es:
+  notifier:
+    user_created:
+      subject: "aGestiona2: Nuevo usuario creado"
+      dear_admin: "Estimado/a Administrador/a,"
+      new_user_created: "He creado mi nueva cuenta de aGestiona2 con el nombre de Usuario "
+      complete_roles: "Por favor, complete la configuración asignando los roles adecuados, para poder usar los servicios de la plataforma."
+      thanks: "Gracias."

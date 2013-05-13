@@ -13,18 +13,23 @@ class User < ActiveRecord::Base
   # attr_accessible :title, :body
   validates :name,  :presence => true
 
-  after_create :assign_default_role
+  after_create :assign_default_role_and_send_email
 
   has_one :worker
   def to_label
     "#{name} (#{email})"
   end
 
-  def assign_default_role
+  private
+  
+  def assign_default_role_and_send_email
     if self.roles.blank?
+      # Assign default roles
       add_role(:ag2Admin_Guest)
       add_role(:ag2Directory_Guest)
       add_role(:ag2Human_Banned)
+      # Send e-mail to administrator to configure the right roles
+      Notifier.user_created(self).deliver
     end
   end
 end
