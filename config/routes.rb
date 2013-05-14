@@ -5,9 +5,9 @@ Ag2Portal::Application.routes.draw do
     get "lowres/index"
     get "home/index"
     
-    # Devise
-    devise_for :users
-    
+    # Devise (the standard route is: devise_for :users) localized
+    devise_for :users, :controllers => { :omniauth_callbacks => "users/omniauth_callbacks" }
+        
     # Root
     root :to => "welcome#index"
   

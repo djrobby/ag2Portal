@@ -20,6 +20,6 @@
 
 <%- if devise_mapping.omniauthable? %>
   <%- resource_class.omniauth_providers.each do |provider| %>
-    <%= link_to I18n.t("goto_signin_provider", :scope => :"devise.shared"), new_session_path(resource_name) %><br />
+    <%= link_to I18n.t("devise.shared.goto_signin_provider") + "#{provider.to_s.titleize}", main_app.user_omniauth_authorize_path(:google_apps) %><br />
   <% end -%>
 <% end -%>

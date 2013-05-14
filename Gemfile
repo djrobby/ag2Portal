@@ -52,6 +52,7 @@ gem 'paperclip'
 gem 'sunspot_rails'
 gem 'dbf'
 gem 'will_paginate', '~> 3.0.0'
+gem 'omniauth-google-apps'
 
 # Own required gems
 gem 'ag2_admin', :path => 'engines/ag2Admin'

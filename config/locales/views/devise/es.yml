@@ -32,6 +32,6 @@ es:
       goto_password: "¿Has olvidado tu contraseña?"
       goto_confirm_instructions: "¿No has recibido instrucciones de confirmación?"
       goto_unlock_instructions: "¿No has recibido instrucciones de desbloqueo?"
-      goto_signin_provider: "Incia sesión con #{provider.to_s.titleize}"
+      goto_signin_provider: "Incia sesión con "
   google_apps_reminder_html: Si es una cuenta de dominio en Google Apps, <u>debes usar las mismas credenciales</u>.
   user_name_reminder_html: <b>Nombre</b> <u>debe coincidir exactamente</u> con el nombre de usuario que usas para iniciar sesión en tu PC.

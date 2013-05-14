@@ -32,6 +32,6 @@ en:
       goto_password: "Forgot your password?"
       goto_confirm_instructions: "Didn't receive confirmation instructions?"
       goto_unlock_instructions: "Didn't receive unlock instructions?"
-      goto_signin_provider: "Sign in with #{provider.to_s.titleize}"
+      goto_signin_provider: "Sign in with "
   google_apps_reminder_html: If it's a domain account in Google Apps, <u>you must use the same credentials</u>.
   user_name_reminder_html: <b>Name</b> <u>must exactly match</u> the user name you use to log into your PC.
