@@ -1,7 +1,10 @@
 # Use this hook to configure devise mailer, warden hooks and so forth.
 # Many of these configuration options can be set straight in your model.
 
-require 'openid/store/filesystem'
+# OpenID
+# require 'openid/store/filesystem'
+# OAuth2
+require "omniauth-google-oauth2"
 
 Devise.setup do |config|
   # ==> Mailer Configuration
@@ -217,7 +220,12 @@ Devise.setup do |config|
   # Add a new OmniAuth provider. Check the wiki for more information on setting
   # up on your models and hooks.
   # config.omniauth :github, 'APP_ID', 'APP_SECRET', :scope => 'user,public_repo'
-  config.omniauth :google_apps, :store => OpenID::Store::Filesystem.new('/tmp'), :domain => 'aguaygestion.com'
+  # Google Apps provider:
+  # OpenID
+  # config.omniauth :google_apps, :store => OpenID::Store::Filesystem.new('/tmp'), :domain => 'aguaygestion.com'
+  # OAuth2
+  # config.omniauth :google_oauth2, "APP_ID", "APP_SECRET", { access_type: "offline", approval_prompt: "" }
+  config.omniauth :google_oauth2, "243106273259.apps.googleusercontent.com", "82EUdRZpsD4VLLZOoPNWNhfy", { access_type: "offline", approval_prompt: "" }
    
   # ==> Warden configuration
   # If you want to use other strategies, that are not supported by Devise, or
