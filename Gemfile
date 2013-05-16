@@ -22,7 +22,7 @@ end
 # Gems used only for development and not required
 # in production environments by default.
 group :development do
-  gem 'sunspot_solr'
+
 end
 
 gem 'jquery-rails'
@@ -50,6 +50,7 @@ gem "bootstrap-sass"
 gem 'simple_form'
 gem 'paperclip'
 gem 'sunspot_rails'
+gem 'sunspot_solr'
 gem 'dbf'
 gem 'will_paginate', '~> 3.0.0'
 gem 'omniauth-google-apps'
