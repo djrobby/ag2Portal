@@ -14,14 +14,14 @@
       data-toggle="dropdown"><i class="icon-wrench"></i> <%=t :"nav.tools" %> <b class="caret"></b> </a>
       <ul class="dropdown-menu" role="menu">
         <li>
-          <a href="#"><i class="icon-inbox"></i> Blog</a>
+          <a href="<%= ag2_admin.root_path %>"><i class="icon-cog"></i> ag2Admin</a>
         </li>
         <li>
           <a href="<%= ag2_directory.root_path %>"><i class="icon-list"></i> ag2Directory</a>
         </li>
         <li class="divider"></li>
         <li>
-          <a href="<%= ag2_admin.root_path %>"><i class="icon-cog"></i> ag2Admin</a>
+          <a data-toggle="modal" href="#notfound"><i class="icon-fire"></i> ag2HelpDesk</a>
         </li>
       </ul>
     </li>

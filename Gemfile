@@ -14,7 +14,7 @@ group :assets do
   gem 'coffee-rails', '~> 3.2.1'
 
   # See https://github.com/sstephenson/execjs#readme for more supported runtimes
-  # gem 'therubyracer', :platforms => :ruby
+  gem 'therubyracer', :platforms => :ruby
 
   gem 'uglifier', '>= 1.0.3'
 end
@@ -22,7 +22,7 @@ end
 # Gems used only for development and not required
 # in production environments by default.
 group :development do
-  gem 'sunspot_solr'
+
 end
 
 gem 'jquery-rails'
@@ -37,7 +37,8 @@ gem 'jquery-rails'
 # gem 'unicorn'
 
 # Deploy with Capistrano
-# gem 'capistrano'
+gem 'capistrano'
+gem 'rvm-capistrano'
 
 # To use debugger
 # gem 'debugger'
@@ -50,10 +51,12 @@ gem "bootstrap-sass"
 gem 'simple_form'
 gem 'paperclip'
 gem 'sunspot_rails'
+gem 'sunspot_solr'
 gem 'dbf'
 gem 'will_paginate', '~> 3.0.0'
 gem 'omniauth-google-apps'
 gem 'omniauth-google-oauth2'
+gem 'libv8'
 
 # Own required gems
 gem 'ag2_admin', :path => 'engines/ag2Admin'
