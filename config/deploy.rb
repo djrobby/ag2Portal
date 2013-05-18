@@ -8,6 +8,7 @@ before 'deploy', 'rvm:install_ruby' # install Ruby and create gemset (both if mi
 
 # Load RVM's capistrano plugin.
 require 'rvm/capistrano'
+# Use bundler to install requiered gems after update_code
 require "bundler/capistrano"
 
 # be sure to change these
