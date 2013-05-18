@@ -17,7 +17,7 @@
     </thead>
     <tbody>
       <% @shared_contacts.each do |contact| %>
-      <%= render :partial => 'layouts/ag2_directory/sharedcontactinfo', :locals => { :contact => contact, :title => I18n.t("activerecord.models.shared_contact") } %>
+      <%= render :partial => 'layouts/ag2_directory/sharedcontactinfo', :locals => { :contact => contact, :title => I18n.t("activerecord.models.shared_contact.one") } %>
       <tr>
         <td><%= contact.company %></td>
         <td><%= contact.full_name unless contact.last_name.blank? && contact.first_name.blank? %></td>
