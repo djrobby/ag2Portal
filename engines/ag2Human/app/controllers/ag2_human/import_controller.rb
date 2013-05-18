@@ -4,7 +4,7 @@ require "dbf"
 module Ag2Human
   class ImportController < ApplicationController
     before_filter :authenticate_user!
-    load_and_authorize_resource :worker
+    # load_and_authorize_resource :worker
     skip_load_and_authorize_resource :only => :data_import
 
     def index
