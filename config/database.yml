@@ -38,5 +38,6 @@ production:
   database: ag2Db
   pool: 5
   username: root
-  password:
+  password: root
   socket: /tmp/mysql.sock
+  host: ag2back
