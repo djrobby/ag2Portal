@@ -5,7 +5,7 @@ set :rvm_autolibs_flag, "read-only"        # more info: rvm help autolibs
 
 before 'deploy', 'rvm:install_rvm'  # update RVM
 before 'deploy', 'rvm:install_ruby' # install Ruby and create gemset (both if missing)
-before 'deploy:setup', 'rvm:create_gemset' # only create gemset
+before 'deploy', 'rvm:create_gemset' # only create gemset
 
 # Load RVM's capistrano plugin.
 require 'rvm/capistrano'
