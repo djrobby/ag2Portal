@@ -1,0 +1,91 @@
+<!-- Modal -->
+<div class="container">
+  <div id="about" class="modal hide fade in" style="display: none; ">
+    <div class="modal-header">
+      <a class="close" data-dismiss="modal">×</a>
+      <h3><%= t :"nav.help.about" %> aGestiona2</h3>
+    </div>
+    <div class="modal-body">
+      <h4><%= t :about_h %></h4>
+      <p>
+        <a href="http://www.aguaygestion.com" target="_blank">www.aguaygestion.com</a>
+        <br />
+        <a href="mailto:departamento.tic@aguaygestion.com?subject=aGestiona2">departamento.tic@aguaygestion.com</a>
+      </p>
+      <p>
+        <%= t :about_develop_html %>
+        <br />
+        N&eacute;stor Rodr&iacute;guez Maldonado
+      </p>
+      <p>
+        <%= t :about_localization_html %>
+        <br />
+        N&eacute;stor Rodr&iacute;guez Maldonado
+      </p>
+      <p>
+        <%= t :about_ayg_apps_html %>
+        <ul class="thumbnails">
+          <li class="">
+            <img src="/assets/icon/ag2Admin.png" width="48" height="48" alt="ag2Admin" title="ag2Admin" />
+          </li>
+          <li>
+            <img src="/assets/icon/ag2Directory.png" width="48" height="48" alt="ag2Directory" title="ag2Directory" />
+          </li>
+          <li>
+            <img src="/assets/icon/ag2Finance.png" width="48" height="48" alt="ag2Finance" title="ag2Finance" />
+          </li>
+          <li>
+            <img src="/assets/icon/ag2Gest.png" width="48" height="48" alt="ag2Gest" title="ag2Gest" />
+          </li>
+          <li>
+            <img src="/assets/icon/ag2HelpDesk.png" width="48" height="48" alt="ag2HelpDesk" title="ag2HelpDesk" />
+          </li>
+          <li>
+            <img src="/assets/icon/ag2Human.png" width="48" height="48" alt="ag2Human" title="ag2Human" />
+          </li>
+          <li>
+            <img src="/assets/icon/ag2Portal.png" width="48" height="48" alt="ag2Portal" title="ag2Portal" />
+          </li>
+          <li>
+            <img src="/assets/icon/ag2Purchase.png" width="48" height="48" alt="ag2Purchase" title="ag2Purchase" />
+          </li>
+          <li>
+            <img src="/assets/icon/ag2Tech.png" width="48" height="48" alt="ag2Tech" title="ag2Tech" />
+          </li>
+          <li>
+            <img src="/assets/icon/ag2TeamNet.png" width="48" height="48" alt="ag2TeamNet" title="ag2TeamNet" />
+          </li>
+        </ul>
+      </p>
+      <p>
+        <%= t :about_google_apps_html %>
+        <ul class="thumbnails">
+          <li>
+            <img src="/assets/icon/google/ag2Mail.png" width="48" height="48" alt="ag2Mail" title="Gmail" />
+          </li>
+          <li>
+            <img src="/assets/icon/google/ag2Calendar.png" width="48" height="48" alt="ag2Calendar" title="Google Calendar" />
+          </li>
+          <li>
+            <img src="/assets/icon/google/ag2Docs.png" width="48" height="48" alt="ag2Docs" title="Google Docs" />
+          </li>
+          <li>
+            <img src="/assets/icon/google/ag2Drive.png" width="48" height="48" alt="ag2Drive" title="Google Drive" />
+          </li>
+          <li>
+            <img src="/assets/icon/google/ag2Search.png" width="48" height="48" alt="ag2Search" title="Google Search" />
+          </li>
+        </ul>
+      </p>
+      <p>
+        <%= t :about_develop_tools_title_html %>
+        <br />
+        <%=t :about_develop_tools_text_html %><a href="http://opensource.org/licenses" target="_blank">Brief Definition of Open Source Licenses</a>.
+      </p>
+    </div>
+    <div class="modal-footer">
+      <span class="left-floated" style="vertical-align: bottom">&copy; <%= Time.now.year %> Agua y Gesti&oacute;n</span>
+      <a href="#" class="btn btn-primary" data-dismiss="modal"><%= t :close_button %></a>
+    </div>
+  </div>
+</div>
