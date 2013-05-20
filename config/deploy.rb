@@ -24,7 +24,7 @@ set :deploy_to, "/home/#{user}/#{application}"
 # all on the same server, defined above as 'domain', adjust as necessary)
 role :app, domain
 role :web, domain
-role :db, "ag2back", :primary => true
+# role :db, "ag2back", :primary => true
 
 ssh_options[:forward_agent] = true
 default_run_options[:pty] = true
