@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130509164130) do
+ActiveRecord::Schema.define(:version => 20130523163630) do
 
   create_table "apps", :force => true do |t|
     t.string   "name"
@@ -318,6 +318,36 @@ ActiveRecord::Schema.define(:version => 20130509164130) do
   end
 
   add_index "street_types", ["street_type_code"], :name => "index_street_types_on_street_type_code"
+
+  create_table "ticket_categories", :force => true do |t|
+    t.string   "name"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  add_index "ticket_categories", ["name"], :name => "index_ticket_categories_on_name"
+
+  create_table "ticket_priorities", :force => true do |t|
+    t.string   "name"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  add_index "ticket_priorities", ["name"], :name => "index_ticket_priorities_on_name"
+
+  create_table "ticket_statuses", :force => true do |t|
+    t.string   "name"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  add_index "ticket_statuses", ["name"], :name => "index_ticket_statuses_on_name"
 
   create_table "time_records", :force => true do |t|
     t.date     "timerecord_date"

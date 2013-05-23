@@ -1,0 +1,21 @@
+<h1>Listing ticket_priorities</h1>
+
+<table>
+  <tr>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @ticket_priorities.each do |ticket_priority| %>
+  <tr>
+    <td><%= link_to 'Show', ticket_priority %></td>
+    <td><%= link_to 'Edit', edit_ticket_priority_path(ticket_priority) %></td>
+    <td><%= link_to 'Destroy', ticket_priority, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Ticket priority', new_ticket_priority_path %>
