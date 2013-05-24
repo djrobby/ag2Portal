@@ -5,7 +5,7 @@ module Ag2HelpDesk
     # GET /ticket_priorities
     # GET /ticket_priorities.json
     def index
-      @ticket_priorities = TicketPriority.all
+      @ticket_priorities = TicketPriority.paginate(:page => params[:page], :per_page => per_page).order('name')
   
       respond_to do |format|
         format.html # index.html.erb
@@ -16,6 +16,7 @@ module Ag2HelpDesk
     # GET /ticket_priorities/1
     # GET /ticket_priorities/1.json
     def show
+      @breadcrumb = 'read'
       @ticket_priority = TicketPriority.find(params[:id])
   
       respond_to do |format|
@@ -27,6 +28,7 @@ module Ag2HelpDesk
     # GET /ticket_priorities/new
     # GET /ticket_priorities/new.json
     def new
+      @breadcrumb = 'create'
       @ticket_priority = TicketPriority.new
   
       respond_to do |format|
@@ -37,13 +39,16 @@ module Ag2HelpDesk
   
     # GET /ticket_priorities/1/edit
     def edit
+      @breadcrumb = 'update'
       @ticket_priority = TicketPriority.find(params[:id])
     end
   
     # POST /ticket_priorities
     # POST /ticket_priorities.json
     def create
+      @breadcrumb = 'create'
       @ticket_priority = TicketPriority.new(params[:ticket_priority])
+      @ticket_priority.created_by = current_user.id if !current_user.nil?
   
       respond_to do |format|
         if @ticket_priority.save
@@ -59,7 +64,9 @@ module Ag2HelpDesk
     # PUT /ticket_priorities/1
     # PUT /ticket_priorities/1.json
     def update
+      @breadcrumb = 'update'
       @ticket_priority = TicketPriority.find(params[:id])
+      @ticket_priority.updated_by = current_user.id if !current_user.nil?
   
       respond_to do |format|
         if @ticket_priority.update_attributes(params[:ticket_priority])

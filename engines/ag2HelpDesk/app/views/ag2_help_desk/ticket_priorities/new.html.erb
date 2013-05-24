@@ -1,5 +1,7 @@
-<h1>New ticket_priority</h1>
+<%= render '/layouts/ag2_help_desk/prioritiesbreadcrumb' %>
+
+<h3><%=t '.title' %></h3>
 
 <%= render 'form' %>
 
-<%= link_to 'Back', ticket_priorities_path %>
+<%= link_to I18n.t("back_to_main_page", :scope => :"ag2_help_desk.ticket_categories"), ticket_priorities_path %>

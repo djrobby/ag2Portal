@@ -1,6 +1,8 @@
-<h1>Editing ticket_status</h1>
+<%= render '/layouts/ag2_help_desk/statusesbreadcrumb' %>
+
+<h3><%=t '.title' %></h3>
 
 <%= render 'form' %>
 
-<%= link_to 'Show', @ticket_status %> |
-<%= link_to 'Back', ticket_statuses_path %>
+<%= link_to I18n.t("btn_show", :scope => :"ag2_help_desk.ticket_statuses.edit"), @ticket_status %> |
+<%= link_to I18n.t("back_to_main_page", :scope => :"ag2_help_desk.ticket_statuses"), ticket_statuses_path %>

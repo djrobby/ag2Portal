@@ -1,5 +1,18 @@
-<p id="notice"><%= notice %></p>
+<%= render '/layouts/ag2_help_desk/categoriesbreadcrumb' %>
 
+<h3><%=t '.title' %></h3>
+<table class="table">
+  <tbody>
+    <tr>
+      <td>Id:</td>
+      <td><%= @ticket_category.id %></td>
+      <td><%=t :"activerecord.attributes.ticket_category.name" %>:</td>
+      <td><%= @ticket_category.name.titleize %></td>
+    </tr>
+    <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @ticket_category } %>
+    <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @ticket_category } %>
+  </tbody>
+</table>
 
-<%= link_to 'Edit', edit_ticket_category_path(@ticket_category) %> |
-<%= link_to 'Back', ticket_categories_path %>
+<%= render :partial => '/layouts/crud/update', :locals => { :model => TicketCategory, :path => edit_ticket_category_path(@ticket_category), :txt => I18n.t('ag2_help_desk.ticket_categories.show.btn_edit') } %>
+<%= link_to I18n.t("ag2_help_desk.ticket_categories.back_to_main_page"), ticket_categories_path %>

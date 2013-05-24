@@ -1,5 +1,18 @@
-<p id="notice"><%= notice %></p>
+<%= render '/layouts/ag2_help_desk/statusesbreadcrumb' %>
 
+<h3><%=t '.title' %></h3>
+<table class="table">
+  <tbody>
+    <tr>
+      <td>Id:</td>
+      <td><%= @ticket_status.id %></td>
+      <td><%=t :"activerecord.attributes.ticket_status.name" %>:</td>
+      <td><%= @ticket_status.name.titleize %></td>
+    </tr>
+    <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @ticket_status } %>
+    <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @ticket_status } %>
+  </tbody>
+</table>
 
-<%= link_to 'Edit', edit_ticket_status_path(@ticket_status) %> |
-<%= link_to 'Back', ticket_statuses_path %>
+<%= render :partial => '/layouts/crud/update', :locals => { :model => TicketCategory, :path => edit_ticket_status_path(@ticket_status), :txt => I18n.t('ag2_help_desk.ticket_statuses.show.btn_edit') } %>
+<%= link_to I18n.t("ag2_help_desk.ticket_statuses.back_to_main_page"), ticket_statuses_path %>

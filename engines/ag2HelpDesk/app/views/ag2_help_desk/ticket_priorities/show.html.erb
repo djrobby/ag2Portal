@@ -1,5 +1,18 @@
-<p id="notice"><%= notice %></p>
+<%= render '/layouts/ag2_help_desk/prioritiesbreadcrumb' %>
 
+<h3><%=t '.title' %></h3>
+<table class="table">
+  <tbody>
+    <tr>
+      <td>Id:</td>
+      <td><%= @ticket_priority.id %></td>
+      <td><%=t :"activerecord.attributes.ticket_priority.name" %>:</td>
+      <td><%= @ticket_priority.name.titleize %></td>
+    </tr>
+    <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @ticket_priority } %>
+    <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @ticket_priority } %>
+  </tbody>
+</table>
 
-<%= link_to 'Edit', edit_ticket_priority_path(@ticket_priority) %> |
-<%= link_to 'Back', ticket_priorities_path %>
+<%= render :partial => '/layouts/crud/update', :locals => { :model => TicketPriority, :path => edit_ticket_priority_path(@ticket_priority), :txt => I18n.t('ag2_help_desk.ticket_priorities.show.btn_edit') } %>
+<%= link_to I18n.t("ag2_help_desk.ticket_priorities.back_to_main_page"), ticket_priorities_path %>

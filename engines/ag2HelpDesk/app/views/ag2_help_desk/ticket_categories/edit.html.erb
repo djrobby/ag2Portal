@@ -1,6 +1,8 @@
-<h1>Editing ticket_category</h1>
+<%= render '/layouts/ag2_help_desk/categoriesbreadcrumb' %>
+
+<h3><%=t '.title' %></h3>
 
 <%= render 'form' %>
 
-<%= link_to 'Show', @ticket_category %> |
-<%= link_to 'Back', ticket_categories_path %>
+<%= link_to I18n.t("btn_show", :scope => :"ag2_help_desk.ticket_categories.edit"), @ticket_category %> |
+<%= link_to I18n.t("back_to_main_page", :scope => :"ag2_help_desk.ticket_categories"), ticket_categories_path %>
