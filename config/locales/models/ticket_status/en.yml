@@ -1,0 +1,11 @@
+en:
+  activerecord:
+    models:
+      ticket_status:
+        zero:  Ticket statuses
+        one:   Ticket status
+        few:   Ticket statuses
+        other: Ticket statuses
+    attributes:
+      ticket_status:
+        name: "Name"

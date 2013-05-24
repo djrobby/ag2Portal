@@ -1,0 +1,12 @@
+es:
+  ag2_help_desk:
+    breadcrumb:
+      categories:
+        items: "Categorías"
+        item: "Categoría"
+      priorities:
+        items: "Prioridades"
+        item: "Prioridad"
+      statuses:
+        items: "Estados"
+        item: "Estado"

@@ -1,0 +1,11 @@
+es:
+  activerecord:
+    models:
+      ticket_priority:
+        zero:  Prioridades de solicitudes
+        one:   Prioridad de solicitud
+        few:   Prioridades de solicitudes
+        other: Prioridades de solicitudes
+    attributes:
+      ticket_priority:
+        name: "Nombre"

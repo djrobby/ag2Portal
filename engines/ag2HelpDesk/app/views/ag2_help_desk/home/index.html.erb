@@ -1,2 +1,58 @@
-<h1>Home#index</h1>
-<p>Find me in app/views/ag2_help_desk/home/index.html.erb</p>
+<%= render '/layouts/ag2_help_desk/helpdeskbreadcrumb' %>
+
+<!-- Apps Thumbnails -->
+<ul class="thumbnails">
+  <!-- Apps 1 -->
+  <li class="span2"></li>
+  <li class="span4">
+    <% if (session[:resolution] == "LD")%>
+    <a data-toggle="modal" href="#notfound" class="thumbnail centered"><img src="/assets/icon/ag2HelpDeskTickets.png" width="48" height="48" alt="ag2Tickets" /><h5 class="h5-narrow"><%=t :"ag2_help_desk.home.index.tickets" %></h5></a>
+    <% elsif session[:resolution] == "SD" %>
+    <a data-toggle="modal" href="#notfound" class="thumbnail centered"><img src="/assets/pict/ag2/ag2HelpDeskTickets.png" width="96" height="96" alt="ag2Tickets" /><h5 class="h5-narrow"><%=t :"ag2_help_desk.home.index.tickets" %></h5></a>
+    <% else %>
+    <a data-toggle="modal" href="#notfound" class="thumbnail centered"><img src="/assets/pict/ag2HelpDeskTickets.png" width="128" height="128" alt="ag2Tickets" /><h5 class="h5-narrow"><%=t :"ag2_help_desk.home.index.tickets" %></h5></a>
+    <% end %>
+  </li>
+  <li class="span4">
+    <% if (session[:resolution] == "LD")%>
+    <a data-toggle="modal" href="#notfound" class="thumbnail centered"><img src="/assets/icon/ag2HelpDeskTrack.png" width="48" height="48" alt="Control Tracking" /><h5 class="h5-narrow"><%=t :"ag2_help_desk.home.index.control" %></h5></a>
+    <% elsif session[:resolution] == "SD" %>
+    <a data-toggle="modal" href="#notfound" class="thumbnail centered"><img src="/assets/pict/ag2/ag2HelpDeskTrack.png" width="96" height="96" alt="Control Tracking" /><h5 class="h5-narrow"><%=t :"ag2_help_desk.home.index.control" %></h5></a>
+    <% else %>
+    <a data-toggle="modal" href="#notfound" class="thumbnail centered"><img src="/assets/pict/ag2HelpDeskTrack.png" width="128" height="128" alt="Control Tracking" /><h5 class="h5-narrow"><%=t :"ag2_help_desk.home.index.control" %></h5></a>
+    <% end %>
+  </li>
+  <li class="span2"></li>
+</ul><!-- /.thumbnails -->
+<ul class="thumbnails">
+  <!-- Apps 2 -->
+  <li class="span3"></li>
+  <li class="span2">
+    <% if (session[:resolution] == "LD")%>
+    <a href="<%= ticket_categories_path %>" class="thumbnail centered"><img src="/assets/icon/TableA.png" width="48" height="48" alt="ag2Tables" /><h5 class="h5-narrow"><%=t :"ag2_help_desk.home.index.categories" %></h5></a>
+    <% elsif session[:resolution] == "SD" %>
+    <a href="<%= ticket_categories_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/TableA72.png" width="72" height="72" alt="ag2Tables" /><h5 class="h5-narrow"><%=t :"ag2_help_desk.home.index.categories" %></h5></a>
+    <% else %>
+    <a href="<%= ticket_categories_path %>" class="thumbnail centered"><img src="/assets/pict/TableA96.png" width="96" height="96" alt="ag2Tables" /><h5 class="h5-narrow"><%=t :"ag2_help_desk.home.index.categories" %></h5></a>
+    <% end %>
+  </li>
+  <li class="span2">
+    <% if (session[:resolution] == "LD")%>
+    <a href="<%= ticket_priorities_path %>" class="thumbnail centered"><img src="/assets/icon/TableA.png" width="48" height="48" alt="ag2Tables" /><h5 class="h5-narrow"><%=t :"ag2_help_desk.home.index.priorities" %></h5></a>
+    <% elsif session[:resolution] == "SD" %>
+    <a href="<%= ticket_priorities_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/TableA72.png" width="72" height="72" alt="ag2Tables" /><h5 class="h5-narrow"><%=t :"ag2_help_desk.home.index.priorities" %></h5></a>
+    <% else %>
+    <a href="<%= ticket_priorities_path %>" class="thumbnail centered"><img src="/assets/pict/TableA96.png" width="96" height="96" alt="ag2Tables" /><h5 class="h5-narrow"><%=t :"ag2_help_desk.home.index.priorities" %></h5></a>
+    <% end %>
+  </li>
+  <li class="span2">
+    <% if (session[:resolution] == "LD")%>
+    <a href="<%= ticket_statuses_path %>" class="thumbnail centered"><img src="/assets/icon/TableA.png" width="48" height="48" alt="ag2Tables" /><h5 class="h5-narrow"><%=t :"ag2_help_desk.home.index.statuses" %></h5></a>
+    <% elsif session[:resolution] == "SD" %>
+    <a href="<%= ticket_statuses_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/TableA72.png" width="72" height="72" alt="ag2Tables" /><h5 class="h5-narrow"><%=t :"ag2_help_desk.home.index.statuses" %></h5></a>
+    <% else %>
+    <a href="<%= ticket_statuses_path %>" class="thumbnail centered"><img src="/assets/pict/TableA96.png" width="96" height="96" alt="ag2Tables" /><h5 class="h5-narrow"><%=t :"ag2_help_desk.home.index.statuses" %></h5></a>
+    <% end %>
+  </li>
+  <li class="span3"></li>
+</ul><!-- /.thumbnails -->

@@ -1,0 +1,9 @@
+es:
+  ag2_help_desk:
+    home:
+      index:
+        tickets: "Solicitudes"
+        control: "Control&Seguimiento"
+        categories: "Categorias"
+        priorities: "Prioridades"
+        statuses: "Estados"

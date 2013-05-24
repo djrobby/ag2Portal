@@ -1,0 +1,17 @@
+en:
+  ag2_help_desk:
+    ticket_priorities:
+      index:
+        title: "Ticket priorities"
+        btn_new: "New Ticket priority"
+        back_to_root: "Back to ag2HelpDesk"
+      show:
+        title: "Ticket priority"
+        btn_edit: "Edit Ticket priority"
+      edit:
+        title: "Edit Ticket priority"
+        btn_show: "Show Ticket priority"
+      new:
+        title: "New Ticket priority"
+      back_to_main_page: "Back to Ticket priorities"
+        

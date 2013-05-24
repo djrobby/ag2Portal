@@ -1,0 +1,17 @@
+en:
+  ag2_help_desk:
+    ticket_statuses:
+      index:
+        title: "Ticket statuses"
+        btn_new: "New Ticket status"
+        back_to_root: "Back to ag2HelpDesk"
+      show:
+        title: "Ticket status"
+        btn_edit: "Edit Ticket status"
+      edit:
+        title: "Edit Ticket status"
+        btn_show: "Show Ticket status"
+      new:
+        title: "New Ticket status"
+      back_to_main_page: "Back to Ticket statuses"
+        

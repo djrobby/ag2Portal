@@ -1,0 +1,11 @@
+es:
+  activerecord:
+    models:
+      ticket_status:
+        zero:  Estados de solicitudes
+        one:   Estado de solicitud
+        few:   Estados de solicitudes
+        other: Estados de solicitudes
+    attributes:
+      ticket_status:
+        name: "Nombre"

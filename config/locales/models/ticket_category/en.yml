@@ -1,0 +1,11 @@
+en:
+  activerecord:
+    models:
+      ticket_category:
+        zero:  Ticket categories
+        one:   Ticket category
+        few:   Ticket categories
+        other: Ticket categories
+    attributes:
+      ticket_category:
+        name: "Name"

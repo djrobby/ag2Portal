@@ -1,0 +1,17 @@
+en:
+  ag2_help_desk:
+    ticket_categories:
+      index:
+        title: "Ticket categories"
+        btn_new: "New Ticket category"
+        back_to_root: "Back to ag2HelpDesk"
+      show:
+        title: "Ticket category"
+        btn_edit: "Edit Ticket category"
+      edit:
+        title: "Edit Ticket category"
+        btn_show: "Show Ticket category"
+      new:
+        title: "New Ticket category"
+      back_to_main_page: "Back to Ticket categories"
+        

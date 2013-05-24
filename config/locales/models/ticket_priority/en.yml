@@ -1,0 +1,11 @@
+en:
+  activerecord:
+    models:
+      ticket_priority:
+        zero:  Ticket priorities
+        one:   Ticket priority
+        few:   Ticket priorities
+        other: Ticket priorities
+    attributes:
+      ticket_priority:
+        name: "Name"

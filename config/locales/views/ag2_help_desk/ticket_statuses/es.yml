@@ -1,0 +1,16 @@
+es:
+  ag2_help_desk:
+    ticket_statuses:
+      index:
+        title: "Estados de solicitudes"
+        btn_new: "Nuevo Estado de solicitud"
+        back_to_root: "Volver a ag2HelpDesk"
+      show:
+        title: "Estado de solicitud"
+        btn_edit: "Editar Estado de solicitud"
+      edit:
+        title: "Editar Estado de solicitud"
+        btn_show: "Ver Estado de solicitud"
+      new:
+        title: "Nuevo Estado de solicitud"
+      back_to_main_page: "Volver a Estados de solicitudes"

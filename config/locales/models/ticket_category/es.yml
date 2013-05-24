@@ -1,0 +1,11 @@
+es:
+  activerecord:
+    models:
+      ticket_category:
+        zero:  Categorías de solicitudes
+        one:   Categoría de solicitud
+        few:   Categorías de solicitudes
+        other: Categorías de solicitudes
+    attributes:
+      ticket_category:
+        name: "Nombre"

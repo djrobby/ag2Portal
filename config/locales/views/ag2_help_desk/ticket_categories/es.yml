@@ -1,0 +1,16 @@
+es:
+  ag2_help_desk:
+    ticket_categories:
+      index:
+        title: "Categorías de solicitudes"
+        btn_new: "Nuevo Categoría de solicitud"
+        back_to_root: "Volver a ag2HelpDesk"
+      show:
+        title: "Categoría de solicitud"
+        btn_edit: "Editar Categoría de solicitud"
+      edit:
+        title: "Editar Categoría de solicitud"
+        btn_show: "Ver Categoría de solicitud"
+      new:
+        title: "Nuevo Categoría de solicitud"
+      back_to_main_page: "Volver a Categorías de solicitudes"
