@@ -5,6 +5,10 @@ en:
         title: "Tickets"
         btn_new: "New Ticket"
         back_to_root: "Back to ag2HelpDesk"
+        label_from: "From"
+        label_to: "To"
+        label_others: "Others"
+        btn_apply: "Apply Filter"
       show:
         title: "Ticket"
         btn_edit: "Edit Ticket"

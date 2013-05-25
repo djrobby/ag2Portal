@@ -1,16 +1,20 @@
 es:
   ag2_help_desk:
-    ticket_categories:
+    tickets:
       index:
-        title: "Categorías de solicitudes"
-        btn_new: "Nuevo Categoría de solicitud"
+        title: "Solicitudes"
+        btn_new: "Nueva Solicitud"
         back_to_root: "Volver a ag2HelpDesk"
+        label_from: "Desde"
+        label_to: "Hasta"
+        label_others: "Otros"
+        btn_apply: "Aplicar Filtro"
       show:
-        title: "Categoría de solicitud"
-        btn_edit: "Editar Categoría de solicitud"
+        title: "Solicitud"
+        btn_edit: "Editar Solicitud"
       edit:
-        title: "Editar Categoría de solicitud"
-        btn_show: "Ver Categoría de solicitud"
+        title: "Editar Solicitud"
+        btn_show: "Ver Solicitud"
       new:
-        title: "Nuevo Categoría de solicitud"
-      back_to_main_page: "Volver a Categorías de solicitudes"
+        title: "Nuevo Solicitud"
+      back_to_main_page: "Volver a Solicitudes"

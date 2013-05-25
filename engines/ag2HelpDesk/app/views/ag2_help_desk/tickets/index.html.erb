@@ -1,21 +1,85 @@
-<h1>Listing tickets</h1>
+<script>
+  $(document).ready(function() {
+    $('.date_picker').datepicker({
+      format : 'dd/mm/yyyy',
+      weekStart : 1
+    });
+  }); 
+</script>
 
-<table>
-  <tr>
-    <th></th>
-    <th></th>
-    <th></th>
-  </tr>
+<%= render '/layouts/ag2_help_desk/ticketsbreadcrumb' %>
 
-<% @tickets.each do |ticket| %>
-  <tr>
-    <td><%= link_to 'Show', ticket %></td>
-    <td><%= link_to 'Edit', edit_ticket_path(ticket) %></td>
-    <td><%= link_to 'Destroy', ticket, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-  </tr>
-<% end %>
-</table>
+<h3><%= t '.title' %></h3>
 
-<br />
+<div class="container-fluid">
+  <div class="row-fluid">
 
-<%= link_to 'New Ticket', new_ticket_path %>
+    <div class="span3">
+      <div class="well sidebar-nav">
+        <%= form_tag "tickets", :method => 'get' do %>
+        <!-- User -->
+        <%= label_tag I18n.t("created_by"), nil, :class => 'form-label' %>
+        <%= select_tag "User", options_from_collection_for_select(User.all, "id", "email"), :prompt => "", :class => 'x-large-text-field shrinked' %>
+        <!-- Office -->
+        <%= label_tag I18n.t("activerecord.attributes.ticket.office"), nil, :class => 'form-label' %>
+        <%= select_tag "Office", options_from_collection_for_select(Office.all, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked' %>
+        <!-- Dates -->
+        <%= label_tag I18n.t("ag2_help_desk.tickets.index.label_from"), nil, :class => 'form-label' %>
+        <%= text_field_tag "From", params[:date], :class =>  'x-large-text-field shrinked date_picker' %>
+        <%= label_tag I18n.t("ag2_help_desk.tickets.index.label_to"), nil, :class => 'form-label' %>
+        <%= text_field_tag "To", params[:date], :class =>  'x-large-text-field shrinked date_picker' %>
+        <!-- Category -->
+        <%= label_tag I18n.t("activerecord.attributes.ticket.ticket_category"), nil, :class => 'form-label' %>
+        <%= select_tag "Category", options_from_collection_for_select(TicketCategory.all, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked' %>
+        <!-- Priority -->
+        <%= label_tag I18n.t("activerecord.attributes.ticket.ticket_priority"), nil, :class => 'form-label' %>
+        <%= select_tag "Priority", options_from_collection_for_select(TicketPriority.all, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked' %>
+        <!-- Status -->
+        <%= label_tag I18n.t("activerecord.attributes.ticket.ticket_status"), nil, :class => 'form-label' %>
+        <%= select_tag "Status", options_from_collection_for_select(TicketStatus.all, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked' %>
+        <!-- Technician -->
+        <%= label_tag I18n.t("activerecord.attributes.ticket.technician"), nil, :class => 'form-label' %>
+        <%= select_tag "Technician", options_from_collection_for_select(Technician.all, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked' %>
+        <!-- Others -->
+        <%= label_tag I18n.t("ag2_help_desk.tickets.index.label_others"), nil, :class => 'form-label' %>
+        <%= text_field_tag :search, params[:search], :class => 'x-large-text-field shrinked' %>
+        <!-- Submit -->
+        <%= submit_tag I18n.t("ag2_help_desk.tickets.index.btn_apply"), :class => 'btn btn-primary' %>
+        <% end %>
+        <!-- New -->
+        <%= render :partial => '/layouts/crud/new', :locals => { :model => Ticket, :path => new_ticket_path, :txt => I18n.t("ag2_help_desk.tickets.index.btn_new") } %>
+        <!-- Back -->
+        <%= link_to I18n.t("ag2_help_desk.tickets.index.back_to_root"), ag2_help_desk.root_path %>
+      </div><!-- /.sidebar-nav -->
+    </div><!-- /.span3 -->
+
+    <div class="span9">
+      <table class="table table-condensed table-striped shrinked">
+        <thead>
+          <tr>
+            <th><%= t :"activerecord.attributes.ticket.id" %></th>
+            <th><%= t :created_at %></th>
+            <th><%= t :created_by %></th>
+            <th><%= t :"activerecord.attributes.ticket.ticket_subject" %></th>
+            <th><%= t :"activerecord.attributes.ticket.ticket_status" %></th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @tickets.each do |ticket| %>
+          <tr>
+            <td><%= link_to ticket.id.to_s.rjust(5, '0'), ticket %></td>
+            <td><%= ticket.created_at.strftime("%d/%m/%Y %H:%M:%S") %></td>
+            <td><%= ticket.created_by %></td>
+            <td><%= ticket.subject %></td>
+            <td><%= ticket.status.name.titleize %></td>
+            <td> <%= render :partial => '/layouts/crud/edit', :locals => { :model => Ticket, :path => edit_ticket_path(ticket) } %>
+            <%= render :partial => '/layouts/crud/delete', :locals => { :model => Ticket, :path => ticket, :msg => I18n.t("activerecord.models.ticket.one"), :txt => ticket.id.to_s.rjust(5, '0') } %> </td>
+          </tr>
+          <% end %>
+        </tbody>
+      </table>
+      <%= render :partial => '/layouts/pagination', :locals => { :ivar => @tickets } %>
+    </div><!-- /.span9 -->
+  </div><!-- /.row-fluid -->
+</div><!-- /.container-fluid -->

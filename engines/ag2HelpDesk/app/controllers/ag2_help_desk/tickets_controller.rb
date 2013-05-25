@@ -9,34 +9,34 @@ module Ag2HelpDesk
     # GET /tickets.json
     def index
       user = params[:User]
+      office = params[:Office]
       from = params[:From]
       to = params[:To]
-      office = params[:Office]
       category = params[:Category]
       priority = params[:Priority]
       status = params[:Status]
       technician = params[:Technician]
 
-      @search = TimeRecord.search do
+      @search = Ticket.search do
         fulltext params[:search]
         
         if !user.blank?
           with :created_by, user
         end
+        if !office.blank?
+          with :office_id, office
+        end
         if !from.blank?
           any_of do
-            with(:timerecord_date).greater_than(from)
-            with :timerecord_date, from
+            with(:created_at).greater_than(from)
+            with :created_at, from
           end
         end
         if !to.blank?
           any_of do
-            with(:timerecord_date).less_than(to)
-            with :timerecord_date, to
+            with(:created_at).less_than(to)
+            with :created_at, to
           end
-        end
-        if !office.blank?
-          with :office_id, office
         end
         if !category.blank?
           with :ticket_category_id, category
