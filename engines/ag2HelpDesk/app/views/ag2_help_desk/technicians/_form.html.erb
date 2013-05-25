@@ -1,0 +1,7 @@
+<%= simple_form_for @technician, :html => {:class => 'form-vertical well' } do |f| %>
+<%= f.error_notification %>
+<%= display_base_errors resource %>
+<%= f.input :name, :required => true, :autofocus => true, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %>
+<%= f.association :user, collection: User.all(order: 'name'), :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %>
+<%= f.button :submit, :class => 'btn-primary' %>
+<% end %>

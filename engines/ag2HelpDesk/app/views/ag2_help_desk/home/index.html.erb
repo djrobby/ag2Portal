@@ -26,7 +26,16 @@
 </ul><!-- /.thumbnails -->
 <ul class="thumbnails">
   <!-- Apps 2 -->
-  <li class="span3"></li>
+  <li class="span2"></li>
+  <li class="span2">
+    <% if (session[:resolution] == "LD")%>
+    <a href="<%= technicians_path %>" class="thumbnail centered"><img src="/assets/icon/TableA.png" width="48" height="48" alt="ag2Tables" /><h5 class="h5-narrow"><%=t :"ag2_help_desk.home.index.technicians" %></h5></a>
+    <% elsif session[:resolution] == "SD" %>
+    <a href="<%= technicians_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/TableA72.png" width="72" height="72" alt="ag2Tables" /><h5 class="h5-narrow"><%=t :"ag2_help_desk.home.index.technicians" %></h5></a>
+    <% else %>
+    <a href="<%= technicians_path %>" class="thumbnail centered"><img src="/assets/pict/TableA96.png" width="96" height="96" alt="ag2Tables" /><h5 class="h5-narrow"><%=t :"ag2_help_desk.home.index.technicians" %></h5></a>
+    <% end %>
+  </li>
   <li class="span2">
     <% if (session[:resolution] == "LD")%>
     <a href="<%= ticket_categories_path %>" class="thumbnail centered"><img src="/assets/icon/TableA.png" width="48" height="48" alt="ag2Tables" /><h5 class="h5-narrow"><%=t :"ag2_help_desk.home.index.categories" %></h5></a>
@@ -54,5 +63,5 @@
     <a href="<%= ticket_statuses_path %>" class="thumbnail centered"><img src="/assets/pict/TableA96.png" width="96" height="96" alt="ag2Tables" /><h5 class="h5-narrow"><%=t :"ag2_help_desk.home.index.statuses" %></h5></a>
     <% end %>
   </li>
-  <li class="span3"></li>
+  <li class="span2"></li>
 </ul><!-- /.thumbnails -->

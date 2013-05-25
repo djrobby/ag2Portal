@@ -10,3 +10,6 @@ en:
       statuses:
         items: "Statuses"
         item: "Status"
+      technicians:
+        items: "Technicians"
+        item: "Technician"

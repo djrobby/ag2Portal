@@ -1,0 +1,17 @@
+en:
+  ag2_help_desk:
+    technicians:
+      index:
+        title: "Technicians"
+        btn_new: "New Technician"
+        back_to_root: "Back to ag2HelpDesk"
+      show:
+        title: "Technician"
+        btn_edit: "Edit Technician"
+      edit:
+        title: "Edit Technician"
+        btn_show: "Show Technician"
+      new:
+        title: "New Technician"
+      back_to_main_page: "Back to Technicians"
+        

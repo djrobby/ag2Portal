@@ -1,0 +1,13 @@
+es:
+  activerecord:
+    models:
+      technician:
+        zero:  Técnicos
+        one:   Técnico
+        few:   Técnicos
+        other: Técnicos
+    attributes:
+      technician:
+        name: "Nombre"
+        user: "Usuario"
+        user_id: "Usuario"

@@ -1,0 +1,8 @@
+<%= render '/layouts/ag2_help_desk/techniciansbreadcrumb' %>
+
+<h3><%=t '.title' %></h3>
+
+<%= render 'form' %>
+
+<%= link_to I18n.t("btn_show", :scope => :"ag2_help_desk.technicians.edit"), @technician %> |
+<%= link_to I18n.t("back_to_main_page", :scope => :"ag2_help_desk.technicians"), technicians_path %>

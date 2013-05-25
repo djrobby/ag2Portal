@@ -1,0 +1,24 @@
+<%= render '/layouts/ag2_help_desk/techniciansbreadcrumb' %>
+
+<h3><%=t '.title' %></h3>
+<table class="table">
+  <tbody>
+    <tr>
+      <td>Id:</td>
+      <td><%= @technician.id %></td>
+      <td><%=t :"activerecord.attributes.technician.name" %>:</td>
+      <td><%= @technician.name.titleize %></td>
+    </tr>
+    <tr>
+      <td><%=t :"activerecord.attributes.technician.user" %>:</td>
+      <td><%= @technician.user.email %></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @technician } %>
+    <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @technician } %>
+  </tbody>
+</table>
+
+<%= render :partial => '/layouts/crud/update', :locals => { :model => TicketCategory, :path => edit_technician_path(@technician), :txt => I18n.t('ag2_help_desk.technicians.show.btn_edit') } %>
+<%= link_to I18n.t("ag2_help_desk.technicians.back_to_main_page"), technicians_path %>

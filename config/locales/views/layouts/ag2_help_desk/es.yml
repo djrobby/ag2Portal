@@ -10,3 +10,6 @@ es:
       statuses:
         items: "Estados"
         item: "Estado"
+      technicians:
+        items: "Técnicos"
+        item: "Técnico"

@@ -1,0 +1,16 @@
+es:
+  ag2_help_desk:
+    technicians:
+      index:
+        title: "Técnicos"
+        btn_new: "Nuevo Técnico"
+        back_to_root: "Volver a ag2HelpDesk"
+      show:
+        title: "Técnico"
+        btn_edit: "Editar Técnico"
+      edit:
+        title: "Editar Técnico"
+        btn_show: "Ver Técnico"
+      new:
+        title: "Nuevo Técnico"
+      back_to_main_page: "Volver a Técnicos"

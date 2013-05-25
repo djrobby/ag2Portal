@@ -23,6 +23,7 @@ class User < ActiveRecord::Base
   after_create :assign_default_role_and_send_email
 
   has_one :worker
+  has_one :technician
   def to_label
     "#{name} (#{email})"
   end
