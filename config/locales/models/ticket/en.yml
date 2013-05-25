@@ -1,0 +1,24 @@
+en:
+  activerecord:
+    models:
+      ticket:
+        zero:  Tickets
+        one:   Ticket
+        few:   Tickets
+        other: Tickets
+    attributes:
+      ticket:
+        ticket_category: "Category"
+        ticket_category_id: "Category"
+        ticket_priority: "Priority"
+        ticket_priority_id: "Priority"
+        ticket_status: "Status"
+        ticket_status_id: "Status"
+        technician: "Technician"
+        technician_id: "Technician"
+        assign_at: "Assigned at"
+        status_changed_at: "Status changed at"
+        status_changed_message: "Status message"
+        ticket_message: "Message"
+        ticket_subject: "Subject"
+        attachment: "Attachment"

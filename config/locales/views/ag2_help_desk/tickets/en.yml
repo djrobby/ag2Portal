@@ -1,0 +1,17 @@
+en:
+  ag2_help_desk:
+    tickets:
+      index:
+        title: "Tickets"
+        btn_new: "New Ticket"
+        back_to_root: "Back to ag2HelpDesk"
+      show:
+        title: "Ticket"
+        btn_edit: "Edit Ticket"
+      edit:
+        title: "Edit Ticket"
+        btn_show: "Show Ticket"
+      new:
+        title: "New Ticket"
+      back_to_main_page: "Back to Tickets"
+        

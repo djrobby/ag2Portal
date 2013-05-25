@@ -11,4 +11,10 @@ class Notifier < ActionMailer::Base
 
     mail from: user.email, to: "helpdesk@aguaygestion.com"
   end
+
+  def ticket_created(ticket)
+    @ticket = ticket
+
+    mail from: ticket.created_by, to: "helpdesk@aguaygestion.com"
+  end
 end

@@ -2,6 +2,9 @@ require_dependency "ag2_help_desk/application_controller"
 
 module Ag2HelpDesk
   class TechniciansController < ApplicationController
+    before_filter :authenticate_user!
+    load_and_authorize_resource
+
     # GET /technicians
     # GET /technicians.json
     def index

@@ -1,0 +1,10 @@
+<%=t '.number' %><%= @ticket.id %>
+<%=t '.created_at' %><%= @ticket.created_at.utc.getlocal.strftime("%d/%m/%Y %H:%M:%S") %>
+<%=t '.created_by' %><%= @ticket.created_by %>
+<%=t '.office' %><%= @ticket.office.name unless @ticket.office.blank? %>
+<%=t '.category' %><%= @ticket.category.name %>
+<%=t '.priority' %><%= @ticket.priority.name %>
+
+<%=t '.title' %><%= @ticket.subject %>
+-------
+<%= @ticket.message %>

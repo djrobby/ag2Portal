@@ -13,3 +13,6 @@ en:
       technicians:
         items: "Technicians"
         item: "Technician"
+      tickets:
+        items: "Tickets"
+        item: "Ticket"

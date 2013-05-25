@@ -3,4 +3,6 @@ class TicketCategory < ActiveRecord::Base
                   :created_by, :updated_by
 
   validates :name,  :presence => true
+
+  has_many :tickets
 end

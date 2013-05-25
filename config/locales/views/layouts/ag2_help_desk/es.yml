@@ -13,3 +13,6 @@ es:
       technicians:
         items: "Técnicos"
         item: "Técnico"
+      tickets:
+        items: "Solicitudes"
+        item: "Solicitud"

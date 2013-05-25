@@ -1,0 +1,23 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  ticket_category: 
+  ticket_priority: 
+  ticket_subject: MyString
+  ticket_message: MyString
+  ticket_status: 
+  technician: 
+  assign_at: 2013-05-25 09:10:46
+  status_changed_at: 2013-05-25 09:10:46
+  status_changed_message: MyString
+
+two:
+  ticket_category: 
+  ticket_priority: 
+  ticket_subject: MyString
+  ticket_message: MyString
+  ticket_status: 
+  technician: 
+  assign_at: 2013-05-25 09:10:46
+  status_changed_at: 2013-05-25 09:10:46
+  status_changed_message: MyString

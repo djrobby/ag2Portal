@@ -1,0 +1,32 @@
+<% content_for :title, "aGestiona2 | ag2HelpDesk" %>
+<% content_for :icon, "/assets/icon/ag2HelpDeskTickets.png" %>
+<% content_for :alt, "ag2HelpDesk Tickets" %>
+
+<!-- Breadcrumb -->
+<ul class="breadcrumb">
+  <li>
+    <a href="<%= main_app.root_path %>"><i class="icon-home"></i></a><span class="divider">></span>
+  </li>
+  <li>
+    <a href="<%= ag2_help_desk.root_path %>">ag2HelpDesk</a><span class="divider">></span>
+  </li>
+  <% if @tickets %>
+  <li>
+    <%=t :"ag2_help_desk.breadcrumb.tickets.items" %>
+  </li>
+  <% end %>
+  <% if @ticket %>
+  <li>
+    <a href="<%= tickets_path %>"><%=t :"ag2_help_desk.breadcrumb.tickets.items" %></a><span class="divider">></span>
+  </li>
+  <% if @breadcrumb == 'read' || @breadcrumb == 'update' %>
+  <%=t :"ag2_help_desk.breadcrumb.tickets.item" %>
+  <% end %>
+  <% if @breadcrumb == 'create' %>
+  <li>
+    <%=t :"breadcrumb.new" %>
+  </li>
+  <% end %>
+  <% end %>
+  <a class="close" href="<%= ag2_help_desk.root_path %>">&#215;</a>
+</ul>

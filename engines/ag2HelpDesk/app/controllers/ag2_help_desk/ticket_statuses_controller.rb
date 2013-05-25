@@ -2,6 +2,9 @@ require_dependency "ag2_help_desk/application_controller"
 
 module Ag2HelpDesk
   class TicketStatusesController < ApplicationController
+    before_filter :authenticate_user!
+    load_and_authorize_resource
+
     # GET /ticket_statuses
     # GET /ticket_statuses.json
     def index

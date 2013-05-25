@@ -1,0 +1,24 @@
+es:
+  activerecord:
+    models:
+      ticket:
+        zero:  Solicitudes
+        one:   Solicitud
+        few:   Solicitudes
+        other: Solicitudes
+    attributes:
+      ticket:
+        ticket_category: "Categoría"
+        ticket_category_id: "Categoría"
+        ticket_priority: "Prioridad"
+        ticket_priority_id: "Prioridad"
+        ticket_status: "Estado"
+        ticket_status_id: "Estado"
+        technician: "Técnico"
+        technician_id: "Técnico"
+        assign_at: "Asignado el"
+        status_changed_at: "Estado cambiado el"
+        status_changed_message: "Mensaje de estado"
+        ticket_message: "Mensaje"
+        ticket_subject: "Asunto"
+        attachment: "Adjunto"

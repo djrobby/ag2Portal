@@ -6,3 +6,12 @@ es:
       new_user_created: "He creado mi nueva cuenta de aGestiona2 con el nombre de Usuario "
       complete_roles: "Por favor, complete la configuración asignando los roles adecuados, para poder usar los servicios de la plataforma."
       thanks: "Gracias."
+    ticket_created:
+      subject: "aGestiona2: Nueva solicitud de soporte"
+      number: "Solicitud Nº: "
+      created_at: "Creada el: "
+      created_by: "Creada por: "
+      office: "Oficina: "
+      category: "Categoría: "
+      priority: "Prioridad: "
+      title: "Asunto: "

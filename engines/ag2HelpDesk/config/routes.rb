@@ -7,6 +7,7 @@ Ag2HelpDesk::Engine.routes.draw do
     resources :ticket_priorities
     resources :ticket_statuses
     resources :technicians
+    resources :tickets
 
     # Root
     root :to => 'home#index'

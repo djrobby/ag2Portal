@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130524173226) do
+ActiveRecord::Schema.define(:version => 20130525103514) do
 
   create_table "apps", :force => true do |t|
     t.string   "name"
@@ -360,6 +360,38 @@ ActiveRecord::Schema.define(:version => 20130524173226) do
   end
 
   add_index "ticket_statuses", ["name"], :name => "index_ticket_statuses_on_name"
+
+  create_table "tickets", :force => true do |t|
+    t.integer  "ticket_category_id"
+    t.integer  "ticket_priority_id"
+    t.string   "ticket_subject"
+    t.string   "ticket_message"
+    t.integer  "ticket_status_id"
+    t.integer  "technician_id"
+    t.datetime "assign_at"
+    t.datetime "status_changed_at"
+    t.string   "status_changed_message"
+    t.datetime "created_at",              :null => false
+    t.datetime "updated_at",              :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+    t.string   "attachment_file_name"
+    t.string   "attachment_content_type"
+    t.integer  "attachment_file_size"
+    t.datetime "attachment_updated_at"
+    t.integer  "office_id"
+  end
+
+  add_index "tickets", ["assign_at"], :name => "index_tickets_on_assign_at"
+  add_index "tickets", ["created_at"], :name => "index_tickets_on_created_at"
+  add_index "tickets", ["created_by"], :name => "index_tickets_on_created_by"
+  add_index "tickets", ["office_id"], :name => "index_tickets_on_office_id"
+  add_index "tickets", ["status_changed_at"], :name => "index_tickets_on_status_changed_at"
+  add_index "tickets", ["technician_id"], :name => "index_tickets_on_technician_id"
+  add_index "tickets", ["ticket_category_id"], :name => "index_tickets_on_ticket_category_id"
+  add_index "tickets", ["ticket_priority_id"], :name => "index_tickets_on_ticket_priority_id"
+  add_index "tickets", ["ticket_status_id"], :name => "index_tickets_on_ticket_status_id"
+  add_index "tickets", ["ticket_subject"], :name => "index_tickets_on_ticket_subject"
 
   create_table "time_records", :force => true do |t|
     t.date     "timerecord_date"
