@@ -1,6 +1,6 @@
 <%= simple_form_for @timerecord_type, :html => {:class => 'form-vertical well' } do |f| %>
 <%= f.error_notification %>
 <%= display_base_errors resource %>
-<%= f.input :name, :autofocus => true, :input_html => { :class => 'small-text-field' }, :label_html => { :class => 'form-label' } %>
+<%= f.input :name, :autofocus => true, :input_html => { :class => 'small-text-field', :maxlength => 1 }, :label_html => { :class => 'form-label' } %>
 <%= f.button :submit, :class => 'btn-primary' %>
 <% end %>

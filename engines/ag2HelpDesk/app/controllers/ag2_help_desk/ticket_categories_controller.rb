@@ -55,7 +55,7 @@ module Ag2HelpDesk
   
       respond_to do |format|
         if @ticket_category.save
-          format.html { redirect_to @ticket_category, notice: 'Ticket category was successfully created.' }
+          format.html { redirect_to @ticket_category, notice: I18n.t('activerecord.successful.messages.created', :model => @ticket_category.class.model_name.human) }
           format.json { render json: @ticket_category, status: :created, location: @ticket_category }
         else
           format.html { render action: "new" }
@@ -73,7 +73,7 @@ module Ag2HelpDesk
   
       respond_to do |format|
         if @ticket_category.update_attributes(params[:ticket_category])
-          format.html { redirect_to @ticket_category, notice: 'Ticket category was successfully updated.' }
+          format.html { redirect_to @ticket_category, notice: I18n.t('activerecord.successful.messages.updated', :model => @ticket_category.class.model_name.human) }
           format.json { head :no_content }
         else
           format.html { render action: "edit" }

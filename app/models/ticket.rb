@@ -15,7 +15,8 @@ class Ticket < ActiveRecord::Base
   validates :ticket_category_id,  :presence => true
   validates :ticket_priority_id,  :presence => true
 
-  after_create :assign_default_status_and_send_email
+  before_create :assign_default_status_and_office
+  after_create :send_email
 
   searchable do
     text :ticket_message, :ticket_subject, :created_by
@@ -32,14 +33,14 @@ class Ticket < ActiveRecord::Base
 
   private
 
-  def assign_default_status_and_send_email
+  def assign_default_status_and_office
     # Assign default status
     if self.ticket_status_id.blank?
       self.ticket_status_id = 1
     end
     # Assign office if possible
     if self.office_id.blank?
-      user = User.find_by_email(self.created_by)
+      user = User.find(self.created_by)
       if !user.nil?
         worker = Worker.find_by_user_id(user)
         if !worker.nil?
@@ -47,6 +48,9 @@ class Ticket < ActiveRecord::Base
         end
       end
     end
+  end
+
+  def send_email
     # Send notification e-mail
     Notifier.ticket_created(self).deliver
   end

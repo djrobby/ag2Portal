@@ -8,7 +8,7 @@ module Ag2HelpDesk
     # GET /ticket_statuses
     # GET /ticket_statuses.json
     def index
-      @ticket_statuses = TicketStatus.paginate(:page => params[:page], :per_page => per_page).order('name')
+      @ticket_statuses = TicketStatus.paginate(:page => params[:page], :per_page => per_page).order('id')
   
       respond_to do |format|
         format.html # index.html.erb
@@ -55,7 +55,7 @@ module Ag2HelpDesk
   
       respond_to do |format|
         if @ticket_status.save
-          format.html { redirect_to @ticket_status, notice: 'Ticket status was successfully created.' }
+          format.html { redirect_to @ticket_status, notice: I18n.t('activerecord.successful.messages.created', :model => @ticket_status.class.model_name.human) }
           format.json { render json: @ticket_status, status: :created, location: @ticket_status }
         else
           format.html { render action: "new" }
@@ -73,7 +73,7 @@ module Ag2HelpDesk
   
       respond_to do |format|
         if @ticket_status.update_attributes(params[:ticket_status])
-          format.html { redirect_to @ticket_status, notice: 'Ticket status was successfully updated.' }
+          format.html { redirect_to @ticket_status, notice: I18n.t('activerecord.successful.messages.updated', :model => @ticket_status.class.model_name.human) }
           format.json { head :no_content }
         else
           format.html { render action: "edit" }

@@ -1,5 +1,60 @@
-<p id="notice"><%= notice %></p>
+<%= render '/layouts/ag2_help_desk/ticketsbreadcrumb' %>
 
+<h3><%=t '.title' %></h3>
+<table class="table">
+  <tbody>
+    <tr>
+      <td><%=t :"activerecord.attributes.ticket.id" %>:</td>
+      <td><b><%= @ticket.id.to_s.rjust(5, '0') %></b></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><%=t :"activerecord.attributes.ticket.ticket_category" %>:</td>
+      <td><%= @ticket.ticket_category.name.titleize %></td>
+      <td><%=t :"activerecord.attributes.ticket.ticket_priority" %>:</td>
+      <td><%= @ticket.ticket_priority.name.titleize %></td>
+    </tr>
+    <tr>
+      <td><%=t :"activerecord.attributes.ticket.ticket_subject" %>:</td>
+      <td><%= @ticket.ticket_subject %></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><%=t :"activerecord.attributes.ticket.ticket_message" %>:</td>
+      <td><%= @ticket.ticket_message %></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @ticket } %>
+    <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @ticket } %>
+    <tr>
+      <td><%=t :"activerecord.attributes.ticket.office" %>:</td>
+      <td><%= @ticket.office.name unless @ticket.office.blank? %></td>
+      <td><%=t :"activerecord.attributes.ticket.ticket_status" %>:</td>
+      <td><%= @ticket.ticket_status.name.titleize unless @ticket.ticket_status.blank? %></td>
+    </tr>
+    <tr>
+      <td><%=t :"activerecord.attributes.ticket.assign_at" %>:</td>
+      <td><%= @ticket.assign_at.utc.getlocal.strftime("%d/%m/%Y %H:%M:%S") unless @ticket.assign_at.blank? %></td>
+      <td><%=t :"activerecord.attributes.ticket.technician" %>:</td>
+      <td><%= @ticket.technician.name.titleize unless @ticket.technician.blank? %></td>
+    </tr>
+    <tr>
+      <td><%=t :"activerecord.attributes.ticket.status_changed_at" %>:</td>
+      <td><%= @ticket.status_changed_at.utc.getlocal.strftime("%d/%m/%Y %H:%M:%S") unless @ticket.status_changed_at.blank? %></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><%=t :"activerecord.attributes.ticket.status_changed_message" %>:</td>
+      <td><%= @ticket.status_changed_message %></td>
+      <td></td>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
 
-<%= link_to 'Edit', edit_ticket_path(@ticket) %> |
-<%= link_to 'Back', tickets_path %>
+<%= render :partial => '/layouts/crud/update', :locals => { :model => Ticket, :path => edit_ticket_path(@ticket), :txt => I18n.t('ag2_help_desk.tickets.show.btn_edit') } %>
+<%= link_to I18n.t("ag2_help_desk.tickets.back_to_main_page"), tickets_path %>

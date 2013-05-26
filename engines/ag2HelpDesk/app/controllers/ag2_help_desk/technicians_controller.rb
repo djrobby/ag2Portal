@@ -55,7 +55,7 @@ module Ag2HelpDesk
   
       respond_to do |format|
         if @technician.save
-          format.html { redirect_to @technician, notice: 'Technician was successfully created.' }
+          format.html { redirect_to @technician, notice: I18n.t('activerecord.successful.messages.created', :model => @technician.class.model_name.human) }
           format.json { render json: @technician, status: :created, location: @technician }
         else
           format.html { render action: "new" }
@@ -73,7 +73,7 @@ module Ag2HelpDesk
   
       respond_to do |format|
         if @technician.update_attributes(params[:technician])
-          format.html { redirect_to @technician, notice: 'Technician was successfully updated.' }
+          format.html { redirect_to @technician, notice: I18n.t('activerecord.successful.messages.updated', :model => @technician.class.model_name.human) }
           format.json { head :no_content }
         else
           format.html { render action: "edit" }

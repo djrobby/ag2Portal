@@ -4,7 +4,31 @@ module Ag2HelpDesk
   class TicketsController < ApplicationController
     before_filter :authenticate_user!
     load_and_authorize_resource
+    skip_load_and_authorize_resource :only => [:update_office_textfield_from_created_by]
 
+    # Update office text field at view from created_by select
+    def update_office_textfield_from_created_by
+      office = 0
+      
+      user = User.find(params[:id])
+      if !user.nil?
+        worker = Worker.find_by_user_id(user)
+        if !worker.nil?
+          office = worker.office_id
+        end
+      end
+
+      @json_data = { "office" => office }
+
+      respond_to do |format|
+        format.html # update_office_textfield_from_created_by.html.erb does not exist! JSON only
+        format.json { render json: @json_data }
+      end
+    end
+
+    #
+    # Default Methods
+    #
     # GET /tickets
     # GET /tickets.json
     def index
@@ -102,7 +126,7 @@ module Ag2HelpDesk
   
       respond_to do |format|
         if @ticket.save
-          format.html { redirect_to @ticket, notice: 'Ticket was successfully created.' }
+          format.html { redirect_to @ticket, notice: I18n.t('activerecord.successful.messages.created', :model => @ticket.class.model_name.human) }
           format.json { render json: @ticket, status: :created, location: @ticket }
         else
           format.html { render action: "new" }
@@ -120,7 +144,7 @@ module Ag2HelpDesk
   
       respond_to do |format|
         if @ticket.update_attributes(params[:ticket])
-          format.html { redirect_to @ticket, notice: 'Ticket was successfully updated.' }
+          format.html { redirect_to @ticket, notice: I18n.t('activerecord.successful.messages.updated', :model => @ticket.class.model_name.human) }
           format.json { head :no_content }
         else
           format.html { render action: "edit" }
