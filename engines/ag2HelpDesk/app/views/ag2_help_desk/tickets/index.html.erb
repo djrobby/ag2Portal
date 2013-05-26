@@ -73,7 +73,8 @@
             <td><%= User.find(ticket.created_by).email unless ticket.created_by.blank? %></td>
             <td><%= ticket.ticket_subject %></td>
             <td><%= ticket.ticket_status.name.titleize unless ticket.ticket_status.blank? %></td>
-            <td> <%= render :partial => '/layouts/crud/edit', :locals => { :model => Ticket, :path => edit_ticket_path(ticket) } %>
+            <td><a data-toggle="modal" href="#ticket-status-<%= ticket.id %>" class="btn btn-mini" type="button"><i class="icon-tags"></i></a> <%= render ticket %>
+            <%= render :partial => '/layouts/crud/edit', :locals => { :model => Ticket, :path => edit_ticket_path(ticket) } %>
             <%= render :partial => '/layouts/crud/delete', :locals => { :model => Ticket, :path => ticket, :msg => I18n.t("activerecord.models.ticket.one"), :txt => ticket.id.to_s.rjust(5, '0') } %> </td>
           </tr>
           <% end %>

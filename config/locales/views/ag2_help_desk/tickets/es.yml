@@ -9,6 +9,8 @@ es:
         label_to: "Hasta"
         label_others: "Otros"
         btn_apply: "Aplicar Filtro"
+        change_status_title: "Cambiar Estado de Nº %{ticket}"
+        btn_change_status: "Cambiar Estado"
       show:
         title: "Solicitud"
         btn_edit: "Editar Solicitud"

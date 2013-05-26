@@ -9,14 +9,17 @@ class Ticket < ActiveRecord::Base
                   :created_by, :updated_by
   has_attached_file :attachment, :styles => { :medium => "192x192>", :small => "128x128>" }, :default_url => "/images/missing/:style/ticket.png"
 
-  validates :ticket_subject,      :presence => true,
-                                  :length => { :maximum => 20 }
-  validates :ticket_message,      :presence => true
-  validates :ticket_category_id,  :presence => true
-  validates :ticket_priority_id,  :presence => true
+  validates :ticket_subject,          :presence => true,
+                                      :length => { :maximum => 20 }
+  validates :ticket_message,          :presence => true
+  validates :ticket_category_id,      :presence => true
+  validates :ticket_priority_id,      :presence => true
+  validates :technician_id,           :presence => true, :if => "ticket_status_id > 1"
+  validates :status_changed_message,  :presence => true, :if => "ticket_status_id > 3"
 
   before_create :assign_default_status_and_office
-  after_create :send_email
+  after_create :send_create_email
+  before_update :status_changed
 
   searchable do
     text :ticket_message, :ticket_subject, :created_by
@@ -50,8 +53,36 @@ class Ticket < ActiveRecord::Base
     end
   end
 
-  def send_email
+  def status_changed
+    if self.ticket_status_id_was != self.ticket_status_id
+      # Status forwarded to start/end task
+      if self.ticket_status_id > 1 && self.assign_at.blank?
+        self.assign_at = Time.now
+      end
+      # Status reverted to initial
+      if self.ticket_status_id <= 1
+        self.assign_at = nil
+        if !self.technician.blank?
+          self.technician = nil
+        end
+        if !self.status_changed_message.blank?
+          self.status_changed_message = nil
+        end
+      end
+      # Status changed
+      self.status_changed_at = Time.now
+      # Send notification e-mail
+      Notifier.ticket_updated(self).deliver
+    end
+  end
+
+  def send_create_email
     # Send notification e-mail
     Notifier.ticket_created(self).deliver
+  end
+
+  def send_update_email
+    # Send notification e-mail
+    Notifier.ticket_updated(self).deliver
   end
 end

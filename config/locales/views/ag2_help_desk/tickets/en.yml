@@ -9,6 +9,8 @@ en:
         label_to: "To"
         label_others: "Others"
         btn_apply: "Apply Filter"
+        change_status_title: "Update Status of # %{ticket}"
+        btn_change_status: "Change Status"
       show:
         title: "Ticket"
         btn_edit: "Edit Ticket"

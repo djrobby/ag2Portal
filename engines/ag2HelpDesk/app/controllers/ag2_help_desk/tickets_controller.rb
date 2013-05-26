@@ -144,7 +144,8 @@ module Ag2HelpDesk
   
       respond_to do |format|
         if @ticket.update_attributes(params[:ticket])
-          format.html { redirect_to @ticket, notice: I18n.t('activerecord.successful.messages.updated', :model => @ticket.class.model_name.human) }
+          # format.html { redirect_to @ticket, notice: I18n.t('activerecord.successful.messages.updated', :model => @ticket.class.model_name.human) }
+          format.html { redirect_to params[:referrer], notice: I18n.t('activerecord.successful.messages.updated', :model => @ticket.class.model_name.human) }
           format.json { head :no_content }
         else
           format.html { render action: "edit" }
