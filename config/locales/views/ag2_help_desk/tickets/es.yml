@@ -18,5 +18,10 @@ es:
         title: "Editar Solicitud"
         btn_show: "Ver Solicitud"
       new:
-        title: "Nuevo Solicitud"
+        title: "Nueva Solicitud"
+      new_ticket:
+        title: "Solicitud de Soporte"
+        btn_new: "Enviar Solicitud"
+        footer: "¡Recuerda que todos los datos solicitados son obligatorios!"
+        submit: "La solicitud ha sido enviada."
       back_to_main_page: "Volver a Solicitudes"

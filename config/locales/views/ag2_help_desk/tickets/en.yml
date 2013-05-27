@@ -19,5 +19,10 @@ en:
         btn_show: "Show Ticket"
       new:
         title: "New Ticket"
+      new_ticket:
+        title: "Support Request"
+        btn_new: "Send Request"
+        footer: "Remember that all requested data are mandatory!"
+        submit: "Request has been sent."
       back_to_main_page: "Back to Tickets"
         

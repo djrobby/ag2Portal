@@ -14,8 +14,8 @@ class Ticket < ActiveRecord::Base
   validates :ticket_message,          :presence => true
   validates :ticket_category_id,      :presence => true
   validates :ticket_priority_id,      :presence => true
-  validates :technician_id,           :presence => true, :if => "ticket_status_id > 1"
-  validates :status_changed_message,  :presence => true, :if => "ticket_status_id > 3"
+  validates :technician_id,           :presence => true, :if => :technician_required?
+  validates :status_changed_message,  :presence => true, :if => :status_message_required?
 
   before_create :assign_default_status_and_office
   after_create :send_create_email
@@ -36,6 +36,22 @@ class Ticket < ActiveRecord::Base
 
   private
 
+  def technician_required?
+    if !self.ticket_status_id.blank? && self.ticket_status_id > 1
+      true
+    else
+      false
+    end
+  end
+
+  def status_message_required?
+    if !self.ticket_status_id.blank? && self.ticket_status_id > 3
+      true
+    else
+      false
+    end
+  end
+  
   def assign_default_status_and_office
     # Assign default status
     if self.ticket_status_id.blank?

@@ -50,6 +50,7 @@
         <%= render :partial => '/layouts/crud/new', :locals => { :model => Ticket, :path => new_ticket_path, :txt => I18n.t("ag2_help_desk.tickets.index.btn_new") } %>
         <!-- Back -->
         <%= link_to I18n.t("ag2_help_desk.tickets.index.back_to_root"), ag2_help_desk.root_path %>
+        <a data-toggle="modal" href="#new-ticket" class="btn btn-mini" type="button">Modal</a>
       </div><!-- /.sidebar-nav -->
     </div><!-- /.span3 -->
 
