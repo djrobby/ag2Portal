@@ -11,6 +11,7 @@ class ApplicationController < ActionController::Base
   layout :layout
   helper_method :letters
   helper_method :per_page
+  helper_method :undo_link
 
   def letters
     @letters = ('A'..'Z')
@@ -18,12 +19,24 @@ class ApplicationController < ActionController::Base
 
   def per_page
     if session[:resolution] == "LD"
-      20
+    20
     elsif session[:resolution] == "SD"
-      40
+    40
     else
-      60
+    60
     end
+  end
+
+  # Configure link_to 'undo' to be displayed on notification
+  # (rails flash) area (messages layout) at the current view_context
+  # and routes to VersionsController#revert
+  #
+  # At Controllers: "#{undo_link(@<controller_ivar>)}"
+  def undo_link(ivar)
+    view_context.link_to("<i class='icon-undo-black'></i>".html_safe,
+    main_app.revert_version_path(ivar.versions.scoped.last),
+    :method => :post, :class => 'notice_icon_button',
+    :id => 'undo', :title => I18n.t(:undo))
   end
 
   def set_locale

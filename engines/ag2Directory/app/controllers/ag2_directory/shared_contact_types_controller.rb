@@ -73,7 +73,7 @@ module Ag2Directory
       respond_to do |format|
         if @shared_contact_type.update_attributes(params[:shared_contact_type])
           format.html { redirect_to @shared_contact_type,
-                        notice: (I18n.t('activerecord.successful.messages.updated', :model => @shared_contact_type.class.model_name.human) + "#{undo_link}").html_safe }
+                        notice: (I18n.t('activerecord.successful.messages.updated', :model => @shared_contact_type.class.model_name.human) + "#{undo_link(@shared_contact_type)}").html_safe }
           format.json { head :no_content }
         else
           format.html { render action: "edit" }
@@ -90,18 +90,9 @@ module Ag2Directory
 
       respond_to do |format|
         format.html { redirect_to shared_contact_types_url,
-                      notice: (I18n.t('activerecord.successful.messages.destroyed', :model => @shared_contact_type.class.model_name.human) + "#{undo_link}").html_safe }
+                      notice: (I18n.t('activerecord.successful.messages.destroyed', :model => @shared_contact_type.class.model_name.human) + "#{undo_link(@shared_contact_type)}").html_safe }
         format.json { head :no_content }
       end
-    end
-
-    private
-
-    def undo_link
-      view_context.link_to("<i class='icon-undo-black'></i>".html_safe,
-                            main_app.revert_version_path(@shared_contact_type.versions.scoped.last),
-                            :method => :post, :class => 'notice_icon_button',
-                            :id => 'undo', :title => I18n.t(:undo))
     end
   end
 end

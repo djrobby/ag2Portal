@@ -8,6 +8,8 @@ class CorpContact < ActiveRecord::Base
                   :created_by, :updated_by
   has_attached_file :avatar, :styles => { :medium => "96x96>", :small => "64x64>" }, :default_url => "/images/missing/:style/user.png"
 
+  has_paper_trail
+
   validates :first_name,  :presence => true,
                           :length => { :minimum => 2 }
   validates :last_name,   :presence => true,

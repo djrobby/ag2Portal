@@ -13,6 +13,8 @@ class SharedContact < ActiveRecord::Base
                   :country_id, :shared_contact_type_id, :remarks, :region_id,
                   :created_by, :updated_by
 
+  has_paper_trail
+
   validates :first_name,              :presence => true, :if => "company.blank?"
   validates :last_name,               :presence => true, :if => "company.blank?"
   validates :fiscal_id,               :presence => true, :if => "!company.blank?"
