@@ -408,6 +408,57 @@ table.fixed td {
   background-position: 0px 0px;
   background-repeat: no-repeat;
 }
+.icon-undo-white {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  margin-top: 1px;
+  *margin-right: .3em;
+  line-height: 14px;
+  vertical-align: text-top;
+  background-image: image-url("icon/glyph/white/halflings/undo.png");
+  background-position: 0px 0px;
+  background-repeat: no-repeat;
+}
+.icon-undo-black {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  margin-top: 1px;
+  *margin-right: .3em;
+  line-height: 14px;
+  vertical-align: text-top;
+  background-image: image-url("icon/glyph/black/halflings/undo.png");
+  background-position: 0px 0px;
+  background-repeat: no-repeat;
+}
+.icon-redo-white {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  margin-top: 1px;
+  *margin-right: .3em;
+  line-height: 14px;
+  vertical-align: text-top;
+  background-image: image-url("icon/glyph/white/halflings/redo.png");
+  background-position: 0px 0px;
+  background-repeat: no-repeat;
+}
+.icon-redo-black {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  margin-top: 1px;
+  *margin-right: .3em;
+  line-height: 14px;
+  vertical-align: text-top;
+  background-image: image-url("icon/glyph/black/halflings/redo.png");
+  background-position: 0px 0px;
+  background-repeat: no-repeat;
+}
+.notice_icon_button {
+  margin: 0 0 0 10px;
+}
 
 /*
  * Progress indicators

@@ -22,3 +22,5 @@ es:
   about_special_thanks_title_html: "<b>Agradecimientos especiales</b>"
   about_special_thanks_css_html: "Colaboración CSS: "
   about_special_thanks_advise_html: "Asesoramiento General: "
+  undo: "Deshacer"
+  redo: "Rehacer"

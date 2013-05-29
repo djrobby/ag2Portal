@@ -7,6 +7,9 @@ Ag2Portal::Application.routes.draw do
     
     # Devise (the standard route is: devise_for :users) localized
     devise_for :users, :controllers => { :omniauth_callbacks => "users/omniauth_callbacks" }
+
+    # PaperTrail versioning
+    post "versions/:id/revert" => "versions#revert", :as => "revert_version"
         
     # Root
     root :to => "welcome#index"

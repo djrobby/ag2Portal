@@ -3,4 +3,6 @@ class SharedContactType < ActiveRecord::Base
                   :created_by, :updated_by
 
   has_many :shared_contacts
+
+  has_paper_trail
 end
