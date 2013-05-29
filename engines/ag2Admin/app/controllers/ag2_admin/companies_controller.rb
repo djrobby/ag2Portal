@@ -6,7 +6,6 @@ module Ag2Admin
     load_and_authorize_resource
     skip_load_and_authorize_resource :only => [:update_province_textfield_from_town,
                                                :update_province_textfield_from_zipcode]
-    
     # Update hidden province text field at view from town select
     def update_province_textfield_from_town
       @town = Town.find(params[:id])
@@ -24,7 +23,7 @@ module Ag2Admin
       @town = Town.find(@zipcode.town)
       @province = Province.find(@town.province)
       @json_data = { "town_id" => @town.id, "province_id" => @province.id }
-    
+
       respond_to do |format|
         format.html # update_province_textfield.html.erb does not exist! JSON only
         format.json { render json: @json_data }
@@ -103,7 +102,9 @@ module Ag2Admin
 
       respond_to do |format|
         if @company.update_attributes(params[:company])
-          format.html { redirect_to @company, notice: I18n.t('activerecord.successful.messages.updated', :model => @company.class.model_name.human) }
+          format.html { redirect_to @company,
+                        notice: (I18n.t('activerecord.successful.messages.updated', :model => @company.class.model_name.human) +
+                        "#{undo_link(@company)}").html_safe }
           format.json { head :no_content }
         else
           format.html { render action: "edit" }
@@ -119,7 +120,9 @@ module Ag2Admin
       @company.destroy
 
       respond_to do |format|
-        format.html { redirect_to companies_url }
+        format.html { redirect_to companies_url,
+                      notice: (I18n.t('activerecord.successful.messages.destroyed', :model => @company.class.model_name.human) +
+                      "#{undo_link(@company)}").html_safe }
         format.json { head :no_content }
       end
     end

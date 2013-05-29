@@ -8,7 +8,6 @@ module Ag2Directory
                                                :update_province_textfield_from_zipcode,
                                                :update_country_textfield_from_region,
                                                :update_region_textfield_from_province]
-    
     # Update country text field at view from region select
     def update_country_textfield_from_region
       @region = Region.find(params[:id])
@@ -55,7 +54,7 @@ module Ag2Directory
       @region = Region.find(@province.region)
       @country = Country.find(@region.country)
       @json_data = { "town_id" => @town.id, "province_id" => @province.id, "region_id" => @region.id, "country_id" => @country.id }
-    
+
       respond_to do |format|
         format.html # update_province_textfield.html.erb does not exist! JSON only
         format.json { render json: @json_data }
@@ -70,7 +69,7 @@ module Ag2Directory
     def index
       #@shared_contacts = SharedContact.all
       letter = params[:letter]
-      
+
       @search = SharedContact.search do
         fulltext params[:search]
         order_by :company, :asc
@@ -82,53 +81,53 @@ module Ag2Directory
         # @shared_contacts = @search.results.sort_by{ |contact| [ contact.company, contact.last_name, contact.first_name ] }
         @shared_contacts = @search.results
       else
-        # @shared_contacts = SharedContact.order('company', 'last_name, first_name').where("last_name LIKE ?", "#{letter}%")
+      # @shared_contacts = SharedContact.order('company', 'last_name, first_name').where("last_name LIKE ?", "#{letter}%")
         @shared_contacts = SharedContact.where("last_name LIKE ?", "#{letter}%").paginate(:page => params[:page], :per_page => per_page).order('company', 'last_name, first_name')
-      end      
-  
+      end
+
       respond_to do |format|
         format.html # index.html.erb
         format.json { render json: @shared_contacts }
       end
     end
-  
+
     # GET /shared_contacts/1
     # GET /shared_contacts/1.json
     def show
       @breadcrumb = 'read'
       @shared_contact = SharedContact.find(params[:id])
-  
+
       respond_to do |format|
         format.html # show.html.erb
         format.json { render json: @shared_contact }
       end
     end
-  
+
     # GET /shared_contacts/new
     # GET /shared_contacts/new.json
     def new
       @breadcrumb = 'create'
       @shared_contact = SharedContact.new
-  
+
       respond_to do |format|
         format.html # new.html.erb
         format.json { render json: @shared_contact }
       end
     end
-  
+
     # GET /shared_contacts/1/edit
     def edit
       @breadcrumb = 'update'
       @shared_contact = SharedContact.find(params[:id])
     end
-  
+
     # POST /shared_contacts
     # POST /shared_contacts.json
     def create
       @breadcrumb = 'create'
       @shared_contact = SharedContact.new(params[:shared_contact])
       @shared_contact.created_by = current_user.id if !current_user.nil?
-  
+
       respond_to do |format|
         if @shared_contact.save
           format.html { redirect_to @shared_contact, notice: I18n.t('activerecord.successful.messages.created', :model => @shared_contact.class.model_name.human) }
@@ -139,17 +138,19 @@ module Ag2Directory
         end
       end
     end
-  
+
     # PUT /shared_contacts/1
     # PUT /shared_contacts/1.json
     def update
       @breadcrumb = 'update'
       @shared_contact = SharedContact.find(params[:id])
       @shared_contact.updated_by = current_user.id if !current_user.nil?
-  
+
       respond_to do |format|
         if @shared_contact.update_attributes(params[:shared_contact])
-          format.html { redirect_to @shared_contact, notice: I18n.t('activerecord.successful.messages.updated', :model => @shared_contact.class.model_name.human) }
+          format.html { redirect_to @shared_contact,
+                        notice: (I18n.t('activerecord.successful.messages.updated', :model => @shared_contact.class.model_name.human) +
+                        "#{undo_link(@shared_contact)}").html_safe }
           format.json { head :no_content }
         else
           format.html { render action: "edit" }
@@ -157,15 +158,17 @@ module Ag2Directory
         end
       end
     end
-  
+
     # DELETE /shared_contacts/1
     # DELETE /shared_contacts/1.json
     def destroy
       @shared_contact = SharedContact.find(params[:id])
       @shared_contact.destroy
-  
+
       respond_to do |format|
-        format.html { redirect_to shared_contacts_url }
+        format.html { redirect_to shared_contacts_url,
+                      notice: (I18n.t('activerecord.successful.messages.destroyed', :model => @shared_contact.class.model_name.human) +
+                      "#{undo_link(@shared_contact)}").html_safe }
         format.json { head :no_content }
       end
     end

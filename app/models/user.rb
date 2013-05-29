@@ -18,6 +18,9 @@ class User < ActiveRecord::Base
                   :created_by, :updated_by
   attr_accessible :role_ids
   # attr_accessible :title, :body
+
+  has_paper_trail
+
   validates :name,  :presence => true
 
   after_create :assign_default_role_and_send_email

@@ -10,6 +10,8 @@ class Office < ActiveRecord::Base
                   :zipcode_id, :town_id, :province_id, :phone, :fax, :cellular, :email,
                   :created_by, :updated_by
 
+  has_paper_trail
+
   validates :name,            :presence => true
   validates :company_id,      :presence => true
   validates :office_code,     :presence => true,

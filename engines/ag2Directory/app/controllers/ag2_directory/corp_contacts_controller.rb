@@ -5,7 +5,6 @@ module Ag2Directory
     before_filter :authenticate_user!
     load_and_authorize_resource
     skip_load_and_authorize_resource :only => :update_company_textfield_from_office
-    
     # Update company text field at view from office select
     def update_company_textfield_from_office
       @office = Office.find(params[:id])
@@ -24,7 +23,7 @@ module Ag2Directory
     # Search contacts
     def search
       letter = params[:letter]
-      
+
       @search = CorpContact.search do
         fulltext params[:search]
         order_by :last_name, :asc
@@ -35,14 +34,14 @@ module Ag2Directory
         @corp_contacts = @search.results
       else
         @corp_contacts = CorpContact.where("last_name LIKE ?", "#{letter}%").paginate(:page => params[:page], :per_page => per_page).order('last_name, first_name')
-      end      
-      
+      end
+
       respond_to do |format|
         format.html # search.html.erb
         format.json { render json: @corp_contacts }
       end
     end
-    
+
     #
     # Default Methods
     #
@@ -115,7 +114,9 @@ module Ag2Directory
 
       respond_to do |format|
         if @corp_contact.update_attributes(params[:corp_contact])
-          format.html { redirect_to @corp_contact, notice: I18n.t('activerecord.successful.messages.updated', :model => @corp_contact.class.model_name.human) }
+          format.html { redirect_to @corp_contact,
+                        notice: (I18n.t('activerecord.successful.messages.updated', :model => @corp_contact.class.model_name.human) +
+                        "#{undo_link(@corp_contact)}").html_safe }
           format.json { head :no_content }
         else
           format.html { render action: "edit" }
@@ -131,7 +132,9 @@ module Ag2Directory
       @corp_contact.destroy
 
       respond_to do |format|
-        format.html { redirect_to corp_contacts_url }
+        format.html { redirect_to corp_contacts_url,
+                      notice: (I18n.t('activerecord.successful.messages.destroyed', :model => @corp_contact.class.model_name.human) +
+                      "#{undo_link(@corp_contact)}").html_safe }
         format.json { head :no_content }
       end
     end

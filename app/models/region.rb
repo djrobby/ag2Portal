@@ -3,6 +3,8 @@ class Region < ActiveRecord::Base
   attr_accessible :country_id, :name,
                   :created_by, :updated_by
 
+  has_paper_trail
+
   validates :name,        :presence => true
   validates :country_id,  :presence => true
 

@@ -7,22 +7,21 @@ module Ag2Admin
     skip_load_and_authorize_resource :only => [:update_province_textfield_from_town,
                                                :update_province_textfield_from_zipcode,
                                                :update_code_textfield_from_zipcode]
-    
-#    def internal
-#      @companies = Company.all
-#    end
 
+    #    def internal
+    #      @companies = Company.all
+    #    end
     # Update office code at view from zip code select (button from edit or new)
     def update_code_textfield_from_zipcode
       @zipcode = Zipcode.find(params[:id])
       @json_data = { "zipcode" => @zipcode.zipcode }
-    
+
       respond_to do |format|
         format.html # update_code_textfield_from_zipcode.html.erb does not exist! JSON only
         format.json { render json: @json_data }
       end
     end
-    
+
     # Update province text field at view from town select
     def update_province_textfield_from_town
       @town = Town.find(params[:id])
@@ -40,7 +39,7 @@ module Ag2Admin
       @town = Town.find(@zipcode.town)
       @province = Province.find(@town.province)
       @json_data = { "town_id" => @town.id, "province_id" => @province.id, "zipcode" => @zipcode.zipcode }
-    
+
       respond_to do |format|
         format.html # update_province_textfield.html.erb does not exist! JSON only
         format.json { render json: @json_data }
@@ -53,7 +52,7 @@ module Ag2Admin
     # GET /offices
     # GET /offices.json
     def index
-#      internal 
+      #      internal
       @offices = Office.paginate(:page => params[:page], :per_page => per_page).order('office_code')
 
       respond_to do |format|
@@ -77,7 +76,7 @@ module Ag2Admin
     # GET /offices/new
     # GET /offices/new.json
     def new
-#      internal
+      #      internal
       @breadcrumb = 'create'
       @office = Office.new
 
@@ -89,7 +88,7 @@ module Ag2Admin
 
     # GET /offices/1/edit
     def edit
-#      internal
+      #      internal
       @breadcrumb = 'update'
       @office = Office.find(params[:id])
     end
@@ -97,7 +96,7 @@ module Ag2Admin
     # POST /offices
     # POST /offices.json
     def create
-#      internal
+      #      internal
       @breadcrumb = 'create'
       @office = Office.new(params[:office])
       @office.created_by = current_user.id if !current_user.nil?
@@ -116,14 +115,16 @@ module Ag2Admin
     # PUT /offices/1
     # PUT /offices/1.json
     def update
-#      internal
+      #      internal
       @breadcrumb = 'update'
       @office = Office.find(params[:id])
       @office.updated_by = current_user.id if !current_user.nil?
 
       respond_to do |format|
         if @office.update_attributes(params[:office])
-          format.html { redirect_to @office, notice: I18n.t('activerecord.successful.messages.updated', :model => @office.class.model_name.human) }
+          format.html { redirect_to @office,
+                        notice: (I18n.t('activerecord.successful.messages.updated', :model => @office.class.model_name.human) +
+                        "#{undo_link(@office)}").html_safe }
           format.json { head :no_content }
         else
           format.html { render action: "edit" }
@@ -139,7 +140,9 @@ module Ag2Admin
       @office.destroy
 
       respond_to do |format|
-        format.html { redirect_to offices_url }
+        format.html { redirect_to offices_url,
+                      notice: (I18n.t('activerecord.successful.messages.destroyed', :model => @office.class.model_name.human) +
+                      "#{undo_link(@office)}").html_safe }
         format.json { head :no_content }
       end
     end

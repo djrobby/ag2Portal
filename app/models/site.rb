@@ -8,5 +8,7 @@ class Site < ActiveRecord::Base
   validates :path,        :presence => true
   validates :pict_file,   :presence => true
 
+  has_paper_trail
+
   has_many :apps
 end

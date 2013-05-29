@@ -10,6 +10,8 @@ class Company < ActiveRecord::Base
                   :created_by, :updated_by
   has_attached_file :logo, :styles => { :medium => "120x120>", :small => "80x80>" }, :default_url => "/images/missing/:style/company.png"
 
+  has_paper_trail
+
   validates :name,            :presence => true
   validates :fiscal_id,       :presence => true,
                               :length => { :minimum => 9 },

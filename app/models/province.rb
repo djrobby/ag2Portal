@@ -6,6 +6,8 @@ class Province < ActiveRecord::Base
   validates :name,      :presence => true
   validates :ine_cpro,  :length => { :minimum => 2 }
   validates :region_id, :presence => true
+
+  has_paper_trail
                        
   has_many :towns
   has_many :zipcodes

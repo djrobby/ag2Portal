@@ -2,6 +2,8 @@ class Town < ActiveRecord::Base
   belongs_to :province
   attr_accessible :ine_cmun, :ine_dc, :name, :province_id
 
+  has_paper_trail
+
   validates :name,  :presence => true
   validates :province_id,  :presence => true
   validates :ine_cmun, :length => { :minimum => 3 }

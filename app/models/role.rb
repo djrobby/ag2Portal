@@ -6,5 +6,7 @@ class Role < ActiveRecord::Base
   attr_accessible :name,
                   :created_by, :updated_by
 
+  has_paper_trail
+
   scopify
 end

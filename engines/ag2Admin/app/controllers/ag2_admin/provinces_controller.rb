@@ -74,7 +74,9 @@ module Ag2Admin
   
       respond_to do |format|
         if @province.update_attributes(params[:province])
-          format.html { redirect_to @province, notice: I18n.t('activerecord.successful.messages.updated', :model => @province.class.model_name.human) }
+          format.html { redirect_to @province,
+                        notice: (I18n.t('activerecord.successful.messages.updated', :model => @province.class.model_name.human) +
+                        "#{undo_link(@province)}").html_safe }
           format.json { head :no_content }
         else
           format.html { render action: "edit" }
@@ -90,7 +92,9 @@ module Ag2Admin
       @province.destroy
   
       respond_to do |format|
-        format.html { redirect_to provinces_url }
+        format.html { redirect_to provinces_url,
+                      notice: (I18n.t('activerecord.successful.messages.destroyed', :model => @province.class.model_name.human) +
+                      "#{undo_link(@province)}").html_safe }
         format.json { head :no_content }
       end
     end

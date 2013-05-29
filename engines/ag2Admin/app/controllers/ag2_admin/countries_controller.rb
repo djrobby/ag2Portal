@@ -74,7 +74,9 @@ module Ag2Admin
   
       respond_to do |format|
         if @country.update_attributes(params[:country])
-          format.html { redirect_to @country, notice: I18n.t('activerecord.successful.messages.updated', :model => @country.class.model_name.human) }
+          format.html { redirect_to @country,
+                        notice: (I18n.t('activerecord.successful.messages.updated', :model => @country.class.model_name.human) +
+                        "#{undo_link(@country)}").html_safe }
           format.json { head :no_content }
         else
           format.html { render action: "edit" }
@@ -90,7 +92,9 @@ module Ag2Admin
       @country.destroy
   
       respond_to do |format|
-        format.html { redirect_to countries_url }
+        format.html { redirect_to countries_url,
+                      notice: (I18n.t('activerecord.successful.messages.destroyed', :model => @country.class.model_name.human) +
+                      "#{undo_link(@country)}").html_safe }
         format.json { head :no_content }
       end
     end

@@ -4,11 +4,12 @@ class Zipcode < ActiveRecord::Base
   attr_accessible :zipcode, :town_id, :province_id,
                   :created_by, :updated_by
 
+  has_paper_trail
+
   validates :zipcode,  :presence => true
   validates :town_id,  :presence => true
   validates :province_id,  :presence => true
 
-  #has_many :towns
   has_many :companies
   has_many :workers
   has_many :shared_contacts
