@@ -2,6 +2,8 @@ class DegreeType < ActiveRecord::Base
   attr_accessible :dt_code, :name,
                   :created_by, :updated_by
 
+  has_paper_trail
+
   validates :dt_code, :presence => true,
                       :length => { :minimum => 2 },
                       :uniqueness => true

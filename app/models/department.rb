@@ -2,6 +2,8 @@ class Department < ActiveRecord::Base
   attr_accessible :name, :code,
                   :created_by, :updated_by
 
+  has_paper_trail
+
   validates :name,  :presence => true
   validates :code,  :presence => true,
                     :length => { :in => 2..5 }

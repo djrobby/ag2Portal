@@ -67,7 +67,7 @@ module Ag2Admin
 
       respond_to do |format|
         if @zipcode.save
-          format.html { redirect_to @zipcode, notice: I18n.t('activerecord.successful.messages.created', :model => @zipcode.class.model_name.human) }
+          format.html { redirect_to @zipcode, notice: crud_notice('created', @zipcode) }
           format.json { render json: @zipcode, status: :created, location: @zipcode }
         else
           format.html { render action: "new" }
@@ -86,8 +86,7 @@ module Ag2Admin
       respond_to do |format|
         if @zipcode.update_attributes(params[:zipcode])
           format.html { redirect_to @zipcode,
-                        notice: (I18n.t('activerecord.successful.messages.updated', :model => @zipcode.class.model_name.human) +
-                        "#{undo_link(@zipcode)}").html_safe }
+                        notice: (crud_notice('updated', @zipcode) + "#{undo_link(@zipcode)}").html_safe }
           format.json { head :no_content }
         else
           format.html { render action: "edit" }
@@ -104,8 +103,7 @@ module Ag2Admin
 
       respond_to do |format|
         format.html { redirect_to zipcodes_url,
-                      notice: (I18n.t('activerecord.successful.messages.destroyed', :model => @zipcode.class.model_name.human) +
-                      "#{undo_link(@zipcode)}").html_safe }
+                      notice: (crud_notice('destroyed', @zipcode) + "#{undo_link(@zipcode)}").html_safe }
         format.json { head :no_content }
       end
     end

@@ -2,6 +2,8 @@ class ProfessionalGroup < ActiveRecord::Base
   attr_accessible :name, :pg_code,
                   :created_by, :updated_by
 
+  has_paper_trail
+
   validates :pg_code, :presence => true,
                       :length => { :minimum => 2 },
                       :uniqueness => true

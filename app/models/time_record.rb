@@ -6,6 +6,8 @@ class TimeRecord < ActiveRecord::Base
                   :timerecord_type_id, :timerecord_code_id,
                   :created_by, :updated_by
 
+  has_paper_trail
+
   validates :timerecord_date,     :presence => true
   validates :timerecord_time,     :presence => true
   validates :timerecord_type_id,  :presence => true

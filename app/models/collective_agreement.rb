@@ -2,6 +2,8 @@ class CollectiveAgreement < ActiveRecord::Base
   attr_accessible :ca_code, :name,
                   :created_by, :updated_by
 
+  has_paper_trail
+
   validates :ca_code, :presence => true,
                       :length => { :minimum => 2 },
                       :uniqueness => true

@@ -54,7 +54,7 @@ module Ag2Admin
 
       respond_to do |format|
         if @street_type.save
-          format.html { redirect_to @street_type, notice: I18n.t('activerecord.successful.messages.created', :model => @street_type.class.model_name.human) }
+          format.html { redirect_to @street_type, notice: crud_notice('created', @street_type) }
           format.json { render json: @street_type, status: :created, location: @street_type }
         else
           format.html { render action: "new" }
@@ -73,8 +73,7 @@ module Ag2Admin
       respond_to do |format|
         if @street_type.update_attributes(params[:street_type])
           format.html { redirect_to @street_type,
-                        notice: (I18n.t('activerecord.successful.messages.updated', :model => @street_type.class.model_name.human) +
-                        "#{undo_link(@street_type)}").html_safe }
+                        notice: (crud_notice('updated', @street_type) + "#{undo_link(@street_type)}").html_safe }
           format.json { head :no_content }
         else
           format.html { render action: "edit" }
@@ -91,8 +90,7 @@ module Ag2Admin
 
       respond_to do |format|
         format.html { redirect_to street_types_url,
-                      notice: (I18n.t('activerecord.successful.messages.destroyed', :model => @street_type.class.model_name.human) +
-                      "#{undo_link(@street_type)}").html_safe }
+                      notice: (crud_notice('destroyed', @street_type) + "#{undo_link(@street_type)}").html_safe }
         format.json { head :no_content }
       end
     end

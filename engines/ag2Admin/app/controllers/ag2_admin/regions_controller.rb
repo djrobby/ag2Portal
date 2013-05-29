@@ -55,7 +55,7 @@ module Ag2Admin
 
       respond_to do |format|
         if @region.save
-          format.html { redirect_to @region, notice: I18n.t('activerecord.successful.messages.created', :model => @region.class.model_name.human) }
+          format.html { redirect_to @region, notice: crud_notice('created', @region) }
           format.json { render json: @region, status: :created, location: @region }
         else
           format.html { render action: "new" }
@@ -74,8 +74,7 @@ module Ag2Admin
       respond_to do |format|
         if @region.update_attributes(params[:region])
           format.html { redirect_to @region,
-                        notice: (I18n.t('activerecord.successful.messages.updated', :model => @region.class.model_name.human) +
-                        "#{undo_link(@region)}").html_safe }
+                        notice: (crud_notice('updated', @region) + "#{undo_link(@region)}").html_safe }
           format.json { head :no_content }
         else
           format.html { render action: "edit" }
@@ -91,10 +90,8 @@ module Ag2Admin
       @region.destroy
 
       respond_to do |format|
-        format.html { redirect_to regions_url }
         format.html { redirect_to regions_url,
-                      notice: (I18n.t('activerecord.successful.messages.destroyed', :model => @region.class.model_name.human) +
-                      "#{undo_link(@region)}").html_safe }
+                      notice: (crud_notice('destroyed', @region) + "#{undo_link(@region)}").html_safe }
         format.json { head :no_content }
       end
     end

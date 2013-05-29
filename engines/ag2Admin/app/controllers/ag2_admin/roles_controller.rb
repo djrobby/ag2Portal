@@ -55,7 +55,7 @@ module Ag2Admin
 
       respond_to do |format|
         if @role.save
-          format.html { redirect_to @role, notice: I18n.t('activerecord.successful.messages.created', :model => @role.class.model_name.human) }
+          format.html { redirect_to @role, notice: crud_notice('created', @role) }
           format.json { render json: @role, status: :created, location: @role }
         else
           format.html { render action: "new" }
@@ -74,8 +74,7 @@ module Ag2Admin
       respond_to do |format|
         if @role.update_attributes(params[:role])
           format.html { redirect_to @role,
-                        notice: (I18n.t('activerecord.successful.messages.updated', :model => @role.class.model_name.human) +
-                        "#{undo_link(@role)}").html_safe }
+                        notice: (crud_notice('updated', @role) + "#{undo_link(@role)}").html_safe }
           format.json { head :no_content }
         else
           format.html { render action: "edit" }
@@ -92,8 +91,7 @@ module Ag2Admin
 
       respond_to do |format|
         format.html { redirect_to roles_url,
-                      notice: (I18n.t('activerecord.successful.messages.destroyed', :model => @role.class.model_name.human) +
-                      "#{undo_link(@role)}").html_safe }
+                      notice: (crud_notice('destroyed', @role) + "#{undo_link(@role)}").html_safe }
         format.json { head :no_content }
       end
     end

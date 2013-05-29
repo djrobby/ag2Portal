@@ -54,7 +54,7 @@ module Ag2Directory
 
       respond_to do |format|
         if @shared_contact_type.save
-          format.html { redirect_to @shared_contact_type, notice: I18n.t('activerecord.successful.messages.created', :model => @shared_contact_type.class.model_name.human) }
+          format.html { redirect_to @shared_contact_type, notice: crud_notice('created', @shared_contact_type) }
           format.json { render json: @shared_contact_type, status: :created, location: @shared_contact_type }
         else
           format.html { render action: "new" }
@@ -73,8 +73,7 @@ module Ag2Directory
       respond_to do |format|
         if @shared_contact_type.update_attributes(params[:shared_contact_type])
           format.html { redirect_to @shared_contact_type,
-                        notice: (I18n.t('activerecord.successful.messages.updated', :model => @shared_contact_type.class.model_name.human) +
-                        "#{undo_link(@shared_contact_type)}").html_safe }
+                        notice: (crud_notice('updated', @shared_contact_type) + "#{undo_link(@shared_contact_type)}").html_safe }
           format.json { head :no_content }
         else
           format.html { render action: "edit" }
@@ -91,8 +90,7 @@ module Ag2Directory
 
       respond_to do |format|
         format.html { redirect_to shared_contact_types_url,
-                      notice: (I18n.t('activerecord.successful.messages.destroyed', :model => @shared_contact_type.class.model_name.human) +
-                      "#{undo_link(@shared_contact_type)}").html_safe }
+                      notice: (crud_notice('destroyed', @shared_contact_type) + "#{undo_link(@shared_contact_type)}").html_safe }
         format.json { head :no_content }
       end
     end

@@ -96,7 +96,7 @@ module Ag2Directory
 
       respond_to do |format|
         if @corp_contact.save
-          format.html { redirect_to @corp_contact, notice: I18n.t('activerecord.successful.messages.created', :model => @corp_contact.class.model_name.human) }
+          format.html { redirect_to @corp_contact, notice: crud_notice('created', @corp_contact) }
           format.json { render json: @corp_contact, status: :created, location: @corp_contact }
         else
           format.html { render action: "new" }
@@ -115,8 +115,7 @@ module Ag2Directory
       respond_to do |format|
         if @corp_contact.update_attributes(params[:corp_contact])
           format.html { redirect_to @corp_contact,
-                        notice: (I18n.t('activerecord.successful.messages.updated', :model => @corp_contact.class.model_name.human) +
-                        "#{undo_link(@corp_contact)}").html_safe }
+                        notice: (crud_notice('updated', @corp_contact) + "#{undo_link(@corp_contact)}").html_safe }
           format.json { head :no_content }
         else
           format.html { render action: "edit" }
@@ -133,8 +132,7 @@ module Ag2Directory
 
       respond_to do |format|
         format.html { redirect_to corp_contacts_url,
-                      notice: (I18n.t('activerecord.successful.messages.destroyed', :model => @corp_contact.class.model_name.human) +
-                      "#{undo_link(@corp_contact)}").html_safe }
+                      notice: (crud_notice('destroyed', @corp_contact) + "#{undo_link(@corp_contact)}").html_safe }
         format.json { head :no_content }
       end
     end

@@ -84,7 +84,7 @@ module Ag2Admin
 
       respond_to do |format|
         if @company.save
-          format.html { redirect_to @company, notice: I18n.t('activerecord.successful.messages.created', :model => @company.class.model_name.human) }
+          format.html { redirect_to @company, notice: crud_notice('created', @company) }
           format.json { render json: @company, status: :created, location: @company }
         else
           format.html { render action: "new" }
@@ -103,8 +103,7 @@ module Ag2Admin
       respond_to do |format|
         if @company.update_attributes(params[:company])
           format.html { redirect_to @company,
-                        notice: (I18n.t('activerecord.successful.messages.updated', :model => @company.class.model_name.human) +
-                        "#{undo_link(@company)}").html_safe }
+                        notice: (crud_notice('updated', @company) + "#{undo_link(@company)}").html_safe }
           format.json { head :no_content }
         else
           format.html { render action: "edit" }
@@ -121,8 +120,7 @@ module Ag2Admin
 
       respond_to do |format|
         format.html { redirect_to companies_url,
-                      notice: (I18n.t('activerecord.successful.messages.destroyed', :model => @company.class.model_name.human) +
-                      "#{undo_link(@company)}").html_safe }
+                      notice: (crud_notice('destroyed', @company) + "#{undo_link(@company)}").html_safe }
         format.json { head :no_content }
       end
     end

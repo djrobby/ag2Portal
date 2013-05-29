@@ -12,6 +12,7 @@ class ApplicationController < ActionController::Base
   helper_method :letters
   helper_method :per_page
   helper_method :undo_link
+  helper_method :crud_notice
 
   def letters
     @letters = ('A'..'Z')
@@ -37,6 +38,19 @@ class ApplicationController < ActionController::Base
     main_app.revert_version_path(ivar.versions.scoped.last),
     :method => :post, :class => 'notice_icon_button',
     :id => 'undo', :title => I18n.t(:undo))
+  end
+
+  # Notification messages from create, read, update & destroy actions
+  def crud_notice(action, ivar)
+    if action == "created"
+      I18n.t('activerecord.successful.messages.created', :model => ivar.class.model_name.human)
+    elsif action == "updated"
+      I18n.t('activerecord.successful.messages.updated', :model => ivar.class.model_name.human)
+    elsif action == "destroyed"
+      I18n.t('activerecord.successful.messages.destroyed', :model => ivar.class.model_name.human)
+    else # read
+      "Read"
+    end
   end
 
   def set_locale

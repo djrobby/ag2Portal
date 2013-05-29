@@ -7,7 +7,6 @@ module Ag2Admin
     skip_load_and_authorize_resource :only => [:update_province_textfield_from_town,
                                                :update_province_textfield_from_zipcode,
                                                :update_code_textfield_from_zipcode]
-
     #    def internal
     #      @companies = Company.all
     #    end
@@ -103,7 +102,7 @@ module Ag2Admin
 
       respond_to do |format|
         if @office.save
-          format.html { redirect_to @office, notice: I18n.t('activerecord.successful.messages.created', :model => @office.class.model_name.human) }
+          format.html { redirect_to @office, notice: crud_notice('created', @office) }
           format.json { render json: @office, status: :created, location: @office }
         else
           format.html { render action: "new" }
@@ -123,8 +122,7 @@ module Ag2Admin
       respond_to do |format|
         if @office.update_attributes(params[:office])
           format.html { redirect_to @office,
-                        notice: (I18n.t('activerecord.successful.messages.updated', :model => @office.class.model_name.human) +
-                        "#{undo_link(@office)}").html_safe }
+                        notice: (crud_notice('updated', @office) + "#{undo_link(@office)}").html_safe }
           format.json { head :no_content }
         else
           format.html { render action: "edit" }
@@ -141,8 +139,7 @@ module Ag2Admin
 
       respond_to do |format|
         format.html { redirect_to offices_url,
-                      notice: (I18n.t('activerecord.successful.messages.destroyed', :model => @office.class.model_name.human) +
-                      "#{undo_link(@office)}").html_safe }
+                      notice: (crud_notice('destroyed', @office) + "#{undo_link(@office)}").html_safe }
         format.json { head :no_content }
       end
     end

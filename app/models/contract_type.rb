@@ -2,6 +2,8 @@ class ContractType < ActiveRecord::Base
   attr_accessible :ct_code, :name,
                   :created_by, :updated_by
 
+  has_paper_trail
+
   validates :ct_code, :presence => true,
                       :length => { :minimum => 2 },
                       :uniqueness => true

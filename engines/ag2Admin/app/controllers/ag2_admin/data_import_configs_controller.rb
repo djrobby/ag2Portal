@@ -54,7 +54,7 @@ module Ag2Admin
 
       respond_to do |format|
         if @data_import_config.save
-          format.html { redirect_to @data_import_config, notice: I18n.t('activerecord.successful.messages.created', :model => @data_import_config.class.model_name.human) }
+          format.html { redirect_to @data_import_config, notice: crud_notice('created', @data_import_config) }
           format.json { render json: @data_import_config, status: :created, location: @data_import_config }
         else
           format.html { render action: "new" }
@@ -73,8 +73,7 @@ module Ag2Admin
       respond_to do |format|
         if @data_import_config.update_attributes(params[:data_import_config])
           format.html { redirect_to @data_import_config,
-                        notice: (I18n.t('activerecord.successful.messages.updated', :model => @data_import_config.class.model_name.human) +
-                        "#{undo_link(@data_import_config)}").html_safe }
+                        notice: (crud_notice('updated', @data_import_config) + "#{undo_link(@data_import_config)}").html_safe }
           format.json { head :no_content }
         else
           format.html { render action: "edit" }
@@ -91,8 +90,7 @@ module Ag2Admin
 
       respond_to do |format|
         format.html { redirect_to data_import_configs_url,
-                      notice: (I18n.t('activerecord.successful.messages.destroyed', :model => @data_import_config.class.model_name.human) +
-                      "#{undo_link(@data_import_config)}").html_safe }
+                      notice: (crud_notice('destroyed', @data_import_config) + "#{undo_link(@data_import_config)}").html_safe }
         format.json { head :no_content }
       end
     end
