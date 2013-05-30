@@ -1,0 +1,5 @@
+<% if can? :crud, Ticket %>
+<%= link_to txt, new_ticket_path, :class => 'btn btn-primary' %>
+<br />
+<br />
+<% end %>

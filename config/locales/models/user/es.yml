@@ -11,6 +11,7 @@ es:
         one:   Rol
         few:   Roles
         other: Roles
+        check_for_users: "Rol no puede ser eliminado ni modificado mientras existan usuarios vinculados."
     attributes:
       user:
         name: "Nombre"

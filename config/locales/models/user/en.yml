@@ -11,6 +11,7 @@ en:
         one:   Role
         few:   Roles
         other: Roles
+        check_for_users: "Role cannot be destroyed or changed while linked users exist."
     attributes:
       user:
         name: "Name"

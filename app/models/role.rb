@@ -8,5 +8,18 @@ class Role < ActiveRecord::Base
 
   has_paper_trail
 
+  validates :name, :presence => true
+
   scopify
+
+  before_destroy :check_for_users
+  before_update :check_for_users
+
+  private
+  def check_for_users
+    if users.count > 0
+      errors.add(:base, I18n.t('activerecord.models.role.check_for_users'))
+      return false
+    end
+  end
 end

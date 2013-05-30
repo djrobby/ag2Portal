@@ -5,6 +5,7 @@
       <h3><%= I18n.t('ag2_admin.users.index.change_role_title', :user => User.find(user.id).name) %></h3>
     </div>
     <div class="modal-body">
+      <%= hidden_field_tag :referrer, users_path %>
       <%= f.input :role_ids, :collection => Role.all, :as => :check_boxes, :label_method => lambda {|t| t.name}, :label => false, :item_wrapper_class => 'inline' %>
     </div>
     <div class="modal-footer">

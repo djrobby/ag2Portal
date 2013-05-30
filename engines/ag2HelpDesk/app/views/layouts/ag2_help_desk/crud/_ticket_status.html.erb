@@ -1,0 +1,4 @@
+<% if can? :update, Ticket %>
+<a data-toggle="modal" href="#ticket-status-<%= ticket.id %>" class="btn btn-mini" type="button"><i class="icon-tags"></i></a> <%= render ticket %>
+<% end %>
+ 

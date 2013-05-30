@@ -10,6 +10,7 @@
 <%= f.input :password, :autocomplete => "off", :required => false, :label_html => { :class => 'form-label' } %>
 <%= f.input :password_confirmation, :required => false, :label_html => { :class => 'form-label' } %>
 <br />
+<%= hidden_field_tag :referrer, user_path(@user) %>
 <%= f.button :submit, nil, :class => 'btn-primary' %>
 <%= link_to(I18n.t('ag2_admin.users.edit.cancel_account'), user_path(@user), :data => { :confirm => "Are you sure?" }, :method => :delete, :class => 'btn btn-primary') unless @user == current_user %>
 <% end %>

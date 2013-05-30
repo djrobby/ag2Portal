@@ -105,6 +105,27 @@ class Ability
       cannot :manage, WorkerType
       cannot :manage, Worker
     end
+    # ag2HelpDesk
+    if user.has_role? :ag2HelpDesk_User
+      can :crud, Technician
+      can :crud, TicketCategory
+      can :crud, TicketPriority
+      can :crud, TicketStatus
+      can :crud, Ticket
+    elsif user.has_role? :ag2HelpDesk_Guest
+      can :read, Technician
+      can :read, TicketCategory
+      can :read, TicketPriority
+      can :read, TicketStatus
+      can :create, Ticket
+      can :read, Ticket
+    elsif user.has_role? :ag2HelpDesk_Banned
+      cannot :manage, Technician
+      cannot :manage, TicketCategory
+      cannot :manage, TicketPriority
+      cannot :manage, TicketStatus
+      can :create, Ticket
+    end
 
   # Define abilities for the passed in user here. For example:
   #

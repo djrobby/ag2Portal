@@ -1,7 +1,7 @@
 <%= simple_form_for @department, :html => {:class => 'form-vertical well' } do |f| %>
 <%= f.error_notification %>
 <%= display_base_errors resource %>
-<%= f.input :name, :autofocus => true, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %>
-<%= f.input :code, :input_html => { :class => 'mid-text-field' }, :label_html => { :class => 'form-label' } %>
+<%= f.input :code, :autofocus => true, :input_html => { :class => 'mid-text-field' }, :label_html => { :class => 'form-label' } %>
+<%= f.input :name, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %>
 <%= f.button :submit, :class => 'btn-primary' %>
 <% end %>

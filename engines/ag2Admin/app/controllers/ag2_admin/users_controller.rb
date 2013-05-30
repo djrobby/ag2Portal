@@ -73,8 +73,8 @@ module Ag2Admin
       respond_to do |format|
       #if @user.update_attributes(params[:user], :as => :admin)
         if @user.update_attributes(params[:user])
-          format.html { redirect_to @user,
-                        notice: (crud_notice('updated', @user) + "#{undo_link(@user)}").html_safe }
+          # format.html { redirect_to @user, notice: crud_notice('updated', @user) }
+          format.html { redirect_to params[:referrer], notice: crud_notice('updated', @user) }
           format.json { head :no_content }
         else
           format.html { render action: "edit" }
@@ -90,8 +90,7 @@ module Ag2Admin
       @user.destroy
 
       respond_to do |format|
-        format.html { redirect_to users_url,
-                      notice: (crud_notice('destroyed', @user) + "#{undo_link(@user)}").html_safe }
+        format.html { redirect_to users_url, notice: crud_notice('destroyed', @user) }
         format.json { head :no_content }
       end
     end

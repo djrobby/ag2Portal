@@ -1,10 +1,9 @@
 <script>
-  $(document).ready(function() {
-    $('.date_picker').datepicker({
-      format : 'dd/mm/yyyy',
-      weekStart : 1
-    });
-  }); 
+	$(document).ready(function() {
+	$('.date_picker').datepicker({
+	format:'dd/mm/yyyy',weekStart:1
+	});
+	});
 </script>
 
 <%= render '/layouts/ag2_help_desk/ticketsbreadcrumb' %>
@@ -47,10 +46,9 @@
         <%= submit_tag I18n.t("ag2_help_desk.tickets.index.btn_apply"), :class => 'btn btn-primary' %>
         <% end %>
         <!-- New -->
-        <%= render :partial => '/layouts/crud/new', :locals => { :model => Ticket, :path => new_ticket_path, :txt => I18n.t("ag2_help_desk.tickets.index.btn_new") } %>
+        <%= render :partial => '/layouts/ag2_help_desk/crud/ticket_new', :locals => { :txt => I18n.t("ag2_help_desk.tickets.index.btn_new") } %>
         <!-- Back -->
         <%= link_to I18n.t("ag2_help_desk.tickets.index.back_to_root"), ag2_help_desk.root_path %>
-        <a data-toggle="modal" href="#new-ticket" class="btn btn-mini" type="button">Modal</a>
       </div><!-- /.sidebar-nav -->
     </div><!-- /.span3 -->
 
@@ -74,7 +72,7 @@
             <td><%= User.find(ticket.created_by).email unless ticket.created_by.blank? %></td>
             <td><%= ticket.ticket_subject %></td>
             <td><%= ticket.ticket_status.name.titleize unless ticket.ticket_status.blank? %></td>
-            <td><a data-toggle="modal" href="#ticket-status-<%= ticket.id %>" class="btn btn-mini" type="button"><i class="icon-tags"></i></a> <%= render ticket %>
+            <td> <%= render :partial => '/layouts/ag2_help_desk/crud/ticket_status', :locals => { :ticket => ticket } %>
             <%= render :partial => '/layouts/crud/edit', :locals => { :model => Ticket, :path => edit_ticket_path(ticket) } %>
             <%= render :partial => '/layouts/crud/delete', :locals => { :model => Ticket, :path => ticket, :msg => I18n.t("activerecord.models.ticket.one"), :txt => ticket.id.to_s.rjust(5, '0') } %> </td>
           </tr>

@@ -77,7 +77,7 @@ module Ag2Admin
                         notice: (crud_notice('updated', @role) + "#{undo_link(@role)}").html_safe }
           format.json { head :no_content }
         else
-          format.html { render action: "edit" }
+          format.html { render action: "edit", alert: "#{@role.errors[:base].to_s}".html_safe }
           format.json { render json: @role.errors, status: :unprocessable_entity }
         end
       end
@@ -87,12 +87,16 @@ module Ag2Admin
     # DELETE /roles/1.json
     def destroy
       @role = Role.find(params[:id])
-      @role.destroy
 
       respond_to do |format|
-        format.html { redirect_to roles_url,
+        if @role.destroy
+          format.html { redirect_to roles_url,
                       notice: (crud_notice('destroyed', @role) + "#{undo_link(@role)}").html_safe }
-        format.json { head :no_content }
+          format.json { head :no_content }
+        else
+          format.html { redirect_to roles_url, alert: "#{@role.errors[:base].to_s}".gsub('["', '').gsub('"]', '') }
+          format.json { render json: @role.errors, status: :unprocessable_entity }
+        end
       end
     end
   end
