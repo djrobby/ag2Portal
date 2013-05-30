@@ -10,7 +10,6 @@ module Ag2Human
                                                :update_code_textfield_from_name,
                                                :update_province_textfield_from_town,
                                                :update_province_textfield_from_zipcode]
-    
     # Update worker data to upper case at view (to_uppercase_btn)
     def update_textfields_to_uppercase
       lastname = params[:last].upcase
@@ -121,41 +120,41 @@ module Ag2Human
     # Search workers
     def search
 =begin
-      company = params[:Company]
-      office = params[:Office]
-      letter = params[:letter]
+company = params[:Company]
+office = params[:Office]
+letter = params[:letter]
 
-      @search = Worker.search do
-        fulltext params[:search]
-        if !company.blank?
-          with :company_id, company
-        end
-        if !office.blank?
-          with :office_id, office
-        end
-      end
-      if letter.blank? || letter == "%"
-        @workers = @search.results.sort_by{ |worker| worker.worker_code }
-      else
-        @workers = Worker.order('worker_code').where("last_name LIKE ?", "#{letter}%")
-      end
-      
-      respond_to do |format|
-        format.html # search.html.erb
-        format.json { render json: @workers }
-      end
-=end      
+@search = Worker.search do
+fulltext params[:search]
+if !company.blank?
+with :company_id, company
+end
+if !office.blank?
+with :office_id, office
+end
+end
+if letter.blank? || letter == "%"
+@workers = @search.results.sort_by{ |worker| worker.worker_code }
+else
+@workers = Worker.order('worker_code').where("last_name LIKE ?", "#{letter}%")
+end
+
+respond_to do |format|
+format.html # search.html.erb
+format.json { render json: @workers }
+end
+=end
 =begin
-      case
-      when !has_company && !has_office
-        @workers = Worker.order('worker_code').all
-      when has_company && !has_office
-        @workers = Worker.order('worker_code').where("company_id = ?", company)
-      when !has_company && has_office
-        @workers = Worker.order('worker_code').where("office_id = ?", office)
-      when has_company && has_office
-        @workers = Worker.order('worker_code').where("company_id = ? AND office_id = ?", company, office)
-      end
+case
+when !has_company && !has_office
+@workers = Worker.order('worker_code').all
+when has_company && !has_office
+@workers = Worker.order('worker_code').where("company_id = ?", company)
+when !has_company && has_office
+@workers = Worker.order('worker_code').where("office_id = ?", office)
+when has_company && has_office
+@workers = Worker.order('worker_code').where("company_id = ? AND office_id = ?", company, office)
+end
 =end
     end
 
@@ -184,7 +183,7 @@ module Ag2Human
       if letter.blank? || letter == "%"
         @workers = @search.results
       else
-        # @workers = Worker.order('worker_code').where("last_name LIKE ?", "#{letter}%")
+      # @workers = Worker.order('worker_code').where("last_name LIKE ?", "#{letter}%")
         @workers = Worker.where("last_name LIKE ?", "#{letter}%").paginate(:page => params[:page], :per_page => per_page).order('worker_code')
       end
 
@@ -233,7 +232,7 @@ module Ag2Human
 
       respond_to do |format|
         if @worker.save
-          format.html { redirect_to @worker, notice: I18n.t('activerecord.successful.messages.created', :model => @worker.class.model_name.human) }
+          format.html { redirect_to @worker, notice: crud_notice('created', @worker) }
           format.json { render json: @worker, status: :created, location: @worker }
         else
           format.html { render action: "new" }
@@ -251,7 +250,8 @@ module Ag2Human
 
       respond_to do |format|
         if @worker.update_attributes(params[:worker])
-          format.html { redirect_to @worker, notice: I18n.t('activerecord.successful.messages.updated', :model => @worker.class.model_name.human) }
+          format.html { redirect_to @worker,
+                        notice: (crud_notice('updated', @worker) + "#{undo_link(@worker)}").html_safe }
           format.json { head :no_content }
         else
           format.html { render action: "edit" }
@@ -267,7 +267,8 @@ module Ag2Human
       @worker.destroy
 
       respond_to do |format|
-        format.html { redirect_to workers_url }
+        format.html { redirect_to workers_url,
+                      notice: (crud_notice('destroyed', @worker) + "#{undo_link(@worker)}").html_safe }
         format.json { head :no_content }
       end
     end

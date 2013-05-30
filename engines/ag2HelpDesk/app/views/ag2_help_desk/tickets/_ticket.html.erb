@@ -5,7 +5,6 @@
       <h3><%= I18n.t('ag2_help_desk.tickets.index.change_status_title', :ticket => ticket.id.to_s.rjust(5, '0')) %></h3>
     </div>
     <div class="modal-body">
-      <!-- <%#= f.input :role_ids, :collection => Role.all, :as => :check_boxes, :label_method => lambda {|t| t.name}, :label => false, :item_wrapper_class => 'inline' %> -->
       <%= hidden_field_tag :referrer, tickets_path %>
       <%= f.association :ticket_status, collection: TicketStatus.all(order: 'id'), :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %>
       <%= f.association :technician, collection: Technician.all(order: 'name'), :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %>

@@ -3,6 +3,8 @@ class Technician < ActiveRecord::Base
   attr_accessible :name, :user_id,
                   :created_by, :updated_by
 
+  has_paper_trail
+
   validates :name,    :presence => true
   validates :user_id, :presence => true
 

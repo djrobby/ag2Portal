@@ -4,7 +4,6 @@ module Ag2Human
   class TimeRecordsController < ApplicationController
     before_filter :authenticate_user!
     load_and_authorize_resource
-    
     # GET /time_records
     # GET /time_records.json
     def index
@@ -93,7 +92,7 @@ module Ag2Human
 
       respond_to do |format|
         if @time_record.save
-          format.html { redirect_to @time_record, notice: I18n.t('activerecord.successful.messages.created', :model => @time_record.class.model_name.human) }
+          format.html { redirect_to @time_record, notice: crud_notice('created', @time_record) }
           format.json { render json: @time_record, status: :created, location: @time_record }
         else
           format.html { render action: "new" }
@@ -111,7 +110,8 @@ module Ag2Human
 
       respond_to do |format|
         if @time_record.update_attributes(params[:time_record])
-          format.html { redirect_to @time_record, notice: I18n.t('activerecord.successful.messages.updated', :model => @time_record.class.model_name.human) }
+          format.html { redirect_to @time_record,
+                        notice: (crud_notice('updated', @time_record) + "#{undo_link(@time_record)}").html_safe }
           format.json { head :no_content }
         else
           format.html { render action: "edit" }
@@ -127,7 +127,8 @@ module Ag2Human
       @time_record.destroy
 
       respond_to do |format|
-        format.html { redirect_to time_records_url }
+        format.html { redirect_to time_records_url,
+                      notice: (crud_notice('destroyed', @time_record) + "#{undo_link(@time_record)}").html_safe }
         format.json { head :no_content }
       end
     end

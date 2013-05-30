@@ -9,6 +9,8 @@ class Ticket < ActiveRecord::Base
                   :created_by, :updated_by
   has_attached_file :attachment, :styles => { :medium => "192x192>", :small => "128x128>" }, :default_url => "/images/missing/:style/ticket.png"
 
+  has_paper_trail
+
   validates :ticket_subject,          :presence => true,
                                       :length => { :maximum => 20 }
   validates :ticket_message,          :presence => true
