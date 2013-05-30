@@ -1,5 +1,6 @@
 <%= simple_form_for @role do |f| %>
 <%= f.error_notification %>
+<%= f.error :base, :error_method => :to_sentence, :class => 'base-error' %>
 <%= display_base_errors resource %>
 <%= f.input :name, :required => true, :autofocus => true %>
 <%= f.button :submit, :class => 'btn-primary' %>
