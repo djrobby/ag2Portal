@@ -14,7 +14,7 @@
       <tr>
         <td><%= link_to t.name.titleize, t %></td>
         <td> <%= render :partial => '/layouts/crud/edit', :locals => { :model => TicketPriority, :path => edit_ticket_priority_path(t) } %>
-        <%= render :partial => '/layouts/crud/delete', :locals => { :model => TicketPriority, :path => t, :msg => I18n.t("activerecord.models.ticket_priority.one"), :txt => t.name } %> </td>
+        <%= render :partial => '/layouts/crud/delete', :locals => { :model => TicketPriority, :path => t, :msg => I18n.t("activerecord.models.ticket_priority.one"), :txt => t.name } unless t.id < 4 %> </td>
       </tr>
       <% end %>
     </tbody>
