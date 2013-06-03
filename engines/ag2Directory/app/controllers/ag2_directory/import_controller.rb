@@ -30,7 +30,7 @@ module Ag2Directory
           break
         end
       end
-      sleep 1
+      # sleep 1
       render json: @json_data
     end
 
