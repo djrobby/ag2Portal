@@ -1,0 +1,14 @@
+<ul id="records-navigator">
+  <li>
+    <%= link_to path.to_first, :class => 'btn btn-mini' do %> <i class="icon-fast-backward"></i> <% end %>
+  </li>
+  <li>
+    <%= link_to path.to_prev, :class => 'btn btn-mini' do %> <i class="icon-backward"></i> <% end %>
+  </li>
+  <li>
+    <%= link_to path.to_next, :class => 'btn btn-mini' do %> <i class="icon-forward"></i> <% end %>
+  </li>
+  <li>
+    <%= link_to path.to_last, :class => 'btn btn-mini' do %> <i class="icon-fast-forward"></i> <% end %>
+  </li>
+</ul>

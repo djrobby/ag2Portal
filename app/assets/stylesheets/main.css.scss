@@ -192,7 +192,7 @@ a:focus {
 }
 
 /*
- * Bands
+ * Bands - Toolbars
  */
 .blue-band {
   background-color: #0066b2;
@@ -295,6 +295,17 @@ a:focus {
   padding: 0 0 2px 0;
 }
 #pages .page_info b {
+}
+/* Records navigator */
+#records-navigator {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+  vertical-align: top;
+  text-align: right;
+}
+#records-navigator li {
+  display: inline;
 }
 
 /*

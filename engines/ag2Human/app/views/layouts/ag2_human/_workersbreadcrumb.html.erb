@@ -24,9 +24,26 @@
   <% end %>
   <% if @breadcrumb == 'create' %>
   <li>
-    <%=t :"breadcrumb.new" %>
+    <%= t :"breadcrumb.new" %>
+  </li>
+  <% end %>
+  <!-- Records navigator -->
+  <% if @breadcrumb == 'read' %>
+  <li><span class="divider"></span></li>
+  <li>
+    <%= link_to @worker.to_first, :class => 'btn btn-mini' do %> <i class="icon-fast-backward"></i> <% end %>
+  </li>
+  <li>
+    <%= link_to @worker.to_prev, :class => 'btn btn-mini' do %> <i class="icon-backward"></i> <% end %>
+  </li>
+  <li>
+    <%= link_to @worker.to_next, :class => 'btn btn-mini' do %> <i class="icon-forward"></i> <% end %>
+  </li>
+  <li>
+    <%= link_to @worker.to_last, :class => 'btn btn-mini' do %> <i class="icon-fast-forward"></i> <% end %>
   </li>
   <% end %>
   <% end %>
+  <!-- Close -->
   <a class="close" href="<%= ag2_human.root_path %>">&#215;</a>
 </ul>

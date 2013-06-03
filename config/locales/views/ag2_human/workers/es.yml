@@ -12,6 +12,7 @@ es:
       show:
         title: "Trabajador"
         btn_edit: "Editar Trabajador"
+        btn_delete: "Borrar Trabajador"
       edit:
         title: "Editar Trabajador"
         btn_show: "Ver Trabajador"

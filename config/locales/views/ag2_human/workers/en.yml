@@ -12,6 +12,7 @@ en:
       show:
         title: "Worker"
         btn_edit: "Edit Worker"
+        btn_delete: "Delete Worker"
       edit:
         title: "Edit Worker"
         btn_show: "Show Worker"

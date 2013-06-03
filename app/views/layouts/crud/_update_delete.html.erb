@@ -1,0 +1,8 @@
+<% if can? :update, model %>
+<%= link_to update_txt, update_path, :class => 'btn btn-primary' %>
+<% end %>
+<% if can? :destroy, model %>
+<%= link_to delete_txt, delete_path, :data => { :confirm => I18n.t("are_you_sure_to_delete") + "#{msg}? (#{txt})" }, :method => :delete, :class => 'btn btn-primary' %>
+<% end %>
+<br />
+<br />
