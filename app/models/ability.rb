@@ -2,7 +2,7 @@ class Ability
   include CanCan::Ability
   def initialize(user)
     # user ||= User.new # guest user (not logged in)
-    alias_action :create, :read, :update, :delete, :to => :crud
+    alias_action :create, :read, :update, :destroy, :to => :crud
     alias_action :create, :update, :to => :write
 
     # Not logged-in users can't manage anything
@@ -59,10 +59,12 @@ class Ability
     # ag2Directory
     if user.has_role? :ag2Directory_User
       can :crud, CorpContact
+      can :search, CorpContact
       can :crud, SharedContactType
       can :crud, SharedContact
     elsif user.has_role? :ag2Directory_Guest
       can :read, CorpContact
+      can :search, CorpContact
       can :read, SharedContactType
       can :read, SharedContact
     elsif user.has_role? :ag2Directory_Banned

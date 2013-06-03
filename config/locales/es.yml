@@ -201,7 +201,7 @@ es:
       messages:
         created: "%{model} fue creado/a con éxito."
         updated: "%{model} fue actualizado/a con éxito."
-        destroyed: "%{model} fue eliminado con éxito."
+        destroyed: "%{model} fue eliminado/a con éxito."
   simple_form:
     "yes": 'Si'
     "no": 'No'
