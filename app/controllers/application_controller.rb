@@ -36,7 +36,7 @@ class ApplicationController < ActionController::Base
   def undo_link(ivar)
     view_context.link_to("<i class='icon-undo-black'></i>".html_safe,
     main_app.revert_version_path(ivar.versions.scoped.last),
-    :method => :post, :class => 'notice_icon_button',
+    :method => :post, :class => 'notice-icon-button',
     :id => 'undo', :title => I18n.t(:undo))
   end
 

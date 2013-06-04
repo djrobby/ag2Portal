@@ -29,18 +29,28 @@
   <% end %>
   <!-- Records navigator -->
   <% if @breadcrumb == 'read' %>
-  <li><span class="divider"></span></li>
   <li>
-    <%= link_to @worker.to_first, :class => 'btn btn-mini' do %> <i class="icon-fast-backward"></i> <% end %>
+    <span class="divider"></span>
   </li>
   <li>
-    <%= link_to @worker.to_prev, :class => 'btn btn-mini' do %> <i class="icon-backward"></i> <% end %>
+    <%= link_to @worker.to_first, :class => 'notice-icon-button', :id => 'first', :title => I18n.t(:first) do %>
+    <i class="icon-fast-backward"></i>
+    <% end %>
   </li>
   <li>
-    <%= link_to @worker.to_next, :class => 'btn btn-mini' do %> <i class="icon-forward"></i> <% end %>
+    <%= link_to @worker.to_prev, :class => 'notice-icon-button', :id => 'prev', :title => I18n.t(:prev) do %>
+    <i class="icon-backward"></i>
+    <% end %>
   </li>
   <li>
-    <%= link_to @worker.to_last, :class => 'btn btn-mini' do %> <i class="icon-fast-forward"></i> <% end %>
+    <%= link_to @worker.to_next, :class => 'notice-icon-button', :id => 'next', :title => I18n.t(:next) do %>
+    <i class="icon-forward"></i>
+    <% end %>
+  </li>
+  <li>
+    <%= link_to @worker.to_last, :class => 'notice-icon-button', :id => 'last', :title => I18n.t(:last) do %>
+    <i class="icon-fast-forward"></i>
+    <% end %>
   </li>
   <% end %>
   <% end %>

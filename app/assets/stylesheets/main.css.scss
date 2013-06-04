@@ -299,10 +299,13 @@ a:focus {
 /* Records navigator */
 #records-navigator {
   margin: 0;
-  padding: 0;
+  padding: 0 0 2px 0;
   list-style-type: none;
   vertical-align: top;
   text-align: right;
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
+  border-bottom-color: #e3e3e3;
 }
 #records-navigator li {
   display: inline;
@@ -471,7 +474,7 @@ table.fixed td {
   background-position: 0px 0px;
   background-repeat: no-repeat;
 }
-.notice_icon_button {
+.notice-icon-button {
   margin: 0 0 0 10px;
 }
 

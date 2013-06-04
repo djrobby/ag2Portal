@@ -1,5 +1,5 @@
 <%= render '/layouts/ag2_human/workersbreadcrumb' %>
-
+<!-- <%#= render :partial => '/layouts/recordsnavigator', :locals => { :path => @worker } %> -->
 
 <h3> <% if session[:resolution] == "LD" %>
 <%= image_tag @worker.avatar.url(:small) %> <!-- small image size --> <% elsif session[:resolution] == "SD" %>
@@ -138,8 +138,9 @@
 
 <%= render :partial => '/layouts/crud/update_delete',
 :locals => { :model => Worker, :update_path => edit_worker_path(@worker), :update_txt => I18n.t('ag2_human.workers.show.btn_edit'),
-:delete_path => @worker, :delete_txt => I18n.t('ag2_human.workers.show.btn_delete'), :msg => I18n.t("activerecord.models.worker.one"), :txt => @worker.full_name } %>
-<!--<%#= render :partial => '/layouts/crud/update', :locals => { :model => Worker, :path => edit_worker_path(@worker), :txt => I18n.t('ag2_human.workers.show.btn_edit') } %>-->
+:delete_path => @worker, :delete_txt => I18n.t('ag2_human.workers.show.btn_delete'),
+:msg => I18n.t("activerecord.models.worker.one"), :txt => @worker.full_name } %>
+
 <% if !session[:return_to].nil? %>
 <%= link_to session[:return_to], session[:return_to_url] %> |
 <% end %>
