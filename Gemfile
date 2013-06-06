@@ -44,10 +44,10 @@ gem 'rvm-capistrano'
 # gem 'debugger'
 
 # Foreign required gems
-gem "devise"
-gem "cancan"
-gem "rolify"
-gem "bootstrap-sass"
+gem 'devise'
+gem 'cancan'
+gem 'rolify'
+gem 'bootstrap-sass'
 gem 'simple_form'
 gem 'paperclip'
 gem 'sunspot_rails'
@@ -58,6 +58,7 @@ gem 'omniauth-google-apps'
 gem 'omniauth-google-oauth2'
 gem 'libv8'
 gem "paper_trail"
+gem 'thinreports-rails'
 
 # Own required gems
 gem 'ag2_admin', :path => 'engines/ag2Admin'

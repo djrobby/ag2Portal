@@ -23,7 +23,7 @@
 <%= render :partial => '/layouts/crud/update', :locals => { :model => ProfessionalGroup, :path => edit_professional_group_path(@professional_group), :txt => I18n.t('ag2_human.professional_groups.show.btn_edit') } %>
 
 <% if (@workers.count > 0) %>
-<h4>Professional group Workers</h4>
+<h4><%=t '.subtable_title' %></h4>
 <table class="table table-condensed table-striped">
   <thead>
     <%= render '/layouts/ag2_human/workersheader' %>

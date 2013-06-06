@@ -1,6 +1,6 @@
 <%= render '/layouts/ag2_human/wtypesbreadcrumb' %>
 
-<h3>Worker type</h3>
+<h3><%=t '.title' %></h3>
 <table class="table">
   <tbody>
     <tr>
@@ -17,7 +17,7 @@
 <%= render :partial => '/layouts/crud/update', :locals => { :model => WorkerType, :path => edit_worker_path(@worker_type), :txt => I18n.t('ag2_human.worker_types.show.btn_edit') } %>
 
 <% if (@workers.count > 0) %>
-<h4>Worker type Workers</h4>
+<h4><%=t '.subtable_title' %></h4>
 <table class="table table-condensed table-striped">
   <thead>
     <%= render '/layouts/ag2_human/workersheader' %>
