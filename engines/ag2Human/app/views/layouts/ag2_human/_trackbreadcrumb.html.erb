@@ -1,0 +1,20 @@
+<% content_for :title, "aGestiona2 | ag2TimeRecord" %>
+<% content_for :icon, "/assets/icon/ag2TimeRecordTrack.png" %>
+<% content_for :alt, "ag2TimeRecord Control&Tracking" %>
+
+<!-- Breadcrumb -->
+<ul class="breadcrumb">
+  <li>
+    <a href="<%= main_app.root_path %>"><i class="icon-home"></i></a><span class="divider">></span>
+  </li>
+  <li>
+    <a href="<%= ag2_human.root_path %>">ag2Human</a><span class="divider">></span>
+  </li>
+  <li>
+    <a href="<%= ag2_timerecord_path %>">ag2TimeRecord</a><span class="divider">></span>
+  </li>
+  <li>
+    <%=t :"ag2_human.breadcrumb.track" %>
+  </li>
+  <a class="close" href="<%= ag2_human.root_path %>">&#215;</a>
+</ul>

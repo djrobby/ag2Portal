@@ -3,8 +3,8 @@
     <h3 class="sign-h3"><%=t '.title' %></h3>
   </div>
 </div>
-<div class="row">
-  <div class="span8">
+<div class="row-fluid">
+  <div class="span7">
     <div class="sign-description">
       <br />
       <%=t '.welcome' %>
@@ -25,7 +25,7 @@
       </p>
     </div>
   </div>
-  <div class="span4 sign">
+  <div class="span5 sign">
     <%= simple_form_for(resource, :as => resource_name, :url => registration_path(resource_name), :html => {:class => 'form-inline' }) do |f| %>
     <%= f.input :email, :autofocus => true, :input_html => { :class => 'sign-field' }, :label_html => { :class => 'sign-label' } %>
     <%= f.input :name, :input_html => { :class => 'sign-field' }, :label_html => { :class => 'sign-label' } %>

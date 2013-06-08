@@ -1,35 +1,4 @@
-<script>
-  $(document).ready(function() {
-    //$("#progressbar").css("width", "0%");
-    $("#message_area").children().hide();
-  });
-
-  jQuery(function($) {
-    // when #data_import_btn is clicked
-    $("#data_import_btn").click(function() {
-      $('#message_area').children().show();
-      $('#buttons').children().hide();
-      // make a POST call and executes action
-      jQuery.getJSON('data_import', function(data) {
-        $(".modal-body > p").text(data.DataImport);
-        $("#importinfo").modal("show");
-        if (data.Result == 'OK') {
-          $("#message").html('<%= link_to I18n.t("go_to_target", :scope => :"ag2_human.import.index"), workers_path %>');
-          $("#progressbar").hide();
-        }
-        else {
-          $('#message_area').children().hide();
-        }
-        $("#data_import_btn").text(I18n["try_again"]);
-        $('#buttons').children().show();
-      })
-      return false;
-    });
-  })
-</script>
-
-<%= render '/layouts/ag2_human/importbreadcrumb' %>
-<%= render '/layouts/importinfo' %>
+<%= render '/layouts/ag2_human/trackbreadcrumb' %>
 
 <div class="row">
   <div class="span12">

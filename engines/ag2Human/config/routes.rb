@@ -1,4 +1,6 @@
 Ag2Human::Engine.routes.draw do
+  get "ag2_timerecord_track/index"
+
   scope "(:locale)", :locale => /en|es/ do
     # Get
     get "home/index"
@@ -8,6 +10,7 @@ Ag2Human::Engine.routes.draw do
 
     # Routes to time_record
     match 'ag2_timerecord' => 'ag2_timerecord#index', :as => :ag2_timerecord
+    match 'ag2_timerecord_track' => 'ag2_timerecord_track#index', :as => :ag2_timerecord_track
 
     # Routes for jQuery POSTs
     match 'workers/update_province_textfield_from_town/:id', :controller => 'workers', :action => 'update_province_textfield_from_town'
