@@ -1,0 +1,8 @@
+es:
+  ag2_human:
+    ag2_timerecord_track:
+      index:
+        task: "Informes de ag2TimeRecord"
+        description: "Control&Seguimiento generará informes utiizando los datos actualizados de ag2TimeRecord. Indica los datos que quieras buscar en el cuadro de filtros y luego pulsa sobre el botón del informe que desees obtener."
+        how_go_back: "Para regresar a esta página, una vez que visualices el informe, deberás pulsar sobre el botón Atrás o Retroceder de tu navegador."
+        caution: "¡Ten en cuenta que no todos los filtros enumerados, se aplican a todos los informes disponibles!"
