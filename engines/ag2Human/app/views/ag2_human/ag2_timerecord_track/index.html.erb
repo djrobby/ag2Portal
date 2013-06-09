@@ -24,13 +24,15 @@
     $("#offce_report_btn").click(function() {
       // make a POST call and get report
       var worker = $('select#Worker :selected').val();
+      if (worker == "")
+        return;
       var from = $('#From').val();
       var to = $('#To').val();
       var office = $('select#Office :selected').val();
       var code = $('select#Code :selected').val();
-      jQuery.get('office_report/' + worker + '/' + from + '/' + to + '/' + office + '/' + code, function(data) {
-        $("#report_div").html(data);
-      })
+      window.location = "office_report.pdf?worker=" + worker;
+      //jQuery.get('office_report/' + worker, function(data) {
+      //})
       return false;
     });
   })
@@ -86,7 +88,7 @@
       </p>
       <!-- Last button without <p></p> tags for spacing -->
       <a href="#" id="offce_report_btn" class="btn btn-primary"><%= t '.btn_office' %></a>
-      <!-- <a href="<%#= ag2_human.office_report_path(format: 'pdf') %>" id="offce1_report_btn" class="btn btn-primary"><%= t '.btn_office' %></a> -->
+      <!-- <a href="<%#= office_report_path(worker: 3, format: 'pdf') %>" id="offce1_report_btn" class="btn btn-primary"><%= t '.btn_office' %></a> -->
       <br />
       <br />
       <!-- Links -->
