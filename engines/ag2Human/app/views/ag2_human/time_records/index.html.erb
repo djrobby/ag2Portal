@@ -19,7 +19,7 @@
         <%= form_tag "time_records", :method => 'get' do %>
         <!-- Worker -->
         <%= label_tag I18n.t("ag2_human.time_records.index.label_worker"), nil, :class => 'form-label' %>
-        <%= select_tag "Worker", options_from_collection_for_select(Worker.all, "id", "full_name"), :prompt => "", :class => 'x-large-text-field shrinked' %>
+        <%= select_tag "Worker", options_from_collection_for_select(Worker.order('worker_code').all, "id", "full_name"), :prompt => "", :class => 'x-large-text-field shrinked' %>
         <!-- Dates -->
         <%= label_tag I18n.t("ag2_human.time_records.index.label_from"), nil, :class => 'form-label' %>
         <%= text_field_tag "From", params[:date], :class =>  'x-large-text-field shrinked date_picker' %>
@@ -30,8 +30,10 @@
         <%= select_tag "Type", options_from_collection_for_select(TimerecordType.all, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked' %>
         <%= label_tag I18n.t("ag2_human.time_records.index.label_code"), nil, :class => 'form-label' %>
         <%= select_tag "Code", options_from_collection_for_select(TimerecordCode.all, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked' %>
+        <!-- Submit -->
         <%= submit_tag I18n.t("ag2_human.time_records.index.btn_apply"), :class => 'btn btn-primary' %>
         <% end %>
+        <!-- Buttons -->
         <%= render :partial => '/layouts/crud/new', :locals => { :model => TimeRecord, :path => new_time_record_path, :txt => I18n.t("ag2_human.time_records.index.btn_new") } %>
         <%= link_to I18n.t("ag2_human.time_records.index.back_to_root"), ag2_human.ag2_timerecord_path %>
       </div><!-- /.sidebar-nav -->

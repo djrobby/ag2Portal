@@ -5,6 +5,35 @@
       weekStart : 1
     });
   }); 
+
+  jQuery(function($) {
+    // when #worker_report_btn is clicked
+    $("#worker_report_btn").click(function() {
+      // make a POST call and get report
+      var worker = $('select#Worker :selected').val();
+      var from = $('#From').val();
+      var to = $('#To').val();
+      var office = $('select#Office :selected').val();
+      var code = $('select#Code :selected').val();
+      jQuery.getJSON('worker_report/' + worker + '/' + from + '/' + to + '/' + office + '/' + code, function(data) {
+      })
+      return false;
+    });
+
+    // when #offce_report_btn is clicked
+    $("#offce_report_btn").click(function() {
+      // make a POST call and get report
+      var worker = $('select#Worker :selected').val();
+      var from = $('#From').val();
+      var to = $('#To').val();
+      var office = $('select#Office :selected').val();
+      var code = $('select#Code :selected').val();
+      jQuery.get('office_report/' + worker + '/' + from + '/' + to + '/' + office + '/' + code, function(data) {
+        $("#report_div").html(data);
+      })
+      return false;
+    });
+  })
 </script>
 
 <%= render '/layouts/ag2_human/trackbreadcrumb' %>
@@ -35,22 +64,39 @@
       <%= form_tag "ag2_timerecord_track", :method => 'get' do %>
       <!-- Worker -->
       <%= label_tag I18n.t("ag2_human.time_records.index.label_worker"), nil, :class => 'form-label' %>
-      <%= select_tag "Worker", options_from_collection_for_select(Worker.all, "id", "full_name"), :prompt => "", :class => 'x-large-text-field' %>
+      <%= select_tag "Worker", options_from_collection_for_select(Worker.order('worker_code').all, "id", "full_name"), :prompt => "", :class => 'x-large-text-field' %>
       <!-- Dates -->
       <%= label_tag I18n.t("ag2_human.time_records.index.label_from"), nil, :class => 'form-label' %>
       <%= text_field_tag "From", params[:date], :class =>  'mid-text-field date_picker centered' %>
       <%= label_tag I18n.t("ag2_human.time_records.index.label_to"), nil, :class => 'form-label' %>
       <%= text_field_tag "To", params[:date], :class =>  'mid-text-field date_picker centered' %>
+      <!-- Office -->
+      <%= label_tag I18n.t("ag2_human.workers.index.label_office"), nil, :class => 'form-label' %>
+      <%= select_tag "Office", options_from_collection_for_select(Office.order('name').all, "id", "name"), :prompt => "", :class => 'x-large-text-field' %>
       <!-- Code -->
-      <%= label_tag I18n.t("ag2_human.time_records.index.label_code"), nil, :class => 'form-label' %>
-      <%= select_tag "Code", options_from_collection_for_select(TimerecordCode.all, "id", "name"), :prompt => "", :class => 'x-large-text-field' %>
+      <!-- Last tag into <p></p> tags for spacing -->
+      <p>
+        <%= label_tag I18n.t("ag2_human.time_records.index.label_code"), nil, :class => 'form-label' %>
+        <%= select_tag "Code", options_from_collection_for_select(TimerecordCode.all, "id", "name"), :prompt => "", :class => 'x-large-text-field' %>
+      </p>
+      <!-- <%#= submit_tag I18n.t("ag2_human.time_records.index.btn_apply"), :class => 'btn btn-primary' %> -->
+      <!-- Buttons -->
+      <p>
+        <a href="#" id="worker_report_btn" class="btn btn-primary"><%= t '.btn_worker' %></a>
+      </p>
+      <!-- Last button without <p></p> tags for spacing -->
+      <a href="#" id="offce_report_btn" class="btn btn-primary"><%= t '.btn_office' %></a>
+      <!-- <a href="<%#= ag2_human.office_report_path(format: 'pdf') %>" id="offce1_report_btn" class="btn btn-primary"><%= t '.btn_office' %></a> -->
       <br />
-      <%= submit_tag I18n.t("ag2_human.time_records.index.btn_apply"), :class => 'btn btn-primary' %>
-      <%= submit_tag I18n.t("ag2_human.time_records.index.btn_apply"), :class => 'btn btn-primary' %>
       <br />
-      <br />
+      <!-- Links -->
       <%= link_to I18n.t("ag2_human.time_records.index.back_to_root"), ag2_human.ag2_timerecord_path %>
       <% end %>
     </div>
+  </div>
+</div>
+<div class="row-fluid">
+  <div class="span12" id="report_div">
+    Report
   </div>
 </div>
