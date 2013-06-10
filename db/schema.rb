@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130528190553) do
+ActiveRecord::Schema.define(:version => 20130610113626) do
 
   create_table "apps", :force => true do |t|
     t.string   "name"
@@ -420,6 +420,54 @@ ActiveRecord::Schema.define(:version => 20130528190553) do
   end
 
   add_index "timerecord_codes", ["name"], :name => "index_timerecord_codes_on_name"
+
+  create_table "timerecord_reports", :force => true do |t|
+    t.integer "tr_worker_id"
+    t.date    "tr_date"
+    t.time    "tr_time_1"
+    t.integer "tr_type_id_1"
+    t.integer "tr_code_id_1"
+    t.time    "tr_time_2"
+    t.integer "tr_type_id_2"
+    t.integer "tr_code_id_2"
+    t.time    "tr_time_3"
+    t.integer "tr_type_id_3"
+    t.integer "tr_code_id_3"
+    t.time    "tr_time_4"
+    t.integer "tr_type_id_4"
+    t.integer "tr_code_id_4"
+    t.time    "tr_time_5"
+    t.integer "tr_type_id_5"
+    t.integer "tr_code_id_5"
+    t.time    "tr_time_6"
+    t.integer "tr_type_id_6"
+    t.integer "tr_code_id_6"
+    t.time    "tr_time_7"
+    t.integer "tr_type_id_7"
+    t.integer "tr_code_id_7"
+    t.time    "tr_time_8"
+    t.integer "tr_type_id_8"
+    t.integer "tr_code_id_8"
+  end
+
+  add_index "timerecord_reports", ["tr_code_id_1"], :name => "index_timerecord_reports_on_tr_code_id_1"
+  add_index "timerecord_reports", ["tr_code_id_2"], :name => "index_timerecord_reports_on_tr_code_id_2"
+  add_index "timerecord_reports", ["tr_code_id_3"], :name => "index_timerecord_reports_on_tr_code_id_3"
+  add_index "timerecord_reports", ["tr_code_id_4"], :name => "index_timerecord_reports_on_tr_code_id_4"
+  add_index "timerecord_reports", ["tr_code_id_5"], :name => "index_timerecord_reports_on_tr_code_id_5"
+  add_index "timerecord_reports", ["tr_code_id_6"], :name => "index_timerecord_reports_on_tr_code_id_6"
+  add_index "timerecord_reports", ["tr_code_id_7"], :name => "index_timerecord_reports_on_tr_code_id_7"
+  add_index "timerecord_reports", ["tr_code_id_8"], :name => "index_timerecord_reports_on_tr_code_id_8"
+  add_index "timerecord_reports", ["tr_date"], :name => "index_timerecord_reports_on_tr_date"
+  add_index "timerecord_reports", ["tr_type_id_1"], :name => "index_timerecord_reports_on_tr_type_id_1"
+  add_index "timerecord_reports", ["tr_type_id_2"], :name => "index_timerecord_reports_on_tr_type_id_2"
+  add_index "timerecord_reports", ["tr_type_id_3"], :name => "index_timerecord_reports_on_tr_type_id_3"
+  add_index "timerecord_reports", ["tr_type_id_4"], :name => "index_timerecord_reports_on_tr_type_id_4"
+  add_index "timerecord_reports", ["tr_type_id_5"], :name => "index_timerecord_reports_on_tr_type_id_5"
+  add_index "timerecord_reports", ["tr_type_id_6"], :name => "index_timerecord_reports_on_tr_type_id_6"
+  add_index "timerecord_reports", ["tr_type_id_7"], :name => "index_timerecord_reports_on_tr_type_id_7"
+  add_index "timerecord_reports", ["tr_type_id_8"], :name => "index_timerecord_reports_on_tr_type_id_8"
+  add_index "timerecord_reports", ["tr_worker_id"], :name => "index_timerecord_reports_on_tr_worker_id"
 
   create_table "timerecord_types", :force => true do |t|
     t.string   "name"
