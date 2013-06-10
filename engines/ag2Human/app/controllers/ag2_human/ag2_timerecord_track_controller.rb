@@ -30,15 +30,15 @@ module Ag2Human
     # Office report
     def office_report
       worker = params[:worker]
-      from = params[:from]
-      to = params[:to]
+      @from = params[:from]
+      @to = params[:to]
       office = params[:office]
       code = params[:code]
 
       @worker = Worker.find(worker)
+      @office = Office.find(office)
       
       respond_to do |format|
-        #format.html
         format.pdf { send_data render_to_string,
                      filename: "ag2TimeRecord.pdf",
                      type: 'application/pdf',

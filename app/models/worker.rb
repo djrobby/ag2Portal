@@ -59,6 +59,7 @@ class Worker < ActiveRecord::Base
   before_validation :fields_to_uppercase
 
   has_many :time_records
+  has_many :timerecord_reports, :foreign_key => 'tr_worker_id'
   def fields_to_uppercase
     self[:fiscal_id].upcase!
     self[:worker_code].upcase!

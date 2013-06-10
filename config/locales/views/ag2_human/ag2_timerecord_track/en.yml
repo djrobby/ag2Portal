@@ -5,6 +5,11 @@ en:
         task: "ag2TimeRecord Reports"
         description: "Control&Tracking will generate reports using ag2TimeRecord updated data. Fill in the desired search data in the filters box and then click on the button of the report you want to get."
         how_go_back: "To return to this page once you visualize the report, click on the Back or Previous Page button of your browser."
-        caution: "Note that not all filters listed in the filters box, apply to all available reports!"
+        caution: "Note that not all filters listed in the filters box, apply to all available reports! Dates are always mandatory."
         btn_worker: "Worker Report"
         btn_office: "Office Report"
+      office_report:
+        report_title: "Time records by Office"
+        office_title: "Office:"
+      from_title: "From:"
+      to_title: "To:"

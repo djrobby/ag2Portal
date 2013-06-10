@@ -1,5 +1,6 @@
 report.set_layout tlf: 'reports/office_report', layout_options: { default: true }
 
+# Events
 report.events.on :page_create do |e|
   # Set page-number.
   e.page.item(:page_no).value(e.page.no)
@@ -12,5 +13,22 @@ report.events.on :generate do |e|
 end
     
 report.start_new_page
+
+# Page header
+report.page.values report_title: I18n.t("ag2_human.ag2_timerecord_track.office_report.report_title")
+report.page.values office_title: I18n.t("ag2_human.ag2_timerecord_track.office_report.office_title")
+report.page.values from_title: I18n.t("ag2_human.ag2_timerecord_track.from_title")
+report.page.values to_title: I18n.t("ag2_human.ag2_timerecord_track.to_title")
+report.page.values office: @office.name
+report.page.values from: @from
+report.page.values to: @to
+# Page footer
 report.page.values printed_at: Time.now
-report.page.values worker_id: @worker.full_name
+
+# List
+@time_records.each do |t|
+  report.page.list(:default).add_row do |row|
+    row.item(:description).value t.description
+    row.item(:starting_at).value t.starting_at
+  end
+end
