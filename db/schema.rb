@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130610113626) do
+ActiveRecord::Schema.define(:version => 20130611075616) do
 
   create_table "apps", :force => true do |t|
     t.string   "name"
@@ -448,6 +448,7 @@ ActiveRecord::Schema.define(:version => 20130610113626) do
     t.time    "tr_time_8"
     t.integer "tr_type_id_8"
     t.integer "tr_code_id_8"
+    t.time    "tr_worked_time"
   end
 
   add_index "timerecord_reports", ["tr_code_id_1"], :name => "index_timerecord_reports_on_tr_code_id_1"

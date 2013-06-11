@@ -26,9 +26,9 @@ report.page.values to: @to
 report.page.values printed_at: Time.now
 
 # List
-@time_records.each do |t|
-  report.page.list(:default).add_row do |row|
-    row.item(:description).value t.description
-    row.item(:starting_at).value t.starting_at
-  end
-end
+#@time_records.each do |t|
+#  report.page.list(:default).add_row do |row|
+#    row.item(:description).value t.description
+#    row.item(:starting_at).value t.starting_at
+#  end
+#end

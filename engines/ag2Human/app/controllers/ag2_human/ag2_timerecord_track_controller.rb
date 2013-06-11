@@ -39,6 +39,9 @@ module Ag2Human
       @office = Office.find(office)
       
       respond_to do |format|
+        # Execute procedure
+        ActiveRecord::Base.connection.execute("CALL generate_timerecord_reports(0, '2013-04-01', '2013-05-30');")
+        # Render PDF
         format.pdf { send_data render_to_string,
                      filename: "ag2TimeRecord.pdf",
                      type: 'application/pdf',
