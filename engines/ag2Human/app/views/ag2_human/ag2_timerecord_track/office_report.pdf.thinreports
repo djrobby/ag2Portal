@@ -26,9 +26,21 @@ report.page.values to: @to
 report.page.values printed_at: Time.now
 
 # List
-#@time_records.each do |t|
-#  report.page.list(:default).add_row do |row|
-#    row.item(:description).value t.description
-#    row.item(:starting_at).value t.starting_at
-#  end
-#end
+@time_records.each do |t|
+  report.page.list(:default).add_row do |row|
+    row.item(:worker).value t.worker.full_name unless t.tr_worker_id.blank?
+    row.item(:date).value t.tr_date.strftime("%d/%m/%Y") unless t.tr_date.blank?
+    row.item(:time1).value t.tr_time_1.strftime("%H:%M") unless t.tr_time_1.blank?
+    row.item(:type1).value t.type1.name unless t.tr_type_id_1.blank?
+    row.item(:code1).value t.code1.name unless t.tr_code_id_1.blank?
+    row.item(:time2).value t.tr_time_2.strftime("%H:%M") unless t.tr_time_2.blank?
+    row.item(:type2).value t.type2.name unless t.tr_type_id_2.blank?
+    row.item(:code2).value t.code2.name unless t.tr_code_id_2.blank?
+    row.item(:time3).value t.tr_time_3.strftime("%H:%M") unless t.tr_time_3.blank?
+    row.item(:type3).value t.type3.name unless t.tr_type_id_3.blank?
+    row.item(:code3).value t.code3.name unless t.tr_code_id_3.blank?
+    row.item(:time4).value t.tr_time_4.strftime("%H:%M") unless t.tr_time_4.blank?
+    row.item(:type4).value t.type4.name unless t.tr_type_id_4.blank?
+    row.item(:code4).value t.code4.name unless t.tr_code_id_4.blank?
+  end
+end

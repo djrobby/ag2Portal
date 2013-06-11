@@ -8,8 +8,8 @@ module Ag2Human
     # Worker report
     def worker_report
       worker = params[:worker]
-      from = params[:from]
-      to = params[:to]
+      @from = params[:from]
+      @to = params[:to]
       office = params[:office]
       code = params[:code]
 
@@ -17,11 +17,19 @@ module Ag2Human
         return
       end
 
+      # Search worker
       @worker = Worker.find(worker)
+      # Format dates
+      from = Time.parse(@from).strftime("%Y-%m-%d")
+      to = Time.parse(@to).strftime("%Y-%m-%d")
       
       respond_to do |format|
+        # Execute procedure and load aux table
+        ActiveRecord::Base.connection.execute("CALL generate_timerecord_reports(#{worker}, '#{from}', '#{to}');")
+        @time_records = TimerecordReport.all
+        # Render PDF
         format.pdf { send_data render_to_string,
-                     filename: "ag2TimeRecord_#{@worker.worker_code}_#{from}-#{to}.pdf",
+                     filename: "ag2TimeRecord_#{@worker.worker_code}_#{from}_#{to}.pdf",
                      type: 'application/pdf',
                      disposition: 'inline' }
       end
@@ -35,15 +43,19 @@ module Ag2Human
       office = params[:office]
       code = params[:code]
 
-      @worker = Worker.find(worker)
+      # Search office
       @office = Office.find(office)
+      # Format dates
+      from = Time.parse(@from).strftime("%Y-%m-%d")
+      to = Time.parse(@to).strftime("%Y-%m-%d")
       
       respond_to do |format|
-        # Execute procedure
-        ActiveRecord::Base.connection.execute("CALL generate_timerecord_reports(0, '2013-04-01', '2013-05-30');")
+        # Execute procedure and load aux table
+        ActiveRecord::Base.connection.execute("CALL generate_timerecord_reports(0, '#{from}', '#{to}');")
+        @time_records = TimerecordReport.all
         # Render PDF
         format.pdf { send_data render_to_string,
-                     filename: "ag2TimeRecord.pdf",
+                     filename: "ag2TimeRecord_#{@office.office_code}_#{from}_#{to}.pdf",
                      type: 'application/pdf',
                      disposition: 'inline' }
       end
