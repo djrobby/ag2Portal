@@ -24,5 +24,5 @@ class TimerecordReport < ActiveRecord::Base
                   :tr_time_5, :tr_time_6, :tr_time_7, :tr_time_8,
                   :tr_type_id_1, :tr_type_id_2, :tr_type_id_3, :tr_type_id_4,
                   :tr_type_id_5, :tr_type_id_6, :tr_type_id_7, :tr_type_id_8,
-                  :tr_worker_id
+                  :tr_worker_id, :tr_worked_time, :tr_rec_count
 end
