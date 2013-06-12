@@ -1,17 +1,25 @@
 report.set_layout tlf: 'reports/office_report', layout_options: { default: true }
-
-# Events
+#
+# Report events
+#
+# On page create
 report.events.on :page_create do |e|
-  # Set page-number.
+  # Set page-number
   e.page.item(:page_no).value(e.page.no)
 end
+# On report generate
 report.events.on :generate do |e|
   e.pages.each do |page|
-    # Set total-page-number.
+    # Set total-page-number
     page.item(:page_count).value(e.report.page_count)
   end
 end
-    
+report.layout.config do |c| 
+	c.list.events.on :page_footer do |e| 
+		e.section.item(:sum_worked_time_title).value("Hola") 
+	end 
+end
+
 report.start_new_page
 
 # Page header
@@ -49,6 +57,9 @@ sum_rows = 0
   report.page.list(:default).add_row do |row|
   	# If worker changed
   	if !t.tr_worker_id.blank? && (t.tr_worker_id != worker_id)
+		#report.page.list(:default).header.item(:sum_worked_time_title).value I18n.t("ag2_human.ag2_timerecord_track.every_report.sum_worked_time_title")
+		#report.page.list(:default).pagefooter.item(:sum_rec_count_title).value I18n.t("ag2_human.ag2_timerecord_track.every_report.sum_rec_count_title")
+		#report.page.list(:default).pagefooter.item(:sum_rows_title).value I18n.t("ag2_human.ag2_timerecord_track.every_report.sum_rows_title")
 		report.page.list(:default).page_break
   		worker_id = t.tr_worker_id
 		sum_worked_time = Time.parse("00:00:00").strftime("%H:%M:%S")
