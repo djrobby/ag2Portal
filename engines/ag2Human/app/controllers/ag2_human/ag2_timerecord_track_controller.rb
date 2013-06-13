@@ -51,7 +51,7 @@ module Ag2Human
       
       respond_to do |format|
         # Execute procedure and load aux table
-        ActiveRecord::Base.connection.execute("CALL generate_timerecord_reports(0, '#{from}', '#{to}');")
+        ActiveRecord::Base.connection.execute("CALL generate_timerecord_reports(0, '#{from}', '#{to}', #{office});")
         @time_records = TimerecordReport.all
         # Render PDF
         format.pdf { send_data render_to_string,
