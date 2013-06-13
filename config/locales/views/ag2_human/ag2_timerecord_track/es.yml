@@ -16,6 +16,8 @@ es:
         report_title: "Time records by Worker"
         worker_title: "Worker:"
       every_report:
+        pt: "Página"
+        pd: "de"
         from_title: "Desde:"
         to_title: "Hasta:"
         date_col: "Fecha"
@@ -29,6 +31,7 @@ es:
         rec8_col: "Marcaje 8"
         rec_count_col: "Cant."
         worked_time_col: "T.Trabajado"
+        sum_aggregate_title: "Acumulado para:"
         sum_worked_time_title: "Total Tiempo Trabajado:"
         sum_rec_count_title: "Total Marcajes:"
-        sum_rows_title: "Total Días/Filas:"
+        sum_rows_title: "Total Filas (Días):"

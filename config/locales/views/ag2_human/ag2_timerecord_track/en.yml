@@ -16,6 +16,8 @@ en:
         report_title: "Time records by Worker"
         worker_title: "Worker:"
       every_report:
+        pt: "Page"
+        pd: "of"
         from_title: "From:"
         to_title: "To:"
         date_col: "Date"
@@ -29,6 +31,7 @@ en:
         rec8_col: "Record 8"
         rec_count_col: "Count"
         worked_time_col: "Wkd.Time"
+        sum_aggregate_title: "Aggregate for:"
         sum_worked_time_title: "Total Worked Time:"
         sum_rec_count_title: "Total Records:"
-        sum_rows_title: "Total Days/Rows:"
+        sum_rows_title: "Total Rows (Days):"
