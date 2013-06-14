@@ -11,15 +11,14 @@ en:
       office_report:
         report_title: "Time records by Office"
         office_title: "Office:"
-        worker_col: "Worker"
       worker_report:
         report_title: "Time records by Worker"
-        worker_title: "Worker:"
       every_report:
         pt: "Page"
         pd: "of"
         from_title: "From:"
         to_title: "To:"
+        worker_col: "Worker"
         date_col: "Date"
         rec1_col: "Record 1"
         rec2_col: "Record 2"
@@ -35,3 +34,4 @@ en:
         sum_worked_time_title: "Total Worked Time:"
         sum_rec_count_title: "Total Records:"
         sum_rows_title: "Total Rows (Days):"
+        average_title: "Average Worked Time: "

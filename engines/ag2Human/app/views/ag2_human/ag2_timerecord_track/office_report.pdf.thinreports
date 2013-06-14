@@ -32,7 +32,7 @@ report.page.values pt: I18n.t("ag2_human.ag2_timerecord_track.every_report.pt")
 report.page.values pd: I18n.t("ag2_human.ag2_timerecord_track.every_report.pd")
 
 # List header
-report.page.list(:default).header.item(:worker_col).value I18n.t("ag2_human.ag2_timerecord_track.office_report.worker_col")
+report.page.list(:default).header.item(:worker_col).value I18n.t("ag2_human.ag2_timerecord_track.every_report.worker_col")
 report.page.list(:default).header.item(:date_col).value I18n.t("ag2_human.ag2_timerecord_track.every_report.date_col")
 report.page.list(:default).header.item(:rec1_col).value I18n.t("ag2_human.ag2_timerecord_track.every_report.rec1_col")
 report.page.list(:default).header.item(:rec2_col).value I18n.t("ag2_human.ag2_timerecord_track.every_report.rec2_col")

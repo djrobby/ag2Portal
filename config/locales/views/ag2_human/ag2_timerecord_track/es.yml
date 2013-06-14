@@ -11,15 +11,14 @@ es:
       office_report:
         report_title: "Marcajes por Oficina"
         office_title: "Oficina:"
-        worker_col: "Trabajador"
       worker_report:
-        report_title: "Time records by Worker"
-        worker_title: "Worker:"
+        report_title: "Marcajes por Trabajador"
       every_report:
         pt: "Página"
         pd: "de"
         from_title: "Desde:"
         to_title: "Hasta:"
+        worker_col: "Trabajador"
         date_col: "Fecha"
         rec1_col: "Marcaje 1"
         rec2_col: "Marcaje 2"
@@ -35,3 +34,4 @@ es:
         sum_worked_time_title: "Total Tiempo Trabajado:"
         sum_rec_count_title: "Total Marcajes:"
         sum_rows_title: "Total Filas (Días):"
+        average_title: "Promedio Tiempo Trabajado: "

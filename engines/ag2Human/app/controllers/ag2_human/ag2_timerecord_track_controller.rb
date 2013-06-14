@@ -13,7 +13,7 @@ module Ag2Human
       office = params[:office]
       code = params[:code]
 
-      if worker.blank? || from.blank? || to.blank? 
+      if worker.blank? || @from.blank? || @to.blank? 
         return
       end
 
@@ -25,7 +25,7 @@ module Ag2Human
       
       respond_to do |format|
         # Execute procedure and load aux table
-        ActiveRecord::Base.connection.execute("CALL generate_timerecord_reports(#{worker}, '#{from}', '#{to}');")
+        ActiveRecord::Base.connection.execute("CALL generate_timerecord_reports(#{worker}, '#{from}', '#{to}', 0);")
         @time_records = TimerecordReport.all
         # Render PDF
         format.pdf { send_data render_to_string,
@@ -42,6 +42,10 @@ module Ag2Human
       @to = params[:to]
       office = params[:office]
       code = params[:code]
+
+      if office.blank? || @from.blank? || @to.blank? 
+        return
+      end
 
       # Search office
       @office = Office.find(office)
