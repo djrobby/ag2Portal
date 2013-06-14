@@ -1,3 +1,7 @@
+if @time_records.count <= 0
+	return
+end
+
 report.set_layout tlf: 'reports/office_report', layout_options: { default: true }
 
 #
