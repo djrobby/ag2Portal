@@ -18,7 +18,7 @@ module Ag2Human
       message = I18n.t("result_ok_message_html", :scope => :"ag2_human.import.index")
       @json_data = { "DataImport" => message, "Result" => "OK" }
 
-      # Loop thru 'empresa.dbf' records
+      # Read parameters from data import config
       data_import_config = DataImportConfig.find_by_name('workers')
       source = source_exist(data_import_config.source, nil)
       if source.nil?
@@ -31,7 +31,7 @@ module Ag2Human
       empresa.each do |e|
         company = Company.find_by_fiscal_id(e.ccif)
         if !company.nil?
-          # Loop thru 'trabaja.dbf' records for current 'empresa' record
+          # Loop thru 'trabaja.dbf' records for current 'empresa/company' record
           source = source_exist(data_import_config.source, e.ccodemp)
           if !source.nil?
             trabaja = DBF::Table.new(source + "trabaja.dbf")
@@ -53,7 +53,6 @@ module Ag2Human
           end
         end
       end
-      sleep 1
       render json: @json_data
     end
 
