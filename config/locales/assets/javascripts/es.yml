@@ -1,4 +1,5 @@
 es:
+  current_locale: "es"
   screen_size: "Medidas de pantalla"
   window_size: "Medidas de ventana"
   try_again: "Inténtalo de nuevo"

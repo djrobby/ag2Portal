@@ -163,7 +163,11 @@
       var dowCnt = this.weekStart;
       var html = '<tr>';
       while (dowCnt < this.weekStart + 7) {
-        html += '<th class="dow">' + DPGlobal.dates.daysMin[(dowCnt++) % 7] + '</th>';
+    	if (I18n["current_locale"] == "en") {
+            html += '<th class="dow">' + DPGlobal.dates.daysMin[(dowCnt++) % 7] + '</th>';
+    	} else {
+            html += '<th class="dow">' + DPGlobalEs.dates.daysMin[(dowCnt++) % 7] + '</th>';    		
+    	}
       }
       html += '</tr>';
       this.picker.find('.datepicker-days thead').append(html);
@@ -173,14 +177,22 @@
       var html = '';
       var i = 0
       while (i < 12) {
-        html += '<span class="month">' + DPGlobal.dates.monthsShort[i++] + '</span>';
+      	if (I18n["current_locale"] == "en") {
+            html += '<span class="month">' + DPGlobal.dates.monthsShort[i++] + '</span>';
+    	} else {
+            html += '<span class="month">' + DPGlobalEs.dates.monthsShort[i++] + '</span>';
+    	}
       }
       this.picker.find('.datepicker-months td').append(html);
     },
 
     fill : function() {
       var d = new Date(this.viewDate), year = d.getFullYear(), month = d.getMonth(), currentDate = this.date.valueOf();
-      this.picker.find('.datepicker-days th:eq(1)').text(DPGlobal.dates.months[month] + ' ' + year);
+      if (I18n["current_locale"] == "en") {
+          this.picker.find('.datepicker-days th:eq(1)').text(DPGlobal.dates.months[month] + ' ' + year);
+      } else {
+          this.picker.find('.datepicker-days th:eq(1)').text(DPGlobalEs.dates.months[month] + ' ' + year);
+      }
       var prevMonth = new Date(year, month - 1, 28, 0, 0, 0, 0), day = DPGlobal.getDaysInMonth(prevMonth.getFullYear(), prevMonth.getMonth());
       prevMonth.setDate(day);
       prevMonth.setDate(day - (prevMonth.getDay() - this.weekStart + 7) % 7);
@@ -324,6 +336,7 @@
   };
   $.fn.datepicker.Constructor = Datepicker;
 
+  // Global settings & English global localization
   var DPGlobal = {
     modes : [{
       clsName : 'days',
@@ -415,5 +428,16 @@
     contTemplate : '<tbody><tr><td colspan="7"></td></tr></tbody>'
   };
   DPGlobal.template = '<div class="datepicker dropdown-menu">' + '<div class="datepicker-days">' + '<table class=" table-condensed">' + DPGlobal.headTemplate + '<tbody></tbody>' + '</table>' + '</div>' + '<div class="datepicker-months">' + '<table class="table-condensed">' + DPGlobal.headTemplate + DPGlobal.contTemplate + '</table>' + '</div>' + '<div class="datepicker-years">' + '<table class="table-condensed">' + DPGlobal.headTemplate + DPGlobal.contTemplate + '</table>' + '</div>' + '</div>';
+  
+  // Spanish global localization
+  var DPGlobalEs = {
+    dates : {
+      days : ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"],
+      daysShort : ["Dom", "Lun", "Mar", "Mie", "Jue", "Vie", "Sab", "Dom"],
+      daysMin : ["Do", "Lu", "Ma", "Mi", "Ju", "Vi", "Sa", "Do"],
+      months : ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"],
+      monthsShort : ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"]
+    }
+  };
 
 }(window.jQuery); 
