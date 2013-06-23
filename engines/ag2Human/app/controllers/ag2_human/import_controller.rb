@@ -48,12 +48,14 @@ module Ag2Human
                 # worker.nomina_id = nomina_id
               end
               #update_worker(worker, t)
-              #if !worker.save
-                # Error: Workers Updater finished unexpectedly!
-                # message = I18n.t("result_error_message_html", :scope => :"ag2_human.import.index")
-                # @json_data = { "DataImport" => message, "Result" => "ERROR" }
-                # break
-              #end
+              if worker.user_id > 0
+                #if !worker.save
+                  # Error: Workers Updater finished unexpectedly!
+                  #message = I18n.t("result_error_message_html", :scope => :"ag2_human.import.index")
+                  #@json_data = { "DataImport" => message, "Result" => "ERROR" }
+                  #break
+                #end
+              end
             end
           end
         end
@@ -182,14 +184,16 @@ render json: @json_data
       worker.affiliation_id = source.CNUMSEG unless source.CNUMSEG.blank?
       worker.contribution_account_code = source.CSUBCTA unless source.CSUBCTA.blank?
       worker.own_phone = source.CTELEFONO unless source.CTELEFONO.blank?
-      worker.email = source.CEMAIL unless source.CEMAIL.blank?
       worker.contract_type_id = @contract_type.id unless @contract_type.id.nil?
       worker.collective_agreement_id = @collective_agreement.id unless @collective_agreement.id.nil?
       worker.collective_agreement_id = @collective_agreement.id unless @collective_agreement.id.nil?
       worker.worker_type_id = @worker_type.id unless @worker_type.id.nil?
       worker.degree_type_id = @degree_type.id unless @degree_type.id.nil?
       worker.worker_code = generate_worker_code(source.CAPETRA, source.CNOMTRA)
-      worker.user_id = @user.id unless @user.id.nil?
+      if !source.CEMAIL.blank?
+        worker.email = source.CEMAIL
+        worker.user_id = find_user_by_email(source.CEMAIL)
+      end
     end
 
     def generate_worker_code(lastname, firstname)
@@ -227,6 +231,14 @@ render json: @json_data
       end
       
       return code
+    end
+    
+    def find_user_by_email(email)
+      user = User.find_by_email(email)
+      if user.nil?
+        return 0
+      end
+      return user.id
     end
   end
 end
