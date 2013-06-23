@@ -13,4 +13,5 @@ es:
         message: "Espera, importando..."
         go_to_target: "¿Deseas ver a los trabajadores actualizados?"
         result_ok_message_html: "Actualizador de Trabajadores ha finalizado con éxito."
+        result_ok_with_error_message_html: "Actualizador de Trabajadores ha finalizado con errores."
         result_error_message_html: "Error: ¡Actualizador de Trabajadores finalizó inesperadamente!"
