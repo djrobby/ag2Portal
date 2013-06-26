@@ -37,7 +37,7 @@ module Ag2Human
           if !source.nil?
             trabaja = DBF::Table.new(source + "trabaja.dbf")
             trabaja.each do |t|
-              if t.CEMAIL.blank?
+              if t.cemail.blank?
                 next
               end
               nomina_id = e.ccodemp + '-' + t.ccodtra
@@ -161,15 +161,15 @@ render json: @json_data
     end
 
     def update_worker(worker, source)
-      worker.first_name = source.CNOMTRA unless source.CNOMTRA.blank?
-      worker.last_name = source.CAPETRA unless source.CAPETRA.blank?
-      worker.fiscal_id = source.CDNI unless source.CDNI.blank?
-      worker.borned_on = source.DFECNAC unless source.DFECNAC.blank?
+      worker.first_name = source.cnomtra unless source.cnomtra.blank?
+      worker.last_name = source.capetra unless source.capetra.blank?
+      worker.fiscal_id = source.cdni unless source.cdni.blank?
+      worker.borned_on = source.dfecnac unless source.dfecnac.blank?
       worker.street_type_id = @street_type.id unless @street_type.id.blank?
-      worker.street_name = source.CDIRCEN unless source.CDIRCEN.blank?
-      worker.street_number = source.CNUMCEN unless source.CNUMCEN.blank?
-      worker.floor = source.CPISO unless source.CPISO.blank?
-      worker.floor_office = source.CPUERTA unless source.CPUERTA.blank?
+      worker.street_name = source.cdircen unless source.cdircen.blank?
+      worker.street_number = source.cnumcen unless source.cnumcen.blank?
+      worker.floor = source.cpiso unless source.cpiso.blank?
+      worker.floor_office = source.cpuerta unless source.cpuerta.blank?
       worker.zipcode_id = @zipcode.id unless @zipcode.id.blank?
       worker.town_id = @zipcode.town_id unless @zipcode.town_id.blank?
       worker.province_id = @zipcode.province_id unless @zipcode.province_id.blank?
@@ -177,22 +177,22 @@ render json: @json_data
       worker.office_id = @office.id unless @office.id.nil?
       worker.department_id = @department.id unless @department.id.nil?
       worker.professional_group_id = @professional_group.id unless @professional_group.id.nil?
-      worker.position = source.CPUESTO unless source.CPUESTO.nil?
-      worker.starting_at = source.DFECALTA unless source.DFECALTA.blank?
-      worker.issue_starting_at = source.DFECINI unless source.DFECINI.blank?
-      worker.gross_salary = source.NBRUTO unless source.NBRUTO.blank?
-      worker.affiliation_id = source.CNUMSEG unless source.CNUMSEG.blank?
-      worker.contribution_account_code = source.CSUBCTA unless source.CSUBCTA.blank?
-      worker.own_phone = source.CTELEFONO unless source.CTELEFONO.blank?
+      worker.position = source.cpuesto unless source.cpuesto.nil?
+      worker.starting_at = source.dfecalta unless source.dfecalta.blank?
+      worker.issue_starting_at = source.dfecini unless source.dfecini.blank?
+      worker.gross_salary = source.nbruto unless source.nbruto.blank?
+      worker.affiliation_id = source.cnumseg unless source.cnumseg.blank?
+      worker.contribution_account_code = source.csubcta unless source.csubcta.blank?
+      worker.own_phone = source.ctelefono unless source.ctelefono.blank?
       worker.contract_type_id = @contract_type.id unless @contract_type.id.nil?
       worker.collective_agreement_id = @collective_agreement.id unless @collective_agreement.id.nil?
       worker.collective_agreement_id = @collective_agreement.id unless @collective_agreement.id.nil?
       worker.worker_type_id = @worker_type.id unless @worker_type.id.nil?
       worker.degree_type_id = @degree_type.id unless @degree_type.id.nil?
-      worker.worker_code = generate_worker_code(source.CAPETRA, source.CNOMTRA)
-      if !source.CEMAIL.blank?
-        worker.email = source.CEMAIL
-        worker.user_id = find_user_by_email(source.CEMAIL)
+      worker.worker_code = generate_worker_code(source.capetra, source.cnomtra)
+      if !source.cemail.blank?
+        worker.email = source.cemail
+        worker.user_id = find_user_by_email(source.cemail)
       end
     end
 
