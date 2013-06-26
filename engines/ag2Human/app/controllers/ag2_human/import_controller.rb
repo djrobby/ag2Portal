@@ -37,7 +37,8 @@ module Ag2Human
           if !source.nil?
             trabaja = DBF::Table.new(source + "trabaja.dbf")
             trabaja.each do |t|
-              if t.cemail.blank?
+              # Do not import worker with blank email or withdrawal date
+              if t.cemail.blank? || !t.dfecbaj.blank?
                 next
               end
               nomina_id = e.ccodemp + '-' + t.ccodtra
