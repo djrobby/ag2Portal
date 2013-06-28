@@ -31,7 +31,8 @@ module Ag2Human
       empresa = DBF::Table.new(source + "empresa.dbf")
       empresa.each do |e|
         company = Company.find_by_fiscal_id(e.ccif)
-        if !company.nil?
+        office = Office.find_by_nomina_id(e.ccodemp)
+        if !company.nil? && !office.nil?
           # Loop thru 'trabaja.dbf' records for current 'empresa/company' record
           source = source_exist(data_import_config.source, e.ccodemp)
           if !source.nil?
@@ -48,7 +49,7 @@ module Ag2Human
                 # worker = Worker.new
                 # worker.nomina_id = nomina_id
               end
-              #update_worker(worker, t)
+              #update_worker(worker, t, company, office)
               if worker.user_id > 0
                 #if !worker.save
                   # Error: Workers Updater finished unexpectedly!
@@ -161,7 +162,7 @@ render json: @json_data
       @degree_type = DegreeType.first
     end
 
-    def update_worker(worker, source)
+    def update_worker(worker, source, company, office)
       worker.first_name = source.cnomtra unless source.cnomtra.blank?
       worker.last_name = source.capetra unless source.capetra.blank?
       worker.fiscal_id = source.cdni unless source.cdni.blank?
@@ -174,8 +175,8 @@ render json: @json_data
       worker.zipcode_id = @zipcode.id unless @zipcode.id.blank?
       worker.town_id = @zipcode.town_id unless @zipcode.town_id.blank?
       worker.province_id = @zipcode.province_id unless @zipcode.province_id.blank?
-      worker.company_id = @company.id unless @company.id.nil?
-      worker.office_id = @office.id unless @office.id.nil?
+      worker.company_id = company.id unless company.id.blank?
+      worker.office_id = office.id unless office.id.blank?
       worker.department_id = @department.id unless @department.id.nil?
       worker.professional_group_id = @professional_group.id unless @professional_group.id.nil?
       worker.position = source.cpuesto unless source.cpuesto.nil?

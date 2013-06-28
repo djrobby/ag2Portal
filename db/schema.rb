@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130612075743) do
+ActiveRecord::Schema.define(:version => 20130628110745) do
 
   create_table "apps", :force => true do |t|
     t.string   "name"
@@ -186,9 +186,11 @@ ActiveRecord::Schema.define(:version => 20130612075743) do
     t.string   "email"
     t.integer  "created_by"
     t.integer  "updated_by"
+    t.string   "nomina_id"
   end
 
   add_index "offices", ["company_id"], :name => "index_offices_on_company_id"
+  add_index "offices", ["nomina_id"], :name => "index_offices_on_nomina_id"
   add_index "offices", ["office_code"], :name => "index_offices_on_office_code"
   add_index "offices", ["province_id"], :name => "index_offices_on_province_id"
   add_index "offices", ["street_type_id"], :name => "index_offices_on_street_type_id"
