@@ -6,23 +6,23 @@
     <tr>
       <td>Id:</td>
       <td><%= @office.id %></td>
-      <td><%=t 'activerecord.attributes.office.company' %>:</td>
+      <td><%= t 'activerecord.attributes.office.company' %>:</td>
       <td><%= @office.company.name unless @office.company.blank? %></td>
     </tr>
     <tr>
-      <td><%=t 'activerecord.attributes.office.office_code' %>:</td>
+      <td><%= t 'activerecord.attributes.office.office_code' %>:</td>
       <td><%= @office.office_code unless @office.office_code.nil? %></td>
-      <td><%=t 'activerecord.attributes.office.phone' %>:</td>
+      <td><%= t 'activerecord.attributes.office.phone' %>:</td>
       <td><%= @office.phone %></td>
     </tr>
     <tr>
-      <td><%=t 'activerecord.attributes.office.fax' %>:</td>
+      <td><%= t 'activerecord.attributes.office.fax' %>:</td>
       <td><%= @office.fax %></td>
-      <td><%=t 'activerecord.attributes.office.cellular' %>:</td>
+      <td><%= t 'activerecord.attributes.office.cellular' %>:</td>
       <td><%= @office.cellular %></td>
     </tr>
     <tr>
-      <td><%=t 'activerecord.attributes.office.address' %>:</td>
+      <td><%= t 'activerecord.attributes.office.address' %>:</td>
       <td> <%= @office.street_type.street_type_code.titleize  %>. <%= @office.street_name %> <%= @office.street_number %>
       <% if !@office.building.nil? %>
       <%= @office.building.titleize %>
@@ -37,17 +37,25 @@
       <td></td>
     </tr>
     <tr>
-      <td><%=t 'activerecord.attributes.office.town' %>:</td>
+      <td><%= t 'activerecord.attributes.office.town' %>:</td>
       <td><%= @office.town.name %></td>
-      <td><%=t 'activerecord.attributes.office.province' %>:</td>
+      <td><%= t 'activerecord.attributes.office.province' %>:</td>
       <td><%= @office.province.name_and_region %></td>
     </tr>
     <tr>
-      <td><%=t 'activerecord.attributes.office.zipcode' %>:</td>
+      <td><%= t 'activerecord.attributes.office.zipcode' %>:</td>
       <td><%= @office.zipcode.zipcode %></td>
-      <td><%=t 'activerecord.attributes.office.email' %>:</td>
+      <td><%= t 'activerecord.attributes.office.email' %>:</td>
       <td><%= @office.email %></td>
     </tr>
+    <% if (current_user.has_role? :Administrator) || (current_user.has_role? :ag2Human_User) || (current_user.has_role? :ag2Human_Guest) %>
+    <tr>
+      <td><%= t 'activerecord.attributes.office.nomina_id' %>:</td>
+      <td><%= @office.nomina_id unless @office.nomina_id.blank? %></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <% end %>
     <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @office } %>
     <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @office } %>
   </tbody>

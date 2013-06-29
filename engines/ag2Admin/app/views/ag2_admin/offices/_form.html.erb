@@ -71,11 +71,14 @@
   <label class="multi-field-label-three"> <%= f.association :province, collection: Province.all(order: 'name'), :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
 </div>
 <%= f.input :email, :input_html => { :class => 'large-text-field' }, :label_html => { :class => 'form-label' } %>
+<% if (current_user.has_role? :Administrator) || (current_user.has_role? :ag2Human_User) || (current_user.has_role? :ag2Human_Guest) %>
+<%= f.input :nomina_id, :input_html => { :class => 'small-text-field' }, :label_html => { :class => 'form-label' } %>
+<% end %>
 <table class="form-table">
   <tbody>
     <tr class="form-tr">
       <td class="form-td-two left-winged"> <%= f.button :submit, :class => 'btn-primary' %> </td>
-      <td class="form-td-two right-winged"><a href="#" id="generate_code_btn" class="btn btn-warning"><%=t 'ag2_admin.offices.generate_code_btn'%></a></td>
+      <td class="form-td-two right-winged"><a href="#" id="generate_code_btn" class="btn btn-warning"><%= t 'ag2_admin.offices.generate_code_btn'%></a></td>
     </tr>
   </tbody>
 </table>

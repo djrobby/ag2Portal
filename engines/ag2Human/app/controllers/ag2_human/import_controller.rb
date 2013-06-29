@@ -30,26 +30,41 @@ module Ag2Human
       # Loop thru 'empresa' records
       empresa = DBF::Table.new(source + "empresa.dbf")
       empresa.each do |e|
-        company = Company.find_by_fiscal_id(e.ccif)
+        # Do not import deleted 'empresa'
+        if e.nil?
+          next
+        end
+        # Search linked office
         office = Office.find_by_nomina_id(e.ccodemp)
-        if !company.nil? && !office.nil?
+        if !office.nil?
+          company = office.company
           # Loop thru 'trabaja.dbf' records for current 'empresa/company' record
           source = source_exist(data_import_config.source, e.ccodemp)
           if !source.nil?
             trabaja = DBF::Table.new(source + "trabaja.dbf")
             trabaja.each do |t|
-              # Do not import worker with blank email or withdrawal date
-              if t.cemail.blank? || !t.dfecbaj.blank?
+              # Do not import deleted worker
+              if t.nil?
                 next
               end
+              # Do not import worker with withdrawal date
+              if !t.dfecbaj.blank?
+                next
+              end
+              new_worker = false
               nomina_id = e.ccodemp + '-' + t.ccodtra
               worker = Worker.find_by_nomina_id(nomina_id)
               if worker.nil?
+                # Do not import new worker with blank email
+                if t.cemail.blank?
+                  next
+                end
                 # Add new worker from source
-                # worker = Worker.new
-                # worker.nomina_id = nomina_id
+                new_worker = true
+                worker = Worker.new
+                worker.nomina_id = nomina_id
               end
-              #update_worker(worker, t, company, office)
+              update_worker(worker, t, company, office, new_worker)
               if worker.user_id > 0
                 #if !worker.save
                   # Error: Workers Updater finished unexpectedly!
@@ -150,9 +165,9 @@ render json: @json_data
     end
 
     def set_defaults
+      #@company = Company.first
+      #@office = Office.find_by_company_id(@company)
       @street_type = StreetType.first
-      @company = Company.first
-      @office = Office.find_by_company_id(@company)
       @department = Department.first
       @professional_group = ProfessionalGroup.first
       @contract_type = ContractType.first
@@ -162,39 +177,43 @@ render json: @json_data
       @degree_type = DegreeType.first
     end
 
-    def update_worker(worker, source, company, office)
-      worker.first_name = source.cnomtra unless source.cnomtra.blank?
-      worker.last_name = source.capetra unless source.capetra.blank?
-      worker.fiscal_id = source.cdni unless source.cdni.blank?
-      worker.borned_on = source.dfecnac unless source.dfecnac.blank?
-      worker.street_type_id = @street_type.id unless @street_type.id.blank?
-      worker.street_name = source.cdircen unless source.cdircen.blank?
-      worker.street_number = source.cnumcen unless source.cnumcen.blank?
-      worker.floor = source.cpiso unless source.cpiso.blank?
-      worker.floor_office = source.cpuerta unless source.cpuerta.blank?
-      worker.zipcode_id = @zipcode.id unless @zipcode.id.blank?
-      worker.town_id = @zipcode.town_id unless @zipcode.town_id.blank?
-      worker.province_id = @zipcode.province_id unless @zipcode.province_id.blank?
-      worker.company_id = company.id unless company.id.blank?
-      worker.office_id = office.id unless office.id.blank?
-      worker.department_id = @department.id unless @department.id.nil?
-      worker.professional_group_id = @professional_group.id unless @professional_group.id.nil?
-      worker.position = source.cpuesto unless source.cpuesto.nil?
-      worker.starting_at = source.dfecalta unless source.dfecalta.blank?
-      worker.issue_starting_at = source.dfecini unless source.dfecini.blank?
-      worker.gross_salary = source.nbruto unless source.nbruto.blank?
-      worker.affiliation_id = source.cnumseg unless source.cnumseg.blank?
-      worker.contribution_account_code = source.csubcta unless source.csubcta.blank?
-      worker.own_phone = source.ctelefono unless source.ctelefono.blank?
-      worker.contract_type_id = @contract_type.id unless @contract_type.id.nil?
-      worker.collective_agreement_id = @collective_agreement.id unless @collective_agreement.id.nil?
-      worker.collective_agreement_id = @collective_agreement.id unless @collective_agreement.id.nil?
-      worker.worker_type_id = @worker_type.id unless @worker_type.id.nil?
-      worker.degree_type_id = @degree_type.id unless @degree_type.id.nil?
-      worker.worker_code = generate_worker_code(source.capetra, source.cnomtra)
-      if !source.cemail.blank?
-        worker.email = source.cemail
-        worker.user_id = find_user_by_email(source.cemail)
+    def update_worker(worker, source, company, office, new)
+      if new
+        worker.first_name = source.cnomtra unless source.cnomtra.blank?
+        worker.last_name = source.capetra unless source.capetra.blank?
+        worker.fiscal_id = source.cdni unless source.cdni.blank?
+        worker.borned_on = source.dfecnac unless source.dfecnac.blank?
+        worker.street_type_id = @street_type.id unless @street_type.id.blank?
+        worker.street_name = source.cdircen unless source.cdircen.blank?
+        worker.street_number = source.cnumcen unless source.cnumcen.blank?
+        worker.floor = source.cpiso unless source.cpiso.blank?
+        worker.floor_office = source.cpuerta unless source.cpuerta.blank?
+        worker.zipcode_id = @zipcode.id unless @zipcode.id.blank?
+        worker.town_id = @zipcode.town_id unless @zipcode.town_id.blank?
+        worker.province_id = @zipcode.province_id unless @zipcode.province_id.blank?
+        worker.company_id = company.id unless company.id.blank?
+        worker.office_id = office.id unless office.id.blank?
+        worker.department_id = @department.id unless @department.id.nil?
+        worker.professional_group_id = @professional_group.id unless @professional_group.id.nil?
+        worker.position = source.cpuesto unless source.cpuesto.nil?
+        worker.starting_at = source.dfecalta unless source.dfecalta.blank?
+        worker.issue_starting_at = source.dfecini unless source.dfecini.blank?
+        worker.gross_salary = source.nbruto unless source.nbruto.blank?
+        worker.affiliation_id = source.cnumseg unless source.cnumseg.blank?
+        worker.contribution_account_code = source.csubcta unless source.csubcta.blank?
+        worker.own_phone = source.ctelefono unless source.ctelefono.blank?
+        worker.contract_type_id = @contract_type.id unless @contract_type.id.nil?
+        worker.collective_agreement_id = @collective_agreement.id unless @collective_agreement.id.nil?
+        worker.collective_agreement_id = @collective_agreement.id unless @collective_agreement.id.nil?
+        worker.worker_type_id = @worker_type.id unless @worker_type.id.nil?
+        worker.degree_type_id = @degree_type.id unless @degree_type.id.nil?
+        worker.worker_code = generate_worker_code(source.capetra, source.cnomtra)
+        if !source.cemail.blank?
+          worker.email = source.cemail
+          worker.user_id = find_user_by_email(source.cemail)
+        end
+      else
+        worker.gross_salary = source.nbruto unless source.nbruto.blank?
       end
     end
 

@@ -16,6 +16,6 @@ es:
         title: "Editar Oficina"
         btn_show: "Ver Oficina"
       new:
-        title: "Nueva Empresa"
+        title: "Nueva Oficina"
       back_to_main_page: "Volver a Oficinas"
       generate_code_btn: "Código de Oficina"

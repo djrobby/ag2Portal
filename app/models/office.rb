@@ -8,7 +8,7 @@ class Office < ActiveRecord::Base
   attr_accessible :name, :company_id, :office_code,
                   :street_type_id, :street_name, :street_number, :building, :floor, :floor_office,
                   :zipcode_id, :town_id, :province_id, :phone, :fax, :cellular, :email,
-                  :created_by, :updated_by
+                  :created_by, :updated_by, :nomina_id
 
   has_paper_trail
 
