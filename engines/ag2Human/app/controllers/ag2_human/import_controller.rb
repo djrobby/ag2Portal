@@ -66,12 +66,12 @@ module Ag2Human
               end
               update_worker(worker, t, company, office, new_worker)
               if worker.user_id > 0
-                #if !worker.save
+                if !worker.save
                   # Error: Workers Updater finished unexpectedly!
-                  #message = I18n.t("result_error_message_html", :scope => :"ag2_human.import.index")
-                  #@json_data = { "DataImport" => message, "Result" => "ERROR" }
-                  #break
-                #end
+                  message = I18n.t("result_error_message_html", :scope => :"ag2_human.import.index")
+                  @json_data = { "DataImport" => message, "Result" => "ERROR" }
+                  break
+                end
               end
             end
           end
@@ -179,12 +179,13 @@ render json: @json_data
 
     def update_worker(worker, source, company, office, new)
       if new
-        worker.first_name = source.cnomtra unless source.cnomtra.blank?
-        worker.last_name = source.capetra unless source.capetra.blank?
+        # Add new row data
+        worker.first_name = source.cnomtra.gsub(/[^0-9A-Za-z ]/, '').titleize unless source.cnomtra.blank?
+        worker.last_name = source.capetra.gsub(/[^0-9A-Za-z ]/, '').titleize unless source.capetra.blank?
         worker.fiscal_id = source.cdni unless source.cdni.blank?
         worker.borned_on = source.dfecnac unless source.dfecnac.blank?
         worker.street_type_id = @street_type.id unless @street_type.id.blank?
-        worker.street_name = source.cdircen unless source.cdircen.blank?
+        worker.street_name = source.cdircen.gsub(/[^0-9A-Za-z ]/, '').titleize unless source.cdircen.blank?
         worker.street_number = source.cnumcen unless source.cnumcen.blank?
         worker.floor = source.cpiso unless source.cpiso.blank?
         worker.floor_office = source.cpuerta unless source.cpuerta.blank?
@@ -195,10 +196,8 @@ render json: @json_data
         worker.office_id = office.id unless office.id.blank?
         worker.department_id = @department.id unless @department.id.nil?
         worker.professional_group_id = @professional_group.id unless @professional_group.id.nil?
-        worker.position = source.cpuesto unless source.cpuesto.nil?
         worker.starting_at = source.dfecalta unless source.dfecalta.blank?
         worker.issue_starting_at = source.dfecini unless source.dfecini.blank?
-        worker.gross_salary = source.nbruto unless source.nbruto.blank?
         worker.affiliation_id = source.cnumseg unless source.cnumseg.blank?
         worker.contribution_account_code = source.csubcta unless source.csubcta.blank?
         worker.own_phone = source.ctelefono unless source.ctelefono.blank?
@@ -208,12 +207,23 @@ render json: @json_data
         worker.worker_type_id = @worker_type.id unless @worker_type.id.nil?
         worker.degree_type_id = @degree_type.id unless @degree_type.id.nil?
         worker.worker_code = generate_worker_code(source.capetra, source.cnomtra)
+        # Mandatory e-mail and user info
         if !source.cemail.blank?
           worker.email = source.cemail
           worker.user_id = find_user_by_email(source.cemail)
         end
-      else
-        worker.gross_salary = source.nbruto unless source.nbruto.blank?
+        # Check out other mandatory default data
+        if worker.fiscal_id.blank?
+          worker.fiscal_id = worker.worker_code + "0000"
+        end
+        if worker.contribution_account_code.blank?
+          worker.contribution_account_code = "no_existe"
+        end
+      end
+      # Update current row data
+      worker.gross_salary = source.nbruto unless source.nbruto.blank?
+      if worker.position.blank?
+        worker.position = source.cpuesto.gsub(/[^0-9A-Za-z ]/, '').titleize unless source.cpuesto.nil?
       end
     end
 
