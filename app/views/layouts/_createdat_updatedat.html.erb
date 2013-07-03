@@ -1,6 +1,14 @@
 <tr>
   <td><%= t :created_at %>:</td>
+  <% if ivar == @time_record %>
+  <td><%= ivar.created_at.strftime("%d/%m/%Y %H:%M:%S") %></td>
+  <% else %>
   <td><%= ivar.created_at.utc.getlocal.strftime("%d/%m/%Y %H:%M:%S") %></td>
+  <% end %>
   <td><%= t :updated_at %>:</td>
+  <% if ivar == @time_record && ivar.created_by == ivar.updated_by %>
+  <td><%= ivar.created_at.strftime("%d/%m/%Y %H:%M:%S") %></td>
+  <% else %>
   <td><%= ivar.updated_at.utc.getlocal.strftime("%d/%m/%Y %H:%M:%S") %></td>
+  <% end %>
 </tr>
