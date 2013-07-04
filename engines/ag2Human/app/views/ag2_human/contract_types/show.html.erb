@@ -12,8 +12,8 @@
     <tr>
       <td><%=t 'activerecord.attributes.contract_type.name' %>:</td>
       <td><%= @contract_type.name %></td>
-      <td></td>
-      <td></td>
+      <td><%= t :"activerecord.attributes.contract_type.nomina_id" %>:</td>
+      <td><%= @contract_type.nomina_id unless @contract_type.nomina_id.blank? %></td>
     </tr>
     <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @contract_type } %>
     <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @contract_type } %>

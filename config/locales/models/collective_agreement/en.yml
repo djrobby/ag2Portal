@@ -10,3 +10,4 @@ en:
       collective_agreement:
         ca_code: "Code"
         name: "Name"
+        nomina_id: "N+ Id"

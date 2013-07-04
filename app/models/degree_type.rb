@@ -1,6 +1,6 @@
 class DegreeType < ActiveRecord::Base
   attr_accessible :dt_code, :name,
-                  :created_by, :updated_by
+                  :created_by, :updated_by, :nomina_id
 
   has_paper_trail
 

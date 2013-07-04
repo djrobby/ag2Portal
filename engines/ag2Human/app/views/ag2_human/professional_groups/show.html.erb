@@ -12,8 +12,8 @@
     <tr>
       <td><%=t 'activerecord.attributes.professional_group.name' %>:</td>
       <td><%= @professional_group.name %></td>
-      <td></td>
-      <td></td>
+      <td><%= t :"activerecord.attributes.professional_group.nomina_id" %>:</td>
+      <td><%= @professional_group.nomina_id unless @professional_group.nomina_id.blank? %></td>
     </tr>
     <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @professional_group } %>
     <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @professional_group } %>

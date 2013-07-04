@@ -10,3 +10,4 @@ en:
       professional_group:
         pg_code: "Code"
         name: "Name"
+        nomina_id: "N+ Id"

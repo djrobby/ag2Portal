@@ -12,8 +12,8 @@
     <tr>
       <td><%=t 'activerecord.attributes.degree_type.name' %>:</td>
       <td><%= @degree_type.name %></td>
-      <td></td>
-      <td></td>
+      <td><%= t :"activerecord.attributes.degree_type.nomina_id" %>:</td>
+      <td><%= @degree_type.nomina_id unless @degree_type.nomina_id.blank? %></td>
     </tr>
     <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @degree_type } %>
     <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @degree_type } %>

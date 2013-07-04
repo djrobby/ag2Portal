@@ -10,3 +10,4 @@ en:
       contract_type:
         ct_code: "Code"
         name: "Name"
+        nomina_id: "N+ Id"

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130628110745) do
+ActiveRecord::Schema.define(:version => 20130704160504) do
 
   create_table "apps", :force => true do |t|
     t.string   "name"
@@ -36,9 +36,11 @@ ActiveRecord::Schema.define(:version => 20130628110745) do
     t.datetime "updated_at", :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
+    t.string   "nomina_id"
   end
 
   add_index "collective_agreements", ["ca_code"], :name => "index_collective_agreements_on_ca_code"
+  add_index "collective_agreements", ["nomina_id"], :name => "index_collective_agreements_on_nomina_id"
 
   create_table "companies", :force => true do |t|
     t.string   "name"
@@ -84,9 +86,11 @@ ActiveRecord::Schema.define(:version => 20130628110745) do
     t.datetime "updated_at", :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
+    t.string   "nomina_id"
   end
 
   add_index "contract_types", ["ct_code"], :name => "index_contract_types_on_ct_code"
+  add_index "contract_types", ["nomina_id"], :name => "index_contract_types_on_nomina_id"
 
   create_table "corp_contacts", :force => true do |t|
     t.string   "first_name"
@@ -150,9 +154,11 @@ ActiveRecord::Schema.define(:version => 20130628110745) do
     t.datetime "updated_at", :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
+    t.string   "nomina_id"
   end
 
   add_index "degree_types", ["dt_code"], :name => "index_degree_types_on_dt_code"
+  add_index "degree_types", ["nomina_id"], :name => "index_degree_types_on_nomina_id"
 
   create_table "departments", :force => true do |t|
     t.string   "name"
@@ -204,8 +210,10 @@ ActiveRecord::Schema.define(:version => 20130628110745) do
     t.datetime "updated_at", :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
+    t.string   "nomina_id"
   end
 
+  add_index "professional_groups", ["nomina_id"], :name => "index_professional_groups_on_nomina_id"
   add_index "professional_groups", ["pg_code"], :name => "index_professional_groups_on_pg_code"
 
   create_table "provinces", :force => true do |t|
