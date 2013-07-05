@@ -177,8 +177,50 @@ render json: @json_data
       @degree_type = DegreeType.first
     end
 
+    def search_aux_data(source)
+      # Street type
+      if !source.ccodvia.blank?
+        @street_type = StreetType.find_by_street_type_code(source.ccodvia)
+        if @street_type.nil
+          @street_type = StreetType.first
+        end
+      end
+      # ZIP code
+      if !source.ccodpos.blank?
+        @zipcode = Zipcode.find_by_zipcode(source.ccodpos)
+        if @zipcode.nil
+          @zipcode = Zipcode.first
+        end
+      end
+      # Professional group
+      if !source.ccodcat.blank?
+        @professional_group = ProfessionalGroup.find_by_nomina_id(source.ccodcat)
+        if @professional_group.nil
+          @professional_group = ProfessionalGroup.first
+        end
+      end
+      # Contract type
+      if !source.ccodcon.blank?
+        @contract_type = ContractType.find_by_nomina_id(source.ccodcon)
+        if @contract_type.nil
+          @contract_type = ContractType.first
+        end
+      end
+      # Collective agreement
+      if !source.ccodconv.blank?
+        @collective_agreement = CollectiveAgreement.find_by_nomina_id(source.ccodconv)
+        if @collective_agreement.nil
+          @collective_agreement = CollectiveAgreement.first
+        end
+      end
+      # Degree type
+      # Where is it in trabaja.dbf?
+    end
+    
     def update_worker(worker, source, company, office, new)
       if new
+        # Look for default auxiliary data
+        search_aux_data(source)
         # Add new row data
         worker.first_name = source.cnomtra.gsub(/[^0-9A-Za-z ]/, '').titleize unless source.cnomtra.blank?
         worker.last_name = source.capetra.gsub(/[^0-9A-Za-z ]/, '').titleize unless source.capetra.blank?
