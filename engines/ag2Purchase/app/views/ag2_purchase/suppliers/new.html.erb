@@ -1,5 +1,7 @@
-<h1>New supplier</h1>
+<%= render '/layouts/ag2_human/suppliersbreadcrumb' %>
+
+<h3><%=t '.title' %></h3>
 
 <%= render 'form' %>
 
-<%= link_to 'Back', suppliers_path %>
+<%= link_to I18n.t("ag2_purchase.suppliers.back_to_main_page"), suppliers_path %>

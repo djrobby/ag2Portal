@@ -19,3 +19,4 @@ es:
       new:
         title: "Nuevo Proveedor"
       back_to_main_page: "Volver a Proveedores"
+      generate_code_btn: "Código de Proveedor"

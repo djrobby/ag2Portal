@@ -19,3 +19,4 @@ en:
       new:
         title: "New Supplier"
       back_to_main_page: "Back to Suppliers"
+      generate_code_btn: "Supplier Code"
