@@ -1,0 +1,45 @@
+<%= render '/layouts/ag2_purchase/purchasebreadcrumb' %>
+
+<!-- Apps Thumbnails -->
+<ul class="thumbnails">
+  <!-- Apps 1 -->
+  <li class="span4">
+    <% if (session[:resolution] == "LD")%>
+    <a href="<%= suppliers_path %>" class="thumbnail centered"><img src="/assets/icon/ag2Suppliers.png" width="48" height="48" alt="ag2Suppliers" /><h5 class="h5-narrow">ag2Suppliers</h5></a>
+    <% elsif session[:resolution] == "SD" %>
+    <a href="<%= suppliers_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/ag2Suppliers.png" width="96" height="96" alt="ag2Suppliers" /><h5 class="h5-narrow">ag2Suppliers</h5></a>
+    <% else %>
+    <a href="<%= suppliers_path %>" class="thumbnail centered"><img src="/assets/pict/ag2Suppliers.png" width="128" height="128" alt="ag2Suppliers" /><h5 class="h5-narrow">ag2Suppliers</h5></a>
+    <% end %>
+  </li>
+  <li class="span4">
+    <% if (session[:resolution] == "LD")%>
+    <a href="<%= suppliers_path %>" class="thumbnail centered"><img src="/assets/icon/ag2Offers.png" width="48" height="48" alt="ag2OfferRequests" /><h5 class="h5-narrow">ag2OfferRequests</h5></a>
+    <% elsif session[:resolution] == "SD" %>
+    <a href="<%= suppliers_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/ag2Offers.png" width="96" height="96" alt="ag2OfferRequests" /><h5 class="h5-narrow">ag2OfferRequests</h5></a>
+    <% else %>
+    <a href="<%= suppliers_path %>" class="thumbnail centered"><img src="/assets/pict/ag2Offers.png" width="128" height="128" alt="ag2OfferRequests" /><h5 class="h5-narrow">ag2OfferRequests</h5></a>
+    <% end %>
+  </li>
+  <li class="span4">
+    <% if (session[:resolution] == "LD")%>
+    <a href="<%= suppliers_path %>" class="thumbnail centered"><img src="/assets/icon/ag2Orders.png" width="48" height="48" alt="ag2PurchaseOrders" /><h5 class="h5-narrow">ag2PurchaseOrders</h5></a>
+    <% elsif session[:resolution] == "SD" %>
+    <a href="<%= suppliers_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/ag2Orders.png" width="96" height="96" alt="ag2PurchaseOrders" /><h5 class="h5-narrow">ag2PurchaseOrders</h5></a>
+    <% else %>
+    <a href="<%= suppliers_path %>" class="thumbnail centered"><img src="/assets/pict/ag2Orders.png" width="128" height="128" alt="ag2PurchaseOrders" /><h5 class="h5-narrow">ag2PurchaseOrders</h5></a>
+    <% end %>
+  </li>
+</ul><!-- /.thumbnails -->
+<ul class="thumbnails">
+  <!-- Apps 2 -->
+  <li class="span4">
+    <% if (session[:resolution] == "LD")%>
+    <a href="<%= suppliers_path %>" class="thumbnail centered"><img src="/assets/icon/ag2Receipts.png" width="48" height="48" alt="ag2ReceiptNotes" /><h5 class="h5-narrow">ag2ReceiptNotes</h5></a>
+    <% elsif session[:resolution] == "SD" %>
+    <a href="<%= suppliers_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/ag2Receipts.png" width="96" height="96" alt="ag2ReceiptNotes" /><h5 class="h5-narrow">ag2ReceiptNotes</h5></a>
+    <% else %>
+    <a href="<%= suppliers_path %>" class="thumbnail centered"><img src="/assets/pict/ag2Receipts.png" width="128" height="128" alt="ag2ReceiptNotes" /><h5 class="h5-narrow">ag2ReceiptNotes</h5></a>
+    <% end %>
+  </li>
+</ul><!-- /.thumbnails -->

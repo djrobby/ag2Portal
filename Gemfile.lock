@@ -22,6 +22,12 @@ PATH
     ag2_human (0.0.1)
       rails (~> 3.2.12)
 
+PATH
+  remote: engines/ag2Purchase
+  specs:
+    ag2_purchase (0.0.1)
+      rails (~> 3.2.12)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -250,6 +256,7 @@ DEPENDENCIES
   ag2_directory!
   ag2_help_desk!
   ag2_human!
+  ag2_purchase!
   bootstrap-sass
   cancan
   capistrano

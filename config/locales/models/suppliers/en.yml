@@ -1,0 +1,13 @@
+en:
+  activerecord:
+    models:
+      supplier:
+        zero:  Suppliers
+        one:   Supplier
+        few:   Suppliers
+        other: Suppliers
+    attributes:
+      supplier:
+        name: "Name"
+        fiscal_id: "Fiscal Id"
+        supplier_code: "Code"

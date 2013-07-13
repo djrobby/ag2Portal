@@ -1,0 +1,3 @@
+= Ag2Purchase
+
+This project rocks and uses MIT-LICENSE.

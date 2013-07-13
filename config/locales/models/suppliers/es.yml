@@ -1,0 +1,13 @@
+es:
+  activerecord:
+    models:
+      supplier:
+        zero:  Proveedores
+        one:   Proveedor
+        few:   Proveedores
+        other: Proveedores
+    attributes:
+      supplier:
+        name: "Nombre"
+        fiscal_id: "Id Fiscal CIF/NIF"
+        supplier_code: "Código"

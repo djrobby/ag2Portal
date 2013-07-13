@@ -1,6 +1,4 @@
 Ag2Human::Engine.routes.draw do
-  get "ag2_timerecord_track/index"
-
   scope "(:locale)", :locale => /en|es/ do
     # Get
     get "home/index"

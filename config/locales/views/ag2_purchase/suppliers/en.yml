@@ -1,0 +1,21 @@
+en:
+  ag2_purchase:
+    suppliers:
+      index:
+        title: "Suppliers"
+        btn_new: "New Supplier"
+        back_to_root: "Back to ag2Purchase"
+        label_office: "Office"
+        label_company: "Company"
+        label_others: "Others"
+        btn_apply: "Apply Filter"
+      show:
+        title: "Supplier"
+        btn_edit: "Edit Supplier"
+        btn_delete: "Delete Supplier"
+      edit:
+        title: "Edit Supplier"
+        btn_show: "Show Supplier"
+      new:
+        title: "New Supplier"
+      back_to_main_page: "Back to Suppliers"

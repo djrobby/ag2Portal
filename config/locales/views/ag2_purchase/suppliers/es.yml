@@ -1,0 +1,21 @@
+es:
+  ag2_purchase:
+    suppliers:
+      index:
+        title: "Proveedores"
+        btn_new: "Nuevo Proveedor"
+        back_to_root: "Volver a ag2Purchase"
+        label_office: "Office"
+        label_company: "Company"
+        label_others: "Others"
+        btn_apply: "Apply Filter"
+      show:
+        title: "Proveedor"
+        btn_edit: "Editar Proveedor"
+        btn_delete: "Borrar Proveedor"
+      edit:
+        title: "Editar Proveedor"
+        btn_show: "Ver Proveedor"
+      new:
+        title: "Nuevo Proveedor"
+      back_to_main_page: "Volver a Proveedores"
