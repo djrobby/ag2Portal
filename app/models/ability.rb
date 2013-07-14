@@ -128,6 +128,14 @@ class Ability
       cannot :manage, TicketStatus
       can :create, Ticket
     end
+    # ag2Purchase
+    if user.has_role? :ag2Purchase_User
+      can :crud, Supplier
+    elsif user.has_role? :ag2Purchase_Guest
+      can :read, Supplier
+    elsif user.has_role? :ag2Purchase_Banned
+      cannot :manage, Supplier
+    end
 
   # Define abilities for the passed in user here. For example:
   #

@@ -1,6 +1,8 @@
 class Supplier < ActiveRecord::Base
   attr_accessible :fiscal_id, :name, :supplier_code
 
+  has_paper_trail
+
   validates :name,                :presence => true
   validates :supplier_code,       :presence => true,
                                   :length => { :minimum => 5 },
