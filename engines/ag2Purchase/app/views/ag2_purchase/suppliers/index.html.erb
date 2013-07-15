@@ -1,21 +1,30 @@
-<h1>Listing suppliers</h1>
+<%= render '/layouts/ag2_purchase/suppliersbreadcrumb' %>
+<%= render :partial => '/layouts/searchhead', :locals => { :title => I18n.t("ag2_purchase.suppliers.index.title"), :path => suppliers_path } %>
 
-<table>
-  <tr>
-    <th></th>
-    <th></th>
-    <th></th>
-  </tr>
-
-<% @suppliers.each do |supplier| %>
-  <tr>
-    <td><%= link_to 'Show', supplier %></td>
-    <td><%= link_to 'Edit', edit_supplier_path(supplier) %></td>
-    <td><%= link_to 'Destroy', supplier, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-  </tr>
-<% end %>
-</table>
-
-<br />
-
-<%= link_to 'New Supplier', new_supplier_path %>
+<div class="span11">
+  <%= render :partial => '/layouts/lettershead', :locals => { :controller => "suppliers", :action => "index" } %>
+  <table class="table table-condensed table-striped">
+    <thead>
+      <tr>
+        <th><%=t 'activerecord.attributes.supplier.supplier_code' %></th>
+        <th><%=t 'activerecord.attributes.supplier.name' %></th>
+        <th><%=t 'activerecord.attributes.supplier.fiscal_id' %></th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @suppliers.each do |supplier| %>
+      <tr>
+        <td><%= link_to supplier.supplier_code, supplier %></td>
+        <td><%= supplier.name %></td>
+        <td><%= supplier.fiscal_id %></td>
+        <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => Supplier, :path => edit_supplier_path(supplier) } %>
+        <%= render :partial => '/layouts/crud/delete', :locals => { :model => Supplier, :path => supplier, :msg => I18n.t("activerecord.models.supplier.one"), :txt => supplier.name } %> </td>
+      </tr>
+      <% end %>
+    </tbody>
+  </table>
+  <%= render :partial => '/layouts/pagination', :locals => { :ivar => @suppliers } %>
+  <%= render :partial => '/layouts/crud/new', :locals => { :model => Supplier, :path => new_supplier_path, :txt => I18n.t("ag2_purchase.suppliers.index.btn_new") } %>
+  <%= link_to I18n.t("ag2_purchase.suppliers.index.back_to_root"), ag2_purchase.root_path %>
+</div>

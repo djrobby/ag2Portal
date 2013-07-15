@@ -1,5 +1,26 @@
-<p id="notice"><%= notice %></p>
+<%= render '/layouts/ag2_purchase/suppliersbreadcrumb' %>
 
+<h3><%=t '.title' %></h3>
+<table class="table">
+  <tbody>
+    <tr>
+      <td>Id:</td>
+      <td><%= @supplier.id %></td>
+      <td><%=t 'activerecord.attributes.supplier.supplier_code' %>:</td>
+      <td><%= @supplier.supplier_code %></td>
+    </tr>
+    <tr>
+      <td><%=t 'activerecord.attributes.supplier.name' %>:</td>
+      <td><%= @supplier.name %></td>
+      <td><%=t 'activerecord.attributes.supplier.fiscal_id' %>:</td>
+      <td><%= @supplier.fiscal_id %></td>
+    </tr>
+    <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @supplier } %>
+    <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @supplier } %>
+  </tbody>
+</table>
 
-<%= link_to 'Edit', edit_supplier_path(@supplier) %> |
-<%= link_to 'Back', suppliers_path %>
+<%= render :partial => '/layouts/crud/update_delete',
+:locals => { :model => Suppler, :update_path => edit_supplier_path(@supplier), :update_txt => I18n.t('ag2_purchase.suppliers.show.btn_edit'),
+:delete_path => @supplier, :delete_txt => I18n.t('ag2_purchase.suppliers.show.btn_delete'),
+:msg => I18n.t("activerecord.models.supplier.one"), :txt => @supplier.name } %>

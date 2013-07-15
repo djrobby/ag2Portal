@@ -79,6 +79,8 @@ module Ag2Purchase
     # GET /suppliers.json
     def index
       #@suppliers = Supplier.all
+      letter = params[:letter]
+      
       @search = Supplier.search do
         fulltext params[:search]
         order_by :supplier_code, :asc
