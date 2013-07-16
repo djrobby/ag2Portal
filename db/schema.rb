@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130714100026) do
+ActiveRecord::Schema.define(:version => 20130716084107) do
 
   create_table "apps", :force => true do |t|
     t.string   "name"
@@ -333,15 +333,41 @@ ActiveRecord::Schema.define(:version => 20130714100026) do
     t.string   "name"
     t.string   "supplier_code"
     t.string   "fiscal_id"
-    t.datetime "created_at",    :null => false
-    t.datetime "updated_at",    :null => false
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
+    t.integer  "street_type_id"
+    t.string   "street_name"
+    t.string   "street_number"
+    t.string   "building"
+    t.integer  "floor"
+    t.string   "floor_office"
+    t.integer  "zipcode_id"
+    t.integer  "town_id"
+    t.integer  "province_id"
+    t.string   "phone"
+    t.string   "fax"
+    t.string   "cellular"
+    t.string   "email"
+    t.integer  "region_id"
+    t.integer  "country_id"
   end
 
+  add_index "suppliers", ["cellular"], :name => "index_suppliers_on_cellular"
+  add_index "suppliers", ["country_id"], :name => "index_suppliers_on_country_id"
+  add_index "suppliers", ["email"], :name => "index_suppliers_on_email"
+  add_index "suppliers", ["fax"], :name => "index_suppliers_on_fax"
   add_index "suppliers", ["fiscal_id"], :name => "index_suppliers_on_fiscal_id"
   add_index "suppliers", ["name"], :name => "index_suppliers_on_name"
+  add_index "suppliers", ["phone"], :name => "index_suppliers_on_phone"
+  add_index "suppliers", ["province_id"], :name => "index_suppliers_on_province_id"
+  add_index "suppliers", ["region_id"], :name => "index_suppliers_on_region_id"
+  add_index "suppliers", ["street_name"], :name => "index_suppliers_on_street_name"
+  add_index "suppliers", ["street_type_id"], :name => "index_suppliers_on_street_type_id"
   add_index "suppliers", ["supplier_code"], :name => "index_suppliers_on_supplier_code"
+  add_index "suppliers", ["town_id"], :name => "index_suppliers_on_town_id"
+  add_index "suppliers", ["zipcode_id"], :name => "index_suppliers_on_zipcode_id"
 
   create_table "technicians", :force => true do |t|
     t.string   "name"

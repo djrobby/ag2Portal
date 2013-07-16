@@ -14,6 +14,7 @@ class StreetType < ActiveRecord::Base
   has_many :companies
   has_many :workers
   has_many :shared_contacts
+  has_many :suppliers
   def street_type_code_to_uppercase
     self[:street_type_code].upcase!
   end

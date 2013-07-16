@@ -15,6 +15,7 @@ class Province < ActiveRecord::Base
   has_many :offices
   has_many :workers
   has_many :shared_contacts
+  has_many :suppliers
   def to_label
     "#{name} (#{region.name})"
   end

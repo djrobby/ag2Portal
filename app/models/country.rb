@@ -6,4 +6,5 @@ class Country < ActiveRecord::Base
 
   has_many :shared_contacts
   has_many :regions
+  has_many :suppliers
 end

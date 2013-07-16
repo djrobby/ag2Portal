@@ -1,5 +1,12 @@
 class Supplier < ActiveRecord::Base
-  attr_accessible :fiscal_id, :name, :supplier_code
+  belongs_to :province
+  belongs_to :town
+  belongs_to :zipcode
+  belongs_to :street_type
+  attr_accessible :fiscal_id, :name, :supplier_code,
+                  :street_type_id, :street_name, :street_number, :building, :floor, :floor_office,
+                  :zipcode_id, :town_id, :province_id, :phone, :fax, :cellular, :email,
+                  :region_id, :country_id
 
   has_paper_trail
 
@@ -10,6 +17,12 @@ class Supplier < ActiveRecord::Base
   validates :fiscal_id,           :presence => true,
                                   :length => { :minimum => 9 },
                                   :uniqueness => true
+  validates :street_type_id,      :presence => true
+  validates :zipcode_id,          :presence => true
+  validates :town_id,             :presence => true
+  validates :province_id,         :presence => true
+  validates :region_id,               :presence => true
+  validates :country_id,              :presence => true
 
   before_validation :fields_to_uppercase
   def fields_to_uppercase
@@ -41,7 +54,7 @@ class Supplier < ActiveRecord::Base
   end
 
   searchable do
-    text :supplier_code, :name, :fiscal_id
+    text :supplier_code, :name, :fiscal_id, :street_name, :phone, :cellular, :email
     string :supplier_code
   end
 end
