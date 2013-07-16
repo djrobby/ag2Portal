@@ -25,6 +25,8 @@ class Supplier < ActiveRecord::Base
   validates :country_id,              :presence => true
 
   before_validation :fields_to_uppercase
+
+  has_many :supplier_contacts
   def fields_to_uppercase
     self[:fiscal_id].upcase!
     self[:supplier_code].upcase!
