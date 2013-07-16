@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130716084107) do
+ActiveRecord::Schema.define(:version => 20130716115621) do
 
   create_table "apps", :force => true do |t|
     t.string   "name"
@@ -328,6 +328,32 @@ ActiveRecord::Schema.define(:version => 20130716084107) do
   end
 
   add_index "street_types", ["street_type_code"], :name => "index_street_types_on_street_type_code"
+
+  create_table "supplier_contacts", :force => true do |t|
+    t.integer  "supplier_id"
+    t.string   "first_name"
+    t.string   "last_name"
+    t.string   "fiscal_id"
+    t.string   "position"
+    t.string   "department"
+    t.string   "phone"
+    t.string   "extension"
+    t.string   "cellular"
+    t.string   "email"
+    t.string   "remarks"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+    t.string   "created_by"
+    t.string   "updated_by"
+  end
+
+  add_index "supplier_contacts", ["cellular"], :name => "index_supplier_contacts_on_cellular"
+  add_index "supplier_contacts", ["email"], :name => "index_supplier_contacts_on_email"
+  add_index "supplier_contacts", ["first_name"], :name => "index_supplier_contacts_on_first_name"
+  add_index "supplier_contacts", ["fiscal_id"], :name => "index_supplier_contacts_on_fiscal_id"
+  add_index "supplier_contacts", ["last_name"], :name => "index_supplier_contacts_on_last_name"
+  add_index "supplier_contacts", ["phone"], :name => "index_supplier_contacts_on_phone"
+  add_index "supplier_contacts", ["supplier_id"], :name => "index_supplier_contacts_on_supplier_id"
 
   create_table "suppliers", :force => true do |t|
     t.string   "name"
