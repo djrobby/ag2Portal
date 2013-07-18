@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  description: MyString
+  expiration_days: 1
+  default_interest: 9.99
+
+two:
+  description: MyString
+  expiration_days: 1
+  default_interest: 9.99

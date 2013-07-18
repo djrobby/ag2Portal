@@ -11,7 +11,17 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130716115621) do
+ActiveRecord::Schema.define(:version => 20130718115814) do
+
+  create_table "activities", :force => true do |t|
+    t.string   "description"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+    t.string   "created_by"
+    t.string   "updated_by"
+  end
+
+  add_index "activities", ["description"], :name => "index_activities_on_description"
 
   create_table "apps", :force => true do |t|
     t.string   "name"
@@ -202,6 +212,18 @@ ActiveRecord::Schema.define(:version => 20130716115621) do
   add_index "offices", ["street_type_id"], :name => "index_offices_on_street_type_id"
   add_index "offices", ["town_id"], :name => "index_offices_on_town_id"
   add_index "offices", ["zipcode_id"], :name => "index_offices_on_zipcode_id"
+
+  create_table "payment_methods", :force => true do |t|
+    t.string   "description"
+    t.integer  "expiration_days",                                 :default => 0,   :null => false
+    t.decimal  "default_interest", :precision => 12, :scale => 4, :default => 0.0, :null => false
+    t.datetime "created_at",                                                       :null => false
+    t.datetime "updated_at",                                                       :null => false
+    t.string   "created_by"
+    t.string   "updated_by"
+  end
+
+  add_index "payment_methods", ["description"], :name => "index_payment_methods_on_description"
 
   create_table "professional_groups", :force => true do |t|
     t.string   "name"
@@ -394,6 +416,18 @@ ActiveRecord::Schema.define(:version => 20130716115621) do
   add_index "suppliers", ["supplier_code"], :name => "index_suppliers_on_supplier_code"
   add_index "suppliers", ["town_id"], :name => "index_suppliers_on_town_id"
   add_index "suppliers", ["zipcode_id"], :name => "index_suppliers_on_zipcode_id"
+
+  create_table "suppliers_activities", :force => true do |t|
+    t.integer  "supplier_id"
+    t.integer  "activity_id"
+    t.boolean  "default"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+    t.string   "created_by"
+    t.string   "updated_by"
+  end
+
+  add_index "suppliers_activities", ["supplier_id", "activity_id"], :name => "index_suppliers_activities_on_supplier_id_and_activity_id"
 
   create_table "technicians", :force => true do |t|
     t.string   "name"
