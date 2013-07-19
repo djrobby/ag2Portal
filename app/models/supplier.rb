@@ -27,7 +27,6 @@ class Supplier < ActiveRecord::Base
   before_validation :fields_to_uppercase
 
   has_many :supplier_contacts
-  has_many :suppliers_activities
   def fields_to_uppercase
     self[:fiscal_id].upcase!
     self[:supplier_code].upcase!

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130718115814) do
+ActiveRecord::Schema.define(:version => 20130719074453) do
 
   create_table "activities", :force => true do |t|
     t.string   "description"
@@ -381,8 +381,8 @@ ActiveRecord::Schema.define(:version => 20130718115814) do
     t.string   "name"
     t.string   "supplier_code"
     t.string   "fiscal_id"
-    t.datetime "created_at",     :null => false
-    t.datetime "updated_at",     :null => false
+    t.datetime "created_at",                                                        :null => false
+    t.datetime "updated_at",                                                        :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
     t.integer  "street_type_id"
@@ -400,14 +400,25 @@ ActiveRecord::Schema.define(:version => 20130718115814) do
     t.string   "email"
     t.integer  "region_id"
     t.integer  "country_id"
+    t.integer  "payment_method_id"
+    t.string   "ledger_account"
+    t.decimal  "discount_rate",     :precision => 12, :scale => 4, :default => 0.0, :null => false
+    t.boolean  "active"
+    t.integer  "max_orders_count"
+    t.decimal  "max_orders_sum",    :precision => 12, :scale => 4, :default => 0.0, :null => false
+    t.string   "contract_number"
+    t.string   "remarks"
   end
 
   add_index "suppliers", ["cellular"], :name => "index_suppliers_on_cellular"
+  add_index "suppliers", ["contract_number"], :name => "index_suppliers_on_contract_number"
   add_index "suppliers", ["country_id"], :name => "index_suppliers_on_country_id"
   add_index "suppliers", ["email"], :name => "index_suppliers_on_email"
   add_index "suppliers", ["fax"], :name => "index_suppliers_on_fax"
   add_index "suppliers", ["fiscal_id"], :name => "index_suppliers_on_fiscal_id"
+  add_index "suppliers", ["ledger_account"], :name => "index_suppliers_on_ledger_account"
   add_index "suppliers", ["name"], :name => "index_suppliers_on_name"
+  add_index "suppliers", ["payment_method_id"], :name => "index_suppliers_on_payment_method_id"
   add_index "suppliers", ["phone"], :name => "index_suppliers_on_phone"
   add_index "suppliers", ["province_id"], :name => "index_suppliers_on_province_id"
   add_index "suppliers", ["region_id"], :name => "index_suppliers_on_region_id"
@@ -417,14 +428,9 @@ ActiveRecord::Schema.define(:version => 20130718115814) do
   add_index "suppliers", ["town_id"], :name => "index_suppliers_on_town_id"
   add_index "suppliers", ["zipcode_id"], :name => "index_suppliers_on_zipcode_id"
 
-  create_table "suppliers_activities", :force => true do |t|
-    t.integer  "supplier_id"
-    t.integer  "activity_id"
-    t.boolean  "default"
-    t.datetime "created_at",  :null => false
-    t.datetime "updated_at",  :null => false
-    t.string   "created_by"
-    t.string   "updated_by"
+  create_table "suppliers_activities", :id => false, :force => true do |t|
+    t.integer "supplier_id"
+    t.integer "activity_id"
   end
 
   add_index "suppliers_activities", ["supplier_id", "activity_id"], :name => "index_suppliers_activities_on_supplier_id_and_activity_id"
