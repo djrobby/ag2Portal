@@ -7,6 +7,7 @@ class Supplier < ActiveRecord::Base
                   :street_type_id, :street_name, :street_number, :building, :floor, :floor_office,
                   :zipcode_id, :town_id, :province_id, :phone, :fax, :cellular, :email,
                   :region_id, :country_id
+  attr_accessible :activity_ids
 
   has_paper_trail
 
