@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130719074453) do
+ActiveRecord::Schema.define(:version => 20130719094140) do
 
   create_table "activities", :force => true do |t|
     t.string   "description"
@@ -181,6 +181,18 @@ ActiveRecord::Schema.define(:version => 20130719074453) do
 
   add_index "departments", ["code"], :name => "index_departments_on_code"
 
+  create_table "manufacturers", :force => true do |t|
+    t.string   "name"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  create_table "measures", :force => true do |t|
+    t.string   "description"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+  end
+
   create_table "offices", :force => true do |t|
     t.string   "name"
     t.integer  "company_id"
@@ -339,6 +351,18 @@ ActiveRecord::Schema.define(:version => 20130719074453) do
   end
 
   add_index "sites", ["name"], :name => "index_sites_on_name"
+
+  create_table "stores", :force => true do |t|
+    t.string   "name"
+    t.integer  "company_id"
+    t.integer  "office_id"
+    t.string   "location"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "stores", ["company_id"], :name => "index_stores_on_company_id"
+  add_index "stores", ["office_id"], :name => "index_stores_on_office_id"
 
   create_table "street_types", :force => true do |t|
     t.string   "street_type_code"
