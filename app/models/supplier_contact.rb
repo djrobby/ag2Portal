@@ -5,8 +5,9 @@ class SupplierContact < ActiveRecord::Base
 
   has_paper_trail
 
-  validates :first_name,          :presence => true
-  validates :last_name,           :presence => true
+  validates :first_name,  :presence => true
+  validates :last_name,   :presence => true
+  validates :supplier_id, :presence => true
 
   before_validation :fields_to_uppercase
 
