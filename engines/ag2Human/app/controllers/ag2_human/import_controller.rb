@@ -47,10 +47,11 @@ module Ag2Human
               if t.nil?
                 next
               end
-              # Do not import worker with withdrawal date
-              if !t.dfecbaj.blank?
+              # Do not import worker with active withdrawal date
+              if !t.dfecbaj.blank? && t.dfecbaj <= DateTime.now.to_date
                 next
               end
+              # Setup worker code (nomina_id) and go on
               new_worker = false
               nomina_id = e.ccodemp + '-' + t.ccodtra
               worker = Worker.find_by_nomina_id(nomina_id)
@@ -192,8 +193,19 @@ render json: @json_data
           @zipcode = Zipcode.first
         end
       end
+
+      pro_group = nil
+      # Collective agreement
+      if !source.ccodconv.blank?
+        pro_group = source.ccodconv
+        @collective_agreement = CollectiveAgreement.find_by_nomina_id(source.ccodconv)
+        if @collective_agreement.nil
+          @collective_agreement = CollectiveAgreement.first
+        end
+      end
       # Professional group
       if !source.ccodcat.blank?
+        pro_group = pro_group + '-' + source.ccodcat
         @professional_group = ProfessionalGroup.find_by_nomina_id(source.ccodcat)
         if @professional_group.nil
           @professional_group = ProfessionalGroup.first
@@ -204,13 +216,6 @@ render json: @json_data
         @contract_type = ContractType.find_by_nomina_id(source.ccodcon)
         if @contract_type.nil
           @contract_type = ContractType.first
-        end
-      end
-      # Collective agreement
-      if !source.ccodconv.blank?
-        @collective_agreement = CollectiveAgreement.find_by_nomina_id(source.ccodconv)
-        if @collective_agreement.nil
-          @collective_agreement = CollectiveAgreement.first
         end
       end
       # Degree type
