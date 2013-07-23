@@ -1,0 +1,10 @@
+es:
+  ag2_purchase:
+    home:
+      index:
+        tickets: "Solicitudes"
+        control: "Control&Seguimiento"
+        categories: "Categorias"
+        priorities: "Prioridades"
+        statuses: "Estados"
+        technicians: "Técnicos"
