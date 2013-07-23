@@ -223,9 +223,9 @@ render json: @json_data
     end
     
     def update_worker(worker, source, company, office, new)
+      # Look for default auxiliary data
+      search_aux_data(source)
       if new
-        # Look for default auxiliary data
-        search_aux_data(source)
         # Add new row data
         worker.first_name = source.cnomtra.gsub(/[^0-9A-Za-z ]/, '').titleize unless source.cnomtra.blank?
         worker.last_name = source.capetra.gsub(/[^0-9A-Za-z ]/, '').titleize unless source.capetra.blank?
