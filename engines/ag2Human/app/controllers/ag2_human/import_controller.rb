@@ -252,7 +252,6 @@ render json: @json_data
         worker.own_phone = source.ctelefono unless source.ctelefono.blank?
         worker.contract_type_id = @contract_type.id unless @contract_type.id.blank?
         worker.collective_agreement_id = @collective_agreement.id unless @collective_agreement.id.blank?
-        worker.collective_agreement_id = @collective_agreement.id unless @collective_agreement.id.blank?
         worker.worker_type_id = @worker_type.id unless @worker_type.id.blank?
         worker.degree_type_id = @degree_type.id unless @degree_type.id.blank?
         worker.position = source.cpuesto.gsub(/[^0-9A-Za-z ]/, '').titleize unless source.cpuesto.blank?
@@ -325,14 +324,24 @@ render json: @json_data
         if !source.dfecini.blank? && worker.issue_starting_at != source.dfecini
           worker.issue_starting_at = source.dfecini
         end
-        worker.affiliation_id = source.cnumseg unless source.cnumseg.blank?
-        worker.contribution_account_code = source.csubcta unless source.csubcta.blank?
-        worker.own_phone = source.ctelefono unless source.ctelefono.blank?
-        worker.contract_type_id = @contract_type.id unless @contract_type.id.nil?
-        worker.collective_agreement_id = @collective_agreement.id unless @collective_agreement.id.nil?
-        worker.collective_agreement_id = @collective_agreement.id unless @collective_agreement.id.nil?
-        worker.worker_type_id = @worker_type.id unless @worker_type.id.nil?
-        worker.degree_type_id = @degree_type.id unless @degree_type.id.nil?
+        if !source.cnumseg.blank? && worker.affiliation_id != source.cnumseg
+          worker.affiliation_id = source.cnumseg
+        end
+        if !source.csubcta.blank? && worker.contribution_account_code != source.csubcta
+          worker.contribution_account_code = source.csubcta
+        end
+        if !source.ctelefono.blank? && worker.own_phone != source.ctelefono
+          worker.own_phone = source.ctelefono unless source.ctelefono.blank?
+        end
+        if !@contract_type.id.blank? && worker.contract_type_id != @contract_type.id
+          worker.contract_type_id = @contract_type.id
+        end
+        if !@collective_agreement.id.blank? && worker.collective_agreement_id != @collective_agreement.id
+          worker.collective_agreement_id = @collective_agreement.id
+        end
+        if !@degree_type.id.blank? && worker.degree_type_id != @degree_type.id
+          worker.degree_type_id = @degree_type.id
+        end
         if !source.cpuesto.blank? && worker.position != source.cpuesto.gsub(/[^0-9A-Za-z ]/, '').titleize
           worker.position = source.cpuesto.gsub(/[^0-9A-Za-z ]/, '').titleize
         end
