@@ -223,10 +223,12 @@ render json: @json_data
     end
     
     def update_worker(worker, source, company, office, new)
-      # Look for default auxiliary data
+      # Look for auxiliary data (other tables)
       search_aux_data(source)
       if new
+        #
         # Add new row data
+        #
         worker.first_name = source.cnomtra.gsub(/[^0-9A-Za-z ]/, '').titleize unless source.cnomtra.blank?
         worker.last_name = source.capetra.gsub(/[^0-9A-Za-z ]/, '').titleize unless source.capetra.blank?
         worker.fiscal_id = source.cdni unless source.cdni.blank?
@@ -241,18 +243,21 @@ render json: @json_data
         worker.province_id = @zipcode.province_id unless @zipcode.province_id.blank?
         worker.company_id = company.id unless company.id.blank?
         worker.office_id = office.id unless office.id.blank?
-        worker.department_id = @department.id unless @department.id.nil?
-        worker.professional_group_id = @professional_group.id unless @professional_group.id.nil?
+        worker.department_id = @department.id unless @department.id.blank?
+        worker.professional_group_id = @professional_group.id unless @professional_group.id.blank?
         worker.starting_at = source.dfecalta unless source.dfecalta.blank?
         worker.issue_starting_at = source.dfecini unless source.dfecini.blank?
         worker.affiliation_id = source.cnumseg unless source.cnumseg.blank?
         worker.contribution_account_code = source.csubcta unless source.csubcta.blank?
         worker.own_phone = source.ctelefono unless source.ctelefono.blank?
-        worker.contract_type_id = @contract_type.id unless @contract_type.id.nil?
-        worker.collective_agreement_id = @collective_agreement.id unless @collective_agreement.id.nil?
-        worker.collective_agreement_id = @collective_agreement.id unless @collective_agreement.id.nil?
-        worker.worker_type_id = @worker_type.id unless @worker_type.id.nil?
-        worker.degree_type_id = @degree_type.id unless @degree_type.id.nil?
+        worker.contract_type_id = @contract_type.id unless @contract_type.id.blank?
+        worker.collective_agreement_id = @collective_agreement.id unless @collective_agreement.id.blank?
+        worker.collective_agreement_id = @collective_agreement.id unless @collective_agreement.id.blank?
+        worker.worker_type_id = @worker_type.id unless @worker_type.id.blank?
+        worker.degree_type_id = @degree_type.id unless @degree_type.id.blank?
+        worker.position = source.cpuesto.gsub(/[^0-9A-Za-z ]/, '').titleize unless source.cpuesto.blank?
+        worker.gross_salary = source.nbruto unless source.nbruto.blank?
+        # Mandatory worker code
         worker.worker_code = generate_worker_code(source.capetra, source.cnomtra)
         # Mandatory e-mail and user info
         if !source.cemail.blank?
@@ -266,12 +271,77 @@ render json: @json_data
         if worker.contribution_account_code.blank?
           worker.contribution_account_code = "no_existe"
         end
+      else
+        #
+        # Update current row data (if applicable)
+        #
+        if !source.cnomtra.blank? && worker.first_name != source.cnomtra.gsub(/[^0-9A-Za-z ]/, '').titleize
+          worker.first_name = source.cnomtra.gsub(/[^0-9A-Za-z ]/, '').titleize
+        end
+        if !source.capetra.blank? && worker.last_name != source.capetra.gsub(/[^0-9A-Za-z ]/, '').titleize
+          worker.last_name = source.capetra.gsub(/[^0-9A-Za-z ]/, '').titleize
+        end
+        if !source.cdni.blank? && worker.fiscal_id != source.cdni
+          worker.fiscal_id = source.cdni
+        end
+        if !source.dfecnac.blank? && worker.borned_on != source.dfecnac
+          worker.borned_on = source.dfecnac
+        end
+        if !@street_type.id.blank? && worker.street_type_id != @street_type.id
+          worker.street_type_id = @street_type.id
+        end
+        if !source.cdircen.blank? && worker.street_name != source.cdircen.gsub(/[^0-9A-Za-z ]/, '').titleize
+          worker.street_name = source.cdircen.gsub(/[^0-9A-Za-z ]/, '').titleize
+        end
+        if !source.cnumcen.blank? && worker.street_number != source.cnumcen
+          worker.street_number = source.cnumcen
+        end
+        if !source.cpiso.blank? && worker.floor != source.cpiso
+          worker.floor = source.cpiso
+        end
+        if !source.cpuerta.blank? && worker.floor_office != source.cpuerta
+          worker.floor_office = source.cpuerta
+        end
+        if !@zipcode.id.blank? && worker.zipcode_id != @zipcode.id
+          worker.zipcode_id = @zipcode.id
+          worker.town_id = @zipcode.town_id
+          worker.province_id = @zipcode.province_id
+        end
+        if !company.id.blank? && worker.company_id != company.id
+          worker.company_id = company.id
+        end
+        if !office.id.blank? && worker.office_id != office.id
+          worker.office_id = office.id
+        end
+        if !@department.id.blank? && worker.department_id != @department.id
+          worker.department_id = @department.id
+        end
+        if !@professional_group.id.blank? && worker.professional_group_id != @professional_group.id
+          worker.professional_group_id = @professional_group.id
+        end
+        if !source.dfecalta.blank? && worker.starting_at != source.dfecalta
+          worker.starting_at = source.dfecalta
+        end
+        if !source.dfecini.blank? && worker.issue_starting_at != source.dfecini
+          worker.issue_starting_at = source.dfecini
+        end
+        worker.affiliation_id = source.cnumseg unless source.cnumseg.blank?
+        worker.contribution_account_code = source.csubcta unless source.csubcta.blank?
+        worker.own_phone = source.ctelefono unless source.ctelefono.blank?
+        worker.contract_type_id = @contract_type.id unless @contract_type.id.nil?
+        worker.collective_agreement_id = @collective_agreement.id unless @collective_agreement.id.nil?
+        worker.collective_agreement_id = @collective_agreement.id unless @collective_agreement.id.nil?
+        worker.worker_type_id = @worker_type.id unless @worker_type.id.nil?
+        worker.degree_type_id = @degree_type.id unless @degree_type.id.nil?
+        if !source.cpuesto.blank? && worker.position != source.cpuesto.gsub(/[^0-9A-Za-z ]/, '').titleize
+          worker.position = source.cpuesto.gsub(/[^0-9A-Za-z ]/, '').titleize
+        end
+        if !source.nbruto.blank? && worker.gross_salary != source.nbruto
+          worker.gross_salary = source.nbruto
+        end
       end
-      # Update current row data
-      worker.gross_salary = source.nbruto unless source.nbruto.blank?
-      if worker.position.blank?
-        worker.position = source.cpuesto.gsub(/[^0-9A-Za-z ]/, '').titleize unless source.cpuesto.nil?
-      end
+      # Reset default auxiliary data
+      set_defaults
     end
 
     def generate_worker_code(lastname, firstname)
