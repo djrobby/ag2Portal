@@ -13,6 +13,7 @@ class ApplicationController < ActionController::Base
   helper_method :per_page
   helper_method :undo_link
   helper_method :crud_notice
+  helper_method :site_path
 
   def letters
     @letters = ('A'..'Z')
@@ -53,6 +54,19 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  # Site path
+  def site_path(to_site, to_target)
+    site = Site.find_by_name(to_site)
+    if site.nil?
+      site_path = '#notfound'
+      site_target = '_self'
+    else
+      site_path = 'http://' + site.path
+      site_target = to_target
+    end
+    return site_path, site_target
+  end
+  
   def set_locale
     # I18n.locale = params[:locale] || I18n.default_locale
     I18n.locale = params[:locale] || extract_locale_from_accept_language_header || I18n.default_locale
