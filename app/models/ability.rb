@@ -26,6 +26,8 @@ class Ability
     
     #
     # Users according to their roles
+    # IMPORTANT!
+    # Update method 'assign_default_role_and_send_email' in users model for each new role added
     #
     # ag2Admin
     if user.has_role? :ag2Admin_User
