@@ -1,0 +1,9 @@
+es:
+  ag2_purchase:
+    breadcrumb:
+      activities:
+        items: "Actividades"
+        item: "Actividad"
+      payment_methods:
+        items: "Formas de pago"
+        item: "Forma de pago"

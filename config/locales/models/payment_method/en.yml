@@ -1,0 +1,13 @@
+en:
+  activerecord:
+    models:
+      payment_method:
+        zero:  Payment methods
+        one:   Payment method
+        few:   Payment methods
+        other: Payment methods
+    attributes:
+      payment_method:
+        description: "Description"
+        expiration_days: "Expiration days"
+        default_interest: "Default Interest"

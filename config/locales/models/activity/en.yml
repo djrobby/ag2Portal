@@ -1,0 +1,11 @@
+en:
+  activerecord:
+    models:
+      activity:
+        zero:  Activities
+        one:   Activity
+        few:   Activities
+        other: Activities
+    attributes:
+      activity:
+        description: "Description"

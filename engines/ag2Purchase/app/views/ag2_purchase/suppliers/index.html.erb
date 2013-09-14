@@ -1,5 +1,5 @@
 <%= render '/layouts/ag2_purchase/suppliersbreadcrumb' %>
-<%= render :partial => '/layouts/searchhead', :locals => { :title => I18n.t("ag2_purchase.suppliers.index.title"), :path => suppliers_path } %>
+<%= render :partial => '/layouts/searchhead', :locals => { :title => t(".title"), :path => suppliers_path } %>
 
 <div class="span11">
   <%= render :partial => '/layouts/lettershead', :locals => { :controller => "suppliers", :action => "index" } %>
@@ -25,6 +25,6 @@
     </tbody>
   </table>
   <%= render :partial => '/layouts/pagination', :locals => { :ivar => @suppliers } %>
-  <%= render :partial => '/layouts/crud/new', :locals => { :model => Supplier, :path => new_supplier_path, :txt => I18n.t("ag2_purchase.suppliers.index.btn_new") } %>
-  <%= link_to I18n.t("ag2_purchase.suppliers.index.back_to_root"), ag2_purchase.root_path %>
+  <%= render :partial => '/layouts/crud/new', :locals => { :model => Supplier, :path => new_supplier_path, :txt => t(".btn_new") } %>
+  <%= link_to t(".back_to_root"), ag2_purchase.root_path %>
 </div>

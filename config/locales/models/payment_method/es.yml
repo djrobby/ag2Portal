@@ -1,0 +1,13 @@
+es:
+  activerecord:
+    models:
+      payment_method:
+        zero:  Formas de pago
+        one:   Forma de pago
+        few:   Formas de pago
+        other: Formas de pago
+    attributes:
+      payment_method:
+        description: "Descripción"
+        expiration_days: "Días para vencimiento"
+        default_interest: "Intereses de demora"

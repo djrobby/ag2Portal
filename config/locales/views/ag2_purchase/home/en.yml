@@ -2,9 +2,6 @@ en:
   ag2_purchase:
     home:
       index:
-        tickets: "Tickets"
         control: "Control&Tracking"
-        categories: "Categories"
-        priorities: "Priorities"
-        statuses: "Statuses"
-        technicians: "Technicians"
+        activities: "Supplier Activities"
+        payment_methods: "Payment Methods"

@@ -21,6 +21,6 @@
 </table>
 
 <%= render :partial => '/layouts/crud/update_delete',
-:locals => { :model => Suppler, :update_path => edit_supplier_path(@supplier), :update_txt => I18n.t('ag2_purchase.suppliers.show.btn_edit'),
-:delete_path => @supplier, :delete_txt => I18n.t('ag2_purchase.suppliers.show.btn_delete'),
+:locals => { :model => Suppler, :update_path => edit_supplier_path(@supplier), :update_txt => t('.btn_edit'),
+:delete_path => @supplier, :delete_txt => t('.btn_delete'),
 :msg => I18n.t("activerecord.models.supplier.one"), :txt => @supplier.name } %>
