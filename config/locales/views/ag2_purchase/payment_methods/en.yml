@@ -1,0 +1,16 @@
+en:
+  ag2_purchase:
+    payment_methods:
+      index:
+        title: "Payment methods"
+        btn_new: "New Payment method"
+        back_to_root: "Back to ag2Purchase"
+      show:
+        title: "Payment method"
+        btn_edit: "Edit Payment method"
+      edit:
+        title: "Edit Payment method"
+        btn_show: "Show Payment method"
+      new:
+        title: "New Payment method"
+      back_to_main_page: "Back to Payment methods"

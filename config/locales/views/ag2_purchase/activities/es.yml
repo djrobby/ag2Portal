@@ -1,0 +1,16 @@
+es:
+  ag2_purchase:
+    activities:
+      index:
+        title: "Actividades"
+        btn_new: "Nueva Actividad"
+        back_to_root: "Volver a ag2Purchase"
+      show:
+        title: "Actividad"
+        btn_edit: "Editar Actividad"
+      edit:
+        title: "Editar Actividad"
+        btn_show: "Ver Actividad"
+      new:
+        title: "Nueva Actividad"
+      back_to_main_page: "Volver a Actividades"

@@ -1,21 +1,25 @@
-<h1>Listing payment_methods</h1>
+<%= render '/layouts/ag2_purchase/pmethodsbreadcrumb' %>
 
-<table>
-  <tr>
-    <th></th>
-    <th></th>
-    <th></th>
-  </tr>
-
-<% @payment_methods.each do |payment_method| %>
-  <tr>
-    <td><%= link_to 'Show', payment_method %></td>
-    <td><%= link_to 'Edit', edit_payment_method_path(payment_method) %></td>
-    <td><%= link_to 'Destroy', payment_method, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-  </tr>
-<% end %>
-</table>
-
-<br />
-
-<%= link_to 'New Payment method', new_payment_method_path %>
+<h3><%=t '.title' %></h3>
+<div class="span7">
+  <table class="table table-condensed table-striped">
+    <thead>
+      <tr>
+        <th><%=t 'activerecord.attributes.payment_method.description' %></th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @payment_methods.each do |pmethod| %>
+      <tr>
+        <td><%= link_to pmethod.description, pmethod %></td>
+        <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => PaymentMethod, :path => edit_payment_method_path(pmethod) } %>
+        <%= render :partial => '/layouts/crud/delete', :locals => { :model => PaymentMethod, :path => pmethod, :msg => t("activerecord.models.payment_method.one"), :txt => pmethod.description } %> </td>
+      </tr>
+      <% end %>
+    </tbody>
+  </table>
+  <%= render :partial => '/layouts/pagination', :locals => { :ivar => @payment_methods } %>
+  <%= render :partial => '/layouts/crud/new', :locals => { :model => PaymentMethod, :path => new_payment_method_path, :txt => t(".btn_new") } %>
+  <%= link_to t(".back_to_root"), ag2_purchase.root_path %>
+</div>

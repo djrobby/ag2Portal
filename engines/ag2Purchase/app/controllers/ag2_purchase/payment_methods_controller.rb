@@ -2,6 +2,9 @@ require_dependency "ag2_purchase/application_controller"
 
 module Ag2Purchase
   class PaymentMethodsController < ApplicationController
+    before_filter :authenticate_user!
+    load_and_authorize_resource
+
     # GET /payment_methods
     # GET /payment_methods.json
     def index

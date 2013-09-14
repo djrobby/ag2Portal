@@ -22,6 +22,6 @@
     </tbody>
   </table>
   <%= render :partial => '/layouts/pagination', :locals => { :ivar => @street_types } %>
-  <%= render :partial => '/layouts/crud/new', :locals => { :model => Zipcode, :path => new_street_type_path, :txt => I18n.t("ag2_admin.street_types.index.btn_new") } %>
+  <%= render :partial => '/layouts/crud/new', :locals => { :model => StreetType, :path => new_street_type_path, :txt => I18n.t("ag2_admin.street_types.index.btn_new") } %>
   <%= link_to I18n.t("ag2_admin.street_types.index.back_to_root"), ag2_admin.root_path %>
 </div>

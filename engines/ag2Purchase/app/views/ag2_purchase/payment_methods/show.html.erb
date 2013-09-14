@@ -1,5 +1,24 @@
-<p id="notice"><%= notice %></p>
+<%= render '/layouts/ag2_purchase/pmethodsbreadcrumb' %>
 
+<h3><%=t '.title' %></h3>
+<table class="table">
+  <tbody>
+    <tr>
+      <td>Id:</td>
+      <td><%= @payment_method.id %></td>
+      <td><%=t 'activerecord.attributes.payment_method.description' %>:</td>
+      <td><%= @payment_method.description.titleize %></td>
+    </tr>
+    <tr>
+      <td><%=t 'activerecord.attributes.payment_method.expiration_days' %>:</td>
+      <td><%= @payment_method.expiration_days unless @payment_method.expiration_days.blank? %></td>
+      <td><%=t 'activerecord.attributes.payment_method.default_interest' %>:</td>
+      <td><%= number_to_percentage(@payment_method.default_interest, :locale => :es) unless @payment_method.default_interest.blank? %></td>
+    </tr>
+    <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @payment_method } %>
+    <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @payment_method } %>
+  </tbody>
+</table>
 
-<%= link_to 'Edit', edit_payment_method_path(@payment_method) %> |
-<%= link_to 'Back', payment_methods_path %>
+<%= render :partial => '/layouts/crud/update', :locals => { :model => PaymentMethod, :path => edit_payment_method_path(@payment_method), :txt => t('.btn_edit') } %>
+<%= link_to t('ag2_purchase.payment_methods.back_to_main_page'), payment_methods_path %>

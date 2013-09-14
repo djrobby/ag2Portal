@@ -1,17 +1,10 @@
-<%= form_for(@payment_method) do |f| %>
-  <% if @payment_method.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@payment_method.errors.count, "error") %> prohibited this payment_method from being saved:</h2>
-
-      <ul>
-      <% @payment_method.errors.full_messages.each do |msg| %>
-        <li><%= msg %></li>
-      <% end %>
-      </ul>
-    </div>
-  <% end %>
-
-  <div class="actions">
-    <%= f.submit %>
-  </div>
+<%= simple_form_for @payment_method, :html => {:class => 'form-vertical well' } do |f| %>
+<%= f.error_notification %>
+<%= display_base_errors resource %>
+<%= f.input :description, :required => true, :autofocus => true, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %>
+<div>
+  <label class="multi-field-label-two"> <%= f.input :expiration_days, :input_html => { :class => 'mid-text-field number-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.input :default_interest, :input_html => { :class => 'mid-text-field number-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+</div>
+<%= f.button :submit, :class => 'btn-primary' %>
 <% end %>

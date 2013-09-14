@@ -1,6 +1,8 @@
-<h1>Editing activity</h1>
+<%= render '/layouts/ag2_purchase/activitiesbreadcrumb' %>
+
+<h3><%=t '.title' %></h3>
 
 <%= render 'form' %>
 
-<%= link_to 'Show', @activity %> |
-<%= link_to 'Back', activities_path %>
+<%= link_to t(".btn_show"), @activity %> |
+<%= link_to t("ag2_purchase.activities.back_to_main_page"), activities_path %>

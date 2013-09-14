@@ -19,7 +19,7 @@
         <td><%= supplier.name %></td>
         <td><%= supplier.fiscal_id %></td>
         <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => Supplier, :path => edit_supplier_path(supplier) } %>
-        <%= render :partial => '/layouts/crud/delete', :locals => { :model => Supplier, :path => supplier, :msg => I18n.t("activerecord.models.supplier.one"), :txt => supplier.name } %> </td>
+        <%= render :partial => '/layouts/crud/delete', :locals => { :model => Supplier, :path => supplier, :msg => t("activerecord.models.supplier.one"), :txt => supplier.name } %> </td>
       </tr>
       <% end %>
     </tbody>
