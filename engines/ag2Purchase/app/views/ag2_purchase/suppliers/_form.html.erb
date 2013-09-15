@@ -66,8 +66,51 @@
 <%= display_base_errors resource %>
 <%= f.input :name, :required => true, :autofocus => true, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %>
 <div>
-  <label class="multi-field-label-two"> <%= f.input :supplier_code, :input_html => { :class => 'mid-text-field' }, :label_html => { :class => 'form-label' } %> </label>
-  <label class="multi-field-label-two"> <%= f.input :fiscal_id, :input_html => { :class => 'mid-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.input :supplier_code, :input_html => { :class => 'large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.input :fiscal_id, :input_html => { :class => 'large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+</div>
+<div>
+  <label class="multi-field-label-two"> <%= f.input :contract_number, :input_html => { :class => 'large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.input :active, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' }, :boolean_style => :inline %> </label>
+</div>
+<h4><%=t 'ag2_purchase.suppliers.personal_info' %></h4>
+<div>
+  <label class="multi-field-label-two"> <%= f.input :phone, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.input :fax, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+</div>
+<div>
+  <label class="multi-field-label-two"> <%= f.input :cellular, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.input :email, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+</div>
+<div>
+  <label class="multi-field-label-three-thinner"> <%= f.association :street_type, collection: StreetType.all(order: 'street_type_code'), :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-three-wider"> <%= f.input :street_name, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-three-thinner"> <%= f.input :street_number, :input_html => { :class => 'large-text-field number-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+</div>
+<div>
+  <label class="multi-field-label-three-wider"> <%= f.input :building, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-three-thinner"> <%= f.input :floor, :input_html => { :class => 'large-text-field number-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-three-thinner"> <%= f.input :floor_office, :input_html => { :class => 'large-text-field number-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+</div>
+<div>
+  <label class="multi-field-label-three"> <%= f.association :zipcode, collection: Zipcode.all(order: 'zipcode'), :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-three"> <%= f.association :town, collection: Town.all(order: 'name'), :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-three"> <%= f.association :province, collection: Province.all(order: 'name'), :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+</div>
+<div>
+  <label class="multi-field-label-two"> <%= f.association :region, collection: Region.all(order: 'name'), :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.association :country, collection: Country.all(order: 'name'), :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+</div>
+<%= f.input :remarks, :as => :text, :input_html => { :class => 'x-large-text-field', :rows => 2 }, :label_html => { :class => 'form-label' } %>
+<h4><%=t 'ag2_purchase.suppliers.commercial_info' %></h4>
+<div>
+  <label class="multi-field-label-two"> <%= f.association :payment_method, collection: PaymentMethod.all(order: 'description'), :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.input :ledger_account, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+</div>
+<div>
+  <label class="multi-field-label-three"> <%= f.input :discount_rate, :input_html => { :class => 'large-text-field number-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-three"> <%= f.input :max_orders_count, :input_html => { :class => 'large-text-field number-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-three"> <%= f.input :max_orders_sum, :input_html => { :class => 'large-text-field number-text-field' }, :label_html => { :class => 'form-label' } %> </label>
 </div>
 <table class="form-table">
   <tbody>

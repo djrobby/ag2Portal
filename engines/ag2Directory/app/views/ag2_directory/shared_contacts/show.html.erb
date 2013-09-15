@@ -63,6 +63,12 @@
       <td><%=t :"activerecord.attributes.shared_contact.country" %>:</td>
       <td><%= @shared_contact.country.name %></td>
     </tr>
+    <tr>
+      <td><%=t :"activerecord.attributes.shared_contact.remarks" %>:</td>
+      <td><%= @shared_contact.remarks %></td>
+      <td></td>
+      <td></td>
+    </tr>
     <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @shared_contact } %>
     <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @shared_contact } %>
   </tbody>

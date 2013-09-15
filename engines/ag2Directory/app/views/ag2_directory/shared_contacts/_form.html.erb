@@ -99,5 +99,6 @@
   <label class="multi-field-label-two"> <%= f.input :position, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
   <label class="multi-field-label-two"> <%= f.association :shared_contact_type, collection: SharedContactType.all(order: 'name'), :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
 </div>
+<%= f.input :remarks, :as => :text, :input_html => { :class => 'x-large-text-field', :rows => 2 }, :label_html => { :class => 'form-label' } %>
 <%= f.button :submit, :class => 'btn-primary' %>
 <% end %>

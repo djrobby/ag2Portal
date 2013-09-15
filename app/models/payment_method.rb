@@ -6,4 +6,7 @@ class PaymentMethod < ActiveRecord::Base
   validates :description, :presence => true
 
   has_many :suppliers
+  def to_label
+    "#{description}"
+  end
 end
