@@ -1,4 +1,5 @@
 class Supplier < ActiveRecord::Base
+  has_and_belongs_to_many :activities, :join_table => :suppliers_activities
   belongs_to :country
   belongs_to :region
   belongs_to :province
