@@ -71,13 +71,23 @@ a:focus {
 }
 
 /*
- * Hyperlinks special
+ * Pretty Hyperlinks
  */
-.col-header-link {
+/* Table header links (sorting) */
+th .current {
+  padding-right: 12px;
+  background-repeat: no-repeat;
+  background-position: right center;
   color: #333333;  
 }
-.col-header-link:hover,
-.col-header-link:focus {
+th .asc { 
+  background-image: image-url("icon/glyph/black/halflings/up_arrow.png");
+}
+th .desc { 
+  background-image: image-url("icon/glyph/black/halflings/down_arrow.png");
+}
+th .current:hover,
+th .current:focus {
   color: #a67326;  
 }
 

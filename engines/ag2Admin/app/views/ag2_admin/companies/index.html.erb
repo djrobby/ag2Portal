@@ -5,8 +5,8 @@
   <table class="table table-condensed table-striped">
     <thead>
       <tr>
-        <th><%=t 'activerecord.attributes.company.fiscal_id' %></th>
-        <th><%=t 'activerecord.attributes.company.name' %></th>
+        <th><%= sortable "fiscal_id", t('activerecord.attributes.company.fiscal_id') %></th>
+        <th><%= sortable "name", t('activerecord.attributes.company.name') %></th>
         <th></th>
       </tr>
     </thead>

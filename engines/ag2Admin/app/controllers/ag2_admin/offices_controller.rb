@@ -7,6 +7,8 @@ module Ag2Admin
     skip_load_and_authorize_resource :only => [:update_province_textfield_from_town,
                                                :update_province_textfield_from_zipcode,
                                                :update_code_textfield_from_zipcode]
+    # Helper methods for sorting
+    helper_method :sort_column
     #    def internal
     #      @companies = Company.all
     #    end
@@ -53,7 +55,7 @@ module Ag2Admin
     def index
       #      internal
       #@offices = Office.paginate(:page => params[:page], :per_page => per_page).order('office_code')
-      @offices = Office.paginate(:page => params[:page], :per_page => per_page).order(params[:sort])
+      @offices = Office.paginate(:page => params[:page], :per_page => per_page).order(sort_column + ' ' + sort_direction)
 
       respond_to do |format|
         format.html # index.html.erb
@@ -143,6 +145,12 @@ module Ag2Admin
                       notice: (crud_notice('destroyed', @office) + "#{undo_link(@office)}").html_safe }
         format.json { head :no_content }
       end
+    end
+
+    private
+
+    def sort_column
+      Office.column_names.include?(params[:sort]) ? params[:sort] : "office_code"
     end
   end
 end

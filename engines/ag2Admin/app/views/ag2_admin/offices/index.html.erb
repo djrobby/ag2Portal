@@ -1,13 +1,13 @@
 <%= render '/layouts/ag2_admin/officesbreadcrumb' %>
 
-<h3><%=t '.title' %></h3>
+<h3><%= t '.title' %></h3>
 <div class="span9">
   <table class="table table-condensed table-striped">
     <thead>
       <tr>
-        <th><%= link_to t('activerecord.attributes.office.office_code'), {:sort => "office_code"}, {:class => "col-header-link"} %></th>
-        <th><%= link_to t('activerecord.attributes.office.name'), {:sort => "name"}, {:class => "col-header-link"} %></th>
-        <th><%= link_to t('activerecord.attributes.office.company'), {:sort => "company_id"}, {:class => "col-header-link"} %></th>
+        <th><%= sortable "office_code", t('activerecord.attributes.office.office_code') %></th>
+        <th><%= sortable "name", t('activerecord.attributes.office.name') %></th>
+        <th><%= sortable "company_id", t('activerecord.attributes.office.company') %></th>
         <th></th>
       </tr>
     </thead>

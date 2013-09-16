@@ -6,6 +6,8 @@ module Ag2Admin
     load_and_authorize_resource
     skip_load_and_authorize_resource :only => [:update_province_textfield_from_town,
                                                :update_province_textfield_from_zipcode]
+    # Helper methods for sorting
+    helper_method :sort_column
     # Update hidden province text field at view from town select
     def update_province_textfield_from_town
       @town = Town.find(params[:id])
@@ -36,7 +38,7 @@ module Ag2Admin
     # GET /companies
     # GET /companies.json
     def index
-      @companies = Company.paginate(:page => params[:page], :per_page => per_page).order('fiscal_id')
+      @companies = Company.paginate(:page => params[:page], :per_page => per_page).order(sort_column + ' ' + sort_direction)
 
       respond_to do |format|
         format.html # index.html.erb
@@ -123,6 +125,12 @@ module Ag2Admin
                       notice: (crud_notice('destroyed', @company) + "#{undo_link(@company)}").html_safe }
         format.json { head :no_content }
       end
+    end
+
+    private
+
+    def sort_column
+      Company.column_names.include?(params[:sort]) ? params[:sort] : "fiscal_id"
     end
   end
 end

@@ -14,6 +14,7 @@ class ApplicationController < ActionController::Base
   helper_method :undo_link
   helper_method :crud_notice
   helper_method :site_path
+  helper_method :sort_direction
 
   def letters
     @letters = ('A'..'Z')
@@ -66,7 +67,13 @@ class ApplicationController < ActionController::Base
     end
     return site_path, site_target
   end
+
+  # Table (index) sort
+  def sort_direction
+    %w[asc desc].include?(params[:direction]) ? params[:direction] : "asc"
+  end
   
+  # Char set
   def set_locale
     # I18n.locale = params[:locale] || I18n.default_locale
     I18n.locale = params[:locale] || extract_locale_from_accept_language_header || I18n.default_locale
