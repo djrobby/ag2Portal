@@ -306,12 +306,14 @@ render json: @json_data
           worker.town_id = @zipcode.town_id
           worker.province_id = @zipcode.province_id
         end
-        if !company.id.blank? && worker.company_id != company.id
-          worker.company_id = company.id
-        end
-        if !office.id.blank? && worker.office_id != office.id
-          worker.office_id = office.id
-        end
+        #-- Current worker company and office, should not be updated
+        #if !company.id.blank? && worker.company_id != company.id
+        #  worker.company_id = company.id
+        #end
+        #if !office.id.blank? && worker.office_id != office.id
+        #  worker.office_id = office.id
+        #end
+        #--
         if !@department.id.blank? && worker.department_id != @department.id
           worker.department_id = @department.id
         end

@@ -5,9 +5,9 @@
   <table class="table table-condensed table-striped">
     <thead>
       <tr>
-        <th><%=t 'activerecord.attributes.office.office_code' %></th>
-        <th><%=t 'activerecord.attributes.office.name' %></th>
-        <th><%=t 'activerecord.attributes.office.company' %></th>
+        <th><%= link_to t('activerecord.attributes.office.office_code'), {:sort => "office_code"}, {:class => "col-header-link"} %></th>
+        <th><%= link_to t('activerecord.attributes.office.name'), {:sort => "name"}, {:class => "col-header-link"} %></th>
+        <th><%= link_to t('activerecord.attributes.office.company'), {:sort => "company_id"}, {:class => "col-header-link"} %></th>
         <th></th>
       </tr>
     </thead>
