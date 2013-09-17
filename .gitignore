@@ -14,6 +14,9 @@
 /solr/data
 /solr/pids
 
+# Ignore all icon folder files but images
+/app/assets/images/icon/.DS_Store
+
 # Ignore all logfiles and tempfiles.
 /log/*.log
 /log/*.lck
