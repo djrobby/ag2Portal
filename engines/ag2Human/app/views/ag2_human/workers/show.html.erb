@@ -86,6 +86,12 @@
       <td></td>
       <td></td>
     </tr>
+    <tr>
+      <td><%= t :"activerecord.attributes.worker.remarks" %>:</td>
+      <td><%= @worker.remarks %></td>
+      <td></td>
+      <td></td>
+    </tr>
     <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @worker } %>
     <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @worker } %>
   </tbody>

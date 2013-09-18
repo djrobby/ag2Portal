@@ -181,6 +181,7 @@
   <label class="multi-field-label-three"> <%= f.association :town, collection: Town.all(order: 'name'), :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
   <label class="multi-field-label-three"> <%= f.association :province, collection: Province.all(order: 'name'), :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
 </div>
+<%= f.input :remarks, :as => :text, :input_html => { :class => 'x-large-text-field', :rows => 3 }, :label_html => { :class => 'form-label' } %>
 <%= f.input :avatar, :as => :file, :label_html => { :class => 'form-label' } %>
 <table class="form-table">
   <tbody>

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130722171047) do
+ActiveRecord::Schema.define(:version => 20130918081550) do
 
   create_table "activities", :force => true do |t|
     t.string   "description"
@@ -736,6 +736,7 @@ ActiveRecord::Schema.define(:version => 20130722171047) do
     t.decimal  "variable_salary",           :precision => 12, :scale => 4, :default => 0.0, :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
+    t.string   "remarks"
   end
 
   add_index "workers", ["affiliation_id"], :name => "index_workers_on_affiliation_id"

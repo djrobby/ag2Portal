@@ -61,5 +61,6 @@ en:
         borned_on: "Borned on"
         gross_salary: "Gross salary"
         variable_salary: "Variable salary"
+        remarks: "Remarks"
         full_name: "Full Name"
         address: "Address"
