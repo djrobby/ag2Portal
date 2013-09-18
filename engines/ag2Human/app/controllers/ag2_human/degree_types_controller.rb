@@ -4,10 +4,12 @@ module Ag2Human
   class DegreeTypesController < ApplicationController
     before_filter :authenticate_user!
     load_and_authorize_resource
+    # Helper methods for sorting
+    helper_method :sort_column
     # GET /degree_types
     # GET /degree_types.json
     def index
-      @degree_types = DegreeType.paginate(:page => params[:page], :per_page => per_page).order('dt_code')
+      @degree_types = DegreeType.paginate(:page => params[:page], :per_page => per_page).order(sort_column + ' ' + sort_direction)
 
       respond_to do |format|
         format.html # index.html.erb
@@ -94,6 +96,12 @@ module Ag2Human
                       notice: (crud_notice('destroyed', @degree_type) + "#{undo_link(@degree_type)}").html_safe }
         format.json { head :no_content }
       end
+    end
+
+    private
+
+    def sort_column
+      DegreeType.column_names.include?(params[:sort]) ? params[:sort] : "dt_code"
     end
   end
 end

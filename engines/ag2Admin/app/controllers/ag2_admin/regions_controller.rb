@@ -4,10 +4,12 @@ module Ag2Admin
   class RegionsController < ApplicationController
     before_filter :authenticate_user!
     load_and_authorize_resource
+    # Helper methods for sorting
+    helper_method :sort_column
     # GET /regions
     # GET /regions.json
     def index
-      @regions = Region.paginate(:page => params[:page], :per_page => per_page).order('name')
+      @regions = Region.paginate(:page => params[:page], :per_page => per_page).order(sort_column + ' ' + sort_direction)
 
       respond_to do |format|
         format.html # index.html.erb
@@ -94,6 +96,12 @@ module Ag2Admin
                       notice: (crud_notice('destroyed', @region) + "#{undo_link(@region)}").html_safe }
         format.json { head :no_content }
       end
+    end
+
+    private
+
+    def sort_column
+      Region.column_names.include?(params[:sort]) ? params[:sort] : "name"
     end
   end
 end

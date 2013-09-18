@@ -5,9 +5,9 @@
   <table class="table table-condensed table-striped">
     <thead>
       <tr>
-        <th><%=t 'activerecord.attributes.app.name' %></th>
+        <th><%=sortable "name", t('activerecord.attributes.app.name') %></th>
         <th><%=t 'activerecord.attributes.app.path' %></th>
-        <th><%=t 'activerecord.attributes.app.site' %></th>
+        <th><%= sortable "site_id", t('activerecord.attributes.app.site') %></th>
         <th></th>
       </tr>
     </thead>

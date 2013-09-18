@@ -5,8 +5,8 @@
   <table class="table table-condensed table-striped">
     <thead>
       <tr>
-        <th><%=t 'activerecord.attributes.street_type.street_type_code' %></th>
-        <th><%=t 'activerecord.attributes.street_type.street_type_description' %></th>
+        <th><%= sortable "street_type_code", t('activerecord.attributes.street_type.street_type_code') %></th>
+        <th><%= sortable "street_type_description", t('activerecord.attributes.street_type.street_type_description') %></th>
         <th></th>
       </tr>
     </thead>

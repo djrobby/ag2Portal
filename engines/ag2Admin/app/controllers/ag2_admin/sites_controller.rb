@@ -4,10 +4,12 @@ module Ag2Admin
   class SitesController < ApplicationController
     before_filter :authenticate_user!
     load_and_authorize_resource
+    # Helper methods for sorting
+    helper_method :sort_column
     # GET /sites
     # GET /sites.json
     def index
-      @sites = Site.paginate(:page => params[:page], :per_page => per_page)
+      @sites = Site.paginate(:page => params[:page], :per_page => per_page).order(sort_column + ' ' + sort_direction)
 
       respond_to do |format|
         format.html # index.html.erb
@@ -94,6 +96,12 @@ module Ag2Admin
                       notice: (crud_notice('destroyed', @site) + "#{undo_link(@site)}").html_safe }
         format.json { head :no_content }
       end
+    end
+
+    private
+
+    def sort_column
+      Site.column_names.include?(params[:sort]) ? params[:sort] : "id"
     end
   end
 end

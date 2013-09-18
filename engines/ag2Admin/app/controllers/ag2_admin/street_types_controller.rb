@@ -4,10 +4,12 @@ module Ag2Admin
   class StreetTypesController < ApplicationController
     before_filter :authenticate_user!
     load_and_authorize_resource
+    # Helper methods for sorting
+    helper_method :sort_column
     # GET /street_types
     # GET /street_types.json
     def index
-      @street_types = StreetType.paginate(:page => params[:page], :per_page => per_page).order('street_type_code')
+      @street_types = StreetType.paginate(:page => params[:page], :per_page => per_page).order(sort_column + ' ' + sort_direction)
 
       respond_to do |format|
         format.html # index.html.erb
@@ -93,6 +95,12 @@ module Ag2Admin
                       notice: (crud_notice('destroyed', @street_type) + "#{undo_link(@street_type)}").html_safe }
         format.json { head :no_content }
       end
+    end
+
+    private
+
+    def sort_column
+      StreetType.column_names.include?(params[:sort]) ? params[:sort] : "street_type_code"
     end
   end
 end

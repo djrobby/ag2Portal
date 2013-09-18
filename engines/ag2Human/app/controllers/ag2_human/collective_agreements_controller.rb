@@ -4,10 +4,12 @@ module Ag2Human
   class CollectiveAgreementsController < ApplicationController
     before_filter :authenticate_user!
     load_and_authorize_resource
+    # Helper methods for sorting
+    helper_method :sort_column
     # GET /collective_agreements
     # GET /collective_agreements.json
     def index
-      @collective_agreements = CollectiveAgreement.paginate(:page => params[:page], :per_page => per_page).order('ca_code')
+      @collective_agreements = CollectiveAgreement.paginate(:page => params[:page], :per_page => per_page).order(sort_column + ' ' + sort_direction)
 
       respond_to do |format|
         format.html # index.html.erb
@@ -94,6 +96,12 @@ module Ag2Human
                       notice: (crud_notice('destroyed', @collective_agreement) + "#{undo_link(@collective_agreement)}").html_safe }
         format.json { head :no_content }
       end
+    end
+
+    private
+
+    def sort_column
+      CollectiveAgreement.column_names.include?(params[:sort]) ? params[:sort] : "ca_code"
     end
   end
 end

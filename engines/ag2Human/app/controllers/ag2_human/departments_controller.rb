@@ -4,10 +4,12 @@ module Ag2Human
   class DepartmentsController < ApplicationController
     before_filter :authenticate_user!
     load_and_authorize_resource
+    # Helper methods for sorting
+    helper_method :sort_column
     # GET /departments
     # GET /departments.json
     def index
-      @departments = Department.paginate(:page => params[:page], :per_page => per_page).order('code')
+      @departments = Department.paginate(:page => params[:page], :per_page => per_page).order(sort_column + ' ' + sort_direction)
 
       respond_to do |format|
         format.html # index.html.erb
@@ -94,6 +96,12 @@ module Ag2Human
                       notice: (crud_notice('destroyed', @department) + "#{undo_link(@department)}").html_safe }
         format.json { head :no_content }
       end
+    end
+
+    private
+
+    def sort_column
+      Department.column_names.include?(params[:sort]) ? params[:sort] : "code"
     end
   end
 end

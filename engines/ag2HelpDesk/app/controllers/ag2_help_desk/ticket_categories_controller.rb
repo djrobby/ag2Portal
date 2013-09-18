@@ -4,10 +4,12 @@ module Ag2HelpDesk
   class TicketCategoriesController < ApplicationController
     before_filter :authenticate_user!
     load_and_authorize_resource
+    # Helper methods for sorting
+    helper_method :sort_column
     # GET /ticket_categories
     # GET /ticket_categories.json
     def index
-      @ticket_categories = TicketCategory.paginate(:page => params[:page], :per_page => per_page).order('name')
+      @ticket_categories = TicketCategory.paginate(:page => params[:page], :per_page => per_page).order(sort_column + ' ' + sort_direction)
 
       respond_to do |format|
         format.html # index.html.erb
@@ -93,6 +95,12 @@ module Ag2HelpDesk
                       notice: (crud_notice('destroyed', @ticket_category) + "#{undo_link(@ticket_category)}").html_safe }
         format.json { head :no_content }
       end
+    end
+
+    private
+
+    def sort_column
+      TicketCategory.column_names.include?(params[:sort]) ? params[:sort] : "name"
     end
   end
 end

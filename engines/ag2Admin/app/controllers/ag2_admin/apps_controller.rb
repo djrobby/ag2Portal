@@ -4,10 +4,12 @@ module Ag2Admin
   class AppsController < ApplicationController
     before_filter :authenticate_user!
     load_and_authorize_resource
+    # Helper methods for sorting
+    helper_method :sort_column
     # GET /apps
     # GET /apps.json
     def index
-      @apps = App.paginate(:page => params[:page], :per_page => per_page)
+      @apps = App.paginate(:page => params[:page], :per_page => per_page).order(sort_column + ' ' + sort_direction)
 
       respond_to do |format|
         format.html # index.html.erb
@@ -93,6 +95,12 @@ module Ag2Admin
                       notice: (crud_notice('destroyed', @app) + "#{undo_link(@app)}").html_safe }
         format.json { head :no_content }
       end
+    end
+
+    private
+
+    def sort_column
+      App.column_names.include?(params[:sort]) ? params[:sort] : "id"
     end
   end
 end

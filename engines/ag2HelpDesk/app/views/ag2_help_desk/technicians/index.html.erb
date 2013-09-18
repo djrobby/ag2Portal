@@ -5,8 +5,8 @@
   <table class="table table-condensed table-striped">
     <thead>
       <tr>
-        <th><%=t :"activerecord.attributes.technician.name" %></th>
-        <th><%=t :"activerecord.attributes.technician.user" %></th>
+        <th><%= sortable "name", t('activerecord.attributes.technician.name') %></th>
+        <th><%= sortable "user_id", t('activerecord.attributes.technician.user') %></th>
         <th></th>
       </tr>
     </thead>

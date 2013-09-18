@@ -5,6 +5,8 @@ module Ag2Admin
     before_filter :authenticate_user!
     load_and_authorize_resource
     skip_load_and_authorize_resource :only => :update_province_textfield_from_town
+    # Helper methods for sorting
+    helper_method :sort_column
     # Update hidden province text field at view from town select
     def update_province_textfield_from_town
       @town = Town.find(params[:id])
@@ -20,7 +22,7 @@ module Ag2Admin
     # GET /zipcodes.json
     def index
       # @zipcodes = Zipcode.order('zipcode').all
-      @zipcodes = Zipcode.paginate(:page => params[:page], :per_page => per_page).order('zipcode')
+      @zipcodes = Zipcode.paginate(:page => params[:page], :per_page => per_page).order(sort_column + ' ' + sort_direction)
 
       respond_to do |format|
         format.html # index.html.erb
@@ -106,6 +108,12 @@ module Ag2Admin
                       notice: (crud_notice('destroyed', @zipcode) + "#{undo_link(@zipcode)}").html_safe }
         format.json { head :no_content }
       end
+    end
+
+    private
+
+    def sort_column
+      Zipcode.column_names.include?(params[:sort]) ? params[:sort] : "zipcode"
     end
   end
 end

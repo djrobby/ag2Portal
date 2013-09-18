@@ -5,9 +5,9 @@
   <table class="table table-condensed table-striped">
     <thead>
       <tr>
-        <th><%=t 'activerecord.attributes.zipcode.zipcode' %></th>
-        <th><%=t 'activerecord.attributes.zipcode.town' %></th>
-        <th><%=t 'activerecord.attributes.zipcode.province' %></th>
+        <th><%= sortable "zipcode", t('activerecord.attributes.zipcode.zipcode') %></th>
+        <th><%= sortable "town_id", t('activerecord.attributes.zipcode.town') %></th>
+        <th><%= sortable "province_id", t('activerecord.attributes.zipcode.province') %></th>
         <th></th>
       </tr>
     </thead>

@@ -4,10 +4,12 @@ module Ag2Directory
   class SharedContactTypesController < ApplicationController
     before_filter :authenticate_user!
     load_and_authorize_resource
+    # Helper methods for sorting
+    helper_method :sort_column
     # GET /shared_contact_types
     # GET /shared_contact_types.json
     def index
-      @shared_contact_types = SharedContactType.paginate(:page => params[:page], :per_page => per_page).order('name')
+      @shared_contact_types = SharedContactType.paginate(:page => params[:page], :per_page => per_page).order(sort_column + ' ' + sort_direction)
 
       respond_to do |format|
         format.html # index.html.erb
@@ -93,6 +95,12 @@ module Ag2Directory
                       notice: (crud_notice('destroyed', @shared_contact_type) + "#{undo_link(@shared_contact_type)}").html_safe }
         format.json { head :no_content }
       end
+    end
+
+    private
+
+    def sort_column
+      SharedContactType.column_names.include?(params[:sort]) ? params[:sort] : "name"
     end
   end
 end
