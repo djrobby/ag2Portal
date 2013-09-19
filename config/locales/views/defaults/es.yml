@@ -22,6 +22,7 @@ es:
   about_special_thanks_title_html: "<b>Agradecimientos especiales</b>"
   about_special_thanks_css_html: "Colaboración CSS: "
   about_special_thanks_advise_html: "Asesoramiento General: "
+  about_third_pary_apps_html: "<b>Herramientas Libres de Terceros usadas con autorización</b>"
   error: "Error"
   undo: "Deshacer"
   redo: "Rehacer"

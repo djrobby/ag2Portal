@@ -22,6 +22,7 @@ en:
   about_special_thanks_title_html: "<b>Special Thanks</b>"
   about_special_thanks_css_html: "CSS Contribution: "
   about_special_thanks_advise_html: "General Advice: "
+  about_third_pary_apps_html: "<b>Free Third-Party Tools used with permission</b>"
   error: "Error"
   undo: "Undo"
   redo: "Redo"
