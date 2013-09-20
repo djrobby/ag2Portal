@@ -4,11 +4,13 @@ module Ag2Purchase
   class ActivitiesController < ApplicationController
     before_filter :authenticate_user!
     load_and_authorize_resource
+    # Helper methods for sorting
+    helper_method :sort_column
 
     # GET /activities
     # GET /activities.json
     def index
-      @activities = Activity.paginate(:page => params[:page], :per_page => per_page).order('description')
+      @activities = Activity.paginate(:page => params[:page], :per_page => per_page).order(sort_column + ' ' + sort_direction)
   
       respond_to do |format|
         format.html # index.html.erb
@@ -94,6 +96,12 @@ module Ag2Purchase
                       notice: (crud_notice('destroyed', @activity) + "#{undo_link(@activity)}").html_safe }
         format.json { head :no_content }
       end
+    end
+
+    private
+
+    def sort_column
+      Activity.column_names.include?(params[:sort]) ? params[:sort] : "description"
     end
   end
 end
