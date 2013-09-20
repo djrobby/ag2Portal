@@ -5,11 +5,11 @@
   <!-- Apps 1 -->
   <li class="span4">
     <% if (session[:resolution] == "LD")%>
-    <a href="<%= users_path %>" class="thumbnail centered"><img src="/assets/icon/ag2Users.png" width="48" height="48" alt="ag2Users" /><h5 class="h5-narrow">ag2Users</h5></a>
+    <a href="<%= users_path %>" class="thumbnail centered"><img src="/assets/icon/ag2Entities.png" width="48" height="48" alt="ag2Entities" /><h5 class="h5-narrow">ag2Entities</h5></a>
     <% elsif session[:resolution] == "SD" %>
-    <a href="<%= users_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/ag2Users.png" width="96" height="96" alt="ag2Users" /><h5 class="h5-narrow">ag2Users</h5></a>
+    <a href="<%= users_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/ag2Entities.png" width="96" height="96" alt="ag2Entities" /><h5 class="h5-narrow">ag2Entities</h5></a>
     <% else %>
-    <a href="<%= users_path %>" class="thumbnail centered"><img src="/assets/pict/ag2Users.png" width="128" height="128" alt="ag2Users" /><h5 class="h5-narrow">ag2Users</h5></a>
+    <a href="<%= users_path %>" class="thumbnail centered"><img src="/assets/pict/ag2Entities.png" width="128" height="128" alt="ag2Entities" /><h5 class="h5-narrow">ag2Entities</h5></a>
     <% end %>
   </li>
   <li class="span4">

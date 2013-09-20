@@ -11,6 +11,9 @@
     <a href="<%= ag2_admin.root_path %>">ag2Admin</a><span class="divider">></span>
   </li>
   <li>
+    <a href="<%= ag2_admin.config_path %>">ag2Config</a><span class="divider">></span>
+  </li>
+  <li>
     <a href="<%= ag2_admin.users_path %>">ag2Users</a><span class="divider">></span>
   </li>
   <% if @roles %>
@@ -23,7 +26,7 @@
     <a href="<%= roles_path %>"><%=t :"ag2_admin.breadcrumb.roles.items" %></a><span class="divider">></span>
   </li>
   <% if @breadcrumb == 'read' || @breadcrumb == 'update' %>
-  <%= @role.name.titleize %>
+  <%= @role.name %>
   <% end %>
   <% if @breadcrumb == 'create' %>
   <li>

@@ -29,5 +29,5 @@
   <%= render :partial => '/layouts/pagination', :locals => { :ivar => @users } %>
   <%= render :partial => '/layouts/crud/new', :locals => { :model => User, :path => new_user_path, :txt => I18n.t("ag2_admin.users.index.btn_new") } %>
   <%= link_to I18n.t("ag2_admin.users.index.go_to_child"), roles_path %> |
-  <%= link_to I18n.t("ag2_admin.users.index.back_to_root"), ag2_admin.root_path %>
+  <%= link_to I18n.t("ag2_admin.users.index.back_to_root"), ag2_admin.config_path %>
 </div>

@@ -5,7 +5,7 @@ en:
         title: "Users"
         btn_new: "New User"
         go_to_child: "Go to Roles"
-        back_to_root: "Back to ag2Admin"
+        back_to_root: "Back to ag2Config"
         btn_role: "Roles"
         change_role_title: "Roles for %{user}"
         btn_change_role: "Change Roles"

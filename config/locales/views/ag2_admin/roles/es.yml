@@ -5,7 +5,7 @@ es:
         title: "Roles"
         btn_new: "Nuevo Rol"
         back_to_main_app: "Volver a Usuarios"
-        back_to_root: "Volver a ag2Admin"
+        back_to_root: "Volver a ag2Config"
       show:
         title: "Rol"
         btn_edit: "Editar Rol"
