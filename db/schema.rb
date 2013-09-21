@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130918081550) do
+ActiveRecord::Schema.define(:version => 20130921100637) do
 
   create_table "activities", :force => true do |t|
     t.string   "description"
@@ -180,6 +180,56 @@ ActiveRecord::Schema.define(:version => 20130918081550) do
   end
 
   add_index "departments", ["code"], :name => "index_departments_on_code"
+
+  create_table "entities", :force => true do |t|
+    t.string   "fiscal_id"
+    t.string   "first_name"
+    t.string   "last_name"
+    t.string   "company"
+    t.integer  "entity_type_id"
+    t.integer  "street_type_id"
+    t.string   "street_name"
+    t.string   "street_number"
+    t.string   "building"
+    t.integer  "floor"
+    t.string   "floor_office"
+    t.integer  "zipcode_id"
+    t.string   "town"
+    t.integer  "province_id"
+    t.integer  "region_id"
+    t.integer  "country_id"
+    t.string   "phone"
+    t.string   "extension"
+    t.string   "fax"
+    t.string   "cellular"
+    t.string   "email"
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
+    t.string   "created_by"
+    t.string   "updated_by"
+  end
+
+  add_index "entities", ["cellular"], :name => "index_entities_on_cellular"
+  add_index "entities", ["company"], :name => "index_entities_on_company"
+  add_index "entities", ["country_id"], :name => "index_entities_on_country_id"
+  add_index "entities", ["email"], :name => "index_entities_on_email"
+  add_index "entities", ["entity_type_id"], :name => "index_entities_on_entity_type_id"
+  add_index "entities", ["first_name"], :name => "index_entities_on_first_name"
+  add_index "entities", ["fiscal_id"], :name => "index_entities_on_fiscal_id"
+  add_index "entities", ["last_name"], :name => "index_entities_on_last_name"
+  add_index "entities", ["phone"], :name => "index_entities_on_phone"
+  add_index "entities", ["province_id"], :name => "index_entities_on_province_id"
+  add_index "entities", ["region_id"], :name => "index_entities_on_region_id"
+  add_index "entities", ["street_type_id"], :name => "index_entities_on_street_type_id"
+  add_index "entities", ["zipcode_id"], :name => "index_entities_on_zipcode_id"
+
+  create_table "entity_types", :force => true do |t|
+    t.string   "name"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+    t.string   "created_by"
+    t.string   "updated_by"
+  end
 
   create_table "manufacturers", :force => true do |t|
     t.string   "name"

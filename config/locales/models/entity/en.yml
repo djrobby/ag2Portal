@@ -1,0 +1,40 @@
+en:
+  activerecord:
+    models:
+      entity:
+        zero:  Entities
+        one:   Entity
+        few:   Entities
+        other: Entities
+    attributes:
+      entity:
+        fiscal_id: "Fiscal Id"
+        last_name: "Last name"
+        first_name: "Name"
+        company: "Company"
+        entity_type: "Type"
+        entity_type_id: "Type"
+        province: "Province"
+        province_id: "Province"
+        town: "Town"
+        town_id: "Town"
+        zipcode: "Zip Code"
+        zipcode_id: "Zip Code"
+        region: "Region"
+        region_id: "Region"
+        country: "Country"
+        country_id: "Country"
+        street_type: "Street Type"
+        street_type_id: "Street Type"
+        street_name: "Street name"
+        street_number: "Number"
+        building: "Building"
+        floor: "Floor"
+        floor_office: "Office"
+        phone: "Phone"
+        extension: "Extension"
+        fax: "Fax"
+        cellular: "Cellular"
+        email: "Email"
+        full_name: "Full Name"
+        address: "Address"

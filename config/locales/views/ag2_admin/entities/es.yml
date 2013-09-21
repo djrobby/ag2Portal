@@ -1,0 +1,17 @@
+es:
+  ag2_admin:
+    entities:
+      index:
+        title: "Entidades (Sujetos Pasivos)"
+        btn_new: "Nueva Entidad"
+        go_to_child_app: "Ir a Tipos de entidades"
+        back_to_root: "Volver a ag2Admin"
+      show:
+        title: "Entidad"
+        btn_edit: "Editar Entidad"
+      edit:
+        title: "Editar Entidad"
+        btn_show: "Ver Entidad"
+      new:
+        title: "Nueva Entidad"
+      back_to_main_page: "Volver a ag2Entities"

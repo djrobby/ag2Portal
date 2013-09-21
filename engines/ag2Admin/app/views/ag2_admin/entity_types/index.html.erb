@@ -1,0 +1,21 @@
+<h1>Listing entity_types</h1>
+
+<table>
+  <tr>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @entity_types.each do |entity_type| %>
+  <tr>
+    <td><%= link_to 'Show', entity_type %></td>
+    <td><%= link_to 'Edit', edit_entity_type_path(entity_type) %></td>
+    <td><%= link_to 'Destroy', entity_type, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Entity type', new_entity_type_path %>

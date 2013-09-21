@@ -1,0 +1,40 @@
+es:
+  activerecord:
+    models:
+      entity:
+        zero:  Entidades
+        one:   Entidad
+        few:   Entidades
+        other: Entidades
+    attributes:
+      entity:
+        fiscal_id: "Id Fiscal CIF/NIF"
+        last_name: "Apellidos"
+        first_name: "Nombre"
+        company: "Empresa"
+        entity_type: "Tipo"
+        entity_type_id: "Tipo"
+        province: "Provincia"
+        province_id: "Provincia"
+        town: "Población"
+        town_id: "Población"
+        zipcode: "Código postal"
+        zipcode_id: "Código Postal"
+        region: "Región"
+        region_id: "Región"
+        country: "País"
+        country_id: "País"
+        street_type: "Tipo de vía"
+        street_type_id: "Tipo de vía"
+        street_name: "Nombre de vía"
+        street_number: "Nº"
+        building: "Edificio/Bloque"
+        floor: "Planta"
+        floor_office: "Oficina"
+        phone: "Teléfono"
+        extension: "Extensión"
+        fax: "Fax"
+        cellular: "Móvil"
+        email: "Email"
+        full_name: "Apellidos y Nombre"
+        address: "Dirección"

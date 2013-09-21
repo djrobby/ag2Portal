@@ -1,0 +1,17 @@
+en:
+  ag2_admin:
+    entities:
+      index:
+        title: "Entities (TaxPayers)"
+        btn_new: "New Entity"
+        go_to_child_app: "Go to Entity types"
+        back_to_root: "Back to ag2Admin"
+      show:
+        title: "Entity"
+        btn_edit: "Edit Entity"
+      edit:
+        title: "Edit Entity"
+        btn_show: "Show Entity"
+      new:
+        title: "New Entity"
+      back_to_main_page: "Back to ag2Entities"
