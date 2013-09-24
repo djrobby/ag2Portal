@@ -4,7 +4,7 @@ es:
       index:
         title: "Entidades (Sujetos Pasivos)"
         btn_new: "Nueva Entidad"
-        go_to_child_app: "Ir a Tipos de entidades"
+        go_to_child_app: "Ir a Tipos de entidad"
         back_to_root: "Volver a ag2Admin"
       show:
         title: "Entidad"

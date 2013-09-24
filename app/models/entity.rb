@@ -39,5 +39,6 @@ class Entity < ActiveRecord::Base
     string :company
     string :last_name
     string :first_name
+    string :fiscal_id
   end
 end

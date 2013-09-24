@@ -1,5 +1,76 @@
-<p id="notice"><%= notice %></p>
+<%= render '/layouts/ag2_admin/entitiesbreadcrumb' %>
 
+<h3><%= t '.title' %></h3>
+<table class="table">
+  <tbody>
+    <tr>
+      <td>Id:</td>
+      <td><%= @entity.id %></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><%= t :"activerecord.attributes.entity.entity_type" %>:</td>
+      <td><%= @entity.entity_type.name %></td>
+      <td><%= t :"activerecord.attributes.entity.fiscal_id" %>:</td>
+      <td><%= @entity.fiscal_id unless @entity.fiscal_id.blank? %></td>
+    </tr>
+    <tr>
+      <td><%= t :"activerecord.attributes.entity.company" %>:</td>
+      <td><%= @entity.company unless @entity.company.blank? %></td>
+      <td><%= t :"activerecord.attributes.entity.full_name" %>:</td>
+      <td><%= @entity.full_name unless @entity.full_name.blank? %></td>
+    </tr>
+    <tr>
+      <td><%= t :"activerecord.attributes.entity.phone" %>:</td>
+      <td><%= @entity.phone %>
+      <% if !@entity.extension.blank? %>
+      (<%= @entity.extension %>)
+      <% end %> </td>
+      <td><%= t :"activerecord.attributes.entity.fax" %>:</td>
+      <td><%= @entity.fax %></td>
+    </tr>
+    <tr>
+      <td><%= t :"activerecord.attributes.entity.cellular" %>:</td>
+      <td><%= @entity.cellular %></td>
+      <td><%= t :"activerecord.attributes.entity.email" %>:</td>
+      <td><%= @entity.email %></td>
+    </tr>
+    <tr>
+      <td><%= t :"activerecord.attributes.entity.address" %>:</td>
+      <td> <%= @entity.street_type.street_type_code.titleize %>. <%= @entity.street_name %> <%= @entity.street_number %>
+      <% if !@entity.building.blank? %>
+      <%= @entity.building.titleize %>
+      <% end %>
+      <% if !@entity.floor.blank? %>
+      <%= @entity.floor %>&ordm;
+      <% end %>
+      <% if !@entity.floor_office.blank? %>
+      <%= @entity.floor_office %>
+      <% end %> </td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><%= t :"activerecord.attributes.entity.town" %>:</td>
+      <td><%= @entity.town.name %></td>
+      <td><%= t :"activerecord.attributes.entity.province" %>:</td>
+      <td><%= @entity.province.name_and_region %></td>
+    </tr>
+    <tr>
+      <td><%= t :"activerecord.attributes.entity.zipcode" %>:</td>
+      <td><%= @entity.zipcode.zipcode %></td>
+      <td><%= t :"activerecord.attributes.entity.country" %>:</td>
+      <td><%= @entity.country.name %></td>
+    </tr>
+    <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @entity } %>
+    <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @entity } %>
+  </tbody>
+</table>
 
-<%= link_to 'Edit', edit_entity_path(@entity) %> |
-<%= link_to 'Back', entities_path %>
+<%= render :partial => '/layouts/crud/update_delete',
+:locals => { :model => Entity, :update_path => edit_entity_path(@entity), :update_txt => t('.btn_edit'),
+:delete_path => @entity, :delete_txt => t('.btn_delete'),
+:msg => t("activerecord.models.entity.one"), :txt => @entity.fiscal_id } %>
+
+<%= link_to I18n.t("back_to_main_page", :scope => :"ag2_admin.entities"), entities_path %>

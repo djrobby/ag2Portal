@@ -2,6 +2,9 @@ require_dependency "ag2_admin/application_controller"
 
 module Ag2Admin
   class EntityTypesController < ApplicationController
+    before_filter :authenticate_user!
+    load_and_authorize_resource
+
     # GET /entity_types
     # GET /entity_types.json
     def index
@@ -16,6 +19,7 @@ module Ag2Admin
     # GET /entity_types/1
     # GET /entity_types/1.json
     def show
+      @breadcrumb = 'read'
       @entity_type = EntityType.find(params[:id])
   
       respond_to do |format|
@@ -27,6 +31,7 @@ module Ag2Admin
     # GET /entity_types/new
     # GET /entity_types/new.json
     def new
+      @breadcrumb = 'create'
       @entity_type = EntityType.new
   
       respond_to do |format|
@@ -37,17 +42,20 @@ module Ag2Admin
   
     # GET /entity_types/1/edit
     def edit
+      @breadcrumb = 'update'
       @entity_type = EntityType.find(params[:id])
     end
   
     # POST /entity_types
     # POST /entity_types.json
     def create
+      @breadcrumb = 'create'
       @entity_type = EntityType.new(params[:entity_type])
+      @entity_type.created_by = current_user.id if !current_user.nil?
   
       respond_to do |format|
         if @entity_type.save
-          format.html { redirect_to @entity_type, notice: 'Entity type was successfully created.' }
+          format.html { redirect_to @entity_type, notice: crud_notice('created', @entity_type) }
           format.json { render json: @entity_type, status: :created, location: @entity_type }
         else
           format.html { render action: "new" }
@@ -59,11 +67,14 @@ module Ag2Admin
     # PUT /entity_types/1
     # PUT /entity_types/1.json
     def update
+      @breadcrumb = 'update'
       @entity_type = EntityType.find(params[:id])
+      @entity_type.updated_by = current_user.id if !current_user.nil?
   
       respond_to do |format|
         if @entity_type.update_attributes(params[:entity_type])
-          format.html { redirect_to @entity_type, notice: 'Entity type was successfully updated.' }
+          format.html { redirect_to @entity_type,
+                        notice: (crud_notice('updated', @entity_type) + "#{undo_link(@entity_type)}").html_safe }
           format.json { head :no_content }
         else
           format.html { render action: "edit" }
@@ -79,7 +90,8 @@ module Ag2Admin
       @entity_type.destroy
   
       respond_to do |format|
-        format.html { redirect_to entity_types_url }
+        format.html { redirect_to entity_types_url,
+                      notice: (crud_notice('destroyed', @entity_type) + "#{undo_link(@entity_type)}").html_safe }
         format.json { head :no_content }
       end
     end

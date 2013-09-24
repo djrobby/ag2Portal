@@ -83,6 +83,9 @@ module Ag2Directory
       else
       # @shared_contacts = SharedContact.order('company', 'last_name, first_name').where("last_name LIKE ?", "#{letter}%")
         @shared_contacts = SharedContact.where("last_name LIKE ?", "#{letter}%").paginate(:page => params[:page], :per_page => per_page).order('company', 'last_name, first_name')
+        if @shared_contacts.count == 0
+          @shared_contacts = SharedContact.where("company LIKE ?", "#{letter}%").paginate(:page => params[:page], :per_page => per_page).order('company', 'last_name, first_name')
+        end
       end
 
       respond_to do |format|

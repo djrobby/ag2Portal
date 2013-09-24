@@ -1,21 +1,41 @@
-<h1>Listing entities</h1>
+<%= render '/layouts/ag2_admin/entitiesbreadcrumb' %>
+<%= render :partial => '/layouts/searchhead', :locals => { :title => I18n.t("ag2_admin.entities.index.title"), :path => entities_path } %>
 
-<table>
-  <tr>
-    <th></th>
-    <th></th>
-    <th></th>
-  </tr>
-
-<% @entities.each do |entity| %>
-  <tr>
-    <td><%= link_to 'Show', entity %></td>
-    <td><%= link_to 'Edit', edit_entity_path(entity) %></td>
-    <td><%= link_to 'Destroy', entity, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-  </tr>
-<% end %>
-</table>
-
-<br />
-
-<%= link_to 'New Entity', new_entity_path %>
+<div class="span11">
+  <%= render :partial => '/layouts/lettershead', :locals => { :controller => "entities", :action => "index" } %>
+  <table class="table table-condensed table-striped shrinked">
+    <thead>
+      <tr>
+        <th><%= t :"activerecord.attributes.entity.fiscal_id" %></th>
+        <th><%= t :"activerecord.attributes.entity.company" %></th>
+        <th><%= t :"activerecord.attributes.entity.full_name" %></th>
+        <th><%= t :"activerecord.attributes.entity.entity_type" %></th>
+        <th><%= t :"activerecord.attributes.entity.phone" %></th>
+        <th><%= t :"activerecord.attributes.entity.cellular" %></th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @entities.each do |entity| %>
+      <%= render :partial => 'layouts/ag2_admin/entityinfo', :locals => { :contact => entity, :title => I18n.t("activerecord.models.entity.one") } %>
+      <tr>
+        <td><a data-toggle="modal" href="#entityinfo<%= entity.id.to_s %>"><%= entity.fiscal_id %></a></td>
+        <td><%= entity.company %></td>
+        <td><%= entity.full_name unless entity.full_name.blank? %></td>
+        <td><%= entity.entity_type.name unless contact.entity_type.blank? %></td>
+        <td><%= entity.phone unless contact.phone.blank? %>
+        <% if entity.extension.blank? %>
+        (<%= entity.extension %>)
+        <% end %> </td>
+        <td><%= entity.cellular unless entity.cellular.blank? %></td>
+        <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => Entity, :path => edit_entity_path(entity) } %>
+        <%= render :partial => '/layouts/crud/delete', :locals => { :model => Entity, :path => entity, :msg => I18n.t("activerecord.models.entity.one"), :txt => entity.fiscal_id } %> </td>
+      </tr>
+      <% end %>
+    </tbody>
+  </table>
+  <%= render :partial => '/layouts/pagination', :locals => { :ivar => @entities } %>
+  <%= render :partial => '/layouts/crud/new', :locals => { :model => Entity, :path => new_entity_path, :txt => I18n.t("ag2_admin.entities.index.btn_new") } %>
+  <%= link_to I18n.t("go_to_child_app", :scope => :"ag2_admin.entities.index"), entity_types_path %> |
+  <%= link_to I18n.t("back_to_root", :scope => :"ag2_admin.entities.index"), ag2_admin.root_path %>
+</div>

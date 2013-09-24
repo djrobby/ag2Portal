@@ -102,7 +102,8 @@
 </table>
 
 <%= render :partial => '/layouts/crud/update_delete',
-:locals => { :model => Suppler, :update_path => edit_supplier_path(@supplier), :update_txt => t('.btn_edit'),
+:locals => { :model => Supplier, :update_path => edit_supplier_path(@supplier), :update_txt => t('.btn_edit'),
 :delete_path => @supplier, :delete_txt => t('.btn_delete'),
 :msg => t("activerecord.models.supplier.one"), :txt => @supplier.name } %>
+
 <%= link_to t('ag2_purchase.suppliers.back_to_main_page'), suppliers_path %>

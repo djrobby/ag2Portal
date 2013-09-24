@@ -4,7 +4,7 @@ es:
       index:
         title: "Tipos de entidad"
         btn_new: "Nuevo Tipo de entidad"
-        back_to_main_app: "Volver a Entidades"
+        back_to_main_app: "Volver a ag2Entities"
         back_to_root: "Volver a ag2Admin"
       show:
         title: "Tipo de entidad"
