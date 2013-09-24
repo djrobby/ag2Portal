@@ -13,7 +13,7 @@ class CreateEntities < ActiveRecord::Migration
       t.integer :floor
       t.string :floor_office
       t.references :zipcode
-      t.string :town
+      t.references :town
       t.references :province
       t.references :region
       t.references :country
@@ -28,6 +28,7 @@ class CreateEntities < ActiveRecord::Migration
     add_index :entities, :entity_type_id
     add_index :entities, :street_type_id
     add_index :entities, :zipcode_id
+    add_index :entities, :town_id
     add_index :entities, :province_id
     add_index :entities, :region_id
     add_index :entities, :country_id

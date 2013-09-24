@@ -1,0 +1,17 @@
+en:
+  ag2_admin:
+    entity_types:
+      index:
+        title: "Entity types"
+        btn_new: "New Entity type"
+        back_to_main_app: "Back to Entities"
+        back_to_root: "Back to ag2Admin"
+      show:
+        title: "Entity type"
+        btn_edit: "Edit Entity type"
+      edit:
+        title: "Edit Entity type"
+        btn_show: "Show Entity type"
+      new:
+        title: "New Entity type"
+      back_to_main_page: "Back to Entity types"

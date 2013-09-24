@@ -2,7 +2,7 @@ es:
   ag2_admin:
     street_types:
       index:
-        title: "Tipos de vías"
+        title: "Tipos de vía"
         btn_new: "Nuevo Tipo de vía"
         back_to_root: "Volver a ag2Admin"
       show:

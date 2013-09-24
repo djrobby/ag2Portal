@@ -194,7 +194,7 @@ ActiveRecord::Schema.define(:version => 20130921100637) do
     t.integer  "floor"
     t.string   "floor_office"
     t.integer  "zipcode_id"
-    t.string   "town"
+    t.integer  "town_id"
     t.integer  "province_id"
     t.integer  "region_id"
     t.integer  "country_id"
@@ -221,6 +221,7 @@ ActiveRecord::Schema.define(:version => 20130921100637) do
   add_index "entities", ["province_id"], :name => "index_entities_on_province_id"
   add_index "entities", ["region_id"], :name => "index_entities_on_region_id"
   add_index "entities", ["street_type_id"], :name => "index_entities_on_street_type_id"
+  add_index "entities", ["town_id"], :name => "index_entities_on_town_id"
   add_index "entities", ["zipcode_id"], :name => "index_entities_on_zipcode_id"
 
   create_table "entity_types", :force => true do |t|

@@ -1,0 +1,11 @@
+en:
+  activerecord:
+    models:
+      entity_type:
+        zero:  Entity types
+        one:   Entity type
+        few:   Entity types
+        other: Entity types
+    attributes:
+      entity_type:
+        name: "Descrption"

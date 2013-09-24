@@ -1,0 +1,11 @@
+es:
+  activerecord:
+    models:
+      entity_type:
+        zero:  Tipos de entidad
+        one:   Tipo de entidad
+        few:   Tipos de entidad
+        other: Tipos de entidad
+    attributes:
+      entity_type:
+        name: "Descripción"

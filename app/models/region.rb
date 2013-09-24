@@ -10,6 +10,7 @@ class Region < ActiveRecord::Base
 
   has_many :provinces
   has_many :shared_contacts
+  has_many :entities
   has_many :suppliers
   def to_label
     "#{name} (#{country.name})"

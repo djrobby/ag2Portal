@@ -14,6 +14,7 @@ class Town < ActiveRecord::Base
   has_many :zipcodes
   has_many :workers
   has_many :shared_contacts
+  has_many :entities
   has_many :suppliers
   def to_label
     "#{name} (#{province.name})"

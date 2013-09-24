@@ -1,0 +1,17 @@
+es:
+  ag2_admin:
+    entity_types:
+      index:
+        title: "Tipos de entidad"
+        btn_new: "Nuevo Tipo de entidad"
+        back_to_main_app: "Volver a Entidades"
+        back_to_root: "Volver a ag2Admin"
+      show:
+        title: "Tipo de entidad"
+        btn_edit: "Editar Tipo de entidad"
+      edit:
+        title: "Editar Tipo de entidad"
+        btn_show: "Ver Tipo de entidad"
+      new:
+        title: "Nuevo Tipo de entidad"
+      back_to_main_page: "Volver a Tipos de entidad"
