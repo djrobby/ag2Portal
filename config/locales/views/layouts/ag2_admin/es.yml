@@ -3,3 +3,7 @@ es:
     breadcrumb:
       roles:
         items: "Roles"
+        item: "Rol"
+      entitytypes:
+        items: "Tipos"
+        item: "Tipo"

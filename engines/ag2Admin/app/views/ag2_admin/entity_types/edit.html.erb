@@ -1,6 +1,8 @@
-<h1>Editing entity_type</h1>
+<%= render '/layouts/ag2_admin/entitytypesbreadcrumb' %>
+
+<h3><%=t '.title' %></h3>
 
 <%= render 'form' %>
 
-<%= link_to 'Show', @entity_type %> |
-<%= link_to 'Back', entity_types_path %>
+<%= link_to I18n.t("btn_show", :scope => :"ag2_admin.entity_types.edit"), @entity_type %> |
+<%= link_to I18n.t("back_to_main_page", :scope => :"ag2_admin.entity_types"), entity_types_path %>

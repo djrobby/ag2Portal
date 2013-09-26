@@ -1,21 +1,26 @@
-<h1>Listing entity_types</h1>
+<%= render '/layouts/ag2_admin/entitytypesbreadcrumb' %>
 
-<table>
-  <tr>
-    <th></th>
-    <th></th>
-    <th></th>
-  </tr>
-
-<% @entity_types.each do |entity_type| %>
-  <tr>
-    <td><%= link_to 'Show', entity_type %></td>
-    <td><%= link_to 'Edit', edit_entity_type_path(entity_type) %></td>
-    <td><%= link_to 'Destroy', entity_type, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-  </tr>
-<% end %>
-</table>
-
-<br />
-
-<%= link_to 'New Entity type', new_entity_type_path %>
+<h3><%=t '.title' %></h3>
+<div class="span6">
+  <table class="table table-condensed table-striped">
+    <thead>
+      <tr>
+        <th><%= sortable "name", t('activerecord.attributes.entity_type.name') %></th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @entity_types.each do |t| %>
+      <tr>
+        <td><%= link_to t.name.titleize, t %></td>
+        <td> <%= render :partial => '/layouts/crud/edit', :locals => { :model => EntityType, :path => edit_entity_type_path(t) } %>
+        <%= render :partial => '/layouts/crud/delete', :locals => { :model => EntityType, :path => t, :msg => I18n.t("activerecord.models.entity_type.one"), :txt => t.name } unless t.id < 3 %> </td>
+      </tr>
+      <% end %>
+    </tbody>
+  </table>
+  <%= render :partial => '/layouts/pagination', :locals => { :ivar => @entity_types } %>
+  <%= render :partial => '/layouts/crud/new', :locals => { :model => EntityType, :path => new_entity_type_path, :txt => I18n.t("ag2_admin.entity_types.index.btn_new") } %>
+  <%= link_to I18n.t("ag2_admin.entity_types.index.back_to_main_app"), entities_path %> |
+  <%= link_to I18n.t("ag2_admin.entity_types.index.back_to_root"), ag2_admin.root_path %>
+</div>

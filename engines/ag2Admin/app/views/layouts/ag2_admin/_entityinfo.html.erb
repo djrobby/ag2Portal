@@ -6,9 +6,9 @@
     </div>
     <div class="modal-body">
       <p>
+        <%= contact.fiscal_id unless contact.fiscal_id.blank? %>
         <span class="highlighted"><%= contact.entity_type.name unless contact.entity_type.blank? %></span><br />
         <i class="icon-hand-right"></i>
-        <%= contact.fiscal_id unless contact.fiscal_id.blank? %>
       </p>
       <p>
         <%= contact.company unless contact.company.blank? %><br />

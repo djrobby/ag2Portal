@@ -39,6 +39,8 @@ class Ability
       can :crud, StreetType
       can :crud, Town
       can :crud, Zipcode
+      can :crud, Entity
+      can :crud, EntityType
     elsif user.has_role? :ag2Admin_Guest
       can :read, Company
       can :read, Country
@@ -48,6 +50,8 @@ class Ability
       can :read, StreetType
       can :read, Town
       can :read, Zipcode
+      can :read, Entity
+      can :read, EntityType
     elsif user.has_role? :ag2Admin_Banned
       cannot :manage, Company
       cannot :manage, Country
@@ -57,6 +61,8 @@ class Ability
       cannot :manage, StreetType
       cannot :manage, Town
       cannot :manage, Zipcode
+      cannot :manage, Entity
+      cannot :manage, EntityType
     end
     # ag2Directory
     if user.has_role? :ag2Directory_User

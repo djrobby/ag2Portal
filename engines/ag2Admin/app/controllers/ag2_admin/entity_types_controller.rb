@@ -4,11 +4,13 @@ module Ag2Admin
   class EntityTypesController < ApplicationController
     before_filter :authenticate_user!
     load_and_authorize_resource
+    # Helper methods for sorting
+    helper_method :sort_column
 
     # GET /entity_types
     # GET /entity_types.json
     def index
-      @entity_types = EntityType.all
+      @entity_types = EntityType.paginate(:page => params[:page], :per_page => per_page).order(sort_column + ' ' + sort_direction)
   
       respond_to do |format|
         format.html # index.html.erb
@@ -94,6 +96,12 @@ module Ag2Admin
                       notice: (crud_notice('destroyed', @entity_type) + "#{undo_link(@entity_type)}").html_safe }
         format.json { head :no_content }
       end
+    end
+
+    private
+
+    def sort_column
+      EntityType.column_names.include?(params[:sort]) ? params[:sort] : "name"
     end
   end
 end

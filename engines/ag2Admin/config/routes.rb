@@ -19,6 +19,14 @@ Ag2Admin::Engine.routes.draw do
     match 'offices/:id/update_province_textfield_from_zipcode/:id', :controller => 'offices', :action => 'update_province_textfield_from_zipcode'
     match 'offices/update_code_textfield_from_zipcode/:id', :controller => 'offices', :action => 'update_code_textfield_from_zipcode'
     match 'offices/:id/update_code_textfield_from_zipcode/:id', :controller => 'offices', :action => 'update_code_textfield_from_zipcode'
+    match 'entities/update_province_textfield_from_town/:id', :controller => 'entities', :action => 'update_province_textfield_from_town'
+    match 'entities/:id/update_province_textfield_from_town/:id', :controller => 'entities', :action => 'update_province_textfield_from_town'
+    match 'entities/update_province_textfield_from_zipcode/:id', :controller => 'entities', :action => 'update_province_textfield_from_zipcode'
+    match 'entities/:id/update_province_textfield_from_zipcode/:id', :controller => 'entities', :action => 'update_province_textfield_from_zipcode'
+    match 'entities/update_country_textfield_from_region/:id', :controller => 'entities', :action => 'update_country_textfield_from_region'
+    match 'entities/:id/update_country_textfield_from_region/:id', :controller => 'entities', :action => 'update_country_textfield_from_region'
+    match 'entities/update_region_textfield_from_province/:id', :controller => 'entities', :action => 'update_region_textfield_from_province'
+    match 'entities/:id/update_region_textfield_from_province/:id', :controller => 'entities', :action => 'update_region_textfield_from_province'
 
     # Resources
     resources :users

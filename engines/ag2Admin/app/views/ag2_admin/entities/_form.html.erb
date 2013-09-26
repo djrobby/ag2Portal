@@ -1,4 +1,23 @@
 <script>
+  $(document).ready(function() {
+    var contact = $('select#entity_entity_type_id :selected').val();
+    if (contact == "")
+      contact = "0";
+    if (contact == "0") {// Empty type
+      $('#entity_company').prop('disabled', true);
+      $('#entity_last_name').prop('disabled', true);
+      $('#entity_first_name').prop('disabled', true);
+    } else if (contact == "1") {// Type is Person
+      $('#entity_company').prop('disabled', true);
+      $('#entity_last_name').prop('disabled', false);
+      $('#entity_first_name').prop('disabled', false);
+    } else {// Type is Company or Other
+      $('#entity_company').prop('disabled', false);
+      $('#entity_last_name').prop('disabled', true);
+      $('#entity_first_name').prop('disabled', true);
+    }
+  });
+
   jQuery(function($) {
     // when the #entity_town_id field changes
     $("#entity_town_id").change(function() {
@@ -51,6 +70,28 @@
       jQuery.getJSON('update_country_textfield_from_region/' + contact, function(data) {
         $("#entity_country_id").val(data.id);
       })
+      return false;
+    });
+
+    // when the #entity_entity_type_id field changes
+    $("#entity_entity_type_id").change(function() {
+      // make a POST call and replace the content
+      var contact = $('select#entity_entity_type_id :selected').val();
+      if (contact == "")
+        contact = "0";
+      if (contact == "0") {// Empty type
+        $('#entity_company').prop('disabled', true);
+        $('#entity_last_name').prop('disabled', true);
+        $('#entity_first_name').prop('disabled', true);
+      } else if (contact == "1") {// Type is Person
+        $('#entity_company').prop('disabled', true);
+        $('#entity_last_name').prop('disabled', false);
+        $('#entity_first_name').prop('disabled', false);
+      } else {// Type is Company or Other
+        $('#entity_company').prop('disabled', false);
+        $('#entity_last_name').prop('disabled', true);
+        $('#entity_first_name').prop('disabled', true);
+      }
       return false;
     });
   })

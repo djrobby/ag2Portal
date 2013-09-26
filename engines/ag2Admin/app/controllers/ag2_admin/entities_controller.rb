@@ -68,7 +68,7 @@ module Ag2Admin
     # GET /entities.json
     def index
       letter = params[:letter]
-      
+
       @search = Entity.search do
         fulltext params[:search]
         order_by :fiscal_id, :asc
@@ -82,50 +82,50 @@ module Ag2Admin
           @entities = Entity.where("company LIKE ?", "#{letter}%").paginate(:page => params[:page], :per_page => per_page).order('fiscal_id')
         end
       end
-  
+
       respond_to do |format|
         format.html # index.html.erb
         format.json { render json: @suppliers }
       end
     end
-  
+
     # GET /entities/1
     # GET /entities/1.json
     def show
       @breadcrumb = 'read'
       @entity = Entity.find(params[:id])
-  
+
       respond_to do |format|
         format.html # show.html.erb
         format.json { render json: @entity }
       end
     end
-  
+
     # GET /entities/new
     # GET /entities/new.json
     def new
       @breadcrumb = 'create'
       @entity = Entity.new
-  
+
       respond_to do |format|
         format.html # new.html.erb
         format.json { render json: @entity }
       end
     end
-  
+
     # GET /entities/1/edit
     def edit
       @breadcrumb = 'update'
       @entity = Entity.find(params[:id])
     end
-  
+
     # POST /entities
     # POST /entities.json
     def create
       @breadcrumb = 'create'
       @entity = Entity.new(params[:entity])
       @entity.created_by = current_user.id if !current_user.nil?
-  
+
       respond_to do |format|
         if @entity.save
           format.html { redirect_to @entity, notice: crud_notice('created', @entity) }
@@ -136,14 +136,14 @@ module Ag2Admin
         end
       end
     end
-  
+
     # PUT /entities/1
     # PUT /entities/1.json
     def update
       @breadcrumb = 'update'
       @entity = Entity.find(params[:id])
       @entity.updated_by = current_user.id if !current_user.nil?
-  
+
       respond_to do |format|
         if @entity.update_attributes(params[:entity])
           format.html { redirect_to @entity,
@@ -155,13 +155,13 @@ module Ag2Admin
         end
       end
     end
-  
+
     # DELETE /entities/1
     # DELETE /entities/1.json
     def destroy
       @entity = Entity.find(params[:id])
       @entity.destroy
-  
+
       respond_to do |format|
         format.html { redirect_to entities_url,
                       notice: (crud_notice('destroyed', @entity) + "#{undo_link(@entity)}").html_safe }
