@@ -15,7 +15,9 @@ class Entity < ActiveRecord::Base
 
   validates :first_name,      :presence => true, :if => "company.blank?"
   validates :last_name,       :presence => true, :if => "company.blank?"
-  validates :fiscal_id,       :presence => true
+  validates :fiscal_id,       :presence => true,
+                              :length => { :minimum => 9 },
+                              :uniqueness => true
   validates :street_type_id,  :presence => true
   validates :zipcode_id,      :presence => true
   validates :town_id,         :presence => true
@@ -34,8 +36,31 @@ class Entity < ActiveRecord::Base
     self.last_name + ", " + self.first_name
   end
 
+  def to_label
+    "#{fiscal_id} #{supplier_code} #{last_name} #{first_name}"
+  end
+
+  #
+  # Records navigator
+  #
+  def to_first
+    Entity.order("fiscal_id").first
+  end
+
+  def to_prev
+    Entity.where("fiscal_id < ?", supplier_code).order("fiscal_id").last
+  end
+
+  def to_next
+    Entity.where("fiscal_id > ?", supplier_code).order("fiscal_id").first
+  end
+
+  def to_last
+    Entity.order("fiscal_id").last
+  end
+
   searchable do
-    text :first_name, :last_name, :company, :fiscal_id, :cellular, :phone, :email
+    text :first_name, :last_name, :company, :fiscal_id, :cellular, :phone, :email, :street_name
     string :company
     string :last_name
     string :first_name
