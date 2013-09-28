@@ -1,38 +1,69 @@
-require_dependency "ag2_purchase/application_controller"
 
 module Ag2Purchase
   class SuppliersController < ApplicationController
     before_filter :authenticate_user!
+require_dependency "ag2_purchase/application_controller"
     load_and_authorize_resource
     skip_load_and_authorize_resource :only => [:update_province_textfield_from_town,
                                                :update_province_textfield_from_zipcode,
-                                               :update_code_textfield_from_name]
-
-    # Update province text field at view from town select
-    def update_province_textfield_from_town
-      @town = Town.find(params[:id])
-      @province = Province.find(@town.province)
+                                               :update_country_textfield_from_region,
+                                               :update_region_textfield_from_province,
+                                               :update_code_textfield_from_name,
+                                               :validate_fiscal_id_textfield]
+    # Update country text field at view from region select
+    def update_country_textfield_from_region
+      @region = Region.find(params[:id])
+      @country = Country.find(@region.country)
 
       respond_to do |format|
-        format.html # update_province_textfield_from_town.html.erb does not exist! JSON only
-        format.json { render json: @province }
+        format.html # update_country_textfield_from_region.html.erb does not exist! JSON only
+        format.json { render json: @country }
       end
     end
 
-    # Update province and town text fields at view from zip code select
-    def update_province_textfield_from_zipcode
-      @zipcode = Zipcode.find(params[:id])
-      @town = Town.find(@zipcode.town)
-      @province = Province.find(@town.province)
-      @json_data = { "town_id" => @town.id, "province_id" => @province.id }
+    # Update region and country text fields at view from town select
+    def update_region_textfield_from_province
+      @province = Province.find(params[:id])
+      @region = Region.find(@province.region)
+      @country = Country.find(@region.country)
+      @json_data = { "region_id" => @region.id, "country_id" => @country.id }
 
       respond_to do |format|
-        format.html # update_province_textfield_from_zipcode.html.erb does not exist! JSON only
+        format.html # update_province_textfield.html.erb does not exist! JSON only
         format.json { render json: @json_data }
       end
     end
 
-    # Update worker code at view from last_name and first_name (generate_code_btn)
+    # Update province, region and country text fields at view from town select
+    def update_province_textfield_from_town
+      @town = Town.find(params[:id])
+      @province = Province.find(@town.province)
+      @region = Region.find(@province.region)
+      @country = Country.find(@region.country)
+      @json_data = { "province_id" => @province.id, "region_id" => @region.id, "country_id" => @country.id }
+
+      respond_to do |format|
+        format.html # update_province_textfield.html.erb does not exist! JSON only
+        format.json { render json: @json_data }
+      end
+    end
+
+    # Update town, province, region and country text fields at view from zip code select
+    def update_province_textfield_from_zipcode
+      @zipcode = Zipcode.find(params[:id])
+      @town = Town.find(@zipcode.town)
+      @province = Province.find(@town.province)
+      @region = Region.find(@province.region)
+      @country = Country.find(@region.country)
+      @json_data = { "town_id" => @town.id, "province_id" => @province.id, "region_id" => @region.id, "country_id" => @country.id }
+
+      respond_to do |format|
+        format.html # update_province_textfield.html.erb does not exist! JSON only
+        format.json { render json: @json_data }
+      end
+    end
+
+    # Update supplier code at view from last_name and first_name (generate_code_btn)
     def update_code_textfield_from_name
       fullname = params[:id]
       lastname = fullname.split("$").first
@@ -72,6 +103,28 @@ module Ag2Purchase
       end
     end
 
+    # Search Entity
+    def validate_fiscal_id_textfield
+      if params[:id] == '0'
+        id = '$err'
+      else
+        id = ''      
+        @entity = Entity.find_by_fiscal_id(params[:id])
+        if @entity.nil?
+          id = '$err'
+        else
+          id = @entity.fiscal_id
+        end
+      end
+      
+      @json_data = { "id" => id }
+
+      respond_to do |format|
+        format.html # validate_fiscal_id_textfield.html.erb does not exist! JSON only
+        format.json { render json: @json_data }
+      end
+    end
+    
     #
     # Default Methods
     #

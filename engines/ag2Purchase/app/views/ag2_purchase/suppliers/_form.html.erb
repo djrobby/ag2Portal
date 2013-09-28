@@ -15,13 +15,15 @@
       // make a POST call and replace the content
       var supplier = $('#supplier_fiscal_id').val();
       if (supplier == "")
-        supplier = "LL NN$FI";
+        supplier = "0";
       jQuery.getJSON('validate_fiscal_id_textfield/' + supplier, function(data) {
-        $("#supplier_supplier_code").val(data.code);
-        if ($("#supplier_supplier_code").val() == "$err")
-          $("#supplier_supplier_code").css('color', 'red');
+        $("#supplier_fiscal_id").val(data.id);
+        if ($("#supplier_fiscal_id").val() == "$err") {
+          $("#supplier_fiscal_id").css('color', 'red');
+          alert('hh');
+        }
         else
-          $("#supplier_supplier_code").css('color', text_field_color);
+          $("#supplier_fiscal_id").css('color', text_field_color);
       })
       return false;
     }));
@@ -31,11 +33,26 @@
     // when the #supplier_town_id field changes
     $("#supplier_town_id").change(function() {
       // make a POST call and replace the content
-      var supplier = $('select#supplier_town_id :selected').val();
-      if (supplier == "")
-        supplier = "0";
-      jQuery.getJSON('update_province_textfield_from_town/' + supplier, function(data) {
-        $("#supplier_province_id").val(data.id);
+      var contact = $('select#supplier_town_id :selected').val();
+      if (contact == "")
+        contact = "0";
+      jQuery.getJSON('update_province_textfield_from_town/' + contact, function(data) {
+        $("#supplier_province_id").val(data.province_id);
+        $("#supplier_region_id").val(data.region_id);
+        $("#supplier_country_id").val(data.country_id);
+      })
+      return false;
+    });
+
+    // when the #supplier_province_id field changes
+    $("#supplier_province_id").change(function() {
+      // make a POST call and replace the content
+      var contact = $('select#supplier_province_id :selected').val();
+      if (contact == "")
+        contact = "0";
+      jQuery.getJSON('update_region_textfield_from_province/' + contact, function(data) {
+        $("#supplier_region_id").val(data.region_id);
+        $("#supplier_country_id").val(data.country_id);
       })
       return false;
     });
@@ -43,12 +60,26 @@
     // when the #supplier_zipcode_id field changes
     $("#supplier_zipcode_id").change(function() {
       // make a POST call and replace the content
-      var supplier = $('select#supplier_zipcode_id :selected').val();
-      if (supplier == "")
-        supplier = "0";
-      jQuery.getJSON('update_province_textfield_from_zipcode/' + supplier, function(data) {
+      var contact = $('select#supplier_zipcode_id :selected').val();
+      if (contact == "")
+        contact = "0";
+      jQuery.getJSON('update_province_textfield_from_zipcode/' + contact, function(data) {
         $("#supplier_town_id").val(data.town_id);
         $("#supplier_province_id").val(data.province_id);
+        $("#supplier_region_id").val(data.region_id);
+        $("#supplier_country_id").val(data.country_id);
+      })
+      return false;
+    });
+
+    // when the #supplier_region_id field changes
+    $("#supplier_region_id").change(function() {
+      // make a POST call and replace the content
+      var contact = $('select#supplier_region_id :selected').val();
+      if (contact == "")
+        contact = "0";
+      jQuery.getJSON('update_country_textfield_from_region/' + contact, function(data) {
+        $("#supplier_country_id").val(data.id);
       })
       return false;
     });
