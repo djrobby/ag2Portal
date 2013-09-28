@@ -246,6 +246,24 @@ th .current:focus {
 .base-error {
   color: #b94a48;
 }
+/* Button inside text field */
+span.validateicon {
+  position: relative;
+}
+span.validateicon span {
+  position: absolute;
+  display: block;
+  top: -3px;
+  right: 2px;
+  width: 16px;
+  height: 16px;
+  z-index: 1;
+  background: url('icon/glyph/black/halflings/ok.png');
+  cursor: pointer;
+}
+span.validateicon input {
+  padding-right: 16px;
+}
 
 /*
  * Bands - Toolbars

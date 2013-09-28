@@ -8,7 +8,23 @@
       weekStart : 1
     });
     */
-    text_field_color = $("#supplier_name").css('color')
+    text_field_color = $("#supplier_supplier_code").css('color')
+    // Icon inside text field: Validate
+    $('input.iconify').wrap('<span class="validateicon" title="<%=t('ag2_purchase.suppliers.validate_btn') %>" />').after($('<span/>').click(function() {
+      //$(this).prev('input').val('').focus();
+      // make a POST call and replace the content
+      var supplier = $('#supplier_fiscal_id').val();
+      if (supplier == "")
+        supplier = "LL NN$FI";
+      jQuery.getJSON('validate_fiscal_id_textfield/' + supplier, function(data) {
+        $("#supplier_supplier_code").val(data.code);
+        if ($("#supplier_supplier_code").val() == "$err")
+          $("#supplier_supplier_code").css('color', 'red');
+        else
+          $("#supplier_supplier_code").css('color', text_field_color);
+      })
+      return false;
+    }));
   });
   
   jQuery(function($) {
@@ -37,13 +53,13 @@
       return false;
     });
 
-    // when #generate_code_btn is clicked
-    $("#generate_code_btn").click(function() {
+    // when #validate_btn is clicked
+    $("#validate_btn").click(function() {
       // make a POST call and replace the content
-      var supplier = $('#worker_last_name').val() + '$' + $('#worker_first_name').val();
-      if ((supplier == "") || (supplier == "$"))
+      var supplier = $('#supplier_fiscal_id').val();
+      if (supplier == "")
         supplier = "LL NN$FI";
-      jQuery.getJSON('update_code_textfield_from_name/' + supplier, function(data) {
+      jQuery.getJSON('validate_fiscal_id_textfield/' + supplier, function(data) {
         $("#supplier_supplier_code").val(data.code);
         if ($("#supplier_supplier_code").val() == "$err")
           $("#supplier_supplier_code").css('color', 'red');
@@ -65,7 +81,7 @@
 <%= f.error_notification %>
 <%= display_base_errors resource %>
 <div>
-  <label class="multi-field-label-two"> <%= f.input :fiscal_id, :required => true, :autofocus => true, :input_html => { :class => 'large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-two"><%= f.input :fiscal_id, :required => true, :autofocus => true, :input_html => { :class => 'large-text-field iconify' }, :label_html => { :class => 'form-label' } %> </label>
   <label class="multi-field-label-two"> <%= f.input :supplier_code, :required => true, :input_html => { :class => 'large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
 </div>
 <%= f.input :name, :required => true, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %>

@@ -20,5 +20,6 @@ en:
         title: "New Supplier"
       back_to_main_page: "Back to Suppliers"
       generate_code_btn: "Supplier Code"
+      validate_btn: "Validate"
       personal_info: "Supplier Info"
       commercial_info: "Accounting & Commercial Info"
