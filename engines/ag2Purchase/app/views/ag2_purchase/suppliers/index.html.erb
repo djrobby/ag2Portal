@@ -9,15 +9,20 @@
         <th><%=t 'activerecord.attributes.supplier.supplier_code' %></th>
         <th><%=t 'activerecord.attributes.supplier.name' %></th>
         <th><%=t 'activerecord.attributes.supplier.fiscal_id' %></th>
+        <th><%=t 'activerecord.attributes.supplier.phone' %></th>
+        <th><%=t 'activerecord.attributes.supplier.cellular' %></th>
         <th></th>
       </tr>
     </thead>
     <tbody>
       <% @suppliers.each do |supplier| %>
+      <%= render :partial => 'layouts/ag2_purchase/supplierinfo', :locals => { :contact => supplier, :title => I18n.t("activerecord.models.supplier.one") } %>
       <tr>
-        <td><%= link_to supplier.supplier_code, supplier %></td>
+        <td><a data-toggle="modal" href="#supplierinfo<%= supplier.id.to_s %>"><%= supplier.supplier_code %></a></td>
         <td><%= supplier.name %></td>
         <td><%= supplier.fiscal_id %></td>
+        <td><%= supplier.phone unless supplier.phone.blank? %></td>
+        <td><%= supplier.cellular unless supplier.cellular.blank? %></td>
         <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => Supplier, :path => edit_supplier_path(supplier) } %>
         <%= render :partial => '/layouts/crud/delete', :locals => { :model => Supplier, :path => supplier, :msg => t("activerecord.models.supplier.one"), :txt => supplier.name } %> </td>
       </tr>

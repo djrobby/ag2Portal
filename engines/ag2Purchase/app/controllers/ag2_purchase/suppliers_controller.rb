@@ -105,19 +105,23 @@ require_dependency "ag2_purchase/application_controller"
 
     # Search Entity
     def validate_fiscal_id_textfield
+      id = ''
+      fiscal_id = ''      
       if params[:id] == '0'
         id = '$err'
+        fiscal_id = '$err'
       else
-        id = ''      
         @entity = Entity.find_by_fiscal_id(params[:id])
         if @entity.nil?
           id = '$err'
+          fiscal_id = '$err'
         else
-          id = @entity.fiscal_id
+          id = @entity.id
+          fiscal_id = @entity.fiscal_id
         end
       end
       
-      @json_data = { "id" => id }
+      @json_data = { "id" => id, "fiscal_id" => fiscal_id }
 
       respond_to do |format|
         format.html # validate_fiscal_id_textfield.html.erb does not exist! JSON only

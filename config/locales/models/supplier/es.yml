@@ -28,6 +28,8 @@ es:
         region_id: "Región"
         country: "País"
         country_id: "País"
+        entity: "Id Entidad"
+        entity_id: "Id Entidad"
         phone: "Teléfono"
         fax: "Fax"
         cellular: "Móvil"

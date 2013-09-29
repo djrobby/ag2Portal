@@ -9,6 +9,7 @@ es:
       show:
         title: "Entidad"
         btn_edit: "Editar Entidad"
+        btn_delete: "Borrar Entidad"
       edit:
         title: "Editar Entidad"
         btn_show: "Ver Entidad"

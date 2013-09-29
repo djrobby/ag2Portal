@@ -22,9 +22,9 @@
         <td><a data-toggle="modal" href="#entityinfo<%= entity.id.to_s %>"><%= entity.fiscal_id %></a></td>
         <td><%= entity.company %></td>
         <td><%= entity.full_name unless entity.full_name.blank? %></td>
-        <td><%= entity.entity_type.name unless contact.entity_type.blank? %></td>
-        <td><%= entity.phone unless contact.phone.blank? %>
-        <% if entity.extension.blank? %>
+        <td><%= entity.entity_type.name unless entity.entity_type.blank? %></td>
+        <td><%= entity.phone unless entity.phone.blank? %>
+        <% if !entity.extension.blank? %>
         (<%= entity.extension %>)
         <% end %> </td>
         <td><%= entity.cellular unless entity.cellular.blank? %></td>

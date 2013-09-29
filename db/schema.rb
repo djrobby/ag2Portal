@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130921100637) do
+ActiveRecord::Schema.define(:version => 20130929083252) do
 
   create_table "activities", :force => true do |t|
     t.string   "description"
@@ -489,12 +489,14 @@ ActiveRecord::Schema.define(:version => 20130921100637) do
     t.decimal  "max_orders_sum",    :precision => 12, :scale => 4, :default => 0.0, :null => false
     t.string   "contract_number"
     t.string   "remarks"
+    t.integer  "entity_id"
   end
 
   add_index "suppliers", ["cellular"], :name => "index_suppliers_on_cellular"
   add_index "suppliers", ["contract_number"], :name => "index_suppliers_on_contract_number"
   add_index "suppliers", ["country_id"], :name => "index_suppliers_on_country_id"
   add_index "suppliers", ["email"], :name => "index_suppliers_on_email"
+  add_index "suppliers", ["entity_id"], :name => "index_suppliers_on_entity_id"
   add_index "suppliers", ["fax"], :name => "index_suppliers_on_fax"
   add_index "suppliers", ["fiscal_id"], :name => "index_suppliers_on_fiscal_id"
   add_index "suppliers", ["ledger_account"], :name => "index_suppliers_on_ledger_account"

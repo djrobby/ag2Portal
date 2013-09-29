@@ -1,22 +1,17 @@
 <div class="container">
-  <div id="entityinfo<%= contact.id.to_s %>" class="modal hide fade in" style="display: none; ">
+  <div id="supplierinfo<%= contact.id.to_s %>" class="modal hide fade in" style="display: none; ">
     <div class="modal-header">
       <a class="close" data-dismiss="modal">×</a>
       <h4><%= title %></h4>
     </div>
     <div class="modal-body">
       <p>
+        <span class="highlighted"><%= contact.supplier_code unless contact.supplier_code.blank? %></span><br />
         <i class="icon-hand-right"></i>
         <%= contact.fiscal_id unless contact.fiscal_id.blank? %>
-        <span class="highlighted"><%= contact.entity_type.name unless contact.entity_type.blank? %></span>
       </p>
       <p>
-        <% if !contact.company.blank? %>
-        <%= contact.company %><br />
-        <% end %>
-        <% if !contact.full_name.blank? %>
-        <%= contact.full_name %>
-        <% end %>
+        <%= contact.name unless contact.name.blank? %>
       </p>
       <p>
         <i class="icon-road"></i>

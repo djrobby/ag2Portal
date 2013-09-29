@@ -9,6 +9,7 @@ en:
       show:
         title: "Entity"
         btn_edit: "Edit Entity"
+        btn_delete: "Delete Entity"
       edit:
         title: "Edit Entity"
         btn_show: "Show Entity"
