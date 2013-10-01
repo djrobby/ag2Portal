@@ -6,4 +6,7 @@ class Activity < ActiveRecord::Base
   has_paper_trail
 
   validates :description, :presence => true
+  def to_label
+    "#{description}"
+  end
 end

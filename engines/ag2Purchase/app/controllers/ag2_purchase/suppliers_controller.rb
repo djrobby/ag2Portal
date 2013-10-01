@@ -106,7 +106,24 @@ require_dependency "ag2_purchase/application_controller"
     # Search Entity
     def validate_fiscal_id_textfield
       id = ''
-      fiscal_id = ''      
+      fiscal_id = ''
+      name = ''
+      street_type_id = ''
+      street_name = ''
+      street_number = ''
+      building = ''
+      floor = ''
+      floor_office = ''
+      zipcode_id = ''
+      town_id = ''
+      province_id = ''
+      region_id = ''
+      country_id = ''
+      phone = ''
+      fax = ''
+      cellular = ''
+      email = ''
+            
       if params[:id] == '0'
         id = '$err'
         fiscal_id = '$err'
@@ -118,6 +135,26 @@ require_dependency "ag2_purchase/application_controller"
         else
           id = @entity.id
           fiscal_id = @entity.fiscal_id
+          if @entity.entity_type_id < 2
+            name = @entity.full_name
+          else
+            name = @entity.company
+          end
+          street_type_id = @entity.street_type_id
+          street_name = @entity.street_name
+          street_number = @entity.street_number
+          building = @entity.building
+          floor = @entity.floor
+          floor_office = @entity.floor_office
+          zipcode_id = @entity.zipcode_id
+          town_id = @entity.town_id
+          province_id = @entity.province_id
+          region_id = @entity.region_id
+          country_id = @entity.country_id
+          phone = @entity.phone
+          fax = @entity.fax
+          cellular = @entity.cellular
+          email = @entity.email
         end
       end
       

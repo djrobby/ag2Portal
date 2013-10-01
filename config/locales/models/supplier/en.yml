@@ -44,3 +44,5 @@ en:
         contract_number: "Contract #"
         remarks: "Remarks"
         address: "Address"
+        activity_ids: "Activities"
+        activities: "Activities"

@@ -7,7 +7,7 @@
       <td>Id:</td>
       <td><%= @activity.id %></td>
       <td><%=t 'activerecord.attributes.activity.description' %>:</td>
-      <td><%= @activity.description.titleize %></td>
+      <td><%= @activity.description %></td>
     </tr>
     <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @activity } %>
     <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @activity } %>

@@ -165,6 +165,9 @@
   <label class="multi-field-label-three"> <%= f.input :max_orders_count, :input_html => { :class => 'large-text-field number-text-field' }, :label_html => { :class => 'form-label' } %> </label>
   <label class="multi-field-label-three"> <%= f.input :max_orders_sum, :input_html => { :class => 'large-text-field number-text-field' }, :label_html => { :class => 'form-label' } %> </label>
 </div>
+<%= f.association :activities, collection: Activity.order('description'), as: :check_boxes, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %>
+<%= f.input :activity_ids, collection: Activity.order('description'), as: :check_boxes, label_method: lambda {|t| t.description}, label_html: { :class => 'form-label' }, item_wrapper_class: 'inline' %>
+<br />
 <table class="form-table">
   <tbody>
     <tr class="form-tr">

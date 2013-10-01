@@ -44,3 +44,5 @@ es:
         max_orders_sum: "Importe máx. pedidos"
         contract_number: "Nº de Contrato"
         address: "Dirección"
+        activity_ids: "Actividades"
+        activities: "Actividades"
