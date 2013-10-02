@@ -1,14 +1,14 @@
+require_dependency "ag2_purchase/application_controller"
 
 module Ag2Purchase
   class SuppliersController < ApplicationController
     before_filter :authenticate_user!
-require_dependency "ag2_purchase/application_controller"
     load_and_authorize_resource
     skip_load_and_authorize_resource :only => [:update_province_textfield_from_town,
                                                :update_province_textfield_from_zipcode,
                                                :update_country_textfield_from_region,
                                                :update_region_textfield_from_province,
-                                               :update_code_textfield_from_name,
+                                               :update_code_textfield,
                                                :validate_fiscal_id_textfield]
     # Update country text field at view from region select
     def update_country_textfield_from_region
@@ -63,42 +63,28 @@ require_dependency "ag2_purchase/application_controller"
       end
     end
 
-    # Update supplier code at view from last_name and first_name (generate_code_btn)
-    def update_code_textfield_from_name
-      fullname = params[:id]
-      lastname = fullname.split("$").first
-      firstname = fullname.split("$").last
-      lastname1 = lastname.split(" ").first
-      lastname2 = lastname.split(" ").last
+    # Update supplier code at view (generate_code_btn)
+    def update_code_textfield
+      activity = params[:id]
       code = ''
 
       # Builds code, if possible
-      if !lastname1.nil? && lastname1.length > 1
-      code += lastname1[0, 2]
-      end
-      if !lastname2.nil? && lastname2.length > 1
-      code += lastname2[0, 2]
-      end
-      if !firstname.nil? && firstname.length > 0
-      code += firstname[0, 1]
-      end
-
-      if code == ''
-        code = 'LLNNF'
-      else
-        if code.length < 5
-          code = code.ljust(5, '0')
-        end
-      end
-
-      code.upcase!
-      if code == 'LLNNF'
+      if activity == '$'
         code = '$err'
+      else
+        activity = activity.rjust(4, '0')
+        last_supplier_code = Supplier.where("supplier_code LIKE ?", "#{activity}%").order('supplier_code').maximum('supplier_code')
+        if last_supplier_code.nil?
+          code = activity + '-00001'
+        else
+          last_supplier_code = last_supplier_code.split("-").last.to_i + 1
+          code = activity + '-' + last_supplier_code.rjust(5, '0')
+        end
       end
       @json_data = { "code" => code }
 
       respond_to do |format|
-        format.html # update_code_textfield_from_name.html.erb does not exist! JSON only
+        format.html # update_code_textfield.html.erb does not exist! JSON only
         format.json { render json: @json_data }
       end
     end
@@ -123,7 +109,7 @@ require_dependency "ag2_purchase/application_controller"
       fax = ''
       cellular = ''
       email = ''
-            
+
       if params[:id] == '0'
         id = '$err'
         fiscal_id = '$err'
@@ -157,15 +143,22 @@ require_dependency "ag2_purchase/application_controller"
           email = @entity.email
         end
       end
-      
-      @json_data = { "id" => id, "fiscal_id" => fiscal_id }
+
+      @json_data = { "id" => id, "fiscal_id" => fiscal_id,
+                     "street_type_id" => street_type_id, "street_name" => street_name,
+                     "street_number" => street_number, "building" => building,
+                     "floor" => floor, "floor_office" => floor_office, 
+                     "zipcode_id" => zipcode_id, "town_id" => town_id,
+                     "province_id" => province_id, "region_id" => region_id,
+                     "country_id" => country_id, "phone" => phone,
+                     "fax" => fax, "cellular" => cellular, "email" => email }
 
       respond_to do |format|
         format.html # validate_fiscal_id_textfield.html.erb does not exist! JSON only
         format.json { render json: @json_data }
       end
     end
-    
+
     #
     # Default Methods
     #
@@ -174,7 +167,7 @@ require_dependency "ag2_purchase/application_controller"
     def index
       #@suppliers = Supplier.all
       letter = params[:letter]
-      
+
       @search = Supplier.search do
         fulltext params[:search]
         order_by :supplier_code, :asc
@@ -185,43 +178,43 @@ require_dependency "ag2_purchase/application_controller"
       else
         @suppliers = Supplier.where("name LIKE ?", "#{letter}%").paginate(:page => params[:page], :per_page => per_page).order('supplier_code')
       end
-  
+
       respond_to do |format|
         format.html # index.html.erb
         format.json { render json: @suppliers }
       end
     end
-  
+
     # GET /suppliers/1
     # GET /suppliers/1.json
     def show
       @breadcrumb = 'read'
       @supplier = Supplier.find(params[:id])
-  
+
       respond_to do |format|
         format.html # show.html.erb
         format.json { render json: @supplier }
       end
     end
-  
+
     # GET /suppliers/new
     # GET /suppliers/new.json
     def new
       @breadcrumb = 'create'
       @supplier = Supplier.new
-  
+
       respond_to do |format|
         format.html # new.html.erb
         format.json { render json: @supplier }
       end
     end
-  
+
     # GET /suppliers/1/edit
     def edit
       @breadcrumb = 'update'
       @supplier = Supplier.find(params[:id])
     end
-  
+
     # POST /suppliers
     # POST /suppliers.json
     def create
@@ -239,7 +232,7 @@ require_dependency "ag2_purchase/application_controller"
         end
       end
     end
-  
+
     # PUT /suppliers/1
     # PUT /suppliers/1.json
     def update
@@ -258,13 +251,13 @@ require_dependency "ag2_purchase/application_controller"
         end
       end
     end
-  
+
     # DELETE /suppliers/1
     # DELETE /suppliers/1.json
     def destroy
       @supplier = Supplier.find(params[:id])
       @supplier.destroy
-  
+
       respond_to do |format|
         format.html { redirect_to suppliers_url,
                       notice: (crud_notice('destroyed', @supplier) + "#{undo_link(@supplier)}").html_safe }

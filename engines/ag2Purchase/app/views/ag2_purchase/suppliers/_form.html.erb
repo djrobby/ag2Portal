@@ -21,10 +21,26 @@
         if ($("#supplier_fiscal_id").val() == "$err") {
           $("#supplier_fiscal_id").css('color', 'red');
           alert('hh');
-          $('#supplier_fiscal_id').focus();
+          $('#supplier_fiscal_id').select();
         }
         else {
           $("#supplier_entity_id").val(data.id);
+          $("#supplier_street_type_id").val(data.street_type_id);
+          $("#supplier_street_name").val(data.street_name);
+          $("#supplier_street_number").val(data.street_number);
+          $("#supplier_building").val(data.building);
+          $("#supplier_floor").val(data.floor);
+          $("#supplier_floor_office").val(data.floor_office);
+          $("#supplier_zipcode_id").val(data.zipcode_id);
+          $("#supplier_town_id").val(data.town_id);
+          $("#supplier_province_id").val(data.province_id);
+          $("#supplier_region_id").val(data.region_id);
+          $("#supplier_country_id").val(data.country_id);
+          $("#supplier_phone").val(data.phone);
+          $("#supplier_fax").val(data.fax);
+          $("#supplier_cellular").val(data.cellular);
+          $("#supplier_email").val(data.email);
+          
           $("#supplier_fiscal_id").css('color', text_field_color);
           $('#supplier_supplier_code').focus();
         }
@@ -94,8 +110,30 @@
       // make a POST call and replace the content
       var supplier = $('#supplier_fiscal_id').val();
       if (supplier == "")
-        supplier = "LL NN$FI";
+        supplier = "0";
       jQuery.getJSON('validate_fiscal_id_textfield/' + supplier, function(data) {
+        $("#supplier_fiscal_id").val(data.fiscal_id);
+        if ($("#supplier_fiscal_id").val() == "$err") {
+          $("#supplier_fiscal_id").css('color', 'red');
+          alert('hh');
+          $('#supplier_fiscal_id').focus();
+        }
+        else {
+          $("#supplier_entity_id").val(data.id);
+          $("#supplier_fiscal_id").css('color', text_field_color);
+          $('#supplier_supplier_code').focus();
+        }
+      })
+      return false;
+    });
+    
+    // when #generate_code_btn is clicked
+    $("#generate_code_btn").click(function() {
+      // make a POST call and replace the content
+      var supplier = $('select#supplier_activity_ids :selected').val();
+      if (supplier == "")
+        supplier = "$";
+      jQuery.getJSON('update_code_textfield/' + supplier, function(data) {
         $("#supplier_supplier_code").val(data.code);
         if ($("#supplier_supplier_code").val() == "$err")
           $("#supplier_supplier_code").css('color', 'red');
@@ -110,7 +148,21 @@
       // replace the color
       $("#supplier_supplier_code").css('color', text_field_color);
     });
+
   })
+
+  /* Collect checkboxes values in hidden input field */
+  function updateTextArea() {
+    var allVals = [];
+    $('#c_b :checked').each(function() {
+      allVals.push($(this).val());
+    });
+    $('#checked_activities').val(allVals)
+  }
+  $(function() {
+    $('#c_b input').click(updateTextArea);
+    //updateTextArea();
+  });
 </script>
 
 <%= simple_form_for @supplier, :html => {:class => 'form-vertical well' } do |f| %>
@@ -165,8 +217,10 @@
   <label class="multi-field-label-three"> <%= f.input :max_orders_count, :input_html => { :class => 'large-text-field number-text-field' }, :label_html => { :class => 'form-label' } %> </label>
   <label class="multi-field-label-three"> <%= f.input :max_orders_sum, :input_html => { :class => 'large-text-field number-text-field' }, :label_html => { :class => 'form-label' } %> </label>
 </div>
-<%= f.association :activities, collection: Activity.order('description'), as: :check_boxes, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %>
+<div id="c_b">
 <%= f.input :activity_ids, collection: Activity.order('description'), as: :check_boxes, label_method: lambda {|t| t.description}, label_html: { :class => 'form-label' }, item_wrapper_class: 'inline' %>
+</div>
+<input id="checked_activities" type="">
 <br />
 <table class="form-table">
   <tbody>
