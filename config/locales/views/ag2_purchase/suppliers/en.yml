@@ -23,3 +23,5 @@ en:
       validate_btn: "Validate"
       personal_info: "Supplier Info"
       commercial_info: "Accounting & Commercial Info"
+      fiscal_error: "Wrong Fiscal Id or Entity (TaxPayer) does not exist."
+      code_error: "Unable to generate Supplier Code: No Activity chosen."

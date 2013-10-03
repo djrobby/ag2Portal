@@ -72,6 +72,7 @@ module Ag2Purchase
       if activity == '$'
         code = '$err'
       else
+        activity = activity.split(",").first
         activity = activity.rjust(4, '0')
         last_supplier_code = Supplier.where("supplier_code LIKE ?", "#{activity}%").order('supplier_code').maximum('supplier_code')
         if last_supplier_code.nil?
