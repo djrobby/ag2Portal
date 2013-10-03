@@ -1,0 +1,38 @@
+<script>
+  jQuery(function($) {
+    $('#form_new_entity').on('submit', function() {
+      var category = $('select#fnt_category :selected').val();
+      var priority = $('select#fnt_priority :selected').val();
+      var subject = $('#fnt_subject').val();
+      var message = $('#fnt_message').val();
+      if ((category == "") || (priority == "")  || (subject == "")  || (message == "")) {
+        // Error
+        return false;
+      } else {
+        // Hide the modal and exit
+        $("#new-entity").modal('hide');
+        alert('<%= I18n.t("ag2_help_desk.tickets.new_ticket.submit") %>');
+      }
+    });
+  })
+</script>
+
+<div id="new-entity" class="modal" style="display: none;">
+  <%= simple_form_for Entity.new, :url => ag2_admin.entities_path, :remote => :true, :html => { "data-type" => :json, :class => 'form-inline', :id => 'form_new_entity' } do |f| %>
+  <div class="modal-header">
+    <a class="close" data-dismiss="modal">&#215;</a>
+    <h3><%= I18n.t('ag2_help_desk.tickets.new_ticket.title') %></h3>
+  </div>
+  <div class="modal-body">
+    <%= f.association :ticket_category, :autofocus => true, collection: TicketCategory.all(order: 'name'), :input_html => { :class => 'mid-text-field', :id => 'fnt_category' }, :label_html => { :class => 'form-label' } %>
+    <%= f.association :ticket_priority, collection: TicketPriority.all(order: 'id'), :input_html => { :class => 'mid-text-field', :id => 'fnt_priority' }, :label_html => { :class => 'form-label' } %>
+    <%= f.input :ticket_subject, :input_html => { :class => 'x-large-text-field', :maxlength => 20, :id => 'fnt_subject' }, :label_html => { :class => 'form-label' } %>
+    <%= f.input :ticket_message, :as => :text, :input_html => { :class => 'x-large-text-field', :rows => 3, :id => 'fnt_message' }, :label_html => { :class => 'form-label' } %>
+    <%= I18n.t('ag2_help_desk.tickets.new_ticket.footer') %>
+  </div>
+  <div class="modal-footer">
+    <%= f.submit I18n.t('ag2_help_desk.tickets.new_ticket.btn_new'), :class => "btn btn-primary" %>
+    <a class="btn btn-primary" data-dismiss="modal" href="#"><%= t :close_button %></a>
+  </div>
+  <% end %>
+</div>
