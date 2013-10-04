@@ -1,17 +1,43 @@
 <script>
   jQuery(function($) {
     $('#form_new_entity').on('submit', function() {
-      var category = $('select#fnt_category :selected').val();
-      var priority = $('select#fnt_priority :selected').val();
-      var subject = $('#fnt_subject').val();
-      var message = $('#fnt_message').val();
-      if ((category == "") || (priority == "")  || (subject == "")  || (message == "")) {
-        // Error
+      var entity_type = $('select#fnt_entity_type :selected').val();
+      var fiscal_id = $('#fnt_fiscal_id').val();
+      var company = $('#fnt_company').val();
+      var last_name = $('#fnt_last_name').val();
+      var first_name = $('#fnt_first_name').val();
+      var phone = $('#fnt_phone').val();
+      var extension = $('#fnt_extension').val();
+      var fax = $('#fnt_fax').val();
+      var cellular = $('#fnt_cellular').val();
+      var street_type = $('select#fnt_street_type :selected').val();
+      var street_name = $('#fnt_street_name').val();
+      var street_number = $('#fnt_street_number').val();
+      var building = $('#fnt_building').val();
+      var floor = $('#fnt_floor').val();
+      var floor_office = $('#fnt_floor_office').val();
+      var zipcode = $('select#fnt_zipcode :selected').val();
+      var town = $('select#fnt_town :selected').val();
+      var province = $('select#fnt_province :selected').val();
+      var region = $('select#fnt_region :selected').val();
+      var country = $('select#fnt_country :selected').val();
+      var email = $('#fnt_email').val();
+
+      if ((entity_type == "") || (fiscal_id == "")  || (phone == "")  || (email == "")) ||
+          (street_type == "") || (zipcode == "")  || (town == "")  || (province == "")) ||
+          (street_name == "") || (street_number == "")  || (region == "")  || (country == "")) {
+        // Error: Mandatory fields
+        alert('<%= I18n.t("ag2_admin.entities.new_entity.footer") %>');
+        return false;
+      } else if (((last_name == "") && (first_name == "") && (company == "")) ||
+                 ((last_name != "") && (first_name == "") && (company != ""))) {
+        // Error: Name and company empty OR Name and company filled
+        alert('<%= I18n.t("ag2_admin.entities.new_entity.entity_type_alert") %>');
         return false;
       } else {
         // Hide the modal and exit
         $("#new-entity").modal('hide');
-        alert('<%= I18n.t("ag2_help_desk.tickets.new_ticket.submit") %>');
+        alert('<%= I18n.t("ag2_admin.entities.new_entity.submit") %>');
       }
     });
   })

@@ -15,4 +15,10 @@ es:
         btn_show: "Ver Entidad"
       new:
         title: "Nueva Entidad"
+      new_entity:
+        title: "Nueva Entidad"
+        btn_new: "Crear Entidad"
+        footer: "¡Recuerda que todos los datos solicitados son obligatorios!"
+        entity_type_alert: "¡Debes inidicar Nombres o Empresa dependiendo del tipo de Entidad!"
+        submit: "La entidad ha sido creada."
       back_to_main_page: "Volver a ag2Entities"

@@ -15,4 +15,10 @@ en:
         btn_show: "Show Entity"
       new:
         title: "New Entity"
+      new_entity:
+        title: "New Entity"
+        btn_new: "Create Entity"
+        footer: "Remember that all requested data are mandatory!"
+        entity_type_alert: "Must indicate Names or Company upon Entity type!"
+        submit: "Entity has been created."
       back_to_main_page: "Back to ag2Entities"
