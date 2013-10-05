@@ -7,9 +7,8 @@
       var last_name = $('#fnt_last_name').val();
       var first_name = $('#fnt_first_name').val();
       var phone = $('#fnt_phone').val();
-      var extension = $('#fnt_extension').val();
-      var fax = $('#fnt_fax').val();
       var cellular = $('#fnt_cellular').val();
+      var email = $('#fnt_email').val();
       var street_type = $('select#fnt_street_type :selected').val();
       var street_name = $('#fnt_street_name').val();
       var street_number = $('#fnt_street_number').val();
@@ -21,7 +20,6 @@
       var province = $('select#fnt_province :selected').val();
       var region = $('select#fnt_region :selected').val();
       var country = $('select#fnt_country :selected').val();
-      var email = $('#fnt_email').val();
 
       if ((entity_type == "") || (fiscal_id == "")  || (phone == "")  || (email == "")) ||
           (street_type == "") || (zipcode == "")  || (town == "")  || (province == "")) ||
@@ -40,6 +38,60 @@
         alert('<%= I18n.t("ag2_admin.entities.new_entity.submit") %>');
       }
     });
+    
+    // when the #entity_town_id field changes
+    $("#entity_town_id").change(function() {
+      // make a POST call and replace the content
+      var contact = $('select#entity_town_id :selected').val();
+      if (contact == "")
+        contact = "0";
+      jQuery.getJSON('update_province_textfield_from_town/' + contact, function(data) {
+        $("#entity_province_id").val(data.province_id);
+        $("#entity_region_id").val(data.region_id);
+        $("#entity_country_id").val(data.country_id);
+      })
+      return false;
+    });
+
+    // when the #entity_province_id field changes
+    $("#entity_province_id").change(function() {
+      // make a POST call and replace the content
+      var contact = $('select#entity_province_id :selected').val();
+      if (contact == "")
+        contact = "0";
+      jQuery.getJSON('update_region_textfield_from_province/' + contact, function(data) {
+        $("#entity_region_id").val(data.region_id);
+        $("#entity_country_id").val(data.country_id);
+      })
+      return false;
+    });
+
+    // when the #entity_zipcode_id field changes
+    $("#entity_zipcode_id").change(function() {
+      // make a POST call and replace the content
+      var contact = $('select#entity_zipcode_id :selected').val();
+      if (contact == "")
+        contact = "0";
+      jQuery.getJSON('update_province_textfield_from_zipcode/' + contact, function(data) {
+        $("#entity_town_id").val(data.town_id);
+        $("#entity_province_id").val(data.province_id);
+        $("#entity_region_id").val(data.region_id);
+        $("#entity_country_id").val(data.country_id);
+      })
+      return false;
+    });
+
+    // when the #entity_region_id field changes
+    $("#entity_region_id").change(function() {
+      // make a POST call and replace the content
+      var contact = $('select#entity_region_id :selected').val();
+      if (contact == "")
+        contact = "0";
+      jQuery.getJSON('update_country_textfield_from_region/' + contact, function(data) {
+        $("#entity_country_id").val(data.id);
+      })
+      return false;
+    });
   })
 </script>
 
@@ -47,17 +99,32 @@
   <%= simple_form_for Entity.new, :url => ag2_admin.entities_path, :remote => :true, :html => { "data-type" => :json, :class => 'form-inline', :id => 'form_new_entity' } do |f| %>
   <div class="modal-header">
     <a class="close" data-dismiss="modal">&#215;</a>
-    <h3><%= I18n.t('ag2_help_desk.tickets.new_ticket.title') %></h3>
+    <h3><%= I18n.t('ag2_admin.entities.new_entity.title') %></h3>
+    <%= I18n.t('ag2_admin.entities.new_entity.footer') %>
   </div>
   <div class="modal-body">
-    <%= f.association :ticket_category, :autofocus => true, collection: TicketCategory.all(order: 'name'), :input_html => { :class => 'mid-text-field', :id => 'fnt_category' }, :label_html => { :class => 'form-label' } %>
-    <%= f.association :ticket_priority, collection: TicketPriority.all(order: 'id'), :input_html => { :class => 'mid-text-field', :id => 'fnt_priority' }, :label_html => { :class => 'form-label' } %>
-    <%= f.input :ticket_subject, :input_html => { :class => 'x-large-text-field', :maxlength => 20, :id => 'fnt_subject' }, :label_html => { :class => 'form-label' } %>
-    <%= f.input :ticket_message, :as => :text, :input_html => { :class => 'x-large-text-field', :rows => 3, :id => 'fnt_message' }, :label_html => { :class => 'form-label' } %>
-    <%= I18n.t('ag2_help_desk.tickets.new_ticket.footer') %>
+    <%= f.association :entity_type, :autofocus => true, collection: EntityType.all(order: 'name'), :input_html => { :class => 'mid-text-field', :id => 'fnt_entity_type' }, :label_html => { :class => 'form-label' } %>
+    <%= f.input :fiscal_id, :input_html => { :class => 'mid-text-field', :id => 'fnt_fiscal_id' }, :label_html => { :class => 'form-label' } %>
+    <%= f.input :company, :input_html => { :class => 'x-large-text-field', :id => 'fnt_company' }, :label_html => { :class => 'form-label' } %>
+    <%= f.input :last_name, :input_html => { :class => 'x-large-text-field', :id => 'fnt_last_name' }, :label_html => { :class => 'form-label' } %>
+    <%= f.input :first_name, :input_html => { :class => 'x-large-text-field', :id => 'fnt_first_name' }, :label_html => { :class => 'form-label' } %>
+    <%= f.input :phone, :input_html => { :class => 'mid-text-field', :id => 'fnt_phone' }, :label_html => { :class => 'form-label' } %>
+    <%= f.input :cellular, :input_html => { :class => 'mid-text-field', :id => 'fnt_cellular' }, :label_html => { :class => 'form-label' } %>
+    <%= f.input :email, :input_html => { :class => 'x-large-text-field', :id => 'fnt_email' }, :label_html => { :class => 'form-label' } %>
+    <%= f.association :street_type, collection: StreetType.all(order: 'street_type_code'), :input_html => { :class => 'mid-text-field', :id => 'fnt_street_type' }, :label_html => { :class => 'form-label' } %>
+    <%= f.input :street_name, :input_html => { :class => 'x-large-text-field', :id => 'fnt_street_name' }, :label_html => { :class => 'form-label' } %>
+    <%= f.input :street_number, :input_html => { :class => 'small-text-field number-text-field', :id => 'fnt_street_number' }, :label_html => { :class => 'form-label' } %>
+    <%= f.input :building, :input_html => { :class => 'mid-text-field', :id => 'fnt_building' }, :label_html => { :class => 'form-label' } %>
+    <%= f.input :floor, :input_html => { :class => 'small-text-field number-text-field', :id => 'fnt_floor' }, :label_html => { :class => 'form-label' } %>
+    <%= f.input :floor_office, :input_html => { :class => 'small-text-field number-text-field', :id => 'fnt_floor_office' }, :label_html => { :class => 'form-label' } %>
+    <%= f.association :zipcode, collection: Zipcode.all(order: 'zipcode'), :input_html => { :class => 'large-text-field', :id => 'fnt_zipcode' }, :label_html => { :class => 'form-label' } %>
+    <%= f.association :town, collection: Town.all(order: 'name'), :input_html => { :class => 'x-large-text-field', :id => 'fnt_town' }, :label_html => { :class => 'form-label' } %>
+    <%= f.association :province, collection: Province.all(order: 'name'), :input_html => { :class => 'x-large-text-field', :id => 'fnt_province' }, :label_html => { :class => 'form-label' } %>
+    <%= f.association :region, collection: Region.all(order: 'name'), :input_html => { :class => 'x-large-text-field', :id => 'fnt_region' }, :label_html => { :class => 'form-label' } %>
+    <%= f.association :country, collection: Country.all(order: 'name'), :input_html => { :class => 'large-text-field', :id => 'fnt_country' }, :label_html => { :class => 'form-label' } %>
   </div>
   <div class="modal-footer">
-    <%= f.submit I18n.t('ag2_help_desk.tickets.new_ticket.btn_new'), :class => "btn btn-primary" %>
+    <%= f.submit I18n.t('ag2_admin.entities.new_entity.btn_new'), :class => "btn btn-primary" %>
     <a class="btn btn-primary" data-dismiss="modal" href="#"><%= t :close_button %></a>
   </div>
   <% end %>

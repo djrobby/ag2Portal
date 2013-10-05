@@ -21,7 +21,11 @@
         if ($("#supplier_fiscal_id").val() == "$err") {
           $("#supplier_fiscal_id").css('color', 'red');
           alert('<%= I18n.t("ag2_purchase.suppliers.fiscal_error") %>');
-          $('#supplier_fiscal_id').select();
+          // Quick entity creation
+          $("#new-entity").modal('show');
+          $('#new-entity').on('hidden', function() {
+            $('#supplier_fiscal_id').select();
+          });
         }
         else {
           $("#supplier_entity_id").val(data.id);
