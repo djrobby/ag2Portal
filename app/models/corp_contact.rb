@@ -18,7 +18,14 @@ class CorpContact < ActiveRecord::Base
   validates :office_id,   :presence => true
   validates :email,       :presence => true
   def full_name
-    self.last_name + ", " + self.first_name
+    full_name = ""
+    if !self.last_name.blank?
+      full_name += self.last_name
+    end
+    if !self.first_name.blank?
+      full_name += ", " + self.first_name
+    end
+    full_name
   end
 
   searchable do

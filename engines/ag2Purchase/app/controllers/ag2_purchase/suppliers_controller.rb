@@ -145,7 +145,7 @@ module Ag2Purchase
         end
       end
 
-      @json_data = { "id" => id, "fiscal_id" => fiscal_id,
+      @json_data = { "id" => id, "fiscal_id" => fiscal_id, "name" => name,
                      "street_type_id" => street_type_id, "street_name" => street_name,
                      "street_number" => street_number, "building" => building,
                      "floor" => floor, "floor_office" => floor_office, 

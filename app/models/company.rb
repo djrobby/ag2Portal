@@ -28,7 +28,11 @@ class Company < ActiveRecord::Base
   has_many :workers
   has_many :corp_contacts, :order => 'last_name, first_name'
   def fields_to_uppercase
-    self[:fiscal_id].upcase!
-    self[:invoice_code].upcase!
+    if !self.fiscal_id.blank?
+      self[:fiscal_id].upcase!
+    end
+    if !self.invoice_code.blank?
+      self[:invoice_code].upcase!
+    end
   end
 end

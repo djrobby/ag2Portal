@@ -29,15 +29,28 @@ class Entity < ActiveRecord::Base
   before_validation :fields_to_uppercase
 
   def fields_to_uppercase
-    self[:fiscal_id].upcase!
+    if !self.fiscal_id.blank?
+      self[:fiscal_id].upcase!
+    end
   end
 
   def full_name
-    self.last_name + ", " + self.first_name
+    full_name = ""
+    if !self.last_name.blank?
+      full_name += self.last_name
+    end
+    if !self.first_name.blank?
+      full_name += ", " + self.first_name
+    end
+    full_name
   end
 
   def to_label
-    "#{fiscal_id} #{supplier_code} #{last_name} #{first_name}"
+    if !self.last_name.blank? && !self.first_name.blank?
+      "#{fiscal_id}: #{last_name}, #{first_name}"
+    else
+    "#{fiscal_id}: #{company}"
+    end
   end
 
   #

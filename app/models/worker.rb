@@ -60,8 +60,12 @@ class Worker < ActiveRecord::Base
 
   has_many :time_records
   def fields_to_uppercase
-    self[:fiscal_id].upcase!
-    self[:worker_code].upcase!
+    if !self.fiscal_id.blank?
+      self[:fiscal_id].upcase!
+    end
+    if !self.worker_code.blank?
+      self[:worker_code].upcase!
+    end
   end
 
   def to_label
@@ -69,7 +73,14 @@ class Worker < ActiveRecord::Base
   end
 
   def full_name
-    self.last_name + ", " + self.first_name
+    full_name = ""
+    if !self.last_name.blank?
+      full_name += self.last_name
+    end
+    if !self.first_name.blank?
+      full_name += ", " + self.first_name
+    end
+    full_name
   end
 
   #

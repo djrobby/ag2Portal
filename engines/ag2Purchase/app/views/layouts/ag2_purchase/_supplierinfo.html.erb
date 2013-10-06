@@ -2,16 +2,14 @@
   <div id="supplierinfo<%= contact.id.to_s %>" class="modal hide fade in" style="display: none; ">
     <div class="modal-header">
       <a class="close" data-dismiss="modal">×</a>
-      <h4><%= title %></h4>
+      <span class="shrinked"><%= title %></span>
+      <h4><%= contact.name %></h4>
     </div>
     <div class="modal-body">
       <p>
         <span class="highlighted"><%= contact.supplier_code unless contact.supplier_code.blank? %></span><br />
         <i class="icon-hand-right"></i>
         <%= contact.fiscal_id unless contact.fiscal_id.blank? %>
-      </p>
-      <p>
-        <%= contact.name unless contact.name.blank? %>
       </p>
       <p>
         <i class="icon-road"></i>
@@ -33,10 +31,7 @@
       <p>
         <span class="bolded">
           <i class="icon-phone-black"></i>
-          <%= contact.phone unless contact.phone.blank? %>
-          <% if !contact.extension.blank? %>
-            (<%= contact.extension %>)
-          <% end %> &#8226;
+          <%= contact.phone unless contact.phone.blank? %> &#8226;
           <i class="icon-print"></i>
           <%= contact.fax unless contact.fax.blank? %> &#8226;
           <i class="icon-iphone-black"></i>

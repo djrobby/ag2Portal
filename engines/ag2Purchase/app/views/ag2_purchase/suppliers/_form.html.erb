@@ -2,14 +2,20 @@
   var text_field_color;
 
   $(document).ready(function() {
-    /*
-    $('.date_picker').datepicker({
-      format : 'dd/mm/yyyy',
-      weekStart : 1
-    });
-    */
+    // Disable fields if Fiscal Id blank
+    var contact = $('#supplier_fiscal_id').val();
+    if (contact == "")
+      contact = "0";
+    if (contact == "0") {
+      // Empty fiscal id
+      $('#supplier_supplier_code').prop('disabled', true);
+    } else {
+      // Fiscal Id OK
+      $('#supplier_supplier_code').prop('disabled', false);
+    }
+    // Save default text color
     text_field_color = $("#supplier_supplier_code").css('color')
-    // Icon inside text field: Validate
+    // Icon inside text field: Validate Fiscal Id
     $('input.iconify').wrap('<span class="validateicon" title="<%=t('ag2_purchase.suppliers.validate_btn') %>" />').after($('<span/>').click(function() {
       //$(this).prev('input').val('').focus();
       // make a POST call and replace the content
@@ -17,17 +23,26 @@
       if (supplier == "")
         supplier = "0";
       jQuery.getJSON('validate_fiscal_id_textfield/' + supplier, function(data) {
-        $("#supplier_fiscal_id").val(data.fiscal_id);
-        if ($("#supplier_fiscal_id").val() == "$err") {
+        if (data.fiscal_id == "$err") {
           $("#supplier_fiscal_id").css('color', 'red');
-          alert('<%= I18n.t("ag2_purchase.suppliers.fiscal_error") %>');
+          //alert('<%= I18n.t("ag2_purchase.suppliers.fiscal_error") %>');
           // Quick entity creation
+          if ($('#supplier_fiscal_id').val() == "")
+            $("#supplier_fiscal_id").val(data.fiscal_id);
+          if ($('#supplier_fiscal_id').val() != "$err") {
+            $('#fnt_fiscal_id').val($('#supplier_fiscal_id').val());
+          } else {
+            $('#fnt_fiscal_id').val('');            
+          }
           $("#new-entity").modal('show');
           $('#new-entity').on('hidden', function() {
             $('#supplier_fiscal_id').select();
           });
         }
         else {
+          // Fill with Entity data
+          $("#supplier_fiscal_id").val(data.fiscal_id);
+          $("#supplier_name").val(data.name);
           $("#supplier_entity_id").val(data.id);
           $("#supplier_street_type_id").val(data.street_type_id);
           $("#supplier_street_name").val(data.street_name);
@@ -44,7 +59,9 @@
           $("#supplier_fax").val(data.fax);
           $("#supplier_cellular").val(data.cellular);
           $("#supplier_email").val(data.email);
-          
+          // Enable fields
+          $('#supplier_supplier_code').prop('disabled', false);
+          // Default color & focus
           $("#supplier_fiscal_id").css('color', text_field_color);
           $('#supplier_supplier_code').focus();
         }

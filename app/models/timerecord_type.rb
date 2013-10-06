@@ -12,6 +12,8 @@ class TimerecordType < ActiveRecord::Base
 
   has_many :time_records
   def fields_to_uppercase
-    self[:name].upcase!
+    if !self.name.blank?
+      self[:name].upcase!
+    end
   end
 end

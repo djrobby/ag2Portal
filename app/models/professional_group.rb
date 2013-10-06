@@ -13,7 +13,9 @@ class ProfessionalGroup < ActiveRecord::Base
   
   has_many :workers
   def fields_to_uppercase
-    self[:pg_code].upcase!
+    if !self.pg_code.blank?
+      self[:pg_code].upcase!
+    end
   end
 
   def to_label

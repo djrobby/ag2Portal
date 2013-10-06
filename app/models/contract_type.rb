@@ -13,7 +13,9 @@ class ContractType < ActiveRecord::Base
   
   has_many :workers
   def fields_to_uppercase
-    self[:ct_code].upcase!
+    if !self.ct_code.blank?
+      self[:ct_code].upcase!
+    end
   end
 
   def to_label

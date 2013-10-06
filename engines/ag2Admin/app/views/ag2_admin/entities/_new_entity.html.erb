@@ -1,4 +1,23 @@
 <script>
+  $(document).ready(function() {
+    var contact = $('select#fnt_entity_type :selected').val();
+    if (contact == "")
+      contact = "0";
+    if (contact == "0") {// Empty type
+      $('#fnt_company').prop('disabled', true);
+      $('#fnt_last_name').prop('disabled', true);
+      $('#fnt_first_name').prop('disabled', true);
+    } else if (contact == "1") {// Type is Person
+      $('#fnt_company').prop('disabled', true);
+      $('#fnt_last_name').prop('disabled', false);
+      $('#fnt_first_name').prop('disabled', false);
+    } else {// Type is Company or Other
+      $('#fnt_company').prop('disabled', false);
+      $('#fnt_last_name').prop('disabled', true);
+      $('#fnt_first_name').prop('disabled', true);
+    }
+  });
+
   jQuery(function($) {
     $('#form_new_entity').on('submit', function() {
       var entity_type = $('select#fnt_entity_type :selected').val();
@@ -21,14 +40,14 @@
       var region = $('select#fnt_region :selected').val();
       var country = $('select#fnt_country :selected').val();
 
-      if ((entity_type == "") || (fiscal_id == "")  || (phone == "")  || (email == "")) ||
-          (street_type == "") || (zipcode == "")  || (town == "")  || (province == "")) ||
+      if ((entity_type == "") || (fiscal_id == "")  || (phone == "")  || (email == "") ||
+          (street_type == "") || (zipcode == "")  || (town == "")  || (province == "") ||
           (street_name == "") || (street_number == "")  || (region == "")  || (country == "")) {
         // Error: Mandatory fields
         alert('<%= I18n.t("ag2_admin.entities.new_entity.footer") %>');
         return false;
       } else if (((last_name == "") && (first_name == "") && (company == "")) ||
-                 ((last_name != "") && (first_name == "") && (company != ""))) {
+                 ((last_name != "") && (first_name != "") && (company != ""))) {
         // Error: Name and company empty OR Name and company filled
         alert('<%= I18n.t("ag2_admin.entities.new_entity.entity_type_alert") %>');
         return false;
@@ -39,57 +58,79 @@
       }
     });
     
-    // when the #entity_town_id field changes
-    $("#entity_town_id").change(function() {
+    // when the #fnt_town field changes
+    $("#fnt_town").change(function() {
       // make a POST call and replace the content
-      var contact = $('select#entity_town_id :selected').val();
+      var contact = $('select#fnt_town :selected').val();
       if (contact == "")
         contact = "0";
       jQuery.getJSON('update_province_textfield_from_town/' + contact, function(data) {
-        $("#entity_province_id").val(data.province_id);
-        $("#entity_region_id").val(data.region_id);
-        $("#entity_country_id").val(data.country_id);
+        $("#fnt_province").val(data.province_id);
+        $("#fnt_region").val(data.region_id);
+        $("#fnt_country").val(data.country_id);
       })
       return false;
     });
 
-    // when the #entity_province_id field changes
-    $("#entity_province_id").change(function() {
+    // when the #fnt_province field changes
+    $("#fnt_province").change(function() {
       // make a POST call and replace the content
-      var contact = $('select#entity_province_id :selected').val();
+      var contact = $('select#fnt_province :selected').val();
       if (contact == "")
         contact = "0";
       jQuery.getJSON('update_region_textfield_from_province/' + contact, function(data) {
-        $("#entity_region_id").val(data.region_id);
-        $("#entity_country_id").val(data.country_id);
+        $("#fnt_region").val(data.region_id);
+        $("#fnt_country").val(data.country_id);
       })
       return false;
     });
 
-    // when the #entity_zipcode_id field changes
-    $("#entity_zipcode_id").change(function() {
+    // when the #fnt_zipcode field changes
+    $("#fnt_zipcode").change(function() {
       // make a POST call and replace the content
-      var contact = $('select#entity_zipcode_id :selected').val();
+      var contact = $('select#fnt_zipcode :selected').val();
       if (contact == "")
         contact = "0";
       jQuery.getJSON('update_province_textfield_from_zipcode/' + contact, function(data) {
-        $("#entity_town_id").val(data.town_id);
-        $("#entity_province_id").val(data.province_id);
-        $("#entity_region_id").val(data.region_id);
-        $("#entity_country_id").val(data.country_id);
+        $("#fnt_town").val(data.town_id);
+        $("#fnt_province").val(data.province_id);
+        $("#fnt_region").val(data.region_id);
+        $("#fnt_country").val(data.country_id);
       })
       return false;
     });
 
-    // when the #entity_region_id field changes
-    $("#entity_region_id").change(function() {
+    // when the #fnt_region field changes
+    $("#fnt_region").change(function() {
       // make a POST call and replace the content
-      var contact = $('select#entity_region_id :selected').val();
+      var contact = $('select#fnt_region :selected').val();
       if (contact == "")
         contact = "0";
       jQuery.getJSON('update_country_textfield_from_region/' + contact, function(data) {
-        $("#entity_country_id").val(data.id);
+        $("#fnt_country").val(data.id);
       })
+      return false;
+    });
+
+    // when the #fnt_entity_type field changes
+    $("#fnt_entity_type").change(function() {
+      // make a POST call and replace the content
+      var contact = $('select#fnt_entity_type :selected').val();
+      if (contact == "")
+        contact = "0";
+      if (contact == "0") {// Empty type
+        $('#fnt_company').prop('disabled', true);
+        $('#fnt_last_name').prop('disabled', true);
+        $('#fnt_first_name').prop('disabled', true);
+      } else if (contact == "1") {// Type is Person
+        $('#fnt_company').prop('disabled', true);
+        $('#fnt_last_name').prop('disabled', false);
+        $('#fnt_first_name').prop('disabled', false);
+      } else {// Type is Company or Other
+        $('#fnt_company').prop('disabled', false);
+        $('#fnt_last_name').prop('disabled', true);
+        $('#fnt_first_name').prop('disabled', true);
+      }
       return false;
     });
   })

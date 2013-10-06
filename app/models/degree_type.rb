@@ -13,7 +13,9 @@ class DegreeType < ActiveRecord::Base
 
   has_many :workers
   def fields_to_uppercase
-    self[:dt_code].upcase!
+    if !self.dt_code.blank?
+      self[:dt_code].upcase!
+    end
   end
 
   def to_label

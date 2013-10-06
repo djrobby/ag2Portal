@@ -13,7 +13,9 @@ class CollectiveAgreement < ActiveRecord::Base
 
   has_many :workers
   def fields_to_uppercase
-    self[:ca_code].upcase!
+    if !self.ca_code.blank?
+      self[:ca_code].upcase!
+    end
   end
 
   def to_label

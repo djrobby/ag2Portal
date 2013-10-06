@@ -13,7 +13,9 @@ class Department < ActiveRecord::Base
   has_many :workers
   has_many :corp_contacts
   def fields_to_uppercase
-    self[:code].upcase!
+    if !self.code.blank?
+      self[:code].upcase!
+    end
   end
 
   def to_label

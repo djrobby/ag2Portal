@@ -3,15 +3,18 @@
     var contact = $('select#entity_entity_type_id :selected').val();
     if (contact == "")
       contact = "0";
-    if (contact == "0") {// Empty type
+    if (contact == "0") {
+      // Empty type
       $('#entity_company').prop('disabled', true);
       $('#entity_last_name').prop('disabled', true);
       $('#entity_first_name').prop('disabled', true);
-    } else if (contact == "1") {// Type is Person
+    } else if (contact == "1") {
+      // Type is Person
       $('#entity_company').prop('disabled', true);
       $('#entity_last_name').prop('disabled', false);
       $('#entity_first_name').prop('disabled', false);
-    } else {// Type is Company or Other
+    } else {
+      // Type is Company or Other
       $('#entity_company').prop('disabled', false);
       $('#entity_last_name').prop('disabled', true);
       $('#entity_first_name').prop('disabled', true);

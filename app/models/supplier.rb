@@ -39,8 +39,12 @@ class Supplier < ActiveRecord::Base
 
   has_many :supplier_contacts
   def fields_to_uppercase
-    self[:fiscal_id].upcase!
-    self[:supplier_code].upcase!
+    if !self.fiscal_id.blank?
+      self[:fiscal_id].upcase!
+    end
+    if !self.supplier_code.blank?
+      self[:supplier_code].upcase!
+    end
   end
 
   def to_label
