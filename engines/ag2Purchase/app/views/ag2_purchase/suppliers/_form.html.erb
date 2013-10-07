@@ -7,11 +7,17 @@
     if (contact == "")
       contact = "0";
     if (contact == "0") {
-      // Empty fiscal id
+      // Empty fiscal id: Disable
       $('#supplier_supplier_code').prop('disabled', true);
+      $('#supplier_name').prop('disabled', true);
+      $('#generate_code_btn').hide();
+      $('#submit_btn').hide();
     } else {
-      // Fiscal Id OK
+      // Fiscal Id OK: Enable
       $('#supplier_supplier_code').prop('disabled', false);
+      $('#supplier_name').prop('disabled', false);
+      $('#generate_code_btn').show();
+      $('#submit_btn').show();
     }
     // Save default text color
     text_field_color = $("#supplier_supplier_code").css('color')
@@ -59,8 +65,12 @@
           $("#supplier_fax").val(data.fax);
           $("#supplier_cellular").val(data.cellular);
           $("#supplier_email").val(data.email);
+          $("#supplier_active").prop('checked', true);
           // Enable fields
           $('#supplier_supplier_code').prop('disabled', false);
+          $('#supplier_name').prop('disabled', false);
+          $('#generate_code_btn').show();
+          $('#submit_btn').show();
           // Default color & focus
           $("#supplier_fiscal_id").css('color', text_field_color);
           $('#supplier_supplier_code').focus();
@@ -265,7 +275,7 @@
 <table class="form-table">
   <tbody>
     <tr class="form-tr">
-      <td class="form-td-three left-winged"> <%= f.button :submit, :class => 'btn-primary' %> </td>
+      <td class="form-td-three left-winged"> <%= f.button :submit, :class => 'btn-primary', :id => 'submit_btn' %> </td>
       <td class="form-td-three right-winged"><a href="#" id="generate_code_btn" class="btn btn-warning"><%=t 'ag2_purchase.suppliers.generate_code_btn' %></a></td>
     </tr>
   </tbody>

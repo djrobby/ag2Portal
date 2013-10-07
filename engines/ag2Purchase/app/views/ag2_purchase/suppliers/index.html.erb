@@ -1,3 +1,5 @@
+<% session[:return_to] = nil %>
+<% session[:return_to_url] = nil %>
 <%= render '/layouts/ag2_purchase/suppliersbreadcrumb' %>
 <%= render :partial => '/layouts/searchhead', :locals => { :title => t(".title"), :path => suppliers_path } %>
 
@@ -6,18 +8,22 @@
   <table class="table table-condensed table-striped">
     <thead>
       <tr>
-        <th><%=t 'activerecord.attributes.supplier.supplier_code' %></th>
-        <th><%=t 'activerecord.attributes.supplier.name' %></th>
-        <th><%=t 'activerecord.attributes.supplier.fiscal_id' %></th>
-        <th><%=t 'activerecord.attributes.supplier.phone' %></th>
-        <th><%=t 'activerecord.attributes.supplier.cellular' %></th>
+        <th><%= t 'activerecord.attributes.supplier.supplier_code' %></th>
+        <th><%= t 'activerecord.attributes.supplier.name' %></th>
+        <th><%= t 'activerecord.attributes.supplier.fiscal_id' %></th>
+        <th><%= t 'activerecord.attributes.supplier.phone' %></th>
+        <th><%= t 'activerecord.attributes.supplier.cellular' %></th>
         <th></th>
       </tr>
     </thead>
     <tbody>
       <% @suppliers.each do |supplier| %>
       <%= render :partial => 'layouts/ag2_purchase/supplierinfo', :locals => { :contact => supplier, :title => I18n.t("activerecord.models.supplier.one") } %>
-      <tr>
+      <% if supplier.active %>
+        <tr>
+      <% else %>
+        <tr class="inactive-row">
+      <% end %>
         <td><a data-toggle="modal" href="#supplierinfo<%= supplier.id.to_s %>"><%= supplier.supplier_code %></a></td>
         <td><%= supplier.name %></td>
         <td><%= supplier.fiscal_id %></td>

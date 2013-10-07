@@ -73,4 +73,5 @@
 :delete_path => @entity, :delete_txt => t('.btn_delete'),
 :msg => t("activerecord.models.entity.one"), :txt => @entity.fiscal_id } %>
 
+<%= link_to I18n.t('ag2_admin.entities.show.show_to'), @entity.entity_type %> |
 <%= link_to I18n.t("back_to_main_page", :scope => :"ag2_admin.entities"), entities_path %>

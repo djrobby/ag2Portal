@@ -8,6 +8,8 @@ en:
       show:
         title: "Payment method"
         btn_edit: "Edit Payment method"
+        subtable_title: "Payment method Suppliers"
+        return_to: "Back to Payment method"
       edit:
         title: "Edit Payment method"
         btn_show: "Show Payment method"

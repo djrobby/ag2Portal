@@ -23,6 +23,7 @@ module Ag2Admin
     def show
       @breadcrumb = 'read'
       @entity_type = EntityType.find(params[:id])
+      @entities = @entity_type.entities.paginate(:page => params[:page], :per_page => per_page).order('fiscal_id')
   
       respond_to do |format|
         format.html # show.html.erb

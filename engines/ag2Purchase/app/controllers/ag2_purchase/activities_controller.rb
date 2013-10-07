@@ -23,6 +23,7 @@ module Ag2Purchase
     def show
       @breadcrumb = 'read'
       @activity = Activity.find(params[:id])
+      @suppliers = @activity.suppliers.paginate(:page => params[:page], :per_page => per_page).order('supplier_code')
   
       respond_to do |format|
         format.html # show.html.erb

@@ -21,4 +21,20 @@
 </table>
 
 <%= render :partial => '/layouts/crud/update', :locals => { :model => PaymentMethod, :path => edit_payment_method_path(@payment_method), :txt => t('.btn_edit') } %>
+
+<% if (@suppliers.count > 0) %>
+<h4><%=t '.subtable_title' %></h4>
+<table class="table table-condensed table-striped">
+  <thead>
+    <%= render '/layouts/ag2_purchase/suppliersheader' %>
+  </thead>
+  <tbody>
+    <% session[:return_to] = I18n.t('ag2_purchase.payment_methods.show.return_to') %>
+    <% session[:return_to_url] = "#{request.protocol}#{request.host_with_port}#{request.fullpath}" %>
+    <%= render :partial => '/layouts/ag2_purchase/suppliers', :locals => { :suppliers => @suppliers } %>
+  </tbody>
+</table>
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @suppliers } %>
+<% end %>
+
 <%= link_to t('ag2_purchase.payment_methods.back_to_main_page'), payment_methods_path %>

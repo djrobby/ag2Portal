@@ -15,4 +15,28 @@
 </table>
 
 <%= render :partial => '/layouts/crud/update', :locals => { :model => EntityType, :path => edit_entity_type_path(@entity_type), :txt => I18n.t('ag2_admin.entity_types.show.btn_edit') } %>
+
+<% if (@entities.count > 0) %>
+<h4><%= t '.subtable_title' %></h4>
+<table class="table table-condensed table-striped">
+  <thead>
+    <tr>
+      <th><%= t 'activerecord.attributes.entity.fiscal_id' %></th>
+      <th><%= t 'activerecord.attributes.entity.company' %></th>
+      <th><%= t 'activerecord.attributes.entity.full_name' %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @entities.each do |entity| %>
+    <tr>
+      <td><%= link_to entity.fiscal_id, entity %></td>
+      <td><%= entity.company %></td>
+      <td><%= entity.full_name %></td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @entities } %>
+<% end %>
+
 <%= link_to I18n.t("ag2_admin.entity_types.back_to_main_page"), entity_types_path %>

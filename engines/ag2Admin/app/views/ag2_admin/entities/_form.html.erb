@@ -8,16 +8,19 @@
       $('#entity_company').prop('disabled', true);
       $('#entity_last_name').prop('disabled', true);
       $('#entity_first_name').prop('disabled', true);
+      $('#submit_btn').hide();
     } else if (contact == "1") {
       // Type is Person
       $('#entity_company').prop('disabled', true);
       $('#entity_last_name').prop('disabled', false);
       $('#entity_first_name').prop('disabled', false);
+      $('#submit_btn').show();
     } else {
       // Type is Company or Other
       $('#entity_company').prop('disabled', false);
       $('#entity_last_name').prop('disabled', true);
       $('#entity_first_name').prop('disabled', true);
+      $('#submit_btn').show();
     }
   });
 
@@ -86,14 +89,17 @@
         $('#entity_company').prop('disabled', true);
         $('#entity_last_name').prop('disabled', true);
         $('#entity_first_name').prop('disabled', true);
+        $('#submit_btn').hide();
       } else if (contact == "1") {// Type is Person
         $('#entity_company').prop('disabled', true);
         $('#entity_last_name').prop('disabled', false);
         $('#entity_first_name').prop('disabled', false);
+        $('#submit_btn').show();
       } else {// Type is Company or Other
         $('#entity_company').prop('disabled', false);
         $('#entity_last_name').prop('disabled', true);
         $('#entity_first_name').prop('disabled', true);
+        $('#submit_btn').show();
       }
       return false;
     });
@@ -140,5 +146,5 @@
   <label class="multi-field-label-two"> <%= f.association :country, collection: Country.all(order: 'name'), :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
 </div>
 <%= f.input :email, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %>
-<%= f.button :submit, :class => 'btn-primary' %>
+<%= f.button :submit, :class => 'btn-primary', :id => 'submit_btn' %>
 <% end %>

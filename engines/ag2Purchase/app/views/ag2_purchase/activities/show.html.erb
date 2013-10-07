@@ -15,4 +15,20 @@
 </table>
 
 <%= render :partial => '/layouts/crud/update', :locals => { :model => Activity, :path => edit_activity_path(@activity), :txt => t('.btn_edit') } %>
+
+<% if (@suppliers.count > 0) %>
+<h4><%=t '.subtable_title' %></h4>
+<table class="table table-condensed table-striped">
+  <thead>
+    <%= render '/layouts/ag2_purchase/suppliersheader' %>
+  </thead>
+  <tbody>
+    <% session[:return_to] = I18n.t('ag2_purchase.activities.show.return_to') %>
+    <% session[:return_to_url] = "#{request.protocol}#{request.host_with_port}#{request.fullpath}" %>
+    <%= render :partial => '/layouts/ag2_purchase/suppliers', :locals => { :suppliers => @suppliers } %>
+  </tbody>
+</table>
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @suppliers } %>
+<% end %>
+
 <%= link_to t('ag2_purchase.activities.back_to_main_page'), activities_path %>

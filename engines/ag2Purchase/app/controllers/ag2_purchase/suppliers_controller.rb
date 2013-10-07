@@ -79,7 +79,7 @@ module Ag2Purchase
           code = activity + '-00001'
         else
           last_supplier_code = last_supplier_code.split("-").last.to_i + 1
-          code = activity + '-' + last_supplier_code.rjust(5, '0')
+          code = activity + '-' + last_supplier_code.to_s.rjust(5, '0')
         end
       end
       @json_data = { "code" => code }

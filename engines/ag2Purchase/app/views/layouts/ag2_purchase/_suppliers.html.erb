@@ -1,0 +1,7 @@
+<% suppliers.each do |w| %>
+<tr>
+  <td><%= link_to w.supplier_code, w %></td>
+  <td><%= w.name %></td>
+  <td><%= w.fiscal_id %></td>
+</tr>
+<% end %>

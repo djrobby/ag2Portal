@@ -10,6 +10,7 @@ es:
         title: "Entidad"
         btn_edit: "Editar Entidad"
         btn_delete: "Borrar Entidad"
+        show_to: "Ver Tipo de entidad"
       edit:
         title: "Editar Entidad"
         btn_show: "Ver Entidad"

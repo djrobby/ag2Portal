@@ -9,6 +9,7 @@ en:
       show:
         title: "Entity type"
         btn_edit: "Edit Entity type"
+        subtable_title: "Entity type Entities"
       edit:
         title: "Edit Entity type"
         btn_show: "Show Entity type"
