@@ -22,7 +22,7 @@ module Ag2Human
     def show
       @breadcrumb = 'read'
       @degree_type = DegreeType.find(params[:id])
-      @workers = @degree_type.workers
+      @workers = @degree_type.workers.paginate(:page => params[:page], :per_page => per_page).order('worker_code')
 
       respond_to do |format|
         format.html # show.html.erb

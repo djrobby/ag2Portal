@@ -22,7 +22,7 @@ module Ag2Human
     def show
       @breadcrumb = 'read'
       @contract_type = ContractType.find(params[:id])
-      @workers = @contract_type.workers
+      @workers = @contract_type.workers.paginate(:page => params[:page], :per_page => per_page).order('worker_code')
 
       respond_to do |format|
         format.html # show.html.erb

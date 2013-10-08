@@ -34,6 +34,7 @@
     <%= render :partial => '/layouts/ag2_human/workers', :locals => { :workers => @workers } %>
   </tbody>
 </table>
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @workers } %>
 <% end %>
 
 <%= link_to I18n.t('ag2_human.departments.back_to_main_page'), departments_path %>

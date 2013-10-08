@@ -20,7 +20,7 @@ module Ag2Human
     def show
       @breadcrumb = 'read'
       @worker_type = WorkerType.find(params[:id])
-      @workers = @worker_type.workers
+      @workers = @worker_type.workers.paginate(:page => params[:page], :per_page => per_page).order('worker_code')
 
       respond_to do |format|
         format.html # show.html.erb
