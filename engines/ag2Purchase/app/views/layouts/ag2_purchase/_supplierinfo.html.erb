@@ -3,7 +3,13 @@
     <div class="modal-header">
       <a class="close" data-dismiss="modal">×</a>
       <span class="shrinked"><%= title %></span>
+      <% if contact.active %>
+      <i class="icon-thumbs-up"></i>
       <h4><%= contact.name %></h4>
+      <% else %>
+      <i class="icon-thumbs-down"></i>
+      <h4 class="inactive-row"><%= contact.name %></h4>
+      <% end %>
     </div>
     <div class="modal-body">
       <p>
@@ -44,6 +50,12 @@
           <%= contact.email unless contact.email.blank? %>
         </span>
       </p>
+      <% if contact.activities.count > 0 %>
+        &#8226;
+        <% contact.activities.each do |activity| %>
+          <span class="highlighted"><%= activity.description %></span> &#8226;
+        <% end %>
+      <% end %>
     </div>
     <div class="modal-footer">
       <a href="#" class="btn btn-primary" data-dismiss="modal"><%=t :close_button %></a>

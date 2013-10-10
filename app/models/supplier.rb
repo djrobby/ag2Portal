@@ -51,6 +51,10 @@ class Supplier < ActiveRecord::Base
     "#{name} (#{supplier_code})"
   end
 
+  def active_yes_no
+    active ? 'Yes' : 'No'  
+  end
+  
   #
   # Records navigator
   #

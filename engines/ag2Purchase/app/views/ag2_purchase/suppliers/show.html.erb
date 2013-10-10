@@ -1,50 +1,50 @@
 <%= render '/layouts/ag2_purchase/suppliersbreadcrumb' %>
 
-<h3><%=t '.title' %></h3>
+<h3><%= t '.title' %></h3>
 <table class="table">
   <tbody>
     <tr>
       <td>Id:</td>
       <td><%= @supplier.id %></td>
-      <td><%=t 'activerecord.attributes.supplier.supplier_code' %>:</td>
+      <td><%= t 'activerecord.attributes.supplier.supplier_code' %>:</td>
       <td><%= @supplier.supplier_code %></td>
     </tr>
     <tr>
-      <td><%=t 'activerecord.attributes.supplier.fiscal_id' %>:</td>
+      <td><%= t 'activerecord.attributes.supplier.fiscal_id' %>:</td>
       <td><%= @supplier.fiscal_id %></td>
-      <td><%=t 'activerecord.attributes.supplier.entity_id' %>:</td>
+      <td><%= t 'activerecord.attributes.supplier.entity_id' %>:</td>
       <td><%= @supplier.entity_id %></td>
     </tr>
     <tr>
-      <td><%=t 'activerecord.attributes.supplier.name' %>:</td>
+      <td><%= t 'activerecord.attributes.supplier.name' %>:</td>
       <td><%= @supplier.name %></td>
       <td></td>
       <td></td>
     </tr>
     <tr>
-      <td><%=t 'activerecord.attributes.supplier.contract_number' %>:</td>
+      <td><%= t 'activerecord.attributes.supplier.contract_number' %>:</td>
       <td><%= @supplier.contract_number unless @supplier.contract_number.blank? %></td>
-      <td><%=t 'activerecord.attributes.supplier.active' %>:</td>
-      <td><%= @supplier.active unless @supplier.active.blank? %></td>
+      <td><%= t 'activerecord.attributes.supplier.active' %>:</td>
+      <td> <% if @supplier.active %> <i class="icon-thumbs-up"></i> <% else %> <i class="icon-thumbs-down"></i> <% end %> </td>
     </tr>
     <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @supplier } %>
     <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @supplier } %>
   </tbody>
 </table>
 
-<h4><%=t 'ag2_purchase.suppliers.personal_info' %></h4>
+<h4><%= t 'ag2_purchase.suppliers.personal_info' %></h4>
 <table class="table">
   <tbody>
     <tr>
-      <td><%=t 'activerecord.attributes.supplier.phone' %>:</td>
+      <td><%= t 'activerecord.attributes.supplier.phone' %>:</td>
       <td><%= @supplier.phone unless @supplier.phone.blank? %></td>
-      <td><%=t 'activerecord.attributes.supplier.fax' %>:</td>
+      <td><%= t 'activerecord.attributes.supplier.fax' %>:</td>
       <td><%= @supplier.fax unless @supplier.fax.blank? %></td>
     </tr>
     <tr>
-      <td><%=t 'activerecord.attributes.supplier.cellular' %>:</td>
+      <td><%= t 'activerecord.attributes.supplier.cellular' %>:</td>
       <td><%= @supplier.cellular unless @supplier.cellular.blank? %></td>
-      <td><%=t 'activerecord.attributes.supplier.email' %>:</td>
+      <td><%= t 'activerecord.attributes.supplier.email' %>:</td>
       <td><%= @supplier.email unless @supplier.email.blank? %></td>
     </tr>
     <tr>
@@ -83,7 +83,7 @@
   </tbody>
 </table>
 
-<h4><%=t 'ag2_purchase.suppliers.commercial_info' %></h4>
+<h4><%= t 'ag2_purchase.suppliers.commercial_info' %></h4>
 <table class="table">
   <tbody>
     <tr>
@@ -114,10 +114,10 @@
 
 <h4><%= t 'activerecord.attributes.supplier.activity_ids' %></h4>
 <% if @supplier.activities.count > 0 %>
-&#8226;
-<% @supplier.activities.each do |activity| %>
-<span class="highlighted"><%= activity.description %></span> &#8226;
-<% end %>
+  &#8226;
+  <% @supplier.activities.each do |activity| %>
+    <span class="highlighted"><%= activity.description %></span> &#8226;
+  <% end %>
 <% end %>
 <br />
 <br />
