@@ -160,12 +160,16 @@ module Ag2Admin
     # DELETE /entities/1.json
     def destroy
       @entity = Entity.find(params[:id])
-      @entity.destroy
 
       respond_to do |format|
-        format.html { redirect_to entities_url,
+        if @entity.destroy
+          format.html { redirect_to entities_url,
                       notice: (crud_notice('destroyed', @entity) + "#{undo_link(@entity)}").html_safe }
-        format.json { head :no_content }
+          format.json { head :no_content }
+        else
+          format.html { redirect_to entities_url, alert: "#{@entity.errors[:base].to_s}".gsub('["', '').gsub('"]', '') }
+          format.json { render json: @entity.errors, status: :unprocessable_entity }
+        end
       end
     end
   end

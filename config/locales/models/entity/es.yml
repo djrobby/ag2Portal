@@ -6,6 +6,10 @@ es:
         one:   Entidad
         few:   Entidades
         other: Entidades
+        check_for_suppliers: "Entidad no puede ser eliminada mientras existan proveedores vinculados."
+        check_for_customers: "Entidad no puede ser eliminada mientras existan clientes vinculados."
+        update_suppliers: "Entidad fue actualizada: Fallo al actualizar los proveedores vinculados."
+        update_customers: "Entidad fue actualizada: Fallo al actualizar los clientes vinculados."
     attributes:
       entity:
         fiscal_id: "Id Fiscal CIF/NIF"

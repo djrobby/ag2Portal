@@ -6,6 +6,10 @@ en:
         one:   Entity
         few:   Entities
         other: Entities
+        check_for_suppliers: "Entity cannot be destroyed while linked suppliers exist."
+        check_for_customers: "Entity cannot be destroyed while linked customers exist."
+        update_suppliers: "Entity was updated: Failed to update linked suppliers."
+        update_customers: "Entity was updated: Failed to update linked customers."
     attributes:
       entity:
         fiscal_id: "Fiscal Id"

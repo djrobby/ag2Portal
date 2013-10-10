@@ -28,6 +28,11 @@ class Entity < ActiveRecord::Base
 
   before_validation :fields_to_uppercase
 
+  before_destroy :check_for_dependent_records
+  after_update :update_dependent_records
+
+  has_one :supplier
+  #has_many :customers
   def fields_to_uppercase
     if !self.fiscal_id.blank?
       self[:fiscal_id].upcase!
@@ -37,7 +42,7 @@ class Entity < ActiveRecord::Base
   def full_name
     full_name = ""
     if !self.last_name.blank?
-      full_name += self.last_name
+    full_name += self.last_name
     end
     if !self.first_name.blank?
       full_name += ", " + self.first_name
@@ -49,7 +54,7 @@ class Entity < ActiveRecord::Base
     if !self.last_name.blank? && !self.first_name.blank?
       "#{fiscal_id}: #{last_name}, #{first_name}"
     else
-    "#{fiscal_id}: #{company}"
+      "#{fiscal_id}: #{company}"
     end
   end
 
@@ -70,6 +75,55 @@ class Entity < ActiveRecord::Base
 
   def to_last
     Entity.order("fiscal_id").last
+  end
+
+  private
+
+  def check_for_dependent_records
+    # Check for suppliers
+    if !supplier.nil?
+      errors.add(:base, I18n.t('activerecord.models.entity.check_for_suppliers'))
+      return false
+    end
+    # Check for customers
+#    if customers.count > 0
+#      errors.add(:base, I18n.t('activerecord.models.entity.check_for_customers'))
+#      return false
+#    end
+  end
+
+  def update_dependent_records
+    if !supplier.nil?
+      # Update linked supplier
+      if entity_type_id < 2
+        supplier.name = full_name
+      else
+        supplier.name = company
+      end
+      supplier.street_type_id = street_type_id
+      supplier.street_name = street_name
+      supplier.street_number = street_number
+      supplier.building = building
+      supplier.floor = floor
+      supplier.floor_office = floor_office
+      supplier.zipcode_id = zipcode_id
+      supplier.town_id = town_id
+      supplier.province_id = province_id
+      supplier.region_id = region_id
+      supplier.country_id = country_id
+      supplier.phone = phone
+      supplier.fax = fax
+      supplier.cellular = cellular
+      supplier.email = email
+      
+      if !supplier.save
+        errors.add(:base, I18n.t('activerecord.models.entity.update_suppliers'))
+        #return false
+      end
+    end
+#    if customers.count > 0
+      # Update linked customers
+#    end
   end
 
   searchable do
