@@ -1,4 +1,4 @@
-class ProductFamilies < ActiveRecord::Base
+class ProductFamily < ActiveRecord::Base
   attr_accessible :family_code, :max_orders_count, :max_orders_sum, :name
 
   has_paper_trail

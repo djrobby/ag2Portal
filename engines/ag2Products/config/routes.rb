@@ -6,6 +6,11 @@ Ag2Products::Engine.routes.draw do
     # Routes for jQuery POSTs
 
     # Resources
+    resources :products
+    resources :product_families
+    resources :measures
+    resources :manufacturers
+    resources :stores
 
     # Root
     root :to => 'home#index'

@@ -1,0 +1,9 @@
+en:
+  ag2_products:
+    home:
+      index:
+        products: "Products"
+        families: "Product Families"
+        measures: "Measures"
+        manufacturers: "Manufacturers"
+        stores: "Stores"
