@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130929083252) do
+ActiveRecord::Schema.define(:version => 20131011064401) do
 
   create_table "activities", :force => true do |t|
     t.string   "description"
@@ -240,6 +240,8 @@ ActiveRecord::Schema.define(:version => 20130929083252) do
     t.string   "updated_by"
   end
 
+  add_index "manufacturers", ["name"], :name => "index_manufacturers_on_name"
+
   create_table "measures", :force => true do |t|
     t.string   "description"
     t.datetime "created_at",  :null => false
@@ -247,6 +249,8 @@ ActiveRecord::Schema.define(:version => 20130929083252) do
     t.string   "created_by"
     t.string   "updated_by"
   end
+
+  add_index "measures", ["description"], :name => "index_measures_on_description"
 
   create_table "offices", :force => true do |t|
     t.string   "name"
@@ -291,6 +295,20 @@ ActiveRecord::Schema.define(:version => 20130929083252) do
   end
 
   add_index "payment_methods", ["description"], :name => "index_payment_methods_on_description"
+
+  create_table "product_families", :force => true do |t|
+    t.string   "name"
+    t.string   "family_code"
+    t.integer  "max_orders_count"
+    t.decimal  "max_orders_sum",   :precision => 12, :scale => 4, :default => 0.0, :null => false
+    t.datetime "created_at",                                                       :null => false
+    t.datetime "updated_at",                                                       :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  add_index "product_families", ["family_code"], :name => "index_product_families_on_family_code"
+  add_index "product_families", ["name"], :name => "index_product_families_on_name"
 
   create_table "professional_groups", :force => true do |t|
     t.string   "name"

@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  name: MyString
+  family_code: MyString
+  max_orders_count: 1
+  max_orders_sum: 9.99
+
+two:
+  name: MyString
+  family_code: MyString
+  max_orders_count: 1
+  max_orders_sum: 9.99
