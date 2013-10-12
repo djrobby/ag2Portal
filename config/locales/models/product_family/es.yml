@@ -1,0 +1,15 @@
+es:
+  activerecord:
+    models:
+      product_family:
+        zero:  Familias de producto
+        one:   Familia de producto
+        few:   Familias de producto
+        other: Familias de producto
+        check_for_products: "Familia de producto no puede ser eliminada mientras existan productos vinculados."
+    attributes:
+      product_family:
+        name: "Nombre"
+        family_code: "Código"
+        max_orders_count: "Cantidad máx. pedidos"
+        max_orders_sum: "Importe máx. pedidos"

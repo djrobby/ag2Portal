@@ -1,0 +1,11 @@
+es:
+  activerecord:
+    models:
+      measures:
+        zero:  Unidades de medida
+        one:   Unidad de medida
+        few:   Unidades de medida
+        other: Unidades de medida
+    attributes:
+      measures:
+        description: "Descripción"

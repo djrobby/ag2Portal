@@ -1,0 +1,15 @@
+en:
+  activerecord:
+    models:
+      product_family:
+        zero:  Product families
+        one:   Product family
+        few:   Product families
+        other: Product families
+        check_for_products: "Product family cannot be destroyed while linked products exist."
+    attributes:
+      product_family:
+        name: "Name"
+        family_code: "Code"
+        max_orders_count: "Max orders count"
+        max_orders_sum: "Max orders amount"

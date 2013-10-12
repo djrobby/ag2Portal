@@ -1,0 +1,18 @@
+es:
+  ag2_products:
+    breadcrumb:
+      products:
+        items: "Productos"
+        item: "Producto"
+      families:
+        items: "Familias de producto"
+        item: "Familia"
+      measures:
+        items: "Unidades de medida"
+        item: "Unidad"
+      manufacturers:
+        items: "Fabricantes"
+        item: "Fabricante"
+      stores:
+        items: "Almacenes"
+        item: "Almacén"

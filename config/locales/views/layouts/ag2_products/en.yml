@@ -1,0 +1,18 @@
+en:
+  ag2_products:
+    breadcrumb:
+      products:
+        items: "Products"
+        item: "Product"
+      families:
+        items: "Product families"
+        item: "Product family"
+      measures:
+        items: "Measures"
+        item: "Measure"
+      manufacturers:
+        items: "Manufacturers"
+        item: "Manufacturer"
+      stores:
+        items: "Stores"
+        item: "Store"

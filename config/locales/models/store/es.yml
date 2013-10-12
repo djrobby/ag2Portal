@@ -1,0 +1,17 @@
+es:
+  activerecord:
+    models:
+      store:
+        zero:  Almacenes
+        one:   Almacén
+        few:   Almacenes
+        other: Almacenes
+        check_for_products: "Almacén no puede ser eliminada mientras existan productos vinculados."
+    attributes:
+      store:
+        name: "Nombre"
+        company: "Empresa"
+        company_id: "Empresa"
+        office: "Oficina"
+        office_id: "Oficina"
+        location: "Ubicación"

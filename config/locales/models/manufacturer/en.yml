@@ -1,0 +1,11 @@
+en:
+  activerecord:
+    models:
+      manufacturer:
+        zero:  Manufacturers
+        one:   Manufacturer
+        few:   Manufacturers
+        other: Manufacturers
+    attributes:
+      manufacturer:
+        name: "Name"

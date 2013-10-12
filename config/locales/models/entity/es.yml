@@ -16,6 +16,7 @@ es:
         last_name: "Apellidos"
         first_name: "Nombre"
         company: "Empresa"
+        company_id: "Empresa"
         entity_type: "Tipo"
         entity_type_id: "Tipo"
         province: "Provincia"

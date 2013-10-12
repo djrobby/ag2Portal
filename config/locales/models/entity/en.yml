@@ -16,6 +16,7 @@ en:
         last_name: "Last name"
         first_name: "Name"
         company: "Company"
+        company_id: "Company"
         entity_type: "Type"
         entity_type_id: "Type"
         province: "Province"

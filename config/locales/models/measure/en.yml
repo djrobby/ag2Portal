@@ -1,0 +1,11 @@
+en:
+  activerecord:
+    models:
+      measures:
+        zero:  Measures
+        one:   Measure
+        few:   Measures
+        other: Measures
+    attributes:
+      measures:
+        description: "Decription"
