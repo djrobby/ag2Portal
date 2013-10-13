@@ -8,6 +8,8 @@ class ProductFamily < ActiveRecord::Base
                           :length => { :in => 3..5 },
                           :uniqueness => true
 
+  has_many :products
+
   before_validation :fields_to_uppercase
 
   before_destroy :check_for_dependent_records

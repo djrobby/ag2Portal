@@ -8,6 +8,7 @@ Ag2Products::Engine.routes.draw do
     # Resources
     resources :products
     resources :product_families
+    resources :product_types
     resources :measures
     resources :manufacturers
     resources :stores

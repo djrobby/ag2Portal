@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131011183245) do
+ActiveRecord::Schema.define(:version => 20131013162621) do
 
   create_table "activities", :force => true do |t|
     t.string   "description"
@@ -309,6 +309,14 @@ ActiveRecord::Schema.define(:version => 20131011183245) do
 
   add_index "product_families", ["family_code"], :name => "index_product_families_on_family_code"
   add_index "product_families", ["name"], :name => "index_product_families_on_name"
+
+  create_table "product_types", :force => true do |t|
+    t.string   "description"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
 
   create_table "professional_groups", :force => true do |t|
     t.string   "name"
