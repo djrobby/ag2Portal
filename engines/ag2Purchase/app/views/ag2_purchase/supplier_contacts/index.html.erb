@@ -1,0 +1,21 @@
+<h1>Listing supplier_contacts</h1>
+
+<table>
+  <tr>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @supplier_contacts.each do |supplier_contact| %>
+  <tr>
+    <td><%= link_to 'Show', supplier_contact %></td>
+    <td><%= link_to 'Edit', edit_supplier_contact_path(supplier_contact) %></td>
+    <td><%= link_to 'Destroy', supplier_contact, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Supplier contact', new_supplier_contact_path %>

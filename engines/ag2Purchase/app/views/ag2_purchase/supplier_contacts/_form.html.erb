@@ -1,0 +1,17 @@
+<%= form_for(@supplier_contact) do |f| %>
+  <% if @supplier_contact.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@supplier_contact.errors.count, "error") %> prohibited this supplier_contact from being saved:</h2>
+
+      <ul>
+      <% @supplier_contact.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>
