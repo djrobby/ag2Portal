@@ -191,6 +191,7 @@ module Ag2Purchase
     def show
       @breadcrumb = 'read'
       @supplier = Supplier.find(params[:id])
+      @contacts = @supplier.supplier_contacts
 
       respond_to do |format|
         format.html # show.html.erb

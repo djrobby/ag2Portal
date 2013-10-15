@@ -62,5 +62,5 @@ es:
         gross_salary: "Salario bruto"
         variable_salary: "Salario variable"
         remarks: "Comentarios"
-        full_name: "Apellidos y Nombre"
+        full_name: "Nombre completo"
         address: "Dirección"

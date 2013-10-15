@@ -41,5 +41,5 @@ es:
         fax: "Fax"
         cellular: "Móvil"
         email: "Email"
-        full_name: "Apellidos y Nombre"
+        full_name: "Nombre completo"
         address: "Dirección"

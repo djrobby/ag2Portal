@@ -112,8 +112,8 @@
 :delete_path => @supplier, :delete_txt => t('.btn_delete'),
 :msg => t("activerecord.models.supplier.one"), :txt => @supplier.name } %>
 
-<h4><%= t 'activerecord.attributes.supplier.activity_ids' %></h4>
 <% if @supplier.activities.count > 0 %>
+  <h4><%= t 'activerecord.attributes.supplier.activity_ids' %></h4>
   &#8226;
   <% @supplier.activities.each do |activity| %>
     <span class="highlighted"><%= activity.description %></span> &#8226;
@@ -121,6 +121,19 @@
 <% end %>
 <br />
 <br />
+
+<% if (@contacts.count > 0) %>
+<h4><%=t '.subtable_title' %></h4>
+<table class="table table-condensed table-striped">
+  <thead>
+    <%= render '/layouts/ag2_purchase/contactsheader' %>
+  </thead>
+  <tbody>
+    <%= render :partial => '/layouts/ag2_purchase/contacts', :locals => { :contacts => @contacts } %>
+  </tbody>
+</table>
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @contacts } %>
+<% end %>
 
 <% if !session[:return_to].nil? %>
 <%= link_to session[:return_to], session[:return_to_url] %> |

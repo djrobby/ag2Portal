@@ -13,6 +13,7 @@ en:
         title: "Supplier"
         btn_edit: "Edit Supplier"
         btn_delete: "Delete Supplier"
+        subtable_title: "Supplier Contacts"
       edit:
         title: "Edit Supplier"
         btn_show: "Show Supplier"

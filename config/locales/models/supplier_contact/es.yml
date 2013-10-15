@@ -1,0 +1,21 @@
+es:
+  activerecord:
+    models:
+      supplier_contact:
+        zero:  Contactos del proveedor
+        one:   Contacto del proveedor
+        few:   Contactos del proveedor
+        other: Contactos del proveedor
+    attributes:
+      supplier_contact:
+        last_name: "Apellidos"
+        first_name: "Nombre"
+        fiscal_id: "Id Fiscal CIF/NIF"
+        position: "Cargo"
+        department: "Departamento"
+        phone: "Teléfono"
+        extension: "Extensión"
+        cellular: "Móvil"
+        email: "Email"
+        remarks: "Comentarios"
+        full_name: "Nombre completo"

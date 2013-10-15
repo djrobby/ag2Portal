@@ -38,5 +38,5 @@ es:
         company: "Empresa"
         position: "Cargo"
         remarks: "Comentarios"
-        full_name: "Apellidos y Nombre"
+        full_name: "Nombre completo"
         address: "Dirección"

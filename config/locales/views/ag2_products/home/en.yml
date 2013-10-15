@@ -4,6 +4,7 @@ en:
       index:
         products: "Products"
         families: "Product Families"
+        types: "Product Types"
         measures: "Measures"
         manufacturers: "Manufacturers"
         stores: "Stores"

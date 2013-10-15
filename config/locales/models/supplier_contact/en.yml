@@ -1,0 +1,21 @@
+en:
+  activerecord:
+    models:
+      supplier_contact:
+        zero:  Supplier contacts
+        one:   Supplier contact
+        few:   Suppliers contacts
+        other: Suppliers contacts
+    attributes:
+      supplier_contact:
+        last_name: "Last name"
+        first_name: "Name"
+        fiscal_id: "Fiscal Id"
+        position: "Position"
+        department: "Department"
+        phone: "Phone"
+        extension: "Extension"
+        cellular: "Cellular"
+        email: "Email"
+        remarks: "Remarks"
+        full_name: "Full Name"

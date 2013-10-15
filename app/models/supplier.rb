@@ -14,7 +14,7 @@ class Supplier < ActiveRecord::Base
                   :region_id, :country_id, :payment_method_id, :ledger_account, :discount_rate,
                   :active, :max_orders_count, :max_orders_sum, :contract_number, :remarks,
                   :created_by, :updated_by, :entity_id
-                  
+
   attr_accessible :activity_ids
 
   has_paper_trail
@@ -37,7 +37,7 @@ class Supplier < ActiveRecord::Base
 
   before_validation :fields_to_uppercase
 
-  has_many :supplier_contacts
+  has_many :supplier_contacts, dependent: :destroy
   def fields_to_uppercase
     if !self.fiscal_id.blank?
       self[:fiscal_id].upcase!
@@ -52,9 +52,9 @@ class Supplier < ActiveRecord::Base
   end
 
   def active_yes_no
-    active ? 'Yes' : 'No'  
+    active ? 'Yes' : 'No'
   end
-  
+
   #
   # Records navigator
   #

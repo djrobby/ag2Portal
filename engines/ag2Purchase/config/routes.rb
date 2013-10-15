@@ -21,6 +21,7 @@ Ag2Purchase::Engine.routes.draw do
     resources :suppliers
     resources :activities
     resources :payment_methods
+    resources :supplier_contacts
 
     # Root
     root :to => 'home#index'

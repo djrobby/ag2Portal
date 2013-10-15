@@ -3,7 +3,8 @@ es:
     home:
       index:
         products: "Productos"
-        families: "Familias de Producto"
-        measures: "Unidades de Medida"
+        families: "Familias Producto"
+        types: "Tipos Producto"
+        measures: "Unidades Medida"
         manufacturers: "Fabricantes"
         stores: "Almacenes"

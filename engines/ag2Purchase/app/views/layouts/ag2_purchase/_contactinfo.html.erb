@@ -1,0 +1,41 @@
+<div class="container">
+  <div id="contactinfo<%= contact.id.to_s %>" class="modal hide fade in" style="display: none; ">
+    <div class="modal-header">
+      <a class="close" data-dismiss="modal">×</a>
+      <span class="shrinked"><%= title %></span>
+      <h4><%= contact.full_name %></h4>
+    </div>
+    <div class="modal-body">
+      <p>
+        <i class="icon-hand-right"></i>
+        <%= contact.fiscal_id unless contact.fiscal_id.blank? %>
+      </p>
+      <p>
+        <span class="bolded">
+          <i class="icon-phone-black"></i>
+          <%= contact.phone unless contact.phone.blank? %>
+          <% if !contact.extension.blank? %>
+            (<%= contact.extension %>)
+          <% end %> &#8226;
+          <i class="icon-print"></i>
+          <%= contact.fax unless contact.fax.blank? %> &#8226;
+          <i class="icon-iphone-black"></i>
+          <%= contact.cellular unless contact.cellular.blank? %>
+        </span>
+      </p>
+      <p>
+        <span class="emailed">
+          <i class="icon-envelope"></i>
+          <%= contact.email unless contact.email.blank? %>
+        </span>
+        <% if !contact.remarks.blank? %>
+          <i class="icon-bookmark"></i>
+          <%= contact.remarks %>
+        <% end %>
+      </p>
+    </div>
+    <div class="modal-footer">
+      <a href="#" class="btn btn-primary" data-dismiss="modal"><%=t :close_button %></a>
+    </div>
+  </div>
+</div>
