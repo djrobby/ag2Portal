@@ -37,6 +37,8 @@ class Supplier < ActiveRecord::Base
 
   before_validation :fields_to_uppercase
 
+  before_destroy :check_for_dependent_records
+
   has_many :supplier_contacts, dependent: :destroy
   def fields_to_uppercase
     if !self.fiscal_id.blank?
@@ -72,6 +74,16 @@ class Supplier < ActiveRecord::Base
 
   def to_last
     Supplier.order("supplier_code").last
+  end
+
+  private
+
+  def check_for_dependent_records
+    # Check for orders
+#    if orders.count > 0
+#      errors.add(:base, I18n.t('activerecord.models.supplier.check_for_orders'))
+#      return false
+#    end
   end
 
   searchable do

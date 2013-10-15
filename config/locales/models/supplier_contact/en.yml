@@ -19,3 +19,5 @@ en:
         email: "Email"
         remarks: "Remarks"
         full_name: "Full Name"
+        supplier: "Supplier"
+        supplier_id: "Supplier"

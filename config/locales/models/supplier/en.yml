@@ -6,6 +6,7 @@ en:
         one:   Supplier
         few:   Suppliers
         other: Suppliers
+        check_for_orders: "Supplier cannot be destroyed while linked orders exist."
     attributes:
       supplier:
         name: "Name"

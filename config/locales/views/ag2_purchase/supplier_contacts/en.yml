@@ -1,0 +1,18 @@
+en:
+  ag2_purchase:
+    supplier_contacts:
+      index:
+        title: "Supplier contacts"
+        btn_new: "New Contact"
+        back_to_root: "Back to ag2Purchase"
+      show:
+        title: "Supplier contact"
+        btn_edit: "Edit Contact"
+        btn_delete: "Delete Contact"
+      edit:
+        title: "Edit Supplier contact"
+        btn_show: "Show Contact"
+      new:
+        title: "New Supplier contact"
+      back_to_main_page: "Back to Supplier contacts"
+      fiscal_error: "Wrong Fiscal Id."

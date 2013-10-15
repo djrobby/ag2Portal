@@ -1,0 +1,18 @@
+es:
+  ag2_purchase:
+    supplier_contacts:
+      index:
+        title: "Contactos de proveedor"
+        btn_new: "Nuevo Contacto"
+        back_to_root: "Volver a ag2Purchase"
+      show:
+        title: "Contacto de proveedor"
+        btn_edit: "Editar Contacto"
+        btn_delete: "Borrar Contacto"
+      edit:
+        title: "Editar Contacto de proveedor"
+        btn_show: "Ver Contacto"
+      new:
+        title: "Nuevo Contacto de proveedor"
+      back_to_main_page: "Volver a Contactos de proveedor"
+      fiscal_error: "Id Fiscal erróneo."

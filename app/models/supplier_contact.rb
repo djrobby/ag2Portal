@@ -11,12 +11,6 @@ class SupplierContact < ActiveRecord::Base
 
   before_validation :fields_to_uppercase
 
-  searchable do
-    text :first_name, :last_name, :fiscal_id, :cellular, :phone, :email
-    string :last_name
-    string :first_name
-  end
-
   def fields_to_uppercase
     if !self.fiscal_id.blank?
       self[:fiscal_id].upcase!
@@ -32,5 +26,12 @@ class SupplierContact < ActiveRecord::Base
       full_name += ", " + self.first_name
     end
     full_name
+  end
+
+  searchable do
+    text :first_name, :last_name, :fiscal_id, :cellular, :phone, :email
+    string :last_name
+    string :first_name
+    string :supplier_id
   end
 end

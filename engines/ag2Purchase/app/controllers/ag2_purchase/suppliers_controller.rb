@@ -258,12 +258,16 @@ module Ag2Purchase
     # DELETE /suppliers/1.json
     def destroy
       @supplier = Supplier.find(params[:id])
-      @supplier.destroy
 
       respond_to do |format|
-        format.html { redirect_to suppliers_url,
+        if @supplier.destroy
+          format.html { redirect_to suppliers_url,
                       notice: (crud_notice('destroyed', @supplier) + "#{undo_link(@supplier)}").html_safe }
-        format.json { head :no_content }
+          format.json { head :no_content }
+        else
+          format.html { redirect_to suppliers_url, alert: "#{@supplier.errors[:base].to_s}".gsub('["', '').gsub('"]', '') }
+          format.json { render json: @entity.errors, status: :unprocessable_entity }
+        end
       end
     end
   end

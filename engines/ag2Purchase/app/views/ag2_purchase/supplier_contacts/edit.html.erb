@@ -1,6 +1,8 @@
-<h1>Editing supplier_contact</h1>
+<%= render '/layouts/ag2_purchase/contactsbreadcrumb' %>
+
+<h3><%=t '.title' %></h3>
 
 <%= render 'form' %>
 
-<%= link_to 'Show', @supplier_contact %> |
-<%= link_to 'Back', supplier_contacts_path %>
+<%= link_to t(".btn_show"), @supplier_contact %> |
+<%= link_to t("ag2_purchase.supplier_contacts.back_to_main_page"), supplier_contacts_path %>

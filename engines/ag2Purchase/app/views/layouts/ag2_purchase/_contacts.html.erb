@@ -2,9 +2,12 @@
 <%= render :partial => 'layouts/ag2_purchase/contactinfo', :locals => { :contact => w, :title => I18n.t("activerecord.models.supplier_contact.one") } %>
 <tr>
   <td><a data-toggle="modal" href="#contactinfo<%= w.id.to_s %>"><%= w.full_name %></a></td>
-  <td><%= w.position %></td>
-  <td><%= w.phone %></td>
-  <td><%= w.cellular %></td>
-  <td><%= w.email %></td>
+  <td><%= w.position unless w.position.blank? %></td>
+  <td><%= w.phone unless w.phone.blank? %>
+  <% if !w.extension.blank? %>
+  (<%= w.extension %>)
+  <% end %> </td>
+  <td><%= w.cellular unless w.cellular.blank? %></td>
+  <td><%= w.email unless w.email.blank? %></td>
 </tr>
 <% end %>

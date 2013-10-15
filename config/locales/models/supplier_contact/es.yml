@@ -19,3 +19,5 @@ es:
         email: "Email"
         remarks: "Comentarios"
         full_name: "Nombre completo"
+        supplier: "Proveedor"
+        supplier_id: "Proveedor"

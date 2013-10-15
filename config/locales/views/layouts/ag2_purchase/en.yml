@@ -7,3 +7,6 @@ en:
       payment_methods:
         items: "Payment methods"
         item: "Payment method"
+      supplier_contacts:
+        items: "Supplier contacts"
+        item: "Contact"
