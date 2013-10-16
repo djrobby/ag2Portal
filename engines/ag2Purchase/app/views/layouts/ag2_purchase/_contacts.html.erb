@@ -1,5 +1,5 @@
 <% contacts.each do |w| %>
-<%= render :partial => 'layouts/ag2_purchase/contactinfo', :locals => { :contact => w, :title => I18n.t("activerecord.models.supplier_contact.one") } %>
+<%= render :partial => 'layouts/ag2_purchase/contactinfo', :locals => { :contact => w, :title => t("activerecord.models.supplier_contact.one") + ' ' + w.supplier.name } %>
 <tr>
   <td><a data-toggle="modal" href="#contactinfo<%= w.id.to_s %>"><%= w.full_name %></a></td>
   <td><%= w.position unless w.position.blank? %></td>

@@ -29,7 +29,7 @@ class SupplierContact < ActiveRecord::Base
   end
 
   searchable do
-    text :first_name, :last_name, :fiscal_id, :cellular, :phone, :email
+    text :first_name, :last_name, :fiscal_id, :cellular, :phone, :email, :position
     string :last_name
     string :first_name
     string :supplier_id

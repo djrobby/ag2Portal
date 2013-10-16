@@ -2,16 +2,16 @@
 <%= f.error_notification %>
 <%= display_base_errors resource %>
 <div>
-  <label class="multi-field-label-two"><%= f.input :fiscal_id, :autofocus => true, :input_html => { :class => 'large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
-  <label class="multi-field-label-two"> <%= f.input :supplier_id, :input_html => { :class => 'large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
-</div>
-<div>
-  <label class="multi-field-label-two"> <%= f.input :last_name, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.input :last_name, :autofocus => true, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
   <label class="multi-field-label-two"> <%= f.input :first_name, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
 </div>
 <div>
-  <label class="multi-field-label-two"> <%= f.input :department, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.association :supplier, collection: Supplier.all(order: 'name'), :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-two"><%= f.input :fiscal_id, :input_html => { :class => 'large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+</div>
+<div>
   <label class="multi-field-label-two"> <%= f.input :position, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.input :department, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
 </div>
 <div>
   <label class="multi-field-label-two"> <%= f.input :phone, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>

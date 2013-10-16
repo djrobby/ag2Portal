@@ -18,7 +18,7 @@
     </thead>
     <tbody>
       <% @suppliers.each do |supplier| %>
-      <%= render :partial => 'layouts/ag2_purchase/supplierinfo', :locals => { :contact => supplier, :title => I18n.t("activerecord.models.supplier.one") } %>
+      <%= render :partial => 'supplierinfo', :locals => { :contact => supplier, :title => I18n.t("activerecord.models.supplier.one") } %>
       <% if supplier.active %>
       <tr>
       <% else %>

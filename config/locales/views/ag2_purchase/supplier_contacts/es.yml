@@ -4,6 +4,7 @@ es:
       index:
         title: "Contactos de proveedor"
         btn_new: "Nuevo Contacto"
+        back_to_main_app: "Volver a ag2Suppliers"
         back_to_root: "Volver a ag2Purchase"
       show:
         title: "Contacto de proveedor"

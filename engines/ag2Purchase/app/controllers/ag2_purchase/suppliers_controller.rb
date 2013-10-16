@@ -191,7 +191,7 @@ module Ag2Purchase
     def show
       @breadcrumb = 'read'
       @supplier = Supplier.find(params[:id])
-      @contacts = @supplier.supplier_contacts
+      @contacts = @supplier.supplier_contacts.paginate(:page => params[:page], :per_page => per_page).order('last_name', 'first_name')
 
       respond_to do |format|
         format.html # show.html.erb

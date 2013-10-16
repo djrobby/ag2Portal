@@ -56,6 +56,26 @@
           <span class="highlighted"><%= activity.description %></span> &#8226;
         <% end %>
       <% end %>
+      <% if contact.supplier_contacts.count > 0 %>
+        <h5><%=t 'ag2_purchase.suppliers.show.subtable_title' %></h5>
+        <% contact.supplier_contacts.each do |contact| %>
+          <span class="shrinked">
+            <%= contact.full_name %> &#8226;
+            <% if !contact.position.blank? %>
+              <%= contact.position %> &#8226;
+            <% end %>
+            <% if !contact.phone.blank? %>
+              <i class="icon-phone-black"></i> <%= contact.phone %> &#8226;
+            <% end %>
+            <% if !contact.cellular.blank? %>
+              <i class="icon-iphone-black"></i> <%= contact.cellular %> &#8226;
+            <% end %>
+            <% if !contact.email.blank? %>
+              <i class="icon-envelope"></i> <%= contact.email %>
+            <% end %>
+          </span><br />
+        <% end %>
+      <% end %>
     </div>
     <div class="modal-footer">
       <a href="#" class="btn btn-primary" data-dismiss="modal"><%=t :close_button %></a>

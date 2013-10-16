@@ -8,7 +8,9 @@
     <div class="modal-body">
       <p>
         <i class="icon-hand-right"></i>
-        <%= contact.fiscal_id unless contact.fiscal_id.blank? %>
+        <%= contact.fiscal_id unless contact.fiscal_id.blank? %><br />
+        <%= contact.position unless contact.position.blank? %> &#8226;
+        <%= contact.department unless contact.department.blank? %>
       </p>
       <p>
         <span class="bolded">
@@ -17,8 +19,6 @@
           <% if !contact.extension.blank? %>
             (<%= contact.extension %>)
           <% end %> &#8226;
-          <i class="icon-print"></i>
-          <%= contact.fax unless contact.fax.blank? %> &#8226;
           <i class="icon-iphone-black"></i>
           <%= contact.cellular unless contact.cellular.blank? %>
         </span>

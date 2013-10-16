@@ -6,39 +6,35 @@
     <tr>
       <td>Id:</td>
       <td><%= @supplier_contact.id %></td>
-      <td></td>
-      <td></td>
-    </tr>
-    <tr>
-      <td><%= t 'activerecord.attributes.supplier_contact.fiscal_id' %>:</td>
-      <td><%= @supplier_contact.fiscal_id %></td>
-      <td><%= t 'activerecord.attributes.supplier_contact.supplier_id' %>:</td>
-      <td><%= @supplier_contact.supplier_id %></td>
-    </tr>
-    <tr>
       <td><%= t 'activerecord.attributes.supplier_contact.full_name' %>:</td>
       <td><%= @supplier_contact.full_name %></td>
-      <td></td>
-      <td></td>
     </tr>
     <tr>
-      <td><%= t 'activerecord.attributes.supplier_contact.department' %>:</td>
-      <td><%= @supplier_contact.department unless @supplier.contract_number.blank? %></td>
+      <td><%= t 'activerecord.attributes.supplier_contact.supplier' %>:</td>
+      <td><%= @supplier_contact.supplier.name %></td>
+      <td><%= t 'activerecord.attributes.supplier_contact.fiscal_id' %>:</td>
+      <td><%= @supplier_contact.fiscal_id %></td>
+    </tr>
+    <tr>
       <td><%= t 'activerecord.attributes.supplier_contact.position' %>:</td>
       <td><%= @supplier_contact.position unless @supplier_contact.position.blank? %></td>
+      <td><%= t 'activerecord.attributes.supplier_contact.department' %>:</td>
+      <td><%= @supplier_contact.department unless @supplier_contact.department.blank? %></td>
     </tr>
     <tr>
       <td><%= t 'activerecord.attributes.supplier_contact.phone' %>:</td>
       <td><%= @supplier_contact.phone unless @supplier_contact.phone.blank? %>
-      <% if @supplier_contact.extension.blank? %>
+      <% if !@supplier_contact.extension.blank? %>
       (<%= @supplier_contact.extension %>)
       <% end %> </td>
+      <td><%= t 'activerecord.attributes.supplier_contact.cellular' %>:</td>
+      <td><%= @supplier_contact.cellular unless @supplier_contact.cellular.blank? %></td>
     </tr>
     <tr>
-      <td><%= t 'activerecord.attributes.supplier_contact.cellular' %>:</td>
-      <td><%= @supplier_contact.cellular unless @supplier.cellular.blank? %></td>
       <td><%= t 'activerecord.attributes.supplier_contact.email' %>:</td>
-      <td><%= @supplier_contact.email unless @supplier.email.blank? %></td>
+      <td><%= @supplier_contact.email unless @supplier_contact.email.blank? %></td>
+      <td></td>
+      <td></td>
     </tr>
     <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @supplier_contact } %>
     <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @supplier_contact } %>

@@ -17,7 +17,7 @@ module Ag2Purchase
       if letter.blank? || letter == "%"
         @supplier_contacts = @search.results
       else
-        @supplier_contacts = SupplierContact.where("last_name LIKE ?", "#{letter}%").paginate(:page => params[:page], :per_page => per_page).order('supplier_id', 'last_name, first_name')
+        @supplier_contacts = SupplierContact.where("last_name LIKE ?", "#{letter}%").paginate(:page => params[:page], :per_page => per_page).order('supplier_id', 'last_name', 'first_name')
       end
   
       respond_to do |format|
