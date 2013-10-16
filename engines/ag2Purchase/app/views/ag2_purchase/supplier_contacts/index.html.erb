@@ -3,14 +3,14 @@
 
 <div class="span11">
   <%= render :partial => '/layouts/lettershead', :locals => { :controller => "supplier_contacts", :action => "index" } %>
-  <table class="table table-condensed table-striped">
+  <table class="table table-condensed table-striped shrinked">
     <thead>
       <tr>
-        <th><%= t 'activerecord.attributes.supplier.full_name' %></th>
-        <th><%= t 'activerecord.attributes.supplier.position' %></th>
-        <th><%= t 'activerecord.attributes.supplier.phone' %></th>
-        <th><%= t 'activerecord.attributes.supplier.cellular' %></th>
-        <th><%= t 'activerecord.attributes.supplier.email' %></th>
+        <th><%= t 'activerecord.attributes.supplier_contact.full_name' %></th>
+        <th><%= t 'activerecord.attributes.supplier_contact.position' %></th>
+        <th><%= t 'activerecord.attributes.supplier_contact.phone' %></th>
+        <th><%= t 'activerecord.attributes.supplier_contact.cellular' %></th>
+        <th><%= t 'activerecord.attributes.supplier_contact.email' %></th>
         <th></th>
       </tr>
     </thead>

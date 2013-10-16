@@ -5,6 +5,7 @@ en:
         title: "Suppliers"
         btn_new: "New Supplier"
         back_to_root: "Back to ag2Purchase"
+        go_to_child_app: "Go to Supplier contacts"
         label_office: "Office"
         label_company: "Company"
         label_others: "Others"
