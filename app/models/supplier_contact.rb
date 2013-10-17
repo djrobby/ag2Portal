@@ -32,6 +32,6 @@ class SupplierContact < ActiveRecord::Base
     text :first_name, :last_name, :fiscal_id, :cellular, :phone, :email, :position
     string :last_name
     string :first_name
-    string :supplier_id
+    integer :supplier_id
   end
 end

@@ -6,6 +6,9 @@ en:
         btn_new: "New Contact"
         back_to_main_app: "Back to ag2Suppliers"
         back_to_root: "Back to ag2Purchase"
+        label_supplier: "Supplier"
+        label_others: "Others"
+        btn_apply: "Apply Filter"
       show:
         title: "Supplier contact"
         btn_edit: "Edit Contact"

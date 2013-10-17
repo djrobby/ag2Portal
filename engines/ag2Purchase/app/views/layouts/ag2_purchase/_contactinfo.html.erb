@@ -7,8 +7,10 @@
     </div>
     <div class="modal-body">
       <p>
-        <i class="icon-hand-right"></i>
-        <%= contact.fiscal_id unless contact.fiscal_id.blank? %><br />
+        <% if !contact.fiscal_id.blank? %>
+          <i class="icon-hand-right"></i>
+          <%= contact.fiscal_id %><br />
+        <% end %>
         <%= contact.position unless contact.position.blank? %> &#8226;
         <%= contact.department unless contact.department.blank? %>
       </p>

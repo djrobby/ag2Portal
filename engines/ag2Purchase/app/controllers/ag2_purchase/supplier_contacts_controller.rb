@@ -5,10 +5,14 @@ module Ag2Purchase
     # GET /supplier_contacts
     # GET /supplier_contacts.json
     def index
+      supplier = params[:Supplier]
       letter = params[:letter]
 
       @search = SupplierContact.search do
         fulltext params[:search]
+        if !supplier.blank?
+          with :supplier_id, supplier
+        end
         order_by :supplier_id, :asc
         order_by :last_name, :asc
         order_by :first_name, :asc
