@@ -1,0 +1,18 @@
+en:
+  ag2_purchase:
+    manufacturers:
+      index:
+        title: "Measures"
+        btn_new: "New Measure"
+        back_to_root: "Back to ag2Products"
+      show:
+        title: "Measure"
+        btn_edit: "Edit Measure"
+        subtable_title: "Measure Products"
+        return_to: "Back to Measure"
+      edit:
+        title: "Edit Measure"
+        btn_show: "Show Measure"
+      new:
+        title: "New Measure"
+      back_to_main_page: "Back to Measures"

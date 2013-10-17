@@ -1,0 +1,18 @@
+en:
+  ag2_purchase:
+    manufacturers:
+      index:
+        title: "Products"
+        btn_new: "New Product"
+        back_to_root: "Back to ag2Products"
+      show:
+        title: "Product"
+        btn_edit: "Edit Product"
+        subtable_title: ""
+        return_to: "Back to Product"
+      edit:
+        title: "Edit Product"
+        btn_show: "Show Product"
+      new:
+        title: "New Product"
+      back_to_main_page: "Back to Products"

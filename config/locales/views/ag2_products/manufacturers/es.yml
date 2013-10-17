@@ -1,0 +1,18 @@
+es:
+  ag2_purchase:
+    manufacturers:
+      index:
+        title: "Fabricantes"
+        btn_new: "Nuevo Fabricante"
+        back_to_root: "Volver a ag2Products"
+      show:
+        title: "Fabricante"
+        btn_edit: "Editar Fabricante"
+        subtable_title: "Productos del Fabricante"
+        return_to: "Volver a Fabricante"
+      edit:
+        title: "Editar Fabricante"
+        btn_show: "Ver Fabricante"
+      new:
+        title: "Nuevo Fabricante"
+      back_to_main_page: "Volver a Fabricantes"
