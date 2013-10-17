@@ -1,21 +1,25 @@
-<h1>Listing manufacturers</h1>
+<%= render '/layouts/ag2_products/manufacturersbreadcrumb' %>
 
-<table>
-  <tr>
-    <th></th>
-    <th></th>
-    <th></th>
-  </tr>
-
-<% @manufacturers.each do |manufacturer| %>
-  <tr>
-    <td><%= link_to 'Show', manufacturer %></td>
-    <td><%= link_to 'Edit', edit_manufacturer_path(manufacturer) %></td>
-    <td><%= link_to 'Destroy', manufacturer, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-  </tr>
-<% end %>
-</table>
-
-<br />
-
-<%= link_to 'New Manufacturer', new_manufacturer_path %>
+<h3><%=t '.title' %></h3>
+<div class="span7">
+  <table class="table table-condensed table-striped">
+    <thead>
+      <tr>
+        <th><%= sortable "name", t('activerecord.attributes.manufacturer.name') %></th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @manufacturers.each do |m| %>
+      <tr>
+        <td><%= link_to m.name.titleize, m %></td>
+        <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => Manufacturer, :path => edit_manufacturer_path(m) } %>
+        <%= render :partial => '/layouts/crud/delete', :locals => { :model => Manufacturer, :path => m, :msg => t("activerecord.models.manufacturer.one"), :txt => m.name } %> </td>
+      </tr>
+      <% end %>
+    </tbody>
+  </table>
+  <%= render :partial => '/layouts/pagination', :locals => { :ivar => @manufacturers } %>
+  <%= render :partial => '/layouts/crud/new', :locals => { :model => Manufacturer, :path => new_manufacturer_path, :txt => t(".btn_new") } %>
+  <%= link_to t(".back_to_root"), ag2_products.root_path %>
+</div>

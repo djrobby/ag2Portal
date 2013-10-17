@@ -90,12 +90,16 @@ module Ag2Products
     # DELETE /measures/1.json
     def destroy
       @measure = Measure.find(params[:id])
-      @measure.destroy
-  
+
       respond_to do |format|
-        format.html { redirect_to measures_url,
+        if @measure.destroy
+          format.html { redirect_to measures_url,
                       notice: (crud_notice('destroyed', @measure) + "#{undo_link(@measure)}").html_safe }
-        format.json { head :no_content }
+          format.json { head :no_content }
+        else
+          format.html { redirect_to measures_url, alert: "#{@measure.errors[:base].to_s}".gsub('["', '').gsub('"]', '') }
+          format.json { render json: @measure.errors, status: :unprocessable_entity }
+        end
       end
     end
 

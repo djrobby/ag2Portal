@@ -27,7 +27,7 @@ class ProductFamily < ActiveRecord::Base
 
   def check_for_dependent_records
     # Check for products
-    if !products.nil?
+    if products.count > 0
       errors.add(:base, I18n.t('activerecord.models.product_family.check_for_products'))
     return false
     end

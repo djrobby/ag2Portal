@@ -6,6 +6,7 @@ en:
         one:   Measure
         few:   Measures
         other: Measures
+        check_for_products: "Measure cannot be destroyed while linked products exist."
     attributes:
       measures:
         description: "Decription"

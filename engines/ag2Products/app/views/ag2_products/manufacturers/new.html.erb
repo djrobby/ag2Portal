@@ -1,5 +1,7 @@
-<h1>New manufacturer</h1>
+<%= render '/layouts/ag2_products/manufacturersbreadcrumb' %>
+
+<h3><%=t '.title' %></h3>
 
 <%= render 'form' %>
 
-<%= link_to 'Back', manufacturers_path %>
+<%= link_to t("ag2_products.manufacturers.back_to_main_page"), manufacturers_path %>

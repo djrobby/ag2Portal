@@ -10,7 +10,6 @@ module Ag2Products
     # GET /stores
     # GET /stores.json
     def index
-      @stores = Store.all
       @stores = Store.paginate(:page => params[:page], :per_page => per_page).order(sort_column + ' ' + sort_direction)
   
       respond_to do |format|
