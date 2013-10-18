@@ -1,0 +1,18 @@
+es:
+  ag2_products:
+    stores:
+      index:
+        title: "Almacenes"
+        btn_new: "Nueva Almacén"
+        back_to_root: "Volver a ag2Products"
+      show:
+        title: "Almacén"
+        btn_edit: "Editar Almacén"
+        subtable_title: "Productos en Almacén"
+        return_to: "Volver a Almacén"
+      edit:
+        title: "Editar Almacén"
+        btn_show: "Ver Almacén"
+      new:
+        title: "Nuevo Almacén"
+      back_to_main_page: "Volver a Almacenes"

@@ -1,0 +1,18 @@
+en:
+  ag2_products:
+    product_families:
+      index:
+        title: "Product families"
+        btn_new: "New Product family"
+        back_to_root: "Back to ag2Products"
+      show:
+        title: "Product family"
+        btn_edit: "Edit Product family"
+        subtable_title: "Product family Products"
+        return_to: "Back to Product family"
+      edit:
+        title: "Edit Product family"
+        btn_show: "Show Product family"
+      new:
+        title: "New Product family"
+      back_to_main_page: "Back to Product families"

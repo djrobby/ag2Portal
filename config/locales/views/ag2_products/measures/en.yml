@@ -1,6 +1,6 @@
 en:
-  ag2_purchase:
-    manufacturers:
+  ag2_products:
+    measures:
       index:
         title: "Measures"
         btn_new: "New Measure"

@@ -8,7 +8,7 @@ es:
       show:
         title: "Forma de pago"
         btn_edit: "Editar Forma de pago"
-        subtable_title: "Proveedores de la Forma de pago"
+        subtable_title: "Proveedores con la Forma de pago"
         return_to: "Volver a Forma de pago"
       edit:
         title: "Editar Forma de pago"

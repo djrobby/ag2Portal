@@ -1,6 +1,6 @@
 en:
-  ag2_purchase:
-    manufacturers:
+  ag2_products:
+    products:
       index:
         title: "Products"
         btn_new: "New Product"

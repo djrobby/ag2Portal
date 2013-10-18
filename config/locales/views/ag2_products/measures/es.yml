@@ -1,6 +1,6 @@
 es:
-  ag2_purchase:
-    manufacturers:
+  ag2_products:
+    measures:
       index:
         title: "Unidades de medida"
         btn_new: "Nueva Unidad de medida"

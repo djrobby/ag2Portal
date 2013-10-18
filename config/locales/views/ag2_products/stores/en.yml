@@ -1,0 +1,18 @@
+en:
+  ag2_products:
+    stores:
+      index:
+        title: "Stores"
+        btn_new: "New Store"
+        back_to_root: "Back to ag2Products"
+      show:
+        title: "Store"
+        btn_edit: "Edit Store"
+        subtable_title: "Products in Stock"
+        return_to: "Back to Store"
+      edit:
+        title: "Edit Store"
+        btn_show: "Show Store"
+      new:
+        title: "New Store"
+      back_to_main_page: "Back to Stores"

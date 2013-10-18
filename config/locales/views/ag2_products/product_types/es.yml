@@ -1,0 +1,18 @@
+es:
+  ag2_products:
+    product_types:
+      index:
+        title: "Tipos de producto"
+        btn_new: "Nuevo Tipo de producto"
+        back_to_root: "Volver a ag2Products"
+      show:
+        title: "Tipo de producto"
+        btn_edit: "Editar Tipo de producto"
+        subtable_title: "Productos del Tipo de producto"
+        return_to: "Volver a Tipo de producto"
+      edit:
+        title: "Editar Tipo de producto"
+        btn_show: "Ver Tipo de producto"
+      new:
+        title: "Nuevo Tipo de producto"
+      back_to_main_page: "Volver a Tipos de producto"

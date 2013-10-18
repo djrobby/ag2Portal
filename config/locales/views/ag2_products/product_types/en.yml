@@ -1,0 +1,18 @@
+en:
+  ag2_products:
+    product_types:
+      index:
+        title: "Product types"
+        btn_new: "New Product type"
+        back_to_root: "Back to ag2Products"
+      show:
+        title: "Product type"
+        btn_edit: "Edit Product type"
+        subtable_title: "Product type Products"
+        return_to: "Back to Product type"
+      edit:
+        title: "Edit Product type"
+        btn_show: "Show Product type"
+      new:
+        title: "New Product type"
+      back_to_main_page: "Back to Product types"

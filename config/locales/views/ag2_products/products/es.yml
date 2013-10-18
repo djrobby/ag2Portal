@@ -1,12 +1,12 @@
 es:
-  ag2_purchase:
-    manufacturers:
+  ag2_products:
+    products:
       index:
         title: "Productos"
         btn_new: "Nuevo Producto"
         back_to_root: "Volver a ag2Products"
       show:
-        title: "Productos"
+        title: "Producto"
         btn_edit: "Editar Producto"
         subtable_title: ""
         return_to: "Volver a Producto"
