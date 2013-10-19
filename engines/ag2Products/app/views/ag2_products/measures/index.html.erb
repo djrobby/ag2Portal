@@ -1,21 +1,25 @@
-<h1>Listing measures</h1>
+<%= render '/layouts/ag2_products/measuresbreadcrumb' %>
 
-<table>
-  <tr>
-    <th></th>
-    <th></th>
-    <th></th>
-  </tr>
-
-<% @measures.each do |measure| %>
-  <tr>
-    <td><%= link_to 'Show', measure %></td>
-    <td><%= link_to 'Edit', edit_measure_path(measure) %></td>
-    <td><%= link_to 'Destroy', measure, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-  </tr>
-<% end %>
-</table>
-
-<br />
-
-<%= link_to 'New Measure', new_measure_path %>
+<h3><%=t '.title' %></h3>
+<div class="span6">
+  <table class="table table-condensed table-striped">
+    <thead>
+      <tr>
+        <th><%= sortable "description", t('activerecord.attributes.measure.description') %></th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @measures.each do |m| %>
+      <tr>
+        <td><%= link_to m.description, m %></td>
+        <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => Measure, :path => edit_measure_path(m) } %>
+        <%= render :partial => '/layouts/crud/delete', :locals => { :model => Measure, :path => m, :msg => t("activerecord.models.measure.one"), :txt => m.description } %> </td>
+      </tr>
+      <% end %>
+    </tbody>
+  </table>
+  <%= render :partial => '/layouts/pagination', :locals => { :ivar => @measures } %>
+  <%= render :partial => '/layouts/crud/new', :locals => { :model => Measure, :path => new_measure_path, :txt => t(".btn_new") } %>
+  <%= link_to t(".back_to_root"), ag2_products.root_path %>
+</div>

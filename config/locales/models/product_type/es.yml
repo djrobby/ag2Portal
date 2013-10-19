@@ -1,0 +1,12 @@
+es:
+  activerecord:
+    models:
+      product_type:
+        zero:  Tipos de producto
+        one:   Tipo de producto
+        few:   Tipos de producto
+        other: Tipos de producto
+        check_for_products: "Tipo de producto no puede ser eliminado mientras existan productos vinculados."
+    attributes:
+      product_type:
+        description: "Descripción"

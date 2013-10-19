@@ -1,5 +1,36 @@
-<p id="notice"><%= notice %></p>
+<%= render '/layouts/ag2_products/typesbreadcrumb' %>
 
+<h3><%=t '.title' %></h3>
+<table class="table">
+  <tbody>
+    <tr>
+      <td>Id:</td>
+      <td><%= @product_type.id %></td>
+      <td><%=t 'activerecord.attributes.product_type.description' %>:</td>
+      <td><%= @product_type.description %></td>
+    </tr>
+    <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @product_type } %>
+    <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @product_type } %>
+  </tbody>
+</table>
 
-<%= link_to 'Edit', edit_product_type_path(@product_type) %> |
-<%= link_to 'Back', product_types_path %>
+<%= render :partial => '/layouts/crud/update', :locals => { :model => Measure, :path => edit_measure_path(@product_type), :txt => t('.btn_edit') } %>
+
+<% if false %><!-- Activate block removing if -->
+<% if (@products.count > 0) %>
+<h4><%=t '.subtable_title' %></h4>
+<table class="table table-condensed table-striped">
+  <thead>
+    <%= render '/layouts/ag2_products/productsheader' %>
+  </thead>
+  <tbody>
+    <% session[:return_to] = I18n.t('ag2_products.product_types.show.return_to') %>
+    <% session[:return_to_url] = "#{request.protocol}#{request.host_with_port}#{request.fullpath}" %>
+    <%= render :partial => '/layouts/ag2_products/products', :locals => { :products => @products } %>
+  </tbody>
+</table>
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @products } %>
+<% end %>
+<% end %>
+
+<%= link_to t("ag2_products.product_types.back_to_main_page"), product_types_path %>

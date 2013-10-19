@@ -1,12 +1,12 @@
 en:
   activerecord:
     models:
-      measures:
+      measure:
         zero:  Measures
         one:   Measure
         few:   Measures
         other: Measures
         check_for_products: "Measure cannot be destroyed while linked products exist."
     attributes:
-      measures:
+      measure:
         description: "Decription"

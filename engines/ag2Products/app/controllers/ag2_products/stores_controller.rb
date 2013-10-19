@@ -23,7 +23,7 @@ module Ag2Products
     def show
       @breadcrumb = 'read'
       @store = Store.find(params[:id])
-      @products = @store.products.paginate(:page => params[:page], :per_page => per_page).order('product_code')
+      #@products = @store.products.paginate(:page => params[:page], :per_page => per_page).order('product_code')
   
       respond_to do |format|
         format.html # show.html.erb

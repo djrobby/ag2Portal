@@ -1,0 +1,12 @@
+en:
+  activerecord:
+    models:
+      product_type:
+        zero:  Product types
+        one:   Product type
+        few:   Product types
+        other: Product types
+        check_for_products: "Product type cannot be destroyed while linked products exist."
+    attributes:
+      product_type:
+        description: "Decription"

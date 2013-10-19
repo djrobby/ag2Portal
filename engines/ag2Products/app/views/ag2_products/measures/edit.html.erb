@@ -1,6 +1,8 @@
-<h1>Editing measure</h1>
+<%= render '/layouts/ag2_products/measuresbreadcrumb' %>
+
+<h3><%=t '.title' %></h3>
 
 <%= render 'form' %>
 
-<%= link_to 'Show', @measure %> |
-<%= link_to 'Back', measures_path %>
+<%= link_to t(".btn_show"), @measure %> |
+<%= link_to t("ag2_products.measures.back_to_main_page"), measures_path %>

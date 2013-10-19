@@ -1,6 +1,8 @@
-<h1>Editing product_type</h1>
+<%= render '/layouts/ag2_products/typesbreadcrumb' %>
+
+<h3><%=t '.title' %></h3>
 
 <%= render 'form' %>
 
-<%= link_to 'Show', @product_type %> |
-<%= link_to 'Back', product_types_path %>
+<%= link_to t(".btn_show"), @product_type %> |
+<%= link_to t("ag2_products.product_types.back_to_main_page"), product_types_path %>

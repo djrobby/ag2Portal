@@ -1,5 +1,48 @@
-<p id="notice"><%= notice %></p>
+<%= render '/layouts/ag2_products/familiesbreadcrumb' %>
 
+<h3><%=t '.title' %></h3>
+<table class="table">
+  <tbody>
+    <tr>
+      <td>Id:</td>
+      <td><%= @product_family.id %></td>
+      <td><%=t 'activerecord.attributes.product_family.family_code' %>:</td>
+      <td><%= @product_family.family_code %></td>
+    </tr>
+    <tr>
+      <td><%=t 'activerecord.attributes.product_family.name' %>:</td>
+      <td><%= @product_family.name %></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><%=t 'activerecord.attributes.product_family.max_orders_count' %>:</td>
+      <td><%= @product_family.max_orders_count unless @product_family.max_orders_count.blank? %></td>
+      <td><%=t 'activerecord.attributes.product_family.max_orders_sum' %>:</td>
+      <td><%= @product_family.max_orders_sum unless @product_family.max_orders_sum.blank? %></td>
+    </tr>
+    <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @product_family } %>
+    <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @product_family } %>
+  </tbody>
+</table>
 
-<%= link_to 'Edit', edit_product_family_path(@product_family) %> |
-<%= link_to 'Back', product_families_path %>
+<%= render :partial => '/layouts/crud/update', :locals => { :model => Manufacturer, :path => edit_product_family_path(@product_family), :txt => t('.btn_edit') } %>
+
+<% if false %><!-- Activate block removing if -->
+<% if (@products.count > 0) %>
+<h4><%=t '.subtable_title' %></h4>
+<table class="table table-condensed table-striped">
+  <thead>
+    <%= render '/layouts/ag2_products/productsheader' %>
+  </thead>
+  <tbody>
+    <% session[:return_to] = I18n.t('ag2_products.product_families.show.return_to') %>
+    <% session[:return_to_url] = "#{request.protocol}#{request.host_with_port}#{request.fullpath}" %>
+    <%= render :partial => '/layouts/ag2_products/products', :locals => { :products => @products } %>
+  </tbody>
+</table>
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @products } %>
+<% end %>
+<% end %>
+
+<%= link_to t("ag2_products.product_families.back_to_main_page"), product_families_path %>

@@ -1,7 +1,7 @@
 <%= render '/layouts/ag2_products/manufacturersbreadcrumb' %>
 
 <h3><%=t '.title' %></h3>
-<div class="span7">
+<div class="span6">
   <table class="table table-condensed table-striped">
     <thead>
       <tr>
@@ -12,7 +12,7 @@
     <tbody>
       <% @manufacturers.each do |m| %>
       <tr>
-        <td><%= link_to m.name.titleize, m %></td>
+        <td><%= link_to m.name, m %></td>
         <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => Manufacturer, :path => edit_manufacturer_path(m) } %>
         <%= render :partial => '/layouts/crud/delete', :locals => { :model => Manufacturer, :path => m, :msg => t("activerecord.models.manufacturer.one"), :txt => m.name } %> </td>
       </tr>

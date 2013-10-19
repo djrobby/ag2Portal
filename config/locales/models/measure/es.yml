@@ -1,12 +1,12 @@
 es:
   activerecord:
     models:
-      measures:
+      measure:
         zero:  Unidades de medida
         one:   Unidad de medida
         few:   Unidades de medida
         other: Unidades de medida
         check_for_products: "Unidad de medida no puede ser eliminada mientras existan productos vinculados."
     attributes:
-      measures:
+      measure:
         description: "Descripción"
