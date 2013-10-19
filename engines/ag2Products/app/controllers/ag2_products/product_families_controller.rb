@@ -106,7 +106,7 @@ module Ag2Products
     private
 
     def sort_column
-      ProductFamily.column_names.include?(params[:sort]) ? params[:sort] : "name"
+      ProductFamily.column_names.include?(params[:sort]) ? params[:sort] : "family_code"
     end
   end
 end

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131013162621) do
+ActiveRecord::Schema.define(:version => 20131019163344) do
 
   create_table "activities", :force => true do |t|
     t.string   "description"
@@ -299,7 +299,7 @@ ActiveRecord::Schema.define(:version => 20131013162621) do
   create_table "product_families", :force => true do |t|
     t.string   "name"
     t.string   "family_code"
-    t.integer  "max_orders_count"
+    t.integer  "max_orders_count",                                :default => 0
     t.decimal  "max_orders_sum",   :precision => 12, :scale => 4, :default => 0.0, :null => false
     t.datetime "created_at",                                                       :null => false
     t.datetime "updated_at",                                                       :null => false
@@ -511,7 +511,7 @@ ActiveRecord::Schema.define(:version => 20131013162621) do
     t.string   "ledger_account"
     t.decimal  "discount_rate",     :precision => 12, :scale => 4, :default => 0.0, :null => false
     t.boolean  "active"
-    t.integer  "max_orders_count"
+    t.integer  "max_orders_count",                                 :default => 0
     t.decimal  "max_orders_sum",    :precision => 12, :scale => 4, :default => 0.0, :null => false
     t.string   "contract_number"
     t.string   "remarks"
