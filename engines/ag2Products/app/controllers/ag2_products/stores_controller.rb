@@ -4,9 +4,24 @@ module Ag2Products
   class StoresController < ApplicationController
     before_filter :authenticate_user!
     load_and_authorize_resource
+    skip_load_and_authorize_resource :only => [:update_company_textfield_from_office]
     # Helper methods for sorting
     helper_method :sort_column
 
+    # Update company text field at view from office select
+    def update_company_textfield_from_office
+      @office = Office.find(params[:id])
+      @company = Company.find(@office.company)
+
+      respond_to do |format|
+        format.html # update_company_textfield_from_office.html.erb does not exist! JSON only
+        format.json { render json: @company }
+      end
+    end
+
+    #
+    # Default Methods
+    #
     # GET /stores
     # GET /stores.json
     def index

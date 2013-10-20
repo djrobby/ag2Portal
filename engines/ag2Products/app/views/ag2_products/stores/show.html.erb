@@ -1,5 +1,48 @@
-<p id="notice"><%= notice %></p>
+<%= render '/layouts/ag2_products/storesbreadcrumb' %>
 
+<h3><%=t '.title' %></h3>
+<table class="table">
+  <tbody>
+    <tr>
+      <td>Id:</td>
+      <td><%= @store.id %></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><%=t 'activerecord.attributes.store.name' %>:</td>
+      <td><%= @store.name %></td>
+      <td><%=t 'activerecord.attributes.store.location' %>:</td>
+      <td><%= @store.location unless @store.location.blank? %></td>
+    </tr>
+    <tr>
+      <td><%=t 'activerecord.attributes.store.company' %>:</td>
+      <td><%= @store.company.name unless @store.company.blank? %></td>
+      <td><%=t 'activerecord.attributes.store.office' %>:</td>
+      <td><%= @store.office.name unless @store.office.blank? %></td>
+    </tr>
+    <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @store } %>
+    <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @store } %>
+  </tbody>
+</table>
 
-<%= link_to 'Edit', edit_store_path(@store) %> |
-<%= link_to 'Back', stores_path %>
+<%= render :partial => '/layouts/crud/update', :locals => { :model => Store, :path => edit_store_path(@store), :txt => t('.btn_edit') } %>
+
+<% if false %><!-- Activate block removing if -->
+<% if (@products.count > 0) %>
+<h4><%=t '.subtable_title' %></h4>
+<table class="table table-condensed table-striped">
+  <thead>
+    <%= render '/layouts/ag2_products/productsheader' %>
+  </thead>
+  <tbody>
+    <% session[:return_to] = I18n.t('ag2_products.stores.show.return_to') %>
+    <% session[:return_to_url] = "#{request.protocol}#{request.host_with_port}#{request.fullpath}" %>
+    <%= render :partial => '/layouts/ag2_products/products', :locals => { :products => @products } %>
+  </tbody>
+</table>
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @products } %>
+<% end %>
+<% end %>
+
+<%= link_to t("ag2_products.stores.back_to_main_page"), stores_path %>

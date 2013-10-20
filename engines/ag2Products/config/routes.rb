@@ -4,6 +4,8 @@ Ag2Products::Engine.routes.draw do
     get "home/index"
 
     # Routes for jQuery POSTs
+    match 'stores/update_company_textfield_from_office/:id', :controller => 'stores', :action => 'update_company_textfield_from_office'
+    match 'stores/:id/update_company_textfield_from_office/:id', :controller => 'stores', :action => 'update_company_textfield_from_office'
 
     # Resources
     resources :products

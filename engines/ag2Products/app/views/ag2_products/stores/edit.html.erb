@@ -1,6 +1,8 @@
-<h1>Editing store</h1>
+<%= render '/layouts/ag2_products/storesbreadcrumb' %>
+
+<h3><%=t '.title' %></h3>
 
 <%= render 'form' %>
 
-<%= link_to 'Show', @store %> |
-<%= link_to 'Back', stores_path %>
+<%= link_to t(".btn_show"), @store %> |
+<%= link_to t("ag2_products.stores.back_to_main_page"), stores_path %>
