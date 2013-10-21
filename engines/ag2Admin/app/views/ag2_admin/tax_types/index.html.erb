@@ -1,7 +1,7 @@
 <%= render '/layouts/ag2_admin/taxtypesbreadcrumb' %>
 
 <h3><%=t '.title' %></h3>
-<div class="span6">
+<div class="span7">
   <table class="table table-condensed table-striped">
     <thead>
       <tr>
@@ -16,7 +16,7 @@
       <tr>
         <td><%= type.id %></td>
         <td><%= link_to type.description, type %></td>
-        <td><%= number_to_percentage(type.tax, :locale => :es) unless type.tax.blank? %></td>
+        <td><%= number_to_percentage(type.tax, precision: 2, locale: :es) unless type.tax.blank? %></td>
         <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => TaxType, :path => edit_tax_type_path(type) } %>
         <%= render :partial => '/layouts/crud/delete', :locals => { :model => TaxType, :path => type, :msg => I18n.t("activerecord.models.tax_type.one"), :txt => type.description } %> </td>
       </tr>

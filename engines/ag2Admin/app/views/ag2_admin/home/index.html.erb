@@ -104,11 +104,11 @@
   <li class="span2"></li>
   <li class="span4">
     <% if (session[:resolution] == "LD")%>
-    <a href="<%= ag2_admin.config_path %>" class="thumbnail centered"><img src="/assets/icon/ag2Admin.png" alt="ag2Config" /><h5 class="h5-narrow">ag2Config</h5></a>
+    <a href="<%= ag2_admin.config_path %>" class="thumbnail centered"><img src="/assets/icon/ag2Admin.png" width="48" height="48" alt="ag2Config" /><h5 class="h5-narrow">ag2Config</h5></a>
     <% elsif session[:resolution] == "SD" %>
-    <a href="<%= ag2_admin.config_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/ag2Admin.png" width="96" height="96" alt="ag2Config" /><h5 class="h5-narrow">ag2Config</h5></a>
+    <a href="<%= ag2_admin.config_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/ag2Admin72.png" width="72" height="72" alt="ag2Config" /><h5 class="h5-narrow">ag2Config</h5></a>
     <% else %>
-    <a href="<%= ag2_admin.config_path %>" class="thumbnail centered"><img src="/assets/pict/ag2Admin.png" width="128" height="128" alt="ag2Config" /><h5 class="h5-narrow">ag2Config</h5></a>
+    <a href="<%= ag2_admin.config_path %>" class="thumbnail centered"><img src="/assets/pict/ag2Admin96.png" width="96" height="96" alt="ag2Config" /><h5 class="h5-narrow">ag2Config</h5></a>
     <% end %>
   </li>
 </ul><!-- /.thumbnails -->

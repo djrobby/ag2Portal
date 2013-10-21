@@ -11,7 +11,7 @@
     </tr>
     <tr>
       <td><%=t 'activerecord.attributes.tax_type.tax' %>:</td>
-      <td><%= number_to_percentage(@tax_type.tax, :locale => :es) unless @tax_type.tax.blank? %></td>
+      <td><%= number_to_percentage(@tax_type.tax, precision: 2, locale: :es) unless @tax_type.tax.blank? %></td>
       <td></td>
       <td></td>
     </tr>
