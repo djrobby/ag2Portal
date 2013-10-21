@@ -2,6 +2,9 @@ require_dependency "ag2_products/application_controller"
 
 module Ag2Products
   class ProductsController < ApplicationController
+    before_filter :authenticate_user!
+    load_and_authorize_resource
+
     # GET /products
     # GET /products.json
     def index
@@ -16,6 +19,7 @@ module Ag2Products
     # GET /products/1
     # GET /products/1.json
     def show
+      @breadcrumb = 'read'
       @product = Product.find(params[:id])
   
       respond_to do |format|
@@ -27,6 +31,7 @@ module Ag2Products
     # GET /products/new
     # GET /products/new.json
     def new
+      @breadcrumb = 'create'
       @product = Product.new
   
       respond_to do |format|
@@ -37,17 +42,20 @@ module Ag2Products
   
     # GET /products/1/edit
     def edit
+      @breadcrumb = 'update'
       @product = Product.find(params[:id])
     end
   
     # POST /products
     # POST /products.json
     def create
+      @breadcrumb = 'update'
       @product = Product.new(params[:product])
+      @product.created_by = current_user.id if !current_user.nil?
   
       respond_to do |format|
         if @product.save
-          format.html { redirect_to @product, notice: 'Product was successfully created.' }
+          format.html { redirect_to @product, notice: crud_notice('created', @product) }
           format.json { render json: @product, status: :created, location: @product }
         else
           format.html { render action: "new" }
@@ -59,11 +67,14 @@ module Ag2Products
     # PUT /products/1
     # PUT /products/1.json
     def update
+      @breadcrumb = 'update'
       @product = Product.find(params[:id])
+      @product.updated_by = current_user.id if !current_user.nil?
   
       respond_to do |format|
         if @product.update_attributes(params[:product])
-          format.html { redirect_to @product, notice: 'Product was successfully updated.' }
+          format.html { redirect_to @product,
+                        notice: (crud_notice('updated', @product) + "#{undo_link(@product)}").html_safe }
           format.json { head :no_content }
         else
           format.html { render action: "edit" }
@@ -76,11 +87,16 @@ module Ag2Products
     # DELETE /products/1.json
     def destroy
       @product = Product.find(params[:id])
-      @product.destroy
-  
+
       respond_to do |format|
-        format.html { redirect_to products_url }
-        format.json { head :no_content }
+        if @product.destroy
+          format.html { redirect_to products_url,
+                      notice: (crud_notice('destroyed', @product) + "#{undo_link(@product)}").html_safe }
+          format.json { head :no_content }
+        else
+          format.html { redirect_to products_url, alert: "#{@product.errors[:base].to_s}".gsub('["', '').gsub('"]', '') }
+          format.json { render json: @product.errors, status: :unprocessable_entity }
+        end
       end
     end
   end

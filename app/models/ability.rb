@@ -41,6 +41,7 @@ class Ability
       can :crud, Zipcode
       can :crud, Entity
       can :crud, EntityType
+      can :crud, TaxType
     elsif user.has_role? :ag2Admin_Guest
       can :read, Company
       can :read, Country
@@ -52,6 +53,7 @@ class Ability
       can :read, Zipcode
       can :read, Entity
       can :read, EntityType
+      can :read, TaxType
     elsif user.has_role? :ag2Admin_Banned
       cannot :manage, Company
       cannot :manage, Country
@@ -63,6 +65,7 @@ class Ability
       cannot :manage, Zipcode
       cannot :manage, Entity
       cannot :manage, EntityType
+      cannot :manage, TaxType
     end
     # ag2Directory
     if user.has_role? :ag2Directory_User
@@ -139,10 +142,39 @@ class Ability
     # ag2Purchase
     if user.has_role? :ag2Purchase_User
       can :crud, Supplier
+      can :crud, Activity
+      can :crud, PaymentMethod
+      can :crud, SupplierContact
     elsif user.has_role? :ag2Purchase_Guest
       can :read, Supplier
+      can :read, Activity
+      can :read, PaymentMethod
+      can :read, SupplierContact
     elsif user.has_role? :ag2Purchase_Banned
       cannot :manage, Supplier
+      cannot :manage, Activity
+      cannot :manage, PaymentMethod
+      cannot :manage, SupplierContact
+    end
+    # ag2Products
+    if user.has_role? :ag2Purchase_User
+      can :crud, Manufacturer
+      can :crud, Measure
+      can :crud, ProductFamily
+      can :crud, ProductType
+      can :crud, Product
+    elsif user.has_role? :ag2Purchase_Guest
+      can :read, Manufacturer
+      can :read, Measure
+      can :read, ProductFamily
+      can :read, ProductType
+      can :read, Product
+    elsif user.has_role? :ag2Purchase_Banned
+      cannot :manage, Manufacturer
+      cannot :manage, Measure
+      cannot :manage, ProductFamily
+      cannot :manage, ProductType
+      cannot :manage, Product
     end
 
   # Define abilities for the passed in user here. For example:

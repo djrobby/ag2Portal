@@ -7,7 +7,7 @@ module Ag2Directory
     skip_load_and_authorize_resource :only => :data_import
 
     def index
-      authorize! :update, CorpContact
+      authorize! :update, CorpContact   # Authorize only if current user can update CorpContact model
     end
 
     def data_import

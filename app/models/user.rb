@@ -41,6 +41,7 @@ class User < ActiveRecord::Base
       add_role(:ag2Human_Banned)
       add_role(:ag2HelpDesk_Banned)
       add_role(:ag2Purchase_Banned)
+      add_role(:ag2Products_Banned)
       # Send e-mail to administrator to configure the right roles
       Notifier.user_created(self).deliver
     end

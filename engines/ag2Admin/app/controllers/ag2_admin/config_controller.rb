@@ -4,17 +4,10 @@ module Ag2Admin
   class ConfigController < ApplicationController
     before_filter :authenticate_user!
     def index
-      authorize! :manage, User
+      authorize! :manage, User    # Authorize only if current user can manage User model
 
       # Path for ag2Db app
-      app = App.find_by_name('ag2Db')
-      if app.nil?
-        @ag2db_path = '#notfound'
-        @target = '_self'
-      else
-        @ag2db_path = 'http://' + app.path
-        @target = '_blank'
-      end
+      @ag2db_path, @target = application_path('ag2Db', '_blank')
     end
   end
 end

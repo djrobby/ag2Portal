@@ -13,7 +13,8 @@ class ApplicationController < ActionController::Base
   helper_method :per_page
   helper_method :undo_link
   helper_method :crud_notice
-  helper_method :site_path
+  helper_method :website_path
+  helper_method :application_path
   helper_method :sort_direction
 
   def letters
@@ -56,16 +57,29 @@ class ApplicationController < ActionController::Base
   end
 
   # Site path
-  def site_path(to_site, to_target)
-    site = Site.find_by_name(to_site)
-    if site.nil?
-      site_path = '#notfound'
-      site_target = '_self'
+  def website_path(to_site, to_target)
+    _navto = Site.find_by_name(to_site)
+    if _navto.nil?
+      _path = '#notfound'
+      _target = '_self'
     else
-      site_path = 'http://' + site.path
-      site_target = to_target
+      _path = 'http://' + _navto.path
+      _target = to_target
     end
-    return site_path, site_target
+    return _path, _target
+  end
+
+  # App path
+  def application_path(to_app, to_target)
+    _navto = App.find_by_name(to_app)
+    if _navto.nil?
+      _path = '#notfound'
+      _target = '_self'
+    else
+      _path = 'http://' + _navto.path
+      _target = to_target
+    end
+    return _path, _target
   end
 
   # Table (index) sort
