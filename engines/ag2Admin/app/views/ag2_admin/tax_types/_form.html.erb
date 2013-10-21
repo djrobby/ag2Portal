@@ -1,0 +1,7 @@
+<%= simple_form_for @tax_type, :html => {:class => 'form-vertical well' } do |f| %>
+<%= f.error_notification %>
+<%= display_base_errors resource %>
+<%= f.input :description, :autofocus => true, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %>
+<%= f.input :tax, as: :string, input_html: { value: (number_with_precision(f.object.tax, precision: 2) if f.object.tax), class: 'small-text-field' }, label_html: { class: 'form-label' } %>
+<%= f.button :submit, :class => 'btn-primary' %>
+<% end %>

@@ -1,0 +1,16 @@
+es:
+  ag2_admin:
+    tax_types:
+      index:
+        title: "Tipos de impuesto"
+        btn_new: "Nuevo Tipo de impuesto"
+        back_to_root: "Volver a ag2Admin"
+      show:
+        title: "Tipo de impuesto"
+        btn_edit: "Editar Tipo de impuesto"
+      edit:
+        title: "Editar Tipo de impuesto"
+        btn_show: "Ver Tipo de impuesto"
+      new:
+        title: "Nuevo Tipo de impuesto"
+      back_to_main_page: "Volver a Tipos de impuesto"

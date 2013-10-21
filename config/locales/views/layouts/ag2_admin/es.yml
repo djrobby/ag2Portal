@@ -7,3 +7,5 @@ es:
       entitytypes:
         items: "Tipos"
         item: "Tipo"
+      taxtypes:
+        item: "Tipo"

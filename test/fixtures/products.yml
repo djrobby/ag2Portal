@@ -1,0 +1,43 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  product_code: MyString
+  main_description: MyString
+  aux_description: MyString
+  product_type: 
+  product_family: 
+  measure: 
+  tax_type: 
+  manufacturer: 
+  manufacturer_p_code: MyString
+  reference_price: 9.99
+  last_price: 9.99
+  average_price: 9.99
+  sell_price: 9.99
+  markup: 9.99
+  warranty_time: 1
+  life_time: 1
+  active: false
+  aux_code: MyString
+  remarks: MyString
+
+two:
+  product_code: MyString
+  main_description: MyString
+  aux_description: MyString
+  product_type: 
+  product_family: 
+  measure: 
+  tax_type: 
+  manufacturer: 
+  manufacturer_p_code: MyString
+  reference_price: 9.99
+  last_price: 9.99
+  average_price: 9.99
+  sell_price: 9.99
+  markup: 9.99
+  warranty_time: 1
+  life_time: 1
+  active: false
+  aux_code: MyString
+  remarks: MyString

@@ -5,7 +5,7 @@ en:
         title: "Apps"
         btn_new: "New App"
         go_to: "Go to ag2Sites"
-        back_to_root: "Back to ag2Admin"
+        back_to_root: "Back to ag2Config"
       show:
         title: "App"
         btn_edit: "Edit App"

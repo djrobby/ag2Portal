@@ -1,0 +1,12 @@
+en:
+  activerecord:
+    models:
+      tax_type:
+        zero:  Tax types
+        one:   Tax type
+        few:   Tax types
+        other: Tax types
+    attributes:
+      tax_type:
+        tax: "Rate"
+        description: "Description"

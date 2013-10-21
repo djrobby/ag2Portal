@@ -1,0 +1,8 @@
+<%= render '/layouts/ag2_admin/taxtypesbreadcrumb' %>
+
+<h3><%=t '.title' %></h3>
+
+<%= render 'form' %>
+
+<%= link_to I18n.t('ag2_admin.tax_types.edit.btn_show'), @tax_type %> |
+<%= link_to I18n.t('ag2_admin.tax_types.back_to_main_page'), tax_types_path %>

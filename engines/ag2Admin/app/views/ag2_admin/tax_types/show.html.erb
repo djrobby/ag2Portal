@@ -1,0 +1,24 @@
+<%= render '/layouts/ag2_admin/taxtypesbreadcrumb' %>
+
+<h3><%=t '.title' %></h3>
+<table class="table">
+  <tbody>
+    <tr>
+      <td>Id:</td>
+      <td><%= @tax_type.id %></td>
+      <td><%=t 'activerecord.attributes.tax_type.description' %>:</td>
+      <td><%= @tax_type.description %></td>
+    </tr>
+    <tr>
+      <td><%=t 'activerecord.attributes.tax_type.tax' %>:</td>
+      <td><%= number_to_percentage(@tax_type.tax, :locale => :es) unless @tax_type.tax.blank? %></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @tax_type } %>
+    <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @tax_type } %>
+  </tbody>
+</table>
+
+<%= render :partial => '/layouts/crud/update', :locals => { :model => TaxType, :path => edit_tax_type_path(@tax_type), :txt => t('.btn_edit') } %>
+<%= link_to I18n.t('ag2_admin.tax_types.back_to_main_page'), tax_types_path %>

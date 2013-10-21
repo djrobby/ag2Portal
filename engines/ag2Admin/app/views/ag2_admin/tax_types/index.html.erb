@@ -1,0 +1,29 @@
+<%= render '/layouts/ag2_admin/taxtypesbreadcrumb' %>
+
+<h3><%=t '.title' %></h3>
+<div class="span6">
+  <table class="table table-condensed table-striped">
+    <thead>
+      <tr>
+        <th><%= sortable "id", "Id" %></th>
+        <th><%= sortable "description", t('activerecord.attributes.tax_type.description') %></th>
+        <th><%= sortable "tax", t('activerecord.attributes.tax_type.tax') %></th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @tax_types.each do |type| %>
+      <tr>
+        <td><%= type.id %></td>
+        <td><%= link_to type.description, description %></td>
+        <td><%= number_to_percentage(type.tax, :locale => :es) unless type.tax.blank? %></td>
+        <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => TaxType, :path => edit_tax_type_path(type) } %>
+        <%= render :partial => '/layouts/crud/delete', :locals => { :model => TaxType, :path => tax_type, :msg => I18n.t("activerecord.models.tax_type.one"), :txt => type.description } %> </td>
+      </tr>
+      <% end %>
+    </tbody>
+  </table>
+  <%= render :partial => '/layouts/pagination', :locals => { :ivar => @tax_types } %>
+  <%= render :partial => '/layouts/crud/new', :locals => { :model => TaxType, :path => new_tax_type_path, :txt => t('.btn_new') } %>
+  <%= link_to t('.back_to_root'), ag2_admin.root_path %>
+</div>

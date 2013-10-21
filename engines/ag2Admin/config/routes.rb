@@ -44,6 +44,7 @@ Ag2Admin::Engine.routes.draw do
     resources :data_import_configs
     resources :entity_types
     resources :entities
+    resources :tax_types
     
     # Root
     root :to => 'home#index'

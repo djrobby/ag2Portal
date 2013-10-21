@@ -1,0 +1,16 @@
+en:
+  ag2_admin:
+    tax_types:
+      index:
+        title: "Tax types"
+        btn_new: "New Tax type"
+        back_to_root: "Back to ag2Admin"
+      show:
+        title: "Tax type"
+        btn_edit: "Edit Tax type"
+      edit:
+        title: "Edit Tax type"
+        btn_show: "Show Tax type"
+      new:
+        title: "New Tax type"
+      back_to_main_page: "Back to Tax types"

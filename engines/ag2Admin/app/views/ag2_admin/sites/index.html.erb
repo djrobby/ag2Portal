@@ -24,5 +24,5 @@
   <%= render :partial => '/layouts/pagination', :locals => { :ivar => @sites } %>
   <%= render :partial => '/layouts/crud/new', :locals => { :model => Site, :path => new_site_path, :txt => I18n.t("ag2_admin.sites.index.btn_new") } %>
   <%= link_to I18n.t("ag2_admin.sites.index.go_to"), apps_path %> |
-  <%= link_to I18n.t("ag2_admin.sites.index.back_to_root"), ag2_admin.root_path %>
+  <%= link_to I18n.t("ag2_admin.sites.index.back_to_root"), ag2_admin.config_path %>
 </div>

@@ -1,8 +1,7 @@
-<% content_for :title, "aGestiona2 | ag2Sites" %>
-<% content_for :icon, "/assets/icon/ag2Sites.png" %>
-<% content_for :alt, "ag2Sites" %>
+<% content_for :title, "aGestiona2 | ag2TaxTypes" %>
+<% content_for :icon, "/assets/icon/ag2TaxTypes.png" %>
+<% content_for :alt, "ag2TaxTypes" %>
 
-<!-- Breadcrumb -->
 <ul class="breadcrumb">
   <li>
     <a href="<%= main_app.root_path %>"><i class="icon-home"></i></a><span class="divider">></span>
@@ -10,20 +9,17 @@
   <li>
     <a href="<%= ag2_admin.root_path %>">ag2Admin</a><span class="divider">></span>
   </li>
+  <% if @tax_types %>
   <li>
-    <a href="<%= ag2_admin.config_path %>">ag2Config</a><span class="divider">></span>
-  </li>
-  <% if @sites %>
-  <li>
-    ag2Sites
+    ag2TaxTypes
   </li>
   <% end %>
-  <% if @site %>
+  <% if @tax_type %>
   <li>
-    <a href="<%= sites_path %>">ag2Sites</a><span class="divider">></span>
+    <a href="<%= tax_types_path %>">ag2TaxTypes</a><span class="divider">></span>
   </li>
   <% if @breadcrumb == 'read' || @breadcrumb == 'update' %>
-  <%= @site.name %>
+  <%=t :"ag2_admin.breadcrumb.taxtypes.item"%>
   <% end %>
   <% if @breadcrumb == 'create' %>
   <li>

@@ -1,0 +1,12 @@
+es:
+  activerecord:
+    models:
+      tax_type:
+        zero:  Tipos de impuesto
+        one:   Tipo de impuesto
+        few:   Tipos de impuesto
+        other: Tipos de impuesto
+    attributes:
+      tax_type:
+        tax: "Tasa"
+        description: "Descripción"
