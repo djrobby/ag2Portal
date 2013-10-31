@@ -16,3 +16,4 @@ es:
       new:
         title: "Nuevo Producto"
       back_to_main_page: "Volver a Productos"
+      generate_code_btn: "Código de Producto"

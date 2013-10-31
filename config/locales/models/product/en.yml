@@ -1,0 +1,35 @@
+en:
+  activerecord:
+    models:
+      product:
+        zero:  Products
+        one:   Product
+        few:   Products
+        other: Products
+        check_for_products: "Product cannot be destroyed while linked orders exist."
+    attributes:
+      product:
+        product_code: "Code"
+        main_description: "Description"
+        aux_description: "Secondary description"
+        product_type: "Product type"
+        product_type_id: "Product type"
+        product_family: "Product family"
+        product_family_id: "Product family"
+        measure: "Measure"
+        measure_id: "Measure"
+        tax_type: "Tax type"
+        tax_type_id: "Tax type"
+        manufacturer: "Manufacturer"
+        manufacturer_id: "Manufacturer"
+        manufacturer_p_code: "Manufacturer reference"
+        reference_price: "Reference price"
+        last_price: "Last price"
+        average_price: "Average price"
+        sell_price: "Sell price"
+        markup: "Markup"
+        warranty_time: "Warranty time"
+        life_time: "Life time"
+        active: "Active?"
+        aux_code: "Ext/Aux Code"
+        remarks: "Remarks"

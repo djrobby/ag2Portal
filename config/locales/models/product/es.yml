@@ -1,0 +1,35 @@
+es:
+  activerecord:
+    models:
+      product:
+        zero:  Productos
+        one:   Producto
+        few:   Productos
+        other: Productos
+        check_for_products: "Producto no puede ser eliminado mientras existan pedidos vinculados."
+    attributes:
+      product:
+        product_code: "Código"
+        main_description: "Descripción"
+        aux_description: "Descripción secundaria"
+        product_type: "Tipo de producto"
+        product_type_id: "Tipo de producto"
+        product_family: "Familia de producto"
+        product_family_id: "Familia de producto"
+        measure: "Unidad de medida"
+        measure_id: "Unidad de medida"
+        tax_type: "Tipo de impuesto"
+        tax_type_id: "Tipo de impuesto"
+        manufacturer: "Fabricante"
+        manufacturer_id: "Fabricante"
+        manufacturer_p_code: "Referencia del fabricante"
+        reference_price: "Precio de referencia"
+        last_price: "Último precio"
+        average_price: "Precio promedio"
+        sell_price: "Precio de venta"
+        markup: "Márgen"
+        warranty_time: "Tiempo de garantía"
+        life_time: "Tiempo de vida útil"
+        active: "¿Activo?"
+        aux_code: "Código Ext/Aux"
+        remarks: "Comentarios"
