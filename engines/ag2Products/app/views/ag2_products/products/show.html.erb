@@ -1,5 +1,127 @@
-<p id="notice"><%= notice %></p>
+<%= render '/layouts/ag2_products/productsbreadcrumb' %>
 
+<h3><%= t '.title' %></h3>
+<table class="table">
+  <tbody>
+    <tr>
+      <td>Id:</td>
+      <td><%= @product.id %></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><%= t 'activerecord.attributes.product.product_family' %>:</td>
+      <td><%= @product.product_family.name %></td>
+      <td><%= t 'activerecord.attributes.product.product_code' %>:</td>
+      <td><%= @product.product_code %></td>
+    </tr>
+    <tr>
+      <td><%= t 'activerecord.attributes.product.main_description' %>:</td>
+      <td><%= @product.main_description %></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><%= t 'activerecord.attributes.product.aux_description' %>:</td>
+      <td><%= @product.aux_description unless @product.aux_description.blank? %></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><%= t 'activerecord.attributes.product.product_type' %>:</td>
+      <td><%= @product.product_type.name %></td>
+      <td><%= t 'activerecord.attributes.product.active' %>:</td>
+      <td> <% if @product.active %> <i class="icon-thumbs-up"></i> <% else %> <i class="icon-thumbs-down"></i> <% end %> </td>
+    </tr>
+    <tr>
+      <td><%= t 'activerecord.attributes.product.measure' %>:</td>
+      <td><%= @product.measure.name %></td>
+      <td><%= t 'activerecord.attributes.product.manufacturer' %>:</td>
+      <td><%= @product.manufacturer.name %></td>
+    </tr>
+    <tr>
+      <td><%= t 'activerecord.attributes.product.remarks' %>:</td>
+      <td><%= @product.remarks unless @product.remarks.blank? %></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @product } %>
+    <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @product } %>
+  </tbody>
+</table>
 
-<%= link_to 'Edit', edit_product_path(@product) %> |
-<%= link_to 'Back', products_path %>
+<h4><%= t 'ag2_products.products.commercial_info' %></h4>
+<table class="table">
+  <tbody>
+    <tr>
+      <td><%= t 'activerecord.attributes.product.manufacturer_p_code' %>:</td>
+      <td><%= @product.manufacturer_p_code unless @product.manufacturer_p_code.blank? %></td>
+      <td><%= t 'activerecord.attributes.product.aux_code' %>:</td>
+      <td><%= @product.aux_code unless @product.aux_code.blank? %></td>
+    </tr>
+    <tr>
+      <td><%= t 'activerecord.attributes.product.tax_type' %>:</td>
+      <td><%= @product.tax_type.name %> (<%= number_to_percentage(@product.tax_type.tax, precision: 2, locale: :es) unless @product.tax_type.tax.blank? %>)</td>
+      <td><%= t :"activerecord.attributes.product.reference_price" %>:</td>
+      <td><%= number_to_currency(@product.reference_price, precision: 4, locale: :es) unless @product.reference_price.blank? %></td>
+    </tr>
+    <tr>
+      <td><%= t :"activerecord.attributes.product.last_price" %>:</td>
+      <td><%= number_to_currency(@product.last_price, precision: 4, locale: :es) unless @product.last_price.blank? %></td>
+      <td><%= t :"activerecord.attributes.product.average_price" %>:</td>
+      <td><%= number_to_currency(@product.average_price, precision: 4, locale: :es) unless @product.average_price.blank? %></td>
+    </tr>
+    <tr>
+      <td><%= t :"activerecord.attributes.product.markup" %>:</td>
+      <td><%= number_to_percentage(@product.markup, precision: 2, locale: :es) unless @product.markup.blank? %></td>
+      <td><%= t :"activerecord.attributes.product.sell_price" %>:</td>
+      <td><%= number_to_currency(@product.sell_price, precision: 4, locale: :es) unless @product.sell_price.blank? %></td>
+    </tr>
+    <tr>
+      <td><%= t 'activerecord.attributes.product.warranty_time' %>:</td>
+      <td><%= @product.warranty_time unless @product.warranty_time.blank? %></td>
+      <td><%= t 'activerecord.attributes.product.life_time' %>:</td>
+      <td><%= @product.life_time unless @product.life_time.blank? %></td>
+    </tr>
+  </tbody>
+</table>
+
+<%= render :partial => '/layouts/crud/update_delete',
+:locals => { :model => Product, :update_path => edit_Product_path(@product), :update_txt => t('.btn_edit'),
+:delete_path => @product, :delete_txt => t('.btn_delete'),
+:msg => t("activerecord.models.product.one"), :txt => @product.product_code } %>
+
+<% if false %><!-- Activate block removing if -->
+<% if (@stocks.count > 0) %>
+<h4><%=t '.subtable_stores_title' %></h4>
+<table class="table table-condensed table-striped shrinked">
+  <thead>
+    <%= render '/layouts/ag2_products/stocksheader' %>
+  </thead>
+  <tbody>
+    <%= render :partial => '/layouts/ag2_products/stocks', :locals => { :stocks => @stocks } %>
+  </tbody>
+</table>
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @stocks } %>
+<% end %>
+<% end %>
+
+<% if false %><!-- Activate block removing if -->
+<% if (@prices.count > 0) %>
+<h4><%=t '.subtable_prices_title' %></h4>
+<table class="table table-condensed table-striped shrinked">
+  <thead>
+    <%= render '/layouts/ag2_products/pricesheader' %>
+  </thead>
+  <tbody>
+    <%= render :partial => '/layouts/ag2_products/prices', :locals => { :prices => @prices } %>
+  </tbody>
+</table>
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @prices } %>
+<% end %>
+<% end %>
+
+<% if !session[:return_to].nil? %>
+<%= link_to session[:return_to], session[:return_to_url] %> |
+<% end %>
+<%= link_to t('ag2_products.products.back_to_main_page'), products_path %>

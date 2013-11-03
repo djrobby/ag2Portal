@@ -94,7 +94,7 @@
     </tr>
     <tr>
       <td><%= t :"activerecord.attributes.supplier.discount_rate" %>:</td>
-      <td><%= number_to_percentage(@supplier.discount_rate, :locale => :es) unless @supplier.discount_rate.blank? %></td>
+      <td><%= number_to_percentage(@supplier.discount_rate, precision: 2, locale: :es) unless @supplier.discount_rate.blank? %></td>
       <td></td>
       <td></td>
     </tr>
@@ -102,7 +102,7 @@
       <td><%= t :"activerecord.attributes.supplier.max_orders_count" %>:</td>
       <td><%= @supplier.max_orders_count unless @supplier.max_orders_count.blank? %></td>
       <td><%= t :"activerecord.attributes.supplier.max_orders_sum" %>:</td>
-      <td><%= number_to_currency(@supplier.max_orders_sum, :locale => :es) unless @supplier.max_orders_sum.blank? %></td>
+      <td><%= number_to_currency(@supplier.max_orders_sum, locale: :es) unless @supplier.max_orders_sum.blank? %></td>
     </tr>
   </tbody>
 </table>

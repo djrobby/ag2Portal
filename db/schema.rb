@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131021093825) do
+ActiveRecord::Schema.define(:version => 20131103094936) do
 
   create_table "activities", :force => true do |t|
     t.string   "description"
@@ -328,24 +328,28 @@ ActiveRecord::Schema.define(:version => 20131021093825) do
     t.integer  "tax_type_id"
     t.integer  "manufacturer_id"
     t.string   "manufacturer_p_code"
-    t.decimal  "reference_price",     :precision => 10, :scale => 0
-    t.decimal  "last_price",          :precision => 10, :scale => 0
-    t.decimal  "average_price",       :precision => 10, :scale => 0
-    t.decimal  "sell_price",          :precision => 10, :scale => 0
-    t.decimal  "markup",              :precision => 10, :scale => 0
-    t.integer  "warranty_time"
-    t.integer  "life_time"
+    t.decimal  "reference_price",                  :precision => 12, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "last_price",                       :precision => 12, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "average_price",                    :precision => 12, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "sell_price",                       :precision => 10, :scale => 0
+    t.decimal  "markup",                           :precision => 6,  :scale => 2, :default => 0.0, :null => false
+    t.integer  "warranty_time",       :limit => 2,                                :default => 0,   :null => false
+    t.integer  "life_time",           :limit => 2,                                :default => 0,   :null => false
     t.boolean  "active"
     t.string   "aux_code"
     t.string   "remarks"
-    t.datetime "created_at",                                         :null => false
-    t.datetime "updated_at",                                         :null => false
+    t.datetime "created_at",                                                                       :null => false
+    t.datetime "updated_at",                                                                       :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
   end
 
+  add_index "products", ["active"], :name => "index_products_on_active"
+  add_index "products", ["aux_description"], :name => "index_products_on_aux_description"
+  add_index "products", ["main_description"], :name => "index_products_on_main_description"
   add_index "products", ["manufacturer_id"], :name => "index_products_on_manufacturer_id"
   add_index "products", ["measure_id"], :name => "index_products_on_measure_id"
+  add_index "products", ["product_code"], :name => "index_products_on_product_code"
   add_index "products", ["product_family_id"], :name => "index_products_on_product_family_id"
   add_index "products", ["product_type_id"], :name => "index_products_on_product_type_id"
   add_index "products", ["tax_type_id"], :name => "index_products_on_tax_type_id"
@@ -541,7 +545,7 @@ ActiveRecord::Schema.define(:version => 20131021093825) do
     t.integer  "country_id"
     t.integer  "payment_method_id"
     t.string   "ledger_account"
-    t.decimal  "discount_rate",     :precision => 12, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "discount_rate",     :precision => 6,  :scale => 2, :default => 0.0, :null => false
     t.boolean  "active"
     t.integer  "max_orders_count",                                 :default => 0
     t.decimal  "max_orders_sum",    :precision => 12, :scale => 4, :default => 0.0, :null => false
@@ -550,6 +554,7 @@ ActiveRecord::Schema.define(:version => 20131021093825) do
     t.integer  "entity_id"
   end
 
+  add_index "suppliers", ["active"], :name => "index_suppliers_on_active"
   add_index "suppliers", ["cellular"], :name => "index_suppliers_on_cellular"
   add_index "suppliers", ["contract_number"], :name => "index_suppliers_on_contract_number"
   add_index "suppliers", ["country_id"], :name => "index_suppliers_on_country_id"

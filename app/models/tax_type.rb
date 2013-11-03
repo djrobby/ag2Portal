@@ -8,4 +8,8 @@ class TaxType < ActiveRecord::Base
   validates :tax,         :presence => true
 
   #has_many :products
+
+  def to_label
+    "#{description} (#{tax})"
+  end
 end

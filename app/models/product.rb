@@ -29,11 +29,14 @@ class Product < ActiveRecord::Base
   #has_many :product_suppliers, dependent: :destroy
   #has_many :product_stores, dependent: :destroy
   def fields_to_uppercase
+    if !self.product_code.blank?
+      self[:product_code].upcase!
+    end
     if !self.main_description.blank?
       self[:main_description].upcase!
     end
-    if !self.product_code.blank?
-      self[:product_code].upcase!
+    if !self.aux_description.blank?
+      self[:aux_description].upcase!
     end
   end
 
