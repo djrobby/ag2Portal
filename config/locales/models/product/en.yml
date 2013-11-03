@@ -6,7 +6,8 @@ en:
         one:   Product
         few:   Products
         other: Products
-        check_for_products: "Product cannot be destroyed while linked orders exist."
+        check_for_orders: "Product cannot be destroyed while linked orders exist."
+        check_for_stocks: "Product cannot be destroyed while linked stocks exist."
     attributes:
       product:
         product_code: "Code"

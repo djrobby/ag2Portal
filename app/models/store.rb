@@ -10,12 +10,15 @@ class Store < ActiveRecord::Base
 
   before_destroy :check_for_dependent_records
 
+  has_many :stocks
+  has_many :products, :through => :stocks
+
   private
 
   def check_for_dependent_records
-    # Check for products
-    if !products.nil?
-      errors.add(:base, I18n.t('activerecord.models.store.check_for_products'))
+    # Check for stocks
+    if stocks.count > 0
+      errors.add(:base, I18n.t('activerecord.models.store.check_for_stocks'))
       return false
     end
   end

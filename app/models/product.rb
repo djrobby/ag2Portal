@@ -26,8 +26,11 @@ class Product < ActiveRecord::Base
 
   before_destroy :check_for_dependent_records
 
-  #has_many :product_suppliers, dependent: :destroy
-  #has_many :product_stores, dependent: :destroy
+  has_many :purchase_prices, dependent: :destroy
+  has_many :suppliers, :through => :purchase_prices
+  has_many :stocks
+  has_many :stores, :through => :stocks
+
   def fields_to_uppercase
     if !self.product_code.blank?
       self[:product_code].upcase!
@@ -70,6 +73,11 @@ class Product < ActiveRecord::Base
   private
 
   def check_for_dependent_records
+    # Check for stocks
+    if stocks.count > 0
+      errors.add(:base, I18n.t('activerecord.models.store.check_for_stocks'))
+      return false
+    end
     # Check for orders & ...
 #    if orders.count > 0
 #      errors.add(:base, I18n.t('activerecord.models.product.check_for_orders'))

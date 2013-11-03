@@ -6,7 +6,7 @@ en:
         one:   Store
         few:   Stores
         other: Stores
-        check_for_products: "Store cannot be destroyed while linked products exist."
+        check_for_stocks: "Store cannot be destroyed while linked stocks exist."
     attributes:
       store:
         name: "Name"

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131103094936) do
+ActiveRecord::Schema.define(:version => 20131103155534) do
 
   create_table "activities", :force => true do |t|
     t.string   "description"
@@ -380,6 +380,25 @@ ActiveRecord::Schema.define(:version => 20131103094936) do
   add_index "provinces", ["ine_cpro"], :name => "index_provinces_on_ine_cpro"
   add_index "provinces", ["region_id"], :name => "index_provinces_on_region_id"
 
+  create_table "purchase_prices", :force => true do |t|
+    t.integer  "product_id"
+    t.integer  "supplier_id"
+    t.string   "code"
+    t.decimal  "price",       :precision => 12, :scale => 4, :default => 0.0, :null => false
+    t.integer  "measure_id"
+    t.decimal  "factor",      :precision => 12, :scale => 4, :default => 0.0, :null => false
+    t.boolean  "favorite"
+    t.datetime "created_at",                                                  :null => false
+    t.datetime "updated_at",                                                  :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  add_index "purchase_prices", ["code"], :name => "index_purchase_prices_on_code"
+  add_index "purchase_prices", ["measure_id"], :name => "index_purchase_prices_on_measure_id"
+  add_index "purchase_prices", ["product_id"], :name => "index_purchase_prices_on_product_id"
+  add_index "purchase_prices", ["supplier_id"], :name => "index_purchase_prices_on_supplier_id"
+
   create_table "regions", :force => true do |t|
     t.string   "name"
     t.integer  "country_id"
@@ -468,6 +487,22 @@ ActiveRecord::Schema.define(:version => 20131103094936) do
   end
 
   add_index "sites", ["name"], :name => "index_sites_on_name"
+
+  create_table "stocks", :force => true do |t|
+    t.integer  "product_id"
+    t.integer  "store_id"
+    t.decimal  "initial",    :precision => 12, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "current",    :precision => 12, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "minimum",    :precision => 12, :scale => 4, :default => 0.0, :null => false
+    t.string   "location"
+    t.datetime "created_at",                                                 :null => false
+    t.datetime "updated_at",                                                 :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  add_index "stocks", ["product_id"], :name => "index_stocks_on_product_id"
+  add_index "stocks", ["store_id"], :name => "index_stocks_on_store_id"
 
   create_table "stores", :force => true do |t|
     t.string   "name"

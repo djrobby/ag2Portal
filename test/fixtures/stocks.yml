@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  product: 
+  store: 
+  initial: 9.99
+  current: 9.99
+  minimum: 9.99
+  location: MyString
+
+two:
+  product: 
+  store: 
+  initial: 9.99
+  current: 9.99
+  minimum: 9.99
+  location: MyString

@@ -1,0 +1,19 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  product: 
+  supplier: 
+  code: MyString
+  price: 9.99
+  measure: 
+  factor: 9.99
+  favorite: false
+
+two:
+  product: 
+  supplier: 
+  code: MyString
+  price: 9.99
+  measure: 
+  factor: 9.99
+  favorite: false

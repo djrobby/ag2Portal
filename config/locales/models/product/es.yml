@@ -6,7 +6,8 @@ es:
         one:   Producto
         few:   Productos
         other: Productos
-        check_for_products: "Producto no puede ser eliminado mientras existan pedidos vinculados."
+        check_for_orders: "Producto no puede ser eliminado mientras existan pedidos vinculados."
+        check_for_stocks: "Producto no puede ser eliminado mientras existan existencias vinculadas."
     attributes:
       product:
         product_code: "Código"

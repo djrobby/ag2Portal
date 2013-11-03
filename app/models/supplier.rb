@@ -40,6 +40,9 @@ class Supplier < ActiveRecord::Base
   before_destroy :check_for_dependent_records
 
   has_many :supplier_contacts, dependent: :destroy
+  has_many :purchase_prices, dependent: :destroy
+  has_many :products, :through => :purchase_prices
+
   def fields_to_uppercase
     if !self.fiscal_id.blank?
       self[:fiscal_id].upcase!
