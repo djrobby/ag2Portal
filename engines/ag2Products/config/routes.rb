@@ -6,6 +6,8 @@ Ag2Products::Engine.routes.draw do
     # Routes for jQuery POSTs
     match 'stores/update_company_textfield_from_office/:id', :controller => 'stores', :action => 'update_company_textfield_from_office'
     match 'stores/:id/update_company_textfield_from_office/:id', :controller => 'stores', :action => 'update_company_textfield_from_office'
+    match 'products/update_code_textfield/:id', :controller => 'products', :action => 'update_code_textfield'
+    match 'products/:id/update_code_textfield/:id', :controller => 'products', :action => 'update_code_textfield'
 
     # Resources
     resources :products

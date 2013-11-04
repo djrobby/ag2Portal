@@ -4,12 +4,74 @@ module Ag2Products
   class ProductsController < ApplicationController
     before_filter :authenticate_user!
     load_and_authorize_resource
+    skip_load_and_authorize_resource :only => [:update_code_textfield]
+    
+    # Update product code at view (generate_code_btn)
+    def update_code_textfield
+      family = params[:id]
+      code = ''
 
+      # Builds code, if possible
+      if family == '$'
+        code = '$err'
+      else
+        family = family.to_s if family.is_a? Fixnum
+        family = family.rjust(4, '0')
+        last_product_code = Product.where("product_code LIKE ?", "#{family}%").order('product_code').maximum('product_code')
+        if last_product_code.nil?
+          code = family + '-000001'
+        else
+          last_product_code = last_product_code.split("-").last.to_i + 1
+          code = family + '-' + last_product_code.to_s.rjust(6, '0')
+        end
+      end
+      @json_data = { "code" => code }
+
+      respond_to do |format|
+        format.html # update_code_textfield.html.erb does not exist! JSON only
+        format.json { render json: @json_data }
+      end
+    end
+
+    #
+    # Default Methods
+    #
     # GET /products
     # GET /products.json
     def index
-      @products = Product.all
+      type = params[:Type]
+      family = params[:Family]
+      measure = params[:Measure]
+      manufacturer = params[:Manufacturer]
+      tax = params[:Tax]
+      letter = params[:letter]
   
+      @search = Product.search do
+        fulltext params[:search]
+        if !type.blank?
+          with :product_type_id, type
+        end
+        if !family.blank?
+          with :product_family_id, family
+        end
+        if !measure.blank?
+          with :measure_id, measure
+        end
+        if !manufacturer.blank?
+          with :manufacturer_id, manufacturer
+        end
+        if !tax.blank?
+          with :tax_type_id, tax
+        end
+        order_by :product_code, :asc
+        paginate :page => params[:page] || 1, :per_page => per_page
+      end
+      if letter.blank? || letter == "%"
+        @products = @search.results
+      else
+        @products = Product.where("main_description LIKE ?", "#{letter}%").paginate(:page => params[:page], :per_page => per_page).order('product_code')
+      end
+
       respond_to do |format|
         format.html # index.html.erb
         format.json { render json: @products }
@@ -21,8 +83,8 @@ module Ag2Products
     def show
       @breadcrumb = 'read'
       @product = Product.find(params[:id])
-      #@stocks = @product.stocks.paginate(:page => params[:page], :per_page => per_page).order('product_code')
-      #@prices = @product.purchase_prices.paginate(:page => params[:page], :per_page => per_page).order('product_code')
+      #@stocks = @product.stocks.paginate(:page => params[:page], :per_page => per_page).order('store_id')
+      #@prices = @product.purchase_prices.paginate(:page => params[:page], :per_page => per_page).order('supplier_id')
   
       respond_to do |format|
         format.html # show.html.erb

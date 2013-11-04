@@ -1,21 +1,54 @@
-<h1>Listing products</h1>
+<% session[:return_to] = nil %>
+<% session[:return_to_url] = nil %>
+<%= render '/layouts/ag2_products/productsbreadcrumb' %>
 
-<table>
-  <tr>
-    <th></th>
-    <th></th>
-    <th></th>
-  </tr>
+<h3><%=t '.title' %></h3>
 
-<% @products.each do |product| %>
-  <tr>
-    <td><%= link_to 'Show', product %></td>
-    <td><%= link_to 'Edit', edit_product_path(product) %></td>
-    <td><%= link_to 'Destroy', product, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-  </tr>
-<% end %>
-</table>
+<div class="container-fluid">
+  <div class="row-fluid">
 
-<br />
+    <div class="span3">
+      <div class="well sidebar-nav">
+        <%= form_tag "products", :method => 'get' do %>
+        <!-- Type -->
+        <%= label_tag I18n.t("ag2_products.products.index.label_type"), nil, :class => 'form-label' %>
+        <%= select_tag "Type", options_from_collection_for_select(ProductType.order('description').all, "id", "description"), :prompt => "", :class => 'x-large-text-field shrinked' %>
+        <!-- Family -->
+        <%= label_tag I18n.t("ag2_products.products.index.label_family"), nil, :class => 'form-label' %>
+        <%= select_tag "Family", options_from_collection_for_select(ProductFamily.order('name').all, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked' %>
+        <!-- Measure -->
+        <%= label_tag I18n.t("ag2_products.products.index.label_measure"), nil, :class => 'form-label' %>
+        <%= select_tag "Measure", options_from_collection_for_select(Measure.order('description').all, "id", "description"), :prompt => "", :class => 'x-large-text-field shrinked' %>
+        <!-- Manufacturer -->
+        <%= label_tag I18n.t("ag2_products.products.index.label_manufacturer"), nil, :class => 'form-label' %>
+        <%= select_tag "Manufacturer", options_from_collection_for_select(Manufacturer.order('name').all, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked' %>
+        <!-- Tax -->
+        <%= label_tag I18n.t("ag2_products.products.index.label_tax"), nil, :class => 'form-label' %>
+        <%= select_tag "Tax", options_from_collection_for_select(TaxType.order('description').all, "id", "description"), :prompt => "", :class => 'x-large-text-field shrinked' %>
+        <!-- Others -->
+        <%= label_tag I18n.t("ag2_products.products.index.label_others"), nil, :class => 'form-label' %>
+        <%= text_field_tag :search, params[:search], :class => 'x-large-text-field shrinked' %>
+        <!-- Submit -->
+        <%= submit_tag I18n.t("ag2_products.products.index.btn_apply"), :class => 'btn btn-primary' %>
+        <% end %>
+        <!-- Buttons -->
+        <%= render :partial => '/layouts/crud/new', :locals => { :model => Product, :path => new_product_path, :txt => I18n.t("ag2_products.products.index.btn_new") } %>
+        <%= link_to I18n.t("ag2_products.products.index.back_to_root"), ag2_products.root_path %>
+      </div><!-- /.sidebar-nav -->
+    </div><!-- /.span3 -->
 
-<%= link_to 'New Product', new_product_path %>
+    <div class="span9">
+      <%= render :partial => '/layouts/lettershead', :locals => { :controller => "products", :action => "index" } %>
+      <table class="table table-condensed table-striped shrinked">
+        <thead>
+          <%= render '/layouts/ag2_products/productsheader' %>
+        </thead>
+        <tbody>
+          <%= render :partial => '/layouts/ag2_products/products', :locals => { :products => @products } %>
+        </tbody>
+      </table>
+      <%= render :partial => '/layouts/pagination', :locals => { :ivar => @products } %>
+    </div><!-- /.span9 -->
+  </div><!-- /.row-fluid -->
+</div><!-- /.container-fluid -->
+

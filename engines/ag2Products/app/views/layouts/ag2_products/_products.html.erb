@@ -1,0 +1,8 @@
+<% products.each do |w| %>
+<tr>
+  <td><%= link_to w.product_code, w %></td>
+  <td><%= w.main_description %></td>
+  <td><%= w.product_type.description %></td>
+  <td><%= w.product_family.name %></td>
+</tr>
+<% end %>

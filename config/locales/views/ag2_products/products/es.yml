@@ -5,6 +5,13 @@ es:
         title: "Productos"
         btn_new: "Nuevo Producto"
         back_to_root: "Volver a ag2Products"
+        label_type: "Tipo"
+        label_family: "Familia"
+        label_measure: "Medida"
+        label_manufacturer: "Fabricante"
+        label_tax: "Impuesto"
+        label_others: "Otros"
+        btn_apply: "Aplicar Filtro"
       show:
         title: "Producto"
         btn_edit: "Editar Producto"
@@ -18,3 +25,4 @@ es:
       back_to_main_page: "Volver a Productos"
       generate_code_btn: "Código de Producto"
       commercial_info: "Información Comercial"
+      code_error: "Imposible generar Código de Producto: No has elegido Familia."

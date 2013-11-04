@@ -14,7 +14,7 @@ class Product < ActiveRecord::Base
 
   validates :main_description,  :presence => true
   validates :product_code,      :presence => true,
-                                :length => { :in => 3..7 },
+                                :length => { :in => 4..11 },
                                 :uniqueness => true
   validates :product_type_id,   :presence => true
   validates :product_family_id, :presence => true
@@ -87,6 +87,11 @@ class Product < ActiveRecord::Base
 
   searchable do
     text :product_code, :main_description, :aux_description, :manufacturer_p_code
+    integer :product_type_id
+    integer :product_family_id
+    integer :measure_id
+    integer :manufacturer_id
+    integer :tax_type_id
     string :product_code
   end
 end

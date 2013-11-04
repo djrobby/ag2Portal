@@ -1,3 +1,81 @@
+<script>
+  var text_field_color;
+
+  $(document).ready(function() {
+    // Disable fields if Product Family blank
+    var product = $('#product_product_family_id').val();
+    if (product == "")
+      product = "0";
+    if (product == "0") {
+      // Empty family: Disable
+      $('#product_product_code').prop('disabled', true);
+      $('#product_main_description').prop('disabled', true);
+      $('#product_aux_description').prop('disabled', true);
+      $('#generate_code_btn').hide();
+      $('#submit_btn').hide();
+    } else {
+      // Family OK: Enable
+      $('#product_product_code').prop('disabled', false);
+      $('#product_main_description').prop('disabled', false);
+      $('#product_aux_description').prop('disabled', false);
+      $('#generate_code_btn').show();
+      $('#submit_btn').show();
+    }
+    // Save default text color
+    text_field_color = $("#supplier_supplier_code").css('color')
+    $('#product_product_family_id').focus();
+  });
+
+  jQuery(function($) {
+    // when #generate_code_btn is clicked
+    $("#generate_code_btn").click(function() {
+      // make a POST call and replace the content
+      var product = $('#product_product_family_id').val();
+      if (product == "")
+        product = "$";
+      jQuery.getJSON('update_code_textfield/' + product, function(data) {
+        $("#product_product_code").val(data.code);
+        if ($("#product_product_code").val() == "$err") {
+          $("#product_product_code").css('color', 'red');
+          alert('<%= I18n.t("ag2_products.products.code_error") %>');
+          $('#product_product_code').select();
+        } else {
+          $("#product_product_code").css('color', text_field_color);
+        }
+      })
+      return false;
+    });
+
+    // when the #product_product_family_id field changes
+    $("#product_product_family_id").change(function() {
+      var product = $('#product_product_family_id').val();
+      if (product == "")
+        product = "0";
+      if (product == "0") {
+        // Empty family: Disable
+        $('#product_product_code').prop('disabled', true);
+        $('#product_main_description').prop('disabled', true);
+        $('#product_aux_description').prop('disabled', true);
+        $('#generate_code_btn').hide();
+        $('#submit_btn').hide();
+      } else {
+        // Family OK: Enable
+        $('#product_product_code').prop('disabled', false);
+        $('#product_main_description').prop('disabled', false);
+        $('#product_aux_description').prop('disabled', false);
+        $('#generate_code_btn').show();
+        $('#submit_btn').show();
+      }
+    });
+
+    // when the #product_product_code field changes
+    $("#product_product_code").change(function() {
+      // replace the color
+      $("#product_product_code").css('color', text_field_color);
+    });
+  });
+</script>
+
 <%= simple_form_for @product, html: { class: 'form-vertical well' } do |f| %>
 <%= f.error_notification %>
 <%= display_base_errors resource %>
@@ -30,7 +108,7 @@
   <label class="multi-field-label-two"> <%= f.input :average_price, as: :string, input_html: { value: (number_with_precision(f.object.average_price, precision: 4) if f.object.average_price), class: 'large-text-field number-text-field' }, label_html: { class: 'form-label' } %> </label>
 </div>
 <div>
-  <label class="multi-field-label-two"> <%= f.input :markup, as: :string, input_html: { value: (number_with_precision(f.object.markup, precision: 2) if f.object.discount_rate), class: 'large-text-field number-text-field' }, label_html: { class: 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.input :markup, as: :string, input_html: { value: (number_with_precision(f.object.markup, precision: 2) if f.object.markup), class: 'large-text-field number-text-field' }, label_html: { class: 'form-label' } %> </label>
   <label class="multi-field-label-two"> <%= f.input :sell_price, as: :string, input_html: { value: (number_with_precision(f.object.average_price, precision: 4) if f.object.average_price), class: 'large-text-field number-text-field' }, label_html: { class: 'form-label' } %> </label>
 </div>
 <div>

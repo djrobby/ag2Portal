@@ -7,6 +7,10 @@ class Measure < ActiveRecord::Base
 
   before_destroy :check_for_dependent_records
 
+  def to_label
+    "#{description}"
+  end
+
   private
   
   def check_for_dependent_records
