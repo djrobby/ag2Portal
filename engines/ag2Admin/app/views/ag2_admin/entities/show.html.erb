@@ -68,10 +68,10 @@
   </tbody>
 </table>
 
-<%= render :partial => '/layouts/crud/update_delete',
-:locals => { :model => Entity, :update_path => edit_entity_path(@entity), :update_txt => t('.btn_edit'),
-:delete_path => @entity, :delete_txt => t('.btn_delete'),
-:msg => t("activerecord.models.entity.one"), :txt => @entity.fiscal_id } %>
+<%= render partial: '/layouts/crud/update_delete_new', locals:
+{ model: Entity, update_path: edit_entity_path(@entity), update_txt: t('.btn_edit'),
+delete_path: @entity, delete_txt: t('.btn_delete'), msg: t("activerecord.models.entity.one"), :txt => @entity.fiscal_id,
+new_path: new_entity_path, new_txt: t('ag2_admin.entities.index.btn_new') } %>
 
 <%= link_to I18n.t('ag2_admin.entities.show.show_to'), @entity.entity_type %> |
 <%= link_to I18n.t("back_to_main_page", :scope => :"ag2_admin.entities"), entities_path %>

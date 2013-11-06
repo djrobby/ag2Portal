@@ -14,5 +14,9 @@
   </tbody>
 </table>
 
-<%= render :partial => '/layouts/crud/update', :locals => { :model => StreetType, :path => edit_street_type_path(@street_type), :txt => I18n.t('ag2_admin.street_types.show.btn_edit') } %>
+<%= render partial: '/layouts/crud/update_delete_new', locals:
+{ model: StreetType, update_path: edit_street_type_path(@street_type), update_txt: t('.btn_edit'),
+delete_path: @street_type, delete_txt: t('.btn_delete'), msg: t("activerecord.models.street_type.one"), :txt => @street_type.street_type_description,
+new_path: new_street_type_path, new_txt: t('ag2_admin.street_types.index.btn_new') } %>
+
 <%= link_to I18n.t('ag2_admin.street_types.back_to_main_page'), street_types_path %>

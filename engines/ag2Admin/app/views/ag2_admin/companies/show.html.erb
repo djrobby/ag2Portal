@@ -82,7 +82,10 @@
   </tbody>
 </table>
 
-<%= render :partial => '/layouts/crud/update', :locals => { :model => Company, :path => edit_company_path(@company), :txt => I18n.t('ag2_admin.companies.show.btn_edit') } %>
+<%= render :partial => '/layouts/crud/update_delete_new', locals:
+{ model: Company, update_path: edit_company_path(@company), update_txt: t('ag2_admin.companies.show.btn_edit'),
+delete_path: @company, delete_txt: t('ag2_admin.companies.show.btn_delete'), msg: t("activerecord.models.company.one"), :txt => @company.name,
+new_path: new_company_path, new_txt: t('ag2_admin.companies.index.btn_new') } %>
 
 <% if (@offices.count > 0) %>
 <h4><%= t '.subtable_title' %></h4>

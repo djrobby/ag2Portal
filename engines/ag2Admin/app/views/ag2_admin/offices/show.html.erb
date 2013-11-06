@@ -61,6 +61,10 @@
   </tbody>
 </table>
 
-<%= render :partial => '/layouts/crud/update', :locals => { :model => Office, :path => edit_office_path(@office), :txt => I18n.t('ag2_admin.offices.show.btn_edit') } %>
+<%= render partial: '/layouts/crud/update_delete_new', locals:
+{ model: Office, update_path: edit_office_path(@office), update_txt: t('.btn_edit'),
+delete_path: @office, delete_txt: t('.btn_delete'), msg: t("activerecord.models.office.one"), :txt => @office.name,
+new_path: new_office_path, new_txt: t('ag2_admin.offices.index.btn_new') } %>
+
 <%= link_to I18n.t('ag2_admin.offices.show.show_to'), @office.company %> |
 <%= link_to I18n.t('ag2_admin.offices.back_to_main_page'), offices_path %>

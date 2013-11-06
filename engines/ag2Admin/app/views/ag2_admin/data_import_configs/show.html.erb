@@ -20,5 +20,9 @@
   </tbody>
 </table>
 
-<%= render :partial => '/layouts/crud/update', :locals => { :model => DataImportConfig, :path => edit_data_import_config_path(@data_import_config), :txt => I18n.t('ag2_admin.data_import_configs.show.btn_edit') } %>
+<%= render :partial => '/layouts/crud/update_delete_new', locals:
+{ model: DataImportConfig, update_path: edit_data_import_config_path(@data_import_config), update_txt: t('ag2_admin.data_import_configs.show.btn_edit'),
+delete_path: @data_import_config, delete_txt: t('ag2_admin.data_import_configs.show.btn_delete'), msg: t("activerecord.models.data_import_config"), :txt => @data_import_config.name,
+new_path: new_data_import_config_path, new_txt: t('ag2_admin.data_import_configs.index.btn_new') } %>
+
 <%= link_to I18n.t('ag2_admin.data_import_configs.back_to_main_page'), data_import_configs_path %>

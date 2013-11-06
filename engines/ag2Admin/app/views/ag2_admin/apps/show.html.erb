@@ -26,6 +26,10 @@
   </tbody>
 </table>
 
-<%= render :partial => '/layouts/crud/update', :locals => { :model => App, :path => edit_app_path(@app), :txt => I18n.t('ag2_admin.apps.show.btn_edit') } %>
+<%= render :partial => '/layouts/crud/update_delete_new', locals:
+{ model: App, update_path: edit_app_path(@app), update_txt: t('ag2_admin.apps.show.btn_edit'),
+delete_path: @app, delete_txt: t('ag2_admin.apps.show.btn_delete'), msg: t("activerecord.models.app.one"), :txt => @app.name,
+new_path: new_app_path, new_txt: t('ag2_admin.apps.index.btn_new') } %>
+
 <%= link_to I18n.t('ag2_admin.apps.show.show_to'), @app.site %> |
 <%= link_to I18n.t('ag2_admin.apps.back_to_main_page'), apps_path %>

@@ -20,5 +20,9 @@
   </tbody>
 </table>
 
-<%= render :partial => '/layouts/crud/update', :locals => { :model => TaxType, :path => edit_tax_type_path(@tax_type), :txt => t('.btn_edit') } %>
+<%= render partial: '/layouts/crud/update_delete_new', locals:
+{ model: TaxType, update_path: edit_tax_type_path(@tax_type), update_txt: t('.btn_edit'),
+delete_path: @tax_type, delete_txt: t('.btn_delete'), msg: t("activerecord.models.tax_type.one"), :txt => @tax_type.description,
+new_path: new_tax_type_path, new_txt: t('ag2_admin.tax_types.index.btn_new') } %>
+
 <%= link_to I18n.t('ag2_admin.tax_types.back_to_main_page'), tax_types_path %>

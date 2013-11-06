@@ -20,5 +20,9 @@
   </tbody>
 </table>
 
-<%= render :partial => '/layouts/crud/update', :locals => { :model => Zipcode, :path => edit_zipcode_path(@zipcode), :txt => I18n.t('ag2_admin.zipcodes.show.btn_edit') } %>
+<%= render partial: '/layouts/crud/update_delete_new', locals:
+{ model: Zipcode, update_path: edit_zipcode_path(@zipcode), update_txt: t('.btn_edit'),
+delete_path: @zipcode, delete_txt: t('.btn_delete'), msg: t("activerecord.models.zipcode.one"), :txt => @zipcode.zipcode,
+new_path: new_zipcode_path, new_txt: t('ag2_admin.zipcodes.index.btn_new') } %>
+
 <%= link_to I18n.t('ag2_admin.zipcodes.back_to_main_page'), zipcodes_path %>

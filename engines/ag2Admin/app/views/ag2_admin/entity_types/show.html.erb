@@ -14,7 +14,9 @@
   </tbody>
 </table>
 
-<%= render :partial => '/layouts/crud/update', :locals => { :model => EntityType, :path => edit_entity_type_path(@entity_type), :txt => I18n.t('ag2_admin.entity_types.show.btn_edit') } %>
+<%= render partial: '/layouts/crud/update_new', locals:
+{ model: EntityType, update_path: edit_entity_type_path(@entity_type), update_txt: t('.btn_edit'),
+new_path: new_entity_type_path, new_txt: t('ag2_admin.entity_types.index.btn_new') } %>
 
 <% if (@entities.count > 0) %>
 <h4><%= t '.subtable_title' %></h4>
