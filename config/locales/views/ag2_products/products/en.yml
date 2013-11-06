@@ -15,6 +15,7 @@ en:
       show:
         title: "Product"
         btn_edit: "Edit Product"
+        btn_delete: "Delete Product"
         subtable_title: ""
         return_to: "Back to Product"
       edit:

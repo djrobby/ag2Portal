@@ -8,6 +8,7 @@ es:
       show:
         title: "Actividad"
         btn_edit: "Editar Actividad"
+        btn_delete: "Borrar Actividad"
         subtable_title: "Proveedores de la Actividad"
         return_to: "Volver a Actividad"
       edit:

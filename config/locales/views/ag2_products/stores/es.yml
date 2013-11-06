@@ -8,6 +8,7 @@ es:
       show:
         title: "Almacén"
         btn_edit: "Editar Almacén"
+        btn_delete: "Borrar Almacén"
         subtable_title: "Productos en Almacén"
         return_to: "Volver a Almacén"
       edit:

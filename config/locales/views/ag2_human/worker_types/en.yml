@@ -9,6 +9,7 @@ en:
       show:
         title: "Worker type"
         btn_edit: "Edit Worker type"
+        btn_delete: "Delete Worker type"
         subtable_title: "Worker type Workers"
         return_to: "Back to Worker type"
       edit:

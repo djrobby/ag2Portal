@@ -8,6 +8,7 @@ es:
       show:
         title: "Unidad de medida"
         btn_edit: "Editar Unidad de medida"
+        btn_delete: "Borrar Unidad de medida"
         subtable_title: "Productos de la Unidad de medida"
         return_to: "Volver a Unidad de medida"
       edit:

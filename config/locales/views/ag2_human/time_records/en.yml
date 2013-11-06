@@ -14,6 +14,7 @@ en:
       show:
         title: "Time record"
         btn_edit: "Edit Time record"
+        btn_delete: "Delete Time record"
       edit:
         title: "Edit Time record"
         btn_show: "Show Time record"

@@ -9,6 +9,7 @@ es:
       show:
         title: "Tipo de contrato"
         btn_edit: "Editar Tipo de contrato"
+        btn_delete: "Borrar Tipo de contrato"
         subtable_title: "Trabajadores del Tipo de contrato"
         return_to: "Volver a Tipo de contrato"
       edit:

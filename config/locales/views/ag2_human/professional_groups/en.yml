@@ -9,6 +9,7 @@ en:
       show:
         title: "Professional group"
         btn_edit: "Edit Professional group"
+        btn_delete: "Delete Professional group"
         subtable_title: "Professional group Workers"
         return_to: "Back to Professional group"
       edit:

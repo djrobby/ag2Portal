@@ -8,6 +8,7 @@ es:
       show:
         title: "Código de marcaje"
         btn_edit: "Editar Código de marcaje"
+        btn_delete: "Borrar Código de marcaje"
       edit:
         title: "Editar Código de marcaje"
         btn_show: "Ver Código de marcaje"

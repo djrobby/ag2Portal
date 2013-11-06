@@ -9,6 +9,7 @@ es:
       show:
         title: "Convenio colectivo"
         btn_edit: "Editar Convenio colectivo"
+        btn_delete: "Borrar Convenio colectivo"
         subtable_title: "Trabajadores del Convenio colectivo"
         return_to: "Volver a Convenio colectivo"
       edit:

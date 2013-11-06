@@ -9,6 +9,7 @@ es:
       show:
         title: "Tipo de trabajador"
         btn_edit: "Editar Tipo de trabajador"
+        btn_delete: "Borrar Tipo de trabajador"
         subtable_title: "Trabajadores del Tipo de trabajador"
         return_to: "Volver a Tipo de trabajador"
       edit:

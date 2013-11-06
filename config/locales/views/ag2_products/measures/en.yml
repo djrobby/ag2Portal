@@ -8,6 +8,7 @@ en:
       show:
         title: "Measure"
         btn_edit: "Edit Measure"
+        btn_delete: "Delete Measure"
         subtable_title: "Measure Products"
         return_to: "Back to Measure"
       edit:

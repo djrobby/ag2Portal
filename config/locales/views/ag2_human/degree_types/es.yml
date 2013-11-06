@@ -9,6 +9,7 @@ es:
       show:
         title: "Titulación"
         btn_edit: "Editar Titulación"
+        btn_delete: "Borrar Titulación"
         subtable_title: "Trabajadores de la Titulación"
         return_to: "Volver a Titulación"
       edit:

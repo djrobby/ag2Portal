@@ -9,6 +9,7 @@ en:
       show:
         title: "Contract type"
         btn_edit: "Edit Contract type"
+        btn_delete: "Delete Contract type"
         subtable_title: "Contract type Workers"
         return_to: "Back to Contract type"
       edit:

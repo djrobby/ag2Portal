@@ -9,6 +9,7 @@ es:
       show:
         title: "Grupo profesional"
         btn_edit: "Editar Grupo profesional"
+        btn_delete: "Borrar Grupo profesional"
         subtable_title: "Trabajadores del Grupo profesional"
         return_to: "Volver a Grupo profesional"
       edit:

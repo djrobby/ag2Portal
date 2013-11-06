@@ -9,6 +9,7 @@ en:
       show:
         title: "Degree type"
         btn_edit: "Edit Degree type"
+        btn_delete: "Delete Degree type"
         subtable_title: "Degree type Workers"
         return_to: "Back to Degree type"
       edit:

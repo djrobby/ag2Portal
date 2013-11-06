@@ -15,6 +15,7 @@ es:
       show:
         title: "Producto"
         btn_edit: "Editar Producto"
+        btn_delete: "Borrar Producto"
         subtable_title: ""
         return_to: "Volver a Producto"
       edit:

@@ -8,6 +8,7 @@ en:
       show:
         title: "Manufacturer"
         btn_edit: "Edit Manufacturer"
+        btn_delete: "Delete Manufacturer"
         subtable_title: "Manufacturer Products"
         return_to: "Back to Manufacturer"
       edit:

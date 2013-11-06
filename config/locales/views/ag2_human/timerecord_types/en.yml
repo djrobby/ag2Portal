@@ -8,6 +8,7 @@ en:
       show:
         title: "TimeRecord type"
         btn_edit: "Edit TimeRecord type"
+        btn_delete: "Delete TimeRecord type"
       edit:
         title: "Edit TimeRecord type"
         btn_show: "Show TimeRecord type"

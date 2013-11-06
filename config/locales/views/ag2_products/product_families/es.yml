@@ -8,6 +8,7 @@ es:
       show:
         title: "Familia de producto"
         btn_edit: "Editar Familia de producto"
+        btn_delete: "Borrar Familia de producto"
         subtable_title: "Productos de la Familia de producto"
         return_to: "Volver a Familia de producto"
       edit:

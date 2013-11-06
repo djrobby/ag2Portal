@@ -9,6 +9,7 @@ es:
       show:
         title: "Departmento"
         btn_edit: "Editar Departmento"
+        btn_delete: "Borrar Departmento"
         subtable_title: "Trabajadores del Departmento"
         return_to: "Volver a Departmento"
       edit:

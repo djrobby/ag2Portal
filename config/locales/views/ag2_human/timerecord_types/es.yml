@@ -8,6 +8,7 @@ es:
       show:
         title: "Tipo de marcaje"
         btn_edit: "Editar Tipo de marcaje"
+        btn_delete: "Borrar Tipo de marcaje"
       edit:
         title: "Editar Tipo de marcaje"
         btn_show: "Ver Tipo de marcaje"

@@ -8,6 +8,7 @@ en:
       show:
         title: "TimeRecord code"
         btn_edit: "Edit TimeRecord code"
+        btn_delete: "Delete TimeRecord code"
       edit:
         title: "Edit TimeRecord code"
         btn_show: "Show TimeRecord code"

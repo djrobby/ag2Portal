@@ -8,6 +8,7 @@ en:
       show:
         title: "Store"
         btn_edit: "Edit Store"
+        btn_delete: "Delete Store"
         subtable_title: "Products in Stock"
         return_to: "Back to Store"
       edit:

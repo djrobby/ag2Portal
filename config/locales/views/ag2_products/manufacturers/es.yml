@@ -8,6 +8,7 @@ es:
       show:
         title: "Fabricante"
         btn_edit: "Editar Fabricante"
+        btn_delete: "Borrar Fabricante"
         subtable_title: "Productos del Fabricante"
         return_to: "Volver a Fabricante"
       edit:

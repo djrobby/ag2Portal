@@ -9,6 +9,7 @@ en:
       show:
         title: "Collective agreement"
         btn_edit: "Edit Collective agreement"
+        btn_delete: "Delete Collective agreement"
         subtable_title: "Collective AGMT Workers"
         return_to: "Back to Collective agreement"
       edit:

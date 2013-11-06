@@ -8,6 +8,7 @@ en:
       show:
         title: "Product type"
         btn_edit: "Edit Product type"
+        btn_delete: "Delete Product type"
         subtable_title: "Product type Products"
         return_to: "Back to Product type"
       edit:
