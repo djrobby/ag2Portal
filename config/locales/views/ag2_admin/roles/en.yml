@@ -9,6 +9,7 @@ en:
       show:
         title: "Role"
         btn_edit: "Edit Role"
+        btn_delete: "Delete Role"
         subtable_title: "Role Users"
       edit:
         title: "Edit Role"

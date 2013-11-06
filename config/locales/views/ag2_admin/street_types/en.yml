@@ -8,6 +8,7 @@ en:
       show:
         title: "Street type"
         btn_edit: "Edit Street type"
+        btn_delete: "Delete Street type"
       edit:
         title: "Edit Street type"
         btn_show: "Show Street type"

@@ -9,6 +9,7 @@ es:
       show:
         title: "Sitio"
         btn_edit: "Editar Sitio"
+        btn_delete: "Borrar Sitio"
         subtable_title: "Apps del Sitio"
         return_to: "Volver a Sitio"
         show_to: "Ver Sitio"

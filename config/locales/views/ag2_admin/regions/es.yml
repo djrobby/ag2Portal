@@ -10,6 +10,7 @@ es:
       show:
         title: "Región"
         btn_edit: "Editar Región"
+        btn_delete: "Borrar Región"
         subtable_title: "Provincias de la Región"
         show_to: "Ver País"
       edit:

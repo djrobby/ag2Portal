@@ -8,6 +8,7 @@ en:
       show:
         title: "Contact"
         btn_edit: "Edit Contact"
+        btn_delete: "Delete Contact"
       edit:
         title: "Edit Contact"
         btn_show: "Show Contact"

@@ -20,7 +20,10 @@
   </tbody>
 </table>
 
-<%= render :partial => '/layouts/crud/update', :locals => { :model => Role, :path => edit_role_path(@role), :txt => I18n.t('ag2_admin.roles.show.btn_edit') } %>
+<%= render :partial => '/layouts/crud/update_delete_new', locals:
+{ model: Role, update_path: edit_role_path(@role), update_txt: t('ag2_admin.roles.show.btn_edit'),
+delete_path: @role, delete_txt: t('ag2_admin.roles.show.btn_delete'), msg: t("activerecord.models.role.one"), :txt => @role.name.titleize,
+new_path: new_role_path, new_txt: t('ag2_admin.roles.index.btn_new') } %>
 
 <% if (@users.count > 0) %>
 <h4><%=t '.subtable_title' %></h4>

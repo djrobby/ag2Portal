@@ -20,6 +20,10 @@
   </tbody>
 </table>
 
-<%= render :partial => '/layouts/crud/update', :locals => { :model => Town, :path => edit_town_path(@town), :txt => I18n.t('ag2_admin.towns.show.btn_edit') } %>
+<%= render :partial => '/layouts/crud/update_delete_new', locals:
+{ model: Town, update_path: edit_town_path(@town), update_txt: t('ag2_admin.towns.show.btn_edit'),
+delete_path: @town, delete_txt: t('ag2_admin.towns.show.btn_delete'), msg: t("activerecord.models.town.one"), :txt => @town.name,
+new_path: new_town_path, new_txt: t('ag2_admin.towns.index.btn_new') } %>
+
 <%= link_to I18n.t('ag2_admin.towns.show.show_to'), @town.province %> |
 <%= link_to I18n.t('ag2_admin.towns.back_to_main_page'), towns_path %>

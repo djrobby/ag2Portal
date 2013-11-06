@@ -1,0 +1,8 @@
+<% if can? :update, model %>
+<%= link_to update_txt, update_path, :class => 'btn btn-primary' %>
+<% end %>
+<% if can? :create, model %>
+<%= link_to new_txt, new_path, :class => 'btn btn-primary' %>
+<% end %>
+<br />
+<br />

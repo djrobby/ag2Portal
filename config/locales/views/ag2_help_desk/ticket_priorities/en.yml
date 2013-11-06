@@ -8,6 +8,7 @@ en:
       show:
         title: "Ticket priority"
         btn_edit: "Edit Ticket priority"
+        btn_delete: "Delete Ticket priority"
       edit:
         title: "Edit Ticket priority"
         btn_show: "Show Ticket priority"

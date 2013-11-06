@@ -11,6 +11,7 @@ es:
       show:
         title: "Provincia"
         btn_edit: "Editar Provincia"
+        btn_delete: "Borrar Provincia"
         subtable_title: "Poblaciones de la Provincia"
         show_to: "Ver Región"
       edit:

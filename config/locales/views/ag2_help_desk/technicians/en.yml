@@ -8,6 +8,7 @@ en:
       show:
         title: "Technician"
         btn_edit: "Edit Technician"
+        btn_delete: "Delete Technician"
       edit:
         title: "Edit Technician"
         btn_show: "Show Technician"

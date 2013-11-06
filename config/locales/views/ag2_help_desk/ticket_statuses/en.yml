@@ -8,6 +8,7 @@ en:
       show:
         title: "Ticket status"
         btn_edit: "Edit Ticket status"
+        btn_delete: "Delete Ticket status"
       edit:
         title: "Edit Ticket status"
         btn_show: "Show Ticket status"

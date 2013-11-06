@@ -10,6 +10,7 @@ en:
       show:
         title: "Town"
         btn_edit: "Edit Town"
+        btn_delete: "Delete Town"
         show_to: "Show Province"
       edit:
         title: "Edit Town"

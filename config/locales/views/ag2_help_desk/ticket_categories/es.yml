@@ -8,6 +8,7 @@ es:
       show:
         title: "Categoría de solicitud"
         btn_edit: "Editar Categoría de solicitud"
+        btn_delete: "Borrar Categoría de solicitud"
       edit:
         title: "Editar Categoría de solicitud"
         btn_show: "Ver Categoría de solicitud"

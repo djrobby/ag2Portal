@@ -9,6 +9,7 @@ es:
       show:
         title: "Empresa"
         btn_edit: "Editar Empresa"
+        btn_delete: "Borrar Empresa"
         subtable_title: "Oficinas de la Empresa"
         return_to: "Volver a Empresa"
         show_to: "Ver Empresa"

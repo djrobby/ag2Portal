@@ -9,6 +9,7 @@ es:
       show:
         title: "Tipo de entidad"
         btn_edit: "Editar Tipo de entidad"
+        btn_delete: "Borrar Tipo de entidad"
         subtable_title: "Entidades del Tipo de entidad"
       edit:
         title: "Editar Tipo de entidad"

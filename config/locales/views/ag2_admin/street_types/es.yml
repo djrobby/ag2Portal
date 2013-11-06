@@ -8,6 +8,7 @@ es:
       show:
         title: "Tipo de vía"
         btn_edit: "Editar Tipo de vía"
+        btn_delete: "Borrar Tipo de vía"
       edit:
         title: "Editar Tipo de vía"
         btn_show: "Ver Tipo de vía"

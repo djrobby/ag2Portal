@@ -8,6 +8,7 @@ es:
       show:
         title: "Técnico"
         btn_edit: "Editar Técnico"
+        btn_delete: "Borrar Técnico"
       edit:
         title: "Editar Técnico"
         btn_show: "Ver Técnico"

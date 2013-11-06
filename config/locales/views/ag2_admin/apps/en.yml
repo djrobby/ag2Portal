@@ -9,6 +9,7 @@ en:
       show:
         title: "App"
         btn_edit: "Edit App"
+        btn_delete: "Delete App"
         subtable_title: "App Sites"
         return_to: "Back to App"
         show_to: "Show Site"

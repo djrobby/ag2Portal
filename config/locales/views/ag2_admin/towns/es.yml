@@ -10,6 +10,7 @@ es:
       show:
         title: "Población"
         btn_edit: "Editar Población"
+        btn_delete: "Borrar Población"
         show_to: "Ver Provincia"
       edit:
         title: "Editar Población"

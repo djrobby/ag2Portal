@@ -14,6 +14,7 @@ es:
       show:
         title: "Solicitud"
         btn_edit: "Editar Solicitud"
+        btn_delete: "Borrar Solicitud"
       edit:
         title: "Editar Solicitud"
         btn_show: "Ver Solicitud"

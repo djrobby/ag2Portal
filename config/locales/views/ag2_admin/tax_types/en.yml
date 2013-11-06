@@ -8,6 +8,7 @@ en:
       show:
         title: "Tax type"
         btn_edit: "Edit Tax type"
+        btn_delete: "Delete Tax type"
       edit:
         title: "Edit Tax type"
         btn_show: "Show Tax type"

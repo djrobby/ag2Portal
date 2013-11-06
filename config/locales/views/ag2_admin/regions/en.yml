@@ -10,6 +10,7 @@ en:
       show:
         title: "Region"
         btn_edit: "Edit Region"
+        btn_delete: "Delete Region"
         subtable_title: "Region Provinces"
         show_to: "Show Country"
       edit:

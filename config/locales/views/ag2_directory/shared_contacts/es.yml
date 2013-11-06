@@ -9,6 +9,7 @@ es:
       show:
         title: "Contacto"
         btn_edit: "Editar Contacto"
+        btn_delete: "Borrar Contacto"
       edit:
         title: "Editar Contacto"
         btn_show: "Ver Contacto"

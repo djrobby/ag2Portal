@@ -8,6 +8,7 @@ es:
       show:
         title: "Estado de solicitud"
         btn_edit: "Editar Estado de solicitud"
+        btn_delete: "Borrar Estado de solicitud"
       edit:
         title: "Editar Estado de solicitud"
         btn_show: "Ver Estado de solicitud"

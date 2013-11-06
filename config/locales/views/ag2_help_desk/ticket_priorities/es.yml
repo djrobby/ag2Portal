@@ -3,11 +3,12 @@ es:
     ticket_priorities:
       index:
         title: "Prioridades de solicitudes"
-        btn_new: "Nuevo Prioridad de solicitud"
+        btn_new: "Nueva Prioridad de solicitud"
         back_to_root: "Volver a ag2HelpDesk"
       show:
         title: "Prioridad de solicitud"
         btn_edit: "Editar Prioridad de solicitud"
+        btn_delete: "Borrar Prioridad de solicitud"
       edit:
         title: "Editar Prioridad de solicitud"
         btn_show: "Ver Prioridad de solicitud"

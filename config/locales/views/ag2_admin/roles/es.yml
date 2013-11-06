@@ -9,6 +9,7 @@ es:
       show:
         title: "Rol"
         btn_edit: "Editar Rol"
+        btn_delete: "Borrar Rol"
         subtable_title: "Usuarios del Rol"
       edit:
         title: "Editar Rol"

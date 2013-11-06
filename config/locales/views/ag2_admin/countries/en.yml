@@ -9,6 +9,7 @@ en:
       show:
         title: "Country"
         btn_edit: "Edit Country"
+        btn_delete: "Delete Country"
         subtable_title: "Country Regions"
         show_to: "Show Country"
       edit:

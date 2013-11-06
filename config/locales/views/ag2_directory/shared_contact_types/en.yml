@@ -9,6 +9,7 @@ en:
       show:
         title: "Contact type"
         btn_edit: "Edit Contact type"
+        btn_delete: "Delete Contact type"
       edit:
         title: "Edit Contact type"
         btn_show: "Show Contact type"

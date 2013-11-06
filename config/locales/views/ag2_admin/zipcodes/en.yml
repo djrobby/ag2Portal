@@ -10,6 +10,7 @@ en:
       show:
         title: "ZIP code"
         btn_edit: "Edit ZIP code"
+        btn_delete: "Delete ZIP code"
       edit:
         title: "Edit ZIP code"
         btn_show: "Show ZIP code"

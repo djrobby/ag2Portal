@@ -8,6 +8,7 @@ en:
       show:
         title: "Configuration"
         btn_edit: "Edit Configuration"
+        btn_delete: "Delete Configuration"
       edit:
         title: "Edit Configuration"
         btn_show: "Show Configuration"

@@ -9,6 +9,7 @@ es:
       show:
         title: "País"
         btn_edit: "Editar País"
+        btn_delete: "Borrar País"
         subtable_title: "Regiones del País"
         show_to: "Ver País"
       edit:

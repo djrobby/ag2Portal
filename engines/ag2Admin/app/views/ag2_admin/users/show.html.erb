@@ -38,7 +38,9 @@
   </tbody>
 </table>
 
-<%= render :partial => '/layouts/crud/update', :locals => { :model => User, :path => edit_user_path(@user), :txt => I18n.t('ag2_admin.users.show.btn_edit') } %>
+<%= render :partial => '/layouts/crud/update_new', locals:
+{ model: User, update_path: edit_user_path(@user), update_txt: t('ag2_admin.users.show.btn_edit'),
+new_path: new_user_path, new_txt: t('ag2_admin.users.index.btn_new') } %>
 
 <h4><%= t 'activerecord.attributes.user.role_ids' %></h4>
 <% if @user.roles.count > 0 %>
