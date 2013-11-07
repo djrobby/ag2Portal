@@ -49,8 +49,12 @@
 </div>
 <%= f.input :status_changed_message, :as => :text, :input_html => { :class => 'x-large-text-field', :rows => 3 }, :label_html => { :class => 'form-label' } %>
 <%= f.input :attachment, :as => :file, :label_html => { :class => 'form-label' } %>
+<!-- Set referrer to redirect right -->
 <% if @breadcrumb == 'update'%>
 <%= hidden_field_tag :referrer, ticket_path(@ticket) %>
+<% else %>
+<%= hidden_field_tag :referrer, '' %>
 <% end %>
+
 <%= f.button :submit, :class => 'btn-primary' %>
 <% end %>

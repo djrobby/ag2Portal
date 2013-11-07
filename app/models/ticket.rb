@@ -6,13 +6,13 @@ class Ticket < ActiveRecord::Base
   belongs_to :office
   attr_accessible :assign_at, :status_changed_at, :status_changed_message, :ticket_message, :ticket_subject,
                   :ticket_category_id, :ticket_priority_id, :ticket_status_id, :technician_id, :office_id,
-                  :created_by, :updated_by
+                  :attachment, :created_by, :updated_by
   has_attached_file :attachment, :styles => { :medium => "192x192>", :small => "128x128>" }, :default_url => "/images/missing/:style/ticket.png"
 
   has_paper_trail
 
   validates :ticket_subject,          :presence => true,
-                                      :length => { :maximum => 20 }
+                                      :length => { :maximum => 30 }
   validates :ticket_message,          :presence => true
   validates :ticket_category_id,      :presence => true
   validates :ticket_priority_id,      :presence => true

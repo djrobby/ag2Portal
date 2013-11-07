@@ -4,7 +4,8 @@ module Ag2HelpDesk
   class TicketsController < ApplicationController
     before_filter :authenticate_user!
     load_and_authorize_resource
-    skip_load_and_authorize_resource :only => [:update_office_textfield_from_created_by]
+    skip_load_and_authorize_resource :only => [:update_office_textfield_from_created_by,
+                                               :popup_new]
     
     # Update office text field at view from created_by select
     def update_office_textfield_from_created_by
@@ -166,6 +167,24 @@ module Ag2HelpDesk
         format.html { redirect_to tickets_url,
                       notice: (crud_notice('destroyed', @ticket) + "#{undo_link(@ticket)}").html_safe }
         format.json { head :no_content }
+      end
+    end
+
+    # POST /tickets/popup_new
+    # POST /tickets/popup_new.json
+    def popup_new
+      @breadcrumb = 'create'
+      @ticket = Ticket.new(params[:ticket])
+      @ticket.created_by = current_user.id if !current_user.nil?
+
+      respond_to do |format|
+        if @ticket.save
+          format.html { redirect_to params[:referrer] }
+          format.json { render json: @ticket, status: :created, location: @ticket }
+        else
+          format.html { redirect_to params[:referrer], notice: I18n.t('activerecord.errors.ticket.popup') }
+          format.json { render json: @ticket.errors, status: :unprocessable_entity }
+        end
       end
     end
   end

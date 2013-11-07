@@ -14,5 +14,9 @@
   </tbody>
 </table>
 
-<%= render :partial => '/layouts/crud/update', :locals => { :model => SharedContactType, :path => edit_shared_contact_type_path(@shared_contact_type), :txt => I18n.t('ag2_directory.shared_contact_types.show.btn_edit') } %>
+<%= render partial: '/layouts/crud/update_delete_new', locals:
+{ model: SharedContactType, update_path: edit_shared_contact_type_path(@shared_contact_type), update_txt: t('.btn_edit'),
+delete_path: @shared_contact_type, delete_txt: t('.btn_delete'), msg: t("activerecord.models.shared_contact_type.one"), txt: @shared_contact_type.name,
+new_path: new_shared_contact_type_path, new_txt: t('ag2_directory.shared_contact_types.index.btn_new') } %>
+
 <%= link_to I18n.t("ag2_directory.shared_contact_types.back_to_main_page"), shared_contact_types_path %>

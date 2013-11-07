@@ -2,7 +2,7 @@
   <%= simple_form_for ticket, :html => {:method => :put, :class => 'form-inline' } do |f| %>
     <div class="modal-header">
       <a class="close" data-dismiss="modal">&#215;</a>
-      <h3><%= I18n.t('ag2_help_desk.tickets.index.change_status_title', :ticket => ticket.id.to_s.rjust(5, '0')) %></h3>
+      <h3><%= I18n.t('ag2_help_desk.tickets.index.change_status_title', :ticket => ticket.id.to_s.rjust(6, '0')) %></h3>
     </div>
     <div class="modal-body">
       <%= hidden_field_tag :referrer, tickets_path %>

@@ -42,5 +42,9 @@
   </tbody>
 </table>
 
-<%= render :partial => '/layouts/crud/update', :locals => { :model => CorpContact, :path => edit_corp_contact_path(@corp_contact), :txt => I18n.t('ag2_directory.corp_contacts.show.btn_edit') } %>
+<%= render partial: '/layouts/crud/update_delete_new', locals:
+{ model: CorpContact, update_path: edit_corp_contact_path(@corp_contact), update_txt: t('.btn_edit'),
+delete_path: @corp_contact, delete_txt: t('.btn_delete'), msg: t("activerecord.models.corp_contact.one"), :txt => @corp_contact.full_name,
+new_path: new_corp_contact_path, new_txt: t('ag2_directory.corp_contacts.index.btn_new') } %>
+
 <%= link_to I18n.t("back_to_main_page", :scope => :"ag2_directory.corp_contacts"), corp_contacts_path %>

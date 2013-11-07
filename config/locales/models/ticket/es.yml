@@ -23,5 +23,9 @@ es:
         status_changed_message: "Mensaje de estado"
         ticket_message: "Mensaje"
         ticket_subject: "Asunto"
-        attachment: "Adjunto"
+        attachment: "Adjunto (Imágen)"
+        attach_exist: "El archivo adjunto puede ser visto al final de esta página."
         id: "Nº"
+    errors:
+      ticket:
+        popup: "Error: ¡Solicitud no pudo ser creada!"

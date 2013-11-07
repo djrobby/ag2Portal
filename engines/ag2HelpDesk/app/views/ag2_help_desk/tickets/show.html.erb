@@ -5,9 +5,14 @@
   <tbody>
     <tr>
       <td><%=t :"activerecord.attributes.ticket.id" %>:</td>
-      <td><b><%= @ticket.id.to_s.rjust(5, '0') %></b></td>
+      <td><b><%= @ticket.id.to_s.rjust(6, '0') %></b></td>
+      <% if !@ticket.attachment.blank? %>
+      <td><%=t :"activerecord.attributes.ticket.attachment" %>:</td>
+      <td class="highlighted"><%=t :"activerecord.attributes.ticket.attach_exist" %></td>
+      <% else %>
       <td></td>
       <td></td>
+      <% end %>
     </tr>
     <tr>
       <td><%=t :"activerecord.attributes.ticket.ticket_category" %>:</td>
@@ -56,5 +61,21 @@
   </tbody>
 </table>
 
-<%= render :partial => '/layouts/crud/update', :locals => { :model => Ticket, :path => edit_ticket_path(@ticket), :txt => I18n.t('ag2_help_desk.tickets.show.btn_edit') } %>
+<%= render partial: '/layouts/crud/update_delete', locals:
+{ model: Ticket, update_path: edit_ticket_path(@ticket), update_txt: t('.btn_edit'),
+delete_path: @ticket, delete_txt: t('.btn_delete'), msg: t("activerecord.models.ticket.one"), txt: @ticket.id.to_s.rjust(6, '0') } %>
+
 <%= link_to I18n.t("ag2_help_desk.tickets.back_to_main_page"), tickets_path %>
+
+<div>
+  <% if !@ticket.attachment.blank? %>
+  <br />
+  <% if session[:resolution] == "LD" %>
+  <%= image_tag @ticket.attachment.url(:small) %> <!-- small image size -->
+  <% elsif session[:resolution] == "SD" %>
+  <%= image_tag @ticket.attachment.url(:medium) %> <!-- medium image size -->
+  <% else %>
+  <%= image_tag @ticket.attachment.url %> <!-- big image size -->
+  <% end %>
+  <% end %>
+</div>

@@ -23,5 +23,9 @@ en:
         status_changed_message: "Status message"
         ticket_message: "Message"
         ticket_subject: "Subject"
-        attachment: "Attachment"
+        attachment: "Attachment (Image)"
+        attach_exist: "The attachment can be seen at the bottom of this page."
         id: "#"
+    errors:
+      ticket:
+        popup: "Error: Ticket cannot be created!"

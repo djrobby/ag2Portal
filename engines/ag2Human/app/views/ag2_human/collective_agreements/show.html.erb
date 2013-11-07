@@ -20,7 +20,10 @@
   </tbody>
 </table>
 
-<%= render :partial => '/layouts/crud/update', :locals => { :model => CollectiveAgreement, :path => edit_collective_agreement_path(@collective_agreement), :txt => I18n.t('ag2_human.collective_agreements.show.btn_edit') } %>
+<%= render partial: '/layouts/crud/update_delete_new', locals:
+{ model: CollectiveAgreement, update_path: edit_collective_agreement_path(@collective_agreement), update_txt: t('.btn_edit'),
+delete_path: @collective_agreement, delete_txt: t('.btn_delete'), msg: t("activerecord.models.collective_agreement.one"), txt: @collective_agreement.name,
+new_path: new_collective_agreement_path, new_txt: t('ag2_human.collective_agreements.index.btn_new') } %>
 
 <% if (@workers.count > 0) %>
 <h4><%=t '.subtable_title' %></h4>

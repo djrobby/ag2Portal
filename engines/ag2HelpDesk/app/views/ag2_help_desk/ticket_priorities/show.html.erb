@@ -14,5 +14,8 @@
   </tbody>
 </table>
 
-<%= render :partial => '/layouts/crud/update', :locals => { :model => TicketPriority, :path => edit_ticket_priority_path(@ticket_priority), :txt => I18n.t('ag2_help_desk.ticket_priorities.show.btn_edit') } %>
+<%= render partial: '/layouts/crud/update_new', locals:
+{ model: TicketPriority, update_path: edit_ticket_priority_path(@ticket_priority), update_txt: t('.btn_edit'),
+new_path: new_ticket_priority_path, new_txt: t('ag2_help_desk.ticket_priorities.index.btn_new') } %>
+
 <%= link_to I18n.t("ag2_help_desk.ticket_priorities.back_to_main_page"), ticket_priorities_path %>

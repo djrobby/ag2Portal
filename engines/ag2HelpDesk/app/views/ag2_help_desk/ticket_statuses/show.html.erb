@@ -14,5 +14,8 @@
   </tbody>
 </table>
 
-<%= render :partial => '/layouts/crud/update', :locals => { :model => TicketCategory, :path => edit_ticket_status_path(@ticket_status), :txt => I18n.t('ag2_help_desk.ticket_statuses.show.btn_edit') } %>
+<%= render partial: '/layouts/crud/update_new', locals:
+{ model: TicketStatus, update_path: edit_ticket_status_path(@ticket_status), update_txt: t('.btn_edit'),
+new_path: new_ticket_status_path, new_txt: t('ag2_help_desk.ticket_statuses.index.btn_new') } %>
+
 <%= link_to I18n.t("ag2_help_desk.ticket_statuses.back_to_main_page"), ticket_statuses_path %>

@@ -20,5 +20,9 @@
   </tbody>
 </table>
 
-<%= render :partial => '/layouts/crud/update', :locals => { :model => TicketCategory, :path => edit_technician_path(@technician), :txt => I18n.t('ag2_help_desk.technicians.show.btn_edit') } %>
+<%= render partial: '/layouts/crud/update_delete_new', locals:
+{ model: Technician, update_path: edit_technician_path(@technician), update_txt: t('.btn_edit'),
+delete_path: @technician, delete_txt: t('.btn_delete'), msg: t("activerecord.models.technician.one"), txt: @technician.name,
+new_path: new_technician_path, new_txt: t('ag2_help_desk.technicians.index.btn_new') } %>
+
 <%= link_to I18n.t("ag2_help_desk.technicians.back_to_main_page"), technicians_path %>
