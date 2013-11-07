@@ -47,9 +47,9 @@
   </tbody>
 </table>
 
-<%= render :partial => '/layouts/crud/update_delete',
-:locals => { :model => SupplierContact, :update_path => edit_supplier_contact_path(@supplier_contact), :update_txt => t('.btn_edit'),
-:delete_path => @supplier_contact, :delete_txt => t('.btn_delete'),
-:msg => t("activerecord.models.supplier_contact.one"), :txt => @supplier_contact.full_name } %>
+<%= render partial: '/layouts/crud/update_delete_new', locals:
+{ model: SupplierContact, update_path: edit_supplier_contact_path(@supplier_contact), update_txt: t('.btn_edit'),
+delete_path: @supplier_contact, delete_txt: t('.btn_delete'), msg: t("activerecord.models.supplier_contact.one"), txt: @supplier_contact.full_name,
+new_path: new_supplier_contact_path, new_txt: t('ag2_purchase.supplier_contacts.index.btn_new') } %>
 
 <%= link_to t('ag2_purchase.supplier_contacts.back_to_main_page'), supplier_contacts_path %>

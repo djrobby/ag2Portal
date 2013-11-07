@@ -20,7 +20,10 @@
   </tbody>
 </table>
 
-<%= render :partial => '/layouts/crud/update', :locals => { :model => DegreeType, :path => edit_degree_type_path(@degree_type), :txt => I18n.t('ag2_human.degree_types.show.btn_edit') } %>
+<%= render partial: '/layouts/crud/update_delete_new', locals:
+{ model: DegreeType, update_path: edit_degree_type_path(@degree_type), update_txt: t('.btn_edit'),
+delete_path: @degree_type, delete_txt: t('.btn_delete'), msg: t("activerecord.models.degree_type.one"), txt: @degree_type.name,
+new_path: new_degree_type_path, new_txt: t('ag2_human.degree_types.index.btn_new') } %>
 
 <% if (@workers.count > 0) %>
 <h4><%=t '.subtable_title' %></h4>

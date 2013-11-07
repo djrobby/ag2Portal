@@ -86,10 +86,10 @@
   </tbody>
 </table>
 
-<%= render :partial => '/layouts/crud/update_delete',
-:locals => { :model => Product, :update_path => edit_Product_path(@product), :update_txt => t('.btn_edit'),
-:delete_path => @product, :delete_txt => t('.btn_delete'),
-:msg => t("activerecord.models.product.one"), :txt => @product.product_code } %>
+<%= render partial: '/layouts/crud/update_delete_new', locals:
+{ model: Product, update_path: edit_product_path(@product), update_txt: t('.btn_edit'),
+delete_path: @product, delete_txt: t('.btn_delete'), msg: t("activerecord.models.product.one"), txt: @product.product_code,
+new_path: new_product_path, new_txt: t('ag2_products.products.index.btn_new') } %>
 
 <% if false %><!-- Activate block removing if -->
 <% if (@stocks.count > 0) %>

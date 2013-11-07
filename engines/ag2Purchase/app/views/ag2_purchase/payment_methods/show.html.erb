@@ -20,7 +20,10 @@
   </tbody>
 </table>
 
-<%= render :partial => '/layouts/crud/update', :locals => { :model => PaymentMethod, :path => edit_payment_method_path(@payment_method), :txt => t('.btn_edit') } %>
+<%= render partial: '/layouts/crud/update_delete_new', locals:
+{ model: PaymentMethod, update_path: edit_payment_method_path(@payment_method), update_txt: t('.btn_edit'),
+delete_path: @payment_method, delete_txt: t('.btn_delete'), msg: t("activerecord.models.payment_method.one"), txt: @payment_method.description,
+new_path: new_payment_method_path, new_txt: t('ag2_purchase.payment_methods.index.btn_new') } %>
 
 <% if (@suppliers.count > 0) %>
 <h4><%=t '.subtable_title' %></h4>

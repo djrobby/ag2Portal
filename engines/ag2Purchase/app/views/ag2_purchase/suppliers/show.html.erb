@@ -107,10 +107,10 @@
   </tbody>
 </table>
 
-<%= render :partial => '/layouts/crud/update_delete',
-:locals => { :model => Supplier, :update_path => edit_supplier_path(@supplier), :update_txt => t('.btn_edit'),
-:delete_path => @supplier, :delete_txt => t('.btn_delete'),
-:msg => t("activerecord.models.supplier.one"), :txt => @supplier.name } %>
+<%= render partial: '/layouts/crud/update_delete_new', locals:
+{ model: Supplier, update_path: edit_supplier_path(@supplier), update_txt: t('.btn_edit'),
+delete_path: @supplier, delete_txt: t('.btn_delete'), msg: t("activerecord.models.supplier.one"), txt: @supplier.name,
+new_path: new_supplier_path, new_txt: t('ag2_purchase.suppliers.index.btn_new') } %>
 
 <% if @supplier.activities.count > 0 %>
   <h4><%= t 'activerecord.attributes.supplier.activity_ids' %></h4>

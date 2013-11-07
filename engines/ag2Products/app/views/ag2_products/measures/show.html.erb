@@ -14,7 +14,10 @@
   </tbody>
 </table>
 
-<%= render :partial => '/layouts/crud/update', :locals => { :model => Measure, :path => edit_measure_path(@measure), :txt => t('.btn_edit') } %>
+<%= render partial: '/layouts/crud/update_delete_new', locals:
+{ model: Measure, update_path: edit_measure_path(@measure), update_txt: t('.btn_edit'),
+delete_path: @measure, delete_txt: t('.btn_delete'), msg: t("activerecord.models.measure.one"), txt: @measure.description,
+new_path: new_measure_path, new_txt: t('ag2_products.measures.index.btn_new') } %>
 
 <% if false %><!-- Activate block removing if -->
 <% if (@products.count > 0) %>

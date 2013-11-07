@@ -26,7 +26,10 @@
   </tbody>
 </table>
 
-<%= render :partial => '/layouts/crud/update', :locals => { :model => Manufacturer, :path => edit_product_family_path(@product_family), :txt => t('.btn_edit') } %>
+<%= render partial: '/layouts/crud/update_delete_new', locals:
+{ model: ProductFamily, update_path: edit_product_family_path(@product_family), update_txt: t('.btn_edit'),
+delete_path: @product_family, delete_txt: t('.btn_delete'), msg: t("activerecord.models.product_family.one"), txt: @product_family.name,
+new_path: new_product_family_path, new_txt: t('ag2_products.product_families.index.btn_new') } %>
 
 <% if false %><!-- Activate block removing if -->
 <% if (@products.count > 0) %>

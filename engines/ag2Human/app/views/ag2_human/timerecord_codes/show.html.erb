@@ -14,5 +14,9 @@
   </tbody>
 </table>
 
-<%= render :partial => '/layouts/crud/update', :locals => { :model => TimerecordCode, :path => edit_timerecord_code_path(@timerecord_code), :txt => I18n.t('ag2_human.timerecord_codes.show.btn_edit') } %>
+<%= render partial: '/layouts/crud/update_delete_new', locals:
+{ model: TimerecordCode, update_path: edit_timerecord_code_path(@timerecord_code), update_txt: t('.btn_edit'),
+delete_path: @timerecord_code, delete_txt: t('.btn_delete'), msg: t("activerecord.models.timerecord_code.one"), txt: @timerecord_code.name.titleize,
+new_path: new_timerecord_code_path, new_txt: t('ag2_human.timerecord_codes.index.btn_new') } %>
+
 <%= link_to I18n.t("ag2_human.timerecord_codes.back_to_main_page"), timerecord_codes_path %>

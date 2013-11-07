@@ -148,10 +148,10 @@
   </tbody>
 </table>
 
-<%= render :partial => '/layouts/crud/update_delete',
-:locals => { :model => Worker, :update_path => edit_worker_path(@worker), :update_txt => I18n.t('ag2_human.workers.show.btn_edit'),
-:delete_path => @worker, :delete_txt => I18n.t('ag2_human.workers.show.btn_delete'),
-:msg => I18n.t("activerecord.models.worker.one"), :txt => @worker.full_name } %>
+<%= render partial: '/layouts/crud/update_delete_new', locals:
+{ model: Worker, update_path: edit_worker_path(@worker), update_txt: t('.btn_edit'),
+delete_path: @worker, delete_txt: t('.btn_delete'), msg: t("activerecord.models.worker.one"), txt: @worker.full_name,
+new_path: new_worker_path, new_txt: t('ag2_human.workers.index.btn_new') } %>
 
 <% if !session[:return_to].nil? %>
 <%= link_to session[:return_to], session[:return_to_url] %> |

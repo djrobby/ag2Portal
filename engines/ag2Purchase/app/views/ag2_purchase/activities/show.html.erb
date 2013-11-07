@@ -14,7 +14,10 @@
   </tbody>
 </table>
 
-<%= render :partial => '/layouts/crud/update', :locals => { :model => Activity, :path => edit_activity_path(@activity), :txt => t('.btn_edit') } %>
+<%= render partial: '/layouts/crud/update_delete_new', locals:
+{ model: Activity, update_path: edit_activity_path(@activity), update_txt: t('.btn_edit'),
+delete_path: @activity, delete_txt: t('.btn_delete'), msg: t("activerecord.models.activity.one"), txt: @activity.description,
+new_path: new_activity_path, new_txt: t('ag2_purchase.activities.index.btn_new') } %>
 
 <% if (@suppliers.count > 0) %>
 <h4><%=t '.subtable_title' %></h4>

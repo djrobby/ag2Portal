@@ -14,5 +14,9 @@
   </tbody>
 </table>
 
-<%= render :partial => '/layouts/crud/update', :locals => { :model => TimerecordType, :path => edit_timerecord_type_path(@timerecord_type), :txt => I18n.t('ag2_human.timerecord_types.show.btn_edit') } %>
+<%= render partial: '/layouts/crud/update_delete_new', locals:
+{ model: TimerecordType, update_path: edit_timerecord_type_path(@timerecord_type), update_txt: t('.btn_edit'),
+delete_path: @timerecord_type, delete_txt: t('.btn_delete'), msg: t("activerecord.models.timerecord_type.one"), txt: @timerecord_type.name,
+new_path: new_timerecord_type_path, new_txt: t('ag2_human.timerecord_types.index.btn_new') } %>
+
 <%= link_to I18n.t("ag2_human.timerecord_types.back_to_main_page"), timerecord_types_path %>

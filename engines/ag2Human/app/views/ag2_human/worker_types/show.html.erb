@@ -14,7 +14,10 @@
   </tbody>
 </table>
 
-<%= render :partial => '/layouts/crud/update', :locals => { :model => WorkerType, :path => edit_worker_path(@worker_type), :txt => I18n.t('ag2_human.worker_types.show.btn_edit') } %>
+<%= render partial: '/layouts/crud/update_delete_new', locals:
+{ model: WorkerType, update_path: edit_worker_type_path(@worker_type), update_txt: t('.btn_edit'),
+delete_path: @worker_type, delete_txt: t('.btn_delete'), msg: t("activerecord.models.worker_type.one"), txt: @worker_type.description,
+new_path: new_worker_type_path, new_txt: t('ag2_human.worker_types.index.btn_new') } %>
 
 <% if (@workers.count > 0) %>
 <h4><%=t '.subtable_title' %></h4>

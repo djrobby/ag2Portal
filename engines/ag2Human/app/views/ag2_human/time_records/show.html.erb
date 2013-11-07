@@ -26,5 +26,9 @@
   </tbody>
 </table>
 
-<%= render :partial => '/layouts/crud/update', :locals => { :model => TimeRecord, :path => edit_time_record_path(@time_record), :txt => I18n.t('ag2_human.time_records.show.btn_edit') } %>
+<%= render partial: '/layouts/crud/update_delete_new', locals:
+{ model: TimeRecord, update_path: edit_time_record_path(@time_record), update_txt: t('.btn_edit'),
+delete_path: @time_record, delete_txt: t('.btn_delete'), msg: t("activerecord.models.time_record.one"), txt: @time_record.worker.full_name + " - " + @time_record.timerecord_date.strftime("%d/%m/%Y") + " " + @time_record.timerecord_time.strftime("%H:%M"),
+new_path: new_time_record_path, new_txt: t('ag2_human.time_records.index.btn_new') } %>
+
 <%= link_to I18n.t("ag2_human.time_records.back_to_main_page"), time_records_path %>

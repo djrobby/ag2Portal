@@ -32,7 +32,7 @@
         <%= submit_tag I18n.t("ag2_products.products.index.btn_apply"), :class => 'btn btn-primary' %>
         <% end %>
         <!-- Buttons -->
-        <%= render :partial => '/layouts/crud/new', :locals => { :model => Product, :path => new_product_path, :txt => I18n.t("ag2_products.products.index.btn_new") } %>
+        <%= render :partial => '/layouts/crud/new', :locals => { :model => Product, :path => new_product_path, :txt => t(".btn_new") } %>
         <%= link_to I18n.t("ag2_products.products.index.back_to_root"), ag2_products.root_path %>
       </div><!-- /.sidebar-nav -->
     </div><!-- /.span3 -->
