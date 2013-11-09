@@ -1,5 +1,17 @@
 # encoding: utf-8
 
+# Replaceable latin symbols UTF-8 = ASCII-8BIT (ISO-8859-1)
+# Á = \xC1  á = \xE1
+# É = \xC9  é = \xE9
+# Í = \xCD  í = \xED
+# Ó = \xD3  ó = \xF3
+# Ú = \xDA  ú = \xFA
+# Ü = \xDC  ü = \xFC
+# Ñ = \xD1  ñ = \xF1
+# Ç = \xC7  ç = \xE7
+# ¿ = \xBF  ¡ = \xA1
+# ª = \xAA  º = \xBA
+
 require_dependency "ag2_human/application_controller"
 require "dbf"
 
@@ -17,14 +29,20 @@ module Ag2Human
     # Import DBF files from external source
     #
     def data_import
-      message = I18n.t("result_ok_message_html", :scope => :"ag2_human.import.index")
+      message = I18n.t("ag2_human.import.index.result_ok_message_html")
       @json_data = { "DataImport" => message, "Result" => "OK" }
+      $alpha = "\xC1\xC9\xCD\xD3\xDA\xDC\xD1\xC7\xE1\xE9\xED\xF3\xFA\xFC\xF1\xE7\xBF\xA1\xAA\xBA".force_encoding('ISO-8859-1').encode('UTF-8')
+      $gamma = 'AEIOUUNCaeiouunc?!ao'
+      $ucase = "\xC1\xC9\xCD\xD3\xDA\xDC\xD1\xC7".force_encoding('ISO-8859-1').encode('UTF-8')
+      $lcase = "\xE1\xE9\xED\xF3\xFA\xFC\xF1\xE7".force_encoding('ISO-8859-1').encode('UTF-8')
+      incidents = false
+      message = ''
 
       # Read parameters from data import config
       data_import_config = DataImportConfig.find_by_name('workers')
       source = source_exist(data_import_config.source, nil)
       if source.nil?
-        message = I18n.t("result_error_message_html", :scope => :"ag2_human.import.index")
+        message = I18n.t("ag2_human.import.index.result_error_message_html")
         @json_data = { "DataImport" => message, "Result" => "ERROR" }
         render json: @json_data
         return
@@ -67,18 +85,22 @@ module Ag2Human
                 worker = Worker.new
                 worker.nomina_id = nomina_id
               end
-              update_worker(worker, t, company, office, new_worker)
+              worker = update_worker(worker, t, company, office, new_worker)
               if worker.user_id > 0
                 if !worker.save
                   # Error: Workers Updater finished unexpectedly!
-                  message = I18n.t("result_error_message_html", :scope => :"ag2_human.import.index")
-                  @json_data = { "DataImport" => message, "Result" => "ERROR" }
-                  break
+                  incidents = true
+                  message += "<br/>".html_safe + e.ccodemp + " - " + t.capetra + " " + t.cnomtra + " - " + t.cemail
+                  #break   # Import cancelled at company level
                 end
               end
             end
           end
         end
+      end
+      if incidents
+        message = I18n.t("ag2_human.import.index.result_ok_with_error_message_html") + message
+        @json_data = { "DataImport" => message, "Result" => "ERROR" }
       end
       render json: @json_data
     end
@@ -231,23 +253,21 @@ render json: @json_data
         #
         # Add new row data
         #
-        # Init uw vars to generate worker_code
-        first_name_uw = nil
-        last_name_uw = nil
-        first_name_uw = sanitize_string(source.cnomtra) unless source.cnomtra.blank?
-        last_name_uw = sanitize_string(source.capetra) unless source.capetra.blank?
-        #first_name_uw = source.cnomtra.gsub(/[^0-9A-Za-z ]/, '').titleize unless source.cnomtra.blank?
-        #last_name_uw = source.capetra.gsub(/[^0-9A-Za-z ]/, '').titleize unless source.capetra.blank?
+        # Init vars to generate worker_code
+        first_name_wc = nil
+        last_name_wc = nil
+        first_name_wc = sanitize_string(source.cnomtra, true, true, false, false) unless source.cnomtra.blank?
+        last_name_wc = sanitize_string(source.capetra, true, true, false, false) unless source.capetra.blank?
         # Assign data
-        worker.first_name = first_name_uw.titleize unless first_name_uw.blank?
-        worker.last_name = last_name_uw.titleize unless last_name_uw.blank?
-        worker.fiscal_id = source.cdni unless source.cdni.blank?
+        worker.first_name = sanitize_string(source.cnomtra, true, false, false, true) unless source.cnomtra.blank?
+        worker.last_name = sanitize_string(source.capetra, true, false, false, true) unless source.capetra.blank?
+        worker.fiscal_id = sanitize_string(source.cdni, true, false, false, false) unless source.cdni.blank?
         worker.borned_on = source.dfecnac unless source.dfecnac.blank?
         worker.street_type_id = @street_type.id unless @street_type.id.blank?
-        worker.street_name = source.cdircen.gsub(/[^0-9A-Za-z ]/, '').titleize unless source.cdircen.blank?
-        worker.street_number = source.cnumcen unless source.cnumcen.blank?
-        worker.floor = source.cpiso unless source.cpiso.blank?
-        worker.floor_office = source.cpuerta unless source.cpuerta.blank?
+        worker.street_name = sanitize_string(source.cdircen, true, false, false, true) unless source.cdircen.blank?
+        worker.street_number = sanitize_string(source.cnumcen, true, false, false, false) unless source.cnumcen.blank?
+        worker.floor = sanitize_string(source.cpiso, true, false, false, false) unless source.cpiso.blank?
+        worker.floor_office = sanitize_string(source.cpuerta, true, false, false, false) unless source.cpuerta.blank?
         worker.zipcode_id = @zipcode.id unless @zipcode.id.blank?
         worker.town_id = @zipcode.town_id unless @zipcode.town_id.blank?
         worker.province_id = @zipcode.province_id unless @zipcode.province_id.blank?
@@ -257,43 +277,38 @@ render json: @json_data
         worker.professional_group_id = @professional_group.id unless @professional_group.id.blank?
         worker.starting_at = source.dfecalta unless source.dfecalta.blank?
         worker.issue_starting_at = source.dfecini unless source.dfecini.blank?
-        worker.affiliation_id = source.cnumseg unless source.cnumseg.blank?
-        worker.contribution_account_code = source.csubcta unless source.csubcta.blank?
-        worker.own_phone = source.ctelefono unless source.ctelefono.blank?
+        worker.affiliation_id = sanitize_string(source.cnumseg, true, false, false, false) unless source.cnumseg.blank?
+        worker.contribution_account_code = sanitize_string(source.csubcta, true, false, false, false) unless source.csubcta.blank?
+        worker.own_phone = phone(source.cpretel, source.ctelefono)
         worker.contract_type_id = @contract_type.id unless @contract_type.id.blank?
         worker.collective_agreement_id = @collective_agreement.id unless @collective_agreement.id.blank?
         worker.worker_type_id = @worker_type.id unless @worker_type.id.blank?
         worker.degree_type_id = @degree_type.id unless @degree_type.id.blank?
-        worker.position = source.cpuesto.gsub(/[^0-9A-Za-z ]/, '').titleize unless source.cpuesto.blank?
+        worker.position = sanitize_string(source.cpuesto, true, false, false, true) unless source.cpuesto.blank?
         worker.gross_salary = source.nbruto unless source.nbruto.blank?
         # Mandatory worker code
-        if !first_name_uw.nil? && !last_name_uw.nil?
-          worker.worker_code = generate_worker_code(first_name_uw, last_name_uw)
+        if !first_name_wc.nil? && !last_name_wc.nil?
+          worker.worker_code = generate_worker_code(last_name_wc, first_name_wc)
         end
         # Mandatory e-mail and user info
         if !source.cemail.blank?
           worker.email = source.cemail
           worker.user_id = find_user_by_email(source.cemail)
         end
-        # Check out other mandatory default data
-        if worker.fiscal_id.blank?
-          worker.fiscal_id = worker.worker_code + "0000"
-        end
-        if worker.contribution_account_code.blank?
-          worker.contribution_account_code = "no_existe"
-        end
       else
         #
         # Update current row data (if applicable)
         #
-        if !source.cnomtra.blank? && worker.first_name != source.cnomtra.gsub(/[^0-9A-Za-z ]/, '').titleize
-          worker.first_name = source.cnomtra.gsub(/[^0-9A-Za-z ]/, '').titleize
-        end
-        if !source.capetra.blank? && worker.last_name != source.capetra.gsub(/[^0-9A-Za-z ]/, '').titleize
-          worker.last_name = source.capetra.gsub(/[^0-9A-Za-z ]/, '').titleize
-        end
-        if !source.cdni.blank? && worker.fiscal_id != source.cdni
-          worker.fiscal_id = source.cdni
+        #-- Current worker first and last name, should not be updated
+        #if !source.cnomtra.blank? && worker.first_name != source.cnomtra.gsub(/[^0-9A-Za-z ]/, '').titleize
+        #  worker.first_name = source.cnomtra.gsub(/[^0-9A-Za-z ]/, '').titleize
+        #end
+        #if !source.capetra.blank? && worker.last_name != source.capetra.gsub(/[^0-9A-Za-z ]/, '').titleize
+        #  worker.last_name = source.capetra.gsub(/[^0-9A-Za-z ]/, '').titleize
+        #end
+        #--
+        if !source.cdni.blank? && worker.fiscal_id != sanitize_string(source.cdni, true, false, false, false)
+          worker.fiscal_id = sanitize_string(source.cdni, true, false, false, false)
         end
         if !source.dfecnac.blank? && worker.borned_on != source.dfecnac
           worker.borned_on = source.dfecnac
@@ -301,17 +316,17 @@ render json: @json_data
         if !@street_type.id.blank? && worker.street_type_id != @street_type.id
           worker.street_type_id = @street_type.id
         end
-        if !source.cdircen.blank? && worker.street_name != source.cdircen.gsub(/[^0-9A-Za-z ]/, '').titleize
-          worker.street_name = source.cdircen.gsub(/[^0-9A-Za-z ]/, '').titleize
+        if !source.cdircen.blank? && worker.street_name != sanitize_string(source.cdircen, true, false, false, true)
+          worker.street_name = sanitize_string(source.cdircen, true, false, false, true)
         end
-        if !source.cnumcen.blank? && worker.street_number != source.cnumcen
-          worker.street_number = source.cnumcen
+        if !source.cnumcen.blank? && worker.street_number != sanitize_string(source.cnumcen, true, false, false, false)
+          worker.street_number = sanitize_string(source.cnumcen, true, false, false, false)
         end
-        if !source.cpiso.blank? && worker.floor != source.cpiso
-          worker.floor = source.cpiso
+        if !source.cpiso.blank? && worker.floor != sanitize_string(source.cpiso, true, false, false, false)
+          worker.floor = sanitize_string(source.cpiso, true, false, false, false)
         end
-        if !source.cpuerta.blank? && worker.floor_office != source.cpuerta
-          worker.floor_office = source.cpuerta
+        if !source.cpuerta.blank? && worker.floor_office != sanitize_string(source.cpuerta, true, false, false, false)
+          worker.floor_office = sanitize_string(source.cpuerta, true, false, false, false)
         end
         if !@zipcode.id.blank? && worker.zipcode_id != @zipcode.id
           worker.zipcode_id = @zipcode.id
@@ -338,14 +353,14 @@ render json: @json_data
         if !source.dfecini.blank? && worker.issue_starting_at != source.dfecini
           worker.issue_starting_at = source.dfecini
         end
-        if !source.cnumseg.blank? && worker.affiliation_id != source.cnumseg
-          worker.affiliation_id = source.cnumseg
+        if !source.cnumseg.blank? && worker.affiliation_id != sanitize_string(source.cnumseg, true, false, false, false)
+          worker.affiliation_id = sanitize_string(source.cnumseg, true, false, false, false)
         end
-        if !source.csubcta.blank? && worker.contribution_account_code != source.csubcta
-          worker.contribution_account_code = source.csubcta
+        if !source.csubcta.blank? && worker.contribution_account_code != sanitize_string(source.csubcta, true, false, false, false)
+          worker.contribution_account_code = sanitize_string(source.csubcta, true, false, false, false)
         end
-        if !source.ctelefono.blank? && worker.own_phone != source.ctelefono
-          worker.own_phone = source.ctelefono unless source.ctelefono.blank?
+        if !source.ctelefono.blank? && worker.own_phone != phone(source.cpretel, source.ctelefono)
+          worker.own_phone = phone(source.cpretel, source.ctelefono)
         end
         if !@contract_type.id.blank? && worker.contract_type_id != @contract_type.id
           worker.contract_type_id = @contract_type.id
@@ -356,24 +371,70 @@ render json: @json_data
         if !@degree_type.id.blank? && worker.degree_type_id != @degree_type.id
           worker.degree_type_id = @degree_type.id
         end
-        if !source.cpuesto.blank? && worker.position != source.cpuesto.gsub(/[^0-9A-Za-z ]/, '').titleize
-          worker.position = source.cpuesto.gsub(/[^0-9A-Za-z ]/, '').titleize
+        if !source.cpuesto.blank? && worker.position != sanitize_string(source.cpuesto, true, false, false, true)
+          worker.position = sanitize_string(source.cpuesto, true, false, false, true)
         end
         if !source.nbruto.blank? && worker.gross_salary != source.nbruto
           worker.gross_salary = source.nbruto
         end
       end
+      # Check out other mandatory default data
+      if worker.fiscal_id.blank?
+        worker.fiscal_id = worker.worker_code + "0000"
+      end
+      if worker.contribution_account_code.blank?
+        worker.contribution_account_code = "no_existe"
+      end
+      if worker.starting_at.blank? && !source.dfecini.blank?
+        worker.starting_at = source.dfecini
+      end
+      if worker.issue_starting_at.blank? && !source.dfecalta.blank?
+        worker.issue_starting_at = source.dfecalta
+      end
+      
       # Reset default auxiliary data
       set_defaults
+      # Bye
+      return worker
     end
 
-    def sanitize_string(str)
+    def sanitize_string(str, encode, latin, all, capitalized)
       if !str.blank?
-        str.tr('áéíóúñÁÉÍÓÚÑ', 'aeiounAEIOUN')
-        str.gsub(/[^0-9A-Za-z ]/, '')
-      else
-        str
+        if encode
+          # Change encode
+          if str.encoding.name != "UTF-8"
+            str = str.force_encoding('ISO-8859-1').encode('UTF-8')
+          end
+        end
+        if latin
+          # Replace offending latin symbols
+          str = str.tr($alpha, $gamma)
+        end
+        if all
+          # Replace all non ASCII symbols
+          str = str.gsub(/[^0-9A-Za-z ,;.:-_!?@#%&]/, '')
+        end
+        if capitalized
+          # Capitalize (must be apply with encode!)
+          str = str.downcase
+          str = str.tr($ucase, $lcase)
+          str = str.titleize
+        end
       end
+      return str
+    end
+    
+    def phone(pre, num)
+      phone = ''
+      if !pre.blank?
+        pre = sanitize_string(pre, true, false, false, false)
+        phone += pre
+      end
+      if !num.blank?
+        num = sanitize_string(num, true, false, false, false)
+        phone += num      
+      end
+      return phone
     end
     
     def generate_worker_code(lastname, firstname)
@@ -401,14 +462,14 @@ render json: @json_data
       end
       code.upcase!
       
-      # Code must be unique
-      s = 0
-      w = Worker.find_by_worker_code(code)
-      until w.nil?
-        code = code[0, 5] + s.to_s
-        s += 1
-        w = Worker.find_by_worker_code(code)
-      end
+      # Code should be unique
+      #s = 0
+      #w = Worker.find_by_worker_code(code)
+      #until w.nil?
+      #  code = code[0, 5] + s.to_s
+      #  s += 1
+      #  w = Worker.find_by_worker_code(code)
+      #end
       
       return code
     end

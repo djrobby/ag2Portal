@@ -11,7 +11,7 @@
       $('#buttons').children().hide();
       // make a POST call and executes action
       jQuery.getJSON('data_import', function(data) {
-        $(".modal-body > p").text(data.DataImport);
+        $(".modal-body > p").html(data.DataImport);
         $("#importinfo").modal("show");
         if (data.Result == 'OK') {
           $("#message").html('<%= link_to I18n.t("go_to_target", :scope => :"ag2_human.import.index"), workers_path %>');

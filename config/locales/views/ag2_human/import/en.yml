@@ -13,5 +13,5 @@ en:
         message: "Wait, importing..."
         go_to_target: "Do you want to see the updated workers?"
         result_ok_message_html: "Workers Updater finished succesfully."
-        result_ok_with_error_message_html: "Workers Updater finished with errors."
-        result_error_message_html: "Error: Workers Updater finished unexpectedly!"
+        result_ok_with_error_message_html: "<b>Workers Updater finished with incidents:</b><br/>"
+        result_error_message_html: "<b>Error: Workers Updater finished unexpectedly!</b>"

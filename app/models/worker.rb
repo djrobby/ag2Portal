@@ -33,15 +33,14 @@ class Worker < ActiveRecord::Base
   validates :last_name,                 :presence => true,
                                         :length => { :minimum => 2 }
   validates :worker_code,               :presence => true,
-                                        :length => { :minimum => 5 },
-                                        :uniqueness => true
+                                        :length => { :minimum => 5 }
+                                        # should :uniqueness => true
   validates :fiscal_id,                 :presence => true,
-                                        :length => { :minimum => 9 },
-                                        :uniqueness => true
+                                        :length => { :minimum => 9 }
+                                        # should :uniqueness => true
   validates :user_id,                   :presence => true
   validates :company_id,                :presence => true
   validates :office_id,                 :presence => true
-  validates :starting_at,               :presence => true
   validates :street_type_id,            :presence => true
   validates :zipcode_id,                :presence => true
   validates :town_id,                   :presence => true
@@ -51,9 +50,10 @@ class Worker < ActiveRecord::Base
   validates :degree_type_id,            :presence => true
   validates :contract_type_id,          :presence => true
   validates :worker_type_id,            :presence => true
+  validates :starting_at,               :presence => true
   validates :issue_starting_at,         :presence => true
-  validates :affiliation_id,            :presence => true,
-                                        :uniqueness => true
+  validates :affiliation_id,            :presence => true
+                                        # should :uniqueness => true
   validates :contribution_account_code, :presence => true
 
   before_validation :fields_to_uppercase
