@@ -35,6 +35,7 @@ module Ag2Human
       $gamma = 'AEIOUUNCaeiouunc?!ao'
       $ucase = "\xC1\xC9\xCD\xD3\xDA\xDC\xD1\xC7".force_encoding('ISO-8859-1').encode('UTF-8')
       $lcase = "\xE1\xE9\xED\xF3\xFA\xFC\xF1\xE7".force_encoding('ISO-8859-1').encode('UTF-8')
+      $positions = "presidentedirectorjeferesponsablegerentetecnicoauxauxiliaradmadminadministrativoadministrativa"
       incidents = false
       message = ''
 
@@ -217,9 +218,8 @@ render json: @json_data
           @zipcode = Zipcode.first
         end
       end
-
-      pro_group = nil
       # Collective agreement
+      pro_group = nil
       if !source.ccodconv.blank?
         pro_group = source.ccodconv
         @collective_agreement = CollectiveAgreement.find_by_nomina_id(source.ccodconv)
@@ -240,6 +240,28 @@ render json: @json_data
         @contract_type = ContractType.find_by_nomina_id(source.ccodcon)
         if @contract_type.nil?
           @contract_type = ContractType.first
+        end
+      end
+      # Worker type
+      cpuesto = ''
+      if !source.cpuesto.blank?
+        cpuesto = sanitize_string(source.cpuesto, true, false, false, false).split(" ").first.downcase
+        if $positions.include? cpuesto
+          # Empleado
+          @worker_type = WorkerType.find_by_description('Empleado') 
+        else
+          # Operario
+          @worker_type = WorkerType.find_by_description('Operario') 
+        end
+        if @worker_type.nil?
+          @worker_type = WorkerType.first
+        end
+      end
+      # Department
+      if cpuesto != '' && @worker_type.description == 'Operario'
+        @department = Department.find_by_code('PROD')
+        if @department.nil?
+          @department = Department.first
         end
       end
       # Degree type
@@ -333,7 +355,8 @@ render json: @json_data
           worker.town_id = @zipcode.town_id
           worker.province_id = @zipcode.province_id
         end
-        #-- Current worker company and office, should not be updated
+        #-- Current worker company, office, department, progroup, contract, cagreement, degree & position
+        #-- should not be updated
         #if !company.id.blank? && worker.company_id != company.id
         #  worker.company_id = company.id
         #end
@@ -341,12 +364,24 @@ render json: @json_data
         #  worker.office_id = office.id
         #end
         #--
-        if !@department.id.blank? && worker.department_id != @department.id
-          worker.department_id = @department.id
-        end
-        if !@professional_group.id.blank? && worker.professional_group_id != @professional_group.id
-          worker.professional_group_id = @professional_group.id
-        end
+        #if !@department.id.blank? && worker.department_id != @department.id
+        #  worker.department_id = @department.id
+        #end
+        #if !@professional_group.id.blank? && worker.professional_group_id != @professional_group.id
+        #  worker.professional_group_id = @professional_group.id
+        #end
+        #if !@contract_type.id.blank? && worker.contract_type_id != @contract_type.id
+        #  worker.contract_type_id = @contract_type.id
+        #end
+        #if !@collective_agreement.id.blank? && worker.collective_agreement_id != @collective_agreement.id
+        #  worker.collective_agreement_id = @collective_agreement.id
+        #end
+        #if !@degree_type.id.blank? && worker.degree_type_id != @degree_type.id
+        #  worker.degree_type_id = @degree_type.id
+        #end
+        #if !source.cpuesto.blank? && worker.position != sanitize_string(source.cpuesto, true, false, false, true)
+        #  worker.position = sanitize_string(source.cpuesto, true, false, false, true)
+        #end
         if !source.dfecalta.blank? && worker.starting_at != source.dfecalta
           worker.starting_at = source.dfecalta
         end
@@ -361,18 +396,6 @@ render json: @json_data
         end
         if !source.ctelefono.blank? && worker.own_phone != phone(source.cpretel, source.ctelefono)
           worker.own_phone = phone(source.cpretel, source.ctelefono)
-        end
-        if !@contract_type.id.blank? && worker.contract_type_id != @contract_type.id
-          worker.contract_type_id = @contract_type.id
-        end
-        if !@collective_agreement.id.blank? && worker.collective_agreement_id != @collective_agreement.id
-          worker.collective_agreement_id = @collective_agreement.id
-        end
-        if !@degree_type.id.blank? && worker.degree_type_id != @degree_type.id
-          worker.degree_type_id = @degree_type.id
-        end
-        if !source.cpuesto.blank? && worker.position != sanitize_string(source.cpuesto, true, false, false, true)
-          worker.position = sanitize_string(source.cpuesto, true, false, false, true)
         end
         if !source.nbruto.blank? && worker.gross_salary != source.nbruto
           worker.gross_salary = source.nbruto
