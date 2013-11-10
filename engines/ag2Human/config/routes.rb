@@ -26,6 +26,7 @@ Ag2Human::Engine.routes.draw do
     match 'data_import', :controller => 'import', :action => 'data_import'
     match 'worker_report', :controller => 'ag2_timerecord_track', :action => 'worker_report'
     match 'office_report', :controller => 'ag2_timerecord_track', :action => 'office_report'
+    match 'update_workers_select_from_office/:id', :controller => 'ag2_timerecord_track', :action => 'update_workers_select_from_office'
 
     # Resources
     resources :workers

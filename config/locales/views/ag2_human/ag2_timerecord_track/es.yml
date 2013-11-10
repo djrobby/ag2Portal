@@ -4,7 +4,8 @@ es:
       index:
         task: "Informes de ag2TimeRecord"
         description: "Control&Seguimiento generará informes utiizando los datos actualizados de ag2TimeRecord. Indica los datos que quieras buscar en el cuadro de filtros y luego pulsa sobre el botón del informe que desees obtener."
-        how_go_back: "Para regresar a esta página, una vez que visualices el informe, deberás pulsar sobre el botón Atrás o Retroceder de tu navegador."
+        how_go_back_h: "Para regresar a esta página, una vez que visualices el informe, deberás pulsar sobre el botón Atrás o Retroceder de tu navegador."
+        how_go_back_f: "Si el informe se abre en una nueva pestaña o ventana de tu navegador, simplemente pulsa sobre el botón Cerrar de esa pestaña o ventana."
         caution: "¡Ten en cuenta que no todos los filtros enumerados, se aplican a todos los informes disponibles! Las fechas son siempre obligatorias."
         btn_worker: "Informe por Trabajador"
         btn_office: "Informe por Oficina"

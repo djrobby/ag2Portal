@@ -5,6 +5,25 @@ module Ag2Human
     before_filter :authenticate_user!
     skip_load_and_authorize_resource :only => [:worker_report, :office_report]
 
+    # Update workers from office select
+    def update_workers_select_from_office
+      if params[:id] == '0'
+        @workers = Worker.order('worker_code')
+      else
+        office = Office.find(params[:id])
+        if !office.nil?
+          @workers = office.workers.order('worker_code')
+        else
+          @workers = Worker.order('worker_code')
+        end
+      end
+
+      respond_to do |format|
+        format.html # update_company_textfield_from_office.html.erb does not exist! JSON only
+        format.json { render json: @workers }
+      end
+    end
+
     # Worker report
     def worker_report
       worker = params[:worker]
@@ -70,6 +89,9 @@ module Ag2Human
     #
     def index
       authorize! :update, TimeRecord
+      
+      @offices = Office.order('name')
+      @workers = Worker.order('worker_code')
     end
   end
 end

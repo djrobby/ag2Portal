@@ -17,7 +17,8 @@
       var code = $('select#Code :selected').val();
       if ((worker == "") || (from == "") || (to == ""))
         return;
-      window.location = "worker_report.pdf?worker=" + worker + "&from=" + from + "&to=" + to + "&office=" + office + "&code=" + code;
+      window.open("worker_report.pdf?worker=" + worker + "&from=" + from + "&to=" + to + "&office=" + office + "&code=" + code, "_blank");
+      //window.location = "worker_report.pdf?worker=" + worker + "&from=" + from + "&to=" + to + "&office=" + office + "&code=" + code;
       //jQuery.getJSON('worker_report/' + worker + '/' + from + '/' + to + '/' + office + '/' + code, function(data) {
       //})
       return false;
@@ -33,9 +34,26 @@
       var code = $('select#Code :selected').val();
       if ((office == "") || (from == "") || (to == ""))
         return;
-      window.location = "office_report.pdf?worker=" + worker + "&from=" + from + "&to=" + to + "&office=" + office + "&code=" + code;
+      window.open("office_report.pdf?worker=" + worker + "&from=" + from + "&to=" + to + "&office=" + office + "&code=" + code, "_blank");
+      //window.location = "office_report.pdf?worker=" + worker + "&from=" + from + "&to=" + to + "&office=" + office + "&code=" + code;
       //jQuery.get('office_report/' + worker, function(data) {
       //})
+      return false;
+    });
+
+    // when the #Office field changes
+    $("#Office").change(function() {
+      // make a POST call and replace the content
+      var worker = $('#Office :selected').val();
+      if (worker == "")
+        worker = "0";
+      jQuery.getJSON('update_workers_select_from_office/' + worker, function(data) {
+        $("#Worker").html("");
+        $("#Worker").append($('<option></option>').val("").html(""));
+        $.each(data, function(id, option) {
+          $("#Worker").append($('<option></option>').val(option.id).html(option.last_name + ', ' + option.first_name));
+        });
+      })
       return false;
     });
   })
@@ -57,7 +75,8 @@
         <%= t '.description' %>
       </p>
       <p class="bolded">
-        <%= t '.how_go_back' %>
+        <%= t '.how_go_back_h' %>
+        <%= t '.how_go_back_f' %>
       </p>
       <p class="track-caution">
         <%= t '.caution' %>
@@ -67,17 +86,17 @@
   <div class="span5 track-box">
     <div align="center">
       <%= form_tag "ag2_timerecord_track", :method => 'get' do %>
+      <!-- Office -->
+      <%= label_tag I18n.t("ag2_human.workers.index.label_office"), nil, :class => 'form-label' %>
+      <%= select_tag "Office", options_from_collection_for_select(@offices, "id", "name"), :prompt => "", :class => 'x-large-text-field' %>
       <!-- Worker -->
       <%= label_tag I18n.t("ag2_human.time_records.index.label_worker"), nil, :class => 'form-label' %>
-      <%= select_tag "Worker", options_from_collection_for_select(Worker.order('worker_code').all, "id", "full_name"), :prompt => "", :class => 'x-large-text-field' %>
+      <%= select_tag "Worker", options_from_collection_for_select(@workers, "id", "full_name"), :prompt => "", :class => 'x-large-text-field' %>
       <!-- Dates -->
       <%= label_tag I18n.t("ag2_human.time_records.index.label_from"), nil, :class => 'form-label' %>
       <%= text_field_tag "From", params[:date], :class =>  'mid-text-field date_picker centered' %>
       <%= label_tag I18n.t("ag2_human.time_records.index.label_to"), nil, :class => 'form-label' %>
       <%= text_field_tag "To", params[:date], :class =>  'mid-text-field date_picker centered' %>
-      <!-- Office -->
-      <%= label_tag I18n.t("ag2_human.workers.index.label_office"), nil, :class => 'form-label' %>
-      <%= select_tag "Office", options_from_collection_for_select(Office.order('name').all, "id", "name"), :prompt => "", :class => 'x-large-text-field' %>
       <!-- Code -->
       <!-- Last tag into <p></p> tags for spacing -->
       <p>
