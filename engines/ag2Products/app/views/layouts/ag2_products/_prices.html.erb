@@ -1,6 +1,10 @@
 <% prices.each do |w| %>
 <tr>
-  <td><%= link_to w.supplier_code, w %></td>
-  <td><%= w.name %></td>
+  <td><%= link_to w.product.product_code, w %></td>
+  <td><%= w.product.main_description %></td>
+  <td><%= w.supplier.supplier_code %></td>
+  <td><%= w.supplier.name %></td>
+  <td><%= w.code unless w.code.blank? %></td>
+  <td><%= w.price unless w.price.blank? %></td>
 </tr>
 <% end %>

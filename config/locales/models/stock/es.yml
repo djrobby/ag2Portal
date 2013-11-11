@@ -1,0 +1,20 @@
+es:
+  activerecord:
+    models:
+      stock:
+        zero:  Existencias
+        one:   Existencia
+        few:   Existencias
+        other: Existencias
+        check_for_orders: "Producto no puede ser eliminado mientras existan pedidos vinculados."
+        check_for_stocks: "Producto no puede ser eliminado mientras existan existencias vinculadas."
+    attributes:
+      stock:
+        product: "Producto"
+        product_id: "Producto"
+        store: "Almacén"
+        store_id: "Almacén"
+        initial: "Inicial"
+        current: "Actual"
+        minimum: "Mínimo"
+        location: "Ubicación"

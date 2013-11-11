@@ -6,7 +6,10 @@ en:
         item: "Product"
       families:
         items: "Product families"
-        item: "Product family"
+        item: "Family"
+      types:
+        items: "Product types"
+        item: "Type"
       measures:
         items: "Measures"
         item: "Measure"
@@ -16,3 +19,9 @@ en:
       stores:
         items: "Stores"
         item: "Store"
+      prices:
+        items: "Purchase prices"
+        item: "Price"
+      stocks:
+        items: "Stocks"
+        item: "Stock"

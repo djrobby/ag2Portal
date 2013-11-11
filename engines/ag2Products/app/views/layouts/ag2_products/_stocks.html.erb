@@ -1,7 +1,8 @@
 <% stocks.each do |w| %>
 <tr>
-  <td><%= link_to w.name, w %></td>
-  <td><%= w.company.name %></td>
-  <td><%= w.office.name %></td>
+  <td><%= link_to w.product.product_code, w %></td>
+  <td><%= w.product.main_description %></td>
+  <td><%= w.store.name %></td>
+  <td><%= w.current unless w.current.blank? %></td>
 </tr>
 <% end %>

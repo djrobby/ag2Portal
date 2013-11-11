@@ -1,21 +1,57 @@
-<h1>Listing stocks</h1>
+<%= render '/layouts/ag2_products/stocksbreadcrumb' %>
 
-<table>
-  <tr>
-    <th></th>
-    <th></th>
-    <th></th>
-  </tr>
+<h3><%=t '.title' %></h3>
 
-<% @stocks.each do |stock| %>
-  <tr>
-    <td><%= link_to 'Show', stock %></td>
-    <td><%= link_to 'Edit', edit_stock_path(stock) %></td>
-    <td><%= link_to 'Destroy', stock, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-  </tr>
-<% end %>
-</table>
+<div class="container-fluid">
+  <div class="row-fluid">
 
-<br />
+    <div class="span3">
+      <div class="well sidebar-nav">
+        <%= form_tag "stocks", :method => 'get' do %>
+        <!-- Product -->
+        <%= label_tag I18n.t("ag2_products.stocks.index.label_product"), nil, :class => 'form-label' %>
+        <%= select_tag "Product", options_from_collection_for_select(Product.order('description').all, "id", "description"), :prompt => "", :class => 'x-large-text-field shrinked' %>
+        <!-- Store -->
+        <%= label_tag I18n.t("ag2_products.stocks.index.label_store"), nil, :class => 'form-label' %>
+        <%= select_tag "Store", options_from_collection_for_select(Store.order('name').all, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked' %>
+        <!-- Others -->
+        <%= label_tag I18n.t("ag2_products.stocks.index.label_others"), nil, :class => 'form-label' %>
+        <%= text_field_tag :search, params[:search], :class => 'x-large-text-field shrinked' %>
+        <!-- Submit -->
+        <%= submit_tag I18n.t("ag2_products.stocks.index.btn_apply"), :class => 'btn btn-primary' %>
+        <% end %>
+        <!-- Buttons -->
+        <%= render :partial => '/layouts/crud/new', :locals => { :model => Stock, :path => new_stock_path, :txt => t(".btn_new") } %>
+        <%= link_to I18n.t("ag2_products.stocks.index.back_to_root"), ag2_products.root_path %>
+      </div><!-- /.sidebar-nav -->
+    </div><!-- /.span3 -->
 
-<%= link_to 'New Stock', new_stock_path %>
+    <div class="span9">
+      <%= render :partial => '/layouts/lettershead', :locals => { :controller => "stocks", :action => "index" } %>
+      <table class="table table-condensed table-striped shrinked">
+        <thead>
+          <tr>
+            <th><%= t :"activerecord.attributes.stock.product" %></th>
+            <th><%= t :"activerecord.attributes.product.main_description" %></th>
+            <th><%= t :"activerecord.attributes.stock.store" %></th>
+            <th><%= t :"activerecord.attributes.stock.current" %></th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @stocks.each do |stock| %>
+          <tr>
+            <td><%= link_to stock.product.product_code, stock %></td>
+            <td><%= stock.product.main_description %></td>
+            <td><%= stock.store.name %></td>
+            <td><%= stock.current unless stock.current.blank? %></td>
+            <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => Stock, :path => edit_stock_path(stock) } %>
+            <%= render :partial => '/layouts/crud/delete', :locals => { :model => Stock, :path => m, :msg => t("activerecord.models.stock.one"), :txt => stock.product.product_code + "->" + stock.store.name } %> </td>
+          </tr>
+          <% end %>
+        </tbody>
+      </table>
+      <%= render :partial => '/layouts/pagination', :locals => { :ivar => @stocks } %>
+    </div><!-- /.span9 -->
+  </div><!-- /.row-fluid -->
+</div><!-- /.container-fluid -->

@@ -1,5 +1,7 @@
-<h1>New purchase_price</h1>
+<%= render '/layouts/ag2_products/pricesbreadcrumb' %>
+
+<h3><%=t '.title' %></h3>
 
 <%= render 'form' %>
 
-<%= link_to 'Back', purchase_prices_path %>
+<%= link_to t("ag2_products.purchase_prices.back_to_main_page"), purchase_prices_path %>

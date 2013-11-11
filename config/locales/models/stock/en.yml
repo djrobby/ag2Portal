@@ -1,0 +1,20 @@
+en:
+  activerecord:
+    models:
+      stock:
+        zero:  Stocks
+        one:   Stock
+        few:   Stocks
+        other: Stocks
+        check_for_orders: "Product cannot be destroyed while linked orders exist."
+        check_for_stocks: "Product cannot be destroyed while linked stocks exist."
+    attributes:
+      stock:
+        product: "Product"
+        product_id: "Product"
+        store: "Store"
+        store_id: "Store"
+        initial: "Initial"
+        current: "Current"
+        minimum: "Minimum"
+        location: "Location"

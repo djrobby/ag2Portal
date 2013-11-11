@@ -7,6 +7,9 @@ es:
       families:
         items: "Familias de producto"
         item: "Familia"
+      types:
+        items: "Tipos de producto"
+        item: "Tipo"
       measures:
         items: "Unidades de medida"
         item: "Unidad"
@@ -16,3 +19,9 @@ es:
       stores:
         items: "Almacenes"
         item: "Almacén"
+      prices:
+        items: "Precios de compra"
+        item: "Precio"
+      stocks:
+        items: "Existencias"
+        item: "Existencia"

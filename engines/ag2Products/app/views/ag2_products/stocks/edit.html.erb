@@ -1,6 +1,8 @@
-<h1>Editing stock</h1>
+<%= render '/layouts/ag2_products/stocksbreadcrumb' %>
+
+<h3><%=t '.title' %></h3>
 
 <%= render 'form' %>
 
-<%= link_to 'Show', @stock %> |
-<%= link_to 'Back', stocks_path %>
+<%= link_to t(".btn_show"), @stock %> |
+<%= link_to t("ag2_products.stocks.back_to_main_page"), stocks_path %>

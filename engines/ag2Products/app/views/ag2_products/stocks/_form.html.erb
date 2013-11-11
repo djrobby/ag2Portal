@@ -1,17 +1,17 @@
-<%= form_for(@stock) do |f| %>
-  <% if @stock.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@stock.errors.count, "error") %> prohibited this stock from being saved:</h2>
-
-      <ul>
-      <% @stock.errors.full_messages.each do |msg| %>
-        <li><%= msg %></li>
-      <% end %>
-      </ul>
-    </div>
-  <% end %>
-
-  <div class="actions">
-    <%= f.submit %>
-  </div>
+<%= simple_form_for @stock, :html => {:class => 'form-vertical well' } do |f| %>
+<%= f.error_notification %>
+<%= display_base_errors resource %>
+<div>
+  <label class="multi-field-label-two"> <%= f.association :product, collection: Product.all(order: 'main_description'), input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.association :store, collection: Store.all(order: 'name'), input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %> </label>
+</div>
+<div>
+  <label class="multi-field-label-two"> <%= f.input :initial, as: :string, input_html: { value: (number_with_precision(f.object.initial, precision: 4) if f.object.initial), class: 'large-text-field number-text-field' }, label_html: { class: 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.input :minimum, as: :string, input_html: { value: (number_with_precision(f.object.minimum, precision: 4) if f.object.minimum), class: 'large-text-field number-text-field' }, label_html: { class: 'form-label' } %> </label>
+</div>
+<div>
+  <label class="multi-field-label-two"> <%= f.input :current, as: :string, input_html: { value: (number_with_precision(f.object.current, precision: 4) if f.object.current), class: 'large-text-field number-text-field' }, label_html: { class: 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.input :location, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %> </label>
+</div>
+<%= f.button :submit, :class => 'btn-primary' %>
 <% end %>

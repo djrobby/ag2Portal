@@ -135,6 +135,21 @@ new_path: new_supplier_path, new_txt: t('ag2_purchase.suppliers.index.btn_new') 
 <%= render :partial => '/layouts/pagination', :locals => { :ivar => @contacts } %>
 <% end %>
 
+<% if false %><!-- Activate block removing if -->
+<% if (@prices.count > 0) %>
+<h4><%=t '.subtable_prices_title' %></h4>
+<table class="table table-condensed table-striped shrinked">
+  <thead>
+    <%= render '/layouts/ag2_products/pricesheader' %>
+  </thead>
+  <tbody>
+    <%= render :partial => '/layouts/ag2_products/prices', :locals => { :prices => @prices } %>
+  </tbody>
+</table>
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @prices } %>
+<% end %>
+<% end %>
+
 <% if !session[:return_to].nil? %>
 <%= link_to session[:return_to], session[:return_to_url] %> |
 <% end %>

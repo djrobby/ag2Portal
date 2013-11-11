@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131103155534) do
+ActiveRecord::Schema.define(:version => 20131111161752) do
 
   create_table "activities", :force => true do |t|
     t.string   "description"
@@ -516,6 +516,7 @@ ActiveRecord::Schema.define(:version => 20131103155534) do
   end
 
   add_index "stores", ["company_id"], :name => "index_stores_on_company_id"
+  add_index "stores", ["name"], :name => "index_stores_on_name"
   add_index "stores", ["office_id"], :name => "index_stores_on_office_id"
 
   create_table "street_types", :force => true do |t|
@@ -910,7 +911,9 @@ ActiveRecord::Schema.define(:version => 20131103155534) do
   add_index "workers", ["corp_phone"], :name => "index_workers_on_corp_phone"
   add_index "workers", ["degree_type_id"], :name => "index_workers_on_degree_type_id"
   add_index "workers", ["department_id"], :name => "index_workers_on_department_id"
+  add_index "workers", ["first_name"], :name => "index_workers_on_first_name"
   add_index "workers", ["fiscal_id"], :name => "index_workers_on_fiscal_id"
+  add_index "workers", ["last_name"], :name => "index_workers_on_last_name"
   add_index "workers", ["nomina_id"], :name => "index_workers_on_nomina_id"
   add_index "workers", ["office_id"], :name => "index_workers_on_office_id"
   add_index "workers", ["professional_group_id"], :name => "index_workers_on_professional_group_id"

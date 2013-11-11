@@ -1,0 +1,22 @@
+en:
+  activerecord:
+    models:
+      purchase_price:
+        zero:  Purchase prices
+        one:   Purchase price
+        few:   Purchase prices
+        other: Purchase prices
+        check_for_orders: "Product cannot be destroyed while linked orders exist."
+        check_for_stocks: "Product cannot be destroyed while linked stocks exist."
+    attributes:
+      purchase_price:
+        product: "Product"
+        product_id: "Product"
+        supplier: "Supplier"
+        supplier_id: "Supplier"
+        code: "S/P Code"
+        price: "Price"
+        measure: "Measure"
+        measure_id: "Measure"
+        factor: "C Factor"
+        favorite: "Favorite?"

@@ -1,5 +1,40 @@
-<p id="notice"><%= notice %></p>
+<%= render '/layouts/ag2_products/pricesbreadcrumb' %>
 
+<h3><%=t '.title' %></h3>
+<table class="table">
+  <tbody>
+    <tr>
+      <td>Id:</td>
+      <td><%= @purchase_price.id %></td>
+      <td><%=t 'activerecord.attributes.purchase_price.code' %>:</td>
+      <td><%= @purchase_price.code unless @purchase_price.code.blank? %></td>
+    </tr>
+    <tr>
+      <td><%=t 'activerecord.attributes.purchase_price.product' %>:</td>
+      <td><%= @purchase_price.product.product_code %> <%= @purchase_price.product.main_description %></td>
+      <td><%=t 'activerecord.attributes.purchase_price.supplier' %>:</td>
+      <td><%= @purchase_price.supplier.supplier_code %> <%= @purchase_price.supplier.name %></td>
+    </tr>
+    <tr>
+      <td><%=t 'activerecord.attributes.purchase_price.measure' %>:</td>
+      <td><%= @purchase_price.measure.description %></td>
+      <td><%=t 'activerecord.attributes.purchase_price.factor' %>:</td>
+      <td><%= number_with_precision(@purchase_price.factor, precision: 4, locale: :es) unless @purchase_price.factor.blank? %></td>
+    </tr>
+    <tr>
+      <td><%=t 'activerecord.attributes.purchase_price.price' %>:</td>
+      <td><%= number_to_currency(@purchase_price.price, precision: 4, locale: :es) unless @purchase_price.price.blank? %></td>
+      <td><%=t 'activerecord.attributes.purchase_price.favorite' %>:</td>
+      <td> <% if @purchase_price.favorite %> <i class="icon-thumbs-up"></i> <% else %> <i class="icon-thumbs-down"></i> <% end %> </td>
+    </tr>
+    <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @purchase_price } %>
+    <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @purchase_price } %>
+  </tbody>
+</table>
 
-<%= link_to 'Edit', edit_purchase_price_path(@purchase_price) %> |
-<%= link_to 'Back', purchase_prices_path %>
+<%= render partial: '/layouts/crud/update_delete_new', locals:
+{ model: ProductType, update_path: edit_purchase_price_path(@purchase_price), update_txt: t('.btn_edit'),
+delete_path: @purchase_price, delete_txt: t('.btn_delete'), msg: t("activerecord.models.purchase_price.one"), txt: @purchase_price.product.product_code + "->" + @purchase_price.supplier.supplier_code,
+new_path: new_purchase_price_path, new_txt: t('ag2_products.purchase_prices.index.btn_new') } %>
+
+<%= link_to t("ag2_products.purchase_prices.back_to_main_page"), purchase_prices_path %>

@@ -16,6 +16,8 @@ Ag2Products::Engine.routes.draw do
     resources :measures
     resources :manufacturers
     resources :stores
+    resources :purchase_prices
+    resources :stocks
 
     # Root
     root :to => 'home#index'

@@ -10,4 +10,14 @@ class PurchasePrice < ActiveRecord::Base
   validates :supplier_id, :presence => true
   validates :measure_id,  :presence => true
   validates :code,        :presence => true
+
+  searchable do
+    text :code
+    integer :product_id
+    integer :supplier_id
+    integer :measure_id
+    integer :id
+    decimal :price
+    string :code
+  end
 end

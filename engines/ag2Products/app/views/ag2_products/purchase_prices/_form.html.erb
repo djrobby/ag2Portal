@@ -1,17 +1,18 @@
-<%= form_for(@purchase_price) do |f| %>
-  <% if @purchase_price.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@purchase_price.errors.count, "error") %> prohibited this purchase_price from being saved:</h2>
-
-      <ul>
-      <% @purchase_price.errors.full_messages.each do |msg| %>
-        <li><%= msg %></li>
-      <% end %>
-      </ul>
-    </div>
-  <% end %>
-
-  <div class="actions">
-    <%= f.submit %>
-  </div>
+<%= simple_form_for @purchase_price, :html => {:class => 'form-vertical well' } do |f| %>
+<%= f.error_notification %>
+<%= display_base_errors resource %>
+<div>
+  <label class="multi-field-label-two"> <%= f.association :product, collection: Product.all(order: 'main_description'), input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.association :supplier, collection: Supplier.all(order: 'name'), input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %> </label>
+</div>
+<div>
+  <label class="multi-field-label-two"> <%= f.association :measure, collection: Measure.all(order: 'description'), input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.input :factor, as: :string, input_html: { value: (number_with_precision(f.object.factor, precision: 4) if f.object.factor), class: 'large-text-field number-text-field' }, label_html: { class: 'form-label' } %> </label>
+</div>
+<div>
+  <label class="multi-field-label-three"> <%= f.input :code, input_html: { class: 'large-text-field' }, label_html: { class: 'form-label' } %> </label>
+  <label class="multi-field-label-three"> <%= f.input :price, as: :string, input_html: { value: (number_with_precision(f.object.price, precision: 4) if f.object.price), class: 'large-text-field number-text-field' }, label_html: { class: 'form-label' } %> </label>
+  <label class="multi-field-label-three"> <%= f.input :favorite, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' }, boolean_style: :inline %> </label>
+</div>
+<%= f.button :submit, :class => 'btn-primary' %>
 <% end %>

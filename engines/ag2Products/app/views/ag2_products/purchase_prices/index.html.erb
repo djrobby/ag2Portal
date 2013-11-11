@@ -1,21 +1,61 @@
-<h1>Listing purchase_prices</h1>
+<%= render '/layouts/ag2_products/pricesbreadcrumb' %>
 
-<table>
-  <tr>
-    <th></th>
-    <th></th>
-    <th></th>
-  </tr>
+<h3><%=t '.title' %></h3>
 
-<% @purchase_prices.each do |purchase_price| %>
-  <tr>
-    <td><%= link_to 'Show', purchase_price %></td>
-    <td><%= link_to 'Edit', edit_purchase_price_path(purchase_price) %></td>
-    <td><%= link_to 'Destroy', purchase_price, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-  </tr>
-<% end %>
-</table>
+<div class="container-fluid">
+  <div class="row-fluid">
 
-<br />
+    <div class="span3">
+      <div class="well sidebar-nav">
+        <%= form_tag "purchase_prices", :method => 'get' do %>
+        <!-- Product -->
+        <%= label_tag I18n.t("ag2_products.purchase_prices.index.label_product"), nil, :class => 'form-label' %>
+        <%= select_tag "Product", options_from_collection_for_select(Product.order('description').all, "id", "description"), :prompt => "", :class => 'x-large-text-field shrinked' %>
+        <!-- Supplier -->
+        <%= label_tag I18n.t("ag2_products.purchase_prices.index.label_supplier"), nil, :class => 'form-label' %>
+        <%= select_tag "Supplier", options_from_collection_for_select(Supplier.order('name').all, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked' %>
+        <!-- Others -->
+        <%= label_tag I18n.t("ag2_products.purchase_prices.index.label_others"), nil, :class => 'form-label' %>
+        <%= text_field_tag :search, params[:search], :class => 'x-large-text-field shrinked' %>
+        <!-- Submit -->
+        <%= submit_tag I18n.t("ag2_products.purchase_prices.index.btn_apply"), :class => 'btn btn-primary' %>
+        <% end %>
+        <!-- Buttons -->
+        <%= render :partial => '/layouts/crud/new', :locals => { :model => PurchasePrice, :path => new_purchase_price_path, :txt => t(".btn_new") } %>
+        <%= link_to I18n.t("ag2_products.purchase_prices.index.back_to_root"), ag2_products.root_path %>
+      </div><!-- /.sidebar-nav -->
+    </div><!-- /.span3 -->
 
-<%= link_to 'New Purchase price', new_purchase_price_path %>
+    <div class="span9">
+      <%= render :partial => '/layouts/lettershead', :locals => { :controller => "purchase_prices", :action => "index" } %>
+      <table class="table table-condensed table-striped shrinked">
+        <thead>
+          <tr>
+            <th><%= t :"activerecord.attributes.purchase_price.product" %></th>
+            <th><%= t :"activerecord.attributes.product.main_description" %></th>
+            <th><%= t :"activerecord.attributes.purchase_price.supplier" %></th>
+            <th><%= t :"activerecord.attributes.supplier.name" %></th>
+            <th><%= t :"activerecord.attributes.purchase_price.code" %></th>
+            <th><%= t :"activerecord.attributes.purchase_price.price" %></th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @purchase_prices.each do |price| %>
+          <tr>
+            <td><%= link_to price.product.product_code, price %></td>
+            <td><%= price.product.main_description %></td>
+            <td><%= price.supplier.supplier_code %></td>
+            <td><%= price.supplier.name %></td>
+            <td><%= price.code unless price.code.blank? %></td>
+            <td><%= price.price unless price.price.blank? %></td>
+            <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => PurchasePrice, :path => edit_purchase_price_path(price) } %>
+            <%= render :partial => '/layouts/crud/delete', :locals => { :model => PurchasePrice, :path => m, :msg => t("activerecord.models.purchase_price.one"), :txt => price.product.product_code + "->" + price.supplier.supplier_code } %> </td>
+          </tr>
+          <% end %>
+        </tbody>
+      </table>
+      <%= render :partial => '/layouts/pagination', :locals => { :ivar => @purchase_prices } %>
+    </div><!-- /.span9 -->
+  </div><!-- /.row-fluid -->
+</div><!-- /.container-fluid -->

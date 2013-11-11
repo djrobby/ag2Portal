@@ -1,0 +1,22 @@
+es:
+  activerecord:
+    models:
+      purchase_price:
+        zero:  Precios de compra
+        one:   Precio de compra
+        few:   Precios de compra
+        other: Precios de compra
+        check_for_orders: "Producto no puede ser eliminado mientras existan pedidos vinculados."
+        check_for_stocks: "Producto no puede ser eliminado mientras existan existencias vinculadas."
+    attributes:
+      purchase_price:
+        product: "Producto"
+        product_id: "Producto"
+        supplier: "Proveedor"
+        supplier_id: "Proveedor"
+        code: "Código P/P"
+        price: "Precio"
+        measure: "U.Medida"
+        measure_id: "U.Medida"
+        factor: "Factor C"
+        favorite: "¿Favorito?"
