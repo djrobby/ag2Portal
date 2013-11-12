@@ -62,6 +62,14 @@ module Ag2Human
           # Loop thru 'trabaja.dbf' records for current 'empresa/company' record
           source = source_exist(data_import_config.source, e.ccodemp)
           if !source.nil?
+            # Import account code
+            cctagene = nil
+            empnomi = DBF::Table.new(source + "empnomi.dbf")
+            enf = empnomi.first
+            if !enf.nil?
+              cctagene = enf.cctagene
+            end
+            # Import workers
             trabaja = DBF::Table.new(source + "trabaja.dbf")
             trabaja.each do |t|
               # Do not import deleted worker
@@ -86,7 +94,7 @@ module Ag2Human
                 worker = Worker.new
                 worker.nomina_id = nomina_id
               end
-              worker = update_worker(worker, t, company, office, new_worker)
+              worker = update_worker(worker, t, company, office, new_worker, cctagene)
               if worker.user_id > 0
                 if !worker.save
                   # Error: Workers Updater finished unexpectedly!
@@ -268,7 +276,7 @@ render json: @json_data
       # Where is it in trabaja.dbf?
     end
     
-    def update_worker(worker, source, company, office, new)
+    def update_worker(worker, source, company, office, new, cctagene)
       # Look for auxiliary data (other tables)
       search_aux_data(source)
       if new
@@ -300,7 +308,11 @@ render json: @json_data
         worker.starting_at = source.dfecalta unless source.dfecalta.blank?
         worker.issue_starting_at = source.dfecini unless source.dfecini.blank?
         worker.affiliation_id = sanitize_string(source.cnumseg, true, false, false, false) unless source.cnumseg.blank?
-        worker.contribution_account_code = sanitize_string(source.csubcta, true, false, false, false) unless source.csubcta.blank?
+        if !cctagene.nil?
+          worker.contribution_account_code = sanitize_string(cctagene, true, false, false, false)
+        else
+          worker.contribution_account_code = sanitize_string(source.csubcta, true, false, false, false) unless source.csubcta.blank?
+        end
         worker.own_phone = phone(source.cpretel, source.ctelefono)
         worker.contract_type_id = @contract_type.id unless @contract_type.id.blank?
         worker.collective_agreement_id = @collective_agreement.id unless @collective_agreement.id.blank?
@@ -391,8 +403,14 @@ render json: @json_data
         if !source.cnumseg.blank? && worker.affiliation_id != sanitize_string(source.cnumseg, true, false, false, false)
           worker.affiliation_id = sanitize_string(source.cnumseg, true, false, false, false)
         end
-        if !source.csubcta.blank? && worker.contribution_account_code != sanitize_string(source.csubcta, true, false, false, false)
-          worker.contribution_account_code = sanitize_string(source.csubcta, true, false, false, false)
+        if !cctagene.nil?
+          if worker.contribution_account_code != sanitize_string(cctagene, true, false, false, false)
+            worker.contribution_account_code = sanitize_string(cctagene, true, false, false, false)
+          end
+        else
+          if !source.csubcta.blank? && worker.contribution_account_code != sanitize_string(source.csubcta, true, false, false, false)
+            worker.contribution_account_code = sanitize_string(source.csubcta, true, false, false, false)
+          end
         end
         if !source.ctelefono.blank? && worker.own_phone != phone(source.cpretel, source.ctelefono)
           worker.own_phone = phone(source.cpretel, source.ctelefono)

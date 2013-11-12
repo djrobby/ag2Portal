@@ -17,7 +17,6 @@ class PurchasePrice < ActiveRecord::Base
     integer :supplier_id
     integer :measure_id
     integer :id
-    decimal :price
     string :code
   end
 end

@@ -12,8 +12,5 @@ class Stock < ActiveRecord::Base
     integer :product_id
     integer :store_id
     integer :id
-    decimal :initial
-    decimal :current
-    decimal :minimum
   end
 end
