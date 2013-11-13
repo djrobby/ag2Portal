@@ -415,9 +415,10 @@ render json: @json_data
         if !source.ctelefono.blank? && worker.own_phone != phone(source.cpretel, source.ctelefono)
           worker.own_phone = phone(source.cpretel, source.ctelefono)
         end
-        if !source.nbruto.blank? && worker.gross_salary != source.nbruto
-          worker.gross_salary = source.nbruto
-        end
+        #-- Current salary, should not be updated
+        #if !source.nbruto.blank? && worker.gross_salary != source.nbruto
+        #  worker.gross_salary = source.nbruto
+        #end
       end
       # Check out other mandatory default data
       if worker.fiscal_id.blank?
