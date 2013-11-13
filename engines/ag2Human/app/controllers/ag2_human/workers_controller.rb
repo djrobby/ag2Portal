@@ -178,13 +178,14 @@ end
           with :office_id, office
         end
         order_by :worker_code, :asc
+        order_by :id, :asc
         paginate :page => params[:page] || 1, :per_page => per_page
       end
       if letter.blank? || letter == "%"
         @workers = @search.results
       else
       # @workers = Worker.order('worker_code').where("last_name LIKE ?", "#{letter}%")
-        @workers = Worker.where("last_name LIKE ?", "#{letter}%").paginate(:page => params[:page], :per_page => per_page).order('worker_code')
+        @workers = Worker.where("last_name LIKE ?", "#{letter}%").paginate(:page => params[:page], :per_page => per_page).order('worker_code, id')
       end
 
       respond_to do |format|

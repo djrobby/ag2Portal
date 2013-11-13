@@ -87,26 +87,39 @@ class Worker < ActiveRecord::Base
   # Records navigator
   #
   def to_first
-    Worker.order("worker_code").first
+    Worker.order("worker_code, id").first
   end
 
   def to_prev
-    Worker.where("worker_code < ?", worker_code).order("worker_code").last
+    Worker.where("worker_code < ?", worker_code).order("worker_code, id").last
   end
 
   def to_next
-    Worker.where("worker_code > ?", worker_code).order("worker_code").first
+    Worker.where("worker_code > ?", worker_code).order("worker_code, id").first
   end
 
   def to_last
-    Worker.order("worker_code").last
+    Worker.order("worker_code, id").last
   end
 
+  def duplicate
+    Worker.where("worker_code = ?", worker_code).count
+  end
+
+  def to_duplicate_prev
+    Worker.where("worker_code = ? and id < ?", worker_code, id).order("worker_code, id").last
+  end
+
+  def to_duplicate_next
+    Worker.where("worker_code = ? and id > ?", worker_code, id).order("worker_code, id").first
+  end
+  
   searchable do
     text :worker_code, :first_name, :last_name, :fiscal_id, :affiliation_id, :contribution_account_code,
          :corp_cellular_long, :corp_cellular_short, :corp_extension, :corp_phone, :email
     integer :company_id
     integer :office_id
+    integer :id
     string :worker_code
   end
 end

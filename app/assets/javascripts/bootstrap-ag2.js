@@ -41,8 +41,22 @@ jQuery(function($) {
 			hide : 0
 		}
 	});
+	$('#dnext').tooltip({
+		placement : 'bottom',
+		delay : {
+			show : 500,
+			hide : 0
+		}
+	});
+	$('#dprev').tooltip({
+		placement : 'bottom',
+		delay : {
+			show : 500,
+			hide : 0
+		}
+	});
 	// Generic
 	$('a[rel~="tooltip"]').tooltip();
 
 	// Popovers
-})
+});
