@@ -382,12 +382,12 @@ render json: @json_data
         #if !@professional_group.id.blank? && worker.professional_group_id != @professional_group.id
         #  worker.professional_group_id = @professional_group.id
         #end
-        #if !@contract_type.id.blank? && worker.contract_type_id != @contract_type.id
-        #  worker.contract_type_id = @contract_type.id
-        #end
-        #if !@collective_agreement.id.blank? && worker.collective_agreement_id != @collective_agreement.id
-        #  worker.collective_agreement_id = @collective_agreement.id
-        #end
+        if !@contract_type.id.blank? && worker.contract_type_id != @contract_type.id
+          worker.contract_type_id = @contract_type.id
+        end
+        if !@collective_agreement.id.blank? && worker.collective_agreement_id != @collective_agreement.id
+          worker.collective_agreement_id = @collective_agreement.id
+        end
         #if !@degree_type.id.blank? && worker.degree_type_id != @degree_type.id
         #  worker.degree_type_id = @degree_type.id
         #end
