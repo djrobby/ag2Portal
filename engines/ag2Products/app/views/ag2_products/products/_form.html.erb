@@ -119,6 +119,11 @@
   <tbody>
     <tr class="form-tr">
       <td class="form-td-three left-winged"> <%= f.button :submit, class: 'btn-primary', id: 'submit_btn' %> </td>
+      <td class="form-td-three centered">
+        <%= render '/layouts/ag2_products/productstocksprices' %>
+      </td>
+      <% if @breadcrumb == 'update'%>
+      <% end %>
       <td class="form-td-three right-winged"><a href="#" id="generate_code_btn" class="btn btn-warning"><%=t 'ag2_products.products.generate_code_btn' %></a></td>
     </tr>
   </tbody>

@@ -1,0 +1,22 @@
+es:
+  ag2_products:
+    stocks:
+      index:
+        title: "Existencias"
+        btn_new: "Nuevo Existencia"
+        back_to_root: "Volver a ag2Products"
+        back_to_main_app: "Volver a Producto"
+        label_product: "Producto"
+        label_supplier: "Almacén"
+        label_others: "Otros"
+        btn_apply: "Aplicar Filtro"
+      show:
+        title: "Existencia"
+        btn_edit: "Editar Existencia"
+        btn_delete: "Borrar Existencia"
+      edit:
+        title: "Editar Existencia"
+        btn_show: "Ver Existencia"
+      new:
+        title: "Nueva Existencia"
+      back_to_main_page: "Volver a Existencias"

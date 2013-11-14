@@ -10,7 +10,7 @@
         <%= form_tag "purchase_prices", :method => 'get' do %>
         <!-- Product -->
         <%= label_tag I18n.t("ag2_products.purchase_prices.index.label_product"), nil, :class => 'form-label' %>
-        <%= select_tag "Product", options_from_collection_for_select(Product.order('description').all, "id", "description"), :prompt => "", :class => 'x-large-text-field shrinked' %>
+        <%= select_tag "Product", options_from_collection_for_select(Product.order('main_description').all, "id", "description"), :prompt => "", :class => 'x-large-text-field shrinked' %>
         <!-- Supplier -->
         <%= label_tag I18n.t("ag2_products.purchase_prices.index.label_supplier"), nil, :class => 'form-label' %>
         <%= select_tag "Supplier", options_from_collection_for_select(Supplier.order('name').all, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked' %>

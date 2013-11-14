@@ -27,3 +27,5 @@ es:
       generate_code_btn: "Código de Producto"
       commercial_info: "Información Comercial"
       code_error: "Imposible generar Código de Producto: No has elegido Familia."
+      stocks: "Existencias"
+      prices: "Precios"

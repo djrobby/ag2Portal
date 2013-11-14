@@ -1,0 +1,22 @@
+en:
+  ag2_products:
+    stocks:
+      index:
+        title: "Stocks"
+        btn_new: "New Stock"
+        back_to_root: "Back to ag2Products"
+        back_to_main_app: "Back to Product"
+        label_product: "Product"
+        label_store: "Store"
+        label_others: "Others"
+        btn_apply: "Apply Filter"
+      show:
+        title: "Stock"
+        btn_edit: "Edit Stock"
+        btn_delete: "Delete Stock"
+      edit:
+        title: "Edit Stock"
+        btn_show: "Show Stock"
+      new:
+        title: "New Stock"
+      back_to_main_page: "Back to Stocks"
