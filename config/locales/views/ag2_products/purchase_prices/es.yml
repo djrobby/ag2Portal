@@ -1,22 +1,22 @@
 es:
   ag2_products:
-    stocks:
+    purchase_prices:
       index:
-        title: "Existencias"
-        btn_new: "Nuevo Existencia"
+        title: "Precios de compra"
+        btn_new: "Nuevo Precio de compra"
         back_to_root: "Volver a ag2Products"
         back_to_main_app: "Volver a Producto"
         label_product: "Producto"
-        label_supplier: "Almacén"
+        label_supplier: "Proveedor"
         label_others: "Otros"
         btn_apply: "Aplicar Filtro"
       show:
-        title: "Existencia"
-        btn_edit: "Editar Existencia"
-        btn_delete: "Borrar Existencia"
+        title: "Precio de compra"
+        btn_edit: "Editar Precio de compra"
+        btn_delete: "Borrar Precio de compra"
       edit:
-        title: "Editar Existencia"
-        btn_show: "Ver Existencia"
+        title: "Editar Precio de compra"
+        btn_show: "Ver Precio de compra"
       new:
-        title: "Nueva Existencia"
-      back_to_main_page: "Volver a Existencias"
+        title: "Nuevo Precio de compra"
+      back_to_main_page: "Volver a Precios de compra"
