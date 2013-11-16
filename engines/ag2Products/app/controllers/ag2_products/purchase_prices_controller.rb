@@ -7,8 +7,12 @@ module Ag2Products
     # GET /purchase_prices
     # GET /purchase_prices.json
     def index
-      product = params[:Product]
+      product = params[:product]
       supplier = params[:Supplier]
+
+      if !product.blank?
+        @product = Product.find(product)
+      end
   
       @search = PurchasePrice.search do
         fulltext params[:search]

@@ -10,7 +10,11 @@
         <%= form_tag "stocks", :method => 'get' do %>
         <!-- Product -->
         <%= label_tag I18n.t("ag2_products.stocks.index.label_product"), nil, :class => 'form-label' %>
-        <%= select_tag "Product", options_from_collection_for_select(Product.order('main_description').all, "id", "description"), :prompt => "", :class => 'x-large-text-field shrinked' %>
+        <% if @product.nil? %>
+        <%= select_tag "Product", options_from_collection_for_select(Product.order('main_description').all, "id", "main_description"), :prompt => "", :class => 'x-large-text-field shrinked' %>
+        <% else %>
+        <span class="x-large-text-field shrinked"><%= @product.main_description[0,30] %></span>
+        <% end %>
         <!-- Store -->
         <%= label_tag I18n.t("ag2_products.stocks.index.label_store"), nil, :class => 'form-label' %>
         <%= select_tag "Store", options_from_collection_for_select(Store.order('name').all, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked' %>
@@ -22,7 +26,10 @@
         <% end %>
         <!-- Buttons -->
         <%= render :partial => '/layouts/crud/new', :locals => { :model => Stock, :path => new_stock_path, :txt => t(".btn_new") } %>
-        <%= link_to I18n.t("ag2_products.stocks.index.back_to_root"), ag2_products.root_path %>
+        <% if !session[:return_to].nil? && !@product.nil? %>
+        <%= link_to session[:return_to], session[:return_to_url] %><br />
+        <% end %>
+        <%= link_to t(".back_to_root"), ag2_products.root_path %>
       </div><!-- /.sidebar-nav -->
     </div><!-- /.span3 -->
 

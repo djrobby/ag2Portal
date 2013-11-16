@@ -13,6 +13,12 @@
   <li>
     <a href="<%= ag2_products.products_path %>"><%=t :"ag2_products.home.index.products" %></a><span class="divider">></span>
   </li>
+  <% if !session[:return_to].nil? && !@product.nil? %>
+  <li>
+    <a href="<%= session[:return_to_url] %>"><%= @product.product_code %></a><span class="divider">></span>
+  </li>
+  <% end %>
+  
   <% if @stocks %>
   <li>
     <%=t :"ag2_products.breadcrumb.stocks.items" %>

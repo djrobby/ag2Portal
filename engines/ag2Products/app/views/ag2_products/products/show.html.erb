@@ -29,13 +29,13 @@
     </tr>
     <tr>
       <td><%= t 'activerecord.attributes.product.product_type' %>:</td>
-      <td><%= @product.product_type.name %></td>
+      <td><%= @product.product_type.description %></td>
       <td><%= t 'activerecord.attributes.product.active' %>:</td>
       <td> <% if @product.active %> <i class="icon-thumbs-up"></i> <% else %> <i class="icon-thumbs-down"></i> <% end %> </td>
     </tr>
     <tr>
       <td><%= t 'activerecord.attributes.product.measure' %>:</td>
-      <td><%= @product.measure.name %></td>
+      <td><%= @product.measure.description %></td>
       <td><%= t 'activerecord.attributes.product.manufacturer' %>:</td>
       <td><%= @product.manufacturer.name %></td>
     </tr>
@@ -61,7 +61,7 @@
     </tr>
     <tr>
       <td><%= t 'activerecord.attributes.product.tax_type' %>:</td>
-      <td><%= @product.tax_type.name %> (<%= number_to_percentage(@product.tax_type.tax, precision: 2, locale: :es) unless @product.tax_type.tax.blank? %>)</td>
+      <td><%= @product.tax_type.description %> (<%= number_to_percentage(@product.tax_type.tax, precision: 2, locale: :es) unless @product.tax_type.tax.blank? %>)</td>
       <td><%= t :"activerecord.attributes.product.reference_price" %>:</td>
       <td><%= number_to_currency(@product.reference_price, precision: 4, locale: :es) unless @product.reference_price.blank? %></td>
     </tr>
@@ -124,4 +124,5 @@ new_path: new_product_path, new_txt: t('ag2_products.products.index.btn_new') } 
 <% if !session[:return_to].nil? %>
 <%= link_to session[:return_to], session[:return_to_url] %> |
 <% end %>
+
 <%= link_to t('ag2_products.products.back_to_main_page'), products_path %>

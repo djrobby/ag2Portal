@@ -7,9 +7,13 @@ module Ag2Products
     # GET /stocks
     # GET /stocks.json
     def index
-      product = params[:Product]
+      product = params[:product]
       store = params[:Store]
-  
+
+      if !product.blank?
+        @product = Product.find(product)
+      end
+        
       @search = Stock.search do
         fulltext params[:search]
         if !product.blank?

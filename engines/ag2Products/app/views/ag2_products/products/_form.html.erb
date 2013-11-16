@@ -56,6 +56,7 @@
         $('#product_product_code').prop('disabled', true);
         $('#product_main_description').prop('disabled', true);
         $('#product_aux_description').prop('disabled', true);
+        $("#product_active").prop('checked', false);
         $('#generate_code_btn').hide();
         $('#submit_btn').hide();
       } else {
@@ -63,6 +64,7 @@
         $('#product_product_code').prop('disabled', false);
         $('#product_main_description').prop('disabled', false);
         $('#product_aux_description').prop('disabled', false);
+        $("#product_active").prop('checked', true);
         $('#generate_code_btn').show();
         $('#submit_btn').show();
       }
@@ -119,10 +121,10 @@
   <tbody>
     <tr class="form-tr">
       <td class="form-td-three left-winged"> <%= f.button :submit, class: 'btn-primary', id: 'submit_btn' %> </td>
-      <td class="form-td-three centered">
-        <%= render '/layouts/ag2_products/productstocksprices' %>
-      </td>
       <% if @breadcrumb == 'update'%>
+      <td class="form-td-three centered">
+        <%= render partial: '/layouts/ag2_products/productstocksprices', locals: { product: @product } %>
+      </td>
       <% end %>
       <td class="form-td-three right-winged"><a href="#" id="generate_code_btn" class="btn btn-warning"><%=t 'ag2_products.products.generate_code_btn' %></a></td>
     </tr>
