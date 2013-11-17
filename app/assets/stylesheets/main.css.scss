@@ -427,11 +427,21 @@ table.fixed td {
 .inactive-row {
   color: #777777;
 }
+/* General */
+.underlined-tr {
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
+  border-bottom-color: #e3e3e3;
+}
 td[align="right"] {
   text-align: right;
 }
 th[align="right"] {
   text-align: right;
+}
+tfoot {
+  font-weight: bold;
+  color: #a67326;
 }
 /*
  * Icons

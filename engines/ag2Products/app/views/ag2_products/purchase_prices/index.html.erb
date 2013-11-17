@@ -13,7 +13,7 @@
         <% if @product.nil? %>
         <%= select_tag "Product", options_from_collection_for_select(Product.order('main_description').all, "id", "main_description"), :prompt => "", :class => 'x-large-text-field shrinked' %>
         <% else %>
-        <%= select_tag "product", options_from_collection_for_select(Product.where("id = ?", "#{@product.id}").all, "id", "main_description", @product.id), disabled: true, prompt: "", class: 'x-large-text-field shrinked' %>
+        <%= select_tag "product", options_from_collection_for_select(Product.where("id = ?", "#{@product.id}").all, "id", "main_description", @product.id), class: 'x-large-text-field shrinked' %>
         <% end %>
         <!-- Supplier -->
         <%= label_tag I18n.t("ag2_products.purchase_prices.index.label_supplier"), nil, :class => 'form-label' %>
@@ -26,8 +26,8 @@
         <% end %>
         <!-- Buttons outside search form -->
         <%= render :partial => '/layouts/crud/new', :locals => { :model => PurchasePrice, :path => new_purchase_price_path, :txt => t(".btn_new") } %>
-        <% if !session[:return_to].nil? && !@product.nil? %>
-        <%= link_to session[:return_to], session[:return_to_url] %><br />
+        <% if !session[:return_to_prod].nil? && !@product.nil? %>
+        <%= link_to session[:return_to_prod], session[:return_to_prod_url] %><br />
         <% end %>
         <%= link_to t(".back_to_root"), ag2_products.root_path %>
       </div><!-- /.sidebar-nav -->

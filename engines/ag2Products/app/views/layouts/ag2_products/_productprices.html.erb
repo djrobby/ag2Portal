@@ -1,4 +1,3 @@
 <% session[:return_to_prod] = I18n.t('ag2_products.products.show.return_to') %>
 <% session[:return_to_prod_url] = "#{request.protocol}#{request.host_with_port}#{request.fullpath}" %>
-<%= link_to t("ag2_products.products.stocks"), stocks_path(product: product), :class => 'btn btn-warning' %>
 <%= link_to t("ag2_products.products.prices"), purchase_prices_path(product: product), :class => 'btn btn-warning' %>

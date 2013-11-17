@@ -83,8 +83,8 @@ module Ag2Products
     def show
       @breadcrumb = 'read'
       @product = Product.find(params[:id])
-      #@stocks = @product.stocks.paginate(:page => params[:page], :per_page => per_page).order('store_id')
-      #@prices = @product.purchase_prices.paginate(:page => params[:page], :per_page => per_page).order('supplier_id')
+      @stocks = @product.stocks.paginate(:page => params[:page], :per_page => per_page).order('store_id')
+      @prices = @product.purchase_prices.paginate(:page => params[:page], :per_page => per_page).order('supplier_id')
   
       respond_to do |format|
         format.html # show.html.erb

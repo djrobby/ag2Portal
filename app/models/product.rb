@@ -51,6 +51,10 @@ class Product < ActiveRecord::Base
     active ? 'Yes' : 'No'
   end
 
+  def stock
+    stocks.sum("current")
+  end
+  
   #
   # Records navigator
   #

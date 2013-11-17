@@ -16,7 +16,8 @@ es:
         title: "Producto"
         btn_edit: "Editar Producto"
         btn_delete: "Borrar Producto"
-        subtable_title: ""
+        subtable_stocks_title: "Existencias del Producto"
+        subtable_prices_title: "Precios del Producto"
         return_to: "Volver a Producto"
       edit:
         title: "Editar Producto"
