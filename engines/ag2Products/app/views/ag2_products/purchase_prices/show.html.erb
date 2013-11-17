@@ -43,4 +43,8 @@
 delete_path: @purchase_price, delete_txt: t('.btn_delete'), msg: t("activerecord.models.purchase_price.one"), txt: @purchase_price.product.product_code + "->" + @purchase_price.supplier.supplier_code,
 new_path: new_purchase_price_path, new_txt: t('ag2_products.purchase_prices.index.btn_new') } %>
 
+<% if @product %>
+<%= link_to t("ag2_products.purchase_prices.back_to_main_page"), purchase_prices_path(product: @product) %>
+<% else %>
 <%= link_to t("ag2_products.purchase_prices.back_to_main_page"), purchase_prices_path %>
+<% end %>

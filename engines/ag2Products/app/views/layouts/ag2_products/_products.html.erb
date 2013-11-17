@@ -2,7 +2,7 @@
 <tr>
   <td><%= link_to w.product_code, w %></td>
   <td><%= w.main_description %></td>
-  <td><%= w.product_type.description %></td>
-  <td><%= w.product_family.name %></td>
+  <td align="right"><%= number_to_currency(w.reference_price, precision: 4, locale: :es) unless w.reference_price.blank? %></td>
+  <td align="right"><%= number_with_precision(w.reference_price, precision: 4, locale: :es) unless w.reference_price.blank? %></td>
 </tr>
 <% end %>

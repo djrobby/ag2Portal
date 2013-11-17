@@ -19,7 +19,6 @@
 delete_path: @product_type, delete_txt: t('.btn_delete'), msg: t("activerecord.models.product_type.one"), txt: @product_type.description,
 new_path: new_product_type_path, new_txt: t('ag2_products.product_types.index.btn_new') } %>
 
-<% if false %><!-- Activate block removing if -->
 <% if (@products.count > 0) %>
 <h4><%=t '.subtable_title' %></h4>
 <table class="table table-condensed table-striped">
@@ -33,7 +32,6 @@ new_path: new_product_type_path, new_txt: t('ag2_products.product_types.index.bt
   </tbody>
 </table>
 <%= render :partial => '/layouts/pagination', :locals => { :ivar => @products } %>
-<% end %>
 <% end %>
 
 <%= link_to t("ag2_products.product_types.back_to_main_page"), product_types_path %>

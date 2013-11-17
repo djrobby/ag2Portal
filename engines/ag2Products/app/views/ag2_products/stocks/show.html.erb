@@ -12,14 +12,14 @@
     <tr>
       <td>Id:</td>
       <td><%= @stock.id %></td>
-      <td></td>
-      <td></td>
-    </tr>
-    <tr>
       <td><%=t 'activerecord.attributes.stock.product' %>:</td>
       <td><%= @stock.product.product_code %> <%= @stock.product.main_description %></td>
+    </tr>
+    <tr>
       <td><%=t 'activerecord.attributes.stock.store' %>:</td>
       <td><%= @stock.store.name %></td>
+      <td><%=t 'activerecord.attributes.stock.location' %>:</td>
+      <td><%= @stock.location unless @stock.location.blank? %></td>
     </tr>
     <tr>
       <td><%=t 'activerecord.attributes.stock.initial' %>:</td>
@@ -30,8 +30,8 @@
     <tr>
       <td><%=t 'activerecord.attributes.stock.current' %>:</td>
       <td><%= number_with_precision(@stock.current, precision: 4, locale: :es) unless @stock.current.blank? %></td>
-      <td><%=t 'activerecord.attributes.stock.location' %>:</td>
-      <td><%= @stock.location unless @stock.location.blank? %></td>
+      <td></td>
+      <td></td>
     </tr>
     <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @stock } %>
     <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @stock } %>
@@ -43,4 +43,8 @@
 delete_path: @stock, delete_txt: t('.btn_delete'), msg: t("activerecord.models.stock.one"), txt: @stock.product.product_code + "->" + @stock.store.name,
 new_path: new_stock_path, new_txt: t('ag2_products.stocks.index.btn_new') } %>
 
+<% if @product %>
+<%= link_to t("ag2_products.stocks.back_to_main_page"), stocks_path(product: @product) %>
+<% else %>
 <%= link_to t("ag2_products.stocks.back_to_main_page"), stocks_path %>
+<% end %>

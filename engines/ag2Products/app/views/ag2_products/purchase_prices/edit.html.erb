@@ -10,4 +10,8 @@
 <%= render 'form' %>
 
 <%= link_to t(".btn_show"), @purchase_price %> |
+<% if @product %>
+<%= link_to t("ag2_products.purchase_prices.back_to_main_page"), purchase_prices_path(product: @product) %>
+<% else %>
 <%= link_to t("ag2_products.purchase_prices.back_to_main_page"), purchase_prices_path %>
+<% end %>

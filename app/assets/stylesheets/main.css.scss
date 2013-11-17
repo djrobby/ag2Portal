@@ -427,6 +427,12 @@ table.fixed td {
 .inactive-row {
   color: #777777;
 }
+td[align="right"] {
+  text-align: right;
+}
+th[align="right"] {
+  text-align: right;
+}
 /*
  * Icons
  */

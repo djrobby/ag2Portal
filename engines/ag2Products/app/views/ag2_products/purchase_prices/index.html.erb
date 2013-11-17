@@ -13,7 +13,7 @@
         <% if @product.nil? %>
         <%= select_tag "Product", options_from_collection_for_select(Product.order('main_description').all, "id", "main_description"), :prompt => "", :class => 'x-large-text-field shrinked' %>
         <% else %>
-        <span class="x-large-text-field shrinked"><%= @product.main_description[0,30] %></span>
+        <%= select_tag "product", options_from_collection_for_select(Product.where("id = ?", "#{@product.id}").all, "id", "main_description", @product.id), disabled: true, prompt: "", class: 'x-large-text-field shrinked' %>
         <% end %>
         <!-- Supplier -->
         <%= label_tag I18n.t("ag2_products.purchase_prices.index.label_supplier"), nil, :class => 'form-label' %>
@@ -24,7 +24,7 @@
         <!-- Submit -->
         <%= submit_tag I18n.t("ag2_products.purchase_prices.index.btn_apply"), :class => 'btn btn-primary' %>
         <% end %>
-        <!-- Buttons -->
+        <!-- Buttons outside search form -->
         <%= render :partial => '/layouts/crud/new', :locals => { :model => PurchasePrice, :path => new_purchase_price_path, :txt => t(".btn_new") } %>
         <% if !session[:return_to].nil? && !@product.nil? %>
         <%= link_to session[:return_to], session[:return_to_url] %><br />
@@ -55,9 +55,9 @@
             <td><%= price.supplier.supplier_code %></td>
             <td><%= price.supplier.name %></td>
             <td><%= price.code unless price.code.blank? %></td>
-            <td><%= price.price unless price.price.blank? %></td>
+            <td><%= number_to_currency(price.price, precision: 4, locale: :es) unless price.price.blank? %></td>
             <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => PurchasePrice, :path => edit_purchase_price_path(price) } %>
-            <%= render :partial => '/layouts/crud/delete', :locals => { :model => PurchasePrice, :path => m, :msg => t("activerecord.models.purchase_price.one"), :txt => price.product.product_code + "->" + price.supplier.supplier_code } %> </td>
+            <%= render :partial => '/layouts/crud/delete', :locals => { :model => PurchasePrice, :path => price, :msg => t("activerecord.models.purchase_price.one"), :txt => price.product.product_code + "->" + price.supplier.supplier_code } %> </td>
           </tr>
           <% end %>
         </tbody>

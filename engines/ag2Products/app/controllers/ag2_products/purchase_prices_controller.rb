@@ -4,20 +4,19 @@ module Ag2Products
   class PurchasePricesController < ApplicationController
     before_filter :authenticate_user!
     load_and_authorize_resource
+    $product = nil
+    
     # GET /purchase_prices
     # GET /purchase_prices.json
     def index
-      product = params[:product]
+      current_product
+      @product = $product
       supplier = params[:Supplier]
-
-      if !product.blank?
-        @product = Product.find(product)
-      end
   
       @search = PurchasePrice.search do
         fulltext params[:search]
-        if !product.blank?
-          with :product_id, product
+        if !@product.blank?
+          with :product_id, @product
         end
         if !supplier.blank?
           with :supplier_id, supplier
@@ -38,6 +37,7 @@ module Ag2Products
     # GET /purchase_prices/1.json
     def show
       @breadcrumb = 'read'
+      @product = $product
       @purchase_price = PurchasePrice.find(params[:id])
   
       respond_to do |format|
@@ -50,6 +50,7 @@ module Ag2Products
     # GET /purchase_prices/new.json
     def new
       @breadcrumb = 'create'
+      @product = $product
       @purchase_price = PurchasePrice.new
   
       respond_to do |format|
@@ -61,6 +62,7 @@ module Ag2Products
     # GET /purchase_prices/1/edit
     def edit
       @breadcrumb = 'update'
+      @product = $product
       @purchase_price = PurchasePrice.find(params[:id])
     end
   
@@ -68,6 +70,7 @@ module Ag2Products
     # POST /purchase_prices.json
     def create
       @breadcrumb = 'update'
+      @product = $product
       @purchase_price = PurchasePrice.new(params[:purchase_price])
       @purchase_price.created_by = current_user.id if !current_user.nil?
   
@@ -85,6 +88,7 @@ module Ag2Products
     # PUT /purchase_prices/1
     # PUT /purchase_prices/1.json
     def update
+      @product = $product
       @purchase_price = PurchasePrice.find(params[:id])
       @purchase_price.updated_by = current_user.id if !current_user.nil?
   
@@ -103,6 +107,7 @@ module Ag2Products
     # DELETE /purchase_prices/1
     # DELETE /purchase_prices/1.json
     def destroy
+      @product = $product
       @purchase_price = PurchasePrice.find(params[:id])
       @purchase_price.destroy
   
@@ -111,6 +116,16 @@ module Ag2Products
                       notice: (crud_notice('destroyed', @purchase_price) + "#{undo_link(@purchase_price)}").html_safe }
         format.json { head :no_content }
       end
+    end
+
+    private
+    
+    def current_product
+      if !params[:product].blank?
+        $product = Product.find(params[:product])
+      else
+        $product = nil;
+      end 
     end
   end
 end

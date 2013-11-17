@@ -10,4 +10,8 @@
 <%= render 'form' %>
 
 <%= link_to t(".btn_show"), @stock %> |
+<% if @product %>
+<%= link_to t("ag2_products.stocks.back_to_main_page"), stocks_path(product: @product) %>
+<% else %>
 <%= link_to t("ag2_products.stocks.back_to_main_page"), stocks_path %>
+<% end %>

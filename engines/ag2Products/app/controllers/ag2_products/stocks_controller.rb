@@ -4,23 +4,22 @@ module Ag2Products
   class StocksController < ApplicationController
     before_filter :authenticate_user!
     load_and_authorize_resource
+    $product = nil
+    
     # GET /stocks
     # GET /stocks.json
     def index
-      product = params[:product]
+      current_product
+      @product = $product
       store = params[:Store]
-
-      if !product.blank?
-        @product = Product.find(product)
-      end
         
       @search = Stock.search do
         fulltext params[:search]
-        if !product.blank?
-          with :product_id, product
+        if !@product.blank?
+          with :product_id, @product
         end
         if !store.blank?
-          with :store_id, supplier
+          with :store_id, store
         end
         order_by :product_id, :asc
         order_by :store_id, :asc
@@ -38,6 +37,7 @@ module Ag2Products
     # GET /stocks/1.json
     def show
       @breadcrumb = 'read'
+      @product = $product
       @stock = Stock.find(params[:id])
   
       respond_to do |format|
@@ -50,6 +50,7 @@ module Ag2Products
     # GET /stocks/new.json
     def new
       @breadcrumb = 'create'
+      @product = $product
       @stock = Stock.new
   
       respond_to do |format|
@@ -61,6 +62,7 @@ module Ag2Products
     # GET /stocks/1/edit
     def edit
       @breadcrumb = 'update'
+      @product = $product
       @stock = Stock.find(params[:id])
     end
   
@@ -68,6 +70,7 @@ module Ag2Products
     # POST /stocks.json
     def create
       @breadcrumb = 'update'
+      @product = $product
       @stock = Stock.new(params[:stock])
       @stock.created_by = current_user.id if !current_user.nil?
   
@@ -85,6 +88,7 @@ module Ag2Products
     # PUT /stocks/1
     # PUT /stocks/1.json
     def update
+      @product = $product
       @stock = Stock.find(params[:id])
       @stock.updated_by = current_user.id if !current_user.nil?
   
@@ -103,6 +107,7 @@ module Ag2Products
     # DELETE /stocks/1
     # DELETE /stocks/1.json
     def destroy
+      @product = $product
       @stock = Stock.find(params[:id])
       @stock.destroy
   
@@ -111,6 +116,16 @@ module Ag2Products
                       notice: (crud_notice('destroyed', @stock) + "#{undo_link(@stock)}").html_safe }
         format.json { head :no_content }
       end
+    end
+
+    private
+    
+    def current_product
+      if !params[:product].blank?
+        $product = Product.find(params[:product])
+      else
+        $product = nil;
+      end 
     end
   end
 end
