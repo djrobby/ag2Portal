@@ -11,12 +11,18 @@ module Ag2Products
     def index
       current_product
       @product = $product
+      product = nil
+      if !$product.nil?
+        product = $product.id
+      else
+        product = params[:Products]
+      end
       store = params[:Store]
         
       @search = Stock.search do
-        fulltext params[:search]
-        if !@product.blank?
-          with :product_id, @product
+        #fulltext params[:search]
+        if !product.blank?
+          with :product_id, product
         end
         if !store.blank?
           with :store_id, store

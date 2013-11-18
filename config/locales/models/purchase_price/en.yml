@@ -14,7 +14,7 @@ en:
         product_id: "Product"
         supplier: "Supplier"
         supplier_id: "Supplier"
-        code: "S/P Code"
+        code: "Reference"
         price: "Price"
         measure: "Measure"
         measure_id: "Measure"

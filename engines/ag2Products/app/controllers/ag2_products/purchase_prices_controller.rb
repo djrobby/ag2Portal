@@ -11,6 +11,12 @@ module Ag2Products
     def index
       current_product
       @product = $product
+      product = nil
+      if !$product.nil?
+        product = $product.id
+      else
+        product = params[:Products]
+      end
       supplier = params[:Supplier]
   
       @search = PurchasePrice.search do

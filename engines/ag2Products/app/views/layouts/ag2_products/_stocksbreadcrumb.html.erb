@@ -26,7 +26,11 @@
   <% end %>
   <% if @stock %>
   <li>
-    <a href="<%= product_types_path %>"><%=t :"ag2_products.breadcrumb.stocks.items" %></a><span class="divider">></span>
+    <% if !@product.nil? %>
+    <a href="<%= stocks_path(product: @product) %>"><%=t :"ag2_products.breadcrumb.stocks.items" %></a><span class="divider">></span>
+    <% else %>
+    <a href="<%= stocks_path %>"><%=t :"ag2_products.breadcrumb.stocks.items" %></a><span class="divider">></span>
+    <% end %>
   </li>
   <% if @breadcrumb == 'read' || @breadcrumb == 'update' %>
   <%=t :"ag2_products.breadcrumb.stocks.item" %>

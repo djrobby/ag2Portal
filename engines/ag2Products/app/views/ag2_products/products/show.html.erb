@@ -91,7 +91,6 @@
 delete_path: @product, delete_txt: t('.btn_delete'), msg: t("activerecord.models.product.one"), txt: @product.product_code,
 new_path: new_product_path, new_txt: t('ag2_products.products.index.btn_new') } %>
 
-<% if (@stocks.count > 0) %>
 <table class="form-table">
   <tbody>
     <tr class="form-tr underlined-tr">
@@ -104,6 +103,7 @@ new_path: new_product_path, new_txt: t('ag2_products.products.index.btn_new') } 
     </tr>
   </tbody>
 </table>
+<% if (@stocks.count > 0) %>
 <table class="table table-condensed table-striped">
   <thead>
     <%= render '/layouts/ag2_products/stocksheader' %>
@@ -118,7 +118,6 @@ new_path: new_product_path, new_txt: t('ag2_products.products.index.btn_new') } 
 <%= render :partial => '/layouts/pagination', :locals => { :ivar => @stocks } %>
 <% end %>
 
-<% if (@prices.count > 0) %>
 <table class="form-table">
   <tbody>
     <tr class="form-tr underlined-tr">
@@ -126,11 +125,12 @@ new_path: new_product_path, new_txt: t('ag2_products.products.index.btn_new') } 
         <h4><%=t '.subtable_prices_title' %></h4>
       </td>
       <td class="form-td-two right-winged">
-        <%= render partial: '/layouts/ag2_products/productstocks', locals: { product: @product } %>
+        <%= render partial: '/layouts/ag2_products/productprices', locals: { product: @product } %>
       </td>
     </tr>
   </tbody>
 </table>
+<% if (@prices.count > 0) %>
 <table class="table table-condensed table-striped">
   <thead>
     <%= render '/layouts/ag2_products/pricesheader' %>
@@ -140,6 +140,8 @@ new_path: new_product_path, new_txt: t('ag2_products.products.index.btn_new') } 
   </tbody>
 </table>
 <%= render :partial => '/layouts/pagination', :locals => { :ivar => @prices } %>
+<% else %>
+<br />
 <% end %>
 
 <% if !session[:return_to].nil? %>

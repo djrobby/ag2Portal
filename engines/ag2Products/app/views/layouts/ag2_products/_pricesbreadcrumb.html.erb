@@ -26,7 +26,11 @@
   <% end %>
   <% if @purchase_price %>
   <li>
-    <a href="<%= product_types_path %>"><%=t :"ag2_products.breadcrumb.prices.items" %></a><span class="divider">></span>
+    <% if !@product.nil? %>
+    <a href="<%= purchase_prices_path(product: @product) %>"><%=t :"ag2_products.breadcrumb.prices.items" %></a><span class="divider">></span>
+    <% else %>
+    <a href="<%= purchase_prices_path %>"><%=t :"ag2_products.breadcrumb.prices.items" %></a><span class="divider">></span>
+    <% end %>
   </li>
   <% if @breadcrumb == 'read' || @breadcrumb == 'update' %>
   <%=t :"ag2_products.breadcrumb.prices.item" %>

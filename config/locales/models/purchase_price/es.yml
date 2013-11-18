@@ -14,7 +14,7 @@ es:
         product_id: "Producto"
         supplier: "Proveedor"
         supplier_id: "Proveedor"
-        code: "Código P/P"
+        code: "Referencia"
         price: "Precio"
         measure: "U.Medida"
         measure_id: "U.Medida"
