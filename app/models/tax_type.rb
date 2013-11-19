@@ -1,5 +1,5 @@
 class TaxType < ActiveRecord::Base
-  attr_accessible :description, :tax,
+  attr_accessible :description, :tax, :expiration,
                   :created_by, :updated_by
 
   has_paper_trail

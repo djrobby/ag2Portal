@@ -10,3 +10,4 @@ en:
       tax_type:
         tax: "Rate"
         description: "Description"
+        expiration: "Expired on"

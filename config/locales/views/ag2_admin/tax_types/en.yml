@@ -5,6 +5,8 @@ en:
         title: "Tax types"
         btn_new: "New Tax type"
         back_to_root: "Back to ag2Admin"
+        expired_only: "Only expired"
+        current_only: "Only current"
       show:
         title: "Tax type"
         btn_edit: "Edit Tax type"
@@ -15,3 +17,6 @@ en:
       new:
         title: "New Tax type"
       back_to_main_page: "Back to Tax types"
+      expire_btn: "Expire & New"
+      expire_error: "Error creating new Tax type!"
+      expire_success: "Current Tax type expired: New Tax type created wih Id "

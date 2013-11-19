@@ -10,3 +10,4 @@ es:
       tax_type:
         tax: "Tasa"
         description: "Descripción"
+        expiration: "Expiró el"

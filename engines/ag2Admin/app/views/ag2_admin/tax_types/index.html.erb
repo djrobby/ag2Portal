@@ -1,13 +1,14 @@
 <%= render '/layouts/ag2_admin/taxtypesbreadcrumb' %>
 
 <h3><%=t '.title' %></h3>
-<div class="span7">
+<div class="span8">
   <table class="table table-condensed table-striped">
     <thead>
       <tr>
         <th><%= sortable "id", "Id" %></th>
         <th><%= sortable "description", t('activerecord.attributes.tax_type.description') %></th>
         <th><%= sortable "tax", t('activerecord.attributes.tax_type.tax') %></th>
+        <th><%= sortable "expiration", t('activerecord.attributes.tax_type.expiration') %></th>
         <th></th>
       </tr>
     </thead>
@@ -17,6 +18,7 @@
         <td><%= type.id %></td>
         <td><%= link_to type.description, type %></td>
         <td><%= number_to_percentage(type.tax, precision: 2, locale: :es) unless type.tax.blank? %></td>
+        <td><%= type.expiration.strftime("%d/%m/%Y") unless type.expiration.nil? %></td>
         <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => TaxType, :path => edit_tax_type_path(type) } %>
         <%= render :partial => '/layouts/crud/delete', :locals => { :model => TaxType, :path => type, :msg => I18n.t("activerecord.models.tax_type.one"), :txt => type.description } %> </td>
       </tr>
@@ -24,6 +26,8 @@
     </tbody>
   </table>
   <%= render :partial => '/layouts/pagination', :locals => { :ivar => @tax_types } %>
+  <a href="#" id="filter" class="btn btn-warning"><%=t '.current_only' %></a>
   <%= render :partial => '/layouts/crud/new', :locals => { :model => TaxType, :path => new_tax_type_path, :txt => t('.btn_new') } %>
+  
   <%= link_to t('.back_to_root'), ag2_admin.root_path %>
 </div>

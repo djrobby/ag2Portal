@@ -12,8 +12,8 @@
     <tr>
       <td><%=t 'activerecord.attributes.tax_type.tax' %>:</td>
       <td><%= number_to_percentage(@tax_type.tax, precision: 2, locale: :es) unless @tax_type.tax.blank? %></td>
-      <td></td>
-      <td></td>
+      <td><%=t 'activerecord.attributes.tax_type.expiration' %>:</td>
+        <td><%= @tax_type.expiration.strftime("%d/%m/%Y") unless @tax_type.expiration.nil? %></td>
     </tr>
     <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @tax_type } %>
     <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @tax_type } %>

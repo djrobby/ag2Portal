@@ -6,7 +6,32 @@ module Ag2Admin
     load_and_authorize_resource
     # Helper methods for sorting
     helper_method :sort_column
+    
+    # Update worker code at view from last_name and first_name (expire_btn)
+    def expire
+      expire_type = @tax_type
+      new_type = TaxType.new
+      
+      new_type.description = expire_type.description
+      new_type.tax = expire_type.tax
+      new_type.created_by = current_user.id if !current_user.nil?
 
+      if new_type.save
+        code = new_type.id.to_s
+      else
+        code = '$err'
+      end
+      @json_data = { "code" => code }
+
+      respond_to do |format|
+        format.html # expire.html.erb does not exist! JSON only
+        format.json { render json: @json_data }
+      end
+    end
+
+    #
+    # Default Methods
+    #
     # GET /tax_types
     # GET /tax_types.json
     def index

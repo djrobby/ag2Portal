@@ -5,6 +5,8 @@ es:
         title: "Tipos de impuesto"
         btn_new: "Nuevo Tipo de impuesto"
         back_to_root: "Volver a ag2Admin"
+        expired_only: "Solo expirados"
+        current_only: "Solo vigentes"
       show:
         title: "Tipo de impuesto"
         btn_edit: "Editar Tipo de impuesto"
@@ -15,3 +17,6 @@ es:
       new:
         title: "Nuevo Tipo de impuesto"
       back_to_main_page: "Volver a Tipos de impuesto"
+      expire_btn: "Expirar & Nuevo"
+      expire_error: "¡Error creando nuevo Tipo de impuesto!"
+      expire_success: "Tipo de impuesto vigente ha expirado: Nuevo Tipo de impuesto creado con Id "
