@@ -6,6 +6,7 @@ en:
         one:   Tax type
         few:   Tax types
         other: Tax types
+        check_for_products: "Tax type cannot be destroyed while linked products exist."
     attributes:
       tax_type:
         tax: "Rate"

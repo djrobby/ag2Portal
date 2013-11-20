@@ -5,19 +5,26 @@ module Ag2Products
     before_filter :authenticate_user!
     load_and_authorize_resource
     $product = nil
+    $store = nil
     
     # GET /stocks
     # GET /stocks.json
     def index
-      current_product
+      current_product_store
       @product = $product
+      @store = $store
       product = nil
+      store = nil
       if !$product.nil?
         product = $product.id
       else
         product = params[:Products]
       end
-      store = params[:Store]
+      if !$store.nil?
+        store = $store.id
+      else
+        store = params[:Stores]
+      end
         
       @search = Stock.search do
         #fulltext params[:search]
@@ -44,6 +51,7 @@ module Ag2Products
     def show
       @breadcrumb = 'read'
       @product = $product
+      @store = $store
       @stock = Stock.find(params[:id])
   
       respond_to do |format|
@@ -57,6 +65,7 @@ module Ag2Products
     def new
       @breadcrumb = 'create'
       @product = $product
+      @store = $store
       @stock = Stock.new
   
       respond_to do |format|
@@ -69,6 +78,7 @@ module Ag2Products
     def edit
       @breadcrumb = 'update'
       @product = $product
+      @store = $store
       @stock = Stock.find(params[:id])
     end
   
@@ -77,6 +87,7 @@ module Ag2Products
     def create
       @breadcrumb = 'update'
       @product = $product
+      @store = $store
       @stock = Stock.new(params[:stock])
       @stock.created_by = current_user.id if !current_user.nil?
   
@@ -95,6 +106,7 @@ module Ag2Products
     # PUT /stocks/1.json
     def update
       @product = $product
+      @store = $store
       @stock = Stock.find(params[:id])
       @stock.updated_by = current_user.id if !current_user.nil?
   
@@ -114,6 +126,7 @@ module Ag2Products
     # DELETE /stocks/1.json
     def destroy
       @product = $product
+      @store = $store
       @stock = Stock.find(params[:id])
       @stock.destroy
   
@@ -126,11 +139,16 @@ module Ag2Products
 
     private
     
-    def current_product
+    def current_product_store
       if !params[:product].blank?
         $product = Product.find(params[:product])
       else
         $product = nil;
+      end 
+      if !params[:store].blank?
+        $store = Store.find(params[:store])
+      else
+        $store = nil;
       end 
     end
   end

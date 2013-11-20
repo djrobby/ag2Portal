@@ -66,11 +66,11 @@ class Entity < ActiveRecord::Base
   end
 
   def to_prev
-    Entity.where("fiscal_id < ?", supplier_code).order("fiscal_id").last
+    Entity.where("fiscal_id < ?", fiscal_id).order("fiscal_id").last
   end
 
   def to_next
-    Entity.where("fiscal_id > ?", supplier_code).order("fiscal_id").first
+    Entity.where("fiscal_id > ?", fiscal_id).order("fiscal_id").first
   end
 
   def to_last

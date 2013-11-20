@@ -21,8 +21,8 @@ module Ag2Products
   
       @search = PurchasePrice.search do
         fulltext params[:search]
-        if !@product.blank?
-          with :product_id, @product
+        if !product.blank?
+          with :product_id, product
         end
         if !supplier.blank?
           with :supplier_id, supplier

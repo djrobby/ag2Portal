@@ -7,7 +7,7 @@
       <tr>
         <th><%= sortable "name", t('activerecord.attributes.province.name') %></th>
         <th><%= sortable "region_id", t('activerecord.attributes.province.region') %></th>
-        <th><%=t 'activerecord.attributes.province.ine_cpro' %></th>
+        <th align="center"><%=t 'activerecord.attributes.province.ine_cpro' %></th>
         <th></th>
       </tr>
     </thead>
@@ -16,7 +16,7 @@
       <tr>
         <td><%= link_to province.name, province %></td>
         <td><%= province.region.name_and_country unless province.region.blank? %></td>
-        <td><%= province.ine_cpro %></td>
+        <td align="center"><%= province.ine_cpro %></td>
         <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => Province, :path => edit_province_path(province) } %>
         <%= render :partial => '/layouts/crud/delete', :locals => { :model => Province, :path => province, :msg => I18n.t("activerecord.models.province.one"), :txt => province.name } %> </td>
       </tr>

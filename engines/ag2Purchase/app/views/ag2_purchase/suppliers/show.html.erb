@@ -50,13 +50,13 @@
     <tr>
       <td><%= t :"activerecord.attributes.supplier.address" %>:</td>
       <td> <%= @supplier.street_type.street_type_code.titleize  %>. <%= @supplier.street_name %> <%= @supplier.street_number %>
-      <% if @supplier.building.blank? %>
+      <% if !@supplier.building.blank? %>
       <%= @supplier.building.titleize %>
       <% end %>
-      <% if @supplier.floor.blank? %>
+      <% if !@supplier.floor.blank? %>
       <%= @supplier.floor %>&ordm;
       <% end %>
-      <% if @supplier.floor_office.blank? %>
+      <% if !@supplier.floor_office.blank? %>
       <%= @supplier.floor_office %>
       <% end %> </td>
       <td></td>

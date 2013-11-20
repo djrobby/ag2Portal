@@ -5,6 +5,8 @@ class Measure < ActiveRecord::Base
 
   validates :description, :presence => true
 
+  has_many :products
+
   before_destroy :check_for_dependent_records
 
   def to_label

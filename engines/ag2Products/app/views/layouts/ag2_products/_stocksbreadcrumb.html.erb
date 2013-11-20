@@ -1,5 +1,5 @@
 <% content_for :title, "aGestiona2 | ag2Products | ag2Tables" %>
-<% content_for :icon, "/assets/icon/ag2Products.png" %>
+<% content_for :icon, "/assets/icon/TableC.png" %>
 <% content_for :alt, "ag2Tables" %>
 
 <!-- Breadcrumb -->
@@ -10,12 +10,20 @@
   <li>
     <a href="<%= ag2_products.root_path %>">ag2Products</a><span class="divider">></span>
   </li>
+  <% if !session[:return_to_prod].nil? && !@product.nil? %>
   <li>
     <a href="<%= ag2_products.products_path %>"><%=t :"ag2_products.home.index.products" %></a><span class="divider">></span>
   </li>
-  <% if !session[:return_to_prod].nil? && !@product.nil? %>
   <li>
     <a href="<%= session[:return_to_prod_url] %>"><%= @product.product_code %></a><span class="divider">></span>
+  </li>
+  <% end %>
+  <% if !session[:return_to_prod].nil? && !@store.nil? %>
+  <li>
+    <a href="<%= ag2_products.stores_path %>"><%=t :"ag2_products.home.index.stores" %></a><span class="divider">></span>
+  </li>
+  <li>
+    <a href="<%= session[:return_to_prod_url] %>"><%= @store.name %></a><span class="divider">></span>
   </li>
   <% end %>
   
@@ -28,6 +36,8 @@
   <li>
     <% if !@product.nil? %>
     <a href="<%= stocks_path(product: @product) %>"><%=t :"ag2_products.breadcrumb.stocks.items" %></a><span class="divider">></span>
+    <% elsif !@store.nil? %>
+    <a href="<%= stocks_path(store: @store) %>"><%=t :"ag2_products.breadcrumb.stocks.items" %></a><span class="divider">></span>
     <% else %>
     <a href="<%= stocks_path %>"><%=t :"ag2_products.breadcrumb.stocks.items" %></a><span class="divider">></span>
     <% end %>

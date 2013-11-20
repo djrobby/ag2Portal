@@ -24,6 +24,7 @@ module Ag2Admin
       @json_data = { "code" => code }
 
       # Update linked tables with the new tax type created
+      expire_type.products.where(active: true).update_all(tax_type_id: new_type.id)
       
       respond_to do |format|
         format.html # expire.html.erb does not exist! JSON only
@@ -125,12 +126,16 @@ module Ag2Admin
     # DELETE /tax_types/1.json
     def destroy
       @tax_type = TaxType.find(params[:id])
-      @tax_type.destroy
-  
+
       respond_to do |format|
-        format.html { redirect_to tax_types_url,
+        if @tax_type.destroy
+          format.html { redirect_to tax_types_url,
                       notice: (crud_notice('destroyed', @tax_type) + "#{undo_link(@tax_type)}").html_safe }
-        format.json { head :no_content }
+          format.json { head :no_content }
+        else
+          format.html { redirect_to tax_types_url, alert: "#{@tax_type.errors[:base].to_s}".gsub('["', '').gsub('"]', '') }
+          format.json { render json: @tax_type.errors, status: :unprocessable_entity }
+        end
       end
     end
 

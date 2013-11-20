@@ -9,7 +9,7 @@ en:
         title: "Store"
         btn_edit: "Edit Store"
         btn_delete: "Delete Store"
-        subtable_title: "Products in Stock"
+        subtable_title: "Products in Store"
         return_to: "Back to Store"
       edit:
         title: "Edit Store"
@@ -17,3 +17,4 @@ en:
       new:
         title: "New Store"
       back_to_main_page: "Back to Stores"
+      stocks: "Stocks"

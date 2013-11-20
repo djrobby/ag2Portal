@@ -31,21 +31,28 @@
 delete_path: @store, delete_txt: t('.btn_delete'), msg: t("activerecord.models.store.one"), txt: @store.name,
 new_path: new_store_path, new_txt: t('ag2_products.stores.index.btn_new') } %>
 
-<% if false %><!-- Activate block removing if -->
-<% if (@products.count > 0) %>
-<h4><%=t '.subtable_title' %></h4>
-<table class="table table-condensed table-striped">
-  <thead>
-    <%= render '/layouts/ag2_products/productsheader' %>
-  </thead>
+<table class="form-table">
   <tbody>
-    <% session[:return_to] = I18n.t('ag2_products.stores.show.return_to') %>
-    <% session[:return_to_url] = "#{request.protocol}#{request.host_with_port}#{request.fullpath}" %>
-    <%= render :partial => '/layouts/ag2_products/products', :locals => { :products => @products } %>
+    <tr class="form-tr underlined-tr">
+      <td class="form-td-two left-winged">
+        <h4><%=t '.subtable_title' %></h4>
+      </td>
+      <td class="form-td-two right-winged">
+        <%= render partial: '/layouts/ag2_products/storestocks', locals: { store: @store } %>
+      </td>
+    </tr>
   </tbody>
 </table>
-<%= render :partial => '/layouts/pagination', :locals => { :ivar => @products } %>
-<% end %>
+<% if (@stocks.count > 0) %>
+<table class="table table-condensed table-striped">
+  <thead>
+    <%= render '/layouts/ag2_products/stocksstoreheader' %>
+  </thead>
+  <tbody>
+    <%= render :partial => '/layouts/ag2_products/stocksstore', :locals => { :stocks => @stocks } %>
+  </tbody>
+</table>
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @stocks } %>
 <% end %>
 
 <%= link_to t("ag2_products.stores.back_to_main_page"), stores_path %>

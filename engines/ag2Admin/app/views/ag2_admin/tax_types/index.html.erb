@@ -7,8 +7,8 @@
       <tr>
         <th><%= sortable "id", "Id" %></th>
         <th><%= sortable "description", t('activerecord.attributes.tax_type.description') %></th>
-        <th><%= sortable "tax", t('activerecord.attributes.tax_type.tax') %></th>
-        <th><%= sortable "expiration", t('activerecord.attributes.tax_type.expiration') %></th>
+        <th align="right"><%= sortable "tax", t('activerecord.attributes.tax_type.tax') %></th>
+        <th align="center"><%= sortable "expiration", t('activerecord.attributes.tax_type.expiration') %></th>
         <th></th>
       </tr>
     </thead>
@@ -17,8 +17,8 @@
       <tr>
         <td><%= type.id %></td>
         <td><%= link_to type.description, type %></td>
-        <td><%= number_to_percentage(type.tax, precision: 2, locale: :es) unless type.tax.blank? %></td>
-        <td><%= type.expiration.strftime("%d/%m/%Y") unless type.expiration.nil? %></td>
+        <td align="right"><%= number_to_percentage(type.tax, precision: 2, locale: :es) unless type.tax.blank? %></td>
+        <td align="center"><%= type.expiration.strftime("%d/%m/%Y") unless type.expiration.nil? %></td>
         <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => TaxType, :path => edit_tax_type_path(type) } %>
         <%= render :partial => '/layouts/crud/delete', :locals => { :model => TaxType, :path => type, :msg => I18n.t("activerecord.models.tax_type.one"), :txt => type.description } %> </td>
       </tr>

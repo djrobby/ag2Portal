@@ -40,6 +40,8 @@ new_path: new_stock_path, new_txt: t('ag2_products.stocks.index.btn_new') } %>
 
 <% if @product %>
 <%= link_to t("ag2_products.stocks.back_to_main_page"), stocks_path(product: @product) %>
+<% elsif @store %>
+<%= link_to t("ag2_products.stocks.back_to_main_page"), stocks_path(store: @store) %>
 <% else %>
 <%= link_to t("ag2_products.stocks.back_to_main_page"), stocks_path %>
 <% end %>
