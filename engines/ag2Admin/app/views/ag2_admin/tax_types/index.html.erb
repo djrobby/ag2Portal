@@ -26,8 +26,10 @@
     </tbody>
   </table>
   <%= render :partial => '/layouts/pagination', :locals => { :ivar => @tax_types } %>
-  <a href="#" id="filter" class="btn btn-warning"><%=t '.current_only' %></a>
   <%= render :partial => '/layouts/crud/new', :locals => { :model => TaxType, :path => new_tax_type_path, :txt => t('.btn_new') } %>
   
+  <%= link_to t('.all'), controller: "tax_types", action: "index" %> |
+  <%= link_to t('.current_only'), controller: "tax_types", action: "index", filter: "current" %> |
+  <%= link_to t('.expired_only'), controller: "tax_types", action: "index", filter: "expired" %> |
   <%= link_to t('.back_to_root'), ag2_admin.root_path %>
 </div>

@@ -7,6 +7,7 @@ es:
         back_to_root: "Volver a ag2Admin"
         expired_only: "Solo expirados"
         current_only: "Solo vigentes"
+        all: "Todos"
       show:
         title: "Tipo de impuesto"
         btn_edit: "Editar Tipo de impuesto"

@@ -7,15 +7,15 @@ module Ag2Admin
     # Helper methods for sorting
     helper_method :sort_column
     
-    # Update worker code at view from last_name and first_name (expire_btn)
+    # Update expiration and create new (expire_btn)
     def expire
       expire_type = @tax_type
       new_type = TaxType.new
       
+      # Create new tax type based on current
       new_type.description = expire_type.description
       new_type.tax = expire_type.tax
       new_type.created_by = current_user.id if !current_user.nil?
-
       if new_type.save
         code = new_type.id.to_s
       else
@@ -23,6 +23,8 @@ module Ag2Admin
       end
       @json_data = { "code" => code }
 
+      # Update linked tables with the new tax type created
+      
       respond_to do |format|
         format.html # expire.html.erb does not exist! JSON only
         format.json { render json: @json_data }
@@ -35,7 +37,16 @@ module Ag2Admin
     # GET /tax_types
     # GET /tax_types.json
     def index
-      @tax_types = TaxType.paginate(:page => params[:page], :per_page => per_page).order(sort_column + ' ' + sort_direction)
+      filter = params[:filter]
+      if filter == "all"
+        @tax_types = TaxType.paginate(:page => params[:page], :per_page => per_page).order(sort_column + ' ' + sort_direction)
+      elsif filter == "current"
+        @tax_types = TaxType.where("expiration IS NULL").paginate(:page => params[:page], :per_page => per_page).order(sort_column + ' ' + sort_direction)
+      elsif filter == "expired"
+        @tax_types = TaxType.where("NOT expiration IS NULL").paginate(:page => params[:page], :per_page => per_page).order(sort_column + ' ' + sort_direction)
+      else
+        @tax_types = TaxType.paginate(:page => params[:page], :per_page => per_page).order(sort_column + ' ' + sort_direction)
+      end
   
       respond_to do |format|
         format.html # index.html.erb
