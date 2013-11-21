@@ -53,7 +53,7 @@ class Supplier < ActiveRecord::Base
   end
 
   def to_label
-    "#{name} (#{supplier_code})"
+    "#{supplier_code} #{name}"
   end
 
   def active_yes_no

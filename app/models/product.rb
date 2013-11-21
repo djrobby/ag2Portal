@@ -44,7 +44,7 @@ class Product < ActiveRecord::Base
   end
 
   def to_label
-    "#{main_description} (#{product_code})"
+    "#{product_code} #{main_description}"
   end
 
   def active_yes_no

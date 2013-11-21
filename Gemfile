@@ -59,6 +59,7 @@ gem 'omniauth-google-oauth2'
 gem 'libv8'
 gem "paper_trail"
 gem 'thinreports-rails'
+gem "select2-rails"
 
 # Own required gems
 gem 'ag2_admin', :path => 'engines/ag2Admin'
