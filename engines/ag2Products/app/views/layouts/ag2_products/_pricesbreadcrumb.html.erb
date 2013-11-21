@@ -18,6 +18,14 @@
     <a href="<%= session[:return_to_prod_url] %>"><%= @product.product_code %></a><span class="divider">></span>
   </li>
   <% end %>
+  <% if !session[:return_to_prod].nil? && !@supplier.nil? %>
+  <li>
+    <a href="<%= ag2_purchase.suppliers_path %>"><%=t :"ag2_purchase.home.index.suppliers" %></a><span class="divider">></span>
+  </li>
+  <li>
+    <a href="<%= session[:return_to_prod_url] %>"><%= @supplier.supplier_code %></a><span class="divider">></span>
+  </li>
+  <% end %>
   
   <% if @purchase_prices %>
   <li>

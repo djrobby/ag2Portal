@@ -5,19 +5,25 @@ module Ag2Products
     before_filter :authenticate_user!
     load_and_authorize_resource
     $product = nil
+    $supplier = nil
     
     # GET /purchase_prices
     # GET /purchase_prices.json
     def index
-      current_product
+      current_product_supplier
       @product = $product
+      @supplier = $supplier
       product = nil
       if !$product.nil?
         product = $product.id
       else
         product = params[:Products]
       end
-      supplier = params[:Supplier]
+      if !$supplier.nil?
+        supplier = $supplier.id
+      else
+        supplier = params[:Suppliers]
+      end
   
       @search = PurchasePrice.search do
         fulltext params[:search]
@@ -44,6 +50,7 @@ module Ag2Products
     def show
       @breadcrumb = 'read'
       @product = $product
+      @supplier = $supplier
       @purchase_price = PurchasePrice.find(params[:id])
   
       respond_to do |format|
@@ -57,6 +64,7 @@ module Ag2Products
     def new
       @breadcrumb = 'create'
       @product = $product
+      @supplier = $supplier
       @purchase_price = PurchasePrice.new
   
       respond_to do |format|
@@ -69,6 +77,7 @@ module Ag2Products
     def edit
       @breadcrumb = 'update'
       @product = $product
+      @supplier = $supplier
       @purchase_price = PurchasePrice.find(params[:id])
     end
   
@@ -77,6 +86,7 @@ module Ag2Products
     def create
       @breadcrumb = 'update'
       @product = $product
+      @supplier = $supplier
       @purchase_price = PurchasePrice.new(params[:purchase_price])
       @purchase_price.created_by = current_user.id if !current_user.nil?
   
@@ -95,6 +105,7 @@ module Ag2Products
     # PUT /purchase_prices/1.json
     def update
       @product = $product
+      @supplier = $supplier
       @purchase_price = PurchasePrice.find(params[:id])
       @purchase_price.updated_by = current_user.id if !current_user.nil?
   
@@ -114,6 +125,7 @@ module Ag2Products
     # DELETE /purchase_prices/1.json
     def destroy
       @product = $product
+      @supplier = $supplier
       @purchase_price = PurchasePrice.find(params[:id])
       @purchase_price.destroy
   
@@ -126,11 +138,16 @@ module Ag2Products
 
     private
     
-    def current_product
+    def current_product_supplier
       if !params[:product].blank?
         $product = Product.find(params[:product])
       else
         $product = nil;
+      end 
+      if !params[:supplier].blank?
+        $supplier = Supplier.find(params[:supplier])
+      else
+        $supplier = nil;
       end 
     end
   end

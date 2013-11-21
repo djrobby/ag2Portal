@@ -15,6 +15,8 @@ en:
         btn_edit: "Edit Supplier"
         btn_delete: "Delete Supplier"
         subtable_title: "Supplier Contacts"
+        subtable_prices_title: "Supplier Prices"
+        return_to: "Back to Supplier"
       edit:
         title: "Edit Supplier"
         btn_show: "Show Supplier"

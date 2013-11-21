@@ -1,0 +1,7 @@
+<% prices.each do |w| %>
+<tr>
+  <td><%= w.product.product_code %> <%= w.product.main_description[0,40] %></td>
+  <td><%= w.code unless w.code.blank? %></td>
+  <td align="right"><%= number_to_currency(w.price, precision: 4, locale: :es) unless w.price.blank? %></td>
+</tr>
+<% end %>

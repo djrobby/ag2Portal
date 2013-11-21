@@ -1,5 +1,7 @@
 <% session[:return_to] = nil %>
 <% session[:return_to_url] = nil %>
+<% session[:return_to_prod] = nil %>
+<% session[:return_to_prod_url] = nil %>
 <%= render '/layouts/ag2_purchase/suppliersbreadcrumb' %>
 <%= render :partial => '/layouts/searchhead', :locals => { :title => t(".title"), :path => suppliers_path } %>
 

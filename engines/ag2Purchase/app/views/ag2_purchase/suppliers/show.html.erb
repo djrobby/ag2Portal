@@ -135,19 +135,28 @@ new_path: new_supplier_path, new_txt: t('ag2_purchase.suppliers.index.btn_new') 
 <%= render :partial => '/layouts/pagination', :locals => { :ivar => @contacts } %>
 <% end %>
 
-<% if false %><!-- Activate block removing if -->
+<table class="form-table">
+  <tbody>
+    <tr class="form-tr underlined-tr">
+      <td class="form-td-two left-winged">
+        <h4><%=t '.subtable_prices_title' %></h4>
+      </td>
+      <td class="form-td-two right-winged">
+        <%= render partial: '/layouts/ag2_products/supplierprices', locals: { supplier: @supplier } %>
+      </td>
+    </tr>
+  </tbody>
+</table>
 <% if (@prices.count > 0) %>
-<h4><%=t '.subtable_prices_title' %></h4>
 <table class="table table-condensed table-striped shrinked">
   <thead>
-    <%= render '/layouts/ag2_products/pricesheader' %>
+    <%= render '/layouts/ag2_products/pricessupplierheader' %>
   </thead>
   <tbody>
-    <%= render :partial => '/layouts/ag2_products/prices', :locals => { :prices => @prices } %>
+    <%= render :partial => '/layouts/ag2_products/pricessupplier', :locals => { :prices => @prices } %>
   </tbody>
 </table>
 <%= render :partial => '/layouts/pagination', :locals => { :ivar => @prices } %>
-<% end %>
 <% end %>
 
 <% if !session[:return_to].nil? %>
