@@ -210,6 +210,8 @@ es:
       mark: '*'
     error_notification:
       default_message: "Revise los siguientes problemas:"
+  select2:
+    no_matches: "No se encontraron resultados"
   devise:
     confirmations:
       confirmed: Tu cuenta ha sido satisfactoriamente confirmada.

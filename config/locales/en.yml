@@ -216,6 +216,8 @@ en:
       mark: '*'
     error_notification:
       default_message: "Please review the problems below:"
+  select2:
+    no_matches: "No matches found"
   devise:
     confirmations:
       confirmed: "Your account was successfully confirmed. You are now signed in."
