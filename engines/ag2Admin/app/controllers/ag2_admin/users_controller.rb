@@ -9,7 +9,13 @@ module Ag2Admin
     # GET /users
     # GET /users.json
     def index
-      @users = User.paginate(:page => params[:page], :per_page => per_page).order(sort_column + ' ' + sort_direction)
+      letter = params[:letter]
+
+      if letter.blank? || letter == "%"
+        @users = User.paginate(:page => params[:page], :per_page => per_page).order(sort_column + ' ' + sort_direction)
+      else
+        @users = User.where("name LIKE ?", "#{letter}%").paginate(:page => params[:page], :per_page => per_page).order(sort_column + ' ' + sort_direction)
+      end
 
       respond_to do |format|
         format.html # index.html.erb
