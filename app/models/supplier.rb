@@ -42,6 +42,7 @@ class Supplier < ActiveRecord::Base
   has_many :supplier_contacts, dependent: :destroy
   has_many :purchase_prices, dependent: :destroy
   has_many :products, :through => :purchase_prices
+  has_many :purchase_orders
 
   def fields_to_uppercase
     if !self.fiscal_id.blank?
@@ -83,10 +84,10 @@ class Supplier < ActiveRecord::Base
 
   def check_for_dependent_records
     # Check for orders
-#    if orders.count > 0
-#      errors.add(:base, I18n.t('activerecord.models.supplier.check_for_orders'))
-#      return false
-#    end
+    if orders.count > 0
+      errors.add(:base, I18n.t('activerecord.models.supplier.check_for_orders'))
+      return false
+    end
   end
 
   searchable do

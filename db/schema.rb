@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131119181327) do
+ActiveRecord::Schema.define(:version => 20131123124219) do
 
   create_table "activities", :force => true do |t|
     t.string   "description"
@@ -232,6 +232,16 @@ ActiveRecord::Schema.define(:version => 20131119181327) do
     t.string   "updated_by"
   end
 
+  create_table "insurances", :force => true do |t|
+    t.string   "name"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  add_index "insurances", ["name"], :name => "index_insurances_on_name"
+
   create_table "manufacturers", :force => true do |t|
     t.string   "name"
     t.datetime "created_at", :null => false
@@ -283,6 +293,18 @@ ActiveRecord::Schema.define(:version => 20131119181327) do
   add_index "offices", ["street_type_id"], :name => "index_offices_on_street_type_id"
   add_index "offices", ["town_id"], :name => "index_offices_on_town_id"
   add_index "offices", ["zipcode_id"], :name => "index_offices_on_zipcode_id"
+
+  create_table "order_statuses", :force => true do |t|
+    t.string   "name"
+    t.boolean  "approval"
+    t.boolean  "notification"
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  add_index "order_statuses", ["name"], :name => "index_order_statuses_on_name"
 
   create_table "payment_methods", :force => true do |t|
     t.string   "description"
@@ -380,6 +402,52 @@ ActiveRecord::Schema.define(:version => 20131119181327) do
   add_index "provinces", ["ine_cpro"], :name => "index_provinces_on_ine_cpro"
   add_index "provinces", ["region_id"], :name => "index_provinces_on_region_id"
 
+  create_table "purchase_order_items", :force => true do |t|
+    t.integer  "purchase_order_id"
+    t.integer  "product_id"
+    t.string   "code"
+    t.string   "description"
+    t.decimal  "quantity",          :precision => 12, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "price",             :precision => 12, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "discount_pct",      :precision => 6,  :scale => 2, :default => 0.0, :null => false
+    t.decimal  "discount",          :precision => 12, :scale => 4, :default => 0.0, :null => false
+    t.integer  "tax_type_id"
+    t.date     "delivery_date"
+    t.datetime "created_at",                                                        :null => false
+    t.datetime "updated_at",                                                        :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  add_index "purchase_order_items", ["code"], :name => "index_purchase_order_items_on_code"
+  add_index "purchase_order_items", ["delivery_date"], :name => "index_purchase_order_items_on_delivery_date"
+  add_index "purchase_order_items", ["description"], :name => "index_purchase_order_items_on_description"
+  add_index "purchase_order_items", ["product_id"], :name => "index_purchase_order_items_on_product_id"
+  add_index "purchase_order_items", ["purchase_order_id"], :name => "index_purchase_order_items_on_purchase_order_id"
+  add_index "purchase_order_items", ["tax_type_id"], :name => "index_purchase_order_items_on_tax_type_id"
+
+  create_table "purchase_orders", :force => true do |t|
+    t.string   "order_no"
+    t.integer  "supplier_id"
+    t.integer  "payment_method_id"
+    t.integer  "order_status_id"
+    t.date     "order_date"
+    t.string   "remarks"
+    t.decimal  "discount_pct",      :precision => 6,  :scale => 2, :default => 0.0, :null => false
+    t.decimal  "discount",          :precision => 12, :scale => 4, :default => 0.0, :null => false
+    t.string   "supplier_offer_no"
+    t.datetime "created_at",                                                        :null => false
+    t.datetime "updated_at",                                                        :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  add_index "purchase_orders", ["order_date"], :name => "index_purchase_orders_on_order_date"
+  add_index "purchase_orders", ["order_no"], :name => "index_purchase_orders_on_order_no"
+  add_index "purchase_orders", ["order_status_id"], :name => "index_purchase_orders_on_order_status_id"
+  add_index "purchase_orders", ["payment_method_id"], :name => "index_purchase_orders_on_payment_method_id"
+  add_index "purchase_orders", ["supplier_id"], :name => "index_purchase_orders_on_supplier_id"
+
   create_table "purchase_prices", :force => true do |t|
     t.integer  "product_id"
     t.integer  "supplier_id"
@@ -420,6 +488,16 @@ ActiveRecord::Schema.define(:version => 20131119181327) do
 
   add_index "roles", ["name", "resource_type", "resource_id"], :name => "index_roles_on_name_and_resource_type_and_resource_id"
   add_index "roles", ["name"], :name => "index_roles_on_name"
+
+  create_table "sexes", :force => true do |t|
+    t.string   "name"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  add_index "sexes", ["name"], :name => "index_sexes_on_name"
 
   create_table "shared_contact_types", :force => true do |t|
     t.string   "name"
@@ -899,6 +977,10 @@ ActiveRecord::Schema.define(:version => 20131119181327) do
     t.integer  "created_by"
     t.integer  "updated_by"
     t.string   "remarks"
+    t.decimal  "social_security_cost",      :precision => 12, :scale => 4, :default => 0.0, :null => false
+    t.string   "education"
+    t.integer  "sex_id"
+    t.integer  "insurance_id"
   end
 
   add_index "workers", ["affiliation_id"], :name => "index_workers_on_affiliation_id"
@@ -914,11 +996,13 @@ ActiveRecord::Schema.define(:version => 20131119181327) do
   add_index "workers", ["department_id"], :name => "index_workers_on_department_id"
   add_index "workers", ["first_name"], :name => "index_workers_on_first_name"
   add_index "workers", ["fiscal_id"], :name => "index_workers_on_fiscal_id"
+  add_index "workers", ["insurance_id"], :name => "index_workers_on_insurance_id"
   add_index "workers", ["last_name"], :name => "index_workers_on_last_name"
   add_index "workers", ["nomina_id"], :name => "index_workers_on_nomina_id"
   add_index "workers", ["office_id"], :name => "index_workers_on_office_id"
   add_index "workers", ["professional_group_id"], :name => "index_workers_on_professional_group_id"
   add_index "workers", ["province_id"], :name => "index_workers_on_province_id"
+  add_index "workers", ["sex_id"], :name => "index_workers_on_sex_id"
   add_index "workers", ["street_type_id"], :name => "index_workers_on_street_type_id"
   add_index "workers", ["town_id"], :name => "index_workers_on_town_id"
   add_index "workers", ["user_id"], :name => "index_workers_on_user_id"

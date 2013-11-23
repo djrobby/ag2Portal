@@ -12,6 +12,8 @@ class Worker < ActiveRecord::Base
   belongs_to :professional_group
   belongs_to :worker_type
   belongs_to :department
+  belongs_to :sex
+  belongs_to :insurance
   attr_accessible :building, :own_cellular, :email, :ending_at, :first_name,
                   :fiscal_id, :floor, :floor_office, :last_name, :own_phone,
                   :starting_at, :street_name, :street_number, :worker_code,
@@ -23,7 +25,8 @@ class Worker < ActiveRecord::Base
                   :contribution_account_code, :position, :corp_phone,
                   :corp_cellular_long, :corp_cellular_short, :corp_extension,
                   :department_id, :nomina_id, :gross_salary, :variable_salary,
-                  :created_by, :updated_by, :remarks
+                  :created_by, :updated_by, :remarks, :sex_id, :insurance_id,
+                  :social_security_cost, :education
   has_attached_file :avatar, :styles => { :medium => "96x96>", :small => "64x64>" }, :default_url => "/images/missing/:style/user.png"
 
   has_paper_trail
@@ -83,6 +86,18 @@ class Worker < ActiveRecord::Base
     full_name
   end
 
+  def total_cost
+    gross_salary + social_security_cost
+  end
+
+  def age
+    (Date.current - borned_on).round / 365
+  end
+  
+  def years_worked
+    (Date.current - issue_starting_at).round / 365
+  end
+  
   #
   # Records navigator
   #
