@@ -229,6 +229,11 @@ th .current:focus {
 .form-label {
   font-weight: bold;
 }
+/* Special top padded form label for use under sel2 dropdown */
+.form-label-under-sel2 {
+  font-weight: bold;
+  margin-top: 10px;
+}
 /* Form tables */
 .form-table {
   width: 100%;

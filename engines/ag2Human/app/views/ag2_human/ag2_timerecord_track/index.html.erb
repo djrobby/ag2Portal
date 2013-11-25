@@ -6,8 +6,7 @@
     });
     $('.sel2').select2({
       formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
-      containerCssClass: 'left-winged',
-      dropdownAutoWidth: true
+      containerCssClass: 'left-winged'
     });
   }); 
 
@@ -54,6 +53,7 @@
         worker = "0";
       jQuery.getJSON('update_workers_select_from_office/' + worker, function(data) {
         $("#Worker").html("");
+        $("#Worker").select2("val", "");
         $("#Worker").append($('<option></option>').val("").html(""));
         $.each(data, function(id, option) {
           $("#Worker").append($('<option></option>').val(option.id).html(option.last_name + ', ' + option.first_name));
@@ -98,7 +98,7 @@
       <%= label_tag I18n.t("ag2_human.time_records.index.label_worker"), nil, :class => 'form-label' %>
       <%= select_tag "Worker", options_from_collection_for_select(@workers, "id", "full_name"), :prompt => "", :class => 'x-large-text-field sel2' %>
       <!-- Dates -->
-      <%= label_tag I18n.t("ag2_human.time_records.index.label_from"), nil, :class => 'form-label' %>
+      <%= label_tag I18n.t("ag2_human.time_records.index.label_from"), nil, :class => 'form-label-under-sel2' %>
       <%= text_field_tag "From", params[:date], :class =>  'mid-text-field date_picker centered' %>
       <%= label_tag I18n.t("ag2_human.time_records.index.label_to"), nil, :class => 'form-label' %>
       <%= text_field_tag "To", params[:date], :class =>  'mid-text-field date_picker centered' %>

@@ -1,3 +1,17 @@
+<script>
+  $(document).ready(function() {
+    $('.date_picker').datepicker({
+      format : 'dd/mm/yyyy',
+      weekStart : 1
+    });
+    $('.sel2').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      dropdownCssClass: 'shrinked',
+      dropdownAutoWidth: true
+    });
+  });
+</script>
+ 
 <%= render '/layouts/ag2_purchase/contactsbreadcrumb' %>
 <%= render :partial => '/layouts/searchhead', :locals => { :title => t(".title"), :path => supplier_contacts_path } %>
 
@@ -8,9 +22,9 @@
         <%= form_tag "supplier_contacts", :method => 'get' do %>
         <!-- Supplier -->
         <%= label_tag t(".label_supplier"), nil, :class => 'form-label' %>
-        <%= select_tag "Supplier", options_from_collection_for_select(Supplier.order('name').all, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked' %>
+        <%= select_tag "Supplier", options_from_collection_for_select(Supplier.order('name').all, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
         <!-- Others -->
-        <%= label_tag t(".label_others"), nil, :class => 'form-label' %>
+        <%= label_tag t(".label_others"), nil, :class => 'form-label-under-sel2' %>
         <%= text_field_tag :search, params[:search], :class => 'x-large-text-field shrinked' %>
         <!-- Submit -->
         <%= submit_tag t(".btn_apply"), :class => 'btn btn-primary' %>

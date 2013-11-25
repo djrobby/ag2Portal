@@ -1,7 +1,8 @@
 <script>
   $(document).ready(function() {
     $('.sel2').select2({
-      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; }
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      dropdownAutoWidth: true
     });
   });
 </script>
@@ -9,14 +10,12 @@
 <%= simple_form_for @supplier_contact, :html => {:class => 'form-vertical well' } do |f| %>
 <%= f.error_notification %>
 <%= display_base_errors resource %>
-<div>
-  <label class="multi-field-label-two"> <%= f.input :last_name, :autofocus => true, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+<%= f.association :supplier, collection: Supplier.all(order: 'name'), :input_html => { :class => 'x-large-text-field sel2' }, :label_html => { :class => 'form-label' } %>
+<div style="">
+  <label class="multi-field-label-two"> <%= f.input :last_name, :autofocus => true, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label-under-sel2' } %> </label>
   <label class="multi-field-label-two"> <%= f.input :first_name, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
 </div>
-<div>
-  <label class="multi-field-label-two"> <%= f.association :supplier, collection: Supplier.all(order: 'name'), :input_html => { :class => 'x-large-text-field sel2' }, :label_html => { :class => 'form-label' } %> </label>
-  <label class="multi-field-label-two"><%= f.input :fiscal_id, :input_html => { :class => 'large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
-</div>
+<%= f.input :fiscal_id, :input_html => { :class => 'mid-text-field' }, :label_html => { :class => 'form-label' } %>
 <div>
   <label class="multi-field-label-two"> <%= f.input :position, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
   <label class="multi-field-label-two"> <%= f.input :department, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
