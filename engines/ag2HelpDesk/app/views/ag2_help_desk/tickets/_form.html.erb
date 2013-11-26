@@ -4,6 +4,9 @@
       format : 'dd/mm/yyyy',
       weekStart : 1
     });
+    $('.sel2').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; }
+    });
   });
 
   jQuery(function($) {
@@ -33,8 +36,8 @@
 <%= f.input :ticket_subject, :input_html => { :class => 'large-text-field', :maxlength => 20 }, :label_html => { :class => 'form-label' } %>
 <%= f.input :ticket_message, :as => :text, :input_html => { :class => 'x-large-text-field', :rows => 3 }, :label_html => { :class => 'form-label' } %>
 <div>
-  <label class="multi-field-label-two"> <%= f.input :created_by, collection: User.all(order: 'email'), :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
-  <label class="multi-field-label-two"> <%= f.input :updated_by, collection: User.all(order: 'email'), :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.input :created_by, collection: User.all(order: 'email'), :input_html => { :class => 'x-large-text-field sel2' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.input :updated_by, collection: User.all(order: 'email'), :input_html => { :class => 'x-large-text-field sel2' }, :label_html => { :class => 'form-label' } %> </label>
 </div>
 <div>
   <label class="multi-field-label-two"> <%= f.association :office, collection: Office.all(order: 'name'), :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
