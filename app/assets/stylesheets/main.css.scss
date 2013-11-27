@@ -269,6 +269,10 @@ span.validateicon span {
 span.validateicon input {
   padding-right: 16px;
 }
+/* Special top padded form button for use under sel2 dropdown */
+.form-button-under-sel2 {
+  margin-top: 10px;
+}
 
 /*
  * Bands - Toolbars
