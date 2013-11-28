@@ -1,0 +1,43 @@
+<%= render '/layouts/ag2_admin/departmentsbreadcrumb' %>
+
+<h3><%=t '.title' %></h3>
+<table class="table">
+  <tbody>
+    <tr>
+      <td>Id:</td>
+      <td><%= @department.id %></td>
+      <td><%=t 'activerecord.attributes.department.code' %>:</td>
+      <td><%= @department.code %></td>
+    </tr>
+    <tr>
+      <td><%=t 'activerecord.attributes.department.name' %>:</td>
+      <td><%= @department.name %></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @department } %>
+    <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @department } %>
+  </tbody>
+</table>
+
+<%= render partial: '/layouts/crud/update_delete_new', locals:
+{ model: Department, update_path: edit_department_path(@department), update_txt: t('.btn_edit'),
+delete_path: @department, delete_txt: t('.btn_delete'), msg: t("activerecord.models.department.one"), txt: @department.name,
+new_path: new_department_path, new_txt: t('ag2_admin.departments.index.btn_new') } %>
+
+<% if (@areas.count > 0) %>
+<h4><%=t '.subtable_title' %></h4>
+<table class="table table-condensed table-striped">
+  <thead>
+    <%= render '/layouts/ag2_admin/workersheader' %>
+  </thead>
+  <tbody>
+    <% session[:return_to] = I18n.t('ag2_admin.departments.show.return_to') %>
+    <% session[:return_to_url] = "#{request.protocol}#{request.host_with_port}#{request.fullpath}" %>
+    <%= render :partial => '/layouts/@areas/areas', :locals => { :workers => @areas } %>
+  </tbody>
+</table>
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @areas } %>
+<% end %>
+
+<%= link_to I18n.t('ag2_admin.departments.back_to_main_page'), departments_path %>

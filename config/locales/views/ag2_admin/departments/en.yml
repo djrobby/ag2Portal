@@ -1,0 +1,20 @@
+en:
+  ag2_admin:
+    departments:
+      index:
+        title: "Departments"
+        btn_new: "New Department"
+        go_to_areas: "Go to ag2Areas"
+        back_to_root: "Back to ag2Admin"
+      show:
+        title: "Department"
+        btn_edit: "Edit Department"
+        btn_delete: "Delete Department"
+        subtable_title: "Department Areas"
+        return_to: "Back to Department"
+      edit:
+        title: "Edit Department"
+        btn_show: "Show Department"
+      new:
+        title: "New Department"
+      back_to_main_page: "Back to Departments"

@@ -10,6 +10,7 @@ class Department < ActiveRecord::Base
 
   before_validation :fields_to_uppercase
 
+  has_many :areas, dependent: :destroy
   has_many :workers
   has_many :corp_contacts
   def fields_to_uppercase

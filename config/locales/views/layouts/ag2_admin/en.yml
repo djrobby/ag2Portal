@@ -9,3 +9,5 @@ en:
         item: "Type"
       taxtypes:
         item: "Type"
+      departments:
+        items: "Departments"
