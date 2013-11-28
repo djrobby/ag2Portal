@@ -1,6 +1,6 @@
 class Area < ActiveRecord::Base
   belongs_to :department
-  attr_accessible :name
+  attr_accessible :name, :department_id
 
   has_paper_trail
 

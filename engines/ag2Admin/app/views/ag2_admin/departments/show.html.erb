@@ -29,12 +29,16 @@ new_path: new_department_path, new_txt: t('ag2_admin.departments.index.btn_new')
 <h4><%=t '.subtable_title' %></h4>
 <table class="table table-condensed table-striped">
   <thead>
-    <%= render '/layouts/ag2_admin/workersheader' %>
+    <tr>
+      <th><%= t 'activerecord.attributes.area.name' %></th>
+    </tr>
   </thead>
   <tbody>
-    <% session[:return_to] = I18n.t('ag2_admin.departments.show.return_to') %>
-    <% session[:return_to_url] = "#{request.protocol}#{request.host_with_port}#{request.fullpath}" %>
-    <%= render :partial => '/layouts/@areas/areas', :locals => { :workers => @areas } %>
+    <% @areas.each do |area| %>
+    <tr>
+      <td><%= link_to area.name, area %></td>
+    </tr>
+    <% end %>
   </tbody>
 </table>
 <%= render :partial => '/layouts/pagination', :locals => { :ivar => @areas } %>

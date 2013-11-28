@@ -11,3 +11,5 @@ en:
         item: "Type"
       departments:
         items: "Departments"
+      areas:
+        item: "Area"

@@ -1,0 +1,13 @@
+en:
+  activerecord:
+    models:
+      area:
+        zero:  Areas
+        one:   Area
+        few:   Areas
+        other: Areas
+    attributes:
+      area:
+        name: "Name"
+        department: "Department"
+        department_id: "Department"

@@ -1,0 +1,20 @@
+es:
+  ag2_admin:
+    areas:
+      index:
+        title: "Áreas"
+        btn_new: "Nueva Área"
+        go_to_departments: "Ir a ag2Departments"
+        back_to_root: "Volver a ag2Admin"
+      show:
+        title: "Área"
+        btn_edit: "Editar Área"
+        btn_delete: "Borrar Área"
+        return_to: "Volver a Área"
+        show_to: "Ver Departamento"
+      edit:
+        title: "Editar Área"
+        btn_show: "Ver Área"
+      new:
+        title: "Nuevo Área"
+      back_to_main_page: "Volver a Áreas"

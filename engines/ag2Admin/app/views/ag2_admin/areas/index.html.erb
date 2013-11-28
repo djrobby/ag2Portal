@@ -1,21 +1,28 @@
-<h1>Listing areas</h1>
+<%= render '/layouts/ag2_admin/areasbreadcrumb' %>
 
-<table>
-  <tr>
-    <th></th>
-    <th></th>
-    <th></th>
-  </tr>
-
-<% @areas.each do |area| %>
-  <tr>
-    <td><%= link_to 'Show', area %></td>
-    <td><%= link_to 'Edit', edit_area_path(area) %></td>
-    <td><%= link_to 'Destroy', area, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-  </tr>
-<% end %>
-</table>
-
-<br />
-
-<%= link_to 'New Area', new_area_path %>
+<h3><%=t '.title' %></h3>
+<div class="span7">
+  <table class="table table-condensed table-striped">
+    <thead>
+      <tr>
+        <th><%= sortable "name", t('activerecord.attributes.area.name') %></th>
+        <th><%= sortable "department_id", t('activerecord.attributes.department.department') %></th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @areas.each do |t| %>
+      <tr>
+        <td><%= link_to t.name, t %></td>
+        <td><%= t.department.name %></td>
+        <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => Area, :path => edit_area_path(t) } %>
+        <%= render :partial => '/layouts/crud/delete', :locals => { :model => Area, :path => t, :msg => I18n.t("activerecord.models.area.one"), :txt => t.name } %> </td>
+      </tr>
+      <% end %>
+    </tbody>
+  </table>
+  <%= render :partial => '/layouts/pagination', :locals => { :ivar => @areas } %>
+  <%= render :partial => '/layouts/crud/new', :locals => { :model => Area, :path => new_area_path, :txt => I18n.t("ag2_admin.areas.index.btn_new") } %>
+  <%= link_to I18n.t("ag2_admin.areas.index.go_to_departments"), departments_path %> |
+  <%= link_to I18n.t("ag2_admin.areas.index.back_to_root"), ag2_admin.root_path %>
+</div>

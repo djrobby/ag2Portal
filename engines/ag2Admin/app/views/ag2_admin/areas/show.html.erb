@@ -1,5 +1,29 @@
-<p id="notice"><%= notice %></p>
+<%= render '/layouts/ag2_admin/areasbreadcrumb' %>
 
+<h3><%=t '.title' %></h3>
+<table class="table">
+  <tbody>
+    <tr>
+      <td>Id:</td>
+      <td><%= @area.id %></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><%=t 'activerecord.attributes.area.name' %>:</td>
+      <td><%= @area.name %></td>
+      <td><%=t 'activerecord.attributes.area.department' %>:</td>
+      <td><%= @area.department.name %></td>
+    </tr>
+    <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @area } %>
+    <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @area } %>
+  </tbody>
+</table>
 
-<%= link_to 'Edit', edit_area_path(@area) %> |
-<%= link_to 'Back', areas_path %>
+<%= render partial: '/layouts/crud/update_delete_new', locals:
+{ model: Area, update_path: edit_area_path(@area), update_txt: t('.btn_edit'),
+delete_path: @area, delete_txt: t('.btn_delete'), msg: t("activerecord.models.area.one"), txt: @area.name,
+new_path: new_area_path, new_txt: t('ag2_admin.areas.index.btn_new') } %>
+
+<%= link_to I18n.t('ag2_admin.areas.show.show_to'), @area.department %> |
+<%= link_to I18n.t('ag2_admin.areas.back_to_main_page'), areas_path %>

@@ -42,6 +42,8 @@ class Ability
       can :crud, Entity
       can :crud, EntityType
       can :crud, TaxType
+      can :crud, Department
+      can :crud, Area
     elsif user.has_role? :ag2Admin_Guest
       can :read, Company
       can :read, Country
@@ -54,6 +56,8 @@ class Ability
       can :read, Entity
       can :read, EntityType
       can :read, TaxType
+      can :read, Department
+      can :read, Area
     elsif user.has_role? :ag2Admin_Banned
       cannot :manage, Company
       cannot :manage, Country
@@ -66,6 +70,8 @@ class Ability
       cannot :manage, Entity
       cannot :manage, EntityType
       cannot :manage, TaxType
+      cannot :manage, Department
+      cannot :manage, Area
     end
     # ag2Directory
     if user.has_role? :ag2Directory_User
@@ -141,40 +147,52 @@ class Ability
     end
     # ag2Purchase
     if user.has_role? :ag2Purchase_User
-      can :crud, Supplier
       can :crud, Activity
       can :crud, PaymentMethod
+      can :crud, Supplier
       can :crud, SupplierContact
+      can :crud, PurchasePrice
     elsif user.has_role? :ag2Purchase_Guest
-      can :read, Supplier
       can :read, Activity
       can :read, PaymentMethod
+      can :read, Supplier
       can :read, SupplierContact
+      can :read, PurchasePrice
     elsif user.has_role? :ag2Purchase_Banned
-      cannot :manage, Supplier
       cannot :manage, Activity
       cannot :manage, PaymentMethod
+      cannot :manage, Supplier
       cannot :manage, SupplierContact
+      cannot :manage, PurchasePrice
     end
     # ag2Products
-    if user.has_role? :ag2Purchase_User
+    if user.has_role? :ag2Products_User
       can :crud, Manufacturer
       can :crud, Measure
       can :crud, ProductFamily
       can :crud, ProductType
       can :crud, Product
-    elsif user.has_role? :ag2Purchase_Guest
+      can :crud, PurchasePrice
+      can :crud, Store
+      can :crud, Stock
+    elsif user.has_role? :ag2Products_Guest
       can :read, Manufacturer
       can :read, Measure
       can :read, ProductFamily
       can :read, ProductType
       can :read, Product
-    elsif user.has_role? :ag2Purchase_Banned
+      can :read, PurchasePrice
+      can :read, Store
+      can :read, Stock
+    elsif user.has_role? :ag2Products_Banned
       cannot :manage, Manufacturer
       cannot :manage, Measure
       cannot :manage, ProductFamily
       cannot :manage, ProductType
       cannot :manage, Product
+      cannot :manage, PurchasePrice
+      cannot :manage, Store
+      cannot :manage, Stock
     end
 
   # Define abilities for the passed in user here. For example:

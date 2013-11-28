@@ -1,6 +1,8 @@
-<h1>Editing area</h1>
+<%= render '/layouts/ag2_admin/areasbreadcrumb' %>
+
+<h3><%=t '.title' %></h3>
 
 <%= render 'form' %>
 
-<%= link_to 'Show', @area %> |
-<%= link_to 'Back', areas_path %>
+<%= link_to I18n.t('ag2_admin.areas.edit.btn_show'), @area %> |
+<%= link_to I18n.t('ag2_admin.areas.back_to_main_page'), areas_path %>
