@@ -2,10 +2,10 @@ es:
   activerecord:
     models:
       department:
-        zero:  Departmentos
-        one:   Departmento
-        few:   Departmentos
-        other: Departmentos
+        zero:  Departamentos
+        one:   Departamento
+        few:   Departamentos
+        other: Departamentos
     attributes:
       department:
         code: "Código"
