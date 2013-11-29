@@ -22,7 +22,7 @@
     </tbody>
   </table>
   <%= render :partial => '/layouts/pagination', :locals => { :ivar => @departments } %>
-  <%= render :partial => '/layouts/crud/new', :locals => { :model => Department, :path => new_department_path, :txt => I18n.t("ag2_human.departments.index.btn_new") } %>
+  <%= render :partial => '/layouts/crud/new', :locals => { :model => Department, :path => new_department_path, :txt => t(".btn_new") } %>
   <%= link_to I18n.t("ag2_human.departments.index.go_to_workers"), workers_path %> |
   <%= link_to I18n.t("ag2_human.departments.index.back_to_root"), ag2_human.root_path %>
 </div>

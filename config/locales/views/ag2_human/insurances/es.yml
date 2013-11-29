@@ -1,0 +1,20 @@
+es:
+  ag2_human:
+    insurances:
+      index:
+        title: "Seguros"
+        btn_new: "Nuevo Seguro"
+        go_to_workers: "Ir a ag2Workers"
+        back_to_root: "Volver a ag2Human"
+      show:
+        title: "Seguro"
+        btn_edit: "Editar Seguro"
+        btn_delete: "Borrar Seguro"
+        subtable_title: "Trabajadores del Seguro"
+        return_to: "Volver a Seguro"
+      edit:
+        title: "Editar Seguro"
+        btn_show: "Ver Seguro"
+      new:
+        title: "Nuevo Seguro"
+      back_to_main_page: "Volver a Seguros"

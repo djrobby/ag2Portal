@@ -1,0 +1,37 @@
+<%= render '/layouts/ag2_human/insurancesbreadcrumb' %>
+
+<h3><%=t '.title' %></h3>
+<table class="table">
+  <tbody>
+    <tr>
+      <td>Id:</td>
+      <td><%= @insurance.id %></td>
+      <td><%=t :"activerecord.attributes.insurance.name" %>:</td>
+      <td><%= @insurance.name.titleize %></td>
+    </tr>
+    <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @insurance } %>
+    <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @insurance } %>
+  </tbody>
+</table>
+
+<%= render partial: '/layouts/crud/update_delete_new', locals:
+{ model: Insurance, update_path: edit_insurance_path(@insurance), update_txt: t('.btn_edit'),
+delete_path: @insurance, delete_txt: t('.btn_delete'), msg: t("activerecord.models.insurance.one"), txt: @insurance.name.titleize,
+new_path: new_insurance_path, new_txt: t('ag2_human.insurances.index.btn_new') } %>
+
+<% if (@workers.count > 0) %>
+<h4><%=t '.subtable_title' %></h4>
+<table class="table table-condensed table-striped">
+  <thead>
+    <%= render '/layouts/ag2_human/workersheader' %>
+  </thead>
+  <tbody>
+    <% session[:return_to] = I18n.t('ag2_human.insurances.show.return_to') %>
+    <% session[:return_to_url] = "#{request.protocol}#{request.host_with_port}#{request.fullpath}" %>
+    <%= render :partial => '/layouts/ag2_human/workers', :locals => { :workers => @workers } %>
+  </tbody>
+</table>
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @workers } %>
+<% end %>
+
+<%= link_to I18n.t("ag2_human.insurances.back_to_main_page"), insurances_path %>

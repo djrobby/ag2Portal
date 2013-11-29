@@ -1,0 +1,12 @@
+en:
+  activerecord:
+    models:
+      insurance:
+        zero:  Insurances
+        one:   Insurance
+        few:   Insurances
+        other: Insurances
+        check_for_products: "Measure cannot be destroyed while linked workers exist."
+    attributes:
+      insurance:
+        name: "Name"

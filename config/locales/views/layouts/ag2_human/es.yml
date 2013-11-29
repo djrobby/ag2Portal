@@ -22,4 +22,7 @@ es:
         item: "Tipo"
       wtypes:
         items: "Tipos de trabajador"
+      insurances:
+        items: "Seguros"
+        item: "Seguro"
       track: "Control&Seguimiento"

@@ -95,6 +95,7 @@ class Ability
       can :crud, ContractType
       can :crud, DegreeType
       can :crud, Department
+      can :crud, Insurance
       can :crud, ProfessionalGroup
       can :crud, TimeRecord
       can :crud, TimerecordCode
@@ -106,6 +107,7 @@ class Ability
       can :read, ContractType
       can :read, DegreeType
       can :read, Department
+      can :read, Insurance
       can :read, ProfessionalGroup
       can :read, TimeRecord
       can :read, TimerecordCode
@@ -117,6 +119,7 @@ class Ability
       cannot :manage, ContractType
       cannot :manage, DegreeType
       cannot :manage, Department
+      cannot :manage, Insurance
       cannot :manage, ProfessionalGroup
       cannot :manage, TimeRecord
       cannot :manage, TimerecordCode

@@ -87,7 +87,7 @@ class Worker < ActiveRecord::Base
   end
 
   def total_cost
-    gross_salary + social_security_cost
+    gross_salary + variable_salary + social_security_cost
   end
 
   def age
@@ -95,7 +95,11 @@ class Worker < ActiveRecord::Base
   end
   
   def years_worked
-    (Date.current - issue_starting_at).round / 365
+    if ending_at.blank?
+      (Date.current - issue_starting_at).round / 365
+    else
+      (ending_at - issue_starting_at).round / 365
+    end
   end
   
   #

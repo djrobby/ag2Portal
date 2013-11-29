@@ -22,4 +22,7 @@ en:
         item: "Type"
       wtypes:
         items: "Worker types"
+      insurances:
+        items: "Insurances"
+        item: "Insurance"
       track: "Control&Tracking"

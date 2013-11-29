@@ -33,22 +33,22 @@
       <td><%= @worker.borned_on.strftime("%d/%m/%Y") unless @worker.borned_on.nil? %></td>
     </tr>
     <tr>
+      <td><%= t :"activerecord.attributes.worker.years_worked" %>:</td>
+      <td><%= @worker.years_worked %></td>
+      <td><%= t :"activerecord.attributes.worker.age" %>:</td>
+      <td><%= @worker.age %></td>
+    </tr>
+    <tr>
       <td><%= t :"activerecord.attributes.worker.company" %>:</td>
       <td><%= @worker.company.name unless @worker.company.nil? %></td>
       <td><%= t :"activerecord.attributes.worker.office" %>:</td>
       <td><%= @worker.office.name unless @worker.office.nil? %></td>
     </tr>
     <tr>
-      <td><%= t :"activerecord.attributes.worker.worker_type" %>:</td>
-      <td><%= @worker.worker_type.description.titleize unless @worker.worker_type.nil? %></td>
-      <td><%= t :"activerecord.attributes.worker.collective_agreement" %>:</td>
-      <td><%= @worker.collective_agreement.name unless @worker.collective_agreement.nil? %></td>
-    </tr>
-    <tr>
       <td><%= t :"activerecord.attributes.worker.contract_type" %>:</td>
       <td><%= @worker.contract_type.name unless @worker.contract_type.nil? %></td>
-      <td></td>
-      <td></td>
+      <td><%= t :"activerecord.attributes.worker.collective_agreement" %>:</td>
+      <td><%= @worker.collective_agreement.name unless @worker.collective_agreement.nil? %></td>
     </tr>
     <tr>
       <td><%= t :"activerecord.attributes.worker.affiliation_id" %>:</td>
@@ -61,6 +61,12 @@
       <td><%= @worker.professional_group.name unless @worker.professional_group.nil? %></td>
       <td><%= t :"activerecord.attributes.worker.degree_type" %>:</td>
       <td><%= @worker.degree_type.name unless @worker.degree_type.nil? %></td>
+    </tr>
+    <tr>
+      <td><%= t :"activerecord.attributes.worker.worker_type" %>:</td>
+      <td><%= @worker.worker_type.description.titleize unless @worker.worker_type.nil? %></td>
+      <td><%= t :"activerecord.attributes.worker.insurance" %>:</td>
+      <td><%= @worker.insurance.name.titleize unless @worker.insurance.nil? %></td>
     </tr>
     <tr>
       <td><%= t :"activerecord.attributes.worker.department" %>:</td>
@@ -86,12 +92,6 @@
       <td></td>
       <td></td>
     </tr>
-    <tr>
-      <td><%= t :"activerecord.attributes.worker.remarks" %>:</td>
-      <td><%= @worker.remarks %></td>
-      <td></td>
-      <td></td>
-    </tr>
     <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @worker } %>
     <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @worker } %>
   </tbody>
@@ -105,6 +105,12 @@
       <td><%= number_to_currency(@worker.gross_salary, :locale => :es) %></td>
       <td><%= t :"activerecord.attributes.worker.variable_salary" %>:</td>
       <td><%= number_to_currency(@worker.variable_salary, :locale => :es) %></td>
+    </tr>
+    <tr>
+      <td><%= t :"activerecord.attributes.worker.social_security_cost" %>:</td>
+      <td><%= number_to_currency(@worker.social_security_cost, :locale => :es) %></td>
+      <td><%= t :"activerecord.attributes.worker.total_cost" %>:</td>
+      <td><%= number_to_currency(@worker.total_cost, :locale => :es) %></td>
     </tr>
     <tr>
       <td><%= t :"activerecord.attributes.worker.nomina_id" %>:</td>
@@ -144,6 +150,21 @@
       <td><%= @worker.town.name %></td>
       <td><%= t :"activerecord.attributes.worker.province" %>:</td>
       <td><%= @worker.province.name_and_region %></td>
+    </tr>
+    <tr>
+      <td><%= t :"activerecord.attributes.worker.sex" %>:</td>
+      <td><%= @worker.sex.name unless @worker.sex.blank? %></td>
+      <td><%= t :"activerecord.attributes.worker.education" %>:</td>
+      <td><%= @worker.education unless @worker.education.blank? %></td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="table">
+  <tbody>
+    <tr>
+      <td style="width: 12%"><%= t :"activerecord.attributes.worker.remarks" %>:</td>
+      <td style="width: 88%"><%= @worker.remarks unless @worker.remarks.blank? %></td>
     </tr>
   </tbody>
 </table>

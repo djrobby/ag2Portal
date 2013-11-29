@@ -39,6 +39,7 @@ Ag2Human::Engine.routes.draw do
     resources :timerecord_codes
     resources :timerecord_types
     resources :time_records
+    resources :insurances
     
     # Root
     root :to => 'home#index'

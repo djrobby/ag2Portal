@@ -1,0 +1,20 @@
+en:
+  ag2_human:
+    insurances:
+      index:
+        title: "Insurances"
+        btn_new: "New Insurance"
+        go_to_workers: "Go to ag2Workers"
+        back_to_root: "Back to ag2Human"
+      show:
+        title: "Insurance"
+        btn_edit: "Edit Insurance"
+        btn_delete: "Delete Insurance"
+        subtable_title: "Insurance Workers"
+        return_to: "Back to Insurance"
+      edit:
+        title: "Edit Insurance"
+        btn_show: "Show Insurance"
+      new:
+        title: "New Insurance"
+      back_to_main_page: "Back to Insurances"

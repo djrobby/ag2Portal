@@ -1,0 +1,12 @@
+es:
+  activerecord:
+    models:
+      insurance:
+        zero:  Seguros
+        one:   Seguro
+        few:   Seguros
+        other: Seguros
+        check_for_workers: "Seguro no puede ser eliminado mientras existan trabajadores vinculados."
+    attributes:
+      insurance:
+        name: "Nombre"
