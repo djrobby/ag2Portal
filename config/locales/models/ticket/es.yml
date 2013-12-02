@@ -26,6 +26,8 @@ es:
         attachment: "Adjunto (Imágen)"
         attach_exist: "El archivo adjunto puede ser visto al final de esta página."
         id: "Nº"
+        created_by: "Creado por"
+        updated_by: "Actualizado por"
     errors:
       ticket:
         popup: "Error: ¡Solicitud no pudo ser creada!"

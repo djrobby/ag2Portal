@@ -26,6 +26,8 @@ en:
         attachment: "Attachment (Image)"
         attach_exist: "The attachment can be seen at the bottom of this page."
         id: "#"
+        created_by: "Created by"
+        updated_by: "Updated by"
     errors:
       ticket:
         popup: "Error: Ticket cannot be created!"
