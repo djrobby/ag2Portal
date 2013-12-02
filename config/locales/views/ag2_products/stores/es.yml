@@ -4,7 +4,7 @@ es:
       index:
         title: "Almacenes"
         btn_new: "Nueva Almacén"
-        back_to_root: "Volver a ag2Products"
+        back_to_root: "Volver a ag2Logistics"
       show:
         title: "Almacén"
         btn_edit: "Editar Almacén"

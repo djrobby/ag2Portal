@@ -4,7 +4,7 @@ en:
       index:
         title: "Stocks"
         btn_new: "New Stock"
-        back_to_root: "Back to ag2Products"
+        back_to_root: "Back to ag2Logistics"
         back_to_main_app: "Back to Product"
         label_product: "Product"
         label_store: "Store"

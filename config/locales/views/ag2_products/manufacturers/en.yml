@@ -4,7 +4,7 @@ en:
       index:
         title: "Manufacturers"
         btn_new: "New Manufacturer"
-        back_to_root: "Back to ag2Products"
+        back_to_root: "Back to ag2Logistics"
       show:
         title: "Manufacturer"
         btn_edit: "Edit Manufacturer"

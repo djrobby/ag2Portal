@@ -4,7 +4,7 @@ en:
       index:
         title: "Products"
         btn_new: "New Product"
-        back_to_root: "Back to ag2Products"
+        back_to_root: "Back to ag2Logistics"
         label_type: "Type"
         label_family: "Family"
         label_measure: "Measure"

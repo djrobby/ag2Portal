@@ -4,7 +4,7 @@ es:
       index:
         title: "Unidades de medida"
         btn_new: "Nueva Unidad de medida"
-        back_to_root: "Volver a ag2Products"
+        back_to_root: "Volver a ag2Logistics"
       show:
         title: "Unidad de medida"
         btn_edit: "Editar Unidad de medida"

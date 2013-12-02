@@ -4,7 +4,7 @@ es:
       index:
         title: "Tipos de producto"
         btn_new: "Nuevo Tipo de producto"
-        back_to_root: "Volver a ag2Products"
+        back_to_root: "Volver a ag2Logistics"
       show:
         title: "Tipo de producto"
         btn_edit: "Editar Tipo de producto"

@@ -5,29 +5,29 @@
   <!-- Apps 1 -->
   <li class="span4">
     <% if (session[:resolution] == "LD")%>
-    <a href="<%= products_path %>" class="thumbnail centered"><img src="/assets/icon/ag2Products.png" width="48" height="48" alt="<%=t :"ag2_products.home.index.products" %>" /><h5 class="h5-narrow"><%=t :"ag2_products.home.index.products" %></h5></a>
+    <a href="<%= products_path %>" class="thumbnail centered"><img src="/assets/icon/ag2Products.png" width="48" height="48" alt="ag2Products" /><h5 class="h5-narrow">ag2Products</h5></a>
     <% elsif session[:resolution] == "SD" %>
-    <a href="<%= products_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/ag2Products.png" width="96" height="96" alt="<%=t :"ag2_products.home.index.products" %>" /><h5 class="h5-narrow"><%=t :"ag2_products.home.index.products" %></h5></a>
+    <a href="<%= products_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/ag2Products.png" width="96" height="96" alt="ag2Products" /><h5 class="h5-narrow">ag2Products</h5></a>
     <% else %>
-    <a href="<%= products_path %>" class="thumbnail centered"><img src="/assets/pict/ag2Products.png" width="128" height="128" alt="<%=t :"ag2_products.home.index.products" %>" /><h5 class="h5-narrow"><%=t :"ag2_products.home.index.products" %></h5></a>
+    <a href="<%= products_path %>" class="thumbnail centered"><img src="/assets/pict/ag2Products.png" width="128" height="128" alt="ag2Products" /><h5 class="h5-narrow">ag2Products</h5></a>
     <% end %>
   </li>
   <li class="span4">
     <% if (session[:resolution] == "LD")%>
-    <a href="<%= ag2_purchase.root_path %>" class="thumbnail centered"><img src="/assets/icon/ag2Purchase.png" width="48" height="48" alt="ag2Purchase" /><h5 class="h5-narrow">ag2Purchase</h5></a>
+    <a data-toggle="modal" href="#notfound" class="thumbnail centered"><img src="/assets/icon/ag2Receipts.png" width="48" height="48" alt="ag2ReceiptNotes" /><h5 class="h5-narrow">ag2ReceiptNotes</h5></a>
     <% elsif session[:resolution] == "SD" %>
-    <a href="<%= ag2_purchase.root_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/ag2Purchase.png" width="96" height="96" alt="ag2Purchase" /><h5 class="h5-narrow">ag2Purchase</h5></a>
+    <a data-toggle="modal" href="#notfound" class="thumbnail centered"><img src="/assets/pict/ag2/ag2Receipts.png" width="96" height="96" alt="ag2ReceiptNotes" /><h5 class="h5-narrow">ag2ReceiptNotes</h5></a>
     <% else %>
-    <a href="<%= ag2_purchase.root_path %>" class="thumbnail centered"><img src="/assets/pict/ag2Purchase.png" width="128" height="128" alt="ag2Purchase" /><h5 class="h5-narrow">ag2Purchase</h5></a>
+    <a data-toggle="modal" href="#notfound" class="thumbnail centered"><img src="/assets/pict/ag2Receipts.png" width="128" height="128" alt="ag2ReceiptNotes" /><h5 class="h5-narrow">ag2ReceiptNotes</h5></a>
     <% end %>
   </li>
   <li class="span4">
     <% if (session[:resolution] == "LD")%>
-    <a data-toggle="modal" href="#notfound" class="thumbnail centered"><img src="/assets/icon/ag2Gest.png" width="48" height="48" alt="ag2Gest" /><h5 class="h5-narrow">ag2Gest</h5></a>
+    <a data-toggle="modal" href="#notfound" class="thumbnail centered"><img src="/assets/icon/ag2Deliveries.png" width="48" height="48" alt="ag2DeliveryNotes" /><h5 class="h5-narrow">ag2DeliveryNotes</h5></a>
     <% elsif session[:resolution] == "SD" %>
-    <a data-toggle="modal" href="#notfound" class="thumbnail centered"><img src="/assets/pict/ag2/ag2Gest.png" width="96" height="96" alt="ag2Gest" /><h5 class="h5-narrow">ag2Gest</h5></a>
+    <a data-toggle="modal" href="#notfound" class="thumbnail centered"><img src="/assets/pict/ag2/ag2Deliveries.png" width="96" height="96" alt="ag2DeliveryNotes" /><h5 class="h5-narrow">ag2DeliveryNotes</h5></a>
     <% else %>
-    <a data-toggle="modal" href="#notfound" class="thumbnail centered"><img src="/assets/pict/ag2Gest.png" width="128" height="128" alt="ag2Gest" /><h5 class="h5-narrow">ag2Gest</h5></a>
+    <a data-toggle="modal" href="#notfound" class="thumbnail centered"><img src="/assets/pict/ag2Deliveries.png" width="128" height="128" alt="ag2DeliveryNotes" /><h5 class="h5-narrow">ag2DeliveryNotes</h5></a>
     <% end %>
   </li>
 </ul><!-- /.thumbnails -->
@@ -80,4 +80,27 @@
     <% end %>
   </li>
   <li class="span1"></li>
+</ul><!-- /.thumbnails -->
+<ul class="thumbnails">
+  <!-- Apps 3 Engines -->
+  <li class="span2"></li>
+  <li class="span4">
+    <% if (session[:resolution] == "LD")%>
+    <a href="<%= ag2_purchase.root_path %>" class="thumbnail centered"><img src="/assets/icon/ag2Purchase.png" width="48" height="48" alt="ag2Purchase" /><h5 class="h5-narrow">ag2Purchase</h5></a>
+    <% elsif session[:resolution] == "SD" %>
+    <a href="<%= ag2_purchase.root_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/ag2Purchase.png" width="96" height="96" alt="ag2Purchase" /><h5 class="h5-narrow">ag2Purchase</h5></a>
+    <% else %>
+    <a href="<%= ag2_purchase.root_path %>" class="thumbnail centered"><img src="/assets/pict/ag2Purchase.png" width="128" height="128" alt="ag2Purchase" /><h5 class="h5-narrow">ag2Purchase</h5></a>
+    <% end %>
+  </li>
+  <li class="span4">
+    <% if (session[:resolution] == "LD")%>
+    <a data-toggle="modal" href="#notfound" class="thumbnail centered"><img src="/assets/icon/ag2Gest.png" width="48" height="48" alt="ag2Gest" /><h5 class="h5-narrow">ag2Gest</h5></a>
+    <% elsif session[:resolution] == "SD" %>
+    <a data-toggle="modal" href="#notfound" class="thumbnail centered"><img src="/assets/pict/ag2/ag2Gest.png" width="96" height="96" alt="ag2Gest" /><h5 class="h5-narrow">ag2Gest</h5></a>
+    <% else %>
+    <a data-toggle="modal" href="#notfound" class="thumbnail centered"><img src="/assets/pict/ag2Gest.png" width="128" height="128" alt="ag2Gest" /><h5 class="h5-narrow">ag2Gest</h5></a>
+    <% end %>
+  </li>
+  <li class="span2"></li>
 </ul><!-- /.thumbnails -->

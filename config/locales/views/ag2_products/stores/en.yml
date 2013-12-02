@@ -4,7 +4,7 @@ en:
       index:
         title: "Stores"
         btn_new: "New Store"
-        back_to_root: "Back to ag2Products"
+        back_to_root: "Back to ag2Logistics"
       show:
         title: "Store"
         btn_edit: "Edit Store"

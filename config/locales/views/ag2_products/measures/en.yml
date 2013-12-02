@@ -4,7 +4,7 @@ en:
       index:
         title: "Measures"
         btn_new: "New Measure"
-        back_to_root: "Back to ag2Products"
+        back_to_root: "Back to ag2Logistics"
       show:
         title: "Measure"
         btn_edit: "Edit Measure"

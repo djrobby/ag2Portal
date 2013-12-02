@@ -4,7 +4,7 @@ es:
       index:
         title: "Precios de compra"
         btn_new: "Nuevo Precio de compra"
-        back_to_root: "Volver a ag2Products"
+        back_to_root: "Volver a ag2Logistics"
         back_to_main_app: "Volver a Producto"
         label_product: "Producto"
         label_supplier: "Proveedor"

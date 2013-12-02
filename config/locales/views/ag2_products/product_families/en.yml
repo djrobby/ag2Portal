@@ -4,7 +4,7 @@ en:
       index:
         title: "Product families"
         btn_new: "New Product family"
-        back_to_root: "Back to ag2Products"
+        back_to_root: "Back to ag2Logistics"
       show:
         title: "Product family"
         btn_edit: "Edit Product family"
