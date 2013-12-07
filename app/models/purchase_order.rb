@@ -2,8 +2,15 @@ class PurchaseOrder < ActiveRecord::Base
   belongs_to :supplier
   belongs_to :payment_method
   belongs_to :order_status
+  belongs_to :project
+  belongs_to :store
+  belongs_to :work_order
+  belongs_to :charge_account
   attr_accessible :discount, :discount_pct, :order_date, :order_no, :remarks, :supplier_offer_no,
-                  :supplier_id, :payment_method_id, :order_status_id
+                  :supplier_id, :payment_method_id, :order_status_id, :project_id, :store_id,
+                  :work_order_id, :charge_account_id, :retention_pct, :retention_time
+
+  has_many :purchase_order_items, dependent: :destroy
 
   has_paper_trail
 
@@ -14,8 +21,7 @@ class PurchaseOrder < ActiveRecord::Base
   validates :supplier_id,       :presence => true
   validates :payment_method_id, :presence => true
   validates :order_status_id,   :presence => true
-
-  has_many :purchase_order_items, dependent: :destroy
+  validates :project_id,        :presence => true
 
   #
   # Records navigator

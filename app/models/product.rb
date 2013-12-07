@@ -10,6 +10,13 @@ class Product < ActiveRecord::Base
                   :product_type_id, :product_family_id, :measure_id, :tax_type_id, :manufacturer_id
   has_attached_file :image, :styles => { :medium => "120x120>", :small => "80x80>" }, :default_url => "/images/missing/:style/product.png"
 
+  has_many :purchase_prices, dependent: :destroy
+  has_many :suppliers, :through => :purchase_prices
+  has_many :stocks
+  has_many :stores, :through => :stocks
+  has_many :work_orders
+  has_many :purchase_orders
+
   has_paper_trail
 
   validates :main_description,  :presence => true
@@ -23,13 +30,7 @@ class Product < ActiveRecord::Base
   validates :manufacturer_id,   :presence => true
 
   before_validation :fields_to_uppercase
-
   before_destroy :check_for_dependent_records
-
-  has_many :purchase_prices, dependent: :destroy
-  has_many :suppliers, :through => :purchase_prices
-  has_many :stocks
-  has_many :stores, :through => :stocks
 
   def fields_to_uppercase
     if !self.product_code.blank?

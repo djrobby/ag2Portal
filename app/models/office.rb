@@ -25,6 +25,7 @@ class Office < ActiveRecord::Base
   has_many :workers
   has_many :corp_contacts, :order => 'last_name, first_name'
   has_many :tickets
+  has_many :projects
   def to_label
     "#{name} (#{company.name})"
   end

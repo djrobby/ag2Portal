@@ -1,0 +1,21 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  work_order: 
+  product: 
+  description: MyString
+  quantity: 9.99
+  cost: 9.99
+  price: 9.99
+  tax_type: 
+  store: 
+
+two:
+  work_order: 
+  product: 
+  description: MyString
+  quantity: 9.99
+  cost: 9.99
+  price: 9.99
+  tax_type: 
+  store: 

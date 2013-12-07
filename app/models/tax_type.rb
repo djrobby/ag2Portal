@@ -2,6 +2,10 @@ class TaxType < ActiveRecord::Base
   attr_accessible :description, :tax, :expiration,
                   :created_by, :updated_by
 
+  has_many :products
+  has_many :work_orders
+  has_many :purchase_orders
+
   has_paper_trail
 
   validates :description, :presence => true
@@ -9,11 +13,12 @@ class TaxType < ActiveRecord::Base
 
   before_destroy :check_for_dependent_records
 
-  has_many :products
   def to_label
     "#{description} (#{tax})"
   end
 
+  private
+  
   def check_for_dependent_records
     # Check for products
     if products.count > 0

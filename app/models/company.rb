@@ -27,6 +27,7 @@ class Company < ActiveRecord::Base
   has_many :offices
   has_many :workers
   has_many :corp_contacts, :order => 'last_name, first_name'
+  has_many :projects
   def fields_to_uppercase
     if !self.fiscal_id.blank?
       self[:fiscal_id].upcase!

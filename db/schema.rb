@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131128172333) do
+ActiveRecord::Schema.define(:version => 20131207094339) do
 
   create_table "activities", :force => true do |t|
     t.string   "description"
@@ -50,6 +50,24 @@ ActiveRecord::Schema.define(:version => 20131128172333) do
 
   add_index "areas", ["department_id"], :name => "index_areas_on_department_id"
   add_index "areas", ["name"], :name => "index_areas_on_name"
+
+  create_table "charge_accounts", :force => true do |t|
+    t.string   "name"
+    t.date     "opened_at"
+    t.date     "closed_at"
+    t.integer  "project_id"
+    t.string   "ledger_account"
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+    t.string   "account_code"
+  end
+
+  add_index "charge_accounts", ["account_code"], :name => "index_charge_accounts_on_account_code"
+  add_index "charge_accounts", ["ledger_account"], :name => "index_charge_accounts_on_ledger_account"
+  add_index "charge_accounts", ["name"], :name => "index_charge_accounts_on_name"
+  add_index "charge_accounts", ["project_id"], :name => "index_charge_accounts_on_project_id"
 
   create_table "collective_agreements", :force => true do |t|
     t.string   "name"
@@ -401,6 +419,24 @@ ActiveRecord::Schema.define(:version => 20131128172333) do
   add_index "professional_groups", ["nomina_id"], :name => "index_professional_groups_on_nomina_id"
   add_index "professional_groups", ["pg_code"], :name => "index_professional_groups_on_pg_code"
 
+  create_table "projects", :force => true do |t|
+    t.string   "name"
+    t.date     "opened_at"
+    t.date     "closed_at"
+    t.integer  "office_id"
+    t.integer  "company_id"
+    t.string   "ledger_account"
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  add_index "projects", ["company_id"], :name => "index_projects_on_company_id"
+  add_index "projects", ["ledger_account"], :name => "index_projects_on_ledger_account"
+  add_index "projects", ["name"], :name => "index_projects_on_name"
+  add_index "projects", ["office_id"], :name => "index_projects_on_office_id"
+
   create_table "provinces", :force => true do |t|
     t.string   "name"
     t.string   "ine_cpro"
@@ -452,13 +488,23 @@ ActiveRecord::Schema.define(:version => 20131128172333) do
     t.datetime "updated_at",                                                        :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
+    t.integer  "project_id"
+    t.integer  "store_id"
+    t.integer  "work_order_id"
+    t.integer  "charge_account_id"
+    t.decimal  "retention_pct",     :precision => 6,  :scale => 2, :default => 0.0, :null => false
+    t.integer  "retention_time"
   end
 
+  add_index "purchase_orders", ["charge_account_id"], :name => "index_purchase_orders_on_charge_account_id"
   add_index "purchase_orders", ["order_date"], :name => "index_purchase_orders_on_order_date"
   add_index "purchase_orders", ["order_no"], :name => "index_purchase_orders_on_order_no"
   add_index "purchase_orders", ["order_status_id"], :name => "index_purchase_orders_on_order_status_id"
   add_index "purchase_orders", ["payment_method_id"], :name => "index_purchase_orders_on_payment_method_id"
+  add_index "purchase_orders", ["project_id"], :name => "index_purchase_orders_on_project_id"
+  add_index "purchase_orders", ["store_id"], :name => "index_purchase_orders_on_store_id"
   add_index "purchase_orders", ["supplier_id"], :name => "index_purchase_orders_on_supplier_id"
+  add_index "purchase_orders", ["work_order_id"], :name => "index_purchase_orders_on_work_order_id"
 
   create_table "purchase_prices", :force => true do |t|
     t.integer  "product_id"
@@ -931,6 +977,77 @@ ActiveRecord::Schema.define(:version => 20131128172333) do
   end
 
   add_index "versions", ["item_type", "item_id"], :name => "index_versions_on_item_type_and_item_id"
+
+  create_table "work_order_items", :force => true do |t|
+    t.integer  "work_order_id"
+    t.integer  "product_id"
+    t.string   "description"
+    t.decimal  "quantity",      :precision => 12, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "cost",          :precision => 12, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "price",         :precision => 12, :scale => 4, :default => 0.0, :null => false
+    t.integer  "tax_type_id"
+    t.integer  "store_id"
+    t.datetime "created_at",                                                    :null => false
+    t.datetime "updated_at",                                                    :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  add_index "work_order_items", ["description"], :name => "index_work_order_items_on_description"
+  add_index "work_order_items", ["product_id"], :name => "index_work_order_items_on_product_id"
+  add_index "work_order_items", ["store_id"], :name => "index_work_order_items_on_store_id"
+  add_index "work_order_items", ["tax_type_id"], :name => "index_work_order_items_on_tax_type_id"
+  add_index "work_order_items", ["work_order_id"], :name => "index_work_order_items_on_work_order_id"
+
+  create_table "work_order_labors", :force => true do |t|
+    t.string   "name"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  create_table "work_order_statuses", :force => true do |t|
+    t.string   "name"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  create_table "work_order_types", :force => true do |t|
+    t.string   "name"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  create_table "work_orders", :force => true do |t|
+    t.string   "order_no"
+    t.integer  "work_order_type_id"
+    t.integer  "work_order_status_id"
+    t.integer  "work_order_labor_id"
+    t.datetime "started_at"
+    t.datetime "completed_at"
+    t.datetime "closed_at"
+    t.integer  "charge_account_id"
+    t.integer  "project_id"
+    t.integer  "area_id"
+    t.integer  "store_id"
+    t.datetime "created_at",           :null => false
+    t.datetime "updated_at",           :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  add_index "work_orders", ["area_id"], :name => "index_work_orders_on_area_id"
+  add_index "work_orders", ["charge_account_id"], :name => "index_work_orders_on_charge_account_id"
+  add_index "work_orders", ["project_id"], :name => "index_work_orders_on_project_id"
+  add_index "work_orders", ["store_id"], :name => "index_work_orders_on_store_id"
+  add_index "work_orders", ["work_order_labor_id"], :name => "index_work_orders_on_work_order_labor_id"
+  add_index "work_orders", ["work_order_status_id"], :name => "index_work_orders_on_work_order_status_id"
+  add_index "work_orders", ["work_order_type_id"], :name => "index_work_orders_on_work_order_type_id"
 
   create_table "worker_types", :force => true do |t|
     t.string   "description"
