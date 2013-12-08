@@ -6,7 +6,8 @@ es:
         one:   Proveedor
         few:   Proveedores
         other: Proveedores
-        check_for_orders: "Proveedor no puede ser eliminado mientras existan pedidos vinculados."
+        check_for_purchase_orders: "Proveedor no puede ser eliminado mientras existan pedidos vinculados."
+        check_for_receipt_notes: "Proveedor no puede ser eliminado mientras existan albaranes vinculados."
     attributes:
       supplier:
         name: "Nombre"

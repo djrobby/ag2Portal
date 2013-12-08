@@ -15,16 +15,16 @@ class SharedContact < ActiveRecord::Base
 
   has_paper_trail
 
-  validates :first_name,              :presence => true, :if => "company.blank?"
-  validates :last_name,               :presence => true, :if => "company.blank?"
-  validates :fiscal_id,               :presence => true, :if => "!company.blank?"
-  validates :street_type_id,          :presence => true
-  validates :zipcode_id,              :presence => true
-  validates :town_id,                 :presence => true
-  validates :province_id,             :presence => true
-  validates :region_id,               :presence => true
-  validates :country_id,              :presence => true
-  validates :shared_contact_type_id,  :presence => true
+  validates :first_name,           :presence => true, :if => "company.blank?"
+  validates :last_name,            :presence => true, :if => "company.blank?"
+  validates :fiscal_id,            :presence => true, :if => "!company.blank?"
+  validates :street_type,          :presence => true
+  validates :zipcode,              :presence => true
+  validates :town,                 :presence => true
+  validates :province,             :presence => true
+  validates :region,               :presence => true
+  validates :country,              :presence => true
+  validates :shared_contact_type,  :presence => true
 
   before_validation :fields_to_uppercase
 

@@ -11,17 +11,18 @@ class PurchaseOrder < ActiveRecord::Base
                   :work_order_id, :charge_account_id, :retention_pct, :retention_time
 
   has_many :purchase_order_items, dependent: :destroy
+  has_many :receipt_notes
 
   has_paper_trail
 
-  validates :order_date,        :presence => true
-  validates :order_no,          :presence => true,
-                                :length => { :minimum => 5 },
-                                :uniqueness => true
-  validates :supplier_id,       :presence => true
-  validates :payment_method_id, :presence => true
-  validates :order_status_id,   :presence => true
-  validates :project_id,        :presence => true
+  validates :order_date,     :presence => true
+  validates :order_no,       :presence => true,
+                             :length => { :minimum => 5 },
+                             :uniqueness => true
+  validates :supplier,       :presence => true
+  validates :payment_method, :presence => true
+  validates :order_status,   :presence => true
+  validates :project,        :presence => true
 
   #
   # Records navigator

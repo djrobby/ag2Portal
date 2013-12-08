@@ -12,24 +12,26 @@ class WorkOrder < ActiveRecord::Base
 
   has_many :work_order_items, dependent: :destroy
   has_many :purchase_orders
+  has_many :receipt_notes
+  has_many :receipt_note_items
 
   has_paper_trail
 
-  validates :order_no,              :presence => true,
-                                    :length => { :in => 7..17 },
-                                    :uniqueness => true
-  validates :charge_account_id,     :presence => true
-  validates :project_id,            :presence => true
-  validates :work_order_labor_id,   :presence => true
-  validates :work_order_status_id,  :presence => true
-  validates :work_order_type_id,    :presence => true
+  validates :order_no,           :presence => true,
+                                 :length => { :in => 7..17 },
+                                 :uniqueness => true
+  validates :charge_account,     :presence => true
+  validates :project,            :presence => true
+  validates :work_order_labor,   :presence => true
+  validates :work_order_status,  :presence => true
+  validates :work_order_type,    :presence => true
 
   before_destroy :check_for_dependent_records
 
   private
 
   def check_for_dependent_records
-    # Check for purchase_orders
+    # Check for purchase orders
     if purchase_orders.count > 0
       errors.add(:base, I18n.t('activerecord.models.charge_account.check_for_purchase_orders'))
       return false

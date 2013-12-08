@@ -1,0 +1,33 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  receipt_no: MyString
+  purchase_order: 
+  supplier: 
+  payment_method: 
+  receipt_date: 2013-12-08
+  remarks: MyString
+  discount_pct: 9.99
+  discount: 9.99
+  project: 
+  store: 
+  work_order: 
+  charge_account: 
+  retention_pct: 9.99
+  retention_time: 1
+
+two:
+  receipt_no: MyString
+  purchase_order: 
+  supplier: 
+  payment_method: 
+  receipt_date: 2013-12-08
+  remarks: MyString
+  discount_pct: 9.99
+  discount: 9.99
+  project: 
+  store: 
+  work_order: 
+  charge_account: 
+  retention_pct: 9.99
+  retention_time: 1

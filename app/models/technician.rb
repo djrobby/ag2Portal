@@ -5,8 +5,8 @@ class Technician < ActiveRecord::Base
 
   has_paper_trail
 
-  validates :name,    :presence => true
-  validates :user_id, :presence => true
+  validates :name, :presence => true
+  validates :user, :presence => true
 
   has_many :tickets
 end

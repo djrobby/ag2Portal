@@ -7,7 +7,7 @@ class SupplierContact < ActiveRecord::Base
 
   validates :first_name,  :presence => true
   validates :last_name,   :presence => true
-  validates :supplier_id, :presence => true
+  validates :supplier,    :presence => true
 
   before_validation :fields_to_uppercase
 

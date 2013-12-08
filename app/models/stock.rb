@@ -5,8 +5,8 @@ class Stock < ActiveRecord::Base
 
   has_paper_trail
 
-  validates :product_id,  :presence => true
-  validates :store_id,    :presence => true
+  validates :product,  :presence => true
+  validates :store,    :presence => true
 
   searchable do
     integer :product_id

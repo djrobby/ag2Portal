@@ -19,7 +19,7 @@ class ChargeAccount < ActiveRecord::Base
   private
 
   def check_for_dependent_records
-    # Check for purchase_orders
+    # Check for purchase orders
     if purchase_orders.count > 0
       errors.add(:base, I18n.t('activerecord.models.charge_account.check_for_purchase_orders'))
       return false

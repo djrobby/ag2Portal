@@ -6,10 +6,10 @@ class PurchasePrice < ActiveRecord::Base
 
   has_paper_trail
 
-  validates :product_id,  :presence => true
-  validates :supplier_id, :presence => true
-  validates :measure_id,  :presence => true
-  validates :code,        :presence => true
+  validates :product,  :presence => true
+  validates :supplier, :presence => true
+  validates :measure,  :presence => true
+  validates :code,     :presence => true
 
   searchable do
     text :code

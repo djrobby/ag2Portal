@@ -8,8 +8,8 @@ class WorkOrderItem < ActiveRecord::Base
 
   has_paper_trail
 
-  validates :description,   :presence => true
-  validates :work_order_id, :presence => true
-  validates :product_id,    :presence => true
-  validates :tax_type_id,   :presence => true
+  validates :description, :presence => true
+  validates :work_order,  :presence => true
+  validates :product,     :presence => true
+  validates :tax_type,    :presence => true
 end

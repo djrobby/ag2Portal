@@ -8,11 +8,13 @@ class Store < ActiveRecord::Base
   has_many :work_orders
   has_many :work_order_items
   has_many :purchase_orders
+  has_many :receipt_notes
+  has_many :receipt_note_items
 
   has_paper_trail
 
-  validates :name,       :presence => true
-  validates :company_id, :presence => true
+  validates :name,    :presence => true
+  validates :company, :presence => true
 
   before_destroy :check_for_dependent_records
 

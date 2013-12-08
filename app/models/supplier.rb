@@ -20,24 +20,25 @@ class Supplier < ActiveRecord::Base
   has_many :purchase_prices, dependent: :destroy
   has_many :products, :through => :purchase_prices
   has_many :purchase_orders
+  has_many :receipt_notes
   
   has_paper_trail
 
-  validates :name,                :presence => true
-  validates :supplier_code,       :presence => true,
-                                  :length => { :minimum => 5 },
-                                  :uniqueness => true
-  validates :fiscal_id,           :presence => true,
-                                  :length => { :minimum => 9 },
-                                  :uniqueness => true
-  validates :street_type_id,      :presence => true
-  validates :zipcode_id,          :presence => true
-  validates :town_id,             :presence => true
-  validates :province_id,         :presence => true
-  validates :region_id,           :presence => true
-  validates :country_id,          :presence => true
-  validates :payment_method_id,   :presence => true
-  validates :entity_id,           :presence => true
+  validates :name,             :presence => true
+  validates :supplier_code,    :presence => true,
+                               :length => { :minimum => 5 },
+                               :uniqueness => true
+  validates :fiscal_id,        :presence => true,
+                               :length => { :minimum => 9 },
+                               :uniqueness => true
+  validates :street_type,      :presence => true
+  validates :zipcode,          :presence => true
+  validates :town,             :presence => true
+  validates :province,         :presence => true
+  validates :region,           :presence => true
+  validates :country,          :presence => true
+  validates :payment_method,   :presence => true
+  validates :entity,           :presence => true
 
   before_validation :fields_to_uppercase
 
@@ -82,8 +83,13 @@ class Supplier < ActiveRecord::Base
   private
 
   def check_for_dependent_records
-    # Check for orders
-    if orders.count > 0
+    # Check for purchase orders
+    if purchase_orders.count > 0
+      errors.add(:base, I18n.t('activerecord.models.supplier.check_for_purchase_orders'))
+      return false
+    end
+    # Check for receipt notes
+    if receipt_notes.count > 0
       errors.add(:base, I18n.t('activerecord.models.supplier.check_for_orders'))
       return false
     end

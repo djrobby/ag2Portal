@@ -41,23 +41,25 @@ class Worker < ActiveRecord::Base
   validates :fiscal_id,                 :presence => true,
                                         :length => { :minimum => 9 }
                                         # should :uniqueness => true
-  validates :user_id,                   :presence => true
-  validates :company_id,                :presence => true
-  validates :office_id,                 :presence => true
-  validates :street_type_id,            :presence => true
-  validates :zipcode_id,                :presence => true
-  validates :town_id,                   :presence => true
-  validates :province_id,               :presence => true
-  validates :professional_group_id,     :presence => true
-  validates :collective_agreement_id,   :presence => true
-  validates :degree_type_id,            :presence => true
-  validates :contract_type_id,          :presence => true
-  validates :worker_type_id,            :presence => true
+  validates :user,                      :presence => true
+  validates :company,                   :presence => true
+  validates :office,                    :presence => true
+  validates :street_type,               :presence => true
+  validates :zipcode,                   :presence => true
+  validates :town,                      :presence => true
+  validates :province,                  :presence => true
+  validates :professional_group,        :presence => true
+  validates :collective_agreement,      :presence => true
+  validates :degree_type,               :presence => true
+  validates :contract_type,             :presence => true
+  validates :worker_type,               :presence => true
   validates :starting_at,               :presence => true
   validates :issue_starting_at,         :presence => true
   validates :affiliation_id,            :presence => true
                                         # should :uniqueness => true
   validates :contribution_account_code, :presence => true
+  validates :department,                :presence => true
+  #validates :sex,                       :presence => true
 
   before_validation :fields_to_uppercase
 

@@ -5,6 +5,7 @@ class TaxType < ActiveRecord::Base
   has_many :products
   has_many :work_order_items
   has_many :purchase_order_items
+  has_many :receipt_note_items
 
   has_paper_trail
 

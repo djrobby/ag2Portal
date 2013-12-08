@@ -4,10 +4,10 @@ class Town < ActiveRecord::Base
 
   has_paper_trail
 
-  validates :name,  :presence => true
-  validates :province_id,  :presence => true
-  validates :ine_cmun, :length => { :minimum => 3 }
-  validates :ine_dc, :length => { :minimum => 1 }
+  validates :name,      :presence => true
+  validates :province,  :presence => true
+  validates :ine_cmun,  :length => { :minimum => 3 }
+  validates :ine_dc,    :length => { :minimum => 1 }
 
   #has_many :towns
   has_many :companies

@@ -16,6 +16,7 @@ class Product < ActiveRecord::Base
   has_many :stores, :through => :stocks
   has_many :work_order_items
   has_many :purchase_order_items
+  has_many :receipt_note_items
 
   has_paper_trail
 

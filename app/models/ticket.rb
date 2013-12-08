@@ -14,9 +14,9 @@ class Ticket < ActiveRecord::Base
   validates :ticket_subject,          :presence => true,
                                       :length => { :maximum => 30 }
   validates :ticket_message,          :presence => true
-  validates :ticket_category_id,      :presence => true
-  validates :ticket_priority_id,      :presence => true
-  validates :technician_id,           :presence => true, :if => :technician_required?
+  validates :ticket_category,         :presence => true
+  validates :ticket_priority,         :presence => true
+  validates :technician,              :presence => true, :if => :technician_required?
   validates :status_changed_message,  :presence => true, :if => :status_message_required?
 
   before_create :assign_default_status_and_office

@@ -1,0 +1,29 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  receipt_note: 
+  purchase_order_item: 
+  product: 
+  description: MyString
+  quantity: 9.99
+  price: 9.99
+  discount_pct: 9.99
+  discount: 9.99
+  tax_type: 
+  store: 
+  work_order: 
+  charge_account: 
+
+two:
+  receipt_note: 
+  purchase_order_item: 
+  product: 
+  description: MyString
+  quantity: 9.99
+  price: 9.99
+  discount_pct: 9.99
+  discount: 9.99
+  tax_type: 
+  store: 
+  work_order: 
+  charge_account: 

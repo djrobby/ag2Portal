@@ -14,8 +14,8 @@ class CorpContact < ActiveRecord::Base
                           :length => { :minimum => 2 }
   validates :last_name,   :presence => true,
                           :length => { :minimum => 2 }
-  validates :company_id,  :presence => true
-  validates :office_id,   :presence => true
+  validates :company,     :presence => true
+  validates :office,      :presence => true
   validates :email,       :presence => true
   def full_name
     full_name = ""

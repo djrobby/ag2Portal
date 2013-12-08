@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131207094339) do
+ActiveRecord::Schema.define(:version => 20131208104443) do
 
   create_table "activities", :force => true do |t|
     t.string   "description"
@@ -524,6 +524,65 @@ ActiveRecord::Schema.define(:version => 20131207094339) do
   add_index "purchase_prices", ["measure_id"], :name => "index_purchase_prices_on_measure_id"
   add_index "purchase_prices", ["product_id"], :name => "index_purchase_prices_on_product_id"
   add_index "purchase_prices", ["supplier_id"], :name => "index_purchase_prices_on_supplier_id"
+
+  create_table "receipt_note_items", :force => true do |t|
+    t.integer  "receipt_note_id"
+    t.integer  "purchase_order_item_id"
+    t.integer  "product_id"
+    t.string   "description"
+    t.decimal  "quantity",               :precision => 12, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "price",                  :precision => 12, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "discount_pct",           :precision => 6,  :scale => 2, :default => 0.0, :null => false
+    t.decimal  "discount",               :precision => 12, :scale => 4, :default => 0.0, :null => false
+    t.integer  "tax_type_id"
+    t.integer  "store_id"
+    t.integer  "work_order_id"
+    t.integer  "charge_account_id"
+    t.datetime "created_at",                                                             :null => false
+    t.datetime "updated_at",                                                             :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  add_index "receipt_note_items", ["charge_account_id"], :name => "index_receipt_note_items_on_charge_account_id"
+  add_index "receipt_note_items", ["description"], :name => "index_receipt_note_items_on_description"
+  add_index "receipt_note_items", ["product_id"], :name => "index_receipt_note_items_on_product_id"
+  add_index "receipt_note_items", ["purchase_order_item_id"], :name => "index_receipt_note_items_on_purchase_order_item_id"
+  add_index "receipt_note_items", ["receipt_note_id"], :name => "index_receipt_note_items_on_receipt_note_id"
+  add_index "receipt_note_items", ["store_id"], :name => "index_receipt_note_items_on_store_id"
+  add_index "receipt_note_items", ["tax_type_id"], :name => "index_receipt_note_items_on_tax_type_id"
+  add_index "receipt_note_items", ["work_order_id"], :name => "index_receipt_note_items_on_work_order_id"
+
+  create_table "receipt_notes", :force => true do |t|
+    t.string   "receipt_no"
+    t.integer  "purchase_order_id"
+    t.integer  "supplier_id"
+    t.integer  "payment_method_id"
+    t.date     "receipt_date"
+    t.string   "remarks"
+    t.decimal  "discount_pct",      :precision => 6,  :scale => 2, :default => 0.0, :null => false
+    t.decimal  "discount",          :precision => 12, :scale => 4, :default => 0.0, :null => false
+    t.integer  "project_id"
+    t.integer  "store_id"
+    t.integer  "work_order_id"
+    t.integer  "charge_account_id"
+    t.decimal  "retention_pct",     :precision => 6,  :scale => 2, :default => 0.0, :null => false
+    t.integer  "retention_time"
+    t.datetime "created_at",                                                        :null => false
+    t.datetime "updated_at",                                                        :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  add_index "receipt_notes", ["charge_account_id"], :name => "index_receipt_notes_on_charge_account_id"
+  add_index "receipt_notes", ["payment_method_id"], :name => "index_receipt_notes_on_payment_method_id"
+  add_index "receipt_notes", ["project_id"], :name => "index_receipt_notes_on_project_id"
+  add_index "receipt_notes", ["purchase_order_id"], :name => "index_receipt_notes_on_purchase_order_id"
+  add_index "receipt_notes", ["receipt_date"], :name => "index_receipt_notes_on_receipt_date"
+  add_index "receipt_notes", ["receipt_no"], :name => "index_receipt_notes_on_receipt_no"
+  add_index "receipt_notes", ["store_id"], :name => "index_receipt_notes_on_store_id"
+  add_index "receipt_notes", ["supplier_id"], :name => "index_receipt_notes_on_supplier_id"
+  add_index "receipt_notes", ["work_order_id"], :name => "index_receipt_notes_on_work_order_id"
 
   create_table "regions", :force => true do |t|
     t.string   "name"

@@ -1,11 +1,11 @@
 class Entity < ActiveRecord::Base
-  belongs_to :entity_type
   belongs_to :street_type
   belongs_to :zipcode
   belongs_to :town
   belongs_to :province
   belongs_to :region
   belongs_to :country
+  belongs_to :entity_type
   attr_accessible :building, :cellular, :company, :email, :extension, :fax, :first_name, :fiscal_id,
                   :floor, :floor_office, :last_name, :phone, :street_name, :street_number, :town,
                   :entity_type_id, :street_type_id, :zipcode_id, :town_id, :province_id, :region_id, :country_id,
@@ -13,18 +13,18 @@ class Entity < ActiveRecord::Base
 
   has_paper_trail
 
-  validates :first_name,      :presence => true, :if => "company.blank?"
-  validates :last_name,       :presence => true, :if => "company.blank?"
-  validates :fiscal_id,       :presence => true,
-                              :length => { :minimum => 9 },
-                              :uniqueness => true
-  validates :street_type_id,  :presence => true
-  validates :zipcode_id,      :presence => true
-  validates :town_id,         :presence => true
-  validates :province_id,     :presence => true
-  validates :region_id,       :presence => true
-  validates :country_id,      :presence => true
-  validates :entity_type_id,  :presence => true
+  validates :first_name,   :presence => true, :if => "company.blank?"
+  validates :last_name,    :presence => true, :if => "company.blank?"
+  validates :fiscal_id,    :presence => true,
+                           :length => { :minimum => 9 },
+                           :uniqueness => true
+  validates :street_type,  :presence => true
+  validates :zipcode,      :presence => true
+  validates :town,         :presence => true
+  validates :province,     :presence => true
+  validates :region,       :presence => true
+  validates :country,      :presence => true
+  validates :entity_type,  :presence => true
 
   before_validation :fields_to_uppercase
 

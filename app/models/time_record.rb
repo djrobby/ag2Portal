@@ -8,11 +8,11 @@ class TimeRecord < ActiveRecord::Base
 
   has_paper_trail
 
-  validates :timerecord_date,     :presence => true
-  validates :timerecord_time,     :presence => true
-  validates :timerecord_type_id,  :presence => true
-  validates :timerecord_code_id,  :presence => true
-  validates :worker_id,           :presence => true
+  validates :timerecord_date,  :presence => true
+  validates :timerecord_time,  :presence => true
+  validates :timerecord_type,  :presence => true
+  validates :timerecord_code,  :presence => true
+  validates :worker,           :presence => true
 
   searchable do
     integer :worker_id

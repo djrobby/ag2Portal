@@ -5,8 +5,8 @@ class Region < ActiveRecord::Base
 
   has_paper_trail
 
-  validates :name,        :presence => true
-  validates :country_id,  :presence => true
+  validates :name,    :presence => true
+  validates :country, :presence => true
 
   has_many :provinces
   has_many :shared_contacts

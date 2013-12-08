@@ -12,15 +12,15 @@ class Company < ActiveRecord::Base
 
   has_paper_trail
 
-  validates :name,            :presence => true
-  validates :fiscal_id,       :presence => true,
-                              :length => { :minimum => 9 },
-                              :uniqueness => true
-  validates :street_type_id,  :presence => true
-  validates :zipcode_id,      :presence => true
-  validates :town_id,         :presence => true
-  validates :province_id,     :presence => true
-  validates :invoice_code,    :presence => true
+  validates :name,         :presence => true
+  validates :fiscal_id,    :presence => true,
+                           :length => { :minimum => 9 },
+                           :uniqueness => true
+  validates :street_type,  :presence => true
+  validates :zipcode,      :presence => true
+  validates :town,         :presence => true
+  validates :province,     :presence => true
+  validates :invoice_code, :presence => true
 
   before_validation :fields_to_uppercase
 

@@ -10,27 +10,27 @@ class Project < ActiveRecord::Base
 
   has_paper_trail
 
-  validates :name,        :presence => true
-  validates :opened_at,   :presence => true
-  validates :company_id,  :presence => true
-  validates :office_id,   :presence => true
+  validates :name,      :presence => true
+  validates :opened_at, :presence => true
+  validates :company,   :presence => true
+  validates :office,    :presence => true
 
   before_destroy :check_for_dependent_records
 
   private
 
   def check_for_dependent_records
-    # Check for charge_accounts
+    # Check for charge accounts
     if charge_accounts.count > 0
       errors.add(:base, I18n.t('activerecord.models.project.check_for_charge_accounts'))
       return false
     end
-    # Check for work_orders
+    # Check for work orders
     if work_orders.count > 0
       errors.add(:base, I18n.t('activerecord.models.project.check_for_work_orders'))
       return false
     end
-    # Check for purchase_orders
+    # Check for purchase orders
     if purchase_orders.count > 0
       errors.add(:base, I18n.t('activerecord.models.project.check_for_purchase_orders'))
       return false
