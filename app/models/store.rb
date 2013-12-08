@@ -3,16 +3,18 @@ class Store < ActiveRecord::Base
   belongs_to :office
   attr_accessible :location, :name, :company_id, :office_id
 
+  has_many :stocks
+  has_many :products, :through => :stocks
+  has_many :work_orders
+  has_many :work_order_items
+  has_many :purchase_orders
+
   has_paper_trail
 
   validates :name,       :presence => true
   validates :company_id, :presence => true
 
   before_destroy :check_for_dependent_records
-
-  has_many :stocks
-  has_many :products, :through => :stocks
-  has_many :purchase_orders
 
   private
 

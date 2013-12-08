@@ -14,9 +14,13 @@ class Supplier < ActiveRecord::Base
                   :region_id, :country_id, :payment_method_id, :ledger_account, :discount_rate,
                   :active, :max_orders_count, :max_orders_sum, :contract_number, :remarks,
                   :created_by, :updated_by, :entity_id
-
   attr_accessible :activity_ids
 
+  has_many :supplier_contacts, dependent: :destroy
+  has_many :purchase_prices, dependent: :destroy
+  has_many :products, :through => :purchase_prices
+  has_many :purchase_orders
+  
   has_paper_trail
 
   validates :name,                :presence => true
@@ -38,11 +42,6 @@ class Supplier < ActiveRecord::Base
   before_validation :fields_to_uppercase
 
   before_destroy :check_for_dependent_records
-
-  has_many :supplier_contacts, dependent: :destroy
-  has_many :purchase_prices, dependent: :destroy
-  has_many :products, :through => :purchase_prices
-  has_many :purchase_orders
 
   def fields_to_uppercase
     if !self.fiscal_id.blank?

@@ -3,8 +3,8 @@ class TaxType < ActiveRecord::Base
                   :created_by, :updated_by
 
   has_many :products
-  has_many :work_orders
-  has_many :purchase_orders
+  has_many :work_order_items
+  has_many :purchase_order_items
 
   has_paper_trail
 

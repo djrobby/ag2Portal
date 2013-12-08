@@ -1,6 +1,6 @@
 class Project < ActiveRecord::Base
-  belongs_to :office
   belongs_to :company
+  belongs_to :office
   attr_accessible :closed_at, :ledger_account, :name, :opened_at,
                   :office_id, :company_id
 

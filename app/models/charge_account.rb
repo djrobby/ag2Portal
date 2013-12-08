@@ -3,6 +3,7 @@ class ChargeAccount < ActiveRecord::Base
   attr_accessible :closed_at, :ledger_account, :name, :opened_at,
                   :project_id, :account_code
 
+  has_many :work_orders
   has_many :purchase_orders
 
   has_paper_trail

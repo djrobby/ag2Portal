@@ -14,8 +14,8 @@ class Product < ActiveRecord::Base
   has_many :suppliers, :through => :purchase_prices
   has_many :stocks
   has_many :stores, :through => :stocks
-  has_many :work_orders
-  has_many :purchase_orders
+  has_many :work_order_items
+  has_many :purchase_order_items
 
   has_paper_trail
 
