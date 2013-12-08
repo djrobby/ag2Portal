@@ -155,20 +155,29 @@ class Ability
       can :crud, Supplier
       can :crud, SupplierContact
       can :crud, PurchasePrice
+      can :crud, OrderStatus
+      can :crud, PurchaseOrder
+      can :crud, PurchaseOrderItem
     elsif user.has_role? :ag2Purchase_Guest
       can :read, Activity
       can :read, PaymentMethod
       can :read, Supplier
       can :read, SupplierContact
       can :read, PurchasePrice
+      can :read, OrderStatus
+      can :read, PurchaseOrder
+      can :read, PurchaseOrderItem
     elsif user.has_role? :ag2Purchase_Banned
       cannot :manage, Activity
       cannot :manage, PaymentMethod
       cannot :manage, Supplier
       cannot :manage, SupplierContact
       cannot :manage, PurchasePrice
+      cannot :manage, OrderStatus
+      cannot :manage, PurchaseOrder
+      cannot :manage, PurchaseOrderItem
     end
-    # ag2Products
+    # ag2Products (ag2Logistics)
     if user.has_role? :ag2Products_User
       can :crud, Manufacturer
       can :crud, Measure
@@ -196,6 +205,32 @@ class Ability
       cannot :manage, PurchasePrice
       cannot :manage, Store
       cannot :manage, Stock
+    end
+    # ag2Tech
+    if user.has_role? :ag2Tech_User
+      can :crud, Project
+      can :crud, ChargeAccount
+      can :crud, WorkOrderType
+      can :crud, WorkOrderLabor
+      can :crud, WorkOrderStatus
+      can :crud, WorkOrder
+      can :crud, WorkOrderItem
+    elsif user.has_role? :ag2Tech_Guest
+      can :read, Project
+      can :read, ChargeAccount
+      can :read, WorkOrderType
+      can :read, WorkOrderLabor
+      can :read, WorkOrderStatus
+      can :read, WorkOrder
+      can :read, WorkOrderItem
+    elsif user.has_role? :ag2Tech_Banned
+      cannot :manage, Project
+      cannot :manage, ChargeAccount
+      cannot :manage, WorkOrderType
+      cannot :manage, WorkOrderLabor
+      cannot :manage, WorkOrderStatus
+      cannot :manage, WorkOrder
+      cannot :manage, WorkOrderItem
     end
 
   # Define abilities for the passed in user here. For example:

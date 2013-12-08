@@ -21,6 +21,7 @@ Ag2Portal::Application.routes.draw do
     mount Ag2HelpDesk::Engine => "/ag2_help_desk"
     mount Ag2Purchase::Engine => "/ag2_purchase"
     mount Ag2Products::Engine => "/ag2_products"
+    mount Ag2Tech::Engine => "/ag2_tech"
   end
 
   # Index locale
