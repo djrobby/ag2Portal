@@ -1,13 +1,14 @@
 en:
   activerecord:
     models:
-      app:
+      site:
         zero:  Sites
         one:   Site
         few:   Sites
         other: Sites
+        check_for_apps: "Site cannot be destroyed while linked apps exist."
     attributes:
-      app:
+      site:
         name: "Name"
         description: "Description"
         path: "Path"

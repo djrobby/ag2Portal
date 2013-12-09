@@ -89,12 +89,16 @@ module Ag2Admin
     # DELETE /sites/1.json
     def destroy
       @site = Site.find(params[:id])
-      @site.destroy
 
       respond_to do |format|
-        format.html { redirect_to sites_url,
+        if @site.destroy
+          format.html { redirect_to sites_url,
                       notice: (crud_notice('destroyed', @site) + "#{undo_link(@site)}").html_safe }
-        format.json { head :no_content }
+          format.json { head :no_content }
+        else
+          format.html { redirect_to sites_url, alert: "#{@site.errors[:base].to_s}".gsub('["', '').gsub('"]', '') }
+          format.json { render json: @site.errors, status: :unprocessable_entity }
+        end
       end
     end
 

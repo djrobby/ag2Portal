@@ -6,6 +6,7 @@ en:
         one:   Entity type
         few:   Entity types
         other: Entity types
+        check_for_entities: "Entity type cannot be destroyed while linked entities exist."
     attributes:
       entity_type:
         name: "Descrption"

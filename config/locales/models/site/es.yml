@@ -6,6 +6,7 @@ es:
         one:   Sitio
         few:   Sitios
         other: Sitios
+        check_for_apps: "Sitio no puede ser eliminado mientras existan apps vinculadas."
     attributes:
       site:
         name: "Nombre"

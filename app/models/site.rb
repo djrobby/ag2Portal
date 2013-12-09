@@ -2,6 +2,8 @@ class Site < ActiveRecord::Base
   attr_accessible :description, :icon_file, :name, :path, :pict_file,
                   :created_by, :updated_by
 
+  has_many :apps
+
   has_paper_trail
 
   validates :description, :presence => true
@@ -10,5 +12,13 @@ class Site < ActiveRecord::Base
   validates :path,        :presence => true
   validates :pict_file,   :presence => true
 
-  has_many :apps
+  before_destroy :check_for_apps
+
+  private
+  def check_for_apps
+    if apps.count > 0
+      errors.add(:base, I18n.t('activerecord.models.site.check_for_apps'))
+      return false
+    end
+  end
 end

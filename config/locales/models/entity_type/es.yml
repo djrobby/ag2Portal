@@ -6,6 +6,7 @@ es:
         one:   Tipo de entidad
         few:   Tipos de entidad
         other: Tipos de entidad
+        check_for_entities: "Tipo de entidad no puede ser eliminado mientras existan entidades vinculadas."
     attributes:
       entity_type:
         name: "Descripción"
