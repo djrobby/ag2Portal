@@ -29,7 +29,7 @@ class ProductFamily < ActiveRecord::Base
     # Check for products
     if products.count > 0
       errors.add(:base, I18n.t('activerecord.models.product_family.check_for_products'))
-    return false
+      return false
     end
   end
 end

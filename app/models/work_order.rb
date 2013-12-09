@@ -33,7 +33,17 @@ class WorkOrder < ActiveRecord::Base
   def check_for_dependent_records
     # Check for purchase orders
     if purchase_orders.count > 0
-      errors.add(:base, I18n.t('activerecord.models.charge_account.check_for_purchase_orders'))
+      errors.add(:base, I18n.t('activerecord.models.work_order.check_for_purchase_orders'))
+      return false
+    end
+    # Check for receipt notes
+    if receipt_notes.count > 0
+      errors.add(:base, I18n.t('activerecord.models.work_order.check_for_receipt_notes'))
+      return false
+    end
+    # Check for receipt note items
+    if receipt_note_items.count > 0
+      errors.add(:base, I18n.t('activerecord.models.work_order.check_for_receipt_notes'))
       return false
     end
   end

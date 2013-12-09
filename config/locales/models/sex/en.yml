@@ -1,0 +1,11 @@
+en:
+  activerecord:
+    models:
+      sex:
+        zero:  Sexes
+        one:   Sex
+        few:   Sexes
+        other: Sexes
+    attributes:
+      sex:
+        name: "Description"

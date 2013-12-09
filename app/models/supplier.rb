@@ -21,6 +21,8 @@ class Supplier < ActiveRecord::Base
   has_many :products, :through => :purchase_prices
   has_many :purchase_orders
   has_many :receipt_notes
+  has_many :offer_request_suppliers
+  has_many :offers
   
   has_paper_trail
 
@@ -91,6 +93,16 @@ class Supplier < ActiveRecord::Base
     # Check for receipt notes
     if receipt_notes.count > 0
       errors.add(:base, I18n.t('activerecord.models.supplier.check_for_orders'))
+      return false
+    end
+    # Check for offer request suppliers
+    if offer_request_suppliers.count > 0
+      errors.add(:base, I18n.t('activerecord.models.supplier.check_for_offer_requests'))
+      return false
+    end
+    # Check for offers
+    if offers.count > 0
+      errors.add(:base, I18n.t('activerecord.models.supplier.check_for_offers'))
       return false
     end
   end

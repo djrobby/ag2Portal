@@ -26,5 +26,30 @@ class Store < ActiveRecord::Base
       errors.add(:base, I18n.t('activerecord.models.store.check_for_stocks'))
       return false
     end
+    # Check for work orders
+    if work_orders.count > 0
+      errors.add(:base, I18n.t('activerecord.models.store.check_for_work_orders'))
+      return false
+    end
+    # Check for work order items
+    if work_order_items.count > 0
+      errors.add(:base, I18n.t('activerecord.models.store.check_for_work_orders'))
+      return false
+    end
+    # Check for purchase orders
+    if purchase_orders.count > 0
+      errors.add(:base, I18n.t('activerecord.models.store.check_for_purchase_orders'))
+      return false
+    end
+    # Check for receipt notes
+    if receipt_notes.count > 0
+      errors.add(:base, I18n.t('activerecord.models.store.check_for_receipt_notes'))
+      return false
+    end
+    # Check for receipt note items
+    if receipt_note_items.count > 0
+      errors.add(:base, I18n.t('activerecord.models.store.check_for_receipt_notes'))
+      return false
+    end
   end
 end

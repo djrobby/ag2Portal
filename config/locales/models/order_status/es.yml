@@ -1,0 +1,14 @@
+es:
+  activerecord:
+    models:
+      order_status:
+        zero:  Estados de pedidos
+        one:   Estado de pedido
+        few:   Estados de pedidos
+        other: Estados de pedidos
+        check_for_purchase_orders: "Estado de pedido no puede ser eliminado mientras existan pedidos vinculados."
+    attributes:
+      order_status:
+        name: "Descripción"
+        approval: ¿Requiere aprovación?
+        notification: ¿Notifica?

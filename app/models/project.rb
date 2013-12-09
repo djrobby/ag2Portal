@@ -7,6 +7,9 @@ class Project < ActiveRecord::Base
   has_many :charge_accounts
   has_many :work_orders
   has_many :purchase_orders
+  has_many :receipt_notes
+  has_many :offer_requests
+  
 
   has_paper_trail
 
@@ -33,6 +36,16 @@ class Project < ActiveRecord::Base
     # Check for purchase orders
     if purchase_orders.count > 0
       errors.add(:base, I18n.t('activerecord.models.project.check_for_purchase_orders'))
+      return false
+    end
+    # Check for receipt notes
+    if receipt_notes.count > 0
+      errors.add(:base, I18n.t('activerecord.models.project.check_for_receipt_notes'))
+      return false
+    end
+    # Check for offer requests
+    if offer_requests.count > 0
+      errors.add(:base, I18n.t('activerecord.models.project.check_for_offer_requests'))
       return false
     end
   end

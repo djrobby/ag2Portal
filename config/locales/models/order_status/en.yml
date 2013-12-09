@@ -1,0 +1,14 @@
+en:
+  activerecord:
+    models:
+      order_status:
+        zero:  Order statuses
+        one:   Order status
+        few:   Order statuses
+        other: Order statuses
+        check_for_purchase_orders: "Order status cannot be destroyed while linked orders exist."
+    attributes:
+      order_status:
+        name: "Description"
+        approval: Require approval?
+        notification: Notifies?
