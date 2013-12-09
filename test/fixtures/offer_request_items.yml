@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  offer_request: 
+  product: 
+  description: MyString
+  quantity: 9.99
+  price: 9.99
+  tax_type: 
+
+two:
+  offer_request: 
+  product: 
+  description: MyString
+  quantity: 9.99
+  price: 9.99
+  tax_type: 

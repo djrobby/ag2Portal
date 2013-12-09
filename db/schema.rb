@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131208104443) do
+ActiveRecord::Schema.define(:version => 20131209090957) do
 
   create_table "activities", :force => true do |t|
     t.string   "description"
@@ -292,6 +292,101 @@ ActiveRecord::Schema.define(:version => 20131208104443) do
 
   add_index "measures", ["description"], :name => "index_measures_on_description"
 
+  create_table "offer_items", :force => true do |t|
+    t.integer  "offer_id"
+    t.integer  "product_id"
+    t.string   "code"
+    t.string   "description"
+    t.decimal  "quantity",      :precision => 12, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "price",         :precision => 12, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "discount_pct",  :precision => 6,  :scale => 2, :default => 0.0, :null => false
+    t.decimal  "discount",      :precision => 12, :scale => 4, :default => 0.0, :null => false
+    t.integer  "tax_type_id"
+    t.date     "delivery_date"
+    t.datetime "created_at",                                                    :null => false
+    t.datetime "updated_at",                                                    :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  add_index "offer_items", ["code"], :name => "index_offer_items_on_code"
+  add_index "offer_items", ["description"], :name => "index_offer_items_on_description"
+  add_index "offer_items", ["offer_id"], :name => "index_offer_items_on_offer_id"
+  add_index "offer_items", ["product_id"], :name => "index_offer_items_on_product_id"
+  add_index "offer_items", ["tax_type_id"], :name => "index_offer_items_on_tax_type_id"
+
+  create_table "offer_request_items", :force => true do |t|
+    t.integer  "offer_request_id"
+    t.integer  "product_id"
+    t.string   "description"
+    t.decimal  "quantity",         :precision => 12, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "price",            :precision => 12, :scale => 4, :default => 0.0, :null => false
+    t.integer  "tax_type_id"
+    t.datetime "created_at",                                                       :null => false
+    t.datetime "updated_at",                                                       :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  add_index "offer_request_items", ["description"], :name => "index_offer_request_items_on_description"
+  add_index "offer_request_items", ["offer_request_id"], :name => "index_offer_request_items_on_offer_request_id"
+  add_index "offer_request_items", ["product_id"], :name => "index_offer_request_items_on_product_id"
+  add_index "offer_request_items", ["tax_type_id"], :name => "index_offer_request_items_on_tax_type_id"
+
+  create_table "offer_request_suppliers", :force => true do |t|
+    t.integer  "offer_request_id"
+    t.integer  "supplier_id"
+    t.datetime "created_at",       :null => false
+    t.datetime "updated_at",       :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  add_index "offer_request_suppliers", ["offer_request_id"], :name => "index_offer_request_suppliers_on_offer_request_id"
+  add_index "offer_request_suppliers", ["supplier_id"], :name => "index_offer_request_suppliers_on_supplier_id"
+
+  create_table "offer_requests", :force => true do |t|
+    t.string   "request_no"
+    t.date     "request_date"
+    t.date     "deadline_date"
+    t.integer  "payment_method_id"
+    t.integer  "project_id"
+    t.integer  "approved_offer_id"
+    t.datetime "approval_date"
+    t.integer  "approver_id"
+    t.datetime "created_at",        :null => false
+    t.datetime "updated_at",        :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+    t.string   "remarks"
+  end
+
+  add_index "offer_requests", ["approved_offer_id"], :name => "index_offer_requests_on_approved_offer_id"
+  add_index "offer_requests", ["approver_id"], :name => "index_offer_requests_on_approver_id"
+  add_index "offer_requests", ["payment_method_id"], :name => "index_offer_requests_on_payment_method_id"
+  add_index "offer_requests", ["project_id"], :name => "index_offer_requests_on_project_id"
+  add_index "offer_requests", ["request_date"], :name => "index_offer_requests_on_request_date"
+  add_index "offer_requests", ["request_no"], :name => "index_offer_requests_on_request_no"
+
+  create_table "offers", :force => true do |t|
+    t.integer  "offer_request_id"
+    t.integer  "supplier_id"
+    t.integer  "payment_method_id"
+    t.string   "offer_no"
+    t.date     "offer_date"
+    t.string   "remarks"
+    t.datetime "created_at",        :null => false
+    t.datetime "updated_at",        :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  add_index "offers", ["offer_date"], :name => "index_offers_on_offer_date"
+  add_index "offers", ["offer_no"], :name => "index_offers_on_offer_no"
+  add_index "offers", ["offer_request_id"], :name => "index_offers_on_offer_request_id"
+  add_index "offers", ["payment_method_id"], :name => "index_offers_on_payment_method_id"
+  add_index "offers", ["supplier_id"], :name => "index_offers_on_supplier_id"
+
   create_table "offices", :force => true do |t|
     t.string   "name"
     t.integer  "company_id"
@@ -542,9 +637,11 @@ ActiveRecord::Schema.define(:version => 20131208104443) do
     t.datetime "updated_at",                                                             :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
+    t.string   "code"
   end
 
   add_index "receipt_note_items", ["charge_account_id"], :name => "index_receipt_note_items_on_charge_account_id"
+  add_index "receipt_note_items", ["code"], :name => "index_receipt_note_items_on_code"
   add_index "receipt_note_items", ["description"], :name => "index_receipt_note_items_on_description"
   add_index "receipt_note_items", ["product_id"], :name => "index_receipt_note_items_on_product_id"
   add_index "receipt_note_items", ["purchase_order_item_id"], :name => "index_receipt_note_items_on_purchase_order_item_id"
@@ -1102,7 +1199,10 @@ ActiveRecord::Schema.define(:version => 20131208104443) do
 
   add_index "work_orders", ["area_id"], :name => "index_work_orders_on_area_id"
   add_index "work_orders", ["charge_account_id"], :name => "index_work_orders_on_charge_account_id"
+  add_index "work_orders", ["completed_at"], :name => "index_work_orders_on_completed_at"
+  add_index "work_orders", ["order_no"], :name => "index_work_orders_on_order_no"
   add_index "work_orders", ["project_id"], :name => "index_work_orders_on_project_id"
+  add_index "work_orders", ["started_at"], :name => "index_work_orders_on_started_at"
   add_index "work_orders", ["store_id"], :name => "index_work_orders_on_store_id"
   add_index "work_orders", ["work_order_labor_id"], :name => "index_work_orders_on_work_order_labor_id"
   add_index "work_orders", ["work_order_status_id"], :name => "index_work_orders_on_work_order_status_id"

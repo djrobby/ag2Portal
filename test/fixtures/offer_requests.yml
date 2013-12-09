@@ -1,0 +1,21 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  request_no: MyString
+  request_date: 2013-12-09
+  deadline_date: 2013-12-09
+  payment_method: 
+  project: 
+  approved_offer: 
+  approval_date: 2013-12-09 08:57:38
+  approver: 
+
+two:
+  request_no: MyString
+  request_date: 2013-12-09
+  deadline_date: 2013-12-09
+  payment_method: 
+  project: 
+  approved_offer: 
+  approval_date: 2013-12-09 08:57:38
+  approver: 

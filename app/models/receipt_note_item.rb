@@ -6,7 +6,7 @@ class ReceiptNoteItem < ActiveRecord::Base
   belongs_to :store
   belongs_to :work_order
   belongs_to :charge_account
-  attr_accessible :description, :discount, :discount_pct, :price, :quantity,
+  attr_accessible :code, :description, :discount, :discount_pct, :price, :quantity,
                   :receipt_note_id, :purchase_order_item_id, :product_id,
                   :tax_type_id, :store_id, :work_order_id, :charge_account_id
 
