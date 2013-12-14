@@ -89,12 +89,16 @@ module Ag2Human
     # DELETE /departments/1.json
     def destroy
       @department = Department.find(params[:id])
-      @department.destroy
 
       respond_to do |format|
-        format.html { redirect_to departments_url,
+        if @department.destroy
+          format.html { redirect_to departments_url,
                       notice: (crud_notice('destroyed', @department) + "#{undo_link(@department)}").html_safe }
-        format.json { head :no_content }
+          format.json { head :no_content }
+        else
+          format.html { redirect_to departments_url, alert: "#{@department.errors[:base].to_s}".gsub('["', '').gsub('"]', '') }
+          format.json { render json: @department.errors, status: :unprocessable_entity }
+        end
       end
     end
 

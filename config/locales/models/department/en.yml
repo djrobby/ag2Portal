@@ -6,6 +6,8 @@ en:
         one:   Department
         few:   Departments
         other: Departments
+        check_for_workers: "Department cannot be destroyed while linked workers exist."
+        check_for_areas: "Department cannot be destroyed while linked areas exist."
     attributes:
       department:
         code: "Code"

@@ -6,6 +6,8 @@ es:
         one:   Departamento
         few:   Departamentos
         other: Departamentos
+        check_for_workers: "Departamento no puede ser eliminado mientras existan trabajadores vinculados."
+        check_for_areas: "Departamento no puede ser eliminado mientras existan áreas vinculadas."
     attributes:
       department:
         code: "Código"
