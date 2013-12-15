@@ -1,0 +1,35 @@
+en:
+  activerecord:
+    models:
+      receipt_note_item:
+        zero:  Receipt note items
+        one:   Receipt note item
+        few:   Receipt note items
+        other: Receipt note items
+        check_for_supplier_invoices: "Receipt note item cannot be destroyed while linked invoices exist."
+    attributes:
+      receipt_note_item:
+        receipt_note: "Receipt note"
+        receipt_note_id: "Receipt note"
+        purchase_order: "Order"
+        purchase_order_id: "Order"
+        purchase_order_item: "Order item"
+        purchase_order_item_id: "Order item"
+        product: "Product"
+        product_id: "Product"
+        code: "Reference"
+        description: "Description"
+        quantity: "Qty."
+        price: "Price"
+        discount_pct: "Disc.%"
+        discount: "Disc."
+        tax_type: "Tax T."
+        tax_type_id: "Tax T."
+        store: "Store"
+        store_id: "Store"
+        work_order: "Work order"
+        work_order_id: "Work order"
+        charge_account: "Charge account"
+        charge_account_id: "Charge account"
+        amount: "Amount"
+        tax: "Tax"

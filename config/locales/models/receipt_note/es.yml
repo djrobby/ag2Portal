@@ -1,0 +1,36 @@
+es:
+  activerecord:
+    models:
+      receipt_note:
+        zero:  Albaranes
+        one:   Albarán
+        few:   Albaranes
+        other: Albaranes
+        check_for_supplier_invoices: "Albarán no puede ser eliminado mientras existan facturas vinculadas."
+    attributes:
+      receipt_note:
+        receipt_no: "Nº"
+        supplier: "Proveedor"
+        supplier_id: "Proveedor"
+        payment_method: "Forma de pago"
+        payment_method_id: "Forma de pago"
+        receipt_date: "Fecha"
+        remarks: "Comentarios"
+        discount_pct: "% Dto."
+        discount: "Descuento"
+        project: "Proyecto"
+        project_id: "Proyecto"
+        office: "Oficina"
+        company: "Empresa"
+        store: "Almacén"
+        store_id: "Almacén"
+        work_order: "Orden de trabajo"
+        work_order_id: "Orden de trabajo"
+        charge_account: "Cuenta de cargo"
+        charge_account_id: "Cuenta de cargo"
+        retention_pct: "% Retención"
+        retention_time: "Plazo retención"
+        subtotal: "Subtotal"
+        taxable: "Base imponible"
+        taxes: "Impuestos"
+        total: "Total"

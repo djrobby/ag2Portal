@@ -12,7 +12,7 @@ class PurchaseOrder < ActiveRecord::Base
                   :store_id, :work_order_id, :charge_account_id, :retention_pct, :retention_time
 
   has_many :purchase_order_items, dependent: :destroy
-  has_many :receipt_notes
+  has_many :receipt_note_items
 
   has_paper_trail
 
@@ -49,8 +49,8 @@ class PurchaseOrder < ActiveRecord::Base
   private
 
   def check_for_dependent_records
-    # Check for receipt notes
-    if receipt_notes.count > 0
+    # Check for receipt note items
+    if receipt_note_items.count > 0
       errors.add(:base, I18n.t('activerecord.models.purchase_order.check_for_receipt_notes'))
       return false
     end

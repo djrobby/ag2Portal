@@ -1,0 +1,44 @@
+en:
+  activerecord:
+    models:
+      purchase_order:
+        zero:  Purchase orders
+        one:   Purchase order
+        few:   Purchase orders
+        other: Purchase orders
+        check_for_receipt_notes: "Purchase order cannot be destroyed while linked receipt notes exist."
+    attributes:
+      purchase_order:
+        order_no: "No."
+        offer: "Offer"
+        offer_id: "Offer"
+        supplier: "Supplier"
+        supplier_id: "Supplier"
+        payment_method: "Payment method"
+        payment_method_id: "Payment method"
+        order_status: "Status"
+        order_status_id: "Status"
+        order_date: "Date"
+        remarks: "Remarks"
+        delivery_avg: "Est.Delivery average"
+        discount_pct: "Disc.%"
+        discount: "Discount"
+        supplier_offer_no: "Sup.Offer No."
+        project: "Project"
+        project_id: "Project"
+        office: "Office"
+        company: "Company"
+        store: "Store"
+        store_id: "Store"
+        work_order: "Work order"
+        work_order_id: "Work order"
+        charge_account: "Charge account"
+        charge_account_id: "Charge account"
+        retention_pct: "Retention %"
+        retention_time: "Retention time"
+        subtotal: "Subtotal"
+        taxable: "Taxable"
+        taxes: "Taxes"
+        total: "Total"
+        offer_no: "Sup.Offer No."
+        balance: "Balance"

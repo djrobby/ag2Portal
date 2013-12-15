@@ -1,0 +1,36 @@
+en:
+  activerecord:
+    models:
+      receipt_note:
+        zero:  Receipt notes
+        one:   Receipt note
+        few:   Receipt notes
+        other: Receipt notes
+        check_for_supplier_invoices: "Receipt note cannot be destroyed while linked invoices exist."
+    attributes:
+      receipt_note:
+        receipt_no: "No."
+        supplier: "Supplier"
+        supplier_id: "Supplier"
+        payment_method: "Payment method"
+        payment_method_id: "Payment method"
+        receipt_date: "Date"
+        remarks: "Remarks"
+        discount_pct: "Disc.%"
+        discount: "Discount"
+        project: "Project"
+        project_id: "Project"
+        office: "Office"
+        company: "Company"
+        store: "Store"
+        store_id: "Store"
+        work_order: "Work order"
+        work_order_id: "Work order"
+        charge_account: "Charge account"
+        charge_account_id: "Charge account"
+        retention_pct: "Retention %"
+        retention_time: "Retention time"
+        subtotal: "Subtotal"
+        taxable: "Taxable"
+        taxes: "Taxes"
+        total: "Total"

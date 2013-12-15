@@ -1,5 +1,4 @@
 class ReceiptNote < ActiveRecord::Base
-  belongs_to :purchase_order
   belongs_to :supplier
   belongs_to :payment_method
   belongs_to :project
@@ -7,10 +6,11 @@ class ReceiptNote < ActiveRecord::Base
   belongs_to :work_order
   belongs_to :charge_account
   attr_accessible :discount, :discount_pct, :receipt_date, :receipt_no, :remarks, :retention_pct, :retention_time,
-                  :purchase_order_id, :supplier_id, :payment_method_id, :project_id,
+                  :supplier_id, :payment_method_id, :project_id,
                   :store_id, :work_order_id, :charge_account_id
 
   has_many :receipt_note_items, dependent: :destroy
+  has_many :supplier_invoice_items
 
   has_paper_trail
 
@@ -19,6 +19,8 @@ class ReceiptNote < ActiveRecord::Base
   validates :supplier,       :presence => true
   validates :payment_method, :presence => true
   validates :project,        :presence => true
+
+  before_destroy :check_for_dependent_records
 
   #
   # Records navigator
@@ -37,5 +39,15 @@ class ReceiptNote < ActiveRecord::Base
 
   def to_last
     ReceiptNote.order("id").last
+  end
+
+  private
+
+  def check_for_dependent_records
+    # Check for supplier invoice items
+    if supplier_invoice_items.count > 0
+      errors.add(:base, I18n.t('activerecord.models.receipt_note.check_for_supplier_invoices'))
+      return false
+    end
   end
 end

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131215093534) do
+ActiveRecord::Schema.define(:version => 20131215191424) do
 
   create_table "activities", :force => true do |t|
     t.string   "description"
@@ -644,12 +644,14 @@ ActiveRecord::Schema.define(:version => 20131215093534) do
     t.integer  "created_by"
     t.integer  "updated_by"
     t.string   "code"
+    t.integer  "purchase_order_id"
   end
 
   add_index "receipt_note_items", ["charge_account_id"], :name => "index_receipt_note_items_on_charge_account_id"
   add_index "receipt_note_items", ["code"], :name => "index_receipt_note_items_on_code"
   add_index "receipt_note_items", ["description"], :name => "index_receipt_note_items_on_description"
   add_index "receipt_note_items", ["product_id"], :name => "index_receipt_note_items_on_product_id"
+  add_index "receipt_note_items", ["purchase_order_id"], :name => "index_receipt_note_items_on_purchase_order_id"
   add_index "receipt_note_items", ["purchase_order_item_id"], :name => "index_receipt_note_items_on_purchase_order_item_id"
   add_index "receipt_note_items", ["receipt_note_id"], :name => "index_receipt_note_items_on_receipt_note_id"
   add_index "receipt_note_items", ["store_id"], :name => "index_receipt_note_items_on_store_id"
@@ -658,7 +660,6 @@ ActiveRecord::Schema.define(:version => 20131215093534) do
 
   create_table "receipt_notes", :force => true do |t|
     t.string   "receipt_no"
-    t.integer  "purchase_order_id"
     t.integer  "supplier_id"
     t.integer  "payment_method_id"
     t.date     "receipt_date"
@@ -680,7 +681,6 @@ ActiveRecord::Schema.define(:version => 20131215093534) do
   add_index "receipt_notes", ["charge_account_id"], :name => "index_receipt_notes_on_charge_account_id"
   add_index "receipt_notes", ["payment_method_id"], :name => "index_receipt_notes_on_payment_method_id"
   add_index "receipt_notes", ["project_id"], :name => "index_receipt_notes_on_project_id"
-  add_index "receipt_notes", ["purchase_order_id"], :name => "index_receipt_notes_on_purchase_order_id"
   add_index "receipt_notes", ["receipt_date"], :name => "index_receipt_notes_on_receipt_date"
   add_index "receipt_notes", ["receipt_no"], :name => "index_receipt_notes_on_receipt_no"
   add_index "receipt_notes", ["store_id"], :name => "index_receipt_notes_on_store_id"

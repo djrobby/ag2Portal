@@ -1,0 +1,27 @@
+es:
+  activerecord:
+    models:
+      purchase_order_item:
+        zero:  Ítems de pedido
+        one:   Ítem de pedido
+        few:   Ítems de pedido
+        other: Ítems de pedido
+        check_for_receipt_notes: "Ítem de pedido no puede ser eliminado mientras existan albaranes vinculados."
+    attributes:
+      purchase_order_item:
+        purchase_order: "Pedido"
+        purchase_order_id: "Pedido"
+        product: "Producto"
+        product_id: "Producto"
+        code: "Referencia"
+        description: "Descripción"
+        quantity: "Cant."
+        price: "Precio"
+        discount_pct: "% Dto."
+        discount: "Dto."
+        tax_type: "T.Impto."
+        tax_type_id: "T.Impto."
+        delivery_date: "Entrega est."
+        amount: "Importe"
+        tax: "Impto."
+        balance: "Saldo"
