@@ -1,0 +1,24 @@
+en:
+  activerecord:
+    models:
+      project:
+        zero:  Projects
+        one:   Project
+        few:   Projects
+        other: Projects
+        check_for_purchase_orders: "Project cannot be destroyed while linked orders exist."
+        check_for_work_orders: "Project cannot be destroyed while linked work orders exist."
+        check_for_receipt_notes: "Project cannot be destroyed while linked receipt notes exist."
+        check_for_charge_accounts: "Project cannot be destroyed while linked charge accounts exist."
+        check_for_offer_requests: "Project cannot be destroyed while linked requests exist."
+        check_for_supplier_invoices: "Project cannot be destroyed while linked invoices exist."
+    attributes:
+      project:
+        name: "Name"
+        opened_at: "Opened at"
+        closed_at: "Closed at"
+        office: "Office"
+        office_id: "Office"
+        company: "Office"
+        company_id: "Office"
+        ledger_account: "Ledger account"

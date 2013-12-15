@@ -1,0 +1,25 @@
+en:
+  activerecord:
+    models:
+      offer_item:
+        zero:  Offer items
+        one:   Offer item
+        few:   Offer items
+        other: Offer items
+    attributes:
+      offer_item:
+        offer: "Offer"
+        offer_id: "Offer"
+        product: "Product"
+        product_id: "Product"
+        code: "Reference"
+        description: "Description"
+        quantity: "Qty."
+        price: "Price"
+        discount_pct: "Disc.%"
+        discount: "Disc."
+        tax_type: "Tax T."
+        tax_type_id: "Tax T."
+        delivery_date: "Est.Delivery"
+        amount: "Amount"
+        tax: "Tax"

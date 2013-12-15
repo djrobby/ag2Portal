@@ -1,0 +1,23 @@
+es:
+  activerecord:
+    models:
+      offer_request_item:
+        zero:  Ítems de solicitud de oferta
+        one:   Ítem de solicitud de oferta
+        few:   Ítems de solicitud de oferta
+        other: Ítems de solicitud de oferta
+    attributes:
+      offer_request_item:
+        offer: "Oferta"
+        offer_id: "Oferta"
+        product: "Producto"
+        product_id: "Producto"
+        description: "Descripción"
+        quantity: "Cant."
+        price: "Precio"
+        discount_pct: "% Dto."
+        discount: "Dto."
+        tax_type: "T.Impto."
+        tax_type_id: "T.Impto."
+        amount: "Importe"
+        tax: "Impto."

@@ -1,0 +1,14 @@
+en:
+  activerecord:
+    models:
+      offer_request_supplier:
+        zero:  Offer request suppliers
+        one:   Offer request supplier
+        few:   Offer request suppliers
+        other: Offer request suppliers
+    attributes:
+      offer_request_supplier:
+        offer_request: "Offer request"
+        offer_request_id: "Offer request"
+        supplier: "Supplier"
+        supplier_id: "Supplier"

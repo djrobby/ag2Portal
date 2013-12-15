@@ -1,0 +1,30 @@
+es:
+  activerecord:
+    models:
+      offer_request:
+        zero:  Solicitudes de oferta
+        one:   Solicitud de oferta
+        few:   Solicitudes de oferta
+        other: Solicitudes de oferta
+        check_for_offers: "Solicitud de oferta no puede ser eliminada mientras existan ofertas vinculadas."
+    attributes:
+      offer_request:
+        payment_method: "Forma de pago"
+        payment_method_id: "Forma de pago"
+        project: "Proyecto"
+        project_id: "Proyecto"
+        request_no: "Nº"
+        request_date: "Fecha"
+        deadline_date: "Fecha límite"
+        approved_offer: "Oferta Nº"
+        approved_offer_id: "Oferta Nº"
+        approval_date: "Aprobada el"
+        approver: "Aprobada por"
+        approver_id: "Aprobada por"
+        remarks: "Comentarios"
+        discount_pct: "% Dto."
+        discount: "Descuento"
+        subtotal: "Subtotal"
+        taxable: "Base imponible"
+        taxes: "Impuestos"
+        total: "Total"

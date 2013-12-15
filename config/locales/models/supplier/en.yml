@@ -8,7 +8,9 @@ en:
         other: Suppliers
         check_for_purchase_orders: "Supplier cannot be destroyed while linked orders exist."
         check_for_receipt_notes: "Supplier cannot be destroyed while linked receipt notes exist."
+        check_for_offer_requests: "Supplier cannot be destroyed while linked requests exist."
         check_for_offers: "Supplier cannot be destroyed while linked offers exist."
+        check_for_supplier_invoices: "Supplier cannot be destroyed while linked invoices exist."
     attributes:
       supplier:
         name: "Name"

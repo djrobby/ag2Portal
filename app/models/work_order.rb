@@ -14,6 +14,7 @@ class WorkOrder < ActiveRecord::Base
   has_many :purchase_orders
   has_many :receipt_notes
   has_many :receipt_note_items
+  has_many :supplier_invoices
 
   has_paper_trail
 
@@ -44,6 +45,11 @@ class WorkOrder < ActiveRecord::Base
     # Check for receipt note items
     if receipt_note_items.count > 0
       errors.add(:base, I18n.t('activerecord.models.work_order.check_for_receipt_notes'))
+      return false
+    end
+    # Check for supplier invoices
+    if supplier_invoices.count > 0
+      errors.add(:base, I18n.t('activerecord.models.work_order.check_for_supplier_invoices'))
       return false
     end
   end

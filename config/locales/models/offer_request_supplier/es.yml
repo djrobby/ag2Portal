@@ -1,0 +1,14 @@
+es:
+  activerecord:
+    models:
+      offer_request_supplier:
+        zero:  Proveedores de solicitud de oferta
+        one:   Proveedor de solicitud de oferta
+        few:   Proveedores de solicitud de oferta
+        other: Proveedores de solicitud de oferta
+    attributes:
+      offer_request_supplier:
+        offer: "Oferta"
+        offer_id: "Oferta"
+        supplier: "Proveedor"
+        supplier_id: "Proveedor"

@@ -1,0 +1,26 @@
+es:
+  activerecord:
+    models:
+      offer:
+        zero:  Ofertas
+        one:   Oferta
+        few:   Ofertas
+        other: Ofertas
+        check_for_purchase_orders: "Oferta no puede ser eliminada mientras existan pedidos vinculados."
+    attributes:
+      offer:
+        offer_request: "Solicitud de oferta"
+        offer_request_id: "Solicitud de oferta"
+        supplier: "Proveedor"
+        supplier_id: "Proveedor"
+        payment_method: "Forma de pago"
+        payment_method_id: "Forma de pago"
+        offer_no: "Nº"
+        offer_date: "Fecha"
+        remarks: "Comentarios"
+        discount_pct: "% Dto."
+        discount: "Descuento"
+        subtotal: "Subtotal"
+        taxable: "Base imponible"
+        taxes: "Impuestos"
+        total: "Total"

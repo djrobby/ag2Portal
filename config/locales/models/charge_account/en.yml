@@ -1,0 +1,21 @@
+en:
+  activerecord:
+    models:
+      charge_account:
+        zero:  Charge accounts
+        one:   Charge account
+        few:   Charge accounts
+        other: Charge accounts
+        check_for_purchase_orders: "Charge account cannot be destroyed while linked orders exist."
+        check_for_work_orders: "Charge account cannot be destroyed while linked work orders exist."
+        check_for_receipt_notes: "Charge account cannot be destroyed while linked receipt notes exist."
+        check_for_supplier_invoices: "Charge account cannot be destroyed while linked invoices exist."
+    attributes:
+      charge_account:
+        account_code: "Code"
+        name: "Description"
+        opened_at: "Opened at"
+        closed_at: "Closed at"
+        project: "Project"
+        project_id: "Project"
+        ledger_account: "Ledger account"

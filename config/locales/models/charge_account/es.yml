@@ -1,0 +1,21 @@
+es:
+  activerecord:
+    models:
+      charge_account:
+        zero:  Cuentas de cargo
+        one:   Cuenta de cargo
+        few:   Cuentas de cargo
+        other: Cuentas de cargo
+        check_for_purchase_orders: "Cuenta de cargo no puede ser eliminada mientras existan pedidos vinculados."
+        check_for_work_orders: "Cuenta de cargo no puede ser eliminada mientras existan ordenes de trabajo vinculadas."
+        check_for_receipt_notes: "Cuenta de cargo no puede ser eliminada mientras existan albaranes vinculados."
+        check_for_supplier_invoices: "Cuenta de cargo no puede ser eliminada mientras existan facturas vinculados."
+    attributes:
+      charge_account:
+        account_code: "Código"
+        name: "Descripción"
+        opened_at: "Abierta el"
+        closed_at: "Cerrada el"
+        project: "Proyecto"
+        project_id: "Proyecto"
+        ledger_account: "Cuenta contable"

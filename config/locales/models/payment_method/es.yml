@@ -6,6 +6,12 @@ es:
         one:   Forma de pago
         few:   Formas de pago
         other: Formas de pago
+        check_for_suppliers: "Forma de pago no puede ser eliminada mientras existan proveedores vinculados."
+        check_for_purchase_orders: "Forma de pago no puede ser eliminada mientras existan pedidos vinculados."
+        check_for_receipt_notes: "Forma de pago no puede ser eliminada mientras existan albaranes vinculados."
+        check_for_offer_requests: "Forma de pago no puede ser eliminada mientras existan solicitudes vinculadas."
+        check_for_offers: "Forma de pago no puede ser eliminada mientras existan ofertas vinculadas."
+        check_for_supplier_invoices: "Forma de pago no puede ser eliminada mientras existan facturas vinculadas."
     attributes:
       payment_method:
         description: "Descripción"

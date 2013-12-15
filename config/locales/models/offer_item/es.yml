@@ -1,0 +1,25 @@
+es:
+  activerecord:
+    models:
+      offer_item:
+        zero:  Ítems de oferta
+        one:   Ítem de oferta
+        few:   Ítems de oferta
+        other: Ítems de oferta
+    attributes:
+      offer_item:
+        offer: "Oferta"
+        offer_id: "Oferta"
+        product: "Producto"
+        product_id: "Producto"
+        code: "Referencia"
+        description: "Descripción"
+        quantity: "Cant."
+        price: "Precio"
+        discount_pct: "% Dto."
+        discount: "Dto."
+        tax_type: "T.Impto."
+        tax_type_id: "T.Impto."
+        delivery_date: "Entrega est."
+        amount: "Importe"
+        tax: "Impto."

@@ -9,6 +9,7 @@ class Project < ActiveRecord::Base
   has_many :purchase_orders
   has_many :receipt_notes
   has_many :offer_requests
+  has_many :supplier_invoices
   
 
   has_paper_trail
@@ -46,6 +47,11 @@ class Project < ActiveRecord::Base
     # Check for offer requests
     if offer_requests.count > 0
       errors.add(:base, I18n.t('activerecord.models.project.check_for_offer_requests'))
+      return false
+    end
+    # Check for supplier invoices
+    if supplier_invoices.count > 0
+      errors.add(:base, I18n.t('activerecord.models.project.check_for_supplier_invoices'))
       return false
     end
   end

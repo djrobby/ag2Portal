@@ -25,7 +25,7 @@ en:
         ticket_subject: "Subject"
         attachment: "Attachment (Image)"
         attach_exist: "The attachment can be seen at the bottom of this page."
-        id: "#"
+        id: "No."
         created_by: "Created by"
         updated_by: "Updated by"
     errors:

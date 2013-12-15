@@ -1,0 +1,30 @@
+en:
+  activerecord:
+    models:
+      offer_request:
+        zero:  Offer requests
+        one:   Offer request
+        few:   Offer requests
+        other: Offer requests
+        check_for_offers: "Offer request cannot be destroyed while linked offers exist."
+    attributes:
+      offer_request:
+        payment_method: "Payment method"
+        payment_method_id: "Payment method"
+        project: "Project"
+        project_id: "Project"
+        request_no: "No."
+        request_date: "Date"
+        deadline_date: "Deadline date"
+        approved_offer: "Offer No."
+        approved_offer_id: "Offer No."
+        approval_date: "Approved on"
+        approver: "Approved by"
+        approver_id: "Approved by"
+        remarks: "Remarks"
+        discount_pct: "Disc.%"
+        discount: "Discount"
+        subtotal: "Subtotal"
+        taxable: "Taxable"
+        taxes: "Taxes"
+        total: "Total"

@@ -6,6 +6,12 @@ en:
         one:   Payment method
         few:   Payment methods
         other: Payment methods
+        check_for_suppliers: "Payment method cannot be destroyed while linked supplliers exist."
+        check_for_purchase_orders: "Payment method cannot be destroyed while linked orders exist."
+        check_for_receipt_notes: "Payment method cannot be destroyed while linked receipt notes exist."
+        check_for_offer_requests: "Payment method cannot be destroyed while linked requests exist."
+        check_for_offers: "Payment method cannot be destroyed while linked offers exist."
+        check_for_supplier_invoices: "Payment method cannot be destroyed while linked invoices exist."
     attributes:
       payment_method:
         description: "Description"

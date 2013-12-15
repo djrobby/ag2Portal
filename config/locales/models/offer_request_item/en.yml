@@ -1,0 +1,23 @@
+en:
+  activerecord:
+    models:
+      offer_request_item:
+        zero:  Offer request items
+        one:   Offer request item
+        few:   Offer request items
+        other: Offer request items
+    attributes:
+      offer_request_item:
+        offer_request: "Offer request"
+        offer_request_id: "Offer request"
+        product: "Product"
+        product_id: "Product"
+        description: "Description"
+        quantity: "Qty."
+        price: "Price"
+        discount_pct: "Disc.%"
+        discount: "Disc."
+        tax_type: "Tax T."
+        tax_type_id: "Tax T."
+        amount: "Amount"
+        tax: "Tax"

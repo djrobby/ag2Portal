@@ -1,0 +1,26 @@
+en:
+  activerecord:
+    models:
+      offer:
+        zero:  Offers
+        one:   Offer
+        few:   Offers
+        other: Offers
+        check_for_purchase_orders: "Offer cannot be destroyed while linked orders exist."
+    attributes:
+      offer:
+        offer_request: "Offer request"
+        offer_request_id: "Offer request"
+        supplier: "Supplier"
+        supplier_id: "Supplier"
+        payment_method: "Payment method"
+        payment_method_id: "Payment method"
+        offer_no: "No."
+        offer_date: "Date"
+        remarks: "Remarks"
+        discount_pct: "Disc.%"
+        discount: "Discount"
+        subtotal: "Subtotal"
+        taxable: "Taxable"
+        taxes: "Taxes"
+        total: "Total"

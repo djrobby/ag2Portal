@@ -2,7 +2,7 @@ class Offer < ActiveRecord::Base
   belongs_to :offer_request
   belongs_to :supplier
   belongs_to :payment_method
-  attr_accessible :offer_date, :offer_no, :remarks,
+  attr_accessible :offer_date, :offer_no, :remarks, :discount_pct, :discount,
                   :offer_request_id, :supplier_id, :payment_method_id
   
   has_many :offer_items, dependent: :destroy

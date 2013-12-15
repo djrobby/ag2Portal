@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131209120703) do
+ActiveRecord::Schema.define(:version => 20131215093534) do
 
   create_table "activities", :force => true do |t|
     t.string   "description"
@@ -354,11 +354,13 @@ ActiveRecord::Schema.define(:version => 20131209120703) do
     t.integer  "approved_offer_id"
     t.datetime "approval_date"
     t.integer  "approver_id"
-    t.datetime "created_at",        :null => false
-    t.datetime "updated_at",        :null => false
+    t.datetime "created_at",                                                        :null => false
+    t.datetime "updated_at",                                                        :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
     t.string   "remarks"
+    t.decimal  "discount_pct",      :precision => 6,  :scale => 2, :default => 0.0, :null => false
+    t.decimal  "discount",          :precision => 12, :scale => 4, :default => 0.0, :null => false
   end
 
   add_index "offer_requests", ["approved_offer_id"], :name => "index_offer_requests_on_approved_offer_id"
@@ -375,10 +377,12 @@ ActiveRecord::Schema.define(:version => 20131209120703) do
     t.string   "offer_no"
     t.date     "offer_date"
     t.string   "remarks"
-    t.datetime "created_at",        :null => false
-    t.datetime "updated_at",        :null => false
+    t.datetime "created_at",                                                        :null => false
+    t.datetime "updated_at",                                                        :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
+    t.decimal  "discount_pct",      :precision => 6,  :scale => 2, :default => 0.0, :null => false
+    t.decimal  "discount",          :precision => 12, :scale => 4, :default => 0.0, :null => false
   end
 
   add_index "offers", ["offer_date"], :name => "index_offers_on_offer_date"
