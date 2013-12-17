@@ -1,0 +1,25 @@
+es:
+  activerecord:
+    models:
+      work_order_item:
+        zero:  Ítems de orden de trabajo
+        one:   Ítem de orden de trabajo
+        few:   Ítems de orden de trabajo
+        other: Ítems de orden de trabajo
+    attributes:
+      work_order_item:
+        work_order: "Orden de trabajo"
+        work_order_id: "Orden de trabajo"
+        product: "Producto"
+        product_id: "Producto"
+        description: "Descripción"
+        quantity: "Cant."
+        cost: "Coste"
+        price: "Precio"
+        tax_type: "T.Impto."
+        tax_type_id: "T.Impto."
+        store: "Almacén"
+        store_id: "Almacén"
+        costs: "Costes"
+        amount: "Importe"
+        tax: "Impto."

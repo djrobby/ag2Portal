@@ -1,0 +1,25 @@
+en:
+  activerecord:
+    models:
+      work_order_item:
+        zero:  Work order items
+        one:   Work order item
+        few:   Work order items
+        other: Work order items
+    attributes:
+      work_order_item:
+        work_order: "Work order"
+        work_order_id: "Work order"
+        product: "Product"
+        product_id: "Product"
+        description: "Description"
+        quantity: "Qty."
+        cost: "Cost"
+        price: "Price"
+        tax_type: "Tax T."
+        tax_type_id: "Tax T."
+        store: "Store"
+        store_id: "Store"
+        costs: "Costs"
+        amount: "Amount"
+        tax: "Tax"
