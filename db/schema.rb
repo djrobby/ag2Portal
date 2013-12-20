@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131220191554) do
+ActiveRecord::Schema.define(:version => 20131220200257) do
 
   create_table "activities", :force => true do |t|
     t.string   "description"
@@ -1195,6 +1195,20 @@ ActiveRecord::Schema.define(:version => 20131220191554) do
     t.integer  "created_by"
     t.integer  "updated_by"
   end
+
+  create_table "work_order_workers", :force => true do |t|
+    t.integer  "work_order_id"
+    t.integer  "worker_id"
+    t.decimal  "hours",         :precision => 7,  :scale => 2, :default => 0.0, :null => false
+    t.decimal  "cost",          :precision => 12, :scale => 4, :default => 0.0, :null => false
+    t.datetime "created_at",                                                    :null => false
+    t.datetime "updated_at",                                                    :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  add_index "work_order_workers", ["work_order_id"], :name => "index_work_order_workers_on_work_order_id"
+  add_index "work_order_workers", ["worker_id"], :name => "index_work_order_workers_on_worker_id"
 
   create_table "work_orders", :force => true do |t|
     t.string   "order_no"
