@@ -4,6 +4,7 @@ class Department < ActiveRecord::Base
 
   has_many :areas
   has_many :workers
+  has_many :worker_items
   has_many :corp_contacts
 
   has_paper_trail

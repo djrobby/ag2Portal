@@ -1,0 +1,33 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  worker: 
+  company: 
+  office: 
+  professional_group: 
+  collective_agreement: 
+  contract_type: 
+  contribution_account_code: MyString
+  department: 
+  position: MyString
+  insurance: 
+  nomina_id: MyString
+  starting_at: 2013-12-20
+  ending_at: 2013-12-20
+  issue_starting_at: 2013-12-20
+
+two:
+  worker: 
+  company: 
+  office: 
+  professional_group: 
+  collective_agreement: 
+  contract_type: 
+  contribution_account_code: MyString
+  department: 
+  position: MyString
+  insurance: 
+  nomina_id: MyString
+  starting_at: 2013-12-20
+  ending_at: 2013-12-20
+  issue_starting_at: 2013-12-20

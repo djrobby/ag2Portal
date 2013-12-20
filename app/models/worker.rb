@@ -29,6 +29,9 @@ class Worker < ActiveRecord::Base
                   :social_security_cost, :education
   has_attached_file :avatar, :styles => { :medium => "96x96>", :small => "64x64>" }, :default_url => "/images/missing/:style/user.png"
 
+  has_many :time_records
+  has_many :worker_items
+
   has_paper_trail
 
   validates :first_name,                :presence => true,
@@ -63,7 +66,6 @@ class Worker < ActiveRecord::Base
 
   before_validation :fields_to_uppercase
 
-  has_many :time_records
   def fields_to_uppercase
     if !self.fiscal_id.blank?
       self[:fiscal_id].upcase!

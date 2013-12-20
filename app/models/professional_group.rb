@@ -2,6 +2,9 @@ class ProfessionalGroup < ActiveRecord::Base
   attr_accessible :name, :pg_code,
                   :created_by, :updated_by, :nomina_id
 
+  has_many :workers
+  has_many :worker_items
+
   has_paper_trail
 
   validates :pg_code, :presence => true,
@@ -11,7 +14,6 @@ class ProfessionalGroup < ActiveRecord::Base
 
   before_validation :fields_to_uppercase
   
-  has_many :workers
   def fields_to_uppercase
     if !self.pg_code.blank?
       self[:pg_code].upcase!

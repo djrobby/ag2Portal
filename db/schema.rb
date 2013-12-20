@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131215191424) do
+ActiveRecord::Schema.define(:version => 20131220191554) do
 
   create_table "activities", :force => true do |t|
     t.string   "description"
@@ -72,11 +72,12 @@ ActiveRecord::Schema.define(:version => 20131215191424) do
   create_table "collective_agreements", :force => true do |t|
     t.string   "name"
     t.string   "ca_code"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",              :null => false
+    t.datetime "updated_at",              :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
     t.string   "nomina_id"
+    t.integer  "hours",      :limit => 2
   end
 
   add_index "collective_agreements", ["ca_code"], :name => "index_collective_agreements_on_ca_code"
@@ -709,6 +710,16 @@ ActiveRecord::Schema.define(:version => 20131215191424) do
   add_index "roles", ["name", "resource_type", "resource_id"], :name => "index_roles_on_name_and_resource_type_and_resource_id"
   add_index "roles", ["name"], :name => "index_roles_on_name"
 
+  create_table "salary_concepts", :force => true do |t|
+    t.string   "name"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  add_index "salary_concepts", ["name"], :name => "index_salary_concepts_on_name"
+
   create_table "sexes", :force => true do |t|
     t.string   "name"
     t.datetime "created_at", :null => false
@@ -1213,6 +1224,69 @@ ActiveRecord::Schema.define(:version => 20131215191424) do
   add_index "work_orders", ["work_order_labor_id"], :name => "index_work_orders_on_work_order_labor_id"
   add_index "work_orders", ["work_order_status_id"], :name => "index_work_orders_on_work_order_status_id"
   add_index "work_orders", ["work_order_type_id"], :name => "index_work_orders_on_work_order_type_id"
+
+  create_table "worker_items", :force => true do |t|
+    t.integer  "worker_id"
+    t.integer  "company_id"
+    t.integer  "office_id"
+    t.integer  "professional_group_id"
+    t.integer  "collective_agreement_id"
+    t.integer  "contract_type_id"
+    t.string   "contribution_account_code"
+    t.integer  "department_id"
+    t.string   "position"
+    t.integer  "insurance_id"
+    t.string   "nomina_id"
+    t.date     "starting_at"
+    t.date     "ending_at"
+    t.date     "issue_starting_at"
+    t.datetime "created_at",                :null => false
+    t.datetime "updated_at",                :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  add_index "worker_items", ["collective_agreement_id"], :name => "index_worker_items_on_collective_agreement_id"
+  add_index "worker_items", ["company_id"], :name => "index_worker_items_on_company_id"
+  add_index "worker_items", ["contract_type_id"], :name => "index_worker_items_on_contract_type_id"
+  add_index "worker_items", ["contribution_account_code"], :name => "index_worker_items_on_contribution_account_code"
+  add_index "worker_items", ["department_id"], :name => "index_worker_items_on_department_id"
+  add_index "worker_items", ["insurance_id"], :name => "index_worker_items_on_insurance_id"
+  add_index "worker_items", ["nomina_id"], :name => "index_worker_items_on_nomina_id"
+  add_index "worker_items", ["office_id"], :name => "index_worker_items_on_office_id"
+  add_index "worker_items", ["professional_group_id"], :name => "index_worker_items_on_professional_group_id"
+  add_index "worker_items", ["worker_id"], :name => "index_worker_items_on_worker_id"
+
+  create_table "worker_salaries", :force => true do |t|
+    t.integer  "worker_item_id"
+    t.integer  "year",                 :limit => 2
+    t.decimal  "gross_salary",                      :precision => 12, :scale => 4, :default => 0.0,   :null => false
+    t.decimal  "variable_salary",                   :precision => 12, :scale => 4, :default => 0.0,   :null => false
+    t.decimal  "social_security_cost",              :precision => 12, :scale => 4, :default => 0.0,   :null => false
+    t.decimal  "day_pct",                           :precision => 6,  :scale => 2, :default => 100.0, :null => false
+    t.decimal  "discount_pct",                      :precision => 6,  :scale => 2, :default => 100.0, :null => false
+    t.boolean  "active"
+    t.datetime "created_at",                                                                          :null => false
+    t.datetime "updated_at",                                                                          :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  add_index "worker_salaries", ["worker_item_id"], :name => "index_worker_salaries_on_worker_item_id"
+  add_index "worker_salaries", ["year"], :name => "index_worker_salaries_on_year"
+
+  create_table "worker_salary_items", :force => true do |t|
+    t.integer  "worker_salary_id"
+    t.integer  "salary_concept_id"
+    t.decimal  "amount",            :precision => 12, :scale => 4, :default => 0.0, :null => false
+    t.datetime "created_at",                                                        :null => false
+    t.datetime "updated_at",                                                        :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  add_index "worker_salary_items", ["salary_concept_id"], :name => "index_worker_salary_items_on_salary_concept_id"
+  add_index "worker_salary_items", ["worker_salary_id"], :name => "index_worker_salary_items_on_worker_salary_id"
 
   create_table "worker_types", :force => true do |t|
     t.string   "description"

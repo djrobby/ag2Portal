@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  worker_item: 
+  year: 1
+  gross_salary: 9.99
+  variable_salary: 9.99
+  social_security_cost: 9.99
+  day_pct: 9.99
+
+two:
+  worker_item: 
+  year: 1
+  gross_salary: 9.99
+  variable_salary: 9.99
+  social_security_cost: 9.99
+  day_pct: 9.99

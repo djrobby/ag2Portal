@@ -25,7 +25,7 @@ class User < ActiveRecord::Base
 
   after_create :assign_default_role_and_send_email
 
-  has_many :workers
+  has_many :workers # has_one when finished worker_items implementation
   has_one :technician
   def to_label
     "#{name} (#{email})"
