@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131220200257) do
+ActiveRecord::Schema.define(:version => 20131220203955) do
 
   create_table "activities", :force => true do |t|
     t.string   "description"
@@ -68,6 +68,45 @@ ActiveRecord::Schema.define(:version => 20131220200257) do
   add_index "charge_accounts", ["ledger_account"], :name => "index_charge_accounts_on_ledger_account"
   add_index "charge_accounts", ["name"], :name => "index_charge_accounts_on_name"
   add_index "charge_accounts", ["project_id"], :name => "index_charge_accounts_on_project_id"
+
+  create_table "clients", :force => true do |t|
+    t.integer  "entity_id"
+    t.string   "client_code"
+    t.string   "name"
+    t.string   "fiscal_id"
+    t.integer  "street_type_id"
+    t.string   "street_name"
+    t.string   "street_number"
+    t.string   "building"
+    t.integer  "floor"
+    t.string   "floor_office"
+    t.integer  "zipcode_id"
+    t.integer  "town_id"
+    t.integer  "province_id"
+    t.integer  "region_id"
+    t.integer  "country_id"
+    t.string   "phone"
+    t.string   "fax"
+    t.string   "cellular"
+    t.string   "email"
+    t.boolean  "active"
+    t.string   "remarks"
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  add_index "clients", ["client_code"], :name => "index_clients_on_client_code"
+  add_index "clients", ["country_id"], :name => "index_clients_on_country_id"
+  add_index "clients", ["entity_id"], :name => "index_clients_on_entity_id"
+  add_index "clients", ["fiscal_id"], :name => "index_clients_on_fiscal_id"
+  add_index "clients", ["name"], :name => "index_clients_on_name"
+  add_index "clients", ["province_id"], :name => "index_clients_on_province_id"
+  add_index "clients", ["region_id"], :name => "index_clients_on_region_id"
+  add_index "clients", ["street_type_id"], :name => "index_clients_on_street_type_id"
+  add_index "clients", ["town_id"], :name => "index_clients_on_town_id"
+  add_index "clients", ["zipcode_id"], :name => "index_clients_on_zipcode_id"
 
   create_table "collective_agreements", :force => true do |t|
     t.string   "name"
