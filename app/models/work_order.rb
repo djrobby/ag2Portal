@@ -6,11 +6,13 @@ class WorkOrder < ActiveRecord::Base
   belongs_to :project
   belongs_to :area
   belongs_to :store
+  belongs_to :client
   attr_accessible :closed_at, :completed_at, :order_no, :started_at,
                   :work_order_labor_id, :work_order_status_id, :work_order_type_id,
-                  :charge_account_id, :project_id, :area_id, :store_id
+                  :charge_account_id, :project_id, :area_id, :store_id, :client_id
 
   has_many :work_order_items, dependent: :destroy
+  has_many :work_order_workers, dependent: :destroy
   has_many :purchase_orders
   has_many :receipt_notes
   has_many :receipt_note_items

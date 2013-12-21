@@ -1,0 +1,33 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  delivery_note: 
+  sale_offer: 
+  sale_offer_item: 
+  product: 
+  description: MyString
+  quantity: 9.99
+  cost: 9.99
+  price: 9.99
+  discount_pct: 9.99
+  discount: 9.99
+  tax_type: 
+  store: 
+  work_order: 
+  charge_account: 
+
+two:
+  delivery_note: 
+  sale_offer: 
+  sale_offer_item: 
+  product: 
+  description: MyString
+  quantity: 9.99
+  cost: 9.99
+  price: 9.99
+  discount_pct: 9.99
+  discount: 9.99
+  tax_type: 
+  store: 
+  work_order: 
+  charge_account: 

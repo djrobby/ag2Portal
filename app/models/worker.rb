@@ -30,7 +30,8 @@ class Worker < ActiveRecord::Base
   has_attached_file :avatar, :styles => { :medium => "96x96>", :small => "64x64>" }, :default_url => "/images/missing/:style/user.png"
 
   has_many :time_records
-  has_many :worker_items
+  has_many :worker_items, dependent: :destroy
+
 
   has_paper_trail
 

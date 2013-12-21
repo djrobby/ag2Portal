@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131220203955) do
+ActiveRecord::Schema.define(:version => 20131221123349) do
 
   create_table "activities", :force => true do |t|
     t.string   "description"
@@ -239,6 +239,64 @@ ActiveRecord::Schema.define(:version => 20131220203955) do
 
   add_index "degree_types", ["dt_code"], :name => "index_degree_types_on_dt_code"
   add_index "degree_types", ["nomina_id"], :name => "index_degree_types_on_nomina_id"
+
+  create_table "delivery_note_items", :force => true do |t|
+    t.integer  "delivery_note_id"
+    t.integer  "sale_offer_id"
+    t.integer  "sale_offer_item_id"
+    t.integer  "product_id"
+    t.string   "description"
+    t.decimal  "quantity",           :precision => 12, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "cost",               :precision => 12, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "price",              :precision => 12, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "discount_pct",       :precision => 6,  :scale => 2, :default => 0.0, :null => false
+    t.decimal  "discount",           :precision => 12, :scale => 4, :default => 0.0, :null => false
+    t.integer  "tax_type_id"
+    t.integer  "store_id"
+    t.integer  "work_order_id"
+    t.integer  "charge_account_id"
+    t.datetime "created_at",                                                         :null => false
+    t.datetime "updated_at",                                                         :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  add_index "delivery_note_items", ["charge_account_id"], :name => "index_delivery_note_items_on_charge_account_id"
+  add_index "delivery_note_items", ["delivery_note_id"], :name => "index_delivery_note_items_on_delivery_note_id"
+  add_index "delivery_note_items", ["description"], :name => "index_delivery_note_items_on_description"
+  add_index "delivery_note_items", ["product_id"], :name => "index_delivery_note_items_on_product_id"
+  add_index "delivery_note_items", ["sale_offer_id"], :name => "index_delivery_note_items_on_sale_offer_id"
+  add_index "delivery_note_items", ["sale_offer_item_id"], :name => "index_delivery_note_items_on_sale_offer_item_id"
+  add_index "delivery_note_items", ["store_id"], :name => "index_delivery_note_items_on_store_id"
+  add_index "delivery_note_items", ["tax_type_id"], :name => "index_delivery_note_items_on_tax_type_id"
+  add_index "delivery_note_items", ["work_order_id"], :name => "index_delivery_note_items_on_work_order_id"
+
+  create_table "delivery_notes", :force => true do |t|
+    t.string   "delivery_no"
+    t.integer  "client_id"
+    t.integer  "payment_method_id"
+    t.date     "delivery_date"
+    t.string   "remarks"
+    t.decimal  "discount_pct",      :precision => 6,  :scale => 2, :default => 0.0, :null => false
+    t.decimal  "discount",          :precision => 12, :scale => 4, :default => 0.0, :null => false
+    t.integer  "project_id"
+    t.integer  "store_id"
+    t.integer  "work_order_id"
+    t.integer  "charge_account_id"
+    t.datetime "created_at",                                                        :null => false
+    t.datetime "updated_at",                                                        :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  add_index "delivery_notes", ["charge_account_id"], :name => "index_delivery_notes_on_charge_account_id"
+  add_index "delivery_notes", ["client_id"], :name => "index_delivery_notes_on_client_id"
+  add_index "delivery_notes", ["delivery_date"], :name => "index_delivery_notes_on_delivery_date"
+  add_index "delivery_notes", ["delivery_no"], :name => "index_delivery_notes_on_delivery_no"
+  add_index "delivery_notes", ["payment_method_id"], :name => "index_delivery_notes_on_payment_method_id"
+  add_index "delivery_notes", ["project_id"], :name => "index_delivery_notes_on_project_id"
+  add_index "delivery_notes", ["store_id"], :name => "index_delivery_notes_on_store_id"
+  add_index "delivery_notes", ["work_order_id"], :name => "index_delivery_notes_on_work_order_id"
 
   create_table "departments", :force => true do |t|
     t.string   "name"

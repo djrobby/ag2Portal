@@ -10,7 +10,7 @@ class WorkerItem < ActiveRecord::Base
                   :worker_id, :office_id, :professional_group_id, :collective_agreement_id, :contract_type_id,
                   :department_id, :insurance_id
 
-  has_many :worker_salaries
+  has_many :worker_salaries, dependent: :destroy
 
   has_paper_trail
 

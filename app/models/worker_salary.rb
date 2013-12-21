@@ -3,7 +3,7 @@ class WorkerSalary < ActiveRecord::Base
   attr_accessible :day_pct, :gross_salary, :social_security_cost, :variable_salary, :year,
                   :active, :worker_item_id
 
-  has_many :worker_salary_items
+  has_many :worker_salary_items, dependent: :destroy
 
   has_paper_trail
 
