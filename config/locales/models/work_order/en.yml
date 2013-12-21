@@ -31,6 +31,8 @@ en:
         store_id: "Store"
         area: "Area"
         area_id: "Area"
+        client: "Client"
+        client_id: "Client"
         opened_at: "Opened at"
         opened_by: "Opened by"
         subtotal: "Subtotal"

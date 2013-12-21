@@ -1,0 +1,19 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  supplier: 
+  supplier_invoice: 
+  payment_method: 
+  payment_date: 2013-12-21
+  amount: 9.99
+  remarks: MyString
+  approver: 
+
+two:
+  supplier: 
+  supplier_invoice: 
+  payment_method: 
+  payment_date: 2013-12-21
+  amount: 9.99
+  remarks: MyString
+  approver: 

@@ -31,6 +31,8 @@ es:
         store_id: "Almacén"
         area: "Área"
         area_id: "Área"
+        client: "Cliente"
+        client_id: "Cliente"
         opened_at: "Abierta el"
         opened_by: "Abierta por"
         subtotal: "Subtotal"
