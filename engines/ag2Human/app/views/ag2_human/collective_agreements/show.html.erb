@@ -6,12 +6,18 @@
     <tr>
       <td>Id:</td>
       <td><%= @collective_agreement.id %></td>
-      <td><%=t 'activerecord.attributes.collective_agreement.ca_code' %>:</td>
-      <td><%= @collective_agreement.ca_code unless @collective_agreement.ca_code.nil? %></td>
+      <td></td>
+      <td></td>
     </tr>
     <tr>
+      <td><%=t 'activerecord.attributes.collective_agreement.ca_code' %>:</td>
+      <td><%= @collective_agreement.ca_code unless @collective_agreement.ca_code.nil? %></td>
       <td><%=t 'activerecord.attributes.collective_agreement.name' %>:</td>
       <td><%= @collective_agreement.name %></td>
+    </tr>
+    <tr>
+      <td><%=t 'activerecord.attributes.collective_agreement.hours' %>:</td>
+      <td><%= @collective_agreement.hours unless @collective_agreement.hours.blank? %></td>
       <td><%= t :"activerecord.attributes.collective_agreement.nomina_id" %>:</td>
       <td><%= @collective_agreement.nomina_id unless @collective_agreement.nomina_id.blank? %></td>
     </tr>

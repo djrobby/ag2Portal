@@ -7,6 +7,7 @@
       <tr>
         <th><%= sortable "ca_code", t('activerecord.attributes.collective_agreement.ca_code') %></th>
         <th><%= sortable "name", t('activerecord.attributes.collective_agreement.name') %></th>
+        <th align="right"><%= sortable "hours", t('activerecord.attributes.collective_agreement.hours') %></th>
         <th></th>
       </tr>
     </thead>
@@ -15,6 +16,7 @@
       <tr>
         <td><%= link_to t.ca_code, t %></td>
         <td><%= t.name %></td>
+        <td align="right"><%= t.hours %></td>
         <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => CollectiveAgreement, :path => edit_collective_agreement_path(t) } %>
         <%= render :partial => '/layouts/crud/delete', :locals => { :model => CollectiveAgreement, :path => t, :msg => I18n.t("activerecord.models.collective_agreement.one"), :txt => t.name } %> </td>
       </tr>

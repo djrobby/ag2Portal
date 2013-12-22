@@ -3,6 +3,9 @@
 <%= display_base_errors resource %>
 <%= f.input :ca_code, :autofocus => true, :input_html => { :class => 'mid-text-field' }, :label_html => { :class => 'form-label' } %>
 <%= f.input :name, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %>
-<%= f.input :nomina_id, :input_html => { :class => 'mid-text-field' }, :label_html => { :class => 'form-label' } %>
+<div>
+  <label class="multi-field-label-two"> <%= f.input :hours, :input_html => { :class => 'mid-text-field number-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.input :nomina_id, :input_html => { :class => 'mid-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+</div>
 <%= f.button :submit, :class => 'btn-primary' %>
 <% end %>

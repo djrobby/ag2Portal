@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131221204311) do
+ActiveRecord::Schema.define(:version => 20131222091250) do
 
   create_table "activities", :force => true do |t|
     t.string   "description"
@@ -111,12 +111,12 @@ ActiveRecord::Schema.define(:version => 20131221204311) do
   create_table "collective_agreements", :force => true do |t|
     t.string   "name"
     t.string   "ca_code"
-    t.datetime "created_at",              :null => false
-    t.datetime "updated_at",              :null => false
+    t.datetime "created_at",                             :null => false
+    t.datetime "updated_at",                             :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
     t.string   "nomina_id"
-    t.integer  "hours",      :limit => 2
+    t.integer  "hours",      :limit => 2, :default => 0
   end
 
   add_index "collective_agreements", ["ca_code"], :name => "index_collective_agreements_on_ca_code"
