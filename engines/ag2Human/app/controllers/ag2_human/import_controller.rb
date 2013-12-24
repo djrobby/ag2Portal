@@ -80,33 +80,82 @@ module Ag2Human
               if !t.dfecbaj.blank? && t.dfecbaj <= DateTime.now.to_date
                 next
               end
-              # Setup worker code (nomina_id) and go on
-              new_worker = false
+              # Setup nomina_id & fiscal_id
               nomina_id = e.ccodemp + '-' + t.ccodtra
-              worker = Worker.find_by_nomina_id(nomina_id)
+              fiscal_id = sanitize_string(t.cdni, true, false, false, false) unless t.cdni.blank?
+              # Maybe worker & item exist
+              new_worker = false
+              new_worker_item = false
+              new_worker_salary = false
+              # Search for worker by fiscal_id
+              worker = Worker.find_by_fiscal_id(cdni)
               if worker.nil?
-                # Do not import new worker with blank email
+                # Yes, it's new, but do not import new worker with blank email
                 if t.cemail.blank?
                   next
                 end
-                # Add new worker from source
+                # New worker
                 new_worker = true
+                new_worker_item = true
+                new_worker_salary = true
                 worker = Worker.new
-                worker.nomina_id = nomina_id
+                worker_item = WorkerItem.new
+                worker_salary = WorkerSalary.new
+                # Initialize worker (fiscal_id)
+                worker.fiscal_id = fiscal_id
+              else  # Worker exists, check for item
+                # Search for worker_item by nomina_id
+                worker_item = WorkerItem.find_by_nomina_id(nomina_id)
+                if worker_item.nil?
+                  # New worker_item
+                  new_worker_item = true
+                  new_worker_salary = true
+                  worker_item = WorkerItem.new
+                  worker_salary = WorkerSalary.new
+                  # Initialize worker item (nomina_id)
+                  worker_item.nomina_id = nomina_id
+                end
               end
+              # Update worker first
               worker = update_worker(worker, t, company, office, new_worker, cctagene)
+              # And then worker item
+              worker_item = update_worker_item(worker_item, t, company, office, new_worker_item, cctagene)
+              # Try save them
               if worker.user_id > 0
+                # Save worker
                 if !worker.save
                   # Error: Workers Updater finished unexpectedly!
                   incidents = true
                   message += "<br/>".html_safe + e.ccodemp + " - " + t.capetra + " " + t.cnomtra + " - " + t.cemail
                   #break   # Import cancelled at company level
-                end
-              end
-            end
-          end
-        end
-      end
+                else
+                  # Save worker item
+                  if new_worker_item
+                    worker_item.worker_id = worker.id
+                  end
+                  if !worker_item.save
+                    # Error: Workers Updater finished unexpectedly!
+                    incidents = true
+                    message += "<br/>".html_safe + e.ccodemp + " - " + t.capetra + " " + t.cnomtra + " - " + t.cemail
+                  else
+                    if new_worker_salary
+                      # Save worker salary
+                      worker_salary.worker_item_id = worker_item.id
+                      worker_salary.year = Date.today.year
+                      worker_salary.gross_salary = t.nbruto unless t.nbruto.blank?
+                      if !worker_salary.save
+                        # Error: Workers Updater finished unexpectedly!
+                        incidents = true
+                        message += "<br/>".html_safe + e.ccodemp + " - " + t.capetra + " " + t.cnomtra + " - " + t.cemail
+                      end   # worker_salary.save if
+                    end   # new_worker_salary if
+                  end   # worker_item.save if
+                end   # worker.save if
+              end   # worker.user_id if
+            end   # trabaja do
+          end   # source if
+        end   # office if
+      end   # empresa do
       if incidents
         message = I18n.t("ag2_human.import.index.result_ok_with_error_message_html") + message
         @json_data = { "DataImport" => message, "Result" => "ERROR" }
@@ -276,6 +325,69 @@ render json: @json_data
       # Where is it in trabaja.dbf?
     end
     
+    def update_worker_item(worker, source, company, office, new, cctagene)
+      # Dont't need to look for auxiliary data, already done at update_worker
+      if new
+        #
+        # Add new item data
+        #
+        worker.company_id = company.id unless company.id.blank?
+        worker.office_id = office.id unless office.id.blank?
+        worker.department_id = @department.id unless @department.id.blank?
+        worker.professional_group_id = @professional_group.id unless @professional_group.id.blank?
+        worker.starting_at = source.dfecalta unless source.dfecalta.blank?
+        worker.issue_starting_at = source.dfecini unless source.dfecini.blank?
+        worker.contract_type_id = @contract_type.id unless @contract_type.id.blank?
+        worker.collective_agreement_id = @collective_agreement.id unless @collective_agreement.id.blank?
+        worker.position = sanitize_string(source.cpuesto, true, false, false, true) unless source.cpuesto.blank?
+        if !cctagene.nil?
+          worker.contribution_account_code = sanitize_string(cctagene, true, false, false, false)
+        else
+          worker.contribution_account_code = sanitize_string(source.csubcta, true, false, false, false) unless source.csubcta.blank?
+        end
+      else
+        #
+        # Update current item data (if applicable)
+        #
+        #-- Current worker_item company, office, department, progroup & position
+        #-- should not be updated
+        if !@contract_type.id.blank? && worker.contract_type_id != @contract_type.id
+          worker.contract_type_id = @contract_type.id
+        end
+        if !@collective_agreement.id.blank? && worker.collective_agreement_id != @collective_agreement.id
+          worker.collective_agreement_id = @collective_agreement.id
+        end
+        if !source.dfecalta.blank? && worker.starting_at != source.dfecalta
+          worker.starting_at = source.dfecalta
+        end
+        if !source.dfecini.blank? && worker.issue_starting_at != source.dfecini
+          worker.issue_starting_at = source.dfecini
+        end
+        if !cctagene.nil?
+          if worker.contribution_account_code != sanitize_string(cctagene, true, false, false, false)
+            worker.contribution_account_code = sanitize_string(cctagene, true, false, false, false)
+          end
+        else
+          if !source.csubcta.blank? && worker.contribution_account_code != sanitize_string(source.csubcta, true, false, false, false)
+            worker.contribution_account_code = sanitize_string(source.csubcta, true, false, false, false)
+          end
+        end
+      end
+      # Check out other mandatory default data
+      if worker.contribution_account_code.blank?
+        worker.contribution_account_code = "no_existe"
+      end
+      if worker.starting_at.blank? && !source.dfecini.blank?
+        worker.starting_at = source.dfecini
+      end
+      if worker.issue_starting_at.blank? && !source.dfecalta.blank?
+        worker.issue_starting_at = source.dfecalta
+      end
+
+      # Bye
+      return worker
+    end
+    
     def update_worker(worker, source, company, office, new, cctagene)
       # Look for auxiliary data (other tables)
       search_aux_data(source)
@@ -301,25 +413,25 @@ render json: @json_data
         worker.zipcode_id = @zipcode.id unless @zipcode.id.blank?
         worker.town_id = @zipcode.town_id unless @zipcode.town_id.blank?
         worker.province_id = @zipcode.province_id unless @zipcode.province_id.blank?
-        worker.company_id = company.id unless company.id.blank?
-        worker.office_id = office.id unless office.id.blank?
-        worker.department_id = @department.id unless @department.id.blank?
-        worker.professional_group_id = @professional_group.id unless @professional_group.id.blank?
-        worker.starting_at = source.dfecalta unless source.dfecalta.blank?
-        worker.issue_starting_at = source.dfecini unless source.dfecini.blank?
-        worker.affiliation_id = sanitize_string(source.cnumseg, true, false, false, false) unless source.cnumseg.blank?
-        if !cctagene.nil?
-          worker.contribution_account_code = sanitize_string(cctagene, true, false, false, false)
-        else
-          worker.contribution_account_code = sanitize_string(source.csubcta, true, false, false, false) unless source.csubcta.blank?
-        end
         worker.own_phone = phone(source.cpretel, source.ctelefono)
-        worker.contract_type_id = @contract_type.id unless @contract_type.id.blank?
-        worker.collective_agreement_id = @collective_agreement.id unless @collective_agreement.id.blank?
+        worker.affiliation_id = sanitize_string(source.cnumseg, true, false, false, false) unless source.cnumseg.blank?
         worker.worker_type_id = @worker_type.id unless @worker_type.id.blank?
         worker.degree_type_id = @degree_type.id unless @degree_type.id.blank?
-        worker.position = sanitize_string(source.cpuesto, true, false, false, true) unless source.cpuesto.blank?
-        worker.gross_salary = source.nbruto unless source.nbruto.blank?
+        #worker.company_id = company.id unless company.id.blank?
+        #worker.office_id = office.id unless office.id.blank?
+        #worker.department_id = @department.id unless @department.id.blank?
+        #worker.professional_group_id = @professional_group.id unless @professional_group.id.blank?
+        #worker.starting_at = source.dfecalta unless source.dfecalta.blank?
+        #worker.issue_starting_at = source.dfecini unless source.dfecini.blank?
+        #if !cctagene.nil?
+        #  worker.contribution_account_code = sanitize_string(cctagene, true, false, false, false)
+        #else
+        #  worker.contribution_account_code = sanitize_string(source.csubcta, true, false, false, false) unless source.csubcta.blank?
+        #end
+        #worker.contract_type_id = @contract_type.id unless @contract_type.id.blank?
+        #worker.collective_agreement_id = @collective_agreement.id unless @collective_agreement.id.blank?
+        #worker.position = sanitize_string(source.cpuesto, true, false, false, true) unless source.cpuesto.blank?
+        #worker.gross_salary = source.nbruto unless source.nbruto.blank?
         # Mandatory worker code
         if !first_name_wc.nil? && !last_name_wc.nil?
           worker.worker_code = generate_worker_code(last_name_wc, first_name_wc)
@@ -367,6 +479,12 @@ render json: @json_data
           worker.town_id = @zipcode.town_id
           worker.province_id = @zipcode.province_id
         end
+        if !source.ctelefono.blank? && worker.own_phone != phone(source.cpretel, source.ctelefono)
+          worker.own_phone = phone(source.cpretel, source.ctelefono)
+        end
+        if !source.cnumseg.blank? && worker.affiliation_id != sanitize_string(source.cnumseg, true, false, false, false)
+          worker.affiliation_id = sanitize_string(source.cnumseg, true, false, false, false)
+        end
         #-- Current worker company, office, department, progroup, contract, cagreement, degree & position
         #-- should not be updated
         #if !company.id.blank? && worker.company_id != company.id
@@ -382,39 +500,35 @@ render json: @json_data
         #if !@professional_group.id.blank? && worker.professional_group_id != @professional_group.id
         #  worker.professional_group_id = @professional_group.id
         #end
-        if !@contract_type.id.blank? && worker.contract_type_id != @contract_type.id
-          worker.contract_type_id = @contract_type.id
-        end
-        if !@collective_agreement.id.blank? && worker.collective_agreement_id != @collective_agreement.id
-          worker.collective_agreement_id = @collective_agreement.id
-        end
+        
+        #if !@contract_type.id.blank? && worker.contract_type_id != @contract_type.id
+        #  worker.contract_type_id = @contract_type.id
+        #end
+        #if !@collective_agreement.id.blank? && worker.collective_agreement_id != @collective_agreement.id
+        #  worker.collective_agreement_id = @collective_agreement.id
+        #end
+        
         #if !@degree_type.id.blank? && worker.degree_type_id != @degree_type.id
         #  worker.degree_type_id = @degree_type.id
         #end
         #if !source.cpuesto.blank? && worker.position != sanitize_string(source.cpuesto, true, false, false, true)
         #  worker.position = sanitize_string(source.cpuesto, true, false, false, true)
         #end
-        if !source.dfecalta.blank? && worker.starting_at != source.dfecalta
-          worker.starting_at = source.dfecalta
-        end
-        if !source.dfecini.blank? && worker.issue_starting_at != source.dfecini
-          worker.issue_starting_at = source.dfecini
-        end
-        if !source.cnumseg.blank? && worker.affiliation_id != sanitize_string(source.cnumseg, true, false, false, false)
-          worker.affiliation_id = sanitize_string(source.cnumseg, true, false, false, false)
-        end
-        if !cctagene.nil?
-          if worker.contribution_account_code != sanitize_string(cctagene, true, false, false, false)
-            worker.contribution_account_code = sanitize_string(cctagene, true, false, false, false)
-          end
-        else
-          if !source.csubcta.blank? && worker.contribution_account_code != sanitize_string(source.csubcta, true, false, false, false)
-            worker.contribution_account_code = sanitize_string(source.csubcta, true, false, false, false)
-          end
-        end
-        if !source.ctelefono.blank? && worker.own_phone != phone(source.cpretel, source.ctelefono)
-          worker.own_phone = phone(source.cpretel, source.ctelefono)
-        end
+        #if !source.dfecalta.blank? && worker.starting_at != source.dfecalta
+        #  worker.starting_at = source.dfecalta
+        #end
+        #if !source.dfecini.blank? && worker.issue_starting_at != source.dfecini
+        #  worker.issue_starting_at = source.dfecini
+        #end
+        #if !cctagene.nil?
+        #  if worker.contribution_account_code != sanitize_string(cctagene, true, false, false, false)
+        #    worker.contribution_account_code = sanitize_string(cctagene, true, false, false, false)
+        #  end
+        #else
+        #  if !source.csubcta.blank? && worker.contribution_account_code != sanitize_string(source.csubcta, true, false, false, false)
+        #    worker.contribution_account_code = sanitize_string(source.csubcta, true, false, false, false)
+        #  end
+        #end
         #-- Current salary, should not be updated
         #if !source.nbruto.blank? && worker.gross_salary != source.nbruto
         #  worker.gross_salary = source.nbruto
@@ -424,15 +538,15 @@ render json: @json_data
       if worker.fiscal_id.blank?
         worker.fiscal_id = worker.worker_code + "0000"
       end
-      if worker.contribution_account_code.blank?
-        worker.contribution_account_code = "no_existe"
-      end
-      if worker.starting_at.blank? && !source.dfecini.blank?
-        worker.starting_at = source.dfecini
-      end
-      if worker.issue_starting_at.blank? && !source.dfecalta.blank?
-        worker.issue_starting_at = source.dfecalta
-      end
+      #if worker.contribution_account_code.blank?
+      #  worker.contribution_account_code = "no_existe"
+      #end
+      #if worker.starting_at.blank? && !source.dfecini.blank?
+      #  worker.starting_at = source.dfecini
+      #end
+      #if worker.issue_starting_at.blank? && !source.dfecalta.blank?
+      #  worker.issue_starting_at = source.dfecalta
+      #end
       
       # Reset default auxiliary data
       set_defaults
