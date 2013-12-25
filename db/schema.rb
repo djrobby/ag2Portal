@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131222091250) do
+ActiveRecord::Schema.define(:version => 20131225110620) do
 
   create_table "activities", :force => true do |t|
     t.string   "description"
@@ -1465,7 +1465,6 @@ ActiveRecord::Schema.define(:version => 20131222091250) do
     t.decimal  "variable_salary",                   :precision => 12, :scale => 4, :default => 0.0,   :null => false
     t.decimal  "social_security_cost",              :precision => 12, :scale => 4, :default => 0.0,   :null => false
     t.decimal  "day_pct",                           :precision => 6,  :scale => 2, :default => 100.0, :null => false
-    t.decimal  "discount_pct",                      :precision => 6,  :scale => 2, :default => 100.0, :null => false
     t.boolean  "active"
     t.datetime "created_at",                                                                          :null => false
     t.datetime "updated_at",                                                                          :null => false
