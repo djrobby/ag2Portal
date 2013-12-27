@@ -46,24 +46,26 @@ class Worker < ActiveRecord::Base
                                         :length => { :minimum => 9 }
                                         # should :uniqueness => true
   validates :user,                      :presence => true
-  validates :company,                   :presence => true
-  validates :office,                    :presence => true
   validates :street_type,               :presence => true
   validates :zipcode,                   :presence => true
   validates :town,                      :presence => true
   validates :province,                  :presence => true
-  validates :professional_group,        :presence => true
-  validates :collective_agreement,      :presence => true
   validates :degree_type,               :presence => true
-  validates :contract_type,             :presence => true
   validates :worker_type,               :presence => true
-  validates :starting_at,               :presence => true
-  validates :issue_starting_at,         :presence => true
   validates :affiliation_id,            :presence => true
                                         # should :uniqueness => true
-  validates :contribution_account_code, :presence => true
-  validates :department,                :presence => true
   #validates :sex,                       :presence => true
+
+  # Deactivated because in WorkerItem:
+  #validates :professional_group,        :presence => true
+  #validates :collective_agreement,      :presence => true
+  #validates :company,                   :presence => true
+  #validates :office,                    :presence => true
+  #validates :contribution_account_code, :presence => true
+  #validates :department,                :presence => true
+  #validates :contract_type,             :presence => true
+  #validates :starting_at,               :presence => true
+  #validates :issue_starting_at,         :presence => true
 
   before_validation :fields_to_uppercase
 

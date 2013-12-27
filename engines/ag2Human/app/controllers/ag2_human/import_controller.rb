@@ -38,6 +38,8 @@ module Ag2Human
       $positions = "presidentedirectorjeferesponsablegerentetecnicoauxauxiliaradmadminadministrativoadministrativa"
       incidents = false
       message = ''
+      first_name = ''
+      last_name = ''
 
       # Read parameters from data import config
       data_import_config = DataImportConfig.find_by_name('workers')
@@ -83,12 +85,15 @@ module Ag2Human
               # Setup nomina_id & fiscal_id
               nomina_id = e.ccodemp + '-' + t.ccodtra
               fiscal_id = sanitize_string(t.cdni, true, false, false, false) unless t.cdni.blank?
+              # Store names for error messages
+              first_name = sanitize_string(t.cnomtra, true, false, false, true) unless t.cnomtra.blank?
+              last_name = sanitize_string(t.capetra, true, false, false, true) unless t.capetra.blank?
               # Maybe worker & item exist
               new_worker = false
               new_worker_item = false
               new_worker_salary = false
               # Search for worker by fiscal_id
-              worker = Worker.find_by_fiscal_id(cdni)
+              worker = Worker.find_by_fiscal_id(fiscal_id)
               if worker.nil?
                 # Yes, it's new, but do not import new worker with blank email
                 if t.cemail.blank?
@@ -101,8 +106,9 @@ module Ag2Human
                 worker = Worker.new
                 worker_item = WorkerItem.new
                 worker_salary = WorkerSalary.new
-                # Initialize worker (fiscal_id)
+                # Initialize worker (fiscal_id) & worker item (nomina_id) 
                 worker.fiscal_id = fiscal_id
+                worker_item.nomina_id = nomina_id
               else  # Worker exists, check for item
                 # Search for worker_item by nomina_id
                 worker_item = WorkerItem.find_by_nomina_id(nomina_id)
@@ -126,7 +132,7 @@ module Ag2Human
                 if !worker.save
                   # Error: Workers Updater finished unexpectedly!
                   incidents = true
-                  message += "<br/>".html_safe + e.ccodemp + " - " + t.capetra + " " + t.cnomtra + " - " + t.cemail
+                  message += "<br/>".html_safe + e.ccodemp + " - " + last_name + " " + first_name + " - " + t.cemail
                   #break   # Import cancelled at company level
                 else
                   # Save worker item
@@ -136,7 +142,7 @@ module Ag2Human
                   if !worker_item.save
                     # Error: Workers Updater finished unexpectedly!
                     incidents = true
-                    message += "<br/>".html_safe + e.ccodemp + " - " + t.capetra + " " + t.cnomtra + " - " + t.cemail
+                    message += "<br/>".html_safe + e.ccodemp + " - " + last_name + " " + first_name + " - " + t.cemail
                   else
                     if new_worker_salary
                       # Save worker salary
@@ -146,7 +152,7 @@ module Ag2Human
                       if !worker_salary.save
                         # Error: Workers Updater finished unexpectedly!
                         incidents = true
-                        message += "<br/>".html_safe + e.ccodemp + " - " + t.capetra + " " + t.cnomtra + " - " + t.cemail
+                        message += "<br/>".html_safe + e.ccodemp + " - " + last_name + " " + first_name + " - " + t.cemail
                       end   # worker_salary.save if
                     end   # new_worker_salary if
                   end   # worker_item.save if
