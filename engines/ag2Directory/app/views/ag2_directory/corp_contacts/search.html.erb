@@ -30,7 +30,7 @@
     <% @corp_contacts.each do |contact| %>
     <%= render :partial => 'layouts/ag2_directory/corpcontactinfo', :locals => { :contact => contact } %>
     <tr>
-      <td><a data-toggle="modal" href="#contactinfo<%= contact.id.to_s %>"><%= contact.full_name %></a></td>
+      <td><a data-toggle="modal" href="#contactinfo<%= contact.id.to_s %>"><%= contact.full_name_and_count %></a></td>
       <!-- <td><%#= link_to contact.last_name + ', ' + contact.first_name, contact %></td> -->
       <td><%= contact.position unless contact.position.blank? %></td>
       <td><%= contact.department.code unless contact.department.blank? %></td>
@@ -50,3 +50,4 @@
 <%= render :partial => '/layouts/pagination', :locals => { :ivar => @corp_contacts } %>
 
 <%= link_to I18n.t("ag2_directory.corp_contacts.back_to_main_page"), corp_contacts_path %>
+<br /><span class="shrinked"><%= t("ag2_directory.corp_contacts.woker_count_message") %></span>

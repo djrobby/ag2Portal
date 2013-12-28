@@ -14,20 +14,21 @@ module Ag2Directory
       message = I18n.t("result_ok_message_html", :scope => :"ag2_directory.import.index")
       @json_data = { "DataImport" => message, "Result" => "OK" }
 
-      @worker_items = WorkerItem.all
+      @workers = Worker.all
       
-      @worker_items.each do |worker_item|
-        worker = worker_item.worker
-        if !worker.nil?
+      @workers.each do |worker|
+        # Worker items
+        worker_items = worker.worker_items
+        if !worker_items.nil?
           # Contact already exists?
-          @contact = CorpContact.find_by_worker_id(worker_item)
+          @contact = CorpContact.find_by_worker_id(worker)
           if @contact.nil?
-            # Add new contact from worker item
+            # Add new contact from worker
             @contact = CorpContact.new
-            @contact.worker_id = worker_item.id
+            @contact.worker_id = worker.id
           end
           # Update contact
-          update_contact(@contact, worker_item, worker)
+          update_contact(@contact, worker, worker_items.first, worker_items.count)
           # Save contact
           if !@contact.save
             message = I18n.t("result_error_message_html", :scope => :"ag2_directory.import.index")
@@ -40,7 +41,7 @@ module Ag2Directory
       render json: @json_data
     end
 
-    def update_contact(contact, worker_item, worker)
+    def update_contact(contact, worker, worker_item, worker_items_count)
       # Worker data
       contact.first_name = worker.first_name unless worker.first_name.nil?
       contact.last_name = worker.last_name unless worker.last_name.nil?
@@ -57,6 +58,7 @@ module Ag2Directory
       contact.office_id = worker_item.office_id unless worker_item.office_id.nil?
       contact.department_id = worker_item.department_id unless worker_item.department_id.nil?
       contact.position = worker_item.position unless worker_item.position.nil?
+      contact.worker_count = worker_items_count
     end
   end
 end

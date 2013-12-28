@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131225110620) do
+ActiveRecord::Schema.define(:version => 20131228082741) do
 
   create_table "activities", :force => true do |t|
     t.string   "description"
@@ -184,8 +184,8 @@ ActiveRecord::Schema.define(:version => 20131225110620) do
     t.string   "corp_extension"
     t.string   "corp_cellular_long"
     t.string   "corp_cellular_short"
-    t.datetime "created_at",          :null => false
-    t.datetime "updated_at",          :null => false
+    t.datetime "created_at",                       :null => false
+    t.datetime "updated_at",                       :null => false
     t.string   "avatar_file_name"
     t.string   "avatar_content_type"
     t.integer  "avatar_file_size"
@@ -193,6 +193,7 @@ ActiveRecord::Schema.define(:version => 20131225110620) do
     t.integer  "worker_id"
     t.integer  "created_by"
     t.integer  "updated_by"
+    t.integer  "worker_count",        :limit => 2
   end
 
   add_index "corp_contacts", ["company_id"], :name => "index_corp_contacts_on_company_id"
