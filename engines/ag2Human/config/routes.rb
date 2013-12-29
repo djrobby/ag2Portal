@@ -27,6 +27,7 @@ Ag2Human::Engine.routes.draw do
     match 'worker_report', :controller => 'ag2_timerecord_track', :action => 'worker_report'
     match 'office_report', :controller => 'ag2_timerecord_track', :action => 'office_report'
     match 'update_workers_select_from_office/:id', :controller => 'ag2_timerecord_track', :action => 'update_workers_select_from_office'
+    match 'update_offices_select_from_company/:id', :controller => 'workers', :action => 'update_offices_select_from_company'
 
     # Resources
     resources :workers

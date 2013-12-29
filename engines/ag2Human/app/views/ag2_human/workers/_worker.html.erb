@@ -1,8 +1,8 @@
 <tr>
   <td><%= link_to worker.worker_code, worker %></td>
-  <td><%= worker.full_name %></td>
-  <td><%= worker.company.name unless worker.company.nil? %></td>
-  <td><%= worker.office.name unless worker.office.nil? %></td>
+  <td><%= worker.full_name_and_count %></td>
+  <td><%= worker.fiscal_id unless worker.fiscal_id.nil? %></td>
+  <td><%= worker.affiliation_id unless worker.affiliation_id.nil? %></td>
   <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => Worker, :path => edit_worker_path(worker) } %>
   <%= render :partial => '/layouts/crud/delete', :locals => { :model => Worker, :path => worker, :msg => I18n.t("activerecord.models.worker.one"), :txt => worker.full_name } %> </td>
 </tr>

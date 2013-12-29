@@ -1,8 +1,8 @@
 <% workers.each do |w| %>
 <tr>
   <td><%= link_to w.worker_code, w %></td>
-  <td><%= w.full_name %></td>
-  <td><%= w.company.name unless w.company.nil? %></td>
-  <td><%= w.office.name unless w.office.nil? %></td>
+  <td><%= w.full_name_and_count %></td>
+  <td><%= w.fiscal_id unless w.fiscal_id.nil? %></td>
+  <td><%= w.affiliation_id unless w.affiliation_id.nil? %></td>
 </tr>
 <% end %>

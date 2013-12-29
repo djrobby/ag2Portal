@@ -3,7 +3,9 @@ require_dependency "ag2_human/application_controller"
 module Ag2Human
   class Ag2TimerecordTrackController < ApplicationController
     before_filter :authenticate_user!
-    skip_load_and_authorize_resource :only => [:worker_report, :office_report]
+    skip_load_and_authorize_resource :only => [:worker_report,
+                                               :office_report,
+                                               :update_workers_select_from_office]
 
     # Update workers from office select
     def update_workers_select_from_office

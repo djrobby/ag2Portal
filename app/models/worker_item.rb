@@ -33,4 +33,11 @@ class WorkerItem < ActiveRecord::Base
       (ending_at - issue_starting_at).round / 365
     end
   end
+
+  searchable do
+    text :contribution_account_code
+    integer :company_id
+    integer :office_id
+    integer :id
+  end
 end

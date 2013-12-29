@@ -113,6 +113,25 @@ module Ag2Human
       end
     end
 
+    # Update offices from company select
+    def update_offices_select_from_company
+      if params[:id] == '0'
+        @offices = Office.order('name')
+      else
+        company = Company.find(params[:id])
+        if !company.nil?
+          @offices = company.offices.order('name')
+        else
+          @offices = Office.order('name')
+        end
+      end
+
+      respond_to do |format|
+        format.html # update_offices_select_from_company.html.erb does not exist! JSON only
+        format.json { render json: @offices }
+      end
+    end
+
     #
     # Advanced searchers
     # DO NOT use strings as queries to avoid SQL injection exploits!
@@ -169,24 +188,30 @@ end
       office = params[:Office]
       letter = params[:letter]
 
-      @search = Worker.search do
-        fulltext params[:search]
-        if !company.blank?
-          with :company_id, company
-        end
-        if !office.blank?
-          with :office_id, office
-        end
-        order_by :worker_code, :asc
-        order_by :id, :asc
-        paginate :page => params[:page] || 1, :per_page => per_page
-      end
-      if letter.blank? || letter == "%"
-        @workers = @search.results
+      if !company.blank? && !office.blank?
+        @workers = Worker.where(id: WorkerItem.where(company_id: company, office_id: office)).paginate(:page => params[:page], :per_page => per_page).order('worker_code, id')
+      elsif !company.blank? && office.blank?
+        @workers = Worker.where(id: WorkerItem.where(company_id: company)).paginate(:page => params[:page], :per_page => per_page).order('worker_code, id')
+      elsif company.blank? && !office.blank?
+        @workers = Worker.where(id: WorkerItem.where(office_id: office)).paginate(:page => params[:page], :per_page => per_page).order('worker_code, id')
       else
-      # @workers = Worker.order('worker_code').where("last_name LIKE ?", "#{letter}%")
-        @workers = Worker.where("last_name LIKE ?", "#{letter}%").paginate(:page => params[:page], :per_page => per_page).order('worker_code, id')
+        @search = Worker.search do
+          fulltext params[:search]
+          order_by :worker_code, :asc
+          order_by :id, :asc
+          paginate :page => params[:page] || 1, :per_page => per_page
       end
+        if letter.blank? || letter == "%"
+          @workers = @search.results
+        else
+          # @workers = Worker.order('worker_code').where("last_name LIKE ?", "#{letter}%")
+          @workers = Worker.where("last_name LIKE ?", "#{letter}%").paginate(:page => params[:page], :per_page => per_page).order('worker_code, id')
+        end
+      end
+
+      # Initialize select_tags
+      @companies = Company.order('name') if @companies.nil?
+      @offices = Office.order('name') if @offices.nil?
 
       respond_to do |format|
         format.html # index.html.erb

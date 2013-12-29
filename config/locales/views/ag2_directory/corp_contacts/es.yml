@@ -17,4 +17,4 @@ es:
       search:
         title: "Contactos corporativos encontrados"
       back_to_main_page: "Volver a ag2CorporateContacts"
-      woker_count_message: "(#) Contacto en # centros de trabajo - Solo se muestra uno."
+      worker_count_message: "(#) Contacto en # centros de trabajo - Solo se muestra uno."

@@ -17,62 +17,26 @@
     <tr>
       <td><%= t :"activerecord.attributes.worker.fiscal_id" %>:</td>
       <td><%= @worker.fiscal_id %></td>
-      <td><%= t :"activerecord.attributes.worker.user" %>:</td>
-      <td><%= @worker.user.name unless @worker.user.nil? %></td>
+      <td><%= t :"activerecord.attributes.worker.affiliation_id" %>:</td>
+      <td><%= @worker.affiliation_id %></td>
     </tr>
     <tr>
-      <td><%= t :"activerecord.attributes.worker.starting_at" %>:</td>
-      <td><%= @worker.starting_at.strftime("%d/%m/%Y") unless @worker.starting_at.nil? %></td>
-      <td><%= t :"activerecord.attributes.worker.ending_at" %>:</td>
-      <td><%= @worker.ending_at.strftime("%d/%m/%Y") unless @worker.ending_at.nil? %></td>
-    </tr>
-    <tr>
-      <td><%= t :"activerecord.attributes.worker.issue_starting_at" %>:</td>
-      <td><%= @worker.issue_starting_at.strftime("%d/%m/%Y") unless @worker.issue_starting_at.nil? %></td>
       <td><%= t :"activerecord.attributes.worker.borned_on" %>:</td>
       <td><%= @worker.borned_on.strftime("%d/%m/%Y") unless @worker.borned_on.nil? %></td>
-    </tr>
-    <tr>
-      <td><%= t :"activerecord.attributes.worker.years_worked" %>:</td>
-      <td><%= @worker.years_worked %></td>
       <td><%= t :"activerecord.attributes.worker.age" %>:</td>
       <td><%= @worker.age %></td>
     </tr>
     <tr>
-      <td><%= t :"activerecord.attributes.worker.company" %>:</td>
-      <td><%= @worker.company.name unless @worker.company.nil? %></td>
-      <td><%= t :"activerecord.attributes.worker.office" %>:</td>
-      <td><%= @worker.office.name unless @worker.office.nil? %></td>
-    </tr>
-    <tr>
-      <td><%= t :"activerecord.attributes.worker.contract_type" %>:</td>
-      <td><%= @worker.contract_type.name unless @worker.contract_type.nil? %></td>
-      <td><%= t :"activerecord.attributes.worker.collective_agreement" %>:</td>
-      <td><%= @worker.collective_agreement.name unless @worker.collective_agreement.nil? %></td>
-    </tr>
-    <tr>
-      <td><%= t :"activerecord.attributes.worker.affiliation_id" %>:</td>
-      <td><%= @worker.affiliation_id %></td>
-      <td><%= t :"activerecord.attributes.worker.contribution_account_code" %>:</td>
-      <td><%= @worker.contribution_account_code unless @worker.contribution_account_code.nil? %></td>
-    </tr>
-    <tr>
-      <td><%= t :"activerecord.attributes.worker.professional_group" %>:</td>
-      <td><%= @worker.professional_group.name unless @worker.professional_group.nil? %></td>
+      <td><%= t :"activerecord.attributes.worker.worker_type" %>:</td>
+      <td><%= @worker.worker_type.description.titleize unless @worker.worker_type.nil? %></td>
       <td><%= t :"activerecord.attributes.worker.degree_type" %>:</td>
       <td><%= @worker.degree_type.name unless @worker.degree_type.nil? %></td>
     </tr>
     <tr>
-      <td><%= t :"activerecord.attributes.worker.worker_type" %>:</td>
-      <td><%= @worker.worker_type.description.titleize unless @worker.worker_type.nil? %></td>
-      <td><%= t :"activerecord.attributes.worker.insurance" %>:</td>
-      <td><%= @worker.insurance.name.titleize unless @worker.insurance.nil? %></td>
-    </tr>
-    <tr>
-      <td><%= t :"activerecord.attributes.worker.department" %>:</td>
-      <td><%= @worker.department.name unless @worker.department.nil? %></td>
-      <td><%= t :"activerecord.attributes.worker.position" %>:</td>
-      <td><%= @worker.position unless @worker.position.nil? %></td>
+      <td><%= t :"activerecord.attributes.worker.user" %>:</td>
+      <td><%= @worker.user.name unless @worker.user.nil? %></td>
+      <td><%= t :"activerecord.attributes.worker.email" %>:</td>
+      <td><%= @worker.email %></td>
     </tr>
     <tr>
       <td><%= t :"activerecord.attributes.worker.corp_phone" %>:</td>
@@ -86,38 +50,8 @@
       (<%= @worker.corp_cellular_short %>)
       <% end %> </td>
     </tr>
-    <tr>
-      <td><%= t :"activerecord.attributes.worker.email" %>:</td>
-      <td><%= @worker.email %></td>
-      <td></td>
-      <td></td>
-    </tr>
     <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @worker } %>
     <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @worker } %>
-  </tbody>
-</table>
-
-<h4><%= t 'ag2_human.workers.wage_info' %></h4>
-<table class="table">
-  <tbody>
-    <tr>
-      <td><%= t :"activerecord.attributes.worker.gross_salary" %>:</td>
-      <td><%= number_to_currency(@worker.gross_salary, :locale => :es) %></td>
-      <td><%= t :"activerecord.attributes.worker.variable_salary" %>:</td>
-      <td><%= number_to_currency(@worker.variable_salary, :locale => :es) %></td>
-    </tr>
-    <tr>
-      <td><%= t :"activerecord.attributes.worker.social_security_cost" %>:</td>
-      <td><%= number_to_currency(@worker.social_security_cost, :locale => :es) %></td>
-      <td><%= t :"activerecord.attributes.worker.total_cost" %>:</td>
-      <td><%= number_to_currency(@worker.total_cost, :locale => :es) %></td>
-    </tr>
-    <tr>
-      <td><%= t :"activerecord.attributes.worker.nomina_id" %>:</td>
-      <td><%= @worker.nomina_id unless @worker.nomina_id.blank? %></td>
-      <td></td>
-      <td></td>
-    </tr>
   </tbody>
 </table>
 
@@ -165,6 +99,24 @@
     <tr>
       <td style="width: 12%"><%= t :"activerecord.attributes.worker.remarks" %>:</td>
       <td style="width: 88%"><%= @worker.remarks unless @worker.remarks.blank? %></td>
+    </tr>
+  </tbody>
+</table>
+
+<h4><%= t 'ag2_human.workers.wage_info' %></h4>
+<table class="table">
+  <tbody>
+    <tr>
+      <td><%= t :"activerecord.attributes.worker.gross_salary" %>:</td>
+      <td><%= number_to_currency(@worker.gross_salary, :locale => :es) %></td>
+      <td><%= t :"activerecord.attributes.worker.variable_salary" %>:</td>
+      <td><%= number_to_currency(@worker.variable_salary, :locale => :es) %></td>
+    </tr>
+    <tr>
+      <td><%= t :"activerecord.attributes.worker.social_security_cost" %>:</td>
+      <td><%= number_to_currency(@worker.social_security_cost, :locale => :es) %></td>
+      <td><%= t :"activerecord.attributes.worker.nomina_id" %>:</td>
+      <td><%= @worker.nomina_id unless @worker.nomina_id.blank? %></td>
     </tr>
   </tbody>
 </table>

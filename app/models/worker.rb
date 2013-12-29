@@ -93,20 +93,26 @@ class Worker < ActiveRecord::Base
     full_name
   end
 
-  def total_cost
-    gross_salary + variable_salary + social_security_cost
+  def full_name_and_count
+    full_name_and_count = ""
+    if !self.last_name.blank?
+      full_name_and_count += self.last_name
+    end
+    if !self.first_name.blank?
+      full_name_and_count += ", " + self.first_name
+    end
+    if worker_count > 1
+      full_name_and_count += " (" + worker_count.to_s + ")"
+    end
+    full_name_and_count
   end
 
-  def age
-    (Date.current - borned_on).round / 365
+  def worker_count
+    worker_items.count
   end
   
-  def years_worked
-    if ending_at.blank?
-      (Date.current - issue_starting_at).round / 365
-    else
-      (ending_at - issue_starting_at).round / 365
-    end
+  def age
+    (Date.current - borned_on).round / 365
   end
   
   #
@@ -141,10 +147,8 @@ class Worker < ActiveRecord::Base
   end
   
   searchable do
-    text :worker_code, :first_name, :last_name, :fiscal_id, :affiliation_id, :contribution_account_code,
+    text :worker_code, :first_name, :last_name, :fiscal_id, :affiliation_id,
          :corp_cellular_long, :corp_cellular_short, :corp_extension, :corp_phone, :email
-    integer :company_id
-    integer :office_id
     integer :id
     string :worker_code
   end

@@ -1,3 +1,24 @@
+<script>
+  jQuery(function($) {
+    // when the #Company field changes
+    $("#Company").change(function() {
+      // make a POST call and replace the content
+      var worker = $('#Company :selected').val();
+      if (worker == "")
+        worker = "0";
+      jQuery.getJSON('update_offices_select_from_company/' + worker, function(data) {
+        $("#Office").html("");
+        //$("#Office").select2("val", "");
+        $("#Office").append($('<option></option>').val("").html(""));
+        $.each(data, function(id, option) {
+          $("#Office").append($('<option></option>').val(option.id).html(option.name));
+        });
+      })
+      return false;
+    });
+  })
+</script>
+
 <% session[:return_to] = nil %>
 <% session[:return_to_url] = nil %>
 <%= render '/layouts/ag2_human/workersbreadcrumb' %>
@@ -10,12 +31,13 @@
     <div class="span3">
       <div class="well sidebar-nav">
         <%= form_tag "workers", :method => 'get' do %>
-        <!-- Office -->
-        <%= label_tag I18n.t("ag2_human.workers.index.label_office"), nil, :class => 'form-label' %>
-        <%= select_tag "Office", options_from_collection_for_select(Office.order('name').all, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked' %>
         <!-- Company -->
         <%= label_tag I18n.t("ag2_human.workers.index.label_company"), nil, :class => 'form-label' %>
-        <%= select_tag "Company", options_from_collection_for_select(Company.order('name').all, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked' %>
+        <%= select_tag "Company", options_from_collection_for_select(@companies, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked' %>
+        <!--<%#= select_tag "Company", options_from_collection_for_select(Company.order('name').all, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked' %>-->
+        <!-- Office -->
+        <%= label_tag I18n.t("ag2_human.workers.index.label_office"), nil, :class => 'form-label' %>
+        <%= select_tag "Office", options_from_collection_for_select(@offices, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked' %>
         <!-- Others -->
         <%= label_tag I18n.t("ag2_human.workers.index.label_others"), nil, :class => 'form-label' %>
         <%= text_field_tag :search, params[:search], :class => 'x-large-text-field shrinked' %>
@@ -38,6 +60,7 @@
           <%= render @workers %>
         </tbody>
       </table>
+      <span class="shrinked"><%= t("ag2_human.workers.worker_count_message") %></span>
       <%= render :partial => '/layouts/pagination', :locals => { :ivar => @workers } %>
     </div><!-- /.span9 -->
   </div><!-- /.row-fluid -->

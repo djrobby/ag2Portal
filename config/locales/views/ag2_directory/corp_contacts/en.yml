@@ -17,4 +17,4 @@ en:
       search:
         title: "Corporate contacts found"
       back_to_main_page: "Back to ag2CorporateContacts"
-      woker_count_message: "(#) Contact on # workplaces - Only one shown."
+      worker_count_message: "(#) Contact on # workplaces - Only one shown."
