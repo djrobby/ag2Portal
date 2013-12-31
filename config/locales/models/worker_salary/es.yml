@@ -1,0 +1,19 @@
+es:
+  activerecord:
+    models:
+      worker_salary:
+        zero:  Salarios de trabajador
+        one:   Salario de trabajador
+        few:   Salarios de trabajador
+        other: Salarios de trabajador
+    attributes:
+      worker_salary:
+        worker_item: "Item trabajador"
+        worker_item_id: "Item trabajador"
+        year: "Año"
+        gross_salary: "Salario bruto"
+        variable_salary: "Salario variable"
+        social_security_cost: "Coste seguridad social"
+        day_pct: "% Jornada"
+        active: "¿Activo?"
+        total_cost: "Coste laboral"

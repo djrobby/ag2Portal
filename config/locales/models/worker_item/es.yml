@@ -1,0 +1,33 @@
+es:
+  activerecord:
+    models:
+      worker_item:
+        zero:  Items de trabajador
+        one:   Item de trabajador
+        few:   Items de trabajador
+        other: Items de trabajador
+    attributes:
+      worker_item:
+        worker: "Trabajador"
+        worker_id: "Trabajador"
+        company: "Empresa"
+        company_id: "Empresa"
+        office: "Oficina"
+        office_id: "Oficina"
+        professional_group: "Grupo profesional"
+        professional_group_id: "Grupo profesional"
+        collective_agreement: "Covenio colectivo"
+        collective_agreement_id: "Convenio colectivo"
+        contract_type: "Tipo de contrato"
+        contract_type_id: "Tipo de contrato"
+        contribution_account_code: "Código cuenta cotización"
+        department: "Departmento"
+        department_id: "Departmento"
+        position: "Puesto"
+        insurance: "Seguro"
+        insurance_id: "Seguro"
+        nomina_id: "Id N+"
+        starting_at: "Fecha de inicio"
+        ending_at: "Fecha de fin"
+        issue_starting_at: "Fecha de antigüedad"
+        years_worked: "Años trabajados"

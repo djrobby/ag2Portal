@@ -1,0 +1,33 @@
+en:
+  activerecord:
+    models:
+      worker_item:
+        zero:  Worker items
+        one:   Worker item
+        few:   Workers items
+        other: Workers items
+    attributes:
+      worker_item:
+        worker: "Worker"
+        worker_id: "Worker"
+        company: "Company"
+        company_id: "Company"
+        office: "Office"
+        office_id: "Office"
+        professional_group: "Professional group"
+        professional_group_id: "Professional group"
+        collective_agreement: "Collective agreement"
+        collective_agreement_id: "Collective agreement"
+        contract_type: "Contract type"
+        contract_type_id: "Contract type"
+        contribution_account_code: "Contribution account code"
+        department: "Department"
+        department_id: "Department"
+        position: "Position"
+        insurance: "Insurance"
+        insurance_id: "Insurance"
+        nomina_id: "N+ Id"
+        starting_at: "Starting at"
+        ending_at: "Ending at"
+        issue_starting_at: "Issue starting at"
+        years_worked: "Years worked"

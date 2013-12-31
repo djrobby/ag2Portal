@@ -1,0 +1,19 @@
+en:
+  activerecord:
+    models:
+      worker_salary:
+        zero:  Worker salaries
+        one:   Worker salary
+        few:   Workers salaries
+        other: Workers salaries
+    attributes:
+      worker_salary:
+        worker_item: "Worker item"
+        worker_item_id: "Worker item"
+        year: "Year"
+        gross_salary: "Gross salary"
+        variable_salary: "Variable salary"
+        social_security_cost: "Social security cost"
+        day_pct: "Day %"
+        active: "Active?"
+        total_cost: "Labor cost"

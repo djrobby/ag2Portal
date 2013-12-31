@@ -1,0 +1,12 @@
+<% items.each do |w| %>
+<tr>
+  <!--<td><%#= link_to w.worker.worker_code + '/' + w.id, w %></td>-->
+  <td><%= w.worker.worker_code + '/' + w.id %></td>
+  <td><%= w.company.name unless w.company.blank? %></td>
+  <td><%= w.office.name unless w.office.blank? %></td>
+  <td align="center"><%= w.starting_at.strftime("%d/%m/%Y") unless item.starting_at.blank? %></td>
+  <td align="center"><%= w.issue_starting_at.strftime("%d/%m/%Y") unless item.issue_starting_at.blank? %></td>
+  <td align="center"><%= w.ending_at.strftime("%d/%m/%Y") unless item.ending_at.blank? %></td>
+  <td align="right"><%= w.years_worked %></td>
+</tr>
+<% end %>

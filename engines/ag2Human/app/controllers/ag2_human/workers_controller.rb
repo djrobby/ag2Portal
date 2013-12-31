@@ -224,6 +224,8 @@ end
     def show
       @breadcrumb = 'read'
       @worker = Worker.find(params[:id])
+      @worker_items = @worker.worker_items.paginate(:page => params[:page], :per_page => per_page).order('id')
+      #@worker_salaries = @worker_items.worker_salaries.paginate(:page => params[:page], :per_page => per_page).order('year desc')
 
       respond_to do |format|
         format.html # show.html.erb

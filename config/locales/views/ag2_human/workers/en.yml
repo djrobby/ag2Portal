@@ -21,6 +21,7 @@ en:
       back_to_main_page: "Back to Workers"
       wage_info: "Wage Info"
       personal_info: "Personal Info"
+      employment_info: "Employment Info"
       to_uppercase_btn: "To Uppercase"
       generate_code_btn: "Worker Code"
       worker_count_message: "(#) Worker on # workplaces."

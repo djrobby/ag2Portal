@@ -21,6 +21,7 @@ es:
       back_to_main_page: "Volver a Trabajadores"
       wage_info: "Información Salarial"
       personal_info: "Información Personal"
+      employment_info: "Información Laboral"
       to_uppercase_btn: "En Mayúsculas"
       generate_code_btn: "Código de Trabajador"
       worker_count_message: "(#) Trabajador en # centros de trabajo."
