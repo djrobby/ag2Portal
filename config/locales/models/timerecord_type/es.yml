@@ -6,6 +6,7 @@ es:
         one:   Tipo de marcaje
         few:   Tipos de marcaje
         other: Tipos de marcaje
+        check_for_records: "Tipo de marcaje no puede ser eliminado mientras existan marcajes vinculados."
     attributes:
       timerecord_type:
         name: "Tipo"

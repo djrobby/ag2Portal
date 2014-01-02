@@ -6,6 +6,7 @@ es:
         one:   Tipo de trabajador
         few:   Tipos de trabajador
         other: Tipos de trabajador
+        check_for_workers: "Tipo de trabajador no puede ser eliminado mientras existan trabajadores vinculados."
     attributes:
       worker_type:
         description: "Descripción"

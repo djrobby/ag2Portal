@@ -1,0 +1,21 @@
+<h1>Listing worker_salaries</h1>
+
+<table>
+  <tr>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @worker_salaries.each do |worker_salary| %>
+  <tr>
+    <td><%= link_to 'Show', worker_salary %></td>
+    <td><%= link_to 'Edit', edit_worker_salary_path(worker_salary) %></td>
+    <td><%= link_to 'Destroy', worker_salary, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Worker salary', new_worker_salary_path %>

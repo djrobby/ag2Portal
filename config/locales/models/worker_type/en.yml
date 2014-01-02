@@ -6,6 +6,7 @@ en:
         one:   Worker type
         few:   Worker types
         other: Worker types
+        check_for_workers: "Worker type cannot be destroyed while linked workers exist."
     attributes:
       worker_type:
         description: "Description"

@@ -6,6 +6,7 @@ es:
         one:   Tipo de contrato
         few:   Tipos de contrato
         other: Tipos de contrato
+        check_for_workers: "Tipo de contrato no puede ser eliminado mientras existan trabajadores vinculados."
     attributes:
       contract_type:
         ct_code: "Código"

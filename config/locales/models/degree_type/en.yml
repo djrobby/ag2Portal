@@ -6,6 +6,7 @@ en:
         one:   Degree type
         few:   Degree types
         other: Degree types
+        check_for_workers: "Degree type cannot be destroyed while linked workers exist."
     attributes:
       degree_type:
         dt_code: "Code"

@@ -87,12 +87,16 @@ module Ag2Human
     # DELETE /worker_types/1.json
     def destroy
       @worker_type = WorkerType.find(params[:id])
-      @worker_type.destroy
 
       respond_to do |format|
-        format.html { redirect_to worker_types_url,
+        if @worker_type.destroy
+          format.html { redirect_to worker_types_url,
                       notice: (crud_notice('destroyed', @worker_type) + "#{undo_link(@worker_type)}").html_safe }
-        format.json { head :no_content }
+          format.json { head :no_content }
+        else
+          format.html { redirect_to worker_types_url, alert: "#{@worker_type.errors[:base].to_s}".gsub('["', '').gsub('"]', '') }
+          format.json { render json: @worker_type.errors, status: :unprocessable_entity }
+        end
       end
     end
   end

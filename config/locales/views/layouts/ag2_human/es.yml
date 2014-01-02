@@ -22,6 +22,9 @@ es:
         item: "Tipo"
       wtypes:
         items: "Tipos de trabajador"
+      sconcepts:
+        items: "Conceptos salariales"
+        item: "Concepto"
       insurances:
         items: "Seguros"
         item: "Seguro"

@@ -1,0 +1,20 @@
+es:
+  ag2_human:
+    professional_groups:
+      index:
+        title: "Conceptos salariales"
+        btn_new: "Nuevo Concepto salarial"
+        go_to_workers: "Ir a ag2Workers"
+        back_to_root: "Volver a ag2Human"
+      show:
+        title: "Concepto salarial"
+        btn_edit: "Editar Concepto salarial"
+        btn_delete: "Borrar Concepto salarial"
+        subtable_title: "Trabajadores del Concepto salarial"
+        return_to: "Volver a Concepto salarial"
+      edit:
+        title: "Editar Concepto salarial"
+        btn_show: "Ver Concepto salarial"
+      new:
+        title: "Nuevo Concepto salarial"
+      back_to_main_page: "Volver a Conceptos salariales"

@@ -89,12 +89,16 @@ module Ag2Human
     # DELETE /contract_types/1.json
     def destroy
       @contract_type = ContractType.find(params[:id])
-      @contract_type.destroy
 
       respond_to do |format|
-        format.html { redirect_to contract_types_url,
+        if @contract_type.destroy
+          format.html { redirect_to contract_types_url,
                       notice: (crud_notice('destroyed', @contract_type) + "#{undo_link(@contract_type)}").html_safe }
-        format.json { head :no_content }
+          format.json { head :no_content }
+        else
+          format.html { redirect_to contract_types_url, alert: "#{@contract_type.errors[:base].to_s}".gsub('["', '').gsub('"]', '') }
+          format.json { render json: @contract_type.errors, status: :unprocessable_entity }
+        end
       end
     end
 

@@ -6,6 +6,7 @@ en:
         one:   TimeRecord code
         few:   TimeRecord codes
         other: TimeRecord codes
+        check_for_records: "TimeRecord code cannot be destroyed while linked records exist."
     attributes:
       timerecord_code:
         name: "Description"

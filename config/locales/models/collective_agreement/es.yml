@@ -6,6 +6,7 @@ es:
         one:   Convenio colectivo
         few:   Convenios colectivos
         other: Convenios colectivos
+        check_for_workers: "Convenio colectivo no puede ser eliminado mientras existan trabajadores vinculados."
     attributes:
       collective_agreement:
         ca_code: "Código"

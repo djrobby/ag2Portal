@@ -86,12 +86,16 @@ module Ag2Human
     # DELETE /timerecord_types/1.json
     def destroy
       @timerecord_type = TimerecordType.find(params[:id])
-      @timerecord_type.destroy
 
       respond_to do |format|
-        format.html { redirect_to timerecord_types_url,
+        if @timerecord_type.destroy
+          format.html { redirect_to timerecord_types_url,
                       notice: (crud_notice('destroyed', @timerecord_type) + "#{undo_link(@timerecord_type)}").html_safe }
-        format.json { head :no_content }
+          format.json { head :no_content }
+        else
+          format.html { redirect_to timerecord_types_url, alert: "#{@timerecord_type.errors[:base].to_s}".gsub('["', '').gsub('"]', '') }
+          format.json { render json: @timerecord_type.errors, status: :unprocessable_entity }
+        end
       end
     end
   end

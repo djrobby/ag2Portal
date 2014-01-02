@@ -6,6 +6,7 @@ es:
         one:   Titulación
         few:   Titulaciones
         other: Titulaciones
+        check_for_workers: "Titulación no puede ser eliminada mientras existan trabajadores vinculados."
     attributes:
       degree_type:
         dt_code: "Código"

@@ -6,6 +6,7 @@ es:
         one:   Grupo profesional
         few:   Grupos profesionales
         other: Grupos profesionales
+        check_for_workers: "Grupo profesional no puede ser eliminado mientras existan trabajadores vinculados."
     attributes:
       professional_group:
         pg_code: "Código"

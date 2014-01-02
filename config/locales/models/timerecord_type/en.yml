@@ -6,6 +6,7 @@ en:
         one:   TimeRecord type
         few:   TimeRecord types
         other: TimeRecord types
+        check_for_records: "TimeRecord type cannot be destroyed while linked records exist."
     attributes:
       timerecord_type:
         name: "Type"

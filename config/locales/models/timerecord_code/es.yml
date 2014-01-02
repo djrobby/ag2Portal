@@ -6,6 +6,7 @@ es:
         one:   Código de marcaje
         few:   Códigos de marcaje
         other: Códigos de marcaje
+        check_for_records: "Código de marcaje no puede ser eliminado mientras existan marcajes vinculados."
     attributes:
       timerecord_code:
         name: "Descripción"

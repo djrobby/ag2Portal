@@ -12,16 +12,19 @@ en:
       pgroups:
         items: "Pro groups"
       trecordcodes:
-        items: "TimeRecord Codes"
+        items: "TimeRecord codes"
         item: "Code"
       trecords:
-        items: "Time Records"
+        items: "Time records"
         item: "Record"
       trecordtypes:
-        items: "TimeRecord Types"
+        items: "TimeRecord yypes"
         item: "Type"
       wtypes:
         items: "Worker types"
+      sconcepts:
+        items: "Wage concepts"
+        item: "Concept"
       insurances:
         items: "Insurances"
         item: "Insurance"

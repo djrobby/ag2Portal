@@ -6,6 +6,7 @@ en:
         one:   Contract type
         few:   Contract types
         other: Contract types
+        check_for_workers: "Contract type cannot be destroyed while linked workers exist."
     attributes:
       contract_type:
         ct_code: "Code"

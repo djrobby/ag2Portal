@@ -89,12 +89,16 @@ module Ag2Human
     # DELETE /professional_groups/1.json
     def destroy
       @professional_group = ProfessionalGroup.find(params[:id])
-      @professional_group.destroy
 
       respond_to do |format|
-        format.html { redirect_to professional_groups_url,
+        if @professional_group.destroy
+          format.html { redirect_to professional_groups_url,
                       notice: (crud_notice('destroyed', @professional_group) + "#{undo_link(@professional_group)}").html_safe }
-        format.json { head :no_content }
+          format.json { head :no_content }
+        else
+          format.html { redirect_to professional_groups_url, alert: "#{@professional_group.errors[:base].to_s}".gsub('["', '').gsub('"]', '') }
+          format.json { render json: @professional_group.errors, status: :unprocessable_entity }
+        end
       end
     end
 

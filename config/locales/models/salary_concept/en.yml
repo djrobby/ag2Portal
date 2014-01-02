@@ -1,0 +1,13 @@
+en:
+  activerecord:
+    models:
+      salary_concept:
+        zero:  Wage concepts
+        one:   Wage concept
+        few:   Wage concepts
+        other: Wage concepts
+        check_for_salary_items: "Wage concept cannot be destroyed while linked salary items exist."
+    attributes:
+      salary_concept:
+        name: "Name"
+        nomina_id: "N+ Id"

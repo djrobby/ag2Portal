@@ -89,12 +89,16 @@ module Ag2Human
     # DELETE /collective_agreements/1.json
     def destroy
       @collective_agreement = CollectiveAgreement.find(params[:id])
-      @collective_agreement.destroy
 
       respond_to do |format|
-        format.html { redirect_to collective_agreements_url,
+        if @collective_agreement.destroy
+          format.html { redirect_to collective_agreements_url,
                       notice: (crud_notice('destroyed', @collective_agreement) + "#{undo_link(@collective_agreement)}").html_safe }
-        format.json { head :no_content }
+          format.json { head :no_content }
+        else
+          format.html { redirect_to collective_agreements_url, alert: "#{@collective_agreement.errors[:base].to_s}".gsub('["', '').gsub('"]', '') }
+          format.json { render json: @collective_agreement.errors, status: :unprocessable_entity }
+        end
       end
     end
 

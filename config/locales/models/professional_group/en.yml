@@ -6,6 +6,7 @@ en:
         one:   Professional group
         few:   Professional groups
         other: Professional groups
+        check_for_workers: "Professional group cannot be destroyed while linked workers exist."
     attributes:
       professional_group:
         pg_code: "Code"

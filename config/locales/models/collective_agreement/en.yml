@@ -6,6 +6,7 @@ en:
         one:   Collective agreement
         few:   Collective agreements
         other: Collective agreements
+        check_for_workers: "Collective agreement cannot be destroyed while linked workers exist."
     attributes:
       collective_agreement:
         ca_code: "Code"

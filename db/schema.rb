@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131228082741) do
+ActiveRecord::Schema.define(:version => 20140102092527) do
 
   create_table "activities", :force => true do |t|
     t.string   "description"
@@ -814,9 +814,11 @@ ActiveRecord::Schema.define(:version => 20131228082741) do
     t.datetime "updated_at", :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
+    t.string   "nomina_id"
   end
 
   add_index "salary_concepts", ["name"], :name => "index_salary_concepts_on_name"
+  add_index "salary_concepts", ["nomina_id"], :name => "index_salary_concepts_on_nomina_id"
 
   create_table "sexes", :force => true do |t|
     t.string   "name"

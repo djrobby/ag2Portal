@@ -98,7 +98,7 @@ module Ag2Products
           format.json { head :no_content }
         else
           format.html { redirect_to product_types_url, alert: "#{@product_type.errors[:base].to_s}".gsub('["', '').gsub('"]', '') }
-          format.json { render json: @store.errors, status: :unprocessable_entity }
+          format.json { render json: @product_type.errors, status: :unprocessable_entity }
         end
       end
     end

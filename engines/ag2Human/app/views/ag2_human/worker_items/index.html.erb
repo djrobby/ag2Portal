@@ -1,0 +1,21 @@
+<h1>Listing worker_items</h1>
+
+<table>
+  <tr>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @worker_items.each do |worker_item| %>
+  <tr>
+    <td><%= link_to 'Show', worker_item %></td>
+    <td><%= link_to 'Edit', edit_worker_item_path(worker_item) %></td>
+    <td><%= link_to 'Destroy', worker_item, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Worker item', new_worker_item_path %>

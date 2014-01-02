@@ -1,0 +1,13 @@
+es:
+  activerecord:
+    models:
+      salary_concept:
+        zero:  Conceptos salariales
+        one:   Concepto salarial
+        few:   Conceptos salariales
+        other: Conceptos salariales
+        check_for_salary_items: "Concepto salarial no puede ser eliminado mientras existan items de salario vinculados."
+    attributes:
+      salary_concept:
+        name: "Nombre"
+        nomina_id: "Id N+"
