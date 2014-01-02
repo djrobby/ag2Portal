@@ -11,12 +11,12 @@
   </li>
   <% if @street_types %>
   <li>
-    ag2StreetTypes
+    ag2StTypes
   </li>
   <% end %>
   <% if @street_type %>
   <li>
-    <a href="<%= street_types_path %>">ag2StreetTypes</a><span class="divider">></span>
+    <a href="<%= street_types_path %>">ag2StTypes</a><span class="divider">></span>
   </li>
   <% if @breadcrumb == 'read' || @breadcrumb == 'update' %>
   <%= @street_type.street_type_code %>

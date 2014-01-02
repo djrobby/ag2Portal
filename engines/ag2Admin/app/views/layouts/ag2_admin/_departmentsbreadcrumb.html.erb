@@ -12,12 +12,12 @@
   </li>
   <% if @departments %>
   <li>
-    ag2Departments
+    ag2Depts
   </li>
   <% end %>
   <% if @department %>
   <li>
-    <a href="<%= departments_path %>">ag2Departments</a><span class="divider">></span>
+    <a href="<%= departments_path %>">ag2Depts</a><span class="divider">></span>
   </li>
   <% if @breadcrumb == 'read' || @breadcrumb == 'update' %>
   <%= @department.code %>

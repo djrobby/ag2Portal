@@ -1,6 +1,6 @@
 es:
   ag2_human:
-    professional_groups:
+    salary_concepts:
       index:
         title: "Conceptos salariales"
         btn_new: "Nuevo Concepto salarial"
