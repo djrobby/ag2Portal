@@ -31,3 +31,6 @@ es:
         ending_at: "Fecha de fin"
         issue_starting_at: "Fecha de antigüedad"
         years_worked: "Años trabajados"
+        years_worked_abb: "Trabajado"
+        starting_at_abb: "Inicio"
+        issue_starting_at_abb: "Antigüedad"

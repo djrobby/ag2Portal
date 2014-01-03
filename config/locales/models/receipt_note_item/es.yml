@@ -2,19 +2,19 @@ es:
   activerecord:
     models:
       receipt_note_item:
-        zero:  Ítems de albarán
-        one:   Ítem de albarán
-        few:   Ítems de albarán
-        other: Ítems de albarán
-        check_for_supplier_invoices: "Ítem de albarán no puede ser eliminado mientras existan facturas vinculadas."
+        zero:  Items de albarán
+        one:   Item de albarán
+        few:   Items de albarán
+        other: Items de albarán
+        check_for_supplier_invoices: "Item de albarán no puede ser eliminado mientras existan facturas vinculadas."
     attributes:
       receipt_note_item:
         receipt_note: "Albarán"
         receipt_note_id: "Albarán"
         purchase_order: "Pedido"
         purchase_order_id: "Pedido"
-        purchase_order_item: "Ítem pedido"
-        purchase_order_item_id: "Ítem pedido"
+        purchase_order_item: "Item pedido"
+        purchase_order_item_id: "Item pedido"
         product: "Producto"
         product_id: "Producto"
         code: "Referencia"

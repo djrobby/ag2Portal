@@ -31,7 +31,7 @@ class Worker < ActiveRecord::Base
 
   has_many :time_records
   has_many :worker_items, dependent: :destroy
-
+  has_many :worker_salaries, :through => :worker_items
 
   has_paper_trail
 

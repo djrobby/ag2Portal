@@ -2,11 +2,11 @@ es:
   activerecord:
     models:
       purchase_order_item:
-        zero:  Ítems de pedido
-        one:   Ítem de pedido
-        few:   Ítems de pedido
-        other: Ítems de pedido
-        check_for_receipt_notes: "Ítem de pedido no puede ser eliminado mientras existan albaranes vinculados."
+        zero:  Items de pedido
+        one:   Item de pedido
+        few:   Items de pedido
+        other: Items de pedido
+        check_for_receipt_notes: "Item de pedido no puede ser eliminado mientras existan albaranes vinculados."
     attributes:
       purchase_order_item:
         purchase_order: "Pedido"

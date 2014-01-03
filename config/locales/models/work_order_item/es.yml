@@ -2,10 +2,10 @@ es:
   activerecord:
     models:
       work_order_item:
-        zero:  Ítems de orden de trabajo
-        one:   Ítem de orden de trabajo
-        few:   Ítems de orden de trabajo
-        other: Ítems de orden de trabajo
+        zero:  Items de orden de trabajo
+        one:   Item de orden de trabajo
+        few:   Items de orden de trabajo
+        other: Items de orden de trabajo
     attributes:
       work_order_item:
         work_order: "Orden de trabajo"

@@ -1,0 +1,65 @@
+<% items.each do |item| %>
+<% first_item = true %>
+<% salaries = item.worker_salaries.order('year desc') %>
+<% if (salaries.count > 0) %>
+<% salaries.each do |salary| %>
+<tr>
+  <% if first_item %>
+  <td><%= item.id %></td>
+  <td><%= item.company.name unless item.company.blank? %></td>
+  <td><%= item.office.name unless item.office.blank? %></td>
+  <td align="center"><%= item.starting_at.strftime("%d/%m/%Y") unless item.starting_at.blank? %></td>
+  <td align="center"><%= item.issue_starting_at.strftime("%d/%m/%Y") unless item.issue_starting_at.blank? %></td>
+  <td align="left"><%= item.years_worked %></td>
+  <td align="center" class="highlighted">></td>
+  <td align="right"><%= salary.year %></td>
+  <td align="right"><%= number_to_currency(salary.gross_salary, locale: :es) %></td>
+  <td align="right"><%= number_to_currency(salary.total_cost, locale: :es) %></td>
+  <td align="right"><%= number_to_percentage(salary.day_pct, precision: 2, locale: :es) %></td>
+  <td align="center"> <% if salary.active %> <i class="icon-thumbs-up"></i> <% end %> </td>
+  <td align="right">
+    <%= link_to item, :class => 'btn btn-mini' do %> <i class="icon-eye-open"></i> <% end %>
+    <%= render :partial => '/layouts/crud/edit', :locals => { :model => WorkerItem, :path => edit_worker_item_path(item) } %>
+    <%= render :partial => '/layouts/crud/delete', :locals => { :model => WorkerItem, :path => worker, :msg => I18n.t("activerecord.models.worker_item.one"), :txt => item.id.to_s + " - " + item.worker.full_name } %>
+  </td>
+  <% first_item = false %>
+  <% else %>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td align="center" class="highlighted">></td>
+  <td align="right"><%= salary.year %></td>
+  <td align="right"><%= number_to_currency(salary.gross_salary, locale: :es) %></td>
+  <td align="right"><%= number_to_currency(salary.total_cost, locale: :es) %></td>
+  <td align="right"><%= number_to_percentage(salary.day_pct, precision: 2, locale: :es) %></td>
+  <td align="center"> <% if salary.active %> <i class="icon-thumbs-up"></i> <% end %> </td>
+  <td></td>
+  <% end %>
+</tr>
+<% end %>
+<% else %>
+<tr>
+  <td><%= item.id %></td>
+  <td><%= item.company.name unless item.company.blank? %></td>
+  <td><%= item.office.name unless item.office.blank? %></td>
+  <td align="center"><%= item.starting_at.strftime("%d/%m/%Y") unless item.starting_at.blank? %></td>
+  <td align="center"><%= item.issue_starting_at.strftime("%d/%m/%Y") unless item.issue_starting_at.blank? %></td>
+  <td align="right"><%= item.years_worked %></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td align="right">
+    <%= link_to item, :class => 'btn btn-mini' do %> <i class="icon-eye-open"></i> <% end %>
+    <%= render :partial => '/layouts/crud/edit', :locals => { :model => WorkerItem, :path => edit_worker_item_path(item) } %>
+    <%= render :partial => '/layouts/crud/delete', :locals => { :model => WorkerItem, :path => worker, :msg => I18n.t("activerecord.models.worker_item.one"), :txt => item.id.to_s + " - " + item.worker.full_name } %>
+  </td>
+</tr>
+<% end %>
+<% end %>
+

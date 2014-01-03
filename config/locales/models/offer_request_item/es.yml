@@ -2,10 +2,10 @@ es:
   activerecord:
     models:
       offer_request_item:
-        zero:  Ítems de solicitud de oferta
-        one:   Ítem de solicitud de oferta
-        few:   Ítems de solicitud de oferta
-        other: Ítems de solicitud de oferta
+        zero:  Items de solicitud de oferta
+        one:   Item de solicitud de oferta
+        few:   Items de solicitud de oferta
+        other: Items de solicitud de oferta
     attributes:
       offer_request_item:
         offer: "Oferta"

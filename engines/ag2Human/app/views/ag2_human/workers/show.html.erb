@@ -103,16 +103,30 @@
   </tbody>
 </table>
 
+<%= render partial: '/layouts/crud/update_delete_new', locals:
+{ model: Worker, update_path: edit_worker_path(@worker), update_txt: t('.btn_edit'),
+delete_path: @worker, delete_txt: t('.btn_delete'), msg: t("activerecord.models.worker.one"), txt: @worker.full_name,
+new_path: new_worker_path, new_txt: t('ag2_human.workers.index.btn_new') } %>
+
+<table class="form-table">
+  <tbody>
+    <tr class="form-tr underlined-tr">
+      <td class="form-td-two left-winged">
+        <h4><%= t 'ag2_human.workers.employment_wage_info' %></h4>
+      </td>
+      <td class="form-td-two right-winged">
+        <%= link_to t(".btn_new_item"), new_worker_item_path, :class => 'btn btn-warning' %>
+      </td>
+    </tr>
+  </tbody>
+</table>
 <% if (@worker_items.count > 0) %>
-<h4><%= t 'ag2_human.workers.employment_info' %></h4>
-<% if (@worker_items.count > 1) %>
-<!-- Several items -->
-<table class="table table-condensed table-striped">
+<table class="table table-condensed table-striped shrinked">
   <thead>
-    <%= render '/layouts/ag2_human/workeritemsheader' %>
+    <%= render '/layouts/ag2_human/workeritemssalariesheader' %>
   </thead>
   <tbody>
-    <%= render :partial => '/layouts/ag2_human/workeritems', :locals => { :items => @worker_items, :salaries => @worker_salaries } %>
+    <%= render :partial => '/layouts/ag2_human/workeritemssalaries', :locals => { :items => @worker_items, :worker => @worker } %>
   </tbody>
 </table>
 <%= render :partial => '/layouts/pagination', :locals => { :ivar => @worker_items } %>
@@ -178,13 +192,7 @@
 </table>
 <%= render :partial => '/layouts/pagination', :locals => { :ivar => @worker_salaries } %>
 <% end %> <!-- end @worker_salaries.count > 0 -->
-<% end %> <!-- end @worker_items.count > 1 -->
 <% end %> <!-- end @worker_items.count > 0 -->
-
-<%= render partial: '/layouts/crud/update_delete_new', locals:
-{ model: Worker, update_path: edit_worker_path(@worker), update_txt: t('.btn_edit'),
-delete_path: @worker, delete_txt: t('.btn_delete'), msg: t("activerecord.models.worker.one"), txt: @worker.full_name,
-new_path: new_worker_path, new_txt: t('ag2_human.workers.index.btn_new') } %>
 
 <% if !session[:return_to].nil? %>
 <%= link_to session[:return_to], session[:return_to_url] %> |

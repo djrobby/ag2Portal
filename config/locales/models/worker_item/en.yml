@@ -4,8 +4,8 @@ en:
       worker_item:
         zero:  Worker items
         one:   Worker item
-        few:   Workers items
-        other: Workers items
+        few:   Worker items
+        other: Worker items
     attributes:
       worker_item:
         worker: "Worker"
@@ -31,3 +31,6 @@ en:
         ending_at: "Ending at"
         issue_starting_at: "Issue starting at"
         years_worked: "Years worked"
+        years_worked_abb: "Yrs wrkd"
+        starting_at_abb: "Start at"
+        issue_starting_at_abb: "Issue strt at"
