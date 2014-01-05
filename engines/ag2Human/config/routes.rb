@@ -28,6 +28,8 @@ Ag2Human::Engine.routes.draw do
     match 'office_report', :controller => 'ag2_timerecord_track', :action => 'office_report'
     match 'update_workers_select_from_office/:id', :controller => 'ag2_timerecord_track', :action => 'update_workers_select_from_office'
     match 'update_offices_select_from_company/:id', :controller => 'workers', :action => 'update_offices_select_from_company'
+    match 'worker_items/update_company_textfield_from_office/:id', :controller => 'worker_items', :action => 'update_company_textfield_from_office'
+    match 'worker_items/:id/update_company_textfield_from_office/:id', :controller => 'worker_items', :action => 'update_company_textfield_from_office'
 
     # Resources
     resources :workers

@@ -2,6 +2,24 @@ require_dependency "ag2_human/application_controller"
 
 module Ag2Human
   class WorkerItemsController < ApplicationController
+    before_filter :authenticate_user!
+    load_and_authorize_resource
+    skip_load_and_authorize_resource :only => [:update_company_textfield_from_office]
+    
+    # Update company text field at view from office select
+    def update_company_textfield_from_office
+      @office = Office.find(params[:id])
+      @company = Company.find(@office.company)
+
+      respond_to do |format|
+        format.html # update_company_textfield_from_office.html.erb does not exist! JSON only
+        format.json { render json: @company }
+      end
+    end
+
+    #
+    # Default Methods
+    #
     # GET /worker_items
     # GET /worker_items.json
     def index
@@ -16,6 +34,9 @@ module Ag2Human
     # GET /worker_items/1
     # GET /worker_items/1.json
     def show
+      if !params[:worker].nil?
+        @worker = Worker.find(params[:worker])
+      end
       @breadcrumb = 'read'
       @worker_item = WorkerItem.find(params[:id])
       @worker_salaries = @worker_item.worker_salaries.paginate(:page => params[:page], :per_page => per_page).order('year desc')
@@ -43,6 +64,9 @@ module Ag2Human
   
     # GET /worker_items/1/edit
     def edit
+      if !params[:worker].nil?
+        @worker = Worker.find(params[:worker])
+      end
       @breadcrumb = 'update'
       @worker_item = WorkerItem.find(params[:id])
     end

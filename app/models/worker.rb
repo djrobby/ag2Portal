@@ -80,7 +80,7 @@ class Worker < ActiveRecord::Base
   end
 
   def to_label
-    "#{last_name}, #{first_name}"
+    "#{full_name}"
   end
 
   def full_name

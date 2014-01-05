@@ -21,9 +21,15 @@
   <% if @worker_item %>
   <% if @breadcrumb == 'read' || @breadcrumb == 'update' %>
   <li>
-    <%= link_to @worker_item.worker.worker_code, @worker_item.worker %><span class="divider">></span>
+    <% if @worker %>
+    <%= link_to @worker.worker_code, @worker %><span class="divider">></span>
+    <% else %>
+    <%= link_to t("ag2_human.breadcrumb.worker_items.items"), worker_items_path %><span class="divider">></span>
+    <% end %>
   </li>
+  <li>
   <%= t :"ag2_human.breadcrumb.worker_items.item" %>
+  </li>
   <% end %>
   <% if @breadcrumb == 'create' %>
   <% if @worker %>
@@ -35,7 +41,7 @@
   </li>
   <% else %>
   <li>
-    <%= t :"ag2_human.breadcrumb.worker_items.items" %><span class="divider">></span>
+    <%= link_to t("ag2_human.breadcrumb.worker_items.items"), worker_items_path %><span class="divider">></span>
   </li>
   <li>
     <%= t :"breadcrumb.new" %>
@@ -44,5 +50,5 @@
   <% end %>
   <% end %>
   <!-- Close -->
-  <a class="close" href="<%= ag2_human.root_path %>">&#215;</a>
+  <a class="close" href="<%= ag2_human.workers_path %>">&#215;</a>
 </ul>

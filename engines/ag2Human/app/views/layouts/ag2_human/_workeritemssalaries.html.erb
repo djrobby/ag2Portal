@@ -18,8 +18,8 @@
   <td align="right"><%= number_to_percentage(salary.day_pct, precision: 2, locale: :es) %></td>
   <td align="center"> <% if salary.active %> <i class="icon-thumbs-up"></i> <% end %> </td>
   <td align="right">
-    <%= link_to item, :class => 'btn btn-mini' do %> <i class="icon-eye-open"></i> <% end %>
-    <%= render :partial => '/layouts/crud/edit', :locals => { :model => WorkerItem, :path => edit_worker_item_path(item) } %>
+    <%= link_to worker_item_path(worker: item.worker), :class => 'btn btn-mini' do %> <i class="icon-eye-open"></i> <% end %>
+    <%= render :partial => '/layouts/crud/edit', :locals => { :model => WorkerItem, :path => edit_worker_item_path(item, worker: item.worker) } %>
     <%= render :partial => '/layouts/crud/delete', :locals => { :model => WorkerItem, :path => item, :msg => I18n.t("activerecord.models.worker_item.one"), :txt => item.id.to_s + " - " + item.worker.full_name } %>
   </td>
   <% first_item = false %>
@@ -55,8 +55,8 @@
   <td></td>
   <td></td>
   <td align="right">
-    <%= link_to item, :class => 'btn btn-mini' do %> <i class="icon-eye-open"></i> <% end %>
-    <%= render :partial => '/layouts/crud/edit', :locals => { :model => WorkerItem, :path => edit_worker_item_path(item) } %>
+    <%= link_to worker_item_path(worker: item.worker), :class => 'btn btn-mini' do %> <i class="icon-eye-open"></i> <% end %>
+    <%= render :partial => '/layouts/crud/edit', :locals => { :model => WorkerItem, :path => edit_worker_item_path(item, worker: item.worker) } %>
     <%= render :partial => '/layouts/crud/delete', :locals => { :model => WorkerItem, :path => item, :msg => I18n.t("activerecord.models.worker_item.one"), :txt => item.id.to_s + " - " + item.worker.full_name } %>
   </td>
 </tr>
