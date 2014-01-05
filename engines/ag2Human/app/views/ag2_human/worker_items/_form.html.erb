@@ -1,17 +1,57 @@
-<%= form_for(@worker_item) do |f| %>
-  <% if @worker_item.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@worker_item.errors.count, "error") %> prohibited this worker_item from being saved:</h2>
+<script>
+  $(document).ready(function() {
+    $('.date_picker').datepicker({
+      format : 'dd/mm/yyyy',
+      weekStart : 1
+    });
+    $('.sel2').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; }
+    });
+  });
+  
+  jQuery(function($) {
+    // when the #worker_item_office_id field changes
+    $("#worker_item_office_id").change(function() {
+      // make a POST call and replace the content
+      var worker = $('select#worker_item_office_id :selected').val();
+      if (worker == "")
+        worker = "0";
+      jQuery.getJSON('update_company_textfield_from_office/' + worker, function(data) {
+        $("#worker_item_company_id").val(data.id);
+      })
+      return false;
+    });
+  })
+</script>
 
-      <ul>
-      <% @worker_item.errors.full_messages.each do |msg| %>
-        <li><%= msg %></li>
-      <% end %>
-      </ul>
-    </div>
-  <% end %>
-
-  <div class="actions">
-    <%= f.submit %>
-  </div>
+<%= simple_form_for @worker_item, :html => {:class => 'form-vertical well' } do |f| %>
+<%= f.error_notification %>
+<%= display_base_errors resource %>
+<%= f.association :worker, :autofocus => true, collection: Worker.order('last_name, first_name').all, :input_html => { :class => 'x-large-text-field sel2' }, :label_html => { :class => 'form-label' } %>
+<div>
+  <label class="multi-field-label-two"> <%= f.association :office, collection: Office.all(order: 'name'), :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.association :company, collection: Company.all(order: 'name'), :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+</div>
+<div>
+  <label class="multi-field-label-three"> <%= f.input :starting_at, :start_year => Time.now.year - 100, :end_year => Time.now.year + 100, :as => :string, :input_html => { :value => (f.object.starting_at.strftime("%d/%m/%Y") if f.object.starting_at), :class => 'large-text-field date_picker' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-three"> <%= f.input :ending_at, :start_year => Time.now.year - 100, :end_year => Time.now.year + 100, :as => :string, :input_html => { :value => (f.object.ending_at.strftime("%d/%m/%Y") if f.object.ending_at), :class => 'large-text-field date_picker' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-three"> <%= f.input :issue_starting_at, :start_year => Time.now.year - 100, :end_year => Time.now.year + 100, :as => :string, :input_html => { :value => (f.object.issue_starting_at.strftime("%d/%m/%Y") if f.object.issue_starting_at), :class => 'large-text-field date_picker' }, :label_html => { :class => 'form-label' } %> </label>
+</div>
+<div>
+  <label class="multi-field-label-two"> <%= f.association :professional_group, collection: ProfessionalGroup.all(order: 'name'), :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.association :collective_agreement, collection: CollectiveAgreement.all(order: 'name'), :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+</div>
+<div>
+  <label class="multi-field-label-two"> <%= f.association :contract_type, collection: ContractType.all(order: 'name'), :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.input :contribution_account_code, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+</div>
+<div>
+  <label class="multi-field-label-two"> <%= f.association :department, collection: Department.all(order: 'name'), :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.input :position, :input_html => { :class => 'x-large-text-field', :rows => 2 }, :label_html => { :class => 'form-label' } %> </label>
+</div>
+<div>
+  <label class="multi-field-label-two"> <%= f.association :insurance, collection: Insurance.all(order: 'name'), :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.input :nomina_id, :input_html => { :class => 'x-large-text-field', :rows => 2 }, :label_html => { :class => 'form-label' } %> </label>
+</div>
+<%= f.button :submit, :class => 'btn-primary' %>
 <% end %>

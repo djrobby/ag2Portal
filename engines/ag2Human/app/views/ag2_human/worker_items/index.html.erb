@@ -1,21 +1,37 @@
-<h1>Listing worker_items</h1>
+<%= render '/layouts/ag2_human/workeritemsbreadcrumb' %>
 
-<table>
-  <tr>
-    <th></th>
-    <th></th>
-    <th></th>
-  </tr>
-
-<% @worker_items.each do |worker_item| %>
-  <tr>
-    <td><%= link_to 'Show', worker_item %></td>
-    <td><%= link_to 'Edit', edit_worker_item_path(worker_item) %></td>
-    <td><%= link_to 'Destroy', worker_item, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-  </tr>
-<% end %>
-</table>
-
-<br />
-
-<%= link_to 'New Worker item', new_worker_item_path %>
+<h3><%=t '.title' %></h3>
+<div class="span11">
+  <table class="table table-condensed table-striped">
+    <thead>
+      <tr>
+        <th>Id</th>
+        <th><%= t 'activerecord.attributes.worker_item.worker' %></th>
+        <th><%= t 'activerecord.attributes.worker_item.company' %></th>
+        <th><%= t 'activerecord.attributes.worker_item.office' %></th>
+        <th align="center"><%= t "activerecord.attributes.worker_item.starting_at_abb" %></th>
+        <th align="center" colspan="2"><%= t "activerecord.attributes.worker_item.issue_starting_at_abb" %></th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @worker_items.each do |item| %>
+      <tr>
+        <td><%= link_to item.id, item %></td>
+        <td><%= item.worker.full_name unless item.worker.blank? %></td>
+        <td><%= item.company.name unless item.company.blank? %></td>
+        <td><%= item.office.name unless item.office.blank? %></td>
+        <td align="center"><%= item.starting_at.strftime("%d/%m/%Y") unless item.starting_at.blank? %></td>
+        <td align="center"><%= item.issue_starting_at.strftime("%d/%m/%Y") unless item.issue_starting_at.blank? %></td>
+        <td align="right"><%= item.years_worked %></td>
+        <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => WorkerItem, :path => edit_worker_item_path(item) } %>
+        <%= render :partial => '/layouts/crud/delete', :locals => { :model => WorkerItem, :path => item, :msg => I18n.t("activerecord.models.worker_item.one"), :txt => item.id.to_s  + " - " + item.worker.full_name } %> </td>
+      </tr>
+      <% end %>
+    </tbody>
+  </table>
+  <%= render :partial => '/layouts/pagination', :locals => { :ivar => @worker_items } %>
+  <%= render :partial => '/layouts/crud/new', :locals => { :model => WorkerItem, :path => new_worker_item_path, :txt => I18n.t("ag2_human.worker_items.index.btn_new") } %>
+  <%= link_to t(".go_to_workers"), workers_path %> |
+  <%= link_to t(".back_to_root"), ag2_human.root_path %>
+</div>

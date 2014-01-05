@@ -1,6 +1,8 @@
-<h1>Editing worker_item</h1>
+<%= render '/layouts/ag2_human/workeritemsbreadcrumb' %>
+
+<h3><%=t '.title' %></h3>
 
 <%= render 'form' %>
 
-<%= link_to 'Show', @worker_item %> |
-<%= link_to 'Back', worker_items_path %>
+<%= link_to I18n.t("ag2_human.worker_items.edit.btn_show"), @worker_item %> |
+<%= link_to I18n.t("ag2_human.worker_items.back_to_main_page"), @worker_item.worker %>

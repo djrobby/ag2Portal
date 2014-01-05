@@ -28,4 +28,11 @@ es:
       insurances:
         items: "Seguros"
         item: "Seguro"
+      worker_items:
+        items: "Items de trabajador"
+        item: "Item"
+        new: "Nuevo ítem"
+      worker_salaries:
+        items: "Salarios de trabajador"
+        item: "Salario"
       track: "Control&Seguimiento"

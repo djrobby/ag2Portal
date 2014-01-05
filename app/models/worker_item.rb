@@ -11,7 +11,7 @@ class WorkerItem < ActiveRecord::Base
                   :worker_id, :company_id, :office_id, :professional_group_id, :collective_agreement_id,
                   :contract_type_id, :department_id, :insurance_id
 
-  has_many :worker_salaries, dependent: :destroy
+  has_many :worker_salaries
 
   has_paper_trail
 
@@ -25,6 +25,8 @@ class WorkerItem < ActiveRecord::Base
   validates :issue_starting_at,         :presence => true
   validates :contribution_account_code, :presence => true
   validates :department,                :presence => true
+
+  before_destroy :check_for_dependent_records
   
   def years_worked
     if ending_at.blank?
@@ -39,5 +41,15 @@ class WorkerItem < ActiveRecord::Base
     integer :company_id
     integer :office_id
     integer :id
+  end
+
+  private
+
+  def check_for_dependent_records
+    # Check for salaries
+    if worker_salaries.count > 0
+      errors.add(:base, I18n.t('activerecord.models.worker_item.check_for_salaries'))
+      return false
+    end
   end
 end

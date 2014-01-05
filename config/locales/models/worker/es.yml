@@ -6,6 +6,7 @@ es:
         one:   Trabajador
         few:   Trabajadores
         other: Trabajadores
+        check_for_items: "Trabajador no puede ser eliminado mientras existan items vinculados."
     attributes:
       worker:
         last_name: "Apellidos"

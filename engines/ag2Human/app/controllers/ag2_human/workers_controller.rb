@@ -292,12 +292,16 @@ end
     # DELETE /workers/1.json
     def destroy
       @worker = Worker.find(params[:id])
-      @worker.destroy
 
       respond_to do |format|
-        format.html { redirect_to workers_url,
+        if @worker.destroy
+          format.html { redirect_to workers_url,
                       notice: (crud_notice('destroyed', @worker) + "#{undo_link(@worker)}").html_safe }
-        format.json { head :no_content }
+          format.json { head :no_content }
+        else
+          format.html { redirect_to workers_url, alert: "#{@worker.errors[:base].to_s}".gsub('["', '').gsub('"]', '') }
+          format.json { render json: @worker.errors, status: :unprocessable_entity }
+        end
       end
     end
   end

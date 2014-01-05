@@ -30,7 +30,7 @@ class Worker < ActiveRecord::Base
   has_attached_file :avatar, :styles => { :medium => "96x96>", :small => "64x64>" }, :default_url => "/images/missing/:style/user.png"
 
   has_many :time_records
-  has_many :worker_items, dependent: :destroy
+  has_many :worker_items
   has_many :worker_salaries, :through => :worker_items
 
   has_paper_trail
@@ -68,6 +68,7 @@ class Worker < ActiveRecord::Base
   #validates :issue_starting_at,         :presence => true
 
   before_validation :fields_to_uppercase
+  before_destroy :check_for_dependent_records
 
   def fields_to_uppercase
     if !self.fiscal_id.blank?
@@ -151,5 +152,15 @@ class Worker < ActiveRecord::Base
          :corp_cellular_long, :corp_cellular_short, :corp_extension, :corp_phone, :email
     integer :id
     string :worker_code
+  end
+
+  private
+
+  def check_for_dependent_records
+    # Check for items
+    if worker_items.count > 0
+      errors.add(:base, I18n.t('activerecord.models.worker.check_for_items'))
+      return false
+    end
   end
 end

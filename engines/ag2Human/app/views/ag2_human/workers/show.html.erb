@@ -115,7 +115,7 @@ new_path: new_worker_path, new_txt: t('ag2_human.workers.index.btn_new') } %>
         <h4><%= t 'ag2_human.workers.employment_wage_info' %></h4>
       </td>
       <td class="form-td-two right-winged">
-        <%= link_to t(".btn_new_item"), new_worker_item_path, :class => 'btn btn-warning' %>
+        <%= link_to t(".btn_new_item"), new_worker_item_path(worker: @worker), :class => 'btn btn-warning' %>
       </td>
     </tr>
   </tbody>
@@ -131,67 +131,7 @@ new_path: new_worker_path, new_txt: t('ag2_human.workers.index.btn_new') } %>
 </table>
 <%= render :partial => '/layouts/pagination', :locals => { :ivar => @worker_items } %>
 <% else %>
-<!-- One item -->
-<% item = @worker_items.first %>
-<% @worker_salaries = item.worker_salaries.paginate(:page => params[:page], :per_page => per_page).order('year desc') %>
-<table class="table">
-  <tbody>
-    <tr>
-      <td><%= t :"activerecord.attributes.worker_item.company" %>:</td>
-      <td><%= item.company.name unless item.company.blank? %></td>
-      <td><%= t :"activerecord.attributes.worker_item.office" %>:</td>
-      <td><%= item.office.name unless item.office.blank? %></td>
-    </tr>
-    <tr>
-      <td><%= t :"activerecord.attributes.worker_item.starting_at" %>:</td>
-      <td><%= item.starting_at.strftime("%d/%m/%Y") unless item.starting_at.blank? %></td>
-      <td><%= t :"activerecord.attributes.worker_item.issue_starting_at" %>:</td>
-      <td><%= item.issue_starting_at.strftime("%d/%m/%Y") unless item.issue_starting_at.blank? %></td>
-    </tr>
-    <tr>
-      <td><%= t :"activerecord.attributes.worker_item.ending_at" %>:</td>
-      <td><%= item.ending_at.strftime("%d/%m/%Y") unless item.ending_at.blank? %></td>
-      <td><%= t :"activerecord.attributes.worker_item.years_worked" %>:</td>
-      <td><%= item.years_worked %></td>
-    </tr>
-    <tr>
-      <td><%= t :"activerecord.attributes.worker_item.professional_group" %>:</td>
-      <td><%= item.professional_group.name unless item.professional_group.blank? %></td>
-      <td><%= t :"activerecord.attributes.worker_item.collective_agreement" %>:</td>
-      <td><%= item.collective_agreement.name unless item.collective_agreement.blank? %></td>
-    </tr>
-    <tr>
-      <td><%= t :"activerecord.attributes.worker_item.contract_type" %>:</td>
-      <td><%= item.contract_type.name unless item.contract_type.blank? %></td>
-      <td><%= t :"activerecord.attributes.worker_item.contribution_account_code" %>:</td>
-      <td><%= item.contribution_account_code unless item.contribution_account_code.blank? %></td>
-    </tr>
-    <tr>
-      <td><%= t :"activerecord.attributes.worker_item.department" %>:</td>
-      <td><%= item.department.name unless item.department.blank? %></td>
-      <td><%= t :"activerecord.attributes.worker_item.position" %>:</td>
-      <td><%= item.position unless item.position.blank? %></td>
-    </tr>
-    <tr>
-      <td><%= t :"activerecord.attributes.worker_item.insurance" %>:</td>
-      <td><%= item.insurance.name unless item.insurance.blank? %></td>
-      <td><%= t :"activerecord.attributes.worker_item.nomina_id" %>:</td>
-      <td><%= item.nomina_id unless item.nomina_id.blank? %></td>
-    </tr>
-  </tbody>
-</table>
-<% if (@worker_salaries.count > 0) %>
-<h4><%= t 'ag2_human.workers.wage_info' %></h4>
-<table class="table table-condensed table-striped">
-  <thead>
-    <%= render '/layouts/ag2_human/workersalariesheader' %>
-  </thead>
-  <tbody>
-    <%= render :partial => '/layouts/ag2_human/workersalaries', :locals => { :salaries => @worker_salaries } %>
-  </tbody>
-</table>
-<%= render :partial => '/layouts/pagination', :locals => { :ivar => @worker_salaries } %>
-<% end %> <!-- end @worker_salaries.count > 0 -->
+<br />
 <% end %> <!-- end @worker_items.count > 0 -->
 
 <% if !session[:return_to].nil? %>

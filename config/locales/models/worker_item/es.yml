@@ -6,6 +6,7 @@ es:
         one:   Item de trabajador
         few:   Items de trabajador
         other: Items de trabajador
+        check_for_salaries: "Item de trabajador no puede ser eliminado mientras existan salarios vinculados."
     attributes:
       worker_item:
         worker: "Trabajador"

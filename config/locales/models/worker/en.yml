@@ -6,6 +6,7 @@ en:
         one:   Worker
         few:   Workers
         other: Workers
+        check_for_items: "Worker cannot be destroyed while linked items exist."
     attributes:
       worker:
         last_name: "Last name"

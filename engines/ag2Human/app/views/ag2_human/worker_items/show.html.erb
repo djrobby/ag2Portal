@@ -1,5 +1,88 @@
-<p id="notice"><%= notice %></p>
+<%= render '/layouts/ag2_human/workeritemsbreadcrumb' %>
 
+<h3><%=t '.title' %></h3>
+<table class="table">
+  <tbody>
+    <tr>
+      <td>Id:</td>
+      <td><%= @worker_item.id %></td>
+      <td><%= t :"activerecord.attributes.worker_item.worker" %>:</td>
+      <td><%= @worker_item.worker.full_name %></td>
+    </tr>
+    <tr>
+      <td><%= t :"activerecord.attributes.worker_item.company" %>:</td>
+      <td><%= @worker_item.company.name %></td>
+      <td><%= t :"activerecord.attributes.worker_item.office" %>:</td>
+      <td><%= @worker_item.office.name %></td>
+    </tr>
+    <tr>
+      <td><%= t :"activerecord.attributes.worker_item.starting_at" %>:</td>
+      <td><%= @worker_item.starting_at.strftime("%d/%m/%Y") unless @worker_item.starting_at.blank? %></td>
+      <td><%= t :"activerecord.attributes.worker_item.ending_at" %>:</td>
+      <td><%= @worker_item.ending_at.strftime("%d/%m/%Y") unless @worker_item.ending_at.blank? %></td>
+    </tr>
+    <tr>
+      <td><%= t :"activerecord.attributes.worker_item.issue_starting_at" %>:</td>
+      <td><%= @worker_item.issue_starting_at.strftime("%d/%m/%Y") unless @worker_item.issue_starting_at.blank? %></td>
+      <td><%= t :"activerecord.attributes.worker_item.years_worked" %>:</td>
+      <td><%= @worker_item.years_worked %></td>
+    </tr>
+    <tr>
+      <td><%= t :"activerecord.attributes.worker_item.professional_group" %>:</td>
+      <td><%= @worker_item.professional_group.name unless @worker_item.professional_group.blank? %></td>
+      <td><%= t :"activerecord.attributes.worker_item.collective_agreement" %>:</td>
+      <td><%= @worker_item.collective_agreement.name unless @worker_item.collective_agreement.blank? %></td>
+    </tr>
+    <tr>
+      <td><%= t :"activerecord.attributes.worker_item.contract_type" %>:</td>
+      <td><%= @worker_item.contract_type.name unless @worker_item.contract_type.blank? %></td>
+      <td><%= t :"activerecord.attributes.worker_item.contribution_account_code" %>:</td>
+      <td><%= @worker_item.contribution_account_code unless @worker_item.contribution_account_code.blank? %></td>
+    </tr>
+    <tr>
+      <td><%= t :"activerecord.attributes.worker_item.department" %>:</td>
+      <td><%= @worker_item.department.name unless @worker_item.department.blank? %></td>
+      <td><%= t :"activerecord.attributes.worker_item.position" %>:</td>
+      <td><%= @worker_item.position unless @worker_item.position.blank? %></td>
+    </tr>
+    <tr>
+      <td><%= t :"activerecord.attributes.worker_item.insurance" %>:</td>
+      <td><%= @worker_item.insurance.name.titleize unless @worker_item.insurance.blank? %></td>
+      <td><%= t :"activerecord.attributes.worker_item.nomina_id" %>:</td>
+      <td><%= @worker_item.nomina_id unless @worker_item.nomina_id.blank? %></td>
+    </tr>
+    <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @worker_item } %>
+    <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @worker_item } %>
+  </tbody>
+</table>
 
-<%= link_to 'Edit', edit_worker_item_path(@worker_item) %> |
-<%= link_to 'Back', worker_items_path %>
+<%= render partial: '/layouts/crud/update_delete_new', locals:
+{ model: WorkerItem, update_path: edit_worker_item_path(@worker_item), update_txt: t('.btn_edit'),
+delete_path: @worker_item, delete_txt: t('.btn_delete'), msg: t("activerecord.models.worker_item.one"), txt: @worker_item.id.to_s  + " - " + @worker_item.worker.full_name,
+new_path: new_worker_item_path, new_txt: t('ag2_human.worker_items.index.btn_new') } %>
+
+<table class="form-table">
+  <tbody>
+    <tr class="form-tr underlined-tr">
+      <td class="form-td-two left-winged">
+        <h4><%= t 'ag2_human.worker_items.wage_info' %></h4>
+      </td>
+      <td class="form-td-two right-winged">
+        <%= link_to t(".btn_new_salary"), new_worker_salary_path, :class => 'btn btn-warning' %>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<% if (@worker_salaries.count > 0) %>
+<table class="table table-condensed table-striped shrinked">
+  <thead>
+    <%= render '/layouts/ag2_human/workersalariesheader' %>
+  </thead>
+  <tbody>
+    <%= render :partial => '/layouts/ag2_human/workersalaries', :locals => { :salaries => @worker_salaries } %>
+  </tbody>
+</table>
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @worker_salaries } %>
+<% end %>
+
+<%= link_to I18n.t("ag2_human.worker_items.back_to_main_page"), @worker_item.worker %>

@@ -1,5 +1,11 @@
-<h1>New worker_item</h1>
+<%= render '/layouts/ag2_human/workeritemsbreadcrumb' %>
+
+<h3><%=t '.title' %></h3>
 
 <%= render 'form' %>
 
-<%= link_to 'Back', worker_items_path %>
+<% if @worker %>
+<%= link_to I18n.t("ag2_human.worker_items.back_to_main_page"), @worker %>
+<% else %>
+<%= link_to I18n.t("ag2_human.worker_items.back_to_items"), worker_items_path %>
+<% end %>

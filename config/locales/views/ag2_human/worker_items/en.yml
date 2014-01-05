@@ -3,25 +3,19 @@ en:
     worker_items:
       index:
         title: "Worker items"
-        btn_new: "New Worker item"
+        btn_new: "New Item"
+        go_to_workers: "Go to ag2Workers"
         back_to_root: "Back to ag2Human"
-        label_office: "Office"
-        label_company: "Company"
-        label_others: "Others"
-        btn_apply: "Apply Filter"
       show:
         title: "Worker item"
-        btn_edit: "Edit Worker item"
-        btn_delete: "Delete Worker item"
+        btn_edit: "Edit Item"
+        btn_delete: "Delete Item"
+        btn_new_salary: "New Salary"
       edit:
         title: "Edit Worker item"
-        btn_show: "Show Worker item"
+        btn_show: "Show Item"
       new:
         title: "New Worker item"
-      back_to_main_page: "Back to Worker items"
+      back_to_main_page: "Back to Worker"
+      back_to_items: "Back to Worker items"
       wage_info: "Wage Info"
-      personal_info: "Personal Info"
-      employment_info: "Employment Info"
-      to_uppercase_btn: "To Uppercase"
-      generate_code_btn: "Worker Code"
-      worker_count_message: "(#) Worker on # workplaces."

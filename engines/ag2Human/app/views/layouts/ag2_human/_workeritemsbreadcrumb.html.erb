@@ -1,0 +1,48 @@
+<% content_for :title, "aGestiona2 | ag2Workers" %>
+<% content_for :icon, "/assets/icon/ag2Workers.png" %>
+<% content_for :alt, "ag2Workers" %>
+
+<!-- Breadcrumb -->
+<ul class="breadcrumb">
+  <li>
+    <a href="<%= main_app.root_path %>"><i class="icon-home"></i></a><span class="divider">></span>
+  </li>
+  <li>
+    <a href="<%= ag2_human.root_path %>">ag2Human</a><span class="divider">></span>
+  </li>
+  <li>
+    <a href="<%= ag2_human.workers_path %>">ag2Workers</a><span class="divider">></span>
+  </li>
+  <% if @worker_items %>
+  <li>
+    <%= t :"ag2_human.breadcrumb.worker_items.items" %>
+  </li>
+  <% end %>
+  <% if @worker_item %>
+  <% if @breadcrumb == 'read' || @breadcrumb == 'update' %>
+  <li>
+    <%= link_to @worker_item.worker.worker_code, @worker_item.worker %><span class="divider">></span>
+  </li>
+  <%= t :"ag2_human.breadcrumb.worker_items.item" %>
+  <% end %>
+  <% if @breadcrumb == 'create' %>
+  <% if @worker %>
+  <li>
+    <%= link_to @worker.worker_code, @worker %><span class="divider">></span>
+  </li>
+  <li>
+    <%= t :"ag2_human.breadcrumb.worker_items.new" %>
+  </li>
+  <% else %>
+  <li>
+    <%= t :"ag2_human.breadcrumb.worker_items.items" %><span class="divider">></span>
+  </li>
+  <li>
+    <%= t :"breadcrumb.new" %>
+  </li>
+  <% end %>
+  <% end %>
+  <% end %>
+  <!-- Close -->
+  <a class="close" href="<%= ag2_human.root_path %>">&#215;</a>
+</ul>

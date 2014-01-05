@@ -6,6 +6,7 @@ en:
         one:   Worker item
         few:   Worker items
         other: Worker items
+        check_for_salaries: "Worker item cannot be destroyed while linked salaries exist."
     attributes:
       worker_item:
         worker: "Worker"
