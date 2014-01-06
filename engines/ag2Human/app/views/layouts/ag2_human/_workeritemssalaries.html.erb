@@ -3,7 +3,11 @@
 <% salaries = item.worker_salaries.order('year desc') %>
 <% if (salaries.count > 0) %>
 <% salaries.each do |salary| %>
+<% if item.ending_at.blank? %>
 <tr>
+<% else %>
+<tr class="inactive-row">
+<% end %>
   <% if first_item %>
   <td><%= item.id %></td>
   <td><%= item.company.name unless item.company.blank? %></td>
@@ -18,7 +22,7 @@
   <td align="right"><%= number_to_percentage(salary.day_pct, precision: 2, locale: :es) %></td>
   <td align="center"> <% if salary.active %> <i class="icon-thumbs-up"></i> <% end %> </td>
   <td align="right">
-    <%= link_to worker_item_path(worker: item.worker), :class => 'btn btn-mini' do %> <i class="icon-eye-open"></i> <% end %>
+    <%= link_to worker_item_path(item, worker: item.worker), :class => 'btn btn-mini' do %> <i class="icon-eye-open"></i> <% end %>
     <%= render :partial => '/layouts/crud/edit', :locals => { :model => WorkerItem, :path => edit_worker_item_path(item, worker: item.worker) } %>
     <%= render :partial => '/layouts/crud/delete', :locals => { :model => WorkerItem, :path => item, :msg => I18n.t("activerecord.models.worker_item.one"), :txt => item.id.to_s + " - " + item.worker.full_name } %>
   </td>
@@ -41,7 +45,11 @@
 </tr>
 <% end %>
 <% else %>
+<% if item.ending_at.blank? %>
 <tr>
+<% else %>
+<tr class="inactive-row">
+<% end %>
   <td><%= item.id %></td>
   <td><%= item.company.name unless item.company.blank? %></td>
   <td><%= item.office.name unless item.office.blank? %></td>
@@ -55,7 +63,7 @@
   <td></td>
   <td></td>
   <td align="right">
-    <%= link_to worker_item_path(worker: item.worker), :class => 'btn btn-mini' do %> <i class="icon-eye-open"></i> <% end %>
+    <%= link_to worker_item_path(item, worker: item.worker), :class => 'btn btn-mini' do %> <i class="icon-eye-open"></i> <% end %>
     <%= render :partial => '/layouts/crud/edit', :locals => { :model => WorkerItem, :path => edit_worker_item_path(item, worker: item.worker) } %>
     <%= render :partial => '/layouts/crud/delete', :locals => { :model => WorkerItem, :path => item, :msg => I18n.t("activerecord.models.worker_item.one"), :txt => item.id.to_s + " - " + item.worker.full_name } %>
   </td>

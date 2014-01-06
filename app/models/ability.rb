@@ -97,11 +97,15 @@ class Ability
       can :crud, Department
       can :crud, Insurance
       can :crud, ProfessionalGroup
+      can :crud, SalaryConcept
       can :crud, TimeRecord
       can :crud, TimerecordCode
       can :crud, TimerecordType
       can :crud, WorkerType
       can :crud, Worker
+      can :crud, WorkerItem
+      can :crud, WorkerSalary
+      can :crud, WorkerSalaryItem
     elsif user.has_role? :ag2Human_Guest
       can :read, CollectiveAgreement
       can :read, ContractType
@@ -109,11 +113,15 @@ class Ability
       can :read, Department
       can :read, Insurance
       can :read, ProfessionalGroup
+      can :read, SalaryConcept
       can :read, TimeRecord
       can :read, TimerecordCode
       can :read, TimerecordType
       can :read, WorkerType
       can :read, Worker
+      can :read, WorkerItem
+      can :read, WorkerSalary
+      can :read, WorkerSalaryItem
     elsif user.has_role? :ag2Human_Banned
       cannot :manage, CollectiveAgreement
       cannot :manage, ContractType
@@ -121,11 +129,15 @@ class Ability
       cannot :manage, Department
       cannot :manage, Insurance
       cannot :manage, ProfessionalGroup
+      cannot :manage, SalaryConcept
       cannot :manage, TimeRecord
       cannot :manage, TimerecordCode
       cannot :manage, TimerecordType
       cannot :manage, WorkerType
       cannot :manage, Worker
+      cannot :manage, WorkerItem
+      cannot :manage, WorkerSalary
+      cannot :manage, WorkerSalaryItem
     end
     # ag2HelpDesk
     if user.has_role? :ag2HelpDesk_User

@@ -1,0 +1,11 @@
+<% salary_items.each do |item| %>
+<tr>
+  <td><%= item.salary_concept.name %></td>
+  <td align="right"><%= number_to_currency(item.amount, locale: :es) %></td>
+  <td align="right">
+    <%= link_to worker_salary_item_path(salary: item.worker_salary), :class => 'btn btn-mini' do %> <i class="icon-eye-open"></i> <% end %>
+    <%= render :partial => '/layouts/crud/edit', :locals => { :model => WorkerSalaryItem, :path => edit_worker_salary_item_path(item, salary: item.worker_salary) } %>
+    <%= render :partial => '/layouts/crud/delete', :locals => { :model => WorkerSalaryItem, :path => salary_item, :msg => I18n.t("activerecord.models.worker_salary_item.one"), :txt => item.salary_concept.name + " - " + item.worker_salary.year.to_s + " - " + item.worker_salary.worker_item.worker.full_name } %>
+  </td>
+</tr>
+<% end %>

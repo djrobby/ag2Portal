@@ -8,8 +8,8 @@ en:
         other: Workers salaries
     attributes:
       worker_salary:
-        worker_item: "Worker item"
-        worker_item_id: "Worker item"
+        worker_item: "Item Id"
+        worker_item_id: "Item Id"
         year: "Year"
         gross_salary: "Gross salary"
         variable_salary: "Variable salary"

@@ -80,7 +80,8 @@ module Ag2Human
   
       respond_to do |format|
         if @worker_item.save
-          format.html { redirect_to @worker_item, notice: crud_notice('created', @worker_item) }
+          format.html { redirect_to worker_item_path(@worker_item, worker: @worker_item.worker),
+                        notice: crud_notice('created', @worker_item) }
           format.json { render json: @worker_item, status: :created, location: @worker_item }
         else
           format.html { render action: "new" }
@@ -98,7 +99,7 @@ module Ag2Human
   
       respond_to do |format|
         if @worker_item.update_attributes(params[:worker_item])
-          format.html { redirect_to @worker_item,
+          format.html { redirect_to worker_item_path(@worker_item, worker: @worker_item.worker),
                         notice: (crud_notice('updated', @worker_item) + "#{undo_link(@worker_item)}").html_safe }
           format.json { head :no_content }
         else
@@ -117,7 +118,7 @@ module Ag2Human
       respond_to do |format|
         if @worker_item.destroy
           format.html { redirect_to worker,
-                      notice: (crud_notice('destroyed', @worker_item) + "#{undo_link(@worker_item)}").html_safe }
+                        notice: (crud_notice('destroyed', @worker_item) + "#{undo_link(@worker_item)}").html_safe }
           format.json { head :no_content }
         else
           format.html { redirect_to worker, alert: "#{@worker_item.errors[:base].to_s}".gsub('["', '').gsub('"]', '') }

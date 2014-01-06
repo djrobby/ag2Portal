@@ -1,0 +1,21 @@
+en:
+  ag2_human:
+    worker_salaries:
+      index:
+        title: "Worker salaries"
+        btn_new: "New Salary"
+        go_to_workers: "Go to ag2Workers"
+        back_to_root: "Back to ag2Human"
+      show:
+        title: "Worker salary"
+        btn_edit: "Edit Salary"
+        btn_delete: "Delete Salary"
+        btn_new_concept: "New Concept"
+      edit:
+        title: "Edit Worker salary"
+        btn_show: "Show Salary"
+      new:
+        title: "New Worker salary"
+      back_to_main_page: "Back to Worker item"
+      back_to_salaries: "Back to Worker salaries"
+      salary_info: "Salary Breakdown"

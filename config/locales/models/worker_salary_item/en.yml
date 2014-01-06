@@ -1,0 +1,15 @@
+en:
+  activerecord:
+    models:
+      worker_salary_item:
+        zero:  Salary items
+        one:   Salary item
+        few:   Salary items
+        other: Salary items
+    attributes:
+      worker_salary_item:
+        worker_salary: "Salary Id"
+        worker_salary_id: "Salary Id"
+        salary_concept: "Concept"
+        salary_concepto_id: "Concept"
+        amount: "Amount"

@@ -35,4 +35,5 @@ en:
       worker_salaries:
         items: "Worker salaries"
         item: "Salary"
+        new: "New salary"
       track: "Control&Tracking"

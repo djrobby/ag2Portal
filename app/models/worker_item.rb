@@ -26,8 +26,12 @@ class WorkerItem < ActiveRecord::Base
   validates :contribution_account_code, :presence => true
   validates :department,                :presence => true
 
-  before_destroy :check_for_dependent_records
-  
+  before_destroy :check_for_dependent_records  
+
+  def to_label
+    "#{id} - #{worker.full_name}"
+  end
+
   def years_worked
     if ending_at.blank?
       (Date.current - issue_starting_at).round / 365

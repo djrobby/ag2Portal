@@ -1,0 +1,15 @@
+es:
+  activerecord:
+    models:
+      worker_salary_item:
+        zero:  Items de salario
+        one:   Item de salario
+        few:   Items de salario
+        other: Items de salario
+    attributes:
+      worker_salary_item:
+        worker_salary: "Id Salario"
+        worker_salary_id: "Id Salario"
+        salary_concept: "Concepto"
+        salary_concepto_id: "Concepto"
+        amount: "Importe"

@@ -5,9 +5,9 @@
 <%= render 'form' %>
 
 <% if @worker %>
-<%= link_to I18n.t("ag2_human.worker_items.edit.btn_show"), worker_item_path(worker: @worker) %> |
-<%= link_to I18n.t("ag2_human.worker_items.back_to_main_page"), @worker %>
+<%= link_to t("ag2_human.worker_items.edit.btn_show"), worker_item_path(@worker_item, worker: @worker) %> |
+<%= link_to t("ag2_human.worker_items.back_to_main_page"), @worker %>
 <% else %>
-<%= link_to I18n.t("ag2_human.worker_items.edit.btn_show"), @worker_item %> |
-<%= link_to I18n.t("ag2_human.worker_items.back_to_items"), worker_items_path %>
+<%= link_to t("ag2_human.worker_items.edit.btn_show"), @worker_item %> |
+<%= link_to t("ag2_human.worker_items.back_to_items"), worker_items_path %>
 <% end %>

@@ -1,12 +1,16 @@
-<% salaries.each do |w| %>
+<% salaries.each do |salary| %>
 <tr>
-  <!--<td><%#= link_to w.year, w %></td>-->
-  <td><%= w.year %></td>
-  <td align="right"><%= number_to_currency(w.gross_salary, locale: :es) %></td>
-  <td align="right"><%= number_to_currency(w.variable_salary, locale: :es) %></td>
-  <td align="right"><%= number_to_currency(w.social_security_cost, locale: :es) %></td>
-  <td align="right"><%= number_to_currency(w.total_cost, locale: :es) %></td>
-  <td align="right"><%= number_to_percentage(w.day_pct, precision: 2, locale: :es) %></td>
-  <td align="center"> <% if w.active %> <i class="icon-thumbs-up"></i> <% end %> </td>
+  <td><%= salary.year %></td>
+  <td align="right"><%= number_to_currency(salary.gross_salary, locale: :es) %></td>
+  <td align="right"><%= number_to_currency(salary.variable_salary, locale: :es) %></td>
+  <td align="right"><%= number_to_currency(salary.social_security_cost, locale: :es) %></td>
+  <td align="right"><%= number_to_currency(salary.total_cost, locale: :es) %></td>
+  <td align="right"><%= number_to_percentage(salary.day_pct, precision: 2, locale: :es) %></td>
+  <td align="center"> <% if salary.active %> <i class="icon-thumbs-up"></i> <% end %> </td>
+  <td align="right">
+    <%= link_to worker_salary_path(salary, item: salary.worker_item), :class => 'btn btn-mini' do %> <i class="icon-eye-open"></i> <% end %>
+    <%= render :partial => '/layouts/crud/edit', :locals => { :model => WorkerSalary, :path => edit_worker_salary_path(salary, item: salary.worker_item) } %>
+    <%= render :partial => '/layouts/crud/delete', :locals => { :model => WorkerSalary, :path => salary, :msg => I18n.t("activerecord.models.worker_salary.one"), :txt => salary.year.to_s + " - " + salary.worker_item.worker.full_name } %>
+  </td>
 </tr>
 <% end %>

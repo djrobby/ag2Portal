@@ -35,4 +35,5 @@ es:
       worker_salaries:
         items: "Salarios de trabajador"
         item: "Salario"
+        new: "Nuevo salario"
       track: "Control&Seguimiento"

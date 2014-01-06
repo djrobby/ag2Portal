@@ -13,34 +13,37 @@
   <li>
     <a href="<%= ag2_human.workers_path %>">ag2Workers</a><span class="divider">></span>
   </li>
-  <% if @worker_items %>
+  <% if @worker_salaries %>
   <li>
-    <%= t :"ag2_human.breadcrumb.worker_items.items" %>
+    <%= t :"ag2_human.breadcrumb.worker_salaries.items" %>
   </li>
   <% end %>
+  <% if @worker_salary %>
   <% if @worker_item %>
   <li>
-    <% if @worker %>
-    <%= link_to @worker.worker_code, @worker %><span class="divider">></span>
-    <% else %>
-    <%= link_to t("ag2_human.breadcrumb.worker_items.items"), worker_items_path %><span class="divider">></span>
-    <% end %>
+    <%= link_to @worker_item.worker.worker_code, @worker_item.worker %><span class="divider">></span>
   </li>
-  <% if @breadcrumb == 'read' || @breadcrumb == 'update' %>
   <li>
-  <%= t :"ag2_human.breadcrumb.worker_items.item" %>
-  </li>
-  <% end %>
-  <% if @breadcrumb == 'create' %>
-  <% if @worker %>
-  <li>
-    <%= t :"ag2_human.breadcrumb.worker_items.new" %>
+    <%= link_to t("ag2_human.breadcrumb.worker_items.item"), worker_item_path(@worker_item, worker: @worker_item.worker) %><span class="divider">></span>
   </li>
   <% else %>
   <li>
-    <%= t :"breadcrumb.new" %>
+    <%= link_to t("ag2_human.breadcrumb.worker_salaries.items"), worker_salaries_path %><span class="divider">></span>
   </li>
   <% end %>
+  <% if @breadcrumb == 'read' || @breadcrumb == 'update' %>
+  <li>
+    <%= t :"ag2_human.breadcrumb.worker_salaries.item" %>
+  </li>
+  <% end %>
+  <% if @breadcrumb == 'create' %>
+  <li>
+  <% if @worker_item %>
+    <%= t :"ag2_human.breadcrumb.worker_salaries.new" %>
+  <% else %>
+    <%= t :"breadcrumb.new" %>
+  <% end %>
+  </li>
   <% end %>
   <% end %>
   <!-- Close -->

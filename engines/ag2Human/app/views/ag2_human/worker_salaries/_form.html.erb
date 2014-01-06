@@ -1,17 +1,30 @@
-<%= form_for(@worker_salary) do |f| %>
-  <% if @worker_salary.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@worker_salary.errors.count, "error") %> prohibited this worker_salary from being saved:</h2>
+<script>
+  $(document).ready(function() {
+    $('.sel2').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; }
+    });
+  });
+</script>
 
-      <ul>
-      <% @worker_salary.errors.full_messages.each do |msg| %>
-        <li><%= msg %></li>
-      <% end %>
-      </ul>
-    </div>
-  <% end %>
-
-  <div class="actions">
-    <%= f.submit %>
-  </div>
+<%= simple_form_for @worker_salary, :html => {:class => 'form-vertical well' } do |f| %>
+<%= f.error_notification %>
+<%= display_base_errors resource %>
+<% if @worker_item %>
+<%= f.association :worker_item, autofocus: true, collection: WorkerItem.where("id = ?", "#{@worker_item.id}").all, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' }, include_blank: false %>
+<% else %>
+<%= f.association :worker_item, autofocus: true, collection: WorkerItem.order('id').all, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %>
+<% end %>
+<div>
+  <label class="multi-field-label-two"> <%= f.input :year, input_html: { class: 'mid-text-field number-text-field' }, label_html: { class: 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.input :active, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' }, boolean_style: :inline %> </label>
+</div>
+<div>
+  <label class="multi-field-label-two"> <%= f.input :gross_salary, as: :string, input_html: { value: (number_with_precision(f.object.gross_salary, precision: 2) if f.object.gross_salary), class: 'large-text-field number-text-field' }, label_html: { class: 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.input :variable_salary, as: :string, input_html: { value: (number_with_precision(f.object.variable_salary, precision: 2) if f.object.variable_salary), class: 'large-text-field number-text-field' }, label_html: { class: 'form-label' } %> </label>
+</div>
+<div>
+  <label class="multi-field-label-two"> <%= f.input :social_security_cost, as: :string, input_html: { value: (number_with_precision(f.object.social_security_cost, precision: 2) if f.object.social_security_cost), class: 'large-text-field number-text-field' }, label_html: { class: 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.input :day_pct, as: :string, input_html: { value: (number_with_precision(f.object.day_pct, precision: 2) if f.object.day_pct), class: 'large-text-field number-text-field' }, label_html: { class: 'form-label' } %> </label>
+</div>
+<%= f.button :submit, :class => 'btn-primary' %>
 <% end %>

@@ -1,5 +1,85 @@
-<p id="notice"><%= notice %></p>
+<%= render '/layouts/ag2_human/workersalariesbreadcrumb' %>
 
+<h3><%= t '.title' %></h3>
+<table class="table">
+  <tbody>
+    <tr>
+      <td>Id:</td>
+      <td><%= @worker_salary.id %></td>
+      <td><%= t :"activerecord.attributes.worker_salary.worker_item" %>:</td>
+      <td><%= @worker_salary.worker_item.id %></td>
+    </tr>
+    <tr>
+      <td><%= t :"activerecord.attributes.worker_salary.year" %>:</td>
+      <td><%= @worker_salary.year %></td>
+      <td><%= t :"activerecord.attributes.worker_item.worker" %>:</td>
+      <td><%= @worker_salary.worker_item.worker.full_name %></td>
+    </tr>
+    <tr>
+      <td><%= t :"activerecord.attributes.worker_item.company" %>:</td>
+      <td><%= @worker_salary.worker_item.company.name %></td>
+      <td><%= t :"activerecord.attributes.worker_item.office" %>:</td>
+      <td><%= @worker_salary.worker_item.office.name %></td>
+    </tr>
+    <tr>
+      <td><%= t :"activerecord.attributes.worker_salary.gross_salary" %>:</td>
+      <td><%= number_to_currency(@worker_salary.gross_salary, locale: :es) %></td>
+      <td><%= t :"activerecord.attributes.worker_salary.variable_salary" %>:</td>
+      <td><%= number_to_currency(@worker_salary.variable_salary, locale: :es) %></td>
+    </tr>
+    <tr>
+      <td><%= t :"activerecord.attributes.worker_salary.social_security_cost" %>:</td>
+      <td><%= number_to_currency(@worker_salary.social_security_cost, locale: :es) %></td>
+      <td><%= t :"activerecord.attributes.worker_salary.total_cost" %>:</td>
+      <td><%= number_to_currency(@worker_salary.total_cost, locale: :es) %></td>
+    </tr>
+    <tr>
+      <td><%= t :"activerecord.attributes.worker_salary.day_pct" %>:</td>
+      <td><%= number_to_percentage(@worker_salary.day_pct, precision: 2, locale: :es) %></td>
+      <td><%= t :"activerecord.attributes.worker_salary.active" %>:</td>
+      <td><% if @worker_salary.active %> <i class="icon-thumbs-up"></i> <% else %> <i class="icon-thumbs-down"></i> <% end %></td>
+    </tr>
+    <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @worker_salary } %>
+    <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @worker_salary } %>
+  </tbody>
+</table>
 
-<%= link_to 'Edit', edit_worker_salary_path(@worker_salary) %> |
-<%= link_to 'Back', worker_salaries_path %>
+<% if @worker_item %>
+<%= render partial: '/layouts/crud/update_delete_new', locals:
+{ model: WorkerSalary, update_path: edit_worker_salary_path(@worker_salary, item: @worker_item), update_txt: t('.btn_edit'),
+delete_path: @worker_salary, delete_txt: t('.btn_delete'), msg: t("activerecord.models.worker_salary.one"), txt: @worker_salary.year.to_s + " - " + @worker_salary.worker_item.worker.full_name,
+new_path: new_worker_salary_path(item: @worker_item), new_txt: t('ag2_human.worker_salaries.index.btn_new') } %>
+<% else %>
+<%= render partial: '/layouts/crud/update_delete_new', locals:
+{ model: WorkerSalary, update_path: edit_worker_salary_path(@worker_salary), update_txt: t('.btn_edit'),
+delete_path: @worker_salary, delete_txt: t('.btn_delete'), msg: t("activerecord.models.worker_salary.one"), txt: @worker_salary.year.to_s + " - " + @worker_salary.worker_item.worker.full_name,
+new_path: new_worker_salary_path, new_txt: t('ag2_human.worker_salaries.index.btn_new') } %>
+<% end %>
+
+<table class="form-table">
+  <tbody>
+    <tr class="form-tr underlined-tr">
+      <td class="form-td-two left-winged"><h4><%= t 'ag2_human.worker_salaries.salary_info' %></h4></td>
+      <td class="form-td-two right-winged"> <%= link_to t(".btn_new_concept"), new_worker_salary_item_path, :class => 'btn btn-warning' %> </td>
+    </tr>
+  </tbody>
+</table>
+<% if (@worker_salary_items.count > 0) %>
+<table class="table table-condensed table-striped">
+  <thead>
+    <%= render '/layouts/ag2_human/workersalaryitemsheader' %>
+  </thead>
+  <tbody>
+    <%= render :partial => '/layouts/ag2_human/workersalaryitems', :locals => { :salary_items => @worker_salary_items } %>
+  </tbody>
+</table>
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @worker_salary_items } %>
+<% else %>
+<br />
+<% end %>
+
+<% if @worker_item %>
+<%= link_to I18n.t("ag2_human.worker_salaries.back_to_main_page"), worker_item_path(@worker_item, worker: @worker_item.worker) %>
+<% else %>
+<%= link_to I18n.t("ag2_human.worker_salaries.back_to_salaries"), worker_salaries_path %>
+<% end %>

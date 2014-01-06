@@ -75,7 +75,7 @@ new_path: new_worker_item_path, new_txt: t('ag2_human.worker_items.index.btn_new
         <h4><%= t 'ag2_human.worker_items.wage_info' %></h4>
       </td>
       <td class="form-td-two right-winged">
-        <%= link_to t(".btn_new_salary"), new_worker_salary_path, :class => 'btn btn-warning' %>
+        <%= link_to t(".btn_new_salary"), new_worker_salary_path(item: @worker_item), :class => 'btn btn-warning' %>
       </td>
     </tr>
   </tbody>
@@ -90,6 +90,8 @@ new_path: new_worker_item_path, new_txt: t('ag2_human.worker_items.index.btn_new
   </tbody>
 </table>
 <%= render :partial => '/layouts/pagination', :locals => { :ivar => @worker_salaries } %>
+<% else %>
+<br />
 <% end %>
 
 <% if @worker %>

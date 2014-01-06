@@ -8,8 +8,8 @@ es:
         other: Salarios de trabajador
     attributes:
       worker_salary:
-        worker_item: "Item trabajador"
-        worker_item_id: "Item trabajador"
+        worker_item: "Id Item"
+        worker_item_id: "Id Item"
         year: "Año"
         gross_salary: "Salario bruto"
         variable_salary: "Salario variable"

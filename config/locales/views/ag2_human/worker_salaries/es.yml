@@ -1,0 +1,21 @@
+es:
+  ag2_human:
+    worker_salaries:
+      index:
+        title: "Salarios de trabajador"
+        btn_new: "Nuevo Salario"
+        go_to_workers: "Ir a ag2Workers"
+        back_to_root: "Volver a ag2Human"
+      show:
+        title: "Salario de trabajador"
+        btn_edit: "Editar Salario"
+        btn_delete: "Borrar Salario"
+        btn_new_concept: "Nuevo Concepto"
+      edit:
+        title: "Editar Salario de trabajador"
+        btn_show: "Ver Salario"
+      new:
+        title: "Nuevo Salario de trabajador"
+      back_to_main_page: "Volver a Item de trabajador"
+      back_to_salaries: "Volver a Salarios de trabajador"
+      salary_info: "Desglose del Salario"
