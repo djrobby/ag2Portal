@@ -36,4 +36,8 @@ es:
         items: "Salarios de trabajador"
         item: "Salario"
         new: "Nuevo salario"
+      worker_salary_items:
+        items: "Items de salario"
+        item: "Item"
+        new: "Nuevo ítem"
       track: "Control&Seguimiento"

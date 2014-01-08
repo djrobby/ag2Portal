@@ -1,6 +1,13 @@
-<h1>Editing worker_salary_item</h1>
+<%= render '/layouts/ag2_human/workersalaryitemsbreadcrumb' %>
+
+<h3><%=t '.title' %></h3>
 
 <%= render 'form' %>
 
-<%= link_to 'Show', @worker_salary_item %> |
-<%= link_to 'Back', worker_salary_items_path %>
+<% if @worker_salary %>
+<%= link_to t("ag2_human.worker_salary_items.edit.btn_show"), worker_salary_item_path(@worker_salary_item, salary: @worker_salary) %> |
+<%= link_to t("ag2_human.worker_salary_items.back_to_main_page"), worker_salary_path(@worker_salary, item: @worker_salary.worker_item) %>
+<% else %>
+<%= link_to t("ag2_human.worker_salary_items.edit.btn_show"), @worker_salary_item %> |
+<%= link_to t("ag2_human.worker_salary_items.back_to_salary_items"), worker_salary_items_path %>
+<% end %>

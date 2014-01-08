@@ -5,5 +5,6 @@ class WorkerSalaryItem < ActiveRecord::Base
 
   has_paper_trail
 
-  validates :worker_salary, :presence => true
+  validates :worker_salary,   :presence => true
+  validates :salary_concept,  :presence => true
 end

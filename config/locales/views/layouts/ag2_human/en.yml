@@ -36,4 +36,8 @@ en:
         items: "Worker salaries"
         item: "Salary"
         new: "New salary"
+      worker_salary_items:
+        items: "Salary items"
+        item: "Item"
+        new: "New item"
       track: "Control&Tracking"

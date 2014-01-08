@@ -11,5 +11,5 @@ en:
         worker_salary: "Salary Id"
         worker_salary_id: "Salary Id"
         salary_concept: "Concept"
-        salary_concepto_id: "Concept"
+        salary_concept_id: "Concept"
         amount: "Amount"

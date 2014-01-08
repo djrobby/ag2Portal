@@ -10,6 +10,10 @@ class WorkerSalary < ActiveRecord::Base
   validates :worker_item, :presence => true
   validates :year,        :presence => true
 
+  def to_label
+    "#{id} - #{year} - #{worker_item.worker.full_name}"
+  end
+
   def total_cost
     gross_salary + variable_salary + social_security_cost
   end

@@ -1,5 +1,53 @@
-<p id="notice"><%= notice %></p>
+<%= render '/layouts/ag2_human/workersalaryitemsbreadcrumb' %>
 
+<h3><%= t '.title' %></h3>
+<table class="table">
+  <tbody>
+    <tr>
+      <td>Id:</td>
+      <td><%= @worker_salary_item.id %></td>
+      <td><%= t :"activerecord.attributes.worker_salary_item.worker_salary" %>:</td>
+      <td><%= @worker_salary_item.worker_salary.id %></td>
+    </tr>
+    <tr>
+      <td><%= t :"activerecord.attributes.worker_salary.year" %>:</td>
+      <td><%= @worker_salary_item.worker_salary.year %></td>
+      <td><%= t :"activerecord.attributes.worker_item.worker" %>:</td>
+      <td><%= @worker_salary_item.worker_salary.worker_item.worker.full_name %></td>
+    </tr>
+    <tr>
+      <td><%= t :"activerecord.attributes.worker_salary.gross_salary" %>:</td>
+      <td><%= number_to_currency(@worker_salary_item.worker_salary.gross_salary, locale: :es) %></td>
+      <td><%= t :"activerecord.attributes.worker_salary.variable_salary" %>:</td>
+      <td><%= number_to_currency(@worker_salary_item.worker_salary.variable_salary, locale: :es) %></td>
+    </tr>
+    <tr>
+      <td><%= t :"activerecord.attributes.worker_salary.social_security_cost" %>:</td>
+      <td><%= number_to_currency(@worker_salary_item.worker_salary.social_security_cost, locale: :es) %></td>
+      <td><%= t :"activerecord.attributes.worker_salary.total_cost" %>:</td>
+      <td><%= number_to_currency(@worker_salary_item.worker_salary.total_cost, locale: :es) %></td>
+    </tr>
+    <tr>
+      <td><%= t :"activerecord.attributes.worker_salary_item.salary_concept" %>:</td>
+      <td><%= @worker_salary_item.salary_concept.name unless @worker_salary_item.salary_concept.blank? %></td>
+      <td><%= t :"activerecord.attributes.worker_salary_item.amount" %>:</td>
+      <td><%= number_to_currency(@worker_salary_item.amount, precision: 4, locale: :es) %></td>
+    </tr>
+    <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @worker_salary_item } %>
+    <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @worker_salary_item } %>
+  </tbody>
+</table>
 
-<%= link_to 'Edit', edit_worker_salary_item_path(@worker_salary_item) %> |
-<%= link_to 'Back', worker_salary_items_path %>
+<% if @worker_salary %>
+<%= render partial: '/layouts/crud/update_delete_new', locals:
+{ model: WorkerSalaryItem, update_path: edit_worker_salary_item_path(@worker_salary_item, salary: @worker_salary), update_txt: t('.btn_edit'),
+delete_path: @worker_salary_item, delete_txt: t('.btn_delete'), msg: t("activerecord.models.worker_salary_item.one"), txt: @worker_salary_item.salary_concept.name + " - " + @worker_salary_item.worker_salary.year.to_s + " - " + @worker_salary_item.worker_salary.worker_item.worker.full_name,
+new_path: new_worker_salary_item_path(salary: @worker_salary), new_txt: t('ag2_human.worker_salary_items.index.btn_new') } %>
+<%= link_to t("ag2_human.worker_salary_items.back_to_main_page"), worker_salary_path(@worker_salary, item: @worker_salary.worker_item) %>
+<% else %>
+<%= render partial: '/layouts/crud/update_delete_new', locals:
+{ model: WorkerSalaryItem, update_path: edit_worker_salary_item_path(@worker_salary_item), update_txt: t('.btn_edit'),
+delete_path: @worker_salary_item, delete_txt: t('.btn_delete'), msg: t("activerecord.models.worker_salary_item.one"), txt: @worker_salary_item.salary_concept.name + " - " + @worker_salary_item.worker_salary.year.to_s + " - " + @worker_salary_item.worker_salary.worker_item.worker.full_name,
+new_path: new_worker_salary_item_path, new_txt: t('ag2_human.worker_salary_items.index.btn_new') } %>
+<%= link_to t("ag2_human.worker_salary_items.back_to_salary_items"), worker_salary_items_path %>
+<% end %>

@@ -60,7 +60,7 @@ new_path: new_worker_salary_path, new_txt: t('ag2_human.worker_salaries.index.bt
   <tbody>
     <tr class="form-tr underlined-tr">
       <td class="form-td-two left-winged"><h4><%= t 'ag2_human.worker_salaries.salary_info' %></h4></td>
-      <td class="form-td-two right-winged"> <%= link_to t(".btn_new_concept"), new_worker_salary_item_path, :class => 'btn btn-warning' %> </td>
+      <td class="form-td-two right-winged"> <%= link_to t(".btn_new_concept"), new_worker_salary_item_path(salary: @worker_salary), :class => 'btn btn-warning' %> </td>
     </tr>
   </tbody>
 </table>

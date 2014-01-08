@@ -1,21 +1,36 @@
-<h1>Listing worker_salary_items</h1>
+<%= render '/layouts/ag2_human/workersalaryitemsbreadcrumb' %>
 
-<table>
-  <tr>
-    <th></th>
-    <th></th>
-    <th></th>
-  </tr>
-
-<% @worker_salary_items.each do |worker_salary_item| %>
-  <tr>
-    <td><%= link_to 'Show', worker_salary_item %></td>
-    <td><%= link_to 'Edit', edit_worker_salary_item_path(worker_salary_item) %></td>
-    <td><%= link_to 'Destroy', worker_salary_item, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-  </tr>
-<% end %>
-</table>
-
-<br />
-
-<%= link_to 'New Worker salary item', new_worker_salary_item_path %>
+<h3><%=t '.title' %></h3>
+<div class="span11">
+  <table class="table table-condensed table-striped">
+    <thead>
+      <tr>
+        <th>Id</th>
+        <th><%= t 'activerecord.attributes.worker_item.worker' %></th>
+        <th align="right"><%= t :"activerecord.attributes.worker_salary.year" %></th>
+        <th align="right"><%= t :"activerecord.attributes.worker_salary.gross_salary" %></th>
+        <th><%= t :"activerecord.attributes.worker_salary_item.salary_concept" %></th>
+        <th align="right"><%= t :"activerecord.attributes.worker_salary_item.amount" %></th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @worker_salary_items.each do |item| %>
+      <tr>
+        <td><%= link_to item.id, item %></td>
+        <td><%= item.worker_salary.worker_item.worker.full_name %></td>
+        <td align="right"><%= item.worker_salary.year %></td>
+        <td align="right"><%= number_to_currency(item.worker_salary.gross_salary, locale: :es) %></td>
+        <td><%= item.salary_concept.name %></td>
+        <td align="right"><%= number_to_currency(item.amount, precision: 4, locale: :es) %></td>
+        <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => WorkerSalaryItem, :path => edit_worker_salary_item_path(item, salary: item.worker_salary) } %>
+        <%= render :partial => '/layouts/crud/delete', :locals => { :model => WorkerSalaryItem, :path => item, :msg => I18n.t("activerecord.models.worker_salary_item.one"), :txt => item.salary_concept.name + " - " + item.worker_salary.year.to_s + " - " + item.worker_salary.worker_item.worker.full_name } %></td>
+      </tr>
+      <% end %>
+    </tbody>
+  </table>
+  <%= render :partial => '/layouts/pagination', :locals => { :ivar => @worker_salary_items } %>
+  <%= render :partial => '/layouts/crud/new', :locals => { :model => WorkerSalaryItem, :path => new_worker_salary_item_path, :txt => I18n.t("ag2_human.worker_salary_items.index.btn_new") } %>
+  <%= link_to t(".go_to_workers"), workers_path %> |
+  <%= link_to t(".back_to_root"), ag2_human.root_path %>
+</div>
