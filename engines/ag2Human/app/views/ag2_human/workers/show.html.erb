@@ -22,7 +22,7 @@
     </tr>
     <tr>
       <td><%= t :"activerecord.attributes.worker.borned_on" %>:</td>
-      <td><%= @worker.borned_on.strftime("%d/%m/%Y") unless @worker.borned_on.nil? %></td>
+      <td><%= @worker.borned_on.strftime("%d/%m/%Y") unless @worker.borned_on.blank? %></td>
       <td><%= t :"activerecord.attributes.worker.age" %>:</td>
       <td><%= @worker.age %></td>
     </tr>
