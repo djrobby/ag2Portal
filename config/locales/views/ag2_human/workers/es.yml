@@ -26,4 +26,4 @@ es:
       employment_wage_info: "Información Laboral y Salarial"
       to_uppercase_btn: "En Mayúsculas"
       generate_code_btn: "Código de Trabajador"
-      worker_count_message: "(#) Trabajador en # centros de trabajo."
+      worker_count_message: "(#) Trabajador en # centros de trabajo (items)."
