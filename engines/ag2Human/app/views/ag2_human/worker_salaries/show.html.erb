@@ -69,6 +69,9 @@ new_path: new_worker_salary_path, new_txt: t('ag2_human.worker_salaries.index.bt
   <thead>
     <%= render '/layouts/ag2_human/workersalaryitemsheader' %>
   </thead>
+  <tfoot>
+    <%= render :partial => '/layouts/ag2_human/workersalaryitemsfooter', :locals => { :salary => @worker_salary } %>
+  </tfoot>
   <tbody>
     <%= render :partial => '/layouts/ag2_human/workersalaryitems', :locals => { :salary_items => @worker_salary_items } %>
   </tbody>

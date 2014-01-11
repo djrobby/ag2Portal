@@ -17,4 +17,8 @@ class WorkerSalary < ActiveRecord::Base
   def total_cost
     gross_salary + variable_salary + social_security_cost
   end
+
+  def items_sum
+    worker_salary_items.sum("amount")
+  end
 end
