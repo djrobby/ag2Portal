@@ -43,8 +43,8 @@ class Worker < ActiveRecord::Base
                                         :length => { :minimum => 5 }
                                         # should :uniqueness => true
   validates :fiscal_id,                 :presence => true,
-                                        :length => { :minimum => 9 }
-                                        # should :uniqueness => true
+                                        :length => { :minimum => 9 },
+                                        :uniqueness => true
   validates :user,                      :presence => true
   validates :street_type,               :presence => true
   validates :zipcode,                   :presence => true
