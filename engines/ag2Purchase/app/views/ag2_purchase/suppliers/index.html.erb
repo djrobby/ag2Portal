@@ -20,19 +20,22 @@
     </thead>
     <tbody>
       <% @suppliers.each do |supplier| %>
-      <%= render :partial => 'supplierinfo', :locals => { :contact => supplier, :title => I18n.t("activerecord.models.supplier.one") } %>
+      <%#= render :partial => 'supplierinfo', :locals => { :contact => supplier, :title => I18n.t("activerecord.models.supplier.one") } %>
       <% if supplier.active %>
       <tr>
         <% else %>
       <tr class="inactive-row">
         <% end %>
-        <td><a data-toggle="modal" href="#supplierinfo<%= supplier.id.to_s %>"><%= supplier.supplier_code %></a></td>
+        <!--<td><a data-toggle="modal" href="#supplierinfo<%#= supplier.id.to_s %>"><%#= supplier.supplier_code %></a></td>-->
+        <td><%= link_to supplier.supplier_code, supplier %></td>
         <td><%= supplier.name %></td>
         <td><%= supplier.fiscal_id %></td>
         <td><%= supplier.phone unless supplier.phone.blank? %></td>
         <td><%= supplier.cellular unless supplier.cellular.blank? %></td>
-        <td> <%= link_to supplier, :class => 'btn btn-mini', :id => 'show' do %> <i class="icon-eye-open"></i> <% end %>
-        <%= render :partial => '/layouts/crud/edit', :locals => { :model => Supplier, :path => edit_supplier_path(supplier) } %>
+        <% if false %>
+        <!--<td> <%= link_to supplier, :class => 'btn btn-mini', :id => 'show' do %> <i class="icon-eye-open"></i> <% end %>-->
+        <% end %>
+        <td> <%= render :partial => '/layouts/crud/edit', :locals => { :model => Supplier, :path => edit_supplier_path(supplier) } %>
         <%= render :partial => '/layouts/crud/delete', :locals => { :model => Supplier, :path => supplier, :msg => t("activerecord.models.supplier.one"), :txt => supplier.name } %> </td>
       </tr>
       <% end %>
