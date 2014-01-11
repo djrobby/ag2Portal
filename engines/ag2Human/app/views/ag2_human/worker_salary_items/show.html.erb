@@ -19,7 +19,7 @@
       <td><%= t :"activerecord.attributes.worker_salary.gross_salary" %>:</td>
       <td><%= number_to_currency(@worker_salary_item.worker_salary.gross_salary, locale: :es) %></td>
       <td><%= t :"activerecord.attributes.worker_salary.items_sum" %>:</td>
-      <td><%= number_to_currency(@worker_salary_item.worker_salary.items_sum, precision: 4, locale: :es) %></td>
+      <td><%= number_to_currency(@worker_salary_item.worker_salary.items_sum, precision: 2, locale: :es) %></td>
     </tr>
     <tr>
       <td><%= t :"activerecord.attributes.worker_salary_item.salary_concept" %>:</td>
