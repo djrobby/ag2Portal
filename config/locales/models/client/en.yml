@@ -1,0 +1,44 @@
+en:
+  activerecord:
+    models:
+      client:
+        zero:  Clients
+        one:   Client
+        few:   Clients
+        other: Clients
+        check_for_purchase_orders: "Supplier cannot be destroyed while linked orders exist."
+        check_for_receipt_notes: "Supplier cannot be destroyed while linked receipt notes exist."
+        check_for_offer_requests: "Supplier cannot be destroyed while linked requests exist."
+        check_for_offers: "Supplier cannot be destroyed while linked offers exist."
+        check_for_supplier_invoices: "Supplier cannot be destroyed while linked invoices exist."
+    attributes:
+      client:
+        entity: "Entity Id"
+        entity_id: "Entity Id"
+        client_code: "Code"
+        name: "Name"
+        fiscal_id: "Fiscal Id"
+        province: "Province"
+        province_id: "Province"
+        town: "Town"
+        town_id: "Town"
+        zipcode: "Zip Code"
+        zipcode_id: "Zip Code"
+        street_type: "Street Type"
+        street_type_id: "Street Type"
+        street_name: "Street name"
+        street_number: "Number"
+        building: "Building"
+        floor: "Floor"
+        floor_office: "Office"
+        region: "Region"
+        region_id: "Region"
+        country: "Country"
+        country_id: "Country"
+        phone: "Phone"
+        fax: "Fax"
+        cellular: "Cellular"
+        email: "Email"
+        active: "Active?"
+        remarks: "Remarks"
+        address: "Address"

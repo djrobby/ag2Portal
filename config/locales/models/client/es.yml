@@ -1,0 +1,44 @@
+es:
+  activerecord:
+    models:
+      client:
+        zero:  Clientes
+        one:   Cliente
+        few:   Clientes
+        other: Clientes
+        check_for_purchase_orders: "Proveedor no puede ser eliminado mientras existan pedidos vinculados."
+        check_for_receipt_notes: "Proveedor no puede ser eliminado mientras existan albaranes vinculados."
+        check_for_offer_requests: "Proveedor no puede ser eliminado mientras existan solicitudes vinculadas."
+        check_for_offers: "Proveedor no puede ser eliminado mientras existan ofertas vinculadas."
+        check_for_supplier_invoices: "Proveedor no puede ser eliminado mientras existan facturas vinculadas."
+    attributes:
+      client:
+        entity: "Id Entidad"
+        entity_id: "Id Entidad"
+        client_code: "Código"
+        name: "Nombre"
+        fiscal_id: "Id Fiscal CIF/NIF"
+        province: "Provincia"
+        province_id: "Provincia"
+        town: "Población"
+        town_id: "Población"
+        zipcode: "Código postal"
+        zipcode_id: "Código postal"
+        street_type: "Tipo de vía"
+        street_type_id: "Tipo de vía"
+        street_name: "Nombre de vía"
+        street_number: "Nº"
+        building: "Edificio/Bloque"
+        floor: "Planta"
+        floor_office: "Oficina"
+        region: "Región"
+        region_id: "Región"
+        country: "País"
+        country_id: "País"
+        phone: "Teléfono"
+        fax: "Fax"
+        cellular: "Móvil"
+        email: "Email"
+        active: "¿Activo?"
+        remarks: "Comentarios"
+        address: "Dirección"
