@@ -5,6 +5,7 @@
   <table class="table table-condensed table-striped">
     <thead>
       <tr>
+        <th align="right"><%= sortable "id", "Id" %></th>
         <th><%= sortable "name", t('activerecord.attributes.salary_concept.name') %></th>
         <th><%= sortable "nomina_id", t('activerecord.attributes.salary_concept.nomina_id') %></th>
         <th></th>
@@ -13,6 +14,7 @@
     <tbody>
       <% @salary_concepts.each do |t| %>
       <tr>
+        <td align="right"><%= t.id %></td>
         <td><%= link_to t.name, t %></td>
         <td><%= t.nomina_id unless t.nomina_id.blank? %></td>
         <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => SalaryConcept, :path => edit_salary_concept_path(t) } %>
