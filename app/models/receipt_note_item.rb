@@ -7,9 +7,11 @@ class ReceiptNoteItem < ActiveRecord::Base
   belongs_to :store
   belongs_to :work_order
   belongs_to :charge_account
+  belongs_to :project
   attr_accessible :code, :description, :discount, :discount_pct, :price, :quantity,
                   :receipt_note_id, :purchase_order_id, :purchase_order_item_id,
-                  :product_id, :tax_type_id, :store_id, :work_order_id, :charge_account_id
+                  :product_id, :tax_type_id, :store_id, :work_order_id,
+                  :charge_account_id, :project_id
 
   has_many :supplier_invoice_items
 
@@ -22,6 +24,7 @@ class ReceiptNoteItem < ActiveRecord::Base
   validates :store,          :presence => true
   validates :work_order,     :presence => true
   validates :charge_account, :presence => true
+  validates :project,        :presence => true
 
   before_destroy :check_for_dependent_records
 

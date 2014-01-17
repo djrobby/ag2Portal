@@ -18,7 +18,6 @@ class ReceiptNote < ActiveRecord::Base
   validates :receipt_no,     :presence => true
   validates :supplier,       :presence => true
   validates :payment_method, :presence => true
-  validates :project,        :presence => true
 
   before_destroy :check_for_dependent_records
 

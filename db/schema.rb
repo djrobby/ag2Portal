@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140102092527) do
+ActiveRecord::Schema.define(:version => 20140117191001) do
 
   create_table "activities", :force => true do |t|
     t.string   "description"
@@ -663,14 +663,22 @@ ActiveRecord::Schema.define(:version => 20140102092527) do
     t.datetime "updated_at",                                                        :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
+    t.integer  "project_id"
+    t.integer  "store_id"
+    t.integer  "work_order_id"
+    t.integer  "charge_account_id"
   end
 
+  add_index "purchase_order_items", ["charge_account_id"], :name => "index_purchase_order_items_on_charge_account_id"
   add_index "purchase_order_items", ["code"], :name => "index_purchase_order_items_on_code"
   add_index "purchase_order_items", ["delivery_date"], :name => "index_purchase_order_items_on_delivery_date"
   add_index "purchase_order_items", ["description"], :name => "index_purchase_order_items_on_description"
   add_index "purchase_order_items", ["product_id"], :name => "index_purchase_order_items_on_product_id"
+  add_index "purchase_order_items", ["project_id"], :name => "index_purchase_order_items_on_project_id"
   add_index "purchase_order_items", ["purchase_order_id"], :name => "index_purchase_order_items_on_purchase_order_id"
+  add_index "purchase_order_items", ["store_id"], :name => "index_purchase_order_items_on_store_id"
   add_index "purchase_order_items", ["tax_type_id"], :name => "index_purchase_order_items_on_tax_type_id"
+  add_index "purchase_order_items", ["work_order_id"], :name => "index_purchase_order_items_on_work_order_id"
 
   create_table "purchase_orders", :force => true do |t|
     t.string   "order_no"
@@ -744,12 +752,14 @@ ActiveRecord::Schema.define(:version => 20140102092527) do
     t.integer  "updated_by"
     t.string   "code"
     t.integer  "purchase_order_id"
+    t.integer  "project_id"
   end
 
   add_index "receipt_note_items", ["charge_account_id"], :name => "index_receipt_note_items_on_charge_account_id"
   add_index "receipt_note_items", ["code"], :name => "index_receipt_note_items_on_code"
   add_index "receipt_note_items", ["description"], :name => "index_receipt_note_items_on_description"
   add_index "receipt_note_items", ["product_id"], :name => "index_receipt_note_items_on_product_id"
+  add_index "receipt_note_items", ["project_id"], :name => "index_receipt_note_items_on_project_id"
   add_index "receipt_note_items", ["purchase_order_id"], :name => "index_receipt_note_items_on_purchase_order_id"
   add_index "receipt_note_items", ["purchase_order_item_id"], :name => "index_receipt_note_items_on_purchase_order_item_id"
   add_index "receipt_note_items", ["receipt_note_id"], :name => "index_receipt_note_items_on_receipt_note_id"
