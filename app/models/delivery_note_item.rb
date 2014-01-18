@@ -7,21 +7,23 @@ class DeliveryNoteItem < ActiveRecord::Base
   belongs_to :store
   belongs_to :work_order
   belongs_to :charge_account
+  belongs_to :project
   attr_accessible :cost, :description, :discount, :discount_pct, :price, :quantity,
                   :delivery_note_id, :sale_offer_id, :sale_offer_item_id, :product_id,
-                  :tax_type_id, :store_id, :work_order_id, :charge_account_id
+                  :tax_type_id, :store_id, :work_order_id, :charge_account_id, :project_id
 
   has_many :client_invoice_items
 
   has_paper_trail
 
-  validates :delivery_note,  :presence => true
-  validates :description,    :presence => true
-  validates :product,        :presence => true
-  validates :tax_type,       :presence => true
-  validates :store,          :presence => true
-  validates :work_order,     :presence => true
-  validates :charge_account, :presence => true
+  validates :delivery_note,   :presence => true
+  validates :description,     :presence => true
+  validates :product,         :presence => true
+  validates :tax_type,        :presence => true
+  validates :store,           :presence => true
+  validates :work_order,      :presence => true
+  validates :charge_account,  :presence => true
+  validates :project,         :presence => true
 
   before_destroy :check_for_dependent_records
 

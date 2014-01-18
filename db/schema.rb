@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140118080951) do
+ActiveRecord::Schema.define(:version => 20140118184118) do
 
   create_table "activities", :force => true do |t|
     t.string   "description"
@@ -260,12 +260,14 @@ ActiveRecord::Schema.define(:version => 20140118080951) do
     t.datetime "updated_at",                                                         :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
+    t.integer  "project_id"
   end
 
   add_index "delivery_note_items", ["charge_account_id"], :name => "index_delivery_note_items_on_charge_account_id"
   add_index "delivery_note_items", ["delivery_note_id"], :name => "index_delivery_note_items_on_delivery_note_id"
   add_index "delivery_note_items", ["description"], :name => "index_delivery_note_items_on_description"
   add_index "delivery_note_items", ["product_id"], :name => "index_delivery_note_items_on_product_id"
+  add_index "delivery_note_items", ["project_id"], :name => "index_delivery_note_items_on_project_id"
   add_index "delivery_note_items", ["sale_offer_id"], :name => "index_delivery_note_items_on_sale_offer_id"
   add_index "delivery_note_items", ["sale_offer_item_id"], :name => "index_delivery_note_items_on_sale_offer_item_id"
   add_index "delivery_note_items", ["store_id"], :name => "index_delivery_note_items_on_store_id"

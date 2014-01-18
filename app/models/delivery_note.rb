@@ -14,9 +14,8 @@ class DeliveryNote < ActiveRecord::Base
 
   has_paper_trail
 
-  validates :delivery_date, :presence => true
-  validates :delivery_no,   :presence => true
-  validates :project,       :presence => true
+  validates :delivery_date,   :presence => true
+  validates :delivery_no,     :presence => true
 
   before_destroy :check_for_dependent_records
 

@@ -1,0 +1,34 @@
+en:
+  activerecord:
+    models:
+      delivery_note:
+        zero:  Delivery notes
+        one:   Delivery note
+        few:   Delivery notes
+        other: Delivery notes
+        check_for_client_invoices: "Delivery note cannot be destroyed while linked invoices exist."
+    attributes:
+      delivery_note:
+        delivery_no: "No."
+        client: "Client"
+        client_id: "Client"
+        payment_method: "Payment method"
+        payment_method_id: "Payment method"
+        delivery_date: "Date"
+        remarks: "Remarks"
+        discount_pct: "Disc.%"
+        discount: "Discount"
+        project: "Project"
+        project_id: "Project"
+        office: "Office"
+        company: "Company"
+        store: "Store"
+        store_id: "Store"
+        work_order: "Work order"
+        work_order_id: "Work order"
+        charge_account: "Charge account"
+        charge_account_id: "Charge account"
+        subtotal: "Subtotal"
+        taxable: "Taxable"
+        taxes: "Taxes"
+        total: "Total"

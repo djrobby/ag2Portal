@@ -1,0 +1,40 @@
+en:
+  activerecord:
+    models:
+      delivery_note_item:
+        zero:  Delivery note items
+        one:   Delivery note item
+        few:   Delivery note items
+        other: Delivery note items
+        check_for_client_invoices: "Delivery note item cannot be destroyed while linked invoices exist."
+    attributes:
+      delivery_note_item:
+        delivery_note: "Delivery note"
+        delivery_note_id: "Delivery note"
+        sale_offer: "Offer"
+        sale_offer_id: "Offer"
+        sale_offer_item: "Offer item"
+        sale_offer_item_id: "Offer item"
+        product: "Product"
+        product_id: "Product"
+        description: "Description"
+        quantity: "Qty."
+        cost: "Cost"
+        price: "Price"
+        discount_pct: "Disc.%"
+        discount: "Disc."
+        tax_type: "Tax T."
+        tax_type_id: "Tax T."
+        project: "Project"
+        project_id: "Project"
+        office: "Office"
+        company: "Company"
+        store: "Store"
+        store_id: "Store"
+        work_order: "Work order"
+        work_order_id: "Work order"
+        charge_account: "Charge account"
+        charge_account_id: "Charge account"
+        costs: "Costs"
+        amount: "Amount"
+        tax: "Tax"

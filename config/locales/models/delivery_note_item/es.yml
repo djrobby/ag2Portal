@@ -1,0 +1,40 @@
+es:
+  activerecord:
+    models:
+      delivery_note_item:
+        zero:  Items de albarán
+        one:   Item de albarán
+        few:   Items de albarán
+        other: Items de albarán
+        check_for_client_invoices: "Item de albarán no puede ser eliminado mientras existan facturas vinculadas."
+    attributes:
+      delivery_note_item:
+        delivery_note: "Albarán"
+        delivery_note_id: "Albarán"
+        sale_offer: "Presupuesto"
+        sale_offer_id: "Presupuesto"
+        sale_offer_item: "Item presupuesto"
+        sale_offer_item_id: "Item presupuesto"
+        product: "Producto"
+        product_id: "Producto"
+        description: "Descripción"
+        quantity: "Cant."
+        cost: "Coste"
+        price: "Precio"
+        discount_pct: "% Dto."
+        discount: "Dto."
+        tax_type: "T.Impto."
+        tax_type_id: "T.Impto."
+        project: "Proyecto"
+        project_id: "Proyecto"
+        office: "Oficina"
+        company: "Empresa"
+        store: "Almacén"
+        store_id: "Almacén"
+        work_order: "Orden de trabajo"
+        work_order_id: "Orden de trabajo"
+        charge_account: "Cuenta de cargo"
+        charge_account_id: "Cuenta de cargo"
+        costs: "Costes"
+        amount: "Importe"
+        tax: "Impto."
