@@ -1,0 +1,17 @@
+es:
+  activerecord:
+    models:
+      work_order_worker:
+        zero:  Trabajadores de orden de trabajo
+        one:   Trabajador de orden de trabajo
+        few:   Trabajadores de orden de trabajo
+        other: Trabajadores de orden de trabajo
+    attributes:
+      work_order_worker:
+        work_order: "Orden de trabajo"
+        work_order_id: "Orden de trabajo"
+        worker: "Trabajador"
+        worker_id: "Trabajador"
+        hours: "Horas"
+        cost: "Coste"
+        costs: "Costes"

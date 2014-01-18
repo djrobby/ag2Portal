@@ -32,6 +32,7 @@ class Worker < ActiveRecord::Base
   has_many :time_records
   has_many :worker_items
   has_many :worker_salaries, :through => :worker_items
+  has_many :work_order_workers
 
   has_paper_trail
 
@@ -160,6 +161,11 @@ class Worker < ActiveRecord::Base
     # Check for items
     if worker_items.count > 0
       errors.add(:base, I18n.t('activerecord.models.worker.check_for_items'))
+      return false
+    end
+    # Check for work orders
+    if work_order_workers.count > 0
+      errors.add(:base, I18n.t('activerecord.models.worker.check_for_work_orders'))
       return false
     end
   end

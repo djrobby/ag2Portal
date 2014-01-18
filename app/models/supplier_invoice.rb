@@ -9,6 +9,7 @@ class SupplierInvoice < ActiveRecord::Base
 
   has_many :supplier_invoice_items, dependent: :destroy
   has_many :supplier_invoice_approvals, dependent: :destroy
+  has_many :supplier_payments
 
   has_paper_trail
 
@@ -16,6 +17,8 @@ class SupplierInvoice < ActiveRecord::Base
   validates :invoice_no,     :presence => true
   validates :supplier,       :presence => true
   validates :payment_method, :presence => true
+
+  before_destroy :check_for_dependent_records
 
   #
   # Records navigator
@@ -34,5 +37,15 @@ class SupplierInvoice < ActiveRecord::Base
 
   def to_last
     SupplierInvoice.order("id").last
+  end
+
+  private
+
+  def check_for_dependent_records
+    # Check for supplier payments
+    if supplier_payments.count > 0
+      errors.add(:base, I18n.t('activerecord.models.receipt_note.check_for_supplier_payments'))
+      return false
+    end
   end
 end

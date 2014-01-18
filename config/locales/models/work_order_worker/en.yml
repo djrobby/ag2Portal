@@ -1,0 +1,17 @@
+en:
+  activerecord:
+    models:
+      work_order_worker:
+        zero:  Work order workers
+        one:   Work order worker
+        few:   Work order workers
+        other: Work order workers
+    attributes:
+      work_order_worker:
+        work_order: "Work order"
+        work_order_id: "Work order"
+        worker: "Product"
+        worker_id: "Product"
+        hours: "Hours"
+        cost: "Cost"
+        costs: "Costs"
