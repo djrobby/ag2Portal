@@ -16,7 +16,6 @@ class SupplierInvoice < ActiveRecord::Base
   validates :invoice_no,     :presence => true
   validates :supplier,       :presence => true
   validates :payment_method, :presence => true
-  validates :project,        :presence => true
 
   #
   # Records navigator

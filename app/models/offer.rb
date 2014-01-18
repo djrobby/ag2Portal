@@ -2,8 +2,13 @@ class Offer < ActiveRecord::Base
   belongs_to :offer_request
   belongs_to :supplier
   belongs_to :payment_method
+  belongs_to :project
+  belongs_to :store
+  belongs_to :work_order
+  belongs_to :charge_account
   attr_accessible :offer_date, :offer_no, :remarks, :discount_pct, :discount,
-                  :offer_request_id, :supplier_id, :payment_method_id
+                  :offer_request_id, :supplier_id, :payment_method_id,
+                  :project_id, :store_id, :work_order_id, :charge_account_id
   
   has_many :offer_items, dependent: :destroy
   has_many :purchase_orders

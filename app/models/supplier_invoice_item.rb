@@ -6,9 +6,11 @@ class SupplierInvoiceItem < ActiveRecord::Base
   belongs_to :tax_type
   belongs_to :work_order
   belongs_to :charge_account
+  belongs_to :project
   attr_accessible :code, :description, :discount, :discount_pct, :price, :quantity,
                   :supplier_invoice_id, :receipt_note_id, :receipt_note_item_id,
-                  :product_id, :tax_type_id, :work_order_id, :charge_account_id
+                  :product_id, :tax_type_id, :work_order_id, :charge_account_id,
+                  :project_id
 
   has_paper_trail
 
@@ -18,4 +20,5 @@ class SupplierInvoiceItem < ActiveRecord::Base
   validates :tax_type,          :presence => true
   validates :work_order,        :presence => true
   validates :charge_account,    :presence => true
+  validates :project,           :presence => true
 end

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140117191001) do
+ActiveRecord::Schema.define(:version => 20140118080951) do
 
   create_table "activities", :force => true do |t|
     t.string   "description"
@@ -396,41 +396,57 @@ ActiveRecord::Schema.define(:version => 20140117191001) do
     t.integer  "product_id"
     t.string   "code"
     t.string   "description"
-    t.decimal  "quantity",      :precision => 12, :scale => 4, :default => 0.0, :null => false
-    t.decimal  "price",         :precision => 12, :scale => 4, :default => 0.0, :null => false
-    t.decimal  "discount_pct",  :precision => 6,  :scale => 2, :default => 0.0, :null => false
-    t.decimal  "discount",      :precision => 12, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "quantity",          :precision => 12, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "price",             :precision => 12, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "discount_pct",      :precision => 6,  :scale => 2, :default => 0.0, :null => false
+    t.decimal  "discount",          :precision => 12, :scale => 4, :default => 0.0, :null => false
     t.integer  "tax_type_id"
     t.date     "delivery_date"
-    t.datetime "created_at",                                                    :null => false
-    t.datetime "updated_at",                                                    :null => false
+    t.datetime "created_at",                                                        :null => false
+    t.datetime "updated_at",                                                        :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
+    t.integer  "project_id"
+    t.integer  "store_id"
+    t.integer  "work_order_id"
+    t.integer  "charge_account_id"
   end
 
+  add_index "offer_items", ["charge_account_id"], :name => "index_offer_items_on_charge_account_id"
   add_index "offer_items", ["code"], :name => "index_offer_items_on_code"
   add_index "offer_items", ["description"], :name => "index_offer_items_on_description"
   add_index "offer_items", ["offer_id"], :name => "index_offer_items_on_offer_id"
   add_index "offer_items", ["product_id"], :name => "index_offer_items_on_product_id"
+  add_index "offer_items", ["project_id"], :name => "index_offer_items_on_project_id"
+  add_index "offer_items", ["store_id"], :name => "index_offer_items_on_store_id"
   add_index "offer_items", ["tax_type_id"], :name => "index_offer_items_on_tax_type_id"
+  add_index "offer_items", ["work_order_id"], :name => "index_offer_items_on_work_order_id"
 
   create_table "offer_request_items", :force => true do |t|
     t.integer  "offer_request_id"
     t.integer  "product_id"
     t.string   "description"
-    t.decimal  "quantity",         :precision => 12, :scale => 4, :default => 0.0, :null => false
-    t.decimal  "price",            :precision => 12, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "quantity",          :precision => 12, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "price",             :precision => 12, :scale => 4, :default => 0.0, :null => false
     t.integer  "tax_type_id"
-    t.datetime "created_at",                                                       :null => false
-    t.datetime "updated_at",                                                       :null => false
+    t.datetime "created_at",                                                        :null => false
+    t.datetime "updated_at",                                                        :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
+    t.integer  "project_id"
+    t.integer  "store_id"
+    t.integer  "work_order_id"
+    t.integer  "charge_account_id"
   end
 
+  add_index "offer_request_items", ["charge_account_id"], :name => "index_offer_request_items_on_charge_account_id"
   add_index "offer_request_items", ["description"], :name => "index_offer_request_items_on_description"
   add_index "offer_request_items", ["offer_request_id"], :name => "index_offer_request_items_on_offer_request_id"
   add_index "offer_request_items", ["product_id"], :name => "index_offer_request_items_on_product_id"
+  add_index "offer_request_items", ["project_id"], :name => "index_offer_request_items_on_project_id"
+  add_index "offer_request_items", ["store_id"], :name => "index_offer_request_items_on_store_id"
   add_index "offer_request_items", ["tax_type_id"], :name => "index_offer_request_items_on_tax_type_id"
+  add_index "offer_request_items", ["work_order_id"], :name => "index_offer_request_items_on_work_order_id"
 
   create_table "offer_request_suppliers", :force => true do |t|
     t.integer  "offer_request_id"
@@ -460,14 +476,20 @@ ActiveRecord::Schema.define(:version => 20140117191001) do
     t.string   "remarks"
     t.decimal  "discount_pct",      :precision => 6,  :scale => 2, :default => 0.0, :null => false
     t.decimal  "discount",          :precision => 13, :scale => 4, :default => 0.0, :null => false
+    t.integer  "store_id"
+    t.integer  "work_order_id"
+    t.integer  "charge_account_id"
   end
 
   add_index "offer_requests", ["approved_offer_id"], :name => "index_offer_requests_on_approved_offer_id"
   add_index "offer_requests", ["approver_id"], :name => "index_offer_requests_on_approver_id"
+  add_index "offer_requests", ["charge_account_id"], :name => "index_offer_requests_on_charge_account_id"
   add_index "offer_requests", ["payment_method_id"], :name => "index_offer_requests_on_payment_method_id"
   add_index "offer_requests", ["project_id"], :name => "index_offer_requests_on_project_id"
   add_index "offer_requests", ["request_date"], :name => "index_offer_requests_on_request_date"
   add_index "offer_requests", ["request_no"], :name => "index_offer_requests_on_request_no"
+  add_index "offer_requests", ["store_id"], :name => "index_offer_requests_on_store_id"
+  add_index "offer_requests", ["work_order_id"], :name => "index_offer_requests_on_work_order_id"
 
   create_table "offers", :force => true do |t|
     t.integer  "offer_request_id"
@@ -482,13 +504,21 @@ ActiveRecord::Schema.define(:version => 20140117191001) do
     t.integer  "updated_by"
     t.decimal  "discount_pct",      :precision => 6,  :scale => 2, :default => 0.0, :null => false
     t.decimal  "discount",          :precision => 13, :scale => 4, :default => 0.0, :null => false
+    t.integer  "project_id"
+    t.integer  "store_id"
+    t.integer  "work_order_id"
+    t.integer  "charge_account_id"
   end
 
+  add_index "offers", ["charge_account_id"], :name => "index_offers_on_charge_account_id"
   add_index "offers", ["offer_date"], :name => "index_offers_on_offer_date"
   add_index "offers", ["offer_no"], :name => "index_offers_on_offer_no"
   add_index "offers", ["offer_request_id"], :name => "index_offers_on_offer_request_id"
   add_index "offers", ["payment_method_id"], :name => "index_offers_on_payment_method_id"
+  add_index "offers", ["project_id"], :name => "index_offers_on_project_id"
+  add_index "offers", ["store_id"], :name => "index_offers_on_store_id"
   add_index "offers", ["supplier_id"], :name => "index_offers_on_supplier_id"
+  add_index "offers", ["work_order_id"], :name => "index_offers_on_work_order_id"
 
   create_table "offices", :force => true do |t|
     t.string   "name"
@@ -1009,12 +1039,14 @@ ActiveRecord::Schema.define(:version => 20140117191001) do
     t.datetime "updated_at",                                                           :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
+    t.integer  "project_id"
   end
 
   add_index "supplier_invoice_items", ["charge_account_id"], :name => "index_supplier_invoice_items_on_charge_account_id"
   add_index "supplier_invoice_items", ["code"], :name => "index_supplier_invoice_items_on_code"
   add_index "supplier_invoice_items", ["description"], :name => "index_supplier_invoice_items_on_description"
   add_index "supplier_invoice_items", ["product_id"], :name => "index_supplier_invoice_items_on_product_id"
+  add_index "supplier_invoice_items", ["project_id"], :name => "index_supplier_invoice_items_on_project_id"
   add_index "supplier_invoice_items", ["receipt_note_id"], :name => "index_supplier_invoice_items_on_receipt_note_id"
   add_index "supplier_invoice_items", ["receipt_note_item_id"], :name => "index_supplier_invoice_items_on_receipt_note_item_id"
   add_index "supplier_invoice_items", ["supplier_invoice_id"], :name => "index_supplier_invoice_items_on_supplier_invoice_id"
