@@ -1,0 +1,23 @@
+es:
+  activerecord:
+    models:
+      supplier_payment:
+        zero:  Pagos
+        one:   Pago
+        few:   Pagos
+        other: Pagos
+    attributes:
+      supplier_payment:
+        supplier: "Proveedor"
+        supplier_id: "Proveedor"
+        supplier_invoice: "Factura"
+        supplier_invoice_id: "Factura"
+        payment_method: "Forma de pago"
+        payment_method_id: "Forma de pago"
+        payment_date: "Fecha"
+        amount: "Importe"
+        remarks: "Comentarios"
+        approver: "Aprobado por"
+        approver_id: "Aprobado por"
+        supplier_invoice_approval: "Aprobación de factura"
+        supplier_invoice_approval_id: "Aprobación de factura"

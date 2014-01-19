@@ -1,0 +1,17 @@
+es:
+  activerecord:
+    models:
+      supplier_invoice_approval:
+        zero:  Aprobaciones de factura
+        one:   Aprobación de factura
+        few:   Aprobaciones de factura
+        other: Aprobaciones de factura
+    attributes:
+      supplier_invoice_approval:
+        supplier_invoice: "Factura"
+        supplier_invoice_id: "Factura"
+        approval_date: "Aprobada el"
+        approved_amount: "Total aprobado"
+        approver: "Aprobada por"
+        approver_id: "Aprobada por"
+        remarks: "Comentarios"

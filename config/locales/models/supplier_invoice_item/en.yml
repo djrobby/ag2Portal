@@ -1,0 +1,36 @@
+en:
+  activerecord:
+    models:
+      supplier_invoice_item:
+        zero:  Invoice items
+        one:   Invoice item
+        few:   Invoice items
+        other: Invoice items
+    attributes:
+      supplier_invoice_item:
+        supplier_invoice: "Invoice"
+        supplier_invoice_id: "Invoice"
+        receipt_note: "Receipt note"
+        receipt_note_id: "Receipt note"
+        receipt_note_item: "Receipt note item"
+        receipt_note_item_id: "Receipt note item"
+        product: "Product"
+        product_id: "Product"
+        code: "Reference"
+        description: "Description"
+        quantity: "Qty."
+        price: "Price"
+        discount_pct: "Disc.%"
+        discount: "Disc."
+        tax_type: "Tax T."
+        tax_type_id: "Tax T."
+        project: "Project"
+        project_id: "Project"
+        office: "Office"
+        company: "Company"
+        work_order: "Work order"
+        work_order_id: "Work order"
+        charge_account: "Charge account"
+        charge_account_id: "Charge account"
+        amount: "Amount"
+        tax: "Tax"

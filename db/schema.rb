@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140118184118) do
+ActiveRecord::Schema.define(:version => 20140119115357) do
 
   create_table "activities", :force => true do |t|
     t.string   "description"
@@ -1085,16 +1085,18 @@ ActiveRecord::Schema.define(:version => 20140118184118) do
     t.integer  "supplier_invoice_id"
     t.integer  "payment_method_id"
     t.date     "payment_date"
-    t.decimal  "amount",              :precision => 13, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "amount",                        :precision => 13, :scale => 4, :default => 0.0, :null => false
     t.string   "remarks"
     t.integer  "approver_id"
-    t.datetime "created_at",                                                          :null => false
-    t.datetime "updated_at",                                                          :null => false
+    t.datetime "created_at",                                                                    :null => false
+    t.datetime "updated_at",                                                                    :null => false
+    t.integer  "supplier_invoice_approval__id"
   end
 
   add_index "supplier_payments", ["approver_id"], :name => "index_supplier_payments_on_approver_id"
   add_index "supplier_payments", ["payment_method_id"], :name => "index_supplier_payments_on_payment_method_id"
   add_index "supplier_payments", ["supplier_id"], :name => "index_supplier_payments_on_supplier_id"
+  add_index "supplier_payments", ["supplier_invoice_approval__id"], :name => "index_supplier_payments_on_supplier_invoice_approval__id"
   add_index "supplier_payments", ["supplier_invoice_id"], :name => "index_supplier_payments_on_supplier_invoice_id"
 
   create_table "suppliers", :force => true do |t|

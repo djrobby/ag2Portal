@@ -1,0 +1,36 @@
+es:
+  activerecord:
+    models:
+      supplier_invoice_item:
+        zero:  Items de factura
+        one:   Item de factura
+        few:   Items de factura
+        other: Items de factura
+    attributes:
+      supplier_invoice_item:
+        supplier_invoice: "Factura"
+        supplier_invoice_id: "Factura"
+        receipt_note: "Albarán"
+        receipt_note_id: "Albarán"
+        receipt_note_item: "Item albarán"
+        receipt_note_item_id: "Item albarán"
+        product: "Producto"
+        product_id: "Producto"
+        code: "Referencia"
+        description: "Descripción"
+        quantity: "Cant."
+        price: "Precio"
+        discount_pct: "% Dto."
+        discount: "Dto."
+        tax_type: "T.Impto."
+        tax_type_id: "T.Impto."
+        project: "Proyecto"
+        project_id: "Proyecto"
+        office: "Oficina"
+        company: "Empresa"
+        work_order: "Orden de trabajo"
+        work_order_id: "Orden de trabajo"
+        charge_account: "Cuenta de cargo"
+        charge_account_id: "Cuenta de cargo"
+        amount: "Importe"
+        tax: "Impto."

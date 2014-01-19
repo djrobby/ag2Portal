@@ -1,0 +1,17 @@
+en:
+  activerecord:
+    models:
+      supplier_invoice_approval:
+        zero:  Invoice approvals
+        one:   Invoice approval
+        few:   Invoice approvals
+        other: Invoice approvals
+    attributes:
+      supplier_invoice_approval:
+        supplier_invoice: "Invoice"
+        supplier_invoice_id: "Invoice"
+        approval_date: "Approved on"
+        approved_amount: "Total approved"
+        approver: "Approved by"
+        approver_id: "Approved by"
+        remarks: "Remarks"

@@ -1,0 +1,23 @@
+en:
+  activerecord:
+    models:
+      supplier_payment:
+        zero:  Payments
+        one:   Payment
+        few:   Payments
+        other: Payments
+    attributes:
+      supplier_payment:
+        supplier: "Supplier"
+        supplier_id: "Supplier"
+        supplier_invoice: "Invoice"
+        supplier_invoice_id: "Invoice"
+        payment_method: "Payment method"
+        payment_method_id: "Payment method"
+        payment_date: "Date"
+        amount: "Amount"
+        remarks: "Remarks"
+        approver: "Approved by"
+        approver_id: "Approved by"
+        supplier_invoice_approval: "Invoice approval"
+        supplier_invoice_approval_id: "Invoice approval"

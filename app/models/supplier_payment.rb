@@ -3,9 +3,11 @@ class SupplierPayment < ActiveRecord::Base
   belongs_to :supplier_invoice
   belongs_to :payment_method
   belongs_to :approver, :class_name => 'User'
+  belongs_to :supplier_invoice_approval
   attr_accessible :amount, :payment_date, :remarks,
                   :supplier_id, :supplier_invoice_id,
-                  :approver_id, :payment_method_id
+                  :approver_id, :payment_method_id,
+                  :supplier_invoice_approval_id
 
   has_paper_trail
 
