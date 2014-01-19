@@ -1,0 +1,3 @@
+= Ag2Gest
+
+This project rocks and uses MIT-LICENSE.
