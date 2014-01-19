@@ -1,0 +1,12 @@
+es:
+  ag2_gest:
+    breadcrumb:
+      activities:
+        items: "Actividades"
+        item: "Actividad"
+      payment_methods:
+        items: "Formas de pago"
+        item: "Forma de pago"
+      supplier_contacts:
+        items: "Contactos de proveedor"
+        item: "Contacto"

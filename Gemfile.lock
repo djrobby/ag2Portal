@@ -11,6 +11,12 @@ PATH
       rails (~> 3.2.12)
 
 PATH
+  remote: engines/ag2Gest
+  specs:
+    ag2_gest (0.0.1)
+      rails (~> 3.2.12)
+
+PATH
   remote: engines/ag2HelpDesk
   specs:
     ag2_help_desk (0.0.1)
@@ -268,6 +274,7 @@ PLATFORMS
 DEPENDENCIES
   ag2_admin!
   ag2_directory!
+  ag2_gest!
   ag2_help_desk!
   ag2_human!
   ag2_products!

@@ -1,0 +1,7 @@
+en:
+  ag2_gest:
+    home:
+      index:
+        control: "Control&Tracking"
+        activities: "Supplier Activities"
+        payment_methods: "Payment Methods"

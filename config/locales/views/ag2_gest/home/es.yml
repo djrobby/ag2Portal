@@ -1,0 +1,7 @@
+es:
+  ag2_gest:
+    home:
+      index:
+        control: "Control&Seguimiento"
+        activities: "Actividades Provs."
+        payment_methods: "Formas de Pago"

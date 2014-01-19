@@ -10,6 +10,7 @@ Ag2Gest::Engine.routes.draw do
     # Routes for jQuery POSTs
 
     # Resources
+    resources :clients
     
     # Root
     root :to => 'home#index'

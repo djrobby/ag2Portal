@@ -1,0 +1,31 @@
+en:
+  ag2_gest:
+    clients:
+      index:
+        title: "Clients"
+        btn_new: "New Client"
+        back_to_root: "Back to ag2Gest"
+        go_to_child_app: "Go to Supplier contacts"
+        label_office: "Office"
+        label_company: "Company"
+        label_others: "Others"
+        btn_apply: "Apply Filter"
+      show:
+        title: "Client"
+        btn_edit: "Edit Client"
+        btn_delete: "Delete Client"
+        subtable_title: "Supplier Contacts"
+        subtable_prices_title: "Supplier Prices"
+        return_to: "Back to Client"
+      edit:
+        title: "Edit Client"
+        btn_show: "Show Client"
+      new:
+        title: "New Client"
+      back_to_main_page: "Back to Clients"
+      generate_code_btn: "Supplier Code"
+      validate_btn: "Validate"
+      personal_info: "Supplier Info"
+      commercial_info: "Accounting & Commercial Info"
+      fiscal_error: "Wrong Fiscal Id or Entity (TaxPayer) does not exist."
+      code_error: "Unable to generate Supplier Code: No Activity chosen."
