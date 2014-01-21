@@ -38,10 +38,12 @@ class User < ActiveRecord::Base
       # Assign default roles
       add_role(:ag2Admin_Guest)
       add_role(:ag2Directory_Guest)
-      add_role(:ag2Human_Banned)
+      add_role(:ag2Gest_Banned)
       add_role(:ag2HelpDesk_Banned)
+      add_role(:ag2Human_Banned)
       add_role(:ag2Purchase_Banned)
-      add_role(:ag2Products_Banned)
+      add_role(:ag2Logistics_Banned)
+      add_role(:ag2Tech_Banned)
       # Send e-mail to administrator to configure the right roles
       Notifier.user_created(self).deliver
     end

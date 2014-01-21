@@ -267,7 +267,7 @@ module Ag2Purchase
           format.json { head :no_content }
         else
           format.html { redirect_to suppliers_url, alert: "#{@supplier.errors[:base].to_s}".gsub('["', '').gsub('"]', '') }
-          format.json { render json: @entity.errors, status: :unprocessable_entity }
+          format.json { render json: @supplier.errors, status: :unprocessable_entity }
         end
       end
     end

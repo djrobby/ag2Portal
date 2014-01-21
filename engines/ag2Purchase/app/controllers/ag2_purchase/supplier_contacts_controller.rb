@@ -2,6 +2,9 @@ require_dependency "ag2_purchase/application_controller"
 
 module Ag2Purchase
   class SupplierContactsController < ApplicationController
+    before_filter :authenticate_user!
+    load_and_authorize_resource
+
     # GET /supplier_contacts
     # GET /supplier_contacts.json
     def index

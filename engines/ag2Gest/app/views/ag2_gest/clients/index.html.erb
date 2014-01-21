@@ -1,23 +1,45 @@
+<% session[:return_to] = nil %>
+<% session[:return_to_url] = nil %>
 <%= render '/layouts/ag2_gest/clientsbreadcrumb' %>
+<%= render :partial => '/layouts/searchhead', :locals => { :title => t(".title"), :path => clients_path } %>
 
-<h1>Listing clients</h1>
-
-<table>
-  <tr>
-    <th></th>
-    <th></th>
-    <th></th>
-  </tr>
-
-<% @clients.each do |client| %>
-  <tr>
-    <td><%= link_to 'Show', client %></td>
-    <td><%= link_to 'Edit', edit_client_path(client) %></td>
-    <td><%= link_to 'Destroy', client, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-  </tr>
-<% end %>
-</table>
-
-<br />
-
-<%= link_to 'New Client', new_client_path %>
+<div class="span11">
+  <%= render :partial => '/layouts/lettershead', :locals => { :controller => "clients", :action => "index" } %>
+  <table class="table table-condensed table-striped">
+    <thead>
+      <tr>
+        <th><%= t 'activerecord.attributes.client.client_code' %></th>
+        <th><%= t 'activerecord.attributes.client.name' %></th>
+        <th><%= t 'activerecord.attributes.client.fiscal_id' %></th>
+        <th><%= t 'activerecord.attributes.client.phone' %></th>
+        <th><%= t 'activerecord.attributes.client.cellular' %></th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @clients.each do |client| %>
+      <%#= render :partial => 'info', :locals => { :contact => client, :title => I18n.t("activerecord.models.client.one") } %>
+      <% if client.active %>
+      <tr>
+        <% else %>
+      <tr class="inactive-row">
+        <% end %>
+        <!--<td><a data-toggle="modal" href="#info<%#= client.id.to_s %>"><%#= client.client_code %></a></td>-->
+        <td><%= link_to client.client_code, client %></td>
+        <td><%= client.name %></td>
+        <td><%= client.fiscal_id %></td>
+        <td><%= client.phone unless client.phone.blank? %></td>
+        <td><%= client.cellular unless client.cellular.blank? %></td>
+        <% if false %>
+        <!--<td> <%= link_to client, :class => 'btn btn-mini', :id => 'show' do %> <i class="icon-eye-open"></i> <% end %>-->
+        <% end %>
+        <td> <%= render :partial => '/layouts/crud/edit', :locals => { :model => Client, :path => edit_client_path(client) } %>
+        <%= render :partial => '/layouts/crud/delete', :locals => { :model => Client, :path => client, :msg => t("activerecord.models.client.one"), :txt => client.name } %> </td>
+      </tr>
+      <% end %>
+    </tbody>
+  </table>
+  <%= render :partial => '/layouts/pagination', :locals => { :ivar => @clients } %>
+  <%= render :partial => '/layouts/crud/new', :locals => { :model => Client, :path => new_client_path, :txt => t(".btn_new") } %>
+  <%= link_to t(".back_to_root"), ag2_gest.root_path %>
+</div>

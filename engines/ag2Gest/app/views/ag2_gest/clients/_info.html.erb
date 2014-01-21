@@ -1,0 +1,58 @@
+<div class="container">
+  <div id="info<%= contact.id.to_s %>" class="modal hide fade in" style="display: none; ">
+    <div class="modal-header">
+      <a class="close" data-dismiss="modal">×</a>
+      <span class="shrinked"><%= title %></span>
+      <% if contact.active %>
+      <i class="icon-thumbs-up"></i>
+      <h4><%= contact.name %></h4>
+      <% else %>
+      <i class="icon-thumbs-down"></i>
+      <h4 class="inactive-row"><%= contact.name %></h4>
+      <% end %>
+    </div>
+    <div class="modal-body">
+      <p>
+        <span class="highlighted"><%= contact.supplier_code unless contact.supplier_code.blank? %></span><br />
+        <i class="icon-hand-right"></i>
+        <%= contact.fiscal_id unless contact.fiscal_id.blank? %>
+      </p>
+      <p>
+        <i class="icon-road"></i>
+        <%= contact.street_type.street_type_code.titleize %>. <%= contact.street_name %> <%= contact.street_number %>
+        <% if !contact.building.blank? %>
+        <%= contact.building.titleize %>
+        <% end %>
+        <% if !contact.floor.blank? %>
+        <%= contact.floor %>&ordm;
+        <% end %>
+        <% if !contact.floor_office.blank? %>
+        <%= contact.floor_office %>
+        <% end %><br />
+        <%= contact.town.name %> &#8226;
+        <%= contact.zipcode.zipcode %> &#8226;
+        <%= contact.province.name_and_region %> &#8226;
+        <%= contact.country.name %>
+      </p>
+      <p>
+        <span class="bolded">
+          <i class="icon-phone-black"></i>
+          <%= contact.phone unless contact.phone.blank? %> &#8226;
+          <i class="icon-print"></i>
+          <%= contact.fax unless contact.fax.blank? %> &#8226;
+          <i class="icon-iphone-black"></i>
+          <%= contact.cellular unless contact.cellular.blank? %>
+        </span>
+      </p>
+      <p>
+        <span class="emailed">
+          <i class="icon-envelope"></i>
+          <%= contact.email unless contact.email.blank? %>
+        </span>
+      </p>
+    </div>
+    <div class="modal-footer">
+      <a href="#" class="btn btn-primary" data-dismiss="modal"><%=t :close_button %></a>
+    </div>
+  </div>
+</div>

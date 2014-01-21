@@ -89,6 +89,35 @@ class Ability
       cannot :manage, SharedContactType
       cannot :manage, SharedContact
     end
+    # ag2Gest
+    if user.has_role? :ag2Gest_User
+      can :crud, Client
+    elsif user.has_role? :ag2Gest_Guest
+      can :read, Client
+    elsif user.has_role? :ag2Gest_Banned
+      cannot :manage, Client
+    end
+    # ag2HelpDesk
+    if user.has_role? :ag2HelpDesk_User
+      can :crud, Technician
+      can :crud, TicketCategory
+      can :crud, TicketPriority
+      can :crud, TicketStatus
+      can :crud, Ticket
+    elsif user.has_role? :ag2HelpDesk_Guest
+      can :read, Technician
+      can :read, TicketCategory
+      can :read, TicketPriority
+      can :read, TicketStatus
+      can :create, Ticket
+      can :read, Ticket
+    elsif user.has_role? :ag2HelpDesk_Banned
+      cannot :manage, Technician
+      cannot :manage, TicketCategory
+      cannot :manage, TicketPriority
+      cannot :manage, TicketStatus
+      can :create, Ticket
+    end
     # ag2Human
     if user.has_role? :ag2Human_User
       can :crud, CollectiveAgreement
@@ -139,27 +168,6 @@ class Ability
       cannot :manage, WorkerSalary
       cannot :manage, WorkerSalaryItem
     end
-    # ag2HelpDesk
-    if user.has_role? :ag2HelpDesk_User
-      can :crud, Technician
-      can :crud, TicketCategory
-      can :crud, TicketPriority
-      can :crud, TicketStatus
-      can :crud, Ticket
-    elsif user.has_role? :ag2HelpDesk_Guest
-      can :read, Technician
-      can :read, TicketCategory
-      can :read, TicketPriority
-      can :read, TicketStatus
-      can :create, Ticket
-      can :read, Ticket
-    elsif user.has_role? :ag2HelpDesk_Banned
-      cannot :manage, Technician
-      cannot :manage, TicketCategory
-      cannot :manage, TicketPriority
-      cannot :manage, TicketStatus
-      can :create, Ticket
-    end
     # ag2Purchase
     if user.has_role? :ag2Purchase_User
       can :crud, Activity
@@ -190,7 +198,7 @@ class Ability
       cannot :manage, PurchaseOrderItem
     end
     # ag2Products (ag2Logistics)
-    if user.has_role? :ag2Products_User
+    if user.has_role? :ag2Logistics_User
       can :crud, Manufacturer
       can :crud, Measure
       can :crud, ProductFamily
@@ -199,7 +207,7 @@ class Ability
       can :crud, PurchasePrice
       can :crud, Store
       can :crud, Stock
-    elsif user.has_role? :ag2Products_Guest
+    elsif user.has_role? :ag2Logistics_Guest
       can :read, Manufacturer
       can :read, Measure
       can :read, ProductFamily
@@ -208,7 +216,7 @@ class Ability
       can :read, PurchasePrice
       can :read, Store
       can :read, Stock
-    elsif user.has_role? :ag2Products_Banned
+    elsif user.has_role? :ag2Logistics_Banned
       cannot :manage, Manufacturer
       cannot :manage, Measure
       cannot :manage, ProductFamily

@@ -20,13 +20,13 @@
     </thead>
     <tbody>
       <% @suppliers.each do |supplier| %>
-      <%#= render :partial => 'supplierinfo', :locals => { :contact => supplier, :title => I18n.t("activerecord.models.supplier.one") } %>
+      <%#= render :partial => 'info', :locals => { :contact => supplier, :title => I18n.t("activerecord.models.supplier.one") } %>
       <% if supplier.active %>
       <tr>
         <% else %>
       <tr class="inactive-row">
         <% end %>
-        <!--<td><a data-toggle="modal" href="#supplierinfo<%#= supplier.id.to_s %>"><%#= supplier.supplier_code %></a></td>-->
+        <!--<td><a data-toggle="modal" href="#info<%#= supplier.id.to_s %>"><%#= supplier.supplier_code %></a></td>-->
         <td><%= link_to supplier.supplier_code, supplier %></td>
         <td><%= supplier.name %></td>
         <td><%= supplier.fiscal_id %></td>
