@@ -65,22 +65,16 @@ module Ag2Gest
 
     # Update supplier code at view (generate_code_btn)
     def update_code_textfield
-      activity = params[:id]
+      organization = '0001'
       code = ''
 
       # Builds code, if possible
-      if activity == '$'
-        code = '$err'
+      last_client_code = Client.where("client_code LIKE ?", "#{organization}%").order('client_code').maximum('client_code')
+      if last_client_code.nil?
+        code = organization + '-000001'
       else
-        activity = activity.split(",").first
-        activity = activity.rjust(4, '0')
-        last_client_code = Client.where("client_code LIKE ?", "#{activity}%").order('client_code').maximum('client_code')
-        if last_client_code.nil?
-          code = activity + '-00001'
-        else
-          last_client_code = last_client_code.split("-").last.to_i + 1
-          code = activity + '-' + last_client_code.to_s.rjust(5, '0')
-        end
+        last_client_code = last_client_code.split("-").last.to_i + 1
+        code = organization + '-' + last_client_code.to_s.rjust(6, '0')
       end
       @json_data = { "code" => code }
 

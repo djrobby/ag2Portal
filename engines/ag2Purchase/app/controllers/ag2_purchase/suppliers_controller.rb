@@ -76,10 +76,10 @@ module Ag2Purchase
         activity = activity.rjust(4, '0')
         last_supplier_code = Supplier.where("supplier_code LIKE ?", "#{activity}%").order('supplier_code').maximum('supplier_code')
         if last_supplier_code.nil?
-          code = activity + '-00001'
+          code = activity + '-000001'
         else
           last_supplier_code = last_supplier_code.split("-").last.to_i + 1
-          code = activity + '-' + last_supplier_code.to_s.rjust(5, '0')
+          code = activity + '-' + last_supplier_code.to_s.rjust(6, '0')
         end
       end
       @json_data = { "code" => code }

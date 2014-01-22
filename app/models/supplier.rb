@@ -29,7 +29,7 @@ class Supplier < ActiveRecord::Base
 
   validates :name,             :presence => true
   validates :supplier_code,    :presence => true,
-                               :length => { :minimum => 5 },
+                               :length => { :minimum => 6 },
                                :uniqueness => true
   validates :fiscal_id,        :presence => true,
                                :length => { :minimum => 9 },

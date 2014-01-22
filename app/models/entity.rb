@@ -11,6 +11,9 @@ class Entity < ActiveRecord::Base
                   :entity_type_id, :street_type_id, :zipcode_id, :town_id, :province_id, :region_id, :country_id,
                   :created_by, :updated_by
 
+  has_one :supplier
+  has_one :client
+
   has_paper_trail
 
   validates :first_name,   :presence => true, :if => "company.blank?"
@@ -31,8 +34,6 @@ class Entity < ActiveRecord::Base
   before_destroy :check_for_dependent_records
   after_update :update_dependent_records
 
-  has_one :supplier
-  #has_many :customers
   def fields_to_uppercase
     if !self.fiscal_id.blank?
       self[:fiscal_id].upcase!
@@ -85,16 +86,16 @@ class Entity < ActiveRecord::Base
       errors.add(:base, I18n.t('activerecord.models.entity.check_for_suppliers'))
       return false
     end
-    # Check for customers
-#    if customers.count > 0
-#      errors.add(:base, I18n.t('activerecord.models.entity.check_for_customers'))
-#      return false
-#    end
+    # Check for clients
+    if !client.nil?
+      errors.add(:base, I18n.t('activerecord.models.entity.check_for_clients'))
+      return false
+    end
   end
 
   def update_dependent_records
+    # Update linked supplier
     if !supplier.nil?
-      # Update linked supplier
       if entity_type_id < 2
         supplier.name = full_name
       else
@@ -115,15 +116,37 @@ class Entity < ActiveRecord::Base
       supplier.fax = fax
       supplier.cellular = cellular
       supplier.email = email
-      
       if !supplier.save
         errors.add(:base, I18n.t('activerecord.models.entity.update_suppliers'))
-        #return false
       end
     end
-#    if customers.count > 0
-      # Update linked customers
-#    end
+    
+    # Update linked client
+    if !client.nil?
+      if entity_type_id < 2
+        client.name = full_name
+      else
+        client.name = company
+      end
+      client.street_type_id = street_type_id
+      client.street_name = street_name
+      client.street_number = street_number
+      client.building = building
+      client.floor = floor
+      client.floor_office = floor_office
+      client.zipcode_id = zipcode_id
+      client.town_id = town_id
+      client.province_id = province_id
+      client.region_id = region_id
+      client.country_id = country_id
+      client.phone = phone
+      client.fax = fax
+      client.cellular = cellular
+      client.email = email
+      if !client.save
+        errors.add(:base, I18n.t('activerecord.models.entity.update_clients'))
+      end
+    end
   end
 
   searchable do
