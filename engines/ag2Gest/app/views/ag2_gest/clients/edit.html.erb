@@ -1,6 +1,8 @@
-<h1>Editing client</h1>
+<%= render '/layouts/ag2_gest/clientsbreadcrumb' %>
+
+<h3><%=t '.title' %></h3>
 
 <%= render 'form' %>
 
-<%= link_to 'Show', @client %> |
-<%= link_to 'Back', clients_path %>
+<%= link_to t(".btn_show"), @client %> |
+<%= link_to t("ag2_gest.clients.back_to_main_page"), clients_path %>

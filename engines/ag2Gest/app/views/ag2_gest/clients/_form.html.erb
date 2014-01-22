@@ -1,17 +1,268 @@
-<%= form_for(@client) do |f| %>
-  <% if @client.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@client.errors.count, "error") %> prohibited this client from being saved:</h2>
+<script>
+  var text_field_color;
 
-      <ul>
-      <% @client.errors.full_messages.each do |msg| %>
-        <li><%= msg %></li>
-      <% end %>
-      </ul>
-    </div>
-  <% end %>
+  $(document).ready(function() {
+    // Disable fields if Fiscal Id blank
+    var contact = $('#client_fiscal_id').val();
+    if (contact == "")
+      contact = "0";
+    if (contact == "0") {
+      // Empty fiscal id: Disable
+      $('#client_client_code').prop('disabled', true);
+      $('#client_name').prop('disabled', true);
+      $('#generate_code_btn').hide();
+      $('#submit_btn').hide();
+    } else {
+      // Fiscal Id OK: Enable
+      $('#client_client_code').prop('disabled', false);
+      $('#client_name').prop('disabled', false);
+      $('#generate_code_btn').show();
+      $('#submit_btn').show();
+    }
+    // Save default text color
+    text_field_color = $("#client_client_code").css('color')
+    // Icon inside text field: Validate Fiscal Id
+    $('input.iconify').wrap('<span class="validateicon" title="<%=t('ag2_gest.clients.validate_btn') %>" />').after($('<span/>').click(function() {
+      //$(this).prev('input').val('').focus();
+      // make a POST call and replace the content
+      var client = $('#client_fiscal_id').val();
+      if (client == "")
+        client = "0";
+      jQuery.getJSON('validate_fiscal_id_textfield/' + client, function(data) {
+        if (data.fiscal_id == "$err") {
+          $("#client_fiscal_id").css('color', 'red');
+          //alert('<%= I18n.t("ag2_gest.clients.fiscal_error") %>');
+          // Quick entity creation
+          if ($('#client_fiscal_id').val() == "")
+            $("#client_fiscal_id").val(data.fiscal_id);
+          if ($('#client_fiscal_id').val() != "$err") {
+            $('#fnt_fiscal_id').val($('#client_fiscal_id').val());
+          } else {
+            $('#fnt_fiscal_id').val('');            
+          }
+          $("#new-entity").modal('show');
+          $('#new-entity').on('hidden', function() {
+            $('#client_fiscal_id').select();
+          });
+        }
+        else {
+          // Fill with Entity data
+          $("#client_fiscal_id").val(data.fiscal_id);
+          $("#client_name").val(data.name);
+          $("#client_entity_id").val(data.id);
+          $("#client_street_type_id").val(data.street_type_id);
+          $("#client_street_name").val(data.street_name);
+          $("#client_street_number").val(data.street_number);
+          $("#client_building").val(data.building);
+          $("#client_floor").val(data.floor);
+          $("#client_floor_office").val(data.floor_office);
+          $("#client_zipcode_id").val(data.zipcode_id);
+          $("#client_town_id").val(data.town_id);
+          $("#client_province_id").val(data.province_id);
+          $("#client_region_id").val(data.region_id);
+          $("#client_country_id").val(data.country_id);
+          $("#client_phone").val(data.phone);
+          $("#client_fax").val(data.fax);
+          $("#client_cellular").val(data.cellular);
+          $("#client_email").val(data.email);
+          $("#client_active").prop('checked', true);
+          // Enable fields
+          $('#client_client_code').prop('disabled', false);
+          $('#client_name').prop('disabled', false);
+          $('#generate_code_btn').show();
+          $('#submit_btn').show();
+          // Default color & focus
+          $("#client_fiscal_id").css('color', text_field_color);
+          $('#client_client_code').focus();
+        }
+      })
+      return false;
+    }));
+    $('#client_fiscal_id').focus();
+  });
+  
+  jQuery(function($) {
+    // when the #client_town_id field changes
+    $("#client_town_id").change(function() {
+      // make a POST call and replace the content
+      var contact = $('select#client_town_id :selected').val();
+      if (contact == "")
+        contact = "0";
+      jQuery.getJSON('update_province_textfield_from_town/' + contact, function(data) {
+        $("#client_province_id").val(data.province_id);
+        $("#client_region_id").val(data.region_id);
+        $("#client_country_id").val(data.country_id);
+      })
+      return false;
+    });
 
-  <div class="actions">
-    <%= f.submit %>
-  </div>
+    // when the #client_province_id field changes
+    $("#client_province_id").change(function() {
+      // make a POST call and replace the content
+      var contact = $('select#client_province_id :selected').val();
+      if (contact == "")
+        contact = "0";
+      jQuery.getJSON('update_region_textfield_from_province/' + contact, function(data) {
+        $("#client_region_id").val(data.region_id);
+        $("#client_country_id").val(data.country_id);
+      })
+      return false;
+    });
+
+    // when the #client_zipcode_id field changes
+    $("#client_zipcode_id").change(function() {
+      // make a POST call and replace the content
+      var contact = $('select#client_zipcode_id :selected').val();
+      if (contact == "")
+        contact = "0";
+      jQuery.getJSON('update_province_textfield_from_zipcode/' + contact, function(data) {
+        $("#client_town_id").val(data.town_id);
+        $("#client_province_id").val(data.province_id);
+        $("#client_region_id").val(data.region_id);
+        $("#client_country_id").val(data.country_id);
+      })
+      return false;
+    });
+
+    // when the #client_region_id field changes
+    $("#client_region_id").change(function() {
+      // make a POST call and replace the content
+      var contact = $('select#client_region_id :selected').val();
+      if (contact == "")
+        contact = "0";
+      jQuery.getJSON('update_country_textfield_from_region/' + contact, function(data) {
+        $("#client_country_id").val(data.id);
+      })
+      return false;
+    });
+
+    // when #validate_btn is clicked
+    $("#validate_btn").click(function() {
+      // make a POST call and replace the content
+      var client = $('#client_fiscal_id').val();
+      if (client == "")
+        client = "0";
+      jQuery.getJSON('validate_fiscal_id_textfield/' + client, function(data) {
+        $("#client_fiscal_id").val(data.fiscal_id);
+        if ($("#client_fiscal_id").val() == "$err") {
+          $("#client_fiscal_id").css('color', 'red');
+          alert('<%= I18n.t("ag2_gest.clients.fiscal_error") %>');
+          $('#client_fiscal_id').select();
+        }
+        else {
+          $("#client_entity_id").val(data.id);
+          $("#client_street_type_id").val(data.street_type_id);
+          $("#client_street_name").val(data.street_name);
+          $("#client_street_number").val(data.street_number);
+          $("#client_building").val(data.building);
+          $("#client_floor").val(data.floor);
+          $("#client_floor_office").val(data.floor_office);
+          $("#client_zipcode_id").val(data.zipcode_id);
+          $("#client_town_id").val(data.town_id);
+          $("#client_province_id").val(data.province_id);
+          $("#client_region_id").val(data.region_id);
+          $("#client_country_id").val(data.country_id);
+          $("#client_phone").val(data.phone);
+          $("#client_fax").val(data.fax);
+          $("#client_cellular").val(data.cellular);
+          $("#client_email").val(data.email);
+          
+          $("#client_fiscal_id").css('color', text_field_color);
+          $('#client_client_code').focus();
+        }
+      })
+      return false;
+    });
+    
+    // when #generate_code_btn is clicked
+    $("#generate_code_btn").click(function() {
+      // make a POST call and replace the content
+      var activities = $('#checked_activities').val();
+      if (activities == "")
+        activities = "$";
+      jQuery.getJSON('update_code_textfield/' + activities, function(data) {
+        $("#client_client_code").val(data.code);
+        if ($("#client_client_code").val() == "$err") {
+          $("#client_client_code").css('color', 'red');
+          alert('<%= I18n.t("ag2_gest.clients.code_error") %>');
+          $('#client_client_code').select();
+        }
+        else
+          $("#client_client_code").css('color', text_field_color);
+      })
+      return false;
+    });
+
+    // when the #client_client_code field changes
+    $("#client_client_code").change(function() {
+      // replace the color
+      $("#client_client_code").css('color', text_field_color);
+    });
+
+  })
+
+  /* Collect checkboxes values in hidden input field */
+  function updateTextArea() {
+    var allVals = [];
+    $('#c_b :checked').each(function() {
+      allVals.push($(this).val());
+    });
+    $('#checked_activities').val(allVals)
+  }
+  $(function() {
+    $('#c_b input').click(updateTextArea);
+    //updateTextArea();
+  });
+</script>
+
+<%= simple_form_for @client, :html => {:class => 'form-vertical well' } do |f| %>
+<%= f.error_notification %>
+<%= display_base_errors resource %>
+<div>
+  <label class="multi-field-label-three"><%= f.input :fiscal_id, :required => true, :autofocus => true, :input_html => { :class => 'large-text-field iconify' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-three"> <%= f.input :client_code, :required => true, :input_html => { :class => 'large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-three"> <%= f.input :active, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' }, :boolean_style => :inline %> </label>
+</div>
+<%= f.input :name, :required => true, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %>
+<h4><%=t 'ag2_gest.clients.personal_info' %></h4>
+<div>
+  <label class="multi-field-label-two"> <%= f.input :phone, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.input :fax, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+</div>
+<div>
+  <label class="multi-field-label-two"> <%= f.input :cellular, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.input :email, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+</div>
+<div>
+  <label class="multi-field-label-three-thinner"> <%= f.association :street_type, collection: StreetType.all(order: 'street_type_code'), :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-three-wider"> <%= f.input :street_name, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-three-thinner"> <%= f.input :street_number, :input_html => { :class => 'large-text-field number-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+</div>
+<div>
+  <label class="multi-field-label-three-wider"> <%= f.input :building, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-three-thinner"> <%= f.input :floor, :input_html => { :class => 'large-text-field number-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-three-thinner"> <%= f.input :floor_office, :input_html => { :class => 'large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+</div>
+<div>
+  <label class="multi-field-label-three"> <%= f.association :zipcode, collection: Zipcode.all(order: 'zipcode'), :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-three"> <%= f.association :town, collection: Town.all(order: 'name'), :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-three"> <%= f.association :province, collection: Province.all(order: 'name'), :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+</div>
+<div>
+  <label class="multi-field-label-two"> <%= f.association :region, collection: Region.all(order: 'name'), :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.association :country, collection: Country.all(order: 'name'), :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+</div>
+<%= f.input :remarks, :as => :text, :input_html => { :class => 'x-large-text-field', :rows => 2 }, :label_html => { :class => 'form-label' } %>
+<%= f.input :entity_id, :as => :hidden %>
+<table class="form-table">
+  <tbody>
+    <tr class="form-tr">
+      <td class="form-td-three left-winged"> <%= f.button :submit, :class => 'btn-primary', :id => 'submit_btn' %> </td>
+      <td class="form-td-three right-winged"><a href="#" id="generate_code_btn" class="btn btn-warning"><%=t 'ag2_gest.clients.generate_code_btn' %></a></td>
+    </tr>
+  </tbody>
+</table>
 <% end %>
+
+<!-- Modal for new Entity -->
+<%= render '/ag2_admin/entities/new_entity' %>

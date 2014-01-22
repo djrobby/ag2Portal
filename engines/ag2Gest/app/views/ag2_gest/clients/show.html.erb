@@ -1,5 +1,88 @@
-<p id="notice"><%= notice %></p>
+<%= render '/layouts/ag2_gest/clientsbreadcrumb' %>
 
+<h3><%= t '.title' %></h3>
+<table class="table">
+  <tbody>
+    <tr>
+      <td>Id:</td>
+      <td><%= @client.id %></td>
+      <td><%= t 'activerecord.attributes.client.client_code' %>:</td>
+      <td><%= @client.client_code %></td>
+    </tr>
+    <tr>
+      <td><%= t 'activerecord.attributes.client.fiscal_id' %>:</td>
+      <td><%= @client.fiscal_id %></td>
+      <td><%= t 'activerecord.attributes.client.entity_id' %>:</td>
+      <td><%= @client.entity_id %></td>
+    </tr>
+    <tr>
+      <td><%= t 'activerecord.attributes.client.name' %>:</td>
+      <td><%= @client.name %></td>
+      <td><%= t 'activerecord.attributes.client.active' %>:</td>
+      <td> <% if @client.active %> <i class="icon-thumbs-up"></i> <% else %> <i class="icon-thumbs-down"></i> <% end %> </td>
+    </tr>
+    <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @client } %>
+    <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @client } %>
+  </tbody>
+</table>
 
-<%= link_to 'Edit', edit_client_path(@client) %> |
-<%= link_to 'Back', clients_path %>
+<h4><%= t 'ag2_gest.clients.personal_info' %></h4>
+<table class="table">
+  <tbody>
+    <tr>
+      <td><%= t 'activerecord.attributes.client.phone' %>:</td>
+      <td><%= @client.phone unless @client.phone.blank? %></td>
+      <td><%= t 'activerecord.attributes.client.fax' %>:</td>
+      <td><%= @client.fax unless @client.fax.blank? %></td>
+    </tr>
+    <tr>
+      <td><%= t 'activerecord.attributes.client.cellular' %>:</td>
+      <td><%= @client.cellular unless @client.cellular.blank? %></td>
+      <td><%= t 'activerecord.attributes.client.email' %>:</td>
+      <td><%= @client.email unless @client.email.blank? %></td>
+    </tr>
+    <tr>
+      <td><%= t :"activerecord.attributes.client.address" %>:</td>
+      <td> <%= @client.street_type.street_type_code.titleize  %>. <%= @client.street_name %> <%= @client.street_number %>
+      <% if !@client.building.blank? %>
+      <%= @client.building.titleize %>
+      <% end %>
+      <% if !@client.floor.blank? %>
+      <%= @client.floor %>&ordm;
+      <% end %>
+      <% if !@client.floor_office.blank? %>
+      <%= @client.floor_office %>
+      <% end %> </td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><%= t :"activerecord.attributes.client.town" %>:</td>
+      <td><%= @client.town.name %></td>
+      <td><%= t :"activerecord.attributes.client.province" %>:</td>
+      <td><%= @client.province.name_and_region %></td>
+    </tr>
+    <tr>
+      <td><%= t :"activerecord.attributes.client.zipcode" %>:</td>
+      <td><%= @client.zipcode.zipcode %></td>
+      <td><%= t :"activerecord.attributes.client.country" %>:</td>
+      <td><%= @client.country.name %></td>
+    </tr>
+    <tr>
+      <td><%= t :"activerecord.attributes.client.remarks" %>:</td>
+      <td><%= @client.remarks unless @client.remarks.blank? %></td>
+      <td></td>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
+
+<%= render partial: '/layouts/crud/update_delete_new', locals:
+{ model: Client, update_path: edit_client_path(@client), update_txt: t('.btn_edit'),
+delete_path: @client, delete_txt: t('.btn_delete'), msg: t("activerecord.models.client.one"), txt: @client.name,
+new_path: new_client_path, new_txt: t('ag2_gest.clients.index.btn_new') } %>
+
+<% if !session[:return_to].nil? %>
+<%= link_to session[:return_to], session[:return_to_url] %> |
+<% end %>
+<%= link_to t('ag2_gest.clients.back_to_main_page'), clients_path %>
