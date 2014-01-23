@@ -12,7 +12,7 @@ class EntityType < ActiveRecord::Base
 
   private
   def check_for_entities
-    if apps.count > 0
+    if entities.count > 0
       errors.add(:base, I18n.t('activerecord.models.entity_type.check_for_entities'))
       return false
     end

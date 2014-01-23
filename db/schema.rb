@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140119115357) do
+ActiveRecord::Schema.define(:version => 20140123174758) do
 
   create_table "activities", :force => true do |t|
     t.string   "description"
@@ -150,10 +150,12 @@ ActiveRecord::Schema.define(:version => 20140119115357) do
     t.datetime "logo_updated_at"
     t.integer  "created_by"
     t.integer  "updated_by"
+    t.integer  "organization_id"
   end
 
   add_index "companies", ["fiscal_id"], :name => "index_companies_on_fiscal_id"
   add_index "companies", ["invoice_code"], :name => "index_companies_on_invoice_code"
+  add_index "companies", ["organization_id"], :name => "index_companies_on_organization_id"
   add_index "companies", ["province_id"], :name => "index_companies_on_province_id"
   add_index "companies", ["street_type_id"], :name => "index_companies_on_street_type_id"
   add_index "companies", ["town_id"], :name => "index_companies_on_town_id"
@@ -565,6 +567,16 @@ ActiveRecord::Schema.define(:version => 20140119115357) do
   end
 
   add_index "order_statuses", ["name"], :name => "index_order_statuses_on_name"
+
+  create_table "organizations", :force => true do |t|
+    t.string   "name"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  add_index "organizations", ["name"], :name => "index_organizations_on_name"
 
   create_table "payment_methods", :force => true do |t|
     t.string   "description"

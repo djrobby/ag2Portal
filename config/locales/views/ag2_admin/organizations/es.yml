@@ -1,0 +1,20 @@
+es:
+  ag2_admin:
+    organizations:
+      index:
+        title: "Organizaciones"
+        btn_new: "Nueva Organización"
+        go_to: "Ir a ag2Companies"
+        back_to_root: "Volver a ag2Config"
+      show:
+        title: "Organización"
+        btn_edit: "Editar Organización"
+        btn_delete: "Borrar Organización"
+        subtable_title: "Empresas de la Organización"
+        return_to: "Volver a Organización"
+      edit:
+        title: "Editar Organización"
+        btn_show: "Ver Organización"
+      new:
+        title: "Nueva Organización"
+      back_to_main_page: "Volver a Organizaciones"

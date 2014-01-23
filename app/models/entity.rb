@@ -30,7 +30,6 @@ class Entity < ActiveRecord::Base
   validates :entity_type,  :presence => true
 
   before_validation :fields_to_uppercase
-
   before_destroy :check_for_dependent_records
   after_update :update_dependent_records
 

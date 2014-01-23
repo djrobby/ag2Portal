@@ -1,6 +1,6 @@
-<% content_for :title, "aGestiona2 | ag2Users" %>
-<% content_for :icon, "/assets/icon/ag2Users.png" %>
-<% content_for :alt, "ag2Users" %>
+<% content_for :title, "aGestiona2 | ag2Org" %>
+<% content_for :icon, "/assets/icon/ag2Org.png" %>
+<% content_for :alt, "ag2Org" %>
 
 <!-- Breadcrumb -->
 <ul class="breadcrumb">
@@ -13,20 +13,17 @@
   <li>
     <a href="<%= ag2_admin.config_path %>">ag2Config</a><span class="divider">></span>
   </li>
+  <% if @organizations %>
   <li>
-    <a href="<%= ag2_admin.users_path %>">ag2Users</a><span class="divider">></span>
-  </li>
-  <% if @roles %>
-  <li>
-    <%=t :"ag2_admin.breadcrumb.roles.items" %>
+    ag2Org
   </li>
   <% end %>
-  <% if @role %>
+  <% if @organization %>
   <li>
-    <a href="<%= roles_path %>"><%=t :"ag2_admin.breadcrumb.roles.items" %></a><span class="divider">></span>
+    <a href="<%= users_path %>">ag2Org</a><span class="divider">></span>
   </li>
   <% if @breadcrumb == 'read' || @breadcrumb == 'update' %>
-  <%= t :"ag2_admin.breadcrumb.roles.item" %>
+  <%=t :"ag2_admin.breadcrumb.organizations.item"%>
   <% end %>
   <% if @breadcrumb == 'create' %>
   <li>

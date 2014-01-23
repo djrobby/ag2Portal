@@ -17,8 +17,8 @@
     <tr>
       <td>Id:</td>
       <td><%= @company.id %></td>
-      <td></td>
-      <td></td>
+      <td><%= t 'activerecord.attributes.company.organization' %>:</td>
+      <td><%= @company.organization.name %></td>
     </tr>
     <tr>
       <td><%= t 'activerecord.attributes.company.fiscal_id' %>:</td>
@@ -109,4 +109,5 @@ new_path: new_company_path, new_txt: t('ag2_admin.companies.index.btn_new') } %>
 </table>
 <% end %>
 
+<%= link_to I18n.t('ag2_admin.companies.show.show_to'), @company.organization %> |
 <%= link_to I18n.t('ag2_admin.companies.back_to_main_page'), companies_path %>

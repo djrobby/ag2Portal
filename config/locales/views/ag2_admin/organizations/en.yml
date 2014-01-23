@@ -1,0 +1,20 @@
+en:
+  ag2_admin:
+    organizations:
+      index:
+        title: "Organizations"
+        btn_new: "New Organization"
+        go_to: "Go to ag2Companies"
+        back_to_root: "Back to ag2Config"
+      show:
+        title: "Organization"
+        btn_edit: "Edit Organization"
+        btn_delete: "Delete Organization"
+        subtable_title: "Organization Companies"
+        return_to: "Back to Organization"
+      edit:
+        title: "Edit Organization"
+        btn_show: "Show Organization"
+      new:
+        title: "New Organization"
+      back_to_main_page: "Back to Organizations"

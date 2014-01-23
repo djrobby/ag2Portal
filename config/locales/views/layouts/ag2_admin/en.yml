@@ -13,3 +13,6 @@ en:
         items: "Departments"
       areas:
         item: "Area"
+      organizations:
+        items: "Organizations"
+        item: "Organization"

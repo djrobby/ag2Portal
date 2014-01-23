@@ -1,0 +1,12 @@
+en:
+  activerecord:
+    models:
+      organization:
+        zero:  Organizations
+        one:   Organization
+        few:   Organizations
+        other: Organizations
+        check_for_companies: "Organization cannot be destroyed while linked companies exist."
+    attributes:
+      organization:
+        name: "Name"

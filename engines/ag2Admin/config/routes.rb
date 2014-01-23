@@ -48,6 +48,7 @@ Ag2Admin::Engine.routes.draw do
     resources :tax_types
     resources :departments
     resources :areas
+    resources :organizations
     
     # Root
     root :to => 'home#index'

@@ -1,0 +1,12 @@
+es:
+  activerecord:
+    models:
+      organization:
+        zero:  Organizaciones
+        one:   Organización
+        few:   Organizaciones
+        other: Organizaciones
+        check_for_companies: "Organización no puede ser eliminada mientras existan empresas vinculadas."
+    attributes:
+      organization:
+        name: "Nombre"

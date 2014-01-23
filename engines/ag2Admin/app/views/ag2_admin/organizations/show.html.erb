@@ -1,0 +1,42 @@
+<%= render '/layouts/ag2_admin/organizationsbreadcrumb' %>
+
+<h3><%=t '.title' %></h3>
+<table class="table">
+  <tbody>
+    <tr>
+      <td>Id:</td>
+      <td><%= @organization.id %></td>
+      <td><%= t 'activerecord.attributes.company.organization' %>:</td>
+      <td><%= @organization.name %></td>
+    </tr>
+    <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @organization } %>
+    <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @organization } %>
+  </tbody>
+</table>
+
+<%= render :partial => '/layouts/crud/update_delete_new', locals:
+{ model: Organization, update_path: edit_organization_path(@organization), update_txt: t('ag2_admin.organizations.show.btn_edit'),
+delete_path: @organization, delete_txt: t('ag2_admin.organizations.show.btn_delete'), msg: t("activerecord.models.organization.one"), :txt => @organization.name,
+new_path: new_organization_path, new_txt: t('ag2_admin.organizations.index.btn_new') } %>
+
+<% if (@companies.count > 0) %>
+<h4><%= t '.subtable_title' %></h4>
+<table class="table table-condensed table-striped">
+  <thead>
+    <tr>
+      <th><%= t 'activerecord.attributes.company.fiscal_id' %></th>
+      <th><%= t 'activerecord.attributes.company.name' %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @companies.each do |company| %>
+    <tr>
+      <td><%= link_to company.fiscal_id, company %></td>
+      <td><%= company.name %></td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
+<% end %>
+
+<%= link_to I18n.t('ag2_admin.organizations.back_to_main_page'), organizations_path %>

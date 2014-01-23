@@ -33,3 +33,5 @@ en:
         invoice_left_margin: "Page left margin"
         logo: "Logo"
         address: "Address"
+        organization: "Organization"
+        organization_id: "Organization"
