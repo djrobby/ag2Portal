@@ -1,0 +1,3 @@
+= Ag2Finance
+
+This project rocks and uses MIT-LICENSE.
