@@ -1,4 +1,5 @@
 class Office < ActiveRecord::Base
+  has_and_belongs_to_many :users, :join_table => :users_offices
   belongs_to :company
   belongs_to :province
   belongs_to :town
