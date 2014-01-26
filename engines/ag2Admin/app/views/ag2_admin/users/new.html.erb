@@ -9,7 +9,7 @@
 <%= f.input :name, :required => true, :label_html => { :class => 'form-label' } %>
 <%= f.input :password, :required => true, :label_html => { :class => 'form-label' } %>
 <%= f.input :password_confirmation, :required => true, :label_html => { :class => 'form-label' } %>
-<%= f.input :role_ids, :collection => Role.all, :as => :check_boxes, :label_method => lambda {|t| t.name}, :label_html => { :class => 'form-label' }, :item_wrapper_class => 'inline' %>
+<%= f.input :role_ids, :collection => Role.all(order: 'name'), :as => :check_boxes, :label_method => lambda {|t| t.name}, :label_html => { :class => 'form-label' }, :item_wrapper_class => 'inline' %>
 <br />
 <%= f.button :submit, nil, :class => 'btn-primary' %>
 <% end %>

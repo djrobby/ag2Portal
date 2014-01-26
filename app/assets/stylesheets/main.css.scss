@@ -846,3 +846,17 @@ div.indicator-green-progress-bordered {
     margin-right: 1em; }
   .flickr_pagination .next_page {
     margin-left: 1em; }
+
+/*
+ * Modals
+ */
+.modal-options {
+  margin-bottom: 0;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+  padding: 0px 0px 2px 0px;
+  *zoom: 1;
+  -webkit-box-shadow: inset 0 1px 0 #ffffff;
+     -moz-box-shadow: inset 0 1px 0 #ffffff;
+          box-shadow: inset 0 1px 0 #ffffff;
+}

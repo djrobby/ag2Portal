@@ -6,7 +6,7 @@
     </div>
     <div class="modal-body">
       <%= hidden_field_tag :referrer, users_path %>
-      <%= f.input :role_ids, :collection => Role.all, :as => :check_boxes, :label_method => lambda {|t| t.name}, :label => false, :item_wrapper_class => 'inline' %>
+      <%= f.input :role_ids, :collection => Role.all(order: 'name'), :as => :check_boxes, :label_method => lambda {|t| t.name}, :label => false, :item_wrapper_class => 'inline' %>
     </div>
     <div class="modal-footer">
       <%= f.submit I18n.t('ag2_admin.users.index.btn_change_role'), :class => "btn btn-primary" %>

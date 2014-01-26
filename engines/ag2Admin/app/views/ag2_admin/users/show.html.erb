@@ -43,9 +43,9 @@
 new_path: new_user_path, new_txt: t('ag2_admin.users.index.btn_new') } %>
 
 <h4><%= t 'activerecord.attributes.user.role_ids' %></h4>
-<% if @user.roles.count > 0 %>
+<% if @roles.count > 0 %>
 &#8226;
-<% @user.roles.each do |role| %>
+<% @roles.each do |role| %>
 <span class="highlighted"><%= role.name %></span> &#8226;
 <% end %>
 <% end %>

@@ -7,8 +7,11 @@ en:
         go_to_child: "Go to Roles"
         back_to_root: "Back to ag2Config"
         btn_role: "Roles"
+        btn_oco: "OCO"
         change_role_title: "Roles for %{user}"
+        change_oco_title: "OCO for %{user}"
         btn_change_role: "Change Roles"
+        btn_change_oco: "Change OCO"
       show:
         title: "User"
         btn_edit: "Edit User"

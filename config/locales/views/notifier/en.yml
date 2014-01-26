@@ -4,7 +4,7 @@ en:
       subject: "aGestiona2: New user created"
       dear_admin: "Dear Administrator,"
       new_user_created: "I have just created my new aGestiona2 account with the Username "
-      complete_roles: "Please, complete the configuration by assigning appropriate roles to use platform services."
+      complete_roles: "Please, complete the configuration by assigning appropriate roles and OCO to use platform services."
       thanks: "Thanks."
     ticket_created:
       subject: "aGestiona2: New support ticket"
