@@ -6,6 +6,50 @@ module Ag2Admin
     load_and_authorize_resource
     # Helper methods for sorting
     helper_method :sort_column
+
+    # Update company & organization from office select
+    def update_company_organization_from_office
+      company_id = 0;
+      organization_id = 0;
+      
+      if params[:box] != '0'
+        office = Office.find(params[:box])
+        if !office.nil?
+          company_id = office.company_id
+          organization_id = office.company.organization_id
+        end
+      end
+
+      @json_data = { "company_id" => company_id, "organization_id" => organization_id }
+
+      respond_to do |format|
+        format.html # update_company_organization_from_office.html.erb does not exist! JSON only
+        format.json { render json: @json_data }
+      end
+    end
+
+    # Update organization from company select
+    def update_organization_from_company
+      organization_id = 0;
+      
+      if params[:box] != '0'
+        company = Company.find(params[:box])
+        if !company.nil?
+          organization_id = company.organization_id
+        end
+      end
+
+      @json_data = { "organization_id" => organization_id }
+
+      respond_to do |format|
+        format.html # update_company_organization_from_office.html.erb does not exist! JSON only
+        format.json { render json: @json_data }
+      end
+    end
+
+    #
+    # Default Methods
+    #
     # GET /users
     # GET /users.json
     def index

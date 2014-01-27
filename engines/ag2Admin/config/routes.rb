@@ -28,6 +28,8 @@ Ag2Admin::Engine.routes.draw do
     match 'entities/update_region_textfield_from_province/:id', :controller => 'entities', :action => 'update_region_textfield_from_province'
     match 'entities/:id/update_region_textfield_from_province/:id', :controller => 'entities', :action => 'update_region_textfield_from_province'
     match 'tax_types/:id/expire', :controller => 'tax_types', :action => 'expire'
+    match 'update_company_organization_from_office/:box', :controller => 'users', :action => 'update_company_organization_from_office'
+    match 'update_organization_from_company/:box', :controller => 'users', :action => 'update_organization_from_company'
 
     # Resources
     resources :users

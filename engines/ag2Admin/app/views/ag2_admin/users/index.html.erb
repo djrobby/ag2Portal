@@ -4,12 +4,25 @@
     $("[id ^=user_office_ids]").change(function() {
       // make a POST call and replace the content
       var chkd = $(this).prop('checked');
-      var user = $(this).val();
-      if (user == "")
-        user = "0";
-      jQuery.getJSON('update_company_organization_from_office/' + user + '?chkd=' + chkd, function(data) {
-        $("#user_company_ids_" + data.company_id).prop('checked', data.company_checked);
-        $("#user_organization_ids_" + data.organization_id).prop('checked', data.organization_checked);
+      var box = $(this).val();
+      if (box == "")
+        box = "0";
+      jQuery.getJSON('update_company_organization_from_office/' + box, function(data) {
+        $("input:checkbox[id=user_company_ids_" + data.company_id + "]").prop('checked', chkd);
+        $("input:checkbox[id=user_organization_ids_" + data.organization_id + "]").prop('checked', chkd);
+      })
+      return false;
+    });
+
+    // when the #user_company_ids_? check_box changes
+    $("[id ^=user_company_ids]").change(function() {
+      // make a POST call and replace the content
+      var chkd = $(this).prop('checked');
+      var box = $(this).val();
+      if (box == "")
+        box = "0";
+      jQuery.getJSON('update_organization_from_company/' + box, function(data) {
+        $("input:checkbox[id=user_organization_ids_" + data.organization_id + "]").prop('checked', chkd);
       })
       return false;
     });
