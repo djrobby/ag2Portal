@@ -16,3 +16,6 @@ en:
       organizations:
         items: "Organizations"
         item: "Organization"
+      countries:
+        items: "Contries"
+        item: "Country"

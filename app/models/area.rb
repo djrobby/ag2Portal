@@ -8,7 +8,8 @@ class Area < ActiveRecord::Base
 
   validates :name,        :presence => true
   validates :department,  :presence => true
-   before_destroy :check_for_dependent_records
+  
+  before_destroy :check_for_dependent_records
 
   private
 

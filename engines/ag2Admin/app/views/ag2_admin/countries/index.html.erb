@@ -1,11 +1,12 @@
 <%= render '/layouts/ag2_admin/countriesbreadcrumb' %>
 
 <h3><%=t '.title' %></h3>
-<div class="span6">
+<div class="span7">
   <table class="table table-condensed table-striped">
     <thead>
       <tr>
         <th><%= sortable "name", t('activerecord.attributes.country.name') %></th>
+        <th><%= sortable "code", t('activerecord.attributes.country.code') %></th>
         <th></th>
       </tr>
     </thead>
@@ -13,6 +14,7 @@
       <% @countries.each do |country| %>
       <tr>
         <td><%= link_to country.name, country %></td>
+        <td><%= country.code %></td>
         <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => Country, :path => edit_country_path(country) } %>
         <%= render :partial => '/layouts/crud/delete', :locals => { :model => Country, :path => country, :msg => I18n.t("activerecord.models.country.one"), :txt => country.name } %> </td>
       </tr>

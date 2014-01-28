@@ -6,6 +6,12 @@ en:
         one:   Country
         few:   Countries
         other: Countries
+        check_for_contacts: "Country cannot be destroyed while linked contacts exist."
+        check_for_regions: "Country cannot be destroyed while linked regions exist."
+        check_for_entities: "Country cannot be destroyed while linked entities exist."
+        check_for_suppliers: "Country cannot be destroyed while linked suppliers exist."
+        check_for_clients: "Country cannot be destroyed while linked clients exist."
     attributes:
       country:
         name: "Name"
+        code: "ISO Code"

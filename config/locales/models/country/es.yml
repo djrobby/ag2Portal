@@ -6,6 +6,12 @@ es:
         one:   País
         few:   Países
         other: Países
+        check_for_contacts: "País no puede ser eliminado mientras existan contactos vinculados."
+        check_for_regions: "País no puede ser eliminado mientras existan regiones vinculadas."
+        check_for_entities: "País no puede ser eliminado mientras existan entidades vinculadas."
+        check_for_suppliers: "País no puede ser eliminado mientras existan proveedores vinculados."
+        check_for_clients: "País no puede ser eliminado mientras existan clientes vinculados."
     attributes:
       country:
         name: "Nombre"
+        code: "Código ISO"

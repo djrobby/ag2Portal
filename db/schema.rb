@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140125102500) do
+ActiveRecord::Schema.define(:version => 20140128174216) do
 
   create_table "activities", :force => true do |t|
     t.string   "description"
@@ -216,7 +216,10 @@ ActiveRecord::Schema.define(:version => 20140125102500) do
     t.datetime "updated_at", :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
+    t.string   "code"
   end
+
+  add_index "countries", ["code"], :name => "index_countries_on_code"
 
   create_table "data_import_configs", :force => true do |t|
     t.string   "name"
