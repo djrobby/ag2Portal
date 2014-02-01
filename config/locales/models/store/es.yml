@@ -7,6 +7,12 @@ es:
         few:   Almacenes
         other: Almacenes
         check_for_stocks: "Almacén no puede ser eliminada mientras existan existencias vinculadas."
+        check_for_work_orders: "Almacén no puede ser eliminada mientras existan ordenes de trabajo vinculadas."
+        check_for_receipt_notes: "Almacén no puede ser eliminada mientras existan albaranes vinculados."
+        check_for_delivery_notes: "Almacén no puede ser eliminada mientras existan notas de entrega vinculadas."
+        check_for_purchase_orders: "Almacén no puede ser eliminada mientras existan pedidos vinculados."
+        check_for_offer_requests: "Almacén no puede ser eliminada mientras existan solicitudes vinculadas."
+        check_for_offers: "Almacén no puede ser eliminada mientras existan ofertas vinculadas."
     attributes:
       store:
         name: "Nombre"

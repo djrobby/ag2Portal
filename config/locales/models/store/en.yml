@@ -7,6 +7,12 @@ en:
         few:   Stores
         other: Stores
         check_for_stocks: "Store cannot be destroyed while linked stocks exist."
+        check_for_work_orders: "Store cannot be destroyed while linked work orders exist."
+        check_for_receipt_notes: "Store cannot be destroyed while linked receipt notes exist."
+        check_for_delivery_notes: "Store cannot be destroyed while linked delivery notes exist."
+        check_for_purchase_orders: "Store cannot be destroyed while linked orders exist."
+        check_for_offer_requests: "Store cannot be destroyed while linked requests exist."
+        check_for_offers: "Store cannot be destroyed while linked offers exist."
     attributes:
       store:
         name: "Name"
