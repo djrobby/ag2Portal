@@ -6,6 +6,10 @@ es:
         one:   Empresa
         few:   Empresas
         other: Empresas
+        check_for_contacts: "Empresa no puede ser eliminada mientras existan contactos vinculados."
+        check_for_offices: "Empresa no puede ser eliminada mientras existan oficinas vinculadas."
+        check_for_workers: "Empresa no puede ser eliminada mientras existan trabajadores vinculados."
+        check_for_projects: "Empresa no puede ser eliminada mientras existan proyectos vinculados."
     attributes:
       company:
         name: "Nombre"

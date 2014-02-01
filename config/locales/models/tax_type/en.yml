@@ -7,6 +7,14 @@ en:
         few:   Tax types
         other: Tax types
         check_for_products: "Tax type cannot be destroyed while linked products exist."
+        check_for_work_orders: "Tax type cannot be destroyed while linked work orders exist."
+        check_for_purchase_orders: "Tax type cannot be destroyed while linked orders exist."
+        check_for_receipt_notes: "Tax type cannot be destroyed while linked receipt notes exist."
+        check_for_offer_requests: "Tax type cannot be destroyed while linked requests exist."
+        check_for_offers: "Tax type cannot be destroyed while linked offers exist."
+        check_for_delivery_notes: "Tax type cannot be destroyed while linked delivery notes exist."
+        check_for_supplier_invoices: "Tax type cannot be destroyed while linked S invoices exist."
+        check_for_client_invoices: "Tax type cannot be destroyed while linked C invoices exist."
     attributes:
       tax_type:
         tax: "Rate"

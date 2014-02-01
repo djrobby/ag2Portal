@@ -2,11 +2,11 @@ es:
   activerecord:
     models:
       delivery_note:
-        zero:  Albaranes
-        one:   Albarán
-        few:   Albaranes
-        other: Albaranes
-        check_for_client_invoices: "Albarán no puede ser eliminado mientras existan facturas vinculadas."
+        zero:  Notas de entrega
+        one:   Nota de entrega
+        few:   Notas de entrega
+        other: Notas de entrega
+        check_for_client_invoices: "Nota de entrega no puede ser eliminada mientras existan facturas vinculadas."
     attributes:
       delivery_note:
         delivery_no: "Nº"

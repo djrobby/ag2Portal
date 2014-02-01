@@ -89,12 +89,16 @@ module Ag2Admin
     # DELETE /provinces/1.json
     def destroy
       @province = Province.find(params[:id])
-      @province.destroy
 
       respond_to do |format|
-        format.html { redirect_to provinces_url,
+        if @province.destroy
+          format.html { redirect_to provinces_url,
                       notice: (crud_notice('destroyed', @province) + "#{undo_link(@province)}").html_safe }
-        format.json { head :no_content }
+          format.json { head :no_content }
+        else
+          format.html { redirect_to provinces_url, alert: "#{@province.errors[:base].to_s}".gsub('["', '').gsub('"]', '') }
+          format.json { render json: @province.errors, status: :unprocessable_entity }
+        end
       end
     end
 

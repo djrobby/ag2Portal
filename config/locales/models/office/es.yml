@@ -6,6 +6,10 @@ es:
         one:   Oficina
         few:   Oficinas
         other: Oficinas
+        check_for_contacts: "Oficina no puede ser eliminada mientras existan contactos vinculados."
+        check_for_tickets: "Oficina no puede ser eliminada mientras existan solicitudes vinculadas."
+        check_for_workers: "Oficina no puede ser eliminada mientras existan trabajadores vinculados."
+        check_for_projects: "Oficina no puede ser eliminada mientras existan proyectos vinculados."
     attributes:
       office:
         name: "Nombre"

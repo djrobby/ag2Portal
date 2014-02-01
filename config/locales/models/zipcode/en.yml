@@ -6,6 +6,13 @@ en:
         one:   ZIP code
         few:   ZIP codes
         other: ZIP codes
+        check_for_companies: "ZIP code cannot be destroyed while linked companies exist."
+        check_for_offices: "ZIP code cannot be destroyed while linked offices exist."
+        check_for_workers: "ZIP code cannot be destroyed while linked workers exist."
+        check_for_contacts: "ZIP code cannot be destroyed while linked contacts exist."
+        check_for_entities: "ZIP code cannot be destroyed while linked entities exist."
+        check_for_suppliers: "ZIP code cannot be destroyed while linked suppliers exist."
+        check_for_clients: "ZIP code cannot be destroyed while linked clients exist."
     attributes:
       zipcode:
         zipcode: "Zip code"

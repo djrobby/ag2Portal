@@ -6,8 +6,15 @@ en:
         one:   Product
         few:   Products
         other: Products
-        check_for_orders: "Product cannot be destroyed while linked orders exist."
         check_for_stocks: "Product cannot be destroyed while linked stocks exist."
+        check_for_work_orders: "Product cannot be destroyed while linked work orders exist."
+        check_for_purchase_orders: "Product cannot be destroyed while linked orders exist."
+        check_for_receipt_notes: "Product cannot be destroyed while linked receipt notes exist."
+        check_for_offer_requests: "Product cannot be destroyed while linked requests exist."
+        check_for_offers: "Product cannot be destroyed while linked offers exist."
+        check_for_delivery_notes: "Product cannot be destroyed while linked delivery notes exist."
+        check_for_supplier_invoices: "Product cannot be destroyed while linked S invoices exist."
+        check_for_client_invoices: "Product cannot be destroyed while linked C invoices exist."
     attributes:
       product:
         product_code: "Code"

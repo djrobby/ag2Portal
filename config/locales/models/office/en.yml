@@ -6,6 +6,10 @@ en:
         one:   Office
         few:   Offices
         other: Offices
+        check_for_contacts: "Office cannot be destroyed while linked contacts exist."
+        check_for_tickets: "Office cannot be destroyed while linked tickets exist."
+        check_for_workers: "Office cannot be destroyed while linked workers exist."
+        check_for_projects: "Office cannot be destroyed while linked projects exist."
     attributes:
       office:
         name: "Name"

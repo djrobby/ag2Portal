@@ -6,6 +6,10 @@ en:
         one:   Company
         few:   Companies
         other: Companies
+        check_for_contacts: "Company cannot be destroyed while linked contacts exist."
+        check_for_offices: "Company cannot be destroyed while linked offices exist."
+        check_for_workers: "Company cannot be destroyed while linked workers exist."
+        check_for_projects: "Company cannot be destroyed while linked projects exist."
     attributes:
       company:
         name: "Name"

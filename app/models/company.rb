@@ -31,6 +31,7 @@ class Company < ActiveRecord::Base
   validates :organization, :presence => true
 
   before_validation :fields_to_uppercase
+  before_destroy :check_for_dependent_records
 
   def fields_to_uppercase
     if !self.fiscal_id.blank?
@@ -38,6 +39,31 @@ class Company < ActiveRecord::Base
     end
     if !self.invoice_code.blank?
       self[:invoice_code].upcase!
+    end
+  end
+
+  private
+
+  def check_for_dependent_records
+    # Check for offices
+    if offices.count > 0
+      errors.add(:base, I18n.t('activerecord.models.company.check_for_offices'))
+      return false
+    end
+    # Check for workers
+    if workers.count > 0
+      errors.add(:base, I18n.t('activerecord.models.company.check_for_workers'))
+      return false
+    end
+    # Check for corp contacts
+    if corp_contacts.count > 0
+      errors.add(:base, I18n.t('activerecord.models.company.check_for_contacts'))
+      return false
+    end
+    # Check for projects
+    if projects.count > 0
+      errors.add(:base, I18n.t('activerecord.models.company.check_for_projects'))
+      return false
     end
   end
 end

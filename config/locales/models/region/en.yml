@@ -6,6 +6,11 @@ en:
         one:   Region
         few:   Regions
         other: Regions
+        check_for_contacts: "Region cannot be destroyed while linked contacts exist."
+        check_for_provinces: "Region cannot be destroyed while linked provinces exist."
+        check_for_entities: "Region cannot be destroyed while linked entities exist."
+        check_for_suppliers: "Region cannot be destroyed while linked suppliers exist."
+        check_for_clients: "Region cannot be destroyed while linked clients exist."
     attributes:
       region:
         name: "Name"

@@ -6,6 +6,14 @@ en:
         one:   Town
         few:   Towns
         other: Towns
+        check_for_zipcodes: "Town cannot be destroyed while linked ZIP codes exist."
+        check_for_companies: "Town cannot be destroyed while linked companies exist."
+        check_for_offices: "Town cannot be destroyed while linked offices exist."
+        check_for_workers: "Town cannot be destroyed while linked workers exist."
+        check_for_contacts: "Town cannot be destroyed while linked contacts exist."
+        check_for_entities: "Town cannot be destroyed while linked entities exist."
+        check_for_suppliers: "Town cannot be destroyed while linked suppliers exist."
+        check_for_clients: "Town cannot be destroyed while linked clients exist."
     attributes:
       town:
         name: "Name"

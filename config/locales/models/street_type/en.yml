@@ -6,6 +6,13 @@ en:
         one:   Street type
         few:   Street types
         other: Street types
+        check_for_companies: "Street type cannot be destroyed while linked companies exist."
+        check_for_offices: "Street type cannot be destroyed while linked offices exist."
+        check_for_workers: "Street type cannot be destroyed while linked workers exist."
+        check_for_contacts: "Street type cannot be destroyed while linked contacts exist."
+        check_for_entities: "Street type cannot be destroyed while linked entities exist."
+        check_for_suppliers: "Street type cannot be destroyed while linked suppliers exist."
+        check_for_clients: "Street type cannot be destroyed while linked clients exist."
     attributes:
       street_type:
         street_type_code: "Code"

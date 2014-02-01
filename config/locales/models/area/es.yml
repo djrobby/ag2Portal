@@ -6,6 +6,7 @@ es:
         one:   Área
         few:   Áreas
         other: Áreas
+        check_for_work_orders: "Área no puede ser eliminada mientras existan ordenes de trabajo vinculadas."
     attributes:
       area:
         name: "Nombre"

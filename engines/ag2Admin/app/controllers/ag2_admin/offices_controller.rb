@@ -138,12 +138,16 @@ module Ag2Admin
     # DELETE /offices/1.json
     def destroy
       @office = Office.find(params[:id])
-      @office.destroy
 
       respond_to do |format|
-        format.html { redirect_to offices_url,
+        if @office.destroy
+          format.html { redirect_to offices_url,
                       notice: (crud_notice('destroyed', @office) + "#{undo_link(@office)}").html_safe }
-        format.json { head :no_content }
+          format.json { head :no_content }
+        else
+          format.html { redirect_to offices_url, alert: "#{@office.errors[:base].to_s}".gsub('["', '').gsub('"]', '') }
+          format.json { render json: @office.errors, status: :unprocessable_entity }
+        end
       end
     end
 

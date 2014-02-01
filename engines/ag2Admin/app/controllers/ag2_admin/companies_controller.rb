@@ -118,12 +118,16 @@ module Ag2Admin
     # DELETE /companies/1.json
     def destroy
       @company = Company.find(params[:id])
-      @company.destroy
 
       respond_to do |format|
-        format.html { redirect_to companies_url,
+        if @company.destroy
+          format.html { redirect_to companies_url,
                       notice: (crud_notice('destroyed', @company) + "#{undo_link(@company)}").html_safe }
-        format.json { head :no_content }
+          format.json { head :no_content }
+        else
+          format.html { redirect_to companies_url, alert: "#{@company.errors[:base].to_s}".gsub('["', '').gsub('"]', '') }
+          format.json { render json: @company.errors, status: :unprocessable_entity }
+        end
       end
     end
 

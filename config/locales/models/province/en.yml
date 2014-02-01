@@ -6,6 +6,15 @@ en:
         one:   Province
         few:   Provinces
         other: Provinces
+        check_for_towns: "Province cannot be destroyed while linked towns exist."
+        check_for_zipcodes: "Province cannot be destroyed while linked ZIP codes exist."
+        check_for_companies: "Province cannot be destroyed while linked companies exist."
+        check_for_offices: "Province cannot be destroyed while linked offices exist."
+        check_for_workers: "Province cannot be destroyed while linked workers exist."
+        check_for_contacts: "Province cannot be destroyed while linked contacts exist."
+        check_for_entities: "Province cannot be destroyed while linked entities exist."
+        check_for_suppliers: "Province cannot be destroyed while linked suppliers exist."
+        check_for_clients: "Province cannot be destroyed while linked clients exist."
     attributes:
       province:
         name: "Name"

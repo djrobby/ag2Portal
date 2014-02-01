@@ -6,6 +6,15 @@ es:
         one:   Provincia
         few:   Provincias
         other: Provincias
+        check_for_towns: "Provincia no puede ser eliminada mientras existan poblaciones vinculadas."
+        check_for_zipcodes: "Provincia no puede ser eliminada mientras existan códigos postales vinculados."
+        check_for_companies: "Provincia no puede ser eliminada mientras existan empresas vinculadas."
+        check_for_offices: "Provincia no puede ser eliminada mientras existan oficinas vinculadas."
+        check_for_workers: "Provincia no puede ser eliminada mientras existan trabajadores vinculados."
+        check_for_contacts: "Provincia no puede ser eliminada mientras existan contactos vinculados."
+        check_for_entities: "Provincia no puede ser eliminada mientras existan entidades vinculadas."
+        check_for_suppliers: "Provincia no puede ser eliminada mientras existan proveedores vinculados."
+        check_for_clients: "Provincia no puede ser eliminada mientras existan clientes vinculados."
     attributes:
       province:
         name: "Nombre"

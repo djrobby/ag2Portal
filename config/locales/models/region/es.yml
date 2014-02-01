@@ -6,6 +6,11 @@ es:
         one:   Región
         few:   Regiones
         other: Regiones
+        check_for_contacts: "Región no puede ser eliminada mientras existan contactos vinculados."
+        check_for_provinces: "Región no puede ser eliminada mientras existan provincias vinculadas."
+        check_for_entities: "Región no puede ser eliminada mientras existan entidades vinculadas."
+        check_for_suppliers: "Región no puede ser eliminada mientras existan proveedores vinculados."
+        check_for_clients: "Región no puede ser eliminada mientras existan clientes vinculados."
     attributes:
       region:
         name: "Nombre"

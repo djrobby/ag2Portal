@@ -6,6 +6,13 @@ es:
         one:   Código postal
         few:   Códigos postales
         other: Códigos postales
+        check_for_companies: "Código postal no puede ser eliminado mientras existan empresas vinculadas."
+        check_for_offices: "Código postal no puede ser eliminado mientras existan oficinas vinculadas."
+        check_for_workers: "Código postal no puede ser eliminado mientras existan trabajadores vinculados."
+        check_for_contacts: "Código postal no puede ser eliminado mientras existan contactos vinculados."
+        check_for_entities: "Código postal no puede ser eliminado mientras existan entidades vinculadas."
+        check_for_suppliers: "Código postal no puede ser eliminado mientras existan proveedores vinculados."
+        check_for_clients: "Código postal no puede ser eliminado mientras existan clientes vinculados."
     attributes:
       zipcode:
         zipcode: "Código postal"

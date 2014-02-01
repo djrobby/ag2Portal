@@ -29,7 +29,39 @@ class Office < ActiveRecord::Base
   validates :town,         :presence => true
   validates :province,     :presence => true
 
+  before_destroy :check_for_dependent_records
+
   def to_label
     "#{name} (#{company.name})"
+  end
+
+  private
+
+  def check_for_dependent_records
+    # Check for workers
+    if workers.count > 0
+      errors.add(:base, I18n.t('activerecord.models.office.check_for_workers'))
+      return false
+    end
+    # Check for worker items
+    if worker_items.count > 0
+      errors.add(:base, I18n.t('activerecord.models.office.check_for_workers'))
+      return false
+    end
+    # Check for corp contacts
+    if corp_contacts.count > 0
+      errors.add(:base, I18n.t('activerecord.models.office.check_for_contacts'))
+      return false
+    end
+    # Check for projects
+    if projects.count > 0
+      errors.add(:base, I18n.t('activerecord.models.office.check_for_projects'))
+      return false
+    end
+    # Check for tickets
+    if tickets.count > 0
+      errors.add(:base, I18n.t('activerecord.models.office.check_for_tickets'))
+      return false
+    end
   end
 end

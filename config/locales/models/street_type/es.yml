@@ -6,6 +6,13 @@ es:
         one:   Tipo de vía
         few:   Tipos de vía
         other: Tipos de vía
+        check_for_companies: "Tipo de vía no puede ser eliminada mientras existan empresas vinculadas."
+        check_for_offices: "Tipo de vía no puede ser eliminada mientras existan oficinas vinculadas."
+        check_for_workers: "Tipo de vía no puede ser eliminada mientras existan trabajadores vinculados."
+        check_for_contacts: "Tipo de vía no puede ser eliminada mientras existan contactos vinculados."
+        check_for_entities: "Tipo de vía no puede ser eliminada mientras existan entidades vinculadas."
+        check_for_suppliers: "Tipo de vía no puede ser eliminada mientras existan proveedores vinculados."
+        check_for_clients: "Tipo de vía no puede ser eliminada mientras existan clientes vinculados."
     attributes:
       street_type:
         street_type_code: "Código"
