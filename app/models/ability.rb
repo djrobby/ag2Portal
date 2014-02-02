@@ -89,6 +89,11 @@ class Ability
       cannot :manage, SharedContactType
       cannot :manage, SharedContact
     end
+    # ag2Finance (ag2Analytics)
+    if user.has_role? :ag2Analytics_User
+    elsif user.has_role? :ag2Analytics_Guest
+    elsif user.has_role? :ag2Analytics_Banned
+    end
     # ag2Gest
     if user.has_role? :ag2Gest_User
       can :crud, Client
