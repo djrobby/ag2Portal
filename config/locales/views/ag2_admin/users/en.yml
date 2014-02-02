@@ -21,4 +21,10 @@ en:
         cancel_account: "Cancel this account"
       new:
         title: "New User"
+      oco:
+        title: "OCO work session"
+        btn_accept: "Accept"
+        label_office: "Office"
+        label_company: "Company"
+        label_organization: "Organization"
       back_to_main_page: "Back to Users"

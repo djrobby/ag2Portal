@@ -1,5 +1,11 @@
 <img class="footer-nav-brand pull-left" src="/assets/icon/aGestiona2.png" width="165" height="48" alt="aGestiona2" />
 <ul class="nav pull-right">
+  <% if user_signed_in? && session[:exclusive_office] != true %>
+  <li class="footer-nav-li">
+    <!-- OCO -->
+    <a data-toggle="modal" href="#oco"><i class="icon-tasks"></i></a>
+  </li>
+  <% end %>
   <li class="dropdown footer-nav-li">
     <!-- Global web sites -->
     <a href="#"
@@ -35,6 +41,7 @@
     </ul>
   </li>
   <li class="footer-nav-li">
+    <!-- Resolution -->
     <a href="#" onclick="javascript:DisplaySizeInfo();"><%= session[:resolution]%></a>
   </li>
 </ul>

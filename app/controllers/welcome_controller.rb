@@ -8,6 +8,7 @@ class WelcomeController < ApplicationController
     session[:office] = 0
     session[:company] = 0
     session[:organization] = 0
+    session[:exclusive_office] = false
     
     if user_signed_in?
       offices = current_user.offices              # O
@@ -19,6 +20,7 @@ class WelcomeController < ApplicationController
         session[:office] = offices.first.id
         session[:company] = offices.first.company.id
         session[:organization] = offices.first.company.organization.id
+        session[:exclusive_office] = true
       else
         # Exclusive Company?
         if companies.count == 1

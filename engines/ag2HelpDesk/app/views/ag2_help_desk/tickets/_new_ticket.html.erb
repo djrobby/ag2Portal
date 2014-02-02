@@ -18,7 +18,7 @@
   })
 </script>
 
-<div id="new-ticket" class="modal" style="display: none;">
+<div id="new-ticket" class="modal hide fade in" style="display: none;">
   <%= simple_form_for Ticket.new, :url => ag2_help_desk.popup_new_tickets_path, :remote => :true, :html => { "data-type" => :json, :class => 'form-inline', :id => 'form_new_ticket' } do |f| %>
   <div class="modal-header">
     <a class="close" data-dismiss="modal">&#215;</a>

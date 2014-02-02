@@ -1,0 +1,51 @@
+<!-- Modal -->
+<script>
+  jQuery(function($) {
+    $('#btn_accept').click(function() {
+      var office = $('#Office :selected').val();
+      var company = $('#Company :selected').val();
+      var organization = $('#Organization :selected').val();
+      if (office == "") office = "0";
+      if (company == "") company = "0";
+      if (organization == "") organization = "0";
+    });
+    
+    $('#form_new_ticket').on('submit', function() {
+      var category = $('select#fnt_category :selected').val();
+      var priority = $('select#fnt_priority :selected').val();
+      var subject = $('#fnt_subject').val();
+      var message = $('#fnt_message').val();
+      if ((category == "") || (priority == "")  || (subject == "")  || (message == "")) {
+        // Error
+        alert('<%= I18n.t("ag2_help_desk.tickets.new_ticket.footer") %>');
+        return false;
+      } else {
+        // Hide the modal and exit
+        $("#new-ticket").modal('hide');
+        alert('<%= I18n.t("ag2_help_desk.tickets.new_ticket.submit") %>');
+      }
+    });
+  })
+</script>
+
+<div id="oco" class="modal hide fade in" style="display: none;">
+  <div class="modal-header">
+    <a class="close" data-dismiss="modal">&#215;</a>
+    <h3><%= t('ag2_admin.users.oco.title') %></h3>
+  </div>
+  <div class="modal-body">
+    <!-- Office -->
+    <%= label_tag I18n.t("ag2_admin.users.oco.label_office"), nil, :class => 'form-label' %>
+    <%= select_tag "Office", options_from_collection_for_select(current_user.offices, "id", "name"), :prompt => "", :class => 'x-large-text-field' %>
+    <!-- Company -->
+    <%= label_tag I18n.t("ag2_admin.users.oco.label_company"), nil, :class => 'form-label' %>
+    <%= select_tag "Company", options_from_collection_for_select(current_user.companies, "id", "name"), :prompt => "", :class => 'x-large-text-field' %>
+    <!-- Organization -->
+    <%= label_tag I18n.t("ag2_admin.users.oco.label_organization"), nil, :class => 'form-label' %>
+    <%= select_tag "Organization", options_from_collection_for_select(current_user.organizations, "id", "name"), :prompt => "", :class => 'x-large-text-field' %>
+  </div>
+  <div class="modal-footer">
+    <a class="btn btn-primary" href="#" id="btn_accept"><%= t 'ag2_admin.users.oco.btn_accept' %></a>
+    <a class="btn btn-primary" data-dismiss="modal" href="#"><%= t :close_button %></a>
+  </div>
+</div>

@@ -44,6 +44,9 @@
     </footer>
     <!-- Modals -->
     <%= render '/layouts/notfound' %>
+    <% if user_signed_in? && session[:exclusive_office] != true %>
+    <%= render '/layouts/oco' %>
+    <% end %>
     <%= render '/layouts/about' %>
     <%= render '/ag2_help_desk/tickets/new_ticket' %>
   </body>
