@@ -10,6 +10,11 @@ Ag2Portal::Application.routes.draw do
 
     # PaperTrail versioning
     post "versions/:id/revert" => "versions#revert", :as => "revert_version"
+
+    # Routes for jQuery POSTs
+    match 'oco_company_organization_from_office/:office', :controller => 'oco', :action => 'oco_company_organization_from_office'
+    match 'oco_organization_from_company/:company', :controller => 'oco', :action => 'oco_organization_from_company'
+    match 'oco_set_session/:office/:company/:organization', :controller => 'oco', :action => 'oco_set_session'
         
     # Root
     root :to => "welcome#index"

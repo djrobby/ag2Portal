@@ -5,12 +5,20 @@ class WelcomeController < ApplicationController
     #
     # OCO
     #
-    session[:office] = 0
-    session[:company] = 0
-    session[:organization] = 0
-    session[:exclusive_office] = false
-    
     if user_signed_in?
+      if !session[:office]
+        session[:office] = 0
+        session[:exclusive_office] = false
+      end
+      if !session[:company]
+        session[:company] = 0
+        session[:exclusive_company] = false
+      end
+      if !session[:organization]
+        session[:organization] = 0
+        session[:exclusive_organization] = false
+      end
+
       offices = current_user.offices              # O
       companies = current_user.companies          # C
       organizations = current_user.organizations  # O
@@ -26,10 +34,12 @@ class WelcomeController < ApplicationController
         if companies.count == 1
           session[:company] = companies.first.id
           session[:organization] = companies.first.organization.id
+          session[:exclusive_company] = false
         else
           # Exclusive Organization?
           if organizations.count == 1
             session[:organization] = organizations.first.id
+            session[:exclusive_organization] = false
           end
         end
       end
