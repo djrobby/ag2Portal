@@ -16,7 +16,28 @@ class ApplicationController < ActionController::Base
   helper_method :website_path
   helper_method :application_path
   helper_method :sort_direction
+  helper_method :current_oco
 
+  def current_oco
+    oco = ''
+    if session[:office] != '0'
+      oco += Office.find(session[:office]).name + ' | '
+    end
+    if session[:company] != '0'
+      oco += Company.find(session[:company]).name
+    end
+    if current_user.has_role? :Administrator
+      if session[:organization] != '0'
+        if oco == ''
+          oco += Organization.find(session[:organization]).name
+        else
+          oco += ' | ' + Organization.find(session[:organization]).name
+        end
+      end
+    end
+    oco
+  end
+  
   def letters
     @letters = ('A'..'Z')
   end

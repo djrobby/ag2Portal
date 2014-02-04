@@ -7,15 +7,15 @@ class WelcomeController < ApplicationController
     #
     if user_signed_in?
       if !session[:office]
-        session[:office] = 0
+        session[:office] = '0'
         session[:exclusive_office] = false
       end
       if !session[:company]
-        session[:company] = 0
+        session[:company] = '0'
         session[:exclusive_company] = false
       end
       if !session[:organization]
-        session[:organization] = 0
+        session[:organization] = '0'
         session[:exclusive_organization] = false
       end
 
@@ -29,17 +29,20 @@ class WelcomeController < ApplicationController
         session[:company] = offices.first.company.id
         session[:organization] = offices.first.company.organization.id
         session[:exclusive_office] = true
+        session[:exclusive_company] = true
+        session[:exclusive_organization] = true
       else
         # Exclusive Company?
         if companies.count == 1
           session[:company] = companies.first.id
           session[:organization] = companies.first.organization.id
-          session[:exclusive_company] = false
+          session[:exclusive_company] = true
+          session[:exclusive_organization] = true
         else
           # Exclusive Organization?
           if organizations.count == 1
             session[:organization] = organizations.first.id
-            session[:exclusive_organization] = false
+            session[:exclusive_organization] = true
           end
         end
       end
