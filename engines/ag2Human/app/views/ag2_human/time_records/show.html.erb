@@ -23,6 +23,12 @@
     </tr>
     <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @time_record } %>
     <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @time_record } %>
+    <tr>
+      <td><%=t :"activerecord.attributes.time_record.source_ip" %>:</td>
+      <td><%= @time_record.source_ip %></td>
+      <td></td>
+      <td></td>
+    </tr>
   </tbody>
 </table>
 

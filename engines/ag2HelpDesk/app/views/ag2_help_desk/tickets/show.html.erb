@@ -37,8 +37,8 @@
     <tr>
       <td><%=t :"activerecord.attributes.ticket.office" %>:</td>
       <td><%= @ticket.office.name unless @ticket.office.blank? %></td>
-      <td><%=t :"activerecord.attributes.ticket.ticket_status" %>:</td>
-      <td><%= @ticket.ticket_status.name.titleize unless @ticket.ticket_status.blank? %></td>
+      <td><%=t :"activerecord.attributes.ticket.source_ip" %>:</td>
+      <td><%= @ticket.source_ip unless @ticket.source_ip.blank? %></td>
     </tr>
     <tr>
       <td><%=t :"activerecord.attributes.ticket.assign_at" %>:</td>
@@ -49,8 +49,8 @@
     <tr>
       <td><%=t :"activerecord.attributes.ticket.status_changed_at" %>:</td>
       <td><%= @ticket.status_changed_at.utc.getlocal.strftime("%d/%m/%Y %H:%M:%S") unless @ticket.status_changed_at.blank? %></td>
-      <td></td>
-      <td></td>
+      <td><%=t :"activerecord.attributes.ticket.ticket_status" %>:</td>
+      <td><%= @ticket.ticket_status.name.titleize unless @ticket.ticket_status.blank? %></td>
     </tr>
     <tr>
       <td><%=t :"activerecord.attributes.ticket.status_changed_message" %>:</td>

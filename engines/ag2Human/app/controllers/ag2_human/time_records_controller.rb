@@ -89,6 +89,7 @@ module Ag2Human
       @breadcrumb = 'create'
       @time_record = TimeRecord.new(params[:time_record])
       @time_record.created_by = current_user.id if !current_user.nil?
+      @time_record.source_ip = request.remote_ip
 
       respond_to do |format|
         if @time_record.save

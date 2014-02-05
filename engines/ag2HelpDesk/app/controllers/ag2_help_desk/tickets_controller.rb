@@ -124,6 +124,7 @@ module Ag2HelpDesk
       @breadcrumb = 'create'
       @ticket = Ticket.new(params[:ticket])
       @ticket.created_by = current_user.id if !current_user.nil?
+      @ticket.source_ip = request.remote_ip
 
       respond_to do |format|
         if @ticket.save
@@ -176,6 +177,7 @@ module Ag2HelpDesk
       @breadcrumb = 'create'
       @ticket = Ticket.new(params[:ticket])
       @ticket.created_by = current_user.id if !current_user.nil?
+      @ticket.source_ip = request.remote_ip
 
       respond_to do |format|
         if @ticket.save

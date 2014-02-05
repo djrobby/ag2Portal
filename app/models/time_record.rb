@@ -4,7 +4,7 @@ class TimeRecord < ActiveRecord::Base
   belongs_to :timerecord_code
   attr_accessible :timerecord_date, :timerecord_time, :worker_id,
                   :timerecord_type_id, :timerecord_code_id,
-                  :created_by, :updated_by
+                  :created_by, :updated_by, :source_ip
 
   has_paper_trail
 

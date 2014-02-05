@@ -28,6 +28,7 @@ en:
         id: "No."
         created_by: "Created by"
         updated_by: "Updated by"
+        source_ip: "Source IP"
     errors:
       ticket:
         popup: "Error: Ticket cannot be created!"

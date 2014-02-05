@@ -16,3 +16,4 @@ es:
         timerecord_type_id: "Tipo"
         timerecord_code: "Código"
         timerecord_code_id: "Código"
+        source_ip: "IP de origen"

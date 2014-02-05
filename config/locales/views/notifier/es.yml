@@ -12,6 +12,7 @@ es:
       created_at: "Creada el: "
       created_by: "Creada por: "
       office: "Oficina: "
+      source_ip: "IP de origen: "
       category: "Categoría: "
       priority: "Prioridad: "
       title: "Asunto: "
