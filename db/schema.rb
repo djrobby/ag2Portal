@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140128174216) do
+ActiveRecord::Schema.define(:version => 20140205073817) do
 
   create_table "activities", :force => true do |t|
     t.string   "description"
@@ -1246,6 +1246,7 @@ ActiveRecord::Schema.define(:version => 20140128174216) do
     t.integer  "attachment_file_size"
     t.datetime "attachment_updated_at"
     t.integer  "office_id"
+    t.string   "source_ip"
   end
 
   add_index "tickets", ["assign_at"], :name => "index_tickets_on_assign_at"
@@ -1269,6 +1270,7 @@ ActiveRecord::Schema.define(:version => 20140128174216) do
     t.datetime "updated_at",         :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
+    t.string   "source_ip"
   end
 
   add_index "time_records", ["timerecord_code_id"], :name => "index_time_records_on_timerecord_code_id"
