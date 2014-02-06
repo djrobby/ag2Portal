@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140205073817) do
+ActiveRecord::Schema.define(:version => 20140206185114) do
 
   create_table "activities", :force => true do |t|
     t.string   "description"
@@ -339,10 +339,11 @@ ActiveRecord::Schema.define(:version => 20140205073817) do
     t.string   "fax"
     t.string   "cellular"
     t.string   "email"
-    t.datetime "created_at",     :null => false
-    t.datetime "updated_at",     :null => false
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
     t.string   "created_by"
     t.string   "updated_by"
+    t.integer  "organization_id"
   end
 
   add_index "entities", ["cellular"], :name => "index_entities_on_cellular"
@@ -353,6 +354,7 @@ ActiveRecord::Schema.define(:version => 20140205073817) do
   add_index "entities", ["first_name"], :name => "index_entities_on_first_name"
   add_index "entities", ["fiscal_id"], :name => "index_entities_on_fiscal_id"
   add_index "entities", ["last_name"], :name => "index_entities_on_last_name"
+  add_index "entities", ["organization_id"], :name => "index_entities_on_organization_id"
   add_index "entities", ["phone"], :name => "index_entities_on_phone"
   add_index "entities", ["province_id"], :name => "index_entities_on_province_id"
   add_index "entities", ["region_id"], :name => "index_entities_on_region_id"
