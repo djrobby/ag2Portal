@@ -6,10 +6,11 @@ class Entity < ActiveRecord::Base
   belongs_to :region
   belongs_to :country
   belongs_to :entity_type
+  belongs_to :organization
   attr_accessible :building, :cellular, :company, :email, :extension, :fax, :first_name, :fiscal_id,
                   :floor, :floor_office, :last_name, :phone, :street_name, :street_number, :town,
                   :entity_type_id, :street_type_id, :zipcode_id, :town_id, :province_id, :region_id, :country_id,
-                  :created_by, :updated_by
+                  :created_by, :updated_by, :organization_id
 
   has_one :supplier
   has_one :client
@@ -20,7 +21,7 @@ class Entity < ActiveRecord::Base
   validates :last_name,    :presence => true, :if => "company.blank?"
   validates :fiscal_id,    :presence => true,
                            :length => { :minimum => 9 },
-                           :uniqueness => true
+                           :uniqueness => { :scope => :organization_id }
   validates :street_type,  :presence => true
   validates :zipcode,      :presence => true
   validates :town,         :presence => true
@@ -28,6 +29,7 @@ class Entity < ActiveRecord::Base
   validates :region,       :presence => true
   validates :country,      :presence => true
   validates :entity_type,  :presence => true
+  #validates :organization, :presence => true
 
   before_validation :fields_to_uppercase
   before_destroy :check_for_dependent_records

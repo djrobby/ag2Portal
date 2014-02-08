@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140206185114) do
+ActiveRecord::Schema.define(:version => 20140208084531) do
 
   create_table "activities", :force => true do |t|
     t.string   "description"
@@ -153,9 +153,8 @@ ActiveRecord::Schema.define(:version => 20140206185114) do
     t.integer  "organization_id"
   end
 
-  add_index "companies", ["fiscal_id"], :name => "index_companies_on_fiscal_id"
   add_index "companies", ["invoice_code"], :name => "index_companies_on_invoice_code"
-  add_index "companies", ["organization_id"], :name => "index_companies_on_organization_id"
+  add_index "companies", ["organization_id", "fiscal_id"], :name => "index_companies_on_organization_id_and_fiscal_id", :unique => true
   add_index "companies", ["province_id"], :name => "index_companies_on_province_id"
   add_index "companies", ["street_type_id"], :name => "index_companies_on_street_type_id"
   add_index "companies", ["town_id"], :name => "index_companies_on_town_id"
@@ -352,9 +351,8 @@ ActiveRecord::Schema.define(:version => 20140206185114) do
   add_index "entities", ["email"], :name => "index_entities_on_email"
   add_index "entities", ["entity_type_id"], :name => "index_entities_on_entity_type_id"
   add_index "entities", ["first_name"], :name => "index_entities_on_first_name"
-  add_index "entities", ["fiscal_id"], :name => "index_entities_on_fiscal_id"
   add_index "entities", ["last_name"], :name => "index_entities_on_last_name"
-  add_index "entities", ["organization_id"], :name => "index_entities_on_organization_id"
+  add_index "entities", ["organization_id", "fiscal_id"], :name => "index_entities_on_organization_id_and_fiscal_id", :unique => true
   add_index "entities", ["phone"], :name => "index_entities_on_phone"
   add_index "entities", ["province_id"], :name => "index_entities_on_province_id"
   add_index "entities", ["region_id"], :name => "index_entities_on_region_id"
