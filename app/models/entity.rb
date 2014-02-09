@@ -156,5 +156,6 @@ class Entity < ActiveRecord::Base
     string :last_name
     string :first_name
     string :fiscal_id
+    integer :organization_id
   end
 end

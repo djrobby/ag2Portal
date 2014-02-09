@@ -192,10 +192,8 @@ end
         #@workers = Worker.where(id: WorkerItem.where(company_id: company, office_id: office)).paginate(:page => params[:page], :per_page => per_page).order('worker_code, id')
         @workers = Worker.joins(:worker_items).group('worker_items.worker_id').where(worker_items: { company_id: company, office_id: office }).paginate(:page => params[:page], :per_page => per_page).order('worker_code, id')
       elsif !company.blank? && office.blank?
-        #@workers = Worker.where(id: WorkerItem.where(company_id: company)).paginate(:page => params[:page], :per_page => per_page).order('worker_code, id')
         @workers = Worker.joins(:worker_items).group('worker_items.worker_id').where(worker_items: { company_id: company }).paginate(:page => params[:page], :per_page => per_page).order('worker_code, id')
       elsif company.blank? && !office.blank?
-        #@workers = Worker.where(id: WorkerItem.where(office_id: office)).paginate(:page => params[:page], :per_page => per_page).order('worker_code, id')
         @workers = Worker.joins(:worker_items).group('worker_items.worker_id').where(worker_items: { office_id: office }).paginate(:page => params[:page], :per_page => per_page).order('worker_code, id')
       else
         @search = Worker.search do

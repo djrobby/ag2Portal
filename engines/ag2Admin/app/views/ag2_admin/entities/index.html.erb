@@ -17,9 +17,10 @@
     </thead>
     <tbody>
       <% @entities.each do |entity| %>
-      <%= render :partial => 'layouts/ag2_admin/entityinfo', :locals => { :contact => entity, :title => I18n.t("activerecord.models.entity.one") } %>
+      <%#= render :partial => 'layouts/ag2_admin/entityinfo', :locals => { :contact => entity, :title => I18n.t("activerecord.models.entity.one") } %>
       <tr>
-        <td><a data-toggle="modal" href="#entityinfo<%= entity.id.to_s %>"><%= entity.fiscal_id %></a></td>
+        <!--<td><a data-toggle="modal" href="#entityinfo<%#= entity.id.to_s %>"><%#= entity.fiscal_id %></a></td>-->
+        <td><%= link_to entity.fiscal_id, entity %></td>
         <td><%= entity.company %></td>
         <td><%= entity.full_name unless entity.full_name.blank? %></td>
         <td><%= entity.entity_type.name unless entity.entity_type.blank? %></td>

@@ -84,29 +84,29 @@
     <!-- Office -->
     <%= label_tag I18n.t("ag2_admin.users.oco.label_office"), nil, class: 'form-label' %>
     <% if current_user.offices.count == 1 %>
-    <%= select_tag "Office", options_from_collection_for_select(current_user.offices, "id", "name"), class: 'x-large-text-field', include_blank: false %>
+    <%= select_tag "Office", options_from_collection_for_select(current_user.offices.order('name'), "id", "name"), class: 'x-large-text-field', include_blank: false %>
     <% elsif current_user.offices.count > 0 %>
-    <%= select_tag "Office", options_from_collection_for_select(current_user.offices, "id", "name"), prompt: "", class: 'x-large-text-field' %>
+    <%= select_tag "Office", options_from_collection_for_select(current_user.offices.order('name'), "id", "name"), prompt: "", class: 'x-large-text-field' %>
     <% else %>
-    <%= select_tag "Office", options_from_collection_for_select(Office.all, "id", "name"), prompt: "", class: 'x-large-text-field' %>
+    <%= select_tag "Office", options_from_collection_for_select(Office.order('name'), "id", "name"), prompt: "", class: 'x-large-text-field' %>
     <% end %>
     <!-- Company -->
     <%= label_tag I18n.t("ag2_admin.users.oco.label_company"), nil, class: 'form-label' %>
     <% if current_user.companies.count == 1 %>
-    <%= select_tag "Company", options_from_collection_for_select(current_user.companies, "id", "name"), class: 'x-large-text-field', include_blank: false %>
+    <%= select_tag "Company", options_from_collection_for_select(current_user.companies.order('name'), "id", "name"), class: 'x-large-text-field', include_blank: false %>
     <% elsif current_user.companies.count > 0 %>
-    <%= select_tag "Company", options_from_collection_for_select(current_user.companies, "id", "name"), prompt: "", class: 'x-large-text-field' %>
+    <%= select_tag "Company", options_from_collection_for_select(current_user.companies.order('name'), "id", "name"), prompt: "", class: 'x-large-text-field' %>
     <% else %>
-    <%= select_tag "Company", options_from_collection_for_select(Company.all, "id", "name"), prompt: "", class: 'x-large-text-field' %>
+    <%= select_tag "Company", options_from_collection_for_select(Company.order('name'), "id", "name"), prompt: "", class: 'x-large-text-field' %>
     <% end %>
     <!-- Organization -->
     <%= label_tag I18n.t("ag2_admin.users.oco.label_organization"), nil, class: 'form-label' %>
     <% if current_user.organizations.count == 1 %>
-    <%= select_tag "Organization", options_from_collection_for_select(current_user.organizations, "id", "name"), class: 'x-large-text-field', include_blank: false %>
+    <%= select_tag "Organization", options_from_collection_for_select(current_user.organizations.order('name'), "id", "name"), class: 'x-large-text-field', include_blank: false %>
     <% elsif current_user.organizations.count > 0 %>
-    <%= select_tag "Organization", options_from_collection_for_select(current_user.organizations, "id", "name"), prompt: "", class: 'x-large-text-field' %>
+    <%= select_tag "Organization", options_from_collection_for_select(current_user.organizations.order('name'), "id", "name"), prompt: "", class: 'x-large-text-field' %>
     <% else %>
-    <%= select_tag "Organization", options_from_collection_for_select(Organization.all, "id", "name"), prompt: "", class: 'x-large-text-field' %>
+    <%= select_tag "Organization", options_from_collection_for_select(Organization.order('name'), "id", "name"), prompt: "", class: 'x-large-text-field' %>
     <% end %>
   </div>
   <div class="modal-footer">

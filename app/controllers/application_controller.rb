@@ -26,13 +26,11 @@ class ApplicationController < ActionController::Base
     if session[:company] != '0'
       oco += Company.find(session[:company]).name
     end
-    if current_user.has_role? :Administrator
-      if session[:organization] != '0'
-        if oco == ''
-          oco += Organization.find(session[:organization]).name
-        else
-          oco += ' | ' + Organization.find(session[:organization]).name
-        end
+    if session[:organization] != '0'
+      if oco == ''
+        oco += Organization.find(session[:organization]).name
+      else
+        oco += ' | ' + Organization.find(session[:organization]).name
       end
     end
     oco

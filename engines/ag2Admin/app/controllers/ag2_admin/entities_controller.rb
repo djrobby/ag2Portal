@@ -71,6 +71,9 @@ module Ag2Admin
 
       @search = Entity.search do
         fulltext params[:search]
+        if session[:organization] != '0'
+          with :organization_id, session[:organization]
+        end
         order_by :fiscal_id, :asc
         paginate :page => params[:page] || 1, :per_page => per_page
       end
@@ -80,6 +83,9 @@ module Ag2Admin
         @entities = Entity.where("last_name LIKE ?", "#{letter}%").paginate(:page => params[:page], :per_page => per_page).order('fiscal_id')
         if @entities.count == 0
           @entities = Entity.where("company LIKE ?", "#{letter}%").paginate(:page => params[:page], :per_page => per_page).order('fiscal_id')
+        end
+        if session[:organization] != '0'
+          @entities = @entities.where("organization_id = ?", "#{session[:organization]}")
         end
       end
 
