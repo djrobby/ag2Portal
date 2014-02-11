@@ -1,3 +1,6 @@
+<% if !session[:office] %>
+<% init_oco %>
+<% end %>
 <img class="footer-nav-brand pull-left" src="/assets/icon/aGestiona2.png" width="165" height="48" alt="aGestiona2" />
 <ul class="nav pull-right">
   <% if user_signed_in? %>

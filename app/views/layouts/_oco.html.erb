@@ -18,7 +18,7 @@
         // Hide the modal and exit
         var changed = !((office == <%= session[:office] %>) && (company == <%= session[:company] %>) && (organization == <%= session[:organization] %>));
         $("#oco").modal('hide');
-        if (changed) window.location = "/<%= I18n.locale %>";
+        if (changed) window.location = "<%= main_app.root_path %>";
       })
       return false;
     });
@@ -82,28 +82,31 @@
   </div>
   <div class="modal-body">
     <!-- Office -->
+    <% offices_count = current_user.offices.count %>
     <%= label_tag I18n.t("ag2_admin.users.oco.label_office"), nil, class: 'form-label' %>
-    <% if current_user.offices.count == 1 %>
+    <% if offices_count == 1 %>
     <%= select_tag "Office", options_from_collection_for_select(current_user.offices.order('name'), "id", "name"), class: 'x-large-text-field', include_blank: false %>
-    <% elsif current_user.offices.count > 0 %>
+    <% elsif offices_count > 0 %>
     <%= select_tag "Office", options_from_collection_for_select(current_user.offices.order('name'), "id", "name"), prompt: "", class: 'x-large-text-field' %>
     <% else %>
     <%= select_tag "Office", options_from_collection_for_select(Office.order('name'), "id", "name"), prompt: "", class: 'x-large-text-field' %>
     <% end %>
     <!-- Company -->
+    <% companies_count = current_user.companies.count %>
     <%= label_tag I18n.t("ag2_admin.users.oco.label_company"), nil, class: 'form-label' %>
-    <% if current_user.companies.count == 1 %>
+    <% if companies_count == 1 %>
     <%= select_tag "Company", options_from_collection_for_select(current_user.companies.order('name'), "id", "name"), class: 'x-large-text-field', include_blank: false %>
-    <% elsif current_user.companies.count > 0 %>
+    <% elsif companies_count > 0 %>
     <%= select_tag "Company", options_from_collection_for_select(current_user.companies.order('name'), "id", "name"), prompt: "", class: 'x-large-text-field' %>
     <% else %>
     <%= select_tag "Company", options_from_collection_for_select(Company.order('name'), "id", "name"), prompt: "", class: 'x-large-text-field' %>
     <% end %>
     <!-- Organization -->
+    <% organizations_count = current_user.organizations.count %>
     <%= label_tag I18n.t("ag2_admin.users.oco.label_organization"), nil, class: 'form-label' %>
-    <% if current_user.organizations.count == 1 %>
+    <% if organizations_count == 1 %>
     <%= select_tag "Organization", options_from_collection_for_select(current_user.organizations.order('name'), "id", "name"), class: 'x-large-text-field', include_blank: false %>
-    <% elsif current_user.organizations.count > 0 %>
+    <% elsif organizations_count > 0 %>
     <%= select_tag "Organization", options_from_collection_for_select(current_user.organizations.order('name'), "id", "name"), prompt: "", class: 'x-large-text-field' %>
     <% else %>
     <%= select_tag "Organization", options_from_collection_for_select(Organization.order('name'), "id", "name"), prompt: "", class: 'x-large-text-field' %>

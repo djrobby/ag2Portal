@@ -22,6 +22,27 @@
       $('#entity_first_name').prop('disabled', true);
       $('#submit_btn').show();
     }
+    // Save default text color
+    text_field_color = $("#entity_phone").css('color')
+    // Icon inside text field: Validate Fiscal Id
+    $('input.iconify').wrap('<span class="validateicon" title="<%=t('ag2_admin.entities.validate_btn') %>" />').after($('<span/>').click(function() {
+      // make a POST call and replace the content
+      var entity = $('#entity_fiscal_id').val();
+      if (entity == "")
+        entity = "0";
+      jQuery.getJSON('validate_fiscal_id_textfield/' + entity, function(data) {
+        if (data.fiscal_id == "$err") {
+          $("#entity_fiscal_id").css('color', 'red');
+          alert('<%= I18n.t("ag2_admin.entities.fiscal_error") %>');
+          $('#entity_fiscal_id').select();
+        }
+        else {
+          // Default color & focus
+          $("#entity_fiscal_id").css('color', text_field_color);
+        }
+      })
+      return false;
+    }));
   });
 
   jQuery(function($) {
@@ -111,7 +132,7 @@
 <%= display_base_errors resource %>
 <div>
   <label class="multi-field-label-two"> <%= f.association :entity_type, :autofocus => true, collection: EntityType.all(order: 'name'), :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
-  <label class="multi-field-label-two"> <%= f.input :fiscal_id, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.input :fiscal_id, :input_html => { :class => 'large-text-field iconify' }, :label_html => { :class => 'form-label' } %> </label>
 </div>
 <%= f.input :company, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %>
 <div>

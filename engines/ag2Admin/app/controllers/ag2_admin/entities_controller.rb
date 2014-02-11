@@ -7,7 +7,8 @@ module Ag2Admin
     skip_load_and_authorize_resource :only => [:update_province_textfield_from_town,
                                                :update_province_textfield_from_zipcode,
                                                :update_country_textfield_from_region,
-                                               :update_region_textfield_from_province]
+                                               :update_region_textfield_from_province,
+                                               :validate_fiscal_id_textfield]
     # Update country text field at view from region select
     def update_country_textfield_from_region
       @region = Region.find(params[:id])
@@ -61,6 +62,23 @@ module Ag2Admin
       end
     end
 
+    # Validate fiscal id
+    def validate_fiscal_id_textfield
+      fiscal_id = ''
+
+      if params[:id] == '0'
+        fiscal_id = '$err'
+      else
+      end
+
+      @json_data = { "fiscal_id" => fiscal_id }
+
+      respond_to do |format|
+        format.html # validate_fiscal_id_textfield.html.erb does not exist! JSON only
+        format.json { render json: @json_data }
+      end
+    end
+
     #
     # Default Methods
     #
@@ -68,6 +86,9 @@ module Ag2Admin
     # GET /entities.json
     def index
       letter = params[:letter]
+      if !session[:organization]
+        init_oco
+      end
 
       @search = Entity.search do
         fulltext params[:search]

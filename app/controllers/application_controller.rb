@@ -16,8 +16,57 @@ class ApplicationController < ActionController::Base
   helper_method :website_path
   helper_method :application_path
   helper_method :sort_direction
+  helper_method :init_oco
   helper_method :current_oco
 
+  #
+  # OCO
+  #
+  def init_oco
+    if user_signed_in?
+      if !session[:office]
+        session[:office] = '0'
+        session[:exclusive_office] = false
+      end
+      if !session[:company]
+        session[:company] = '0'
+        session[:exclusive_company] = false
+      end
+      if !session[:organization]
+        session[:organization] = '0'
+        session[:exclusive_organization] = false
+      end
+
+      offices = current_user.offices              # O
+      companies = current_user.companies          # C
+      organizations = current_user.organizations  # O
+      
+      # Exclusive Office?
+      if offices.count == 1
+        session[:office] = offices.first.id
+        session[:company] = offices.first.company.id
+        session[:organization] = offices.first.company.organization.id
+        session[:exclusive_office] = true
+        session[:exclusive_company] = true
+        session[:exclusive_organization] = true
+      else
+        # Exclusive Company?
+        if companies.count == 1
+          session[:company] = companies.first.id
+          session[:organization] = companies.first.organization.id
+          session[:exclusive_company] = true
+          session[:exclusive_organization] = true
+        else
+          # Exclusive Organization?
+          if organizations.count == 1
+            session[:organization] = organizations.first.id
+            session[:exclusive_organization] = true
+          end
+        end
+      end
+    end    
+  end
+  
   def current_oco
     oco = ''
     if session[:office] != '0'
@@ -36,6 +85,9 @@ class ApplicationController < ActionController::Base
     oco
   end
   
+  #
+  # Display
+  #
   def letters
     @letters = ('A'..'Z')
   end
