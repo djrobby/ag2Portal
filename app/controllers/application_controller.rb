@@ -168,6 +168,29 @@ class ApplicationController < ActionController::Base
     { :locale => I18n.locale }
   end
 
+  #
+  # Control digits
+  #
+  # CIF/NIF
+  # Returns DC if no exception
+  # Exceptions:
+  # => $err = Calculation error
+  # => $par = Parameter error
+  def dc_fiscal_id(fiscal_id)
+      fiscal_id.strip!
+      fiscal_id.upcase!
+      fiscal_id.delete! ' /-'
+      if fiscal_id.length < 8 || fiscal_id.length > 9
+        return '$par'
+      end
+      if fiscal_id.length == 8 && is_numeric?(fiscal_id)
+        # Calculate DC
+      elsif fiscal_id.length == 9 && !is_numeric?(fiscal_id)
+        # Test DC
+      end
+      
+  end
+
 =begin
 def default_url_options(options={})
 # logger.debug "default_url_options is passed options: #{options.inspect}\n"
@@ -180,6 +203,10 @@ end
 =end
 
   private
+
+  def is_numeric?(object)
+    true if Float(object) rescue false
+  end  
 
   def extract_locale_from_accept_language_header
     request.env['HTTP_ACCEPT_LANGUAGE'].scan(/^[a-z]{2}/).first
