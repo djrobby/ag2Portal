@@ -64,14 +64,22 @@ module Ag2Admin
 
     # Validate fiscal id
     def validate_fiscal_id_textfield
-      fiscal_id = ''
+      fiscal_id = params[:id]
+      dc = ''
+      f_id = ''
 
-      if params[:id] == '0'
-        fiscal_id = '$err'
+      if fiscal_id == '0'
+        f_id = '$err'
       else
+        dc = fiscal_id_dc(fiscal_id)
+        if dc == '$par' || dc == '$err'
+          f_id = '$err'
+        else
+          f_id = fiscal_id_description(fiscal_id[0])
+        end
       end
 
-      @json_data = { "fiscal_id" => fiscal_id }
+      @json_data = { "fiscal_id" => f_id }
 
       respond_to do |format|
         format.html # validate_fiscal_id_textfield.html.erb does not exist! JSON only

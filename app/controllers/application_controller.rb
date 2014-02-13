@@ -176,19 +176,41 @@ class ApplicationController < ActionController::Base
   # Exceptions:
   # => $err = Calculation error
   # => $par = Parameter error
-  def dc_fiscal_id(fiscal_id)
-      fiscal_id.strip!
-      fiscal_id.upcase!
-      fiscal_id.delete! ' /-'
-      if fiscal_id.length < 8 || fiscal_id.length > 9
-        return '$par'
+  def fiscal_id_dc(fiscal_id)
+    _dc = ''
+    fiscal_id.strip!
+    fiscal_id.upcase!
+    fiscal_id.delete! ' /-'
+    if fiscal_id.length < 8 || fiscal_id.length > 9
+      _dc = '$par'
+    else
+      if is_numeric?(fiscal_id[0])
+        # NIF
+        _dc = calc_dc_individual(fiscal_id.to_i)
+      elsif fiscal_id[0] == 'X'
+        # NIE
+        _dc = calc_dc_individual(fiscal_id[1, fiscal_id.length-1].to_i)
+      elsif fiscal_id[0] == 'U'
+        # UTE
+        _dc = '$ute'
+      elsif ('ABCDEFGHKLMNPQS'.index fiscal_id[0]) != nil
+        # CIF
+        _dc = calc_dc_legal_entity(fiscal_id)
+      else
+        _dc = '$err'
       end
-      if fiscal_id.length == 8 && is_numeric?(fiscal_id)
-        # Calculate DC
-      elsif fiscal_id.length == 9 && !is_numeric?(fiscal_id)
-        # Test DC
-      end
-      
+    end
+    _dc
+  end
+  
+  def fiscal_id_description(code)
+    _m = 'ERROR'
+    code = '0' if is_numeric?(code)
+    _d = FiscalDescription.find_by_code(code)
+    if !_d.nil?
+      _m = _d.name
+    end
+    _m
   end
 
 =begin
@@ -204,14 +226,46 @@ end
 
   private
 
+  # IS NUMERIC
   def is_numeric?(object)
     true if Float(object) rescue false
   end  
+  
+  # NIF/NIE
+  def calc_dc_individual(fiscal_id)
+    'TRWAGMYFPDXBNJZSQVHLCKE'[fiscal_id % 23, 1]
+  end
+  # CIF
+  def calc_dc_legal_entity(fiscal_id)
+    _dc = ''
+    _l = 0
+    _c = '0246813579'
+    _l += _c[fiscal_id[1].to_i].to_i + fiscal_id[2].to_i
+    _l += _c[fiscal_id[3].to_i].to_i + fiscal_id[4].to_i
+    _l += _c[fiscal_id[5].to_i].to_i + fiscal_id[6].to_i
+    _l += _c[fiscal_id[7].to_i].to_i
+    _l = 10 - (_l % 10)
+    if _l == 10
+      _dc = 'J0'
+    else
+      _dc = (_l + 64).chr + _l.to_s
+    end
+    if _dc[0] == fiscal_id[8]
+      _dc = _dc[0]
+    elsif _dc[1] == fiscal_id[8]
+      _dc = _dc[1]
+    else
+      _dc = '$err'
+    end
+    _dc
+  end
 
+  # BROWSER CURRENT LOCALE
   def extract_locale_from_accept_language_header
     request.env['HTTP_ACCEPT_LANGUAGE'].scan(/^[a-z]{2}/).first
   end
 
+  # SETUP LAYOUT
   def layout
     # turn layout off for session and registration pages
     # and on for the others
