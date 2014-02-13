@@ -204,7 +204,7 @@ class ApplicationController < ActionController::Base
   end
   
   def fiscal_id_description(code)
-    _m = 'ERROR'
+    _m = '$err'
     code = '0' if is_numeric?(code)
     _d = FiscalDescription.find_by_code(code)
     if !_d.nil?

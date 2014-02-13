@@ -25,3 +25,4 @@ es:
       back_to_main_page: "Volver a ag2Entities"
       validate_btn: "Validar"
       fiscal_error: "Id Fiscal erróneo."
+      fiscal_name: "Nombre de Id Fiscal no hallado."

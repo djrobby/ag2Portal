@@ -25,3 +25,4 @@ en:
       back_to_main_page: "Back to ag2Entities"
       validate_btn: "Validate"
       fiscal_error: "Wrong Fiscal Id."
+      fiscal_name: "Fiscal Id Name not found."
