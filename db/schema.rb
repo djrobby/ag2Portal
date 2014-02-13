@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140208084531) do
+ActiveRecord::Schema.define(:version => 20140213130753) do
 
   create_table "activities", :force => true do |t|
     t.string   "description"
@@ -367,6 +367,15 @@ ActiveRecord::Schema.define(:version => 20140208084531) do
     t.string   "created_by"
     t.string   "updated_by"
   end
+
+  create_table "fiscal_descriptions", :force => true do |t|
+    t.string   "code"
+    t.string   "name"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "fiscal_descriptions", ["code"], :name => "index_fiscal_descriptions_on_code", :unique => true
 
   create_table "insurances", :force => true do |t|
     t.string   "name"
