@@ -5,3 +5,4 @@ es:
         control: "Control&Seguimiento"
         activities: "Actividades Provs."
         payment_methods: "Formas de Pago"
+        order_statuses: "Estados de Pedidos"

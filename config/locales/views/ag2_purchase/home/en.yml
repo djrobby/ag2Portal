@@ -5,3 +5,4 @@ en:
         control: "Control&Tracking"
         activities: "Supplier Activities"
         payment_methods: "Payment Methods"
+        order_statuses: "Order Statuses"

@@ -10,10 +10,14 @@ class PurchaseOrder < ActiveRecord::Base
   attr_accessible :discount, :discount_pct, :order_date, :order_no, :remarks, :supplier_offer_no,
                   :supplier_id, :payment_method_id, :order_status_id, :project_id, :offer_id,
                   :store_id, :work_order_id, :charge_account_id, :retention_pct, :retention_time
-
+  attr_accessible :purchase_order_items_attributes
+  
   has_many :purchase_order_items, dependent: :destroy
   has_many :receipt_note_items
 
+  accepts_nested_attributes_for :purchase_order_items,                                 
+                                :reject_if => lambda { |attrs| attrs.all? { |key, value| value.blank? } },
+                                :allow_destroy => true
   has_paper_trail
 
   validates :order_date,     :presence => true

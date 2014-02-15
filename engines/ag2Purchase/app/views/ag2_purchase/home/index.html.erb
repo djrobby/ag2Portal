@@ -63,8 +63,7 @@
 </ul><!-- /.thumbnails -->
 <ul class="thumbnails">
   <!-- Apps 3 -->
-  <li class="span2"></li>
-  <li class="span2"></li>
+  <li class="span3"></li>
   <li class="span2">
     <% if (session[:resolution] == "LD")%>
     <a href="<%= activities_path %>" class="thumbnail centered"><img src="/assets/icon/TableA.png" width="48" height="48" alt="ag2Tables" /><h5 class="h5-narrow"><%=t :"ag2_purchase.home.index.activities" %></h5></a>
@@ -83,6 +82,14 @@
     <a href="<%= payment_methods_path %>" class="thumbnail centered"><img src="/assets/pict/TableA96.png" width="96" height="96" alt="ag2Tables" /><h5 class="h5-narrow"><%=t :"ag2_purchase.home.index.payment_methods" %></h5></a>
     <% end %>
   </li>
-  <li class="span2"></li>
-  <li class="span2"></li>
+  <li class="span2">
+    <% if (session[:resolution] == "LD")%>
+    <a href="<%= order_statuses_path %>" class="thumbnail centered"><img src="/assets/icon/TableA.png" width="48" height="48" alt="ag2Tables" /><h5 class="h5-narrow"><%=t :"ag2_purchase.home.index.order_statuses" %></h5></a>
+    <% elsif session[:resolution] == "SD" %>
+    <a href="<%= order_statuses_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/TableA72.png" width="72" height="72" alt="ag2Tables" /><h5 class="h5-narrow"><%=t :"ag2_purchase.home.index.order_statuses" %></h5></a>
+    <% else %>
+    <a href="<%= order_statuses_path %>" class="thumbnail centered"><img src="/assets/pict/TableA96.png" width="96" height="96" alt="ag2Tables" /><h5 class="h5-narrow"><%=t :"ag2_purchase.home.index.order_statuses" %></h5></a>
+    <% end %>
+  </li>
+  <li class="span3"></li>
 </ul><!-- /.thumbnails -->

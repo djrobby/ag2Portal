@@ -1,0 +1,21 @@
+<h1>Listing purchase_orders</h1>
+
+<table>
+  <tr>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @purchase_orders.each do |purchase_order| %>
+  <tr>
+    <td><%= link_to 'Show', purchase_order %></td>
+    <td><%= link_to 'Edit', edit_purchase_order_path(purchase_order) %></td>
+    <td><%= link_to 'Destroy', purchase_order, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Purchase order', new_purchase_order_path %>
