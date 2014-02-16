@@ -6,6 +6,7 @@ en:
         one:   Activity
         few:   Activities
         other: Activities
+        check_for_suppliers: "Activity cannot be destroyed while linked supplliers exist."
     attributes:
       activity:
         description: "Description"

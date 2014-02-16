@@ -90,12 +90,16 @@ module Ag2Purchase
     # DELETE /payment_methods/1.json
     def destroy
       @payment_method = PaymentMethod.find(params[:id])
-      @payment_method.destroy
-  
+
       respond_to do |format|
-        format.html { redirect_to payment_methods_url,
+        if @payment_method.destroy
+          format.html { redirect_to payment_methods_url,
                       notice: (crud_notice('destroyed', @payment_method) + "#{undo_link(@payment_method)}").html_safe }
-        format.json { head :no_content }
+          format.json { head :no_content }
+        else
+          format.html { redirect_to payment_methods_url, alert: "#{@payment_method.errors[:base].to_s}".gsub('["', '').gsub('"]', '') }
+          format.json { render json: @payment_method.errors, status: :unprocessable_entity }
+        end
       end
     end
 

@@ -1,0 +1,18 @@
+en:
+  ag2_purchase:
+    order_statuses:
+      index:
+        title: "Order statuses"
+        btn_new: "New Order status"
+        back_to_root: "Back to ag2Purchase"
+      show:
+        title: "Order status"
+        btn_edit: "Edit Order status"
+        btn_delete: "Delete Order status"
+        return_to: "Back to Order status"
+      edit:
+        title: "Edit Order status"
+        btn_show: "Show Order status"
+      new:
+        title: "New Order status"
+      back_to_main_page: "Back to Order statuses"

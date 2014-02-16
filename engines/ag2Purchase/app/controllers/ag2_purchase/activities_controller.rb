@@ -90,12 +90,16 @@ module Ag2Purchase
     # DELETE /activities/1.json
     def destroy
       @activity = Activity.find(params[:id])
-      @activity.destroy
-  
+
       respond_to do |format|
-        format.html { redirect_to activities_url,
+        if @activity.destroy
+          format.html { redirect_to activities_url,
                       notice: (crud_notice('destroyed', @activity) + "#{undo_link(@activity)}").html_safe }
-        format.json { head :no_content }
+          format.json { head :no_content }
+        else
+          format.html { redirect_to activities_url, alert: "#{@activity.errors[:base].to_s}".gsub('["', '').gsub('"]', '') }
+          format.json { render json: @activity.errors, status: :unprocessable_entity }
+        end
       end
     end
 

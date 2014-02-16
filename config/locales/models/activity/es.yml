@@ -6,6 +6,7 @@ es:
         one:   Actividad
         few:   Actividades
         other: Actividades
+        check_for_suppliers: "Actividad no puede ser eliminada mientras existan proveedores vinculados."
     attributes:
       activity:
         description: "Descripción"

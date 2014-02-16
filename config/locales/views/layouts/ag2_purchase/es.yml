@@ -10,3 +10,6 @@ es:
       supplier_contacts:
         items: "Contactos de proveedor"
         item: "Contacto"
+      order_statuses:
+        items: "Estados de pedidos"
+        item: "Estado"

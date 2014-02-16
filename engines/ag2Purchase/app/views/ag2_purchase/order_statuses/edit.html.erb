@@ -1,6 +1,8 @@
-<h1>Editing order_status</h1>
+<%= render '/layouts/ag2_purchase/ostatusesbreadcrumb' %>
+
+<h3><%=t '.title' %></h3>
 
 <%= render 'form' %>
 
-<%= link_to 'Show', @order_status %> |
-<%= link_to 'Back', order_statuses_path %>
+<%= link_to t(".btn_show"), @order_status %> |
+<%= link_to t("ag2_purchase.order_statuses.back_to_main_page"), order_statuses_path %>
