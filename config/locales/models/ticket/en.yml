@@ -29,6 +29,7 @@ en:
         created_by: "Created by"
         updated_by: "Updated by"
         source_ip: "Source IP"
+        hd_email: "Support email"
     errors:
       ticket:
         popup: "Error: Ticket cannot be created!"

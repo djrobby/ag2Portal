@@ -16,7 +16,9 @@ class Notifier < ActionMailer::Base
     @ticket = ticket
 
     user = User.find(ticket.created_by)
-    mail from: user.email, to: "helpdesk@aguaygestion.com"
+    if !user.nil?
+      mail from: user.email, to: ticket.hd_email
+    end
   end
 
   def ticket_updated(ticket)

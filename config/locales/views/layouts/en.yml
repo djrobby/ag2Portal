@@ -15,6 +15,10 @@ en:
     header: "Warning"
     body_title: "The requested resource is not available."
     body_description: "The application or website requested was not found. You will be notified when the resource is operational."
+  not_signed_in:
+    header: "Warning"
+    body_title: "Login required."
+    body_description: "You must log in using your user credentials before proceeding."
   import:
     message: "Message"
   breadcrumb:

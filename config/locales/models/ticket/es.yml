@@ -29,6 +29,7 @@ es:
         created_by: "Creado por"
         updated_by: "Actualizado por"
         source_ip: "IP de origen"
+        hd_email: "Email de soporte"
     errors:
       ticket:
         popup: "Error: ¡Solicitud no pudo ser creada!"

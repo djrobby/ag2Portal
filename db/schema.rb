@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140213130753) do
+ActiveRecord::Schema.define(:version => 20140218193217) do
 
   create_table "activities", :force => true do |t|
     t.string   "description"
@@ -151,6 +151,7 @@ ActiveRecord::Schema.define(:version => 20140213130753) do
     t.integer  "created_by"
     t.integer  "updated_by"
     t.integer  "organization_id"
+    t.string   "hd_email"
   end
 
   add_index "companies", ["invoice_code"], :name => "index_companies_on_invoice_code"
@@ -586,6 +587,7 @@ ActiveRecord::Schema.define(:version => 20140213130753) do
     t.datetime "updated_at", :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
+    t.string   "hd_email"
   end
 
   add_index "organizations", ["name"], :name => "index_organizations_on_name"
@@ -1256,6 +1258,7 @@ ActiveRecord::Schema.define(:version => 20140213130753) do
     t.datetime "attachment_updated_at"
     t.integer  "office_id"
     t.string   "source_ip"
+    t.string   "hd_email"
   end
 
   add_index "tickets", ["assign_at"], :name => "index_tickets_on_assign_at"

@@ -15,6 +15,10 @@ es:
     header: "Advertencia"
     body_title: "El recurso solicitado no está disponible."
     body_description: "La aplicación o el sitio web requerido no se ha encontrado. Recibirás una notificación cuando el recurso se encuentre operativo."
+  not_signed_in:
+    header: "Advertencia"
+    body_title: "Inicio de sesión requerido."
+    body_description: "Debes iniciar sesión usando tus credenciales de usuario antes de continuar."
   import:
     message: "Mensaje"
   breadcrumb:

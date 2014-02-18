@@ -59,6 +59,14 @@
       <td><%= t 'activerecord.attributes.company.email' %>:</td>
       <td><%= @company.email %></td>
     </tr>
+    <% if (current_user.has_role? :Administrator) %>
+    <tr>
+      <td><%= t 'activerecord.attributes.company.hd_email' %>:</td>
+      <td><%= @company.hd_email unless @company.hd_email.blank? %></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <% end %>
     <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @company } %>
     <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @company } %>
   </tbody>

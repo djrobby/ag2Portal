@@ -2,5 +2,8 @@
 <%= f.error_notification %>
 <%= display_base_errors resource %>
 <%= f.input :name, :required => true, :autofocus => true, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %>
+<% if (current_user.has_role? :Administrator) %>
+<%= f.input :hd_email, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %>
+<% end %>
 <%= f.button :submit, :class => 'btn-primary' %>
 <% end %>

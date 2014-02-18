@@ -1,6 +1,6 @@
 class Organization < ActiveRecord::Base
   has_and_belongs_to_many :users, :join_table => :users_organizations
-  attr_accessible :name
+  attr_accessible :name, :hd_email
 
   has_many :companies
 

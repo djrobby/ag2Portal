@@ -125,6 +125,7 @@ module Ag2HelpDesk
       @ticket = Ticket.new(params[:ticket])
       @ticket.created_by = current_user.id if !current_user.nil?
       @ticket.source_ip = request.remote_ip
+      @ticket.hd_email = mail_to
 
       respond_to do |format|
         if @ticket.save
@@ -178,6 +179,7 @@ module Ag2HelpDesk
       @ticket = Ticket.new(params[:ticket])
       @ticket.created_by = current_user.id if !current_user.nil?
       @ticket.source_ip = request.remote_ip
+      @ticket.hd_email = mail_to
 
       respond_to do |format|
         if @ticket.save
@@ -188,6 +190,23 @@ module Ag2HelpDesk
           format.json { render json: @ticket.errors, status: :unprocessable_entity }
         end
       end
+    end
+    
+    private
+    
+    def mail_to
+      _to = "helpdesk@aguaygestion.com"
+      begin
+        if session[:company] != '0'
+          company = Company.find(session[:company])
+          if !company.nil?
+            _to = company.hd_email
+          end
+        end
+      rescue => e
+        _to = "helpdesk@aguaygestion.com"
+      end
+      _to
     end
   end
 end

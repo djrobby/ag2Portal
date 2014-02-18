@@ -39,3 +39,4 @@ es:
         address: "Dirección"
         organization: "Organización"
         organization_id: "Organización"
+        hd_email: "Email de soporte"

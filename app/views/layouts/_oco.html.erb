@@ -56,22 +56,6 @@
       $("#Company").val(0);
       return false;
     });
-    
-    $('#form_new_ticket').on('submit', function() {
-      var category = $('select#fnt_category :selected').val();
-      var priority = $('select#fnt_priority :selected').val();
-      var subject = $('#fnt_subject').val();
-      var message = $('#fnt_message').val();
-      if ((category == "") || (priority == "")  || (subject == "")  || (message == "")) {
-        // Error
-        alert('<%= I18n.t("ag2_help_desk.tickets.new_ticket.footer") %>');
-        return false;
-      } else {
-        // Hide the modal and exit
-        $("#new-ticket").modal('hide');
-        alert('<%= I18n.t("ag2_help_desk.tickets.new_ticket.submit") %>');
-      }
-    });
   })
 </script>
 

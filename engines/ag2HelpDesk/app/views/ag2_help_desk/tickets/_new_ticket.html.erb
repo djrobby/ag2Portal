@@ -19,23 +19,39 @@
 </script>
 
 <div id="new-ticket" class="modal hide fade in" style="display: none;">
-  <%= simple_form_for Ticket.new, :url => ag2_help_desk.popup_new_tickets_path, :remote => :true, :html => { "data-type" => :json, :class => 'form-inline', :id => 'form_new_ticket' } do |f| %>
-  <div class="modal-header">
-    <a class="close" data-dismiss="modal">&#215;</a>
-    <h3><%= I18n.t('ag2_help_desk.tickets.new_ticket.title') %></h3>
-    <%= I18n.t('ag2_help_desk.tickets.new_ticket.footer') %>
-  </div>
-  <div class="modal-body">
-    <%= f.association :ticket_category, :autofocus => true, collection: TicketCategory.all(order: 'name'), :input_html => { :class => 'mid-text-field', :id => 'fnt_category' }, :label_html => { :class => 'form-label' } %>
-    <%= f.association :ticket_priority, collection: TicketPriority.all(order: 'id'), :input_html => { :class => 'mid-text-field', :id => 'fnt_priority' }, :label_html => { :class => 'form-label' } %>
-    <%= f.input :ticket_subject, :input_html => { :class => 'x-large-text-field', :maxlength => 20, :id => 'fnt_subject' }, :label_html => { :class => 'form-label' } %>
-    <%= f.input :ticket_message, :as => :text, :input_html => { :class => 'x-large-text-field', :rows => 3, :id => 'fnt_message' }, :label_html => { :class => 'form-label' } %>
-    <%= f.input :attachment, :as => :file, :label_html => { :class => 'form-label' } %>
-    <%= hidden_field_tag :referrer, "#{request.protocol}#{request.host_with_port}#{request.fullpath}" %>
-  </div>
-  <div class="modal-footer">
-    <%= f.submit I18n.t('ag2_help_desk.tickets.new_ticket.btn_new'), :class => "btn btn-primary" %>
-    <a class="btn btn-primary" data-dismiss="modal" href="#"><%= t :close_button %></a>
-  </div>
+  <% if user_signed_in? %>
+    <%= simple_form_for Ticket.new, :url => ag2_help_desk.popup_new_tickets_path, :remote => :true, :html => { "data-type" => :json, :class => 'form-inline', :id => 'form_new_ticket' } do |f| %>
+    <div class="modal-header">
+      <a class="close" data-dismiss="modal">&#215;</a>
+      <h3><%= I18n.t('ag2_help_desk.tickets.new_ticket.title') %></h3>
+      <%= I18n.t('ag2_help_desk.tickets.new_ticket.footer') %>
+    </div>
+    <div class="modal-body">
+      <%= f.association :ticket_category, :autofocus => true, collection: TicketCategory.all(order: 'name'), :input_html => { :class => 'mid-text-field', :id => 'fnt_category' }, :label_html => { :class => 'form-label' } %>
+      <%= f.association :ticket_priority, collection: TicketPriority.all(order: 'id'), :input_html => { :class => 'mid-text-field', :id => 'fnt_priority' }, :label_html => { :class => 'form-label' } %>
+      <%= f.input :ticket_subject, :input_html => { :class => 'x-large-text-field', :maxlength => 20, :id => 'fnt_subject' }, :label_html => { :class => 'form-label' } %>
+      <%= f.input :ticket_message, :as => :text, :input_html => { :class => 'x-large-text-field', :rows => 3, :id => 'fnt_message' }, :label_html => { :class => 'form-label' } %>
+      <%= f.input :attachment, :as => :file, :label_html => { :class => 'form-label' } %>
+      <%= hidden_field_tag :referrer, "#{request.protocol}#{request.host_with_port}#{request.fullpath}" %>
+    </div>
+    <div class="modal-footer">
+      <%= f.submit I18n.t('ag2_help_desk.tickets.new_ticket.btn_new'), :class => "btn btn-primary" %>
+      <a class="btn btn-primary" data-dismiss="modal" href="#"><%= t :close_button %></a>
+    </div>
+    <% end %>
+  <% else %>
+    <div class="modal-header">
+      <a class="close" data-dismiss="modal">×</a>
+      <h3>aGestiona2: <%=t :"not_signed_in.header" %></h3>
+    </div>
+    <div class="modal-body">
+      <h4><%=t :"not_signed_in.body_title" %></h4>
+      <p>
+        <%=t :"not_signed_in.body_description" %>
+      </p>
+    </div>
+    <div class="modal-footer">
+      <a href="#" class="btn btn-primary" data-dismiss="modal"><%=t :close_button %></a>
+    </div>
   <% end %>
 </div>

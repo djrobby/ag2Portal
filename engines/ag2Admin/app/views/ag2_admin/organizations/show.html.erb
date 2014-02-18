@@ -6,8 +6,14 @@
     <tr>
       <td>Id:</td>
       <td><%= @organization.id %></td>
-      <td><%= t 'activerecord.attributes.company.organization' %>:</td>
+      <td><%= t 'activerecord.attributes.organization.name' %>:</td>
       <td><%= @organization.name %></td>
+    </tr>
+    <tr>
+      <td><%= t 'activerecord.attributes.company.hd_email' %>:</td>
+      <td><%= @organization.hd_email unless @organization.hd_email.blank? %></td>
+      <td></td>
+      <td></td>
     </tr>
     <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @organization } %>
     <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @organization } %>

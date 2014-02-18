@@ -10,3 +10,4 @@ en:
     attributes:
       organization:
         name: "Name"
+        hd_email: "Support email"
