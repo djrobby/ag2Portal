@@ -59,13 +59,13 @@ class Ticket < ActiveRecord::Base
     if self.ticket_status_id.blank?
       self.ticket_status_id = 1
     end
-    # Assign office if possible
+    # Assign default office if possible
     if self.office_id.blank?
       user = User.find(self.created_by)
       if !user.nil?
         worker = Worker.find_by_user_id(user)
         if !worker.nil?
-          self.office_id = worker.office_id
+          self.office_id = worker.worker_items.first.office_id if worker.worker_items.count > 0
         end
       end
     end

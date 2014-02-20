@@ -28,4 +28,4 @@ en:
       status: "Current status: "
       status_changed_at: "Status changed at: "
       status_changed_message: "Support message: "
-      do_not_reply: "Do not reply directly to this e-mail: It was sent from and unattended mailbox."
+    do_not_reply: "Do not reply directly to this e-mail: It was sent from an unattended mailbox."

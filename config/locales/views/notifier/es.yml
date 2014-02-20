@@ -28,4 +28,4 @@ es:
       status: "Estado actual: "
       status_changed_at: "Ultimo cambio de estado: "
       status_changed_message: "Mensaje de soporte técnico: "
-      do_not_reply: "No conteste a este e-mail: Es un mensaje enviado desde un sistema automático."
+    do_not_reply: "No responda directamente a este e-mail: Ha sido enviado desde un sistema desatendido."

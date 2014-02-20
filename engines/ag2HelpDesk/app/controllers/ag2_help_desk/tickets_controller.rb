@@ -126,6 +126,7 @@ module Ag2HelpDesk
       @ticket.created_by = current_user.id if !current_user.nil?
       @ticket.source_ip = request.remote_ip
       @ticket.hd_email = mail_to
+      @ticket.office_id = from_office
 
       respond_to do |format|
         if @ticket.save
@@ -180,6 +181,7 @@ module Ag2HelpDesk
       @ticket.created_by = current_user.id if !current_user.nil?
       @ticket.source_ip = request.remote_ip
       @ticket.hd_email = mail_to
+      @ticket.office_id = from_office
 
       respond_to do |format|
         if @ticket.save
@@ -207,6 +209,36 @@ module Ag2HelpDesk
         _to = "helpdesk@aguaygestion.com"
       end
       _to
+    end
+
+    def from_office
+      _office = 0
+      begin
+        if session[:office] != '0'
+          office = Office.find(session[:office])
+          if !office.nil?
+            _office = office.id
+          end
+        end
+        if _office == 0
+          _office = default_office
+        end
+      rescue => e
+          _office = default_office
+      end
+      _office
+    end
+    
+    def default_office
+      _office = 0
+      _user = User.find(current_user)
+      if !_user.nil?
+        _worker = Worker.find_by_user_id(_user)
+        if !_worker.nil?
+          _office = _worker.worker_items.first.office_id if _worker.worker_items.count > 0
+        end
+      end
+      _office
     end
   end
 end
