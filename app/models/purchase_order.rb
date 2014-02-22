@@ -16,7 +16,7 @@ class PurchaseOrder < ActiveRecord::Base
   has_many :receipt_note_items
 
   accepts_nested_attributes_for :purchase_order_items,                                 
-                                :reject_if => lambda { |attrs| attrs.all? { |key, value| value.blank? } },
+                                :reject_if => :all_blank,
                                 :allow_destroy => true
   has_paper_trail
 
