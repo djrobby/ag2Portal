@@ -6,8 +6,8 @@
       <tr>
         <th><%= t 'activerecord.attributes.purchase_order.order_no' %></th>
         <th><%= t 'activerecord.attributes.purchase_order.order_date' %></th>
-        <th><%= t 'activerecord.attributes.purchase_order.supplier' %></th>
         <th><%= t 'activerecord.attributes.purchase_order.order_status' %></th>
+        <th><%= t 'activerecord.attributes.purchase_order.supplier' %></th>
         <th><%= t 'activerecord.attributes.purchase_order.offer' %></th>
         <th></th>
       </tr>
@@ -17,8 +17,8 @@
       <tr>
         <td><%= link_to order.order_no, order %></td>
         <td><%= order.order_date %></td>
-        <td><%= order.supplier.name %></td>
         <td><%= order.order_status.name %></td>
+        <td><%= order.supplier.name %></td>
         <td><%= order.offer.offer_no unless order.offer.blank? %></td>
         <td> <%= render :partial => '/layouts/crud/edit', :locals => { :model => PurchaseOrder, :path => edit_purchase_order_path(order) } %>
         <%= render :partial => '/layouts/crud/delete', :locals => { :model => PurchaseOrder, :path => order, :msg => t("activerecord.models.purchase_order.one"), :txt => order.order_no } %> </td>
@@ -27,6 +27,6 @@
     </tbody>
   </table>
   <%= render :partial => '/layouts/pagination', :locals => { :ivar => @purchase_orders } %>
-  <%= render :partial => '/layouts/crud/new', :locals => { :model => PurchaseOrder, :path => new_supplier_path, :txt => t(".btn_new") } %>
+  <%= render :partial => '/layouts/crud/new', :locals => { :model => PurchaseOrder, :path => new_purchase_order_path, :txt => t(".btn_new") } %>
   <%= link_to t(".back_to_root"), ag2_purchase.root_path %>
 </div>
