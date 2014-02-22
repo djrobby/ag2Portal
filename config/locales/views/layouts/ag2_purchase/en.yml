@@ -13,3 +13,6 @@ en:
       order_statuses:
         items: "Order statuses"
         item: "Status"
+      purchase_orders:
+        items: "Purchase orders"
+        item: "Order"

@@ -2,10 +2,16 @@ require_dependency "ag2_purchase/application_controller"
 
 module Ag2Purchase
   class PurchaseOrdersController < ApplicationController
+    before_filter :authenticate_user!
+    load_and_authorize_resource
+
+    #
+    # Default Methods
+    #
     # GET /purchase_orders
     # GET /purchase_orders.json
     def index
-      @purchase_orders = PurchaseOrder.all
+      @purchase_orders = PurchaseOrder.paginate(:page => params[:page], :per_page => per_page).order('order_no')
   
       respond_to do |format|
         format.html # index.html.erb
@@ -16,6 +22,7 @@ module Ag2Purchase
     # GET /purchase_orders/1
     # GET /purchase_orders/1.json
     def show
+      @breadcrumb = 'read'
       @purchase_order = PurchaseOrder.find(params[:id])
   
       respond_to do |format|
@@ -27,6 +34,7 @@ module Ag2Purchase
     # GET /purchase_orders/new
     # GET /purchase_orders/new.json
     def new
+      @breadcrumb = 'create'
       @purchase_order = PurchaseOrder.new
   
       respond_to do |format|
@@ -37,17 +45,19 @@ module Ag2Purchase
   
     # GET /purchase_orders/1/edit
     def edit
+      @breadcrumb = 'update'
       @purchase_order = PurchaseOrder.find(params[:id])
     end
   
     # POST /purchase_orders
     # POST /purchase_orders.json
     def create
+      @breadcrumb = 'create'
       @purchase_order = PurchaseOrder.new(params[:purchase_order])
   
       respond_to do |format|
         if @purchase_order.save
-          format.html { redirect_to @purchase_order, notice: 'Purchase order was successfully created.' }
+          format.html { redirect_to @purchase_order, notice: crud_notice('created', @purchase_order) }
           format.json { render json: @purchase_order, status: :created, location: @purchase_order }
         else
           format.html { render action: "new" }
@@ -59,11 +69,13 @@ module Ag2Purchase
     # PUT /purchase_orders/1
     # PUT /purchase_orders/1.json
     def update
+      @breadcrumb = 'update'
       @purchase_order = PurchaseOrder.find(params[:id])
   
       respond_to do |format|
         if @purchase_order.update_attributes(params[:purchase_order])
-          format.html { redirect_to @purchase_order, notice: 'Purchase order was successfully updated.' }
+          format.html { redirect_to @purchase_order,
+                        notice: (crud_notice('updated', @purchase_order) + "#{undo_link(@purchase_order)}").html_safe }
           format.json { head :no_content }
         else
           format.html { render action: "edit" }
@@ -76,11 +88,16 @@ module Ag2Purchase
     # DELETE /purchase_orders/1.json
     def destroy
       @purchase_order = PurchaseOrder.find(params[:id])
-      @purchase_order.destroy
-  
+
       respond_to do |format|
-        format.html { redirect_to purchase_orders_url }
-        format.json { head :no_content }
+        if @purchase_order.destroy
+          format.html { redirect_to purchase_orders_url,
+                      notice: (crud_notice('destroyed', @purchase_order) + "#{undo_link(@purchase_order)}").html_safe }
+          format.json { head :no_content }
+        else
+          format.html { redirect_to purchase_orders_url, alert: "#{@purchase_order.errors[:base].to_s}".gsub('["', '').gsub('"]', '') }
+          format.json { render json: @purchase_order.errors, status: :unprocessable_entity }
+        end
       end
     end
   end

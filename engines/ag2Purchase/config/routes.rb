@@ -23,6 +23,7 @@ Ag2Purchase::Engine.routes.draw do
     resources :payment_methods
     resources :supplier_contacts
     resources :order_statuses
+    resources :purchase_orders
 
     # Root
     root :to => 'home#index'

@@ -34,19 +34,19 @@ class PurchaseOrder < ActiveRecord::Base
   # Records navigator
   #
   def to_first
-    PurchaseOrder.order("id").first
+    PurchaseOrder.order("order_no").first
   end
 
   def to_prev
-    PurchaseOrder.where("id < ?", id).order("id").last
+    PurchaseOrder.where("id < ?", id).order("order_no").last
   end
 
   def to_next
-    PurchaseOrder.where("id > ?", id).order("id").first
+    PurchaseOrder.where("id > ?", id).order("order_no").first
   end
 
   def to_last
-    PurchaseOrder.order("id").last
+    PurchaseOrder.order("order_no").last
   end
 
   private

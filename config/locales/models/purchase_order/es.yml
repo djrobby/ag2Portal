@@ -7,8 +7,8 @@ es:
         few:   Pedidos
         other: Pedidos
         check_for_receipt_notes: "Pedido no puede ser eliminado mientras existan albaranes vinculados."
-    purchase_order:
-      offer:
+    attributes:
+      purchase_order:
         order_no: "Nº"
         offer: "Oferta"
         offer_id: "Oferta"

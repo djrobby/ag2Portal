@@ -1,0 +1,59 @@
+<% content_for :title, "aGestiona2 | ag2PurchaseOrders" %>
+<% content_for :icon, "/assets/icon/ag2Orders.png" %>
+<% content_for :alt, "ag2PurchaseOrders" %>
+
+<!-- Breadcrumb -->
+<ul class="breadcrumb">
+  <li>
+    <a href="<%= main_app.root_path %>"><i class="icon-home"></i></a><span class="divider">></span>
+  </li>
+  <li>
+    <a href="<%= ag2_purchase.root_path %>">ag2Purchase</a><span class="divider">></span>
+  </li>
+  <% if @purchase_orders %>
+  <li>
+    ag2PurchaseOrders
+  </li>
+  <% end %>
+  <% if @purchase_order %>
+  <li>
+    <a href="<%= purchase_orders_path %>">ag2PurchaseOrders</a><span class="divider">></span>
+  </li>
+  <% if @breadcrumb == 'read' || @breadcrumb == 'update' %>
+  <%=t :"ag2_purchase.breadcrumb.purchase_orders.item" %>
+  <% end %>
+  <% if @breadcrumb == 'create' %>
+  <li>
+    <%= t :"breadcrumb.new" %>
+  </li>
+  <% end %>
+  <!-- Records navigator -->
+  <% if @breadcrumb == 'read' %>
+  <li>
+    <span class="divider"></span>
+  </li>
+  <li>
+    <%= link_to @purchase_order.to_first, :class => 'notice-icon-button', :id => 'first', :title => I18n.t(:first) do %>
+    <i class="icon-fast-backward"></i>
+    <% end %>
+  </li>
+  <li>
+    <%= link_to @purchase_order.to_prev, :class => 'notice-icon-button', :id => 'prev', :title => I18n.t(:prev) do %>
+    <i class="icon-backward"></i>
+    <% end %>
+  </li>
+  <li>
+    <%= link_to @purchase_order.to_next, :class => 'notice-icon-button', :id => 'next', :title => I18n.t(:next) do %>
+    <i class="icon-forward"></i>
+    <% end %>
+  </li>
+  <li>
+    <%= link_to @purchase_order.to_last, :class => 'notice-icon-button', :id => 'last', :title => I18n.t(:last) do %>
+    <i class="icon-fast-forward"></i>
+    <% end %>
+  </li>
+  <% end %>
+  <% end %>
+  <!-- Close -->
+  <a class="close" href="<%= ag2_purchase.root_path %>">&#215;</a>
+</ul>

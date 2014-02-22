@@ -13,3 +13,6 @@ es:
       order_statuses:
         items: "Estados de pedidos"
         item: "Estado"
+      purchase_orders:
+        items: "Pedidos"
+        item: "Pedido"

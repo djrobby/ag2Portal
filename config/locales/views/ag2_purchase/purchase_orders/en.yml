@@ -1,0 +1,31 @@
+en:
+  ag2_purchase:
+    purchase_orders:
+      index:
+        title: "Purchase orders"
+        btn_new: "New Order"
+        back_to_root: "Back to ag2Purchase"
+        go_to_child_app: "Go to Supplier contacts"
+        label_office: "Office"
+        label_company: "Company"
+        label_others: "Others"
+        btn_apply: "Apply Filter"
+      show:
+        title: "Order"
+        btn_edit: "Edit Order"
+        btn_delete: "Delete Order"
+        subtable_title: "Supplier Contacts"
+        subtable_prices_title: "Supplier Prices"
+        return_to: "Back to Supplier"
+      edit:
+        title: "Edit Order"
+        btn_show: "Show Order"
+      new:
+        title: "New Order"
+      back_to_main_page: "Back to Purchase orders"
+      generate_code_btn: "Supplier Code"
+      validate_btn: "Validate"
+      personal_info: "Supplier Info"
+      commercial_info: "Accounting & Commercial Info"
+      fiscal_error: "Wrong Fiscal Id or Entity (TaxPayer) does not exist."
+      code_error: "Unable to generate Supplier Code: No Activity chosen."

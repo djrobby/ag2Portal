@@ -1,0 +1,31 @@
+es:
+  ag2_purchase:
+    purchase_orders:
+      index:
+        title: "Pedidos"
+        btn_new: "Nuevo Pedido"
+        back_to_root: "Volver a ag2Purchase"
+        go_to_child_app: "Ir a Contactos de proveedor"
+        label_office: "Office"
+        label_company: "Company"
+        label_others: "Others"
+        btn_apply: "Apply Filter"
+      show:
+        title: "Pedido"
+        btn_edit: "Editar Pedido"
+        btn_delete: "Borrar Pedido"
+        subtable_title: "Contactos del Proveedor"
+        subtable_prices_title: "Precios del Proveedor"
+        return_to: "Volver a Proveedor"
+      edit:
+        title: "Editar Pedido"
+        btn_show: "Ver Pedido"
+      new:
+        title: "Nuevo Pedido"
+      back_to_main_page: "Volver a Pedidos"
+      generate_code_btn: "Código de Proveedor"
+      validate_btn: "Validar"
+      personal_info: "Información del Proveedor"
+      commercial_info: "Información Contable y Comercial"
+      fiscal_error: "Id Fiscal erróneo o Entidad (Sujeto Pasivo) no existe."
+      code_error: "Imposible generar Código de Proveedor: No has elegido Actividad."
