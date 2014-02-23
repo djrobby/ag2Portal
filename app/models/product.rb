@@ -53,6 +53,9 @@ class Product < ActiveRecord::Base
     "#{product_code} #{main_description[0,40]}"
   end
 
+  #
+  # Calculated fields
+  #
   def active_yes_no
     active ? 'Yes' : 'No'
   end

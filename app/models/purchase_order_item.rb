@@ -25,6 +25,21 @@ class PurchaseOrderItem < ActiveRecord::Base
 
   before_destroy :check_for_dependent_records
 
+  #
+  # Calculated fields
+  #
+  def amount
+    quantity * (price - discount)
+  end
+
+  def tax
+    tax_type.tax * amount
+  end
+  
+  def balance
+    quantity - receipt_note_items.sum("quantity")
+  end
+
   private
 
   def check_for_dependent_records

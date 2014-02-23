@@ -31,6 +31,36 @@ class PurchaseOrder < ActiveRecord::Base
   before_destroy :check_for_dependent_records
 
   #
+  # Calculated fields
+  #
+  def subtotal
+    purchase_order_items.sum("amount")
+  end
+
+  def taxable
+    subtotal - discount
+  end
+
+  def taxes
+    purchase_order_items.sum("tax")
+  end
+
+  def balance
+    purchase_order_items.sum("balance")
+  end
+  
+  def delivery_avg
+    avg, cnt = 0, 0
+    purchase_order_items.each do |i|
+      if !i.delivery_date.blank?
+        avg = Time.parse(i.delivery_date.to_s).to_f
+        cnt += 1
+      end
+    end
+    cnt > 0 ? Date.parse(Time.at(avg / cnt).to_s) : nil
+  end
+
+  #
   # Records navigator
   #
   def to_first
