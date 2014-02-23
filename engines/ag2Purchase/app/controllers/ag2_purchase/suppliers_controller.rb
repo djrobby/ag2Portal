@@ -177,7 +177,7 @@ module Ag2Purchase
       if letter.blank? || letter == "%"
         @suppliers = @search.results
       else
-        @suppliers = Supplier.where("name LIKE ?", "#{letter}%").paginate(:page => params[:page], :per_page => per_page).order('supplier_code')
+        @suppliers = Supplier.where("name LIKE ?", "#{letter}%").paginate(:page => params[:page], :per_page => per_page).order(:supplier_code)
       end
 
       respond_to do |format|
@@ -191,8 +191,8 @@ module Ag2Purchase
     def show
       @breadcrumb = 'read'
       @supplier = Supplier.find(params[:id])
-      @contacts = @supplier.supplier_contacts.paginate(:page => params[:page], :per_page => per_page).order('last_name', 'first_name')
-      @prices = @supplier.purchase_prices.paginate(:page => params[:page], :per_page => per_page).order('product_id')
+      @contacts = @supplier.supplier_contacts.paginate(:page => params[:page], :per_page => per_page).order(:last_name, :first_name)
+      @prices = @supplier.purchase_prices.paginate(:page => params[:page], :per_page => per_page).order(:product_id)
 
       respond_to do |format|
         format.html # show.html.erb

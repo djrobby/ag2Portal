@@ -24,6 +24,7 @@ module Ag2Purchase
     def show
       @breadcrumb = 'read'
       @purchase_order = PurchaseOrder.find(params[:id])
+      @items = @purchase_order.purchase_order_items.paginate(:page => params[:page], :per_page => per_page).order('id')
   
       respond_to do |format|
         format.html # show.html.erb
@@ -36,6 +37,7 @@ module Ag2Purchase
     def new
       @breadcrumb = 'create'
       @purchase_order = PurchaseOrder.new
+      @offers = Offer.order(:supplier_id, :offer_no, :id)
   
       respond_to do |format|
         format.html # new.html.erb
