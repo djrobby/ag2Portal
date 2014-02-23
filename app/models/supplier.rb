@@ -61,6 +61,9 @@ class Supplier < ActiveRecord::Base
     "#{supplier_code} #{name}"
   end
 
+  #
+  # Calculated fields
+  #
   def active_yes_no
     active ? 'Yes' : 'No'
   end

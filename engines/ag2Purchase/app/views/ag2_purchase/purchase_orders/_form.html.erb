@@ -1,3 +1,11 @@
+<script>
+  $(document).ready(function() {
+    $('.sel2').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; }
+    });
+  });
+</script>
+
 <%= simple_form_for @purchase_order, :html => {:class => 'form-vertical well' } do |f| %>
 <%= f.error_notification %>
 <%= display_base_errors resource %>
@@ -5,11 +13,11 @@
   <label class="multi-field-label-two"> <%= f.input :order_no, autofocus: true, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %> </label>
   <label class="multi-field-label-two"> <%= f.input :order_date, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %> </label>
 </div>
-<%= f.association :offer, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %>
-
+<%= f.association :supplier, collection: Supplier.all(order: 'name'), input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %>
+<%= f.association :offer, collection: Offer.all(order: 'id'), input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %>
 <div>
-  <label class="multi-field-label-two"> <%= f.input :supplier, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' }, :boolean_style => :inline %> </label>
-  <label class="multi-field-label-two"> <%= f.input :payment_method, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' }, :boolean_style => :inline %> </label>
+  <label class="multi-field-label-two"> <%= f.association :supplier, collection: Supplier.all(order: 'name'), input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.association :payment_method, collection: PaymentMethod.all(order: 'description'), input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %> </label>
 </div>
 <%= f.button :submit, :class => 'btn-primary' %>
 <% end %>

@@ -24,6 +24,10 @@ class Offer < ActiveRecord::Base
 
   before_destroy :check_for_dependent_records
 
+  def to_label
+    "#{id} #{offer_no} #{supplier.name}"
+  end
+
   #
   # Records navigator
   #
