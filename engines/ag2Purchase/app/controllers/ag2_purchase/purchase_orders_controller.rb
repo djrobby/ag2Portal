@@ -54,6 +54,7 @@ module Ag2Purchase
     def create
       @breadcrumb = 'create'
       @purchase_order = PurchaseOrder.new(params[:purchase_order])
+      @purchase_order.created_by = current_user.id if !current_user.nil?
   
       respond_to do |format|
         if @purchase_order.save
@@ -71,6 +72,7 @@ module Ag2Purchase
     def update
       @breadcrumb = 'update'
       @purchase_order = PurchaseOrder.find(params[:id])
+      @purchase_order.updated_by = current_user.id if !current_user.nil?
   
       respond_to do |format|
         if @purchase_order.update_attributes(params[:purchase_order])

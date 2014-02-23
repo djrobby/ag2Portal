@@ -60,6 +60,10 @@ class PurchaseOrder < ActiveRecord::Base
     cnt > 0 ? Date.parse(Time.at(avg / cnt).to_s) : nil
   end
 
+  def offer_no
+    offer.nil? ? nil : offer.offer_no  
+  end
+  
   #
   # Records navigator
   #
