@@ -11,15 +11,39 @@
     </tr>
     <tr>
       <td><%=t 'activerecord.attributes.purchase_order.order_date' %>:</td>
-      <td> <% if @purchase_order.order_date %> </td>
+      <td><%= @purchase_order.order_date.strftime("%d/%m/%Y") unless @purchase_order.order_date.blank? %></td>
       <td><%=t 'activerecord.attributes.purchase_order.order_status' %>:</td>
-      <td> <% if @purchase_order.order_status.name %> </td>
+      <td> <%= @purchase_order.order_status.name %> </td>
     </tr>
     <tr>
-      <td><%=t 'activerecord.attributes.purchase_order.order_date' %>:</td>
-      <td> <% if @purchase_order.approval %> <i class="icon-thumbs-up"></i> <% else %> <i class="icon-thumbs-down"></i> <% end %> </td>
-      <td><%=t 'activerecord.attributes.purchase_order.order_status' %>:</td>
-      <td> <% if @purchase_order.notification %> <i class="icon-thumbs-up"></i> <% else %> <i class="icon-thumbs-down"></i> <% end %> </td>
+      <td><%=t 'activerecord.attributes.purchase_order.supplier' %>:</td>
+      <td><%= @purchase_order.supplier.name %></td>
+      <td><%=t 'activerecord.attributes.purchase_order.offer' %>:</td>
+      <td><%= @purchase_order.offer.offer_no unless @purchase_order.offer.blank? %></td>
+    </tr>
+    <tr>
+      <td><%=t 'activerecord.attributes.purchase_order.payment_method' %>:</td>
+      <td> <%= @purchase_order.payment_method.description %> </td>
+      <td><%=t 'activerecord.attributes.purchase_order.project' %>:</td>
+      <td><%= @purchase_order.project.name unless @purchase_order.project.blank? %></td>
+    </tr>
+    <tr>
+      <td><%=t 'activerecord.attributes.purchase_order.charge_account' %>:</td>
+      <td> <%= @purchase_order.charge_account.name unless @purchase_order.charge_account.blank? %> </td>
+      <td><%=t 'activerecord.attributes.purchase_order.work_order' %>:</td>
+      <td><%= @purchase_order.work_order.order_no unless @purchase_order.work_order.blank? %></td>
+    </tr>
+    <tr>
+      <td><%=t 'activerecord.attributes.purchase_order.store' %>:</td>
+      <td> <%= @purchase_order.store.name unless @purchase_order.store.blank? %> </td>
+      <td><%= t :"activerecord.attributes.purchase_order.remarks" %>:</td>
+      <td><%= @purchase_order.remarks unless @purchase_order.remarks.blank? %></td>
+    </tr>
+    <tr>
+      <td><%=t 'activerecord.attributes.purchase_order.retention_pct' %>:</td>
+      <td><%= number_to_percentage(@purchase_order.retention_pct, precision: 2, locale: :es) unless @purchase_order.retention_pct.blank? %></td>
+      <td><%=t 'activerecord.attributes.purchase_order.retention_time' %>:</td>
+      <td><%= @purchase_order.retention_time unless @purchase_order.retention_time.blank? %></td>
     </tr>
     <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @purchase_order } %>
     <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @purchase_order } %>
