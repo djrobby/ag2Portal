@@ -55,4 +55,18 @@
 delete_path: @purchase_order, delete_txt: t('.btn_delete'), msg: t("activerecord.models.purchase_order.one"), txt: @purchase_order.order_no,
 new_path: new_purchase_order_path, new_txt: t('ag2_purchase.purchase_orders.index.btn_new') } %>
 
+<% if (@items.count > 0) %>
+<table class="table table-condensed table-striped shrinked">
+  <thead>
+    <%= render 'itemsheader' %>
+  </thead>
+  <tbody>
+    <%= render partial: 'item', collection: @items %>
+  </tbody>
+</table>
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @items } %>
+<% else %>
+<br />
+<% end %> <!-- end @items.count > 0 -->
+
 <%= link_to t("ag2_purchase.purchase_orders.back_to_main_page"), purchase_orders_path %>

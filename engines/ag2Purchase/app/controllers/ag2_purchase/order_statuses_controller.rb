@@ -105,7 +105,7 @@ module Ag2Purchase
     private
 
     def sort_column
-      OrderStatus.column_names.include?(params[:sort]) ? params[:sort] : "name"
+      OrderStatus.column_names.include?(params[:sort]) ? params[:sort] : "id"
     end
   end
 end

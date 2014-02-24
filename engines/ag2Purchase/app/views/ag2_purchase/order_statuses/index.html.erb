@@ -5,6 +5,7 @@
   <table class="table table-condensed table-striped">
     <thead>
       <tr>
+        <th><%= sortable "id", 'Id' %></th>
         <th><%= sortable "name", t('activerecord.attributes.order_status.name') %></th>
         <th></th>
       </tr>
@@ -12,6 +13,7 @@
     <tbody>
       <% @order_statuses.each do |status| %>
       <tr>
+        <td><%= status.id %></td>
         <td><%= link_to status.name, status %></td>
         <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => OrderStatus, :path => edit_order_status_path(status) } %>
         <%= render :partial => '/layouts/crud/delete', :locals => { :model => OrderStatus, :path => status, :msg => t("activerecord.models.order_status.one"), :txt => status.name } %> </td>
