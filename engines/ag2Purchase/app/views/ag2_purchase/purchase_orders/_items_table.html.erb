@@ -1,0 +1,15 @@
+<table id="items_table" class="table table-condensed table-striped shrinked">
+  <thead>
+    <%= render 'items_header' %>
+  </thead>
+  <tbody>
+    <%= f.simple_fields_for :purchase_order_items do |i| %>
+    <tr>
+      <td><%= i.input :descrption %></td>
+      <% if current_page?(new_purchase_order_path) || current_page?(edit_purchase_order_path) %>
+      <td><%= link_to_remove_fields('<i class="icon-trash"></i>'.html_safe, i, title: t('ag2_purchase.purchase_orders.delete_item')) %></td>
+      <% end %>
+    </tr>
+  </tbody>
+</table>
+

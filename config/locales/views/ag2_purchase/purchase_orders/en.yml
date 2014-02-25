@@ -29,3 +29,4 @@ en:
       commercial_info: "Accounting & Commercial Info"
       fiscal_error: "Wrong Fiscal Id or Entity (TaxPayer) does not exist."
       code_error: "Unable to generate Supplier Code: No Activity chosen."
+      delete_item: "Delete this Order item."

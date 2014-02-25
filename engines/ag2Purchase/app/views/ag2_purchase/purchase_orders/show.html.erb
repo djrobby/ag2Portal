@@ -58,7 +58,7 @@ new_path: new_purchase_order_path, new_txt: t('ag2_purchase.purchase_orders.inde
 <% if (@items.count > 0) %>
 <table class="table table-condensed table-striped shrinked">
   <thead>
-    <%= render 'itemsheader' %>
+    <%= render 'items_header' %>
   </thead>
   <tbody>
     <%= render partial: 'item', collection: @items %>

@@ -1,7 +1,3 @@
 <tr>
   <td><%= item.product.product_code %></td>
-  <% if @breadcrumb == 'update'%>
-  <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => PurchaseOrderItem, :path => edit_purchase_order_path(item.purchase_order) } %>
-  <%= render :partial => '/layouts/crud/delete', :locals => { :model => PurchaseOrderItem, :path => item, :msg => t("activerecord.models.purchase_order_item.one"), :txt => item.id } %> </td>
-  <% end %>
 </tr>

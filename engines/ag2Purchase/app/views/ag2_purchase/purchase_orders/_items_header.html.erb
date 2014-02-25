@@ -1,6 +1,6 @@
 <tr>
   <th><%= t "activerecord.attributes.purchase_order_item.product" %></th>
-  <% if @breadcrumb == 'update'%>
+  <% if current_page?(new_purchase_order_path) || current_page?(edit_purchase_order_path) %>
   <th></th>
   <% end %>
 </tr>

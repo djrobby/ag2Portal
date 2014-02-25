@@ -29,3 +29,4 @@ es:
       commercial_info: "Información Contable y Comercial"
       fiscal_error: "Id Fiscal erróneo o Entidad (Sujeto Pasivo) no existe."
       code_error: "Imposible generar Código de Proveedor: No has elegido Actividad."
+      delete_item: "Borrar este Item de pedido."
