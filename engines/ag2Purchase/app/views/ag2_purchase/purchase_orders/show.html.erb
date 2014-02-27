@@ -55,8 +55,19 @@
 delete_path: @purchase_order, delete_txt: t('.btn_delete'), msg: t("activerecord.models.purchase_order.one"), txt: @purchase_order.order_no,
 new_path: new_purchase_order_path, new_txt: t('ag2_purchase.purchase_orders.index.btn_new') } %>
 
+<table class="form-table">
+  <tbody>
+    <tr class="form-tr underlined-tr">
+      <td class="form-td-two left-winged">
+        <h4><%= t 'ag2_purchase.purchase_orders.items_info' %></h4>
+      </td>
+      <td class="form-td-two right-winged">
+        <%= link_to t("ag2_products.products.prices"), ag2_products.purchase_prices_path(supplier: supplier), :class => 'btn btn-warning' %>
+      </td>
+    </tr>
+  </tbody>
+</table>
 <% if (@items.count > 0) %>
-<h4><%= t 'ag2_purchase.purchase_orders.items_info' %></h4>
 <table class="table table-condensed table-striped shrinked">
   <thead>
     <%= render 'items_header' %>

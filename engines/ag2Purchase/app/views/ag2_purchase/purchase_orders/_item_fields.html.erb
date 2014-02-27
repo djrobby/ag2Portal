@@ -1,0 +1,14 @@
+<div id="new-item-fields" class="modal hide fade in" style="display: none;">
+  <div class="modal-header">
+    <a class="close" data-dismiss="modal">×</a>
+    <h3><%= t("ag2_purchase.purchase_orders.add_item") %><%= t("ag2_purchase.purchase_orders.add_item_to", var: @purchase_order.order_no) unless @purchase_order.order_no.blank? %></h3>
+  </div>
+  <div class="modal-body">
+    <%= f.association :product, autofocus: true, collection: Product.all(order: 'main_description'), input_html: { class: 'x-large-text-field sel2', id: 'fnt-product' }, label_html: { class: 'form-label' } %>
+    <%= f.input :description, input_html: { class: 'x-large-text-field', maxlength: 40, id: 'fnt-description' }, label_html: { class: 'form-label' } %>
+  </div>
+  <div class="modal-footer">
+    <%= f.submit t('ag2_purchase.purchase_orders.btn_add_item'), :class => "btn btn-primary" %>
+    <a class="btn btn-primary" data-dismiss="modal" href="#"><%= t :close_button %></a>
+  </div>
+</div>

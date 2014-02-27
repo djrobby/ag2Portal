@@ -23,7 +23,20 @@
   <label class="multi-field-label-two"> <%= f.association :payment_method, collection: PaymentMethod.all(order: 'description'), input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %> </label>
   <label class="multi-field-label-two"> <%= f.association :order_status, collection: OrderStatus.all(order: 'id'), input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %> </label>
 </div>
-<h4><%= t 'ag2_purchase.purchase_orders.items_info' %></h4>
+<!-- Items -->
+<table class="form-table">
+  <tbody>
+    <tr class="form-tr underlined-tr">
+      <td class="form-td-two left-winged">
+        <h4><%= t 'ag2_purchase.purchase_orders.items_info' %></h4>
+      </td>
+      <td class="form-td-two right-winged">
+        <%= link_to_add_fields(t("ag2_purchase.purchase_orders.btn_new_item"), f, :purchase_order_items, class: "btn btn-warning", title: t("ag2_purchase.purchase_orders.add_item")) %>
+      </td>
+    </tr>
+  </tbody>
+</table>
 <%= render 'items_table', f: f %>
+<!-- Buttons -->
 <%= f.button :submit, :class => 'btn-primary' %>
 <% end %>
