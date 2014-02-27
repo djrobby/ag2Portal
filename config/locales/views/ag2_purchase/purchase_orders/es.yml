@@ -25,7 +25,7 @@ es:
       back_to_main_page: "Volver a Pedidos"
       generate_code_btn: "Código de Proveedor"
       validate_btn: "Validar"
-      personal_info: "Información del Proveedor"
+      items_info: "Items del Pedido"
       commercial_info: "Información Contable y Comercial"
       fiscal_error: "Id Fiscal erróneo o Entidad (Sujeto Pasivo) no existe."
       code_error: "Imposible generar Código de Proveedor: No has elegido Actividad."

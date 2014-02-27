@@ -23,5 +23,7 @@
   <label class="multi-field-label-two"> <%= f.association :payment_method, collection: PaymentMethod.all(order: 'description'), input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %> </label>
   <label class="multi-field-label-two"> <%= f.association :order_status, collection: OrderStatus.all(order: 'id'), input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %> </label>
 </div>
+<h4><%= t 'ag2_purchase.purchase_orders.items_info' %></h4>
+<%= render 'items_table', f: f %>
 <%= f.button :submit, :class => 'btn-primary' %>
 <% end %>

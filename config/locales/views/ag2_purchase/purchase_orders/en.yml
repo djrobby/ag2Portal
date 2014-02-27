@@ -25,7 +25,7 @@ en:
       back_to_main_page: "Back to Purchase orders"
       generate_code_btn: "Supplier Code"
       validate_btn: "Validate"
-      personal_info: "Supplier Info"
+      items_info: "Order Items"
       commercial_info: "Accounting & Commercial Info"
       fiscal_error: "Wrong Fiscal Id or Entity (TaxPayer) does not exist."
       code_error: "Unable to generate Supplier Code: No Activity chosen."

@@ -1,3 +1,11 @@
 <tr>
   <td><%= item.product.product_code %></td>
+  <td><%= item.description %></td>
+  <td align="right"><%= item.quantity %></td>
+  <td align="right"><%= number_to_currency(item.price, precision: 4, locale: :es) %></td>
+  <td align="right"><%= number_to_percentage(item.discount_pct, precision: 2, locale: :es) %></td>
+  <td align="right"><%= number_to_currency(item.discount, precision: 4, locale: :es) %></td>
+  <td align="right"><%= number_to_currency(item.amount, precision: 4, locale: :es) %></td>
+  <td align="right"><%= number_to_currency(item.tax, precision: 4, locale: :es) %></td>
+  <td align="right"><%= item.balance %></td>
 </tr>

@@ -23,7 +23,14 @@ class PurchaseOrderItem < ActiveRecord::Base
   validates :work_order,     :presence => true
   validates :charge_account, :presence => true
 
+  before_validation :fields_to_uppercase
   before_destroy :check_for_dependent_records
+
+  def fields_to_uppercase
+    if !self.description.blank?
+      self[:description].upcase!
+    end
+  end
 
   #
   # Calculated fields
