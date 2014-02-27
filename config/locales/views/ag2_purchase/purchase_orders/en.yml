@@ -17,6 +17,7 @@ en:
         subtable_title: "Supplier Contacts"
         subtable_prices_title: "Supplier Prices"
         return_to: "Back to Supplier"
+        print: "Print"
       edit:
         title: "Edit Order"
         btn_show: "Show Order"

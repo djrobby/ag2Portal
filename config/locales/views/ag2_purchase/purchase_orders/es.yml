@@ -17,6 +17,7 @@ es:
         subtable_title: "Contactos del Proveedor"
         subtable_prices_title: "Precios del Proveedor"
         return_to: "Volver a Proveedor"
+        print: "Imprimir"
       edit:
         title: "Editar Pedido"
         btn_show: "Ver Pedido"
