@@ -1,7 +1,9 @@
 <div id="new-item-fields" class="modal hide fade in" style="display: none;">
   <div class="modal-header">
     <a class="close" data-dismiss="modal">×</a>
-    <h3><%= t("ag2_purchase.purchase_orders.add_item") %><%= t("ag2_purchase.purchase_orders.add_item_to", var: @purchase_order.order_no) unless @purchase_order.order_no.blank? %></h3>
+    <span><%= t("ag2_purchase.purchase_orders.add_item_to", var: @purchase_order.order_no) unless @purchase_order.order_no.blank? %></span>
+    <h3><%= t("ag2_purchase.purchase_orders.add_item") %></h3>
+    <span class="shrinked"><%= I18n.t(:mandatory_subtitle) %></span>
   </div>
   <div class="modal-body">
     <%= f.association :product, autofocus: true, collection: Product.all(order: 'main_description'), input_html: { class: 'x-large-text-field sel2 field', id: 'fnt-product' }, label_html: { class: 'form-label' } %>

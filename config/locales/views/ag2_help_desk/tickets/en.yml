@@ -23,7 +23,6 @@ en:
       new_ticket:
         title: "Support Request"
         btn_new: "Send Request"
-        footer: "Remember that the fields marked with * are mandatory!"
         submit: "Request has been sent."
         error: "can't be blank"
       back_to_main_page: "Back to Tickets"

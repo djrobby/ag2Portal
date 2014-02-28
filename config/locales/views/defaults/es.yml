@@ -31,3 +31,4 @@ es:
   next: "Siguiente"
   prev: "Anterior"
   duplicate: "Duplicados"
+  mandatory_subtitle: "¡Recuerda que los campos marcados con * son obligatorios!"

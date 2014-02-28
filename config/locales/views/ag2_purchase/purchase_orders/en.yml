@@ -31,6 +31,6 @@ en:
       code_error: "Unable to generate Supplier Code: No Activity chosen."
       delete_item: "Delete this Item"
       add_item: "Add new Item"
-      add_item_to: " to Order %{var}"
+      add_item_to: "Order %{var}"
       btn_new_item: "New Item"
       btn_add_item: "Add"

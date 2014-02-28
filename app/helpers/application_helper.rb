@@ -34,12 +34,14 @@ module ApplicationHelper
   end
   
   # Add
-  def link_to_add_fields(name, f, association, options = {})
+  def link_to_add_fields(name, f, association, fields_partial, options = {})
     new_object = f.object.class.reflect_on_association(association).klass.new
-    fields = f.fields_for(association, new_object, :child_index => "new_#{ association }", :onsubmit => "return $(this.)validate();") do |builder|
-      render(association.to_s.singularize + "_fields", :f => builder)
+    #fields = f.fields_for(association, new_object, :child_index => "new_#{ association }", :onsubmit => "return $(this.)validate();") do |builder|
+    fields = f.simple_fields_for(association, new_object, :child_index => "new_#{ fields_partial }", :onsubmit => "return $(this.)validate();") do |builder|
+      render(fields_partial, :f => builder)
+      #render(association.to_s.singularize + "_fields", :f => builder)
     end
-
-    link_to_function(name, "add_fields(this, \"#{ association }\", \"#{ escape_javascript(fields) }\")", options)
+    #link_to_function(name, "add_fields(this, \"#{ association }\", \"#{ escape_javascript(fields) }\")", options)
+    link_to_function(name, "add_fields(this, \"#{ fields_partial }\", \"#{ escape_javascript(fields) }\")", options)
   end
 end

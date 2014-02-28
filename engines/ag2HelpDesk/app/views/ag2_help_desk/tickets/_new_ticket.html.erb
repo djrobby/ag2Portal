@@ -45,7 +45,7 @@
     <div class="modal-header">
       <a class="close" data-dismiss="modal">&#215;</a>
       <h3><%= I18n.t('ag2_help_desk.tickets.new_ticket.title') %></h3>
-      <%= I18n.t('ag2_help_desk.tickets.new_ticket.footer') %>
+      <span class="shrinked"><%= I18n.t(:mandatory_subtitle) %></span>
     </div>
     <div class="modal-body">
       <%= f.association :ticket_category, :autofocus => true, collection: TicketCategory.all(order: 'name'), :input_html => { :class => 'mid-text-field', :id => 'fnt_category', :data => { :validation => "required", "validation-error-msg" => "#{e}" } }, :label_html => { :class => 'form-label' } %>

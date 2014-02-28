@@ -55,7 +55,6 @@
 delete_path: @purchase_order, delete_txt: t('.btn_delete'), msg: t("activerecord.models.purchase_order.one"), txt: @purchase_order.order_no,
 new_path: new_purchase_order_path, new_txt: t('ag2_purchase.purchase_orders.index.btn_new') } %>
 
-<% if (@items.count > 0) %>
 <table class="form-table">
   <tbody>
     <tr class="form-tr underlined-tr">
@@ -68,6 +67,7 @@ new_path: new_purchase_order_path, new_txt: t('ag2_purchase.purchase_orders.inde
     </tr>
   </tbody>
 </table>
+<% if (@items.count > 0) %>
 <table class="table table-condensed table-striped shrinked">
   <thead>
     <%= render 'items_header' %>
