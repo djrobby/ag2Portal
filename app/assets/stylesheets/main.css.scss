@@ -872,3 +872,12 @@ div.indicator-green-progress-bordered {
      -moz-box-shadow: inset 0 1px 0 #ffffff;
           box-shadow: inset 0 1px 0 #ffffff;
 }
+
+/*
+ * jQuery Form Validator
+ */
+.jquery_form_error_message {
+  display: block;
+  margin-top: 3px;
+  color: #f00;
+}

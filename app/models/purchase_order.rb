@@ -20,6 +20,8 @@ class PurchaseOrder < ActiveRecord::Base
                                 :allow_destroy => true
   has_paper_trail
 
+  validates_associated :purchase_order_items
+  
   validates :order_date,     :presence => true
   validates :order_no,       :presence => true,
                              :length => { :minimum => 5 },

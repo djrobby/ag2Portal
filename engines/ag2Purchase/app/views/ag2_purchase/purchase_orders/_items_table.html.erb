@@ -4,7 +4,7 @@
   </thead>
   <tbody>
     <%= f.simple_fields_for :purchase_order_items do |i| %>
-    <tr>
+    <tr class="fields">
       <td><%= i.label :product.product_code %></td>
       <td><%= i.input :description, label: false, input_html: { onkeyup: "caps(this)" } %></td>
       <td><%= i.input :quantity, label: false, as: :string, input_html: { value: (number_with_precision(f.object.quantity, precision: 4) if f.object.quantity), class: 'number-text-field' } %></td>

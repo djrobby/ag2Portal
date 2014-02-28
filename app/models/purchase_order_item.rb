@@ -14,14 +14,15 @@ class PurchaseOrderItem < ActiveRecord::Base
 
   has_paper_trail
 
-  validates :purchase_order, :presence => true
-  validates :description,    :presence => true
-  validates :product,        :presence => true
-  validates :tax_type,       :presence => true
-  validates :project,        :presence => true
-  validates :store,          :presence => true
-  validates :work_order,     :presence => true
-  validates :charge_account, :presence => true
+  validates :purchase_order,  :presence => true
+  validates :description,     :presence => true,
+                              :length => { :maximum => 40 }
+  validates :product,         :presence => true
+  validates :tax_type,        :presence => true
+  validates :project,         :presence => true
+  validates :store,           :presence => true
+  validates :work_order,      :presence => true
+  validates :charge_account,  :presence => true
 
   before_validation :fields_to_uppercase
   before_destroy :check_for_dependent_records

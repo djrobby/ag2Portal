@@ -4,11 +4,16 @@
     <h3><%= t("ag2_purchase.purchase_orders.add_item") %><%= t("ag2_purchase.purchase_orders.add_item_to", var: @purchase_order.order_no) unless @purchase_order.order_no.blank? %></h3>
   </div>
   <div class="modal-body">
-    <%= f.association :product, autofocus: true, collection: Product.all(order: 'main_description'), input_html: { class: 'x-large-text-field sel2', id: 'fnt-product' }, label_html: { class: 'form-label' } %>
-    <%= f.input :description, input_html: { class: 'x-large-text-field', maxlength: 40, id: 'fnt-description' }, label_html: { class: 'form-label' } %>
+    <%= f.association :product, autofocus: true, collection: Product.all(order: 'main_description'), input_html: { class: 'x-large-text-field sel2 field', id: 'fnt-product' }, label_html: { class: 'form-label' } %>
+    <%= f.input :description, input_html: { class: 'x-large-text-field field', maxlength: 40, id: 'fnt-description' }, label_html: { class: 'form-label' } %>
+    <%= f.input :_destroy, as: :hidden, input_html: { class: 'field' } %>
   </div>
   <div class="modal-footer">
-    <%= f.submit t('ag2_purchase.purchase_orders.btn_add_item'), :class => "btn btn-primary" %>
-    <a class="btn btn-primary" data-dismiss="modal" href="#"><%= t :close_button %></a>
+    <button id="addButton" type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><%= t('ag2_purchase.purchase_orders.btn_add_item') %></button>
+    <button id="cancelButton" type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><%= t :close_button %></button>
   </div>
 </div>
+
+<script type="text/javascript">
+  itemFieldsUI.init();
+</script>

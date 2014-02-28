@@ -1,6 +1,25 @@
 <script>
+  var validationSettings;
+
+  $(document).ready(function() {
+    validationSettings = {
+      errorMessagePosition : 'element'
+    };
+  });
+  
   jQuery(function($) {
-    $('#form_new_ticket').on('submit', function() {
+    $('#form_new_ticket').on('submit', function(e) {
+      var isValid = $('#form_new_ticket').validate(false, validationSettings);
+      if (!isValid) {
+        // Error
+        e.stopPropagation();
+        return false;
+      } else {
+        // Hide the modal and exit
+        $("#new-ticket").modal('hide');
+        alert('<%= I18n.t("ag2_help_desk.tickets.new_ticket.submit") %>');
+      }
+      /*
       var category = $('select#fnt_category :selected').val();
       var priority = $('select#fnt_priority :selected').val();
       var subject = $('#fnt_subject').val();
@@ -14,12 +33,14 @@
         $("#new-ticket").modal('hide');
         alert('<%= I18n.t("ag2_help_desk.tickets.new_ticket.submit") %>');
       }
+       */
     });
   })
 </script>
 
 <div id="new-ticket" class="modal hide fade in" style="display: none;">
   <% if user_signed_in? %>
+    <% e = I18n.t('ag2_help_desk.tickets.new_ticket.error') %>
     <%= simple_form_for Ticket.new, :url => ag2_help_desk.popup_new_tickets_path, :remote => :true, :html => { "data-type" => :json, :class => 'form-inline', :id => 'form_new_ticket' } do |f| %>
     <div class="modal-header">
       <a class="close" data-dismiss="modal">&#215;</a>
@@ -27,10 +48,10 @@
       <%= I18n.t('ag2_help_desk.tickets.new_ticket.footer') %>
     </div>
     <div class="modal-body">
-      <%= f.association :ticket_category, :autofocus => true, collection: TicketCategory.all(order: 'name'), :input_html => { :class => 'mid-text-field', :id => 'fnt_category' }, :label_html => { :class => 'form-label' } %>
-      <%= f.association :ticket_priority, collection: TicketPriority.all(order: 'id'), :input_html => { :class => 'mid-text-field', :id => 'fnt_priority' }, :label_html => { :class => 'form-label' } %>
-      <%= f.input :ticket_subject, :input_html => { :class => 'x-large-text-field', :maxlength => 20, :id => 'fnt_subject' }, :label_html => { :class => 'form-label' } %>
-      <%= f.input :ticket_message, :as => :text, :input_html => { :class => 'x-large-text-field', :rows => 3, :id => 'fnt_message' }, :label_html => { :class => 'form-label' } %>
+      <%= f.association :ticket_category, :autofocus => true, collection: TicketCategory.all(order: 'name'), :input_html => { :class => 'mid-text-field', :id => 'fnt_category', :data => { :validation => "required", "validation-error-msg" => "#{e}" } }, :label_html => { :class => 'form-label' } %>
+      <%= f.association :ticket_priority, collection: TicketPriority.all(order: 'id'), :input_html => { :class => 'mid-text-field', :id => 'fnt_priority', :data => { :validation => "required", "validation-error-msg" => "#{e}" } }, :label_html => { :class => 'form-label' } %>
+      <%= f.input :ticket_subject, :input_html => { :class => 'x-large-text-field', :maxlength => 20, :id => 'fnt_subject', :data => { :validation => "required", "validation-error-msg" => "#{e}" } }, :label_html => { :class => 'form-label' } %>
+      <%= f.input :ticket_message, :as => :text, :input_html => { :class => 'x-large-text-field', :rows => 3, :id => 'fnt_message', :data => { :validation => "required", "validation-error-msg" => "#{e}" } }, :label_html => { :class => 'form-label' } %>
       <%= f.input :attachment, :as => :file, :label_html => { :class => 'form-label' } %>
       <%= hidden_field_tag :referrer, "#{request.protocol}#{request.host_with_port}#{request.fullpath}" %>
     </div>
