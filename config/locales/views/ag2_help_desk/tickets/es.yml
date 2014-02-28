@@ -26,8 +26,4 @@ es:
         footer: "¡Recuerda que los campos marcados con * son obligatorios!"
         submit: "La solicitud ha sido enviada."
         error: "no puede estar en blanco"
-        category: "Category"
-        priority: "Priority"
-        message: "Message"
-        subject: "Subject"
       back_to_main_page: "Volver a Solicitudes"
