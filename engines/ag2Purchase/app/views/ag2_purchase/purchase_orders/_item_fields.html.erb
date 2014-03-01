@@ -1,3 +1,11 @@
+<script>
+  $(document).ready(function() {
+    $('.isel2').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; }
+    });
+  });
+</script>
+
 <div id="new-item-fields" class="modal hide fade in" style="display: none;">
   <div class="modal-header">
     <a class="close" data-dismiss="modal">×</a>
@@ -6,7 +14,7 @@
     <span class="shrinked"><%= I18n.t(:mandatory_subtitle) %></span>
   </div>
   <div class="modal-body">
-    <%= f.association :product, autofocus: true, collection: Product.all(order: 'main_description'), input_html: { class: 'x-large-text-field sel2 field', id: 'fnt-product' }, label_html: { class: 'form-label' } %>
+    <%= f.association :product, autofocus: true, collection: Product.all(order: 'main_description'), input_html: { class: 'x-large-text-field isel2 field', id: 'fnt-product' }, label_html: { class: 'form-label' } %>
     <%= f.input :description, input_html: { class: 'x-large-text-field field', maxlength: 40, id: 'fnt-description' }, label_html: { class: 'form-label' } %>
     <%= f.input :_destroy, as: :hidden, input_html: { class: 'field' } %>
   </div>

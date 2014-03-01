@@ -38,6 +38,7 @@ module Ag2Purchase
       @breadcrumb = 'create'
       @purchase_order = PurchaseOrder.new
       @offers = Offer.order(:supplier_id, :offer_no, :id)
+      #@purchase_order.purchase_order_items.build
   
       respond_to do |format|
         format.html # new.html.erb
