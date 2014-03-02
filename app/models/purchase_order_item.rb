@@ -41,7 +41,7 @@ class PurchaseOrderItem < ActiveRecord::Base
   end
 
   def tax
-    tax_type.tax * amount
+    tax_type.tax * amount if !tax_type.nil?
   end
   
   def balance
