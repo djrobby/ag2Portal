@@ -38,7 +38,7 @@
   })
 </script>
 
-<div id="new-ticket" class="modal hide fade in" style="display: none;">
+<div id="new-ticket" class="modal hide fade" style="display: none;">
   <% if user_signed_in? %>
     <% e = t('ag2_help_desk.tickets.new_ticket.error') %>
     <%= simple_form_for Ticket.new, :url => ag2_help_desk.popup_new_tickets_path, :remote => :true, :html => { "data-type" => :json, :class => 'form-inline', :id => 'form_new_ticket' } do |f| %>

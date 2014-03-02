@@ -18,6 +18,16 @@ function add_fields(link, association, content) {
     var regex = new RegExp("new_" + association, "g");
     $(link).parent().after(content.replace(regex, new_id));
     $('#new-item-fields').modal('show');
+    // Special datepicker
+    $('.idatepicker').datepicker({
+      format : 'dd/mm/yyyy',
+      weekStart : 1,
+      orientation : "bottom left"
+    });
+    // Special select2
+    $('.isel2').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; }
+    });
 }
 
 // Set up the UI/UX for the master screens.  This object sets up all the functionality we need to:

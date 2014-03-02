@@ -1,20 +1,15 @@
 <script>
   $(document).ready(function() {
-    // Special select2
-    $('.isel2').select2({
-      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; }
-    });
-    $('.idatepicker').datepicker({
-      format : 'dd/mm/yyyy',
-      weekStart : 1
-    });
     // Disable calculated fields
     $('#fnt-amount').prop('readonly', true);
     $('#fnt-tax').prop('readonly', true);
+    if ($('#fnt-delivery-date').val() == "") {
+      $('#fnt-delivery-date').val(new Date());
+    }
   });
 </script>
 
-<div id="new-item-fields" class="modal hide fade in" style="display: none;">
+<div id="new-item-fields" class="modal hide fade" style="display: none; z-index: 1150">
   <div class="modal-header">
     <a class="close" data-dismiss="modal">×</a>
     <span><%= t("ag2_purchase.purchase_orders.add_item_to", var: @purchase_order.order_no) unless @purchase_order.order_no.blank? %></span>
