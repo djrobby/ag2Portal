@@ -21,8 +21,9 @@ function add_fields(link, association, content) {
     // Special datepicker
     $('.idatepicker').datepicker({
       format : 'dd/mm/yyyy',
-      weekStart : 1,
-      orientation : "bottom left"
+      weekStart : 1
+    }).on('changeDate', function(e){
+    	$('.idatepicker').datepicker('hide');
     });
     // Special select2
     $('.isel2').select2({

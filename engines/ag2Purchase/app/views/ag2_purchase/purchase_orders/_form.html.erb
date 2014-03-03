@@ -6,7 +6,12 @@
     $('.date_picker').datepicker({
       format : 'dd/mm/yyyy',
       weekStart : 1
+    }).on('changeDate', function(e){
+      $('.date_picker').datepicker('hide');
     });
+    if ($('#purchase_order_order_date').val() == "") {
+      $('#purchase_order_order_date').datepicker('setValue', es_date(new Date()));
+    }
   });
 </script>
 

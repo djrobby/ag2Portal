@@ -3,16 +3,12 @@
     // Disable calculated fields
     $('#fnt-amount').prop('readonly', true);
     $('#fnt-tax').prop('readonly', true);
-    if ($('#fnt-delivery-date').val() == "") {
-      $('#fnt-delivery-date').val(new Date());
-    }
   });
 </script>
 
 <div id="new-item-fields" class="modal hide fade" style="display: none; z-index: 1150">
   <div class="modal-header">
     <a class="close" data-dismiss="modal">×</a>
-    <span><%= t("ag2_purchase.purchase_orders.add_item_to", var: @purchase_order.order_no) unless @purchase_order.order_no.blank? %></span>
     <h3><%= t("ag2_purchase.purchase_orders.add_item") %></h3>
     <span class="shrinked"><%= I18n.t(:mandatory_subtitle) %></span>
   </div>
@@ -35,6 +31,7 @@
     <%= f.input :_destroy, as: :hidden, input_html: { class: 'field' } %>
   </div>
   <div class="modal-footer">
+    <span class="left-floated" style="vertical-align: bottom"><%= t("ag2_purchase.purchase_orders.add_item_to", var: @purchase_order.order_no) unless @purchase_order.order_no.blank? %></span>
     <button id="addButton" type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><%= t('ag2_purchase.purchase_orders.btn_add_item') %></button>
     <button id="cancelButton" type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><%= t :close_button %></button>
   </div>

@@ -136,12 +136,12 @@
   })
 </script>
 
-<div id="new-entity" class="modal" style="display: none;">
+<div id="new-entity" class="modal fade" style="display: none;">
   <%= simple_form_for Entity.new, :url => ag2_admin.entities_path, :remote => :true, :html => { "data-type" => :json, :class => 'form-inline', :id => 'form_new_entity' } do |f| %>
   <div class="modal-header">
     <a class="close" data-dismiss="modal">&#215;</a>
     <h3><%= I18n.t('ag2_admin.entities.new_entity.title') %></h3>
-    <%= I18n.t('ag2_admin.entities.new_entity.footer') %>
+    <span class="shrinked"><%= I18n.t(:mandatory_subtitle) %></span>
   </div>
   <div class="modal-body">
     <%= f.association :entity_type, :autofocus => true, collection: EntityType.all(order: 'name'), :input_html => { :class => 'mid-text-field', :id => 'fnt_entity_type' }, :label_html => { :class => 'form-label' } %>
