@@ -13,7 +13,7 @@ function remove_fields(link) {
     $(link).closest(".fields").hide();
 }
 // Display modal to add new item
-function add_fields(link, association, content) {
+function add_fields(link, association, content, sel2NoMatches) {
     var new_id = new Date().getTime();
     var regex = new RegExp("new_" + association, "g");
     $(link).parent().after(content.replace(regex, new_id));
@@ -26,8 +26,8 @@ function add_fields(link, association, content) {
     	$('.idatepicker').datepicker('hide');
     });
     // Special select2
-    $('.isel2').select2({
-      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; }
+    $('select.isel2').select2({
+      formatNoMatches: function(m) { return sel2NoMatches; }
     });
 }
 
@@ -48,7 +48,7 @@ var itemFieldsUI = {
         };
 
         // Run validation on an input element when it loses focus.
-        $('#new-item-fields').validateOnBlur();
+        //$('#new-item-fields').validateOnBlur();
 
         $('#addButton').on('click', function(e) {
             // If the form validation on our Items modal "form" fails, stop everything and prompt the user
@@ -56,12 +56,11 @@ var itemFieldsUI = {
             var isValid = $('#new-item-fields').validate(false, validationSettings);
             if(!isValid) {
                 e.stopPropagation();
-
                 return false;
             }
-
             formHandler.appendFields();
             formHandler.hideForm();
+            alert('Added');
         });
     }
 };

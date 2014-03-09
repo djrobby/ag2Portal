@@ -35,6 +35,7 @@ module ApplicationHelper
   
   # Add
   def link_to_add_fields(name, f, association, fields_partial, options = {})
+    sel2NoMatch = t("select2.no_matches")
     new_object = f.object.class.reflect_on_association(association).klass.new
     #fields = f.fields_for(association, new_object, :child_index => "new_#{ association }", :onsubmit => "return $(this.)validate();") do |builder|
     fields = f.simple_fields_for(association, new_object, :child_index => "new_#{ fields_partial }", :onsubmit => "return $(this.)validate();") do |builder|
@@ -42,6 +43,6 @@ module ApplicationHelper
       #render(association.to_s.singularize + "_fields", :f => builder)
     end
     #link_to_function(name, "add_fields(this, \"#{ association }\", \"#{ escape_javascript(fields) }\")", options)
-    link_to_function(name, "add_fields(this, \"#{ fields_partial }\", \"#{ escape_javascript(fields) }\")", options)
+    link_to_function(name, "add_fields(this, \"#{ fields_partial }\", \"#{ escape_javascript(fields) }\", \"#{ sel2NoMatch }\")", options)
   end
 end

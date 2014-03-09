@@ -34,3 +34,4 @@ es:
       add_item_to: "Pedido %{var}"
       btn_new_item: "Nuevo Item"
       btn_add_item: "Agregar"
+      item_error: "no puede estar en blanco"

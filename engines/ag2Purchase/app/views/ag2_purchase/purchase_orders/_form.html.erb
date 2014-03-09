@@ -1,6 +1,6 @@
 <script>
   $(document).ready(function() {
-    $('.sel2').select2({
+    $('select.sel2').select2({
       formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; }
     });
     $('.date_picker').datepicker({

@@ -34,3 +34,4 @@ en:
       add_item_to: "Order %{var}"
       btn_new_item: "New Item"
       btn_add_item: "Add"
+      item_error: "can't be blank"

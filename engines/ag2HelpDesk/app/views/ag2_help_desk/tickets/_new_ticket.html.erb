@@ -5,6 +5,8 @@
     validationSettings = {
       errorMessagePosition : 'element'
     };
+    // Run validation on an input element when it loses focus.    
+    //$('#new-item-fields').validateOnBlur();
   });
   
   jQuery(function($) {
@@ -14,11 +16,10 @@
         // Error
         e.stopPropagation();
         return false;
-      } else {
-        // Hide the modal and exit
-        $("#new-ticket").modal('hide');
-        alert('<%= I18n.t("ag2_help_desk.tickets.new_ticket.submit") %>');
       }
+      // Hide the modal and exit
+      $("#new-ticket").modal('hide');
+      alert('<%= I18n.t("ag2_help_desk.tickets.new_ticket.submit") %>');
       /*
       var category = $('select#fnt_category :selected').val();
       var priority = $('select#fnt_priority :selected').val();
