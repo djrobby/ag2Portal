@@ -1,0 +1,21 @@
+<h1>Listing charge_accounts</h1>
+
+<table>
+  <tr>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @charge_accounts.each do |charge_account| %>
+  <tr>
+    <td><%= link_to 'Show', charge_account %></td>
+    <td><%= link_to 'Edit', edit_charge_account_path(charge_account) %></td>
+    <td><%= link_to 'Destroy', charge_account, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Charge account', new_charge_account_path %>

@@ -1,0 +1,21 @@
+<h1>Listing work_order_labors</h1>
+
+<table>
+  <tr>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @work_order_labors.each do |work_order_labor| %>
+  <tr>
+    <td><%= link_to 'Show', work_order_labor %></td>
+    <td><%= link_to 'Edit', edit_work_order_labor_path(work_order_labor) %></td>
+    <td><%= link_to 'Destroy', work_order_labor, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Work order labor', new_work_order_labor_path %>
