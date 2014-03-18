@@ -31,6 +31,25 @@ class WorkOrder < ActiveRecord::Base
 
   before_destroy :check_for_dependent_records
 
+  #
+  # Records navigator
+  #
+  def to_first
+    WorkOrder.order("order_no").first
+  end
+
+  def to_prev
+    WorkOrder.where("order_no < ?", id).order("order_no").last
+  end
+
+  def to_next
+    WorkOrder.where("order_no > ?", id).order("order_no").first
+  end
+
+  def to_last
+    WorkOrder.order("order_no").last
+  end
+
   private
 
   def check_for_dependent_records

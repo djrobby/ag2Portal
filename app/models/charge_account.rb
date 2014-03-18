@@ -19,6 +19,25 @@ class ChargeAccount < ActiveRecord::Base
 
   before_destroy :check_for_dependent_records
 
+  #
+  # Records navigator
+  #
+  def to_first
+    ChargeAccount.order("account_code").first
+  end
+
+  def to_prev
+    ChargeAccount.where("account_code < ?", id).order("account_code").last
+  end
+
+  def to_next
+    ChargeAccount.where("account_code > ?", id).order("account_code").first
+  end
+
+  def to_last
+    ChargeAccount.order("account_code").last
+  end
+
   private
 
   def check_for_dependent_records

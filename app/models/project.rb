@@ -21,6 +21,25 @@ class Project < ActiveRecord::Base
 
   before_destroy :check_for_dependent_records
 
+  #
+  # Records navigator
+  #
+  def to_first
+    Project.order("id").first
+  end
+
+  def to_prev
+    Project.where("id < ?", id).order("id").last
+  end
+
+  def to_next
+    Project.where("id > ?", id).order("id").first
+  end
+
+  def to_last
+    Project.order("id").last
+  end
+
   private
 
   def check_for_dependent_records
