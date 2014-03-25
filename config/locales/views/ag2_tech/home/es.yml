@@ -1,0 +1,8 @@
+es:
+  ag2_tech:
+    home:
+      index:
+        control: "Control&Seguimiento"
+        work_order_types: "Tipos de OT"
+        work_order_statuses: "Estados de OT"
+        work_order_labors: "Labores para OT"

@@ -1,0 +1,21 @@
+es:
+  ag2_tech:
+    breadcrumb:
+      charge_accounts:
+        items: "Cuentas de cargo"
+        item: "Cuenta"
+      projects:
+        items: "Proyectos"
+        item: "Proyecto"
+      work_orders:
+        items: "Ordenes de trabajo"
+        item: "Orden"
+      work_order_labors:
+        items: "Labores para OT"
+        item: "Labor"
+      work_order_statuses:
+        items: "Estados de OT"
+        item: "Estado"
+      work_order_types:
+        items: "Tipos de OT"
+        item: "Tipo"

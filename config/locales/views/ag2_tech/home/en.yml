@@ -1,0 +1,8 @@
+en:
+  ag2_tech:
+    home:
+      index:
+        control: "Control&Tracking"
+        work_order_types: "Work order types"
+        work_order_statuses: "Work order statuses"
+        work_order_labors: "Work order labors"

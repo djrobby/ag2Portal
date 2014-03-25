@@ -1,6 +1,6 @@
-<% content_for :title, "aGestiona2 | ag2Projects" %>
-<% content_for :icon, "/assets/icon/ag2Projects.png" %>
-<% content_for :alt, "ag2Projects" %>
+<% content_for :title, "aGestiona2 | ag2WorkOrders" %>
+<% content_for :icon, "/assets/icon/ag2WorkOrders.png" %>
+<% content_for :alt, "ag2WorkOrders" %>
 
 <!-- Breadcrumb -->
 <ul class="breadcrumb">
@@ -10,17 +10,17 @@
   <li>
     <a href="<%= ag2_tech.root_path %>">ag2Tech</a><span class="divider">></span>
   </li>
-  <% if @projects %>
+  <% if @work_orders %>
   <li>
-    ag2Projects
+    ag2WorkOrders
   </li>
   <% end %>
-  <% if @project %>
+  <% if @work_order %>
   <li>
-    <a href="<%= projects_path %>">ag2Projects</a><span class="divider">></span>
+    <a href="<%= work_orders_path %>">ag2WorkOrders</a><span class="divider">></span>
   </li>
   <% if @breadcrumb == 'read' || @breadcrumb == 'update' %>
-  <%=t :"ag2_tech.breadcrumb.projects.item" %>
+  <%=t :"ag2_tech.breadcrumb.work_orders.item" %>
   <% end %>
   <% if @breadcrumb == 'create' %>
   <li>
@@ -33,22 +33,22 @@
     <span class="divider"></span>
   </li>
   <li>
-    <%= link_to @project.to_first, :class => 'notice-icon-button', :id => 'first', :title => I18n.t(:first) do %>
+    <%= link_to @work_order.to_first, :class => 'notice-icon-button', :id => 'first', :title => I18n.t(:first) do %>
     <i class="icon-fast-backward"></i>
     <% end %>
   </li>
   <li>
-    <%= link_to @project.to_prev, :class => 'notice-icon-button', :id => 'prev', :title => I18n.t(:prev) do %>
+    <%= link_to @work_order.to_prev, :class => 'notice-icon-button', :id => 'prev', :title => I18n.t(:prev) do %>
     <i class="icon-backward"></i>
     <% end %>
   </li>
   <li>
-    <%= link_to @project.to_next, :class => 'notice-icon-button', :id => 'next', :title => I18n.t(:next) do %>
+    <%= link_to @work_order.to_next, :class => 'notice-icon-button', :id => 'next', :title => I18n.t(:next) do %>
     <i class="icon-forward"></i>
     <% end %>
   </li>
   <li>
-    <%= link_to @project.to_last, :class => 'notice-icon-button', :id => 'last', :title => I18n.t(:last) do %>
+    <%= link_to @work_order.to_last, :class => 'notice-icon-button', :id => 'last', :title => I18n.t(:last) do %>
     <i class="icon-fast-forward"></i>
     <% end %>
   </li>

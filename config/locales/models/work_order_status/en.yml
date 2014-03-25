@@ -6,7 +6,7 @@ en:
         one:   Work order status
         few:   Work order statuses
         other: Work order statuses
-        check_for_work_orders: "Work order status cannot be destroyed while linked work orders exist."
+        check_for_work_orders: "Status cannot be destroyed while linked work orders exist."
     attributes:
       work_order_status:
         name: "Description"

@@ -1,0 +1,21 @@
+en:
+  ag2_tech:
+    breadcrumb:
+      charge_accounts:
+        items: "Charge accounts"
+        item: "Account"
+      projects:
+        items: "Projects"
+        item: "Project"
+      work_orders:
+        items: "Work orders"
+        item: "Order"
+      work_order_labors:
+        items: "Work order labors"
+        item: "Labor"
+      work_order_statuses:
+        items: "Work order statuses"
+        item: "Status"
+      work_order_types:
+        items: "Work order types"
+        item: "Type"
