@@ -59,7 +59,7 @@
             <td><%= product.product_type.description %></td>
             <td><%= product.product_family.name %></td>
             <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => Product, :path => edit_product_path(product) } %>
-            <%= render :partial => '/layouts/crud/delete', :locals => { :model => Product, :path => product, :msg => t("activerecord.models.product.one"), :txt => product.product_code } %> </td>
+            <%= render :partial => '/layouts/crud/delete', :locals => { :model => Product, :path => product, :msg => t("activerecord.models.product.one"), :txt => product.full_name } %> </td>
           </tr>
           <% end %>
         </tbody>

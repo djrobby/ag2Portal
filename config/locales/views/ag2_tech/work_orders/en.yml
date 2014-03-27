@@ -1,0 +1,20 @@
+en:
+  ag2_tech:
+    work_orders:
+      index:
+        title: "Work orders"
+        btn_new: "New Work order"
+        back_to_root: "Back to ag2Tech"
+      show:
+        title: "Work order"
+        btn_edit: "Edit Work order"
+        btn_delete: "Delete Work order"
+      edit:
+        title: "Edit Work order"
+        btn_show: "Show Work order"
+      new:
+        title: "New Work order"
+      back_to_main_page: "Back to Work orders"
+      generate_code_btn: "Order No"
+      validate_btn: "Validate"
+      code_error: "Unable to generate Order No: No Activity chosen."

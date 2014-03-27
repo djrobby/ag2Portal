@@ -69,6 +69,11 @@ class Client < ActiveRecord::Base
     Client.order("client_code").last
   end
 
+  searchable do
+    text :client_code, :name, :fiscal_id, :street_name, :phone, :cellular, :email
+    string :client_code
+  end
+
   private
 
   def check_for_dependent_records
@@ -77,10 +82,5 @@ class Client < ActiveRecord::Base
       errors.add(:base, I18n.t('activerecord.models.client.check_for_delivery_notes'))
       return false
     end
-  end
-
-  searchable do
-    text :client_code, :name, :fiscal_id, :street_name, :phone, :cellular, :email
-    string :client_code
   end
 end

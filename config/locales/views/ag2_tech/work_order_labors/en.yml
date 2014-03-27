@@ -1,0 +1,17 @@
+en:
+  ag2_tech:
+    work_order_labors:
+      index:
+        title: "Work order labors"
+        btn_new: "New Work order labor"
+        back_to_root: "Back to ag2Tech"
+      show:
+        title: "Work order labor"
+        btn_edit: "Edit Work order labor"
+        btn_delete: "Delete Work order labor"
+      edit:
+        title: "Edit Work order labor"
+        btn_show: "Show Work order labor"
+      new:
+        title: "New Work order labor"
+      back_to_main_page: "Back to Work order labors"

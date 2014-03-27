@@ -1,0 +1,20 @@
+en:
+  ag2_tech:
+    charge_accounts:
+      index:
+        title: "Charge accounts"
+        btn_new: "New Charge account"
+        back_to_root: "Back to ag2Tech"
+      show:
+        title: "Charge account"
+        btn_edit: "Edit Charge account"
+        btn_delete: "Delete Charge account"
+      edit:
+        title: "Edit Charge account"
+        btn_show: "Show Charge account"
+      new:
+        title: "New Charge account"
+      back_to_main_page: "Back to Charge accounts"
+      generate_code_btn: "Account Code"
+      validate_btn: "Validate"
+      code_error: "Unable to generate Account Code: No Activity chosen."

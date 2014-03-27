@@ -50,7 +50,18 @@ class Product < ActiveRecord::Base
   end
 
   def to_label
-    "#{product_code} #{main_description[0,40]}"
+    "#{full_name}"
+  end
+
+  def full_name
+    full_name = ""
+    if !self.product_code.blank?
+      full_name += self.product_code
+    end
+    if !self.main_description.blank?
+      full_name += " " + self.main_description[0,40]
+    end
+    full_name
   end
 
   #

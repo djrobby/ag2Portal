@@ -1,0 +1,17 @@
+en:
+  ag2_tech:
+    projects:
+      index:
+        title: "Projects"
+        btn_new: "New Project"
+        back_to_root: "Back to ag2Tech"
+      show:
+        title: "Project"
+        btn_edit: "Edit Project"
+        btn_delete: "Delete Project"
+      edit:
+        title: "Edit Project"
+        btn_show: "Show Project"
+      new:
+        title: "New Project"
+      back_to_main_page: "Back to Projects"

@@ -2,10 +2,10 @@ es:
   activerecord:
     models:
       work_order_status:
-        zero:  Estados de ordenes de trabajo
-        one:   Estado de orden de trabajo
-        few:   Estados de ordenes de trabajo
-        other: Estados de ordenes de trabajo
+        zero:  Estados de OT
+        one:   Estado de OT
+        few:   Estados de OT
+        other: Estados de OT
         check_for_work_orders: "Estado no puede ser eliminado mientras existan ordenes de trabajo vinculadas."
     attributes:
       work_order_status:

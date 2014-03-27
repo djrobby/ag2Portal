@@ -1,0 +1,20 @@
+es:
+  ag2_tech:
+    charge_accounts:
+      index:
+        title: "Cuentas de cargo"
+        btn_new: "Nueva Cuenta de cargo"
+        back_to_root: "Volver a ag2Tech"
+      show:
+        title: "Cuenta de cargo"
+        btn_edit: "Editar Cuenta de cargo"
+        btn_delete: "Borrar Cuenta de cargo"
+      edit:
+        title: "Editar Cuenta de cargo"
+        btn_show: "Ver Cuenta de cargo"
+      new:
+        title: "Nueva Cuenta de cargo"
+      back_to_main_page: "Volver a Cuentas de cargo"
+      generate_code_btn: "Código de Cuenta"
+      validate_btn: "Validar"
+      code_error: "Imposible generar Código de Cuenta: No has elegido Actividad."

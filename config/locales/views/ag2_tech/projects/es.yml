@@ -1,0 +1,17 @@
+es:
+  ag2_tech:
+    projects:
+      index:
+        title: "Proyectos"
+        btn_new: "Nuevo Proyecto"
+        back_to_root: "Volver a ag2Tech"
+      show:
+        title: "Proyecto"
+        btn_edit: "Editar Proyecto"
+        btn_delete: "Borrar Proyecto"
+      edit:
+        title: "Editar Proyecto"
+        btn_show: "Ver Proyecto"
+      new:
+        title: "Nuevo Proyecto"
+      back_to_main_page: "Volver a Proyectos"

@@ -19,6 +19,21 @@ class ChargeAccount < ActiveRecord::Base
 
   before_destroy :check_for_dependent_records
 
+  def to_label
+    "#{full_name}"
+  end
+
+  def full_name
+    full_name = ""
+    if !self.account_code.blank?
+      full_name += self.account_code
+    end
+    if !self.name.blank?
+      full_name += " " + self.name[0,40]
+    end
+    full_name
+  end
+
   #
   # Records navigator
   #
@@ -36,6 +51,11 @@ class ChargeAccount < ActiveRecord::Base
 
   def to_last
     ChargeAccount.order("account_code").last
+  end
+
+  searchable do
+    text :account_code, :name
+    string :account_code
   end
 
   private

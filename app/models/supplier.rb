@@ -87,6 +87,11 @@ class Supplier < ActiveRecord::Base
     Supplier.order("supplier_code").last
   end
 
+  searchable do
+    text :supplier_code, :name, :fiscal_id, :street_name, :phone, :cellular, :email
+    string :supplier_code
+  end
+
   private
 
   def check_for_dependent_records
@@ -120,10 +125,5 @@ class Supplier < ActiveRecord::Base
       errors.add(:base, I18n.t('activerecord.models.supplier.check_for_supplier_payments'))
       return false
     end
-  end
-
-  searchable do
-    text :supplier_code, :name, :fiscal_id, :street_name, :phone, :cellular, :email
-    string :supplier_code
   end
 end

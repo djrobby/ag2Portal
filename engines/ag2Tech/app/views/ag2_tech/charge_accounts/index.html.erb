@@ -1,21 +1,37 @@
-<h1>Listing charge_accounts</h1>
+<%= render '/layouts/ag2_tech/caccountsbreadcrumb' %>
+<%= render :partial => '/layouts/searchhead', :locals => { :title => t(".title"), :path => charge_accounts_path } %>
 
-<table>
-  <tr>
-    <th></th>
-    <th></th>
-    <th></th>
-  </tr>
-
-<% @charge_accounts.each do |charge_account| %>
-  <tr>
-    <td><%= link_to 'Show', charge_account %></td>
-    <td><%= link_to 'Edit', edit_charge_account_path(charge_account) %></td>
-    <td><%= link_to 'Destroy', charge_account, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-  </tr>
-<% end %>
-</table>
-
-<br />
-
-<%= link_to 'New Charge account', new_charge_account_path %>
+<div class="span11">
+  <table class="table table-condensed table-striped">
+    <thead>
+      <tr>
+        <th><%= t 'activerecord.attributes.charge_account.account_code' %></th>
+        <th><%= t 'activerecord.attributes.charge_account.name' %></th>
+        <th><%= t 'activerecord.attributes.charge_account.project' %></th>
+        <th><%= t 'activerecord.attributes.charge_account.opened_at' %></th>
+        <th><%= t 'activerecord.attributes.charge_account.closed_at' %></th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @charge_accounts.each do |account| %>
+      <% if account.closed_at.blank? %>
+      <tr>
+      <% else %>
+      <tr class="inactive-row">
+      <% end %>
+        <td><%= link_to account.supplier_code, account %></td>
+        <td><%= account.name %></td>
+        <td><%= account.project.name unless account.project.blank? %></td>
+        <td><%= account.opened_at unless supplier.opened_at.blank? %></td>
+        <td><%= account.closed_at unless supplier.closed_at.blank? %></td>
+        <td> <%= render :partial => '/layouts/crud/edit', :locals => { :model => ChargeAccount, :path => edit_charge_account_path(account) } %>
+        <%= render :partial => '/layouts/crud/delete', :locals => { :model => ChargeAccount, :path => account, :msg => t("activerecord.models.charge_account.one"), :txt => account.full_name } %> </td>
+      </tr>
+      <% end %>
+    </tbody>
+  </table>
+  <%= render :partial => '/layouts/pagination', :locals => { :ivar => @charge_accounts } %>
+  <%= render :partial => '/layouts/crud/new', :locals => { :model => ChargeAccount, :path => new_charge_account_path, :txt => t(".btn_new") } %>
+  <%= link_to t(".back_to_root"), ag2_tech.root_path %>
+</div>

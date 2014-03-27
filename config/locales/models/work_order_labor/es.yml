@@ -2,10 +2,10 @@ es:
   activerecord:
     models:
       work_order_labor:
-        zero:  Labores para ordenes de trabajo
-        one:   Labor para orden de trabajo
-        few:   Labores para ordenes de trabajo
-        other: Labores para ordenes de trabajo
+        zero:  Labores para OT
+        one:   Labor para OT
+        few:   Labores para OT
+        other: Labores para OT
         check_for_work_orders: "Labor no puede ser eliminada mientras existan ordenes de trabajo vinculadas."
     attributes:
       work_order_labor:

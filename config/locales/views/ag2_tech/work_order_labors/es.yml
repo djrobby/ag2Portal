@@ -1,0 +1,17 @@
+es:
+  ag2_tech:
+    work_order_labors:
+      index:
+        title: "Labores para OT"
+        btn_new: "Nueva Labor para OT"
+        back_to_root: "Volver a ag2Tech"
+      show:
+        title: "Labor para OT"
+        btn_edit: "Editar Labor para OT"
+        btn_delete: "Borrar Labor para OT"
+      edit:
+        title: "Editar Labor para OT"
+        btn_show: "Ver Labor para OT"
+      new:
+        title: "Nueva Labor para OT"
+      back_to_main_page: "Volver a Labores para OT"

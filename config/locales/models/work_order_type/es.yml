@@ -2,10 +2,10 @@ es:
   activerecord:
     models:
       work_order_type:
-        zero:  Tipos de ordenes de trabajo
-        one:   Tipo de orden de trabajo
-        few:   Tipos de ordenes de trabajo
-        other: Tipos de ordenes de trabajo
+        zero:  Tipos de OT
+        one:   Tipo de OT
+        few:   Tipos de OT
+        other: Tipos de OT
         check_for_work_orders: "Tipo no puede ser eliminado mientras existan ordenes de trabajo vinculadas."
     attributes:
       work_order_type:

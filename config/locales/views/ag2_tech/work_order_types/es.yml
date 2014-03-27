@@ -1,0 +1,17 @@
+es:
+  ag2_tech:
+    work_order_types:
+      index:
+        title: "Tipos de OT"
+        btn_new: "Nuevo Tipo de OT"
+        back_to_root: "Volver a ag2Tech"
+      show:
+        title: "Tipo de OT"
+        btn_edit: "Editar Tipo de OT"
+        btn_delete: "Borrar Tipo de OT"
+      edit:
+        title: "Editar Tipo de OT"
+        btn_show: "Ver Tipo de OT"
+      new:
+        title: "Nuevo Tipo de OT"
+      back_to_main_page: "Volver a Tipos de OT"
