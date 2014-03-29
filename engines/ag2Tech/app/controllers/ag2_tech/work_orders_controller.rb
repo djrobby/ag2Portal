@@ -4,13 +4,16 @@ module Ag2Tech
   class WorkOrdersController < ApplicationController
     before_filter :authenticate_user!
     load_and_authorize_resource
-    # Helper methods for sorting
-    helper_method :sort_column
 
     # GET /work_orders
     # GET /work_orders.json
     def index
-      @work_orders = WorkOrder.paginate(:page => params[:page], :per_page => per_page).order(sort_column + ' ' + sort_direction)
+      @search = ChargeAccount.search do
+        fulltext params[:search]
+        order_by :order_no, :asc
+        paginate :page => params[:page] || 1, :per_page => per_page
+      end
+      @work_orders = @search.results
   
       respond_to do |format|
         format.html # index.html.erb
@@ -100,12 +103,6 @@ module Ag2Tech
           format.json { render json: @work_order.errors, status: :unprocessable_entity }
         end
       end
-    end
-
-    private
-
-    def sort_column
-      WorkOrderLabor.column_names.include?(params[:sort]) ? params[:sort] : "order_no"
     end
   end
 end

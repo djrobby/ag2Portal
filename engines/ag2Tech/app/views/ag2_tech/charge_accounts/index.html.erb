@@ -20,11 +20,11 @@
       <% else %>
       <tr class="inactive-row">
       <% end %>
-        <td><%= link_to account.supplier_code, account %></td>
+        <td><%= link_to account.account_code, account %></td>
         <td><%= account.name %></td>
         <td><%= account.project.name unless account.project.blank? %></td>
-        <td><%= account.opened_at unless supplier.opened_at.blank? %></td>
-        <td><%= account.closed_at unless supplier.closed_at.blank? %></td>
+        <td><%= account.opened_at unless account.opened_at.blank? %></td>
+        <td><%= account.closed_at unless account.closed_at.blank? %></td>
         <td> <%= render :partial => '/layouts/crud/edit', :locals => { :model => ChargeAccount, :path => edit_charge_account_path(account) } %>
         <%= render :partial => '/layouts/crud/delete', :locals => { :model => ChargeAccount, :path => account, :msg => t("activerecord.models.charge_account.one"), :txt => account.full_name } %> </td>
       </tr>

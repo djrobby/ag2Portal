@@ -9,7 +9,8 @@ class WorkOrder < ActiveRecord::Base
   belongs_to :client
   attr_accessible :closed_at, :completed_at, :order_no, :started_at,
                   :work_order_labor_id, :work_order_status_id, :work_order_type_id,
-                  :charge_account_id, :project_id, :area_id, :store_id, :client_id
+                  :charge_account_id, :project_id, :area_id, :store_id, :client_id,
+                  :remarks
 
   has_many :work_order_items, dependent: :destroy
   has_many :work_order_workers, dependent: :destroy
@@ -48,6 +49,17 @@ class WorkOrder < ActiveRecord::Base
 
   def to_last
     WorkOrder.order("order_no").last
+  end
+
+  searchable do
+    text :order_no, :remarks
+    string :order_no
+    integer :charge_account_id
+    integer :project_id
+    integer :client_id
+    date :started_at
+    date :completed_at
+    date :closed_at
   end
 
   private

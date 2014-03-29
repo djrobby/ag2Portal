@@ -40,6 +40,11 @@ class Project < ActiveRecord::Base
     Project.order("id").last
   end
 
+  searchable do
+    text :name
+    integer :id
+  end
+
   private
 
   def check_for_dependent_records

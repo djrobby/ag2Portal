@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140218193217) do
+ActiveRecord::Schema.define(:version => 20140329103556) do
 
   create_table "activities", :force => true do |t|
     t.string   "description"
@@ -1511,6 +1511,7 @@ ActiveRecord::Schema.define(:version => 20140218193217) do
     t.integer  "created_by"
     t.integer  "updated_by"
     t.integer  "client_id"
+    t.string   "remarks"
   end
 
   add_index "work_orders", ["area_id"], :name => "index_work_orders_on_area_id"

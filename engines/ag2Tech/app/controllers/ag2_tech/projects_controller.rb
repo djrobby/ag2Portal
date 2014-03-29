@@ -4,13 +4,16 @@ module Ag2Tech
   class ProjectsController < ApplicationController
     before_filter :authenticate_user!
     load_and_authorize_resource
-    # Helper methods for sorting
-    helper_method :sort_column
 
     # GET /projects
     # GET /projects.json
     def index
-      @projects = Project.paginate(:page => params[:page], :per_page => per_page).order(sort_column + ' ' + sort_direction)
+      @search = ChargeAccount.search do
+        fulltext params[:search]
+        order_by :id, :asc
+        paginate :page => params[:page] || 1, :per_page => per_page
+      end
+      @projects = @search.results
   
       respond_to do |format|
         format.html # index.html.erb
@@ -100,12 +103,6 @@ module Ag2Tech
           format.json { render json: @project.errors, status: :unprocessable_entity }
         end
       end
-    end
-
-    private
-
-    def sort_column
-      Project.column_names.include?(params[:sort]) ? params[:sort] : "name"
     end
   end
 end
