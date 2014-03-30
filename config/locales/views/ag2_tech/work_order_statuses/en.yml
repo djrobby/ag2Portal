@@ -2,16 +2,16 @@ en:
   ag2_tech:
     work_order_statuses:
       index:
-        title: "Work order statuses"
-        btn_new: "New Work order status"
+        title: "WO statuses"
+        btn_new: "New WO status"
         back_to_root: "Back to ag2Tech"
       show:
-        title: "Work order status"
-        btn_edit: "Edit Work order status"
-        btn_delete: "Delete Work order status"
+        title: "WO status"
+        btn_edit: "Edit WO status"
+        btn_delete: "Delete WO status"
       edit:
-        title: "Edit Work order status"
-        btn_show: "Show Work order status"
+        title: "Edit WO status"
+        btn_show: "Show WO status"
       new:
-        title: "New Work order status"
-      back_to_main_page: "Back to Work order statuses"
+        title: "New WO status"
+      back_to_main_page: "Back to WO statuses"

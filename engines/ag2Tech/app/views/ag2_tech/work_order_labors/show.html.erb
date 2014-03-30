@@ -1,5 +1,22 @@
-<p id="notice"><%= notice %></p>
+<%= render '/layouts/ag2_tech/worderlaborsbreadcrumb' %>
 
+<h3><%=t '.title' %></h3>
+<table class="table">
+  <tbody>
+    <tr>
+      <td>Id:</td>
+      <td><%= @work_order_labor.id %></td>
+      <td><%=t 'activerecord.attributes.work_order_labor.name' %>:</td>
+      <td><%= @work_order_labor.name.titleize %></td>
+    </tr>
+    <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @work_order_labor } %>
+    <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @work_order_labor } %>
+  </tbody>
+</table>
 
-<%= link_to 'Edit', edit_work_order_labor_path(@work_order_labor) %> |
-<%= link_to 'Back', work_order_labors_path %>
+<%= render partial: '/layouts/crud/update_delete_new', locals:
+{ model: WorkOrderLabor, update_path: edit_work_order_labor_path(@work_order_labor), update_txt: t('.btn_edit'),
+delete_path: @work_order_labor, delete_txt: t('.btn_delete'), msg: t("activerecord.models.work_order_labor.one"), txt: @work_order_labor.name,
+new_path: new_work_order_labor_path, new_txt: t('ag2_tech.work_order_labors.index.btn_new') } %>
+
+<%= link_to t("ag2_tech.work_order_labors.back_to_main_page"), work_order_labors_path %>

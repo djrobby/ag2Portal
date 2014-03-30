@@ -2,10 +2,10 @@ en:
   activerecord:
     models:
       work_order_type:
-        zero:  Work order types
-        one:   Work order type
-        few:   Work order types
-        other: Work order types
+        zero:  WO types
+        one:   WO type
+        few:   WO types
+        other: WO types
         check_for_work_orders: "Type cannot be destroyed while linked work orders exist."
     attributes:
       work_order_type:

@@ -11,11 +11,11 @@ en:
         items: "Work orders"
         item: "Order"
       work_order_labors:
-        items: "Work order labors"
+        items: "WO labors"
         item: "Labor"
       work_order_statuses:
-        items: "Work order statuses"
+        items: "WO statuses"
         item: "Status"
       work_order_types:
-        items: "Work order types"
+        items: "WO types"
         item: "Type"

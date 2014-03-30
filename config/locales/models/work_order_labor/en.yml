@@ -2,10 +2,10 @@ en:
   activerecord:
     models:
       work_order_labor:
-        zero:  Work order labors
-        one:   Work order labor
-        few:   Work order labors
-        other: Work order labors
+        zero:  WO labors
+        one:   WO labor
+        few:   WO labors
+        other: WO labors
         check_for_work_orders: "Labor cannot be destroyed while linked work orders exist."
     attributes:
       work_order_labor:

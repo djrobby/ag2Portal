@@ -1,21 +1,25 @@
-<h1>Listing work_order_types</h1>
+<%= render '/layouts/ag2_tech/wordertypesbreadcrumb' %>
 
-<table>
-  <tr>
-    <th></th>
-    <th></th>
-    <th></th>
-  </tr>
-
-<% @work_order_types.each do |work_order_type| %>
-  <tr>
-    <td><%= link_to 'Show', work_order_type %></td>
-    <td><%= link_to 'Edit', edit_work_order_type_path(work_order_type) %></td>
-    <td><%= link_to 'Destroy', work_order_type, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-  </tr>
-<% end %>
-</table>
-
-<br />
-
-<%= link_to 'New Work order type', new_work_order_type_path %>
+<h3><%=t '.title' %></h3>
+<div class="span7">
+  <table class="table table-condensed table-striped">
+    <thead>
+      <tr>
+        <th><%= sortable "name", t('activerecord.attributes.work_order_type.name') %></th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @work_order_types.each do |type| %>
+      <tr>
+        <td><%= link_to type.name, type %></td>
+        <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => WorkOrderType, :path => edit_work_order_type_path(type) } %>
+        <%= render :partial => '/layouts/crud/delete', :locals => { :model => WorkOrderType, :path => type, :msg => t("activerecord.models.work_order_type.one"), :txt => type.name } %> </td>
+      </tr>
+      <% end %>
+    </tbody>
+  </table>
+  <%= render :partial => '/layouts/pagination', :locals => { :ivar => @work_order_types } %>
+  <%= render :partial => '/layouts/crud/new', :locals => { :model => WorkOrderType, :path => new_work_order_type_path, :txt => t(".btn_new") } %>
+  <%= link_to t(".back_to_root"), ag2_tech.root_path %>
+</div>

@@ -1,21 +1,27 @@
-<h1>Listing work_order_statuses</h1>
+<%= render '/layouts/ag2_tech/worderstatusesbreadcrumb' %>
 
-<table>
-  <tr>
-    <th></th>
-    <th></th>
-    <th></th>
-  </tr>
-
-<% @work_order_statuses.each do |work_order_status| %>
-  <tr>
-    <td><%= link_to 'Show', work_order_status %></td>
-    <td><%= link_to 'Edit', edit_work_order_status_path(work_order_status) %></td>
-    <td><%= link_to 'Destroy', work_order_status, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-  </tr>
-<% end %>
-</table>
-
-<br />
-
-<%= link_to 'New Work order status', new_work_order_status_path %>
+<h3><%=t '.title' %></h3>
+<div class="span7">
+  <table class="table table-condensed table-striped">
+    <thead>
+      <tr>
+        <th><%= sortable "id", 'Id' %></th>
+        <th><%= sortable "name", t('activerecord.attributes.work_order_status.name') %></th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @work_order_statuses.each do |status| %>
+      <tr>
+        <td><%= status.id %></td>
+        <td><%= link_to status.name, status %></td>
+        <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => WorkOrderStatus, :path => edit_work_order_status_path(status) } %>
+        <%= render :partial => '/layouts/crud/delete', :locals => { :model => WorkOrderStatus, :path => status, :msg => t("activerecord.models.work_order_status.one"), :txt => status.name } %> </td>
+      </tr>
+      <% end %>
+    </tbody>
+  </table>
+  <%= render :partial => '/layouts/pagination', :locals => { :ivar => @work_order_statuses } %>
+  <%= render :partial => '/layouts/crud/new', :locals => { :model => WorkOrderStatus, :path => new_work_order_status_path, :txt => t(".btn_new") } %>
+  <%= link_to t(".back_to_root"), ag2_tech.root_path %>
+</div>

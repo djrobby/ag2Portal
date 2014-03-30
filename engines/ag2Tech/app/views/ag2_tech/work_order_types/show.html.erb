@@ -1,5 +1,22 @@
-<p id="notice"><%= notice %></p>
+<%= render '/layouts/ag2_tech/wordertypesbreadcrumb' %>
 
+<h3><%=t '.title' %></h3>
+<table class="table">
+  <tbody>
+    <tr>
+      <td>Id:</td>
+      <td><%= @work_order_type.id %></td>
+      <td><%=t 'activerecord.attributes.work_order_type.name' %>:</td>
+      <td><%= @work_order_type.name.titleize %></td>
+    </tr>
+    <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @work_order_type } %>
+    <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @work_order_type } %>
+  </tbody>
+</table>
 
-<%= link_to 'Edit', edit_work_order_type_path(@work_order_type) %> |
-<%= link_to 'Back', work_order_types_path %>
+<%= render partial: '/layouts/crud/update_delete_new', locals:
+{ model: WorkOrderType, update_path: edit_work_order_type_path(@work_order_type), update_txt: t('.btn_edit'),
+delete_path: @work_order_type, delete_txt: t('.btn_delete'), msg: t("activerecord.models.work_order_type.one"), txt: @work_order_type.name,
+new_path: new_work_order_type_path, new_txt: t('ag2_tech.work_order_types.index.btn_new') } %>
+
+<%= link_to t("ag2_tech.work_order_types.back_to_main_page"), work_order_types_path %>

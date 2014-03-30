@@ -1,5 +1,7 @@
-<h1>New work_order_labor</h1>
+<%= render '/layouts/ag2_tech/worderlaborsbreadcrumb' %>
+
+<h3><%=t '.title' %></h3>
 
 <%= render 'form' %>
 
-<%= link_to 'Back', work_order_labors_path %>
+<%= link_to t("ag2_tech.work_order_labors.back_to_main_page"), work_order_labors_path %>

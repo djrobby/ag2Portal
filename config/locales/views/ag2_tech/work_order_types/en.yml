@@ -2,16 +2,16 @@ en:
   ag2_tech:
     work_order_types:
       index:
-        title: "Work order types"
-        btn_new: "New Work order type"
+        title: "WO types"
+        btn_new: "New WO type"
         back_to_root: "Back to ag2Tech"
       show:
-        title: "Work order type"
-        btn_edit: "Edit Work order type"
-        btn_delete: "Delete Work order type"
+        title: "WO type"
+        btn_edit: "Edit WO type"
+        btn_delete: "Delete WO type"
       edit:
-        title: "Edit Work order type"
-        btn_show: "Show Work order type"
+        title: "Edit WO type"
+        btn_show: "Show WO type"
       new:
-        title: "New Work order type"
-      back_to_main_page: "Back to Work order types"
+        title: "New WO type"
+      back_to_main_page: "Back to WO types"

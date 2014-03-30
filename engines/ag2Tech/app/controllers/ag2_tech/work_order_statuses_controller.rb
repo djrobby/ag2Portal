@@ -105,7 +105,7 @@ module Ag2Tech
     private
 
     def sort_column
-      WorkOrderStatus.column_names.include?(params[:sort]) ? params[:sort] : "name"
+      WorkOrderStatus.column_names.include?(params[:sort]) ? params[:sort] : "id"
     end
   end
 end

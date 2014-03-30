@@ -3,6 +3,6 @@ en:
     home:
       index:
         control: "Control&Tracking"
-        work_order_types: "Work order types"
-        work_order_statuses: "Work order statuses"
-        work_order_labors: "Work order labors"
+        work_order_types: "WO types"
+        work_order_statuses: "WO statuses"
+        work_order_labors: "WO labors"
