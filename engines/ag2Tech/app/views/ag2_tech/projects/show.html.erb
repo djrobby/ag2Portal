@@ -1,5 +1,40 @@
-<p id="notice"><%= notice %></p>
+<%= render '/layouts/ag2_tech/projectsbreadcrumb' %>
 
+<h3><%=t '.title' %></h3>
+<table class="table">
+  <tbody>
+    <tr>
+      <td>Id:</td>
+      <td><%= @project.id %></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><%=t 'activerecord.attributes.project.name' %>:</td>
+      <td><%= @project.name %></td>
+      <td><%=t 'activerecord.attributes.project.ledger_account' %>:</td>
+      <td><%= @project.ledger_account unless @project.ledger_account.blank? %></td>
+    </tr>
+    <tr>
+      <td><%= t :"activerecord.attributes.project.company" %>:</td>
+      <td><%= @project.company.name %></td>
+      <td><%= t :"activerecord.attributes.project.office" %>:</td>
+      <td><%= @project.office.name %></td>
+    </tr>
+    <tr>
+      <td><%= t :"activerecord.attributes.project.opened_at" %>:</td>
+      <td><%= @project.opened_at.strftime("%d/%m/%Y") unless @project.opened_at.blank? %></td>
+      <td><%= t :"activerecord.attributes.project.closed_at" %>:</td>
+      <td><%= @project.closed_at.strftime("%d/%m/%Y") unless @project.closed_at.blank? %></td>
+    </tr>
+    <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @project } %>
+    <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @project } %>
+  </tbody>
+</table>
 
-<%= link_to 'Edit', edit_project_path(@project) %> |
-<%= link_to 'Back', projects_path %>
+<%= render partial: '/layouts/crud/update_delete_new', locals:
+{ model: Project, update_path: edit_project_path(@project), update_txt: t('.btn_edit'),
+delete_path: @project, delete_txt: t('.btn_delete'), msg: t("activerecord.models.project.one"), txt: @project.full_name,
+new_path: new_project_path, new_txt: t('ag2_tech.projects.index.btn_new') } %>
+
+<%= link_to t("ag2_tech.projects.back_to_main_page"), projects_path %>

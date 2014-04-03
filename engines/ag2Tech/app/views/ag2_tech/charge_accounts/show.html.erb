@@ -1,5 +1,39 @@
-<p id="notice"><%= notice %></p>
+<%= render '/layouts/ag2_tech/caccountsbreadcrumb' %>
 
+<h3><%=t '.title' %></h3>
+<table class="table">
+  <tbody>
+    <tr>
+      <td>Id:</td>
+      <td><%= @charge_account.id %></td>
+      <td></td>
+      <td></td>
+    </tr>
+      <td><%=t 'activerecord.attributes.charge_account.account_code' %>:</td>
+      <td><%= @charge_account.account_code %></td>
+      <td><%=t 'activerecord.attributes.charge_account.ledger_account' %>:</td>
+      <td><%= @charge_account.ledger_account unless @charge_account.ledger_account.blank? %></td>
+    </tr>
+    <tr>
+      <td><%=t 'activerecord.attributes.charge_account.name' %>:</td>
+      <td><%= @charge_account.name %></td>
+      <td><%=t 'activerecord.attributes.charge_account.project' %>:</td>
+      <td><%= @charge_account.project.full_name %></td>
+    </tr>
+    <tr>
+      <td><%= t :"activerecord.attributes.charge_account.opened_at" %>:</td>
+      <td><%= @charge_account.opened_at.strftime("%d/%m/%Y") unless @charge_account.opened_at.blank? %></td>
+      <td><%= t :"activerecord.attributes.charge_account.closed_at" %>:</td>
+      <td><%= @charge_account.closed_at.strftime("%d/%m/%Y") unless @charge_account.closed_at.blank? %></td>
+    </tr>
+    <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @charge_account } %>
+    <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @charge_account } %>
+  </tbody>
+</table>
 
-<%= link_to 'Edit', edit_charge_account_path(@charge_account) %> |
-<%= link_to 'Back', charge_accounts_path %>
+<%= render partial: '/layouts/crud/update_delete_new', locals:
+{ model: ChargeAccount, update_path: edit_charge_account_path(@charge_account), update_txt: t('.btn_edit'),
+delete_path: @charge_account, delete_txt: t('.btn_delete'), msg: t("activerecord.models.charge_account.one"), txt: @charge_account.full_name,
+new_path: new_charge_account_path, new_txt: t('ag2_tech.charge_accounts.index.btn_new') } %>
+
+<%= link_to t("ag2_tech.charge_accounts.back_to_main_page"), charge_accounts_path %>

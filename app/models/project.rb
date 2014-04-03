@@ -21,6 +21,18 @@ class Project < ActiveRecord::Base
 
   before_destroy :check_for_dependent_records
 
+  def to_label
+    "#{full_name}"
+  end
+
+  def full_name
+    full_name = self.id.to_s
+    if !self.name.blank?
+      full_name += " - " + self.name[0,40]
+    end
+    full_name
+  end
+
   #
   # Records navigator
   #

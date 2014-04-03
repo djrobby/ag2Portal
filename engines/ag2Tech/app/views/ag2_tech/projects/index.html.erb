@@ -9,8 +9,8 @@
         <th><%= t 'activerecord.attributes.project.name' %></th>
         <th><%= t 'activerecord.attributes.project.company' %></th>
         <th><%= t 'activerecord.attributes.project.office' %></th>
-        <th><%= t 'activerecord.attributes.project.opened_at' %></th>
-        <th><%= t 'activerecord.attributes.project.closed_at' %></th>
+        <th align="center"><%= t 'activerecord.attributes.project.opened_at' %></th>
+        <th align="center"><%= t 'activerecord.attributes.project.closed_at' %></th>
         <th></th>
       </tr>
     </thead>
@@ -25,10 +25,10 @@
         <td><%= link_to project.name, project %></td>
         <td><%= project.company.name unless project.company.blank? %></td>
         <td><%= project.office.name unless project.office.blank? %></td>
-        <td><%= project.opened_at unless project.opened_at.blank? %></td>
-        <td><%= project.closed_at unless project.closed_at.blank? %></td>
+        <td align="center"><%= project.opened_at.strftime("%d/%m/%Y") unless project.opened_at.blank? %></td>
+        <td align="center"><%= project.closed_at.strftime("%d/%m/%Y") unless project.closed_at.blank? %></td>
         <td> <%= render :partial => '/layouts/crud/edit', :locals => { :model => Project, :path => edit_project_path(project) } %>
-        <%= render :partial => '/layouts/crud/delete', :locals => { :model => Project, :path => project, :msg => t("activerecord.models.project.one"), :txt => project.name } %> </td>
+        <%= render :partial => '/layouts/crud/delete', :locals => { :model => Project, :path => project, :msg => t("activerecord.models.project.one"), :txt => project.full_name } %> </td>
       </tr>
       <% end %>
     </tbody>

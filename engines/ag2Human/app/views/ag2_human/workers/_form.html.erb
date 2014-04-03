@@ -5,6 +5,8 @@
     $('.date_picker').datepicker({
       format : 'dd/mm/yyyy',
       weekStart : 1
+    }).on('changeDate', function(e){
+      $('.date_picker').datepicker('hide');
     });
     text_field_color = $("#worker_last_name").css('color')
   });

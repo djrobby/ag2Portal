@@ -4,11 +4,26 @@ module Ag2Tech
   class ProjectsController < ApplicationController
     before_filter :authenticate_user!
     load_and_authorize_resource
+    skip_load_and_authorize_resource :only => [:update_company_textfield_from_office]
+    
+    # Update company text field at view from office select
+    def update_company_textfield_from_office
+      @office = Office.find(params[:id])
+      @company = Company.find(@office.company)
 
+      respond_to do |format|
+        format.html # update_company_textfield_from_office.html.erb does not exist! JSON only
+        format.json { render json: @company }
+      end
+    end
+
+    #
+    # Default Methods
+    #
     # GET /projects
     # GET /projects.json
     def index
-      @search = ChargeAccount.search do
+      @search = Project.search do
         fulltext params[:search]
         order_by :id, :asc
         paginate :page => params[:page] || 1, :per_page => per_page

@@ -8,8 +8,8 @@
         <th><%= t 'activerecord.attributes.charge_account.account_code' %></th>
         <th><%= t 'activerecord.attributes.charge_account.name' %></th>
         <th><%= t 'activerecord.attributes.charge_account.project' %></th>
-        <th><%= t 'activerecord.attributes.charge_account.opened_at' %></th>
-        <th><%= t 'activerecord.attributes.charge_account.closed_at' %></th>
+        <th align="center"><%= t 'activerecord.attributes.charge_account.opened_at' %></th>
+        <th align="center"><%= t 'activerecord.attributes.charge_account.closed_at' %></th>
         <th></th>
       </tr>
     </thead>
@@ -23,8 +23,8 @@
         <td><%= link_to account.account_code, account %></td>
         <td><%= account.name %></td>
         <td><%= account.project.name unless account.project.blank? %></td>
-        <td><%= account.opened_at unless account.opened_at.blank? %></td>
-        <td><%= account.closed_at unless account.closed_at.blank? %></td>
+        <td align="center"><%= account.opened_at.strftime("%d/%m/%Y") unless account.opened_at.blank? %></td>
+        <td align="center"><%= account.closed_at.strftime("%d/%m/%Y") unless account.closed_at.blank? %></td>
         <td> <%= render :partial => '/layouts/crud/edit', :locals => { :model => ChargeAccount, :path => edit_charge_account_path(account) } %>
         <%= render :partial => '/layouts/crud/delete', :locals => { :model => ChargeAccount, :path => account, :msg => t("activerecord.models.charge_account.one"), :txt => account.full_name } %> </td>
       </tr>
