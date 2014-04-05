@@ -36,7 +36,7 @@
         <!--<td> <%= link_to supplier, :class => 'btn btn-mini', :id => 'show' do %> <i class="icon-eye-open"></i> <% end %>-->
         <% end %>
         <td> <%= render :partial => '/layouts/crud/edit', :locals => { :model => Supplier, :path => edit_supplier_path(supplier) } %>
-        <%= render :partial => '/layouts/crud/delete', :locals => { :model => Supplier, :path => supplier, :msg => t("activerecord.models.supplier.one"), :txt => supplier.name } %> </td>
+        <%= render :partial => '/layouts/crud/delete', :locals => { :model => Supplier, :path => supplier, :msg => t("activerecord.models.supplier.one"), :txt => supplier.full_name } %> </td>
       </tr>
       <% end %>
     </tbody>

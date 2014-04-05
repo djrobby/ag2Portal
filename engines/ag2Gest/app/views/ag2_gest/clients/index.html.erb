@@ -34,7 +34,7 @@
         <!--<td> <%= link_to client, :class => 'btn btn-mini', :id => 'show' do %> <i class="icon-eye-open"></i> <% end %>-->
         <% end %>
         <td> <%= render :partial => '/layouts/crud/edit', :locals => { :model => Client, :path => edit_client_path(client) } %>
-        <%= render :partial => '/layouts/crud/delete', :locals => { :model => Client, :path => client, :msg => t("activerecord.models.client.one"), :txt => client.name } %> </td>
+        <%= render :partial => '/layouts/crud/delete', :locals => { :model => Client, :path => client, :msg => t("activerecord.models.client.one"), :txt => client.full_name } %> </td>
       </tr>
       <% end %>
     </tbody>

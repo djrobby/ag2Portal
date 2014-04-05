@@ -14,6 +14,7 @@ es:
         check_for_supplier_invoices: "Proyecto no puede ser eliminado mientras existan facturas vinculadas."
     attributes:
       project:
+        project_code: "Código"
         name: "Nombre"
         opened_at: "Abierto el"
         closed_at: "Cerrado el"

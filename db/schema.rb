@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140329103556) do
+ActiveRecord::Schema.define(:version => 20140405100436) do
 
   create_table "activities", :force => true do |t|
     t.string   "description"
@@ -682,16 +682,19 @@ ActiveRecord::Schema.define(:version => 20140329103556) do
     t.integer  "office_id"
     t.integer  "company_id"
     t.string   "ledger_account"
-    t.datetime "created_at",     :null => false
-    t.datetime "updated_at",     :null => false
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
+    t.string   "project_code"
+    t.integer  "organization_id"
   end
 
   add_index "projects", ["company_id"], :name => "index_projects_on_company_id"
   add_index "projects", ["ledger_account"], :name => "index_projects_on_ledger_account"
   add_index "projects", ["name"], :name => "index_projects_on_name"
   add_index "projects", ["office_id"], :name => "index_projects_on_office_id"
+  add_index "projects", ["organization_id", "project_code"], :name => "index_projects_on_organization_id_and_project_code", :unique => true
 
   create_table "provinces", :force => true do |t|
     t.string   "name"

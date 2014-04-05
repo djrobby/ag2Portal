@@ -6,8 +6,8 @@
     <tr>
       <td>Id:</td>
       <td><%= @project.id %></td>
-      <td></td>
-      <td></td>
+      <td><%=t 'activerecord.attributes.project.project_code' %>:</td>
+      <td><%= @project.project_code %></td>
     </tr>
     <tr>
       <td><%=t 'activerecord.attributes.project.name' %>:</td>

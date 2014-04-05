@@ -39,12 +39,6 @@
       <td><%= t 'activerecord.attributes.product.manufacturer' %>:</td>
       <td><%= @product.manufacturer.name %></td>
     </tr>
-    <tr>
-      <td><%= t 'activerecord.attributes.product.remarks' %>:</td>
-      <td><%= @product.remarks unless @product.remarks.blank? %></td>
-      <td></td>
-      <td></td>
-    </tr>
     <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @product } %>
     <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @product } %>
   </tbody>
@@ -82,6 +76,15 @@
       <td><%= @product.warranty_time unless @product.warranty_time.blank? %></td>
       <td><%= t 'activerecord.attributes.product.life_time' %>:</td>
       <td><%= @product.life_time unless @product.life_time.blank? %></td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="table">
+  <tbody>
+    <tr>
+      <td style="width: 12%"><%= t :"activerecord.attributes.product.remarks" %>:</td>
+      <td style="width: 88%"><%= @product.remarks unless @product.remarks.blank? %></td>
     </tr>
   </tbody>
 </table>

@@ -18,7 +18,7 @@
     </tr>
     <tr>
       <td><%=t 'activerecord.attributes.purchase_price.supplier' %>:</td>
-      <td><%= @purchase_price.supplier.supplier_code %> <%= @purchase_price.supplier.name %></td>
+      <td><%= @purchase_price.supplier.full_name %></td>
       <td><%=t 'activerecord.attributes.purchase_price.price' %>:</td>
       <td><%= number_to_currency(@purchase_price.price, precision: 4, locale: :es) unless @purchase_price.price.blank? %></td>
     </tr>

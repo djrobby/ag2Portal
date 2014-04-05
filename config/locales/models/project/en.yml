@@ -14,6 +14,7 @@ en:
         check_for_supplier_invoices: "Project cannot be destroyed while linked invoices exist."
     attributes:
       project:
+        project_code: "Code"
         name: "Name"
         opened_at: "Opened at"
         closed_at: "Closed at"

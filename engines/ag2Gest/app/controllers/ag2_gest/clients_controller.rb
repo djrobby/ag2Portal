@@ -63,7 +63,7 @@ module Ag2Gest
       end
     end
 
-    # Update supplier code at view (generate_code_btn)
+    # Update client code at view (generate_code_btn)
     def update_code_textfield
       organization = '0001'
       code = ''

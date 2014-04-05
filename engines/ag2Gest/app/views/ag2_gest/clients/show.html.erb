@@ -68,18 +68,21 @@
       <td><%= t :"activerecord.attributes.client.country" %>:</td>
       <td><%= @client.country.name %></td>
     </tr>
+  </tbody>
+</table>
+
+<table class="table">
+  <tbody>
     <tr>
-      <td><%= t :"activerecord.attributes.client.remarks" %>:</td>
-      <td><%= @client.remarks unless @client.remarks.blank? %></td>
-      <td></td>
-      <td></td>
+      <td style="width: 12%"><%= t :"activerecord.attributes.client.remarks" %>:</td>
+      <td style="width: 88%"><%= @client.remarks unless @client.remarks.blank? %></td>
     </tr>
   </tbody>
 </table>
 
 <%= render partial: '/layouts/crud/update_delete_new', locals:
 { model: Client, update_path: edit_client_path(@client), update_txt: t('.btn_edit'),
-delete_path: @client, delete_txt: t('.btn_delete'), msg: t("activerecord.models.client.one"), txt: @client.name,
+delete_path: @client, delete_txt: t('.btn_delete'), msg: t("activerecord.models.client.one"), txt: @client.full_name,
 new_path: new_client_path, new_txt: t('ag2_gest.clients.index.btn_new') } %>
 
 <% if !session[:return_to].nil? %>

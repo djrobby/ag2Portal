@@ -25,7 +25,7 @@ module Ag2Tech
     def index
       @search = Project.search do
         fulltext params[:search]
-        order_by :id, :asc
+        order_by :project_code, :asc
         paginate :page => params[:page] || 1, :per_page => per_page
       end
       @projects = @search.results

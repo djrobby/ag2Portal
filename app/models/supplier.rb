@@ -58,7 +58,18 @@ class Supplier < ActiveRecord::Base
   end
 
   def to_label
-    "#{supplier_code} #{name}"
+    "#{full_name}"
+  end
+
+  def full_name
+    full_name = ""
+    if !self.supplier_code.blank?
+      full_name += self.supplier_code
+    end
+    if !self.name.blank?
+      full_name += " " + self.name[0,40]
+    end
+    full_name
   end
 
   #

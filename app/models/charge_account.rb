@@ -29,7 +29,7 @@ class ChargeAccount < ActiveRecord::Base
       full_name += self.account_code
     end
     if !self.name.blank?
-      full_name += " - " + self.name[0,40]
+      full_name += " " + self.name[0,40]
     end
     full_name
   end

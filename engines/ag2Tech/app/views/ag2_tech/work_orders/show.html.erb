@@ -1,5 +1,68 @@
-<p id="notice"><%= notice %></p>
+<%= render '/layouts/ag2_tech/wordersbreadcrumb' %>
 
+<h3><%=t '.title' %></h3>
+<table class="table">
+  <tbody>
+    <tr>
+      <td>Id:</td>
+      <td><%= @work_order.id %></td>
+      <td><%=t 'activerecord.attributes.work_order.order_no' %>:</td>
+      <td><%= @work_order.order_no %></td>
+    </tr>
+    <tr>
+      <td><%=t 'activerecord.attributes.work_order.project' %>:</td>
+      <td><%= @work_order.project.name %></td>
+      <td><%=t 'activerecord.attributes.work_order.charge_account' %>:</td>
+      <td><%= @work_order.charge_account.full_name %></td>
+    </tr>
+    <tr>
+      <td><%=t 'activerecord.attributes.work_order.area' %>:</td>
+      <td><%= @work_order.area.full_name unless @work_order.area.blank? %></td>
+      <td><%=t 'activerecord.attributes.work_order.work_order_type' %>:</td>
+      <td><%= @work_order.work_order_type.name %></td>
+    </tr>
+    <tr>
+      <td><%=t 'activerecord.attributes.work_order.work_order_labor' %>:</td>
+      <td><%= @work_order.work_order_labor.name %></td>
+      <td><%=t 'activerecord.attributes.work_order.work_order_status' %>:</td>
+      <td><%= @work_order.work_order_status.name %></td>
+    </tr>
+    <tr>
+      <td><%=t 'activerecord.attributes.work_order.client' %>:</td>
+      <td><%= @work_order.client.full_name unless @work_order.client.blank? %></td>
+      <td><%=t 'activerecord.attributes.work_order.store' %>:</td>
+      <td><%= @work_order.store.name unless @work_order.store.blank? %></td>
+    </tr>
+    <tr>
+      <td><%= t :"activerecord.attributes.work_order.started_at" %>:</td>
+      <td><%= @work_order.started_at.strftime("%d/%m/%Y") unless @work_order.started_at.blank? %></td>
+      <td><%= t :"activerecord.attributes.work_order.completed_at" %>:</td>
+      <td><%= @work_order.completed_at.strftime("%d/%m/%Y") unless @work_order.completed_at.blank? %></td>
+    </tr>
+    <tr>
+      <td><%= t :"activerecord.attributes.work_order.closed_at" %>:</td>
+      <td><%= @work_order.closed_at.strftime("%d/%m/%Y") unless @work_order.closed_at.blank? %></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @work_order } %>
+    <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @work_order } %>
+  </tbody>
+</table>
 
-<%= link_to 'Edit', edit_work_order_path(@work_order) %> |
-<%= link_to 'Back', work_orders_path %>
+<!-- Remarks -->
+<table class="table">
+  <tbody>
+    <tr>
+      <td style="width: 12%"><%= t :"activerecord.attributes.work_order.remarks" %>:</td>
+      <td style="width: 88%"><%= @work_order.remarks unless @work_order.remarks.blank? %></td>
+    </tr>
+  </tbody>
+</table>
+
+<%= render partial: '/layouts/crud/update_delete_new', locals:
+{ model: WorkOrder, update_path: edit_work_order_path(@work_order), update_txt: t('.btn_edit'),
+delete_path: @work_order, delete_txt: t('.btn_delete'), msg: t("activerecord.models.work_order.one"), txt: @work_order.order_no,
+new_path: new_work_order_path, new_txt: t('ag2_tech.work_orders.index.btn_new') } %>
+
+<%= link_to t("ag2_tech.work_orders.back_to_main_page"), work_orders_path %>

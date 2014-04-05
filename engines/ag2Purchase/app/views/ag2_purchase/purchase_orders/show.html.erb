@@ -17,27 +17,27 @@
     </tr>
     <tr>
       <td><%=t 'activerecord.attributes.purchase_order.supplier' %>:</td>
-      <td><%= @purchase_order.supplier.name %></td>
+      <td><%= @purchase_order.supplier.full_name %></td>
       <td><%=t 'activerecord.attributes.purchase_order.offer' %>:</td>
       <td><%= @purchase_order.offer.offer_no unless @purchase_order.offer.blank? %></td>
     </tr>
     <tr>
       <td><%=t 'activerecord.attributes.purchase_order.payment_method' %>:</td>
       <td> <%= @purchase_order.payment_method.description %> </td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
       <td><%=t 'activerecord.attributes.purchase_order.project' %>:</td>
       <td><%= @purchase_order.project.name unless @purchase_order.project.blank? %></td>
-    </tr>
-    <tr>
       <td><%=t 'activerecord.attributes.purchase_order.charge_account' %>:</td>
       <td> <%= @purchase_order.charge_account.name unless @purchase_order.charge_account.blank? %> </td>
-      <td><%=t 'activerecord.attributes.purchase_order.work_order' %>:</td>
-      <td><%= @purchase_order.work_order.order_no unless @purchase_order.work_order.blank? %></td>
     </tr>
     <tr>
+      <td><%=t 'activerecord.attributes.purchase_order.work_order' %>:</td>
+      <td><%= @purchase_order.work_order.order_no unless @purchase_order.work_order.blank? %></td>
       <td><%=t 'activerecord.attributes.purchase_order.store' %>:</td>
       <td> <%= @purchase_order.store.name unless @purchase_order.store.blank? %> </td>
-      <td><%= t :"activerecord.attributes.purchase_order.remarks" %>:</td>
-      <td><%= @purchase_order.remarks unless @purchase_order.remarks.blank? %></td>
     </tr>
     <tr>
       <td><%=t 'activerecord.attributes.purchase_order.retention_pct' %>:</td>
@@ -47,6 +47,16 @@
     </tr>
     <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @purchase_order } %>
     <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @purchase_order } %>
+  </tbody>
+</table>
+
+<!-- Remarks -->
+<table class="table">
+  <tbody>
+    <tr>
+      <td style="width: 12%"><%= t :"activerecord.attributes.purchase_order.remarks" %>:</td>
+      <td style="width: 88%"><%= @purchase_order.remarks unless @purchase_order.remarks.blank? %></td>
+    </tr>
   </tbody>
 </table>
 

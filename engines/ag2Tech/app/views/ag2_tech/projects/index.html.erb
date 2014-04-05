@@ -5,7 +5,7 @@
   <table class="table table-condensed table-striped">
     <thead>
       <tr>
-        <th><%= t 'activerecord.attributes.project.id' %></th>
+        <th><%= t 'activerecord.attributes.project.project_code' %></th>
         <th><%= t 'activerecord.attributes.project.name' %></th>
         <th><%= t 'activerecord.attributes.project.company' %></th>
         <th><%= t 'activerecord.attributes.project.office' %></th>
@@ -21,8 +21,8 @@
       <% else %>
       <tr class="inactive-row">
       <% end %>
-        <td><%= project.id %></td>
-        <td><%= link_to project.name, project %></td>
+        <td><%= link_to project.project_code, project %></td>
+        <td><%= project.name %></td>
         <td><%= project.company.name unless project.company.blank? %></td>
         <td><%= project.office.name unless project.office.blank? %></td>
         <td align="center"><%= project.opened_at.strftime("%d/%m/%Y") unless project.opened_at.blank? %></td>

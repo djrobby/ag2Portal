@@ -2,7 +2,7 @@ class Project < ActiveRecord::Base
   belongs_to :company
   belongs_to :office
   attr_accessible :closed_at, :ledger_account, :name, :opened_at,
-                  :office_id, :company_id
+                  :office_id, :company_id, :project_code
 
   has_many :charge_accounts
   has_many :work_orders
@@ -14,10 +14,13 @@ class Project < ActiveRecord::Base
 
   has_paper_trail
 
-  validates :name,      :presence => true
-  validates :opened_at, :presence => true
-  validates :company,   :presence => true
-  validates :office,    :presence => true
+  validates :name,          :presence => true
+  validates :project_code,  :presence => true,
+                            :length => { :minimum => 6 },
+                            :uniqueness => true
+  validates :opened_at,     :presence => true
+  validates :company,       :presence => true
+  validates :office,        :presence => true
 
   before_destroy :check_for_dependent_records
 
@@ -26,9 +29,12 @@ class Project < ActiveRecord::Base
   end
 
   def full_name
-    full_name = self.id.to_s
+    full_name = ""
+    if !self.project_code.blank?
+      full_name += self.project_code
+    end
     if !self.name.blank?
-      full_name += " - " + self.name[0,40]
+      full_name += " " + self.name[0,40]
     end
     full_name
   end
@@ -53,8 +59,8 @@ class Project < ActiveRecord::Base
   end
 
   searchable do
-    text :name
-    integer :id
+    text :project_code, :name
+    string :project_code
   end
 
   private

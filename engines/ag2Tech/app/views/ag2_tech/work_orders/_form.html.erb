@@ -1,17 +1,40 @@
-<%= form_for(@work_order) do |f| %>
-  <% if @work_order.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@work_order.errors.count, "error") %> prohibited this work_order from being saved:</h2>
+<script>
+  $(document).ready(function() {
+    $('.date_picker').datepicker({
+      format : 'dd/mm/yyyy',
+      weekStart : 1
+    }).on('changeDate', function(e){
+      $('.date_picker').datepicker('hide');
+    });
+  });
+  
+  jQuery(function($) {
+    // when the #work_order_project_id field changes
+    $("#work_order_project_id").change(function() {
+      // make a POST call and replace the content
+      var order = $('select#work_order_project_id :selected').val();
+      if (order == "")
+        order = "0";
+      jQuery.getJSON('update_account_textfield_from_project/' + order, function(data) {
+        $("#work_order_charge_account_id").val(data.id);
+      })
+      return false;
+    });
+  })
+</script>
 
-      <ul>
-      <% @work_order.errors.full_messages.each do |msg| %>
-        <li><%= msg %></li>
-      <% end %>
-      </ul>
-    </div>
-  <% end %>
-
-  <div class="actions">
-    <%= f.submit %>
-  </div>
+<%= simple_form_for @work_order, :html => {:class => 'form-vertical well' } do |f| %>
+<%= f.error_notification %>
+<%= display_base_errors resource %>
+<%= f.input :name, autofocus: true, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %>
+<div>
+  <label class="multi-field-label-two"> <%= f.association :office, collection: Office.all(order: 'name'), input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.association :company, collection: Company.all(order: 'name'), input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %> </label>
+</div>
+<div>
+  <label class="multi-field-label-three"> <%= f.input :opened_at, start_year: Time.now.year - 100, end_year: Time.now.year + 100, as: :string, input_html: { value: (f.object.opened_at.strftime("%d/%m/%Y") if f.object.opened_at), class: 'large-text-field date_picker' }, label_html: { class: 'form-label' } %> </label>
+  <label class="multi-field-label-three"> <%= f.input :closed_at, start_year: Time.now.year - 100, end_year: Time.now.year + 100, as: :string, input_html: { value: (f.object.closed_at.strftime("%d/%m/%Y") if f.object.closed_at), class: 'large-text-field date_picker' }, label_html: { class: 'form-label' } %> </label>
+  <label class="multi-field-label-three"> <%= f.input :ledger_account, input_html: { class: 'large-text-field' }, label_html: { class: 'form-label' } %> </label>
+</div>
+<%= f.button :submit, :class => 'btn-primary' %>
 <% end %>

@@ -11,6 +11,21 @@ class Area < ActiveRecord::Base
   
   before_destroy :check_for_dependent_records
 
+  def to_label
+    "#{full_name}"
+  end
+
+  def full_name
+    full_name = ""
+    if !self.name.blank?
+      full_name += self.name
+    end
+    if !self.department.blank?
+      full_name += " (" + self.department.name + ")"
+    end
+    full_name
+  end
+
   private
 
   def check_for_dependent_records
