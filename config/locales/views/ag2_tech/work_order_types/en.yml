@@ -9,6 +9,8 @@ en:
         title: "WO type"
         btn_edit: "Edit WO type"
         btn_delete: "Delete WO type"
+        subtable_title: "WO type Orders"
+        return_to: "Back to WO type"
       edit:
         title: "Edit WO type"
         btn_show: "Show WO type"

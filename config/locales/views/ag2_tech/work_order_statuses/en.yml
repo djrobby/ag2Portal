@@ -9,6 +9,8 @@ en:
         title: "WO status"
         btn_edit: "Edit WO status"
         btn_delete: "Delete WO status"
+        subtable_title: "WO status Orders"
+        return_to: "Back to WO status"
       edit:
         title: "Edit WO status"
         btn_show: "Show WO status"

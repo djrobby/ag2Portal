@@ -9,6 +9,8 @@ es:
         title: "Estado de OT"
         btn_edit: "Editar Estado de OT"
         btn_delete: "Borrar Estado de OT"
+        subtable_title: "Ordenes del Estado de OT"
+        return_to: "Volver a Estado de OT"
       edit:
         title: "Editar Estado de OT"
         btn_show: "Ver Estado de OT"

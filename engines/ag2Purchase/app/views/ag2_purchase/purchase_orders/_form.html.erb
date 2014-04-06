@@ -29,7 +29,7 @@
   <label class="multi-field-label-two"> <%= f.association :order_status, collection: OrderStatus.all(order: 'id'), input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %> </label>
 </div>
 <div>
-  <label class="multi-field-label-two"> <%= f.association :project, collection: Project.all(order: 'name'), input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.association :project, collection: Project.all(order: 'project_code'), input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
   <label class="multi-field-label-two"> <%= f.association :charge_account, collection: ChargeAccount.all(order: 'account_code'), input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
 </div>
 <div>

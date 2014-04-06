@@ -6,6 +6,8 @@ Ag2Tech::Engine.routes.draw do
     # Routes for jQuery POSTs
     match 'projects/update_company_textfield_from_office/:id', :controller => 'projects', :action => 'update_company_textfield_from_office'
     match 'projects/:id/update_company_textfield_from_office/:id', :controller => 'projects', :action => 'update_company_textfield_from_office'
+    match 'work_orders/update_account_textfield_from_project/:id', :controller => 'work_orders', :action => 'update_account_textfield_from_project'
+    match 'work_orders/:id/update_account_textfield_from_project/:id', :controller => 'work_orders', :action => 'update_account_textfield_from_project'
 
     # Resources
     resources :projects

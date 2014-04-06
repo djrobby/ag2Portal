@@ -12,12 +12,6 @@
     <tr>
       <td><%=t 'activerecord.attributes.work_order.project' %>:</td>
       <td><%= @work_order.project.name %></td>
-      <td><%=t 'activerecord.attributes.work_order.charge_account' %>:</td>
-      <td><%= @work_order.charge_account.full_name %></td>
-    </tr>
-    <tr>
-      <td><%=t 'activerecord.attributes.work_order.area' %>:</td>
-      <td><%= @work_order.area.full_name unless @work_order.area.blank? %></td>
       <td><%=t 'activerecord.attributes.work_order.work_order_type' %>:</td>
       <td><%= @work_order.work_order_type.name %></td>
     </tr>
@@ -26,6 +20,12 @@
       <td><%= @work_order.work_order_labor.name %></td>
       <td><%=t 'activerecord.attributes.work_order.work_order_status' %>:</td>
       <td><%= @work_order.work_order_status.name %></td>
+    </tr>
+    <tr>
+      <td><%=t 'activerecord.attributes.work_order.area' %>:</td>
+      <td><%= @work_order.area.full_name unless @work_order.area.blank? %></td>
+      <td><%=t 'activerecord.attributes.work_order.charge_account' %>:</td>
+      <td><%= @work_order.charge_account.full_name %></td>
     </tr>
     <tr>
       <td><%=t 'activerecord.attributes.work_order.client' %>:</td>

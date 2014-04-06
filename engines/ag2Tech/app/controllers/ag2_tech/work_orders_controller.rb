@@ -4,11 +4,26 @@ module Ag2Tech
   class WorkOrdersController < ApplicationController
     before_filter :authenticate_user!
     load_and_authorize_resource
+    skip_load_and_authorize_resource :only => [:update_account_textfield_from_project]
+    
+    # Update account text field at view from project select
+    def update_account_textfield_from_project
+      @project = Project.find(params[:id])
+      @charge_accounts = @project.charge_accounts(order: 'account_code')
 
+      respond_to do |format|
+        format.html # update_account_textfield_from_project.html.erb does not exist! JSON only
+        format.json { render json: @charge_accounts }
+      end
+    end
+
+    #
+    # Default Methods
+    #
     # GET /work_orders
     # GET /work_orders.json
     def index
-      @search = ChargeAccount.search do
+      @search = WorkOrder.search do
         fulltext params[:search]
         order_by :order_no, :asc
         paginate :page => params[:page] || 1, :per_page => per_page
@@ -38,6 +53,7 @@ module Ag2Tech
     def new
       @breadcrumb = 'create'
       @work_order = WorkOrder.new
+      @charge_accounts = ChargeAccount.all(order: 'account_code')
   
       respond_to do |format|
         format.html # new.html.erb
@@ -49,6 +65,7 @@ module Ag2Tech
     def edit
       @breadcrumb = 'update'
       @work_order = WorkOrder.find(params[:id])
+      @charge_accounts = @work_order.project.charge_accounts(order: 'account_code')
     end
   
     # POST /work_orders

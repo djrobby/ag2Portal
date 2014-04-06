@@ -9,8 +9,8 @@ es:
         check_for_purchase_orders: "Orden de trabajo no puede ser eliminada mientras existan pedidos vinculados."
         check_for_receipt_notes: "Orden de trabajo no puede ser eliminada mientras existan albaranes vinculados."
         check_for_supplier_invoices: "Orden de trabajo no puede ser eliminada mientras existan facturas vinculadas."
-    work_order:
-      offer:
+    attributes:
+      work_order:
         order_no: "Nº"
         work_order_type: "Tipo"
         work_order_type_id: "Tipo"

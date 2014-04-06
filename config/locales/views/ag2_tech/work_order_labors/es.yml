@@ -9,6 +9,8 @@ es:
         title: "Labor para OT"
         btn_edit: "Editar Labor para OT"
         btn_delete: "Borrar Labor para OT"
+        subtable_title: "Ordenes de Labor para OT"
+        return_to: "Volver a Labor para OT"
       edit:
         title: "Editar Labor para OT"
         btn_show: "Ver Labor para OT"

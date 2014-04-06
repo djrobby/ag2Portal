@@ -9,6 +9,8 @@ es:
         title: "Tipo de OT"
         btn_edit: "Editar Tipo de OT"
         btn_delete: "Borrar Tipo de OT"
+        subtable_title: "Ordenes del Tipo de OT"
+        return_to: "Volver a Tipo de OT"
       edit:
         title: "Editar Tipo de OT"
         btn_show: "Ver Tipo de OT"

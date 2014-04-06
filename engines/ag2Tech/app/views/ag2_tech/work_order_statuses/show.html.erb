@@ -19,4 +19,19 @@
 delete_path: @work_order_status, delete_txt: t('.btn_delete'), msg: t("activerecord.models.work_order_status.one"), txt: @work_order_status.name,
 new_path: new_work_order_status_path, new_txt: t('ag2_tech.work_order_statuses.index.btn_new') } %>
 
+<% if (@worker_orders.count > 0) %>
+<h4><%=t '.subtable_title' %></h4>
+<table class="table table-condensed table-striped">
+  <thead>
+    <%= render '/layouts/ag2_tech/wordersheader' %>
+  </thead>
+  <tbody>
+    <% session[:return_to] = I18n.t('.return_to') %>
+    <% session[:return_to_url] = "#{request.protocol}#{request.host_with_port}#{request.fullpath}" %>
+    <%= render :partial => '/layouts/ag2_tech/worders', :locals => { :orders => @worker_orders } %>
+  </tbody>
+</table>
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @worker_orders } %>
+<% end %>
+
 <%= link_to t("ag2_tech.work_order_statuses.back_to_main_page"), work_order_statuses_path %>
