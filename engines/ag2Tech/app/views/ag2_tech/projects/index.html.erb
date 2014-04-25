@@ -1,39 +1,85 @@
-<%= render '/layouts/ag2_tech/projectsbreadcrumb' %>
-<%= render :partial => '/layouts/searchhead', :locals => { :title => t(".title"), :path => projects_path } %>
+<script>
+  jQuery(function($) {
+    // when the #Company field changes
+    $("#Company").change(function() {
+      // make a POST call and replace the content
+      var project = $('#Company :selected').val();
+      if (project == "")
+        project = "0";
+      jQuery.getJSON('update_offices_select_from_company/' + project, function(data) {
+        $("#Office").html("");
+        //$("#Office").select2("val", "");
+        $("#Office").append($('<option></option>').val("").html(""));
+        $.each(data, function(id, option) {
+          $("#Office").append($('<option></option>').val(option.id).html(option.name));
+        });
+      })
+      return false;
+    });
+  })
+</script>
 
-<div class="span11">
-  <table class="table table-condensed table-striped">
-    <thead>
-      <tr>
-        <th><%= t 'activerecord.attributes.project.project_code' %></th>
-        <th><%= t 'activerecord.attributes.project.name' %></th>
-        <th><%= t 'activerecord.attributes.project.company' %></th>
-        <th><%= t 'activerecord.attributes.project.office' %></th>
-        <th align="center"><%= t 'activerecord.attributes.project.opened_at' %></th>
-        <th align="center"><%= t 'activerecord.attributes.project.closed_at' %></th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody>
-      <% @projects.each do |project| %>
-      <% if project.closed_at.blank? %>
-      <tr>
-      <% else %>
-      <tr class="inactive-row">
-      <% end %>
-        <td><%= link_to project.project_code, project %></td>
-        <td><%= project.name %></td>
-        <td><%= project.company.name unless project.company.blank? %></td>
-        <td><%= project.office.name unless project.office.blank? %></td>
-        <td align="center"><%= project.opened_at.strftime("%d/%m/%Y") unless project.opened_at.blank? %></td>
-        <td align="center"><%= project.closed_at.strftime("%d/%m/%Y") unless project.closed_at.blank? %></td>
-        <td> <%= render :partial => '/layouts/crud/edit', :locals => { :model => Project, :path => edit_project_path(project) } %>
-        <%= render :partial => '/layouts/crud/delete', :locals => { :model => Project, :path => project, :msg => t("activerecord.models.project.one"), :txt => project.full_name } %> </td>
-      </tr>
-      <% end %>
-    </tbody>
-  </table>
-  <%= render :partial => '/layouts/pagination', :locals => { :ivar => @projects } %>
-  <%= render :partial => '/layouts/crud/new', :locals => { :model => Project, :path => new_project_path, :txt => t(".btn_new") } %>
-  <%= link_to t(".back_to_root"), ag2_tech.root_path %>
-</div>
+<%= render '/layouts/ag2_tech/projectsbreadcrumb' %>
+
+<div class="container-fluid">
+  <div class="row-fluid">
+
+    <div class="span3">
+      <div class="well sidebar-nav">
+        <%= form_tag "projects", :method => 'get' do %>
+        <!-- Company -->
+        <%= label_tag I18n.t("ag2_tech.projects.index.label_company"), nil, :class => 'form-label' %>
+        <%= select_tag "Company", options_from_collection_for_select(@companies, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked' %>
+        <!-- Office -->
+        <%= label_tag I18n.t("ag2_tech.projects.index.label_office"), nil, :class => 'form-label' %>
+        <%= select_tag "Office", options_from_collection_for_select(@offices, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked' %>
+        <!-- Others -->
+        <%= label_tag I18n.t("ag2_tech.projects.index.label_others"), nil, :class => 'form-label' %>
+        <%= text_field_tag :search, params[:search], :class => 'x-large-text-field shrinked' %>
+        <!-- Submit -->
+        <%= submit_tag I18n.t("ag2_tech.projects.index.btn_apply"), :class => 'btn btn-primary' %>
+        <% end %>
+        <!-- Buttons -->
+        <%= render :partial => '/layouts/crud/new', :locals => { :model => Project, :path => new_project_path, :txt => t(".btn_new") } %>
+      <%= link_to t(".back_to_root"), ag2_tech.root_path %>
+        <%= link_to I18n.t("ag2_human.workers.index.back_to_root"), ag2_human.root_path %>
+      </div><!-- /.sidebar-nav -->
+    </div><!-- /.span3 -->
+
+    <div class="span9">
+      <table class="table table-condensed table-striped shrinked">
+        <thead>
+          <tr>
+            <th><%= t 'activerecord.attributes.project.project_code' %></th>
+            <th><%= t 'activerecord.attributes.project.name' %></th>
+            <th><%= t 'activerecord.attributes.project.company' %></th>
+            <th><%= t 'activerecord.attributes.project.office' %></th>
+            <th align="center"><%= t 'activerecord.attributes.project.opened_at' %></th>
+            <th align="center"><%= t 'activerecord.attributes.project.closed_at' %></th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @projects.each do |project| %>
+          <% if project.closed_at.blank? %>
+          <tr>
+            <% else %>
+          <tr class="inactive-row">
+            <% end %>
+            <td><%= link_to project.project_code, project %></td>
+            <td><%= project.name %></td>
+            <td><%= project.company.name unless project.company.blank? %></td>
+            <td><%= project.office.name unless project.office.blank? %></td>
+            <td align="center"><%= project.opened_at.strftime("%d/%m/%Y") unless project.opened_at.blank? %></td>
+            <td align="center"><%= project.closed_at.strftime("%d/%m/%Y") unless project.closed_at.blank? %></td>
+            <td> <%= render :partial => '/layouts/crud/edit', :locals => { :model => Project, :path => edit_project_path(project) } %>
+            <%= render :partial => '/layouts/crud/delete', :locals => { :model => Project, :path => project, :msg => t("activerecord.models.project.one"), :txt => project.full_name } %> </td>
+          </tr>
+          <% end %>
+        </tbody>
+      </table>
+      <%= render :partial => '/layouts/pagination', :locals => { :ivar => @projects } %>
+    </div><!-- /.span9 -->
+  </div><!-- /.row-fluid -->
+</div><!-- /.container-fluid -->
+

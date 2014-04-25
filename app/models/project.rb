@@ -61,6 +61,8 @@ class Project < ActiveRecord::Base
   searchable do
     text :project_code, :name
     string :project_code
+    integer :company_id
+    integer :office_id
   end
 
   private

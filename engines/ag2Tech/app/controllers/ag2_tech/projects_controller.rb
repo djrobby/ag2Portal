@@ -23,12 +23,25 @@ module Ag2Tech
     # GET /projects
     # GET /projects.json
     def index
+      company = params[:Company]
+      office = params[:Office]
+
       @search = Project.search do
         fulltext params[:search]
+        if !company.blank?
+          with :company_id, type
+        end
+        if !office.blank?
+          with :office_id, family
+        end
         order_by :project_code, :asc
         paginate :page => params[:page] || 1, :per_page => per_page
       end
       @projects = @search.results
+
+      # Initialize select_tags
+      @companies = Company.order('name') if @companies.nil?
+      @offices = Office.order('name') if @offices.nil?
   
       respond_to do |format|
         format.html # index.html.erb

@@ -5,6 +5,9 @@ es:
         title: "Cuentas de cargo"
         btn_new: "Nueva Cuenta de cargo"
         back_to_root: "Volver a ag2Tech"
+        label_project: "Proyecto"
+        label_others: "Otros"
+        btn_apply: "Aplicar Filtro"
       show:
         title: "Cuenta de cargo"
         btn_edit: "Editar Cuenta de cargo"

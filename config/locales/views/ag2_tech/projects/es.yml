@@ -5,6 +5,10 @@ es:
         title: "Proyectos"
         btn_new: "Nuevo Proyecto"
         back_to_root: "Volver a ag2Tech"
+        label_office: "Oficina"
+        label_company: "Empresa"
+        label_others: "Otros"
+        btn_apply: "Aplicar Filtro"
       show:
         title: "Proyecto"
         btn_edit: "Editar Proyecto"

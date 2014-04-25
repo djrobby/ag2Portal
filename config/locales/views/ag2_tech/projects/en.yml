@@ -5,6 +5,10 @@ en:
         title: "Projects"
         btn_new: "New Project"
         back_to_root: "Back to ag2Tech"
+        label_office: "Office"
+        label_company: "Company"
+        label_others: "Others"
+        btn_apply: "Apply Filter"
       show:
         title: "Project"
         btn_edit: "Edit Project"

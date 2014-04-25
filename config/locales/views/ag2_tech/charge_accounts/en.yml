@@ -5,6 +5,9 @@ en:
         title: "Charge accounts"
         btn_new: "New Charge account"
         back_to_root: "Back to ag2Tech"
+        label_project: "Project"
+        label_others: "Others"
+        btn_apply: "Apply Filter"
       show:
         title: "Charge account"
         btn_edit: "Edit Charge account"

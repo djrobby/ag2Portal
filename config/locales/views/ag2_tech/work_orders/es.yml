@@ -5,6 +5,11 @@ es:
         title: "Ordenes de trabajo"
         btn_new: "Nueva Orden de trabajo"
         back_to_root: "Volver a ag2Tech"
+        label_project: "Proyecto"
+        label_office: "Oficina"
+        label_company: "Empresa"
+        label_others: "Otros"
+        btn_apply: "Aplicar Filtro"
       show:
         title: "Orden de trabajo"
         btn_edit: "Editar Orden de trabajo"

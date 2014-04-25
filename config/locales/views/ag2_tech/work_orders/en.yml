@@ -5,6 +5,11 @@ en:
         title: "Work orders"
         btn_new: "New Work order"
         back_to_root: "Back to ag2Tech"
+        label_project: "Project"
+        label_office: "Office"
+        label_company: "Company"
+        label_others: "Others"
+        btn_apply: "Apply Filter"
       show:
         title: "Work order"
         btn_edit: "Edit Work order"
