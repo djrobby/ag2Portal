@@ -15,7 +15,7 @@
       var project = $('select#project_office_id :selected').val();
       if (project == "")
         project = "0";
-      jQuery.getJSON('update_company_textfield_from_office/' + project, function(data) {
+      jQuery.getJSON('pr_update_company_textfield_from_office/' + project, function(data) {
         $("#project_company_id").val(data.id);
       })
       return false;

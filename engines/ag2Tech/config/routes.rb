@@ -4,10 +4,12 @@ Ag2Tech::Engine.routes.draw do
     get "home/index"
 
     # Routes for jQuery POSTs
-    match 'projects/update_company_textfield_from_office/:id', :controller => 'projects', :action => 'update_company_textfield_from_office'
-    match 'projects/:id/update_company_textfield_from_office/:id', :controller => 'projects', :action => 'update_company_textfield_from_office'
-    match 'work_orders/update_account_textfield_from_project/:id', :controller => 'work_orders', :action => 'update_account_textfield_from_project'
-    match 'work_orders/:id/update_account_textfield_from_project/:id', :controller => 'work_orders', :action => 'update_account_textfield_from_project'
+    match 'projects/pr_update_company_textfield_from_office/:id', :controller => 'projects', :action => 'pr_update_company_textfield_from_office'
+    match 'pr_update_company_textfield_from_office/:id', :controller => 'projects', :action => 'pr_update_company_textfield_from_office'
+    match 'projects/:id/pr_update_company_textfield_from_office/:id', :controller => 'projects', :action => 'pr_update_company_textfield_from_office'
+    match 'work_orders/wo_update_account_textfield_from_project/:id', :controller => 'work_orders', :action => 'wo_update_account_textfield_from_project'
+    match 'wo_update_account_textfield_from_project/:id', :controller => 'work_orders', :action => 'wo_update_account_textfield_from_project'
+    match 'work_orders/:id/wo_update_account_textfield_from_project/:id', :controller => 'work_orders', :action => 'wo_update_account_textfield_from_project'
 
     # Resources
     resources :projects

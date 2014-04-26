@@ -1,7 +1,8 @@
 <script>
   $(document).ready(function() {
     $('select.sel2').select2({
-      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; }
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      allowClear: true
     });
     $('.date_picker').datepicker({
       format : 'dd/mm/yyyy',

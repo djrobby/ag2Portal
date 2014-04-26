@@ -1,5 +1,5 @@
 <%= render '/layouts/ag2_tech/caccountsbreadcrumb' %>
-<%= render :partial => '/layouts/searchhead', :locals => { :title => t(".title"), :path => charge_accounts_path } %>
+<h3><%= t '.title' %></h3>
 
 <div class="container-fluid">
   <div class="row-fluid">
@@ -9,7 +9,7 @@
         <%= form_tag "charge_accounts", :method => 'get' do %>
         <!-- Project -->
         <%= label_tag I18n.t("ag2_tech.charge_accounts.index.label_project"), nil, :class => 'form-label' %>
-        <%= select_tag "Project", options_from_collection_for_select(@projects, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked' %>
+        <%= select_tag "Project", options_from_collection_for_select(@projects, "id", "full_name"), :prompt => "", :class => 'x-large-text-field shrinked' %>
         <!-- Others -->
         <%= label_tag I18n.t("ag2_tech.charge_accounts.index.label_others"), nil, :class => 'form-label' %>
         <%= text_field_tag :search, params[:search], :class => 'x-large-text-field shrinked' %>

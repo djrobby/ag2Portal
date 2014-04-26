@@ -13,7 +13,7 @@ module Ag2Tech
       @search = ChargeAccount.search do
         fulltext params[:search]
         if !project.blank?
-          with :project_id, type
+          with :project_id, project
         end
         order_by :account_code, :asc
         paginate :page => params[:page] || 1, :per_page => per_page

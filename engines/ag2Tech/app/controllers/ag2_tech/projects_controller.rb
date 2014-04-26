@@ -4,15 +4,15 @@ module Ag2Tech
   class ProjectsController < ApplicationController
     before_filter :authenticate_user!
     load_and_authorize_resource
-    skip_load_and_authorize_resource :only => [:update_company_textfield_from_office]
+    skip_load_and_authorize_resource :only => [:pr_update_company_textfield_from_office]
     
     # Update company text field at view from office select
-    def update_company_textfield_from_office
+    def pr_update_company_textfield_from_office
       @office = Office.find(params[:id])
       @company = Company.find(@office.company)
 
       respond_to do |format|
-        format.html # update_company_textfield_from_office.html.erb does not exist! JSON only
+        format.html # pr_update_company_textfield_from_office.html.erb does not exist! JSON only
         format.json { render json: @company }
       end
     end
@@ -29,10 +29,10 @@ module Ag2Tech
       @search = Project.search do
         fulltext params[:search]
         if !company.blank?
-          with :company_id, type
+          with :company_id, company
         end
         if !office.blank?
-          with :office_id, family
+          with :office_id, office
         end
         order_by :project_code, :asc
         paginate :page => params[:page] || 1, :per_page => per_page

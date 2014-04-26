@@ -18,7 +18,7 @@
       <td><%=t 'activerecord.attributes.charge_account.name' %>:</td>
       <td><%= @charge_account.name %></td>
       <td><%=t 'activerecord.attributes.charge_account.project' %>:</td>
-      <td><%= @charge_account.project.full_name %></td>
+      <td><%= @charge_account.project.full_name unless @charge_account.project.blank? %></td>
     </tr>
     <tr>
       <td><%= t :"activerecord.attributes.charge_account.opened_at" %>:</td>

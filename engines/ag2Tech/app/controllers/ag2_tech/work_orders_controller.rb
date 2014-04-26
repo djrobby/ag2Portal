@@ -4,15 +4,20 @@ module Ag2Tech
   class WorkOrdersController < ApplicationController
     before_filter :authenticate_user!
     load_and_authorize_resource
-    skip_load_and_authorize_resource :only => [:update_account_textfield_from_project]
+    skip_load_and_authorize_resource :only => [:wo_update_account_textfield_from_project]
     
     # Update account text field at view from project select
-    def update_account_textfield_from_project
-      @project = Project.find(params[:id])
-      @charge_accounts = @project.charge_accounts(order: 'account_code')
+    def wo_update_account_textfield_from_project
+      project = params[:id]
+      if project != '0'
+        @project = Project.find(params[:id])
+        @charge_accounts = @project.blank? ? ChargeAccount.all(order: 'account_code') : @project.charge_accounts(order: 'account_code')
+      else
+        @charge_accounts = ChargeAccount.all(order: 'account_code')
+      end
 
       respond_to do |format|
-        format.html # update_account_textfield_from_project.html.erb does not exist! JSON only
+        format.html # wo_update_account_textfield_from_project.html.erb does not exist! JSON only
         format.json { render json: @charge_accounts }
       end
     end
@@ -30,13 +35,13 @@ module Ag2Tech
       @search = WorkOrder.search do
         fulltext params[:search]
         if !project.blank?
-          with :project_id, type
+          with :project_id, project
         end
         if !type.blank?
           with :work_order_type_id, type
         end
         if !status.blank?
-          with :work_order_status_id, type
+          with :work_order_status_id, status
         end
         order_by :order_no, :asc
         paginate :page => params[:page] || 1, :per_page => per_page
@@ -83,7 +88,7 @@ module Ag2Tech
     def edit
       @breadcrumb = 'update'
       @work_order = WorkOrder.find(params[:id])
-      @charge_accounts = @work_order.project.charge_accounts(order: 'account_code')
+      @charge_accounts = @work_order.project.blank? ? ChargeAccount.all(order: 'account_code') : @work_order.project.charge_accounts(order: 'account_code')
     end
   
     # POST /work_orders
@@ -98,6 +103,7 @@ module Ag2Tech
           format.html { redirect_to @work_order, notice: crud_notice('created', @work_order) }
           format.json { render json: @work_order, status: :created, location: @work_order }
         else
+          @charge_accounts = ChargeAccount.all(order: 'account_code')
           format.html { render action: "new" }
           format.json { render json: @work_order.errors, status: :unprocessable_entity }
         end
@@ -117,6 +123,7 @@ module Ag2Tech
                         notice: (crud_notice('updated', @work_order) + "#{undo_link(@work_order)}").html_safe }
           format.json { head :no_content }
         else
+          @charge_accounts = @work_order.project.blank? ? ChargeAccount.all(order: 'account_code') : @work_order.project.charge_accounts(order: 'account_code')
           format.html { render action: "edit" }
           format.json { render json: @work_order.errors, status: :unprocessable_entity }
         end
