@@ -57,6 +57,9 @@ class WorkOrder < ActiveRecord::Base
     integer :charge_account_id
     integer :project_id
     integer :client_id
+    integer :work_order_type_id
+    integer :work_order_status_id
+    integer :client_id
     date :started_at
     date :completed_at
     date :closed_at

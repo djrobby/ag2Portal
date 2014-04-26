@@ -41,8 +41,7 @@
         <% end %>
         <!-- Buttons -->
         <%= render :partial => '/layouts/crud/new', :locals => { :model => Project, :path => new_project_path, :txt => t(".btn_new") } %>
-      <%= link_to t(".back_to_root"), ag2_tech.root_path %>
-        <%= link_to I18n.t("ag2_human.workers.index.back_to_root"), ag2_human.root_path %>
+        <%= link_to t(".back_to_root"), ag2_tech.root_path %>
       </div><!-- /.sidebar-nav -->
     </div><!-- /.span3 -->
 

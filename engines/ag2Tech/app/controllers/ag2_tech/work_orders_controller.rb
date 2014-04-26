@@ -23,12 +23,30 @@ module Ag2Tech
     # GET /work_orders
     # GET /work_orders.json
     def index
+      project = params[:Project]
+      type = params[:Type]
+      status = params[:Status]
+
       @search = WorkOrder.search do
         fulltext params[:search]
+        if !project.blank?
+          with :project_id, type
+        end
+        if !type.blank?
+          with :work_order_type_id, type
+        end
+        if !status.blank?
+          with :work_order_status_id, type
+        end
         order_by :order_no, :asc
         paginate :page => params[:page] || 1, :per_page => per_page
       end
       @work_orders = @search.results
+
+      # Initialize select_tags
+      @projects = Project.order('name') if @projects.nil?
+      @types = WorkOrderType.order('name') if @types.nil?
+      @statuses = WorkOrderStatus.order('id') if @statuses.nil?
   
       respond_to do |format|
         format.html # index.html.erb

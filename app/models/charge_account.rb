@@ -56,6 +56,7 @@ class ChargeAccount < ActiveRecord::Base
   searchable do
     text :account_code, :name
     string :account_code
+    integer :project_id
   end
 
   private

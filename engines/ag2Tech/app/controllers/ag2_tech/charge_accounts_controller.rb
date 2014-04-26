@@ -8,12 +8,20 @@ module Ag2Tech
     # GET /charge_accounts
     # GET /charge_accounts.json
     def index
+      project = params[:Project]
+
       @search = ChargeAccount.search do
         fulltext params[:search]
+        if !project.blank?
+          with :project_id, type
+        end
         order_by :account_code, :asc
         paginate :page => params[:page] || 1, :per_page => per_page
       end
       @charge_accounts = @search.results
+
+      # Initialize select_tags
+      @projects = Project.order('name') if @projects.nil?
   
       respond_to do |format|
         format.html # index.html.erb

@@ -6,6 +6,8 @@ en:
         btn_new: "New Work order"
         back_to_root: "Back to ag2Tech"
         label_project: "Project"
+        label_type: "Type"
+        label_status: "Status"
         label_office: "Office"
         label_company: "Company"
         label_others: "Others"

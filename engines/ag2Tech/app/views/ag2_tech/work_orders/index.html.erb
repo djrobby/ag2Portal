@@ -1,39 +1,66 @@
 <%= render '/layouts/ag2_tech/wordersbreadcrumb' %>
 <%= render :partial => '/layouts/searchhead', :locals => { :title => t(".title"), :path => work_orders_path } %>
 
-<div class="span11">
-  <table class="table table-condensed table-striped">
-    <thead>
-      <tr>
-        <th><%= t 'activerecord.attributes.work_order.order_no' %></th>
-        <th><%= t 'activerecord.attributes.work_order.project' %></th>
-        <th><%= t 'activerecord.attributes.work_order.work_order_type' %></th>
-        <th><%= t 'activerecord.attributes.work_order.work_order_status' %></th>
-        <th><%= t 'activerecord.attributes.work_order.started_at' %></th>
-        <th><%= t 'activerecord.attributes.work_order.completed_at' %></th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody>
-      <% @work_orders.each do |order| %>
-      <% if order.closed_at.blank? %>
-      <tr>
-      <% else %>
-      <tr class="inactive-row">
-      <% end %>
-        <td><%= link_to order.order_no, order %></td>
-        <td><%= order.project.name unless order.project.blank? %></td>
-        <td><%= order.work_order_type.name unless order.work_order_type.blank? %></td>
-        <td><%= order.work_order_status.name unless order.work_order_status.blank? %></td>
-        <td><%= order.started_at unless order.started_at.blank? %></td>
-        <td><%= order.completed_at unless order.completed_at.blank? %></td>
-        <td> <%= render :partial => '/layouts/crud/edit', :locals => { :model => WorkOrder, :path => edit_work_order_path(order) } %>
-        <%= render :partial => '/layouts/crud/delete', :locals => { :model => WorkOrder, :path => order, :msg => t("activerecord.models.work_order.one"), :txt => order.order_no } %> </td>
-      </tr>
-      <% end %>
-    </tbody>
-  </table>
-  <%= render :partial => '/layouts/pagination', :locals => { :ivar => @work_orders } %>
-  <%= render :partial => '/layouts/crud/new', :locals => { :model => WorkOrder, :path => new_work_order_path, :txt => t(".btn_new") } %>
-  <%= link_to t(".back_to_root"), ag2_tech.root_path %>
-</div>
+<div class="container-fluid">
+  <div class="row-fluid">
+
+    <div class="span3">
+      <div class="well sidebar-nav">
+        <%= form_tag "projects", :method => 'get' do %>
+        <!-- Project -->
+        <%= label_tag I18n.t("ag2_tech.work_orders.index.label_project"), nil, :class => 'form-label' %>
+        <%= select_tag "Project", options_from_collection_for_select(@projects, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked' %>
+        <!-- Type -->
+        <%= label_tag I18n.t("ag2_tech.work_orders.index.label_type"), nil, :class => 'form-label' %>
+        <%= select_tag "Type", options_from_collection_for_select(@types, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked' %>
+        <!-- Status -->
+        <%= label_tag I18n.t("ag2_tech.work_orders.index.label_status"), nil, :class => 'form-label' %>
+        <%= select_tag "Status", options_from_collection_for_select(@statuses, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked' %>
+        <!-- Others -->
+        <%= label_tag I18n.t("ag2_tech.work_orders.index.label_others"), nil, :class => 'form-label' %>
+        <%= text_field_tag :search, params[:search], :class => 'x-large-text-field shrinked' %>
+        <!-- Submit -->
+        <%= submit_tag I18n.t("ag2_tech.work_orders.index.btn_apply"), :class => 'btn btn-primary' %>
+        <% end %>
+        <!-- Buttons -->
+        <%= render :partial => '/layouts/crud/new', :locals => { :model => WorkOrder, :path => new_work_order_path, :txt => t(".btn_new") } %>
+        <%= link_to t(".back_to_root"), ag2_tech.root_path %>
+      </div><!-- /.sidebar-nav -->
+    </div><!-- /.span3 -->
+
+    <div class="span9">
+      <table class="table table-condensed table-striped">
+        <thead>
+          <tr>
+            <th><%= t 'activerecord.attributes.work_order.order_no' %></th>
+            <th><%= t 'activerecord.attributes.work_order.project' %></th>
+            <th><%= t 'activerecord.attributes.work_order.work_order_type' %></th>
+            <th><%= t 'activerecord.attributes.work_order.work_order_status' %></th>
+            <th><%= t 'activerecord.attributes.work_order.started_at' %></th>
+            <th><%= t 'activerecord.attributes.work_order.completed_at' %></th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @work_orders.each do |order| %>
+          <% if order.closed_at.blank? %>
+          <tr>
+            <% else %>
+          <tr class="inactive-row">
+            <% end %>
+            <td><%= link_to order.order_no, order %></td>
+            <td><%= order.project.name unless order.project.blank? %></td>
+            <td><%= order.work_order_type.name unless order.work_order_type.blank? %></td>
+            <td><%= order.work_order_status.name unless order.work_order_status.blank? %></td>
+            <td><%= order.started_at unless order.started_at.blank? %></td>
+            <td><%= order.completed_at unless order.completed_at.blank? %></td>
+            <td> <%= render :partial => '/layouts/crud/edit', :locals => { :model => WorkOrder, :path => edit_work_order_path(order) } %>
+            <%= render :partial => '/layouts/crud/delete', :locals => { :model => WorkOrder, :path => order, :msg => t("activerecord.models.work_order.one"), :txt => order.order_no } %> </td>
+          </tr>
+          <% end %>
+        </tbody>
+      </table>
+      <%= render :partial => '/layouts/pagination', :locals => { :ivar => @work_orders } %>
+    </div><!-- /.span9 -->
+  </div><!-- /.row-fluid -->
+</div><!-- /.container-fluid -->
