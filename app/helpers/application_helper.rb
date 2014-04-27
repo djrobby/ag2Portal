@@ -34,10 +34,16 @@ module ApplicationHelper
   end
   
   # Add
+  # name:         The name of the link - ie. t("ag2_purchase.purchase_orders.btn_new_item")
+  # f:            The parent form - ie. f (usually the form in _form.html.erb)
+  # association:  The association data object defined on parent model with accepts_nested_attributes_for (usually items) - ie. :purchase_order_items
+  # fields_partial: Partial view name, the one in _item_fields.html.erb - ie. "item_fields"
+  # options: class: "btn btn-warning", title: t("ag2_purchase.purchase_orders.add_item")
   def link_to_add_fields(name, f, association, fields_partial, options = {})
     sel2NoMatch = t("select2.no_matches")
     new_object = f.object.class.reflect_on_association(association).klass.new
     #fields = f.fields_for(association, new_object, :child_index => "new_#{ association }", :onsubmit => "return $(this.)validate();") do |builder|
+    #fields = f.fields_for(association, new_object, :child_index => "new_#{ fields_partial }", :onsubmit => "return $(this.)validate();") do |builder|
     fields = f.simple_fields_for(association, new_object, :child_index => "new_#{ fields_partial }", :onsubmit => "return $(this.)validate();") do |builder|
       render(fields_partial, :f => builder)
       #render(association.to_s.singularize + "_fields", :f => builder)
