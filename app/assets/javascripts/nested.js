@@ -60,7 +60,7 @@ var itemFieldsUI = {
             }
             formHandler.appendFields();
             formHandler.hideForm();
-            alert('Added');
+            //alert('Added');
         });
     }
 };
@@ -112,7 +112,7 @@ var rowBuilder = function() {
     var link = $('<a>', {
         href: '#',
         onclick: 'remove_fields(this); return false;',
-        title: 'Delete this Pilot.'
+        title: 'Delete this Item.'
     }).append($('<i>', { class: 'icon-trash' }));
 
     // A private method for building a <TR> w/the required data.

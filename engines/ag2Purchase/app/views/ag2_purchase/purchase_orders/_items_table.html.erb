@@ -5,14 +5,13 @@
   <tbody>
     <%= f.simple_fields_for :purchase_order_items do |i| %>
     <tr class="fields">
-      <td><%= i.label :product.product_code %></td>
+      <td><%= i.label :product, "Uno" %></td>
       <td><%= i.input :description, label: false, input_html: { onkeyup: "caps(this)" } %></td>
-      <td><%= i.input :quantity, label: false, as: :string, input_html: { value: (number_with_precision(f.object.quantity, precision: 4) if f.object.quantity), class: 'number-text-field' } %></td>
-      <td><%= i.input :price, label: false, as: :string, input_html: { value: (number_with_precision(f.object.price, precision: 4) if f.object.price), class: 'number-text-field' } %></td>
-      <td><%= i.input :discount_pct, label: false, as: :string, input_html: { value: (number_with_precision(f.object.discount_pct, precision: 2) if f.object.discount_pct), class: 'number-text-field' } %></td>
-      <td><%= i.input :discount, label: false, as: :string, input_html: { value: (number_with_precision(f.object.discount, precision: 4) if f.object.discount), class: 'number-text-field' } %></td>
-      <td><%= i.label number_to_currency(:amount, precision: 4, locale: :es) %></td>
-      <td><%= i.label number_to_currency(:tax, precision: 4, locale: :es) %></td>
+      <td><%= i.input :quantity, label: false, as: :string, input_html: { value: (number_with_precision(i.object.quantity, precision: 4) if i.object.quantity), class: 'number-text-field' } %></td>
+      <td><%= i.input :price, label: false, as: :string, input_html: { value: (number_with_precision(i.object.price, precision: 4) if i.object.price), class: 'number-text-field' } %></td>
+      <td><%= i.input :discount_pct, label: false, as: :string, input_html: { value: (number_with_precision(i.object.discount_pct, precision: 2) if i.object.discount_pct), class: 'number-text-field' } %></td>
+      <td><%= i.input :discount, label: false, as: :string, input_html: { value: (number_with_precision(i.object.discount, precision: 4) if i.object.discount), class: 'number-text-field' } %></td>
+      <td><%= i.label :amount, label_html: { value: (number_to_currency(i.object.amount, precision: 4, locale: :es) if i.object.amount) } %></td>
       <% if current_page?(new_purchase_order_path) || current_page?(edit_purchase_order_path) %>
       <td><%= link_to_remove_fields('<i class="icon-trash"></i>'.html_safe, i, title: t('ag2_purchase.purchase_orders.delete_item')) %></td>
       <% end %>
