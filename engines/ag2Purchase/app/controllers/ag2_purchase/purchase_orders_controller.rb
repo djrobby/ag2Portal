@@ -4,6 +4,21 @@ module Ag2Purchase
   class PurchaseOrdersController < ApplicationController
     before_filter :authenticate_user!
     load_and_authorize_resource
+    skip_load_and_authorize_resource :only => [:po_update_description_prices_from_product]
+
+    # Update description and prices text fields at view from product select
+    def po_update_description_prices_from_product
+      @product = Product.find(params[:product])
+      @prices = @product.purchase_prices
+      price = @product.reference_price
+      tax = (params[:qty].to_f * price) * @product.tax_type.tax
+      @json_data = { "description" => @product.main_description, "price" => price.to_s, "tax" => tax.to_s }
+
+      respond_to do |format|
+        format.html # po_update_description_prices_from_product.html.erb does not exist! JSON only
+        format.json { render json: @json_data }
+      end
+    end
 
     #
     # Default Methods

@@ -1,14 +1,14 @@
 <tr>
-  <th><%= t "activerecord.attributes.purchase_order_item.product" %></th>
-  <th><%= t "activerecord.attributes.purchase_order_item.description" %></th>
-  <th align="right"><%= t "activerecord.attributes.purchase_order_item.quantity" %></th>
+  <th><%= t "activerecord.attributes.purchase_order_item.product_c" %></th>
+  <th><%= t "activerecord.attributes.purchase_order_item.description_c" %></th>
+  <th align="right"><%= t "activerecord.attributes.purchase_order_item.quantity_c" %></th>
   <th align="right"><%= t "activerecord.attributes.purchase_order_item.price" %></th>
-  <th align="right"><%= t "activerecord.attributes.purchase_order_item.discount_pct" %></th>
+  <th align="right"><%= t "activerecord.attributes.purchase_order_item.discount_pct_c" %></th>
   <th align="right"><%= t "activerecord.attributes.purchase_order_item.discount" %></th>
   <th align="right"><%= t "activerecord.attributes.purchase_order_item.amount" %></th>
   <th align="right"><%= t "activerecord.attributes.purchase_order_item.tax" %></th>
   <% if current_page?(new_purchase_order_path) || current_page?(edit_purchase_order_path) %>
-  <th>B</th>
+  <th></th>
   <% else %>
   <th align="right"><%= t "activerecord.attributes.purchase_order_item.balance" %></th>
   <% end %>

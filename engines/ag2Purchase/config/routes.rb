@@ -16,6 +16,9 @@ Ag2Purchase::Engine.routes.draw do
     match 'suppliers/:id/validate_fiscal_id_textfield/:id', :controller => 'suppliers', :action => 'validate_fiscal_id_textfield'
     match 'suppliers/update_code_textfield/:id', :controller => 'suppliers', :action => 'update_code_textfield'
     match 'suppliers/:id/update_code_textfield/:id', :controller => 'suppliers', :action => 'update_code_textfield'
+    match 'purchase_orders/po_update_description_prices_from_product/:product/:qty', :controller => 'purchase_orders', :action => 'po_update_description_prices_from_product'
+    match 'po_update_description_prices_from_product/:product/:qty', :controller => 'purchase_orders', :action => 'po_update_description_prices_from_product'
+    match 'purchase_orders/:id/po_update_description_prices_from_product/:product/:qty', :controller => 'purchase_orders', :action => 'po_update_description_prices_from_product'
 
     # Resources
     resources :suppliers
