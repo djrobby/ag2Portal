@@ -2,6 +2,7 @@ require_dependency "ag2_purchase/application_controller"
 
 module Ag2Purchase
   class PurchaseOrdersController < ApplicationController
+    include ActionView::Helpers::NumberHelper
     before_filter :authenticate_user!
     load_and_authorize_resource
     skip_load_and_authorize_resource :only => [:po_update_description_prices_from_product]
@@ -10,9 +11,14 @@ module Ag2Purchase
     def po_update_description_prices_from_product
       @product = Product.find(params[:product])
       @prices = @product.purchase_prices
+      qty = params[:qty].to_f
       price = @product.reference_price
-      tax = (params[:qty].to_f * price) * @product.tax_type.tax
-      @json_data = { "description" => @product.main_description, "price" => price.to_s, "tax" => tax.to_s }
+      amount = qty * price
+      tax = amount * (@product.tax_type.tax / 100)
+      price = number_with_precision(price, precision: 4)
+      tax = number_with_precision(tax, precision: 4)
+      amount = number_with_precision(amount, precision: 4)
+      @json_data = { "description" => @product.main_description, "price" => price.to_s, "amount" => amount.to_s, "tax" => tax.to_s }
 
       respond_to do |format|
         format.html # po_update_description_prices_from_product.html.erb does not exist! JSON only

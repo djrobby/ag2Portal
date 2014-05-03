@@ -4,6 +4,26 @@
     $('#fnt-amount').prop('readonly', true);
     $('#fnt-tax').prop('readonly', true);
   });
+
+  jQuery(function($) {
+    // when the #fnt-product field changes
+    $("#fnt-product").change(function() {
+      // make a POST call and replace the content
+      var product = $('select#fnt-product :selected').val();
+      if (product == "")
+        product = "0";
+      var qty = $('#fnt-quantity').val();
+      if (qty == "")
+        qty = "0";
+      jQuery.getJSON('po_update_description_prices_from_product/' + product + '/' + qty, function(data) {
+        $("#fnt-description").val(data.description);
+        $("#fnt-price").val(data.price);
+        $("#fnt-amount").val(data.amount);
+        $("#fnt-tax").val(data.tax);
+      })
+      return false;
+    });
+  })
 </script>
 
 <div id="new-item-fields" class="modal hide fade" data-backdrop="static">

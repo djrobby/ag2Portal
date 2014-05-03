@@ -9,7 +9,27 @@
   }); 
 
   jQuery(function($) {
-    // when the #fnt-product field changes
+    // when the .fnt-product field changes
+    $(".fnt-product").change(function() {
+      // preserve the current object
+      var _this = (this);
+      // make a POST call and replace the content
+      var product = $(this).closest('tr').find('select.fnt-product :selected').val();
+      if (product == "")
+        product = "0";
+      var qty = $(this).closest('tr').find('.fnt-quantity').val();
+      if (qty == "")
+        qty = "0";
+      jQuery.getJSON('po_update_description_prices_from_product/' + product + '/' + qty, function(data) {
+        $(_this).closest('tr').find('.fnt-description').val(data.description);
+        $(_this).closest('tr').find('.fnt-price').val(data.price);
+        $(_this).closest('tr').find('.fnt-amount').val(data.amount);
+        $(_this).closest('tr').find('.fnt-tax').val(data.tax);
+      })
+      return false;
+    });
+
+    // when the #fnt-product field changes (DO NOT USE HERE!)
     $("#fnt-product").change(function() {
       // make a POST call and replace the content
       var product = $('select#fnt-product :selected').val();
@@ -53,14 +73,14 @@
   <tbody>
     <%= f.simple_fields_for :purchase_order_items, defaults: { input_html: { class: 'sub-form' } } do |i| %>
     <tr class="fields">
-      <td><%= i.association :product, label: false, collection: Product.all(order: 'product_code'), input_html: { class: 'isel2', id: 'fnt-product' } %></td>
-      <td><%= i.input :description, label: false, input_html: { onkeyup: "caps(this)", class: 'sub-alfanumeric-text-field', id: 'fnt-description' } %></td>
-      <td><%= i.input :quantity, label: false, as: :string, input_html: { value: (number_with_precision(i.object.quantity, precision: 4) if i.object.quantity), class: 'sub-number-text-field', id: 'fnt-quantity' } %></td>
-      <td><%= i.input :price, label: false, as: :string, input_html: { value: (number_with_precision(i.object.price, precision: 4) if i.object.price), class: 'sub-number-text-field', id: 'fnt-price' } %></td>
-      <td><%= i.input :discount_pct, label: false, as: :string, input_html: { value: (number_with_precision(i.object.discount_pct, precision: 2) if i.object.discount_pct), class: 'sub-number-text-field', id: 'fnt-discount-pct' } %></td>
-      <td><%= i.input :discount, label: false, as: :string, input_html: { value: (number_with_precision(i.object.discount, precision: 4) if i.object.discount), class: 'sub-number-text-field', id: 'fnt-discount' } %></td>
-      <td><%= i.input :amount, disabled: true, label: false, as: :string, input_html: { value: (number_with_precision(i.object.amount, precision: 4) if i.object.amount), class: 'sub-number-text-field sub-disabled-field', id: 'fnt-amount' } %></td>
-      <td><%= i.input :tax, disabled: true, label: false, as: :string, input_html: { value: (number_with_precision(i.object.tax, precision: 4) if i.object.tax), class: 'sub-number-text-field sub-disabled-field', id: 'fnt-tax' } %></td>
+      <td><%= i.association :product, label: false, collection: Product.all(order: 'product_code'), input_html: { class: 'isel2 fnt-product', name: 'fnt-product' } %></td>
+      <td><%= i.input :description, label: false, input_html: { onkeyup: "caps(this)", class: 'sub-alfanumeric-text-field fnt-description', name: 'fnt-description' } %></td>
+      <td><%= i.input :quantity, label: false, as: :string, input_html: { value: (number_with_precision(i.object.quantity, precision: 4) if i.object.quantity), class: 'sub-number-text-field fnt-quantity', name: 'fnt-quantity' } %></td>
+      <td><%= i.input :price, label: false, as: :string, input_html: { value: (number_with_precision(i.object.price, precision: 4) if i.object.price), class: 'sub-number-text-field fnt-price', name: 'fnt-price' } %></td>
+      <td><%= i.input :discount_pct, label: false, as: :string, input_html: { value: (number_with_precision(i.object.discount_pct, precision: 2) if i.object.discount_pct), class: 'sub-number-text-field', name: 'fnt-discount-pct' } %></td>
+      <td><%= i.input :discount, label: false, as: :string, input_html: { value: (number_with_precision(i.object.discount, precision: 4) if i.object.discount), class: 'sub-number-text-field', name: 'fnt-discount' } %></td>
+      <td><%= i.input :amount, disabled: true, label: false, as: :string, input_html: { value: (number_with_precision(i.object.amount, precision: 4) if i.object.amount), class: 'sub-number-text-field sub-disabled-field fnt-amount', name: 'fnt-amount' } %></td>
+      <td><%= i.input :tax, disabled: true, label: false, as: :string, input_html: { value: (number_with_precision(i.object.tax, precision: 4) if i.object.tax), class: 'sub-number-text-field sub-disabled-field fnt-tax', name: 'fnt-tax' } %></td>
       <% if current_page?(new_purchase_order_path) || current_page?(edit_purchase_order_path) %>
       <td><%= link_to_remove_fields('<i class="icon-trash"></i>'.html_safe, i) %></td>
       <% end %>
