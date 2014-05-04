@@ -12,6 +12,8 @@ en:
     attributes:
       work_order:
         order_no: "No."
+        remarks: "Remarks"
+        description: "Description"
         work_order_type: "Type"
         work_order_type_id: "Type"
         work_order_status: "Status"

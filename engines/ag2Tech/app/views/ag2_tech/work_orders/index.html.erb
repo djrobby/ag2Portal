@@ -43,6 +43,7 @@
         <thead>
           <tr>
             <th><%= t 'activerecord.attributes.work_order.order_no' %></th>
+            <th><%= t 'activerecord.attributes.work_order.description' %></th>
             <th><%= t 'activerecord.attributes.work_order.project' %></th>
             <th><%= t 'activerecord.attributes.work_order.work_order_type' %></th>
             <th><%= t 'activerecord.attributes.work_order.work_order_status' %></th>
@@ -59,6 +60,7 @@
           <tr class="inactive-row">
             <% end %>
             <td><%= link_to order.order_no, order %></td>
+            <td><%= order.summary %></td>
             <td><%= order.project.full_name unless order.project.blank? %></td>
             <td><%= order.work_order_type.name unless order.work_order_type.blank? %></td>
             <td><%= order.work_order_status.name unless order.work_order_status.blank? %></td>

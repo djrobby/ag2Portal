@@ -5,23 +5,46 @@ module Ag2Purchase
     include ActionView::Helpers::NumberHelper
     before_filter :authenticate_user!
     load_and_authorize_resource
-    skip_load_and_authorize_resource :only => [:po_update_description_prices_from_product]
-
+    skip_load_and_authorize_resource :only => [:po_update_description_prices_from_product,
+                                               :po_update_amount_from_price_or_quantity]
     # Update description and prices text fields at view from product select
     def po_update_description_prices_from_product
       @product = Product.find(params[:product])
       @prices = @product.purchase_prices
-      qty = params[:qty].to_f
+      qty = params[:qty].to_f / 10000
       price = @product.reference_price
       amount = qty * price
       tax = amount * (@product.tax_type.tax / 100)
       price = number_with_precision(price, precision: 4)
       tax = number_with_precision(tax, precision: 4)
       amount = number_with_precision(amount, precision: 4)
-      @json_data = { "description" => @product.main_description, "price" => price.to_s, "amount" => amount.to_s, "tax" => tax.to_s }
+      @json_data = { "description" => @product.main_description, "price" => price.to_s, "amount" => amount.to_s, "tax" => tax.to_s, "type" => @product.tax_type.id }
 
       respond_to do |format|
         format.html # po_update_description_prices_from_product.html.erb does not exist! JSON only
+        format.json { render json: @json_data }
+      end
+    end
+
+    # Update amount and tax text fields at view (quantity or price changed)
+    def po_update_amount_from_price_or_quantity
+      price = params[:price].to_f / 10000
+      qty = params[:qty].to_f / 10000
+      tax_type = params[:tax_type].to_i
+      if tax_type.blank? || tax_type == "0"
+        tax_type = Product.find(params[:product]).tax_type.id
+      end
+      tax = TaxType.find(tax_type).tax
+      amount = qty * price
+      tax = amount * (tax / 100)
+      qty = number_with_precision(qty, precision: 4)
+      price = number_with_precision(price, precision: 4)
+      amount = number_with_precision(amount, precision: 4)
+      tax = number_with_precision(tax, precision: 4)
+      @json_data = { "quantity" => qty.to_s, "price" => price.to_s, "amount" => amount.to_s, "tax" => tax.to_s }
+
+      respond_to do |format|
+        format.html # po_update_amount_from_price_or_quantity.html.erb does not exist! JSON only
         format.json { render json: @json_data }
       end
     end

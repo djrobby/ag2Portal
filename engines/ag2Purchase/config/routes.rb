@@ -3,7 +3,11 @@ Ag2Purchase::Engine.routes.draw do
     # Get
     get "home/index"
     
+    # Patterns
+    DECIMAL_PATTERN = /-?\d+(\.\d+)/
+    
     # Routes for jQuery POSTs
+    # Numbers with decimals (.) must be multiplied (by 1... and the same zeroes positions) before passed as REST parameter! 
     match 'suppliers/update_province_textfield_from_town/:id', :controller => 'suppliers', :action => 'update_province_textfield_from_town'
     match 'suppliers/:id/update_province_textfield_from_town/:id', :controller => 'suppliers', :action => 'update_province_textfield_from_town'
     match 'suppliers/update_province_textfield_from_zipcode/:id', :controller => 'suppliers', :action => 'update_province_textfield_from_zipcode'
@@ -19,6 +23,9 @@ Ag2Purchase::Engine.routes.draw do
     match 'purchase_orders/po_update_description_prices_from_product/:product/:qty', :controller => 'purchase_orders', :action => 'po_update_description_prices_from_product'
     match 'po_update_description_prices_from_product/:product/:qty', :controller => 'purchase_orders', :action => 'po_update_description_prices_from_product'
     match 'purchase_orders/:id/po_update_description_prices_from_product/:product/:qty', :controller => 'purchase_orders', :action => 'po_update_description_prices_from_product'
+    match 'purchase_orders/po_update_amount_from_price_or_quantity/:price/:qty/:tax_type', :controller => 'purchase_orders', :action => 'po_update_amount_from_price_or_quantity'
+    match 'po_update_amount_from_price_or_quantity/:price/:qty/:tax_type', :controller => 'purchase_orders', :action => 'po_update_amount_from_price_or_quantity'
+    match 'purchase_orders/:id/po_update_amount_from_price_or_quantity/:price/:qty/:tax_type', :controller => 'purchase_orders', :action => 'po_update_amount_from_price_or_quantity'
 
     # Resources
     resources :suppliers

@@ -10,7 +10,7 @@ class WorkOrder < ActiveRecord::Base
   attr_accessible :closed_at, :completed_at, :order_no, :started_at,
                   :work_order_labor_id, :work_order_status_id, :work_order_type_id,
                   :charge_account_id, :project_id, :area_id, :store_id, :client_id,
-                  :remarks
+                  :remarks, :description
 
   has_many :work_order_items, dependent: :destroy
   has_many :work_order_workers, dependent: :destroy
@@ -21,17 +21,36 @@ class WorkOrder < ActiveRecord::Base
 
   has_paper_trail
 
-  validates :order_no,           :presence => true,
-                                 :length => { :in => 7..17 },
-                                 :uniqueness => true
-  validates :charge_account,     :presence => true
-  validates :project,            :presence => true
-  validates :work_order_labor,   :presence => true
-  validates :work_order_status,  :presence => true
-  validates :work_order_type,    :presence => true
+  validates :order_no,          :presence => true,
+                                :length => { :in => 7..17 },
+                                :uniqueness => true
+  validates :description,       :presence => true,
+                                :length => { :maximum => 100 }
+  validates :charge_account,    :presence => true
+  validates :project,           :presence => true
+  validates :work_order_labor,  :presence => true
+  validates :work_order_status, :presence => true
+  validates :work_order_type,   :presence => true
 
   before_destroy :check_for_dependent_records
 
+  def to_label
+    "#{full_name}"
+  end
+
+  def full_name
+    full_name = ""
+    if !self.order_no.blank?
+      full_name += self.order_no
+    end
+    full_name += " " + summary
+    full_name
+  end
+
+  def summary
+    description.blank? ? "N/A" : description[0,40]
+  end
+  
   #
   # Records navigator
   #

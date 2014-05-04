@@ -10,40 +10,40 @@
       <td><%= @work_order.order_no %></td>
     </tr>
     <tr>
+      <td><%=t 'activerecord.attributes.work_order.description' %>:</td>
+      <td><%= @work_order.summary %></td>
       <td><%=t 'activerecord.attributes.work_order.project' %>:</td>
       <td><%= @work_order.project.full_name %></td>
+    </tr>
+    <tr>
       <td><%=t 'activerecord.attributes.work_order.work_order_type' %>:</td>
       <td><%= @work_order.work_order_type.name %></td>
-    </tr>
-    <tr>
       <td><%=t 'activerecord.attributes.work_order.work_order_labor' %>:</td>
       <td><%= @work_order.work_order_labor.name %></td>
+    </tr>
+    <tr>
       <td><%=t 'activerecord.attributes.work_order.work_order_status' %>:</td>
       <td><%= @work_order.work_order_status.name %></td>
-    </tr>
-    <tr>
       <td><%=t 'activerecord.attributes.work_order.area' %>:</td>
       <td><%= @work_order.area.full_name unless @work_order.area.blank? %></td>
+    </tr>
+    <tr>
       <td><%=t 'activerecord.attributes.work_order.charge_account' %>:</td>
       <td><%= @work_order.charge_account.full_name %></td>
-    </tr>
-    <tr>
       <td><%=t 'activerecord.attributes.work_order.client' %>:</td>
       <td><%= @work_order.client.full_name unless @work_order.client.blank? %></td>
+    </tr>
+    <tr>
       <td><%=t 'activerecord.attributes.work_order.store' %>:</td>
       <td><%= @work_order.store.name unless @work_order.store.blank? %></td>
-    </tr>
-    <tr>
       <td><%= t :"activerecord.attributes.work_order.started_at" %>:</td>
       <td><%= @work_order.started_at.strftime("%d/%m/%Y") unless @work_order.started_at.blank? %></td>
-      <td><%= t :"activerecord.attributes.work_order.completed_at" %>:</td>
-      <td><%= @work_order.completed_at.strftime("%d/%m/%Y") unless @work_order.completed_at.blank? %></td>
     </tr>
     <tr>
+      <td><%= t :"activerecord.attributes.work_order.completed_at" %>:</td>
+      <td><%= @work_order.completed_at.strftime("%d/%m/%Y") unless @work_order.completed_at.blank? %></td>
       <td><%= t :"activerecord.attributes.work_order.closed_at" %>:</td>
       <td><%= @work_order.closed_at.strftime("%d/%m/%Y") unless @work_order.closed_at.blank? %></td>
-      <td></td>
-      <td></td>
     </tr>
     <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @work_order } %>
     <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @work_order } %>

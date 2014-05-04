@@ -231,8 +231,8 @@ th .current:focus {
   //height: 20px !important;
   //line-height: 20px !important;
   width: 99% !important;
-  padding: 3px !important;
-  margin-bottom: 5px !important;
+  padding: 3px 2px !important;
+  margin-bottom: 0px !important;
   font-size: 12px !important;
   color: #555555;
   vertical-align: middle;
@@ -244,14 +244,14 @@ th .current:focus {
   text-align: left !important;
   width: 99% !important;
   padding: 3px 2px !important;
-  margin-bottom: 5px !important;
+  margin-bottom: 0px !important;
   font-size: 12px !important;
 }
 .sub-number-text-field {
   text-align: right !important;
   width: 99% !important;
   padding: 3px 2px !important;
-  margin-bottom: 5px !important;
+  margin-bottom: 0px !important;
   font-size: 12px !important;
 }
 .sub-disabled-field {
@@ -260,7 +260,7 @@ th .current:focus {
 .sub-select-field {
   text-align: left !important;
   width: 99% !important;
-  font-size: 12px !important;
+  margin-bottom: 0px !important;
   font-size: 12px !important;
 }
 .sub-select2-field {
