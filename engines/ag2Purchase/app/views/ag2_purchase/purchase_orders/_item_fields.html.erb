@@ -42,19 +42,14 @@
         $("#fnt-charge-account").html("");
         $("#fnt-charge-account").select2("val", "");
         $("#fnt-charge-account").append($('<option></option>').val("").html(""));
-        $("#fnt-store").html("");
-        $("#fnt-store").select2("val", "");
-        $("#fnt-store").append($('<option></option>').val("").html(""));
         $.each(data, function(id, option) {
+            alert(id + ": " + option.id);
           switch (id) {
             case 'project':
               $("#fnt-project").append($('<option></option>').val(option.id).html(option.project_code + " " + option.name));
               break;
             case 'charge_account':
               $("#fnt-charge-account").append($('<option></option>').val(option.id).html(option.account_code + " " + option.name));
-              break;
-            case 'store':
-              $("#fnt-store").append($('<option></option>').val(option.id).html(option.name));
               break;
           }
         });

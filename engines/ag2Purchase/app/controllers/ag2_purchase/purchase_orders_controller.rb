@@ -6,6 +6,8 @@ module Ag2Purchase
     before_filter :authenticate_user!
     load_and_authorize_resource
     skip_load_and_authorize_resource :only => [:po_update_description_prices_from_product,
+                                               :po_update_project_from_order,
+                                               :po_update_charge_account_from_project,
                                                :po_update_amount_from_price_or_quantity]
     # Update description and prices text fields at view from product select
     def po_update_description_prices_from_product
@@ -37,21 +39,11 @@ module Ag2Purchase
         if @charge_account.blank?
           @charge_account = @project.blank? ? ChargeAccount.all(order: 'account_code') : @project.charge_accounts(order: 'account_code')
         end
-        if !@project.company.blank? && !@project.office.blank?
-          @store = Store.where("company_id = ? AND office_id = ?", @project.company_id, @project.office_id).order('name')
-        elsif !@project.company.blank? && @project.office.blank?
-          @store = Store.where("company_id = ?", @project.company_id).order('name')
-        elsif @project.company.blank? && !@project.office.blank?
-          @store = Store.where("office_id = ?", @project.office_id).order('name')
-        else
-          @store = Store.all(order: 'name')
-        end
       else
         @project = Project.all(order: 'name')
         @charge_account = ChargeAccount.all(order: 'account_code')
-        @store = Store.all(order: 'name')
       end
-      @json_data = { "project" => @project, "charge_account" => @charge_account, "store" => @store }
+      @json_data = { "project" => @project, "charge_account" => @charge_account }
 
       respond_to do |format|
         format.html # po_update_project_from_order.html.erb does not exist! JSON only

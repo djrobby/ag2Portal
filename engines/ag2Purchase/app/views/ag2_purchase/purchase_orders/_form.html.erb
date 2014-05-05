@@ -1,7 +1,8 @@
 <script>
   $(document).ready(function() {
     $('select.sel2').select2({
-      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; }
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      allowClear: true
     });
     $('.date_picker').datepicker({
       format : 'dd/mm/yyyy',
@@ -13,6 +14,25 @@
       $('#purchase_order_order_date').datepicker('setValue', es_date(new Date()));
     }
   });
+  
+  jQuery(function($) {
+    // when the #purchase_order_project_id field changes
+    $("#purchase_order_project_id").change(function() {
+      // make a POST call and replace the content
+      var order = $('select#purchase_order_project_id :selected').val();
+      if (order == "")
+        order = "0";
+      jQuery.getJSON('po_update_charge_account_from_project/' + order, function(data) {
+        $("#purchase_order_charge_account_id").html("");
+        $("#purchase_order_charge_account_id").select2("val", "");
+        $("#purchase_order_charge_account_id").append($('<option></option>').val("").html(""));
+        $.each(data, function(id, option) {
+          $("#purchase_order_charge_account_id").append($('<option></option>').val(option.id).html(option.account_code + " " + option.name));
+        });
+      })
+      return false;
+    });
+  })
 </script>
 
 <%= simple_form_for @purchase_order, :html => {:class => 'form-vertical well' } do |f| %>
