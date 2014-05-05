@@ -18,11 +18,60 @@ module Ag2Purchase
       price = number_with_precision(price, precision: 4)
       tax = number_with_precision(tax, precision: 4)
       amount = number_with_precision(amount, precision: 4)
-      @json_data = { "description" => @product.main_description, "price" => price.to_s, "amount" => amount.to_s, "tax" => tax.to_s, "type" => @product.tax_type.id }
+      @json_data = { "description" => @product.main_description, "price" => price.to_s, "amount" => amount.to_s,
+                     "tax" => tax.to_s, "type" => @product.tax_type.id }
 
       respond_to do |format|
         format.html # po_update_description_prices_from_product.html.erb does not exist! JSON only
         format.json { render json: @json_data }
+      end
+    end
+
+    # Update project and charge account text fields at view from work order select
+    def po_update_project_from_order
+      order = params[:order]
+      if order != '0'
+        @order = WorkOrder.find(order)
+        @project = @order.project
+        @charge_account = @order.charge_account
+        if @charge_account.blank?
+          @charge_account = @project.blank? ? ChargeAccount.all(order: 'account_code') : @project.charge_accounts(order: 'account_code')
+        end
+        if !@project.company.blank? && !@project.office.blank?
+          @store = Store.where("company_id = ? AND office_id = ?", @project.company_id, @project.office_id).order('name')
+        elsif !@project.company.blank? && @project.office.blank?
+          @store = Store.where("company_id = ?", @project.company_id).order('name')
+        elsif @project.company.blank? && !@project.office.blank?
+          @store = Store.where("office_id = ?", @project.office_id).order('name')
+        else
+          @store = Store.all(order: 'name')
+        end
+      else
+        @project = Project.all(order: 'name')
+        @charge_account = ChargeAccount.all(order: 'account_code')
+        @store = Store.all(order: 'name')
+      end
+      @json_data = { "project" => @project, "charge_account" => @charge_account, "store" => @store }
+
+      respond_to do |format|
+        format.html # po_update_project_from_order.html.erb does not exist! JSON only
+        format.json { render json: @json_data }
+      end
+    end
+
+    # Update charge account text fields at view from project select
+    def po_update_charge_account_from_project
+      project = params[:order]
+      if project != '0'
+        @project = Project.find(project)
+        @charge_accounts = @project.blank? ? ChargeAccount.all(order: 'account_code') : @project.charge_accounts(order: 'account_code')
+      else
+        @charge_accounts = ChargeAccount.all(order: 'account_code')
+      end
+
+      respond_to do |format|
+        format.html # po_update_charge_account_from_project.html.erb does not exist! JSON only
+        format.json { render json: @charge_accounts }
       end
     end
 
@@ -31,17 +80,25 @@ module Ag2Purchase
       price = params[:price].to_f / 10000
       qty = params[:qty].to_f / 10000
       tax_type = params[:tax_type].to_i
+      discount_p = params[:discount_p].to_f / 100
+      discount = params[:discount].to_f / 10000
       if tax_type.blank? || tax_type == "0"
         tax_type = Product.find(params[:product]).tax_type.id
       end
       tax = TaxType.find(tax_type).tax
-      amount = qty * price
+      if discount_p > 0
+        discount = price * (discount_p / 100)
+      end
+      amount = qty * (price - discount)
       tax = amount * (tax / 100)
       qty = number_with_precision(qty, precision: 4)
       price = number_with_precision(price, precision: 4)
       amount = number_with_precision(amount, precision: 4)
       tax = number_with_precision(tax, precision: 4)
-      @json_data = { "quantity" => qty.to_s, "price" => price.to_s, "amount" => amount.to_s, "tax" => tax.to_s }
+      discount_p = number_with_precision(discount_p, precision: 2)
+      discount = number_with_precision(discount, precision: 4)
+      @json_data = { "quantity" => qty.to_s, "price" => price.to_s, "amount" => amount.to_s, "tax" => tax.to_s,
+                     "discountp" => discount_p.to_s, "discount" => discount.to_s }
 
       respond_to do |format|
         format.html # po_update_amount_from_price_or_quantity.html.erb does not exist! JSON only

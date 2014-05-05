@@ -23,9 +23,15 @@ Ag2Purchase::Engine.routes.draw do
     match 'purchase_orders/po_update_description_prices_from_product/:product/:qty', :controller => 'purchase_orders', :action => 'po_update_description_prices_from_product'
     match 'po_update_description_prices_from_product/:product/:qty', :controller => 'purchase_orders', :action => 'po_update_description_prices_from_product'
     match 'purchase_orders/:id/po_update_description_prices_from_product/:product/:qty', :controller => 'purchase_orders', :action => 'po_update_description_prices_from_product'
-    match 'purchase_orders/po_update_amount_from_price_or_quantity/:price/:qty/:tax_type', :controller => 'purchase_orders', :action => 'po_update_amount_from_price_or_quantity'
-    match 'po_update_amount_from_price_or_quantity/:price/:qty/:tax_type', :controller => 'purchase_orders', :action => 'po_update_amount_from_price_or_quantity'
-    match 'purchase_orders/:id/po_update_amount_from_price_or_quantity/:price/:qty/:tax_type', :controller => 'purchase_orders', :action => 'po_update_amount_from_price_or_quantity'
+    match 'purchase_orders/po_update_amount_from_price_or_quantity/:price/:qty/:tax_type/:discount_p/:discount', :controller => 'purchase_orders', :action => 'po_update_amount_from_price_or_quantity'
+    match 'po_update_amount_from_price_or_quantity/:price/:qty/:tax_type/:discount_p/:discount', :controller => 'purchase_orders', :action => 'po_update_amount_from_price_or_quantity'
+    match 'purchase_orders/:id/po_update_amount_from_price_or_quantity/:price/:qty/:tax_type/:discount_p/:discount', :controller => 'purchase_orders', :action => 'po_update_amount_from_price_or_quantity'
+    match 'purchase_orders/po_update_project_from_order/:order', :controller => 'purchase_orders', :action => 'po_update_project_from_order'
+    match 'po_update_project_from_order/:price/:qty/:order', :controller => 'purchase_orders', :action => 'po_update_project_from_order'
+    match 'purchase_orders/:id/po_update_project_from_order/:order', :controller => 'purchase_orders', :action => 'po_update_project_from_order'
+    match 'purchase_orders/po_update_charge_account_from_project/:order', :controller => 'purchase_orders', :action => 'po_update_charge_account_from_project'
+    match 'po_update_charge_account_from_project/:price/:qty/:order', :controller => 'purchase_orders', :action => 'po_update_charge_account_from_project'
+    match 'purchase_orders/:id/po_update_charge_account_from_project/:order', :controller => 'purchase_orders', :action => 'po_update_charge_account_from_project'
 
     # Resources
     resources :suppliers

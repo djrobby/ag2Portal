@@ -27,6 +27,9 @@
         $(_this).closest('tr').find('.fnt-price').val(data.price);
         $(_this).closest('tr').find('.fnt-amount').val(data.amount);
         $(_this).closest('tr').find('.fnt-tax').val(data.tax);
+        $(_this).closest('tr').find(".fnt-tax-type").val(data.type);
+        $(_this).closest('tr').find('.fnt-discount-pct').val("0,00");
+        $(_this).closest('tr').find('.fnt-discount').val("0,0000");
       })
       return false;
     });
@@ -35,25 +38,7 @@
     $(".fnt-quantity").change(function() {
       // preserve the current object
       var _this = (this);
-      // make a POST call and replace the content
-      var price = $(this).closest('tr').find('.fnt-price').val();
-      if (price == "")
-        price = "0";
-      var qty = $(this).closest('tr').find('.fnt-quantity').val();
-      if (qty == "")
-        qty = "0";
-      var tax_type = $(this).closest('tr').find('.fnt-tax-type').val();
-      if (tax_type == "")
-        tax_type = "0";
-      // Right formatted for passing as REST parameter
-      price = price.replace(",", ".") * 10000;
-      qty = qty.replace(",", ".") * 10000;
-      jQuery.getJSON('po_update_amount_from_price_or_quantity/' + price + '/' + qty + '/' + tax_type, function(data) {
-        $(_this).closest('tr').find('.fnt-price').val(data.price);
-        $(_this).closest('tr').find('.fnt-quantity').val(data.quantity);
-        $(_this).closest('tr').find('.fnt-amount').val(data.amount);
-        $(_this).closest('tr').find('.fnt-tax').val(data.tax);
-      })
+      recalculate(_this);
       return false;
     });
 
@@ -61,27 +46,58 @@
     $(".fnt-price").change(function() {
       // preserve the current object
       var _this = (this);
+      recalculate(_this);
+      return false;
+    });
+
+    // when the .fnt-discount-pct field changes
+    $(".fnt-discount-pct").change(function() {
+      // preserve the current object
+      var _this = (this);
+      recalculate(_this);
+      return false;
+    });
+
+    // when the .fnt-discount field changes
+    $(".fnt-discount").change(function() {
+      // preserve the current object
+      var _this = (this);
+      recalculate(_this);
+      return false;
+    });
+    
+    // Recalculate amounts & prices
+    function recalculate(_this) {
       // make a POST call and replace the content
-      var price = $(this).closest('tr').find('.fnt-price').val();
+      var price = $(_this).closest('tr').find('.fnt-price').val();
       if (price == "")
         price = "0";
-      var qty = $(this).closest('tr').find('.fnt-quantity').val();
+      var qty = $(_this).closest('tr').find('.fnt-quantity').val();
       if (qty == "")
         qty = "0";
-      var tax_type = $(this).closest('tr').find('.fnt-tax-type').val();
+      var tax_type = $(_this).closest('tr').find('.fnt-tax-type').val();
       if (tax_type == "")
         tax_type = "0";
+      var discount_p = $(_this).closest('tr').find('.fnt-discount-pct').val();
+      if (discount_p == "")
+        discount_p = "0";
+      var discount = $(_this).closest('tr').find('.fnt-discount').val();
+      if (discount == "")
+        discount = "0";
       // Right formatted for passing as REST parameter
       price = price.replace(",", ".") * 10000;
       qty = qty.replace(",", ".") * 10000;
-      jQuery.getJSON('po_update_amount_from_price_or_quantity/' + price + '/' + qty + '/' + tax_type, function(data) {
+      discount_p = discount_p.replace(",", ".") * 100;
+      discount = discount.replace(",", ".") * 10000;
+      jQuery.getJSON('po_update_amount_from_price_or_quantity/' + price + '/' + qty + '/' + tax_type + '/' + discount_p + '/' + discount, function(data) {
         $(_this).closest('tr').find('.fnt-price').val(data.price);
         $(_this).closest('tr').find('.fnt-quantity').val(data.quantity);
         $(_this).closest('tr').find('.fnt-amount').val(data.amount);
         $(_this).closest('tr').find('.fnt-tax').val(data.tax);
+        $(_this).closest('tr').find('.fnt-discount-pct').val(data.discountp);
+        $(_this).closest('tr').find('.fnt-discount').val(data.discount);
       })
-      return false;
-    });
+    }
   })
 </script>
 
@@ -114,8 +130,8 @@
       <td><%= i.input :description, label: false, input_html: { onkeyup: "caps(this)", class: 'sub-alfanumeric-text-field fnt-description', name: 'fnt-description' } %></td>
       <td><%= i.input :quantity, label: false, as: :string, input_html: { value: (number_with_precision(i.object.quantity, precision: 4) if i.object.quantity), class: 'sub-number-text-field fnt-quantity', name: 'fnt-quantity' } %></td>
       <td><%= i.input :price, label: false, as: :string, input_html: { value: (number_with_precision(i.object.price, precision: 4) if i.object.price), class: 'sub-number-text-field fnt-price', name: 'fnt-price' } %></td>
-      <td><%= i.input :discount_pct, label: false, as: :string, input_html: { value: (number_with_precision(i.object.discount_pct, precision: 2) if i.object.discount_pct), class: 'sub-number-text-field', name: 'fnt-discount-pct' } %></td>
-      <td><%= i.input :discount, label: false, as: :string, input_html: { value: (number_with_precision(i.object.discount, precision: 4) if i.object.discount), class: 'sub-number-text-field', name: 'fnt-discount' } %></td>
+      <td><%= i.input :discount_pct, label: false, as: :string, input_html: { value: (number_with_precision(i.object.discount_pct, precision: 2) if i.object.discount_pct), class: 'sub-number-text-field fnt-discount-pct', name: 'fnt-discount-pct' } %></td>
+      <td><%= i.input :discount, label: false, as: :string, input_html: { value: (number_with_precision(i.object.discount, precision: 4) if i.object.discount), class: 'sub-number-text-field fnt-discount', name: 'fnt-discount' } %></td>
       <td><%= i.input :amount, disabled: true, label: false, as: :string, input_html: { value: (number_with_precision(i.object.amount, precision: 4) if i.object.amount), class: 'sub-number-text-field sub-disabled-field fnt-amount', name: 'fnt-amount' } %></td>
       <td><%= i.input :tax, disabled: true, label: false, as: :string, input_html: { value: (number_with_precision(i.object.tax, precision: 4) if i.object.tax), class: 'sub-number-text-field sub-disabled-field fnt-tax', name: 'fnt-tax' } %></td>
       <% if current_page?(new_purchase_order_path) || current_page?(edit_purchase_order_path) %>

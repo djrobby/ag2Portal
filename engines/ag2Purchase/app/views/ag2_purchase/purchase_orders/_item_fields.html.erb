@@ -23,34 +23,67 @@
         $("#fnt-amount").val(data.amount);
         $("#fnt-tax-type").val(data.type);
         $("#fnt-tax").val(data.tax);
-      })
+        $('#fnt-discount-pct').val("0,00");
+        $('#fnt-discount').val("0,0000");
+      });
       return false;
     });
-  })
+
+    // when the #fnt-work-order field changes
+    $("#fnt-work-order").change(function() {
+      // make a POST call and replace the content
+      var order = $('select#fnt-work-order :selected').val();
+      if (order == "")
+        order = "0";
+      jQuery.getJSON('po_update_project_from_order/' + order, function(data) {
+        $("#fnt-project").html("");
+        $("#fnt-project").select2("val", "");
+        $("#fnt-project").append($('<option></option>').val("").html(""));
+        $("#fnt-charge-account").html("");
+        $("#fnt-charge-account").select2("val", "");
+        $("#fnt-charge-account").append($('<option></option>').val("").html(""));
+        $("#fnt-store").html("");
+        $("#fnt-store").select2("val", "");
+        $("#fnt-store").append($('<option></option>').val("").html(""));
+        $.each(data, function(id, option) {
+          switch (id) {
+            case 'project':
+              $("#fnt-project").append($('<option></option>').val(option.id).html(option.project_code + " " + option.name));
+              break;
+            case 'charge_account':
+              $("#fnt-charge-account").append($('<option></option>').val(option.id).html(option.account_code + " " + option.name));
+              break;
+            case 'store':
+              $("#fnt-store").append($('<option></option>').val(option.id).html(option.name));
+              break;
+          }
+        });
+      });
+      return false;
+    });
+
+    // when the #fnt-project field changes
+    $("#fnt-project").change(function() {
+      // make a POST call and replace the content
+      var order = $('select#fnt-project :selected').val();
+      if (order == "")
+        order = "0";
+      jQuery.getJSON('po_update_charge_account_from_project/' + order, function(data) {
+        $("#fnt-charge-account").html("");
+        $("#fnt-charge-account").select2("val", "");
+        $("#fnt_charge-account").append($('<option></option>').val("").html(""));
+        $.each(data, function(id, option) {
+          $("#fnt-charge-account").append($('<option></option>').val(option.id).html(option.account_code + " " + option.name));
+        });
+      });
+      return false;
+    });
 
     // when the #fnt-quantity field changes
     $("#fnt-quantity").change(function() {
       // preserve the current object
       var _this = (this);
-      // make a POST call and replace the content
-      var price = $(this).closest('tr').find('#fnt-price').val();
-      if (price == "")
-        price = "0";
-      var qty = $(this).closest('tr').find('#fnt-quantity').val();
-      if (qty == "")
-        qty = "0";
-      var tax_type = $(this).closest('tr').find('#fnt-tax-type').val();
-      if (tax_type == "")
-        tax_type = "0";
-      // Right formatted for passing as REST parameter
-      price = price.replace(",", ".") * 10000;
-      qty = qty.replace(",", ".") * 10000;
-      jQuery.getJSON('po_update_amount_from_price_or_quantity/' + price + '/' + qty + '/' + tax_type, function(data) {
-        $('#fnt-price').val(data.price);
-        $('#fnt-quantity').val(data.quantity);
-        $('#fnt-amount').val(data.amount);
-        $('#fnt-tax').val(data.tax);
-      })
+      recalculate(_this);
       return false;
     });
 
@@ -58,27 +91,59 @@
     $("#fnt-price").change(function() {
       // preserve the current object
       var _this = (this);
+      recalculate(_this);
+      return false;
+    });
+
+    // when the #fnt-discount-pct field changes
+    $("#fnt-discount-pct").change(function() {
+      // preserve the current object
+      var _this = (this);
+      recalculate(_this);
+      return false;
+    });
+
+    // when the #fnt-discount field changes
+    $("#fnt-discount").change(function() {
+      // preserve the current object
+      var _this = (this);
+      recalculate(_this);
+      return false;
+    });
+
+    // Recalculate amounts & prices
+    function recalculate(_this) {
       // make a POST call and replace the content
-      var price = $(this).closest('tr').find('#fnt-price').val();
+      var price = $('#fnt-price').val();
       if (price == "")
         price = "0";
-      var qty = $(this).closest('tr').find('#fnt-quantity').val();
+      var qty = $('#fnt-quantity').val();
       if (qty == "")
         qty = "0";
-      var tax_type = $(this).closest('tr').find('#fnt-tax-type').val();
+      var tax_type = $('#fnt-tax-type').val();
       if (tax_type == "")
         tax_type = "0";
+      var discount_p = $('#fnt-discount-pct').val();
+      if (discount_p == "")
+        discount_p = "0";
+      var discount = $('#fnt-discount').val();
+      if (discount == "")
+        discount = "0";
       // Right formatted for passing as REST parameter
       price = price.replace(",", ".") * 10000;
       qty = qty.replace(",", ".") * 10000;
-      jQuery.getJSON('po_update_amount_from_price_or_quantity/' + price + '/' + qty + '/' + tax_type, function(data) {
+      discount_p = discount_p.replace(",", ".") * 100;
+      discount = discount.replace(",", ".") * 10000;
+      jQuery.getJSON('po_update_amount_from_price_or_quantity/' + price + '/' + qty + '/' + tax_type + '/' + discount_p + '/' + discount, function(data) {
         $('#fnt-price').val(data.price);
         $('#fnt-quantity').val(data.quantity);
         $('#fnt-amount').val(data.amount);
         $('#fnt-tax').val(data.tax);
+        $('#fnt-discount-pct').val(data.discountp);
+        $('#fnt-discount').val(data.discount);
       })
-      return false;
-    });
+    }
+  })
 </script>
 
 <div id="new-item-fields" class="modal hide fade" data-backdrop="static">
