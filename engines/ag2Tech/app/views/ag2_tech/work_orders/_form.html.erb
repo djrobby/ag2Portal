@@ -20,14 +20,38 @@
       if (order == "")
         order = "0";
       jQuery.getJSON('wo_update_account_textfield_from_project/' + order, function(data) {
+        var c = data.charge_account;
+        var s = data.store;
         $("#work_order_charge_account_id").html("");
         $("#work_order_charge_account_id").select2("val", "");
         $("#work_order_charge_account_id").append($('<option></option>').val("").html(""));
-        $.each(data, function(id, option) {
-          $("#work_order_charge_account_id").append($('<option></option>').val(option.id).html(option.account_code + " " + option.name));
-        });
+        if (!c.length) {
+          $.each(data, function(id, option) {
+            if (id == 'charge_account') {
+              $("#work_order_charge_account_id").append($('<option></option>').val(option.id).html(option.account_code + " " + option.name));
+            }
+          });
+        } else {
+          $.each(c, function(id, option) {
+            $("#work_order_charge_account_id").append($('<option></option>').val(option.id).html(option.account_code + " " + option.name));
+          });
+        }
+        $("#work_order_store_id").html("");
+        $("#work_order_store_id").select2("val", "");
+        $("#work_order_store_id").append($('<option></option>').val("").html(""));
+        if (!s.length) {
+          $.each(data, function(id, option) {
+            if (id == 'store') {
+              $("#work_order_store_id").append($('<option></option>').val(option.id).html(option.name));
+            }
+          });
+        } else {
+          $.each(s, function(id, option) {
+            $("#work_order_store_id").append($('<option></option>').val(option.id).html(option.name));
+          });
+        }
         //$("#work_order_charge_account_id").val(data.id);
-      })
+      });
       return false;
     });
   })

@@ -23,13 +23,93 @@
       if (order == "")
         order = "0";
       jQuery.getJSON('po_update_charge_account_from_project/' + order, function(data) {
+        var c = data.charge_account;
+        var s = data.store;
         $("#purchase_order_charge_account_id").html("");
         $("#purchase_order_charge_account_id").select2("val", "");
         $("#purchase_order_charge_account_id").append($('<option></option>').val("").html(""));
-        $.each(data, function(id, option) {
-          $("#purchase_order_charge_account_id").append($('<option></option>').val(option.id).html(option.account_code + " " + option.name));
-        });
-      })
+        if (!c.length) {
+          $.each(data, function(id, option) {
+            if (id == 'charge_account') {
+              $("#purchase_order_charge_account_id").append($('<option></option>').val(option.id).html(option.account_code + " " + option.name));
+            }
+          });
+        } else {
+          $.each(c, function(id, option) {
+            $("#purchase_order_charge_account_id").append($('<option></option>').val(option.id).html(option.account_code + " " + option.name));
+          });
+        }
+        $("#purchase_order_store_id").html("");
+        $("#purchase_order_store_id").select2("val", "");
+        $("#purchase_order_store_id").append($('<option></option>').val("").html(""));
+        if (!s.length) {
+          $.each(data, function(id, option) {
+            if (id == 'store') {
+              $("#purchase_order_store_id").append($('<option></option>').val(option.id).html(option.name));
+            }
+          });
+        } else {
+          $.each(s, function(id, option) {
+            $("#purchase_order_store_id").append($('<option></option>').val(option.id).html(option.name));
+          });
+        }
+      });
+      return false;
+    });
+
+    // when the #purchase_order_work_order_id field changes
+    $("#purchase_order_work_order_id").change(function() {
+      // make a POST call and replace the content
+      var order = $('select#purchase_order_work_order_id :selected').val();
+      if (order == "")
+        order = "0";
+      jQuery.getJSON('po_update_project_from_order/' + order, function(data) {
+        var p = data.project;
+        var c = data.charge_account;
+        var s = data.store;
+        $("#purchase_order_project_id").html("");
+        $("#purchase_order_project_id").select2("val", "");
+        $("#purchase_order_project_id").append($('<option></option>').val("").html(""));
+        if (!p.length) {
+          $.each(data, function(id, option) {
+            if (id == 'project') {
+              $("#purchase_order_project_id").append($('<option></option>').val(option.id).html(option.project_code + " " + option.name));
+            }
+          });
+        } else {
+          $.each(p, function(id, option) {
+            $("#purchase_order_project_id").append($('<option></option>').val(option.id).html(option.project_code + " " + option.name));
+          });
+        }
+        $("#purchase_order_charge_account_id").html("");
+        $("#purchase_order_charge_account_id").select2("val", "");
+        $("#purchase_order_charge_account_id").append($('<option></option>').val("").html(""));
+        if (!c.length) {
+          $.each(data, function(id, option) {
+            if (id == 'charge_account') {
+              $("#purchase_order_charge_account_id").append($('<option></option>').val(option.id).html(option.account_code + " " + option.name));
+            }
+          });
+        } else {
+          $.each(c, function(id, option) {
+            $("#purchase_order_charge_account_id").append($('<option></option>').val(option.id).html(option.account_code + " " + option.name));
+          });
+        }
+        $("#purchase_order_store_id").html("");
+        $("#purchase_order_store_id").select2("val", "");
+        $("#purchase_order_store_id").append($('<option></option>').val("").html(""));
+        if (!s.length) {
+          $.each(data, function(id, option) {
+            if (id == 'store') {
+              $("#purchase_order_store_id").append($('<option></option>').val(option.id).html(option.name));
+            }
+          });
+        } else {
+          $.each(s, function(id, option) {
+            $("#purchase_order_store_id").append($('<option></option>').val(option.id).html(option.name));
+          });
+        }
+      });
       return false;
     });
   })
@@ -49,11 +129,11 @@
   <label class="multi-field-label-two"> <%= f.association :order_status, collection: OrderStatus.all(order: 'id'), input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %> </label>
 </div>
 <div>
+  <label class="multi-field-label-two"> <%= f.association :work_order, collection: WorkOrder.all(order: 'order_no'), input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
   <label class="multi-field-label-two"> <%= f.association :project, collection: Project.all(order: 'project_code'), input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
-  <label class="multi-field-label-two"> <%= f.association :charge_account, collection: ChargeAccount.all(order: 'account_code'), input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
 </div>
 <div>
-  <label class="multi-field-label-two"> <%= f.association :work_order, collection: WorkOrder.all(order: 'order_no'), input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.association :charge_account, collection: ChargeAccount.all(order: 'account_code'), input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
   <label class="multi-field-label-two"> <%= f.association :store, collection: Store.all(order: 'name'), input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
 </div>
 <!-- Items -->

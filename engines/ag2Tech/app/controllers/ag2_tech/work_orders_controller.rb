@@ -10,15 +10,18 @@ module Ag2Tech
     def wo_update_account_textfield_from_project
       project = params[:id]
       if project != '0'
-        @project = Project.find(params[:id])
-        @charge_accounts = @project.blank? ? ChargeAccount.all(order: 'account_code') : @project.charge_accounts(order: 'account_code')
+        @project = Project.find(project)
+        @charge_account = @project.blank? ? ChargeAccount.all(order: 'account_code') : @project.charge_accounts(order: 'account_code')
+        @store = project_stores(@project)
       else
-        @charge_accounts = ChargeAccount.all(order: 'account_code')
+        @charge_account = ChargeAccount.all(order: 'account_code')
+        @store = Store.all(order: 'name')
       end
+      @json_data = { "charge_account" => @charge_account, "store" => @store }
 
       respond_to do |format|
         format.html # wo_update_account_textfield_from_project.html.erb does not exist! JSON only
-        format.json { render json: @charge_accounts }
+        format.json { render json: @json_data }
       end
     end
 
@@ -145,6 +148,21 @@ module Ag2Tech
           format.json { render json: @work_order.errors, status: :unprocessable_entity }
         end
       end
+    end
+    
+    private
+    
+    def project_stores(_project)
+      if !_project.company.blank? && !_project.office.blank?
+        _store = Store.where("company_id = ? AND office_id = ?", _project.company.id, _project.office.id)
+      elsif !_project.company.blank? && _project.office.blank?
+        _store = Store.where("company_id = ?", _project.company.id)
+      elsif _project.company.blank? && !_project.office.blank?
+        _store = Store.where("office_id = ?", _project.office.id)
+      else
+        _store = Store.all(order: 'name')
+      end
+      _store
     end
   end
 end

@@ -36,23 +36,51 @@
       if (order == "")
         order = "0";
       jQuery.getJSON('po_update_project_from_order/' + order, function(data) {
+        var p = data.project;
+        var c = data.charge_account;
+        var s = data.store;
         $("#fnt-project").html("");
         $("#fnt-project").select2("val", "");
         $("#fnt-project").append($('<option></option>').val("").html(""));
+        if (!p.length) {
+          $.each(data, function(id, option) {
+            if (id == 'project') {
+              $("#fnt-project").append($('<option></option>').val(option.id).html(option.project_code + " " + option.name));
+            }
+          });
+        } else {
+          $.each(p, function(id, option) {
+            $("#fnt-project").append($('<option></option>').val(option.id).html(option.project_code + " " + option.name));
+          });
+        }
         $("#fnt-charge-account").html("");
         $("#fnt-charge-account").select2("val", "");
         $("#fnt-charge-account").append($('<option></option>').val("").html(""));
-        $.each(data, function(id, option) {
-            alert(id + ": " + option.id);
-          switch (id) {
-            case 'project':
-              $("#fnt-project").append($('<option></option>').val(option.id).html(option.project_code + " " + option.name));
-              break;
-            case 'charge_account':
+        if (!c.length) {
+          $.each(data, function(id, option) {
+            if (id == 'charge_account') {
               $("#fnt-charge-account").append($('<option></option>').val(option.id).html(option.account_code + " " + option.name));
-              break;
-          }
-        });
+            }
+          });
+        } else {
+          $.each(c, function(id, option) {
+            $("#fnt-charge-account").append($('<option></option>').val(option.id).html(option.account_code + " " + option.name));
+          });
+        }
+        $("#fnt-store").html("");
+        $("#fnt-store").select2("val", "");
+        $("#fnt-store").append($('<option></option>').val("").html(""));
+        if (!s.length) {
+          $.each(data, function(id, option) {
+            if (id == 'store') {
+              $("#fnt-store").append($('<option></option>').val(option.id).html(option.name));
+            }
+          });
+        } else {
+          $.each(s, function(id, option) {
+            $("#fnt-store").append($('<option></option>').val(option.id).html(option.name));
+          });
+        }
       });
       return false;
     });
@@ -64,12 +92,44 @@
       if (order == "")
         order = "0";
       jQuery.getJSON('po_update_charge_account_from_project/' + order, function(data) {
+        var c = data.charge_account;
+        var s = data.store;
+        $("#fnt-charge-account").html("");
+        $("#fnt-charge-account").select2("val", "");
+        $("#fnt-charge-account").append($('<option></option>').val("").html(""));
+        if (!c.length) {
+          $.each(data, function(id, option) {
+            if (id == 'charge_account') {
+              $("#fnt-charge-account").append($('<option></option>').val(option.id).html(option.account_code + " " + option.name));
+            }
+          });
+        } else {
+          $.each(c, function(id, option) {
+            $("#fnt-charge-account").append($('<option></option>').val(option.id).html(option.account_code + " " + option.name));
+          });
+        }
+        $("#fnt-store").html("");
+        $("#fnt-store").select2("val", "");
+        $("#fnt-store").append($('<option></option>').val("").html(""));
+        if (!s.length) {
+          $.each(data, function(id, option) {
+            if (id == 'store') {
+              $("#fnt-store").append($('<option></option>').val(option.id).html(option.name));
+            }
+          });
+        } else {
+          $.each(s, function(id, option) {
+            $("#fnt-store").append($('<option></option>').val(option.id).html(option.name));
+          });
+        }
+        /*
         $("#fnt-charge-account").html("");
         $("#fnt-charge-account").select2("val", "");
         $("#fnt_charge-account").append($('<option></option>').val("").html(""));
         $.each(data, function(id, option) {
           $("#fnt-charge-account").append($('<option></option>').val(option.id).html(option.account_code + " " + option.name));
         });
+         */
       });
       return false;
     });
@@ -149,7 +209,7 @@
     <span class="shrinked"><%= I18n.t(:mandatory_subtitle) %></span>
   </div>
   <div class="modal-body">
-    <%= f.association :product, collection: Product.all(order: 'main_description'), input_html: { class: 'x-large-text-field isel2 field', id: 'fnt-product', data: { validation: "required", "validation-error-msg" => "#{e}" } }, label_html: { class: 'form-label' } %>
+    <%= f.association :product, collection: Product.all(order: 'main_description'), input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-product', data: { validation: "required", "validation-error-msg" => "#{e}" } }, label_html: { class: 'form-label' } %>
     <%= f.input :description, input_html: { class: 'x-large-text-field field', maxlength: 40, id: 'fnt-description', data: { validation: "required", "validation-error-msg" => "#{e}" }, onkeyup: "caps(this)" }, label_html: { class: 'form-label' } %>
     <%= f.input :code, input_html: { class: 'mid-text-field field', id: 'fnt-code' }, label_html: { class: 'form-label' } %>
     <%= f.input :quantity, as: :string, input_html: { value: (number_with_precision(f.object.quantity, precision: 4) if f.object.quantity), class: 'mid-text-field number-text-field field', id: 'fnt-quantity' }, label_html: { class: 'form-label' } %>
@@ -160,10 +220,10 @@
     <%= f.association :tax_type, collection: TaxType.where('expiration IS NULL').order('description'), input_html: { class: 'x-large-text-field field', id: 'fnt-tax-type', data: { validation: "required", "validation-error-msg" => "#{e}" } }, label_html: { class: 'form-label' } %>
     <%= f.input :tax, as: :string, input_html: { value: (number_with_precision(f.object.tax, precision: 4) if f.object.tax), class: 'mid-text-field number-text-field field', id: 'fnt-tax' }, label_html: { class: 'form-label' } %>
     <%= f.input :delivery_date, start_year: Time.now.year - 100, end_year: Time.now.year + 100, as: :string, input_html: { value: (f.object.delivery_date.strftime("%d/%m/%Y") if f.object.delivery_date), class: 'mid-text-field idatepicker field', id: 'fnt-delivery-date' }, label_html: { class: 'form-label' } %>
-    <%= f.association :work_order, collection: WorkOrder.all(order: 'order_no'), input_html: { class: 'x-large-text-field isel2 field', id: 'fnt-work-order' }, label_html: { class: 'form-label' } %>
-    <%= f.association :project, collection: Project.all(order: 'name'), input_html: { class: 'x-large-text-field isel2 field', id: 'fnt-project', data: { validation: "required", "validation-error-msg" => "#{e}" } }, label_html: { class: 'form-label' } %>
-    <%= f.association :charge_account, collection: ChargeAccount.all(order: 'account_code'), input_html: { class: 'x-large-text-field isel2 field', id: 'fnt-charge-account', data: { validation: "required", "validation-error-msg" => "#{e}" } }, label_html: { class: 'form-label' } %>
-    <%= f.association :store, collection: Store.all(order: 'name'), input_html: { class: 'x-large-text-field isel2 field', id: 'fnt-store' }, label_html: { class: 'form-label' } %>
+    <%= f.association :work_order, collection: WorkOrder.all(order: 'order_no'), input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-work-order' }, label_html: { class: 'form-label' } %>
+    <%= f.association :project, collection: Project.all(order: 'name'), input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-project', data: { validation: "required", "validation-error-msg" => "#{e}" } }, label_html: { class: 'form-label' } %>
+    <%= f.association :charge_account, collection: ChargeAccount.all(order: 'account_code'), input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-charge-account', data: { validation: "required", "validation-error-msg" => "#{e}" } }, label_html: { class: 'form-label' } %>
+    <%= f.association :store, collection: Store.all(order: 'name'), input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-store' }, label_html: { class: 'form-label' } %>
     <%= f.input :_destroy, as: :hidden, input_html: { class: 'field' } %>
   </div>
   <div class="modal-footer">

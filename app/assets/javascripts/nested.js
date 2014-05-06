@@ -26,8 +26,9 @@ function add_fields(link, association, content, sel2NoMatches) {
     	$('.idatepicker').datepicker('hide');
     });
     // Special select2
-    $('select.isel2').select2({
-      formatNoMatches: function(m) { return sel2NoMatches; }
+    $('select.fsel2').select2({
+      formatNoMatches: function(m) { return sel2NoMatches; },
+      allowClear: true
     });
 }
 

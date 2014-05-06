@@ -11,17 +11,33 @@ module Ag2Purchase
                                                :po_update_amount_from_price_or_quantity]
     # Update description and prices text fields at view from product select
     def po_update_description_prices_from_product
-      @product = Product.find(params[:product])
-      @prices = @product.purchase_prices
-      qty = params[:qty].to_f / 10000
-      price = @product.reference_price
-      amount = qty * price
-      tax = amount * (@product.tax_type.tax / 100)
+      product = params[:product]
+      description = ""
+      qty = 0
+      price = 0
+      amount = 0
+      tax_type_id = 0
+      tax_type_tax = 0
+      tax = 0
+      if product != '0'
+        @product = Product.find(params[:product])
+        @prices = @product.purchase_prices
+        # Assignment
+        description = @product.main_description
+        qty = params[:qty].to_f / 10000
+        price = @product.reference_price
+        amount = qty * price
+        tax_type_id = @product.tax_type.id
+        tax_type_tax = @product.tax_type.tax
+        tax = amount * (tax_type_tax / 100)
+      end
+      # Format numbers
       price = number_with_precision(price, precision: 4)
       tax = number_with_precision(tax, precision: 4)
       amount = number_with_precision(amount, precision: 4)
-      @json_data = { "description" => @product.main_description, "price" => price.to_s, "amount" => amount.to_s,
-                     "tax" => tax.to_s, "type" => @product.tax_type.id }
+      # Setup JSON
+      @json_data = { "description" => description, "price" => price.to_s, "amount" => amount.to_s,
+                     "tax" => tax.to_s, "type" => tax_type_id }
 
       respond_to do |format|
         format.html # po_update_description_prices_from_product.html.erb does not exist! JSON only
@@ -29,21 +45,26 @@ module Ag2Purchase
       end
     end
 
-    # Update project and charge account text fields at view from work order select
+    # Update project, charge account and store text fields at view from work order select
     def po_update_project_from_order
       order = params[:order]
       if order != '0'
         @order = WorkOrder.find(order)
         @project = @order.project
         @charge_account = @order.charge_account
+        @store = @order.store
         if @charge_account.blank?
           @charge_account = @project.blank? ? ChargeAccount.all(order: 'account_code') : @project.charge_accounts(order: 'account_code')
+        end
+        if @store.blank?
+          @store = project_stores(@project)
         end
       else
         @project = Project.all(order: 'name')
         @charge_account = ChargeAccount.all(order: 'account_code')
+        @store = Store.all(order: 'name')
       end
-      @json_data = { "project" => @project, "charge_account" => @charge_account }
+      @json_data = { "project" => @project, "charge_account" => @charge_account, "store" => @store }
 
       respond_to do |format|
         format.html # po_update_project_from_order.html.erb does not exist! JSON only
@@ -51,19 +72,22 @@ module Ag2Purchase
       end
     end
 
-    # Update charge account text fields at view from project select
+    # Update charge account and store text fields at view from project select
     def po_update_charge_account_from_project
       project = params[:order]
       if project != '0'
         @project = Project.find(project)
-        @charge_accounts = @project.blank? ? ChargeAccount.all(order: 'account_code') : @project.charge_accounts(order: 'account_code')
+        @charge_account = @project.blank? ? ChargeAccount.all(order: 'account_code') : @project.charge_accounts(order: 'account_code')
+        @store = project_stores(@project)
       else
-        @charge_accounts = ChargeAccount.all(order: 'account_code')
+        @charge_account = ChargeAccount.all(order: 'account_code')
+        @store = Store.all(order: 'name')
       end
+      @json_data = { "charge_account" => @charge_account, "store" => @store }
 
       respond_to do |format|
         format.html # po_update_charge_account_from_project.html.erb does not exist! JSON only
-        format.json { render json: @charge_accounts }
+        format.json { render json: @json_data }
       end
     end
 
@@ -198,6 +222,21 @@ module Ag2Purchase
           format.json { render json: @purchase_order.errors, status: :unprocessable_entity }
         end
       end
+    end
+    
+    private
+    
+    def project_stores(_project)
+      if !_project.company.blank? && !_project.office.blank?
+        _store = Store.where("company_id = ? AND office_id = ?", _project.company.id, _project.office.id)
+      elsif !_project.company.blank? && _project.office.blank?
+        _store = Store.where("company_id = ?", _project.company.id)
+      elsif _project.company.blank? && !_project.office.blank?
+        _store = Store.where("office_id = ?", _project.office.id)
+      else
+        _store = Store.all(order: 'name')
+      end
+      _store
     end
   end
 end
