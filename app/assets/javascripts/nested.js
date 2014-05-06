@@ -121,7 +121,6 @@ var rowBuilder = function() {
         var newRow = row.clone();
 
         $(fields).map(function() {
-            alert(this);
             $(this).removeAttr('class');
             var td = $('<td/>').append($(this));
             td.appendTo(newRow);
