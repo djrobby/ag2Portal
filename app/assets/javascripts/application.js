@@ -15,4 +15,5 @@
 //= require bootstrap
 //= require select2
 //= require select2_locale_es
+//= require ag2_purchase
 //= require_tree .
