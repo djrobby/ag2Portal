@@ -3,8 +3,8 @@
 aGestiona2® is Agua y Gestión platform as a service.
 
 	The goal of the entire system is to be the Employee Productivity Suite for the organization.
-	Based on REST services and applications written essentially in Ruby on Rails®, is also coded in Java, jQuery, and more.
-	And the contibuition of open source tools: Alfresco® Community, Producteev by Jive® and Google® Apps.
+	Based on REST services and applications written essentially in Ruby on Rails®, is also coded in Java, jQuery,
+	and the contribution of open source tools, like Alfresco® Community, Producteev by Jive® and Google® Apps.
 
 Designed and developed by Néstor Rodríguez Maldonado.
 
