@@ -19,9 +19,6 @@ var po_itemFieldsUI = {
             errorMessagePosition : 'element'
         };
 
-        // Run validation on an input element when it loses focus.
-        //$('#new-item-fields').validateOnBlur();
-
         $('#addButton').on('click', function(e) {
             // If the form validation on our Items modal "form" fails, stop everything and prompt the user
             // to fix the issues.
