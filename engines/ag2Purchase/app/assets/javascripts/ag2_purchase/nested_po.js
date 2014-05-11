@@ -2,10 +2,10 @@
  * Methods to add 'fields' to the Purchase Items table 
  * Very important!!:
  *  1. remove_fields() & add_fields() are in main nested.js!!
- *  1. Modal window must be named 'new-item-fields'
- *  2. Items table must be named 'items-table'
+ *  1. Modal window must be named (ie, 'new-item-fields')
+ *  2. Items table must be named (ie. 'items-table')
  *  3. Each row in Items table must have 'class="fields"'
- *  4. Each field in modal window must have 'class="field"'
+ *  4. Each field in modal window, to add to the table, must have 'class="field"'
  * >> This global methods are in main nested.js!!
  */
 
@@ -53,7 +53,7 @@ var po_formHandler = {
         po_rowBuilder.addRow(po_cfg.getTBodySelector(), inputFields);
 
         // Add the "Remove" link to the last cell.
-        po_rowBuilder.link.clone().appendTo($('tr:last td:last'));
+        //po_rowBuilder.link.clone().appendTo($('tr:last td:last'));
     },
 
     // Public method for hiding the data entry fields.
@@ -69,19 +69,36 @@ var po_rowBuilder = function() {
     // Public property that describes the "Remove" link.
     var link = $('<a>', {
         href: '#',
-        onclick: 'remove_fields(this); return false;',
-        title: 'Delete this Item.'
+        onclick: 'remove_fields(this); return false;'
     }).append($('<i>', { class: 'icon-trash' }));
 
     // A private method for building a <TR> w/the required data.
     var buildRow = function(fields) {
         var newRow = row.clone();
+        var newLink = link.clone();
 
+        // fields
         $(fields).map(function() {
+            //alert(this.id);
             $(this).removeAttr('class');
-            var td = $('<td/>').append($(this));
-            td.appendTo(newRow);
+            $(this).addClass("sub-number-text-field");
+            var css = '';
+            // Add only if not select2 link
+            if (this.id.indexOf("s2") == -1) {
+              css = this.id;
+              if ($(this).hasClass('fsel2')) css = css + ' isel2 sub-select2-field';
+              if ($(this).hasClass('number-text-field')) css = css + ' sub-number-text-field';
+              if ($(this).hasClass('sub-disabled-field')) css = css + ' sub-disabled-field';
+              if (css == $(this).id) css = css + ' sub-alfanumeric-text-field';
+              $(this).removeAttr('class');
+              $(this).addClass(css);
+              var td = $('<td/>').append($(this));
+              td.appendTo(newRow);
+            }
         });
+        // link
+        var td = $('<td/>').append(newLink);
+        td.appendTo(newRow);
 
         return newRow;
     };
