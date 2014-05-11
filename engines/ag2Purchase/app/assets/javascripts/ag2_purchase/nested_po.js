@@ -80,16 +80,20 @@ var po_rowBuilder = function() {
         // fields
         $(fields).map(function() {
             //alert(this.id);
-            $(this).removeAttr('class');
-            $(this).addClass("sub-number-text-field");
+            //$(this).removeAttr('class');
+            //$(this).addClass("sub-number-text-field");
             var css = '';
+            var currentClass = '';
             // Add only if not select2 link
             if (this.id.indexOf("s2") == -1) {
               css = this.id;
-              if ($(this).hasClass('fsel2')) css = css + ' isel2 sub-select2-field';
+              currentClass = $(this).attr('class');
+              //alert(css + ': ' + currentClass);
+              if ($(this).hasClass('fsel2')) css = css + ' select isel2 sub-select2-field';
               if ($(this).hasClass('number-text-field')) css = css + ' sub-number-text-field';
               if ($(this).hasClass('sub-disabled-field')) css = css + ' sub-disabled-field';
-              if (css == $(this).id) css = css + ' sub-alfanumeric-text-field';
+              if (css === this.id) css = css + ' sub-alfanumeric-text-field';
+              //alert(css);
               $(this).removeAttr('class');
               $(this).addClass(css);
               var td = $('<td/>').append($(this));
