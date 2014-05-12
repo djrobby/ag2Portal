@@ -10,24 +10,27 @@
  */
 
 var po_itemFieldsUI = {
-    init: function() {
+    init: function(sel2NoMatches) {
         // Configuration for the jQuery validator plugin:
-        // Set the error messages to appear under the element that has the error. By default, the
+        // Set the error messages to appear under the element that has the
+		// error. By default, the
         // errors appear in the all-too-familiar bulleted-list.
-        // Other configuration options can be seen here:  https://github.com/victorjonsson/jQuery-Form-Validator
+        // Other configuration options can be seen here:
+		// https://github.com/victorjonsson/jQuery-Form-Validator
         var validationSettings = {
             errorMessagePosition : 'element'
         };
 
         $('#addButton').on('click', function(e) {
-            // If the form validation on our Items modal "form" fails, stop everything and prompt the user
+            // If the form validation on our Items modal "form" fails, stop
+			// everything and prompt the user
             // to fix the issues.
             var isValid = $('#new-item-fields').validate(false, validationSettings);
             if(!isValid) {
                 e.stopPropagation();
                 return false;
             }
-            po_formHandler.appendFields();
+            po_formHandler.appendFields(sel2NoMatches);
             po_formHandler.hideForm();
         });
     }
@@ -44,16 +47,23 @@ var po_cfg = {
 
 var po_formHandler = {
     // Public method for adding a new row to the table.
-    appendFields: function () {
-        // Get a handle on all the input fields in the form and detach them from the DOM (we'll attach them later).
+    appendFields: function (sel2NoMatches) {
+        // Get a handle on all the input fields in the form and detach them from
+		// the DOM (we'll attach them later).
         var inputFields = $(po_cfg.formId + ' ' + po_cfg.inputFieldClassSelector);
         inputFields.detach();
 
         // Build the row and add it to the end of the table.
         po_rowBuilder.addRow(po_cfg.getTBodySelector(), inputFields);
 
-        // Add the "Remove" link to the last cell.
-        //po_rowBuilder.link.clone().appendTo($('tr:last td:last'));
+        // Apply select2 to added row selects
+        $('select.isel2').select2('destroy');
+        $('select.isel2').select2({
+          formatNoMatches: function(m) { return sel2NoMatches; },
+          dropdownCssClass: 'shrinked',
+          dropdownAutoWidth: true,
+          containerCssClass: 'sub-select2-field'
+        });
     },
 
     // Public method for hiding the data entry fields.
@@ -79,35 +89,45 @@ var po_rowBuilder = function() {
 
         // fields
         $(fields).map(function() {
-            //alert(this.id);
-            //$(this).removeAttr('class');
-            //$(this).addClass("sub-number-text-field");
+            //var divs = '<div class="control-group string required purchase_order_purchase_order_items_description"><div class="controls"><input class="string required sub-alfanumeric-text-field fnt-description" id="purchase_order_purchase_order_items_attributes_0_description" name="fnt-description" onkeyup="caps(this)" size="50" type="text" value="toto" /></div></div>';
             var css = '';
             var currentClass = '';
             // Add only if not select2 link
             if (this.id.indexOf("s2") == -1) {
+              // Apply CSS
               css = this.id;
-              currentClass = $(this).attr('class');
-              //alert(css + ': ' + currentClass);
               if ($(this).hasClass('fsel2')) css = css + ' select isel2 sub-select2-field';
               if ($(this).hasClass('number-text-field')) css = css + ' sub-number-text-field';
               if ($(this).hasClass('sub-disabled-field')) css = css + ' sub-disabled-field';
               if (css === this.id) css = css + ' sub-alfanumeric-text-field';
-              //alert(css);
+              if (css.indexOf("isel2") == -1) css = css + ' sub-bordered-input';
+              css = css + ' string';
               $(this).removeAttr('class');
               $(this).addClass(css);
+              // Add new column to row
               var td = $('<td/>').append($(this));
+              if (this.id === 'fnt-code' || this.id === 'fnt-delivery-date' ||
+                this.id === 'fnt-work-order' || this.id === 'fnt-project' ||
+                this.id === 'fnt-charge-account' || this.id === 'fnt-store' ||
+                this.id === 'fnt-tax-type') {
+                td = $('<td style="display:none;"/>').append($(this));
+              }
+              // If destroy field, add delete link also
+              if (this.id.indexOf("_destroy") != -1) {
+                var td = $('<td/>').append($(this), newLink);
+              }
               td.appendTo(newRow);
             }
         });
         // link
-        var td = $('<td/>').append(newLink);
-        td.appendTo(newRow);
+        //var td = $('<td/>').append(newLink);
+        //td.appendTo(newRow);
 
         return newRow;
     };
 
-    // A public method for building a row and attaching it to the end of a <TBODY> element.
+    // A public method for building a row and attaching it to the end of a
+	// <TBODY> element.
     var attachRow = function(tableBody, fields) {
         var row = buildRow(fields);
         $(row).appendTo($(tableBody));
