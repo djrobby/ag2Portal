@@ -40,7 +40,7 @@ module Ag2Purchase
         @product = Product.find(params[:product])
         @prices = @product.purchase_prices
         # Assignment
-        description = @product.main_description
+        description = @product.main_description[0,40]
         qty = params[:qty].to_f / 10000
         price = @product.reference_price
         amount = qty * price
@@ -49,9 +49,9 @@ module Ag2Purchase
         tax = amount * (tax_type_tax / 100)
       end
       # Format numbers
-      price = number_with_precision(price, precision: 4)
-      tax = number_with_precision(tax, precision: 4)
-      amount = number_with_precision(amount, precision: 4)
+      price = number_with_precision(price.round(4), precision: 4)
+      tax = number_with_precision(tax.round(4), precision: 4)
+      amount = number_with_precision(amount.round(4), precision: 4)
       # Setup JSON
       @json_data = { "description" => description, "price" => price.to_s, "amount" => amount.to_s,
                      "tax" => tax.to_s, "type" => tax_type_id }
@@ -124,12 +124,12 @@ module Ag2Purchase
       end
       amount = qty * (price - discount)
       tax = amount * (tax / 100)
-      qty = number_with_precision(qty, precision: 4)
-      price = number_with_precision(price, precision: 4)
-      amount = number_with_precision(amount, precision: 4)
-      tax = number_with_precision(tax, precision: 4)
-      discount_p = number_with_precision(discount_p, precision: 2)
-      discount = number_with_precision(discount, precision: 4)
+      qty = number_with_precision(qty.round(4), precision: 4)
+      price = number_with_precision(price.round(4), precision: 4)
+      amount = number_with_precision(amount.round(4), precision: 4)
+      tax = number_with_precision(tax.round(4), precision: 4)
+      discount_p = number_with_precision(discount_p.round(2), precision: 2)
+      discount = number_with_precision(discount.round(4), precision: 4)
       @json_data = { "quantity" => qty.to_s, "price" => price.to_s, "amount" => amount.to_s, "tax" => tax.to_s,
                      "discountp" => discount_p.to_s, "discount" => discount.to_s }
 

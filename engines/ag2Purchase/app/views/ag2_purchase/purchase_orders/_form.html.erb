@@ -1,4 +1,6 @@
 <script>
+  var _thisForm = '';
+  
   $(document).ready(function() {
     $('select.sel2').select2({
       formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
@@ -13,6 +15,9 @@
     if ($('#purchase_order_order_date').val() == "") {
       $('#purchase_order_order_date').datepicker('setValue', es_date(new Date()));
     }
+    
+    // Initialized form variable
+    _thisForm = $("#purchase_order_order_no").closest('form')[0];
   });
   
   jQuery(function($) {
@@ -130,6 +135,26 @@
       });
       return false;
     });
+    
+    // when submit    
+    $(_thisForm).on('submit', function() {
+      // Must change decimal separator, if comma, in items table numeric fields
+      var price = '';
+      var qty = '';
+      var discount_p = '';
+      var discount = '';
+      $('tr.fields').each(function() {
+        price = $(this).find('input.fnt-price').val().replace(",", ".");
+        qty = $(this).find('input.fnt-quantity').val().replace(",", ".");
+        discount_p = $(this).find('input.fnt-discount-pct').val().replace(",", ".");
+        discount = $(this).find('input.fnt-discount').val().replace(",", ".");
+        $(this).find('input.fnt-price').val(price);
+        $(this).find('input.fnt-quantity').val(qty);
+        $(this).find('input.fnt-discount-pct').val(discount_p);
+        $(this).find('input.fnt-discount').val(discount);
+      });
+      //e.preventDefault();
+    });
   })
 </script>
 
@@ -170,5 +195,5 @@
 <%= render 'items_table', f: f %>
 <!-- Totals -->
 <!-- Buttons -->
-<%= f.button :submit, :class => 'btn-primary' %>
+<%= f.button :submit, class: 'btn-primary' %>
 <% end %>

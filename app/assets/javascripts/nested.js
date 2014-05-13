@@ -9,7 +9,7 @@
  */
 // Remove current item from the DOM
 function remove_fields(link) {
-    $(link).prev("input[type=text]").val("1");
+    $(link).prev("input[type=hidden]").val("1");
     $(link).closest(".fields").hide();
 }
 // Display modal to add new item

@@ -235,10 +235,10 @@
     <%= f.association :tax_type, collection: TaxType.where('expiration IS NULL').order('description'), input_html: { class: 'x-large-text-field field', id: 'fnt-tax-type', data: { validation: "required", "validation-error-msg" => "#{e}" } }, label_html: { class: 'form-label' } %>
     <%= f.input :tax, disabled: true, as: :string, input_html: { value: (number_with_precision(f.object.tax, precision: 4) if f.object.tax), class: 'mid-text-field number-text-field sub-disabled-field field', id: 'fnt-tax' }, label_html: { class: 'form-label' } %>
     <%= f.input :delivery_date, start_year: Time.now.year - 100, end_year: Time.now.year + 100, as: :string, input_html: { value: (f.object.delivery_date.strftime("%d/%m/%Y") if f.object.delivery_date), class: 'mid-text-field idatepicker field', id: 'fnt-delivery-date' }, label_html: { class: 'form-label' } %>
-    <%= f.association :work_order, collection: WorkOrder.all(order: 'order_no'), input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-work-order' }, label_html: { class: 'form-label' } %>
+    <%= f.association :work_order, collection: WorkOrder.all(order: 'order_no'), input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-work-order', data: { validation: "required", "validation-error-msg" => "#{e}" } }, label_html: { class: 'form-label' } %>
     <%= f.association :project, collection: Project.all(order: 'name'), input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-project', data: { validation: "required", "validation-error-msg" => "#{e}" } }, label_html: { class: 'form-label' } %>
     <%= f.association :charge_account, collection: ChargeAccount.all(order: 'account_code'), input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-charge-account', data: { validation: "required", "validation-error-msg" => "#{e}" } }, label_html: { class: 'form-label' } %>
-    <%= f.association :store, collection: Store.all(order: 'name'), input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-store' }, label_html: { class: 'form-label' } %>
+    <%= f.association :store, collection: Store.all(order: 'name'), input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-store', data: { validation: "required", "validation-error-msg" => "#{e}" } }, label_html: { class: 'form-label' } %>
     <%= f.input :_destroy, as: :hidden, input_html: { class: 'field' } %>
   </div>
   <div class="modal-footer">

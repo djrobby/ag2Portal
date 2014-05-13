@@ -82,12 +82,11 @@ var po_rowBuilder = function() {
         $(fields).map(function() {
             //var divs = '<div class="control-group string required purchase_order_purchase_order_items_description"><div class="controls"><input class="string required sub-alfanumeric-text-field fnt-description" id="purchase_order_purchase_order_items_attributes_0_description" name="fnt-description" onkeyup="caps(this)" size="50" type="text" value="toto" /></div></div>';
             var css = '';
-            var currentClass = '';
             // Add only if not select2 link
             if (this.id.indexOf("s2") == -1) {
               // Apply CSS
               css = this.id;
-              if ($(this).hasClass('fsel2')) css = css + ' select isel2 sub-select2-field';
+              if ($(this).hasClass('fsel2')) css = css + ' select isel2';
               if ($(this).hasClass('number-text-field')) css = css + ' sub-number-text-field';
               if ($(this).hasClass('sub-disabled-field')) css = css + ' sub-disabled-field';
               if (css === this.id) css = css + ' sub-alfanumeric-text-field';
