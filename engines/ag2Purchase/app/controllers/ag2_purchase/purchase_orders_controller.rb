@@ -8,7 +8,24 @@ module Ag2Purchase
     skip_load_and_authorize_resource :only => [:po_update_description_prices_from_product,
                                                :po_update_project_from_order,
                                                :po_update_charge_account_from_project,
-                                               :po_update_amount_from_price_or_quantity]
+                                               :po_update_amount_from_price_or_quantity,
+                                               :po_update_offer_select_from_supplier]
+    # Update offer select at view from supplier select
+    def po_update_offer_select_from_supplier
+      supplier = params[:supplier]
+      if supplier != '0'
+        @supplier = Supplier.find(supplier)
+        @offers = @supplier.blank? ? Offer.order(:supplier_id, :offer_no, :id) : @supplier.offers.order(:supplier_id, :offer_no, :id)
+      else
+        @offers = Offer.order(:supplier_id, :offer_no, :id)
+      end
+
+      respond_to do |format|
+        format.html # po_update_offer_textfield_from_supplier.html.erb does not exist! JSON only
+        format.json { render json: @offers }
+      end
+    end
+
     # Update description and prices text fields at view from product select
     def po_update_description_prices_from_product
       product = params[:product]
@@ -167,7 +184,8 @@ module Ag2Purchase
     def edit
       @breadcrumb = 'update'
       @purchase_order = PurchaseOrder.find(params[:id])
-      @items = @purchase_order.purchase_order_items.order('id')
+      @offers = @purchase_order.supplier.blank? ? Offer.order(:supplier_id, :offer_no, :id) : @purchase_order.supplier.offers.order(:supplier_id, :offer_no, :id)
+      #@items = @purchase_order.purchase_order_items.order('id')
     end
   
     # POST /purchase_orders
@@ -182,6 +200,7 @@ module Ag2Purchase
           format.html { redirect_to @purchase_order, notice: crud_notice('created', @purchase_order) }
           format.json { render json: @purchase_order, status: :created, location: @purchase_order }
         else
+          @offers = Offer.order(:supplier_id, :offer_no, :id)
           format.html { render action: "new" }
           format.json { render json: @purchase_order.errors, status: :unprocessable_entity }
         end
@@ -201,6 +220,7 @@ module Ag2Purchase
                         notice: (crud_notice('updated', @purchase_order) + "#{undo_link(@purchase_order)}").html_safe }
           format.json { head :no_content }
         else
+          @offers = @purchase_order.supplier.blank? ? Offer.order(:supplier_id, :offer_no, :id) : @purchase_order.supplier.offers.order(:supplier_id, :offer_no, :id)
           format.html { render action: "edit" }
           format.json { render json: @purchase_order.errors, status: :unprocessable_entity }
         end

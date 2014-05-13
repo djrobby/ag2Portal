@@ -7,7 +7,7 @@
   <th align="right"><%= t "activerecord.attributes.purchase_order_item.discount_c" %></th>
   <th align="right"><%= t "activerecord.attributes.purchase_order_item.amount_c" %></th>
   <th align="right"><%= t "activerecord.attributes.purchase_order_item.tax_c" %></th>
-  <% if current_page?(new_purchase_order_path) || current_page?(edit_purchase_order_path) %>
+  <% if @breadcrumb == 'create' || @breadcrumb == 'update' %>
   <th></th>
   <% else %>
   <th align="right"><%= t "activerecord.attributes.purchase_order_item.balance_c" %></th>

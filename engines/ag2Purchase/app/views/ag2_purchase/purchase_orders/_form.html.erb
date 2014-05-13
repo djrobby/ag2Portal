@@ -16,6 +16,24 @@
   });
   
   jQuery(function($) {
+    // when the #purchase_order_supplier_id field changes
+    $("#purchase_order_supplier_id").change(function() {
+      // make a POST call and replace the content
+      var supplier = $('select#purchase_order_supplier_id :selected').val();
+      if (supplier == "")
+        supplier = "0";
+      jQuery.getJSON('po_update_offer_select_from_supplier/' + supplier, function(data) {
+        $("#purchase_order_offer_id").html("");
+        $("#purchase_order_offer_id").select2("val", "");
+        $("#purchase_order_offer_id").append($('<option></option>').val("").html(""));
+        $.each(data, function(id, option) {
+          $("#purchase_order_offer_id").append($('<option></option>').val(option.id).html(option.id + ' ' + option.offer_no + ' ' + option.supplier.name));
+        });
+        //$("#purchase_order_offer_id").val(data.id);
+      });
+      return false;
+    });
+
     // when the #purchase_order_project_id field changes
     $("#purchase_order_project_id").change(function() {
       // make a POST call and replace the content
@@ -115,7 +133,7 @@
   })
 </script>
 
-<%= simple_form_for @purchase_order, :html => {:class => 'form-vertical well' } do |f| %>
+<%= simple_form_for @purchase_order, html: { class: 'form-vertical well' } do |f| %>
 <%= f.error_notification %>
 <%= display_base_errors resource %>
 <div>

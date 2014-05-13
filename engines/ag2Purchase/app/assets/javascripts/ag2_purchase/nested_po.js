@@ -11,20 +11,11 @@
 
 var po_itemFieldsUI = {
     init: function(sel2NoMatches) {
-        // Configuration for the jQuery validator plugin:
-        // Set the error messages to appear under the element that has the
-		// error. By default, the
-        // errors appear in the all-too-familiar bulleted-list.
-        // Other configuration options can be seen here:
-		// https://github.com/victorjonsson/jQuery-Form-Validator
         var validationSettings = {
             errorMessagePosition : 'element'
         };
 
         $('#addButton').on('click', function(e) {
-            // If the form validation on our Items modal "form" fails, stop
-			// everything and prompt the user
-            // to fix the issues.
             var isValid = $('#new-item-fields').validate(false, validationSettings);
             if(!isValid) {
                 e.stopPropagation();

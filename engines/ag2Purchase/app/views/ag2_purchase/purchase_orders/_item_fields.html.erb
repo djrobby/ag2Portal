@@ -3,6 +3,21 @@
     // Disable calculated fields
     //$('#fnt-amount').prop('readonly', true);
     //$('#fnt-tax').prop('readonly', true);
+    
+    // Retrieves parent values
+    var _f = $("#fnt-product").closest('form')[0];
+    var _o = $('select#purchase_order_work_order_id :selected').val();
+    if (_o == "") _o = "0";
+    $('select#fnt-work-order').val(_o);
+    var _p = $('select#purchase_order_project_id :selected').val();
+    if (_p == "") _p = "0";
+    $('select#fnt-project').val(_p);
+    var _c = $('select#purchase_order_charge_account_id :selected').val();
+    if (_c == "") _c = "0";
+    $('select#fnt-charge-account').val(_c);
+    var _s = $('select#purchase_order_store_id :selected').val();
+    if (_s == "") _s = "0";
+    $('select#fnt-store').val(_s);
   });
 
   jQuery(function($) {
@@ -234,6 +249,6 @@
 </div>
 
 <script type="text/javascript">
-    sel2NoMatch = '<%= t("select2.no_matches") %>';
+  sel2NoMatch = '<%= t("select2.no_matches") %>';
   po_itemFieldsUI.init(sel2NoMatch);
 </script>

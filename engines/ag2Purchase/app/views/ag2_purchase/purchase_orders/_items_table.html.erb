@@ -141,7 +141,7 @@
       <td style="display:none;"><%= i.association :project, label: false, wrapper: false, input_html: { class: 'isel2 fnt-project', name: 'fnt-project' } %></td>
       <td style="display:none;"><%= i.association :charge_account, label: false, wrapper: false, input_html: { class: 'isel2 fnt-charge-account', name: 'fnt-charge-account' } %></td>
       <td style="display:none;"><%= i.association :store, label: false, wrapper: false, input_html: { class: 'isel2 fnt-store', name: 'fnt-store' } %></td>
-      <% if current_page?(new_purchase_order_path) || current_page?(edit_purchase_order_path) %>
+      <% if @breadcrumb == 'create' || @breadcrumb == 'update' %>
       <td><%= link_to_remove_fields('<i class="icon-trash"></i>'.html_safe, i) %></td>
       <% end %>
     </tr>
