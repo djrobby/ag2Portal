@@ -145,7 +145,25 @@ module Ag2Purchase
     # GET /purchase_orders
     # GET /purchase_orders.json
     def index
-      @purchase_orders = PurchaseOrder.paginate(:page => params[:page], :per_page => per_page).order('order_no')
+      supplier = params[:Supplier]
+      status = params[:Status]
+
+      @search = PurchaseOrder.search do
+        fulltext params[:search]
+        if !supplier.blank?
+          with :supplier_id, supplier
+        end
+        if !status.blank?
+          with :order_status_id, status
+        end
+        order_by :order_no, :asc
+        paginate :page => params[:page] || 1, :per_page => per_page
+      end
+      @purchase_orders = @search.results
+
+      # Initialize select_tags
+      @suppliers = Supplier.order('name') if @suppliers.nil?
+      @statuses = OrderStatus.order('id') if @statuses.nil?
   
       respond_to do |format|
         format.html # index.html.erb

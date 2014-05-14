@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140504104904) do
+ActiveRecord::Schema.define(:version => 20140514110144) do
 
   create_table "activities", :force => true do |t|
     t.string   "description"
@@ -989,15 +989,19 @@ ActiveRecord::Schema.define(:version => 20140504104904) do
     t.integer  "company_id"
     t.integer  "office_id"
     t.string   "location"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
     t.string   "created_by"
     t.string   "updated_by"
+    t.integer  "organization_id"
+    t.integer  "supplier_id"
   end
 
   add_index "stores", ["company_id"], :name => "index_stores_on_company_id"
   add_index "stores", ["name"], :name => "index_stores_on_name"
   add_index "stores", ["office_id"], :name => "index_stores_on_office_id"
+  add_index "stores", ["organization_id"], :name => "index_stores_on_organization_id"
+  add_index "stores", ["supplier_id"], :name => "index_stores_on_supplier_id"
 
   create_table "street_types", :force => true do |t|
     t.string   "street_type_code"

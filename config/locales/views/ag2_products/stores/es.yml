@@ -18,3 +18,4 @@ es:
         title: "Nuevo Almacén"
       back_to_main_page: "Volver a Almacenes"
       stocks: "Existencias"
+      depot: "¿Depósito JIT?"

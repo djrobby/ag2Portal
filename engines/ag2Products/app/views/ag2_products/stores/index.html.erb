@@ -4,13 +4,14 @@
 
 <h3><%=t '.title' %></h3>
 <div class="span11">
-  <table class="table table-condensed table-striped">
+  <table class="table table-condensed table-striped shrinked">
     <thead>
       <tr>
         <th><%= sortable "name", t('activerecord.attributes.store.name') %></th>
-        <th><%= sortable "location", t('activerecord.attributes.store.location') %></th>
         <th><%= sortable "company_id", t('activerecord.attributes.store.company') %></th>
         <th><%= sortable "office_id", t('activerecord.attributes.store.office') %></th>
+        <th><%= sortable "supplier_id", t('activerecord.attributes.store.supplier') %></th>
+        <th><%= sortable "location", t('activerecord.attributes.store.location') %></th>
         <th></th>
       </tr>
     </thead>
@@ -18,9 +19,10 @@
       <% @stores.each do |m| %>
       <tr>
         <td><%= link_to m.name, m %></td>
-        <td><%= m.location %></td>
         <td><%= m.company.name unless m.company.nil? %></td>
         <td><%= m.office.name unless m.office.nil? %></td>
+        <td><%= m.supplier.full_name unless m.supplier.nil? %></td>
+        <td><%= m.location unless m.location.blank? %></td>
         <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => Store, :path => edit_store_path(m) } %>
         <%= render :partial => '/layouts/crud/delete', :locals => { :model => Store, :path => m, :msg => t("activerecord.models.store.one"), :txt => m.name } %> </td>
       </tr>

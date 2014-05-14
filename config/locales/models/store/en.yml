@@ -21,3 +21,5 @@ en:
         office: "Office"
         office_id: "Office"
         location: "Location"
+        supplier: "Supplier"
+        supplier_id: "Supplier"

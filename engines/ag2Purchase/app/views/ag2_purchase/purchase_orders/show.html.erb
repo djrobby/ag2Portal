@@ -60,11 +60,6 @@
   </tbody>
 </table>
 
-<%= render partial: '/layouts/crud/update_delete_new', locals:
-{ model: PurchaseOrder, update_path: edit_purchase_order_path(@purchase_order), update_txt: t('.btn_edit'),
-delete_path: @purchase_order, delete_txt: t('.btn_delete'), msg: t("activerecord.models.purchase_order.one"), txt: @purchase_order.order_no,
-new_path: new_purchase_order_path, new_txt: t('ag2_purchase.purchase_orders.index.btn_new') } %>
-
 <table class="form-table">
   <tbody>
     <tr class="form-tr underlined-tr">
@@ -90,5 +85,10 @@ new_path: new_purchase_order_path, new_txt: t('ag2_purchase.purchase_orders.inde
 <% else %>
 <br />
 <% end %> <!-- end @items.count > 0 -->
+
+<%= render partial: '/layouts/crud/update_delete_new', locals:
+{ model: PurchaseOrder, update_path: edit_purchase_order_path(@purchase_order), update_txt: t('.btn_edit'),
+delete_path: @purchase_order, delete_txt: t('.btn_delete'), msg: t("activerecord.models.purchase_order.one"), txt: @purchase_order.order_no,
+new_path: new_purchase_order_path, new_txt: t('ag2_purchase.purchase_orders.index.btn_new') } %>
 
 <%= link_to t("ag2_purchase.purchase_orders.back_to_main_page"), purchase_orders_path %>

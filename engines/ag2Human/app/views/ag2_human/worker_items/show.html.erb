@@ -56,18 +56,6 @@
   </tbody>
 </table>
 
-<% if @worker %>
-<%= render partial: '/layouts/crud/update_delete_new', locals:
-{ model: WorkerItem, update_path: edit_worker_item_path(@worker_item, worker: @worker), update_txt: t('.btn_edit'),
-delete_path: @worker_item, delete_txt: t('.btn_delete'), msg: t("activerecord.models.worker_item.one"), txt: @worker_item.id.to_s  + " - " + @worker_item.worker.full_name,
-new_path: new_worker_item_path(worker: @worker), new_txt: t('ag2_human.worker_items.index.btn_new') } %>
-<% else %>
-<%= render partial: '/layouts/crud/update_delete_new', locals:
-{ model: WorkerItem, update_path: edit_worker_item_path(@worker_item), update_txt: t('.btn_edit'),
-delete_path: @worker_item, delete_txt: t('.btn_delete'), msg: t("activerecord.models.worker_item.one"), txt: @worker_item.id.to_s  + " - " + @worker_item.worker.full_name,
-new_path: new_worker_item_path, new_txt: t('ag2_human.worker_items.index.btn_new') } %>
-<% end %>
-
 <table class="form-table">
   <tbody>
     <tr class="form-tr underlined-tr">
@@ -95,7 +83,15 @@ new_path: new_worker_item_path, new_txt: t('ag2_human.worker_items.index.btn_new
 <% end %>
 
 <% if @worker %>
+<%= render partial: '/layouts/crud/update_delete_new', locals:
+{ model: WorkerItem, update_path: edit_worker_item_path(@worker_item, worker: @worker), update_txt: t('.btn_edit'),
+delete_path: @worker_item, delete_txt: t('.btn_delete'), msg: t("activerecord.models.worker_item.one"), txt: @worker_item.id.to_s  + " - " + @worker_item.worker.full_name,
+new_path: new_worker_item_path(worker: @worker), new_txt: t('ag2_human.worker_items.index.btn_new') } %>
 <%= link_to I18n.t("ag2_human.worker_items.back_to_main_page"), @worker %>
 <% else %>
+<%= render partial: '/layouts/crud/update_delete_new', locals:
+{ model: WorkerItem, update_path: edit_worker_item_path(@worker_item), update_txt: t('.btn_edit'),
+delete_path: @worker_item, delete_txt: t('.btn_delete'), msg: t("activerecord.models.worker_item.one"), txt: @worker_item.id.to_s  + " - " + @worker_item.worker.full_name,
+new_path: new_worker_item_path, new_txt: t('ag2_human.worker_items.index.btn_new') } %>
 <%= link_to I18n.t("ag2_human.worker_items.back_to_items"), worker_items_path %>
 <% end %>

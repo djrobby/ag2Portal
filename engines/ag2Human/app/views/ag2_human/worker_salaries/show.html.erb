@@ -45,15 +45,7 @@
 </table>
 
 <% if @worker_item %>
-<%= render partial: '/layouts/crud/update_delete_new', locals:
-{ model: WorkerSalary, update_path: edit_worker_salary_path(@worker_salary, item: @worker_item), update_txt: t('.btn_edit'),
-delete_path: @worker_salary, delete_txt: t('.btn_delete'), msg: t("activerecord.models.worker_salary.one"), txt: @worker_salary.year.to_s + " - " + @worker_salary.worker_item.worker.full_name,
-new_path: new_worker_salary_path(item: @worker_item), new_txt: t('ag2_human.worker_salaries.index.btn_new') } %>
 <% else %>
-<%= render partial: '/layouts/crud/update_delete_new', locals:
-{ model: WorkerSalary, update_path: edit_worker_salary_path(@worker_salary), update_txt: t('.btn_edit'),
-delete_path: @worker_salary, delete_txt: t('.btn_delete'), msg: t("activerecord.models.worker_salary.one"), txt: @worker_salary.year.to_s + " - " + @worker_salary.worker_item.worker.full_name,
-new_path: new_worker_salary_path, new_txt: t('ag2_human.worker_salaries.index.btn_new') } %>
 <% end %>
 
 <table class="form-table">
@@ -82,7 +74,15 @@ new_path: new_worker_salary_path, new_txt: t('ag2_human.worker_salaries.index.bt
 <% end %>
 
 <% if @worker_item %>
+<%= render partial: '/layouts/crud/update_delete_new', locals:
+{ model: WorkerSalary, update_path: edit_worker_salary_path(@worker_salary, item: @worker_item), update_txt: t('.btn_edit'),
+delete_path: @worker_salary, delete_txt: t('.btn_delete'), msg: t("activerecord.models.worker_salary.one"), txt: @worker_salary.year.to_s + " - " + @worker_salary.worker_item.worker.full_name,
+new_path: new_worker_salary_path(item: @worker_item), new_txt: t('ag2_human.worker_salaries.index.btn_new') } %>
 <%= link_to I18n.t("ag2_human.worker_salaries.back_to_main_page"), worker_item_path(@worker_item, worker: @worker_item.worker) %>
 <% else %>
+<%= render partial: '/layouts/crud/update_delete_new', locals:
+{ model: WorkerSalary, update_path: edit_worker_salary_path(@worker_salary), update_txt: t('.btn_edit'),
+delete_path: @worker_salary, delete_txt: t('.btn_delete'), msg: t("activerecord.models.worker_salary.one"), txt: @worker_salary.year.to_s + " - " + @worker_salary.worker_item.worker.full_name,
+new_path: new_worker_salary_path, new_txt: t('ag2_human.worker_salaries.index.btn_new') } %>
 <%= link_to I18n.t("ag2_human.worker_salaries.back_to_salaries"), worker_salaries_path %>
 <% end %>

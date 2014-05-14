@@ -18,9 +18,35 @@
     
     // Initialized form variable
     _thisForm = $("#purchase_order_order_no").closest('form')[0];
+
+    // Disable fields if Product Family blank
+    var order = $('#purchase_order_order_no').val();
+    if (order == "")
+      order = "0";
+    if (order == "0") {
+      // Empty order: Disable
+      $('#submit_btn').hide();
+    } else {
+      // Order: OK: Enable
+      $('#submit_btn').show();
+    }
   });
   
   jQuery(function($) {
+    // when the #purchase_order_order_no field changes
+    $("#purchase_order_order_no").change(function() {
+      var order = $('#purchase_order_order_no').val();
+      if (order == "")
+        order = "0";
+      if (order == "0") {
+        // Empty order: Disable
+        $('#submit_btn').hide();
+      } else {
+        // Order: OK: Enable
+        $('#submit_btn').show();
+      }
+    });
+
     // when the #purchase_order_supplier_id field changes
     $("#purchase_order_supplier_id").change(function() {
       // make a POST call and replace the content
@@ -187,7 +213,7 @@
         <h4><%= t 'ag2_purchase.purchase_orders.items_info' %></h4>
       </td>
       <td class="form-td-two right-winged">
-        <%= link_to_add_fields(t("ag2_purchase.purchase_orders.btn_new_item"), f, :purchase_order_items, "item_fields", class: "btn btn-warning", title: t("ag2_purchase.purchase_orders.add_item")) %>
+        <%= link_to_add_fields(t("ag2_purchase.purchase_orders.btn_new_item"), f, :purchase_order_items, "item_fields", class: "btn btn-warning") %>
       </td>
     </tr>
   </tbody>
@@ -195,5 +221,5 @@
 <%= render 'items_table', f: f %>
 <!-- Totals -->
 <!-- Buttons -->
-<%= f.button :submit, class: 'btn-primary' %>
+<%= f.button :submit, class: 'btn-primary', id: 'submit_btn' %>
 <% end %>

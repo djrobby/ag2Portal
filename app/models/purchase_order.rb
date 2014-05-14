@@ -85,6 +85,20 @@ class PurchaseOrder < ActiveRecord::Base
     PurchaseOrder.order("order_no").last
   end
 
+  searchable do
+    text :order_no, :supplier_offer_no
+    string :order_no
+    integer :supplier_id
+    integer :payment_method_id
+    integer :order_status_id
+    integer :project_id
+    integer :store_id
+    integer :work_order_id
+    integer :charge_account_id
+    integer :offer_id
+    date :order_date
+  end
+
   private
 
   def check_for_dependent_records

@@ -25,5 +25,7 @@
   <label class="multi-field-label-two"> <%= f.association :office, collection: Office.all(order: 'name'), :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
   <label class="multi-field-label-two"> <%= f.association :company, collection: Company.all(order: 'name'), :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
 </div>
+<h4><%= t 'ag2_products.stores.depot' %></h4>
+<%= f.association :supplier, collection: Supplier.all(order: 'name'), input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %>
 <%= f.button :submit, :class => 'btn-primary' %>
 <% end %>

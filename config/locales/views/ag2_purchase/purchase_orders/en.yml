@@ -6,8 +6,8 @@ en:
         btn_new: "New Order"
         back_to_root: "Back to ag2Purchase"
         go_to_child_app: "Go to Supplier contacts"
-        label_office: "Office"
-        label_company: "Company"
+        label_supplier: "Supplier"
+        label_status: "Status"
         label_others: "Others"
         btn_apply: "Apply Filter"
       show:

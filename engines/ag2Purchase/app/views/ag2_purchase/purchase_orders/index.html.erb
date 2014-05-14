@@ -1,32 +1,58 @@
 <%= render '/layouts/ag2_purchase/ordersbreadcrumb' %>
 
-<div class="span11">
-  <table class="table table-condensed table-striped">
-    <thead>
-      <tr>
-        <th><%= t 'activerecord.attributes.purchase_order.order_no' %></th>
-        <th><%= t 'activerecord.attributes.purchase_order.order_date' %></th>
-        <th><%= t 'activerecord.attributes.purchase_order.order_status' %></th>
-        <th><%= t 'activerecord.attributes.purchase_order.supplier' %></th>
-        <th><%= t 'activerecord.attributes.purchase_order.offer' %></th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody>
-      <% @purchase_orders.each do |order| %>
-      <tr>
-        <td><%= link_to order.order_no, order %></td>
-        <td><%= order.order_date %></td>
-        <td><%= order.order_status.name %></td>
-        <td><%= order.supplier.full_name %></td>
-        <td><%= order.offer.offer_no unless order.offer.blank? %></td>
-        <td> <%= render :partial => '/layouts/crud/edit', :locals => { :model => PurchaseOrder, :path => edit_purchase_order_path(order) } %>
-        <%= render :partial => '/layouts/crud/delete', :locals => { :model => PurchaseOrder, :path => order, :msg => t("activerecord.models.purchase_order.one"), :txt => order.order_no } %> </td>
-      </tr>
-      <% end %>
-    </tbody>
-  </table>
-  <%= render :partial => '/layouts/pagination', :locals => { :ivar => @purchase_orders } %>
-  <%= render :partial => '/layouts/crud/new', :locals => { :model => PurchaseOrder, :path => new_purchase_order_path, :txt => t(".btn_new") } %>
-  <%= link_to t(".back_to_root"), ag2_purchase.root_path %>
-</div>
+<h3><%= t '.title' %></h3>
+
+<div class="container-fluid">
+  <div class="row-fluid">
+
+    <div class="span3">
+      <div class="well sidebar-nav">
+        <%= form_tag "purchase_orders", :method => 'get' do %>
+        <!-- Supplier -->
+        <%= label_tag I18n.t("ag2_purchase.purchase_orders.index.label_supplier"), nil, :class => 'form-label' %>
+        <%= select_tag "Supplier", options_from_collection_for_select(@suppliers, "id", "full_name"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
+        <!-- Status -->
+        <%= label_tag I18n.t("ag2_purchase.purchase_orders.index.label_status"), nil, :class => 'form-label' %>
+        <%= select_tag "Status", options_from_collection_for_select(@statuses, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked' %>
+        <!-- Others -->
+        <%= label_tag I18n.t("ag2_purchase.purchase_orders.index.label_others"), nil, :class => 'form-label' %>
+        <%= text_field_tag :search, params[:search], :class => 'x-large-text-field shrinked' %>
+        <!-- Submit -->
+        <%= submit_tag I18n.t("ag2_purchase.purchase_orders.index.btn_apply"), :class => 'btn btn-primary' %>
+        <% end %>
+        <!-- Buttons -->
+        <%= render :partial => '/layouts/crud/new', :locals => { :model => PurchaseOrder, :path => new_purchase_order_path, :txt => t(".btn_new") } %>
+        <%= link_to t(".back_to_root"), ag2_purchase.root_path %>
+      </div><!-- /.sidebar-nav -->
+    </div><!-- /.span3 -->
+
+    <div class="span9">
+      <table class="table table-condensed table-striped shrinked">
+        <thead>
+          <tr>
+            <th><%= t 'activerecord.attributes.purchase_order.order_no' %></th>
+            <th align="center"><%= t 'activerecord.attributes.purchase_order.order_date' %></th>
+            <th><%= t 'activerecord.attributes.purchase_order.order_status' %></th>
+            <th><%= t 'activerecord.attributes.purchase_order.supplier' %></th>
+            <th><%= t 'activerecord.attributes.purchase_order.offer' %></th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @purchase_orders.each do |order| %>
+          <tr>
+            <td><%= link_to order.order_no, order %></td>
+            <td align="center"><%= order.order_date.strftime("%d/%m/%Y") unless order.order_date.blank? %></td>
+            <td><%= order.order_status.name %></td>
+            <td><%= order.supplier.full_name %></td>
+            <td><%= order.offer.offer_no unless order.offer.blank? %></td>
+            <td> <%= render :partial => '/layouts/crud/edit', :locals => { :model => PurchaseOrder, :path => edit_purchase_order_path(order) } %>
+            <%= render :partial => '/layouts/crud/delete', :locals => { :model => PurchaseOrder, :path => order, :msg => t("activerecord.models.purchase_order.one"), :txt => order.order_no } %> </td>
+          </tr>
+          <% end %>
+        </tbody>
+      </table>
+      <%= render :partial => '/layouts/pagination', :locals => { :ivar => @purchase_orders } %>
+    </div><!-- /.span9 -->
+  </div><!-- /.row-fluid -->
+</div><!-- /.container-fluid -->

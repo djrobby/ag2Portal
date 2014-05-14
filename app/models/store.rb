@@ -1,7 +1,10 @@
 class Store < ActiveRecord::Base
   belongs_to :company
   belongs_to :office
-  attr_accessible :location, :name, :company_id, :office_id
+  belongs_to :organization
+  belongs_to :supplier
+  attr_accessible :location, :name, :company_id, :office_id,
+                  :organization_id, :supplier_id
 
   has_many :stocks
   has_many :products, :through => :stocks
@@ -20,8 +23,9 @@ class Store < ActiveRecord::Base
 
   has_paper_trail
 
-  validates :name,    :presence => true
-  validates :company, :presence => true
+  validates :name,      :presence => true
+  validates :company,   :presence => true, :if => "supplier.blank?"
+  validates :supplier,  :presence => true, :if => "company.blank?"
 
   before_destroy :check_for_dependent_records
 

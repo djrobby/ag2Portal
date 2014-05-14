@@ -6,20 +6,20 @@
     <tr>
       <td>Id:</td>
       <td><%= @store.id %></td>
-      <td></td>
-      <td></td>
-    </tr>
-    <tr>
       <td><%=t 'activerecord.attributes.store.name' %>:</td>
       <td><%= @store.name %></td>
-      <td><%=t 'activerecord.attributes.store.location' %>:</td>
-      <td><%= @store.location unless @store.location.blank? %></td>
     </tr>
     <tr>
       <td><%=t 'activerecord.attributes.store.company' %>:</td>
       <td><%= @store.company.name unless @store.company.blank? %></td>
       <td><%=t 'activerecord.attributes.store.office' %>:</td>
       <td><%= @store.office.name unless @store.office.blank? %></td>
+    </tr>
+    <tr>
+      <td><%=t 'activerecord.attributes.store.supplier' %>:</td>
+      <td><%= @store.supplier.full_name unless @store.supplier.blank? %></td>
+      <td><%=t 'activerecord.attributes.store.location' %>:</td>
+      <td><%= @store.location unless @store.location.blank? %></td>
     </tr>
     <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @store } %>
     <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @store } %>
