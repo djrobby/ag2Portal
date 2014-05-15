@@ -1,3 +1,46 @@
+<script>
+  var _thisForm = '';
+  $(document).ready(function() {
+    // Initialized form variable
+    _thisForm = $("#product_family_family_code").closest('form')[0];
+
+    // Disable fields if Family Code blank
+    var a = $('#product_family_family_code').val();
+    if (a == "")
+      a = "0";
+    if (a == "0") {
+      // Empty code: Disable
+      $('#submit_btn').hide();
+    } else {
+      // Code OK: Enable
+      $('#submit_btn').show();
+    }
+  });
+
+  jQuery(function($) {
+    // when the #product_family_max_orders_sum field changes
+    $("#product_family_max_orders_sum").change(function() {
+      var num = $('#product_family_max_orders_sum').val();
+      if (num == "")
+        num = "0";
+      // Right formatted for passing as REST parameter
+      num = num.replace(",", ".") * 10000;
+      jQuery.getJSON('pf_format_numbers/' + num, function(data) {
+        $('#product_family_max_orders_sum').val(data.num);
+      });
+      return false;
+    });
+
+    // when submit    
+    $(_thisForm).on('submit', function() {
+      // Must change decimal separator, if comma, in numeric fields
+      var num = $('#product_family_max_orders_sum').val().replace(",", ".");
+      $('#product_family_max_orders_sum').val(num);
+    });
+    
+  });  
+</script>
+
 <%= simple_form_for @product_family, :html => {:class => 'form-vertical well' } do |f| %>
 <%= f.error_notification %>
 <%= display_base_errors resource %>
@@ -9,5 +52,5 @@
   <label class="multi-field-label-two"> <%= f.input :max_orders_count, input_html: { class: 'large-text-field number-text-field' }, label_html: { class: 'form-label' } %> </label>
   <label class="multi-field-label-two"> <%= f.input :max_orders_sum, as: :string, input_html: { value: (number_with_precision(f.object.max_orders_sum, precision: 2) if f.object.max_orders_sum), class: 'large-text-field number-text-field' }, label_html: { class: 'form-label' } %> </label>
 </div>
-<%= f.button :submit, :class => 'btn-primary' %>
+<%= f.button :submit, :class => 'btn-primary', id: 'submit_btn' %>
 <% end %>

@@ -2,11 +2,32 @@ require_dependency "ag2_products/application_controller"
 
 module Ag2Products
   class ProductFamiliesController < ApplicationController
+    include ActionView::Helpers::NumberHelper
     before_filter :authenticate_user!
     load_and_authorize_resource
+    skip_load_and_authorize_resource :only => [:po_update_description_prices_from_product,
+                                               :po_update_project_from_order,
+                                               :po_update_charge_account_from_project,
+                                               :po_update_amount_from_price_or_quantity,
+                                               :po_update_offer_select_from_supplier]
     # Helper methods for sorting
     helper_method :sort_column
 
+    # Format numbers properly
+    def pf_format_numbers
+      num = params[:num].to_f / 10000
+      num = number_with_precision(num.round(2), precision: 2)
+      @json_data = { "num" => num.to_s }
+
+      respond_to do |format|
+        format.html # pf_format_numbers.html.erb does not exist! JSON only
+        format.json { render json: @json_data }
+      end
+    end
+
+    #
+    # Default Methods
+    #
     # GET /product_families
     # GET /product_families.json
     def index

@@ -19,7 +19,7 @@
     // Initialized form variable
     _thisForm = $("#purchase_order_order_no").closest('form')[0];
 
-    // Disable fields if Product Family blank
+    // Disable fields if Order# blank
     var order = $('#purchase_order_order_no').val();
     if (order == "")
       order = "0";
@@ -27,7 +27,7 @@
       // Empty order: Disable
       $('#submit_btn').hide();
     } else {
-      // Order: OK: Enable
+      // Order OK: Enable
       $('#submit_btn').show();
     }
   });
