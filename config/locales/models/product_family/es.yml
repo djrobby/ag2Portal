@@ -12,4 +12,4 @@ es:
         name: "Nombre"
         family_code: "Código"
         max_orders_count: "Cantidad máx. pedidos"
-        max_orders_sum: "Importe máx. pedidos"
+        max_orders_sum: "Importe máx. pedidos €"

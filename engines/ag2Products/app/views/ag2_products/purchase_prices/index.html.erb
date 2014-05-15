@@ -81,17 +81,17 @@
             <td><%= price.supplier.supplier_code %></td>
             <td><%= price.supplier.name %></td>
             <td><%= price.code unless price.code.blank? %></td>
-            <td align="right"><%= number_to_currency(price.price, precision: 4, locale: :es) unless price.price.blank? %></td>
+            <td align="right"><%= number_with_precision(price.price, precision: 4) unless price.price.blank? %></td>
             <% elsif !@product.nil? %>
             <td><%= link_to price.supplier.supplier_code, price %></td>
             <td><%= price.supplier.name %></td>
             <td><%= price.code unless price.code.blank? %></td>
-            <td align="right"><%= number_to_currency(price.price, precision: 4, locale: :es) unless price.price.blank? %></td>
+            <td align="right"><%= number_with_precision(price.price, precision: 4) unless price.price.blank? %></td>
             <% else %> <!-- !@supplier.nil? -->
             <td><%= link_to price.product.product_code, price %></td>
             <td><%= price.product.main_description[0,40] %></td>
             <td><%= price.code unless price.code.blank? %></td>
-            <td align="right"><%= number_to_currency(price.price, precision: 4, locale: :es) unless price.price.blank? %></td>
+            <td align="right"><%= number_with_precision(price.price, precision: 4) unless price.price.blank? %></td>
             <% end %>
             <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => PurchasePrice, :path => edit_purchase_price_path(price) } %>
             <%= render :partial => '/layouts/crud/delete', :locals => { :model => PurchasePrice, :path => price, :msg => t("activerecord.models.purchase_price.one"), :txt => price.product.product_code + "->" + price.supplier.supplier_code } %> </td>

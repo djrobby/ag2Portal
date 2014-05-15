@@ -57,19 +57,19 @@
       <td><%= t 'activerecord.attributes.product.tax_type' %>:</td>
       <td><%= @product.tax_type.description %> (<%= number_to_percentage(@product.tax_type.tax, precision: 2, locale: :es) unless @product.tax_type.tax.blank? %>)</td>
       <td><%= t :"activerecord.attributes.product.reference_price" %>:</td>
-      <td><%= number_to_currency(@product.reference_price, precision: 4, locale: :es) unless @product.reference_price.blank? %></td>
+      <td><%= number_with_precision(@product.reference_price, precision: 4) unless @product.reference_price.blank? %></td>
     </tr>
     <tr>
       <td><%= t :"activerecord.attributes.product.last_price" %>:</td>
-      <td><%= number_to_currency(@product.last_price, precision: 4, locale: :es) unless @product.last_price.blank? %></td>
+      <td><%= number_with_precision(@product.last_price, precision: 4) unless @product.last_price.blank? %></td>
       <td><%= t :"activerecord.attributes.product.average_price" %>:</td>
-      <td><%= number_to_currency(@product.average_price, precision: 4, locale: :es) unless @product.average_price.blank? %></td>
+      <td><%= number_with_precision(@product.average_price, precision: 4) unless @product.average_price.blank? %></td>
     </tr>
     <tr>
       <td><%= t :"activerecord.attributes.product.markup" %>:</td>
-      <td><%= number_to_percentage(@product.markup, precision: 2, locale: :es) unless @product.markup.blank? %></td>
+      <td><%= number_with_precision(@product.markup, precision: 2) unless @product.markup.blank? %></td>
       <td><%= t :"activerecord.attributes.product.sell_price" %>:</td>
-      <td><%= number_to_currency(@product.sell_price, precision: 4, locale: :es) unless @product.sell_price.blank? %></td>
+      <td><%= number_with_precision(@product.sell_price, precision: 4) unless @product.sell_price.blank? %></td>
     </tr>
     <tr>
       <td><%= t 'activerecord.attributes.product.warranty_time' %>:</td>

@@ -1,8 +1,8 @@
 <% stocks.each do |w| %>
 <tr>
   <td><%= w.product.product_code %> <%= w.product.main_description[0,40] %></td>
-  <td align="right"><%= number_with_precision(w.initial, precision: 4, locale: :es) unless w.initial.blank? %></td>
-  <td align="right"><%= number_with_precision(w.minimum, precision: 4, locale: :es) unless w.minimum.blank? %></td>
-  <td align="right"><%= number_with_precision(w.current, precision: 4, locale: :es) unless w.current.blank? %></td>
+  <td align="right"><%= number_with_precision(w.initial, precision: 4) unless w.initial.blank? %></td>
+  <td align="right"><%= number_with_precision(w.minimum, precision: 4) unless w.minimum.blank? %></td>
+  <td align="right"><%= number_with_precision(w.current, precision: 4) unless w.current.blank? %></td>
 </tr>
 <% end %>

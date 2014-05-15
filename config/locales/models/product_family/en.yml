@@ -12,4 +12,4 @@ en:
         name: "Name"
         family_code: "Code"
         max_orders_count: "Max orders count"
-        max_orders_sum: "Max orders amount"
+        max_orders_sum: "Max orders amount €"

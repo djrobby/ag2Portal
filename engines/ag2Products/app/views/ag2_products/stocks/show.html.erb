@@ -18,13 +18,13 @@
     </tr>
     <tr>
       <td><%=t 'activerecord.attributes.stock.initial' %>:</td>
-      <td><%= number_with_precision(@stock.initial, precision: 4, locale: :es) unless @stock.initial.blank? %></td>
+      <td><%= number_with_precision(@stock.initial, precision: 4) unless @stock.initial.blank? %></td>
       <td><%=t 'activerecord.attributes.stock.minimum' %>:</td>
-      <td><%= number_with_precision(@stock.minimum, precision: 4, locale: :es) unless @stock.minimum.blank? %></td>
+      <td><%= number_with_precision(@stock.minimum, precision: 4) unless @stock.minimum.blank? %></td>
     </tr>
     <tr>
       <td><%=t 'activerecord.attributes.stock.current' %>:</td>
-      <td><%= number_with_precision(@stock.current, precision: 4, locale: :es) unless @stock.current.blank? %></td>
+      <td><%= number_with_precision(@stock.current, precision: 4) unless @stock.current.blank? %></td>
       <td></td>
       <td></td>
     </tr>

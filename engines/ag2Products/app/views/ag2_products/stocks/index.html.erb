@@ -75,18 +75,18 @@
             <td><%= link_to stock.product.product_code, stock %></td>
             <td><%= stock.product.main_description[0,40] %></td>
             <td><%= stock.store.name %></td>
-            <td align="right"><%= number_with_precision(stock.current, precision: 4, locale: :es) unless stock.current.blank? %></td>
+            <td align="right"><%= number_with_precision(stock.current, precision: 4) unless stock.current.blank? %></td>
             <% elsif !@product.nil? %>
             <td><%= link_to stock.store.name, stock %></td>
-            <td align="right"><%= number_with_precision(stock.initial, precision: 4, locale: :es) unless stock.initial.blank? %></td>
-            <td align="right"><%= number_with_precision(stock.minimum, precision: 4, locale: :es) unless stock.minimum.blank? %></td>
-            <td align="right"><%= number_with_precision(stock.current, precision: 4, locale: :es) unless stock.current.blank? %></td>
+            <td align="right"><%= number_with_precision(stock.initial, precision: 4) unless stock.initial.blank? %></td>
+            <td align="right"><%= number_with_precision(stock.minimum, precision: 4) unless stock.minimum.blank? %></td>
+            <td align="right"><%= number_with_precision(stock.current, precision: 4) unless stock.current.blank? %></td>
             <% else %> <!-- !@store.nil? -->
             <td><%= link_to stock.product.product_code, stock %></td>
             <td><%= stock.product.main_description[0,40] %></td>
-            <td align="right"><%= number_with_precision(stock.initial, precision: 4, locale: :es) unless stock.initial.blank? %></td>
-            <td align="right"><%= number_with_precision(stock.minimum, precision: 4, locale: :es) unless stock.minimum.blank? %></td>
-            <td align="right"><%= number_with_precision(stock.current, precision: 4, locale: :es) unless stock.current.blank? %></td>
+            <td align="right"><%= number_with_precision(stock.initial, precision: 4) unless stock.initial.blank? %></td>
+            <td align="right"><%= number_with_precision(stock.minimum, precision: 4) unless stock.minimum.blank? %></td>
+            <td align="right"><%= number_with_precision(stock.current, precision: 4) unless stock.current.blank? %></td>
             <% end %>
             <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => Stock, :path => edit_stock_path(stock) } %>
             <%= render :partial => '/layouts/crud/delete', :locals => { :model => Stock, :path => stock, :msg => t("activerecord.models.stock.one"), :txt => stock.product.product_code + "->" + stock.store.name } %> </td>

@@ -24,7 +24,7 @@
       if (num == "")
         num = "0";
       // Right formatted for passing as REST parameter
-      num = num.replace(",", ".") * 10000;
+      num = right_number(num, 4) * 10000;
       jQuery.getJSON('pf_format_numbers/' + num, function(data) {
         $('#product_family_max_orders_sum').val(data.num);
       });
@@ -37,7 +37,6 @@
       var num = $('#product_family_max_orders_sum').val().replace(",", ".");
       $('#product_family_max_orders_sum').val(num);
     });
-    
   });  
 </script>
 

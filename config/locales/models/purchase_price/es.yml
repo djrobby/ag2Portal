@@ -15,7 +15,7 @@ es:
         supplier: "Proveedor"
         supplier_id: "Proveedor"
         code: "Referencia"
-        price: "Precio"
+        price: "Precio €"
         measure: "U.Medida"
         measure_id: "U.Medida"
         factor: "Factor C"
