@@ -16,7 +16,7 @@
       if (num == "")
         num = "0";
       // Right formatted for passing as REST parameter
-      num = right_number(num, 4) * 10000;
+      num = parseInt(right_number(num, 4) * 10000);
       jQuery.getJSON('pp_format_numbers/' + num, function(data) {
         $('#purchase_price_price').val(data.num);
       });

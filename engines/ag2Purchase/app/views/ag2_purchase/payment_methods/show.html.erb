@@ -13,7 +13,7 @@
       <td><%=t 'activerecord.attributes.payment_method.expiration_days' %>:</td>
       <td><%= @payment_method.expiration_days unless @payment_method.expiration_days.blank? %></td>
       <td><%=t 'activerecord.attributes.payment_method.default_interest' %>:</td>
-      <td><%= number_to_percentage(@payment_method.default_interest, :locale => :es) unless @payment_method.default_interest.blank? %></td>
+      <td><%= number_with_precision(@payment_method.default_interest, precision: 3) unless @payment_method.default_interest.blank? %></td>
     </tr>
     <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @payment_method } %>
     <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @payment_method } %>

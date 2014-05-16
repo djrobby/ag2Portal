@@ -2,10 +2,12 @@ require_dependency "ag2_products/application_controller"
 
 module Ag2Products
   class ProductsController < ApplicationController
+    include ActionView::Helpers::NumberHelper
     before_filter :authenticate_user!
     load_and_authorize_resource
-    skip_load_and_authorize_resource :only => [:update_code_textfield]
-    
+    skip_load_and_authorize_resource :only => [:update_code_textfield,
+                                               :pr_format_amount,
+                                               :pr_format_percentage]
     # Update product code at view (generate_code_btn)
     def update_code_textfield
       family = params[:id]
@@ -31,6 +33,28 @@ module Ag2Products
         format.html # update_code_textfield.html.erb does not exist! JSON only
         format.json { render json: @json_data }
       end
+    end
+
+    # Format amount properly
+    def pr_format_amount
+      num = params[:num].to_f / 10000
+      num = number_with_precision(num.round(4), precision: 4)
+      @json_data = { "num" => num.to_s }
+      render json: @json_data
+    end
+
+    # Format percentage properly and calculate sell price
+    def pr_markup
+      markup = params[:markup].to_f / 100
+      sell = params[:sell].to_f / 10000
+      reference = params[:reference].to_f / 10000
+      if markup != 0
+        sell = reference * (1 + (markup / 100))
+      end
+      markup = number_with_precision(markup.round(2), precision: 2)
+      sell = number_with_precision(sell.round(4), precision: 4)
+      @json_data = { "markup" => markup.to_s, "sell" => sell.to_s }
+      render json: @json_data
     end
 
     #

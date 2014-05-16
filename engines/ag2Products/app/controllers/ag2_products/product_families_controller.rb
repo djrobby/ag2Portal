@@ -5,11 +5,7 @@ module Ag2Products
     include ActionView::Helpers::NumberHelper
     before_filter :authenticate_user!
     load_and_authorize_resource
-    skip_load_and_authorize_resource :only => [:po_update_description_prices_from_product,
-                                               :po_update_project_from_order,
-                                               :po_update_charge_account_from_project,
-                                               :po_update_amount_from_price_or_quantity,
-                                               :po_update_offer_select_from_supplier]
+    skip_load_and_authorize_resource :only => [:pf_format_numbers]
     # Helper methods for sorting
     helper_method :sort_column
 

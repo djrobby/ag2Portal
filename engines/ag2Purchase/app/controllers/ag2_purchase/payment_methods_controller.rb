@@ -2,11 +2,24 @@ require_dependency "ag2_purchase/application_controller"
 
 module Ag2Purchase
   class PaymentMethodsController < ApplicationController
+    include ActionView::Helpers::NumberHelper
     before_filter :authenticate_user!
     load_and_authorize_resource
+    skip_load_and_authorize_resource :only => [:pm_format_numbers]
     # Helper methods for sorting
     helper_method :sort_column
 
+    # Format numbers properly
+    def pm_format_numbers
+      num = params[:num].to_f / 1000
+      num = number_with_precision(num.round(3), precision: 3)
+      @json_data = { "num" => num.to_s }
+      render json: @json_data
+    end
+
+    #
+    # Default Methods
+    #
     # GET /payment_methods
     # GET /payment_methods.json
     def index

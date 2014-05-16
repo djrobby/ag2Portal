@@ -29,7 +29,7 @@ function right_number(n, l) {
     if (d.length > l) {
       d = r.length - (d.length - l);
       r = r.substring(0, d);
-    } 
+    }
   }
   return r;
 }

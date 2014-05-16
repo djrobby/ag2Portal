@@ -1,3 +1,33 @@
+<script>
+  var _thisForm = '';
+  $(document).ready(function() {
+    // Initialized form variable
+    _thisForm = $("#payment_method_description").closest('form')[0];
+  });
+
+  jQuery(function($) {
+    // when the #payment_method_default_interest field changes
+    $("#payment_method_default_interest").change(function() {
+      var num = $('#payment_method_default_interest').val();
+      if (num == "")
+        num = "0";
+      // Right formatted for passing as REST parameter
+      num = parseInt(right_number(num, 3) * 1000);
+      jQuery.getJSON('pm_format_numbers/' + num, function(data) {
+        $('#payment_method_default_interest').val(data.num);
+      });
+      return false;
+    });
+    
+    // when submit    
+    $(_thisForm).on('submit', function() {
+      // Must change decimal separator, if comma, in numeric fields
+      var num = $('#payment_method_default_interest').val().replace(",", ".");
+      $('#payment_method_default_interest').val(num);
+    });
+  });
+</script>
+
 <%= simple_form_for @payment_method, :html => {:class => 'form-vertical well' } do |f| %>
 <%= f.error_notification %>
 <%= display_base_errors resource %>

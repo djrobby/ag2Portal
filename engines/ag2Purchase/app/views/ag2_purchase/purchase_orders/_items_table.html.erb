@@ -21,7 +21,7 @@
       if (qty == "")
         qty = "0";
       // Right formatted for passing as REST parameter
-      qty = qty.replace(",", ".") * 10000;
+      qty = parseInt(right_number(qty, 4) * 10000);
       jQuery.getJSON('po_update_description_prices_from_product/' + product + '/' + qty, function(data) {
         $(_this).closest('tr').find('.fnt-description').val(data.description);
         $(_this).closest('tr').find('.fnt-price').val(data.price);
@@ -85,10 +85,10 @@
       if (discount == "")
         discount = "0";
       // Right formatted for passing as REST parameter
-      price = price.replace(",", ".") * 10000;
-      qty = qty.replace(",", ".") * 10000;
-      discount_p = discount_p.replace(",", ".") * 100;
-      discount = discount.replace(",", ".") * 10000;
+      price = parseInt(right_number(price, 4) * 10000);
+      qty = parseInt(right_number(qty, 4) * 10000);
+      discount_p = parseInt(right_number(discount_p, 2) * 100);
+      discount = parseInt(right_number(discount, 4) * 10000);
       jQuery.getJSON('po_update_amount_from_price_or_quantity/' + price + '/' + qty + '/' + tax_type + '/' + discount_p + '/' + discount, function(data) {
         $(_this).closest('tr').find('.fnt-price').val(data.price);
         $(_this).closest('tr').find('.fnt-quantity').val(data.quantity);

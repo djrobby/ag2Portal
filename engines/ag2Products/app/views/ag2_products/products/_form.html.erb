@@ -1,5 +1,6 @@
 <script>
   var text_field_color;
+  var _thisForm = '';
 
   $(document).ready(function() {
     // Disable fields if Product Family blank
@@ -24,6 +25,9 @@
     // Save default text color
     text_field_color = $("#supplier_supplier_code").css('color')
     $('#product_product_family_id').focus();
+
+    // Initialized form variable
+    _thisForm = $("#product_product_family_id").closest('form')[0];
   });
 
   jQuery(function($) {
@@ -75,6 +79,95 @@
       // replace the color
       $("#product_product_code").css('color', text_field_color);
     });
+
+    // when the #product_reference_price field changes
+    $("#product_reference_price").change(function() {
+      var num = $('#product_reference_price').val();
+      if (num == "")
+        num = "0";
+      // Right formatted for passing as REST parameter
+      num = parseInt(right_number(num, 4) * 10000);
+      jQuery.getJSON('pr_format_amount/' + num, function(data) {
+        $('#product_reference_price').val(data.num);
+      });
+      return false;
+    });
+
+    // when the #product_last_price field changes
+    $("#product_last_price").change(function() {
+      var num = $('#product_last_price').val();
+      if (num == "")
+        num = "0";
+      // Right formatted for passing as REST parameter
+      num = parseInt(right_number(num, 4) * 10000);
+      jQuery.getJSON('pr_format_amount/' + num, function(data) {
+        $('#product_last_price').val(data.num);
+      });
+      return false;
+    });
+
+    // when the #product_average_price field changes
+    $("#product_average_price").change(function() {
+      var num = $('#product_average_price').val();
+      if (num == "")
+        num = "0";
+      // Right formatted for passing as REST parameter
+      num = parseInt(right_number(num, 4) * 10000);
+      jQuery.getJSON('pr_format_amount/' + num, function(data) {
+        $('#product_average_price').val(data.num);
+      });
+      return false;
+    });
+
+    // when the #product_sell_price field changes
+    $("#product_sell_price").change(function() {
+      var num = $('#product_sell_price').val();
+      if (num == "")
+        num = "0";
+      // Right formatted for passing as REST parameter
+      num = parseInt(right_number(num, 4) * 10000);
+      jQuery.getJSON('pr_format_amount/' + num, function(data) {
+        $('#product_sell_price').val(data.num);
+      });
+      return false;
+    });
+
+    // when the #product_markup field changes
+    $("#product_markup").change(function() {
+      var markup = $('#product_markup').val();
+      if (markup == "")
+        markup = "0";
+      var sell = $('#product_sell_price').val();
+      if (sell == "")
+        sell = "0";
+      var reference = $('#product_reference_price').val();
+      if (reference == "")
+        reference = "0";
+      // Right formatted for passing as REST parameter
+      markup = parseInt(right_number(markup, 2) * 100);
+      sell = parseInt(right_number(sell, 4) * 10000);
+      reference = parseInt(right_number(reference, 4) * 10000);
+      jQuery.getJSON('pr_markup/' + markup + '/' + sell + '/' + reference, function(data) {
+        $('#product_markup').val(data.markup);
+        $('#product_sell_price').val(data.sell);
+        });
+      return false;
+    });
+
+    // when submit    
+    $(_thisForm).on('submit', function() {
+      // Must change decimal separator, if comma, in numeric fields
+      var r = $('#product_reference_price').val().replace(",", ".");
+      var l = $('#product_last_price').val().replace(",", ".");
+      var a = $('#product_average_price').val().replace(",", ".");
+      var s = $('#product_sell_price').val().replace(",", ".");
+      var m = $('#product_markup').val().replace(",", ".");
+      $('#product_reference_price').val(r);
+      $('#product_last_price').val(l);
+      $('#product_average_price').val(a);
+      $('#product_sell_price').val(s);
+      $('#product_markup').val(m);
+    });
   });
 </script>
 
@@ -111,7 +204,7 @@
 </div>
 <div>
   <label class="multi-field-label-two"> <%= f.input :markup, as: :string, input_html: { value: (number_with_precision(f.object.markup, precision: 2) if f.object.markup), class: 'large-text-field number-text-field' }, label_html: { class: 'form-label' } %> </label>
-  <label class="multi-field-label-two"> <%= f.input :sell_price, as: :string, input_html: { value: (number_with_precision(f.object.average_price, precision: 4) if f.object.average_price), class: 'large-text-field number-text-field' }, label_html: { class: 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.input :sell_price, as: :string, input_html: { value: (number_with_precision(f.object.sell_price, precision: 4) if f.object.sell_price), class: 'large-text-field number-text-field' }, label_html: { class: 'form-label' } %> </label>
 </div>
 <div>
   <label class="multi-field-label-two"> <%= f.input :warranty_time, input_html: { class: 'large-text-field number-text-field' }, label_html: { class: 'form-label' } %> </label>

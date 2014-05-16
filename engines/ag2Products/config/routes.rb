@@ -11,6 +11,18 @@ Ag2Products::Engine.routes.draw do
     match 'product_families/pf_format_numbers/:num', :controller => 'product_families', :action => 'pf_format_numbers'
     match 'pf_format_numbers/:num', :controller => 'product_families', :action => 'pf_format_numbers'
     match 'product_families/:id/pf_format_numbers/:num', :controller => 'product_families', :action => 'pf_format_numbers'
+    match 'stocks/st_format_numbers/:num', :controller => 'stocks', :action => 'st_format_numbers'
+    match 'st_format_numbers/:num', :controller => 'stocks', :action => 'st_format_numbers'
+    match 'stocks/:id/st_format_numbers/:num', :controller => 'stocks', :action => 'st_format_numbers'
+    match 'purchase_prices/pp_format_numbers/:num', :controller => 'purchase_prices', :action => 'pp_format_numbers'
+    match 'pp_format_numbers/:num', :controller => 'purchase_prices', :action => 'pp_format_numbers'
+    match 'purchase_prices/:id/pp_format_numbers/:num', :controller => 'purchase_prices', :action => 'pp_format_numbers'
+    match 'products/pr_format_amount/:num', :controller => 'products', :action => 'pr_format_amount'
+    match 'pr_format_amount/:num', :controller => 'products', :action => 'pr_format_amount'
+    match 'products/:id/pr_format_amount/:num', :controller => 'products', :action => 'pr_format_amount'
+    match 'products/pr_markup/:markup/:sell/:reference', :controller => 'products', :action => 'pr_markup'
+    match 'pr_markup/:markup/:sell/:reference', :controller => 'products', :action => 'pr_markup'
+    match 'products/:id/pr_markup/:markup/:sell/:reference', :controller => 'products', :action => 'pr_markup'
 
     # Resources
     resources :products

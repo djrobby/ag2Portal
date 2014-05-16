@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140514110144) do
+ActiveRecord::Schema.define(:version => 20140516083531) do
 
   create_table "activities", :force => true do |t|
     t.string   "description"
@@ -639,7 +639,7 @@ ActiveRecord::Schema.define(:version => 20140514110144) do
     t.decimal  "reference_price",                  :precision => 12, :scale => 4, :default => 0.0, :null => false
     t.decimal  "last_price",                       :precision => 12, :scale => 4, :default => 0.0, :null => false
     t.decimal  "average_price",                    :precision => 12, :scale => 4, :default => 0.0, :null => false
-    t.decimal  "sell_price",                       :precision => 10, :scale => 0
+    t.decimal  "sell_price",                       :precision => 12, :scale => 4, :default => 0.0, :null => false
     t.decimal  "markup",                           :precision => 6,  :scale => 2, :default => 0.0, :null => false
     t.integer  "warranty_time",       :limit => 2,                                :default => 0,   :null => false
     t.integer  "life_time",           :limit => 2,                                :default => 0,   :null => false

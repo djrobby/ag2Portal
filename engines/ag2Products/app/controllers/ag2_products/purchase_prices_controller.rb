@@ -2,10 +2,20 @@ require_dependency "ag2_products/application_controller"
 
 module Ag2Products
   class PurchasePricesController < ApplicationController
+    include ActionView::Helpers::NumberHelper
     before_filter :authenticate_user!
     load_and_authorize_resource
+    skip_load_and_authorize_resource :only => [:pp_format_numbers]
     $product = nil
     $supplier = nil
+
+    # Format numbers properly
+    def pp_format_numbers
+      num = params[:num].to_f / 10000
+      num = number_with_precision(num.round(4), precision: 4)
+      @json_data = { "num" => num.to_s }
+      render json: @json_data
+    end
     
     # GET /purchase_prices
     # GET /purchase_prices.json

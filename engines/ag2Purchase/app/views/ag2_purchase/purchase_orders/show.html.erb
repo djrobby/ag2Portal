@@ -41,7 +41,7 @@
     </tr>
     <tr>
       <td><%=t 'activerecord.attributes.purchase_order.retention_pct' %>:</td>
-      <td><%= number_to_percentage(@purchase_order.retention_pct, precision: 2, locale: :es) unless @purchase_order.retention_pct.blank? %></td>
+      <td><%= number_with_precision(@purchase_order.retention_pct, precision: 2) unless @purchase_order.retention_pct.blank? %></td>
       <td><%=t 'activerecord.attributes.purchase_order.retention_time' %>:</td>
       <td><%= @purchase_order.retention_time unless @purchase_order.retention_time.blank? %></td>
     </tr>

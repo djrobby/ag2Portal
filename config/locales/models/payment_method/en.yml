@@ -16,4 +16,4 @@ en:
       payment_method:
         description: "Description"
         expiration_days: "Expiration days"
-        default_interest: "Default Interest"
+        default_interest: "Default Interest %"

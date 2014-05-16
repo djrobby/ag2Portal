@@ -16,7 +16,7 @@
       if (num == "")
         num = "0";
       // Right formatted for passing as REST parameter
-      num = right_number(num, 4) * 10000;
+      num = parseInt(right_number(num, 4) * 10000);
       jQuery.getJSON('st_format_numbers/' + num, function(data) {
         $('#stock_initial').val(data.num);
       });
@@ -24,12 +24,12 @@
     });
 
     // when the #stock_minimum field changes
-    $("#stock_initial").change(function() {
+    $("#stock_minimum").change(function() {
       var num = $('#stock_minimum').val();
       if (num == "")
         num = "0";
       // Right formatted for passing as REST parameter
-      num = right_number(num, 4) * 10000;
+      num = parseInt(right_number(num, 4) * 10000);
       jQuery.getJSON('st_format_numbers/' + num, function(data) {
         $('#stock_minimum').val(data.num);
       });
@@ -37,12 +37,12 @@
     });
 
     // when the #stock_current field changes
-    $("#stock_initial").change(function() {
+    $("#stock_current").change(function() {
       var num = $('#stock_current').val();
       if (num == "")
         num = "0";
       // Right formatted for passing as REST parameter
-      num = right_number(num, 4) * 10000;
+      num = parseInt(right_number(num, 4) * 10000);
       jQuery.getJSON('st_format_numbers/' + num, function(data) {
         $('#stock_current').val(data.num);
       });

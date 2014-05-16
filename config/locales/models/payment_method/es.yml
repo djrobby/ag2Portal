@@ -16,4 +16,4 @@ es:
       payment_method:
         description: "Descripción"
         expiration_days: "Días para vencimiento"
-        default_interest: "Intereses de demora"
+        default_interest: "Intereses demora %"
