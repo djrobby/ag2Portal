@@ -77,6 +77,9 @@
   <thead>
     <%= render 'items_header' %>
   </thead>
+  <tfoot>
+    <%= render partial: 'items_footer', :locals => { order: @purchase_order } %>
+  </tfoot>
   <tbody>
     <%= render partial: 'item', collection: @items %>
   </tbody>

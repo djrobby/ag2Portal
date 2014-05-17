@@ -7,7 +7,7 @@ Ag2Purchase::Engine.routes.draw do
     DECIMAL_PATTERN = /-?\d+(\.\d+)/
     
     # Routes for jQuery POSTs
-    # Numbers with decimals (.) must be multiplied (by 1... and the same zeroes positions) before passed as REST parameter! 
+    # Numbers with decimals (.) must be multiplied (by 1xxx and the same zeroes x positions) before passed as REST parameter! 
     match 'suppliers/update_province_textfield_from_town/:id', :controller => 'suppliers', :action => 'update_province_textfield_from_town'
     match 'suppliers/:id/update_province_textfield_from_town/:id', :controller => 'suppliers', :action => 'update_province_textfield_from_town'
     match 'suppliers/update_province_textfield_from_zipcode/:id', :controller => 'suppliers', :action => 'update_province_textfield_from_zipcode'
@@ -38,6 +38,12 @@ Ag2Purchase::Engine.routes.draw do
     match 'payment_methods/pm_format_numbers/:num', :controller => 'payment_methods', :action => 'pm_format_numbers'
     match 'pm_format_numbers/:num', :controller => 'payment_methods', :action => 'pm_format_numbers'
     match 'payment_methods/:id/pm_format_numbers/:num', :controller => 'payment_methods', :action => 'pm_format_numbers'
+    match 'suppliers/su_format_amount/:num', :controller => 'suppliers', :action => 'su_format_amount'
+    match 'su_format_amount/:num', :controller => 'suppliers', :action => 'su_format_amount'
+    match 'suppliers/:id/su_format_amount/:num', :controller => 'suppliers', :action => 'su_format_amount'
+    match 'suppliers/su_format_percentage/:num', :controller => 'suppliers', :action => 'su_format_percentage'
+    match 'su_format_percentage/:num', :controller => 'suppliers', :action => 'su_format_percentage'
+    match 'suppliers/:id/su_format_percentage/:num', :controller => 'suppliers', :action => 'su_format_percentage'
 
     # Resources
     resources :suppliers

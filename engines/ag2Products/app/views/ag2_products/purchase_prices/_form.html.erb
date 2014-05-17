@@ -23,11 +23,26 @@
       return false;
     });
 
+    // when the #purchase_price_factor field changes
+    $("#purchase_price_factor").change(function() {
+      var num = $('#purchase_price_factor').val();
+      if (num == "")
+        num = "0";
+      // Right formatted for passing as REST parameter
+      num = parseInt(right_number(num, 4) * 10000);
+      jQuery.getJSON('pp_format_numbers/' + num, function(data) {
+        $('#purchase_price_factor').val(data.num);
+      });
+      return false;
+    });
+
     // when submit    
     $(_thisForm).on('submit', function() {
       // Must change decimal separator, if comma, in numeric fields
-      var num = $('#purchase_price_price').val().replace(",", ".");
-      $('#purchase_price_price').val(num);
+      var p = $('#purchase_price_price').val().replace(",", ".");
+      var f = $('#purchase_price_factor').val().replace(",", ".");
+      $('#purchase_price_price').val(p);
+      $('#purchase_price_factor').val(f);
     });
   });  
 </script>

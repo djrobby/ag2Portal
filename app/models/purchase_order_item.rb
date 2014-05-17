@@ -43,7 +43,23 @@ class PurchaseOrderItem < ActiveRecord::Base
   def tax
     (tax_type.tax / 100) * amount if !tax_type.nil?
   end
-  
+
+  def net
+    net = amount
+    if !purchase_order.discount_pct.blank?
+      net = net - (net * purchase_order.discount_pct)
+    end
+    net
+  end
+
+  def net_tax
+    net_tax = tax
+    if !purchase_order.discount_pct.blank?
+      net_tax = net_tax - (net_tax * purchase_order.discount_pct)
+    end
+    net_tax
+  end
+    
   def balance
     quantity - receipt_note_items.sum("quantity")
   end

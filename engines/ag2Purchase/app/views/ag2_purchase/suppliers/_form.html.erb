@@ -1,5 +1,6 @@
 <script>
   var text_field_color;
+  var _thisForm = '';
 
   $(document).ready(function() {
     // Disable fields if Fiscal Id blank
@@ -79,6 +80,9 @@
       return false;
     }));
     $('#supplier_fiscal_id').focus();
+
+    // Initialized form variable
+    _thisForm = $("#supplier_fiscal_id").closest('form')[0];
   });
   
   jQuery(function($) {
@@ -199,7 +203,41 @@
       $("#supplier_supplier_code").css('color', text_field_color);
     });
 
-  })
+    // when the #supplier_max_orders_sum field changes
+    $("#supplier_max_orders_sum").change(function() {
+      var num = $('#supplier_max_orders_sum').val();
+      if (num == "")
+        num = "0";
+      // Right formatted for passing as REST parameter
+      num = parseInt(right_number(num, 4) * 10000);
+      jQuery.getJSON('su_format_amount/' + num, function(data) {
+        $('#supplier_max_orders_sum').val(data.num);
+      });
+      return false;
+    });
+
+    // when the #supplier_discount_rate field changes
+    $("#supplier_discount_rate").change(function() {
+      var num = $('#supplier_discount_rate').val();
+      if (num == "")
+        num = "0";
+      // Right formatted for passing as REST parameter
+      num = parseInt(right_number(num, 2) * 100);
+      jQuery.getJSON('su_format_percentage/' + num, function(data) {
+        $('#supplier_discount_rate').val(data.num);
+      });
+      return false;
+    });
+
+    // when submit    
+    $(_thisForm).on('submit', function() {
+      // Must change decimal separator, if comma, in numeric fields
+      var m = $('#supplier_max_orders_sum').val().replace(",", ".");
+      var d = $('#supplier_discount_rate').val().replace(",", ".");
+      $('#supplier_max_orders_sum').val(m);
+      $('#supplier_discount_rate').val(d);
+    });
+  });
 
   /* Collect checkboxes values in hidden input field */
   function updateTextArea() {

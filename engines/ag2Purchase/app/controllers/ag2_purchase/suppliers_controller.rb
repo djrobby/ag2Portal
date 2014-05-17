@@ -2,6 +2,7 @@ require_dependency "ag2_purchase/application_controller"
 
 module Ag2Purchase
   class SuppliersController < ApplicationController
+    include ActionView::Helpers::NumberHelper
     before_filter :authenticate_user!
     load_and_authorize_resource
     skip_load_and_authorize_resource :only => [:update_province_textfield_from_town,
@@ -9,7 +10,9 @@ module Ag2Purchase
                                                :update_country_textfield_from_region,
                                                :update_region_textfield_from_province,
                                                :update_code_textfield,
-                                               :validate_fiscal_id_textfield]
+                                               :validate_fiscal_id_textfield,
+                                               :su_format_amount,
+                                               :su_format_percentage]
     # Update country text field at view from region select
     def update_country_textfield_from_region
       @region = Region.find(params[:id])
@@ -158,6 +161,22 @@ module Ag2Purchase
         format.html # validate_fiscal_id_textfield.html.erb does not exist! JSON only
         format.json { render json: @json_data }
       end
+    end
+
+    # Format amount properly
+    def su_format_amount
+      num = params[:num].to_f / 10000
+      num = number_with_precision(num.round(4), precision: 4)
+      @json_data = { "num" => num.to_s }
+      render json: @json_data
+    end
+
+    # Format percentage properly
+    def su_format_percentage
+      num = params[:num].to_f / 100
+      num = number_with_precision(num.round(2), precision: 2)
+      @json_data = { "num" => num.to_s }
+      render json: @json_data
     end
 
     #

@@ -36,7 +36,13 @@ class PurchaseOrder < ActiveRecord::Base
   # Calculated fields
   #
   def subtotal
-    purchase_order_items.sum("amount")
+    subtotal = 0
+    purchase_order_items.each do |i|
+      if !i.amount.blank?
+        subtotal += i.amount
+      end
+    end
+    subtotal
   end
 
   def taxable
@@ -44,11 +50,31 @@ class PurchaseOrder < ActiveRecord::Base
   end
 
   def taxes
-    purchase_order_items.sum("tax")
+    taxes = 0
+    purchase_order_items.each do |i|
+      if !i.tax.blank?
+        taxes += i.tax
+      end
+    end
+    taxes
   end
 
+  def total
+    taxable + taxes  
+  end
+  
   def balance
-    purchase_order_items.sum("balance")
+    balance = 0
+    purchase_order_items.each do |i|
+      if !i.balance.blank?
+        balance += i.balance
+      end
+    end
+    balance
+  end
+
+  def quantity
+    purchase_order_items.sum("quantity")
   end
   
   def delivery_avg

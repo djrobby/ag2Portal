@@ -7,7 +7,7 @@ module Ag2Products
     load_and_authorize_resource
     skip_load_and_authorize_resource :only => [:update_code_textfield,
                                                :pr_format_amount,
-                                               :pr_format_percentage]
+                                               :pr_markup]
     # Update product code at view (generate_code_btn)
     def update_code_textfield
       family = params[:id]
