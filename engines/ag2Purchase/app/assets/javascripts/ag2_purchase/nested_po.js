@@ -40,7 +40,7 @@ var po_formHandler = {
     // Public method for adding a new row to the table.
     appendFields: function (sel2NoMatches) {
         // Get a handle on all the input fields in the form and detach them from
-		// the DOM (we'll attach them later).
+		    // the DOM (we'll attach them later).
         var inputFields = $(po_cfg.formId + ' ' + po_cfg.inputFieldClassSelector);
         inputFields.detach();
 
@@ -59,6 +59,9 @@ var po_formHandler = {
 
     // Public method for hiding the data entry fields.
     hideForm: function() {
+        // Update and display totals
+        $('#items-table').trigger('totals');
+        // Hide modal
         $(po_cfg.formId).modal('hide');
     }
 };
@@ -70,7 +73,7 @@ var po_rowBuilder = function() {
     // Public property that describes the "Remove" link.
     var link = $('<a>', {
         href: '#',
-        onclick: 'remove_fields(this); return false;'
+        onclick: 'remove_fields(this); $("#items-table").trigger("totals"); return false;'
     }).append($('<i>', { class: 'icon-trash' }));
 
     // A private method for building a <TR> w/the required data.

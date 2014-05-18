@@ -45,19 +45,11 @@ class PurchaseOrderItem < ActiveRecord::Base
   end
 
   def net
-    net = amount
-    if !purchase_order.discount_pct.blank?
-      net = net - (net * purchase_order.discount_pct)
-    end
-    net
+    amount - (amount * (purchase_order.discount_pct / 100)) if !purchase_order.discount_pct.blank?
   end
 
   def net_tax
-    net_tax = tax
-    if !purchase_order.discount_pct.blank?
-      net_tax = net_tax - (net_tax * purchase_order.discount_pct)
-    end
-    net_tax
+    tax - (tax * (purchase_order.discount_pct / 100)) if !purchase_order.discount_pct.blank?
   end
     
   def balance

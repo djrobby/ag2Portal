@@ -161,6 +161,19 @@
       });
       return false;
     });
+
+    // when the #purchase_order_discount_pct field changes
+    $("#purchase_order_discount_pct").change(function() {
+      var num = $('#purchase_order_discount_pct').val();
+      if (num == "")
+        num = "0";
+      // Right formatted for passing as REST parameter
+      num = parseInt(right_number(num, 2) * 100);
+      jQuery.getJSON('po_format_number/' + num, function(data) {
+        $('#purchase_order_discount_pct').val(data.num);
+      });
+      return false;
+    });
     
     // when submit    
     $(_thisForm).on('submit', function() {
@@ -179,9 +192,12 @@
         $(this).find('input.fnt-discount-pct').val(discount_p);
         $(this).find('input.fnt-discount').val(discount);
       });
+      // Must change decimal separator, if comma, in numeric fields
+      var num = $('#purchase_order_discount_pct').val().replace(",", ".");
+      $('#purchase_order_discount_pct').val(num);
       //e.preventDefault();
     });
-  })
+  });
 </script>
 
 <%= simple_form_for @purchase_order, html: { class: 'form-vertical well' } do |f| %>
@@ -220,6 +236,10 @@
 </table>
 <%= render 'items_table', f: f %>
 <!-- Totals -->
+<div>
+  <label class="multi-field-label-two"> <%= f.input :discount_pct, as: :string, input_html: { value: (number_with_precision(f.object.discount_pct, precision: 2) if f.object.discount_pct), class: 'mid-text-filed number-text-field' }, label_html: { class: 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.input :bonus, disabled: true, as: :string, input_html: { value: (number_with_precision(f.object.bonus, precision: 4) if f.object.bonus), class: 'mid-text-filed number-text-field sub-disabled-field' }, label_html: { class: 'form-label' } %> </label>
+</div>
 <!-- Buttons -->
 <%= f.button :submit, class: 'btn-primary', id: 'submit_btn' %>
 <% end %>

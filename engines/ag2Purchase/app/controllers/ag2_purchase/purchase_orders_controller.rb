@@ -9,7 +9,8 @@ module Ag2Purchase
                                                :po_update_project_from_order,
                                                :po_update_charge_account_from_project,
                                                :po_update_amount_from_price_or_quantity,
-                                               :po_update_offer_select_from_supplier]
+                                               :po_update_offer_select_from_supplier,
+                                               :po_format_numbers]
     # Update offer select at view from supplier select
     def po_update_offer_select_from_supplier
       supplier = params[:supplier]
@@ -137,6 +138,26 @@ module Ag2Purchase
         format.html # po_update_amount_from_price_or_quantity.html.erb does not exist! JSON only
         format.json { render json: @json_data }
       end
+    end
+
+    # Format numbers properly
+    def po_format_number
+      num = params[:num].to_f / 100
+      num = number_with_precision(num.round(2), precision: 2)
+      @json_data = { "num" => num.to_s }
+      render json: @json_data
+    end
+
+    # Format totals properly
+    def po_format_totals
+      qty = params[:qty].to_f / 10000
+      amount = params[:amount].to_f / 10000
+      tax = params[:tax].to_f / 10000
+      qty = number_with_precision(qty.round(4), precision: 4)
+      amount = number_with_precision(amount.round(4), precision: 4)
+      tax = number_with_precision(tax.round(4), precision: 4)
+      @json_data = { "qty" => qty.to_s, "amount" => amount.to_s, "tax" => tax.to_s }
+      render json: @json_data
     end
 
     #

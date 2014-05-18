@@ -45,15 +45,19 @@ class PurchaseOrder < ActiveRecord::Base
     subtotal
   end
 
+  def bonus
+    (discount_pct / 100) * subtotal if !discount_pct.blank?
+  end
+  
   def taxable
-    subtotal - discount
+    subtotal - bonus - discount
   end
 
   def taxes
     taxes = 0
     purchase_order_items.each do |i|
-      if !i.tax.blank?
-        taxes += i.tax
+      if !i.net_tax.blank?
+        taxes += i.net_tax
       end
     end
     taxes

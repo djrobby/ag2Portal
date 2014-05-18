@@ -6,6 +6,29 @@
       dropdownAutoWidth: true,
       containerCssClass: 'sub-select2-field'
     });
+
+    // Trigger to display totals at table foot
+    $('#items-table').bind('totals', function(event) {
+      var qty = 0;
+      var amount = 0;
+      var tax = 0;
+      $('tr.fields:visible').each(function() {
+        qty += parseFloat(right_number($(this).find('input.fnt-quantity').val(), 4));
+        amount += parseFloat(right_number($(this).find('input.fnt-amount').val(), 4));
+        tax += parseFloat(right_number($(this).find('input.fnt-tax').val(), 4));
+      });
+      qty = parseInt(right_number(qty.toString(), 4) * 10000);
+      amount = parseInt(right_number(amount.toString(), 4) * 10000);
+      tax = parseInt(right_number(tax.toString(), 4) * 10000);
+      jQuery.getJSON('po_format_totals/' + qty + '/' + amount + '/' + tax, function(data) {
+        document.getElementById('foot-quantity').innerHTML = data.qty;
+        document.getElementById('foot-amount').innerHTML = data.amount;
+        document.getElementById('foot-tax').innerHTML = data.tax;
+      });
+    });
+
+    // Update and display totals
+    $('#items-table').trigger('totals');
   }); 
 
   jQuery(function($) {
@@ -30,7 +53,7 @@
         $(_this).closest('tr').find(".fnt-tax-type").val(data.type);
         $(_this).closest('tr').find('.fnt-discount-pct').val("0,00");
         $(_this).closest('tr').find('.fnt-discount').val("0,0000");
-      })
+      });
       return false;
     });
 
@@ -96,9 +119,25 @@
         $(_this).closest('tr').find('.fnt-tax').val(data.tax);
         $(_this).closest('tr').find('.fnt-discount-pct').val(data.discountp);
         $(_this).closest('tr').find('.fnt-discount').val(data.discount);
-      })
+        // Update and display totals
+        $('#items-table').trigger('totals');
+      });
     }
-  })
+
+    /*
+     * Very special function!
+     * This one re-calculate table totals
+     * When the .icon-trash clicked
+     * Replace behavior of link_to_remove_fields
+     * (the same was done in nested_po.js)
+     */
+    $(".icon-trash").click(function() {
+      remove_fields(this);
+      // Update and display totals
+      $('#items-table').trigger('totals');
+      return false;
+    });
+  });
 </script>
 
 <table id="items-table" class="table table-condensed table-striped shrinked fixed">
@@ -123,6 +162,9 @@
   <thead>
     <%= render 'items_header' %>
   </thead>
+  <tfoot>
+    <%= render 'items_table_footer' %>
+  </tfoot>
   <tbody>
     <%= f.simple_fields_for :purchase_order_items, defaults: { input_html: { class: 'sub-form' } } do |i| %>
     <tr class="fields">
