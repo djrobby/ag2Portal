@@ -37,7 +37,7 @@ es:
         retention_pct: "% Retención"
         retention_time: "Plazo retención"
         subtotal: "Subtotal"
-        taxable: "Base imponible"
+        taxable: "B.Imponible"
         taxes: "Impuestos"
         total: "Total"
         offer_no: "Nº Oferta prov."

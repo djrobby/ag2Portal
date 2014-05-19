@@ -10,7 +10,8 @@ module Ag2Purchase
                                                :po_update_charge_account_from_project,
                                                :po_update_amount_from_price_or_quantity,
                                                :po_update_offer_select_from_supplier,
-                                               :po_format_numbers]
+                                               :po_format_numbers,
+                                               :po_totals]
     # Update offer select at view from supplier select
     def po_update_offer_select_from_supplier
       supplier = params[:supplier]
@@ -148,15 +149,30 @@ module Ag2Purchase
       render json: @json_data
     end
 
-    # Format totals properly
-    def po_format_totals
+    # Calculate and format totals properly
+    def po_totals
       qty = params[:qty].to_f / 10000
       amount = params[:amount].to_f / 10000
       tax = params[:tax].to_f / 10000
+      discount_p = params[:discount_p].to_f / 100
+      # Bonus
+      discount = discount_p != 0 ? amount * (discount_p / 100) : 0
+      # Taxable
+      taxable = amount - discount
+      # Taxes
+      tax = tax - (tax * (discount_p / 100)) if discount_p != 0
+      # Total
+      total = taxable + tax      
+      # Format output values
       qty = number_with_precision(qty.round(4), precision: 4)
       amount = number_with_precision(amount.round(4), precision: 4)
       tax = number_with_precision(tax.round(4), precision: 4)
-      @json_data = { "qty" => qty.to_s, "amount" => amount.to_s, "tax" => tax.to_s }
+      discount = number_with_precision(discount.round(4), precision: 4)
+      taxable = number_with_precision(taxable.round(4), precision: 4)
+      total = number_with_precision(total.round(4), precision: 4)
+      # Setup JSON hash
+      @json_data = { "qty" => qty.to_s, "amount" => amount.to_s, "tax" => tax.to_s,
+                     "discount" => discount.to_s, "taxable" => taxable.to_s, "total" => total.to_s }
       render json: @json_data
     end
 

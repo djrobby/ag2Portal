@@ -26,9 +26,11 @@
     if (order == "0") {
       // Empty order: Disable
       $('#submit_btn').hide();
+      $('.fnt-new-btn').hide();
     } else {
       // Order OK: Enable
       $('#submit_btn').show();
+      $('.fnt-new-btn').show();
     }
   });
   
@@ -41,9 +43,11 @@
       if (order == "0") {
         // Empty order: Disable
         $('#submit_btn').hide();
+        $('.fnt-new-btn').hide();
       } else {
         // Order: OK: Enable
         $('#submit_btn').show();
+        $('.fnt-new-btn').show();
       }
     });
 
@@ -172,6 +176,8 @@
       jQuery.getJSON('po_format_number/' + num, function(data) {
         $('#purchase_order_discount_pct').val(data.num);
       });
+      // Update and display totals
+      $('#items-table').trigger('totals');
       return false;
     });
     
@@ -229,17 +235,13 @@
         <h4><%= t 'ag2_purchase.purchase_orders.items_info' %></h4>
       </td>
       <td class="form-td-two right-winged">
-        <%= link_to_add_fields(t("ag2_purchase.purchase_orders.btn_new_item"), f, :purchase_order_items, "item_fields", class: "btn btn-warning") %>
+        <%= link_to_add_fields(t("ag2_purchase.purchase_orders.btn_new_item"), f, :purchase_order_items, "item_fields", class: "btn btn-warning fnt-new-btn") %>
       </td>
     </tr>
   </tbody>
 </table>
 <%= render 'items_table', f: f %>
-<!-- Totals -->
-<div>
-  <label class="multi-field-label-two"> <%= f.input :discount_pct, as: :string, input_html: { value: (number_with_precision(f.object.discount_pct, precision: 2) if f.object.discount_pct), class: 'mid-text-filed number-text-field' }, label_html: { class: 'form-label' } %> </label>
-  <label class="multi-field-label-two"> <%= f.input :bonus, disabled: true, as: :string, input_html: { value: (number_with_precision(f.object.bonus, precision: 4) if f.object.bonus), class: 'mid-text-filed number-text-field sub-disabled-field' }, label_html: { class: 'form-label' } %> </label>
-</div>
+<!-- Totals in items_table_footer -->
 <!-- Buttons -->
 <%= f.button :submit, class: 'btn-primary', id: 'submit_btn' %>
 <% end %>

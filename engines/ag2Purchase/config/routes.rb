@@ -45,9 +45,9 @@ Ag2Purchase::Engine.routes.draw do
     match 'purchase_orders/po_format_number/:num', :controller => 'purchase_orders', :action => 'po_format_number'
     match 'po_format_number/:num', :controller => 'purchase_orders', :action => 'po_format_number'
     match 'purchase_orders/:id/po_format_number/:num', :controller => 'purchase_orders', :action => 'po_format_number'
-    match 'purchase_orders/po_format_totals/:qty/:amount/:tax', :controller => 'purchase_orders', :action => 'po_format_totals'
-    match 'po_format_totals/:qty/:amount/:tax', :controller => 'purchase_orders', :action => 'po_format_totals'
-    match 'purchase_orders/:id/po_format_totals/:qty/:amount/:tax', :controller => 'purchase_orders', :action => 'po_format_totals'
+    match 'purchase_orders/po_totals/:qty/:amount/:tax/:discount_p', :controller => 'purchase_orders', :action => 'po_totals'
+    match 'po_totals/:qty/:amount/:tax/:discount_p', :controller => 'purchase_orders', :action => 'po_totals'
+    match 'purchase_orders/:id/po_totals/:qty/:amount/:tax/:discount_p', :controller => 'purchase_orders', :action => 'po_totals'
     #
     match 'payment_methods/pm_format_numbers/:num', :controller => 'payment_methods', :action => 'pm_format_numbers'
     match 'pm_format_numbers/:num', :controller => 'payment_methods', :action => 'pm_format_numbers'

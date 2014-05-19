@@ -9,6 +9,7 @@
 
     // Trigger to display totals at table foot
     $('#items-table').bind('totals', function(event) {
+      // Sum necessary values from table rows
       var qty = 0;
       var amount = 0;
       var tax = 0;
@@ -20,13 +21,20 @@
       qty = parseInt(right_number(qty.toString(), 4) * 10000);
       amount = parseInt(right_number(amount.toString(), 4) * 10000);
       tax = parseInt(right_number(tax.toString(), 4) * 10000);
-      jQuery.getJSON('po_format_totals/' + qty + '/' + amount + '/' + tax, function(data) {
+      // Bonus
+      var discount_p = $('#purchase_order_discount_pct').val();
+      if (discount_p == "")
+        discount_p = "0";
+      discount_p = parseInt(right_number(discount_p, 2) * 100);
+      jQuery.getJSON('po_totals/' + qty + '/' + amount + '/' + tax + '/' + discount_p, function(data) {
         document.getElementById('foot-quantity').innerHTML = data.qty;
         document.getElementById('foot-amount').innerHTML = data.amount;
         document.getElementById('foot-tax').innerHTML = data.tax;
+        document.getElementById('foot-discount').innerHTML = data.discount;
+        document.getElementById('foot-taxable').innerHTML = data.taxable;
+        document.getElementById('foot-total').innerHTML = data.total;
       });
     });
-
     // Update and display totals
     $('#items-table').trigger('totals');
   }); 
@@ -163,7 +171,7 @@
     <%= render 'items_header' %>
   </thead>
   <tfoot>
-    <%= render 'items_table_footer' %>
+    <%= render 'items_table_footer', f: f %>
   </tfoot>
   <tbody>
     <%= f.simple_fields_for :purchase_order_items, defaults: { input_html: { class: 'sub-form' } } do |i| %>
