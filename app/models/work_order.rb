@@ -10,7 +10,7 @@ class WorkOrder < ActiveRecord::Base
   attr_accessible :closed_at, :completed_at, :order_no, :started_at,
                   :work_order_labor_id, :work_order_status_id, :work_order_type_id,
                   :charge_account_id, :project_id, :area_id, :store_id, :client_id,
-                  :remarks, :description
+                  :remarks, :description, :petitioner, :master_order_id
 
   has_many :work_order_items, dependent: :destroy
   has_many :work_order_workers, dependent: :destroy
@@ -19,6 +19,10 @@ class WorkOrder < ActiveRecord::Base
   has_many :receipt_note_items
   has_many :supplier_invoices
 
+  # Self join
+  has_many :suborders, class_name: 'WorkOrder', foreign_key: 'master_order_id'
+  belongs_to :master_order, class_name: 'WorkOrder'
+  
   has_paper_trail
 
   validates :order_no,          :presence => true,
@@ -71,7 +75,7 @@ class WorkOrder < ActiveRecord::Base
   end
 
   searchable do
-    text :order_no, :remarks
+    text :order_no, :description, :petitioner
     string :order_no
     integer :charge_account_id
     integer :project_id
@@ -79,6 +83,7 @@ class WorkOrder < ActiveRecord::Base
     integer :work_order_type_id
     integer :work_order_status_id
     integer :client_id
+    integer :master_order_id
     date :started_at
     date :completed_at
     date :closed_at

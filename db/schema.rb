@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140516083531) do
+ActiveRecord::Schema.define(:version => 20140520083100) do
 
   create_table "activities", :force => true do |t|
     t.string   "description"
@@ -1520,12 +1520,15 @@ ActiveRecord::Schema.define(:version => 20140516083531) do
     t.integer  "client_id"
     t.string   "remarks"
     t.string   "description"
+    t.string   "petitioner"
+    t.integer  "master_order_id"
   end
 
   add_index "work_orders", ["area_id"], :name => "index_work_orders_on_area_id"
   add_index "work_orders", ["charge_account_id"], :name => "index_work_orders_on_charge_account_id"
   add_index "work_orders", ["client_id"], :name => "index_work_orders_on_client_id"
   add_index "work_orders", ["completed_at"], :name => "index_work_orders_on_completed_at"
+  add_index "work_orders", ["master_order_id"], :name => "index_work_orders_on_master_order_id"
   add_index "work_orders", ["order_no"], :name => "index_work_orders_on_order_no"
   add_index "work_orders", ["project_id"], :name => "index_work_orders_on_project_id"
   add_index "work_orders", ["started_at"], :name => "index_work_orders_on_started_at"

@@ -1,8 +1,8 @@
 class OfferRequest < ActiveRecord::Base
   belongs_to :payment_method
   belongs_to :project
-  belongs_to :approved_offer, :class_name => 'Offer'
-  belongs_to :approver, :class_name => 'User'
+  belongs_to :approved_offer, class_name: 'Offer'
+  belongs_to :approver, class_name: 'User'
   belongs_to :store
   belongs_to :work_order
   belongs_to :charge_account

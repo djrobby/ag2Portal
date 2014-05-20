@@ -12,7 +12,7 @@ class Offer < ActiveRecord::Base
   
   has_many :offer_items, dependent: :destroy
   has_many :purchase_orders
-  #has_one :approver_offer_request, :class_name => 'OfferRequest', :foreign_key => 'approved_offer_id'
+  #has_one :approver_offer_request, class_name: 'OfferRequest', foreign_key: 'approved_offer_id'
 
   has_paper_trail
 
