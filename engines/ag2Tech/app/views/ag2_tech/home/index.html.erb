@@ -33,7 +33,6 @@
 </ul><!-- /.thumbnails -->
 <ul class="thumbnails">
   <!-- Apps 2 -->
-  <li class="span3"></li>
   <li class="span2">
     <% if (session[:resolution] == "LD")%>
     <a href="<%= work_order_types_path %>" class="thumbnail centered"><img src="/assets/icon/TableA.png" width="48" height="48" alt="ag2Tables" /><h5 class="h5-narrow"><%=t :"ag2_tech.home.index.work_order_types" %></h5></a>
@@ -61,35 +60,32 @@
     <a href="<%= work_order_labors_path %>" class="thumbnail centered"><img src="/assets/pict/TableA96.png" width="96" height="96" alt="ag2Tables" /><h5 class="h5-narrow"><%=t :"ag2_tech.home.index.work_order_labors" %></h5></a>
     <% end %>
   </li>
-  <li class="span3"></li>
-</ul><!-- /.thumbnails -->
-<ul class="thumbnails">
-  <!-- Apps 3 Engines -->
-  <li class="span4">
+  <!-- Engines -->
+  <li class="span2">
     <% if (session[:resolution] == "LD")%>
     <a href="<%= ag2_gest.root_path %>" class="thumbnail centered"><img src="/assets/icon/ag2Gest.png" width="48" height="48" alt="ag2Gest" /><h5 class="h5-narrow">ag2Gest</h5></a>
     <% elsif session[:resolution] == "SD" %>
-    <a href="<%= ag2_gest.root_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/ag2Gest.png" width="96" height="96" alt="ag2Gest" /><h5 class="h5-narrow">ag2Gest</h5></a>
+    <a href="<%= ag2_gest.root_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/ag2Gest72.png" width="72" height="72" alt="ag2Gest" /><h5 class="h5-narrow">ag2Gest</h5></a>
     <% else %>
-    <a href="<%= ag2_gest.root_path %>" class="thumbnail centered"><img src="/assets/pict/ag2Gest.png" width="128" height="128" alt="ag2Gest" /><h5 class="h5-narrow">ag2Gest</h5></a>
+    <a href="<%= ag2_gest.root_path %>" class="thumbnail centered"><img src="/assets/pict/ag2Gest96.png" width="96" height="96" alt="ag2Gest" /><h5 class="h5-narrow">ag2Gest</h5></a>
     <% end %>
   </li>
-  <li class="span4">
+  <li class="span2">
     <% if (session[:resolution] == "LD")%>
     <a href="<%= ag2_products.root_path %>" class="thumbnail centered"><img src="/assets/icon/ag2Logistics.png" width="48" height="48" alt="ag2Logistics" /><h5 class="h5-narrow">ag2Logistics</h5></a>
     <% elsif session[:resolution] == "SD" %>
-    <a href="<%= ag2_products.root_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/ag2Logistics.png" width="96" height="96" alt="ag2Logistics" /><h5 class="h5-narrow">ag2Logistics</h5></a>
+    <a href="<%= ag2_products.root_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/ag2Logistics72.png" width="72" height="72" alt="ag2Logistics" /><h5 class="h5-narrow">ag2Logistics</h5></a>
     <% else %>
-    <a href="<%= ag2_products.root_path %>" class="thumbnail centered"><img src="/assets/pict/ag2Logistics.png" width="128" height="128" alt="ag2Logistics" /><h5 class="h5-narrow">ag2Logistics</h5></a>
+    <a href="<%= ag2_products.root_path %>" class="thumbnail centered"><img src="/assets/pict/ag2Logistics96.png" width="96" height="96" alt="ag2Logistics" /><h5 class="h5-narrow">ag2Logistics</h5></a>
     <% end %>
   </li>
-  <li class="span4">
+  <li class="span2">
     <% if (session[:resolution] == "LD")%>
     <a href="<%= ag2_purchase.root_path %>" class="thumbnail centered"><img src="/assets/icon/ag2Purchase.png" width="48" height="48" alt="ag2Purchase" /><h5 class="h5-narrow">ag2Purchase</h5></a>
     <% elsif session[:resolution] == "SD" %>
-    <a href="<%= ag2_purchase.root_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/ag2Purchase.png" width="96" height="96" alt="ag2Purchase" /><h5 class="h5-narrow">ag2Purchase</h5></a>
+    <a href="<%= ag2_purchase.root_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/ag2Purchase72.png" width="72" height="72" alt="ag2Purchase" /><h5 class="h5-narrow">ag2Purchase</h5></a>
     <% else %>
-    <a href="<%= ag2_purchase.root_path %>" class="thumbnail centered"><img src="/assets/pict/ag2Purchase.png" width="128" height="128" alt="ag2Purchase" /><h5 class="h5-narrow">ag2Purchase</h5></a>
+    <a href="<%= ag2_purchase.root_path %>" class="thumbnail centered"><img src="/assets/pict/ag2Purchase96.png" width="96" height="96" alt="ag2Purchase" /><h5 class="h5-narrow">ag2Purchase</h5></a>
     <% end %>
   </li>
 </ul><!-- /.thumbnails -->
