@@ -12,3 +12,9 @@ en:
       department:
         code: "Code"
         name: "Name"
+        company: "Company"
+        company_id: "Company"
+        organization: "Organization"
+        organization_id: "Organization"
+        worker: "Chief"
+        worker_id: "Chief"

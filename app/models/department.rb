@@ -1,5 +1,8 @@
 class Department < ActiveRecord::Base
-  attr_accessible :name, :code,
+  belongs_to :organization
+  belongs_to :company
+  belongs_to :worker
+  attr_accessible :name, :code, :organization_id, :company_id, :worker_id,
                   :created_by, :updated_by
 
   has_many :areas

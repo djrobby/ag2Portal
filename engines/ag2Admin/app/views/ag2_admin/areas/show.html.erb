@@ -6,14 +6,14 @@
     <tr>
       <td>Id:</td>
       <td><%= @area.id %></td>
-      <td></td>
-      <td></td>
-    </tr>
-    <tr>
       <td><%=t 'activerecord.attributes.area.name' %>:</td>
       <td><%= @area.name %></td>
+    </tr>
+    <tr>
       <td><%=t 'activerecord.attributes.area.department' %>:</td>
       <td><%= @area.department.name %></td>
+      <td><%=t 'activerecord.attributes.area.worker' %>:</td>
+      <td><%= @area.worker.full_name unless @area.worker.blank? %></td>
     </tr>
     <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @area } %>
     <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @area } %>

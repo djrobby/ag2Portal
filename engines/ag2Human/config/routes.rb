@@ -23,13 +23,23 @@ Ag2Human::Engine.routes.draw do
     match 'workers/:id/update_email_textfield_from_user/:id', :controller => 'workers', :action => 'update_email_textfield_from_user'
     match 'workers/update_textfields_to_uppercase/:last/:first/:code/:fiscal', :controller => 'workers', :action => 'update_textfields_to_uppercase'
     match 'workers/:id/update_textfields_to_uppercase/:last/:first/:code/:fiscal', :controller => 'workers', :action => 'update_textfields_to_uppercase'
-    match 'data_import', :controller => 'import', :action => 'data_import'
+    match 'update_offices_select_from_company/:id', :controller => 'workers', :action => 'update_offices_select_from_company'
+    #
     match 'worker_report', :controller => 'ag2_timerecord_track', :action => 'worker_report'
     match 'office_report', :controller => 'ag2_timerecord_track', :action => 'office_report'
     match 'update_workers_select_from_office/:id', :controller => 'ag2_timerecord_track', :action => 'update_workers_select_from_office'
-    match 'update_offices_select_from_company/:id', :controller => 'workers', :action => 'update_offices_select_from_company'
+    #
     match 'worker_items/update_company_textfield_from_office/:id', :controller => 'worker_items', :action => 'update_company_textfield_from_office'
     match 'worker_items/:id/update_company_textfield_from_office/:id', :controller => 'worker_items', :action => 'update_company_textfield_from_office'
+    #
+    match 'data_import', :controller => 'import', :action => 'data_import'
+    #
+    match 'departments/de_update_worker_select_from_company/:department', :controller => 'departments', :action => 'de_update_worker_select_from_company'
+    match 'de_update_worker_select_from_company/:department', :controller => 'departments', :action => 'de_update_worker_select_from_company'
+    match 'departments/:id/de_update_worker_select_from_company/:department', :controller => 'departments', :action => 'de_update_worker_select_from_company'
+    match 'departments/de_update_company_select_from_organization/:department', :controller => 'departments', :action => 'de_update_company_select_from_organization'
+    match 'de_update_company_select_from_organization/:department', :controller => 'departments', :action => 'de_update_company_select_from_organization'
+    match 'departments/:id/de_update_company_select_from_organization/:department', :controller => 'departments', :action => 'de_update_company_select_from_organization'
 
     # Resources
     resources :workers

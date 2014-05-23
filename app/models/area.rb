@@ -1,6 +1,7 @@
 class Area < ActiveRecord::Base
   belongs_to :department
-  attr_accessible :name, :department_id
+  belongs_to :worker
+  attr_accessible :name, :department_id, :worker_id
 
   has_many :work_orders
 

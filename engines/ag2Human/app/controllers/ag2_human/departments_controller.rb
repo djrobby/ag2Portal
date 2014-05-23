@@ -4,8 +4,46 @@ module Ag2Human
   class DepartmentsController < ApplicationController
     before_filter :authenticate_user!
     load_and_authorize_resource
+    skip_load_and_authorize_resource :only => [:de_update_worker_select_from_company,
+                                               :de_update_company_select_from_organization]
     # Helper methods for sorting
     helper_method :sort_column
+
+    # Update worker select at view from company select
+    def de_update_worker_select_from_company
+      company = params[:department]
+      if company != '0'
+        @company = Company.find(company)
+        @workers = @company.blank? ? Worker.order(:last_name, :first_name) : @company.workers.order(:last_name, :first_name)
+      else
+        @workers = Worker.order(:last_name, :first_name)
+      end
+
+      respond_to do |format|
+        format.html # de_update_worker_select_from_company.html.erb does not exist! JSON only
+        format.json { render json: @workers }
+      end
+    end
+
+    # Update company select at view from organization select
+    def de_update_company_select_from_organization
+      organization = params[:department]
+      if organization != '0'
+        @organization = Organization.find(organization)
+        @companies = @organization.blank? ? Company.order(:name) : @organization.companies.order(:name)
+      else
+        @companies = Company.order(:name)
+      end
+
+      respond_to do |format|
+        format.html # de_update_company_select_from_organization.html.erb does not exist! JSON only
+        format.json { render json: @companies }
+      end
+    end
+
+    #
+    # Default Methods
+    #
     # GET /departments
     # GET /departments.json
     def index
@@ -35,6 +73,8 @@ module Ag2Human
     def new
       @breadcrumb = 'create'
       @department = Department.new
+      @companies = Company.order(:name)
+      @workers = Worker.order(:last_name, :first_name)
 
       respond_to do |format|
         format.html # new.html.erb
@@ -46,6 +86,8 @@ module Ag2Human
     def edit
       @breadcrumb = 'update'
       @department = Department.find(params[:id])
+      @companies = @department.organization.blank? ? Company.order(:name) : @department.organization.companies.order(:name)
+      @workers = @department.company.blank? ? Worker.order(:last_name, :first_name) : @department.company.workers.order(:last_name, :first_name)
     end
 
     # POST /departments
@@ -60,6 +102,8 @@ module Ag2Human
           format.html { redirect_to @department, notice: crud_notice('created', @department) }
           format.json { render json: @department, status: :created, location: @department }
         else
+          @companies = Company.order(:name)
+          @workers = Worker.order(:last_name, :first_name)
           format.html { render action: "new" }
           format.json { render json: @department.errors, status: :unprocessable_entity }
         end
@@ -79,6 +123,8 @@ module Ag2Human
                         notice: (crud_notice('updated', @department) + "#{undo_link(@department)}").html_safe }
           format.json { head :no_content }
         else
+          @companies = @department.organization.blank? ? Company.order(:name) : @department.organization.companies.order(:name)
+          @workers = @department.company.blank? ? Worker.order(:last_name, :first_name) : @department.company.workers.order(:last_name, :first_name)
           format.html { render action: "edit" }
           format.json { render json: @department.errors, status: :unprocessable_entity }
         end

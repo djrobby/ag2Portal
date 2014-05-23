@@ -1,7 +1,36 @@
+<script>
+  $(document).ready(function() {
+    $('.sel2').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      allowClear: true
+    });
+  });  
+
+  jQuery(function($) {
+    // when the #area_department_id field changes
+    $("#area_department_id").change(function() {
+      // make a POST call and replace the content
+      var department = $('select#area_department_id :selected').val();
+      if (department == "")
+        department = "0";
+      jQuery.getJSON('ar_update_worker_select_from_department/' + department, function(data) {
+        $("#area_worker_id").html("");
+        $("#area_worker_id").select2("val", "");
+        $("#area_worker_id").append($('<option></option>').val("").html(""));
+        $.each(data, function(id, option) {
+          $("#area_worker_id").append($('<option></option>').val(option.id).html(option.last_name + ", " + option.first_name));
+        });
+      });
+      return false;
+    });
+  });
+</script>
+
 <%= simple_form_for @area, :html => {:class => 'form-vertical well' } do |f| %>
 <%= f.error_notification %>
 <%= display_base_errors resource %>
 <%= f.input :name, autofocus: true, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %>
 <%= f.association :department, collection: Department.all(order: 'name'), :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %>
+<%= f.association :worker, collection: @workers, :input_html => { :class => 'x-large-text-field sel2' }, :label_html => { :class => 'form-label' } %>
 <%= f.button :submit, :class => 'btn-primary' %>
 <% end %>

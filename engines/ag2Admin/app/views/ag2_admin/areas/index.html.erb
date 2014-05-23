@@ -1,12 +1,13 @@
 <%= render '/layouts/ag2_admin/areasbreadcrumb' %>
 
 <h3><%=t '.title' %></h3>
-<div class="span7">
+<div class="span11">
   <table class="table table-condensed table-striped">
     <thead>
       <tr>
         <th><%= sortable "name", t('activerecord.attributes.area.name') %></th>
         <th><%= sortable "department_id", t('activerecord.attributes.area.department') %></th>
+        <th><%= sortable "worker_id", t('activerecord.attributes.area.worker') %></th>
         <th></th>
       </tr>
     </thead>
@@ -15,6 +16,7 @@
       <tr>
         <td><%= link_to t.name, t %></td>
         <td><%= t.department.name %></td>
+        <td><%= t.worker.full_name unless t.worker.blank? %></td>
         <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => Area, :path => edit_area_path(t) } %>
         <%= render :partial => '/layouts/crud/delete', :locals => { :model => Area, :path => t, :msg => I18n.t("activerecord.models.area.one"), :txt => t.name } %> </td>
       </tr>

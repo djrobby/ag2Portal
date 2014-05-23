@@ -12,3 +12,9 @@ es:
       department:
         code: "Código"
         name: "Nombre"
+        company: "Empresa"
+        company_id: "Empresa"
+        organization: "Organización"
+        organization_id: "Organización"
+        worker: "Jefe"
+        worker_id: "Jefe"

@@ -12,8 +12,14 @@
     <tr>
       <td><%=t 'activerecord.attributes.department.name' %>:</td>
       <td><%= @department.name %></td>
-      <td></td>
-      <td></td>
+      <td><%=t 'activerecord.attributes.department.organization' %>:</td>
+      <td><%= @department.organization.name unless @department.organization.blank? %></td>
+    </tr>
+    <tr>
+      <td><%=t 'activerecord.attributes.department.company' %>:</td>
+      <td><%= @department.company.name unless @department.company.blank? %></td>
+      <td><%=t 'activerecord.attributes.department.worker' %>:</td>
+      <td><%= @department.worker.full_name unless @department.worker.blank? %></td>
     </tr>
     <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @department } %>
     <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @department } %>

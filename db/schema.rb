@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140520083100) do
+ActiveRecord::Schema.define(:version => 20140523061954) do
 
   create_table "activities", :force => true do |t|
     t.string   "description"
@@ -46,10 +46,12 @@ ActiveRecord::Schema.define(:version => 20140520083100) do
     t.datetime "updated_at",    :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
+    t.integer  "worker_id"
   end
 
   add_index "areas", ["department_id"], :name => "index_areas_on_department_id"
   add_index "areas", ["name"], :name => "index_areas_on_name"
+  add_index "areas", ["worker_id"], :name => "index_areas_on_worker_id"
 
   create_table "charge_accounts", :force => true do |t|
     t.string   "name"
@@ -308,14 +310,20 @@ ActiveRecord::Schema.define(:version => 20140520083100) do
 
   create_table "departments", :force => true do |t|
     t.string   "name"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
     t.string   "code"
     t.integer  "created_by"
     t.integer  "updated_by"
+    t.integer  "organization_id"
+    t.integer  "company_id"
+    t.integer  "worker_id"
   end
 
   add_index "departments", ["code"], :name => "index_departments_on_code"
+  add_index "departments", ["company_id"], :name => "index_departments_on_company_id"
+  add_index "departments", ["organization_id"], :name => "index_departments_on_organization_id"
+  add_index "departments", ["worker_id"], :name => "index_departments_on_worker_id"
 
   create_table "entities", :force => true do |t|
     t.string   "fiscal_id"

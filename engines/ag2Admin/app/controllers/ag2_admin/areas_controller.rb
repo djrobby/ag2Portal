@@ -4,8 +4,29 @@ module Ag2Admin
   class AreasController < ApplicationController
     before_filter :authenticate_user!
     load_and_authorize_resource
+    skip_load_and_authorize_resource :only => [:ar_update_worker_select_from_department]
     # Helper methods for sorting
     helper_method :sort_column
+
+    # Update worker select at view from department select
+    def ar_update_worker_select_from_department
+      department = params[:department]
+      if department != '0'
+        @department = Department.find(department)
+        @workers = @department.company.blank? ? Worker.order(:last_name, :first_name) : @department.company.workers.order(:last_name, :first_name)
+      else
+        @workers = Worker.order(:last_name, :first_name)
+      end
+
+      respond_to do |format|
+        format.html # ar_update_worker_select_from_department.html.erb does not exist! JSON only
+        format.json { render json: @workers }
+      end
+    end
+
+    #
+    # Default Methods
+    #
     # GET /areas
     # GET /areas.json
     def index
@@ -34,6 +55,7 @@ module Ag2Admin
     def new
       @breadcrumb = 'create'
       @area = Area.new
+      @workers = Worker.order(:last_name, :first_name)
   
       respond_to do |format|
         format.html # new.html.erb
@@ -45,6 +67,7 @@ module Ag2Admin
     def edit
       @breadcrumb = 'update'
       @area = Area.find(params[:id])
+      @workers = @area.department.company.blank? ? Worker.order(:last_name, :first_name) : @area.department.company.workers.order(:last_name, :first_name)
     end
   
     # POST /areas
@@ -59,6 +82,7 @@ module Ag2Admin
           format.html { redirect_to @area, notice: crud_notice('created', @area) }
           format.json { render json: @area, status: :created, location: @area }
         else
+          @workers = Worker.order(:last_name, :first_name)
           format.html { render action: "new" }
           format.json { render json: @area.errors, status: :unprocessable_entity }
         end
@@ -78,6 +102,7 @@ module Ag2Admin
                         notice: (crud_notice('updated', @area) + "#{undo_link(@area)}").html_safe }
           format.json { head :no_content }
         else
+          @workers = @area.department.company.blank? ? Worker.order(:last_name, :first_name) : @area.department.company.workers.order(:last_name, :first_name)
           format.html { render action: "edit" }
           format.json { render json: @area.errors, status: :unprocessable_entity }
         end

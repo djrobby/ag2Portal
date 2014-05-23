@@ -9,16 +9,19 @@ Ag2Admin::Engine.routes.draw do
     # Routes for jQuery POSTs
     match 'zipcodes/update_province_textfield_from_town/:id', :controller => 'zipcodes', :action => 'update_province_textfield_from_town'
     match 'zipcodes/:id/update_province_textfield_from_town/:id', :controller => 'zipcodes', :action => 'update_province_textfield_from_town'
+    #
     match 'companies/update_province_textfield_from_town/:id', :controller => 'companies', :action => 'update_province_textfield_from_town'
     match 'companies/:id/update_province_textfield_from_town/:id', :controller => 'companies', :action => 'update_province_textfield_from_town'
     match 'companies/update_province_textfield_from_zipcode/:id', :controller => 'companies', :action => 'update_province_textfield_from_zipcode'
     match 'companies/:id/update_province_textfield_from_zipcode/:id', :controller => 'companies', :action => 'update_province_textfield_from_zipcode'
+    #
     match 'offices/update_province_textfield_from_town/:id', :controller => 'offices', :action => 'update_province_textfield_from_town'
     match 'offices/:id/update_province_textfield_from_town/:id', :controller => 'offices', :action => 'update_province_textfield_from_town'
     match 'offices/update_province_textfield_from_zipcode/:id', :controller => 'offices', :action => 'update_province_textfield_from_zipcode'
     match 'offices/:id/update_province_textfield_from_zipcode/:id', :controller => 'offices', :action => 'update_province_textfield_from_zipcode'
     match 'offices/update_code_textfield_from_zipcode/:id', :controller => 'offices', :action => 'update_code_textfield_from_zipcode'
     match 'offices/:id/update_code_textfield_from_zipcode/:id', :controller => 'offices', :action => 'update_code_textfield_from_zipcode'
+    #
     match 'entities/update_province_textfield_from_town/:id', :controller => 'entities', :action => 'update_province_textfield_from_town'
     match 'entities/:id/update_province_textfield_from_town/:id', :controller => 'entities', :action => 'update_province_textfield_from_town'
     match 'entities/update_province_textfield_from_zipcode/:id', :controller => 'entities', :action => 'update_province_textfield_from_zipcode'
@@ -29,7 +32,20 @@ Ag2Admin::Engine.routes.draw do
     match 'entities/:id/update_region_textfield_from_province/:id', :controller => 'entities', :action => 'update_region_textfield_from_province'
     match 'entities/validate_fiscal_id_textfield/:id', :controller => 'entities', :action => 'validate_fiscal_id_textfield'
     match 'entities/:id/validate_fiscal_id_textfield/:id', :controller => 'entities', :action => 'validate_fiscal_id_textfield'
+    #
+    match 'areas/ar_update_worker_select_from_department/:department', :controller => 'areas', :action => 'ar_update_worker_select_from_department'
+    match 'ar_update_worker_select_from_department/:department', :controller => 'areas', :action => 'ar_update_worker_select_from_department'
+    match 'areas/:id/ar_update_worker_select_from_department/:department', :controller => 'areas', :action => 'ar_update_worker_select_from_department'
+    #
+    match 'departments/de_update_worker_select_from_company/:department', :controller => 'departments', :action => 'de_update_worker_select_from_company'
+    match 'de_update_worker_select_from_company/:department', :controller => 'departments', :action => 'de_update_worker_select_from_company'
+    match 'departments/:id/de_update_worker_select_from_company/:department', :controller => 'departments', :action => 'de_update_worker_select_from_company'
+    match 'departments/de_update_company_select_from_organization/:department', :controller => 'departments', :action => 'de_update_company_select_from_organization'
+    match 'de_update_company_select_from_organization/:department', :controller => 'departments', :action => 'de_update_company_select_from_organization'
+    match 'departments/:id/de_update_company_select_from_organization/:department', :controller => 'departments', :action => 'de_update_company_select_from_organization'
+    #
     match 'tax_types/:id/expire', :controller => 'tax_types', :action => 'expire'
+    #
     match 'update_company_organization_from_office/:box', :controller => 'users', :action => 'update_company_organization_from_office'
     match 'update_organization_from_company/:box', :controller => 'users', :action => 'update_organization_from_company'
 

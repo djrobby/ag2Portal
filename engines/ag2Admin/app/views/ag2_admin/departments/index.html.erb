@@ -1,12 +1,14 @@
 <%= render '/layouts/ag2_admin/departmentsbreadcrumb' %>
 
 <h3><%=t '.title' %></h3>
-<div class="span7">
+<div class="span11">
   <table class="table table-condensed table-striped">
     <thead>
       <tr>
         <th><%= sortable "code", t('activerecord.attributes.department.code') %></th>
         <th><%= sortable "name", t('activerecord.attributes.department.name') %></th>
+        <th><%= sortable "organization_id", t('activerecord.attributes.department.organization') %></th>
+        <th><%= sortable "company_id", t('activerecord.attributes.department.company') %></th>
         <th></th>
       </tr>
     </thead>
@@ -15,6 +17,8 @@
       <tr>
         <td><%= link_to t.code, t %></td>
         <td><%= t.name %></td>
+        <td><%= t.organization.name unless t.organization.blank? %></td>
+        <td><%= t.company.name unless t.company.blank? %></td>
         <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => Department, :path => edit_department_path(t) } %>
         <%= render :partial => '/layouts/crud/delete', :locals => { :model => Department, :path => t, :msg => I18n.t("activerecord.models.department.one"), :txt => t.name } %> </td>
       </tr>

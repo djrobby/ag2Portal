@@ -12,3 +12,5 @@ en:
         name: "Name"
         department: "Department"
         department_id: "Department"
+        worker: "Chief"
+        worker_id: "Chief"
