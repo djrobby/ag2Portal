@@ -7,10 +7,14 @@ class WorkOrder < ActiveRecord::Base
   belongs_to :area
   belongs_to :store
   belongs_to :client
+  belongs_to :organization
+  belongs_to :in_charge, class_name: 'Worker'
   attr_accessible :closed_at, :completed_at, :order_no, :started_at,
                   :work_order_labor_id, :work_order_status_id, :work_order_type_id,
                   :charge_account_id, :project_id, :area_id, :store_id, :client_id,
-                  :remarks, :description, :petitioner, :master_order_id
+                  :remarks, :description, :petitioner, :master_order_id, :organization_id,
+                  :in_charge_id, :reported_at, :approved_at, :certified_at, :posted_at,
+                  :location, :pub_record
 
   has_many :work_order_items, dependent: :destroy
   has_many :work_order_workers, dependent: :destroy
@@ -35,6 +39,7 @@ class WorkOrder < ActiveRecord::Base
   validates :work_order_labor,  :presence => true
   validates :work_order_status, :presence => true
   validates :work_order_type,   :presence => true
+  validates :in_charge,         :presence => true
 
   before_destroy :check_for_dependent_records
 

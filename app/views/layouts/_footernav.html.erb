@@ -3,17 +3,14 @@
 <% end %>
 <img class="footer-nav-brand pull-left" src="/assets/icon/aGestiona2.png" width="165" height="48" alt="aGestiona2" />
 <ul class="nav pull-right">
-  <% if user_signed_in? %>
-  <!-- OCO -->
-  <% if session[:exclusive_office] != true || session[:exclusive_company] != true || session[:exclusive_organization] != true %>
+  <% if user_signed_in? %> <!-- OCO -->
   <li class="footer-nav-li">
+    <% if session[:exclusive_office] != true || session[:exclusive_company] != true || session[:exclusive_organization] != true %>
     <a data-toggle="modal" href="#oco"><%= current_oco %> <i class="icon-tasks"></i></a>
-  </li>
-  <% else %>
-  <li class="footer-nav-li">
+    <% else %>
     <a data-toggle="modal" href="#"><%= current_oco %></a>
+    <% end %>
   </li>
-  <% end %>
   <% end %>
   <li class="dropdown footer-nav-li">
     <!-- Global web sites -->
@@ -53,7 +50,7 @@
     <!-- Resolution -->
     <a href="#" onclick="javascript:DisplaySizeInfo();"><%= session[:resolution] %></a>
   </li>
-</ul>
+</ul><!-- /.pull-right -->
 
 <!--
   <li class="footer-nav-li">

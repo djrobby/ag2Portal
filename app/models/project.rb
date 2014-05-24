@@ -1,8 +1,9 @@
 class Project < ActiveRecord::Base
+  belongs_to :organization
   belongs_to :company
   belongs_to :office
   attr_accessible :closed_at, :ledger_account, :name, :opened_at,
-                  :office_id, :company_id, :project_code
+                  :office_id, :company_id, :project_code, :organization_id
 
   has_many :charge_accounts
   has_many :work_orders

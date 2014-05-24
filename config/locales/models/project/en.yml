@@ -22,4 +22,6 @@ en:
         office_id: "Office"
         company: "Office"
         company_id: "Office"
+        organization: "Organization"
+        organization_id: "Organization"
         ledger_account: "Ledger account"

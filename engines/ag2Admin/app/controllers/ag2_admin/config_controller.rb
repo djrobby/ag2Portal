@@ -8,6 +8,8 @@ module Ag2Admin
 
       # Path for ag2Db app
       @ag2db_path, @target = application_path('ag2Db', '_blank')
+      # Path for ag2TeamNet app
+      @ag2teamnet_path, @ag2teamnet_target = website_path('ag2TeamNet', '_self')
     end
   end
 end

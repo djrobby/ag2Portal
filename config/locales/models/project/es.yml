@@ -22,4 +22,6 @@ es:
         office_id: "Oficina"
         company: "Empresa"
         company_id: "Empresa"
+        organization: "Organización"
+        organization_id: "Organización"
         ledger_account: "Cuenta contable"

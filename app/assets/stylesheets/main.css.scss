@@ -540,6 +540,49 @@ tfoot {
 /*
  * Icons
  */
+[class^="ico-"],
+[class*=" ico-"] {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  margin-top: 1px;
+  line-height: 14px;
+  vertical-align: text-top;
+  background-position: 0px 0px;
+  background-repeat: no-repeat;
+}
+/* Apps */
+.ico-admin {
+  background-image: image-url("icon/ag2/admin.png");
+}
+.ico-analytics {
+  background-image: image-url("icon/ag2/analytics.png");
+}
+.ico-directory {
+  background-image: image-url("icon/ag2/directory.png");
+}
+.ico-gest {
+  background-image: image-url("icon/ag2/gest.png");
+}
+.ico-helpdesk {
+  background-image: image-url("icon/ag2/helpdesk.png");
+}
+.ico-human {
+  background-image: image-url("icon/ag2/human.png");
+}
+.ico-logistics {
+  background-image: image-url("icon/ag2/logistics.png");
+}
+.ico-purchase {
+  background-image: image-url("icon/ag2/purchase.png");
+}
+.ico-teamnet {
+  background-image: image-url("icon/ag2/teamnet.png");
+}
+.ico-tech {
+  background-image: image-url("icon/ag2/tech.png");
+}
+/* Tools */
 .ico-gmail {
   display: inline-block;
   width: 14px;
@@ -564,6 +607,32 @@ tfoot {
   background-position: 0px 0px;
   background-repeat: no-repeat;
 }
+/* Languages */
+.ico-en-us {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  margin-top: 1px;
+  /* *margin-right: .3em;*/
+  line-height: 16px;
+  vertical-align: text-top;
+  background-image: image-url("icon/locales/halflings/en-US.png");
+  background-position: 0px 0px;
+  background-repeat: no-repeat;
+}
+.ico-es-es {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  margin-top: 1px;
+  /* *margin-right: .3em;*/
+  line-height: 16px;
+  vertical-align: text-top;
+  background-image: image-url("icon/locales/halflings/es-ES.png");
+  background-position: 0px 0px;
+  background-repeat: no-repeat;
+}
+/* Others */
 .icon-phone-white {
   display: inline-block;
   width: 8px;
@@ -609,30 +678,6 @@ tfoot {
   line-height: 14px;
   vertical-align: text-top;
   background-image: image-url("icon/glyph/black/halflings/iphone.png");
-  background-position: 0px 0px;
-  background-repeat: no-repeat;
-}
-.ico-en-us {
-  display: inline-block;
-  width: 16px;
-  height: 16px;
-  margin-top: 1px;
-  /* *margin-right: .3em;*/
-  line-height: 16px;
-  vertical-align: text-top;
-  background-image: image-url("icon/locales/halflings/en-US.png");
-  background-position: 0px 0px;
-  background-repeat: no-repeat;
-}
-.ico-es-es {
-  display: inline-block;
-  width: 16px;
-  height: 16px;
-  margin-top: 1px;
-  /* *margin-right: .3em;*/
-  line-height: 16px;
-  vertical-align: text-top;
-  background-image: image-url("icon/locales/halflings/es-ES.png");
   background-position: 0px 0px;
   background-repeat: no-repeat;
 }

@@ -22,20 +22,32 @@
       <td><%= @work_order.work_order_labor.name %></td>
     </tr>
     <tr>
-      <td><%=t 'activerecord.attributes.work_order.work_order_status' %>:</td>
-      <td><%= @work_order.work_order_status.name %></td>
       <td><%=t 'activerecord.attributes.work_order.area' %>:</td>
       <td><%= @work_order.area.full_name unless @work_order.area.blank? %></td>
+      <td><%=t 'activerecord.attributes.work_order.in_charge' %>:</td>
+      <td><%= @work_order.in_charge.full_name unless @work_order.in_charge.blank? %></td>
     </tr>
     <tr>
       <td><%=t 'activerecord.attributes.work_order.charge_account' %>:</td>
       <td><%= @work_order.charge_account.full_name %></td>
-      <td><%=t 'activerecord.attributes.work_order.client' %>:</td>
-      <td><%= @work_order.client.full_name unless @work_order.client.blank? %></td>
-    </tr>
-    <tr>
       <td><%=t 'activerecord.attributes.work_order.store' %>:</td>
       <td><%= @work_order.store.name unless @work_order.store.blank? %></td>
+    </tr>
+    <tr>
+      <td><%=t 'activerecord.attributes.work_order.client' %>:</td>
+      <td><%= @work_order.client.full_name unless @work_order.client.blank? %></td>
+      <td><%= t :"activerecord.attributes.work_order.petitioner" %>:</td>
+      <td><%= @work_order.petitioner unless @work_order.petitioner.blank? %></td>
+    </tr>
+    <tr>
+      <td><%=t 'activerecord.attributes.work_order.location' %>:</td>
+      <td><%= @work_order.location unless @work_order.location.blank? %></td>
+      <td><%= t :"activerecord.attributes.work_order.pub_record" %>:</td>
+      <td><%= @work_order.pub_record unless @work_order.pub_record.blank? %></td>
+    </tr>
+    <tr>
+      <td><%=t 'activerecord.attributes.work_order.work_order_status' %>:</td>
+      <td><%= @work_order.work_order_status.name %></td>
       <td><%= t :"activerecord.attributes.work_order.started_at" %>:</td>
       <td><%= @work_order.started_at.strftime("%d/%m/%Y") unless @work_order.started_at.blank? %></td>
     </tr>
@@ -44,6 +56,18 @@
       <td><%= @work_order.completed_at.strftime("%d/%m/%Y") unless @work_order.completed_at.blank? %></td>
       <td><%= t :"activerecord.attributes.work_order.closed_at" %>:</td>
       <td><%= @work_order.closed_at.strftime("%d/%m/%Y") unless @work_order.closed_at.blank? %></td>
+    </tr>
+    <tr>
+      <td><%= t :"activerecord.attributes.work_order.reported_at" %>:</td>
+      <td><%= @work_order.reported_at.utc.getlocal.strftime("%d/%m/%Y %H:%M:%S") unless @work_order.reported_at.blank? %></td>
+      <td><%= t :"activerecord.attributes.work_order.approved_at" %>:</td>
+      <td><%= @work_order.approved_at.utc.getlocal.strftime("%d/%m/%Y %H:%M:%S") unless @work_order.approved_at.blank? %></td>
+    </tr>
+    <tr>
+      <td><%= t :"activerecord.attributes.work_order.certified_at" %>:</td>
+      <td><%= @work_order.certified_at.strftime("%d/%m/%Y") unless @work_order.certified_at.blank? %></td>
+      <td><%= t :"activerecord.attributes.work_order.posted_at" %>:</td>
+      <td><%= @work_order.posted_at.strftime("%d/%m/%Y") unless @work_order.posted_at.blank? %></td>
     </tr>
     <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @work_order } %>
     <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @work_order } %>
@@ -56,6 +80,10 @@
     <tr>
       <td style="width: 12%"><%= t :"activerecord.attributes.work_order.remarks" %>:</td>
       <td style="width: 88%"><%= @work_order.remarks unless @work_order.remarks.blank? %></td>
+    </tr>
+    <tr>
+      <td style="width: 12%"><%= t :"activerecord.attributes.work_order.master_order" %>:</td>
+      <td style="width: 88%"><%= @work_order.master_order unless @work_order.master_order.blank? %></td>
     </tr>
   </tbody>
 </table>

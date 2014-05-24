@@ -1,6 +1,7 @@
 es:
   nav:
     home: "Inicio"
+    apps: "Apps&Sitios"
     tools: "Herramientas"
     help:
       help: "Ayuda"
