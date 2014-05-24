@@ -193,6 +193,9 @@ th .current:focus {
 .x-large-text-field {
   width: 97%;
 }
+.m-large-text-field {
+  width: 85%;
+}
 .large-text-field {
   width: 72%;
 }
@@ -213,8 +216,16 @@ th .current:focus {
   display: inline-block;
   width: 49.82%;
 }
+.multi-field-label-two-table {
+  display: inline-table;
+  width: 49.82%;
+}
 .multi-field-label-three {
   display: inline-block;
+  width: 33.09%;
+}
+.multi-field-label-three-table {
+  display: inline-table;
   width: 33.09%;
 }
 .multi-field-label-three-thinner {
@@ -224,6 +235,10 @@ th .current:focus {
 .multi-field-label-three-wider {
   display: inline-block;
   width: 53.09%;
+}
+.multi-field-label-four {
+  display: inline-block;
+  width: 24.59%;
 }
 /* Sub-Form (items) text fields */
 .sub-bordered-input {
