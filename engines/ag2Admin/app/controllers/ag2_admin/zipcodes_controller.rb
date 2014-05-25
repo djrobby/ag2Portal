@@ -10,7 +10,8 @@ module Ag2Admin
     # Update hidden province text field at view from town select
     def update_province_textfield_from_town
       @town = Town.find(params[:id])
-      @province = Province.find(@town.province)
+      @province = @town.province
+      #@province = Province.find(@town.province)
 
       respond_to do |format|
         format.html # update_province_textfield.html.erb does not exist! JSON only

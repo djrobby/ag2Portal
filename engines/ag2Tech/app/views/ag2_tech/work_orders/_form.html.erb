@@ -54,7 +54,27 @@
       });
       return false;
     });
-  })
+
+    // when the #work_order_area_id field changes
+    $("#work_order_area_id").change(function() {
+      // make a POST call and replace the content
+      var order = $('select#work_order_area_id :selected').val();
+      if (order == "")
+        order = "0";
+      jQuery.getJSON('wo_update_worker_select_from_area/' + order, function(data) {
+        $("#work_order_in_charge_id").select2("val", data.id);
+        /*
+        $("#work_order_in_charge_id").html("");
+        $("#work_order_in_charge_id").select2("val", "");
+        $("#work_order_in_charge_id").append($('<option></option>').val("").html(""));
+        $.each(data, function(id, option) {
+          $("#work_order_in_charge_id").append($('<option></option>').val(option.id).html(option.last_name + ", " + option.first_name));
+        });
+        */
+      });
+      return false;
+    });
+  });
 </script>
 
 <%= simple_form_for @work_order, :html => { :class => 'form-vertical well' } do |f| %>
@@ -72,7 +92,7 @@
 </div>
 <div>
   <label class="multi-field-label-two"> <%= f.association :area, collection: Area.all(order: 'name'), input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
-  <label class="multi-field-label-two"> <%= f.association :in_charge, collection: Worker.all, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.association :in_charge, collection: @workers, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
 </div>
 <div>
   <label class="multi-field-label-two"> <%= f.association :charge_account, collection: @charge_accounts, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>

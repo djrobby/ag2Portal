@@ -14,6 +14,7 @@ class Company < ActiveRecord::Base
 
   has_many :offices
   has_many :workers
+  has_many :worker_items
   has_many :corp_contacts, :order => 'last_name, first_name'
   has_many :projects
 

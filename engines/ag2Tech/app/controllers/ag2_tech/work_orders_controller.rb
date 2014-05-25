@@ -4,7 +4,8 @@ module Ag2Tech
   class WorkOrdersController < ApplicationController
     before_filter :authenticate_user!
     load_and_authorize_resource
-    skip_load_and_authorize_resource :only => [:wo_update_account_textfield_from_project]
+    skip_load_and_authorize_resource :only => [:wo_update_account_textfield_from_project,
+                                               :wo_update_worker_select_from_area]
     
     # Update account text field at view from project select
     def wo_update_account_textfield_from_project
@@ -22,6 +23,21 @@ module Ag2Tech
       respond_to do |format|
         format.html # wo_update_account_textfield_from_project.html.erb does not exist! JSON only
         format.json { render json: @json_data }
+      end
+    end
+
+    # Update in charge (worker) select at view from area select
+    def wo_update_worker_select_from_area
+      area = params[:id]
+      @worker = 0
+      if area != '0'
+        @area = Area.find(area)
+        @worker = @area.worker
+      end
+
+      respond_to do |format|
+        format.html # wo_update_worker_select_from_area.html.erb does not exist! JSON only
+        format.json { render json: @worker }
       end
     end
 
@@ -79,7 +95,8 @@ module Ag2Tech
     def new
       @breadcrumb = 'create'
       @work_order = WorkOrder.new
-      @charge_accounts = ChargeAccount.all(order: 'account_code')
+      @charge_accounts = ChargeAccount.order(:account_code)
+      @workers = Worker.order(:last_name, :first_name)
   
       respond_to do |format|
         format.html # new.html.erb
@@ -91,7 +108,8 @@ module Ag2Tech
     def edit
       @breadcrumb = 'update'
       @work_order = WorkOrder.find(params[:id])
-      @charge_accounts = @work_order.project.blank? ? ChargeAccount.all(order: 'account_code') : @work_order.project.charge_accounts(order: 'account_code')
+      @charge_accounts = @work_order.project.blank? ? ChargeAccount.order(:account_code) : @work_order.project.charge_accounts.order(:account_code)
+      @workers = project_workers(@work_order.project)
     end
   
     # POST /work_orders
@@ -106,7 +124,8 @@ module Ag2Tech
           format.html { redirect_to @work_order, notice: crud_notice('created', @work_order) }
           format.json { render json: @work_order, status: :created, location: @work_order }
         else
-          @charge_accounts = ChargeAccount.all(order: 'account_code')
+          @charge_accounts = ChargeAccount.order(:account_code)
+          @workers = Worker.order(:last_name, :first_name)
           format.html { render action: "new" }
           format.json { render json: @work_order.errors, status: :unprocessable_entity }
         end
@@ -126,7 +145,8 @@ module Ag2Tech
                         notice: (crud_notice('updated', @work_order) + "#{undo_link(@work_order)}").html_safe }
           format.json { head :no_content }
         else
-          @charge_accounts = @work_order.project.blank? ? ChargeAccount.all(order: 'account_code') : @work_order.project.charge_accounts(order: 'account_code')
+          @charge_accounts = @work_order.project.blank? ? ChargeAccount.order(:account_code) : @work_order.project.charge_accounts.order(:account_code)
+          @workers = project_workers(@work_order.project)
           format.html { render action: "edit" }
           format.json { render json: @work_order.errors, status: :unprocessable_entity }
         end
@@ -154,15 +174,64 @@ module Ag2Tech
     
     def project_stores(_project)
       if !_project.company.blank? && !_project.office.blank?
-        _store = Store.where("company_id = ? AND office_id = ?", _project.company.id, _project.office.id)
+        _store = Store.where("company_id = ? AND office_id = ?", _project.company.id, _project.office.id).order(:name)
       elsif !_project.company.blank? && _project.office.blank?
-        _store = Store.where("company_id = ?", _project.company.id)
+        _store = Store.where("company_id = ?", _project.company.id).order(:name)
       elsif _project.company.blank? && !_project.office.blank?
-        _store = Store.where("office_id = ?", _project.office.id)
+        _store = Store.where("office_id = ?", _project.office.id).order(:name)
       else
-        _store = Store.all(order: 'name')
+        _store = Store.order(:name)
       end
       _store
+    end
+
+    def project_workers(_project)
+      if !_project.company.blank? && !_project.office.blank?  # Company & office
+        _worker = company_office_workers(_project.company, _project.office)
+      elsif !_project.company.blank? && _project.office.blank?  # Company
+        _worker = company_workers(_project.company)
+      elsif _project.company.blank? && !_project.office.blank?  # Office
+        _worker = office_workers(_project.company, _project.office)
+      else  # All
+        _worker = Worker.order(:last_name, :first_name)
+      end
+      _worker
+    end
+    
+    def company_office_workers(_company, _office)
+      # Company & office
+      _workers = Worker.joins(:worker_items).group('worker_items.worker_id').where(worker_items: { company_id: _company, office_id: _office }).order(:last_name, :first_name)
+      if _workers.blank?  # If not, office
+        _workers = Worker.joins(:worker_items).group('worker_items.worker_id').where(worker_items: { office_id: _office }).order(:last_name, :first_name)
+        if _workers.blank? # If not, company
+          _workers = Worker.joins(:worker_items).group('worker_items.worker_id').where(worker_items: { company_id: _company }).order(:last_name, :first_name)
+          if _workers.blank?  # If not, last, all
+            _workers = Worker.order(:last_name, :first_name)            
+          end
+        end
+      end
+      _workers
+    end
+    
+    def company_workers(_company)
+      # Company
+      _workers = Worker.joins(:worker_items).group('worker_items.worker_id').where(worker_items: { company_id: _company }).order(:last_name, :first_name)
+      if _workers.blank?  # If not, all
+        _workers = Worker.order(:last_name, :first_name)            
+      end
+      _workers
+    end
+
+    def office_workers(_company, _office)
+      # Office
+      _workers = Worker.joins(:worker_items).group('worker_items.worker_id').where(worker_items: { office_id: _office }).order(:last_name, :first_name)
+      if _workers.blank? # If not, company
+        _workers = Worker.joins(:worker_items).group('worker_items.worker_id').where(worker_items: { company_id: _company }).order(:last_name, :first_name)
+        if _workers.blank?  # If not, last, all
+          _workers = Worker.order(:last_name, :first_name)            
+        end
+      end
+      _workers
     end
   end
 end
