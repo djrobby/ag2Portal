@@ -5,7 +5,8 @@ module Ag2Tech
     before_filter :authenticate_user!
     load_and_authorize_resource
     skip_load_and_authorize_resource :only => [:wo_update_account_textfield_from_project,
-                                               :wo_update_worker_select_from_area]
+                                               :wo_update_worker_select_from_area,
+                                               :wo_update_petitioner_textfield_from_client]
     
     # Update account text field at view from project select
     def wo_update_account_textfield_from_project
@@ -14,11 +15,13 @@ module Ag2Tech
         @project = Project.find(project)
         @charge_account = @project.blank? ? ChargeAccount.all(order: 'account_code') : @project.charge_accounts(order: 'account_code')
         @store = project_stores(@project)
+        @worker = project_workers(@project)
       else
         @charge_account = ChargeAccount.all(order: 'account_code')
         @store = Store.all(order: 'name')
+        @worker = Worker.order(:last_name, :first_name)
       end
-      @json_data = { "charge_account" => @charge_account, "store" => @store }
+      @json_data = { "charge_account" => @charge_account, "store" => @store, "worker" => @worker }
 
       respond_to do |format|
         format.html # wo_update_account_textfield_from_project.html.erb does not exist! JSON only
@@ -29,7 +32,7 @@ module Ag2Tech
     # Update in charge (worker) select at view from area select
     def wo_update_worker_select_from_area
       area = params[:id]
-      @worker = 0
+      @worker = nil
       if area != '0'
         @area = Area.find(area)
         @worker = @area.worker
@@ -38,6 +41,21 @@ module Ag2Tech
       respond_to do |format|
         format.html # wo_update_worker_select_from_area.html.erb does not exist! JSON only
         format.json { render json: @worker }
+      end
+    end
+
+    # Update petitioner text field at view from client select
+    def wo_update_petitioner_textfield_from_client
+      client = params[:id]
+      @json_data = { "name" => '' }
+      if client != '0'
+        @client = Client.find(client)
+        @json_data = { "name" => @client.name }
+      end
+
+      respond_to do |format|
+        format.html # wo_update_petitioner_textfield_from_client.html.erb does not exist! JSON only
+        format.json { render json: @json_data }
       end
     end
 

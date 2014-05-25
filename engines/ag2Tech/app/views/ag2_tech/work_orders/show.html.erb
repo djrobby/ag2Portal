@@ -59,9 +59,9 @@
     </tr>
     <tr>
       <td><%= t :"activerecord.attributes.work_order.reported_at" %>:</td>
-      <td><%= @work_order.reported_at.utc.getlocal.strftime("%d/%m/%Y %H:%M:%S") unless @work_order.reported_at.blank? %></td>
+      <td><%= @work_order.reported_at.strftime("%d/%m/%Y %H:%M:%S") unless @work_order.reported_at.blank? %></td>
       <td><%= t :"activerecord.attributes.work_order.approved_at" %>:</td>
-      <td><%= @work_order.approved_at.utc.getlocal.strftime("%d/%m/%Y %H:%M:%S") unless @work_order.approved_at.blank? %></td>
+      <td><%= @work_order.approved_at.strftime("%d/%m/%Y %H:%M:%S") unless @work_order.approved_at.blank? %></td>
     </tr>
     <tr>
       <td><%= t :"activerecord.attributes.work_order.certified_at" %>:</td>

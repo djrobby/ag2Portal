@@ -6,12 +6,19 @@ function caps(e) {
 }
 
 /*
- * Returns ES formatted date
+ * Returns ES formatted date & time
  */
 function es_date(d) {
   var month = d.getMonth()+1;
   var day = d.getDate();
   var o = (day<10 ? '0' : '') + day + '/' + (month<10 ? '0' : '') + month + '/' + d.getFullYear();
+  return o;
+}
+function es_time(d) {
+  var hh = d.getHours();
+  var mm = d.getMinutes();
+  var ss = d.getSeconds();
+  var o = (hh<10 ? '0' : '') + hh + ':' + (mm<10 ? '0' : '') + mm + ':' + ':' + (ss<10 ? '0' : '') + ss;
   return o;
 }
 
