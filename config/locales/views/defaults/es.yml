@@ -32,3 +32,7 @@ es:
   prev: "Anterior"
   duplicate: "Duplicados"
   mandatory_subtitle: "¡Recuerda que los campos marcados con * son obligatorios!"
+  dd_image_message: "Deja la imagen aquí"
+  dd_images_message: "Deja las imágenes aquí"
+  dd_file_message: "Deja el archivo aquí"
+  dd_files_message: "Deja los archivos aquí"

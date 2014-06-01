@@ -8,7 +8,7 @@ class Product < ActiveRecord::Base
                   :main_description, :manufacturer_p_code, :markup, :product_code, :reference_price,
                   :remarks, :sell_price, :warranty_time,
                   :product_type_id, :product_family_id, :measure_id, :tax_type_id, :manufacturer_id
-  has_attached_file :image, :styles => { :medium => "120x120>", :small => "80x80>" }, :default_url => "/images/missing/:style/product.png"
+  has_attached_file :image, :styles => { :original => "160x160>", :medium => "120x120>", :small => "80x80>" }, :default_url => "/images/missing/:style/product.png"
 
   has_many :purchase_prices, dependent: :destroy
   has_many :suppliers, :through => :purchase_prices
@@ -33,6 +33,8 @@ class Product < ActiveRecord::Base
   validates :measure_id,        :presence => true
   validates :tax_type_id,       :presence => true
   validates :manufacturer_id,   :presence => true
+
+  validates_attachment_content_type :image, :content_type => /\Aimage\/.*\Z/
 
   before_validation :fields_to_uppercase
   before_destroy :check_for_dependent_records

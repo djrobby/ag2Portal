@@ -61,15 +61,17 @@
   </tbody>
 </table>
 
-<%= render partial: '/layouts/crud/update_delete', locals:
+<%= render partial: '/layouts/crud/update_delete_new', locals:
 { model: Ticket, update_path: edit_ticket_path(@ticket), update_txt: t('.btn_edit'),
-delete_path: @ticket, delete_txt: t('.btn_delete'), msg: t("activerecord.models.ticket.one"), txt: @ticket.id.to_s.rjust(6, '0') } %>
+delete_path: @ticket, delete_txt: t('.btn_delete'), msg: t("activerecord.models.ticket.one"), txt: @ticket.id.to_s.rjust(6, '0'),
+new_path: new_ticket_path, new_txt: t('ag2_help_desk.tickets.index.btn_new') } %>
 
 <%= link_to I18n.t("ag2_help_desk.tickets.back_to_main_page"), tickets_path %>
 
-<div>
-  <% if !@ticket.attachment.blank? %>
-  <br />
+<% if !@ticket.attachment.blank? %>
+<br />
+<br />
+<div id="dd_files">
   <% if session[:resolution] == "LD" %>
   <%= image_tag @ticket.attachment.url(:small) %> <!-- small image size -->
   <% elsif session[:resolution] == "SD" %>
@@ -77,5 +79,5 @@ delete_path: @ticket, delete_txt: t('.btn_delete'), msg: t("activerecord.models.
   <% else %>
   <%= image_tag @ticket.attachment.url %> <!-- big image size -->
   <% end %>
-  <% end %>
 </div>
+<% end %>

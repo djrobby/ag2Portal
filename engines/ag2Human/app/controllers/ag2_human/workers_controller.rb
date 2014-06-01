@@ -9,7 +9,27 @@ module Ag2Human
                                                :update_company_textfield_from_office,
                                                :update_code_textfield_from_name,
                                                :update_province_textfield_from_town,
-                                               :update_province_textfield_from_zipcode]
+                                               :update_province_textfield_from_zipcode,
+                                               :wk_update_attachment]
+    # Public attachment for drag&drop
+    $attachment = nil
+  
+    # Update attached file from drag&drop
+    def wk_update_attachment
+      if !$attachment.nil?
+        $attachment.destroy
+        $attachment = Attachment.new
+      end
+      $attachment.avatar = params[:file]
+      $attachment.id = 1
+      $attachment.save!
+      if $attachment.save
+        render json: { "image" => $attachment.avatar }
+      else
+        render json: { "image" => "" }
+      end
+    end
+
     # Update worker data to upper case at view (to_uppercase_btn)
     def update_textfields_to_uppercase
       lastname = params[:last].upcase
@@ -239,6 +259,8 @@ end
     def new
       @breadcrumb = 'create'
       @worker = Worker.new
+      $attachment = Attachment.new
+      destroy_attachment
 
       respond_to do |format|
         format.html # new.html.erb
@@ -250,6 +272,8 @@ end
     def edit
       @breadcrumb = 'update'
       @worker = Worker.find(params[:id])
+      $attachment = Attachment.new
+      destroy_attachment
     end
 
     # POST /workers
@@ -258,12 +282,20 @@ end
       @breadcrumb = 'create'
       @worker = Worker.new(params[:worker])
       @worker.created_by = current_user.id if !current_user.nil?
+      # Should use attachment from drag&drop?
+      if @worker.avatar.blank? && !$attachment.avatar.blank?
+        @worker.avatar = $attachment.avatar
+      end
 
       respond_to do |format|
         if @worker.save
+          $attachment.destroy
+          $attachment = nil
           format.html { redirect_to @worker, notice: crud_notice('created', @worker) }
           format.json { render json: @worker, status: :created, location: @worker }
         else
+          $attachment.destroy
+          $attachment = Attachment.new
           format.html { render action: "new" }
           format.json { render json: @worker.errors, status: :unprocessable_entity }
         end
@@ -276,13 +308,21 @@ end
       @breadcrumb = 'update'
       @worker = Worker.find(params[:id])
       @worker.updated_by = current_user.id if !current_user.nil?
+      # Should use attachment from drag&drop?
+      if !$attachment.avatar.blank? && $attachment.updated_at > @worker.updated_at
+        @worker.avatar = $attachment.avatar
+      end
 
       respond_to do |format|
         if @worker.update_attributes(params[:worker])
+          $attachment.destroy
+          $attachment = nil
           format.html { redirect_to @worker,
                         notice: (crud_notice('updated', @worker) + "#{undo_link(@worker)}").html_safe }
           format.json { head :no_content }
         else
+          $attachment.destroy
+          $attachment = Attachment.new
           format.html { render action: "edit" }
           format.json { render json: @worker.errors, status: :unprocessable_entity }
         end

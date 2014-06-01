@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140524070406) do
+ActiveRecord::Schema.define(:version => 20140601055059) do
 
   create_table "activities", :force => true do |t|
     t.string   "description"
@@ -52,6 +52,15 @@ ActiveRecord::Schema.define(:version => 20140524070406) do
   add_index "areas", ["department_id"], :name => "index_areas_on_department_id"
   add_index "areas", ["name"], :name => "index_areas_on_name"
   add_index "areas", ["worker_id"], :name => "index_areas_on_worker_id"
+
+  create_table "attachments", :force => true do |t|
+    t.datetime "created_at",          :null => false
+    t.datetime "updated_at",          :null => false
+    t.string   "avatar_file_name"
+    t.string   "avatar_content_type"
+    t.integer  "avatar_file_size"
+    t.datetime "avatar_updated_at"
+  end
 
   create_table "charge_accounts", :force => true do |t|
     t.string   "name"

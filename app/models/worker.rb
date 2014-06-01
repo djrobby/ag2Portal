@@ -27,7 +27,7 @@ class Worker < ActiveRecord::Base
                   :department_id, :nomina_id, :gross_salary, :variable_salary,
                   :created_by, :updated_by, :remarks, :sex_id, :insurance_id,
                   :social_security_cost, :education
-  has_attached_file :avatar, :styles => { :medium => "96x96>", :small => "64x64>" }, :default_url => "/images/missing/:style/user.png"
+  has_attached_file :avatar, :styles => { :original => "128x128>", :medium => "96x96>", :small => "64x64>" }, :default_url => "/images/missing/:style/user.png"
 
   has_many :time_records
   has_many :worker_items
@@ -67,6 +67,8 @@ class Worker < ActiveRecord::Base
   #validates :contract_type,             :presence => true
   #validates :starting_at,               :presence => true
   #validates :issue_starting_at,         :presence => true
+
+  validates_attachment_content_type :avatar, :content_type => /\Aimage\/.*\Z/
 
   before_validation :fields_to_uppercase
   before_destroy :check_for_dependent_records

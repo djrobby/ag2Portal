@@ -1,4 +1,8 @@
 <script>
+  $(document).ready(function() {
+    dd_import_files('#dd_files', '#image_content', 'co_update_attachment');
+  });
+
   jQuery(function($) {
     // when the #company_town_id field changes
     $("#company_town_id").change(function() {
@@ -24,7 +28,12 @@
       })
       return false;
     });
-  })
+
+    // when the #company_logo field changes
+    $("#company_logo").change(function() {
+      readImageFromInput(this, '#dd_files');
+    });
+  });
 </script>
 
 <%= simple_form_for @company, :html => {:class => 'form-vertical well' } do |f| %>
@@ -74,6 +83,24 @@
   <label class="multi-field-label-two"><%= f.input :invoice_header, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %></label>
   <label class="multi-field-label-two"><%= f.input :invoice_footer, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %></label>
 </div>
-<%= f.input :logo, :as => :file, :label_html => { :class => 'form-label' } %>
+<!-- Attachment -->
+<table class="form-table">
+  <tbody>
+    <tr class="form-tr">
+      <td class="form-td-two left-winged"> <%= f.input :logo, as: :file, input_html: { accept: 'image/*' }, label_html: { class: 'form-label' } %> </td>
+      <td class="form-td-two right-winged">
+      <div id="dd_files">
+        <% if !@company.logo_file_name.nil? %>
+          <span id="image_text"></span>
+          <img id="image_content" src="<%= @company.logo.url %>">
+        <% else %>
+          <span id="image_text"><%= t 'dd_image_message' %></span>
+          <img id="image_content" hidden>
+        <% end %>
+      </div></td>
+    </tr>
+  </tbody>
+</table>
+<!-- Buttons -->
 <%= f.button :submit, :class => 'btn-primary' %>
 <% end %>

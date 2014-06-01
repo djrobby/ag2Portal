@@ -1,4 +1,8 @@
 <script>
+  $(document).ready(function() {
+    dd_import_files('#dd_files', '#image_content', 'cc_update_attachment');
+  });
+
   jQuery(function($) {
     // when the #corp_contact_office_id field changes
     $("#corp_contact_office_id").change(function() {
@@ -11,7 +15,12 @@
       })
       return false;
     });
-  })
+
+    // when the #corp_contact_avatar field changes
+    $("#corp_contact_avatar").change(function() {
+      readImageFromInput(this, '#dd_files');
+    });
+  });
 </script>
 
 <%= simple_form_for @corp_contact, :html => { :class => 'form-vertical well' } do |f| %>
@@ -38,6 +47,24 @@
   <label class="multi-field-label-two"> <%= f.input :corp_cellular_long, :input_html => { :class => 'large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
   <label class="multi-field-label-two"> <%= f.input :corp_cellular_short, :input_html => { :class => 'large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
 </div>
-<%= f.input :avatar, :as => :file, :label_html => { :class => 'form-label' } %>
+<!-- Attachment -->
+<table class="form-table">
+  <tbody>
+    <tr class="form-tr">
+      <td class="form-td-two left-winged"> <%= f.input :avatar, as: :file, input_html: { accept: 'image/*' }, label_html: { class: 'form-label' } %> </td>
+      <td class="form-td-two right-winged">
+      <div id="dd_files">
+        <% if !@corp_contact.avatar_file_name.nil? %>
+          <span id="image_text"></span>
+          <img id="image_content" src="<%= @corp_contact.avatar.url %>">
+        <% else %>
+          <span id="image_text"><%= t 'dd_image_message' %></span>
+          <img id="image_content" hidden>
+        <% end %>
+      </div></td>
+    </tr>
+  </tbody>
+</table>
+<!-- Buttons -->
 <%= f.button :submit, :class => 'btn-primary' %>
 <% end %>

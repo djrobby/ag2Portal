@@ -5,9 +5,29 @@ module Ag2Admin
     before_filter :authenticate_user!
     load_and_authorize_resource
     skip_load_and_authorize_resource :only => [:update_province_textfield_from_town,
-                                               :update_province_textfield_from_zipcode]
+                                               :update_province_textfield_from_zipcode,
+                                               :co_update_attachment]
     # Helper methods for sorting
     helper_method :sort_column
+    # Public attachment for drag&drop
+    $attachment = nil
+  
+    # Update attached file from drag&drop
+    def co_update_attachment
+      if !$attachment.nil?
+        $attachment.destroy
+        $attachment = Attachment.new
+      end
+      $attachment.avatar = params[:file]
+      $attachment.id = 1
+      $attachment.save!
+      if $attachment.save
+        render json: { "image" => $attachment.avatar }
+      else
+        render json: { "image" => "" }
+      end
+    end
+
     # Update hidden province text field at view from town select
     def update_province_textfield_from_town
       @town = Town.find(params[:id])
@@ -68,6 +88,8 @@ module Ag2Admin
     def new
       @breadcrumb = 'create'
       @company = Company.new
+      $attachment = Attachment.new
+      destroy_attachment
 
       respond_to do |format|
         format.html # new.html.erb
@@ -79,6 +101,8 @@ module Ag2Admin
     def edit
       @breadcrumb = 'update'
       @company = Company.find(params[:id])
+      $attachment = Attachment.new
+      destroy_attachment
     end
 
     # POST /companies
@@ -87,12 +111,20 @@ module Ag2Admin
       @breadcrumb = 'create'
       @company = Company.new(params[:company])
       @company.created_by = current_user.id if !current_user.nil?
+      # Should use attachment from drag&drop?
+      if @company.logo.blank? && !$attachment.avatar.blank?
+        @company.logo = $attachment.avatar
+      end
 
       respond_to do |format|
         if @company.save
+          $attachment.destroy
+          $attachment = nil
           format.html { redirect_to @company, notice: crud_notice('created', @company) }
           format.json { render json: @company, status: :created, location: @company }
         else
+          $attachment.destroy
+          $attachment = Attachment.new
           format.html { render action: "new" }
           format.json { render json: @company.errors, status: :unprocessable_entity }
         end
@@ -105,13 +137,21 @@ module Ag2Admin
       @breadcrumb = 'update'
       @company = Company.find(params[:id])
       @company.updated_by = current_user.id if !current_user.nil?
+      # Should use attachment from drag&drop?
+      if !$attachment.avatar.blank? && $attachment.updated_at > @company.updated_at
+        @company.logo = $attachment.avatar
+      end
 
       respond_to do |format|
         if @company.update_attributes(params[:company])
+          $attachment.destroy
+          $attachment = nil
           format.html { redirect_to @company,
                         notice: (crud_notice('updated', @company) + "#{undo_link(@company)}").html_safe }
           format.json { head :no_content }
         else
+          $attachment.destroy
+          $attachment = Attachment.new
           format.html { render action: "edit" }
           format.json { render json: @company.errors, status: :unprocessable_entity }
         end

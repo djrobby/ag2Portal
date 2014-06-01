@@ -6,7 +6,7 @@ class CorpContact < ActiveRecord::Base
                   :first_name, :last_name, :position, :company_id, :office_id, :department_id, :avatar,
                   :worker_id, :worker_count,
                   :created_by, :updated_by
-  has_attached_file :avatar, :styles => { :medium => "96x96>", :small => "64x64>" }, :default_url => "/images/missing/:style/user.png"
+  has_attached_file :avatar, :styles => { :original => "128x128>", :medium => "96x96>", :small => "64x64>" }, :default_url => "/images/missing/:style/user.png"
 
   has_paper_trail
 
@@ -17,6 +17,8 @@ class CorpContact < ActiveRecord::Base
   validates :company,     :presence => true
   validates :office,      :presence => true
   validates :email,       :presence => true
+
+  validates_attachment_content_type :avatar, :content_type => /\Aimage\/.*\Z/
 
   def full_name
     full_name = ""

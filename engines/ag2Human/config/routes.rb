@@ -24,6 +24,9 @@ Ag2Human::Engine.routes.draw do
     match 'workers/update_textfields_to_uppercase/:last/:first/:code/:fiscal', :controller => 'workers', :action => 'update_textfields_to_uppercase'
     match 'workers/:id/update_textfields_to_uppercase/:last/:first/:code/:fiscal', :controller => 'workers', :action => 'update_textfields_to_uppercase'
     match 'update_offices_select_from_company/:id', :controller => 'workers', :action => 'update_offices_select_from_company'
+    match 'workers/wk_update_attachment', :controller => 'workers', :action => 'wk_update_attachment'
+    match 'wk_update_attachment', :controller => 'workers', :action => 'wk_update_attachment'
+    match 'workers/:id/wk_update_attachment', :controller => 'workers', :action => 'wk_update_attachment'
     #
     match 'worker_report', :controller => 'ag2_timerecord_track', :action => 'worker_report'
     match 'office_report', :controller => 'ag2_timerecord_track', :action => 'office_report'

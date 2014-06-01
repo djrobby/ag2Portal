@@ -9,6 +9,8 @@
     $('.sel2').select2({
       formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; }
     });
+    // Setup drag & drop
+    dd_import_files('#dd_files', '#image_content', 'ti_update_attachment');
   });
 
   jQuery(function($) {
@@ -25,7 +27,12 @@
       })
       return false;
     });
-  })
+
+    // when the #ticket_attachment field changes
+    $("#ticket_attachment").change(function() {
+      readImageFromInput(this, '#dd_files');
+    });
+  });
 </script>
 
 <%= simple_form_for @ticket, :html => {:class => 'form-vertical well' } do |f| %>
@@ -53,7 +60,24 @@
   <label class="multi-field-label-two"> <%= f.input :status_changed_at, :start_year => Time.now.year - 100, :end_year => Time.now.year + 100, :as => :string, :input_html => { :value => (f.object.status_changed_at.strftime("%d/%m/%Y %H:%M:%S") if f.object.status_changed_at), :class => 'large-text-field date_picker' }, :label_html => { :class => 'form-label' } %> </label>
 </div>
 <%= f.input :status_changed_message, :as => :text, :input_html => { :class => 'x-large-text-field', :rows => 3 }, :label_html => { :class => 'form-label' } %>
-<%= f.input :attachment, :as => :file, :label_html => { :class => 'form-label' } %>
+<!-- Attachment -->
+<table class="form-table">
+  <tbody>
+    <tr class="form-tr">
+      <td class="form-td-two left-winged"> <%= f.input :attachment, as: :file, input_html: { accept: 'image/*' }, label_html: { class: 'form-label' } %> </td>
+      <td class="form-td-two right-winged">
+      <div id="dd_files">
+        <% if !@ticket.attachment_file_name.nil? %>
+          <span id="image_text"></span>
+          <img id="image_content" src="<%= @ticket.attachment.url %>">
+        <% else %>
+          <span id="image_text"><%= t 'dd_image_message' %></span>
+          <img id="image_content" hidden>
+        <% end %>
+      </div></td>
+    </tr>
+  </tbody>
+</table>
 <!-- Set referrer to redirect right -->
 <% if @breadcrumb == 'update'%>
 <%= hidden_field_tag :referrer, ticket_path(@ticket) %>

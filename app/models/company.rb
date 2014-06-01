@@ -10,7 +10,7 @@ class Company < ActiveRecord::Base
                   :zipcode_id, :town_id, :province_id, :phone, :fax, :cellular, :email, :logo,
                   :invoice_code, :invoice_header, :invoice_footer, :invoice_left_margin,
                   :created_by, :updated_by, :organization_id, :hd_email
-  has_attached_file :logo, :styles => { :medium => "120x120>", :small => "80x80>" }, :default_url => "/images/missing/:style/company.png"
+  has_attached_file :logo, :styles => { :original => "160x160>", :medium => "120x120>", :small => "80x80>" }, :default_url => "/images/missing/:style/company.png"
 
   has_many :offices
   has_many :workers
@@ -30,6 +30,8 @@ class Company < ActiveRecord::Base
   validates :province,     :presence => true
   validates :invoice_code, :presence => true
   validates :organization, :presence => true
+
+  validates_attachment_content_type :logo, :content_type => /\Aimage\/.*\Z/
 
   before_validation :fields_to_uppercase
   before_destroy :check_for_dependent_records

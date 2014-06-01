@@ -14,6 +14,9 @@ Ag2Admin::Engine.routes.draw do
     match 'companies/:id/update_province_textfield_from_town/:id', :controller => 'companies', :action => 'update_province_textfield_from_town'
     match 'companies/update_province_textfield_from_zipcode/:id', :controller => 'companies', :action => 'update_province_textfield_from_zipcode'
     match 'companies/:id/update_province_textfield_from_zipcode/:id', :controller => 'companies', :action => 'update_province_textfield_from_zipcode'
+    match 'companies/co_update_attachment', :controller => 'companies', :action => 'co_update_attachment'
+    match 'co_update_attachment', :controller => 'companies', :action => 'co_update_attachment'
+    match 'companies/:id/co_update_attachment', :controller => 'companies', :action => 'co_update_attachment'
     #
     match 'offices/update_province_textfield_from_town/:id', :controller => 'offices', :action => 'update_province_textfield_from_town'
     match 'offices/:id/update_province_textfield_from_town/:id', :controller => 'offices', :action => 'update_province_textfield_from_town'

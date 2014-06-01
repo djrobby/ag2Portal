@@ -23,6 +23,9 @@ class Ability
     cannot :manage, Role
     cannot :manage, Site
     cannot :manage, User
+
+    # Users can manage attachments
+    can :manage, Attachment
     
     #
     # Users according to their roles

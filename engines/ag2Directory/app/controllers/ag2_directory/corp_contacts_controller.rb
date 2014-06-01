@@ -4,7 +4,27 @@ module Ag2Directory
   class CorpContactsController < ApplicationController
     before_filter :authenticate_user!
     load_and_authorize_resource
-    skip_load_and_authorize_resource :only => :update_company_textfield_from_office
+    skip_load_and_authorize_resource :only => [:update_company_textfield_from_office,
+                                               :cc_update_attachment]
+    # Public attachment for drag&drop
+    $attachment = nil
+  
+    # Update attached file from drag&drop
+    def cc_update_attachment
+      if !$attachment.nil?
+        $attachment.destroy
+        $attachment = Attachment.new
+      end
+      $attachment.avatar = params[:file]
+      $attachment.id = 1
+      $attachment.save!
+      if $attachment.save
+        render json: { "image" => $attachment.avatar }
+      else
+        render json: { "image" => "" }
+      end
+    end
+
     # Update company text field at view from office select
     def update_company_textfield_from_office
       @office = Office.find(params[:id])
@@ -74,6 +94,8 @@ module Ag2Directory
     def new
       @breadcrumb = 'create'
       @corp_contact = CorpContact.new
+      $attachment = Attachment.new
+      destroy_attachment
 
       respond_to do |format|
         format.html # new.html.erb
@@ -85,6 +107,8 @@ module Ag2Directory
     def edit
       @breadcrumb = 'update'
       @corp_contact = CorpContact.find(params[:id])
+      $attachment = Attachment.new
+      destroy_attachment
     end
 
     # POST /corp_contacts
@@ -93,12 +117,20 @@ module Ag2Directory
       @breadcrumb = 'create'
       @corp_contact = CorpContact.new(params[:corp_contact])
       @corp_contact.created_by = current_user.id if !current_user.nil?
+      # Should use attachment from drag&drop?
+      if @corp_contact.avatar.blank? && !$attachment.avatar.blank?
+        @corp_contact.avatar = $attachment.avatar
+      end
 
       respond_to do |format|
         if @corp_contact.save
+          $attachment.destroy
+          $attachment = nil
           format.html { redirect_to @corp_contact, notice: crud_notice('created', @corp_contact) }
           format.json { render json: @corp_contact, status: :created, location: @corp_contact }
         else
+          $attachment.destroy
+          $attachment = Attachment.new
           format.html { render action: "new" }
           format.json { render json: @corp_contact.errors, status: :unprocessable_entity }
         end
@@ -111,13 +143,21 @@ module Ag2Directory
       @breadcrumb = 'update'
       @corp_contact = CorpContact.find(params[:id])
       @corp_contact.updated_by = current_user.id if !current_user.nil?
+      # Should use attachment from drag&drop?
+      if !$attachment.avatar.blank? && $attachment.updated_at > @corp_contact.updated_at
+        @corp_contact.avatar = $attachment.avatar
+      end
 
       respond_to do |format|
         if @corp_contact.update_attributes(params[:corp_contact])
+          $attachment.destroy
+          $attachment = nil
           format.html { redirect_to @corp_contact,
                         notice: (crud_notice('updated', @corp_contact) + "#{undo_link(@corp_contact)}").html_safe }
           format.json { head :no_content }
         else
+          $attachment.destroy
+          $attachment = Attachment.new
           format.html { render action: "edit" }
           format.json { render json: @corp_contact.errors, status: :unprocessable_entity }
         end

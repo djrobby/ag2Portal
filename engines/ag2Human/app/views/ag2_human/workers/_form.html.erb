@@ -9,6 +9,8 @@
       $('.date_picker').datepicker('hide');
     });
     text_field_color = $("#worker_last_name").css('color')
+    // Setup drag & drop
+    dd_import_files('#dd_files', '#image_content', 'wk_update_attachment');
   });
   
   jQuery(function($) {
@@ -102,7 +104,12 @@
       })
       return false;
     });
-  })
+
+    // when the #worker_avatar field changes
+    $("#worker_avatar").change(function() {
+      readImageFromInput(this, '#dd_files');
+    });
+  });
 </script>
 
 <%= simple_form_for @worker, :html => {:class => 'form-vertical well' } do |f| %>
@@ -161,7 +168,26 @@
   <label class="multi-field-label-two-table"> <%= f.input :education, :as => :text, :input_html => { :class => 'x-large-text-field', :rows => 2 }, :label_html => { :class => 'form-label' } %> </label>
 </div>
 <%= f.input :remarks, :as => :text, :input_html => { :class => 'x-large-text-field', :rows => 3 }, :label_html => { :class => 'form-label multi-field-label' } %>
-<%= f.input :avatar, :as => :file, :label_html => { :class => 'form-label' } %>
+<!-- Attachment -->
+<table class="form-table">
+  <tbody>
+    <tr class="form-tr">
+      <td class="form-td-two left-winged"> <%= f.input :avatar, as: :file, input_html: { accept: 'image/*' }, label_html: { class: 'form-label' } %> </td>
+      <td class="form-td-two right-winged">
+      <div id="dd_files">
+        <% if !@worker.avatar_file_name.nil? %>
+          <span id="image_text"></span>
+          <img id="image_content" src="<%= @worker.avatar.url %>">
+        <% else %>
+          <span id="image_text"><%= t 'dd_image_message' %></span>
+          <img id="image_content" hidden>
+        <% end %>
+      </div></td>
+    </tr>
+  </tbody>
+</table>
+<!-- Buttons -->
+<br />
 <table class="form-table">
   <tbody>
     <tr class="form-tr">

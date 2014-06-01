@@ -19,6 +19,8 @@ class Ticket < ActiveRecord::Base
   validates :technician,              :presence => true, :if => :technician_required?
   validates :status_changed_message,  :presence => true, :if => :status_message_required?
 
+  validates_attachment_content_type :attachment, :content_type => /\Aimage\/.*\Z/
+
   before_create :assign_default_status_and_office
   after_create :send_create_email
   before_update :status_changed

@@ -5,7 +5,26 @@ module Ag2HelpDesk
     before_filter :authenticate_user!
     load_and_authorize_resource
     skip_load_and_authorize_resource :only => [:update_office_textfield_from_created_by,
-                                               :popup_new]
+                                               :popup_new,
+                                               :ti_update_attachment]
+    # Public attachment for drag&drop
+    $attachment = nil
+  
+    # Update attached file from drag&drop
+    def ti_update_attachment
+      if !$attachment.nil?
+        $attachment.destroy
+        $attachment = Attachment.new
+      end
+      $attachment.avatar = params[:file]
+      $attachment.id = 1
+      $attachment.save!
+      if $attachment.save
+        render json: { "image" => $attachment.avatar }
+      else
+        render json: { "image" => "" }
+      end
+    end
     
     # Update office text field at view from created_by select
     def update_office_textfield_from_created_by
@@ -105,6 +124,8 @@ module Ag2HelpDesk
     def new
       @breadcrumb = 'create'
       @ticket = Ticket.new
+      $attachment = Attachment.new
+      destroy_attachment
 
       respond_to do |format|
         format.html # new.html.erb
@@ -116,6 +137,8 @@ module Ag2HelpDesk
     def edit
       @breadcrumb = 'update'
       @ticket = Ticket.find(params[:id])
+      $attachment = Attachment.new
+      destroy_attachment
     end
 
     # POST /tickets
@@ -127,12 +150,20 @@ module Ag2HelpDesk
       @ticket.source_ip = request.remote_ip
       @ticket.hd_email = mail_to
       @ticket.office_id = from_office
+      # Should use attachment from drag&drop?
+      if @ticket.attachment.blank? && !$attachment.avatar.blank?
+        @ticket.attachment = $attachment.avatar
+      end
 
       respond_to do |format|
         if @ticket.save
+          $attachment.destroy
+          $attachment = nil
           format.html { redirect_to @ticket, notice: crud_notice('created', @ticket) }
           format.json { render json: @ticket, status: :created, location: @ticket }
         else
+          $attachment.destroy
+          $attachment = Attachment.new
           format.html { render action: "new" }
           format.json { render json: @ticket.errors, status: :unprocessable_entity }
         end
@@ -145,15 +176,23 @@ module Ag2HelpDesk
       @breadcrumb = 'update'
       @ticket = Ticket.find(params[:id])
       @ticket.updated_by = current_user.id if !current_user.nil?
+      # Should use attachment from drag&drop?
+      if !$attachment.avatar.blank? && $attachment.updated_at > @ticket.updated_at
+        @ticket.attachment = $attachment.avatar
+      end
 
       respond_to do |format|
         if @ticket.update_attributes(params[:ticket])
+          $attachment.destroy
+          $attachment = nil
           # format.html { redirect_to @ticket, notice: I18n.t('activerecord.successful.messages.updated', :model => @ticket.class.model_name.human) }
           # format.html { redirect_to params[:referrer], notice: I18n.t('activerecord.successful.messages.updated', :model => @ticket.class.model_name.human) }
           format.html { redirect_to params[:referrer],
                         notice: (crud_notice('updated', @ticket) + "#{undo_link(@ticket)}").html_safe }
           format.json { head :no_content }
         else
+          $attachment.destroy
+          $attachment = Attachment.new
           format.html { render action: "edit" }
           format.json { render json: @ticket.errors, status: :unprocessable_entity }
         end

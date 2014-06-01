@@ -169,6 +169,17 @@ class ApplicationController < ActionController::Base
   end
 
   #
+  # Attachments
+  #
+  # Destroy previous attachment
+  def destroy_attachment
+    a = Attachment.find(1) rescue nil
+    if !a.nil?
+      a.destroy
+    end  
+  end
+
+  #
   # Control digits
   #
   # CIF/NIF
