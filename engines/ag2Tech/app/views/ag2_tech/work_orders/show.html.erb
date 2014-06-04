@@ -88,6 +88,66 @@
   </tbody>
 </table>
 
+<!-- Items -->
+<table class="form-table">
+  <tbody>
+    <tr class="form-tr underlined-tr">
+      <td class="form-td-two left-winged">
+        <h4><%= t 'ag2_tech.work_orders.items_info' %></h4>
+      </td>
+      <td class="form-td-two right-winged">
+        <%= link_to t(".print"), work_orders_path, :class => 'btn btn-warning' %>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<% if (@items.count > 0) %>
+<table class="table table-condensed table-striped shrinked">
+  <thead>
+    <%= render 'items_header' %>
+  </thead>
+  <tfoot>
+    <%= render partial: 'items_footer', :locals => { order: @work_order } %>
+  </tfoot>
+  <tbody>
+    <%= render partial: 'item', collection: @items %>
+  </tbody>
+</table>
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @items } %>
+<% else %>
+<br />
+<% end %> <!-- end @items.count > 0 -->
+
+<!-- Workers -->
+<table class="form-table">
+  <tbody>
+    <tr class="form-tr underlined-tr">
+      <td class="form-td-two left-winged">
+        <h4><%= t 'ag2_tech.work_orders.workers_info' %></h4>
+      </td>
+      <td class="form-td-two right-winged">
+        <%= link_to t(".print"), work_orders_path, :class => 'btn btn-warning' %>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<% if (@workers.count > 0) %>
+<table class="table table-condensed table-striped shrinked">
+  <thead>
+    <%= render 'workers_header' %>
+  </thead>
+  <tfoot>
+    <%= render partial: 'workers_footer', :locals => { order: @work_order } %>
+  </tfoot>
+  <tbody>
+    <%= render partial: 'worker', collection: @workers %>
+  </tbody>
+</table>
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @workers } %>
+<% else %>
+<br />
+<% end %> <!-- end @workers.count > 0 -->
+
 <%= render partial: '/layouts/crud/update_delete_new', locals:
 { model: WorkOrder, update_path: edit_work_order_path(@work_order), update_txt: t('.btn_edit'),
 delete_path: @work_order, delete_txt: t('.btn_delete'), msg: t("activerecord.models.work_order.one"), txt: @work_order.order_no,

@@ -10,8 +10,8 @@ en:
       work_order_worker:
         work_order: "Work order"
         work_order_id: "Work order"
-        worker: "Product"
-        worker_id: "Product"
+        worker: "Worker"
+        worker_id: "Worker"
         hours: "Hours"
         cost: "Cost"
         costs: "Costs"

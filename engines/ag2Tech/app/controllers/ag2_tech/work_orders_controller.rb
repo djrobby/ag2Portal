@@ -101,6 +101,8 @@ module Ag2Tech
     def show
       @breadcrumb = 'read'
       @work_order = WorkOrder.find(params[:id])
+      @items = @work_order.work_order_items.paginate(:page => params[:page], :per_page => per_page).order('id')
+      @workers = @work_order.work_order_workers.paginate(:page => params[:page], :per_page => per_page).order('id')
   
       respond_to do |format|
         format.html # show.html.erb

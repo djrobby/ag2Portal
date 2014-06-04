@@ -1,0 +1,11 @@
+<tr>
+  <td><%= worker.product.product_code %></td>
+  <td><%= worker.description %></td>
+  <td align="right"><%= number_with_precision(worker.quantity, precision: 4) %></td>
+  <td align="right"><%= number_with_precision(worker.price, precision: 4) %></td>
+  <td align="right"><%= number_with_precision(worker.discount_pct, precision: 2) %></td>
+  <td align="right"><%= number_with_precision(worker.discount, precision: 4) %></td>
+  <td align="right"><%= number_with_precision(worker.amount, precision: 4) %></td>
+  <td align="right"><%= number_with_precision(worker.tax, precision: 4) %></td>
+  <td align="right"><%= number_with_precision(worker.balance, precision: 4) %></td>
+</tr>

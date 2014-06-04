@@ -1,0 +1,15 @@
+<tr>
+  <th><%= t "activerecord.attributes.work_order_worker.product_c" %></th>
+  <th><%= t "activerecord.attributes.work_order_worker.description_c" %></th>
+  <th align="right"><%= t "activerecord.attributes.work_order_worker.quantity_c" %></th>
+  <th align="right"><%= t "activerecord.attributes.work_order_worker.price_c" %></th>
+  <th align="right"><%= t "activerecord.attributes.work_order_worker.discount_pct_c" %></th>
+  <th align="right"><%= t "activerecord.attributes.work_order_worker.discount_c" %></th>
+  <th align="right"><%= t "activerecord.attributes.work_order_worker.amount_c" %></th>
+  <th align="right"><%= t "activerecord.attributes.work_order_worker.tax_c" %></th>
+  <% if @breadcrumb == 'create' || @breadcrumb == 'update' %>
+  <th></th>
+  <% else %>
+  <th align="right"><%= t "activerecord.attributes.work_order_worker.balance_c" %></th>
+  <% end %>
+</tr>
