@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140601055059) do
+ActiveRecord::Schema.define(:version => 20140605184031) do
 
   create_table "activities", :force => true do |t|
     t.string   "description"
@@ -1507,7 +1507,7 @@ ActiveRecord::Schema.define(:version => 20140601055059) do
   create_table "work_order_workers", :force => true do |t|
     t.integer  "work_order_id"
     t.integer  "worker_id"
-    t.decimal  "hours",         :precision => 7,  :scale => 2, :default => 0.0, :null => false
+    t.decimal  "hours",         :precision => 9,  :scale => 4, :default => 0.0, :null => false
     t.decimal  "cost",          :precision => 12, :scale => 4, :default => 0.0, :null => false
     t.datetime "created_at",                                                    :null => false
     t.datetime "updated_at",                                                    :null => false

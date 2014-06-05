@@ -59,6 +59,69 @@ class WorkOrder < ActiveRecord::Base
   def summary
     description.blank? ? "N/A" : description[0,40]
   end
+
+  #
+  # Calculated fields
+  #
+  def item_costs
+    costs = 0
+    work_order_items.each do |i|
+      if !i.costs.blank?
+        costs += i.costs
+      end
+    end
+    costs
+  end
+
+  def subtotal
+    subtotal = 0
+    work_order_items.each do |i|
+      if !i.amount.blank?
+        subtotal += i.amount
+      end
+    end
+    subtotal
+  end
+  
+  def taxable
+    subtotal
+  end
+
+  def taxes
+    taxes = 0
+    work_order_items.each do |i|
+      if !i.tax.blank?
+        taxes += i.tax
+      end
+    end
+    taxes
+  end
+
+  def total
+    taxable + taxes  
+  end
+
+  def quantity
+    work_order_items.sum("quantity")
+  end
+
+  def worker_costs
+    costs = 0
+    work_order_workers.each do |i|
+      if !i.costs.blank?
+        costs += i.costs
+      end
+    end
+    costs
+  end
+
+  def hours
+    work_order_workers.sum("hours")
+  end
+  
+  def hours_avg
+    hours / work_order_workers.count
+  end
   
   #
   # Records navigator

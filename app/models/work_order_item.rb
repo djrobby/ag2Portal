@@ -12,4 +12,27 @@ class WorkOrderItem < ActiveRecord::Base
   validates :description, :presence => true
   validates :product,     :presence => true
   validates :tax_type,    :presence => true
+
+  before_validation :fields_to_uppercase
+
+  def fields_to_uppercase
+    if !self.description.blank?
+      self[:description].upcase!
+    end
+  end
+
+  #
+  # Calculated fields
+  #
+  def costs
+    quantity * cost
+  end
+
+  def amount
+    quantity * price
+  end
+
+  def tax
+    (tax_type.tax / 100) * amount if !tax_type.nil?
+  end
 end

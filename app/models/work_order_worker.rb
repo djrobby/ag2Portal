@@ -7,4 +7,11 @@ class WorkOrderWorker < ActiveRecord::Base
 
   validates :work_order,  :presence => true
   validates :worker,      :presence => true
+
+  #
+  # Calculated fields
+  #
+  def costs
+    hours * cost
+  end
 end

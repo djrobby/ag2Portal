@@ -1,33 +1,21 @@
 <tr>
-  <td></td>
-  <td align="right"><%= t :"activerecord.attributes.work_order.quantity" %> | <%= t :"activerecord.attributes.work_order.subtotal" %> | <%= t :"activerecord.attributes.work_order.balance" %></td>
-  <td align="right"><%= number_with_precision(order.quantity, precision: 4) unless order.quantity.blank? %></td>
-  <td></td>
+  <td align="right"><%= t :"activerecord.attributes.work_order.hours" %></td>
+  <td align="right"><%= number_with_precision(order.hours, precision: 4) unless order.hours.blank? %></td>
   <td></td>
   <td></td>
-  <td align="right"><%= number_with_precision(order.subtotal, precision: 4) unless order.subtotal.blank? %></td>
   <td></td>
-  <td align="right"><%= number_with_precision(order.balance, precision: 4) unless order.balance.blank? %></td>
 </tr>
 <tr>
+  <td align="right"><%= t :"activerecord.attributes.work_order.hours_avg" %></td>
+  <td align="right"><%= number_with_precision(order.hours_avg, precision: 4) unless order.hours_avg.blank? %></td>
   <td></td>
-  <td align="right"><%= t :"activerecord.attributes.work_order.bonus" %> | <%= t :"activerecord.attributes.work_order.taxable" %> | <%= t :"activerecord.attributes.work_order.taxes" %></td>
   <td></td>
-  <td></td>
-  <td align="right"><%= number_with_precision(order.discount_pct, precision: 2) unless order.discount_pct.blank? %></td>
-  <td align="right"><%= number_with_precision(order.bonus, precision: 4) unless order.bonus.blank? %></td>
-  <td align="right"><%= number_with_precision(order.taxable, precision: 4) unless order.taxable.blank? %></td>
-  <td align="right"><%= number_with_precision(order.taxes, precision: 4) unless order.taxes.blank? %></td>
   <td></td>
 </tr>
 <tr class="totals">
-  <td></td>
-  <td align="right"><%= t :"activerecord.attributes.work_order.total" %></td>
-  <td></td>
+  <td align="right"><%= t :"activerecord.attributes.work_order.worker_costs" %></td>
   <td></td>
   <td></td>
-  <td></td>
-  <td align="right"><%= number_with_precision(order.total, precision: 4) unless order.total.blank? %></td>
-  <td></td>
+  <td align="right"><%= number_with_precision(order.worker_costs, precision: 4) unless order.worker_costs.blank? %></td>
   <td></td>
 </tr>
