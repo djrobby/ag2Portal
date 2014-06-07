@@ -13,11 +13,12 @@ function remove_fields(link) {
     $(link).closest(".fields").hide();
 }
 // Display modal to add new item
-function add_fields(link, association, content, sel2NoMatches) {
+function add_fields(link, association, modal, content, sel2NoMatches) {
     var new_id = new Date().getTime();
     var regex = new RegExp("new_" + association, "g");
     $(link).parent().after(content.replace(regex, new_id));
-    $('#new-item-fields').modal('show');
+    //$('#new-item-fields').modal('show');
+    $('#' + modal).modal('show');
     // Special datepicker for #new-item-fields
     $('.idatepicker').datepicker({
       format : 'dd/mm/yyyy',

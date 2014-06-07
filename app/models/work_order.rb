@@ -15,6 +15,7 @@ class WorkOrder < ActiveRecord::Base
                   :remarks, :description, :petitioner, :master_order_id, :organization_id,
                   :in_charge_id, :reported_at, :approved_at, :certified_at, :posted_at,
                   :location, :pub_record
+  attr_accessible :work_order_items_attributes, :work_order_workers_attributes
 
   has_many :work_order_items, dependent: :destroy
   has_many :work_order_workers, dependent: :destroy
@@ -23,11 +24,21 @@ class WorkOrder < ActiveRecord::Base
   has_many :receipt_note_items
   has_many :supplier_invoices
 
+  # Nested attributes
+  accepts_nested_attributes_for :work_order_items,                                 
+                                :reject_if => :all_blank,
+                                :allow_destroy => true
+  accepts_nested_attributes_for :work_order_workers,                                 
+                                :reject_if => :all_blank,
+                                :allow_destroy => true
+
   # Self join
   has_many :suborders, class_name: 'WorkOrder', foreign_key: 'master_order_id'
   belongs_to :master_order, class_name: 'WorkOrder'
   
   has_paper_trail
+
+  validates_associated :work_order_items, :work_order_workers
 
   validates :order_no,          :presence => true,
                                 :length => { :in => 7..17 },

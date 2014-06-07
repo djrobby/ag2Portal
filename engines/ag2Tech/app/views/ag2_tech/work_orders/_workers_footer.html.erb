@@ -3,12 +3,10 @@
   <td align="right"><%= number_with_precision(order.hours, precision: 4) unless order.hours.blank? %></td>
   <td></td>
   <td></td>
-  <td></td>
 </tr>
 <tr>
   <td align="right"><%= t :"activerecord.attributes.work_order.hours_avg" %></td>
   <td align="right"><%= number_with_precision(order.hours_avg, precision: 4) unless order.hours_avg.blank? %></td>
-  <td></td>
   <td></td>
   <td></td>
 </tr>
@@ -17,5 +15,4 @@
   <td></td>
   <td></td>
   <td align="right"><%= number_with_precision(order.worker_costs, precision: 4) unless order.worker_costs.blank? %></td>
-  <td></td>
 </tr>

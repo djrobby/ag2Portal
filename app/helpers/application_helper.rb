@@ -37,9 +37,10 @@ module ApplicationHelper
   # name:         The name of the link - ie. t("ag2_purchase.purchase_orders.btn_new_item")
   # f:            The parent form - ie. f (usually the form in _form.html.erb)
   # association:  The association data object defined on parent model with accepts_nested_attributes_for (usually items) - ie. :purchase_order_items
-  # fields_partial: Partial view name, the one in _item_fields.html.erb - ie. "item_fields"
+  # fields_partial: Partial view name, the one in _item_fields.html.erb - ie. "item_fields" that contains the modal window
+  # modal:          Div id (modal window)
   # options: class: "btn btn-warning", title: t("ag2_purchase.purchase_orders.add_item")
-  def link_to_add_fields(name, f, association, fields_partial, options = {})
+  def link_to_add_fields(name, f, association, fields_partial, modal, options = {})
     sel2NoMatch = t("select2.no_matches")
     new_object = f.object.class.reflect_on_association(association).klass.new
     #fields = f.fields_for(association, new_object, :child_index => "new_#{ association }", :onsubmit => "return $(this.)validate();") do |builder|
@@ -49,6 +50,6 @@ module ApplicationHelper
       #render(association.to_s.singularize + "_fields", :f => builder)
     end
     #link_to_function(name, "add_fields(this, \"#{ association }\", \"#{ escape_javascript(fields) }\")", options)
-    link_to_function(name, "add_fields(this, \"#{ fields_partial }\", \"#{ escape_javascript(fields) }\", \"#{ sel2NoMatch }\")", options)
+    link_to_function(name, "add_fields(this, \"#{ fields_partial }\", \"#{ modal }\", \"#{ escape_javascript(fields) }\", \"#{ sel2NoMatch }\")", options)
   end
 end

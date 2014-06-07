@@ -148,23 +148,15 @@
   });
 </script>
 
-<table id="items-table" class="table table-condensed table-striped shrinked fixed">
-  <!-- product -->
-  <col width="16%" />
-  <!-- description -->
-  <col width="26%" />
-  <!-- quantity -->
-  <col width="9%" />
-  <!-- price -->
-  <col width="9%" />
-  <!-- discount_pct -->
-  <col width="8%" />
-  <!-- discount -->
-  <col width="9%" />
-  <!-- amount -->
-  <col width="9%" />
-  <!-- tax -->
-  <col width="9%" />
+<table id="workers-table" class="table table-condensed table-striped shrinked fixed">
+  <!-- worker -->
+  <col width="65%" />
+  <!-- hours -->
+  <col width="10%" />
+  <!-- cost -->
+  <col width="10%" />
+  <!-- costs -->
+  <col width="10%" />
   <!-- button -->
   <col width="5%" />
   <thead>
@@ -176,21 +168,10 @@
   <tbody>
     <%= f.simple_fields_for :work_order_workers, defaults: { input_html: { class: 'sub-form' } } do |i| %>
     <tr class="fields">
-      <td><%= i.association :product, label: false, wrapper: false, collection: Product.all(order: 'product_code'), input_html: { class: 'isel2 fnt-product' } %></td>
-      <td><%= i.input :description, label: false, wrapper: false, input_html: { onkeyup: "caps(this)", class: 'sub-alfanumeric-text-field fnt-description', maxlength: 40 } %></td>
-      <td style="display:none;"><%= i.input :code, label: false, wrapper: false, input_html: { class: 'sub-alfanumeric-text-field fnt-code' } %></td>
-      <td><%= i.input :quantity, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.quantity, precision: 4) if i.object.quantity), class: 'sub-number-text-field fnt-quantity' } %></td>
-      <td><%= i.input :price, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.price, precision: 4) if i.object.price), class: 'sub-number-text-field fnt-price' } %></td>
-      <td><%= i.input :discount_pct, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.discount_pct, precision: 2) if i.object.discount_pct), class: 'sub-number-text-field fnt-discount-pct' } %></td>
-      <td><%= i.input :discount, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.discount, precision: 4) if i.object.discount), class: 'sub-number-text-field fnt-discount' } %></td>
-      <td><%= i.input :amount, disabled: true, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.amount, precision: 4) if i.object.amount), class: 'sub-number-text-field sub-disabled-field fnt-amount' } %></td>
-      <td style="display:none;"><%= i.association :tax_type, label: false, wrapper: false, input_html: { class: 'sub-alfanumeric-text-field fnt-tax-type' } %></td>
-      <td><%= i.input :tax, disabled: true, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.tax, precision: 4) if i.object.tax), class: 'sub-number-text-field sub-disabled-field fnt-tax' } %></td>
-      <td style="display:none;"><%= i.input :delivery_date, label: false, wrapper: false, as: :string, input_html: { class: 'sub-alfanumeric-text-field fnt-delivery-date' } %></td>
-      <td style="display:none;"><%= i.association :work_order, label: false, wrapper: false, input_html: { class: 'isel2 fnt-work-order' } %></td>
-      <td style="display:none;"><%= i.association :project, label: false, wrapper: false, input_html: { class: 'isel2 fnt-project' } %></td>
-      <td style="display:none;"><%= i.association :charge_account, label: false, wrapper: false, input_html: { class: 'isel2 fnt-charge-account' } %></td>
-      <td style="display:none;"><%= i.association :store, label: false, wrapper: false, input_html: { class: 'isel2 fnt-store' } %></td>
+      <td><%= i.association :worker, label: false, wrapper: false, collection: Worker.all(order: 'full_name'), input_html: { class: 'isel2 fnt-worker' } %></td>
+      <td><%= i.input :hours, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.hours, precision: 4) if i.object.hours), class: 'sub-number-text-field fnt-hours' } %></td>
+      <td><%= i.input :cost, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.cost, precision: 4) if i.object.cost), class: 'sub-number-text-field fnt-cost' } %></td>
+      <td><%= i.input :costs, disabled: true, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.costs, precision: 4) if i.object.costs), class: 'sub-number-text-field sub-disabled-field fnt-costs' } %></td>
       <% if @breadcrumb == 'create' || @breadcrumb == 'update' %>
       <td><%= link_to_remove_fields('<i class="icon-trash"></i>'.html_safe, i) %></td>
       <% end %>

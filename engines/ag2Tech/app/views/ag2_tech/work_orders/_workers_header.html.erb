@@ -3,5 +3,7 @@
   <th align="right"><%= t "activerecord.attributes.work_order_worker.hours" %></th>
   <th align="right"><%= t "activerecord.attributes.work_order_worker.cost" %></th>
   <th align="right"><%= t "activerecord.attributes.work_order_worker.costs" %></th>
+  <% if @breadcrumb == 'create' || @breadcrumb == 'update' %>
   <th></th>
+  <% end %>
 </tr>

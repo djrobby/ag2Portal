@@ -7,5 +7,7 @@
   <th align="right"><%= t "activerecord.attributes.work_order_item.price_c" %></th>
   <th align="right"><%= t "activerecord.attributes.work_order_item.amount_c" %></th>
   <th align="right"><%= t "activerecord.attributes.work_order_item.tax_c" %></th>
+  <% if @breadcrumb == 'create' || @breadcrumb == 'update' %>
   <th></th>
+  <% end %>
 </tr>

@@ -15,6 +15,7 @@ class PurchaseOrder < ActiveRecord::Base
   has_many :purchase_order_items, dependent: :destroy
   has_many :receipt_note_items
 
+  # Nested attributes
   accepts_nested_attributes_for :purchase_order_items,                                 
                                 :reject_if => :all_blank,
                                 :allow_destroy => true

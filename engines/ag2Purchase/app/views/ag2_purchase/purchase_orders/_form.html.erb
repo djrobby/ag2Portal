@@ -235,13 +235,14 @@
         <h4><%= t 'ag2_purchase.purchase_orders.items_info' %></h4>
       </td>
       <td class="form-td-two right-winged">
-        <%= link_to_add_fields(t("ag2_purchase.purchase_orders.btn_new_item"), f, :purchase_order_items, "item_fields", class: "btn btn-warning fnt-new-btn") %>
+        <%= link_to_add_fields(t("ag2_purchase.purchase_orders.btn_new_item"), f, :purchase_order_items, "item_fields", "new-item-fields", class: "btn btn-warning fnt-new-btn") %>
       </td>
     </tr>
   </tbody>
 </table>
 <%= render 'items_table', f: f %>
-<!-- Totals in items_table_footer -->
+<!-- Remarks -->
+<%= f.input :remarks, as: :text, input_html: { class: 'x-large-text-field', rows: 3 }, label_html: { class: 'form-label' } %>
 <!-- Buttons -->
 <%= f.button :submit, class: 'btn-primary', id: 'submit_btn' %>
 <% end %>

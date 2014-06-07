@@ -12,7 +12,7 @@ es:
     attributes:
       work_order:
         order_no: "Nº"
-        remarks: "Comentarios"
+        remarks: "Observaciones"
         description: "Descripción"
         work_order_type: "Tipo"
         work_order_type_id: "Tipo"

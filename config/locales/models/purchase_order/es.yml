@@ -19,7 +19,7 @@ es:
         order_status: "Estado"
         order_status_id: "Estado"
         order_date: "Fecha"
-        remarks: "Comentarios"
+        remarks: "Observaciones"
         delivery_avg: "Promedio entrega est."
         discount_pct: "Bonificación %"
         discount: "Bonficación €"
