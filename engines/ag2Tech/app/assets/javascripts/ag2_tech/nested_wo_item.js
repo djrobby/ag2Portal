@@ -16,7 +16,8 @@ var wo_itemFieldsUI = {
         };
 
         $('#addButton').on('click', function(e) {
-            var isValid = $('#new-item-fields').validate(false, validationSettings);
+            //var isValid = $('#new-item-fields').validate(false, validationSettings);
+            var isValid = $(wo_cfg.formId).validate(false, validationSettings);
             if(!isValid) {
                 e.stopPropagation();
                 return false;
@@ -60,7 +61,7 @@ var wo_formHandler = {
     // Public method for hiding the data entry fields.
     hideForm: function() {
         // Update and display totals
-        $('#items-table').trigger('totals');
+        $(wo_cfg.tableId).trigger('totals');
         // Hide modal
         $(wo_cfg.formId).modal('hide');
     }
@@ -97,12 +98,10 @@ var wo_rowBuilder = function() {
               css = css + ' string';
               $(this).removeAttr('class');
               $(this).addClass(css);
-              // Add new column to row
+              // Add new column to row...
               var td = $('<td/>').append($(this));
-              if (this.id === 'fnt-code' || this.id === 'fnt-delivery-date' ||
-                this.id === 'fnt-work-order' || this.id === 'fnt-project' ||
-                this.id === 'fnt-charge-account' || this.id === 'fnt-store' ||
-                this.id === 'fnt-tax-type') {
+              // ...hiding this if applicable
+              if (this.id === 'fnt-tax-type') {
                 td = $('<td style="display:none;"/>').append($(this));
               }
               // If destroy field, add delete link also
@@ -112,9 +111,6 @@ var wo_rowBuilder = function() {
               td.appendTo(newRow);
             }
         });
-        // link
-        //var td = $('<td/>').append(newLink);
-        //td.appendTo(newRow);
 
         return newRow;
     };

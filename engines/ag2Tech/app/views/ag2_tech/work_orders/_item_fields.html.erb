@@ -1,23 +1,7 @@
 <script>
   $(document).ready(function() {
-    // Disable calculated fields
-    //$('#fnt-amount').prop('readonly', true);
-    //$('#fnt-tax').prop('readonly', true);
-    
     // Retrieves parent values
     var _f = $("#fnt-product").closest('form')[0];
-    var _o = $('select#purchase_order_work_order_id :selected').val();
-    if (_o == "") _o = "0";
-    $('select#fnt-work-order').val(_o);
-    var _p = $('select#purchase_order_project_id :selected').val();
-    if (_p == "") _p = "0";
-    $('select#fnt-project').val(_p);
-    var _c = $('select#purchase_order_charge_account_id :selected').val();
-    if (_c == "") _c = "0";
-    $('select#fnt-charge-account').val(_c);
-    var _s = $('select#purchase_order_store_id :selected').val();
-    if (_s == "") _s = "0";
-    $('select#fnt-store').val(_s);
   });
 
   jQuery(function($) {
@@ -33,122 +17,18 @@
       // Right formatted for passing as REST parameter
       qty = parseInt(right_number(qty, 4) * 10000);
       //qty = qty.replace(",", ".") * 10000;
-      jQuery.getJSON('po_update_description_prices_from_product/' + product + '/' + qty, function(data) {
+      jQuery.getJSON('wo_update_description_prices_from_product/' + product + '/' + qty, function(data) {
         $("#fnt-description").val(data.description);
+        $("#fnt-cost").val(data.cost);
+        $("#fnt-costs").val(data.costs);
         $("#fnt-price").val(data.price);
         $("#fnt-amount").val(data.amount);
         $("#fnt-tax-type").val(data.type);
         $("#fnt-tax").val(data.tax);
-        $('#fnt-discount-pct').val("0,00");
-        $('#fnt-discount').val("0,0000");
       });
       return false;
     });
 
-    // when the #fnt-work-order field changes
-    $("#fnt-work-order").change(function() {
-      // make a POST call and replace the content
-      var order = $('select#fnt-work-order :selected').val();
-      if (order == "")
-        order = "0";
-      jQuery.getJSON('po_update_project_from_order/' + order, function(data) {
-        var p = data.project;
-        var c = data.charge_account;
-        var s = data.store;
-        $("#fnt-project").html("");
-        $("#fnt-project").select2("val", "");
-        $("#fnt-project").append($('<option></option>').val("").html(""));
-        if (!p.length) {
-          $.each(data, function(id, option) {
-            if (id == 'project') {
-              $("#fnt-project").append($('<option></option>').val(option.id).html(option.project_code + " " + option.name));
-            }
-          });
-        } else {
-          $.each(p, function(id, option) {
-            $("#fnt-project").append($('<option></option>').val(option.id).html(option.project_code + " " + option.name));
-          });
-        }
-        $("#fnt-charge-account").html("");
-        $("#fnt-charge-account").select2("val", "");
-        $("#fnt-charge-account").append($('<option></option>').val("").html(""));
-        if (!c.length) {
-          $.each(data, function(id, option) {
-            if (id == 'charge_account') {
-              $("#fnt-charge-account").append($('<option></option>').val(option.id).html(option.account_code + " " + option.name));
-            }
-          });
-        } else {
-          $.each(c, function(id, option) {
-            $("#fnt-charge-account").append($('<option></option>').val(option.id).html(option.account_code + " " + option.name));
-          });
-        }
-        $("#fnt-store").html("");
-        $("#fnt-store").select2("val", "");
-        $("#fnt-store").append($('<option></option>').val("").html(""));
-        if (!s.length) {
-          $.each(data, function(id, option) {
-            if (id == 'store') {
-              $("#fnt-store").append($('<option></option>').val(option.id).html(option.name));
-            }
-          });
-        } else {
-          $.each(s, function(id, option) {
-            $("#fnt-store").append($('<option></option>').val(option.id).html(option.name));
-          });
-        }
-      });
-      return false;
-    });
-
-    // when the #fnt-project field changes
-    $("#fnt-project").change(function() {
-      // make a POST call and replace the content
-      var order = $('select#fnt-project :selected').val();
-      if (order == "")
-        order = "0";
-      jQuery.getJSON('po_update_charge_account_from_project/' + order, function(data) {
-        var c = data.charge_account;
-        var s = data.store;
-        $("#fnt-charge-account").html("");
-        $("#fnt-charge-account").select2("val", "");
-        $("#fnt-charge-account").append($('<option></option>').val("").html(""));
-        if (!c.length) {
-          $.each(data, function(id, option) {
-            if (id == 'charge_account') {
-              $("#fnt-charge-account").append($('<option></option>').val(option.id).html(option.account_code + " " + option.name));
-            }
-          });
-        } else {
-          $.each(c, function(id, option) {
-            $("#fnt-charge-account").append($('<option></option>').val(option.id).html(option.account_code + " " + option.name));
-          });
-        }
-        $("#fnt-store").html("");
-        $("#fnt-store").select2("val", "");
-        $("#fnt-store").append($('<option></option>').val("").html(""));
-        if (!s.length) {
-          $.each(data, function(id, option) {
-            if (id == 'store') {
-              $("#fnt-store").append($('<option></option>').val(option.id).html(option.name));
-            }
-          });
-        } else {
-          $.each(s, function(id, option) {
-            $("#fnt-store").append($('<option></option>').val(option.id).html(option.name));
-          });
-        }
-        /*
-        $("#fnt-charge-account").html("");
-        $("#fnt-charge-account").select2("val", "");
-        $("#fnt_charge-account").append($('<option></option>').val("").html(""));
-        $.each(data, function(id, option) {
-          $("#fnt-charge-account").append($('<option></option>').val(option.id).html(option.account_code + " " + option.name));
-        });
-         */
-      });
-      return false;
-    });
 
     // when the #fnt-quantity field changes
     $("#fnt-quantity").change(function() {
@@ -166,16 +46,8 @@
       return false;
     });
 
-    // when the #fnt-discount-pct field changes
-    $("#fnt-discount-pct").change(function() {
-      // preserve the current object
-      var _this = (this);
-      recalculate(_this);
-      return false;
-    });
-
-    // when the #fnt-discount field changes
-    $("#fnt-discount").change(function() {
+    // when the #fnt-cost field changes
+    $("#fnt-cost").change(function() {
       // preserve the current object
       var _this = (this);
       recalculate(_this);
@@ -185,6 +57,9 @@
     // Recalculate amounts & prices
     function recalculate(_this) {
       // make a POST call and replace the content
+      var price = $('#fnt-cost').val();
+      if (cost == "")
+        cost = "0";
       var price = $('#fnt-price').val();
       if (price == "")
         price = "0";
@@ -194,24 +69,17 @@
       var tax_type = $('#fnt-tax-type').val();
       if (tax_type == "")
         tax_type = "0";
-      var discount_p = $('#fnt-discount-pct').val();
-      if (discount_p == "")
-        discount_p = "0";
-      var discount = $('#fnt-discount').val();
-      if (discount == "")
-        discount = "0";
       // Right formatted for passing as REST parameter
+      cost = parseInt(right_number(cost, 4) * 10000);
       price = parseInt(right_number(price, 4) * 10000);
       qty = parseInt(right_number(qty, 4) * 10000);
-      discount_p = parseInt(right_number(discount_p, 2) * 100);
-      discount = parseInt(right_number(discount, 4) * 10000);
-      jQuery.getJSON('po_update_amount_from_price_or_quantity/' + price + '/' + qty + '/' + tax_type + '/' + discount_p + '/' + discount, function(data) {
-        $('#fnt-price').val(data.price);
+      jQuery.getJSON('wo_update_amount_and_costs_from_price_or_quantity/' + cost + '/' + price + '/' + qty + '/' + tax_type, function(data) {
         $('#fnt-quantity').val(data.quantity);
+        $('#fnt-cost').val(data.cost);
+        $('#fnt-costs').val(data.costs);
+        $('#fnt-price').val(data.price);
         $('#fnt-amount').val(data.amount);
         $('#fnt-tax').val(data.tax);
-        $('#fnt-discount-pct').val(data.discountp);
-        $('#fnt-discount').val(data.discount);
       })
     }
   })

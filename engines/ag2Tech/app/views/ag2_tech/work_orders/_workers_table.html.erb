@@ -8,89 +8,59 @@
     });
 
     // Trigger to display totals at table foot
-    $('#items-table').bind('totals', function(event) {
+    $('#workers-table').bind('totals', function(event) {
       // Sum necessary values from table rows
-      var qty = 0;
-      var amount = 0;
-      var tax = 0;
+      var hours = 0;
+      var costs = 0;
+      var count = 0;
       $('tr.fields:visible').each(function() {
-        qty += parseFloat(right_number($(this).find('input.fnt-quantity').val(), 4));
-        amount += parseFloat(right_number($(this).find('input.fnt-amount').val(), 4));
-        tax += parseFloat(right_number($(this).find('input.fnt-tax').val(), 4));
+        hours += parseFloat(right_number($(this).find('input.fnt-hours').val(), 4));
+        costs += parseFloat(right_number($(this).find('input.fnt-costs').val(), 4));
+        count += 1;
       });
-      qty = parseInt(right_number(qty.toString(), 4) * 10000);
-      amount = parseInt(right_number(amount.toString(), 4) * 10000);
-      tax = parseInt(right_number(tax.toString(), 4) * 10000);
-      // Bonus
-      var discount_p = $('#purchase_order_discount_pct').val();
-      if (discount_p == "")
-        discount_p = "0";
-      discount_p = parseInt(right_number(discount_p, 2) * 100);
-      jQuery.getJSON('po_totals/' + qty + '/' + amount + '/' + tax + '/' + discount_p, function(data) {
-        document.getElementById('foot-quantity').innerHTML = data.qty;
-        document.getElementById('foot-amount').innerHTML = data.amount;
-        document.getElementById('foot-tax').innerHTML = data.tax;
-        document.getElementById('foot-discount').innerHTML = data.discount;
-        document.getElementById('foot-taxable').innerHTML = data.taxable;
+      hours = parseInt(right_number(hours.toString(), 4) * 10000);
+      costs = parseInt(right_number(costs.toString(), 4) * 10000);
+      jQuery.getJSON('wo_worker_totals/' + hours + '/' + costs + '/' + count, function(data) {
+        document.getElementById('foot-hours').innerHTML = data.hours;
+        document.getElementById('foot-hours-avg').innerHTML = data.average;
         document.getElementById('foot-total').innerHTML = data.total;
       });
     });
     // Update and display totals
-    $('#items-table').trigger('totals');
+    $('#workers-table').trigger('totals');
   }); 
 
   jQuery(function($) {
-    // when the .fnt-product field changes
-    $(".fnt-product").change(function() {
+    // when the .fnt-worker field changes
+    $(".fnt-worker").change(function() {
       // preserve the current object
       var _this = (this);
       // make a POST call and replace the content
-      var product = $(this).closest('tr').find('select.fnt-product :selected').val();
-      if (product == "")
-        product = "0";
-      var qty = $(this).closest('tr').find('.fnt-quantity').val();
-      if (qty == "")
-        qty = "0";
+      var worker = $(this).closest('tr').find('select.fnt-worker :selected').val();
+      if (worker == "")
+        worker = "0";
+      var hours = $(this).closest('tr').find('.fnt-hours').val();
+      if (hours == "")
+        hours = "0";
       // Right formatted for passing as REST parameter
-      qty = parseInt(right_number(qty, 4) * 10000);
-      jQuery.getJSON('po_update_description_prices_from_product/' + product + '/' + qty, function(data) {
-        $(_this).closest('tr').find('.fnt-description').val(data.description);
-        $(_this).closest('tr').find('.fnt-price').val(data.price);
-        $(_this).closest('tr').find('.fnt-amount').val(data.amount);
-        $(_this).closest('tr').find('.fnt-tax').val(data.tax);
-        $(_this).closest('tr').find(".fnt-tax-type").val(data.type);
-        $(_this).closest('tr').find('.fnt-discount-pct').val("0,00");
-        $(_this).closest('tr').find('.fnt-discount').val("0,0000");
+      hours = parseInt(right_number(hours, 4) * 10000);
+      jQuery.getJSON('wo_update_costs_from_worker/' + worker + '/' + hours, function(data) {
+        $(_this).closest('tr').find('.fnt-cost').val(data.cost);
+        $(_this).closest('tr').find('.fnt-costs').val(data.costs);
       });
       return false;
     });
 
-    // when the .fnt-quantity field changes
-    $(".fnt-quantity").change(function() {
+    // when the .fnt-hours field changes
+    $(".fnt-hours").change(function() {
       // preserve the current object
       var _this = (this);
       recalculate(_this);
       return false;
     });
 
-    // when the .fnt-price field changes
-    $(".fnt-price").change(function() {
-      // preserve the current object
-      var _this = (this);
-      recalculate(_this);
-      return false;
-    });
-
-    // when the .fnt-discount-pct field changes
-    $(".fnt-discount-pct").change(function() {
-      // preserve the current object
-      var _this = (this);
-      recalculate(_this);
-      return false;
-    });
-
-    // when the .fnt-discount field changes
-    $(".fnt-discount").change(function() {
+    // when the .fnt-cost field changes
+    $(".fnt-cost").change(function() {
       // preserve the current object
       var _this = (this);
       recalculate(_this);
@@ -100,35 +70,21 @@
     // Recalculate amounts & prices
     function recalculate(_this) {
       // make a POST call and replace the content
-      var price = $(_this).closest('tr').find('.fnt-price').val();
-      if (price == "")
-        price = "0";
-      var qty = $(_this).closest('tr').find('.fnt-quantity').val();
-      if (qty == "")
-        qty = "0";
-      var tax_type = $(_this).closest('tr').find('.fnt-tax-type').val();
-      if (tax_type == "")
-        tax_type = "0";
-      var discount_p = $(_this).closest('tr').find('.fnt-discount-pct').val();
-      if (discount_p == "")
-        discount_p = "0";
-      var discount = $(_this).closest('tr').find('.fnt-discount').val();
-      if (discount == "")
-        discount = "0";
+      var cost = $(_this).closest('tr').find('.fnt-cost').val();
+      if (cost == "")
+        cost = "0";
+      var hours = $(_this).closest('tr').find('.fnt-hours').val();
+      if (hours == "")
+        hours = "0";
       // Right formatted for passing as REST parameter
-      price = parseInt(right_number(price, 4) * 10000);
-      qty = parseInt(right_number(qty, 4) * 10000);
-      discount_p = parseInt(right_number(discount_p, 2) * 100);
-      discount = parseInt(right_number(discount, 4) * 10000);
-      jQuery.getJSON('po_update_amount_from_price_or_quantity/' + price + '/' + qty + '/' + tax_type + '/' + discount_p + '/' + discount, function(data) {
-        $(_this).closest('tr').find('.fnt-price').val(data.price);
-        $(_this).closest('tr').find('.fnt-quantity').val(data.quantity);
-        $(_this).closest('tr').find('.fnt-amount').val(data.amount);
-        $(_this).closest('tr').find('.fnt-tax').val(data.tax);
-        $(_this).closest('tr').find('.fnt-discount-pct').val(data.discountp);
-        $(_this).closest('tr').find('.fnt-discount').val(data.discount);
+      cost = parseInt(right_number(cost, 4) * 10000);
+      hours = parseInt(right_number(hours, 4) * 10000);
+      jQuery.getJSON('wo_update_costs_from_cost_or_hours/' + cost + '/' + hours, function(data) {
+        $(_this).closest('tr').find('.fnt-cost').val(data.cost);
+        $(_this).closest('tr').find('.fnt-hours').val(data.hours);
+        $(_this).closest('tr').find('.fnt-costs').val(data.costs);
         // Update and display totals
-        $('#items-table').trigger('totals');
+        $('#workers-table').trigger('totals');
       });
     }
 
@@ -142,7 +98,7 @@
     $(".icon-trash").click(function() {
       remove_fields(this);
       // Update and display totals
-      $('#items-table').trigger('totals');
+      $('#workers-table').trigger('totals');
       return false;
     });
   });

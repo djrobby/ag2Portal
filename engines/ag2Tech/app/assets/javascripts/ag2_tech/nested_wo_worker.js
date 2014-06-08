@@ -16,7 +16,7 @@ var wo_workerFieldsUI = {
         };
 
         $('#addWorkerButton').on('click', function(e) {
-            var isValid = $('#new-worker-fields').validate(false, validationSettings);
+            var isValid = $(wo_w_cfg.formId).validate(false, validationSettings);
             if(!isValid) {
                 e.stopPropagation();
                 return false;
@@ -60,7 +60,7 @@ var wo_w_formHandler = {
     // Public method for hiding the data entry fields.
     hideForm: function() {
         // Update and display totals
-        $('#workers-table').trigger('totals');
+        $(wo_w_cfg.tableId).trigger('totals');
         // Hide modal
         $(wo_w_cfg.formId).modal('hide');
     }
@@ -98,12 +98,12 @@ var wo_w_rowBuilder = function() {
               $(this).addClass(css);
               // Add new column to row
               var td = $('<td/>').append($(this));
-              if (this.id === 'fnt-code' || this.id === 'fnt-delivery-date' ||
-                this.id === 'fnt-work-order' || this.id === 'fnt-project' ||
-                this.id === 'fnt-charge-account' || this.id === 'fnt-store' ||
-                this.id === 'fnt-tax-type') {
+              // ...hiding this if applicable
+              /*
+              if (this.id === 'fnt-tax-type') {
                 td = $('<td style="display:none;"/>').append($(this));
               }
+              */
               // If destroy field, add delete link also
               if (this.id.indexOf("_destroy") != -1) {
                 var td = $('<td/>').append($(this), newLink);

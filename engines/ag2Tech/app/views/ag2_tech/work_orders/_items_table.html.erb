@@ -11,27 +11,25 @@
     $('#items-table').bind('totals', function(event) {
       // Sum necessary values from table rows
       var qty = 0;
+      var costs = 0;
       var amount = 0;
       var tax = 0;
       $('tr.fields:visible').each(function() {
         qty += parseFloat(right_number($(this).find('input.fnt-quantity').val(), 4));
+        costs += parseFloat(right_number($(this).find('input.fnt-costs').val(), 4));
         amount += parseFloat(right_number($(this).find('input.fnt-amount').val(), 4));
         tax += parseFloat(right_number($(this).find('input.fnt-tax').val(), 4));
       });
       qty = parseInt(right_number(qty.toString(), 4) * 10000);
+      costs = parseInt(right_number(costs.toString(), 4) * 10000);
       amount = parseInt(right_number(amount.toString(), 4) * 10000);
       tax = parseInt(right_number(tax.toString(), 4) * 10000);
-      // Bonus
-      var discount_p = $('#purchase_order_discount_pct').val();
-      if (discount_p == "")
-        discount_p = "0";
-      discount_p = parseInt(right_number(discount_p, 2) * 100);
-      jQuery.getJSON('po_totals/' + qty + '/' + amount + '/' + tax + '/' + discount_p, function(data) {
+      jQuery.getJSON('wo_item_totals/' + qty + '/' + amount + '/' + costs + '/' + tax, function(data) {
         document.getElementById('foot-quantity').innerHTML = data.qty;
+        document.getElementById('foot-costs').innerHTML = data.costs;
         document.getElementById('foot-amount').innerHTML = data.amount;
-        document.getElementById('foot-tax').innerHTML = data.tax;
-        document.getElementById('foot-discount').innerHTML = data.discount;
         document.getElementById('foot-taxable').innerHTML = data.taxable;
+        document.getElementById('foot-tax').innerHTML = data.tax;
         document.getElementById('foot-total').innerHTML = data.total;
       });
     });
@@ -53,14 +51,14 @@
         qty = "0";
       // Right formatted for passing as REST parameter
       qty = parseInt(right_number(qty, 4) * 10000);
-      jQuery.getJSON('po_update_description_prices_from_product/' + product + '/' + qty, function(data) {
+      jQuery.getJSON('wo_update_description_prices_from_product/' + product + '/' + qty, function(data) {
         $(_this).closest('tr').find('.fnt-description').val(data.description);
+        $(_this).closest('tr').find('.fnt-cost').val(data.cost);
+        $(_this).closest('tr').find('.fnt-costs').val(data.costs);
         $(_this).closest('tr').find('.fnt-price').val(data.price);
         $(_this).closest('tr').find('.fnt-amount').val(data.amount);
-        $(_this).closest('tr').find('.fnt-tax').val(data.tax);
         $(_this).closest('tr').find(".fnt-tax-type").val(data.type);
-        $(_this).closest('tr').find('.fnt-discount-pct').val("0,00");
-        $(_this).closest('tr').find('.fnt-discount').val("0,0000");
+        $(_this).closest('tr').find('.fnt-tax').val(data.tax);
       });
       return false;
     });
@@ -81,16 +79,8 @@
       return false;
     });
 
-    // when the .fnt-discount-pct field changes
-    $(".fnt-discount-pct").change(function() {
-      // preserve the current object
-      var _this = (this);
-      recalculate(_this);
-      return false;
-    });
-
-    // when the .fnt-discount field changes
-    $(".fnt-discount").change(function() {
+    // when the .fnt-cost field changes
+    $(".fnt-cost").change(function() {
       // preserve the current object
       var _this = (this);
       recalculate(_this);
@@ -100,6 +90,9 @@
     // Recalculate amounts & prices
     function recalculate(_this) {
       // make a POST call and replace the content
+      var cost = $(_this).closest('tr').find('.fnt-cost').val();
+      if (cost == "")
+        cost = "0";
       var price = $(_this).closest('tr').find('.fnt-price').val();
       if (price == "")
         price = "0";
@@ -109,24 +102,17 @@
       var tax_type = $(_this).closest('tr').find('.fnt-tax-type').val();
       if (tax_type == "")
         tax_type = "0";
-      var discount_p = $(_this).closest('tr').find('.fnt-discount-pct').val();
-      if (discount_p == "")
-        discount_p = "0";
-      var discount = $(_this).closest('tr').find('.fnt-discount').val();
-      if (discount == "")
-        discount = "0";
       // Right formatted for passing as REST parameter
+      cost = parseInt(right_number(cost, 4) * 10000);
       price = parseInt(right_number(price, 4) * 10000);
       qty = parseInt(right_number(qty, 4) * 10000);
-      discount_p = parseInt(right_number(discount_p, 2) * 100);
-      discount = parseInt(right_number(discount, 4) * 10000);
-      jQuery.getJSON('po_update_amount_from_price_or_quantity/' + price + '/' + qty + '/' + tax_type + '/' + discount_p + '/' + discount, function(data) {
-        $(_this).closest('tr').find('.fnt-price').val(data.price);
+      jQuery.getJSON('wo_update_amount_and_costs_from_price_or_quantity/' + cost + '/' + price + '/' + qty + '/' + tax_type, function(data) {
         $(_this).closest('tr').find('.fnt-quantity').val(data.quantity);
+        $(_this).closest('tr').find('.fnt-cost').val(data.cost);
+        $(_this).closest('tr').find('.fnt-costs').val(data.costs);
+        $(_this).closest('tr').find('.fnt-price').val(data.price);
         $(_this).closest('tr').find('.fnt-amount').val(data.amount);
         $(_this).closest('tr').find('.fnt-tax').val(data.tax);
-        $(_this).closest('tr').find('.fnt-discount-pct').val(data.discountp);
-        $(_this).closest('tr').find('.fnt-discount').val(data.discount);
         // Update and display totals
         $('#items-table').trigger('totals');
       });

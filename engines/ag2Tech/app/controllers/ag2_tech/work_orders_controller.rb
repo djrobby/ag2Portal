@@ -6,7 +6,120 @@ module Ag2Tech
     load_and_authorize_resource
     skip_load_and_authorize_resource :only => [:wo_update_account_textfield_from_project,
                                                :wo_update_worker_select_from_area,
-                                               :wo_update_petitioner_textfield_from_client]
+                                               :wo_update_petitioner_textfield_from_client,
+                                               :wo_item_totals,
+                                               :wo_worker_totals,
+                                               :wo_update_description_prices_from_product,
+                                               :wo_update_costs_from_worker]
+    # Calculate and format item totals properly
+    def wo_item_totals
+      qty = params[:qty].to_f / 10000
+      amount = params[:amount].to_f / 10000
+      costs = params[:costs].to_f / 10000
+      tax = params[:tax].to_f / 10000
+      # Taxable
+      taxable = amount
+      # Total
+      total = taxable + tax      
+      # Format output values
+      qty = number_with_precision(qty.round(4), precision: 4)
+      amount = number_with_precision(amount.round(4), precision: 4)
+      costs = number_with_precision(costs.round(4), precision: 4)
+      tax = number_with_precision(tax.round(4), precision: 4)
+      taxable = number_with_precision(taxable.round(4), precision: 4)
+      total = number_with_precision(total.round(4), precision: 4)
+      # Setup JSON hash
+      @json_data = { "qty" => qty.to_s, "costs" => costs.to_s, "amount" => amount.to_s,
+                     "tax" => tax.to_s, "taxable" => taxable.to_s, "total" => total.to_s }
+      render json: @json_data
+    end
+
+    # Calculate and format worker totals properly
+    def wo_worker_totals
+      hours = params[:hours].to_f / 10000
+      costs = params[:costs].to_f / 10000
+      count = params[:count].to_i
+      # Hours average
+      average = hours / count
+      # Total
+      total = costs      
+      # Format output values
+      hours = number_with_precision(hours.round(4), precision: 4)
+      average = number_with_precision(average.round(4), precision: 4)
+      total = number_with_precision(total.round(4), precision: 4)
+      # Setup JSON hash
+      @json_data = { "hours" => hours.to_s, "average" => average.to_s, "total" => total.to_s }
+      render json: @json_data
+    end
+
+    # Update description and prices text fields at view from product select
+    def wo_update_description_prices_from_product
+      product = params[:product]
+      description = ""
+      qty = 0
+      cost = 0
+      costs = 0
+      price = 0
+      amount = 0
+      tax_type_id = 0
+      tax_type_tax = 0
+      tax = 0
+      if product != '0'
+        @product = Product.find(product)
+        @prices = @product.purchase_prices
+        # Assignment
+        description = @product.main_description[0,40]
+        qty = params[:qty].to_f / 10000
+        cost = @product.reference_price
+        costs = qty * cost
+        price = @product.sell_price
+        amount = qty * price
+        tax_type_id = @product.tax_type.id
+        tax_type_tax = @product.tax_type.tax
+        tax = amount * (tax_type_tax / 100)
+      end
+      # Format numbers
+      cost = number_with_precision(cost.round(4), precision: 4)
+      costs = number_with_precision(costs.round(4), precision: 4)
+      price = number_with_precision(price.round(4), precision: 4)
+      amount = number_with_precision(amount.round(4), precision: 4)
+      tax = number_with_precision(tax.round(4), precision: 4)
+      # Setup JSON
+      @json_data = { "description" => description,
+                     "cost" => cost.to_s, "costs" => costs.to_s,
+                     "price" => price.to_s, "amount" => amount.to_s,
+                     "tax" => tax.to_s, "type" => tax_type_id }
+
+      respond_to do |format|
+        format.html # wo_update_description_prices_from_product.html.erb does not exist! JSON only
+        format.json { render json: @json_data }
+      end
+    end
+
+    # Update cost text fields at view from worker select
+    def wo_update_costs_from_worker
+      worker = params[:worker]
+      hours = 0
+      cost = 0
+      costs = 0
+      if worker != '0'
+        @worker = Worker.find(worker)
+        # Look for working day percentage and calculate cost per hour
+        # Assignment
+        hours = params[:hours].to_f / 10000
+        costs = hours * cost
+      end
+      # Format numbers
+      cost = number_with_precision(cost.round(4), precision: 4)
+      costs = number_with_precision(costs.round(4), precision: 4)
+      # Setup JSON
+      @json_data = { "cost" => cost.to_s, "costs" => costs.to_s }
+
+      respond_to do |format|
+        format.html # wo_update_costs_from_worker.html.erb does not exist! JSON only
+        format.json { render json: @json_data }
+      end
+    end
     
     # Update account text field at view from project select
     def wo_update_account_textfield_from_project
