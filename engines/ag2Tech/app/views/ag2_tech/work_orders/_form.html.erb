@@ -59,6 +59,7 @@
             $("#work_order_store_id").append($('<option></option>').val(option.id).html(option.name));
           });
         }
+        // In charge
         $("#work_order_in_charge_id").html("");
         $("#work_order_in_charge_id").select2("val", "");
         $("#work_order_in_charge_id").append($('<option></option>').val("").html(""));
@@ -73,7 +74,7 @@
             $("#work_order_in_charge_id").append($('<option></option>').val(option.id).html(option.last_name + ', ' + option.first_name));
           });
         }
-        //$("#work_order_charge_account_id").val(data.id);
+        // Should change #work_order_workers_worker_id
       });
       return false;
     });

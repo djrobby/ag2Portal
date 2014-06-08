@@ -117,8 +117,13 @@ module Ag2Purchase
       tax_type = params[:tax_type].to_i
       discount_p = params[:discount_p].to_f / 100
       discount = params[:discount].to_f / 10000
+      product = params[:product]
       if tax_type.blank? || tax_type == "0"
-        tax_type = Product.find(params[:product]).tax_type.id
+        if !product.blank? && product != "0"
+          tax_type = Product.find(product).tax_type.id
+        else
+          tax_type = TaxType.where('expiration IS NULL').order('id').first.id
+        end
       end
       tax = TaxType.find(tax_type).tax
       if discount_p > 0

@@ -1,7 +1,12 @@
 <script>
+  var _f = '';
+  var _p = '';
+
   $(document).ready(function() {
     // Retrieves parent values
-    var _f = $("#fnt-worker").closest('form')[0];
+    _f = $("#fnt-worker").closest('form')[0];
+    _p = $('select#work_order_project_id :selected').val();
+    if (_p == "") _p = "0";
   });
 
   jQuery(function($) {
@@ -16,7 +21,7 @@
         hours = "0";
       // Right formatted for passing as REST parameter
       hours = parseInt(right_number(hours, 4) * 10000);
-      jQuery.getJSON('wo_update_costs_from_worker/' + worker + '/' + hours, function(data) {
+      jQuery.getJSON('wo_update_costs_from_worker/' + worker + '/' + hours + '/' + _p + '/' + yy, function(data) {
         $("#fnt-cost").val(data.cost);
         $("#fnt-costs").val(data.costs);
       });
@@ -68,7 +73,7 @@
     <span class="shrinked"><%= I18n.t(:mandatory_subtitle) %></span>
   </div>
   <div class="modal-body">
-    <%= f.association :worker, collection: Worker.all(order: 'full_name'), input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-worker', data: { validation: "required", "validation-error-msg" => "#{e}" } }, label_html: { class: 'form-label' } %>
+    <%= f.association :worker, collection: @workers, input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-worker', data: { validation: "required", "validation-error-msg" => "#{e}" } }, label_html: { class: 'form-label' } %>
     <%= f.input :hours, as: :string, input_html: { value: (number_with_precision(f.object.hours, precision: 4) if f.object.hours), class: 'mid-text-field number-text-field field', id: 'fnt-hours' }, label_html: { class: 'form-label' } %>
     <%= f.input :cost, as: :string, input_html: { value: (number_with_precision(f.object.cost, precision: 4) if f.object.cost), class: 'mid-text-field number-text-field field', id: 'fnt-cost' }, label_html: { class: 'form-label' } %>
     <%= f.input :costs, disabled: true, as: :string, input_html: { value: (number_with_precision(f.object.costs, precision: 4) if f.object.costs), class: 'mid-text-field number-text-field sub-disabled-field field', id: 'fnt-costs' }, label_html: { class: 'form-label' } %>

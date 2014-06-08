@@ -73,7 +73,7 @@
       cost = parseInt(right_number(cost, 4) * 10000);
       price = parseInt(right_number(price, 4) * 10000);
       qty = parseInt(right_number(qty, 4) * 10000);
-      jQuery.getJSON('wo_update_amount_and_costs_from_price_or_quantity/' + cost + '/' + price + '/' + qty + '/' + tax_type, function(data) {
+      jQuery.getJSON('wo_update_amount_and_costs_from_price_or_quantity/' + cost + '/' + price + '/' + qty + '/' + tax_type + '/' + product, function(data) {
         $('#fnt-quantity').val(data.quantity);
         $('#fnt-cost').val(data.cost);
         $('#fnt-costs').val(data.costs);

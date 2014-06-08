@@ -10,7 +10,9 @@ module Ag2Tech
                                                :wo_item_totals,
                                                :wo_worker_totals,
                                                :wo_update_description_prices_from_product,
-                                               :wo_update_costs_from_worker]
+                                               :wo_update_costs_from_worker,
+                                               :wo_update_amount_and_costs_from_price_or_quantity,
+                                               :wo_update_costs_from_cost_or_hours]
     # Calculate and format item totals properly
     def wo_item_totals
       qty = params[:qty].to_f / 10000
@@ -99,16 +101,38 @@ module Ag2Tech
     # Update cost text fields at view from worker select
     def wo_update_costs_from_worker
       worker = params[:worker]
-      hours = 0
+      project = params[:project]
+      year = params[:year].to_i
+      hours = params[:hours].to_f / 10000
       cost = 0
       costs = 0
-      if worker != '0'
-        @worker = Worker.find(worker)
+      worker_item = nil
+      worker_salary = nil
+      if worker != '0' && project != '0'
+        @worker = Worker.find(worker) rescue nil
+        @project = Project.find(project) rescue nil
         # Look for working day percentage and calculate cost per hour
-        # Assignment
-        hours = params[:hours].to_f / 10000
-        costs = hours * cost
+        if !@worker.nil? && !@project.nil?
+          if !@project.company.blank? && !@project.office.blank?  # Company & office
+            worker_item = WorkerItem.where(worker_id: @worker, company_id: @project.company, office_id: @project.office).first
+          elsif !@project.company.blank? && @project.office.blank?  # Company
+            worker_item = WorkerItem.where(worker_id: @worker, company_id: @project.company).first
+          elsif @project.company.blank? && !@project.office.blank?  # Office
+            worker_item = WorkerItem.where(worker_id: @worker, company_id: @project.office).first
+          else  # Neither company nor office
+            worker_item = WorkerItem.where(worker_id: @worker).first
+          end
+          if !worker_item.nil?
+            worker_salary = WorkerSalary.where(worker_item_id: worker_item, year: year).first
+            if !worker_salary.nil?
+              # One year = 2080 hours
+              cost = (worker_salary.total_cost / 2080) * (worker_salary.day_pct / 100)
+            end
+          end
+        end
       end
+      # Assignment
+      costs = hours * cost
       # Format numbers
       cost = number_with_precision(cost.round(4), precision: 4)
       costs = number_with_precision(costs.round(4), precision: 4)
@@ -117,6 +141,58 @@ module Ag2Tech
 
       respond_to do |format|
         format.html # wo_update_costs_from_worker.html.erb does not exist! JSON only
+        format.json { render json: @json_data }
+      end
+    end
+
+    # Update amount and costs text fields at view (quantity or price changed)
+    def wo_update_amount_and_costs_from_price_or_quantity
+      cost = params[:cost].to_f / 10000
+      price = params[:price].to_f / 10000
+      qty = params[:qty].to_f / 10000
+      tax_type = params[:tax_type].to_i
+      product = params[:product]
+      if tax_type.blank? || tax_type == "0"
+        if !product.blank? && product != "0"
+          tax_type = Product.find(product).tax_type.id
+        else
+          tax_type = TaxType.where('expiration IS NULL').order('id').first.id
+        end
+      end
+      tax = TaxType.find(tax_type).tax
+      amount = qty * price
+      costs = qty * cost
+      tax = amount * (tax / 100)
+      qty = number_with_precision(qty.round(4), precision: 4)
+      cost = number_with_precision(cost.round(4), precision: 4)
+      costs = number_with_precision(costs.round(4), precision: 4)
+      price = number_with_precision(price.round(4), precision: 4)
+      amount = number_with_precision(amount.round(4), precision: 4)
+      tax = number_with_precision(tax.round(4), precision: 4)
+      @json_data = { "quantity" => qty.to_s,
+                     "cost" => cost.to_s, "costs" => costs.to_s, 
+                     "price" => price.to_s, "amount" => amount.to_s, 
+                     "tax" => tax.to_s }
+
+      respond_to do |format|
+        format.html # wo_update_amount_and_costs_from_price_or_quantity.html.erb does not exist! JSON only
+        format.json { render json: @json_data }
+      end
+    end
+
+    # Update costs text field at view (hours or cost changed)
+    def wo_update_costs_from_cost_or_hours
+      cost = params[:cost].to_f / 10000
+      hours = params[:hours].to_f / 10000
+      costs = qty * cost
+      hours = number_with_precision(hours.round(4), precision: 4)
+      cost = number_with_precision(cost.round(4), precision: 4)
+      costs = number_with_precision(costs.round(4), precision: 4)
+      @json_data = { "hours" => hours.to_s,
+                     "cost" => cost.to_s, "costs" => costs.to_s } 
+
+      respond_to do |format|
+        format.html # wo_update_costs_from_cost_or_hours.html.erb does not exist! JSON only
         format.json { render json: @json_data }
       end
     end

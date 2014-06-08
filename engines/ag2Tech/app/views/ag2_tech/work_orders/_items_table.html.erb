@@ -102,11 +102,14 @@
       var tax_type = $(_this).closest('tr').find('.fnt-tax-type').val();
       if (tax_type == "")
         tax_type = "0";
+      var product = $(this).closest('tr').find('select.fnt-product :selected').val();
+      if (product == "")
+        product = "0";
       // Right formatted for passing as REST parameter
       cost = parseInt(right_number(cost, 4) * 10000);
       price = parseInt(right_number(price, 4) * 10000);
       qty = parseInt(right_number(qty, 4) * 10000);
-      jQuery.getJSON('wo_update_amount_and_costs_from_price_or_quantity/' + cost + '/' + price + '/' + qty + '/' + tax_type, function(data) {
+      jQuery.getJSON('wo_update_amount_and_costs_from_price_or_quantity/' + cost + '/' + price + '/' + qty + '/' + tax_type + '/' + product, function(data) {
         $(_this).closest('tr').find('.fnt-quantity').val(data.quantity);
         $(_this).closest('tr').find('.fnt-cost').val(data.cost);
         $(_this).closest('tr').find('.fnt-costs').val(data.costs);
