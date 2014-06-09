@@ -61,7 +61,7 @@
             <% end %>
             <td><%= link_to order.order_no, order %></td>
             <td><%= order.summary %></td>
-            <td><%= order.project.full_name unless order.project.blank? %></td>
+            <td><%= order.project.project_code unless order.project.blank? %></td>
             <td><%= order.work_order_type.name unless order.work_order_type.blank? %></td>
             <td><%= order.work_order_status.name unless order.work_order_status.blank? %></td>
             <td align="center"><%= order.started_at.strftime("%d/%m/%Y") unless order.started_at.blank? %></td>

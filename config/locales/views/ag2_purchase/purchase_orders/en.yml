@@ -14,9 +14,6 @@ en:
         title: "Order"
         btn_edit: "Edit Order"
         btn_delete: "Delete Order"
-        subtable_title: "Supplier Contacts"
-        subtable_prices_title: "Supplier Prices"
-        return_to: "Back to Supplier"
         print: "Print"
       edit:
         title: "Edit Order"

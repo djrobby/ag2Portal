@@ -1,18 +1,28 @@
 <script>
   var _f = '';
   var _p = '';
+  var _date = '';
+  var _year = '';
 
   $(document).ready(function() {
     // Retrieves parent values
     _f = $("#fnt-worker").closest('form')[0];
     _p = $('select#work_order_project_id :selected').val();
     if (_p == "") _p = "0";
+    _date = $('#work_order_started_at').val();
+    if (_date == "") {
+      _date = new Date();
+    } else {
+      _date = new Date(_date);
+    }
+    _year = _date.getFullYear();
   });
 
   jQuery(function($) {
     // when the #fnt-worker field changes
     $("#fnt-worker").change(function() {
       // make a POST call and replace the content
+      var yy = 
       var worker = $('select#fnt-worker :selected').val();
       if (worker == "")
         worker = "0";
@@ -21,7 +31,7 @@
         hours = "0";
       // Right formatted for passing as REST parameter
       hours = parseInt(right_number(hours, 4) * 10000);
-      jQuery.getJSON('wo_update_costs_from_worker/' + worker + '/' + hours + '/' + _p + '/' + yy, function(data) {
+      jQuery.getJSON('wo_update_costs_from_worker/' + worker + '/' + hours + '/' + _p + '/' + _year, function(data) {
         $("#fnt-cost").val(data.cost);
         $("#fnt-costs").val(data.costs);
       });

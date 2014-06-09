@@ -16,6 +16,7 @@ en:
         title: "Work order"
         btn_edit: "Edit Work order"
         btn_delete: "Delete Work order"
+        print: "Print"
       edit:
         title: "Edit Work order"
         btn_show: "Show Work order"

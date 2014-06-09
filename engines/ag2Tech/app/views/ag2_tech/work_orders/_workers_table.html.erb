@@ -39,6 +39,14 @@
     $(".fnt-worker").change(function() {
       // preserve the current object
       var _this = (this);
+      // Obtain current year
+      var dd = $('#work_order_started_at').val();
+      if (dd == "") {
+        dd = new Date();
+      } else {
+        dd = new Date(dd);
+      }
+      var yy = _date.getFullYear();
       // make a POST call and replace the content
       project = $('select#work_order_project_id :selected').val();
       if (project == "")

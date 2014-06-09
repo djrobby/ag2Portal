@@ -108,6 +108,8 @@ module Ag2Tech
       costs = 0
       worker_item = nil
       worker_salary = nil
+      hours_year = 2080
+      
       if worker != '0' && project != '0'
         @worker = Worker.find(worker) rescue nil
         @project = Project.find(project) rescue nil
@@ -123,10 +125,14 @@ module Ag2Tech
             worker_item = WorkerItem.where(worker_id: @worker).first
           end
           if !worker_item.nil?
+            hours_year = worker_item.collective_agreement.hours rescue 2080
+            if hours_year.blank?
+              hours_year = 2080
+            end
             worker_salary = WorkerSalary.where(worker_item_id: worker_item, year: year).first
             if !worker_salary.nil?
               # One year = 2080 hours
-              cost = (worker_salary.total_cost / 2080) * (worker_salary.day_pct / 100)
+              cost = (worker_salary.total_cost / hours_year) * (worker_salary.day_pct / 100)
             end
           end
         end
