@@ -48,8 +48,8 @@ var wo_w_formHandler = {
         wo_w_rowBuilder.addRow(wo_w_cfg.getTBodySelector(), inputFields);
 
         // Apply select2 to added row selects
-        $('select.isel2').select2('destroy');
-        $('select.isel2').select2({
+        $('select.wsel2').select2('destroy');
+        $('select.wsel2').select2({
           formatNoMatches: function(m) { return sel2NoMatches; },
           dropdownCssClass: 'shrinked',
           dropdownAutoWidth: true,

@@ -14,7 +14,7 @@
       var costs = 0;
       var amount = 0;
       var tax = 0;
-      $('tr.fields:visible').each(function() {
+      $('#items-table tr.fields:visible').each(function() {
         qty += parseFloat(right_number($(this).find('input.fnt-quantity').val(), 4));
         costs += parseFloat(right_number($(this).find('input.fnt-costs').val(), 4));
         amount += parseFloat(right_number($(this).find('input.fnt-amount').val(), 4));

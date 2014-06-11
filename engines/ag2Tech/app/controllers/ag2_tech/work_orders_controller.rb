@@ -2,6 +2,7 @@ require_dependency "ag2_tech/application_controller"
 
 module Ag2Tech
   class WorkOrdersController < ApplicationController
+    include ActionView::Helpers::NumberHelper
     before_filter :authenticate_user!
     load_and_authorize_resource
     skip_load_and_authorize_resource :only => [:wo_update_account_textfield_from_project,
@@ -42,7 +43,7 @@ module Ag2Tech
       costs = params[:costs].to_f / 10000
       count = params[:count].to_i
       # Hours average
-      average = hours / count
+      average = count > 0 ? hours / count : 0
       # Total
       total = costs      
       # Format output values

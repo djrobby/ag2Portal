@@ -2,7 +2,7 @@
   var _f = '';
 
   $(document).ready(function() {
-    $('.isel2').select2({
+    $('.wsel2').select2({
       formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
       dropdownCssClass: 'shrinked',
       dropdownAutoWidth: true,
@@ -15,9 +15,11 @@
       var hours = 0;
       var costs = 0;
       var count = 0;
-      $('tr.fields:visible').each(function() {
+      $('#workers-table tr.fields:visible').each(function() {
         hours += parseFloat(right_number($(this).find('input.fnt-hours').val(), 4));
-        costs += parseFloat(right_number($(this).find('input.fnt-costs').val(), 4));
+        alert(hours);
+        costs += parseFloat(right_number($(this).find('input.fnt-costsw').val(), 4));
+        alert(costs);
         count += 1;
       });
       hours = parseInt(right_number(hours.toString(), 4) * 10000);
@@ -25,7 +27,7 @@
       jQuery.getJSON('wo_worker_totals/' + hours + '/' + costs + '/' + count, function(data) {
         document.getElementById('foot-hours').innerHTML = data.hours;
         document.getElementById('foot-hours-avg').innerHTML = data.average;
-        document.getElementById('foot-total').innerHTML = data.total;
+        document.getElementById('foot-totalw').innerHTML = data.total;
       });
     });
     // Update and display totals
@@ -60,8 +62,8 @@
       // Right formatted for passing as REST parameter
       hours = parseInt(right_number(hours, 4) * 10000);
       jQuery.getJSON('wo_update_costs_from_worker/' + worker + '/' + hours + '/' + project + '/' + yy, function(data) {
-        $(_this).closest('tr').find('.fnt-cost').val(data.cost);
-        $(_this).closest('tr').find('.fnt-costs').val(data.costs);
+        $(_this).closest('tr').find('.fnt-costw').val(data.cost);
+        $(_this).closest('tr').find('.fnt-costsw').val(data.costs);
       });
       return false;
     });
@@ -74,8 +76,8 @@
       return false;
     });
 
-    // when the .fnt-cost field changes
-    $(".fnt-cost").change(function() {
+    // when the .fnt-costw field changes
+    $(".fnt-costw").change(function() {
       // preserve the current object
       var _this = (this);
       recalculate(_this);
@@ -85,7 +87,7 @@
     // Recalculate amounts & prices
     function recalculate(_this) {
       // make a POST call and replace the content
-      var cost = $(_this).closest('tr').find('.fnt-cost').val();
+      var cost = $(_this).closest('tr').find('.fnt-costw').val();
       if (cost == "")
         cost = "0";
       var hours = $(_this).closest('tr').find('.fnt-hours').val();
@@ -95,9 +97,9 @@
       cost = parseInt(right_number(cost, 4) * 10000);
       hours = parseInt(right_number(hours, 4) * 10000);
       jQuery.getJSON('wo_update_costs_from_cost_or_hours/' + cost + '/' + hours, function(data) {
-        $(_this).closest('tr').find('.fnt-cost').val(data.cost);
+        $(_this).closest('tr').find('.fnt-costw').val(data.cost);
         $(_this).closest('tr').find('.fnt-hours').val(data.hours);
-        $(_this).closest('tr').find('.fnt-costs').val(data.costs);
+        $(_this).closest('tr').find('.fnt-costsw').val(data.costs);
         // Update and display totals
         $('#workers-table').trigger('totals');
       });
@@ -139,10 +141,10 @@
   <tbody>
     <%= f.simple_fields_for :work_order_workers, defaults: { input_html: { class: 'sub-form' } } do |i| %>
     <tr class="fields">
-      <td><%= i.association :worker, label: false, wrapper: false, collection: @workers, input_html: { class: 'isel2 fnt-worker' } %></td>
+      <td><%= i.association :worker, label: false, wrapper: false, collection: @workers, input_html: { class: 'wsel2 fnt-worker' } %></td>
       <td><%= i.input :hours, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.hours, precision: 4) if i.object.hours), class: 'sub-number-text-field fnt-hours' } %></td>
-      <td><%= i.input :cost, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.cost, precision: 4) if i.object.cost), class: 'sub-number-text-field fnt-cost' } %></td>
-      <td><%= i.input :costs, disabled: true, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.costs, precision: 4) if i.object.costs), class: 'sub-number-text-field sub-disabled-field fnt-costs' } %></td>
+      <td><%= i.input :cost, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.cost, precision: 4) if i.object.cost), class: 'sub-number-text-field fnt-costw' } %></td>
+      <td><%= i.input :costs, disabled: true, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.costs, precision: 4) if i.object.costs), class: 'sub-number-text-field sub-disabled-field fnt-costsw' } %></td>
       <% if @breadcrumb == 'create' || @breadcrumb == 'update' %>
       <td><%= link_to_remove_fields('<i class="icon-trash"></i>'.html_safe, i) %></td>
       <% end %>

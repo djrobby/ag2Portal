@@ -215,6 +215,8 @@
         $('#fnt-tax').val(data.tax);
         $('#fnt-discount-pct').val(data.discountp);
         $('#fnt-discount').val(data.discount);
+        // Update and display totals
+        $('#items-table').trigger('totals');
       })
     }
   })

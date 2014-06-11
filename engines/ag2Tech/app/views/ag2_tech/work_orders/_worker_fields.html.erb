@@ -32,8 +32,8 @@
       // Right formatted for passing as REST parameter
       hours = parseInt(right_number(hours, 4) * 10000);
       jQuery.getJSON('wo_update_costs_from_worker/' + worker + '/' + hours + '/' + _p + '/' + _year, function(data) {
-        $("#fnt-cost").val(data.cost);
-        $("#fnt-costs").val(data.costs);
+        $("#fnt-costw").val(data.cost);
+        $("#fnt-costsw").val(data.costs);
       });
       return false;
     });
@@ -46,8 +46,8 @@
       return false;
     });
 
-    // when the #fnt-cost field changes
-    $("#fnt-cost").change(function() {
+    // when the #fnt-costw field changes
+    $("#fnt-costw").change(function() {
       // preserve the current object
       var _this = (this);
       recalculate(_this);
@@ -57,7 +57,7 @@
     // Recalculate amounts & prices
     function recalculate(_this) {
       // make a POST call and replace the content
-      var cost = $('#fnt-cost').val();
+      var cost = $('#fnt-costw').val();
       if (cost == "")
         cost = "0";
       var hours = $('#fnt-hours').val();
@@ -67,10 +67,12 @@
       cost = parseInt(right_number(cost, 4) * 10000);
       hours = parseInt(right_number(hours, 4) * 10000);
       jQuery.getJSON('wo_update_costs_from_cost_or_hours/' + cost + '/' + hours, function(data) {
-        $('#fnt-cost').val(data.cost);
+        $('#fnt-costw').val(data.cost);
         $('#fnt-hours').val(data.hours);
-        $('#fnt-costs').val(data.costs);
-      })
+        $('#fnt-costsw').val(data.costs);
+        // Update and display totals
+        $('#workers-table').trigger('totals');
+      });
     }
   })
 </script>
@@ -85,8 +87,8 @@
   <div class="modal-body">
     <%= f.association :worker, collection: @workers, input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-worker', data: { validation: "required", "validation-error-msg" => "#{e}" } }, label_html: { class: 'form-label' } %>
     <%= f.input :hours, as: :string, input_html: { value: (number_with_precision(f.object.hours, precision: 4) if f.object.hours), class: 'mid-text-field number-text-field field', id: 'fnt-hours' }, label_html: { class: 'form-label' } %>
-    <%= f.input :cost, as: :string, input_html: { value: (number_with_precision(f.object.cost, precision: 4) if f.object.cost), class: 'mid-text-field number-text-field field', id: 'fnt-cost' }, label_html: { class: 'form-label' } %>
-    <%= f.input :costs, disabled: true, as: :string, input_html: { value: (number_with_precision(f.object.costs, precision: 4) if f.object.costs), class: 'mid-text-field number-text-field sub-disabled-field field', id: 'fnt-costs' }, label_html: { class: 'form-label' } %>
+    <%= f.input :cost, as: :string, input_html: { value: (number_with_precision(f.object.cost, precision: 4) if f.object.cost), class: 'mid-text-field number-text-field field', id: 'fnt-costw' }, label_html: { class: 'form-label' } %>
+    <%= f.input :costs, disabled: true, as: :string, input_html: { value: (number_with_precision(f.object.costs, precision: 4) if f.object.costs), class: 'mid-text-field number-text-field sub-disabled-field field', id: 'fnt-costsw' }, label_html: { class: 'form-label' } %>
     <%= f.input :_destroy, as: :hidden, input_html: { class: 'field' } %>
   </div>
   <div class="modal-footer">

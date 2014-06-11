@@ -57,7 +57,7 @@
     // Recalculate amounts & prices
     function recalculate(_this) {
       // make a POST call and replace the content
-      var price = $('#fnt-cost').val();
+      var cost = $('#fnt-cost').val();
       if (cost == "")
         cost = "0";
       var price = $('#fnt-price').val();
@@ -69,6 +69,9 @@
       var tax_type = $('#fnt-tax-type').val();
       if (tax_type == "")
         tax_type = "0";
+      var product = $('select#fnt-product :selected').val();
+      if (product == "")
+        product = "0";
       // Right formatted for passing as REST parameter
       cost = parseInt(right_number(cost, 4) * 10000);
       price = parseInt(right_number(price, 4) * 10000);
@@ -80,7 +83,9 @@
         $('#fnt-price').val(data.price);
         $('#fnt-amount').val(data.amount);
         $('#fnt-tax').val(data.tax);
-      })
+        // Update and display totals
+        $('#items-table').trigger('totals');
+      });
     }
   })
 </script>
