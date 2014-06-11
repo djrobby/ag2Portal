@@ -191,7 +191,7 @@ module Ag2Tech
     def wo_update_costs_from_cost_or_hours
       cost = params[:cost].to_f / 10000
       hours = params[:hours].to_f / 10000
-      costs = qty * cost
+      costs = hours * cost
       hours = number_with_precision(hours.round(4), precision: 4)
       cost = number_with_precision(cost.round(4), precision: 4)
       costs = number_with_precision(costs.round(4), precision: 4)

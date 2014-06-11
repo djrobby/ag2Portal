@@ -24,6 +24,9 @@ var wo_workerFieldsUI = {
             wo_w_formHandler.appendFields(sel2NoMatches);
             wo_w_formHandler.hideForm();
         });
+
+        $('#cancelWorkerButton').on('click', function(e) {
+        });
     }
 };
 
@@ -88,11 +91,11 @@ var wo_w_rowBuilder = function() {
             if (this.id.indexOf("s2") == -1) {
               // Apply CSS
               css = this.id;
-              if ($(this).hasClass('fsel2')) css = css + ' select isel2';
+              if ($(this).hasClass('fsel2')) css = css + ' select wsel2';
               if ($(this).hasClass('number-text-field')) css = css + ' sub-number-text-field';
               if ($(this).hasClass('sub-disabled-field')) css = css + ' sub-disabled-field';
               if (css === this.id) css = css + ' sub-alfanumeric-text-field';
-              if (css.indexOf("isel2") == -1) css = css + ' sub-bordered-input';
+              if (css.indexOf("wsel2") == -1) css = css + ' sub-bordered-input';
               css = css + ' string';
               $(this).removeAttr('class');
               $(this).addClass(css);

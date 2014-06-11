@@ -17,9 +17,7 @@
       var count = 0;
       $('#workers-table tr.fields:visible').each(function() {
         hours += parseFloat(right_number($(this).find('input.fnt-hours').val(), 4));
-        alert(hours);
         costs += parseFloat(right_number($(this).find('input.fnt-costsw').val(), 4));
-        alert(costs);
         count += 1;
       });
       hours = parseInt(right_number(hours.toString(), 4) * 10000);
@@ -116,20 +114,19 @@
       remove_fields(this);
       // Update and display totals
       $('#workers-table').trigger('totals');
-      return false;
     });
   });
 </script>
 
 <table id="workers-table" class="table table-condensed table-striped shrinked fixed">
   <!-- worker -->
-  <col width="65%" />
+  <col width="60%" />
   <!-- hours -->
-  <col width="10%" />
+  <col width="11%" />
   <!-- cost -->
-  <col width="10%" />
+  <col width="12%" />
   <!-- costs -->
-  <col width="10%" />
+  <col width="12%" />
   <!-- button -->
   <col width="5%" />
   <thead>

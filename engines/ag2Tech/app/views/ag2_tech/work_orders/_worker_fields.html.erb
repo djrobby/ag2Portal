@@ -9,7 +9,7 @@
     _f = $("#fnt-worker").closest('form')[0];
     _p = $('select#work_order_project_id :selected').val();
     if (_p == "") _p = "0";
-    _date = $('#work_order_started_at').val();
+    _date = $('#work_order_started_at').data('datepicker').date;
     if (_date == "") {
       _date = new Date();
     } else {
@@ -22,7 +22,6 @@
     // when the #fnt-worker field changes
     $("#fnt-worker").change(function() {
       // make a POST call and replace the content
-      var yy = 
       var worker = $('select#fnt-worker :selected').val();
       if (worker == "")
         worker = "0";

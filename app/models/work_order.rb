@@ -134,6 +134,10 @@ class WorkOrder < ActiveRecord::Base
     hours / work_order_workers.count
   end
   
+  def total_costs
+    item_costs + worker_costs
+  end
+  
   #
   # Records navigator
   #
