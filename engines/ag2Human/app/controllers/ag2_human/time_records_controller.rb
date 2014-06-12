@@ -16,7 +16,9 @@ module Ag2Human
       # Must use Sunspot index always for update/re-index current data
       # because data is added externally (ag2TimeRecord Client)
       # (at rails console, use Sunspot.commit!)
-      TimeRecord.index
+      @time_records = TimeRecord.all
+      @time_records.index
+      #TimeRecord.index
 
       @search = TimeRecord.search do
         if !worker.blank?
@@ -45,6 +47,7 @@ module Ag2Human
         paginate :page => params[:page] || 1, :per_page => per_page
       end
       # @time_records = @search.results.sort_by{ |record| [ record.timerecord_date, record.timerecord_time ] }
+      #@time_records = TimeRecord.paginate(:page => params[:page], :per_page => per_page).order(:timerecord_date, :timerecord_time)
       @time_records = @search.results
 
       respond_to do |format|
