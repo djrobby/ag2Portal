@@ -26,6 +26,8 @@ var wo_workerFieldsUI = {
         });
 
         $('#cancelWorkerButton').on('click', function(e) {
+          wo_w_formHandler.removeFields();
+          wo_w_formHandler.hideForm();
         });
     }
 };
@@ -57,6 +59,21 @@ var wo_w_formHandler = {
           dropdownCssClass: 'shrinked',
           dropdownAutoWidth: true,
           containerCssClass: 'sub-select2-field'
+        });
+    },
+
+    // Public method for remove a new row when cancel button has been clicked.
+    removeFields: function () {
+        // Get a handle on all the input fields in the form and detach them from
+        // the DOM (we'll attach them later).
+        var inputFields = $(wo_w_cfg.formId + ' ' + wo_w_cfg.inputFieldClassSelector);
+        inputFields.detach();
+
+        // Change value of _destroy field
+        $(inputFields).map(function() {
+          if (this.id.indexOf("_destroy") != -1) {
+            $(this).val("1");
+          }
         });
     },
 

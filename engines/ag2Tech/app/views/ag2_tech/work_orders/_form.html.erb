@@ -1,4 +1,6 @@
 <script>
+  var _thisForm = '';
+  
   $(document).ready(function() {
     $('select.sel2').select2({
       formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
@@ -18,9 +20,46 @@
       $(this).val(dt);
       $('.date_picker').datepicker('hide');
     });
+    
+    // Initialized form variable
+    _thisForm = $("#work_order_order_no").closest('form')[0];
+
+    // Disable fields if Order# blank
+    var order = $('#work_order_order_no').val();
+    if (order == "")
+      order = "0";
+    if (order == "0") {
+      // Empty order: Disable
+      $('#submit_btn').hide();
+      $('.fnt-new-btn').hide();
+      $('.fnt-new-worker-btn').hide();
+    } else {
+      // Order OK: Enable
+      $('#submit_btn').show();
+      $('.fnt-new-btn').show();
+      $('.fnt-new-worker-btn').show();
+    }
   });
   
   jQuery(function($) {
+    // when the #work_order_order_no field changes
+    $("#work_order_order_no").change(function() {
+      var order = $('#work_order_order_no').val();
+      if (order == "")
+        order = "0";
+      if (order == "0") {
+        // Empty order: Disable
+        $('#submit_btn').hide();
+        $('.fnt-new-btn').hide();
+        $('.fnt-new-worker-btn').hide();
+      } else {
+        // Order OK: Enable
+        $('#submit_btn').show();
+        $('.fnt-new-btn').show();
+        $('.fnt-new-worker-btn').show();
+      }
+    });
+    
     // when the #work_order_project_id field changes
     $("#work_order_project_id").change(function() {
       // make a POST call and replace the content
@@ -110,6 +149,30 @@
       });
       return false;
     });
+    
+    // when submit    
+    $(_thisForm).on('submit', function() {
+      var qty = '';
+      var price = '';
+      var cost = '';
+      // Must change decimal separator, if comma, in items table numeric fields
+      $('#items-table tr.fields').each(function() {
+        qty = $(this).find('input.fnt-quantity').val().replace(",", ".");
+        price = $(this).find('input.fnt-price').val().replace(",", ".");
+        cost = $(this).find('input.fnt-cost').val().replace(",", ".");
+        $(this).find('input.fnt-quantity').val(qty);
+        $(this).find('input.fnt-price').val(price);
+        $(this).find('input.fnt-cost').val(cost);
+      });
+      // Must change decimal separator, if comma, in workers table numeric fields
+      $('#workers-table tr.fields').each(function() {
+        qty = $(this).find('input.fnt-hours').val().replace(",", ".");
+        cost = $(this).find('input.fnt-costw').val().replace(",", ".");
+        $(this).find('input.fnt-hours').val(qty);
+        $(this).find('input.fnt-costw').val(cost);
+      });
+      //e.preventDefault();
+    });
   });
 </script>
 
@@ -184,5 +247,5 @@
 <!-- Remarks -->
 <%= f.input :remarks, as: :text, input_html: { class: 'x-large-text-field', rows: 3 }, label_html: { class: 'form-label' } %>
 <!-- Buttons -->
-<%= f.button :submit, :class => 'btn-primary' %>
+<%= f.button :submit, class: 'btn-primary', id: 'submit_btn' %>
 <% end %>

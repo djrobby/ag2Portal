@@ -77,7 +77,7 @@
 </table>
 <%= render :partial => '/layouts/pagination', :locals => { :ivar => @items } %>
 <% else %>
-<br />
+<%= render :partial => '/layouts/paginationunbordered', :locals => { :ivar => @items } %>
 <% end %> <!-- end @items.count > 0 -->
 
 <!-- Remarks -->

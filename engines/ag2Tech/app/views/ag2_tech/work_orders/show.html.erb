@@ -107,7 +107,7 @@
 </table>
 <%= render :partial => '/layouts/pagination', :locals => { :ivar => @items } %>
 <% else %>
-<br />
+<%= render :partial => '/layouts/paginationunbordered', :locals => { :ivar => @items } %>
 <% end %> <!-- end @items.count > 0 -->
 
 <!-- Workers -->
@@ -137,7 +137,7 @@
 </table>
 <%= render :partial => '/layouts/pagination', :locals => { :ivar => @workers } %>
 <% else %>
-<br />
+<%= render :partial => '/layouts/paginationunbordered', :locals => { :ivar => @workers } %>
 <% end %> <!-- end @workers.count > 0 -->
 
 <!-- Remarks -->
