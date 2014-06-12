@@ -13,13 +13,8 @@ module Ag2Human
       type = params[:Type]
       code = params[:Code]
 
-      # Must use Sunspot index always for update/re-index current data
-      # because data is added externally (ag2TimeRecord Client)
-      # (at rails console, use Sunspot.commit!)
-      @time_records = TimeRecord.all
-      @time_records.index
-      #TimeRecord.index
-
+      # Sunspot re-index at ag2_timerecord_controller
+      
       @search = TimeRecord.search do
         if !worker.blank?
           with :worker_id, worker
