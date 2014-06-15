@@ -21,3 +21,4 @@ en:
         approver_id: "Approved by"
         supplier_invoice_approval: "Invoice approval"
         supplier_invoice_approval_id: "Invoice approval"
+        invoice_debt: "Current debt"

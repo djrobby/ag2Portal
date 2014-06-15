@@ -2,10 +2,10 @@ en:
   activerecord:
     models:
       offer_request_supplier:
-        zero:  Offer request suppliers
-        one:   Offer request supplier
-        few:   Offer request suppliers
-        other: Offer request suppliers
+        zero:  Suppliers invited to tender
+        one:   Supplier invited to tender
+        few:   Suppliers invited to tender
+        other: Suppliers invited to tender
     attributes:
       offer_request_supplier:
         offer_request: "Offer request"

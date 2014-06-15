@@ -2,10 +2,10 @@ es:
   activerecord:
     models:
       offer_request_supplier:
-        zero:  Proveedores de solicitud de oferta
-        one:   Proveedor de solicitud de oferta
-        few:   Proveedores de solicitud de oferta
-        other: Proveedores de solicitud de oferta
+        zero:  Proveedores invitados a ofertar
+        one:   Proveedor invitado a ofertar
+        few:   Proveedores invitados a ofertar
+        other: Proveedores invitados a ofertar
     attributes:
       offer_request_supplier:
         offer: "Oferta"

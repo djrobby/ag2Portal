@@ -16,4 +16,13 @@ class SupplierPayment < ActiveRecord::Base
   validates :payment_method,    :presence => true
   validates :approver,          :presence => true
   validates :payment_date,      :presence => true
+  validates :amount,            :presence => true,
+                                :numericality => { :greater_than => 0, :less_than_or_equal_to => :invoice_debt }
+
+  #
+  # Calculated fields
+  #
+  def invoice_debt
+    supplier_invoice.debt
+  end
 end

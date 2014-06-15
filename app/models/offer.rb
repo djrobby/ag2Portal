@@ -14,7 +14,14 @@ class Offer < ActiveRecord::Base
   has_many :purchase_orders
   #has_one :approver_offer_request, class_name: 'OfferRequest', foreign_key: 'approved_offer_id'
 
+  # Nested attributes
+  accepts_nested_attributes_for :offer_items,                                 
+                                :reject_if => :all_blank,
+                                :allow_destroy => true
+
   has_paper_trail
+
+  validates_associated :offer_items
 
   validates :offer_date,      :presence => true
   validates :offer_no,        :presence => true
@@ -25,7 +32,60 @@ class Offer < ActiveRecord::Base
   before_destroy :check_for_dependent_records
 
   def to_label
-    "#{id} #{offer_no} #{supplier.name}"
+    "#{full_name}"
+  end
+
+  def full_name
+    full_name = ""
+    if !self.offer_no.blank?
+      full_name += self.offer_no
+    end
+    if !self.offer_date.blank?
+      full_name += " " + self.offer_date
+    end
+    if !self.supplier.blank?
+      full_name += " " + self.supplier.full_name
+    end
+    full_name
+  end
+
+  #
+  # Calculated fields
+  #
+  def subtotal
+    subtotal = 0
+    offer_items.each do |i|
+      if !i.amount.blank?
+        subtotal += i.amount
+      end
+    end
+    subtotal
+  end
+
+  def bonus
+    (discount_pct / 100) * subtotal if !discount_pct.blank?
+  end
+  
+  def taxable
+    subtotal - bonus - discount
+  end
+
+  def taxes
+    taxes = 0
+    offer_items.each do |i|
+      if !i.net_tax.blank?
+        taxes += i.net_tax
+      end
+    end
+    taxes
+  end
+
+  def total
+    taxable + taxes  
+  end
+
+  def quantity
+    offer_items.sum("quantity")
   end
 
   #

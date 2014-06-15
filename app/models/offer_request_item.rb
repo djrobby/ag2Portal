@@ -12,12 +12,40 @@ class OfferRequestItem < ActiveRecord::Base
 
   has_paper_trail
 
-  validates :description,     :presence => true
   validates :offer_request,   :presence => true
+  validates :description,     :presence => true,
+                              :length => { :maximum => 40 }
   validates :product,         :presence => true
   validates :tax_type,        :presence => true
   validates :project,         :presence => true
   validates :store,           :presence => true
   validates :work_order,      :presence => true
   validates :charge_account,  :presence => true
+
+  before_validation :fields_to_uppercase
+
+  def fields_to_uppercase
+    if !self.description.blank?
+      self[:description].upcase!
+    end
+  end
+
+  #
+  # Calculated fields
+  #
+  def amount
+    quantity * price
+  end
+
+  def tax
+    (tax_type.tax / 100) * amount if !tax_type.nil?
+  end
+
+  def net
+    amount - (amount * (offer_request.discount_pct / 100)) if !offer_request.discount_pct.blank?
+  end
+
+  def net_tax
+    tax - (tax * (offer_request.discount_pct / 100)) if !offer_request.discount_pct.blank?
+  end
 end

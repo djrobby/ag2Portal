@@ -26,7 +26,7 @@ en:
         reported_at: "Reported at"
         approved_at: "Approved at"
         certified_at: "Certified at"
-        posted_at: "Accounted at"
+        posted_at: "Posted at"
         charge_account: "Charge account"
         charge_account_id: "Charge account"
         project: "Project"
