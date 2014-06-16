@@ -1,0 +1,21 @@
+<h1>Listing offer_requests</h1>
+
+<table>
+  <tr>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @offer_requests.each do |offer_request| %>
+  <tr>
+    <td><%= link_to 'Show', offer_request %></td>
+    <td><%= link_to 'Edit', edit_offer_request_path(offer_request) %></td>
+    <td><%= link_to 'Destroy', offer_request, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Offer request', new_offer_request_path %>

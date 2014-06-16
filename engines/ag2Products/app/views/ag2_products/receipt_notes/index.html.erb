@@ -1,0 +1,21 @@
+<h1>Listing receipt_notes</h1>
+
+<table>
+  <tr>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @receipt_notes.each do |receipt_note| %>
+  <tr>
+    <td><%= link_to 'Show', receipt_note %></td>
+    <td><%= link_to 'Edit', edit_receipt_note_path(receipt_note) %></td>
+    <td><%= link_to 'Destroy', receipt_note, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Receipt note', new_receipt_note_path %>

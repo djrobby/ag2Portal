@@ -1,0 +1,21 @@
+<h1>Listing supplier_payments</h1>
+
+<table>
+  <tr>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @supplier_payments.each do |supplier_payment| %>
+  <tr>
+    <td><%= link_to 'Show', supplier_payment %></td>
+    <td><%= link_to 'Edit', edit_supplier_payment_path(supplier_payment) %></td>
+    <td><%= link_to 'Destroy', supplier_payment, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Supplier payment', new_supplier_payment_path %>

@@ -1,0 +1,21 @@
+<h1>Listing supplier_invoices</h1>
+
+<table>
+  <tr>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @supplier_invoices.each do |supplier_invoice| %>
+  <tr>
+    <td><%= link_to 'Show', supplier_invoice %></td>
+    <td><%= link_to 'Edit', edit_supplier_invoice_path(supplier_invoice) %></td>
+    <td><%= link_to 'Destroy', supplier_invoice, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Supplier invoice', new_supplier_invoice_path %>
