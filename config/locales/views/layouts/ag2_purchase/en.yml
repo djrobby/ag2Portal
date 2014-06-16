@@ -16,3 +16,15 @@ en:
       purchase_orders:
         items: "Purchase orders"
         item: "Order"
+      offer_requests:
+        items: "Offer requests"
+        item: "Request"
+      offers:
+        items: "Offers"
+        item: "Offer"
+      supplier_invoices:
+        items: "Invoices"
+        item: "Invoice"
+      supplier_payments:
+        items: "Payments"
+        item: "Payment"

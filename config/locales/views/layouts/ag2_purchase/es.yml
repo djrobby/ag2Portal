@@ -16,3 +16,15 @@ es:
       purchase_orders:
         items: "Pedidos"
         item: "Pedido"
+      offer_requests:
+        items: "Solicitudes de oferta"
+        item: "Solicitud"
+      offers:
+        items: "Ofertas"
+        item: "Oferta"
+      supplier_invoices:
+        items: "Facturas"
+        item: "Factura"
+      supplier_payments:
+        items: "Pagos"
+        item: "Pago"
