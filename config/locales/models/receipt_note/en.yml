@@ -34,3 +34,5 @@ en:
         taxable: "Taxable"
         taxes: "Taxes"
         total: "Total"
+        quantity: "Articles"
+        bonus: "Bonus"

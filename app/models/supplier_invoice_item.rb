@@ -35,7 +35,7 @@ class SupplierInvoiceItem < ActiveRecord::Base
   # Calculated fields
   #
   def amount
-    quantity * price
+    quantity * (price - discount)
   end
 
   def tax

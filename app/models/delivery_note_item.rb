@@ -17,7 +17,8 @@ class DeliveryNoteItem < ActiveRecord::Base
   has_paper_trail
 
   validates :delivery_note,   :presence => true
-  validates :description,     :presence => true
+  validates :description,     :presence => true,
+                              :length => { :maximum => 40 }
   validates :product,         :presence => true
   validates :tax_type,        :presence => true
   validates :store,           :presence => true
@@ -26,6 +27,36 @@ class DeliveryNoteItem < ActiveRecord::Base
   validates :project,         :presence => true
 
   before_destroy :check_for_dependent_records
+  before_validation :fields_to_uppercase
+
+  def fields_to_uppercase
+    if !self.description.blank?
+      self[:description].upcase!
+    end
+  end
+
+  #
+  # Calculated fields
+  #
+  def costs
+    quantity * cost
+  end
+
+  def amount
+    quantity * (price - discount)
+  end
+
+  def tax
+    (tax_type.tax / 100) * amount if !tax_type.nil?
+  end
+
+  def net
+    amount - (amount * (delivery_note.discount_pct / 100)) if !delivery_note.discount_pct.blank?
+  end
+
+  def net_tax
+    tax - (tax * (delivery_note.discount_pct / 100)) if !delivery_note.discount_pct.blank?
+  end
 
   private
 

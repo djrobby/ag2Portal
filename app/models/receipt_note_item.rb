@@ -17,16 +17,43 @@ class ReceiptNoteItem < ActiveRecord::Base
 
   has_paper_trail
 
-  validates :receipt_note,   :presence => true
-  validates :description,    :presence => true
-  validates :product,        :presence => true
-  validates :tax_type,       :presence => true
-  validates :store,          :presence => true
-  validates :work_order,     :presence => true
-  validates :charge_account, :presence => true
-  validates :project,        :presence => true
+  validates :receipt_note,    :presence => true
+  validates :description,     :presence => true,
+                              :length => { :maximum => 40 }
+  validates :product,         :presence => true
+  validates :tax_type,        :presence => true
+  validates :store,           :presence => true
+  validates :work_order,      :presence => true
+  validates :charge_account,  :presence => true
+  validates :project,         :presence => true
 
   before_destroy :check_for_dependent_records
+  before_validation :fields_to_uppercase
+
+  def fields_to_uppercase
+    if !self.description.blank?
+      self[:description].upcase!
+    end
+  end
+
+  #
+  # Calculated fields
+  #
+  def amount
+    quantity * (price - discount)
+  end
+
+  def tax
+    (tax_type.tax / 100) * amount if !tax_type.nil?
+  end
+
+  def net
+    amount - (amount * (receipt_note.discount_pct / 100)) if !receipt_note.discount_pct.blank?
+  end
+
+  def net_tax
+    tax - (tax * (receipt_note.discount_pct / 100)) if !receipt_note.discount_pct.blank?
+  end
 
   private
 

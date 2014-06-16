@@ -11,7 +11,14 @@ class ReceiptNote < ActiveRecord::Base
   has_many :receipt_note_items, dependent: :destroy
   has_many :supplier_invoice_items
 
+  # Nested attributes
+  accepts_nested_attributes_for :receipt_note_items,                                 
+                                :reject_if => :all_blank,
+                                :allow_destroy => true
+
   has_paper_trail
+
+  validates_associated :receipt_note_items
 
   validates :receipt_date,   :presence => true
   validates :receipt_no,     :presence => true
@@ -19,6 +26,63 @@ class ReceiptNote < ActiveRecord::Base
   validates :payment_method, :presence => true
 
   before_destroy :check_for_dependent_records
+
+  def to_label
+    "#{full_name}"
+  end
+
+  def full_name
+    full_name = ""
+    if !self.receipt_no.blank?
+      full_name += self.receipt_no
+    end
+    if !self.receipt_date.blank?
+      full_name += " " + self.receipt_date
+    end
+    if !self.supplier.blank?
+      full_name += " " + self.supplier.full_name
+    end
+    full_name
+  end
+
+  #
+  # Calculated fields
+  #
+  def subtotal
+    subtotal = 0
+    receipt_note_items.each do |i|
+      if !i.amount.blank?
+        subtotal += i.amount
+      end
+    end
+    subtotal
+  end
+
+  def bonus
+    (discount_pct / 100) * subtotal if !discount_pct.blank?
+  end
+  
+  def taxable
+    subtotal - bonus - discount
+  end
+
+  def taxes
+    taxes = 0
+    receipt_note_items.each do |i|
+      if !i.net_tax.blank?
+        taxes += i.net_tax
+      end
+    end
+    taxes
+  end
+
+  def total
+    taxable + taxes  
+  end
+
+  def quantity
+    receipt_note_items.sum("quantity")
+  end
 
   #
   # Records navigator
