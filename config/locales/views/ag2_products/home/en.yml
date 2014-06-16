@@ -2,6 +2,7 @@ en:
   ag2_products:
     home:
       index:
+        control: "Control&Tracking"
         products: "Products"
         families: "Product Families"
         types: "Product Types"

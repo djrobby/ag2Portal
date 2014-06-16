@@ -2,6 +2,8 @@ es:
   ag2_products:
     home:
       index:
+        control: "Control&Seguimiento"
+        control_a: "Control&Seguimto."
         products: "Productos"
         families: "Familias Producto"
         types: "Tipos Producto"

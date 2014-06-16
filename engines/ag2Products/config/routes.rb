@@ -33,6 +33,8 @@ Ag2Products::Engine.routes.draw do
     resources :stores
     resources :purchase_prices
     resources :stocks
+    resources :delivery_notes
+    resources :receipt_notes
 
     # Root
     root :to => 'home#index'

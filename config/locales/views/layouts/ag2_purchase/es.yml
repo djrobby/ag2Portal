@@ -11,7 +11,7 @@ es:
         items: "Contactos de proveedor"
         item: "Contacto"
       order_statuses:
-        items: "Estados de pedidos"
+        items: "Estados de pedido"
         item: "Estado"
       purchase_orders:
         items: "Pedidos"

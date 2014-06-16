@@ -2,17 +2,17 @@ es:
   ag2_purchase:
     order_statuses:
       index:
-        title: "Estados de pedidos"
-        btn_new: "Nuevo Estado de pedidos"
+        title: "Estados de pedido"
+        btn_new: "Nuevo Estado de pedido"
         back_to_root: "Volver a ag2Purchase"
       show:
-        title: "Estado de pedidos"
-        btn_edit: "Editar Estado de pedidos"
-        btn_delete: "Borrar Estado de pedidos"
-        return_to: "Volver a Estado de pedidos"
+        title: "Estado de pedido"
+        btn_edit: "Editar Estado de pedido"
+        btn_delete: "Borrar Estado de pedido"
+        return_to: "Volver a Estado de pedido"
       edit:
-        title: "Editar Estado de pedidos"
-        btn_show: "Ver Estado de pedidos"
+        title: "Editar Estado de pedido"
+        btn_show: "Ver Estado de pedido"
       new:
-        title: "Nuevo Estado de pedidos"
-      back_to_main_page: "Volver a Estados de pedidos"
+        title: "Nuevo Estado de pedido"
+      back_to_main_page: "Volver a Estados de pedido"
