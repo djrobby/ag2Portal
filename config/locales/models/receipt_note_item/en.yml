@@ -6,7 +6,7 @@ en:
         one:   Receipt note item
         few:   Receipt note items
         other: Receipt note items
-        check_for_supplier_invoices: "Receipt note item cannot be destroyed while linked invoices exist."
+        check_for_supplier_invoices: "Receipt note item cannot be destroyed while linked S invoices exist."
     attributes:
       receipt_note_item:
         receipt_note: "Receipt note"

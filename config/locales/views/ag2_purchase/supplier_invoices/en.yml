@@ -1,0 +1,37 @@
+en:
+  ag2_purchase:
+    supplier_invoices:
+      index:
+        title: "Invoices"
+        btn_new: "New Invoice"
+        back_to_root: "Back to ag2Purchase"
+        label_supplier: "Supplier"
+        label_project: "Project"
+        label_work_order: "Work order"
+        label_others: "Others"
+        btn_apply: "Apply Filter"
+      show:
+        title: "Invoice"
+        btn_edit: "Edit Invoice"
+        btn_delete: "Delete Invoice"
+        print: "Print"
+      edit:
+        title: "Edit Invoice"
+        btn_show: "Show Invoice"
+      new:
+        title: "New Invoice"
+      back_to_main_page: "Back to Invoices"
+      generate_code_btn: "Invoice No."
+      validate_btn: "Validate"
+      code_error: "Unable to generate Invoice No.: No Activity chosen."
+      items_info: "Invoice Items"
+      delete_item: "Delete this Item"
+      add_item: "Add new Item"
+      add_item_to: "Invoice %{var}"
+      btn_new_item: "New Item"
+      btn_add_item: "Add"
+      item_error: "can't be blank"
+      approvals_info: "Invoice Approvals"
+      delete_approval: "Delete this Approval"
+      add_approval: "Add new Approval"
+      btn_new_approval: "New Approval"

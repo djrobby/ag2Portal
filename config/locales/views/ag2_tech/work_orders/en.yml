@@ -23,7 +23,7 @@ en:
       new:
         title: "New Work order"
       back_to_main_page: "Back to Work orders"
-      generate_code_btn: "Order No"
+      generate_code_btn: "Order No."
       validate_btn: "Validate"
       code_error: "Unable to generate Order No: No Activity chosen."
       items_info: "Order Items"

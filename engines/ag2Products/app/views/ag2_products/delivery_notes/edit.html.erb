@@ -1,6 +1,8 @@
-<h1>Editing delivery_note</h1>
+<%= render '/layouts/ag2_purchase/deliveriesbreadcrumb' %>
+
+<h3><%=t '.title' %></h3>
 
 <%= render 'form' %>
 
-<%= link_to 'Show', @delivery_note %> |
-<%= link_to 'Back', delivery_notes_path %>
+<%= link_to t(".btn_show"), @delivery_note %> |
+<%= link_to t("ag2_products.delivery_notes.back_to_main_page"), delivery_notes_path %>

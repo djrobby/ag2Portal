@@ -1,6 +1,8 @@
-<h1>Editing receipt_note</h1>
+<%= render '/layouts/ag2_purchase/receiptsbreadcrumb' %>
+
+<h3><%=t '.title' %></h3>
 
 <%= render 'form' %>
 
-<%= link_to 'Show', @receipt_note %> |
-<%= link_to 'Back', receipt_notes_path %>
+<%= link_to t(".btn_show"), @receipt_note %> |
+<%= link_to t("ag2_products.receipt_notes.back_to_main_page"), receipt_notes_path %>

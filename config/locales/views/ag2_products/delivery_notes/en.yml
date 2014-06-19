@@ -1,0 +1,33 @@
+en:
+  ag2_purchase:
+    offer_requests:
+      index:
+        title: "Delivery notes"
+        btn_new: "New Delivery note"
+        back_to_root: "Back to ag2Purchase"
+        label_supplier: "Supplier"
+        label_project: "Project"
+        label_work_order: "Work order"
+        label_others: "Others"
+        btn_apply: "Apply Filter"
+      show:
+        title: "Delivery note"
+        btn_edit: "Edit Delivery note"
+        btn_delete: "Delete Delivery note"
+        print: "Print"
+      edit:
+        title: "Edit Delivery note"
+        btn_show: "Show Delivery note"
+      new:
+        title: "New Delivery note"
+      back_to_main_page: "Back to Delivery notes"
+      generate_code_btn: "Delivery note No."
+      validate_btn: "Validate"
+      code_error: "Unable to generate Delivery note No.: No Activity chosen."
+      items_info: "Delivery note Items"
+      delete_item: "Delete this Item"
+      add_item: "Add new Item"
+      add_item_to: "Request %{var}"
+      btn_new_item: "New Item"
+      btn_add_item: "Add"
+      item_error: "can't be blank"

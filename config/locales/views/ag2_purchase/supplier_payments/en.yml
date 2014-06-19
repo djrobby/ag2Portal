@@ -1,0 +1,26 @@
+en:
+  ag2_purchase:
+    supplier_payments:
+      index:
+        title: "Payments"
+        btn_new: "New Payment"
+        back_to_root: "Back to ag2Purchase"
+        label_supplier: "Supplier"
+        label_project: "Project"
+        label_invoice: "Invoice"
+        label_others: "Others"
+        btn_apply: "Apply Filter"
+      show:
+        title: "Payment"
+        btn_edit: "Edit Payment"
+        btn_delete: "Delete Payment"
+        print: "Print"
+      edit:
+        title: "Edit Payment"
+        btn_show: "Show Payment"
+      new:
+        title: "New Payment"
+      back_to_main_page: "Back to Payments"
+      generate_code_btn: "Payment No."
+      validate_btn: "Validate"
+      code_error: "Unable to generate Payment No.: No Activity chosen."

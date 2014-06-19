@@ -1,6 +1,8 @@
-<h1>Editing supplier_payment</h1>
+<%= render '/layouts/ag2_purchase/paymentsbreadcrumb' %>
+
+<h3><%=t '.title' %></h3>
 
 <%= render 'form' %>
 
-<%= link_to 'Show', @supplier_payment %> |
-<%= link_to 'Back', supplier_payments_path %>
+<%= link_to t(".btn_show"), @supplier_payment %> |
+<%= link_to t("ag2_purchase.supplier_payments.back_to_main_page"), supplier_payments_path %>

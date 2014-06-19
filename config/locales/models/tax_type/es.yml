@@ -9,7 +9,7 @@ es:
         check_for_products: "Tipo de impuesto no puede ser eliminado mientras existan productos vinculados."
         check_for_work_orders: "Tipo de impuesto no puede ser eliminado mientras existan ordenes de trabajo vinculadas."
         check_for_purchase_orders: "Tipo de impuesto no puede ser eliminado mientras existan pedidos vinculados."
-        check_for_receipt_notes: "Tipo de impuesto no puede ser eliminado mientras existan albaranes vinculados."
+        check_for_receipt_notes: "Tipo de impuesto no puede ser eliminado mientras existan notas de recepción vinculadas."
         check_for_offer_requests: "Tipo de impuesto no puede ser eliminado mientras existan solicitudes vinculadas."
         check_for_offers: "Tipo de impuesto no puede ser eliminado mientras existan ofertas vinculadas."
         check_for_delivery_notes: "Tipo de impuesto no puede ser eliminado mientras existan notas de entrega vinculadas."

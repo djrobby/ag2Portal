@@ -11,7 +11,8 @@ en:
         check_for_receipt_notes: "Project cannot be destroyed while linked receipt notes exist."
         check_for_charge_accounts: "Project cannot be destroyed while linked charge accounts exist."
         check_for_offer_requests: "Project cannot be destroyed while linked requests exist."
-        check_for_supplier_invoices: "Project cannot be destroyed while linked invoices exist."
+        check_for_supplier_invoices: "Project cannot be destroyed while linked S invoices exist."
+        check_for_delivery_notes: "Project cannot be destroyed while linked delivery notes exist."
     attributes:
       project:
         project_code: "Code"

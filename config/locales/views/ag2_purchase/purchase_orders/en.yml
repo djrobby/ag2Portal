@@ -21,7 +21,7 @@ en:
       new:
         title: "New Order"
       back_to_main_page: "Back to Purchase orders"
-      generate_code_btn: "Supplier Code"
+      generate_code_btn: "Order No."
       validate_btn: "Validate"
       items_info: "Order Items"
       fiscal_error: "Wrong Fiscal Id or Entity (TaxPayer) does not exist."

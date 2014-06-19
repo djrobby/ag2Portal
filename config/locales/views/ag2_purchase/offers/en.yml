@@ -1,0 +1,33 @@
+en:
+  ag2_purchase:
+    offers:
+      index:
+        title: "Offers"
+        btn_new: "New Offer"
+        back_to_root: "Back to ag2Purchase"
+        label_supplier: "Supplier"
+        label_project: "Project"
+        label_work_order: "Work order"
+        label_others: "Others"
+        btn_apply: "Apply Filter"
+      show:
+        title: "Offer"
+        btn_edit: "Edit Offer"
+        btn_delete: "Delete Offer"
+        print: "Print"
+      edit:
+        title: "Edit Offer"
+        btn_show: "Show Offer"
+      new:
+        title: "New Offer"
+      back_to_main_page: "Back to Offers"
+      generate_code_btn: "Offer No."
+      validate_btn: "Validate"
+      code_error: "Unable to generate Offer No.: No Activity chosen."
+      items_info: "Offer Items"
+      delete_item: "Delete this Item"
+      add_item: "Add new Item"
+      add_item_to: "Offer %{var}"
+      btn_new_item: "New Item"
+      btn_add_item: "Add"
+      item_error: "can't be blank"

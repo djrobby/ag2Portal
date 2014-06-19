@@ -1,0 +1,26 @@
+es:
+  ag2_purchase:
+    supplier_payments:
+      index:
+        title: "Pagos"
+        btn_new: "Nuevo Pago"
+        back_to_root: "Volver a ag2Purchase"
+        label_supplier: "Proveedor"
+        label_project: "Proyecto"
+        label_invoice: "Factura"
+        label_others: "Otros"
+        btn_apply: "Aplicar Filtro"
+      show:
+        title: "Pago"
+        btn_edit: "Editar Pago"
+        btn_delete: "Borrar Pago"
+        print: "Imprimir"
+      edit:
+        title: "Editar Pago"
+        btn_show: "Ver Pago"
+      new:
+        title: "Nueva Pago"
+      back_to_main_page: "Volver a Pagos"
+      generate_code_btn: "Nº de Pago"
+      validate_btn: "Validar"
+      code_error: "Imposible generar Nº de Pago: No has elegido Actividad."

@@ -1,5 +1,7 @@
-<h1>New offer</h1>
+<%= render '/layouts/ag2_purchase/offersbreadcrumb' %>
+
+<h3><%=t '.title' %></h3>
 
 <%= render 'form' %>
 
-<%= link_to 'Back', offers_path %>
+<%= link_to t("ag2_purchase.offers.back_to_main_page"), offers_path %>

@@ -1,0 +1,37 @@
+en:
+  ag2_purchase:
+    offer_requests:
+      index:
+        title: "Offer requests"
+        btn_new: "New Request"
+        back_to_root: "Back to ag2Purchase"
+        label_supplier: "Supplier"
+        label_project: "Project"
+        label_work_order: "Work order"
+        label_others: "Others"
+        btn_apply: "Apply Filter"
+      show:
+        title: "Request"
+        btn_edit: "Edit Request"
+        btn_delete: "Delete Request"
+        print: "Print"
+      edit:
+        title: "Edit Request"
+        btn_show: "Show Request"
+      new:
+        title: "New Request"
+      back_to_main_page: "Back to Offer requests"
+      generate_code_btn: "Request No."
+      validate_btn: "Validate"
+      code_error: "Unable to generate Request No.: No Activity chosen."
+      items_info: "Request Items"
+      delete_item: "Delete this Item"
+      add_item: "Add new Item"
+      add_item_to: "Request %{var}"
+      btn_new_item: "New Item"
+      btn_add_item: "Add"
+      item_error: "can't be blank"
+      suppliers_info: "Suppliers invited to tender"
+      delete_supplier: "Delete this Supplier"
+      add_supplier: "Add new Supplier"
+      btn_new_supplier: "New Supplier"

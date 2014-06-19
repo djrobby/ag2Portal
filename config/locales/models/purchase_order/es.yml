@@ -6,7 +6,7 @@ es:
         one:   Pedido
         few:   Pedidos
         other: Pedidos
-        check_for_receipt_notes: "Pedido no puede ser eliminado mientras existan albaranes vinculados."
+        check_for_receipt_notes: "Pedido no puede ser eliminado mientras existan notas de recepción vinculadas."
     attributes:
       purchase_order:
         order_no: "Nº"

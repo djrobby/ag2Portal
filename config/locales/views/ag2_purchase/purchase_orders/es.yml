@@ -21,7 +21,7 @@ es:
       new:
         title: "Nuevo Pedido"
       back_to_main_page: "Volver a Pedidos"
-      generate_code_btn: "Código de Proveedor"
+      generate_code_btn: "Nº de Pedido"
       validate_btn: "Validar"
       items_info: "Items del Pedido"
       fiscal_error: "Id Fiscal erróneo o Entidad (Sujeto Pasivo) no existe."

@@ -2,11 +2,11 @@ es:
   activerecord:
     models:
       receipt_note:
-        zero:  Albaranes
-        one:   Albarán
-        few:   Albaranes
-        other: Albaranes
-        check_for_supplier_invoices: "Albarán no puede ser eliminado mientras existan facturas vinculadas."
+        zero:  Notas de recepción
+        one:   Nota de recepción
+        few:   Notas de recepción
+        other: Notas de recepción
+        check_for_supplier_invoices: "Nota de recepción no puede ser eliminada mientras existan facturas S vinculadas."
     attributes:
       receipt_note:
         receipt_no: "Nº"

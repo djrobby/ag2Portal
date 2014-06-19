@@ -93,5 +93,15 @@ class Client < ActiveRecord::Base
       errors.add(:base, I18n.t('activerecord.models.client.check_for_delivery_notes'))
       return false
     end
+    # Check for invoices
+    if delivery_notes.count > 0
+      errors.add(:base, I18n.t('activerecord.models.client.check_for_client_invoices'))
+      return false
+    end
+    # Check for charges
+    if delivery_notes.count > 0
+      errors.add(:base, I18n.t('activerecord.models.client.check_for_client_charges'))
+      return false
+    end
   end
 end
