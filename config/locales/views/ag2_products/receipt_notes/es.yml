@@ -1,6 +1,6 @@
 es:
   ag2_purchase:
-    offer_requests:
+    receipt_notes:
       index:
         title: "Notas de recepción"
         btn_new: "Nueva Recepción"

@@ -1,6 +1,6 @@
 en:
   ag2_purchase:
-    offer_requests:
+    delivery_notes:
       index:
         title: "Delivery notes"
         btn_new: "New Delivery note"

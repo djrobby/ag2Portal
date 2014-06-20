@@ -25,3 +25,9 @@ es:
       stocks:
         items: "Existencias"
         item: "Existencia"
+      delivery_notes:
+        items: "Notas de entrega"
+        item: "Entrega"
+      stocks:
+        items: "Notas de recepción"
+        item: "Recepción"

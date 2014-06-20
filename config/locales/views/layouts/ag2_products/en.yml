@@ -25,3 +25,9 @@ en:
       stocks:
         items: "Stocks"
         item: "Stock"
+      delivery_notes:
+        items: "Delivery notes"
+        item: "Delivery note"
+      receipt_notes:
+        items: "Receipt notes"
+        item: "Receipt note"

@@ -1,6 +1,6 @@
 en:
   ag2_purchase:
-    offer_requests:
+    receipt_notes:
       index:
         title: "Receipt notes"
         btn_new: "New Receipt note"
