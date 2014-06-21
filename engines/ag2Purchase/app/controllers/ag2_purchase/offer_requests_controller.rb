@@ -12,7 +12,30 @@ module Ag2Purchase
     # GET /offer_requests
     # GET /offer_requests.json
     def index
-      @offer_requests = OfferRequest.all
+      supplier = params[:Supplier]
+      project = params[:Project]
+      order = params[:Order]
+
+      @search = OfferRequest.search do
+        fulltext params[:search]
+        if !supplier.blank?
+          with :supplier_id, supplier
+        end
+        if !project.blank?
+          with :project_id, project
+        end
+        if !order.blank?
+          with :work_order_id, order
+        end
+        order_by :request_no, :asc
+        paginate :page => params[:page] || 1, :per_page => per_page
+      end
+      @offer_requests = @search.results
+
+      # Initialize select_tags
+      @suppliers = Supplier.order('name') if @suppliers.nil?
+      @projects = Project.order('project_code') if @projects.nil?
+      @work_orders = WorkOrder.order('order_no') if @work_orders.nil?
   
       respond_to do |format|
         format.html # index.html.erb

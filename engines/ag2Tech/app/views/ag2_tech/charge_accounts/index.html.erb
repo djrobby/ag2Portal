@@ -1,3 +1,13 @@
+<script>
+  $(document).ready(function() {
+    $('.sel2').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      dropdownCssClass: 'shrinked',
+      dropdownAutoWidth: true
+    });
+  }); 
+</script>
+
 <%= render '/layouts/ag2_tech/caccountsbreadcrumb' %>
 <h3><%= t '.title' %></h3>
 
@@ -9,9 +19,9 @@
         <%= form_tag "charge_accounts", :method => 'get' do %>
         <!-- Project -->
         <%= label_tag I18n.t("ag2_tech.charge_accounts.index.label_project"), nil, :class => 'form-label' %>
-        <%= select_tag "Project", options_from_collection_for_select(@projects, "id", "full_name"), :prompt => "", :class => 'x-large-text-field shrinked' %>
+        <%= select_tag "Project", options_from_collection_for_select(@projects, "id", "full_name"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
         <!-- Others -->
-        <%= label_tag I18n.t("ag2_tech.charge_accounts.index.label_others"), nil, :class => 'form-label' %>
+        <%= label_tag I18n.t("ag2_tech.charge_accounts.index.label_others"), nil, :class => 'form-label-under-sel2' %>
         <%= text_field_tag :search, params[:search], :class => 'x-large-text-field shrinked' %>
         <!-- Submit -->
         <%= submit_tag I18n.t("ag2_tech.charge_accounts.index.btn_apply"), :class => 'btn btn-primary' %>

@@ -108,6 +108,21 @@ class OfferRequest < ActiveRecord::Base
     OfferRequest.order("id").last
   end
 
+  searchable do
+    text :request_no
+    string :request_no
+    integer :payment_method_id
+    integer :project_id
+    integer :store_id
+    integer :work_order_id
+    integer :charge_account_id
+    integer :approved_offer_id
+    integer :approver_id
+    date :request_date
+    date :deadline_date
+    date :approval_date
+  end
+
   private
 
   def check_for_dependent_records

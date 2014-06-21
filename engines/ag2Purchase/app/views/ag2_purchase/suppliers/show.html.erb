@@ -162,7 +162,7 @@ new_path: new_supplier_path, new_txt: t('ag2_purchase.suppliers.index.btn_new') 
 </table>
 <%= render :partial => '/layouts/pagination', :locals => { :ivar => @prices } %>
 <% else %>
-<br />
+<%= render :partial => '/layouts/paginationunbordered', :locals => { :ivar => @prices } %>
 <% end %>
 
 <% if !session[:return_to].nil? %>

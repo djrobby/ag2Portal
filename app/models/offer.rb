@@ -49,6 +49,17 @@ class Offer < ActiveRecord::Base
     full_name
   end
 
+  def partial_name
+    partial_name = ""
+    if !self.offer_no.blank?
+      partial_name += self.offer_no
+    end
+    if !self.supplier.blank?
+      partial_name += " " + self.supplier.name[0,40]
+    end
+    partial_name
+  end
+
   #
   # Calculated fields
   #
@@ -105,6 +116,17 @@ class Offer < ActiveRecord::Base
 
   def to_last
     Offer.order("id").last
+  end
+
+  searchable do
+    text :offer_no
+    string :offer_no
+    integer :payment_method_id
+    integer :project_id
+    integer :store_id
+    integer :work_order_id
+    integer :charge_account_id
+    date :offer_date
   end
 
   private

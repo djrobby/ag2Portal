@@ -70,7 +70,7 @@
 </table>
 <%= render :partial => '/layouts/pagination', :locals => { :ivar => @worker_salary_items } %>
 <% else %>
-<br />
+<%= render :partial => '/layouts/paginationunbordered', :locals => { :ivar => @worker_salary_items } %>
 <% end %>
 
 <% if @worker_item %>

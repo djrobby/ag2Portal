@@ -1,21 +1,72 @@
-<h1>Listing offer_requests</h1>
+<script>
+  $(document).ready(function() {
+    $('.sel2').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      dropdownCssClass: 'shrinked',
+      dropdownAutoWidth: true
+    });
+  }); 
+</script>
 
-<table>
-  <tr>
-    <th></th>
-    <th></th>
-    <th></th>
-  </tr>
+<%= render '/layouts/ag2_purchase/requestsbreadcrumb' %>
+<h3><%= t '.title' %></h3>
 
-<% @offer_requests.each do |offer_request| %>
-  <tr>
-    <td><%= link_to 'Show', offer_request %></td>
-    <td><%= link_to 'Edit', edit_offer_request_path(offer_request) %></td>
-    <td><%= link_to 'Destroy', offer_request, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-  </tr>
-<% end %>
-</table>
+<div class="container-fluid">
+  <div class="row-fluid">
 
-<br />
+    <div class="span3">
+      <div class="well sidebar-nav">
+        <%= form_tag "offer_requests", :method => 'get' do %>
+        <!-- Supplier -->
+        <%= label_tag I18n.t("ag2_purchase.offer_requests.index.label_supplier"), nil, :class => 'form-label' %>
+        <%= select_tag "Supplier", options_from_collection_for_select(@suppliers, "id", "full_name"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
+        <!-- Project -->
+        <%= label_tag I18n.t("ag2_purchase.offer_requests.index.label_project"), nil, :class => 'form-label-under-sel2' %>
+        <%= select_tag "Project", options_from_collection_for_select(@projects, "id", "full_name"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
+        <!-- Work order -->
+        <%= label_tag I18n.t("ag2_purchase.offer_requests.index.label_work_order"), nil, :class => 'form-label-under-sel2' %>
+        <%= select_tag "Order", options_from_collection_for_select(@work_orders, "id", "full_name"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
+        <!-- Others -->
+        <%= label_tag I18n.t("ag2_purchase.offer_requests.index.label_others"), nil, :class => 'form-label-under-sel2' %>
+        <%= text_field_tag :search, params[:search], :class => 'x-large-text-field shrinked' %>
+        <!-- Submit -->
+        <%= submit_tag I18n.t("ag2_purchase.offer_requests.index.btn_apply"), :class => 'btn btn-primary' %>
+        <% end %>
+        <!-- Buttons -->
+        <%= render :partial => '/layouts/crud/new', :locals => { :model => OfferRequest, :path => new_offer_request_path, :txt => t(".btn_new") } %>
+        <%= link_to t(".back_to_root"), ag2_purchase.root_path %>
+      </div><!-- /.sidebar-nav -->
+    </div><!-- /.span3 -->
 
-<%= link_to 'New Offer request', new_offer_request_path %>
+    <div class="span9">
+      <table class="table table-condensed table-striped shrinked">
+        <thead>
+          <tr>
+            <th><%= t 'activerecord.attributes.offer_request.request_no' %></th>
+            <th align="center"><%= t 'activerecord.attributes.offer_request.request_date' %></th>
+            <th align="center"><%= t 'activerecord.attributes.offer_request.deadline_date' %></th>
+            <th><%= t 'activerecord.attributes.offer_request.project' %></th>
+            <th><%= t 'activerecord.attributes.offer_request.approved_offer' %></th>
+            <th align="right"><%= t 'activerecord.attributes.offer_request.total' %></th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @offer_requests.each do |request| %>
+          <tr>
+            <td><%= link_to order.request_no, request %></td>
+            <td align="center"><%= request.order_date.strftime("%d/%m/%Y") unless request.order_date.blank? %></td>
+            <td align="center"><%= request.deadline_date.strftime("%d/%m/%Y") unless request.deadline_date.blank? %></td>
+            <td><%= request.project.full_name unless request.project.blank? %></td>
+            <td><%= request.approved_offer.partial_name unless request.approved_offer.blank? %></td>
+            <td align="right"><%= number_with_precision(request.total, precision: 4) unless request.total.blank? %></td>
+            <td> <%= render :partial => '/layouts/crud/edit', :locals => { :model => OfferRequest, :path => edit_offer_request_path(request) } %>
+            <%= render :partial => '/layouts/crud/delete', :locals => { :model => OfferRequest, :path => request, :msg => t("activerecord.models.offer_request.one"), :txt => request.request_no } %> </td>
+          </tr>
+          <% end %>
+        </tbody>
+      </table>
+      <%= render :partial => '/layouts/pagination', :locals => { :ivar => @offer_requests } %>
+    </div><!-- /.span9 -->
+  </div><!-- /.row-fluid -->
+</div><!-- /.container-fluid -->
