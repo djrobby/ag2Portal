@@ -27,7 +27,7 @@ module Ag2Purchase
         if !order.blank?
           with :work_order_id, order
         end
-        order_by :offer_no, :asc
+        order_by :id, :asc
         paginate :page => params[:page] || 1, :per_page => per_page
       end
       @offers = @search.results

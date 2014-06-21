@@ -1,21 +1,72 @@
-<h1>Listing supplier_invoices</h1>
+<script>
+  $(document).ready(function() {
+    $('.sel2').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      dropdownCssClass: 'shrinked',
+      dropdownAutoWidth: true
+    });
+  }); 
+</script>
 
-<table>
-  <tr>
-    <th></th>
-    <th></th>
-    <th></th>
-  </tr>
+<%= render '/layouts/ag2_purchase/invoicesbreadcrumb' %>
+<h3><%= t '.title' %></h3>
 
-<% @supplier_invoices.each do |supplier_invoice| %>
-  <tr>
-    <td><%= link_to 'Show', supplier_invoice %></td>
-    <td><%= link_to 'Edit', edit_supplier_invoice_path(supplier_invoice) %></td>
-    <td><%= link_to 'Destroy', supplier_invoice, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-  </tr>
-<% end %>
-</table>
+<div class="container-fluid">
+  <div class="row-fluid">
 
-<br />
+    <div class="span3">
+      <div class="well sidebar-nav">
+        <%= form_tag "supplier_invoices", :method => 'get' do %>
+        <!-- Supplier -->
+        <%= label_tag I18n.t("ag2_purchase.supplier_invoices.index.label_supplier"), nil, :class => 'form-label' %>
+        <%= select_tag "Supplier", options_from_collection_for_select(@suppliers, "id", "full_name"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
+        <!-- Project -->
+        <%= label_tag I18n.t("ag2_purchase.supplier_invoices.index.label_project"), nil, :class => 'form-label-under-sel2' %>
+        <%= select_tag "Project", options_from_collection_for_select(@projects, "id", "full_name"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
+        <!-- Work order -->
+        <%= label_tag I18n.t("ag2_purchase.supplier_invoices.index.label_work_order"), nil, :class => 'form-label-under-sel2' %>
+        <%= select_tag "Order", options_from_collection_for_select(@work_orders, "id", "full_name"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
+        <!-- Others -->
+        <%= label_tag I18n.t("ag2_purchase.supplier_invoices.index.label_others"), nil, :class => 'form-label-under-sel2' %>
+        <%= text_field_tag :search, params[:search], :class => 'x-large-text-field shrinked' %>
+        <!-- Submit -->
+        <%= submit_tag I18n.t("ag2_purchase.supplier_invoices.index.btn_apply"), :class => 'btn btn-primary' %>
+        <% end %>
+        <!-- Buttons -->
+        <%= render :partial => '/layouts/crud/new', :locals => { :model => SupplierInvoice, :path => new_supplier_invoice_path, :txt => t(".btn_new") } %>
+        <%= link_to t(".back_to_root"), ag2_purchase.root_path %>
+      </div><!-- /.sidebar-nav -->
+    </div><!-- /.span3 -->
 
-<%= link_to 'New Supplier invoice', new_supplier_invoice_path %>
+    <div class="span9">
+      <table class="table table-condensed table-striped shrinked">
+        <thead>
+          <tr>
+            <th>Id</th>
+            <th><%= t 'activerecord.attributes.supplier_invoice.invoice_no' %></th>
+            <th align="center"><%= t 'activerecord.attributes.supplier_invoice.invoice_date' %></th>
+            <th><%= t 'activerecord.attributes.supplier_invoice.supplier' %></th>
+            <th><%= t 'activerecord.attributes.supplier_invoice.project' %></th>
+            <th align="right"><%= t 'activerecord.attributes.supplier_invoice.total' %></th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @supplier_invoices.each do |invoice| %>
+          <tr>
+            <td><%= invoice.id %></td>
+            <td><%= link_to invoice.invoice_no, invoice %></td>
+            <td align="center"><%= invoice.invoice_date.strftime("%d/%m/%Y") unless invoice.invoice_date.blank? %></td>
+            <td><%= invoice.supplier.name unless invoice.supplier.blank? %></td>
+            <td><%= invoice.project.full_name unless invoice.project.blank? %></td>
+            <td align="right"><%= number_with_precision(invoice.total, precision: 4) unless invoice.total.blank? %></td>
+            <td> <%= render :partial => '/layouts/crud/edit', :locals => { :model => SupplierInvoice, :path => edit_supplier_invoice_path(invoice) } %>
+            <%= render :partial => '/layouts/crud/delete', :locals => { :model => SupplierInvoice, :path => invoice, :msg => t("activerecord.models.supplier_invoice.one"), :txt => invoice.invoice_no } %> </td>
+          </tr>
+          <% end %>
+        </tbody>
+      </table>
+      <%= render :partial => '/layouts/pagination', :locals => { :ivar => @supplier_invoices } %>
+    </div><!-- /.span9 -->
+  </div><!-- /.row-fluid -->
+</div><!-- /.container-fluid -->

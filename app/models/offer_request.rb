@@ -93,19 +93,19 @@ class OfferRequest < ActiveRecord::Base
   # Records navigator
   #
   def to_first
-    OfferRequest.order("id").first
+    OfferRequest.order("request_no").first
   end
 
   def to_prev
-    OfferRequest.where("id < ?", id).order("id").last
+    OfferRequest.where("request_no < ?", request_no).order("request_no").last
   end
 
   def to_next
-    OfferRequest.where("id > ?", id).order("id").first
+    OfferRequest.where("request_no > ?", request_no).order("request_no").first
   end
 
   def to_last
-    OfferRequest.order("id").last
+    OfferRequest.order("request_no").last
   end
 
   searchable do

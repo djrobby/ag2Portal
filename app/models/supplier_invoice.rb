@@ -134,6 +134,19 @@ class SupplierInvoice < ActiveRecord::Base
     SupplierInvoice.order("id").last
   end
 
+  searchable do
+    text :invoice_no
+    string :invoice_no
+    integer :id
+    integer :payment_method_id
+    integer :project_id
+    integer :store_id
+    integer :work_order_id
+    integer :charge_account_id
+    date :invoice_date
+    date :posted_at
+  end
+
   private
 
   def check_for_dependent_records

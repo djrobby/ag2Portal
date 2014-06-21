@@ -12,7 +12,30 @@ module Ag2Purchase
     # GET /supplier_invoices
     # GET /supplier_invoices.json
     def index
-      @supplier_invoices = SupplierInvoice.all
+      supplier = params[:Supplier]
+      project = params[:Project]
+      order = params[:Order]
+
+      @search = SupplierInvoice.search do
+        fulltext params[:search]
+        if !supplier.blank?
+          with :supplier_id, supplier
+        end
+        if !project.blank?
+          with :project_id, project
+        end
+        if !order.blank?
+          with :work_order_id, order
+        end
+        order_by :id, :asc
+        paginate :page => params[:page] || 1, :per_page => per_page
+      end
+      @supplier_invoices = @search.results
+
+      # Initialize select_tags
+      @suppliers = Supplier.order('name') if @suppliers.nil?
+      @projects = Project.order('project_code') if @projects.nil?
+      @work_orders = WorkOrder.order('order_no') if @work_orders.nil?
   
       respond_to do |format|
         format.html # index.html.erb
@@ -26,6 +49,7 @@ module Ag2Purchase
       @breadcrumb = 'read'
       @supplier_invoice = SupplierInvoice.find(params[:id])
       @items = @supplier_invoice.supplier_invoice_items.paginate(:page => params[:page], :per_page => per_page).order('id')
+      @approvals = @supplier_invoice.supplier_invoice_approvals.paginate(:page => params[:page], :per_page => per_page).order('id')
   
       respond_to do |format|
         format.html # show.html.erb
