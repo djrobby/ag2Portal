@@ -15,6 +15,7 @@ en:
         payment_method: "Payment method"
         payment_method_id: "Payment method"
         payment_date: "Date"
+        payment_no: "No."
         amount: "Amount"
         remarks: "Remarks"
         approver: "Approved by"

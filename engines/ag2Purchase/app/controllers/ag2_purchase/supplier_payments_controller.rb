@@ -12,7 +12,25 @@ module Ag2Purchase
     # GET /supplier_payments
     # GET /supplier_payments.json
     def index
-      @supplier_payments = SupplierPayment.all
+      supplier = params[:Supplier]
+      invoice = params[:Invoice]
+
+      @search = SupplierPayment.search do
+        fulltext params[:search]
+        if !supplier.blank?
+          with :supplier_id, supplier
+        end
+        if !invoice.blank?
+          with :supplier_invoice_id, invoice
+        end
+        order_by :payment_no, :asc
+        paginate :page => params[:page] || 1, :per_page => per_page
+      end
+      @supplier_payments = @search.results
+
+      # Initialize select_tags
+      @suppliers = Supplier.order('name') if @suppliers.nil?
+      @invoices = SupplierInvoice.order('id') if @invoices.nil?
   
       respond_to do |format|
         format.html # index.html.erb

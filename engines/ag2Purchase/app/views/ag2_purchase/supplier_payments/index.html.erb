@@ -1,21 +1,69 @@
-<h1>Listing supplier_payments</h1>
+<script>
+  $(document).ready(function() {
+    $('.sel2').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      dropdownCssClass: 'shrinked',
+      dropdownAutoWidth: true
+    });
+  }); 
+</script>
 
-<table>
-  <tr>
-    <th></th>
-    <th></th>
-    <th></th>
-  </tr>
+<%= render '/layouts/ag2_purchase/paymentsbreadcrumb' %>
+<h3><%= t '.title' %></h3>
 
-<% @supplier_payments.each do |supplier_payment| %>
-  <tr>
-    <td><%= link_to 'Show', supplier_payment %></td>
-    <td><%= link_to 'Edit', edit_supplier_payment_path(supplier_payment) %></td>
-    <td><%= link_to 'Destroy', supplier_payment, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-  </tr>
-<% end %>
-</table>
+<div class="container-fluid">
+  <div class="row-fluid">
 
-<br />
+    <div class="span3">
+      <div class="well sidebar-nav">
+        <%= form_tag "supplier_invoices", :method => 'get' do %>
+        <!-- Supplier -->
+        <%= label_tag I18n.t("ag2_purchase.supplier_payments.index.label_supplier"), nil, :class => 'form-label' %>
+        <%= select_tag "Supplier", options_from_collection_for_select(@suppliers, "id", "full_name"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
+        <!-- Invoice -->
+        <%= label_tag I18n.t("ag2_purchase.supplier_payments.index.label_invoice"), nil, :class => 'form-label-under-sel2' %>
+        <%= select_tag "Invoice", options_from_collection_for_select(@invoices, "id", "full_name"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
+        <!-- Others -->
+        <%= label_tag I18n.t("ag2_purchase.supplier_payments.index.label_others"), nil, :class => 'form-label-under-sel2' %>
+        <%= text_field_tag :search, params[:search], :class => 'x-large-text-field shrinked' %>
+        <!-- Submit -->
+        <%= submit_tag I18n.t("ag2_purchase.supplier_payments.index.btn_apply"), :class => 'btn btn-primary' %>
+        <% end %>
+        <!-- Buttons -->
+        <%= render :partial => '/layouts/crud/new', :locals => { :model => SupplierPayment, :path => new_supplier_payment_path, :txt => t(".btn_new") } %>
+        <%= link_to t(".back_to_root"), ag2_purchase.root_path %>
+      </div><!-- /.sidebar-nav -->
+    </div><!-- /.span3 -->
 
-<%= link_to 'New Supplier payment', new_supplier_payment_path %>
+    <div class="span9">
+      <table class="table table-condensed table-striped shrinked">
+        <thead>
+          <tr>
+            <th><%= t 'activerecord.attributes.supplier_payment.payment_no' %></th>
+            <th align="center"><%= t 'activerecord.attributes.supplier_payment.payment_date' %></th>
+            <th><%= t 'activerecord.attributes.supplier_payment.supplier' %></th>
+            <th><%= t 'activerecord.attributes.supplier_payment.supplier_invoice' %></th>
+            <th><%= t 'activerecord.attributes.supplier_payment.payment_method' %></th>
+            <th align="right"><%= t 'activerecord.attributes.supplier_payment.amount' %></th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @supplier_payments.each do |payment| %>
+          <tr>
+            <td><%= link_to payment.payment_no, payment %></td>
+            <td align="center"><%= payment.payment_date.strftime("%d/%m/%Y") unless payment.payment_date.blank? %></td>
+            <td><%= payment.supplier.name unless payment.supplier.blank? %></td>
+            <td><%= payment.supplier_invoice.invoice_no unless payment.supplier_invoice.blank? %></td>
+            <td><%= payment.payment_method.description unless payment.payment_method.blank? %></td>
+            <td align="right"><%= number_with_precision(payment.amount, precision: 4) unless payment.amount.blank? %></td>
+            <td> <%= render :partial => '/layouts/crud/edit', :locals => { :model => SupplierPayment, :path => edit_supplier_payment_path(payment) } %>
+            <%= render :partial => '/layouts/crud/delete', :locals => { :model => SupplierPayment, :path => payment, :msg => t("activerecord.models.supplier_payment.one"), :txt => payment.payment_no } %> </td>
+          </tr>
+          <% end %>
+        </tbody>
+      </table>
+      <%= render :partial => '/layouts/pagination', :locals => { :ivar => @supplier_payments } %>
+    </div><!-- /.span9 -->
+  </div><!-- /.row-fluid -->
+</div><!-- /.container-fluid -->

@@ -103,6 +103,19 @@ class ReceiptNote < ActiveRecord::Base
     ReceiptNote.order("id").last
   end
 
+  searchable do
+    text :receipt_no
+    string :receipt_no
+    integer :id
+    integer :payment_method_id
+    integer :project_id
+    integer :store_id
+    integer :work_order_id
+    integer :charge_account_id
+    integer :supplier_id
+    date :receipt_date
+  end
+
   private
 
   def check_for_dependent_records

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140615120548) do
+ActiveRecord::Schema.define(:version => 20140622090730) do
 
   create_table "activities", :force => true do |t|
     t.string   "description"
@@ -1143,10 +1143,12 @@ ActiveRecord::Schema.define(:version => 20140615120548) do
     t.datetime "created_at",                                                                    :null => false
     t.datetime "updated_at",                                                                    :null => false
     t.integer  "supplier_invoice_approval__id"
+    t.string   "payment_no"
   end
 
   add_index "supplier_payments", ["approver_id"], :name => "index_supplier_payments_on_approver_id"
   add_index "supplier_payments", ["payment_method_id"], :name => "index_supplier_payments_on_payment_method_id"
+  add_index "supplier_payments", ["payment_no"], :name => "index_supplier_payments_on_payment_no"
   add_index "supplier_payments", ["supplier_id"], :name => "index_supplier_payments_on_supplier_id"
   add_index "supplier_payments", ["supplier_invoice_approval__id"], :name => "index_supplier_payments_on_supplier_invoice_approval__id"
   add_index "supplier_payments", ["supplier_invoice_id"], :name => "index_supplier_payments_on_supplier_invoice_id"

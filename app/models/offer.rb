@@ -121,6 +121,7 @@ class Offer < ActiveRecord::Base
   searchable do
     text :offer_no
     string :offer_no
+    integer :id
     integer :payment_method_id
     integer :project_id
     integer :store_id

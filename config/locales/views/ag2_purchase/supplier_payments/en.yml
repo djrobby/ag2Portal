@@ -6,7 +6,6 @@ en:
         btn_new: "New Payment"
         back_to_root: "Back to ag2Purchase"
         label_supplier: "Supplier"
-        label_project: "Project"
         label_invoice: "Invoice"
         label_others: "Others"
         btn_apply: "Apply Filter"

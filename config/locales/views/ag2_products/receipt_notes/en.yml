@@ -1,10 +1,10 @@
 en:
-  ag2_purchase:
+  ag2_products:
     receipt_notes:
       index:
         title: "Receipt notes"
         btn_new: "New Receipt note"
-        back_to_root: "Back to ag2Purchase"
+        back_to_root: "Back to ag2Logistics"
         label_supplier: "Supplier"
         label_project: "Project"
         label_work_order: "Work order"

@@ -101,19 +101,31 @@ class DeliveryNote < ActiveRecord::Base
   # Records navigator
   #
   def to_first
-    DeliveryNote.order("id").first
+    DeliveryNote.order("delivery_no").first
   end
 
   def to_prev
-    DeliveryNote.where("id < ?", id).order("id").last
+    DeliveryNote.where("delivery_no < ?", delivery_no).order("delivery_no").last
   end
 
   def to_next
-    DeliveryNote.where("id > ?", id).order("id").first
+    DeliveryNote.where("delivery_no > ?", delivery_no).order("delivery_no").first
   end
 
   def to_last
-    DeliveryNote.order("id").last
+    DeliveryNote.order("delivery_no").last
+  end
+
+  searchable do
+    text :delivery_no
+    string :delivery_no
+    integer :payment_method_id
+    integer :project_id
+    integer :store_id
+    integer :work_order_id
+    integer :charge_account_id
+    integer :client_id
+    date :delivery_date
   end
 
   private

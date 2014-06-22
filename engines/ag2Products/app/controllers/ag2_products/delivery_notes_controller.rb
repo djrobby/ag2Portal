@@ -14,7 +14,30 @@ module Ag2Products
     # GET /delivery_notes
     # GET /delivery_notes.json
     def index
-      @delivery_notes = DeliveryNote.all
+      client = params[:Client]
+      project = params[:Project]
+      order = params[:Order]
+
+      @search = DeliveryNote.search do
+        fulltext params[:search]
+        if !client.blank?
+          with :client_id, client
+        end
+        if !project.blank?
+          with :project_id, project
+        end
+        if !order.blank?
+          with :work_order_id, order
+        end
+        order_by :delivery_no, :asc
+        paginate :page => params[:page] || 1, :per_page => per_page
+      end
+      @delivery_notes = @search.results
+
+      # Initialize select_tags
+      @clients = Client.order('name') if @clients.nil?
+      @projects = Project.order('project_code') if @projects.nil?
+      @work_orders = WorkOrder.order('order_no') if @work_orders.nil?
   
       respond_to do |format|
         format.html # index.html.erb
