@@ -51,6 +51,10 @@ Ag2Admin::Engine.routes.draw do
     #
     match 'update_company_organization_from_office/:box', :controller => 'users', :action => 'update_company_organization_from_office'
     match 'update_organization_from_company/:box', :controller => 'users', :action => 'update_organization_from_company'
+    #
+    match 'guides/gu_update_site_from_app/:app', :controller => 'guides', :action => 'gu_update_site_from_app'
+    match 'gu_update_site_from_app/:app', :controller => 'guides', :action => 'gu_update_site_from_app'
+    match 'guides/:id/gu_update_site_from_app/:app', :controller => 'guides', :action => 'gu_update_site_from_app'
 
     # Resources
     resources :users

@@ -6,6 +6,7 @@ en:
         one:   App
         few:   Apps
         other: Apps
+        check_for_guides: "App cannot be destroyed while linked guides exist."
     attributes:
       app:
         name: "Name"

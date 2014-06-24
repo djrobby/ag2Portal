@@ -6,6 +6,7 @@ es:
         one:   App
         few:   Apps
         other: Apps
+        check_for_guides: "App no puede ser eliminada mientras existan guías vinculadas."
     attributes:
       app:
         name: "Nombre"

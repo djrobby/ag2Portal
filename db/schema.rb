@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140624153955) do
+ActiveRecord::Schema.define(:version => 20140624181726) do
 
   create_table "activities", :force => true do |t|
     t.string   "description"
@@ -403,6 +403,8 @@ ActiveRecord::Schema.define(:version => 20140624153955) do
     t.text     "body",        :limit => 16777215
     t.datetime "created_at",                      :null => false
     t.datetime "updated_at",                      :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
   end
 
   add_index "guides", ["app_id"], :name => "index_guides_on_app_id"

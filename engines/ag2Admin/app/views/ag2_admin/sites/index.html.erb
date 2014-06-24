@@ -5,6 +5,7 @@
   <table class="table table-condensed table-striped">
     <thead>
       <tr>
+        <th><%=sortable "id", 'Id' %></th>
         <th><%= sortable "name", t('activerecord.attributes.site.name') %></th>
         <th><%=t 'activerecord.attributes.site.path' %></th>
         <th></th>
@@ -13,6 +14,7 @@
     <tbody>
       <% @sites.each do |site| %>
       <tr>
+        <td><%= site.id %></td>
         <td><%= link_to site.name, site %></td>
         <td><%= site.path %></td>
         <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => Site, :path => edit_site_path(site) } %>

@@ -19,3 +19,6 @@ es:
       countries:
         items: "Países"
         item: "País"
+      guides:
+        items: "Guías"
+        item: "Guía"

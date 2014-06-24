@@ -5,6 +5,7 @@
   <table class="table table-condensed table-striped">
     <thead>
       <tr>
+        <th><%=sortable "id", 'Id' %></th>
         <th><%=sortable "name", t('activerecord.attributes.app.name') %></th>
         <th><%=t 'activerecord.attributes.app.path' %></th>
         <th><%= sortable "site_id", t('activerecord.attributes.app.site') %></th>
@@ -14,6 +15,7 @@
     <tbody>
       <% @apps.each do |app| %>
       <tr>
+        <td><%= app.id %></td>
         <td><%= link_to app.name, app %></td>
         <td><%= app.site.path %>/<%= app.path %></td>
         <td><%= app.site.name unless app.site.blank? %></td>

@@ -3,6 +3,7 @@ class Site < ActiveRecord::Base
                   :created_by, :updated_by
 
   has_many :apps
+  has_many :guides
 
   has_paper_trail
 
@@ -12,12 +13,16 @@ class Site < ActiveRecord::Base
   validates :path,        :presence => true
   validates :pict_file,   :presence => true
 
-  before_destroy :check_for_apps
+  before_destroy :check_for_apps_guides
 
   private
-  def check_for_apps
+  def check_for_apps_guides
     if apps.count > 0
       errors.add(:base, I18n.t('activerecord.models.site.check_for_apps'))
+      return false
+    end
+    if guides.count > 0
+      errors.add(:base, I18n.t('activerecord.models.site.check_for_guides'))
       return false
     end
   end

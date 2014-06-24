@@ -88,12 +88,16 @@ module Ag2Admin
     # DELETE /apps/1.json
     def destroy
       @app = App.find(params[:id])
-      @app.destroy
 
       respond_to do |format|
-        format.html { redirect_to apps_url,
+        if @app.destroy
+          format.html { redirect_to apps_url,
                       notice: (crud_notice('destroyed', @app) + "#{undo_link(@app)}").html_safe }
-        format.json { head :no_content }
+          format.json { head :no_content }
+        else
+          format.html { redirect_to apps_url, alert: "#{@app.errors[:base].to_s}".gsub('["', '').gsub('"]', '') }
+          format.json { render json: @app.errors, status: :unprocessable_entity }
+        end
       end
     end
 

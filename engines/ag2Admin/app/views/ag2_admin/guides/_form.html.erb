@@ -1,17 +1,32 @@
-<%= form_for(@guide) do |f| %>
-  <% if @guide.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@guide.errors.count, "error") %> prohibited this guide from being saved:</h2>
+<script>
+  jQuery(function($) {
+    // when the #guide_app_id field changes
+    $("#guide_app_id").change(function() {
+      // make a POST call and replace the content
+      var app = $('select#guide_app_id :selected').val();
+      if (app == "")
+        app = "0";
+      jQuery.getJSON('gu_update_site_from_app/' + app, function(data) {
+        if (data != null) {
+          $("#guide_site_id").val(data.id);
+        } else {
+          $("#guide_site_id").val(0);
+        }
+      })
+      return false;
+    });
+  });
+</script>
 
-      <ul>
-      <% @guide.errors.full_messages.each do |msg| %>
-        <li><%= msg %></li>
-      <% end %>
-      </ul>
-    </div>
-  <% end %>
-
-  <div class="actions">
-    <%= f.submit %>
-  </div>
+<%= simple_form_for @guide, :html => { :class => 'form-vertical well' } do |f| %>
+<%= f.error_notification %>
+<%= display_base_errors resource %>
+<%= f.input :name, :autofocus => true, :input_html => { :class => 'large-text-field' }, :label_html => { :class => 'form-label' } %>
+<%= f.input :description, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %>
+<div>
+  <label class="multi-field-label-two"> <%= f.association :app, collection: App.all(order: 'name'), :input_html => { :class => 'large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.association :site, collection: Site.all(order: 'name'), :input_html => { :class => 'large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+</div>
+<%= f.input :body, :as => :text, :input_html => { :class => 'x-large-text-field', :rows => 20 }, :label_html => { :class => 'form-label' } %>
+<%= f.button :submit, :class => 'btn-primary' %>
 <% end %>

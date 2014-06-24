@@ -7,6 +7,7 @@ es:
         few:   Sitios
         other: Sitios
         check_for_apps: "Sitio no puede ser eliminado mientras existan apps vinculadas."
+        check_for_guides: "Sitio no puede ser eliminado mientras existan guías vinculadas."
     attributes:
       site:
         name: "Nombre"

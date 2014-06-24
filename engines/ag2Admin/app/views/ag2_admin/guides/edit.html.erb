@@ -1,6 +1,8 @@
-<h1>Editing guide</h1>
+<%= render '/layouts/ag2_admin/guidesbreadcrumb' %>
+
+<h3><%=t '.title' %></h3>
 
 <%= render 'form' %>
 
-<%= link_to 'Show', @guide %> |
-<%= link_to 'Back', guides_path %>
+<%= link_to I18n.t('ag2_admin.guides.edit.btn_show'), @guide %> |
+<%= link_to I18n.t('ag2_admin.guides.back_to_main_page'), guides_path %>

@@ -1,0 +1,17 @@
+en:
+  activerecord:
+    models:
+      app:
+        zero:  Guides
+        one:   Guide
+        few:   Guides
+        other: Guides
+    attributes:
+      app:
+        site_id: "Site"
+        site: "Site"
+        app_id: "App"
+        app: "App"
+        name: "Title"
+        description: "Description"
+        body: "Body"

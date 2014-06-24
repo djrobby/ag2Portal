@@ -1,0 +1,17 @@
+es:
+  activerecord:
+    models:
+      guide:
+        zero:  Guías
+        one:   Guía
+        few:   Guías
+        other: Guías
+    attributes:
+      guide:
+        site_id: "Sitio"
+        site: "Sitio"
+        app_id: "App"
+        app: "App"
+        name: "Título"
+        description: "Descripción"
+        body: "Cuerpo"

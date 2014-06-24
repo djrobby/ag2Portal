@@ -1,0 +1,17 @@
+en:
+  ag2_admin:
+    guides:
+      index:
+        title: "Guides"
+        btn_new: "New Guide"
+        back_to_root: "Back to ag2Config"
+      show:
+        title: "Guide"
+        btn_edit: "Edit Guide"
+        btn_delete: "Delete Guide"
+      edit:
+        title: "Edit Guide"
+        btn_show: "Show Guide"
+      new:
+        title: "New Guide"
+      back_to_main_page: "Back to Guides"
