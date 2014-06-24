@@ -72,6 +72,7 @@ Ag2Admin::Engine.routes.draw do
     resources :departments
     resources :areas
     resources :organizations
+    resources :guides
     
     # Root
     root :to => 'home#index'

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140622090730) do
+ActiveRecord::Schema.define(:version => 20140624153955) do
 
   create_table "activities", :force => true do |t|
     t.string   "description"
@@ -394,6 +394,20 @@ ActiveRecord::Schema.define(:version => 20140622090730) do
   end
 
   add_index "fiscal_descriptions", ["code"], :name => "index_fiscal_descriptions_on_code", :unique => true
+
+  create_table "guides", :force => true do |t|
+    t.integer  "site_id"
+    t.integer  "app_id"
+    t.string   "name"
+    t.string   "description"
+    t.text     "body",        :limit => 16777215
+    t.datetime "created_at",                      :null => false
+    t.datetime "updated_at",                      :null => false
+  end
+
+  add_index "guides", ["app_id"], :name => "index_guides_on_app_id"
+  add_index "guides", ["name"], :name => "index_guides_on_name", :unique => true
+  add_index "guides", ["site_id"], :name => "index_guides_on_site_id"
 
   create_table "insurances", :force => true do |t|
     t.string   "name"

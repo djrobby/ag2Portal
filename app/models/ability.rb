@@ -20,6 +20,7 @@ class Ability
     # Users can't manage configurations
     cannot :manage, App
     cannot :manage, DataImportConfig
+    cannot :manage, Guide
     cannot :manage, Role
     cannot :manage, Site
     cannot :manage, User
