@@ -4,6 +4,7 @@ Ag2Portal::Application.routes.draw do
     get "icores/index"
     get "lowres/index"
     get "home/index"
+    get "guide/index"
     
     # Devise (the standard route is: devise_for :users) localized
     devise_for :users, :controllers => { :omniauth_callbacks => "users/omniauth_callbacks" }

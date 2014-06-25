@@ -4,6 +4,7 @@ class Ability
     # user ||= User.new # guest user (not logged in)
     alias_action :create, :read, :update, :destroy, :to => :crud
     alias_action :create, :update, :to => :write
+    alias_action :create, :update, :destroy, :to => :cud
 
     # Not logged-in users can't manage anything
     if user.nil?
@@ -20,10 +21,13 @@ class Ability
     # Users can't manage configurations
     cannot :manage, App
     cannot :manage, DataImportConfig
-    cannot :manage, Guide
     cannot :manage, Role
     cannot :manage, Site
     cannot :manage, User
+
+    # Users can read guides
+    cannot :cud, Guide
+    cannot :cud, Subguide
 
     # Users can manage attachments
     can :manage, Attachment

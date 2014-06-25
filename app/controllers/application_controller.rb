@@ -288,6 +288,8 @@ end
       else
         "registration"
       end
+    elsif is_a?(ApplicationController::GuideController)
+      "guide"
     else
       "application"
     end

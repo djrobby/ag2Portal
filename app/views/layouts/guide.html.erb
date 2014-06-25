@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= content_for?(:title) ? yield(:title) : "aGestiona2 | Guides" %></title>
+    <meta name="description" content="aGestiona2 Guides">
+    <meta name="author" content="Nestor Rodriguez (SPSI) para AYG">
+    <%= favicon_link_tag "/favicon.ico?1" %>
+    <%= stylesheet_link_tag    "application", :media => "all" %>
+    <%= javascript_include_tag "application" %>
+    <%= csrf_meta_tags %>
+    <%= yield(:head) %>
+  </head>
+  <body>
+    <!-- Header NavBar -->
+    <header class="navbar navbar-fixed-top">
+      <nav class="navbar-inner">
+        <div class="container">
+          <%= render '/layouts/guidehead' %>
+        </div>
+      </nav>
+    </header>
+    <!-- Main container -->
+    <div id="main" role="main">
+      <div class="container">
+        <div class="row">
+          <div class="span12">
+            <%= render '/layouts/messages' %>
+            <%= yield %>
+          </div>
+        </div>
+      </div>
+    </div><!-- /#main -->
+    <!-- Footer NavBar -->
+    <footer class="navbar navbar-fixed-bottom">
+      <div class="navbar-inner">
+        <div class="container">
+          <%= render '/layouts/guidefoot' %>
+        </div>
+      </div>
+    </footer>
+    <!-- Modals -->
+    <%= render '/layouts/about' %>
+  </body>
+</html>
