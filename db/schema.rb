@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140624181726) do
+ActiveRecord::Schema.define(:version => 20140625121631) do
 
   create_table "activities", :force => true do |t|
     t.string   "description"
@@ -405,11 +405,13 @@ ActiveRecord::Schema.define(:version => 20140624181726) do
     t.datetime "updated_at",                      :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
+    t.integer  "sort_order"
   end
 
   add_index "guides", ["app_id"], :name => "index_guides_on_app_id"
   add_index "guides", ["name"], :name => "index_guides_on_name", :unique => true
   add_index "guides", ["site_id"], :name => "index_guides_on_site_id"
+  add_index "guides", ["sort_order"], :name => "index_guides_on_sort_order"
 
   create_table "insurances", :force => true do |t|
     t.string   "name"
@@ -1046,6 +1048,22 @@ ActiveRecord::Schema.define(:version => 20140624181726) do
   end
 
   add_index "street_types", ["street_type_code"], :name => "index_street_types_on_street_type_code"
+
+  create_table "subguides", :force => true do |t|
+    t.integer  "guide_id"
+    t.string   "name"
+    t.string   "description"
+    t.text     "body",        :limit => 16777215
+    t.integer  "sort_order"
+    t.datetime "created_at",                      :null => false
+    t.datetime "updated_at",                      :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  add_index "subguides", ["guide_id"], :name => "index_subguides_on_guide_id"
+  add_index "subguides", ["name"], :name => "index_subguides_on_name", :unique => true
+  add_index "subguides", ["sort_order"], :name => "index_subguides_on_sort_order"
 
   create_table "supplier_contacts", :force => true do |t|
     t.integer  "supplier_id"
