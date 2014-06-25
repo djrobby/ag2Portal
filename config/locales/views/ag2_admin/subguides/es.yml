@@ -10,6 +10,7 @@ es:
         title: "Subguía"
         btn_edit: "Editar Subguía"
         btn_delete: "Borrar Subguía"
+        show_to: "Ver Guía"
       edit:
         title: "Editar Subguía"
         btn_show: "Ver Subguía"

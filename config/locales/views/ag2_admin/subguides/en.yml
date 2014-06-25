@@ -10,6 +10,7 @@ en:
         title: "Subguide"
         btn_edit: "Edit Subguide"
         btn_delete: "Delete Subguide"
+        show_to: "Show Guide"
       edit:
         title: "Edit Subguide"
         btn_show: "Show Subguide"

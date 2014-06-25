@@ -1,4 +1,4 @@
-<%= render '/layouts/ag2_admin/guidesbreadcrumb' %>
+<%= render '/layouts/ag2_admin/subguidesbreadcrumb' %>
 
 <h3><%= t '.title' %></h3>
 <table class="table">
@@ -10,7 +10,7 @@
       <td><%= @subguide.sort_order %></td>
     </tr>
     <tr>
-      <td><%=t 'activerecord.attributes.subguide.app' %>:</td>
+      <td><%=t 'activerecord.attributes.subguide.guide' %>:</td>
       <td><%= @subguide.guide.name unless @subguide.guide.blank? %></td>
       <td></td>
       <td></td>

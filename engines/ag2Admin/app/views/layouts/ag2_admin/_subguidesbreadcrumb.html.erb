@@ -1,6 +1,6 @@
-<% content_for :title, "aGestiona2 | ag2Subguides" %>
+<% content_for :title, "aGestiona2 | ag2Guides" %>
 <% content_for :icon, "/assets/icon/ag2Guides.png" %>
-<% content_for :alt, "ag2Subguides" %>
+<% content_for :alt, "ag2Guides" %>
 
 <!-- Breadcrumb -->
 <ul class="breadcrumb">
@@ -13,14 +13,17 @@
   <li>
     <a href="<%= ag2_admin.config_path %>">ag2Config</a><span class="divider">></span>
   </li>
+  <li>
+    <a href="<%= ag2_admin.guides_path %>">ag2Guides</a><span class="divider">></span>
+  </li>
   <% if @subguides %>
   <li>
-    ag2Subguides
+    <%= t :"ag2_admin.breadcrumb.subguides.items" %>
   </li>
   <% end %>
   <% if @subguide %>
   <li>
-    <a href="<%= subguides_path %>">ag2Subguides</a><span class="divider">></span>
+    <a href="<%= subguides_path %>"><%= t :"ag2_admin.breadcrumb.subguides.items" %></a><span class="divider">></span>
   </li>
   <% if @breadcrumb == 'read' || @breadcrumb == 'update' %>
   <%= t :"ag2_admin.breadcrumb.subguides.item" %>

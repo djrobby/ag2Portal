@@ -4,7 +4,7 @@ es:
       index:
         title: "Guías"
         btn_new: "Nueva Guía"
-        go_to: "Ir a ag2Subguides"
+        go_to: "Ir a Subguías"
         back_to_root: "Volver a ag2Config"
       show:
         title: "Guía"
