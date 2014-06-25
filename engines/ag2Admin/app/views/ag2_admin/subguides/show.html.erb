@@ -1,0 +1,45 @@
+<%= render '/layouts/ag2_admin/guidesbreadcrumb' %>
+
+<h3><%= t '.title' %></h3>
+<table class="table">
+  <tbody>
+    <tr>
+      <td>Id:</td>
+      <td><%= @subguide.id %></td>
+      <td><%=t 'activerecord.attributes.subguide.sort_order' %>:</td>
+      <td><%= @subguide.sort_order %></td>
+    </tr>
+    <tr>
+      <td><%=t 'activerecord.attributes.subguide.app' %>:</td>
+      <td><%= @subguide.guide.name unless @subguide.guide.blank? %></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><%=t 'activerecord.attributes.subguide.name' %>:</td>
+      <td><%= @subguide.name %></td>
+      <td><%=t 'activerecord.attributes.subguide.description' %>:</td>
+      <td><%= @subguide.description %></td>
+    </tr>
+    <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @subguide } %>
+    <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @subguide } %>
+  </tbody>
+</table>
+
+<!-- Body -->
+<table class="table">
+  <tbody>
+    <tr>
+      <td style="width: 7%"><%= t 'activerecord.attributes.subguide.body' %>:</td>
+      <td style="width: 93%"><%= @subguide.body unless @subguide.body.blank? %></td>
+    </tr>
+  </tbody>
+</table>
+
+<%= render :partial => '/layouts/crud/update_delete_new', locals:
+{ model: Subguide, update_path: edit_subguide_path(@subguide), update_txt: t('ag2_admin.subguides.show.btn_edit'),
+delete_path: @subguide, delete_txt: t('ag2_admin.subguides.show.btn_delete'), msg: t("activerecord.models.subguide.one"), :txt => @subguide.name,
+new_path: new_subguide_path, new_txt: t('ag2_admin.subguides.index.btn_new') } %>
+
+<%= link_to I18n.t('ag2_admin.subguides.show.show_to'), @subguide.guide %> |
+<%= link_to I18n.t('ag2_admin.subguides.back_to_main_page'), subguides_path %>

@@ -1,0 +1,16 @@
+en:
+  activerecord:
+    models:
+      subguide:
+        zero:  Subguides
+        one:   Subguide
+        few:   Subguides
+        other: Subguides
+    attributes:
+      subguide:
+        guide_id: "Guide"
+        guide: "Guide"
+        name: "Title"
+        description: "Description"
+        body: "Body"
+        sort_order: "Order"

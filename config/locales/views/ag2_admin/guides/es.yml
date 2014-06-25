@@ -4,11 +4,15 @@ es:
       index:
         title: "Guías"
         btn_new: "Nueva Guía"
+        go_to: "Ir a ag2Subguides"
         back_to_root: "Volver a ag2Config"
       show:
         title: "Guía"
         btn_edit: "Editar Guía"
         btn_delete: "Borrar Guía"
+        subtable_title: "Subguías de la Guía"
+        return_to: "Volver a Guía"
+        show_to: "Ver Subguía"
       edit:
         title: "Editar Guía"
         btn_show: "Ver Guía"

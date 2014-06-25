@@ -22,3 +22,6 @@ es:
       guides:
         items: "Guías"
         item: "Guía"
+      subguides:
+        items: "Subguías"
+        item: "Subguía"

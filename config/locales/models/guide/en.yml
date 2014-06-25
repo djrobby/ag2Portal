@@ -1,13 +1,14 @@
 en:
   activerecord:
     models:
-      app:
+      guide:
         zero:  Guides
         one:   Guide
         few:   Guides
         other: Guides
+        check_for_subguides: "Guide cannot be destroyed while linked subguides exist."
     attributes:
-      app:
+      guide:
         site_id: "Site"
         site: "Site"
         app_id: "App"
@@ -15,3 +16,4 @@ en:
         name: "Title"
         description: "Description"
         body: "Body"
+        sort_order: "Order"

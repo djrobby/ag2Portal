@@ -38,6 +38,7 @@ module Ag2Admin
     def show
       @breadcrumb = 'read'
       @guide = Guide.find(params[:id])
+      @subguides = @guide.subguides.paginate(:page => params[:page], :per_page => per_page).order('sort_order')
   
       respond_to do |format|
         format.html # show.html.erb
@@ -120,7 +121,7 @@ module Ag2Admin
     private
 
     def sort_column
-      Guide.column_names.include?(params[:sort]) ? params[:sort] : "id"
+      Guide.column_names.include?(params[:sort]) ? params[:sort] : "sort_order"
     end
   end
 end

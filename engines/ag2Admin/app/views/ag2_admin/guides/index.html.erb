@@ -5,7 +5,7 @@
   <table class="table table-condensed table-striped">
     <thead>
       <tr>
-        <th><%=sortable "id", 'Id' %></th>
+        <th><%=sortable "sort_order", t('activerecord.attributes.guide.sort_order') %></th>
         <th><%=sortable "name", t('activerecord.attributes.guide.name') %></th>
         <th><%= sortable "site_id", t('activerecord.attributes.guide.site') %></th>
         <th><%= sortable "app_id", t('activerecord.attributes.guide.app') %></th>
@@ -15,7 +15,7 @@
     <tbody>
       <% @guides.each do |guide| %>
       <tr>
-        <td><%= guide.id %></td>
+        <td><%= guide.sort_order %></td>
         <td><%= link_to guide.name, guide %></td>
         <td><%= guide.site.name unless guide.site.blank? %></td>
         <td><%= guide.app.name unless guide.app.blank? %></td>
@@ -27,5 +27,6 @@
   </table>
   <%= render :partial => '/layouts/pagination', :locals => { :ivar => @guides } %>
   <%= render :partial => '/layouts/crud/new', :locals => { :model => Guide, :path => new_guide_path, :txt => t(".btn_new") } %>
+  <%= link_to t(".go_to"), subguides_path %> |
   <%= link_to t(".back_to_root"), ag2_admin.config_path %>
 </div>

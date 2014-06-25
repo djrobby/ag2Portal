@@ -21,11 +21,14 @@
 <%= simple_form_for @guide, :html => { :class => 'form-vertical well' } do |f| %>
 <%= f.error_notification %>
 <%= display_base_errors resource %>
-<%= f.input :name, :autofocus => true, :input_html => { :class => 'large-text-field' }, :label_html => { :class => 'form-label' } %>
+<div>
+  <label class="multi-field-label-two"> <%= f.input :name, :autofocus => true, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.input :sort_order, :input_html => { :class => 'mid-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+</div>
 <%= f.input :description, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %>
 <div>
-  <label class="multi-field-label-two"> <%= f.association :app, collection: App.all(order: 'name'), :input_html => { :class => 'large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
-  <label class="multi-field-label-two"> <%= f.association :site, collection: Site.all(order: 'name'), :input_html => { :class => 'large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.association :app, collection: App.all(order: 'name'), :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.association :site, collection: Site.all(order: 'name'), :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
 </div>
 <%= f.input :body, :as => :text, :input_html => { :class => 'x-large-text-field', :rows => 20 }, :label_html => { :class => 'form-label' } %>
 <%= f.button :submit, :class => 'btn-primary' %>

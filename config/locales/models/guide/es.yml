@@ -6,6 +6,7 @@ es:
         one:   Guía
         few:   Guías
         other: Guías
+        check_for_subguides: "Guía no puede ser eliminada mientras existan subguías vinculadas."
     attributes:
       guide:
         site_id: "Sitio"
@@ -15,3 +16,4 @@ es:
         name: "Título"
         description: "Descripción"
         body: "Cuerpo"
+        sort_order: "Orden"

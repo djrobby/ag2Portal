@@ -1,0 +1,30 @@
+<%= render '/layouts/ag2_admin/subguidesbreadcrumb' %>
+
+<h3><%=t '.title' %></h3>
+<div class="span11">
+  <table class="table table-condensed table-striped">
+    <thead>
+      <tr>
+        <th><%=sortable "sort_order", t('activerecord.attributes.subguide.sort_order') %></th>
+        <th><%=sortable "name", t('activerecord.attributes.subguide.name') %></th>
+        <th><%= sortable "guide_id", t('activerecord.attributes.subguide.guide') %></th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @subguides.each do |guide| %>
+      <tr>
+        <td><%= guide.sort_order %></td>
+        <td><%= link_to guide.name, guide %></td>
+        <td><%= guide.guide.name unless guide.guide.blank? %></td>
+        <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => Subguide, :path => edit_subguide_path(guide) } %>
+        <%= render :partial => '/layouts/crud/delete', :locals => { :model => Subguide, :path => guide, :msg => I18n.t("activerecord.models.subguide.one"), :txt => guide.name } %> </td>
+      </tr>
+      <% end %>
+    </tbody>
+  </table>
+  <%= render :partial => '/layouts/pagination', :locals => { :ivar => @subguides } %>
+  <%= render :partial => '/layouts/crud/new', :locals => { :model => Subguide, :path => new_subguide_path, :txt => t(".btn_new") } %>
+  <%= link_to t(".go_to"), guides_path %> |
+  <%= link_to t(".back_to_root"), ag2_admin.config_path %>
+</div>

@@ -4,11 +4,15 @@ en:
       index:
         title: "Guides"
         btn_new: "New Guide"
+        go_to: "Go to ag2Subguides"
         back_to_root: "Back to ag2Config"
       show:
         title: "Guide"
         btn_edit: "Edit Guide"
         btn_delete: "Delete Guide"
+        subtable_title: "Guide Subguides"
+        return_to: "Back to Guide"
+        show_to: "Show Subguide"
       edit:
         title: "Edit Guide"
         btn_show: "Show Guide"

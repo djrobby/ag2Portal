@@ -6,8 +6,8 @@
     <tr>
       <td>Id:</td>
       <td><%= @guide.id %></td>
-      <td></td>
-      <td></td>
+      <td><%=t 'activerecord.attributes.guide.sort_order' %>:</td>
+      <td><%= @guide.sort_order %></td>
     </tr>
     <tr>
       <td><%=t 'activerecord.attributes.guide.name' %>:</td>
@@ -40,5 +40,26 @@
 { model: Guide, update_path: edit_guide_path(@guide), update_txt: t('ag2_admin.guides.show.btn_edit'),
 delete_path: @guide, delete_txt: t('ag2_admin.guides.show.btn_delete'), msg: t("activerecord.models.guide.one"), :txt => @guide.name,
 new_path: new_guide_path, new_txt: t('ag2_admin.guides.index.btn_new') } %>
+
+<% if (@subguides.count > 0) %>
+<h4><%=t '.subtable_title' %></h4>
+<table class="table table-condensed table-striped">
+  <thead>
+    <tr>
+      <th><%=t 'activerecord.attributes.subguide.sort_order' %></th>
+      <th><%=t 'activerecord.attributes.subguide.name' %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @subguides.each do |guide| %>
+    <tr>
+      <td><%= guide.sort_order %></td>
+      <td><%= link_to guide.name, guide %></td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @subguides } %>
+<% end %>
 
 <%= link_to I18n.t('ag2_admin.guides.back_to_main_page'), guides_path %>
