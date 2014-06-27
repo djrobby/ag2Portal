@@ -10,6 +10,9 @@
     </li>
   </ul>
   <p class="pull-right" style="padding-top: 13px">
-    <a href="<%= main_app.root_path %>" class="btn btn-primary"><%= t :close_button %></a>
+    <% if false %>
+      <a href="<%= main_app.root_path %>" class="btn btn-primary"><%= t :close_button %></a>
+    <% end %>
+    <a href="#" onclick="window.close();return false;" class="btn btn-primary"><%= t :close_button %></a>
   </p>
 </div><!--/.nav-collapse -->

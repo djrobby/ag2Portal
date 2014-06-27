@@ -16,6 +16,9 @@ Ag2Portal::Application.routes.draw do
     match 'oco_company_organization_from_office/:office', :controller => 'oco', :action => 'oco_company_organization_from_office'
     match 'oco_organization_from_company/:company', :controller => 'oco', :action => 'oco_organization_from_company'
     match 'oco_set_session/:office/:company/:organization', :controller => 'oco', :action => 'oco_set_session'
+    #
+    match 'guide/gu_content_from_guide/:name', :controller => 'guide', :action => 'gu_content_from_guide'
+    match 'guide/gu_content_from_subguide/:name', :controller => 'guide', :action => 'gu_content_from_subguide'
         
     # Root
     root :to => "welcome#index"

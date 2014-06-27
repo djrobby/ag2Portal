@@ -1,14 +1,46 @@
+<script>
+  jQuery(function($) {
+    // when the .guide link is clicked
+    $(".guide").click(function(e) {
+      e.preventDefault();
+      // make a POST call and replace the content
+      var _this = (this);
+      setContent(_this, 'gu_content_from_guide/');
+      return false;
+    });
+
+    // when the .subguide link is clicked
+    $(".subguide").click(function(e) {
+      e.preventDefault();
+      // make a POST call and replace the content
+      var _this = (this);
+      setContent(_this, 'gu_content_from_subguide/');
+      return false;
+    });
+
+    // Set content
+    function setContent(_this, f) {
+      var t = _this.innerText;
+      jQuery.getJSON(f + t, function(data) {
+        if (data.content != null) {
+          document.getElementById("content").innerHTML = data.content;
+        }
+      });
+    }
+  });
+</script>
+
 <div class="row-fluid" style="padding-top: 12px">
   <div class="span4 well sidebar-nav">
     <table>
       <tbody>
         <% @guides.each do |g| %>
         <tr>
-          <td><a href="#" target="content"><%= g.name %></a></td>
+          <td><a href="#" class="guide"><%= g.name %></a></td>
         </tr>
         <% g.subguides.each do |s| %>
         <tr>
-          <td style="padding-left: 1em"><a href="#" target="content"><%= s.name %></a></td>
+          <td style="padding-left: 1em"><a href="#" class="subguide"><%= s.name %></a></td>
         </tr>
         <% end %>
         <% end %>
@@ -16,8 +48,6 @@
     </table>
   </div>
   <div class="span8" id="content">
-    <p>
-      Find me in app/views/guide/index.html.erb
-    </p>
+    <%= @guide.body.html_safe %>
   </div>
 </div>
