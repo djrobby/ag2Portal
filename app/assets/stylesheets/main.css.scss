@@ -125,6 +125,18 @@ th .current:focus {
 }
 
 /*
+ * Guides
+ */
+.guide-h4 {
+  margin: 10px 0;
+  font-family: inherit;
+  font-weight: bold;
+  line-height: 20px;
+  color: #da4f49;
+  text-rendering: optimizelegibility;
+}
+
+/*
  * Data import
  */
 .import-box {

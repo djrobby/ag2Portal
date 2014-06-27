@@ -31,7 +31,7 @@
   <tbody>
     <tr>
       <td style="width: 7%"><%= t 'activerecord.attributes.guide.body' %>:</td>
-      <td style="width: 93%"><%= @guide.body unless @guide.body.blank? %></td>
+      <td style="width: 93%"><%= @guide.body.html_safe unless @guide.body.blank? %></td>
     </tr>
   </tbody>
 </table>

@@ -23,7 +23,9 @@
       var t = _this.innerText;
       jQuery.getJSON(f + t, function(data) {
         if (data.content != null) {
-          document.getElementById("content").innerHTML = data.content;
+          document.getElementById("content").innerHTML = '<h4 class="guide-h4">' + t + '</h4>' + data.content
+        } else {
+          document.getElementById("content").innerHTML = '<h4 class="guide-h4">' + t + '</h4>'
         }
       });
     }
@@ -48,6 +50,7 @@
     </table>
   </div>
   <div class="span8" id="content">
+    <h4 class="guide-h4"><%= @guide.name.html_safe %></h4>
     <%= @guide.body.html_safe %>
   </div>
 </div>
