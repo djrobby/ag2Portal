@@ -1,4 +1,12 @@
 <script>
+  var previousLink;
+
+  $(document).ready(function() {
+    var _links = document.getElementById('index').rows[0].cells[0].getElementsByTagName("a");
+    previousLink = _links[0];
+    previousLink.style.color = "#da4f49";
+  });
+  
   jQuery(function($) {
     // when the .guide link is clicked
     $(".guide").click(function(e) {
@@ -22,11 +30,20 @@
     function setContent(_this, f) {
       var t = _this.innerText;
       jQuery.getJSON(f + t, function(data) {
-        if (data.content != null) {
-          document.getElementById("content").innerHTML = '<h4 class="guide-h4">' + t + '</h4>' + data.content
+        previousLink.removeAttribute("style");
+        _this.style.color = "#da4f49";
+        document.getElementById("name").innerHTML = t;
+        if (data.description != null) {
+          document.getElementById("description").innerHTML = data.description;
         } else {
-          document.getElementById("content").innerHTML = '<h4 class="guide-h4">' + t + '</h4>'
+          document.getElementById("description").innerHTML = '';
         }
+        if (data.body != null) {
+          document.getElementById("body").innerHTML = data.body;
+        } else {
+          document.getElementById("body").innerHTML = '';
+        }
+        previousLink = _this;
       });
     }
   });
@@ -34,7 +51,7 @@
 
 <div class="row-fluid" style="padding-top: 12px">
   <div class="span4 well sidebar-nav">
-    <table>
+    <table id="index">
       <tbody>
         <% @guides.each do |g| %>
         <tr>
@@ -42,7 +59,7 @@
         </tr>
         <% g.subguides.each do |s| %>
         <tr>
-          <td style="padding-left: 1em"><a href="#" class="subguide"><%= s.name %></a></td>
+          <td style="padding-left: 1em;"><a href="#" class="subguide"><%= s.name %></a></td>
         </tr>
         <% end %>
         <% end %>
@@ -50,7 +67,12 @@
     </table>
   </div>
   <div class="span8" id="content">
-    <h4 class="guide-h4"><%= @guide.name.html_safe %></h4>
-    <%= @guide.body.html_safe %>
+    <h4 id="name" class="guide-h4"><%= @guide.name.html_safe %></h4>
+    <div style="padding-left: 1em;">
+      <p><b id="description"><%= @guide.description.html_safe %></b></p>
+      <div id="body">
+        <%= @guide.body.html_safe %>
+      </div>
+    </div>
   </div>
 </div>
