@@ -111,7 +111,7 @@ class SupplierInvoice < ActiveRecord::Base
     (invoice_date - payment_avg_date).to_i rescue 0
   end
   
-  def approved_to_paid
+  def approved_to_pay
     supplier_invoice_approvals.sum("approved_amount")
   end
   

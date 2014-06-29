@@ -17,4 +17,5 @@
 //= require select2_locale_es
 //= require ag2_purchase
 //= require ag2_tech
+//= require ag2_products
 //= require_tree .
