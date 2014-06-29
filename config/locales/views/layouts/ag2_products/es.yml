@@ -28,6 +28,6 @@ es:
       delivery_notes:
         items: "Notas de entrega"
         item: "Entrega"
-      stocks:
+      receipt_notes:
         items: "Notas de recepción"
         item: "Recepción"

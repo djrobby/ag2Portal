@@ -1,0 +1,39 @@
+<tr>
+  <td></td>
+  <td align="right"><%= t :"activerecord.attributes.delivery_note.quantity" %> | <%= t :"activerecord.attributes.delivery_note.subtotal" %></td>
+  <td align="right" id="foot-quantity"><%= number_with_precision('0', precision: 4) %></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td align="right" id="foot-amount"><%= number_with_precision('0', precision: 4) %></td>
+  <td></td>
+  <td></td>
+</tr>
+<tr>
+  <td></td>
+  <td align="right"><%= t :"activerecord.attributes.delivery_note.bonus" %> | <%= t :"activerecord.attributes.delivery_note.taxable" %> | <%= t :"activerecord.attributes.delivery_note.taxes" %></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td align="right"><%= f.input :discount_pct, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(f.object.discount_pct, precision: 2) if f.object.discount_pct), class: 'sub-number-text-field' } %></td>
+  <td align="right" id="foot-discount"><%= number_with_precision('0', precision: 4) %></td>
+  <td align="right" id="foot-taxable"><%= number_with_precision('0', precision: 4) %></td>
+  <td align="right" id="foot-tax"><%= number_with_precision('0', precision: 4) %></td>
+  <td></td>
+</tr>
+<tr class="totals">
+  <td></td>
+  <td align="right"><%= t :"activerecord.attributes.delivery_note.item_costs" %> | <%= t :"activerecord.attributes.delivery_note.total" %></td>
+  <td></td>
+  <td></td>
+  <td align="right" id="foot-costs"><%= number_with_precision('0', precision: 4) %></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td align="right" id="foot-total"><%= number_with_precision('0', precision: 4) %></td>
+  <td></td>
+  <td><a href="#" onclick="javascript:$('#items-table').trigger('totals'); return false;"><i class="icon-refresh"></i></a></td>
+</tr>

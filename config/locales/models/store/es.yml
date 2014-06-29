@@ -23,3 +23,4 @@ es:
         location: "Ubicación"
         supplier: "Proveedor"
         supplier_id: "Proveedor"
+        stock: "Existencia total"

@@ -48,6 +48,9 @@ new_path: new_store_path, new_txt: t('ag2_products.stores.index.btn_new') } %>
   <thead>
     <%= render '/layouts/ag2_products/stocksstoreheader' %>
   </thead>
+  <tfoot>
+    <%= render :partial => '/layouts/ag2_products/stocksstorefooter', :locals => { :store => @store } %>
+  </tfoot>
   <tbody>
     <%= render :partial => '/layouts/ag2_products/stocksstore', :locals => { :stocks => @stocks } %>
   </tbody>

@@ -29,6 +29,13 @@ class Store < ActiveRecord::Base
 
   before_destroy :check_for_dependent_records
 
+  #
+  # Calculated fields
+  #
+  def stock
+    stocks.sum("current")
+  end
+
   private
 
   def check_for_dependent_records

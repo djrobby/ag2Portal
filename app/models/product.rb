@@ -92,6 +92,16 @@ class Product < ActiveRecord::Base
     Product.where("product_code > ?", product_code).order("product_code").first
   end
 
+  searchable do
+    text :product_code, :main_description, :aux_description, :manufacturer_p_code
+    integer :product_type_id
+    integer :product_family_id
+    integer :measure_id
+    integer :manufacturer_id
+    integer :tax_type_id
+    string :product_code
+  end
+
   def to_last
     Product.order("product_code").last
   end
@@ -144,15 +154,5 @@ class Product < ActiveRecord::Base
       errors.add(:base, I18n.t('activerecord.models.product.check_for_client_invoices'))
       return false
     end
-  end
-
-  searchable do
-    text :product_code, :main_description, :aux_description, :manufacturer_p_code
-    integer :product_type_id
-    integer :product_family_id
-    integer :measure_id
-    integer :manufacturer_id
-    integer :tax_type_id
-    string :product_code
   end
 end

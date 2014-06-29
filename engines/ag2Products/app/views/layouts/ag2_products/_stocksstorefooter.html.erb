@@ -1,0 +1,7 @@
+<tr>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td align="right"><%= t :"activerecord.attributes.store.stock" %></td>
+  <td align="right"><%= number_with_precision(store.stock, precision: 4) unless store.stock.blank? %></td>
+</tr>

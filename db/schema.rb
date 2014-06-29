@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140625121631) do
+ActiveRecord::Schema.define(:version => 20140629103657) do
 
   create_table "activities", :force => true do |t|
     t.string   "description"
@@ -1014,6 +1014,7 @@ ActiveRecord::Schema.define(:version => 20140625121631) do
     t.datetime "updated_at",                                                 :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
+    t.decimal  "maximum",    :precision => 12, :scale => 4, :default => 0.0, :null => false
   end
 
   add_index "stocks", ["product_id"], :name => "index_stocks_on_product_id"
