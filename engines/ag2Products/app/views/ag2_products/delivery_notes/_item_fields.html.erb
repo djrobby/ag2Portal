@@ -1,21 +1,17 @@
 <script>
   $(document).ready(function() {
-    // Disable calculated fields
-    //$('#fnt-amount').prop('readonly', true);
-    //$('#fnt-tax').prop('readonly', true);
-    
     // Retrieves parent values
     var _f = $("#fnt-product").closest('form')[0];
-    var _o = $('select#purchase_order_work_order_id :selected').val();
+    var _o = $('select#delivery_note_work_order_id :selected').val();
     if (_o == "") _o = "0";
     $('select#fnt-work-order').val(_o);
-    var _p = $('select#purchase_order_project_id :selected').val();
+    var _p = $('select#delivery_note_project_id :selected').val();
     if (_p == "") _p = "0";
     $('select#fnt-project').val(_p);
-    var _c = $('select#purchase_order_charge_account_id :selected').val();
+    var _c = $('select#delivery_note_charge_account_id :selected').val();
     if (_c == "") _c = "0";
     $('select#fnt-charge-account').val(_c);
-    var _s = $('select#purchase_order_store_id :selected').val();
+    var _s = $('select#delivery_note_store_id :selected').val();
     if (_s == "") _s = "0";
     $('select#fnt-store').val(_s);
   });
@@ -33,8 +29,10 @@
       // Right formatted for passing as REST parameter
       qty = parseInt(right_number(qty, 4) * 10000);
       //qty = qty.replace(",", ".") * 10000;
-      jQuery.getJSON('po_update_description_prices_from_product/' + product + '/' + qty, function(data) {
+      jQuery.getJSON('dn_update_description_prices_from_product/' + product + '/' + qty, function(data) {
         $("#fnt-description").val(data.description);
+        $("#fnt-cost").val(data.cost);
+        $("#fnt-costs").val(data.costs);
         $("#fnt-price").val(data.price);
         $("#fnt-amount").val(data.amount);
         $("#fnt-tax-type").val(data.type);
@@ -51,7 +49,7 @@
       var order = $('select#fnt-work-order :selected').val();
       if (order == "")
         order = "0";
-      jQuery.getJSON('po_update_project_from_order/' + order, function(data) {
+      jQuery.getJSON('dn_update_project_from_order/' + order, function(data) {
         var p = data.project;
         var c = data.charge_account;
         var s = data.store;
@@ -107,7 +105,7 @@
       var order = $('select#fnt-project :selected').val();
       if (order == "")
         order = "0";
-      jQuery.getJSON('po_update_charge_account_from_project/' + order, function(data) {
+      jQuery.getJSON('dn_update_charge_account_from_project/' + order, function(data) {
         var c = data.charge_account;
         var s = data.store;
         $("#fnt-charge-account").html("");
@@ -138,14 +136,6 @@
             $("#fnt-store").append($('<option></option>').val(option.id).html(option.name));
           });
         }
-        /*
-        $("#fnt-charge-account").html("");
-        $("#fnt-charge-account").select2("val", "");
-        $("#fnt_charge-account").append($('<option></option>').val("").html(""));
-        $.each(data, function(id, option) {
-          $("#fnt-charge-account").append($('<option></option>').val(option.id).html(option.account_code + " " + option.name));
-        });
-         */
       });
       return false;
     });
@@ -182,9 +172,20 @@
       return false;
     });
 
+    // when the #fnt-cost field changes
+    $("#fnt-cost").change(function() {
+      // preserve the current object
+      var _this = (this);
+      recalculate(_this);
+      return false;
+    });
+
     // Recalculate amounts & prices
     function recalculate(_this) {
       // make a POST call and replace the content
+      var cost = $("#fnt-cost").val();
+      if (cost == "")
+        cost = "0";
       var price = $('#fnt-price').val();
       if (price == "")
         price = "0";
@@ -204,13 +205,16 @@
       if (product == "")
         product = "0";
       // Right formatted for passing as REST parameter
+      cost = parseInt(right_number(cost, 4) * 10000);
       price = parseInt(right_number(price, 4) * 10000);
       qty = parseInt(right_number(qty, 4) * 10000);
       discount_p = parseInt(right_number(discount_p, 2) * 100);
       discount = parseInt(right_number(discount, 4) * 10000);
-      jQuery.getJSON('po_update_amount_from_price_or_quantity/' + price + '/' + qty + '/' + tax_type + '/' + discount_p + '/' + discount + '/' + product, function(data) {
-        $('#fnt-price').val(data.price);
+      jQuery.getJSON('dn_update_amount_and_costs_from_price_or_quantity/' + cost + '/' + price + '/' + qty + '/' + tax_type + '/' + discount_p + '/' + discount + '/' + product, function(data) {
         $('#fnt-quantity').val(data.quantity);
+        $("#fnt-cost").val(data.cost);
+        $("#fnt-costs").val(data.costs);
+        $('#fnt-price').val(data.price);
         $('#fnt-amount').val(data.amount);
         $('#fnt-tax').val(data.tax);
         $('#fnt-discount-pct').val(data.discountp);
@@ -226,21 +230,21 @@
   <% e = t(:item_error) %>
   <div class="modal-header">
     <a class="close" data-dismiss="modal">×</a>
-    <h3><%= t("ag2_purchase.purchase_orders.add_item") %></h3>
+    <h3><%= t("ag2_products.delivery_notes.add_item") %></h3>
     <span class="shrinked"><%= I18n.t(:mandatory_subtitle) %></span>
   </div>
   <div class="modal-body">
     <%= f.association :product, collection: Product.all(order: 'main_description'), input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-product', data: { validation: "required", "validation-error-msg" => "#{e}" } }, label_html: { class: 'form-label' } %>
     <%= f.input :description, input_html: { class: 'x-large-text-field field', maxlength: 40, id: 'fnt-description', data: { validation: "required", "validation-error-msg" => "#{e}" }, onkeyup: "caps(this)" }, label_html: { class: 'form-label' } %>
-    <%= f.input :code, input_html: { class: 'mid-text-field field', id: 'fnt-code' }, label_html: { class: 'form-label' } %>
     <%= f.input :quantity, as: :string, input_html: { value: (number_with_precision(f.object.quantity, precision: 4) if f.object.quantity), class: 'mid-text-field number-text-field field', id: 'fnt-quantity' }, label_html: { class: 'form-label' } %>
+    <%= f.input :cost, as: :string, input_html: { value: (number_with_precision(f.object.cost, precision: 4) if f.object.cost), class: 'mid-text-field number-text-field field', id: 'fnt-cost' }, label_html: { class: 'form-label' } %>
+    <%= f.input :costs, disabled: true, as: :string, input_html: { value: (number_with_precision(f.object.costs, precision: 4) if f.object.costs), class: 'mid-text-field number-text-field sub-disabled-field field', id: 'fnt-costs' }, label_html: { class: 'form-label' } %>
     <%= f.input :price, as: :string, input_html: { value: (number_with_precision(f.object.price, precision: 4) if f.object.price), class: 'mid-text-field number-text-field field', id: 'fnt-price' }, label_html: { class: 'form-label' } %>
     <%= f.input :discount_pct, as: :string, input_html: { value: (number_with_precision(f.object.discount_pct, precision: 2) if f.object.discount_pct), class: 'mid-text-field number-text-field field', id: 'fnt-discount-pct' }, label_html: { class: 'form-label' } %>
     <%= f.input :discount, as: :string, input_html: { value: (number_with_precision(f.object.discount, precision: 4) if f.object.discount), class: 'mid-text-field number-text-field field', id: 'fnt-discount' }, label_html: { class: 'form-label' } %>
     <%= f.input :amount, disabled: true, as: :string, input_html: { value: (number_with_precision(f.object.amount, precision: 4) if f.object.amount), class: 'mid-text-field number-text-field sub-disabled-field field', id: 'fnt-amount' }, label_html: { class: 'form-label' } %>
     <%= f.association :tax_type, collection: TaxType.where('expiration IS NULL').order('description'), input_html: { class: 'x-large-text-field field', id: 'fnt-tax-type', data: { validation: "required", "validation-error-msg" => "#{e}" } }, label_html: { class: 'form-label' } %>
     <%= f.input :tax, disabled: true, as: :string, input_html: { value: (number_with_precision(f.object.tax, precision: 4) if f.object.tax), class: 'mid-text-field number-text-field sub-disabled-field field', id: 'fnt-tax' }, label_html: { class: 'form-label' } %>
-    <%= f.input :delivery_date, start_year: Time.now.year - 100, end_year: Time.now.year + 100, as: :string, input_html: { value: (f.object.delivery_date.strftime("%d/%m/%Y") if f.object.delivery_date), class: 'mid-text-field idatepicker field', id: 'fnt-delivery-date' }, label_html: { class: 'form-label' } %>
     <%= f.association :work_order, collection: WorkOrder.all(order: 'order_no'), input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-work-order', data: { validation: "required", "validation-error-msg" => "#{e}" } }, label_html: { class: 'form-label' } %>
     <%= f.association :project, collection: Project.all(order: 'name'), input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-project', data: { validation: "required", "validation-error-msg" => "#{e}" } }, label_html: { class: 'form-label' } %>
     <%= f.association :charge_account, collection: ChargeAccount.all(order: 'account_code'), input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-charge-account', data: { validation: "required", "validation-error-msg" => "#{e}" } }, label_html: { class: 'form-label' } %>
@@ -248,13 +252,13 @@
     <%= f.input :_destroy, as: :hidden, input_html: { class: 'field' } %>
   </div>
   <div class="modal-footer">
-    <span class="left-floated" style="vertical-align: bottom"><%= t("ag2_purchase.purchase_orders.add_item_to", var: @purchase_order.order_no) unless @purchase_order.order_no.blank? %></span>
-    <button id="addButton" type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><%= t('ag2_purchase.purchase_orders.btn_add_item') %></button>
+    <span class="left-floated" style="vertical-align: bottom"><%= t("ag2_products.delivery_notes.add_item_to", var: @delivery_note.delivery_no) unless @delivery_note.delivery_no.blank? %></span>
+    <button id="addButton" type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><%= t('ag2_products.delivery_notes.btn_add_item') %></button>
     <button id="cancelButton" type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><%= t :close_button %></button>
   </div>
 </div>
 
 <script type="text/javascript">
   sel2NoMatch = '<%= t("select2.no_matches") %>';
-  po_itemFieldsUI.init(sel2NoMatch);
+  dn_itemFieldsUI.init(sel2NoMatch);
 </script>
