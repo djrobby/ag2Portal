@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140629103657) do
+ActiveRecord::Schema.define(:version => 20140701193909) do
 
   create_table "activities", :force => true do |t|
     t.string   "description"
@@ -881,11 +881,13 @@ ActiveRecord::Schema.define(:version => 20140629103657) do
     t.datetime "updated_at",                                                        :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
+    t.integer  "purchase_order_id"
   end
 
   add_index "receipt_notes", ["charge_account_id"], :name => "index_receipt_notes_on_charge_account_id"
   add_index "receipt_notes", ["payment_method_id"], :name => "index_receipt_notes_on_payment_method_id"
   add_index "receipt_notes", ["project_id"], :name => "index_receipt_notes_on_project_id"
+  add_index "receipt_notes", ["purchase_order_id"], :name => "index_receipt_notes_on_purchase_order_id"
   add_index "receipt_notes", ["receipt_date"], :name => "index_receipt_notes_on_receipt_date"
   add_index "receipt_notes", ["receipt_no"], :name => "index_receipt_notes_on_receipt_no"
   add_index "receipt_notes", ["store_id"], :name => "index_receipt_notes_on_store_id"

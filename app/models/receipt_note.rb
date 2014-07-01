@@ -5,8 +5,10 @@ class ReceiptNote < ActiveRecord::Base
   belongs_to :store
   belongs_to :work_order
   belongs_to :charge_account
+  belongs_to :purchase_order
   attr_accessible :discount, :discount_pct, :receipt_date, :receipt_no, :remarks, :retention_pct, :retention_time,
-                  :supplier_id, :payment_method_id, :project_id, :store_id, :work_order_id, :charge_account_id
+                  :supplier_id, :payment_method_id, :project_id, :store_id, :work_order_id, :charge_account_id,
+                  :purchase_order_id
 
   has_many :receipt_note_items, dependent: :destroy
   has_many :supplier_invoice_items
@@ -113,6 +115,7 @@ class ReceiptNote < ActiveRecord::Base
     integer :work_order_id
     integer :charge_account_id
     integer :supplier_id
+    integer :purchase_order_id
     date :receipt_date
   end
 

@@ -1,17 +1,247 @@
-<%= form_for(@receipt_note) do |f| %>
-  <% if @receipt_note.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@receipt_note.errors.count, "error") %> prohibited this receipt_note from being saved:</h2>
+<script>
+  var _thisForm = '';
+  
+  $(document).ready(function() {
+    $('select.sel2').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      allowClear: true
+    });
+    $('.date_picker').datepicker({
+      format : 'dd/mm/yyyy',
+      weekStart : 1
+    }).on('changeDate', function(e){
+      $('.date_picker').datepicker('hide');
+    });
+    if ($('#receipt_note_receipt_date').val() == "") {
+      $('#receipt_note_receipt_date').datepicker('setValue', es_date(new Date()));
+    }
+    
+    // Initialized form variable
+    _thisForm = $("#receipt_note_order_no").closest('form')[0];
 
-      <ul>
-      <% @receipt_note.errors.full_messages.each do |msg| %>
-        <li><%= msg %></li>
-      <% end %>
-      </ul>
-    </div>
-  <% end %>
+    // Disable fields if Receipt# blank
+    var order = $('#receipt_note_receipt_no').val();
+    if (order == "")
+      order = "0";
+    if (order == "0") {
+      // Empty order: Disable
+      $('#submit_btn').hide();
+      $('.fnt-new-btn').hide();
+    } else {
+      // Order OK: Enable
+      $('#submit_btn').show();
+      $('.fnt-new-btn').show();
+    }
+  });
+  
+  jQuery(function($) {
+    // when the #receipt_note_receipt_no field changes
+    $("#receipt_note_receipt_no").change(function() {
+      var order = $('#receipt_note_receipt_no').val();
+      if (order == "")
+        order = "0";
+      if (order == "0") {
+        // Empty order: Disable
+        $('#submit_btn').hide();
+        $('.fnt-new-btn').hide();
+      } else {
+        // Order: OK: Enable
+        $('#submit_btn').show();
+        $('.fnt-new-btn').show();
+      }
+    });
 
-  <div class="actions">
-    <%= f.submit %>
-  </div>
+    // when the #receipt_note_supplier_id field changes
+    $("#receipt_note_supplier_id").change(function() {
+      // make a POST call and replace the content
+      var supplier = $('select#receipt_note_supplier_id :selected').val();
+      if (supplier == "")
+        supplier = "0";
+      jQuery.getJSON('rn_update_order_select_from_supplier/' + supplier, function(data) {
+        $("#receipt_note_order_id").html("");
+        $("#receipt_note_order_id").select2("val", "");
+        $("#receipt_note_order_id").append($('<option></option>').val("").html(""));
+        $.each(data, function(id, option) {
+          $("#receipt_note_order_id").append($('<option></option>').val(option.id).html(option.id + ' ' + option.order_no + ' ' + option.supplier.name));
+        });
+      });
+      return false;
+    });
+
+    // when the #receipt_note_project_id field changes
+    $("#receipt_note_project_id").change(function() {
+      // make a POST call and replace the content
+      var order = $('select#receipt_note_project_id :selected').val();
+      if (order == "")
+        order = "0";
+      jQuery.getJSON('rn_update_charge_account_from_project/' + order, function(data) {
+        var c = data.charge_account;
+        var s = data.store;
+        $("#receipt_note_charge_account_id").html("");
+        $("#receipt_note_charge_account_id").select2("val", "");
+        $("#receipt_note_charge_account_id").append($('<option></option>').val("").html(""));
+        if (!c.length) {
+          $.each(data, function(id, option) {
+            if (id == 'charge_account') {
+              $("#receipt_note_charge_account_id").append($('<option></option>').val(option.id).html(option.account_code + " " + option.name));
+            }
+          });
+        } else {
+          $.each(c, function(id, option) {
+            $("#receipt_note_charge_account_id").append($('<option></option>').val(option.id).html(option.account_code + " " + option.name));
+          });
+        }
+        $("#receipt_note_store_id").html("");
+        $("#receipt_note_store_id").select2("val", "");
+        $("#receipt_note_store_id").append($('<option></option>').val("").html(""));
+        if (!s.length) {
+          $.each(data, function(id, option) {
+            if (id == 'store') {
+              $("#receipt_note_store_id").append($('<option></option>').val(option.id).html(option.name));
+            }
+          });
+        } else {
+          $.each(s, function(id, option) {
+            $("#receipt_note_store_id").append($('<option></option>').val(option.id).html(option.name));
+          });
+        }
+      });
+      return false;
+    });
+
+    // when the #receipt_note_work_order_id field changes
+    $("#receipt_note_work_order_id").change(function() {
+      // make a POST call and replace the content
+      var order = $('select#receipt_note_work_order_id :selected').val();
+      if (order == "")
+        order = "0";
+      jQuery.getJSON('rn_update_project_from_order/' + order, function(data) {
+        var p = data.project;
+        var c = data.charge_account;
+        var s = data.store;
+        $("#receipt_note_project_id").html("");
+        $("#receipt_note_project_id").select2("val", "");
+        $("#receipt_note_project_id").append($('<option></option>').val("").html(""));
+        if (!p.length) {
+          $.each(data, function(id, option) {
+            if (id == 'project') {
+              $("#receipt_note_project_id").append($('<option></option>').val(option.id).html(option.project_code + " " + option.name));
+            }
+          });
+        } else {
+          $.each(p, function(id, option) {
+            $("#receipt_note_project_id").append($('<option></option>').val(option.id).html(option.project_code + " " + option.name));
+          });
+        }
+        $("#receipt_note_charge_account_id").html("");
+        $("#receipt_note_charge_account_id").select2("val", "");
+        $("#receipt_note_charge_account_id").append($('<option></option>').val("").html(""));
+        if (!c.length) {
+          $.each(data, function(id, option) {
+            if (id == 'charge_account') {
+              $("#receipt_note_charge_account_id").append($('<option></option>').val(option.id).html(option.account_code + " " + option.name));
+            }
+          });
+        } else {
+          $.each(c, function(id, option) {
+            $("#receipt_note_charge_account_id").append($('<option></option>').val(option.id).html(option.account_code + " " + option.name));
+          });
+        }
+        $("#receipt_note_store_id").html("");
+        $("#receipt_note_store_id").select2("val", "");
+        $("#receipt_note_store_id").append($('<option></option>').val("").html(""));
+        if (!s.length) {
+          $.each(data, function(id, option) {
+            if (id == 'store') {
+              $("#receipt_note_store_id").append($('<option></option>').val(option.id).html(option.name));
+            }
+          });
+        } else {
+          $.each(s, function(id, option) {
+            $("#receipt_note_store_id").append($('<option></option>').val(option.id).html(option.name));
+          });
+        }
+      });
+      return false;
+    });
+
+    // when the #receipt_note_discount_pct field changes
+    $("#receipt_note_discount_pct").change(function() {
+      var num = $('#receipt_note_discount_pct').val();
+      if (num == "")
+        num = "0";
+      // Right formatted for passing as REST parameter
+      num = parseInt(right_number(num, 2) * 100);
+      jQuery.getJSON('rn_format_number/' + num, function(data) {
+        $('#receipt_note_discount_pct').val(data.num);
+      });
+      // Update and display totals
+      $('#items-table').trigger('totals');
+      return false;
+    });
+    
+    // when submit    
+    $(_thisForm).on('submit', function() {
+      // Must change decimal separator, if comma, in items table numeric fields
+      var price = '';
+      var qty = '';
+      var discount_p = '';
+      var discount = '';
+      $('tr.fields').each(function() {
+        price = $(this).find('input.fnt-price').val().replace(",", ".");
+        qty = $(this).find('input.fnt-quantity').val().replace(",", ".");
+        discount_p = $(this).find('input.fnt-discount-pct').val().replace(",", ".");
+        discount = $(this).find('input.fnt-discount').val().replace(",", ".");
+        $(this).find('input.fnt-price').val(price);
+        $(this).find('input.fnt-quantity').val(qty);
+        $(this).find('input.fnt-discount-pct').val(discount_p);
+        $(this).find('input.fnt-discount').val(discount);
+      });
+      // Must change decimal separator, if comma, in numeric fields
+      var num = $('#receipt_note_discount_pct').val().replace(",", ".");
+      $('#receipt_note_discount_pct').val(num);
+      //e.preventDefault();
+    });
+  });
+</script>
+
+<%= simple_form_for @receipt_note, html: { class: 'form-vertical well' } do |f| %>
+<%= f.error_notification %>
+<%= display_base_errors resource %>
+<div>
+  <label class="multi-field-label-two"> <%= f.input :receipt_no, autofocus: true, input_html: { class: 'mid-text-field' }, label_html: { class: 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.input :receipt_date, start_year: Time.now.year - 100, end_year: Time.now.year + 100, as: :string, input_html: { value: (f.object.order_date.strftime("%d/%m/%Y") if f.object.order_date), class: 'mid-text-field date_picker' }, label_html: { class: 'form-label' } %> </label>
+</div>
+<%= f.association :supplier, collection: Supplier.all(order: 'name'), input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %>
+<%= f.association :order, collection: @orders, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %>
+<div>
+  <label class="multi-field-label-two"> <%= f.association :payment_method, collection: PaymentMethod.all(order: 'description'), input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label-under-sel2' } %> </label>
+  <label class="multi-field-label-two"> <%= f.association :order_status, collection: OrderStatus.all(order: 'id'), input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %> </label>
+</div>
+<div>
+  <label class="multi-field-label-two"> <%= f.association :work_order, collection: WorkOrder.all(order: 'order_no'), input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.association :project, collection: Project.all(order: 'project_code'), input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
+</div>
+<div>
+  <label class="multi-field-label-two"> <%= f.association :charge_account, collection: ChargeAccount.all(order: 'account_code'), input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.association :store, collection: Store.all(order: 'name'), input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
+</div>
+<!-- Items -->
+<table class="form-table">
+  <tbody>
+    <tr class="form-tr underlined-tr">
+      <td class="form-td-two left-winged">
+        <h4><%= t 'ag2_products.receipt_notes.items_info' %></h4>
+      </td>
+      <td class="form-td-two right-winged">
+        <%= link_to_add_fields(t("ag2_products.receipt_notes.btn_new_item"), f, :receipt_note_items, "item_fields", "new-item-fields", class: "btn btn-warning fnt-new-btn") %>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<%= render 'items_table', f: f %>
+<!-- Remarks -->
+<%= f.input :remarks, as: :text, input_html: { class: 'x-large-text-field', rows: 3 }, label_html: { class: 'form-label' } %>
+<!-- Buttons -->
+<%= f.button :submit, class: 'btn-primary', id: 'submit_btn' %>
 <% end %>

@@ -13,6 +13,7 @@ class PurchaseOrder < ActiveRecord::Base
   attr_accessible :purchase_order_items_attributes
   
   has_many :purchase_order_items, dependent: :destroy
+  has_many :receipt_notes
   has_many :receipt_note_items
 
   # Nested attributes
@@ -133,6 +134,11 @@ class PurchaseOrder < ActiveRecord::Base
   private
 
   def check_for_dependent_records
+    # Check for receipt notes
+    if receipt_notes.count > 0
+      errors.add(:base, I18n.t('activerecord.models.purchase_order.check_for_receipt_notes'))
+      return false
+    end
     # Check for receipt note items
     if receipt_note_items.count > 0
       errors.add(:base, I18n.t('activerecord.models.purchase_order.check_for_receipt_notes'))
