@@ -21,6 +21,7 @@ class Ability
     # Users can't manage configurations
     cannot :manage, App
     cannot :manage, DataImportConfig
+    cannot :manage, Organization
     cannot :manage, Role
     cannot :manage, Site
     cannot :manage, User
@@ -80,6 +81,35 @@ class Ability
       cannot :manage, TaxType
       cannot :manage, Department
       cannot :manage, Area
+    end
+    # ag2Config
+    if user.has_role? :ag2Config_User
+      can :manage, App
+      can :manage, DataImportConfig
+      can :manage, Organization
+      can :manage, Role
+      can :manage, Site
+      can :manage, User
+      can :manage, Guide
+      can :manage, Subguide
+    elsif user.has_role? :ag2Config_Guest
+      can :read, App
+      can :read, DataImportConfig
+      can :read, Organization
+      can :read, Role
+      can :read, Site
+      can :read, User
+      can :read, Guide
+      can :read, Subguide
+    elsif user.has_role? :ag2Config_Banned
+      cannot :manage, App
+      cannot :manage, DataImportConfig
+      cannot :manage, Organization
+      cannot :manage, Role
+      cannot :manage, Site
+      cannot :manage, User
+      cannot :manage, Guide
+      cannot :manage, Subguide
     end
     # ag2Directory
     if user.has_role? :ag2Directory_User
