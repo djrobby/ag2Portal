@@ -9,7 +9,9 @@ module Ag2Products
                                                :dn_update_description_prices_from_product,
                                                :dn_update_amount_and_costs_from_price_or_quantity,
                                                :dn_update_project_from_order,
-                                               :dn_update_charge_account_from_project]
+                                               :dn_update_charge_account_from_project,
+                                               :dn_update_offer_select_from_client,
+                                               :dn_format_number]
                                                
     # Calculate and format totals properly
     def dn_totals
@@ -153,6 +155,30 @@ module Ag2Products
       render json: @json_data
     end
 
+    # Update sale offer select at view from client select
+    def dn_update_offer_select_from_client
+      client = params[:client]
+      if client != '0'
+        @client = Client.find(client)
+        @offers = @client.blank? ? SaleOffer.order(:client_id, :offer_no, :id) : @client.sale_offers.order(:client_id, :offer_no, :id)
+      else
+        @offers = SaleOffer.order(:client_id, :offer_no, :id)
+      end
+
+      respond_to do |format|
+        format.html # dn_update_offer_select_from_client.html.erb does not exist! JSON only
+        format.json { render json: @offers }
+      end
+    end
+
+    # Format numbers properly
+    def po_format_number
+      num = params[:num].to_f / 100
+      num = number_with_precision(num.round(2), precision: 2)
+      @json_data = { "num" => num.to_s }
+      render json: @json_data
+    end
+
     #
     # Default Methods
     #
@@ -210,6 +236,7 @@ module Ag2Products
     def new
       @breadcrumb = 'create'
       @delivery_note = DeliveryNote.new
+      @offers = SaleOffer.order(:client_id, :offer_no, :id)
   
       respond_to do |format|
         format.html # new.html.erb
@@ -221,6 +248,7 @@ module Ag2Products
     def edit
       @breadcrumb = 'update'
       @delivery_note = DeliveryNote.find(params[:id])
+      @offers = @delivery_note.client.blank? ? SaleOffer.order(:client_id, :offer_no, :id) : @delivery_note.client.sale_offers.order(:client_id, :offer_no, :id)
     end
   
     # POST /delivery_notes
@@ -235,6 +263,7 @@ module Ag2Products
           format.html { redirect_to @delivery_note, notice: crud_notice('created', @delivery_note) }
           format.json { render json: @delivery_note, status: :created, location: @delivery_note }
         else
+          @offers = SaleOffer.order(:client_id, :offer_no, :id)
           format.html { render action: "new" }
           format.json { render json: @delivery_note.errors, status: :unprocessable_entity }
         end
@@ -254,6 +283,7 @@ module Ag2Products
                         notice: (crud_notice('updated', @delivery_note) + "#{undo_link(@delivery_note)}").html_safe }
           format.json { head :no_content }
         else
+          @offers = @delivery_note.client.blank? ? SaleOffer.order(:client_id, :offer_no, :id) : @delivery_note.client.sale_offers.order(:client_id, :offer_no, :id)
           format.html { render action: "edit" }
           format.json { render json: @delivery_note.errors, status: :unprocessable_entity }
         end

@@ -62,7 +62,7 @@
         $("#purchase_order_offer_id").select2("val", "");
         $("#purchase_order_offer_id").append($('<option></option>').val("").html(""));
         $.each(data, function(id, option) {
-          $("#purchase_order_offer_id").append($('<option></option>').val(option.id).html(option.id + ' ' + option.offer_no + ' ' + option.supplier.name));
+          $("#purchase_order_offer_id").append($('<option></option>').val(option.id).html(option.offer_no + ' ' + option.offer_date + ' ' + option.supplier.name));
         });
         //$("#purchase_order_offer_id").val(data.id);
       });
@@ -180,6 +180,19 @@
       $('#items-table').trigger('totals');
       return false;
     });
+
+    // when the #purchase_order_retention_pct field changes
+    $("#purchase_order_retention_pct").change(function() {
+      var num = $('#purchase_order_retention_pct').val();
+      if (num == "")
+        num = "0";
+      // Right formatted for passing as REST parameter
+      num = parseInt(right_number(num, 2) * 100);
+      jQuery.getJSON('po_format_number/' + num, function(data) {
+        $('#purchase_order_retention_pct').val(data.num);
+      });
+      return false;
+    });
     
     // when submit    
     $(_thisForm).on('submit', function() {
@@ -201,6 +214,8 @@
       // Must change decimal separator, if comma, in numeric fields
       var num = $('#purchase_order_discount_pct').val().replace(",", ".");
       $('#purchase_order_discount_pct').val(num);
+      var num = $('#purchase_order_retention_pct').val().replace(",", ".");
+      $('#purchase_order_retention_pct').val(num);
       //e.preventDefault();
     });
   });
@@ -226,6 +241,10 @@
 <div>
   <label class="multi-field-label-two"> <%= f.association :charge_account, collection: ChargeAccount.all(order: 'account_code'), input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
   <label class="multi-field-label-two"> <%= f.association :store, collection: Store.all(order: 'name'), input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
+</div>
+<div>
+  <label class="multi-field-label-two"> <%= f.input :retention_pct, as: :string, input_html: { value: (number_with_precision(f.object.retention_pct, precision: 2) if f.object.retention_pct), class: 'mid-text-field number-text-field' }, label_html: { class: 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.input :retention_time, input_html: { class: 'mid-text-field number-text-field' }, label_html: { class: 'form-label' } %> </label>
 </div>
 <!-- Items -->
 <table class="form-table">

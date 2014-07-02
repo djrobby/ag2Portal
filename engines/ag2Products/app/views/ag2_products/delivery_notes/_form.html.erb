@@ -1,17 +1,249 @@
-<%= form_for(@delivery_note) do |f| %>
-  <% if @delivery_note.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@delivery_note.errors.count, "error") %> prohibited this delivery_note from being saved:</h2>
+<script>
+  var _thisForm = '';
+  
+  $(document).ready(function() {
+    $('select.sel2').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      allowClear: true
+    });
+    $('.date_picker').datepicker({
+      format : 'dd/mm/yyyy',
+      weekStart : 1
+    }).on('changeDate', function(e){
+      $('.date_picker').datepicker('hide');
+    });
+    if ($('#delivery_note_delivery_date').val() == "") {
+      $('#delivery_note_delivery_date').datepicker('setValue', es_date(new Date()));
+    }
+    
+    // Initialized form variable
+    _thisForm = $("#delivery_note_delivery_no").closest('form')[0];
 
-      <ul>
-      <% @delivery_note.errors.full_messages.each do |msg| %>
-        <li><%= msg %></li>
-      <% end %>
-      </ul>
-    </div>
-  <% end %>
+    // Disable fields if Receipt# blank
+    var order = $('#delivery_note_delivery_no').val();
+    if (order == "")
+      order = "0";
+    if (order == "0") {
+      // Empty order: Disable
+      $('#submit_btn').hide();
+      $('.fnt-new-btn').hide();
+    } else {
+      // Order OK: Enable
+      $('#submit_btn').show();
+      $('.fnt-new-btn').show();
+    }
+  });
+  
+  jQuery(function($) {
+    // when the #delivery_note_delivery_no field changes
+    $("#delivery_note_delivery_no").change(function() {
+      var order = $('#delivery_note_delivery_no').val();
+      if (order == "")
+        order = "0";
+      if (order == "0") {
+        // Empty order: Disable
+        $('#submit_btn').hide();
+        $('.fnt-new-btn').hide();
+      } else {
+        // Order: OK: Enable
+        $('#submit_btn').show();
+        $('.fnt-new-btn').show();
+      }
+    });
 
-  <div class="actions">
-    <%= f.submit %>
-  </div>
+    // when the #delivery_note_client_id field changes
+    $("#delivery_note_client_id").change(function() {
+      // make a POST call and replace the content
+      var client = $('select#delivery_note_client_id :selected').val();
+      if (client == "")
+        client = "0";
+      jQuery.getJSON('dn_update_offer_select_from_client/' + client, function(data) {
+        $("#delivery_note_order_id").html("");
+        $("#delivery_note_order_id").select2("val", "");
+        $("#delivery_note_order_id").append($('<option></option>').val("").html(""));
+        $.each(data, function(id, option) {
+          $("#delivery_note_sale_offer_id").append($('<option></option>').val(option.id).html(option.order_no + ' ' + option.order_date + ' ' + option.client.name));
+        });
+      });
+      return false;
+    });
+
+    // when the #delivery_note_project_id field changes
+    $("#delivery_note_project_id").change(function() {
+      // make a POST call and replace the content
+      var order = $('select#delivery_note_project_id :selected').val();
+      if (order == "")
+        order = "0";
+      jQuery.getJSON('dn_update_charge_account_from_project/' + order, function(data) {
+        var c = data.charge_account;
+        var s = data.store;
+        $("#delivery_note_charge_account_id").html("");
+        $("#delivery_note_charge_account_id").select2("val", "");
+        $("#delivery_note_charge_account_id").append($('<option></option>').val("").html(""));
+        if (!c.length) {
+          $.each(data, function(id, option) {
+            if (id == 'charge_account') {
+              $("#delivery_note_charge_account_id").append($('<option></option>').val(option.id).html(option.account_code + " " + option.name));
+            }
+          });
+        } else {
+          $.each(c, function(id, option) {
+            $("#delivery_note_charge_account_id").append($('<option></option>').val(option.id).html(option.account_code + " " + option.name));
+          });
+        }
+        $("#delivery_note_store_id").html("");
+        $("#delivery_note_store_id").select2("val", "");
+        $("#delivery_note_store_id").append($('<option></option>').val("").html(""));
+        if (!s.length) {
+          $.each(data, function(id, option) {
+            if (id == 'store') {
+              $("#delivery_note_store_id").append($('<option></option>').val(option.id).html(option.name));
+            }
+          });
+        } else {
+          $.each(s, function(id, option) {
+            $("#delivery_note_store_id").append($('<option></option>').val(option.id).html(option.name));
+          });
+        }
+      });
+      return false;
+    });
+
+    // when the #delivery_note_work_order_id field changes
+    $("#delivery_note_work_order_id").change(function() {
+      // make a POST call and replace the content
+      var order = $('select#delivery_note_work_order_id :selected').val();
+      if (order == "")
+        order = "0";
+      jQuery.getJSON('dn_update_project_from_order/' + order, function(data) {
+        var p = data.project;
+        var c = data.charge_account;
+        var s = data.store;
+        $("#delivery_note_project_id").html("");
+        $("#delivery_note_project_id").select2("val", "");
+        $("#delivery_note_project_id").append($('<option></option>').val("").html(""));
+        if (!p.length) {
+          $.each(data, function(id, option) {
+            if (id == 'project') {
+              $("#delivery_note_project_id").append($('<option></option>').val(option.id).html(option.project_code + " " + option.name));
+            }
+          });
+        } else {
+          $.each(p, function(id, option) {
+            $("#delivery_note_project_id").append($('<option></option>').val(option.id).html(option.project_code + " " + option.name));
+          });
+        }
+        $("#delivery_note_charge_account_id").html("");
+        $("#delivery_note_charge_account_id").select2("val", "");
+        $("#delivery_note_charge_account_id").append($('<option></option>').val("").html(""));
+        if (!c.length) {
+          $.each(data, function(id, option) {
+            if (id == 'charge_account') {
+              $("#delivery_note_charge_account_id").append($('<option></option>').val(option.id).html(option.account_code + " " + option.name));
+            }
+          });
+        } else {
+          $.each(c, function(id, option) {
+            $("#delivery_note_charge_account_id").append($('<option></option>').val(option.id).html(option.account_code + " " + option.name));
+          });
+        }
+        $("#delivery_note_store_id").html("");
+        $("#delivery_note_store_id").select2("val", "");
+        $("#delivery_note_store_id").append($('<option></option>').val("").html(""));
+        if (!s.length) {
+          $.each(data, function(id, option) {
+            if (id == 'store') {
+              $("#delivery_note_store_id").append($('<option></option>').val(option.id).html(option.name));
+            }
+          });
+        } else {
+          $.each(s, function(id, option) {
+            $("#delivery_note_store_id").append($('<option></option>').val(option.id).html(option.name));
+          });
+        }
+      });
+      return false;
+    });
+
+    // when the #delivery_note_discount_pct field changes
+    $("#delivery_note_discount_pct").change(function() {
+      var num = $('#delivery_note_discount_pct').val();
+      if (num == "")
+        num = "0";
+      // Right formatted for passing as REST parameter
+      num = parseInt(right_number(num, 2) * 100);
+      jQuery.getJSON('dn_format_number/' + num, function(data) {
+        $('#delivery_note_discount_pct').val(data.num);
+      });
+      // Update and display totals
+      $('#items-table').trigger('totals');
+      return false;
+    });
+    
+    // when submit    
+    $(_thisForm).on('submit', function() {
+      // Must change decimal separator, if comma, in items table numeric fields
+      var qty = '';
+      var price = '';
+      var cost = '';
+      var discount_p = '';
+      var discount = '';
+      $('tr.fields').each(function() {
+        qty = $(this).find('input.fnt-quantity').val().replace(",", ".");
+        price = $(this).find('input.fnt-price').val().replace(",", ".");
+        cost = $(this).find('input.fnt-cost').val().replace(",", ".");
+        discount_p = $(this).find('input.fnt-discount-pct').val().replace(",", ".");
+        discount = $(this).find('input.fnt-discount').val().replace(",", ".");
+        $(this).find('input.fnt-quantity').val(qty);
+        $(this).find('input.fnt-price').val(price);
+        $(this).find('input.fnt-cost').val(cost);
+        $(this).find('input.fnt-discount-pct').val(discount_p);
+        $(this).find('input.fnt-discount').val(discount);
+      });
+      // Must change decimal separator, if comma, in numeric fields
+      var num = $('#delivery_note_discount_pct').val().replace(",", ".");
+      $('#delivery_note_discount_pct').val(num);
+      //e.preventDefault();
+    });
+  });
+</script>
+
+<%= simple_form_for @delivery_note, html: { class: 'form-vertical well' } do |f| %>
+<%= f.error_notification %>
+<%= display_base_errors resource %>
+<div>
+  <label class="multi-field-label-two"> <%= f.input :delivery_no, autofocus: true, input_html: { class: 'mid-text-field' }, label_html: { class: 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.input :delivery_date, start_year: Time.now.year - 100, end_year: Time.now.year + 100, as: :string, input_html: { value: (f.object.delivery_date.strftime("%d/%m/%Y") if f.object.delivery_date), class: 'mid-text-field date_picker' }, label_html: { class: 'form-label' } %> </label>
+</div>
+<%= f.association :client, collection: Client.all(order: 'name'), input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %>
+<%= f.association :sale_offer, collection: @offers, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %>
+<div>
+  <label class="multi-field-label-two"> <%= f.association :payment_method, collection: PaymentMethod.all(order: 'description'), input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label-under-sel2' } %> </label>
+</div>
+<div>
+  <label class="multi-field-label-two"> <%= f.association :work_order, collection: WorkOrder.all(order: 'order_no'), input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.association :project, collection: Project.all(order: 'project_code'), input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
+</div>
+<div>
+  <label class="multi-field-label-two"> <%= f.association :charge_account, collection: ChargeAccount.all(order: 'account_code'), input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.association :store, collection: Store.all(order: 'name'), input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
+</div>
+<!-- Items -->
+<table class="form-table">
+  <tbody>
+    <tr class="form-tr underlined-tr">
+      <td class="form-td-two left-winged">
+        <h4><%= t 'ag2_products.delivery_notes.items_info' %></h4>
+      </td>
+      <td class="form-td-two right-winged">
+        <%= link_to_add_fields(t("ag2_products.delivery_notes.btn_new_item"), f, :delivery_note_items, "item_fields", "new-item-fields", class: "btn btn-warning fnt-new-btn") %>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<%= render 'items_table', f: f %>
+<!-- Remarks -->
+<%= f.input :remarks, as: :text, input_html: { class: 'x-large-text-field', rows: 3 }, label_html: { class: 'form-label' } %>
+<!-- Buttons -->
+<%= f.button :submit, class: 'btn-primary', id: 'submit_btn' %>
 <% end %>

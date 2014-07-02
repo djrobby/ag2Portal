@@ -17,7 +17,7 @@
     }
     
     // Initialized form variable
-    _thisForm = $("#receipt_note_order_no").closest('form')[0];
+    _thisForm = $("#receipt_note_receipt_no").closest('form')[0];
 
     // Disable fields if Receipt# blank
     var order = $('#receipt_note_receipt_no').val();
@@ -62,7 +62,7 @@
         $("#receipt_note_order_id").select2("val", "");
         $("#receipt_note_order_id").append($('<option></option>').val("").html(""));
         $.each(data, function(id, option) {
-          $("#receipt_note_order_id").append($('<option></option>').val(option.id).html(option.id + ' ' + option.order_no + ' ' + option.supplier.name));
+          $("#receipt_note_order_id").append($('<option></option>').val(option.id).html(option.order_no + ' ' + option.order_date + ' ' + option.supplier.name));
         });
       });
       return false;
@@ -179,6 +179,19 @@
       $('#items-table').trigger('totals');
       return false;
     });
+
+    // when the #receipt_note_retention_pct field changes
+    $("#receipt_note_retention_pct").change(function() {
+      var num = $('#receipt_note_retention_pct').val();
+      if (num == "")
+        num = "0";
+      // Right formatted for passing as REST parameter
+      num = parseInt(right_number(num, 2) * 100);
+      jQuery.getJSON('rn_format_number/' + num, function(data) {
+        $('#receipt_note_retention_pct').val(data.num);
+      });
+      return false;
+    });
     
     // when submit    
     $(_thisForm).on('submit', function() {
@@ -188,18 +201,20 @@
       var discount_p = '';
       var discount = '';
       $('tr.fields').each(function() {
-        price = $(this).find('input.fnt-price').val().replace(",", ".");
         qty = $(this).find('input.fnt-quantity').val().replace(",", ".");
+        price = $(this).find('input.fnt-price').val().replace(",", ".");
         discount_p = $(this).find('input.fnt-discount-pct').val().replace(",", ".");
         discount = $(this).find('input.fnt-discount').val().replace(",", ".");
-        $(this).find('input.fnt-price').val(price);
         $(this).find('input.fnt-quantity').val(qty);
+        $(this).find('input.fnt-price').val(price);
         $(this).find('input.fnt-discount-pct').val(discount_p);
         $(this).find('input.fnt-discount').val(discount);
       });
       // Must change decimal separator, if comma, in numeric fields
       var num = $('#receipt_note_discount_pct').val().replace(",", ".");
       $('#receipt_note_discount_pct').val(num);
+      var num = $('#receipt_note_retention_pct').val().replace(",", ".");
+      $('#receipt_note_retention_pct').val(num);
       //e.preventDefault();
     });
   });
@@ -210,13 +225,12 @@
 <%= display_base_errors resource %>
 <div>
   <label class="multi-field-label-two"> <%= f.input :receipt_no, autofocus: true, input_html: { class: 'mid-text-field' }, label_html: { class: 'form-label' } %> </label>
-  <label class="multi-field-label-two"> <%= f.input :receipt_date, start_year: Time.now.year - 100, end_year: Time.now.year + 100, as: :string, input_html: { value: (f.object.order_date.strftime("%d/%m/%Y") if f.object.order_date), class: 'mid-text-field date_picker' }, label_html: { class: 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.input :receipt_date, start_year: Time.now.year - 100, end_year: Time.now.year + 100, as: :string, input_html: { value: (f.object.receipt_date.strftime("%d/%m/%Y") if f.object.receipt_date), class: 'mid-text-field date_picker' }, label_html: { class: 'form-label' } %> </label>
 </div>
 <%= f.association :supplier, collection: Supplier.all(order: 'name'), input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %>
-<%= f.association :order, collection: @orders, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %>
+<%= f.association :purchase_order, collection: @orders, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %>
 <div>
   <label class="multi-field-label-two"> <%= f.association :payment_method, collection: PaymentMethod.all(order: 'description'), input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label-under-sel2' } %> </label>
-  <label class="multi-field-label-two"> <%= f.association :order_status, collection: OrderStatus.all(order: 'id'), input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %> </label>
 </div>
 <div>
   <label class="multi-field-label-two"> <%= f.association :work_order, collection: WorkOrder.all(order: 'order_no'), input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
@@ -225,6 +239,10 @@
 <div>
   <label class="multi-field-label-two"> <%= f.association :charge_account, collection: ChargeAccount.all(order: 'account_code'), input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
   <label class="multi-field-label-two"> <%= f.association :store, collection: Store.all(order: 'name'), input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
+</div>
+<div>
+  <label class="multi-field-label-two"> <%= f.input :retention_pct, as: :string, input_html: { value: (number_with_precision(f.object.retention_pct, precision: 2) if f.object.retention_pct), class: 'mid-text-field number-text-field' }, label_html: { class: 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.input :retention_time, input_html: { class: 'mid-text-field number-text-field' }, label_html: { class: 'form-label' } %> </label>
 </div>
 <!-- Items -->
 <table class="form-table">

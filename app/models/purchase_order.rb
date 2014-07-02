@@ -34,6 +34,35 @@ class PurchaseOrder < ActiveRecord::Base
 
   before_destroy :check_for_dependent_records
 
+  def to_label
+    "#{full_name}"
+  end
+
+  def full_name
+    full_name = ""
+    if !self.order_no.blank?
+      full_name += self.order_no
+    end
+    if !self.order_date.blank?
+      full_name += " " + self.order_date
+    end
+    if !self.supplier.blank?
+      full_name += " " + self.supplier.full_name
+    end
+    full_name
+  end
+
+  def partial_name
+    partial_name = ""
+    if !self.order_no.blank?
+      full_name += self.order_no
+    end
+    if !self.supplier.blank?
+      partial_name += " " + self.supplier.name[0,40]
+    end
+    partial_name
+  end
+
   #
   # Calculated fields
   #

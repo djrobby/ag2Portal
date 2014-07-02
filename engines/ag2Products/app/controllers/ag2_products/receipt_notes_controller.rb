@@ -9,7 +9,9 @@ module Ag2Products
                                                :rn_update_description_prices_from_product,
                                                :rn_update_amount_from_price_or_quantity,
                                                :rn_update_project_from_order,
-                                               :rn_update_charge_account_from_project]
+                                               :rn_update_charge_account_from_project,
+                                               :rn_update_order_select_from_supplier,
+                                               :rn_format_number]
     # Calculate and format totals properly
     def rn_totals
       qty = params[:qty].to_f / 10000
@@ -139,6 +141,30 @@ module Ag2Products
       render json: @json_data
     end
 
+    # Update purchase order select at view from supplier select
+    def rn_update_order_select_from_supplier
+      supplier = params[:supplier]
+      if supplier != '0'
+        @supplier = Supplier.find(supplier)
+        @orders = @supplier.blank? ? PurchaseOrder.order(:supplier_id, :order_no, :id) : @supplier.purchase_orders.order(:supplier_id, :order_no, :id)
+      else
+        @orders = PurchaseOrder.order(:supplier_id, :order_no, :id)
+      end
+
+      respond_to do |format|
+        format.html # rn_update_order_select_from_supplier.html.erb does not exist! JSON only
+        format.json { render json: @orders }
+      end
+    end
+
+    # Format numbers properly
+    def po_format_number
+      num = params[:num].to_f / 100
+      num = number_with_precision(num.round(2), precision: 2)
+      @json_data = { "num" => num.to_s }
+      render json: @json_data
+    end
+
     #
     # Default Methods
     #
@@ -196,6 +222,7 @@ module Ag2Products
     def new
       @breadcrumb = 'create'
       @receipt_note = ReceiptNote.new
+      @orders = PurchaseOrder.order(:supplier_id, :order_no, :id)
   
       respond_to do |format|
         format.html # new.html.erb
@@ -207,6 +234,7 @@ module Ag2Products
     def edit
       @breadcrumb = 'update'
       @receipt_note = ReceiptNote.find(params[:id])
+      @orders = @receipt_note.supplier.blank? ? PurchaseOrder.order(:supplier_id, :order_no, :id) : @receipt_note.supplier.purchase_orders.order(:supplier_id, :order_no, :id)
     end
   
     # POST /receipt_notes
@@ -221,6 +249,7 @@ module Ag2Products
           format.html { redirect_to @receipt_note, notice: crud_notice('created', @receipt_note) }
           format.json { render json: @receipt_note, status: :created, location: @receipt_note }
         else
+          @orders = PurchaseOrder.order(:supplier_id, :order_no, :id)
           format.html { render action: "new" }
           format.json { render json: @receipt_note.errors, status: :unprocessable_entity }
         end
@@ -240,6 +269,7 @@ module Ag2Products
                         notice: (crud_notice('updated', @receipt_note) + "#{undo_link(@receipt_note)}").html_safe }
           format.json { head :no_content }
         else
+          @orders = @receipt_note.supplier.blank? ? PurchaseOrder.order(:supplier_id, :order_no, :id) : @receipt_note.supplier.purchase_orders.order(:supplier_id, :order_no, :id)
           format.html { render action: "edit" }
           format.json { render json: @receipt_note.errors, status: :unprocessable_entity }
         end
