@@ -9,8 +9,8 @@ es:
         check_for_client_invoices: "Item de nota de entrega no puede ser eliminado mientras existan facturas vinculadas."
     attributes:
       delivery_note_item:
-        delivery_note: "Albarán"
-        delivery_note_id: "Albarán"
+        delivery_note: "Nota de entrega"
+        delivery_note_id: "Nota de entrega"
         sale_offer: "Presupuesto"
         sale_offer_id: "Presupuesto"
         sale_offer_item: "Item presupuesto"

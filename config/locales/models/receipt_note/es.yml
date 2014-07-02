@@ -28,6 +28,8 @@ es:
         work_order_id: "Orden de trabajo"
         charge_account: "Cuenta de cargo"
         charge_account_id: "Cuenta de cargo"
+        purchase_order: "Pedido"
+        purchase_order_id: "Pedido"
         retention_pct: "% Retención"
         retention_time: "Plazo retención"
         subtotal: "Subtotal"

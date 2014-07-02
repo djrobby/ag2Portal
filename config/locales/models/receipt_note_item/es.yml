@@ -9,8 +9,8 @@ es:
         check_for_supplier_invoices: "Item de nota de recepción no puede ser eliminado mientras existan facturas S vinculadas."
     attributes:
       receipt_note_item:
-        receipt_note: "Albarán"
-        receipt_note_id: "Albarán"
+        receipt_note: "Nota de recepción"
+        receipt_note_id: "Nota de recepción"
         purchase_order: "Pedido"
         purchase_order_id: "Pedido"
         purchase_order_item: "Item pedido"

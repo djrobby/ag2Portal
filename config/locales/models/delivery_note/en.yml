@@ -28,6 +28,8 @@ en:
         work_order_id: "Work order"
         charge_account: "Charge account"
         charge_account_id: "Charge account"
+        sale_offer: "Offer"
+        sale_offer_id: "Offer"
         costs: "Costs"
         subtotal: "Subtotal"
         taxable: "Taxable"
