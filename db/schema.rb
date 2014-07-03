@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140702160644) do
+ActiveRecord::Schema.define(:version => 20140703170004) do
 
   create_table "activities", :force => true do |t|
     t.string   "description"
@@ -631,15 +631,17 @@ ActiveRecord::Schema.define(:version => 20140702160644) do
 
   create_table "payment_methods", :force => true do |t|
     t.string   "description"
-    t.integer  "expiration_days",                                 :default => 0,   :null => false
-    t.decimal  "default_interest", :precision => 12, :scale => 4, :default => 0.0, :null => false
-    t.datetime "created_at",                                                       :null => false
-    t.datetime "updated_at",                                                       :null => false
+    t.integer  "expiration_days",                                              :default => 0,   :null => false
+    t.decimal  "default_interest",              :precision => 12, :scale => 4, :default => 0.0, :null => false
+    t.datetime "created_at",                                                                    :null => false
+    t.datetime "updated_at",                                                                    :null => false
     t.string   "created_by"
     t.string   "updated_by"
+    t.integer  "flow",             :limit => 2
   end
 
   add_index "payment_methods", ["description"], :name => "index_payment_methods_on_description"
+  add_index "payment_methods", ["flow"], :name => "index_payment_methods_on_flow"
 
   create_table "product_families", :force => true do |t|
     t.string   "name"

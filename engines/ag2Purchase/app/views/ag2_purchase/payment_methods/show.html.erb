@@ -15,6 +15,12 @@
       <td><%=t 'activerecord.attributes.payment_method.default_interest' %>:</td>
       <td><%= number_with_precision(@payment_method.default_interest, precision: 3) unless @payment_method.default_interest.blank? %></td>
     </tr>
+    <tr>
+      <td><%=t 'activerecord.attributes.payment_method.flow' %>:</td>
+      <td><%= @payment_method.flow unless @payment_method.flow.blank? %></td>
+      <td></td>
+      <td></td>
+    </tr>
     <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @payment_method } %>
     <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @payment_method } %>
   </tbody>

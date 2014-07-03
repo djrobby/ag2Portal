@@ -8,7 +8,7 @@ es:
         other: Formas de pago
         check_for_suppliers: "Forma de pago no puede ser eliminada mientras existan proveedores vinculados."
         check_for_purchase_orders: "Forma de pago no puede ser eliminada mientras existan pedidos vinculados."
-        check_for_receipt_notes: "Forma de pago no puede ser eliminada mientras existan albaranes vinculados."
+        check_for_receipt_notes: "Forma de pago no puede ser eliminada mientras existan notas de entrega vinculadas."
         check_for_offer_requests: "Forma de pago no puede ser eliminada mientras existan solicitudes vinculadas."
         check_for_offers: "Forma de pago no puede ser eliminada mientras existan ofertas vinculadas."
         check_for_supplier_invoices: "Forma de pago no puede ser eliminada mientras existan facturas vinculadas."
@@ -17,3 +17,7 @@ es:
         description: "Descripción"
         expiration_days: "Días para vencimiento"
         default_interest: "Intereses demora %"
+        flow: "Para"
+        flow_1: "Cobros"
+        flow_2: "Pagos"
+        flow_3: "Ambos"

@@ -17,3 +17,7 @@ en:
         description: "Description"
         expiration_days: "Expiration days"
         default_interest: "Default Interest %"
+        flow: "For"
+        flow_1: "Collections"
+        flow_2: "Payments"
+        flow_3: "Both"

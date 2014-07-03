@@ -1,5 +1,5 @@
 class PaymentMethod < ActiveRecord::Base
-  attr_accessible :default_interest, :description, :expiration_days
+  attr_accessible :default_interest, :description, :expiration_days, :flow
 
   has_many :suppliers
   has_many :purchase_orders
@@ -11,6 +11,7 @@ class PaymentMethod < ActiveRecord::Base
   has_paper_trail
 
   validates :description, :presence => true
+  validates :flow,        :numericality => { :only_integer => true, :greater_than => 0, :less_than_or_equal_to => 3}
 
   before_destroy :check_for_dependent_records
 

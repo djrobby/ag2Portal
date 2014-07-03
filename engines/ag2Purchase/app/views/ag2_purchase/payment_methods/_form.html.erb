@@ -36,5 +36,11 @@
   <label class="multi-field-label-two"> <%= f.input :expiration_days, input_html: { class: 'mid-text-field number-text-field' }, label_html: { class: 'form-label' } %> </label>
   <label class="multi-field-label-two"> <%= f.input :default_interest, as: :string, input_html: { value: (number_with_precision(f.object.default_interest, precision: 3) if f.object.default_interest), class: 'mid-text-field number-text-field' }, label_html: { class: 'form-label' } %> </label>
 </div>
+<%= f.input :flow,
+  collection: [[1, t('activerecord.attributes.payment_method.flow_1')],
+               [2, t('activerecord.attributes.payment_method.flow_2')],
+               [3, t('activerecord.attributes.payment_method.flow_3')]],
+               as: :radio_buttons, label_method: :last, value_method: :first, label_html: { class: 'form-label' }, item_wrapper_class: 'inline' %>
+<br />
 <%= f.button :submit, :class => 'btn-primary' %>
 <% end %>
