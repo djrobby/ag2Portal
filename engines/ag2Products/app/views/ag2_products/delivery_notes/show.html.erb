@@ -1,5 +1,86 @@
-<p id="notice"><%= notice %></p>
+<%= render '/layouts/ag2_products/deliveriesbreadcrumb' %>
 
+<h3><%=t '.title' %></h3>
+<table class="table">
+  <tbody>
+    <tr>
+      <td>Id:</td>
+      <td><%= @delivery_note.id %></td>
+      <td><%=t 'activerecord.attributes.delivery_note.delivery_no' %>:</td>
+      <td><%= @delivery_note.delivery_no %></td>
+    </tr>
+    <tr>
+      <td><%=t 'activerecord.attributes.delivery_note.receipt_date' %>:</td>
+      <td><%= @delivery_note.receipt_date.strftime("%d/%m/%Y") unless @delivery_note.receipt_date.blank? %></td>
+      <td><%=t 'activerecord.attributes.delivery_note.offer' %>:</td>
+      <td><%= @delivery_note.sale_offer.offer_no unless @delivery_note.sale_offer.blank? %></td>
+    </tr>
+    <tr>
+      <td><%=t 'activerecord.attributes.delivery_note.supplier' %>:</td>
+      <td><%= @delivery_note.client.full_name unless @delivery_note.client.blank? %></td>
+      <td><%=t 'activerecord.attributes.delivery_note.payment_method' %>:</td>
+      <td> <%= @delivery_note.payment_method.description unless @delivery_note.payment_method.blank? %> </td>
+    </tr>
+    <tr>
+      <td><%=t 'activerecord.attributes.delivery_note.project' %>:</td>
+      <td><%= @delivery_note.project.name unless @delivery_note.project.blank? %></td>
+      <td><%=t 'activerecord.attributes.delivery_note.charge_account' %>:</td>
+      <td> <%= @delivery_note.charge_account.name unless @delivery_note.charge_account.blank? %> </td>
+    </tr>
+    <tr>
+      <td><%=t 'activerecord.attributes.delivery_note.work_order' %>:</td>
+      <td><%= @delivery_note.work_order.delivery_no unless @delivery_note.work_order.blank? %></td>
+      <td><%=t 'activerecord.attributes.delivery_note.store' %>:</td>
+      <td> <%= @delivery_note.store.name unless @delivery_note.store.blank? %> </td>
+    </tr>
+    <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @delivery_note } %>
+    <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @delivery_note } %>
+  </tbody>
+</table>
 
-<%= link_to 'Edit', edit_delivery_note_path(@delivery_note) %> |
-<%= link_to 'Back', delivery_notes_path %>
+<!-- Items -->
+<table class="form-table">
+  <tbody>
+    <tr class="form-tr underlined-tr">
+      <td class="form-td-two left-winged">
+        <h4><%= t 'ag2_products.delivery_notes.items_info' %></h4>
+      </td>
+      <td class="form-td-two right-winged">
+        <%= link_to t(".print"), delivery_notes_path, :class => 'btn btn-warning' %>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<% if (@items.count > 0) %>
+<table class="table table-condensed table-striped shrinked">
+  <thead>
+    <%= render 'items_header' %>
+  </thead>
+  <tfoot>
+    <%= render partial: 'items_footer', :locals => { note: @delivery_note } %>
+  </tfoot>
+  <tbody>
+    <%= render partial: 'item', collection: @items %>
+  </tbody>
+</table>
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @items } %>
+<% else %>
+<%= render :partial => '/layouts/paginationunbordered', :locals => { :ivar => @items } %>
+<% end %> <!-- end @items.count > 0 -->
+
+<!-- Remarks -->
+<table class="table">
+  <tbody>
+    <tr>
+      <td style="width: 12%"><%= t :"activerecord.attributes.delivery_note.remarks" %>:</td>
+      <td style="width: 88%"><%= @delivery_note.remarks unless @delivery_note.remarks.blank? %></td>
+    </tr>
+  </tbody>
+</table>
+
+<%= render partial: '/layouts/crud/update_delete_new', locals:
+{ model: DeliveryNote, update_path: edit_delivery_note_path(@delivery_note), update_txt: t('.btn_edit'),
+delete_path: @delivery_note, delete_txt: t('.btn_delete'), msg: t("activerecord.models.delivery_note.one"), txt: @delivery_note.delivery_no,
+new_path: new_delivery_note_path, new_txt: t('ag2_products.delivery_notes.index.btn_new') } %>
+
+<%= link_to t("ag2_products.delivery_notes.back_to_main_page"), delivery_notes_path %>

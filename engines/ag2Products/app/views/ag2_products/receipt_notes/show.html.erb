@@ -1,5 +1,92 @@
-<p id="notice"><%= notice %></p>
+<%= render '/layouts/ag2_products/receiptsbreadcrumb' %>
 
+<h3><%=t '.title' %></h3>
+<table class="table">
+  <tbody>
+    <tr>
+      <td>Id:</td>
+      <td><%= @receipt_note.id %></td>
+      <td><%=t 'activerecord.attributes.receipt_note.receipt_no' %>:</td>
+      <td><%= @receipt_note.receipt_no %></td>
+    </tr>
+    <tr>
+      <td><%=t 'activerecord.attributes.receipt_note.receipt_date' %>:</td>
+      <td><%= @receipt_note.receipt_date.strftime("%d/%m/%Y") unless @receipt_note.receipt_date.blank? %></td>
+      <td><%=t 'activerecord.attributes.receipt_note.offer' %>:</td>
+      <td><%= @receipt_note.purchase_order.order_no unless @receipt_note.purchase_order.blank? %></td>
+    </tr>
+    <tr>
+      <td><%=t 'activerecord.attributes.receipt_note.supplier' %>:</td>
+      <td><%= @receipt_note.supplier.full_name %></td>
+      <td><%=t 'activerecord.attributes.receipt_note.payment_method' %>:</td>
+      <td> <%= @receipt_note.payment_method.description %> </td>
+    </tr>
+    <tr>
+      <td><%=t 'activerecord.attributes.receipt_note.project' %>:</td>
+      <td><%= @receipt_note.project.name unless @receipt_note.project.blank? %></td>
+      <td><%=t 'activerecord.attributes.receipt_note.charge_account' %>:</td>
+      <td> <%= @receipt_note.charge_account.name unless @receipt_note.charge_account.blank? %> </td>
+    </tr>
+    <tr>
+      <td><%=t 'activerecord.attributes.receipt_note.work_order' %>:</td>
+      <td><%= @receipt_note.work_order.receipt_no unless @receipt_note.work_order.blank? %></td>
+      <td><%=t 'activerecord.attributes.receipt_note.store' %>:</td>
+      <td> <%= @receipt_note.store.name unless @receipt_note.store.blank? %> </td>
+    </tr>
+    <tr>
+      <td><%=t 'activerecord.attributes.purchase_order.retention_pct' %>:</td>
+      <td><%= number_with_precision(@purchase_order.retention_pct, precision: 2) unless @purchase_order.retention_pct.blank? %></td>
+      <td><%=t 'activerecord.attributes.purchase_order.retention_time' %>:</td>
+      <td><%= @purchase_order.retention_time unless @purchase_order.retention_time.blank? %></td>
+    </tr>
+    <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @receipt_note } %>
+    <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @receipt_note } %>
+  </tbody>
+</table>
 
-<%= link_to 'Edit', edit_receipt_note_path(@receipt_note) %> |
-<%= link_to 'Back', receipt_notes_path %>
+<!-- Items -->
+<table class="form-table">
+  <tbody>
+    <tr class="form-tr underlined-tr">
+      <td class="form-td-two left-winged">
+        <h4><%= t 'ag2_products.receipt_notes.items_info' %></h4>
+      </td>
+      <td class="form-td-two right-winged">
+        <%= link_to t(".print"), receipt_notes_path, :class => 'btn btn-warning' %>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<% if (@items.count > 0) %>
+<table class="table table-condensed table-striped shrinked">
+  <thead>
+    <%= render 'items_header' %>
+  </thead>
+  <tfoot>
+    <%= render partial: 'items_footer', :locals => { note: @receipt_note } %>
+  </tfoot>
+  <tbody>
+    <%= render partial: 'item', collection: @items %>
+  </tbody>
+</table>
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @items } %>
+<% else %>
+<%= render :partial => '/layouts/paginationunbordered', :locals => { :ivar => @items } %>
+<% end %> <!-- end @items.count > 0 -->
+
+<!-- Remarks -->
+<table class="table">
+  <tbody>
+    <tr>
+      <td style="width: 12%"><%= t :"activerecord.attributes.receipt_note.remarks" %>:</td>
+      <td style="width: 88%"><%= @receipt_note.remarks unless @receipt_note.remarks.blank? %></td>
+    </tr>
+  </tbody>
+</table>
+
+<%= render partial: '/layouts/crud/update_delete_new', locals:
+{ model: ReceiptNote, update_path: edit_receipt_note_path(@receipt_note), update_txt: t('.btn_edit'),
+delete_path: @receipt_note, delete_txt: t('.btn_delete'), msg: t("activerecord.models.receipt_note.one"), txt: @receipt_note.receipt_no,
+new_path: new_receipt_note_path, new_txt: t('ag2_products.receipt_notes.index.btn_new') } %>
+
+<%= link_to t("ag2_products.receipt_notes.back_to_main_page"), receipt_notes_path %>
