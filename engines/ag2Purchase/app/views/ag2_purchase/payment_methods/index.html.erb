@@ -1,11 +1,12 @@
 <%= render '/layouts/ag2_purchase/pmethodsbreadcrumb' %>
 
 <h3><%=t '.title' %></h3>
-<div class="span7">
+<div class="span8">
   <table class="table table-condensed table-striped">
     <thead>
       <tr>
         <th><%= sortable "description", t('activerecord.attributes.payment_method.description') %></th>
+        <th><%= sortable "flow", t('activerecord.attributes.payment_method.flow') %></th>
         <th></th>
       </tr>
     </thead>
@@ -13,6 +14,7 @@
       <% @payment_methods.each do |pmethod| %>
       <tr>
         <td><%= link_to pmethod.description, pmethod %></td>
+        <td><%= pmethod.flow_label %></td>
         <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => PaymentMethod, :path => edit_payment_method_path(pmethod) } %>
         <%= render :partial => '/layouts/crud/delete', :locals => { :model => PaymentMethod, :path => pmethod, :msg => t("activerecord.models.payment_method.one"), :txt => pmethod.description } %> </td>
       </tr>
