@@ -120,11 +120,17 @@ module Ag2Products
     # Update project, charge account and store text fields at view from work order select
     def dn_update_project_from_order
       order = params[:order]
+      project_id = 0
+      charge_account_id = 0
+      store_id = 0
       if order != '0'
         @order = WorkOrder.find(order)
         @project = @order.project
+        project_id = @project.id rescue 0
         @charge_account = @order.charge_account
+        charge_account_id = @charge_account.id rescue 0
         @store = @order.store
+        store_id = @store.id rescue 0
         if @charge_account.blank?
           @charge_account = @project.blank? ? ChargeAccount.all(order: 'account_code') : @project.charge_accounts(order: 'account_code')
         end
@@ -136,7 +142,8 @@ module Ag2Products
         @charge_account = ChargeAccount.all(order: 'account_code')
         @store = Store.all(order: 'name')
       end
-      @json_data = { "project" => @project, "charge_account" => @charge_account, "store" => @store }
+      @json_data = { "project" => @project, "charge_account" => @charge_account, "store" => @store,
+                     "project_id" => project_id, "charge_account_id" => charge_account_id, "store_id" => store_id }
       render json: @json_data
     end
 
@@ -208,9 +215,9 @@ module Ag2Products
       @delivery_notes = @search.results
 
       # Initialize select_tags
-      @clients = Client.order('name') if @clients.nil?
-      @projects = Project.order('project_code') if @projects.nil?
-      @work_orders = WorkOrder.order('order_no') if @work_orders.nil?
+      @clients_s = Client.order('name') if @clients_s.nil?
+      @projects_s = Project.order('project_code') if @projects_s.nil?
+      @work_orders_s = WorkOrder.order('order_no') if @work_orders_s.nil?
   
       respond_to do |format|
         format.html # index.html.erb
@@ -237,6 +244,10 @@ module Ag2Products
       @breadcrumb = 'create'
       @delivery_note = DeliveryNote.new
       @offers = SaleOffer.order(:client_id, :offer_no, :id)
+      @work_orders = WorkOrder.order(:order_no)
+      @projects = Project.order(:project_code)
+      @charge_accounts = ChargeAccount.order(:account_code)
+      @stores = Store.order(:name)
   
       respond_to do |format|
         format.html # new.html.erb
@@ -249,6 +260,10 @@ module Ag2Products
       @breadcrumb = 'update'
       @delivery_note = DeliveryNote.find(params[:id])
       @offers = @delivery_note.client.blank? ? SaleOffer.order(:client_id, :offer_no, :id) : @delivery_note.client.sale_offers.order(:client_id, :offer_no, :id)
+      @work_orders = @purchase_order.work_order.blank? ? WorkOrder.order(:order_no) : WorkOrder.where('id = ?', @purchase_order.work_order)
+      @projects = @purchase_order.project.blank? ? Project.order(:project_code) : Project.where('id = ?', @purchase_order.project)
+      @charge_accounts = @purchase_order.charge_account.blank? ? ChargeAccount.order(:account_code) : ChargeAccount.where('id = ?', @purchase_order.charge_account)
+      @stores = @purchase_order.store.blank? ? Store.order(:name) : Store.where('id = ?', @purchase_order.store)
     end
   
     # POST /delivery_notes
@@ -264,6 +279,10 @@ module Ag2Products
           format.json { render json: @delivery_note, status: :created, location: @delivery_note }
         else
           @offers = SaleOffer.order(:client_id, :offer_no, :id)
+          @work_orders = WorkOrder.order(:order_no)
+          @projects = Project.order(:project_code)
+          @charge_accounts = ChargeAccount.order(:account_code)
+          @stores = Store.order(:name)
           format.html { render action: "new" }
           format.json { render json: @delivery_note.errors, status: :unprocessable_entity }
         end
@@ -284,6 +303,10 @@ module Ag2Products
           format.json { head :no_content }
         else
           @offers = @delivery_note.client.blank? ? SaleOffer.order(:client_id, :offer_no, :id) : @delivery_note.client.sale_offers.order(:client_id, :offer_no, :id)
+          @work_orders = @purchase_order.work_order.blank? ? WorkOrder.order(:order_no) : WorkOrder.where('id = ?', @purchase_order.work_order)
+          @projects = @purchase_order.project.blank? ? Project.order(:project_code) : Project.where('id = ?', @purchase_order.project)
+          @charge_accounts = @purchase_order.charge_account.blank? ? ChargeAccount.order(:account_code) : ChargeAccount.where('id = ?', @purchase_order.charge_account)
+          @stores = @purchase_order.store.blank? ? Store.order(:name) : Store.where('id = ?', @purchase_order.store)
           format.html { render action: "edit" }
           format.json { render json: @delivery_note.errors, status: :unprocessable_entity }
         end

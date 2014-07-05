@@ -37,7 +37,7 @@ class DeliveryNote < ActiveRecord::Base
       full_name += self.delivery_no
     end
     if !self.delivery_date.blank?
-      full_name += " " + self.delivery_date
+      full_name += " " + self.delivery_date.to_s
     end
     if !self.work_order.blank?
       full_name += " " + self.work_order.full_name

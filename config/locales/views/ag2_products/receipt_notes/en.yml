@@ -27,7 +27,7 @@ en:
       items_info: "Receipt note Items"
       delete_item: "Delete this Item"
       add_item: "Add new Item"
-      add_item_to: "Request %{var}"
+      add_item_to: "Note %{var}"
       btn_new_item: "New Item"
       btn_add_item: "Add"
       item_error: "can't be blank"

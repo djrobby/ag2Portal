@@ -67,11 +67,17 @@ module Ag2Purchase
     # Update project, charge account and store text fields at view from work order select
     def po_update_project_from_order
       order = params[:order]
+      project_id = 0
+      charge_account_id = 0
+      store_id = 0
       if order != '0'
         @order = WorkOrder.find(order)
         @project = @order.project
+        project_id = @project.id rescue 0
         @charge_account = @order.charge_account
+        charge_account_id = @charge_account.id rescue 0
         @store = @order.store
+        store_id = @store.id rescue 0
         if @charge_account.blank?
           @charge_account = @project.blank? ? ChargeAccount.all(order: 'account_code') : @project.charge_accounts(order: 'account_code')
         end
@@ -83,7 +89,8 @@ module Ag2Purchase
         @charge_account = ChargeAccount.all(order: 'account_code')
         @store = Store.all(order: 'name')
       end
-      @json_data = { "project" => @project, "charge_account" => @charge_account, "store" => @store }
+      @json_data = { "project" => @project, "charge_account" => @charge_account, "store" => @store,
+                     "project_id" => project_id, "charge_account_id" => charge_account_id, "store_id" => store_id }
 
       respond_to do |format|
         format.html # po_update_project_from_order.html.erb does not exist! JSON only
@@ -232,6 +239,10 @@ module Ag2Purchase
       @breadcrumb = 'create'
       @purchase_order = PurchaseOrder.new
       @offers = Offer.order(:supplier_id, :offer_no, :id)
+      @work_orders = WorkOrder.order(:order_no)
+      @projects = Project.order(:project_code)
+      @charge_accounts = ChargeAccount.order(:account_code)
+      @stores = Store.order(:name)
       #@purchase_order.purchase_order_items.build
   
       respond_to do |format|
@@ -245,6 +256,10 @@ module Ag2Purchase
       @breadcrumb = 'update'
       @purchase_order = PurchaseOrder.find(params[:id])
       @offers = @purchase_order.supplier.blank? ? Offer.order(:supplier_id, :offer_no, :id) : @purchase_order.supplier.offers.order(:supplier_id, :offer_no, :id)
+      @work_orders = @purchase_order.work_order.blank? ? WorkOrder.order(:order_no) : WorkOrder.where('id = ?', @purchase_order.work_order)
+      @projects = @purchase_order.project.blank? ? Project.order(:project_code) : Project.where('id = ?', @purchase_order.project)
+      @charge_accounts = @purchase_order.charge_account.blank? ? ChargeAccount.order(:account_code) : ChargeAccount.where('id = ?', @purchase_order.charge_account)
+      @stores = @purchase_order.store.blank? ? Store.order(:name) : Store.where('id = ?', @purchase_order.store)
       #@items = @purchase_order.purchase_order_items.order('id')
     end
   
@@ -261,6 +276,10 @@ module Ag2Purchase
           format.json { render json: @purchase_order, status: :created, location: @purchase_order }
         else
           @offers = Offer.order(:supplier_id, :offer_no, :id)
+          @work_orders = WorkOrder.order(:order_no)
+          @projects = Project.order(:project_code)
+          @charge_accounts = ChargeAccount.order(:account_code)
+          @stores = Store.order(:name)
           format.html { render action: "new" }
           format.json { render json: @purchase_order.errors, status: :unprocessable_entity }
         end
@@ -281,6 +300,10 @@ module Ag2Purchase
           format.json { head :no_content }
         else
           @offers = @purchase_order.supplier.blank? ? Offer.order(:supplier_id, :offer_no, :id) : @purchase_order.supplier.offers.order(:supplier_id, :offer_no, :id)
+          @work_orders = @purchase_order.work_order.blank? ? WorkOrder.order(:order_no) : WorkOrder.where('id = ?', @purchase_order.work_order)
+          @projects = @purchase_order.project.blank? ? Project.order(:project_code) : Project.where('id = ?', @purchase_order.project)
+          @charge_accounts = @purchase_order.charge_account.blank? ? ChargeAccount.order(:account_code) : ChargeAccount.where('id = ?', @purchase_order.charge_account)
+          @stores = @purchase_order.store.blank? ? Store.order(:name) : Store.where('id = ?', @purchase_order.store)
           format.html { render action: "edit" }
           format.json { render json: @purchase_order.errors, status: :unprocessable_entity }
         end

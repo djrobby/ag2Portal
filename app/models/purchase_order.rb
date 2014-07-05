@@ -44,7 +44,7 @@ class PurchaseOrder < ActiveRecord::Base
       full_name += self.order_no
     end
     if !self.order_date.blank?
-      full_name += " " + self.order_date
+      full_name += " " + self.order_date.to_s
     end
     if !self.supplier.blank?
       full_name += " " + self.supplier.full_name

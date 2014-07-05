@@ -41,7 +41,7 @@ class SupplierInvoice < ActiveRecord::Base
       full_name += self.invoice_no
     end
     if !self.invoice_date.blank?
-      full_name += " " + self.invoice_date
+      full_name += " " + self.invoice_date.to_s
     end
     if !self.supplier.blank?
       full_name += " " + self.supplier.full_name

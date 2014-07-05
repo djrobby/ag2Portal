@@ -119,6 +119,10 @@
         var p = data.project;
         var c = data.charge_account;
         var s = data.store;
+        var p_id = data.project_id;
+        var c_id = data.charge_account_id;
+        var s_id = data.store_id;
+        // Project
         $("#delivery_note_project_id").html("");
         $("#delivery_note_project_id").select2("val", "");
         $("#delivery_note_project_id").append($('<option></option>').val("").html(""));
@@ -133,6 +137,8 @@
             $("#delivery_note_project_id").append($('<option></option>').val(option.id).html(option.project_code + " " + option.name));
           });
         }
+        if (p_id != 0) $("#delivery_note_project_id").select2("val", p_id);
+        // Charge Account
         $("#delivery_note_charge_account_id").html("");
         $("#delivery_note_charge_account_id").select2("val", "");
         $("#delivery_note_charge_account_id").append($('<option></option>').val("").html(""));
@@ -147,6 +153,8 @@
             $("#delivery_note_charge_account_id").append($('<option></option>').val(option.id).html(option.account_code + " " + option.name));
           });
         }
+        if (c_id != 0) $("#delivery_note_charge_account_id").select2("val", c_id);
+        // Store
         $("#delivery_note_store_id").html("");
         $("#delivery_note_store_id").select2("val", "");
         $("#delivery_note_store_id").append($('<option></option>').val("").html(""));
@@ -161,6 +169,7 @@
             $("#delivery_note_store_id").append($('<option></option>').val(option.id).html(option.name));
           });
         }
+        if (s_id != 0) $("#delivery_note_store_id").select2("val", s_id);
       });
       return false;
     });
@@ -221,12 +230,12 @@
   <label class="multi-field-label-two"> <%= f.association :payment_method, collection: PaymentMethod.all(order: 'description'), input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label-under-sel2' } %> </label>
 </div>
 <div>
-  <label class="multi-field-label-two"> <%= f.association :work_order, collection: WorkOrder.all(order: 'order_no'), input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
-  <label class="multi-field-label-two"> <%= f.association :project, collection: Project.all(order: 'project_code'), input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.association :work_order, collection: @work_orders, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.association :project, collection: @projects, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
 </div>
 <div>
-  <label class="multi-field-label-two"> <%= f.association :charge_account, collection: ChargeAccount.all(order: 'account_code'), input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
-  <label class="multi-field-label-two"> <%= f.association :store, collection: Store.all(order: 'name'), input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.association :charge_account, collection: @charge_accounts, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.association :store, collection: @stores, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
 </div>
 <!-- Items -->
 <table class="form-table">

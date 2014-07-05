@@ -19,13 +19,13 @@
         <%= form_tag "offers", :method => 'get' do %>
         <!-- Supplier -->
         <%= label_tag I18n.t("ag2_products.receipt_notes.index.label_supplier"), nil, :class => 'form-label' %>
-        <%= select_tag "Supplier", options_from_collection_for_select(@suppliers, "id", "full_name"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
+        <%= select_tag "Supplier", options_from_collection_for_select(@suppliers_s, "id", "full_name"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
         <!-- Project -->
         <%= label_tag I18n.t("ag2_products.receipt_notes.index.label_project"), nil, :class => 'form-label-under-sel2' %>
-        <%= select_tag "Project", options_from_collection_for_select(@projects, "id", "full_name"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
+        <%= select_tag "Project", options_from_collection_for_select(@projects_s, "id", "full_name"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
         <!-- Work order -->
         <%= label_tag I18n.t("ag2_products.receipt_notes.index.label_work_order"), nil, :class => 'form-label-under-sel2' %>
-        <%= select_tag "Order", options_from_collection_for_select(@work_orders, "id", "full_name"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
+        <%= select_tag "Order", options_from_collection_for_select(@work_orders_s, "id", "full_name"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
         <!-- Others -->
         <%= label_tag I18n.t("ag2_products.receipt_notes.index.label_others"), nil, :class => 'form-label-under-sel2' %>
         <%= text_field_tag :search, params[:search], :class => 'x-large-text-field shrinked' %>

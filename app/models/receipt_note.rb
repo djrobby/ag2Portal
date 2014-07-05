@@ -39,7 +39,7 @@ class ReceiptNote < ActiveRecord::Base
       full_name += self.receipt_no
     end
     if !self.receipt_date.blank?
-      full_name += " " + self.receipt_date
+      full_name += " " + self.receipt_date.to_s
     end
     if !self.supplier.blank?
       full_name += " " + self.supplier.full_name
