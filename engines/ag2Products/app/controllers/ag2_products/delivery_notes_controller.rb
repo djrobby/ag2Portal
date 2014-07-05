@@ -11,7 +11,8 @@ module Ag2Products
                                                :dn_update_project_from_order,
                                                :dn_update_charge_account_from_project,
                                                :dn_update_offer_select_from_client,
-                                               :dn_format_number]
+                                               :dn_format_number,
+                                               :dn_current_stock]
                                                
     # Calculate and format totals properly
     def dn_totals
@@ -43,6 +44,7 @@ module Ag2Products
     # Update description and prices text fields at view from product select
     def dn_update_description_prices_from_product
       product = params[:product]
+      store = params[:store]
       description = ""
       qty = 0
       cost = 0
@@ -52,6 +54,7 @@ module Ag2Products
       tax_type_id = 0
       tax_type_tax = 0
       tax = 0
+      current_stock = 0
       if product != '0'
         @product = Product.find(product)
         @prices = @product.purchase_prices
@@ -65,6 +68,9 @@ module Ag2Products
         tax_type_id = @product.tax_type.id
         tax_type_tax = @product.tax_type.tax
         tax = amount * (tax_type_tax / 100)
+        if store != 0
+          current_stock = Stock.find_by_product_and_store(product, store).current rescue 0
+        end
       end
       # Format numbers
       cost = number_with_precision(cost.round(4), precision: 4)
@@ -72,11 +78,12 @@ module Ag2Products
       price = number_with_precision(price.round(4), precision: 4)
       amount = number_with_precision(amount.round(4), precision: 4)
       tax = number_with_precision(tax.round(4), precision: 4)
+      current_stock = number_with_precision(current_stock.round(4), precision: 4)
       # Setup JSON hash
       @json_data = { "description" => description,
                      "cost" => cost.to_s, "costs" => costs.to_s,
                      "price" => price.to_s, "amount" => amount.to_s,
-                     "tax" => tax.to_s, "type" => tax_type_id }
+                     "tax" => tax.to_s, "type" => tax_type_id, "stock" => current_stock.to_s }
       render json: @json_data
     end
 
@@ -179,10 +186,25 @@ module Ag2Products
     end
 
     # Format numbers properly
-    def po_format_number
+    def dn_format_number
       num = params[:num].to_f / 100
       num = number_with_precision(num.round(2), precision: 2)
       @json_data = { "num" => num.to_s }
+      render json: @json_data
+    end
+
+    # Update current stock text field at view from store select
+    def dn_current_stock
+      product = params[:product]
+      store = params[:store]
+      current_stock = 0
+      if product != '0' && store != '0'
+        current_stock = Stock.find_by_product_and_store(product, store).current rescue 0
+      end
+      # Format numbers
+      current_stock = number_with_precision(current_stock.round(4), precision: 4)
+      # Setup JSON
+      @json_data = { "stock" => current_stock.to_s }
       render json: @json_data
     end
 

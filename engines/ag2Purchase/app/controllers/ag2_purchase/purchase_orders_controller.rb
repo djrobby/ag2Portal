@@ -11,7 +11,8 @@ module Ag2Purchase
                                                :po_update_amount_from_price_or_quantity,
                                                :po_update_offer_select_from_supplier,
                                                :po_format_numbers,
-                                               :po_totals]
+                                               :po_totals,
+                                               :po_current_stock]
     # Update offer select at view from supplier select
     def po_update_offer_select_from_supplier
       supplier = params[:supplier]
@@ -31,6 +32,7 @@ module Ag2Purchase
     # Update description and prices text fields at view from product select
     def po_update_description_prices_from_product
       product = params[:product]
+      store = params[:store]
       description = ""
       qty = 0
       price = 0
@@ -38,6 +40,7 @@ module Ag2Purchase
       tax_type_id = 0
       tax_type_tax = 0
       tax = 0
+      current_stock = 0
       if product != '0'
         @product = Product.find(params[:product])
         @prices = @product.purchase_prices
@@ -49,14 +52,18 @@ module Ag2Purchase
         tax_type_id = @product.tax_type.id
         tax_type_tax = @product.tax_type.tax
         tax = amount * (tax_type_tax / 100)
+        if store != 0
+          current_stock = Stock.find_by_product_and_store(product, store).current rescue 0
+        end
       end
       # Format numbers
       price = number_with_precision(price.round(4), precision: 4)
       tax = number_with_precision(tax.round(4), precision: 4)
       amount = number_with_precision(amount.round(4), precision: 4)
+      current_stock = number_with_precision(current_stock.round(4), precision: 4)
       # Setup JSON
       @json_data = { "description" => description, "price" => price.to_s, "amount" => amount.to_s,
-                     "tax" => tax.to_s, "type" => tax_type_id }
+                     "tax" => tax.to_s, "type" => tax_type_id, "stock" => current_stock.to_s }
 
       respond_to do |format|
         format.html # po_update_description_prices_from_product.html.erb does not exist! JSON only
@@ -185,6 +192,21 @@ module Ag2Purchase
       # Setup JSON hash
       @json_data = { "qty" => qty.to_s, "amount" => amount.to_s, "tax" => tax.to_s,
                      "discount" => discount.to_s, "taxable" => taxable.to_s, "total" => total.to_s }
+      render json: @json_data
+    end
+
+    # Update current stock text field at view from store select
+    def po_current_stock
+      product = params[:product]
+      store = params[:store]
+      current_stock = 0
+      if product != '0' && store != '0'
+        current_stock = Stock.find_by_product_and_store(product, store).current rescue 0
+      end
+      # Format numbers
+      current_stock = number_with_precision(current_stock.round(4), precision: 4)
+      # Setup JSON
+      @json_data = { "stock" => current_stock.to_s }
       render json: @json_data
     end
 

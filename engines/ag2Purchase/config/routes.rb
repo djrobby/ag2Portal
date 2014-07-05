@@ -27,9 +27,9 @@ Ag2Purchase::Engine.routes.draw do
     match 'su_format_percentage/:num', :controller => 'suppliers', :action => 'su_format_percentage'
     match 'suppliers/:id/su_format_percentage/:num', :controller => 'suppliers', :action => 'su_format_percentage'
     #
-    match 'purchase_orders/po_update_description_prices_from_product/:product/:qty', :controller => 'purchase_orders', :action => 'po_update_description_prices_from_product'
-    match 'po_update_description_prices_from_product/:product/:qty', :controller => 'purchase_orders', :action => 'po_update_description_prices_from_product'
-    match 'purchase_orders/:id/po_update_description_prices_from_product/:product/:qty', :controller => 'purchase_orders', :action => 'po_update_description_prices_from_product'
+    match 'purchase_orders/po_update_description_prices_from_product/:product/:qty/:store', :controller => 'purchase_orders', :action => 'po_update_description_prices_from_product'
+    match 'po_update_description_prices_from_product/:product/:qty/:store', :controller => 'purchase_orders', :action => 'po_update_description_prices_from_product'
+    match 'purchase_orders/:id/po_update_description_prices_from_product/:product/:qty/:store', :controller => 'purchase_orders', :action => 'po_update_description_prices_from_product'
     match 'purchase_orders/po_update_amount_from_price_or_quantity/:price/:qty/:tax_type/:discount_p/:discount/:product', :controller => 'purchase_orders', :action => 'po_update_amount_from_price_or_quantity'
     match 'po_update_amount_from_price_or_quantity/:price/:qty/:tax_type/:discount_p/:discount/:product', :controller => 'purchase_orders', :action => 'po_update_amount_from_price_or_quantity'
     match 'purchase_orders/:id/po_update_amount_from_price_or_quantity/:price/:qty/:tax_type/:discount_p/:discount/:product', :controller => 'purchase_orders', :action => 'po_update_amount_from_price_or_quantity'
@@ -48,6 +48,9 @@ Ag2Purchase::Engine.routes.draw do
     match 'purchase_orders/po_totals/:qty/:amount/:tax/:discount_p', :controller => 'purchase_orders', :action => 'po_totals'
     match 'po_totals/:qty/:amount/:tax/:discount_p', :controller => 'purchase_orders', :action => 'po_totals'
     match 'purchase_orders/:id/po_totals/:qty/:amount/:tax/:discount_p', :controller => 'purchase_orders', :action => 'po_totals'
+    match 'purchase_orders/po_current_stock/:product/:store', :controller => 'purchase_orders', :action => 'po_current_stock'
+    match 'po_current_stock/:product/:store', :controller => 'purchase_orders', :action => 'po_current_stock'
+    match 'purchase_orders/:id/po_current_stock/:product/:store', :controller => 'purchase_orders', :action => 'po_current_stock'
     #
     match 'payment_methods/pm_format_numbers/:num', :controller => 'payment_methods', :action => 'pm_format_numbers'
     match 'pm_format_numbers/:num', :controller => 'payment_methods', :action => 'pm_format_numbers'
