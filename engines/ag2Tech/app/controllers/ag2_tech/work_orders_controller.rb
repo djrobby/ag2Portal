@@ -58,6 +58,7 @@ module Ag2Tech
     # Update description and prices text fields at view from product select
     def wo_update_description_prices_from_product
       product = params[:product]
+      store = params[:store]
       description = ""
       qty = 0
       cost = 0
@@ -67,6 +68,7 @@ module Ag2Tech
       tax_type_id = 0
       tax_type_tax = 0
       tax = 0
+      current_stock = 0
       if product != '0'
         @product = Product.find(product)
         @prices = @product.purchase_prices
@@ -80,6 +82,9 @@ module Ag2Tech
         tax_type_id = @product.tax_type.id
         tax_type_tax = @product.tax_type.tax
         tax = amount * (tax_type_tax / 100)
+        if store != 0
+          current_stock = Stock.find_by_product_and_store(product, store).current rescue 0
+        end
       end
       # Format numbers
       cost = number_with_precision(cost.round(4), precision: 4)
@@ -87,11 +92,12 @@ module Ag2Tech
       price = number_with_precision(price.round(4), precision: 4)
       amount = number_with_precision(amount.round(4), precision: 4)
       tax = number_with_precision(tax.round(4), precision: 4)
+      current_stock = number_with_precision(current_stock.round(4), precision: 4)
       # Setup JSON
       @json_data = { "description" => description,
                      "cost" => cost.to_s, "costs" => costs.to_s,
                      "price" => price.to_s, "amount" => amount.to_s,
-                     "tax" => tax.to_s, "type" => tax_type_id }
+                     "tax" => tax.to_s, "type" => tax_type_id, "stock" => current_stock.to_s }
 
       respond_to do |format|
         format.html # wo_update_description_prices_from_product.html.erb does not exist! JSON only

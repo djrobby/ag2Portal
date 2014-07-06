@@ -9,7 +9,7 @@ class Stock < ActiveRecord::Base
   validates :store,    :presence => true
 
   def self.find_by_product_and_store(_product, _store)
-    Stock.where("product_id = ? AND store_id = ?", _product, _store).first  
+    Stock.where("product_id = ? AND store_id = ?", _product, _store).first 
   end
   
   searchable do

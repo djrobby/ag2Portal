@@ -11,6 +11,10 @@ class PurchasePrice < ActiveRecord::Base
   validates :measure,  :presence => true
   validates :code,     :presence => true
 
+  def self.find_by_product_and_supplier(_product, _supplier)
+    PurchasePrice.where("product_id = ? AND supplier_id = ?", _product, _supplier).first  
+  end
+
   searchable do
     text :code
     integer :product_id

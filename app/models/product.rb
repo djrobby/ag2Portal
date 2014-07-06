@@ -28,11 +28,11 @@ class Product < ActiveRecord::Base
   validates :product_code,      :presence => true,
                                 :length => { :in => 4..11 },
                                 :uniqueness => true
-  validates :product_type_id,   :presence => true
-  validates :product_family_id, :presence => true
-  validates :measure_id,        :presence => true
-  validates :tax_type_id,       :presence => true
-  validates :manufacturer_id,   :presence => true
+  validates :product_type,      :presence => true
+  validates :product_family,    :presence => true
+  validates :measure,           :presence => true
+  validates :tax_type,          :presence => true
+  validates :manufacturer,      :presence => true
 
   validates_attachment_content_type :image, :content_type => /\Aimage\/.*\Z/
 
