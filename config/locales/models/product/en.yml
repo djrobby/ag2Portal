@@ -33,7 +33,7 @@ en:
         manufacturer_p_code: "Manufacturer reference"
         reference_price: "Reference price €"
         last_price: "Last price €"
-        average_price: "Average price €"
+        average_price: "Weighted average price €"
         sell_price: "Sell price €"
         markup: "Markup %"
         warranty_time: "Warranty time"

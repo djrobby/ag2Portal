@@ -38,6 +38,7 @@ class Product < ActiveRecord::Base
 
   before_validation :fields_to_uppercase
   before_destroy :check_for_dependent_records
+  before_save :update_sell_price
 
   def fields_to_uppercase
     if !self.product_code.blank?
@@ -49,6 +50,7 @@ class Product < ActiveRecord::Base
     if !self.aux_description.blank?
       self[:aux_description].upcase!
     end
+    true
   end
 
   def to_label
@@ -108,6 +110,7 @@ class Product < ActiveRecord::Base
 
   private
 
+  # Before destroy
   def check_for_dependent_records
     # Check for stocks
     if stocks.count > 0
@@ -153,6 +156,13 @@ class Product < ActiveRecord::Base
     if supplier_invoice_items.count > 0
       errors.add(:base, I18n.t('activerecord.models.product.check_for_client_invoices'))
       return false
+    end
+  end
+  
+  # Before save
+  def update_sell_price
+    if !reference_price.blank? && !markup.blank?
+      self.sell_price = reference_price * (1 + (markup / 100))
     end
   end
 end

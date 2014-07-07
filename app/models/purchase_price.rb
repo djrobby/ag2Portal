@@ -11,6 +11,8 @@ class PurchasePrice < ActiveRecord::Base
   validates :measure,  :presence => true
   validates :code,     :presence => true
 
+  after_save :update_reference_price_if_favorite
+
   def self.find_by_product_and_supplier(_product, _supplier)
     PurchasePrice.where("product_id = ? AND supplier_id = ?", _product, _supplier).first  
   end
@@ -22,5 +24,17 @@ class PurchasePrice < ActiveRecord::Base
     integer :measure_id
     integer :id
     string :code
+  end
+  
+  private
+  
+  # After save
+  def update_reference_price_if_favorite
+    if favorite
+      product.reference_price = price
+      if !product.save
+        return false
+      end      
+    end
   end
 end

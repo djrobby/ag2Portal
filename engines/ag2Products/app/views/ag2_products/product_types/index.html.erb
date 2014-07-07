@@ -14,7 +14,7 @@
       <tr>
         <td><%= link_to m.description, m %></td>
         <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => ProductType, :path => edit_product_type_path(m) } %>
-        <%= render :partial => '/layouts/crud/delete', :locals => { :model => ProductType, :path => m, :msg => t("activerecord.models.product_type.one"), :txt => m.description } %> </td>
+        <%= render :partial => '/layouts/crud/delete', :locals => { :model => ProductType, :path => m, :msg => t("activerecord.models.product_type.one"), :txt => m.description } unless m.id < 3 %> </td>
       </tr>
       <% end %>
     </tbody>
