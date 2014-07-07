@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140703170004) do
+ActiveRecord::Schema.define(:version => 20140707175555) do
 
   create_table "activities", :force => true do |t|
     t.string   "description"
@@ -689,6 +689,10 @@ ActiveRecord::Schema.define(:version => 20140703170004) do
     t.datetime "updated_at",                                                                       :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
+    t.string   "image_file_name"
+    t.string   "image_content_type"
+    t.integer  "image_file_size"
+    t.datetime "image_updated_at"
   end
 
   add_index "products", ["active"], :name => "index_products_on_active"
