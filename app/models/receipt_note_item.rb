@@ -49,6 +49,10 @@ class ReceiptNoteItem < ActiveRecord::Base
     quantity * (price - discount)
   end
 
+  def amount_was
+    quantity_was * (price_was - discount_was)
+  end
+
   def tax
     (tax_type.tax / 100) * amount if !tax_type.nil?
   end
@@ -78,52 +82,24 @@ class ReceiptNoteItem < ActiveRecord::Base
   # Before save (create & update)
   # Creates new Stock (unless product type 2) & PurchasePrice if don't exist
   def check_for_new_stock_and_price
-    if product.product_type.id != 2
-      _stock = Stock.find_by_product_and_store(product, store)
-      if _stock.nil?
-        # Insert a new empty record if Stock doesn't exist
-        _stock = Stock.create(product: product, store: store, initial: 0, current: 0, minimum: 0, maximum: 0, location: nil)
-      end
-    end
-    _purchase_price = PurchasePrice.find_by_product_and_supplier(product, receipt_note.supplier)
-    if _purchase_price.nil?
-      # Insert a new empty record if PurchasePrice doesn't exist
-      _purchase_price = PurchasePrice.create(product: product, supplier: receipt_note.supplier, code: code, price: 0, measure: product.measure, factor: 1)
-    end
+    create_stock_if_necessary(product, store)
+    create_purchase_price_if_necessary(product, receipt_note.supplier)
     true
   end
     
   # After create
   # Updates Stock & PurchasePrice (current)
   def update_stock_and_price_on_create
-    _current_stock = 0
-    _current_average_price = 0
-    _new_average_price = 0
-    # Update current Stock (unless product type 2) attributes: current
-    if product.product_type.id != 2
-      _stock = Stock.find_by_product_and_store(product, store)
-      if !_stock.nil?
-        _stock.current += quantity
-        if !_stock.save
-          return false
-        end
-      end
-    end 
-    # Update current PurchasePrice attributes: price
-    # Warning: If current PurchasePrice is favorite, Product reference_price will be updated automatically: Do not update it later!
-    _purchase_price = PurchasePrice.find_by_product_and_supplier(product, receipt_note.supplier)
-    if _purchase_price.nil?
-      _purchase_price.price = price
-      if !_purchase_price.save
-        return false
-      end
+    # Update current Stock
+    if !update_stock(product, store, quantity, true)
+      return false
     end
-    # Update current Product attributes: last_price, average_price
-    _current_stock = product.stock
-    _current_average_price = product.average_price
-    _new_average_price = ((_current_average_price * _current_stock) + amount) / (_current_stock + quantity)
-    product.attributes = { last_price: price, average_price: _new_average_price }
-    if !product.save
+    # Update current PurchasePrice
+    if !update_purchase_price(product, receipt_note.supplier, price, code)
+      return false
+    end
+    # Update current Product
+    if !update_product(product, amount, quantity, price, true)
       return false
     end
     true
@@ -132,6 +108,118 @@ class ReceiptNoteItem < ActiveRecord::Base
   # After update
   # Updates Stock & PurchasePrice (current and previous)
   def update_stock_and_price_on_update
-    
+    #
+    # Update current data if necessary
+    #
+    if product_changed? || store_changed? || quantity_changed?
+      # Current Stock
+      if !update_stock(product, store, quantity - quantity_was, true)
+        return false
+      end
+    end
+    if product_changed? || receipt_note.supplier_changed? || price_changed? || code_changed?
+      # Current PurchasePrice
+      if !update_purchase_price(product, receipt_note.supplier, price, code)
+        return false
+      end
+    end
+    if product_changed? || quantity_changed? || price_changed?
+      # Current Product
+      if !update_product(product, amount - amount_was, quantity - quantity_was, price, true)
+        return false
+      end
+    end
+    #
+    # Roll back previous data if necessary
+    #
+    if product_changed? || store_changed?
+      # Previous Stock
+      if !update_stock(product_was, store_was, quantity_was, false)
+        return false
+      end
+    end
+    if product_changed? || receipt_note.supplier_changed?
+      # Previous PurchasePrice
+      if !update_purchase_price(product_was, receipt_note.supplier_was, price_was, code_was)
+        return false
+      end
+    end 
+    if product_changed?
+      # Previous Product
+      if !update_product(product_was, amount_was, quantity_was, price_was, false)
+        return false
+      end
+    end
+  end
+  
+  #
+  # Helper methods for triggers
+  #
+  # Creates new Stock (unless product_type 2) if don't exist
+  def create_stock_if_necessary(_product, _store)
+    if _product.product_type.id != 2
+      _stock = Stock.find_by_product_and_store(_product, _store)
+      if _stock.nil?
+        # Insert a new empty record if Stock doesn't exist
+        _stock = Stock.create(product: _product, store: _store, initial: 0, current: 0, minimum: 0, maximum: 0, location: nil)
+      end
+    end
+    true
+  end
+
+  # Creates new PurchasePrice if don't exist
+  def create_purchase_price_if_necessary(_product, _supplier)
+    _purchase_price = PurchasePrice.find_by_product_and_supplier(_product, _supplier)
+    if _purchase_price.nil?
+      # Insert a new empty record if PurchasePrice doesn't exist
+      _purchase_price = PurchasePrice.create(product: _product, supplier: _supplier, code: nil, price: 0, measure: _product.measure, factor: 1)
+    end
+    true
+  end
+
+  # Update current Stock attributes: current
+  # Warning: Only if product_type is different from 2!
+  # Boolean is_new => true: current/new, false: previous/old
+  def update_stock(_product, _store, _quantity, _is_new)
+    if _product.product_type.id != 2
+      _stock = Stock.find_by_product_and_store(_product, _store)
+      if !_stock.nil?
+        _stock.current = _is_new ? _stock.current + _quantity : _stock.current - _quantity
+        if !_stock.save
+          return false
+        end
+      end
+    end
+    true 
+  end
+
+  # Update current PurchasePrice attributes: price
+  # Warning: If current PurchasePrice is favorite, Product reference_price will be updated automatically: Do not update it later!
+  def update_purchase_price(_product, _supplier, _price, _code)
+    _purchase_price = PurchasePrice.find_by_product_and_supplier(_product, _supplier)
+    if _purchase_price.nil?
+      _purchase_price.attributes = { price: _price, code: _code }
+      if !_purchase_price.save
+        return false
+      end
+    end
+    true 
+  end
+  
+  # Update current Product attributes: last_price, average_price
+  # Boolean is_new => true: current/new, false: previous/old
+  def update_product(_product, _amount, _quantity, _price, _is_new)
+    _current_stock = _product.stock
+    _current_average_price = _product.average_price
+    if _is_new
+      _new_average_price = ((_current_average_price * _current_stock) + _amount) / (_current_stock + _quantity)
+    else
+      _new_average_price = ((_current_average_price * _current_stock) - _amount) / (_current_stock - _quantity)
+    end
+    _product.attributes = { last_price: _price, average_price: _new_average_price }
+    if !_product.save
+      return false
+    end
+    true    
   end
 end
