@@ -6,7 +6,7 @@ class Product < ActiveRecord::Base
   belongs_to :manufacturer
   attr_accessible :active, :aux_code, :aux_description, :average_price, :last_price, :life_time,
                   :main_description, :manufacturer_p_code, :markup, :product_code, :reference_price,
-                  :remarks, :sell_price, :warranty_time,
+                  :remarks, :sell_price, :warranty_time, :prev_last_price,
                   :product_type_id, :product_family_id, :measure_id, :tax_type_id, :manufacturer_id
   has_attached_file :image, :styles => { :original => "160x160>", :medium => "120x120>", :small => "80x80>" }, :default_url => "/images/missing/:style/product.png"
 

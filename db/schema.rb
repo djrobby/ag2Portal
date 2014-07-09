@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140707175555) do
+ActiveRecord::Schema.define(:version => 20140709182447) do
 
   create_table "activities", :force => true do |t|
     t.string   "description"
@@ -693,6 +693,7 @@ ActiveRecord::Schema.define(:version => 20140707175555) do
     t.string   "image_content_type"
     t.integer  "image_file_size"
     t.datetime "image_updated_at"
+    t.decimal  "prev_last_price",                  :precision => 12, :scale => 4, :default => 0.0, :null => false
   end
 
   add_index "products", ["active"], :name => "index_products_on_active"
@@ -830,6 +831,8 @@ ActiveRecord::Schema.define(:version => 20140707175555) do
     t.datetime "updated_at",                                                  :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
+    t.string   "prev_code"
+    t.decimal  "prev_price",  :precision => 12, :scale => 4, :default => 0.0, :null => false
   end
 
   add_index "purchase_prices", ["code"], :name => "index_purchase_prices_on_code"
