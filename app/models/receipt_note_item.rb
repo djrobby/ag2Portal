@@ -99,7 +99,7 @@ class ReceiptNoteItem < ActiveRecord::Base
       return false
     end
     # Update current Product
-    if !update_product(product, amount, quantity, price, true)
+    if !update_product(product, amount, quantity, price, true, 1)
       return false
     end
     true
@@ -143,16 +143,16 @@ class ReceiptNoteItem < ActiveRecord::Base
     # Product
     if product_changed?
       # Current Product
-      if !update_product(product, amount, quantity, price, true)
+      if !update_product(product, amount, quantity, price, true, 1)
         return false
       end
       # Previous Product
-      if !update_product(product_was, amount_was, quantity_was, price_was, false)
+      if !update_product(product_was, amount_was, quantity_was, price_was, false, 2)
         return false
       end
     elsif quantity_changed? || price_changed?
       # Current Product
-      if !update_product(product, amount - amount_was, quantity - quantity_was, price, true)
+      if !update_product(product, amount - amount_was, quantity - quantity_was, price, true, 0)
         return false
       end
     end
@@ -223,15 +223,28 @@ class ReceiptNoteItem < ActiveRecord::Base
   
   # Update current Product attributes: last_price, average_price
   # Boolean is_new => true: current/new, false: previous/old
-  def update_product(_product, _amount, _quantity, _price, _is_new)
+  # Integer change_previous:  0 do nothing on previous values 
+  #                           1 last_price => prev_last_price (set previous value)
+  #                           2 prev_last_price => last_price (roll back value)
+  def update_product(_product, _amount, _quantity, _price, _is_new, _change_previous)
     _current_stock = _product.stock
     _current_average_price = _product.average_price
+    # Weighted average price
     if _is_new
       _new_average_price = ((_current_average_price * _current_stock) + _amount) / (_current_stock + _quantity)
     else
       _new_average_price = ((_current_average_price * _current_stock) - _amount) / (_current_stock - _quantity)
     end
-    _product.attributes = { last_price: _price, average_price: _new_average_price }
+    _product.average_price = _new_average_price
+    # Last price
+    if _change_previous == 0
+      _product.attributes = { last_price: _price }
+    elsif _change_previous == 1
+      _product.attributes = { last_price: _price, prev_last_price: _product.last_price }
+    elsif _change_previous == 2
+      _product.attributes = { last_price: _product.prev_last_price }
+    end
+    # Save changes
     if !_product.save
       return false
     end
