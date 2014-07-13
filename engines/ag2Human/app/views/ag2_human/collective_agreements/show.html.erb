@@ -32,14 +32,14 @@ delete_path: @collective_agreement, delete_txt: t('.btn_delete'), msg: t("active
 new_path: new_collective_agreement_path, new_txt: t('ag2_human.collective_agreements.index.btn_new') } %>
 
 <% if (@workers.count > 0) %>
+<% session[:return_to] = I18n.t('ag2_human.collective_agreements.show.return_to') %>
+<% session[:return_to_url] = "#{request.protocol}#{request.host_with_port}#{request.fullpath}" %>
 <h4><%=t '.subtable_title' %></h4>
 <table class="table table-condensed table-striped">
   <thead>
     <%= render '/layouts/ag2_human/workersheader' %>
   </thead>
   <tbody>
-    <% session[:return_to] = I18n.t('ag2_human.collective_agreements.show.return_to') %>
-    <% session[:return_to_url] = "#{request.protocol}#{request.host_with_port}#{request.fullpath}" %>
     <%= render :partial => '/layouts/ag2_human/workers', :locals => { :workers => @workers } %>
   </tbody>
 </table>

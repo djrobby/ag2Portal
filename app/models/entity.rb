@@ -39,12 +39,13 @@ class Entity < ActiveRecord::Base
     if !self.fiscal_id.blank?
       self[:fiscal_id].upcase!
     end
+    true
   end
 
   def full_name
     full_name = ""
     if !self.last_name.blank?
-    full_name += self.last_name
+      full_name += self.last_name
     end
     if !self.first_name.blank?
       full_name += ", " + self.first_name
@@ -77,6 +78,15 @@ class Entity < ActiveRecord::Base
 
   def to_last
     Entity.order("fiscal_id").last
+  end
+
+  searchable do
+    text :first_name, :last_name, :company, :fiscal_id, :cellular, :phone, :email, :street_name
+    string :company
+    string :last_name
+    string :first_name
+    string :fiscal_id
+    integer :organization_id
   end
 
   private
@@ -148,14 +158,5 @@ class Entity < ActiveRecord::Base
         errors.add(:base, I18n.t('activerecord.models.entity.update_clients'))
       end
     end
-  end
-
-  searchable do
-    text :first_name, :last_name, :company, :fiscal_id, :cellular, :phone, :email, :street_name
-    string :company
-    string :last_name
-    string :first_name
-    string :fiscal_id
-    integer :organization_id
   end
 end

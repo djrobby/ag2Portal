@@ -97,6 +97,7 @@ module Ag2Admin
     # GET /entities
     # GET /entities.json
     def index
+      manage_filter_state
       letter = params[:letter]
       if !session[:organization]
         init_oco
@@ -107,9 +108,19 @@ module Ag2Admin
         if session[:organization] != '0'
           with :organization_id, session[:organization]
         end
+        if !letter.blank? && letter != "%"
+          any_of do
+            with(:last_name).starting_with(letter)
+            with(:company).starting_with(letter)
+          end
+        end
         order_by :fiscal_id, :asc
         paginate :page => params[:page] || 1, :per_page => per_page
       end
+      @entities = @search.results
+      
+      # If letter isn't used into search block:
+=begin 
       if letter.blank? || letter == "%"
         @entities = @search.results
       else
@@ -121,10 +132,11 @@ module Ag2Admin
           @entities = @entities.where("organization_id = ?", "#{session[:organization]}")
         end
       end
+=end
 
       respond_to do |format|
         format.html # index.html.erb
-        format.json { render json: @suppliers }
+        format.json { render json: @entities }
       end
     end
 
@@ -209,6 +221,29 @@ module Ag2Admin
           format.html { redirect_to entities_url, alert: "#{@entity.errors[:base].to_s}".gsub('["', '').gsub('"]', '') }
           format.json { render json: @entity.errors, status: :unprocessable_entity }
         end
+      end
+    end
+
+    private
+
+    # Keeps filter state
+    def manage_filter_state
+      # search
+      if params[:search]
+        session[:search] = params[:search]
+      elsif session[:search]
+        params[:search] = session[:search]
+      end
+      # letter
+      if params[:letter]
+        if params[:letter] == '%'
+          session[:letter] = nil
+          params[:letter] = nil
+        else
+          session[:letter] = params[:letter]
+        end
+      elsif session[:letter]
+        params[:letter] = session[:letter]
       end
     end
   end

@@ -20,14 +20,14 @@ delete_path: @worker_type, delete_txt: t('.btn_delete'), msg: t("activerecord.mo
 new_path: new_worker_type_path, new_txt: t('ag2_human.worker_types.index.btn_new') } %>
 
 <% if (@workers.count > 0) %>
+<% session[:return_to] = I18n.t('ag2_human.worker_types.show.return_to') %>
+<% session[:return_to_url] = "#{request.protocol}#{request.host_with_port}#{request.fullpath}" %>
 <h4><%=t '.subtable_title' %></h4>
 <table class="table table-condensed table-striped">
   <thead>
     <%= render '/layouts/ag2_human/workersheader' %>
   </thead>
   <tbody>
-    <% session[:return_to] = I18n.t('ag2_human.worker_types.show.return_to') %>
-    <% session[:return_to_url] = "#{request.protocol}#{request.host_with_port}#{request.fullpath}" %>
     <%= render :partial => '/layouts/ag2_human/workers', :locals => { :workers => @workers } %>
   </tbody>
 </table>
