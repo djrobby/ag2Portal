@@ -74,6 +74,7 @@ class ReceiptNoteItem < ActiveRecord::Base
       errors.add(:base, I18n.t('activerecord.models.receipt_note_item.check_for_supplier_invoices'))
       return false
     end
+    true
   end
   
   #
@@ -156,6 +157,7 @@ class ReceiptNoteItem < ActiveRecord::Base
         return false
       end
     end
+    true
   end
   
   #
