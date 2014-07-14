@@ -348,7 +348,15 @@ th .current:focus {
 .base-error {
   color: #b94a48;
 }
-/* Button inside text field */
+/* Special top padded form button for use under sel2 dropdown */
+.form-button-under-sel2 {
+  margin-top: 10px;
+}
+
+/*
+ * Buttons inside text field
+ */
+/* Validate button */
 span.validateicon {
   position: relative;
 }
@@ -366,9 +374,23 @@ span.validateicon span {
 span.validateicon input {
   padding-right: 16px;
 }
-/* Special top padded form button for use under sel2 dropdown */
-.form-button-under-sel2 {
-  margin-top: 10px;
+/* Clear button */
+span.clearicon {
+  position: relative;
+}
+span.clearicon span {
+  position: absolute;
+  display: block;
+  top: 2px;
+  right: 2px;
+  width: 16px;
+  height: 16px;
+  z-index: 1;
+  background: url('icon/glyph/black/halflings/remove.png');
+  cursor: pointer;
+}
+span.clearicon input {
+  padding-right: 16px;
 }
 
 /*

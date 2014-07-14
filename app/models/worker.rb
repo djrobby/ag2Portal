@@ -155,6 +155,7 @@ class Worker < ActiveRecord::Base
          :corp_cellular_long, :corp_cellular_short, :corp_extension, :corp_phone, :email
     integer :id
     string :worker_code
+    string :last_name
   end
 
   private

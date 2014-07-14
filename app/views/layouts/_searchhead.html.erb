@@ -1,10 +1,25 @@
+<script>
+  var _thisForm = '';
+
+  $(document).ready(function() {
+    // Initialized form variable
+    _thisForm = $("#search").closest('form')[0];
+    // Icon inside text field: Clear search text field content
+    $('input.iconify').wrap('<span class="clearicon" />').after($('<span/>').click(function() {
+      $("#search").val("");
+      _thisForm.submit();
+      //return false;
+    }));
+  });  
+</script>
+
 <div class="title-band-with-search">
   <div style="float: left">
     <h3><%= title %></h3>
   </div>
   <div>
     <%= form_tag path, :method => :get, :class => 'form-search' do %>
-    <%= text_field_tag :search, params[:search], :class => 'search-query' %>
+    <%= text_field_tag :search, params[:search], :class => 'search-query iconify' %>
     <%= image_submit_tag("/assets/icon/glyph/black/halflings/search.png", :name => nil, :class => 'btn') %>
     <% end %>
   </div>

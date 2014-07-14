@@ -203,7 +203,7 @@ end
     # GET /workers
     # GET /workers.json
     def index
-      #@workers = Worker.all
+      manage_filter_state
       company = params[:Company]
       office = params[:Office]
       letter = params[:letter]
@@ -218,16 +218,22 @@ end
       else
         @search = Worker.search do
           fulltext params[:search]
+          if !letter.blank? && letter != "%"
+            with(:last_name).starting_with(letter)
+          end
           order_by :worker_code, :asc
           order_by :id, :asc
           paginate :page => params[:page] || 1, :per_page => per_page
         end
+        @workers = @search.results
+=begin
         if letter.blank? || letter == "%"
           @workers = @search.results
         else
           # @workers = Worker.order('worker_code').where("last_name LIKE ?", "#{letter}%")
           @workers = Worker.where("last_name LIKE ?", "#{letter}%").paginate(:page => params[:page], :per_page => per_page).order('worker_code, id')
         end
+=end
       end
 
       # Initialize select_tags
@@ -343,6 +349,41 @@ end
           format.html { redirect_to workers_url, alert: "#{@worker.errors[:base].to_s}".gsub('["', '').gsub('"]', '') }
           format.json { render json: @worker.errors, status: :unprocessable_entity }
         end
+      end
+    end
+
+    private
+
+    # Keeps filter state
+    def manage_filter_state
+      # search
+      if params[:search]
+        session[:search] = params[:search]
+      elsif session[:search]
+        params[:search] = session[:search]
+      end
+      # company
+      if params[:Company]
+        session[:Company] = params[:Company]
+      elsif session[:Company]
+        params[:Company] = session[:Company]
+      end
+      # office
+      if params[:Office]
+        session[:Office] = params[:Office]
+      elsif session[:Office]
+        params[:Office] = session[:Office]
+      end
+      # letter
+      if params[:letter]
+        if params[:letter] == '%'
+          session[:letter] = nil
+          params[:letter] = nil
+        else
+          session[:letter] = params[:letter]
+        end
+      elsif session[:letter]
+        params[:letter] = session[:letter]
       end
     end
   end
