@@ -7,6 +7,7 @@ module Ag2Human
     # GET /time_records
     # GET /time_records.json
     def index
+      manage_filter_state
       worker = params[:Worker]
       from = params[:From]
       to = params[:To]
@@ -129,6 +130,42 @@ module Ag2Human
         format.html { redirect_to time_records_url,
                       notice: (crud_notice('destroyed', @time_record) + "#{undo_link(@time_record)}").html_safe }
         format.json { head :no_content }
+      end
+    end
+
+    private
+
+    # Keeps filter state
+    def manage_filter_state
+      # worker
+      if params[:Worker]
+        session[:Worker] = params[:Worker]
+      elsif session[:Worker]
+        params[:Worker] = session[:Worker]
+      end
+      # from
+      if params[:From]
+        session[:From] = params[:From]
+      elsif session[:From]
+        params[:From] = session[:From]
+      end
+      # to
+      if params[:To]
+        session[:To] = params[:To]
+      elsif session[:To]
+        params[:To] = session[:To]
+      end
+      # type
+      if params[:Type]
+        session[:Type] = params[:Type]
+      elsif session[:Type]
+        params[:Type] = session[:Type]
+      end
+      # type
+      if params[:Code]
+        session[:Code] = params[:Code]
+      elsif session[:Code]
+        params[:Code] = session[:Code]
       end
     end
   end

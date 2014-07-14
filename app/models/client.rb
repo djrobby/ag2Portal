@@ -83,6 +83,7 @@ class Client < ActiveRecord::Base
   searchable do
     text :client_code, :name, :fiscal_id, :street_name, :phone, :cellular, :email
     string :client_code
+    string :name
   end
 
   private

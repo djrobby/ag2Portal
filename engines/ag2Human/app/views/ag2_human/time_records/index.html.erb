@@ -1,4 +1,6 @@
 <script>
+  var _thisForm = '';
+
   $(document).ready(function() {
     $('.date_picker').datepicker({
       format : 'dd/mm/yyyy',
@@ -9,7 +11,29 @@
       dropdownCssClass: 'shrinked',
       dropdownAutoWidth: true
     });
+    // Initialized form variable
+    _thisForm = $("#Worker").closest('form')[0];
   }); 
+
+  $(window).bind("load", function() {
+    $("#Worker").select2("val", "<%= params[:Worker] %>");
+    $("#From").val("<%= params[:From] %>");
+    $("#To").val("<%= params[:To] %>");
+    $("#Type").val("<%= params[:Type] %>");
+    $("#Code").val("<%= params[:Code] %>");
+  });
+
+  jQuery(function($) {
+    // when the #removeFilter button clicked
+    $("#removeFilter").click(function() {
+      $("#Worker").select2("val", "");
+      $("#From").val("");
+      $("#To").val("");
+      $("#Type").val("");
+      $("#Code").val("");
+      _thisForm.submit();
+    });
+  });
 </script>
 
 <%= render '/layouts/ag2_human/trecordsbreadcrumb' %>
@@ -36,7 +60,9 @@
         <%= label_tag I18n.t("ag2_human.time_records.index.label_code"), nil, :class => 'form-label' %>
         <%= select_tag "Code", options_from_collection_for_select(TimerecordCode.all, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked' %>
         <!-- Submit -->
-        <%= submit_tag I18n.t("ag2_human.time_records.index.btn_apply"), :class => 'btn btn-primary' %>
+        <%= submit_tag I18n.t(:apply_filter_button), :class => 'btn btn-primary' %>
+        <!-- Remove filter -->
+        <button id="removeFilter" type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><%= t :clear_filter_button %></button>
         <% end %>
         <!-- Buttons -->
         <%= render :partial => '/layouts/crud/new', :locals => { :model => TimeRecord, :path => new_time_record_path, :txt => I18n.t("ag2_human.time_records.index.btn_new") } %>

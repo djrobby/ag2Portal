@@ -185,19 +185,18 @@ module Ag2Purchase
     # GET /suppliers
     # GET /suppliers.json
     def index
-      #@suppliers = Supplier.all
+      manage_filter_state
       letter = params[:letter]
 
       @search = Supplier.search do
         fulltext params[:search]
+        if !letter.blank? && letter != "%"
+          with(:name).starting_with(letter)
+        end
         order_by :supplier_code, :asc
         paginate :page => params[:page] || 1, :per_page => per_page
       end
-      if letter.blank? || letter == "%"
-        @suppliers = @search.results
-      else
-        @suppliers = Supplier.where("name LIKE ?", "#{letter}%").paginate(:page => params[:page], :per_page => per_page).order(:supplier_code)
-      end
+      @suppliers = @search.results
 
       respond_to do |format|
         format.html # index.html.erb
@@ -288,6 +287,29 @@ module Ag2Purchase
           format.html { redirect_to suppliers_url, alert: "#{@supplier.errors[:base].to_s}".gsub('["', '').gsub('"]', '') }
           format.json { render json: @supplier.errors, status: :unprocessable_entity }
         end
+      end
+    end
+
+    private
+
+    # Keeps filter state
+    def manage_filter_state
+      # search
+      if params[:search]
+        session[:search] = params[:search]
+      elsif session[:search]
+        params[:search] = session[:search]
+      end
+      # letter
+      if params[:letter]
+        if params[:letter] == '%'
+          session[:letter] = nil
+          params[:letter] = nil
+        else
+          session[:letter] = params[:letter]
+        end
+      elsif session[:letter]
+        params[:letter] = session[:letter]
       end
     end
   end

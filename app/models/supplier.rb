@@ -101,6 +101,7 @@ class Supplier < ActiveRecord::Base
   searchable do
     text :supplier_code, :name, :fiscal_id, :street_name, :phone, :cellular, :email
     string :supplier_code
+    string :name
   end
 
   private

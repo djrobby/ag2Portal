@@ -8,6 +8,11 @@ module Ag2Human
       session[:letter] = nil      
       session[:Company] = nil
       session[:Office] = nil      
+      session[:Worker] = nil
+      session[:From] = nil      
+      session[:To] = nil
+      session[:Type] = nil      
+      session[:Code] = nil      
     end
   end
 end

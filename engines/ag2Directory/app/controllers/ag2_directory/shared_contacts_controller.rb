@@ -67,26 +67,23 @@ module Ag2Directory
     # GET /shared_contacts
     # GET /shared_contacts.json
     def index
-      #@shared_contacts = SharedContact.all
+      manage_filter_state
       letter = params[:letter]
 
       @search = SharedContact.search do
         fulltext params[:search]
+        if !letter.blank? && letter != "%"
+          any_of do
+            with(:last_name).starting_with(letter)
+            with(:company).starting_with(letter)
+          end
+        end
         order_by :company, :asc
         order_by :last_name, :asc
         order_by :first_name, :asc
         paginate :page => params[:page] || 1, :per_page => per_page
       end
-      if letter.blank? || letter == "%"
-        # @shared_contacts = @search.results.sort_by{ |contact| [ contact.company, contact.last_name, contact.first_name ] }
-        @shared_contacts = @search.results
-      else
-      # @shared_contacts = SharedContact.order('company', 'last_name, first_name').where("last_name LIKE ?", "#{letter}%")
-        @shared_contacts = SharedContact.where("last_name LIKE ?", "#{letter}%").paginate(:page => params[:page], :per_page => per_page).order('company', 'last_name, first_name')
-        if @shared_contacts.count == 0
-          @shared_contacts = SharedContact.where("company LIKE ?", "#{letter}%").paginate(:page => params[:page], :per_page => per_page).order('company', 'last_name, first_name')
-        end
-      end
+      @shared_contacts = @search.results
 
       respond_to do |format|
         format.html # index.html.erb
@@ -171,6 +168,29 @@ module Ag2Directory
         format.html { redirect_to shared_contacts_url,
                       notice: (crud_notice('destroyed', @shared_contact) + "#{undo_link(@shared_contact)}").html_safe }
         format.json { head :no_content }
+      end
+    end
+
+    private
+
+    # Keeps filter state
+    def manage_filter_state
+      # search
+      if params[:search]
+        session[:search] = params[:search]
+      elsif session[:search]
+        params[:search] = session[:search]
+      end
+      # letter
+      if params[:letter]
+        if params[:letter] == '%'
+          session[:letter] = nil
+          params[:letter] = nil
+        else
+          session[:letter] = params[:letter]
+        end
+      elsif session[:letter]
+        params[:letter] = session[:letter]
       end
     end
   end

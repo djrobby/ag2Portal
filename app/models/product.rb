@@ -94,18 +94,18 @@ class Product < ActiveRecord::Base
     Product.where("product_code > ?", product_code).order("product_code").first
   end
 
+  def to_last
+    Product.order("product_code").last
+  end
+
   searchable do
     text :product_code, :main_description, :aux_description, :manufacturer_p_code
+    string :product_code
     integer :product_type_id
     integer :product_family_id
     integer :measure_id
     integer :manufacturer_id
     integer :tax_type_id
-    string :product_code
-  end
-
-  def to_last
-    Product.order("product_code").last
   end
 
   private
@@ -164,5 +164,6 @@ class Product < ActiveRecord::Base
     if !reference_price.blank? && !markup.blank?
       self.sell_price = reference_price * (1 + (markup / 100))
     end
+    true
   end
 end

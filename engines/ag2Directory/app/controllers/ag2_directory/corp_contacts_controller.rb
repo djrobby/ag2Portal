@@ -42,19 +42,19 @@ module Ag2Directory
     #
     # Search contacts
     def search
+      manage_filter_state
       letter = params[:letter]
 
       @search = CorpContact.search do
         fulltext params[:search]
+        if !letter.blank? && letter != "%"
+          with(:last_name).starting_with(letter)
+        end
         order_by :last_name, :asc
         order_by :first_name, :asc
         paginate :page => params[:page] || 1, :per_page => per_page
       end
-      if letter.blank? || letter == "%"
-        @corp_contacts = @search.results
-      else
-        @corp_contacts = CorpContact.where("last_name LIKE ?", "#{letter}%").paginate(:page => params[:page], :per_page => per_page).order('last_name, first_name')
-      end
+      @corp_contacts = @search.results
 
       respond_to do |format|
         format.html # search.html.erb
@@ -68,7 +68,7 @@ module Ag2Directory
     # GET /corp_contacts
     # GET /corp_contacts.json
     def index
-      #@corp_contacts = CorpContact.all
+      session[:letter] = nil
       @corp_contacts = Company.order('name').all(:include => [:offices, :corp_contacts])
 
       respond_to do |format|
@@ -174,6 +174,31 @@ module Ag2Directory
         format.html { redirect_to corp_contacts_url,
                       notice: (crud_notice('destroyed', @corp_contact) + "#{undo_link(@corp_contact)}").html_safe }
         format.json { head :no_content }
+      end
+    end
+
+    private
+
+    # Keeps filter state
+    def manage_filter_state
+      # search
+=begin
+      if params[:search]
+        session[:search] = params[:search]
+      elsif session[:search]
+        params[:search] = session[:search]
+      end
+=end
+      # letter
+      if params[:letter]
+        if params[:letter] == '%'
+          session[:letter] = nil
+          params[:letter] = nil
+        else
+          session[:letter] = params[:letter]
+        end
+      elsif session[:letter]
+        params[:letter] = session[:letter]
       end
     end
   end
