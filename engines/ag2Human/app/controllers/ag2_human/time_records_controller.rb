@@ -161,7 +161,7 @@ module Ag2Human
       elsif session[:Type]
         params[:Type] = session[:Type]
       end
-      # type
+      # code
       if params[:Code]
         session[:Code] = params[:Code]
       elsif session[:Code]

@@ -101,6 +101,7 @@ class Product < ActiveRecord::Base
   searchable do
     text :product_code, :main_description, :aux_description, :manufacturer_p_code
     string :product_code
+    string :main_description
     integer :product_type_id
     integer :product_family_id
     integer :measure_id

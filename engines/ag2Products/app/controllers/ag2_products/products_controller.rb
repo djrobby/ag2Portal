@@ -63,6 +63,7 @@ module Ag2Products
     # GET /products
     # GET /products.json
     def index
+      manage_filter_state
       type = params[:Type]
       family = params[:Family]
       measure = params[:Measure]
@@ -72,6 +73,9 @@ module Ag2Products
   
       @search = Product.search do
         fulltext params[:search]
+        if !letter.blank? && letter != "%"
+          with(:main_description).starting_with(letter)
+        end
         if !type.blank?
           with :product_type_id, type
         end
@@ -90,11 +94,7 @@ module Ag2Products
         order_by :product_code, :asc
         paginate :page => params[:page] || 1, :per_page => per_page
       end
-      if letter.blank? || letter == "%"
-        @products = @search.results
-      else
-        @products = Product.where("main_description LIKE ?", "#{letter}%").paginate(:page => params[:page], :per_page => per_page).order('product_code')
-      end
+      @products = @search.results
 
       respond_to do |format|
         format.html # index.html.erb
@@ -185,6 +185,59 @@ module Ag2Products
           format.html { redirect_to products_url, alert: "#{@product.errors[:base].to_s}".gsub('["', '').gsub('"]', '') }
           format.json { render json: @product.errors, status: :unprocessable_entity }
         end
+      end
+    end
+
+    private
+
+    # Keeps filter state
+    def manage_filter_state
+      # search
+      if params[:search]
+        session[:search] = params[:search]
+      elsif session[:search]
+        params[:search] = session[:search]
+      end
+      # type
+      if params[:Type]
+        session[:Type] = params[:Type]
+      elsif session[:Type]
+        params[:Type] = session[:Type]
+      end
+      # family
+      if params[:Family]
+        session[:Family] = params[:Family]
+      elsif session[:Family]
+        params[:Family] = session[:Family]
+      end
+      # measure
+      if params[:Measure]
+        session[:Measure] = params[:Measure]
+      elsif session[:Measure]
+        params[:Measure] = session[:Measure]
+      end
+      # manufacturer
+      if params[:Manufacturer]
+        session[:Manufacturer] = params[:Manufacturer]
+      elsif session[:Manufacturer]
+        params[:Manufacturer] = session[:Manufacturer]
+      end
+      # tax
+      if params[:Tax]
+        session[:Tax] = params[:Tax]
+      elsif session[:Tax]
+        params[:Tax] = session[:Tax]
+      end
+      # letter
+      if params[:letter]
+        if params[:letter] == '%'
+          session[:letter] = nil
+          params[:letter] = nil
+        else
+          session[:letter] = params[:letter]
+        end
+      elsif session[:letter]
+        params[:letter] = session[:letter]
       end
     end
   end

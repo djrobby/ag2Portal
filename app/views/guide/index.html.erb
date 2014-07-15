@@ -57,7 +57,7 @@
         <tr>
           <td><a href="#" class="guide"><%= g.name %></a></td>
         </tr>
-        <% g.subguides.each do |s| %>
+        <% g.subguides.order(:sort_order).each do |s| %>
         <tr>
           <td style="padding-left: 1em;"><a href="#" class="subguide"><%= s.name %></a></td>
         </tr>

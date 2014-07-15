@@ -1,3 +1,33 @@
+<script>
+  var _thisForm = '';
+
+  $(document).ready(function() {
+    // Initialized form variable
+    _thisForm = $("#Type").closest('form')[0];
+  }); 
+
+  $(window).bind("load", function() {
+    $("#Type").val("<%= params[:Type] %>");
+    $("#Family").val("<%= params[:Family] %>");
+    $("#Measure").val("<%= params[:Measure] %>");
+    $("#Manufacturer").val("<%= params[:Manufacturer] %>");
+    $("#Tax").val("<%= params[:Tax] %>");
+  });
+
+  jQuery(function($) {
+    // when the #removeFilter button clicked
+    $("#removeFilter").click(function() {
+      $("#Type").val("");
+      $("#Family").val("");
+      $("#Measure").val("");
+      $("#Manufacturer").val("");
+      $("#Tax").val("");
+      $("#search").val("");
+      _thisForm.submit();
+    });
+  });
+</script>
+
 <% session[:return_to] = nil %>
 <% session[:return_to_url] = nil %>
 <% session[:return_to_prod] = nil %>
@@ -26,12 +56,14 @@
         <%= select_tag "Manufacturer", options_from_collection_for_select(Manufacturer.order('name').all, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked' %>
         <!-- Tax -->
         <%= label_tag I18n.t("ag2_products.products.index.label_tax"), nil, :class => 'form-label' %>
-        <%= select_tag "Tax", options_from_collection_for_select(TaxType.order('description').all, "id", "description"), :prompt => "", :class => 'x-large-text-field shrinked' %>
+        <%= select_tag "Tax", options_from_collection_for_select(TaxType.where('expiration IS NULL').order('description'), "id", "to_label"), :prompt => "", :class => 'x-large-text-field shrinked' %>
         <!-- Others -->
         <%= label_tag I18n.t("ag2_products.products.index.label_others"), nil, :class => 'form-label' %>
         <%= text_field_tag :search, params[:search], :class => 'x-large-text-field shrinked' %>
         <!-- Submit -->
-        <%= submit_tag I18n.t("ag2_products.products.index.btn_apply"), :class => 'btn btn-primary' %>
+        <%= submit_tag I18n.t(:apply_filter_button), :class => 'btn btn-primary' %>
+        <!-- Remove filter -->
+        <button id="removeFilter" type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><%= t :clear_filter_button %></button>
         <% end %>
         <!-- Buttons -->
         <%= render :partial => '/layouts/crud/new', :locals => { :model => Product, :path => new_product_path, :txt => t(".btn_new") } %>
