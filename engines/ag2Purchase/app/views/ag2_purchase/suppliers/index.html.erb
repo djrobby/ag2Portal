@@ -27,7 +27,7 @@
       <tr class="inactive-row">
         <% end %>
         <!--<td><a data-toggle="modal" href="#info<%#= supplier.id.to_s %>"><%#= supplier.supplier_code %></a></td>-->
-        <td><%= link_to supplier.supplier_code, supplier %></td>
+        <td><%= link_to supplier.full_name, supplier %></td>
         <td><%= supplier.name %></td>
         <td><%= supplier.fiscal_id %></td>
         <td><%= supplier.phone unless supplier.phone.blank? %></td>

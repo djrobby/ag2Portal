@@ -3,6 +3,7 @@ en:
     home:
       index:
         control: "Control&Tracking"
+        suppliers: "Suppliers"
         activities: "Supplier Activities"
         payment_methods: "Payment Methods"
         order_statuses: "Order Statuses"

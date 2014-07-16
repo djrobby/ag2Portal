@@ -86,7 +86,7 @@
         <tbody>
           <% @products.each do |product| %>
           <tr>
-            <td><%= link_to product.product_code, product %></td>
+            <td><%= link_to product.full_code, product %></td>
             <td><%= product.main_description %></td>
             <td><%= product.product_type.description %></td>
             <td><%= product.product_family.name %></td>

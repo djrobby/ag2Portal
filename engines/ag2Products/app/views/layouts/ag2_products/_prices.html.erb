@@ -1,6 +1,6 @@
 <% prices.each do |w| %>
 <tr>
-  <td><%= w.supplier.supplier_code %></td>
+  <td><%= w.supplier.full_code %></td>
   <td><%= w.supplier.name %></td>
   <td><%= w.code unless w.code.blank? %></td>
   <td align="right"><%= number_with_precision(w.price, precision: 4) unless w.price.blank? %></td>

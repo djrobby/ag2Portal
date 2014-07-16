@@ -15,7 +15,7 @@
     <a href="<%= ag2_products.products_path %>"><%=t :"ag2_products.home.index.products" %></a><span class="divider">></span>
   </li>
   <li>
-    <a href="<%= session[:return_to_prod_url] %>"><%= @product.product_code %></a><span class="divider">></span>
+    <a href="<%= session[:return_to_prod_url] %>"><%= @product.full_code %></a><span class="divider">></span>
   </li>
   <% end %>
   <% if !session[:return_to_prod].nil? && !@store.nil? %>

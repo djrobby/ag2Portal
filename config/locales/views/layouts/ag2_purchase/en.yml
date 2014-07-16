@@ -1,6 +1,9 @@
 en:
   ag2_purchase:
     breadcrumb:
+      suppliers:
+        items: "Suppliers"
+        item: "Supplier"
       activities:
         items: "Activities"
         item: "Activity"

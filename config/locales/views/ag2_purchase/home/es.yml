@@ -3,6 +3,7 @@ es:
     home:
       index:
         control: "Control&Seguimiento"
+        suppliers: "Proveedores"
         activities: "Actividades Provs."
         payment_methods: "Formas de Pago"
         order_statuses: "Estados de Pedido"

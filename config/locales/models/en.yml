@@ -1,0 +1,12 @@
+en:
+  activerecord:
+    errors:
+      models:
+        product:
+          attributes:
+            product_code:
+              code_invalid: "Invalid code"
+        supplier:
+          attributes:
+            product_code:
+              code_invalid: "Invalid code"
