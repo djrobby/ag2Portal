@@ -5,7 +5,7 @@ class ProductFamily < ActiveRecord::Base
 
   validates :name,        :presence => true
   validates :family_code, :presence => true,
-                          :length => { :in => 3..5 },
+                          :length => { :is => 4 },
                           :uniqueness => true
 
   has_many :products

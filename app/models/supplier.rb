@@ -30,7 +30,7 @@ class Supplier < ActiveRecord::Base
 
   validates :name,             :presence => true
   validates :supplier_code,    :presence => true,
-                               :length => { :minimum => 6 },
+                               :length => { :is => 10 },
                                :uniqueness => true
   validates :fiscal_id,        :presence => true,
                                :length => { :minimum => 9 },
@@ -62,14 +62,19 @@ class Supplier < ActiveRecord::Base
   end
 
   def full_name
-    full_name = ""
-    if !self.supplier_code.blank?
-      full_name += self.supplier_code
-    end
+    full_name = full_code
     if !self.name.blank?
       full_name += " " + self.name[0,40]
     end
     full_name
+  end
+
+  def full_code
+    full_code = ""
+    if !self.supplier_code.blank?
+      full_code += self.supplier_code[0..3] + '-' + self.supplier_code[4..9]
+    end
+    full_code
   end
 
   #

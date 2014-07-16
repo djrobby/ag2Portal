@@ -26,7 +26,7 @@ class Product < ActiveRecord::Base
 
   validates :main_description,  :presence => true
   validates :product_code,      :presence => true,
-                                :length => { :in => 4..11 },
+                                :length => { :is => 10 },
                                 :uniqueness => true
   validates :product_type,      :presence => true
   validates :product_family,    :presence => true
@@ -58,16 +58,21 @@ class Product < ActiveRecord::Base
   end
 
   def full_name
-    full_name = ""
-    if !self.product_code.blank?
-      full_name += self.product_code
-    end
+    full_name = full_code
     if !self.main_description.blank?
       full_name += " " + self.main_description[0,40]
     end
     full_name
   end
 
+  def full_code
+    full_code = ""
+    if !self.product_code.blank?
+      full_code += self.product_code[0..3] + '-' + self.product_code[4..9]
+    end
+    full_code
+  end
+  
   #
   # Calculated fields
   #

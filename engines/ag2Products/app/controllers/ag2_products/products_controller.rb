@@ -21,9 +21,9 @@ module Ag2Products
         family = family.rjust(4, '0')
         last_product_code = Product.where("product_code LIKE ?", "#{family}%").order('product_code').maximum('product_code')
         if last_product_code.nil?
-          code = family + '-000001'
+          code = family + '000001'
         else
-          last_product_code = last_product_code.split("-").last.to_i + 1
+          last_product_code = last_product_code[4..9].to_i + 1
           code = family + '-' + last_product_code.to_s.rjust(6, '0')
         end
       end
