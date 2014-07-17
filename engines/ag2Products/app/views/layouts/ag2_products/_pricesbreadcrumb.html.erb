@@ -12,7 +12,7 @@
     <a href="<%= ag2_products.root_path %>">ag2Logistics</a><span class="divider">></span>
   </li>
   <li>
-    <a href="<%= ag2_products.products_path %>"><%=t :"ag2_products.home.index.products" %></a><span class="divider">></span>
+    <a href="<%= ag2_products.products_path %>">ag2Products</a><span class="divider">></span>
   </li>
   <li>
     <a href="<%= session[:return_to_prod_url] %>"><%= @product.full_code %></a><span class="divider">></span>
@@ -23,7 +23,7 @@
     <a href="<%= ag2_purchase.root_path %>">ag2Purchase</a><span class="divider">></span>
   </li>
   <li>
-    <a href="<%= ag2_purchase.suppliers_path %>"><%=t :"ag2_purchase.home.index.suppliers" %></a><span class="divider">></span>
+    <a href="<%= ag2_purchase.suppliers_path %>">ag2Suppliers</a><span class="divider">></span>
   </li>
   <li>
     <a href="<%= session[:return_to_prod_url] %>"><%= @supplier.full_code %></a><span class="divider">></span>

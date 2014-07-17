@@ -12,7 +12,7 @@
   </li>
   <% if !session[:return_to_prod].nil? && !@product.nil? %>
   <li>
-    <a href="<%= ag2_products.products_path %>"><%=t :"ag2_products.home.index.products" %></a><span class="divider">></span>
+    <a href="<%= ag2_products.products_path %>">ag2Products</a><span class="divider">></span>
   </li>
   <li>
     <a href="<%= session[:return_to_prod_url] %>"><%= @product.full_code %></a><span class="divider">></span>
