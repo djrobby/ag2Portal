@@ -216,6 +216,7 @@ module Ag2Products
     # GET /delivery_notes
     # GET /delivery_notes.json
     def index
+      manage_filter_state
       client = params[:Client]
       project = params[:Project]
       order = params[:Order]
@@ -365,6 +366,34 @@ module Ag2Products
         _store = Store.all(order: 'name')
       end
       _store
+    end
+    
+    # Keeps filter state
+    def manage_filter_state
+      # search
+      if params[:search]
+        session[:search] = params[:search]
+      elsif session[:search]
+        params[:search] = session[:search]
+      end
+      # supplier
+      if params[:Client]
+        session[:Client] = params[:Client]
+      elsif session[:Client]
+        params[:Client] = session[:Client]
+      end
+      # project
+      if params[:Project]
+        session[:Project] = params[:Project]
+      elsif session[:Project]
+        params[:Project] = session[:Project]
+      end
+      # order
+      if params[:Order]
+        session[:Order] = params[:Order]
+      elsif session[:Order]
+        params[:Order] = session[:Order]
+      end
     end
   end
 end

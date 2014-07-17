@@ -8,6 +8,7 @@ module Ag2Tech
     # GET /charge_accounts
     # GET /charge_accounts.json
     def index
+      manage_filter_state
       project = params[:Project]
 
       @search = ChargeAccount.search do
@@ -110,6 +111,24 @@ module Ag2Tech
           format.html { redirect_to charge_accounts_url, alert: "#{@charge_account.errors[:base].to_s}".gsub('["', '').gsub('"]', '') }
           format.json { render json: @charge_account.errors, status: :unprocessable_entity }
         end
+      end
+    end
+
+    private
+    
+    # Keeps filter state
+    def manage_filter_state
+      # search
+      if params[:search]
+        session[:search] = params[:search]
+      elsif session[:search]
+        params[:search] = session[:search]
+      end
+      # project
+      if params[:Project]
+        session[:Project] = params[:Project]
+      elsif session[:Project]
+        params[:Project] = session[:Project]
       end
     end
   end

@@ -1,4 +1,16 @@
 <script>
+  var _thisForm = '';
+
+  $(document).ready(function() {
+    // Initialized form variable
+    _thisForm = $("#removeFilter").closest('form')[0];
+  }); 
+
+  $(window).bind("load", function() {
+    $("#Company").val("<%= params[:Company] %>");
+    $("#Office").val("<%= params[:Office] %>");
+  });
+
   jQuery(function($) {
     // when the #Company field changes
     $("#Company").change(function() {
@@ -16,7 +28,15 @@
       })
       return false;
     });
-  })
+    
+    // when the #removeFilter button clicked
+    $("#removeFilter").click(function() {
+      $("#Company").val("");
+      $("#Office").val("");
+      $("#search").val("");
+      _thisForm.submit();
+    });
+  });
 </script>
 
 <%= render '/layouts/ag2_tech/projectsbreadcrumb' %>
@@ -38,7 +58,9 @@
         <%= label_tag I18n.t("ag2_tech.projects.index.label_others"), nil, :class => 'form-label' %>
         <%= text_field_tag :search, params[:search], :class => 'x-large-text-field shrinked' %>
         <!-- Submit -->
-        <%= submit_tag I18n.t("ag2_tech.projects.index.btn_apply"), :class => 'btn btn-primary' %>
+        <%= submit_tag I18n.t(:apply_filter_button), :class => 'btn btn-primary' %>
+        <!-- Remove filter -->
+        <button id="removeFilter" type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><%= t :clear_filter_button %></button>
         <% end %>
         <!-- Buttons -->
         <%= render :partial => '/layouts/crud/new', :locals => { :model => Project, :path => new_project_path, :txt => t(".btn_new") } %>

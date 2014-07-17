@@ -21,6 +21,7 @@ module Ag2Products
     # GET /purchase_prices.json
     def index
       current_product_supplier
+      manage_filter_state
       @product = $product
       @supplier = $supplier
       product = nil
@@ -159,6 +160,22 @@ module Ag2Products
       else
         $supplier = nil;
       end 
+    end
+    
+    # Keeps filter state
+    def manage_filter_state
+      # products
+      if params[:Products]
+        session[:Products] = params[:Products]
+      elsif session[:Products]
+        params[:Products] = session[:Products]
+      end
+      # suppliers
+      if params[:Suppliers]
+        session[:Suppliers] = params[:Suppliers]
+      elsif session[:Suppliers]
+        params[:Suppliers] = session[:Suppliers]
+      end
     end
   end
 end

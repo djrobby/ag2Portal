@@ -1,11 +1,29 @@
 <script>
+  var _thisForm = '';
+
   $(document).ready(function() {
     $('.sel2').select2({
       formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
       dropdownCssClass: 'shrinked',
       dropdownAutoWidth: true
     });
+    // Initialized form variable
+    _thisForm = $("#removeFilter").closest('form')[0];
   }); 
+
+  $(window).bind("load", function() {
+    $("#Products").select2("val", "<%= params[:Products] %>");
+    $("#Suppliers").select2("val", "<%= params[:Suppliers] %>");
+  });
+
+  jQuery(function($) {
+    // when the #removeFilter button clicked
+    $("#removeFilter").click(function() {
+      $("#Products").select2("val", "");
+      $("#Suppliers").select2("val", "");
+      _thisForm.submit();
+    });
+  });
 </script>
 
 <%= render '/layouts/ag2_products/pricesbreadcrumb' %>
@@ -21,22 +39,24 @@
         <!-- Product -->
         <%= label_tag I18n.t("ag2_products.stocks.index.label_product"), nil, :class => 'form-label' %>
         <% if @product.nil? %>
-        <%= select_tag "Products", options_from_collection_for_select(Product.order('main_description').all, "id", "main_description"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
+        <%= select_tag "Products", options_from_collection_for_select(Product.order('main_description').all, "id", "full_name"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
         <% else %>
-        <%= select_tag "product", options_from_collection_for_select(Product.where("id = ?", "#{@product.id}").all, "id", "main_description", @product.id), class: 'x-large-text-field shrinked' %>
+        <%= select_tag "product", options_from_collection_for_select(Product.where("id = ?", "#{@product.id}").all, "id", "full_name", @product.id), class: 'x-large-text-field shrinked' %>
         <% end %>
         <!-- Supplier -->
         <%= label_tag I18n.t("ag2_products.purchase_prices.index.label_supplier"), nil, :class => 'form-label' %>
         <% if @supplier.nil? %>
-        <%= select_tag "Suppliers", options_from_collection_for_select(Supplier.order('name').all, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
+        <%= select_tag "Suppliers", options_from_collection_for_select(Supplier.order('name').all, "id", "full_name"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
         <% else %>
-        <%= select_tag "supplier", options_from_collection_for_select(Supplier.where("id = ?", "#{@supplier.id}").all, "id", "name", @supplier.id), class: 'x-large-text-field shrinked' %>
+        <%= select_tag "supplier", options_from_collection_for_select(Supplier.where("id = ?", "#{@supplier.id}").all, "id", "full_name", @supplier.id), class: 'x-large-text-field shrinked' %>
         <% end %>
         <!-- Others -->
         <%= label_tag I18n.t("ag2_products.purchase_prices.index.label_others"), nil, :class => 'form-label-under-sel2' %>
         <%= text_field_tag :search, params[:search], :class => 'x-large-text-field shrinked' %>
         <!-- Submit -->
-        <%= submit_tag I18n.t("ag2_products.purchase_prices.index.btn_apply"), :class => 'btn btn-primary' %>
+        <%= submit_tag I18n.t(:apply_filter_button), :class => 'btn btn-primary form-button-under-sel2' %>
+        <!-- Remove filter -->
+        <button id="removeFilter" type="button" class="btn btn-primary form-button-under-sel2" data-dismiss="modal" aria-hidden="true"><%= t :clear_filter_button %></button>
         <% end %>
         <!-- Buttons outside search form -->
         <%= render :partial => '/layouts/crud/new', :locals => { :model => PurchasePrice, :path => new_purchase_price_path, :txt => t(".btn_new") } %>

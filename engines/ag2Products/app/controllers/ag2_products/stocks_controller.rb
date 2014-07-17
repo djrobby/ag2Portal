@@ -21,6 +21,7 @@ module Ag2Products
     # GET /stocks.json
     def index
       current_product_store
+      manage_filter_state
       @product = $product
       @store = $store
       product = nil
@@ -160,6 +161,22 @@ module Ag2Products
       else
         $store = nil;
       end 
+    end
+    
+    # Keeps filter state
+    def manage_filter_state
+      # products
+      if params[:Products]
+        session[:Products] = params[:Products]
+      elsif session[:Products]
+        params[:Products] = session[:Products]
+      end
+      # stores
+      if params[:Stores]
+        session[:Stores] = params[:Stores]
+      elsif session[:Stores]
+        params[:Stores] = session[:Stores]
+      end
     end
   end
 end

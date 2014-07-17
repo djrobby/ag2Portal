@@ -1,11 +1,32 @@
 <script>
+  var _thisForm = '';
+
   $(document).ready(function() {
     $('.sel2').select2({
       formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
       dropdownCssClass: 'shrinked',
       dropdownAutoWidth: true
     });
+    // Initialized form variable
+    _thisForm = $("#Client").closest('form')[0];
   }); 
+
+  $(window).bind("load", function() {
+    $("#Client").select2("val", "<%= params[:Supplier] %>");
+    $("#Project").select2("val", "<%= params[:Project] %>");
+    $("#Order").select2("val", "<%= params[:Order] %>");
+  });
+
+  jQuery(function($) {
+    // when the #removeFilter button clicked
+    $("#removeFilter").click(function() {
+      $("#Client").select2("val", "");
+      $("#Project").select2("val", "");
+      $("#Order").select2("val", "");
+      $("#search").val("");
+      _thisForm.submit();
+    });
+  });
 </script>
 
 <%= render '/layouts/ag2_products/deliveriesbreadcrumb' %>
@@ -30,7 +51,9 @@
         <%= label_tag I18n.t("ag2_products.delivery_notes.index.label_others"), nil, :class => 'form-label-under-sel2' %>
         <%= text_field_tag :search, params[:search], :class => 'x-large-text-field shrinked' %>
         <!-- Submit -->
-        <%= submit_tag I18n.t("ag2_products.delivery_notes.index.btn_apply"), :class => 'btn btn-primary' %>
+        <%= submit_tag I18n.t(:apply_filter_button), :class => 'btn btn-primary' %>
+        <!-- Remove filter -->
+        <button id="removeFilter" type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><%= t :clear_filter_button %></button>
         <% end %>
         <!-- Buttons -->
         <%= render :partial => '/layouts/crud/new', :locals => { :model => ReceiptNote, :path => new_delivery_note_path, :txt => t(".btn_new") } %>

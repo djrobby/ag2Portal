@@ -12,6 +12,7 @@ module Ag2Purchase
     # GET /offer_requests
     # GET /offer_requests.json
     def index
+      manage_filter_state
       supplier = params[:Supplier]
       project = params[:Project]
       order = params[:Order]
@@ -126,6 +127,36 @@ module Ag2Purchase
           format.html { redirect_to offer_requests_url, alert: "#{@offer_request.errors[:base].to_s}".gsub('["', '').gsub('"]', '') }
           format.json { render json: @offer_request.errors, status: :unprocessable_entity }
         end
+      end
+    end
+
+    private
+    
+    # Keeps filter state
+    def manage_filter_state
+      # search
+      if params[:search]
+        session[:search] = params[:search]
+      elsif session[:search]
+        params[:search] = session[:search]
+      end
+      # supplier
+      if params[:Supplier]
+        session[:Supplier] = params[:Supplier]
+      elsif session[:Supplier]
+        params[:Supplier] = session[:Supplier]
+      end
+      # project
+      if params[:Project]
+        session[:Project] = params[:Project]
+      elsif session[:Project]
+        params[:Project] = session[:Project]
+      end
+      # order
+      if params[:Order]
+        session[:Order] = params[:Order]
+      elsif session[:Order]
+        params[:Order] = session[:Order]
       end
     end
   end

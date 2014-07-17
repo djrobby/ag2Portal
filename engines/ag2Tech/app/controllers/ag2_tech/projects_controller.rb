@@ -23,6 +23,7 @@ module Ag2Tech
     # GET /projects
     # GET /projects.json
     def index
+      manage_filter_state
       company = params[:Company]
       office = params[:Office]
 
@@ -130,6 +131,30 @@ module Ag2Tech
           format.html { redirect_to projects_url, alert: "#{@project.errors[:base].to_s}".gsub('["', '').gsub('"]', '') }
           format.json { render json: @project.errors, status: :unprocessable_entity }
         end
+      end
+    end
+
+    private
+    
+    # Keeps filter state
+    def manage_filter_state
+      # search
+      if params[:search]
+        session[:search] = params[:search]
+      elsif session[:search]
+        params[:search] = session[:search]
+      end
+      # company
+      if params[:Company]
+        session[:Company] = params[:Company]
+      elsif session[:Company]
+        params[:Company] = session[:Company]
+      end
+      # office
+      if params[:Office]
+        session[:Office] = params[:Office]
+      elsif session[:Office]
+        params[:Office] = session[:Office]
       end
     end
   end

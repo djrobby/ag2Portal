@@ -12,6 +12,7 @@ module Ag2Purchase
     # GET /supplier_payments
     # GET /supplier_payments.json
     def index
+      manage_filter_state
       supplier = params[:Supplier]
       invoice = params[:Invoice]
 
@@ -119,6 +120,30 @@ module Ag2Purchase
           format.html { redirect_to supplier_payments_url, alert: "#{@supplier_payment.errors[:base].to_s}".gsub('["', '').gsub('"]', '') }
           format.json { render json: @supplier_payment.errors, status: :unprocessable_entity }
         end
+      end
+    end
+
+    private
+    
+    # Keeps filter state
+    def manage_filter_state
+      # search
+      if params[:search]
+        session[:search] = params[:search]
+      elsif session[:search]
+        params[:search] = session[:search]
+      end
+      # supplier
+      if params[:Supplier]
+        session[:Supplier] = params[:Supplier]
+      elsif session[:Supplier]
+        params[:Supplier] = session[:Supplier]
+      end
+      # invoice
+      if params[:Invoice]
+        session[:Invoice] = params[:Invoice]
+      elsif session[:Invoice]
+        params[:Invoice] = session[:Invoice]
       end
     end
   end

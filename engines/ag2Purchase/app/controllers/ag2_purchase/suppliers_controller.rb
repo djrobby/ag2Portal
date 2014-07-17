@@ -312,5 +312,10 @@ module Ag2Purchase
         params[:letter] = session[:letter]
       end
     end
+
+    def reset_stock_prices_filter
+      session[:Products] = nil
+      session[:Suppliers] = nil      
+    end
   end
 end

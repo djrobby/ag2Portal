@@ -44,6 +44,7 @@ module Ag2Products
     # GET /stores/1
     # GET /stores/1.json
     def show
+      reset_stock_prices_filter
       @breadcrumb = 'read'
       @store = Store.find(params[:id])
       @stocks = @store.stocks.paginate(:page => params[:page], :per_page => per_page).order('product_id')
@@ -130,6 +131,11 @@ module Ag2Products
 
     def sort_column
       Store.column_names.include?(params[:sort]) ? params[:sort] : "name"
+    end
+
+    def reset_stock_prices_filter
+      session[:Products] = nil
+      session[:Stores] = nil      
     end
   end
 end

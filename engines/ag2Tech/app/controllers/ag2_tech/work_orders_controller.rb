@@ -267,6 +267,7 @@ module Ag2Tech
     # GET /work_orders
     # GET /work_orders.json
     def index
+      manage_filter_state
       project = params[:Project]
       type = params[:Type]
       status = params[:Status]
@@ -454,6 +455,34 @@ module Ag2Tech
         end
       end
       _workers
+    end
+
+    # Keeps filter state
+    def manage_filter_state
+      # search
+      if params[:search]
+        session[:search] = params[:search]
+      elsif session[:search]
+        params[:search] = session[:search]
+      end
+      # project
+      if params[:Project]
+        session[:Project] = params[:Project]
+      elsif session[:Project]
+        params[:Project] = session[:Project]
+      end
+      # type
+      if params[:Type]
+        session[:Type] = params[:Type]
+      elsif session[:Type]
+        params[:Type] = session[:Type]
+      end
+      # status
+      if params[:Status]
+        session[:Status] = params[:Status]
+      elsif session[:Status]
+        params[:Status] = session[:Status]
+      end
     end
   end
 end

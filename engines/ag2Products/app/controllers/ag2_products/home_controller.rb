@@ -11,6 +11,12 @@ module Ag2Products
       session[:Measure] = nil      
       session[:Manufacturer] = nil
       session[:Tax] = nil      
+      session[:Client] = nil      
+      session[:Project] = nil
+      session[:Order] = nil      
+      session[:Products] = nil
+      session[:Stores] = nil      
+      session[:Suppliers] = nil      
     end
   end
 end

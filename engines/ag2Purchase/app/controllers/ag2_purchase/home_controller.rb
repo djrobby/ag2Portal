@@ -6,6 +6,13 @@ module Ag2Purchase
       @ag2teamnet_path, @ag2teamnet_target = website_path('ag2TeamNet', '_self')
       session[:search] = nil
       session[:letter] = nil      
+      session[:Supplier] = nil      
+      session[:Status] = nil
+      session[:Project] = nil      
+      session[:Order] = nil
+      session[:Invoice] = nil
+      session[:Products] = nil
+      session[:Suppliers] = nil      
     end
   end
 end
