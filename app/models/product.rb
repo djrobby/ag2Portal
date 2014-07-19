@@ -67,11 +67,8 @@ class Product < ActiveRecord::Base
   end
 
   def full_code
-    full_code = ""
-    if !self.product_code.blank?
-      full_code += self.product_code[0..3] + '-' + self.product_code[4..9]
-    end
-    full_code
+    # Product code (Family code & sequential number) => FFFF-NNNNNN
+    product_code.blank? ? "" : product_code[0..3] + '-' + product_code[4..9]
   end
   
   #

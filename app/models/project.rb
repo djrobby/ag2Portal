@@ -17,7 +17,7 @@ class Project < ActiveRecord::Base
 
   validates :name,          :presence => true
   validates :project_code,  :presence => true,
-                            :length => { :minimum => 6 },
+                            :length => { :is => 10 },
                             :uniqueness => true
   validates :opened_at,     :presence => true
   validates :company,       :presence => true
@@ -30,14 +30,16 @@ class Project < ActiveRecord::Base
   end
 
   def full_name
-    full_name = ""
-    if !self.project_code.blank?
-      full_name += self.project_code
-    end
+    full_name = full_code
     if !self.name.blank?
       full_name += " " + self.name[0,40]
     end
     full_name
+  end
+
+  def full_code
+    # Project code (Company id & sequential number) => CCCC-NNNNNN
+    project_code.blank? ? "" : project_code[0..3] + '-' + project_code[4..9]
   end
 
   #

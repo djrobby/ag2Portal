@@ -71,11 +71,8 @@ class Supplier < ActiveRecord::Base
   end
 
   def full_code
-    full_code = ""
-    if !self.supplier_code.blank?
-      full_code += self.supplier_code[0..3] + '-' + self.supplier_code[4..9]
-    end
-    full_code
+    # Supplier code (Main activity id & sequential number) => AAAA-NNNNNN
+    supplier_code.blank? ? "" : supplier_code[0..3] + '-' + supplier_code[4..9]
   end
 
   #

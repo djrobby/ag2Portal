@@ -59,16 +59,18 @@ class WorkOrder < ActiveRecord::Base
   end
 
   def full_name
-    full_name = ""
-    if !self.order_no.blank?
-      full_name += self.order_no
-    end
+    full_name = full_no
     full_name += " " + summary
     full_name
   end
 
   def summary
     description.blank? ? "N/A" : description[0,40]
+  end
+
+  def full_no
+    # Order no (Project code & sequential number) => PPPP-NNNNNN
+    order_no.blank? ? "" : order_no[0..3] + '-' + order_no[4..9]
   end
 
   #
