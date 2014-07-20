@@ -71,10 +71,10 @@ module Ag2Gest
       # Builds code, if possible
       last_client_code = Client.where("client_code LIKE ?", "#{organization}%").order('client_code').maximum('client_code')
       if last_client_code.nil?
-        code = organization + '-000001'
+        code = organization + '0000001'
       else
-        last_client_code = last_client_code.split("-").last.to_i + 1
-        code = organization + '-' + last_client_code.to_s.rjust(6, '0')
+        last_client_code = last_client_code[4..10].to_i + 1
+        code = organization + last_client_code.to_s.rjust(6, '0')
       end
       @json_data = { "code" => code }
 

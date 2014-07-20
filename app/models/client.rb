@@ -16,7 +16,8 @@ class Client < ActiveRecord::Base
 
   validates :name,        :presence => true
   validates :client_code, :presence => true,
-                          :length => { :minimum => 6 },
+                          :length => { :is => 11 },
+                          :format => { with: /\A\d+\Z/, message: :code_invalid },
                           :uniqueness => true
   validates :fiscal_id,   :presence => true,
                           :length => { :minimum => 9 },
@@ -47,16 +48,21 @@ class Client < ActiveRecord::Base
   end
 
   def full_name
-    full_name = ""
-    if !self.client_code.blank?
-      full_name += self.client_code
-    end
+    full_name = full_code
     if !self.name.blank?
       full_name += " " + self.name[0,40]
     end
     full_name
   end
 
+  def full_code
+    # Client code (Entity Organization id & sequential number) => OOOO-NNNNNNN
+    client_code.blank? ? "" : client_code[0..3] + '-' + client_code[4..10]
+  end
+
+  #
+  # Calculated fields
+  #
   def active_yes_no
     active ? 'Yes' : 'No'
   end

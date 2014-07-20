@@ -24,7 +24,7 @@ module Ag2Products
           code = family + '000001'
         else
           last_product_code = last_product_code[4..9].to_i + 1
-          code = family + '-' + last_product_code.to_s.rjust(6, '0')
+          code = family + last_product_code.to_s.rjust(6, '0')
         end
       end
       @json_data = { "code" => code }

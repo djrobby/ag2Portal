@@ -18,6 +18,7 @@ class Project < ActiveRecord::Base
   validates :name,          :presence => true
   validates :project_code,  :presence => true,
                             :length => { :is => 10 },
+                            :format => { with: /\A\d+\Z/, message: :code_invalid },
                             :uniqueness => true
   validates :opened_at,     :presence => true
   validates :company,       :presence => true

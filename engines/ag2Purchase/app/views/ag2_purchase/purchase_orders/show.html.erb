@@ -29,7 +29,7 @@
     </tr>
     <tr>
       <td><%=t 'activerecord.attributes.purchase_order.project' %>:</td>
-      <td><%= @purchase_order.project.name unless @purchase_order.project.blank? %></td>
+      <td><%= @purchase_order.project.full_name unless @purchase_order.project.blank? %></td>
       <td><%=t 'activerecord.attributes.purchase_order.charge_account' %>:</td>
       <td> <%= @purchase_order.charge_account.name unless @purchase_order.charge_account.blank? %> </td>
     </tr>

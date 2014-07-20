@@ -6,15 +6,19 @@
     
     // Retrieves parent values
     var _f = $("#fnt-product").closest('form')[0];
-    var _o = $('select#purchase_order_work_order_id :selected').val();
-    if (_o == "") _o = "0";
-    $('select#fnt-work-order').val(_o);
+    // Project
     var _p = $('select#purchase_order_project_id :selected').val();
     if (_p == "") _p = "0";
     $('select#fnt-project').val(_p);
+    // Work Order
+    var _o = $('select#purchase_order_work_order_id :selected').val();
+    if (_o == "") _o = "0";
+    $('select#fnt-work-order').val(_o);
+    // Charge Account
     var _c = $('select#purchase_order_charge_account_id :selected').val();
     if (_c == "") _c = "0";
     $('select#fnt-charge-account').val(_c);
+    // Store
     var _s = $('select#purchase_order_store_id :selected').val();
     if (_s == "") _s = "0";
     $('select#fnt-store').val(_s);
@@ -70,36 +74,18 @@
       var order = $('select#fnt-work-order :selected').val();
       if (order == "")
         order = "0";
-      jQuery.getJSON('po_update_project_from_order/' + order, function(data) {
-        var p = data.project;
+      jQuery.getJSON('po_update_charge_account_from_order/' + order, function(data) {
         var c = data.charge_account;
         var s = data.store;
-        var p_id = data.project_id;
         var c_id = data.charge_account_id;
         var s_id = data.store_id;
-        // Project
-        $("#fnt-project").html("");
-        $("#fnt-project").select2("val", "");
-        $("#fnt-project").append($('<option></option>').val("").html(""));
-        if (!p.length) {
-          $.each(data, function(id, option) {
-            if (id == 'project') {
-              $("#fnt-project").append($('<option></option>').val(option.id).html(option.project_code + " " + option.name));
-            }
-          });
-        } else {
-          $.each(p, function(id, option) {
-            $("#fnt-project").append($('<option></option>').val(option.id).html(option.project_code + " " + option.name));
-          });
-        }
-        if (p_id != 0) $("#fnt-project").select2("val", p_id);
         // Charge Account
         $("#fnt-charge-account").html("");
         $("#fnt-charge-account").select2("val", "");
         $("#fnt-charge-account").append($('<option></option>').val("").html(""));
         if (!c.length) {
           $.each(data, function(id, option) {
-            if (id == 'charge_account') {
+            if (id == 'charge_account' && option != "") {
               $("#fnt-charge-account").append($('<option></option>').val(option.id).html(option.account_code + " " + option.name));
             }
           });
@@ -115,7 +101,7 @@
         $("#fnt-store").append($('<option></option>').val("").html(""));
         if (!s.length) {
           $.each(data, function(id, option) {
-            if (id == 'store') {
+            if (id == 'store' && option != "") {
               $("#fnt-store").append($('<option></option>').val(option.id).html(option.name));
             }
           });
@@ -136,14 +122,31 @@
       if (order == "")
         order = "0";
       jQuery.getJSON('po_update_charge_account_from_project/' + order, function(data) {
+        var w = data.work_order;
         var c = data.charge_account;
         var s = data.store;
+        // Work Order
+        $("#fnt-work-order").html("");
+        $("#fnt-work-order").select2("val", "");
+        $("#fnt-work-order").append($('<option></option>').val("").html(""));
+        if (!w.length) {
+          $.each(data, function(id, option) {
+            if (id == 'work_order' && option != "") {
+              $("#fnt-work-order").append($('<option></option>').val(option.id).html(option.order_no.substring(0,10) + "-" + option.order_no.substring(10,14) + "-" + option.order_no.substring(14,20) + " " + option.description));
+            }
+          });
+        } else {
+          $.each(w, function(id, option) {
+            $("#fnt-work-order").append($('<option></option>').val(option.id).html(option.order_no.substring(0,10) + "-" + option.order_no.substring(10,14) + "-" + option.order_no.substring(14,20) + " " + option.description));
+          });
+        }
+        // Charge Account
         $("#fnt-charge-account").html("");
         $("#fnt-charge-account").select2("val", "");
         $("#fnt-charge-account").append($('<option></option>').val("").html(""));
         if (!c.length) {
           $.each(data, function(id, option) {
-            if (id == 'charge_account') {
+            if (id == 'charge_account' && option != "") {
               $("#fnt-charge-account").append($('<option></option>').val(option.id).html(option.account_code + " " + option.name));
             }
           });
@@ -152,12 +155,13 @@
             $("#fnt-charge-account").append($('<option></option>').val(option.id).html(option.account_code + " " + option.name));
           });
         }
+        // Store
         $("#fnt-store").html("");
         $("#fnt-store").select2("val", "");
         $("#fnt-store").append($('<option></option>').val("").html(""));
         if (!s.length) {
           $.each(data, function(id, option) {
-            if (id == 'store') {
+            if (id == 'store' && option != "") {
               $("#fnt-store").append($('<option></option>').val(option.id).html(option.name));
             }
           });
@@ -269,8 +273,8 @@
     <%= f.association :tax_type, collection: TaxType.where('expiration IS NULL').order('description'), input_html: { class: 'x-large-text-field field', id: 'fnt-tax-type', data: { validation: "required", "validation-error-msg" => "#{e}" } }, label_html: { class: 'form-label' } %>
     <%= f.input :tax, disabled: true, as: :string, input_html: { value: (number_with_precision(f.object.tax, precision: 4) if f.object.tax), class: 'mid-text-field number-text-field sub-disabled-field field', id: 'fnt-tax' }, label_html: { class: 'form-label' } %>
     <%= f.input :delivery_date, start_year: Time.now.year - 100, end_year: Time.now.year + 100, as: :string, input_html: { value: (f.object.delivery_date.strftime("%d/%m/%Y") if f.object.delivery_date), class: 'mid-text-field idatepicker field', id: 'fnt-delivery-date' }, label_html: { class: 'form-label' } %>
-    <%= f.association :work_order, collection: @work_orders, input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-work-order', data: { validation: "required", "validation-error-msg" => "#{e}" } }, label_html: { class: 'form-label' } %>
     <%= f.association :project, collection: @projects, input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-project', data: { validation: "required", "validation-error-msg" => "#{e}" } }, label_html: { class: 'form-label' } %>
+    <%= f.association :work_order, collection: @work_orders, input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-work-order', data: { validation: "required", "validation-error-msg" => "#{e}" } }, label_html: { class: 'form-label' } %>
     <%= f.association :charge_account, collection: @charge_accounts, input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-charge-account', data: { validation: "required", "validation-error-msg" => "#{e}" } }, label_html: { class: 'form-label' } %>
     <%= f.association :store, collection: @stores, input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-store', data: { validation: "required", "validation-error-msg" => "#{e}" } }, label_html: { class: 'form-label' } %>
     <%= f.input :_destroy, as: :hidden, input_html: { class: 'field' } %>

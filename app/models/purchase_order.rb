@@ -31,6 +31,7 @@ class PurchaseOrder < ActiveRecord::Base
   validates :supplier,       :presence => true
   validates :payment_method, :presence => true
   validates :order_status,   :presence => true
+  validates :project,        :presence => true
 
   before_destroy :check_for_dependent_records
 
@@ -61,6 +62,11 @@ class PurchaseOrder < ActiveRecord::Base
       partial_name += " " + self.supplier.name[0,40]
     end
     partial_name
+  end
+
+  def full_no
+    # Order no (Project code & year & sequential number) => PPPPPPPPPP-YYYY-NNNNNN
+    order_no.blank? ? "" : order_no[0..9] + '-' + order_no[10..13] + '-' + order_no[14..19]
   end
 
   #

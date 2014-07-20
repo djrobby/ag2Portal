@@ -29,7 +29,7 @@ class Entity < ActiveRecord::Base
   validates :region,       :presence => true
   validates :country,      :presence => true
   validates :entity_type,  :presence => true
-  #validates :organization, :presence => true
+  validates :organization, :presence => true
 
   before_validation :fields_to_uppercase
   before_destroy :check_for_dependent_records
@@ -55,9 +55,9 @@ class Entity < ActiveRecord::Base
 
   def to_label
     if !self.last_name.blank? && !self.first_name.blank?
-      "#{fiscal_id}: #{last_name}, #{first_name}"
+      "#{fiscal_id} #{full_name}"
     else
-      "#{fiscal_id}: #{company}"
+      "#{fiscal_id} #{company}"
     end
   end
 

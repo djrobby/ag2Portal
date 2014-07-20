@@ -31,8 +31,8 @@ class Supplier < ActiveRecord::Base
   validates :name,             :presence => true
   validates :supplier_code,    :presence => true,
                                :length => { :is => 10 },
-                               :uniqueness => true,
-                               :format => { with: /\A\d+\Z/, message: :code_invalid }
+                               :format => { with: /\A\d+\Z/, message: :code_invalid },
+                               :uniqueness => true
   validates :fiscal_id,        :presence => true,
                                :length => { :minimum => 9 },
                                :uniqueness => true
