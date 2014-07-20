@@ -16,6 +16,11 @@
       _date = new Date(_date);
     }
     _year = _date.getFullYear();
+
+    // Set focus
+    $(".modal").on('shown', function() {
+      $(this).find(".form-label:first").focus();
+    });
   });
 
   jQuery(function($) {

@@ -49,8 +49,6 @@
         <%= submit_tag I18n.t(:apply_filter_button), :class => 'btn btn-primary' %>
         <!-- Remove filter -->
         <button id="removeFilter" type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><%= t :clear_filter_button %></button>
-        <!-- Remove filter -->
-        <button id="removeFilter" type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><%= t :clear_filter_button %></button>
         <% end %>
         <!-- Buttons -->
         <%= render :partial => '/layouts/crud/new', :locals => { :model => PurchaseOrder, :path => new_purchase_order_path, :txt => t(".btn_new") } %>

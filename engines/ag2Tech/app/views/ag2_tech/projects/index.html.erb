@@ -88,7 +88,7 @@
             <% else %>
           <tr class="inactive-row">
             <% end %>
-            <td><%= link_to project.project_code, project %></td>
+            <td><%= link_to project.full_code, project %></td>
             <td><%= project.name %></td>
             <td><%= project.company.name unless project.company.blank? %></td>
             <td><%= project.office.name unless project.office.blank? %></td>

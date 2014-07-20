@@ -6,6 +6,11 @@
     var _f = $("#fnt-product").closest('form')[0];
     _s = $('select#work_order_store_id :selected').val();
     if (_s == "") _s = "0";
+
+    // Set focus
+    $(".modal").on('shown', function() {
+      $(this).find(".form-label:first").focus();
+    });
   });
 
   jQuery(function($) {

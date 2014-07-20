@@ -30,12 +30,12 @@
     <tr>
       <td><%=t 'activerecord.attributes.purchase_order.project' %>:</td>
       <td><%= @purchase_order.project.full_name unless @purchase_order.project.blank? %></td>
-      <td><%=t 'activerecord.attributes.purchase_order.charge_account' %>:</td>
-      <td> <%= @purchase_order.charge_account.name unless @purchase_order.charge_account.blank? %> </td>
+      <td><%=t 'activerecord.attributes.purchase_order.work_order' %>:</td>
+      <td><%= @purchase_order.work_order.full_no unless @purchase_order.work_order.blank? %></td>
     </tr>
     <tr>
-      <td><%=t 'activerecord.attributes.purchase_order.work_order' %>:</td>
-      <td><%= @purchase_order.work_order.order_no unless @purchase_order.work_order.blank? %></td>
+      <td><%=t 'activerecord.attributes.purchase_order.charge_account' %>:</td>
+      <td> <%= @purchase_order.charge_account.name unless @purchase_order.charge_account.blank? %> </td>
       <td><%=t 'activerecord.attributes.purchase_order.store' %>:</td>
       <td> <%= @purchase_order.store.name unless @purchase_order.store.blank? %> </td>
     </tr>
