@@ -56,7 +56,7 @@
       // Right formatted for passing as REST parameter
       qty = parseInt(right_number(qty, 4) * 10000);
       //qty = qty.replace(",", ".") * 10000;
-      jQuery.getJSON('po_update_description_prices_from_product/' + product + '/' + qty + '/' + store, function(data) {
+      jQuery.getJSON('po_update_description_prices_from_product_store/' + product + '/' + qty + '/' + store, function(data) {
         $("#fnt-description").val(data.description);
         $("#fnt-price").val(data.price);
         $("#fnt-amount").val(data.amount);

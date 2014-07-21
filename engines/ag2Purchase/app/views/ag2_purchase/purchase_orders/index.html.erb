@@ -72,7 +72,7 @@
         <tbody>
           <% @purchase_orders.each do |order| %>
           <tr>
-            <td><%= link_to order.order_no, order %></td>
+            <td><%= link_to order.full_no, order %></td>
             <td align="center"><%= order.order_date.strftime("%d/%m/%Y") unless order.order_date.blank? %></td>
             <td><%= order.order_status.name %></td>
             <td><%= order.supplier.full_name %></td>

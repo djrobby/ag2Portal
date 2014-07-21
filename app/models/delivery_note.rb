@@ -23,7 +23,11 @@ class DeliveryNote < ActiveRecord::Base
   validates_associated :delivery_note_items
 
   validates :delivery_date,   :presence => true
-  validates :delivery_no,     :presence => true
+  validates :delivery_no,     :presence => true,
+                              :length => { :is => 14 },
+                              :format => { with: /\A\d+\Z/, message: :code_invalid },
+                              :uniqueness => true
+  validates :project,         :presence => true
 
   before_destroy :check_for_dependent_records
 
@@ -32,10 +36,7 @@ class DeliveryNote < ActiveRecord::Base
   end
 
   def full_name
-    full_name = ""
-    if !self.delivery_no.blank?
-      full_name += self.delivery_no
-    end
+    full_name = full_no
     if !self.delivery_date.blank?
       full_name += " " + self.delivery_date.to_s
     end
@@ -47,6 +48,19 @@ class DeliveryNote < ActiveRecord::Base
       end
     end
     full_name
+  end
+
+  def partial_name
+    partial_name = full_no
+    if !self.delivery_date.blank?
+      full_name += " " + self.delivery_date.to_s
+    end
+    partial_name
+  end
+
+  def full_no
+    # Delivery no (Company id & year & sequential number) => CCCC-YYYY-NNNNNN
+    delivery_no.blank? ? "" : delivery_no[0..3] + '-' + delivery_no[4..7] + '-' + delivery_no[8..13]
   end
 
   #

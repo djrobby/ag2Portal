@@ -21,7 +21,7 @@ es:
       new:
         title: "Nueva Nota de entrega"
       back_to_main_page: "Volver a Notas de entrega"
-      generate_code_btn: "Nº de Entrega"
+      generate_code_btn: "Nº de Nota de entrega"
       validate_btn: "Validar"
       code_error: "Imposible generar Nº de Entrega: No has elegido Actividad."
       items_info: "Items de la Nota de entrega"

@@ -4,6 +4,7 @@ Ag2Tech::Engine.routes.draw do
     get "home/index"
 
     # Routes for jQuery POSTs
+    # Numbers with decimals (.) must be multiplied (by 1xxx and the same zeroes x positions) before passed as REST parameter! 
     match 'projects/pr_update_company_textfield_from_office/:id', :controller => 'projects', :action => 'pr_update_company_textfield_from_office'
     match 'pr_update_company_textfield_from_office/:id', :controller => 'projects', :action => 'pr_update_company_textfield_from_office'
     match 'projects/:id/pr_update_company_textfield_from_office/:id', :controller => 'projects', :action => 'pr_update_company_textfield_from_office'
@@ -23,9 +24,12 @@ Ag2Tech::Engine.routes.draw do
     match 'work_orders/wo_worker_totals/:hours/:costs/:count', :controller => 'work_orders', :action => 'wo_worker_totals'
     match 'wo_worker_totals/:hours/:costs/:count', :controller => 'work_orders', :action => 'wo_worker_totals'
     match 'work_orders/:id/wo_worker_totals/:hours/:costs/:count', :controller => 'work_orders', :action => 'wo_worker_totals'
-    match 'work_orders/wo_update_description_prices_from_product/:product/:qty/:store', :controller => 'work_orders', :action => 'wo_update_description_prices_from_product'
-    match 'wo_update_description_prices_from_product/:product/:qty/:store', :controller => 'work_orders', :action => 'wo_update_description_prices_from_product'
-    match 'work_orders/:id/wo_update_description_prices_from_product/:product/:qty/:store', :controller => 'work_orders', :action => 'wo_update_description_prices_from_product'
+    match 'work_orders/wo_update_description_prices_from_product_store/:product/:qty/:store', :controller => 'work_orders', :action => 'wo_update_description_prices_from_product_store'
+    match 'wo_update_description_prices_from_product_store/:product/:qty/:store', :controller => 'work_orders', :action => 'wo_update_description_prices_from_product_store'
+    match 'work_orders/:id/wo_update_description_prices_from_product_store/:product/:qty/:store', :controller => 'work_orders', :action => 'wo_update_description_prices_from_product_store'
+    match 'work_orders/wo_update_description_prices_from_product/:product/:qty', :controller => 'work_orders', :action => 'wo_update_description_prices_from_product'
+    match 'wo_update_description_prices_from_product/:product/:qty', :controller => 'work_orders', :action => 'wo_update_description_prices_from_product'
+    match 'work_orders/:id/wo_update_description_prices_from_product/:product/:qty', :controller => 'work_orders', :action => 'wo_update_description_prices_from_product'
     match 'work_orders/wo_update_costs_from_worker/:worker/:hours/:project/:year', :controller => 'work_orders', :action => 'wo_update_costs_from_worker'
     match 'wo_update_costs_from_worker/:worker/:hours/:project/:year', :controller => 'work_orders', :action => 'wo_update_costs_from_worker'
     match 'work_orders/:id/wo_update_costs_from_worker/:worker/:hours/:project/:year', :controller => 'work_orders', :action => 'wo_update_costs_from_worker'

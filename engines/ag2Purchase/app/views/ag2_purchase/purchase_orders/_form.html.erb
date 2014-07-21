@@ -1,4 +1,5 @@
 <script>
+  var text_field_color;
   var _thisForm = '';
   
   $(document).ready(function() {
@@ -15,6 +16,9 @@
     if ($('#purchase_order_order_date').val() == "") {
       $('#purchase_order_order_date').datepicker('setValue', es_date(new Date()));
     }
+
+    // Save default text color
+    text_field_color = $("#purchase_order_order_no").css('color')
     
     // Initialized form variable
     _thisForm = $("#purchase_order_order_no").closest('form')[0];
@@ -31,6 +35,18 @@
       // Order OK: Enable
       $('#submit_btn').show();
       $('.fnt-new-btn').show();
+    }
+
+    // Disable generate_code_btn if purchase_order_project_id blank
+    var order = $('#purchase_order_project_id').val();
+    if (order == "")
+      order = "0";
+    if (order == "0") {
+      // Empty project: Hide
+      $('#generate_code_btn').hide();
+    } else {
+      // Project OK: Show
+      $('#generate_code_btn').show();
     }
   });
   
@@ -49,6 +65,25 @@
         $('#submit_btn').show();
         $('.fnt-new-btn').show();
       }
+    });
+    
+    // when #generate_code_btn is clicked
+    $("#generate_code_btn").click(function() {
+      // make a POST call and replace the content
+      var order = $('#purchase_order_project_id').val();
+      if (order == "")
+        order = "$";
+      jQuery.getJSON('po_generate_no/' + order, function(data) {
+        $("#purchase_order_order_no").val(data.code);
+        if ($("#purchase_order_order_no").val() == "$err") {
+          $("#purchase_order_order_no").css('color', 'red');
+          alert('<%= I18n.t("ag2_purchase.purchase_orders.no_error") %>');
+          $('#purchase_order_order_no').select();
+        }
+        else
+          $("#supplier_supplier_code").css('color', text_field_color);
+      })
+      return false;
     });
 
     // when the #purchase_order_supplier_id field changes
@@ -125,6 +160,14 @@
           });
         }
       });
+      // Disable generate_code_btn if purchase_order_project_id blank
+      if (order == "0") {
+        // Empty project: Hide
+        $('#generate_code_btn').hide();
+      } else {
+        // Project OK: Show
+        $('#generate_code_btn').show();
+      }
       return false;
     });
 
@@ -272,5 +315,14 @@
 <!-- Remarks -->
 <%= f.input :remarks, as: :text, input_html: { class: 'x-large-text-field', rows: 3 }, label_html: { class: 'form-label' } %>
 <!-- Buttons -->
-<%= f.button :submit, class: 'btn-primary', id: 'submit_btn' %>
+<table class="form-table">
+  <tbody>
+    <tr class="form-tr">
+      <td class="form-td-three left-winged"> <%= f.button :submit, :class => 'btn-primary', :id => 'submit_btn' %> </td>
+      <% if @breadcrumb == 'create'%>
+      <td class="form-td-three right-winged"><a href="#" id="generate_code_btn" class="btn btn-warning"><%=t 'ag2_purchase.purchase_orders.generate_code_btn' %></a></td>
+      <% end %>
+    </tr>
+  </tbody>
+</table>
 <% end %>

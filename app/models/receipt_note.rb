@@ -22,10 +22,11 @@ class ReceiptNote < ActiveRecord::Base
 
   validates_associated :receipt_note_items
 
-  validates :receipt_date,   :presence => true
-  validates :receipt_no,     :presence => true
-  validates :supplier,       :presence => true
-  validates :payment_method, :presence => true
+  validates :receipt_date,    :presence => true
+  validates :receipt_no,      :presence => true,
+                              :uniqueness => { :scope => :supplier_id }
+  validates :supplier,        :presence => true
+  validates :payment_method,  :presence => true
 
   before_destroy :check_for_dependent_records
 
@@ -45,6 +46,17 @@ class ReceiptNote < ActiveRecord::Base
       full_name += " " + self.supplier.full_name
     end
     full_name
+  end
+
+  def partial_name
+    partial_name = ""
+    if !self.receipt_no.blank?
+      partial_name += self.receipt_no
+    end
+    if !self.supplier.blank?
+      partial_name += " " + self.supplier.full_name
+    end
+    partial_name
   end
 
   #

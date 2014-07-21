@@ -219,7 +219,9 @@
         <%= render partial: '/layouts/ag2_products/productstocksprices', locals: { product: @product } %>
       </td>
       <% end %>
+      <% if @breadcrumb == 'create'%>
       <td class="form-td-three right-winged"><a href="#" id="generate_code_btn" class="btn btn-warning"><%=t 'ag2_products.products.generate_code_btn' %></a></td>
+      <% end %>
     </tr>
   </tbody>
 </table>

@@ -5,14 +5,16 @@ module Ag2Purchase
     include ActionView::Helpers::NumberHelper
     before_filter :authenticate_user!
     load_and_authorize_resource
-    skip_load_and_authorize_resource :only => [:po_update_description_prices_from_product,
+    skip_load_and_authorize_resource :only => [:po_update_description_prices_from_product_store,
+                                               :po_update_description_prices_from_product,
                                                :po_update_charge_account_from_order,
                                                :po_update_charge_account_from_project,
                                                :po_update_amount_from_price_or_quantity,
                                                :po_update_offer_select_from_supplier,
                                                :po_format_numbers,
                                                :po_totals,
-                                               :po_current_stock]
+                                               :po_current_stock,
+                                               :po_generate_no]
     # Update offer select at view from supplier select
     def po_update_offer_select_from_supplier
       supplier = params[:supplier]
@@ -29,8 +31,8 @@ module Ag2Purchase
       end
     end
 
-    # Update description and prices text fields at view from product select
-    def po_update_description_prices_from_product
+    # Update description and prices text fields at view from product & store selects
+    def po_update_description_prices_from_product_store
       product = params[:product]
       store = params[:store]
       description = ""
@@ -42,7 +44,7 @@ module Ag2Purchase
       tax = 0
       current_stock = 0
       if product != '0'
-        @product = Product.find(params[:product])
+        @product = Product.find(product)
         @prices = @product.purchase_prices
         # Assignment
         description = @product.main_description[0,40]
@@ -64,11 +66,39 @@ module Ag2Purchase
       # Setup JSON
       @json_data = { "description" => description, "price" => price.to_s, "amount" => amount.to_s,
                      "tax" => tax.to_s, "type" => tax_type_id, "stock" => current_stock.to_s }
+      render json: @json_data
+    end
 
-      respond_to do |format|
-        format.html # po_update_description_prices_from_product.html.erb does not exist! JSON only
-        format.json { render json: @json_data }
+    # Update description and prices text fields at view from product select
+    def po_update_description_prices_from_product
+      product = params[:product]
+      description = ""
+      qty = 0
+      price = 0
+      amount = 0
+      tax_type_id = 0
+      tax_type_tax = 0
+      tax = 0
+      if product != '0'
+        @product = Product.find(product)
+        @prices = @product.purchase_prices
+        # Assignment
+        description = @product.main_description[0,40]
+        qty = params[:qty].to_f / 10000
+        price = @product.reference_price
+        amount = qty * price
+        tax_type_id = @product.tax_type.id
+        tax_type_tax = @product.tax_type.tax
+        tax = amount * (tax_type_tax / 100)
       end
+      # Format numbers
+      price = number_with_precision(price.round(4), precision: 4)
+      tax = number_with_precision(tax.round(4), precision: 4)
+      amount = number_with_precision(amount.round(4), precision: 4)
+      # Setup JSON
+      @json_data = { "description" => description, "price" => price.to_s, "amount" => amount.to_s,
+                     "tax" => tax.to_s, "type" => tax_type_id }
+      render json: @json_data
     end
 
     # Update charge account and store text fields at view from work order select
@@ -206,6 +236,32 @@ module Ag2Purchase
       current_stock = number_with_precision(current_stock.round(4), precision: 4)
       # Setup JSON
       @json_data = { "stock" => current_stock.to_s }
+      render json: @json_data
+    end
+
+    # Update order number at view (generate_code_btn)
+    def po_generate_no
+      project = params[:id]
+      year = Time.new.year
+      code = ''
+
+      # Builds code, if possible
+      if project == '$'
+        code = '$err'
+      else
+        project = project.to_s if project.is_a? Fixnum
+        project = project.rjust(10, '0')
+        year = year.to_s if year.is_a? Fixnum
+        year = year.rjust(4, '0')
+        last_no = PurchaseOrder.where("order_no LIKE ?", "#{project}#{year}%").order(:order_no).maximum(:order_no)
+        if last_no.nil?
+          code = project + year + '000001'
+        else
+          last_no = last_no[14..19].to_i + 1
+          code = project + year + last_no.to_s.rjust(6, '0')
+        end
+      end
+      @json_data = { "code" => code }
       render json: @json_data
     end
 

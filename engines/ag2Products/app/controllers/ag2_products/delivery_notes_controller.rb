@@ -6,6 +6,7 @@ module Ag2Products
     before_filter :authenticate_user!
     load_and_authorize_resource
     skip_load_and_authorize_resource :only => [:dn_totals,
+                                               :dn_update_description_prices_from_product_store,
                                                :dn_update_description_prices_from_product,
                                                :dn_update_amount_and_costs_from_price_or_quantity,
                                                :dn_update_charge_account_from_order,
@@ -41,8 +42,8 @@ module Ag2Products
       render json: @json_data
     end
 
-    # Update description and prices text fields at view from product select
-    def dn_update_description_prices_from_product
+    # Update description and prices text fields at view from product & store selects
+    def dn_update_description_prices_from_product_store
       product = params[:product]
       store = params[:store]
       description = ""
@@ -84,6 +85,46 @@ module Ag2Products
                      "cost" => cost.to_s, "costs" => costs.to_s,
                      "price" => price.to_s, "amount" => amount.to_s,
                      "tax" => tax.to_s, "type" => tax_type_id, "stock" => current_stock.to_s }
+      render json: @json_data
+    end
+
+    # Update description and prices text fields at view from product select
+    def dn_update_description_prices_from_product
+      product = params[:product]
+      description = ""
+      qty = 0
+      cost = 0
+      costs = 0
+      price = 0
+      amount = 0
+      tax_type_id = 0
+      tax_type_tax = 0
+      tax = 0
+      if product != '0'
+        @product = Product.find(product)
+        @prices = @product.purchase_prices
+        # Assignment
+        description = @product.main_description[0,40]
+        qty = params[:qty].to_f / 10000
+        cost = @product.reference_price
+        costs = qty * cost
+        price = @product.sell_price
+        amount = qty * price
+        tax_type_id = @product.tax_type.id
+        tax_type_tax = @product.tax_type.tax
+        tax = amount * (tax_type_tax / 100)
+      end
+      # Format numbers
+      cost = number_with_precision(cost.round(4), precision: 4)
+      costs = number_with_precision(costs.round(4), precision: 4)
+      price = number_with_precision(price.round(4), precision: 4)
+      amount = number_with_precision(amount.round(4), precision: 4)
+      tax = number_with_precision(tax.round(4), precision: 4)
+      # Setup JSON hash
+      @json_data = { "description" => description,
+                     "cost" => cost.to_s, "costs" => costs.to_s,
+                     "price" => price.to_s, "amount" => amount.to_s,
+                     "tax" => tax.to_s, "type" => tax_type_id }
       render json: @json_data
     end
 

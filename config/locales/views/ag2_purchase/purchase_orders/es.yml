@@ -25,7 +25,7 @@ es:
       validate_btn: "Validar"
       items_info: "Items del Pedido"
       fiscal_error: "Id Fiscal erróneo o Entidad (Sujeto Pasivo) no existe."
-      code_error: "Imposible generar Código de Proveedor: No has elegido Actividad."
+      no_error: "Imposible generar Nº de Pedido: No has elegido Proyecto."
       delete_item: "Borrar este Item"
       add_item: "Agregar nuevo Item"
       add_item_to: "Pedido %{var}"

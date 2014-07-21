@@ -26,7 +26,8 @@ class PurchaseOrder < ActiveRecord::Base
   
   validates :order_date,     :presence => true
   validates :order_no,       :presence => true,
-                             :length => { :minimum => 5 },
+                             :length => { :is => 20 },
+                             :format => { with: /\A\d+\Z/, message: :code_invalid },
                              :uniqueness => true
   validates :supplier,       :presence => true
   validates :payment_method, :presence => true
@@ -40,10 +41,7 @@ class PurchaseOrder < ActiveRecord::Base
   end
 
   def full_name
-    full_name = ""
-    if !self.order_no.blank?
-      full_name += self.order_no
-    end
+    full_name = full_no
     if !self.order_date.blank?
       full_name += " " + self.order_date.to_s
     end
@@ -54,10 +52,7 @@ class PurchaseOrder < ActiveRecord::Base
   end
 
   def partial_name
-    partial_name = ""
-    if !self.order_no.blank?
-      full_name += self.order_no
-    end
+    partial_name = full_no
     if !self.supplier.blank?
       partial_name += " " + self.supplier.name[0,40]
     end
