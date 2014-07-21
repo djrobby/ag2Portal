@@ -1,19 +1,34 @@
 <script>
   $(document).ready(function() {
-    // Retrieves parent values
+    /*
+     * Retrieves parent values
+     */
+    // Form
     var _f = $("#fnt-product").closest('form')[0];
-    var _o = $('select#receipt_note_work_order_id :selected').val();
-    if (_o == "") _o = "0";
-    $('select#fnt-work-order').val(_o);
-    var _p = $('select#receipt_note_project_id :selected').val();
+    // Project
+    $("#fnt-project").html("");
+    $('#receipt_note_project_id option').clone().appendTo('#fnt-project');
+    var _p = $('#receipt_note_project_id :selected').val();
     if (_p == "") _p = "0";
-    $('select#fnt-project').val(_p);
-    var _c = $('select#receipt_note_charge_account_id :selected').val();
+    $('#fnt-project').val(_p);
+    // Work Order
+    $("#fnt-work-order").html("");
+    $('#receipt_note_work_order_id option').clone().appendTo('#fnt-work-order');
+    var _o = $('#receipt_note_work_order_id :selected').val();
+    if (_o == "") _o = "0";
+    $('#fnt-work-order').val(_o);
+    // Charge Account
+    $("#fnt-charge-account").html("");
+    $('#receipt_note_charge_account_id option').clone().appendTo('#fnt-charge-account');
+    var _c = $('#receipt_note_charge_account_id :selected').val();
     if (_c == "") _c = "0";
-    $('select#fnt-charge-account').val(_c);
-    var _s = $('select#receipt_note_store_id :selected').val();
+    $('#fnt-charge-account').val(_c);
+    // Store
+    $("#fnt-store").html("");
+    $('#receipt_note_store_id option').clone().appendTo('#fnt-store');
+    var _s = $('#receipt_note_store_id :selected').val();
     if (_s == "") _s = "0";
-    $('select#fnt-store').val(_s);
+    $('#fnt-store').val(_s);
   });
 
   jQuery(function($) {

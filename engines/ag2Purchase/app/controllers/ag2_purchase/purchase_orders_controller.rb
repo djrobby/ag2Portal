@@ -368,20 +368,20 @@ module Ag2Purchase
       _store
     end
 
-    def work_order_charge_account(_purchase_order)
-      if _purchase_order.work_order.blank? || _purchase_order.work_order.charge_account.blank?
-        _charge_account = _purchase_order.project.blank? ? ChargeAccount.order(:account_code) : _purchase_order.project.charge_accounts.order(:account_code)
+    def work_order_charge_account(_model)
+      if _model.work_order.blank? || _model.work_order.charge_account.blank?
+        _charge_account = _model.project.blank? ? ChargeAccount.order(:account_code) : _model.project.charge_accounts.order(:account_code)
       else
-        _charge_account = ChargeAccount.where("id = ?", _purchase_order.work_order.charge_account)
+        _charge_account = ChargeAccount.where("id = ?", _model.work_order.charge_account)
       end
       _charge_account
     end
 
-    def work_order_store(_purchase_order)
-      if _purchase_order.work_order.blank? || _purchase_order.work_order.store.blank?
-        _store = _purchase_order.project.blank? ? Store.order(:name) : project_stores(_purchase_order.project)
+    def work_order_store(_model)
+      if _model.work_order.blank? || _model.work_order.store.blank?
+        _store = _model.project.blank? ? Store.order(:name) : project_stores(_model.project)
       else
-        _store = Store.where("id = ?", _purchase_order.work_order.store)
+        _store = Store.where("id = ?", _model.work_order.store)
       end
       _store
     end

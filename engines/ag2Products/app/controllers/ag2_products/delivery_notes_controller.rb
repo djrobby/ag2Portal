@@ -8,7 +8,7 @@ module Ag2Products
     skip_load_and_authorize_resource :only => [:dn_totals,
                                                :dn_update_description_prices_from_product,
                                                :dn_update_amount_and_costs_from_price_or_quantity,
-                                               :dn_update_project_from_order,
+                                               :dn_update_charge_account_from_order,
                                                :dn_update_charge_account_from_project,
                                                :dn_update_offer_select_from_client,
                                                :dn_format_number,
@@ -124,48 +124,47 @@ module Ag2Products
       render json: @json_data
     end
 
-    # Update project, charge account and store text fields at view from work order select
-    def dn_update_project_from_order
+    # Update charge account and store text fields at view from work order select
+    def dn_update_charge_account_from_order
       order = params[:order]
-      project_id = 0
       charge_account_id = 0
       store_id = 0
       if order != '0'
         @order = WorkOrder.find(order)
         @project = @order.project
-        project_id = @project.id rescue 0
         @charge_account = @order.charge_account
         charge_account_id = @charge_account.id rescue 0
         @store = @order.store
         store_id = @store.id rescue 0
         if @charge_account.blank?
-          @charge_account = @project.blank? ? ChargeAccount.all(order: 'account_code') : @project.charge_accounts(order: 'account_code')
+          @charge_account = @project.blank? ? ChargeAccount.order(:account_code) : @project.charge_accounts.order(:account_code)
         end
         if @store.blank?
           @store = project_stores(@project)
         end
       else
-        @project = Project.all(order: 'name')
-        @charge_account = ChargeAccount.all(order: 'account_code')
-        @store = Store.all(order: 'name')
+        @charge_account = ChargeAccount.order(:account_code)
+        @store = Store.order(:name)
       end
-      @json_data = { "project" => @project, "charge_account" => @charge_account, "store" => @store,
-                     "project_id" => project_id, "charge_account_id" => charge_account_id, "store_id" => store_id }
+      @json_data = { "charge_account" => @charge_account, "store" => @store,
+                     "charge_account_id" => charge_account_id, "store_id" => store_id }
       render json: @json_data
     end
 
-    # Update charge account and store text fields at view from project select
+    # Update work order, charge account and store text fields at view from project select
     def dn_update_charge_account_from_project
       project = params[:order]
       if project != '0'
         @project = Project.find(project)
-        @charge_account = @project.blank? ? ChargeAccount.all(order: 'account_code') : @project.charge_accounts(order: 'account_code')
+        @work_order = @project.blank? ? WorkOrder.order(:order_no) : @project.work_orders.order(:order_no)
+        @charge_account = @project.blank? ? ChargeAccount.order(:account_code) : @project.charge_accounts.order(:account_code)
         @store = project_stores(@project)
       else
-        @charge_account = ChargeAccount.all(order: 'account_code')
-        @store = Store.all(order: 'name')
+        @work_order = WorkOrder.order(:order_no)
+        @charge_account = ChargeAccount.order(:account_code)
+        @store = Store.order(:name)
       end
-      @json_data = { "charge_account" => @charge_account, "store" => @store }
+      @json_data = { "work_order" => @work_order, "charge_account" => @charge_account, "store" => @store }
       render json: @json_data
     end
 
@@ -267,8 +266,8 @@ module Ag2Products
       @breadcrumb = 'create'
       @delivery_note = DeliveryNote.new
       @offers = SaleOffer.order(:client_id, :offer_no, :id)
-      @work_orders = WorkOrder.order(:order_no)
       @projects = Project.order(:project_code)
+      @work_orders = WorkOrder.order(:order_no)
       @charge_accounts = ChargeAccount.order(:account_code)
       @stores = Store.order(:name)
   
@@ -283,10 +282,10 @@ module Ag2Products
       @breadcrumb = 'update'
       @delivery_note = DeliveryNote.find(params[:id])
       @offers = @delivery_note.client.blank? ? SaleOffer.order(:client_id, :offer_no, :id) : @delivery_note.client.sale_offers.order(:client_id, :offer_no, :id)
-      @work_orders = @purchase_order.work_order.blank? ? WorkOrder.order(:order_no) : WorkOrder.where('id = ?', @purchase_order.work_order)
-      @projects = @purchase_order.project.blank? ? Project.order(:project_code) : Project.where('id = ?', @purchase_order.project)
-      @charge_accounts = @purchase_order.charge_account.blank? ? ChargeAccount.order(:account_code) : ChargeAccount.where('id = ?', @purchase_order.charge_account)
-      @stores = @purchase_order.store.blank? ? Store.order(:name) : Store.where('id = ?', @purchase_order.store)
+      @projects = Project.order(:project_code)
+      @work_orders = @delivery_note.project.blank? ? WorkOrder.order(:order_no) : @delivery_note.project.work_orders.order(:order_no)
+      @charge_accounts = work_order_charge_account(@delivery_note)
+      @stores = work_order_store(@delivery_note)
     end
   
     # POST /delivery_notes
@@ -326,10 +325,10 @@ module Ag2Products
           format.json { head :no_content }
         else
           @offers = @delivery_note.client.blank? ? SaleOffer.order(:client_id, :offer_no, :id) : @delivery_note.client.sale_offers.order(:client_id, :offer_no, :id)
-          @work_orders = @purchase_order.work_order.blank? ? WorkOrder.order(:order_no) : WorkOrder.where('id = ?', @purchase_order.work_order)
-          @projects = @purchase_order.project.blank? ? Project.order(:project_code) : Project.where('id = ?', @purchase_order.project)
-          @charge_accounts = @purchase_order.charge_account.blank? ? ChargeAccount.order(:account_code) : ChargeAccount.where('id = ?', @purchase_order.charge_account)
-          @stores = @purchase_order.store.blank? ? Store.order(:name) : Store.where('id = ?', @purchase_order.store)
+          @projects = Project.order(:project_code)
+          @work_orders = @delivery_note.project.blank? ? WorkOrder.order(:order_no) : @delivery_note.project.work_orders.order(:order_no)
+          @charge_accounts = work_order_charge_account(@delivery_note)
+          @stores = work_order_store(@delivery_note)
           format.html { render action: "edit" }
           format.json { render json: @delivery_note.errors, status: :unprocessable_entity }
         end
@@ -357,13 +356,31 @@ module Ag2Products
     
     def project_stores(_project)
       if !_project.company.blank? && !_project.office.blank?
-        _store = Store.where("company_id = ? AND office_id = ?", _project.company.id, _project.office.id)
+        _store = Store.where("company_id = ? AND office_id = ?", _project.company.id, _project.office.id).order(:name)
       elsif !_project.company.blank? && _project.office.blank?
-        _store = Store.where("company_id = ?", _project.company.id)
+        _store = Store.where("company_id = ?", _project.company.id).order(:name)
       elsif _project.company.blank? && !_project.office.blank?
-        _store = Store.where("office_id = ?", _project.office.id)
+        _store = Store.where("office_id = ?", _project.office.id).order(:name)
       else
-        _store = Store.all(order: 'name')
+        _store = Store.order(:name)
+      end
+      _store
+    end
+
+    def work_order_charge_account(_model)
+      if _model.work_order.blank? || _model.work_order.charge_account.blank?
+        _charge_account = _model.project.blank? ? ChargeAccount.order(:account_code) : _model.project.charge_accounts.order(:account_code)
+      else
+        _charge_account = ChargeAccount.where("id = ?", _model.work_order.charge_account)
+      end
+      _charge_account
+    end
+
+    def work_order_store(_model)
+      if _model.work_order.blank? || _model.work_order.store.blank?
+        _store = _model.project.blank? ? Store.order(:name) : project_stores(_model.project)
+      else
+        _store = Store.where("id = ?", _model.work_order.store)
       end
       _store
     end

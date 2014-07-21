@@ -75,14 +75,31 @@
       if (order == "")
         order = "0";
       jQuery.getJSON('dn_update_charge_account_from_project/' + order, function(data) {
+        var w = data.work_order;
         var c = data.charge_account;
         var s = data.store;
+        // Work Order
+        $("#delivery_note_work_order_id").html("");
+        $("#delivery_note_work_order_id").select2("val", "");
+        $("#delivery_note_work_order_id").append($('<option></option>').val("").html(""));
+        if (!w.length) {
+          $.each(data, function(id, option) {
+            if (id == 'work_order' && option != "") {
+              $("#delivery_note_work_order_id").append($('<option></option>').val(option.id).html(option.order_no.substring(0,10) + "-" + option.order_no.substring(10,14) + "-" + option.order_no.substring(14,20) + " " + option.description));
+            }
+          });
+        } else {
+          $.each(w, function(id, option) {
+            $("#delivery_note_work_order_id").append($('<option></option>').val(option.id).html(option.order_no.substring(0,10) + "-" + option.order_no.substring(10,14) + "-" + option.order_no.substring(14,20) + " " + option.description));
+          });
+        }
+        // Charge Account
         $("#delivery_note_charge_account_id").html("");
         $("#delivery_note_charge_account_id").select2("val", "");
         $("#delivery_note_charge_account_id").append($('<option></option>').val("").html(""));
         if (!c.length) {
           $.each(data, function(id, option) {
-            if (id == 'charge_account') {
+            if (id == 'charge_account' && option != "") {
               $("#delivery_note_charge_account_id").append($('<option></option>').val(option.id).html(option.account_code + " " + option.name));
             }
           });
@@ -91,12 +108,13 @@
             $("#delivery_note_charge_account_id").append($('<option></option>').val(option.id).html(option.account_code + " " + option.name));
           });
         }
+        // Store
         $("#delivery_note_store_id").html("");
         $("#delivery_note_store_id").select2("val", "");
         $("#delivery_note_store_id").append($('<option></option>').val("").html(""));
         if (!s.length) {
           $.each(data, function(id, option) {
-            if (id == 'store') {
+            if (id == 'store' && option != "") {
               $("#delivery_note_store_id").append($('<option></option>').val(option.id).html(option.name));
             }
           });
@@ -115,36 +133,18 @@
       var order = $('select#delivery_note_work_order_id :selected').val();
       if (order == "")
         order = "0";
-      jQuery.getJSON('dn_update_project_from_order/' + order, function(data) {
-        var p = data.project;
+      jQuery.getJSON('dn_update_charge_account_from_order/' + order, function(data) {
         var c = data.charge_account;
         var s = data.store;
-        var p_id = data.project_id;
         var c_id = data.charge_account_id;
         var s_id = data.store_id;
-        // Project
-        $("#delivery_note_project_id").html("");
-        $("#delivery_note_project_id").select2("val", "");
-        $("#delivery_note_project_id").append($('<option></option>').val("").html(""));
-        if (!p.length) {
-          $.each(data, function(id, option) {
-            if (id == 'project') {
-              $("#delivery_note_project_id").append($('<option></option>').val(option.id).html(option.project_code + " " + option.name));
-            }
-          });
-        } else {
-          $.each(p, function(id, option) {
-            $("#delivery_note_project_id").append($('<option></option>').val(option.id).html(option.project_code + " " + option.name));
-          });
-        }
-        if (p_id != 0) $("#delivery_note_project_id").select2("val", p_id);
         // Charge Account
         $("#delivery_note_charge_account_id").html("");
         $("#delivery_note_charge_account_id").select2("val", "");
         $("#delivery_note_charge_account_id").append($('<option></option>').val("").html(""));
         if (!c.length) {
           $.each(data, function(id, option) {
-            if (id == 'charge_account') {
+            if (id == 'charge_account' && option != "") {
               $("#delivery_note_charge_account_id").append($('<option></option>').val(option.id).html(option.account_code + " " + option.name));
             }
           });
@@ -160,7 +160,7 @@
         $("#delivery_note_store_id").append($('<option></option>').val("").html(""));
         if (!s.length) {
           $.each(data, function(id, option) {
-            if (id == 'store') {
+            if (id == 'store' && option != "") {
               $("#delivery_note_store_id").append($('<option></option>').val(option.id).html(option.name));
             }
           });
