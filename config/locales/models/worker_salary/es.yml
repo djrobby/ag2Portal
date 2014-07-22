@@ -16,5 +16,6 @@ es:
         social_security_cost: "Coste seguridad social"
         day_pct: "% Jornada"
         active: "¿Activo?"
+        overtime: "Hora extra"
         total_cost: "Coste laboral"
         items_sum: "Total items salario"

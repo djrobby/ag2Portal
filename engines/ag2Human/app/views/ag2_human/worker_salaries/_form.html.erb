@@ -26,5 +26,8 @@
   <label class="multi-field-label-two"> <%= f.input :social_security_cost, as: :string, input_html: { value: (number_with_precision(f.object.social_security_cost, precision: 2) if f.object.social_security_cost), class: 'large-text-field number-text-field' }, label_html: { class: 'form-label' } %> </label>
   <label class="multi-field-label-two"> <%= f.input :day_pct, as: :string, input_html: { value: (number_with_precision(f.object.day_pct, precision: 2) if f.object.day_pct), class: 'large-text-field number-text-field' }, label_html: { class: 'form-label' } %> </label>
 </div>
+<div>
+  <label class="multi-field-label-two"> <%= f.input :overtime, as: :string, input_html: { value: (number_with_precision(f.object.overtime, precision: 2) if f.object.overtime), class: 'large-text-field number-text-field' }, label_html: { class: 'form-label' } %> </label>
+</div>
 <%= f.button :submit, :class => 'btn-primary' %>
 <% end %>

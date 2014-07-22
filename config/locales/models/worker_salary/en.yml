@@ -16,5 +16,6 @@ en:
         social_security_cost: "Social security cost"
         day_pct: "Day %"
         active: "Active?"
+        overtime: "Overtime (hour)"
         total_cost: "Labor cost"
         items_sum: "Total salary items"

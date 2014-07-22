@@ -36,8 +36,14 @@
     <tr>
       <td><%= t :"activerecord.attributes.worker_salary.day_pct" %>:</td>
       <td><%= number_to_percentage(@worker_salary.day_pct, precision: 2, locale: :es) %></td>
+      <td><%= t :"activerecord.attributes.worker_salary.overtime" %>:</td>
+      <td><%= number_to_currency(@worker_salary.overtime, locale: :es) %></td>
+    </tr>
+    <tr>
       <td><%= t :"activerecord.attributes.worker_salary.active" %>:</td>
       <td><% if @worker_salary.active %> <i class="icon-thumbs-up"></i> <% else %> <i class="icon-thumbs-down"></i> <% end %></td>
+      <td></td>
+      <td></td>
     </tr>
     <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @worker_salary } %>
     <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @worker_salary } %>
