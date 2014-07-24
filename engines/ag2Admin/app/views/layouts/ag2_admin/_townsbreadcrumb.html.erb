@@ -12,15 +12,15 @@
   </li>
   <% if @towns %>
   <li>
-    ag2Towns
+    <%=t "ag2_admin.breadcrumb.towns.items" %>
   </li>
   <% end %>
   <% if @town %>
   <li>
-    <a href="<%= towns_path %>">ag2Towns</a><span class="divider">></span>
+    <a href="<%= towns_path %>"><%=t "ag2_admin.breadcrumb.towns.items" %></a><span class="divider">></span>
   </li>
   <% if @breadcrumb == 'read' || @breadcrumb == 'update' %>
-  <%= @town.name %>
+  <%=t "ag2_admin.breadcrumb.towns.item"%>
   <% end %>
   <% if @breadcrumb == 'create' %>
   <li>

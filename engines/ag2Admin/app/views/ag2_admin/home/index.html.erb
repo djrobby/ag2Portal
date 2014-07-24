@@ -5,29 +5,29 @@
   <!-- Apps 1 -->
   <li class="span4">
     <% if (session[:resolution] == "LD")%>
-    <a href="<%= entities_path %>" class="thumbnail centered"><img src="/assets/icon/ag2Entities.png" width="48" height="48" alt="ag2Entities" /><h5 class="h5-narrow">ag2Entities</h5></a>
+    <a href="<%= entities_path %>" class="thumbnail centered"><img src="/assets/icon/ag2Entities.png" width="48" height="48" alt="ag2Entities" /><h5 class="h5-narrow"><%=t ".entities" %></h5></a>
     <% elsif session[:resolution] == "SD" %>
-    <a href="<%= entities_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/ag2Entities.png" width="96" height="96" alt="ag2Entities" /><h5 class="h5-narrow">ag2Entities</h5></a>
+    <a href="<%= entities_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/ag2Entities.png" width="96" height="96" alt="ag2Entities" /><h5 class="h5-narrow"><%=t ".entities" %></h5></a>
     <% else %>
-    <a href="<%= entities_path %>" class="thumbnail centered"><img src="/assets/pict/ag2Entities.png" width="128" height="128" alt="ag2Entities" /><h5 class="h5-narrow">ag2Entities</h5></a>
+    <a href="<%= entities_path %>" class="thumbnail centered"><img src="/assets/pict/ag2Entities.png" width="128" height="128" alt="ag2Entities" /><h5 class="h5-narrow"><%=t ".entities" %></h5></a>
     <% end %>
   </li>
   <li class="span4">
     <% if (session[:resolution] == "LD")%>
-    <a href="<%= companies_path %>" class="thumbnail centered"><img src="/assets/icon/ag2Companies.png" width="48" height="48" alt="ag2Companies" /><h5 class="h5-narrow">ag2Companies</h5></a>
+    <a href="<%= companies_path %>" class="thumbnail centered"><img src="/assets/icon/ag2Companies.png" width="48" height="48" alt="ag2Companies" /><h5 class="h5-narrow"><%=t ".companies" %></h5></a>
     <% elsif session[:resolution] == "SD" %>
-    <a href="<%= companies_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/ag2Companies.png" width="96" height="96" alt="ag2Companies" /><h5 class="h5-narrow">ag2Companies</h5></a>
+    <a href="<%= companies_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/ag2Companies.png" width="96" height="96" alt="ag2Companies" /><h5 class="h5-narrow"><%=t ".companies" %></h5></a>
     <% else %>
-    <a href="<%= companies_path %>" class="thumbnail centered"><img src="/assets/pict/ag2Companies.png" width="128" height="128" alt="ag2Companies" /><h5 class="h5-narrow">ag2Companies</h5></a>
+    <a href="<%= companies_path %>" class="thumbnail centered"><img src="/assets/pict/ag2Companies.png" width="128" height="128" alt="ag2Companies" /><h5 class="h5-narrow"><%=t ".companies" %></h5></a>
     <% end %>
   </li>
   <li class="span4">
     <% if (session[:resolution] == "LD")%>
-    <a href="<%= offices_path %>" class="thumbnail centered"><img src="/assets/icon/ag2Offices.png" width="48" height="48" alt="ag2Offices" /><h5 class="h5-narrow">ag2Offices</h5></a>
+    <a href="<%= offices_path %>" class="thumbnail centered"><img src="/assets/icon/ag2Offices.png" width="48" height="48" alt="ag2Offices" /><h5 class="h5-narrow"><%=t ".offices" %></h5></a>
     <% elsif session[:resolution] == "SD" %>
-    <a href="<%= offices_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/ag2Offices.png" width="96" height="96" alt="ag2Offices" /><h5 class="h5-narrow">ag2Offices</h5></a>
+    <a href="<%= offices_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/ag2Offices.png" width="96" height="96" alt="ag2Offices" /><h5 class="h5-narrow"><%=t ".offices" %></h5></a>
     <% else %>
-    <a href="<%= offices_path %>" class="thumbnail centered"><img src="/assets/pict/ag2Offices.png" width="128" height="128" alt="ag2Offices" /><h5 class="h5-narrow">ag2Offices</h5></a>
+    <a href="<%= offices_path %>" class="thumbnail centered"><img src="/assets/pict/ag2Offices.png" width="128" height="128" alt="ag2Offices" /><h5 class="h5-narrow"><%=t ".offices" %></h5></a>
     <% end %>
   </li>
 </ul><!-- /.thumbnails -->
@@ -35,56 +35,56 @@
   <!-- Apps 2 (Tables) -->
   <li class="span2">
     <% if (session[:resolution] == "LD")%>
-    <a href="<%= countries_path %>" class="thumbnail centered"><img src="/assets/icon/ag2Countries.png" width="48" height="48" alt="ag2Countries" /><h5 class="h5-narrow">ag2Countries</h5></a>
+    <a href="<%= countries_path %>" class="thumbnail centered"><img src="/assets/icon/ag2Countries.png" width="48" height="48" alt="ag2Countries" /><h5 class="h5-narrow"><%=t ".countries" %></h5></a>
     <% elsif session[:resolution] == "SD" %>
-    <a href="<%= countries_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/ag2Countries72.png" width="72" height="72" alt="ag2Countries" /><h5 class="h5-narrow">ag2Countries</h5></a>
+    <a href="<%= countries_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/ag2Countries72.png" width="72" height="72" alt="ag2Countries" /><h5 class="h5-narrow"><%=t ".countries" %></h5></a>
     <% else %>
-    <a href="<%= countries_path %>" class="thumbnail centered"><img src="/assets/pict/ag2Countries96.png" width="96" height="96" alt="ag2Countries" /><h5 class="h5-narrow">ag2Countries</h5></a>
+    <a href="<%= countries_path %>" class="thumbnail centered"><img src="/assets/pict/ag2Countries96.png" width="96" height="96" alt="ag2Countries" /><h5 class="h5-narrow"><%=t ".countries" %></h5></a>
     <% end %>
   </li>
   <li class="span2">
     <% if (session[:resolution] == "LD")%>
-    <a href="<%= regions_path %>" class="thumbnail centered"><img src="/assets/icon/ag2Regions.png" width="48" height="48" alt="ag2Regions" /><h5 class="h5-narrow">ag2Regions</h5></a>
+    <a href="<%= regions_path %>" class="thumbnail centered"><img src="/assets/icon/ag2Regions.png" width="48" height="48" alt="ag2Regions" /><h5 class="h5-narrow"><%=t ".regions" %></h5></a>
     <% elsif session[:resolution] == "SD" %>
-    <a href="<%= regions_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/ag2Regions72.png" width="72" height="72" alt="ag2Regions" /><h5 class="h5-narrow">ag2Regions</h5></a>
+    <a href="<%= regions_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/ag2Regions72.png" width="72" height="72" alt="ag2Regions" /><h5 class="h5-narrow"><%=t ".regions" %></h5></a>
     <% else %>
-    <a href="<%= regions_path %>" class="thumbnail centered"><img src="/assets/pict/ag2Regions96.png" width="96" height="96" alt="ag2Regions" /><h5 class="h5-narrow">ag2Regions</h5></a>
+    <a href="<%= regions_path %>" class="thumbnail centered"><img src="/assets/pict/ag2Regions96.png" width="96" height="96" alt="ag2Regions" /><h5 class="h5-narrow"><%=t ".regions" %></h5></a>
     <% end %>
   </li>
   <li class="span2">
     <% if (session[:resolution] == "LD")%>
-    <a href="<%= provinces_path %>" class="thumbnail centered"><img src="/assets/icon/ag2Provinces.png" width="48" height="48" alt="ag2Provinces" /><h5 class="h5-narrow">ag2Provinces</h5></a>
+    <a href="<%= provinces_path %>" class="thumbnail centered"><img src="/assets/icon/ag2Provinces.png" width="48" height="48" alt="ag2Provinces" /><h5 class="h5-narrow"><%=t ".provinces" %></h5></a>
     <% elsif session[:resolution] == "SD" %>
-    <a href="<%= provinces_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/ag2Provinces72.png" width="72" height="72" alt="ag2Provinces" /><h5 class="h5-narrow">ag2Provinces</h5></a>
+    <a href="<%= provinces_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/ag2Provinces72.png" width="72" height="72" alt="ag2Provinces" /><h5 class="h5-narrow"><%=t ".provinces" %></h5></a>
     <% else %>
-    <a href="<%= provinces_path %>" class="thumbnail centered"><img src="/assets/pict/ag2Provinces96.png" width="96" height="96" alt="ag2Provinces" /><h5 class="h5-narrow">ag2Provinces</h5></a>
+    <a href="<%= provinces_path %>" class="thumbnail centered"><img src="/assets/pict/ag2Provinces96.png" width="96" height="96" alt="ag2Provinces" /><h5 class="h5-narrow"><%=t ".provinces" %></h5></a>
     <% end %>
   </li>
   <li class="span2">
     <% if (session[:resolution] == "LD")%>
-    <a href="<%= towns_path %>" class="thumbnail centered"><img src="/assets/icon/ag2Towns.png" width="48" height="48" alt="ag2Towns" /><h5 class="h5-narrow">ag2Towns</h5></a>
+    <a href="<%= towns_path %>" class="thumbnail centered"><img src="/assets/icon/ag2Towns.png" width="48" height="48" alt="ag2Towns" /><h5 class="h5-narrow"><%=t ".towns" %></h5></a>
     <% elsif session[:resolution] == "SD" %>
-    <a href="<%= towns_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/ag2Towns72.png" width="72" height="72" alt="ag2Towns" /><h5 class="h5-narrow">ag2Towns</h5></a>
+    <a href="<%= towns_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/ag2Towns72.png" width="72" height="72" alt="ag2Towns" /><h5 class="h5-narrow"><%=t ".towns" %></h5></a>
     <% else %>
-    <a href="<%= towns_path %>" class="thumbnail centered"><img src="/assets/pict/ag2Towns96.png" width="96" height="96" alt="ag2Towns" /><h5 class="h5-narrow">ag2Towns</h5></a>
+    <a href="<%= towns_path %>" class="thumbnail centered"><img src="/assets/pict/ag2Towns96.png" width="96" height="96" alt="ag2Towns" /><h5 class="h5-narrow"><%=t ".towns" %></h5></a>
     <% end %>
   </li>
   <li class="span2">
     <% if (session[:resolution] == "LD")%>
-    <a href="<%= zipcodes_path %>" class="thumbnail centered"><img src="/assets/icon/ag2Zipcodes.png" width="48" height="48" alt="ag2ZipCodes" /><h5 class="h5-narrow">ag2ZipCodes</h5></a>
+    <a href="<%= zipcodes_path %>" class="thumbnail centered"><img src="/assets/icon/ag2Zipcodes.png" width="48" height="48" alt="ag2ZipCodes" /><h5 class="h5-narrow"><%=t ".zipcodes" %></h5></a>
     <% elsif session[:resolution] == "SD" %>
-    <a href="<%= zipcodes_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/ag2Zipcodes72.png" width="72" height="72" alt="ag2ZipCodes" /><h5 class="h5-narrow">ag2ZipCodes</h5></a>
+    <a href="<%= zipcodes_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/ag2Zipcodes72.png" width="72" height="72" alt="ag2ZipCodes" /><h5 class="h5-narrow"><%=t ".zipcodes" %></h5></a>
     <% else %>
-    <a href="<%= zipcodes_path %>" class="thumbnail centered"><img src="/assets/pict/ag2Zipcodes96.png" width="96" height="96" alt="ag2ZipCodes" /><h5 class="h5-narrow">ag2ZipCodes</h5></a>
+    <a href="<%= zipcodes_path %>" class="thumbnail centered"><img src="/assets/pict/ag2Zipcodes96.png" width="96" height="96" alt="ag2ZipCodes" /><h5 class="h5-narrow"><%=t ".zipcodes" %></h5></a>
     <% end %>
   </li>
   <li class="span2">
     <% if (session[:resolution] == "LD")%>
-    <a href="<%= street_types_path %>" class="thumbnail centered"><img src="/assets/icon/ag2StreetTypes.png" width="48" height="48" alt="ag2StTypes" /><h5 class="h5-narrow">ag2StTypes</h5></a>
+    <a href="<%= street_types_path %>" class="thumbnail centered"><img src="/assets/icon/ag2StreetTypes.png" width="48" height="48" alt="ag2StTypes" /><h5 class="h5-narrow"><%=t ".street_types" %></h5></a>
     <% elsif session[:resolution] == "SD" %>
-    <a href="<%= street_types_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/ag2StreetTypes72.png" width="72" height="72" alt="ag2StTypes" /><h5 class="h5-narrow">ag2StTypes</h5></a>
+    <a href="<%= street_types_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/ag2StreetTypes72.png" width="72" height="72" alt="ag2StTypes" /><h5 class="h5-narrow"><%=t ".street_types" %></h5></a>
     <% else %>
-    <a href="<%= street_types_path %>" class="thumbnail centered"><img src="/assets/pict/ag2StreetTypes96.png" width="96" height="96" alt="ag2StTypes" /><h5 class="h5-narrow">ag2StTypes</h5></a>
+    <a href="<%= street_types_path %>" class="thumbnail centered"><img src="/assets/pict/ag2StreetTypes96.png" width="96" height="96" alt="ag2StTypes" /><h5 class="h5-narrow"><%=t ".street_types" %></h5></a>
     <% end %>
   </li>
 </ul><!-- /.thumbnails -->
@@ -92,29 +92,29 @@
   <!-- Apps 3 -->
   <li class="span2">
     <% if (session[:resolution] == "LD")%>
-    <a href="<%= departments_path %>" class="thumbnail centered"><img src="/assets/icon/ag2Departments.png" width="48" height="48" alt="ag2Depts" /><h5 class="h5-narrow">ag2Depts</h5></a>
+    <a href="<%= departments_path %>" class="thumbnail centered"><img src="/assets/icon/ag2Departments.png" width="48" height="48" alt="ag2Depts" /><h5 class="h5-narrow"><%=t ".departments" %></h5></a>
     <% elsif session[:resolution] == "SD" %>
-    <a href="<%= departments_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/ag2Departments72.png" width="72" height="72" alt="ag2Depts" /><h5 class="h5-narrow">ag2Depts</h5></a>
+    <a href="<%= departments_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/ag2Departments72.png" width="72" height="72" alt="ag2Depts" /><h5 class="h5-narrow"><%=t ".departments" %></h5></a>
     <% else %>
-    <a href="<%= departments_path %>" class="thumbnail centered"><img src="/assets/pict/ag2Departments96.png" width="96" height="96" alt="ag2Depts" /><h5 class="h5-narrow">ag2Depts</h5></a>
+    <a href="<%= departments_path %>" class="thumbnail centered"><img src="/assets/pict/ag2Departments96.png" width="96" height="96" alt="ag2Depts" /><h5 class="h5-narrow"><%=t ".departments" %></h5></a>
     <% end %>
   </li>
   <li class="span2">
     <% if (session[:resolution] == "LD")%>
-    <a href="<%= areas_path %>" class="thumbnail centered"><img src="/assets/icon/ag2Areas.png" width="48" height="48" alt="ag2Areas" /><h5 class="h5-narrow">ag2Areas</h5></a>
+    <a href="<%= areas_path %>" class="thumbnail centered"><img src="/assets/icon/ag2Areas.png" width="48" height="48" alt="ag2Areas" /><h5 class="h5-narrow"><%=t ".areas" %></h5></a>
     <% elsif session[:resolution] == "SD" %>
-    <a href="<%= areas_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/ag2Areas72.png" width="72" height="72" alt="ag2Areas" /><h5 class="h5-narrow">ag2Areas</h5></a>
+    <a href="<%= areas_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/ag2Areas72.png" width="72" height="72" alt="ag2Areas" /><h5 class="h5-narrow"><%=t ".areas" %></h5></a>
     <% else %>
-    <a href="<%= areas_path %>" class="thumbnail centered"><img src="/assets/pict/ag2Areas96.png" width="96" height="96" alt="ag2Areas" /><h5 class="h5-narrow">ag2Areas</h5></a>
+    <a href="<%= areas_path %>" class="thumbnail centered"><img src="/assets/pict/ag2Areas96.png" width="96" height="96" alt="ag2Areas" /><h5 class="h5-narrow"><%=t ".areas" %></h5></a>
     <% end %>
   </li>
   <li class="span2">
     <% if (session[:resolution] == "LD")%>
-    <a href="<%= tax_types_path %>" class="thumbnail centered"><img src="/assets/icon/ag2TaxTypes.png" width="48" height="48" alt="ag2TaxTypes" /><h5 class="h5-narrow">ag2TaxTypes</h5></a>
+    <a href="<%= tax_types_path %>" class="thumbnail centered"><img src="/assets/icon/ag2TaxTypes.png" width="48" height="48" alt="ag2TaxTypes" /><h5 class="h5-narrow"><%=t ".tax_types" %></h5></a>
     <% elsif session[:resolution] == "SD" %>
-    <a href="<%= tax_types_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/ag2TaxTypes72.png" width="72" height="72" alt="ag2TaxTypes" /><h5 class="h5-narrow">ag2TaxTypes</h5></a>
+    <a href="<%= tax_types_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/ag2TaxTypes72.png" width="72" height="72" alt="ag2TaxTypes" /><h5 class="h5-narrow"><%=t ".tax_types" %></h5></a>
     <% else %>
-    <a href="<%= tax_types_path %>" class="thumbnail centered"><img src="/assets/pict/ag2TaxTypes96.png" width="96" height="96" alt="ag2TaxTypes" /><h5 class="h5-narrow">ag2TaxTypes</h5></a>
+    <a href="<%= tax_types_path %>" class="thumbnail centered"><img src="/assets/pict/ag2TaxTypes96.png" width="96" height="96" alt="ag2TaxTypes" /><h5 class="h5-narrow"><%=t ".tax_types" %></h5></a>
     <% end %>
   </li>
   <li class="span2"></li>

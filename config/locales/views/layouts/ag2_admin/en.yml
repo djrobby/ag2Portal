@@ -8,10 +8,13 @@ en:
         items: "Types"
         item: "Type"
       taxtypes:
+        items: "Tax types"
         item: "Type"
       departments:
         items: "Departments"
+        item: "Department"
       areas:
+        items: "Areas"
         item: "Area"
       organizations:
         items: "Organizations"
@@ -25,3 +28,27 @@ en:
       subguides:
         items: "Subguides"
         item: "Subguide"
+      companies:
+        items: "Companies"
+        item: "Company"
+      entities:
+        items: "Entities"
+        item: "Entity"
+      offices:
+        items: "Offices"
+        item: "Office"
+      provinces:
+        items: "Provinces"
+        item: "Province"
+      regions:
+        items: "Regions"
+        item: "Region"
+      streettypes:
+        items: "Street types"
+        item: "Type"
+      towns:
+        items: "Towns"
+        item: "Town"
+      zipcodes:
+        items: "ZIP codes"
+        item: "ZIP"

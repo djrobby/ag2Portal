@@ -12,15 +12,15 @@
   </li>
   <% if @countries %>
   <li>
-    ag2Countries
+    <%=t "ag2_admin.breadcrumb.countries.items" %>
   </li>
   <% end %>
   <% if @country %>
   <li>
-    <a href="<%= countries_path %>">ag2Countries</a><span class="divider">></span>
+    <a href="<%= countries_path %>"><%=t "ag2_admin.breadcrumb.countries.items" %></a><span class="divider">></span>
   </li>
   <% if @breadcrumb == 'read' || @breadcrumb == 'update' %>
-  <%=t :"ag2_admin.breadcrumb.countries.item"%>
+  <%=t "ag2_admin.breadcrumb.countries.item"%>
   <% end %>
   <% if @breadcrumb == 'create' %>
   <li>

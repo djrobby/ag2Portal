@@ -9,4 +9,5 @@ es:
         worker_types: "Tipos Trabajador"
         departments: "Departamentos"
         insurances: "Seguros"
-        salary_concepts: "Conceptos Salariales"
+        salary_concepts: "Concep.Salariales"
+        workers: "Trabajadores"

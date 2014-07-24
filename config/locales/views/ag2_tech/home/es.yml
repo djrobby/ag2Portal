@@ -3,6 +3,10 @@ es:
     home:
       index:
         control: "Control&Seguimiento"
+        control_a: "Control&Seguimto."
         work_order_types: "Tipos de OT"
         work_order_statuses: "Estados de OT"
         work_order_labors: "Labores para OT"
+        projects: "Proyectos"
+        charge_accounts: "Cuentas de Cargo"
+        work_orders: "Ordenes de Trabajo"

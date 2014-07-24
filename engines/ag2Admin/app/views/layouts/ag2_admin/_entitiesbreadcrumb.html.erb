@@ -12,15 +12,15 @@
   </li>
   <% if @entities %>
   <li>
-    ag2Entities
+    <%=t "ag2_admin.breadcrumb.entities.items" %>
   </li>
   <% end %>
   <% if @entity %>
   <li>
-    <a href="<%= entities_path %>">ag2Entities</a><span class="divider">></span>
+    <a href="<%= entities_path %>"><%=t "ag2_admin.breadcrumb.entities.items" %></a><span class="divider">></span>
   </li>
   <% if @breadcrumb == 'read' || @breadcrumb == 'update' %>
-  <%= @entity.fiscal_id %>
+  <%=t "ag2_admin.breadcrumb.entities.item"%>
   <% end %>
   <% if @breadcrumb == 'create' %>
   <li>

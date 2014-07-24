@@ -1,0 +1,16 @@
+es:
+  ag2_admin:
+    home:
+      index:
+        entities: "Entidades"
+        companies: "Empresas"
+        offices: "Oficinas"
+        countries: "Países"
+        regions: "Regiones"
+        provinces: "Provincias"
+        towns: "Poblaciones"
+        zipcodes: "Cód.Postales"
+        street_types: "Tipos de Vía"
+        departments: "Departamentos"
+        areas: "Áreas"
+        tax_types: "Tipos Impositivos"

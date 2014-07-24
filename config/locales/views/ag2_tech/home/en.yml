@@ -3,6 +3,10 @@ en:
     home:
       index:
         control: "Control&Tracking"
+        control_a: "Control&Tracking"
         work_order_types: "WO types"
         work_order_statuses: "WO statuses"
         work_order_labors: "WO labors"
+        projects: "Projects"
+        charge_accounts: "Charge Accounts"
+        work_orders: "Work Orders"

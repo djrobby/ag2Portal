@@ -10,3 +10,6 @@ es:
         measures: "Unidades Medida"
         manufacturers: "Fabricantes"
         stores: "Almacenes"
+        products: "Productos"
+        receipt_notes: "Notas de Recepción"
+        delivery_notes: "Notas de Entrega"

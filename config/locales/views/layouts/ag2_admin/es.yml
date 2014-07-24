@@ -8,10 +8,13 @@ es:
         items: "Tipos"
         item: "Tipo"
       taxtypes:
+        items: "Tipos de impuesto"
         item: "Tipo"
       departments:
         items: "Departamentos"
+        item: "Departamento"
       areas:
+        items: "Áreas"
         item: "Área"
       organizations:
         items: "Organizaciones"
@@ -25,3 +28,27 @@ es:
       subguides:
         items: "Subguías"
         item: "Subguía"
+      companies:
+        items: "Empresas"
+        item: "Empresa"
+      entities:
+        items: "Entidades"
+        item: "Entidad"
+      offices:
+        items: "Oficinas"
+        item: "Oficina"
+      provinces:
+        items: "Provincias"
+        item: "Provincia"
+      regions:
+        items: "Regiones"
+        item: "Región"
+      streettypes:
+        items: "Tipos de vía"
+        item: "Tipo"
+      towns:
+        items: "Poblaciones"
+        item: "Población"
+      zipcodes:
+        items: "Códigos postales"
+        item: "CP"

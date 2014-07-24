@@ -3,7 +3,14 @@ en:
     home:
       index:
         control: "Control&Tracking"
+        control_a: "Control&Tracking"
         suppliers: "Suppliers"
         activities: "Supplier Activities"
         payment_methods: "Payment Methods"
         order_statuses: "Order Statuses"
+        suppliers: "Suppliers"
+        offer_requests: "Offer Requests"
+        offers: "Offers"
+        purchase_orders: "Purchase Orders"
+        supplier_invoices: "Invoices"
+        payments: "Payments"

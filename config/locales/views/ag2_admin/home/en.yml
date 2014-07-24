@@ -1,0 +1,16 @@
+en:
+  ag2_admin:
+    home:
+      index:
+        entities: "Entities"
+        companies: "Companies"
+        offices: "Offices"
+        countries: "Countries"
+        regions: "Regions"
+        provinces: "Provinces"
+        towns: "Towns"
+        zipcodes: "ZIP codes"
+        street_types: "Street Types"
+        departments: "Departments"
+        areas: "Areas"
+        tax_types: "Tax Types"

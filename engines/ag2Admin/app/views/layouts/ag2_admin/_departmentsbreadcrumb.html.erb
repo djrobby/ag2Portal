@@ -12,15 +12,15 @@
   </li>
   <% if @departments %>
   <li>
-    ag2Depts
+    <%=t "ag2_admin.breadcrumb.departments.items" %>
   </li>
   <% end %>
   <% if @department %>
   <li>
-    <a href="<%= departments_path %>">ag2Depts</a><span class="divider">></span>
+    <a href="<%= departments_path %>"><%=t "ag2_admin.breadcrumb.departments.items" %></a><span class="divider">></span>
   </li>
   <% if @breadcrumb == 'read' || @breadcrumb == 'update' %>
-  <%= @department.code %>
+  <%=t "ag2_admin.breadcrumb.departments.item"%>
   <% end %>
   <% if @breadcrumb == 'create' %>
   <li>

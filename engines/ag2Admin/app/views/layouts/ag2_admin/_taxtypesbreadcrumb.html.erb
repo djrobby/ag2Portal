@@ -11,12 +11,12 @@
   </li>
   <% if @tax_types %>
   <li>
-    ag2TaxTypes
+    <%=t "ag2_admin.breadcrumb.taxtypes.items" %>
   </li>
   <% end %>
   <% if @tax_type %>
   <li>
-    <a href="<%= tax_types_path %>">ag2TaxTypes</a><span class="divider">></span>
+    <a href="<%= tax_types_path %>"><%=t "ag2_admin.breadcrumb.taxtypes.items" %></a><span class="divider">></span>
   </li>
   <% if @breadcrumb == 'read' || @breadcrumb == 'update' %>
   <%=t :"ag2_admin.breadcrumb.taxtypes.item"%>

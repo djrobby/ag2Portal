@@ -12,15 +12,15 @@
   </li>
   <% if @offices %>
   <li>
-    ag2Offices
+    <%=t "ag2_admin.breadcrumb.offices.items" %>
   </li>
   <% end %>
   <% if @office %>
   <li>
-    <a href="<%= offices_path %>">ag2Offices</a><span class="divider">></span>
+    <a href="<%= offices_path %>"><%=t "ag2_admin.breadcrumb.offices.items" %></a><span class="divider">></span>
   </li>
   <% if @breadcrumb == 'read' || @breadcrumb == 'update' %>
-  <%= @office.office_code %>
+  <%=t "ag2_admin.breadcrumb.offices.item"%>
   <% end %>
   <% if @breadcrumb == 'create' %>
   <li>

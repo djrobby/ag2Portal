@@ -3,9 +3,13 @@ en:
     home:
       index:
         control: "Control&Tracking"
+        control_a: "Control&Tracking"
         products: "Products"
         families: "Product Families"
         types: "Product Types"
         measures: "Measures"
         manufacturers: "Manufacturers"
         stores: "Stores"
+        products: "Products"
+        receipt_notes: "Receipt Notes"
+        delivery_notes: "Delivery Notes"

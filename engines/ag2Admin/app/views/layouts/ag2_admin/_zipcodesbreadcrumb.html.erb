@@ -12,15 +12,15 @@
   </li>
   <% if @zipcodes %>
   <li>
-    ag2Zipcodes
+    <%=t "ag2_admin.breadcrumb.zipcodes.items" %>
   </li>
   <% end %>
   <% if @zipcode %>
   <li>
-    <a href="<%= zipcodes_path %>">ag2Zipcodes</a><span class="divider">></span>
+    <a href="<%= zipcodes_path %>"><%=t "ag2_admin.breadcrumb.zipcodes.items" %></a><span class="divider">></span>
   </li>
   <% if @breadcrumb == 'read' || @breadcrumb == 'update' %>
-  <%= @zipcode.zipcode %>
+  <%=t "ag2_admin.breadcrumb.zipcodes.item"%>
   <% end %>
   <% if @breadcrumb == 'create' %>
   <li>

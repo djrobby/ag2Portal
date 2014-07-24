@@ -1,0 +1,6 @@
+es:
+  ag2_directory:
+    home:
+      index:
+        corp_contacts: "Corporativos"
+        shared_contacts: "Compartidos"
