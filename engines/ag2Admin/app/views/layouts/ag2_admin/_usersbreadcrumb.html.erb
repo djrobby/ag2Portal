@@ -15,15 +15,15 @@
   </li>
   <% if @users %>
   <li>
-    ag2Users
+    <%=t "ag2_admin.breadcrumb.users.items" %>
   </li>
   <% end %>
   <% if @user %>
   <li>
-    <a href="<%= users_path %>">ag2Users</a><span class="divider">></span>
+    <a href="<%= users_path %>"><%=t "ag2_admin.breadcrumb.users.items" %></a><span class="divider">></span>
   </li>
   <% if @breadcrumb == 'read' || @breadcrumb == 'update' %>
-  <%= @user.name %>
+  <%=t "ag2_admin.breadcrumb.users.item" %>
   <% end %>
   <% if @breadcrumb == 'create' %>
   <li>

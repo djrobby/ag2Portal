@@ -12,15 +12,15 @@
   </li>
   <% if @workers %>
   <li>
-    ag2Workers
+    <%=t "ag2_human.breadcrumb.workers.items"%>
   </li>
   <% end %>
   <% if @worker %>
   <li>
-    <a href="<%= workers_path %>">ag2Workers</a><span class="divider">></span>
+    <a href="<%= workers_path %>"><%=t "ag2_human.breadcrumb.workers.items"%></a><span class="divider">></span>
   </li>
   <% if @breadcrumb == 'read' || @breadcrumb == 'update' %>
-  <%= @worker.worker_code %>
+  <%=t "ag2_human.breadcrumb.workers.item"%>
   <% end %>
   <% if @breadcrumb == 'create' %>
   <li>

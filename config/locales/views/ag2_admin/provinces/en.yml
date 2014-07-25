@@ -4,9 +4,9 @@ en:
       index:
         title: "Provinces"
         btn_new: "New Province"
-        go_to_parent: "Go to ag2Regions"
-        go_to_child: "Go to ag2Towns"
-        go_to_link: "Go to ag2ZipCodes"
+        go_to_parent: "Go to Regions"
+        go_to_child: "Go to Towns"
+        go_to_link: "Go to ZIP Codes"
         back_to_root: "Back to ag2Admin"
       show:
         title: "Province"

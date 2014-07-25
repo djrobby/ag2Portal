@@ -12,15 +12,15 @@
   </li>
   <% if @supplier_payments %>
   <li>
-    ag2Payments
+    <%=t "ag2_purchase.breadcrumb.supplier_payments.items"%>
   </li>
   <% end %>
   <% if @supplier_payment %>
   <li>
-    <a href="<%= supplier_payments_path %>">ag2Payments</a><span class="divider">></span>
+    <a href="<%= supplier_payments_path %>"><%=t "ag2_purchase.breadcrumb.supplier_payments.items"%></a><span class="divider">></span>
   </li>
   <% if @breadcrumb == 'read' || @breadcrumb == 'update' %>
-  <%=t :"ag2_purchase.breadcrumb.supplier_payments.item" %>
+  <%=t "ag2_purchase.breadcrumb.supplier_payments.item" %>
   <% end %>
   <% if @breadcrumb == 'create' %>
   <li>

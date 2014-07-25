@@ -4,7 +4,7 @@ en:
       index:
         title: "Corporate contacts"
         btn_new: "New Contact"
-        back_to_root: "Go to ag2Directory"
+        back_to_root: "Back to ag2Directory"
       show:
         title: "Contact"
         btn_edit: "Edit Contact"
@@ -16,5 +16,5 @@ en:
         title: "New Contact"
       search:
         title: "Corporate contacts found"
-      back_to_main_page: "Back to ag2CorporateContacts"
+      back_to_main_page: "Back to Corporate contacts"
       worker_count_message: "(#) Contact on # workplaces - Only one shown."

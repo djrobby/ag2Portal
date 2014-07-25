@@ -4,7 +4,7 @@ es:
       index:
         title: "Organizaciones"
         btn_new: "Nueva Organización"
-        go_to: "Ir a ag2Companies"
+        go_to: "Ir a Empresas"
         back_to_root: "Volver a ag2Config"
       show:
         title: "Organización"

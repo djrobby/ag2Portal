@@ -12,15 +12,15 @@
   </li>
   <% if @work_orders %>
   <li>
-    ag2WorkOrders
+    <%=t "ag2_tech.breadcrumb.work_orders.items" %>
   </li>
   <% end %>
   <% if @work_order %>
   <li>
-    <a href="<%= work_orders_path %>">ag2WorkOrders</a><span class="divider">></span>
+    <a href="<%= work_orders_path %>"><%=t "ag2_tech.breadcrumb.work_orders.items" %></a><span class="divider">></span>
   </li>
   <% if @breadcrumb == 'read' || @breadcrumb == 'update' %>
-  <%=t :"ag2_tech.breadcrumb.work_orders.item" %>
+  <%=t "ag2_tech.breadcrumb.work_orders.item" %>
   <% end %>
   <% if @breadcrumb == 'create' %>
   <li>

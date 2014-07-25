@@ -7,7 +7,7 @@
       <td>Id:</td>
       <td><%= @user.id %></td>
       <td><%= t 'activerecord.attributes.user.name' %>:</td>
-      <td><%= @user.name %></td>
+      <td><b><%= @user.name %></b></td>
     </tr>
     <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @user } %>
     <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @user } %>

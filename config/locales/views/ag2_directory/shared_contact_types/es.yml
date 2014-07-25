@@ -4,8 +4,8 @@ es:
       index:
         title: "Tipos de contactos compartidos"
         btn_new: "Nuevo Tipo de contacto"
-        back_to_main_app: "Volver a ag2SharedContacts"
-        back_to_root: "Ir a ag2Directory"
+        back_to_main_app: "Volver a Contactos compartidos"
+        back_to_root: "Volver a ag2Directory"
       show:
         title: "Tipo de contacto"
         btn_edit: "Editar Tipo de contacto"

@@ -4,7 +4,7 @@ es:
       index:
         title: "Oficinas"
         btn_new: "Nueva Oficina"
-        go_to: "Ir a ag2Companies"
+        go_to: "Ir a Empresas"
         back_to_root: "Volver a ag2Admin"
       show:
         title: "Oficina"

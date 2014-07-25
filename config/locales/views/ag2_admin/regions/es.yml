@@ -4,8 +4,8 @@ es:
       index:
         title: "Regiones"
         btn_new: "Nueva Región"
-        go_to_parent: "Ir a ag2Countries"
-        go_to_child: "Ir a ag2Provinces"
+        go_to_parent: "Ir a Países"
+        go_to_child: "Ir a Provincias"
         back_to_root: "Volver a ag2Admin"
       show:
         title: "Región"

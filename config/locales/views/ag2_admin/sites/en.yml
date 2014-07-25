@@ -4,7 +4,7 @@ en:
       index:
         title: "Sites"
         btn_new: "New Site"
-        go_to: "Go to ag2Apps"
+        go_to: "Go to Apps"
         back_to_root: "Back to ag2Config"
       show:
         title: "Site"

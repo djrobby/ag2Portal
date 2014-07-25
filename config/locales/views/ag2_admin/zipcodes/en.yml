@@ -4,8 +4,8 @@ en:
       index:
         title: "ZIP codes"
         btn_new: "New ZIP code"
-        go_to_parent: "Go to ag2Provinces"
-        go_to_link: "Go to ag2Towns"
+        go_to_parent: "Go to Provinces"
+        go_to_link: "Go to Towns"
         back_to_root: "Back to ag2Admin"
       show:
         title: "ZIP code"

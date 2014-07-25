@@ -1,16 +1,24 @@
 en:
   ag2_human:
     breadcrumb:
+      workers:
+        items: "Workers"
+        item: "Worker"
       cagreements:
-        items: "Collective agmts"
+        items: "Collective agreements"
+        item: "Agreement"
       ctypes:
         items: "Contract types"
+        item: "Type"
       departments:
         items: "Departments"
+        item: "Department"
       dtypes:
         items: "Degree types"
+        item: "Type"
       pgroups:
-        items: "Pro groups"
+        items: "Professional groups"
+        item: "Group"
       trecordcodes:
         items: "TimeRecord codes"
         item: "Code"
@@ -22,6 +30,7 @@ en:
         item: "Type"
       wtypes:
         items: "Worker types"
+        item: "Type"
       sconcepts:
         items: "Wage concepts"
         item: "Concept"

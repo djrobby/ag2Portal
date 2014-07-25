@@ -4,8 +4,8 @@ es:
       index:
         title: "Códigos postales"
         btn_new: "Nuevo Código postal"
-        go_to_parent: "Ir a ag2Provinces"
-        go_to_link: "Ir a ag2Towns"
+        go_to_parent: "Ir a Provincias"
+        go_to_link: "Ir a Poblaciones"
         back_to_root: "Volver a ag2Admin"
       show:
         title: "Código postal"

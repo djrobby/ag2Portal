@@ -4,7 +4,7 @@ en:
       index:
         title: "Contract types"
         btn_new: "New Contract type"
-        go_to_workers: "Go to ag2Workers"
+        go_to_workers: "Go to Workers"
         back_to_root: "Back to ag2Human"
       show:
         title: "Contract type"

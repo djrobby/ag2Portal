@@ -4,8 +4,8 @@ es:
       index:
         title: "Poblaciones"
         btn_new: "Nueva Población"
-        go_to_parent: "Ir a ag2Provinces"
-        go_to_link: "Ir a ag2ZipCodes"
+        go_to_parent: "Ir a Provincias"
+        go_to_link: "Ir a Códigos postales"
         back_to_root: "Volver a ag2Admin"
       show:
         title: "Población"

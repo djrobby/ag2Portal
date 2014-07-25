@@ -4,7 +4,7 @@ es:
       index:
         title: "Contactos corporativos"
         btn_new: "Nuevo Contacto"
-        back_to_root: "Ir a ag2Directory"
+        back_to_root: "Volver a ag2Directory"
       show:
         title: "Contacto"
         btn_edit: "Editar Contacto"
@@ -16,5 +16,5 @@ es:
         title: "Nuevo Contacto"
       search:
         title: "Contactos corporativos encontrados"
-      back_to_main_page: "Volver a ag2CorporateContacts"
+      back_to_main_page: "Volver a Contactos corporativos"
       worker_count_message: "(#) Contacto en # centros de trabajo - Solo se muestra uno."

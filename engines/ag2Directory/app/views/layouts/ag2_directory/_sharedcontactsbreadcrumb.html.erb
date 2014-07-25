@@ -12,15 +12,15 @@
   </li>
   <% if @shared_contacts %>
   <li>
-    ag2SharedContacts
+    <%=t "ag2_directory.breadcrumb.sharedcontacts.items" %>
   </li>
   <% end %>
   <% if @shared_contact %>
   <li>
-    <a href="<%= shared_contacts_path %>">ag2SharedContacts</a><span class="divider">></span>
+    <a href="<%= shared_contacts_path %>"><%=t "ag2_directory.breadcrumb.sharedcontacts.items" %></a><span class="divider">></span>
   </li>
   <% if @breadcrumb == 'read' || @breadcrumb == 'update' %>
-  <%=t :"ag2_directory.breadcrumb.sharedcontacts.item"%>
+  <%=t "ag2_directory.breadcrumb.sharedcontacts.item"%>
   <% end %>
   <% if @breadcrumb == 'create' %>
   <li>

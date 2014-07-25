@@ -52,3 +52,12 @@ es:
       zipcodes:
         items: "Códigos postales"
         item: "CP"
+      apps:
+        items: "Apps"
+        item: "App"
+      sites:
+        items: "Sitios"
+        item: "Sitio"
+      users:
+        items: "Usuarios"
+        item: "Usuario"

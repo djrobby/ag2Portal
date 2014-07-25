@@ -63,7 +63,11 @@
         <% if !session[:return_to_prod].nil? && (!@product.nil? || !@supplier.nil?) %>
         <%= link_to session[:return_to_prod], session[:return_to_prod_url] %><br />
         <% end %>
+        <% if @supplier.nil? %>
         <%= link_to t(".back_to_root"), ag2_products.root_path %>
+        <% else %>
+        <%= link_to t("ag2_purchase.suppliers.index.back_to_root"), ag2_purchase.root_path %>
+        <% end %>
       </div><!-- /.sidebar-nav -->
     </div><!-- /.span3 -->
 

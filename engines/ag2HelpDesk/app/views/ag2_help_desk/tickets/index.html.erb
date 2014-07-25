@@ -1,9 +1,42 @@
 <script>
+  var _thisForm = '';
+
 	$(document).ready(function() {
-	$('.date_picker').datepicker({
-	format:'dd/mm/yyyy',weekStart:1
+  	$('.date_picker').datepicker({
+  	 format:'dd/mm/yyyy',weekStart:1
+  	});
+    // Initialized form variable
+    _thisForm = $("#removeFilter").closest('form')[0];
 	});
-	});
+
+  $(window).bind("load", function() {
+    $("#Id").val("<%= params[:Id] %>");
+    $("#User").val("<%= params[:User] %>");
+    $("#Office").val("<%= params[:Office] %>");
+    $("#From").val("<%= params[:From] %>");
+    $("#To").val("<%= params[:To] %>");
+    $("#Category").val("<%= params[:Category] %>");
+    $("#Priority").val("<%= params[:Priority] %>");
+    $("#Status").val("<%= params[:Status] %>");
+    $("#Technician").val("<%= params[:Technician] %>");
+  });
+
+  jQuery(function($) {
+    // when the #removeFilter button clicked
+    $("#removeFilter").click(function() {
+      $("#Id").val("");
+      $("#User").val("");
+      $("#Office").val("");
+      $("#From").val("");
+      $("#To").val("");
+      $("#Category").val("");
+      $("#Priority").val("");
+      $("#Status").val("");
+      $("#Technician").val("");
+      $("#search").val("");
+      _thisForm.submit();
+    });
+  });
 </script>
 
 <%= render '/layouts/ag2_help_desk/ticketsbreadcrumb' %>
@@ -16,6 +49,9 @@
     <div class="span3">
       <div class="well sidebar-nav">
         <%= form_tag "tickets", :method => 'get' do %>
+        <!-- Nº -->
+        <%= label_tag I18n.t("activerecord.attributes.ticket.id"), nil, :class => 'form-label' %>
+        <%= text_field_tag "Id", nil, :class => 'x-large-text-field shrinked number-text-field' %>
         <!-- User -->
         <%= label_tag I18n.t("created_by"), nil, :class => 'form-label' %>
         <%= select_tag "User", options_from_collection_for_select(User.all, "id", "email"), :prompt => "", :class => 'x-large-text-field shrinked' %>
@@ -43,7 +79,9 @@
         <%= label_tag I18n.t("ag2_help_desk.tickets.index.label_others"), nil, :class => 'form-label' %>
         <%= text_field_tag :search, params[:search], :class => 'x-large-text-field shrinked' %>
         <!-- Submit -->
-        <%= submit_tag I18n.t("ag2_help_desk.tickets.index.btn_apply"), :class => 'btn btn-primary' %>
+        <%= submit_tag I18n.t(:apply_filter_button), :class => 'btn btn-primary' %>
+        <!-- Remove filter -->
+        <button id="removeFilter" type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><%= t :clear_filter_button %></button>
         <% end %>
         <!-- New -->
         <%= render :partial => '/layouts/ag2_help_desk/crud/ticket_new', :locals => { :txt => I18n.t("ag2_help_desk.tickets.index.btn_new") } %>

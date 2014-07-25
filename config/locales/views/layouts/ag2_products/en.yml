@@ -27,7 +27,7 @@ en:
         item: "Stock"
       delivery_notes:
         items: "Delivery notes"
-        item: "Delivery note"
+        item: "Note"
       receipt_notes:
         items: "Receipt notes"
-        item: "Receipt note"
+        item: "Note"

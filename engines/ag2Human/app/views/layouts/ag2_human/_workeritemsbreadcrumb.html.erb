@@ -11,11 +11,11 @@
     <a href="<%= ag2_human.root_path %>">ag2Human</a><span class="divider">></span>
   </li>
   <li>
-    <a href="<%= ag2_human.workers_path %>">ag2Workers</a><span class="divider">></span>
+    <a href="<%= ag2_human.workers_path %>"><%=t "ag2_human.breadcrumb.workers.items"%></a><span class="divider">></span>
   </li>
   <% if @worker_items %>
   <li>
-    <%= t :"ag2_human.breadcrumb.worker_items.items" %>
+    <%= t "ag2_human.breadcrumb.worker_items.items" %>
   </li>
   <% end %>
   <% if @worker_item %>
@@ -28,13 +28,13 @@
   </li>
   <% if @breadcrumb == 'read' || @breadcrumb == 'update' %>
   <li>
-  <%= t :"ag2_human.breadcrumb.worker_items.item" %>
+  <%= t "ag2_human.breadcrumb.worker_items.item" %>
   </li>
   <% end %>
   <% if @breadcrumb == 'create' %>
   <% if @worker %>
   <li>
-    <%= t :"ag2_human.breadcrumb.worker_items.new" %>
+    <%= t "ag2_human.breadcrumb.worker_items.new" %>
   </li>
   <% else %>
   <li>

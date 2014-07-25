@@ -12,15 +12,15 @@
   </li>
   <% if @salary_concepts %>
   <li>
-    <%=t :"ag2_human.breadcrumb.sconcepts.items" %>
+    <%=t "ag2_human.breadcrumb.sconcepts.items" %>
   </li>
   <% end %>
   <% if @salary_concept %>
   <li>
-    <a href="<%= salary_concepts_path %>"><%=t :"ag2_human.breadcrumb.sconcepts.items" %></a><span class="divider">></span>
+    <a href="<%= salary_concepts_path %>"><%=t "ag2_human.breadcrumb.sconcepts.items" %></a><span class="divider">></span>
   </li>
   <% if @breadcrumb == 'read' || @breadcrumb == 'update' %>
-  <%=t :"ag2_human.breadcrumb.sconcepts.item" %>
+  <%=t "ag2_human.breadcrumb.sconcepts.item" %>
   <% end %>
   <% if @breadcrumb == 'create' %>
   <li>

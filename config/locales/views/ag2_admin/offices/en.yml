@@ -4,7 +4,7 @@ en:
       index:
         title: "Offices"
         btn_new: "New Office"
-        go_to: "Go to ag2Companies"
+        go_to: "Go to Companies"
         back_to_root: "Back to ag2Admin"
       show:
         title: "Office"

@@ -5,7 +5,7 @@ en:
         title: "Shared contacts"
         btn_new: "New Contact"
         go_to_child_app: "Go to Shared contact types"
-        back_to_root: "Go to ag2Directory"
+        back_to_root: "Back to ag2Directory"
       show:
         title: "Contact"
         btn_edit: "Edit Contact"
@@ -15,5 +15,5 @@ en:
         btn_show: "Show Contact"
       new:
         title: "New Contact"
-      back_to_main_page: "Back to ag2SharedContacts"
+      back_to_main_page: "Back to Shared contacts"
         

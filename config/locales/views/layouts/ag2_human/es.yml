@@ -1,16 +1,24 @@
 es:
   ag2_human:
     breadcrumb:
+      workers:
+        items: "Trabajadores"
+        item: "Trabajador"
       cagreements:
         items: "Convenios colectivos"
+        item: "Convenio"
       ctypes:
         items: "Tipos de contrato"
+        item: "Tipo"
       departments:
         items: "Departamentos"
+        item: "Departmento"
       dtypes:
         items: "Titulaciones"
+        item: "Titulación"
       pgroups:
         items: "Grupos profesionales"
+        item: "Grupo"
       trecordcodes:
         items: "Códigos de marcaje"
         item: "Código"
@@ -22,6 +30,7 @@ es:
         item: "Tipo"
       wtypes:
         items: "Tipos de trabajador"
+        item: "Tipo"
       sconcepts:
         items: "Conceptos salariales"
         item: "Concepto"

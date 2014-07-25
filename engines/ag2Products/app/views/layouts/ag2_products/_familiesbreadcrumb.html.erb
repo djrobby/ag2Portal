@@ -12,15 +12,15 @@
   </li>
   <% if @product_families %>
   <li>
-    <%=t :"ag2_products.breadcrumb.families.items" %>
+    <%=t "ag2_products.breadcrumb.families.items" %>
   </li>
   <% end %>
   <% if @product_family %>
   <li>
-    <a href="<%= product_families_path %>"><%=t :"ag2_products.breadcrumb.families.items" %></a><span class="divider">></span>
+    <a href="<%= product_families_path %>"><%=t "ag2_products.breadcrumb.families.items" %></a><span class="divider">></span>
   </li>
   <% if @breadcrumb == 'read' || @breadcrumb == 'update' %>
-  <%=t :"ag2_products.breadcrumb.families.item" %>
+  <%=t "ag2_products.breadcrumb.families.item" %>
   <% end %>
   <% if @breadcrumb == 'create' %>
   <li>

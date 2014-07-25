@@ -5,7 +5,7 @@ es:
         title: "Contactos compartidos"
         btn_new: "Nuevo Contacto"
         go_to_child_app: "Ir a Tipos de contactos compartidos"
-        back_to_root: "Ir a ag2Directory"
+        back_to_root: "Volver a ag2Directory"
       show:
         title: "Contacto"
         btn_edit: "Editar Contacto"
@@ -15,4 +15,4 @@ es:
         btn_show: "Ver Contacto"
       new:
         title: "Nuevo Contacto"
-      back_to_main_page: "Volver a ag2SharedContacts"
+      back_to_main_page: "Volver a Contactos compartidos"

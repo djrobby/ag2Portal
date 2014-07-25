@@ -1,6 +1,6 @@
 <% orders.each do |w| %>
 <tr>
-  <td><%= link_to w.order_no, w %></td>
+  <td><%= link_to w.full_no, w %></td>
   <td><%= w.project.name unless w.project.blank? %></td>
   <td><%= w.started_at.strftime("%d/%m/%Y") unless w.started_at.blank? %></td>
   <td><%= w.completed_at.strftime("%d/%m/%Y") unless w.completed_at.blank? %></td>

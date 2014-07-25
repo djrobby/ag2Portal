@@ -12,15 +12,15 @@
   </li>
   <% if @corp_contacts %>
   <li>
-    ag2CorporateContacts
+    <%=t "ag2_directory.breadcrumb.corpcontacts.items" %>
   </li>
   <% end %>
   <% if @corp_contact %>
   <li>
-    <a href="<%= corp_contacts_path %>">ag2CorporateContacts</a><span class="divider">></span>
+    <a href="<%= corp_contacts_path %>"><%=t "ag2_directory.breadcrumb.corpcontacts.items" %></a><span class="divider">></span>
   </li>
   <% if @breadcrumb == 'read' || @breadcrumb == 'update' %>
-  <%=t :"ag2_directory.breadcrumb.corpcontacts.item"%>
+  <%=t "ag2_directory.breadcrumb.corpcontacts.item"%>
   <% end %>
   <% if @breadcrumb == 'create' %>
   <li>

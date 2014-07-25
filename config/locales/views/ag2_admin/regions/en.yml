@@ -4,8 +4,8 @@ en:
       index:
         title: "Regions"
         btn_new: "New Region"
-        go_to_parent: "Go to ag2Countries"
-        go_to_child: "Go to ag2Provinces"
+        go_to_parent: "Go to Countries"
+        go_to_child: "Go to Provinces"
         back_to_root: "Back to ag2Admin"
       show:
         title: "Region"

@@ -52,3 +52,12 @@ en:
       zipcodes:
         items: "ZIP codes"
         item: "ZIP"
+      apps:
+        items: "Apps"
+        item: "App"
+      sites:
+        items: "Sites"
+        item: "Site"
+      users:
+        items: "Users"
+        item: "User"

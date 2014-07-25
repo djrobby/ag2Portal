@@ -12,15 +12,15 @@
   </li>
   <% if @receipt_notes %>
   <li>
-    ag2ReceiptNotes
+    <%=t "ag2_products.breadcrumb.receipt_notes.items" %>
   </li>
   <% end %>
   <% if @receipt_note %>
   <li>
-    <a href="<%= receipt_notes_path %>">ag2ReceiptNotes</a><span class="divider">></span>
+    <a href="<%= receipt_notes_path %>"><%=t "ag2_products.breadcrumb.receipt_notes.items" %></a><span class="divider">></span>
   </li>
   <% if @breadcrumb == 'read' || @breadcrumb == 'update' %>
-  <%=t :"ag2_products.breadcrumb.receipt_notes.item" %>
+  <%=t "ag2_products.breadcrumb.receipt_notes.item" %>
   <% end %>
   <% if @breadcrumb == 'create' %>
   <li>

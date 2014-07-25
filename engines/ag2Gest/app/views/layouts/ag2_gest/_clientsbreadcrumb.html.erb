@@ -12,15 +12,15 @@
   </li>
   <% if @clients %>
   <li>
-    ag2Clients
+    <%=t "ag2_gest.breadcrumb.clients.items" %>
   </li>
   <% end %>
   <% if @client %>
   <li>
-    <a href="<%= clients_path %>">ag2Clients</a><span class="divider">></span>
+    <a href="<%= clients_path %>"><%=t "ag2_gest.breadcrumb.clients.items" %></a><span class="divider">></span>
   </li>
   <% if @breadcrumb == 'read' || @breadcrumb == 'update' %>
-  <%= @client.client_code %>
+  <%=t "ag2_gest.breadcrumb.clients.item" %>
   <% end %>
   <% if @breadcrumb == 'create' %>
   <li>

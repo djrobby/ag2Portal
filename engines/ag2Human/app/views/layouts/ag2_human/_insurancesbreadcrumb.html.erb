@@ -12,15 +12,15 @@
   </li>
   <% if @insurances %>
   <li>
-    <%=t :"ag2_human.breadcrumb.insurances.items" %>
+    <%=t "ag2_human.breadcrumb.insurances.items" %>
   </li>
   <% end %>
   <% if @insurance %>
   <li>
-    <a href="<%= insurances_path %>"><%=t :"ag2_human.breadcrumb.insurances.items" %></a><span class="divider">></span>
+    <a href="<%= insurances_path %>"><%=t "ag2_human.breadcrumb.insurances.items" %></a><span class="divider">></span>
   </li>
   <% if @breadcrumb == 'read' || @breadcrumb == 'update' %>
-  <%=t :"ag2_human.breadcrumb.insurances.item" %>
+  <%=t "ag2_human.breadcrumb.insurances.item" %>
   <% end %>
   <% if @breadcrumb == 'create' %>
   <li>

@@ -4,9 +4,9 @@ es:
       index:
         title: "Provincias"
         btn_new: "Nueva Provincia"
-        go_to_parent: "Ir a ag2Regions"
-        go_to_child: "Ir a ag2Towns"
-        go_to_link: "Ir a ag2ZipCodes"
+        go_to_parent: "Ir a Regiones"
+        go_to_child: "Ir a Poblaciones"
+        go_to_link: "Ir a Códigos postales"
         back_to_root: "Volver a ag2Admin"
       show:
         title: "Provincia"

@@ -4,7 +4,7 @@ es:
       index:
         title: "Departamentos"
         btn_new: "Nuevo Departamento"
-        go_to_areas: "Ir a ag2Areas"
+        go_to_areas: "Ir a Áreas"
         back_to_root: "Volver a ag2Admin"
       show:
         title: "Departamento"

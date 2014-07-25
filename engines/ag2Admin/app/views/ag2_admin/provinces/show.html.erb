@@ -6,12 +6,12 @@
     <tr>
       <td>Id:</td>
       <td><%= @province.id %></td>
-      <td><%=t 'activerecord.attributes.province.region' %>:</td>
-      <td><%= @province.region.name_and_country unless @province.region.blank? %></td>
+      <td><%=t 'activerecord.attributes.province.ine_cpro' %>:</td>
+      <td><b><%= @province.ine_cpro %></b></td>
     </tr>
     <tr>
-      <td><%=t 'activerecord.attributes.province.ine_cpro' %>:</td>
-      <td><%= @province.ine_cpro %></td>
+      <td><%=t 'activerecord.attributes.province.region' %>:</td>
+      <td><%= @province.region.name_and_country unless @province.region.blank? %></td>
       <td></td>
       <td></td>
     </tr>

@@ -4,8 +4,8 @@ en:
       index:
         title: "Towns"
         btn_new: "New Town"
-        go_to_parent: "Go to ag2Provinces"
-        go_to_link: "Go to ag2ZipCodes"
+        go_to_parent: "Go to Provinces"
+        go_to_link: "Go to ZIP Codes"
         back_to_root: "Back to ag2Admin"
       show:
         title: "Town"

@@ -3,5 +3,5 @@ en:
     home:
       index:
         control: "Control&Tracking"
-        activities: "Supplier Activities"
-        payment_methods: "Payment Methods"
+        control_a: "Control&Tracking"
+        clients: "Clients"

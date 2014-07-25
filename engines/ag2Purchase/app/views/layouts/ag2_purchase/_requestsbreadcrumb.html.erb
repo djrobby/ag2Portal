@@ -12,12 +12,12 @@
   </li>
   <% if @offer_requests %>
   <li>
-    ag2OfferRequests
+    <%=t "ag2_purchase.breadcrumb.offer_requests.items"%>
   </li>
   <% end %>
   <% if @offer_request %>
   <li>
-    <a href="<%= offer_requests_path %>">ag2OfferRequests</a><span class="divider">></span>
+    <a href="<%= offer_requests_path %>"><%=t "ag2_purchase.breadcrumb.offer_requests.items"%></a><span class="divider">></span>
   </li>
   <% if @breadcrumb == 'read' || @breadcrumb == 'update' %>
   <%=t :"ag2_purchase.breadcrumb.offer_requests.item" %>

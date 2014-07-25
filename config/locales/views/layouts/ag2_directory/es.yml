@@ -2,8 +2,10 @@ es:
   ag2_directory:
     breadcrumb:
       corpcontacts:
+        items: "Contactos corporativos"
         item: "Contacto"
       sharedcontacts:
+        items: "Contactos compartidos"
         item: "Contacto"
       sharedcontacttypes:
         items: "Tipos"

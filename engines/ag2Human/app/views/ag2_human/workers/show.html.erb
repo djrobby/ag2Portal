@@ -12,7 +12,7 @@
       <td>Id:</td>
       <td><%= @worker.id %></td>
       <td><%= t :"activerecord.attributes.worker.worker_code" %>:</td>
-      <td><%= @worker.worker_code unless @worker.worker_code.nil? %></td>
+      <td><b><%= @worker.worker_code unless @worker.worker_code.nil? %></b></td>
     </tr>
     <tr>
       <td><%= t :"activerecord.attributes.worker.fiscal_id" %>:</td>

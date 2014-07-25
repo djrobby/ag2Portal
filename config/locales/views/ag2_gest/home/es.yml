@@ -3,5 +3,5 @@ es:
     home:
       index:
         control: "Control&Seguimiento"
-        activities: "Actividades Provs."
-        payment_methods: "Formas de Pago"
+        control_a: "Control&Seguimto."
+        clients: "Clientes"

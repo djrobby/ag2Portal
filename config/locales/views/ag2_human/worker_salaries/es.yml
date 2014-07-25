@@ -4,7 +4,7 @@ es:
       index:
         title: "Salarios de trabajador"
         btn_new: "Nuevo Salario"
-        go_to_workers: "Ir a ag2Workers"
+        go_to_workers: "Ir a Trabajadores"
         back_to_root: "Volver a ag2Human"
       show:
         title: "Salario de trabajador"

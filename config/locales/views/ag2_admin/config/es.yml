@@ -3,3 +3,8 @@ es:
     config:
       index:
         configuration: "Configuración"
+        organizations: "Organizaciones"
+        users: "Usuarios"
+        sites: "Sitios"
+        apps: "Apps"
+        guides: "Guías"

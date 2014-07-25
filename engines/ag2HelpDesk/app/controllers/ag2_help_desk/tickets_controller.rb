@@ -52,6 +52,8 @@ module Ag2HelpDesk
     # GET /tickets
     # GET /tickets.json
     def index
+      manage_filter_state
+      id = params[:Id]
       user = params[:User]
       office = params[:Office]
       from = params[:From]
@@ -63,7 +65,9 @@ module Ag2HelpDesk
 
       @search = Ticket.search do
         fulltext params[:search]
-
+        if !id.blank?
+          with :id, id
+        end
         if !user.blank?
           with :created_by, user
         end
@@ -94,7 +98,6 @@ module Ag2HelpDesk
         if !technician.blank?
           with :technician_id, technician
         end
-
         order_by :id, :desc
         paginate :page => params[:page] || 1, :per_page => per_page
       end
@@ -278,6 +281,70 @@ module Ag2HelpDesk
         end
       end
       _office
+    end
+
+    # Keeps filter state
+    def manage_filter_state
+      # search
+      if params[:search]
+        session[:search] = params[:search]
+      elsif session[:search]
+        params[:search] = session[:search]
+      end
+      # id
+      if params[:Id]
+        session[:Id] = params[:Id]
+      elsif session[:Id]
+        params[:Id] = session[:Id]
+      end
+      # user
+      if params[:User]
+        session[:User] = params[:User]
+      elsif session[:User]
+        params[:User] = session[:User]
+      end
+      # office
+      if params[:Office]
+        session[:Office] = params[:Office]
+      elsif session[:Office]
+        params[:Office] = session[:Office]
+      end
+      # from
+      if params[:From]
+        session[:From] = params[:From]
+      elsif session[:From]
+        params[:From] = session[:From]
+      end
+      # to
+      if params[:To]
+        session[:To] = params[:To]
+      elsif session[:To]
+        params[:To] = session[:To]
+      end
+      # category
+      if params[:Category]
+        session[:Category] = params[:Category]
+      elsif session[:Category]
+        params[:Category] = session[:Category]
+      end
+      # priority
+      if params[:Priority]
+        session[:Priority] = params[:Priority]
+      elsif session[:Priority]
+        params[:Priority] = session[:Priority]
+      end
+      # status
+      if params[:Status]
+        session[:Status] = params[:Status]
+      elsif session[:Status]
+        params[:Status] = session[:Status]
+      end
+      # technician
+      if params[:Technician]
+        session[:Technician] = params[:Technician]
+      elsif session[:Technician]
+        params[:Technician] = session[:Technician]
+      end
     end
   end
 end

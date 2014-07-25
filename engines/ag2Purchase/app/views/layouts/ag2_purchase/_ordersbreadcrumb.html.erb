@@ -12,12 +12,12 @@
   </li>
   <% if @purchase_orders %>
   <li>
-    ag2PurchaseOrders
+    <%=t "ag2_purchase.breadcrumb.purchase_orders.items"%>
   </li>
   <% end %>
   <% if @purchase_order %>
   <li>
-    <a href="<%= purchase_orders_path %>">ag2PurchaseOrders</a><span class="divider">></span>
+    <a href="<%= purchase_orders_path %>"><%=t "ag2_purchase.breadcrumb.purchase_orders.items"%></a><span class="divider">></span>
   </li>
   <% if @breadcrumb == 'read' || @breadcrumb == 'update' %>
   <%=t :"ag2_purchase.breadcrumb.purchase_orders.item" %>

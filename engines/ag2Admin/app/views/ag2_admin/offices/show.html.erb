@@ -6,12 +6,12 @@
     <tr>
       <td>Id:</td>
       <td><%= @office.id %></td>
-      <td><%= t 'activerecord.attributes.office.company' %>:</td>
-      <td><%= @office.company.name unless @office.company.blank? %></td>
+      <td><%= t 'activerecord.attributes.office.office_code' %>:</td>
+      <td><b><%= @office.office_code unless @office.office_code.nil? %></b></td>
     </tr>
     <tr>
-      <td><%= t 'activerecord.attributes.office.office_code' %>:</td>
-      <td><%= @office.office_code unless @office.office_code.nil? %></td>
+      <td><%= t 'activerecord.attributes.office.company' %>:</td>
+      <td><%= @office.company.name unless @office.company.blank? %></td>
       <td><%= t 'activerecord.attributes.office.phone' %>:</td>
       <td><%= @office.phone %></td>
     </tr>

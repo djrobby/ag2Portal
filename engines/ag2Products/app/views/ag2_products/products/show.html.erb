@@ -6,14 +6,10 @@
     <tr>
       <td>Id:</td>
       <td><%= @product.id %></td>
-      <td></td>
-      <td></td>
+      <td><%= t 'activerecord.attributes.product.product_code' %>:</td>
+      <td><b><%= @product.full_code %></b></td>
     </tr>
     <tr>
-      <td><%= t 'activerecord.attributes.product.product_family' %>:</td>
-      <td><%= @product.product_family.name %></td>
-      <td><%= t 'activerecord.attributes.product.product_code' %>:</td>
-      <td><%= @product.full_code %></td>
     </tr>
     <tr>
       <td><%= t 'activerecord.attributes.product.main_description' %>:</td>
@@ -24,14 +20,14 @@
     <tr>
       <td><%= t 'activerecord.attributes.product.aux_description' %>:</td>
       <td><%= @product.aux_description unless @product.aux_description.blank? %></td>
-      <td></td>
-      <td></td>
-    </tr>
-    <tr>
-      <td><%= t 'activerecord.attributes.product.product_type' %>:</td>
-      <td><%= @product.product_type.description %></td>
       <td><%= t 'activerecord.attributes.product.active' %>:</td>
       <td> <% if @product.active %> <i class="icon-thumbs-up"></i> <% else %> <i class="icon-thumbs-down"></i> <% end %> </td>
+    </tr>
+    <tr>
+      <td><%= t 'activerecord.attributes.product.product_family' %>:</td>
+      <td><%= @product.product_family.name %></td>
+      <td><%= t 'activerecord.attributes.product.product_type' %>:</td>
+      <td><%= @product.product_type.description %></td>
     </tr>
     <tr>
       <td><%= t 'activerecord.attributes.product.measure' %>:</td>

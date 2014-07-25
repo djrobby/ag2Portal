@@ -12,15 +12,15 @@
   </li>
   <% if @charge_accounts %>
   <li>
-    ag2ChargeAccounts
+    <%=t "ag2_tech.breadcrumb.charge_accounts.items" %>
   </li>
   <% end %>
   <% if @charge_account %>
   <li>
-    <a href="<%= charge_accounts_path %>">ag2ChargeAccounts</a><span class="divider">></span>
+    <a href="<%= charge_accounts_path %>"><%=t "ag2_tech.breadcrumb.charge_accounts.items" %></a><span class="divider">></span>
   </li>
   <% if @breadcrumb == 'read' || @breadcrumb == 'update' %>
-  <%=t :"ag2_tech.breadcrumb.charge_accounts.item" %>
+  <%=t "ag2_tech.breadcrumb.charge_accounts.item" %>
   <% end %>
   <% if @breadcrumb == 'create' %>
   <li>

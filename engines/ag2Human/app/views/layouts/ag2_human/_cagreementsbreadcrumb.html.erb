@@ -12,7 +12,7 @@
   </li>
   <% if @collective_agreements %>
   <li>
-    <%=t :"ag2_human.breadcrumb.cagreements.items"%>
+    <%=t "ag2_human.breadcrumb.cagreements.items"%>
   </li>
   <% end %>
   <% if @collective_agreement %>
@@ -20,7 +20,7 @@
     <a href="<%= collective_agreements_path %>"><%=t :"ag2_human.breadcrumb.cagreements.items"%></a><span class="divider">></span>
   </li>
   <% if @breadcrumb == 'read' || @breadcrumb == 'update' %>
-  <%= @collective_agreement.ca_code %>
+  <%=t "ag2_human.breadcrumb.cagreements.item"%>
   <% end %>
   <% if @breadcrumb == 'create' %>
   <li>

@@ -7,7 +7,7 @@
       <td>Id:</td>
       <td><%= @country.id %></td>
       <td><%=t 'activerecord.attributes.country.code' %>:</td>
-      <td><%= @country.code %></td>
+      <td><b><%= @country.code %></b></td>
     </tr>
     <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @country } %>
     <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @country } %>
