@@ -7,6 +7,9 @@ es:
         few:   Organizaciones
         other: Organizaciones
         check_for_companies: "Organización no puede ser eliminada mientras existan empresas vinculadas."
+        check_for_entities: "Organización no puede ser eliminada mientras existan entidades vinculadas."
+        check_for_clients: "Organización no puede ser eliminada mientras existan clientes vinculados."
+        check_for_suppliers: "Organización no puede ser eliminada mientras existan proveedores vinculados."
     attributes:
       organization:
         name: "Nombre"

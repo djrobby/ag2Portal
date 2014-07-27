@@ -8,12 +8,13 @@ class Supplier < ActiveRecord::Base
   belongs_to :street_type
   belongs_to :payment_method
   belongs_to :entity
+  belongs_to :organization
   attr_accessible :fiscal_id, :name, :supplier_code,
                   :street_type_id, :street_name, :street_number, :building, :floor, :floor_office,
                   :zipcode_id, :town_id, :province_id, :phone, :fax, :cellular, :email,
                   :region_id, :country_id, :payment_method_id, :ledger_account, :discount_rate,
                   :active, :max_orders_count, :max_orders_sum, :contract_number, :remarks,
-                  :created_by, :updated_by, :entity_id
+                  :created_by, :updated_by, :entity_id, :organization_id
   attr_accessible :activity_ids
 
   has_many :supplier_contacts, dependent: :destroy
@@ -28,22 +29,23 @@ class Supplier < ActiveRecord::Base
   
   has_paper_trail
 
-  validates :name,             :presence => true
-  validates :supplier_code,    :presence => true,
-                               :length => { :is => 10 },
-                               :format => { with: /\A\d+\Z/, message: :code_invalid },
-                               :uniqueness => true
-  validates :fiscal_id,        :presence => true,
-                               :length => { :minimum => 9 },
-                               :uniqueness => true
-  validates :street_type,      :presence => true
-  validates :zipcode,          :presence => true
-  validates :town,             :presence => true
-  validates :province,         :presence => true
-  validates :region,           :presence => true
-  validates :country,          :presence => true
-  validates :payment_method,   :presence => true
-  validates :entity,           :presence => true
+  validates :name,            :presence => true
+  validates :supplier_code,   :presence => true,
+                              :length => { :is => 10 },
+                              :format => { with: /\A\d+\Z/, message: :code_invalid },
+                              :uniqueness => { :scope => :organization_id }
+  validates :fiscal_id,       :presence => true,
+                              :length => { :minimum => 9 },
+                              :uniqueness => { :scope => :organization_id }
+  validates :street_type,     :presence => true
+  validates :zipcode,         :presence => true
+  validates :town,            :presence => true
+  validates :province,        :presence => true
+  validates :region,          :presence => true
+  validates :country,         :presence => true
+  validates :payment_method,  :presence => true
+  validates :entity,          :presence => true
+  validates :organization,    :presence => true
 
   before_validation :fields_to_uppercase
 
@@ -105,6 +107,7 @@ class Supplier < ActiveRecord::Base
     text :supplier_code, :name, :fiscal_id, :street_name, :phone, :cellular, :email
     string :supplier_code
     string :name
+    integer :organization_id
   end
 
   private

@@ -21,6 +21,14 @@
       <td><%= t :"activerecord.attributes.entity.full_name" %>:</td>
       <td><%= @entity.full_name unless @entity.full_name.blank? %></td>
     </tr>
+    <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @entity } %>
+    <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @entity } %>
+  </tbody>
+</table>
+
+<h4><%=t 'ag2_admin.entities.personal_info' %></h4>
+<table class="table">
+  <tbody>
     <tr>
       <td><%= t :"activerecord.attributes.entity.phone" %>:</td>
       <td><%= @entity.phone %>
@@ -63,8 +71,6 @@
       <td><%= t :"activerecord.attributes.entity.country" %>:</td>
       <td><%= @entity.country.name %></td>
     </tr>
-    <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @entity } %>
-    <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @entity } %>
   </tbody>
 </table>
 

@@ -6,29 +6,31 @@ class Client < ActiveRecord::Base
   belongs_to :province
   belongs_to :region
   belongs_to :country
+  belongs_to :organization
   attr_accessible :active, :building, :cellular, :client_code, :email, :fax, :fiscal_id, :floor, :floor_office,
-                  :name, :phone, :remarks, :street_name, :street_number,
+                  :name, :phone, :remarks, :street_name, :street_number, :organization_id,
                   :entity_id, :street_type_id, :zipcode_id, :town_id, :province_id, :region_id, :country_id
 
   has_many :delivery_notes
 
   has_paper_trail
 
-  validates :name,        :presence => true
-  validates :client_code, :presence => true,
-                          :length => { :is => 11 },
-                          :format => { with: /\A\d+\Z/, message: :code_invalid },
-                          :uniqueness => true
-  validates :fiscal_id,   :presence => true,
-                          :length => { :minimum => 9 },
-                          :uniqueness => true
-  validates :street_type, :presence => true
-  validates :zipcode,     :presence => true
-  validates :town,        :presence => true
-  validates :province,    :presence => true
-  validates :region,      :presence => true
-  validates :country,     :presence => true
-  validates :entity,      :presence => true
+  validates :name,          :presence => true
+  validates :client_code,   :presence => true,
+                            :length => { :is => 11 },
+                            :format => { with: /\A\d+\Z/, message: :code_invalid },
+                            :uniqueness => { :scope => :organization_id }
+  validates :fiscal_id,     :presence => true,
+                            :length => { :minimum => 9 },
+                            :uniqueness => { :scope => :organization_id }
+  validates :street_type,   :presence => true
+  validates :zipcode,       :presence => true
+  validates :town,          :presence => true
+  validates :province,      :presence => true
+  validates :region,        :presence => true
+  validates :country,       :presence => true
+  validates :entity,        :presence => true
+  validates :organization,  :presence => true
 
   before_validation :fields_to_uppercase
 
@@ -56,7 +58,7 @@ class Client < ActiveRecord::Base
   end
 
   def full_code
-    # Client code (Entity Organization id & sequential number) => OOOO-NNNNNNN
+    # Client code (Organization id & sequential number) => OOOO-NNNNNNN
     client_code.blank? ? "" : client_code[0..3] + '-' + client_code[4..10]
   end
 
@@ -90,6 +92,7 @@ class Client < ActiveRecord::Base
     text :client_code, :name, :fiscal_id, :street_name, :phone, :cellular, :email
     string :client_code
     string :name
+    integer :organization_id
   end
 
   private

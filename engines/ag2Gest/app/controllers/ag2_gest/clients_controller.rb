@@ -8,7 +8,7 @@ module Ag2Gest
                                                :update_province_textfield_from_zipcode,
                                                :update_country_textfield_from_region,
                                                :update_region_textfield_from_province,
-                                               :update_code_textfield,
+                                               :cl_generate_code,
                                                :validate_fiscal_id_textfield]
     # Update country text field at view from region select
     def update_country_textfield_from_region
@@ -64,24 +64,26 @@ module Ag2Gest
     end
 
     # Update client code at view (generate_code_btn)
-    def update_code_textfield
-      organization = '0001'
+    def cl_generate_code
+      organization = params[:id]
       code = ''
 
       # Builds code, if possible
-      last_client_code = Client.where("client_code LIKE ?", "#{organization}%").order('client_code').maximum('client_code')
-      if last_client_code.nil?
-        code = organization + '0000001'
+      if organization == '$'
+        code = '$err'
       else
-        last_client_code = last_client_code[4..10].to_i + 1
-        code = organization + last_client_code.to_s.rjust(6, '0')
+        organization = organization.to_s if organization.is_a? Fixnum
+        organization = organization.rjust(4, '0')
+        last_client_code = Client.where("client_code LIKE ?", "#{organization}%").order('client_code').maximum('client_code')
+        if last_client_code.nil?
+          code = organization + '0000001'
+        else
+          last_client_code = last_client_code[4..10].to_i + 1
+          code = organization + last_client_code.to_s.rjust(7, '0')
+        end
       end
       @json_data = { "code" => code }
-
-      respond_to do |format|
-        format.html # update_code_textfield.html.erb does not exist! JSON only
-        format.json { render json: @json_data }
-      end
+      render json: @json_data
     end
 
     # Search Entity
@@ -104,6 +106,7 @@ module Ag2Gest
       fax = ''
       cellular = ''
       email = ''
+      organization_id = ''
 
       if params[:id] == '0'
         id = '$err'
@@ -136,6 +139,7 @@ module Ag2Gest
           fax = @entity.fax
           cellular = @entity.cellular
           email = @entity.email
+          organization_id = @entity.organization_id
         end
       end
 
@@ -146,7 +150,8 @@ module Ag2Gest
                      "zipcode_id" => zipcode_id, "town_id" => town_id,
                      "province_id" => province_id, "region_id" => region_id,
                      "country_id" => country_id, "phone" => phone,
-                     "fax" => fax, "cellular" => cellular, "email" => email }
+                     "fax" => fax, "cellular" => cellular, "email" => email,
+                     "organization_id" => organization_id }
 
       respond_to do |format|
         format.html # validate_fiscal_id_textfield.html.erb does not exist! JSON only

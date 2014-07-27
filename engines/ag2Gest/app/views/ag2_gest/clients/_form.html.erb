@@ -66,6 +66,7 @@
           $("#client_cellular").val(data.cellular);
           $("#client_email").val(data.email);
           $("#client_active").prop('checked', true);
+          $("#client_organization_id").val(data.organization_id);
           // Enable fields
           $('#client_client_code').prop('disabled', false);
           $('#client_name').prop('disabled', false);
@@ -166,6 +167,7 @@
           $("#client_fax").val(data.fax);
           $("#client_cellular").val(data.cellular);
           $("#client_email").val(data.email);
+          $("#client_organization_id").val(data.organization_id);
           
           $("#client_fiscal_id").css('color', text_field_color);
           $('#client_client_code').focus();
@@ -177,18 +179,18 @@
     // when #generate_code_btn is clicked
     $("#generate_code_btn").click(function() {
       // make a POST call and replace the content
-      var activities = $('#checked_activities').val();
-      if (activities == "")
-        activities = "$";
-      jQuery.getJSON('update_code_textfield/' + activities, function(data) {
+      var client = $('#client_organization_id').val();
+      if (client == "")
+        client = "$";
+      jQuery.getJSON('cl_generate_code/' + client, function(data) {
         $("#client_client_code").val(data.code);
         if ($("#client_client_code").val() == "$err") {
           $("#client_client_code").css('color', 'red');
           alert('<%= I18n.t("ag2_gest.clients.code_error") %>');
-          $('#client_client_code').select();
         }
         else
           $("#client_client_code").css('color', text_field_color);
+        $('#client_client_code').select();
       })
       return false;
     });
@@ -199,7 +201,26 @@
       $("#client_client_code").css('color', text_field_color);
     });
 
-  })
+    // when the #client_fiscal_id field changes
+    $("#client_fiscal_id").change(function() {
+      var contact = $('#client_fiscal_id').val();
+      if (contact == "")
+        contact = "0";
+      if (contact == "0") {
+        // Empty fiscal id: Disable
+        $('#client_client_code').prop('disabled', true);
+        $('#client_name').prop('disabled', true);
+        $('#generate_code_btn').hide();
+        $('#submit_btn').hide();
+      } else {
+        // Fiscal Id OK: Enable
+        $('#client_client_code').prop('disabled', false);
+        $('#client_name').prop('disabled', false);
+        $('#generate_code_btn').show();
+        $('#submit_btn').show();
+      }
+    });
+  });
 
   /* Collect checkboxes values in hidden input field */
   function updateTextArea() {
@@ -219,11 +240,18 @@
 <%= f.error_notification %>
 <%= display_base_errors resource %>
 <div>
-  <label class="multi-field-label-three"><%= f.input :fiscal_id, :required => true, :autofocus => true, :input_html => { :class => 'large-text-field iconify' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-three"><%= f.input :fiscal_id, :required => true, :autofocus => true, :input_html => { onkeyup: "caps(this)", :class => 'large-text-field iconify' }, :label_html => { :class => 'form-label' } %> </label>
   <label class="multi-field-label-three"> <%= f.input :client_code, :required => true, :input_html => { :class => 'large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
   <label class="multi-field-label-three"> <%= f.input :active, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' }, :boolean_style => :inline %> </label>
 </div>
 <%= f.input :name, :required => true, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %>
+<% if session[:organization] != '0' %>
+<%= f.association :organization, collection: Organization.where("id = ?", "#{session[:organization]}").all, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' }, include_blank: false %>
+<% elsif current_user.organizations.count > 0 %>
+<%= f.association :organization, collection: current_user.organizations.order('name'), input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' }, include_blank: false %>
+<% else %>
+<%= f.association :organization, collection: Organization.order('name'), input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %>
+<% end %>
 <h4><%=t 'ag2_gest.clients.personal_info' %></h4>
 <div>
   <label class="multi-field-label-two"> <%= f.input :phone, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
@@ -258,7 +286,9 @@
   <tbody>
     <tr class="form-tr">
       <td class="form-td-three left-winged"> <%= f.button :submit, :class => 'btn-primary', :id => 'submit_btn' %> </td>
+      <% if @breadcrumb == 'create'%>
       <td class="form-td-three right-winged"><a href="#" id="generate_code_btn" class="btn btn-warning"><%=t 'ag2_gest.clients.generate_code_btn' %></a></td>
+      <% end %>
     </tr>
   </tbody>
 </table>

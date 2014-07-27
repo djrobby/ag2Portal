@@ -40,3 +40,5 @@ es:
         active: "¿Activo?"
         remarks: "Comentarios"
         address: "Dirección"
+        organization: "Organización"
+        organization_id: "Organización"

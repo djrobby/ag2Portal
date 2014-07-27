@@ -17,19 +17,19 @@ class Entity < ActiveRecord::Base
 
   has_paper_trail
 
-  validates :first_name,   :presence => true, :if => "company.blank?"
-  validates :last_name,    :presence => true, :if => "company.blank?"
-  validates :fiscal_id,    :presence => true,
-                           :length => { :minimum => 9 },
-                           :uniqueness => { :scope => :organization_id }
-  validates :street_type,  :presence => true
-  validates :zipcode,      :presence => true
-  validates :town,         :presence => true
-  validates :province,     :presence => true
-  validates :region,       :presence => true
-  validates :country,      :presence => true
-  validates :entity_type,  :presence => true
-  validates :organization, :presence => true
+  validates :first_name,    :presence => true, :if => "company.blank?"
+  validates :last_name,     :presence => true, :if => "company.blank?"
+  validates :fiscal_id,     :presence => true,
+                            :length => { :minimum => 9 },
+                            :uniqueness => { :scope => :organization_id }
+  validates :street_type,   :presence => true
+  validates :zipcode,       :presence => true
+  validates :town,          :presence => true
+  validates :province,      :presence => true
+  validates :region,        :presence => true
+  validates :country,       :presence => true
+  validates :entity_type,   :presence => true
+  validates :organization,  :presence => true
 
   before_validation :fields_to_uppercase
   before_destroy :check_for_dependent_records

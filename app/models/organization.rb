@@ -3,6 +3,9 @@ class Organization < ActiveRecord::Base
   attr_accessible :name, :hd_email
 
   has_many :companies
+  has_many :entities
+  has_many :clients
+  has_many :suppliers
 
   has_paper_trail
 
@@ -23,6 +26,21 @@ class Organization < ActiveRecord::Base
     # Check for companies
     if companies.count > 0
       errors.add(:base, I18n.t('activerecord.models.organization.check_for_companies'))
+      return false
+    end
+    # Check for entities
+    if entities.count > 0
+      errors.add(:base, I18n.t('activerecord.models.organization.check_for_entities'))
+      return false
+    end
+    # Check for clients
+    if clients.count > 0
+      errors.add(:base, I18n.t('activerecord.models.organization.check_for_clients'))
+      return false
+    end
+    # Check for suppliers
+    if suppliers.count > 0
+      errors.add(:base, I18n.t('activerecord.models.organization.check_for_suppliers'))
       return false
     end
   end

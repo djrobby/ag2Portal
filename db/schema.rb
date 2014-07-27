@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140722181224) do
+ActiveRecord::Schema.define(:version => 20140727074145) do
 
   create_table "activities", :force => true do |t|
     t.string   "description"
@@ -102,17 +102,18 @@ ActiveRecord::Schema.define(:version => 20140722181224) do
     t.string   "email"
     t.boolean  "active"
     t.string   "remarks"
-    t.datetime "created_at",     :null => false
-    t.datetime "updated_at",     :null => false
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
+    t.integer  "organization_id"
   end
 
-  add_index "clients", ["client_code"], :name => "index_clients_on_client_code"
   add_index "clients", ["country_id"], :name => "index_clients_on_country_id"
   add_index "clients", ["entity_id"], :name => "index_clients_on_entity_id"
-  add_index "clients", ["fiscal_id"], :name => "index_clients_on_fiscal_id"
   add_index "clients", ["name"], :name => "index_clients_on_name"
+  add_index "clients", ["organization_id", "client_code"], :name => "index_clients_on_organization_id_and_client_code", :unique => true
+  add_index "clients", ["organization_id", "fiscal_id"], :name => "index_clients_on_organization_id_and_fiscal_id", :unique => true
   add_index "clients", ["province_id"], :name => "index_clients_on_province_id"
   add_index "clients", ["region_id"], :name => "index_clients_on_region_id"
   add_index "clients", ["street_type_id"], :name => "index_clients_on_street_type_id"
@@ -1233,6 +1234,7 @@ ActiveRecord::Schema.define(:version => 20140722181224) do
     t.string   "contract_number"
     t.string   "remarks"
     t.integer  "entity_id"
+    t.integer  "organization_id"
   end
 
   add_index "suppliers", ["active"], :name => "index_suppliers_on_active"
@@ -1242,16 +1244,16 @@ ActiveRecord::Schema.define(:version => 20140722181224) do
   add_index "suppliers", ["email"], :name => "index_suppliers_on_email"
   add_index "suppliers", ["entity_id"], :name => "index_suppliers_on_entity_id"
   add_index "suppliers", ["fax"], :name => "index_suppliers_on_fax"
-  add_index "suppliers", ["fiscal_id"], :name => "index_suppliers_on_fiscal_id"
   add_index "suppliers", ["ledger_account"], :name => "index_suppliers_on_ledger_account"
   add_index "suppliers", ["name"], :name => "index_suppliers_on_name"
+  add_index "suppliers", ["organization_id", "fiscal_id"], :name => "index_suppliers_on_organization_id_and_fiscal_id", :unique => true
+  add_index "suppliers", ["organization_id", "supplier_code"], :name => "index_suppliers_on_organization_id_and_supplier_code", :unique => true
   add_index "suppliers", ["payment_method_id"], :name => "index_suppliers_on_payment_method_id"
   add_index "suppliers", ["phone"], :name => "index_suppliers_on_phone"
   add_index "suppliers", ["province_id"], :name => "index_suppliers_on_province_id"
   add_index "suppliers", ["region_id"], :name => "index_suppliers_on_region_id"
   add_index "suppliers", ["street_name"], :name => "index_suppliers_on_street_name"
   add_index "suppliers", ["street_type_id"], :name => "index_suppliers_on_street_type_id"
-  add_index "suppliers", ["supplier_code"], :name => "index_suppliers_on_supplier_code"
   add_index "suppliers", ["town_id"], :name => "index_suppliers_on_town_id"
   add_index "suppliers", ["zipcode_id"], :name => "index_suppliers_on_zipcode_id"
 

@@ -52,3 +52,5 @@ en:
         address: "Address"
         activity_ids: "Activities"
         activities: "Activities"
+        organization: "Organization"
+        organization_id: "Organization"

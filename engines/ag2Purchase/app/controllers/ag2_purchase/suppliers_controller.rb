@@ -9,7 +9,7 @@ module Ag2Purchase
                                                :update_province_textfield_from_zipcode,
                                                :update_country_textfield_from_region,
                                                :update_region_textfield_from_province,
-                                               :update_code_textfield,
+                                               :su_generate_code,
                                                :validate_fiscal_id_textfield,
                                                :su_format_amount,
                                                :su_format_percentage]
@@ -67,7 +67,7 @@ module Ag2Purchase
     end
 
     # Update supplier code at view (generate_code_btn)
-    def update_code_textfield
+    def su_generate_code
       activity = params[:id]
       code = ''
 
@@ -86,11 +86,7 @@ module Ag2Purchase
         end
       end
       @json_data = { "code" => code }
-
-      respond_to do |format|
-        format.html # update_code_textfield.html.erb does not exist! JSON only
-        format.json { render json: @json_data }
-      end
+      render json: @json_data
     end
 
     # Search Entity
@@ -113,6 +109,7 @@ module Ag2Purchase
       fax = ''
       cellular = ''
       email = ''
+      organization_id = ''
 
       if params[:id] == '0'
         id = '$err'
@@ -145,6 +142,7 @@ module Ag2Purchase
           fax = @entity.fax
           cellular = @entity.cellular
           email = @entity.email
+          organization_id = @entity.organization_id
         end
       end
 
@@ -155,7 +153,8 @@ module Ag2Purchase
                      "zipcode_id" => zipcode_id, "town_id" => town_id,
                      "province_id" => province_id, "region_id" => region_id,
                      "country_id" => country_id, "phone" => phone,
-                     "fax" => fax, "cellular" => cellular, "email" => email }
+                     "fax" => fax, "cellular" => cellular, "email" => email,
+                     "organization_id" => organization_id }
 
       respond_to do |format|
         format.html # validate_fiscal_id_textfield.html.erb does not exist! JSON only

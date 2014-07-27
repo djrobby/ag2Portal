@@ -67,6 +67,7 @@
           $("#supplier_cellular").val(data.cellular);
           $("#supplier_email").val(data.email);
           $("#supplier_active").prop('checked', true);
+          $("#supplier_organization_id").val(data.organization_id);
           // Enable fields
           $('#supplier_supplier_code').prop('disabled', false);
           $('#supplier_name').prop('disabled', false);
@@ -170,6 +171,7 @@
           $("#supplier_fax").val(data.fax);
           $("#supplier_cellular").val(data.cellular);
           $("#supplier_email").val(data.email);
+          $("#supplier_organization_id").val(data.organization_id);
           
           $("#supplier_fiscal_id").css('color', text_field_color);
           $('#supplier_supplier_code').focus();
@@ -184,16 +186,16 @@
       var activities = $('#checked_activities').val();
       if (activities == "")
         activities = "$";
-      jQuery.getJSON('update_code_textfield/' + activities, function(data) {
+      jQuery.getJSON('su_generate_code/' + activities, function(data) {
         $("#supplier_supplier_code").val(data.code);
         if ($("#supplier_supplier_code").val() == "$err") {
           $("#supplier_supplier_code").css('color', 'red');
           alert('<%= I18n.t("ag2_purchase.suppliers.code_error") %>');
-          $('#supplier_supplier_code').select();
         }
         else
           $("#supplier_supplier_code").css('color', text_field_color);
-      })
+        $('#supplier_supplier_code').select();
+      });
       return false;
     });
 
@@ -201,6 +203,26 @@
     $("#supplier_supplier_code").change(function() {
       // replace the color
       $("#supplier_supplier_code").css('color', text_field_color);
+    });
+
+    // when the #supplier_fiscal_id field changes
+    $("#supplier_fiscal_id").change(function() {
+      var contact = $('#supplier_fiscal_id').val();
+      if (contact == "")
+        contact = "0";
+      if (contact == "0") {
+        // Empty fiscal id: Disable
+        $('#supplier_supplier_code').prop('disabled', true);
+        $('#supplier_name').prop('disabled', true);
+        $('#generate_code_btn').hide();
+        $('#submit_btn').hide();
+      } else {
+        // Fiscal Id OK: Enable
+        $('#supplier_supplier_code').prop('disabled', false);
+        $('#supplier_name').prop('disabled', false);
+        $('#generate_code_btn').show();
+        $('#submit_btn').show();
+      }
     });
 
     // when the #supplier_max_orders_sum field changes
@@ -257,7 +279,7 @@
 <%= f.error_notification %>
 <%= display_base_errors resource %>
 <div>
-  <label class="multi-field-label-two"><%= f.input :fiscal_id, :required => true, :autofocus => true, :input_html => { :class => 'large-text-field iconify' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-two"><%= f.input :fiscal_id, :required => true, :autofocus => true, :input_html => { onkeyup: "caps(this)", :class => 'large-text-field iconify' }, :label_html => { :class => 'form-label' } %> </label>
   <label class="multi-field-label-two"> <%= f.input :supplier_code, :required => true, :input_html => { :class => 'large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
 </div>
 <%= f.input :name, :required => true, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %>
@@ -265,6 +287,13 @@
   <label class="multi-field-label-two"> <%= f.input :contract_number, :input_html => { :class => 'large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
   <label class="multi-field-label-two"> <%= f.input :active, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' }, :boolean_style => :inline %> </label>
 </div>
+<% if session[:organization] != '0' %>
+<%= f.association :organization, collection: Organization.where("id = ?", "#{session[:organization]}").all, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' }, include_blank: false %>
+<% elsif current_user.organizations.count > 0 %>
+<%= f.association :organization, collection: current_user.organizations.order('name'), input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' }, include_blank: false %>
+<% else %>
+<%= f.association :organization, collection: Organization.order('name'), input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %>
+<% end %>
 <h4><%=t 'ag2_purchase.suppliers.personal_info' %></h4>
 <div>
   <label class="multi-field-label-two"> <%= f.input :phone, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>

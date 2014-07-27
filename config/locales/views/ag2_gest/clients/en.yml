@@ -21,4 +21,4 @@ en:
       personal_info: "Client Info"
       commercial_info: "Accounting & Commercial Info"
       fiscal_error: "Wrong Fiscal Id or Entity (TaxPayer) does not exist."
-      code_error: "Unable to generate Client Code: No Activity chosen."
+      code_error: "Unable to generate Client Code: No Organization chosen."

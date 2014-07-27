@@ -84,11 +84,7 @@ module Ag2Admin
       end
 
       @json_data = { "fiscal_id" => f_id, "fiscal_name" => f_name }
-
-      respond_to do |format|
-        format.html # validate_fiscal_id_textfield.html.erb does not exist! JSON only
-        format.json { render json: @json_data }
-      end
+      render json: @json_data
     end
 
     #

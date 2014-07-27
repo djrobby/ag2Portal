@@ -52,3 +52,5 @@ es:
         address: "Dirección"
         activity_ids: "Actividades"
         activities: "Actividades"
+        organization: "Organización"
+        organization_id: "Organización"
