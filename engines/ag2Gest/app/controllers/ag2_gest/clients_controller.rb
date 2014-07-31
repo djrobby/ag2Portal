@@ -9,6 +9,7 @@ module Ag2Gest
                                                :update_country_textfield_from_region,
                                                :update_region_textfield_from_province,
                                                :cl_generate_code,
+                                               :et_validate_fiscal_id_textfield,
                                                :validate_fiscal_id_textfield]
     # Update country text field at view from region select
     def update_country_textfield_from_region
@@ -112,7 +113,11 @@ module Ag2Gest
         id = '$err'
         fiscal_id = '$err'
       else
-        @entity = Entity.find_by_fiscal_id(params[:id])
+        if session[:organization] != '0'
+          @entity = Entity.find_by_fiscal_id_and_organization(params[:id], session[:organization])
+        else
+          @entity = Entity.find_by_fiscal_id(params[:id])
+        end
         if @entity.nil?
           id = '$err'
           fiscal_id = '$err'
@@ -159,6 +164,34 @@ module Ag2Gest
       end
     end
 
+    # Validate entity fiscal id (modal)
+    def et_validate_fiscal_id_textfield
+      fiscal_id = params[:id]
+      dc = ''
+      f_id = 'OK'
+      f_name = ''
+
+      if fiscal_id == '0'
+        f_id = '$err'
+      else
+        dc = fiscal_id_dc(fiscal_id)
+        if dc == '$par' || dc == '$err'
+          f_id = '$err'
+        else
+          if dc == '$uni'
+            f_id = '??'
+          end
+          f_name = fiscal_id_description(fiscal_id[0])
+          if f_name == '$err'
+            f_name = I18n.t("ag2_admin.entities.fiscal_name")
+          end
+        end
+      end
+
+      @json_data = { "fiscal_id" => f_id, "fiscal_name" => f_name }
+      render json: @json_data
+    end
+
     #
     # Default Methods
     #
@@ -167,9 +200,15 @@ module Ag2Gest
     def index
       manage_filter_state
       letter = params[:letter]
+      if !session[:organization]
+        init_oco
+      end
 
       @search = Client.search do
         fulltext params[:search]
+        if session[:organization] != '0'
+          with :organization_id, session[:organization]
+        end
         if !letter.blank? && letter != "%"
           with(:name).starting_with(letter)
         end

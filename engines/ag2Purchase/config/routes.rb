@@ -17,6 +17,7 @@ Ag2Purchase::Engine.routes.draw do
     match 'suppliers/update_region_textfield_from_province/:id', :controller => 'suppliers', :action => 'update_region_textfield_from_province'
     match 'suppliers/:id/update_region_textfield_from_province/:id', :controller => 'suppliers', :action => 'update_region_textfield_from_province'
     match 'suppliers/validate_fiscal_id_textfield/:id', :controller => 'suppliers', :action => 'validate_fiscal_id_textfield'
+    match 'validate_fiscal_id_textfield/:id', :controller => 'suppliers', :action => 'validate_fiscal_id_textfield'
     match 'suppliers/:id/validate_fiscal_id_textfield/:id', :controller => 'suppliers', :action => 'validate_fiscal_id_textfield'
     match 'suppliers/su_generate_code/:id', :controller => 'suppliers', :action => 'su_generate_code'
     match 'su_generate_code/:id', :controller => 'suppliers', :action => 'su_generate_code'
@@ -27,6 +28,9 @@ Ag2Purchase::Engine.routes.draw do
     match 'suppliers/su_format_percentage/:num', :controller => 'suppliers', :action => 'su_format_percentage'
     match 'su_format_percentage/:num', :controller => 'suppliers', :action => 'su_format_percentage'
     match 'suppliers/:id/su_format_percentage/:num', :controller => 'suppliers', :action => 'su_format_percentage'
+    match 'suppliers/et_validate_fiscal_id_textfield/:id', :controller => 'suppliers', :action => 'et_validate_fiscal_id_textfield'
+    match 'et_validate_fiscal_id_textfield/:id', :controller => 'suppliers', :action => 'et_validate_fiscal_id_textfield'
+    match 'suppliers/:id/et_validate_fiscal_id_textfield/:id', :controller => 'suppliers', :action => 'et_validate_fiscal_id_textfield'
     #
     match 'purchase_orders/po_update_description_prices_from_product_store/:product/:qty/:store', :controller => 'purchase_orders', :action => 'po_update_description_prices_from_product_store'
     match 'po_update_description_prices_from_product_store/:product/:qty/:store', :controller => 'purchase_orders', :action => 'po_update_description_prices_from_product_store'

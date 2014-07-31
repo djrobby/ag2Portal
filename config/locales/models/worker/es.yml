@@ -75,3 +75,5 @@ es:
         total_cost: "Coste laboral"
         age: "Edad"
         years_worked: "Años trabajados"
+        organization: "Organización"
+        organization_id: "Organización"

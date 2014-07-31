@@ -17,10 +17,14 @@ Ag2Gest::Engine.routes.draw do
     match 'clients/update_region_textfield_from_province/:id', :controller => 'clients', :action => 'update_region_textfield_from_province'
     match 'clients/:id/update_region_textfield_from_province/:id', :controller => 'clients', :action => 'update_region_textfield_from_province'
     match 'clients/validate_fiscal_id_textfield/:id', :controller => 'clients', :action => 'validate_fiscal_id_textfield'
+    match 'validate_fiscal_id_textfield/:id', :controller => 'clients', :action => 'validate_fiscal_id_textfield'
     match 'clients/:id/validate_fiscal_id_textfield/:id', :controller => 'clients', :action => 'validate_fiscal_id_textfield'
     match 'clients/cl_generate_code/:id', :controller => 'clients', :action => 'cl_generate_code'
     match 'cl_generate_code/:id', :controller => 'clients', :action => 'cl_generate_code'
     match 'clients/:id/cl_generate_code/:id', :controller => 'clients', :action => 'cl_generate_code'
+    match 'clients/et_validate_fiscal_id_textfield/:id', :controller => 'clients', :action => 'et_validate_fiscal_id_textfield'
+    match 'et_validate_fiscal_id_textfield/:id', :controller => 'clients', :action => 'et_validate_fiscal_id_textfield'
+    match 'clients/:id/et_validate_fiscal_id_textfield/:id', :controller => 'clients', :action => 'et_validate_fiscal_id_textfield'
 
     # Resources
     resources :clients

@@ -35,7 +35,7 @@ class Supplier < ActiveRecord::Base
                               :format => { with: /\A\d+\Z/, message: :code_invalid },
                               :uniqueness => { :scope => :organization_id }
   validates :fiscal_id,       :presence => true,
-                              :length => { :minimum => 9 },
+                              :length => { :minimum => 8 },
                               :uniqueness => { :scope => :organization_id }
   validates :street_type,     :presence => true
   validates :zipcode,         :presence => true

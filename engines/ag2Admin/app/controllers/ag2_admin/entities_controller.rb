@@ -76,14 +76,20 @@ module Ag2Admin
         if dc == '$par' || dc == '$err'
           f_id = '$err'
         else
+          if dc == '$uni'
+            f_id = '??'
+          end
           f_name = fiscal_id_description(fiscal_id[0])
           if f_name == '$err'
             f_name = I18n.t("ag2_admin.entities.fiscal_name")
           end
+          if is_numeric?(fiscal_id[0]) && fiscal_id.to_s.length == 8
+            fiscal_id = fiscal_id.to_s + dc
+          end
         end
       end
 
-      @json_data = { "fiscal_id" => f_id, "fiscal_name" => f_name }
+      @json_data = { "f_id" => f_id, "fiscal_name" => f_name, "fiscal_id" => fiscal_id }
       render json: @json_data
     end
 

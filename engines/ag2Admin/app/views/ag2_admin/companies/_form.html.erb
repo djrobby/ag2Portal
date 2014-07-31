@@ -1,6 +1,34 @@
 <script>
+  var text_field_color;
+
   $(document).ready(function() {
+    // Setup drag & drop
     dd_import_files('#dd_files', '#image_content', 'co_update_attachment');
+    // Save default text color
+    text_field_color = $("#company_phone").css('color')
+    // Icon inside text field: Validate Fiscal Id
+    $('input.iconify').wrap('<span class="validateicon" title="<%=t('ag2_admin.companies.validate_btn') %>" />').after($('<span/>').click(function() {
+      // make a POST call and replace the content
+      var company = $('#company_fiscal_id').val();
+      if (company == "")
+        company = "0";
+      jQuery.getJSON('co_validate_fiscal_id_textfield/' + company, function(data) {
+        if (data.f_id == "$err") {
+          $("#company_fiscal_id").css('color', 'red');
+          $('#submit_btn').hide();
+          alert('<%= I18n.t("ag2_admin.companies.fiscal_error") %>');
+          $('#company_fiscal_id').select();
+        }
+        else {
+          // Default color & focus
+          $("#company_fiscal_id").css('color', text_field_color);
+          $("#company_fiscal_id").val(data.fiscal_id);
+          $('#submit_btn').show();
+          alert(data.f_id + ': ' + data.fiscal_name + '.');
+        }
+      });
+      return false;
+    }));
   });
 
   jQuery(function($) {
@@ -48,7 +76,7 @@
 <%= f.association :organization, collection: Organization.order('name'), input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %>
 <% end %>
 <div>
-  <label class="multi-field-label-two"><%= f.input :fiscal_id, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %></label>
+  <label class="multi-field-label-two"><%= f.input :fiscal_id, :input_html => { onkeyup: "caps(this)", :class => 'large-text-field iconify' }, :label_html => { :class => 'form-label' } %></label>
   <label class="multi-field-label-two"> <%= f.input :phone, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
 </div>
 <div>
@@ -102,5 +130,5 @@
   </tbody>
 </table>
 <!-- Buttons -->
-<%= f.button :submit, :class => 'btn-primary' %>
+<%= f.button :submit, :class => 'btn-primary', :id => 'submit_btn' %>
 <% end %>

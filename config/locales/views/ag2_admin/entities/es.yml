@@ -21,6 +21,7 @@ es:
         btn_new: "Crear Entidad"
         footer: "¡Recuerda que todos los datos solicitados son obligatorios!"
         entity_type_alert: "¡Debes inidicar Nombres o Empresa dependiendo del tipo de Entidad!"
+        entity_fiscal_short: "Id Fiscal es demasiado corto (8 caracteres mínimo)"
         submit: "La entidad ha sido creada."
       back_to_main_page: "Volver a ag2Entities"
       validate_btn: "Validar"

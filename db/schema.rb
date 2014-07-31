@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140727074145) do
+ActiveRecord::Schema.define(:version => 20140731094419) do
 
   create_table "activities", :force => true do |t|
     t.string   "description"
@@ -1742,6 +1742,7 @@ ActiveRecord::Schema.define(:version => 20140727074145) do
     t.string   "education"
     t.integer  "sex_id"
     t.integer  "insurance_id"
+    t.integer  "organization_id"
   end
 
   add_index "workers", ["affiliation_id"], :name => "index_workers_on_affiliation_id"
@@ -1756,18 +1757,18 @@ ActiveRecord::Schema.define(:version => 20140727074145) do
   add_index "workers", ["degree_type_id"], :name => "index_workers_on_degree_type_id"
   add_index "workers", ["department_id"], :name => "index_workers_on_department_id"
   add_index "workers", ["first_name"], :name => "index_workers_on_first_name"
-  add_index "workers", ["fiscal_id"], :name => "index_workers_on_fiscal_id"
   add_index "workers", ["insurance_id"], :name => "index_workers_on_insurance_id"
   add_index "workers", ["last_name"], :name => "index_workers_on_last_name"
   add_index "workers", ["nomina_id"], :name => "index_workers_on_nomina_id"
   add_index "workers", ["office_id"], :name => "index_workers_on_office_id"
+  add_index "workers", ["organization_id", "fiscal_id"], :name => "index_workers_on_organization_id_and_fiscal_id", :unique => true
+  add_index "workers", ["organization_id", "worker_code"], :name => "index_workers_on_organization_id_and_worker_code"
   add_index "workers", ["professional_group_id"], :name => "index_workers_on_professional_group_id"
   add_index "workers", ["province_id"], :name => "index_workers_on_province_id"
   add_index "workers", ["sex_id"], :name => "index_workers_on_sex_id"
   add_index "workers", ["street_type_id"], :name => "index_workers_on_street_type_id"
   add_index "workers", ["town_id"], :name => "index_workers_on_town_id"
   add_index "workers", ["user_id"], :name => "index_workers_on_user_id"
-  add_index "workers", ["worker_code"], :name => "index_workers_on_worker_code"
   add_index "workers", ["worker_type_id"], :name => "index_workers_on_worker_type_id"
   add_index "workers", ["zipcode_id"], :name => "index_workers_on_zipcode_id"
 

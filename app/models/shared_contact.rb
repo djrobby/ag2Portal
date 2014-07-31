@@ -17,7 +17,9 @@ class SharedContact < ActiveRecord::Base
 
   validates :first_name,           :presence => true, :if => "company.blank?"
   validates :last_name,            :presence => true, :if => "company.blank?"
-  validates :fiscal_id,            :presence => true, :if => "!company.blank?"
+  validates :fiscal_id,            :presence => true,
+                                   :length => { :minimum => 8 },
+                                   :if => "!company.blank?"
   validates :street_type,          :presence => true
   validates :zipcode,              :presence => true
   validates :town,                 :presence => true

@@ -1,4 +1,6 @@
 <script>
+  var text_field_color;
+
   $(document).ready(function() {
     var contact = $('select#fnt_entity_type :selected').val();
     if (contact == "")
@@ -16,6 +18,8 @@
       $('#fnt_last_name').prop('disabled', true);
       $('#fnt_first_name').prop('disabled', true);
     }
+    // Save default text color
+    text_field_color = $("#fnt_phone").css('color')
   });
 
   jQuery(function($) {
@@ -46,17 +50,38 @@
           (street_name == "") || (street_number == "")  || (region == "")  || (country == "") ||
           (organization == "")) {
         // Error: Mandatory fields
-        alert('<%= I18n.t("ag2_admin.entities.new_entity.footer") %>');
+        alert('<%= I18n.t(:mandatory_subtitle) %>');
         return false;
       } else if (((last_name == "") && (first_name == "") && (company == "")) ||
                  ((last_name != "") && (first_name != "") && (company != ""))) {
         // Error: Name and company empty OR Name and company filled
         alert('<%= I18n.t("ag2_admin.entities.new_entity.entity_type_alert") %>');
         return false;
+      } else if (fiscal_id.length < 8) {
+        // Error: Fiscal Id too short
+        alert('<%= I18n.t("ag2_admin.entities.new_entity.entity_fiscal_short") %>');
+        return false;
       } else {
-        // Hide the modal and exit
-        $("#new-entity").modal('hide');
-        alert('<%= I18n.t("ag2_admin.entities.new_entity.submit") %>');
+        // validate fiscal id
+        var entity = $('#fnt_fiscal_id').val();
+        if (entity == "")
+          entity = "0";
+        jQuery.getJSON('et_validate_fiscal_id_textfield/' + entity, function(data) {
+          if (data.fiscal_id == "$err") {
+            // Error color & focus
+            $("#fnt_fiscal_id").css('color', 'red');
+            alert('<%= I18n.t("ag2_admin.entities.fiscal_error") %>');
+            $('#fnt_fiscal_id').select();
+          }
+          else {
+            // Default color
+            $("#fnt_fiscal_id").css('color', text_field_color);
+            alert(data.fiscal_id + ': ' + data.fiscal_name + '.');
+            // Hide the modal and exit
+            $("#new-entity").modal('hide');
+            alert('<%= I18n.t("ag2_admin.entities.new_entity.submit") %>');
+          }
+        });
       }
     });
     
@@ -148,9 +173,9 @@
   <div class="modal-body">
     <%= f.association :entity_type, :autofocus => true, collection: EntityType.all(order: 'name'), :input_html => { :class => 'mid-text-field', :id => 'fnt_entity_type' }, :label_html => { :class => 'form-label' } %>
     <%= f.input :fiscal_id, :input_html => { onkeyup: "caps(this)", :class => 'mid-text-field', :id => 'fnt_fiscal_id' }, :label_html => { :class => 'form-label' } %>
-    <%= f.input :company, :input_html => { :class => 'x-large-text-field', :id => 'fnt_company' }, :label_html => { :class => 'form-label' } %>
-    <%= f.input :last_name, :input_html => { :class => 'x-large-text-field', :id => 'fnt_last_name' }, :label_html => { :class => 'form-label' } %>
-    <%= f.input :first_name, :input_html => { :class => 'x-large-text-field', :id => 'fnt_first_name' }, :label_html => { :class => 'form-label' } %>
+    <%= f.input :company, required: true, :input_html => { :class => 'x-large-text-field', :id => 'fnt_company' }, :label_html => { :class => 'form-label' } %>
+    <%= f.input :last_name, required: true, :input_html => { :class => 'x-large-text-field', :id => 'fnt_last_name' }, :label_html => { :class => 'form-label' } %>
+    <%= f.input :first_name, required: true, :input_html => { :class => 'x-large-text-field', :id => 'fnt_first_name' }, :label_html => { :class => 'form-label' } %>
     <%= f.input :phone, required: true, :input_html => { :class => 'mid-text-field', :id => 'fnt_phone' }, :label_html => { :class => 'form-label' } %>
     <%= f.input :cellular, :input_html => { :class => 'mid-text-field', :id => 'fnt_cellular' }, :label_html => { :class => 'form-label' } %>
     <%= f.input :email, :input_html => { :class => 'x-large-text-field', :id => 'fnt_email' }, :label_html => { :class => 'form-label' } %>

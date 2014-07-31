@@ -22,7 +22,7 @@ class Company < ActiveRecord::Base
 
   validates :name,         :presence => true
   validates :fiscal_id,    :presence => true,
-                           :length => { :minimum => 9 },
+                           :length => { :minimum => 8 },
                            :uniqueness => { :scope => :organization_id }
   validates :street_type,  :presence => true
   validates :zipcode,      :presence => true

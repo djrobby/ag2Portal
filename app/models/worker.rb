@@ -14,6 +14,7 @@ class Worker < ActiveRecord::Base
   belongs_to :department
   belongs_to :sex
   belongs_to :insurance
+  belongs_to :organization
   attr_accessible :building, :own_cellular, :email, :ending_at, :first_name,
                   :fiscal_id, :floor, :floor_office, :last_name, :own_phone,
                   :starting_at, :street_name, :street_number, :worker_code,
@@ -26,7 +27,7 @@ class Worker < ActiveRecord::Base
                   :corp_cellular_long, :corp_cellular_short, :corp_extension,
                   :department_id, :nomina_id, :gross_salary, :variable_salary,
                   :created_by, :updated_by, :remarks, :sex_id, :insurance_id,
-                  :social_security_cost, :education
+                  :social_security_cost, :education, :organization_id
   has_attached_file :avatar, :styles => { :original => "128x128>", :medium => "96x96>", :small => "64x64>" }, :default_url => "/images/missing/:style/user.png"
 
   has_many :time_records
@@ -44,8 +45,8 @@ class Worker < ActiveRecord::Base
                                         :length => { :minimum => 5 }
                                         # should :uniqueness => true
   validates :fiscal_id,                 :presence => true,
-                                        :length => { :minimum => 9 },
-                                        :uniqueness => true
+                                        :length => { :minimum => 8 },
+                                        :uniqueness => { :scope => :organization_id }
   validates :user,                      :presence => true
   validates :street_type,               :presence => true
   validates :zipcode,                   :presence => true
@@ -55,6 +56,7 @@ class Worker < ActiveRecord::Base
   validates :worker_type,               :presence => true
   validates :affiliation_id,            :presence => true
                                         # should :uniqueness => true
+  validates :organization,              :presence => true
   #validates :sex,                       :presence => true
 
   # Deactivated because in WorkerItem:

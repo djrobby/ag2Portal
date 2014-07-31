@@ -192,23 +192,34 @@ class ApplicationController < ActionController::Base
     fiscal_id.strip!
     fiscal_id.upcase!
     fiscal_id.delete! ' /-'
-    if fiscal_id.length < 8 || fiscal_id.length > 9
-      _dc = '$par'
+    if fiscal_id[0] == '_'
+      # Other unidentified
+      _dc = '$uni'
     else
-      if is_numeric?(fiscal_id[0])
-        # NIF
-        _dc = calc_dc_individual(fiscal_id.to_i)
-      elsif fiscal_id[0] == 'X'
-        # NIE
-        _dc = calc_dc_individual(fiscal_id[1, fiscal_id.length-1].to_i)
-      elsif fiscal_id[0] == 'U'
-        # UTE
-        _dc = '$ute'
-      elsif ('ABCDEFGHKLMNPQS'.index fiscal_id[0]) != nil
-        # CIF
-        _dc = calc_dc_legal_entity(fiscal_id)
+      if fiscal_id.length < 8 || fiscal_id.length > 9
+        _dc = '$par'
       else
-        _dc = '$err'
+        if is_numeric?(fiscal_id[0])
+          # NIF
+          _dc = calc_dc_individual(fiscal_id.to_i)
+          if fiscal_id.length == 9 && fiscal_id[8] != _dc
+            _dc = '$err'
+          end
+        elsif fiscal_id[0] == 'X'
+          # NIE
+          _dc = calc_dc_individual(fiscal_id[1, fiscal_id.length-1].to_i)
+        elsif fiscal_id[0] == 'U'
+          # UTE
+          _dc = '$ute'
+        elsif ('ABCDEFGHKLMNPQS'.index fiscal_id[0]) != nil
+          # CIF
+          _dc = calc_dc_legal_entity(fiscal_id)
+        elsif fiscal_id[0] == '*'
+          # Other unidentified
+          _dc = '$uni'
+        else
+          _dc = '$err'
+        end
       end
     end
     _dc
@@ -235,12 +246,12 @@ def set_charset
 end
 =end
 
-  private
-
   # IS NUMERIC
   def is_numeric?(object)
     true if Float(object) rescue false
   end  
+
+  private
   
   # NIF/NIE
   def calc_dc_individual(fiscal_id)

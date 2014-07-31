@@ -20,7 +20,7 @@ class Entity < ActiveRecord::Base
   validates :first_name,    :presence => true, :if => "company.blank?"
   validates :last_name,     :presence => true, :if => "company.blank?"
   validates :fiscal_id,     :presence => true,
-                            :length => { :minimum => 9 },
+                            :length => { :minimum => 8 },
                             :uniqueness => { :scope => :organization_id }
   validates :street_type,   :presence => true
   validates :zipcode,       :presence => true
@@ -59,6 +59,10 @@ class Entity < ActiveRecord::Base
     else
       "#{fiscal_id} #{company}"
     end
+  end
+
+  def self.find_by_fiscal_id_and_organization(_fiscal_id, _organization)
+    Entity.where("fiscal_id = ? AND organization_id = ?", _fiscal_id, _organization).first 
   end
 
   #

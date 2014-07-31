@@ -17,6 +17,9 @@ Ag2Admin::Engine.routes.draw do
     match 'companies/co_update_attachment', :controller => 'companies', :action => 'co_update_attachment'
     match 'co_update_attachment', :controller => 'companies', :action => 'co_update_attachment'
     match 'companies/:id/co_update_attachment', :controller => 'companies', :action => 'co_update_attachment'
+    match 'companies/co_validate_fiscal_id_textfield/:id', :controller => 'entities', :action => 'validate_fiscal_id_textfield'
+    match 'co_validate_fiscal_id_textfield/:id', :controller => 'entities', :action => 'validate_fiscal_id_textfield'
+    match 'companies/:id/co_validate_fiscal_id_textfield/:id', :controller => 'entities', :action => 'validate_fiscal_id_textfield'
     #
     match 'offices/update_province_textfield_from_town/:id', :controller => 'offices', :action => 'update_province_textfield_from_town'
     match 'offices/:id/update_province_textfield_from_town/:id', :controller => 'offices', :action => 'update_province_textfield_from_town'
@@ -33,8 +36,9 @@ Ag2Admin::Engine.routes.draw do
     match 'entities/:id/update_country_textfield_from_region/:id', :controller => 'entities', :action => 'update_country_textfield_from_region'
     match 'entities/update_region_textfield_from_province/:id', :controller => 'entities', :action => 'update_region_textfield_from_province'
     match 'entities/:id/update_region_textfield_from_province/:id', :controller => 'entities', :action => 'update_region_textfield_from_province'
-    match 'entities/validate_fiscal_id_textfield/:id', :controller => 'entities', :action => 'validate_fiscal_id_textfield'
-    match 'entities/:id/validate_fiscal_id_textfield/:id', :controller => 'entities', :action => 'validate_fiscal_id_textfield'
+    match 'entities/et_validate_fiscal_id_textfield/:id', :controller => 'entities', :action => 'validate_fiscal_id_textfield'
+    match 'et_validate_fiscal_id_textfield/:id', :controller => 'entities', :action => 'validate_fiscal_id_textfield'
+    match 'entities/:id/et_validate_fiscal_id_textfield/:id', :controller => 'entities', :action => 'validate_fiscal_id_textfield'
     #
     match 'areas/ar_update_worker_select_from_department/:department', :controller => 'areas', :action => 'ar_update_worker_select_from_department'
     match 'ar_update_worker_select_from_department/:department', :controller => 'areas', :action => 'ar_update_worker_select_from_department'

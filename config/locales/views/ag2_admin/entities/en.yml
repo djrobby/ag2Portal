@@ -21,6 +21,7 @@ en:
         btn_new: "Create Entity"
         footer: "Remember that all requested data are mandatory!"
         entity_type_alert: "Must indicate Names or Company upon Entity type!"
+        entity_fiscal_short: "Fiscal Id is too short (minimum is 8 characters)"
         submit: "Entity has been created."
       back_to_main_page: "Back to ag2Entities"
       validate_btn: "Validate"

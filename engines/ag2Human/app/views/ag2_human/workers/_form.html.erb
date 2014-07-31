@@ -8,9 +8,33 @@
     }).on('changeDate', function(e){
       $('.date_picker').datepicker('hide');
     });
+    // Save default text color
     text_field_color = $("#worker_last_name").css('color')
     // Setup drag & drop
     dd_import_files('#dd_files', '#image_content', 'wk_update_attachment');
+    // Icon inside text field: Validate Fiscal Id
+    $('input.iconify').wrap('<span class="validateicon" title="<%=t('ag2_human.workers.validate_btn') %>" />').after($('<span/>').click(function() {
+      // make a POST call and replace the content
+      var worker = $('#worker_fiscal_id').val();
+      if (worker == "")
+        entity = "0";
+      jQuery.getJSON('wk_validate_fiscal_id_textfield/' + worker, function(data) {
+        if (data.f_id == "$err") {
+          $("#worker_fiscal_id").css('color', 'red');
+          $('#submit_btn').hide();
+          alert('<%= I18n.t("ag2_human.workers.fiscal_error") %>');
+          $('#worker_fiscal_id').select();
+        }
+        else {
+          // Default color & focus
+          $("#worker_fiscal_id").css('color', text_field_color);
+          $("#worker_fiscal_id").val(data.fiscal_id);
+          $('#submit_btn').show();
+          alert(data.f_id + ': ' + data.fiscal_name + '.');
+        }
+      });
+      return false;
+    }));
   });
   
   jQuery(function($) {
@@ -121,8 +145,15 @@
 </div>
 <div>
   <label class="multi-field-label-two"> <%= f.input :worker_code, :input_html => { :class => 'large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
-  <label class="multi-field-label-two"> <%= f.input :fiscal_id, :input_html => { :class => 'large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.input :fiscal_id, :input_html => { onkeyup: "caps(this)", :class => 'large-text-field iconify' }, :label_html => { :class => 'form-label' } %> </label>
 </div>
+<% if session[:organization] != '0' %>
+<%= f.association :organization, collection: Organization.where("id = ?", "#{session[:organization]}").all, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' }, include_blank: false %>
+<% elsif current_user.organizations.count > 0 %>
+<%= f.association :organization, collection: current_user.organizations.order('name'), input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' }, include_blank: false %>
+<% else %>
+<%= f.association :organization, collection: Organization.order('name'), input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %>
+<% end %>
 <div>
   <label class="multi-field-label-two"> <%= f.input :affiliation_id, :input_html => { :class => 'large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
   <label class="multi-field-label-two"> <%= f.input :borned_on, :start_year => Time.now.year - 100, :end_year => Time.now.year + 100, :as => :string, :input_html => { :value => (f.object.borned_on.strftime("%d/%m/%Y") if f.object.borned_on), :class => 'mid-text-field date_picker' }, :label_html => { :class => 'form-label' } %> </label>
@@ -191,7 +222,7 @@
 <table class="form-table">
   <tbody>
     <tr class="form-tr">
-      <td class="form-td-three left-winged"> <%= f.button :submit, :class => 'btn-primary' %> </td>
+      <td class="form-td-three left-winged"> <%= f.button :submit, :class => 'btn-primary', :id => 'submit_btn' %> </td>
       <td class="form-td-three centered"><a href="#" id="to_uppercase_btn" class="btn btn-warning"><%=t 'ag2_human.workers.to_uppercase_btn' %></a></td>
       <td class="form-td-three right-winged"><a href="#" id="generate_code_btn" class="btn btn-warning"><%=t 'ag2_human.workers.generate_code_btn' %></a></td>
     </tr>

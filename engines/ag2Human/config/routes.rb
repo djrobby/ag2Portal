@@ -16,6 +16,7 @@ Ag2Human::Engine.routes.draw do
     match 'workers/update_province_textfield_from_zipcode/:id', :controller => 'workers', :action => 'update_province_textfield_from_zipcode'
     match 'workers/:id/update_province_textfield_from_zipcode/:id', :controller => 'workers', :action => 'update_province_textfield_from_zipcode'
     match 'workers/update_code_textfield_from_name/:id', :controller => 'workers', :action => 'update_code_textfield_from_name'
+    match 'update_code_textfield_from_name/:id', :controller => 'workers', :action => 'update_code_textfield_from_name'
     match 'workers/:id/update_code_textfield_from_name/:id', :controller => 'workers', :action => 'update_code_textfield_from_name'
     match 'workers/update_company_textfield_from_office/:id', :controller => 'workers', :action => 'update_company_textfield_from_office'
     match 'workers/:id/update_company_textfield_from_office/:id', :controller => 'workers', :action => 'update_company_textfield_from_office'
@@ -27,6 +28,9 @@ Ag2Human::Engine.routes.draw do
     match 'workers/wk_update_attachment', :controller => 'workers', :action => 'wk_update_attachment'
     match 'wk_update_attachment', :controller => 'workers', :action => 'wk_update_attachment'
     match 'workers/:id/wk_update_attachment', :controller => 'workers', :action => 'wk_update_attachment'
+    match 'workers/wk_validate_fiscal_id_textfield/:id', :controller => 'workers', :action => 'validate_fiscal_id_textfield'
+    match 'wk_validate_fiscal_id_textfield/:id', :controller => 'workers', :action => 'validate_fiscal_id_textfield'
+    match 'workers/:id/wk_validate_fiscal_id_textfield/:id', :controller => 'workers', :action => 'validate_fiscal_id_textfield'
     #
     match 'worker_report', :controller => 'ag2_timerecord_track', :action => 'worker_report'
     match 'office_report', :controller => 'ag2_timerecord_track', :action => 'office_report'

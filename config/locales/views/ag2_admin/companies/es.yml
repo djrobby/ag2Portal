@@ -19,4 +19,7 @@ es:
       new:
         title: "Nueva Empresa"
       back_to_main_page: "Volver a Empresas"
+      validate_btn: "Validar"
+      fiscal_error: "Id Fiscal erróneo."
+      fiscal_name: "Nombre de Id Fiscal no hallado."
       invoices_info: "Información sobre Facturas de la Empresa"

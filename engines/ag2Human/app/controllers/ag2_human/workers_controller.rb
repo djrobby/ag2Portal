@@ -10,7 +10,8 @@ module Ag2Human
                                                :update_code_textfield_from_name,
                                                :update_province_textfield_from_town,
                                                :update_province_textfield_from_zipcode,
-                                               :wk_update_attachment]
+                                               :wk_update_attachment,
+                                               :validate_fiscal_id_textfield]
     # Public attachment for drag&drop
     $attachment = nil
   
@@ -150,6 +151,37 @@ module Ag2Human
         format.html # update_offices_select_from_company.html.erb does not exist! JSON only
         format.json { render json: @offices }
       end
+    end
+
+    # Validate fiscal id
+    def validate_fiscal_id_textfield
+      fiscal_id = params[:id]
+      dc = ''
+      f_id = 'OK'
+      f_name = ''
+
+      if fiscal_id == '0'
+        f_id = '$err'
+      else
+        dc = fiscal_id_dc(fiscal_id)
+        if dc == '$par' || dc == '$err'
+          f_id = '$err'
+        else
+          if dc == '$uni'
+            f_id = '??'
+          end
+          f_name = fiscal_id_description(fiscal_id[0])
+          if f_name == '$err'
+            f_name = I18n.t("ag2_admin.entities.fiscal_name")
+          end
+          if is_numeric?(fiscal_id[0]) && fiscal_id.to_s.length == 8
+            fiscal_id = fiscal_id.to_s + dc
+          end
+        end
+      end
+
+      @json_data = { "f_id" => f_id, "fiscal_name" => f_name, "fiscal_id" => fiscal_id }
+      render json: @json_data
     end
 
     #
