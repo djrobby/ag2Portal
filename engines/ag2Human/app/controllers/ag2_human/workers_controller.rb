@@ -239,6 +239,9 @@ end
       company = params[:Company]
       office = params[:Office]
       letter = params[:letter]
+      if !session[:organization]
+        init_oco
+      end
 
       if !company.blank? && !office.blank?
         #@workers = Worker.where(id: WorkerItem.where(company_id: company, office_id: office)).paginate(:page => params[:page], :per_page => per_page).order('worker_code, id')
@@ -250,6 +253,9 @@ end
       else
         @search = Worker.search do
           fulltext params[:search]
+          if session[:organization] != '0'
+            with :organization_id, session[:organization]
+          end
           if !letter.blank? && letter != "%"
             with(:last_name).starting_with(letter)
           end

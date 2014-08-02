@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140731094419) do
+ActiveRecord::Schema.define(:version => 20140802083607) do
 
   create_table "activities", :force => true do |t|
     t.string   "description"
@@ -695,6 +695,7 @@ ActiveRecord::Schema.define(:version => 20140731094419) do
     t.integer  "image_file_size"
     t.datetime "image_updated_at"
     t.decimal  "prev_last_price",                  :precision => 12, :scale => 4, :default => 0.0, :null => false
+    t.integer  "organization_id"
   end
 
   add_index "products", ["active"], :name => "index_products_on_active"
@@ -702,7 +703,7 @@ ActiveRecord::Schema.define(:version => 20140731094419) do
   add_index "products", ["main_description"], :name => "index_products_on_main_description"
   add_index "products", ["manufacturer_id"], :name => "index_products_on_manufacturer_id"
   add_index "products", ["measure_id"], :name => "index_products_on_measure_id"
-  add_index "products", ["product_code"], :name => "index_products_on_product_code"
+  add_index "products", ["organization_id", "product_code"], :name => "index_products_on_organization_id_and_product_code", :unique => true
   add_index "products", ["product_family_id"], :name => "index_products_on_product_family_id"
   add_index "products", ["product_type_id"], :name => "index_products_on_product_type_id"
   add_index "products", ["tax_type_id"], :name => "index_products_on_tax_type_id"

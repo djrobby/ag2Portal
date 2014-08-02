@@ -4,10 +4,12 @@ class Product < ActiveRecord::Base
   belongs_to :measure
   belongs_to :tax_type
   belongs_to :manufacturer
+  belongs_to :organization
   attr_accessible :active, :aux_code, :aux_description, :average_price, :last_price, :life_time,
                   :main_description, :manufacturer_p_code, :markup, :product_code, :reference_price,
                   :remarks, :sell_price, :warranty_time, :prev_last_price,
-                  :product_type_id, :product_family_id, :measure_id, :tax_type_id, :manufacturer_id
+                  :product_type_id, :product_family_id, :measure_id, :tax_type_id,
+                  :manufacturer_id, :organization_id
   has_attached_file :image, :styles => { :original => "160x160>", :medium => "120x120>", :small => "80x80>" }, :default_url => "/images/missing/:style/product.png"
 
   has_many :purchase_prices, dependent: :destroy
@@ -34,6 +36,7 @@ class Product < ActiveRecord::Base
   validates :measure,           :presence => true
   validates :tax_type,          :presence => true
   validates :manufacturer,      :presence => true
+  validates :organization,      :presence => true
 
   validates_attachment_content_type :image, :content_type => /\Aimage\/.*\Z/
 
@@ -110,6 +113,7 @@ class Product < ActiveRecord::Base
     integer :measure_id
     integer :manufacturer_id
     integer :tax_type_id
+    integer :organization_id
   end
 
   private

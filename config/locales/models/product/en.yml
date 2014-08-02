@@ -42,3 +42,5 @@ en:
         aux_code: "Ext/Aux Code"
         remarks: "Remarks"
         stock: "Total stock"
+        organization: "Organization"
+        organization_id: "Organization"

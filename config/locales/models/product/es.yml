@@ -42,3 +42,5 @@ es:
         aux_code: "Código Ext/Aux"
         remarks: "Comentarios"
         stock: "Existencia total"
+        organization: "Organización"
+        organization_id: "Organización"

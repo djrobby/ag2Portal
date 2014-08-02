@@ -158,6 +158,7 @@ class Worker < ActiveRecord::Base
     integer :id
     string :worker_code
     string :last_name
+    integer :organization_id
   end
 
   private
