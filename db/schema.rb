@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140802083607) do
+ActiveRecord::Schema.define(:version => 20140803094402) do
 
   create_table "activities", :force => true do |t|
     t.string   "description"
@@ -332,9 +332,8 @@ ActiveRecord::Schema.define(:version => 20140802083607) do
     t.integer  "worker_id"
   end
 
-  add_index "departments", ["code"], :name => "index_departments_on_code"
   add_index "departments", ["company_id"], :name => "index_departments_on_company_id"
-  add_index "departments", ["organization_id"], :name => "index_departments_on_organization_id"
+  add_index "departments", ["organization_id", "code"], :name => "index_departments_on_organization_id_and_code", :unique => true
   add_index "departments", ["worker_id"], :name => "index_departments_on_worker_id"
 
   create_table "entities", :force => true do |t|

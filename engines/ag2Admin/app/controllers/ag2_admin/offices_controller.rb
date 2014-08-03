@@ -7,8 +7,10 @@ module Ag2Admin
     skip_load_and_authorize_resource :only => [:update_province_textfield_from_town,
                                                :update_province_textfield_from_zipcode,
                                                :update_code_textfield_from_zipcode]
-    # Helper methods for sorting
-    helper_method :sort_column
+    # Helper methods for
+    # => sorting
+    # => allow edit (hide buttons)
+    helper_method :sort_column, :cannot_edit
     #    def internal
     #      @companies = Company.all
     #    end
@@ -54,8 +56,13 @@ module Ag2Admin
     # GET /offices.json
     def index
       #      internal
-      #@offices = Office.paginate(:page => params[:page], :per_page => per_page).order('office_code')
-      @offices = Office.paginate(:page => params[:page], :per_page => per_page).order(sort_column + ' ' + sort_direction)
+      if session[:organization] != '0'
+        # OCO organization active
+        @offices = Office.joins(:company).where(companies: { organization_id: session[:organization] }).paginate(:page => params[:page], :per_page => per_page).order(sort_column + ' ' + sort_direction)
+      else
+        # OCO inactive
+        @offices = Office.paginate(:page => params[:page], :per_page => per_page).order(sort_column + ' ' + sort_direction)
+      end
 
       respond_to do |format|
         format.html # index.html.erb
@@ -155,6 +162,11 @@ module Ag2Admin
 
     def sort_column
       Office.column_names.include?(params[:sort]) ? params[:sort] : "office_code"
+    end
+    
+    def cannot_edit(_office, _company)
+      (session[:office] != '0' && _office != session[:office].to_i) ||
+      (session[:company] != '0' && _company != session[:company].to_i)
     end
   end
 end

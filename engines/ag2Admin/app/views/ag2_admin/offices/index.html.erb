@@ -17,8 +17,8 @@
         <td><%= link_to office.office_code, office %></td>
         <td><%= office.name %></td>
         <td><%= office.company.name unless office.company.blank? %></td>
-        <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => Office, :path => edit_office_path(office) } %>
-        <%= render :partial => '/layouts/crud/delete', :locals => { :model => Office, :path => office, :msg => I18n.t("activerecord.models.office.one"), :txt => office.name } %> </td>
+        <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => Office, :path => edit_office_path(office) } unless cannot_edit(office.id, office.company_id) %>
+        <%= render :partial => '/layouts/crud/delete', :locals => { :model => Office, :path => office, :msg => I18n.t("activerecord.models.office.one"), :txt => office.name } unless cannot_edit(office.id, office.company.id) %> </td>
       </tr>
       <% end %>
     </tbody>

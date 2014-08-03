@@ -19,8 +19,8 @@
         <td><%= t.name %></td>
         <td><%= t.organization.name unless t.organization.blank? %></td>
         <td><%= t.company.name unless t.company.blank? %></td>
-        <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => Department, :path => edit_department_path(t) } %>
-        <%= render :partial => '/layouts/crud/delete', :locals => { :model => Department, :path => t, :msg => I18n.t("activerecord.models.department.one"), :txt => t.name } %> </td>
+        <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => Department, :path => edit_department_path(t) } unless cannot_edit(t.company_id) %>
+        <%= render :partial => '/layouts/crud/delete', :locals => { :model => Department, :path => t, :msg => I18n.t("activerecord.models.department.one"), :txt => t.name } unless cannot_edit(t.company_id) %> </td>
       </tr>
       <% end %>
     </tbody>

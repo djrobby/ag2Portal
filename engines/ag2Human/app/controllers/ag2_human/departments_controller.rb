@@ -47,7 +47,11 @@ module Ag2Human
     # GET /departments
     # GET /departments.json
     def index
-      @departments = Department.paginate(:page => params[:page], :per_page => per_page).order(sort_column + ' ' + sort_direction)
+      if session[:organization] != '0'
+        @departments = Department.where(organization_id: session[:organization]).paginate(:page => params[:page], :per_page => per_page).order(sort_column + ' ' + sort_direction)
+      else
+        @departments = Department.paginate(:page => params[:page], :per_page => per_page).order(sort_column + ' ' + sort_direction)
+      end
 
       respond_to do |format|
         format.html # index.html.erb

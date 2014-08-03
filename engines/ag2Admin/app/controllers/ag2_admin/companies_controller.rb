@@ -7,8 +7,10 @@ module Ag2Admin
     skip_load_and_authorize_resource :only => [:update_province_textfield_from_town,
                                                :update_province_textfield_from_zipcode,
                                                :co_update_attachment]
-    # Helper methods for sorting
-    helper_method :sort_column
+    # Helper methods for
+    # => sorting
+    # => allow edit (hide buttons)
+    helper_method :sort_column, :cannot_edit
     # Public attachment for drag&drop
     $attachment = nil
   
@@ -179,6 +181,10 @@ module Ag2Admin
 
     def sort_column
       Company.column_names.include?(params[:sort]) ? params[:sort] : "fiscal_id"
+    end
+    
+    def cannot_edit(_company)
+      session[:company] != '0' && _company != session[:company].to_i
     end
   end
 end

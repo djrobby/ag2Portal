@@ -12,9 +12,11 @@ class Department < ActiveRecord::Base
 
   has_paper_trail
 
-  validates :name,  :presence => true
-  validates :code,  :presence => true,
-                    :length => { :in => 2..5 }
+  validates :name,          :presence => true
+  validates :code,          :presence => true,
+                            :length => { :in => 3..5 },
+                            :uniqueness => { :scope => :organization_id }
+  validates :organization,  :presence => true
 
   before_validation :fields_to_uppercase
   before_destroy :check_for_dependent_records
@@ -27,6 +29,12 @@ class Department < ActiveRecord::Base
 
   def to_label
     "#{name} (#{code})"
+  end
+
+  def name_and_company
+    _nac = self.name
+    _nac += " (" + self.company.name[0,40].strip + ")" if !self.company.blank?
+    _nac
   end
   
   private

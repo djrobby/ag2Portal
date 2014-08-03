@@ -17,8 +17,8 @@
         <td><%= link_to company.fiscal_id, company %></td>
         <td><%= company.name %></td>
         <td><%= company.organization.name %></td>
-        <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => Company, :path => edit_company_path(company) } %>
-        <%= render :partial => '/layouts/crud/delete', :locals => { :model => Company, :path => company, :msg => I18n.t("activerecord.models.company.one"), :txt => company.name } %> </td>
+        <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => Company, :path => edit_company_path(company) } unless cannot_edit(company.id) %>
+        <%= render :partial => '/layouts/crud/delete', :locals => { :model => Company, :path => company, :msg => I18n.t("activerecord.models.company.one"), :txt => company.name } unless cannot_edit(company.id) %> </td>
       </tr>
       <% end %>
     </tbody>
