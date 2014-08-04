@@ -69,9 +69,15 @@ module Ag2Directory
     def index
       manage_filter_state
       letter = params[:letter]
+      if !session[:organization]
+        init_oco
+      end
 
       @search = SharedContact.search do
         fulltext params[:search]
+        if session[:organization] != '0'
+          with :organization_id, session[:organization]
+        end
         if !letter.blank? && letter != "%"
           any_of do
             with(:last_name).starting_with(letter)

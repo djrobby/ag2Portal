@@ -1,4 +1,8 @@
+<% if worker.ending_at.blank? %>
 <tr>
+<% else %>
+<tr class="inactive-row">
+<% end %>
   <td><%= link_to worker.worker_code, worker %></td>
   <td><%= worker.full_name_and_count %></td>
   <td><%= worker.fiscal_id unless worker.fiscal_id.nil? %></td>

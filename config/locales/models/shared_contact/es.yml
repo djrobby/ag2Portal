@@ -40,3 +40,5 @@ es:
         remarks: "Comentarios"
         full_name: "Nombre completo"
         address: "Dirección"
+        organization: "Organización"
+        organization_id: "Organización"

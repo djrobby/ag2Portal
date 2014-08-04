@@ -44,9 +44,15 @@ module Ag2Directory
     def search
       manage_filter_state
       letter = params[:letter]
+      if !session[:organization]
+        init_oco
+      end
 
       @search = CorpContact.search do
         fulltext params[:search]
+        if session[:organization] != '0'
+          with :organization_id, session[:organization]
+        end
         if !letter.blank? && letter != "%"
           with(:last_name).starting_with(letter)
         end
@@ -69,7 +75,16 @@ module Ag2Directory
     # GET /corp_contacts.json
     def index
       session[:letter] = nil
-      @corp_contacts = Company.order('name').all(:include => [:offices, :corp_contacts])
+
+      if !session[:organization]
+        init_oco
+      end
+      if session[:organization] != '0'
+        @corp_contacts = Company.where(organization_id: session[:organization]).includes(:offices, :corp_contacts).order(:name)
+      else
+        @corp_contacts = Company.includes(:offices, :corp_contacts).order(:name)
+      end
+      #@corp_contacts = Company.order('name').all(:include => [:offices, :corp_contacts])
 
       respond_to do |format|
         format.html # index.html.erb

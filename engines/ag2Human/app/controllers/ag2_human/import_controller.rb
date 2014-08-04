@@ -264,6 +264,7 @@ render json: @json_data
       @zipcode = Zipcode.first
       @worker_type = WorkerType.first
       @degree_type = DegreeType.first
+      @organization = Organization.first
     end
 
     def search_aux_data(source)
@@ -407,6 +408,7 @@ render json: @json_data
         first_name_wc = sanitize_string(source.cnomtra, true, true, false, false) unless source.cnomtra.blank?
         last_name_wc = sanitize_string(source.capetra, true, true, false, false) unless source.capetra.blank?
         # Assign data
+        worker.organization_id = !@organization.blank? ? @organization.id : 1
         worker.first_name = sanitize_string(source.cnomtra, true, false, false, true) unless source.cnomtra.blank?
         worker.last_name = sanitize_string(source.capetra, true, false, false, true) unless source.capetra.blank?
         worker.fiscal_id = sanitize_string(source.cdni, true, false, false, false) unless source.cdni.blank?

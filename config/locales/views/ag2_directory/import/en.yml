@@ -3,7 +3,7 @@ en:
     import:
       index:
         task: "Corporate Contacts Updater"
-        description: "ag2DataImport will add new Contacts or update existing ones, using the Workers current data. This procedure do not destroy any existing Contacts data."
+        description: "ag2DataImport will add new Contacts or update existing ones, using the current data of Workers with items. This procedure do not destroy any existing Contacts data that are not linked to Workers."
         do_not_interrupt: "This operation may take a while: Do not interrupt it once starts up!"
         caution: "Caution!"
         warning: "This action cannot be undone!"

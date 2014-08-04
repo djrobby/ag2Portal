@@ -26,3 +26,5 @@ es:
         department_id: "Departamento"
         full_name: "Nombre completo"
         dept: "Dpto"
+        organization: "Organización"
+        organization_id: "Organización"

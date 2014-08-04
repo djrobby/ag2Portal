@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140803094402) do
+ActiveRecord::Schema.define(:version => 20140804153836) do
 
   create_table "activities", :force => true do |t|
     t.string   "description"
@@ -208,6 +208,7 @@ ActiveRecord::Schema.define(:version => 20140803094402) do
     t.integer  "created_by"
     t.integer  "updated_by"
     t.integer  "worker_count",        :limit => 2
+    t.integer  "organization_id"
   end
 
   add_index "corp_contacts", ["company_id"], :name => "index_corp_contacts_on_company_id"
@@ -220,6 +221,7 @@ ActiveRecord::Schema.define(:version => 20140803094402) do
   add_index "corp_contacts", ["first_name"], :name => "index_corp_contacts_on_first_name"
   add_index "corp_contacts", ["last_name"], :name => "index_corp_contacts_on_last_name"
   add_index "corp_contacts", ["office_id"], :name => "index_corp_contacts_on_office_id"
+  add_index "corp_contacts", ["organization_id"], :name => "index_corp_contacts_on_organization_id"
   add_index "corp_contacts", ["worker_id"], :name => "index_corp_contacts_on_worker_id"
 
   create_table "countries", :force => true do |t|
@@ -986,6 +988,7 @@ ActiveRecord::Schema.define(:version => 20140803094402) do
     t.integer  "region_id"
     t.integer  "created_by"
     t.integer  "updated_by"
+    t.integer  "organization_id"
   end
 
   add_index "shared_contacts", ["cellular"], :name => "index_shared_contacts_on_cellular"
@@ -995,6 +998,7 @@ ActiveRecord::Schema.define(:version => 20140803094402) do
   add_index "shared_contacts", ["first_name"], :name => "index_shared_contacts_on_first_name"
   add_index "shared_contacts", ["fiscal_id"], :name => "index_shared_contacts_on_fiscal_id"
   add_index "shared_contacts", ["last_name"], :name => "index_shared_contacts_on_last_name"
+  add_index "shared_contacts", ["organization_id"], :name => "index_shared_contacts_on_organization_id"
   add_index "shared_contacts", ["phone"], :name => "index_shared_contacts_on_phone"
   add_index "shared_contacts", ["province_id"], :name => "index_shared_contacts_on_province_id"
   add_index "shared_contacts", ["region_id"], :name => "index_shared_contacts_on_region_id"

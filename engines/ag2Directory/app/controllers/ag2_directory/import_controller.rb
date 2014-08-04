@@ -19,7 +19,7 @@ module Ag2Directory
       @workers.each do |worker|
         # Worker items
         worker_items = worker.worker_items
-        if !worker_items.nil?
+        if !worker_items.blank?
           # Contact already exists?
           @contact = CorpContact.find_by_worker_id(worker)
           if @contact.nil?
@@ -27,13 +27,23 @@ module Ag2Directory
             @contact = CorpContact.new
             @contact.worker_id = worker.id
           end
-          # Update contact
-          update_contact(@contact, worker, worker_items.first, worker_items.count)
-          # Save contact
-          if !@contact.save
-            message = I18n.t("result_error_message_html", :scope => :"ag2_directory.import.index")
-            @json_data = { "DataImport" => message, "Result" => "ERROR" }
-            break
+          # Proceed based on ending_at
+          if worker.ending_at.blank?
+            # Update contact
+            update_contact(@contact, worker, worker_items.first, worker_items.count)
+            # Save contact
+            if !@contact.save
+              message = I18n.t("result_error_message_html", :scope => :"ag2_directory.import.index")
+              @json_data = { "DataImport" => message, "Result" => "ERROR" }
+              break
+            end
+          else
+            # Delete contact
+            if !@contact.destroy
+              message = I18n.t("result_error_message_html", :scope => :"ag2_directory.import.index")
+              @json_data = { "DataImport" => message, "Result" => "ERROR" }
+              break
+            end
           end
         end
       end
@@ -43,6 +53,7 @@ module Ag2Directory
 
     def update_contact(contact, worker, worker_item, worker_items_count)
       # Worker data
+      contact.organization_id = worker.organization_id unless worker.organization_id.nil?
       contact.first_name = worker.first_name unless worker.first_name.nil?
       contact.last_name = worker.last_name unless worker.last_name.nil?
       contact.email = worker.email unless worker.email.nil?

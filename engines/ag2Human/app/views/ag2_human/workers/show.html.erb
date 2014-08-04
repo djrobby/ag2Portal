@@ -27,6 +27,12 @@
       <td><%= @worker.age  unless @worker.borned_on.blank? %></td>
     </tr>
     <tr>
+      <td><%= t :"activerecord.attributes.worker.starting_at" %>:</td>
+      <td><%= @worker.starting_at.strftime("%d/%m/%Y") unless @worker.starting_at.blank? %></td>
+      <td><%= t :"activerecord.attributes.worker.ending_at" %>:</td>
+      <td><%= @worker.ending_at.strftime("%d/%m/%Y") unless @worker.ending_at.blank? %></td>
+    </tr>
+    <tr>
       <td><%= t :"activerecord.attributes.worker.worker_type" %>:</td>
       <td><%= @worker.worker_type.description.titleize unless @worker.worker_type.nil? %></td>
       <td><%= t :"activerecord.attributes.worker.degree_type" %>:</td>

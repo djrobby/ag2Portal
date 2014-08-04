@@ -40,3 +40,5 @@ en:
         remarks: "Remarks"
         full_name: "Full Name"
         address: "Address"
+        organization: "Organization"
+        organization_id: "Organization"

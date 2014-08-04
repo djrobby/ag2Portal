@@ -6,12 +6,13 @@ class SharedContact < ActiveRecord::Base
   belongs_to :country
   belongs_to :region
   belongs_to :shared_contact_type
+  belongs_to :organization
   attr_accessible :building, :cellular, :company, :email, :extension,
                   :fax, :first_name, :fiscal_id, :floor, :floor_office,
                   :last_name, :phone, :position, :street_name, :street_number,
                   :street_type_id, :zipcode_id, :town_id, :province_id,
                   :country_id, :shared_contact_type_id, :remarks, :region_id,
-                  :created_by, :updated_by
+                  :created_by, :updated_by, :organization_id
 
   has_paper_trail
 
@@ -27,6 +28,7 @@ class SharedContact < ActiveRecord::Base
   validates :region,               :presence => true
   validates :country,              :presence => true
   validates :shared_contact_type,  :presence => true
+  validates :organization,         :presence => true
 
   before_validation :fields_to_uppercase
 
@@ -35,6 +37,7 @@ class SharedContact < ActiveRecord::Base
     string :company
     string :last_name
     string :first_name
+    integer :organization_id
   end
 
   def fields_to_uppercase

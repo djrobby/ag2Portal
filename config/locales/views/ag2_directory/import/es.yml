@@ -3,7 +3,7 @@ es:
     import:
       index:
         task: "Actualizador de Contactos Corporativos"
-        description: "ag2DataImport agregará nuevos Contactos o actualizará los ya existentes, utilizando los datos actuales de Trabajadores. Este procedimiento no destruye los datos de los Contactos existentes."
+        description: "ag2DataImport agregará nuevos Contactos o actualizará los ya existentes, utilizando los datos actuales de Trabajadores con ítems. Este procedimiento no destruye los datos de los Contactos existentes que no estén vinculados a Trabajadores."
         do_not_interrupt: "Esta operación puede tardar un rato: ¡No la interrumpas una vez puesta en marcha!"
         caution: "¡Precaución!"
         warning: "¡Esta acción no se puede deshacer!"

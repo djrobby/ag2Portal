@@ -5,15 +5,18 @@
 <% @corp_contacts.each do |company| %>
 <!-- Company -->
 <%= render :partial => 'layouts/companyinfo', :locals => { :company => company } %>
-<h4 class="blue-band"><a data-toggle="modal" href="#companyinfo<%= company.id.to_s %>"><%= company.name %></a><!-- <%= company.name %> --><span class="blue-separator">| </span><i class="icon-hand-right icon-white"></i> <%= company.fiscal_id  %> <span class="blue-separator">| </span><i class="icon-phone-white"></i> <% if !company.phone.blank? %>
+<h4 class="blue-band"><a data-toggle="modal" href="#companyinfo<%= company.id.to_s %>"><%= company.name %></a><!-- <%= company.name %> --><span class="blue-separator">| </span><i class="icon-hand-right icon-white"></i> <%= company.fiscal_id  %> <span class="blue-separator">| </span><i class="icon-phone-white"></i>
+<% if !company.phone.blank? %>
 <%= company.phone %>
 <% else %>
 ...
-<% end %> <span class="blue-separator">| </span><i class="icon-iphone-white"></i> <% if !company.cellular.blank? %>
+<% end %> <span class="blue-separator">| </span><i class="icon-iphone-white"></i>
+<% if !company.cellular.blank? %>
 <%= company.cellular %>
 <% else %>
 ...
 <% end %> </h4>
+<% if (company.offices.count == 0) %><br /><% end %>
 
 <% company.offices.sort_by{ |office| office.name }.each do |office| %>
 <% if (office.corp_contacts.count > 0) %>

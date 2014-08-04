@@ -56,6 +56,9 @@ module Ag2Admin
     # GET /offices.json
     def index
       #      internal
+      if !session[:organization]
+        init_oco
+      end
       if session[:organization] != '0'
         # OCO organization active
         @offices = Office.joins(:company).where(companies: { organization_id: session[:organization] }).paginate(:page => params[:page], :per_page => per_page).order(sort_column + ' ' + sort_direction)
