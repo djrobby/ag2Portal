@@ -27,8 +27,8 @@ module Ag2Directory
             @contact = CorpContact.new
             @contact.worker_id = worker.id
           end
-          # Proceed based on ending_at
-          if worker.ending_at.blank?
+          # Proceed based on ending_at & is_contact
+          if worker.ending_at.blank? && worker.is_contact
             # Update contact
             update_contact(@contact, worker, worker_items.first, worker_items.count)
             # Save contact

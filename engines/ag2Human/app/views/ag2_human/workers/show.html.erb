@@ -56,6 +56,12 @@
       (<%= @worker.corp_cellular_short %>)
       <% end %> </td>
     </tr>
+    <tr>
+      <td><%= t 'activerecord.attributes.worker.organization' %>:</td>
+      <td><%= @worker.organization.name unless @worker.organization.blank? %></td>
+      <td><%= t 'activerecord.attributes.worker.is_contact' %>:</td>
+      <td> <% if @worker.is_contact %> <i class="icon-thumbs-up"></i> <% else %> <i class="icon-thumbs-down"></i> <% end %> </td>
+    </tr>
     <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @worker } %>
     <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @worker } %>
   </tbody>
