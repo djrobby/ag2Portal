@@ -431,6 +431,7 @@ render json: @json_data
         #worker.professional_group_id = @professional_group.id unless @professional_group.id.blank?
         #worker.starting_at = source.dfecalta unless source.dfecalta.blank?
         #worker.issue_starting_at = source.dfecini unless source.dfecini.blank?
+        worker.starting_at = source.dfecini unless source.dfecini.blank?
         #if !cctagene.nil?
         #  worker.contribution_account_code = sanitize_string(cctagene, true, false, false, false)
         #else
@@ -528,6 +529,9 @@ render json: @json_data
         #if !source.dfecini.blank? && worker.issue_starting_at != source.dfecini
         #  worker.issue_starting_at = source.dfecini
         #end
+        if !source.dfecini.blank? && worker.starting_at != source.dfecini
+          worker.starting_at = source.dfecini
+        end
         #if !cctagene.nil?
         #  if worker.contribution_account_code != sanitize_string(cctagene, true, false, false, false)
         #    worker.contribution_account_code = sanitize_string(cctagene, true, false, false, false)
