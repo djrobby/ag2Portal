@@ -1,5 +1,6 @@
 class ContractType < ActiveRecord::Base
-  attr_accessible :ct_code, :name,
+  belongs_to :organization
+  attr_accessible :ct_code, :name, :organization_id,
                   :created_by, :updated_by, :nomina_id
 
   has_many :workers
@@ -7,10 +8,11 @@ class ContractType < ActiveRecord::Base
 
   has_paper_trail
 
-  validates :ct_code, :presence => true,
-                      :length => { :minimum => 2 },
-                      :uniqueness => true
-  validates :name,    :presence => true
+  validates :ct_code,       :presence => true,
+                            :length => { :minimum => 2 },
+                            :uniqueness => { :scope => :organization_id }
+  validates :name,          :presence => true
+  validates :organization,  :presence => true
 
   before_validation :fields_to_uppercase
   before_destroy :check_for_dependent_records

@@ -11,3 +11,5 @@ es:
       salary_concept:
         name: "Nombre"
         nomina_id: "Id N+"
+        organization: "Organización"
+        organization_id: "Organización"

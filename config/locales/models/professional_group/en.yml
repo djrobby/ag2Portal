@@ -12,3 +12,5 @@ en:
         pg_code: "Code"
         name: "Name"
         nomina_id: "N+ Id"
+        organization: "Organization"
+        organization_id: "Organization"

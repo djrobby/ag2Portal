@@ -10,3 +10,5 @@ es:
     attributes:
       insurance:
         name: "Nombre"
+        organization: "Organización"
+        organization_id: "Organización"

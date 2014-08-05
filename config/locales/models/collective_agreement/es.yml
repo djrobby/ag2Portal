@@ -13,3 +13,5 @@ es:
         name: "Nombre"
         nomina_id: "Id N+"
         hours: "Horas anuales"
+        organization: "Organización"
+        organization_id: "Organización"

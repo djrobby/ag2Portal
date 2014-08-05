@@ -1,11 +1,13 @@
 class SalaryConcept < ActiveRecord::Base
-  attr_accessible :name, :nomina_id
+  belongs_to :organization
+  attr_accessible :name, :nomina_id, :organization_id
 
   has_many :worker_salary_items
 
   has_paper_trail
 
-  validates :name,  :presence => true
+  validates :name,          :presence => true
+  validates :organization,  :presence => true
 
   before_destroy :check_for_dependent_records
 

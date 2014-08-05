@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140805115421) do
+ActiveRecord::Schema.define(:version => 20140805180451) do
 
   create_table "activities", :force => true do |t|
     t.string   "description"
@@ -123,16 +123,17 @@ ActiveRecord::Schema.define(:version => 20140805115421) do
   create_table "collective_agreements", :force => true do |t|
     t.string   "name"
     t.string   "ca_code"
-    t.datetime "created_at",                             :null => false
-    t.datetime "updated_at",                             :null => false
+    t.datetime "created_at",                                  :null => false
+    t.datetime "updated_at",                                  :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
     t.string   "nomina_id"
-    t.integer  "hours",      :limit => 2, :default => 0
+    t.integer  "hours",           :limit => 2, :default => 0
+    t.integer  "organization_id"
   end
 
-  add_index "collective_agreements", ["ca_code"], :name => "index_collective_agreements_on_ca_code"
   add_index "collective_agreements", ["nomina_id"], :name => "index_collective_agreements_on_nomina_id"
+  add_index "collective_agreements", ["organization_id", "ca_code"], :name => "index_collective_agreements_on_organization_id_and_ca_code", :unique => true
 
   create_table "companies", :force => true do |t|
     t.string   "name"
@@ -176,15 +177,16 @@ ActiveRecord::Schema.define(:version => 20140805115421) do
   create_table "contract_types", :force => true do |t|
     t.string   "name"
     t.string   "ct_code"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
     t.string   "nomina_id"
+    t.integer  "organization_id"
   end
 
-  add_index "contract_types", ["ct_code"], :name => "index_contract_types_on_ct_code"
   add_index "contract_types", ["nomina_id"], :name => "index_contract_types_on_nomina_id"
+  add_index "contract_types", ["organization_id", "ct_code"], :name => "index_contract_types_on_organization_id_and_ct_code", :unique => true
 
   create_table "corp_contacts", :force => true do |t|
     t.string   "first_name"
@@ -250,15 +252,16 @@ ActiveRecord::Schema.define(:version => 20140805115421) do
   create_table "degree_types", :force => true do |t|
     t.string   "name"
     t.string   "dt_code"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
     t.string   "nomina_id"
+    t.integer  "organization_id"
   end
 
-  add_index "degree_types", ["dt_code"], :name => "index_degree_types_on_dt_code"
   add_index "degree_types", ["nomina_id"], :name => "index_degree_types_on_nomina_id"
+  add_index "degree_types", ["organization_id", "dt_code"], :name => "index_degree_types_on_organization_id_and_dt_code", :unique => true
 
   create_table "delivery_note_items", :force => true do |t|
     t.integer  "delivery_note_id"
@@ -419,13 +422,15 @@ ActiveRecord::Schema.define(:version => 20140805115421) do
 
   create_table "insurances", :force => true do |t|
     t.string   "name"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
+    t.integer  "organization_id"
   end
 
   add_index "insurances", ["name"], :name => "index_insurances_on_name"
+  add_index "insurances", ["organization_id"], :name => "index_insurances_on_organization_id"
 
   create_table "manufacturers", :force => true do |t|
     t.string   "name"
@@ -712,15 +717,16 @@ ActiveRecord::Schema.define(:version => 20140805115421) do
   create_table "professional_groups", :force => true do |t|
     t.string   "name"
     t.string   "pg_code"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
     t.string   "nomina_id"
+    t.integer  "organization_id"
   end
 
   add_index "professional_groups", ["nomina_id"], :name => "index_professional_groups_on_nomina_id"
-  add_index "professional_groups", ["pg_code"], :name => "index_professional_groups_on_pg_code"
+  add_index "professional_groups", ["organization_id", "pg_code"], :name => "index_professional_groups_on_organization_id_and_pg_code", :unique => true
 
   create_table "projects", :force => true do |t|
     t.string   "name"
@@ -932,15 +938,17 @@ ActiveRecord::Schema.define(:version => 20140805115421) do
 
   create_table "salary_concepts", :force => true do |t|
     t.string   "name"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
     t.string   "nomina_id"
+    t.integer  "organization_id"
   end
 
   add_index "salary_concepts", ["name"], :name => "index_salary_concepts_on_name"
   add_index "salary_concepts", ["nomina_id"], :name => "index_salary_concepts_on_nomina_id"
+  add_index "salary_concepts", ["organization_id"], :name => "index_salary_concepts_on_organization_id"
 
   create_table "sexes", :force => true do |t|
     t.string   "name"
@@ -1687,11 +1695,14 @@ ActiveRecord::Schema.define(:version => 20140805115421) do
 
   create_table "worker_types", :force => true do |t|
     t.string   "description"
-    t.datetime "created_at",  :null => false
-    t.datetime "updated_at",  :null => false
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
+    t.integer  "organization_id"
   end
+
+  add_index "worker_types", ["organization_id"], :name => "index_worker_types_on_organization_id"
 
   create_table "workers", :force => true do |t|
     t.string   "first_name"

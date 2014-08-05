@@ -1,5 +1,6 @@
 class CollectiveAgreement < ActiveRecord::Base
-  attr_accessible :ca_code, :name, :hours,
+  belongs_to :organization
+  attr_accessible :ca_code, :name, :hours, :organization_id,
                   :created_by, :updated_by, :nomina_id
 
   has_many :workers
@@ -7,10 +8,11 @@ class CollectiveAgreement < ActiveRecord::Base
 
   has_paper_trail
 
-  validates :ca_code, :presence => true,
-                      :length => { :minimum => 2 },
-                      :uniqueness => true
-  validates :name,    :presence => true
+  validates :ca_code,       :presence => true,
+                            :length => { :minimum => 2 },
+                            :uniqueness => { :scope => :organization_id }
+  validates :name,          :presence => true
+  validates :organization,  :presence => true
 
   before_validation :fields_to_uppercase
   before_destroy :check_for_dependent_records

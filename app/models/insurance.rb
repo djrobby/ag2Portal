@@ -1,12 +1,14 @@
 class Insurance < ActiveRecord::Base
-  attr_accessible :name
+  belongs_to :organization
+  attr_accessible :name, :organization_id
 
   has_many :workers
   has_many :worker_items
 
   has_paper_trail
 
-  validates :name,  :presence => true
+  validates :name,          :presence => true
+  validates :organization,  :presence => true
 
   before_destroy :check_for_dependent_records
 

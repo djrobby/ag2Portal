@@ -1,5 +1,6 @@
 class ProfessionalGroup < ActiveRecord::Base
-  attr_accessible :name, :pg_code,
+  belongs_to :organization
+  attr_accessible :name, :pg_code, :organization_id,
                   :created_by, :updated_by, :nomina_id
 
   has_many :workers
@@ -7,10 +8,11 @@ class ProfessionalGroup < ActiveRecord::Base
 
   has_paper_trail
 
-  validates :pg_code, :presence => true,
-                      :length => { :minimum => 2 },
-                      :uniqueness => true
-  validates :name,    :presence => true
+  validates :pg_code,       :presence => true,
+                            :length => { :minimum => 2 },
+                            :uniqueness => { :scope => :organization_id }
+  validates :name,          :presence => true
+  validates :organization,  :presence => true
 
   before_validation :fields_to_uppercase
   before_destroy :check_for_dependent_records

@@ -10,3 +10,5 @@ en:
     attributes:
       worker_type:
         description: "Description"
+        organization: "Organization"
+        organization_id: "Organization"

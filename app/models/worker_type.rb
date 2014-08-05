@@ -1,12 +1,14 @@
 class WorkerType < ActiveRecord::Base
-  attr_accessible :description,
+  belongs_to :organization
+  attr_accessible :description, :organization_id,
                   :created_by, :updated_by
 
   has_many :workers
 
   has_paper_trail
 
-  validates :description, :presence => true
+  validates :description,   :presence => true
+  validates :organization,  :presence => true
 
   before_destroy :check_for_workers
   
