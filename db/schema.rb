@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140804153836) do
+ActiveRecord::Schema.define(:version => 20140805115421) do
 
   create_table "activities", :force => true do |t|
     t.string   "description"
@@ -1747,6 +1747,7 @@ ActiveRecord::Schema.define(:version => 20140804153836) do
     t.integer  "sex_id"
     t.integer  "insurance_id"
     t.integer  "organization_id"
+    t.boolean  "is_contact"
   end
 
   add_index "workers", ["affiliation_id"], :name => "index_workers_on_affiliation_id"
