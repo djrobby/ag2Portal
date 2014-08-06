@@ -53,11 +53,19 @@
         <%= form_tag "workers", :method => 'get' do %>
         <!-- Company -->
         <%= label_tag I18n.t("ag2_human.workers.index.label_company"), nil, :class => 'form-label' %>
+        <% if session[:company] != '0' %>
+        <%= select_tag "Company", options_from_collection_for_select(@companies, "id", "name"), :class => 'x-large-text-field shrinked' %>
+        <% else %>
         <%= select_tag "Company", options_from_collection_for_select(@companies, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked' %>
+        <% end %>
         <!--<%#= select_tag "Company", options_from_collection_for_select(Company.order('name').all, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked' %>-->
         <!-- Office -->
         <%= label_tag I18n.t("ag2_human.workers.index.label_office"), nil, :class => 'form-label' %>
+        <% if session[:office] != '0' %>
+        <%= select_tag "Office", options_from_collection_for_select(@offices, "id", "name"), :class => 'x-large-text-field shrinked' %>
+        <% else %>
         <%= select_tag "Office", options_from_collection_for_select(@offices, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked' %>
+        <% end %>
         <!-- Others -->
         <%= label_tag I18n.t("ag2_human.workers.index.label_others"), nil, :class => 'form-label' %>
         <%= text_field_tag :search, params[:search], :class => 'x-large-text-field shrinked' %>

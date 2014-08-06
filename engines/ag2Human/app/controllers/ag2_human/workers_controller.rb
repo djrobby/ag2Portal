@@ -275,8 +275,20 @@ end
       end
 
       # Initialize select_tags
-      @companies = Company.order('name') if @companies.nil?
-      @offices = Office.order('name') if @offices.nil?
+      if session[:company] != '0'
+        @companies = Company.where(id: session[:company]) if @companies.nil?
+      else
+        @companies = Company.order(:name) if @companies.nil?
+      end
+      if session[:office] != '0'
+        @offices = Office.where(id: session[:office]) if @offices.nil?
+      elsif session[:company] != '0'
+        @offices = @companies.first.offices.order(:name) if @offices.nil?
+      else
+        @offices = Office.order(:name) if @offices.nil?
+      end
+      #@companies = Company.order('name') if @companies.nil?
+      #@offices = Office.order('name') if @offices.nil?
 
       respond_to do |format|
         format.html # index.html.erb
