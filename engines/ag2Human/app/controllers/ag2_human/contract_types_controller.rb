@@ -9,7 +9,12 @@ module Ag2Human
     # GET /contract_types
     # GET /contract_types.json
     def index
-      @contract_types = ContractType.paginate(:page => params[:page], :per_page => per_page).order(sort_column + ' ' + sort_direction)
+      init_oco if !session[:organization]
+      if session[:organization] != '0'
+        @contract_types = ContractType.where(organization_id: session[:organization]).paginate(:page => params[:page], :per_page => per_page).order(sort_column + ' ' + sort_direction)
+      else
+        @contract_types = ContractType.paginate(:page => params[:page], :per_page => per_page).order(sort_column + ' ' + sort_direction)
+      end
 
       respond_to do |format|
         format.html # index.html.erb

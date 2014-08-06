@@ -7,7 +7,12 @@ module Ag2Human
     # GET /worker_types
     # GET /worker_types.json
     def index
-      @worker_types = WorkerType.paginate(:page => params[:page], :per_page => per_page).order('description')
+      init_oco if !session[:organization]
+      if session[:organization] != '0'
+        @worker_types = WorkerType.where(organization_id: session[:organization]).paginate(:page => params[:page], :per_page => per_page).order('description')
+      else
+        @worker_types = WorkerType.paginate(:page => params[:page], :per_page => per_page).order('description')
+      end
 
       respond_to do |format|
         format.html # index.html.erb

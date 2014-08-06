@@ -9,7 +9,12 @@ module Ag2Human
     # GET /professional_groups
     # GET /professional_groups.json
     def index
-      @professional_groups = ProfessionalGroup.paginate(:page => params[:page], :per_page => per_page).order(sort_column + ' ' + sort_direction)
+      init_oco if !session[:organization]
+      if session[:organization] != '0'
+        @professional_groups = ProfessionalGroup.where(organization_id: session[:organization]).paginate(:page => params[:page], :per_page => per_page).order(sort_column + ' ' + sort_direction)
+      else
+        @professional_groups = ProfessionalGroup.paginate(:page => params[:page], :per_page => per_page).order(sort_column + ' ' + sort_direction)
+      end
 
       respond_to do |format|
         format.html # index.html.erb

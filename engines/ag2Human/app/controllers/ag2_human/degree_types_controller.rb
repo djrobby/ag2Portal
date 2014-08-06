@@ -9,7 +9,12 @@ module Ag2Human
     # GET /degree_types
     # GET /degree_types.json
     def index
-      @degree_types = DegreeType.paginate(:page => params[:page], :per_page => per_page).order(sort_column + ' ' + sort_direction)
+      init_oco if !session[:organization]
+      if session[:organization] != '0'
+        @degree_types = DegreeType.where(organization_id: session[:organization]).paginate(:page => params[:page], :per_page => per_page).order(sort_column + ' ' + sort_direction)
+      else
+        @degree_types = DegreeType.paginate(:page => params[:page], :per_page => per_page).order(sort_column + ' ' + sort_direction)
+      end
 
       respond_to do |format|
         format.html # index.html.erb
