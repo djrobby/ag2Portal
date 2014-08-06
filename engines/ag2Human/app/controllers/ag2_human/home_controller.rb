@@ -6,8 +6,8 @@ module Ag2Human
       @ag2teamnet_path, @ag2teamnet_target = website_path('ag2TeamNet', '_self')
       session[:search] = nil
       session[:letter] = nil      
-      session[:Company] = nil
-      session[:Office] = nil      
+      session[:WrkrCompany] = nil
+      session[:WrkrOffice] = nil      
       session[:Worker] = nil
       session[:From] = nil      
       session[:To] = nil

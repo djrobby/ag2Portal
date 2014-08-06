@@ -236,11 +236,27 @@ end
     # GET /workers.json
     def index
       manage_filter_state
-      company = params[:Company]
-      office = params[:Office]
+      company = params[:WrkrCompany]
+      office = params[:WrkrOffice]
       letter = params[:letter]
+      # OCO
       if !session[:organization]
         init_oco
+      end
+      # Initialize select_tags
+      if session[:company] != '0'
+        @companies = Company.where(id: session[:company]) if @companies.nil?
+        company = session[:company]
+      else
+        @companies = Company.order(:name) if @companies.nil?
+      end
+      if session[:office] != '0'
+        @offices = Office.where(id: session[:office]) if @offices.nil?
+        office = session[:office]
+      elsif session[:company] != '0'
+        @offices = @companies.first.offices.order(:name) if @offices.nil?
+      else
+        @offices = Office.order(:name) if @offices.nil?
       end
 
       if !company.blank? && !office.blank?
@@ -274,22 +290,6 @@ end
 =end
       end
 
-      # Initialize select_tags
-      if session[:company] != '0'
-        @companies = Company.where(id: session[:company]) if @companies.nil?
-      else
-        @companies = Company.order(:name) if @companies.nil?
-      end
-      if session[:office] != '0'
-        @offices = Office.where(id: session[:office]) if @offices.nil?
-      elsif session[:company] != '0'
-        @offices = @companies.first.offices.order(:name) if @offices.nil?
-      else
-        @offices = Office.order(:name) if @offices.nil?
-      end
-      #@companies = Company.order('name') if @companies.nil?
-      #@offices = Office.order('name') if @offices.nil?
-
       respond_to do |format|
         format.html # index.html.erb
         format.json { render json: @workers }
@@ -303,10 +303,18 @@ end
       @worker = Worker.find(params[:id])
       @worker_items = @worker.worker_items.paginate(:page => params[:page], :per_page => per_page).order('id')
       #@worker_salaries = @worker.worker_salaries.paginate(:page => params[:page], :per_page => per_page).order('year desc')
+      b = true
 
       respond_to do |format|
-        format.html # show.html.erb
-        format.json { render json: @worker }
+        if (session[:organization] != '0' && @worker.organization_id != session[:organization].to_i) ||
+           (session[:company] != '0' && @worker.company_id != session[:company].to_i) ||
+           (session[:office] != '0' && @worker.office_id != session[:office].to_i)
+          format.html { redirect_to workers_url, alert: I18n.t('unauthorized.default') }
+          format.json { head :no_content }
+        else
+          format.html # show.html.erb
+          format.json { render json: @worker }
+        end
       end
     end
 
@@ -413,16 +421,16 @@ end
         params[:search] = session[:search]
       end
       # company
-      if params[:Company]
-        session[:Company] = params[:Company]
-      elsif session[:Company]
-        params[:Company] = session[:Company]
+      if params[:WrkrCompany]
+        session[:WrkrCompany] = params[:WrkrCompany]
+      elsif session[:WrkrCompany]
+        params[:WrkrCompany] = session[:WrkrCompany]
       end
       # office
-      if params[:Office]
-        session[:Office] = params[:Office]
-      elsif session[:Office]
-        params[:Office] = session[:Office]
+      if params[:WrkrOffice]
+        session[:WrkrOffice] = params[:WrkrOffice]
+      elsif session[:WrkrOffice]
+        params[:WrkrOffice] = session[:WrkrOffice]
       end
       # letter
       if params[:letter]

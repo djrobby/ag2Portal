@@ -3,27 +3,27 @@
 
   $(document).ready(function() {
     // Initialized form variable
-    _thisForm = $("#Company").closest('form')[0];
+    _thisForm = $("#removeFilter").closest('form')[0];
   });
 
   $(window).bind("load", function() {
-    $("#Company").val("<%= params[:Company] %>");
-    $("#Office").val("<%= params[:Office] %>");
+    $("#WrkrCompany").val("<%= params[:WrkrCompany] %>");
+    $("#WrkrOffice").val("<%= params[:WrkrOffice] %>");
   });
 
   jQuery(function($) {
-    // when the #Company field changes
-    $("#Company").change(function() {
+    // when the #WrkrCompany field changes
+    $("#WrkrCompany").change(function() {
       // make a POST call and replace the content
-      var worker = $('#Company :selected').val();
+      var worker = $('#WrkrCompany :selected').val();
       if (worker == "")
         worker = "0";
       jQuery.getJSON('update_offices_select_from_company/' + worker, function(data) {
         $("#Office").html("");
-        //$("#Office").select2("val", "");
-        $("#Office").append($('<option></option>').val("").html(""));
+        //$("#WrkrOffice").select2("val", "");
+        $("#WrkrOffice").append($('<option></option>').val("").html(""));
         $.each(data, function(id, option) {
-          $("#Office").append($('<option></option>').val(option.id).html(option.name));
+          $("#WrkrOffice").append($('<option></option>').val(option.id).html(option.name));
         });
       })
       return false;
@@ -31,8 +31,8 @@
     
     // when the #removeFilter button clicked
     $("#removeFilter").click(function() {
-      $("#Company").val("");
-      $("#Office").val("");
+      $("#WrkrCompany").val("");
+      $("#WrkrOffice").val("");
       $("#search").val("");
       _thisForm.submit();
     });
@@ -54,17 +54,17 @@
         <!-- Company -->
         <%= label_tag I18n.t("ag2_human.workers.index.label_company"), nil, :class => 'form-label' %>
         <% if session[:company] != '0' %>
-        <%= select_tag "Company", options_from_collection_for_select(@companies, "id", "name"), :class => 'x-large-text-field shrinked' %>
+        <%= select_tag "WrkrCompany", options_from_collection_for_select(@companies, "id", "name"), :class => 'x-large-text-field shrinked' %>
         <% else %>
-        <%= select_tag "Company", options_from_collection_for_select(@companies, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked' %>
+        <%= select_tag "WrkrCompany", options_from_collection_for_select(@companies, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked' %>
         <% end %>
         <!--<%#= select_tag "Company", options_from_collection_for_select(Company.order('name').all, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked' %>-->
         <!-- Office -->
         <%= label_tag I18n.t("ag2_human.workers.index.label_office"), nil, :class => 'form-label' %>
         <% if session[:office] != '0' %>
-        <%= select_tag "Office", options_from_collection_for_select(@offices, "id", "name"), :class => 'x-large-text-field shrinked' %>
+        <%= select_tag "WrkrOffice", options_from_collection_for_select(@offices, "id", "name"), :class => 'x-large-text-field shrinked' %>
         <% else %>
-        <%= select_tag "Office", options_from_collection_for_select(@offices, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked' %>
+        <%= select_tag "WrkrOffice", options_from_collection_for_select(@offices, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked' %>
         <% end %>
         <!-- Others -->
         <%= label_tag I18n.t("ag2_human.workers.index.label_others"), nil, :class => 'form-label' %>
