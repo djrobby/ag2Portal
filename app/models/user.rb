@@ -39,7 +39,7 @@ class User < ActiveRecord::Base
   def assign_default_role_and_send_email
     if self.roles.blank?
       # Assign default roles
-      add_role(:ag2Admin_Guest)
+      add_role(:ag2Admin_Banned)
       add_role(:ag2Analytics_Banned)
       add_role(:ag2Directory_Guest)
       add_role(:ag2Gest_Banned)
@@ -48,6 +48,7 @@ class User < ActiveRecord::Base
       add_role(:ag2Logistics_Banned)
       add_role(:ag2Purchase_Banned)
       add_role(:ag2Tech_Banned)
+      add_role(:ag2Config_Banned)
       # Send e-mail to administrator to configure the right roles
       Notifier.user_created(self).deliver
     end
