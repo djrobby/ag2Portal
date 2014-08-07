@@ -4,7 +4,8 @@ module Ag2Tech
   class ProjectsController < ApplicationController
     before_filter :authenticate_user!
     load_and_authorize_resource
-    skip_load_and_authorize_resource :only => [:pr_update_company_textfield_from_office]
+    skip_load_and_authorize_resource :only => [:pr_update_company_textfield_from_office,
+                                               :pr_update_company_and_office_textfields_from_organization]
     
     # Update company text field at view from office select
     def pr_update_company_textfield_from_office
@@ -15,6 +16,25 @@ module Ag2Tech
         format.html # pr_update_company_textfield_from_office.html.erb does not exist! JSON only
         format.json { render json: @company }
       end
+    end
+    
+    # Update company & office text fields at view from organization select
+    def pr_update_company_and_office_textfields_from_organization
+      organization = params[:id]
+      if organization != '0'
+        @organization = Organization.find(organization)
+        @companies = @organization.blank? ? Company.order(:name) : @organization.companies(order: :name)
+        @offices = Office.joins(:company).where(companies: { organization_id: organization }).order(:name)
+      else
+        @companies = Company.order(:name)
+        @offices = Office.order(:name)
+      end
+      @offices_dropdown = []
+      @offices.each do |i|
+        @offices_dropdown = @offices_dropdown << [i.id, i.name, i.company.name] 
+      end
+      @json_data = { "companies" => @companies, "offices" => @offices_dropdown }
+      render json: @json_data
     end
 
     #
@@ -67,6 +87,8 @@ module Ag2Tech
     def new
       @breadcrumb = 'create'
       @project = Project.new
+      @companies = Company.order(:name)
+      @offices = Office.order(:name)
   
       respond_to do |format|
         format.html # new.html.erb
@@ -78,6 +100,8 @@ module Ag2Tech
     def edit
       @breadcrumb = 'update'
       @project = Project.find(params[:id])
+      @companies = @project.organization.companies
+      @offices = Office.joins(:company).where(companies: { organization_id: @project.organization_id }).order(:name)
     end
   
     # POST /projects
@@ -92,6 +116,8 @@ module Ag2Tech
           format.html { redirect_to @project, notice: crud_notice('created', @project) }
           format.json { render json: @project, status: :created, location: @project }
         else
+          @companies = Company.order(:name)
+          @offices = Office.order(:name)
           format.html { render action: "new" }
           format.json { render json: @project.errors, status: :unprocessable_entity }
         end
@@ -111,6 +137,8 @@ module Ag2Tech
                         notice: (crud_notice('updated', @project) + "#{undo_link(@project)}").html_safe }
           format.json { head :no_content }
         else
+          @companies = @project.organization.companies
+          @offices = Office.joins(:company).where(companies: { organization_id: @project.organization_id }).order(:name)
           format.html { render action: "edit" }
           format.json { render json: @project.errors, status: :unprocessable_entity }
         end

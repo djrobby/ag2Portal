@@ -8,6 +8,9 @@ Ag2Tech::Engine.routes.draw do
     match 'projects/pr_update_company_textfield_from_office/:id', :controller => 'projects', :action => 'pr_update_company_textfield_from_office'
     match 'pr_update_company_textfield_from_office/:id', :controller => 'projects', :action => 'pr_update_company_textfield_from_office'
     match 'projects/:id/pr_update_company_textfield_from_office/:id', :controller => 'projects', :action => 'pr_update_company_textfield_from_office'
+    match 'projects/pr_update_company_and_office_textfields_from_organization/:id', :controller => 'projects', :action => 'pr_update_company_and_office_textfields_from_organization'
+    match 'pr_update_company_and_office_textfields_from_organization/:id', :controller => 'projects', :action => 'pr_update_company_and_office_textfields_from_organization'
+    match 'projects/:id/pr_update_company_and_office_textfields_from_organization/:id', :controller => 'projects', :action => 'pr_update_company_and_office_textfields_from_organization'
     #
     match 'work_orders/wo_update_account_textfield_from_project/:id', :controller => 'work_orders', :action => 'wo_update_account_textfield_from_project'
     match 'wo_update_account_textfield_from_project/:id', :controller => 'work_orders', :action => 'wo_update_account_textfield_from_project'

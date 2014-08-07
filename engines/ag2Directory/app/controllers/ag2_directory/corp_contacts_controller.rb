@@ -17,7 +17,7 @@ module Ag2Directory
       end
       $attachment.avatar = params[:file]
       $attachment.id = 1
-      $attachment.save!
+      #$attachment.save!
       if $attachment.save
         render json: { "image" => $attachment.avatar }
       else
