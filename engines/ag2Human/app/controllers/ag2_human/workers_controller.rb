@@ -306,9 +306,8 @@ end
       b = true
 
       respond_to do |format|
-        if (session[:organization] != '0' && @worker.organization_id != session[:organization].to_i) ||
-           (session[:company] != '0' && @worker.company_id != session[:company].to_i) ||
-           (session[:office] != '0' && @worker.office_id != session[:office].to_i)
+        # Check worker OCO access
+        if !oco_can_access(@worker)
           format.html { redirect_to workers_url, alert: I18n.t('unauthorized.default') }
           format.json { head :no_content }
         else
@@ -338,6 +337,10 @@ end
       @worker = Worker.find(params[:id])
       $attachment = Attachment.new
       destroy_attachment
+      # Check worker OCO access
+      if !oco_can_access(@worker)
+        redirect_to workers_url, alert: I18n.t('unauthorized.default')
+      end
     end
 
     # POST /workers
@@ -443,6 +446,46 @@ end
       elsif session[:letter]
         params[:letter] = session[:letter]
       end
+    end
+    
+    def oco_can_access(_worker)
+      _b = true
+      # check by organization
+      if session[:organization] != '0' && _worker.organization_id != session[:organization].to_i
+        _b = false
+      else
+        # must check using items
+        _items = _worker.worker_items
+        if _items.count < 1
+          _b = false
+        else
+          # check by company
+          if session[:company] != '0'
+            _b = false
+            # loop thru items
+            _items.each do |i|
+              if i.company_id == session[:company].to_i
+                _b = true
+                break
+              end
+            end   # end loop
+            if _b
+              # can access by company: Check by office
+              if session[:office] != '0'
+                _b = false
+                # loop thru items
+                _items.each do |i|
+                  if i.office_id == session[:office].to_i
+                    _b = true
+                    break
+                  end
+                end   # end loop
+              end
+            end            
+          end
+        end
+      end
+      return _b
     end
   end
 end
