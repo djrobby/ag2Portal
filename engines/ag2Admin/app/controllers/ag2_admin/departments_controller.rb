@@ -49,6 +49,7 @@ module Ag2Admin
     # GET /departments
     # GET /departments.json
     def index
+      init_oco if !session[:organization]
       if session[:organization] != '0'
         @departments = Department.where(organization_id: session[:organization]).paginate(:page => params[:page], :per_page => per_page).order(sort_column + ' ' + sort_direction)
       else
@@ -79,8 +80,17 @@ module Ag2Admin
     def new
       @breadcrumb = 'create'
       @department = Department.new
-      @companies = Company.order(:name)
-      @workers = Worker.order(:last_name, :first_name)
+      if session[:organization] != '0'
+        @companies = Company.where(organization_id: session[:organization]).order(:name)
+        if session[:company] != 0
+          @workers = Worker.joins(:company).where(companies: { id: session[:company].to_i }).order(:last_name, :first_name)
+        else
+          @workers = Worker.joins(:company).where(companies: { organization_id: session[:organization].to_i }).order(:last_name, :first_name)
+        end
+      else
+        @companies = Company.order(:name)
+        @workers = Worker.order(:last_name, :first_name)
+      end
 
       respond_to do |format|
         format.html # new.html.erb
@@ -108,8 +118,17 @@ module Ag2Admin
           format.html { redirect_to @department, notice: crud_notice('created', @department) }
           format.json { render json: @department, status: :created, location: @department }
         else
-          @companies = Company.order(:name)
-          @workers = Worker.order(:last_name, :first_name)
+          if session[:organization] != '0'
+            @companies = Company.where(organization_id: session[:organization]).order(:name)
+            if session[:company] != 0
+              @workers = Worker.joins(:company).where(companies: { id: session[:company].to_i }).order(:last_name, :first_name)
+            else
+              @workers = Worker.joins(:company).where(companies: { organization_id: session[:organization].to_i }).order(:last_name, :first_name)
+            end
+          else
+            @companies = Company.order(:name)
+            @workers = Worker.order(:last_name, :first_name)
+          end
           format.html { render action: "new" }
           format.json { render json: @department.errors, status: :unprocessable_entity }
         end

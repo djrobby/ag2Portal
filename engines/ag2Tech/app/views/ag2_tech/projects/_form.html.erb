@@ -36,7 +36,7 @@
         $("#project_company_id").append($('<option></option>').val("").html(""));
         if (!c.length) {
           $.each(data, function(id, option) {
-            if (id == 'companies') {
+            if (id == 'companies' && option != "") {
               $("#project_company_id").append($('<option></option>').val(option.id).html(option.name));
             }
           });
@@ -51,14 +51,13 @@
         $("#project_office_id").append($('<option></option>').val("").html(""));
         if (!o.length) {
           $.each(data, function(id, option) {
-            if (id == 'offices') {
-              $("#project_office_id").append($('<option></option>').val(option.id).html(option.name + " (" + option.company_name + ")"));
+            if (id == 'offices' && option != "") {
+              $("#project_office_id").append($('<option></option>').val(option[0]).html(option[1] + " (" + option[2] + ")"));
             }
           });
         } else {
           $.each(o, function(id, option) {
-            alert(JSON.stringify(option));
-            $("#project_office_id").append($('<option></option>').val(option.id).html(option.name + " (" + option.company_name + ")"));
+            $("#project_office_id").append($('<option></option>').val(option[0]).html(option[1] + " (" + option[2] + ")"));
           });
         }
       })

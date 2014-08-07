@@ -23,13 +23,14 @@ module Ag2Tech
       organization = params[:id]
       if organization != '0'
         @organization = Organization.find(organization)
-        @companies = @organization.blank? ? Company.order(:name) : @organization.companies(order: :name)
+        @companies = @organization.blank? ? Company.order(:name) : @organization.companies.order(:name)
         @offices = Office.joins(:company).where(companies: { organization_id: organization }).order(:name)
       else
         @companies = Company.order(:name)
         @offices = Office.order(:name)
       end
       @offices_dropdown = []
+      
       @offices.each do |i|
         @offices_dropdown = @offices_dropdown << [i.id, i.name, i.company.name] 
       end
@@ -87,8 +88,13 @@ module Ag2Tech
     def new
       @breadcrumb = 'create'
       @project = Project.new
-      @companies = Company.order(:name)
-      @offices = Office.order(:name)
+      if session[:organization] != '0'
+        @companies = Company.where(organization_id: session[:organization]).order(:name)
+        @offices = Office.joins(:company).where(companies: { organization_id: session[:organization].to_i }).order(:name)
+      else
+        @companies = Company.order(:name)
+        @offices = Office.order(:name)
+      end
   
       respond_to do |format|
         format.html # new.html.erb
@@ -100,8 +106,8 @@ module Ag2Tech
     def edit
       @breadcrumb = 'update'
       @project = Project.find(params[:id])
-      @companies = @project.organization.companies
-      @offices = Office.joins(:company).where(companies: { organization_id: @project.organization_id }).order(:name)
+      @companies = @project.organization.blank? ? Company.order(:name) : @project.organization.companies.order(:name)
+      @offices = @project.organization.blank? ? Office.order(:name) : Office.joins(:company).where(companies: { organization_id: @project.organization_id }).order(:name)
     end
   
     # POST /projects
@@ -116,8 +122,13 @@ module Ag2Tech
           format.html { redirect_to @project, notice: crud_notice('created', @project) }
           format.json { render json: @project, status: :created, location: @project }
         else
-          @companies = Company.order(:name)
-          @offices = Office.order(:name)
+          if session[:organization] != '0'
+            @companies = Company.where(organization_id: session[:organization]).order(:name)
+            @offices = Office.joins(:company).where(companies: { organization_id: session[:organization].to_i }).order(:name)
+          else
+            @companies = Company.order(:name)
+            @offices = Office.order(:name)
+          end
           format.html { render action: "new" }
           format.json { render json: @project.errors, status: :unprocessable_entity }
         end

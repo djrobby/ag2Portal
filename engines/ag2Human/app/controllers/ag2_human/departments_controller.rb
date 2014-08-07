@@ -6,8 +6,10 @@ module Ag2Human
     load_and_authorize_resource
     skip_load_and_authorize_resource :only => [:de_update_worker_select_from_company,
                                                :de_update_company_select_from_organization]
-    # Helper methods for sorting
-    helper_method :sort_column
+    # Helper methods for
+    # => sorting
+    # => allow edit (hide buttons)
+    helper_method :sort_column, :cannot_edit
 
     # Update worker select at view from company select
     def de_update_worker_select_from_company
@@ -78,8 +80,17 @@ module Ag2Human
     def new
       @breadcrumb = 'create'
       @department = Department.new
-      @companies = Company.order(:name)
-      @workers = Worker.order(:last_name, :first_name)
+      if session[:organization] != '0'
+        @companies = Company.where(organization_id: session[:organization]).order(:name)
+        if session[:company] != 0
+          @workers = Worker.joins(:company).where(companies: { id: session[:company].to_i }).order(:last_name, :first_name)
+        else
+          @workers = Worker.joins(:company).where(companies: { organization_id: session[:organization].to_i }).order(:last_name, :first_name)
+        end
+      else
+        @companies = Company.order(:name)
+        @workers = Worker.order(:last_name, :first_name)
+      end
 
       respond_to do |format|
         format.html # new.html.erb
@@ -107,8 +118,17 @@ module Ag2Human
           format.html { redirect_to @department, notice: crud_notice('created', @department) }
           format.json { render json: @department, status: :created, location: @department }
         else
-          @companies = Company.order(:name)
-          @workers = Worker.order(:last_name, :first_name)
+          if session[:organization] != '0'
+            @companies = Company.where(organization_id: session[:organization]).order(:name)
+            if session[:company] != 0
+              @workers = Worker.joins(:company).where(companies: { id: session[:company].to_i }).order(:last_name, :first_name)
+            else
+              @workers = Worker.joins(:company).where(companies: { organization_id: session[:organization].to_i }).order(:last_name, :first_name)
+            end
+          else
+            @companies = Company.order(:name)
+            @workers = Worker.order(:last_name, :first_name)
+          end
           format.html { render action: "new" }
           format.json { render json: @department.errors, status: :unprocessable_entity }
         end
@@ -157,6 +177,10 @@ module Ag2Human
 
     def sort_column
       Department.column_names.include?(params[:sort]) ? params[:sort] : "code"
+    end
+    
+    def cannot_edit(_company)
+      session[:company] != '0' && (_company != session[:company].to_i && !_company.blank?)
     end
   end
 end
