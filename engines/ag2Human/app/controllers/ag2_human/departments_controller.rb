@@ -16,15 +16,11 @@ module Ag2Human
       company = params[:department]
       if company != '0'
         @company = Company.find(company)
-        @workers = @company.blank? ? Worker.order(:last_name, :first_name) : @company.workers.order(:last_name, :first_name)
+        @workers = @company.blank? ? workers_dropdown : workers_by_company(@company)
       else
-        @workers = Worker.order(:last_name, :first_name)
+        @workers = workers_dropdown
       end
-
-      respond_to do |format|
-        format.html # de_update_worker_select_from_company.html.erb does not exist! JSON only
-        format.json { render json: @workers }
-      end
+      render json: @workers
     end
 
     # Update company select at view from organization select
@@ -32,15 +28,14 @@ module Ag2Human
       organization = params[:department]
       if organization != '0'
         @organization = Organization.find(organization)
-        @companies = @organization.blank? ? Company.order(:name) : @organization.companies.order(:name)
+        @companies = @organization.blank? ? companies_dropdown : @organization.companies.order(:name)
+        @workers = @organization.blank? ? workers_dropdown : @organization.workers.order(:last_name, :first_name)
       else
-        @companies = Company.order(:name)
+        @companies = companies_dropdown
+        @workers = workers_dropdown
       end
-
-      respond_to do |format|
-        format.html # de_update_company_select_from_organization.html.erb does not exist! JSON only
-        format.json { render json: @companies }
-      end
+      @json_data = { "companies" => @companies, "workers" => @workers }
+      render json: @json_data
     end
 
     #
@@ -80,17 +75,8 @@ module Ag2Human
     def new
       @breadcrumb = 'create'
       @department = Department.new
-      if session[:organization] != '0'
-        @companies = Company.where(organization_id: session[:organization]).order(:name)
-        if session[:company] != 0
-          @workers = Worker.joins(:company).where(companies: { id: session[:company].to_i }).order(:last_name, :first_name)
-        else
-          @workers = Worker.joins(:company).where(companies: { organization_id: session[:organization].to_i }).order(:last_name, :first_name)
-        end
-      else
-        @companies = Company.order(:name)
-        @workers = Worker.order(:last_name, :first_name)
-      end
+      @companies = companies_dropdown
+      @workers = workers_dropdown
 
       respond_to do |format|
         format.html # new.html.erb
@@ -102,8 +88,8 @@ module Ag2Human
     def edit
       @breadcrumb = 'update'
       @department = Department.find(params[:id])
-      @companies = @department.organization.blank? ? Company.order(:name) : @department.organization.companies.order(:name)
-      @workers = @department.company.blank? ? Worker.order(:last_name, :first_name) : @department.company.workers.order(:last_name, :first_name)
+      @companies = @department.organization.blank? ? companies_dropdown : @department.organization.companies.order(:name)
+      @workers = @department.company.blank? ? workers_dropdown : workers_by_company(@department.company)
     end
 
     # POST /departments
@@ -118,17 +104,8 @@ module Ag2Human
           format.html { redirect_to @department, notice: crud_notice('created', @department) }
           format.json { render json: @department, status: :created, location: @department }
         else
-          if session[:organization] != '0'
-            @companies = Company.where(organization_id: session[:organization]).order(:name)
-            if session[:company] != 0
-              @workers = Worker.joins(:company).where(companies: { id: session[:company].to_i }).order(:last_name, :first_name)
-            else
-              @workers = Worker.joins(:company).where(companies: { organization_id: session[:organization].to_i }).order(:last_name, :first_name)
-            end
-          else
-            @companies = Company.order(:name)
-            @workers = Worker.order(:last_name, :first_name)
-          end
+          @companies = companies_dropdown
+          @workers = workers_dropdown
           format.html { render action: "new" }
           format.json { render json: @department.errors, status: :unprocessable_entity }
         end
@@ -148,8 +125,8 @@ module Ag2Human
                         notice: (crud_notice('updated', @department) + "#{undo_link(@department)}").html_safe }
           format.json { head :no_content }
         else
-          @companies = @department.organization.blank? ? Company.order(:name) : @department.organization.companies.order(:name)
-          @workers = @department.company.blank? ? Worker.order(:last_name, :first_name) : @department.company.workers.order(:last_name, :first_name)
+          @companies = @department.organization.blank? ? companies_dropdown : @department.organization.companies.order(:name)
+          @workers = @department.company.blank? ? workers_dropdown : workers_by_company(@department.company)
           format.html { render action: "edit" }
           format.json { render json: @department.errors, status: :unprocessable_entity }
         end
@@ -181,6 +158,22 @@ module Ag2Human
     
     def cannot_edit(_company)
       session[:company] != '0' && (_company != session[:company].to_i && !_company.blank?)
+    end
+    
+    def workers_dropdown
+      if session[:company] != '0'
+        _workers = workers_by_company(session[:company].to_i)
+      else
+        _workers = session[:organization] != '0' ? Worker.where(organization_id: session[:organization].to_i).order(:last_name, :first_name) : Worker.order(:last_name, :first_name)
+      end
+    end
+
+    def companies_dropdown
+      _companies = session[:organization] != '0' ? Company.where(organization_id: session[:organization].to_i).order(:name) : Company.order(:name)
+    end
+
+    def workers_by_company(_company)
+      _workers = Worker.joins(:worker_items).group('worker_items.worker_id').where(worker_items: { company_id: _company }).order(:last_name, :first_name)      
     end
   end
 end

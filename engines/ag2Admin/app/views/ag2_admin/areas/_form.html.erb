@@ -30,7 +30,7 @@
 <%= f.error_notification %>
 <%= display_base_errors resource %>
 <%= f.input :name, autofocus: true, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %>
-<%= f.association :department, collection: Department.all(order: 'name'), :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %>
+<%= f.association :department, collection: @departments, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %>
 <%= f.association :worker, collection: @workers, :input_html => { :class => 'x-large-text-field sel2' }, :label_html => { :class => 'form-label' } %>
 <%= f.button :submit, :class => 'btn-primary' %>
 <% end %>

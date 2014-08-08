@@ -2,10 +2,34 @@ class Organization < ActiveRecord::Base
   has_and_belongs_to_many :users, :join_table => :users_organizations
   attr_accessible :name, :hd_email
 
+  # admin
   has_many :companies
   has_many :entities
+  # directory
+  has_many :corp_contacts
+  has_many :shared_contacts
+  # finance
+  # gest
   has_many :clients
+  # helpdesk
+  # human
+  has_many :workers
+  has_many :collective_agreements
+  has_many :contract_types
+  has_many :degree_types
+  has_many :departments
+  has_many :insurances
+  has_many :professional_groups
+  has_many :salary_concepts
+  # logistics
+  has_many :products
+  has_many :stores
+  # purchase
   has_many :suppliers
+  # tech
+  has_many :projects
+  has_many :work_orders
+  ## has_many :charge_accounts  
 
   has_paper_trail
 

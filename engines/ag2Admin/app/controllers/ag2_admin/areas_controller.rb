@@ -15,23 +15,19 @@ module Ag2Admin
       department = params[:department]
       if department != '0'
         @department = Department.find(department)
-        @workers = @department.company.blank? ? Worker.order(:last_name, :first_name) : @department.company.workers.order(:last_name, :first_name)
+        @workers = @department.blank? ? workers_dropdown : workers_by_department(@department)
       else
-        @workers = Worker.order(:last_name, :first_name)
+        @workers = workers_dropdown
       end
-
-      respond_to do |format|
-        format.html # ar_update_worker_select_from_department.html.erb does not exist! JSON only
-        format.json { render json: @workers }
-      end
+      render json: @workers
     end
-
     #
     # Default Methods
     #
     # GET /areas
     # GET /areas.json
     def index
+      init_oco if !session[:organization]
       if session[:organization] != '0'
         # OCO organization active
         @areas = Area.joins(:department).where(departments: { organization_id: session[:organization] }).paginate(:page => params[:page], :per_page => per_page).order(sort_column + ' ' + sort_direction)
@@ -63,7 +59,8 @@ module Ag2Admin
     def new
       @breadcrumb = 'create'
       @area = Area.new
-      @workers = Worker.order(:last_name, :first_name)
+      @departments = departments_dropdown
+      @workers = workers_dropdown
   
       respond_to do |format|
         format.html # new.html.erb
@@ -75,7 +72,8 @@ module Ag2Admin
     def edit
       @breadcrumb = 'update'
       @area = Area.find(params[:id])
-      @workers = @area.department.company.blank? ? Worker.order(:last_name, :first_name) : @area.department.company.workers.order(:last_name, :first_name)
+      @departments = departments_dropdown
+      @workers = @area.department.blank? ? workers_dropdown : workers_by_department(@area.department)
     end
   
     # POST /areas
@@ -90,7 +88,8 @@ module Ag2Admin
           format.html { redirect_to @area, notice: crud_notice('created', @area) }
           format.json { render json: @area, status: :created, location: @area }
         else
-          @workers = Worker.order(:last_name, :first_name)
+          @departments = departments_dropdown
+          @workers = workers_dropdown
           format.html { render action: "new" }
           format.json { render json: @area.errors, status: :unprocessable_entity }
         end
@@ -110,7 +109,8 @@ module Ag2Admin
                         notice: (crud_notice('updated', @area) + "#{undo_link(@area)}").html_safe }
           format.json { head :no_content }
         else
-          @workers = @area.department.company.blank? ? Worker.order(:last_name, :first_name) : @area.department.company.workers.order(:last_name, :first_name)
+          @departments = departments_dropdown
+          @workers = @area.department.blank? ? workers_dropdown : workers_by_department(@area.department)
           format.html { render action: "edit" }
           format.json { render json: @area.errors, status: :unprocessable_entity }
         end
@@ -142,6 +142,18 @@ module Ag2Admin
     
     def cannot_edit(_department)
       session[:company] != '0' && (_department.company_id != session[:company].to_i && !_department.company.blank?)
+    end
+
+    def workers_dropdown
+      _workers = session[:organization] != '0' ? Worker.where(organization_id: session[:organization].to_i).order(:last_name, :first_name) : Worker.order(:last_name, :first_name)
+    end
+
+    def departments_dropdown
+      _departments = session[:organization] != '0' ? Department.where(organization_id: session[:organization].to_i).order(:name) : Department.order(:name)
+    end
+    
+    def workers_by_department(_department)
+      _workers = Worker.joins(:worker_items).group('worker_items.worker_id').where(worker_items: { department_id: _department }).order(:last_name, :first_name)      
     end
   end
 end
