@@ -6,9 +6,10 @@ class OfferRequest < ActiveRecord::Base
   belongs_to :store
   belongs_to :work_order
   belongs_to :charge_account
+  belongs_to :organization
   attr_accessible :approval_date, :deadline_date, :request_date, :request_no, :remarks,
                   :discount_pct, :discount, :payment_method_id, :project_id, :approved_offer_id,
-                  :approver_id, :store_id, :work_order_id, :charge_account_id 
+                  :approver_id, :store_id, :work_order_id, :charge_account_id, :organization_id 
 
   has_many :offer_request_items, dependent: :destroy
   has_many :offer_request_suppliers, dependent: :destroy

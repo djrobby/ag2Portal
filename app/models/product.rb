@@ -30,7 +30,7 @@ class Product < ActiveRecord::Base
   validates :product_code,      :presence => true,
                                 :length => { :is => 10 },
                                 :format => { with: /\A\d+\Z/, message: :code_invalid },
-                                :uniqueness => true
+                                :uniqueness => { :scope => :organization_id }
   validates :product_type,      :presence => true
   validates :product_family,    :presence => true
   validates :measure,           :presence => true

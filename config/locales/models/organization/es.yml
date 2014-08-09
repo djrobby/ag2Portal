@@ -10,6 +10,11 @@ es:
         check_for_entities: "Organización no puede ser eliminada mientras existan entidades vinculadas."
         check_for_clients: "Organización no puede ser eliminada mientras existan clientes vinculados."
         check_for_suppliers: "Organización no puede ser eliminada mientras existan proveedores vinculados."
+        check_for_workers: "Organización no puede ser eliminada mientras existan trabajadores vinculados."
+        check_for_technicians: "Organización no puede ser eliminada mientras existan técnicos vinculados."
+        check_for_corp_contacts: "Organización no puede ser eliminada mientras existan contactos vinculados."
+        check_for_products: "Organización no puede ser eliminada mientras existan productos vinculados."
+        check_for_stores: "Organización no puede ser eliminada mientras existan almacenes vinculadas."
     attributes:
       organization:
         name: "Nombre"

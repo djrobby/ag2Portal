@@ -1,7 +1,8 @@
 class ChargeAccount < ActiveRecord::Base
   belongs_to :project
+  belongs_to :organization
   attr_accessible :closed_at, :ledger_account, :name, :opened_at,
-                  :project_id, :account_code
+                  :project_id, :account_code, :organization_id
 
   has_many :work_orders
   has_many :purchase_orders

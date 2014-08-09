@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140805180451) do
+ActiveRecord::Schema.define(:version => 20140809100520) do
 
   create_table "activities", :force => true do |t|
     t.string   "description"
@@ -68,11 +68,12 @@ ActiveRecord::Schema.define(:version => 20140805180451) do
     t.date     "closed_at"
     t.integer  "project_id"
     t.string   "ledger_account"
-    t.datetime "created_at",     :null => false
-    t.datetime "updated_at",     :null => false
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
     t.string   "account_code"
+    t.integer  "organization_id"
   end
 
   add_index "charge_accounts", ["account_code"], :name => "index_charge_accounts_on_account_code"
@@ -313,6 +314,7 @@ ActiveRecord::Schema.define(:version => 20140805180451) do
     t.integer  "created_by"
     t.integer  "updated_by"
     t.integer  "sale_offer_id"
+    t.integer  "organization_id"
   end
 
   add_index "delivery_notes", ["charge_account_id"], :name => "index_delivery_notes_on_charge_account_id"
@@ -540,6 +542,7 @@ ActiveRecord::Schema.define(:version => 20140805180451) do
     t.integer  "store_id"
     t.integer  "work_order_id"
     t.integer  "charge_account_id"
+    t.integer  "organization_id"
   end
 
   add_index "offer_requests", ["approved_offer_id"], :name => "index_offer_requests_on_approved_offer_id"
@@ -569,6 +572,7 @@ ActiveRecord::Schema.define(:version => 20140805180451) do
     t.integer  "store_id"
     t.integer  "work_order_id"
     t.integer  "charge_account_id"
+    t.integer  "organization_id"
   end
 
   add_index "offers", ["charge_account_id"], :name => "index_offers_on_charge_account_id"
@@ -645,6 +649,7 @@ ActiveRecord::Schema.define(:version => 20140805180451) do
     t.string   "created_by"
     t.string   "updated_by"
     t.integer  "flow",             :limit => 2
+    t.integer  "organization_id"
   end
 
   add_index "payment_methods", ["description"], :name => "index_payment_methods_on_description"
@@ -659,6 +664,7 @@ ActiveRecord::Schema.define(:version => 20140805180451) do
     t.datetime "updated_at",                                                       :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
+    t.integer  "organization_id"
   end
 
   add_index "product_families", ["family_code"], :name => "index_product_families_on_family_code"
@@ -815,6 +821,7 @@ ActiveRecord::Schema.define(:version => 20140805180451) do
     t.decimal  "retention_pct",     :precision => 6,  :scale => 2, :default => 0.0, :null => false
     t.integer  "retention_time"
     t.integer  "offer_id"
+    t.integer  "organization_id"
   end
 
   add_index "purchase_orders", ["charge_account_id"], :name => "index_purchase_orders_on_charge_account_id"
@@ -902,6 +909,7 @@ ActiveRecord::Schema.define(:version => 20140805180451) do
     t.integer  "created_by"
     t.integer  "updated_by"
     t.integer  "purchase_order_id"
+    t.integer  "organization_id"
   end
 
   add_index "receipt_notes", ["charge_account_id"], :name => "index_receipt_notes_on_charge_account_id"
@@ -1182,6 +1190,7 @@ ActiveRecord::Schema.define(:version => 20140805180451) do
     t.integer  "created_by"
     t.integer  "updated_by"
     t.date     "posted_at"
+    t.integer  "organization_id"
   end
 
   add_index "supplier_invoices", ["charge_account_id"], :name => "index_supplier_invoices_on_charge_account_id"
@@ -1205,6 +1214,7 @@ ActiveRecord::Schema.define(:version => 20140805180451) do
     t.datetime "updated_at",                                                                    :null => false
     t.integer  "supplier_invoice_approval__id"
     t.string   "payment_no"
+    t.integer  "organization_id"
   end
 
   add_index "supplier_payments", ["approver_id"], :name => "index_supplier_payments_on_approver_id"
@@ -1289,10 +1299,11 @@ ActiveRecord::Schema.define(:version => 20140805180451) do
   create_table "technicians", :force => true do |t|
     t.string   "name"
     t.integer  "user_id"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
+    t.integer  "organization_id"
   end
 
   add_index "technicians", ["name"], :name => "index_technicians_on_name"
@@ -1349,6 +1360,7 @@ ActiveRecord::Schema.define(:version => 20140805180451) do
     t.integer  "office_id"
     t.string   "source_ip"
     t.string   "hd_email"
+    t.integer  "organization_id"
   end
 
   add_index "tickets", ["assign_at"], :name => "index_tickets_on_assign_at"
@@ -1548,10 +1560,11 @@ ActiveRecord::Schema.define(:version => 20140805180451) do
 
   create_table "work_order_labors", :force => true do |t|
     t.string   "name"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
+    t.integer  "organization_id"
   end
 
   create_table "work_order_statuses", :force => true do |t|
@@ -1564,10 +1577,11 @@ ActiveRecord::Schema.define(:version => 20140805180451) do
 
   create_table "work_order_types", :force => true do |t|
     t.string   "name"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
+    t.integer  "organization_id"
   end
 
   create_table "work_order_workers", :force => true do |t|

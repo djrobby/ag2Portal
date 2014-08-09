@@ -4,9 +4,10 @@ class Ticket < ActiveRecord::Base
   belongs_to :ticket_status
   belongs_to :technician
   belongs_to :office
+  belongs_to :organization
   attr_accessible :assign_at, :status_changed_at, :status_changed_message, :ticket_message, :ticket_subject,
                   :ticket_category_id, :ticket_priority_id, :ticket_status_id, :technician_id, :office_id,
-                  :attachment, :created_by, :updated_by, :source_ip, :hd_email
+                  :attachment, :created_by, :updated_by, :source_ip, :hd_email, :organization_id
   has_attached_file :attachment, :styles => { :medium => "192x192>", :small => "128x128>" }, :default_url => "/images/missing/:style/ticket.png"
 
   has_paper_trail

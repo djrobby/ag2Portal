@@ -1,7 +1,8 @@
 class Technician < ActiveRecord::Base
   belongs_to :user
+  belongs_to :organization
   attr_accessible :name, :user_id,
-                  :created_by, :updated_by
+                  :created_by, :updated_by, :organization_id
 
   has_paper_trail
 

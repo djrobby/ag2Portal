@@ -7,9 +7,10 @@ class PurchaseOrder < ActiveRecord::Base
   belongs_to :store
   belongs_to :work_order
   belongs_to :charge_account
+  belongs_to :organization
   attr_accessible :discount, :discount_pct, :order_date, :order_no, :remarks, :supplier_offer_no,
                   :supplier_id, :payment_method_id, :order_status_id, :project_id, :offer_id,
-                  :store_id, :work_order_id, :charge_account_id, :retention_pct, :retention_time
+                  :store_id, :work_order_id, :charge_account_id, :retention_pct, :retention_time, :organization_id
   attr_accessible :purchase_order_items_attributes
   
   has_many :purchase_order_items, dependent: :destroy

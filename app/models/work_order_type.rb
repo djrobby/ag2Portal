@@ -1,5 +1,6 @@
 class WorkOrderType < ActiveRecord::Base
-  attr_accessible :name
+  belongs_to :organization
+  attr_accessible :name, :organization_id
 
   has_many :work_orders
 

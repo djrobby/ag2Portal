@@ -12,6 +12,8 @@ class Organization < ActiveRecord::Base
   # gest
   has_many :clients
   # helpdesk
+  has_many :technicians
+  has_many :tickets
   # human
   has_many :workers
   has_many :collective_agreements
@@ -23,13 +25,24 @@ class Organization < ActiveRecord::Base
   has_many :salary_concepts
   # logistics
   has_many :products
+  has_many :product_families
   has_many :stores
+  has_many :delivery_notes
+  has_many :receipt_notes
   # purchase
   has_many :suppliers
+  has_many :payment_methods
+  has_many :offer_requests
+  has_many :offers
+  has_many :purchase_orders
+  has_many :supplier_invoices
+  has_manu :supplier_payments
   # tech
   has_many :projects
   has_many :work_orders
-  ## has_many :charge_accounts  
+  has_many :charge_accounts
+  has_many :work_order_labors
+  has_many :work_order_types
 
   has_paper_trail
 
@@ -65,6 +78,31 @@ class Organization < ActiveRecord::Base
     # Check for suppliers
     if suppliers.count > 0
       errors.add(:base, I18n.t('activerecord.models.organization.check_for_suppliers'))
+      return false
+    end
+    # Check for workers
+    if workers.count > 0
+      errors.add(:base, I18n.t('activerecord.models.organization.check_for_workers'))
+      return false
+    end
+    # Check for technicians
+    if technicians.count > 0
+      errors.add(:base, I18n.t('activerecord.models.organization.check_for_technicians'))
+      return false
+    end
+    # Check for corporate contacts
+    if corp_contacts.count > 0
+      errors.add(:base, I18n.t('activerecord.models.organization.check_for_corp_contacts'))
+      return false
+    end
+    # Check for products
+    if products.count > 0
+      errors.add(:base, I18n.t('activerecord.models.organization.check_for_products'))
+      return false
+    end
+    # Check for stores
+    if stores.count > 0
+      errors.add(:base, I18n.t('activerecord.models.organization.check_for_stores'))
       return false
     end
   end

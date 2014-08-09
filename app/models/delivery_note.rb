@@ -6,9 +6,10 @@ class DeliveryNote < ActiveRecord::Base
   belongs_to :work_order
   belongs_to :charge_account
   belongs_to :sale_offer
+  belongs_to :organization
   attr_accessible :delivery_date, :delivery_no, :discount, :discount_pct, :remarks,
                   :client_id, :payment_method_id, :project_id, :store_id, :work_order_id,
-                  :charge_account_id, :sale_offer_id
+                  :charge_account_id, :sale_offer_id, :organization_id
 
   has_many :delivery_note_items, dependent: :destroy
   has_many :client_invoice_items
