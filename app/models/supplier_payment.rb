@@ -16,10 +16,18 @@ class SupplierPayment < ActiveRecord::Base
   validates :supplier_invoice,  :presence => true
   validates :payment_method,    :presence => true
   validates :approver,          :presence => true
-  validates :payment_no,        :presence => true
+  validates :payment_no,        :presence => true,
+                                :length => { :is => 14 },
+                                :uniqueness => { :scope => :organization_id }
   validates :payment_date,      :presence => true
   validates :amount,            :presence => true,
                                 :numericality => { :greater_than => 0, :less_than_or_equal_to => :invoice_debt }
+  validates :organization,      :presence => true
+
+  def full_no
+    # Payment no (Organization id & year & sequential number) => OOOO-YYYY-NNNNNN
+    payment_no.blank? ? "" : payment_no[0..3] + '-' + payment_no[4..7] + '-' + payment_no[8..13]
+  end
 
   #
   # Calculated fields
@@ -38,5 +46,6 @@ class SupplierPayment < ActiveRecord::Base
     integer :approver_id
     integer :supplier_invoice_approval_id
     date :payment_date
+    integer :organization_id
   end
 end

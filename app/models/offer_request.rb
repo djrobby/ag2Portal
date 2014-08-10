@@ -28,8 +28,13 @@ class OfferRequest < ActiveRecord::Base
   validates_associated :offer_request_items, :offer_request_suppliers
 
   validates :request_date,    :presence => true
-  validates :request_no,      :presence => true
+  validates :request_no,      :presence => true,
+                              :length => { :is => 20 },
+                              :format => { with: /\A\d+\Z/, message: :code_invalid },
+                              :uniqueness => { :scope => :organization_id }
   validates :payment_method,  :presence => true
+  validates :project,         :presence => true
+  validates :organization,    :presence => true
 
   before_destroy :check_for_dependent_records
 
@@ -49,6 +54,11 @@ class OfferRequest < ActiveRecord::Base
       full_name += " " + self.project.full_name
     end
     full_name
+  end
+
+  def full_no
+    # Request no (Project code & year & sequential number) => PPPPPPPPPP-YYYY-NNNNNN
+    request_no.blank? ? "" : request_no[0..9] + '-' + request_no[10..13] + '-' + request_no[14..19]
   end
 
   #
@@ -122,6 +132,7 @@ class OfferRequest < ActiveRecord::Base
     date :request_date
     date :deadline_date
     date :approval_date
+    integer :organization_id
   end
 
   private

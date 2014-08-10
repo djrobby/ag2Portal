@@ -29,11 +29,12 @@ class PurchaseOrder < ActiveRecord::Base
   validates :order_no,       :presence => true,
                              :length => { :is => 20 },
                              :format => { with: /\A\d+\Z/, message: :code_invalid },
-                             :uniqueness => true
+                             :uniqueness => { :scope => :organization_id }
   validates :supplier,       :presence => true
   validates :payment_method, :presence => true
   validates :order_status,   :presence => true
   validates :project,        :presence => true
+  validates :organization,    :presence => true
 
   before_destroy :check_for_dependent_records
 
@@ -160,6 +161,7 @@ class PurchaseOrder < ActiveRecord::Base
     integer :charge_account_id
     integer :offer_id
     date :order_date
+    integer :organization_id
   end
 
   private

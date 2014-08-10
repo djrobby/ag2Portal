@@ -14,9 +14,10 @@ class ChargeAccount < ActiveRecord::Base
 
   validates :account_code,  :presence => true,
                             :length => { :in => 7..17 },
-                            :uniqueness => true
+                            :uniqueness => { :scope => :organization_id }
   validates :name,          :presence => true
   validates :opened_at,     :presence => true
+  validates :organization,  :presence => true
 
   before_destroy :check_for_dependent_records
 
@@ -58,6 +59,7 @@ class ChargeAccount < ActiveRecord::Base
     text :account_code, :name
     string :account_code
     integer :project_id
+    integer :organization_id
   end
 
   private

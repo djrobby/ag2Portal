@@ -1,4 +1,4 @@
-<%=t '.number' %><%= @ticket.id.to_s.rjust(6, '0') %>
+<%=t '.number' %><%= @ticket.id.to_s.rjust(7, '0') %>
 <%=t '.created_at' %><%= @ticket.created_at.utc.getlocal.strftime("%d/%m/%Y %H:%M:%S") %>
 <%=t '.category' %><%= @ticket.ticket_category.name %>
 <%=t '.priority' %><%= @ticket.ticket_priority.name %>

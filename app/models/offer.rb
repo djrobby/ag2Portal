@@ -25,10 +25,12 @@ class Offer < ActiveRecord::Base
   validates_associated :offer_items
 
   validates :offer_date,      :presence => true
-  validates :offer_no,        :presence => true
+  validates :offer_no,        :presence => true,
+                              :uniqueness => { :scope => [ :organization_id, :supplier_id ] }
   validates :supplier,        :presence => true
   validates :payment_method,  :presence => true
   validates :offer_request,   :presence => true
+  validates :organization,    :presence => true
 
   before_destroy :check_for_dependent_records
 
@@ -129,6 +131,7 @@ class Offer < ActiveRecord::Base
     integer :work_order_id
     integer :charge_account_id
     date :offer_date
+    integer :organization_id
   end
 
   private

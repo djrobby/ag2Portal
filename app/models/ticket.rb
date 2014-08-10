@@ -19,6 +19,7 @@ class Ticket < ActiveRecord::Base
   validates :ticket_priority,         :presence => true
   validates :technician,              :presence => true, :if => :technician_required?
   validates :status_changed_message,  :presence => true, :if => :status_message_required?
+  validates :organization,            :presence => true
 
   validates_attachment_content_type :attachment, :content_type => /\Aimage\/.*\Z/
 
@@ -37,6 +38,7 @@ class Ticket < ActiveRecord::Base
     time :created_at
     time :assign_at
     string :created_by
+    integer :organization_id
   end
 
   private

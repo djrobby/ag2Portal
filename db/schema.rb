@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140809100520) do
+ActiveRecord::Schema.define(:version => 20140810112347) do
 
   create_table "activities", :force => true do |t|
     t.string   "description"
@@ -79,6 +79,8 @@ ActiveRecord::Schema.define(:version => 20140809100520) do
   add_index "charge_accounts", ["account_code"], :name => "index_charge_accounts_on_account_code"
   add_index "charge_accounts", ["ledger_account"], :name => "index_charge_accounts_on_ledger_account"
   add_index "charge_accounts", ["name"], :name => "index_charge_accounts_on_name"
+  add_index "charge_accounts", ["organization_id", "account_code"], :name => "index_charge_accounts_on_organization_id_and_account_code", :unique => true
+  add_index "charge_accounts", ["organization_id"], :name => "index_charge_accounts_on_organization_id"
   add_index "charge_accounts", ["project_id"], :name => "index_charge_accounts_on_project_id"
 
   create_table "clients", :force => true do |t|
@@ -110,11 +112,14 @@ ActiveRecord::Schema.define(:version => 20140809100520) do
     t.integer  "organization_id"
   end
 
+  add_index "clients", ["client_code"], :name => "index_clients_on_client_code"
   add_index "clients", ["country_id"], :name => "index_clients_on_country_id"
   add_index "clients", ["entity_id"], :name => "index_clients_on_entity_id"
+  add_index "clients", ["fiscal_id"], :name => "index_clients_on_fiscal_id"
   add_index "clients", ["name"], :name => "index_clients_on_name"
   add_index "clients", ["organization_id", "client_code"], :name => "index_clients_on_organization_id_and_client_code", :unique => true
   add_index "clients", ["organization_id", "fiscal_id"], :name => "index_clients_on_organization_id_and_fiscal_id", :unique => true
+  add_index "clients", ["organization_id"], :name => "index_clients_on_organization_id"
   add_index "clients", ["province_id"], :name => "index_clients_on_province_id"
   add_index "clients", ["region_id"], :name => "index_clients_on_region_id"
   add_index "clients", ["street_type_id"], :name => "index_clients_on_street_type_id"
@@ -133,8 +138,10 @@ ActiveRecord::Schema.define(:version => 20140809100520) do
     t.integer  "organization_id"
   end
 
+  add_index "collective_agreements", ["ca_code"], :name => "index_collective_agreements_on_ca_code"
   add_index "collective_agreements", ["nomina_id"], :name => "index_collective_agreements_on_nomina_id"
   add_index "collective_agreements", ["organization_id", "ca_code"], :name => "index_collective_agreements_on_organization_id_and_ca_code", :unique => true
+  add_index "collective_agreements", ["organization_id"], :name => "index_collective_agreements_on_organization_id"
 
   create_table "companies", :force => true do |t|
     t.string   "name"
@@ -168,8 +175,10 @@ ActiveRecord::Schema.define(:version => 20140809100520) do
     t.string   "hd_email"
   end
 
+  add_index "companies", ["fiscal_id"], :name => "index_companies_on_fiscal_id"
   add_index "companies", ["invoice_code"], :name => "index_companies_on_invoice_code"
   add_index "companies", ["organization_id", "fiscal_id"], :name => "index_companies_on_organization_id_and_fiscal_id", :unique => true
+  add_index "companies", ["organization_id"], :name => "index_companies_on_organization_id"
   add_index "companies", ["province_id"], :name => "index_companies_on_province_id"
   add_index "companies", ["street_type_id"], :name => "index_companies_on_street_type_id"
   add_index "companies", ["town_id"], :name => "index_companies_on_town_id"
@@ -186,8 +195,10 @@ ActiveRecord::Schema.define(:version => 20140809100520) do
     t.integer  "organization_id"
   end
 
+  add_index "contract_types", ["ct_code"], :name => "index_contract_types_on_ct_code"
   add_index "contract_types", ["nomina_id"], :name => "index_contract_types_on_nomina_id"
   add_index "contract_types", ["organization_id", "ct_code"], :name => "index_contract_types_on_organization_id_and_ct_code", :unique => true
+  add_index "contract_types", ["organization_id"], :name => "index_contract_types_on_organization_id"
 
   create_table "corp_contacts", :force => true do |t|
     t.string   "first_name"
@@ -261,8 +272,10 @@ ActiveRecord::Schema.define(:version => 20140809100520) do
     t.integer  "organization_id"
   end
 
+  add_index "degree_types", ["dt_code"], :name => "index_degree_types_on_dt_code"
   add_index "degree_types", ["nomina_id"], :name => "index_degree_types_on_nomina_id"
   add_index "degree_types", ["organization_id", "dt_code"], :name => "index_degree_types_on_organization_id_and_dt_code", :unique => true
+  add_index "degree_types", ["organization_id"], :name => "index_degree_types_on_organization_id"
 
   create_table "delivery_note_items", :force => true do |t|
     t.integer  "delivery_note_id"
@@ -321,6 +334,8 @@ ActiveRecord::Schema.define(:version => 20140809100520) do
   add_index "delivery_notes", ["client_id"], :name => "index_delivery_notes_on_client_id"
   add_index "delivery_notes", ["delivery_date"], :name => "index_delivery_notes_on_delivery_date"
   add_index "delivery_notes", ["delivery_no"], :name => "index_delivery_notes_on_delivery_no"
+  add_index "delivery_notes", ["organization_id", "delivery_no"], :name => "index_delivery_notes_on_organization_id_and_delivery_no", :unique => true
+  add_index "delivery_notes", ["organization_id"], :name => "index_delivery_notes_on_organization_id"
   add_index "delivery_notes", ["payment_method_id"], :name => "index_delivery_notes_on_payment_method_id"
   add_index "delivery_notes", ["project_id"], :name => "index_delivery_notes_on_project_id"
   add_index "delivery_notes", ["sale_offer_id"], :name => "index_delivery_notes_on_sale_offer_id"
@@ -339,8 +354,10 @@ ActiveRecord::Schema.define(:version => 20140809100520) do
     t.integer  "worker_id"
   end
 
+  add_index "departments", ["code"], :name => "index_departments_on_code"
   add_index "departments", ["company_id"], :name => "index_departments_on_company_id"
   add_index "departments", ["organization_id", "code"], :name => "index_departments_on_organization_id_and_code", :unique => true
+  add_index "departments", ["organization_id"], :name => "index_departments_on_organization_id"
   add_index "departments", ["worker_id"], :name => "index_departments_on_worker_id"
 
   create_table "entities", :force => true do |t|
@@ -378,8 +395,10 @@ ActiveRecord::Schema.define(:version => 20140809100520) do
   add_index "entities", ["email"], :name => "index_entities_on_email"
   add_index "entities", ["entity_type_id"], :name => "index_entities_on_entity_type_id"
   add_index "entities", ["first_name"], :name => "index_entities_on_first_name"
+  add_index "entities", ["fiscal_id"], :name => "index_entities_on_fiscal_id"
   add_index "entities", ["last_name"], :name => "index_entities_on_last_name"
   add_index "entities", ["organization_id", "fiscal_id"], :name => "index_entities_on_organization_id_and_fiscal_id", :unique => true
+  add_index "entities", ["organization_id"], :name => "index_entities_on_organization_id"
   add_index "entities", ["phone"], :name => "index_entities_on_phone"
   add_index "entities", ["province_id"], :name => "index_entities_on_province_id"
   add_index "entities", ["region_id"], :name => "index_entities_on_region_id"
@@ -548,6 +567,8 @@ ActiveRecord::Schema.define(:version => 20140809100520) do
   add_index "offer_requests", ["approved_offer_id"], :name => "index_offer_requests_on_approved_offer_id"
   add_index "offer_requests", ["approver_id"], :name => "index_offer_requests_on_approver_id"
   add_index "offer_requests", ["charge_account_id"], :name => "index_offer_requests_on_charge_account_id"
+  add_index "offer_requests", ["organization_id", "request_no"], :name => "index_offer_requests_on_organization_id_and_request_no", :unique => true
+  add_index "offer_requests", ["organization_id"], :name => "index_offer_requests_on_organization_id"
   add_index "offer_requests", ["payment_method_id"], :name => "index_offer_requests_on_payment_method_id"
   add_index "offer_requests", ["project_id"], :name => "index_offer_requests_on_project_id"
   add_index "offer_requests", ["request_date"], :name => "index_offer_requests_on_request_date"
@@ -579,6 +600,8 @@ ActiveRecord::Schema.define(:version => 20140809100520) do
   add_index "offers", ["offer_date"], :name => "index_offers_on_offer_date"
   add_index "offers", ["offer_no"], :name => "index_offers_on_offer_no"
   add_index "offers", ["offer_request_id"], :name => "index_offers_on_offer_request_id"
+  add_index "offers", ["organization_id", "supplier_id", "offer_no"], :name => "index_offers_on_organization_id_and_supplier_id_and_offer_no", :unique => true
+  add_index "offers", ["organization_id"], :name => "index_offers_on_organization_id"
   add_index "offers", ["payment_method_id"], :name => "index_offers_on_payment_method_id"
   add_index "offers", ["project_id"], :name => "index_offers_on_project_id"
   add_index "offers", ["store_id"], :name => "index_offers_on_store_id"
@@ -654,6 +677,7 @@ ActiveRecord::Schema.define(:version => 20140809100520) do
 
   add_index "payment_methods", ["description"], :name => "index_payment_methods_on_description"
   add_index "payment_methods", ["flow"], :name => "index_payment_methods_on_flow"
+  add_index "payment_methods", ["organization_id"], :name => "index_payment_methods_on_organization_id"
 
   create_table "product_families", :force => true do |t|
     t.string   "name"
@@ -669,6 +693,8 @@ ActiveRecord::Schema.define(:version => 20140809100520) do
 
   add_index "product_families", ["family_code"], :name => "index_product_families_on_family_code"
   add_index "product_families", ["name"], :name => "index_product_families_on_name"
+  add_index "product_families", ["organization_id", "family_code"], :name => "index_product_families_on_organization_id_and_family_code", :unique => true
+  add_index "product_families", ["organization_id"], :name => "index_product_families_on_organization_id"
 
   create_table "product_types", :force => true do |t|
     t.string   "description"
@@ -716,6 +742,8 @@ ActiveRecord::Schema.define(:version => 20140809100520) do
   add_index "products", ["manufacturer_id"], :name => "index_products_on_manufacturer_id"
   add_index "products", ["measure_id"], :name => "index_products_on_measure_id"
   add_index "products", ["organization_id", "product_code"], :name => "index_products_on_organization_id_and_product_code", :unique => true
+  add_index "products", ["organization_id"], :name => "index_products_on_organization_id"
+  add_index "products", ["product_code"], :name => "index_products_on_product_code"
   add_index "products", ["product_family_id"], :name => "index_products_on_product_family_id"
   add_index "products", ["product_type_id"], :name => "index_products_on_product_type_id"
   add_index "products", ["tax_type_id"], :name => "index_products_on_tax_type_id"
@@ -733,6 +761,8 @@ ActiveRecord::Schema.define(:version => 20140809100520) do
 
   add_index "professional_groups", ["nomina_id"], :name => "index_professional_groups_on_nomina_id"
   add_index "professional_groups", ["organization_id", "pg_code"], :name => "index_professional_groups_on_organization_id_and_pg_code", :unique => true
+  add_index "professional_groups", ["organization_id"], :name => "index_professional_groups_on_organization_id"
+  add_index "professional_groups", ["pg_code"], :name => "index_professional_groups_on_pg_code"
 
   create_table "projects", :force => true do |t|
     t.string   "name"
@@ -754,6 +784,8 @@ ActiveRecord::Schema.define(:version => 20140809100520) do
   add_index "projects", ["name"], :name => "index_projects_on_name"
   add_index "projects", ["office_id"], :name => "index_projects_on_office_id"
   add_index "projects", ["organization_id", "project_code"], :name => "index_projects_on_organization_id_and_project_code", :unique => true
+  add_index "projects", ["organization_id"], :name => "index_projects_on_organization_id"
+  add_index "projects", ["project_code"], :name => "index_projects_on_project_code"
 
   create_table "provinces", :force => true do |t|
     t.string   "name"
@@ -829,6 +861,8 @@ ActiveRecord::Schema.define(:version => 20140809100520) do
   add_index "purchase_orders", ["order_date"], :name => "index_purchase_orders_on_order_date"
   add_index "purchase_orders", ["order_no"], :name => "index_purchase_orders_on_order_no"
   add_index "purchase_orders", ["order_status_id"], :name => "index_purchase_orders_on_order_status_id"
+  add_index "purchase_orders", ["organization_id", "order_no"], :name => "index_purchase_orders_on_organization_id_and_order_no", :unique => true
+  add_index "purchase_orders", ["organization_id"], :name => "index_purchase_orders_on_organization_id"
   add_index "purchase_orders", ["payment_method_id"], :name => "index_purchase_orders_on_payment_method_id"
   add_index "purchase_orders", ["project_id"], :name => "index_purchase_orders_on_project_id"
   add_index "purchase_orders", ["store_id"], :name => "index_purchase_orders_on_store_id"
@@ -913,6 +947,8 @@ ActiveRecord::Schema.define(:version => 20140809100520) do
   end
 
   add_index "receipt_notes", ["charge_account_id"], :name => "index_receipt_notes_on_charge_account_id"
+  add_index "receipt_notes", ["organization_id", "supplier_id", "receipt_no"], :name => "index_receipt_notes_on_organization_and_supplier_and_no", :unique => true
+  add_index "receipt_notes", ["organization_id"], :name => "index_receipt_notes_on_organization_id"
   add_index "receipt_notes", ["payment_method_id"], :name => "index_receipt_notes_on_payment_method_id"
   add_index "receipt_notes", ["project_id"], :name => "index_receipt_notes_on_project_id"
   add_index "receipt_notes", ["purchase_order_id"], :name => "index_receipt_notes_on_purchase_order_id"
@@ -1196,6 +1232,8 @@ ActiveRecord::Schema.define(:version => 20140809100520) do
   add_index "supplier_invoices", ["charge_account_id"], :name => "index_supplier_invoices_on_charge_account_id"
   add_index "supplier_invoices", ["invoice_date"], :name => "index_supplier_invoices_on_invoice_date"
   add_index "supplier_invoices", ["invoice_no"], :name => "index_supplier_invoices_on_invoice_no"
+  add_index "supplier_invoices", ["organization_id", "supplier_id", "invoice_no"], :name => "index_supplier_invoices_on_organization_and_supplier_and_no", :unique => true
+  add_index "supplier_invoices", ["organization_id"], :name => "index_supplier_invoices_on_organization_id"
   add_index "supplier_invoices", ["payment_method_id"], :name => "index_supplier_invoices_on_payment_method_id"
   add_index "supplier_invoices", ["posted_at"], :name => "index_supplier_invoices_on_posted_at"
   add_index "supplier_invoices", ["project_id"], :name => "index_supplier_invoices_on_project_id"
@@ -1207,21 +1245,23 @@ ActiveRecord::Schema.define(:version => 20140809100520) do
     t.integer  "supplier_invoice_id"
     t.integer  "payment_method_id"
     t.date     "payment_date"
-    t.decimal  "amount",                        :precision => 13, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "amount",                       :precision => 13, :scale => 4, :default => 0.0, :null => false
     t.string   "remarks"
     t.integer  "approver_id"
-    t.datetime "created_at",                                                                    :null => false
-    t.datetime "updated_at",                                                                    :null => false
-    t.integer  "supplier_invoice_approval__id"
+    t.datetime "created_at",                                                                   :null => false
+    t.datetime "updated_at",                                                                   :null => false
     t.string   "payment_no"
     t.integer  "organization_id"
+    t.integer  "supplier_invoice_approval_id"
   end
 
   add_index "supplier_payments", ["approver_id"], :name => "index_supplier_payments_on_approver_id"
+  add_index "supplier_payments", ["organization_id", "payment_no"], :name => "index_supplier_payments_on_organization_id_and_payment_no", :unique => true
+  add_index "supplier_payments", ["organization_id"], :name => "index_supplier_payments_on_organization_id"
   add_index "supplier_payments", ["payment_method_id"], :name => "index_supplier_payments_on_payment_method_id"
   add_index "supplier_payments", ["payment_no"], :name => "index_supplier_payments_on_payment_no"
   add_index "supplier_payments", ["supplier_id"], :name => "index_supplier_payments_on_supplier_id"
-  add_index "supplier_payments", ["supplier_invoice_approval__id"], :name => "index_supplier_payments_on_supplier_invoice_approval__id"
+  add_index "supplier_payments", ["supplier_invoice_approval_id"], :name => "index_supplier_payments_on_supplier_invoice_approval_id"
   add_index "supplier_payments", ["supplier_invoice_id"], :name => "index_supplier_payments_on_supplier_invoice_id"
 
   create_table "suppliers", :force => true do |t|
@@ -1266,16 +1306,19 @@ ActiveRecord::Schema.define(:version => 20140809100520) do
   add_index "suppliers", ["email"], :name => "index_suppliers_on_email"
   add_index "suppliers", ["entity_id"], :name => "index_suppliers_on_entity_id"
   add_index "suppliers", ["fax"], :name => "index_suppliers_on_fax"
+  add_index "suppliers", ["fiscal_id"], :name => "index_suppliers_on_fiscal_id"
   add_index "suppliers", ["ledger_account"], :name => "index_suppliers_on_ledger_account"
   add_index "suppliers", ["name"], :name => "index_suppliers_on_name"
   add_index "suppliers", ["organization_id", "fiscal_id"], :name => "index_suppliers_on_organization_id_and_fiscal_id", :unique => true
   add_index "suppliers", ["organization_id", "supplier_code"], :name => "index_suppliers_on_organization_id_and_supplier_code", :unique => true
+  add_index "suppliers", ["organization_id"], :name => "index_suppliers_on_organization_id"
   add_index "suppliers", ["payment_method_id"], :name => "index_suppliers_on_payment_method_id"
   add_index "suppliers", ["phone"], :name => "index_suppliers_on_phone"
   add_index "suppliers", ["province_id"], :name => "index_suppliers_on_province_id"
   add_index "suppliers", ["region_id"], :name => "index_suppliers_on_region_id"
   add_index "suppliers", ["street_name"], :name => "index_suppliers_on_street_name"
   add_index "suppliers", ["street_type_id"], :name => "index_suppliers_on_street_type_id"
+  add_index "suppliers", ["supplier_code"], :name => "index_suppliers_on_supplier_code"
   add_index "suppliers", ["town_id"], :name => "index_suppliers_on_town_id"
   add_index "suppliers", ["zipcode_id"], :name => "index_suppliers_on_zipcode_id"
 
@@ -1307,6 +1350,8 @@ ActiveRecord::Schema.define(:version => 20140809100520) do
   end
 
   add_index "technicians", ["name"], :name => "index_technicians_on_name"
+  add_index "technicians", ["organization_id", "user_id"], :name => "index_technicians_on_organization_id_and_user_id", :unique => true
+  add_index "technicians", ["organization_id"], :name => "index_technicians_on_organization_id"
   add_index "technicians", ["user_id"], :name => "index_technicians_on_user_id"
 
   create_table "ticket_categories", :force => true do |t|
@@ -1367,6 +1412,7 @@ ActiveRecord::Schema.define(:version => 20140809100520) do
   add_index "tickets", ["created_at"], :name => "index_tickets_on_created_at"
   add_index "tickets", ["created_by"], :name => "index_tickets_on_created_by"
   add_index "tickets", ["office_id"], :name => "index_tickets_on_office_id"
+  add_index "tickets", ["organization_id"], :name => "index_tickets_on_organization_id"
   add_index "tickets", ["status_changed_at"], :name => "index_tickets_on_status_changed_at"
   add_index "tickets", ["technician_id"], :name => "index_tickets_on_technician_id"
   add_index "tickets", ["ticket_category_id"], :name => "index_tickets_on_ticket_category_id"
@@ -1567,6 +1613,8 @@ ActiveRecord::Schema.define(:version => 20140809100520) do
     t.integer  "organization_id"
   end
 
+  add_index "work_order_labors", ["organization_id"], :name => "index_work_order_labors_on_organization_id"
+
   create_table "work_order_statuses", :force => true do |t|
     t.string   "name"
     t.datetime "created_at", :null => false
@@ -1583,6 +1631,8 @@ ActiveRecord::Schema.define(:version => 20140809100520) do
     t.integer  "updated_by"
     t.integer  "organization_id"
   end
+
+  add_index "work_order_types", ["organization_id"], :name => "index_work_order_types_on_organization_id"
 
   create_table "work_order_workers", :force => true do |t|
     t.integer  "work_order_id"
@@ -1636,6 +1686,7 @@ ActiveRecord::Schema.define(:version => 20140809100520) do
   add_index "work_orders", ["in_charge_id"], :name => "index_work_orders_on_in_charge_id"
   add_index "work_orders", ["master_order_id"], :name => "index_work_orders_on_master_order_id"
   add_index "work_orders", ["order_no"], :name => "index_work_orders_on_order_no"
+  add_index "work_orders", ["organization_id", "order_no"], :name => "index_work_orders_on_organization_id_and_order_no", :unique => true
   add_index "work_orders", ["organization_id"], :name => "index_work_orders_on_organization_id"
   add_index "work_orders", ["project_id"], :name => "index_work_orders_on_project_id"
   add_index "work_orders", ["started_at"], :name => "index_work_orders_on_started_at"
@@ -1787,18 +1838,21 @@ ActiveRecord::Schema.define(:version => 20140809100520) do
   add_index "workers", ["degree_type_id"], :name => "index_workers_on_degree_type_id"
   add_index "workers", ["department_id"], :name => "index_workers_on_department_id"
   add_index "workers", ["first_name"], :name => "index_workers_on_first_name"
+  add_index "workers", ["fiscal_id"], :name => "index_workers_on_fiscal_id"
   add_index "workers", ["insurance_id"], :name => "index_workers_on_insurance_id"
   add_index "workers", ["last_name"], :name => "index_workers_on_last_name"
   add_index "workers", ["nomina_id"], :name => "index_workers_on_nomina_id"
   add_index "workers", ["office_id"], :name => "index_workers_on_office_id"
   add_index "workers", ["organization_id", "fiscal_id"], :name => "index_workers_on_organization_id_and_fiscal_id", :unique => true
   add_index "workers", ["organization_id", "worker_code"], :name => "index_workers_on_organization_id_and_worker_code"
+  add_index "workers", ["organization_id"], :name => "index_workers_on_organization_id"
   add_index "workers", ["professional_group_id"], :name => "index_workers_on_professional_group_id"
   add_index "workers", ["province_id"], :name => "index_workers_on_province_id"
   add_index "workers", ["sex_id"], :name => "index_workers_on_sex_id"
   add_index "workers", ["street_type_id"], :name => "index_workers_on_street_type_id"
   add_index "workers", ["town_id"], :name => "index_workers_on_town_id"
   add_index "workers", ["user_id"], :name => "index_workers_on_user_id"
+  add_index "workers", ["worker_code"], :name => "index_workers_on_worker_code"
   add_index "workers", ["worker_type_id"], :name => "index_workers_on_worker_type_id"
   add_index "workers", ["zipcode_id"], :name => "index_workers_on_zipcode_id"
 

@@ -43,7 +43,7 @@ class WorkOrder < ActiveRecord::Base
   validates :order_no,          :presence => true,
                                 :length => { :is => 20 },
                                 :format => { with: /\A\d+\Z/, message: :code_invalid },
-                                :uniqueness => true
+                                :uniqueness => { :scope => :organization_id }
   validates :description,       :presence => true,
                                 :length => { :maximum => 100 }
   validates :charge_account,    :presence => true
@@ -52,6 +52,7 @@ class WorkOrder < ActiveRecord::Base
   validates :work_order_status, :presence => true
   validates :work_order_type,   :presence => true
   validates :in_charge,         :presence => true
+  validates :organization,      :presence => true
 
   before_destroy :check_for_dependent_records
 
@@ -173,6 +174,7 @@ class WorkOrder < ActiveRecord::Base
     date :started_at
     date :completed_at
     date :closed_at
+    integer :organization_id
   end
 
   private

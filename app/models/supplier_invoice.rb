@@ -26,9 +26,11 @@ class SupplierInvoice < ActiveRecord::Base
   validates_associated :supplier_invoice_items, :supplier_invoice_approvals
 
   validates :invoice_date,   :presence => true
-  validates :invoice_no,     :presence => true
+  validates :invoice_no,     :presence => true,
+                             :uniqueness => { :scope => [ :organization_id, :supplier_id ] }
   validates :supplier,       :presence => true
   validates :payment_method, :presence => true
+  validates :organization,    :presence => true
 
   before_destroy :check_for_dependent_records
 
@@ -146,6 +148,7 @@ class SupplierInvoice < ActiveRecord::Base
     integer :charge_account_id
     date :invoice_date
     date :posted_at
+    integer :organization_id
   end
 
   private

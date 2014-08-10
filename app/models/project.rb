@@ -19,10 +19,11 @@ class Project < ActiveRecord::Base
   validates :project_code,  :presence => true,
                             :length => { :is => 10 },
                             :format => { with: /\A\d+\Z/, message: :code_invalid },
-                            :uniqueness => true
+                            :uniqueness => { :scope => :organization_id }
   validates :opened_at,     :presence => true
   validates :company,       :presence => true
   validates :office,        :presence => true
+  validates :organization,  :presence => true
 
   before_destroy :check_for_dependent_records
 
@@ -67,6 +68,7 @@ class Project < ActiveRecord::Base
     string :project_code
     integer :company_id
     integer :office_id
+    integer :organization_id
   end
 
   private

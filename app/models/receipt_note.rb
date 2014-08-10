@@ -25,9 +25,10 @@ class ReceiptNote < ActiveRecord::Base
 
   validates :receipt_date,    :presence => true
   validates :receipt_no,      :presence => true,
-                              :uniqueness => { :scope => :supplier_id }
+                              :uniqueness => { :scope => [ :organization_id, :supplier_id ] }
   validates :supplier,        :presence => true
   validates :payment_method,  :presence => true
+  validates :organization,    :presence => true
 
   before_destroy :check_for_dependent_records
 
@@ -130,6 +131,7 @@ class ReceiptNote < ActiveRecord::Base
     integer :supplier_id
     integer :purchase_order_id
     date :receipt_date
+    integer :organization_id
   end
 
   private

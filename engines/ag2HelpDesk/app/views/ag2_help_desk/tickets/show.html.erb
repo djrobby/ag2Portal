@@ -5,7 +5,7 @@
   <tbody>
     <tr>
       <td><%=t :"activerecord.attributes.ticket.id" %>:</td>
-      <td><b><%= @ticket.id.to_s.rjust(6, '0') %></b></td>
+      <td><b><%= @ticket.id.to_s.rjust(7, '0') %></b></td>
       <% if !@ticket.attachment.blank? %>
       <td><%=t :"activerecord.attributes.ticket.attachment" %>:</td>
       <td class="highlighted"><%=t :"activerecord.attributes.ticket.attach_exist" %></td>

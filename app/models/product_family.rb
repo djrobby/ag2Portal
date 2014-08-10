@@ -4,10 +4,11 @@ class ProductFamily < ActiveRecord::Base
 
   has_paper_trail
 
-  validates :name,        :presence => true
-  validates :family_code, :presence => true,
-                          :length => { :is => 4 },
-                          :uniqueness => true
+  validates :name,          :presence => true
+  validates :family_code,   :presence => true,
+                            :length => { :is => 4 },
+                            :uniqueness => { :scope => :organization_id }
+  validates :organization,  :presence => true
 
   has_many :products
 

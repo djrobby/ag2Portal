@@ -27,8 +27,9 @@ class DeliveryNote < ActiveRecord::Base
   validates :delivery_no,     :presence => true,
                               :length => { :is => 14 },
                               :format => { with: /\A\d+\Z/, message: :code_invalid },
-                              :uniqueness => true
+                              :uniqueness => { :scope => :organization_id }
   validates :project,         :presence => true
+  validates :organization,    :presence => true
 
   before_destroy :check_for_dependent_records
 
@@ -60,7 +61,7 @@ class DeliveryNote < ActiveRecord::Base
   end
 
   def full_no
-    # Delivery no (Company id & year & sequential number) => CCCC-YYYY-NNNNNN
+    # Delivery no (Organization id & year & sequential number) => OOOO-YYYY-NNNNNN
     delivery_no.blank? ? "" : delivery_no[0..3] + '-' + delivery_no[4..7] + '-' + delivery_no[8..13]
   end
 
@@ -142,6 +143,7 @@ class DeliveryNote < ActiveRecord::Base
     integer :charge_account_id
     integer :client_id
     date :delivery_date
+    integer :organization_id
   end
 
   private
