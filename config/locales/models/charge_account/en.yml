@@ -19,3 +19,5 @@ en:
         project: "Project"
         project_id: "Project"
         ledger_account: "Ledger account"
+        organization: "Organization"
+        organization_id: "Organization"

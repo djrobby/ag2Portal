@@ -22,3 +22,5 @@ es:
         flow_2: "Pagos"
         flow_3: "Ambos"
         flow_3_show: "Cobros y Pagos"
+        organization: "Organización"
+        organization_id: "Organización"

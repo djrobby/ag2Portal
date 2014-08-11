@@ -23,3 +23,5 @@ es:
         supplier_invoice_approval: "Aprobación de factura"
         supplier_invoice_approval_id: "Aprobación de factura"
         invoice_debt: "Deuda actual"
+        organization: "Organización"
+        organization_id: "Organización"

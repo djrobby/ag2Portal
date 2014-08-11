@@ -23,3 +23,5 @@ en:
         supplier_invoice_approval: "Invoice approval"
         supplier_invoice_approval_id: "Invoice approval"
         invoice_debt: "Current debt"
+        organization: "Organization"
+        organization_id: "Organization"

@@ -11,3 +11,5 @@ es:
         name: "Nombre"
         user: "Usuario"
         user_id: "Usuario"
+        organization: "Organización"
+        organization_id: "Organización"

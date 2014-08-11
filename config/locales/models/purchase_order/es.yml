@@ -44,3 +44,5 @@ es:
         balance: "Saldo"
         quantity: "Artículos"
         bonus: "Bonificación"
+        organization: "Organización"
+        organization_id: "Organización"

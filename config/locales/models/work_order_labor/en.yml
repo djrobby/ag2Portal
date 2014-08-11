@@ -10,3 +10,5 @@ en:
     attributes:
       work_order_labor:
         name: "Description"
+        organization: "Organization"
+        organization_id: "Organization"

@@ -38,3 +38,5 @@ es:
         total: "Total"
         quantity: "Artículos"
         bonus: "Bonificación"
+        organization: "Organización"
+        organization_id: "Organización"

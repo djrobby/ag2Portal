@@ -38,3 +38,5 @@ es:
         approved_to_paid: "Aprobado para pagar"
         payment_avg_date: "Fecha media de pago"
         payment_period: "Plazo medio de pago"
+        organization: "Organización"
+        organization_id: "Organización"

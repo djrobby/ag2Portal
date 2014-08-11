@@ -38,3 +38,5 @@ en:
         approved_to_paid: "Approved to pay"
         payment_avg_date: "Avg.payment date"
         payment_period: "Avg.payment period"
+        organization: "Organization"
+        organization_id: "Organization"

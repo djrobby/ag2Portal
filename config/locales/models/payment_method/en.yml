@@ -22,3 +22,5 @@ en:
         flow_2: "Payments"
         flow_3: "Both"
         flow_3_show: "Collections & Payments"
+        organization: "Organization"
+        organization_id: "Organization"

@@ -36,3 +36,5 @@ en:
         total: "Total"
         quantity: "Articles"
         bonus: "Bonus"
+        organization: "Organization"
+        organization_id: "Organization"

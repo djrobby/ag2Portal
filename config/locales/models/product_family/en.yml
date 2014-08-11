@@ -13,3 +13,5 @@ en:
         family_code: "Code"
         max_orders_count: "Max orders count"
         max_orders_sum: "Max orders amount €"
+        organization: "Organization"
+        organization_id: "Organization"

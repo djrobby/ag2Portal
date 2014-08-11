@@ -19,3 +19,5 @@ es:
         project: "Proyecto"
         project_id: "Proyecto"
         ledger_account: "Cuenta contable"
+        organization: "Organización"
+        organization_id: "Organización"
