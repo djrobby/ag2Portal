@@ -240,9 +240,7 @@ end
       office = params[:WrkrOffice]
       letter = params[:letter]
       # OCO
-      if !session[:organization]
-        init_oco
-      end
+      init_oco if !session[:organization]
       # Initialize select_tags
       if session[:company] != '0'
         @companies = Company.where(id: session[:company]) if @companies.nil?

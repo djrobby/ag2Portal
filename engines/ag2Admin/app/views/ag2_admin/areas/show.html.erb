@@ -19,10 +19,14 @@
   </tbody>
 </table>
 
+<% if cannot_edit(@area.department) %>
+<%= render partial: '/layouts/crud/new', locals: { model: Area, path: new_area_path, txt: I18n.t("ag2_admin.areas.index.btn_new") } %>
+<% else %>
 <%= render partial: '/layouts/crud/update_delete_new', locals:
 { model: Area, update_path: edit_area_path(@area), update_txt: t('.btn_edit'),
 delete_path: @area, delete_txt: t('.btn_delete'), msg: t("activerecord.models.area.one"), txt: @area.name,
 new_path: new_area_path, new_txt: t('ag2_admin.areas.index.btn_new') } %>
+<% end %>
 
 <%= link_to I18n.t('ag2_admin.areas.show.show_to'), @area.department %> |
 <%= link_to I18n.t('ag2_admin.areas.back_to_main_page'), areas_path %>

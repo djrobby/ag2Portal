@@ -70,9 +70,8 @@ module Ag2Products
       manufacturer = params[:Manufacturer]
       tax = params[:Tax]
       letter = params[:letter]
-      if !session[:organization]
-        init_oco
-      end
+      # OCO
+      init_oco if !session[:organization]
   
       @search = Product.search do
         fulltext params[:search]

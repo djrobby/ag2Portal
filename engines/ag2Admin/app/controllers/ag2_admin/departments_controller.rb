@@ -88,8 +88,8 @@ module Ag2Admin
     def edit
       @breadcrumb = 'update'
       @department = Department.find(params[:id])
-      @companies = @department.organization.blank? ? companies_dropdown : @department.organization.companies.order(:name)
-      @workers = @department.company.blank? ? workers_dropdown : workers_by_company(@department.company)
+      @companies = @department.organization.blank? ? companies_dropdown : companies_dropdown_edit(@department.organization)
+      @workers = @department.company.blank? ? workers_dropdown : workers_dropdown_edit(@department.company_id)
     end
 
     # POST /departments
@@ -125,8 +125,8 @@ module Ag2Admin
                         notice: (crud_notice('updated', @department) + "#{undo_link(@department)}").html_safe }
           format.json { head :no_content }
         else
-          @companies = @department.organization.blank? ? companies_dropdown : @department.organization.companies.order(:name)
-          @workers = @department.company.blank? ? workers_dropdown : workers_by_company(@department.company)
+          @companies = @department.organization.blank? ? companies_dropdown : companies_dropdown_edit(@department.organization)
+          @workers = @department.company.blank? ? workers_dropdown : workers_dropdown_edit(@department.company)
           format.html { render action: "edit" }
           format.json { render json: @department.errors, status: :unprocessable_entity }
         end
@@ -159,6 +159,14 @@ module Ag2Admin
     def cannot_edit(_company)
       session[:company] != '0' && (_company != session[:company].to_i && !_company.blank?)
     end
+
+    def companies_dropdown
+      if session[:company] != '0'
+        _companies = Company.where(id: session[:company].to_i)
+      else
+        _companies = session[:organization] != '0' ? Company.where(organization_id: session[:organization].to_i).order(:name) : Company.order(:name)
+      end
+    end
     
     def workers_dropdown
       if session[:company] != '0'
@@ -168,8 +176,20 @@ module Ag2Admin
       end
     end
 
-    def companies_dropdown
-      _companies = session[:organization] != '0' ? Company.where(organization_id: session[:organization].to_i).order(:name) : Company.order(:name)
+    def companies_dropdown_edit(_organization)
+      if session[:company] != '0'
+        _companies = Company.where(id: session[:company].to_i)
+      else
+        _companies = _organization.companies.order(:name)
+      end
+    end
+    
+    def workers_dropdown_edit(_company)
+      if session[:company] != '0'
+        _workers = workers_by_company(session[:company].to_i)
+      else
+        _workers = workers_by_company(_company)
+      end
     end
 
     def workers_by_company(_company)

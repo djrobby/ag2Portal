@@ -149,7 +149,11 @@ module Ag2Admin
     end
 
     def departments_dropdown
-      _departments = session[:organization] != '0' ? Department.where(organization_id: session[:organization].to_i).order(:name) : Department.order(:name)
+      if session[:company] != '0'
+        _departments = Department.where('company_id = ? OR company_id IS NULL', session[:company].to_i)
+      else
+        _departments = session[:organization] != '0' ? Department.where(organization_id: session[:organization].to_i).order(:name) : Department.order(:name)
+      end
     end
     
     def workers_by_department(_department)

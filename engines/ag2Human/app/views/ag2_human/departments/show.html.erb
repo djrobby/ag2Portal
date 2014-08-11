@@ -26,10 +26,14 @@
   </tbody>
 </table>
 
+<% if cannot_edit(@department.company_id) %>
+<%= render partial: '/layouts/crud/new', locals: { model: Department, path: new_department_path, txt: I18n.t("ag2_human.departments.index.btn_new") } %>
+<% else %>
 <%= render partial: '/layouts/crud/update_delete_new', locals:
 { model: Department, update_path: edit_department_path(@department), update_txt: t('.btn_edit'),
 delete_path: @department, delete_txt: t('.btn_delete'), msg: t("activerecord.models.department.one"), txt: @department.name,
 new_path: new_department_path, new_txt: t('ag2_human.departments.index.btn_new') } %>
+<% end %>
 
 <% if (@workers.count > 0) %>
 <% session[:return_to] = I18n.t('ag2_human.departments.show.return_to') %>

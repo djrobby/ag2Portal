@@ -9,8 +9,12 @@ module Ag2Tech
     
     # Update company text field at view from office select
     def pr_update_company_textfield_from_office
-      @office = Office.find(params[:id])
-      @company = Company.find(@office.company)
+      office = params[:id]
+      @company = 0
+      if office != '0'
+        @office = Office.find(office)
+        @company = @office.blank? ? 0 : @office.company
+      end
 
       respond_to do |format|
         format.html # pr_update_company_textfield_from_office.html.erb does not exist! JSON only
@@ -23,14 +27,13 @@ module Ag2Tech
       organization = params[:id]
       if organization != '0'
         @organization = Organization.find(organization)
-        @companies = @organization.blank? ? Company.order(:name) : @organization.companies.order(:name)
-        @offices = Office.joins(:company).where(companies: { organization_id: organization }).order(:name)
+        @companies = @organization.blank? ? companies_dropdown : @organization.companies.order(:name)
+        @offices = @organization.blank? ? offices_dropdown : Office.joins(:company).where(companies: { organization_id: organization }).order(:name)
       else
-        @companies = Company.order(:name)
-        @offices = Office.order(:name)
+        @companies = companies_dropdown
+        @offices = offices_dropdown
       end
       @offices_dropdown = []
-      
       @offices.each do |i|
         @offices_dropdown = @offices_dropdown << [i.id, i.name, i.company.name] 
       end
@@ -45,11 +48,31 @@ module Ag2Tech
     # GET /projects.json
     def index
       manage_filter_state
-      company = params[:Company]
-      office = params[:Office]
+      company = params[:WrkrCompany]
+      office = params[:WrkrOffice]
+      # OCO
+      init_oco if !session[:organization]
+      # Initialize select_tags
+      if session[:company] != '0'
+        @companies = Company.where(id: session[:company]) if @companies.nil?
+        company = session[:company]
+      else
+        @companies = Company.order(:name) if @companies.nil?
+      end
+      if session[:office] != '0'
+        @offices = Office.where(id: session[:office]) if @offices.nil?
+        office = session[:office]
+      elsif session[:company] != '0'
+        @offices = @companies.first.offices.order(:name) if @offices.nil?
+      else
+        @offices = Office.order(:name) if @offices.nil?
+      end
 
       @search = Project.search do
         fulltext params[:search]
+        if session[:organization] != '0'
+          with :organization_id, session[:organization]
+        end
         if !company.blank?
           with :company_id, company
         end
@@ -61,10 +84,6 @@ module Ag2Tech
       end
       @projects = @search.results
 
-      # Initialize select_tags
-      @companies = Company.order('name') if @companies.nil?
-      @offices = Office.order('name') if @offices.nil?
-  
       respond_to do |format|
         format.html # index.html.erb
         format.json { render json: @projects }
@@ -88,13 +107,8 @@ module Ag2Tech
     def new
       @breadcrumb = 'create'
       @project = Project.new
-      if session[:organization] != '0'
-        @companies = Company.where(organization_id: session[:organization]).order(:name)
-        @offices = Office.joins(:company).where(companies: { organization_id: session[:organization].to_i }).order(:name)
-      else
-        @companies = Company.order(:name)
-        @offices = Office.order(:name)
-      end
+      @companies = companies_dropdown
+      @offices = offices_dropdown
   
       respond_to do |format|
         format.html # new.html.erb
@@ -106,8 +120,8 @@ module Ag2Tech
     def edit
       @breadcrumb = 'update'
       @project = Project.find(params[:id])
-      @companies = @project.organization.blank? ? Company.order(:name) : @project.organization.companies.order(:name)
-      @offices = @project.organization.blank? ? Office.order(:name) : Office.joins(:company).where(companies: { organization_id: @project.organization_id }).order(:name)
+      @companies = @project.organization.blank? ? companies_dropdown : companies_dropdown_edit(@project.organization)
+      @offices = @project.organization.blank? ? offices_dropdown : offices_dropdown_edit(@project.organization_id)
     end
   
     # POST /projects
@@ -122,13 +136,8 @@ module Ag2Tech
           format.html { redirect_to @project, notice: crud_notice('created', @project) }
           format.json { render json: @project, status: :created, location: @project }
         else
-          if session[:organization] != '0'
-            @companies = Company.where(organization_id: session[:organization]).order(:name)
-            @offices = Office.joins(:company).where(companies: { organization_id: session[:organization].to_i }).order(:name)
-          else
-            @companies = Company.order(:name)
-            @offices = Office.order(:name)
-          end
+          @companies = companies_dropdown
+          @offices = offices_dropdown
           format.html { render action: "new" }
           format.json { render json: @project.errors, status: :unprocessable_entity }
         end
@@ -148,8 +157,8 @@ module Ag2Tech
                         notice: (crud_notice('updated', @project) + "#{undo_link(@project)}").html_safe }
           format.json { head :no_content }
         else
-          @companies = @project.organization.companies
-          @offices = Office.joins(:company).where(companies: { organization_id: @project.organization_id }).order(:name)
+          @companies = @project.organization.blank? ? companies_dropdown : companies_dropdown_edit(@project.organization)
+          @offices = @project.organization.blank? ? offices_dropdown : offices_dropdown_edit(@project.organization_id)
           format.html { render action: "edit" }
           format.json { render json: @project.errors, status: :unprocessable_entity }
         end
@@ -174,6 +183,46 @@ module Ag2Tech
     end
 
     private
+
+    def companies_dropdown
+      if session[:company] != '0'
+        _companies = Company.where(id: session[:company].to_i)
+      else
+        _companies = session[:organization] != '0' ? Company.where(organization_id: session[:organization].to_i).order(:name) : Company.order(:name)
+      end
+    end
+
+    def offices_dropdown
+      if session[:office] != '0'
+        _offices = Office.where(id: session[:office].to_i)
+      elsif session[:company] != '0'
+        _offices = offices_by_company(session[:company].to_i)
+      else
+        _offices = session[:organization] != '0' ? Office.joins(:company).where(companies: { organization_id: session[:organization].to_i }).order(:name) : Office.order(:name)
+      end
+    end
+
+    def companies_dropdown_edit(_organization)
+      if session[:company] != '0'
+        _companies = Company.where(id: session[:company].to_i)
+      else
+        _companies = _organization.companies.order(:name)
+      end
+    end
+
+    def offices_dropdown_edit(_organization)
+      if session[:office] != '0'
+        _offices = Office.where(id: session[:office].to_i)
+      elsif session[:company] != '0'
+        _offices = offices_by_company(session[:company].to_i)
+      else
+        _offices = Office.joins(:company).where(companies: { organization_id: _organization }).order(:name)
+      end
+    end
+
+    def offices_by_company(_company)
+      _offices = Office.where(company_id: _company).order(:name)      
+    end
     
     # Keeps filter state
     def manage_filter_state
@@ -184,16 +233,16 @@ module Ag2Tech
         params[:search] = session[:search]
       end
       # company
-      if params[:Company]
-        session[:Company] = params[:Company]
-      elsif session[:Company]
-        params[:Company] = session[:Company]
+      if params[:WrkrCompany]
+        session[:WrkrCompany] = params[:WrkrCompany]
+      elsif session[:WrkrCompany]
+        params[:WrkrCompany] = session[:WrkrCompany]
       end
       # office
-      if params[:Office]
-        session[:Office] = params[:Office]
-      elsif session[:Office]
-        params[:Office] = session[:Office]
+      if params[:WrkrOffice]
+        session[:WrkrOffice] = params[:WrkrOffice]
+      elsif session[:WrkrOffice]
+        params[:WrkrOffice] = session[:WrkrOffice]
       end
     end
   end

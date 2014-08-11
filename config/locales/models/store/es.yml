@@ -24,3 +24,5 @@ es:
         supplier: "Proveedor"
         supplier_id: "Proveedor"
         stock: "Existencia total"
+        organization: "Organización"
+        organization_id: "Organización"

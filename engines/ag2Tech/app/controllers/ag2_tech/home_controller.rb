@@ -9,8 +9,8 @@ module Ag2Tech
       session[:Project] = nil      
       session[:Type] = nil
       session[:Status] = nil
-      session[:Company] = nil
-      session[:Office] = nil
+      session[:WrkrCompany] = nil
+      session[:WrkrOffice] = nil      
     end
   end
 end

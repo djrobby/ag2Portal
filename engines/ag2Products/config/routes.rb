@@ -5,8 +5,12 @@ Ag2Products::Engine.routes.draw do
 
     # Routes for jQuery POSTs
     # Numbers with decimals (.) must be multiplied (by 1xxx and the same zeroes x positions) before passed as REST parameter! 
-    match 'stores/update_company_textfield_from_office/:id', :controller => 'stores', :action => 'update_company_textfield_from_office'
-    match 'stores/:id/update_company_textfield_from_office/:id', :controller => 'stores', :action => 'update_company_textfield_from_office'
+    match 'stores/st_update_company_textfield_from_office/:id', :controller => 'stores', :action => 'st_update_company_textfield_from_office'
+    match 'st_update_company_textfield_from_office/:id', :controller => 'stores', :action => 'st_update_company_textfield_from_office'
+    match 'stores/:id/st_update_company_textfield_from_office/:id', :controller => 'stores', :action => 'st_update_company_textfield_from_office'
+    match 'stores/st_update_company_and_office_textfields_from_organization/:id', :controller => 'stores', :action => 'st_update_company_and_office_textfields_from_organization'
+    match 'st_update_company_and_office_textfields_from_organization/:id', :controller => 'stores', :action => 'st_update_company_and_office_textfields_from_organization'
+    match 'stores/:id/st_update_company_and_office_textfields_from_organization/:id', :controller => 'stores', :action => 'st_update_company_and_office_textfields_from_organization'
     #
     match 'products/update_code_textfield/:id', :controller => 'products', :action => 'update_code_textfield'
     match 'products/:id/update_code_textfield/:id', :controller => 'products', :action => 'update_code_textfield'
