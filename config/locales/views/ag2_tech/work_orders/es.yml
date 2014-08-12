@@ -25,7 +25,7 @@ es:
       back_to_main_page: "Volver a Ordenes de trabajo"
       generate_code_btn: "Nº de Orden"
       validate_btn: "Validar"
-      code_error: "Imposible generar Nº de Orden: No has elegido Actividad."
+      no_error: "Imposible generar Nº de Orden: No has elegido Proyecto."
       items_info: "Items de la Orden"
       workers_info: "Trabajadores de la Orden"
       delete_item: "Borrar este Item"

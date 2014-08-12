@@ -241,16 +241,16 @@ module Ag2Purchase
 
     # Update order number at view (generate_code_btn)
     def po_generate_no
-      project = params[:id]
+      project = params[:project]
       year = Time.new.year
       code = ''
 
       # Builds code, if possible
-      if project == '$'
+      project_code = Project.find(project).project_code rescue '$'
+      if project == '$' || project_code == '$'
         code = '$err'
       else
-        project = project.to_s if project.is_a? Fixnum
-        project = project.rjust(10, '0')
+        project = project_code.rjust(10, '0')
         year = year.to_s if year.is_a? Fixnum
         year = year.rjust(4, '0')
         last_no = PurchaseOrder.where("order_no LIKE ?", "#{project}#{year}%").order(:order_no).maximum(:order_no)

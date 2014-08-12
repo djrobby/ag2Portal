@@ -1,4 +1,5 @@
 <script>
+  var text_field_color;
   var _thisForm = '';
   
   $(document).ready(function() {
@@ -21,6 +22,9 @@
       $('.date_picker').datepicker('hide');
     });
     
+    // Save default text color
+    text_field_color = $("#work_order_order_no").css('color')
+
     // Initialized form variable
     _thisForm = $("#work_order_order_no").closest('form')[0];
 
@@ -38,6 +42,18 @@
       $('#submit_btn').show();
       $('.fnt-new-btn').show();
       $('.fnt-new-worker-btn').show();
+    }
+
+    // Disable generate_code_btn if work_order_project_id blank
+    var order = $('#work_order_project_id').val();
+    if (order == "")
+      order = "0";
+    if (order == "0") {
+      // Empty project: Hide
+      $('#generate_code_btn').hide();
+    } else {
+      // Project OK: Show
+      $('#generate_code_btn').show();
     }
   });
   
@@ -58,6 +74,25 @@
         $('.fnt-new-btn').show();
         $('.fnt-new-worker-btn').show();
       }
+    });
+    
+    // when #generate_code_btn is clicked
+    $("#generate_code_btn").click(function() {
+      // make a POST call and replace the content
+      var order = $('select#work_order_project_id :selected').val();
+      if (order == "")
+        order = "$";
+      jQuery.getJSON('wo_generate_no/' + order, function(data) {
+        $("#work_order_order_no").val(data.code);
+        if ($("#work_order_order_no").val() == "$err") {
+          $("#work_order_order_no").css('color', 'red');
+          alert('<%= I18n.t("ag2_tech.work_orders.no_error") %>');
+          $('#work_order_order_no').select();
+        }
+        else
+          $("#work_order_order_no").css('color', text_field_color);
+      });
+      return false;
     });
     
     // when the #work_order_project_id field changes
@@ -115,6 +150,14 @@
         }
         // Should change #work_order_workers_worker_id
       });
+      // Disable generate_code_btn if work_order_project_id blank
+      if (order == "0") {
+        // Empty project: Hide
+        $('#generate_code_btn').hide();
+      } else {
+        // Project OK: Show
+        $('#generate_code_btn').show();
+      }
       return false;
     });
 
@@ -247,5 +290,14 @@
 <!-- Remarks -->
 <%= f.input :remarks, as: :text, input_html: { class: 'x-large-text-field', rows: 3 }, label_html: { class: 'form-label' } %>
 <!-- Buttons -->
-<%= f.button :submit, class: 'btn-primary', id: 'submit_btn' %>
+<table class="form-table">
+  <tbody>
+    <tr class="form-tr">
+      <td class="form-td-three left-winged"> <%= f.button :submit, :class => 'btn-primary', :id => 'submit_btn' %> </td>
+      <% if @breadcrumb == 'create'%>
+      <td class="form-td-three right-winged"><a href="#" id="generate_code_btn" class="btn btn-warning"><%=t 'ag2_tech.work_orders.generate_code_btn' %></a></td>
+      <% end %>
+    </tr>
+  </tbody>
+</table>
 <% end %>

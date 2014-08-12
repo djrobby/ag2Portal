@@ -5,7 +5,8 @@ module Ag2Tech
     before_filter :authenticate_user!
     load_and_authorize_resource
     skip_load_and_authorize_resource :only => [:pr_update_company_textfield_from_office,
-                                               :pr_update_company_and_office_textfields_from_organization]
+                                               :pr_update_company_and_office_textfields_from_organization,
+                                               :pr_generate_code]
     
     # Update company text field at view from office select
     def pr_update_company_textfield_from_office
@@ -38,6 +39,29 @@ module Ag2Tech
         @offices_dropdown = @offices_dropdown << [i.id, i.name, i.company.name] 
       end
       @json_data = { "companies" => @companies, "offices" => @offices_dropdown }
+      render json: @json_data
+    end
+
+    # Update project code at view (generate_code_btn)
+    def pr_generate_code
+      header = params[:header]
+      code = ''
+
+      # Builds code, if possible
+      if header == '$'
+        code = '$err'
+      else
+        header = header.to_s if header.is_a? Fixnum
+        header = header.rjust(4, '0')
+        last_code = Project.where("project_code LIKE ?", "#{header}%").order(:project_code).maximum(:project_code)
+        if last_code.nil?
+          code = header + '000001'
+        else
+          last_code = last_code[4..9].to_i + 1
+          code = header + last_code.to_s.rjust(6, '0')
+        end
+      end
+      @json_data = { "code" => code }
       render json: @json_data
     end
 

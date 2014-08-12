@@ -13,7 +13,8 @@ module Ag2Tech
                                                :wo_update_description_prices_from_product,
                                                :wo_update_costs_from_worker,
                                                :wo_update_amount_and_costs_from_price_or_quantity,
-                                               :wo_update_costs_from_cost_or_hours]
+                                               :wo_update_costs_from_cost_or_hours,
+                                               :wo_generate_code]
     # Calculate and format item totals properly
     def wo_item_totals
       qty = params[:qty].to_f / 10000
@@ -259,6 +260,32 @@ module Ag2Tech
         format.html # wo_update_petitioner_textfield_from_client.html.erb does not exist! JSON only
         format.json { render json: @json_data }
       end
+    end
+
+    # Update order number at view (generate_code_btn)
+    def wo_generate_no
+      project = params[:project]
+      year = Time.new.year
+      code = ''
+
+      # Builds code, if possible
+      project_code = Project.find(project).project_code rescue '$'
+      if project == '$' || project_code == '$'
+        code = '$err'
+      else
+        project = project_code.rjust(10, '0')
+        year = year.to_s if year.is_a? Fixnum
+        year = year.rjust(4, '0')
+        last_no = WorkOrder.where("order_no LIKE ?", "#{project}#{year}%").order(:order_no).maximum(:order_no)
+        if last_no.nil?
+          code = project + year + '000001'
+        else
+          last_no = last_no[14..19].to_i + 1
+          code = project + year + last_no.to_s.rjust(6, '0')
+        end
+      end
+      @json_data = { "code" => code }
+      render json: @json_data
     end
 
     #

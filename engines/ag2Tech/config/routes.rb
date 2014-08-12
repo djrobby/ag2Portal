@@ -11,6 +11,13 @@ Ag2Tech::Engine.routes.draw do
     match 'projects/pr_update_company_and_office_textfields_from_organization/:id', :controller => 'projects', :action => 'pr_update_company_and_office_textfields_from_organization'
     match 'pr_update_company_and_office_textfields_from_organization/:id', :controller => 'projects', :action => 'pr_update_company_and_office_textfields_from_organization'
     match 'projects/:id/pr_update_company_and_office_textfields_from_organization/:id', :controller => 'projects', :action => 'pr_update_company_and_office_textfields_from_organization'
+    match 'projects/pr_generate_code/:header', :controller => 'projects', :action => 'pr_generate_code'
+    match 'pr_generate_code/:header', :controller => 'projects', :action => 'pr_generate_code'
+    match 'projects/:id/pr_generate_code/:header', :controller => 'projects', :action => 'pr_generate_code'
+    #
+    match 'charge_accounts/cc_generate_code/:header', :controller => 'charge_accounts', :action => 'cc_generate_code'
+    match 'cc_generate_code/:header', :controller => 'charge_accounts', :action => 'cc_generate_code'
+    match 'charge_accounts/:id/cc_generate_code/:header', :controller => 'charge_accounts', :action => 'cc_generate_code'
     #
     match 'work_orders/wo_update_account_textfield_from_project/:id', :controller => 'work_orders', :action => 'wo_update_account_textfield_from_project'
     match 'wo_update_account_textfield_from_project/:id', :controller => 'work_orders', :action => 'wo_update_account_textfield_from_project'
@@ -42,6 +49,9 @@ Ag2Tech::Engine.routes.draw do
     match 'work_orders/wo_update_costs_from_cost_or_hours/:cost/:hours', :controller => 'work_orders', :action => 'wo_update_costs_from_cost_or_hours'
     match 'wo_update_costs_from_cost_or_hours/:cost/:hours', :controller => 'work_orders', :action => 'wo_update_costs_from_cost_or_hours'
     match 'work_orders/:id/wo_update_costs_from_cost_or_hours/:cost/:hours', :controller => 'work_orders', :action => 'wo_update_costs_from_cost_or_hours'
+    match 'work_orders/wo_generate_no/:project', :controller => 'work_orders', :action => 'wo_generate_no'
+    match 'wo_generate_no/:project', :controller => 'work_orders', :action => 'wo_generate_no'
+    match 'work_orders/:id/wo_generate_no/:project', :controller => 'work_orders', :action => 'wo_generate_no'
 
     # Resources
     resources :projects

@@ -19,3 +19,6 @@ es:
       new:
         title: "Nuevo Proyecto"
       back_to_main_page: "Volver a Proyectos"
+      generate_code_btn: "Código de Proyecto"
+      validate_btn: "Validar"
+      code_error: "Imposible generar Código de Proyecto: No has elegido Empresa."

@@ -19,3 +19,6 @@ en:
       new:
         title: "New Project"
       back_to_main_page: "Back to Projects"
+      generate_code_btn: "Project Code"
+      validate_btn: "Validate"
+      code_error: "Unable to generate Project Code: No Company chosen."

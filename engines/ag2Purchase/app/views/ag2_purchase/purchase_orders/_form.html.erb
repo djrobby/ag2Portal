@@ -70,7 +70,7 @@
     // when #generate_code_btn is clicked
     $("#generate_code_btn").click(function() {
       // make a POST call and replace the content
-      var order = $('#purchase_order_project_id').val();
+      var order = $('select#purchase_order_project_id :selected').val();
       if (order == "")
         order = "$";
       jQuery.getJSON('po_generate_no/' + order, function(data) {
@@ -81,7 +81,7 @@
           $('#purchase_order_order_no').select();
         }
         else
-          $("#supplier_supplier_code").css('color', text_field_color);
+          $("#purchase_order_order_no").css('color', text_field_color);
       })
       return false;
     });

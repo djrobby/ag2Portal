@@ -1,4 +1,8 @@
 <script>
+  var text_field_color;
+  var old_value = '';
+  var old_code = '';
+
   $(document).ready(function() {
     $('select.sel2').select2({
       formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
@@ -9,6 +13,86 @@
       weekStart : 1
     }).on('changeDate', function(e){
       $('.date_picker').datepicker('hide');
+    });
+
+    // Save default text color
+    text_field_color = $("#charge_account_account_code").css('color')
+
+    // Disable fields if #charge_account_account_code blank
+    var code = $('#charge_account_account_code').val();
+    if (code == "")
+      code = "0";
+    if (code == "0") {
+      // Empty code: Disable
+      $('#submit_btn').hide();
+    } else {
+      // Code OK: Enable
+      $('#submit_btn').show();
+    }
+
+    // Disable generate_code_btn if charge_account_organization_id blank
+    var order = $('#charge_account_organization_id').val();
+    if (order == "")
+      order = "0";
+    if (order == "0") {
+      // Empty organization: Hide
+      $('#generate_code_btn').hide();
+    } else {
+      // Organization OK: Show (if not updating)
+      old_value = $('#charge_account_organization_id').val();
+      old_code = $('#charge_account_account_code').val();
+      if ('<%= @breadcrumb == 'update' %>') {
+        $('#generate_code_btn').hide();
+      } else {
+        $('#generate_code_btn').show();
+      }
+    }
+  });
+
+  jQuery(function($) {
+    // when #generate_code_btn is clicked
+    $("#generate_code_btn").click(function() {
+      // make a POST call and replace the content
+      var header = $('select#charge_account_organization_id :selected').val();
+      if (header == "")
+        header = "$";
+      jQuery.getJSON('cc_generate_code/' + header, function(data) {
+        $("#charge_account_account_code").val(data.code);
+        if ($("#charge_account_account_code").val() == "$err") {
+          $("#charge_account_account_code").css('color', 'red');
+          alert('<%= I18n.t("ag2_tech.charge_accounts.code_error") %>');
+          $('#charge_account_account_code').select();
+        }
+        else
+          $("#charge_account_account_code").css('color', text_field_color);
+      });
+      return false;
+    });
+
+    // when the #charge_account_organization_id field changes
+    $("#charge_account_organization_id").change(function() {
+      // make a POST call and replace the content
+      var order = $('select#charge_account_organization_id :selected').val();
+      if (order == "")
+        order = "0";
+      // Disable generate_code_btn if charge_account_organization_id blank
+      if (order == "0") {
+        // Empty organization:: Hide
+        $('#generate_code_btn').hide();
+      } else {
+        // Organization OK: Show (if not updating)
+        if ('<%= @breadcrumb == 'update' %>') {
+          if (old_value == $('#charge_account_organization_id').val()) {
+            $('#charge_account_account_code').val(old_code);
+            $('#generate_code_btn').hide();
+          } else {
+            $('#generate_code_btn').show();
+          }
+        } else {
+          $('#generate_code_btn').show();
+        }
+      }
+      return false;
     });
   });
 </script>
@@ -21,10 +105,24 @@
   <label class="multi-field-label-two"> <%= f.input :ledger_account, input_html: { class: 'mid-text-field' }, label_html: { class: 'form-label' } %> </label>
 </div>
 <%= f.input :name, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %>
-<%= f.association :project, collection: Project.all(order: 'project_code'), input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %>
+<% if session[:organization] != '0' %>
+<%= f.association :organization, collection: Organization.where("id = ?", "#{session[:organization]}").all, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' }, include_blank: false %>
+<% elsif current_user.organizations.count > 0 %>
+<%= f.association :organization, collection: current_user.organizations.order('name'), input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' }, include_blank: false %>
+<% else %>
+<%= f.association :organization, collection: Organization.order('name'), input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %>
+<% end %>
+<%= f.association :project, collection: @projects, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %>
 <div>
   <label class="multi-field-label-two"> <%= f.input :opened_at, start_year: Time.now.year - 100, end_year: Time.now.year + 100, as: :string, input_html: { value: (f.object.opened_at.strftime("%d/%m/%Y") if f.object.opened_at), class: 'mid-text-field date_picker' }, label_html: { class: 'form-label-under-sel2' } %> </label>
   <label class="multi-field-label-two"> <%= f.input :closed_at, start_year: Time.now.year - 100, end_year: Time.now.year + 100, as: :string, input_html: { value: (f.object.closed_at.strftime("%d/%m/%Y") if f.object.closed_at), class: 'mid-text-field date_picker' }, label_html: { class: 'form-label' } %> </label>
 </div>
-<%= f.button :submit, :class => 'btn-primary' %>
+<table class="form-table">
+  <tbody>
+    <tr class="form-tr">
+      <td class="form-td-three left-winged"> <%= f.button :submit, :class => 'btn-primary', :id => 'submit_btn' %> </td>
+      <td class="form-td-three right-winged"><a href="#" id="generate_code_btn" class="btn btn-warning"><%=t 'ag2_tech.charge_accounts.generate_code_btn' %></a></td>
+    </tr>
+  </tbody>
+</table>
 <% end %>

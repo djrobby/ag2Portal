@@ -59,9 +59,9 @@ Ag2Purchase::Engine.routes.draw do
     match 'purchase_orders/po_current_stock/:product/:store', :controller => 'purchase_orders', :action => 'po_current_stock'
     match 'po_current_stock/:product/:store', :controller => 'purchase_orders', :action => 'po_current_stock'
     match 'purchase_orders/:id/po_current_stock/:product/:store', :controller => 'purchase_orders', :action => 'po_current_stock'
-    match 'purchase_orders/po_generate_no/:id', :controller => 'purchase_orders', :action => 'po_generate_no'
-    match 'po_generate_no/:id', :controller => 'purchase_orders', :action => 'po_generate_no'
-    match 'purchase_orders/:id/po_generate_no/:id', :controller => 'purchase_orders', :action => 'po_generate_no'
+    match 'purchase_orders/po_generate_no/:project', :controller => 'purchase_orders', :action => 'po_generate_no'
+    match 'po_generate_no/:project', :controller => 'purchase_orders', :action => 'po_generate_no'
+    match 'purchase_orders/:id/po_generate_no/:project', :controller => 'purchase_orders', :action => 'po_generate_no'
     #
     match 'payment_methods/pm_format_numbers/:num', :controller => 'payment_methods', :action => 'pm_format_numbers'
     match 'pm_format_numbers/:num', :controller => 'payment_methods', :action => 'pm_format_numbers'

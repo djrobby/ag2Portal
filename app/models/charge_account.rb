@@ -13,7 +13,7 @@ class ChargeAccount < ActiveRecord::Base
   has_paper_trail
 
   validates :account_code,  :presence => true,
-                            :length => { :in => 7..17 },
+                            :length => { :is => 11 },
                             :uniqueness => { :scope => :organization_id }
   validates :name,          :presence => true
   validates :opened_at,     :presence => true
@@ -26,14 +26,16 @@ class ChargeAccount < ActiveRecord::Base
   end
 
   def full_name
-    full_name = ""
-    if !self.account_code.blank?
-      full_name += self.account_code
-    end
+    full_name = full_code
     if !self.name.blank?
       full_name += " " + self.name[0,40]
     end
     full_name
+  end
+
+  def full_code
+    # Account code (Organization id & sequential number) => OOOO-NNNNNNN
+    account_code.blank? ? "" : account_code[0..3] + '-' + account_code[4..10]
   end
 
   #

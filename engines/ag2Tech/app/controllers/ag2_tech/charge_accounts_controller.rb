@@ -4,15 +4,49 @@ module Ag2Tech
   class ChargeAccountsController < ApplicationController
     before_filter :authenticate_user!
     load_and_authorize_resource
+    skip_load_and_authorize_resource :only => [:cc_generate_code]
 
+    # Update account code at view (generate_code_btn)
+    def cc_generate_code
+      header = params[:header]
+      code = ''
+
+      # Builds code, if possible
+      if header == '$'
+        code = '$err'
+      else
+        header = header.to_s if header.is_a? Fixnum
+        header = header.rjust(4, '0')
+        last_code = ChargeAccount.where("account_code LIKE ?", "#{header}%").order(:account_code).maximum(:account_code)
+        if last_code.nil?
+          code = header + '0000001'
+        else
+          last_code = last_code[4..10].to_i + 1
+          code = header + last_code.to_s.rjust(7, '0')
+        end
+      end
+      @json_data = { "code" => code }
+      render json: @json_data
+    end
+
+    #
+    # Default Methods
+    #
     # GET /charge_accounts
     # GET /charge_accounts.json
     def index
       manage_filter_state
       project = params[:Project]
-
+      # OCO
+      init_oco if !session[:organization]
+      # Initialize select_tags
+      @projects = projects_dropdown if @projects.nil?
+  
       @search = ChargeAccount.search do
         fulltext params[:search]
+        if session[:organization] != '0'
+          with :organization_id, session[:organization]
+        end
         if !project.blank?
           with :project_id, project
         end
@@ -21,9 +55,6 @@ module Ag2Tech
       end
       @charge_accounts = @search.results
 
-      # Initialize select_tags
-      @projects = Project.order('name') if @projects.nil?
-  
       respond_to do |format|
         format.html # index.html.erb
         format.json { render json: @charge_accounts }
@@ -47,6 +78,7 @@ module Ag2Tech
     def new
       @breadcrumb = 'create'
       @charge_account = ChargeAccount.new
+      @projects = projects_dropdown
   
       respond_to do |format|
         format.html # new.html.erb
@@ -58,6 +90,7 @@ module Ag2Tech
     def edit
       @breadcrumb = 'update'
       @charge_account = ChargeAccount.find(params[:id])
+      @projects = projects_dropdown_edit(@charge_account.project)
     end
   
     # POST /charge_accounts
@@ -72,6 +105,7 @@ module Ag2Tech
           format.html { redirect_to @charge_account, notice: crud_notice('created', @charge_account) }
           format.json { render json: @charge_account, status: :created, location: @charge_account }
         else
+          @projects = projects_dropdown
           format.html { render action: "new" }
           format.json { render json: @charge_account.errors, status: :unprocessable_entity }
         end
@@ -91,6 +125,7 @@ module Ag2Tech
                         notice: (crud_notice('updated', @charge_account) + "#{undo_link(@charge_account)}").html_safe }
           format.json { head :no_content }
         else
+          @projects = projects_dropdown_edit(@charge_account.project)
           format.html { render action: "edit" }
           format.json { render json: @charge_account.errors, status: :unprocessable_entity }
         end
@@ -115,6 +150,24 @@ module Ag2Tech
     end
 
     private
+
+    def projects_dropdown
+      if session[:office] != '0'
+        _projects = Project.where(office_id: session[:office].to_i).order(:project_code)
+      elsif session[:company] != '0'
+        _projects = Project.where(company_id: session[:company].to_i).order(:project_code)
+      else
+        _projects = session[:organization] != '0' ? Project.where(organization_id: session[:organization].to_i).order(:project_code) : Project.order(:project_code)
+      end
+    end
+
+    def projects_dropdown_edit(_project)
+      _projects = projects_dropdown
+      if _projects.blank?
+        _projects = Project.where(id: _project)
+      end
+      _projects
+    end
     
     # Keeps filter state
     def manage_filter_state
