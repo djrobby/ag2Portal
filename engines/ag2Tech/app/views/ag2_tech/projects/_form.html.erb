@@ -46,6 +46,20 @@
   });
   
   jQuery(function($) {
+    // when the #project_project_code field changes
+    $("#project_project_code").change(function() {
+      var order = $('#project_project_code').val();
+      if (order == "")
+        order = "0";
+      if (order == "0") {
+        // Empty order: Disable
+        $('#submit_btn').hide();
+      } else {
+        // Order OK: Enable
+        $('#submit_btn').show();
+      }
+    });
+
     // when the #project_office_id field changes
     $("#project_office_id").change(function() {
       // make a POST call and replace the content
@@ -118,9 +132,10 @@
           $("#project_project_code").css('color', 'red');
           alert('<%= I18n.t("ag2_tech.projects.code_error") %>');
           $('#project_project_code').select();
-        }
-        else
+        } else {
           $("#project_project_code").css('color', text_field_color);
+          $("#project_project_code").trigger("change");
+        }
       });
       return false;
     });

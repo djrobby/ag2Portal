@@ -50,6 +50,20 @@
   });
 
   jQuery(function($) {
+    // when the #charge_account_account_code field changes
+    $("#charge_account_account_code").change(function() {
+      var order = $('#charge_account_account_code').val();
+      if (order == "")
+        order = "0";
+      if (order == "0") {
+        // Empty order: Disable
+        $('#submit_btn').hide();
+      } else {
+        // Order OK: Enable
+        $('#submit_btn').show();
+      }
+    });
+
     // when #generate_code_btn is clicked
     $("#generate_code_btn").click(function() {
       // make a POST call and replace the content
@@ -62,9 +76,10 @@
           $("#charge_account_account_code").css('color', 'red');
           alert('<%= I18n.t("ag2_tech.charge_accounts.code_error") %>');
           $('#charge_account_account_code').select();
-        }
-        else
+        } else {
           $("#charge_account_account_code").css('color', text_field_color);
+          $("#charge_account_account_code").trigger("change");
+        }
       });
       return false;
     });

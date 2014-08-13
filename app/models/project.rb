@@ -1,4 +1,5 @@
 class Project < ActiveRecord::Base
+  has_and_belongs_to_many :users, :join_table => :users_projects
   belongs_to :organization
   belongs_to :company
   belongs_to :office

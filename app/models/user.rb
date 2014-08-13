@@ -3,6 +3,7 @@ class User < ActiveRecord::Base
   has_and_belongs_to_many :organizations, :join_table => :users_organizations
   has_and_belongs_to_many :companies, :join_table => :users_companies
   has_and_belongs_to_many :offices, :join_table => :users_offices
+  has_and_belongs_to_many :projects, :join_table => :users_projects
   # Include default devise modules. Others available are:
   # :token_authenticatable, :confirmable,
   # :lockable, :timeoutable and :omniauthable
@@ -19,7 +20,7 @@ class User < ActiveRecord::Base
   # Setup accessible (or protected) attributes for your model
   attr_accessible :name, :email, :password, :password_confirmation, :remember_me,
                   :created_by, :updated_by
-  attr_accessible :role_ids, :organization_ids, :company_ids, :office_ids
+  attr_accessible :role_ids, :organization_ids, :company_ids, :office_ids, :project_ids
   # attr_accessible :title, :body
 
   has_paper_trail

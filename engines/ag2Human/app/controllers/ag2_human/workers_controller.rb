@@ -258,6 +258,33 @@ end
       end
 
       if !company.blank? && !office.blank?
+        @items = WorkerItem.group(:worker_id).where(company_id: company, office_id: office)
+      elsif !company.blank? && office.blank?
+        @items = WorkerItem.group(:worker_id).where(company_id: company)
+      elsif company.blank? && !office.blank?
+        @items = WorkerItem.group(:worker_id).where(office_id: office)
+      else
+        @items = WorkerItem.group(:worker_id)
+      end
+
+      current_items = @items.blank? ? [0] : current_items_for_index(@items)
+      @search = Worker.search do
+        with :id, current_items
+        fulltext params[:search]
+        if session[:organization] != '0'
+          with :organization_id, session[:organization]
+        end
+        if !letter.blank? && letter != "%"
+          with(:last_name).starting_with(letter)
+        end
+        order_by :worker_code, :asc
+        order_by :created_at, :asc
+        paginate :page => params[:page] || 1, :per_page => per_page
+      end
+      @workers = @search.results
+
+=begin
+      if !company.blank? && !office.blank?
         #@workers = Worker.where(id: WorkerItem.where(company_id: company, office_id: office)).paginate(:page => params[:page], :per_page => per_page).order('worker_code, id')
         @workers = Worker.joins(:worker_items).group('worker_items.worker_id').where(worker_items: { company_id: company, office_id: office }).paginate(:page => params[:page], :per_page => per_page).order('worker_code, id')
       elsif !company.blank? && office.blank?
@@ -278,15 +305,14 @@ end
           paginate :page => params[:page] || 1, :per_page => per_page
         end
         @workers = @search.results
-=begin
         if letter.blank? || letter == "%"
           @workers = @search.results
         else
           # @workers = Worker.order('worker_code').where("last_name LIKE ?", "#{letter}%")
           @workers = Worker.where("last_name LIKE ?", "#{letter}%").paginate(:page => params[:page], :per_page => per_page).order('worker_code, id')
         end
-=end
       end
+=end
 
       respond_to do |format|
         format.html # index.html.erb
@@ -305,13 +331,8 @@ end
 
       respond_to do |format|
         # Check worker OCO access
-        if !oco_can_access(@worker)
-          format.html { redirect_to workers_url, alert: I18n.t('unauthorized.default') }
-          format.json { head :no_content }
-        else
           format.html # show.html.erb
           format.json { render json: @worker }
-        end
       end
     end
 
@@ -412,6 +433,20 @@ end
     end
 
     private
+    
+    def current_items_for_index(_items)
+      _current_items = []
+      # Add items found
+      _items.each do |i|
+        _current_items = _current_items << i.worker_id
+      end
+      # Add workers without items
+      _workers_no_item = Worker.includes(:worker_items).where(worker_items: { worker_id: nil })
+      _workers_no_item.each do |i|
+        _current_items = _current_items << i.id
+      end
+      _current_items
+    end
 
     # Keeps filter state
     def manage_filter_state

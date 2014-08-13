@@ -155,9 +155,10 @@ class Worker < ActiveRecord::Base
   searchable do
     text :worker_code, :first_name, :last_name, :fiscal_id, :affiliation_id,
          :corp_cellular_long, :corp_cellular_short, :corp_extension, :corp_phone, :email
-    integer :id
+    integer :id, :multiple => true
     string :worker_code
     string :last_name
+    time :created_at
     integer :organization_id
   end
 
