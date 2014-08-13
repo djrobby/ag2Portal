@@ -116,6 +116,7 @@ module Ag2Products
         else
           @companies = companies_dropdown
           @offices = offices_dropdown
+          @suppliers = suppliers_dropdown
           format.html { render action: "new" }
           format.json { render json: @store.errors, status: :unprocessable_entity }
         end
@@ -137,6 +138,7 @@ module Ag2Products
         else
           @companies = @store.organization.blank? ? companies_dropdown : companies_dropdown_edit(@store.organization)
           @offices = @store.organization.blank? ? offices_dropdown : offices_dropdown_edit(@store.organization_id)
+          @suppliers = @store.organization.blank? ? suppliers_dropdown : suppliers_dropdown_edit(@store.organization)
           format.html { render action: "edit" }
           format.json { render json: @store.errors, status: :unprocessable_entity }
         end

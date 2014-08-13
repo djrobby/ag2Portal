@@ -24,5 +24,6 @@ es:
         supplier: "Proveedor"
         supplier_id: "Proveedor"
         stock: "Existencia total"
+        depot: "Depósito JIT"
         organization: "Organización"
         organization_id: "Organización"

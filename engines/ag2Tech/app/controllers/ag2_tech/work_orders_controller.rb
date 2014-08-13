@@ -217,7 +217,7 @@ module Ag2Tech
       project = params[:id]
       if project != '0'
         @project = Project.find(project)
-        @charge_account = @project.blank? ? charge_accounts_dropdown : @project.charge_accounts.order(:account_code)
+        @charge_account = @project.blank? ? charge_accounts_dropdown : charge_accounts_dropdown_edit(@project.id)
         @store = project_stores(@project)
         @worker = project_workers(@project)
       else
@@ -374,6 +374,9 @@ module Ag2Tech
       @labors = work_order_labors_dropdown
       @charge_accounts = charge_accounts_dropdown
       @workers = workers_dropdown
+      @areas = areas_dropdown
+      @stores = stores_dropdown
+      @clients = clients_dropdown
   
       respond_to do |format|
         format.html # new.html.erb
@@ -388,9 +391,11 @@ module Ag2Tech
       @projects = projects_dropdown_edit(@work_order.project)
       @types = work_order_types_dropdown_edit(@work_order.work_order_type)
       @labors = work_order_labors_dropdown_edit(@work_order.work_order_labor)
-
-      @charge_accounts = @work_order.project.blank? ? ChargeAccount.order(:account_code) : @work_order.project.charge_accounts.order(:account_code)
+      @charge_accounts = @work_order.project.blank? ? charge_accounts_dropdown : charge_accounts_dropdown_edit(@work_order.project_id)
       @workers = project_workers(@work_order.project)
+      @areas = areas_dropdown
+      @stores = project_stores(@work_order.project)
+      @clients = clients_dropdown
     end
   
     # POST /work_orders
@@ -410,6 +415,9 @@ module Ag2Tech
           @labors = work_order_labors_dropdown
           @charge_accounts = charge_accounts_dropdown
           @workers = workers_dropdown
+          @areas = areas_dropdown
+          @stores = stores_dropdown
+          @clients = clients_dropdown
           format.html { render action: "new" }
           format.json { render json: @work_order.errors, status: :unprocessable_entity }
         end
@@ -429,7 +437,10 @@ module Ag2Tech
                         notice: (crud_notice('updated', @work_order) + "#{undo_link(@work_order)}").html_safe }
           format.json { head :no_content }
         else
-          @charge_accounts = @work_order.project.blank? ? ChargeAccount.order(:account_code) : @work_order.project.charge_accounts.order(:account_code)
+          @projects = projects_dropdown_edit(@work_order.project)
+          @types = work_order_types_dropdown_edit(@work_order.work_order_type)
+          @labors = work_order_labors_dropdown_edit(@work_order.work_order_labor)
+          @charge_accounts = @work_order.project.blank? ? charge_accounts_dropdown : charge_accounts_dropdown_edit(@work_order.project_id)
           @workers = project_workers(@work_order.project)
           format.html { render action: "edit" }
           format.json { render json: @work_order.errors, status: :unprocessable_entity }
@@ -466,11 +477,11 @@ module Ag2Tech
     
     def project_stores(_project)
       if !_project.company.blank? && !_project.office.blank?
-        _store = Store.where("company_id = ? AND office_id = ?", _project.company.id, _project.office.id).order(:name)
+        _store = Store.where("(company_id = ? AND office_id = ?) OR (company_id IS NULL AND NOT supplier_id IS NULL)", _project.company.id, _project.office.id).order(:name)
       elsif !_project.company.blank? && _project.office.blank?
-        _store = Store.where("company_id = ?", _project.company.id).order(:name)
+        _store = Store.where("(company_id = ?) OR (company_id IS NULL AND NOT supplier_id IS NULL)", _project.company.id).order(:name)
       elsif _project.company.blank? && !_project.office.blank?
-        _store = Store.where("office_id = ?", _project.office.id).order(:name)
+        _store = Store.where("(office_id = ?) OR (company_id IS NULL AND NOT supplier_id IS NULL)", _project.office.id).order(:name)
       else
         _store = Store.order(:name)
       end
@@ -485,20 +496,20 @@ module Ag2Tech
       elsif _project.company.blank? && !_project.office.blank?  # Office
         _worker = office_workers(_project.company, _project.office)
       else  # All
-        _worker = Worker.order(:last_name, :first_name)
+        _worker = Worker.order(:worker_code)
       end
       _worker
     end
     
     def company_office_workers(_company, _office)
       # Company & office
-      _workers = Worker.joins(:worker_items).group('worker_items.worker_id').where(worker_items: { company_id: _company, office_id: _office }).order(:last_name, :first_name)
+      _workers = Worker.joins(:worker_items).group('worker_items.worker_id').where(worker_items: { company_id: _company, office_id: _office }).order(:worker_code)
       if _workers.blank?  # If not, office
-        _workers = Worker.joins(:worker_items).group('worker_items.worker_id').where(worker_items: { office_id: _office }).order(:last_name, :first_name)
+        _workers = Worker.joins(:worker_items).group('worker_items.worker_id').where(worker_items: { office_id: _office }).order(:worker_code)
         if _workers.blank? # If not, company
-          _workers = Worker.joins(:worker_items).group('worker_items.worker_id').where(worker_items: { company_id: _company }).order(:last_name, :first_name)
+          _workers = Worker.joins(:worker_items).group('worker_items.worker_id').where(worker_items: { company_id: _company }).order(:worker_code)
           if _workers.blank?  # If not, last, all
-            _workers = Worker.order(:last_name, :first_name)            
+            _workers = Worker.order(:worker_code)            
           end
         end
       end
@@ -507,20 +518,20 @@ module Ag2Tech
     
     def company_workers(_company)
       # Company
-      _workers = Worker.joins(:worker_items).group('worker_items.worker_id').where(worker_items: { company_id: _company }).order(:last_name, :first_name)
+      _workers = Worker.joins(:worker_items).group('worker_items.worker_id').where(worker_items: { company_id: _company }).order(:worker_code)
       if _workers.blank?  # If not, all
-        _workers = Worker.order(:last_name, :first_name)            
+        _workers = Worker.order(:worker_code)            
       end
       _workers
     end
 
     def office_workers(_company, _office)
       # Office
-      _workers = Worker.joins(:worker_items).group('worker_items.worker_id').where(worker_items: { office_id: _office }).order(:last_name, :first_name)
+      _workers = Worker.joins(:worker_items).group('worker_items.worker_id').where(worker_items: { office_id: _office }).order(:worker_code)
       if _workers.blank? # If not, company
-        _workers = Worker.joins(:worker_items).group('worker_items.worker_id').where(worker_items: { company_id: _company }).order(:last_name, :first_name)
+        _workers = Worker.joins(:worker_items).group('worker_items.worker_id').where(worker_items: { company_id: _company }).order(:worker_code)
         if _workers.blank?  # If not, last, all
-          _workers = Worker.order(:last_name, :first_name)            
+          _workers = Worker.order(:worker_code)            
         end
       end
       _workers
@@ -572,12 +583,24 @@ module Ag2Tech
       _accounts = session[:organization] != '0' ? ChargeAccount.where(organization_id: session[:organization].to_i).order(:account_code) : ChargeAccount.order(:account_code)
     end
 
+    def charge_accounts_dropdown_edit(_project)
+      _accounts = ChargeAccount.where('project_id = ? OR project_id IS NULL', _project).order(:account_code)
+    end
+
     def workers_dropdown
-      _workers = session[:organization] != '0' ? Worker.where(organization_id: session[:organization].to_i).order(:last_name, :first_name) : Worker.order(:last_name, :first_name)
+      _workers = session[:organization] != '0' ? Worker.where(organization_id: session[:organization].to_i).order(:worker_code) : Worker.order(:worker_code)
     end
 
     def stores_dropdown
       _stores = session[:organization] != '0' ? Store.where(organization_id: session[:organization].to_i).order(:name) : Store.order(:name)
+    end
+
+    def areas_dropdown
+      _areas = session[:organization] != '0' ? Area.joins(:department).where(departments: { organization_id: session[:organization].to_i }).order(:name) : Area.order(:name)
+    end
+
+    def clients_dropdown
+      _cliengts = session[:organization] != '0' ? Client.where(organization_id: session[:organization].to_i).order(:client_code) : Client.order(:client_code)
     end
 
     # Keeps filter state
