@@ -4,7 +4,21 @@ module Ag2Tech
   class ChargeAccountsController < ApplicationController
     before_filter :authenticate_user!
     load_and_authorize_resource
-    skip_load_and_authorize_resource :only => [:cc_generate_code]
+    skip_load_and_authorize_resource :only => [:cc_update_project_textfields_from_organization,
+                                               :cc_generate_code]
+    
+    # Update project text fields at view from organization select
+    def cc_update_project_textfields_from_organization
+      organization = params[:org]
+      if organization != '0'
+        @organization = Organization.find(organization)
+        @projects = @organization.blank? ? projects_dropdown : @organization.projects.order(:project_code)
+      else
+        @projects = projects_dropdown
+      end
+      @json_data = { "projects" => @projects }
+      render json: @json_data
+    end
 
     # Update account code at view (generate_code_btn)
     def cc_generate_code
@@ -42,7 +56,12 @@ module Ag2Tech
       # Initialize select_tags
       @projects = projects_dropdown if @projects.nil?
   
+      current_projects = @projects.blank? ? [0] : current_projects_for_index(@projects)
       @search = ChargeAccount.search do
+        any_of do
+          with :project_id, current_projects
+          with :project_id, nil
+        end
         fulltext params[:search]
         if session[:organization] != '0'
           with :organization_id, session[:organization]
@@ -150,6 +169,14 @@ module Ag2Tech
     end
 
     private
+    
+    def current_projects_for_index(_projects)
+      _current_projects = []
+      _projects.each do |i|
+        _current_projects = _current_projects << i.id
+      end
+      _current_projects
+    end
 
     def projects_dropdown
       if session[:office] != '0'

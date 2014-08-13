@@ -94,6 +94,69 @@
       });
       return false;
     });
+
+    // when the #work_order_organization_id field changes
+    $("#work_order_organization_id").change(function() {
+      // make a POST call and replace the content
+      var order = $('select#work_order_organization_id :selected').val();
+      if (order == "")
+        order = "0";
+      jQuery.getJSON('wo_update_project_textfields_from_organization/' + order, function(data) {
+        var p = data.projects;
+        var t = data.types;
+        var l = data.labors;
+        // Projects
+        $("#work_order_project_id").html("");
+        $("#work_order_project_id").select2("val", "");
+        $("#work_order_project_id").append($('<option></option>').val("").html(""));
+        if (!p.length) {
+          $.each(data, function(id, option) {
+            if (id == 'projects' && option != "") {
+              $("#work_order_project_id").append($('<option></option>').val(option.id).html(option.project_code.substring(0,4) + "-" + option.project_code.substring(4,10) + " " + option.name));
+            }
+          });
+        } else {
+          $.each(p, function(id, option) {
+            $("#work_order_project_id").append($('<option></option>').val(option.id).html(option.project_code.substring(0,4) + "-" + option.project_code.substring(4,10) + " " + option.name));
+          });
+        }
+        // Types
+        $("#work_order_work_order_type_id").html("");
+        $("#work_order_work_order_type_id").val("");
+        $("#work_order_work_order_type_id").append($('<option></option>').val("").html(""));
+        if (!t.length) {
+          $.each(data, function(id, option) {
+            if (id == 'projects' && option != "") {
+              $("#work_order_work_order_type_id").append($('<option></option>').val(option.id).html(option.name));
+            }
+          });
+        } else {
+          $.each(t, function(id, option) {
+            $("#work_order_work_order_type_id").append($('<option></option>').val(option.id).html(option.name));
+          });
+        }
+        // Labors
+        $("#work_order_work_order_labor_id").html("");
+        $("#work_order_work_order_labor_id").val("");
+        $("#work_order_work_order_labor_id").append($('<option></option>').val("").html(""));
+        if (!l.length) {
+          $.each(data, function(id, option) {
+            if (id == 'projects' && option != "") {
+              $("#work_order_work_order_labor_id").append($('<option></option>').val(option.id).html(option.name));
+            }
+          });
+        } else {
+          $.each(l, function(id, option) {
+            $("#work_order_work_order_labor_id").append($('<option></option>').val(option.id).html(option.name));
+          });
+        }
+      });
+      if (order == "0") {
+        $("#work_order_project_id").val(0);
+        $("#work_order_project_id").trigger("change");
+      }
+      return false;
+    });
     
     // when the #work_order_project_id field changes
     $("#work_order_project_id").change(function() {
@@ -105,20 +168,22 @@
         var c = data.charge_account;
         var s = data.store;
         var w = data.worker;
+        // Charge account
         $("#work_order_charge_account_id").html("");
         $("#work_order_charge_account_id").select2("val", "");
         $("#work_order_charge_account_id").append($('<option></option>').val("").html(""));
         if (!c.length) {
           $.each(data, function(id, option) {
             if (id == 'charge_account' && option != "") {
-              $("#work_order_charge_account_id").append($('<option></option>').val(option.id).html(option.account_code + " " + option.name));
+              $("#work_order_charge_account_id").append($('<option></option>').val(option.id).html(option.account_code.substring(0,4) + "-" + option.account_code.substring(4,10) + " " + option.name));
             }
           });
         } else {
           $.each(c, function(id, option) {
-            $("#work_order_charge_account_id").append($('<option></option>').val(option.id).html(option.account_code + " " + option.name));
+            $("#work_order_charge_account_id").append($('<option></option>').val(option.id).html(option.account_code.substring(0,4) + "-" + option.account_code.substring(4,10) + " " + option.name));
           });
         }
+        // Store
         $("#work_order_store_id").html("");
         $("#work_order_store_id").select2("val", "");
         $("#work_order_store_id").append($('<option></option>').val("").html(""));
@@ -223,13 +288,20 @@
 <%= f.error_notification %>
 <%= display_base_errors resource %>
 <%= f.input :description, autofocus: true, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %>
-<%= f.association :project, collection: Project.all(order: 'project_code'), input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %>
+<% if session[:organization] != '0' %>
+<%= f.association :organization, collection: Organization.where("id = ?", "#{session[:organization]}").all, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' }, include_blank: false %>
+<% elsif current_user.organizations.count > 0 %>
+<%= f.association :organization, collection: current_user.organizations.order('name'), input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' }, include_blank: false %>
+<% else %>
+<%= f.association :organization, collection: Organization.order('name'), input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %>
+<% end %>
+<%= f.association :project, collection: @projects, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %>
 <div>
-  <label class="multi-field-label-two"> <%= f.association :work_order_type, collection: WorkOrderType.all(order: 'name'), input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label-under-sel2' } %> </label>
+  <label class="multi-field-label-two"> <%= f.association :work_order_type, collection: @types, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label-under-sel2' } %> </label>
   <label class="multi-field-label-two"> <%= f.input :order_no, input_html: { class: 'mid-text-field' }, label_html: { class: 'form-label' } %> </label>
 </div>
 <div>
-  <label class="multi-field-label-two"> <%= f.association :work_order_labor, collection: WorkOrderLabor.all(order: 'name'), input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.association :work_order_labor, collection: @labors, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %> </label>
   <label class="multi-field-label-two"> <%= f.association :work_order_status, collection: WorkOrderStatus.all(order: 'id'), input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %> </label>
 </div>
 <div>

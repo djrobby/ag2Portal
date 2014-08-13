@@ -165,7 +165,7 @@ class WorkOrder < ActiveRecord::Base
     text :order_no, :description, :petitioner
     string :order_no
     integer :charge_account_id
-    integer :project_id
+    integer :project_id, :multiple => true
     integer :client_id
     integer :work_order_type_id
     integer :work_order_status_id

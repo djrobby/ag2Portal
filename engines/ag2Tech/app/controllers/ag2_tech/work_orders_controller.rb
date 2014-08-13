@@ -14,6 +14,7 @@ module Ag2Tech
                                                :wo_update_costs_from_worker,
                                                :wo_update_amount_and_costs_from_price_or_quantity,
                                                :wo_update_costs_from_cost_or_hours,
+                                               :wo_update_project_textfields_from_organization,
                                                :wo_generate_code]
     # Calculate and format item totals properly
     def wo_item_totals
@@ -216,13 +217,13 @@ module Ag2Tech
       project = params[:id]
       if project != '0'
         @project = Project.find(project)
-        @charge_account = @project.blank? ? ChargeAccount.all(order: 'account_code') : @project.charge_accounts(order: 'account_code')
+        @charge_account = @project.blank? ? charge_accounts_dropdown : @project.charge_accounts.order(:account_code)
         @store = project_stores(@project)
         @worker = project_workers(@project)
       else
-        @charge_account = ChargeAccount.all(order: 'account_code')
-        @store = Store.all(order: 'name')
-        @worker = Worker.order(:last_name, :first_name)
+        @charge_account = charge_accounts_dropdown
+        @store = stores_dropdown
+        @worker = workers_dropdown
       end
       @json_data = { "charge_account" => @charge_account, "store" => @store, "worker" => @worker }
 
@@ -262,6 +263,23 @@ module Ag2Tech
       end
     end
 
+    # Update project text fields at view from organization select
+    def wo_update_project_textfields_from_organization
+      organization = params[:org]
+      if organization != '0'
+        @organization = Organization.find(organization)
+        @projects = @organization.blank? ? projects_dropdown : @organization.projects.order(:project_code)
+        @types = @organization.blank? ? work_order_types_dropdown : @organization.work_order_types.order(:name)
+        @labors = @organization.blank? ? work_order_labors_dropdown : @organization.work_order_labors.order(:name)
+      else
+        @projects = projects_dropdown
+        @types = work_order_types_dropdown
+        @labors = work_order_labors_dropdown
+      end
+      @json_data = { "projects" => @projects, "types" => @types, "labors" => @labors }
+      render json: @json_data
+    end
+
     # Update order number at view (generate_code_btn)
     def wo_generate_no
       project = params[:project]
@@ -298,9 +316,20 @@ module Ag2Tech
       project = params[:Project]
       type = params[:Type]
       status = params[:Status]
+      # OCO
+      init_oco if !session[:organization]
+      # Initialize select_tags
+      @projects = projects_dropdown if @projects.nil?
+      @types = work_order_types_dropdown if @types.nil?
+      @statuses = WorkOrderStatus.order('id') if @statuses.nil?
 
+      current_projects = @projects.blank? ? [0] : current_projects_for_index(@projects)
       @search = WorkOrder.search do
+        with :project_id, current_projects
         fulltext params[:search]
+        if session[:organization] != '0'
+          with :organization_id, session[:organization]
+        end
         if !project.blank?
           with :project_id, project
         end
@@ -314,11 +343,6 @@ module Ag2Tech
         paginate :page => params[:page] || 1, :per_page => per_page
       end
       @work_orders = @search.results
-
-      # Initialize select_tags
-      @projects = Project.order('name') if @projects.nil?
-      @types = WorkOrderType.order('name') if @types.nil?
-      @statuses = WorkOrderStatus.order('id') if @statuses.nil?
   
       respond_to do |format|
         format.html # index.html.erb
@@ -345,8 +369,11 @@ module Ag2Tech
     def new
       @breadcrumb = 'create'
       @work_order = WorkOrder.new
-      @charge_accounts = ChargeAccount.order(:account_code)
-      @workers = Worker.order(:last_name, :first_name)
+      @projects = projects_dropdown
+      @types = work_order_types_dropdown
+      @labors = work_order_labors_dropdown
+      @charge_accounts = charge_accounts_dropdown
+      @workers = workers_dropdown
   
       respond_to do |format|
         format.html # new.html.erb
@@ -358,6 +385,10 @@ module Ag2Tech
     def edit
       @breadcrumb = 'update'
       @work_order = WorkOrder.find(params[:id])
+      @projects = projects_dropdown_edit(@work_order.project)
+      @types = work_order_types_dropdown_edit(@work_order.work_order_type)
+      @labors = work_order_labors_dropdown_edit(@work_order.work_order_labor)
+
       @charge_accounts = @work_order.project.blank? ? ChargeAccount.order(:account_code) : @work_order.project.charge_accounts.order(:account_code)
       @workers = project_workers(@work_order.project)
     end
@@ -374,8 +405,11 @@ module Ag2Tech
           format.html { redirect_to @work_order, notice: crud_notice('created', @work_order) }
           format.json { render json: @work_order, status: :created, location: @work_order }
         else
-          @charge_accounts = ChargeAccount.order(:account_code)
-          @workers = Worker.order(:last_name, :first_name)
+          @projects = projects_dropdown
+          @types = work_order_types_dropdown
+          @labors = work_order_labors_dropdown
+          @charge_accounts = charge_accounts_dropdown
+          @workers = workers_dropdown
           format.html { render action: "new" }
           format.json { render json: @work_order.errors, status: :unprocessable_entity }
         end
@@ -421,6 +455,14 @@ module Ag2Tech
     end
     
     private
+    
+    def current_projects_for_index(_projects)
+      _current_projects = []
+      _projects.each do |i|
+        _current_projects = _current_projects << i.id
+      end
+      _current_projects
+    end
     
     def project_stores(_project)
       if !_project.company.blank? && !_project.office.blank?
@@ -482,6 +524,60 @@ module Ag2Tech
         end
       end
       _workers
+    end
+
+    def projects_dropdown
+      if session[:office] != '0'
+        _projects = Project.where(office_id: session[:office].to_i).order(:project_code)
+      elsif session[:company] != '0'
+        _projects = Project.where(company_id: session[:company].to_i).order(:project_code)
+      else
+        _projects = session[:organization] != '0' ? Project.where(organization_id: session[:organization].to_i).order(:project_code) : Project.order(:project_code)
+      end
+    end
+
+    def projects_dropdown_edit(_project)
+      _projects = projects_dropdown
+      if _projects.blank?
+        _projects = Project.where(id: _project)
+      end
+      _projects
+    end
+
+    def work_order_types_dropdown
+      _types = session[:organization] != '0' ? WorkOrderType.where(organization_id: session[:organization].to_i).order(:name) : WorkOrderType.order(:name)
+    end
+
+    def work_order_types_dropdown_edit(_type)
+      _types = work_order_types_dropdown
+      if _types.blank?
+        _types = WorkOrderType.where(id: _type)
+      end
+      _types
+    end
+
+    def work_order_labors_dropdown
+      _labors = session[:organization] != '0' ? WorkOrderLabor.where(organization_id: session[:organization].to_i).order(:name) : WorkOrderLabor.order(:name)
+    end
+
+    def work_order_labors_dropdown_edit(_labor)
+      _labors = work_order_labors_dropdown
+      if _labors.blank?
+        _labors = WorkOrderLabor.where(id: _labor)
+      end
+      _labors
+    end
+
+    def charge_accounts_dropdown
+      _accounts = session[:organization] != '0' ? ChargeAccount.where(organization_id: session[:organization].to_i).order(:account_code) : ChargeAccount.order(:account_code)
+    end
+
+    def workers_dropdown
+      _workers = session[:organization] != '0' ? Worker.where(organization_id: session[:organization].to_i).order(:last_name, :first_name) : Worker.order(:last_name, :first_name)
+    end
+
+    def stores_dropdown
+      _stores = session[:organization] != '0' ? Store.where(organization_id: session[:organization].to_i).order(:name) : Store.order(:name)
     end
 
     # Keeps filter state

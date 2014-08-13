@@ -25,7 +25,7 @@ module Ag2Tech
     
     # Update company & office text fields at view from organization select
     def pr_update_company_and_office_textfields_from_organization
-      organization = params[:id]
+      organization = params[:org]
       if organization != '0'
         @organization = Organization.find(organization)
         @companies = @organization.blank? ? companies_dropdown : @organization.companies.order(:name)

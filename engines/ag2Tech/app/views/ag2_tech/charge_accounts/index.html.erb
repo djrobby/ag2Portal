@@ -70,7 +70,7 @@
             <% else %>
           <tr class="inactive-row">
             <% end %>
-            <td><%= link_to account.account_code, account %></td>
+            <td><%= link_to account.full_code, account %></td>
             <td><%= account.name %></td>
             <td><%= account.project.full_name unless account.project.blank? %></td>
             <td align="center"><%= account.opened_at.strftime("%d/%m/%Y") unless account.opened_at.blank? %></td>
