@@ -107,7 +107,8 @@ class Worker < ActiveRecord::Base
     if !self.first_name.blank?
       full_name_and_count += ", " + self.first_name
     end
-    if worker_count > 1
+    wc = worker_count
+    if wc > 1 || wc < 1
       full_name_and_count += " (" + worker_count.to_s + ")"
     end
     full_name_and_count

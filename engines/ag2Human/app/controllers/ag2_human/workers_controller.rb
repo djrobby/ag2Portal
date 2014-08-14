@@ -12,6 +12,10 @@ module Ag2Human
                                                :update_province_textfield_from_zipcode,
                                                :wk_update_attachment,
                                                :validate_fiscal_id_textfield]
+    # Helper methods for
+    # => allow edit (hide buttons)
+    helper_method :cannot_edit
+
     # Public attachment for drag&drop
     $attachment = nil
   
@@ -331,8 +335,13 @@ end
 
       respond_to do |format|
         # Check worker OCO access
+        if !oco_can_access(@worker)
+          format.html { redirect_to workers_url, alert: I18n.t('unauthorized.default') }
+          format.json { head :no_content }
+        else
           format.html # show.html.erb
           format.json { render json: @worker }
+        end
       end
     end
 
@@ -441,11 +450,17 @@ end
         _current_items = _current_items << i.worker_id
       end
       # Add workers without items
+      if session[:office] && session[:office] == '0'
       _workers_no_item = Worker.includes(:worker_items).where(worker_items: { worker_id: nil })
       _workers_no_item.each do |i|
         _current_items = _current_items << i.id
       end
+      end
       _current_items
+    end
+    
+    def cannot_edit(_worker)
+      _worker.worker_count < 1 ? false : !oco_can_access(_worker)
     end
 
     # Keeps filter state

@@ -26,7 +26,7 @@ en:
       employment_wage_info: "Employment & Wage Info"
       to_uppercase_btn: "To Uppercase"
       generate_code_btn: "Worker Code"
-      worker_count_message: "(#) Worker on # workplaces (items)."
+      worker_count_message: "(#) Worker on # workplaces (items). (0) No items!"
       validate_btn: "Validate"
       fiscal_error: "Wrong Fiscal Id."
       fiscal_name: "Fiscal Id Name not found."

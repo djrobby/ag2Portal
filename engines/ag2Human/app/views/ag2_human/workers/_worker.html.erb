@@ -7,6 +7,6 @@
   <td><%= worker.full_name_and_count %></td>
   <td><%= worker.fiscal_id unless worker.fiscal_id.nil? %></td>
   <td><%= worker.affiliation_id unless worker.affiliation_id.nil? %></td>
-  <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => Worker, :path => edit_worker_path(worker) } %>
-  <%= render :partial => '/layouts/crud/delete', :locals => { :model => Worker, :path => worker, :msg => I18n.t("activerecord.models.worker.one"), :txt => worker.full_name } %> </td>
+  <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => Worker, :path => edit_worker_path(worker) } unless cannot_edit(worker) %>
+  <%= render :partial => '/layouts/crud/delete', :locals => { :model => Worker, :path => worker, :msg => I18n.t("activerecord.models.worker.one"), :txt => worker.full_name } unless cannot_edit(worker) %> </td>
 </tr>
