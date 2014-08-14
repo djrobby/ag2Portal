@@ -55,6 +55,13 @@
       // Project OK: Show
       $('#generate_code_btn').show();
     }
+    
+    // Can't change order no if editing
+    if ('<%= @breadcrumb %>' == "update") {
+      $('#work_order_order_no').prop('readonly', true);
+    } else {
+      $('#work_order_order_no').prop('readonly', false);
+    }
   });
   
   jQuery(function($) {

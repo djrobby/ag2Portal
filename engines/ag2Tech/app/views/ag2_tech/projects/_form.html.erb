@@ -37,7 +37,7 @@
       // Company OK: Show (if not updating)
       old_value = $('#project_company_id').val();
       old_code = $('#project_project_code').val();
-      if ('<%= @breadcrumb == 'update' %>') {
+      if ('<%= @breadcrumb %>' == "update") {
         $('#generate_code_btn').hide();
       } else {
         $('#generate_code_btn').show();

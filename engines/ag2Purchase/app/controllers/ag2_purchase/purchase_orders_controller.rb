@@ -274,6 +274,11 @@ module Ag2Purchase
       manage_filter_state
       supplier = params[:Supplier]
       status = params[:Status]
+      # OCO
+      init_oco if !session[:organization]
+      # Initialize select_tags
+      @suppliers = suppliers_dropdown if @suppliers.nil?
+      @statuses = OrderStatus.order('id') if @statuses.nil?
 
       @search = PurchaseOrder.search do
         fulltext params[:search]
@@ -287,10 +292,6 @@ module Ag2Purchase
         paginate :page => params[:page] || 1, :per_page => per_page
       end
       @purchase_orders = @search.results
-
-      # Initialize select_tags
-      @suppliers = Supplier.order('name') if @suppliers.nil?
-      @statuses = OrderStatus.order('id') if @statuses.nil?
   
       respond_to do |format|
         format.html # index.html.erb
@@ -440,6 +441,10 @@ module Ag2Purchase
         _store = Store.where("id = ?", _model.work_order.store)
       end
       _store
+    end
+
+    def suppliers_dropdown
+      _suppliers = session[:organization] != '0' ? Supplier.where(organization_id: session[:organization].to_i).order(:supplier_code) : Supplier.order(:supplier_code)
     end
     
     # Keeps filter state

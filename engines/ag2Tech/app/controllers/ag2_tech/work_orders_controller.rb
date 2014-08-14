@@ -600,7 +600,7 @@ module Ag2Tech
     end
 
     def clients_dropdown
-      _cliengts = session[:organization] != '0' ? Client.where(organization_id: session[:organization].to_i).order(:client_code) : Client.order(:client_code)
+      _clients = session[:organization] != '0' ? Client.where(organization_id: session[:organization].to_i).order(:client_code) : Client.order(:client_code)
     end
 
     # Keeps filter state

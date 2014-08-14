@@ -48,6 +48,13 @@
       // Project OK: Show
       $('#generate_code_btn').show();
     }
+    
+    // Can't change order no if editing
+    if ('<%= @breadcrumb %>' == "update") {
+      $('#purchase_order_order_no').prop('readonly', true);
+    } else {
+      $('#purchase_order_order_no').prop('readonly', false);
+    }
   });
   
   jQuery(function($) {
@@ -136,12 +143,12 @@
         if (!c.length) {
           $.each(data, function(id, option) {
             if (id == 'charge_account' && option != "") {
-              $("#purchase_order_charge_account_id").append($('<option></option>').val(option.id).html(option.account_code.substring(0,4) + "-" + option.account_code.substring(4,10) + " " + option.name));
+              $("#purchase_order_charge_account_id").append($('<option></option>').val(option.id).html(option.account_code.substring(0,4) + "-" + option.account_code.substring(4,11) + " " + option.name));
             }
           });
         } else {
           $.each(c, function(id, option) {
-            $("#purchase_order_charge_account_id").append($('<option></option>').val(option.id).html(option.account_code.substring(0,4) + "-" + option.account_code.substring(4,10) + " " + option.name));
+            $("#purchase_order_charge_account_id").append($('<option></option>').val(option.id).html(option.account_code.substring(0,4) + "-" + option.account_code.substring(4,11) + " " + option.name));
           });
         }
         // Store
@@ -189,12 +196,12 @@
         if (!c.length) {
           $.each(data, function(id, option) {
             if (id == 'charge_account' && option != "") {
-              $("#purchase_order_charge_account_id").append($('<option></option>').val(option.id).html(option.account_code.substring(0,4) + "-" + option.account_code.substring(4,10) + " " + option.name));
+              $("#purchase_order_charge_account_id").append($('<option></option>').val(option.id).html(option.account_code.substring(0,4) + "-" + option.account_code.substring(4,11) + " " + option.name));
             }
           });
         } else {
           $.each(c, function(id, option) {
-            $("#purchase_order_charge_account_id").append($('<option></option>').val(option.id).html(option.account_code.substring(0,4) + "-" + option.account_code.substring(4,10) + " " + option.name));
+            $("#purchase_order_charge_account_id").append($('<option></option>').val(option.id).html(option.account_code.substring(0,4) + "-" + option.account_code.substring(4,11) + " " + option.name));
           });
         }
         if (c_id != 0) $("#purchase_order_charge_account_id").select2("val", c_id);
@@ -282,10 +289,13 @@
 </div>
 <%= f.association :supplier, collection: Supplier.all(order: 'name'), input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %>
 <%= f.association :offer, collection: @offers, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %>
-<div>
-  <label class="multi-field-label-two"> <%= f.association :payment_method, collection: PaymentMethod.all(order: 'description'), input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label-under-sel2' } %> </label>
-  <label class="multi-field-label-two"> <%= f.association :order_status, collection: OrderStatus.all(order: 'id'), input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %> </label>
-</div>
+<% if session[:organization] != '0' %>
+<%= f.association :organization, collection: Organization.where("id = ?", "#{session[:organization]}").all, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' }, include_blank: false %>
+<% elsif current_user.organizations.count > 0 %>
+<%= f.association :organization, collection: current_user.organizations.order('name'), input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' }, include_blank: false %>
+<% else %>
+<%= f.association :organization, collection: Organization.order('name'), input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %>
+<% end %>
 <div>
   <label class="multi-field-label-two"> <%= f.association :project, collection: @projects, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
   <label class="multi-field-label-two"> <%= f.association :work_order, collection: @work_orders, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
@@ -293,6 +303,10 @@
 <div>
   <label class="multi-field-label-two"> <%= f.association :charge_account, collection: @charge_accounts, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
   <label class="multi-field-label-two"> <%= f.association :store, collection: @stores, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
+</div>
+<div>
+  <label class="multi-field-label-two"> <%= f.association :payment_method, collection: PaymentMethod.all(order: 'description'), input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label-under-sel2' } %> </label>
+  <label class="multi-field-label-two"> <%= f.association :order_status, collection: OrderStatus.all(order: 'id'), input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %> </label>
 </div>
 <div>
   <label class="multi-field-label-two"> <%= f.input :retention_pct, as: :string, input_html: { value: (number_with_precision(f.object.retention_pct, precision: 2) if f.object.retention_pct), class: 'mid-text-field number-text-field' }, label_html: { class: 'form-label' } %> </label>

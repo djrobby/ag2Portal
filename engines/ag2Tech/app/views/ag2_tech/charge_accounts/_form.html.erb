@@ -41,7 +41,7 @@
       // Organization OK: Show (if not updating)
       old_value = $('#charge_account_organization_id').val();
       old_code = $('#charge_account_account_code').val();
-      if ('<%= @breadcrumb == 'update' %>') {
+      if ('<%= @breadcrumb %>' == "update") {
         $('#generate_code_btn').hide();
       } else {
         $('#generate_code_btn').show();
