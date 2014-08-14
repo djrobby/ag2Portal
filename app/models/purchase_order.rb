@@ -155,7 +155,7 @@ class PurchaseOrder < ActiveRecord::Base
     integer :supplier_id
     integer :payment_method_id
     integer :order_status_id
-    integer :project_id
+    integer :project_id, :multiple => true
     integer :store_id
     integer :work_order_id
     integer :charge_account_id

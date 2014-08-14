@@ -272,16 +272,23 @@ module Ag2Purchase
     # GET /purchase_orders.json
     def index
       manage_filter_state
+      project = params[:Project]
       supplier = params[:Supplier]
       status = params[:Status]
       # OCO
       init_oco if !session[:organization]
       # Initialize select_tags
+      @projects = projects_dropdown if @projects.nil?
       @suppliers = suppliers_dropdown if @suppliers.nil?
       @statuses = OrderStatus.order('id') if @statuses.nil?
 
+      current_projects = @projects.blank? ? [0] : current_projects_for_index(@projects)
       @search = PurchaseOrder.search do
+        with :project_id, current_projects
         fulltext params[:search]
+        if !project.blank?
+          with :project_id, project
+        end
         if !supplier.blank?
           with :supplier_id, supplier
         end
@@ -317,11 +324,12 @@ module Ag2Purchase
     def new
       @breadcrumb = 'create'
       @purchase_order = PurchaseOrder.new
-      @offers = Offer.order(:supplier_id, :offer_no, :id)
-      @projects = Project.order(:project_code)
-      @work_orders = WorkOrder.order(:order_no)
-      @charge_accounts = ChargeAccount.order(:account_code)
-      @stores = Store.order(:name)
+
+      @offers = offers_dropdown
+      @projects = projects_dropdown
+      @work_orders = work_orders_dropdown
+      @charge_accounts = charge_accounts_dropdown
+      @stores = stores_dropdown
       #@purchase_order.purchase_order_items.build
   
       respond_to do |format|
@@ -412,6 +420,14 @@ module Ag2Purchase
     
     private
     
+    def current_projects_for_index(_projects)
+      _current_projects = []
+      _projects.each do |i|
+        _current_projects = _current_projects << i.id
+      end
+      _current_projects
+    end
+    
     def project_stores(_project)
       if !_project.company.blank? && !_project.office.blank?
         _store = Store.where("company_id = ? AND office_id = ?", _project.company.id, _project.office.id).order(:name)
@@ -443,8 +459,46 @@ module Ag2Purchase
       _store
     end
 
+    def projects_dropdown
+      if session[:office] != '0'
+        _projects = Project.where(office_id: session[:office].to_i).order(:project_code)
+      elsif session[:company] != '0'
+        _projects = Project.where(company_id: session[:company].to_i).order(:project_code)
+      else
+        _projects = session[:organization] != '0' ? Project.where(organization_id: session[:organization].to_i).order(:project_code) : Project.order(:project_code)
+      end
+    end
+
+    def projects_dropdown_edit(_project)
+      _projects = projects_dropdown
+      if _projects.blank?
+        _projects = Project.where(id: _project)
+      end
+      _projects
+    end
+
     def suppliers_dropdown
       _suppliers = session[:organization] != '0' ? Supplier.where(organization_id: session[:organization].to_i).order(:supplier_code) : Supplier.order(:supplier_code)
+    end
+
+    def offers_dropdown
+      _offers = session[:organization] != '0' ? Offer.where(organization_id: session[:organization].to_i).order(:supplier_id, :offer_no, :id) : Offer.order(:supplier_id, :offer_no, :id)
+    end
+
+    def charge_accounts_dropdown
+      _accounts = session[:organization] != '0' ? ChargeAccount.where(organization_id: session[:organization].to_i).order(:account_code) : ChargeAccount.order(:account_code)
+    end
+
+    def charge_accounts_dropdown_edit(_project)
+      _accounts = ChargeAccount.where('project_id = ? OR project_id IS NULL', _project).order(:account_code)
+    end
+
+    def stores_dropdown
+      _stores = session[:organization] != '0' ? Store.where(organization_id: session[:organization].to_i).order(:name) : Store.order(:name)
+    end
+
+    def work_orders_dropdown
+      _stores = session[:organization] != '0' ? WorkOrder.where(organization_id: session[:organization].to_i).order(:order_no) : WorkOrder.order(:order_no)
     end
     
     # Keeps filter state
@@ -454,6 +508,12 @@ module Ag2Purchase
         session[:search] = params[:search]
       elsif session[:search]
         params[:search] = session[:search]
+      end
+      # project
+      if params[:Project]
+        session[:Project] = params[:Project]
+      elsif session[:Project]
+        params[:Project] = session[:Project]
       end
       # supplier
       if params[:Supplier]
