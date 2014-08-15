@@ -23,7 +23,7 @@ es:
       back_to_main_page: "Volver a Notas de entrega"
       generate_code_btn: "Nº de Nota de entrega"
       validate_btn: "Validar"
-      code_error: "Imposible generar Nº de Entrega: No has elegido Actividad."
+      no_error: "Imposible generar Nº de Entrega: No has elegido Organización."
       items_info: "Items de la Nota de entrega"
       delete_item: "Borrar este Item"
       add_item: "Agregar nuevo Item"

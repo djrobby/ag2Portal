@@ -80,6 +80,13 @@
       return false;
     }));
     $('#client_fiscal_id').focus();
+    
+    // Can't change code if editing
+    if ('<%= @breadcrumb %>' == "update") {
+      $('#client_client_code').prop('readonly', true);
+    } else {
+      $('#client_client_code').prop('readonly', false);
+    }
   });
   
   jQuery(function($) {

@@ -13,8 +13,8 @@ module Ag2Products
                                                :dn_update_charge_account_from_project,
                                                :dn_update_offer_select_from_client,
                                                :dn_format_number,
-                                               :dn_current_stock]
-                                               
+                                               :dn_current_stock,
+                                               :dn_generate_no]
     # Calculate and format totals properly
     def dn_totals
       qty = params[:qty].to_f / 10000
@@ -245,6 +245,16 @@ module Ag2Products
       current_stock = number_with_precision(current_stock.round(4), precision: 4)
       # Setup JSON
       @json_data = { "stock" => current_stock.to_s }
+      render json: @json_data
+    end
+
+    # Update delivery number at view (generate_code_btn)
+    def dn_generate_no
+      organization = params[:org]
+
+      # Builds no, if possible
+      code = organization == '$' ? '$err' : dn_next_no(organization)
+      @json_data = { "code" => code }
       render json: @json_data
     end
 

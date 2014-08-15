@@ -67,22 +67,9 @@ module Ag2Gest
     # Update client code at view (generate_code_btn)
     def cl_generate_code
       organization = params[:id]
-      code = ''
 
       # Builds code, if possible
-      if organization == '$'
-        code = '$err'
-      else
-        organization = organization.to_s if organization.is_a? Fixnum
-        organization = organization.rjust(4, '0')
-        last_client_code = Client.where("client_code LIKE ?", "#{organization}%").order('client_code').maximum('client_code')
-        if last_client_code.nil?
-          code = organization + '0000001'
-        else
-          last_client_code = last_client_code[4..10].to_i + 1
-          code = organization + last_client_code.to_s.rjust(7, '0')
-        end
-      end
+      code = organization == '$' ? '$err' : cl_next_code(organization)
       @json_data = { "code" => code }
       render json: @json_data
     end

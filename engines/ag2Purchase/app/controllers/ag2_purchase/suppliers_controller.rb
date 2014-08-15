@@ -70,22 +70,9 @@ module Ag2Purchase
     # Update supplier code at view (generate_code_btn)
     def su_generate_code
       activity = params[:id]
-      code = ''
 
       # Builds code, if possible
-      if activity == '$'
-        code = '$err'
-      else
-        activity = activity.split(",").first
-        activity = activity.rjust(4, '0')
-        last_supplier_code = Supplier.where("supplier_code LIKE ?", "#{activity}%").order('supplier_code').maximum('supplier_code')
-        if last_supplier_code.nil?
-          code = activity + '000001'
-        else
-          last_supplier_code = last_supplier_code[4..9].to_i + 1
-          code = activity + last_supplier_code.to_s.rjust(6, '0')
-        end
-      end
+      code = activity == '$' ? '$err' : su_next_code(activity)
       @json_data = { "code" => code }
       render json: @json_data
     end

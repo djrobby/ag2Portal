@@ -109,16 +109,21 @@
       if (order == "")
         order = "0";
       jQuery.getJSON('wo_update_project_textfields_from_organization/' + order, function(data) {
-        var p = data.projects;
-        var t = data.types;
-        var l = data.labors;
-        // Projects
+        var p = data.project;
+        var t = data.type;
+        var l = data.labor;
+        var c = data.client;
+        var h = data.charge_account
+        var s = data.store
+        var w = data.worker
+        var a = data.area
+        // Project
         $("#work_order_project_id").html("");
         $("#work_order_project_id").select2("val", "");
         $("#work_order_project_id").append($('<option></option>').val("").html(""));
         if (!p.length) {
           $.each(data, function(id, option) {
-            if (id == 'projects' && option != "") {
+            if (id == 'project' && option != "") {
               $("#work_order_project_id").append($('<option></option>').val(option.id).html(option.project_code.substring(0,4) + "-" + option.project_code.substring(4,10) + " " + option.name));
             }
           });
@@ -127,13 +132,13 @@
             $("#work_order_project_id").append($('<option></option>').val(option.id).html(option.project_code.substring(0,4) + "-" + option.project_code.substring(4,10) + " " + option.name));
           });
         }
-        // Types
+        // Type
         $("#work_order_work_order_type_id").html("");
         $("#work_order_work_order_type_id").val("");
         $("#work_order_work_order_type_id").append($('<option></option>').val("").html(""));
         if (!t.length) {
           $.each(data, function(id, option) {
-            if (id == 'projects' && option != "") {
+            if (id == 'type' && option != "") {
               $("#work_order_work_order_type_id").append($('<option></option>').val(option.id).html(option.name));
             }
           });
@@ -142,19 +147,94 @@
             $("#work_order_work_order_type_id").append($('<option></option>').val(option.id).html(option.name));
           });
         }
-        // Labors
+        // Labor
         $("#work_order_work_order_labor_id").html("");
         $("#work_order_work_order_labor_id").val("");
         $("#work_order_work_order_labor_id").append($('<option></option>').val("").html(""));
         if (!l.length) {
           $.each(data, function(id, option) {
-            if (id == 'projects' && option != "") {
+            if (id == 'labor' && option != "") {
               $("#work_order_work_order_labor_id").append($('<option></option>').val(option.id).html(option.name));
             }
           });
         } else {
           $.each(l, function(id, option) {
             $("#work_order_work_order_labor_id").append($('<option></option>').val(option.id).html(option.name));
+          });
+        }
+        // Client
+        $("#work_order_client_id").html("");
+        $("#work_order_client_id").select2("val", "");
+        $("#work_order_client_id").append($('<option></option>').val("").html(""));
+        if (!c.length) {
+          $.each(data, function(id, option) {
+            if (id == 'client' && option != "") {
+              $("#work_order_client_id").append($('<option></option>').val(option.id).html(option.client_code.substring(0,4) + "-" + option.client_code.substring(4,11) + " " + option.name));
+            }
+          });
+        } else {
+          $.each(c, function(id, option) {
+            $("#work_order_client_id").append($('<option></option>').val(option.id).html(option.client_code.substring(0,4) + "-" + option.client_code.substring(4,11) + " " + option.name));
+          });
+        }
+        // Charge account
+        $("#work_order_charge_account_id").html("");
+        $("#work_order_charge_account_id").select2("val", "");
+        $("#work_order_charge_account_id").append($('<option></option>').val("").html(""));
+        if (!h.length) {
+          $.each(data, function(id, option) {
+            if (id == 'charge_account' && option != "") {
+              $("#work_order_charge_account_id").append($('<option></option>').val(option.id).html(option.account_code.substring(0,4) + "-" + option.account_code.substring(4,11) + " " + option.name));
+            }
+          });
+        } else {
+          $.each(h, function(id, option) {
+            $("#work_order_charge_account_id").append($('<option></option>').val(option.id).html(option.account_code.substring(0,4) + "-" + option.account_code.substring(4,11) + " " + option.name));
+          });
+        }
+        // Store
+        $("#work_order_store_id").html("");
+        $("#work_order_store_id").select2("val", "");
+        $("#work_order_store_id").append($('<option></option>').val("").html(""));
+        if (!s.length) {
+          $.each(data, function(id, option) {
+            if (id == 'store' && option != "") {
+              $("#work_order_store_id").append($('<option></option>').val(option.id).html(option.name));
+            }
+          });
+        } else {
+          $.each(s, function(id, option) {
+            $("#work_order_store_id").append($('<option></option>').val(option.id).html(option.name));
+          });
+        }
+        // In charge
+        $("#work_order_in_charge_id").html("");
+        $("#work_order_in_charge_id").select2("val", "");
+        $("#work_order_in_charge_id").append($('<option></option>').val("").html(""));
+        if (!w.length) {
+          $.each(data, function(id, option) {
+            if (id == 'worker' && option != "") {
+              $("#work_order_in_charge_id").append($('<option></option>').val(option.id).html(option.last_name + ', ' + option.first_name));
+            }
+          });
+        } else {
+          $.each(w, function(id, option) {
+            $("#work_order_in_charge_id").append($('<option></option>').val(option.id).html(option.last_name + ', ' + option.first_name));
+          });
+        }
+        // Area
+        $("#work_order_area_id").html("");
+        $("#work_order_area_id").select2("val", "");
+        $("#work_order_area_id").append($('<option></option>').val("").html(""));
+        if (!a.length) {
+          $.each(data, function(id, option) {
+            if (id == 'area' && option != "") {
+              $("#work_order_area_id").append($('<option></option>').val(option[0]).html(option[1] + " (" + option[2] + ")"));
+            }
+          });
+        } else {
+          $.each(a, function(id, option) {
+            $("#work_order_area_id").append($('<option></option>').val(option[0]).html(option[1] + " (" + option[2] + ")"));
           });
         }
       });

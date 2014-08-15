@@ -23,22 +23,9 @@ module Ag2Tech
     # Update account code at view (generate_code_btn)
     def cc_generate_code
       header = params[:header]
-      code = ''
 
       # Builds code, if possible
-      if header == '$'
-        code = '$err'
-      else
-        header = header.to_s if header.is_a? Fixnum
-        header = header.rjust(4, '0')
-        last_code = ChargeAccount.where("account_code LIKE ?", "#{header}%").order(:account_code).maximum(:account_code)
-        if last_code.nil?
-          code = header + '0000001'
-        else
-          last_code = last_code[4..10].to_i + 1
-          code = header + last_code.to_s.rjust(7, '0')
-        end
-      end
+      code = header == '$' ? code = '$err' : cc_next_code(header)
       @json_data = { "code" => code }
       render json: @json_data
     end

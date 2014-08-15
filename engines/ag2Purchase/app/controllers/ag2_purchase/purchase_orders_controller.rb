@@ -14,15 +14,16 @@ module Ag2Purchase
                                                :po_format_numbers,
                                                :po_totals,
                                                :po_current_stock,
+                                               :po_update_project_textfields_from_organization,
                                                :po_generate_no]
     # Update offer select at view from supplier select
     def po_update_offer_select_from_supplier
       supplier = params[:supplier]
       if supplier != '0'
         @supplier = Supplier.find(supplier)
-        @offers = @supplier.blank? ? Offer.order(:supplier_id, :offer_no, :id) : @supplier.offers.order(:supplier_id, :offer_no, :id)
+        @offers = @supplier.blank? ? offers_dropdown : @supplier.offers.order(:supplier_id, :offer_no, :id)
       else
-        @offers = Offer.order(:supplier_id, :offer_no, :id)
+        @offers = offers_dropdown
       end
 
       respond_to do |format|
@@ -114,14 +115,14 @@ module Ag2Purchase
         @store = @order.store
         store_id = @store.id rescue 0
         if @charge_account.blank?
-          @charge_account = @project.blank? ? ChargeAccount.order(:account_code) : @project.charge_accounts.order(:account_code)
+          @charge_account = @project.blank? ? charge_accounts_dropdown : @project.charge_accounts.order(:account_code)
         end
         if @store.blank?
           @store = project_stores(@project)
         end
       else
-        @charge_account = ChargeAccount.order(:account_code)
-        @store = Store.order(:name)
+        @charge_account = charge_accounts_dropdown
+        @store = stores_dropdown
       end
       @json_data = { "charge_account" => @charge_account, "store" => @store,
                      "charge_account_id" => charge_account_id, "store_id" => store_id }
@@ -137,13 +138,13 @@ module Ag2Purchase
       project = params[:order]
       if project != '0'
         @project = Project.find(project)
-        @work_order = @project.blank? ? WorkOrder.order(:order_no) : @project.work_orders.order(:order_no)
-        @charge_account = @project.blank? ? ChargeAccount.order(:account_code) : @project.charge_accounts.order(:account_code)
+        @work_order = @project.blank? ? work_orders_dropdown : @project.work_orders.order(:order_no)
+        @charge_account = @project.blank? ? charge_accounts_dropdown : @project.charge_accounts.order(:account_code)
         @store = project_stores(@project)
       else
-        @work_order = WorkOrder.order(:order_no)
-        @charge_account = ChargeAccount.order(:account_code)
-        @store = Store.order(:name)
+        @work_order = work_orders_dropdown
+        @charge_account = charge_accounts_dropdown
+        @store = stores_dropdown
       end
       @json_data = { "work_order" => @work_order, "charge_account" => @charge_account, "store" => @store }
 
@@ -239,28 +240,36 @@ module Ag2Purchase
       render json: @json_data
     end
 
+    # Update project text and other fields at view from organization select
+    def po_update_project_textfields_from_organization
+      organization = params[:org]
+      if organization != '0'
+        @organization = Organization.find(organization)
+        @suppliers = @organization.blank? ? suppliers_dropdown : @organization.suppliers.order(:supplier_code)
+        @projects = @organization.blank? ? projects_dropdown : @organization.projects.order(:project_code)
+        @work_orders = @organization.blank? ? work_orders_dropdown : @organization.work_orders.order(:order_no)
+        @charge_accounts = @organization.blank? ? charge_accounts_dropdown : @organization.charge_accounts.order(:account_code)
+        @stores = @organization.blank? ? stores_dropdown : @organization.stores.order(:name)
+        @payment_methods = @organization.blank? ? payment_methods_dropdown : @organization.payment_methods.order(:description)
+      else
+        @suppliers = suppliers_dropdown
+        @projects = projects_dropdown
+        @work_orders = work_orders_dropdown
+        @charge_accounts = charge_accounts_dropdown
+        @stores = stores_dropdown
+        @payment_methods = payment_methods_dropdown
+      end
+      @json_data = { "supplier" => @suppliers, "project" => @projects, "work_order" => @work_orders,
+                     "charge_account" => @charge_accounts, "store" => @stores, "payment_method" => @payment_methods }
+      render json: @json_data
+    end
+
     # Update order number at view (generate_code_btn)
     def po_generate_no
       project = params[:project]
-      year = Time.new.year
-      code = ''
 
-      # Builds code, if possible
-      project_code = Project.find(project).project_code rescue '$'
-      if project == '$' || project_code == '$'
-        code = '$err'
-      else
-        project = project_code.rjust(10, '0')
-        year = year.to_s if year.is_a? Fixnum
-        year = year.rjust(4, '0')
-        last_no = PurchaseOrder.where("order_no LIKE ?", "#{project}#{year}%").order(:order_no).maximum(:order_no)
-        if last_no.nil?
-          code = project + year + '000001'
-        else
-          last_no = last_no[14..19].to_i + 1
-          code = project + year + last_no.to_s.rjust(6, '0')
-        end
-      end
+      # Builds no, if possible
+      code = project == '$' ? '$err' : po_next_no(project)
       @json_data = { "code" => code }
       render json: @json_data
     end
@@ -324,12 +333,12 @@ module Ag2Purchase
     def new
       @breadcrumb = 'create'
       @purchase_order = PurchaseOrder.new
-
       @offers = offers_dropdown
       @projects = projects_dropdown
       @work_orders = work_orders_dropdown
       @charge_accounts = charge_accounts_dropdown
       @stores = stores_dropdown
+      @suppliers = suppliers_dropdown
       #@purchase_order.purchase_order_items.build
   
       respond_to do |format|
@@ -342,11 +351,12 @@ module Ag2Purchase
     def edit
       @breadcrumb = 'update'
       @purchase_order = PurchaseOrder.find(params[:id])
-      @offers = @purchase_order.supplier.blank? ? Offer.order(:supplier_id, :offer_no, :id) : @purchase_order.supplier.offers.order(:supplier_id, :offer_no, :id)
-      @projects = Project.order(:project_code)
-      @work_orders = @purchase_order.project.blank? ? WorkOrder.order(:order_no) : @purchase_order.project.work_orders.order(:order_no)
+      @offers = @purchase_order.supplier.blank? ? offers_dropdown : @purchase_order.supplier.offers.order(:supplier_id, :offer_no, :id)
+      @projects = projects_dropdown_edit(@purchase_order.project)
+      @work_orders = @purchase_order.project.blank? ? work_orders_dropdown : @purchase_order.project.work_orders.order(:order_no)
       @charge_accounts = work_order_charge_account(@purchase_order)
       @stores = work_order_store(@purchase_order)
+      @suppliers = suppliers_dropdown
       #@work_orders = @purchase_order.work_order.blank? ? WorkOrder.order(:order_no) : WorkOrder.where('id = ?', @purchase_order.work_order)
       #@projects = @purchase_order.project.blank? ? Project.order(:project_code) : Project.where('id = ?', @purchase_order.project)
       #@charge_accounts = @purchase_order.charge_account.blank? ? ChargeAccount.order(:account_code) : ChargeAccount.where('id = ?', @purchase_order.charge_account)
@@ -366,11 +376,12 @@ module Ag2Purchase
           format.html { redirect_to @purchase_order, notice: crud_notice('created', @purchase_order) }
           format.json { render json: @purchase_order, status: :created, location: @purchase_order }
         else
-          @offers = Offer.order(:supplier_id, :offer_no, :id)
-          @projects = Project.order(:project_code)
-          @work_orders = WorkOrder.order(:order_no)
-          @charge_accounts = ChargeAccount.order(:account_code)
-          @stores = Store.order(:name)
+          @offers = offers_dropdown
+          @projects = projects_dropdown
+          @work_orders = work_orders_dropdown
+          @charge_accounts = charge_accounts_dropdown
+          @stores = stores_dropdown
+          @suppliers = suppliers_dropdown
           format.html { render action: "new" }
           format.json { render json: @purchase_order.errors, status: :unprocessable_entity }
         end
@@ -390,11 +401,12 @@ module Ag2Purchase
                         notice: (crud_notice('updated', @purchase_order) + "#{undo_link(@purchase_order)}").html_safe }
           format.json { head :no_content }
         else
-          @offers = @purchase_order.supplier.blank? ? Offer.order(:supplier_id, :offer_no, :id) : @purchase_order.supplier.offers.order(:supplier_id, :offer_no, :id)
-          @projects = Project.order(:project_code)
-          @work_orders = @purchase_order.project.blank? ? WorkOrder.order(:order_no) : @purchase_order.project.work_orders.order(:order_no)
+          @offers = @purchase_order.supplier.blank? ? offers_dropdown : @purchase_order.supplier.offers.order(:supplier_id, :offer_no, :id)
+          @projects = projects_dropdown_edit(@purchase_order.project)
+          @work_orders = @purchase_order.project.blank? ? work_orders_dropdown : @purchase_order.project.work_orders.order(:order_no)
           @charge_accounts = work_order_charge_account(@purchase_order)
           @stores = work_order_store(@purchase_order)
+          @suppliers = suppliers_dropdown
           format.html { render action: "edit" }
           format.json { render json: @purchase_order.errors, status: :unprocessable_entity }
         end
@@ -430,31 +442,31 @@ module Ag2Purchase
     
     def project_stores(_project)
       if !_project.company.blank? && !_project.office.blank?
-        _store = Store.where("company_id = ? AND office_id = ?", _project.company.id, _project.office.id).order(:name)
+        _store = Store.where("(company_id = ? AND office_id = ?) OR (company_id IS NULL AND NOT supplier_id IS NULL)", _project.company.id, _project.office.id).order(:name)
       elsif !_project.company.blank? && _project.office.blank?
-        _store = Store.where("company_id = ?", _project.company.id).order(:name)
+        _store = Store.where("(company_id = ?) OR (company_id IS NULL AND NOT supplier_id IS NULL)", _project.company.id).order(:name)
       elsif _project.company.blank? && !_project.office.blank?
-        _store = Store.where("office_id = ?", _project.office.id).order(:name)
+        _store = Store.where("(office_id = ?) OR (company_id IS NULL AND NOT supplier_id IS NULL)", _project.office.id).order(:name)
       else
-        _store = Store.order(:name)
+        _store = stores_dropdown
       end
       _store
     end
 
-    def work_order_charge_account(_model)
-      if _model.work_order.blank? || _model.work_order.charge_account.blank?
-        _charge_account = _model.project.blank? ? ChargeAccount.order(:account_code) : _model.project.charge_accounts.order(:account_code)
+    def work_order_charge_account(_order)
+      if _order.work_order.blank? || _order.work_order.charge_account.blank?
+        _charge_account = _order.project.blank? ? charge_accounts_dropdown : charge_accounts_dropdown_edit(_order.project_id)
       else
-        _charge_account = ChargeAccount.where("id = ?", _model.work_order.charge_account)
+        _charge_account = ChargeAccount.where("id = ?", _order.work_order.charge_account)
       end
       _charge_account
     end
 
-    def work_order_store(_model)
-      if _model.work_order.blank? || _model.work_order.store.blank?
-        _store = _model.project.blank? ? Store.order(:name) : project_stores(_model.project)
+    def work_order_store(_order)
+      if _order.work_order.blank? || _order.work_order.store.blank?
+        _store = _order.project.blank? ? stores_dropdown : project_stores(_order.project)
       else
-        _store = Store.where("id = ?", _model.work_order.store)
+        _store = Store.where("id = ?", _order.work_order.store)
       end
       _store
     end
@@ -498,7 +510,11 @@ module Ag2Purchase
     end
 
     def work_orders_dropdown
-      _stores = session[:organization] != '0' ? WorkOrder.where(organization_id: session[:organization].to_i).order(:order_no) : WorkOrder.order(:order_no)
+      _orders = session[:organization] != '0' ? WorkOrder.where(organization_id: session[:organization].to_i).order(:order_no) : WorkOrder.order(:order_no)
+    end
+
+    def payment_methods_dropdown
+      _methods = session[:organization] != '0' ? PaymentMethod.where(organization_id: session[:organization].to_i).order(:description) : PaymentMethod.order(:description)
     end
     
     # Keeps filter state

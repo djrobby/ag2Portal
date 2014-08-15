@@ -36,6 +36,25 @@
       $('#submit_btn').show();
       $('.fnt-new-btn').show();
     }
+
+    // Disable generate_code_btn if delivery_note_organization_id blank
+    var order = $('#delivery_note_organization_id').val();
+    if (order == "")
+      order = "0";
+    if (order == "0") {
+      // Empty project: Hide
+      $('#generate_code_btn').hide();
+    } else {
+      // Project OK: Show
+      $('#generate_code_btn').show();
+    }
+    
+    // Can't change delivery no if editing
+    if ('<%= @breadcrumb %>' == "update") {
+      $('#delivery_note_delivery_no').prop('readonly', true);
+    } else {
+      $('#delivery_note_delivery_no').prop('readonly', false);
+    }
   });
   
   jQuery(function($) {
@@ -53,6 +72,25 @@
         $('#submit_btn').show();
         $('.fnt-new-btn').show();
       }
+    });
+    
+    // when #generate_code_btn is clicked
+    $("#generate_code_btn").click(function() {
+      // make a POST call and replace the content
+      var order = $('select#delivery_note_organization_id :selected').val();
+      if (order == "")
+        order = "$";
+      jQuery.getJSON('dn_generate_no/' + order, function(data) {
+        $("#delivery_note_delivery_no").val(data.code);
+        if ($("#delivery_note_delivery_no").val() == "$err") {
+          $("#delivery_note_delivery_no").css('color', 'red');
+          alert('<%= I18n.t("ag2_products.delivery_notes.no_error") %>');
+          $('#delivery_note_delivery_no').select();
+        }
+        else
+          $("#delivery_note_delivery_no").css('color', text_field_color);
+      })
+      return false;
     });
 
     // when the #delivery_note_client_id field changes
@@ -228,6 +266,13 @@
   <label class="multi-field-label-two"> <%= f.input :delivery_no, autofocus: true, input_html: { class: 'mid-text-field' }, label_html: { class: 'form-label' } %> </label>
   <label class="multi-field-label-two"> <%= f.input :delivery_date, start_year: Time.now.year - 100, end_year: Time.now.year + 100, as: :string, input_html: { value: (f.object.delivery_date.strftime("%d/%m/%Y") if f.object.delivery_date), class: 'mid-text-field date_picker' }, label_html: { class: 'form-label' } %> </label>
 </div>
+<% if session[:organization] != '0' %>
+<%= f.association :organization, collection: Organization.where("id = ?", "#{session[:organization]}").all, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' }, include_blank: false %>
+<% elsif current_user.organizations.count > 0 %>
+<%= f.association :organization, collection: current_user.organizations.order('name'), input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' }, include_blank: false %>
+<% else %>
+<%= f.association :organization, collection: Organization.order('name'), input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %>
+<% end %>
 <%= f.association :client, collection: Client.all(order: 'name'), input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %>
 <%= f.association :sale_offer, collection: @offers, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %>
 <div>

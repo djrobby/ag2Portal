@@ -84,6 +84,13 @@
 
     // Initialized form variable
     _thisForm = $("#supplier_fiscal_id").closest('form')[0];
+    
+    // Can't change code if editing
+    if ('<%= @breadcrumb %>' == "update") {
+      $('#supplier_supplier_code').prop('readonly', true);
+    } else {
+      $('#supplier_supplier_code').prop('readonly', false);
+    }
   });
   
   jQuery(function($) {

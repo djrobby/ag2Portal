@@ -263,7 +263,7 @@ module Ag2Tech
       end
     end
 
-    # Update project text fields at view from organization select
+    # Update project text and other fields at view from organization select
     def wo_update_project_textfields_from_organization
       organization = params[:org]
       if organization != '0'
@@ -271,37 +271,37 @@ module Ag2Tech
         @projects = @organization.blank? ? projects_dropdown : @organization.projects.order(:project_code)
         @types = @organization.blank? ? work_order_types_dropdown : @organization.work_order_types.order(:name)
         @labors = @organization.blank? ? work_order_labors_dropdown : @organization.work_order_labors.order(:name)
+        @clients = @organization.blank? ? clients_dropdown : @organization.clients.order(:client_code)
+        @charge_accounts = @organization.blank? ? charge_accounts_dropdown : @organization.charge_accounts.order(:account_code)
+        @stores = @organization.blank? ? stores_dropdown : @organization.stores.order(:name)
+        @workers = @organization.blank? ? workers_dropdown : @organization.workers.order(:worker_code)
+        @areas = @organization.blank? ? areas_dropdown : organization_areas(@organization)
       else
         @projects = projects_dropdown
         @types = work_order_types_dropdown
         @labors = work_order_labors_dropdown
+        @clients = clients_dropdown
+        @charge_accounts = charge_accounts_dropdown
+        @stores = stores_dropdown
+        @workers = workers_dropdown
+        @areas = areas_dropdown
       end
-      @json_data = { "projects" => @projects, "types" => @types, "labors" => @labors }
+      @areas_dropdown = []
+      @areas.each do |i|
+        @areas_dropdown = @areas_dropdown << [i.id, i.name, i.department.name] 
+      end
+      @json_data = { "project" => @projects, "type" => @types, "labor" => @labors,
+                     "client" => @clients, "charge_account" => @charge_accounts,
+                     "store" => @stores, "worker" => @workers, "area" => @areas_dropdown }
       render json: @json_data
     end
 
     # Update order number at view (generate_code_btn)
     def wo_generate_no
       project = params[:project]
-      year = Time.new.year
-      code = ''
 
-      # Builds code, if possible
-      project_code = Project.find(project).project_code rescue '$'
-      if project == '$' || project_code == '$'
-        code = '$err'
-      else
-        project = project_code.rjust(10, '0')
-        year = year.to_s if year.is_a? Fixnum
-        year = year.rjust(4, '0')
-        last_no = WorkOrder.where("order_no LIKE ?", "#{project}#{year}%").order(:order_no).maximum(:order_no)
-        if last_no.nil?
-          code = project + year + '000001'
-        else
-          last_no = last_no[14..19].to_i + 1
-          code = project + year + last_no.to_s.rjust(6, '0')
-        end
-      end
+      # Builds no, if possible
+      code = project == '$' ? '$err' : wo_next_no(project)
       @json_data = { "code" => code }
       render json: @json_data
     end
@@ -483,7 +483,7 @@ module Ag2Tech
       elsif _project.company.blank? && !_project.office.blank?
         _store = Store.where("(office_id = ?) OR (company_id IS NULL AND NOT supplier_id IS NULL)", _project.office.id).order(:name)
       else
-        _store = Store.order(:name)
+        _store = stores_dropdown
       end
       _store
     end
@@ -603,6 +603,10 @@ module Ag2Tech
       _clients = session[:organization] != '0' ? Client.where(organization_id: session[:organization].to_i).order(:client_code) : Client.order(:client_code)
     end
 
+    def organization_areas(_organization)
+      Area.includes(:department).where(departments: { organization_id: _organization })
+    end
+    
     # Keeps filter state
     def manage_filter_state
       # search

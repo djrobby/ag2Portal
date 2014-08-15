@@ -23,7 +23,7 @@ en:
       back_to_main_page: "Back to Delivery notes"
       generate_code_btn: "Delivery note No."
       validate_btn: "Validate"
-      code_error: "Unable to generate Delivery note No.: No Activity chosen."
+      no_error: "Unable to generate Delivery note No.: No Organization chosen."
       items_info: "Delivery note Items"
       delete_item: "Delete this Item"
       add_item: "Add new Item"

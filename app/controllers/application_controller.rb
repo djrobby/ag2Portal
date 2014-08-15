@@ -251,6 +251,133 @@ end
     true if Float(object) rescue false
   end  
 
+  #
+  # Automatic codes & document numbers
+  #
+  # Supplier code
+  def su_next_code(activity)
+    code = ''
+    activity = activity.split(",").first
+    activity = activity.rjust(4, '0')
+    last_supplier_code = Supplier.where("supplier_code LIKE ?", "#{activity}%").order('supplier_code').maximum('supplier_code')
+    if last_supplier_code.nil?
+      code = activity + '000001'
+    else
+      last_supplier_code = last_supplier_code[4..9].to_i + 1
+      code = activity + last_supplier_code.to_s.rjust(6, '0')
+    end
+    code
+  end
+
+  # Client code
+  def cl_next_code(organization)
+    code = ''
+    organization = organization.to_s if organization.is_a? Fixnum
+    organization = organization.rjust(4, '0')
+    last_client_code = Client.where("client_code LIKE ?", "#{organization}%").order('client_code').maximum('client_code')
+    if last_client_code.nil?
+      code = organization + '0000001'
+    else
+      last_client_code = last_client_code[4..10].to_i + 1
+      code = organization + last_client_code.to_s.rjust(7, '0')
+    end
+    code
+  end
+
+  # Project code
+  def pr_next_code(header)
+    code = ''
+    header = header.to_s if header.is_a? Fixnum
+    header = header.rjust(4, '0')
+    last_code = Project.where("project_code LIKE ?", "#{header}%").order(:project_code).maximum(:project_code)
+    if last_code.nil?
+      code = header + '000001'
+    else
+      last_code = last_code[4..9].to_i + 1
+      code = header + last_code.to_s.rjust(6, '0')
+    end
+    code
+  end
+
+  # Charge account code
+  def cc_next_code(header)
+    code = ''
+    header = header.to_s if header.is_a? Fixnum
+    header = header.rjust(4, '0')
+    last_code = ChargeAccount.where("account_code LIKE ?", "#{header}%").order(:account_code).maximum(:account_code)
+    if last_code.nil?
+      code = header + '0000001'
+    else
+      last_code = last_code[4..10].to_i + 1
+      code = header + last_code.to_s.rjust(7, '0')
+    end
+    code
+   end
+  
+  # Delivery note no
+  def dn_next_no(organization)
+    year = Time.new.year
+    code = ''
+    organization = organization.to_s if organization.is_a? Fixnum
+    organization = organization.rjust(4, '0')
+    year = year.to_s if year.is_a? Fixnum
+    year = year.rjust(4, '0')
+    last_no = DeliveryNote.where("delivery_no LIKE ?", "#{organization}#{year}%").order(:delivery_no).maximum(:delivery_no)
+    if last_no.nil?
+      code = organization + year + '000001'
+    else
+      last_no = last_no[14..19].to_i + 1
+      code = organization + year + last_no.to_s.rjust(6, '0')
+    end
+    code
+  end
+  
+  # Purchase order no
+  def po_next_no(project)
+    year = Time.new.year
+    code = ''
+    # Builds code, if possible
+    project_code = Project.find(project).project_code rescue '$'
+    if project_code == '$'
+      code = '$err'
+    else
+      project = project_code.rjust(10, '0')
+      year = year.to_s if year.is_a? Fixnum
+      year = year.rjust(4, '0')
+      last_no = PurchaseOrder.where("order_no LIKE ?", "#{project}#{year}%").order(:order_no).maximum(:order_no)
+      if last_no.nil?
+        code = project + year + '000001'
+      else
+        last_no = last_no[14..19].to_i + 1
+        code = project + year + last_no.to_s.rjust(6, '0')
+      end
+    end
+    code
+  end
+  
+  # Work order no
+  def wo_next_no(project)
+    year = Time.new.year
+    code = ''
+    # Builds code, if possible
+    project_code = Project.find(project).project_code rescue '$'
+    if project_code == '$'
+      code = '$err'
+    else
+      project = project_code.rjust(10, '0')
+      year = year.to_s if year.is_a? Fixnum
+      year = year.rjust(4, '0')
+      last_no = WorkOrder.where("order_no LIKE ?", "#{project}#{year}%").order(:order_no).maximum(:order_no)
+      if last_no.nil?
+        code = project + year + '000001'
+      else
+        last_no = last_no[14..19].to_i + 1
+        code = project + year + last_no.to_s.rjust(6, '0')
+      end
+    end
+    code
+  end
+
   private
   
   # NIF/NIE
