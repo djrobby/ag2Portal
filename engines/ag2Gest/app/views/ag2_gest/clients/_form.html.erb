@@ -1,5 +1,7 @@
 <script>
   var text_field_color;
+  var old_value = '';
+  var old_code = '';
 
   $(document).ready(function() {
     // Disable fields if Fiscal Id blank
@@ -80,6 +82,24 @@
       return false;
     }));
     $('#client_fiscal_id').focus();
+
+    // Disable generate_code_btn if client_organization_id blank
+    var client = $('#client_organization_id').val();
+    if (client == "")
+      client = "$";
+    if (client == "$") {
+      // Empty organization: Hide
+      $('#generate_code_btn').hide();
+    } else {
+      // Organization OK: Show (if not updating)
+      old_value = $('#client_organization_id').val();
+      old_code = $('#client_client_code').val();
+      if ('<%= @breadcrumb %>' == "update") {
+        $('#generate_code_btn').hide();
+      } else {
+        $('#generate_code_btn').show();
+      }
+    }
     
     // Can't change code if editing
     if ('<%= @breadcrumb %>' == "update") {
@@ -90,6 +110,33 @@
   });
   
   jQuery(function($) {
+    // when the #client_organization_id field changes
+    $("#client_organization_id").change(function() {
+      // make a POST call and replace the content
+      var order = $('select#client_organization_id :selected').val();
+      if (order == "")
+        order = "0";
+      // Disable generate_code_btn if client_organization_id blank
+      if (order == "0") {
+        // Empty organization:: Hide
+        $('#generate_code_btn').hide();
+      } else {
+        // Organization OK: Show (if not updating)
+        if ('<%= @breadcrumb == 'update' %>') {
+          if (old_value == $('#client_organization_id').val()) {
+            $('#client_client_code').val(old_code);
+            $("#client_client_code").css('color', text_field_color);
+            $('#generate_code_btn').hide();
+          } else {
+            $('#generate_code_btn').show();
+          }
+        } else {
+          $('#generate_code_btn').show();
+        }
+      }
+      return false;
+    });
+
     // when the #client_town_id field changes
     $("#client_town_id").change(function() {
       // make a POST call and replace the content
@@ -228,19 +275,6 @@
       }
     });
   });
-
-  /* Collect checkboxes values in hidden input field */
-  function updateTextArea() {
-    var allVals = [];
-    $('#c_b :checked').each(function() {
-      allVals.push($(this).val());
-    });
-    $('#checked_activities').val(allVals)
-  }
-  $(function() {
-    $('#c_b input').click(updateTextArea);
-    //updateTextArea();
-  });
 </script>
 
 <%= simple_form_for @client, :html => {:class => 'form-vertical well' } do |f| %>
@@ -293,9 +327,7 @@
   <tbody>
     <tr class="form-tr">
       <td class="form-td-three left-winged"> <%= f.button :submit, :class => 'btn-primary', :id => 'submit_btn' %> </td>
-      <% if @breadcrumb == 'create'%>
       <td class="form-td-three right-winged"><a href="#" id="generate_code_btn" class="btn btn-warning"><%=t 'ag2_gest.clients.generate_code_btn' %></a></td>
-      <% end %>
     </tr>
   </tbody>
 </table>

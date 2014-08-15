@@ -28,4 +28,4 @@ es:
       personal_info: "Información del Proveedor"
       commercial_info: "Información Contable y Comercial"
       fiscal_error: "Id Fiscal erróneo o Entidad (Sujeto Pasivo) no existe."
-      code_error: "Imposible generar Código de Proveedor: No has elegido Actividad."
+      code_error: "Imposible generar Código de Proveedor: No has elegido Organización o Actividad."

@@ -69,10 +69,15 @@ module Ag2Purchase
 
     # Update supplier code at view (generate_code_btn)
     def su_generate_code
-      activity = params[:id]
+      activity = params[:activity]
+      organization = params[:org]
 
       # Builds code, if possible
-      code = activity == '$' ? '$err' : su_next_code(activity)
+      if activity == '$' || organization == '$'
+        code = '$err'
+      else
+        code = su_next_code(organization, activity)
+      end
       @json_data = { "code" => code }
       render json: @json_data
     end

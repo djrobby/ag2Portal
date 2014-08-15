@@ -255,16 +255,18 @@ end
   # Automatic codes & document numbers
   #
   # Supplier code
-  def su_next_code(activity)
+  def su_next_code(organization, activity)
     code = ''
+    organization = organization.to_s if organization.is_a? Fixnum
+    organization = organization.rjust(4, '0')
     activity = activity.split(",").first
     activity = activity.rjust(4, '0')
-    last_supplier_code = Supplier.where("supplier_code LIKE ?", "#{activity}%").order('supplier_code').maximum('supplier_code')
-    if last_supplier_code.nil?
-      code = activity + '000001'
+    last_code = Supplier.where("supplier_code LIKE ?", "#{organization}#{activity}%").order(:supplier_code).maximum(:supplier_code)
+    if last_code.nil?
+      code = organization + activity + '000001'
     else
-      last_supplier_code = last_supplier_code[4..9].to_i + 1
-      code = activity + last_supplier_code.to_s.rjust(6, '0')
+      last_code = last_code[8..13].to_i + 1
+      code = organization + activity + last_code.to_s.rjust(6, '0')
     end
     code
   end
@@ -274,16 +276,18 @@ end
     code = ''
     organization = organization.to_s if organization.is_a? Fixnum
     organization = organization.rjust(4, '0')
-    last_client_code = Client.where("client_code LIKE ?", "#{organization}%").order('client_code').maximum('client_code')
-    if last_client_code.nil?
+    last_code = Client.where("client_code LIKE ?", "#{organization}%").order(:client_code).maximum(:client_code)
+    if last_code.nil?
       code = organization + '0000001'
     else
-      last_client_code = last_client_code[4..10].to_i + 1
-      code = organization + last_client_code.to_s.rjust(7, '0')
+      last_code = last_code[4..10].to_i + 1
+      code = organization + last_code.to_s.rjust(7, '0')
     end
     code
   end
 
+  # Product code
+  
   # Project code
   def pr_next_code(header)
     code = ''

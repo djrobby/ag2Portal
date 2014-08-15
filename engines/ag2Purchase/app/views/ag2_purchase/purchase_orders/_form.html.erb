@@ -113,12 +113,12 @@
         if (!c.length) {
           $.each(data, function(id, option) {
             if (id == 'supplier' && option != "") {
-              $("#purchase_order_supplier_id").append($('<option></option>').val(option.id).html(option.supplier_code.substring(0,4) + "-" + option.supplier_code.substring(4,10) + " " + option.name));
+              $("#purchase_order_supplier_id").append($('<option></option>').val(option.id).html(option.supplier_code.substring(0,4) + "-" + option.supplier_code.substring(4,8) + "-" + option.supplier_code.substring(8,14) + " " + option.name));
             }
           });
         } else {
           $.each(c, function(id, option) {
-            $("#purchase_order_supplier_id").append($('<option></option>').val(option.id).html(option.supplier_code.substring(0,4) + "-" + option.supplier_code.substring(4,10) + " " + option.name));
+            $("#purchase_order_supplier_id").append($('<option></option>').val(option.id).html(option.supplier_code.substring(0,4) + "-" + option.supplier_code.substring(4,8) + "-" + option.supplier_code.substring(8,14) + " " + option.name));
           });
         }
         // Project

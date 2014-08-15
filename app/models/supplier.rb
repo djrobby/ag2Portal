@@ -31,7 +31,7 @@ class Supplier < ActiveRecord::Base
 
   validates :name,            :presence => true
   validates :supplier_code,   :presence => true,
-                              :length => { :is => 10 },
+                              :length => { :is => 14 },
                               :format => { with: /\A\d+\Z/, message: :code_invalid },
                               :uniqueness => { :scope => :organization_id }
   validates :fiscal_id,       :presence => true,
@@ -73,8 +73,8 @@ class Supplier < ActiveRecord::Base
   end
 
   def full_code
-    # Supplier code (Main activity id & sequential number) => AAAA-NNNNNN
-    supplier_code.blank? ? "" : supplier_code[0..3] + '-' + supplier_code[4..9]
+    # Supplier code (Organization id & Main activity & sequential number) => OOOO-AAAA-NNNNNN
+    supplier_code.blank? ? "" : supplier_code[0..3] + '-' + supplier_code[4..7] + '-' + supplier_code[8..13]
   end
 
   #

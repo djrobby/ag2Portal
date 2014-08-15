@@ -44,10 +44,11 @@
         <%= select_tag "product", options_from_collection_for_select(Product.where("id = ?", "#{@product.id}").all, "id", "full_name", @product.id), class: 'x-large-text-field shrinked' %>
         <% end %>
         <!-- Store -->
-        <%= label_tag I18n.t("ag2_products.stocks.index.label_store"), nil, :class => 'form-label' %>
         <% if @store.nil? %>
+        <%= label_tag I18n.t("ag2_products.stocks.index.label_store"), nil, :class => 'form-label' %>
         <%= select_tag "Stores", options_from_collection_for_select(Store.order('name').all, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
         <% else %>
+        <%= label_tag I18n.t("ag2_products.stocks.index.label_store"), nil, :class => 'form-label-under-sel2' %>
         <%= select_tag "store", options_from_collection_for_select(Store.where("id = ?", "#{@store.id}").all, "id", "name", @store.id), class: 'x-large-text-field shrinked' %>
         <% end %>
         <!-- Submit -->

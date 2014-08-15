@@ -1,6 +1,8 @@
 <script>
   var text_field_color;
   var _thisForm = '';
+  var old_value = '';
+  var old_code = '';
 
   $(document).ready(function() {
     // Disable fields if Fiscal Id blank
@@ -84,16 +86,62 @@
 
     // Initialized form variable
     _thisForm = $("#supplier_fiscal_id").closest('form')[0];
+
+    // Disable generate_code_btn if supplier_organization_id blank
+    var supplier = $('#supplier_organization_id').val();
+    if (supplier == "")
+      supplier = "$";
+    if (supplier == "$") {
+      // Empty organization: Hide
+      $('#generate_code_btn').hide();
+    } else {
+      // Organization OK: Show (if not updating)
+      old_value = $('#supplier_organization_id').val();
+      old_code = $('#supplier_supplier_code').val();
+      if ('<%= @breadcrumb %>' == "update") {
+        $('#generate_code_btn').hide();
+      } else {
+        $('#generate_code_btn').show();
+      }
+    }
     
     // Can't change code if editing
     if ('<%= @breadcrumb %>' == "update") {
       $('#supplier_supplier_code').prop('readonly', true);
+      updateTextArea();
     } else {
       $('#supplier_supplier_code').prop('readonly', false);
     }
   });
   
   jQuery(function($) {
+    // when the #supplier_organization_id field changes
+    $("#supplier_organization_id").change(function() {
+      // make a POST call and replace the content
+      var order = $('select#supplier_organization_id :selected').val();
+      if (order == "")
+        order = "0";
+      // Disable generate_code_btn if supplier_organization_id blank
+      if (order == "0") {
+        // Empty organization:: Hide
+        $('#generate_code_btn').hide();
+      } else {
+        // Organization OK: Show (if not updating)
+        if ('<%= @breadcrumb == 'update' %>') {
+          if (old_value == $('#supplier_organization_id').val()) {
+            $('#supplier_supplier_code').val(old_code);
+            $("#supplier_supplier_code").css('color', text_field_color);
+            $('#generate_code_btn').hide();
+          } else {
+            $('#generate_code_btn').show();
+          }
+        } else {
+          $('#generate_code_btn').show();
+        }
+      }
+      return false;
+    });
+
     // when the #supplier_town_id field changes
     $("#supplier_town_id").change(function() {
       // make a POST call and replace the content
@@ -193,7 +241,10 @@
       var activities = $('#checked_activities').val();
       if (activities == "")
         activities = "$";
-      jQuery.getJSON('su_generate_code/' + activities, function(data) {
+      var supplier = $('#supplier_organization_id').val();
+      if (supplier == "")
+        supplier = "$";
+      jQuery.getJSON('su_generate_code/' + activities + '/' + supplier, function(data) {
         $("#supplier_supplier_code").val(data.code);
         if ($("#supplier_supplier_code").val() == "$err") {
           $("#supplier_supplier_code").css('color', 'red');
@@ -351,9 +402,7 @@
   <tbody>
     <tr class="form-tr">
       <td class="form-td-three left-winged"> <%= f.button :submit, :class => 'btn-primary', :id => 'submit_btn' %> </td>
-      <% if @breadcrumb == 'create'%>
       <td class="form-td-three right-winged"><a href="#" id="generate_code_btn" class="btn btn-warning"><%=t 'ag2_purchase.suppliers.generate_code_btn' %></a></td>
-      <% end %>
     </tr>
   </tbody>
 </table>
