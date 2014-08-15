@@ -270,8 +270,16 @@ module Ag2Products
       client = params[:Client]
       project = params[:Project]
       order = params[:Order]
+      # OCO
+      init_oco if !session[:organization]
+      # Initialize select_tags
+      @clients_s = clients_dropdown if @clients_s.nil?
+      @projects_s = projects_dropdown if @projects_s.nil?
+      @work_orders_s = work_orders_dropdown if @work_orders_s.nil?
 
+      current_projects = @projects.blank? ? [0] : current_projects_for_index(@projects)
       @search = DeliveryNote.search do
+        with :project_id, current_projects
         fulltext params[:search]
         if !client.blank?
           with :client_id, client
@@ -288,9 +296,6 @@ module Ag2Products
       @delivery_notes = @search.results
 
       # Initialize select_tags
-      @clients_s = Client.order('name') if @clients_s.nil?
-      @projects_s = Project.order('project_code') if @projects_s.nil?
-      @work_orders_s = WorkOrder.order('order_no') if @work_orders_s.nil?
   
       respond_to do |format|
         format.html # index.html.erb
@@ -405,35 +410,85 @@ module Ag2Products
     
     private
     
+    def current_projects_for_index(_projects)
+      _current_projects = []
+      _projects.each do |i|
+        _current_projects = _current_projects << i.id
+      end
+      _current_projects
+    end
+    
     def project_stores(_project)
       if !_project.company.blank? && !_project.office.blank?
-        _store = Store.where("company_id = ? AND office_id = ?", _project.company.id, _project.office.id).order(:name)
+        _store = Store.where("(company_id = ? AND office_id = ?) OR (company_id IS NULL AND NOT supplier_id IS NULL)", _project.company.id, _project.office.id).order(:name)
       elsif !_project.company.blank? && _project.office.blank?
-        _store = Store.where("company_id = ?", _project.company.id).order(:name)
+        _store = Store.where("(company_id = ?) OR (company_id IS NULL AND NOT supplier_id IS NULL)", _project.company.id).order(:name)
       elsif _project.company.blank? && !_project.office.blank?
-        _store = Store.where("office_id = ?", _project.office.id).order(:name)
+        _store = Store.where("(office_id = ?) OR (company_id IS NULL AND NOT supplier_id IS NULL)", _project.office.id).order(:name)
       else
-        _store = Store.order(:name)
+        _store = stores_dropdown
       end
       _store
     end
 
-    def work_order_charge_account(_model)
-      if _model.work_order.blank? || _model.work_order.charge_account.blank?
-        _charge_account = _model.project.blank? ? ChargeAccount.order(:account_code) : _model.project.charge_accounts.order(:account_code)
+    def work_order_charge_account(_order)
+      if _order.work_order.blank? || _order.work_order.charge_account.blank?
+        _charge_account = _order.project.blank? ? charge_accounts_dropdown : charge_accounts_dropdown_edit(_order.project_id)
       else
-        _charge_account = ChargeAccount.where("id = ?", _model.work_order.charge_account)
+        _charge_account = ChargeAccount.where("id = ?", _order.work_order.charge_account)
       end
       _charge_account
     end
 
-    def work_order_store(_model)
-      if _model.work_order.blank? || _model.work_order.store.blank?
-        _store = _model.project.blank? ? Store.order(:name) : project_stores(_model.project)
+    def work_order_store(_order)
+      if _order.work_order.blank? || _order.work_order.store.blank?
+        _store = _order.project.blank? ? stores_dropdown : project_stores(_order.project)
       else
-        _store = Store.where("id = ?", _model.work_order.store)
+        _store = Store.where("id = ?", _order.work_order.store)
       end
       _store
+    end
+
+    def projects_dropdown
+      if session[:office] != '0'
+        _projects = Project.where(office_id: session[:office].to_i).order(:project_code)
+      elsif session[:company] != '0'
+        _projects = Project.where(company_id: session[:company].to_i).order(:project_code)
+      else
+        _projects = session[:organization] != '0' ? Project.where(organization_id: session[:organization].to_i).order(:project_code) : Project.order(:project_code)
+      end
+    end
+
+    def projects_dropdown_edit(_project)
+      _projects = projects_dropdown
+      if _projects.blank?
+        _projects = Project.where(id: _project)
+      end
+      _projects
+    end
+
+    def clients_dropdown
+      _clients = session[:organization] != '0' ? Client.where(organization_id: session[:organization].to_i).order(:client_code) : Client.order(:client_code)
+    end
+
+    def charge_accounts_dropdown
+      _accounts = session[:organization] != '0' ? ChargeAccount.where(organization_id: session[:organization].to_i).order(:account_code) : ChargeAccount.order(:account_code)
+    end
+
+    def charge_accounts_dropdown_edit(_project)
+      _accounts = ChargeAccount.where('project_id = ? OR project_id IS NULL', _project).order(:account_code)
+    end
+
+    def stores_dropdown
+      _stores = session[:organization] != '0' ? Store.where(organization_id: session[:organization].to_i).order(:name) : Store.order(:name)
+    end
+
+    def work_orders_dropdown
+      _orders = session[:organization] != '0' ? WorkOrder.where(organization_id: session[:organization].to_i).order(:order_no) : WorkOrder.order(:order_no)
+    end
+
+    def payment_methods_dropdown
+      _methods = session[:organization] != '0' ? PaymentMethod.where(organization_id: session[:organization].to_i).order(:description) : PaymentMethod.order(:description)
     end
     
     # Keeps filter state
