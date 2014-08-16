@@ -11,28 +11,11 @@ module Ag2Products
     # Update product code at view (generate_code_btn)
     def update_code_textfield
       family = params[:id]
-      code = ''
 
-      # Builds code, if possible
-      if family == '$'
-        code = '$err'
-      else
-        family = family.to_s if family.is_a? Fixnum
-        family = family.rjust(4, '0')
-        last_product_code = Product.where("product_code LIKE ?", "#{family}%").order('product_code').maximum('product_code')
-        if last_product_code.nil?
-          code = family + '000001'
-        else
-          last_product_code = last_product_code[4..9].to_i + 1
-          code = family + last_product_code.to_s.rjust(6, '0')
-        end
-      end
+      # Builds no, if possible
+      code = family == '$' ? '$err' : pt_next_code(family)
       @json_data = { "code" => code }
-
-      respond_to do |format|
-        format.html # update_code_textfield.html.erb does not exist! JSON only
-        format.json { render json: @json_data }
-      end
+      render json: @json_data
     end
 
     # Format amount properly

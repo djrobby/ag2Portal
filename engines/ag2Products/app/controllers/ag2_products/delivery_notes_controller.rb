@@ -14,7 +14,24 @@ module Ag2Products
                                                :dn_update_offer_select_from_client,
                                                :dn_format_number,
                                                :dn_current_stock,
+                                               :dn_update_project_textfields_from_organization,
                                                :dn_generate_no]
+    # Update sale offer select at view from client select
+    def dn_update_offer_select_from_client
+      client = params[:client]
+      if client != '0'
+        @client = Client.find(client)
+        @offers = @client.blank? ? offers_dropdown : @client.sale_offers.order(:client_id, :offer_no, :id)
+      else
+        @offers = offers_dropdown
+      end
+
+      respond_to do |format|
+        format.html # po_update_offer_textfield_from_supplier.html.erb does not exist! JSON only
+        format.json { render json: @offers }
+      end
+    end
+
     # Calculate and format totals properly
     def dn_totals
       qty = params[:qty].to_f / 10000
@@ -178,14 +195,14 @@ module Ag2Products
         @store = @order.store
         store_id = @store.id rescue 0
         if @charge_account.blank?
-          @charge_account = @project.blank? ? ChargeAccount.order(:account_code) : @project.charge_accounts.order(:account_code)
+          @charge_account = @project.blank? ? charge_accounts_dropdown : @project.charge_accounts.order(:account_code)
         end
         if @store.blank?
           @store = project_stores(@project)
         end
       else
-        @charge_account = ChargeAccount.order(:account_code)
-        @store = Store.order(:name)
+        @charge_account = charge_accounts_dropdown
+        @store = stores_dropdown
       end
       @json_data = { "charge_account" => @charge_account, "store" => @store,
                      "charge_account_id" => charge_account_id, "store_id" => store_id }
@@ -197,32 +214,16 @@ module Ag2Products
       project = params[:order]
       if project != '0'
         @project = Project.find(project)
-        @work_order = @project.blank? ? WorkOrder.order(:order_no) : @project.work_orders.order(:order_no)
-        @charge_account = @project.blank? ? ChargeAccount.order(:account_code) : @project.charge_accounts.order(:account_code)
+        @work_order = @project.blank? ? work_orders_dropdown : @project.work_orders.order(:order_no)
+        @charge_account = @project.blank? ? charge_accounts_dropdown : @project.charge_accounts.order(:account_code)
         @store = project_stores(@project)
       else
-        @work_order = WorkOrder.order(:order_no)
-        @charge_account = ChargeAccount.order(:account_code)
-        @store = Store.order(:name)
+        @work_order = work_orders_dropdown
+        @charge_account = charge_accounts_dropdown
+        @store = stores_dropdown
       end
       @json_data = { "work_order" => @work_order, "charge_account" => @charge_account, "store" => @store }
       render json: @json_data
-    end
-
-    # Update sale offer select at view from client select
-    def dn_update_offer_select_from_client
-      client = params[:client]
-      if client != '0'
-        @client = Client.find(client)
-        @offers = @client.blank? ? SaleOffer.order(:client_id, :offer_no, :id) : @client.sale_offers.order(:client_id, :offer_no, :id)
-      else
-        @offers = SaleOffer.order(:client_id, :offer_no, :id)
-      end
-
-      respond_to do |format|
-        format.html # dn_update_offer_select_from_client.html.erb does not exist! JSON only
-        format.json { render json: @offers }
-      end
     end
 
     # Format numbers properly
@@ -245,6 +246,30 @@ module Ag2Products
       current_stock = number_with_precision(current_stock.round(4), precision: 4)
       # Setup JSON
       @json_data = { "stock" => current_stock.to_s }
+      render json: @json_data
+    end
+
+    # Update project text and other fields at view from organization select
+    def dn_update_project_textfields_from_organization
+      organization = params[:org]
+      if organization != '0'
+        @organization = Organization.find(organization)
+        @clients = @organization.blank? ? clients_dropdown : @organization.clients.order(:client_code)
+        @projects = @organization.blank? ? projects_dropdown : @organization.projects.order(:project_code)
+        @work_orders = @organization.blank? ? work_orders_dropdown : @organization.work_orders.order(:order_no)
+        @charge_accounts = @organization.blank? ? charge_accounts_dropdown : @organization.charge_accounts.order(:account_code)
+        @stores = @organization.blank? ? stores_dropdown : @organization.stores.order(:name)
+        @payment_methods = @organization.blank? ? payment_methods_dropdown : @organization.payment_methods.order(:description)
+      else
+        @clients = clients_dropdown
+        @projects = projects_dropdown
+        @work_orders = work_orders_dropdown
+        @charge_accounts = charge_accounts_dropdown
+        @stores = stores_dropdown
+        @payment_methods = payment_methods_dropdown
+      end
+      @json_data = { "client" => @clients, "project" => @projects, "work_order" => @work_orders,
+                     "charge_account" => @charge_accounts, "store" => @stores, "payment_method" => @payment_methods }
       render json: @json_data
     end
 
@@ -295,8 +320,6 @@ module Ag2Products
       end
       @delivery_notes = @search.results
 
-      # Initialize select_tags
-  
       respond_to do |format|
         format.html # index.html.erb
         format.json { render json: @delivery_notes }
@@ -321,11 +344,13 @@ module Ag2Products
     def new
       @breadcrumb = 'create'
       @delivery_note = DeliveryNote.new
-      @offers = SaleOffer.order(:client_id, :offer_no, :id)
-      @projects = Project.order(:project_code)
-      @work_orders = WorkOrder.order(:order_no)
-      @charge_accounts = ChargeAccount.order(:account_code)
-      @stores = Store.order(:name)
+      @offers = offers_dropdown
+      @projects = projects_dropdown
+      @work_orders = work_orders_dropdown
+      @charge_accounts = charge_accounts_dropdown
+      @stores = stores_dropdown
+      @clients = clients_dropdown
+      @payment_methods = payment_methods_dropdown
   
       respond_to do |format|
         format.html # new.html.erb
@@ -337,11 +362,13 @@ module Ag2Products
     def edit
       @breadcrumb = 'update'
       @delivery_note = DeliveryNote.find(params[:id])
-      @offers = @delivery_note.client.blank? ? SaleOffer.order(:client_id, :offer_no, :id) : @delivery_note.client.sale_offers.order(:client_id, :offer_no, :id)
-      @projects = Project.order(:project_code)
-      @work_orders = @delivery_note.project.blank? ? WorkOrder.order(:order_no) : @delivery_note.project.work_orders.order(:order_no)
+      @offers = @delivery_note.client.blank? ? offers_dropdown : @delivery_note.client.sale_offers.order(:client_id, :offer_no, :id)
+      @projects = projects_dropdown_edit(@delivery_note.project)
+      @work_orders = @delivery_note.project.blank? ? work_orders_dropdown : @delivery_note.project.work_orders.order(:order_no)
       @charge_accounts = work_order_charge_account(@delivery_note)
       @stores = work_order_store(@delivery_note)
+      @clients = clients_dropdown
+      @payment_methods = payment_methods_dropdown
     end
   
     # POST /delivery_notes
@@ -356,11 +383,13 @@ module Ag2Products
           format.html { redirect_to @delivery_note, notice: crud_notice('created', @delivery_note) }
           format.json { render json: @delivery_note, status: :created, location: @delivery_note }
         else
-          @offers = SaleOffer.order(:client_id, :offer_no, :id)
-          @work_orders = WorkOrder.order(:order_no)
-          @projects = Project.order(:project_code)
-          @charge_accounts = ChargeAccount.order(:account_code)
-          @stores = Store.order(:name)
+          @offers = offers_dropdown
+          @projects = projects_dropdown
+          @work_orders = work_orders_dropdown
+          @charge_accounts = charge_accounts_dropdown
+          @stores = stores_dropdown
+          @clients = clients_dropdown
+          @payment_methods = payment_methods_dropdown
           format.html { render action: "new" }
           format.json { render json: @delivery_note.errors, status: :unprocessable_entity }
         end
@@ -380,11 +409,13 @@ module Ag2Products
                         notice: (crud_notice('updated', @delivery_note) + "#{undo_link(@delivery_note)}").html_safe }
           format.json { head :no_content }
         else
-          @offers = @delivery_note.client.blank? ? SaleOffer.order(:client_id, :offer_no, :id) : @delivery_note.client.sale_offers.order(:client_id, :offer_no, :id)
-          @projects = Project.order(:project_code)
-          @work_orders = @delivery_note.project.blank? ? WorkOrder.order(:order_no) : @delivery_note.project.work_orders.order(:order_no)
+          @offers = @delivery_note.client.blank? ? offers_dropdown : @delivery_note.client.sale_offers.order(:client_id, :offer_no, :id)
+          @projects = projects_dropdown_edit(@purchase_order.project)
+          @work_orders = @delivery_note.project.blank? ? work_orders_dropdown : @delivery_note.project.work_orders.order(:order_no)
           @charge_accounts = work_order_charge_account(@delivery_note)
           @stores = work_order_store(@delivery_note)
+          @clients = clients_dropdown
+          @payment_methods = payment_methods_dropdown
           format.html { render action: "edit" }
           format.json { render json: @delivery_note.errors, status: :unprocessable_entity }
         end
@@ -471,6 +502,10 @@ module Ag2Products
       _clients = session[:organization] != '0' ? Client.where(organization_id: session[:organization].to_i).order(:client_code) : Client.order(:client_code)
     end
 
+    def offers_dropdown
+      _offers = session[:organization] != '0' ? SaleOffer.where(organization_id: session[:organization].to_i).order(:client_id, :offer_no, :id) : SaleOffer.order(:client_id, :offer_no, :id)
+    end
+
     def charge_accounts_dropdown
       _accounts = session[:organization] != '0' ? ChargeAccount.where(organization_id: session[:organization].to_i).order(:account_code) : ChargeAccount.order(:account_code)
     end
@@ -499,7 +534,7 @@ module Ag2Products
       elsif session[:search]
         params[:search] = session[:search]
       end
-      # supplier
+      # client
       if params[:Client]
         session[:Client] = params[:Client]
       elsif session[:Client]

@@ -287,6 +287,19 @@ end
   end
 
   # Product code
+  def pt_next_code(family)
+    code = ''
+    family = family.to_s if family.is_a? Fixnum
+    family = family.rjust(4, '0')
+    last_code = Product.where("product_code LIKE ?", "#{family}%").order(:product_code).maximum(:product_code)
+    if last_code.nil?
+      code = family + '000001'
+    else
+      last_code = last_code[4..9].to_i + 1
+      code = family + last_code.to_s.rjust(6, '0')
+    end
+    code
+  end
   
   # Project code
   def pr_next_code(header)

@@ -60,9 +60,9 @@ Ag2Products::Engine.routes.draw do
     match 'delivery_notes/dn_current_stock/:product/:store', :controller => 'delivery_notes', :action => 'dn_current_stock'
     match 'dn_current_stock/:product/:store', :controller => 'delivery_notes', :action => 'dn_current_stock'
     match 'delivery_notes/:id/dn_current_stock/:product/:store', :controller => 'delivery_notes', :action => 'dn_current_stock'
-    match 'delivery_notes/dn_update_no_textfield/:id', :controller => 'delivery_notes', :action => 'dn_update_no_textfield'
-    match 'dn_update_no_textfield/:id', :controller => 'delivery_notes', :action => 'dn_update_no_textfield'
-    match 'delivery_notes/:id/dn_update_no_textfield/:id', :controller => 'delivery_notes', :action => 'dn_update_no_textfield'
+    match 'delivery_notes/dn_update_project_textfields_from_organization/:org', :controller => 'delivery_notes', :action => 'dn_update_project_textfields_from_organization'
+    match 'dn_update_project_textfields_from_organization/:org', :controller => 'delivery_notes', :action => 'dn_update_project_textfields_from_organization'
+    match 'delivery_notes/:id/dn_update_project_textfields_from_organization/:org', :controller => 'delivery_notes', :action => 'dn_update_project_textfields_from_organization'
     match 'delivery_notes/dn_generate_no/:org', :controller => 'delivery_notes', :action => 'dn_generate_no'
     match 'dn_generate_no/:org', :controller => 'delivery_notes', :action => 'dn_generate_no'
     match 'delivery_notes/:id/dn_generate_no/:org', :controller => 'delivery_notes', :action => 'dn_generate_no'
@@ -94,6 +94,9 @@ Ag2Products::Engine.routes.draw do
     match 'receipt_notes/rn_current_stock/:product/:store', :controller => 'receipt_notes', :action => 'rn_current_stock'
     match 'rn_current_stock/:product/:store', :controller => 'receipt_notes', :action => 'rn_current_stock'
     match 'receipt_notes/:id/rn_current_stock/:product/:store', :controller => 'receipt_notes', :action => 'rn_current_stock'
+    match 'receipt_notes/rn_update_project_textfields_from_organization/:org', :controller => 'receipt_notes', :action => 'rn_update_project_textfields_from_organization'
+    match 'rn_update_project_textfields_from_organization/:org', :controller => 'receipt_notes', :action => 'rn_update_project_textfields_from_organization'
+    match 'receipt_notes/:id/rn_update_project_textfields_from_organization/:org', :controller => 'receipt_notes', :action => 'rn_update_project_textfields_from_organization'
 
     # Resources
     resources :products

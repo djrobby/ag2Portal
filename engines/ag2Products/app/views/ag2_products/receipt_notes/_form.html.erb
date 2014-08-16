@@ -1,4 +1,5 @@
 <script>
+  var text_field_color;
   var _thisForm = '';
   
   $(document).ready(function() {
@@ -15,6 +16,9 @@
     if ($('#receipt_note_receipt_date').val() == "") {
       $('#receipt_note_receipt_date').datepicker('setValue', es_date(new Date()));
     }
+
+    // Save default text color
+    text_field_color = $("#receipt_note_order_no").css('color')
     
     // Initialized form variable
     _thisForm = $("#receipt_note_receipt_no").closest('form')[0];
@@ -49,6 +53,117 @@
         $('#submit_btn').show();
         $('.fnt-new-btn').show();
       }
+    });
+
+    // when the #receipt_note_organization_id field changes
+    $("#receipt_note_organization_id").change(function() {
+      // make a POST call and replace the content
+      var order = $('select#receipt_note_organization_id :selected').val();
+      if (order == "")
+        order = "0";
+      jQuery.getJSON('rn_update_project_textfields_from_organization/' + order, function(data) {
+        var c = data.supplier;
+        var p = data.project;
+        var w = data.work_order;
+        var h = data.charge_account
+        var s = data.store
+        var m = data.payment_method
+        // Supplier
+        $("#receipt_note_supplier_id").html("");
+        $("#receipt_note_supplier_id").select2("val", "");
+        $("#receipt_note_supplier_id").append($('<option></option>').val("").html(""));
+        if (!c.length) {
+          $.each(data, function(id, option) {
+            if (id == 'supplier' && option != "") {
+              $("#receipt_note_supplier_id").append($('<option></option>').val(option.id).html(option.supplier_code.substring(0,4) + "-" + option.supplier_code.substring(4,8) + "-" + option.supplier_code.substring(8,14) + " " + option.name));
+            }
+          });
+        } else {
+          $.each(c, function(id, option) {
+            $("#receipt_note_supplier_id").append($('<option></option>').val(option.id).html(option.supplier_code.substring(0,4) + "-" + option.supplier_code.substring(4,8) + "-" + option.supplier_code.substring(8,14) + " " + option.name));
+          });
+        }
+        // Project
+        $("#receipt_note_project_id").html("");
+        $("#receipt_note_project_id").select2("val", "");
+        $("#receipt_note_project_id").append($('<option></option>').val("").html(""));
+        if (!p.length) {
+          $.each(data, function(id, option) {
+            if (id == 'project' && option != "") {
+              $("#receipt_note_project_id").append($('<option></option>').val(option.id).html(option.project_code.substring(0,4) + "-" + option.project_code.substring(4,10) + " " + option.name));
+            }
+          });
+        } else {
+          $.each(p, function(id, option) {
+            $("#receipt_note_project_id").append($('<option></option>').val(option.id).html(option.project_code.substring(0,4) + "-" + option.project_code.substring(4,10) + " " + option.name));
+          });
+        }
+        // Work order
+        $("#receipt_note_work_order_id").html("");
+        $("#receipt_note_work_order_id").select2("val", "");
+        $("#receipt_note_work_order_id").append($('<option></option>').val("").html(""));
+        if (!w.length) {
+          $.each(data, function(id, option) {
+            if (id == 'type' && option != "") {
+              $("#receipt_note_work_order_id").append($('<option></option>').val(option.id).html(option.order_no.substring(0,10) + "-" + option.order_no.substring(10,14) + "-" + option.order_no.substring(14,20) + " " + option.description.substring(0,41)));
+            }
+          });
+        } else {
+          $.each(w, function(id, option) {
+            $("#receipt_note_work_order_id").append($('<option></option>').val(option.id).html(option.order_no.substring(0,10) + "-" + option.order_no.substring(10,14) + "-" + option.order_no.substring(14,20) + " " + option.description.substring(0,41)));
+          });
+        }
+        // Charge account
+        $("#receipt_note_charge_account_id").html("");
+        $("#receipt_note_charge_account_id").select2("val", "");
+        $("#receipt_note_charge_account_id").append($('<option></option>').val("").html(""));
+        if (!h.length) {
+          $.each(data, function(id, option) {
+            if (id == 'charge_account' && option != "") {
+              $("#receipt_note_charge_account_id").append($('<option></option>').val(option.id).html(option.account_code.substring(0,4) + "-" + option.account_code.substring(4,11) + " " + option.name));
+            }
+          });
+        } else {
+          $.each(h, function(id, option) {
+            $("#receipt_note_charge_account_id").append($('<option></option>').val(option.id).html(option.account_code.substring(0,4) + "-" + option.account_code.substring(4,11) + " " + option.name));
+          });
+        }
+        // Store
+        $("#receipt_note_store_id").html("");
+        $("#receipt_note_store_id").select2("val", "");
+        $("#receipt_note_store_id").append($('<option></option>').val("").html(""));
+        if (!s.length) {
+          $.each(data, function(id, option) {
+            if (id == 'store' && option != "") {
+              $("#receipt_note_store_id").append($('<option></option>').val(option.id).html(option.name));
+            }
+          });
+        } else {
+          $.each(s, function(id, option) {
+            $("#receipt_note_store_id").append($('<option></option>').val(option.id).html(option.name));
+          });
+        }
+        // Payment method
+        $("#receipt_note_payment_method_id").html("");
+        $("#receipt_note_payment_method_id").val("");
+        $("#receipt_note_payment_method_id").append($('<option></option>').val("").html(""));
+        if (!m.length) {
+          $.each(data, function(id, option) {
+            if (id == 'payment_method' && option != "") {
+              $("#receipt_note_payment_method_id").append($('<option></option>').val(option.id).html(option.description));
+            }
+          });
+        } else {
+          $.each(m, function(id, option) {
+            $("#receipt_note_payment_method_id").append($('<option></option>').val(option.id).html(option.description));
+          });
+        }
+      });
+      if (order == "0") {
+        $("#receipt_note_project_id").val(0);
+        //$("#receipt_note_project_id").trigger("change");
+      }
+      return false;
     });
 
     // when the #receipt_note_supplier_id field changes
@@ -100,14 +215,15 @@
         if (!c.length) {
           $.each(data, function(id, option) {
             if (id == 'charge_account' && option != "") {
-              $("#receipt_note_charge_account_id").append($('<option></option>').val(option.id).html(option.account_code + " " + option.name));
+              $("#receipt_note_charge_account_id").append($('<option></option>').val(option.id).html(option.account_code.substring(0,4) + "-" + option.account_code.substring(4,11) + " " + option.name));
             }
           });
         } else {
           $.each(c, function(id, option) {
-            $("#receipt_note_charge_account_id").append($('<option></option>').val(option.id).html(option.account_code + " " + option.name));
+            $("#receipt_note_charge_account_id").append($('<option></option>').val(option.id).html(option.account_code.substring(0,4) + "-" + option.account_code.substring(4,11) + " " + option.name));
           });
         }
+        // Store
         $("#receipt_note_store_id").html("");
         $("#receipt_note_store_id").select2("val", "");
         $("#receipt_note_store_id").append($('<option></option>').val("").html(""));
@@ -144,12 +260,12 @@
         if (!c.length) {
           $.each(data, function(id, option) {
             if (id == 'charge_account' && option != "") {
-              $("#receipt_note_charge_account_id").append($('<option></option>').val(option.id).html(option.account_code + " " + option.name));
+              $("#receipt_note_charge_account_id").append($('<option></option>').val(option.id).html(option.account_code.substring(0,4) + "-" + option.account_code.substring(4,11) + " " + option.name));
             }
           });
         } else {
           $.each(c, function(id, option) {
-            $("#receipt_note_charge_account_id").append($('<option></option>').val(option.id).html(option.account_code + " " + option.name));
+            $("#receipt_note_charge_account_id").append($('<option></option>').val(option.id).html(option.account_code.substring(0,4) + "-" + option.account_code.substring(4,11) + " " + option.name));
           });
         }
         if (c_id != 0) $("#receipt_note_charge_account_id").select2("val", c_id);
@@ -235,10 +351,17 @@
   <label class="multi-field-label-two"> <%= f.input :receipt_no, autofocus: true, input_html: { class: 'mid-text-field' }, label_html: { class: 'form-label' } %> </label>
   <label class="multi-field-label-two"> <%= f.input :receipt_date, start_year: Time.now.year - 100, end_year: Time.now.year + 100, as: :string, input_html: { value: (f.object.receipt_date.strftime("%d/%m/%Y") if f.object.receipt_date), class: 'mid-text-field date_picker' }, label_html: { class: 'form-label' } %> </label>
 </div>
-<%= f.association :supplier, collection: Supplier.all(order: 'name'), input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %>
+<% if session[:organization] != '0' %>
+<%= f.association :organization, collection: Organization.where("id = ?", "#{session[:organization]}").all, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' }, include_blank: false %>
+<% elsif current_user.organizations.count > 0 %>
+<%= f.association :organization, collection: current_user.organizations.order('name'), input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' }, include_blank: false %>
+<% else %>
+<%= f.association :organization, collection: Organization.order('name'), input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %>
+<% end %>
+<%= f.association :supplier, collection: @suppliers, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %>
 <%= f.association :purchase_order, collection: @orders, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %>
 <div>
-  <label class="multi-field-label-two"> <%= f.association :payment_method, collection: PaymentMethod.all(order: 'description'), input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label-under-sel2' } %> </label>
+  <label class="multi-field-label-two"> <%= f.association :payment_method, collection: @payment_methods, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label-under-sel2' } %> </label>
 </div>
 <div>
   <label class="multi-field-label-two"> <%= f.association :work_order, collection: @work_orders, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>

@@ -126,11 +126,7 @@ module Ag2Purchase
       end
       @json_data = { "charge_account" => @charge_account, "store" => @store,
                      "charge_account_id" => charge_account_id, "store_id" => store_id }
-
-      respond_to do |format|
-        format.html # po_update_charge_account_from_order.html.erb does not exist! JSON only
-        format.json { render json: @json_data }
-      end
+      render json: @json_data
     end
 
     # Update work order, charge account and store text fields at view from project select
@@ -147,11 +143,7 @@ module Ag2Purchase
         @store = stores_dropdown
       end
       @json_data = { "work_order" => @work_order, "charge_account" => @charge_account, "store" => @store }
-
-      respond_to do |format|
-        format.html # po_update_charge_account_from_project.html.erb does not exist! JSON only
-        format.json { render json: @json_data }
-      end
+      render json: @json_data
     end
 
     # Update amount and tax text fields at view (quantity or price changed)
@@ -339,6 +331,7 @@ module Ag2Purchase
       @charge_accounts = charge_accounts_dropdown
       @stores = stores_dropdown
       @suppliers = suppliers_dropdown
+      @payment_methods = payment_methods_dropdown
       #@purchase_order.purchase_order_items.build
   
       respond_to do |format|
@@ -357,6 +350,7 @@ module Ag2Purchase
       @charge_accounts = work_order_charge_account(@purchase_order)
       @stores = work_order_store(@purchase_order)
       @suppliers = suppliers_dropdown
+      @payment_methods = payment_methods_dropdown
       #@work_orders = @purchase_order.work_order.blank? ? WorkOrder.order(:order_no) : WorkOrder.where('id = ?', @purchase_order.work_order)
       #@projects = @purchase_order.project.blank? ? Project.order(:project_code) : Project.where('id = ?', @purchase_order.project)
       #@charge_accounts = @purchase_order.charge_account.blank? ? ChargeAccount.order(:account_code) : ChargeAccount.where('id = ?', @purchase_order.charge_account)
@@ -382,6 +376,7 @@ module Ag2Purchase
           @charge_accounts = charge_accounts_dropdown
           @stores = stores_dropdown
           @suppliers = suppliers_dropdown
+          @payment_methods = payment_methods_dropdown
           format.html { render action: "new" }
           format.json { render json: @purchase_order.errors, status: :unprocessable_entity }
         end
@@ -407,6 +402,7 @@ module Ag2Purchase
           @charge_accounts = work_order_charge_account(@purchase_order)
           @stores = work_order_store(@purchase_order)
           @suppliers = suppliers_dropdown
+          @payment_methods = payment_methods_dropdown
           format.html { render action: "edit" }
           format.json { render json: @purchase_order.errors, status: :unprocessable_entity }
         end
@@ -525,17 +521,17 @@ module Ag2Purchase
       elsif session[:search]
         params[:search] = session[:search]
       end
-      # project
-      if params[:Project]
-        session[:Project] = params[:Project]
-      elsif session[:Project]
-        params[:Project] = session[:Project]
-      end
       # supplier
       if params[:Supplier]
         session[:Supplier] = params[:Supplier]
       elsif session[:Supplier]
         params[:Supplier] = session[:Supplier]
+      end
+      # project
+      if params[:Project]
+        session[:Project] = params[:Project]
+      elsif session[:Project]
+        params[:Project] = session[:Project]
       end
       # status
       if params[:Status]
