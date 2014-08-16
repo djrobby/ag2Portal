@@ -4,7 +4,8 @@ module Ag2HelpDesk
   class TicketsController < ApplicationController
     before_filter :authenticate_user!
     load_and_authorize_resource
-    skip_load_and_authorize_resource :only => [:update_office_textfield_from_created_by,
+    skip_load_and_authorize_resource :only => [:ti_update_office_textfield_from_created_by,
+                                               :ti_update_office_textfield_from_organization,
                                                :popup_new,
                                                :ti_update_attachment]
     # Public attachment for drag&drop
@@ -27,23 +28,36 @@ module Ag2HelpDesk
     end
     
     # Update office text field at view from created_by select
-    def update_office_textfield_from_created_by
+    def ti_update_office_textfield_from_created_by
       office = 0
-
-      user = User.find(params[:id])
+      user = User.find(params[:cb])
       if !user.nil?
         worker = Worker.find_by_user_id(user)
         if !worker.nil?
-        office = worker.office_id
+          office = worker.worker_items.first.office_id if worker.worker_count > 0
         end
       end
-
       @json_data = { "office" => office }
-
-      respond_to do |format|
-        format.html # update_office_textfield_from_created_by.html.erb does not exist! JSON only
-        format.json { render json: @json_data }
+      render json: @json_data
+    end
+    
+    # Update office text field at view from organization select
+    def ti_update_office_textfield_from_organization
+      organization = params[:org]
+      if organization != '0'
+        @organization = Organization.find(organization)
+        @offices = @organization.blank? ? offices_dropdown : Office.joins(:company).where(companies: { organization_id: organization }).order(:name)
+        @technicians = @organization.blank? ? technicians_dropdown : @organization.technicians.order(:name)
+      else
+        @offices = offices_dropdown
+        @technicians = technicians_dropdown
       end
+      @offices_dropdown = []
+      @offices.each do |i|
+        @offices_dropdown = @offices_dropdown << [i.id, i.name, i.company.name] 
+      end
+      @json_data = { "offices" => @offices_dropdown, "technicians" => @technicians }
+      render json: @json_data
     end
 
     #
@@ -62,9 +76,14 @@ module Ag2HelpDesk
       priority = params[:Priority]
       status = params[:Status]
       technician = params[:Technician]
+      # OCO
+      init_oco if !session[:organization]
 
       @search = Ticket.search do
         fulltext params[:search]
+        if session[:organization] != '0'
+          with :organization_id, session[:organization]
+        end
         if !id.blank?
           with :id, id
         end
@@ -129,6 +148,8 @@ module Ag2HelpDesk
       @ticket = Ticket.new
       $attachment = Attachment.new
       destroy_attachment
+      @offices = offices_dropdown
+      @technicians = technicians_dropdown
 
       respond_to do |format|
         format.html # new.html.erb
@@ -142,6 +163,8 @@ module Ag2HelpDesk
       @ticket = Ticket.find(params[:id])
       $attachment = Attachment.new
       destroy_attachment
+      @offices = @ticket.organization.blank? ? offices_dropdown : offices_dropdown_edit(@ticket.organization_id)
+      @technicians = @ticket.organization.blank? ? technicians_dropdown : @ticket.organization.technicians.order(:name)
     end
 
     # POST /tickets
@@ -167,6 +190,8 @@ module Ag2HelpDesk
         else
           $attachment.destroy
           $attachment = Attachment.new
+          @offices = offices_dropdown
+          @technicians = technicians_dropdown
           format.html { render action: "new" }
           format.json { render json: @ticket.errors, status: :unprocessable_entity }
         end
@@ -196,6 +221,8 @@ module Ag2HelpDesk
         else
           $attachment.destroy
           $attachment = Attachment.new
+          @offices = @ticket.organization.blank? ? offices_dropdown : offices_dropdown_edit(@ticket.organization_id)
+          @technicians = @ticket.organization.blank? ? technicians_dropdown : @ticket.organization.technicians.order(:name)
           format.html { render action: "edit" }
           format.json { render json: @ticket.errors, status: :unprocessable_entity }
         end
@@ -224,6 +251,7 @@ module Ag2HelpDesk
       @ticket.source_ip = request.remote_ip
       @ticket.hd_email = mail_to
       @ticket.office_id = from_office
+      @ticket.organization_id = from_organization
 
       respond_to do |format|
         if @ticket.save
@@ -270,6 +298,24 @@ module Ag2HelpDesk
       end
       _office
     end
+
+    def from_organization
+      _organization = 0
+      begin
+        if session[:organization] != '0'
+          organization = Organization.find(session[:organization])
+          if !organization.nil?
+            _organization = organization.id
+          end
+        end
+        if _organization == 0
+          _organization = default_organization
+        end
+      rescue => e
+          _office = default_organization
+      end
+      _organization
+    end
     
     def default_office
       _office = 0
@@ -277,12 +323,52 @@ module Ag2HelpDesk
       if !_user.nil?
         _worker = Worker.find_by_user_id(_user)
         if !_worker.nil?
-          _office = _worker.worker_items.first.office_id if _worker.worker_items.count > 0
+          _office = _worker.worker_items.first.office_id if _worker.worker_count > 0
         end
       end
       _office
     end
 
+    def default_organization
+      _organization = 0
+      _user = User.find(current_user)
+      if !_user.nil?
+        _worker = Worker.find_by_user_id(_user)
+        if !_worker.nil?
+          _organization = _worker.organization_id
+        end
+      end
+      _organization
+    end
+
+    def offices_dropdown
+      if session[:office] != '0'
+        _offices = Office.where(id: session[:office].to_i)
+      elsif session[:company] != '0'
+        _offices = offices_by_company(session[:company].to_i)
+      else
+        _offices = session[:organization] != '0' ? Office.joins(:company).where(companies: { organization_id: session[:organization].to_i }).order(:name) : Office.order(:name)
+      end
+    end
+
+    def offices_dropdown_edit(_organization)
+      if session[:office] != '0'
+        _offices = Office.where(id: session[:office].to_i)
+      elsif session[:company] != '0'
+        _offices = offices_by_company(session[:company].to_i)
+      else
+        _offices = Office.joins(:company).where(companies: { organization_id: _organization }).order(:name)
+      end
+    end
+
+    def offices_by_company(_company)
+      _offices = Office.where(company_id: _company).order(:name)      
+    end
+    
+    def technicians_dropdown
+      _technicians = session[:organization] != '0' ? Technician.where(organization_id: session[:organization].to_i).order(:name) : Technician.order(:name)  
+    end
+    
     # Keeps filter state
     def manage_filter_state
       # search

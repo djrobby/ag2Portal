@@ -9,7 +9,12 @@ module Ag2HelpDesk
     # GET /technicians
     # GET /technicians.json
     def index
-      @technicians = Technician.paginate(:page => params[:page], :per_page => per_page).order(sort_column + ' ' + sort_direction)
+      init_oco if !session[:organization]
+      if session[:organization] != '0'
+        @technicians = Technician.where(organization_id: session[:organization]).paginate(:page => params[:page], :per_page => per_page).order(sort_column + ' ' + sort_direction)
+      else
+        @technicians = Technician.paginate(:page => params[:page], :per_page => per_page).order(sort_column + ' ' + sort_direction)
+      end
 
       respond_to do |format|
         format.html # index.html.erb

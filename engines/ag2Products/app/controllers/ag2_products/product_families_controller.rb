@@ -27,7 +27,12 @@ module Ag2Products
     # GET /product_families
     # GET /product_families.json
     def index
-      @product_families = ProductFamily.paginate(:page => params[:page], :per_page => per_page).order(sort_column + ' ' + sort_direction)
+      init_oco if !session[:organization]
+      if session[:organization] != '0'
+        @product_families = ProductFamily.where(organization_id: session[:organization]).paginate(:page => params[:page], :per_page => per_page).order(sort_column + ' ' + sort_direction)
+      else
+        @product_families = ProductFamily.paginate(:page => params[:page], :per_page => per_page).order(sort_column + ' ' + sort_direction)
+      end
   
       respond_to do |format|
         format.html # index.html.erb

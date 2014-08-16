@@ -6,7 +6,35 @@ en:
           attributes:
             product_code:
               code_invalid: "Invalid code"
+        product_family:
+          attributes:
+            family_code:
+              code_invalid: "Invalid code (must be numeric)"
         supplier:
           attributes:
-            product_code:
+            supplier_code:
               code_invalid: "Invalid code"
+        client:
+          attributes:
+            client_code:
+              code_invalid: "Invalid code"
+        project:
+          attributes:
+            project_code:
+              code_invalid: "Invalid code"
+        delivery_note:
+          attributes:
+            delivery_no:
+              code_invalid: "Invalid no."
+        offer_request:
+          attributes:
+            request_no:
+              code_invalid: "Invalid no."
+        purchase_order:
+          attributes:
+            order_no:
+              code_invalid: "Invalid no."
+        work_order:
+          attributes:
+            order_no:
+              code_invalid: "Invalid no."

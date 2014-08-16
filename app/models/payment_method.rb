@@ -12,7 +12,7 @@ class PaymentMethod < ActiveRecord::Base
   has_paper_trail
 
   validates :description,   :presence => true
-  validates :flow,          :numericality => { :only_integer => true, :greater_than => 0, :less_than_or_equal_to => 3}
+  validates :flow,          :numericality => { :only_integer => true, :greater_than => 0, :less_than_or_equal_to => 3 }
   validates :organization,  :presence => true
 
   before_destroy :check_for_dependent_records

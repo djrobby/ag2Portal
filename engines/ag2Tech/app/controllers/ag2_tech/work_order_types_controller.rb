@@ -10,7 +10,12 @@ module Ag2Tech
     # GET /work_order_types
     # GET /work_order_types.json
     def index
-      @work_order_types = WorkOrderType.paginate(:page => params[:page], :per_page => per_page).order(sort_column + ' ' + sort_direction)
+      init_oco if !session[:organization]
+      if session[:organization] != '0'
+        @work_order_types = WorkOrderType.where(organization_id: session[:organization]).paginate(:page => params[:page], :per_page => per_page).order(sort_column + ' ' + sort_direction)
+      else
+        @work_order_types = WorkOrderType.paginate(:page => params[:page], :per_page => per_page).order(sort_column + ' ' + sort_direction)
+      end
   
       respond_to do |format|
         format.html # index.html.erb

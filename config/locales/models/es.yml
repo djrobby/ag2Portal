@@ -6,7 +6,35 @@ es:
           attributes:
             product_code:
               code_invalid: "Código inválido"
+        product_family:
+          attributes:
+            family_code:
+              code_invalid: "Código inválido (debe ser numérico)"
         supplier:
           attributes:
-            product_code:
+            supplier_code:
               code_invalid: "Código inválido"
+        client:
+          attributes:
+            client_code:
+              code_invalid: "Código inválido"
+        project:
+          attributes:
+            project_code:
+              code_invalid: "Código inválido"
+        delivery_note:
+          attributes:
+            delivery_no:
+              code_invalid: "Nº inválido"
+        offer_request:
+          attributes:
+            request_no:
+              code_invalid: "Nº inválido"
+        purchase_order:
+          attributes:
+            order_no:
+              code_invalid: "Nº inválido"
+        work_order:
+          attributes:
+            order_no:
+              code_invalid: "Nº inválido"

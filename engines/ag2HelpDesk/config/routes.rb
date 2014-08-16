@@ -4,11 +4,15 @@ Ag2HelpDesk::Engine.routes.draw do
     get "home/index"
 
     # Routes for jQuery POSTs
-    match 'tickets/update_office_textfield_from_created_by/:id', :controller => 'tickets', :action => 'update_office_textfield_from_created_by'
-    match 'tickets/:id/update_office_textfield_from_created_by/:id', :controller => 'tickets', :action => 'update_office_textfield_from_created_by'
+    match 'tickets/ti_update_office_textfield_from_created_by/:cb', :controller => 'tickets', :action => 'ti_update_office_textfield_from_created_by'
+    match 'ti_update_office_textfield_from_created_by/:cb', :controller => 'tickets', :action => 'ti_update_office_textfield_from_created_by'
+    match 'tickets/:id/ti_update_office_textfield_from_created_by/:cb', :controller => 'tickets', :action => 'ti_update_office_textfield_from_created_by'
     match 'tickets/ti_update_attachment', :controller => 'tickets', :action => 'ti_update_attachment'
     match 'ti_update_attachment', :controller => 'tickets', :action => 'ti_update_attachment'
     match 'tickets/:id/ti_update_attachment', :controller => 'tickets', :action => 'ti_update_attachment'
+    match 'tickets/ti_update_office_textfield_from_organization/:org', :controller => 'tickets', :action => 'ti_update_office_textfield_from_organization'
+    match 'ti_update_office_textfield_from_organization/:org', :controller => 'tickets', :action => 'ti_update_office_textfield_from_organization'
+    match 'tickets/:id/ti_update_office_textfield_from_organization/:org', :controller => 'tickets', :action => 'ti_update_office_textfield_from_organization'
 
     # Resources
     resources :ticket_categories

@@ -7,7 +7,9 @@ class ProductFamily < ActiveRecord::Base
   validates :name,          :presence => true
   validates :family_code,   :presence => true,
                             :length => { :is => 4 },
-                            :uniqueness => { :scope => :organization_id }
+                            :uniqueness => { :scope => :organization_id },
+                            :format => { with: /\A\d+\Z/, message: :code_invalid },
+                            :numericality => { :only_integer => true, :greater_than => 0 }
   validates :organization,  :presence => true
 
   has_many :products
