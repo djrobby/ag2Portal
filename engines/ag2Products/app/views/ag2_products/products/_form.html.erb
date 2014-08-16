@@ -1,6 +1,9 @@
 <script>
   var text_field_color;
   var _thisForm = '';
+  var old_fam = '';
+  var old_org = '';
+  var old_code = '';
 
   $(document).ready(function() {
     // Disable fields if Product Family blank
@@ -21,23 +24,52 @@
       $('#product_aux_description').prop('disabled', false);
       $('#generate_code_btn').show();
       $('#submit_btn').show();
+      old_fam = $('#product_product_family_id').val();
     }
     // Save default text color
-    text_field_color = $("#supplier_supplier_code").css('color')
+    text_field_color = $("#product_product_code").css('color')
     $('#product_product_family_id').focus();
 
     // Initialized form variable
     _thisForm = $("#product_product_family_id").closest('form')[0];
+
+    // Disable generate_code_btn if product_organization_id blank
+    var org = $('#product_organization_id').val();
+    if (org == "")
+      org = "$";
+    if (org == "$") {
+      // Empty organization: Hide
+      $('#generate_code_btn').hide();
+    } else {
+      // Organization OK: Show (if not updating)
+      old_org = $('#product_organization_id').val();
+      old_code = $('#product_product_code').val();
+      if ('<%= @breadcrumb %>' == "update") {
+        $('#generate_code_btn').hide();
+      } else {
+        $('#generate_code_btn').show();
+      }
+    }
+    
+    // Can't change code if editing
+    if ('<%= @breadcrumb %>' == "update") {
+      $('#product_product_code').prop('readonly', true);
+    } else {
+      $('#product_product_code').prop('readonly', false);
+    }
   });
 
   jQuery(function($) {
     // when #generate_code_btn is clicked
     $("#generate_code_btn").click(function() {
       // make a POST call and replace the content
-      var product = $('#product_product_family_id').val();
+      var product = $('select#product_product_family_id :selected').val();
       if (product == "")
         product = "$";
-      jQuery.getJSON('update_code_textfield/' + product, function(data) {
+      var org = $('#product_organization_id').val();
+      if (org == "")
+        org = "$";
+      jQuery.getJSON('pr_update_code_textfield/' + product + '/' + org, function(data) {
         $("#product_product_code").val(data.code);
         if ($("#product_product_code").val() == "$err") {
           $("#product_product_code").css('color', 'red');
@@ -50,9 +82,39 @@
       return false;
     });
 
+    // when the #product_organization_id field changes
+    $("#product_organization_id").change(function() {
+      // make a POST call and replace the content
+      var product = $('select#product_organization_id :selected').val();
+      if (product == "")
+        product = "0";
+      jQuery.getJSON('pr_update_family_textfield_from_organization/' + product, function(data) {
+        var f = data.families;
+        // Families
+        $("#product_product_family_id").html("");
+        $("#product_product_family_id").val("");
+        $("#product_product_family_id").append($('<option></option>').val("").html(""));
+        if (!f.length) {
+          $.each(data, function(id, option) {
+            if (id == 'technicians' && option != "") {
+              $("#product_product_family_id").append($('<option></option>').val(option.id).html(option.family_code + " " + option.name.substring(0,41)));
+            }
+          });
+        } else {
+          $.each(f, function(id, option) {
+            $("#product_product_family_id").append($('<option></option>').val(option.id).html(option.family_code + " " + option.name.substring(0,41)));
+          });
+        }
+      });
+      if (product == '0') $("#product_product_family_id").val(0);
+      // Disable generate_code_btn if product_organization_id blank
+      show_hide_generate_code_btn();
+      return false;
+    });
+
     // when the #product_product_family_id field changes
     $("#product_product_family_id").change(function() {
-      var product = $('#product_product_family_id').val();
+      var product = $('select#product_product_family_id :selected').val();
       if (product == "")
         product = "0";
       if (product == "0") {
@@ -72,6 +134,8 @@
         $('#generate_code_btn').show();
         $('#submit_btn').show();
       }
+      // Disable generate_code_btn if product_product_family_id blank
+      show_hide_generate_code_btn();
     });
 
     // when the #product_product_code field changes
@@ -169,17 +233,38 @@
       $('#product_markup').val(m);
     });
   });
+  
+  function show_hide_generate_code_btn() {
+    // Disable generate_code_btn if product_organization_id and product_product_family_id are blank
+    var product = $('select#product_product_family_id :selected').val();
+    if (product == "")
+      product = "$";
+    var org = $('select#product_organization_id :selected').val();
+    if (org == "")
+      org = "$";
+    if (product != "$" && org != "$") {
+      // Show (if not updating)
+      if ('<%= @breadcrumb == 'update' %>') {
+        if (old_org == $('#product_organization_id').val() && old_fam == $('#product_product_family_id').val()) {
+          $('#product_product_code').val(old_code);
+          $("#product_product_code").css('color', text_field_color);
+          $('#generate_code_btn').hide();
+        } else {
+          $('#generate_code_btn').show();
+        }
+      } else {
+        $('#generate_code_btn').show();
+      }
+    } else {
+      // Hide
+      $('#generate_code_btn').hide();
+    }    
+  }
 </script>
 
 <%= simple_form_for @product, html: { class: 'form-vertical well' } do |f| %>
 <%= f.error_notification %>
 <%= display_base_errors resource %>
-<div>
-  <label class="multi-field-label-two"> <%= f.association :product_family, autofocus: true, collection: ProductFamily.all(order: 'name'), input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %> </label>
-  <label class="multi-field-label-two"> <%= f.input :product_code, input_html: { class: 'large-text-field' }, label_html: { class: 'form-label' } %> </label>
-</div>
-<%= f.input :main_description, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %>
-<%= f.input :aux_description, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %>
 <% if session[:organization] != '0' %>
 <%= f.association :organization, collection: Organization.where("id = ?", "#{session[:organization]}").all, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' }, include_blank: false %>
 <% elsif current_user.organizations.count > 0 %>
@@ -187,6 +272,12 @@
 <% else %>
 <%= f.association :organization, collection: Organization.order('name'), input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %>
 <% end %>
+<div>
+  <label class="multi-field-label-two"> <%= f.association :product_family, autofocus: true, collection: @product_families, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.input :product_code, input_html: { class: 'large-text-field' }, label_html: { class: 'form-label' } %> </label>
+</div>
+<%= f.input :main_description, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %>
+<%= f.input :aux_description, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %>
 <div>
   <label class="multi-field-label-two"> <%= f.association :product_type, collection: ProductType.all(order: 'description'), input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %> </label>
   <label class="multi-field-label-two"> <%= f.input :active, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' }, boolean_style: :inline %> </label>
@@ -226,9 +317,7 @@
         <%= render partial: '/layouts/ag2_products/productstocksprices', locals: { product: @product } %>
       </td>
       <% end %>
-      <% if @breadcrumb == 'create'%>
       <td class="form-td-three right-winged"><a href="#" id="generate_code_btn" class="btn btn-warning"><%=t 'ag2_products.products.generate_code_btn' %></a></td>
-      <% end %>
     </tr>
   </tbody>
 </table>

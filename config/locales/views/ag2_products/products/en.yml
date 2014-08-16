@@ -27,6 +27,6 @@ en:
       back_to_main_page: "Back to Products"
       generate_code_btn: "Product Code"
       commercial_info: "Commercial Info"
-      code_error: "Unable to generate Product Code: No Family chosen."
+      code_error: "Unable to generate Product Code: No Organization or Family chosen."
       stocks: "Stocks"
       prices: "Prices"

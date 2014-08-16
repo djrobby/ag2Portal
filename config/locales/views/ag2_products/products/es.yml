@@ -27,6 +27,6 @@ es:
       back_to_main_page: "Volver a Productos"
       generate_code_btn: "Código de Producto"
       commercial_info: "Información Comercial"
-      code_error: "Imposible generar Código de Producto: No has elegido Familia."
+      code_error: "Imposible generar Código de Producto: No has elegido Organización o Familia."
       stocks: "Existencias"
       prices: "Precios"

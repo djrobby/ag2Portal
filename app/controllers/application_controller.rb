@@ -287,16 +287,25 @@ end
   end
 
   # Product code
-  def pt_next_code(family)
+  def pt_next_code(organization, family)
     code = ''
-    family = family.to_s if family.is_a? Fixnum
-    family = family.rjust(4, '0')
-    last_code = Product.where("product_code LIKE ?", "#{family}%").order(:product_code).maximum(:product_code)
-    if last_code.nil?
-      code = family + '000001'
+    # Builds code, if possible
+    family_code = ProductFamily.find(family).family_code rescue '$'
+    if family_code == '$'
+      code = '$err'
     else
-      last_code = last_code[4..9].to_i + 1
-      code = family + last_code.to_s.rjust(6, '0')
+      family = family_code.rjust(4, '0')
+      if organization == 0
+        last_code = Product.where("product_code LIKE ?", "#{family}%").order(:product_code).maximum(:product_code)
+      else
+        last_code = Product.where("product_code LIKE ? AND organization_id = ?", "#{family}%", "#{organization}").order(:product_code).maximum(:product_code)
+      end
+      if last_code.nil?
+        code = family + '000001'
+      else
+        last_code = last_code[4..9].to_i + 1
+        code = family + last_code.to_s.rjust(6, '0')
+      end
     end
     code
   end

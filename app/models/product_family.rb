@@ -24,7 +24,18 @@ class ProductFamily < ActiveRecord::Base
   end
 
   def to_label
-    "#{name} (#{family_code})"
+    "#{full_name}"
+  end
+
+  def full_name
+    full_name = ''
+    if !self.family_code.blank?
+      full_name = self.family_code
+    end
+    if !self.name.blank?
+      full_name += " " + self.name[0,40]
+    end
+    full_name
   end
 
   private

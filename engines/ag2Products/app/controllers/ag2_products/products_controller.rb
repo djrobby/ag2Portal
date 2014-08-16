@@ -5,15 +5,21 @@ module Ag2Products
     include ActionView::Helpers::NumberHelper
     before_filter :authenticate_user!
     load_and_authorize_resource
-    skip_load_and_authorize_resource :only => [:update_code_textfield,
+    skip_load_and_authorize_resource :only => [:pr_update_code_textfield,
                                                :pr_format_amount,
-                                               :pr_markup]
+                                               :pr_markup,
+                                               :pr_update_family_textfield_from_organization]
     # Update product code at view (generate_code_btn)
-    def update_code_textfield
-      family = params[:id]
+    def pr_update_code_textfield
+      family = params[:fam]
+      organization = params[:org]
 
       # Builds no, if possible
-      code = family == '$' ? '$err' : pt_next_code(family)
+      if family == '$' || organization == '$'
+        code = '$err'
+      else
+        code = pt_next_code(organization, family)
+      end
       @json_data = { "code" => code }
       render json: @json_data
     end
@@ -37,6 +43,19 @@ module Ag2Products
       markup = number_with_precision(markup.round(2), precision: 2)
       sell = number_with_precision(sell.round(4), precision: 4)
       @json_data = { "markup" => markup.to_s, "sell" => sell.to_s }
+      render json: @json_data
+    end
+    
+    # Update family text field at view from organization select
+    def pr_update_family_textfield_from_organization
+      organization = params[:org]
+      if organization != '0'
+        @organization = Organization.find(organization)
+        @product_families = @organization.blank? ? families_dropdown : @organization.product_families.order(:family_code)
+      else
+        @offices = families_dropdown
+      end
+      @json_data = { "families" => @product_families }
       render json: @json_data
     end
 
@@ -110,6 +129,7 @@ module Ag2Products
     def new
       @breadcrumb = 'create'
       @product = Product.new
+      @product_families = families_dropdown
   
       respond_to do |format|
         format.html # new.html.erb
@@ -121,6 +141,7 @@ module Ag2Products
     def edit
       @breadcrumb = 'update'
       @product = Product.find(params[:id])
+      @product_families = @product.organization.blank? ? families_dropdown : @product.organization.product_families.order(:name)
     end
   
     # POST /products
@@ -135,6 +156,7 @@ module Ag2Products
           format.html { redirect_to @product, notice: crud_notice('created', @product) }
           format.json { render json: @product, status: :created, location: @product }
         else
+          @product_families = families_dropdown
           format.html { render action: "new" }
           format.json { render json: @product.errors, status: :unprocessable_entity }
         end
@@ -154,6 +176,7 @@ module Ag2Products
                         notice: (crud_notice('updated', @product) + "#{undo_link(@product)}").html_safe }
           format.json { head :no_content }
         else
+          @product_families = @product.organization.blank? ? families_dropdown : @product.organization.product_families.order(:name)
           format.html { render action: "edit" }
           format.json { render json: @product.errors, status: :unprocessable_entity }
         end
@@ -178,6 +201,10 @@ module Ag2Products
     end
 
     private
+    
+    def families_dropdown
+      _families = session[:organization] != '0' ? ProductFamily.where(organization_id: session[:organization].to_i).order(:family_code) : ProductFamily.order(:family_code)  
+    end
 
     # Keeps filter state
     def manage_filter_state
