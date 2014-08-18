@@ -96,7 +96,7 @@
     <%= f.input :_destroy, as: :hidden, input_html: { class: 'field' } %>
   </div>
   <div class="modal-footer">
-    <span class="left-floated" style="vertical-align: bottom"><%= t("ag2_tech.work_orders.add_item_to", var: @work_order.full_no) unless @work_order.order_no.blank? %></span>
+    <span class="left-floated shrinked" style="vertical-align: bottom"><%= t("ag2_tech.work_orders.add_item_to", var: @work_order.full_no) unless @work_order.order_no.blank? %></span>
     <button id="addWorkerButton" type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><%= t('ag2_tech.work_orders.btn_add_item') %></button>
     <button id="cancelWorkerButton" type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><%= t :close_button %></button>
   </div>

@@ -89,6 +89,7 @@
         }
         else
           $("#purchase_order_order_no").css('color', text_field_color);
+          $('#purchase_order_order_no').trigger("change");
       })
       return false;
     });

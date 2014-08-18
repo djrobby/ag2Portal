@@ -6,16 +6,12 @@
 
   $(document).ready(function() {
     // Retrieves parent values
-    _f = $("#fnt-worker").closest('form')[0];
-    _p = $('select#work_order_project_id :selected').val();
-    if (_p == "") _p = "0";
-    _date = $('#work_order_started_at').data('datepicker').date;
-    if (_date == "") {
-      _date = new Date();
-    } else {
-      _date = new Date(_date);
+    _f = $("#fnt-approver").closest('form')[0];
+
+    // Set #fnt-approval-date
+    if ($('#fnt-approval-date').val() == "") {
+      $('#fnt-approval-date').datepicker('setValue', es_date(new Date()));
     }
-    _year = _date.getFullYear();
 
     // Set focus
     $(".modal").on('shown', function() {
@@ -24,34 +20,9 @@
   });
 
   jQuery(function($) {
-    // when the #fnt-worker field changes
-    $("#fnt-worker").change(function() {
-      // make a POST call and replace the content
-      var worker = $('select#fnt-worker :selected').val();
-      if (worker == "")
-        worker = "0";
-      var hours = $('#fnt-hours').val();
-      if (hours == "")
-        hours = "0";
-      // Right formatted for passing as REST parameter
-      hours = parseInt(right_number(hours, 4) * 10000);
-      jQuery.getJSON('wo_update_costs_from_worker/' + worker + '/' + hours + '/' + _p + '/' + _year, function(data) {
-        $("#fnt-costw").val(data.cost);
-        $("#fnt-costsw").val(data.costs);
-      });
-      return false;
-    });
-
-    // when the #fnt-hours field changes
-    $("#fnt-hours").change(function() {
-      // preserve the current object
-      var _this = (this);
-      recalculate(_this);
-      return false;
-    });
-
-    // when the #fnt-costw field changes
-    $("#fnt-costw").change(function() {
+    // when the #fnt-approved-amount field changes
+    $("#fnt-approved-amount").change(function() {
+      // can't approve more than current debt
       // preserve the current object
       var _this = (this);
       recalculate(_this);
@@ -75,34 +46,34 @@
         $('#fnt-hours').val(data.hours);
         $('#fnt-costsw').val(data.costs);
         // Update and display totals
-        $('#workers-table').trigger('totals');
+        $('#approvals-table').trigger('totals');
       });
     }
   })
 </script>
 
-<div id="new-worker-fields" class="modal hide fade" data-backdrop="static">
+<div id="new-approval-fields" class="modal hide fade" data-backdrop="static">
   <% e = t(:item_error) %>
   <div class="modal-header">
     <a class="close" data-dismiss="modal">×</a>
-    <h3><%= t("ag2_tech.work_orders.add_worker") %></h3>
+    <h3><%= t("ag2_purchase.supplier_invoices.add_approval") %></h3>
     <span class="shrinked"><%= I18n.t(:mandatory_subtitle) %></span>
   </div>
   <div class="modal-body">
-    <%= f.association :worker, collection: @workers, input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-worker', data: { validation: "required", "validation-error-msg" => "#{e}" } }, label_html: { class: 'form-label' } %>
-    <%= f.input :hours, as: :string, input_html: { value: (number_with_precision(f.object.hours, precision: 4) if f.object.hours), class: 'mid-text-field number-text-field field', id: 'fnt-hours' }, label_html: { class: 'form-label' } %>
-    <%= f.input :cost, as: :string, input_html: { value: (number_with_precision(f.object.cost, precision: 4) if f.object.cost), class: 'mid-text-field number-text-field field', id: 'fnt-costw' }, label_html: { class: 'form-label' } %>
-    <%= f.input :costs, disabled: true, as: :string, input_html: { value: (number_with_precision(f.object.costs, precision: 4) if f.object.costs), class: 'mid-text-field number-text-field sub-disabled-field field', id: 'fnt-costsw' }, label_html: { class: 'form-label' } %>
+    <%= f.association :approver, collection: @users, input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-approver', data: { validation: "required", "validation-error-msg" => "#{e}" } }, label_html: { class: 'form-label' } %>
+    <%= f.input :approval_date, start_year: Time.now.year - 100, end_year: Time.now.year + 100, as: :string, input_html: { value: (f.object.approval_date.strftime("%d/%m/%Y") if f.object.approval_date), class: 'mid-text-field idatepicker field', id: 'fnt-approval-date', data: { validation: "required", "validation-error-msg" => "#{e}" } }, label_html: { class: 'form-label' } %>
+    <%= f.input :approved_amount, as: :string, input_html: { value: (number_with_precision(f.object.approved_amount, precision: 4) if f.object.approved_amount), class: 'mid-text-field number-text-field field', id: 'fnt-approved-amount', data: { validation: "required", "validation-error-msg" => "#{e}" } }, label_html: { class: 'form-label' } %>
+    <%= f.input :remarks, input_html: { class: 'x-large-text-field field', maxlength: 40, id: 'fnt-remarks' }, label_html: { class: 'form-label' } %>
     <%= f.input :_destroy, as: :hidden, input_html: { class: 'field' } %>
   </div>
   <div class="modal-footer">
-    <span class="left-floated" style="vertical-align: bottom"><%= t("ag2_tech.work_orders.add_item_to", var: @work_order.full_no) unless @work_order.order_no.blank? %></span>
-    <button id="addWorkerButton" type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><%= t('ag2_tech.work_orders.btn_add_item') %></button>
-    <button id="cancelWorkerButton" type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><%= t :close_button %></button>
+    <span class="left-floated" style="vertical-align: bottom"><%= t("ag2_purchase.supplier_invoices.add_item_to", var: @supplier_invoice.invoice_no) unless @supplier_invoice.invoice_no.blank? %></span>
+    <button id="addApprovalButton" type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><%= t('ag2_purchase.supplier_invoices.btn_add_item') %></button>
+    <button id="cancelApprovalButton" type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><%= t :close_button %></button>
   </div>
 </div>
 
 <script type="text/javascript">
   sel2NoMatch = '<%= t("select2.no_matches") %>';
-  wo_workerFieldsUI.init(sel2NoMatch);
+  si_approvalFieldsUI.init(sel2NoMatch);
 </script>

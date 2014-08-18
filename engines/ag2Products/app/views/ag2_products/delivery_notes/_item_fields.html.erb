@@ -300,9 +300,9 @@
     <%= f.input :_destroy, as: :hidden, input_html: { class: 'field' } %>
   </div>
   <div class="modal-footer">
-    <span class="left-floated" style="vertical-align: bottom"><%= t("ag2_products.delivery_notes.add_item_to", var: @delivery_note.delivery_no) unless @delivery_note.delivery_no.blank? %>&#8226;</span>
-    <span class="left-floated" style="vertical-align: bottom"><%= t("activerecord.attributes.stock.current") %>=</span>
-    <span class="left-floated" style="vertical-align: bottom" id="current-stock">0,0000</span>
+    <span class="left-floated shrinked" style="vertical-align: bottom"><%= t("ag2_products.delivery_notes.add_item_to", var: @delivery_note.delivery_no) unless @delivery_note.delivery_no.blank? %>&#8226;</span>
+    <span class="left-floated shrinked" style="vertical-align: bottom"><%= t("activerecord.attributes.stock.current") %>=</span>
+    <span class="left-floated shrinked" style="vertical-align: bottom" id="current-stock">0,0000</span>
     <button id="addButton" type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><%= t('ag2_products.delivery_notes.btn_add_item') %></button>
     <button id="cancelButton" type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><%= t :close_button %></button>
   </div>

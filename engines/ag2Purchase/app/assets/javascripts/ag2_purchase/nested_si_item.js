@@ -16,7 +16,6 @@ var si_itemFieldsUI = {
         };
 
         $('#addButton').on('click', function(e) {
-            //var isValid = $('#new-item-fields').validate(false, validationSettings);
             var isValid = $(si_cfg.formId).validate(false, validationSettings);
             if(!isValid) {
                 e.stopPropagation();

@@ -115,7 +115,7 @@ module Ag2Purchase
         @store = @order.store
         store_id = @store.id rescue 0
         if @charge_account.blank?
-          @charge_account = @project.blank? ? charge_accounts_dropdown : @project.charge_accounts.order(:account_code)
+          @charge_account = @project.blank? ? charge_accounts_dropdown : charge_accounts_dropdown_edit(@project.id)
         end
         if @store.blank?
           @store = project_stores(@project)
@@ -135,7 +135,7 @@ module Ag2Purchase
       if project != '0'
         @project = Project.find(project)
         @work_order = @project.blank? ? work_orders_dropdown : @project.work_orders.order(:order_no)
-        @charge_account = @project.blank? ? charge_accounts_dropdown : @project.charge_accounts.order(:account_code)
+        @charge_account = @project.blank? ? charge_accounts_dropdown : charge_accounts_dropdown_edit(@project.id)
         @store = project_stores(@project)
       else
         @work_order = work_orders_dropdown

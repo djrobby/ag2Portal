@@ -89,7 +89,8 @@
         }
         else
           $("#delivery_note_delivery_no").css('color', text_field_color);
-      })
+          $('#delivery_note_delivery_no').trigger("change");
+      });
       return false;
     });
 
