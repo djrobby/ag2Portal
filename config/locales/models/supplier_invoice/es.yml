@@ -40,3 +40,5 @@ es:
         payment_period: "Plazo medio de pago"
         organization: "Organización"
         organization_id: "Organización"
+        receipt_note: "Nota de recepción"
+        receipt_note_id: "Nota de recepción"

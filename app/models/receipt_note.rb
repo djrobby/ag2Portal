@@ -28,6 +28,7 @@ class ReceiptNote < ActiveRecord::Base
                               :uniqueness => { :scope => [ :organization_id, :supplier_id ] }
   validates :supplier,        :presence => true
   validates :payment_method,  :presence => true
+  validates :project,         :presence => true
   validates :organization,    :presence => true
 
   before_destroy :check_for_dependent_records

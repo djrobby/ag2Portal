@@ -8,14 +8,20 @@
       dropdownAutoWidth: true,
       containerCssClass: 'sub-select2-field'
     });
+    $('.wdatepicker').datepicker({
+      format : 'dd/mm/yyyy',
+      weekStart : 1
+    }).on('changeDate', function(e){
+      $('.date_picker').datepicker('hide');
+    });
 
     // Trigger to display totals at table foot
-    $('#workers-table').bind('totals', function(event) {
+    $('#approvals-table').bind('totals', function(event) {
       // Sum necessary values from table rows
       var hours = 0;
       var costs = 0;
       var count = 0;
-      $('#workers-table tr.fields:visible').each(function() {
+      $('#approvals-table tr.fields:visible').each(function() {
         hours += parseFloat(right_number($(this).find('input.fnt-hours').val(), 4));
         costs += parseFloat(right_number($(this).find('input.fnt-costsw').val(), 4));
         count += 1;
@@ -29,7 +35,7 @@
       });
     });
     // Update and display totals
-    $('#workers-table').trigger('totals');
+    $('#approvals-table').trigger('totals');
     // Retrieves parent values
     _f = $(".fnt-worker").closest('form')[0];
   }); 
@@ -99,7 +105,7 @@
         $(_this).closest('tr').find('.fnt-hours').val(data.hours);
         $(_this).closest('tr').find('.fnt-costsw').val(data.costs);
         // Update and display totals
-        $('#workers-table').trigger('totals');
+        $('#approvals-table').trigger('totals');
       });
     }
 
@@ -108,17 +114,17 @@
      * This one re-calculate table totals after delete an item
      * When the .icon-trash clicked
      * Replace behavior of link_to_remove_fields
-     * (the same was done in nested_wo.js)
+     * (the same was done in nested_si.js)
      */
     $(".icon-trash").click(function() {
       remove_fields(this);
       // Update and display totals
-      $('#workers-table').trigger('totals');
+      $('#approvals-table').trigger('totals');
     });
   });
 </script>
 
-<table id="workers-table" class="table table-condensed table-striped shrinked fixed">
+<table id="approvals-table" class="table table-condensed table-striped shrinked fixed">
   <!-- worker -->
   <col width="60%" />
   <!-- hours -->
@@ -130,18 +136,18 @@
   <!-- button -->
   <col width="5%" />
   <thead>
-    <%= render 'workers_header' %>
+    <%= render 'approvals_header' %>
   </thead>
   <tfoot>
-    <%= render 'workers_table_footer', f: f %>
+    <%= render 'approvals_table_footer', f: f %>
   </tfoot>
   <tbody>
-    <%= f.simple_fields_for :work_order_workers, defaults: { input_html: { class: 'sub-form' } } do |i| %>
+    <%= f.simple_fields_for :supplier_invoice_approvals, defaults: { input_html: { class: 'sub-form' } } do |i| %>
     <tr class="fields">
-      <td><%= i.association :worker, label: false, wrapper: false, collection: @workers, input_html: { class: 'wsel2 fnt-worker' } %></td>
-      <td><%= i.input :hours, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.hours, precision: 4) if i.object.hours), class: 'sub-number-text-field fnt-hours' } %></td>
-      <td><%= i.input :cost, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.cost, precision: 4) if i.object.cost), class: 'sub-number-text-field fnt-costw' } %></td>
-      <td><%= i.input :costs, disabled: true, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.costs, precision: 4) if i.object.costs), class: 'sub-number-text-field sub-disabled-field fnt-costsw' } %></td>
+      <td><%= i.association :approver, label: false, wrapper: false, collection: @workers, input_html: { class: 'wsel2 fnt-approver' } %></td>
+      <td><%= i.input :approval_date, label: false, wrapper: false, as: :string, start_year: Time.now.year - 100, end_year: Time.now.year + 100, input_html: { value: (f.object.approval_date.strftime("%d/%m/%Y") if f.object.approval_date), class: 'sub-alfanumeric-text-field wdatepicker fnt-approval-date' } %></td>
+      <td><%= i.input :approved_amount, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.cost, precision: 4) if i.object.cost), class: 'sub-number-text-field fnt-approved-amount' } %></td>
+      <td><%= i.input :remarks, label: false, wrapper: false, input_html: { class: 'sub-alfanumeric-text-field fnt-remarks', maxlength: 40 } %></td>
       <% if @breadcrumb == 'create' || @breadcrumb == 'update' %>
       <td><%= link_to_remove_fields('<i class="icon-trash"></i>'.html_safe, i) %></td>
       <% end %>

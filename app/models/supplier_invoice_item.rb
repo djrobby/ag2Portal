@@ -22,6 +22,7 @@ class SupplierInvoiceItem < ActiveRecord::Base
   validates :work_order,        :presence => true
   validates :charge_account,    :presence => true
   validates :project,           :presence => true
+  validates :receipt_note_item, :presence => true, :if => "!receipt_note_id.blank?"
 
   before_validation :fields_to_uppercase
 

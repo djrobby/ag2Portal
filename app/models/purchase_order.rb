@@ -34,7 +34,7 @@ class PurchaseOrder < ActiveRecord::Base
   validates :payment_method, :presence => true
   validates :order_status,   :presence => true
   validates :project,        :presence => true
-  validates :organization,    :presence => true
+  validates :organization,   :presence => true
 
   before_destroy :check_for_dependent_records
 

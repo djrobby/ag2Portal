@@ -80,8 +80,8 @@
             <td><%= invoice.id %></td>
             <td><%= link_to invoice.invoice_no, invoice %></td>
             <td align="center"><%= invoice.invoice_date.strftime("%d/%m/%Y") unless invoice.invoice_date.blank? %></td>
-            <td><%= invoice.supplier.name unless invoice.supplier.blank? %></td>
-            <td><%= invoice.project.full_name unless invoice.project.blank? %></td>
+            <td><%= invoice.supplier.full_name[0,40] unless invoice.supplier.blank? %></td>
+            <td><%= invoice.project.full_code unless invoice.project.blank? %></td>
             <td align="right"><%= number_with_precision(invoice.total, precision: 4) unless invoice.total.blank? %></td>
             <td> <%= render :partial => '/layouts/crud/edit', :locals => { :model => SupplierInvoice, :path => edit_supplier_invoice_path(invoice) } %>
             <%= render :partial => '/layouts/crud/delete', :locals => { :model => SupplierInvoice, :path => invoice, :msg => t("activerecord.models.supplier_invoice.one"), :txt => invoice.invoice_no } %> </td>

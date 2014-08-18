@@ -83,7 +83,7 @@
           <tr class="inactive-row">
             <% end %>
             <td><%= link_to order.full_no, order %></td>
-            <td><%= order.summary %></td>
+            <td><%= order.summary[0,30] %></td>
             <td><%= order.project.full_code unless order.project.blank? %></td>
             <td><%= order.work_order_type.name unless order.work_order_type.blank? %></td>
             <td><%= order.work_order_status.name unless order.work_order_status.blank? %></td>

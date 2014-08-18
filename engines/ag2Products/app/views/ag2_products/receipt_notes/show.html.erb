@@ -7,7 +7,7 @@
       <td>Id:</td>
       <td><%= @receipt_note.id %></td>
       <td><%=t 'activerecord.attributes.receipt_note.receipt_no' %>:</td>
-      <td><%= @receipt_note.receipt_no %></td>
+      <td><b><%= @receipt_note.receipt_no %></b></td>
     </tr>
     <tr>
       <td><%=t 'activerecord.attributes.receipt_note.receipt_date' %>:</td>
@@ -23,21 +23,21 @@
     </tr>
     <tr>
       <td><%=t 'activerecord.attributes.receipt_note.project' %>:</td>
-      <td><%= @receipt_note.project.name unless @receipt_note.project.blank? %></td>
-      <td><%=t 'activerecord.attributes.receipt_note.charge_account' %>:</td>
-      <td> <%= @receipt_note.charge_account.name unless @receipt_note.charge_account.blank? %> </td>
+      <td><%= @receipt_note.project.full_name unless @receipt_note.project.blank? %></td>
+      <td><%=t 'activerecord.attributes.receipt_note.work_order' %>:</td>
+      <td><%= @receipt_note.work_order.full_name unless @receipt_note.work_order.blank? %></td>
     </tr>
     <tr>
-      <td><%=t 'activerecord.attributes.receipt_note.work_order' %>:</td>
-      <td><%= @receipt_note.work_order.receipt_no unless @receipt_note.work_order.blank? %></td>
+      <td><%=t 'activerecord.attributes.receipt_note.charge_account' %>:</td>
+      <td> <%= @receipt_note.charge_account.full_name unless @receipt_note.charge_account.blank? %> </td>
       <td><%=t 'activerecord.attributes.receipt_note.store' %>:</td>
       <td> <%= @receipt_note.store.name unless @receipt_note.store.blank? %> </td>
     </tr>
     <tr>
       <td><%=t 'activerecord.attributes.purchase_order.retention_pct' %>:</td>
-      <td><%= number_with_precision(@purchase_order.retention_pct, precision: 2) unless @purchase_order.retention_pct.blank? %></td>
+      <td><%= number_with_precision(@receipt_note.retention_pct, precision: 2) unless @receipt_note.retention_pct.blank? %></td>
       <td><%=t 'activerecord.attributes.purchase_order.retention_time' %>:</td>
-      <td><%= @purchase_order.retention_time unless @purchase_order.retention_time.blank? %></td>
+      <td><%= @receipt_note.retention_time unless @receipt_note.retention_time.blank? %></td>
     </tr>
     <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @receipt_note } %>
     <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @receipt_note } %>

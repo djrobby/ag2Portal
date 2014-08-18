@@ -17,17 +17,18 @@ class ReceiptNoteItem < ActiveRecord::Base
 
   has_paper_trail
 
-  validates :receipt_note,    :presence => true
-  validates :description,     :presence => true,
-                              :length => { :maximum => 40 }
-  validates :product,         :presence => true
-  validates :tax_type,        :presence => true
-  validates :store,           :presence => true
-  validates :work_order,      :presence => true
-  validates :charge_account,  :presence => true
-  validates :project,         :presence => true
-  validates :quantity,        :numericality => true
-  validates :price,           :numericality => true
+  validates :receipt_note,        :presence => true
+  validates :description,         :presence => true,
+                                  :length => { :maximum => 40 }
+  validates :product,             :presence => true
+  validates :tax_type,            :presence => true
+  validates :store,               :presence => true
+  validates :work_order,          :presence => true
+  validates :charge_account,      :presence => true
+  validates :project,             :presence => true
+  validates :quantity,            :numericality => true
+  validates :price,               :numericality => true
+  validates :purchase_order_item, :presence => true, :if => "!purchase_order_id.blank?"
 
   before_destroy :check_for_dependent_records
   before_validation :fields_to_uppercase

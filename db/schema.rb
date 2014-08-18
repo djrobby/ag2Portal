@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140813170321) do
+ActiveRecord::Schema.define(:version => 20140818070253) do
 
   create_table "activities", :force => true do |t|
     t.string   "description"
@@ -1227,6 +1227,7 @@ ActiveRecord::Schema.define(:version => 20140813170321) do
     t.integer  "updated_by"
     t.date     "posted_at"
     t.integer  "organization_id"
+    t.integer  "receipt_note_id"
   end
 
   add_index "supplier_invoices", ["charge_account_id"], :name => "index_supplier_invoices_on_charge_account_id"
@@ -1237,6 +1238,7 @@ ActiveRecord::Schema.define(:version => 20140813170321) do
   add_index "supplier_invoices", ["payment_method_id"], :name => "index_supplier_invoices_on_payment_method_id"
   add_index "supplier_invoices", ["posted_at"], :name => "index_supplier_invoices_on_posted_at"
   add_index "supplier_invoices", ["project_id"], :name => "index_supplier_invoices_on_project_id"
+  add_index "supplier_invoices", ["receipt_note_id"], :name => "index_supplier_invoices_on_receipt_note_id"
   add_index "supplier_invoices", ["supplier_id"], :name => "index_supplier_invoices_on_supplier_id"
   add_index "supplier_invoices", ["work_order_id"], :name => "index_supplier_invoices_on_work_order_id"
 

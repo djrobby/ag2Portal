@@ -5,9 +5,10 @@ class SupplierInvoice < ActiveRecord::Base
   belongs_to :work_order
   belongs_to :charge_account
   belongs_to :organization
+  belongs_to :receipt_note
   attr_accessible :discount, :discount_pct, :invoice_date, :invoice_no, :remarks,
                   :supplier_id, :payment_method_id, :project_id, :work_order_id, :charge_account_id,
-                  :posted_at, :organization_id
+                  :posted_at, :organization_id, :receipt_note_id
 
   has_many :supplier_invoice_items, dependent: :destroy
   has_many :supplier_invoice_approvals, dependent: :destroy
@@ -30,7 +31,8 @@ class SupplierInvoice < ActiveRecord::Base
                              :uniqueness => { :scope => [ :organization_id, :supplier_id ] }
   validates :supplier,       :presence => true
   validates :payment_method, :presence => true
-  validates :organization,    :presence => true
+  validates :project,        :presence => true
+  validates :organization,   :presence => true
 
   before_destroy :check_for_dependent_records
 

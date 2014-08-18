@@ -79,7 +79,7 @@
           <tr>
             <td><%= link_to note.delivery_no, note %></td>
             <td align="center"><%= note.delivery_date.strftime("%d/%m/%Y") unless note.delivery_date.blank? %></td>
-            <td><%= note.client.name unless note.client.blank? %></td>
+            <td><%= note.client.full_name unless note.client.blank? %></td>
             <td><%= note.project.full_name unless note.project.blank? %></td>
             <td><%= note.work_order.full_name unless note.work_order.blank? %></td>
             <td align="right"><%= number_with_precision(note.total, precision: 4) unless note.total.blank? %></td>

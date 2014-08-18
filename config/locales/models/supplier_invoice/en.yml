@@ -40,3 +40,5 @@ en:
         payment_period: "Avg.payment period"
         organization: "Organization"
         organization_id: "Organization"
+        receipt_note: "Receipt note"
+        receipt_note_id: "Receipt note"

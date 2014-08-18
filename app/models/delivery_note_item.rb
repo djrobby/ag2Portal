@@ -28,6 +28,7 @@ class DeliveryNoteItem < ActiveRecord::Base
   validates :quantity,        :numericality => true
   validates :price,           :numericality => true
   validates :cost,            :numericality => true
+  validates :sale_offer_item, :presence => true, :if => "!receipt_note_id.blank?"
 
   before_destroy :check_for_dependent_records
   before_validation :fields_to_uppercase

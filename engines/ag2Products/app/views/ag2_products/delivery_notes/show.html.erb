@@ -7,7 +7,7 @@
       <td>Id:</td>
       <td><%= @delivery_note.id %></td>
       <td><%=t 'activerecord.attributes.delivery_note.delivery_no' %>:</td>
-      <td><%= @delivery_note.delivery_no %></td>
+      <td><b><%= @delivery_note.delivery_no %></b></td>
     </tr>
     <tr>
       <td><%=t 'activerecord.attributes.delivery_note.receipt_date' %>:</td>
@@ -23,13 +23,13 @@
     </tr>
     <tr>
       <td><%=t 'activerecord.attributes.delivery_note.project' %>:</td>
-      <td><%= @delivery_note.project.name unless @delivery_note.project.blank? %></td>
-      <td><%=t 'activerecord.attributes.delivery_note.charge_account' %>:</td>
-      <td> <%= @delivery_note.charge_account.name unless @delivery_note.charge_account.blank? %> </td>
+      <td><%= @delivery_note.project.full_name unless @delivery_note.project.blank? %></td>
+      <td><%=t 'activerecord.attributes.delivery_note.work_order' %>:</td>
+      <td><%= @delivery_note.work_order.full_name unless @delivery_note.work_order.blank? %></td>
     </tr>
     <tr>
-      <td><%=t 'activerecord.attributes.delivery_note.work_order' %>:</td>
-      <td><%= @delivery_note.work_order.delivery_no unless @delivery_note.work_order.blank? %></td>
+      <td><%=t 'activerecord.attributes.delivery_note.charge_account' %>:</td>
+      <td> <%= @delivery_note.charge_account.full_name unless @delivery_note.charge_account.blank? %> </td>
       <td><%=t 'activerecord.attributes.delivery_note.store' %>:</td>
       <td> <%= @delivery_note.store.name unless @delivery_note.store.blank? %> </td>
     </tr>
