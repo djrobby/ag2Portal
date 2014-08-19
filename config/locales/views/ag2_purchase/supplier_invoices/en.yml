@@ -35,3 +35,4 @@ en:
       delete_approval: "Delete this Approval"
       add_approval: "Add new Approval"
       btn_new_approval: "New Approval"
+      approval_error: "Total approved must not be greater than the amount due (%{var})"

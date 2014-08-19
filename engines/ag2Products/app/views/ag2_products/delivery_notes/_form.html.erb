@@ -86,10 +86,10 @@
           $("#delivery_note_delivery_no").css('color', 'red');
           alert('<%= I18n.t("ag2_products.delivery_notes.no_error") %>');
           $('#delivery_note_delivery_no').select();
-        }
-        else
+        } else {
           $("#delivery_note_delivery_no").css('color', text_field_color);
           $('#delivery_note_delivery_no').trigger("change");
+        }
       });
       return false;
     });
@@ -402,8 +402,8 @@
   <label class="multi-field-label-two"> <%= f.association :payment_method, collection: @payment_methods, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label-under-sel2' } %> </label>
 </div>
 <div>
-  <label class="multi-field-label-two"> <%= f.association :work_order, collection: @work_orders, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
   <label class="multi-field-label-two"> <%= f.association :project, collection: @projects, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.association :work_order, collection: @work_orders, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
 </div>
 <div>
   <label class="multi-field-label-two"> <%= f.association :charge_account, collection: @charge_accounts, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>

@@ -10,7 +10,7 @@ class SupplierInvoiceApproval < ActiveRecord::Base
   validates :approver,          :presence => true
   validates :approval_date,     :presence => true
   validates :approved_amount,   :presence => true,
-                                :numericality => { :greater_than => 0, :less_than_or_equal_to => :invoice_debt }
+                                :numericality => { :greater_than_or_equal_to => 0, :less_than_or_equal_to => :invoice_debt }
 
   #
   # Calculated fields

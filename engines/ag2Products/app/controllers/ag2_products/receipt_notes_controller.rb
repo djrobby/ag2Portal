@@ -173,7 +173,7 @@ module Ag2Products
         @store = @order.store
         store_id = @store.id rescue 0
         if @charge_account.blank?
-          @charge_account = @project.blank? ? charge_accounts_dropdown : @project.charge_accounts.order(:account_code)
+          @charge_account = @project.blank? ? charge_accounts_dropdown : charge_accounts_dropdown_edit(@project.id)
         end
         if @store.blank?
           @store = project_stores(@project)
@@ -193,7 +193,7 @@ module Ag2Products
       if project != '0'
         @project = Project.find(project)
         @work_order = @project.blank? ? work_orders_dropdown : @project.work_orders.order(:order_no)
-        @charge_account = @project.blank? ? charge_accounts_dropdown : @project.charge_accounts.order(:account_code)
+        @charge_account = @project.blank? ? charge_accounts_dropdown : charge_accounts_dropdown_edit(@project.id)
         @store = project_stores(@project)
       else
         @work_order = work_orders_dropdown
@@ -237,7 +237,7 @@ module Ag2Products
         @work_orders = @organization.blank? ? work_orders_dropdown : @organization.work_orders.order(:order_no)
         @charge_accounts = @organization.blank? ? charge_accounts_dropdown : @organization.charge_accounts.order(:account_code)
         @stores = @organization.blank? ? stores_dropdown : @organization.stores.order(:name)
-        @payment_methods = @organization.blank? ? payment_methods_dropdown : @organization.payment_methods.order(:description)
+        @payment_methods = @organization.blank? ? payment_methods_dropdown : payment_payment_methods(@organization.id)
       else
         @suppliers = suppliers_dropdown
         @projects = projects_dropdown
@@ -336,7 +336,7 @@ module Ag2Products
       @charge_accounts = work_order_charge_account(@receipt_note)
       @stores = work_order_store(@receipt_note)
       @suppliers = suppliers_dropdown
-      @payment_methods = payment_methods_dropdown
+      @payment_methods = @receipt_note.organization.blank? ? payment_methods_dropdown : payment_payment_methods(@receipt_note.organization_id)
     end
   
     # POST /receipt_notes
@@ -383,7 +383,7 @@ module Ag2Products
           @charge_accounts = work_order_charge_account(@receipt_note)
           @stores = work_order_store(@receipt_note)
           @suppliers = suppliers_dropdown
-          @payment_methods = payment_methods_dropdown
+          @payment_methods = @receipt_note.organization.blank? ? payment_methods_dropdown : payment_payment_methods(@receipt_note.organization_id)
           format.html { render action: "edit" }
           format.json { render json: @receipt_note.errors, status: :unprocessable_entity }
         end
@@ -491,7 +491,16 @@ module Ag2Products
     end
 
     def payment_methods_dropdown
-      _methods = session[:organization] != '0' ? PaymentMethod.where(organization_id: session[:organization].to_i).order(:description) : PaymentMethod.order(:description)
+      _methods = session[:organization] != '0' ? payment_payment_methods(session[:organization].to_i) : payment_payment_methods(0)
+    end
+    
+    def payment_payment_methods(_organization)
+      if _organization != 0
+        _methods = PaymentMethod.where("(flow = 3 OR flow = 2) AND organization_id = ?", _organization).order(:description)
+      else
+        _methods = PaymentMethod.where("flow = 3 OR flow = 2").order(:description)
+      end
+      _methods
     end
     
     # Keeps filter state

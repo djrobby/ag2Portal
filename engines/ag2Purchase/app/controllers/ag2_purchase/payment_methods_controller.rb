@@ -23,14 +23,20 @@ module Ag2Purchase
     # GET /payment_methods
     # GET /payment_methods.json
     def index
-      @payment_methods = PaymentMethod.paginate(:page => params[:page], :per_page => per_page).order(sort_column + ' ' + sort_direction)
+      filter = params[:filter]
+      init_oco if !session[:organization]
+      if session[:organization] != '0'
+        @payment_methods = flow_filter_organization(filter, session[:organization].to_i)
+      else
+        @payment_methods = flow_filter(filter)
+      end
   
       respond_to do |format|
         format.html # index.html.erb
         format.json { render json: @payment_methods }
       end
     end
-  
+      
     # GET /payment_methods/1
     # GET /payment_methods/1.json
     def show
@@ -117,6 +123,32 @@ module Ag2Purchase
     end
 
     private
+
+    def flow_filter(_filter)
+      if _filter == "all"
+        _methods = PaymentMethod.paginate(:page => params[:page], :per_page => per_page).order(sort_column + ' ' + sort_direction)
+      elsif _filter == "collection"
+        _methods = PaymentMethod.where("flow = 3 OR flow = 1").paginate(:page => params[:page], :per_page => per_page).order(sort_column + ' ' + sort_direction)
+      elsif _filter == "payment"
+        _methods = PaymentMethod.where("flow = 3 OR flow = 2").paginate(:page => params[:page], :per_page => per_page).order(sort_column + ' ' + sort_direction)
+      else
+        _methods = PaymentMethod.paginate(:page => params[:page], :per_page => per_page).order(sort_column + ' ' + sort_direction)
+      end
+      _methods
+    end
+
+    def flow_filter_organization(_filter, _organization)
+      if _filter == "all"
+        _methods = PaymentMethod.where(organization_id: _organization).paginate(:page => params[:page], :per_page => per_page).order(sort_column + ' ' + sort_direction)
+      elsif _filter == "collection"
+        _methods = PaymentMethod.where("(flow = 3 OR flow = 1) AND organization_id = ?", _organization).paginate(:page => params[:page], :per_page => per_page).order(sort_column + ' ' + sort_direction)
+      elsif _filter == "payment"
+        _methods = PaymentMethod.where("(flow = 3 OR flow = 2) AND organization_id = ?", _organization).paginate(:page => params[:page], :per_page => per_page).order(sort_column + ' ' + sort_direction)
+      else
+        _methods = PaymentMethod.where(organization_id: _organization).paginate(:page => params[:page], :per_page => per_page).order(sort_column + ' ' + sort_direction)
+      end
+      _methods
+    end
 
     def sort_column
       PaymentMethod.column_names.include?(params[:sort]) ? params[:sort] : "description"

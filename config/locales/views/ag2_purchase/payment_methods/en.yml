@@ -5,6 +5,9 @@ en:
         title: "Payment methods"
         btn_new: "New Payment method"
         back_to_root: "Back to ag2Purchase"
+        collection_only: "For collections"
+        payment_only: "For payments"
+        all: "All"
       show:
         title: "Payment method"
         btn_edit: "Edit Payment method"

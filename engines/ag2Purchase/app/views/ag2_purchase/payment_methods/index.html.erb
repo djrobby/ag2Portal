@@ -23,5 +23,9 @@
   </table>
   <%= render :partial => '/layouts/pagination', :locals => { :ivar => @payment_methods } %>
   <%= render :partial => '/layouts/crud/new', :locals => { :model => PaymentMethod, :path => new_payment_method_path, :txt => t(".btn_new") } %>
+
+  <%= link_to t('.all'), controller: "payment_methods", action: "index" %> |
+  <%= link_to t('.collection_only'), controller: "payment_methods", action: "index", filter: "collection" %> |
+  <%= link_to t('.payment_only'), controller: "payment_methods", action: "index", filter: "payment" %> |
   <%= link_to t(".back_to_root"), ag2_purchase.root_path %>
 </div>

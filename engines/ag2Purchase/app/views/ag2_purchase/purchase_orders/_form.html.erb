@@ -86,11 +86,11 @@
           $("#purchase_order_order_no").css('color', 'red');
           alert('<%= I18n.t("ag2_purchase.purchase_orders.no_error") %>');
           $('#purchase_order_order_no').select();
-        }
-        else
+        } else {
           $("#purchase_order_order_no").css('color', text_field_color);
           $('#purchase_order_order_no').trigger("change");
-      })
+        }
+      });
       return false;
     });
 

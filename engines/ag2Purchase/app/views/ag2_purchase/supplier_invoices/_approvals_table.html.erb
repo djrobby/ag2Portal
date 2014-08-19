@@ -1,5 +1,7 @@
 <script>
   var _f = '';
+  var _i = '';
+  var text_field_color;
 
   $(document).ready(function() {
     $('.wsel2').select2({
@@ -15,6 +17,9 @@
       $('.wdatepicker').datepicker('hide');
     });
 
+    // Save default text color
+    text_field_color = $(".fnt-approver").css('color')
+
     // Trigger to display totals at table foot
     $('#approvals-table').bind('totals', function(event) {
       // Sum necessary values from table rows
@@ -29,40 +34,36 @@
     });
     // Update and display totals
     $('#approvals-table').trigger('totals');
+
     // Retrieves parent values
     _f = $(".fnt-approver").closest('form')[0];
+    _i = $('#hidden_id').val();
+    if (_i == "") _i = "0";
   }); 
 
   jQuery(function($) {
     // when the .fnt-approved-amount field changes
     $(".fnt-approved-amount").change(function() {
       // can't approve more than current debt
-      // preserve the current object
       var _this = (this);
-      recalculate(_this);
+      var amount = $(_this).closest('tr').find('.fnt-approved-amount').val();
+      if (amount == "")
+        amount = "0";
+      amount = parseInt(right_number(amount, 4) * 10000);
+      jQuery.getJSON('si_update_approved_amount/' + amount + '/' + _i, function(data) {
+        $(_this).closest('tr').find('.fnt-approved-amount').val(data.amount);
+        if (data.amount == "$err") {
+          $(_this).closest('tr').find('.fnt-approved-amount').css('color', 'red');
+          alert('<%= I18n.t("ag2_purchase.supplier_invoices.approval_error", var: @invoice_debt) %>');
+          $(_this).closest('tr').find('.fnt-approved-amount').select();
+        } else {
+          $(_this).closest('tr').find('.fnt-approved-amount').css('color', text_field_color);
+          // Update and display totals
+          $('#approvals-table').trigger('totals');
+        }
+      });
       return false;
     });
-    
-    // Recalculate amounts & prices
-    function recalculate(_this) {
-      // make a POST call and replace the content
-      var cost = $(_this).closest('tr').find('.fnt-costw').val();
-      if (cost == "")
-        cost = "0";
-      var hours = $(_this).closest('tr').find('.fnt-hours').val();
-      if (hours == "")
-        hours = "0";
-      // Right formatted for passing as REST parameter
-      cost = parseInt(right_number(cost, 4) * 10000);
-      hours = parseInt(right_number(hours, 4) * 10000);
-      jQuery.getJSON('wo_update_costs_from_cost_or_hours/' + cost + '/' + hours, function(data) {
-        $(_this).closest('tr').find('.fnt-costw').val(data.cost);
-        $(_this).closest('tr').find('.fnt-hours').val(data.hours);
-        $(_this).closest('tr').find('.fnt-costsw').val(data.costs);
-        // Update and display totals
-        $('#approvals-table').trigger('totals');
-      });
-    }
 
     /*
      * Very special function!

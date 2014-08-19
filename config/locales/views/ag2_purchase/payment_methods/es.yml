@@ -5,6 +5,9 @@ es:
         title: "Formas de pago"
         btn_new: "Nueva Forma de pago"
         back_to_root: "Volver a ag2Purchase"
+        collection_only: "Para cobros"
+        payment_only: "Para pagos"
+        all: "Todos"
       show:
         title: "Forma de pago"
         btn_edit: "Editar Forma de pago"

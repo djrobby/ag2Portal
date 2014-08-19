@@ -32,6 +32,33 @@ module Ag2Purchase
       end
     end
 
+    # Calculate and format totals properly
+    def po_totals
+      qty = params[:qty].to_f / 10000
+      amount = params[:amount].to_f / 10000
+      tax = params[:tax].to_f / 10000
+      discount_p = params[:discount_p].to_f / 100
+      # Bonus
+      discount = discount_p != 0 ? amount * (discount_p / 100) : 0
+      # Taxable
+      taxable = amount - discount
+      # Taxes
+      tax = tax - (tax * (discount_p / 100)) if discount_p != 0
+      # Total
+      total = taxable + tax      
+      # Format output values
+      qty = number_with_precision(qty.round(4), precision: 4)
+      amount = number_with_precision(amount.round(4), precision: 4)
+      tax = number_with_precision(tax.round(4), precision: 4)
+      discount = number_with_precision(discount.round(4), precision: 4)
+      taxable = number_with_precision(taxable.round(4), precision: 4)
+      total = number_with_precision(total.round(4), precision: 4)
+      # Setup JSON hash
+      @json_data = { "qty" => qty.to_s, "amount" => amount.to_s, "tax" => tax.to_s,
+                     "discount" => discount.to_s, "taxable" => taxable.to_s, "total" => total.to_s }
+      render json: @json_data
+    end
+
     # Update description and prices text fields at view from product & store selects
     def po_update_description_prices_from_product_store
       product = params[:product]
@@ -102,6 +129,42 @@ module Ag2Purchase
       render json: @json_data
     end
 
+    # Update amount and tax text fields at view (quantity or price changed)
+    def po_update_amount_from_price_or_quantity
+      price = params[:price].to_f / 10000
+      qty = params[:qty].to_f / 10000
+      tax_type = params[:tax_type].to_i
+      discount_p = params[:discount_p].to_f / 100
+      discount = params[:discount].to_f / 10000
+      product = params[:product]
+      if tax_type.blank? || tax_type == "0"
+        if !product.blank? && product != "0"
+          tax_type = Product.find(product).tax_type.id
+        else
+          tax_type = TaxType.where('expiration IS NULL').order('id').first.id
+        end
+      end
+      tax = TaxType.find(tax_type).tax
+      if discount_p > 0
+        discount = price * (discount_p / 100)
+      end
+      amount = qty * (price - discount)
+      tax = amount * (tax / 100)
+      qty = number_with_precision(qty.round(4), precision: 4)
+      price = number_with_precision(price.round(4), precision: 4)
+      amount = number_with_precision(amount.round(4), precision: 4)
+      tax = number_with_precision(tax.round(4), precision: 4)
+      discount_p = number_with_precision(discount_p.round(2), precision: 2)
+      discount = number_with_precision(discount.round(4), precision: 4)
+      @json_data = { "quantity" => qty.to_s, "price" => price.to_s, "amount" => amount.to_s, "tax" => tax.to_s,
+                     "discountp" => discount_p.to_s, "discount" => discount.to_s }
+
+      respond_to do |format|
+        format.html # po_update_amount_from_price_or_quantity.html.erb does not exist! JSON only
+        format.json { render json: @json_data }
+      end
+    end
+
     # Update charge account and store text fields at view from work order select
     def po_update_charge_account_from_order
       order = params[:order]
@@ -146,74 +209,11 @@ module Ag2Purchase
       render json: @json_data
     end
 
-    # Update amount and tax text fields at view (quantity or price changed)
-    def po_update_amount_from_price_or_quantity
-      price = params[:price].to_f / 10000
-      qty = params[:qty].to_f / 10000
-      tax_type = params[:tax_type].to_i
-      discount_p = params[:discount_p].to_f / 100
-      discount = params[:discount].to_f / 10000
-      product = params[:product]
-      if tax_type.blank? || tax_type == "0"
-        if !product.blank? && product != "0"
-          tax_type = Product.find(product).tax_type.id
-        else
-          tax_type = TaxType.where('expiration IS NULL').order('id').first.id
-        end
-      end
-      tax = TaxType.find(tax_type).tax
-      if discount_p > 0
-        discount = price * (discount_p / 100)
-      end
-      amount = qty * (price - discount)
-      tax = amount * (tax / 100)
-      qty = number_with_precision(qty.round(4), precision: 4)
-      price = number_with_precision(price.round(4), precision: 4)
-      amount = number_with_precision(amount.round(4), precision: 4)
-      tax = number_with_precision(tax.round(4), precision: 4)
-      discount_p = number_with_precision(discount_p.round(2), precision: 2)
-      discount = number_with_precision(discount.round(4), precision: 4)
-      @json_data = { "quantity" => qty.to_s, "price" => price.to_s, "amount" => amount.to_s, "tax" => tax.to_s,
-                     "discountp" => discount_p.to_s, "discount" => discount.to_s }
-
-      respond_to do |format|
-        format.html # po_update_amount_from_price_or_quantity.html.erb does not exist! JSON only
-        format.json { render json: @json_data }
-      end
-    end
-
     # Format numbers properly
     def po_format_number
       num = params[:num].to_f / 100
       num = number_with_precision(num.round(2), precision: 2)
       @json_data = { "num" => num.to_s }
-      render json: @json_data
-    end
-
-    # Calculate and format totals properly
-    def po_totals
-      qty = params[:qty].to_f / 10000
-      amount = params[:amount].to_f / 10000
-      tax = params[:tax].to_f / 10000
-      discount_p = params[:discount_p].to_f / 100
-      # Bonus
-      discount = discount_p != 0 ? amount * (discount_p / 100) : 0
-      # Taxable
-      taxable = amount - discount
-      # Taxes
-      tax = tax - (tax * (discount_p / 100)) if discount_p != 0
-      # Total
-      total = taxable + tax      
-      # Format output values
-      qty = number_with_precision(qty.round(4), precision: 4)
-      amount = number_with_precision(amount.round(4), precision: 4)
-      tax = number_with_precision(tax.round(4), precision: 4)
-      discount = number_with_precision(discount.round(4), precision: 4)
-      taxable = number_with_precision(taxable.round(4), precision: 4)
-      total = number_with_precision(total.round(4), precision: 4)
-      # Setup JSON hash
-      @json_data = { "qty" => qty.to_s, "amount" => amount.to_s, "tax" => tax.to_s,
-                     "discount" => discount.to_s, "taxable" => taxable.to_s, "total" => total.to_s }
       render json: @json_data
     end
 
@@ -242,7 +242,7 @@ module Ag2Purchase
         @work_orders = @organization.blank? ? work_orders_dropdown : @organization.work_orders.order(:order_no)
         @charge_accounts = @organization.blank? ? charge_accounts_dropdown : @organization.charge_accounts.order(:account_code)
         @stores = @organization.blank? ? stores_dropdown : @organization.stores.order(:name)
-        @payment_methods = @organization.blank? ? payment_methods_dropdown : @organization.payment_methods.order(:description)
+        @payment_methods = @organization.blank? ? payment_methods_dropdown : payment_payment_methods(@organization.id)
       else
         @suppliers = suppliers_dropdown
         @projects = projects_dropdown
@@ -350,7 +350,7 @@ module Ag2Purchase
       @charge_accounts = work_order_charge_account(@purchase_order)
       @stores = work_order_store(@purchase_order)
       @suppliers = suppliers_dropdown
-      @payment_methods = payment_methods_dropdown
+      @payment_methods = @purchase_order.organization.blank? ? payment_methods_dropdown : payment_payment_methods(@purchase_order.organization_id)
       #@work_orders = @purchase_order.work_order.blank? ? WorkOrder.order(:order_no) : WorkOrder.where('id = ?', @purchase_order.work_order)
       #@projects = @purchase_order.project.blank? ? Project.order(:project_code) : Project.where('id = ?', @purchase_order.project)
       #@charge_accounts = @purchase_order.charge_account.blank? ? ChargeAccount.order(:account_code) : ChargeAccount.where('id = ?', @purchase_order.charge_account)
@@ -402,7 +402,7 @@ module Ag2Purchase
           @charge_accounts = work_order_charge_account(@purchase_order)
           @stores = work_order_store(@purchase_order)
           @suppliers = suppliers_dropdown
-          @payment_methods = payment_methods_dropdown
+          @payment_methods = @purchase_order.organization.blank? ? payment_methods_dropdown : payment_payment_methods(@purchase_order.organization_id)
           format.html { render action: "edit" }
           format.json { render json: @purchase_order.errors, status: :unprocessable_entity }
         end
@@ -510,7 +510,16 @@ module Ag2Purchase
     end
 
     def payment_methods_dropdown
-      _methods = session[:organization] != '0' ? PaymentMethod.where(organization_id: session[:organization].to_i).order(:description) : PaymentMethod.order(:description)
+      _methods = session[:organization] != '0' ? payment_payment_methods(session[:organization].to_i) : payment_payment_methods(0)
+    end
+    
+    def payment_payment_methods(_organization)
+      if _organization != 0
+        _methods = PaymentMethod.where("(flow = 3 OR flow = 2) AND organization_id = ?", _organization).order(:description)
+      else
+        _methods = PaymentMethod.where("flow = 3 OR flow = 2").order(:description)
+      end
+      _methods
     end
     
     # Keeps filter state

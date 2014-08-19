@@ -95,10 +95,10 @@
           $("#work_order_order_no").css('color', 'red');
           alert('<%= I18n.t("ag2_tech.work_orders.no_error") %>');
           $('#work_order_order_no').select();
-        }
-        else
+        } else {
           $("#work_order_order_no").css('color', text_field_color);
           $('#work_order_order_no').trigger("change");
+        }
       });
       return false;
     });
