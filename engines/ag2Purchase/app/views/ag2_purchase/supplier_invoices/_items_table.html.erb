@@ -26,7 +26,7 @@
       if (discount_p == "")
         discount_p = "0";
       discount_p = parseInt(right_number(discount_p, 2) * 100);
-      jQuery.getJSON('rn_totals/' + qty + '/' + amount + '/' + tax + '/' + discount_p, function(data) {
+      jQuery.getJSON('si_totals/' + qty + '/' + amount + '/' + tax + '/' + discount_p, function(data) {
         document.getElementById('foot-quantity').innerHTML = data.qty;
         document.getElementById('foot-amount').innerHTML = data.amount;
         document.getElementById('foot-tax').innerHTML = data.tax;
@@ -53,7 +53,7 @@
         qty = "0";
       // Right formatted for passing as REST parameter
       qty = parseInt(right_number(qty, 4) * 10000);
-      jQuery.getJSON('rn_update_description_prices_from_product/' + product + '/' + qty, function(data) {
+      jQuery.getJSON('si_update_description_prices_from_product/' + product + '/' + qty, function(data) {
         $(_this).closest('tr').find('.fnt-description').val(data.description);
         $(_this).closest('tr').find('.fnt-price').val(data.price);
         $(_this).closest('tr').find('.fnt-amount').val(data.amount);
@@ -123,7 +123,7 @@
       qty = parseInt(right_number(qty, 4) * 10000);
       discount_p = parseInt(right_number(discount_p, 2) * 100);
       discount = parseInt(right_number(discount, 4) * 10000);
-      jQuery.getJSON('rn_update_amount_from_price_or_quantity/' + price + '/' + qty + '/' + tax_type + '/' + discount_p + '/' + discount + '/' + product, function(data) {
+      jQuery.getJSON('si_update_amount_from_price_or_quantity/' + price + '/' + qty + '/' + tax_type + '/' + discount_p + '/' + discount + '/' + product, function(data) {
         $(_this).closest('tr').find('.fnt-quantity').val(data.quantity);
         $(_this).closest('tr').find('.fnt-price').val(data.price);
         $(_this).closest('tr').find('.fnt-amount').val(data.amount);

@@ -52,7 +52,7 @@
       // Right formatted for passing as REST parameter
       qty = parseInt(right_number(qty, 4) * 10000);
       //qty = qty.replace(",", ".") * 10000;
-      jQuery.getJSON('rn_update_description_prices_from_product_store/' + product + '/' + qty + '/' + store, function(data) {
+      jQuery.getJSON('si_update_description_prices_from_product_store/' + product + '/' + qty + '/' + store, function(data) {
         $("#fnt-description").val(data.description);
         $("#fnt-price").val(data.price);
         $("#fnt-amount").val(data.amount);
@@ -74,7 +74,7 @@
       var store = $('select#fnt-store :selected').val();
       if (store == "")
         store = "0";
-      jQuery.getJSON('rn_current_stock/' + product + '/' + store, function(data) {
+      jQuery.getJSON('si_current_stock/' + product + '/' + store, function(data) {
         $("#current-stock").html(data.stock);
       });
       return false;
@@ -86,7 +86,7 @@
       var order = $('select#fnt-work-order :selected').val();
       if (order == "")
         order = "0";
-      jQuery.getJSON('rn_update_charge_account_from_order/' + order, function(data) {
+      jQuery.getJSON('si_update_charge_account_from_order/' + order, function(data) {
         var c = data.charge_account;
         var s = data.store;
         var c_id = data.charge_account_id;
@@ -133,7 +133,7 @@
       var order = $('select#fnt-project :selected').val();
       if (order == "")
         order = "0";
-      jQuery.getJSON('rn_update_charge_account_from_project/' + order, function(data) {
+      jQuery.getJSON('si_update_charge_account_from_project/' + order, function(data) {
         var w = data.work_order;
         var c = data.charge_account;
         var s = data.store;
@@ -244,7 +244,7 @@
       qty = parseInt(right_number(qty, 4) * 10000);
       discount_p = parseInt(right_number(discount_p, 2) * 100);
       discount = parseInt(right_number(discount, 4) * 10000);
-      jQuery.getJSON('rn_update_amount_from_price_or_quantity/' + price + '/' + qty + '/' + tax_type + '/' + discount_p + '/' + discount + '/' + product, function(data) {
+      jQuery.getJSON('si_update_amount_from_price_or_quantity/' + price + '/' + qty + '/' + tax_type + '/' + discount_p + '/' + discount + '/' + product, function(data) {
         $('#fnt-quantity').val(data.quantity);
         $('#fnt-price').val(data.price);
         $('#fnt-amount').val(data.amount);

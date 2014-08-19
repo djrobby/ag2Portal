@@ -1,12 +1,16 @@
 <script>
   var _f = '';
-  var _p = '';
-  var _date = '';
-  var _year = '';
+  var _i = '';
+  var text_field_color;
 
   $(document).ready(function() {
     // Retrieves parent values
     _f = $("#fnt-approver").closest('form')[0];
+    _i = $('#hidden_id').val();
+    if (_i == "") _i = "0";
+
+    // Save default text color
+    text_field_color = $(".fnt-approver").css('color')
 
     // Set #fnt-approval-date
     if ($('#fnt-approval-date').val() == "") {
@@ -27,29 +31,27 @@
       var _this = (this);
       recalculate(_this);
       return false;
-    });
 
-    // Recalculate amounts & prices
-    function recalculate(_this) {
-      // make a POST call and replace the content
-      var cost = $('#fnt-costw').val();
-      if (cost == "")
-        cost = "0";
-      var hours = $('#fnt-hours').val();
-      if (hours == "")
-        hours = "0";
-      // Right formatted for passing as REST parameter
-      cost = parseInt(right_number(cost, 4) * 10000);
-      hours = parseInt(right_number(hours, 4) * 10000);
-      jQuery.getJSON('wo_update_costs_from_cost_or_hours/' + cost + '/' + hours, function(data) {
-        $('#fnt-costw').val(data.cost);
-        $('#fnt-hours').val(data.hours);
-        $('#fnt-costsw').val(data.costs);
-        // Update and display totals
-        $('#approvals-table').trigger('totals');
+      // can't approve more than current debt
+      var amount = $('#fnt-approved-amount').val();
+      if (amount == "")
+        amount = "0";
+      amount = parseInt(right_number(amount, 4) * 10000);
+      jQuery.getJSON('si_update_approved_amount/' + amount + '/' + _i, function(data) {
+        $('#fnt-approved-amount').val(data.amount);
+        if (data.amount == "$err") {
+          $('#fnt-approved-amount').css('color', 'red');
+          alert('<%= I18n.t("ag2_purchase.supplier_invoices.approval_error", var: @invoice_debt) %>');
+          $('#fnt-approved-amount').select();
+        } else {
+          $('#fnt-approved-amount').css('color', text_field_color);
+          // Update and display totals
+          $('#approvals-table').trigger('totals');
+        }
       });
-    }
-  })
+      return false;
+    });
+  });
 </script>
 
 <div id="new-approval-fields" class="modal hide fade" data-backdrop="static">

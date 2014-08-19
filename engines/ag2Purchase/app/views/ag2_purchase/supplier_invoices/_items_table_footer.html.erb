@@ -1,6 +1,6 @@
 <tr>
   <td></td>
-  <td align="right"><%= t :"activerecord.attributes.receipt_note.quantity" %> | <%= t :"activerecord.attributes.receipt_note.subtotal" %></td>
+  <td align="right"><%= t :"activerecord.attributes.supplier_invoice.quantity" %> | <%= t :"activerecord.attributes.supplier_invoice.subtotal" %></td>
   <td align="right" id="foot-quantity"><%= number_with_precision('0', precision: 4) %></td>
   <td></td>
   <td></td>
@@ -11,7 +11,7 @@
 </tr>
 <tr>
   <td></td>
-  <td align="right"><%= t :"activerecord.attributes.receipt_note.bonus" %> | <%= t :"activerecord.attributes.receipt_note.taxable" %> | <%= t :"activerecord.attributes.receipt_note.taxes" %></td>
+  <td align="right"><%= t :"activerecord.attributes.supplier_invoice.bonus" %> | <%= t :"activerecord.attributes.supplier_invoice.taxable" %> | <%= t :"activerecord.attributes.supplier_invoice.taxes" %></td>
   <td></td>
   <td></td>
   <td align="right"><%= f.input :discount_pct, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(f.object.discount_pct, precision: 2) if f.object.discount_pct), class: 'sub-number-text-field' } %></td>
@@ -22,7 +22,7 @@
 </tr>
 <tr class="totals">
   <td></td>
-  <td align="right"><%= t :"activerecord.attributes.receipt_note.total" %></td>
+  <td align="right"><%= t :"activerecord.attributes.supplier_invoice.total" %></td>
   <td></td>
   <td></td>
   <td></td>
