@@ -23,6 +23,7 @@ class Product < ActiveRecord::Base
   has_many :offer_request_items
   has_many :offer_items
   has_many :supplier_invoice_items
+  has_many :sale_offer_items
 
   has_paper_trail
 
@@ -163,6 +164,11 @@ class Product < ActiveRecord::Base
     # Check for client invoice items
     if supplier_invoice_items.count > 0
       errors.add(:base, I18n.t('activerecord.models.product.check_for_client_invoices'))
+      return false
+    end
+    # Check for sale offer items
+    if sale_offer_items.count > 0
+      errors.add(:base, I18n.t('activerecord.models.product.check_for_sale_offers'))
       return false
     end
   end

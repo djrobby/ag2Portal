@@ -7,6 +7,7 @@ en:
         few:   Clients
         other: Clients
         check_for_delivery_notes: "Client cannot be destroyed while linked delivery notes exist."
+        check_for_sale_offers: "Client cannot be destroyed while linked offers exist."
         check_for_client_invoices: "Client cannot be destroyed while linked C invoices exist."
         check_for_client_charges: "Client cannot be destroyed while linked charges exist."
     attributes:

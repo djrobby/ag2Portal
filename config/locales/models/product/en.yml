@@ -15,6 +15,7 @@ en:
         check_for_delivery_notes: "Product cannot be destroyed while linked delivery notes exist."
         check_for_supplier_invoices: "Product cannot be destroyed while linked S invoices exist."
         check_for_client_invoices: "Product cannot be destroyed while linked C invoices exist."
+        check_for_sale_offers: "Product cannot be destroyed while linked offers exist."
     attributes:
       product:
         product_code: "Code"

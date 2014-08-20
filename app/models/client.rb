@@ -12,6 +12,7 @@ class Client < ActiveRecord::Base
                   :entity_id, :street_type_id, :zipcode_id, :town_id, :province_id, :region_id, :country_id
 
   has_many :delivery_notes
+  has_many :sale_offers
 
   has_paper_trail
 
@@ -101,6 +102,11 @@ class Client < ActiveRecord::Base
     # Check for delivery notes
     if delivery_notes.count > 0
       errors.add(:base, I18n.t('activerecord.models.client.check_for_delivery_notes'))
+      return false
+    end
+    # Check for sale offers
+    if sale_offers.count > 0
+      errors.add(:base, I18n.t('activerecord.models.client.check_for_sale_offers'))
       return false
     end
     # Check for invoices

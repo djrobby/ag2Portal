@@ -1,0 +1,14 @@
+en:
+  activerecord:
+    models:
+      sale_offer_status:
+        zero:  Sale offer statuses
+        one:   Sale offer status
+        few:   Sale offer statuses
+        other: Sale offer statuses
+        check_for_sale_offers: "Sale offer status cannot be destroyed while linked offers exist."
+    attributes:
+      sale_offer_status:
+        name: "Description"
+        approval: Require approval?
+        notification: Notifies?

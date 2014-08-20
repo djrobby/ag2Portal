@@ -11,6 +11,7 @@ class Organization < ActiveRecord::Base
   # finance
   # gest
   has_many :clients
+  has_many :sale_offers
   # helpdesk
   has_many :technicians
   has_many :tickets

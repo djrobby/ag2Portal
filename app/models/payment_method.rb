@@ -8,6 +8,8 @@ class PaymentMethod < ActiveRecord::Base
   has_many :offer_requests
   has_many :offers
   has_many :supplier_invoices
+  has_many :delivery_notes
+  has_many :sale_offers
 
   has_paper_trail
 
@@ -62,6 +64,16 @@ class PaymentMethod < ActiveRecord::Base
     # Check for supplier invoices
     if supplier_invoices.count > 0
       errors.add(:base, I18n.t('activerecord.models.payment_method.check_for_supplier_invoices'))
+      return false
+    end
+    # Check for delivery notes
+    if delivery_notes.count > 0
+      errors.add(:base, I18n.t('activerecord.models.payment_method.check_for_delivery_notes'))
+      return false
+    end
+    # Check for sale offers
+    if sale_offers.count > 0
+      errors.add(:base, I18n.t('activerecord.models.payment_method.check_for_sale_offers'))
       return false
     end
   end

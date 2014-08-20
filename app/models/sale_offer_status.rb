@@ -1,7 +1,7 @@
-class OrderStatus < ActiveRecord::Base
+class SaleOfferStatus < ActiveRecord::Base
   attr_accessible :approval, :name, :notification
 
-  has_many :purchase_orders
+  has_many :sale_offers
 
   has_paper_trail
 
@@ -12,9 +12,9 @@ class OrderStatus < ActiveRecord::Base
   private
 
   def check_for_dependent_records
-    # Check for purchase orders
-    if purchase_orders.count > 0
-      errors.add(:base, I18n.t('activerecord.models.order_status.check_for_purchase_orders'))
+    # Check for sell offers
+    if sale_offers.count > 0
+      errors.add(:base, I18n.t('activerecord.models.sale_offer.check_for_sale_offers'))
       return false
     end
   end

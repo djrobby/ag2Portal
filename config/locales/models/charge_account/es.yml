@@ -7,9 +7,12 @@ es:
         few:   Cuentas de cargo
         other: Cuentas de cargo
         check_for_purchase_orders: "Cuenta de cargo no puede ser eliminada mientras existan pedidos vinculados."
-        check_for_work_orders: "Cuenta de cargo no puede ser eliminada mientras existan ordenes de trabajo vinculadas."
         check_for_receipt_notes: "Cuenta de cargo no puede ser eliminada mientras existan notas de recepción vinculadas."
-        check_for_supplier_invoices: "Cuenta de cargo no puede ser eliminada mientras existan facturas vinculados."
+        check_for_delivery_notes: "Cuenta de cargo no puede ser eliminada mientras existan notas de entrega vinculadas."
+        check_for_offer_requests: "Cuenta de cargo no puede ser eliminada mientras existan solicitudes vinculadas."
+        check_for_offers: "Cuenta de cargo no puede ser eliminada mientras existan ofertas vinculadas."
+        check_for_supplier_invoices: "Cuenta de cargo no puede ser eliminada mientras existan facturas S vinculadas."
+        check_for_sale_offers: "Cuenta de cargo no puede ser eliminada mientras existan presupuestos vinculados."
     attributes:
       charge_account:
         account_code: "Código"

@@ -1,0 +1,31 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  client: 
+  payment_method: 
+  sale_offer_status: 
+  offer_no: MyString
+  offer_date: 2014-08-20
+  remarks: MyString
+  discount_pct: 9.99
+  discount: 9.99
+  project: 
+  store: 
+  work_order: 
+  charge_account: 
+  organization: 
+
+two:
+  client: 
+  payment_method: 
+  sale_offer_status: 
+  offer_no: MyString
+  offer_date: 2014-08-20
+  remarks: MyString
+  discount_pct: 9.99
+  discount: 9.99
+  project: 
+  store: 
+  work_order: 
+  charge_account: 
+  organization: 

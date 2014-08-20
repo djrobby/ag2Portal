@@ -8,7 +8,11 @@ en:
         other: Work orders
         check_for_purchase_orders: "Work order cannot be destroyed while linked orders exist."
         check_for_receipt_notes: "Work order cannot be destroyed while linked receipt notes exist."
+        check_for_delivery_notes: "Work order cannot be destroyed while linked delivery notes exist."
+        check_for_offer_requests: "Work order cannot be destroyed while linked requests exist."
+        check_for_offers: "Work order cannot be destroyed while linked offers exist."
         check_for_supplier_invoices: "Work order cannot be destroyed while linked S invoices exist."
+        check_for_sale_offers: "Work order cannot be destroyed while linked offers exist."
     attributes:
       work_order:
         order_no: "No."

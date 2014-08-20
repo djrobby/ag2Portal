@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140818070253) do
+ActiveRecord::Schema.define(:version => 20140820115455) do
 
   create_table "activities", :force => true do |t|
     t.string   "description"
@@ -993,6 +993,79 @@ ActiveRecord::Schema.define(:version => 20140818070253) do
   add_index "salary_concepts", ["name"], :name => "index_salary_concepts_on_name"
   add_index "salary_concepts", ["nomina_id"], :name => "index_salary_concepts_on_nomina_id"
   add_index "salary_concepts", ["organization_id"], :name => "index_salary_concepts_on_organization_id"
+
+  create_table "sale_offer_items", :force => true do |t|
+    t.integer  "sale_offer_id"
+    t.integer  "product_id"
+    t.string   "description"
+    t.decimal  "quantity",          :precision => 10, :scale => 0
+    t.decimal  "price",             :precision => 10, :scale => 0
+    t.decimal  "discount_pct",      :precision => 10, :scale => 0
+    t.decimal  "discount",          :precision => 10, :scale => 0
+    t.integer  "tax_type_id"
+    t.date     "delivery_date"
+    t.integer  "project_id"
+    t.integer  "store_id"
+    t.integer  "work_order_id"
+    t.integer  "charge_account_id"
+    t.datetime "created_at",                                       :null => false
+    t.datetime "updated_at",                                       :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  add_index "sale_offer_items", ["charge_account_id"], :name => "index_sale_offer_items_on_charge_account_id"
+  add_index "sale_offer_items", ["description"], :name => "index_sale_offer_items_on_description"
+  add_index "sale_offer_items", ["product_id"], :name => "index_sale_offer_items_on_product_id"
+  add_index "sale_offer_items", ["project_id"], :name => "index_sale_offer_items_on_project_id"
+  add_index "sale_offer_items", ["sale_offer_id"], :name => "index_sale_offer_items_on_sale_offer_id"
+  add_index "sale_offer_items", ["store_id"], :name => "index_sale_offer_items_on_store_id"
+  add_index "sale_offer_items", ["tax_type_id"], :name => "index_sale_offer_items_on_tax_type_id"
+  add_index "sale_offer_items", ["work_order_id"], :name => "index_sale_offer_items_on_work_order_id"
+
+  create_table "sale_offer_statuses", :force => true do |t|
+    t.string   "name"
+    t.boolean  "approval"
+    t.boolean  "notification"
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  add_index "sale_offer_statuses", ["name"], :name => "index_sale_offer_statuses_on_name"
+
+  create_table "sale_offers", :force => true do |t|
+    t.integer  "client_id"
+    t.integer  "payment_method_id"
+    t.integer  "sale_offer_status_id"
+    t.string   "offer_no"
+    t.date     "offer_date"
+    t.string   "remarks"
+    t.decimal  "discount_pct",         :precision => 6,  :scale => 2, :default => 0.0, :null => false
+    t.decimal  "discount",             :precision => 13, :scale => 4, :default => 0.0, :null => false
+    t.integer  "project_id"
+    t.integer  "store_id"
+    t.integer  "work_order_id"
+    t.integer  "charge_account_id"
+    t.integer  "organization_id"
+    t.datetime "created_at",                                                           :null => false
+    t.datetime "updated_at",                                                           :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  add_index "sale_offers", ["charge_account_id"], :name => "index_sale_offers_on_charge_account_id"
+  add_index "sale_offers", ["client_id"], :name => "index_sale_offers_on_client_id"
+  add_index "sale_offers", ["offer_date"], :name => "index_sale_offers_on_offer_date"
+  add_index "sale_offers", ["offer_no"], :name => "index_sale_offers_on_offer_no"
+  add_index "sale_offers", ["organization_id", "offer_no"], :name => "index_sale_offers_on_organization_id_and_offer_no", :unique => true
+  add_index "sale_offers", ["organization_id"], :name => "index_sale_offers_on_organization_id"
+  add_index "sale_offers", ["payment_method_id"], :name => "index_sale_offers_on_payment_method_id"
+  add_index "sale_offers", ["project_id"], :name => "index_sale_offers_on_project_id"
+  add_index "sale_offers", ["sale_offer_status_id"], :name => "index_sale_offers_on_sale_offer_status_id"
+  add_index "sale_offers", ["store_id"], :name => "index_sale_offers_on_store_id"
+  add_index "sale_offers", ["work_order_id"], :name => "index_sale_offers_on_work_order_id"
 
   create_table "sexes", :force => true do |t|
     t.string   "name"

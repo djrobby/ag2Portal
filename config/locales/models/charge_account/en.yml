@@ -7,9 +7,12 @@ en:
         few:   Charge accounts
         other: Charge accounts
         check_for_purchase_orders: "Charge account cannot be destroyed while linked orders exist."
-        check_for_work_orders: "Charge account cannot be destroyed while linked work orders exist."
         check_for_receipt_notes: "Charge account cannot be destroyed while linked receipt notes exist."
-        check_for_supplier_invoices: "Charge account cannot be destroyed while linked invoices exist."
+        check_for_delivery_notes: "Charge account cannot be destroyed while linked delivery notes exist."
+        check_for_offer_requests: "Charge account cannot be destroyed while linked requests exist."
+        check_for_offers: "Charge account cannot be destroyed while linked offers exist."
+        check_for_supplier_invoices: "Charge account cannot be destroyed while linked S invoices exist."
+        check_for_sale_offers: "Charge account cannot be destroyed while linked offers exist."
     attributes:
       charge_account:
         account_code: "Code"
