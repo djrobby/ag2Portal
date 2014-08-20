@@ -1,0 +1,42 @@
+es:
+  activerecord:
+    models:
+      sale_offer:
+        zero:  Presupuestos
+        one:   Presupuesto
+        few:   Presupuestos
+        other: Presupuestos
+        check_for_purchase_orders: "Presupuesto no puede ser eliminado mientras existan notas de entrega vinculadas."
+    attributes:
+      sale_offer:
+        client: "Cliente"
+        client_id: "Cliente"
+        payment_method: "Forma de pago"
+        payment_method_id: "Forma de pago"
+        sale_offer_status: "Estado"
+        sale_offer_status_id: "Estado"
+        offer_no: "Nº"
+        offer_date: "Fecha"
+        remarks: "Comentarios"
+        discount_pct: "% Dto."
+        discount: "Descuento"
+        project: "Proyecto"
+        project_id: "Proyecto"
+        office: "Oficina"
+        company: "Empresa"
+        store: "Almacén"
+        store_id: "Almacén"
+        work_order: "Orden de trabajo"
+        work_order_id: "Orden de trabajo"
+        charge_account: "Cuenta de cargo"
+        charge_account_id: "Cuenta de cargo"
+        subtotal: "Subtotal"
+        taxable: "Base imponible"
+        taxes: "Impuestos"
+        total: "Total"
+        quantity: "Artículos"
+        bonus: "Bonificación"
+        balance: "Saldo"
+        delivery_avg: "Promedio entrega est."
+        organization: "Organización"
+        organization_id: "Organización"

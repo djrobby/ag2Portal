@@ -28,6 +28,7 @@ Ag2Gest::Engine.routes.draw do
 
     # Resources
     resources :clients
+    resources :sale_offers
     
     # Root
     root :to => 'home#index'

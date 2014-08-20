@@ -1,0 +1,45 @@
+es:
+  activerecord:
+    models:
+      sale_offer_item:
+        zero:  Ítems de presupuesto
+        one:   Ítem de presupuesto
+        few:   Ítems de presupuesto
+        other: Ítems de presupuesto
+    attributes:
+      sale_offer_item:
+        sale_offer: "Oferta"
+        sale_offer_id: "Oferta"
+        product: "Producto"
+        product_id: "Producto"
+        product_c: "Cód."
+        code: "Referencia"
+        description: "Descripción"
+        description_c: "Concepto"
+        quantity: "Cantidad"
+        quantity_c: "Cant."
+        price_c: "Precio"
+        price: "Precio €"
+        discount_pct: "% Dto."
+        discount_pct_c: "%D"
+        discount_c: "Dto."
+        discount: "Dto.€"
+        tax_type: "T.Impto."
+        tax_type_id: "T.Impto."
+        delivery_date: "Entrega est."
+        amount_c: "Importe"
+        amount: "Importe €"
+        tax_c: "Impto."
+        tax: "Impto.€"
+        balance: "Saldo"
+        balance_c: "Saldo"
+        project: "Proyecto"
+        project_id: "Proyecto"
+        office: "Oficina"
+        company: "Empresa"
+        store: "Almacén"
+        store_id: "Almacén"
+        work_order: "Orden de trabajo"
+        work_order_id: "Orden de trabajo"
+        charge_account: "Cuenta de cargo"
+        charge_account_id: "Cuenta de cargo"

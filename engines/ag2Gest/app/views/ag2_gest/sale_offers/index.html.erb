@@ -1,0 +1,21 @@
+<h1>Listing sale_offers</h1>
+
+<table>
+  <tr>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @sale_offers.each do |sale_offer| %>
+  <tr>
+    <td><%= link_to 'Show', sale_offer %></td>
+    <td><%= link_to 'Edit', edit_sale_offer_path(sale_offer) %></td>
+    <td><%= link_to 'Destroy', sale_offer, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Sale offer', new_sale_offer_path %>

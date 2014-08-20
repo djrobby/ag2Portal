@@ -1,0 +1,42 @@
+en:
+  activerecord:
+    models:
+      sale_offer:
+        zero:  Sale offers
+        one:   Sale offer
+        few:   Sale offers
+        other: Sale offers
+        check_for_purchase_orders: "Sale offer cannot be destroyed while linked delivery notes exist."
+    attributes:
+      sale_offer:
+        client: "Client"
+        client_id: "Client"
+        payment_method: "Payment method"
+        payment_method_id: "Payment method"
+        sale_offer_status: "Status"
+        sale_offer_status_id: "Status"
+        offer_no: "No."
+        offer_date: "Date"
+        remarks: "Remarks"
+        discount_pct: "Disc.%"
+        discount: "Discount"
+        project: "Project"
+        project_id: "Project"
+        office: "Office"
+        company: "Company"
+        store: "Store"
+        store_id: "Store"
+        work_order: "Work order"
+        work_order_id: "Work order"
+        charge_account: "Charge account"
+        charge_account_id: "Charge account"
+        subtotal: "Subtotal"
+        taxable: "Taxable"
+        taxes: "Taxes"
+        total: "Total"
+        quantity: "Articles"
+        bonus: "Bonus"
+        balance: "Balance"
+        delivery_avg: "Est.Delivery average"
+        organization: "Organization"
+        organization_id: "Organization"
