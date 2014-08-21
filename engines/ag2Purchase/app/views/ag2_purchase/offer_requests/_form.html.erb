@@ -1,17 +1,402 @@
-<%= form_for(@offer_request) do |f| %>
-  <% if @offer_request.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@offer_request.errors.count, "error") %> prohibited this offer_request from being saved:</h2>
+<script>
+  var text_field_color;
+  var _thisForm = '';
+  
+  $(document).ready(function() {
+    $('select.sel2').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      allowClear: true
+    });
+    $('.date_picker').datepicker({
+      format : 'dd/mm/yyyy',
+      weekStart : 1
+    }).on('changeDate', function(e){
+      $('.date_picker').datepicker('hide');
+    });
+    if ($('#offer_request_request_date').val() == "") {
+      $('#offer_request_request_date').datepicker('setValue', es_date(new Date()));
+    }
 
-      <ul>
-      <% @offer_request.errors.full_messages.each do |msg| %>
-        <li><%= msg %></li>
-      <% end %>
-      </ul>
-    </div>
-  <% end %>
+    // Save default text color
+    text_field_color = $("#offer_request_request_no").css('color')
+    
+    // Initialized form variable
+    _thisForm = $("#offer_request_request_no").closest('form')[0];
 
-  <div class="actions">
-    <%= f.submit %>
-  </div>
+    // Disable fields if request# blank
+    var order = $('#offer_request_request_no').val();
+    if (order == "")
+      order = "0";
+    if (order == "0") {
+      // Empty order: Disable
+      $('#submit_btn').hide();
+      $('.fnt-new-btn').hide();
+      $('.fnt-new-supplier-btn').hide();
+    } else {
+      // Order OK: Enable
+      $('#submit_btn').show();
+      $('.fnt-new-btn').show();
+      $('.fnt-new-supplier-btn').show();
+    }
+
+    // Disable generate_code_btn if offer_request_project_id blank
+    var order = $('#offer_request_project_id').val();
+    if (order == "")
+      order = "0";
+    if (order == "0") {
+      // Empty project: Hide
+      $('#generate_code_btn').hide();
+    } else {
+      // Project OK: Show
+      $('#generate_code_btn').show();
+    }
+    
+    // Can't change order no if editing
+    if ('<%= @breadcrumb %>' == "update") {
+      $('#offer_request_request_no').prop('readonly', true);
+    } else {
+      $('#offer_request_request_no').prop('readonly', false);
+    }
+  });
+  
+  jQuery(function($) {
+    // when the #offer_request_request_no field changes
+    $("#offer_request_request_no").change(function() {
+      var order = $('#offer_request_request_no').val();
+      if (order == "")
+        order = "0";
+      if (order == "0") {
+        // Empty order: Disable
+        $('#submit_btn').hide();
+        $('.fnt-new-btn').hide();
+        $('.fnt-new-supplier-btn').hide();
+      } else {
+        // Order: OK: Enable
+        $('#submit_btn').show();
+        $('.fnt-new-btn').show();
+        $('.fnt-new-supplier-btn').show();
+      }
+    });
+    
+    // when #generate_code_btn is clicked
+    $("#generate_code_btn").click(function() {
+      // make a POST call and replace the content
+      var order = $('select#offer_request_project_id :selected').val();
+      if (order == "")
+        order = "$";
+      jQuery.getJSON('po_generate_no/' + order, function(data) {
+        $("#offer_request_request_no").val(data.code);
+        if ($("#offer_request_request_no").val() == "$err") {
+          $("#offer_request_request_no").css('color', 'red');
+          alert('<%= I18n.t("ag2_purchase.offer_requests.no_error") %>');
+          $('#offer_request_request_no').select();
+        } else {
+          $("#offer_request_request_no").css('color', text_field_color);
+          $('#offer_request_request_no').trigger("change");
+        }
+      });
+      return false;
+    });
+
+    // when the #offer_request_organization_id field changes
+    $("#offer_request_organization_id").change(function() {
+      // make a POST call and replace the content
+      var order = $('select#offer_request_organization_id :selected').val();
+      if (order == "")
+        order = "0";
+      jQuery.getJSON('or_update_project_textfields_from_organization/' + order, function(data) {
+        var p = data.project;
+        var w = data.work_order;
+        var h = data.charge_account
+        var s = data.store
+        var m = data.payment_method
+        // Project
+        $("#offer_request_project_id").html("");
+        $("#offer_request_project_id").select2("val", "");
+        $("#offer_request_project_id").append($('<option></option>').val("").html(""));
+        if (!p.length) {
+          $.each(data, function(id, option) {
+            if (id == 'project' && option != "") {
+              $("#offer_request_project_id").append($('<option></option>').val(option.id).html(option.project_code.substring(0,4) + "-" + option.project_code.substring(4,10) + " " + option.name));
+            }
+          });
+        } else {
+          $.each(p, function(id, option) {
+            $("#offer_request_project_id").append($('<option></option>').val(option.id).html(option.project_code.substring(0,4) + "-" + option.project_code.substring(4,10) + " " + option.name));
+          });
+        }
+        // Work order
+        $("#offer_request_work_order_id").html("");
+        $("#offer_request_work_order_id").select2("val", "");
+        $("#offer_request_work_order_id").append($('<option></option>').val("").html(""));
+        if (!w.length) {
+          $.each(data, function(id, option) {
+            if (id == 'type' && option != "") {
+              $("#offer_request_work_order_id").append($('<option></option>').val(option.id).html(option.order_no.substring(0,10) + "-" + option.order_no.substring(10,14) + "-" + option.order_no.substring(14,20) + " " + option.description.substring(0,41)));
+            }
+          });
+        } else {
+          $.each(w, function(id, option) {
+            $("#offer_request_work_order_id").append($('<option></option>').val(option.id).html(option.order_no.substring(0,10) + "-" + option.order_no.substring(10,14) + "-" + option.order_no.substring(14,20) + " " + option.description.substring(0,41)));
+          });
+        }
+        // Charge account
+        $("#offer_request_charge_account_id").html("");
+        $("#offer_request_charge_account_id").select2("val", "");
+        $("#offer_request_charge_account_id").append($('<option></option>').val("").html(""));
+        if (!h.length) {
+          $.each(data, function(id, option) {
+            if (id == 'charge_account' && option != "") {
+              $("#offer_request_charge_account_id").append($('<option></option>').val(option.id).html(option.account_code.substring(0,4) + "-" + option.account_code.substring(4,11) + " " + option.name));
+            }
+          });
+        } else {
+          $.each(h, function(id, option) {
+            $("#offer_request_charge_account_id").append($('<option></option>').val(option.id).html(option.account_code.substring(0,4) + "-" + option.account_code.substring(4,11) + " " + option.name));
+          });
+        }
+        // Store
+        $("#offer_request_store_id").html("");
+        $("#offer_request_store_id").select2("val", "");
+        $("#offer_request_store_id").append($('<option></option>').val("").html(""));
+        if (!s.length) {
+          $.each(data, function(id, option) {
+            if (id == 'store' && option != "") {
+              $("#offer_request_store_id").append($('<option></option>').val(option.id).html(option.name));
+            }
+          });
+        } else {
+          $.each(s, function(id, option) {
+            $("#offer_request_store_id").append($('<option></option>').val(option.id).html(option.name));
+          });
+        }
+        // Payment method
+        $("#offer_request_payment_method_id").html("");
+        $("#offer_request_payment_method_id").val("");
+        $("#offer_request_payment_method_id").append($('<option></option>').val("").html(""));
+        if (!m.length) {
+          $.each(data, function(id, option) {
+            if (id == 'payment_method' && option != "") {
+              $("#offer_request_payment_method_id").append($('<option></option>').val(option.id).html(option.description));
+            }
+          });
+        } else {
+          $.each(m, function(id, option) {
+            $("#offer_request_payment_method_id").append($('<option></option>').val(option.id).html(option.description));
+          });
+        }
+      });
+      if (order == "0") {
+        $("#offer_request_project_id").val(0);
+        //$("#offer_request_project_id").trigger("change");
+      }
+      return false;
+    });
+
+    // when the #offer_request_project_id field changes
+    $("#offer_request_project_id").change(function() {
+      // make a POST call and replace the content
+      var order = $('select#offer_request_project_id :selected').val();
+      if (order == "")
+        order = "0";
+      jQuery.getJSON('or_update_charge_account_from_project/' + order, function(data) {
+        var w = data.work_order;
+        var c = data.charge_account;
+        var s = data.store;
+        // Work Order
+        $("#offer_request_work_order_id").html("");
+        $("#offer_request_work_order_id").select2("val", "");
+        $("#offer_request_work_order_id").append($('<option></option>').val("").html(""));
+        if (!w.length) {
+          $.each(data, function(id, option) {
+            if (id == 'offer_request' && option != "") {
+              $("#offer_request_work_order_id").append($('<option></option>').val(option.id).html(option.order_no.substring(0,10) + "-" + option.order_no.substring(10,14) + "-" + option.order_no.substring(14,20) + " " + option.description));
+            }
+          });
+        } else {
+          $.each(w, function(id, option) {
+            $("#offer_request_work_order_id").append($('<option></option>').val(option.id).html(option.order_no.substring(0,10) + "-" + option.order_no.substring(10,14) + "-" + option.order_no.substring(14,20) + " " + option.description));
+          });
+        }
+        // Charge Account
+        $("#offer_request_charge_account_id").html("");
+        $("#offer_request_charge_account_id").select2("val", "");
+        $("#offer_request_charge_account_id").append($('<option></option>').val("").html(""));
+        if (!c.length) {
+          $.each(data, function(id, option) {
+            if (id == 'charge_account' && option != "") {
+              $("#offer_request_charge_account_id").append($('<option></option>').val(option.id).html(option.account_code.substring(0,4) + "-" + option.account_code.substring(4,11) + " " + option.name));
+            }
+          });
+        } else {
+          $.each(c, function(id, option) {
+            $("#offer_request_charge_account_id").append($('<option></option>').val(option.id).html(option.account_code.substring(0,4) + "-" + option.account_code.substring(4,11) + " " + option.name));
+          });
+        }
+        // Store
+        $("#offer_request_store_id").html("");
+        $("#offer_request_store_id").select2("val", "");
+        $("#offer_request_store_id").append($('<option></option>').val("").html(""));
+        if (!s.length) {
+          $.each(data, function(id, option) {
+            if (id == 'store' && option != "") {
+              $("#offer_request_store_id").append($('<option></option>').val(option.id).html(option.name));
+            }
+          });
+        } else {
+          $.each(s, function(id, option) {
+            $("#offer_request_store_id").append($('<option></option>').val(option.id).html(option.name));
+          });
+        }
+      });
+      return false;
+    });
+
+    // when the #offer_request_work_order_id field changes
+    $("#offer_request_work_order_id").change(function() {
+      // make a POST call and replace the content
+      var order = $('select#offer_request_work_order_id :selected').val();
+      if (order == "")
+        order = "0";
+      jQuery.getJSON('or_update_charge_account_from_order/' + order, function(data) {
+        var c = data.charge_account;
+        var s = data.store;
+        var c_id = data.charge_account_id;
+        var s_id = data.store_id;
+        // Charge Account
+        $("#offer_request_charge_account_id").html("");
+        $("#offer_request_charge_account_id").select2("val", "");
+        $("#offer_request_charge_account_id").append($('<option></option>').val("").html(""));
+        if (!c.length) {
+          $.each(data, function(id, option) {
+            if (id == 'charge_account' && option != "") {
+              $("#offer_request_charge_account_id").append($('<option></option>').val(option.id).html(option.account_code.substring(0,4) + "-" + option.account_code.substring(4,11) + " " + option.name));
+            }
+          });
+        } else {
+          $.each(c, function(id, option) {
+            $("#offer_request_charge_account_id").append($('<option></option>').val(option.id).html(option.account_code.substring(0,4) + "-" + option.account_code.substring(4,11) + " " + option.name));
+          });
+        }
+        if (c_id != 0) $("#offer_request_charge_account_id").select2("val", c_id);
+        // Store
+        $("#offer_request_store_id").html("");
+        $("#offer_request_store_id").select2("val", "");
+        $("#offer_request_store_id").append($('<option></option>').val("").html(""));
+        if (!s.length) {
+          $.each(data, function(id, option) {
+            if (id == 'store' && option != "") {
+              $("#offer_request_store_id").append($('<option></option>').val(option.id).html(option.name));
+            }
+          });
+        } else {
+          $.each(s, function(id, option) {
+            $("#offer_request_store_id").append($('<option></option>').val(option.id).html(option.name));
+          });
+        }
+        if (s_id != 0) $("#offer_request_store_id").select2("val", s_id);
+      });
+      return false;
+    });
+
+    // when the #offer_request_discount_pct field changes
+    $("#offer_request_discount_pct").change(function() {
+      var num = $('#offer_request_discount_pct').val();
+      if (num == "")
+        num = "0";
+      // Right formatted for passing as REST parameter
+      num = parseInt(right_number(num, 2) * 100);
+      jQuery.getJSON('or_format_number/' + num, function(data) {
+        $('#offer_request_discount_pct').val(data.num);
+      });
+      // Update and display totals
+      $('#items-table').trigger('totals');
+      return false;
+    });
+    
+    // when submit    
+    $(_thisForm).on('submit', function() {
+      // Must change decimal separator, if comma, in items table numeric fields
+      var price = '';
+      var qty = '';
+      var discount_p = '';
+      var discount = '';
+      $('tr.fields').each(function() {
+        qty = $(this).find('input.fnt-quantity').val().replace(",", ".");
+        price = $(this).find('input.fnt-price').val().replace(",", ".");
+        discount_p = $(this).find('input.fnt-discount-pct').val().replace(",", ".");
+        discount = $(this).find('input.fnt-discount').val().replace(",", ".");
+        $(this).find('input.fnt-quantity').val(qty);
+        $(this).find('input.fnt-price').val(price);
+        $(this).find('input.fnt-discount-pct').val(discount_p);
+        $(this).find('input.fnt-discount').val(discount);
+      });
+      // Must change decimal separator, if comma, in numeric fields
+      var num = $('#offer_request_discount_pct').val().replace(",", ".");
+      $('#offer_request_discount_pct').val(num);
+      //e.preventDefault();
+    });
+  });
+</script>
+
+<%= simple_form_for @offer_request, html: { class: 'form-vertical well' } do |f| %>
+<%= f.error_notification %>
+<%= display_base_errors resource %>
+<div>
+  <label class="multi-field-label-two"> <%= f.input :request_no, autofocus: true, input_html: { class: 'mid-text-field' }, label_html: { class: 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.input :request_date, start_year: Time.now.year - 100, end_year: Time.now.year + 100, as: :string, input_html: { value: (f.object.request_date.strftime("%d/%m/%Y") if f.object.request_date), class: 'mid-text-field date_picker' }, label_html: { class: 'form-label' } %> </label>
+</div>
+<% if session[:organization] != '0' %>
+<%= f.association :organization, collection: Organization.where("id = ?", "#{session[:organization]}").all, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' }, include_blank: false %>
+<% elsif current_user.organizations.count > 0 %>
+<%= f.association :organization, collection: current_user.organizations.order('name'), input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' }, include_blank: false %>
+<% else %>
+<%= f.association :organization, collection: Organization.order('name'), input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %>
+<% end %>
+<div>
+  <label class="multi-field-label-two"> <%= f.association :project, collection: @projects, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.association :offer_request, collection: @offer_requests, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
+</div>
+<div>
+  <label class="multi-field-label-two"> <%= f.association :charge_account, collection: @charge_accounts, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.association :store, collection: @stores, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
+</div>
+<div>
+  <label class="multi-field-label-two"> <%= f.association :payment_method, collection: @payment_methods, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label-under-sel2' } %> </label>
+  <label class="multi-field-label-two"> <%= f.input :deadline_date, start_year: Time.now.year - 100, end_year: Time.now.year + 100, as: :string, input_html: { value: (f.object.deadline_date.strftime("%d/%m/%Y") if f.object.deadline_date), class: 'mid-text-field date_picker' }, label_html: { class: 'form-label' } %> </label>
+</div>
+<!-- Items -->
+<table class="form-table">
+  <tbody>
+    <tr class="form-tr underlined-tr">
+      <td class="form-td-two left-winged">
+        <h4><%= t 'ag2_purchase.offer_requests.items_info' %></h4>
+      </td>
+      <td class="form-td-two right-winged">
+        <%= link_to_add_fields(t("ag2_purchase.offer_requests.btn_new_item"), f, :offer_request_items, "item_fields", "new-item-fields", class: "btn btn-warning fnt-new-btn") %>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<%= render 'items_table', f: f %>
+<!-- suppliers -->
+<table class="form-table">
+  <tbody>
+    <tr class="form-tr underlined-tr">
+      <td class="form-td-two left-winged">
+        <h4><%= t 'ag2_purchase.offer_requests.suppliers_info' %></h4>
+      </td>
+      <td class="form-td-two right-winged">
+        <%= link_to_add_fields(t("ag2_purchase.offer_requests.btn_new_supplier"), f, :offer_request_suppliers, "supplier_fields", "new-supplier-fields", class: "btn btn-warning fnt-new-supplier-btn") %>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<%= render 'suppliers_table', f: f %>
+<!-- Remarks -->
+<%= f.input :remarks, as: :text, input_html: { class: 'x-large-text-field', rows: 3 }, label_html: { class: 'form-label' } %>
+<!-- Special hidden Id -->
+<%= f.input :id, as: :hidden, input_html: { id: 'hidden_id' } %>
+<!-- Buttons -->
+<%= f.button :submit, class: 'btn-primary', id: 'submit_btn' %>
 <% end %>

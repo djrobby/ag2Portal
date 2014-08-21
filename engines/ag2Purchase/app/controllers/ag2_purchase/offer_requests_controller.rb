@@ -51,6 +51,7 @@ module Ag2Purchase
       @offer_request = OfferRequest.find(params[:id])
       @items = @offer_request.offer_request_items.paginate(:page => params[:page], :per_page => per_page).order('id')
       @suppliers = @offer_request.offer_request_suppliers.paginate(:page => params[:page], :per_page => per_page).order('id')
+      @offers = @offer_request.offers.paginate(:page => params[:page], :per_page => per_page).order('id')
   
       respond_to do |format|
         format.html # show.html.erb

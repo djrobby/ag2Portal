@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140820115455) do
+ActiveRecord::Schema.define(:version => 20140821080510) do
 
   create_table "activities", :force => true do |t|
     t.string   "description"
@@ -594,8 +594,11 @@ ActiveRecord::Schema.define(:version => 20140820115455) do
     t.integer  "work_order_id"
     t.integer  "charge_account_id"
     t.integer  "organization_id"
+    t.integer  "approver_id"
+    t.datetime "approval_date"
   end
 
+  add_index "offers", ["approver_id"], :name => "index_offers_on_approver_id"
   add_index "offers", ["charge_account_id"], :name => "index_offers_on_charge_account_id"
   add_index "offers", ["offer_date"], :name => "index_offers_on_offer_date"
   add_index "offers", ["offer_no"], :name => "index_offers_on_offer_no"
