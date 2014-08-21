@@ -1,5 +1,92 @@
-<p id="notice"><%= notice %></p>
+<%= render '/layouts/ag2_purchase/offersbreadcrumb' %>
 
+<h3><%=t '.title' %></h3>
+<table class="table">
+  <tbody>
+    <tr>
+      <td>Id:</td>
+      <td><%= @offer.id %></td>
+      <td><%=t 'activerecord.attributes.offer.offer_no' %>:</td>
+      <td><b><%= @offer.offer_no %></b></td>
+    </tr>
+    <tr>
+      <td><%=t 'activerecord.attributes.offer.offer_date' %>:</td>
+      <td><%= @offer.offer_date.strftime("%d/%m/%Y") unless @offer.offer_date.blank? %></td>
+      <td><%=t 'activerecord.attributes.offer.deadline_date' %>:</td>
+      <td><%= @offer.deadline_date.strftime("%d/%m/%Y") unless @offer.deadline_date.blank? %></td>
+    </tr>
+    <tr>
+      <td><%=t 'activerecord.attributes.offer.project' %>:</td>
+      <td><%= @offer.project.full_name unless @offer.project.blank? %></td>
+      <td><%=t 'activerecord.attributes.offer.work_order' %>:</td>
+      <td><%= @offer.work_order.full_name unless @offer.work_order.blank? %></td>
+    </tr>
+    <tr>
+      <td><%=t 'activerecord.attributes.offer.charge_account' %>:</td>
+      <td> <%= @offer.charge_account.full_name unless @offer.charge_account.blank? %> </td>
+      <td><%=t 'activerecord.attributes.offer.store' %>:</td>
+      <td> <%= @offer.store.name unless @offer.store.blank? %> </td>
+    </tr>
+    <tr>
+      <td><%=t 'activerecord.attributes.offer.payment_method' %>:</td>
+      <td> <%= @offer.payment_method.description %> </td>
+      <td><%=t 'activerecord.attributes.offer.approved_offer' %>:</td>
+      <td> <%= @offer.approved_offer.full_name unless @offer.approved_offer.blank? %> </td>
+    </tr>
+    <tr>
+      <td><%=t 'activerecord.attributes.offer.approval_date' %>:</td>
+      <td><%= @offer.approval_date.strftime("%d/%m/%Y") unless @offer.approval_date.blank? %></td>
+      <td><%=t 'activerecord.attributes.offer.approver' %>:</td>
+      <td> <%= @offer.approver.email unless @offer.approver.blank? %> </td>
+    </tr>
+    <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @offer } %>
+    <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @offer } %>
+  </tbody>
+</table>
 
-<%= link_to 'Edit', edit_offer_path(@offer) %> |
-<%= link_to 'Back', offers_path %>
+<!-- Items -->
+<table class="form-table">
+  <tbody>
+    <tr class="form-tr underlined-tr">
+      <td class="form-td-two left-winged">
+        <h4><%= t 'ag2_purchase.offers.items_info' %></h4>
+      </td>
+      <td class="form-td-two right-winged">
+        <%= link_to t(".print"), offers_path, :class => 'btn btn-warning' %>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<% if (@items.count > 0) %>
+<table class="table table-condensed table-striped shrinked">
+  <thead>
+    <%= render 'items_header' %>
+  </thead>
+  <tfoot>
+    <%= render partial: 'items_footer', :locals => { note: @offer } %>
+  </tfoot>
+  <tbody>
+    <%= render partial: 'item', collection: @items %>
+  </tbody>
+</table>
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @items } %>
+<% else %>
+<%= render :partial => '/layouts/paginationunbordered', :locals => { :ivar => @items } %>
+<% end %> <!-- end @items.count > 0 -->
+
+<!-- Remarks -->
+<table class="table">
+  <tbody>
+    <tr>
+      <td style="width: 12%"><%= t :"activerecord.attributes.offer.remarks" %>:</td>
+      <td style="width: 88%"><%= @offer.remarks unless @offer.remarks.blank? %></td>
+    </tr>
+  </tbody>
+</table>
+
+<%= render partial: '/layouts/crud/update_delete_new', locals:
+{ model: Offer, update_path: edit_offer_path(@offer), update_txt: t('.btn_edit'),
+delete_path: @offer, delete_txt: t('.btn_delete'), msg: t("activerecord.models.offer.one"), txt: @offer.offer_no,
+new_path: new_offer_path, new_txt: t('ag2_purchase.offers.index.btn_new') } %>
+
+<%= link_to t("ag2_purchase.offers.back_to_main_page"), offers_path %>
