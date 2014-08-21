@@ -22,11 +22,11 @@
       amount = parseInt(right_number(amount.toString(), 4) * 10000);
       tax = parseInt(right_number(tax.toString(), 4) * 10000);
       // Bonus
-      var discount_p = $('#purchase_order_discount_pct').val();
+      var discount_p = $('#offer_request_discount_pct').val();
       if (discount_p == "")
         discount_p = "0";
       discount_p = parseInt(right_number(discount_p, 2) * 100);
-      jQuery.getJSON('si_totals/' + qty + '/' + amount + '/' + tax + '/' + discount_p, function(data) {
+      jQuery.getJSON('or_totals/' + qty + '/' + amount + '/' + tax + '/' + discount_p, function(data) {
         document.getElementById('foot-quantity').innerHTML = data.qty;
         document.getElementById('foot-amount').innerHTML = data.amount;
         document.getElementById('foot-tax').innerHTML = data.tax;
@@ -53,7 +53,7 @@
         qty = "0";
       // Right formatted for passing as REST parameter
       qty = parseInt(right_number(qty, 4) * 10000);
-      jQuery.getJSON('si_update_description_prices_from_product/' + product + '/' + qty, function(data) {
+      jQuery.getJSON('or_update_description_prices_from_product/' + product + '/' + qty, function(data) {
         $(_this).closest('tr').find('.fnt-description').val(data.description);
         $(_this).closest('tr').find('.fnt-price').val(data.price);
         $(_this).closest('tr').find('.fnt-amount').val(data.amount);
@@ -123,7 +123,7 @@
       qty = parseInt(right_number(qty, 4) * 10000);
       discount_p = parseInt(right_number(discount_p, 2) * 100);
       discount = parseInt(right_number(discount, 4) * 10000);
-      jQuery.getJSON('si_update_amount_from_price_or_quantity/' + price + '/' + qty + '/' + tax_type + '/' + discount_p + '/' + discount + '/' + product, function(data) {
+      jQuery.getJSON('or_update_amount_from_price_or_quantity/' + price + '/' + qty + '/' + tax_type + '/' + discount_p + '/' + discount + '/' + product, function(data) {
         $(_this).closest('tr').find('.fnt-quantity').val(data.quantity);
         $(_this).closest('tr').find('.fnt-price').val(data.price);
         $(_this).closest('tr').find('.fnt-amount').val(data.amount);
@@ -153,21 +153,17 @@
 
 <table id="items-table" class="table table-condensed table-striped shrinked fixed">
   <!-- product -->
-  <col width="16%" />
+  <col width="20%" />
   <!-- description -->
-  <col width="26%" />
+  <col width="35%" />
   <!-- quantity -->
-  <col width="9%" />
+  <col width="10%" />
   <!-- price -->
-  <col width="9%" />
-  <!-- discount_pct -->
-  <col width="8%" />
-  <!-- discount -->
-  <col width="9%" />
+  <col width="10%" />
   <!-- amount -->
-  <col width="9%" />
+  <col width="10%" />
   <!-- tax -->
-  <col width="9%" />
+  <col width="10%" />
   <!-- button -->
   <col width="5%" />
   <thead>
@@ -177,15 +173,12 @@
     <%= render 'items_table_footer', f: f %>
   </tfoot>
   <tbody>
-    <%= f.simple_fields_for :supplier_invoice_items, defaults: { input_html: { class: 'sub-form' } } do |i| %>
+    <%= f.simple_fields_for :offer_request_items, defaults: { input_html: { class: 'sub-form' } } do |i| %>
     <tr class="fields">
       <td><%= i.association :product, label: false, wrapper: false, collection: Product.all(order: 'product_code'), input_html: { class: 'isel2 fnt-product' } %></td>
       <td><%= i.input :description, label: false, wrapper: false, input_html: { onkeyup: "caps(this)", class: 'sub-alfanumeric-text-field fnt-description', maxlength: 40 } %></td>
-      <td style="display:none;"><%= i.input :code, label: false, wrapper: false, input_html: { class: 'sub-alfanumeric-text-field fnt-code' } %></td>
       <td><%= i.input :quantity, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.quantity, precision: 4) if i.object.quantity), class: 'sub-number-text-field fnt-quantity' } %></td>
       <td><%= i.input :price, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.price, precision: 4) if i.object.price), class: 'sub-number-text-field fnt-price' } %></td>
-      <td><%= i.input :discount_pct, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.discount_pct, precision: 2) if i.object.discount_pct), class: 'sub-number-text-field fnt-discount-pct' } %></td>
-      <td><%= i.input :discount, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.discount, precision: 4) if i.object.discount), class: 'sub-number-text-field fnt-discount' } %></td>
       <td><%= i.input :amount, disabled: true, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.amount, precision: 4) if i.object.amount), class: 'sub-number-text-field sub-disabled-field fnt-amount' } %></td>
       <td style="display:none;"><%= i.association :tax_type, label: false, wrapper: false, input_html: { class: 'sub-alfanumeric-text-field fnt-tax-type' } %></td>
       <td><%= i.input :tax, disabled: true, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.tax, precision: 4) if i.object.tax), class: 'sub-number-text-field sub-disabled-field fnt-tax' } %></td>

@@ -1,0 +1,10 @@
+<ul id="letters">
+  <% letters.each do |l| %>
+  <li>
+    <%= link_to l, { :controller => controller, :action => action, :letter => l }, :class => ("selected" if session[:letter] == l), :remote => true %> |
+  </li>
+  <% end %>
+  <li>
+    <%= link_to "%", { :controller => controller, :action => action, :letter => "%" }, :remote => true %>
+  </li>
+</ul>

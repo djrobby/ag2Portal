@@ -84,9 +84,9 @@
   <!-- approver -->
   <col width="30%" />
   <!-- approval_date -->
-  <col width="20%" />
+  <col width="15%" />
   <!-- approval_amount -->
-  <col width="20%" />
+  <col width="15%" />
   <!-- remarks -->
   <col width="35%" />
   <!-- button -->
@@ -100,9 +100,9 @@
   <tbody>
     <%= f.simple_fields_for :supplier_invoice_approvals, defaults: { input_html: { class: 'sub-form' } } do |i| %>
     <tr class="fields">
-      <td><%= i.association :approver, label: false, wrapper: false, collection: @users, input_html: { class: 'wsel2 fnt-approver' } %></td>
+      <td><%= i.input :approver, disabled: true, label: false, wrapper: false, input_html: { class: 'sub-alfanumeric-text-field sub-disabled-field fnt-approver' } %></td>
       <td><%= i.input :approval_date, label: false, wrapper: false, as: :string, start_year: Time.now.year - 100, end_year: Time.now.year + 100, input_html: { value: (f.object.approval_date.strftime("%d/%m/%Y") if f.object.approval_date), class: 'sub-alfanumeric-text-field wdatepicker fnt-approval-date' } %></td>
-      <td><%= i.input :approved_amount, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.cost, precision: 4) if i.object.cost), class: 'sub-number-text-field fnt-approved-amount' } %></td>
+      <td><%= i.input :approved_amount, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.approved_amount, precision: 4) if i.object.approved_amount), class: 'sub-number-text-field fnt-approved-amount' } %></td>
       <td><%= i.input :remarks, label: false, wrapper: false, input_html: { class: 'sub-alfanumeric-text-field fnt-remarks', maxlength: 40 } %></td>
       <% if @breadcrumb == 'create' || @breadcrumb == 'update' %>
       <td><%= link_to_remove_fields('<i class="icon-trash"></i>'.html_safe, i) %></td>

@@ -50,7 +50,7 @@
 
     <div class="span3">
       <div class="well sidebar-nav">
-        <%= form_tag "workers", :method => 'get' do %>
+        <%= form_tag workers_path, :method => 'get', :remote => true do %>
         <!-- Company -->
         <%= label_tag I18n.t("ag2_human.workers.index.label_company"), nil, :class => 'form-label' %>
         <% if session[:company] != '0' %>
@@ -81,12 +81,12 @@
     </div><!-- /.span3 -->
 
     <div class="span9">
-      <%= render :partial => '/layouts/lettershead', :locals => { :controller => "workers", :action => "index" } %>
+      <%= render :partial => '/layouts/lettershead_ajax', :locals => { :controller => "workers", :action => "index" } %>
       <table class="table table-condensed table-striped shrinked">
         <thead>
           <%= render '/layouts/ag2_human/workersheader' %>
         </thead>
-        <tbody>
+        <tbody id="workers">
           <%= render @workers %>
         </tbody>
       </table>

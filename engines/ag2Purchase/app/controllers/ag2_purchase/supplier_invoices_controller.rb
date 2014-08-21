@@ -12,6 +12,7 @@ module Ag2Purchase
                                                :si_update_description_prices_from_product,
                                                :si_update_amount_from_price_or_quantity,
                                                :si_update_approved_amount,
+                                               :si_current_invoice_debt,
                                                :si_update_charge_account_from_order,
                                                :si_update_charge_account_from_project,
                                                :si_format_number,
@@ -178,8 +179,16 @@ module Ag2Purchase
       invoice_id = params[:invoice]
       debt = SupplierInvoice.find(invoice_id).debt rescue -1
       amount = amount > debt? ? '$err' : number_with_precision(amount.round(4), precision: 4)
-      #debt = number_with_precision(debt.round(4), precision: 4)
       @json_data = { "amount" => amount.to_s }
+      render json: @json_data
+    end
+    
+    # Current invoice debt
+    def si_current_invoice_debt
+      invoice_id = params[:invoice]
+      debt = SupplierInvoice.find(invoice_id).debt rescue -1
+      debt = number_with_precision(debt.round(4), precision: 4)
+      @json_data = { "debt" => debt.to_s }
       render json: @json_data
     end
     
