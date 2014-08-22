@@ -51,6 +51,7 @@ module Ag2Products
     # GET /stores
     # GET /stores.json
     def index
+      manage_filter_state
       init_oco if !session[:organization]
       if session[:organization] != '0'
         @stores = Store.where("organization_id = ?", "#{session[:organization]}").paginate(:page => params[:page], :per_page => per_page).order(sort_column + ' ' + sort_direction)
@@ -61,6 +62,7 @@ module Ag2Products
       respond_to do |format|
         format.html # index.html.erb
         format.json { render json: @stores }
+        format.js
       end
     end
   
@@ -223,6 +225,22 @@ module Ag2Products
 
     def offices_by_company(_company)
       _offices = Office.where(company_id: _company).order(:name)      
+    end
+
+    # Keeps filter state
+    def manage_filter_state
+      # sort
+      if params[:sort]
+        session[:sort] = params[:sort]
+      elsif session[:sort]
+        params[:sort] = session[:sort]
+      end
+      # direction
+      if params[:direction]
+        session[:direction] = params[:direction]
+      elsif session[:direction]
+        params[:direction] = session[:direction]
+      end
     end
   end
 end

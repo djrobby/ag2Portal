@@ -10,24 +10,43 @@
       dropdownAutoWidth: true
     });
   });
+
+  $(window).bind("load", function() {
+    $("#Supplier").select2("val", "<%= params[:Supplier] %>");
+  });
+
+  jQuery(function($) {
+    // when the #removeFilter button clicked
+    $("#removeFilter").click(function() {
+      $("#Supplier").select2("val", "");
+      $("#search").val("");
+      // no AJAX
+      //_thisForm.submit();
+      // AJAX
+      $("#submit_btn").trigger("click");
+    });
+  });
 </script>
  
 <%= render '/layouts/ag2_purchase/contactsbreadcrumb' %>
-<%= render :partial => '/layouts/searchhead', :locals => { :title => t(".title"), :path => supplier_contacts_path } %>
+
+<h3><%=t '.title' %></h3>
 
 <div class="container-fluid">
   <div class="row-fluid">
     <div class="span3">
       <div class="well sidebar-nav">
-        <%= form_tag "supplier_contacts", :method => 'get' do %>
+        <%= form_tag supplier_contacts_path, :method => 'get', :remote => true do %>
         <!-- Supplier -->
         <%= label_tag t(".label_supplier"), nil, :class => 'form-label' %>
-        <%= select_tag "Supplier", options_from_collection_for_select(Supplier.order('name').all, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
+        <%= select_tag "Supplier", options_from_collection_for_select(@suppliers, "id", "full_name"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
         <!-- Others -->
         <%= label_tag t(".label_others"), nil, :class => 'form-label-under-sel2' %>
         <%= text_field_tag :search, params[:search], :class => 'x-large-text-field shrinked' %>
         <!-- Submit -->
-        <%= submit_tag t(".btn_apply"), :class => 'btn btn-primary' %>
+        <%= submit_tag I18n.t(:apply_filter_button), :class => 'btn btn-primary', :id => 'submit_btn' %>
+        <!-- Remove filter -->
+        <button id="removeFilter" type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><%= t :clear_filter_button %></button>
         <% end %>
         <!-- Buttons -->
         <%= render :partial => '/layouts/crud/new', :locals => { :model => SupplierContact, :path => new_supplier_contact_path, :txt => t(".btn_new") } %>
@@ -35,38 +54,9 @@
         <%= link_to t(".back_to_root"), ag2_purchase.root_path %>
       </div><!-- /.sidebar-nav -->
     </div><!-- /.span3 -->
-    <div class="span9">
-      <%= render :partial => '/layouts/lettershead', :locals => { :controller => "supplier_contacts", :action => "index" } %>
-      <table class="table table-condensed table-striped shrinked">
-        <thead>
-          <tr>
-            <th><%= t 'activerecord.attributes.supplier_contact.full_name' %></th>
-            <th><%= t 'activerecord.attributes.supplier_contact.supplier' %></th>
-            <th><%= t 'activerecord.attributes.supplier_contact.position' %></th>
-            <th><%= t 'activerecord.attributes.supplier_contact.phone' %></th>
-            <th><%= t 'activerecord.attributes.supplier_contact.cellular' %></th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          <% @supplier_contacts.each do |w| %>
-          <%= render :partial => 'layouts/ag2_purchase/contactinfo', :locals => { :contact => w, :title => t("activerecord.models.supplier_contact.one") + ' ' + w.supplier.name } %>
-          <tr>
-            <td><a data-toggle="modal" href="#contactinfo<%= w.id.to_s %>"><%= w.full_name %></a></td>
-            <td><%= w.supplier.name %></td>
-            <td><%= w.position unless w.position.blank? %></td>
-            <td><%= w.phone unless w.phone.blank? %>
-            <% if !w.extension.blank? %>
-            (<%= w.extension %>)
-            <% end %> </td>
-            <td><%= w.cellular unless w.cellular.blank? %></td>
-            <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => SupplierContact, :path => edit_supplier_contact_path(w) } %>
-            <%= render :partial => '/layouts/crud/delete', :locals => { :model => SupplierContact, :path => w, :msg => t("activerecord.models.supplier_contact.one"), :txt => w.full_name } %> </td>
-          </tr>
-          <% end %>
-        </tbody>
-      </table>
-      <%= render :partial => '/layouts/pagination', :locals => { :ivar => @supplier_contacts } %>
+
+    <div class="span9" id="div_table">
+      <%= render 'supplier_contacts' %>
     </div><!-- /.span9 -->
   </div><!-- /.row-fluid -->
 </div><!-- /.container-fluid -->

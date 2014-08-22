@@ -65,6 +65,7 @@ module Ag2Directory
       respond_to do |format|
         format.html # search.html.erb
         format.json { render json: @corp_contacts }
+        format.js
       end
     end
 

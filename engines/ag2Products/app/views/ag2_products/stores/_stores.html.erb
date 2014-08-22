@@ -1,0 +1,37 @@
+<script>
+  $(document).ready(function() {
+    $("#div_table th a, #div_table #pages a").on("click", function() {
+      $.getScript(this.href);
+      return false;
+    });
+  }); 
+</script>
+
+<table class="table table-condensed table-striped shrinked">
+  <thead>
+    <tr>
+      <th><%= sortable "name", t('activerecord.attributes.store.name') %></th>
+      <th><%= sortable "company_id", t('activerecord.attributes.store.company') %></th>
+      <th><%= sortable "office_id", t('activerecord.attributes.store.office') %></th>
+      <th><%= sortable "supplier_id", t('activerecord.attributes.store.depot') %></th>
+      <th><%= sortable "location", t('activerecord.attributes.store.location') %></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @stores.each do |m| %>
+    <tr>
+      <td><%= link_to m.name, m %></td>
+      <td><%= m.company.name unless m.company.nil? %></td>
+      <td><%= m.office.name unless m.office.nil? %></td>
+      <td><%= m.supplier.full_name unless m.supplier.nil? %></td>
+      <td><%= m.location unless m.location.blank? %></td>
+      <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => Store, :path => edit_store_path(m) } %>
+      <%= render :partial => '/layouts/crud/delete', :locals => { :model => Store, :path => m, :msg => t("activerecord.models.store.one"), :txt => m.name } %> </td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @stores } %>
+<%= render :partial => '/layouts/crud/new', :locals => { :model => Store, :path => new_store_path, :txt => t("ag2_products.stores.index.btn_new") } %>
+<%= link_to t("ag2_products.stores.index.back_to_root"), ag2_products.root_path %>

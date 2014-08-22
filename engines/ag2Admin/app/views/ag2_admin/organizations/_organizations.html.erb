@@ -1,0 +1,32 @@
+<script>
+  $(document).ready(function() {
+    $("#div_table th a, #div_table #pages a").on("click", function() {
+      $.getScript(this.href);
+      return false;
+    });
+  }); 
+</script>
+
+<table class="table table-condensed table-striped">
+  <thead>
+    <tr>
+      <th><%= sortable "id", "Id" %></th>
+      <th><%= sortable "name", t('activerecord.attributes.organization.name') %></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @organizations.each do |organization| %>
+    <tr>
+      <td><%= organization.id %></td>
+      <td><%= link_to organization.name, organization %></td>
+      <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => Organization, :path => edit_organization_path(organization) } %>
+      <%= render :partial => '/layouts/crud/delete', :locals => { :model => Organization, :path => organization, :msg => I18n.t("activerecord.models.organization.one"), :txt => organization.name } %> </td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @organizations } %>
+<%= render :partial => '/layouts/crud/new', :locals => { :model => Organization, :path => new_organization_path, :txt => t(".btn_new") } %>
+<%= link_to t("ag2_admin.organizations.index.go_to"), companies_path %> |
+<%= link_to t("ag2_admin.organizations.index.back_to_root"), ag2_admin.config_path %>

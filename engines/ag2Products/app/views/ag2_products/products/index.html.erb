@@ -23,7 +23,10 @@
       $("#Manufacturer").val("");
       $("#Tax").val("");
       $("#search").val("");
-      _thisForm.submit();
+      // no AJAX
+      //_thisForm.submit();
+      // AJAX
+      $("#submit_btn").trigger("click");
     });
   });
 </script>
@@ -41,13 +44,13 @@
 
     <div class="span3">
       <div class="well sidebar-nav">
-        <%= form_tag "products", :method => 'get' do %>
+        <%= form_tag "products", :method => 'get', :remote => true do %>
         <!-- Type -->
         <%= label_tag I18n.t("ag2_products.products.index.label_type"), nil, :class => 'form-label' %>
         <%= select_tag "Type", options_from_collection_for_select(ProductType.order('description').all, "id", "description"), :prompt => "", :class => 'x-large-text-field shrinked' %>
         <!-- Family -->
         <%= label_tag I18n.t("ag2_products.products.index.label_family"), nil, :class => 'form-label' %>
-        <%= select_tag "Family", options_from_collection_for_select(ProductFamily.order('name').all, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked' %>
+        <%= select_tag "Family", options_from_collection_for_select(@product_families, "id", "full_name"), :prompt => "", :class => 'x-large-text-field shrinked' %>
         <!-- Measure -->
         <%= label_tag I18n.t("ag2_products.products.index.label_measure"), nil, :class => 'form-label' %>
         <%= select_tag "Measure", options_from_collection_for_select(Measure.order('description').all, "id", "description"), :prompt => "", :class => 'x-large-text-field shrinked' %>
@@ -61,7 +64,7 @@
         <%= label_tag I18n.t("ag2_products.products.index.label_others"), nil, :class => 'form-label' %>
         <%= text_field_tag :search, params[:search], :class => 'x-large-text-field shrinked' %>
         <!-- Submit -->
-        <%= submit_tag I18n.t(:apply_filter_button), :class => 'btn btn-primary' %>
+        <%= submit_tag I18n.t(:apply_filter_button), :class => 'btn btn-primary', :id => 'submit_btn' %>
         <!-- Remove filter -->
         <button id="removeFilter" type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><%= t :clear_filter_button %></button>
         <% end %>
@@ -71,32 +74,8 @@
       </div><!-- /.sidebar-nav -->
     </div><!-- /.span3 -->
 
-    <div class="span9">
-      <%= render :partial => '/layouts/lettershead', :locals => { :controller => "products", :action => "index" } %>
-      <table class="table table-condensed table-striped shrinked">
-        <thead>
-          <tr>
-            <th><%= t :"activerecord.attributes.product.product_code" %></th>
-            <th><%= t :"activerecord.attributes.product.main_description" %></th>
-            <th><%= t :"activerecord.attributes.product.product_type" %></th>
-            <th><%= t :"activerecord.attributes.product.product_family" %></th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          <% @products.each do |product| %>
-          <tr>
-            <td><%= link_to product.full_code, product %></td>
-            <td><%= product.main_description %></td>
-            <td><%= product.product_type.description %></td>
-            <td><%= product.product_family.name %></td>
-            <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => Product, :path => edit_product_path(product) } %>
-            <%= render :partial => '/layouts/crud/delete', :locals => { :model => Product, :path => product, :msg => t("activerecord.models.product.one"), :txt => product.full_name } %> </td>
-          </tr>
-          <% end %>
-        </tbody>
-      </table>
-      <%= render :partial => '/layouts/pagination', :locals => { :ivar => @products } %>
+    <div class="span9" id="div_table">
+      <%= render 'products' %>
     </div><!-- /.span9 -->
   </div><!-- /.row-fluid -->
 </div><!-- /.container-fluid -->

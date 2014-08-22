@@ -23,7 +23,7 @@ en:
         entity_type_alert: "Must indicate Names or Company upon Entity type!"
         entity_fiscal_short: "Fiscal Id is too short (minimum is 8 characters)"
         submit: "Entity has been created."
-      back_to_main_page: "Back to ag2Entities"
+      back_to_main_page: "Back to Entities"
       validate_btn: "Validate"
       fiscal_error: "Wrong Fiscal Id."
       fiscal_name: "Fiscal Id Name not found."

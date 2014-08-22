@@ -13,13 +13,9 @@
 <table class="table table-condensed table-striped">
   <thead>
     <tr>
-      <% if params[:letter].blank? || params[:letter] == "%" %>
+      <th><%= sortable "id", "Id" %></th>
       <th><%= sortable "email", t('activerecord.attributes.user.email') %></th>
       <th><%= sortable "name", t('activerecord.attributes.user.name') %></th>
-      <% else %>
-      <th><%= t 'activerecord.attributes.user.email' %></th>
-      <th><%= t 'activerecord.attributes.user.name' %></th>
-      <% end %>
       <th><%= t 'activerecord.attributes.user.current_sign_in_at' %></th>
       <th><%= t 'activerecord.attributes.user.current_sign_in_ip' %></th>
       <th></th>
@@ -28,6 +24,7 @@
   <tbody>
     <% @users.each do |user| %>
     <tr>
+      <td><%= user.id %></td>
       <td><%= link_to user.email, user %></td>
       <td><%= user.name %></td>
       <td><%= user.current_sign_in_at.utc.getlocal.strftime("%d/%m/%Y %H:%M:%S") unless user.current_sign_in_at.nil? %></td>

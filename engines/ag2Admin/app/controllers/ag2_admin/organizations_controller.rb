@@ -10,11 +10,13 @@ module Ag2Admin
     # GET /organizations
     # GET /organizations.json
     def index
+      manage_filter_state
       @organizations = Organization.paginate(:page => params[:page], :per_page => per_page).order(sort_column + ' ' + sort_direction)
   
       respond_to do |format|
         format.html # index.html.erb
         format.json { render json: @organizations }
+        format.js
       end
     end
   
@@ -107,6 +109,22 @@ module Ag2Admin
 
     def sort_column
       Organization.column_names.include?(params[:sort]) ? params[:sort] : "id"
+    end
+
+    # Keeps filter state
+    def manage_filter_state
+      # sort
+      if params[:sort]
+        session[:sort] = params[:sort]
+      elsif session[:sort]
+        params[:sort] = session[:sort]
+      end
+      # direction
+      if params[:direction]
+        session[:direction] = params[:direction]
+      elsif session[:direction]
+        params[:direction] = session[:direction]
+      end
     end
   end
 end

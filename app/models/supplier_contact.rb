@@ -1,13 +1,15 @@
 class SupplierContact < ActiveRecord::Base
   belongs_to :supplier
+  belongs_to :organization
   attr_accessible :cellular, :department, :email, :extension, :first_name, :fiscal_id, :last_name,
-                  :phone, :position, :remarks, :supplier_id
+                  :phone, :position, :remarks, :supplier_id, :organization_id
 
   has_paper_trail
 
-  validates :first_name,  :presence => true
-  validates :last_name,   :presence => true
-  validates :supplier,    :presence => true
+  validates :first_name,    :presence => true
+  validates :last_name,     :presence => true
+  validates :supplier,      :presence => true
+  validates :organization,  :presence => true
 
   before_validation :fields_to_uppercase
 
@@ -33,5 +35,6 @@ class SupplierContact < ActiveRecord::Base
     string :last_name
     string :first_name
     integer :supplier_id
+    integer :organization_id
   end
 end

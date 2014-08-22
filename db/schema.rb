@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140821080510) do
+ActiveRecord::Schema.define(:version => 20140822175654) do
 
   create_table "activities", :force => true do |t|
     t.string   "description"
@@ -1224,10 +1224,11 @@ ActiveRecord::Schema.define(:version => 20140821080510) do
     t.string   "cellular"
     t.string   "email"
     t.string   "remarks"
-    t.datetime "created_at",  :null => false
-    t.datetime "updated_at",  :null => false
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
     t.string   "created_by"
     t.string   "updated_by"
+    t.integer  "organization_id"
   end
 
   add_index "supplier_contacts", ["cellular"], :name => "index_supplier_contacts_on_cellular"
@@ -1235,6 +1236,7 @@ ActiveRecord::Schema.define(:version => 20140821080510) do
   add_index "supplier_contacts", ["first_name"], :name => "index_supplier_contacts_on_first_name"
   add_index "supplier_contacts", ["fiscal_id"], :name => "index_supplier_contacts_on_fiscal_id"
   add_index "supplier_contacts", ["last_name"], :name => "index_supplier_contacts_on_last_name"
+  add_index "supplier_contacts", ["organization_id"], :name => "index_supplier_contacts_on_organization_id"
   add_index "supplier_contacts", ["phone"], :name => "index_supplier_contacts_on_phone"
   add_index "supplier_contacts", ["supplier_id"], :name => "index_supplier_contacts_on_supplier_id"
 

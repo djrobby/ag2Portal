@@ -74,6 +74,8 @@ module Ag2Products
       letter = params[:letter]
       # OCO
       init_oco if !session[:organization]
+      # Initialize select_tags
+      @product_families = families_dropdown if @product_families.nil?
   
       @search = Product.search do
         fulltext params[:search]
@@ -106,6 +108,7 @@ module Ag2Products
       respond_to do |format|
         format.html # index.html.erb
         format.json { render json: @products }
+        format.js
       end
     end
   

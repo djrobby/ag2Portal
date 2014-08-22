@@ -3,46 +3,8 @@
 <% session[:return_to_prod] = nil %>
 <% session[:return_to_prod_url] = nil %>
 <%= render '/layouts/ag2_purchase/suppliersbreadcrumb' %>
-<%= render :partial => '/layouts/searchhead', :locals => { :title => t(".title"), :path => suppliers_path } %>
+<%= render :partial => '/layouts/searchhead_remote', :locals => { :title => t(".title"), :path => suppliers_path } %>
 
-<div class="span11">
-  <%= render :partial => '/layouts/lettershead', :locals => { :controller => "suppliers", :action => "index" } %>
-  <table class="table table-condensed table-striped">
-    <thead>
-      <tr>
-        <th><%= t 'activerecord.attributes.supplier.supplier_code' %></th>
-        <th><%= t 'activerecord.attributes.supplier.name' %></th>
-        <th><%= t 'activerecord.attributes.supplier.fiscal_id' %></th>
-        <th><%= t 'activerecord.attributes.supplier.phone' %></th>
-        <th><%= t 'activerecord.attributes.supplier.cellular' %></th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody>
-      <% @suppliers.each do |supplier| %>
-      <%#= render :partial => 'info', :locals => { :contact => supplier, :title => I18n.t("activerecord.models.supplier.one") } %>
-      <% if supplier.active %>
-      <tr>
-        <% else %>
-      <tr class="inactive-row">
-        <% end %>
-        <!--<td><a data-toggle="modal" href="#info<%#= supplier.id.to_s %>"><%#= supplier.supplier_code %></a></td>-->
-        <td><%= link_to supplier.full_code, supplier %></td>
-        <td><%= supplier.name %></td>
-        <td><%= supplier.fiscal_id %></td>
-        <td><%= supplier.phone unless supplier.phone.blank? %></td>
-        <td><%= supplier.cellular unless supplier.cellular.blank? %></td>
-        <% if false %>
-        <!--<td> <%= link_to supplier, :class => 'btn btn-mini', :id => 'show' do %> <i class="icon-eye-open"></i> <% end %>-->
-        <% end %>
-        <td> <%= render :partial => '/layouts/crud/edit', :locals => { :model => Supplier, :path => edit_supplier_path(supplier) } %>
-        <%= render :partial => '/layouts/crud/delete', :locals => { :model => Supplier, :path => supplier, :msg => t("activerecord.models.supplier.one"), :txt => supplier.full_name } %> </td>
-      </tr>
-      <% end %>
-    </tbody>
-  </table>
-  <%= render :partial => '/layouts/pagination', :locals => { :ivar => @suppliers } %>
-  <%= render :partial => '/layouts/crud/new', :locals => { :model => Supplier, :path => new_supplier_path, :txt => t(".btn_new") } %>
-  <%= link_to I18n.t("go_to_child_app", :scope => :"ag2_purchase.suppliers.index"), supplier_contacts_path %> |
-  <%= link_to t(".back_to_root"), ag2_purchase.root_path %>
+<div class="span11" id="div_table">
+  <%= render 'suppliers' %>
 </div>

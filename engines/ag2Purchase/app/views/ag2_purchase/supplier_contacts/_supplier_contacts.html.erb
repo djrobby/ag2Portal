@@ -1,0 +1,40 @@
+<script>
+  $(document).ready(function() {
+    $("#div_table th a, #div_table #pages a").on("click", function() {
+      $.getScript(this.href);
+      return false;
+    });
+  }); 
+</script>
+
+<%= render :partial => '/layouts/lettershead_remote', :locals => { :controller => "supplier_contacts", :action => "index" } %>
+<table class="table table-condensed table-striped shrinked">
+  <thead>
+    <tr>
+      <th><%= t 'activerecord.attributes.supplier_contact.full_name' %></th>
+      <th><%= t 'activerecord.attributes.supplier_contact.supplier' %></th>
+      <th><%= t 'activerecord.attributes.supplier_contact.position' %></th>
+      <th><%= t 'activerecord.attributes.supplier_contact.phone' %></th>
+      <th><%= t 'activerecord.attributes.supplier_contact.cellular' %></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @supplier_contacts.each do |w| %>
+    <%= render :partial => 'layouts/ag2_purchase/contactinfo', :locals => { :contact => w, :title => t("activerecord.models.supplier_contact.one") + ' ' + w.supplier.name } %>
+    <tr>
+      <td><a data-toggle="modal" href="#contactinfo<%= w.id.to_s %>"><%= w.full_name %></a></td>
+      <td><%= w.supplier.name %></td>
+      <td><%= w.position unless w.position.blank? %></td>
+      <td><%= w.phone unless w.phone.blank? %>
+      <% if !w.extension.blank? %>
+      (<%= w.extension %>)
+      <% end %> </td>
+      <td><%= w.cellular unless w.cellular.blank? %></td>
+      <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => SupplierContact, :path => edit_supplier_contact_path(w) } %>
+      <%= render :partial => '/layouts/crud/delete', :locals => { :model => SupplierContact, :path => w, :msg => t("activerecord.models.supplier_contact.one"), :txt => w.full_name } %> </td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @supplier_contacts } %>

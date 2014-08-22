@@ -1,0 +1,34 @@
+<script>
+  $(document).ready(function() {
+    $("#div_table th a, #div_table #pages a").on("click", function() {
+      $.getScript(this.href);
+      return false;
+    });
+  }); 
+</script>
+
+<table class="table table-condensed table-striped">
+  <thead>
+    <tr>
+      <th><%= sortable "office_code", t('activerecord.attributes.office.office_code') %></th>
+      <th><%= sortable "name", t('activerecord.attributes.office.name') %></th>
+      <th><%= sortable "company_id", t('activerecord.attributes.office.company') %></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @offices.each do |office| %>
+    <tr>
+      <td><%= link_to office.office_code, office %></td>
+      <td><%= office.name %></td>
+      <td><%= office.company.name unless office.company.blank? %></td>
+      <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => Office, :path => edit_office_path(office) } unless cannot_edit(office.id, office.company_id) %>
+      <%= render :partial => '/layouts/crud/delete', :locals => { :model => Office, :path => office, :msg => I18n.t("activerecord.models.office.one"), :txt => office.name } unless cannot_edit(office.id, office.company.id) %> </td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @offices } %>
+<%= render :partial => '/layouts/crud/new', :locals => { :model => Office, :path => new_office_path, :txt => I18n.t("ag2_admin.offices.index.btn_new") } %>
+<%= link_to I18n.t("ag2_admin.offices.index.go_to"), companies_path %> |
+<%= link_to I18n.t("ag2_admin.offices.index.back_to_root"), ag2_admin.root_path %>

@@ -94,6 +94,7 @@ module Ag2Directory
       respond_to do |format|
         format.html # index.html.erb
         format.json { render json: @shared_contacts }
+        format.js
       end
     end
 

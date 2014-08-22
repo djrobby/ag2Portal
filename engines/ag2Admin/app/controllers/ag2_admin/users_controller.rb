@@ -159,6 +159,18 @@ module Ag2Admin
 
     # Keeps filter state
     def manage_filter_state
+      # sort
+      if params[:sort]
+        session[:sort] = params[:sort]
+      elsif session[:sort]
+        params[:sort] = session[:sort]
+      end
+      # direction
+      if params[:direction]
+        session[:direction] = params[:direction]
+      elsif session[:direction]
+        params[:direction] = session[:direction]
+      end
       # letter
       if params[:letter]
         if params[:letter] == '%'

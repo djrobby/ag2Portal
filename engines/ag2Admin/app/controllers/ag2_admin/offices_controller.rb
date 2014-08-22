@@ -56,6 +56,7 @@ module Ag2Admin
     # GET /offices.json
     def index
       #      internal
+      manage_filter_state
       if !session[:organization]
         init_oco
       end
@@ -70,6 +71,7 @@ module Ag2Admin
       respond_to do |format|
         format.html # index.html.erb
         format.json { render json: @offices }
+        format.js
       end
     end
 
@@ -170,6 +172,22 @@ module Ag2Admin
     def cannot_edit(_office, _company)
       (session[:office] != '0' && _office != session[:office].to_i) ||
       (session[:company] != '0' && _company != session[:company].to_i)
+    end
+
+    # Keeps filter state
+    def manage_filter_state
+      # sort
+      if params[:sort]
+        session[:sort] = params[:sort]
+      elsif session[:sort]
+        params[:sort] = session[:sort]
+      end
+      # direction
+      if params[:direction]
+        session[:direction] = params[:direction]
+      elsif session[:direction]
+        params[:direction] = session[:direction]
+      end
     end
   end
 end

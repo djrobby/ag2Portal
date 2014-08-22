@@ -17,6 +17,8 @@ module Ag2Products
       session[:Products] = nil
       session[:Stores] = nil      
       session[:Suppliers] = nil      
+      session[:sort] = nil
+      session[:direction] = nil      
     end
   end
 end

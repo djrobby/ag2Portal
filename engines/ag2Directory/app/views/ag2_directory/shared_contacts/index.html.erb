@@ -1,42 +1,6 @@
 <%= render '/layouts/ag2_directory/sharedcontactsbreadcrumb' %>
-<%= render :partial => '/layouts/searchhead', :locals => { :title => I18n.t("ag2_directory.shared_contacts.index.title"), :path => shared_contacts_path } %>
+<%= render :partial => '/layouts/searchhead_remote', :locals => { :title => I18n.t("ag2_directory.shared_contacts.index.title"), :path => shared_contacts_path } %>
 
-<div class="span11">
-  <%= render :partial => '/layouts/lettershead', :locals => { :controller => "shared_contacts", :action => "index" } %>
-  <table class="table table-condensed table-striped shrinked">
-    <thead>
-      <tr>
-        <th><%= t :"activerecord.attributes.shared_contact.company" %></th>
-        <th><%= t :"activerecord.attributes.shared_contact.full_name" %></th>
-        <th><%= t :"activerecord.attributes.shared_contact.shared_contact_type" %></th>
-        <th><%= t :"activerecord.attributes.shared_contact.phone" %></th>
-        <th><%= t :"activerecord.attributes.shared_contact.cellular" %></th>
-        <th><%= t :"activerecord.attributes.shared_contact.email" %></th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody>
-      <% @shared_contacts.each do |contact| %>
-      <%= render :partial => 'layouts/ag2_directory/sharedcontactinfo', :locals => { :contact => contact, :title => I18n.t("activerecord.models.shared_contact.one") } %>
-      <tr>
-        <td><%= contact.company %></td>
-        <td><%= contact.full_name unless contact.last_name.blank? && contact.first_name.blank? %></td>
-        <td><%= contact.shared_contact_type.name unless contact.shared_contact_type.blank? %></td>
-        <td><%= contact.phone unless contact.phone.blank? %>
-        <% if !contact.extension.blank? %>
-        (<%= contact.extension %>)
-        <% end %> </td>
-        <td><%= contact.cellular unless contact.cellular.blank? %></td>
-        <td><%= contact.email %></td>
-        <td><a data-toggle="modal" href="#contactinfo<%= contact.id.to_s %>" class="btn btn-mini"><i class="icon-eye-open"></i></a>
-        <%= render :partial => '/layouts/crud/edit', :locals => { :model => SharedContact, :path => edit_shared_contact_path(contact) } %>
-        <%= render :partial => '/layouts/crud/delete', :locals => { :model => SharedContact, :path => contact, :msg => I18n.t("activerecord.models.shared_contact.one"), :txt => contact.full_name + " - " + contact.company } %> </td>
-      </tr>
-      <% end %>
-    </tbody>
-  </table>
-  <%= render :partial => '/layouts/pagination', :locals => { :ivar => @shared_contacts } %>
-  <%= render :partial => '/layouts/crud/new', :locals => { :model => SharedContact, :path => new_shared_contact_path, :txt => I18n.t("ag2_directory.shared_contacts.index.btn_new") } %>
-  <%= link_to I18n.t("go_to_child_app", :scope => :"ag2_directory.shared_contacts.index"), shared_contact_types_path %> |
-  <%= link_to I18n.t("back_to_root", :scope => :"ag2_directory.shared_contacts.index"), ag2_directory.root_path %>
+<div class="span11" id="div_table">
+  <%= render 'shared_contacts' %>
 </div>

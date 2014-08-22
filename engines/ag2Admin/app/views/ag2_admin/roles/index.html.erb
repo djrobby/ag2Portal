@@ -1,26 +1,6 @@
 <%= render '/layouts/ag2_admin/rolesbreadcrumb' %>
 
 <h3><%=t '.title' %></h3>
-<div class="span4">
-  <table class="table table-condensed table-striped">
-    <thead>
-      <tr>
-        <th><%= sortable "name", t('activerecord.attributes.role.name') %></th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody>
-      <% @roles.each do |role| %>
-      <tr>
-        <td><%= link_to role.name, role %></td>
-        <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => Role, :path => edit_role_path(role) } %>
-        <%= render :partial => '/layouts/crud/delete', :locals => { :model => Role, :path => role, :msg => I18n.t("activerecord.models.role.one"), :txt => role.name.titleize } %> </td>
-      </tr>
-      <% end %>
-    </tbody>
-  </table>
-  <%= render :partial => '/layouts/pagination', :locals => { :ivar => @roles } %>
-  <%= render :partial => '/layouts/crud/new', :locals => { :model => Role, :path => new_role_path, :txt => I18n.t("ag2_admin.roles.index.btn_new") } %>
-  <%= link_to I18n.t("ag2_admin.roles.index.back_to_main_app"), users_path %> |
-  <%= link_to I18n.t("ag2_admin.roles.index.back_to_root"), ag2_admin.config_path %>
+<div class="span6" id="div_table">
+  <%= render 'roles' %>
 </div>

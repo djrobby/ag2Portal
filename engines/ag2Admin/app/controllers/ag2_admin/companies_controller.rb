@@ -60,6 +60,7 @@ module Ag2Admin
     # GET /companies
     # GET /companies.json
     def index
+      manage_filter_state
       if session[:organization] != '0'
         @companies = Company.where("organization_id = ?", "#{session[:organization]}").paginate(:page => params[:page], :per_page => per_page).order(sort_column + ' ' + sort_direction)
       else
@@ -186,6 +187,22 @@ module Ag2Admin
     
     def cannot_edit(_company)
       session[:company] != '0' && _company != session[:company].to_i
+    end
+
+    # Keeps filter state
+    def manage_filter_state
+      # sort
+      if params[:sort]
+        session[:sort] = params[:sort]
+      elsif session[:sort]
+        params[:sort] = session[:sort]
+      end
+      # direction
+      if params[:direction]
+        session[:direction] = params[:direction]
+      elsif session[:direction]
+        params[:direction] = session[:direction]
+      end
     end
   end
 end

@@ -1,27 +1,6 @@
 <%= render '/layouts/ag2_products/familiesbreadcrumb' %>
 
 <h3><%=t '.title' %></h3>
-<div class="span7">
-  <table class="table table-condensed table-striped">
-    <thead>
-      <tr>
-        <th><%= sortable "family_code", t('activerecord.attributes.product_family.family_code') %></th>
-        <th><%= sortable "name", t('activerecord.attributes.product_family.name') %></th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody>
-      <% @product_families.each do |m| %>
-      <tr>
-        <td><%= link_to m.family_code, m %></td>
-        <td><%= m.name %></td>
-        <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => ProductFamily, :path => edit_product_family_path(m) } %>
-        <%= render :partial => '/layouts/crud/delete', :locals => { :model => ProductFamily, :path => m, :msg => t("activerecord.models.product_family.one"), :txt => m.name } %> </td>
-      </tr>
-      <% end %>
-    </tbody>
-  </table>
-  <%= render :partial => '/layouts/pagination', :locals => { :ivar => @product_families } %>
-  <%= render :partial => '/layouts/crud/new', :locals => { :model => ProductFamily, :path => new_product_family_path, :txt => t(".btn_new") } %>
-  <%= link_to t(".back_to_root"), ag2_products.root_path %>
+<div class="span8" id="div_table">
+  <%= render 'product_families' %>
 </div>
