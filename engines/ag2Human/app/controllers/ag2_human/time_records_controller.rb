@@ -49,6 +49,7 @@ module Ag2Human
       respond_to do |format|
         format.html # index.html.erb
         format.json { render json: @time_records }
+        format.js
       end
     end
 

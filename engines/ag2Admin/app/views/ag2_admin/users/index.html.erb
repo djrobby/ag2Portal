@@ -26,46 +26,12 @@
       })
       return false;
     });
-  })
+  });
 </script>
 
 <%= render '/layouts/ag2_admin/usersbreadcrumb' %>
 
 <h3><%=t '.title' %></h3>
-<div class="span11">
-  <%= render :partial => '/layouts/lettershead', :locals => { :controller => "users", :action => "index" } %>
-  <table class="table table-condensed table-striped">
-    <thead>
-      <tr>
-        <% if params[:letter].blank? || params[:letter] == "%" %>
-        <th><%= sortable "email", t('activerecord.attributes.user.email') %></th>
-        <th><%= sortable "name", t('activerecord.attributes.user.name') %></th>
-        <% else %>
-        <th><%= t 'activerecord.attributes.user.email' %></th>
-        <th><%= t 'activerecord.attributes.user.name' %></th>
-        <% end %>
-        <th><%=t 'activerecord.attributes.user.current_sign_in_at' %></th>
-        <th><%=t 'activerecord.attributes.user.current_sign_in_ip' %></th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody>
-      <% @users.each do |user| %>
-      <tr>
-        <td><%= link_to user.email, user %></td>
-        <td><%= user.name %></td>
-        <td><%= user.current_sign_in_at.utc.getlocal.strftime("%d/%m/%Y %H:%M:%S") unless user.current_sign_in_at.nil? %></td>
-        <td><%= user.current_sign_in_ip unless user.current_sign_in_ip.nil? %></td>
-        <td><a data-toggle="modal" href="#role-options-<%= user.id %>" class="btn btn-mini" type="button"><%=t '.btn_role' %></a> <%= render user %>
-        <a data-toggle="modal" href="#oco-options-<%= user.id %>" class="btn btn-mini" type="button"><%=t '.btn_oco' %></a> <%= render partial: 'oco', locals: { user: user } %>
-        <%= render :partial => '/layouts/crud/edit', :locals => { :model => User, :path => edit_user_path(user) } %>
-        <%= render :partial => '/layouts/crud/delete', :locals => { :model => User, :path => user, :msg => I18n.t("activerecord.models.user.one"), :txt => user.name } unless user == current_user %> </td>
-      </tr>
-      <% end %>
-    </tbody>
-  </table>
-  <%= render :partial => '/layouts/pagination', :locals => { :ivar => @users } %>
-  <%= render :partial => '/layouts/crud/new', :locals => { :model => User, :path => new_user_path, :txt => I18n.t("ag2_admin.users.index.btn_new") } %>
-  <%= link_to I18n.t("ag2_admin.users.index.go_to_child"), roles_path %> |
-  <%= link_to I18n.t("ag2_admin.users.index.back_to_root"), ag2_admin.config_path %>
+<div class="span11" id="div_table">
+  <%= render 'users' %>
 </div>

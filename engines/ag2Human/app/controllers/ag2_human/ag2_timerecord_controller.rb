@@ -6,6 +6,11 @@ module Ag2Human
 
     def index
       authorize! :update, TimeRecord
+      session[:Worker] = nil
+      session[:From] = nil      
+      session[:To] = nil
+      session[:Type] = nil      
+      session[:Code] = nil      
 
       # Sunspot special:
       # Must use Sunspot index always for update/re-index current data,

@@ -1,30 +1,6 @@
 <%= render '/layouts/ag2_admin/companiesbreadcrumb' %>
 
 <h3><%=t '.title' %></h3>
-<div class="span9">
-  <table class="table table-condensed table-striped">
-    <thead>
-      <tr>
-        <th><%= sortable "fiscal_id", t('activerecord.attributes.company.fiscal_id') %></th>
-        <th><%= sortable "name", t('activerecord.attributes.company.name') %></th>
-        <th><%= sortable "organization", t('activerecord.attributes.company.organization') %></th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody>
-      <% @companies.each do |company| %>
-      <tr>
-        <td><%= link_to company.fiscal_id, company %></td>
-        <td><%= company.name %></td>
-        <td><%= company.organization.name %></td>
-        <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => Company, :path => edit_company_path(company) } unless cannot_edit(company.id) %>
-        <%= render :partial => '/layouts/crud/delete', :locals => { :model => Company, :path => company, :msg => I18n.t("activerecord.models.company.one"), :txt => company.name } unless cannot_edit(company.id) %> </td>
-      </tr>
-      <% end %>
-    </tbody>
-  </table>
-  <%= render :partial => '/layouts/pagination', :locals => { :ivar => @companies } %>
-  <%= render :partial => '/layouts/crud/new', :locals => { :model => Company, :path => new_company_path, :txt => I18n.t("ag2_admin.companies.index.btn_new") } %>
-  <%= link_to I18n.t("ag2_admin.companies.index.go_to"), offices_path %> |
-  <%= link_to I18n.t("ag2_admin.companies.index.back_to_root"), ag2_admin.root_path %>
+<div class="span9" id="div_table">
+  <%= render 'companies' %>
 </div>

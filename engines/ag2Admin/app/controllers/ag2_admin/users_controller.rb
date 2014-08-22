@@ -53,8 +53,8 @@ module Ag2Admin
     # GET /users
     # GET /users.json
     def index
+      manage_filter_state
       letter = params[:letter]
-
       if letter.blank? || letter == "%"
         @users = User.paginate(:page => params[:page], :per_page => per_page).order(sort_column + ' ' + sort_direction)
       else
@@ -64,6 +64,7 @@ module Ag2Admin
       respond_to do |format|
         format.html # index.html.erb
         format.json { render json: @users }
+        format.js
       end
     end
 
@@ -152,6 +153,23 @@ module Ag2Admin
 
     def sort_column
       User.column_names.include?(params[:sort]) ? params[:sort] : "id"
+    end
+
+    private
+
+    # Keeps filter state
+    def manage_filter_state
+      # letter
+      if params[:letter]
+        if params[:letter] == '%'
+          session[:letter] = nil
+          params[:letter] = nil
+        else
+          session[:letter] = params[:letter]
+        end
+      elsif session[:letter]
+        params[:letter] = session[:letter]
+      end
     end
   end
 end

@@ -11,7 +11,8 @@ module Ag2Human
                                                :update_province_textfield_from_town,
                                                :update_province_textfield_from_zipcode,
                                                :wk_update_attachment,
-                                               :validate_fiscal_id_textfield]
+                                               :validate_fiscal_id_textfield,
+                                               :update_offices_select_from_company]
     # Helper methods for
     # => allow edit (hide buttons)
     helper_method :cannot_edit
@@ -140,10 +141,10 @@ module Ag2Human
 
     # Update offices from company select
     def update_offices_select_from_company
-      if params[:id] == '0'
+      if params[:com] == '0'
         @offices = Office.order('name')
       else
-        company = Company.find(params[:id])
+        company = Company.find(params[:com])
         if !company.nil?
           @offices = company.offices.order('name')
         else
@@ -506,7 +507,8 @@ end
         # must check using items
         _items = _worker.worker_items
         if _items.count < 1
-          _b = false
+          # no items: no company, no office... let's go on
+          _b = true
         else
           # check by company
           if session[:company] != '0'

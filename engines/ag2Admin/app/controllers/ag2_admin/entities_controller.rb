@@ -101,9 +101,8 @@ module Ag2Admin
     def index
       manage_filter_state
       letter = params[:letter]
-      if !session[:organization]
-        init_oco
-      end
+      # OCO
+      init_oco if !session[:organization]
 
       @search = Entity.search do
         fulltext params[:search]
@@ -139,6 +138,7 @@ module Ag2Admin
       respond_to do |format|
         format.html # index.html.erb
         format.json { render json: @entities }
+        format.js
       end
     end
 

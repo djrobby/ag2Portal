@@ -19,7 +19,7 @@
       if (worker == "")
         worker = "0";
       jQuery.getJSON('update_offices_select_from_company/' + worker, function(data) {
-        $("#Office").html("");
+        $("#WrkrOffice").html("");
         //$("#WrkrOffice").select2("val", "");
         $("#WrkrOffice").append($('<option></option>').val("").html(""));
         $.each(data, function(id, option) {
@@ -34,7 +34,10 @@
       $("#WrkrCompany").val("");
       $("#WrkrOffice").val("");
       $("#search").val("");
-      _thisForm.submit();
+      // no AJAX
+      //_thisForm.submit();
+      // AJAX
+      $("#submit_btn").trigger("click");
     });
   });
 </script>
@@ -70,7 +73,7 @@
         <%= label_tag I18n.t("ag2_human.workers.index.label_others"), nil, :class => 'form-label' %>
         <%= text_field_tag :search, params[:search], :class => 'x-large-text-field shrinked' %>
         <!-- Submit -->
-        <%= submit_tag I18n.t(:apply_filter_button), :class => 'btn btn-primary' %>
+        <%= submit_tag I18n.t(:apply_filter_button), :class => 'btn btn-primary', :id => 'submit_btn' %>
         <!-- Remove filter -->
         <button id="removeFilter" type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><%= t :clear_filter_button %></button>
         <% end %>
@@ -80,18 +83,8 @@
       </div><!-- /.sidebar-nav -->
     </div><!-- /.span3 -->
 
-    <div class="span9">
-      <%= render :partial => '/layouts/lettershead_ajax', :locals => { :controller => "workers", :action => "index" } %>
-      <table class="table table-condensed table-striped shrinked">
-        <thead>
-          <%= render '/layouts/ag2_human/workersheader' %>
-        </thead>
-        <tbody id="workers">
-          <%= render @workers %>
-        </tbody>
-      </table>
-      <span class="shrinked"><%= t("ag2_human.workers.worker_count_message") %></span>
-      <%= render :partial => '/layouts/pagination', :locals => { :ivar => @workers } %>
+    <div class="span9" id="div_table">
+      <%= render 'workers' %>
     </div><!-- /.span9 -->
   </div><!-- /.row-fluid -->
 </div><!-- /.container-fluid -->

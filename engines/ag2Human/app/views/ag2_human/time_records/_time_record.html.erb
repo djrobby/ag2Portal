@@ -1,0 +1,10 @@
+<tr>
+  <td><%= time_record.worker.full_name %></td>
+  <td><%= time_record.timerecord_date.strftime("%d/%m/%Y") %></td>
+  <td><%= time_record.timerecord_time.strftime("%H:%M") %></td>
+  <td><%= time_record.timerecord_type.name %></td>
+  <td><%= time_record.timerecord_code.name.titleize %></td>
+  <td><%= link_to time_record, :class => 'btn btn-mini' do %> <i class="icon-eye-open"></i> <% end %>
+  <%= render :partial => '/layouts/crud/edit', :locals => { :model => TimeRecord, :path => edit_time_record_path(time_record) } %>
+  <%= render :partial => '/layouts/crud/delete', :locals => { :model => TimeRecord, :path => time_record, :msg => I18n.t("activetime_record.models.time_record.one"), :txt => time_record.worker.full_name + " - " + time_record.timerecord_date.strftime("%d/%m/%Y") + " " + time_record.timerecord_time.strftime("%H:%M") } %> </td>
+</tr>

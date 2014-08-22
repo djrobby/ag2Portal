@@ -40,3 +40,8 @@ function right_number(n, l) {
   }
   return r;
 }
+
+/*
+ * AJAX sorting
+ * $(document).ready at each index view
+ */

@@ -1,0 +1,14 @@
+<tr>
+  <!--<td><a data-toggle="modal" href="#entityinfo<%#= entity.id.to_s %>"><%#= entity.fiscal_id %></a></td>-->
+  <td><%= link_to entity.fiscal_id, entity %></td>
+  <td><%= entity.company %></td>
+  <td><%= entity.full_name unless entity.full_name.blank? %></td>
+  <td><%= entity.entity_type.name unless entity.entity_type.blank? %></td>
+  <td><%= entity.phone unless entity.phone.blank? %>
+  <% if !entity.extension.blank? %>
+  (<%= entity.extension %>)
+  <% end %> </td>
+  <td><%= entity.cellular unless entity.cellular.blank? %></td>
+  <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => Entity, :path => edit_entity_path(entity) } %>
+  <%= render :partial => '/layouts/crud/delete', :locals => { :model => Entity, :path => entity, :msg => I18n.t("activerecord.models.entity.one"), :txt => entity.fiscal_id } %> </td>
+</tr>

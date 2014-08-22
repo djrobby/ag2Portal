@@ -1,0 +1,22 @@
+<script>
+$(document).ready(function() {
+  $("#div_table th a, #div_table #pages a").on( "click", function() {
+    $.getScript(this.href);
+    return false;
+  });
+});
+</script>
+
+<div id="letters_partial">
+  <%= render :partial => '/layouts/lettershead_remote', :locals => { :controller => "workers", :action => "index" } %>
+</div>
+<table class="table table-condensed table-striped shrinked">
+  <thead>
+    <%= render '/layouts/ag2_human/workersheader' %>
+  </thead>
+  <tbody id="table_body">
+    <%= render @workers %>
+  </tbody>
+</table>
+<span class="shrinked"><%= t("ag2_human.workers.worker_count_message") %></span>
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @workers } %>

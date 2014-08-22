@@ -1,0 +1,25 @@
+<script>
+$(document).ready(function() {
+  $("#div_table th a, #div_table #pages a").on( "click", function() {
+    $.getScript(this.href);
+    return false;
+  });
+});
+</script>
+
+<table class="table table-condensed table-striped shrinked">
+  <thead>
+    <tr>
+      <th><%= t :"activerecord.attributes.time_record.worker" %></th>
+      <th><%= t :"activerecord.attributes.time_record.timerecord_date" %></th>
+      <th><%= t :"activerecord.attributes.time_record.timerecord_time" %></th>
+      <th><%= t :"activerecord.attributes.time_record.timerecord_type" %></th>
+      <th><%= t :"activerecord.attributes.time_record.timerecord_code" %></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody id="table_body">
+    <%= render @time_records %>
+  </tbody>
+</table>
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @time_records } %>

@@ -69,6 +69,7 @@ module Ag2Admin
       respond_to do |format|
         format.html # index.html.erb
         format.json { render json: @companies }
+        format.js
       end
     end
 

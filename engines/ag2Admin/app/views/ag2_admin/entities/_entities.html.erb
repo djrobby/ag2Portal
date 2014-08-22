@@ -1,0 +1,32 @@
+<script>
+$(document).ready(function() {
+  $("#div_table th a, #div_table #pages a").on( "click", function() {
+    $.getScript(this.href);
+    return false;
+  });
+});
+</script>
+
+<div id="letters_partial">
+  <%= render :partial => '/layouts/lettershead_remote', :locals => { :controller => "entities", :action => "index" } %>
+</div>
+<table class="table table-condensed table-striped shrinked">
+  <thead>
+    <tr>
+      <th><%= t :"activerecord.attributes.entity.fiscal_id" %></th>
+      <th><%= t :"activerecord.attributes.entity.company" %></th>
+      <th><%= t :"activerecord.attributes.entity.full_name" %></th>
+      <th><%= t :"activerecord.attributes.entity.entity_type" %></th>
+      <th><%= t :"activerecord.attributes.entity.phone" %></th>
+      <th><%= t :"activerecord.attributes.entity.cellular" %></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody id="table_body">
+    <%= render @entities %>
+  </tbody>
+</table>
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @entities } %>
+<%= render :partial => '/layouts/crud/new', :locals => { :model => Entity, :path => new_entity_path, :txt => I18n.t("ag2_admin.entities.index.btn_new") } %>
+<%= link_to I18n.t("go_to_child_app", :scope => :"ag2_admin.entities.index"), entity_types_path %> |
+<%= link_to I18n.t("back_to_root", :scope => :"ag2_admin.entities.index"), ag2_admin.root_path %>
