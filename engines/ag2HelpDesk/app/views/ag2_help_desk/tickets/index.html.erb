@@ -34,7 +34,10 @@
       $("#Status").val("");
       $("#Technician").val("");
       $("#search").val("");
-      _thisForm.submit();
+      // no AJAX
+      //_thisForm.submit();
+      // AJAX
+      $("#submit_btn").trigger("click");
     });
   });
 </script>
@@ -48,7 +51,7 @@
 
     <div class="span3">
       <div class="well sidebar-nav">
-        <%= form_tag "tickets", :method => 'get' do %>
+        <%= form_tag "tickets", :method => 'get', :remote => true do %>
         <!-- Nº -->
         <%= label_tag I18n.t("activerecord.attributes.ticket.id"), nil, :class => 'form-label' %>
         <%= text_field_tag "Id", nil, :class => 'x-large-text-field shrinked number-text-field' %>
@@ -79,7 +82,7 @@
         <%= label_tag I18n.t("ag2_help_desk.tickets.index.label_others"), nil, :class => 'form-label' %>
         <%= text_field_tag :search, params[:search], :class => 'x-large-text-field shrinked' %>
         <!-- Submit -->
-        <%= submit_tag I18n.t(:apply_filter_button), :class => 'btn btn-primary' %>
+        <%= submit_tag I18n.t(:apply_filter_button), :class => 'btn btn-primary', :id => 'submit_btn' %>
         <!-- Remove filter -->
         <button id="removeFilter" type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><%= t :clear_filter_button %></button>
         <% end %>
@@ -90,34 +93,8 @@
       </div><!-- /.sidebar-nav -->
     </div><!-- /.span3 -->
 
-    <div class="span9">
-      <table class="table table-condensed table-striped shrinked">
-        <thead>
-          <tr>
-            <th><%= t :"activerecord.attributes.ticket.id" %></th>
-            <th><%= t :created_at %></th>
-            <th><%= t :created_by %></th>
-            <th><%= t :"activerecord.attributes.ticket.ticket_subject" %></th>
-            <th><%= t :"activerecord.attributes.ticket.ticket_status" %></th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          <% @tickets.each do |ticket| %>
-          <tr>
-            <td><%= link_to ticket.id.to_s.rjust(7, '0'), ticket %></td>
-            <td><%= ticket.created_at.strftime("%d/%m/%Y %H:%M:%S") %></td>
-            <td><%= User.find(ticket.created_by).email unless ticket.created_by.blank? %></td>
-            <td><%= ticket.ticket_subject %></td>
-            <td><%= ticket.ticket_status.name.titleize unless ticket.ticket_status.blank? %></td>
-            <td> <%= render :partial => '/layouts/ag2_help_desk/crud/ticket_status', :locals => { :ticket => ticket } %>
-            <%= render :partial => '/layouts/crud/edit', :locals => { :model => Ticket, :path => edit_ticket_path(ticket) } %>
-            <%= render :partial => '/layouts/crud/delete', :locals => { :model => Ticket, :path => ticket, :msg => I18n.t("activerecord.models.ticket.one"), :txt => ticket.id.to_s.rjust(6, '0') } %> </td>
-          </tr>
-          <% end %>
-        </tbody>
-      </table>
-      <%= render :partial => '/layouts/pagination', :locals => { :ivar => @tickets } %>
+    <div class="span9" id="div_table">
+      <%= render 'tickets' %>
     </div><!-- /.span9 -->
   </div><!-- /.row-fluid -->
 </div><!-- /.container-fluid -->

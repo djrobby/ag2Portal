@@ -1,0 +1,36 @@
+<script>
+  $(document).ready(function() {
+    $("#div_table th a, #div_table #pages a").on("click", function() {
+      $.getScript(this.href);
+      return false;
+    });
+  }); 
+</script>
+
+<table class="table table-condensed table-striped shrinked">
+  <thead>
+    <tr>
+      <th><%= t :"activerecord.attributes.ticket.id" %></th>
+      <th><%= t :created_at %></th>
+      <th><%= t :created_by %></th>
+      <th><%= t :"activerecord.attributes.ticket.ticket_subject" %></th>
+      <th><%= t :"activerecord.attributes.ticket.ticket_status" %></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @tickets.each do |ticket| %>
+    <tr>
+      <td><%= link_to ticket.id.to_s.rjust(7, '0'), ticket %></td>
+      <td><%= ticket.created_at.strftime("%d/%m/%Y %H:%M:%S") %></td>
+      <td><%= User.find(ticket.created_by).email unless ticket.created_by.blank? %></td>
+      <td><%= ticket.ticket_subject %></td>
+      <td><%= ticket.ticket_status.name.titleize unless ticket.ticket_status.blank? %></td>
+      <td> <%= render :partial => '/layouts/ag2_help_desk/crud/ticket_status', :locals => { :ticket => ticket } %>
+      <%= render :partial => '/layouts/crud/edit', :locals => { :model => Ticket, :path => edit_ticket_path(ticket) } %>
+      <%= render :partial => '/layouts/crud/delete', :locals => { :model => Ticket, :path => ticket, :msg => I18n.t("activerecord.models.ticket.one"), :txt => ticket.id.to_s.rjust(6, '0') } %> </td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @tickets } %>

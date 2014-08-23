@@ -126,6 +126,7 @@ module Ag2HelpDesk
       respond_to do |format|
         format.html # index.html.erb
         format.json { render json: @tickets }
+        format.js
       end
     end
 
