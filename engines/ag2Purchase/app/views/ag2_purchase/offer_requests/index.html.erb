@@ -24,7 +24,10 @@
       $("#Project").select2("val", "");
       $("#Order").select2("val", "");
       $("#search").val("");
-      _thisForm.submit();
+      // no AJAX
+      //_thisForm.submit();
+      // AJAX
+      $("#submit_btn").trigger("click");
     });
   });
 </script>
@@ -37,7 +40,7 @@
 
     <div class="span3">
       <div class="well sidebar-nav">
-        <%= form_tag "offer_requests", :method => 'get' do %>
+        <%= form_tag "offer_requests", :method => 'get', :remote => true do %>
         <!-- Supplier -->
         <%= label_tag I18n.t("ag2_purchase.offer_requests.index.label_supplier"), nil, :class => 'form-label' %>
         <%= select_tag "Supplier", options_from_collection_for_select(@suppliers, "id", "full_name"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
@@ -51,7 +54,7 @@
         <%= label_tag I18n.t("ag2_purchase.offer_requests.index.label_others"), nil, :class => 'form-label-under-sel2' %>
         <%= text_field_tag :search, params[:search], :class => 'x-large-text-field shrinked' %>
         <!-- Submit -->
-        <%= submit_tag I18n.t(:apply_filter_button), :class => 'btn btn-primary' %>
+        <%= submit_tag I18n.t(:apply_filter_button), :class => 'btn btn-primary', :id => 'submit_btn' %>
         <!-- Remove filter -->
         <button id="removeFilter" type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><%= t :clear_filter_button %></button>
         <% end %>
@@ -61,35 +64,8 @@
       </div><!-- /.sidebar-nav -->
     </div><!-- /.span3 -->
 
-    <div class="span9">
-      <table class="table table-condensed table-striped shrinked">
-        <thead>
-          <tr>
-            <th><%= t 'activerecord.attributes.offer_request.request_no' %></th>
-            <th align="center"><%= t 'activerecord.attributes.offer_request.request_date' %></th>
-            <th align="center"><%= t 'activerecord.attributes.offer_request.deadline_date' %></th>
-            <th><%= t 'activerecord.attributes.offer_request.project' %></th>
-            <th><%= t 'activerecord.attributes.offer_request.approved_offer' %></th>
-            <th align="right"><%= t 'activerecord.attributes.offer_request.total' %></th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          <% @offer_requests.each do |request| %>
-          <tr>
-            <td><%= link_to order.request_no, request %></td>
-            <td align="center"><%= request.order_date.strftime("%d/%m/%Y") unless request.order_date.blank? %></td>
-            <td align="center"><%= request.deadline_date.strftime("%d/%m/%Y") unless request.deadline_date.blank? %></td>
-            <td><%= request.project.full_name unless request.project.blank? %></td>
-            <td><%= request.approved_offer.partial_name unless request.approved_offer.blank? %></td>
-            <td align="right"><%= number_with_precision(request.total, precision: 4) unless request.total.blank? %></td>
-            <td> <%= render :partial => '/layouts/crud/edit', :locals => { :model => OfferRequest, :path => edit_offer_request_path(request) } %>
-            <%= render :partial => '/layouts/crud/delete', :locals => { :model => OfferRequest, :path => request, :msg => t("activerecord.models.offer_request.one"), :txt => request.request_no } %> </td>
-          </tr>
-          <% end %>
-        </tbody>
-      </table>
-      <%= render :partial => '/layouts/pagination', :locals => { :ivar => @offer_requests } %>
+    <div class="span9" id="div_table">
+      <%= render 'offer_requests' %>
     </div><!-- /.span9 -->
   </div><!-- /.row-fluid -->
 </div><!-- /.container-fluid -->

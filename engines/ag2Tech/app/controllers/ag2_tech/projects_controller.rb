@@ -98,6 +98,7 @@ module Ag2Tech
       respond_to do |format|
         format.html # index.html.erb
         format.json { render json: @projects }
+        format.js
       end
     end
   

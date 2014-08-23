@@ -1,0 +1,39 @@
+<script>
+  $(document).ready(function() {
+    $("#div_table th a, #div_table #pages a").on("click", function() {
+      $.getScript(this.href);
+      return false;
+    });
+  }); 
+</script>
+
+<table class="table table-condensed table-striped shrinked">
+  <thead>
+    <tr>
+      <th>Id</th>
+      <th><%= t 'activerecord.attributes.offer.offer_no' %></th>
+      <th align="center"><%= t 'activerecord.attributes.offer.offer_date' %></th>
+      <th><%= t 'activerecord.attributes.offer.supplier' %></th>
+      <th><%= t 'activerecord.attributes.offer.offer_request' %></th>
+      <th><%= t 'activerecord.attributes.offer.project' %></th>
+      <th align="right"><%= t 'activerecord.attributes.offer.total' %></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @offers.each do |offer| %>
+    <tr>
+      <td><%= offer.id %></td>
+      <td><%= link_to offer.offer_no, offer %></td>
+      <td align="center"><%= offer.offer_date.strftime("%d/%m/%Y") unless offer.offer_date.blank? %></td>
+      <td><%= offer.supplier.full_name unless offer.supplier.blank? %></td>
+      <td><%= offer.offer_request.request_no unless offer.offer_request.blank? %></td>
+      <td><%= offer.project.full_name unless offer.project.blank? %></td>
+      <td align="right"><%= number_with_precision(offer.total, precision: 4) unless offer.total.blank? %></td>
+      <td> <%= render :partial => '/layouts/crud/edit', :locals => { :model => Offer, :path => edit_offer_path(offer) } %>
+      <%= render :partial => '/layouts/crud/delete', :locals => { :model => Offer, :path => offer, :msg => t("activerecord.models.offer.one"), :txt => offer.offer_no } %> </td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @offers } %>

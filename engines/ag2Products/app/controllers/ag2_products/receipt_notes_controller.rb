@@ -291,6 +291,7 @@ module Ag2Products
       respond_to do |format|
         format.html # index.html.erb
         format.json { render json: @receipt_notes }
+        format.js
       end
     end
   

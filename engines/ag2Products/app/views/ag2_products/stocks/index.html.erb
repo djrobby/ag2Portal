@@ -21,7 +21,10 @@
     $("#removeFilter").click(function() {
       $("#Products").select2("val", "");
       $("#Stores").select2("val", "");
-      _thisForm.submit();
+      // no AJAX
+      //_thisForm.submit();
+      // AJAX
+      $("#submit_btn").trigger("click");
     });
   });
 </script>
@@ -35,7 +38,7 @@
 
     <div class="span3">
       <div class="well sidebar-nav">
-        <%= form_tag "stocks", :method => 'get' do %>
+        <%= form_tag "stocks", :method => 'get', :remote => true do %>
         <!-- Product -->
         <%= label_tag I18n.t("ag2_products.stocks.index.label_product"), nil, :class => 'form-label' %>
         <% if @product.nil? %>
@@ -52,7 +55,7 @@
         <%= select_tag "store", options_from_collection_for_select(Store.where("id = ?", "#{@store.id}").all, "id", "name", @store.id), class: 'x-large-text-field shrinked' %>
         <% end %>
         <!-- Submit -->
-        <%= submit_tag I18n.t(:apply_filter_button), :class => 'btn btn-primary form-button-under-sel2' %>
+        <%= submit_tag I18n.t(:apply_filter_button), :class => 'btn btn-primary form-button-under-sel2', :id => 'submit_btn' %>
         <!-- Remove filter -->
         <button id="removeFilter" type="button" class="btn btn-primary form-button-under-sel2" data-dismiss="modal" aria-hidden="true"><%= t :clear_filter_button %></button>
         <% end %>
@@ -65,57 +68,8 @@
       </div><!-- /.sidebar-nav -->
     </div><!-- /.span3 -->
 
-    <div class="span9">
-      <table class="table table-condensed table-striped shrinked">
-        <thead>
-          <tr>
-            <% if @product.nil? && @store.nil? %>
-            <th><%= t :"activerecord.attributes.stock.product" %></th>
-            <th><%= t :"activerecord.attributes.stock.store" %></th>
-            <th align="right"><%= t :"activerecord.attributes.stock.current" %></th>
-            <% elsif !@product.nil? %>
-            <th><%= t :"activerecord.attributes.stock.store" %></th>
-            <th align="right"><%= t :"activerecord.attributes.stock.minimum" %></th>
-            <th align="right"><%= t :"activerecord.attributes.stock.maximum" %></th>
-            <th align="right"><%= t :"activerecord.attributes.stock.initial" %></th>
-            <th align="right"><%= t :"activerecord.attributes.stock.current" %></th>
-            <% else %> <!-- !@store.nil? -->
-            <th><%= t :"activerecord.attributes.stock.product" %></th>
-            <th align="right"><%= t :"activerecord.attributes.stock.minimum" %></th>
-            <th align="right"><%= t :"activerecord.attributes.stock.maximum" %></th>
-            <th align="right"><%= t :"activerecord.attributes.stock.initial" %></th>
-            <th align="right"><%= t :"activerecord.attributes.stock.current" %></th>
-            <% end %>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          <% @stocks.each do |stock| %>
-          <tr>
-            <% if @product.nil? && @store.nil? %>
-            <td><%= link_to stock.product.full_name, stock %></td>
-            <td><%= stock.store.name %></td>
-            <td align="right"><%= number_with_precision(stock.current, precision: 4) unless stock.current.blank? %></td>
-            <% elsif !@product.nil? %>
-            <td><%= link_to stock.store.name, stock %></td>
-            <td align="right"><%= number_with_precision(stock.minimum, precision: 4) unless stock.minimum.blank? %></td>
-            <td align="right"><%= number_with_precision(stock.maximum, precision: 4) unless stock.maximum.blank? %></td>
-            <td align="right"><%= number_with_precision(stock.initial, precision: 4) unless stock.initial.blank? %></td>
-            <td align="right"><%= number_with_precision(stock.current, precision: 4) unless stock.current.blank? %></td>
-            <% else %> <!-- !@store.nil? -->
-            <td><%= link_to stock.product.full_name, stock %></td>
-            <td align="right"><%= number_with_precision(stock.minimum, precision: 4) unless stock.minimum.blank? %></td>
-            <td align="right"><%= number_with_precision(stock.maximum, precision: 4) unless stock.maximum.blank? %></td>
-            <td align="right"><%= number_with_precision(stock.initial, precision: 4) unless stock.initial.blank? %></td>
-            <td align="right"><%= number_with_precision(stock.current, precision: 4) unless stock.current.blank? %></td>
-            <% end %>
-            <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => Stock, :path => edit_stock_path(stock) } %>
-            <%= render :partial => '/layouts/crud/delete', :locals => { :model => Stock, :path => stock, :msg => t("activerecord.models.stock.one"), :txt => stock.product.full_name + "->" + stock.store.name } %> </td>
-          </tr>
-          <% end %>
-        </tbody>
-      </table>
-      <%= render :partial => '/layouts/pagination', :locals => { :ivar => @stocks } %>
+    <div class="span9" id="div_table">
+      <%= render 'stocks' %>
     </div><!-- /.span9 -->
   </div><!-- /.row-fluid -->
 </div><!-- /.container-fluid -->

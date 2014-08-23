@@ -321,6 +321,7 @@ module Ag2Purchase
       respond_to do |format|
         format.html # index.html.erb
         format.json { render json: @supplier_invoices }
+        format.js
       end
     end
   

@@ -1,0 +1,41 @@
+<script>
+  $(document).ready(function() {
+    $("#div_table th a, #div_table #pages a").on("click", function() {
+      $.getScript(this.href);
+      return false;
+    });
+  }); 
+</script>
+
+<table class="table table-condensed table-striped shrinked">
+  <thead>
+    <tr>
+      <th><%= t 'activerecord.attributes.project.project_code' %></th>
+      <th><%= t 'activerecord.attributes.project.name' %></th>
+      <th><%= t 'activerecord.attributes.project.company' %></th>
+      <th><%= t 'activerecord.attributes.project.office' %></th>
+      <th align="center"><%= t 'activerecord.attributes.project.opened_at' %></th>
+      <th align="center"><%= t 'activerecord.attributes.project.closed_at' %></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @projects.each do |project| %>
+    <% if project.closed_at.blank? %>
+    <tr>
+      <% else %>
+    <tr class="inactive-row">
+      <% end %>
+      <td><%= link_to project.full_code, project %></td>
+      <td><%= project.name %></td>
+      <td><%= project.company.name unless project.company.blank? %></td>
+      <td><%= project.office.name unless project.office.blank? %></td>
+      <td align="center"><%= project.opened_at.strftime("%d/%m/%Y") unless project.opened_at.blank? %></td>
+      <td align="center"><%= project.closed_at.strftime("%d/%m/%Y") unless project.closed_at.blank? %></td>
+      <td> <%= render :partial => '/layouts/crud/edit', :locals => { :model => Project, :path => edit_project_path(project) } %>
+      <%= render :partial => '/layouts/crud/delete', :locals => { :model => Project, :path => project, :msg => t("activerecord.models.project.one"), :txt => project.full_name } %> </td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @projects } %>

@@ -304,6 +304,7 @@ module Ag2Purchase
       respond_to do |format|
         format.html # index.html.erb
         format.json { render json: @purchase_orders }
+        format.js
       end
     end
   

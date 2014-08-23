@@ -24,7 +24,10 @@
       $("#Type").val("");
       $("#Status").val("");
       $("#search").val("");
-      _thisForm.submit();
+      // no AJAX
+      //_thisForm.submit();
+      // AJAX
+      $("#submit_btn").trigger("click");
     });
   });
 </script>
@@ -37,7 +40,7 @@
 
     <div class="span3">
       <div class="well sidebar-nav">
-        <%= form_tag "work_orders", :method => 'get' do %>
+        <%= form_tag "work_orders", :method => 'get', :remote => true do %>
         <!-- Project -->
         <%= label_tag I18n.t("ag2_tech.work_orders.index.label_project"), nil, :class => 'form-label' %>
         <%= select_tag "Project", options_from_collection_for_select(@projects, "id", "full_name"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
@@ -51,7 +54,7 @@
         <%= label_tag I18n.t("ag2_tech.work_orders.index.label_others"), nil, :class => 'form-label' %>
         <%= text_field_tag :search, params[:search], :class => 'x-large-text-field shrinked' %>
         <!-- Submit -->
-        <%= submit_tag I18n.t(:apply_filter_button), :class => 'btn btn-primary' %>
+        <%= submit_tag I18n.t(:apply_filter_button), :class => 'btn btn-primary', :id => 'submit_btn' %>
         <!-- Remove filter -->
         <button id="removeFilter" type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><%= t :clear_filter_button %></button>
         <% end %>
@@ -61,41 +64,8 @@
       </div><!-- /.sidebar-nav -->
     </div><!-- /.span3 -->
 
-    <div class="span9">
-      <table class="table table-condensed table-striped shrinked">
-        <thead>
-          <tr>
-            <th><%= t 'activerecord.attributes.work_order.order_no' %></th>
-            <th><%= t 'activerecord.attributes.work_order.description' %></th>
-            <th><%= t 'activerecord.attributes.work_order.project' %></th>
-            <th><%= t 'activerecord.attributes.work_order.work_order_type' %></th>
-            <th><%= t 'activerecord.attributes.work_order.work_order_status' %></th>
-            <th align="center"><%= t 'activerecord.attributes.work_order.started_at' %></th>
-            <th align="center"><%= t 'activerecord.attributes.work_order.completed_at' %></th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          <% @work_orders.each do |order| %>
-          <% if order.closed_at.blank? %>
-          <tr>
-            <% else %>
-          <tr class="inactive-row">
-            <% end %>
-            <td><%= link_to order.full_no, order %></td>
-            <td><%= order.summary[0,30] %></td>
-            <td><%= order.project.full_code unless order.project.blank? %></td>
-            <td><%= order.work_order_type.name unless order.work_order_type.blank? %></td>
-            <td><%= order.work_order_status.name unless order.work_order_status.blank? %></td>
-            <td align="center"><%= order.started_at.strftime("%d/%m/%Y") unless order.started_at.blank? %></td>
-            <td align="center"><%= order.completed_at.strftime("%d/%m/%Y") unless order.completed_at.blank? %></td>
-            <td> <%= render :partial => '/layouts/crud/edit', :locals => { :model => WorkOrder, :path => edit_work_order_path(order) } %>
-            <%= render :partial => '/layouts/crud/delete', :locals => { :model => WorkOrder, :path => order, :msg => t("activerecord.models.work_order.one"), :txt => order.order_no } %> </td>
-          </tr>
-          <% end %>
-        </tbody>
-      </table>
-      <%= render :partial => '/layouts/pagination', :locals => { :ivar => @work_orders } %>
+    <div class="span9" id="div_table">
+      <%= render 'work_orders' %>
     </div><!-- /.span9 -->
   </div><!-- /.row-fluid -->
 </div><!-- /.container-fluid -->

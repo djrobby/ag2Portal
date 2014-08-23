@@ -53,6 +53,7 @@ module Ag2Products
       respond_to do |format|
         format.html # index.html.erb
         format.json { render json: @purchase_prices }
+        format.js
       end
     end
   

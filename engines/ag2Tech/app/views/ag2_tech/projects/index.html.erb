@@ -34,7 +34,10 @@
       $("#WrkrCompany").val("");
       $("#WrkrOffice").val("");
       $("#search").val("");
-      _thisForm.submit();
+      // no AJAX
+      //_thisForm.submit();
+      // AJAX
+      $("#submit_btn").trigger("click");
     });
   });
 </script>
@@ -47,7 +50,7 @@
 
     <div class="span3">
       <div class="well sidebar-nav">
-        <%= form_tag "projects", :method => 'get' do %>
+        <%= form_tag "projects", :method => 'get', :remote => true do %>
         <!-- Company -->
         <%= label_tag I18n.t("ag2_tech.projects.index.label_company"), nil, :class => 'form-label' %>
         <% if session[:company] != '0' %>
@@ -66,7 +69,7 @@
         <%= label_tag I18n.t("ag2_tech.projects.index.label_others"), nil, :class => 'form-label' %>
         <%= text_field_tag :search, params[:search], :class => 'x-large-text-field shrinked' %>
         <!-- Submit -->
-        <%= submit_tag I18n.t(:apply_filter_button), :class => 'btn btn-primary' %>
+        <%= submit_tag I18n.t(:apply_filter_button), :class => 'btn btn-primary', :id => 'submit_btn' %>
         <!-- Remove filter -->
         <button id="removeFilter" type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><%= t :clear_filter_button %></button>
         <% end %>
@@ -76,39 +79,8 @@
       </div><!-- /.sidebar-nav -->
     </div><!-- /.span3 -->
 
-    <div class="span9">
-      <table class="table table-condensed table-striped shrinked">
-        <thead>
-          <tr>
-            <th><%= t 'activerecord.attributes.project.project_code' %></th>
-            <th><%= t 'activerecord.attributes.project.name' %></th>
-            <th><%= t 'activerecord.attributes.project.company' %></th>
-            <th><%= t 'activerecord.attributes.project.office' %></th>
-            <th align="center"><%= t 'activerecord.attributes.project.opened_at' %></th>
-            <th align="center"><%= t 'activerecord.attributes.project.closed_at' %></th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          <% @projects.each do |project| %>
-          <% if project.closed_at.blank? %>
-          <tr>
-            <% else %>
-          <tr class="inactive-row">
-            <% end %>
-            <td><%= link_to project.full_code, project %></td>
-            <td><%= project.name %></td>
-            <td><%= project.company.name unless project.company.blank? %></td>
-            <td><%= project.office.name unless project.office.blank? %></td>
-            <td align="center"><%= project.opened_at.strftime("%d/%m/%Y") unless project.opened_at.blank? %></td>
-            <td align="center"><%= project.closed_at.strftime("%d/%m/%Y") unless project.closed_at.blank? %></td>
-            <td> <%= render :partial => '/layouts/crud/edit', :locals => { :model => Project, :path => edit_project_path(project) } %>
-            <%= render :partial => '/layouts/crud/delete', :locals => { :model => Project, :path => project, :msg => t("activerecord.models.project.one"), :txt => project.full_name } %> </td>
-          </tr>
-          <% end %>
-        </tbody>
-      </table>
-      <%= render :partial => '/layouts/pagination', :locals => { :ivar => @projects } %>
+    <div class="span9" id="div_table">
+      <%= render 'projects' %>
     </div><!-- /.span9 -->
   </div><!-- /.row-fluid -->
 </div><!-- /.container-fluid -->

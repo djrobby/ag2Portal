@@ -24,7 +24,10 @@
       $("#Project").select2("val", "");
       $("#Order").select2("val", "");
       $("#search").val("");
-      _thisForm.submit();
+      // no AJAX
+      //_thisForm.submit();
+      // AJAX
+      $("#submit_btn").trigger("click");
     });
   });
 </script>
@@ -37,7 +40,7 @@
 
     <div class="span3">
       <div class="well sidebar-nav">
-        <%= form_tag "supplier_invoices", :method => 'get' do %>
+        <%= form_tag "supplier_invoices", :method => 'get', :remote => true do %>
         <!-- Supplier -->
         <%= label_tag I18n.t("ag2_purchase.supplier_invoices.index.label_supplier"), nil, :class => 'form-label' %>
         <%= select_tag "Supplier", options_from_collection_for_select(@suppliers, "id", "full_name"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
@@ -51,7 +54,7 @@
         <%= label_tag I18n.t("ag2_purchase.supplier_invoices.index.label_others"), nil, :class => 'form-label-under-sel2' %>
         <%= text_field_tag :search, params[:search], :class => 'x-large-text-field shrinked' %>
         <!-- Submit -->
-        <%= submit_tag I18n.t(:apply_filter_button), :class => 'btn btn-primary' %>
+        <%= submit_tag I18n.t(:apply_filter_button), :class => 'btn btn-primary', :id => 'submit_btn' %>
         <!-- Remove filter -->
         <button id="removeFilter" type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><%= t :clear_filter_button %></button>
         <% end %>
@@ -61,35 +64,8 @@
       </div><!-- /.sidebar-nav -->
     </div><!-- /.span3 -->
 
-    <div class="span9">
-      <table class="table table-condensed table-striped shrinked">
-        <thead>
-          <tr>
-            <th>Id</th>
-            <th><%= t 'activerecord.attributes.supplier_invoice.invoice_no' %></th>
-            <th align="center"><%= t 'activerecord.attributes.supplier_invoice.invoice_date' %></th>
-            <th><%= t 'activerecord.attributes.supplier_invoice.supplier' %></th>
-            <th><%= t 'activerecord.attributes.supplier_invoice.project' %></th>
-            <th align="right"><%= t 'activerecord.attributes.supplier_invoice.total' %></th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          <% @supplier_invoices.each do |invoice| %>
-          <tr>
-            <td><%= invoice.id %></td>
-            <td><%= link_to invoice.invoice_no, invoice %></td>
-            <td align="center"><%= invoice.invoice_date.strftime("%d/%m/%Y") unless invoice.invoice_date.blank? %></td>
-            <td><%= invoice.supplier.full_name[0,40] unless invoice.supplier.blank? %></td>
-            <td><%= invoice.project.full_code unless invoice.project.blank? %></td>
-            <td align="right"><%= number_with_precision(invoice.total, precision: 4) unless invoice.total.blank? %></td>
-            <td> <%= render :partial => '/layouts/crud/edit', :locals => { :model => SupplierInvoice, :path => edit_supplier_invoice_path(invoice) } %>
-            <%= render :partial => '/layouts/crud/delete', :locals => { :model => SupplierInvoice, :path => invoice, :msg => t("activerecord.models.supplier_invoice.one"), :txt => invoice.invoice_no } %> </td>
-          </tr>
-          <% end %>
-        </tbody>
-      </table>
-      <%= render :partial => '/layouts/pagination', :locals => { :ivar => @supplier_invoices } %>
+    <div class="span9" id="div_table">
+      <%= render 'supplier_invoices' %>
     </div><!-- /.span9 -->
   </div><!-- /.row-fluid -->
 </div><!-- /.container-fluid -->

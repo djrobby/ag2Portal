@@ -323,6 +323,7 @@ module Ag2Products
       respond_to do |format|
         format.html # index.html.erb
         format.json { render json: @delivery_notes }
+        format.js
       end
     end
   

@@ -64,6 +64,7 @@ module Ag2Tech
       respond_to do |format|
         format.html # index.html.erb
         format.json { render json: @charge_accounts }
+        format.js
       end
     end
   

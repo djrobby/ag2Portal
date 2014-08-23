@@ -20,7 +20,10 @@
     $("#removeFilter").click(function() {
       $("#Project").select2("val", "");
       $("#search").val("");
-      _thisForm.submit();
+      // no AJAX
+      //_thisForm.submit();
+      // AJAX
+      $("#submit_btn").trigger("click");
     });
   });
 </script>
@@ -33,7 +36,7 @@
 
     <div class="span3">
       <div class="well sidebar-nav">
-        <%= form_tag "charge_accounts", :method => 'get' do %>
+        <%= form_tag "charge_accounts", :method => 'get', :remote => true do %>
         <!-- Project -->
         <%= label_tag I18n.t("ag2_tech.charge_accounts.index.label_project"), nil, :class => 'form-label' %>
         <%= select_tag "Project", options_from_collection_for_select(@projects, "id", "full_name"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
@@ -41,7 +44,7 @@
         <%= label_tag I18n.t("ag2_tech.charge_accounts.index.label_others"), nil, :class => 'form-label-under-sel2' %>
         <%= text_field_tag :search, params[:search], :class => 'x-large-text-field shrinked' %>
         <!-- Submit -->
-        <%= submit_tag I18n.t(:apply_filter_button), :class => 'btn btn-primary' %>
+        <%= submit_tag I18n.t(:apply_filter_button), :class => 'btn btn-primary', :id => 'submit_btn' %>
         <!-- Remove filter -->
         <button id="removeFilter" type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><%= t :clear_filter_button %></button>
         <% end %>
@@ -51,37 +54,8 @@
       </div><!-- /.sidebar-nav -->
     </div><!-- /.span3 -->
 
-    <div class="span9">
-      <table class="table table-condensed table-striped shrinked">
-        <thead>
-          <tr>
-            <th><%= t 'activerecord.attributes.charge_account.account_code' %></th>
-            <th><%= t 'activerecord.attributes.charge_account.name' %></th>
-            <th><%= t 'activerecord.attributes.charge_account.project' %></th>
-            <th align="center"><%= t 'activerecord.attributes.charge_account.opened_at' %></th>
-            <th align="center"><%= t 'activerecord.attributes.charge_account.closed_at' %></th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          <% @charge_accounts.each do |account| %>
-          <% if account.closed_at.blank? %>
-          <tr>
-            <% else %>
-          <tr class="inactive-row">
-            <% end %>
-            <td><%= link_to account.full_code, account %></td>
-            <td><%= account.name %></td>
-            <td><%= account.project.full_code unless account.project.blank? %></td>
-            <td align="center"><%= account.opened_at.strftime("%d/%m/%Y") unless account.opened_at.blank? %></td>
-            <td align="center"><%= account.closed_at.strftime("%d/%m/%Y") unless account.closed_at.blank? %></td>
-            <td> <%= render :partial => '/layouts/crud/edit', :locals => { :model => ChargeAccount, :path => edit_charge_account_path(account) } %>
-            <%= render :partial => '/layouts/crud/delete', :locals => { :model => ChargeAccount, :path => account, :msg => t("activerecord.models.charge_account.one"), :txt => account.full_name } %> </td>
-          </tr>
-          <% end %>
-        </tbody>
-      </table>
-      <%= render :partial => '/layouts/pagination', :locals => { :ivar => @charge_accounts } %>
+    <div class="span9" id="div_table">
+      <%= render 'charge_accounts' %>
     </div><!-- /.span9 -->
   </div><!-- /.row-fluid -->
 </div><!-- /.container-fluid -->
