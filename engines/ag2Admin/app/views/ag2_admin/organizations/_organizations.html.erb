@@ -27,6 +27,6 @@
   </tbody>
 </table>
 <%= render :partial => '/layouts/pagination', :locals => { :ivar => @organizations } %>
-<%= render :partial => '/layouts/crud/new', :locals => { :model => Organization, :path => new_organization_path, :txt => t(".btn_new") } %>
+<%= render :partial => '/layouts/crud/new', :locals => { :model => Organization, :path => new_organization_path, :txt => t("ag2_admin.organizations.index.btn_new") } %>
 <%= link_to t("ag2_admin.organizations.index.go_to"), companies_path %> |
 <%= link_to t("ag2_admin.organizations.index.back_to_root"), ag2_admin.config_path %>

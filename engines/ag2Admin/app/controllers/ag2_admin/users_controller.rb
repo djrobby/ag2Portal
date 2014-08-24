@@ -46,7 +46,7 @@ module Ag2Admin
         format.json { render json: @json_data }
       end
     end
-
+    
     #
     # Default Methods
     #
@@ -56,9 +56,9 @@ module Ag2Admin
       manage_filter_state
       letter = params[:letter]
       if letter.blank? || letter == "%"
-        @users = User.paginate(:page => params[:page], :per_page => per_page).order(sort_column + ' ' + sort_direction)
+        @users = User.paginate(:page => params[:page], :per_page => slow_per_page).order(sort_column + ' ' + sort_direction)
       else
-        @users = User.where("name LIKE ?", "#{letter}%").paginate(:page => params[:page], :per_page => per_page).order(sort_column + ' ' + sort_direction)
+        @users = User.where("name LIKE ?", "#{letter}%").paginate(:page => params[:page], :per_page => slow_per_page).order(sort_column + ' ' + sort_direction)
       end
 
       respond_to do |format|

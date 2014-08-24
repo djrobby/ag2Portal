@@ -1,4 +1,14 @@
 <script>
+  $(document).ajaxStart(function() {
+    // show loader on start
+    $("#div_table").html("");
+    $("#loader").show();
+  }).ajaxSuccess(function() {
+    // hide loader on success
+    $("#loader").hide();
+    //$("#loader").css("display","none");
+  });
+  
   jQuery(function($) {
     // when the #user_office_ids_? check_box changes
     $("[id ^=user_office_ids]").change(function() {
@@ -10,7 +20,7 @@
       jQuery.getJSON('update_company_organization_from_office/' + box, function(data) {
         $("input:checkbox[id=user_company_ids_" + data.company_id + "]").prop('checked', chkd);
         $("input:checkbox[id=user_organization_ids_" + data.organization_id + "]").prop('checked', chkd);
-      })
+      });
       return false;
     });
 
@@ -23,7 +33,7 @@
         box = "0";
       jQuery.getJSON('update_organization_from_company/' + box, function(data) {
         $("input:checkbox[id=user_organization_ids_" + data.organization_id + "]").prop('checked', chkd);
-      })
+      });
       return false;
     });
   });
@@ -32,6 +42,16 @@
 <%= render '/layouts/ag2_admin/usersbreadcrumb' %>
 
 <h3><%=t '.title' %></h3>
-<div class="span11" id="div_table">
-  <%= render 'users' %>
+
+<div class="span11">
+  <div id="loader"></div>
+  <div id="div_table">
+    <%= render 'users' %>
+  </div>
+  <div id="div_links">
+    <%= link_to I18n.t("ag2_admin.users.index.go_to_child"), roles_path %> |
+    <%= link_to I18n.t("ag2_admin.users.index.back_to_root"), ag2_admin.config_path %>
+  </div>
 </div>
+
+

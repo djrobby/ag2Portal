@@ -102,6 +102,16 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def slow_per_page
+    if session[:resolution] == "LD"
+    10
+    elsif session[:resolution] == "SD"
+    20
+    else
+    30
+    end
+  end
+
   # Configure link_to 'undo' to be displayed on notification
   # (rails flash) area (messages layout) at the current view_context
   # and routes to VersionsController#revert
