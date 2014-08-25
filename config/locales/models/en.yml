@@ -38,3 +38,11 @@ en:
           attributes:
             order_no:
               code_invalid: "Invalid no."
+        charge_account:
+          attributes:
+            account_code:
+              code_invalid: "Invalid code"
+        charge_group:
+          attributes:
+            group_code:
+              code_invalid: "Invalid code (must be numeric)"

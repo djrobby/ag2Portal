@@ -24,3 +24,5 @@ en:
         ledger_account: "Ledger account"
         organization: "Organization"
         organization_id: "Organization"
+        charge_group: "Charge group"
+        charge_group_id: "Charge group"

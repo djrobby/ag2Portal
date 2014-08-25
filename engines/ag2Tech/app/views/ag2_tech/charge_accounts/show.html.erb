@@ -11,14 +11,14 @@
     </tr>
       <td><%=t 'activerecord.attributes.charge_account.name' %>:</td>
       <td><%= @charge_account.name %></td>
-      <td><%=t 'activerecord.attributes.charge_account.ledger_account' %>:</td>
-      <td><%= @charge_account.ledger_account unless @charge_account.ledger_account.blank? %></td>
+      <td><%=t 'activerecord.attributes.charge_account.charge_group' %>:</td>
+      <td><%= @charge_account.charge_group.full_name unless @charge_account.charge_group.blank? %></td>
     </tr>
     <tr>
+      <td><%=t 'activerecord.attributes.charge_account.ledger_account' %>:</td>
+      <td><%= @charge_account.ledger_account unless @charge_account.ledger_account.blank? %></td>
       <td><%=t 'activerecord.attributes.charge_account.project' %>:</td>
       <td><%= @charge_account.project.full_name unless @charge_account.project.blank? %></td>
-      <td></td>
-      <td></td>
     </tr>
     <tr>
       <td><%= t :"activerecord.attributes.charge_account.opened_at" %>:</td>
@@ -36,4 +36,7 @@
 delete_path: @charge_account, delete_txt: t('.btn_delete'), msg: t("activerecord.models.charge_account.one"), txt: @charge_account.full_name,
 new_path: new_charge_account_path, new_txt: t('ag2_tech.charge_accounts.index.btn_new') } %>
 
+<% if !session[:return_to].nil? %>
+<%= link_to session[:return_to], session[:return_to_url] %> |
+<% end %>
 <%= link_to t("ag2_tech.charge_accounts.back_to_main_page"), charge_accounts_path %>

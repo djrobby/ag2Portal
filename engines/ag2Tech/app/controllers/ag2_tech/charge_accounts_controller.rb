@@ -13,19 +13,26 @@ module Ag2Tech
       if organization != '0'
         @organization = Organization.find(organization)
         @projects = @organization.blank? ? projects_dropdown : @organization.projects.order(:project_code)
+        @groups = @organization.blank? ? groups_dropdown : @organization.charge_groups.order(:group_code)
       else
         @projects = projects_dropdown
+        @groups = groups_dropdown
       end
-      @json_data = { "projects" => @projects }
+      @json_data = { "projects" => @projects, "groups" => @groups }
       render json: @json_data
     end
 
     # Update account code at view (generate_code_btn)
     def cc_generate_code
-      header = params[:header]
+      group = params[:group]
+      organization = params[:org]
 
       # Builds code, if possible
-      code = header == '$' ? code = '$err' : cc_next_code(header)
+      if group == '$' || organization == '$'
+        code = '$err'
+      else
+        code = cc_next_code(organization, group)
+      end
       @json_data = { "code" => code }
       render json: @json_data
     end
@@ -86,6 +93,7 @@ module Ag2Tech
       @breadcrumb = 'create'
       @charge_account = ChargeAccount.new
       @projects = projects_dropdown
+      @groups = groups_dropdown
   
       respond_to do |format|
         format.html # new.html.erb
@@ -98,6 +106,7 @@ module Ag2Tech
       @breadcrumb = 'update'
       @charge_account = ChargeAccount.find(params[:id])
       @projects = projects_dropdown_edit(@charge_account.project)
+      @groups = @charge_account.organization.blank? ? groups_dropdown : @charge_account.organization.charge_groups.order(:group_code)
     end
   
     # POST /charge_accounts
@@ -113,6 +122,7 @@ module Ag2Tech
           format.json { render json: @charge_account, status: :created, location: @charge_account }
         else
           @projects = projects_dropdown
+          @groups = groups_dropdown
           format.html { render action: "new" }
           format.json { render json: @charge_account.errors, status: :unprocessable_entity }
         end
@@ -133,6 +143,7 @@ module Ag2Tech
           format.json { head :no_content }
         else
           @projects = projects_dropdown_edit(@charge_account.project)
+          @groups = @charge_account.organization.blank? ? groups_dropdown : @charge_account.organization.charge_groups.order(:group_code)
           format.html { render action: "edit" }
           format.json { render json: @charge_account.errors, status: :unprocessable_entity }
         end
@@ -182,6 +193,10 @@ module Ag2Tech
         _projects = Project.where(id: _project)
       end
       _projects
+    end
+
+    def groups_dropdown
+      session[:organization] != '0' ? ChargeGroup.where(organization_id: session[:organization].to_i).order(:group_code) : ChargeGroup.order(:group_code)
     end
     
     # Keeps filter state

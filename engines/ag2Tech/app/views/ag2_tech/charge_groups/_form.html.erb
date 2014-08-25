@@ -1,0 +1,27 @@
+<%= simple_form_for @charge_group, :html => {:class => 'form-vertical well' } do |f| %>
+<%= f.error_notification %>
+<%= display_base_errors resource %>
+<div>
+  <label class="multi-field-label-two"> <%= f.input :group_code, :autofocus => true, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.input :name, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+</div>
+<div>
+  <label class="multi-field-label-two">
+    <% if session[:organization] != '0' %>
+    <%= f.association :organization, collection: Organization.where("id = ?", "#{session[:organization]}").all, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' }, include_blank: false %>
+    <% elsif current_user.organizations.count > 0 %>
+    <%= f.association :organization, collection: current_user.organizations.order('name'), input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' }, include_blank: false %>
+    <% else %>
+    <%= f.association :organization, collection: Organization.order('name'), input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %>
+    <% end %>
+  </label>
+  <label class="multi-field-label-two"> <%= f.input :ledger_account, input_html: { class: 'mid-text-field' }, label_html: { class: 'form-label' } %> </label>
+</div>
+<%= f.input :flow,
+  collection: [[1, t('activerecord.attributes.charge_group.flow_1')],
+               [2, t('activerecord.attributes.charge_group.flow_2')],
+               [3, t('activerecord.attributes.charge_group.flow_3')]],
+               as: :radio_buttons, label_method: :last, value_method: :first, label_html: { class: 'form-label' }, item_wrapper_class: 'inline' %>
+<br />
+<%= f.button :submit, :class => 'btn-primary' %>
+<% end %>

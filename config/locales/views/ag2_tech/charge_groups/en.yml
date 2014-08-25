@@ -1,0 +1,23 @@
+en:
+  ag2_tech:
+    charge_groups:
+      index:
+        title: "Charge groups"
+        btn_new: "New Charge group"
+        back_to_root: "Back to ag2Tech"
+        income_only: "For income"
+        expenditure_only: "For expenditure"
+        all: "All"
+      show:
+        title: "Charge group"
+        btn_edit: "Edit Charge group"
+        btn_delete: "Delete Charge group"
+        subtable_title: "Group accounts"
+        return_to: "Back to Charge group"
+      edit:
+        title: "Edit Charge group"
+        btn_show: "Show Charge group"
+      new:
+        title: "New Charge group"
+      back_to_main_page: "Back to Charge groups"
+      code_error: "Unable to generate Group Code: No Organization chosen."

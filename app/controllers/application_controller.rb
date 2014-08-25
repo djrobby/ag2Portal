@@ -336,16 +336,25 @@ end
   end
 
   # Charge account code
-  def cc_next_code(header)
+  def cc_next_code(organization, group)
     code = ''
-    header = header.to_s if header.is_a? Fixnum
-    header = header.rjust(4, '0')
-    last_code = ChargeAccount.where("account_code LIKE ?", "#{header}%").order(:account_code).maximum(:account_code)
-    if last_code.nil?
-      code = header + '0000001'
+    # Builds code, if possible
+    group_code = ChargeGroup.find(group).group_code rescue '$'
+    if group_code == '$'
+      code = '$err'
     else
-      last_code = last_code[4..10].to_i + 1
-      code = header + last_code.to_s.rjust(7, '0')
+      group = group_code.rjust(4, '0')
+      if organization == 0
+        last_code = ChargeAccount.where("account_code LIKE ?", "#{group}%").order(:account_code).maximum(:account_code)
+      else
+        last_code = ChargeAccount.where("account_code LIKE ? AND organization_id = ?", "#{group}%", "#{organization}").order(:account_code).maximum(:account_code)
+      end
+      if last_code.nil?
+        code = group + '0000001'
+      else
+        last_code = last_code[4..10].to_i + 1
+        code = group + last_code.to_s.rjust(7, '0')
+      end
     end
     code
    end

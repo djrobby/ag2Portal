@@ -1,0 +1,37 @@
+<script>
+  $(document).ready(function() {
+    $("#div_table th a, #div_table #pages a").on("click", function() {
+      $.getScript(this.href);
+      return false;
+    });
+  }); 
+</script>
+
+<table class="table table-condensed table-striped">
+  <thead>
+    <tr>
+      <th><%= sortable "group_code", t('activerecord.attributes.charge_group.group_code') %></th>
+      <th><%= sortable "name", t('activerecord.attributes.charge_group.name') %></th>
+      <th><%= sortable "flow", t('activerecord.attributes.charge_group.flow') %></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @charge_groups.each do |group| %>
+    <tr>
+      <td><%= link_to group.group_code, group %></td>
+      <td><%= group.name %></td>
+      <td><%= group.flow_label %></td>
+      <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => ChargeGroup, :path => edit_charge_group_path(group) } %>
+      <%= render :partial => '/layouts/crud/delete', :locals => { :model => ChargeGroup, :path => group, :msg => t("activerecord.models.charge_group.one"), :txt => group.full_name } %> </td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @charge_groups } %>
+<%= render :partial => '/layouts/crud/new', :locals => { :model => ChargeGroup, :path => new_charge_group_path, :txt => t("ag2_tech.charge_groups.index.btn_new") } %>
+
+<%= link_to t('ag2_tech.charge_groups.index.all'), controller: "charge_groups", action: "index", ifilter: "all", :remote => true %> |
+<%= link_to t('ag2_tech.charge_groups.index.income_only'), controller: "charge_groups", action: "index", filter: "income", ifilter: "income", :remote => true %> |
+<%= link_to t('ag2_tech.charge_groups.index.expenditure_only'), controller: "charge_groups", action: "index", filter: "expenditure", ifilter: "expenditure", :remote => true %> |
+<%= link_to t("ag2_tech.charge_groups.index.back_to_root"), ag2_tech.root_path %>

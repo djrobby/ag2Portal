@@ -20,4 +20,4 @@ en:
       back_to_main_page: "Back to Charge accounts"
       generate_code_btn: "Account Code"
       validate_btn: "Validate"
-      code_error: "Unable to generate Account Code: No Organization chosen."
+      code_error: "Unable to generate Account Code: No Organization or Group chosen."

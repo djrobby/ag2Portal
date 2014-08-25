@@ -1,0 +1,39 @@
+<script>
+  $(document).ready(function() {
+    $("#div_table th a, #div_table #pages a").on("click", function() {
+      $.getScript(this.href);
+      return false;
+    });
+  }); 
+</script>
+
+<table class="table table-condensed table-striped">
+  <thead>
+    <tr>
+      <th><%= sortable "id", "Id" %></th>
+      <th><%= sortable "description", t('activerecord.attributes.tax_type.description') %></th>
+      <th align="right"><%= sortable "tax", t('activerecord.attributes.tax_type.tax') %></th>
+      <th align="center"><%= sortable "expiration", t('activerecord.attributes.tax_type.expiration') %></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @tax_types.each do |type| %>
+    <tr>
+      <td><%= type.id %></td>
+      <td><%= link_to type.description, type %></td>
+      <td align="right"><%= number_to_percentage(type.tax, precision: 2, locale: :es) unless type.tax.blank? %></td>
+      <td align="center"><%= type.expiration.strftime("%d/%m/%Y") unless type.expiration.nil? %></td>
+      <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => TaxType, :path => edit_tax_type_path(type) } %>
+      <%= render :partial => '/layouts/crud/delete', :locals => { :model => TaxType, :path => type, :msg => I18n.t("activerecord.models.tax_type.one"), :txt => type.description } %> </td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @tax_types } %>
+<%= render :partial => '/layouts/crud/new', :locals => { :model => TaxType, :path => new_tax_type_path, :txt => t('ag2_admin.tax_types.index.btn_new') } %>
+
+<%= link_to t('ag2_admin.tax_types.index.all'), controller: "tax_types", action: "index", ifilter: "all", :remote => true %> |
+<%= link_to t('ag2_admin.tax_types.index.current_only'), controller: "tax_types", action: "index", ifilter: "current", :remote => true %> |
+<%= link_to t('ag2_admin.tax_types.index.expired_only'), controller: "tax_types", action: "index", ifilter: "expired", :remote => true %> |
+<%= link_to t('ag2_admin.tax_types.index.back_to_root'), ag2_admin.root_path %>

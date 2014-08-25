@@ -1,6 +1,7 @@
 <script>
   var text_field_color;
-  var old_value = '';
+  var old_grp = '';
+  var old_org = '';
   var old_code = '';
 
   $(document).ready(function() {
@@ -28,6 +29,7 @@
     } else {
       // Code OK: Enable
       $('#submit_btn').show();
+      old_grp = $('#charge_account_charge_group_id').val();
     }
 
     // Disable generate_code_btn if charge_account_organization_id blank
@@ -39,13 +41,20 @@
       $('#generate_code_btn').hide();
     } else {
       // Organization OK: Show (if not updating)
-      old_value = $('#charge_account_organization_id').val();
+      old_org = $('#charge_account_organization_id').val();
       old_code = $('#charge_account_account_code').val();
       if ('<%= @breadcrumb %>' == "update") {
         $('#generate_code_btn').hide();
       } else {
         $('#generate_code_btn').show();
       }
+    }
+    
+    // Can't change code if editing
+    if ('<%= @breadcrumb %>' == "update") {
+      $('#charge_account_account_code').prop('readonly', true);
+    } else {
+      $('#charge_account_account_code').prop('readonly', false);
     }
   });
 
@@ -67,10 +76,13 @@
     // when #generate_code_btn is clicked
     $("#generate_code_btn").click(function() {
       // make a POST call and replace the content
-      var header = $('select#charge_account_organization_id :selected').val();
-      if (header == "")
-        header = "$";
-      jQuery.getJSON('cc_generate_code/' + header, function(data) {
+      var grp = $('select#charge_account_charge_group_id :selected').val();
+      if (grp == "")
+        grp = "$";
+      var org = $('select#charge_account_organization_id :selected').val();
+      if (org == "")
+        org = "$";
+      jQuery.getJSON('cc_generate_code/' + grp + '/' + org, function(data) {
         $("#charge_account_account_code").val(data.code);
         if ($("#charge_account_account_code").val() == "$err") {
           $("#charge_account_account_code").css('color', 'red');
@@ -92,6 +104,7 @@
         order = "0";
       jQuery.getJSON('cc_update_project_textfields_from_organization/' + order, function(data) {
         var p = data.projects;
+        var g = data.groups;
         // Projects
         $("#charge_account_project_id").html("");
         $("#charge_account_project_id").select2("val", "");
@@ -107,27 +120,75 @@
             $("#charge_account_project_id").append($('<option></option>').val(option.id).html(option.project_code.substring(0,4) + "-" + option.project_code.substring(4,10) + " " + option.name));
           });
         }
+        // Groups
+        $("#charge_account_charge_group_id").html("");
+        $("#charge_account_charge_group_id").val("");
+        $("#charge_account_charge_group_id").append($('<option></option>').val("").html(""));
+        if (!g.length) {
+          $.each(data, function(id, option) {
+            if (id == 'groups' && option != "") {
+              $("#charge_account_charge_group_id").append($('<option></option>').val(option.id).html(option.group_code + " " + option.name));
+            }
+          });
+        } else {
+          $.each(g, function(id, option) {
+            $("#charge_account_charge_group_id").append($('<option></option>').val(option.id).html(option.group_code + " " + option.name));
+          });
+        }
       });
+      if (order == '0') $("#charge_account_charge_group_id").val(0);
       // Disable generate_code_btn if charge_account_organization_id blank
-      if (order == "0") {
-        // Empty organization:: Hide
+      show_hide_generate_code_btn();
+      return false;
+    });
+
+    // when the #charge_account_charge_group_id field changes
+    $("#charge_account_charge_group_id").change(function() {
+      var grp = $('select#charge_account_charge_group_id :selected').val();
+      if (grp == "")
+        product = "0";
+      if (grp == "0") {
+        // Empty group: Disable
+        $('#product_product_code').prop('disabled', true);
         $('#generate_code_btn').hide();
+        $('#submit_btn').hide();
       } else {
-        // Organization OK: Show (if not updating)
-        if ('<%= @breadcrumb == 'update' %>') {
-          if (old_value == $('#charge_account_organization_id').val()) {
-            $('#charge_account_account_code').val(old_code);
-            $('#generate_code_btn').hide();
-          } else {
-            $('#generate_code_btn').show();
-          }
+        // Group OK: Enable
+        $('#product_product_code').prop('disabled', false);
+        $('#generate_code_btn').show();
+        $('#submit_btn').show();
+      }
+      // Disable generate_code_btn if charge_account_charge_group_id blank
+      show_hide_generate_code_btn();
+    });
+  });
+  
+  function show_hide_generate_code_btn() {
+    // Disable generate_code_btn if charge_account_organization_id and charge_account_charge_group_id are blank
+    var grp = $('select#charge_account_charge_group_id :selected').val();
+    if (grp == "")
+      grp = "$";
+    var org = $('select#product_organization_id :selected').val();
+    if (org == "")
+      org = "$";
+    if (grp != "$" && org != "$") {
+      // Show (if not updating)
+      if ('<%= @breadcrumb == 'update' %>') {
+        if (old_org == $('#charge_account_organization_id').val() && old_grp == $('#charge_account_charge_group_id').val()) {
+          $('#charge_account_account_code').val(old_code);
+          $("#charge_account_account_code").css('color', text_field_color);
+          $('#generate_code_btn').hide();
         } else {
           $('#generate_code_btn').show();
         }
+      } else {
+        $('#generate_code_btn').show();
       }
-      return false;
-    });
-  });
+    } else {
+      // Hide
+      $('#generate_code_btn').hide();
+    }    
+  }
 </script>
 
 <%= simple_form_for @charge_account, :html => {:class => 'form-vertical well' } do |f| %>
@@ -135,9 +196,8 @@
 <%= display_base_errors resource %>
 <div>
   <label class="multi-field-label-two"> <%= f.input :account_code, autofocus: true, input_html: { class: 'mid-text-field' }, label_html: { class: 'form-label' } %> </label>
-  <label class="multi-field-label-two"> <%= f.input :ledger_account, input_html: { class: 'mid-text-field' }, label_html: { class: 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.input :name, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %> </label>
 </div>
-<%= f.input :name, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %>
 <% if session[:organization] != '0' %>
 <%= f.association :organization, collection: Organization.where("id = ?", "#{session[:organization]}").all, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' }, include_blank: false %>
 <% elsif current_user.organizations.count > 0 %>
@@ -145,6 +205,10 @@
 <% else %>
 <%= f.association :organization, collection: Organization.order('name'), input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %>
 <% end %>
+<div>
+  <label class="multi-field-label-two"> <%= f.association :charge_group, collection: @groups, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.input :ledger_account, input_html: { class: 'mid-text-field' }, label_html: { class: 'form-label' } %> </label>
+</div>
 <%= f.association :project, collection: @projects, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %>
 <div>
   <label class="multi-field-label-two"> <%= f.input :opened_at, start_year: Time.now.year - 100, end_year: Time.now.year + 100, as: :string, input_html: { value: (f.object.opened_at.strftime("%d/%m/%Y") if f.object.opened_at), class: 'mid-text-field date_picker' }, label_html: { class: 'form-label-under-sel2' } %> </label>

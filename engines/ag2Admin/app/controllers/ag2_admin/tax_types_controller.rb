@@ -38,7 +38,8 @@ module Ag2Admin
     # GET /tax_types
     # GET /tax_types.json
     def index
-      filter = params[:filter]
+      manage_filter_state
+      filter = params[:ifilter]
       if filter == "all"
         @tax_types = TaxType.paginate(:page => params[:page], :per_page => per_page).order(sort_column + ' ' + sort_direction)
       elsif filter == "current"
@@ -52,6 +53,7 @@ module Ag2Admin
       respond_to do |format|
         format.html # index.html.erb
         format.json { render json: @tax_types }
+        format.js
       end
     end
   
@@ -143,6 +145,28 @@ module Ag2Admin
 
     def sort_column
       TaxType.column_names.include?(params[:sort]) ? params[:sort] : "id"
+    end
+
+    # Keeps filter state
+    def manage_filter_state
+      # sort
+      if params[:sort]
+        session[:sort] = params[:sort]
+      elsif session[:sort]
+        params[:sort] = session[:sort]
+      end
+      # direction
+      if params[:direction]
+        session[:direction] = params[:direction]
+      elsif session[:direction]
+        params[:direction] = session[:direction]
+      end
+      # ifilter
+      if params[:ifilter]
+        session[:ifilter] = params[:ifilter]
+      elsif session[:ifilter]
+        params[:ifilter] = session[:ifilter]
+      end
     end
   end
 end

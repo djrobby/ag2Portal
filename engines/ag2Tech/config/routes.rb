@@ -15,9 +15,9 @@ Ag2Tech::Engine.routes.draw do
     match 'pr_generate_code/:header', :controller => 'projects', :action => 'pr_generate_code'
     match 'projects/:id/pr_generate_code/:header', :controller => 'projects', :action => 'pr_generate_code'
     #
-    match 'charge_accounts/cc_generate_code/:header', :controller => 'charge_accounts', :action => 'cc_generate_code'
-    match 'cc_generate_code/:header', :controller => 'charge_accounts', :action => 'cc_generate_code'
-    match 'charge_accounts/:id/cc_generate_code/:header', :controller => 'charge_accounts', :action => 'cc_generate_code'
+    match 'charge_accounts/cc_generate_code/:group/:org', :controller => 'charge_accounts', :action => 'cc_generate_code'
+    match 'cc_generate_code/:group/:org', :controller => 'charge_accounts', :action => 'cc_generate_code'
+    match 'charge_accounts/:id/cc_generate_code/:group/:org', :controller => 'charge_accounts', :action => 'cc_generate_code'
     match 'charge_accounts/cc_update_project_textfields_from_organization/:org', :controller => 'charge_accounts', :action => 'cc_update_project_textfields_from_organization'
     match 'cc_update_project_textfields_from_organization/:org', :controller => 'charge_accounts', :action => 'cc_update_project_textfields_from_organization'
     match 'charge_accounts/:id/cc_update_project_textfields_from_organization/:org', :controller => 'charge_accounts', :action => 'cc_update_project_textfields_from_organization'
@@ -63,6 +63,7 @@ Ag2Tech::Engine.routes.draw do
     resources :work_order_labors
     resources :work_order_statuses
     resources :work_order_types
+    resources :charge_groups
     
     # Root
     root :to => 'home#index'

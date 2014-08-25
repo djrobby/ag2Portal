@@ -1,0 +1,21 @@
+es:
+  activerecord:
+    models:
+      charge_group:
+        zero:  Grupos de cargo
+        one:   Grupo de cargo
+        few:   Grupos de cargo
+        other: Grupos de cargo
+        check_for_charge_accounts: "Grupo de cargo no puede ser eliminado mientras existan cuentas de cargo vinculadas."
+    attributes:
+      charge_group:
+        group_code: "Código"
+        name: "Descripción"
+        ledger_account: "Cuenta contable"
+        organization: "Organización"
+        organization_id: "Organización"
+        flow: "Usado para"
+        flow_1: "Ingresos"
+        flow_2: "Gastos"
+        flow_3: "Ambos"
+        flow_3_show: "Ingresos y Gastos"

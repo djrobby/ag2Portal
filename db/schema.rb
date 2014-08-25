@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140822175654) do
+ActiveRecord::Schema.define(:version => 20140825092703) do
 
   create_table "activities", :force => true do |t|
     t.string   "description"
@@ -74,14 +74,35 @@ ActiveRecord::Schema.define(:version => 20140822175654) do
     t.integer  "updated_by"
     t.string   "account_code"
     t.integer  "organization_id"
+    t.integer  "charge_group_id"
   end
 
   add_index "charge_accounts", ["account_code"], :name => "index_charge_accounts_on_account_code"
+  add_index "charge_accounts", ["charge_group_id"], :name => "index_charge_accounts_on_charge_group_id"
   add_index "charge_accounts", ["ledger_account"], :name => "index_charge_accounts_on_ledger_account"
   add_index "charge_accounts", ["name"], :name => "index_charge_accounts_on_name"
   add_index "charge_accounts", ["organization_id", "account_code"], :name => "index_charge_accounts_on_organization_id_and_account_code", :unique => true
   add_index "charge_accounts", ["organization_id"], :name => "index_charge_accounts_on_organization_id"
   add_index "charge_accounts", ["project_id"], :name => "index_charge_accounts_on_project_id"
+
+  create_table "charge_groups", :force => true do |t|
+    t.string   "group_code"
+    t.string   "name"
+    t.integer  "flow",            :limit => 2
+    t.string   "ledger_account"
+    t.integer  "organization_id"
+    t.datetime "created_at",                   :null => false
+    t.datetime "updated_at",                   :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  add_index "charge_groups", ["flow"], :name => "index_charge_groups_on_flow"
+  add_index "charge_groups", ["group_code"], :name => "index_charge_groups_on_group_code"
+  add_index "charge_groups", ["ledger_account"], :name => "index_charge_groups_on_ledger_account"
+  add_index "charge_groups", ["name"], :name => "index_charge_groups_on_name"
+  add_index "charge_groups", ["organization_id", "group_code"], :name => "index_charge_groups_on_organization_and_code", :unique => true
+  add_index "charge_groups", ["organization_id"], :name => "index_charge_groups_on_organization_id"
 
   create_table "clients", :force => true do |t|
     t.integer  "entity_id"

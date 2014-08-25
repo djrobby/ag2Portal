@@ -19,3 +19,6 @@ en:
       work_order_types:
         items: "WO types"
         item: "Type"
+      charge_groups:
+        items: "Charge groups"
+        item: "Group"

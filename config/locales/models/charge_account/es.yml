@@ -24,3 +24,5 @@ es:
         ledger_account: "Cuenta contable"
         organization: "Organización"
         organization_id: "Organización"
+        charge_group: "Grupo de cargo"
+        charge_group_id: "Grupo de cargo"

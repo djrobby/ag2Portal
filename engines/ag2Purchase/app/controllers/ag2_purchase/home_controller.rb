@@ -13,6 +13,9 @@ module Ag2Purchase
       session[:Invoice] = nil
       session[:Products] = nil
       session[:Suppliers] = nil      
+      session[:sort] = nil
+      session[:direction] = nil      
+      session[:ifilter] = nil      
     end
   end
 end

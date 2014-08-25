@@ -11,6 +11,9 @@ module Ag2Tech
       session[:Status] = nil
       session[:WrkrCompany] = nil
       session[:WrkrOffice] = nil      
+      session[:sort] = nil
+      session[:direction] = nil      
+      session[:ifilter] = nil      
     end
   end
 end

@@ -1,0 +1,21 @@
+en:
+  activerecord:
+    models:
+      charge_group:
+        zero:  Charge groups
+        one:   Charge group
+        few:   Charge groups
+        other: Charge groups
+        check_for_charge_accounts: "Charge group cannot be destroyed while linked charge accounts exist."
+    attributes:
+      charge_group:
+        group_code: "Code"
+        name: "Description"
+        ledger_account: "Ledger account"
+        organization: "Organization"
+        organization_id: "Organization"
+        flow: "Used for"
+        flow_1: "Income"
+        flow_2: "Expenditure"
+        flow_3: "Both"
+        flow_3_show: "Income & Expenditure"

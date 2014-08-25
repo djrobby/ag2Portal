@@ -1,0 +1,35 @@
+<script>
+  $(document).ready(function() {
+    $("#div_table th a, #div_table #pages a").on("click", function() {
+      $.getScript(this.href);
+      return false;
+    });
+  }); 
+</script>
+
+<table class="table table-condensed table-striped">
+  <thead>
+    <tr>
+      <th><%= sortable "description", t('activerecord.attributes.payment_method.description') %></th>
+      <th><%= sortable "flow", t('activerecord.attributes.payment_method.flow') %></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @payment_methods.each do |pmethod| %>
+    <tr>
+      <td><%= link_to pmethod.description, pmethod %></td>
+      <td><%= pmethod.flow_label %></td>
+      <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => PaymentMethod, :path => edit_payment_method_path(pmethod) } %>
+      <%= render :partial => '/layouts/crud/delete', :locals => { :model => PaymentMethod, :path => pmethod, :msg => t("activerecord.models.payment_method.one"), :txt => pmethod.description } %> </td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @payment_methods } %>
+<%= render :partial => '/layouts/crud/new', :locals => { :model => PaymentMethod, :path => new_payment_method_path, :txt => t("ag2_purchase.payment_methods.index.btn_new") } %>
+
+<%= link_to t('ag2_purchase.payment_methods.index.all'), controller: "payment_methods", action: "index", ifilter: "all", :remote => true %> |
+<%= link_to t('ag2_purchase.payment_methods.index.collection_only'), controller: "payment_methods", action: "index", ifilter: "collection", :remote => true %> |
+<%= link_to t('ag2_purchase.payment_methods.index.payment_only'), controller: "payment_methods", action: "index", ifilter: "payment", :remote => true %> |
+<%= link_to t("ag2_purchase.payment_methods.index.back_to_root"), ag2_purchase.root_path %>

@@ -8,6 +8,7 @@ module Ag2Admin
       session[:letter] = nil      
       session[:sort] = nil
       session[:direction] = nil      
+      session[:ifilter] = nil      
     end
   end
 end

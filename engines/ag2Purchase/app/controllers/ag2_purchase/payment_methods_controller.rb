@@ -23,7 +23,8 @@ module Ag2Purchase
     # GET /payment_methods
     # GET /payment_methods.json
     def index
-      filter = params[:filter]
+      manage_filter_state
+      filter = params[:ifilter]
       init_oco if !session[:organization]
       if session[:organization] != '0'
         @payment_methods = flow_filter_organization(filter, session[:organization].to_i)
@@ -34,6 +35,7 @@ module Ag2Purchase
       respond_to do |format|
         format.html # index.html.erb
         format.json { render json: @payment_methods }
+        format.js
       end
     end
       
@@ -152,6 +154,28 @@ module Ag2Purchase
 
     def sort_column
       PaymentMethod.column_names.include?(params[:sort]) ? params[:sort] : "description"
+    end
+
+    # Keeps filter state
+    def manage_filter_state
+      # sort
+      if params[:sort]
+        session[:sort] = params[:sort]
+      elsif session[:sort]
+        params[:sort] = session[:sort]
+      end
+      # direction
+      if params[:direction]
+        session[:direction] = params[:direction]
+      elsif session[:direction]
+        params[:direction] = session[:direction]
+      end
+      # ifilter
+      if params[:ifilter]
+        session[:ifilter] = params[:ifilter]
+      elsif session[:ifilter]
+        params[:ifilter] = session[:ifilter]
+      end
     end
   end
 end

@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  group_code: MyString
+  name: MyString
+  flow: 1
+  ledger_account: MyString
+  organization: 
+
+two:
+  group_code: MyString
+  name: MyString
+  flow: 1
+  ledger_account: MyString
+  organization: 
