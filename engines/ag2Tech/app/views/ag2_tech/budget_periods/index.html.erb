@@ -1,0 +1,21 @@
+<h1>Listing budget_periods</h1>
+
+<table>
+  <tr>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @budget_periods.each do |budget_period| %>
+  <tr>
+    <td><%= link_to 'Show', budget_period %></td>
+    <td><%= link_to 'Edit', edit_budget_period_path(budget_period) %></td>
+    <td><%= link_to 'Destroy', budget_period, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Budget period', new_budget_period_path %>

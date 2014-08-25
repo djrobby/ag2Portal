@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  budget_no: MyString
+  description: MyString
+  project: 
+  organization: 
+  budget_period: 
+
+two:
+  budget_no: MyString
+  description: MyString
+  project: 
+  organization: 
+  budget_period: 

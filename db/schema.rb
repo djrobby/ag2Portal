@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140825092703) do
+ActiveRecord::Schema.define(:version => 20140825162630) do
 
   create_table "activities", :force => true do |t|
     t.string   "description"
@@ -61,6 +61,60 @@ ActiveRecord::Schema.define(:version => 20140825092703) do
     t.integer  "avatar_file_size"
     t.datetime "avatar_updated_at"
   end
+
+  create_table "budget_items", :force => true do |t|
+    t.integer  "budget_id"
+    t.integer  "charge_account_id"
+    t.decimal  "amount",            :precision => 13, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "corrected_amount",  :precision => 13, :scale => 4, :default => 0.0, :null => false
+    t.datetime "created_at",                                                        :null => false
+    t.datetime "updated_at",                                                        :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  add_index "budget_items", ["budget_id"], :name => "index_budget_items_on_budget_id"
+  add_index "budget_items", ["charge_account_id"], :name => "index_budget_items_on_charge_account_id"
+
+  create_table "budget_periods", :force => true do |t|
+    t.string   "period_code"
+    t.string   "name"
+    t.datetime "starting_at"
+    t.datetime "ending_at"
+    t.integer  "organization_id"
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  add_index "budget_periods", ["ending_at"], :name => "index_budget_periods_on_ending_at"
+  add_index "budget_periods", ["name"], :name => "index_budget_periods_on_name"
+  add_index "budget_periods", ["organization_id", "period_code"], :name => "index_budget_periods_on_organization_and_code", :unique => true
+  add_index "budget_periods", ["organization_id"], :name => "index_budget_periods_on_organization_id"
+  add_index "budget_periods", ["period_code"], :name => "index_budget_periods_on_period_code"
+  add_index "budget_periods", ["starting_at"], :name => "index_budget_periods_on_starting_at"
+
+  create_table "budgets", :force => true do |t|
+    t.string   "budget_no"
+    t.string   "description"
+    t.integer  "project_id"
+    t.integer  "organization_id"
+    t.integer  "budget_period_id"
+    t.datetime "created_at",       :null => false
+    t.datetime "updated_at",       :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+    t.integer  "approver_id"
+    t.datetime "approval_date"
+  end
+
+  add_index "budgets", ["approver_id"], :name => "index_budgets_on_approver_id"
+  add_index "budgets", ["budget_no"], :name => "index_budgets_on_budget_no"
+  add_index "budgets", ["budget_period_id"], :name => "index_budgets_on_budget_period_id"
+  add_index "budgets", ["organization_id", "budget_no"], :name => "index_budgets_on_organization_and_code", :unique => true
+  add_index "budgets", ["organization_id"], :name => "index_budgets_on_organization_id"
+  add_index "budgets", ["project_id"], :name => "index_budgets_on_project_id"
 
   create_table "charge_accounts", :force => true do |t|
     t.string   "name"
@@ -1022,18 +1076,18 @@ ActiveRecord::Schema.define(:version => 20140825092703) do
     t.integer  "sale_offer_id"
     t.integer  "product_id"
     t.string   "description"
-    t.decimal  "quantity",          :precision => 10, :scale => 0
-    t.decimal  "price",             :precision => 10, :scale => 0
-    t.decimal  "discount_pct",      :precision => 10, :scale => 0
-    t.decimal  "discount",          :precision => 10, :scale => 0
+    t.decimal  "quantity",          :precision => 12, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "price",             :precision => 12, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "discount_pct",      :precision => 6,  :scale => 2, :default => 0.0, :null => false
+    t.decimal  "discount",          :precision => 12, :scale => 4, :default => 0.0, :null => false
     t.integer  "tax_type_id"
     t.date     "delivery_date"
     t.integer  "project_id"
     t.integer  "store_id"
     t.integer  "work_order_id"
     t.integer  "charge_account_id"
-    t.datetime "created_at",                                       :null => false
-    t.datetime "updated_at",                                       :null => false
+    t.datetime "created_at",                                                        :null => false
+    t.datetime "updated_at",                                                        :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
   end

@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  period_code: MyString
+  name: MyString
+  starting_at: 2014-08-25 17:31:42
+  ending_at: 2014-08-25 17:31:42
+
+two:
+  period_code: MyString
+  name: MyString
+  starting_at: 2014-08-25 17:31:42
+  ending_at: 2014-08-25 17:31:42

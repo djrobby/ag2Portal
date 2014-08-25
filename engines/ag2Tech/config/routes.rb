@@ -64,6 +64,8 @@ Ag2Tech::Engine.routes.draw do
     resources :work_order_statuses
     resources :work_order_types
     resources :charge_groups
+    resources :budget_periods
+    resources :budgets
     
     # Root
     root :to => 'home#index'

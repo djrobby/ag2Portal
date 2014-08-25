@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  budget: 
+  charge_account: 
+  amount: 9.99
+  corrected_amount: 9.99
+
+two:
+  budget: 
+  charge_account: 
+  amount: 9.99
+  corrected_amount: 9.99
