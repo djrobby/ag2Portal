@@ -332,13 +332,13 @@ module Ag2Purchase
     def edit
       @breadcrumb = 'update'
       @offer_request = OfferRequest.find(params[:id])
-      @projects = projects_dropdown_edit(@purchase_order.project)
-      @work_orders = @purchase_order.project.blank? ? work_orders_dropdown : @purchase_order.project.work_orders.order(:order_no)
-      @charge_accounts = work_order_charge_account(@purchase_order)
-      @stores = work_order_store(@purchase_order)
-      @suppliers = @purchase_order.organization.blank? ? suppliers_dropdown : @purchase_order.organization.suppliers(:supplier_code)
-      @payment_methods = @purchase_order.organization.blank? ? payment_methods_dropdown : payment_payment_methods(@purchase_order.organization_id)
-      @products = @purchase_order.organization.blank? ? products_dropdown : @purchase_order.organization.products(:product_code)
+      @projects = projects_dropdown_edit(@offer_request.project)
+      @work_orders = @offer_request.project.blank? ? work_orders_dropdown : @offer_request.project.work_orders.order(:order_no)
+      @charge_accounts = work_order_charge_account(@offer_request)
+      @stores = work_order_store(@offer_request)
+      @suppliers = @offer_request.organization.blank? ? suppliers_dropdown : @offer_request.organization.suppliers(:supplier_code)
+      @payment_methods = @offer_request.organization.blank? ? payment_methods_dropdown : payment_payment_methods(@offer_request.organization_id)
+      @products = @offer_request.organization.blank? ? products_dropdown : @offer_request.organization.products(:product_code)
     end
   
     # POST /offer_requests
@@ -379,13 +379,13 @@ module Ag2Purchase
                         notice: (crud_notice('updated', @offer_request) + "#{undo_link(@offer_request)}").html_safe }
           format.json { head :no_content }
         else
-          @projects = projects_dropdown_edit(@purchase_order.project)
-          @work_orders = @purchase_order.project.blank? ? work_orders_dropdown : @purchase_order.project.work_orders.order(:order_no)
-          @charge_accounts = work_order_charge_account(@purchase_order)
-          @stores = work_order_store(@purchase_order)
-          @suppliers = @purchase_order.organization.blank? ? suppliers_dropdown : @purchase_order.organization.suppliers(:supplier_code)
-          @payment_methods = @purchase_order.organization.blank? ? payment_methods_dropdown : payment_payment_methods(@purchase_order.organization_id)
-          @products = @purchase_order.organization.blank? ? products_dropdown : @purchase_order.organization.products(:product_code)
+          @projects = projects_dropdown_edit(@offer_request.project)
+          @work_orders = @offer_request.project.blank? ? work_orders_dropdown : @offer_request.project.work_orders.order(:order_no)
+          @charge_accounts = work_order_charge_account(@offer_request)
+          @stores = work_order_store(@offer_request)
+          @suppliers = @offer_request.organization.blank? ? suppliers_dropdown : @offer_request.organization.suppliers(:supplier_code)
+          @payment_methods = @offer_request.organization.blank? ? payment_methods_dropdown : payment_payment_methods(@offer_request.organization_id)
+          @products = @offer_request.organization.blank? ? products_dropdown : @offer_request.organization.products(:product_code)
           format.html { render action: "edit" }
           format.json { render json: @offer_request.errors, status: :unprocessable_entity }
         end

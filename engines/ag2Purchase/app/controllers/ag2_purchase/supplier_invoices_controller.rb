@@ -270,6 +270,7 @@ module Ag2Purchase
         @charge_accounts = @organization.blank? ? charge_accounts_dropdown : @organization.charge_accounts.order(:account_code)
         @stores = @organization.blank? ? stores_dropdown : @organization.stores.order(:name)
         @payment_methods = @organization.blank? ? payment_methods_dropdown : payment_payment_methods(@organization.id)
+        @products = @organization.blank? ? products_dropdown : @organization.products.order(:product_code)
       else
         @suppliers = suppliers_dropdown
         @projects = projects_dropdown
@@ -277,9 +278,11 @@ module Ag2Purchase
         @charge_accounts = charge_accounts_dropdown
         @stores = stores_dropdown
         @payment_methods = payment_methods_dropdown
+        @products = products_dropdown
       end
       @json_data = { "supplier" => @suppliers, "project" => @projects, "work_order" => @work_orders,
-                     "charge_account" => @charge_accounts, "store" => @stores, "payment_method" => @payment_methods }
+                     "charge_account" => @charge_accounts, "store" => @stores,
+                     "payment_method" => @payment_methods, "product" => @products }
       render json: @json_data
     end
 
@@ -351,6 +354,7 @@ module Ag2Purchase
       @stores = stores_dropdown
       @suppliers = suppliers_dropdown
       @payment_methods = payment_methods_dropdown
+      @products = products_dropdown
   
       respond_to do |format|
         format.html # new.html.erb
@@ -370,6 +374,7 @@ module Ag2Purchase
       @stores = work_order_store(@supplier_invoice)
       @suppliers = suppliers_dropdown
       @payment_methods = @supplier_invoice.organization.blank? ? payment_methods_dropdown : payment_payment_methods(@supplier_invoice.organization_id)      
+      @products = @supplier_invoice.organization.blank? ? products_dropdown : @supplier_invoice.organization.products(:product_code)
       # Special to approvals
       @invoice_debt = number_with_precision(@supplier_invoice.debt.round(4), precision: 4)
     end
@@ -393,6 +398,7 @@ module Ag2Purchase
           @stores = stores_dropdown
           @suppliers = suppliers_dropdown
           @payment_methods = payment_methods_dropdown
+          @products = products_dropdown
           format.html { render action: "new" }
           format.json { render json: @supplier_invoice.errors, status: :unprocessable_entity }
         end
@@ -419,6 +425,7 @@ module Ag2Purchase
           @stores = work_order_store(@supplier_invoice)
           @suppliers = suppliers_dropdown
           @payment_methods = @supplier_invoice.organization.blank? ? payment_methods_dropdown : payment_payment_methods(@supplier_invoice.organization_id)      
+          @products = @supplier_invoice.organization.blank? ? products_dropdown : @supplier_invoice.organization.products(:product_code)
           format.html { render action: "edit" }
           format.json { render json: @supplier_invoice.errors, status: :unprocessable_entity }
         end
@@ -537,6 +544,10 @@ module Ag2Purchase
       end
       _methods
     end
+
+    def products_dropdown
+      session[:organization] != '0' ? Product.where(organization_id: session[:organization].to_i).order(:product_code) : Product.order(:product_code)
+    end    
     
     # Keeps filter state
     def manage_filter_state

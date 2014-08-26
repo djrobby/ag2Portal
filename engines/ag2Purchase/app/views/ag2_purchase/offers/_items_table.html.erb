@@ -26,7 +26,7 @@
       if (discount_p == "")
         discount_p = "0";
       discount_p = parseInt(right_number(discount_p, 2) * 100);
-      jQuery.getJSON('si_totals/' + qty + '/' + amount + '/' + tax + '/' + discount_p, function(data) {
+      jQuery.getJSON('of_totals/' + qty + '/' + amount + '/' + tax + '/' + discount_p, function(data) {
         document.getElementById('foot-quantity').innerHTML = data.qty;
         document.getElementById('foot-amount').innerHTML = data.amount;
         document.getElementById('foot-tax').innerHTML = data.tax;
@@ -53,7 +53,7 @@
         qty = "0";
       // Right formatted for passing as REST parameter
       qty = parseInt(right_number(qty, 4) * 10000);
-      jQuery.getJSON('si_update_description_prices_from_product/' + product + '/' + qty, function(data) {
+      jQuery.getJSON('of_update_description_prices_from_product/' + product + '/' + qty, function(data) {
         $(_this).closest('tr').find('.fnt-description').val(data.description);
         $(_this).closest('tr').find('.fnt-price').val(data.price);
         $(_this).closest('tr').find('.fnt-amount').val(data.amount);
@@ -123,7 +123,7 @@
       qty = parseInt(right_number(qty, 4) * 10000);
       discount_p = parseInt(right_number(discount_p, 2) * 100);
       discount = parseInt(right_number(discount, 4) * 10000);
-      jQuery.getJSON('si_update_amount_from_price_or_quantity/' + price + '/' + qty + '/' + tax_type + '/' + discount_p + '/' + discount + '/' + product, function(data) {
+      jQuery.getJSON('of_update_amount_from_price_or_quantity/' + price + '/' + qty + '/' + tax_type + '/' + discount_p + '/' + discount + '/' + product, function(data) {
         $(_this).closest('tr').find('.fnt-quantity').val(data.quantity);
         $(_this).closest('tr').find('.fnt-price').val(data.price);
         $(_this).closest('tr').find('.fnt-amount').val(data.amount);
@@ -179,7 +179,7 @@
   <tbody>
     <%= f.simple_fields_for :supplier_invoice_items, defaults: { input_html: { class: 'sub-form' } } do |i| %>
     <tr class="fields">
-      <td><%= i.association :product, label: false, wrapper: false, collection: Product.all(order: 'product_code'), input_html: { class: 'isel2 fnt-product' } %></td>
+      <td><%= i.association :product, label: false, wrapper: false, collection: @products, input_html: { class: 'isel2 fnt-product' } %></td>
       <td><%= i.input :description, label: false, wrapper: false, input_html: { onkeyup: "caps(this)", class: 'sub-alfanumeric-text-field fnt-description', maxlength: 40 } %></td>
       <td style="display:none;"><%= i.input :code, label: false, wrapper: false, input_html: { class: 'sub-alfanumeric-text-field fnt-code' } %></td>
       <td><%= i.input :quantity, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.quantity, precision: 4) if i.object.quantity), class: 'sub-number-text-field fnt-quantity' } %></td>

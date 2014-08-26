@@ -260,6 +260,7 @@ module Ag2Products
         @charge_accounts = @organization.blank? ? charge_accounts_dropdown : @organization.charge_accounts.order(:account_code)
         @stores = @organization.blank? ? stores_dropdown : @organization.stores.order(:name)
         @payment_methods = @organization.blank? ? payment_methods_dropdown : collection_payment_methods(@organization.id)
+        @products = @organization.blank? ? products_dropdown : @organization.products.order(:product_code)
       else
         @clients = clients_dropdown
         @projects = projects_dropdown
@@ -267,9 +268,11 @@ module Ag2Products
         @charge_accounts = charge_accounts_dropdown
         @stores = stores_dropdown
         @payment_methods = payment_methods_dropdown
+        @products = products_dropdown
       end
       @json_data = { "client" => @clients, "project" => @projects, "work_order" => @work_orders,
-                     "charge_account" => @charge_accounts, "store" => @stores, "payment_method" => @payment_methods }
+                     "charge_account" => @charge_accounts, "store" => @stores,
+                     "payment_method" => @payment_methods, "product" => @products }
       render json: @json_data
     end
 
@@ -352,6 +355,7 @@ module Ag2Products
       @stores = stores_dropdown
       @clients = clients_dropdown
       @payment_methods = payment_methods_dropdown
+      @products = products_dropdown
   
       respond_to do |format|
         format.html # new.html.erb
@@ -368,8 +372,9 @@ module Ag2Products
       @work_orders = @delivery_note.project.blank? ? work_orders_dropdown : @delivery_note.project.work_orders.order(:order_no)
       @charge_accounts = work_order_charge_account(@delivery_note)
       @stores = work_order_store(@delivery_note)
-      @clients = clients_dropdown
+      @clients = @delivery_note.organization.blank? ? clients_dropdown : @delivery_note.organization.clients(:client_code)
       @payment_methods = @delivery_note.organization.blank? ? payment_methods_dropdown : collection_payment_methods(@delivery_note.organization_id)
+      @products = @delivery_note.organization.blank? ? products_dropdown : @delivery_note.organization.products(:product_code)
     end
   
     # POST /delivery_notes
@@ -391,6 +396,7 @@ module Ag2Products
           @stores = stores_dropdown
           @clients = clients_dropdown
           @payment_methods = payment_methods_dropdown
+          @products = products_dropdown
           format.html { render action: "new" }
           format.json { render json: @delivery_note.errors, status: :unprocessable_entity }
         end
@@ -415,8 +421,9 @@ module Ag2Products
           @work_orders = @delivery_note.project.blank? ? work_orders_dropdown : @delivery_note.project.work_orders.order(:order_no)
           @charge_accounts = work_order_charge_account(@delivery_note)
           @stores = work_order_store(@delivery_note)
-          @clients = clients_dropdown
+          @clients = @delivery_note.organization.blank? ? clients_dropdown : @delivery_note.organization.clients(:client_code)
           @payment_methods = @delivery_note.organization.blank? ? payment_methods_dropdown : collection_payment_methods(@delivery_note.organization_id)
+          @products = @delivery_note.organization.blank? ? products_dropdown : @delivery_note.organization.products(:product_code)
           format.html { render action: "edit" }
           format.json { render json: @delivery_note.errors, status: :unprocessable_entity }
         end
@@ -535,6 +542,10 @@ module Ag2Products
       end
       _methods
     end
+
+    def products_dropdown
+      session[:organization] != '0' ? Product.where(organization_id: session[:organization].to_i).order(:product_code) : Product.order(:product_code)
+    end    
     
     # Keeps filter state
     def manage_filter_state

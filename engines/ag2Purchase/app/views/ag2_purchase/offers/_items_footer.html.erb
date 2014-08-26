@@ -1,6 +1,6 @@
 <tr>
   <td></td>
-  <td align="right"><%= t :"activerecord.attributes.supplier_invoice.quantity" %> | <%= t :"activerecord.attributes.supplier_invoice.subtotal" %></td>
+  <td align="right"><%= t :"activerecord.attributes.offer.quantity" %> | <%= t :"activerecord.attributes.offer.subtotal" %></td>
   <td align="right"><%= number_with_precision(note.quantity, precision: 4) unless note.quantity.blank? %></td>
   <td></td>
   <td></td>
@@ -10,7 +10,7 @@
 </tr>
 <tr>
   <td></td>
-  <td align="right"><%= t :"activerecord.attributes.supplier_invoice.bonus" %> | <%= t :"activerecord.attributes.supplier_invoice.taxable" %> | <%= t :"activerecord.attributes.supplier_invoice.taxes" %></td>
+  <td align="right"><%= t :"activerecord.attributes.offer.bonus" %> | <%= t :"activerecord.attributes.offer.taxable" %> | <%= t :"activerecord.attributes.offer.taxes" %></td>
   <td></td>
   <td></td>
   <td align="right"><%= number_with_precision(note.discount_pct, precision: 2) unless note.discount_pct.blank? %></td>
@@ -20,7 +20,7 @@
 </tr>
 <tr class="totals">
   <td></td>
-  <td align="right"><%= t :"activerecord.attributes.supplier_invoice.total" %></td>
+  <td align="right"><%= t :"activerecord.attributes.offer.total" %></td>
   <td></td>
   <td></td>
   <td></td>

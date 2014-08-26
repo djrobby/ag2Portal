@@ -276,6 +276,7 @@ module Ag2Tech
         @stores = @organization.blank? ? stores_dropdown : @organization.stores.order(:name)
         @workers = @organization.blank? ? workers_dropdown : @organization.workers.order(:worker_code)
         @areas = @organization.blank? ? areas_dropdown : organization_areas(@organization)
+        @products = @organization.blank? ? products_dropdown : @organization.products.order(:product_code)
       else
         @projects = projects_dropdown
         @types = work_order_types_dropdown
@@ -285,6 +286,7 @@ module Ag2Tech
         @stores = stores_dropdown
         @workers = workers_dropdown
         @areas = areas_dropdown
+        @products = products_dropdown
       end
       @areas_dropdown = []
       @areas.each do |i|
@@ -292,7 +294,8 @@ module Ag2Tech
       end
       @json_data = { "project" => @projects, "type" => @types, "labor" => @labors,
                      "client" => @clients, "charge_account" => @charge_accounts,
-                     "store" => @stores, "worker" => @workers, "area" => @areas_dropdown }
+                     "store" => @stores, "worker" => @workers,
+                     "area" => @areas_dropdown, "product" => @products }
       render json: @json_data
     end
 
@@ -378,6 +381,7 @@ module Ag2Tech
       @areas = areas_dropdown
       @stores = stores_dropdown
       @clients = clients_dropdown
+      @products = products_dropdown
   
       respond_to do |format|
         format.html # new.html.erb
@@ -397,6 +401,7 @@ module Ag2Tech
       @areas = areas_dropdown
       @stores = project_stores(@work_order.project)
       @clients = clients_dropdown
+      @products = @work_order.organization.blank? ? products_dropdown : @work_order.organization.products(:product_code)
     end
   
     # POST /work_orders
@@ -419,6 +424,7 @@ module Ag2Tech
           @areas = areas_dropdown
           @stores = stores_dropdown
           @clients = clients_dropdown
+          @products = products_dropdown
           format.html { render action: "new" }
           format.json { render json: @work_order.errors, status: :unprocessable_entity }
         end
@@ -443,6 +449,10 @@ module Ag2Tech
           @labors = work_order_labors_dropdown_edit(@work_order.work_order_labor)
           @charge_accounts = @work_order.project.blank? ? charge_accounts_dropdown : charge_accounts_dropdown_edit(@work_order.project_id)
           @workers = project_workers(@work_order.project)
+          @areas = areas_dropdown
+          @stores = project_stores(@work_order.project)
+          @clients = clients_dropdown
+          @products = @work_order.organization.blank? ? products_dropdown : @work_order.organization.products(:product_code)
           format.html { render action: "edit" }
           format.json { render json: @work_order.errors, status: :unprocessable_entity }
         end
@@ -607,6 +617,10 @@ module Ag2Tech
     def organization_areas(_organization)
       Area.includes(:department).where(departments: { organization_id: _organization })
     end
+
+    def products_dropdown
+      session[:organization] != '0' ? Product.where(organization_id: session[:organization].to_i).order(:product_code) : Product.order(:product_code)
+    end    
     
     # Keeps filter state
     def manage_filter_state
