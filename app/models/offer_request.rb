@@ -123,7 +123,7 @@ class OfferRequest < ActiveRecord::Base
     text :request_no
     string :request_no
     integer :payment_method_id
-    integer :project_id
+    integer :project_id, :multiple => true
     integer :store_id
     integer :work_order_id
     integer :charge_account_id

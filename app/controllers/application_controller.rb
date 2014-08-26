@@ -422,6 +422,29 @@ end
     end
     code
   end
+  
+  # Offer request no
+  def or_next_no(project)
+    year = Time.new.year
+    code = ''
+    # Builds code, if possible
+    project_code = Project.find(project).project_code rescue '$'
+    if project_code == '$'
+      code = '$err'
+    else
+      project = project_code.rjust(10, '0')
+      year = year.to_s if year.is_a? Fixnum
+      year = year.rjust(4, '0')
+      last_no = OfferRequest.where("request_no LIKE ?", "#{project}#{year}%").order(:request_no).maximum(:request_no)
+      if last_no.nil?
+        code = project + year + '000001'
+      else
+        last_no = last_no[14..19].to_i + 1
+        code = project + year + last_no.to_s.rjust(6, '0')
+      end
+    end
+    code
+  end
 
   private
   

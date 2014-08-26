@@ -84,7 +84,7 @@
       var order = $('select#offer_request_project_id :selected').val();
       if (order == "")
         order = "$";
-      jQuery.getJSON('po_generate_no/' + order, function(data) {
+      jQuery.getJSON('or_generate_no/' + order, function(data) {
         $("#offer_request_request_no").val(data.code);
         if ($("#offer_request_request_no").val() == "$err") {
           $("#offer_request_request_no").css('color', 'red');
@@ -355,7 +355,7 @@
 <% end %>
 <div>
   <label class="multi-field-label-two"> <%= f.association :project, collection: @projects, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
-  <label class="multi-field-label-two"> <%= f.association :offer_request, collection: @offer_requests, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.association :work_order, collection: @work_orders, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
 </div>
 <div>
   <label class="multi-field-label-two"> <%= f.association :charge_account, collection: @charge_accounts, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>

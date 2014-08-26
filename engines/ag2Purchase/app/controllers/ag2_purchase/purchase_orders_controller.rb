@@ -243,6 +243,7 @@ module Ag2Purchase
         @charge_accounts = @organization.blank? ? charge_accounts_dropdown : @organization.charge_accounts.order(:account_code)
         @stores = @organization.blank? ? stores_dropdown : @organization.stores.order(:name)
         @payment_methods = @organization.blank? ? payment_methods_dropdown : payment_payment_methods(@organization.id)
+        @products = @organization.blank? ? products_dropdown : @organization.products.order(:product_code)
       else
         @suppliers = suppliers_dropdown
         @projects = projects_dropdown
@@ -250,9 +251,11 @@ module Ag2Purchase
         @charge_accounts = charge_accounts_dropdown
         @stores = stores_dropdown
         @payment_methods = payment_methods_dropdown
+        @products = products_dropdown
       end
       @json_data = { "supplier" => @suppliers, "project" => @projects, "work_order" => @work_orders,
-                     "charge_account" => @charge_accounts, "store" => @stores, "payment_method" => @payment_methods }
+                     "charge_account" => @charge_accounts, "store" => @stores,
+                     "payment_method" => @payment_methods, "product" => @products }
       render json: @json_data
     end
 
@@ -333,6 +336,7 @@ module Ag2Purchase
       @stores = stores_dropdown
       @suppliers = suppliers_dropdown
       @payment_methods = payment_methods_dropdown
+      @products = products_dropdown
       #@purchase_order.purchase_order_items.build
   
       respond_to do |format|
@@ -350,8 +354,9 @@ module Ag2Purchase
       @work_orders = @purchase_order.project.blank? ? work_orders_dropdown : @purchase_order.project.work_orders.order(:order_no)
       @charge_accounts = work_order_charge_account(@purchase_order)
       @stores = work_order_store(@purchase_order)
-      @suppliers = suppliers_dropdown
+      @suppliers = @purchase_order.organization.blank? ? suppliers_dropdown : @purchase_order.organization.suppliers(:supplier_code)
       @payment_methods = @purchase_order.organization.blank? ? payment_methods_dropdown : payment_payment_methods(@purchase_order.organization_id)
+      @products = @purchase_order.organization.blank? ? products_dropdown : @purchase_order.organization.products(:product_code)
       #@work_orders = @purchase_order.work_order.blank? ? WorkOrder.order(:order_no) : WorkOrder.where('id = ?', @purchase_order.work_order)
       #@projects = @purchase_order.project.blank? ? Project.order(:project_code) : Project.where('id = ?', @purchase_order.project)
       #@charge_accounts = @purchase_order.charge_account.blank? ? ChargeAccount.order(:account_code) : ChargeAccount.where('id = ?', @purchase_order.charge_account)
@@ -378,6 +383,7 @@ module Ag2Purchase
           @stores = stores_dropdown
           @suppliers = suppliers_dropdown
           @payment_methods = payment_methods_dropdown
+          @products = products_dropdown
           format.html { render action: "new" }
           format.json { render json: @purchase_order.errors, status: :unprocessable_entity }
         end
@@ -402,8 +408,9 @@ module Ag2Purchase
           @work_orders = @purchase_order.project.blank? ? work_orders_dropdown : @purchase_order.project.work_orders.order(:order_no)
           @charge_accounts = work_order_charge_account(@purchase_order)
           @stores = work_order_store(@purchase_order)
-          @suppliers = suppliers_dropdown
+          @suppliers = @purchase_order.organization.blank? ? suppliers_dropdown : @purchase_order.organization.suppliers(:supplier_code)
           @payment_methods = @purchase_order.organization.blank? ? payment_methods_dropdown : payment_payment_methods(@purchase_order.organization_id)
+          @products = @purchase_order.organization.blank? ? products_dropdown : @purchase_order.organization.products(:product_code)
           format.html { render action: "edit" }
           format.json { render json: @purchase_order.errors, status: :unprocessable_entity }
         end
@@ -522,7 +529,11 @@ module Ag2Purchase
       end
       _methods
     end
-    
+
+    def products_dropdown
+      session[:organization] != '0' ? Product.where(organization_id: session[:organization].to_i).order(:product_code) : Product.order(:product_code)
+    end    
+
     # Keeps filter state
     def manage_filter_state
       # search
