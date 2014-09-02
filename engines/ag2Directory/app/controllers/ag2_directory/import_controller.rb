@@ -18,7 +18,8 @@ module Ag2Directory
       
       @workers.each do |worker|
         # Worker items
-        worker_items = worker.worker_items
+        #worker_items = worker.worker_items
+        worker_items = worker.worker_items.where('ending_at IS NULL OR ending_at > ?', DateTime.now.to_date)
         if !worker_items.blank?
           # Contact already exists?
           @contact = CorpContact.find_by_worker_id(worker)

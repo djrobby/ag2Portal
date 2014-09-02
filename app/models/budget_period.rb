@@ -7,7 +7,7 @@ class BudgetPeriod < ActiveRecord::Base
   has_paper_trail
 
   validates :period_code,   :presence => true,
-                            :length => { :greater_than_or_equal_to => 4, :less_than_or_equal_to => 8 },
+                            :length => { :minimum => 4, :maximum => 8 },
                             :uniqueness => { :scope => :organization_id }
   validates :name,          :presence => true
   validates :starting_at,   :presence => true
