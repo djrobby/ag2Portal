@@ -26,3 +26,4 @@ es:
         organization_id: "Organización"
         charge_group: "Grupo de cargo"
         charge_group_id: "Grupo de cargo"
+        charge_group_c: "Grupo"

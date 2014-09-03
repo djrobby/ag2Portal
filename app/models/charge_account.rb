@@ -52,6 +52,14 @@ class ChargeAccount < ActiveRecord::Base
     account_code.blank? ? "" : account_code[0..3] + '-' + account_code[4..10]
   end
 
+  def partial_name
+    name.blank? ? "" : self.name[0,30]
+  end
+
+  def partial_group_name
+    charge_group.blank? ? "" : charge_group.name[0,30]
+  end
+  
   #
   # Records navigator
   #
@@ -75,6 +83,7 @@ class ChargeAccount < ActiveRecord::Base
     text :account_code, :name
     string :account_code
     integer :project_id, :multiple => true
+    integer :charge_group_id
     integer :organization_id
   end
 
