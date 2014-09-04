@@ -1,6 +1,7 @@
 <script>
   var text_field_color;
-  var old_value = '';
+  var old_com = '';
+  var old_typ = '';
   var old_code = '';
 
   $(document).ready(function() {
@@ -24,6 +25,7 @@
     } else {
       // Code OK: Enable
       $('#submit_btn').show();
+      old_typ = $('#project_project_type_id').val();
     }
 
     // Disable generate_code_btn if project_company_id blank
@@ -35,13 +37,20 @@
       $('#generate_code_btn').hide();
     } else {
       // Company OK: Show (if not updating)
-      old_value = $('#project_company_id').val();
+      old_com = $('#project_company_id').val();
       old_code = $('#project_project_code').val();
       if ('<%= @breadcrumb %>' == "update") {
         $('#generate_code_btn').hide();
       } else {
         $('#generate_code_btn').show();
       }
+    }
+    
+    // Can't change code if editing
+    if ('<%= @breadcrumb %>' == "update") {
+      $('#project_project_code').prop('readonly', true);
+    } else {
+      $('#project_project_code').prop('readonly', false);
     }
   });
   
@@ -58,6 +67,60 @@
         // Order OK: Enable
         $('#submit_btn').show();
       }
+    });
+
+    // when #generate_code_btn is clicked
+    $("#generate_code_btn").click(function() {
+      // make a POST call and replace the content
+      var company = $('select#project_company_id :selected').val();
+      if (company == "")
+        company = "$";
+      var type = $('select#project_project_type_id :selected').val();
+      if (type == "")
+        type = "$";
+      jQuery.getJSON('pr_generate_code/' + company + '/' + type, function(data) {
+        $("#project_project_code").val(data.code);
+        if ($("#project_project_code").val() == "$err") {
+          $("#project_project_code").css('color', 'red');
+          alert('<%= I18n.t("ag2_tech.projects.code_error") %>');
+          $('#project_project_code').select();
+        } else {
+          $("#project_project_code").css('color', text_field_color);
+          $("#project_project_code").trigger("change");
+        }
+      });
+      return false;
+    });
+
+    // when the #project_company_id field changes
+    $("#project_company_id").change(function() {
+      // make a POST call and replace the content
+      var order = $('select#project_company_id :selected').val();
+      if (order == "")
+        order = "0";
+      // Disable generate_code_btn if project_company_id blank
+      show_hide_generate_code_btn();
+      return false;
+    });
+
+    // when the #project_project_type_id field changes
+    $("#project_project_type_id").change(function() {
+      var type = $('select#project_project_type_id :selected').val();
+      if (type == "")
+        type = "0";
+      if (type == "0") {
+        // Empty type: Disable
+        $('#project_project_code').prop('disabled', true);
+        $('#generate_code_btn').hide();
+        $('#submit_btn').hide();
+      } else {
+        // Type OK: Enable
+        $('#project_project_code').prop('disabled', false);
+        $('#generate_code_btn').show();
+        $('#submit_btn').show();
+      }
+      // Disable generate_code_btn if project_project_type_id blank
+      show_hide_generate_code_btn();
     });
 
     // when the #project_office_id field changes
@@ -119,53 +182,34 @@
       }
       return false;
     });
-
-    // when #generate_code_btn is clicked
-    $("#generate_code_btn").click(function() {
-      // make a POST call and replace the content
-      var header = $('select#project_company_id :selected').val();
-      if (header == "")
-        header = "$";
-      jQuery.getJSON('pr_generate_code/' + header, function(data) {
-        $("#project_project_code").val(data.code);
-        if ($("#project_project_code").val() == "$err") {
-          $("#project_project_code").css('color', 'red');
-          alert('<%= I18n.t("ag2_tech.projects.code_error") %>');
-          $('#project_project_code').select();
-        } else {
+  });
+  
+  function show_hide_generate_code_btn() {
+    // Disable generate_code_btn if project_company_id and project_project_type_id are blank
+    var company = $('select#project_company_id :selected').val();
+    if (company == "")
+      company = "$";
+    var type = $('select#project_project_type_id :selected').val();
+    if (type == "")
+      type = "$";
+    if (company != "$" && type != "$") {
+      // Show (if not updating)
+      if ('<%= @breadcrumb == 'update' %>') {
+        if (old_com == $('#project_company_id').val() && old_typ == $('#project_project_type_id').val()) {
+          $('#project_project_code').val(old_code);
           $("#project_project_code").css('color', text_field_color);
-          $("#project_project_code").trigger("change");
-        }
-      });
-      return false;
-    });
-
-    // when the #project_company_id field changes
-    $("#project_company_id").change(function() {
-      // make a POST call and replace the content
-      var order = $('select#project_company_id :selected').val();
-      if (order == "")
-        order = "0";
-      // Disable generate_code_btn if project_company_id blank
-      if (order == "0") {
-        // Empty company: Hide
-        $('#generate_code_btn').hide();
-      } else {
-        // Company OK: Show (if not updating)
-        if ('<%= @breadcrumb == 'update' %>') {
-          if (old_value == $('#project_company_id').val()) {
-            $('#project_project_code').val(old_code);
-            $('#generate_code_btn').hide();
-          } else {
-            $('#generate_code_btn').show();
-          }
+          $('#generate_code_btn').hide();
         } else {
           $('#generate_code_btn').show();
         }
+      } else {
+        $('#generate_code_btn').show();
       }
-      return false;
-    });
-  });
+    } else {
+      // Hide
+      $('#generate_code_btn').hide();
+    }    
+  }
 </script>
 
 <%= simple_form_for @project, :html => {:class => 'form-vertical well' } do |f| %>

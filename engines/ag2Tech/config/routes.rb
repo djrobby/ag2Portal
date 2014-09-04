@@ -11,9 +11,9 @@ Ag2Tech::Engine.routes.draw do
     match 'projects/pr_update_company_and_office_textfields_from_organization/:org', :controller => 'projects', :action => 'pr_update_company_and_office_textfields_from_organization'
     match 'pr_update_company_and_office_textfields_from_organization/:org', :controller => 'projects', :action => 'pr_update_company_and_office_textfields_from_organization'
     match 'projects/:id/pr_update_company_and_office_textfields_from_organization/:org', :controller => 'projects', :action => 'pr_update_company_and_office_textfields_from_organization'
-    match 'projects/pr_generate_code/:header', :controller => 'projects', :action => 'pr_generate_code'
-    match 'pr_generate_code/:header', :controller => 'projects', :action => 'pr_generate_code'
-    match 'projects/:id/pr_generate_code/:header', :controller => 'projects', :action => 'pr_generate_code'
+    match 'projects/pr_generate_code/:company/:type', :controller => 'projects', :action => 'pr_generate_code'
+    match 'pr_generate_code/:company/:type', :controller => 'projects', :action => 'pr_generate_code'
+    match 'projects/:id/pr_generate_code/:company/:type', :controller => 'projects', :action => 'pr_generate_code'
     #
     match 'charge_accounts/cc_generate_code/:group/:org', :controller => 'charge_accounts', :action => 'cc_generate_code'
     match 'cc_generate_code/:group/:org', :controller => 'charge_accounts', :action => 'cc_generate_code'

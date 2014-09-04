@@ -2,22 +2,22 @@ es:
   ag2_tech:
     charge_groups:
       index:
-        title: "Grupos de cargo"
-        btn_new: "Nuevo Grupo de cargo"
+        title: "Grupos analíticos"
+        btn_new: "Nuevo Grupo analítico"
         back_to_root: "Volver a ag2Tech"
         income_only: "Para ingresos"
         expenditure_only: "Para gastos"
         all: "Todos"
       show:
-        title: "Grupo de cargo"
-        btn_edit: "Editar Grupo de cargo"
-        btn_delete: "Borrar Grupo de cargo"
+        title: "Grupo analítico"
+        btn_edit: "Editar Grupo analítico"
+        btn_delete: "Borrar Grupo analítico"
         subtable_title: "Cuentas del Grupo"
-        return_to: "Volver a Grupo de cargo"
+        return_to: "Volver a Grupo analítico"
       edit:
-        title: "Editar Grupo de cargo"
-        btn_show: "Ver Grupo de cargo"
+        title: "Editar Grupo analítico"
+        btn_show: "Ver Grupo analítico"
       new:
-        title: "Nuevo Grupo de cargo"
-      back_to_main_page: "Volver a Grupos de cargo"
+        title: "Nuevo Grupo analítico"
+      back_to_main_page: "Volver a Grupos analíticos"
       code_error: "Imposible generar Código de Grupo: No has elegido Organización."

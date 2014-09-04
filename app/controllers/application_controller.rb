@@ -321,16 +321,23 @@ end
   end
   
   # Project code
-  def pr_next_code(header)
+  def pr_next_code(company, type)
     code = ''
-    header = header.to_s if header.is_a? Fixnum
-    header = header.rjust(4, '0')
-    last_code = Project.where("project_code LIKE ?", "#{header}%").order(:project_code).maximum(:project_code)
-    if last_code.nil?
-      code = header + '000001'
+    # Builds code, if possible
+    type_code = ProjectType.find(type).code rescue '$'
+    if type_code == '$'
+      code = '$err'
     else
-      last_code = last_code[4..9].to_i + 1
-      code = header + last_code.to_s.rjust(6, '0')
+      type = type_code[0,3].upcase
+      company = company.to_s if company.is_a? Fixnum
+      company = company.rjust(3, '0')
+      last_code = Project.where("project_code LIKE ?", "#{company}#{type}%").order(:project_code).maximum(:project_code)
+      if last_code.nil?
+        code = company + type + '000001'
+      else
+        last_code = last_code[6..11].to_i + 1
+        code = company + type + last_code.to_s.rjust(6, '0')
+      end
     end
     code
   end

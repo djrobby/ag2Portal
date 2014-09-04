@@ -146,15 +146,15 @@
     $("#charge_account_charge_group_id").change(function() {
       var grp = $('select#charge_account_charge_group_id :selected').val();
       if (grp == "")
-        product = "0";
+        grp = "0";
       if (grp == "0") {
         // Empty group: Disable
-        $('#product_product_code').prop('disabled', true);
+        $('#charge_account_account_code').prop('disabled', true);
         $('#generate_code_btn').hide();
         $('#submit_btn').hide();
       } else {
         // Group OK: Enable
-        $('#product_product_code').prop('disabled', false);
+        $('#charge_account_account_code').prop('disabled', false);
         $('#generate_code_btn').show();
         $('#submit_btn').show();
       }
@@ -168,7 +168,7 @@
     var grp = $('select#charge_account_charge_group_id :selected').val();
     if (grp == "")
       grp = "$";
-    var org = $('select#product_organization_id :selected').val();
+    var org = $('select#charge_account_organization_id :selected').val();
     if (org == "")
       org = "$";
     if (grp != "$" && org != "$") {

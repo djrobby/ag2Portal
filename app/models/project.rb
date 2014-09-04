@@ -29,7 +29,7 @@ class Project < ActiveRecord::Base
   validates :name,          :presence => true
   validates :project_code,  :presence => true,
                             :length => { :is => 12 },
-                            :format => { with: /\A\d+\Z/, message: :code_invalid },
+                            :format => { with: /\A[a-zA-Z\d]+\Z/, message: :code_invalid },
                             :uniqueness => { :scope => :organization_id }
   validates :opened_at,     :presence => true
   validates :company,       :presence => true

@@ -44,10 +44,15 @@ module Ag2Tech
 
     # Update project code at view (generate_code_btn)
     def pr_generate_code
-      header = params[:header]
+      company = params[:company]
+      type = params[:type]
 
       # Builds code, if possible
-      code = header == '$' ? code = '$err' : pr_next_code(header)
+      if company == '$' || type == '$'
+        code = '$err'
+      else
+        code = pr_next_code(company, type)
+      end
       @json_data = { "code" => code }
       render json: @json_data
     end
