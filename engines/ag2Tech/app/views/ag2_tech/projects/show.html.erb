@@ -12,8 +12,8 @@
     <tr>
       <td><%=t 'activerecord.attributes.project.name' %>:</td>
       <td><%= @project.name %></td>
-      <td><%=t 'activerecord.attributes.project.ledger_account' %>:</td>
-      <td><%= @project.ledger_account unless @project.ledger_account.blank? %></td>
+      <td><%=t 'activerecord.attributes.project.project_type' %>:</td>
+      <td><%= @project.project_type.full_name unless @project.project_type.blank? %></td>
     </tr>
     <tr>
       <td><%= t :"activerecord.attributes.project.company" %>:</td>

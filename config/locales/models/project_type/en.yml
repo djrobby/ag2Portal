@@ -1,0 +1,13 @@
+en:
+  activerecord:
+    models:
+      project_type:
+        zero:  Project types
+        one:   Project type
+        few:   Projects types
+        other: Projects types
+        check_for_projects: "Project type cannot be destroyed while linked projects exist."
+    attributes:
+      project_type:
+        code: "Código"
+        name: "Descripción"

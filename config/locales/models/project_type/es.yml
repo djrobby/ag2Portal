@@ -1,0 +1,13 @@
+es:
+  activerecord:
+    models:
+      project_type:
+        zero:  Tipos de proyecto
+        one:   Tipo de proyecto
+        few:   Tipos de proyecto
+        other: Tipos de proyecto
+        check_for_projects: "Tipos de proyecto no puede ser eliminado mientras existan proyectos vinculados."
+    attributes:
+      project_type:
+        code: "Código"
+        name: "Descripción"

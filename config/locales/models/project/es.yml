@@ -28,3 +28,5 @@ es:
         organization: "Organización"
         organization_id: "Organización"
         ledger_account: "Cuenta contable"
+        project_type: "Tipo"
+        project_type_id: "Tipo"

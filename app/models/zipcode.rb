@@ -15,7 +15,8 @@ class Zipcode < ActiveRecord::Base
 
   has_paper_trail
 
-  validates :zipcode,   :presence => true
+  validates :zipcode,   :presence => true,
+                        :uniqueness => true
   validates :town,      :presence => true
   validates :province,  :presence => true
 

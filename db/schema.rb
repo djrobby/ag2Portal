@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140904062731) do
+ActiveRecord::Schema.define(:version => 20140904112147) do
 
   create_table "activities", :force => true do |t|
     t.string   "description"
@@ -854,6 +854,15 @@ ActiveRecord::Schema.define(:version => 20140904062731) do
   add_index "professional_groups", ["organization_id"], :name => "index_professional_groups_on_organization_id"
   add_index "professional_groups", ["pg_code"], :name => "index_professional_groups_on_pg_code"
 
+  create_table "project_types", :force => true do |t|
+    t.string   "code"
+    t.string   "name"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "project_types", ["code"], :name => "index_project_types_on_code"
+
   create_table "projects", :force => true do |t|
     t.string   "name"
     t.date     "opened_at"
@@ -867,6 +876,7 @@ ActiveRecord::Schema.define(:version => 20140904062731) do
     t.integer  "updated_by"
     t.string   "project_code"
     t.integer  "organization_id"
+    t.integer  "project_type_id"
   end
 
   add_index "projects", ["company_id"], :name => "index_projects_on_company_id"
@@ -876,6 +886,7 @@ ActiveRecord::Schema.define(:version => 20140904062731) do
   add_index "projects", ["organization_id", "project_code"], :name => "index_projects_on_organization_id_and_project_code", :unique => true
   add_index "projects", ["organization_id"], :name => "index_projects_on_organization_id"
   add_index "projects", ["project_code"], :name => "index_projects_on_project_code"
+  add_index "projects", ["project_type_id"], :name => "index_projects_on_project_type_id"
 
   create_table "provinces", :force => true do |t|
     t.string   "name"

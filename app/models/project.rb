@@ -3,8 +3,9 @@ class Project < ActiveRecord::Base
   belongs_to :organization
   belongs_to :company
   belongs_to :office
-  attr_accessible :closed_at, :ledger_account, :name, :opened_at,
-                  :office_id, :company_id, :project_code, :organization_id
+  belongs_to :project_type
+  attr_accessible :closed_at, :ledger_account, :name, :opened_at, :project_code,
+                  :office_id, :company_id, :organization_id, :project_type_id
 
   has_many :charge_accounts
   has_many :work_orders
@@ -27,13 +28,14 @@ class Project < ActiveRecord::Base
 
   validates :name,          :presence => true
   validates :project_code,  :presence => true,
-                            :length => { :is => 10 },
+                            :length => { :is => 12 },
                             :format => { with: /\A\d+\Z/, message: :code_invalid },
                             :uniqueness => { :scope => :organization_id }
   validates :opened_at,     :presence => true
   validates :company,       :presence => true
   validates :office,        :presence => true
   validates :organization,  :presence => true
+  validates :project_type,  :presence => true
 
   before_destroy :check_for_dependent_records
 
@@ -50,8 +52,8 @@ class Project < ActiveRecord::Base
   end
 
   def full_code
-    # Project code (Company id & sequential number) => CCCC-NNNNNN
-    project_code.blank? ? "" : project_code[0..3] + '-' + project_code[4..9]
+    # Project code (Company id & project type code & sequential number) => CCC-TTT-NNNNNN
+    project_code.blank? ? "" : project_code[0..2] + '-' + project_code[3..5] + '-' + project_code[6..11]
   end
 
   #

@@ -28,3 +28,5 @@ en:
         organization: "Organization"
         organization_id: "Organization"
         ledger_account: "Ledger account"
+        project_type: "Type"
+        project_type_id: "Type"
