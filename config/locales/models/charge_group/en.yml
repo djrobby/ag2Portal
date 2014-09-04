@@ -2,11 +2,11 @@ en:
   activerecord:
     models:
       charge_group:
-        zero:  Charge groups
-        one:   Charge group
-        few:   Charge groups
-        other: Charge groups
-        check_for_charge_accounts: "Charge group cannot be destroyed while linked charge accounts exist."
+        zero:  Analytical groups
+        one:   Analytical group
+        few:   Analytical groups
+        other: Analytical groups
+        check_for_charge_accounts: "Analytical group cannot be destroyed while linked analytical accounts exist."
     attributes:
       charge_group:
         group_code: "Code"

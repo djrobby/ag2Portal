@@ -2,17 +2,17 @@ en:
   activerecord:
     models:
       charge_account:
-        zero:  Charge accounts
-        one:   Charge account
-        few:   Charge accounts
-        other: Charge accounts
-        check_for_purchase_orders: "Charge account cannot be destroyed while linked orders exist."
-        check_for_receipt_notes: "Charge account cannot be destroyed while linked receipt notes exist."
-        check_for_delivery_notes: "Charge account cannot be destroyed while linked delivery notes exist."
-        check_for_offer_requests: "Charge account cannot be destroyed while linked requests exist."
-        check_for_offers: "Charge account cannot be destroyed while linked offers exist."
-        check_for_supplier_invoices: "Charge account cannot be destroyed while linked S invoices exist."
-        check_for_sale_offers: "Charge account cannot be destroyed while linked offers exist."
+        zero:  Analytical accounts
+        one:   Analytical account
+        few:   Analytical accounts
+        other: Analytical accounts
+        check_for_purchase_orders: "Analytical account cannot be destroyed while linked orders exist."
+        check_for_receipt_notes: "Analytical account cannot be destroyed while linked receipt notes exist."
+        check_for_delivery_notes: "Analytical account cannot be destroyed while linked delivery notes exist."
+        check_for_offer_requests: "Analytical account cannot be destroyed while linked requests exist."
+        check_for_offers: "Analytical account cannot be destroyed while linked offers exist."
+        check_for_supplier_invoices: "Analytical account cannot be destroyed while linked S invoices exist."
+        check_for_sale_offers: "Analytical account cannot be destroyed while linked offers exist."
     attributes:
       charge_account:
         account_code: "Code"
@@ -24,6 +24,6 @@ en:
         ledger_account: "Ledger account"
         organization: "Organization"
         organization_id: "Organization"
-        charge_group: "Charge group"
-        charge_group_id: "Charge group"
+        charge_group: "Analytical group"
+        charge_group_id: "Analytical group"
         charge_group_c: "Group"

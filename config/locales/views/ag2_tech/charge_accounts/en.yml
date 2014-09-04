@@ -2,22 +2,22 @@ en:
   ag2_tech:
     charge_accounts:
       index:
-        title: "Charge accounts"
-        btn_new: "New Charge account"
+        title: "Analytical accounts"
+        btn_new: "New Analytical account"
         back_to_root: "Back to ag2Tech"
         label_project: "Project"
         label_others: "Others"
         btn_apply: "Apply Filter"
       show:
-        title: "Charge account"
-        btn_edit: "Edit Charge account"
-        btn_delete: "Delete Charge account"
+        title: "Analytical account"
+        btn_edit: "Edit Analytical account"
+        btn_delete: "Delete Analytical account"
       edit:
-        title: "Edit Charge account"
-        btn_show: "Show Charge account"
+        title: "Edit Analytical account"
+        btn_show: "Show Analytical account"
       new:
-        title: "New Charge account"
-      back_to_main_page: "Back to Charge accounts"
+        title: "New Analytical account"
+      back_to_main_page: "Back to Analytical accounts"
       generate_code_btn: "Account Code"
       validate_btn: "Validate"
       code_error: "Unable to generate Account Code: No Organization or Group chosen."

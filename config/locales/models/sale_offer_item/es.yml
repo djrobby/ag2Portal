@@ -41,5 +41,5 @@ es:
         store_id: "Almacén"
         work_order: "Orden de trabajo"
         work_order_id: "Orden de trabajo"
-        charge_account: "Cuenta de cargo"
-        charge_account_id: "Cuenta de cargo"
+        charge_account: "Cuenta analítica"
+        charge_account_id: "Cuenta analítica"

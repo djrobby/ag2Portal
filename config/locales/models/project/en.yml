@@ -6,7 +6,7 @@ en:
         one:   Project
         few:   Projects
         other: Projects
-        check_for_charge_accounts: "Project cannot be destroyed while linked charge accounts exist."
+        check_for_charge_accounts: "Project cannot be destroyed while linked analytical accounts exist."
         check_for_work_orders: "Project cannot be destroyed while linked work orders exist."
         check_for_purchase_orders: "Project cannot be destroyed while linked orders exist."
         check_for_receipt_notes: "Project cannot be destroyed while linked receipt notes exist."

@@ -8,6 +8,6 @@ es:
         work_order_statuses: "Estados de OT"
         work_order_labors: "Labores para OT"
         projects: "Proyectos"
-        charge_accounts: "Cuentas de Cargo"
+        charge_accounts: "Cuentas Analíticas"
         work_orders: "Ordenes de Trabajo"
-        charge_groups: "Grupos de Cargo"
+        charge_groups: "Grupos Analíticos"

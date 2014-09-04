@@ -2,7 +2,7 @@ es:
   ag2_tech:
     breadcrumb:
       charge_accounts:
-        items: "Cuentas de cargo"
+        items: "Cuentas analíticas"
         item: "Cuenta"
       projects:
         items: "Proyectos"
@@ -20,5 +20,5 @@ es:
         items: "Tipos de OT"
         item: "Tipo"
       charge_groups:
-        items: "Grupos de cargo"
+        items: "Grupos analíticos"
         item: "Grupo"

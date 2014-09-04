@@ -2,22 +2,22 @@ es:
   ag2_tech:
     charge_accounts:
       index:
-        title: "Cuentas de cargo"
-        btn_new: "Nueva Cuenta de cargo"
+        title: "Cuentas analíticas"
+        btn_new: "Nueva Cuenta analítica"
         back_to_root: "Volver a ag2Tech"
         label_project: "Proyecto"
         label_others: "Otros"
         btn_apply: "Aplicar Filtro"
       show:
-        title: "Cuenta de cargo"
-        btn_edit: "Editar Cuenta de cargo"
-        btn_delete: "Borrar Cuenta de cargo"
+        title: "Cuenta analítica"
+        btn_edit: "Editar Cuenta analítica"
+        btn_delete: "Borrar Cuenta analítica"
       edit:
-        title: "Editar Cuenta de cargo"
-        btn_show: "Ver Cuenta de cargo"
+        title: "Editar Cuenta analítica"
+        btn_show: "Ver Cuenta analítica"
       new:
-        title: "Nueva Cuenta de cargo"
-      back_to_main_page: "Volver a Cuentas de cargo"
+        title: "Nueva Cuenta analítica"
+      back_to_main_page: "Volver a Cuentas analíticas"
       generate_code_btn: "Código de Cuenta"
       validate_btn: "Validar"
       code_error: "Imposible generar Código de Cuenta: No has elegido Organización o Grupo."

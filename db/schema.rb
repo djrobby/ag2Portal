@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140825162630) do
+ActiveRecord::Schema.define(:version => 20140904062731) do
 
   create_table "activities", :force => true do |t|
     t.string   "description"
@@ -71,6 +71,18 @@ ActiveRecord::Schema.define(:version => 20140825162630) do
     t.datetime "updated_at",                                                        :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
+    t.decimal  "month_01",          :precision => 13, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "month_02",          :precision => 13, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "month_03",          :precision => 13, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "month_04",          :precision => 13, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "month_05",          :precision => 13, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "month_06",          :precision => 13, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "month_07",          :precision => 13, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "month_08",          :precision => 13, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "month_09",          :precision => 13, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "month_10",          :precision => 13, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "month_11",          :precision => 13, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "month_12",          :precision => 13, :scale => 4, :default => 0.0, :null => false
   end
 
   add_index "budget_items", ["budget_id"], :name => "index_budget_items_on_budget_id"

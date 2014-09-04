@@ -2,17 +2,17 @@ es:
   activerecord:
     models:
       charge_account:
-        zero:  Cuentas de cargo
-        one:   Cuenta de cargo
-        few:   Cuentas de cargo
-        other: Cuentas de cargo
-        check_for_purchase_orders: "Cuenta de cargo no puede ser eliminada mientras existan pedidos vinculados."
-        check_for_receipt_notes: "Cuenta de cargo no puede ser eliminada mientras existan notas de recepción vinculadas."
-        check_for_delivery_notes: "Cuenta de cargo no puede ser eliminada mientras existan notas de entrega vinculadas."
-        check_for_offer_requests: "Cuenta de cargo no puede ser eliminada mientras existan solicitudes vinculadas."
-        check_for_offers: "Cuenta de cargo no puede ser eliminada mientras existan ofertas vinculadas."
-        check_for_supplier_invoices: "Cuenta de cargo no puede ser eliminada mientras existan facturas S vinculadas."
-        check_for_sale_offers: "Cuenta de cargo no puede ser eliminada mientras existan presupuestos vinculados."
+        zero:  Cuentas analíticas
+        one:   Cuenta analítica
+        few:   Cuentas analíticas
+        other: Cuentas analíticas
+        check_for_purchase_orders: "Cuenta analítica no puede ser eliminada mientras existan pedidos vinculados."
+        check_for_receipt_notes: "Cuenta analítica no puede ser eliminada mientras existan notas de recepción vinculadas."
+        check_for_delivery_notes: "Cuenta analítica no puede ser eliminada mientras existan notas de entrega vinculadas."
+        check_for_offer_requests: "Cuenta analítica no puede ser eliminada mientras existan solicitudes vinculadas."
+        check_for_offers: "Cuenta analítica no puede ser eliminada mientras existan ofertas vinculadas."
+        check_for_supplier_invoices: "Cuenta analítica no puede ser eliminada mientras existan facturas S vinculadas."
+        check_for_sale_offers: "Cuenta analítica no puede ser eliminada mientras existan presupuestos vinculados."
     attributes:
       charge_account:
         account_code: "Código"
@@ -24,6 +24,6 @@ es:
         ledger_account: "Cuenta contable"
         organization: "Organización"
         organization_id: "Organización"
-        charge_group: "Grupo de cargo"
-        charge_group_id: "Grupo de cargo"
+        charge_group: "Grupo analítico"
+        charge_group_id: "Grupo analítico"
         charge_group_c: "Grupo"

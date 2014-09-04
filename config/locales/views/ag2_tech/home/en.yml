@@ -8,6 +8,6 @@ en:
         work_order_statuses: "WO statuses"
         work_order_labors: "WO labors"
         projects: "Projects"
-        charge_accounts: "Charge Accounts"
+        charge_accounts: "Analytical Accounts"
         work_orders: "Work Orders"
-        charge_groups: "Charge Groups"
+        charge_groups: "Analytical Groups"

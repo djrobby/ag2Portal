@@ -2,11 +2,11 @@ es:
   activerecord:
     models:
       charge_group:
-        zero:  Grupos de cargo
-        one:   Grupo de cargo
-        few:   Grupos de cargo
-        other: Grupos de cargo
-        check_for_charge_accounts: "Grupo de cargo no puede ser eliminado mientras existan cuentas de cargo vinculadas."
+        zero:  Grupos analíticos
+        one:   Grupo analítico
+        few:   Grupos analíticos
+        other: Grupos analíticos
+        check_for_charge_accounts: "Grupo analítico no puede ser eliminado mientras existan cuentas analíticas vinculadas."
     attributes:
       charge_group:
         group_code: "Código"
