@@ -1,5 +1,33 @@
-<p id="notice"><%= notice %></p>
+<%= render '/layouts/ag2_tech/bperiodsbreadcrumb' %>
 
+<h3><%=t '.title' %></h3>
+<table class="table">
+  <tbody>
+    <tr>
+      <td>Id:</td>
+      <td><%= @budget_period.id %></td>
+      <td><%=t 'activerecord.attributes.budget_period.account_code' %>:</td>
+      <td><b><%= @budget_period.period_code %></b></td>
+    </tr>
+      <td><%=t 'activerecord.attributes.budget_period.name' %>:</td>
+      <td><%= @budget_period.name %></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><%= t :"activerecord.attributes.budget_period.starting_at" %>:</td>
+      <td><%= @budget_period.starting_at.strftime("%d/%m/%Y") unless @budget_period.starting_at.blank? %></td>
+      <td><%= t :"activerecord.attributes.budget_period.ending_at" %>:</td>
+      <td><%= @budget_period.ending_at.strftime("%d/%m/%Y") unless @budget_period.ending_at.blank? %></td>
+    </tr>
+    <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @budget_period } %>
+    <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @budget_period } %>
+  </tbody>
+</table>
 
-<%= link_to 'Edit', edit_budget_period_path(@budget_period) %> |
-<%= link_to 'Back', budget_periods_path %>
+<%= render partial: '/layouts/crud/update_delete_new', locals:
+{ model: BudgetPeriod, update_path: edit_budget_period_path(@budget_period), update_txt: t('.btn_edit'),
+delete_path: @budget_period, delete_txt: t('.btn_delete'), msg: t("activerecord.models.budget_period.one"), txt: @budget_period.full_name,
+new_path: new_budget_period_path, new_txt: t('ag2_tech.budget_periods.index.btn_new') } %>
+
+<%= link_to t("ag2_tech.budget_periods.back_to_main_page"), budget_periods_path %>

@@ -1,0 +1,39 @@
+<script>
+  $(document).ready(function() {
+    $("#div_table th a, #div_table #pages a").on("click", function() {
+      $.getScript(this.href);
+      return false;
+    });
+  }); 
+</script>
+
+<table class="table table-condensed table-striped">
+  <thead>
+    <tr>
+      <th><%= sortable "period_code", t('activerecord.attributes.budget_period.period_code') %></th>
+      <th><%= sortable "name", t('activerecord.attributes.budget_period.name') %></th>
+      <th align="center"><%= sortable "starting_at", t('activerecord.attributes.budget_period.starting_at') %></th>
+      <th align="center"><%= sortable "ending_at", t('activerecord.attributes.budget_period.ending_at') %></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @budget_periods.each do |period| %>
+    <tr>
+      <td><%= link_to period.period_code, period %></td>
+      <td><%= period.name %></td>
+      <td align="center"><%= period.starting_at.strftime("%d/%m/%Y") unless period.starting_at.nil? %></td>
+      <td align="center"><%= period.ending_at.strftime("%d/%m/%Y") unless period.ending_at.nil? %></td>
+      <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => BudgetPeriod, :path => edit_budget_period_path(period) } %>
+      <%= render :partial => '/layouts/crud/delete', :locals => { :model => BudgetPeriod, :path => period, :msg => I18n.t("activerecord.models.budget_period.one"), :txt => period.full_name } %> </td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @budget_periods } %>
+<%= render :partial => '/layouts/crud/new', :locals => { :model => BudgetPeriod, :path => new_budget_period_path, :txt => t('ag2_tech.budget_periods.index.btn_new') } %>
+
+<%= link_to t('ag2_tech.budget_periods.index.all'), controller: "budget_periods", action: "index", ifilter: "all", :remote => true %> |
+<%= link_to t('ag2_tech.budget_periods.index.current_only'), controller: "budget_periods", action: "index", ifilter: "current", :remote => true %> |
+<%= link_to t('ag2_tech.budget_periods.index.expired_only'), controller: "budget_periods", action: "index", ifilter: "expired", :remote => true %> |
+<%= link_to t('ag2_tech.budget_periods.index.back_to_root'), ag2_tech.root_path %>

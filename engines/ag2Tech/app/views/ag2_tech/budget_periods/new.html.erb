@@ -1,5 +1,7 @@
-<h1>New budget_period</h1>
+<%= render '/layouts/ag2_tech/bperiodsbreadcrumb' %>
+
+<h3><%=t '.title' %></h3>
 
 <%= render 'form' %>
 
-<%= link_to 'Back', budget_periods_path %>
+<%= link_to t("ag2_tech.budget_periods.back_to_main_page"), budget_periods_path %>

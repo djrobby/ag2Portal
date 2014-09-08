@@ -1,0 +1,17 @@
+en:
+  activerecord:
+    models:
+      budget_period:
+        zero:  Budget periods
+        one:   Budget period
+        few:   Budget periods
+        other: Budget periods
+        check_for_budgets: "Budget period cannot be destroyed while linked budgets exist."
+    attributes:
+      budget_period:
+        period_code: "Code"
+        name: "Description"
+        starting_at: "Starting at"
+        ending_at: "Ending at"
+        organization: "Organization"
+        organization_id: "Organization"

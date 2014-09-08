@@ -1,0 +1,17 @@
+es:
+  activerecord:
+    models:
+      budget_period:
+        zero:  Periodos presupuestarios
+        one:   Periodo presupuestario
+        few:   Periodos presupuestarios
+        other: Periodos presupuestarios
+        check_for_budgets: "Periodo presupuestario no puede ser eliminado mientras existan presupuestos vinculadas."
+    attributes:
+      budget_period:
+        period_code: "Código"
+        name: "Descripción"
+        starting_at: "Fecha de inicio"
+        ending_at: "Fecha de fin"
+        organization: "Organización"
+        organization_id: "Organización"
