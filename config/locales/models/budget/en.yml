@@ -1,0 +1,22 @@
+en:
+  activerecord:
+    models:
+      budget:
+        zero:  Budgets
+        one:   Budget
+        few:   Budgets
+        other: Budgets
+        check_for_budgets: "Budget cannot be destroyed while linked budgets exist."
+    attributes:
+      budget:
+        budget_no: "No."
+        description: "Description"
+        project: "Project"
+        project_id: "Project"
+        organization: "Organization"
+        organization_id: "Organization"
+        budget_period: "Period"
+        budget_period_id: "Period"
+        approver: "Approved by"
+        approver_id: "Approved by"
+        approval_date: "Approved on"

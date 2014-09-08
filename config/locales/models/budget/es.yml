@@ -1,0 +1,22 @@
+es:
+  activerecord:
+    models:
+      budget:
+        zero:  Presupuestos
+        one:   Presupuesto
+        few:   Presupuestos
+        other: Presupuestos
+        check_for_budgets: "Presupuesto no puede ser eliminado mientras existan presupuestos vinculadas."
+    attributes:
+      budget:
+        budget_no: "Nº"
+        description: "Descripción"
+        project: "Proyecto"
+        project_id: "Proyecto"
+        organization: "Organización"
+        organization_id: "Organización"
+        budget_period: "Periodo"
+        budget_period_id: "Periodo"
+        approver: "Aprobado por"
+        approver_id: "Aprobado por"
+        approval_date: "Aprobado el"

@@ -31,6 +31,7 @@ module Ag2Tech
     def show
       @breadcrumb = 'read'
       @budget_period = BudgetPeriod.find(params[:id])
+      @budgets = @budget_period.budgets.paginate(:page => params[:page], :per_page => per_page).order(:budget_no)
   
       respond_to do |format|
         format.html # show.html.erb

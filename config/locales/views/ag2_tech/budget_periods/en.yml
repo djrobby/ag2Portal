@@ -1,0 +1,23 @@
+en:
+  ag2_tech:
+    budget_periods:
+      index:
+        title: "Budget periods"
+        btn_new: "New Budget period"
+        back_to_root: "Back to ag2Tech"
+        expired_only: "Only expired"
+        current_only: "Only current"
+        all: "All"
+      show:
+        title: "Budget period"
+        btn_edit: "Edit Budget period"
+        btn_delete: "Delete Budget period"
+        subtable_title: "Period Budgets"
+        return_to: "Back to Budget period"
+      edit:
+        title: "Edit Budget period"
+        btn_show: "Show Budget period"
+      new:
+        title: "New Budget period"
+      back_to_main_page: "Back to Budget periods"
+      code_error: "Unable to generate Group Code: No Organization chosen."

@@ -22,3 +22,6 @@ es:
       charge_groups:
         items: "Grupos analíticos"
         item: "Grupo"
+      budget_periods:
+        items: "Periodos presupuestarios"
+        item: "Periodo"

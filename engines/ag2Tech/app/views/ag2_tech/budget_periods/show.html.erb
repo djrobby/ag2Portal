@@ -30,4 +30,19 @@
 delete_path: @budget_period, delete_txt: t('.btn_delete'), msg: t("activerecord.models.budget_period.one"), txt: @budget_period.full_name,
 new_path: new_budget_period_path, new_txt: t('ag2_tech.budget_periods.index.btn_new') } %>
 
+<% if (@budgets.count > 0) %>
+<h4><%=t '.subtable_title' %></h4>
+<table class="table table-condensed table-striped shrinked">
+  <thead>
+    <%= render '/layouts/ag2_tech/budgetsheader' %>
+  </thead>
+  <tbody>
+    <% session[:return_to] = I18n.t('ag2_tech.budget_periods.show.return_to') %>
+    <% session[:return_to_url] = "#{request.protocol}#{request.host_with_port}#{request.fullpath}" %>
+    <%= render :partial => '/layouts/ag2_tech/budgets', :locals => { :budgets => @budgets } %>
+  </tbody>
+</table>
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @budgets } %>
+<% end %>
+
 <%= link_to t("ag2_tech.budget_periods.back_to_main_page"), budget_periods_path %>

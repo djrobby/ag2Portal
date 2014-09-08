@@ -1,0 +1,7 @@
+<% budgets.each do |budget| %>
+<tr>
+  <td><%= link_to budget.budget_no, budget %></td>
+  <td><%= budget.description %></td>
+  <td><%= budget.project.full_name unless budget.project.blank? %></td>
+</tr>
+<% end %>
