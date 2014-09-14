@@ -29,7 +29,7 @@ class OfferRequest < ActiveRecord::Base
 
   validates :request_date,    :presence => true
   validates :request_no,      :presence => true,
-                              :length => { :is => 20 },
+                              :length => { :is => 22 },
                               :format => { with: /\A\d+\Z/, message: :code_invalid },
                               :uniqueness => { :scope => :organization_id }
   validates :payment_method,  :presence => true
@@ -57,8 +57,8 @@ class OfferRequest < ActiveRecord::Base
   end
 
   def full_no
-    # Request no (Project code & year & sequential number) => PPPPPPPPPP-YYYY-NNNNNN
-    request_no.blank? ? "" : request_no[0..9] + '-' + request_no[10..13] + '-' + request_no[14..19]
+    # Request no (Project code & year & sequential number) => PPPPPPPPPPPP-YYYY-NNNNNN
+    request_no.blank? ? "" : request_no[0..11] + '-' + request_no[12..15] + '-' + request_no[16..21]
   end
 
   #

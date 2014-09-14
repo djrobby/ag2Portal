@@ -1,0 +1,30 @@
+<tr>
+  <td></td>
+  <td align="right"><%= t :"activerecord.attributes.work_order.quantity" %> | <%= t :"activerecord.attributes.work_order.subtotal" %></td>
+  <td align="right"><%= number_with_precision(order.quantity, precision: 4) unless order.quantity.blank? %></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td align="right"><%= number_with_precision(order.subtotal, precision: 4) unless order.subtotal.blank? %></td>
+  <td></td>
+</tr>
+<tr>
+  <td></td>
+  <td align="right"><%= t :"activerecord.attributes.work_order.taxable" %> | <%= t :"activerecord.attributes.work_order.taxes" %></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td align="right"><%= number_with_precision(order.taxable, precision: 4) unless order.taxable.blank? %></td>
+  <td align="right"><%= number_with_precision(order.taxes, precision: 4) unless order.taxes.blank? %></td>
+</tr>
+<tr class="totals">
+  <td></td>
+  <td align="right"><%= t :"activerecord.attributes.work_order.item_costs" %> | <%= t :"activerecord.attributes.work_order.total" %></td>
+  <td></td>
+  <td></td>
+  <td align="right"><%= number_with_precision(order.item_costs, precision: 4) unless order.item_costs.blank? %></td>
+  <td></td>
+  <td align="right"><%= number_with_precision(order.total, precision: 4) unless order.total.blank? %></td>
+  <td></td>
+</tr>

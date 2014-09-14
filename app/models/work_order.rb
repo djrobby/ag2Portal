@@ -51,7 +51,7 @@ class WorkOrder < ActiveRecord::Base
   validates_associated :work_order_items, :work_order_workers
 
   validates :order_no,          :presence => true,
-                                :length => { :is => 20 },
+                                :length => { :is => 22 },
                                 :format => { with: /\A\d+\Z/, message: :code_invalid },
                                 :uniqueness => { :scope => :organization_id }
   validates :description,       :presence => true,
@@ -82,7 +82,7 @@ class WorkOrder < ActiveRecord::Base
 
   def full_no
     # Order no (Project code & year & sequential number) => PPPPPPPPPP-YYYY-NNNNNN
-    order_no.blank? ? "" : order_no[0..9] + '-' + order_no[10..13] + '-' + order_no[14..19]
+    order_no.blank? ? "" : order_no[0..11] + '-' + order_no[12..15] + '-' + order_no[16..21]
   end
 
   #

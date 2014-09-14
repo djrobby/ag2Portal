@@ -366,6 +366,27 @@ end
     code
    end
   
+  # Budget no
+  def bu_next_no(project, period)
+    code = ''
+    # Builds code, if possible
+    project_code = Project.find(project).project_code rescue '$'
+    period_code = BudgetPeriod.find(period).code rescue '$'
+    if project_code == '$' || period_code == '$'
+      code = '$err'
+    else
+      project = project_code[0,12].upcase.rjust(12, '0')
+      period = period_code[0,8].upcase.rjust(8, '0')
+      last_no = Budget.where("buget_no LIKE ?", "#{project}#{period}")
+      if last_no.nil?
+        code = project + period
+      else
+        code = '$err'
+      end
+    end
+    code
+  end
+  
   # Delivery note no
   def dn_next_no(organization)
     year = Time.new.year
@@ -393,14 +414,14 @@ end
     if project_code == '$'
       code = '$err'
     else
-      project = project_code.rjust(10, '0')
+      project = project_code.rjust(12, '0')
       year = year.to_s if year.is_a? Fixnum
       year = year.rjust(4, '0')
       last_no = PurchaseOrder.where("order_no LIKE ?", "#{project}#{year}%").order(:order_no).maximum(:order_no)
       if last_no.nil?
         code = project + year + '000001'
       else
-        last_no = last_no[14..19].to_i + 1
+        last_no = last_no[16..21].to_i + 1
         code = project + year + last_no.to_s.rjust(6, '0')
       end
     end
@@ -416,14 +437,14 @@ end
     if project_code == '$'
       code = '$err'
     else
-      project = project_code.rjust(10, '0')
+      project = project_code.rjust(12, '0')
       year = year.to_s if year.is_a? Fixnum
       year = year.rjust(4, '0')
       last_no = WorkOrder.where("order_no LIKE ?", "#{project}#{year}%").order(:order_no).maximum(:order_no)
       if last_no.nil?
         code = project + year + '000001'
       else
-        last_no = last_no[14..19].to_i + 1
+        last_no = last_no[16..21].to_i + 1
         code = project + year + last_no.to_s.rjust(6, '0')
       end
     end
@@ -439,14 +460,14 @@ end
     if project_code == '$'
       code = '$err'
     else
-      project = project_code.rjust(10, '0')
+      project = project_code.rjust(12, '0')
       year = year.to_s if year.is_a? Fixnum
       year = year.rjust(4, '0')
       last_no = OfferRequest.where("request_no LIKE ?", "#{project}#{year}%").order(:request_no).maximum(:request_no)
       if last_no.nil?
         code = project + year + '000001'
       else
-        last_no = last_no[14..19].to_i + 1
+        last_no = last_no[16..21].to_i + 1
         code = project + year + last_no.to_s.rjust(6, '0')
       end
     end

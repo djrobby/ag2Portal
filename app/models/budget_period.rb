@@ -8,6 +8,7 @@ class BudgetPeriod < ActiveRecord::Base
 
   validates :period_code,   :presence => true,
                             :length => { :minimum => 4, :maximum => 8 },
+                            :format => { with: /\A[a-zA-Z\d]+\Z/, message: :code_invalid },
                             :uniqueness => { :scope => :organization_id }
   validates :name,          :presence => true
   validates :starting_at,   :presence => true

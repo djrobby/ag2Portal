@@ -1,21 +1,71 @@
-<h1>Listing budgets</h1>
+<script>
+  var _thisForm = '';
 
-<table>
-  <tr>
-    <th></th>
-    <th></th>
-    <th></th>
-  </tr>
+  $(document).ready(function() {
+    $('.sel2').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      dropdownCssClass: 'shrinked',
+      dropdownAutoWidth: true
+    });
+    // Initialized form variable
+    _thisForm = $("#Project").closest('form')[0];
+  }); 
 
-<% @budgets.each do |budget| %>
-  <tr>
-    <td><%= link_to 'Show', budget %></td>
-    <td><%= link_to 'Edit', edit_budget_path(budget) %></td>
-    <td><%= link_to 'Destroy', budget, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-  </tr>
-<% end %>
-</table>
+  $(window).bind("load", function() {
+    $("#Project").select2("val", "<%= params[:Project] %>");
+    $("#Type").val("<%= params[:Type] %>");
+    $("#Status").val("<%= params[:Status] %>");
+  });
 
-<br />
+  jQuery(function($) {
+    // when the #removeFilter button clicked
+    $("#removeFilter").click(function() {
+      $("#Project").select2("val", "");
+      $("#Type").val("");
+      $("#Status").val("");
+      $("#search").val("");
+      // no AJAX
+      //_thisForm.submit();
+      // AJAX
+      $("#submit_btn").trigger("click");
+    });
+  });
+</script>
 
-<%= link_to 'New Budget', new_budget_path %>
+<%= render '/layouts/ag2_tech/budgetsbreadcrumb' %>
+<h3><%= t '.title' %></h3>
+
+<div class="container-fluid">
+  <div class="row-fluid">
+
+    <div class="span3">
+      <div class="well sidebar-nav">
+        <%= form_tag "budgets", :method => 'get', :remote => true do %>
+        <!-- Project -->
+        <%= label_tag I18n.t("ag2_tech.budgets.index.label_project"), nil, :class => 'form-label' %>
+        <%= select_tag "Project", options_from_collection_for_select(@projects, "id", "full_name"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
+        <!-- Type -->
+        <%= label_tag I18n.t("ag2_tech.budgets.index.label_type"), nil, :class => 'form-label-under-sel2' %>
+        <%= select_tag "Type", options_from_collection_for_select(@types, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked' %>
+        <!-- Status -->
+        <%= label_tag I18n.t("ag2_tech.budgets.index.label_status"), nil, :class => 'form-label' %>
+        <%= select_tag "Status", options_from_collection_for_select(@statuses, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked' %>
+        <!-- Others -->
+        <%= label_tag I18n.t("ag2_tech.budgets.index.label_others"), nil, :class => 'form-label' %>
+        <%= text_field_tag :search, params[:search], :class => 'x-large-text-field shrinked' %>
+        <!-- Submit -->
+        <%= submit_tag I18n.t(:apply_filter_button), :class => 'btn btn-primary', :id => 'submit_btn' %>
+        <!-- Remove filter -->
+        <button id="removeFilter" type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><%= t :clear_filter_button %></button>
+        <% end %>
+        <!-- Buttons -->
+        <%= render :partial => '/layouts/crud/new', :locals => { :model => Budget, :path => new_budget_path, :txt => t(".btn_new") } %>
+        <%= link_to t(".back_to_root"), ag2_tech.root_path %>
+      </div><!-- /.sidebar-nav -->
+    </div><!-- /.span3 -->
+
+    <div class="span9" id="div_table">
+      <%= render 'budgets' %>
+    </div><!-- /.span9 -->
+  </div><!-- /.row-fluid -->
+</div><!-- /.container-fluid -->

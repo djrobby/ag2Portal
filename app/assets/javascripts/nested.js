@@ -5,7 +5,7 @@
  *  2. Items table must be named 'items-table'
  *  3. Each row in Items table must have 'class="fields"'
  *  4. Each field in modal window must have 'class="field"'
- * >> If a master form have more then one items table, this code must be replicated at the proper folder & file name!!
+ * >> If a master form have more than one items table, this code must be replicated at the proper folder & file name!!
  */
 // Remove current item from the DOM
 function remove_fields(link) {

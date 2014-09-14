@@ -25,3 +25,6 @@ es:
       budget_periods:
         items: "Periodos presupuestarios"
         item: "Periodo"
+      budgets:
+        items: "Presupuestos"
+        item: "Presupuesto"

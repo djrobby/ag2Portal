@@ -50,3 +50,11 @@ es:
           attributes:
             group_code:
               code_invalid: "Código inválido (debe ser numérico)"
+        budget_period:
+          attributes:
+            period_code:
+              code_invalid: "Código inválido (debe ser alfanumérico)"
+        budget:
+          attributes:
+            budget_no:
+              code_invalid: "Nº inválido (debe ser alfanumérico)"

@@ -1,0 +1,34 @@
+es:
+  ag2_tech:
+    budgets:
+      index:
+        title: "Presupuestos"
+        btn_new: "Nuevo Presupuesto"
+        back_to_root: "Volver a ag2Tech"
+        label_project: "Proyecto"
+        label_type: "Tipo"
+        label_status: "Estado"
+        label_office: "Oficina"
+        label_company: "Empresa"
+        label_others: "Otros"
+        btn_apply: "Aplicar Filtro"
+      show:
+        title: "Presupuesto"
+        btn_edit: "Editar Presupuesto"
+        btn_delete: "Borrar Presupuesto"
+        print: "Imprimir"
+      edit:
+        title: "Editar Presupuesto"
+        btn_show: "Ver Presupuesto"
+      new:
+        title: "Nuevo Presupuesto"
+      back_to_main_page: "Volver a Presupuestos"
+      generate_code_btn: "Nº de Presupuesto"
+      validate_btn: "Validar"
+      no_error: "Imposible generar Nº de Presupuesto: No has elegido Proyecto o Periodo, o Nº ya está en uso."
+      items_info: "Items del Presupuesto"
+      delete_item: "Borrar este Item"
+      add_item: "Agregar nuevo Item"
+      add_item_to: "Presupuesto %{var}"
+      btn_new_item: "Nuevo Item"
+      btn_add_item: "Agregar"

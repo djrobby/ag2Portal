@@ -1,0 +1,34 @@
+en:
+  ag2_tech:
+    budgets:
+      index:
+        title: "Budgets"
+        btn_new: "New Budget"
+        back_to_root: "Back to ag2Tech"
+        label_project: "Project"
+        label_type: "Type"
+        label_status: "Status"
+        label_office: "Office"
+        label_company: "Company"
+        label_others: "Others"
+        btn_apply: "Apply Filter"
+      show:
+        title: "Budget"
+        btn_edit: "Edit Budget"
+        btn_delete: "Delete Budget"
+        print: "Print"
+      edit:
+        title: "Edit Budget"
+        btn_show: "Show Budget"
+      new:
+        title: "New Budget"
+      back_to_main_page: "Back to Budgets"
+      generate_code_btn: "Budget No."
+      validate_btn: "Validate"
+      no_error: "Unable to generate Budget No.: No Project or Period chosen, or No. has already been taken."
+      items_info: "Budget Items"
+      delete_item: "Delete this Item"
+      add_item: "Add new Item"
+      add_item_to: "Budget %{var}"
+      btn_new_item: "New Item"
+      btn_add_item: "Add"

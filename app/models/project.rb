@@ -60,19 +60,19 @@ class Project < ActiveRecord::Base
   # Records navigator
   #
   def to_first
-    Project.order("id").first
+    Project.order("project_code").first
   end
 
   def to_prev
-    Project.where("id < ?", id).order("id").last
+    Project.where("project_code < ?", id).order("project_code").last
   end
 
   def to_next
-    Project.where("id > ?", id).order("id").first
+    Project.where("project_code > ?", id).order("project_code").first
   end
 
   def to_last
-    Project.order("id").last
+    Project.order("project_code").last
   end
 
   searchable do

@@ -1,0 +1,33 @@
+<tr>
+  <td></td>
+  <td align="right"><%= t :"activerecord.attributes.work_order.quantity" %> | <%= t :"activerecord.attributes.work_order.subtotal" %></td>
+  <td align="right" id="foot-quantity"><%= number_with_precision('0', precision: 4) %></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td align="right" id="foot-amount"><%= number_with_precision('0', precision: 4) %></td>
+  <td></td>
+  <td></td>
+</tr>
+<tr>
+  <td></td>
+  <td align="right"><%= t :"activerecord.attributes.work_order.taxable" %> | <%= t :"activerecord.attributes.work_order.taxes" %></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td align="right" id="foot-taxable"><%= number_with_precision('0', precision: 4) %></td>
+  <td align="right" id="foot-tax"><%= number_with_precision('0', precision: 4) %></td>
+  <td></td>
+</tr>
+<tr class="totals">
+  <td></td>
+  <td align="right"><%= t :"activerecord.attributes.work_order.item_costs" %> | <%= t :"activerecord.attributes.work_order.total" %></td>
+  <td></td>
+  <td></td>
+  <td align="right" id="foot-costs"><%= number_with_precision('0', precision: 4) %></td>
+  <td></td>
+  <td align="right" id="foot-total"><%= number_with_precision('0', precision: 4) %></td>
+  <td></td>
+  <td><a href="#" onclick="javascript:$('#items-table').trigger('totals'); return false;"><i class="icon-refresh"></i></a></td>
+</tr>

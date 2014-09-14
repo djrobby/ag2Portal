@@ -27,7 +27,7 @@ class PurchaseOrder < ActiveRecord::Base
   
   validates :order_date,     :presence => true
   validates :order_no,       :presence => true,
-                             :length => { :is => 20 },
+                             :length => { :is => 22 },
                              :format => { with: /\A\d+\Z/, message: :code_invalid },
                              :uniqueness => { :scope => :organization_id }
   validates :supplier,       :presence => true
@@ -62,8 +62,8 @@ class PurchaseOrder < ActiveRecord::Base
   end
 
   def full_no
-    # Order no (Project code & year & sequential number) => PPPPPPPPPP-YYYY-NNNNNN
-    order_no.blank? ? "" : order_no[0..9] + '-' + order_no[10..13] + '-' + order_no[14..19]
+    # Order no (Project code & year & sequential number) => PPPPPPPPPPPP-YYYY-NNNNNN
+    order_no.blank? ? "" : order_no[0..11] + '-' + order_no[12..15] + '-' + order_no[16..21]
   end
 
   #
