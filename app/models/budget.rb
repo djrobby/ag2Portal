@@ -48,6 +48,23 @@ class Budget < ActiveRecord::Base
   end
 
   #
+  # Calculated fields
+  #
+  def total_income
+    result = 0
+    budget_items.each do |i|
+      if !i.amount.blank?
+        result += i.amount
+      end
+    end
+    result
+  end
+
+  def total_expenditure
+    
+  end
+
+  #
   # Records navigator
   #
   def to_first
