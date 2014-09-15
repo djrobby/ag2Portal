@@ -1,5 +1,76 @@
-<p id="notice"><%= notice %></p>
+<%= render '/layouts/ag2_tech/budgetsbreadcrumb' %>
 
+<h3><%=t '.title' %></h3>
+<table class="table">
+  <tbody>
+    <tr>
+      <td>Id:</td>
+      <td><%= @budget.id %></td>
+      <td><%=t 'activerecord.attributes.budget.budget_no' %>:</td>
+      <td><b><%= @budget.full_no %></b></td>
+    </tr>
+    <tr>
+      <td><%=t 'activerecord.attributes.budget.description' %>:</td>
+      <td><%= @budget.summary %></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><%=t 'activerecord.attributes.budget.project' %>:</td>
+      <td><%= @budget.project.full_name %></td>
+      <td><%=t 'activerecord.attributes.budget.budget_period' %>:</td>
+      <td><%= @budget.budget_period.full_name %></td>
+    </tr>
+    <tr>
+      <td><%=t 'activerecord.attributes.budget.approval_date' %>:</td>
+      <td><%= @budget.approval_date.strftime("%d/%m/%Y") unless @budget.approval_date.blank? %></td>
+      <td><%=t 'activerecord.attributes.budget.approver' %>:</td>
+      <td> <%= @budget.approver.email unless @budget.approver.blank? %> </td>
+    </tr>
+    <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @budget } %>
+    <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @budget } %>
+    <tr>
+      <td class="highlighted bolded"><%= t :"activerecord.attributes.budget.total_income" %>:</td>
+      <td class="highlighted bolded"><%= number_with_precision(@budget.total_income, precision: 4) unless @budget.total_income.blank? %></td>
+      <td class="highlighted bolded"><%= t :"activerecord.attributes.budget.total_expenditure" %>:</td>
+      <td class="highlighted bolded"><%= number_with_precision(@budget.total_expenditure, precision: 4) unless @budget.total_expenditure.blank? %></td>
+    </tr>
+  </tbody>
+</table>
 
-<%= link_to 'Edit', edit_budget_path(@budget) %> |
-<%= link_to 'Back', budgets_path %>
+<!-- Items -->
+<table class="form-table">
+  <tbody>
+    <tr class="form-tr underlined-tr">
+      <td class="form-td-two left-winged">
+        <h4><%= t 'ag2_tech.budgets.items_info' %></h4>
+      </td>
+      <td class="form-td-two right-winged">
+        <%= link_to t(".print"), budgets_path, :class => 'btn btn-warning' %>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<% if (@items.count > 0) %>
+<table class="table table-condensed table-striped shrinked">
+  <thead>
+    <%= render 'items_header' %>
+  </thead>
+  <tfoot>
+    <%= render partial: 'items_footer', :locals => { budget: @budget } %>
+  </tfoot>
+  <tbody>
+    <%= render partial: 'item', collection: @items %>
+  </tbody>
+</table>
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @items } %>
+<% else %>
+<%= render :partial => '/layouts/paginationunbordered', :locals => { :ivar => @items } %>
+<% end %> <!-- end @items.count > 0 -->
+
+<%= render partial: '/layouts/crud/update_delete_new', locals:
+{ model: Budget, update_path: edit_budget_path(@budget), update_txt: t('.btn_edit'),
+delete_path: @budget, delete_txt: t('.btn_delete'), msg: t("activerecord.models.budget.one"), txt: @budget.budget_no,
+new_path: new_budget_path, new_txt: t('ag2_tech.budgets.index.btn_new') } %>
+
+<%= link_to t("ag2_tech.budgets.back_to_main_page"), budgets_path %>

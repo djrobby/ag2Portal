@@ -45,6 +45,12 @@
       <td><%=t 'activerecord.attributes.purchase_order.retention_time' %>:</td>
       <td><%= @purchase_order.retention_time unless @purchase_order.retention_time.blank? %></td>
     </tr>
+    <tr>
+      <td><%=t 'activerecord.attributes.purchase_order.approval_date' %>:</td>
+      <td><%= @purchase_order.approval_date.strftime("%d/%m/%Y") unless @purchase_order.approval_date.blank? %></td>
+      <td><%=t 'activerecord.attributes.purchase_order.approver' %>:</td>
+      <td> <%= @purchase_order.approver.email unless @purchase_order.approver.blank? %> </td>
+    </tr>
     <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @purchase_order } %>
     <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @purchase_order } %>
   </tbody>

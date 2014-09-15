@@ -13,16 +13,14 @@
 
   $(window).bind("load", function() {
     $("#Project").select2("val", "<%= params[:Project] %>");
-    $("#Type").val("<%= params[:Type] %>");
-    $("#Status").val("<%= params[:Status] %>");
+    $("#Period").select2("val", "<%= params[:Period] %>");
   });
 
   jQuery(function($) {
     // when the #removeFilter button clicked
     $("#removeFilter").click(function() {
       $("#Project").select2("val", "");
-      $("#Type").val("");
-      $("#Status").val("");
+      $("#Period").select2("val", "");
       $("#search").val("");
       // no AJAX
       //_thisForm.submit();
@@ -44,14 +42,11 @@
         <!-- Project -->
         <%= label_tag I18n.t("ag2_tech.budgets.index.label_project"), nil, :class => 'form-label' %>
         <%= select_tag "Project", options_from_collection_for_select(@projects, "id", "full_name"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
-        <!-- Type -->
-        <%= label_tag I18n.t("ag2_tech.budgets.index.label_type"), nil, :class => 'form-label-under-sel2' %>
-        <%= select_tag "Type", options_from_collection_for_select(@types, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked' %>
-        <!-- Status -->
-        <%= label_tag I18n.t("ag2_tech.budgets.index.label_status"), nil, :class => 'form-label' %>
-        <%= select_tag "Status", options_from_collection_for_select(@statuses, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked' %>
+        <!-- Period -->
+        <%= label_tag I18n.t("ag2_tech.budgets.index.label_period"), nil, :class => 'form-label-under-sel2' %>
+        <%= select_tag "Period", options_from_collection_for_select(@periods, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
         <!-- Others -->
-        <%= label_tag I18n.t("ag2_tech.budgets.index.label_others"), nil, :class => 'form-label' %>
+        <%= label_tag I18n.t("ag2_tech.budgets.index.label_others"), nil, :class => 'form-label-under-sel2' %>
         <%= text_field_tag :search, params[:search], :class => 'x-large-text-field shrinked' %>
         <!-- Submit -->
         <%= submit_tag I18n.t(:apply_filter_button), :class => 'btn btn-primary', :id => 'submit_btn' %>

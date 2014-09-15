@@ -2,14 +2,46 @@ require_dependency "ag2_tech/application_controller"
 
 module Ag2Tech
   class BudgetsController < ApplicationController
+    before_filter :authenticate_user!
+    load_and_authorize_resource
+
+    #
+    # Default Methods
+    #
     # GET /budgets
     # GET /budgets.json
     def index
-      @budgets = Budget.all
+      manage_filter_state
+      project = params[:Project]
+      period = params[:Period]
+      # OCO
+      init_oco if !session[:organization]
+      # Initialize select_tags
+      @projects = projects_dropdown if @projects.nil?
+      @periods = periods_dropdown if @periods.nil?
+      
+      current_projects = @projects.blank? ? [0] : current_projects_for_index(@projects)
+      @search = Budget.search do
+        with :project_id, current_projects
+        fulltext params[:search]
+        if session[:organization] != '0'
+          with :organization_id, session[:organization]
+        end
+        if !project.blank?
+          with :project_id, project
+        end
+        if !period.blank?
+          with :budget_period_id, period
+        end
+        order_by :budget_no, :asc
+        paginate :page => params[:page] || 1, :per_page => per_page
+      end
+      @budgets = @search.results
   
       respond_to do |format|
         format.html # index.html.erb
         format.json { render json: @budgets }
+        format.js
       end
     end
   
@@ -94,6 +126,52 @@ module Ag2Tech
           format.html { redirect_to budgets_url, alert: "#{@budget.errors[:base].to_s}".gsub('["', '').gsub('"]', '') }
           format.json { render json: @budget.errors, status: :unprocessable_entity }
         end
+      end
+    end
+    
+    private
+    
+    def current_projects_for_index(_projects)
+      _current_projects = []
+      _projects.each do |i|
+        _current_projects = _current_projects << i.id
+      end
+      _current_projects
+    end
+
+    def projects_dropdown
+      if session[:office] != '0'
+        _projects = Project.where(office_id: session[:office].to_i).order(:project_code)
+      elsif session[:company] != '0'
+        _projects = Project.where(company_id: session[:company].to_i).order(:project_code)
+      else
+        _projects = session[:organization] != '0' ? Project.where(organization_id: session[:organization].to_i).order(:project_code) : Project.order(:project_code)
+      end
+    end
+
+    def periods_dropdown
+      session[:organization] != '0' ? BudgetPeriod.where(organization_id: session[:organization].to_i).order(:period_code) : BudgetPeriod.order(:period_code)
+    end
+    
+    # Keeps filter state
+    def manage_filter_state
+      # search
+      if params[:search]
+        session[:search] = params[:search]
+      elsif session[:search]
+        params[:search] = session[:search]
+      end
+      # project
+      if params[:Project]
+        session[:Project] = params[:Project]
+      elsif session[:Project]
+        params[:Project] = session[:Project]
+      end
+      # period
+      if params[:Period]
+        session[:Period] = params[:Period]
+      elsif session[:Period]
+        params[:Period] = session[:Period]
       end
     end
   end

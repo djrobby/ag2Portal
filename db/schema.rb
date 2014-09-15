@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140904112147) do
+ActiveRecord::Schema.define(:version => 20140915125302) do
 
   create_table "activities", :force => true do |t|
     t.string   "description"
@@ -955,8 +955,11 @@ ActiveRecord::Schema.define(:version => 20140904112147) do
     t.integer  "retention_time"
     t.integer  "offer_id"
     t.integer  "organization_id"
+    t.integer  "approver_id"
+    t.datetime "approval_date"
   end
 
+  add_index "purchase_orders", ["approver_id"], :name => "index_purchase_orders_on_approver_id"
   add_index "purchase_orders", ["charge_account_id"], :name => "index_purchase_orders_on_charge_account_id"
   add_index "purchase_orders", ["offer_id"], :name => "index_purchase_orders_on_offer_id"
   add_index "purchase_orders", ["order_date"], :name => "index_purchase_orders_on_order_date"

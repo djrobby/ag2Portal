@@ -11,3 +11,5 @@ en:
         charge_accounts: "Analytical Accounts"
         work_orders: "Work Orders"
         charge_groups: "Analytical Groups"
+        budget_periods: "Budget Periods"
+        budgets: "Budgets"

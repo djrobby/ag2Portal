@@ -31,16 +31,20 @@ class Budget < ActiveRecord::Base
   end
 
   def full_name
-    full_name = full_code
+    full_name = full_no
     if !self.description.blank?
       full_name += " " + self.description[0,40]
     end
     full_name
   end
 
-  def full_code
+  def full_no
     # Budget no. (Project code & budget period code & sequential number) => PPPPPPPPPPPP-BBBBBBBB
     budget_no.blank? ? "" : budget_no[0..11] + '-' + budget_no[12..19]
+  end
+
+  def summary
+    description.blank? ? "" : description[0,40]     
   end
 
   #

@@ -23,6 +23,19 @@
   </li>
   <li class="span4">
     <% if (session[:resolution] == "LD")%>
+    <a href="<%= budgets_path %>" class="thumbnail centered"><img src="/assets/icon/ag2Budgets.png" width="48" height="48" alt="ag2Budgets" /><h5 class="h5-narrow"><%=t ".budgets" %></h5></a>
+    <% elsif session[:resolution] == "SD" %>
+    <a href="<%= budgets_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/ag2Budgets.png" width="96" height="96" alt="ag2Budgets" /><h5 class="h5-narrow"><%=t ".budgets" %></h5></a>
+    <% else %>
+    <a href="<%= budgets_path %>" class="thumbnail centered"><img src="/assets/pict/ag2Budgets.png" width="128" height="128" alt="ag2Budgets" /><h5 class="h5-narrow"><%=t ".budgets" %></h5></a>
+    <% end %>
+  </li>
+</ul><!-- /.thumbnails -->
+<ul class="thumbnails">
+  <!-- Apps 2 -->
+  <li class="span2"></li>
+  <li class="span4">
+    <% if (session[:resolution] == "LD")%>
     <a href="<%= work_orders_path %>" class="thumbnail centered"><img src="/assets/icon/ag2WorkOrders.png" width="48" height="48" alt="ag2WorkOrders" /><h5 class="h5-narrow"><%=t ".work_orders" %></h5></a>
     <% elsif session[:resolution] == "SD" %>
     <a href="<%= work_orders_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/ag2WorkOrders.png" width="96" height="96" alt="ag2WorkOrders" /><h5 class="h5-narrow"><%=t ".work_orders" %></h5></a>
@@ -30,9 +43,20 @@
     <a href="<%= work_orders_path %>" class="thumbnail centered"><img src="/assets/pict/ag2WorkOrders.png" width="128" height="128" alt="ag2WorkOrders" /><h5 class="h5-narrow"><%=t ".work_orders" %></h5></a>
     <% end %>
   </li>
+  <li class="span4">
+    <% if (session[:resolution] == "LD")%>
+    <a data-toggle="modal" href="#notfound" class="thumbnail centered"><img src="/assets/icon/ag2TechTrack.png" width="48" height="48" alt="Control Tracking" /><h5 class="h5-narrow"><%=t ".control" %></h5></a>
+    <% elsif session[:resolution] == "SD" %>
+    <a data-toggle="modal" href="#notfound" class="thumbnail centered"><img src="/assets/pict/ag2/ag2TechTrack.png" width="96" height="96" alt="Control Tracking" /><h5 class="h5-narrow"><%=t ".control" %></h5></a>
+    <% else %>
+    <a data-toggle="modal" href="#notfound" class="thumbnail centered"><img src="/assets/pict/ag2TechTrack.png" width="128" height="128" alt="Control Tracking" /><h5 class="h5-narrow"><%=t ".control" %></h5></a>
+    <% end %>
+  </li>
+  <li class="span2"></li>
 </ul><!-- /.thumbnails -->
 <ul class="thumbnails">
-  <!-- Apps 2 -->
+  <!-- Apps 3 -->
+  <li class="span1"></li>
   <li class="span2">
     <% if (session[:resolution] == "LD")%>
     <a href="<%= charge_groups_path %>" class="thumbnail centered"><img src="/assets/icon/TableA.png" width="48" height="48" alt="ag2Tables" /><h5 class="h5-narrow"><%=t ".charge_groups" %></h5></a>
@@ -40,6 +64,15 @@
     <a href="<%= charge_groups_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/TableA72.png" width="72" height="72" alt="ag2Tables" /><h5 class="h5-narrow"><%=t ".charge_groups" %></h5></a>
     <% else %>
     <a href="<%= charge_groups_path %>" class="thumbnail centered"><img src="/assets/pict/TableA96.png" width="96" height="96" alt="ag2Tables" /><h5 class="h5-narrow"><%=t ".charge_groups" %></h5></a>
+    <% end %>
+  </li>
+  <li class="span2">
+    <% if (session[:resolution] == "LD")%>
+    <a href="<%= budget_periods_path %>" class="thumbnail centered"><img src="/assets/icon/TableA.png" width="48" height="48" alt="ag2Tables" /><h5 class="h5-narrow"><%=t ".budget_periods" %></h5></a>
+    <% elsif session[:resolution] == "SD" %>
+    <a href="<%= budget_periods_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/TableA72.png" width="72" height="72" alt="ag2Tables" /><h5 class="h5-narrow"><%=t ".budget_periods" %></h5></a>
+    <% else %>
+    <a href="<%= budget_periods_path %>" class="thumbnail centered"><img src="/assets/pict/TableA96.png" width="96" height="96" alt="ag2Tables" /><h5 class="h5-narrow"><%=t ".budget_periods" %></h5></a>
     <% end %>
   </li>
   <li class="span2">
@@ -69,13 +102,5 @@
     <a href="<%= work_order_labors_path %>" class="thumbnail centered"><img src="/assets/pict/TableA96.png" width="96" height="96" alt="ag2Tables" /><h5 class="h5-narrow"><%=t ".work_order_labors" %></h5></a>
     <% end %>
   </li>
-  <li class="span4">
-    <% if (session[:resolution] == "LD")%>
-    <a data-toggle="modal" href="#notfound" class="thumbnail centered"><img src="/assets/icon/ag2TechTrack.png" width="48" height="48" alt="Control Tracking" /><h5 class="h5-narrow"><%=t ".control" %></h5></a>
-    <% elsif session[:resolution] == "SD" %>
-    <a data-toggle="modal" href="#notfound" class="thumbnail centered"><img src="/assets/pict/ag2/ag2TechTrack72.png" width="72" height="72" alt="Control Tracking" /><h5 class="h5-narrow"><%=t ".control" %></h5></a>
-    <% else %>
-    <a data-toggle="modal" href="#notfound" class="thumbnail centered"><img src="/assets/pict/ag2TechTrack96.png" width="96" height="96" alt="Control Tracking" /><h5 class="h5-narrow"><%=t ".control" %></h5></a>
-    <% end %>
-  </li>
+  <li class="span1"></li>
 </ul><!-- /.thumbnails -->

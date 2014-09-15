@@ -11,3 +11,5 @@ es:
         charge_accounts: "Cuentas Analíticas"
         work_orders: "Ordenes de Trabajo"
         charge_groups: "Grupos Analíticos"
+        budget_periods: "Periodos Presup."
+        budgets: "Presupuestos"

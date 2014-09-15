@@ -20,3 +20,5 @@ es:
         approver: "Aprobado por"
         approver_id: "Aprobado por"
         approval_date: "Aprobado el"
+        total_income: "Total ingresos"
+        total_expenditure: "Total gastos"

@@ -6,10 +6,7 @@ en:
         btn_new: "New Budget"
         back_to_root: "Back to ag2Tech"
         label_project: "Project"
-        label_type: "Type"
-        label_status: "Status"
-        label_office: "Office"
-        label_company: "Company"
+        label_period: "Period"
         label_others: "Others"
         btn_apply: "Apply Filter"
       show:

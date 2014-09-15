@@ -1,5 +1,7 @@
-<h1>New budget</h1>
+<%= render '/layouts/ag2_tech/budgetsbreadcrumb' %>
+
+<h3><%=t '.title' %></h3>
 
 <%= render 'form' %>
 
-<%= link_to 'Back', budgets_path %>
+<%= link_to t("ag2_tech.budgets.back_to_main_page"), budgets_path %>
