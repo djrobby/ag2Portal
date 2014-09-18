@@ -51,17 +51,25 @@ class Budget < ActiveRecord::Base
   # Calculated fields
   #
   def total_income
-    result = 0
+    _result = 0
     budget_items.each do |i|
-      if !i.amount.blank?
-        result += i.amount
+      _flow = i.charge_account.charge_group.flow rescue 0
+      if (_flow == 1 || _flow == 3) && !i.amount.blank?
+        _result += i.amount        
       end
     end
-    result
+    _result
   end
 
   def total_expenditure
-    
+    _result = 0
+    budget_items.each do |i|
+      _flow = i.charge_account.charge_group.flow rescue 0
+      if (_flow == 2 || _flow == 3) && !i.amount.blank?
+        _result += i.amount        
+      end
+    end
+    _result
   end
 
   #

@@ -35,9 +35,9 @@ class ChargeGroup < ActiveRecord::Base
 
   def flow_label
     flow_label = case flow
-      when 1 then I18n.t('activerecord.attributes.charge_group.flow_1')
-      when 2 then I18n.t('activerecord.attributes.charge_group.flow_2')
-      when 3 then I18n.t('activerecord.attributes.charge_group.flow_3_show')
+      when 1 then I18n.t('activerecord.attributes.charge_group.flow_1')       #Income
+      when 2 then I18n.t('activerecord.attributes.charge_group.flow_2')       #Expenditure
+      when 3 then I18n.t('activerecord.attributes.charge_group.flow_3_show')  #Both
       else 'N/A'
     end
   end
