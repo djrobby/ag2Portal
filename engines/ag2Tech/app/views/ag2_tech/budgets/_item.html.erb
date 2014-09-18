@@ -1,10 +1,17 @@
 <tr>
-  <td><%= item.product.full_code %></td>
-  <td><%= item.description %></td>
-  <td align="right"><%= number_with_precision(item.quantity, precision: 4) %></td>
-  <td align="right"><%= number_with_precision(item.cost, precision: 4) %></td>
-  <td align="right"><%= number_with_precision(item.costs, precision: 4) %></td>
-  <td align="right"><%= number_with_precision(item.price, precision: 4) %></td>
-  <td align="right"><%= number_with_precision(item.amount, precision: 4) %></td>
-  <td align="right"><%= number_with_precision(item.tax, precision: 4) %></td>
+  <td><%= item.charge_account.full_name %></td>
+  <td align="right"><%= number_with_precision(item.month_01, precision: 4) %></td>
+  <td align="right"><%= number_with_precision(item.month_02, precision: 4) %></td>
+  <td align="right"><%= number_with_precision(item.month_03, precision: 4) %></td>
+  <td align="right"><%= number_with_precision(item.month_04, precision: 4) %></td>
+  <td align="right"><%= number_with_precision(item.month_05, precision: 4) %></td>
+  <td align="right"><%= number_with_precision(item.month_06, precision: 4) %></td>
+  <td align="right"><%= number_with_precision(item.month_07, precision: 4) %></td>
+  <td align="right"><%= number_with_precision(item.month_08, precision: 4) %></td>
+  <td align="right"><%= number_with_precision(item.month_09, precision: 4) %></td>
+  <td align="right"><%= number_with_precision(item.month_10, precision: 4) %></td>
+  <td align="right"><%= number_with_precision(item.month_11, precision: 4) %></td>
+  <td align="right"><%= number_with_precision(item.month_12, precision: 4) %></td>
+  <td align="right"><%= number_with_precision(item.annual, precision: 4) %></td>
+  <td align="right"><%= number_with_precision(item.corrected_amount, precision: 4) %></td>
 </tr>

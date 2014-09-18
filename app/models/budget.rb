@@ -54,8 +54,8 @@ class Budget < ActiveRecord::Base
     _result = 0
     budget_items.each do |i|
       _flow = i.charge_account.charge_group.flow rescue 0
-      if (_flow == 1 || _flow == 3) && !i.amount.blank?
-        _result += i.amount        
+      if (_flow == 1 || _flow == 3) && !i.annual.blank?
+        _result += i.annual        
       end
     end
     _result
@@ -65,8 +65,60 @@ class Budget < ActiveRecord::Base
     _result = 0
     budget_items.each do |i|
       _flow = i.charge_account.charge_group.flow rescue 0
-      if (_flow == 2 || _flow == 3) && !i.amount.blank?
-        _result += i.amount        
+      if (_flow == 2 || _flow == 3) && !i.annual.blank?
+        _result += i.annual        
+      end
+    end
+    _result
+  end
+
+  def total
+    total_income - total_expenditure
+  end
+
+  def total_01
+    _result = 0
+    budget_items.each do |i|
+      if !i.month_01.blank?
+        _flow = i.charge_account.charge_group.flow rescue 0
+        case _flow
+        when 1
+          _result += i.month_01        
+        when 2
+          _result -= i.month_01        
+        end
+      end
+    end
+    _result
+  end
+
+  def total_02
+    _result = 0
+    budget_items.each do |i|
+      if !i.month_02.blank?
+        _flow = i.charge_account.charge_group.flow rescue 0
+        case _flow
+        when 1
+          _result += i.month_02        
+        when 2
+          _result -= i.month_02        
+        end
+      end
+    end
+    _result
+  end
+
+  def total_03
+    _result = 0
+    budget_items.each do |i|
+      if !i.month_03.blank?
+        _flow = i.charge_account.charge_group.flow rescue 0
+        case _flow
+        when 1
+          _result += i.month_03        
+        when 2
+          _result -= i.month_03        
+        end
       end
     end
     _result
