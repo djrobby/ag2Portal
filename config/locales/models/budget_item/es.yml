@@ -1,0 +1,45 @@
+es:
+  activerecord:
+    models:
+      budget_item:
+        zero:  Items de presupuesto
+        one:   Item de presupuesto
+        few:   Items de presupuesto
+        other: Items de presupuesto
+    attributes:
+      budget_item:
+        budget: "Presupuesto"
+        budget_id: "Presupuesto"
+        charge_account: "Cuenta analítica"
+        charge_account_id: "Cuenta analítica"
+        charge_account_c: "Cuenta"
+        month_01: "Mes 01 €"
+        month_01_c: "Mes01"
+        month_02: "Mes 02 €"
+        month_02_c: "Mes02"
+        month_03: "Mes 03 €"
+        month_03_c: "Mes03"
+        month_04: "Mes 04 €"
+        month_04_c: "Mes04"
+        month_05: "Mes 05 €"
+        month_05_c: "Mes05"
+        month_06: "Mes 06 €"
+        month_06_c: "Mes06"
+        month_07: "Mes 07 €"
+        month_07_c: "Mes07"
+        month_08: "Mes 08 €"
+        month_08_c: "Mes08"
+        month_09: "Mes 09 €"
+        month_09_c: "Mes09"
+        month_10: "Mes 10 €"
+        month_10_c: "Mes10"
+        month_11: "Mes 11 €"
+        month_11_c: "Mes11"
+        month_12: "Mes 12 €"
+        month_12_c: "Mes12"
+        amount: "Importe €"
+        amount_c: "Importe"
+        annual: "Anual €"
+        annual_c: "Anual"
+        corrected_amount: "Rectificativo €"
+        corrected_amount_c: "Rectif."

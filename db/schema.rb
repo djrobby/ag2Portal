@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140915125302) do
+ActiveRecord::Schema.define(:version => 20140919095557) do
 
   create_table "activities", :force => true do |t|
     t.string   "description"
@@ -61,6 +61,18 @@ ActiveRecord::Schema.define(:version => 20140915125302) do
     t.integer  "avatar_file_size"
     t.datetime "avatar_updated_at"
   end
+
+  create_table "budget_groups", :force => true do |t|
+    t.integer  "budget_id"
+    t.integer  "charge_group_id"
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  add_index "budget_groups", ["budget_id"], :name => "index_budget_groups_on_budget_id"
+  add_index "budget_groups", ["charge_group_id"], :name => "index_budget_groups_on_charge_group_id"
 
   create_table "budget_items", :force => true do |t|
     t.integer  "budget_id"

@@ -77,38 +77,71 @@ class Budget < ActiveRecord::Base
   end
 
   def total_01
-    _result = 0
-    budget_items.each do |i|
-      if !i.month_01.blank?
-        _flow = i.charge_account.charge_group.flow rescue 0
-        case _flow
-        when 1
-          _result += i.month_01        
-        when 2
-          _result -= i.month_01        
-        end
-      end
-    end
-    _result
+    budget_items.sum("month_01")
   end
 
   def total_02
+    budget_items.sum("month_02")
+  end
+
+  def total_03
+    budget_items.sum("month_03")
+  end
+
+  def total_04
+    budget_items.sum("month_04")
+  end
+
+  def total_05
+    budget_items.sum("month_05")
+  end
+
+  def total_06
+    budget_items.sum("month_06")
+  end
+
+  def total_07
+    budget_items.sum("month_07")
+  end
+
+  def total_08
+    budget_items.sum("month_08")
+  end
+
+  def total_09
+    budget_items.sum("month_09")
+  end
+
+  def total_10
+    budget_items.sum("month_11")
+  end
+
+  def total_11
+    budget_items.sum("month_11")
+  end
+
+  def total_12
+    budget_items.sum("month_12")
+  end
+
+  def total_annual
     _result = 0
     budget_items.each do |i|
-      if !i.month_02.blank?
-        _flow = i.charge_account.charge_group.flow rescue 0
-        case _flow
-        when 1
-          _result += i.month_02        
-        when 2
-          _result -= i.month_02        
-        end
+      if !i.amount.blank?
+        _result += i.amount
+      else
+        _result += (i.month_01 + i.month_02 + i.month_03 + i.month_04 + i.month_04 + i.month_06 +
+                    i.month_07 + i.month_08 + i.month_09 + i.month_10 + i.month_11 + i.month_12)
       end
     end
     _result
   end
 
-  def total_03
+  def total_corrected
+    budget_items.sum("corrected_amount")
+  end
+
+  def total_00
     _result = 0
     budget_items.each do |i|
       if !i.month_03.blank?

@@ -1,0 +1,45 @@
+en:
+  activerecord:
+    models:
+      budget_item:
+        zero:  Budget items
+        one:   Budget item
+        few:   Budget items
+        other: Budget items
+    attributes:
+      budget_item:
+        budget: "Budget"
+        budget_id: "Budget"
+        charge_account: "Analytical account"
+        charge_account_id: "Analytical account"
+        charge_account_c: "Account"
+        month_01: "Month 01 €"
+        month_01_c: "Mth01"
+        month_02: "Month 02 €"
+        month_02_c: "Mth02"
+        month_03: "Month 03 €"
+        month_03_c: "Mth03"
+        month_04: "Month 04 €"
+        month_04_c: "Mth04"
+        month_05: "Month 05 €"
+        month_05_c: "Mth05"
+        month_06: "Month 06 €"
+        month_06_c: "Mth06"
+        month_07: "Month 07 €"
+        month_07_c: "Mth07"
+        month_08: "Month 08 €"
+        month_08_c: "Mth08"
+        month_09: "Month 09 €"
+        month_09_c: "Mth09"
+        month_10: "Month 10 €"
+        month_10_c: "Mth10"
+        month_11: "Month 11 €"
+        month_11_c: "Mth11"
+        month_12: "Month 12 €"
+        month_12_c: "Mth12"
+        amount: "Amount €"
+        amount_c: "Amount"
+        annual: "Annual €"
+        annual_c: "Annual"
+        corrected_amount: "Amending €"
+        corrected_amount_c: "Amending"

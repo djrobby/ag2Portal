@@ -26,6 +26,7 @@ class BudgetItem < ActiveRecord::Base
   #
   # Calculated fields
   #
+  # Amounts must be positive or negative based on charge_group.flow, and must be validated at data-entry!
   def annual
     if amount.blank?
       month_01 + month_02 + month_03 + month_04 + month_05 + month_06 +
