@@ -18,10 +18,10 @@
   <tbody>
     <% @budget_headings.each do |heading| %>
     <tr>
-      <td><%= link_to heading.group_code, heading %></td>
+      <td><%= link_to heading.heading_code, heading %></td>
       <td><%= heading.name %></td>
       <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => BudgetHeading, :path => edit_budget_heading_path(heading) } %>
-      <%= render :partial => '/layouts/crud/delete', :locals => { :model => BudgetHeading, :path => group, :msg => t("activerecord.models.budget_heading.one"), :txt => heading.full_name } %> </td>
+      <%= render :partial => '/layouts/crud/delete', :locals => { :model => BudgetHeading, :path => heading, :msg => t("activerecord.models.budget_heading.one"), :txt => heading.full_name } %> </td>
     </tr>
     <% end %>
   </tbody>

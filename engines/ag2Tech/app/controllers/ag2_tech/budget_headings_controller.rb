@@ -4,9 +4,20 @@ module Ag2Tech
   class BudgetHeadingsController < ApplicationController
     before_filter :authenticate_user!
     load_and_authorize_resource
+    skip_load_and_authorize_resource :only => [:bh_update_textfields_to_uppercase]
     # Helper methods for sorting
     helper_method :sort_column
 
+    # Update name to upper case at view (to_uppercase_btn)
+    def bh_update_textfields_to_uppercase
+      name = params[:name].upcase
+      @json_data = { "name" => name }
+      render json: @json_data
+    end
+
+    #
+    # Default Methods
+    #
     # GET /budget_headings
     # GET /budget_headings.json
     def index
@@ -14,9 +25,9 @@ module Ag2Tech
       manage_filter_state
       init_oco if !session[:organization]
       if session[:organization] != '0'
-        @budget_headings = BudgetHeading.where(organization_id: session[:organization].to_i).order(sort_column + ' ' + sort_direction)
+        @budget_headings = BudgetHeading.where(organization_id: session[:organization].to_i).paginate(:page => params[:page], :per_page => per_page).order(sort_column + ' ' + sort_direction)
       else
-        @budget_headings = BudgetHeading.order(sort_column + ' ' + sort_direction)
+        @budget_headings = BudgetHeading.paginate(:page => params[:page], :per_page => per_page).order(sort_column + ' ' + sort_direction)
       end
   
       respond_to do |format|
@@ -61,7 +72,7 @@ module Ag2Tech
     def create
       @breadcrumb = 'create'
       @budget_heading = BudgetHeading.new(params[:budget_heading])
-      @charge_group.created_by = current_user.id if !current_user.nil?
+      @budget_heading.created_by = current_user.id if !current_user.nil?
   
       respond_to do |format|
         if @budget_heading.save
@@ -79,7 +90,7 @@ module Ag2Tech
     def update
       @breadcrumb = 'update'
       @budget_heading = BudgetHeading.find(params[:id])
-      @charge_group.updated_by = current_user.id if !current_user.nil?
+      @budget_heading.updated_by = current_user.id if !current_user.nil?
   
       respond_to do |format|
         if @budget_heading.update_attributes(params[:budget_heading])

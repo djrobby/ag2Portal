@@ -9,7 +9,7 @@
       <td></td>
       <td></td>
     </tr>
-      <td><%=t 'activerecord.attributes.budget_heading.group_code' %>:</td>
+      <td><%=t 'activerecord.attributes.budget_heading.heading_code' %>:</td>
       <td><b><%= @budget_heading.heading_code %></b></td>
       <td><%=t 'activerecord.attributes.budget_heading.name' %>:</td>
       <td><%= @budget_heading.name %></td>
@@ -26,13 +26,13 @@ new_path: new_budget_heading_path, new_txt: t('ag2_tech.budget_headings.index.bt
 
 <% if (@charge_groups.count > 0) %>
 <h4><%=t '.subtable_title' %></h4>
-<table class="table table-condensed table-striped shrinked">
+<table class="table table-condensed table-striped">
   <thead>
     <%= render '/layouts/ag2_tech/groupsheader' %>
   </thead>
   <tbody>
-    <% session[:return_to] = I18n.t('ag2_tech.budget_headings.show.return_to') %>
-    <% session[:return_to_url] = "#{request.protocol}#{request.host_with_port}#{request.fullpath}" %>
+    <% session[:return_to2] = I18n.t('ag2_tech.budget_headings.show.return_to') %>
+    <% session[:return_to_url2] = "#{request.protocol}#{request.host_with_port}#{request.fullpath}" %>
     <%= render :partial => '/layouts/ag2_tech/groups', :locals => { :groups => @charge_groups } %>
   </tbody>
 </table>

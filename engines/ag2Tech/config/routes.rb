@@ -22,6 +22,10 @@ Ag2Tech::Engine.routes.draw do
     match 'cc_update_project_textfields_from_organization/:org', :controller => 'charge_accounts', :action => 'cc_update_project_textfields_from_organization'
     match 'charge_accounts/:id/cc_update_project_textfields_from_organization/:org', :controller => 'charge_accounts', :action => 'cc_update_project_textfields_from_organization'
     #
+    match 'charge_groups/cg_update_heading_textfield_from_organization/:org', :controller => 'charge_groups', :action => 'cg_update_heading_textfield_from_organization'
+    match 'cg_update_heading_textfield_from_organization/:org', :controller => 'charge_groups', :action => 'cg_update_heading_textfield_from_organization'
+    match 'charge_groups/:id/cg_update_heading_textfield_from_organization/:org', :controller => 'charge_groups', :action => 'cg_update_heading_textfield_from_organization'
+    #
     match 'work_orders/wo_update_account_textfield_from_project/:id', :controller => 'work_orders', :action => 'wo_update_account_textfield_from_project'
     match 'wo_update_account_textfield_from_project/:id', :controller => 'work_orders', :action => 'wo_update_account_textfield_from_project'
     match 'work_orders/:id/wo_update_account_textfield_from_project/:id', :controller => 'work_orders', :action => 'wo_update_account_textfield_from_project'
@@ -55,6 +59,10 @@ Ag2Tech::Engine.routes.draw do
     match 'work_orders/wo_generate_no/:project', :controller => 'work_orders', :action => 'wo_generate_no'
     match 'wo_generate_no/:project', :controller => 'work_orders', :action => 'wo_generate_no'
     match 'work_orders/:id/wo_generate_no/:project', :controller => 'work_orders', :action => 'wo_generate_no'
+    #
+    match 'budget_headings/bh_update_textfields_to_uppercase/:name', :controller => 'budget_headings', :action => 'bh_update_textfields_to_uppercase'
+    match 'bh_update_textfields_to_uppercase/:name', :controller => 'budget_headings', :action => 'bh_update_textfields_to_uppercase'
+    match 'budget_headings/:id/bh_update_textfields_to_uppercase/:name', :controller => 'budget_headings', :action => 'bh_update_textfields_to_uppercase'
 
     # Resources
     resources :projects
@@ -65,6 +73,7 @@ Ag2Tech::Engine.routes.draw do
     resources :work_order_types
     resources :charge_groups
     resources :budget_periods
+    resources :budget_headings
     resources :budgets
     
     # Root

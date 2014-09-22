@@ -45,4 +45,7 @@ new_path: new_charge_group_path, new_txt: t('ag2_tech.charge_groups.index.btn_ne
 <%= render :partial => '/layouts/pagination', :locals => { :ivar => @charge_accounts } %>
 <% end %>
 
+<% if !session[:return_to2].nil? %>
+<%= link_to session[:return_to2], session[:return_to_url2] %> |
+<% end %>
 <%= link_to t("ag2_tech.charge_groups.back_to_main_page"), charge_groups_path %>

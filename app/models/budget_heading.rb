@@ -7,7 +7,7 @@ class BudgetHeading < ActiveRecord::Base
   has_paper_trail
 
   validates :heading_code,    :presence => true,
-                              :length => { :is => 3 },
+                              :length => { :is => 4 },
                               :format => { with: /\A\d+\Z/, message: :code_invalid },
                               :numericality => { :only_integer => true, :greater_than => 0 },
                               :uniqueness => { :scope => :organization_id }

@@ -18,3 +18,4 @@ en:
         title: "New Budget heading"
       back_to_main_page: "Back to Budget headings"
       code_error: "Unable to generate Heading Code: No Organization chosen."
+      to_uppercase_btn: "To Uppercase"

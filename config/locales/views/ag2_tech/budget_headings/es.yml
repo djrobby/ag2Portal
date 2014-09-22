@@ -18,3 +18,4 @@ es:
         title: "Nueva Partida presupuestaria"
       back_to_main_page: "Volver a Partidas presupuestarias"
       code_error: "Imposible generar Código de Partida: No has elegido Organización."
+      to_uppercase_btn: "En Mayúsculas"

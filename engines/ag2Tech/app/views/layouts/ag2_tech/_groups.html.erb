@@ -1,0 +1,7 @@
+<% groups.each do |group| %>
+<tr>
+  <td><%= link_to group.group_code, group %></td>
+  <td><%= group.name %></td>
+  <td><%= group.flow_label unless group.flow_label.blank? %></td>
+</tr>
+<% end %>
