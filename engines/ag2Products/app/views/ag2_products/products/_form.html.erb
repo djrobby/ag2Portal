@@ -6,6 +6,8 @@
   var old_code = '';
 
   $(document).ready(function() {
+    // Setup drag & drop
+    dd_import_files('#dd_files', '#image_content', 'pr_update_attachment');
     // Disable fields if Product Family blank
     var product = $('#product_product_family_id').val();
     if (product == "")
@@ -308,6 +310,26 @@
   <label class="multi-field-label-two"> <%= f.input :warranty_time, input_html: { class: 'large-text-field number-text-field' }, label_html: { class: 'form-label' } %> </label>
   <label class="multi-field-label-two"> <%= f.input :life_time, input_html: { class: 'large-text-field number-text-field' }, label_html: { class: 'form-label' } %> </label>
 </div>
+<!-- Attachment -->
+<table class="form-table">
+  <tbody>
+    <tr class="form-tr">
+      <td class="form-td-two left-winged"> <%= f.input :image, as: :file, input_html: { accept: 'image/*' }, label_html: { class: 'form-label' } %> </td>
+      <td class="form-td-two right-winged">
+      <div id="dd_files">
+        <% if !@product.image_file_name.nil? %>
+          <span id="image_text"></span>
+          <img id="image_content" src="<%= @product.image.url %>">
+        <% else %>
+          <span id="image_text"><%= t 'dd_image_message' %></span>
+          <img id="image_content" hidden>
+        <% end %>
+      </div></td>
+    </tr>
+  </tbody>
+</table>
+<br />
+<!-- Buttons -->
 <table class="form-table">
   <tbody>
     <tr class="form-tr">

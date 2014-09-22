@@ -24,6 +24,9 @@ Ag2Products::Engine.routes.draw do
     match 'products/pr_update_family_textfield_from_organization/:org', :controller => 'products', :action => 'pr_update_family_textfield_from_organization'
     match 'pr_update_family_textfield_from_organization/:org', :controller => 'products', :action => 'pr_update_family_textfield_from_organization'
     match 'products/:id/pr_update_family_textfield_from_organization/:org', :controller => 'products', :action => 'pr_update_family_textfield_from_organization'
+    match 'products/pr_update_attachment', :controller => 'products', :action => 'pr_update_attachment'
+    match 'pr_update_attachment', :controller => 'products', :action => 'pr_update_attachment'
+    match 'products/:id/pr_update_attachment', :controller => 'products', :action => 'pr_update_attachment'
     #
     match 'product_families/pf_format_numbers/:num', :controller => 'product_families', :action => 'pf_format_numbers'
     match 'pf_format_numbers/:num', :controller => 'product_families', :action => 'pf_format_numbers'

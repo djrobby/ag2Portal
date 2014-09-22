@@ -8,7 +8,27 @@ module Ag2Products
     skip_load_and_authorize_resource :only => [:pr_update_code_textfield,
                                                :pr_format_amount,
                                                :pr_markup,
-                                               :pr_update_family_textfield_from_organization]
+                                               :pr_update_family_textfield_from_organization,
+                                               :pr_update_attachment]
+    # Public attachment for drag&drop
+    $attachment = nil
+  
+    # Update attached file from drag&drop
+    def pr_update_attachment
+      if !$attachment.nil?
+        $attachment.destroy
+        $attachment = Attachment.new
+      end
+      $attachment.avatar = params[:file]
+      $attachment.id = 1
+      #$attachment.save!
+      if $attachment.save
+        render json: { "image" => $attachment.avatar }
+      else
+        render json: { "image" => "" }
+      end
+    end
+
     # Update product code at view (generate_code_btn)
     def pr_update_code_textfield
       family = params[:fam]
@@ -133,6 +153,8 @@ module Ag2Products
       @breadcrumb = 'create'
       @product = Product.new
       @product_families = families_dropdown
+      $attachment = Attachment.new
+      destroy_attachment
   
       respond_to do |format|
         format.html # new.html.erb
@@ -145,6 +167,8 @@ module Ag2Products
       @breadcrumb = 'update'
       @product = Product.find(params[:id])
       @product_families = @product.organization.blank? ? families_dropdown : @product.organization.product_families.order(:name)
+      $attachment = Attachment.new
+      destroy_attachment
     end
   
     # POST /products
@@ -153,12 +177,20 @@ module Ag2Products
       @breadcrumb = 'update'
       @product = Product.new(params[:product])
       @product.created_by = current_user.id if !current_user.nil?
+      # Should use attachment from drag&drop?
+      if @product.image.blank? && !$attachment.avatar.blank?
+        @product.image = $attachment.avatar
+      end
   
       respond_to do |format|
         if @product.save
+          $attachment.destroy
+          $attachment = nil
           format.html { redirect_to @product, notice: crud_notice('created', @product) }
           format.json { render json: @product, status: :created, location: @product }
         else
+          $attachment.destroy
+          $attachment = Attachment.new
           @product_families = families_dropdown
           format.html { render action: "new" }
           format.json { render json: @product.errors, status: :unprocessable_entity }
@@ -172,13 +204,21 @@ module Ag2Products
       @breadcrumb = 'update'
       @product = Product.find(params[:id])
       @product.updated_by = current_user.id if !current_user.nil?
+      # Should use attachment from drag&drop?
+      if !$attachment.avatar.blank? && $attachment.updated_at > @product.updated_at
+        @product.image = $attachment.avatar
+      end
   
       respond_to do |format|
         if @product.update_attributes(params[:product])
+          $attachment.destroy
+          $attachment = nil
           format.html { redirect_to @product,
                         notice: (crud_notice('updated', @product) + "#{undo_link(@product)}").html_safe }
           format.json { head :no_content }
         else
+          $attachment.destroy
+          $attachment = Attachment.new
           @product_families = @product.organization.blank? ? families_dropdown : @product.organization.product_families.order(:name)
           format.html { render action: "edit" }
           format.json { render json: @product.errors, status: :unprocessable_entity }
