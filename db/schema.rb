@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140919095557) do
+ActiveRecord::Schema.define(:version => 20140922115637) do
 
   create_table "activities", :force => true do |t|
     t.string   "description"
@@ -73,6 +73,20 @@ ActiveRecord::Schema.define(:version => 20140919095557) do
 
   add_index "budget_groups", ["budget_id"], :name => "index_budget_groups_on_budget_id"
   add_index "budget_groups", ["charge_group_id"], :name => "index_budget_groups_on_charge_group_id"
+
+  create_table "budget_headings", :force => true do |t|
+    t.string   "heading_code"
+    t.string   "name"
+    t.integer  "organization_id"
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  add_index "budget_headings", ["heading_code"], :name => "index_budget_headings_on_heading_code"
+  add_index "budget_headings", ["organization_id", "heading_code"], :name => "index_budget_headings_on_organization_and_code", :unique => true
+  add_index "budget_headings", ["organization_id"], :name => "index_budget_headings_on_organization_id"
 
   create_table "budget_items", :force => true do |t|
     t.integer  "budget_id"
@@ -166,15 +180,17 @@ ActiveRecord::Schema.define(:version => 20140919095557) do
   create_table "charge_groups", :force => true do |t|
     t.string   "group_code"
     t.string   "name"
-    t.integer  "flow",            :limit => 2
+    t.integer  "flow",              :limit => 2
     t.string   "ledger_account"
     t.integer  "organization_id"
-    t.datetime "created_at",                   :null => false
-    t.datetime "updated_at",                   :null => false
+    t.datetime "created_at",                     :null => false
+    t.datetime "updated_at",                     :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
+    t.integer  "budget_heading_id"
   end
 
+  add_index "charge_groups", ["budget_heading_id"], :name => "index_charge_groups_on_budget_heading_id"
   add_index "charge_groups", ["flow"], :name => "index_charge_groups_on_flow"
   add_index "charge_groups", ["group_code"], :name => "index_charge_groups_on_group_code"
   add_index "charge_groups", ["ledger_account"], :name => "index_charge_groups_on_ledger_account"
