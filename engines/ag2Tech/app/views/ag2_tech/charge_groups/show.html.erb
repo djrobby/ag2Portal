@@ -11,14 +11,14 @@
     </tr>
       <td><%=t 'activerecord.attributes.charge_group.name' %>:</td>
       <td><%= @charge_group.name %></td>
-      <td><%=t 'activerecord.attributes.charge_group.ledger_account' %>:</td>
-      <td><%= @charge_group.ledger_account unless @charge_group.ledger_account.blank? %></td>
-    </tr>
-    <tr>
       <td><%=t 'activerecord.attributes.charge_group.flow' %>:</td>
       <td><%= @charge_group.flow_label unless @charge_group.flow.blank? %></td>
-      <td></td>
-      <td></td>
+    </tr>
+    <tr>
+      <td><%=t 'activerecord.attributes.charge_group.budget_heading' %>:</td>
+      <td><%= @charge_group.budget_heading.full_name unless @charge_group.budget_heading.blank? %></td>
+      <td><%=t 'activerecord.attributes.charge_group.ledger_account' %>:</td>
+      <td><%= @charge_group.ledger_account unless @charge_group.ledger_account.blank? %></td>
     </tr>
     <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @charge_group } %>
     <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @charge_group } %>

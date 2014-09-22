@@ -45,6 +45,8 @@ class Organization < ActiveRecord::Base
   has_many :work_order_labors
   has_many :work_order_types
   has_many :charge_groups
+  has_many :budget_headings
+  has_many :budgets
 
   has_paper_trail
 

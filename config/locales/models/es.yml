@@ -58,3 +58,7 @@ es:
           attributes:
             budget_no:
               code_invalid: "Nº inválido (debe ser alfanumérico)"
+        budget_heading:
+          attributes:
+            heading_code:
+              code_invalid: "Código inválido (debe ser numérico)"

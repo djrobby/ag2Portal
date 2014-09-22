@@ -1,0 +1,42 @@
+<%= render '/layouts/ag2_tech/bheadingsbreadcrumb' %>
+
+<h3><%=t '.title' %></h3>
+<table class="table">
+  <tbody>
+    <tr>
+      <td>Id:</td>
+      <td><%= @budget_heading.id %></td>
+      <td></td>
+      <td></td>
+    </tr>
+      <td><%=t 'activerecord.attributes.budget_heading.group_code' %>:</td>
+      <td><b><%= @budget_heading.heading_code %></b></td>
+      <td><%=t 'activerecord.attributes.budget_heading.name' %>:</td>
+      <td><%= @budget_heading.name %></td>
+    </tr>
+    <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @budget_heading } %>
+    <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @budget_heading } %>
+  </tbody>
+</table>
+
+<%= render partial: '/layouts/crud/update_delete_new', locals:
+{ model: BudgetHeading, update_path: edit_budget_heading_path(@budget_heading), update_txt: t('.btn_edit'),
+delete_path: @budget_heading, delete_txt: t('.btn_delete'), msg: t("activerecord.models.budget_heading.one"), txt: @budget_heading.full_name,
+new_path: new_budget_heading_path, new_txt: t('ag2_tech.budget_headings.index.btn_new') } %>
+
+<% if (@charge_groups.count > 0) %>
+<h4><%=t '.subtable_title' %></h4>
+<table class="table table-condensed table-striped shrinked">
+  <thead>
+    <%= render '/layouts/ag2_tech/groupsheader' %>
+  </thead>
+  <tbody>
+    <% session[:return_to] = I18n.t('ag2_tech.budget_headings.show.return_to') %>
+    <% session[:return_to_url] = "#{request.protocol}#{request.host_with_port}#{request.fullpath}" %>
+    <%= render :partial => '/layouts/ag2_tech/groups', :locals => { :groups => @charge_groups } %>
+  </tbody>
+</table>
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @charge_groups } %>
+<% end %>
+
+<%= link_to t("ag2_tech.budget_headings.back_to_main_page"), budget_headings_path %>

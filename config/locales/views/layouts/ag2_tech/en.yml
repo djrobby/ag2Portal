@@ -28,3 +28,6 @@ en:
       budgets:
         items: "Budgets"
         item: "Budget"
+      budget_headings:
+        items: "Budget headings"
+        item: "Heading"

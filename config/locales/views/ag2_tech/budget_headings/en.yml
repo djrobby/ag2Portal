@@ -1,0 +1,20 @@
+en:
+  ag2_tech:
+    budget_headings:
+      index:
+        title: "Budget headings"
+        btn_new: "New Budget heading"
+        back_to_root: "Back to ag2Tech"
+      show:
+        title: "Budget heading"
+        btn_edit: "Edit Budget heading"
+        btn_delete: "Delete Budget heading"
+        subtable_title: "Heading groups"
+        return_to: "Back to Budget heading"
+      edit:
+        title: "Edit Budget heading"
+        btn_show: "Show Budget heading"
+      new:
+        title: "New Budget heading"
+      back_to_main_page: "Back to Budget headings"
+      code_error: "Unable to generate Heading Code: No Organization chosen."

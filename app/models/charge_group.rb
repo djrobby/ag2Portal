@@ -1,20 +1,22 @@
 class ChargeGroup < ActiveRecord::Base
   belongs_to :organization
-  attr_accessible :flow, :group_code, :ledger_account, :name, :organization_id
+  belongs_to :budget_heading
+  attr_accessible :flow, :group_code, :ledger_account, :name, :organization_id, :budget_heading_id
 
   has_many :charge_accounts
 
   has_paper_trail
 
-  validates :group_code,    :presence => true,
-                            :length => { :is => 4 },
-                            :format => { with: /\A\d+\Z/, message: :code_invalid },
-                            :numericality => { :only_integer => true, :greater_than => 0 },
-                            :uniqueness => { :scope => :organization_id }
-  validates :name,          :presence => true
-  validates :flow,          :presence => true,
-                            :numericality => { :only_integer => true, :greater_than => 0, :less_than_or_equal_to => 3 }
-  validates :organization,  :presence => true
+  validates :group_code,      :presence => true,
+                              :length => { :is => 4 },
+                              :format => { with: /\A\d+\Z/, message: :code_invalid },
+                              :numericality => { :only_integer => true, :greater_than => 0 },
+                              :uniqueness => { :scope => :organization_id }
+  validates :name,            :presence => true
+  validates :flow,            :presence => true,
+                              :numericality => { :only_integer => true, :greater_than => 0, :less_than_or_equal_to => 3 }
+  validates :organization,    :presence => true
+  validates :budget_heading,  :presence => true
 
   before_destroy :check_for_dependent_records
 

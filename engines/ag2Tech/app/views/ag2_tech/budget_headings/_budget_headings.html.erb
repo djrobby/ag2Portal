@@ -1,0 +1,32 @@
+<script>
+  $(document).ready(function() {
+    $("#div_table th a, #div_table #pages a").on("click", function() {
+      $.getScript(this.href);
+      return false;
+    });
+  }); 
+</script>
+
+<table class="table table-condensed table-striped">
+  <thead>
+    <tr>
+      <th><%= sortable "heading_code", t('activerecord.attributes.budget_heading.heading_code') %></th>
+      <th><%= sortable "name", t('activerecord.attributes.budget_heading.name') %></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @budget_headings.each do |heading| %>
+    <tr>
+      <td><%= link_to heading.group_code, heading %></td>
+      <td><%= heading.name %></td>
+      <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => BudgetHeading, :path => edit_budget_heading_path(heading) } %>
+      <%= render :partial => '/layouts/crud/delete', :locals => { :model => BudgetHeading, :path => group, :msg => t("activerecord.models.budget_heading.one"), :txt => heading.full_name } %> </td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @budget_headings } %>
+<%= render :partial => '/layouts/crud/new', :locals => { :model => BudgetHeading, :path => new_budget_heading_path, :txt => t("ag2_tech.budget_headings.index.btn_new") } %>
+
+<%= link_to t("ag2_tech.budget_headings.index.back_to_root"), ag2_tech.root_path %>

@@ -1,0 +1,15 @@
+en:
+  activerecord:
+    models:
+      budget_heading:
+        zero:  Budget headings
+        one:   Budget heading
+        few:   Budget headings
+        other: Budget headings
+        check_for_charge_groups: "Budget heading cannot be destroyed while linked analytical groups exist."
+    attributes:
+      budget_heading:
+        heading_code: "Code"
+        name: "Name"
+        organization: "Organization"
+        organization_id: "Organization"

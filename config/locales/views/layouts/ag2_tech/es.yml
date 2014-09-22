@@ -28,3 +28,6 @@ es:
       budgets:
         items: "Presupuestos"
         item: "Presupuesto"
+      budget_headings:
+        items: "Partidas presupuestarias"
+        item: "Partida"

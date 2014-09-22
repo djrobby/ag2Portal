@@ -4,8 +4,22 @@ module Ag2Tech
   class ChargeGroupsController < ApplicationController
     before_filter :authenticate_user!
     load_and_authorize_resource
+    skip_load_and_authorize_resource :only => [:cg_update_heading_textfield_from_organization]
     # Helper methods for sorting
     helper_method :sort_column
+    
+    # Update budget_heading text fields at view from organization select
+    def cg_update_heading_textfield_from_organization
+      organization = params[:org]
+      if organization != '0'
+        @organization = Organization.find(organization)
+        @headings = @organization.blank? ? headings_dropdown : @organization.budget_headings.order(:heading_code)
+      else
+        @headings = headings_dropdown
+      end
+      @json_data = { "headings" => @headings }
+      render json: @json_data
+    end
 
     # GET /charge_groups
     # GET /charge_groups.json
@@ -44,6 +58,7 @@ module Ag2Tech
     def new
       @breadcrumb = 'create'
       @charge_group = ChargeGroup.new
+      @headings = headings_dropdown
   
       respond_to do |format|
         format.html # new.html.erb
@@ -55,6 +70,7 @@ module Ag2Tech
     def edit
       @breadcrumb = 'update'
       @charge_group = ChargeGroup.find(params[:id])
+      @headings = @charge_group.organization.blank? ? headings_dropdown : @charge_group.organization.budget_headings.order(:heading_code)
     end
   
     # POST /charge_groups
@@ -141,6 +157,10 @@ module Ag2Tech
 
     def sort_column
       ChargeGroup.column_names.include?(params[:sort]) ? params[:sort] : "group_code"
+    end
+
+    def headings_dropdown
+      session[:organization] != '0' ? BudgetHeading.where(organization_id: session[:organization].to_i).order(:heading_code) : BudgetHeading.order(:heading_code)
     end
 
     # Keeps filter state

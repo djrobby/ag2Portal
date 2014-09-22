@@ -1,0 +1,20 @@
+es:
+  ag2_tech:
+    budget_headings:
+      index:
+        title: "Partidas presupuestarias"
+        btn_new: "Nueva Partida presupuestaria"
+        back_to_root: "Volver a ag2Tech"
+      show:
+        title: "Partida presupuestaria"
+        btn_edit: "Editar Partida presupuestaria"
+        btn_delete: "Borrar Partida presupuestaria"
+        subtable_title: "Grupos de la Partida"
+        return_to: "Volver a Partida presupuestaria"
+      edit:
+        title: "Editar Partida presupuestaria"
+        btn_show: "Ver Partida presupuestaria"
+      new:
+        title: "Nueva Partida presupuestaria"
+      back_to_main_page: "Volver a Partidas presupuestarias"
+      code_error: "Imposible generar Código de Partida: No has elegido Organización."

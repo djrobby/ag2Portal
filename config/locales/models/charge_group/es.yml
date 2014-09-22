@@ -19,3 +19,5 @@ es:
         flow_2: "Gastos"
         flow_3: "Ambos"
         flow_3_show: "Ingresos y Gastos"
+        budget_heading: "Partida presupuestaria"
+        budget_heading_id: "Partida presupuestaria"

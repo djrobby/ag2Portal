@@ -1,3 +1,34 @@
+<script>
+  jQuery(function($) {
+    // when the #charge_group_organization_id field changes
+    $("#charge_group_organization_id").change(function() {
+      // make a POST call and replace the content
+      var order = $('select#charge_group_organization_id :selected').val();
+      if (order == "")
+        order = "0";
+      jQuery.getJSON('cg_update_heading_textfield_from_organization/' + order, function(data) {
+        var h = data.headings;
+        // Headings
+        $("#charge_group_budget_heading_id").html("");
+        $("#charge_group_budget_heading_id").val("");
+        $("#charge_group_budget_heading_id").append($('<option></option>').val("").html(""));
+        if (!h.length) {
+          $.each(data, function(id, option) {
+            if (id == 'headings' && option != "") {
+              $("#charge_group_budget_heading_id").append($('<option></option>').val(option.id).html(option.heading_code + " " + option.name));
+            }
+          });
+        } else {
+          $.each(h, function(id, option) {
+            $("#charge_group_budget_heading_id").append($('<option></option>').val(option.id).html(option.heading_code + " " + option.name));
+          });
+        }
+      });
+      return false;
+    });
+  });
+</script>
+
 <%= simple_form_for @charge_group, :html => {:class => 'form-vertical well' } do |f| %>
 <%= f.error_notification %>
 <%= display_base_errors resource %>
@@ -5,16 +36,15 @@
   <label class="multi-field-label-two"> <%= f.input :group_code, :autofocus => true, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
   <label class="multi-field-label-two"> <%= f.input :name, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
 </div>
+<% if session[:organization] != '0' %>
+<%= f.association :organization, collection: Organization.where("id = ?", "#{session[:organization]}").all, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' }, include_blank: false %>
+<% elsif current_user.organizations.count > 0 %>
+<%= f.association :organization, collection: current_user.organizations.order('name'), input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' }, include_blank: false %>
+<% else %>
+<%= f.association :organization, collection: Organization.order('name'), input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %>
+<% end %>
 <div>
-  <label class="multi-field-label-two">
-    <% if session[:organization] != '0' %>
-    <%= f.association :organization, collection: Organization.where("id = ?", "#{session[:organization]}").all, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' }, include_blank: false %>
-    <% elsif current_user.organizations.count > 0 %>
-    <%= f.association :organization, collection: current_user.organizations.order('name'), input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' }, include_blank: false %>
-    <% else %>
-    <%= f.association :organization, collection: Organization.order('name'), input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %>
-    <% end %>
-  </label>
+  <label class="multi-field-label-two"> <%= f.association :budget_heading, collection: @headings, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %> </label>
   <label class="multi-field-label-two"> <%= f.input :ledger_account, input_html: { class: 'mid-text-field' }, label_html: { class: 'form-label' } %> </label>
 </div>
 <%= f.input :flow,

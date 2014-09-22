@@ -1,0 +1,15 @@
+es:
+  activerecord:
+    models:
+      budget_heading:
+        zero:  Partidas presupuestarias
+        one:   Partida presupuestaria
+        few:   Partidas presupuestarias
+        other: Partidas presupuestarias
+        check_for_charge_accounts: "Partida presupuestaria no puede ser eliminada mientras existan grupos analíticos vinculados."
+    attributes:
+      budget_heading:
+        heading_code: "Código"
+        name: "Nombre"
+        organization: "Organización"
+        organization_id: "Organización"
