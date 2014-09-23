@@ -90,19 +90,31 @@ class Product < ActiveRecord::Base
   # Records navigator
   #
   def to_first
-    Product.order("product_code").first
+    Product.order("product_code, id").first
   end
 
   def to_prev
-    Product.where("product_code < ?", product_code).order("product_code").last
+    Product.where("product_code < ?", product_code).order("product_code, id").last
   end
 
   def to_next
-    Product.where("product_code > ?", product_code).order("product_code").first
+    Product.where("product_code > ?", product_code).order("product_code, id").first
   end
 
   def to_last
-    Product.order("product_code").last
+    Product.order("product_code, id").last
+  end
+
+  def duplicate
+    Product.where("product_code = ?", product_code).count
+  end
+
+  def to_duplicate_prev
+    Product.where("product_code = ? and id < ?", product_code, id).order("product_code, id").last
+  end
+
+  def to_duplicate_next
+    Product.where("product_code = ? and id > ?", product_code, id).order("product_code, id").first
   end
 
   searchable do

@@ -1,17 +1,23 @@
 <%= render '/layouts/ag2_admin/companiesbreadcrumb' %>
 
-<h3 style="float: left; margin-top: 0;"><%= @company.name %></h3>
-<div style="float: right">
-  <% if !@company.logo.blank? %>
-  <% if session[:resolution] == "LD" %>
-  <%= image_tag @company.logo.url(:small) %> <!-- small image size -->
-  <% elsif session[:resolution] == "SD" %>
-  <%= image_tag @company.logo.url(:medium) %> <!-- medium image size -->
-  <% else %>
-  <%= image_tag @company.logo.url %> <!-- big image size -->
-  <% end %>
-  <% end %>
-</div>
+<table class="header-with-image">
+  <tr>
+    <td class="header-title">
+      <h3><%= @company.name %></h3>
+    </td>
+    <td class="header-image">
+      <% if !@company.logo.blank? %>
+      <% if session[:resolution] == "LD" %>
+      <%= image_tag @company.logo.url(:small) %> <!-- small image size -->
+      <% elsif session[:resolution] == "SD" %>
+      <%= image_tag @company.logo.url(:medium) %> <!-- medium image size -->
+      <% else %>
+      <%= image_tag @company.logo.url %> <!-- big image size -->
+      <% end %>
+      <% end %>
+    </td>
+  </tr>
+</table>
 <table class="table">
   <tbody>
     <tr>
@@ -119,3 +125,16 @@ new_path: new_company_path, new_txt: t('ag2_admin.companies.index.btn_new') } %>
 
 <%= link_to I18n.t('ag2_admin.companies.show.show_to'), @company.organization %> |
 <%= link_to I18n.t('ag2_admin.companies.back_to_main_page'), companies_path %>
+
+<h3 style="float: left; margin-top: 0;"><%= @company.name %></h3>
+<div style="float: right">
+  <% if !@company.logo.blank? %>
+  <% if session[:resolution] == "LD" %>
+  <%= image_tag @company.logo.url(:small) %> <!-- small image size -->
+  <% elsif session[:resolution] == "SD" %>
+  <%= image_tag @company.logo.url(:medium) %> <!-- medium image size -->
+  <% else %>
+  <%= image_tag @company.logo.url %> <!-- big image size -->
+  <% end %>
+  <% end %>
+</div>

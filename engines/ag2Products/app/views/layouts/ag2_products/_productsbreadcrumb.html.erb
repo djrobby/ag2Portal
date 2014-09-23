@@ -52,6 +52,18 @@
     <i class="icon-fast-forward"></i>
     <% end %>
   </li>
+  <% if @product.duplicate > 1 %>
+  <li>
+    <%= link_to @product.to_duplicate_prev, class: 'notice-icon-button', id: 'dprev', title: @product.duplicate.to_s do %>
+    <i class="icon-chevron-left"></i>
+    <% end %>
+  </li>
+  <li>
+    <%= link_to @product.to_duplicate_next, class: 'notice-icon-button', id: 'dnext', title: @product.duplicate.to_s do %>
+    <i class="icon-chevron-right"></i>
+    <% end %>
+  </li>
+  <% end %>
   <% end %>
   <% end %>
   <!-- Close -->

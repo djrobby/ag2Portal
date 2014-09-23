@@ -1,18 +1,23 @@
 <%= render '/layouts/ag2_products/productsbreadcrumb' %>
 
-
-<h3 style="float: left; margin-top: 0;"><%= t '.title' %></h3>
-<div style="float: right">
-  <% if !@product.image.blank? %>
-  <% if session[:resolution] == "LD" %>
-  <%= image_tag @product.image.url(:small) %> <!-- small image size -->
-  <% elsif session[:resolution] == "SD" %>
-  <%= image_tag @product.image.url(:medium) %> <!-- medium image size -->
-  <% else %>
-  <%= image_tag @product.image.url %> <!-- big image size -->
-  <% end %>
-  <% end %>
-</div>
+<table class="header-with-image">
+  <tr>
+    <td class="header-title">
+      <h3><%= t '.title' %></h3>
+    </td>
+    <td class="header-image">
+      <% if !@product.image.blank? %>
+      <% if session[:resolution] == "LD" %>
+      <%= image_tag @product.image.url(:small) %> <!-- small image size -->
+      <% elsif session[:resolution] == "SD" %>
+      <%= image_tag @product.image.url(:medium) %> <!-- medium image size -->
+      <% else %>
+      <%= image_tag @product.image.url %> <!-- big image size -->
+      <% end %>
+      <% end %>
+    </td>
+  </tr>
+</table>
 <table class="table">
   <tbody>
     <tr>
@@ -161,3 +166,16 @@ new_path: new_product_path, new_txt: t('ag2_products.products.index.btn_new') } 
 <%= link_to session[:return_to], session[:return_to_url] %> |
 <% end %>
 <%= link_to t('ag2_products.products.back_to_main_page'), products_path %>
+
+<h3 style="float: left; margin-top: 0;"><%= t '.title' %></h3>
+<div style="float: right">
+  <% if !@product.image.blank? %>
+  <% if session[:resolution] == "LD" %>
+  <%= image_tag @product.image.url(:small) %> <!-- small image size -->
+  <% elsif session[:resolution] == "SD" %>
+  <%= image_tag @product.image.url(:medium) %> <!-- medium image size -->
+  <% else %>
+  <%= image_tag @product.image.url %> <!-- big image size -->
+  <% end %>
+  <% end %>
+</div>

@@ -601,6 +601,31 @@ tfoot {
   color: inherit;
   text-rendering: optimizelegibility;
 }
+/* Header table with image */
+.header-with-image {
+  margin: 0 !important;
+  padding: 0 !important;
+  width: 100% !important;
+  table-layout: fixed !important;
+}
+.header-with-image tr {
+  margin: 0 !important;
+  padding: 0 !important;
+  width: 100% !important;
+}
+.header-with-image td {
+  margin: 0 !important;
+  padding: 0 !important;
+  width: 50% !important;
+}
+.header-title {
+  vertical-align: bottom !important;
+  text-align: left !important;
+}
+.header-image {
+  vertical-align: center !important;
+  text-align: right !important;
+}
 /*
  * Icons
  */
