@@ -137,22 +137,36 @@
 </script>
 
 <table id="items-table" class="table table-condensed table-striped shrinked fixed">
-  <!-- product -->
-  <col width="16%" />
-  <!-- description -->
-  <col width="25%" />
-  <!-- quantity -->
-  <col width="9%" />
-  <!-- cost -->
-  <col width="9%" />
-  <!-- costs -->
-  <col width="9%" />
-  <!-- price -->
-  <col width="9%" />
-  <!-- amount -->
-  <col width="9%" />
-  <!-- tax -->
-  <col width="9%" />
+  <!-- account -->
+  <col width="11%" />
+  <!-- month01 -->
+  <col width="6%" />
+  <!-- month02 -->
+  <col width="6%" />
+  <!-- month03 -->
+  <col width="6%" />
+  <!-- month04 -->
+  <col width="6%" />
+  <!-- month05 -->
+  <col width="6%" />
+  <!-- month06 -->
+  <col width="6%" />
+  <!-- month07 -->
+  <col width="6%" />
+  <!-- month08 -->
+  <col width="6%" />
+  <!-- month09 -->
+  <col width="6%" />
+  <!-- month10 -->
+  <col width="6%" />
+  <!-- month11 -->
+  <col width="6%" />
+  <!-- month12 -->
+  <col width="6%" />
+  <!-- annual -->
+  <col width="6%" />
+  <!-- corrected -->
+  <col width="6%" />
   <!-- button -->
   <col width="5%" />
   <thead>
@@ -162,17 +176,23 @@
     <%= render 'items_table_footer', f: f %>
   </tfoot>
   <tbody>
-    <%= f.simple_fields_for :work_order_items, defaults: { input_html: { class: 'sub-form' } } do |i| %>
+    <%= f.simple_fields_for :budget_items, defaults: { input_html: { class: 'sub-form' } } do |i| %>
     <tr class="fields">
-      <td><%= i.association :product, label: false, wrapper: false, collection: @products, input_html: { class: 'isel2 fnt-product' } %></td>
-      <td><%= i.input :description, label: false, wrapper: false, input_html: { onkeyup: "caps(this)", class: 'sub-alfanumeric-text-field fnt-description', maxlength: 40 } %></td>
-      <td><%= i.input :quantity, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.quantity, precision: 4) if i.object.quantity), class: 'sub-number-text-field fnt-quantity' } %></td>
-      <td><%= i.input :cost, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.cost, precision: 4) if i.object.cost), class: 'sub-number-text-field fnt-cost' } %></td>
-      <td><%= i.input :costs, disabled: true, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.costs, precision: 4) if i.object.costs), class: 'sub-number-text-field sub-disabled-field fnt-costs' } %></td>
-      <td><%= i.input :price, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.price, precision: 4) if i.object.price), class: 'sub-number-text-field fnt-price' } %></td>
-      <td><%= i.input :amount, disabled: true, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.amount, precision: 4) if i.object.amount), class: 'sub-number-text-field sub-disabled-field fnt-amount' } %></td>
-      <td style="display:none;"><%= i.association :tax_type, label: false, wrapper: false, input_html: { class: 'sub-alfanumeric-text-field fnt-tax-type' } %></td>
-      <td><%= i.input :tax, disabled: true, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.tax, precision: 4) if i.object.tax), class: 'sub-number-text-field sub-disabled-field fnt-tax' } %></td>
+      <td><%= i.association :charge_account, label: false, wrapper: false, collection: @charge_accounts, input_html: { class: 'isel2 fnt-account' } %></td>
+      <td><%= i.input :month_01, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.month_01, precision: 4) if i.object.month_01), class: 'sub-number-text-field fnt-month01' } %></td>
+      <td><%= i.input :month_02, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.month_02, precision: 4) if i.object.month_02), class: 'sub-number-text-field fnt-month02' } %></td>
+      <td><%= i.input :month_03, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.month_03, precision: 4) if i.object.month_03), class: 'sub-number-text-field fnt-month03' } %></td>
+      <td><%= i.input :month_04, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.month_04, precision: 4) if i.object.month_04), class: 'sub-number-text-field fnt-month04' } %></td>
+      <td><%= i.input :month_05, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.month_05, precision: 4) if i.object.month_05), class: 'sub-number-text-field fnt-month05' } %></td>
+      <td><%= i.input :month_06, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.month_06, precision: 4) if i.object.month_06), class: 'sub-number-text-field fnt-month06' } %></td>
+      <td><%= i.input :month_07, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.month_07, precision: 4) if i.object.month_07), class: 'sub-number-text-field fnt-month07' } %></td>
+      <td><%= i.input :month_08, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.month_08, precision: 4) if i.object.month_08), class: 'sub-number-text-field fnt-month08' } %></td>
+      <td><%= i.input :month_09, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.month_09, precision: 4) if i.object.month_09), class: 'sub-number-text-field fnt-month09' } %></td>
+      <td><%= i.input :month_10, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.month_10, precision: 4) if i.object.month_10), class: 'sub-number-text-field fnt-month10' } %></td>
+      <td><%= i.input :month_11, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.month_11, precision: 4) if i.object.month_11), class: 'sub-number-text-field fnt-month11' } %></td>
+      <td><%= i.input :month_12, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.month_12, precision: 4) if i.object.month_12), class: 'sub-number-text-field fnt-month12' } %></td>
+      <td><%= i.input :annual, disabled: true, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.annual, precision: 4) if i.object.annual), class: 'sub-number-text-field sub-disabled-field fnt-annual' } %></td>
+      <td><%= i.input :corrected_amount, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.corrected_amount, precision: 4) if i.object.corrected_amount), class: 'sub-number-text-field fnt-corrected' } %></td>
       <% if @breadcrumb == 'create' || @breadcrumb == 'update' %>
       <td><%= link_to_remove_fields('<i class="icon-trash"></i>'.html_safe, i) %></td>
       <% end %>
