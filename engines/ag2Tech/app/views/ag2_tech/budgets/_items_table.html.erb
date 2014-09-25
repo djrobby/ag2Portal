@@ -54,13 +54,24 @@
       m12 = parseInt(right_number(m12.toString(), 4) * 10000);
       anu = parseInt(right_number(anu.toString(), 4) * 10000);
       cor = parseInt(right_number(cor.toString(), 4) * 10000);
-      jQuery.getJSON('bu_item_totals/' + qty + '/' + amount + '/' + costs + '/' + tax, function(data) {
-        document.getElementById('foot-quantity').innerHTML = data.qty;
-        document.getElementById('foot-costs').innerHTML = data.costs;
-        document.getElementById('foot-amount').innerHTML = data.amount;
-        document.getElementById('foot-taxable').innerHTML = data.taxable;
-        document.getElementById('foot-tax').innerHTML = data.tax;
-        document.getElementById('foot-total').innerHTML = data.total;
+      jQuery.getJSON('bu_item_totals/' + m01 + '/' + m02 + '/' + m03 + '/' + m04 + '/' +,
+                                         m05 + '/' + m06 + '/' + m07 + '/' + m08 + '/' +,
+                                         m09 + '/' + m10 + '/' + m11 + '/' + m12 + '/' +,
+                                         anu + '/' + cor, function(data) {
+        document.getElementById('foot-total01').innerHTML = data.total01;
+        document.getElementById('foot-total02').innerHTML = data.total02;
+        document.getElementById('foot-total03').innerHTML = data.total03;
+        document.getElementById('foot-total04').innerHTML = data.total04;
+        document.getElementById('foot-total05').innerHTML = data.total05;
+        document.getElementById('foot-total06').innerHTML = data.total06;
+        document.getElementById('foot-total07').innerHTML = data.total07;
+        document.getElementById('foot-total08').innerHTML = data.total08;
+        document.getElementById('foot-total09').innerHTML = data.total09;
+        document.getElementById('foot-total10').innerHTML = data.total10;
+        document.getElementById('foot-total11').innerHTML = data.total11;
+        document.getElementById('foot-total12').innerHTML = data.total12;
+        document.getElementById('foot-annual').innerHTML = data.annual;
+        document.getElementById('foot-corrected').innerHTML = data.corrected;
       });
     });
     // Update and display totals
@@ -68,84 +79,173 @@
   }); 
 
   jQuery(function($) {
-    // when the .fnt-product field changes
-    $(".fnt-product").change(function() {
-      // preserve the current object
+    // when the .fnt-month01 field changes
+    $(".fnt-month01").change(function() {
       var _this = (this);
-      // make a POST call and replace the content
-      var product = $(this).closest('tr').find('select.fnt-product :selected').val();
-      if (product == "")
-        product = "0";
-      var qty = $(this).closest('tr').find('.fnt-quantity').val();
-      if (qty == "")
-        qty = "0";
+      recalculate(_this);
+      return false;
+    });
+
+    // when the .fnt-month02 field changes
+    $(".fnt-month02").change(function() {
+      var _this = (this);
+      recalculate(_this);
+      return false;
+    });
+
+    // when the .fnt-month03 field changes
+    $(".fnt-month03").change(function() {
+      var _this = (this);
+      recalculate(_this);
+      return false;
+    });
+
+    // when the .fnt-month04 field changes
+    $(".fnt-month04").change(function() {
+      var _this = (this);
+      recalculate(_this);
+      return false;
+    });
+
+    // when the .fnt-month05 field changes
+    $(".fnt-month05").change(function() {
+      var _this = (this);
+      recalculate(_this);
+      return false;
+    });
+
+    // when the .fnt-month06 field changes
+    $(".fnt-month06").change(function() {
+      var _this = (this);
+      recalculate(_this);
+      return false;
+    });
+
+    // when the .fnt-month07 field changes
+    $(".fnt-month07").change(function() {
+      var _this = (this);
+      recalculate(_this);
+      return false;
+    });
+
+    // when the .fnt-month08 field changes
+    $(".fnt-month08").change(function() {
+      var _this = (this);
+      recalculate(_this);
+      return false;
+    });
+
+    // when the .fnt-month09 field changes
+    $(".fnt-month09").change(function() {
+      var _this = (this);
+      recalculate(_this);
+      return false;
+    });
+
+    // when the .fnt-month10 field changes
+    $(".fnt-month10").change(function() {
+      var _this = (this);
+      recalculate(_this);
+      return false;
+    });
+
+    // when the .fnt-month11 field changes
+    $(".fnt-month11").change(function() {
+      var _this = (this);
+      recalculate(_this);
+      return false;
+    });
+
+    // when the .fnt-month12 field changes
+    $(".fnt-month12").change(function() {
+      var _this = (this);
+      recalculate(_this);
+      return false;
+    });
+
+    // when the .fnt-corrected field changes
+    $(".fnt-corrected").change(function() {
+      var cor = $(_this).closest('tr').find('.fnt-corrected').val();
+      if (cor == "")
+        cor = "0";
       // Right formatted for passing as REST parameter
-      qty = parseInt(right_number(qty, 4) * 10000);
-      jQuery.getJSON('wo_update_description_prices_from_product/' + product + '/' + qty, function(data) {
-        $(_this).closest('tr').find('.fnt-description').val(data.description);
-        $(_this).closest('tr').find('.fnt-cost').val(data.cost);
-        $(_this).closest('tr').find('.fnt-costs').val(data.costs);
-        $(_this).closest('tr').find('.fnt-price').val(data.price);
-        $(_this).closest('tr').find('.fnt-amount').val(data.amount);
-        $(_this).closest('tr').find(".fnt-tax-type").val(data.type);
-        $(_this).closest('tr').find('.fnt-tax').val(data.tax);
+      cor = parseInt(right_number(cor, 4) * 10000);
+      jQuery.getJSON('bu_update_corrected/' + cor, function(data) {
+        $(_this).closest('tr').find('.fnt-corrected').val(data.corrected);
+        // Update and display totals
+        $('#items-table').trigger('totals');
       });
       return false;
     });
-
-    // when the .fnt-quantity field changes
-    $(".fnt-quantity").change(function() {
-      // preserve the current object
-      var _this = (this);
-      recalculate(_this);
-      return false;
-    });
-
-    // when the .fnt-price field changes
-    $(".fnt-price").change(function() {
-      // preserve the current object
-      var _this = (this);
-      recalculate(_this);
-      return false;
-    });
-
-    // when the .fnt-cost field changes
-    $(".fnt-cost").change(function() {
-      // preserve the current object
-      var _this = (this);
-      recalculate(_this);
-      return false;
-    });
     
-    // Recalculate amounts & prices
+    // Recalculate amounts
     function recalculate(_this) {
       // make a POST call and replace the content
-      var cost = $(_this).closest('tr').find('.fnt-cost').val();
-      if (cost == "")
-        cost = "0";
-      var price = $(_this).closest('tr').find('.fnt-price').val();
-      if (price == "")
-        price = "0";
-      var qty = $(_this).closest('tr').find('.fnt-quantity').val();
-      if (qty == "")
-        qty = "0";
-      var tax_type = $(_this).closest('tr').find('.fnt-tax-type').val();
-      if (tax_type == "")
-        tax_type = "0";
-      var product = $(this).closest('tr').find('select.fnt-product :selected').val();
-      if (product == "")
-        product = "0";
+      var m01 = $(_this).closest('tr').find('.fnt-month01').val();
+      if (m01 == "")
+        m01 = "0";
+      var m02 = $(_this).closest('tr').find('.fnt-month02').val();
+      if (m02 == "")
+        m02 = "0";
+      var m03 = $(_this).closest('tr').find('.fnt-month03').val();
+      if (m03 == "")
+        m03 = "0";
+      var m04 = $(_this).closest('tr').find('.fnt-month04').val();
+      if (m04 == "")
+        m04 = "0";
+      var m05 = $(_this).closest('tr').find('.fnt-month05').val();
+      if (m05 == "")
+        m05 = "0";
+      var m06 = $(_this).closest('tr').find('.fnt-month06').val();
+      if (m06 == "")
+        m06 = "0";
+      var m07 = $(_this).closest('tr').find('.fnt-month07').val();
+      if (m07 == "")
+        m07 = "0";
+      var m08 = $(_this).closest('tr').find('.fnt-month08').val();
+      if (m08 == "")
+        m08 = "0";
+      var m09 = $(_this).closest('tr').find('.fnt-month09').val();
+      if (m09 == "")
+        m09 = "0";
+      var m10 = $(_this).closest('tr').find('.fnt-month10').val();
+      if (m10 == "")
+        m10 = "0";
+      var m11 = $(_this).closest('tr').find('.fnt-month11').val();
+      if (m11 == "")
+        m11 = "0";
+      var m12 = $(_this).closest('tr').find('.fnt-month12').val();
+      if (m12 == "")
+        m12 = "0";
       // Right formatted for passing as REST parameter
-      cost = parseInt(right_number(cost, 4) * 10000);
-      price = parseInt(right_number(price, 4) * 10000);
-      qty = parseInt(right_number(qty, 4) * 10000);
-      jQuery.getJSON('wo_update_amount_and_costs_from_price_or_quantity/' + cost + '/' + price + '/' + qty + '/' + tax_type + '/' + product, function(data) {
-        $(_this).closest('tr').find('.fnt-quantity').val(data.quantity);
-        $(_this).closest('tr').find('.fnt-cost').val(data.cost);
-        $(_this).closest('tr').find('.fnt-costs').val(data.costs);
-        $(_this).closest('tr').find('.fnt-price').val(data.price);
-        $(_this).closest('tr').find('.fnt-amount').val(data.amount);
-        $(_this).closest('tr').find('.fnt-tax').val(data.tax);
+      m01 = parseInt(right_number(m01.toString(), 4) * 10000);
+      m02 = parseInt(right_number(m02.toString(), 4) * 10000);
+      m03 = parseInt(right_number(m03.toString(), 4) * 10000);
+      m04 = parseInt(right_number(m04.toString(), 4) * 10000);
+      m05 = parseInt(right_number(m05.toString(), 4) * 10000);
+      m06 = parseInt(right_number(m06.toString(), 4) * 10000);
+      m07 = parseInt(right_number(m07.toString(), 4) * 10000);
+      m08 = parseInt(right_number(m08.toString(), 4) * 10000);
+      m09 = parseInt(right_number(m09.toString(), 4) * 10000);
+      m10 = parseInt(right_number(m10.toString(), 4) * 10000);
+      m11 = parseInt(right_number(m11.toString(), 4) * 10000);
+      m12 = parseInt(right_number(m12.toString(), 4) * 10000);
+      jQuery.getJSON('bu_update_annual/' + m01 + '/' + m02 + '/' + m03 + '/' + m04 + '/' +
+                                           m05 + '/' + m06 + '/' + m07 + '/' + m08 + '/' +
+                                           m09 + '/' + m10 + '/' + m11 + '/' + m12 + '/' +, function(data) {
+        $(_this).closest('tr').find('.fnt-month01').val(data.month01);
+        $(_this).closest('tr').find('.fnt-month02').val(data.month02);
+        $(_this).closest('tr').find('.fnt-month03').val(data.month03);
+        $(_this).closest('tr').find('.fnt-month04').val(data.month04);
+        $(_this).closest('tr').find('.fnt-month05').val(data.month05);
+        $(_this).closest('tr').find('.fnt-month06').val(data.month06);
+        $(_this).closest('tr').find('.fnt-month07').val(data.month07);
+        $(_this).closest('tr').find('.fnt-month08').val(data.month08);
+        $(_this).closest('tr').find('.fnt-month09').val(data.month09);
+        $(_this).closest('tr').find('.fnt-month10').val(data.month10);
+        $(_this).closest('tr').find('.fnt-month11').val(data.month11);
+        $(_this).closest('tr').find('.fnt-month12').val(data.month12);
+        $(_this).closest('tr').find('.fnt-annual').val(data.annual);
         // Update and display totals
         $('#items-table').trigger('totals');
       });

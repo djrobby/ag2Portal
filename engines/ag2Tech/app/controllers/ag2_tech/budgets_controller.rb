@@ -5,29 +5,80 @@ module Ag2Tech
     before_filter :authenticate_user!
     load_and_authorize_resource
     skip_load_and_authorize_resource :only => [:bu_item_totals,
+                                               :bu_update_corrected,
+                                               :bu_update_annual,
                                                :bu_update_account_textfield_from_project,
                                                :bu_update_project_textfield_from_organization,
                                                :bu_generate_no]
     # Calculate and format item totals properly
     def bu_item_totals
-      qty = params[:qty].to_f / 10000
-      amount = params[:amount].to_f / 10000
-      costs = params[:costs].to_f / 10000
-      tax = params[:tax].to_f / 10000
-      # Taxable
-      taxable = amount
-      # Total
-      total = taxable + tax      
+      total01 = params[:m01].to_f / 10000
+      total02 = params[:m02].to_f / 10000
+      total03 = params[:m03].to_f / 10000
+      total04 = params[:m04].to_f / 10000
+      total05 = params[:m05].to_f / 10000
+      total06 = params[:m06].to_f / 10000
+      total07 = params[:m07].to_f / 10000
+      total08 = params[:m08].to_f / 10000
+      total09 = params[:m09].to_f / 10000
+      total10 = params[:m10].to_f / 10000
+      total11 = params[:m11].to_f / 10000
+      total12 = params[:m12].to_f / 10000
+      annual = params[:anu].to_f / 10000
+      corrected = params[:cor].to_f / 10000
+      # Total income
+      # Total expenditure
       # Format output values
-      qty = number_with_precision(qty.round(4), precision: 4)
-      amount = number_with_precision(amount.round(4), precision: 4)
-      costs = number_with_precision(costs.round(4), precision: 4)
-      tax = number_with_precision(tax.round(4), precision: 4)
-      taxable = number_with_precision(taxable.round(4), precision: 4)
-      total = number_with_precision(total.round(4), precision: 4)
+      total01 = number_with_precision(total01.round(4), precision: 4)
+      total02 = number_with_precision(total02.round(4), precision: 4)
+      total03 = number_with_precision(total03.round(4), precision: 4)
+      total04 = number_with_precision(total04.round(4), precision: 4)
+      total05 = number_with_precision(total05.round(4), precision: 4)
+      total06 = number_with_precision(total06.round(4), precision: 4)
+      total07 = number_with_precision(total07.round(4), precision: 4)
+      total08 = number_with_precision(total08.round(4), precision: 4)
+      total09 = number_with_precision(total09.round(4), precision: 4)
+      total10 = number_with_precision(total10.round(4), precision: 4)
+      total11 = number_with_precision(total11.round(4), precision: 4)
+      total12 = number_with_precision(total12.round(4), precision: 4)
+      annual = number_with_precision(annual.round(4), precision: 4)
+      corrected = number_with_precision(corrected.round(4), precision: 4)
       # Setup JSON hash
-      @json_data = { "qty" => qty.to_s, "costs" => costs.to_s, "amount" => amount.to_s,
-                     "tax" => tax.to_s, "taxable" => taxable.to_s, "total" => total.to_s }
+      @json_data = { "total01" => total01.to_s, "total02" => total02.to_s, "total03" => total03.to_s, "total04" => total04.to_s,
+                     "total05" => total05.to_s, "total06" => total06.to_s, "total07" => total07.to_s, "total08" => total08.to_s,
+                     "total09" => total09.to_s, "total10" => total10.to_s, "total11" => total11.to_s, "total12" => total12.to_s,
+                     "annual" => annual.to_s, "corrected" => corrected.to_s }
+      render json: @json_data
+    end
+
+    # Update corrected text field at view
+    def bu_update_corrected
+      corrected = params[:cor].to_f / 10000
+      corrected = number_with_precision(corrected.round(4), precision: 4)
+      @json_data = { "corrected" => corrected.to_s }
+      render json: @json_data
+    end
+
+    # Update annual text field at view (some monthXX changed)
+    def bu_update_annual
+      total01 = params[:m01].to_f / 10000
+      total02 = params[:m02].to_f / 10000
+      total03 = params[:m03].to_f / 10000
+      total04 = params[:m04].to_f / 10000
+      total05 = params[:m05].to_f / 10000
+      total06 = params[:m06].to_f / 10000
+      total07 = params[:m07].to_f / 10000
+      total08 = params[:m08].to_f / 10000
+      total09 = params[:m09].to_f / 10000
+      total10 = params[:m10].to_f / 10000
+      total11 = params[:m11].to_f / 10000
+      total12 = params[:m12].to_f / 10000
+      annual = total01 + total02 + total03 + total04 + total05 + total06 +
+               total07 + total08 + total09 + total10 + total11 + total12
+      @json_data = { "total01" => total01.to_s, "total02" => total02.to_s, "total03" => total03.to_s, "total04" => total04.to_s,
+                     "total05" => total05.to_s, "total06" => total06.to_s, "total07" => total07.to_s, "total08" => total08.to_s,
+                     "total09" => total09.to_s, "total10" => total10.to_s, "total11" => total11.to_s, "total12" => total12.to_s,
+                     "annual" => annual.to_s }
       render json: @json_data
     end
     

@@ -1,11 +1,12 @@
 <script>
-  var _s = "0";
+  var _f;
+  var _p = "0";
   
   $(document).ready(function() {
     // Retrieves parent values
-    var _f = $("#fnt-product").closest('form')[0];
-    _s = $('select#budget_store_id :selected').val();
-    if (_s == "") _s = "0";
+    _f = $("#fnt-account").closest('form')[0];
+    _p = $('select#budget_project_id :selected').val();
+    if (_p == "") _p = "0";
 
     // Set focus
     $(".modal").on('shown', function() {
@@ -14,90 +15,178 @@
   });
 
   jQuery(function($) {
-    // when the #fnt-product field changes
-    $("#fnt-product").change(function() {
-      // make a POST call and replace the content
-      var product = $('select#fnt-product :selected').val();
-      if (product == "")
-        product = "0";
-      var qty = $('#fnt-quantity').val();
-      if (qty == "")
-        qty = "0";
+    // when the #fnt-month01 field changes
+    $("#fnt-month01").change(function() {
+      var _this = (this);
+      recalculate(_this);
+      return false;
+    });
+
+    // when the #fnt-month02 field changes
+    $("#fnt-month02").change(function() {
+      var _this = (this);
+      recalculate(_this);
+      return false;
+    });
+
+    // when the #fnt-month03 field changes
+    $("#fnt-month03").change(function() {
+      var _this = (this);
+      recalculate(_this);
+      return false;
+    });
+
+    // when the #fnt-month04 field changes
+    $("#fnt-month04").change(function() {
+      var _this = (this);
+      recalculate(_this);
+      return false;
+    });
+
+    // when the #fnt-month05 field changes
+    $("#fnt-month05").change(function() {
+      var _this = (this);
+      recalculate(_this);
+      return false;
+    });
+
+    // when the #fnt-month06 field changes
+    $("#fnt-month06").change(function() {
+      var _this = (this);
+      recalculate(_this);
+      return false;
+    });
+
+    // when the #fnt-month07 field changes
+    $("#fnt-month07").change(function() {
+      var _this = (this);
+      recalculate(_this);
+      return false;
+    });
+
+    // when the #fnt-month08 field changes
+    $("#fnt-month08").change(function() {
+      var _this = (this);
+      recalculate(_this);
+      return false;
+    });
+
+    // when the #fnt-month09 field changes
+    $("#fnt-month09").change(function() {
+      var _this = (this);
+      recalculate(_this);
+      return false;
+    });
+
+    // when the #fnt-month10 field changes
+    $("#fnt-month10").change(function() {
+      var _this = (this);
+      recalculate(_this);
+      return false;
+    });
+
+    // when the #fnt-month11 field changes
+    $("#fnt-month11").change(function() {
+      var _this = (this);
+      recalculate(_this);
+      return false;
+    });
+
+    // when the #fnt-month12 field changes
+    $("#fnt-month12").change(function() {
+      var _this = (this);
+      recalculate(_this);
+      return false;
+    });
+
+    // when the #fnt-corrected field changes
+    $("#fnt-corrected").change(function() {
+      var cor = $('#fnt-corrected').val();
+      if (cor == "")
+        cor = "0";
       // Right formatted for passing as REST parameter
-      qty = parseInt(right_number(qty, 4) * 10000);
-      //qty = qty.replace(",", ".") * 10000;
-      jQuery.getJSON('wo_update_description_prices_from_product/' + product + '/' + qty + '/' + _s, function(data) {
-        $("#fnt-description").val(data.description);
-        $("#fnt-cost").val(data.cost);
-        $("#fnt-costs").val(data.costs);
-        $("#fnt-price").val(data.price);
-        $("#fnt-amount").val(data.amount);
-        $("#fnt-tax-type").val(data.type);
-        $("#fnt-tax").val(data.tax);
-        $("#current-stock").html(data.stock);
+      cor = parseInt(right_number(cor, 4) * 10000);
+      jQuery.getJSON('bu_update_corrected/' + cor, function(data) {
+        $('#fnt-corrected').val(data.corrected);
+        // Update and display totals
+        $('#items-table').trigger('totals');
       });
-      return false;
-    });
-
-
-    // when the #fnt-quantity field changes
-    $("#fnt-quantity").change(function() {
-      // preserve the current object
-      var _this = (this);
-      recalculate(_this);
-      return false;
-    });
-
-    // when the #fnt-price field changes
-    $("#fnt-price").change(function() {
-      // preserve the current object
-      var _this = (this);
-      recalculate(_this);
-      return false;
-    });
-
-    // when the #fnt-cost field changes
-    $("#fnt-cost").change(function() {
-      // preserve the current object
-      var _this = (this);
-      recalculate(_this);
       return false;
     });
 
     // Recalculate amounts & prices
     function recalculate(_this) {
       // make a POST call and replace the content
-      var cost = $('#fnt-cost').val();
-      if (cost == "")
-        cost = "0";
-      var price = $('#fnt-price').val();
-      if (price == "")
-        price = "0";
-      var qty = $('#fnt-quantity').val();
-      if (qty == "")
-        qty = "0";
-      var tax_type = $('#fnt-tax-type').val();
-      if (tax_type == "")
-        tax_type = "0";
-      var product = $('select#fnt-product :selected').val();
-      if (product == "")
-        product = "0";
+      var m01 = $('#fnt-month01').val();
+      if (m01 == "")
+        m01 = "0";
+      var m02 = $('#fnt-month02').val();
+      if (m02 == "")
+        m02 = "0";
+      var m03 = $('#fnt-month03').val();
+      if (m03 == "")
+        m03 = "0";
+      var m04 = $('#fnt-month04').val();
+      if (m04 == "")
+        m04 = "0";
+      var m05 = $('#fnt-month05').val();
+      if (m05 == "")
+        m05 = "0";
+      var m06 = $('#fnt-month06').val();
+      if (m06 == "")
+        m06 = "0";
+      var m07 = $('#fnt-month07').val();
+      if (m07 == "")
+        m07 = "0";
+      var m08 = $('#fnt-month08').val();
+      if (m08 == "")
+        m08 = "0";
+      var m09 = $('#fnt-month09').val();
+      if (m09 == "")
+        m09 = "0";
+      var m10 = $('#fnt-month10').val();
+      if (m10 == "")
+        m10 = "0";
+      var m11 = $('#fnt-month11').val();
+      if (m11 == "")
+        m11 = "0";
+      var m12 = $('#fnt-month12').val();
+      if (m12 == "")
+        m12 = "0";
       // Right formatted for passing as REST parameter
-      cost = parseInt(right_number(cost, 4) * 10000);
-      price = parseInt(right_number(price, 4) * 10000);
-      qty = parseInt(right_number(qty, 4) * 10000);
-      jQuery.getJSON('wo_update_amount_and_costs_from_price_or_quantity/' + cost + '/' + price + '/' + qty + '/' + tax_type + '/' + product, function(data) {
-        $('#fnt-quantity').val(data.quantity);
-        $('#fnt-cost').val(data.cost);
-        $('#fnt-costs').val(data.costs);
-        $('#fnt-price').val(data.price);
-        $('#fnt-amount').val(data.amount);
-        $('#fnt-tax').val(data.tax);
+      m01 = parseInt(right_number(m01.toString(), 4) * 10000);
+      m02 = parseInt(right_number(m02.toString(), 4) * 10000);
+      m03 = parseInt(right_number(m03.toString(), 4) * 10000);
+      m04 = parseInt(right_number(m04.toString(), 4) * 10000);
+      m05 = parseInt(right_number(m05.toString(), 4) * 10000);
+      m06 = parseInt(right_number(m06.toString(), 4) * 10000);
+      m07 = parseInt(right_number(m07.toString(), 4) * 10000);
+      m08 = parseInt(right_number(m08.toString(), 4) * 10000);
+      m09 = parseInt(right_number(m09.toString(), 4) * 10000);
+      m10 = parseInt(right_number(m10.toString(), 4) * 10000);
+      m11 = parseInt(right_number(m11.toString(), 4) * 10000);
+      m12 = parseInt(right_number(m12.toString(), 4) * 10000);
+      jQuery.getJSON('bu_update_annual/' + m01 + '/' + m02 + '/' + m03 + '/' + m04 + '/' +
+                                           m05 + '/' + m06 + '/' + m07 + '/' + m08 + '/' +
+                                           m09 + '/' + m10 + '/' + m11 + '/' + m12 + '/' +, function(data) {
+        $('#fnt-month01').val(data.month01);
+        $('#fnt-month02').val(data.month02);
+        $('#fnt-month03').val(data.month03);
+        $('#fnt-month04').val(data.month04);
+        $('#fnt-month05').val(data.month05);
+        $('#fnt-month06').val(data.month06);
+        $('#fnt-month07').val(data.month07);
+        $('#fnt-month08').val(data.month08);
+        $('#fnt-month09').val(data.month09);
+        $('#fnt-month10').val(data.month10);
+        $('#fnt-month11').val(data.month11);
+        $('#fnt-month12').val(data.month12);
+        $('#fnt-annual').val(data.annual);
         // Update and display totals
         $('#items-table').trigger('totals');
       });
     }
-  })
+  });
 </script>
 
 <div id="new-item-fields" class="modal hide fade" data-backdrop="static">
