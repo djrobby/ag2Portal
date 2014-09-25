@@ -10,21 +10,51 @@
     // Trigger to display totals at table foot
     $('#items-table').bind('totals', function(event) {
       // Sum necessary values from table rows
-      var qty = 0;
-      var costs = 0;
-      var amount = 0;
-      var tax = 0;
+      var m01 = 0;
+      var m02 = 0;
+      var m03 = 0;
+      var m04 = 0;
+      var m05 = 0;
+      var m06 = 0;
+      var m07 = 0;
+      var m08 = 0;
+      var m09 = 0;
+      var m10 = 0;
+      var m11 = 0;
+      var m12 = 0;
+      var anu = 0;
+      var cor = 0;
       $('#items-table tr.fields:visible').each(function() {
-        qty += parseFloat(right_number($(this).find('input.fnt-quantity').val(), 4));
-        costs += parseFloat(right_number($(this).find('input.fnt-costs').val(), 4));
-        amount += parseFloat(right_number($(this).find('input.fnt-amount').val(), 4));
-        tax += parseFloat(right_number($(this).find('input.fnt-tax').val(), 4));
+        m01 += parseFloat(right_number($(this).find('input.fnt-month01').val(), 4));
+        m02 += parseFloat(right_number($(this).find('input.fnt-month02').val(), 4));
+        m03 += parseFloat(right_number($(this).find('input.fnt-month03').val(), 4));
+        m04 += parseFloat(right_number($(this).find('input.fnt-month04').val(), 4));
+        m05 += parseFloat(right_number($(this).find('input.fnt-month05').val(), 4));
+        m06 += parseFloat(right_number($(this).find('input.fnt-month06').val(), 4));
+        m07 += parseFloat(right_number($(this).find('input.fnt-month07').val(), 4));
+        m08 += parseFloat(right_number($(this).find('input.fnt-month08').val(), 4));
+        m09 += parseFloat(right_number($(this).find('input.fnt-month09').val(), 4));
+        m10 += parseFloat(right_number($(this).find('input.fnt-month10').val(), 4));
+        m11 += parseFloat(right_number($(this).find('input.fnt-month11').val(), 4));
+        m12 += parseFloat(right_number($(this).find('input.fnt-month12').val(), 4));
+        anu += parseFloat(right_number($(this).find('input.fnt-annual').val(), 4));
+        cor += parseFloat(right_number($(this).find('input.fnt-corrected').val(), 4));
       });
-      qty = parseInt(right_number(qty.toString(), 4) * 10000);
-      costs = parseInt(right_number(costs.toString(), 4) * 10000);
-      amount = parseInt(right_number(amount.toString(), 4) * 10000);
-      tax = parseInt(right_number(tax.toString(), 4) * 10000);
-      jQuery.getJSON('wo_item_totals/' + qty + '/' + amount + '/' + costs + '/' + tax, function(data) {
+      m01 = parseInt(right_number(m01.toString(), 4) * 10000);
+      m02 = parseInt(right_number(m02.toString(), 4) * 10000);
+      m03 = parseInt(right_number(m03.toString(), 4) * 10000);
+      m04 = parseInt(right_number(m04.toString(), 4) * 10000);
+      m05 = parseInt(right_number(m05.toString(), 4) * 10000);
+      m06 = parseInt(right_number(m06.toString(), 4) * 10000);
+      m07 = parseInt(right_number(m07.toString(), 4) * 10000);
+      m08 = parseInt(right_number(m08.toString(), 4) * 10000);
+      m09 = parseInt(right_number(m09.toString(), 4) * 10000);
+      m10 = parseInt(right_number(m10.toString(), 4) * 10000);
+      m11 = parseInt(right_number(m11.toString(), 4) * 10000);
+      m12 = parseInt(right_number(m12.toString(), 4) * 10000);
+      anu = parseInt(right_number(anu.toString(), 4) * 10000);
+      cor = parseInt(right_number(cor.toString(), 4) * 10000);
+      jQuery.getJSON('bu_item_totals/' + qty + '/' + amount + '/' + costs + '/' + tax, function(data) {
         document.getElementById('foot-quantity').innerHTML = data.qty;
         document.getElementById('foot-costs').innerHTML = data.costs;
         document.getElementById('foot-amount').innerHTML = data.amount;

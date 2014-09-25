@@ -4,12 +4,10 @@ module Ag2Tech
   class BudgetsController < ApplicationController
     before_filter :authenticate_user!
     load_and_authorize_resource
-    skip_load_and_authorize_resource :only => [:bu_update_account_textfield_from_project,
-                                               :bu_item_totals,
-                                               :bu_worker_totals,
-                                               :wo_update_amount_and_costs_from_price_or_quantity,
+    skip_load_and_authorize_resource :only => [:bu_item_totals,
+                                               :bu_update_account_textfield_from_project,
                                                :bu_update_project_textfield_from_organization,
-                                               :bu_generate_code]
+                                               :bu_generate_no]
     # Calculate and format item totals properly
     def bu_item_totals
       qty = params[:qty].to_f / 10000
@@ -47,47 +45,29 @@ module Ag2Tech
     end
 
     # Update project text field at view from organization select
-    def bu_update_project_textfields_from_organization
+    def bu_update_project_textfield_from_organization
       organization = params[:org]
       if organization != '0'
         @organization = Organization.find(organization)
         @projects = @organization.blank? ? projects_dropdown : @organization.projects.order(:project_code)
-        @types = @organization.blank? ? work_order_types_dropdown : @organization.work_order_types.order(:name)
-        @labors = @organization.blank? ? work_order_labors_dropdown : @organization.work_order_labors.order(:name)
-        @clients = @organization.blank? ? clients_dropdown : @organization.clients.order(:client_code)
-        @charge_accounts = @organization.blank? ? charge_accounts_dropdown : @organization.charge_accounts.order(:account_code)
-        @stores = @organization.blank? ? stores_dropdown : @organization.stores.order(:name)
-        @workers = @organization.blank? ? workers_dropdown : @organization.workers.order(:worker_code)
-        @areas = @organization.blank? ? areas_dropdown : organization_areas(@organization)
-        @products = @organization.blank? ? products_dropdown : @organization.products.order(:product_code)
       else
         @projects = projects_dropdown
-        @types = work_order_types_dropdown
-        @labors = work_order_labors_dropdown
-        @clients = clients_dropdown
-        @charge_accounts = charge_accounts_dropdown
-        @stores = stores_dropdown
-        @workers = workers_dropdown
-        @areas = areas_dropdown
-        @products = products_dropdown
       end
-      @areas_dropdown = []
-      @areas.each do |i|
-        @areas_dropdown = @areas_dropdown << [i.id, i.name, i.department.name] 
-      end
-      @json_data = { "project" => @projects, "type" => @types, "labor" => @labors,
-                     "client" => @clients, "charge_account" => @charge_accounts,
-                     "store" => @stores, "worker" => @workers,
-                     "area" => @areas_dropdown, "product" => @products }
+      @json_data = { "project" => @projects }
       render json: @json_data
     end
 
-    # Update order number at view (generate_code_btn)
-    def wo_generate_no
+    # Update budget number at view (generate_code_btn)
+    def bu_generate_no
       project = params[:project]
+      period = params[:period]
 
       # Builds no, if possible
-      code = project == '$' ? '$err' : wo_next_no(project)
+      if project == '$' || period == '$'
+        code = '$err'
+      else
+        code = bu_next_no(project, period)
+      end
       @json_data = { "code" => code }
       render json: @json_data
     end

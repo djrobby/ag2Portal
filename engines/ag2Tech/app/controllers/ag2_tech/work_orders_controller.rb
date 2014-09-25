@@ -15,7 +15,7 @@ module Ag2Tech
                                                :wo_update_amount_and_costs_from_price_or_quantity,
                                                :wo_update_costs_from_cost_or_hours,
                                                :wo_update_project_textfields_from_organization,
-                                               :wo_generate_code]
+                                               :wo_generate_no]
     # Calculate and format item totals properly
     def wo_item_totals
       qty = params[:qty].to_f / 10000
