@@ -1,17 +1,262 @@
-<%= form_for(@budget) do |f| %>
-  <% if @budget.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@budget.errors.count, "error") %> prohibited this budget from being saved:</h2>
+<script>
+  var text_field_color;
+  var _thisForm = '';
+  
+  $(document).ready(function() {
+    $('select.sel2').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      allowClear: true
+    });
+    
+    // Save default text color
+    text_field_color = $("#budget_budget_no").css('color')
 
-      <ul>
-      <% @budget.errors.full_messages.each do |msg| %>
-        <li><%= msg %></li>
+    // Initialized form variable
+    _thisForm = $("#budget_budget_no").closest('form')[0];
+
+    // Disable fields if Budget# blank
+    var order = $('#budget_budget_no').val();
+    if (order == "")
+      order = "0";
+    if (order == "0") {
+      // Empty order: Disable
+      $('#submit_btn').hide();
+      $('.fnt-new-btn').hide();
+    } else {
+      // Order OK: Enable
+      $('#submit_btn').show();
+      $('.fnt-new-btn').show();
+    }
+
+    // Disable generate_code_btn if budget_project_id blank
+    var order = $('#budget_project_id').val();
+    if (order == "")
+      order = "0";
+    if (order == "0") {
+      // Empty project: Hide
+      $('#generate_code_btn').hide();
+    } else {
+      // Project OK: Show (if not updating)
+      if ('<%= @breadcrumb %>' == "update") {
+        $('#generate_code_btn').hide();
+      } else {
+        $('#generate_code_btn').show();
+      }
+    }
+    
+    // Can't change budget no if editing
+    if ('<%= @breadcrumb %>' == "update") {
+      $('#budget_budget_no').prop('readonly', true);
+    } else {
+      $('#budget_budget_no').prop('readonly', false);
+    }
+  });
+  
+  jQuery(function($) {
+    // when the #budget_order_no field changes
+    $("#budget_order_no").change(function() {
+      var order = $('#budget_order_no').val();
+      if (order == "")
+        order = "0";
+      if (order == "0") {
+        // Empty order: Disable
+        $('#submit_btn').hide();
+        $('.fnt-new-btn').hide();
+      } else {
+        // Order OK: Enable
+        $('#submit_btn').show();
+        $('.fnt-new-btn').show();
+      }
+    });
+    
+    // when #generate_code_btn is clicked
+    $("#generate_code_btn").click(function() {
+      // make a POST call and replace the content
+      var order = $('select#budget_project_id :selected').val();
+      if (order == "")
+        order = "$";
+      var period = $('select#budget_budget_period_id :selected').val();
+      if (period == "")
+        period = "$";
+      jQuery.getJSON('bu_generate_no/' + order + '/' + period, function(data) {
+        $("#budget_order_no").val(data.code);
+        if ($("#budget_order_no").val() == "$err") {
+          $("#budget_order_no").css('color', 'red');
+          alert('<%= I18n.t("ag2_tech.budgets.no_error") %>');
+          $('#budget_order_no').select();
+        } else {
+          $("#budget_order_no").css('color', text_field_color);
+          $('#budget_order_no').trigger("change");
+        }
+      });
+      return false;
+    });
+
+    // when the #budget_organization_id field changes
+    $("#budget_organization_id").change(function() {
+      // make a POST call and replace the content
+      var order = $('select#budget_organization_id :selected').val();
+      if (order == "")
+        order = "0";
+      jQuery.getJSON('bu_update_project_textfield_from_organization/' + order, function(data) {
+        var p = data.project;
+        // Project
+        $("#budget_project_id").html("");
+        $("#budget_project_id").select2("val", "");
+        $("#budget_project_id").append($('<option></option>').val("").html(""));
+        if (!p.length) {
+          $.each(data, function(id, option) {
+            if (id == 'project' && option != "") {
+              $("#budget_project_id").append($('<option></option>').val(option.id).html(option.project_code.substring(0,3) + "-" + option.project_code.substring(3,6) + "-" + option.project_code.substring(6,12) + " " + option.name));
+            }
+          });
+        } else {
+          $.each(p, function(id, option) {
+            $("#budget_project_id").append($('<option></option>').val(option.id).html(option.project_code.substring(0,3) + "-" + option.project_code.substring(3,6) + "-" + option.project_code.substring(6,12) + " " + option.name));
+          });
+        }
+      });
+      if (order == "0") {
+        $("#budget_project_id").val(0);
+        $("#budget_project_id").trigger("change");
+      }
+      return false;
+    });
+    
+    // when the #budget_project_id field changes
+    $("#budget_project_id").change(function() {
+      // make a POST call and replace the content
+      var order = $('select#budget_project_id :selected').val();
+      if (order == "")
+        order = "0";
+      jQuery.getJSON('bu_update_account_textfields_from_project/' + order, function(data) {
+        var c = data.charge_account;
+        // Items table charge accounts
+        $('#items-table tr').each(function() {
+          $(this).find('.fnt-account').html("");
+          $(this).find('.fnt-account').select2("val", "");
+          $(this).find('.fnt-account').append($('<option></option>').val("").html(""));
+          if (!c.length) {
+            $.each(data, function(id, option) {
+              if (id == 'charge_account' && option != "") {
+                $(this).find('.fnt-account').append($('<option></option>').val(option.id).html(option.account_code.substring(0,4) + "-" + option.account_code.substring(4,11) + " " + option.name));
+              }
+            });
+          } else {
+            $.each(c, function(id, option) {
+              $(this).find('.fnt-account').append($('<option></option>').val(option.id).html(option.account_code.substring(0,4) + "-" + option.account_code.substring(4,11) + " " + option.name));
+            });
+          }
+        });
+      });
+      // Disable generate_code_btn if budget_project_id blank
+      if (order == "0") {
+        // Empty project: Hide
+        $('#generate_code_btn').hide();
+      } else {
+        // Project OK: Show
+        $('#generate_code_btn').show();
+      }
+      return false;
+    });
+    
+    // when the #budget_budget_period_id field changes
+    $("#budget_budget_period_id").change(function() {
+      // make a POST call and replace the content
+      var order = $('select#budget_budget_period_id :selected').val();
+      if (order == "")
+        order = "0";
+      // Disable generate_code_btn if budget_budget_period_id blank
+      if (order == "0") {
+        // Empty period: Hide
+        $('#generate_code_btn').hide();
+      } else {
+        // Period OK: Show
+        $('#generate_code_btn').show();
+      }
+      return false;
+    });
+    
+    // when submit    
+    $(_thisForm).on('submit', function() {
+      var qty = '';
+      var price = '';
+      var cost = '';
+      // Must change decimal separator, if comma, in items table numeric fields
+      $('#items-table tr.fields').each(function() {
+        m01 = $(this).find('input.fnt-month01').val().replace(",", ".");
+        m02 = $(this).find('input.fnt-month02').val().replace(",", ".");
+        m03 = $(this).find('input.fnt-month03').val().replace(",", ".");
+        m04 = $(this).find('input.fnt-month04').val().replace(",", ".");
+        m05 = $(this).find('input.fnt-month05').val().replace(",", ".");
+        m06 = $(this).find('input.fnt-month06').val().replace(",", ".");
+        m07 = $(this).find('input.fnt-month07').val().replace(",", ".");
+        m08 = $(this).find('input.fnt-month08').val().replace(",", ".");
+        m09 = $(this).find('input.fnt-month09').val().replace(",", ".");
+        m10 = $(this).find('input.fnt-month10').val().replace(",", ".");
+        m11 = $(this).find('input.fnt-month11').val().replace(",", ".");
+        m12 = $(this).find('input.fnt-month12').val().replace(",", ".");
+        cor = $(this).find('input.fnt-corrected').val().replace(",", ".");
+        $(this).find('input.fnt-month01').val(m01);
+        $(this).find('input.fnt-month02').val(m02);
+        $(this).find('input.fnt-month03').val(m03);
+        $(this).find('input.fnt-month04').val(m04);
+        $(this).find('input.fnt-month05').val(m05);
+        $(this).find('input.fnt-month06').val(m06);
+        $(this).find('input.fnt-month07').val(m07);
+        $(this).find('input.fnt-month08').val(m08);
+        $(this).find('input.fnt-month09').val(m09);
+        $(this).find('input.fnt-month10').val(m10);
+        $(this).find('input.fnt-month11').val(m11);
+        $(this).find('input.fnt-month12').val(m12);
+        $(this).find('input.fnt-corrected').val(cor);
+      });
+      //e.preventDefault();
+    });
+  });
+</script>
+
+<%= simple_form_for @budget, :html => { :class => 'form-vertical well' } do |f| %>
+<%= f.error_notification %>
+<%= display_base_errors resource %>
+<% if session[:organization] != '0' %>
+<%= f.association :organization, autofocus: true, collection: Organization.where("id = ?", "#{session[:organization]}").all, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' }, include_blank: false %>
+<% elsif current_user.organizations.count > 0 %>
+<%= f.association :organization, autofocus: true, collection: current_user.organizations.order('name'), input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' }, include_blank: false %>
+<% else %>
+<%= f.association :organization, autofocus: true, collection: Organization.order('name'), input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %>
+<% end %>
+<div>
+  <label class="multi-field-label-two"> <%= f.association :project, collection: @projects, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.association :budget_period, collection: @periods, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
+</div>
+<div>
+  <label class="multi-field-label-two"> <%= f.input :description, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label-under-sel2' } %> </label>
+  <label class="multi-field-label-two"> <%= f.input :budget_no, input_html: { class: 'mid-text-field' }, label_html: { class: 'form-label' } %> </label>
+</div>
+<!-- Items -->
+<table class="form-table">
+  <tbody>
+    <tr class="form-tr underlined-tr">
+      <td class="form-td-two left-winged">
+        <h4><%= t 'ag2_tech.budgets.items_info' %></h4>
+      </td>
+      <td class="form-td-two right-winged">
+        <%= link_to_add_fields(t("ag2_tech.budgets.btn_new_item"), f, :budget_items, "item_fields", "new-item-fields", class: "btn btn-warning fnt-new-btn") %>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<%= render 'items_table', f: f %>
+<!-- Buttons -->
+<table class="form-table">
+  <tbody>
+    <tr class="form-tr">
+      <td class="form-td-three left-winged"> <%= f.button :submit, :class => 'btn-primary', :id => 'submit_btn' %> </td>
+      <% if @breadcrumb == 'create'%>
+      <td class="form-td-three right-winged"><a href="#" id="generate_code_btn" class="btn btn-warning"><%=t 'ag2_tech.budgets.generate_code_btn' %></a></td>
       <% end %>
-      </ul>
-    </div>
-  <% end %>
-
-  <div class="actions">
-    <%= f.submit %>
-  </div>
+    </tr>
+  </tbody>
+</table>
 <% end %>

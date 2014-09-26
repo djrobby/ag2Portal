@@ -7,7 +7,7 @@ module Ag2Tech
     skip_load_and_authorize_resource :only => [:bu_item_totals,
                                                :bu_update_corrected,
                                                :bu_update_annual,
-                                               :bu_update_account_textfield_from_project,
+                                               :bu_update_account_textfields_from_project,
                                                :bu_update_project_textfield_from_organization,
                                                :bu_generate_no]
     # Calculate and format item totals properly
@@ -82,8 +82,8 @@ module Ag2Tech
       render json: @json_data
     end
     
-    # Update account text field at view from project select
-    def bu_update_account_textfield_from_project
+    # Update item-table account text fields at view from project select
+    def bu_update_account_textfields_from_project
       project = params[:id]
       if project != '0'
         @project = Project.find(project)
@@ -180,6 +180,8 @@ module Ag2Tech
     def new
       @breadcrumb = 'create'
       @budget = Budget.new
+      @projects = projects_dropdown
+      @periods = periods_dropdown
       @charge_accounts = charge_accounts_dropdown
   
       respond_to do |format|
@@ -192,6 +194,8 @@ module Ag2Tech
     def edit
       @breadcrumb = 'update'
       @budget = Budget.find(params[:id])
+      @projects = projects_dropdown
+      @periods = periods_dropdown
       @charge_accounts = @budget.project.blank? ? charge_accounts_dropdown : charge_accounts_dropdown_edit(@budget.project_id)
     end
   
@@ -207,6 +211,9 @@ module Ag2Tech
           format.html { redirect_to @budget, notice: crud_notice('created', @budget) }
           format.json { render json: @budget, status: :created, location: @budget }
         else
+          @projects = projects_dropdown
+          @periods = periods_dropdown
+          @charge_accounts = charge_accounts_dropdown
           format.html { render action: "new" }
           format.json { render json: @budget.errors, status: :unprocessable_entity }
         end
@@ -226,6 +233,9 @@ module Ag2Tech
                         notice: (crud_notice('updated', @budget) + "#{undo_link(@budget)}").html_safe }
           format.json { head :no_content }
         else
+          @projects = projects_dropdown
+          @periods = periods_dropdown
+          @charge_accounts = @budget.project.blank? ? charge_accounts_dropdown : charge_accounts_dropdown_edit(@budget.project_id)
           format.html { render action: "edit" }
           format.json { render json: @budget.errors, status: :unprocessable_entity }
         end
