@@ -9,7 +9,8 @@ module Ag2Tech
                                                :bu_update_annual,
                                                :bu_update_account_textfields_from_project,
                                                :bu_update_project_textfield_from_organization,
-                                               :bu_generate_no]
+                                               :bu_generate_no,
+                                               :bu_new]
     # Calculate and format item totals properly
     def bu_item_totals
       total01 = params[:m01].to_f / 10000
@@ -121,6 +122,11 @@ module Ag2Tech
       end
       @json_data = { "code" => code }
       render json: @json_data
+    end
+
+    # Inherits new Budget from the chosen one
+    def bu_inherit
+      
     end
 
     #

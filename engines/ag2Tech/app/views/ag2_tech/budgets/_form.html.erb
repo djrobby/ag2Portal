@@ -79,6 +79,37 @@
       if (period == "")
         period = "$";
       jQuery.getJSON('bu_generate_no/' + order + '/' + period, function(data) {
+        $("#budget_budget_no").val(data.code);
+        if ($("#budget_budget_no").val() == "$err") {
+          $("#budget_budget_no").css('color', 'red');
+          alert('<%= I18n.t("ag2_tech.budgets.no_error") %>');
+          $('#budget_budget_no').select();
+        } else {
+          $("#budget_budget_no").css('color', text_field_color);
+          $('#budget_budget_no').trigger("change");
+        }
+      });
+      return false;
+    });
+    
+    // when #new_btn is clicked
+    $("#new_btn").click(function() {
+      // make a POST call and replace the content
+      var order = $('select#budget_project_id :selected').val();
+      if (order == "")
+        order = "$";
+      var period = $('select#budget_budget_period_id :selected').val();
+      if (period == "")
+        period = "$";
+      if (order == '$' || period == '$') {
+        alert('<%= I18n.t("ag2_tech.budgets.new_error") %>');
+      } else {
+        $("#new-budget").modal('show');
+        $('#new-budget').on('hidden', function() {
+          $('#budget_budget_no').select();
+        });        
+      }
+      jQuery.getJSON('bu_generate_no/' + order + '/' + period, function(data) {
         $("#budget_order_no").val(data.code);
         if ($("#budget_order_no").val() == "$err") {
           $("#budget_order_no").css('color', 'red');
@@ -254,9 +285,13 @@
     <tr class="form-tr">
       <td class="form-td-three left-winged"> <%= f.button :submit, :class => 'btn-primary', :id => 'submit_btn' %> </td>
       <% if @breadcrumb == 'create'%>
+      <td class="form-td-three centered"><a href="#" id="new_btn" class="btn btn-warning"><%=t 'ag2_tech.budgets.new_btn' %></a></td>
       <td class="form-td-three right-winged"><a href="#" id="generate_code_btn" class="btn btn-warning"><%=t 'ag2_tech.budgets.generate_code_btn' %></a></td>
       <% end %>
     </tr>
   </tbody>
 </table>
 <% end %>
+
+<!-- Modal for new Budget -->
+<%= render 'new_budget' %>
