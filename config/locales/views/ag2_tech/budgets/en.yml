@@ -19,6 +19,13 @@ en:
         btn_show: "Show Budget"
       new:
         title: "New Budget"
+      new_budget:
+        title: "New Budget"
+        btn_new: "Generate"
+        footer: "Remember that all requested data are mandatory!"
+        entity_type_alert: "Must indicate Names or Company upon Entity type!"
+        entity_fiscal_short: "Fiscal Id is too short (minimum is 8 characters)"
+        submit: "Budget has been generated."
       back_to_main_page: "Back to Budgets"
       generate_code_btn: "Budget No."
       new_btn: "Generate new or Inherit previous"

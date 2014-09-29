@@ -287,11 +287,10 @@
       <% if @breadcrumb == 'create'%>
       <td class="form-td-three centered"><a href="#" id="new_btn" class="btn btn-warning"><%=t 'ag2_tech.budgets.new_btn' %></a></td>
       <td class="form-td-three right-winged"><a href="#" id="generate_code_btn" class="btn btn-warning"><%=t 'ag2_tech.budgets.generate_code_btn' %></a></td>
+      <!-- Modal for new Budget -->
+      <%= render 'new_budget' %>
       <% end %>
     </tr>
   </tbody>
 </table>
 <% end %>
-
-<!-- Modal for new Budget -->
-<%= render 'new_budget' %>

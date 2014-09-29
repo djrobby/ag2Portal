@@ -1,0 +1,88 @@
+<script>
+  $(document).ready(function() {
+    $('.sel2').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      //dropdownCssClass: 'shrinked',
+      dropdownAutoWidth: true
+    });
+  });
+
+  jQuery(function($) {
+    
+    // when #ok_btn is clicked
+    $("#ok_btn").click(function() {
+      var order = $('select#budget_project_id :selected').val();
+      if (order == "")
+        order = "$";
+      var period = $('select#budget_budget_period_id :selected').val();
+      if (period == "")
+        period = "$";
+      if (order == '$' || period == '$') {
+        alert('<%= I18n.t("ag2_tech.budgets.new_error") %>');
+      } else {
+        $("#new-budget").modal('show');
+        $('#new-budget').on('hidden', function() {
+          $('#budget_budget_no').select();
+        });        
+      }
+      jQuery.getJSON('bu_generate_no/' + order + '/' + period, function(data) {
+        $("#budget_order_no").val(data.code);
+        if ($("#budget_order_no").val() == "$err") {
+          $("#budget_order_no").css('color', 'red');
+          alert('<%= I18n.t("ag2_tech.budgets.no_error") %>');
+          $('#budget_order_no').select();
+        } else {
+          $("#budget_order_no").css('color', text_field_color);
+          $('#budget_order_no').trigger("change");
+        }
+      });
+      return false;
+    });
+
+    // when #cancel_btn is clicked
+    $("#cancel_btn").click(function() {
+      var order = $('select#budget_project_id :selected').val();
+      if (order == "")
+        order = "$";
+      var period = $('select#budget_budget_period_id :selected').val();
+      if (period == "")
+        period = "$";
+      if (order == '$' || period == '$') {
+        alert('<%= I18n.t("ag2_tech.budgets.new_error") %>');
+      } else {
+        $("#new-budget").modal('show');
+        $('#new-budget').on('hidden', function() {
+          $('#budget_budget_no').select();
+        });        
+      }
+      jQuery.getJSON('bu_generate_no/' + order + '/' + period, function(data) {
+        $("#budget_order_no").val(data.code);
+        if ($("#budget_order_no").val() == "$err") {
+          $("#budget_order_no").css('color', 'red');
+          alert('<%= I18n.t("ag2_tech.budgets.no_error") %>');
+          $('#budget_order_no').select();
+        } else {
+          $("#budget_order_no").css('color', text_field_color);
+          $('#budget_order_no').trigger("change");
+        }
+      });
+      return false;
+    });
+  });  
+</script>
+
+<div id="new-budget" class="modal fade" style="display: none;">
+  <div class="modal-header">
+    <a class="close" data-dismiss="modal">&#215;</a>
+    <h3><%= t('ag2_tech.budgets.new_budget.title') %></h3>
+    <span class="shrinked"><%= I18n.t(:mandatory_subtitle) %></span>
+  </div>
+  <div class="modal-body">
+    <%= label_tag I18n.t("ag2_tech.budgets.new_budget.label_budgets"), nil, :class => 'form-label' %>
+    <%= select_tag "Budgets", options_from_collection_for_select(@old_budgets, "id", "full_name"), :prompt => "", :class => 'x-large-text-field sel2' %>
+  </div>
+  <div class="modal-footer">
+    <a class="btn btn-primary" data-dismiss="modal" href="#" id="ok_btn"><%= t 'ag2_tech.budgets.new_budget.btn_new' %></a>
+    <a class="btn btn-primary" data-dismiss="modal" href="#" id="cancel_btn"><%= t :close_button %></a>
+  </div>    
+</div>

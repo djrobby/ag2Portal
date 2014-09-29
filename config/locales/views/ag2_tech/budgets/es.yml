@@ -19,6 +19,12 @@ es:
         btn_show: "Ver Presupuesto"
       new:
         title: "Nuevo Presupuesto"
+      new_budget:
+        title: "Nuevo Presupuesto"
+        btn_new: "Generar"
+        entity_type_alert: "¡Debes inidicar Nombres o Empresa dependiendo del tipo de Entidad!"
+        entity_fiscal_short: "Id Fiscal es demasiado corto (8 caracteres mínimo)"
+        submit: "Presupuesto ha sido generado."
       back_to_main_page: "Volver a Presupuestos"
       generate_code_btn: "Nº de Presupuesto"
       new_btn: "Generar nuevo o Heredar anterior"

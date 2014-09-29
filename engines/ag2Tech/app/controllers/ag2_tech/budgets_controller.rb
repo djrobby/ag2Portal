@@ -85,12 +85,14 @@ module Ag2Tech
     
     # Update item-table account text fields at view from project select
     def bu_update_account_textfields_from_project
-      project = params[:id]
+      project = params[:project]
       if project != '0'
         @project = Project.find(project)
         @charge_account = @project.blank? ? charge_accounts_dropdown : charge_accounts_dropdown_edit(@project.id)
+        @old_budgets = @project.blank? ? budgets_dropdown : budgets_dropdown_edit(@project.id)
       else
         @charge_account = charge_accounts_dropdown
+        @old_budgets = budgets_dropdown
       end
       @json_data = { "charge_account" => @charge_account }
       render json: @json_data
@@ -102,8 +104,10 @@ module Ag2Tech
       if organization != '0'
         @organization = Organization.find(organization)
         @projects = @organization.blank? ? projects_dropdown : @organization.projects.order(:project_code)
+        @old_budgets = @organization.blank? ? budgets_dropdown : @organization.budgets.order('budget_no DESC')
       else
         @projects = projects_dropdown
+        @old_budgets = budgets_dropdown
       end
       @json_data = { "project" => @projects }
       render json: @json_data
@@ -189,6 +193,7 @@ module Ag2Tech
       @projects = projects_dropdown
       @periods = periods_dropdown
       @charge_accounts = charge_accounts_dropdown
+      @old_budgets = budgets_dropdown
   
       respond_to do |format|
         format.html # new.html.erb
@@ -295,6 +300,14 @@ module Ag2Tech
 
     def charge_accounts_dropdown_edit(_project)
       _accounts = ChargeAccount.where('project_id = ? OR project_id IS NULL', _project).order(:account_code)
+    end
+
+    def budgets_dropdown
+      session[:organization] != '0' ? Budget.where(organization_id: session[:organization].to_i).order('budget_no DESC') : Budget.order('budget_no DESC')
+    end
+
+    def budgets_dropdown_edit(_project)
+      _budgets = Budget.where(project_id: _project).order('budget_no DESC')
     end
     
     # Keeps filter state
