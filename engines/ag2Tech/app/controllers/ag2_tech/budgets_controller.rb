@@ -138,36 +138,64 @@ module Ag2Tech
       if project == '$' || period == '$'
         code = '$err'
       else
-        code = bu_next_no(project, period)
+        code = bu_next_no(project, period)  # New budget number
         if code != '$err'
-          @new_budget_no = code
           if budget == '$'
             # All new budget using assigned charge accounts
             _accounts = charge_accounts_dropdown_edit(project)
             if !_accounts.nil? && _accounts.count > 0
-              _accounts.each do |_account|
-                
+              @new_budget = create_budget(code, nil, project, Project.find(project).organization_id, period)
+              if !@new_budget.nil?
+                _accounts.each do |_account|
+                  _item_id = create_budget_item(@new_budget.id, _account.id, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+                  if _item_id == 0
+                    code = "$err"
+                    break
+                  end
+                end
+              else
+                code = "$err"
               end
             else
               code = "$err"
             end
           else
             # Inherits from previous selected budget
-            _items = BudgetItem.where(budget_id: budget).order(:id)
-            if !_items.nil? && _items.count > 0
+            _pbudget = Budget.find(budget)
+            if !_pbudget.nil?
+              _pitems = BudgetItem.where(budget_id: budget).order(:id)
+              if !_pitems.nil? && _pitems.count > 0
+                @new_budget = create_budget(code, _pbudget.description, _pbudget.project_id, _pbudget.organization_id, _pbudget.budget_period_id)
+                if !@new_budget.nil?
+                  _pitems.each do |_item|
+                    _item_id = create_budget_item(@new_budget.id, _item.charge_account_id,
+                                                  _item.month_01, _item.month_02, _item.month_03, _item.month_04,
+                                                  _item.month_05, _item.month_06, _item.month_07, _item_month_08,
+                                                  _item.month_09, _item.month_10, _item.month_11, _item_month_12)
+                    if _item_id == 0
+                      code = "$err"
+                      break
+                    end
+                  end
+                else
+                  code = "$err"
+                end
+              else
+                code = "$err"
+              end
             else
               code = "$err"
             end
-            _items.each do |_item|
-              
-            end
           end
         end
-        # If no error, display show.html.erb
-        redirect_to @new_budget, notice: crud_notice('created', @new_budget)
       end
-      @json_data = { "code" => code }
-      render json: @json_data
+      if code != '$err'
+        # If no error, show new budget
+        redirect_to @new_budget, notice: crud_notice('created', @new_budget)
+      else
+        @json_data = { "code" => code }
+        render json: @json_data
+      end
     end
 
     #
@@ -367,6 +395,46 @@ module Ag2Tech
       elsif session[:Period]
         params[:Period] = session[:Period]
       end
+    end
+
+    # Special methods to create new budget (bu_new)
+    def create_budget(budget_no, description, project_id, organization_id, budget_period_id)
+      _new_budget = nil
+      _budget = Budget.new
+      _budget.budget_no = budget_no
+      _budget.description = description.blank? ? 'Presupuesto ' + budget_no : 'Copia de ' + description
+      _budget.project_id = project_id
+      _budget.organization_id = organization_id
+      _budget.budget_period_id = budget_period_id
+      if _budget.save
+        _new_budget = _budget
+      end
+      _new_budget
+    end
+
+    def create_budget_item(budget_id, charge_account_id, month_01, month_02, month_03, month_04,
+                           month_05, month_06, month_07, month_08, month_09, month_10, month_11, month_12)
+      _id = 0
+      _budget_item = BudgetItem.new
+      _budget_item.budget_id = budget_id
+      _budget_item.charge_account_id = charge_account_id
+      _budget_item.month_01 = month_01
+      _budget_item.month_02 = month_02
+      _budget_item.month_03 = month_03
+      _budget_item.month_04 = month_04
+      _budget_item.month_05 = month_05
+      _budget_item.month_06 = month_06
+      _budget_item.month_07 = month_07
+      _budget_item.month_08 = month_08
+      _budget_item.month_09 = month_09
+      _budget_item.month_10 = month_10
+      _budget_item.month_11 = month_11
+      _budget_item.month_12 = month_12
+      _budget_item.corrected_amount = 0
+      if _budget_item.save
+        _id = _budget_item.id
+      end
+      _id
     end
   end
 end
