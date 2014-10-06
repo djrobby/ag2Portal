@@ -106,20 +106,10 @@
       } else {
         $("#new-budget").modal('show');
         $('#new-budget').on('hidden', function() {
+          // Executes if budget_no == $err, only
           $('#budget_budget_no').select();
-        });        
+        });
       }
-      jQuery.getJSON('bu_generate_no/' + order + '/' + period, function(data) {
-        $("#budget_order_no").val(data.code);
-        if ($("#budget_order_no").val() == "$err") {
-          $("#budget_order_no").css('color', 'red');
-          alert('<%= I18n.t("ag2_tech.budgets.no_error") %>');
-          $('#budget_order_no').select();
-        } else {
-          $("#budget_order_no").css('color', text_field_color);
-          $('#budget_order_no').trigger("change");
-        }
-      });
       return false;
     });
 

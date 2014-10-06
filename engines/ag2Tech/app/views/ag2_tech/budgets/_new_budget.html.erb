@@ -8,7 +8,6 @@
   });
 
   jQuery(function($) {
-    
     // when #ok_btn is clicked
     $("#ok_btn").click(function() {
       var order = $('select#budget_project_id :selected').val();
@@ -17,23 +16,22 @@
       var period = $('select#budget_budget_period_id :selected').val();
       if (period == "")
         period = "$";
-      if (order == '$' || period == '$') {
-        alert('<%= I18n.t("ag2_tech.budgets.new_error") %>');
-      } else {
-        $("#new-budget").modal('show');
-        $('#new-budget').on('hidden', function() {
-          $('#budget_budget_no').select();
-        });        
-      }
-      jQuery.getJSON('bu_generate_no/' + order + '/' + period, function(data) {
-        $("#budget_order_no").val(data.code);
-        if ($("#budget_order_no").val() == "$err") {
-          $("#budget_order_no").css('color', 'red');
-          alert('<%= I18n.t("ag2_tech.budgets.no_error") %>');
-          $('#budget_order_no').select();
+      var budget = $('select#budgets :selected').val();
+      if (budget == "")
+        budget = "$";
+      jQuery.getJSON('bu_new/' + order + '/' + period + '/' + budget, function(data) {
+        $("#budget_budget_no").val(data.code);
+        if ($("#budget_budget_no").val() == "$err") {
+          $("#budget_budget_no").css('color', 'red');
+          alert('<%= I18n.t("ag2_tech.budgets.new_error") %>');
+          $("#new-budget").modal('hide');
         } else {
+          // If no error, controller has redirected to show.html.erb
+          /*
           $("#budget_order_no").css('color', text_field_color);
+          alert('<%= I18n.t("ag2_tech.budgets.new_success", var: @new_budget_no) %>');
           $('#budget_order_no').trigger("change");
+          */
         }
       });
       return false;

@@ -128,9 +128,46 @@ module Ag2Tech
       render json: @json_data
     end
 
-    # Inherits new Budget from the chosen one
-    def bu_inherit
-      
+    # New Budget (from the chosen one)
+    def bu_new
+      project = params[:project]
+      period = params[:period]
+      budget = params[:budget]
+
+      # Generate new, if possible
+      if project == '$' || period == '$'
+        code = '$err'
+      else
+        code = bu_next_no(project, period)
+        if code != '$err'
+          @new_budget_no = code
+          if budget == '$'
+            # All new budget using assigned charge accounts
+            _accounts = charge_accounts_dropdown_edit(project)
+            if !_accounts.nil? && _accounts.count > 0
+              _accounts.each do |_account|
+                
+              end
+            else
+              code = "$err"
+            end
+          else
+            # Inherits from previous selected budget
+            _items = BudgetItem.where(budget_id: budget).order(:id)
+            if !_items.nil? && _items.count > 0
+            else
+              code = "$err"
+            end
+            _items.each do |_item|
+              
+            end
+          end
+        end
+        # If no error, display show.html.erb
+        redirect_to @new_budget, notice: crud_notice('created', @new_budget)
+      end
+      @json_data = { "code" => code }
+      render json: @json_data
     end
 
     #
