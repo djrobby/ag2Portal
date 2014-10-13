@@ -47,6 +47,8 @@ class Organization < ActiveRecord::Base
   has_many :charge_groups
   has_many :budget_headings
   has_many :budgets
+  has_many :vehicles
+  has_many :tools
 
   has_paper_trail
 
@@ -84,6 +86,11 @@ class Organization < ActiveRecord::Base
       errors.add(:base, I18n.t('activerecord.models.organization.check_for_suppliers'))
       return false
     end
+    # Check for payment methods
+    if payment_methods.count > 0
+      errors.add(:base, I18n.t('activerecord.models.organization.check_for_payment_methods'))
+      return false
+    end
     # Check for workers
     if workers.count > 0
       errors.add(:base, I18n.t('activerecord.models.organization.check_for_workers'))
@@ -107,6 +114,16 @@ class Organization < ActiveRecord::Base
     # Check for stores
     if stores.count > 0
       errors.add(:base, I18n.t('activerecord.models.organization.check_for_stores'))
+      return false
+    end
+    # Check for vehicles
+    if vehicles.count > 0
+      errors.add(:base, I18n.t('activerecord.models.organization.check_for_vehicles'))
+      return false
+    end
+    # Check for tools
+    if tools.count > 0
+      errors.add(:base, I18n.t('activerecord.models.organization.check_for_tools'))
       return false
     end
   end

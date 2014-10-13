@@ -15,10 +15,15 @@ class WorkOrder < ActiveRecord::Base
                   :remarks, :description, :petitioner, :master_order_id, :organization_id,
                   :in_charge_id, :reported_at, :approved_at, :certified_at, :posted_at,
                   :location, :pub_record
-  attr_accessible :work_order_items_attributes, :work_order_workers_attributes
+  attr_accessible :work_order_items_attributes, :work_order_workers_attributes,
+                  :work_order_tools_attributes, :work_order_vehicles_attributes,
+                  :work_order_subcontractors_attributes
 
   has_many :work_order_items, dependent: :destroy
   has_many :work_order_workers, dependent: :destroy
+  has_many :work_order_tools, dependent: :destroy
+  has_many :work_order_vehicles, dependent: :destroy
+  has_many :work_order_subcontractors, dependent: :destroy
   has_many :purchase_orders
   has_many :purchase_order_items
   has_many :receipt_notes
@@ -41,6 +46,15 @@ class WorkOrder < ActiveRecord::Base
   accepts_nested_attributes_for :work_order_workers,                                 
                                 :reject_if => :all_blank,
                                 :allow_destroy => true
+  accepts_nested_attributes_for :work_order_tools,                                 
+                                :reject_if => :all_blank,
+                                :allow_destroy => true
+  accepts_nested_attributes_for :work_order_vehicles,                                 
+                                :reject_if => :all_blank,
+                                :allow_destroy => true
+  accepts_nested_attributes_for :work_order_subcontractors,                                 
+                                :reject_if => :all_blank,
+                                :allow_destroy => true
 
   # Self join
   has_many :suborders, class_name: 'WorkOrder', foreign_key: 'master_order_id'
@@ -48,7 +62,9 @@ class WorkOrder < ActiveRecord::Base
   
   has_paper_trail
 
-  validates_associated :work_order_items, :work_order_workers
+  validates_associated :work_order_items, :work_order_workers,
+                       :work_order_tools, :work_order_vehicles,
+                       :work_order_subcontractors
 
   validates :order_no,          :presence => true,
                                 :length => { :is => 22 },
@@ -149,7 +165,37 @@ class WorkOrder < ActiveRecord::Base
   end
   
   def total_costs
-    item_costs + worker_costs
+    item_costs + worker_costs + tool_costs + vehicle_costs + subcontractor_costs
+  end
+
+  def tool_costs
+    costs = 0
+    work_order_tools.each do |i|
+      if !i.costs.blank?
+        costs += i.costs
+      end
+    end
+    costs
+  end
+
+  def vehicle_costs
+    costs = 0
+    work_order_vehicles.each do |i|
+      if !i.costs.blank?
+        costs += i.costs
+      end
+    end
+    costs
+  end
+
+  def subcontractor_costs
+    costs = 0
+    work_order_subcontractors.each do |i|
+      if !i.costs.blank?
+        costs += i.costs
+      end
+    end
+    costs
   end
   
   #

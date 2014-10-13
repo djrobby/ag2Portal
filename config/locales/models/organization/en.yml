@@ -10,11 +10,14 @@ en:
         check_for_entities: "Organization cannot be destroyed while linked entities exist."
         check_for_clients: "Organization cannot be destroyed while linked clients exist."
         check_for_suppliers: "Organization cannot be destroyed while linked suppliers exist."
+        check_for_payment_methods: "Organization cannot be destroyed while linked payment methods exist."
         check_for_workers: "Organization cannot be destroyed while linked workers exist."
         check_for_technicians: "Organization cannot be destroyed while linked technicians exist."
         check_for_corp_contacts: "Organization cannot be destroyed while linked contacts exist."
         check_for_products: "Organization cannot be destroyed while linked products exist."
         check_for_stores: "Organization cannot be destroyed while linked stores exist."
+        check_for_vehicles: "Organization cannot be destroyed while linked vehicles exist."
+        check_for_tools: "Organization cannot be destroyed while linked tools exist."
     attributes:
       organization:
         name: "Name"

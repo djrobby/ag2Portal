@@ -1,0 +1,23 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  organization: 
+  company: 
+  office: 
+  product: 
+  name: MyString
+  serial_no: MyString
+  brand: MyString
+  model: MyString
+  cost: 9.99
+
+two:
+  organization: 
+  company: 
+  office: 
+  product: 
+  name: MyString
+  serial_no: MyString
+  brand: MyString
+  model: MyString
+  cost: 9.99

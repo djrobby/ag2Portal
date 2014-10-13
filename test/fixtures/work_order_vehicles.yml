@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  work_order: 
+  vehicle: 
+  distance: 9.99
+  cost: 9.99
+
+two:
+  work_order: 
+  vehicle: 
+  distance: 9.99
+  cost: 9.99

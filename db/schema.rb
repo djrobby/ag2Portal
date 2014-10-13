@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140922115637) do
+ActiveRecord::Schema.define(:version => 20141013091531) do
 
   create_table "activities", :force => true do |t|
     t.string   "description"
@@ -1718,6 +1718,29 @@ ActiveRecord::Schema.define(:version => 20140922115637) do
 
   add_index "timerecord_types", ["name"], :name => "index_timerecord_types_on_name"
 
+  create_table "tools", :force => true do |t|
+    t.integer  "organization_id"
+    t.integer  "company_id"
+    t.integer  "office_id"
+    t.integer  "product_id"
+    t.string   "name"
+    t.string   "serial_no"
+    t.string   "brand"
+    t.string   "model"
+    t.decimal  "cost",            :precision => 12, :scale => 4, :default => 0.0, :null => false
+    t.datetime "created_at",                                                      :null => false
+    t.datetime "updated_at",                                                      :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  add_index "tools", ["company_id"], :name => "index_tools_on_company_id"
+  add_index "tools", ["office_id"], :name => "index_tools_on_office_id"
+  add_index "tools", ["organization_id", "serial_no"], :name => "index_tools_on_organization_and_serial", :unique => true
+  add_index "tools", ["organization_id"], :name => "index_tools_on_organization_id"
+  add_index "tools", ["product_id"], :name => "index_tools_on_product_id"
+  add_index "tools", ["serial_no"], :name => "index_tools_on_serial_no"
+
   create_table "towns", :force => true do |t|
     t.string   "name"
     t.string   "ine_cmun"
@@ -1788,6 +1811,29 @@ ActiveRecord::Schema.define(:version => 20140922115637) do
 
   add_index "users_roles", ["user_id", "role_id"], :name => "index_users_roles_on_user_id_and_role_id"
 
+  create_table "vehicles", :force => true do |t|
+    t.integer  "organization_id"
+    t.integer  "company_id"
+    t.integer  "office_id"
+    t.integer  "product_id"
+    t.string   "name"
+    t.string   "registration"
+    t.string   "brand"
+    t.string   "model"
+    t.decimal  "cost",            :precision => 12, :scale => 4, :default => 0.0, :null => false
+    t.datetime "created_at",                                                      :null => false
+    t.datetime "updated_at",                                                      :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  add_index "vehicles", ["company_id"], :name => "index_vehicles_on_company_id"
+  add_index "vehicles", ["office_id"], :name => "index_vehicles_on_office_id"
+  add_index "vehicles", ["organization_id", "registration"], :name => "index_vehicles_on_organization_and_registration", :unique => true
+  add_index "vehicles", ["organization_id"], :name => "index_vehicles_on_organization_id"
+  add_index "vehicles", ["product_id"], :name => "index_vehicles_on_product_id"
+  add_index "vehicles", ["registration"], :name => "index_vehicles_on_registration"
+
   create_table "versions", :force => true do |t|
     t.string   "item_type",  :null => false
     t.integer  "item_id",    :null => false
@@ -1839,6 +1885,31 @@ ActiveRecord::Schema.define(:version => 20140922115637) do
     t.integer  "updated_by"
   end
 
+  create_table "work_order_subcontractors", :force => true do |t|
+    t.integer  "work_order_id"
+    t.integer  "supplier_id"
+    t.integer  "purchase_order_id"
+    t.decimal  "enforcement_pct",   :precision => 7, :scale => 2, :default => 0.0, :null => false
+    t.datetime "created_at",                                                       :null => false
+    t.datetime "updated_at",                                                       :null => false
+  end
+
+  add_index "work_order_subcontractors", ["purchase_order_id"], :name => "index_work_order_subcontractors_on_purchase_order_id"
+  add_index "work_order_subcontractors", ["supplier_id"], :name => "index_work_order_subcontractors_on_supplier_id"
+  add_index "work_order_subcontractors", ["work_order_id"], :name => "index_work_order_subcontractors_on_work_order_id"
+
+  create_table "work_order_tools", :force => true do |t|
+    t.integer  "work_order_id"
+    t.integer  "tool_id"
+    t.decimal  "minutes",       :precision => 7,  :scale => 2, :default => 0.0, :null => false
+    t.decimal  "cost",          :precision => 12, :scale => 4, :default => 0.0, :null => false
+    t.datetime "created_at",                                                    :null => false
+    t.datetime "updated_at",                                                    :null => false
+  end
+
+  add_index "work_order_tools", ["tool_id"], :name => "index_work_order_tools_on_tool_id"
+  add_index "work_order_tools", ["work_order_id"], :name => "index_work_order_tools_on_work_order_id"
+
   create_table "work_order_types", :force => true do |t|
     t.string   "name"
     t.datetime "created_at",      :null => false
@@ -1849,6 +1920,18 @@ ActiveRecord::Schema.define(:version => 20140922115637) do
   end
 
   add_index "work_order_types", ["organization_id"], :name => "index_work_order_types_on_organization_id"
+
+  create_table "work_order_vehicles", :force => true do |t|
+    t.integer  "work_order_id"
+    t.integer  "vehicle_id"
+    t.decimal  "distance",      :precision => 7,  :scale => 2, :default => 0.0, :null => false
+    t.decimal  "cost",          :precision => 12, :scale => 4, :default => 0.0, :null => false
+    t.datetime "created_at",                                                    :null => false
+    t.datetime "updated_at",                                                    :null => false
+  end
+
+  add_index "work_order_vehicles", ["vehicle_id"], :name => "index_work_order_vehicles_on_vehicle_id"
+  add_index "work_order_vehicles", ["work_order_id"], :name => "index_work_order_vehicles_on_work_order_id"
 
   create_table "work_order_workers", :force => true do |t|
     t.integer  "work_order_id"

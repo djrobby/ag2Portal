@@ -62,3 +62,7 @@ es:
           attributes:
             heading_code:
               code_invalid: "Código inválido (debe ser numérico)"
+        vehicle:
+          attributes:
+            registration:
+              code_invalid: "Matrícula inválida (must be alphanumeric)"

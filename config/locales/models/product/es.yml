@@ -16,6 +16,8 @@ es:
         check_for_supplier_invoices: "Producto no puede ser eliminado mientras existan facturas S vinculadas."
         check_for_client_invoices: "Producto no puede ser eliminado mientras existan facturas C vinculadas."
         check_for_sale_offers: "Producto no puede ser eliminado mientras existan presupuestos vinculados."
+        check_for_vehicles: "Producto no puede ser eliminado mientras existan vehículos vinculados."
+        check_for_tools: "Producto no puede ser eliminado mientras existan herramientas vinculadas."
     attributes:
       product:
         product_code: "Código"
