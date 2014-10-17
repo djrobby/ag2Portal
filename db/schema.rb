@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20141013091531) do
+ActiveRecord::Schema.define(:version => 20141013100758) do
 
   create_table "activities", :force => true do |t|
     t.string   "description"
@@ -1892,6 +1892,8 @@ ActiveRecord::Schema.define(:version => 20141013091531) do
     t.decimal  "enforcement_pct",   :precision => 7, :scale => 2, :default => 0.0, :null => false
     t.datetime "created_at",                                                       :null => false
     t.datetime "updated_at",                                                       :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
   end
 
   add_index "work_order_subcontractors", ["purchase_order_id"], :name => "index_work_order_subcontractors_on_purchase_order_id"
@@ -1905,6 +1907,8 @@ ActiveRecord::Schema.define(:version => 20141013091531) do
     t.decimal  "cost",          :precision => 12, :scale => 4, :default => 0.0, :null => false
     t.datetime "created_at",                                                    :null => false
     t.datetime "updated_at",                                                    :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
   end
 
   add_index "work_order_tools", ["tool_id"], :name => "index_work_order_tools_on_tool_id"
@@ -1928,6 +1932,8 @@ ActiveRecord::Schema.define(:version => 20141013091531) do
     t.decimal  "cost",          :precision => 12, :scale => 4, :default => 0.0, :null => false
     t.datetime "created_at",                                                    :null => false
     t.datetime "updated_at",                                                    :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
   end
 
   add_index "work_order_vehicles", ["vehicle_id"], :name => "index_work_order_vehicles_on_vehicle_id"
