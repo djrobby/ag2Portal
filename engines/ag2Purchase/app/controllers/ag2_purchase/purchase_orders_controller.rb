@@ -15,7 +15,8 @@ module Ag2Purchase
                                                :po_totals,
                                                :po_current_stock,
                                                :po_update_project_textfields_from_organization,
-                                               :po_generate_no]
+                                               :po_generate_no,
+                                               :po_product_stock]
     # Update offer select at view from supplier select
     def po_update_offer_select_from_supplier
       supplier = params[:supplier]
@@ -71,6 +72,7 @@ module Ag2Purchase
       tax_type_tax = 0
       tax = 0
       current_stock = 0
+      product_stock = 0
       if product != '0'
         @product = Product.find(product)
         @prices = @product.purchase_prices
@@ -82,6 +84,7 @@ module Ag2Purchase
         tax_type_id = @product.tax_type.id
         tax_type_tax = @product.tax_type.tax
         tax = amount * (tax_type_tax / 100)
+        product_stock = @product.stock
         if store != 0
           current_stock = Stock.find_by_product_and_store(product, store).current rescue 0
         end
@@ -91,9 +94,11 @@ module Ag2Purchase
       tax = number_with_precision(tax.round(4), precision: 4)
       amount = number_with_precision(amount.round(4), precision: 4)
       current_stock = number_with_precision(current_stock.round(4), precision: 4)
+      product_stock = number_with_precision(product_stock.round(4), precision: 4)
       # Setup JSON
       @json_data = { "description" => description, "price" => price.to_s, "amount" => amount.to_s,
-                     "tax" => tax.to_s, "type" => tax_type_id, "stock" => current_stock.to_s }
+                     "tax" => tax.to_s, "type" => tax_type_id,
+                     "stock" => current_stock.to_s, "product_stock" => product_stock.to_s }
       render json: @json_data
     end
 
@@ -266,6 +271,26 @@ module Ag2Purchase
       # Builds no, if possible
       code = project == '$' ? '$err' : po_next_no(project)
       @json_data = { "code" => code }
+      render json: @json_data
+    end
+
+    # Product stock by store
+    def po_product_stock
+      product = params[:product]
+      qty = params[:qty].to_f / 10000
+      store = params[:store]
+      stocks = nil
+      _stocks = nil
+      if product != '0' && store != 0
+        stocks = Stock.find_by_product_and_not_store_and_positive(product, store)
+      end
+      if stocks != nil && stocks.count > 0
+        _stocks = []
+        stocks.each do |i|
+          _stocks = _stocks << (i.id + i.store.name + i.current)
+        end
+      end
+      @json_data = { "stocks" => _stocks }
       render json: @json_data
     end
 

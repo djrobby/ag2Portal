@@ -9,6 +9,9 @@
      */
     // Form
     var _f = $("#fnt-product").closest('form')[0];
+    // Organization
+    var _org = $('#purchase_order_organization_id :selected').val();
+    if (_org == "") _org = "0";
     // Project
     $("#fnt-project").html("");
     $('#purchase_order_project_id option').clone().appendTo('#fnt-project');
@@ -55,6 +58,8 @@
         store = "0";
       // Right formatted for passing as REST parameter
       qty = parseInt(right_number(qty, 4) * 10000);
+      var _sstock = 0;
+      var _pstock = 0;
       //qty = qty.replace(",", ".") * 10000;
       jQuery.getJSON('po_update_description_prices_from_product_store/' + product + '/' + qty + '/' + store, function(data) {
         $("#fnt-description").val(data.description);
@@ -65,6 +70,28 @@
         $('#fnt-discount-pct').val("0,00");
         $('#fnt-discount').val("0,0000");
         $("#current-stock").html(data.stock);
+        _sstock = parseFloat(data.stock);
+        _pstock = parseFloat(data.product_stock);
+        if ((_pstock - _sstock) > 0) {
+          jQuery.getJSON('po_product_stock/' + product + '/' + qty + '/' + store, function(data) {
+            if (data.stocks != null) {
+              var s = data.stocks;
+              var a = '';
+              if (!s.length) {
+                $.each(data, function(id, option) {
+                  if (id == 'stocks' && option != "") {
+                    a += option.store.name + ' ' + option.current;
+                  }
+                });
+              } else {
+                $.each(s, function(id, option) {
+                  a += option.store.name + ' ' + option.current;
+                });
+              }
+              alert(a);
+            }
+          });
+        }
       });
       return false;
     });
