@@ -84,7 +84,7 @@ module Ag2Purchase
         tax_type_id = @product.tax_type.id
         tax_type_tax = @product.tax_type.tax
         tax = amount * (tax_type_tax / 100)
-        product_stock = @product.stock
+        product_stock = @product.not_jit_stock
         if store != 0
           current_stock = Stock.find_by_product_and_store(product, store).current rescue 0
         end
@@ -221,6 +221,12 @@ module Ag2Purchase
       @json_data = { "num" => num.to_s }
       render json: @json_data
     end
+    def po_format_number_4
+      num = params[:num].to_f / 10000
+      num = number_with_precision(num.round(4), precision: 4)
+      @json_data = { "num" => num.to_s }
+      render json: @json_data
+    end
 
     # Update current stock text field at view from store select
     def po_current_stock
@@ -284,14 +290,7 @@ module Ag2Purchase
       if product != '0' && store != 0
         stocks = Stock.find_by_product_and_not_store_and_positive(product, store)
       end
-      if stocks != nil && stocks.count > 0
-        _stocks = []
-        stocks.each do |i|
-          _stocks = _stocks << (i.id + i.store.name + i.current)
-        end
-      end
-      @json_data = { "stocks" => _stocks }
-      render json: @json_data
+      render json: stocks, include: :store
     end
 
     #

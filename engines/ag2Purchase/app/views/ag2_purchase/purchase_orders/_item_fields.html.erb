@@ -1,4 +1,6 @@
 <script>
+  var _num;
+  
   $(document).ready(function() {
     // Disable calculated fields
     //$('#fnt-amount').prop('readonly', true);
@@ -74,20 +76,11 @@
         _pstock = parseFloat(data.product_stock);
         if ((_pstock - _sstock) > 0) {
           jQuery.getJSON('po_product_stock/' + product + '/' + qty + '/' + store, function(data) {
-            if (data.stocks != null) {
-              var s = data.stocks;
-              var a = '';
-              if (!s.length) {
-                $.each(data, function(id, option) {
-                  if (id == 'stocks' && option != "") {
-                    a += option.store.name + ' ' + option.current;
-                  }
-                });
-              } else {
-                $.each(s, function(id, option) {
-                  a += option.store.name + ' ' + option.current;
-                });
-              }
+            if (data != null) {
+              var a = '<%= I18n.t("ag2_purchase.purchase_orders.stocks_warning") %>\n';
+              $.each(data, function(id, option) {
+                a += '\n' + option.store.name + ' = ' + option.current;
+              });
               alert(a);
             }
           });
@@ -257,6 +250,10 @@
       return false;
     });
 
+    $("#infoButton").click(function() {
+      alert("dblclick");
+    });
+    
     // Recalculate amounts & prices
     function recalculate(_this) {
       // make a POST call and replace the content
@@ -294,7 +291,7 @@
         $('#items-table').trigger('totals');
       })
     }
-  })
+  });
 </script>
 
 <div id="new-item-fields" class="modal hide fade" data-backdrop="static">
@@ -309,7 +306,10 @@
     <%= f.association :work_order, collection: @work_orders, input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-work-order', data: { validation: "required", "validation-error-msg" => "#{e}" } }, label_html: { class: 'form-label' } %>
     <%= f.association :charge_account, collection: @charge_accounts, input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-charge-account', data: { validation: "required", "validation-error-msg" => "#{e}" } }, label_html: { class: 'form-label' } %>
     <%= f.association :store, collection: @stores, input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-store', data: { validation: "required", "validation-error-msg" => "#{e}" } }, label_html: { class: 'form-label' } %>
-    <%= f.association :product, collection: @products, input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-product', data: { validation: "required", "validation-error-msg" => "#{e}" } }, label_html: { class: 'form-label' } %>
+    <a href="#" style="float: left" id="infoButton"><i class="icon-info-sign" title="<%=t('ag2_purchase.purchase_orders.info_btn') %>"></i></a>
+    <div style="overflow: hidden; padding-left: 0em;">
+      <%= f.association :product, collection: @products, input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-product', data: { validation: "required", "validation-error-msg" => "#{e}" } }, label_html: { class: 'form-label' } %>
+    </div>
     <%= f.input :description, input_html: { class: 'x-large-text-field field', maxlength: 40, id: 'fnt-description', data: { validation: "required", "validation-error-msg" => "#{e}" }, onkeyup: "caps(this)" }, label_html: { class: 'form-label' } %>
     <%= f.input :code, input_html: { class: 'mid-text-field field', id: 'fnt-code' }, label_html: { class: 'form-label' } %>
     <%= f.input :quantity, as: :string, input_html: { value: (number_with_precision(f.object.quantity, precision: 4) if f.object.quantity), class: 'mid-text-field number-text-field field', id: 'fnt-quantity' }, label_html: { class: 'form-label' } %>

@@ -33,3 +33,5 @@ en:
       btn_new_item: "New Item"
       btn_add_item: "Add"
       item_error: "can't be blank"
+      stocks_warning: "This product has stocks in other stores!"
+      info_btn: "Stocks"

@@ -33,3 +33,5 @@ es:
       btn_new_item: "Nuevo Item"
       btn_add_item: "Agregar"
       item_error: "no puede estar en blanco"
+      stocks_warning: "¡Este producto tiene existencias en otras almacenes!"
+      info_btn: "Existencias"

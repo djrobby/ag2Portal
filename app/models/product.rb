@@ -88,6 +88,16 @@ class Product < ActiveRecord::Base
     stocks.sum("current")
   end
   
+  def not_jit_stock
+    _s = 0
+    stocks.each do |s|
+      if s.store.supplier_id.blank? && !s.current.blank?
+        _s += s.current
+      end
+    end
+    _s    
+  end
+
   #
   # Records navigator
   #
