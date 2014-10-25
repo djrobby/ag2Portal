@@ -15,6 +15,10 @@ class Stock < ActiveRecord::Base
   def self.find_by_product_and_not_store_and_positive(_product, _store)
     Stock.includes(:store).where("product_id = ? AND store_id != ? AND current > 0 AND stores.supplier_id IS NULL", _product, _store) 
   end
+
+  def self.find_by_product_all_stocks(_product)
+    Stock.includes(:store).where("product_id = ?", _product) 
+  end
   
   searchable do
     integer :product_id

@@ -251,7 +251,19 @@
     });
 
     $("#infoButton").click(function() {
-      alert("dblclick");
+      var product = $('select#fnt-product :selected').val();
+      if (product == "")
+        product = "0";
+      jQuery.getJSON('po_product_all_stocks/' + product, function(data) {
+        if (data != null) {
+          var a = '<%= I18n.t("ag2_purchase.purchase_orders.info_btn") %>\n';
+          $.each(data, function(id, option) {
+            a += '\n' + option.store.name + ' = ' + option.current;
+          });
+          alert(a);
+        }
+      });
+      return false;
     });
     
     // Recalculate amounts & prices

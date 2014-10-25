@@ -286,9 +286,17 @@ module Ag2Purchase
       qty = params[:qty].to_f / 10000
       store = params[:store]
       stocks = nil
-      _stocks = nil
       if product != '0' && store != 0
         stocks = Stock.find_by_product_and_not_store_and_positive(product, store)
+      end
+      render json: stocks, include: :store
+    end
+
+    def po_product_all_stocks
+      product = params[:product]
+      stocks = nil
+      if product != '0'
+        stocks = Stock.find_by_product_all_stocks(product)
       end
       render json: stocks, include: :store
     end
