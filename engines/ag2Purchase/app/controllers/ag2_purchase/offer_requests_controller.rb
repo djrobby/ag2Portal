@@ -255,7 +255,7 @@ module Ag2Purchase
     end
 
     # Approve offer
-    def approve_offer
+    def or_approve_offer
       _offer = params[:offer]
       _offer_request = params[:offer_request]
       code = '$err'
@@ -272,7 +272,7 @@ module Ag2Purchase
     end
 
     # Disapprove offer
-    def disapprove_offer
+    def or_disapprove_offer
       offer = params[:offer]
       offer_request = params[:offer_request]
 

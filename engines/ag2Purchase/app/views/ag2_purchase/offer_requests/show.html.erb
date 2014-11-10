@@ -6,9 +6,9 @@
     // Approve offer from selected table row, when the .icon-ok clicked
     $(".icon-ok").click(function() {
       var _row = $(this).closest("tr");
-      var _offer_id = _row.find(".offer-id").text();
-      var _offer_request_id = $('#offer_request_table').find(".offer-request-id").text();
-      jQuery.getJSON('approve_offer/' + _offer_id + '/' + _offer_request_id, function(data) {
+      var _offer = _row.find(".offer-id").text();
+      var _offer_request = $('#offer_request_table').find(".offer-request-id").text();
+      jQuery.getJSON('or_approve_offer/' + _offer + '/' + _offer_request, function(data) {
         document.getElementById('foot-quantity').innerHTML = data.qty;
         document.getElementById('foot-amount').innerHTML = data.amount;
         document.getElementById('foot-tax').innerHTML = data.tax;
@@ -21,9 +21,9 @@
     // Disapprove offer from selected table row, when the .icon-remove clicked
     $(".icon-remove").click(function() {
       var _row = $(this).closest("tr");
-      var _offer_id = _row.find("offer-id").text();
-      var _offer_request_id = $('#offer_request_table').find(".offer-request-id").text();
-      jQuery.getJSON('disapprove_offer/' + _offer_id + '/' + _offer_request_id, function(data) {
+      var _offer = _row.find("offer-id").text();
+      var _offer_request = $('#offer_request_table').find(".offer-request-id").text();
+      jQuery.getJSON('or_disapprove_offer/' + _offer + '/' + _offer_request, function(data) {
         document.getElementById('foot-quantity').innerHTML = data.qty;
         document.getElementById('foot-amount').innerHTML = data.amount;
         document.getElementById('foot-tax').innerHTML = data.tax;

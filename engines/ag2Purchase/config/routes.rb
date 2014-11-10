@@ -115,6 +115,13 @@ Ag2Purchase::Engine.routes.draw do
     match 'supplier_invoices/si_current_invoice_debt/:invoice', :controller => 'supplier_invoices', :action => 'si_current_invoice_debt'
     match 'si_current_invoice_debt/:invoice', :controller => 'supplier_invoices', :action => 'si_current_invoice_debt'
     match 'supplier_invoices/:id/si_current_invoice_debt/:invoice', :controller => 'supplier_invoices', :action => 'si_current_invoice_debt'
+    #
+    match 'offer_requests/or_approve_offer/:offer/:offer_request', :controller => 'offer_requests', :action => 'or_approve_offer'
+    match 'or_approve_offer/:offer/:offer_request', :controller => 'offer_requests', :action => 'or_approve_offer'
+    match 'offer_requests/:id/or_approve_offer/:offer/:offer_request', :controller => 'offer_requests', :action => 'or_approve_offer'
+    match 'offer_requests/or_disapprove_offer/:offer/:offer_request', :controller => 'offer_requests', :action => 'or_disapprove_offer'
+    match 'or_disapprove_offer/:offer/:offer_request', :controller => 'offer_requests', :action => 'or_disapprove_offer'
+    match 'offer_requests/:id/or_disapprove_offer/:offer/:offer_request', :controller => 'offer_requests', :action => 'or_disapprove_offer'
 
     # Resources
     resources :suppliers
