@@ -1,7 +1,9 @@
 <tr>
-  <td><%= offer.id %></td>
+  <td class="offer-id"><%= offer.id %></td>
   <td><%= link_to offer.offer_no, offer %></td>
   <td align="center"><%= offer.offer_date.strftime("%d/%m/%Y") unless offer.offer_date.blank? %></td>
   <td><%= offer.supplier.full_name %></td>
   <td align="right"><%= number_with_precision(offer.total, precision: 4) unless offer.total.blank? %></td>
+  <td><a href="#"><i class="icon-ok"></i></a></td>
+  <td><a href="#"><i class="icon-remove"></i></a></td>
 </tr>

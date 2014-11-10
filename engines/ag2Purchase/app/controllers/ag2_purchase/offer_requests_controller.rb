@@ -14,7 +14,9 @@ module Ag2Purchase
                                                :or_totals,
                                                :or_current_stock,
                                                :or_update_project_textfields_from_organization,
-                                               :or_generate_no]
+                                               :or_generate_no,
+                                               :approve_offer,
+                                               :disapprove_offer]
     # Calculate and format totals properly
     def or_totals
       qty = params[:qty].to_f / 10000
@@ -248,6 +250,32 @@ module Ag2Purchase
 
       # Builds no, if possible
       code = project == '$' ? '$err' : or_next_no(project)
+      @json_data = { "code" => code }
+      render json: @json_data
+    end
+
+    # Approve offer
+    def approve_offer
+      _offer = params[:offer]
+      _offer_request = params[:offer_request]
+      code = '$err'
+
+      offer_request = OfferRequest.find(_offer_request)
+      if !offer_request.nil?
+        if offer_request.approved_offer_id.blank?
+          # Can approve offer
+        end
+      else
+      end
+      @json_data = { "code" => code }
+      render json: @json_data
+    end
+
+    # Disapprove offer
+    def disapprove_offer
+      offer = params[:offer]
+      offer_request = params[:offer_request]
+
       @json_data = { "code" => code }
       render json: @json_data
     end

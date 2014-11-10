@@ -1,13 +1,50 @@
+<script>
+  jQuery(function($) {
+    /*
+     * Very special functions!
+     */
+    // Approve offer from selected table row, when the .icon-ok clicked
+    $(".icon-ok").click(function() {
+      var _row = $(this).closest("tr");
+      var _offer_id = _row.find(".offer-id").text();
+      var _offer_request_id = $('#offer_request_table').find(".offer-request-id").text();
+      jQuery.getJSON('approve_offer/' + _offer_id + '/' + _offer_request_id, function(data) {
+        document.getElementById('foot-quantity').innerHTML = data.qty;
+        document.getElementById('foot-amount').innerHTML = data.amount;
+        document.getElementById('foot-tax').innerHTML = data.tax;
+        document.getElementById('foot-discount').innerHTML = data.discount;
+        document.getElementById('foot-taxable').innerHTML = data.taxable;
+        document.getElementById('foot-total').innerHTML = data.total;
+      });
+    });
+
+    // Disapprove offer from selected table row, when the .icon-remove clicked
+    $(".icon-remove").click(function() {
+      var _row = $(this).closest("tr");
+      var _offer_id = _row.find("offer-id").text();
+      var _offer_request_id = $('#offer_request_table').find(".offer-request-id").text();
+      jQuery.getJSON('disapprove_offer/' + _offer_id + '/' + _offer_request_id, function(data) {
+        document.getElementById('foot-quantity').innerHTML = data.qty;
+        document.getElementById('foot-amount').innerHTML = data.amount;
+        document.getElementById('foot-tax').innerHTML = data.tax;
+        document.getElementById('foot-discount').innerHTML = data.discount;
+        document.getElementById('foot-taxable').innerHTML = data.taxable;
+        document.getElementById('foot-total').innerHTML = data.total;
+      });
+    });
+  });
+</script>
+
 <%= render '/layouts/ag2_purchase/requestsbreadcrumb' %>
 
 <h3><%=t '.title' %></h3>
-<table class="table">
+<table id="offer_request_table" class="table">
   <tbody>
     <tr>
       <td>Id:</td>
       <td><%= @offer_request.id %></td>
       <td><%=t 'activerecord.attributes.offer_request.request_no' %>:</td>
-      <td><b><%= @offer_request.request_no %></b></td>
+      <td class="offer-request-id"><b><%= @offer_request.request_no %></b></td>
     </tr>
     <tr>
       <td><%=t 'activerecord.attributes.offer_request.request_date' %>:</td>
@@ -119,7 +156,7 @@ new_path: new_offer_request_path, new_txt: t('ag2_purchase.offer_requests.index.
 <!-- Offers -->
 <% if (@offers.count > 0) %>
 <h4><%=t 'ag2_purchase.offer_requests.offers_info' %></h4>
-<table class="table table-condensed table-striped shrinked">
+<table id="offers_table" class="table table-condensed table-striped shrinked">
   <thead>
     <%= render 'offers_header' %>
   </thead>
