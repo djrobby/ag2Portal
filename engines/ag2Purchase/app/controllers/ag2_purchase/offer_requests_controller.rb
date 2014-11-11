@@ -264,8 +264,37 @@ module Ag2Purchase
       if !offer_request.nil?
         if offer_request.approved_offer_id.blank?
           # Can approve offer
+          offer = Offer.find(_offer)
+          if !offer.nil? && !current_user.nil?
+            # Attempt approve
+            offer.approver_id = current_user.id
+            offer.approval_date = DateTime.now
+            if offer.save
+              offer_request.approved_offer_id = _offer
+              offer_request.approver_id = current_user.id
+              offer_request.approval_date = DateTime.now
+              if offer_request.save
+                # Success
+                code = '$ok'
+              else
+                # Can't save offer request
+                code = '$write'
+              end
+            else
+              # Can't save offer
+              code = '$write'
+            end
+          else
+            # Offer not found or user not logged in
+            code = '$err'
+          end
+        else
+          # There is an offer already approved
+          code = '$warn'
         end
       else
+        # Offer request not found
+        code = '$err'
       end
       @json_data = { "code" => code }
       render json: @json_data
@@ -273,9 +302,46 @@ module Ag2Purchase
 
     # Disapprove offer
     def or_disapprove_offer
-      offer = params[:offer]
-      offer_request = params[:offer_request]
+      _offer = params[:offer]
+      _offer_request = params[:offer_request]
+      code = '$err'
 
+      offer_request = OfferRequest.find(_offer_request)
+      if !offer_request.nil?
+        if !offer_request.approved_offer_id.blank?
+          # Can disapprove offer
+          offer = Offer.find(_offer)
+          if !offer.nil?
+            # Attempt disapprove
+            offer.approver_id = nil
+            offer.approval_date = nil
+            if offer.save
+              offer_request.approved_offer_id = nil
+              offer_request.approver_id = nil
+              offer_request.approval_date = nil
+              if offer_request.save
+                # Success
+                code = '$ok'
+              else
+                # Can't save offer request
+                code = '$write'
+              end
+            else
+              # Can't save offer
+              code = '$write'
+            end
+          else
+            # Offer not found
+            code = '$err'
+          end
+        else
+          # There isn't previous offer approved
+          code = '$warn'
+        end
+      else
+        # Offer request not found
+        code = '$err'
+      end
       @json_data = { "code" => code }
       render json: @json_data
     end
