@@ -15,8 +15,8 @@ module Ag2Purchase
                                                :or_current_stock,
                                                :or_update_project_textfields_from_organization,
                                                :or_generate_no,
-                                               :approve_offer,
-                                               :disapprove_offer]
+                                               :or_approve_offer,
+                                               :or_disapprove_offer]
     # Calculate and format totals properly
     def or_totals
       qty = params[:qty].to_f / 10000

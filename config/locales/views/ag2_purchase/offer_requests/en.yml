@@ -23,7 +23,7 @@ en:
       back_to_main_page: "Back to Offer requests"
       generate_code_btn: "Request No."
       validate_btn: "Validate"
-      code_error: "Unable to generate Request No.: No Activity chosen."
+      code_error: "Unable to generate Request No.: No Project chosen."
       items_info: "Request Items"
       delete_item: "Delete this Item"
       add_item: "Add new Item"

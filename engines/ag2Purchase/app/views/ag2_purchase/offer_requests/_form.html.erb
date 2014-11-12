@@ -398,5 +398,14 @@
 <!-- Special hidden Id -->
 <%= f.input :id, as: :hidden, input_html: { id: 'hidden_id' } %>
 <!-- Buttons -->
-<%= f.button :submit, class: 'btn-primary', id: 'submit_btn' %>
+<table class="form-table">
+  <tbody>
+    <tr class="form-tr">
+      <td class="form-td-three left-winged"> <%= f.button :submit, :class => 'btn-primary', :id => 'submit_btn' %> </td>
+      <% if @breadcrumb == 'create'%>
+      <td class="form-td-three right-winged"><a href="#" id="generate_code_btn" class="btn btn-warning"><%=t 'ag2_purchase.offer_requests.generate_code_btn' %></a></td>
+      <% end %>
+    </tr>
+  </tbody>
+</table>
 <% end %>

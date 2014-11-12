@@ -68,7 +68,7 @@
       var order = $('select#offer_organization_id :selected').val();
       if (order == "")
         order = "0";
-      jQuery.getJSON('po_update_project_textfields_from_organization/' + order, function(data) {
+      jQuery.getJSON('of_update_project_textfields_from_organization/' + order, function(data) {
         var c = data.supplier;
         var p = data.project;
         var w = data.work_order;
@@ -179,7 +179,7 @@
       var supplier = $('select#offer_supplier_id :selected').val();
       if (supplier == "")
         supplier = "0";
-      jQuery.getJSON('po_update_request_select_from_supplier/' + supplier, function(data) {
+      jQuery.getJSON('of_update_request_select_from_supplier/' + supplier, function(data) {
         $("#offer_offer_request_id").html("");
         $("#offer_offer_request_id").select2("val", "");
         $("#offer_offer_request_id").append($('<option></option>').val("").html(""));
@@ -191,13 +191,31 @@
       return false;
     });
 
+
+    // when the #offer_offer_request_id field changes
+    $("#offer_offer_request_id").change(function() {
+      // make a POST call and replace the content
+      var request = $('select#offer_offer_request_id :selected').val();
+      if (request == "")
+        request = "0";
+      jQuery.getJSON('of_update_items_table_from_request/' + request, function(data) {
+        $("#offer_offer_request_id").html("");
+        $("#offer_offer_request_id").select2("val", "");
+        $("#offer_offer_request_id").append($('<option></option>').val("").html(""));
+        $.each(data, function(id, option) {
+          $("#offer_offer_request_id").append($('<option></option>').val(option.id).html(option.offer_no + ' ' + option.offer_date + ' ' + option.supplier.name));
+        });
+      });
+      return false;
+    });
+
     // when the #offer_project_id field changes
     $("#offer_project_id").change(function() {
       // make a POST call and replace the content
       var order = $('select#offer_project_id :selected').val();
       if (order == "")
         order = "0";
-      jQuery.getJSON('po_update_charge_account_from_project/' + order, function(data) {
+      jQuery.getJSON('of_update_charge_account_from_project/' + order, function(data) {
         var w = data.work_order;
         var c = data.charge_account;
         var s = data.store;
@@ -256,7 +274,7 @@
       var order = $('select#offer_work_order_id :selected').val();
       if (order == "")
         order = "0";
-      jQuery.getJSON('po_update_charge_account_from_order/' + order, function(data) {
+      jQuery.getJSON('of_update_charge_account_from_order/' + order, function(data) {
         var c = data.charge_account;
         var s = data.store;
         var c_id = data.charge_account_id;
@@ -304,7 +322,7 @@
         num = "0";
       // Right formatted for passing as REST parameter
       num = parseInt(right_number(num, 2) * 100);
-      jQuery.getJSON('po_format_number/' + num, function(data) {
+      jQuery.getJSON('of_format_number/' + num, function(data) {
         $('#offer_discount_pct').val(data.num);
       });
       // Update and display totals
@@ -319,7 +337,7 @@
         num = "0";
       // Right formatted for passing as REST parameter
       num = parseInt(right_number(num, 2) * 100);
-      jQuery.getJSON('po_format_number/' + num, function(data) {
+      jQuery.getJSON('of_format_number/' + num, function(data) {
         $('#offer_retention_pct').val(data.num);
       });
       return false;
