@@ -246,7 +246,10 @@ module Ag2Purchase
 
     # Update offer items table at view from request items
     def of_update_items_table_from_request
-      
+      request = params[:request]
+      if request != '0'
+        
+      end
     end
     
     #
