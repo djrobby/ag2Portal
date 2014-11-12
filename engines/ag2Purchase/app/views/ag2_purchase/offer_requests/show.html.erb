@@ -1,36 +1,60 @@
 <script>
+  var text_field_color;
+  var current_row;
+
+  $(document).ready(function() {
+    // Save default text color
+    text_field_color = $("table#offers_table tr:even").css('color')
+  });
+
   jQuery(function($) {
     /*
      * Very special functions!
      */
     // Approve offer from selected table row, when the .icon-ok clicked
     $(".icon-ok").click(function() {
-      var _row = $(this).closest("tr");
-      var _offer = _row.find(".offer-id").text();
+      var current_row = $(this).closest("tr");
+      var _offer = current_row.find(".offer-id").text();
       var _offer_request = $('#offer_request_table').find(".offer-request-id").text();
       jQuery.getJSON('or_approve_offer/' + _offer + '/' + _offer_request, function(data) {
-        document.getElementById('foot-quantity').innerHTML = data.qty;
-        document.getElementById('foot-amount').innerHTML = data.amount;
-        document.getElementById('foot-tax').innerHTML = data.tax;
-        document.getElementById('foot-discount').innerHTML = data.discount;
-        document.getElementById('foot-taxable').innerHTML = data.taxable;
-        document.getElementById('foot-total').innerHTML = data.total;
+        if (data.code == "$err") {
+          alert('<%= I18n.t("ag2_purchase.offer_requests.approve_offer_error") %>');
+        } else if (data.code == "$write") {
+          alert('<%= I18n.t("ag2_purchase.offer_requests.approve_offer_write") %>');
+        } else if (data.code == "$warn") {
+          alert('<%= I18n.t("ag2_purchase.offer_requests.approve_offer_warn") %>');
+        } else {
+          $('#offer_request_table').find(".offer-request-approver").text(data.approver);
+          $('#offer_request_table').find(".offer-request-approval-date").text(data.approval_date);
+          current_row.css('color', 'red');
+
+          $("#offer_request_request_no").css('color', text_field_color);
+          $('#offer_request_request_no').trigger("change");
+        }
       });
+      return false;
     });
 
     // Disapprove offer from selected table row, when the .icon-remove clicked
     $(".icon-remove").click(function() {
-      var _row = $(this).closest("tr");
-      var _offer = _row.find("offer-id").text();
+      var current_row = $(this).closest("tr");
+      text_field_color = current_row.css('color')
+      var _offer = current_row.find(".offer-id").text();
       var _offer_request = $('#offer_request_table').find(".offer-request-id").text();
       jQuery.getJSON('or_disapprove_offer/' + _offer + '/' + _offer_request, function(data) {
-        document.getElementById('foot-quantity').innerHTML = data.qty;
-        document.getElementById('foot-amount').innerHTML = data.amount;
-        document.getElementById('foot-tax').innerHTML = data.tax;
-        document.getElementById('foot-discount').innerHTML = data.discount;
-        document.getElementById('foot-taxable').innerHTML = data.taxable;
-        document.getElementById('foot-total').innerHTML = data.total;
+        if (data.code == "$err") {
+          alert('<%= I18n.t("ag2_purchase.offer_requests.approve_offer_error") %>');
+        } else if (data.code == "$write") {
+          alert('<%= I18n.t("ag2_purchase.offer_requests.approve_offer_write") %>');
+        } else if (data.code == "$warn") {
+          alert('<%= I18n.t("ag2_purchase.offer_requests.disapprove_offer_warn") %>');
+        } else {
+          $('#offer_request_table').find(".offer-request-approver").text("");
+          $('#offer_request_table').find(".offer-request-approval-date").text("");
+          current_row.css('color', text_field_color);
+        }
       });
+      return false;
     });
   });
 </script>
@@ -42,9 +66,9 @@
   <tbody>
     <tr>
       <td>Id:</td>
-      <td><%= @offer_request.id %></td>
+      <td class="offer-request-id"><%= @offer_request.id %></td>
       <td><%=t 'activerecord.attributes.offer_request.request_no' %>:</td>
-      <td class="offer-request-id"><b><%= @offer_request.request_no %></b></td>
+      <td><b><%= @offer_request.request_no %></b></td>
     </tr>
     <tr>
       <td><%=t 'activerecord.attributes.offer_request.request_date' %>:</td>
@@ -72,9 +96,9 @@
     </tr>
     <tr>
       <td><%=t 'activerecord.attributes.offer_request.approval_date' %>:</td>
-      <td><%= @offer_request.approval_date.strftime("%d/%m/%Y") unless @offer_request.approval_date.blank? %></td>
+      <td class="offer-request-approval-date"><%= @offer_request.approval_date.strftime("%d/%m/%Y %H:%M:%S") unless @offer_request.approval_date.blank? %></td>
       <td><%=t 'activerecord.attributes.offer_request.approver' %>:</td>
-      <td> <%= @offer_request.approver.email unless @offer_request.approver.blank? %> </td>
+      <td class="offer-request-approver"> <%= @offer_request.approver.email unless @offer_request.approver.blank? %> </td>
     </tr>
     <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @offer_request } %>
     <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @offer_request } %>

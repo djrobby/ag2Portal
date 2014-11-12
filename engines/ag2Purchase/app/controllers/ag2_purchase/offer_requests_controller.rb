@@ -259,6 +259,9 @@ module Ag2Purchase
       _offer = params[:offer]
       _offer_request = params[:offer_request]
       code = '$err'
+      _approver_id = nil
+      _approver = nil
+      _approval_date = nil
 
       offer_request = OfferRequest.find(_offer_request)
       if !offer_request.nil?
@@ -267,12 +270,14 @@ module Ag2Purchase
           offer = Offer.find(_offer)
           if !offer.nil? && !current_user.nil?
             # Attempt approve
-            offer.approver_id = current_user.id
-            offer.approval_date = DateTime.now
+            _approver_id = current_user.id
+            _approval_date = DateTime.now
+            offer.approver_id = _approver_id
+            offer.approval_date = _approval_date
             if offer.save
               offer_request.approved_offer_id = _offer
-              offer_request.approver_id = current_user.id
-              offer_request.approval_date = DateTime.now
+              offer_request.approver_id = _approver_id
+              offer_request.approval_date = _approval_date
               if offer_request.save
                 # Success
                 code = '$ok'
@@ -296,7 +301,12 @@ module Ag2Purchase
         # Offer request not found
         code = '$err'
       end
-      @json_data = { "code" => code }
+      # Approver data
+      if !_approver_id.nil?
+        _approver = User.find(_approver_id).email        
+      end
+
+      @json_data = { "code" => code, "approver" => _approver, "approval_date" => _approval_date.strftime("%d/%m/%Y %H:%M:%S") }
       render json: @json_data
     end
 

@@ -36,3 +36,7 @@ en:
       add_supplier: "Add new Supplier"
       btn_new_supplier: "New Supplier"
       offers_info: "Offers received"
+      approve_offer_error: "Request or Offer not found."
+      approve_offer_write: "Unable to save Request or Offer."
+      approve_offer_warn: "There is an offer already approved."
+      disapprove_offer_warn: "There isn't previous offer approved."

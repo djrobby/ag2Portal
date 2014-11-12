@@ -36,3 +36,7 @@ es:
       add_supplier: "Agregar nuevo Proveedor"
       btn_new_supplier: "Nuevo Proveedor"
       offers_info: "Ofertas recibidas"
+      approve_offer_error: "Solicitud u Oferta no encontrada."
+      approve_offer_write: "Imposible guardar Solicitud u Oferta."
+      approve_offer_warn: "Ya existe una Oferta aprobada."
+      disapprove_offer_warn: "No existe una Oferta previa aprobada."
