@@ -212,7 +212,8 @@
          * Table objects
          */
         var table = '#items-table';
-        var row = $('<tr>', { class: 'fields' });
+        var tr = $('<tr>', { class: 'fields' });
+        var td = $('<td>');
         var link = $('<a>', {
             href: '#',
             onclick: 'remove_fields(this); return false;',
@@ -231,7 +232,9 @@
          * Add new rows
          */
         $.each(data, function(id, option) {
-          var newRow = row.clone();
+          newRow = tr.clone();
+          newCol = td.clone();
+          
           td.appendTo(newRow);
           newRow.append(table);
           
@@ -245,6 +248,8 @@
           $("#offer_offer_request_id").append($('<option></option>').val(option.id).html(option.offer_no + ' ' + option.offer_date + ' ' + option.supplier.name));
         });
       });
+      // Update and display totals
+      $('#items-table').trigger('totals');
       return false;
     });
 
