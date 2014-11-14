@@ -176,7 +176,7 @@
       var supplier = $('select#supplier_invoice_supplier_id :selected').val();
       if (supplier == "")
         supplier = "0";
-      jQuery.getJSON('si_update_order_select_from_supplier/' + supplier, function(data) {
+      jQuery.getJSON('si_update_receipt_select_from_supplier/' + supplier, function(data) {
         $("#supplier_invoice_order_id").html("");
         $("#supplier_invoice_order_id").select2("val", "");
         $("#supplier_invoice_order_id").append($('<option></option>').val("").html(""));
@@ -348,7 +348,7 @@
 <%= f.association :organization, collection: Organization.order('name'), input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %>
 <% end %>
 <%= f.association :supplier, collection: @suppliers, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %>
-<%= f.association :purchase_order, collection: @receipt_notes, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %>
+<%= f.association :receipt_note, collection: @receipt_notes, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %>
 <div>
   <label class="multi-field-label-two"> <%= f.association :payment_method, collection: @payment_methods, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %> </label>
 </div>

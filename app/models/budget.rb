@@ -5,6 +5,7 @@ class Budget < ActiveRecord::Base
   belongs_to :approver, class_name: 'User'
   attr_accessible :budget_no, :description, :project_id, :organization_id,
                   :budget_period_id, :approver_id, :approval_date
+  attr_accessible :budget_items_attributes
   
   has_many :budget_items, dependent: :destroy
 

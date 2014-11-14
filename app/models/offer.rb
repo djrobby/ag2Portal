@@ -12,6 +12,7 @@ class Offer < ActiveRecord::Base
                   :offer_request_id, :supplier_id, :payment_method_id,
                   :project_id, :store_id, :work_order_id, :charge_account_id,
                   :organization_id, :approver_id, :approval_date
+  attr_accessible :offer_items_attributes
   
   has_many :offer_items, dependent: :destroy
   has_many :purchase_orders

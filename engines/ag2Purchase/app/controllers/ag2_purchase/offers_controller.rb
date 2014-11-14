@@ -247,9 +247,11 @@ module Ag2Purchase
     # Update offer items table at view from request items
     def of_update_items_table_from_request
       request = params[:request]
+      @request_items = nil
       if request != '0'
-        
+        @request_items = OfferRequest.find(_request).offer_request_items.order(:id)
       end
+      render json: @request_items
     end
     
     #

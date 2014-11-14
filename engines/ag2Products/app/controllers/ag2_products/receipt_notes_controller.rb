@@ -22,7 +22,7 @@ module Ag2Products
         @supplier = Supplier.find(supplier)
         @orders = @supplier.blank? ? orders_dropdown : @supplier.purchase_orders.order(:supplier_id, :order_no, :id)
       else
-        @offers = orders_dropdown
+        @orders = orders_dropdown
       end
 
       respond_to do |format|

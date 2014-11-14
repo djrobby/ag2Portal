@@ -192,13 +192,52 @@
     });
 
 
-    // when the #offer_offer_request_id field changes
+    /*
+     * When the #offer_offer_request_id field changes
+     * 
+     * Very special function!
+     * Set _destroy on existing table item rows
+     * &
+     * Add new item table rows from selected offer request
+     * 
+     * Must mimic nested.js (global) & nested_of.js functions 
+     */
     $("#offer_offer_request_id").change(function() {
       // make a POST call and replace the content
       var request = $('select#offer_offer_request_id :selected').val();
       if (request == "")
         request = "0";
       jQuery.getJSON('of_update_items_table_from_request/' + request, function(data) {
+        /*
+         * Table objects
+         */
+        var table = '#items-table';
+        var row = $('<tr>', { class: 'fields' });
+        var link = $('<a>', {
+            href: '#',
+            onclick: 'remove_fields(this); return false;',
+            title: 'Delete this Item.'
+        }).append($('<i>', { class: 'icon-trash' }));
+        
+        /*
+         * Hide existing rows for disposal
+         */
+        $('#items-table tr.fields').each(function() {
+          _link = $(this).find('.icon-trash')
+          remove_fields(_link);
+        });
+        
+        /*
+         * Add new rows
+         */
+        $.each(data, function(id, option) {
+          var newRow = row.clone();
+          td.appendTo(newRow);
+          newRow.append(table);
+          
+          $("#supplier_invoice_order_id").append($('<option></option>').val(option.id).html(option.order_no + ' ' + option.order_date + ' ' + option.supplier.name));
+        });
+
         $("#offer_offer_request_id").html("");
         $("#offer_offer_request_id").select2("val", "");
         $("#offer_offer_request_id").append($('<option></option>').val("").html(""));

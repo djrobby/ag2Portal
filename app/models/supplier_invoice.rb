@@ -9,6 +9,7 @@ class SupplierInvoice < ActiveRecord::Base
   attr_accessible :discount, :discount_pct, :invoice_date, :invoice_no, :remarks,
                   :supplier_id, :payment_method_id, :project_id, :work_order_id, :charge_account_id,
                   :posted_at, :organization_id, :receipt_note_id
+  attr_accessible :supplier_invoice_items_attributes, :supplier_invoice_approvals_attributes
 
   has_many :supplier_invoice_items, dependent: :destroy
   has_many :supplier_invoice_approvals, dependent: :destroy

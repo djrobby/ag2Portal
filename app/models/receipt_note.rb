@@ -10,6 +10,7 @@ class ReceiptNote < ActiveRecord::Base
   attr_accessible :discount, :discount_pct, :receipt_date, :receipt_no, :remarks, :retention_pct, :retention_time,
                   :supplier_id, :payment_method_id, :project_id, :store_id, :work_order_id, :charge_account_id,
                   :purchase_order_id, :organization_id
+  attr_accessible :receipt_note_items_attributes
 
   has_many :receipt_note_items, dependent: :destroy
   has_many :supplier_invoice_items

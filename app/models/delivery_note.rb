@@ -10,6 +10,7 @@ class DeliveryNote < ActiveRecord::Base
   attr_accessible :delivery_date, :delivery_no, :discount, :discount_pct, :remarks,
                   :client_id, :payment_method_id, :project_id, :store_id, :work_order_id,
                   :charge_account_id, :sale_offer_id, :organization_id
+  attr_accessible :delivery_note_items_attributes
 
   has_many :delivery_note_items, dependent: :destroy
   has_many :client_invoice_items

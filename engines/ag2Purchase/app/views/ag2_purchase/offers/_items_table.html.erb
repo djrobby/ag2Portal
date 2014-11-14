@@ -177,7 +177,7 @@
     <%= render 'items_table_footer', f: f %>
   </tfoot>
   <tbody>
-    <%= f.simple_fields_for :supplier_invoice_items, defaults: { input_html: { class: 'sub-form' } } do |i| %>
+    <%= f.simple_fields_for :offer_items, defaults: { input_html: { class: 'sub-form' } } do |i| %>
     <tr class="fields">
       <td><%= i.association :product, label: false, wrapper: false, collection: @products, input_html: { class: 'isel2 fnt-product' } %></td>
       <td><%= i.input :description, label: false, wrapper: false, input_html: { onkeyup: "caps(this)", class: 'sub-alfanumeric-text-field fnt-description', maxlength: 40 } %></td>

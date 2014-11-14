@@ -10,6 +10,7 @@ class OfferRequest < ActiveRecord::Base
   attr_accessible :approval_date, :deadline_date, :request_date, :request_no, :remarks,
                   :discount_pct, :discount, :payment_method_id, :project_id, :approved_offer_id,
                   :approver_id, :store_id, :work_order_id, :charge_account_id, :organization_id 
+  attr_accessible :offer_request_items_attributes, :offer_request_suppliers_attributes
 
   has_many :offer_request_items, dependent: :destroy
   has_many :offer_request_suppliers, dependent: :destroy

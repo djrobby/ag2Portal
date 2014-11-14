@@ -10,6 +10,7 @@ class SaleOffer < ActiveRecord::Base
   attr_accessible :discount, :discount_pct, :offer_date, :offer_no, :remarks,
                   :client_id, :payment_method_id, :sale_offer_status_id,
                   :project_id, :store_id, :work_order_id, :charge_account_id, :organization_id
+  attr_accessible :sale_offer_items_attributes
 
   has_many :sale_offer_items, dependent: :destroy
   has_many :delivery_notes

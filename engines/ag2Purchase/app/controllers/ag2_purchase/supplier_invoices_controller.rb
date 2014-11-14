@@ -23,9 +23,9 @@ module Ag2Purchase
       supplier = params[:supplier]
       if supplier != '0'
         @supplier = Supplier.find(supplier)
-        @orders = @supplier.blank? ? receipts_dropdown : @supplier.receipt_notes.order(:supplier_id, :receipt_no, :id)
+        @notes = @supplier.blank? ? receipts_dropdown : @supplier.receipt_notes.order(:supplier_id, :receipt_no, :id)
       else
-        @offers = receipts_dropdown
+        @notes = receipts_dropdown
       end
 
       respond_to do |format|
