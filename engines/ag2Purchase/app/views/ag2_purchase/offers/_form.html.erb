@@ -233,9 +233,110 @@
          */
         $.each(data, function(id, option) {
           newRow = tr.clone();
-          newCol = td.clone();
           
-          td.appendTo(newRow);
+          // :product
+          newCol = $('<td/>');
+          css = 'isel2 fnt-product'
+          newCol.addClass(css);
+          newCol.append(option.product_id);
+          newCol.appendTo(newRow);
+          // :description
+          newCol = $('<td/>');
+          css = 'sub-alfanumeric-text-field fnt-description'
+          newCol.addClass(css);
+          newCol.append(option.description);
+          newCol.appendTo(newRow);
+          // :code
+          newCol = $('<td style="display:none;"/>')
+          css = 'sub-alfanumeric-text-field fnt-code'
+          newCol.addClass(css);
+          newCol.append('');
+          newCol.appendTo(newRow);
+          // :quantity
+          num = parseInt(right_number(option.quantity, 4) * 10000);
+          jQuery.getJSON('of_format_number_4/' + num, function(num_data) {
+            newCol = $('<td/>');
+            css = 'sub-number-text-field fnt-quantity'
+            newCol.addClass(css);
+            newCol.append(num_data.num);
+            newCol.appendTo(newRow);
+          });
+          // :price
+          num = parseInt(right_number(option.price, 4) * 10000);
+          jQuery.getJSON('of_format_number_4/' + num, function(num_data) {
+            newCol = $('<td/>');
+            css = 'sub-number-text-field fnt-price'
+            newCol.addClass(css);
+            newCol.append(num_data.num);
+            newCol.appendTo(newRow);
+          });
+          // :discount_pct
+          num = parseInt(right_number(option.discount_pct, 2) * 100);
+          jQuery.getJSON('of_format_number/' + num, function(num_data) {
+            newCol = $('<td/>');
+            css = 'sub-number-text-field fnt-discount-pct'
+            newCol.addClass(css);
+            newCol.append(num_data.num);
+            newCol.appendTo(newRow);
+          });
+          // :discount
+          num = parseInt(right_number(option.discount, 4) * 10000);
+          jQuery.getJSON('of_format_number_4/' + num, function(num_data) {
+            newCol = $('<td/>');
+            css = 'sub-number-text-field fnt-discount'
+            newCol.addClass(css);
+            newCol.append(num_data.num);
+            newCol.appendTo(newRow);
+          });
+          // :amount
+          num = parseInt(right_number(option.amount, 4) * 10000);
+          jQuery.getJSON('of_format_number_4/' + num, function(num_data) {
+            newCol = $('<td/>');
+            css = 'sub-number-text-field sub-disabled-field fnt-amount'
+            newCol.addClass(css);
+            newCol.append(num_data.num);
+            newCol.appendTo(newRow);
+          });
+          // :tax_type
+          newCol = $('<td style="display:none;"/>')
+          css = 'sub-alfanumeric-text-field fnt-tax-type'
+          newCol.addClass(css);
+          newCol.append(option.tax_type_id);
+          newCol.appendTo(newRow);
+          // :tax
+          num = parseInt(right_number(option.tax, 4) * 10000);
+          jQuery.getJSON('of_format_number_4/' + num, function(num_data) {
+            newCol = $('<td/>');
+            css = 'sub-number-text-field sub-disabled-field fnt-tax'
+            newCol.addClass(css);
+            newCol.append(num_data.num);
+            newCol.appendTo(newRow);
+          });
+          // :work_order
+          newCol = $('<td style="display:none;"/>')
+          css = 'isel2 fnt-work-order'
+          newCol.addClass(css);
+          newCol.appendTo(newRow);
+          // :project
+          newCol = $('<td style="display:none;"/>')
+          css = 'isel2 fnt-project'
+          newCol.addClass(css);
+          newCol.appendTo(newRow);
+          // :charge_account
+          newCol = $('<td style="display:none;"/>')
+          css = 'isel2 fnt-charge-account'
+          newCol.addClass(css);
+          newCol.appendTo(newRow);
+          // :store
+          newCol = $('<td style="display:none;"/>')
+          css = 'isel2 fnt-store'
+          newCol.addClass(css);
+          newCol.appendTo(newRow);
+          // :_destroy
+          newCol = $('<td/>');
+          newCol.append("<%= link_to_remove_fields('<i class="icon-trash"></i>'.html_safe, i) %>");
+          newCol.appendTo(newRow);
+
           newRow.append(table);
           
           $("#supplier_invoice_order_id").append($('<option></option>').val(option.id).html(option.order_no + ' ' + option.order_date + ' ' + option.supplier.name));
