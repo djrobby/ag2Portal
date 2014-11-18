@@ -266,9 +266,12 @@ module Ag2Purchase
     # Generate purchase order
     def of_generate_order
       o = params[:offer]
+      code = ''
+      
       if o != '0'
         offer = Offer.find(o)
         if !offer.nil?
+          # Attempt save purchase order
           order = PurchaseOrder.new
           order.discount
           order.discount_pct
@@ -290,6 +293,7 @@ module Ag2Purchase
           order.approver_id
           order.approval_date
           if order.save?
+            # Attempt save purchase order items
             offer.offer_items.each do |i|
               item = PurchaseOrderItem.new
               item.code
@@ -299,26 +303,26 @@ module Ag2Purchase
               item.discount_pct
               item.quantity
               item.price
-              item.purchase_order_id
+              item.purchase_order_id = order.id
               item.product_id
               item.tax_type_id
               item.project_id
               item.store_id
               item.work_order_id
               item.charge_account_id
-              if item.save?
-                
+              if !item.save?
+                # Can't save order item
+                code = '$write'
+                break
               end
             end
+          else
+            # Can't save order
+            code = '$write'
           end
         end
-        @request_items = OfferRequest.find(_request).offer_request_items.order(:id)
       end
-      @request_items = nil
-      if request != '0'
-        @request_items = OfferRequest.find(_request).offer_request_items.order(:id)
-      end
-      render json: @request_items
+      render json: @json_data
     end
     
     #
