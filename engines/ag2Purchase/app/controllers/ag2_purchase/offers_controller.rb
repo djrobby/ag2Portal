@@ -14,7 +14,8 @@ module Ag2Purchase
                                                :of_format_numbers,
                                                :of_current_stock,
                                                :of_update_project_textfields_from_organization,
-                                               :of_update_items_table_from_request]
+                                               :of_update_items_table_from_request,
+                                               :of_generate_order]
     # Calculate and format totals properly
     def of_totals
       qty = params[:qty].to_f / 10000
@@ -255,6 +256,64 @@ module Ag2Purchase
     # Update offer items table at view from request items
     def of_update_items_table_from_request
       request = params[:request]
+      @request_items = nil
+      if request != '0'
+        @request_items = OfferRequest.find(_request).offer_request_items.order(:id)
+      end
+      render json: @request_items
+    end
+
+    # Generate purchase order
+    def of_generate_order
+      o = params[:offer]
+      if o != '0'
+        offer = Offer.find(o)
+        if !offer.nil?
+          order = PurchaseOrder.new
+          order.discount
+          order.discount_pct
+          order.order_date
+          order.order_no
+          order.remarks
+          order.supplier_offer_no
+          order.supplier_id
+          order.payment_method_id
+          order.order_status_id
+          order.project_id
+          order.offer_id
+          order.store_id
+          order.work_order_id
+          order.charge_account_id
+          order.retention_pct
+          order.retention_time
+          order.organization_id
+          order.approver_id
+          order.approval_date
+          if order.save?
+            offer.offer_items.each do |i|
+              item = PurchaseOrderItem.new
+              item.code
+              item.delivery_date
+              item.description
+              item.discount
+              item.discount_pct
+              item.quantity
+              item.price
+              item.purchase_order_id
+              item.product_id
+              item.tax_type_id
+              item.project_id
+              item.store_id
+              item.work_order_id
+              item.charge_account_id
+              if item.save?
+                
+              end
+            end
+          end
+        end
+        @request_items = OfferRequest.find(_request).offer_request_items.order(:id)
+      end
       @request_items = nil
       if request != '0'
         @request_items = OfferRequest.find(_request).offer_request_items.order(:id)

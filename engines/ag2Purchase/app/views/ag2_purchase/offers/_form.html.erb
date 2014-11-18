@@ -316,21 +316,25 @@
           newCol = $('<td style="display:none;"/>')
           css = 'isel2 fnt-work-order'
           newCol.addClass(css);
+          newCol.append(option.work_order_id);
           newCol.appendTo(newRow);
           // :project
           newCol = $('<td style="display:none;"/>')
           css = 'isel2 fnt-project'
           newCol.addClass(css);
+          newCol.append(option.project_id);
           newCol.appendTo(newRow);
           // :charge_account
           newCol = $('<td style="display:none;"/>')
           css = 'isel2 fnt-charge-account'
           newCol.addClass(css);
+          newCol.append(option.charge_account_id);
           newCol.appendTo(newRow);
           // :store
           newCol = $('<td style="display:none;"/>')
           css = 'isel2 fnt-store'
           newCol.addClass(css);
+          newCol.append(option.store_id);
           newCol.appendTo(newRow);
           // :_destroy
           newCol = $('<td/>');
@@ -338,15 +342,6 @@
           newCol.appendTo(newRow);
 
           newRow.append(table);
-          
-          $("#supplier_invoice_order_id").append($('<option></option>').val(option.id).html(option.order_no + ' ' + option.order_date + ' ' + option.supplier.name));
-        });
-
-        $("#offer_offer_request_id").html("");
-        $("#offer_offer_request_id").select2("val", "");
-        $("#offer_offer_request_id").append($('<option></option>').val("").html(""));
-        $.each(data, function(id, option) {
-          $("#offer_offer_request_id").append($('<option></option>').val(option.id).html(option.offer_no + ' ' + option.offer_date + ' ' + option.supplier.name));
         });
       });
       // Update and display totals

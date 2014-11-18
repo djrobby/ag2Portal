@@ -1,3 +1,27 @@
+<script>
+  jQuery(function($) {
+    // when #generate_order_btn is clicked
+    $("#generate_order_btn").click(function() {
+      // make a POST call and replace the content
+      var offer = $('#offer_id').val();
+      if (offer == "")
+        offer = "0";
+      jQuery.getJSON('of_generate_order/' + offer, function(data) {
+        $("#offer_request_request_no").val(data.code);
+        if ($("#offer_request_request_no").val() == "$err") {
+          $("#offer_request_request_no").css('color', 'red');
+          alert('<%= I18n.t("ag2_purchase.offer_requests.no_error") %>');
+          $('#offer_request_request_no').select();
+        } else {
+          $("#offer_request_request_no").css('color', text_field_color);
+          $('#offer_request_request_no').trigger("change");
+        }
+      });
+      return false;
+    });
+  });  
+</script>
+
 <%= render '/layouts/ag2_purchase/offersbreadcrumb' %>
 
 <h3><%=t '.title' %></h3>
@@ -88,5 +112,8 @@
 { model: Offer, update_path: edit_offer_path(@offer), update_txt: t('.btn_edit'),
 delete_path: @offer, delete_txt: t('.btn_delete'), msg: t("activerecord.models.offer.one"), txt: @offer.offer_no,
 new_path: new_offer_path, new_txt: t('ag2_purchase.offers.index.btn_new') } %>
+
+<!-- Generate purchase order -->
+<a href="#" id="generate_order" class="btn btn-warning"><%=t 'ag2_purchase.offers.generate_order_btn' %></a>
 
 <%= link_to t("ag2_purchase.offers.back_to_main_page"), offers_path %>
