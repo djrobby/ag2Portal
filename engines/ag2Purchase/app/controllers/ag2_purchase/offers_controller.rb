@@ -272,26 +272,27 @@ module Ag2Purchase
         offer = Offer.find(o)
         if !offer.nil?
           # Attempt save purchase order
+          code = offer.project == '$' ? '$err' : po_next_no(project)
           order = PurchaseOrder.new
-          order.discount
-          order.discount_pct
-          order.order_date
-          order.order_no
-          order.remarks
-          order.supplier_offer_no
-          order.supplier_id
-          order.payment_method_id
+          order.discount = offer.discount
+          order.discount_pct = offer.discount_pct
+          order.order_date = DateTime.now
+          order.order_no = code
+          order.remarks = offer.remarks
+          order.supplier_offer_no = offer.offer_no
+          order.supplier_id = offer.supplier_id
+          order.payment_method_id = offer.payment_method_id
           order.order_status_id
-          order.project_id
-          order.offer_id
-          order.store_id
-          order.work_order_id
-          order.charge_account_id
-          order.retention_pct
-          order.retention_time
-          order.organization_id
-          order.approver_id
-          order.approval_date
+          order.project_id = offer.project_id
+          order.offer_id = offer.id
+          order.store_id = offer.store_id
+          order.work_order_id = offer.work_order_id
+          order.charge_account_id = offer.charge_account_id
+          order.retention_pct = 0
+          order.retention_time = 0
+          order.organization_id = offer.organization_id
+          order.approver_id = nil
+          order.approval_date = nil
           if order.save?
             # Attempt save purchase order items
             offer.offer_items.each do |i|
@@ -322,6 +323,7 @@ module Ag2Purchase
           end
         end
       end
+      @json_data = { "code" => code }
       render json: @json_data
     end
     
