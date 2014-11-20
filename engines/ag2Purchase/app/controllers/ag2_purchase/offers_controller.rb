@@ -282,7 +282,7 @@ module Ag2Purchase
           order.supplier_offer_no = offer.offer_no
           order.supplier_id = offer.supplier_id
           order.payment_method_id = offer.payment_method_id
-          order.order_status_id
+          order.order_status_id = 1
           order.project_id = offer.project_id
           order.offer_id = offer.id
           order.store_id = offer.store_id

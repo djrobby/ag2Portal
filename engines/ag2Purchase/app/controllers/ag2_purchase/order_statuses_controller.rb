@@ -10,6 +10,7 @@ module Ag2Purchase
     # GET /order_statuses
     # GET /order_statuses.json
     def index
+      manage_filter_state
       @order_statuses = OrderStatus.paginate(:page => params[:page], :per_page => per_page).order(sort_column + ' ' + sort_direction)
   
       respond_to do |format|
@@ -27,6 +28,7 @@ module Ag2Purchase
       respond_to do |format|
         format.html # show.html.erb
         format.json { render json: @order_status }
+        format.js
       end
     end
   
@@ -106,6 +108,22 @@ module Ag2Purchase
 
     def sort_column
       OrderStatus.column_names.include?(params[:sort]) ? params[:sort] : "id"
+    end
+
+    # Keeps filter state
+    def manage_filter_state
+      # sort
+      if params[:sort]
+        session[:sort] = params[:sort]
+      elsif session[:sort]
+        params[:sort] = session[:sort]
+      end
+      # direction
+      if params[:direction]
+        session[:direction] = params[:direction]
+      elsif session[:direction]
+        params[:direction] = session[:direction]
+      end
     end
   end
 end

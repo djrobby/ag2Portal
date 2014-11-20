@@ -10,11 +10,13 @@ module Ag2Purchase
     # GET /activities
     # GET /activities.json
     def index
+      manage_filter_state
       @activities = Activity.paginate(:page => params[:page], :per_page => per_page).order(sort_column + ' ' + sort_direction)
   
       respond_to do |format|
         format.html # index.html.erb
         format.json { render json: @activities }
+        format.js
       end
     end
   
@@ -28,6 +30,7 @@ module Ag2Purchase
       respond_to do |format|
         format.html # show.html.erb
         format.json { render json: @activity }
+        format.js
       end
     end
   
@@ -107,6 +110,22 @@ module Ag2Purchase
 
     def sort_column
       Activity.column_names.include?(params[:sort]) ? params[:sort] : "description"
+    end
+
+    # Keeps filter state
+    def manage_filter_state
+      # sort
+      if params[:sort]
+        session[:sort] = params[:sort]
+      elsif session[:sort]
+        params[:sort] = session[:sort]
+      end
+      # direction
+      if params[:direction]
+        session[:direction] = params[:direction]
+      elsif session[:direction]
+        params[:direction] = session[:direction]
+      end
     end
   end
 end
