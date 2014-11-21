@@ -32,3 +32,6 @@ en:
       btn_add_item: "Add"
       item_error: "can't be blank"
       generate_order_btn: "Purchase Order"
+      generate_order_error: "Purchase Order can not be generated: Offer invalid."
+      generate_order_write: "Unable to save new Purchase Order."
+      generate_order_ok: "Purchase Order %{var} has been generated."

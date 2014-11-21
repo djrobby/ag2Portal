@@ -32,3 +32,6 @@ es:
       btn_add_item: "Agregar"
       item_error: "no puede estar en blanco"
       generate_order_btn: "Pedido"
+      generate_order_error: "Imposible generar Pedido: Oferta inválida."
+      generate_order_write: "Imposible guardar nuevo Pedido."
+      generate_order_ok: "Pedido %{var} ha sido generado."

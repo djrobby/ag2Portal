@@ -269,60 +269,70 @@ module Ag2Purchase
       code = ''
       
       if o != '0'
-        offer = Offer.find(o)
-        if !offer.nil?
-          # Attempt save purchase order
-          code = offer.project == '$' ? '$err' : po_next_no(project)
-          order = PurchaseOrder.new
-          order.discount = offer.discount
-          order.discount_pct = offer.discount_pct
-          order.order_date = DateTime.now
-          order.order_no = code
-          order.remarks = offer.remarks
-          order.supplier_offer_no = offer.offer_no
-          order.supplier_id = offer.supplier_id
-          order.payment_method_id = offer.payment_method_id
-          order.order_status_id = 1
-          order.project_id = offer.project_id
-          order.offer_id = offer.id
-          order.store_id = offer.store_id
-          order.work_order_id = offer.work_order_id
-          order.charge_account_id = offer.charge_account_id
-          order.retention_pct = 0
-          order.retention_time = 0
-          order.organization_id = offer.organization_id
-          order.approver_id = nil
-          order.approval_date = nil
-          if order.save?
-            # Attempt save purchase order items
-            offer.offer_items.each do |i|
-              item = PurchaseOrderItem.new
-              item.code
-              item.delivery_date
-              item.description
-              item.discount
-              item.discount_pct
-              item.quantity
-              item.price
-              item.purchase_order_id = order.id
-              item.product_id
-              item.tax_type_id
-              item.project_id
-              item.store_id
-              item.work_order_id
-              item.charge_account_id
-              if !item.save?
-                # Can't save order item
-                code = '$write'
-                break
-              end
-            end
-          else
-            # Can't save order
-            code = '$write'
-          end
-        end
-      end
+        offer = Offer.find(o) rescue nil
+        offer_items = offer.offer_items rescue nil
+        if !offer.nil? && !offer_items.nil?
+          # Generate new purchase order no.
+          code = (offer.project.nil || offer.project == 0) ? '$err' : po_next_no(project)
+          if code != '$err'
+            # Attempt save purchase order
+            order = PurchaseOrder.new
+            order.discount = offer.discount
+            order.discount_pct = offer.discount_pct
+            order.order_date = DateTime.now
+            order.order_no = code
+            order.remarks = offer.remarks
+            order.supplier_offer_no = offer.offer_no
+            order.supplier_id = offer.supplier_id
+            order.payment_method_id = offer.payment_method_id
+            order.order_status_id = 1
+            order.project_id = offer.project_id
+            order.offer_id = offer.id
+            order.store_id = offer.store_id
+            order.work_order_id = offer.work_order_id
+            order.charge_account_id = offer.charge_account_id
+            order.retention_pct = 0
+            order.retention_time = 0
+            order.organization_id = offer.organization_id
+            order.approver_id = nil
+            order.approval_date = nil
+            if order.save?
+              # Attempt save purchase order items
+              offer.offer_items.each do |i|
+                item = PurchaseOrderItem.new
+                item.code = i.code
+                item.delivery_date = i.delivery_date
+                item.description = i.description
+                item.discount = i.discount
+                item.discount_pct = i.discount_pct
+                item.quantity = i.quantity
+                item.price = i.price
+                item.purchase_order_id = order.id
+                item.product_id = i.product_id
+                item.tax_type_id = i.tax_type_id
+                item.project_id = i.project_id
+                item.store_id = i.store_id
+                item.work_order_id = i.work_order_id
+                item.charge_account_id = i.charge_account_id
+                if !item.save?
+                  # Can't save order item (exit)
+                  code = '$write'
+                  break
+                end   # !item.save?
+              end   # do |i|
+            else
+              # Can't save order
+              code = '$write'
+            end   # order.save?
+          end   # code != '$err'
+        else
+          # Offer not found
+          code = '$err'
+        end   # !offer.nil? && !offer_items.nil?
+      else
+        # Offer 0
+        code = '$err'
+      end   # o != '0'
       @json_data = { "code" => code }
       render json: @json_data
     end

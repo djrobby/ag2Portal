@@ -7,14 +7,13 @@
       if (offer == "")
         offer = "0";
       jQuery.getJSON('of_generate_order/' + offer, function(data) {
-        $("#offer_request_request_no").val(data.code);
-        if ($("#offer_request_request_no").val() == "$err") {
-          $("#offer_request_request_no").css('color', 'red');
-          alert('<%= I18n.t("ag2_purchase.offer_requests.no_error") %>');
-          $('#offer_request_request_no').select();
+        if (data.code == "$err") {
+          alert('<%= I18n.t("ag2_purchase.offers.generate_order_error") %>');
+        } else if (data.code == "$write") {
+          alert('<%= I18n.t("ag2_purchase.offers.generate_order_write") %>');
         } else {
-          $("#offer_request_request_no").css('color', text_field_color);
-          $('#offer_request_request_no').trigger("change");
+          alert('<%= I18n.t("ag2_purchase.offers.generate_order_ok") %>');
+          $('#generate_order_btn').hide();
         }
       });
       return false;
