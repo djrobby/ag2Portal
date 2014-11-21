@@ -25,5 +25,5 @@
   </tbody>
 </table>
 <%= render :partial => '/layouts/pagination', :locals => { :ivar => @activities } %>
-<%= render :partial => '/layouts/crud/new', :locals => { :model => Activity, :path => new_activity_path, :txt => t(".btn_new") } %>
+<%= render :partial => '/layouts/crud/new', :locals => { :model => Activity, :path => new_activity_path, :txt => t("ag2_purchase.activities.index.btn_new") } %>
 <%= link_to t("ag2_purchase.activities.index.back_to_root"), ag2_purchase.root_path %>
