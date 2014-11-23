@@ -174,12 +174,21 @@ Ag2Purchase::Engine.routes.draw do
     match 'offers/of_format_number/:num', :controller => 'offers', :action => 'of_format_number'
     match 'of_format_number/:num', :controller => 'offers', :action => 'of_format_number'
     match 'offers/:id/of_format_number/:num', :controller => 'offers', :action => 'of_format_number'
+    match 'offers/of_format_number_4/:num', :controller => 'offers', :action => 'of_format_number'
+    match 'of_format_number_4/:num', :controller => 'offers', :action => 'of_format_number'
+    match 'offers/:id/of_format_number_4/:num', :controller => 'offers', :action => 'of_format_number'
     match 'offers/of_current_stock/:product/:store', :controller => 'offers', :action => 'of_current_stock'
     match 'of_current_stock/:product/:store', :controller => 'offers', :action => 'of_current_stock'
     match 'offers/:id/of_current_stock/:product/:store', :controller => 'offers', :action => 'of_current_stock'
     match 'offers/of_update_project_textfields_from_organization/:org', :controller => 'offers', :action => 'of_update_project_textfields_from_organization'
     match 'of_update_project_textfields_from_organization/:org', :controller => 'offers', :action => 'of_update_project_textfields_from_organization'
     match 'offers/:id/of_update_project_textfields_from_organization/:org', :controller => 'offers', :action => 'of_update_project_textfields_from_organization'
+    match 'offers/of_update_items_table_from_request/:request', :controller => 'offers', :action => 'of_update_items_table_from_request'
+    match 'of_update_items_table_from_request/:request', :controller => 'offers', :action => 'of_update_items_table_from_request'
+    match 'offers/:id/of_update_items_table_from_request/:request', :controller => 'offers', :action => 'of_update_items_table_from_request'
+    match 'offers/of_generate_order/:offer', :controller => 'offers', :action => 'of_generate_order'
+    match 'of_generate_order/:offer', :controller => 'offers', :action => 'of_generate_order'
+    match 'offers/:id/of_generate_order/:offer', :controller => 'offers', :action => 'of_generate_order'
 
     # Resources
     resources :suppliers

@@ -67,14 +67,16 @@ Ag2Tech::Engine.routes.draw do
     # Resources
     resources :projects
     resources :charge_accounts
+    resources :charge_groups
     resources :work_orders
     resources :work_order_labors
     resources :work_order_statuses
     resources :work_order_types
-    resources :charge_groups
     resources :budget_periods
     resources :budget_headings
     resources :budgets
+    resources :tools
+    resources :vehicles
     
     # Root
     root :to => 'home#index'

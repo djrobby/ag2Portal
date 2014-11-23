@@ -12,6 +12,7 @@ module Ag2Purchase
                                                :of_update_charge_account_from_order,
                                                :of_update_charge_account_from_project,
                                                :of_format_numbers,
+                                               :of_format_number_4,
                                                :of_current_stock,
                                                :of_update_project_textfields_from_organization,
                                                :of_update_items_table_from_request,
