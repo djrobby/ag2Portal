@@ -1,0 +1,29 @@
+<script>
+  $(document).ready(function() {
+    $("#div_table th a, #div_table #pages a").on("click", function() {
+      $.getScript(this.href);
+      return false;
+    });
+  }); 
+</script>
+
+<table class="table table-condensed table-striped">
+  <thead>
+    <tr>
+      <th><%= sortable "name", t('activerecord.attributes.work_order_type.name') %></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @work_order_types.each do |type| %>
+    <tr>
+      <td><%= link_to type.name, type %></td>
+      <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => WorkOrderType, :path => edit_work_order_type_path(type) } %>
+      <%= render :partial => '/layouts/crud/delete', :locals => { :model => WorkOrderType, :path => type, :msg => t("activerecord.models.work_order_type.one"), :txt => type.name } %> </td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @work_order_types } %>
+<%= render :partial => '/layouts/crud/new', :locals => { :model => WorkOrderType, :path => new_work_order_type_path, :txt => t("ag2_tech.work_order_types.index.btn_new") } %>
+<%= link_to t("ag2_tech.work_order_types.index.back_to_root"), ag2_tech.root_path %>

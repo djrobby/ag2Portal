@@ -2,14 +2,25 @@ require_dependency "ag2_tech/application_controller"
 
 module Ag2Tech
   class VehiclesController < ApplicationController
+    before_filter :authenticate_user!
+    load_and_authorize_resource
+    # Helper methods for sorting
+    helper_method :sort_column
+
     # GET /vehicles
     # GET /vehicles.json
     def index
-      @vehicles = Vehicle.all
+      init_oco if !session[:organization]
+      if session[:organization] != '0'
+        @vehicles = Vehicle.where(organization_id: session[:organization]).paginate(:page => params[:page], :per_page => per_page).order(sort_column + ' ' + sort_direction)
+      else
+        @vehicles = Vehicle.paginate(:page => params[:page], :per_page => per_page).order(sort_column + ' ' + sort_direction)
+      end
   
       respond_to do |format|
         format.html # index.html.erb
         format.json { render json: @vehicles }
+        format.js
       end
     end
   
