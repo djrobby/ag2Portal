@@ -30,7 +30,6 @@ module Ag2Purchase
       respond_to do |format|
         format.html # show.html.erb
         format.json { render json: @activity }
-        format.js
       end
     end
   

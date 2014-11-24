@@ -1,25 +1,6 @@
 <%= render '/layouts/ag2_products/typesbreadcrumb' %>
 
 <h3><%=t '.title' %></h3>
-<div class="span6">
-  <table class="table table-condensed table-striped">
-    <thead>
-      <tr>
-        <th><%= sortable "description", t('activerecord.attributes.product_type.description') %></th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody>
-      <% @product_types.each do |m| %>
-      <tr>
-        <td><%= link_to m.description, m %></td>
-        <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => ProductType, :path => edit_product_type_path(m) } %>
-        <%= render :partial => '/layouts/crud/delete', :locals => { :model => ProductType, :path => m, :msg => t("activerecord.models.product_type.one"), :txt => m.description } unless m.id < 3 %> </td>
-      </tr>
-      <% end %>
-    </tbody>
-  </table>
-  <%= render :partial => '/layouts/pagination', :locals => { :ivar => @product_types } %>
-  <%= render :partial => '/layouts/crud/new', :locals => { :model => ProductType, :path => new_product_type_path, :txt => t(".btn_new") } %>
-  <%= link_to t(".back_to_root"), ag2_products.root_path %>
+<div class="span6" id="div_table">
+  <%= render 'product_types' %>
 </div>

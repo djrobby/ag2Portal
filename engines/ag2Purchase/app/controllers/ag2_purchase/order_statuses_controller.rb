@@ -29,7 +29,6 @@ module Ag2Purchase
       respond_to do |format|
         format.html # show.html.erb
         format.json { render json: @order_status }
-        format.js
       end
     end
   

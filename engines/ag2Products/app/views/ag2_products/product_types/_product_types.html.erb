@@ -1,0 +1,31 @@
+<script>
+  $(document).ready(function() {
+    $("#div_table th a, #div_table #pages a").on("click", function() {
+      $.getScript(this.href);
+      return false;
+    });
+  }); 
+</script>
+
+<table class="table table-condensed table-striped">
+  <thead>
+    <tr>
+      <th><%= sortable "id", 'Id' %></th>
+      <th><%= sortable "description", t('activerecord.attributes.product_type.description') %></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @product_types.each do |m| %>
+    <tr>
+      <td><%= m.id %></td>
+      <td><%= link_to m.description, m %></td>
+      <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => ProductType, :path => edit_product_type_path(m) } %>
+      <%= render :partial => '/layouts/crud/delete', :locals => { :model => ProductType, :path => m, :msg => t("activerecord.models.product_type.one"), :txt => m.description } unless m.id < 5 %> </td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @product_types } %>
+<%= render :partial => '/layouts/crud/new', :locals => { :model => ProductType, :path => new_product_type_path, :txt => t("ag2_products.product_types.index.btn_new") } %>
+<%= link_to t("ag2_products.product_types.index.back_to_root"), ag2_products.root_path %>

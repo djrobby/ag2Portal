@@ -10,11 +10,13 @@ module Ag2Products
     # GET /measures
     # GET /measures.json
     def index
+      manage_filter_state
       @measures = Measure.paginate(:page => params[:page], :per_page => per_page).order(sort_column + ' ' + sort_direction)
   
       respond_to do |format|
         format.html # index.html.erb
         format.json { render json: @measures }
+        format.js
       end
     end
   
@@ -107,6 +109,22 @@ module Ag2Products
 
     def sort_column
       Measure.column_names.include?(params[:sort]) ? params[:sort] : "description"
+    end
+
+    # Keeps filter state
+    def manage_filter_state
+      # sort
+      if params[:sort]
+        session[:sort] = params[:sort]
+      elsif session[:sort]
+        params[:sort] = session[:sort]
+      end
+      # direction
+      if params[:direction]
+        session[:direction] = params[:direction]
+      elsif session[:direction]
+        params[:direction] = session[:direction]
+      end
     end
   end
 end

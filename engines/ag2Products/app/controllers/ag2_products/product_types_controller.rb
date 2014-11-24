@@ -10,11 +10,13 @@ module Ag2Products
     # GET /product_types
     # GET /product_types.json
     def index
+      manage_filter_state
       @product_types = ProductType.paginate(:page => params[:page], :per_page => per_page).order(sort_column + ' ' + sort_direction)
   
       respond_to do |format|
         format.html # index.html.erb
         format.json { render json: @product_types }
+        format.js
       end
     end
   
@@ -106,7 +108,23 @@ module Ag2Products
     private
 
     def sort_column
-      Store.column_names.include?(params[:sort]) ? params[:sort] : "description"
+      ProductType.column_names.include?(params[:sort]) ? params[:sort] : "id"
+    end
+
+    # Keeps filter state
+    def manage_filter_state
+      # sort
+      if params[:sort]
+        session[:sort] = params[:sort]
+      elsif session[:sort]
+        params[:sort] = session[:sort]
+      end
+      # direction
+      if params[:direction]
+        session[:direction] = params[:direction]
+      elsif session[:direction]
+        params[:direction] = session[:direction]
+      end
     end
   end
 end

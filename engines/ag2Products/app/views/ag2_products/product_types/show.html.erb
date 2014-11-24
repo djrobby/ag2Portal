@@ -14,9 +14,8 @@
   </tbody>
 </table>
 
-<%= render partial: '/layouts/crud/update_delete_new', locals:
+<%= render partial: '/layouts/crud/update_new', locals:
 { model: ProductType, update_path: edit_product_type_path(@product_type), update_txt: t('.btn_edit'),
-delete_path: @product_type, delete_txt: t('.btn_delete'), msg: t("activerecord.models.product_type.one"), txt: @product_type.description,
 new_path: new_product_type_path, new_txt: t('ag2_products.product_types.index.btn_new') } %>
 
 <% if (@products.count > 0) %>
