@@ -1,0 +1,18 @@
+es:
+  ag2_tech:
+    tools:
+      index:
+        title: "Herramientas"
+        btn_new: "Nueva Herramienta"
+        back_to_root: "Volver a ag2Tech"
+      show:
+        title: "Herramienta"
+        btn_edit: "Editar Herramienta"
+        btn_delete: "Borrar Herramienta"
+      edit:
+        title: "Editar Herramienta"
+        btn_show: "Ver Herramienta"
+      new:
+        title: "Nueva Herramienta"
+      back_to_main_page: "Volver a Herramientas"
+      code_error: "Imposible generar Código de Herramienta: No has elegido Organización."

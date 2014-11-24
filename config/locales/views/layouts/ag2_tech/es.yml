@@ -31,3 +31,9 @@ es:
       budget_headings:
         items: "Partidas presupuestarias"
         item: "Partida"
+      tools:
+        items: "Herramientas"
+        item: "Herramienta"
+      vehicles:
+        items: "Vehículos"
+        item: "Vehículo"

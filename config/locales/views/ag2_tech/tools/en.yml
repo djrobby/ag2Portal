@@ -1,0 +1,18 @@
+en:
+  ag2_tech:
+    tools:
+      index:
+        title: "Tools"
+        btn_new: "New Tool"
+        back_to_root: "Back to ag2Tech"
+      show:
+        title: "Tool"
+        btn_edit: "Edit Tool"
+        btn_delete: "Delete Tool"
+      edit:
+        title: "Edit Tool"
+        btn_show: "Show Tool"
+      new:
+        title: "New Tool"
+      back_to_main_page: "Back to Tools"
+      code_error: "Unable to generate Tool Code: No Organization chosen."

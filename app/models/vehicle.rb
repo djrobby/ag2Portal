@@ -42,7 +42,7 @@ class Vehicle < ActiveRecord::Base
   def check_for_dependent_records
     # Check for work order vehicles
     if work_order_vehicles.count > 0
-      errors.add(:base, I18n.t('activerecord.models.budget_period.check_for_work_order_vehicles'))
+      errors.add(:base, I18n.t('activerecord.models.vehicle.check_for_work_orders'))
       return false
     end
   end

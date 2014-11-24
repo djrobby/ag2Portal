@@ -1,0 +1,24 @@
+en:
+  activerecord:
+    models:
+      tool:
+        zero:  Tools
+        one:   Tool
+        few:   Tools
+        other: Tools
+        check_for_work_orders: "Tool cannot be destroyed while linked work orders exist."
+    attributes:
+      tool:
+        organization: "Organization"
+        organization_id: "Organization"
+        company: "Company"
+        company_id: "Company"
+        office: "Office"
+        office_id: "Office"
+        product: "Product"
+        product_id: "Product"
+        name: "Description"
+        serial_no: "Serial No."
+        brand: "Brand"
+        model: "Model"
+        cost: "Cost €/min."

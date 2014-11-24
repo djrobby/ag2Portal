@@ -40,7 +40,7 @@ class Tool < ActiveRecord::Base
   def check_for_dependent_records
     # Check for work order tools
     if work_order_tools.count > 0
-      errors.add(:base, I18n.t('activerecord.models.budget_period.check_for_work_order_tools'))
+      errors.add(:base, I18n.t('activerecord.models.tool.check_for_work_orders'))
       return false
     end
   end

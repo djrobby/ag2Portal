@@ -1,0 +1,18 @@
+en:
+  ag2_tech:
+    vehicles:
+      index:
+        title: "Vehicles"
+        btn_new: "New Vehicle"
+        back_to_root: "Back to ag2Tech"
+      show:
+        title: "Vehicle"
+        btn_edit: "Edit Vehicle"
+        btn_delete: "Delete Vehicle"
+      edit:
+        title: "Edit Vehicle"
+        btn_show: "Show Vehicle"
+      new:
+        title: "New Vehicle"
+      back_to_main_page: "Back to Vehicles"
+      code_error: "Unable to generate Vehicle Code: No Organization chosen."

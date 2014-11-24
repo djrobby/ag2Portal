@@ -1,6 +1,8 @@
-<h1>Editing vehicle</h1>
+<%= render '/layouts/ag2_tech/vehiclesbreadcrumb' %>
+
+<h3><%=t '.title' %></h3>
 
 <%= render 'form' %>
 
-<%= link_to 'Show', @vehicle %> |
-<%= link_to 'Back', vehicles_path %>
+<%= link_to t(".btn_show"), @vehicle %> |
+<%= link_to t("ag2_tech.vehicles.back_to_main_page"), vehicles_path %>

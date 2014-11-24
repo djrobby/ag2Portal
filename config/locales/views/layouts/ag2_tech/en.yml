@@ -31,3 +31,9 @@ en:
       budget_headings:
         items: "Budget headings"
         item: "Heading"
+      tools:
+        items: "Tools"
+        item: "Tool"
+      vehicles:
+        items: "Vehicles"
+        item: "Vehicle"

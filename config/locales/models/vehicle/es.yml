@@ -1,0 +1,24 @@
+es:
+  activerecord:
+    models:
+      vehicle:
+        zero:  Vehículos
+        one:   Vehículo
+        few:   Vehículos
+        other: Vehículos
+        check_for_work_orders: "Vehículo no puede ser eliminado mientras existan ordenes de trabajo vinculadas."
+    attributes:
+      vehicle:
+        organization: "Organización"
+        organization_id: "Organización"
+        company: "Empresa"
+        company_id: "Empresa"
+        office: "Oficina"
+        office_id: "Oficina"
+        product: "Producto"
+        product_id: "Producto"
+        name: "Descripción"
+        registration: "Nº de Matrícula"
+        brand: "Marca"
+        model: "Modelo"
+        cost: "Coste €/km."

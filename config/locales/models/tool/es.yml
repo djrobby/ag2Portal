@@ -1,0 +1,24 @@
+es:
+  activerecord:
+    models:
+      tool:
+        zero:  Herramientas
+        one:   Herramienta
+        few:   Herramientas
+        other: Herramientas
+        check_for_work_orders: "Herramienta no puede ser eliminada mientras existan ordenes de trabajo vinculadas."
+    attributes:
+      tool:
+        organization: "Organización"
+        organization_id: "Organización"
+        company: "Empresa"
+        company_id: "Empresa"
+        office: "Oficina"
+        office_id: "Oficina"
+        product: "Producto"
+        product_id: "Producto"
+        name: "Descripción"
+        serial_no: "Nº de Serie"
+        brand: "Marca"
+        model: "Modelo"
+        cost: "Coste €/mín."

@@ -1,0 +1,18 @@
+es:
+  ag2_tech:
+    vehicles:
+      index:
+        title: "Vehículos"
+        btn_new: "Nuevo Vehículo"
+        back_to_root: "Volver a ag2Tech"
+      show:
+        title: "Vehículo"
+        btn_edit: "Editar Vehículo"
+        btn_delete: "Borrar Vehículo"
+      edit:
+        title: "Editar Vehículo"
+        btn_show: "Ver Vehículo"
+      new:
+        title: "Nuevo Vehículo"
+      back_to_main_page: "Volver a Vehículos"
+      code_error: "Imposible generar Código de Vehículo: No has elegido Organización."

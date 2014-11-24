@@ -1,0 +1,24 @@
+en:
+  activerecord:
+    models:
+      vehicle:
+        zero:  Vehicles
+        one:   Vehicle
+        few:   Vehicles
+        other: Vehicles
+        check_for_work_orders: "Vehicle cannot be destroyed while linked work orders exist."
+    attributes:
+      vehicle:
+        organization: "Organization"
+        organization_id: "Organization"
+        company: "Company"
+        company_id: "Company"
+        office: "Office"
+        office_id: "Office"
+        product: "Product"
+        product_id: "Product"
+        name: "Description"
+        registration: "Registration No."
+        brand: "Brand"
+        model: "Model"
+        cost: "Cost €/km."
