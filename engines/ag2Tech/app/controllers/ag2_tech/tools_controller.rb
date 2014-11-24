@@ -11,12 +11,18 @@ module Ag2Tech
     # GET /tools.json
     def index
       manage_filter_state
+      # OCO
       init_oco if !session[:organization]
-      if session[:organization] != '0'
-        @tools = Tool.where(organization_id: session[:organization]).paginate(:page => params[:page], :per_page => per_page).order(sort_column + ' ' + sort_direction)
-      else
-        @tools = Tool.paginate(:page => params[:page], :per_page => per_page).order(sort_column + ' ' + sort_direction)
+
+      @search = Tool.search do
+        fulltext params[:search]
+        if session[:organization] != '0'
+          with :organization_id, session[:organization]
+        end
+        order_by :serial_no, :asc
+        paginate :page => params[:page] || 1, :per_page => per_page
       end
+      @tools = @search.results
   
       respond_to do |format|
         format.html # index.html.erb
@@ -117,17 +123,11 @@ module Ag2Tech
 
     # Keeps filter state
     def manage_filter_state
-      # sort
-      if params[:sort]
-        session[:sort] = params[:sort]
-      elsif session[:sort]
-        params[:sort] = session[:sort]
-      end
-      # direction
-      if params[:direction]
-        session[:direction] = params[:direction]
-      elsif session[:direction]
-        params[:direction] = session[:direction]
+      # search
+      if params[:search]
+        session[:search] = params[:search]
+      elsif session[:search]
+        params[:search] = session[:search]
       end
     end
   end

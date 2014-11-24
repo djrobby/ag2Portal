@@ -37,6 +37,18 @@ class Vehicle < ActiveRecord::Base
     full_name
   end
 
+  searchable do
+    text :name, :registration, :brand, :model
+    string :name
+    string :registration
+    string :brand
+    string :model
+    integer :organization_id
+    integer :company_id
+    integer :office_id
+    integer :product_id
+  end
+
   private
 
   def check_for_dependent_records

@@ -1,6 +1,6 @@
 <%= render '/layouts/ag2_tech/vehiclesbreadcrumb' %>
+<%= render :partial => '/layouts/searchhead_remote', :locals => { :title => I18n.t("ag2_tech.vehicles.index.title"), :path => vehicles_path } %>
 
-<h3><%=t '.title' %></h3>
 <div class="span11" id="div_table">
   <%= render 'vehicles' %>
 </div>

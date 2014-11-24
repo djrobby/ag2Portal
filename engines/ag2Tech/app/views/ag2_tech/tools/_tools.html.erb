@@ -10,20 +10,28 @@
 <table class="table table-condensed table-striped">
   <thead>
     <tr>
-      <th><%= sortable "name", t('activerecord.attributes.work_order_labor.name') %></th>
+      <th><%= t('activerecord.attributes.tool.serial_no') %></th>
+      <th><%= t('activerecord.attributes.tool.name') %></th>
+      <th><%= t('activerecord.attributes.tool.brand') %></th>
+      <th><%= t('activerecord.attributes.tool.model') %></th>
+      <th align="right"><%= t('activerecord.attributes.tool.cost') %></th>
       <th></th>
     </tr>
   </thead>
   <tbody>
-    <% @work_order_labors.each do |labor| %>
+    <% @tools.each do |m| %>
     <tr>
-      <td><%= link_to labor.name, labor %></td>
-      <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => WorkOrderLabor, :path => edit_work_order_labor_path(labor) } %>
-      <%= render :partial => '/layouts/crud/delete', :locals => { :model => WorkOrderLabor, :path => labor, :msg => t("activerecord.models.work_order_labor.one"), :txt => labor.name } %> </td>
+      <td><%= link_to m.serial_no, m %></td>
+      <td><%= m.name %></td>
+      <td><%= m.brand unless m.brand.blank? %></td>
+      <td><%= m.model unless m.model.blank? %></td>
+      <td align="right"><%= number_with_precision(m.cost, precision: 4) unless m.cost.blank? %></td>
+      <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => Tool, :path => edit_tool_path(m) } %>
+      <%= render :partial => '/layouts/crud/delete', :locals => { :model => Tool, :path => m, :msg => t("activerecord.models.tool.one"), :txt => m.full_name } %> </td>
     </tr>
     <% end %>
   </tbody>
 </table>
-<%= render :partial => '/layouts/pagination', :locals => { :ivar => @work_order_labors } %>
-<%= render :partial => '/layouts/crud/new', :locals => { :model => WorkOrderLabor, :path => new_work_order_labor_path, :txt => t("ag2_tech.work_order_labors.index.btn_new") } %>
-<%= link_to t("ag2_tech.work_order_labors.index.back_to_root"), ag2_tech.root_path %>
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @tools } %>
+<%= render :partial => '/layouts/crud/new', :locals => { :model => Tool, :path => new_tool_path, :txt => t("ag2_tech.tools.index.btn_new") } %>
+<%= link_to t("ag2_tech.tools.index.back_to_root"), ag2_tech.root_path %>
