@@ -1,4 +1,11 @@
 <script>
+  $(document).ready(function() {
+    $('select.sel2').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      allowClear: true
+    });
+  });
+
   jQuery(function($) {
     // when the #tool_office_id field changes
     $("#tool_office_id").change(function() {
@@ -21,40 +28,57 @@
       jQuery.getJSON('tl_update_company_and_office_textfields_from_organization/' + tool, function(data) {
         var c = data.companies;
         var o = data.offices;
+        var p = data.products
         // Companies
-        $("#project_company_id").html("");
-        $("#project_company_id").val("");
-        $("#project_company_id").append($('<option></option>').val("").html(""));
+        $("#tool_company_id").html("");
+        $("#tool_company_id").val("");
+        $("#tool_company_id").append($('<option></option>').val("").html(""));
         if (!c.length) {
           $.each(data, function(id, option) {
             if (id == 'companies' && option != "") {
-              $("#project_company_id").append($('<option></option>').val(option.id).html(option.name));
+              $("#tool_company_id").append($('<option></option>').val(option.id).html(option.name));
             }
           });
         } else {
           $.each(c, function(id, option) {
-            $("#project_company_id").append($('<option></option>').val(option.id).html(option.name));
+            $("#tool_company_id").append($('<option></option>').val(option.id).html(option.name));
           });
         }
         // Offices
-        $("#project_office_id").html("");
-        $("#project_office_id").val("");
-        $("#project_office_id").append($('<option></option>').val("").html(""));
+        $("#tool_office_id").html("");
+        $("#tool_office_id").val("");
+        $("#tool_office_id").append($('<option></option>').val("").html(""));
         if (!o.length) {
           $.each(data, function(id, option) {
             if (id == 'offices' && option != "") {
-              $("#project_office_id").append($('<option></option>').val(option[0]).html(option[1] + " (" + option[2] + ")"));
+              $("#tool_office_id").append($('<option></option>').val(option[0]).html(option[1] + " (" + option[2] + ")"));
             }
           });
         } else {
           $.each(o, function(id, option) {
-            $("#project_office_id").append($('<option></option>').val(option[0]).html(option[1] + " (" + option[2] + ")"));
+            $("#tool_office_id").append($('<option></option>').val(option[0]).html(option[1] + " (" + option[2] + ")"));
+          });
+        }
+        // Products
+        $("#tool_product_id").html("");
+        $("#tool_product_id").select2("val", "");
+        $("#tool_product_id").append($('<option></option>').val("").html(""));
+        if (!p.length) {
+          $.each(data, function(id, option) {
+            if (id == 'products' && option != "") {
+              $("#tool_product_id").append($('<option></option>').val(option.id).html(option.product_code.substring(0,4) + "-" + option.product_code.substring(4,10) + " " + option.name));
+            }
+          });
+        } else {
+          $.each(p, function(id, option) {
+            $("#tool_product_id").append($('<option></option>').val(option.id).html(option.product_code.substring(0,4) + "-" + option.product_code.substring(4,10) + " " + option.name));
           });
         }
       });
-      if (project == "0") {
-        $("#project_company_id").val(0);
-        $("#project_company_id").trigger("change");
+      if (tool == "0") {
+        $("#tool_company_id").val(0);
+        $("#tool_office_id").val(0);
+        $("#tool_product_id").val(0);
       }
       return false;
     });

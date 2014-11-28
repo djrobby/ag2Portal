@@ -17,11 +17,7 @@ module Ag2Tech
         @office = Office.find(office)
         @company = @office.blank? ? 0 : @office.company
       end
-
-      respond_to do |format|
-        format.html # pr_update_company_textfield_from_office.html.erb does not exist! JSON only
-        format.json { render json: @company }
-      end
+      render json: @company
     end
     
     # Update company & office text fields at view from organization select
@@ -31,15 +27,17 @@ module Ag2Tech
         @organization = Organization.find(organization)
         @companies = @organization.blank? ? companies_dropdown : @organization.companies.order(:name)
         @offices = @organization.blank? ? offices_dropdown : Office.joins(:company).where(companies: { organization_id: organization }).order(:name)
+        @products = @organization.blank? ? products_dropdown : @organization.products.order(:product_code)
       else
         @companies = companies_dropdown
         @offices = offices_dropdown
+        @products = products_dropdown
       end
       @offices_dropdown = []
       @offices.each do |i|
         @offices_dropdown = @offices_dropdown << [i.id, i.name, i.company.name] 
       end
-      @json_data = { "companies" => @companies, "offices" => @offices_dropdown }
+      @json_data = { "companies" => @companies, "offices" => @offices_dropdown, "products" => @products }
       render json: @json_data
     end
 
@@ -87,6 +85,9 @@ module Ag2Tech
     def new
       @breadcrumb = 'create'
       @tool = Tool.new
+      @companies = companies_dropdown
+      @offices = offices_dropdown
+      @products = products_dropdown
   
       respond_to do |format|
         format.html # new.html.erb
@@ -98,6 +99,9 @@ module Ag2Tech
     def edit
       @breadcrumb = 'update'
       @tool = Tool.find(params[:id])
+      @companies = @tool.organization.blank? ? companies_dropdown : companies_dropdown_edit(@tool.organization)
+      @offices = @tool.organization.blank? ? offices_dropdown : offices_dropdown_edit(@tool.organization_id)
+      @products = @tool.organization.blank? ? products_dropdown : @tool.organization.products(:product_code)
     end
   
     # POST /tools
@@ -112,6 +116,9 @@ module Ag2Tech
           format.html { redirect_to @tool, notice: crud_notice('created', @tool) }
           format.json { render json: @tool, status: :created, location: @tool }
         else
+          @companies = companies_dropdown
+          @offices = offices_dropdown
+          @products = products_dropdown
           format.html { render action: "new" }
           format.json { render json: @tool.errors, status: :unprocessable_entity }
         end
@@ -131,6 +138,9 @@ module Ag2Tech
                         notice: (crud_notice('updated', @tool) + "#{undo_link(@tool)}").html_safe }
           format.json { head :no_content }
         else
+          @companies = @tool.organization.blank? ? companies_dropdown : companies_dropdown_edit(@tool.organization)
+          @offices = @tool.organization.blank? ? offices_dropdown : offices_dropdown_edit(@tool.organization_id)
+          @products = @tool.organization.blank? ? products_dropdown : @tool.organization.products(:product_code)
           format.html { render action: "edit" }
           format.json { render json: @tool.errors, status: :unprocessable_entity }
         end
@@ -156,6 +166,51 @@ module Ag2Tech
 
     private
 
+    def companies_dropdown
+      if session[:company] != '0'
+        _companies = Company.where(id: session[:company].to_i)
+      else
+        _companies = session[:organization] != '0' ? Company.where(organization_id: session[:organization].to_i).order(:name) : Company.order(:name)
+      end
+    end
+
+    def offices_dropdown
+      if session[:office] != '0'
+        _offices = Office.where(id: session[:office].to_i)
+      elsif session[:company] != '0'
+        _offices = offices_by_company(session[:company].to_i)
+      else
+        _offices = session[:organization] != '0' ? Office.joins(:company).where(companies: { organization_id: session[:organization].to_i }).order(:name) : Office.order(:name)
+      end
+    end
+
+    def companies_dropdown_edit(_organization)
+      if session[:company] != '0'
+        _companies = Company.where(id: session[:company].to_i)
+      else
+        _companies = _organization.companies.order(:name)
+      end
+    end
+
+    def offices_dropdown_edit(_organization)
+      if session[:office] != '0'
+        _offices = Office.where(id: session[:office].to_i)
+      elsif session[:company] != '0'
+        _offices = offices_by_company(session[:company].to_i)
+      else
+        _offices = Office.joins(:company).where(companies: { organization_id: _organization }).order(:name)
+      end
+    end
+
+    def offices_by_company(_company)
+      _offices = Office.where(company_id: _company).order(:name)      
+    end
+
+    def products_dropdown
+      session[:organization] != '0' ? Product.where(organization_id: session[:organization].to_i).order(:product_code) : Product.order(:product_code)
+    end    
+
+    # Sort by column
     def sort_column
       Tool.column_names.include?(params[:sort]) ? params[:sort] : "serial_no"
     end

@@ -1,3 +1,90 @@
+<script>
+  $(document).ready(function() {
+    $('select.sel2').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      allowClear: true
+    });
+  });
+
+  jQuery(function($) {
+    // when the #vehicle_office_id field changes
+    $("#vehicle_office_id").change(function() {
+      // make a POST call and replace the content
+      var tool = $('select#vehicle_office_id :selected').val();
+      if (tool == "")
+        tool = "0";
+      jQuery.getJSON('ve_update_company_textfield_from_office/' + tool, function(data) {
+        $("#vehicle_company_id").val(data.id);
+      });
+      return false;
+    });
+
+    // when the #vehicle_organization_id field changes
+    $("#vehicle_organization_id").change(function() {
+      // make a POST call and replace the content
+      var tool = $('select#vehicle_organization_id :selected').val();
+      if (tool == "")
+        tool = "0";
+      jQuery.getJSON('ve_update_company_and_office_textfields_from_organization/' + tool, function(data) {
+        var c = data.companies;
+        var o = data.offices;
+        var p = data.products
+        // Companies
+        $("#vehicle_company_id").html("");
+        $("#vehicle_company_id").val("");
+        $("#vehicle_company_id").append($('<option></option>').val("").html(""));
+        if (!c.length) {
+          $.each(data, function(id, option) {
+            if (id == 'companies' && option != "") {
+              $("#vehicle_company_id").append($('<option></option>').val(option.id).html(option.name));
+            }
+          });
+        } else {
+          $.each(c, function(id, option) {
+            $("#vehicle_company_id").append($('<option></option>').val(option.id).html(option.name));
+          });
+        }
+        // Offices
+        $("#vehicle_office_id").html("");
+        $("#vehicle_office_id").val("");
+        $("#vehicle_office_id").append($('<option></option>').val("").html(""));
+        if (!o.length) {
+          $.each(data, function(id, option) {
+            if (id == 'offices' && option != "") {
+              $("#vehicle_office_id").append($('<option></option>').val(option[0]).html(option[1] + " (" + option[2] + ")"));
+            }
+          });
+        } else {
+          $.each(o, function(id, option) {
+            $("#vehicle_office_id").append($('<option></option>').val(option[0]).html(option[1] + " (" + option[2] + ")"));
+          });
+        }
+        // Products
+        $("#vehicle_product_id").html("");
+        $("#vehicle_product_id").select2("val", "");
+        $("#vehicle_product_id").append($('<option></option>').val("").html(""));
+        if (!p.length) {
+          $.each(data, function(id, option) {
+            if (id == 'products' && option != "") {
+              $("#vehicle_product_id").append($('<option></option>').val(option.id).html(option.product_code.substring(0,4) + "-" + option.product_code.substring(4,10) + " " + option.name));
+            }
+          });
+        } else {
+          $.each(p, function(id, option) {
+            $("#vehicle_product_id").append($('<option></option>').val(option.id).html(option.product_code.substring(0,4) + "-" + option.product_code.substring(4,10) + " " + option.name));
+          });
+        }
+      });
+      if (tool == "0") {
+        $("#vehicle_company_id").val(0);
+        $("#vehicle_office_id").val(0);
+        $("#vehicle_product_id").val(0);
+      }
+      return false;
+    });
+  });  
+</script>
+
 <%= simple_form_for @vehicle, :html => {:class => 'form-vertical well' } do |f| %>
 <%= f.error_notification %>
 <%= display_base_errors resource %>
