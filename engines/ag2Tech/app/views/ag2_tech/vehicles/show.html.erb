@@ -1,5 +1,45 @@
-<p id="notice"><%= notice %></p>
+<%= render '/layouts/ag2_tech/vehiclesbreadcrumb' %>
 
+<h3><%=t '.title' %></h3>
+<table class="table">
+  <tbody>
+    <tr>
+      <td>Id:</td>
+      <td><%= @vehicle.id %></td>
+      <td><%=t 'activerecord.attributes.vehicle.registration' %>:</td>
+      <td><b><%= @vehicle.registration %></b></td>
+    </tr>
+      <td><%=t 'activerecord.attributes.vehicle.name' %>:</td>
+      <td><%= @vehicle.name %></td>
+      <td><%=t 'activerecord.attributes.vehicle.organization' %>:</td>
+      <td><%= @tool.organization.name unless @tool.organization.blank? %></td>
+    </tr>
+    </tr>
+      <td><%=t 'activerecord.attributes.vehicle.office' %>:</td>
+      <td><%= @tool.office.name unless @tool.office.blank? %></td>
+      <td><%=t 'activerecord.attributes.vehicle.company' %>:</td>
+      <td><%= @tool.company.name unless @tool.company.blank? %></td>
+    </tr>
+    </tr>
+      <td><%=t 'activerecord.attributes.vehicle.product' %>:</td>
+      <td><%= @vehicle.product.full_name unless @vehicle.product.blank? %></td>
+      <td><%=t 'activerecord.attributes.vehicle.cost' %>:</td>
+      <td><%= number_with_precision(@tool.cost, precision: 4) unless @tool.cost.blank? %></td>
+    </tr>
+    </tr>
+      <td><%=t 'activerecord.attributes.vehicle.brand' %>:</td>
+      <td><%= @vehicle.brand unless @vehicle.brand.blank? %></td>
+      <td><%=t 'activerecord.attributes.vehicle.model' %>:</td>
+      <td><%= @vehicle.model unless @vehicle.model.blank? %></td>
+    </tr>
+    <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @vehicle } %>
+    <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @vehicle } %>
+  </tbody>
+</table>
 
-<%= link_to 'Edit', edit_vehicle_path(@vehicle) %> |
-<%= link_to 'Back', vehicles_path %>
+<%= render partial: '/layouts/crud/update_delete_new', locals:
+{ model: vehicle, update_path: edit_vehicle_path(@vehicle), update_txt: t('.btn_edit'),
+delete_path: @vehicle, delete_txt: t('.btn_delete'), msg: t("activerecord.models.vehicle.one"), txt: @vehicle.full_name,
+new_path: new_vehicle_path, new_txt: t('ag2_tech.vehicles.index.btn_new') } %>
+
+<%= link_to t("ag2_tech.vehicles.back_to_main_page"), vehicles_path %>

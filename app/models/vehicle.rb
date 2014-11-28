@@ -14,7 +14,7 @@ class Vehicle < ActiveRecord::Base
   validates :registration,  :presence => true,
                             :length => { :minimum => 4, :maximum => 10 },
                             :format => { with: /\A[a-zA-Z\d]+\Z/, message: :code_invalid },
-                            :uniqueness => { :scope => :organization_id }
+                            :uniqueness => { :scope => [ :organization_id, :company_id ] }
   validates :name,          :presence => true
   validates :organization,  :presence => true
 

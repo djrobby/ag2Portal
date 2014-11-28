@@ -63,7 +63,21 @@ Ag2Tech::Engine.routes.draw do
     match 'budget_headings/bh_update_textfields_to_uppercase/:name', :controller => 'budget_headings', :action => 'bh_update_textfields_to_uppercase'
     match 'bh_update_textfields_to_uppercase/:name', :controller => 'budget_headings', :action => 'bh_update_textfields_to_uppercase'
     match 'budget_headings/:id/bh_update_textfields_to_uppercase/:name', :controller => 'budget_headings', :action => 'bh_update_textfields_to_uppercase'
-
+    #
+    match 'tools/tl_update_company_textfield_from_office/:id', :controller => 'tools', :action => 'tl_update_company_textfield_from_office'
+    match 'tl_update_company_textfield_from_office/:id', :controller => 'tools', :action => 'tl_update_company_textfield_from_office'
+    match 'tools/:id/tl_update_company_textfield_from_office/:id', :controller => 'tools', :action => 'tl_update_company_textfield_from_office'
+    match 'tools/tl_update_company_and_office_textfields_from_organization/:org', :controller => 'tools', :action => 'tl_update_company_and_office_textfields_from_organization'
+    match 'tl_update_company_and_office_textfields_from_organization/:org', :controller => 'tools', :action => 'tl_update_company_and_office_textfields_from_organization'
+    match 'tools/:id/tl_update_company_and_office_textfields_from_organization/:org', :controller => 'tools', :action => 'tl_update_company_and_office_textfields_from_organization'
+    #
+    match 'vehicles/ve_update_company_textfield_from_office/:id', :controller => 'vehicles', :action => 've_update_company_textfield_from_office'
+    match 've_update_company_textfield_from_office/:id', :controller => 'vehicles', :action => 've_update_company_textfield_from_office'
+    match 'vehicles/:id/ve_update_company_textfield_from_office/:id', :controller => 'vehicles', :action => 've_update_company_textfield_from_office'
+    match 'vehicles/ve_update_company_and_office_textfields_from_organization/:org', :controller => 'vehicles', :action => 've_update_company_and_office_textfields_from_organization'
+    match 've_update_company_and_office_textfields_from_organization/:org', :controller => 'vehicles', :action => 've_update_company_and_office_textfields_from_organization'
+    match 'vehicles/:id/ve_update_company_and_office_textfields_from_organization/:org', :controller => 'vehicles', :action => 've_update_company_and_office_textfields_from_organization'
+    
     # Resources
     resources :projects
     resources :charge_accounts

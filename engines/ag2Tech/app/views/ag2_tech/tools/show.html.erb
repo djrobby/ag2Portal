@@ -5,29 +5,41 @@
   <tbody>
     <tr>
       <td>Id:</td>
-      <td><%= @charge_group.id %></td>
-      <td><%=t 'activerecord.attributes.charge_group.group_code' %>:</td>
-      <td><b><%= @charge_group.group_code %></b></td>
+      <td><%= @tool.id %></td>
+      <td><%=t 'activerecord.attributes.tool.serial_no' %>:</td>
+      <td><b><%= @tool.serial_no %></b></td>
     </tr>
-      <td><%=t 'activerecord.attributes.charge_group.name' %>:</td>
-      <td><%= @charge_group.name %></td>
-      <td><%=t 'activerecord.attributes.charge_group.flow' %>:</td>
-      <td><%= @charge_group.flow_label unless @charge_group.flow.blank? %></td>
+      <td><%=t 'activerecord.attributes.tool.name' %>:</td>
+      <td><%= @tool.name %></td>
+      <td><%=t 'activerecord.attributes.tool.organization' %>:</td>
+      <td><%= @tool.organization.name unless @tool.organization.blank? %></td>
     </tr>
-    <tr>
-      <td><%=t 'activerecord.attributes.charge_group.budget_heading' %>:</td>
-      <td><%= @charge_group.budget_heading.full_name unless @charge_group.budget_heading.blank? %></td>
-      <td><%=t 'activerecord.attributes.charge_group.ledger_account' %>:</td>
-      <td><%= @charge_group.ledger_account unless @charge_group.ledger_account.blank? %></td>
     </tr>
-    <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @charge_group } %>
-    <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @charge_group } %>
+      <td><%=t 'activerecord.attributes.tool.company' %>:</td>
+      <td><%= @tool.company.name unless @tool.company.blank? %></td>
+      <td><%=t 'activerecord.attributes.tool.office' %>:</td>
+      <td><%= @tool.office.name unless @tool.office.blank? %></td>
+    </tr>
+    </tr>
+      <td><%=t 'activerecord.attributes.tool.product' %>:</td>
+      <td><%= @tool.product.full_name unless @tool.product.blank? %></td>
+      <td><%=t 'activerecord.attributes.tool.cost' %>:</td>
+      <td><%= number_with_precision(@tool.cost, precision: 4) unless @tool.cost.blank? %></td>
+    </tr>
+    </tr>
+      <td><%=t 'activerecord.attributes.tool.brand' %>:</td>
+      <td><%= @tool.brand unless @tool.brand.blank? %></td>
+      <td><%=t 'activerecord.attributes.tool.model' %>:</td>
+      <td><%= @tool.model unless @tool.model.blank? %></td>
+    </tr>
+    <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @tool } %>
+    <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @tool } %>
   </tbody>
 </table>
 
 <%= render partial: '/layouts/crud/update_delete_new', locals:
-{ model: Tool, update_path: edit_charge_group_path(@charge_group), update_txt: t('.btn_edit'),
-delete_path: @charge_group, delete_txt: t('.btn_delete'), msg: t("activerecord.models.charge_group.one"), txt: @charge_group.full_name,
-new_path: new_charge_group_path, new_txt: t('ag2_tech.charge_groups.index.btn_new') } %>
+{ model: Tool, update_path: edit_tool_path(@tool), update_txt: t('.btn_edit'),
+delete_path: @tool, delete_txt: t('.btn_delete'), msg: t("activerecord.models.tool.one"), txt: @tool.full_name,
+new_path: new_tool_path, new_txt: t('ag2_tech.tools.index.btn_new') } %>
 
 <%= link_to t("ag2_tech.tools.back_to_main_page"), tools_path %>

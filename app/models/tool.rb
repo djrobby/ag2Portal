@@ -12,7 +12,7 @@ class Tool < ActiveRecord::Base
   has_paper_trail
 
   validates :serial_no,     :presence => true,
-                            :uniqueness => { :scope => :organization_id }
+                            :uniqueness => { :scope => [ :organization_id, :company_id ] }
   validates :name,          :presence => true
   validates :organization,  :presence => true
 

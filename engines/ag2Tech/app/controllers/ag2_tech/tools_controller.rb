@@ -4,9 +4,48 @@ module Ag2Tech
   class ToolsController < ApplicationController
     before_filter :authenticate_user!
     load_and_authorize_resource
+    skip_load_and_authorize_resource :only => [:tl_update_company_textfield_from_office,
+                                               :tl_update_company_and_office_textfields_from_organization]
     # Helper methods for sorting
     helper_method :sort_column
+    
+    # Update company text field at view from office select
+    def tl_update_company_textfield_from_office
+      office = params[:id]
+      @company = 0
+      if office != '0'
+        @office = Office.find(office)
+        @company = @office.blank? ? 0 : @office.company
+      end
 
+      respond_to do |format|
+        format.html # pr_update_company_textfield_from_office.html.erb does not exist! JSON only
+        format.json { render json: @company }
+      end
+    end
+    
+    # Update company & office text fields at view from organization select
+    def tl_update_company_and_office_textfields_from_organization
+      organization = params[:org]
+      if organization != '0'
+        @organization = Organization.find(organization)
+        @companies = @organization.blank? ? companies_dropdown : @organization.companies.order(:name)
+        @offices = @organization.blank? ? offices_dropdown : Office.joins(:company).where(companies: { organization_id: organization }).order(:name)
+      else
+        @companies = companies_dropdown
+        @offices = offices_dropdown
+      end
+      @offices_dropdown = []
+      @offices.each do |i|
+        @offices_dropdown = @offices_dropdown << [i.id, i.name, i.company.name] 
+      end
+      @json_data = { "companies" => @companies, "offices" => @offices_dropdown }
+      render json: @json_data
+    end
+
+    #
+    # Default Methods
+    #
     # GET /tools
     # GET /tools.json
     def index

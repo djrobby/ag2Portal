@@ -1,17 +1,44 @@
-<%= form_for(@vehicle) do |f| %>
-  <% if @vehicle.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@vehicle.errors.count, "error") %> prohibited this vehicle from being saved:</h2>
-
-      <ul>
-      <% @vehicle.errors.full_messages.each do |msg| %>
-        <li><%= msg %></li>
-      <% end %>
-      </ul>
-    </div>
-  <% end %>
-
-  <div class="actions">
-    <%= f.submit %>
-  </div>
+<%= simple_form_for @vehicle, :html => {:class => 'form-vertical well' } do |f| %>
+<%= f.error_notification %>
+<%= display_base_errors resource %>
+<div>
+  <label class="multi-field-label-two"> <%= f.input :registration, autofocus: true, input_html: { class: 'mid-text-field' }, label_html: { class: 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.input :name, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %> </label>
+</div>
+<% if session[:organization] != '0' %>
+<%= f.association :organization, collection: Organization.where("id = ?", "#{session[:organization]}").all, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' }, include_blank: false %>
+<% elsif current_user.organizations.count > 0 %>
+<%= f.association :organization, collection: current_user.organizations.order('name'), input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' }, include_blank: false %>
+<% else %>
+<%= f.association :organization, collection: Organization.order('name'), input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %>
+<% end %>
+<div>
+  <label class="multi-field-label-two">
+    <% if session[:office] != '0' %>
+    <%= f.association :office, collection: Office.where("id = ?", "#{session[:office]}").all, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' }, include_blank: false %>
+    <% elsif current_user.offices.count > 0 %>
+    <%= f.association :office, collection: current_user.offices.order('name'), input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' }, include_blank: false %>
+    <% else %>
+    <%= f.association :office, collection: @offices, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %>
+    <% end %>
+  </label>
+  <label class="multi-field-label-two">
+    <% if session[:company] != '0' %>
+    <%= f.association :company, collection: Company.where("id = ?", "#{session[:company]}").all, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' }, include_blank: false %>
+    <% elsif current_user.companies.count > 0 %>
+    <%= f.association :company, collection: current_user.companies.order('name'), input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' }, include_blank: false %>
+    <% else %>
+    <%= f.association :company, collection: @companies, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %>
+    <% end %>
+  </label>
+</div>
+<div>
+  <label class="multi-field-label-two"> <%= f.association :product, collection: @products, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.input :cost, as: :string, input_html: { value: (number_with_precision(f.object.cost, precision: 4) if f.object.cost), class: 'large-text-field number-text-field' }, label_html: { class: 'form-label' } %> </label>
+</div>
+<div>
+  <label class="multi-field-label-two"> <%= f.input :brand, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.input :model, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %> </label>
+</div>
+<%= f.button :submit, :class => 'btn-primary', :id => 'submit_btn' %>
 <% end %>
