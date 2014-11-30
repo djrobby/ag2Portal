@@ -70,6 +70,9 @@ Ag2Tech::Engine.routes.draw do
     match 'tools/tl_update_company_and_office_textfields_from_organization/:org', :controller => 'tools', :action => 'tl_update_company_and_office_textfields_from_organization'
     match 'tl_update_company_and_office_textfields_from_organization/:org', :controller => 'tools', :action => 'tl_update_company_and_office_textfields_from_organization'
     match 'tools/:id/tl_update_company_and_office_textfields_from_organization/:org', :controller => 'tools', :action => 'tl_update_company_and_office_textfields_from_organization'
+    match 'tools/tl_update_name_textfield_from_product/:product', :controller => 'tools', :action => 'tl_update_name_textfield_from_product'
+    match 'tl_update_name_textfield_from_product/:product', :controller => 'tools', :action => 'tl_update_name_textfield_from_product'
+    match 'tools/:id/tl_update_name_textfield_from_product/:product', :controller => 'tools', :action => 'tl_update_name_textfield_from_product'
     #
     match 'vehicles/ve_update_company_textfield_from_office/:id', :controller => 'vehicles', :action => 've_update_company_textfield_from_office'
     match 've_update_company_textfield_from_office/:id', :controller => 'vehicles', :action => 've_update_company_textfield_from_office'
@@ -77,6 +80,9 @@ Ag2Tech::Engine.routes.draw do
     match 'vehicles/ve_update_company_and_office_textfields_from_organization/:org', :controller => 'vehicles', :action => 've_update_company_and_office_textfields_from_organization'
     match 've_update_company_and_office_textfields_from_organization/:org', :controller => 'vehicles', :action => 've_update_company_and_office_textfields_from_organization'
     match 'vehicles/:id/ve_update_company_and_office_textfields_from_organization/:org', :controller => 'vehicles', :action => 've_update_company_and_office_textfields_from_organization'
+    match 'tools/ve_update_name_textfield_from_product/:product', :controller => 'tools', :action => 've_update_name_textfield_from_product'
+    match 've_update_name_textfield_from_product/:product', :controller => 'tools', :action => 've_update_name_textfield_from_product'
+    match 'tools/:id/ve_update_name_textfield_from_product/:product', :controller => 'tools', :action => 've_update_name_textfield_from_product'
     
     # Resources
     resources :projects

@@ -82,6 +82,20 @@
       }
       return false;
     });
+
+    // when the #vehicle_product_id field changes
+    $("#vehicle_product_id").change(function() {
+      // make a POST call and replace the content
+      var tool = $('select#vehicle_product_id :selected').val();
+      if (tool == "")
+        tool = "0";
+      jQuery.getJSON('ve_update_name_textfield_from_product/' + tool, function(data) {
+        $("#vehicle_name").val(data.description);
+        $("#vehicle_cost").val(data.cost);
+        $("#vehicle_brand").val(data.manufacturer);
+      });
+      return false;
+    });
   });  
 </script>
 

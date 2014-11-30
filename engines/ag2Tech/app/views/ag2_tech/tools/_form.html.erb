@@ -82,6 +82,20 @@
       }
       return false;
     });
+
+    // when the #tool_product_id field changes
+    $("#tool_product_id").change(function() {
+      // make a POST call and replace the content
+      var tool = $('select#tool_product_id :selected').val();
+      if (tool == "")
+        tool = "0";
+      jQuery.getJSON('tl_update_name_textfield_from_product/' + tool, function(data) {
+        $("#tool_name").val(data.description);
+        $("#tool_cost").val(data.cost);
+        $("#tool_brand").val(data.manufacturer);
+      });
+      return false;
+    });
   });  
 </script>
 

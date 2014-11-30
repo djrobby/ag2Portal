@@ -2,10 +2,12 @@ require_dependency "ag2_tech/application_controller"
 
 module Ag2Tech
   class VehiclesController < ApplicationController
+    include ActionView::Helpers::NumberHelper
     before_filter :authenticate_user!
     load_and_authorize_resource
     skip_load_and_authorize_resource :only => [:ve_update_company_textfield_from_office,
-                                               :ve_update_company_and_office_textfields_from_organization]
+                                               :ve_update_company_and_office_textfields_from_organization,
+                                               :ve_update_name_textfield_from_product]
     # Helper methods for sorting
     helper_method :sort_column
     
@@ -38,6 +40,26 @@ module Ag2Tech
         @offices_dropdown = @offices_dropdown << [i.id, i.name, i.company.name] 
       end
       @json_data = { "companies" => @companies, "offices" => @offices_dropdown, "products" => @products }
+      render json: @json_data
+    end
+    
+    # Update name text field at view from product select
+    def tl_update_name_textfield_from_product
+      product = params[:product]
+      description = ""
+      cost = 0
+      manufacturer = ""
+      if product != '0'
+        @product = Product.find(product)
+        # Assignment
+        description = @product.main_description[0,40]
+        cost = @product.reference_price
+        manufacturer = @product.manufacturer.name rescue ""
+      end
+      # Format numbers
+      cost = number_with_precision(cost.round(4), precision: 4)
+      # Setup JSON
+      @json_data = { "description" => description, "cost" => cost.to_s, "manufacturer" => manufacturer }
       render json: @json_data
     end
 
