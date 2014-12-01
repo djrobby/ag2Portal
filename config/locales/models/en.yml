@@ -65,4 +65,4 @@ en:
         vehicle:
           attributes:
             registration:
-              code_invalid: "Invalid registration (must be alphanumeric)"
+              code_invalid: "Invalid registration (must be alphanumeric without blanks)"

@@ -66,12 +66,12 @@
         if (!p.length) {
           $.each(data, function(id, option) {
             if (id == 'products' && option != "") {
-              $("#tool_product_id").append($('<option></option>').val(option.id).html(option.product_code.substring(0,4) + "-" + option.product_code.substring(4,10) + " " + option.name));
+              $("#tool_product_id").append($('<option></option>').val(option.id).html(option.product_code.substring(0,4) + "-" + option.product_code.substring(4,10) + " " + option.main_description));
             }
           });
         } else {
           $.each(p, function(id, option) {
-            $("#tool_product_id").append($('<option></option>').val(option.id).html(option.product_code.substring(0,4) + "-" + option.product_code.substring(4,10) + " " + option.name));
+            $("#tool_product_id").append($('<option></option>').val(option.id).html(option.product_code.substring(0,4) + "-" + option.product_code.substring(4,10) + " " + option.main_description));
           });
         }
       });

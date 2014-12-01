@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20141013100758) do
+ActiveRecord::Schema.define(:version => 20141201105236) do
 
   create_table "activities", :force => true do |t|
     t.string   "description"
@@ -1727,11 +1727,15 @@ ActiveRecord::Schema.define(:version => 20141013100758) do
     t.string   "serial_no"
     t.string   "brand"
     t.string   "model"
-    t.decimal  "cost",            :precision => 12, :scale => 4, :default => 0.0, :null => false
-    t.datetime "created_at",                                                      :null => false
-    t.datetime "updated_at",                                                      :null => false
+    t.decimal  "cost",               :precision => 12, :scale => 4, :default => 0.0, :null => false
+    t.datetime "created_at",                                                         :null => false
+    t.datetime "updated_at",                                                         :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
+    t.string   "image_file_name"
+    t.string   "image_content_type"
+    t.integer  "image_file_size"
+    t.datetime "image_updated_at"
   end
 
   add_index "tools", ["company_id"], :name => "index_tools_on_company_id"
@@ -1820,11 +1824,15 @@ ActiveRecord::Schema.define(:version => 20141013100758) do
     t.string   "registration"
     t.string   "brand"
     t.string   "model"
-    t.decimal  "cost",            :precision => 12, :scale => 4, :default => 0.0, :null => false
-    t.datetime "created_at",                                                      :null => false
-    t.datetime "updated_at",                                                      :null => false
+    t.decimal  "cost",               :precision => 12, :scale => 4, :default => 0.0, :null => false
+    t.datetime "created_at",                                                         :null => false
+    t.datetime "updated_at",                                                         :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
+    t.string   "image_file_name"
+    t.string   "image_content_type"
+    t.integer  "image_file_size"
+    t.datetime "image_updated_at"
   end
 
   add_index "vehicles", ["company_id"], :name => "index_vehicles_on_company_id"

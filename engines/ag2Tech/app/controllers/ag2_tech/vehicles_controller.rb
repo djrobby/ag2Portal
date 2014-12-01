@@ -44,7 +44,7 @@ module Ag2Tech
     end
     
     # Update name text field at view from product select
-    def tl_update_name_textfield_from_product
+    def ve_update_name_textfield_from_product
       product = params[:product]
       description = ""
       cost = 0
@@ -121,9 +121,9 @@ module Ag2Tech
     def edit
       @breadcrumb = 'update'
       @vehicle = Vehicle.find(params[:id])
-      @companies = @tool.organization.blank? ? companies_dropdown : companies_dropdown_edit(@tool.organization)
-      @offices = @tool.organization.blank? ? offices_dropdown : offices_dropdown_edit(@tool.organization_id)
-      @products = @tool.organization.blank? ? products_dropdown : @tool.organization.products(:product_code)
+      @companies = @vehicle.organization.blank? ? companies_dropdown : companies_dropdown_edit(@vehicle.organization)
+      @offices = @vehicle.organization.blank? ? offices_dropdown : offices_dropdown_edit(@vehicle.organization_id)
+      @products = @vehicle.organization.blank? ? products_dropdown : @vehicle.organization.products(:product_code)
     end
   
     # POST /vehicles
@@ -160,9 +160,9 @@ module Ag2Tech
                         notice: (crud_notice('updated', @vehicle) + "#{undo_link(@vehicle)}").html_safe }
           format.json { head :no_content }
         else
-          @companies = @tool.organization.blank? ? companies_dropdown : companies_dropdown_edit(@tool.organization)
-          @offices = @tool.organization.blank? ? offices_dropdown : offices_dropdown_edit(@tool.organization_id)
-          @products = @tool.organization.blank? ? products_dropdown : @tool.organization.products(:product_code)
+          @companies = @vehicle.organization.blank? ? companies_dropdown : companies_dropdown_edit(@vehicle.organization)
+          @offices = @vehicle.organization.blank? ? offices_dropdown : offices_dropdown_edit(@vehicle.organization_id)
+          @products = @vehicle.organization.blank? ? products_dropdown : @vehicle.organization.products(:product_code)
           format.html { render action: "edit" }
           format.json { render json: @vehicle.errors, status: :unprocessable_entity }
         end

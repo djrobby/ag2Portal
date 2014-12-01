@@ -65,4 +65,4 @@ es:
         vehicle:
           attributes:
             registration:
-              code_invalid: "Matrícula inválida (must be alphanumeric)"
+              code_invalid: "Matrícula inválida (debe ser alfanumérica sin espacios)"

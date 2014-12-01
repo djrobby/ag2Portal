@@ -66,12 +66,12 @@
         if (!p.length) {
           $.each(data, function(id, option) {
             if (id == 'products' && option != "") {
-              $("#vehicle_product_id").append($('<option></option>').val(option.id).html(option.product_code.substring(0,4) + "-" + option.product_code.substring(4,10) + " " + option.name));
+              $("#vehicle_product_id").append($('<option></option>').val(option.id).html(option.product_code.substring(0,4) + "-" + option.product_code.substring(4,10) + " " + option.main_description));
             }
           });
         } else {
           $.each(p, function(id, option) {
-            $("#vehicle_product_id").append($('<option></option>').val(option.id).html(option.product_code.substring(0,4) + "-" + option.product_code.substring(4,10) + " " + option.name));
+            $("#vehicle_product_id").append($('<option></option>').val(option.id).html(option.product_code.substring(0,4) + "-" + option.product_code.substring(4,10) + " " + option.main_description));
           });
         }
       });
@@ -131,7 +131,7 @@
 </div>
 <div>
   <label class="multi-field-label-two"> <%= f.association :product, collection: @products, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
-  <label class="multi-field-label-two"> <%= f.input :registration, input_html: { class: 'mid-text-field' }, label_html: { class: 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.input :registration, input_html: { onkeyup: "caps(this)", class: 'mid-text-field' }, label_html: { class: 'form-label' } %> </label>
 </div>
 <div>
   <label class="multi-field-label-two"> <%= f.input :name, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %> </label>

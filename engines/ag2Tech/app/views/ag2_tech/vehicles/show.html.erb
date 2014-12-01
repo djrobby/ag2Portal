@@ -12,19 +12,19 @@
       <td><%=t 'activerecord.attributes.vehicle.name' %>:</td>
       <td><%= @vehicle.name %></td>
       <td><%=t 'activerecord.attributes.vehicle.organization' %>:</td>
-      <td><%= @tool.organization.name unless @tool.organization.blank? %></td>
+      <td><%= @vehicle.organization.name unless @vehicle.organization.blank? %></td>
     </tr>
     </tr>
       <td><%=t 'activerecord.attributes.vehicle.office' %>:</td>
-      <td><%= @tool.office.name unless @tool.office.blank? %></td>
+      <td><%= @vehicle.office.name unless @vehicle.office.blank? %></td>
       <td><%=t 'activerecord.attributes.vehicle.company' %>:</td>
-      <td><%= @tool.company.name unless @tool.company.blank? %></td>
+      <td><%= @vehicle.company.name unless @vehicle.company.blank? %></td>
     </tr>
     </tr>
       <td><%=t 'activerecord.attributes.vehicle.product' %>:</td>
       <td><%= @vehicle.product.full_name unless @vehicle.product.blank? %></td>
       <td><%=t 'activerecord.attributes.vehicle.cost' %>:</td>
-      <td><%= number_with_precision(@tool.cost, precision: 4) unless @tool.cost.blank? %></td>
+      <td><%= number_with_precision(@vehicle.cost, precision: 4) unless @vehicle.cost.blank? %></td>
     </tr>
     </tr>
       <td><%=t 'activerecord.attributes.vehicle.brand' %>:</td>
@@ -38,7 +38,7 @@
 </table>
 
 <%= render partial: '/layouts/crud/update_delete_new', locals:
-{ model: vehicle, update_path: edit_vehicle_path(@vehicle), update_txt: t('.btn_edit'),
+{ model: Vehicle, update_path: edit_vehicle_path(@vehicle), update_txt: t('.btn_edit'),
 delete_path: @vehicle, delete_txt: t('.btn_delete'), msg: t("activerecord.models.vehicle.one"), txt: @vehicle.full_name,
 new_path: new_vehicle_path, new_txt: t('ag2_tech.vehicles.index.btn_new') } %>
 
