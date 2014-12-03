@@ -178,6 +178,10 @@ class WorkOrder < ActiveRecord::Base
     costs
   end
 
+  def tool_minutes
+    work_order_tools.sum("minutes")
+  end
+
   def vehicle_costs
     costs = 0
     work_order_vehicles.each do |i|
@@ -186,6 +190,10 @@ class WorkOrder < ActiveRecord::Base
       end
     end
     costs
+  end
+
+  def vehicle_distance
+    work_order_vehicles.sum("distance")
   end
 
   def subcontractor_costs

@@ -1,0 +1,7 @@
+<tr>
+  <td><%= subcontractor.supplier.full_name %></td>
+  <td><%= subcontractor.purchase_order.full_name %></td>
+  <td align="right"><%= number_with_precision(subcontractor.enforcement_pct, precision: 2) %></td>
+  <td align="right"><%= number_with_precision(subcontractor.cost, precision: 4) %></td>
+  <td align="right"><%= number_with_precision(subcontractor.costs, precision: 4) %></td>
+</tr>

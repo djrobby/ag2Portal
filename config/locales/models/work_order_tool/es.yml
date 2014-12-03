@@ -1,0 +1,17 @@
+es:
+  activerecord:
+    models:
+      work_order_tool:
+        zero:  Herramientas de orden de trabajo
+        one:   Herramienta de orden de trabajo
+        few:   Herramientas de orden de trabajo
+        other: Herramientas de orden de trabajo
+    attributes:
+      work_order_tool:
+        work_order: "Orden de trabajo"
+        work_order_id: "Orden de trabajo"
+        tool: "Herramienta"
+        tool_id: "Herramienta"
+        minutes: "Minutos"
+        cost: "Coste"
+        costs: "Costos"

@@ -1,0 +1,7 @@
+<tr class="totals">
+  <td align="right"><%= t :"activerecord.attributes.work_order.vehicle_distance" %> | <%= t :"activerecord.attributes.work_order.vehicle_costs" %></td>
+  <td align="right" id="foot-distance"><%= number_with_precision('0', precision: 2) %></td>
+  <td></td>
+  <td align="right" id="foot-totalv"><%= number_with_precision('0', precision: 4) %></td>
+  <td><a href="#" onclick="javascript:$('#vehicles-table').trigger('totals'); return false;"><i class="icon-refresh"></i></a></td>
+</tr>

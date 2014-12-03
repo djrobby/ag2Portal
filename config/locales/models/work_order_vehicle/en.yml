@@ -1,0 +1,17 @@
+en:
+  activerecord:
+    models:
+      work_order_vehicle:
+        zero:  Work order vehicles
+        one:   Work order vehicle
+        few:   Work order vehicles
+        other: Work order vehicles
+    attributes:
+      work_order_vehicle:
+        work_order: "Work order"
+        work_order_id: "Work order"
+        vehicle: "Vehicle"
+        vehicle_id: "Vehicle"
+        distance: "KM."
+        cost: "Cost"
+        costs: "Costs"

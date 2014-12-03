@@ -1,0 +1,17 @@
+es:
+  activerecord:
+    models:
+      work_order_vehicle:
+        zero:  Vehículos de orden de trabajo
+        one:   Vehículo de orden de trabajo
+        few:   Vehículos de orden de trabajo
+        other: Vehículos de orden de trabajo
+    attributes:
+      work_order_vehicle:
+        work_order: "Orden de trabajo"
+        work_order_id: "Orden de trabajo"
+        vehicle: "Vehículo"
+        vehicle_id: "Vehículo"
+        distance: "KM."
+        cost: "Coste"
+        costs: "Costos"

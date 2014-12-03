@@ -361,6 +361,9 @@ module Ag2Tech
       @work_order = WorkOrder.find(params[:id])
       @items = @work_order.work_order_items.paginate(:page => params[:page], :per_page => per_page).order('id')
       @workers = @work_order.work_order_workers.paginate(:page => params[:page], :per_page => per_page).order('id')
+      @subcontractors = @work_order.work_order_subcontractors.paginate(:page => params[:page], :per_page => per_page).order('id')
+      @tools = @work_order.work_order_tools.paginate(:page => params[:page], :per_page => per_page).order('id')
+      @vehicles = @work_order.work_order_vehicles.paginate(:page => params[:page], :per_page => per_page).order('id')
   
       respond_to do |format|
         format.html # show.html.erb

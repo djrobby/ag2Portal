@@ -1,0 +1,19 @@
+es:
+  activerecord:
+    models:
+      work_order_subcontractor:
+        zero:  Subcontratistas de orden de trabajo
+        one:   Subcontratista de orden de trabajo
+        few:   Subcontratistas de orden de trabajo
+        other: Subcontratistas de orden de trabajo
+    attributes:
+      work_order_subcontractor:
+        work_order: "Orden de trabajo"
+        work_order_id: "Orden de trabajo"
+        supplier: "Proveedor"
+        supplier_id: "Proveedor"
+        purchase_order: "Pedido"
+        purchase_order_id: "Pedido"
+        enforcement_pct: "% Aplica"
+        cost: "Coste"
+        costs: "Costos"

@@ -1,0 +1,19 @@
+en:
+  activerecord:
+    models:
+      work_order_subcontractor:
+        zero:  Work order subcontractors
+        one:   Work order subcontractor
+        few:   Work order subcontractors
+        other: Work order subcontractors
+    attributes:
+      work_order_subcontractor:
+        work_order: "Work order"
+        work_order_id: "Work order"
+        supplier: "Supplier"
+        supplier_id: "Supplier"
+        purchase_order: "Pur.order"
+        purchase_order_id: "Pur.order"
+        enforcement_pct: "Enforce %"
+        cost: "Cost"
+        costs: "Costs"

@@ -66,3 +66,8 @@ es:
         item_costs_title: "Costos artículos"
         worker_costs_title: "Costos mano de obra"
         total_costs: "Total costos"
+        subcontractor_costs: "Costos subcontratistas"
+        tool_costs: "Costos herramientas"
+        tool_minutes: "Minutos"
+        vehicle_costs: "Vehicle costs"
+        vehicle_distance: "KM."

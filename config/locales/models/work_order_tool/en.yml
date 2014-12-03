@@ -1,0 +1,17 @@
+en:
+  activerecord:
+    models:
+      work_order_tool:
+        zero:  Work order tools
+        one:   Work order tool
+        few:   Work order tools
+        other: Work order tools
+    attributes:
+      work_order_tool:
+        work_order: "Work order"
+        work_order_id: "Work order"
+        tool: "Tool"
+        tool_id: "Tool"
+        minutes: "Minutes"
+        cost: "Cost"
+        costs: "Costs"

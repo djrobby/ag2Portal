@@ -1,0 +1,6 @@
+<tr class="totals">
+  <td align="right"><%= t :"activerecord.attributes.work_order.vehicle_distance" %> | <%= t :"activerecord.attributes.work_order.vehicle_costs" %></td>
+  <td align="right"><%= number_with_precision(order.vehicle_distance, precision: 2) unless order.vehicle_distance.blank? %></td>
+  <td></td>
+  <td align="right"><%= number_with_precision(order.vehicle_costs, precision: 4) unless order.vehicle_costs.blank? %></td>
+</tr>
