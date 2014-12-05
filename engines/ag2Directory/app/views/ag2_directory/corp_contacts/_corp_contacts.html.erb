@@ -10,20 +10,23 @@
 <%= render :partial => '/layouts/lettershead_remote', :locals => { :controller => "corp_contacts", :action => "search" } %>
 <table class="table table-condensed table-striped shrinked fixed">
   <!-- Name -->
-  <col width="25%" />
-  <!-- Position -->
-  <col width="13%" />
-  <!-- Department -->
-  <col width="8%" />
-  <!-- Phone -->
+  <col width="22%" />
+  <!-- Office -->
   <col width="15%" />
+  <!-- Position -->
+  <col width="10%" />
+  <!-- Department -->
+  <col width="7%" />
+  <!-- Phone -->
+  <col width="12%" />
   <!-- Cellular -->
-  <col width="14%" />
+  <col width="12%" />
   <!-- Email -->
-  <col width="25%" />
+  <col width="22%" />
   <thead>
     <tr>
       <th><%= t :"activerecord.attributes.corp_contact.full_name" %></th>
+      <th><%= t :"activerecord.attributes.corp_contact.office" %></th>
       <th><%= t :"activerecord.attributes.corp_contact.position" %></th>
       <th><%= t :"activerecord.attributes.corp_contact.dept" %></th>
       <th><%= t :"activerecord.attributes.corp_contact.corp_phone" %></th>
@@ -37,6 +40,7 @@
     <tr>
       <td><a data-toggle="modal" href="#contactinfo<%= contact.id.to_s %>"><%= contact.full_name_and_count %></a></td>
       <!-- <td><%#= link_to contact.last_name + ', ' + contact.first_name, contact %></td> -->
+      <td><%= contact.office.name unless contact.office.blank? %></td>
       <td><%= contact.position unless contact.position.blank? %></td>
       <td><%= contact.department.code unless contact.department.blank? %></td>
       <td><%= contact.corp_phone unless contact.corp_phone.nil? %>
