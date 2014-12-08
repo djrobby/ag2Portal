@@ -113,7 +113,7 @@
     $(".icon-trash").click(function() {
       remove_fields(this);
       // Update and display totals
-      $('#workers-table').trigger('totals');
+      $('#subcontractors-table').trigger('totals');
     });
   });
 </script>
@@ -130,18 +130,19 @@
   <!-- button -->
   <col width="5%" />
   <thead>
-    <%= render 'workers_header' %>
+    <%= render 'subcontractors_header' %>
   </thead>
   <tfoot>
-    <%= render 'workers_table_footer', f: f %>
+    <%= render 'subcontractors_table_footer', f: f %>
   </tfoot>
   <tbody>
-    <%= f.simple_fields_for :work_order_workers, defaults: { input_html: { class: 'sub-form' } } do |i| %>
+    <%= f.simple_fields_for :work_order_subcontractors, defaults: { input_html: { class: 'sub-form' } } do |i| %>
     <tr class="fields">
-      <td><%= i.association :worker, label: false, wrapper: false, collection: @workers, input_html: { class: 'wsel2 fnt-worker' } %></td>
-      <td><%= i.input :hours, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.hours, precision: 4) if i.object.hours), class: 'sub-number-text-field fnt-hours' } %></td>
-      <td><%= i.input :cost, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.cost, precision: 4) if i.object.cost), class: 'sub-number-text-field fnt-costw' } %></td>
-      <td><%= i.input :costs, disabled: true, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.costs, precision: 4) if i.object.costs), class: 'sub-number-text-field sub-disabled-field fnt-costsw' } %></td>
+      <td><%= i.association :supplier, label: false, wrapper: false, collection: @suppliers, input_html: { class: 'wsel2 fnt-supplier' } %></td>
+      <td><%= i.association :purchase_order, label: false, wrapper: false, collection: @purchase_orders, input_html: { class: 'wsel2 fnt-purchase-order' } %></td>
+      <td><%= i.input :enforcement_pct, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.enforcement_pct, precision: 2) if i.object.enforcement_pct), class: 'sub-number-text-field fnt-enforcement-pct' } %></td>
+      <td><%= i.input :cost, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.cost, precision: 4) if i.object.cost), class: 'sub-number-text-field fnt-costsub' } %></td>
+      <td><%= i.input :costs, disabled: true, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.costs, precision: 4) if i.object.costs), class: 'sub-number-text-field sub-disabled-field fnt-costssub' } %></td>
       <% if @breadcrumb == 'create' || @breadcrumb == 'update' %>
       <td><%= link_to_remove_fields('<i class="icon-trash"></i>'.html_safe, i) %></td>
       <% end %>
