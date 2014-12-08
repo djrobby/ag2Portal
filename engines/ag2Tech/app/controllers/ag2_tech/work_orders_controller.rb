@@ -656,7 +656,13 @@ module Ag2Tech
       session[:organization] != '0' ? PurchaseOrder.where(organization_id: session[:organization].to_i).order(:supplier_id, :order_no, :id) : PurchaseOrder.order(:supplier_id, :order_no, :id)
     end
     
-    def orders_dropdown_edit(_work_order)
+    def orders_dropdown_edit(_work_order, _supplier)
+      if !_work_order.nil? && !_work_order.project.nil? && !_supplier.nil?
+        _orders = PurchaseOrder.where('organization_id = ? AND project_id = ? AND supplier_id', _work_order.organization_id, _work_order.project_id, _supplier).order(:supplier_id, :order_no, :id)
+      else
+        _orders = orders_dropdown
+      end
+      _orders
     end
 
     def tools_dropdown
