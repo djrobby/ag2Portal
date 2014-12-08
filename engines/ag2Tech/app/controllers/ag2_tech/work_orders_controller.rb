@@ -376,15 +376,22 @@ module Ag2Tech
     def new
       @breadcrumb = 'create'
       @work_order = WorkOrder.new
+      # Form
       @projects = projects_dropdown
       @types = work_order_types_dropdown
       @labors = work_order_labors_dropdown
-      @charge_accounts = charge_accounts_dropdown
-      @workers = workers_dropdown
       @areas = areas_dropdown
+      @charge_accounts = charge_accounts_dropdown
       @stores = stores_dropdown
       @clients = clients_dropdown
+      # Form & Sub-forms
+      @workers = workers_dropdown
+      # Sub-forms
       @products = products_dropdown
+      @suppliers = suppliers_dropdown
+      @orders = orders_dropdown
+      @tools = tools_dropdown
+      @vehicles = vehicles_dropdown
   
       respond_to do |format|
         format.html # new.html.erb
@@ -396,15 +403,23 @@ module Ag2Tech
     def edit
       @breadcrumb = 'update'
       @work_order = WorkOrder.find(params[:id])
+      # Form
       @projects = projects_dropdown_edit(@work_order.project)
       @types = work_order_types_dropdown_edit(@work_order.work_order_type)
       @labors = work_order_labors_dropdown_edit(@work_order.work_order_labor)
-      @charge_accounts = @work_order.project.blank? ? charge_accounts_dropdown : charge_accounts_dropdown_edit(@work_order.project_id)
-      @workers = project_workers(@work_order.project)
       @areas = areas_dropdown
+      @charge_accounts = @work_order.project.blank? ? charge_accounts_dropdown : charge_accounts_dropdown_edit(@work_order.project_id)
       @stores = project_stores(@work_order.project)
       @clients = clients_dropdown
+      # Form & Sub-forms
+      @workers = project_workers(@work_order.project)
+      # Sub-forms
       @products = @work_order.organization.blank? ? products_dropdown : @work_order.organization.products(:product_code)
+      @suppliers = @work_order.organization.blank? ? suppliers_dropdown : @work_order.organization.suppliers(:supplier_code)
+      @orders = orders_dropdown_edit(@work_order)
+      #@orders = @work_order.supplier.blank? ? orders_dropdown : @work_order.supplier.purchase_orders.order(:supplier_id, :order_no, :id)
+      @tools = tools_dropdown_edit(@work_order)
+      @vehicles = vehicles_dropdown_edit(@work_order)
     end
   
     # POST /work_orders
@@ -422,12 +437,16 @@ module Ag2Tech
           @projects = projects_dropdown
           @types = work_order_types_dropdown
           @labors = work_order_labors_dropdown
-          @charge_accounts = charge_accounts_dropdown
-          @workers = workers_dropdown
           @areas = areas_dropdown
+          @charge_accounts = charge_accounts_dropdown
           @stores = stores_dropdown
           @clients = clients_dropdown
+          @workers = workers_dropdown
           @products = products_dropdown
+          @suppliers = suppliers_dropdown
+          @purchase_orders = purchase_orders_dropdown
+          @tools = tools_dropdown
+          @vehicles = vehicles_dropdown
           format.html { render action: "new" }
           format.json { render json: @work_order.errors, status: :unprocessable_entity }
         end
@@ -450,12 +469,16 @@ module Ag2Tech
           @projects = projects_dropdown_edit(@work_order.project)
           @types = work_order_types_dropdown_edit(@work_order.work_order_type)
           @labors = work_order_labors_dropdown_edit(@work_order.work_order_labor)
-          @charge_accounts = @work_order.project.blank? ? charge_accounts_dropdown : charge_accounts_dropdown_edit(@work_order.project_id)
-          @workers = project_workers(@work_order.project)
           @areas = areas_dropdown
+          @charge_accounts = @work_order.project.blank? ? charge_accounts_dropdown : charge_accounts_dropdown_edit(@work_order.project_id)
           @stores = project_stores(@work_order.project)
           @clients = clients_dropdown
+          @workers = project_workers(@work_order.project)
           @products = @work_order.organization.blank? ? products_dropdown : @work_order.organization.products(:product_code)
+          @suppliers = @work_order.organization.blank? ? suppliers_dropdown : @work_order.organization.suppliers(:supplier_code)
+          @orders = orders_dropdown_edit(@work_order)
+          @tools = tools_dropdown_edit(@work_order)
+          @vehicles = vehicles_dropdown_edit(@work_order)
           format.html { render action: "edit" }
           format.json { render json: @work_order.errors, status: :unprocessable_entity }
         end
@@ -570,7 +593,7 @@ module Ag2Tech
     end
 
     def work_order_types_dropdown
-      _types = session[:organization] != '0' ? WorkOrderType.where(organization_id: session[:organization].to_i).order(:name) : WorkOrderType.order(:name)
+      session[:organization] != '0' ? WorkOrderType.where(organization_id: session[:organization].to_i).order(:name) : WorkOrderType.order(:name)
     end
 
     def work_order_types_dropdown_edit(_type)
@@ -582,7 +605,7 @@ module Ag2Tech
     end
 
     def work_order_labors_dropdown
-      _labors = session[:organization] != '0' ? WorkOrderLabor.where(organization_id: session[:organization].to_i).order(:name) : WorkOrderLabor.order(:name)
+      session[:organization] != '0' ? WorkOrderLabor.where(organization_id: session[:organization].to_i).order(:name) : WorkOrderLabor.order(:name)
     end
 
     def work_order_labors_dropdown_edit(_labor)
@@ -594,27 +617,27 @@ module Ag2Tech
     end
 
     def charge_accounts_dropdown
-      _accounts = session[:organization] != '0' ? ChargeAccount.where(organization_id: session[:organization].to_i).order(:account_code) : ChargeAccount.order(:account_code)
+      session[:organization] != '0' ? ChargeAccount.where(organization_id: session[:organization].to_i).order(:account_code) : ChargeAccount.order(:account_code)
     end
 
     def charge_accounts_dropdown_edit(_project)
-      _accounts = ChargeAccount.where('project_id = ? OR project_id IS NULL', _project).order(:account_code)
+      ChargeAccount.where('project_id = ? OR project_id IS NULL', _project).order(:account_code)
     end
 
     def workers_dropdown
-      _workers = session[:organization] != '0' ? Worker.where(organization_id: session[:organization].to_i).order(:worker_code) : Worker.order(:worker_code)
+      session[:organization] != '0' ? Worker.where(organization_id: session[:organization].to_i).order(:worker_code) : Worker.order(:worker_code)
     end
 
     def stores_dropdown
-      _stores = session[:organization] != '0' ? Store.where(organization_id: session[:organization].to_i).order(:name) : Store.order(:name)
+      session[:organization] != '0' ? Store.where(organization_id: session[:organization].to_i).order(:name) : Store.order(:name)
     end
 
     def areas_dropdown
-      _areas = session[:organization] != '0' ? Area.joins(:department).where(departments: { organization_id: session[:organization].to_i }).order(:name) : Area.order(:name)
+      session[:organization] != '0' ? Area.joins(:department).where(departments: { organization_id: session[:organization].to_i }).order(:name) : Area.order(:name)
     end
 
     def clients_dropdown
-      _clients = session[:organization] != '0' ? Client.where(organization_id: session[:organization].to_i).order(:client_code) : Client.order(:client_code)
+      session[:organization] != '0' ? Client.where(organization_id: session[:organization].to_i).order(:client_code) : Client.order(:client_code)
     end
 
     def organization_areas(_organization)
@@ -624,6 +647,43 @@ module Ag2Tech
     def products_dropdown
       session[:organization] != '0' ? Product.where(organization_id: session[:organization].to_i).order(:product_code) : Product.order(:product_code)
     end    
+
+    def suppliers_dropdown
+      session[:organization] != '0' ? Supplier.where(organization_id: session[:organization].to_i).order(:supplier_code) : Supplier.order(:supplier_code)
+    end
+
+    def orders_dropdown
+      session[:organization] != '0' ? PurchaseOrder.where(organization_id: session[:organization].to_i).order(:supplier_id, :order_no, :id) : PurchaseOrder.order(:supplier_id, :order_no, :id)
+    end
+    
+    def orders_dropdown_edit(_work_order)
+    end
+
+    def tools_dropdown
+      if session[:office] != '0'
+        Tool.where('office_id = ? OR (office_id IS NULL AND organization_id = ?)', session[:office].to_i, session[:organization].to_i).order(:serial_no)
+      elsif session[:company] != '0'
+        Tool.where('company_id = ? OR (company_id IS NULL AND organization_id = ?)', session[:company].to_i, session[:organization].to_i).order(:serial_no)
+      else
+        session[:organization] != '0' ? Tool.where(organization_id: session[:organization].to_i).order(:serial_no) : Tool.order(:serial_no)
+      end
+    end
+
+    def tools_dropdown_edit(_work_order)
+    end
+
+    def vehicles_dropdown
+      if session[:office] != '0'
+        Vehicle.where('office_id = ? OR (office_id IS NULL AND organization_id = ?)', session[:office].to_i, session[:organization].to_i).order(:registration)
+      elsif session[:company] != '0'
+        Vehicle.where('company_id = ? OR (company_id IS NULL AND organization_id = ?)', session[:company].to_i, session[:organization].to_i).order(:registration)
+      else
+        session[:organization] != '0' ? Vehicle.where(organization_id: session[:organization].to_i).order(:registration) : Vehicle.order(:registration)
+      end
+    end
+
+    def vehicles_dropdown_edit(_work_order)
+    end
     
     # Keeps filter state
     def manage_filter_state
