@@ -416,7 +416,7 @@ module Ag2Tech
       # Sub-forms
       @products = @work_order.organization.blank? ? products_dropdown : @work_order.organization.products(:product_code)
       @suppliers = @work_order.organization.blank? ? suppliers_dropdown : @work_order.organization.suppliers(:supplier_code)
-      @orders = orders_dropdown_edit(@work_order)
+      @orders = orders_dropdown_edit(@work_order, nil)
       #@orders = @work_order.supplier.blank? ? orders_dropdown : @work_order.supplier.purchase_orders.order(:supplier_id, :order_no, :id)
       @tools = tools_dropdown_edit(@work_order)
       @vehicles = vehicles_dropdown_edit(@work_order)
@@ -476,7 +476,7 @@ module Ag2Tech
           @workers = project_workers(@work_order.project)
           @products = @work_order.organization.blank? ? products_dropdown : @work_order.organization.products(:product_code)
           @suppliers = @work_order.organization.blank? ? suppliers_dropdown : @work_order.organization.suppliers(:supplier_code)
-          @orders = orders_dropdown_edit(@work_order)
+          @orders = orders_dropdown_edit(@work_order, nil)
           @tools = tools_dropdown_edit(@work_order)
           @vehicles = vehicles_dropdown_edit(@work_order)
           format.html { render action: "edit" }
@@ -657,17 +657,22 @@ module Ag2Tech
     end
     
     def orders_dropdown_edit(_work_order, _supplier)
+      _a = nil
       if !_work_order.nil? && !_work_order.project.nil? && !_supplier.nil?
-        _orders = PurchaseOrder.where('organization_id = ? AND project_id = ? AND supplier_id', _work_order.organization_id, _work_order.project_id, _supplier).order(:supplier_id, :order_no, :id)
+        _a = PurchaseOrder.where('organization_id = ? AND project_id = ? AND supplier_id', _work_order.organization_id, _work_order.project_id, _supplier).order(:supplier_id, :order_no, :id)
+      elsif !_work_order.nil? && !_work_order.project.nil? && _supplier.nil?
+        _a = PurchaseOrder.where('organization_id = ? AND project_id = ?', _work_order.organization_id, _work_order.project_id).order(:supplier_id, :order_no, :id)
+      elsif (_work_order.nil? || _work_order.project.nil?) && !_supplier.nil?
+        _a = session[:organization] != '0' ? PurchaseOrder.where('organization_id = ? AND supplier_id = ?', session[:organization].to_i, _supplier).order(:supplier_id, :order_no, :id) : PurchaseOrder.where(supplier_id: _supplier).order(:supplier_id, :order_no, :id)
       else
-        _orders = orders_dropdown
+        _a = orders_dropdown
       end
-      _orders
+      _a
     end
 
     def tools_dropdown
       if session[:office] != '0'
-        Tool.where('office_id = ? OR (office_id IS NULL AND organization_id = ?)', session[:office].to_i, session[:organization].to_i).order(:serial_no)
+        Tool.where('office_id = ? OR (office_id IS NULL AND company_id = ?) OR (office_id IS NULL AND company_id IS NULL AND organization_id = ?)', session[:office].to_i, session[:company].to_i, session[:organization].to_i).order(:serial_no)
       elsif session[:company] != '0'
         Tool.where('company_id = ? OR (company_id IS NULL AND organization_id = ?)', session[:company].to_i, session[:organization].to_i).order(:serial_no)
       else
@@ -676,11 +681,18 @@ module Ag2Tech
     end
 
     def tools_dropdown_edit(_work_order)
+      _a = nil
+      if !_work_order.nil? && !_work_order.project.nil?
+        _a = Tool.where('office_id = ? OR (office_id IS NULL AND company_id = ?) OR (office_id IS NULL AND company_id IS NULL AND organization_id = ?)', _work_order.project.office_id, _work_order.project.company_id, _work_order.organization_id).order(:serial_no)
+      else
+        _a = tools_dropdown
+      end
+      _a
     end
 
     def vehicles_dropdown
       if session[:office] != '0'
-        Vehicle.where('office_id = ? OR (office_id IS NULL AND organization_id = ?)', session[:office].to_i, session[:organization].to_i).order(:registration)
+        Vehicle.where('office_id = ? OR (office_id IS NULL AND company_id = ?) OR (office_id IS NULL AND company_id IS NULL AND organization_id = ?)', session[:office].to_i, session[:company].to_i, session[:organization].to_i).order(:registration)
       elsif session[:company] != '0'
         Vehicle.where('company_id = ? OR (company_id IS NULL AND organization_id = ?)', session[:company].to_i, session[:organization].to_i).order(:registration)
       else
@@ -689,6 +701,13 @@ module Ag2Tech
     end
 
     def vehicles_dropdown_edit(_work_order)
+      _a = nil
+      if !_work_order.nil? && !_work_order.project.nil?
+        _a = Vehicle.where('office_id = ? OR (office_id IS NULL AND company_id = ?) OR (office_id IS NULL AND company_id IS NULL AND organization_id = ?)', _work_order.project.office_id, _work_order.project.company_id, _work_order.organization_id).order(:serial_no)
+      else
+        _a = vehicles_dropdown
+      end
+      _a
     end
     
     # Keeps filter state
