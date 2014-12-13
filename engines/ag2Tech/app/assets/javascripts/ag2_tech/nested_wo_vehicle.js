@@ -53,8 +53,8 @@ var wo_v_formHandler = {
         wo_v_rowBuilder.addRow(wo_v_cfg.getTBodySelector(), inputFields);
 
         // Apply select2 to added row selects
-        $('select.wsel2').select2('destroy');
-        $('select.wsel2').select2({
+        $('select.vsel2').select2('destroy');
+        $('select.vsel2').select2({
           formatNoMatches: function(m) { return sel2NoMatches; },
           dropdownCssClass: 'shrinked',
           dropdownAutoWidth: true,
@@ -108,11 +108,11 @@ var wo_v_rowBuilder = function() {
             if (this.id.indexOf("s2") == -1) {
               // Apply CSS
               css = this.id;
-              if ($(this).hasClass('fsel2')) css = css + ' select wsel2';
+              if ($(this).hasClass('fsel2')) css = css + ' select vsel2';
               if ($(this).hasClass('number-text-field')) css = css + ' sub-number-text-field';
               if ($(this).hasClass('sub-disabled-field')) css = css + ' sub-disabled-field';
               if (css === this.id) css = css + ' sub-alfanumeric-text-field';
-              if (css.indexOf("wsel2") == -1) css = css + ' sub-bordered-input';
+              if (css.indexOf("vsel2") == -1) css = css + ' sub-bordered-input';
               css = css + ' string';
               $(this).removeAttr('class');
               $(this).addClass(css);

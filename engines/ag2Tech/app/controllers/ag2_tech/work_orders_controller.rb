@@ -15,7 +15,13 @@ module Ag2Tech
                                                :wo_update_amount_and_costs_from_price_or_quantity,
                                                :wo_update_costs_from_cost_or_hours,
                                                :wo_update_project_textfields_from_organization,
-                                               :wo_generate_no]
+                                               :wo_generate_no,
+                                               :wo_tool_totals,
+                                               :wo_vehicle_totals,
+                                               :wo_update_costs_from_tool,
+                                               :wo_update_costs_from_vehicle,
+                                               :wo_update_costs_from_cost_or_minutes,
+                                               :wo_update_costs_from_cost_or_distance]
     # Calculate and format item totals properly
     def wo_item_totals
       qty = params[:qty].to_f / 10000
@@ -54,6 +60,42 @@ module Ag2Tech
       total = number_with_precision(total.round(4), precision: 4)
       # Setup JSON hash
       @json_data = { "hours" => hours.to_s, "average" => average.to_s, "total" => total.to_s }
+      render json: @json_data
+    end
+
+    # Calculate and format tool totals properly
+    def wo_tool_totals
+      minutes = params[:minutes].to_f / 100
+      costs = params[:costs].to_f / 10000
+      count = params[:count].to_i
+      # Minutes average
+      average = count > 0 ? minutes / count : 0
+      # Total
+      total = costs      
+      # Format output values
+      minutes = number_with_precision(minutes.round(2), precision: 2)
+      average = number_with_precision(average.round(2), precision: 2)
+      total = number_with_precision(total.round(4), precision: 4)
+      # Setup JSON hash
+      @json_data = { "minutes" => minutes.to_s, "average" => average.to_s, "total" => total.to_s }
+      render json: @json_data
+    end
+
+    # Calculate and format vehicle totals properly
+    def wo_vehicle_totals
+      distance = params[:distance].to_f / 100
+      costs = params[:costs].to_f / 10000
+      count = params[:count].to_i
+      # Minutes average
+      average = count > 0 ? distance / count : 0
+      # Total
+      total = costs      
+      # Format output values
+      distance = number_with_precision(distance.round(2), precision: 2)
+      average = number_with_precision(average.round(2), precision: 2)
+      total = number_with_precision(total.round(4), precision: 4)
+      # Setup JSON hash
+      @json_data = { "distance" => distance.to_s, "average" => average.to_s, "total" => total.to_s }
       render json: @json_data
     end
 
@@ -160,7 +202,47 @@ module Ag2Tech
       end
     end
 
-    # Update amount and costs text fields at view (quantity or price changed)
+    # Update cost text fields at view from tool select
+    def wo_update_costs_from_tool
+      tool = params[:tool]
+      minutes = params[:minutes].to_f / 100
+      cost = 0
+      costs = 0
+      if tool != '0'
+        @tool = Tool.find(tool)
+        # Assignment
+        cost = @tool.cost
+        costs = minutes * cost
+      end
+      # Format numbers
+      cost = number_with_precision(cost.round(4), precision: 4)
+      costs = number_with_precision(costs.round(4), precision: 4)
+      # Setup JSON
+      @json_data = { "cost" => cost.to_s, "costs" => costs.to_s }
+      render json: @json_data
+    end
+
+    # Update cost text fields at view from vehicle select
+    def wo_update_costs_from_vehicle
+      vehicle = params[:vehicle]
+      distance = params[:distance].to_f / 100
+      cost = 0
+      costs = 0
+      if vehicle != '0'
+        @vehicle = Vehicle.find(vehicle)
+        # Assignment
+        cost = @vehicle.cost
+        costs = distance * cost
+      end
+      # Format numbers
+      cost = number_with_precision(cost.round(4), precision: 4)
+      costs = number_with_precision(costs.round(4), precision: 4)
+      # Setup JSON
+      @json_data = { "cost" => cost.to_s, "costs" => costs.to_s }
+      render json: @json_data
+    end
+
+    # Update amount and costs text fields at view -item- (quantity or price changed)
     def wo_update_amount_and_costs_from_price_or_quantity
       cost = params[:cost].to_f / 10000
       price = params[:price].to_f / 10000
@@ -195,7 +277,7 @@ module Ag2Tech
       end
     end
 
-    # Update costs text field at view (hours or cost changed)
+    # Update costs text field at view -worker- (hours or cost changed)
     def wo_update_costs_from_cost_or_hours
       cost = params[:cost].to_f / 10000
       hours = params[:hours].to_f / 10000
@@ -210,6 +292,32 @@ module Ag2Tech
         format.html # wo_update_costs_from_cost_or_hours.html.erb does not exist! JSON only
         format.json { render json: @json_data }
       end
+    end
+
+    # Update costs text field at view -tool- (minutes or cost changed)
+    def wo_update_costs_from_cost_or_minutes
+      cost = params[:cost].to_f / 10000
+      minutes = params[:minutes].to_f / 100
+      costs = minutes * cost
+      minutes = number_with_precision(minutes.round(2), precision: 2)
+      cost = number_with_precision(cost.round(4), precision: 4)
+      costs = number_with_precision(costs.round(4), precision: 4)
+      @json_data = { "minutes" => minutes.to_s,
+                     "cost" => cost.to_s, "costs" => costs.to_s }
+      render json: @json_data 
+    end
+
+    # Update costs text field at view -vehicle- (distance or cost changed)
+    def wo_update_costs_from_cost_or_distance
+      cost = params[:cost].to_f / 10000
+      distance = params[:distance].to_f / 100
+      costs = distance * cost
+      distance = number_with_precision(distance.round(2), precision: 2)
+      cost = number_with_precision(cost.round(4), precision: 4)
+      costs = number_with_precision(costs.round(4), precision: 4)
+      @json_data = { "distance" => distance.to_s,
+                     "cost" => cost.to_s, "costs" => costs.to_s }
+      render json: @json_data 
     end
     
     # Update account text field at view from project select
