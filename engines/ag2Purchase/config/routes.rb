@@ -7,7 +7,9 @@ Ag2Purchase::Engine.routes.draw do
     DECIMAL_PATTERN = /-?\d+(\.\d+)/
     
     # Routes for jQuery POSTs
-    # Numbers with decimals (.) must be multiplied (by 1xxx and the same zeroes x positions) before passed as REST parameter! 
+    # Numbers with decimals (.) must be multiplied (by 1xxx and the same zeroes x positions) before passed as REST parameter!
+    #
+    # Suppliers 
     match 'suppliers/update_province_textfield_from_town/:id', :controller => 'suppliers', :action => 'update_province_textfield_from_town'
     match 'suppliers/:id/update_province_textfield_from_town/:id', :controller => 'suppliers', :action => 'update_province_textfield_from_town'
     match 'suppliers/update_province_textfield_from_zipcode/:id', :controller => 'suppliers', :action => 'update_province_textfield_from_zipcode'
@@ -32,6 +34,7 @@ Ag2Purchase::Engine.routes.draw do
     match 'et_validate_fiscal_id_textfield/:id', :controller => 'suppliers', :action => 'et_validate_fiscal_id_textfield'
     match 'suppliers/:id/et_validate_fiscal_id_textfield/:id', :controller => 'suppliers', :action => 'et_validate_fiscal_id_textfield'
     #
+    # Purchase orders 
     match 'purchase_orders/po_update_description_prices_from_product_store/:product/:qty/:store', :controller => 'purchase_orders', :action => 'po_update_description_prices_from_product_store'
     match 'po_update_description_prices_from_product_store/:product/:qty/:store', :controller => 'purchase_orders', :action => 'po_update_description_prices_from_product_store'
     match 'purchase_orders/:id/po_update_description_prices_from_product_store/:product/:qty/:store', :controller => 'purchase_orders', :action => 'po_update_description_prices_from_product_store'
@@ -71,11 +74,15 @@ Ag2Purchase::Engine.routes.draw do
     match 'purchase_orders/po_product_all_stocks/:product', :controller => 'purchase_orders', :action => 'po_product_all_stocks'
     match 'po_product_all_stocks/:product', :controller => 'purchase_orders', :action => 'po_product_all_stocks'
     match 'purchase_orders/:id/po_product_all_stocks/:product', :controller => 'purchase_orders', :action => 'po_product_all_stocks'
+    # Purchase order Reports
+    match 'purchase_order_form', :controller => 'purchase_orders', :action => 'purchase_order_form'
     #
+    # Payment methods
     match 'payment_methods/pm_format_numbers/:num', :controller => 'payment_methods', :action => 'pm_format_numbers'
     match 'pm_format_numbers/:num', :controller => 'payment_methods', :action => 'pm_format_numbers'
     match 'payment_methods/:id/pm_format_numbers/:num', :controller => 'payment_methods', :action => 'pm_format_numbers'
     #
+    # Supplier invoices
     match 'supplier_invoices/si_update_description_prices_from_product_store/:product/:qty/:store', :controller => 'supplier_invoices', :action => 'si_update_description_prices_from_product_store'
     match 'si_update_description_prices_from_product_store/:product/:qty/:store', :controller => 'supplier_invoices', :action => 'si_update_description_prices_from_product_store'
     match 'supplier_invoices/:id/si_update_description_prices_from_product_store/:product/:qty/:store', :controller => 'supplier_invoices', :action => 'si_update_description_prices_from_product_store'
@@ -116,6 +123,7 @@ Ag2Purchase::Engine.routes.draw do
     match 'si_current_invoice_debt/:invoice', :controller => 'supplier_invoices', :action => 'si_current_invoice_debt'
     match 'supplier_invoices/:id/si_current_invoice_debt/:invoice', :controller => 'supplier_invoices', :action => 'si_current_invoice_debt'
     #
+    # Offer requests
     match 'offer_requests/or_totals/:qty/:amount/:tax/:discount_p', :controller => 'offer_requests', :action => 'or_totals'
     match 'or_totals/:qty/:amount/:tax/:discount_p', :controller => 'offer_requests', :action => 'or_totals'
     match 'offer_requests/:id/or_totals/:qty/:amount/:tax/:discount_p', :controller => 'offer_requests', :action => 'or_totals'
@@ -153,6 +161,7 @@ Ag2Purchase::Engine.routes.draw do
     match 'or_disapprove_offer/:offer/:offer_request', :controller => 'offer_requests', :action => 'or_disapprove_offer'
     match 'offer_requests/:id/or_disapprove_offer/:offer/:offer_request', :controller => 'offer_requests', :action => 'or_disapprove_offer'
     #
+    # Offers
     match 'offers/of_totals/:qty/:amount/:tax/:discount_p', :controller => 'offers', :action => 'of_totals'
     match 'of_totals/:qty/:amount/:tax/:discount_p', :controller => 'offers', :action => 'of_totals'
     match 'offers/:id/of_totals/:qty/:amount/:tax/:discount_p', :controller => 'offers', :action => 'of_totals'
