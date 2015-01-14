@@ -7,4 +7,6 @@ class TicketPriority < ActiveRecord::Base
   validates :name,  :presence => true
 
   has_many :tickets
+  
+  scope :user_only, -> { where('id < ?', 3).order('id') }
 end
