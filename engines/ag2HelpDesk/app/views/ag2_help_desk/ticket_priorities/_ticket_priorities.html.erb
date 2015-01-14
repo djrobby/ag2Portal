@@ -1,0 +1,31 @@
+<script>
+  $(document).ready(function() {
+    $("#div_table th a, #div_table #pages a").on("click", function() {
+      $.getScript(this.href);
+      return false;
+    });
+  }); 
+</script>
+
+<table class="table table-condensed table-striped">
+  <thead>
+    <tr>
+      <th><%= sortable "id", "Id" %></th>
+      <th><%= sortable "name", t('activerecord.attributes.ticket_priority.name') %></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @ticket_priorities.each do |t| %>
+    <tr>
+      <td><%= t.id %></td>
+      <td><%= link_to t.name.titleize, t %></td>
+      <td> <%= render :partial => '/layouts/crud/edit', :locals => { :model => TicketPriority, :path => edit_ticket_priority_path(t) } %>
+      <%= render :partial => '/layouts/crud/delete', :locals => { :model => TicketPriority, :path => t, :msg => I18n.t("activerecord.models.ticket_priority.one"), :txt => t.name } unless t.id < 4 %> </td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @ticket_priorities } %>
+<%= render :partial => '/layouts/crud/new', :locals => { :model => TicketPriority, :path => new_ticket_priority_path, :txt => I18n.t("ag2_help_desk.ticket_priorities.index.btn_new") } %>
+<%= link_to I18n.t("ag2_help_desk.ticket_priorities.index.back_to_root"), ag2_help_desk.root_path %>

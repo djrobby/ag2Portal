@@ -14,6 +14,8 @@ module Ag2HelpDesk
       session[:Priority] = nil      
       session[:Status] = nil      
       session[:Technician] = nil      
+      session[:sort] = nil
+      session[:direction] = nil      
     end
   end
 end

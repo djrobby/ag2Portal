@@ -1,27 +1,6 @@
 <%= render '/layouts/ag2_help_desk/techniciansbreadcrumb' %>
 
 <h3><%=t '.title' %></h3>
-<div class="span8">
-  <table class="table table-condensed table-striped">
-    <thead>
-      <tr>
-        <th><%= sortable "name", t('activerecord.attributes.technician.name') %></th>
-        <th><%= sortable "user_id", t('activerecord.attributes.technician.user') %></th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody>
-      <% @technicians.each do |t| %>
-      <tr>
-        <td><%= link_to t.name.titleize, t %></td>
-        <td><%= t.user.email %></td>
-        <td> <%= render :partial => '/layouts/crud/edit', :locals => { :model => Technician, :path => edit_technician_path(t) } %>
-        <%= render :partial => '/layouts/crud/delete', :locals => { :model => Technician, :path => t, :msg => I18n.t("activerecord.models.technician.one"), :txt => t.name } %> </td>
-      </tr>
-      <% end %>
-    </tbody>
-  </table>
-  <%= render :partial => '/layouts/pagination', :locals => { :ivar => @technicians } %>
-  <%= render :partial => '/layouts/crud/new', :locals => { :model => Technician, :path => new_technician_path, :txt => I18n.t("ag2_help_desk.technicians.index.btn_new") } %>
-  <%= link_to I18n.t("ag2_help_desk.technicians.index.back_to_root"), ag2_help_desk.root_path %>
+<div class="span8" id="div_table">
+  <%= render 'technicians' %>
 </div>

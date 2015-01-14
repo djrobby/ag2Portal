@@ -1,0 +1,31 @@
+<script>
+  $(document).ready(function() {
+    $("#div_table th a, #div_table #pages a").on("click", function() {
+      $.getScript(this.href);
+      return false;
+    });
+  }); 
+</script>
+
+<table class="table table-condensed table-striped">
+  <thead>
+    <tr>
+      <th><%= sortable "id", "Id" %></th>
+      <th><%= sortable "name", t('activerecord.attributes.ticket_status.name') %></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @ticket_statuses.each do |t| %>
+    <tr>
+      <td><%= t.id %></td>
+      <td><%= link_to t.name.titleize, t %></td>
+      <td> <%= render :partial => '/layouts/crud/edit', :locals => { :model => TicketStatus, :path => edit_ticket_status_path(t) } %>
+      <%= render :partial => '/layouts/crud/delete', :locals => { :model => TicketStatus, :path => t, :msg => I18n.t("activerecord.models.ticket_status.one"), :txt => t.name } unless t.id < 5 %> </td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @ticket_statuses } %>
+<%= render :partial => '/layouts/crud/new', :locals => { :model => TicketStatus, :path => new_ticket_status_path, :txt => I18n.t("ag2_help_desk.ticket_statuses.index.btn_new") } %>
+<%= link_to I18n.t("ag2_help_desk.ticket_statuses.index.back_to_root"), ag2_help_desk.root_path %>
