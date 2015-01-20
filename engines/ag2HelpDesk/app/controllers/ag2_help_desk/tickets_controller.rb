@@ -206,13 +206,13 @@ module Ag2HelpDesk
       @ticket = Ticket.find(params[:id])
       @ticket.updated_by = current_user.id if !current_user.nil?
       # Should use attachment from drag&drop?
-      if !$attachment.avatar.blank? && $attachment.updated_at > @ticket.updated_at
+      if $attachment != nil && !$attachment.avatar.blank? && $attachment.updated_at > @ticket.updated_at
         @ticket.attachment = $attachment.avatar
       end
 
       respond_to do |format|
         if @ticket.update_attributes(params[:ticket])
-          $attachment.destroy
+          destroy_attachment
           $attachment = nil
           # format.html { redirect_to @ticket, notice: I18n.t('activerecord.successful.messages.updated', :model => @ticket.class.model_name.human) }
           # format.html { redirect_to params[:referrer], notice: I18n.t('activerecord.successful.messages.updated', :model => @ticket.class.model_name.human) }
@@ -220,7 +220,7 @@ module Ag2HelpDesk
                         notice: (crud_notice('updated', @ticket) + "#{undo_link(@ticket)}").html_safe }
           format.json { head :no_content }
         else
-          $attachment.destroy
+          destroy_attachment
           $attachment = Attachment.new
           @offices = @ticket.organization.blank? ? offices_dropdown : offices_dropdown_edit(@ticket.organization_id)
           @technicians = @ticket.organization.blank? ? technicians_dropdown : @ticket.organization.technicians.order(:name)
@@ -266,6 +266,12 @@ module Ag2HelpDesk
     end
     
     private
+    
+    def destroy_attachment
+      if $attachment != nil
+        $attachment.destroy        
+      end
+    end
     
     def mail_to
       _to = "helpdesk@aguaygestion.com"
