@@ -21,6 +21,7 @@ Ag2HelpDesk::Engine.routes.draw do
     resources :technicians
     resources :tickets do
       post 'popup_new', on: :collection
+      get 'my_tickets', on: :collection
     end
 
     # Root

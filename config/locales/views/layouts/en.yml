@@ -5,7 +5,8 @@ en:
     tools: "Tools"
     help:
       help: "Help"
-      contact: "Support"
+      support: "Support"
+      tickets: "My open tickets"
       guide: "Guides"
       about: "About"
     edit_profile: "Edit your profile"

@@ -6,7 +6,7 @@ module Ag2HelpDesk
     load_and_authorize_resource
     skip_load_and_authorize_resource :only => [:ti_update_office_textfield_from_created_by,
                                                :ti_update_office_textfield_from_organization,
-                                               :popup_new,
+                                               :popup_new, :my_tickets,
                                                :ti_update_attachment]
     # Public attachment for drag&drop
     $attachment = nil
@@ -262,6 +262,34 @@ module Ag2HelpDesk
           format.html { redirect_to params[:referrer], notice: I18n.t('activerecord.errors.ticket.popup') }
           format.json { render json: @ticket.errors, status: :unprocessable_entity }
         end
+      end
+    end
+
+    # GET /my_tickets
+    # GET /my_tickets.json
+    def my_tickets
+      user = current_user.id if !current_user.nil?
+      # OCO
+      init_oco if !session[:organization]
+
+      @search = Ticket.search do
+        fulltext params[:search]
+        if session[:organization] != '0'
+          with :organization_id, session[:organization]
+        end
+        if !user.blank?
+          with :created_by, user
+        end
+        with(:ticket_status_id).less_than(4)
+        order_by :id, :desc
+        paginate :page => params[:page] || 1, :per_page => per_page
+      end
+
+      @tickets = @search.results
+
+      respond_to do |format|
+        format.html # my_tickets.html.erb
+        format.json { render json: @tickets }
       end
     end
     

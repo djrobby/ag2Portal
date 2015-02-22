@@ -522,7 +522,7 @@ end
       else
         "registration"
       end
-    elsif is_a?(ApplicationController::GuideController)
+    elsif is_a?(GuideController)
       "guide"
     else
       "application"

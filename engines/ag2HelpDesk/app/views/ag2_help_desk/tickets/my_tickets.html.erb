@@ -1,0 +1,40 @@
+<%= render '/layouts/ag2_help_desk/helpdeskbreadcrumb' %>
+
+<h3><%= t '.title' %></h3>
+
+<div class="container-fluid">
+  <div class="row-fluid">
+    <div class="span12" id="div_table">
+      <table class="table table-condensed table-striped shrinked">
+        <thead>
+          <tr>
+            <th><%= t :"activerecord.attributes.ticket.id" %></th>
+            <th><%= t :created_at %></th>
+            <th><%=t "activerecord.attributes.ticket.ticket_category" %></th>
+            <th><%=t "activerecord.attributes.ticket.ticket_priority" %></th>
+            <th><%= t "activerecord.attributes.ticket.ticket_subject" %></th>
+            <th><%= t :updated_at %></th>
+            <th><%= t "activerecord.attributes.ticket.ticket_status" %></th>
+            <th><%=t "activerecord.attributes.ticket.technician" %></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @tickets.each do |ticket| %>
+          <tr>
+            <td><%= ticket.id.to_s.rjust(7, '0') %></td>
+            <td><%= ticket.created_at.strftime("%d/%m/%Y %H:%M:%S") %></td>
+            <td><%= ticket.ticket_category.name.titleize unless ticket.ticket_category.blank? %></td>
+            <td><%= ticket.ticket_priority.name.titleize unless ticket.ticket_priority.blank? %></td>
+            <td><%= ticket.ticket_subject %></td>
+            <td><%= ticket.updated_at.strftime("%d/%m/%Y %H:%M:%S") %></td>
+            <td><%= ticket.ticket_status.name.titleize unless ticket.ticket_status.blank? %></td>
+            <td><%= ticket.technician.name.titleize unless ticket.technician.blank? %></td>
+          </tr>
+          <% end %>
+        </tbody>
+      </table>
+      <%= render :partial => '/layouts/pagination', :locals => { :ivar => @tickets } %>
+      <%= link_to I18n.t("ag2_help_desk.tickets.my_tickets.back_to_root"), main_app.root_path %>
+    </div><!-- /.span12 -->
+  </div><!-- /.row-fluid -->
+</div><!-- /.container-fluid -->

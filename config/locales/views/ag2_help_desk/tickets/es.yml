@@ -25,4 +25,7 @@ es:
         btn_new: "Enviar Solicitud"
         submit: "La solicitud ha sido enviada."
         error: "no puede estar en blanco"
+      my_tickets:
+        title: "Mis solicitudes abiertas"
+        back_to_root: "Volver a ag2Portal"
       back_to_main_page: "Volver a Solicitudes"

@@ -73,7 +73,10 @@
       data-toggle="dropdown"><i class="icon-question-sign"></i> <%=t :"nav.help.help" %> <b class="caret"></b> </a>
       <ul class="dropdown-menu" role="menu">
         <li>
-          <a data-toggle="modal" href="#new-ticket"><i class="icon-comment"></i> <%=t :"nav.help.contact" %></a>
+          <a data-toggle="modal" href="#new-ticket"><i class="icon-comment"></i> <%=t :"nav.help.support" %></a>
+        </li>
+        <li>
+          <a href="<%= ag2_help_desk.my_tickets_tickets_path %>"><i class="ico-helpdesk"></i> <%=t :"nav.help.tickets" %></a>
         </li>
         <li class="divider"></li>
         <li>

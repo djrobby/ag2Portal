@@ -25,5 +25,8 @@ en:
         btn_new: "Send Request"
         submit: "Request has been sent."
         error: "can't be blank"
+      my_tickets:
+        title: "My open tickets"
+        back_to_root: "Back to ag2Portal"
       back_to_main_page: "Back to Tickets"
         
