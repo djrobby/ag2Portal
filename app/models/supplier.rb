@@ -14,7 +14,7 @@ class Supplier < ActiveRecord::Base
                   :zipcode_id, :town_id, :province_id, :phone, :fax, :cellular, :email,
                   :region_id, :country_id, :payment_method_id, :ledger_account, :discount_rate,
                   :active, :max_orders_count, :max_orders_sum, :contract_number, :remarks,
-                  :created_by, :updated_by, :entity_id, :organization_id
+                  :created_by, :updated_by, :entity_id, :organization_id, :is_contact
   attr_accessible :activity_ids
 
   has_many :supplier_contacts, dependent: :destroy

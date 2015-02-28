@@ -33,8 +33,8 @@
     <tr>
       <td><%= t 'activerecord.attributes.supplier_contact.email' %>:</td>
       <td><%= @supplier_contact.email unless @supplier_contact.email.blank? %></td>
-      <td></td>
-      <td></td>
+      <td><%= t 'activerecord.attributes.supplier_contact.is_contact' %>:</td>
+      <td> <% if @supplier_contact.is_contact %> <i class="icon-thumbs-up"></i> <% else %> <i class="icon-thumbs-down"></i> <% end %> </td>
     </tr>
     <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @supplier_contact } %>
     <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @supplier_contact } %>

@@ -1,10 +1,10 @@
 <script>
-$(document).ready(function() {
-  $("#div_table th a, #div_table #pages a").on( "click", function() {
-    $.getScript(this.href);
-    return false;
+  $(document).ready(function() {
+    $("#div_table th a, #div_table #pages a").on( "click", function() {
+      $.getScript(this.href);
+      return false;
+    });
   });
-});
 </script>
 
 <%= render :partial => '/layouts/lettershead_remote', :locals => { :controller => "workers", :action => "index" } %>

@@ -43,3 +43,4 @@ en:
         address: "Address"
         organization: "Organization"
         organization_id: "Organization"
+        is_contact: "Is contact?"

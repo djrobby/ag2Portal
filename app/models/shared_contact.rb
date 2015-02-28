@@ -38,6 +38,7 @@ class SharedContact < ActiveRecord::Base
     string :last_name
     string :first_name
     integer :organization_id
+    integer :shared_contact_type_id
   end
 
   def fields_to_uppercase

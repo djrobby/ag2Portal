@@ -6,6 +6,7 @@ module Ag2Directory
       @ag2teamnet_path, @ag2teamnet_target = website_path('ag2TeamNet', '_self')
       session[:search] = nil
       session[:letter] = nil      
+      session[:ContactType] = nil      
     end
   end
 end

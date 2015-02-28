@@ -4,8 +4,10 @@ es:
       index:
         title: "Contactos compartidos"
         btn_new: "Nuevo Contacto"
-        go_to_child_app: "Ir a Tipos de contactos compartidos"
+        go_to_child_app: "Ir a Tipos de contactos"
         back_to_root: "Volver a ag2Directory"
+        label_type: "Tipo"
+        label_others: "Otros"
       show:
         title: "Contacto"
         btn_edit: "Editar Contacto"

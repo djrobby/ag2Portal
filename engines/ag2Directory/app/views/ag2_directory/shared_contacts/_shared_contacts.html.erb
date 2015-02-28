@@ -40,6 +40,3 @@
   </tbody>
 </table>
 <%= render :partial => '/layouts/pagination', :locals => { :ivar => @shared_contacts } %>
-<%= render :partial => '/layouts/crud/new', :locals => { :model => SharedContact, :path => new_shared_contact_path, :txt => I18n.t("ag2_directory.shared_contacts.index.btn_new") } %>
-<%= link_to I18n.t("go_to_child_app", :scope => :"ag2_directory.shared_contacts.index"), shared_contact_types_path %> |
-<%= link_to I18n.t("back_to_root", :scope => :"ag2_directory.shared_contacts.index"), ag2_directory.root_path %>

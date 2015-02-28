@@ -2,7 +2,7 @@ class SupplierContact < ActiveRecord::Base
   belongs_to :supplier
   belongs_to :organization
   attr_accessible :cellular, :department, :email, :extension, :first_name, :fiscal_id, :last_name,
-                  :phone, :position, :remarks, :supplier_id, :organization_id
+                  :phone, :position, :remarks, :supplier_id, :organization_id, :is_contact
 
   has_paper_trail
 

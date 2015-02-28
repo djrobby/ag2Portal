@@ -4,8 +4,10 @@ en:
       index:
         title: "Shared contacts"
         btn_new: "New Contact"
-        go_to_child_app: "Go to Shared contact types"
+        go_to_child_app: "Go to contact Types"
         back_to_root: "Back to ag2Directory"
+        label_type: "Type"
+        label_others: "Others"
       show:
         title: "Contact"
         btn_edit: "Edit Contact"

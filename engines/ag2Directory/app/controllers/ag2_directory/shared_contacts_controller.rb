@@ -68,15 +68,18 @@ module Ag2Directory
     # GET /shared_contacts.json
     def index
       manage_filter_state
+      type = params[:ContactType]
       letter = params[:letter]
-      if !session[:organization]
-        init_oco
-      end
+      # OCO
+      init_oco if !session[:organization]
 
       @search = SharedContact.search do
         fulltext params[:search]
         if session[:organization] != '0'
           with :organization_id, session[:organization]
+        end
+        if !type.blank?
+          with :shared_contact_type_id, type
         end
         if !letter.blank? && letter != "%"
           any_of do
@@ -187,6 +190,12 @@ module Ag2Directory
         session[:search] = params[:search]
       elsif session[:search]
         params[:search] = session[:search]
+      end
+      # type
+      if params[:ContactType]
+        session[:ContactType] = params[:ContactType]
+      elsif session[:ContactType]
+        params[:ContactType] = session[:ContactType]
       end
       # letter
       if params[:letter]

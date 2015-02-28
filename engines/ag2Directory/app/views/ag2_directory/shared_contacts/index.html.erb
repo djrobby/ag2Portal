@@ -1,6 +1,58 @@
-<%= render '/layouts/ag2_directory/sharedcontactsbreadcrumb' %>
-<%= render :partial => '/layouts/searchhead_remote', :locals => { :title => I18n.t("ag2_directory.shared_contacts.index.title"), :path => shared_contacts_path } %>
+<script>
+  var _thisForm = '';
 
-<div class="span11" id="div_table">
-  <%= render 'shared_contacts' %>
-</div>
+  $(document).ready(function() {
+    // Initialized form variable
+    _thisForm = $("#removeFilter").closest('form')[0];
+  });
+
+  $(window).bind("load", function() {
+    $("#ContactType").val("<%= params[:ContactType] %>");
+  });
+
+  jQuery(function($) {
+    // when the #removeFilter button clicked
+    $("#removeFilter").click(function() {
+      $("#ContactType").val("");
+      $("#search").val("");
+      // no AJAX
+      //_thisForm.submit();
+      // AJAX
+      $("#submit_btn").trigger("click");
+    });
+  });
+</script>
+
+<%= render '/layouts/ag2_directory/sharedcontactsbreadcrumb' %>
+
+<h3><%=t '.title' %></h3>
+
+<div class="container-fluid">
+  <div class="row-fluid">
+
+    <div class="span3">
+      <div class="well sidebar-nav">
+        <%= form_tag shared_contacts_path, :method => 'get', :remote => true do %>
+        <!-- Type -->
+        <%= label_tag I18n.t("ag2_directory.shared_contacts.index.label_type"), nil, :class => 'form-label' %>
+        <%= select_tag "ContactType", options_from_collection_for_select(SharedContactType.all, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked' %>
+        <!-- Others -->
+        <%= label_tag I18n.t("ag2_directory.shared_contacts.index.label_others"), nil, :class => 'form-label' %>
+        <%= text_field_tag :search, params[:search], :class => 'x-large-text-field shrinked' %>
+        <!-- Submit -->
+        <%= submit_tag I18n.t(:apply_filter_button), :class => 'btn btn-primary', :id => 'submit_btn' %>
+        <!-- Remove filter -->
+        <button id="removeFilter" type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><%= t :clear_filter_button %></button>
+        <% end %>
+        <!-- Buttons -->
+        <%= render :partial => '/layouts/crud/new', :locals => { :model => SharedContact, :path => new_shared_contact_path, :txt => I18n.t("ag2_directory.shared_contacts.index.btn_new") } %>
+        <%= link_to I18n.t("go_to_child_app", :scope => :"ag2_directory.shared_contacts.index"), shared_contact_types_path %><br />
+        <%= link_to I18n.t("back_to_root", :scope => :"ag2_directory.shared_contacts.index"), ag2_directory.root_path %>
+      </div><!-- /.sidebar-nav -->
+    </div><!-- /.span3 -->
+
+    <div class="span9" id="div_table">
+      <%= render 'shared_contacts' %>
+    </div><!-- /.span9 -->
+  </div><!-- /.row-fluid -->
+</div><!-- /.container-fluid -->

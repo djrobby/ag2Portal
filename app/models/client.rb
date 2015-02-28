@@ -9,7 +9,7 @@ class Client < ActiveRecord::Base
   belongs_to :organization
   attr_accessible :active, :building, :cellular, :client_code, :email, :fax, :fiscal_id, :floor, :floor_office,
                   :name, :phone, :remarks, :street_name, :street_number, :organization_id,
-                  :entity_id, :street_type_id, :zipcode_id, :town_id, :province_id, :region_id, :country_id
+                  :entity_id, :street_type_id, :zipcode_id, :town_id, :province_id, :region_id, :country_id, :is_contact
 
   has_many :delivery_notes
   has_many :sale_offers

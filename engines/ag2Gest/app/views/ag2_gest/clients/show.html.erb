@@ -21,6 +21,12 @@
       <td><%= t 'activerecord.attributes.client.active' %>:</td>
       <td> <% if @client.active %> <i class="icon-thumbs-up"></i> <% else %> <i class="icon-thumbs-down"></i> <% end %> </td>
     </tr>
+    <tr>
+      <td><%= t 'activerecord.attributes.client.organization' %>:</td>
+      <td><%= @client.organization.name unless @client.organization.blank? %></td>
+      <td><%= t 'activerecord.attributes.client.is_contact' %>:</td>
+      <td> <% if @client.is_contact %> <i class="icon-thumbs-up"></i> <% else %> <i class="icon-thumbs-down"></i> <% end %> </td>
+    </tr>
     <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @client } %>
     <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @client } %>
   </tbody>

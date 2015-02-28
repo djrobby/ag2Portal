@@ -27,6 +27,12 @@
       <td><%= t 'activerecord.attributes.supplier.active' %>:</td>
       <td> <% if @supplier.active %> <i class="icon-thumbs-up"></i> <% else %> <i class="icon-thumbs-down"></i> <% end %> </td>
     </tr>
+    <tr>
+      <td><%= t 'activerecord.attributes.supplier.organization' %>:</td>
+      <td><%= @supplier.organization.name unless @supplier.organization.blank? %></td>
+      <td><%= t 'activerecord.attributes.supplier.is_contact' %>:</td>
+      <td> <% if @supplier.is_contact %> <i class="icon-thumbs-up"></i> <% else %> <i class="icon-thumbs-down"></i> <% end %> </td>
+    </tr>
     <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @supplier } %>
     <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @supplier } %>
   </tbody>

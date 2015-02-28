@@ -21,3 +21,4 @@ es:
         full_name: "Nombre completo"
         supplier: "Proveedor"
         supplier_id: "Proveedor"
+        is_contact: "¿Es contacto?"

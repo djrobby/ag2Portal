@@ -43,3 +43,4 @@ es:
         address: "Dirección"
         organization: "Organización"
         organization_id: "Organización"
+        is_contact: "¿Es contacto?"

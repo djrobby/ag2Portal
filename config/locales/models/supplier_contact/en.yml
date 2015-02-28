@@ -21,3 +21,4 @@ en:
         full_name: "Full Name"
         supplier: "Supplier"
         supplier_id: "Supplier"
+        is_contact: "Is contact?"
