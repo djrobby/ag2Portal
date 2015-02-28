@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20141201105236) do
+ActiveRecord::Schema.define(:version => 20150228090311) do
 
   create_table "activities", :force => true do |t|
     t.string   "description"
@@ -220,11 +220,13 @@ ActiveRecord::Schema.define(:version => 20141201105236) do
     t.string   "email"
     t.boolean  "active"
     t.string   "remarks"
-    t.datetime "created_at",      :null => false
-    t.datetime "updated_at",      :null => false
+    t.datetime "created_at",        :null => false
+    t.datetime "updated_at",        :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
     t.integer  "organization_id"
+    t.boolean  "is_contact"
+    t.integer  "shared_contact_id"
   end
 
   add_index "clients", ["client_code"], :name => "index_clients_on_client_code"
@@ -237,6 +239,7 @@ ActiveRecord::Schema.define(:version => 20141201105236) do
   add_index "clients", ["organization_id"], :name => "index_clients_on_organization_id"
   add_index "clients", ["province_id"], :name => "index_clients_on_province_id"
   add_index "clients", ["region_id"], :name => "index_clients_on_region_id"
+  add_index "clients", ["shared_contact_id"], :name => "index_clients_on_shared_contact_id"
   add_index "clients", ["street_type_id"], :name => "index_clients_on_street_type_id"
   add_index "clients", ["town_id"], :name => "index_clients_on_town_id"
   add_index "clients", ["zipcode_id"], :name => "index_clients_on_zipcode_id"
@@ -1353,11 +1356,13 @@ ActiveRecord::Schema.define(:version => 20141201105236) do
     t.string   "cellular"
     t.string   "email"
     t.string   "remarks"
-    t.datetime "created_at",      :null => false
-    t.datetime "updated_at",      :null => false
+    t.datetime "created_at",        :null => false
+    t.datetime "updated_at",        :null => false
     t.string   "created_by"
     t.string   "updated_by"
     t.integer  "organization_id"
+    t.boolean  "is_contact"
+    t.integer  "shared_contact_id"
   end
 
   add_index "supplier_contacts", ["cellular"], :name => "index_supplier_contacts_on_cellular"
@@ -1367,6 +1372,7 @@ ActiveRecord::Schema.define(:version => 20141201105236) do
   add_index "supplier_contacts", ["last_name"], :name => "index_supplier_contacts_on_last_name"
   add_index "supplier_contacts", ["organization_id"], :name => "index_supplier_contacts_on_organization_id"
   add_index "supplier_contacts", ["phone"], :name => "index_supplier_contacts_on_phone"
+  add_index "supplier_contacts", ["shared_contact_id"], :name => "index_supplier_contacts_on_shared_contact_id"
   add_index "supplier_contacts", ["supplier_id"], :name => "index_supplier_contacts_on_supplier_id"
 
   create_table "supplier_invoice_approvals", :force => true do |t|
@@ -1506,6 +1512,8 @@ ActiveRecord::Schema.define(:version => 20141201105236) do
     t.string   "remarks"
     t.integer  "entity_id"
     t.integer  "organization_id"
+    t.boolean  "is_contact"
+    t.integer  "shared_contact_id"
   end
 
   add_index "suppliers", ["active"], :name => "index_suppliers_on_active"
@@ -1525,6 +1533,7 @@ ActiveRecord::Schema.define(:version => 20141201105236) do
   add_index "suppliers", ["phone"], :name => "index_suppliers_on_phone"
   add_index "suppliers", ["province_id"], :name => "index_suppliers_on_province_id"
   add_index "suppliers", ["region_id"], :name => "index_suppliers_on_region_id"
+  add_index "suppliers", ["shared_contact_id"], :name => "index_suppliers_on_shared_contact_id"
   add_index "suppliers", ["street_name"], :name => "index_suppliers_on_street_name"
   add_index "suppliers", ["street_type_id"], :name => "index_suppliers_on_street_type_id"
   add_index "suppliers", ["supplier_code"], :name => "index_suppliers_on_supplier_code"

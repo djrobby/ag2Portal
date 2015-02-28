@@ -46,3 +46,6 @@ es:
         bonus: "Bonificación"
         organization: "Organización"
         organization_id: "Organización"
+        approval_date: "Aprobado el"
+        approver: "Aprobado por"
+        approver_id: "Aprobado por"
