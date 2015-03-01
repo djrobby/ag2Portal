@@ -25,16 +25,16 @@
     <%= render :partial => 'layouts/ag2_directory/sharedcontactinfo', :locals => { :contact => contact, :title => I18n.t("activerecord.models.shared_contact.one") } %>
     <tr>
       <td><%= contact.company %></td>
-      <td><%= contact.full_name unless contact.last_name.blank? && contact.first_name.blank? %></td>
+      <td><%= contact.full_name %></td>
       <td><%= contact.shared_contact_type.name unless contact.shared_contact_type.blank? %></td>
       <td><%= contact.phone unless contact.phone.blank? %>
       <% if !contact.extension.blank? %>
       (<%= contact.extension %>)
       <% end %> </td>
       <td><%= contact.cellular unless contact.cellular.blank? %></td>
-      <td><%= contact.email %></td>
+      <td><%= contact.email unless contact.email.blank? %></td>
       <td><a data-toggle="modal" href="#contactinfo<%= contact.id.to_s %>" class="btn btn-mini"><i class="icon-eye-open"></i></a> <%= render :partial => '/layouts/crud/edit', :locals => { :model => SharedContact, :path => edit_shared_contact_path(contact) } %>
-      <%= render :partial => '/layouts/crud/delete', :locals => { :model => SharedContact, :path => contact, :msg => I18n.t("activerecord.models.shared_contact.one"), :txt => contact.full_name + " - " + contact.company } %> </td>
+      <%= render :partial => '/layouts/crud/delete', :locals => { :model => SharedContact, :path => contact, :msg => I18n.t("activerecord.models.shared_contact.one"), :txt => contact.full_name + " - " + contact.company_name } %> </td>
     </tr>
     <% end %>
   </tbody>

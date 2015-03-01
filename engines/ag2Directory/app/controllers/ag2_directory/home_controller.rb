@@ -7,6 +7,8 @@ module Ag2Directory
       session[:search] = nil
       session[:letter] = nil      
       session[:ContactType] = nil      
+      session[:sort] = nil
+      session[:direction] = nil      
     end
   end
 end

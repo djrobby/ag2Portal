@@ -52,6 +52,14 @@ class SharedContact < ActiveRecord::Base
     end
     full_name
   end
+  
+  def company_name
+    company_name = ""
+    if !self.company.blank?
+      company_name += self.company
+    end
+    company_name
+  end
 
   searchable do
     text :first_name, :last_name, :company, :fiscal_id, :cellular, :phone, :email

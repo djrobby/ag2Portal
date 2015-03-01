@@ -14,7 +14,7 @@ class Supplier < ActiveRecord::Base
                   :zipcode_id, :town_id, :province_id, :phone, :fax, :cellular, :email,
                   :region_id, :country_id, :payment_method_id, :ledger_account, :discount_rate,
                   :active, :max_orders_count, :max_orders_sum, :contract_number, :remarks,
-                  :created_by, :updated_by, :entity_id, :organization_id, :is_contact
+                  :created_by, :updated_by, :entity_id, :organization_id, :is_contact, :shared_contact_id
   attr_accessible :activity_ids
 
   has_many :supplier_contacts, dependent: :destroy
@@ -48,8 +48,9 @@ class Supplier < ActiveRecord::Base
   validates :organization,    :presence => true
 
   before_validation :fields_to_uppercase
-
   before_destroy :check_for_dependent_records
+  after_create :should_create_shared_contact, if: :is_contact?
+  after_update :should_update_shared_contact, if: :is_contact?
 
   def fields_to_uppercase
     if !self.fiscal_id.blank?
@@ -143,5 +144,81 @@ class Supplier < ActiveRecord::Base
       errors.add(:base, I18n.t('activerecord.models.supplier.check_for_supplier_payments'))
       return false
     end
+  end
+
+  #
+  # Triggers to update linked models
+  #
+  # After create
+  # Should create new Shared Contact (shared_contact_id not set)
+  def should_create_shared_contact
+    _entity = Entity.find(entity)
+    # Maybe contact exists previously
+    _contact = SharedContact.find_by_fiscal_id_and_organization(fiscal_id, organization_id) rescue nil
+    if _contact.nil?
+      # Let's create a new contact
+      _contact = create_shared_contact(_entity)
+    else
+      # Contact exists, updates it
+      _contact = update_shared_contact(_contact, _entity)
+    end
+    # Update contact id
+    self.update_column(:shared_contact_id, _contact.id) if !_contact.id.nil?
+    true
+  end
+
+  # After update
+  # Should update existing Shared Contact (shared_contact_id is set)
+  def should_update_shared_contact
+    _entity = Entity.find(entity)
+    # Retrieve contact by its id
+    _contact = SharedContact.find(shared_contact_id) rescue nil
+    if _contact.nil?
+      # Not found ??? Maybe is another contact... Let's check it out
+      _contact = SharedContact.find_by_fiscal_id_and_organization(fiscal_id, organization_id) rescue nil
+      if _contact.nil?
+        # No contact yet: Let's create a new one
+        _contact = create_shared_contact(_entity)
+      else
+        # Contact exists but with a different id
+        _contact = update_shared_contact(_contact, _entity)
+      end
+    else
+      # Contact found, updates it
+      _contact = update_shared_contact(_contact, _entity)
+    end
+    # Update contact id
+    self.update_column(:shared_contact_id, _contact.id) if !_contact.id.nil?
+    true
+  end
+
+  #
+  # Helper methods for triggers
+  #
+  # Creates new Shared Contact
+  def create_shared_contact(_entity)
+    _contact = SharedContact.create(first_name: _entity.first_name, last_name: _entity.last_name, company: _entity.company,
+                                    fiscal_id: fiscal_id, street_type_id: street_type_id, street_name: street_name,
+                                    street_number: street_number, building: building, floor: floor,
+                                    floor_office: floor_office, zipcode_id: zipcode_id, town_id: town_id,
+                                    province_id: province_id, country_id: country_id, phone: phone,
+                                    extension: _entity.extension, fax: fax, cellular: cellular,
+                                    email: email, shared_contact_type_id: 3, region_id: region_id,
+                                    organization_id: organization_id, created_by: created_by, updated_by: updated_by)
+    return _contact
+  end
+
+  # Updates existing Shared Contact
+  def update_shared_contact(_contact, _entity)
+    _contact.attributes = { first_name: _entity.first_name, last_name: _entity.last_name, company: _entity.company,
+                            fiscal_id: fiscal_id, street_type_id: street_type_id, street_name: street_name,
+                            street_number: street_number, building: building, floor: floor,
+                            floor_office: floor_office, zipcode_id: zipcode_id, town_id: town_id,
+                            province_id: province_id, country_id: country_id, phone: phone,
+                            extension: _entity.extension, fax: fax, cellular: cellular,
+                            email: email, shared_contact_type_id: 3, region_id: region_id,
+                            organization_id: organization_id, updated_by: updated_by }
+    _contact.save
+    return _contact 
   end
 end

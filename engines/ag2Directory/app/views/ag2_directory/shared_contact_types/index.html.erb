@@ -1,26 +1,6 @@
 <%= render '/layouts/ag2_directory/sharedcontacttypesbreadcrumb' %>
 
 <h3><%=t '.title' %></h3>
-<div class="span6">
-  <table class="table table-condensed table-striped">
-    <thead>
-      <tr>
-        <th><%= sortable "name", t('activerecord.attributes.shared_contact_type.name') %></th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody>
-      <% @shared_contact_types.each do |t| %>
-      <tr>
-        <td><%= link_to t.name.titleize, t %></td>
-        <td> <%= render :partial => '/layouts/crud/edit', :locals => { :model => SharedContactType, :path => edit_shared_contact_type_path(t) } %>
-        <%= render :partial => '/layouts/crud/delete', :locals => { :model => SharedContactType, :path => t, :msg => I18n.t("activerecord.models.shared_contact_type.one"), :txt => t.name } %> </td>
-      </tr>
-      <% end %>
-    </tbody>
-  </table>
-  <%= render :partial => '/layouts/pagination', :locals => { :ivar => @shared_contact_types } %>
-  <%= render :partial => '/layouts/crud/new', :locals => { :model => SharedContactType, :path => new_shared_contact_type_path, :txt => I18n.t("ag2_directory.shared_contact_types.index.btn_new") } %>
-  <%= link_to I18n.t("ag2_directory.shared_contact_types.index.back_to_main_app"), shared_contacts_path %> |
-  <%= link_to I18n.t("ag2_directory.shared_contact_types.index.back_to_root"), ag2_directory.root_path %>
+<div class="span6" id="div_table">
+  <%= render 'shared_contact_types' %>
 </div>
