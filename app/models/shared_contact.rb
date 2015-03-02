@@ -32,8 +32,12 @@ class SharedContact < ActiveRecord::Base
 
   before_validation :fields_to_uppercase
 
-  def self.find_by_fiscal_id_and_organization(_fiscal_id, _organization)
-    SharedContact.where("fiscal_id = ? AND organization_id = ?", _fiscal_id, _organization).first 
+  def self.find_by_fiscal_id_organization_type(_fiscal_id, _organization, _type)
+    SharedContact.where("fiscal_id = ? AND organization_id = ? AND shared_contact_type_id = ?", _fiscal_id, _organization, _type).first 
+  end
+
+  def self.find_by_name_organization_type(_last, _first, _organization, _type)
+    SharedContact.where("last_name = ? AND first_name = ? AND organization_id = ? AND shared_contact_type_id = ?", _last, _first, _organization, _type).first 
   end
 
   def fields_to_uppercase

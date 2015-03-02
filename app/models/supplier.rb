@@ -154,7 +154,7 @@ class Supplier < ActiveRecord::Base
   def should_create_shared_contact
     _entity = Entity.find(entity)
     # Maybe contact exists previously
-    _contact = SharedContact.find_by_fiscal_id_and_organization(fiscal_id, organization_id) rescue nil
+    _contact = SharedContact.find_by_fiscal_id_organization_type(fiscal_id, organization_id, 2) rescue nil
     if _contact.nil?
       # Let's create a new contact
       _contact = create_shared_contact(_entity)
@@ -175,7 +175,7 @@ class Supplier < ActiveRecord::Base
     _contact = SharedContact.find(shared_contact_id) rescue nil
     if _contact.nil?
       # Not found ??? Maybe is another contact... Let's check it out
-      _contact = SharedContact.find_by_fiscal_id_and_organization(fiscal_id, organization_id) rescue nil
+      _contact = SharedContact.find_by_fiscal_id_organization_type(fiscal_id, organization_id, 2) rescue nil
       if _contact.nil?
         # No contact yet: Let's create a new one
         _contact = create_shared_contact(_entity)
@@ -203,7 +203,7 @@ class Supplier < ActiveRecord::Base
                                     floor_office: floor_office, zipcode_id: zipcode_id, town_id: town_id,
                                     province_id: province_id, country_id: country_id, phone: phone,
                                     extension: _entity.extension, fax: fax, cellular: cellular,
-                                    email: email, shared_contact_type_id: 3, region_id: region_id,
+                                    email: email, shared_contact_type_id: 2, region_id: region_id,
                                     organization_id: organization_id, created_by: created_by, updated_by: updated_by)
     return _contact
   end
@@ -216,7 +216,7 @@ class Supplier < ActiveRecord::Base
                             floor_office: floor_office, zipcode_id: zipcode_id, town_id: town_id,
                             province_id: province_id, country_id: country_id, phone: phone,
                             extension: _entity.extension, fax: fax, cellular: cellular,
-                            email: email, shared_contact_type_id: 3, region_id: region_id,
+                            email: email, shared_contact_type_id: 2, region_id: region_id,
                             organization_id: organization_id, updated_by: updated_by }
     _contact.save
     return _contact 

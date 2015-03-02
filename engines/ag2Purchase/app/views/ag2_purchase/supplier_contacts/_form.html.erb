@@ -4,15 +4,22 @@
       formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
       dropdownAutoWidth: true
     });
+
+    // Set focus
+    if ('<%= @breadcrumb %>' == "update") {
+      $('input:visible:enabled')[1].focus();
+    } else {
+      $('input:visible:enabled')[0].focus();
+    }
   });
 </script>
 
 <%= simple_form_for @supplier_contact, :html => {:class => 'form-vertical well' } do |f| %>
 <%= f.error_notification %>
 <%= display_base_errors resource %>
-<%= f.association :supplier, collection: Supplier.all(order: 'name'), :input_html => { :class => 'x-large-text-field sel2' }, :label_html => { :class => 'form-label' } %>
+<%= f.association :supplier, collection: Supplier.all(order: 'name'), :input_html => { :class => 'x-large-text-field sel2', id: 'fnt-supplier' }, :label_html => { :class => 'form-label' } %>
 <div style="">
-  <label class="multi-field-label-two"> <%= f.input :last_name, :autofocus => true, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label-under-sel2' } %> </label>
+  <label class="multi-field-label-two"> <%= f.input :last_name, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label-under-sel2' } %> </label>
   <label class="multi-field-label-two"> <%= f.input :first_name, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
 </div>
 <div>

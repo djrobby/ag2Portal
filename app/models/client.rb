@@ -132,7 +132,7 @@ class Client < ActiveRecord::Base
   def should_create_shared_contact
     _entity = Entity.find(entity)
     # Maybe contact exists previously
-    _contact = SharedContact.find_by_fiscal_id_and_organization(fiscal_id, organization_id) rescue nil
+    _contact = SharedContact.find_by_fiscal_id_organization_type(fiscal_id, organization_id, 3) rescue nil
     if _contact.nil?
       # Let's create a new contact
       _contact = create_shared_contact(_entity)
@@ -153,7 +153,7 @@ class Client < ActiveRecord::Base
     _contact = SharedContact.find(shared_contact_id) rescue nil
     if _contact.nil?
       # Not found ??? Maybe is another contact... Let's check it out
-      _contact = SharedContact.find_by_fiscal_id_and_organization(fiscal_id, organization_id) rescue nil
+      _contact = SharedContact.find_by_fiscal_id_organization_type(fiscal_id, organization_id, 3) rescue nil
       if _contact.nil?
         # No contact yet: Let's create a new one
         _contact = create_shared_contact(_entity)
