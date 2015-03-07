@@ -1,0 +1,349 @@
+<script>
+  var _num;
+  
+  $(document).ready(function() {
+    // Disable calculated fields
+    //$('#fnt-amount').prop('readonly', true);
+    //$('#fnt-tax').prop('readonly', true);
+    
+    /*
+     * Retrieves parent values
+     */
+    // Form
+    var _f = $("#fnt-product").closest('form')[0];
+    // Organization
+    var _org = $('#purchase_order_organization_id :selected').val();
+    if (_org == "") _org = "0";
+    // Project
+    $("#fnt-project").html("");
+    $('#purchase_order_project_id option').clone().appendTo('#fnt-project');
+    var _p = $('#purchase_order_project_id :selected').val();
+    if (_p == "") _p = "0";
+    $('#fnt-project').val(_p);
+    // Work Order
+    $("#fnt-work-order").html("");
+    $('#purchase_order_work_order_id option').clone().appendTo('#fnt-work-order');
+    var _o = $('#purchase_order_work_order_id :selected').val();
+    if (_o == "") _o = "0";
+    $('#fnt-work-order').val(_o);
+    // Charge Account
+    $("#fnt-charge-account").html("");
+    $('#purchase_order_charge_account_id option').clone().appendTo('#fnt-charge-account');
+    var _c = $('#purchase_order_charge_account_id :selected').val();
+    if (_c == "") _c = "0";
+    $('#fnt-charge-account').val(_c);
+    // Store
+    $("#fnt-store").html("");
+    $('#purchase_order_store_id option').clone().appendTo('#fnt-store');
+    var _s = $('#purchase_order_store_id :selected').val();
+    if (_s == "") _s = "0";
+    $('#fnt-store').val(_s);
+
+    // Set focus
+    $(".modal").on('shown', function() {
+      $(this).find(".form-label:first").focus();
+    });
+  }); 
+
+  jQuery(function($) {
+    // when the #fnt-product field changes
+    $("#fnt-product").change(function() {
+      // make a POST call and replace the content
+      var product = $('select#fnt-product :selected').val();
+      if (product == "")
+        product = "0";
+      var qty = $('#fnt-quantity').val();
+      if (qty == "")
+        qty = "0";
+      var store = $('select#fnt-store :selected').val();
+      if (store == "")
+        store = "0";
+      // Right formatted for passing as REST parameter
+      qty = parseInt(right_number(qty, 4) * 10000);
+      var _sstock = 0;
+      var _pstock = 0;
+      //qty = qty.replace(",", ".") * 10000;
+      jQuery.getJSON('po_update_description_prices_from_product_store/' + product + '/' + qty + '/' + store, function(data) {
+        $("#fnt-description").val(data.description);
+        $("#fnt-price").val(data.price);
+        $("#fnt-amount").val(data.amount);
+        $("#fnt-tax-type").val(data.type);
+        $("#fnt-tax").val(data.tax);
+        $('#fnt-discount-pct').val("0,00");
+        $('#fnt-discount').val("0,0000");
+        $("#current-stock").html(data.stock);
+        _sstock = parseFloat(data.stock);
+        _pstock = parseFloat(data.product_stock);
+        if ((_pstock - _sstock) > 0) {
+          jQuery.getJSON('po_product_stock/' + product + '/' + qty + '/' + store, function(data) {
+            if (data != null) {
+              var a = '<%= I18n.t("ag2_purchase.purchase_orders.stocks_warning") %>\n';
+              $.each(data, function(id, option) {
+                a += '\n' + option.store.name + ' = ' + option.current;
+              });
+              alert(a);
+            }
+          });
+        }
+      });
+      return false;
+    });
+
+    // when the #fnt-store field changes
+    $("#fnt-store").change(function() {
+      // make a POST call and replace the content
+      var product = $('select#fnt-product :selected').val();
+      if (product == "")
+        product = "0";
+      var store = $('select#fnt-store :selected').val();
+      if (store == "")
+        store = "0";
+      jQuery.getJSON('po_current_stock/' + product + '/' + store, function(data) {
+        $("#current-stock").html(data.stock);
+      });
+      return false;
+    });
+
+    // when the #fnt-work-order field changes
+    $("#fnt-work-order").change(function() {
+      // make a POST call and replace the content
+      var order = $('select#fnt-work-order :selected').val();
+      if (order == "")
+        order = "0";
+      jQuery.getJSON('po_update_charge_account_from_order/' + order, function(data) {
+        var c = data.charge_account;
+        var s = data.store;
+        var c_id = data.charge_account_id;
+        var s_id = data.store_id;
+        // Charge Account
+        $("#fnt-charge-account").html("");
+        $("#fnt-charge-account").select2("val", "");
+        $("#fnt-charge-account").append($('<option></option>').val("").html(""));
+        if (!c.length) {
+          $.each(data, function(id, option) {
+            if (id == 'charge_account' && option != "") {
+              $("#fnt-charge-account").append($('<option></option>').val(option.id).html(option.account_code + " " + option.name));
+            }
+          });
+        } else {
+          $.each(c, function(id, option) {
+            $("#fnt-charge-account").append($('<option></option>').val(option.id).html(option.account_code + " " + option.name));
+          });
+        }
+        if (c_id != 0) $("#fnt-charge-account").select2("val", c_id);
+        // Store
+        $("#fnt-store").html("");
+        $("#fnt-store").select2("val", "");
+        $("#fnt-store").append($('<option></option>').val("").html(""));
+        if (!s.length) {
+          $.each(data, function(id, option) {
+            if (id == 'store' && option != "") {
+              $("#fnt-store").append($('<option></option>').val(option.id).html(option.name));
+            }
+          });
+        } else {
+          $.each(s, function(id, option) {
+            $("#fnt-store").append($('<option></option>').val(option.id).html(option.name));
+          });
+        }
+        if (s_id != 0) $("#fnt-store").select2("val", s_id);
+      });
+      return false;
+    });
+
+    // when the #fnt-project field changes
+    $("#fnt-project").change(function() {
+      // make a POST call and replace the content
+      var order = $('select#fnt-project :selected').val();
+      if (order == "")
+        order = "0";
+      jQuery.getJSON('po_update_charge_account_from_project/' + order, function(data) {
+        var w = data.work_order;
+        var c = data.charge_account;
+        var s = data.store;
+        // Work Order
+        $("#fnt-work-order").html("");
+        $("#fnt-work-order").select2("val", "");
+        $("#fnt-work-order").append($('<option></option>').val("").html(""));
+        if (!w.length) {
+          $.each(data, function(id, option) {
+            if (id == 'work_order' && option != "") {
+              $("#fnt-work-order").append($('<option></option>').val(option.id).html(option.order_no.substring(0,10) + "-" + option.order_no.substring(10,14) + "-" + option.order_no.substring(14,20) + " " + option.description));
+            }
+          });
+        } else {
+          $.each(w, function(id, option) {
+            $("#fnt-work-order").append($('<option></option>').val(option.id).html(option.order_no.substring(0,10) + "-" + option.order_no.substring(10,14) + "-" + option.order_no.substring(14,20) + " " + option.description));
+          });
+        }
+        // Charge Account
+        $("#fnt-charge-account").html("");
+        $("#fnt-charge-account").select2("val", "");
+        $("#fnt-charge-account").append($('<option></option>').val("").html(""));
+        if (!c.length) {
+          $.each(data, function(id, option) {
+            if (id == 'charge_account' && option != "") {
+              $("#fnt-charge-account").append($('<option></option>').val(option.id).html(option.account_code + " " + option.name));
+            }
+          });
+        } else {
+          $.each(c, function(id, option) {
+            $("#fnt-charge-account").append($('<option></option>').val(option.id).html(option.account_code + " " + option.name));
+          });
+        }
+        // Store
+        $("#fnt-store").html("");
+        $("#fnt-store").select2("val", "");
+        $("#fnt-store").append($('<option></option>').val("").html(""));
+        if (!s.length) {
+          $.each(data, function(id, option) {
+            if (id == 'store' && option != "") {
+              $("#fnt-store").append($('<option></option>').val(option.id).html(option.name));
+            }
+          });
+        } else {
+          $.each(s, function(id, option) {
+            $("#fnt-store").append($('<option></option>').val(option.id).html(option.name));
+          });
+        }
+        /*
+        $("#fnt-charge-account").html("");
+        $("#fnt-charge-account").select2("val", "");
+        $("#fnt_charge-account").append($('<option></option>').val("").html(""));
+        $.each(data, function(id, option) {
+          $("#fnt-charge-account").append($('<option></option>').val(option.id).html(option.account_code + " " + option.name));
+        });
+         */
+      });
+      return false;
+    });
+
+    // when the #fnt-quantity field changes
+    $("#fnt-quantity").change(function() {
+      // preserve the current object
+      var _this = (this);
+      recalculate(_this);
+      return false;
+    });
+
+    // when the #fnt-price field changes
+    $("#fnt-price").change(function() {
+      // preserve the current object
+      var _this = (this);
+      recalculate(_this);
+      return false;
+    });
+
+    // when the #fnt-discount-pct field changes
+    $("#fnt-discount-pct").change(function() {
+      // preserve the current object
+      var _this = (this);
+      recalculate(_this);
+      return false;
+    });
+
+    // when the #fnt-discount field changes
+    $("#fnt-discount").change(function() {
+      // preserve the current object
+      var _this = (this);
+      recalculate(_this);
+      return false;
+    });
+
+    $("#infoButton").click(function() {
+      var product = $('select#fnt-product :selected').val();
+      if (product == "")
+        product = "0";
+      jQuery.getJSON('po_product_all_stocks/' + product, function(data) {
+        if (data != null) {
+          var a = '<%= I18n.t("ag2_purchase.purchase_orders.info_btn") %>\n';
+          $.each(data, function(id, option) {
+            a += '\n' + option.store.name + ' = ' + option.current;
+          });
+          alert(a);
+        }
+      });
+      return false;
+    });
+    
+    // Recalculate amounts & prices
+    function recalculate(_this) {
+      // make a POST call and replace the content
+      var price = $('#fnt-price').val();
+      if (price == "")
+        price = "0";
+      var qty = $('#fnt-quantity').val();
+      if (qty == "")
+        qty = "0";
+      var tax_type = $('#fnt-tax-type').val();
+      if (tax_type == "")
+        tax_type = "0";
+      var discount_p = $('#fnt-discount-pct').val();
+      if (discount_p == "")
+        discount_p = "0";
+      var discount = $('#fnt-discount').val();
+      if (discount == "")
+        discount = "0";
+      var product = $('select#fnt-product :selected').val();
+      if (product == "")
+        product = "0";
+      // Right formatted for passing as REST parameter
+      price = parseInt(right_number(price, 4) * 10000);
+      qty = parseInt(right_number(qty, 4) * 10000);
+      discount_p = parseInt(right_number(discount_p, 2) * 100);
+      discount = parseInt(right_number(discount, 4) * 10000);
+      jQuery.getJSON('po_update_amount_from_price_or_quantity/' + price + '/' + qty + '/' + tax_type + '/' + discount_p + '/' + discount + '/' + product, function(data) {
+        $('#fnt-price').val(data.price);
+        $('#fnt-quantity').val(data.quantity);
+        $('#fnt-amount').val(data.amount);
+        $('#fnt-tax').val(data.tax);
+        $('#fnt-discount-pct').val(data.discountp);
+        $('#fnt-discount').val(data.discount);
+        // Update and display totals
+        $('#items-table').trigger('totals');
+      })
+    }
+  });
+</script>
+
+<div id="new-item-fields" class="modal hide fade" data-backdrop="static">
+  <% e = t(:item_error) %>
+  <div class="modal-header">
+    <a class="close" data-dismiss="modal">×</a>
+    <h3><%= t("ag2_purchase.purchase_orders.add_item") %></h3>
+    <span class="shrinked"><%= I18n.t(:mandatory_subtitle) %></span>
+  </div>
+  <div class="modal-body">
+    <%= f.association :project, collection: @projects, input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-project', data: { validation: "required", "validation-error-msg" => "#{e}" } }, label_html: { class: 'form-label' } %>
+    <%= f.association :work_order, collection: @work_orders, input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-work-order', data: { validation: "required", "validation-error-msg" => "#{e}" } }, label_html: { class: 'form-label' } %>
+    <%= f.association :charge_account, collection: @charge_accounts, input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-charge-account', data: { validation: "required", "validation-error-msg" => "#{e}" } }, label_html: { class: 'form-label' } %>
+    <%= f.association :store, collection: @stores, input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-store', data: { validation: "required", "validation-error-msg" => "#{e}" } }, label_html: { class: 'form-label' } %>
+    <a href="#" style="float: left" id="infoButton"><i class="icon-info-sign" title="<%=t('ag2_purchase.purchase_orders.info_btn') %>"></i></a>
+    <div style="overflow: hidden; padding-left: 0em;">
+      <%= f.association :product, collection: @products, input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-product', data: { validation: "required", "validation-error-msg" => "#{e}" } }, label_html: { class: 'form-label' } %>
+    </div>
+    <%= f.input :description, input_html: { class: 'x-large-text-field field', maxlength: 40, id: 'fnt-description', data: { validation: "required", "validation-error-msg" => "#{e}" }, onkeyup: "caps(this)" }, label_html: { class: 'form-label' } %>
+    <%= f.input :code, input_html: { class: 'mid-text-field field', id: 'fnt-code' }, label_html: { class: 'form-label' } %>
+    <%= f.input :quantity, as: :string, input_html: { value: (number_with_precision(f.object.quantity, precision: 4) if f.object.quantity), class: 'mid-text-field number-text-field field', id: 'fnt-quantity' }, label_html: { class: 'form-label' } %>
+    <%= f.input :price, as: :string, input_html: { value: (number_with_precision(f.object.price, precision: 4) if f.object.price), class: 'mid-text-field number-text-field field', id: 'fnt-price' }, label_html: { class: 'form-label' } %>
+    <%= f.input :discount_pct, as: :string, input_html: { value: (number_with_precision(f.object.discount_pct, precision: 2) if f.object.discount_pct), class: 'mid-text-field number-text-field field', id: 'fnt-discount-pct' }, label_html: { class: 'form-label' } %>
+    <%= f.input :discount, as: :string, input_html: { value: (number_with_precision(f.object.discount, precision: 4) if f.object.discount), class: 'mid-text-field number-text-field field', id: 'fnt-discount' }, label_html: { class: 'form-label' } %>
+    <%= f.input :amount, disabled: true, as: :string, input_html: { value: (number_with_precision(f.object.amount, precision: 4) if f.object.amount), class: 'mid-text-field number-text-field sub-disabled-field field', id: 'fnt-amount' }, label_html: { class: 'form-label' } %>
+    <%= f.association :tax_type, collection: TaxType.where('expiration IS NULL').order('description'), input_html: { class: 'x-large-text-field field', id: 'fnt-tax-type', data: { validation: "required", "validation-error-msg" => "#{e}" } }, label_html: { class: 'form-label' } %>
+    <%= f.input :tax, disabled: true, as: :string, input_html: { value: (number_with_precision(f.object.tax, precision: 4) if f.object.tax), class: 'mid-text-field number-text-field sub-disabled-field field', id: 'fnt-tax' }, label_html: { class: 'form-label' } %>
+    <%= f.input :delivery_date, start_year: Time.now.year - 100, end_year: Time.now.year + 100, as: :string, input_html: { value: (f.object.delivery_date.strftime("%d/%m/%Y") if f.object.delivery_date), class: 'mid-text-field idatepicker field', id: 'fnt-delivery-date' }, label_html: { class: 'form-label' } %>
+    <%= f.input :_destroy, as: :hidden, input_html: { class: 'field' } %>
+  </div>
+  <div class="modal-footer">
+    <span class="left-floated shrinked" style="vertical-align: bottom"><%= t("ag2_purchase.purchase_orders.add_item_to", var: @purchase_order.full_no) unless @purchase_order.order_no.blank? %>&#8226;</span>
+    <span class="left-floated shrinked" style="vertical-align: bottom"><%= t("activerecord.attributes.stock.current") %>=</span>
+    <span class="left-floated shrinked" style="vertical-align: bottom" id="current-stock">0,0000</span>
+    <button id="addButton" type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><%= t('ag2_purchase.purchase_orders.btn_add_item') %></button>
+    <button id="cancelButton" type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><%= t :close_button %></button>
+  </div>
+</div>
+
+<script type="text/javascript">
+  sel2NoMatch = '<%= t("select2.no_matches") %>';
+  po_itemFieldsUI.init(sel2NoMatch);
+</script>
