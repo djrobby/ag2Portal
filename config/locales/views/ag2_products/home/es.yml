@@ -11,5 +11,6 @@ es:
         manufacturers: "Fabricantes"
         stores: "Almacenes"
         products: "Productos"
+        purchase_orders: "Pedidos"
         receipt_notes: "Notas de Recepción"
         delivery_notes: "Notas de Entrega"

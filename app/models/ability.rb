@@ -214,58 +214,103 @@ class Ability
     # ag2Purchase
     if user.has_role? :ag2Purchase_User
       can :crud, Activity
-      can :crud, PaymentMethod
-      can :crud, Supplier
-      can :crud, SupplierContact
-      can :crud, PurchasePrice
+      can :crud, Offer
+      can :crud, OfferItem
+      can :crud, OfferRequest
+      can :crud, OfferRequestItem
+      can :crud, OfferRequestSupplier
       can :crud, OrderStatus
+      can :crud, PaymentMethod
+      can :crud, PurchasePrice
       can :crud, PurchaseOrder
       can :crud, PurchaseOrderItem
+      can :crud, Supplier
+      can :crud, SupplierContact
+      can :crud, SupplierInvoice
+      can :crud, SupplierInvoiceApproval
+      can :crud, SupplierInvoiceItem
+      can :crud, SupplierPayment
     elsif user.has_role? :ag2Purchase_Guest
       can :read, Activity
-      can :read, PaymentMethod
-      can :read, Supplier
-      can :read, SupplierContact
-      can :read, PurchasePrice
+      can :read, Offer
+      can :read, OfferItem
+      can :read, OfferRequest
+      can :read, OfferRequestItem
+      can :read, OfferRequestSupplier
       can :read, OrderStatus
+      can :read, PaymentMethod
+      can :read, PurchasePrice
       can :read, PurchaseOrder
       can :read, PurchaseOrderItem
+      can :read, Supplier
+      can :read, SupplierContact
+      can :read, SupplierInvoice
+      can :read, SupplierInvoiceApproval
+      can :read, SupplierInvoiceItem
+      can :read, SupplierPayment
     elsif user.has_role? :ag2Purchase_Banned
       cannot :manage, Activity
-      cannot :manage, PaymentMethod
-      cannot :manage, Supplier
-      cannot :manage, SupplierContact
-      cannot :manage, PurchasePrice
+      cannot :manage, Offer
+      cannot :manage, OfferItem
+      cannot :manage, OfferRequest
+      cannot :manage, OfferRequestItem
+      cannot :manage, OfferRequestSupplier
       cannot :manage, OrderStatus
+      cannot :manage, PaymentMethod
+      cannot :manage, PurchasePrice
       cannot :manage, PurchaseOrder
       cannot :manage, PurchaseOrderItem
+      cannot :manage, Supplier
+      cannot :manage, SupplierContact
+      cannot :manage, SupplierInvoice
+      cannot :manage, SupplierInvoiceApproval
+      cannot :manage, SupplierInvoiceItem
+      cannot :manage, SupplierPayment
     end
     # ag2Products (ag2Logistics)
     if user.has_role? :ag2Logistics_User
+      can :crud, DeliveryNote
+      can :crud, DeliveryNoteItem
       can :crud, Manufacturer
       can :crud, Measure
       can :crud, ProductFamily
       can :crud, ProductType
       can :crud, Product
+      can :crud, PurchaseOrder
+      can :crud, PurchaseOrderItem
       can :crud, PurchasePrice
+      can :crud, ReceiptNote
+      can :crud, ReceiptNoteItem
       can :crud, Store
       can :crud, Stock
     elsif user.has_role? :ag2Logistics_Guest
+      can :read, DeliveryNote
+      can :read, DeliveryNoteItem
       can :read, Manufacturer
       can :read, Measure
       can :read, ProductFamily
       can :read, ProductType
       can :read, Product
+      can :read, PurchaseOrder
+      can :read, PurchaseOrderItem
       can :read, PurchasePrice
+      can :read, ReceiptNote
+      can :read, ReceiptNoteItem
       can :read, Store
       can :read, Stock
     elsif user.has_role? :ag2Logistics_Banned
+      cannot :manage, DeliveryNote
+      cannot :manage, DeliveryNoteItem
       cannot :manage, Manufacturer
       cannot :manage, Measure
       cannot :manage, ProductFamily
       cannot :manage, ProductType
       cannot :manage, Product
+      cannot :manage, PurchaseOrder
+      cannot :manage, PurchaseOrderItem
       cannot :manage, PurchasePrice
+      cannot :manage, ReceiptNote
+      cannot :manage, ReceiptNoteItem
       cannot :manage, Store
       cannot :manage, Stock
     end

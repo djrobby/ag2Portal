@@ -11,5 +11,6 @@ en:
         manufacturers: "Manufacturers"
         stores: "Stores"
         products: "Products"
+        purchase_orders: "Purchase Orders"
         receipt_notes: "Receipt Notes"
         delivery_notes: "Delivery Notes"

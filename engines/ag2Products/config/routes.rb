@@ -114,6 +114,7 @@ Ag2Products::Engine.routes.draw do
     resources :stores
     resources :purchase_prices
     resources :stocks
+    resources :purchase_orders
     resources :delivery_notes
     resources :receipt_notes
 

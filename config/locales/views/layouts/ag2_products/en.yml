@@ -25,6 +25,9 @@ en:
       stocks:
         items: "Stocks"
         item: "Stock"
+      purchase_orders:
+        items: "Purchase orders"
+        item: "Order"
       delivery_notes:
         items: "Delivery notes"
         item: "Note"

@@ -1,0 +1,37 @@
+en:
+  ag2_products:
+    purchase_orders:
+      index:
+        title: "Purchase orders"
+        btn_new: "New Order"
+        back_to_root: "Back to ag2Logistics"
+        go_to_child_app: "Go to Supplier contacts"
+        label_project: "Project"
+        label_supplier: "Supplier"
+        label_status: "Status"
+        label_others: "Others"
+        btn_apply: "Apply Filter"
+      show:
+        title: "Order"
+        btn_edit: "Edit Order"
+        btn_delete: "Delete Order"
+        print: "Print"
+      edit:
+        title: "Edit Order"
+        btn_show: "Show Order"
+      new:
+        title: "New Order"
+      back_to_main_page: "Back to Purchase orders"
+      generate_code_btn: "Order No."
+      validate_btn: "Validate"
+      items_info: "Order Items"
+      fiscal_error: "Wrong Fiscal Id or Entity (TaxPayer) does not exist."
+      no_error: "Unable to generate Order No.: No Project chosen."
+      delete_item: "Delete this Item"
+      add_item: "Add new Item"
+      add_item_to: "Order %{var}"
+      btn_new_item: "New Item"
+      btn_add_item: "Add"
+      item_error: "can't be blank"
+      stocks_warning: "This product has stocks in other stores!"
+      info_btn: "Stocks"

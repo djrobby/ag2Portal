@@ -3,6 +3,7 @@
 <!-- Apps Thumbnails -->
 <ul class="thumbnails">
   <!-- Apps 1 -->
+  <li class="span2"></li>
   <li class="span4">
     <% if (session[:resolution] == "LD")%>
     <a href="<%= products_path %>" class="thumbnail centered"><img src="/assets/icon/ag2Products.png" width="48" height="48" alt="ag2Products" /><h5 class="h5-narrow"><%=t ".products" %></h5></a>
@@ -12,6 +13,20 @@
     <a href="<%= products_path %>" class="thumbnail centered"><img src="/assets/pict/ag2Products.png" width="128" height="128" alt="ag2Products" /><h5 class="h5-narrow"><%=t ".products" %></h5></a>
     <% end %>
   </li>
+  <li class="span4">
+    <% if (session[:resolution] == "LD")%>
+    <a href="<%= purchase_orders_path %>" class="thumbnail centered"><img src="/assets/icon/ag2Orders.png" width="48" height="48" alt="ag2PurchaseOrders" /><h5 class="h5-narrow"><%=t ".purchase_orders" %></h5></a>
+    <% elsif session[:resolution] == "SD" %>
+    <a href="<%= purchase_orders_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/ag2Orders.png" width="96" height="96" alt="ag2PurchaseOrders" /><h5 class="h5-narrow"><%=t ".purchase_orders" %></h5></a>
+    <% else %>
+    <a href="<%= purchase_orders_path %>" class="thumbnail centered"><img src="/assets/pict/ag2Orders.png" width="128" height="128" alt="ag2PurchaseOrders" /><h5 class="h5-narrow"><%=t ".purchase_orders" %></h5></a>
+    <% end %>
+  </li>
+  <li class="span2"></li>
+</ul><!-- /.thumbnails -->
+<ul class="thumbnails">
+  <!-- Apps 2 -->
+  <li class="span2"></li>
   <li class="span4">
     <% if (session[:resolution] == "LD")%>
     <a href="<%= receipt_notes_path %>" class="thumbnail centered"><img src="/assets/icon/ag2Receipts.png" width="48" height="48" alt="ag2ReceiptNotes" /><h5 class="h5-narrow"><%=t ".receipt_notes" %></h5></a>
@@ -30,9 +45,10 @@
     <a href="<%= delivery_notes_path %>" class="thumbnail centered"><img src="/assets/pict/ag2Deliveries.png" width="128" height="128" alt="ag2DeliveryNotes" /><h5 class="h5-narrow"><%=t ".delivery_notes" %></h5></a>
     <% end %>
   </li>
+  <li class="span2"></li>
 </ul><!-- /.thumbnails -->
 <ul class="thumbnails">
-  <!-- Apps 2 -->
+  <!-- Apps 3 -->
   <li class="span2">
     <% if (session[:resolution] == "LD")%>
     <a href="<%= product_families_path %>" class="thumbnail centered"><img src="/assets/icon/TableA.png" width="48" height="48" alt="ag2Tables" /><h5 class="h5-narrow"><%=t ".families" %></h5></a>
