@@ -29,6 +29,10 @@ class Province < ActiveRecord::Base
     self.name + " (" + self.region.name + ")"
   end
 
+  def name_region_country
+    self.name + " (" + self.region.name_and_country + ")"
+  end
+
   private
 
   def check_for_dependent_records

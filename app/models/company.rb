@@ -9,7 +9,8 @@ class Company < ActiveRecord::Base
                   :street_type_id, :street_name, :street_number, :building, :floor, :floor_office,
                   :zipcode_id, :town_id, :province_id, :phone, :fax, :cellular, :email, :logo,
                   :invoice_code, :invoice_header, :invoice_footer, :invoice_left_margin,
-                  :created_by, :updated_by, :organization_id, :hd_email
+                  :created_by, :updated_by, :organization_id, :hd_email,
+                  :max_order_total, :max_order_price
   has_attached_file :logo, :styles => { :original => "160x160>", :medium => "120x120>", :small => "80x80>" }, :default_url => "/images/missing/:style/company.png"
 
   has_many :offices

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150228090311) do
+ActiveRecord::Schema.define(:version => 20150308082213) do
 
   create_table "activities", :force => true do |t|
     t.string   "description"
@@ -264,8 +264,8 @@ ActiveRecord::Schema.define(:version => 20150228090311) do
   create_table "companies", :force => true do |t|
     t.string   "name"
     t.string   "fiscal_id"
-    t.datetime "created_at",          :null => false
-    t.datetime "updated_at",          :null => false
+    t.datetime "created_at",                                                          :null => false
+    t.datetime "updated_at",                                                          :null => false
     t.integer  "street_type_id"
     t.string   "street_name"
     t.string   "street_number"
@@ -291,6 +291,8 @@ ActiveRecord::Schema.define(:version => 20150228090311) do
     t.integer  "updated_by"
     t.integer  "organization_id"
     t.string   "hd_email"
+    t.decimal  "max_order_total",     :precision => 13, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "max_order_price",     :precision => 12, :scale => 4, :default => 0.0, :null => false
   end
 
   add_index "companies", ["fiscal_id"], :name => "index_companies_on_fiscal_id"
@@ -732,8 +734,8 @@ ActiveRecord::Schema.define(:version => 20150228090311) do
   create_table "offices", :force => true do |t|
     t.string   "name"
     t.integer  "company_id"
-    t.datetime "created_at",     :null => false
-    t.datetime "updated_at",     :null => false
+    t.datetime "created_at",                                                      :null => false
+    t.datetime "updated_at",                                                      :null => false
     t.string   "office_code"
     t.integer  "street_type_id"
     t.string   "street_name"
@@ -751,6 +753,8 @@ ActiveRecord::Schema.define(:version => 20150228090311) do
     t.integer  "created_by"
     t.integer  "updated_by"
     t.string   "nomina_id"
+    t.decimal  "max_order_total", :precision => 13, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "max_order_price", :precision => 12, :scale => 4, :default => 0.0, :null => false
   end
 
   add_index "offices", ["company_id"], :name => "index_offices_on_company_id"
@@ -803,13 +807,14 @@ ActiveRecord::Schema.define(:version => 20150228090311) do
   create_table "product_families", :force => true do |t|
     t.string   "name"
     t.string   "family_code"
-    t.integer  "max_orders_count",                                :default => 0
-    t.decimal  "max_orders_sum",   :precision => 12, :scale => 4, :default => 0.0, :null => false
-    t.datetime "created_at",                                                       :null => false
-    t.datetime "updated_at",                                                       :null => false
+    t.integer  "max_orders_count",                                   :default => 0
+    t.decimal  "max_orders_sum",      :precision => 12, :scale => 4, :default => 0.0, :null => false
+    t.datetime "created_at",                                                          :null => false
+    t.datetime "updated_at",                                                          :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
     t.integer  "organization_id"
+    t.boolean  "order_authorization"
   end
 
   add_index "product_families", ["family_code"], :name => "index_product_families_on_family_code"
@@ -901,13 +906,15 @@ ActiveRecord::Schema.define(:version => 20150228090311) do
     t.integer  "office_id"
     t.integer  "company_id"
     t.string   "ledger_account"
-    t.datetime "created_at",      :null => false
-    t.datetime "updated_at",      :null => false
+    t.datetime "created_at",                                                      :null => false
+    t.datetime "updated_at",                                                      :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
     t.string   "project_code"
     t.integer  "organization_id"
     t.integer  "project_type_id"
+    t.decimal  "max_order_total", :precision => 13, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "max_order_price", :precision => 12, :scale => 4, :default => 0.0, :null => false
   end
 
   add_index "projects", ["company_id"], :name => "index_projects_on_company_id"
@@ -1483,8 +1490,8 @@ ActiveRecord::Schema.define(:version => 20150228090311) do
     t.string   "name"
     t.string   "supplier_code"
     t.string   "fiscal_id"
-    t.datetime "created_at",                                                        :null => false
-    t.datetime "updated_at",                                                        :null => false
+    t.datetime "created_at",                                                          :null => false
+    t.datetime "updated_at",                                                          :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
     t.integer  "street_type_id"
@@ -1504,16 +1511,17 @@ ActiveRecord::Schema.define(:version => 20150228090311) do
     t.integer  "country_id"
     t.integer  "payment_method_id"
     t.string   "ledger_account"
-    t.decimal  "discount_rate",     :precision => 6,  :scale => 2, :default => 0.0, :null => false
+    t.decimal  "discount_rate",       :precision => 6,  :scale => 2, :default => 0.0, :null => false
     t.boolean  "active"
-    t.integer  "max_orders_count",                                 :default => 0
-    t.decimal  "max_orders_sum",    :precision => 13, :scale => 4, :default => 0.0, :null => false
+    t.integer  "max_orders_count",                                   :default => 0
+    t.decimal  "max_orders_sum",      :precision => 13, :scale => 4, :default => 0.0, :null => false
     t.string   "contract_number"
     t.string   "remarks"
     t.integer  "entity_id"
     t.integer  "organization_id"
     t.boolean  "is_contact"
     t.integer  "shared_contact_id"
+    t.boolean  "order_authorization"
   end
 
   add_index "suppliers", ["active"], :name => "index_suppliers_on_active"
