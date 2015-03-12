@@ -35,3 +35,5 @@ en:
         email: "Email"
         address: "Address"
         nomina_id: "N+ Id"
+        max_order_total: "Max amount per order €"
+        max_order_price: "Max price per order item €"

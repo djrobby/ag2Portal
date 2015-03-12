@@ -102,6 +102,7 @@
 <% if (current_user.has_role? :Administrator) %>
 <%= f.input :hd_email, :input_html => { :class => 'large-text-field' }, :label_html => { :class => 'form-label' } %>
 <% end %>
+<!-- Invoices info -->
 <h4><%=t 'ag2_admin.companies.invoices_info' %></h4>
 <div>
   <label class="multi-field-label-two"><%= f.input :invoice_code, :input_html => { :maxlength => 3, :class => 'mid-text-field' }, :label_html => { :class => 'form-label' } %></label>
@@ -129,6 +130,12 @@
     </tr>
   </tbody>
 </table>
+<!-- Commercial info -->
+<h4><%=t 'ag2_admin.companies.commercial_info' %></h4>
+<div>
+  <label class="multi-field-label-two"> <%= f.input :max_order_total, as: :string, input_html: { value: (number_with_precision(f.object.max_order_total, precision: 4) if f.object.max_order_total), class: 'large-text-field number-text-field' }, label_html: { class: 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.input :max_order_price, as: :string, input_html: { value: (number_with_precision(f.object.max_order_price, precision: 4) if f.object.max_order_price), class: 'large-text-field number-text-field' }, label_html: { class: 'form-label' } %> </label>
+</div>
 <!-- Buttons -->
 <%= f.button :submit, :class => 'btn-primary', :id => 'submit_btn' %>
 <% end %>

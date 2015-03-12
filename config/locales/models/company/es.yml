@@ -40,3 +40,5 @@ es:
         organization: "Organización"
         organization_id: "Organización"
         hd_email: "Email de soporte"
+        max_order_total: "Importe máx. por pedido €"
+        max_order_price: "Precio máx. por ítem pedido €"

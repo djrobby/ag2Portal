@@ -40,3 +40,5 @@ en:
         organization: "Organization"
         organization_id: "Organization"
         hd_email: "Support email"
+        max_order_total: "Max amount per order €"
+        max_order_price: "Max price per order item €"

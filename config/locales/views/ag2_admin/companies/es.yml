@@ -22,4 +22,5 @@ es:
       validate_btn: "Validar"
       fiscal_error: "Id Fiscal erróneo."
       fiscal_name: "Nombre de Id Fiscal no hallado."
-      invoices_info: "Información sobre Facturas de la Empresa"
+      invoices_info: "Información sobre Facturas"
+      commercial_info: "Información Comercial"

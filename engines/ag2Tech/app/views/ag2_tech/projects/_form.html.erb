@@ -251,6 +251,13 @@
   <label class="multi-field-label-two"> <%= f.input :opened_at, start_year: Time.now.year - 100, end_year: Time.now.year + 100, as: :string, input_html: { value: (f.object.opened_at.strftime("%d/%m/%Y") if f.object.opened_at), class: 'mid-text-field date_picker' }, label_html: { class: 'form-label' } %> </label>
   <label class="multi-field-label-two"> <%= f.input :closed_at, start_year: Time.now.year - 100, end_year: Time.now.year + 100, as: :string, input_html: { value: (f.object.closed_at.strftime("%d/%m/%Y") if f.object.closed_at), class: 'mid-text-field date_picker' }, label_html: { class: 'form-label' } %> </label>
 </div>
+<!-- Commercial info -->
+<h4><%=t 'ag2_tech.projects.commercial_info' %></h4>
+<div>
+  <label class="multi-field-label-two"> <%= f.input :max_order_total, as: :string, input_html: { value: (number_with_precision(f.object.max_order_total, precision: 4) if f.object.max_order_total), class: 'large-text-field number-text-field' }, label_html: { class: 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.input :max_order_price, as: :string, input_html: { value: (number_with_precision(f.object.max_order_price, precision: 4) if f.object.max_order_price), class: 'large-text-field number-text-field' }, label_html: { class: 'form-label' } %> </label>
+</div>
+<!-- Buttons -->
 <table class="form-table">
   <tbody>
     <tr class="form-tr">

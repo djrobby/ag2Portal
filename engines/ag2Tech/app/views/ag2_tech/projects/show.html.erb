@@ -32,6 +32,19 @@
   </tbody>
 </table>
 
+<!-- Commercial info -->
+<h4><%=t 'ag2_tech.projects.commercial_info' %></h4>
+<table class="table">
+  <tbody>
+    <tr>
+      <td><%= t :"activerecord.attributes.project.max_order_total" %>:</td>
+      <td><%= number_with_precision(@project.max_order_total) unless @project.max_order_total.blank? %></td>
+      <td><%= t :"activerecord.attributes.project.max_order_price" %>:</td>
+      <td><%= number_with_precision(@project.max_order_price) unless @project.max_order_price.blank? %></td>
+    </tr>
+  </tbody>
+</table>
+
 <%= render partial: '/layouts/crud/update_delete_new', locals:
 { model: Project, update_path: edit_project_path(@project), update_txt: t('.btn_edit'),
 delete_path: @project, delete_txt: t('.btn_delete'), msg: t("activerecord.models.project.one"), txt: @project.full_name,

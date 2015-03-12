@@ -30,3 +30,5 @@ en:
         ledger_account: "Ledger account"
         project_type: "Type"
         project_type_id: "Type"
+        max_order_total: "Max amount per order €"
+        max_order_price: "Max price per order item €"

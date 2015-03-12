@@ -22,3 +22,4 @@ en:
       generate_code_btn: "Project Code"
       validate_btn: "Validate"
       code_error: "Unable to generate Project Code: No Company or Type chosen."
+      commercial_info: "Commercial Info"
