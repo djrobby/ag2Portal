@@ -31,8 +31,28 @@ class User < ActiveRecord::Base
 
   has_many :workers # has_one when finished worker_items implementation
   has_one :technician
+
   def to_label
     "#{name} (#{email})"
+  end
+
+  def self.domains
+    domains = []
+    # loop thru existing users
+    User.all.each do |u|
+      email_domain = u.email.split('@').last  # extract domain from email
+      # check if domain already exists
+      exists = false
+      for i in 0...domains.size
+        if email_domain == domains[i]
+          exists = true          
+        end
+      end
+      if exists == false
+        domains = domains << email_domain
+      end
+    end        
+    domains
   end
 
   private

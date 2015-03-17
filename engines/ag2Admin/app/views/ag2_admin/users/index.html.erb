@@ -41,7 +41,7 @@
 
 <%= render '/layouts/ag2_admin/usersbreadcrumb' %>
 
-<h3><%=t '.title' %></h3>
+<%= render partial: '/layouts/searchhead_dropdown_remote', locals: { title: t('.title'), path: users_path, dropdown: User.domains } %>
 
 <div class="span11">
   <div id="loader"></div>

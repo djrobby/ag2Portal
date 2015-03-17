@@ -55,10 +55,15 @@ module Ag2Admin
     def index
       manage_filter_state
       letter = params[:letter]
-      if letter.blank? || letter == "%"
+      search = params[:search]
+      if (search.blank?) && (letter.blank? || letter == "%")
         @users = User.paginate(:page => params[:page], :per_page => slow_per_page).order(sort_column + ' ' + sort_direction)
-      else
+      elsif (search.blank?) && (!letter.blank? || letter != "%")
         @users = User.where("name LIKE ?", "#{letter}%").paginate(:page => params[:page], :per_page => slow_per_page).order(sort_column + ' ' + sort_direction)
+      elsif (!search.blank?) && (letter.blank? || letter == "%")
+        @users = User.where("email LIKE ?", "%#{search}").paginate(:page => params[:page], :per_page => slow_per_page).order(sort_column + ' ' + sort_direction)
+      elsif (!search.blank?) && (!letter.blank? || letter != "%")
+        @users = User.where("email LIKE ? AND name LIKE ?", "%#{search}", "#{letter}%").paginate(:page => params[:page], :per_page => slow_per_page).order(sort_column + ' ' + sort_direction)
       end
 
       respond_to do |format|
@@ -170,6 +175,12 @@ module Ag2Admin
         session[:direction] = params[:direction]
       elsif session[:direction]
         params[:direction] = session[:direction]
+      end
+      # search
+      if params[:search]
+        session[:search] = params[:search]
+      elsif session[:search]
+        params[:search] = session[:search]
       end
       # letter
       if params[:letter]

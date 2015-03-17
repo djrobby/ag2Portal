@@ -19,86 +19,91 @@
   <% if (company.offices.count == 0) %><br /><% end %>
   
   <% company.offices.sort_by{ |office| office.name }.each do |office| %>
-    <!-- Office -->
-    <%= render :partial => 'layouts/officeinfo', :locals => { :office => office } %>
-    <h5 class="yellow-band"><a data-toggle="modal" href="#officeinfo<%= office.id.to_s %>"><%= office.name %></a><!-- <%= office.name %> --><span class="yellow-separator">| </span><i class="icon-hand-right"></i> <%= office.office_code  %> <span class="yellow-separator">| </span><i class="icon-phone-black"></i>
-    <% if !office.phone.blank? %>
-    <%= office.phone %>
+    <!-- Do not show if it's virtual office without contacts -->
+    <% if (office.office_code.split('/').first == '99999') && (office.corp_contacts.count == 0) %>
+      <!-- <br /> -->
     <% else %>
-    ...
-    <% end %> <span class="yellow-separator">| </span><i class="icon-iphone-black"></i>
-    <% if !office.cellular.blank? %>
-    <%= office.cellular %>
-    <% else %>
-    ...
-    <% end %> <span class="yellow-separator">| </span><i class="icon-road"></i> <%= office.street_type.street_type_code.titleize  %>. <%= office.street_name %> <%= office.street_number %>
-    <% if !office.building.blank? %>
-    <%= office.building.titleize %>
-    <% end %>
-    <% if !office.floor.blank? %>
-    <%= office.floor %>&ordm;
-    <% end %>
-    <% if !office.floor_office.blank? %>
-    <%= office.floor_office %>
-    <% end %>-
-    <%= office.town.name %>,
-    <%= office.zipcode.zipcode %>
-    <%= office.province.name %> </h5>
-
-    <% if (office.corp_contacts.count == 0) %>
-      <br />
-    <% else %>
-      <!-- Contact -->
-      <table class="table table-condensed table-striped shrinked fixed">
-        <!-- Name -->
-        <col width="23%" />
-        <!-- Position -->
-        <col width="13%" />
-        <!-- Department -->
-        <col width="8%" />
-        <!-- Phone -->
-        <col width="14%" />
-        <!-- Cellular -->
-        <col width="14%" />
-        <!-- Email -->
-        <col width="20%" />
-        <!-- Buttons -->
-        <col width="8%" />
-        <thead>
-          <tr>
-            <th><%= t :"activerecord.attributes.corp_contact.full_name" %></th>
-            <th><%= t :"activerecord.attributes.corp_contact.position" %></th>
-            <th><%= t :"activerecord.attributes.corp_contact.dept" %></th>
-            <th><%= t :"activerecord.attributes.corp_contact.corp_phone" %></th>
-            <th><%= t :"activerecord.attributes.corp_contact.corp_cellular_long" %></th>
-            <th><%= t :"activerecord.attributes.corp_contact.email" %></th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          <% office.corp_contacts.each do |contact| %>
-          <%= render :partial => 'layouts/ag2_directory/corpcontactinfo', :locals => { :contact => contact } %>
-          <tr>
-            <td><a data-toggle="modal" href="#contactinfo<%= contact.id.to_s %>"><%= contact.full_name_and_count %></a></td>
-            <!-- <td><%#= link_to contact.last_name + ', ' + contact.first_name, contact %></td> -->
-            <td><%= contact.position unless contact.position.blank? %></td>
-            <td><%= contact.department.code unless contact.department.blank? %></td>
-            <td><%= contact.corp_phone unless contact.corp_phone.blank? %>
-            <% if !contact.corp_extension.blank? %>
-            (<%= contact.corp_extension %>)
-            <% end %> </td>
-            <td><%= contact.corp_cellular_long unless contact.corp_cellular_long.blank? %>
-            <% if !contact.corp_cellular_short.blank? %>
-            (<%= contact.corp_cellular_short %>)
-            <% end %> </td>
-            <td><%= contact.email %></td>
-            <td> <%= render :partial => '/layouts/crud/edit', :locals => { :model => CorpContact, :path => edit_corp_contact_path(contact) } %>
-            <%= render :partial => '/layouts/crud/delete', :locals => { :model => CorpContact, :path => contact, :msg => I18n.t("activerecord.models.corp_contact.one"), :txt => contact.full_name } %> </td>
-          </tr>
-          <% end %><!-- office.corp_contacts.each -->
-        </tbody>
-      </table>
-    <% end %><!-- (office.corp_contacts.count == 0) -->
+      <!-- Office -->
+      <%= render :partial => 'layouts/officeinfo', :locals => { :office => office } %>
+      <h5 class="yellow-band"><a data-toggle="modal" href="#officeinfo<%= office.id.to_s %>"><%= office.name %></a><!-- <%= office.name %> --><span class="yellow-separator">| </span><i class="icon-hand-right"></i> <%= office.office_code  %> <span class="yellow-separator">| </span><i class="icon-phone-black"></i>
+      <% if !office.phone.blank? %>
+      <%= office.phone %>
+      <% else %>
+      ...
+      <% end %> <span class="yellow-separator">| </span><i class="icon-iphone-black"></i>
+      <% if !office.cellular.blank? %>
+      <%= office.cellular %>
+      <% else %>
+      ...
+      <% end %> <span class="yellow-separator">| </span><i class="icon-road"></i> <%= office.street_type.street_type_code.titleize  %>. <%= office.street_name %> <%= office.street_number %>
+      <% if !office.building.blank? %>
+      <%= office.building.titleize %>
+      <% end %>
+      <% if !office.floor.blank? %>
+      <%= office.floor %>&ordm;
+      <% end %>
+      <% if !office.floor_office.blank? %>
+      <%= office.floor_office %>
+      <% end %>-
+      <%= office.town.name %>,
+      <%= office.zipcode.zipcode %>
+      <%= office.province.name %> </h5>
+  
+      <% if (office.corp_contacts.count == 0) %>
+        <br />
+      <% else %>
+        <!-- Contact -->
+        <table class="table table-condensed table-striped shrinked fixed">
+          <!-- Name -->
+          <col width="23%" />
+          <!-- Position -->
+          <col width="13%" />
+          <!-- Department -->
+          <col width="8%" />
+          <!-- Phone -->
+          <col width="14%" />
+          <!-- Cellular -->
+          <col width="14%" />
+          <!-- Email -->
+          <col width="20%" />
+          <!-- Buttons -->
+          <col width="8%" />
+          <thead>
+            <tr>
+              <th><%= t :"activerecord.attributes.corp_contact.full_name" %></th>
+              <th><%= t :"activerecord.attributes.corp_contact.position" %></th>
+              <th><%= t :"activerecord.attributes.corp_contact.dept" %></th>
+              <th><%= t :"activerecord.attributes.corp_contact.corp_phone" %></th>
+              <th><%= t :"activerecord.attributes.corp_contact.corp_cellular_long" %></th>
+              <th><%= t :"activerecord.attributes.corp_contact.email" %></th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <% office.corp_contacts.each do |contact| %>
+            <%= render :partial => 'layouts/ag2_directory/corpcontactinfo', :locals => { :contact => contact } %>
+            <tr>
+              <td><a data-toggle="modal" href="#contactinfo<%= contact.id.to_s %>"><%= contact.full_name_and_count %></a></td>
+              <!-- <td><%#= link_to contact.last_name + ', ' + contact.first_name, contact %></td> -->
+              <td><%= contact.position unless contact.position.blank? %></td>
+              <td><%= contact.department.code unless contact.department.blank? %></td>
+              <td><%= contact.corp_phone unless contact.corp_phone.blank? %>
+              <% if !contact.corp_extension.blank? %>
+              (<%= contact.corp_extension %>)
+              <% end %> </td>
+              <td><%= contact.corp_cellular_long unless contact.corp_cellular_long.blank? %>
+              <% if !contact.corp_cellular_short.blank? %>
+              (<%= contact.corp_cellular_short %>)
+              <% end %> </td>
+              <td><%= contact.email %></td>
+              <td> <%= render :partial => '/layouts/crud/edit', :locals => { :model => CorpContact, :path => edit_corp_contact_path(contact) } %>
+              <%= render :partial => '/layouts/crud/delete', :locals => { :model => CorpContact, :path => contact, :msg => I18n.t("activerecord.models.corp_contact.one"), :txt => contact.full_name } %> </td>
+            </tr>
+            <% end %><!-- office.corp_contacts.each -->
+          </tbody>
+        </table>
+      <% end %><!-- (office.corp_contacts.count == 0) -->
+    <% end %><!-- (office.code.split('/').first == '99999') && (office.corp_contacts.count == 0) -->
   <% end %><!-- company.offices.sort_by{ |office| office.name }.each -->
 <% end %><!-- @corp_contacts.each -->
 

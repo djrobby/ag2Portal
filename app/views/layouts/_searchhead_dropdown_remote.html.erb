@@ -1,0 +1,11 @@
+<div class="title-band-with-search">
+  <div style="float: left">
+    <h3><%= title %></h3>
+  </div>
+  <div>
+    <%= form_tag path, :method => :get, :remote => true, :class => 'form-search' do %>
+    <%= select_tag :search, options_for_select(dropdown, params[:search]), :prompt => "", :class => 'search-query' %>
+    <%= image_submit_tag("/assets/icon/glyph/black/halflings/search.png", :name => nil, :class => 'btn') %>
+    <% end %>
+  </div>
+</div>
