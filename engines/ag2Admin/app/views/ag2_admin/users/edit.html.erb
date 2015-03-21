@@ -6,9 +6,14 @@
 <%= f.error_notification %>
 <%= display_base_errors resource %>
 <%= f.input :email, :required => true, :autofocus => true, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %>
-<%= f.input :name, :required => true, :label_html => { :class => 'form-label' } %>
-<%= f.input :password, :autocomplete => "off", :required => false, :label_html => { :class => 'form-label' } %>
-<%= f.input :password_confirmation, :required => false, :label_html => { :class => 'form-label' } %>
+<div>
+  <label class="multi-field-label-two"> <%= f.input :name, :required => true, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.input :real_email, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' }, :boolean_style => :inline %> </label>
+</div>
+<div>
+  <label class="multi-field-label-two"> <%= f.input :password, :autocomplete => "off", :required => false, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.input :password_confirmation, :required => false, :label_html => { :class => 'form-label' } %> </label>
+</div>
 <br />
 <%= hidden_field_tag :referrer, user_path(@user) %>
 <%= f.button :submit, nil, :class => 'btn-primary' %>

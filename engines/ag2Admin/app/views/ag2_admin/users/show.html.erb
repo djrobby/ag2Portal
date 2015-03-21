@@ -20,8 +20,8 @@
     <tr>
       <td><%= t 'activerecord.attributes.user.sign_in_count' %>:</td>
       <td><%= @user.sign_in_count %></td>
-      <td></td>
-      <td></td>
+      <td><%= t 'activerecord.attributes.user.real_email' %>:</td>
+      <td> <% if @user.real_email %> <i class="icon-thumbs-up"></i> <% else %> <i class="icon-thumbs-down"></i> <% end %> </td>
     </tr>
     <tr>
       <td><%= t 'activerecord.attributes.user.current_sign_in_at' %>:</td>

@@ -1,7 +1,8 @@
 class ChargeGroup < ActiveRecord::Base
   belongs_to :organization
   belongs_to :budget_heading
-  attr_accessible :flow, :group_code, :ledger_account, :name, :organization_id, :budget_heading_id
+  belongs_to :ledger_account
+  attr_accessible :flow, :group_code, :ledger_account_id, :name, :organization_id, :budget_heading_id
 
   has_many :charge_accounts
 

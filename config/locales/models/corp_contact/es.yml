@@ -15,7 +15,7 @@ es:
         corp_extension: "Extensión"
         corp_cellular_long: "Móvil"
         corp_cellular_short: "Extensión móvil"
-        email: "Email"
+        email: "Correo-e"
         position: "Puesto"
         avatar: "Avatar"
         company: "Empresa"
@@ -28,3 +28,4 @@ es:
         dept: "Dpto"
         organization: "Organización"
         organization_id: "Organización"
+        real_email: "¿Cuenta de correo-e real?"

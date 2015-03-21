@@ -117,8 +117,25 @@
     <a href="<%= tax_types_path %>" class="thumbnail centered"><img src="/assets/pict/ag2TaxTypes96.png" width="96" height="96" alt="ag2TaxTypes" /><h5 class="h5-narrow"><%=t ".tax_types" %></h5></a>
     <% end %>
   </li>
-  <li class="span2"></li>
-  <li class="span4">
+  <li class="span2">
+    <% if (session[:resolution] == "LD")%>
+    <a href="<%= accounting_groups_path %>" class="thumbnail centered"><img src="/assets/icon/ag2AccountingGroups.png" width="48" height="48" alt="ag2AccountingGroups" /><h5 class="h5-narrow"><%=t ".accounting_groups" %></h5></a>
+    <% elsif session[:resolution] == "SD" %>
+    <a href="<%= accounting_groups_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/ag2AccountingGroups72.png" width="72" height="72" alt="ag2AccountingGroups" /><h5 class="h5-narrow"><%=t ".accounting_groups" %></h5></a>
+    <% else %>
+    <a href="<%= accounting_groups_path %>" class="thumbnail centered"><img src="/assets/pict/ag2AccountingGroups96.png" width="96" height="96" alt="ag2AccountingGroups" /><h5 class="h5-narrow"><%=t ".accounting_groups" %></h5></a>
+    <% end %>
+  </li>
+  <li class="span2">
+    <% if (session[:resolution] == "LD")%>
+    <a href="<%= ledger_accounts_path %>" class="thumbnail centered"><img src="/assets/icon/ag2LedgerAccounts.png" width="48" height="48" alt="ag2LedgerAccounts" /><h5 class="h5-narrow"><%=t ".ledger_accounts" %></h5></a>
+    <% elsif session[:resolution] == "SD" %>
+    <a href="<%= ledger_accounts_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/ag2LedgerAccounts72.png" width="72" height="72" alt="ag2LedgerAccounts" /><h5 class="h5-narrow"><%=t ".ledger_accounts" %></h5></a>
+    <% else %>
+    <a href="<%= ledger_accounts_path %>" class="thumbnail centered"><img src="/assets/pict/ag2LedgerAccounts96.png" width="96" height="96" alt="ag2LedgerAccounts" /><h5 class="h5-narrow"><%=t ".ledger_accounts" %></h5></a>
+    <% end %>
+  </li>
+  <li class="span2">
     <% if (session[:resolution] == "LD")%>
     <a href="<%= ag2_admin.config_path %>" class="thumbnail centered"><img src="/assets/icon/ag2Admin.png" width="48" height="48" alt="ag2Config" /><h5 class="h5-narrow">ag2Config</h5></a>
     <% elsif session[:resolution] == "SD" %>

@@ -14,3 +14,5 @@ en:
         departments: "Departments"
         areas: "Areas"
         tax_types: "Tax Types"
+        accounting_groups: "Accounting Groups"
+        ledger_accounts: "Ledger Accounts"

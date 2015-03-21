@@ -58,6 +58,7 @@ module Ag2Directory
       contact.first_name = worker.first_name unless worker.first_name.nil?
       contact.last_name = worker.last_name unless worker.last_name.nil?
       contact.email = worker.email unless worker.email.nil?
+      contact.real_email = worker.real_email unless worker.real_email.nil?
       contact.corp_phone = worker.corp_phone unless worker.corp_phone.nil?
       contact.corp_extension = worker.corp_extension unless worker.corp_extension.nil?
       contact.corp_cellular_long = worker.corp_cellular_long unless worker.corp_cellular_long.nil?

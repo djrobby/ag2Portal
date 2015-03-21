@@ -9,10 +9,11 @@ class Supplier < ActiveRecord::Base
   belongs_to :payment_method
   belongs_to :entity
   belongs_to :organization
+  belongs_to :ledger_account
   attr_accessible :fiscal_id, :name, :supplier_code,
                   :street_type_id, :street_name, :street_number, :building, :floor, :floor_office,
                   :zipcode_id, :town_id, :province_id, :phone, :fax, :cellular, :email,
-                  :region_id, :country_id, :payment_method_id, :ledger_account, :discount_rate,
+                  :region_id, :country_id, :payment_method_id, :ledger_account_id, :discount_rate,
                   :active, :max_orders_count, :max_orders_sum, :contract_number, :remarks,
                   :created_by, :updated_by, :entity_id, :organization_id,
                   :is_contact, :shared_contact_id, :order_authorization

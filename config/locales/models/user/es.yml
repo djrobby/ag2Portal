@@ -15,7 +15,7 @@ es:
     attributes:
       user:
         name: "Nombre"
-        email: "Email"
+        email: "Correo-e"
         password: "Contraseña"
         password_confirmation: "Confirmar contraseña"
         role_ids: "Roles"
@@ -27,6 +27,7 @@ es:
         current_sign_in_ip: "IP de la sesión actual"
         last_sign_in_at: "Ultima sesión iniciada el"
         last_sign_in_ip: "IP de la última sesión"
+        real_email: "¿Cuenta de correo-e real?"
       role:
         name: "Nombre"
         resource_id: "Id de recurso"

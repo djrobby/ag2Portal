@@ -20,7 +20,7 @@ en:
         corp_extension: "Corporate extension"
         corp_cellular_long: "Corporate cellular"
         corp_cellular_short: "Corporate cellular extension"
-        email: "Corporate email"
+        email: "Corporate e-mail"
         own_phone: "Personal phone"
         own_cellular: "Personal cellular"
         street_name: "Street name"
@@ -78,3 +78,4 @@ en:
         organization: "Organization"
         organization_id: "Organization"
         is_contact: "Is contact?"
+        real_email: "Real e-mail account?"

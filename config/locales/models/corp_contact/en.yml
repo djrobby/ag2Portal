@@ -15,7 +15,7 @@ en:
         corp_extension: "Extension"
         corp_cellular_long: "Cellular"
         corp_cellular_short: "Cellular Extension"
-        email: "Email"
+        email: "E-mail"
         position: "Position"
         avatar: "Avatar"
         company: "Company"
@@ -28,3 +28,4 @@ en:
         dept: "Dept"
         organization: "Organization"
         organization_id: "Organization"
+        real_email: "Real e-mail account?"

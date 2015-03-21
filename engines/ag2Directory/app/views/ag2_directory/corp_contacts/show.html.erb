@@ -34,8 +34,8 @@
     <tr>
       <td><%=t :"activerecord.attributes.corp_contact.email" %></td>
       <td><%= @corp_contact.email %></td>
-      <td></td>
-      <td></td>
+      <td><%= t 'activerecord.attributes.corp_contact.real_email' %>:</td>
+      <td> <% if @corp_contact.real_email %> <i class="icon-thumbs-up"></i> <% else %> <i class="icon-thumbs-down"></i> <% end %> </td>
     </tr>
     <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @corp_contact } %>
     <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @corp_contact } %>

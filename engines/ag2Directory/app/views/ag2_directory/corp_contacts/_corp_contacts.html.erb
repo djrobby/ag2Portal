@@ -51,7 +51,7 @@
       <% if !contact.corp_cellular_short.blank? %>
       (<%= contact.corp_cellular_short %>)
       <% end %> </td>
-      <td><%= contact.email %></td>
+      <td><%= contact.email if contact.real_email %></td>
     </tr>
     <% end %>
   </tbody>

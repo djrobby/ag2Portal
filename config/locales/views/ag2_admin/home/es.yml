@@ -14,3 +14,5 @@ es:
         departments: "Departamentos"
         areas: "Áreas"
         tax_types: "Tipos Impositivos"
+        accounting_groups: "Grupos Contables"
+        ledger_accounts: "Cuentas Contables"

@@ -11,7 +11,16 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150308082213) do
+ActiveRecord::Schema.define(:version => 20150321125703) do
+
+  create_table "accounting_groups", :force => true do |t|
+    t.string   "code"
+    t.string   "name"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "accounting_groups", ["code"], :name => "index_accounting_groups_on_code", :unique => true
 
   create_table "activities", :force => true do |t|
     t.string   "description"
@@ -159,19 +168,19 @@ ActiveRecord::Schema.define(:version => 20150308082213) do
     t.date     "opened_at"
     t.date     "closed_at"
     t.integer  "project_id"
-    t.string   "ledger_account"
-    t.datetime "created_at",      :null => false
-    t.datetime "updated_at",      :null => false
+    t.datetime "created_at",        :null => false
+    t.datetime "updated_at",        :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
     t.string   "account_code"
     t.integer  "organization_id"
     t.integer  "charge_group_id"
+    t.integer  "ledger_account_id"
   end
 
   add_index "charge_accounts", ["account_code"], :name => "index_charge_accounts_on_account_code"
   add_index "charge_accounts", ["charge_group_id"], :name => "index_charge_accounts_on_charge_group_id"
-  add_index "charge_accounts", ["ledger_account"], :name => "index_charge_accounts_on_ledger_account"
+  add_index "charge_accounts", ["ledger_account_id"], :name => "index_charge_accounts_on_ledger_account_id"
   add_index "charge_accounts", ["name"], :name => "index_charge_accounts_on_name"
   add_index "charge_accounts", ["organization_id", "account_code"], :name => "index_charge_accounts_on_organization_id_and_account_code", :unique => true
   add_index "charge_accounts", ["organization_id"], :name => "index_charge_accounts_on_organization_id"
@@ -181,19 +190,19 @@ ActiveRecord::Schema.define(:version => 20150308082213) do
     t.string   "group_code"
     t.string   "name"
     t.integer  "flow",              :limit => 2
-    t.string   "ledger_account"
     t.integer  "organization_id"
     t.datetime "created_at",                     :null => false
     t.datetime "updated_at",                     :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
     t.integer  "budget_heading_id"
+    t.integer  "ledger_account_id"
   end
 
   add_index "charge_groups", ["budget_heading_id"], :name => "index_charge_groups_on_budget_heading_id"
   add_index "charge_groups", ["flow"], :name => "index_charge_groups_on_flow"
   add_index "charge_groups", ["group_code"], :name => "index_charge_groups_on_group_code"
-  add_index "charge_groups", ["ledger_account"], :name => "index_charge_groups_on_ledger_account"
+  add_index "charge_groups", ["ledger_account_id"], :name => "index_charge_groups_on_ledger_account_id"
   add_index "charge_groups", ["name"], :name => "index_charge_groups_on_name"
   add_index "charge_groups", ["organization_id", "group_code"], :name => "index_charge_groups_on_organization_and_code", :unique => true
   add_index "charge_groups", ["organization_id"], :name => "index_charge_groups_on_organization_id"
@@ -227,12 +236,14 @@ ActiveRecord::Schema.define(:version => 20150308082213) do
     t.integer  "organization_id"
     t.boolean  "is_contact"
     t.integer  "shared_contact_id"
+    t.integer  "ledger_account_id"
   end
 
   add_index "clients", ["client_code"], :name => "index_clients_on_client_code"
   add_index "clients", ["country_id"], :name => "index_clients_on_country_id"
   add_index "clients", ["entity_id"], :name => "index_clients_on_entity_id"
   add_index "clients", ["fiscal_id"], :name => "index_clients_on_fiscal_id"
+  add_index "clients", ["ledger_account_id"], :name => "index_clients_on_ledger_account_id"
   add_index "clients", ["name"], :name => "index_clients_on_name"
   add_index "clients", ["organization_id", "client_code"], :name => "index_clients_on_organization_id_and_client_code", :unique => true
   add_index "clients", ["organization_id", "fiscal_id"], :name => "index_clients_on_organization_id_and_fiscal_id", :unique => true
@@ -332,8 +343,8 @@ ActiveRecord::Schema.define(:version => 20150308082213) do
     t.string   "corp_extension"
     t.string   "corp_cellular_long"
     t.string   "corp_cellular_short"
-    t.datetime "created_at",                       :null => false
-    t.datetime "updated_at",                       :null => false
+    t.datetime "created_at",                                         :null => false
+    t.datetime "updated_at",                                         :null => false
     t.string   "avatar_file_name"
     t.string   "avatar_content_type"
     t.integer  "avatar_file_size"
@@ -343,6 +354,7 @@ ActiveRecord::Schema.define(:version => 20150308082213) do
     t.integer  "updated_by"
     t.integer  "worker_count",        :limit => 2
     t.integer  "organization_id"
+    t.boolean  "real_email",                       :default => true
   end
 
   add_index "corp_contacts", ["company_id"], :name => "index_corp_contacts_on_company_id"
@@ -572,6 +584,22 @@ ActiveRecord::Schema.define(:version => 20150308082213) do
 
   add_index "insurances", ["name"], :name => "index_insurances_on_name"
   add_index "insurances", ["organization_id"], :name => "index_insurances_on_organization_id"
+
+  create_table "ledger_accounts", :force => true do |t|
+    t.string   "code"
+    t.string   "name"
+    t.integer  "accounting_group_id"
+    t.integer  "project_id"
+    t.integer  "organization_id"
+    t.datetime "created_at",          :null => false
+    t.datetime "updated_at",          :null => false
+  end
+
+  add_index "ledger_accounts", ["accounting_group_id"], :name => "index_ledger_accounts_on_accounting_group_id"
+  add_index "ledger_accounts", ["code"], :name => "index_ledger_accounts_on_code"
+  add_index "ledger_accounts", ["organization_id", "code"], :name => "index_ledger_accounts_on_organization_and_code", :unique => true
+  add_index "ledger_accounts", ["organization_id"], :name => "index_ledger_accounts_on_organization_id"
+  add_index "ledger_accounts", ["project_id"], :name => "index_ledger_accounts_on_project_id"
 
   create_table "manufacturers", :force => true do |t|
     t.string   "name"
@@ -905,20 +933,20 @@ ActiveRecord::Schema.define(:version => 20150308082213) do
     t.date     "closed_at"
     t.integer  "office_id"
     t.integer  "company_id"
-    t.string   "ledger_account"
-    t.datetime "created_at",                                                      :null => false
-    t.datetime "updated_at",                                                      :null => false
+    t.datetime "created_at",                                                        :null => false
+    t.datetime "updated_at",                                                        :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
     t.string   "project_code"
     t.integer  "organization_id"
     t.integer  "project_type_id"
-    t.decimal  "max_order_total", :precision => 13, :scale => 4, :default => 0.0, :null => false
-    t.decimal  "max_order_price", :precision => 12, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "max_order_total",   :precision => 13, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "max_order_price",   :precision => 12, :scale => 4, :default => 0.0, :null => false
+    t.integer  "ledger_account_id"
   end
 
   add_index "projects", ["company_id"], :name => "index_projects_on_company_id"
-  add_index "projects", ["ledger_account"], :name => "index_projects_on_ledger_account"
+  add_index "projects", ["ledger_account_id"], :name => "index_projects_on_ledger_account_id"
   add_index "projects", ["name"], :name => "index_projects_on_name"
   add_index "projects", ["office_id"], :name => "index_projects_on_office_id"
   add_index "projects", ["organization_id", "project_code"], :name => "index_projects_on_organization_id_and_project_code", :unique => true
@@ -1510,7 +1538,6 @@ ActiveRecord::Schema.define(:version => 20150308082213) do
     t.integer  "region_id"
     t.integer  "country_id"
     t.integer  "payment_method_id"
-    t.string   "ledger_account"
     t.decimal  "discount_rate",       :precision => 6,  :scale => 2, :default => 0.0, :null => false
     t.boolean  "active"
     t.integer  "max_orders_count",                                   :default => 0
@@ -1522,6 +1549,7 @@ ActiveRecord::Schema.define(:version => 20150308082213) do
     t.boolean  "is_contact"
     t.integer  "shared_contact_id"
     t.boolean  "order_authorization"
+    t.integer  "ledger_account_id"
   end
 
   add_index "suppliers", ["active"], :name => "index_suppliers_on_active"
@@ -1532,7 +1560,7 @@ ActiveRecord::Schema.define(:version => 20150308082213) do
   add_index "suppliers", ["entity_id"], :name => "index_suppliers_on_entity_id"
   add_index "suppliers", ["fax"], :name => "index_suppliers_on_fax"
   add_index "suppliers", ["fiscal_id"], :name => "index_suppliers_on_fiscal_id"
-  add_index "suppliers", ["ledger_account"], :name => "index_suppliers_on_ledger_account"
+  add_index "suppliers", ["ledger_account_id"], :name => "index_suppliers_on_ledger_account_id"
   add_index "suppliers", ["name"], :name => "index_suppliers_on_name"
   add_index "suppliers", ["organization_id", "fiscal_id"], :name => "index_suppliers_on_organization_id_and_fiscal_id", :unique => true
   add_index "suppliers", ["organization_id", "supplier_code"], :name => "index_suppliers_on_organization_id_and_supplier_code", :unique => true
@@ -1777,8 +1805,8 @@ ActiveRecord::Schema.define(:version => 20150308082213) do
   add_index "towns", ["province_id"], :name => "index_towns_on_province_id"
 
   create_table "users", :force => true do |t|
-    t.string   "email",                  :default => "", :null => false
-    t.string   "encrypted_password",     :default => "", :null => false
+    t.string   "email",                  :default => "",   :null => false
+    t.string   "encrypted_password",     :default => "",   :null => false
     t.string   "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
@@ -1787,11 +1815,12 @@ ActiveRecord::Schema.define(:version => 20150308082213) do
     t.datetime "last_sign_in_at"
     t.string   "current_sign_in_ip"
     t.string   "last_sign_in_ip"
-    t.datetime "created_at",                             :null => false
-    t.datetime "updated_at",                             :null => false
-    t.string   "name",                   :default => "", :null => false
+    t.datetime "created_at",                               :null => false
+    t.datetime "updated_at",                               :null => false
+    t.string   "name",                   :default => "",   :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
+    t.boolean  "real_email",             :default => true
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true
@@ -2121,8 +2150,8 @@ ActiveRecord::Schema.define(:version => 20150308082213) do
     t.string   "own_phone"
     t.string   "own_cellular"
     t.string   "email"
-    t.datetime "created_at",                                                                :null => false
-    t.datetime "updated_at",                                                                :null => false
+    t.datetime "created_at",                                                                 :null => false
+    t.datetime "updated_at",                                                                 :null => false
     t.string   "avatar_file_name"
     t.string   "avatar_content_type"
     t.integer  "avatar_file_size"
@@ -2143,17 +2172,18 @@ ActiveRecord::Schema.define(:version => 20150308082213) do
     t.string   "corp_extension"
     t.integer  "department_id"
     t.string   "nomina_id"
-    t.decimal  "gross_salary",              :precision => 12, :scale => 4, :default => 0.0, :null => false
-    t.decimal  "variable_salary",           :precision => 12, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "gross_salary",              :precision => 12, :scale => 4, :default => 0.0,  :null => false
+    t.decimal  "variable_salary",           :precision => 12, :scale => 4, :default => 0.0,  :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
     t.string   "remarks"
-    t.decimal  "social_security_cost",      :precision => 12, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "social_security_cost",      :precision => 12, :scale => 4, :default => 0.0,  :null => false
     t.string   "education"
     t.integer  "sex_id"
     t.integer  "insurance_id"
     t.integer  "organization_id"
     t.boolean  "is_contact"
+    t.boolean  "real_email",                                               :default => true
   end
 
   add_index "workers", ["affiliation_id"], :name => "index_workers_on_affiliation_id"

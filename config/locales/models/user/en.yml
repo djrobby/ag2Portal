@@ -15,7 +15,7 @@ en:
     attributes:
       user:
         name: "Name"
-        email: "Email"
+        email: "E-mail"
         password: "Password"
         password_confirmation: "Password confirmation"
         role_ids: "Roles"
@@ -27,6 +27,7 @@ en:
         current_sign_in_ip: "Current signed in IP"
         last_sign_in_at: "Last signed in at"
         last_sign_in_ip: "Last signed in IP"
+        real_email: "Real e-mail account?"
       role:
         name: "Name"
         resource_id: "Resource id"

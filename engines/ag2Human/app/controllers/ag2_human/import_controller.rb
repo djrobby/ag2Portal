@@ -448,7 +448,7 @@ render json: @json_data
         # Mandatory e-mail and user info
         if !source.cemail.blank?
           worker.email = source.cemail
-          worker.user_id = find_user_by_email(source.cemail)
+          worker.user_id, worker.real_email = find_user_by_email(source.cemail)
         end
       else
         #
@@ -645,9 +645,9 @@ render json: @json_data
     def find_user_by_email(email)
       user = User.find_by_email(email)
       if user.nil?
-        return 0
+        return 0, 0
       end
-      return user.id
+      return user.id, user.real_email
     end
   end
 end

@@ -5,7 +5,7 @@ class CorpContact < ActiveRecord::Base
   belongs_to :organization
   attr_accessible :corp_cellular_long, :corp_cellular_short, :corp_extension, :corp_phone, :email,
                   :first_name, :last_name, :position, :company_id, :office_id, :department_id, :avatar,
-                  :worker_id, :worker_count, :created_by, :updated_by, :organization_id
+                  :worker_id, :worker_count, :created_by, :updated_by, :organization_id, :real_email
   has_attached_file :avatar, :styles => { :original => "128x128>", :medium => "96x96>", :small => "64x64>" }, :default_url => "/images/missing/:style/user.png"
 
   has_paper_trail

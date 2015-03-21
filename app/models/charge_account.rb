@@ -2,7 +2,8 @@ class ChargeAccount < ActiveRecord::Base
   belongs_to :project
   belongs_to :organization
   belongs_to :charge_group
-  attr_accessible :closed_at, :ledger_account, :name, :opened_at,
+  belongs_to :ledger_account
+  attr_accessible :closed_at, :ledger_account_id, :name, :opened_at,
                   :project_id, :account_code, :organization_id, :charge_group_id
 
   has_many :work_orders
@@ -23,15 +24,16 @@ class ChargeAccount < ActiveRecord::Base
 
   has_paper_trail
 
-  validates :account_code,  :presence => true,
-                            :length => { :is => 11 },
-                            :format => { with: /\A\d+\Z/, message: :code_invalid },
-                            :numericality => { :only_integer => true, :greater_than => 0 },
-                            :uniqueness => { :scope => :organization_id }
-  validates :name,          :presence => true
-  validates :opened_at,     :presence => true
-  validates :organization,  :presence => true
-  validates :charge_group,  :presence => true
+  validates :account_code,    :presence => true,
+                              :length => { :is => 11 },
+                              :format => { with: /\A\d+\Z/, message: :code_invalid },
+                              :numericality => { :only_integer => true, :greater_than => 0 },
+                              :uniqueness => { :scope => :organization_id }
+  validates :name,            :presence => true
+  validates :opened_at,       :presence => true
+  validates :organization,    :presence => true
+  validates :charge_group,    :presence => true
+  validates :ledger_account,  :presence => true
 
   before_destroy :check_for_dependent_records
 
