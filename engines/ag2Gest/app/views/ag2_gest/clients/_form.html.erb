@@ -281,8 +281,8 @@
 <%= f.error_notification %>
 <%= display_base_errors resource %>
 <div>
-  <label class="multi-field-label-three"><%= f.input :fiscal_id, :required => true, :autofocus => true, :input_html => { onkeyup: "caps(this)", :class => 'large-text-field iconify' }, :label_html => { :class => 'form-label' } %> </label>
-  <label class="multi-field-label-three"> <%= f.input :client_code, :required => true, :input_html => { :class => 'large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-three"><%= f.input :fiscal_id, required: true, autofocus: true, input_html: { onkeyup: "caps(this)", class: 'large-text-field iconify' }, label_html: { class: 'form-label' } %> </label>
+  <label class="multi-field-label-three"> <%= f.input :client_code, required: true, input_html: { onkeydown: "only_digit(event)", class: 'large-text-field', maxlength: 11 }, label_html: { class: 'form-label' } %> </label>
   <label class="multi-field-label-three"> <%= f.input :active, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' }, :boolean_style => :inline %> </label>
 </div>
 <%= f.input :name, :required => true, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %>
@@ -328,6 +328,12 @@
 </div>
 <%= f.input :remarks, :as => :text, :input_html => { :class => 'x-large-text-field', :rows => 2 }, :label_html => { :class => 'form-label' } %>
 <%= f.input :entity_id, :as => :hidden %>
+<h4><%=t 'ag2_purchase.suppliers.commercial_info' %></h4>
+<div>
+  <label class="multi-field-label-two"> <%= f.association :payment_method, collection: PaymentMethod.all(order: 'description'), :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.association :ledger_account, collection: @ledger_accounts, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+</div>
+<!-- Buttons -->
 <table class="form-table">
   <tbody>
     <tr class="form-tr">

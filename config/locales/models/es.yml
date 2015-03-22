@@ -5,64 +5,68 @@ es:
         product:
           attributes:
             product_code:
-              code_invalid: "Código inválido"
+              code_invalid: "inválido"
         product_family:
           attributes:
             family_code:
-              code_invalid: "Código inválido (debe ser numérico)"
+              code_invalid: "inválido (debe ser numérico)"
         supplier:
           attributes:
             supplier_code:
-              code_invalid: "Código inválido"
+              code_invalid: "inválido"
         client:
           attributes:
             client_code:
-              code_invalid: "Código inválido"
+              code_invalid: "inválido (debe ser numérico)"
         delivery_note:
           attributes:
             delivery_no:
-              code_invalid: "Nº inválido"
+              code_invalid: "inválido"
         offer_request:
           attributes:
             request_no:
-              code_invalid: "Nº inválido"
+              code_invalid: "inválido"
         purchase_order:
           attributes:
             order_no:
-              code_invalid: "Nº inválido"
+              code_invalid: "inválido"
         project:
           attributes:
             project_code:
-              code_invalid: "Código inválido"
+              code_invalid: "inválido"
         project_type:
           attributes:
             code:
-              code_invalid: "Código inválido (debe ser alfabético)"
+              code_invalid: "inválido (debe ser alfabético)"
         work_order:
           attributes:
             order_no:
-              code_invalid: "Nº inválido"
+              code_invalid: "inválido"
         charge_account:
           attributes:
             account_code:
-              code_invalid: "Código inválido"
+              code_invalid: "inválido"
         charge_group:
           attributes:
             group_code:
-              code_invalid: "Código inválido (debe ser numérico)"
+              code_invalid: "inválido (debe ser numérico)"
         budget_period:
           attributes:
             period_code:
-              code_invalid: "Código inválido (debe ser alfanumérico)"
+              code_invalid: "inválido (debe ser alfanumérico)"
         budget:
           attributes:
             budget_no:
-              code_invalid: "Nº inválido (debe ser alfanumérico)"
+              code_invalid: "inválido (debe ser alfanumérico)"
         budget_heading:
           attributes:
             heading_code:
-              code_invalid: "Código inválido (debe ser numérico)"
+              code_invalid: "inválido (debe ser numérico)"
         vehicle:
           attributes:
             registration:
-              code_invalid: "Matrícula inválida (debe ser alfanumérica sin espacios)"
+              code_invalid: "inválida (debe ser alfanumérica sin espacios)"
+        accounting_group:
+          attributes:
+            code:
+              code_invalid: "inválido (debe ser un dígito numérico)"

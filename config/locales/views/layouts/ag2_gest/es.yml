@@ -4,3 +4,6 @@ es:
       clients:
         items: "Clientes"
         item: "Cliente"
+      payment_methods:
+        items: "Formas de pago"
+        item: "Forma de pago"

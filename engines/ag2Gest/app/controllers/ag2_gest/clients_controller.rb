@@ -228,6 +228,7 @@ module Ag2Gest
     def new
       @breadcrumb = 'create'
       @client = Client.new
+      @ledger_accounts = ledger_accounts_dropdown
   
       respond_to do |format|
         format.html # new.html.erb
@@ -239,6 +240,7 @@ module Ag2Gest
     def edit
       @breadcrumb = 'update'
       @client = Client.find(params[:id])
+      @ledger_accounts = @client.organization.blank? ? ledger_accounts_dropdown : @client.organization.ledger_accounts.order(:code)
     end
   
     # POST /clients
@@ -253,6 +255,7 @@ module Ag2Gest
           format.html { redirect_to @client, notice: crud_notice('created', @client) }
           format.json { render json: @client, status: :created, location: @client }
         else
+          @ledger_accounts = ledger_accounts_dropdown
           format.html { render action: "new" }
           format.json { render json: @client.errors, status: :unprocessable_entity }
         end
@@ -272,6 +275,7 @@ module Ag2Gest
                         notice: (crud_notice('updated', @client) + "#{undo_link(@client)}").html_safe }
           format.json { head :no_content }
         else
+          @ledger_accounts = @client.organization.blank? ? ledger_accounts_dropdown : @client.organization.ledger_accounts.order(:code)
           format.html { render action: "edit" }
           format.json { render json: @client.errors, status: :unprocessable_entity }
         end
@@ -296,6 +300,10 @@ module Ag2Gest
     end
 
     private
+
+    def ledger_accounts_dropdown
+      session[:organization] != '0' ? LedgerAccount.where(organization_id: session[:organization].to_i).order(:group_code) : LedgerAccount.order(:group_code)
+    end
 
     # Keeps filter state
     def manage_filter_state

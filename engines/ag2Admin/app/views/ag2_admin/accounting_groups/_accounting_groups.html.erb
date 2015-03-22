@@ -1,0 +1,32 @@
+<script>
+  $(document).ready(function() {
+    $("#div_table th a, #div_table #pages a").on("click", function() {
+      $.getScript(this.href);
+      return false;
+    });
+  }); 
+</script>
+
+<table class="table table-condensed table-striped">
+  <thead>
+    <tr>
+      <th><%= sortable "code", t('activerecord.attributes.accounting_group.code') %></th>
+      <th><%= sortable "name", t('activerecord.attributes.accounting_group.name') %></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @accounting_groups.each do |t| %>
+    <tr>
+      <td><%= link_to t.code, t %></td>
+      <td><%= t.name %></td>
+      <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => AccountingGroup, :path => edit_accounting_group_path(t) } %>
+      <%= render :partial => '/layouts/crud/delete', :locals => { :model => AccountingGroup, :path => accounting_group, :msg => I18n.t("activerecord.models.accounting_group.one"), :txt => t.name } %> </td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @accounting_groups } %>
+<%= render :partial => '/layouts/crud/new', :locals => { :model => AccountingGroup, :path => new_accounting_group_path, :txt => I18n.t("ag2_admin.accounting_groups.index.btn_new") } %>
+<%= link_to I18n.t("ag2_admin.accounting_groups.index.go_to"), ledger_accounts_path %> |
+<%= link_to I18n.t("ag2_admin.accounting_groups.index.back_to_root"), ag2_admin.root_path %>

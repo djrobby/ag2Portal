@@ -1,0 +1,20 @@
+en:
+  ag2_admin:
+    accounting_groups:
+      index:
+        title: "Accounting groups"
+        btn_new: "New Accounting group"
+        go_to: "Go to Ledger accounts"
+        back_to_root: "Back to ag2Admin"
+      show:
+        title: "Accounting group"
+        btn_edit: "Edit Accounting group"
+        btn_delete: "Delete Accounting group"
+        subtable_title: "Group accounts"
+        show_to: "Show Accounting group"
+      edit:
+        title: "Edit Accounting group"
+        btn_show: "Show Accounting group"
+      new:
+        title: "New Accounting group"
+      back_to_main_page: "Back to Accounting groups"

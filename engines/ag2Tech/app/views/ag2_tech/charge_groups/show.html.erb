@@ -18,7 +18,7 @@
       <td><%=t 'activerecord.attributes.charge_group.budget_heading' %>:</td>
       <td><%= @charge_group.budget_heading.full_name unless @charge_group.budget_heading.blank? %></td>
       <td><%=t 'activerecord.attributes.charge_group.ledger_account' %>:</td>
-      <td><%= @charge_group.ledger_account unless @charge_group.ledger_account.blank? %></td>
+      <td><%= @charge_group.ledger_account.full_name unless @charge_group.ledger_account.blank? %></td>
     </tr>
     <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @charge_group } %>
     <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @charge_group } %>

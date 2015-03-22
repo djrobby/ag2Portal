@@ -1,0 +1,13 @@
+es:
+  activerecord:
+    models:
+      accounting_group:
+        zero:  Grupos contables
+        one:   Grupo contable
+        few:   Grupos contables
+        other: Grupos contables
+        check_for_contacts: "Grupo contable no puede ser eliminado mientras existan cuentas contables vinculadas."
+    attributes:
+      accounting_group:
+        name: "Nombre"
+        code: "Código"

@@ -94,6 +94,7 @@ module Ag2Tech
       @charge_account = ChargeAccount.new
       @projects = projects_dropdown
       @groups = groups_dropdown
+      @ledger_accounts = ledger_accounts_dropdown
   
       respond_to do |format|
         format.html # new.html.erb
@@ -107,6 +108,7 @@ module Ag2Tech
       @charge_account = ChargeAccount.find(params[:id])
       @projects = projects_dropdown_edit(@charge_account.project)
       @groups = @charge_account.organization.blank? ? groups_dropdown : @charge_account.organization.charge_groups.order(:group_code)
+      @ledger_accounts = @charge_account.organization.blank? ? ledger_accounts_dropdown : @charge_account.organization.ledger_accounts.order(:code)
     end
   
     # POST /charge_accounts
@@ -123,6 +125,7 @@ module Ag2Tech
         else
           @projects = projects_dropdown
           @groups = groups_dropdown
+          @ledger_accounts = ledger_accounts_dropdown
           format.html { render action: "new" }
           format.json { render json: @charge_account.errors, status: :unprocessable_entity }
         end
@@ -144,6 +147,7 @@ module Ag2Tech
         else
           @projects = projects_dropdown_edit(@charge_account.project)
           @groups = @charge_account.organization.blank? ? groups_dropdown : @charge_account.organization.charge_groups.order(:group_code)
+          @ledger_accounts = @charge_account.organization.blank? ? ledger_accounts_dropdown : @charge_account.organization.ledger_accounts.order(:code)
           format.html { render action: "edit" }
           format.json { render json: @charge_account.errors, status: :unprocessable_entity }
         end
@@ -197,6 +201,10 @@ module Ag2Tech
 
     def groups_dropdown
       session[:organization] != '0' ? ChargeGroup.where(organization_id: session[:organization].to_i).order(:group_code) : ChargeGroup.order(:group_code)
+    end
+
+    def ledger_accounts_dropdown
+      session[:organization] != '0' ? LedgerAccount.where(organization_id: session[:organization].to_i).order(:group_code) : LedgerAccount.order(:group_code)
     end
     
     # Keeps filter state

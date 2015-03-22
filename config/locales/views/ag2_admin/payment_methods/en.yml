@@ -1,0 +1,22 @@
+en:
+  ag2_admin:
+    payment_methods:
+      index:
+        title: "Payment methods"
+        btn_new: "New Payment method"
+        back_to_root: "Back to ag2Admin"
+        collection_only: "For collections"
+        payment_only: "For payments"
+        all: "All"
+      show:
+        title: "Payment method"
+        btn_edit: "Edit Payment method"
+        btn_delete: "Delete Payment method"
+        subtable_title: "Payment method Suppliers"
+        return_to: "Back to Payment method"
+      edit:
+        title: "Edit Payment method"
+        btn_show: "Show Payment method"
+      new:
+        title: "New Payment method"
+      back_to_main_page: "Back to Payment methods"

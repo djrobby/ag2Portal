@@ -27,6 +27,7 @@ module Ag2Admin
     # GET /areas
     # GET /areas.json
     def index
+      manage_filter_state
       init_oco if !session[:organization]
       if session[:organization] != '0'
         # OCO organization active
@@ -39,6 +40,7 @@ module Ag2Admin
       respond_to do |format|
         format.html # index.html.erb
         format.json { render json: @areas }
+        format.js
       end
     end
   
@@ -158,6 +160,22 @@ module Ag2Admin
     
     def workers_by_department(_department)
       _workers = Worker.joins(:worker_items).group('worker_items.worker_id').where(worker_items: { department_id: _department }).order(:last_name, :first_name)      
+    end
+
+    # Keeps filter state
+    def manage_filter_state
+      # sort
+      if params[:sort]
+        session[:sort] = params[:sort]
+      elsif session[:sort]
+        params[:sort] = session[:sort]
+      end
+      # direction
+      if params[:direction]
+        session[:direction] = params[:direction]
+      elsif session[:direction]
+        params[:direction] = session[:direction]
+      end
     end
   end
 end

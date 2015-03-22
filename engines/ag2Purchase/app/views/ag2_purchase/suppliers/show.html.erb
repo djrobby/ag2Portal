@@ -91,7 +91,7 @@
       <td><%= t :"activerecord.attributes.supplier.payment_method" %>:</td>
       <td><%= @supplier.payment_method.description %></td>
       <td><%= t :"activerecord.attributes.supplier.ledger_account" %>:</td>
-      <td><%= @supplier.ledger_account unless @supplier.ledger_account.blank? %></td>
+      <td><%= @supplier.ledger_account.full_name unless @supplier.ledger_account.blank? %></td>
     </tr>
     <tr>
       <td><%= t :"activerecord.attributes.supplier.discount_rate" %>:</td>

@@ -43,6 +43,7 @@ en:
         payment_method: "Payment method"
         payment_method_id: "Payment method"
         ledger_account: "Ledger account"
+        ledger_account_id: "Ledger account"
         discount_rate: "Discount rate %"
         active: "Active?"
         max_orders_count: "Max orders count"

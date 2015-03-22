@@ -13,6 +13,8 @@ module Ag2Human
       session[:To] = nil
       session[:Type] = nil      
       session[:Code] = nil      
+      session[:sort] = nil
+      session[:direction] = nil      
     end
   end
 end

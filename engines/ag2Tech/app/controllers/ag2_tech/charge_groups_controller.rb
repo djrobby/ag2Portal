@@ -59,6 +59,7 @@ module Ag2Tech
       @breadcrumb = 'create'
       @charge_group = ChargeGroup.new
       @headings = headings_dropdown
+      @ledger_accounts = ledger_accounts_dropdown
   
       respond_to do |format|
         format.html # new.html.erb
@@ -71,6 +72,7 @@ module Ag2Tech
       @breadcrumb = 'update'
       @charge_group = ChargeGroup.find(params[:id])
       @headings = @charge_group.organization.blank? ? headings_dropdown : @charge_group.organization.budget_headings.order(:heading_code)
+      @ledger_accounts = @charge_group.organization.blank? ? ledger_accounts_dropdown : @charge_group.organization.ledger_accounts.order(:code)
     end
   
     # POST /charge_groups
@@ -85,6 +87,8 @@ module Ag2Tech
           format.html { redirect_to @charge_group, notice: crud_notice('created', @charge_group) }
           format.json { render json: @charge_group, status: :created, location: @charge_group }
         else
+          @headings = headings_dropdown
+          @ledger_accounts = ledger_accounts_dropdown
           format.html { render action: "new" }
           format.json { render json: @charge_group.errors, status: :unprocessable_entity }
         end
@@ -104,6 +108,8 @@ module Ag2Tech
                         notice: (crud_notice('updated', @charge_group) + "#{undo_link(@charge_group)}").html_safe }
           format.json { head :no_content }
         else
+          @headings = @charge_group.organization.blank? ? headings_dropdown : @charge_group.organization.budget_headings.order(:heading_code)
+          @ledger_accounts = @charge_group.organization.blank? ? ledger_accounts_dropdown : @charge_group.organization.ledger_accounts.order(:code)
           format.html { render action: "edit" }
           format.json { render json: @charge_group.errors, status: :unprocessable_entity }
         end
@@ -161,6 +167,10 @@ module Ag2Tech
 
     def headings_dropdown
       session[:organization] != '0' ? BudgetHeading.where(organization_id: session[:organization].to_i).order(:heading_code) : BudgetHeading.order(:heading_code)
+    end
+
+    def ledger_accounts_dropdown
+      session[:organization] != '0' ? LedgerAccount.where(organization_id: session[:organization].to_i).order(:group_code) : LedgerAccount.order(:group_code)
     end
 
     # Keeps filter state

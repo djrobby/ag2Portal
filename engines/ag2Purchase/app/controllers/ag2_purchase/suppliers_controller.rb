@@ -254,6 +254,7 @@ module Ag2Purchase
     def new
       @breadcrumb = 'create'
       @supplier = Supplier.new
+      @ledger_accounts = ledger_accounts_dropdown
 
       respond_to do |format|
         format.html # new.html.erb
@@ -265,6 +266,7 @@ module Ag2Purchase
     def edit
       @breadcrumb = 'update'
       @supplier = Supplier.find(params[:id])
+      @ledger_accounts = @supplier.organization.blank? ? ledger_accounts_dropdown : @supplier.organization.ledger_accounts.order(:code)
     end
 
     # POST /suppliers
@@ -279,6 +281,7 @@ module Ag2Purchase
           format.html { redirect_to @supplier, notice: crud_notice('created', @supplier) }
           format.json { render json: @supplier, status: :created, location: @supplier }
         else
+          @ledger_accounts = ledger_accounts_dropdown
           format.html { render action: "new" }
           format.json { render json: @supplier.errors, status: :unprocessable_entity }
         end
@@ -298,6 +301,7 @@ module Ag2Purchase
                         notice: (crud_notice('updated', @supplier) + "#{undo_link(@supplier)}").html_safe }
           format.json { head :no_content }
         else
+          @ledger_accounts = @supplier.organization.blank? ? ledger_accounts_dropdown : @supplier.organization.ledger_accounts.order(:code)
           format.html { render action: "edit" }
           format.json { render json: @supplier.errors, status: :unprocessable_entity }
         end
@@ -322,6 +326,10 @@ module Ag2Purchase
     end
 
     private
+
+    def ledger_accounts_dropdown
+      session[:organization] != '0' ? LedgerAccount.where(organization_id: session[:organization].to_i).order(:group_code) : LedgerAccount.order(:group_code)
+    end
 
     # Keeps filter state
     def manage_filter_state

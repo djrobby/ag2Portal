@@ -1,0 +1,34 @@
+<%= render '/layouts/ag2_admin/pmethodsbreadcrumb' %>
+
+<h3><%=t '.title' %></h3>
+<table class="table">
+  <tbody>
+    <tr>
+      <td>Id:</td>
+      <td><%= @payment_method.id %></td>
+      <td><%=t 'activerecord.attributes.payment_method.description' %>:</td>
+      <td><%= @payment_method.description.titleize %></td>
+    </tr>
+    <tr>
+      <td><%=t 'activerecord.attributes.payment_method.expiration_days' %>:</td>
+      <td><%= @payment_method.expiration_days unless @payment_method.expiration_days.blank? %></td>
+      <td><%=t 'activerecord.attributes.payment_method.default_interest' %>:</td>
+      <td><%= number_with_precision(@payment_method.default_interest, precision: 3) unless @payment_method.default_interest.blank? %></td>
+    </tr>
+    <tr>
+      <td><%=t 'activerecord.attributes.payment_method.flow' %>:</td>
+      <td><%= @payment_method.flow_label unless @payment_method.flow.blank? %></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @payment_method } %>
+    <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @payment_method } %>
+  </tbody>
+</table>
+
+<%= render partial: '/layouts/crud/update_delete_new', locals:
+{ model: PaymentMethod, update_path: edit_payment_method_path(@payment_method), update_txt: t('.btn_edit'),
+delete_path: @payment_method, delete_txt: t('.btn_delete'), msg: t("activerecord.models.payment_method.one"), txt: @payment_method.description,
+new_path: new_payment_method_path, new_txt: t('ag2_admin.payment_methods.index.btn_new') } %>
+
+<%= link_to t('ag2_admin.payment_methods.back_to_main_page'), payment_methods_path %>

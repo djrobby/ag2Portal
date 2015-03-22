@@ -1,0 +1,36 @@
+<script>
+  $(document).ready(function() {
+    $("#div_table th a, #div_table #pages a").on("click", function() {
+      $.getScript(this.href);
+      return false;
+    });
+  }); 
+</script>
+
+<table class="table table-condensed table-striped">
+  <thead>
+    <tr>
+      <th><%= sortable "code", t('activerecord.attributes.ledger_account.code') %></th>
+      <th><%= sortable "name", t('activerecord.attributes.ledger_account.name') %></th>
+      <th><%= sortable "accounting_group_id", t('activerecord.attributes.ledger_account.accounting_group') %></th>
+      <th><%= sortable "project_id", t('activerecord.attributes.ledger_account.project') %></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @ledger_accounts.each do |t| %>
+    <tr>
+      <td><%= link_to t.code, t %></td>
+      <td><%= t.name %></td>
+      <td><%= t.accounting_group.full_name unless t.accounting_group.blank? %></td>
+      <td><%= t.project.full_code unless t.project.blank? %></td>
+      <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => LedgerAccount, :path => edit_ledger_account_path(t) } %>
+      <%= render :partial => '/layouts/crud/delete', :locals => { :model => LedgerAccount, :path => ledger_account, :msg => I18n.t("activerecord.models.ledger_account.one"), :txt => t.name } %> </td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @ledger_accounts } %>
+<%= render :partial => '/layouts/crud/new', :locals => { :model => LedgerAccount, :path => new_ledger_account_path, :txt => I18n.t("ag2_admin.ledger_accounts.index.btn_new") } %>
+<%= link_to I18n.t("ag2_admin.ledger_accounts.index.go_to"), accounting_groups_path %> |
+<%= link_to I18n.t("ag2_admin.ledger_accounts.index.back_to_root"), ag2_admin.root_path %>

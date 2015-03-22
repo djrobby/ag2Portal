@@ -1,28 +1,6 @@
 <%= render '/layouts/ag2_admin/countriesbreadcrumb' %>
 
 <h3><%=t '.title' %></h3>
-<div class="span7">
-  <table class="table table-condensed table-striped">
-    <thead>
-      <tr>
-        <th><%= sortable "name", t('activerecord.attributes.country.name') %></th>
-        <th><%= sortable "code", t('activerecord.attributes.country.code') %></th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody>
-      <% @countries.each do |country| %>
-      <tr>
-        <td><%= link_to country.name, country %></td>
-        <td><%= country.code %></td>
-        <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => Country, :path => edit_country_path(country) } %>
-        <%= render :partial => '/layouts/crud/delete', :locals => { :model => Country, :path => country, :msg => I18n.t("activerecord.models.country.one"), :txt => country.name } %> </td>
-      </tr>
-      <% end %>
-    </tbody>
-  </table>
-  <%= render :partial => '/layouts/pagination', :locals => { :ivar => @countries } %>
-  <%= render :partial => '/layouts/crud/new', :locals => { :model => Country, :path => new_country_path, :txt => I18n.t("ag2_admin.countries.index.btn_new") } %>
-  <%= link_to I18n.t("ag2_admin.countries.index.go_to"), regions_path %> |
-  <%= link_to I18n.t("ag2_admin.countries.index.back_to_root"), ag2_admin.root_path %>
+<div class="span7" id="div_table">
+  <%= render 'countries' %>
 </div>

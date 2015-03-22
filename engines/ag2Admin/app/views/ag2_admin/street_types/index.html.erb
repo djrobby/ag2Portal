@@ -1,27 +1,6 @@
 <%= render '/layouts/ag2_admin/streettypesbreadcrumb' %>
 
 <h3><%=t '.title' %></h3>
-<div class="span6">
-  <table class="table table-condensed table-striped">
-    <thead>
-      <tr>
-        <th><%= sortable "street_type_code", t('activerecord.attributes.street_type.street_type_code') %></th>
-        <th><%= sortable "street_type_description", t('activerecord.attributes.street_type.street_type_description') %></th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody>
-      <% @street_types.each do |street_type| %>
-      <tr>
-        <td><%= link_to street_type.street_type_code, street_type %></td>
-        <td><%= street_type.street_type_description.titleize %></td>
-        <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => StreetType, :path => edit_street_type_path(street_type) } %>
-        <%= render :partial => '/layouts/crud/delete', :locals => { :model => StreetType, :path => street_type, :msg => I18n.t("activerecord.models.street_type.one"), :txt => street_type.street_type_description } %> </td>
-      </tr>
-      <% end %>
-    </tbody>
-  </table>
-  <%= render :partial => '/layouts/pagination', :locals => { :ivar => @street_types } %>
-  <%= render :partial => '/layouts/crud/new', :locals => { :model => StreetType, :path => new_street_type_path, :txt => I18n.t("ag2_admin.street_types.index.btn_new") } %>
-  <%= link_to I18n.t("ag2_admin.street_types.index.back_to_root"), ag2_admin.root_path %>
+<div class="span6" id="div_table">
+  <%= render 'street_types' %>
 </div>

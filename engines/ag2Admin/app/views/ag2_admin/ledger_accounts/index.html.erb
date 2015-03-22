@@ -1,21 +1,6 @@
-<h1>Listing ledger_accounts</h1>
+<%= render '/layouts/ag2_admin/laccountsbreadcrumb' %>
 
-<table>
-  <tr>
-    <th></th>
-    <th></th>
-    <th></th>
-  </tr>
-
-<% @ledger_accounts.each do |ledger_account| %>
-  <tr>
-    <td><%= link_to 'Show', ledger_account %></td>
-    <td><%= link_to 'Edit', edit_ledger_account_path(ledger_account) %></td>
-    <td><%= link_to 'Destroy', ledger_account, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-  </tr>
-<% end %>
-</table>
-
-<br />
-
-<%= link_to 'New Ledger account', new_ledger_account_path %>
+<h3><%=t '.title' %></h3>
+<div class="span10" id="div_table">
+  <%= render 'ledger_accounts' %>
+</div>

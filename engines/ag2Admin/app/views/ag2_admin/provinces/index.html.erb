@@ -1,32 +1,6 @@
 <%= render '/layouts/ag2_admin/provincesbreadcrumb' %>
 
 <h3><%=t '.title' %></h3>
-<div class="span7">
-  <table class="table table-condensed table-striped">
-    <thead>
-      <tr>
-        <th><%= sortable "name", t('activerecord.attributes.province.name') %></th>
-        <th><%= sortable "region_id", t('activerecord.attributes.province.region') %></th>
-        <th align="center"><%=t 'activerecord.attributes.province.ine_cpro' %></th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody>
-      <% @provinces.each do |province| %>
-      <tr>
-        <td><%= link_to province.name, province %></td>
-        <td><%= province.region.name_and_country unless province.region.blank? %></td>
-        <td align="center"><%= province.ine_cpro %></td>
-        <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => Province, :path => edit_province_path(province) } %>
-        <%= render :partial => '/layouts/crud/delete', :locals => { :model => Province, :path => province, :msg => I18n.t("activerecord.models.province.one"), :txt => province.name } %> </td>
-      </tr>
-      <% end %>
-    </tbody>
-  </table>
-  <%= render :partial => '/layouts/pagination', :locals => { :ivar => @provinces } %>
-  <%= render :partial => '/layouts/crud/new', :locals => { :model => Province, :path => new_province_path, :txt => I18n.t("ag2_admin.provinces.index.btn_new") } %>
-  <%= link_to I18n.t("ag2_admin.provinces.index.go_to_parent"), regions_path %> |
-  <%= link_to I18n.t("ag2_admin.provinces.index.go_to_child"), towns_path %> |
-  <%= link_to I18n.t("ag2_admin.provinces.index.go_to_link"), zipcodes_path %> |
-  <%= link_to I18n.t("ag2_admin.provinces.index.back_to_root"), ag2_admin.root_path %>
+<div class="span7" id="div_table">
+  <%= render 'provinces' %>
 </div>

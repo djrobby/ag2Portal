@@ -45,7 +45,7 @@
 <% end %>
 <div>
   <label class="multi-field-label-two"> <%= f.association :budget_heading, collection: @headings, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %> </label>
-  <label class="multi-field-label-two"> <%= f.input :ledger_account, input_html: { class: 'mid-text-field' }, label_html: { class: 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.association :ledger_account, collection: @ledger_accounts, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %> </label>
 </div>
 <%= f.input :flow,
   collection: [[1, t('activerecord.attributes.charge_group.flow_1')],

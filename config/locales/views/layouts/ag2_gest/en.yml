@@ -4,3 +4,6 @@ en:
       clients:
         items: "Clients"
         item: "Client"
+      payment_methods:
+        items: "Payment methods"
+        item: "Payment method"

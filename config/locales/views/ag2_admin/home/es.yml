@@ -16,3 +16,4 @@ es:
         tax_types: "Tipos Impositivos"
         accounting_groups: "Grupos Contables"
         ledger_accounts: "Cuentas Contables"
+        payment_methods: "Formas de Pago"

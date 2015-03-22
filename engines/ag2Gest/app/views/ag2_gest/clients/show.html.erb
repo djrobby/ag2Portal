@@ -77,6 +77,20 @@
   </tbody>
 </table>
 
+<!-- Commercial info -->
+<h4><%= t 'ag2_gest.clients.commercial_info' %></h4>
+<table class="table">
+  <tbody>
+    <tr>
+      <td><%= t :"activerecord.attributes.client.payment_method" %>:</td>
+      <td><%= @client.payment_method.description unless @client.payment_method.blank? %></td>
+      <td><%= t :"activerecord.attributes.client.ledger_account" %>:</td>
+      <td><%= @client.ledger_account.full_name unless @client.ledger_account.blank? %></td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- Remarks -->
 <table class="table">
   <tbody>
     <tr>

@@ -1,0 +1,35 @@
+<script>
+  $(document).ready(function() {
+    $("#div_table th a, #div_table #pages a").on("click", function() {
+      $.getScript(this.href);
+      return false;
+    });
+  }); 
+</script>
+
+<table class="table table-condensed table-striped">
+  <thead>
+    <tr>
+      <th><%= sortable "name", t('activerecord.attributes.town.name') %></th>
+      <th><%= sortable "province_id", t('activerecord.attributes.town.province') %></th>
+      <th align="center"><%= t 'activerecord.attributes.town.ine_cmun' %></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @towns.each do |town| %>
+    <tr>
+      <td><%= link_to town.name, town %></td>
+      <td><%= town.province.name_and_region unless town.province.blank? %></td>
+      <td align="center"><%= town.ine_cmun %></td>
+      <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => Town, :path => edit_town_path(town) } %>
+      <%= render :partial => '/layouts/crud/delete', :locals => { :model => Town, :path => town, :msg => I18n.t("activerecord.models.town.one"), :txt => town.name } %> </td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @towns } %>
+<%= render :partial => '/layouts/crud/new', :locals => { :model => Town, :path => new_town_path, :txt => I18n.t("ag2_admin.towns.index.btn_new") } %>
+<%= link_to I18n.t("ag2_admin.towns.index.go_to_parent"), provinces_path %> |
+<%= link_to I18n.t("ag2_admin.towns.index.go_to_link"), zipcodes_path %> |
+<%= link_to I18n.t("ag2_admin.towns.index.back_to_root"), ag2_admin.root_path %>

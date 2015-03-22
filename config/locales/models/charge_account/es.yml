@@ -22,6 +22,7 @@ es:
         project: "Proyecto"
         project_id: "Proyecto"
         ledger_account: "Cuenta contable"
+        ledger_account_id: "Cuenta contable"
         organization: "Organización"
         organization_id: "Organización"
         charge_group: "Grupo analítico"

@@ -53,6 +53,9 @@ class Ability
       can :crud, TaxType
       can :crud, Department
       can :crud, Area
+      can :crud, AccountingGroup
+      can :crud, LedgerAccount
+      can :crud, PaymentMethod
     elsif user.has_role? :ag2Admin_Guest
       can :read, Company
       can :read, Country
@@ -67,6 +70,9 @@ class Ability
       can :read, TaxType
       can :read, Department
       can :read, Area
+      can :read, AccountingGroup
+      can :read, LedgerAccount
+      can :read, PaymentMethod
     elsif user.has_role? :ag2Admin_Banned
       cannot :manage, Company
       cannot :manage, Country
@@ -81,6 +87,9 @@ class Ability
       cannot :manage, TaxType
       cannot :manage, Department
       cannot :manage, Area
+      cannot :manage, AccountingGroup
+      cannot :manage, LedgerAccount
+      cannot :manage, PaymentMethod
     end
     # ag2Config
     if user.has_role? :ag2Config_User
@@ -135,10 +144,13 @@ class Ability
     # ag2Gest
     if user.has_role? :ag2Gest_User
       can :crud, Client
+      can :crud, PaymentMethod
     elsif user.has_role? :ag2Gest_Guest
       can :read, Client
+      can :read, PaymentMethod
     elsif user.has_role? :ag2Gest_Banned
       cannot :manage, Client
+      cannot :manage, PaymentMethod
     end
     # ag2HelpDesk
     if user.has_role? :ag2HelpDesk_User

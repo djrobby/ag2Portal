@@ -1,0 +1,22 @@
+es:
+  ag2_admin:
+    payment_methods:
+      index:
+        title: "Formas de pago"
+        btn_new: "Nueva Forma de pago"
+        back_to_root: "Volver a ag2Admin"
+        collection_only: "Para cobros"
+        payment_only: "Para pagos"
+        all: "Todos"
+      show:
+        title: "Forma de pago"
+        btn_edit: "Editar Forma de pago"
+        btn_delete: "Borrar Forma de pago"
+        subtable_title: "Proveedores con la Forma de pago"
+        return_to: "Volver a Forma de pago"
+      edit:
+        title: "Editar Forma de pago"
+        btn_show: "Ver Forma de pago"
+      new:
+        title: "Nueva Forma de pago"
+      back_to_main_page: "Volver a Formas de pago"

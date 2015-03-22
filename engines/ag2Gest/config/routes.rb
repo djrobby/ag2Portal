@@ -29,6 +29,7 @@ Ag2Gest::Engine.routes.draw do
     # Resources
     resources :clients
     resources :sale_offers
+    resources :payment_methods
     
     # Root
     root :to => 'home#index'

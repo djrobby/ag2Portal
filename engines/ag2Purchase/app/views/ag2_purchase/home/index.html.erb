@@ -74,11 +74,11 @@
   </li>
   <li class="span2">
     <% if (session[:resolution] == "LD")%>
-    <a href="<%= payment_methods_path %>" class="thumbnail centered"><img src="/assets/icon/TableA.png" width="48" height="48" alt="ag2Tables" /><h5 class="h5-narrow"><%=t ".payment_methods" %></h5></a>
+    <a href="<%= payment_methods_path %>" class="thumbnail centered"><img src="/assets/icon/ag2PaymentMethods.png" width="48" height="48" alt="ag2Tables" /><h5 class="h5-narrow"><%=t ".payment_methods" %></h5></a>
     <% elsif session[:resolution] == "SD" %>
-    <a href="<%= payment_methods_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/TableA72.png" width="72" height="72" alt="ag2Tables" /><h5 class="h5-narrow"><%=t ".payment_methods" %></h5></a>
+    <a href="<%= payment_methods_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/ag2PaymentMethods72.png" width="72" height="72" alt="ag2Tables" /><h5 class="h5-narrow"><%=t ".payment_methods" %></h5></a>
     <% else %>
-    <a href="<%= payment_methods_path %>" class="thumbnail centered"><img src="/assets/pict/TableA96.png" width="96" height="96" alt="ag2Tables" /><h5 class="h5-narrow"><%=t ".payment_methods" %></h5></a>
+    <a href="<%= payment_methods_path %>" class="thumbnail centered"><img src="/assets/pict/ag2PaymentMethods96.png" width="96" height="96" alt="ag2Tables" /><h5 class="h5-narrow"><%=t ".payment_methods" %></h5></a>
     <% end %>
   </li>
   <li class="span2">

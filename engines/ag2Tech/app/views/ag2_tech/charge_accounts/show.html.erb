@@ -16,7 +16,7 @@
     </tr>
     <tr>
       <td><%=t 'activerecord.attributes.charge_account.ledger_account' %>:</td>
-      <td><%= @charge_account.ledger_account unless @charge_account.ledger_account.blank? %></td>
+      <td><%= @charge_account.ledger_account.full_name unless @charge_account.ledger_account.blank? %></td>
       <td><%=t 'activerecord.attributes.charge_account.project' %>:</td>
       <td><%= @charge_account.project.full_name unless @charge_account.project.blank? %></td>
     </tr>

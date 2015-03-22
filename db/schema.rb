@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150321125703) do
+ActiveRecord::Schema.define(:version => 20150322124204) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -237,6 +237,7 @@ ActiveRecord::Schema.define(:version => 20150321125703) do
     t.boolean  "is_contact"
     t.integer  "shared_contact_id"
     t.integer  "ledger_account_id"
+    t.integer  "payment_method_id"
   end
 
   add_index "clients", ["client_code"], :name => "index_clients_on_client_code"
@@ -248,6 +249,7 @@ ActiveRecord::Schema.define(:version => 20150321125703) do
   add_index "clients", ["organization_id", "client_code"], :name => "index_clients_on_organization_id_and_client_code", :unique => true
   add_index "clients", ["organization_id", "fiscal_id"], :name => "index_clients_on_organization_id_and_fiscal_id", :unique => true
   add_index "clients", ["organization_id"], :name => "index_clients_on_organization_id"
+  add_index "clients", ["payment_method_id"], :name => "index_clients_on_payment_method_id"
   add_index "clients", ["province_id"], :name => "index_clients_on_province_id"
   add_index "clients", ["region_id"], :name => "index_clients_on_region_id"
   add_index "clients", ["shared_contact_id"], :name => "index_clients_on_shared_contact_id"

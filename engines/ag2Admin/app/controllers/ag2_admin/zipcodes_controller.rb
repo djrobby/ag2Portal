@@ -22,12 +22,13 @@ module Ag2Admin
     # GET /zipcodes
     # GET /zipcodes.json
     def index
-      # @zipcodes = Zipcode.order('zipcode').all
+      manage_filter_state
       @zipcodes = Zipcode.paginate(:page => params[:page], :per_page => per_page).order(sort_column + ' ' + sort_direction)
 
       respond_to do |format|
         format.html # index.html.erb
         format.json { render json: @zipcodes }
+        format.js
       end
     end
 
@@ -119,6 +120,22 @@ module Ag2Admin
 
     def sort_column
       Zipcode.column_names.include?(params[:sort]) ? params[:sort] : "zipcode"
+    end
+
+    # Keeps filter state
+    def manage_filter_state
+      # sort
+      if params[:sort]
+        session[:sort] = params[:sort]
+      elsif session[:sort]
+        params[:sort] = session[:sort]
+      end
+      # direction
+      if params[:direction]
+        session[:direction] = params[:direction]
+      elsif session[:direction]
+        params[:direction] = session[:direction]
+      end
     end
   end
 end

@@ -8,10 +8,11 @@ class Client < ActiveRecord::Base
   belongs_to :country
   belongs_to :organization
   belongs_to :ledger_account
+  belongs_to :payment_method
   attr_accessible :active, :building, :cellular, :client_code, :email, :fax, :fiscal_id, :floor, :floor_office,
                   :name, :phone, :remarks, :street_name, :street_number, :organization_id,
                   :entity_id, :street_type_id, :zipcode_id, :town_id, :province_id, :region_id, :country_id,
-                  :created_by, :updated_by, :is_contact, :shared_contact_id, :ledger_account_id
+                  :created_by, :updated_by, :is_contact, :shared_contact_id, :ledger_account_id, :payment_method_id
 
   has_many :delivery_notes
   has_many :sale_offers
@@ -34,6 +35,7 @@ class Client < ActiveRecord::Base
   validates :country,       :presence => true
   validates :entity,        :presence => true
   validates :organization,  :presence => true
+  validates :payment_method,  :presence => true
 
   before_validation :fields_to_uppercase
   before_destroy :check_for_dependent_records

@@ -5,64 +5,68 @@ en:
         product:
           attributes:
             product_code:
-              code_invalid: "Invalid code"
+              code_invalid: "invalid"
         product_family:
           attributes:
             family_code:
-              code_invalid: "Invalid code (must be numeric)"
+              code_invalid: "invalid (must be numeric)"
         supplier:
           attributes:
             supplier_code:
-              code_invalid: "Invalid code"
+              code_invalid: "invalid"
         client:
           attributes:
             client_code:
-              code_invalid: "Invalid code"
+              code_invalid: "invalid (must be numeric)"
         delivery_note:
           attributes:
             delivery_no:
-              code_invalid: "Invalid no."
+              code_invalid: "invalid"
         offer_request:
           attributes:
             request_no:
-              code_invalid: "Invalid no."
+              code_invalid: "invalid"
         purchase_order:
           attributes:
             order_no:
-              code_invalid: "Invalid no."
+              code_invalid: "invalid"
         project:
           attributes:
             project_code:
-              code_invalid: "Invalid code"
+              code_invalid: "invalid"
         project_type:
           attributes:
             code:
-              code_invalid: "Invalid code (must be alphabetic)"
+              code_invalid: "invalid (must be alphabetic)"
         work_order:
           attributes:
             order_no:
-              code_invalid: "Invalid no."
+              code_invalid: "invalid"
         charge_account:
           attributes:
             account_code:
-              code_invalid: "Invalid code"
+              code_invalid: "invalid"
         charge_group:
           attributes:
             group_code:
-              code_invalid: "Invalid code (must be numeric)"
+              code_invalid: "invalid (must be numeric)"
         budget_period:
           attributes:
             period_code:
-              code_invalid: "Invalid code (must be alphanumeric)"
+              code_invalid: "invalid (must be alphanumeric)"
         budget:
           attributes:
             budget_no:
-              code_invalid: "Invalid no. (must be alphanumeric)"
+              code_invalid: "invalid (must be alphanumeric)"
         budget_heading:
           attributes:
             heading_code:
-              code_invalid: "Invalid code (must be numeric)"
+              code_invalid: "invalid (must be numeric)"
         vehicle:
           attributes:
             registration:
-              code_invalid: "Invalid registration (must be alphanumeric without blanks)"
+              code_invalid: "invalid (must be alphanumeric without blanks)"
+        accounting_group:
+          attributes:
+            code:
+              code_invalid: "invalid (must be one numeric digit)"

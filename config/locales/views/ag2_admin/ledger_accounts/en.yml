@@ -1,0 +1,20 @@
+en:
+  ag2_admin:
+    ledger_accounts:
+      index:
+        title: "Ledger accounts"
+        btn_new: "New Ledger account"
+        go_to: "Go to Accounting groups"
+        back_to_root: "Back to ag2Admin"
+      show:
+        title: "Ledger account"
+        btn_edit: "Edit Ledger account"
+        btn_delete: "Delete Ledger account"
+        subtable_title: "Linked analytical accounts"
+        show_to: "Show Ledger account"
+      edit:
+        title: "Edit Ledger account"
+        btn_show: "Show Ledger account"
+      new:
+        title: "New Ledger account"
+      back_to_main_page: "Back to Ledger accounts"

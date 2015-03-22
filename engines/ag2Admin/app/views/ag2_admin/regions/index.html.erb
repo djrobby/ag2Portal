@@ -1,29 +1,6 @@
 <%= render '/layouts/ag2_admin/regionsbreadcrumb' %>
 
 <h3><%=t '.title' %></h3>
-<div class="span7">
-  <table class="table table-condensed table-striped">
-    <thead>
-      <tr>
-        <th><%= sortable "name", t('activerecord.attributes.region.name') %></th>
-        <th><%= sortable "country_id", t('activerecord.attributes.region.country') %></th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody>
-      <% @regions.each do |region| %>
-      <tr>
-        <td><%= link_to region.name, region %></td>
-        <td><%= region.country.name unless region.country.blank? %></td>
-        <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => Region, :path => edit_region_path(region) } %>
-        <%= render :partial => '/layouts/crud/delete', :locals => { :model => Region, :path => region, :msg => I18n.t("activerecord.models.region.one"), :txt => region.name } %> </td>
-      </tr>
-      <% end %>
-    </tbody>
-  </table>
-  <%= render :partial => '/layouts/pagination', :locals => { :ivar => @regions } %>
-  <%= render :partial => '/layouts/crud/new', :locals => { :model => Region, :path => new_region_path, :txt => I18n.t("ag2_admin.regions.index.btn_new") } %>
-  <%= link_to I18n.t("ag2_admin.regions.index.go_to_parent"), countries_path %> |
-  <%= link_to I18n.t("ag2_admin.regions.index.go_to_child"), provinces_path %> |
-  <%= link_to I18n.t("ag2_admin.regions.index.back_to_root"), ag2_admin.root_path %>
+<div class="span7" id="div_table">
+  <%= render 'regions' %>
 </div>

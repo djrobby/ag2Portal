@@ -61,3 +61,12 @@ en:
       users:
         items: "Users"
         item: "User"
+      accounting_groups:
+        items: "Accounting groups"
+        item: "Group"
+      ledger_accounts:
+        items: "Ledger accounts"
+        item: "Account"
+      payment_methods:
+        items: "Payment methods"
+        item: "Payment method"

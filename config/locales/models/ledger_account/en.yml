@@ -1,0 +1,22 @@
+en:
+  activerecord:
+    models:
+      ledger_account:
+        zero:  Ledger accounts
+        one:   Ledger account
+        few:   Ledger accounts
+        other: Ledger accounts
+        check_for_charge_accounts: "Ledger account cannot be destroyed while linked analytical accounts exist."
+        check_for_charge_groups: "Ledger account cannot be destroyed while linked analytical groups exist."
+        check_for_suppliers: "Ledger account cannot be destroyed while linked suppliers exist."
+        check_for_clients: "Ledger account cannot be destroyed while linked clients exist."
+    ledger_account:
+      country:
+        name: "Name"
+        code: "Code"
+        accounting_group: "Accounting group"
+        accounting_group_id: "Accounting group"
+        organization: "Organization"
+        organization_id: "Organization"
+        project: "Project"
+        project_id: "Project"

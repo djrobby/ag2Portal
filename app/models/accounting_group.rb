@@ -4,7 +4,10 @@ class AccountingGroup < ActiveRecord::Base
 
   has_paper_trail
 
-  validates :code,  :presence => true, :uniqueness => true
+  validates :code,  :presence => true,
+                    :length => { :is => 1 },
+                    :format => { with: /\A\d+\Z/, message: :code_invalid },
+                    :uniqueness => true
   validates :name,  :presence => true
   
   before_destroy :check_for_ledger_accounts

@@ -2,20 +2,20 @@ es:
   ag2_tech:
     budget_headings:
       index:
-        title: "Partidas presupuestarias"
-        btn_new: "Nueva Partida presupuestaria"
+        title: "Actividades presupuestos"
+        btn_new: "Nueva Actividad"
         back_to_root: "Volver a ag2Tech"
       show:
-        title: "Partida presupuestaria"
-        btn_edit: "Editar Partida presupuestaria"
-        btn_delete: "Borrar Partida presupuestaria"
-        subtable_title: "Grupos de la Partida"
-        return_to: "Volver a Partida presupuestaria"
+        title: "Actividad presupuesto"
+        btn_edit: "Editar Actividad"
+        btn_delete: "Borrar Actividad"
+        subtable_title: "Grupos de la Actividad"
+        return_to: "Volver a Actividad presupuesto"
       edit:
-        title: "Editar Partida presupuestaria"
-        btn_show: "Ver Partida presupuestaria"
+        title: "Editar Actividad presupuesto"
+        btn_show: "Ver Actividad presupuesto"
       new:
-        title: "Nueva Partida presupuestaria"
-      back_to_main_page: "Volver a Partidas presupuestarias"
-      code_error: "Imposible generar Código de Partida: No has elegido Organización."
+        title: "Nueva Actividad presupuesto"
+      back_to_main_page: "Volver a Actividades presupuestos"
+      code_error: "Imposible generar Código de Actividad: No has elegido Organización."
       to_uppercase_btn: "En Mayúsculas"

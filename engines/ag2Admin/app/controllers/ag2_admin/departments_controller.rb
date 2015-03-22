@@ -44,6 +44,7 @@ module Ag2Admin
     # GET /departments
     # GET /departments.json
     def index
+      manage_filter_state
       init_oco if !session[:organization]
       if session[:organization] != '0'
         @departments = Department.where(organization_id: session[:organization]).paginate(:page => params[:page], :per_page => per_page).order(sort_column + ' ' + sort_direction)
@@ -54,6 +55,7 @@ module Ag2Admin
       respond_to do |format|
         format.html # index.html.erb
         format.json { render json: @departments }
+        format.js
       end
     end
 
@@ -194,6 +196,22 @@ module Ag2Admin
 
     def workers_by_company(_company)
       _workers = Worker.joins(:worker_items).group('worker_items.worker_id').where(worker_items: { company_id: _company }).order(:last_name, :first_name)      
+    end
+
+    # Keeps filter state
+    def manage_filter_state
+      # sort
+      if params[:sort]
+        session[:sort] = params[:sort]
+      elsif session[:sort]
+        params[:sort] = session[:sort]
+      end
+      # direction
+      if params[:direction]
+        session[:direction] = params[:direction]
+      elsif session[:direction]
+        params[:direction] = session[:direction]
+      end
     end
   end
 end

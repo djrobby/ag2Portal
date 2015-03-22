@@ -1,0 +1,13 @@
+en:
+  activerecord:
+    models:
+      accounting_group:
+        zero:  Accounting groups
+        one:   Accounting group
+        few:   Accounting groups
+        other: Accounting groups
+        check_for_ledger_accounts: "Accounting group cannot be destroyed while linked ledger accounts exist."
+    accounting_group:
+      country:
+        name: "Name"
+        code: "Code"

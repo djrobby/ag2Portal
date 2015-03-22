@@ -44,6 +44,7 @@ es:
         payment_method: "Forma de pago"
         payment_method_id: "Forma de pago"
         ledger_account: "Cuenta contable"
+        ledger_account_id: "Cuenta contable"
         discount_rate: "Tasa descuento %"
         active: "¿Activo?"
         max_orders_count: "Cantidad máx. pedidos"

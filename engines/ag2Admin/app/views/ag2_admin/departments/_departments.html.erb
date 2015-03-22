@@ -1,0 +1,36 @@
+<script>
+  $(document).ready(function() {
+    $("#div_table th a, #div_table #pages a").on("click", function() {
+      $.getScript(this.href);
+      return false;
+    });
+  }); 
+</script>
+
+<table class="table table-condensed table-striped">
+  <thead>
+    <tr>
+      <th><%= sortable "code", t('activerecord.attributes.department.code') %></th>
+      <th><%= sortable "name", t('activerecord.attributes.department.name') %></th>
+      <th><%= sortable "organization_id", t('activerecord.attributes.department.organization') %></th>
+      <th><%= sortable "company_id", t('activerecord.attributes.department.company') %></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @departments.each do |t| %>
+    <tr>
+      <td><%= link_to t.code, t %></td>
+      <td><%= t.name %></td>
+      <td><%= t.organization.name unless t.organization.blank? %></td>
+      <td><%= t.company.name unless t.company.blank? %></td>
+      <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => Department, :path => edit_department_path(t) } unless cannot_edit(t.company_id) %>
+      <%= render :partial => '/layouts/crud/delete', :locals => { :model => Department, :path => t, :msg => I18n.t("activerecord.models.department.one"), :txt => t.name } unless cannot_edit(t.company_id) %> </td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @departments } %>
+<%= render :partial => '/layouts/crud/new', :locals => { :model => Department, :path => new_department_path, :txt => I18n.t("ag2_admin.departments.index.btn_new") } %>
+<%= link_to I18n.t("ag2_admin.departments.index.go_to_areas"), areas_path %> |
+<%= link_to I18n.t("ag2_admin.departments.index.back_to_root"), ag2_admin.root_path %>

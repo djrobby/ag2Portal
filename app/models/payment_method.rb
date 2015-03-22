@@ -3,6 +3,7 @@ class PaymentMethod < ActiveRecord::Base
   attr_accessible :default_interest, :description, :expiration_days, :flow, :organization_id
 
   has_many :suppliers
+  has_many :clients
   has_many :purchase_orders
   has_many :receipt_notes
   has_many :offer_requests

@@ -29,8 +29,8 @@ es:
         items: "Presupuestos"
         item: "Presupuesto"
       budget_headings:
-        items: "Partidas presupuestarias"
-        item: "Partida"
+        items: "Actividades presupuestos"
+        item: "Actividad"
       tools:
         items: "Herramientas"
         item: "Herramienta"

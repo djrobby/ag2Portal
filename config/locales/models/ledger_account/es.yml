@@ -1,0 +1,22 @@
+es:
+  activerecord:
+    models:
+      ledger_account:
+        zero:  Cuentas contables
+        one:   Cuenta contable
+        few:   Cuentas contables
+        other: Cuentas contables
+        check_for_charge_accounts: "Cuenta contable no puede ser eliminada mientras existan cuentas analíticas vinculadas."
+        check_for_charge_groups: "Cuenta contable no puede ser eliminada mientras existan grupos analíticos vinculados."
+        check_for_suppliers: "Cuenta contable no puede ser eliminada mientras existan proveedores vinculados."
+        check_for_clients: "Cuenta contable no puede ser eliminada mientras existan clientes vinculados."
+    attributes:
+      ledger_account:
+        name: "Nombre"
+        code: "Código"
+        accounting_group: "Grupo contable"
+        accounting_group_id: "Grupo contable"
+        organization: "Organización"
+        organization_id: "Organización"
+        project: "Proyecto"
+        project_id: "Proyecto"

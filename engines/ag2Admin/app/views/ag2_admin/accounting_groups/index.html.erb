@@ -1,21 +1,6 @@
-<h1>Listing accounting_groups</h1>
+<%= render '/layouts/ag2_admin/agroupsbreadcrumb' %>
 
-<table>
-  <tr>
-    <th></th>
-    <th></th>
-    <th></th>
-  </tr>
-
-<% @accounting_groups.each do |accounting_group| %>
-  <tr>
-    <td><%= link_to 'Show', accounting_group %></td>
-    <td><%= link_to 'Edit', edit_accounting_group_path(accounting_group) %></td>
-    <td><%= link_to 'Destroy', accounting_group, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-  </tr>
-<% end %>
-</table>
-
-<br />
-
-<%= link_to 'New Accounting group', new_accounting_group_path %>
+<h3><%=t '.title' %></h3>
+<div class="span7" id="div_table">
+  <%= render 'accounting_groups' %>
+</div>

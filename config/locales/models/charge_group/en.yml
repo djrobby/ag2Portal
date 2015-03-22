@@ -12,6 +12,7 @@ en:
         group_code: "Code"
         name: "Description"
         ledger_account: "Ledger account"
+        ledger_account_id: "Ledger account"
         organization: "Organization"
         organization_id: "Organization"
         flow: "Used for"
