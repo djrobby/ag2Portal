@@ -1,5 +1,50 @@
-<p id="notice"><%= notice %></p>
+<%= render '/layouts/ag2_admin/agroupsbreadcrumb' %>
 
+<h3><%=t '.title' %></h3>
+<table class="table">
+  <tbody>
+    <tr>
+      <td>Id:</td>
+      <td><%= @accounting_group.id %></td>
+      <td><%=t 'activerecord.attributes.accounting_group.code' %>:</td>
+      <td><b><%= @accounting_group.code %></b></td>
+    </tr>
+    <tr>
+      <td><%=t 'activerecord.attributes.accounting_group.name' %>:</td>
+      <td><%= @accounting_group.name %></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @accounting_group } %>
+    <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @accounting_group } %>
+  </tbody>
+</table>
 
-<%= link_to 'Edit', edit_accounting_group_path(@accounting_group) %> |
-<%= link_to 'Back', accounting_groups_path %>
+<%= render :partial => '/layouts/crud/update_delete_new', locals:
+{ model: AccountingGroup, update_path: edit_accounting_group_path(@accounting_group), update_txt: t('ag2_admin.accounting_groups.show.btn_edit'),
+delete_path: @accounting_group, delete_txt: t('ag2_admin.accounting_groups.show.btn_delete'), msg: t("activerecord.models.accounting_group.one"), :txt => @accounting_group.name,
+new_path: new_accounting_group_path, new_txt: t('ag2_admin.accounting_groups.index.btn_new') } %>
+
+<% if (@ledger_accounts.count > 0) %>
+<h4><%= t '.subtable_title' %></h4>
+<table class="table table-condensed table-striped">
+  <thead>
+    <tr>
+      <th><%= t 'activerecord.attributes.ledger_account.code' %></th>
+      <th><%= t 'activerecord.attributes.ledger_account.name' %></th>
+      <th><%= t 'activerecord.attributes.ledger_account.project' %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @ledger_accounts.each do |t| %>
+    <tr>
+      <td><%= link_to t.code, t %></td>
+      <td><%= t.name %></td>
+      <td><%= t.project.full_code unless t.project.blank? %></td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
+<% end %>
+
+<%= link_to I18n.t('ag2_admin.accounting_groups.back_to_main_page'), accounting_groups_path %>

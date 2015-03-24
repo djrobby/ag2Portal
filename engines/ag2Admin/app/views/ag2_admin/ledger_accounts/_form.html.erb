@@ -1,17 +1,81 @@
-<%= form_for(@ledger_account) do |f| %>
-  <% if @ledger_account.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@ledger_account.errors.count, "error") %> prohibited this ledger_account from being saved:</h2>
+<script>
+  var text_field_color;
+  var _thisForm = '';
+  
+  $(document).ready(function() {
+    $('select.sel2').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      allowClear: true
+    });
+  });
 
-      <ul>
-      <% @ledger_account.errors.full_messages.each do |msg| %>
-        <li><%= msg %></li>
-      <% end %>
-      </ul>
-    </div>
-  <% end %>
+  jQuery(function($) {
+    // when the #ledger_account_organization_id field changes
+    $("#ledger_account_organization_id").change(function() {
+      // make a POST call and replace the content
+      var org = $('select#ledger_account_organization_id :selected').val();
+      if (org == "")
+        org = "0";
+      jQuery.getJSON('la_update_project_textfield_from_organization/' + org, function(data) {
+        var p = data.project;
+        // Project
+        $("#ledger_account_project_id").html("");
+        $("#ledger_account_project_id").select2("val", "");
+        $("#ledger_account_project_id").append($('<option></option>').val("").html(""));
+        if (!p.length) {
+          $.each(data, function(id, option) {
+            if (id == 'project' && option != "") {
+              $("#ledger_account_project_id").append($('<option></option>').val(option.id).html(option.project_code.substring(0,3) + "-" + option.project_code.substring(3,6) + "-" + option.project_code.substring(6,12) + " " + option.name));
+            }
+          });
+        } else {
+          $.each(p, function(id, option) {
+            $("#ledger_account_project_id").append($('<option></option>').val(option.id).html(option.project_code.substring(0,3) + "-" + option.project_code.substring(3,6) + "-" + option.project_code.substring(6,12) + " " + option.name));
+          });
+        }
+      });
+      if (org == "0") {
+        $("#ledger_account_project_id").val(0);
+      }
+      return false;
+    });
 
-  <div class="actions">
-    <%= f.submit %>
-  </div>
+    // when the #ledger_account_code field changes
+    $("#ledger_account_code").change(function() {
+      // make a POST call and replace the content
+      var code = $('#ledger_account_code').val();
+      if (code == "")
+        code = "0";
+      jQuery.getJSON('la_update_accounting_group_from_code/' + code, function(data) {
+        $("#ledger_account_accounting_group_id").val(data.accounting_group_id);
+      });
+      if (code == "0") {
+        $("#ledger_account_accounting_group_id").val(0);
+      }
+      return false;
+    });
+  });
+</script>
+
+<%= simple_form_for @ledger_account, :html => {:class => 'form-vertical well' } do |f| %>
+<%= f.error_notification %>
+<%= display_base_errors resource %>
+<div>
+  <label class="multi-field-label-two"> <%= f.input :code, :autofocus => true, :input_html => { class: 'small-text-field' }, label_html: { class: 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.input :name, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+</div>
+<div>
+  <label class="multi-field-label-two"> <%= f.association :accounting_group, collection: AccountingGroup.order('code'), input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %> </label>
+  <label class="multi-field-label-two">
+    <% if session[:organization] != '0' %>
+    <%= f.association :organization, collection: Organization.where("id = ?", "#{session[:organization]}").all, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' }, include_blank: false %>
+    <% elsif current_user.organizations.count > 0 %>
+    <%= f.association :organization, collection: current_user.organizations.order('name'), input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' }, include_blank: false %>
+    <% else %>
+    <%= f.association :organization, collection: Organization.order('name'), input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %>
+    <% end %>
+  </label>
+</div>
+<%= f.association :project, collection: @projects, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %>
+<%= f.button :submit, :class => 'btn-primary form-button-under-sel2' %>
 <% end %>

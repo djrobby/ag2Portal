@@ -26,7 +26,7 @@ class LedgerAccount < ActiveRecord::Base
   def full_name
     full_name = code.blank? ? "" : code.strip
     if !self.name.blank?
-      full_name += " " + self.name[0,40]
+      full_name += " " + self.name[0,50]
     end
     full_name
   end

@@ -1,5 +1,35 @@
-<p id="notice"><%= notice %></p>
+<%= render '/layouts/ag2_admin/laccountsbreadcrumb' %>
 
+<h3><%=t '.title' %></h3>
+<table class="table">
+  <tbody>
+    <tr>
+      <td>Id:</td>
+      <td><%= @ledger_account.id %></td>
+      <td><%=t 'activerecord.attributes.ledger_account.code' %>:</td>
+      <td><b><%= @ledger_account.code %></b></td>
+    </tr>
+    <tr>
+      <td><%=t 'activerecord.attributes.ledger_account.name' %>:</td>
+      <td><%= @ledger_account.name %></td>
+      <td><%=t 'activerecord.attributes.ledger_account.accounting_group' %>:</td>
+      <td><%= @ledger_account.accounting_group.full_name unless @ledger_account.accounting_group.blank? %></td>
+    </tr>
+    <tr>
+      <td><%=t 'activerecord.attributes.ledger_account.organization' %>:</td>
+      <td><%= @ledger_account.organization.name %></td>
+      <td><%=t 'activerecord.attributes.ledger_account.project' %>:</td>
+      <td><%= @ledger_account.project.full_name unless @ledger_account.project.blank? %></td>
+    </tr>
+    <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @ledger_account } %>
+    <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @ledger_account } %>
+  </tbody>
+</table>
 
-<%= link_to 'Edit', edit_ledger_account_path(@ledger_account) %> |
-<%= link_to 'Back', ledger_accounts_path %>
+<%= render :partial => '/layouts/crud/update_delete_new', locals:
+{ model: LedgerAccount, update_path: edit_ledger_account_path(@ledger_account), update_txt: t('ag2_admin.ledger_accounts.show.btn_edit'),
+delete_path: @ledger_account, delete_txt: t('ag2_admin.ledger_accounts.show.btn_delete'), msg: t("activerecord.models.ledger_account.one"), :txt => @ledger_account.code,
+new_path: new_ledger_account_path, new_txt: t('ag2_admin.ledger_accounts.index.btn_new') } %>
+
+<%= link_to I18n.t('ag2_admin.ledger_accounts.show.show_to'), @ledger_account.accounting_group %> |
+<%= link_to I18n.t('ag2_admin.ledger_accounts.back_to_main_page'), ledger_accounts_path %>

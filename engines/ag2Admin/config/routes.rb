@@ -60,6 +60,13 @@ Ag2Admin::Engine.routes.draw do
     match 'guides/gu_update_site_from_app/:app', :controller => 'guides', :action => 'gu_update_site_from_app'
     match 'gu_update_site_from_app/:app', :controller => 'guides', :action => 'gu_update_site_from_app'
     match 'guides/:id/gu_update_site_from_app/:app', :controller => 'guides', :action => 'gu_update_site_from_app'
+    #
+    match 'ledger_accounts/la_update_project_textfield_from_organization/:org', :controller => 'ledger_accounts', :action => 'la_update_project_textfield_from_organization'
+    match 'la_update_project_textfield_from_organization/:org', :controller => 'ledger_accounts', :action => 'la_update_project_textfield_from_organization'
+    match 'ledger_accounts/:id/la_update_project_textfield_from_organization/:org', :controller => 'ledger_accounts', :action => 'la_update_project_textfield_from_organization'
+    match 'ledger_accounts/la_update_accounting_group_from_code/:code', :controller => 'ledger_accounts', :action => 'la_update_accounting_group_from_code'
+    match 'la_update_accounting_group_from_code/:code', :controller => 'ledger_accounts', :action => 'la_update_accounting_group_from_code'
+    match 'ledger_accounts/:id/la_update_accounting_group_from_code/:code', :controller => 'ledger_accounts', :action => 'la_update_accounting_group_from_code'
 
     # Resources
     resources :users

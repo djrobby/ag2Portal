@@ -1,5 +1,7 @@
-<h1>New accounting_group</h1>
+<%= render '/layouts/ag2_admin/agroupsbreadcrumb' %>
+
+<h3><%=t '.title' %></h3>
 
 <%= render 'form' %>
 
-<%= link_to 'Back', accounting_groups_path %>
+<%= link_to I18n.t('ag2_admin.accounting_groups.back_to_main_page'), accounting_groups_path %>

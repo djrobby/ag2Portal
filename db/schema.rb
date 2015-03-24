@@ -11,13 +11,15 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150322124204) do
+ActiveRecord::Schema.define(:version => 20150324184817) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
     t.string   "name"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
   end
 
   add_index "accounting_groups", ["code"], :name => "index_accounting_groups_on_code", :unique => true
@@ -595,6 +597,8 @@ ActiveRecord::Schema.define(:version => 20150322124204) do
     t.integer  "organization_id"
     t.datetime "created_at",          :null => false
     t.datetime "updated_at",          :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
   end
 
   add_index "ledger_accounts", ["accounting_group_id"], :name => "index_ledger_accounts_on_accounting_group_id"

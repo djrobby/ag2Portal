@@ -1,17 +1,7 @@
-<%= form_for(@accounting_group) do |f| %>
-  <% if @accounting_group.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@accounting_group.errors.count, "error") %> prohibited this accounting_group from being saved:</h2>
-
-      <ul>
-      <% @accounting_group.errors.full_messages.each do |msg| %>
-        <li><%= msg %></li>
-      <% end %>
-      </ul>
-    </div>
-  <% end %>
-
-  <div class="actions">
-    <%= f.submit %>
-  </div>
+<%= simple_form_for @accounting_group, :html => {:class => 'form-vertical well' } do |f| %>
+<%= f.error_notification %>
+<%= display_base_errors resource %>
+<%= f.input :code, :autofocus => true, :input_html => { class: 'x-small-text-field', maxlength: 1 }, label_html: { class: 'form-label' } %>
+<%= f.input :name, :input_html => { :class => 'x-large-text-field', maxlength: 40 }, :label_html => { :class => 'form-label' } %>
+<%= f.button :submit, :class => 'btn-primary' %>
 <% end %>

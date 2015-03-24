@@ -1,5 +1,7 @@
-<h1>New ledger_account</h1>
+<%= render '/layouts/ag2_admin/laccountsbreadcrumb' %>
+
+<h3><%=t '.title' %></h3>
 
 <%= render 'form' %>
 
-<%= link_to 'Back', ledger_accounts_path %>
+<%= link_to I18n.t('ag2_admin.ledger_accounts.back_to_main_page'), ledger_accounts_path %>

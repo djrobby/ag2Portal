@@ -11,7 +11,7 @@ en:
         btn_edit: "Edit Ledger account"
         btn_delete: "Delete Ledger account"
         subtable_title: "Linked analytical accounts"
-        show_to: "Show Ledger account"
+        show_to: "Show Accounting group"
       edit:
         title: "Edit Ledger account"
         btn_show: "Show Ledger account"
