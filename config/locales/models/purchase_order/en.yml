@@ -10,6 +10,7 @@ en:
     attributes:
       purchase_order:
         order_no: "No."
+        order_no_report: "No"
         offer: "Offer"
         offer_id: "Offer"
         supplier: "Supplier"

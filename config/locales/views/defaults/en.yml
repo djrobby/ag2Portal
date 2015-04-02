@@ -40,3 +40,6 @@ en:
   dd_images_message: "Drop images here"
   dd_file_message: "Drop file here"
   dd_files_message: "Drop files here"
+  every_report:
+    pt: "Page"
+    pd: "of"

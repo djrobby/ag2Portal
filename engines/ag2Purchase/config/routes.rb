@@ -74,8 +74,9 @@ Ag2Purchase::Engine.routes.draw do
     match 'purchase_orders/po_product_all_stocks/:product', :controller => 'purchase_orders', :action => 'po_product_all_stocks'
     match 'po_product_all_stocks/:product', :controller => 'purchase_orders', :action => 'po_product_all_stocks'
     match 'purchase_orders/:id/po_product_all_stocks/:product', :controller => 'purchase_orders', :action => 'po_product_all_stocks'
+    #
     # Purchase order Reports
-    match 'purchase_order_form', :controller => 'purchase_orders', :action => 'purchase_order_form'
+    #match 'purchase_order_form', :controller => 'purchase_orders', :action => 'purchase_order_form'
     #
     # Payment methods
     match 'payment_methods/pm_format_numbers/:num', :controller => 'payment_methods', :action => 'pm_format_numbers'
@@ -205,7 +206,9 @@ Ag2Purchase::Engine.routes.draw do
     resources :payment_methods
     resources :supplier_contacts
     resources :order_statuses
-    resources :purchase_orders
+    resources :purchase_orders do
+      get 'purchase_order_form', on: :collection
+    end
     resources :offer_requests
     resources :offers
     resources :supplier_invoices

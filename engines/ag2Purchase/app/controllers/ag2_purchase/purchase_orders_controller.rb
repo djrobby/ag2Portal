@@ -16,7 +16,8 @@ module Ag2Purchase
                                                :po_current_stock,
                                                :po_update_project_textfields_from_organization,
                                                :po_generate_no,
-                                               :po_product_stock]
+                                               :po_product_stock,
+                                               :purchase_order_form]
     # Update offer select at view from supplier select
     def po_update_offer_select_from_supplier
       supplier = params[:supplier]
@@ -491,6 +492,23 @@ module Ag2Purchase
           format.html { redirect_to purchase_orders_url, alert: "#{@purchase_order.errors[:base].to_s}".gsub('["', '').gsub('"]', '') }
           format.json { render json: @purchase_order.errors, status: :unprocessable_entity }
         end
+      end
+    end
+
+    # Report
+    def purchase_order_form
+      # Search purchase order & items
+      @purchase_order = PurchaseOrder.find(params[:id])
+      @items = @purchase_order.purchase_order_items.order('id')
+
+      title = t("activerecord.models.purchase_order.one")      
+
+      respond_to do |format|
+        # Render PDF
+        format.pdf { send_data render_to_string,
+                     filename: "#{title}_#{@purchase_order.full_no}.pdf",
+                     type: 'application/pdf',
+                     disposition: 'inline' }
       end
     end
     

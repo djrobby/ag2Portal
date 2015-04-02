@@ -1,0 +1,6 @@
+report.start_new_page
+report.page.values printed_at: Time.now
+  report.page.list(:list).add_row do |row|
+    row.item(:col1).value @purchase_order.full_no
+    row.item(:col2).value @purchase_order.order_date
+  end
