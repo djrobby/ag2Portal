@@ -28,11 +28,41 @@ report.start_new_page
 # Page header: Image block for Logo
 report.page.values company_logo: "public/" + @purchase_order.project.company.logo.url(:original).split("?").first unless @purchase_order.project.company.logo.blank?
 # Page header: Others
-report.page.values order_no_title: I18n.t("activerecord.attributes.purchase_order.order_no_report") + ":"
-report.page.values order_no: @purchase_order.full_no
-report.page.values order_date_title: I18n.t("activerecord.attributes.purchase_order.order_date") + ":"
-report.page.values order_date: @purchase_order.order_date.strftime("%d/%m/%Y")
+report.page.values(order_no_title: I18n.t("activerecord.attributes.purchase_order.order_no_report") + ":",
+				   order_no: @purchase_order.full_no,
+				   order_date_title: I18n.t("activerecord.attributes.purchase_order.order_date") + ":",
+				   order_date: @purchase_order.order_date.strftime("%d/%m/%Y"))
 # Page footer
-report.page.values printed_at: Time.now
-report.page.values pt: I18n.t("every_report.pt")
-report.page.values pd: I18n.t("every_report.pd")
+report.page.values(printed_at: Time.now,
+				   pt: I18n.t("every_report.pt"),
+				   pd: I18n.t("every_report.pd"))
+
+# List header
+report.page.list(:default).header do |header|
+	header.item(:no_c).value "#"
+	header.item(:product_c).value I18n.t("activerecord.attributes.purchase_order_item.code")
+	header.item(:description_c).value I18n.t("activerecord.attributes.purchase_order_item.description_c")
+	header.item(:quantity_c).value I18n.t("activerecord.attributes.purchase_order_item.quantity_c")
+	header.item(:price_c).value I18n.t("activerecord.attributes.purchase_order_item.price_c")
+	header.item(:discount_c).value I18n.t("activerecord.attributes.purchase_order_item.discount_c")
+	header.item(:amount_c).value I18n.t("activerecord.attributes.purchase_order_item.amount_c")
+	header.item(:tax_c).value I18n.t("activerecord.attributes.purchase_order_item.tax_c")
+	header.item(:delivery_date_c).value I18n.t("activerecord.attributes.purchase_order_item.delivery_date")
+end
+
+# List detail
+no = 0
+@items.each do |i|
+	report.page.list(:default).add_row do |row|
+		no = no + 1
+    	row.item(:no).value no
+    	row.item(:product).value i.product.full_code unless i.product.blank?
+    	row.item(:description).value i.description unless i.description.blank?
+    	row.item(:quantity).value number_with_precision(i.quantity, precision: 4) unless i.quantity.blank?
+    	row.item(:price).value number_with_precision(i.price, precision: 4) unless i.price.blank?
+    	row.item(:discount).value number_with_precision(i.discount, precision: 4) unless i.discount.blank?
+    	row.item(:amount).value number_with_precision(i.amount, precision: 4) unless i.amount.blank?
+    	row.item(:tax).value number_with_precision(i.tax, precision: 4) unless i.tax.blank?
+    	row.item(:delivery_date).value i.delivery_date.strftime("%d/%m/%Y") unless i.delivery_date.blank?
+	end
+end
