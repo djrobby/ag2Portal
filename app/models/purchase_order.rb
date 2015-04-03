@@ -27,16 +27,16 @@ class PurchaseOrder < ActiveRecord::Base
 
   validates_associated :purchase_order_items
   
-  validates :order_date,     :presence => true
-  validates :order_no,       :presence => true,
-                             :length => { :is => 22 },
-                             :format => { with: /\A\d+\Z/, message: :code_invalid },
-                             :uniqueness => { :scope => :organization_id }
-  validates :supplier,       :presence => true
-  validates :payment_method, :presence => true
-  validates :order_status,   :presence => true
-  validates :project,        :presence => true
-  validates :organization,   :presence => true
+  validates :order_date,      :presence => true
+  validates :order_no,        :presence => true,
+                              :length => { :is => 22 },
+                              :format => { with: /\A[a-zA-Z\d]+\Z/, message: :code_invalid },
+                              :uniqueness => { :scope => :organization_id }
+  validates :supplier,        :presence => true
+  validates :payment_method,  :presence => true
+  validates :order_status,    :presence => true
+  validates :project,         :presence => true
+  validates :organization,    :presence => true
 
   before_destroy :check_for_dependent_records
 

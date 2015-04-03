@@ -23,15 +23,50 @@ report.events.on :generate do |e|
 	end
 end
 
+#
+# List configuration (stores & events)
+#
+report.layout.config.list(:default) do |c|
+	# Define the variables used in list
+	c.use_stores page_quantity: 0, page_discount: 0, page_amount: 0, page_tax: 0
+
+	# On list page footer insertion
+	c.events.on :page_footer_insert do |e|
+		# Display page sutotals
+		e.section.item(:page_subtotals).value(I18n.t("activerecord.models.purchase_order.one"))
+		e.section.item(:page_quantity).value(number_with_precision(e.store.page_quantity, precision: 4))
+		# Initialize subtotals to 0
+		e.store.page_quantity = 0
+		e.store.page_discount = 0
+		e.store.page_amount = 0
+		e.store.page_tax = 0
+	end
+	# On list footer insertion
+	c.events.on :footer_insert do |e|
+		# Display list totals
+	end
+end
+
+# New page & start
 report.start_new_page
 
 # Page header: Image block for Logo
 report.page.values company_logo: "public/" + @purchase_order.project.company.logo.url(:original).split("?").first unless @purchase_order.project.company.logo.blank?
+# Page header: Company
+report.page.values(company_name: @purchase_order.project.company.name,
+				   company_address_1: @purchase_order.project.company.address_1,
+				   company_address_2: @purchase_order.project.company.address_2,
+				   company_phones: @purchase_order.project.company.phone_and_fax,
+				   company_email: @purchase_order.project.company.email_and_website,
+				   company_fiscal_id: I18n.t("activerecord.attributes.company.fiscal_id_c") + ": " + @purchase_order.project.company.fiscal_id)
 # Page header: Others
-report.page.values(order_no_title: I18n.t("activerecord.attributes.purchase_order.order_no_report") + ":",
+report.page.values(form_title: I18n.t("activerecord.models.purchase_order.one"),
+				   order_no_title: I18n.t("activerecord.attributes.purchase_order.order_no_report") + ":",
 				   order_no: @purchase_order.full_no,
 				   order_date_title: I18n.t("activerecord.attributes.purchase_order.order_date") + ":",
-				   order_date: @purchase_order.order_date.strftime("%d/%m/%Y"))
+				   order_date: @purchase_order.order_date.strftime("%d/%m/%Y"),
+				   offer_title: I18n.t("activerecord.attributes.purchase_order.offer") + ":",
+				   offer: @purchase_order.offer)
 # Page footer
 report.page.values(printed_at: Time.now,
 				   pt: I18n.t("every_report.pt"),
@@ -65,4 +100,11 @@ no = 0
     	row.item(:tax).value number_with_precision(i.tax, precision: 4) unless i.tax.blank?
     	row.item(:delivery_date).value i.delivery_date.strftime("%d/%m/%Y") unless i.delivery_date.blank?
 	end
+	# Store page subtotals
+    report.page.list(:default) do |list|
+		list.store.page_quantity += i.quantity
+		list.store.page_discount += i.discount
+		list.store.page_amount += i.amount
+		list.store.page_tax += i.tax
+    end	
 end

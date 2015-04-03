@@ -14,6 +14,7 @@ es:
       company:
         name: "Nombre"
         fiscal_id: "Id Fiscal CIF/NIF"
+        fiscal_id_c: "CIF/NIF"
         province: "Provincia"
         province_id: "Provincia"
         town: "Población"
@@ -28,6 +29,7 @@ es:
         floor: "Planta"
         floor_office: "Oficina"
         phone: "Teléfono"
+        phone_c: "Tel"
         fax: "Fax"
         cellular: "Móvil"
         email: "Email"
@@ -42,3 +44,4 @@ es:
         hd_email: "Email de soporte"
         max_order_total: "Importe máx. por pedido €"
         max_order_price: "Precio máx. por ítem pedido €"
+        website: "Sitio web"

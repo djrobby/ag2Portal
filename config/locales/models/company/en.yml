@@ -14,6 +14,7 @@ en:
       company:
         name: "Name"
         fiscal_id: "Fiscal Id"
+        fiscal_id_c: "Fiscal Id"
         province: "Province"
         province_id: "Province"
         town: "Town"
@@ -28,6 +29,7 @@ en:
         floor: "Floor"
         floor_office: "Office"
         phone: "Phone"
+        phone_c: "Phone"
         fax: "Fax"
         cellular: "Cellular"
         email: "Email"
@@ -42,3 +44,4 @@ en:
         hd_email: "Support email"
         max_order_total: "Max amount per order €"
         max_order_price: "Max price per order item €"
+        website: "Website"
