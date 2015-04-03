@@ -16,6 +16,7 @@ es:
       supplier:
         name: "Nombre"
         fiscal_id: "Id Fiscal CIF/NIF"
+        fiscal_id_c: "CIF/NIF"
         supplier_code: "Código"
         province: "Provincia"
         province_id: "Provincia"

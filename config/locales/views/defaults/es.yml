@@ -43,3 +43,4 @@ es:
   every_report:
     pt: "Página"
     pd: "de"
+    page_subtotals: "Subtotales Página"

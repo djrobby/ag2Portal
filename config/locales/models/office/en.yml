@@ -30,6 +30,7 @@ en:
         floor: "Floor"
         floor_office: "Office"
         phone: "Phone"
+        phone_c: "Phone"
         fax: "Fax"
         cellular: "Cellular"
         email: "Email"

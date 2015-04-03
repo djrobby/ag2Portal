@@ -16,6 +16,7 @@ en:
       supplier:
         name: "Name"
         fiscal_id: "Fiscal Id"
+        fiscal_id_c: "Fiscal Id"
         supplier_code: "Code"
         province: "Province"
         province_id: "Province"

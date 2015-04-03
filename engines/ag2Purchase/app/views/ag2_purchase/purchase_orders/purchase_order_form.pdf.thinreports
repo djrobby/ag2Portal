@@ -5,6 +5,9 @@ if @items.count <= 0
 	return
 end
 
+# Localization for numbers
+delimiter = I18n.locale == :es ? "." : ","
+
 report.set_layout tlf: 'reports/purchase_order_form', layout_options: { default: true }
 
 #
@@ -33,8 +36,11 @@ report.layout.config.list(:default) do |c|
 	# On list page footer insertion
 	c.events.on :page_footer_insert do |e|
 		# Display page sutotals
-		e.section.item(:page_subtotals).value(I18n.t("activerecord.models.purchase_order.one"))
+		e.section.item(:page_subtotals).value(I18n.t("every_report.page_subtotals"))
 		e.section.item(:page_quantity).value(number_with_precision(e.store.page_quantity, precision: 4))
+		e.section.item(:page_discount).value(number_with_precision(e.store.page_discount, precision: 4))
+		e.section.item(:page_amount).value(number_with_precision(e.store.page_amount, precision: 4))
+		e.section.item(:page_tax).value(number_with_precision(e.store.page_tax, precision: 4))
 		# Initialize subtotals to 0
 		e.store.page_quantity = 0
 		e.store.page_discount = 0
@@ -44,6 +50,16 @@ report.layout.config.list(:default) do |c|
 	# On list footer insertion
 	c.events.on :footer_insert do |e|
 		# Display list totals
+		e.section.item(:subtotal_c).value(I18n.t("activerecord.attributes.purchase_order.subtotal"))
+		e.section.item(:bonus_c).value(I18n.t("activerecord.attributes.purchase_order.bonus") + " " + number_with_precision(@purchase_order.discount_pct, precision: 2) + "%")
+		e.section.item(:taxable_c).value(I18n.t("activerecord.attributes.purchase_order.taxable"))
+		e.section.item(:taxes_c).value(I18n.t("activerecord.attributes.purchase_order.taxes"))
+		e.section.item(:total_c).value(I18n.t("activerecord.attributes.purchase_order.total").upcase)
+		e.section.item(:subtotal).value(number_with_precision(@purchase_order.subtotal, precision: 2, delimiter: delimiter))
+		e.section.item(:bonus).value(number_with_precision(@purchase_order.bonus, precision: 2, delimiter: delimiter))
+		e.section.item(:taxable).value(number_with_precision(@purchase_order.taxable, precision: 2, delimiter: delimiter))
+		e.section.item(:taxes).value(number_with_precision(@purchase_order.taxes, precision: 2, delimiter: delimiter))
+		e.section.item(:total).value(number_with_precision(@purchase_order.total, precision: 2, delimiter: delimiter))
 	end
 end
 
@@ -66,11 +82,28 @@ report.page.values(form_title: I18n.t("activerecord.models.purchase_order.one"),
 				   order_date_title: I18n.t("activerecord.attributes.purchase_order.order_date") + ":",
 				   order_date: @purchase_order.order_date.strftime("%d/%m/%Y"),
 				   offer_title: I18n.t("activerecord.attributes.purchase_order.offer") + ":",
-				   offer: @purchase_order.offer)
+				   offer: @purchase_order.offer,
+				   supplier_title: I18n.t("activerecord.attributes.purchase_order.supplier"),
+				   petitioner_title: I18n.t("activerecord.attributes.purchase_order.office_c"),
+				   supplier_name: @purchase_order.supplier.name,
+				   supplier_address_1: @purchase_order.supplier.address_1,
+				   supplier_address_2: @purchase_order.supplier.address_2,
+				   supplier_fiscal_id: I18n.t("activerecord.attributes.supplier.fiscal_id_c") + ": " + @purchase_order.supplier.fiscal_id,
+				   petitioner_name: @purchase_order.project.office.name,
+				   petitioner_address_1: @purchase_order.project.office.address_1,
+				   petitioner_address_2: @purchase_order.project.office.address_2,
+				   petitioner_phones_email: @purchase_order.project.office.phone_fax_email,
+				   payment_title: I18n.t("activerecord.attributes.purchase_order.payment_method"),
+				   store_location_title: I18n.t("activerecord.attributes.store.delivery_location"),
+				   payment_method: @purchase_order.payment_method.description,
+				   store_address_1: @purchase_order.store.name,
+				   store_address_2: @purchase_order.store.location)
 # Page footer
 report.page.values(printed_at: Time.now,
 				   pt: I18n.t("every_report.pt"),
-				   pd: I18n.t("every_report.pd"))
+				   pd: I18n.t("every_report.pd"),
+				   remarks_title: I18n.t("activerecord.attributes.purchase_order.remarks"),
+				   remarks: @purchase_order.remarks)
 
 # List header
 report.page.list(:default).header do |header|

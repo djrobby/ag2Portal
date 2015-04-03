@@ -28,6 +28,7 @@ en:
         project: "Project"
         project_id: "Project"
         office: "Office"
+        office_c: "Petitioner"
         company: "Company"
         store: "Store"
         store_id: "Store"

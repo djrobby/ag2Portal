@@ -95,7 +95,7 @@ class Company < ActiveRecord::Base
     _ret
   end
   
- def email_and_website
+  def email_and_website
     _ret = ""
     if !self.email.blank?
       _ret += self.email.strip
@@ -106,7 +106,7 @@ class Company < ActiveRecord::Base
     _ret
   end
 
- def phone_and_fax
+  def phone_and_fax
     _ret = ""
     if !self.phone.blank?
       _ret += I18n.t("activerecord.attributes.company.phone_c") + ": " + self.phone.strip

@@ -30,6 +30,7 @@ es:
         floor: "Planta"
         floor_office: "Oficina"
         phone: "Teléfono"
+        phone_c: "Tel"
         fax: "Fax"
         cellular: "Móvil"
         email: "Email"

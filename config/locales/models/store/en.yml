@@ -28,3 +28,4 @@ en:
         depot: "JIT Depot"
         organization: "Organization"
         organization_id: "Organization"
+        delivery_location: "Delivery address"

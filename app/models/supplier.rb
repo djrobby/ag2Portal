@@ -80,6 +80,55 @@ class Supplier < ActiveRecord::Base
     supplier_code.blank? ? "" : supplier_code[0..3] + '-' + supplier_code[4..7] + '-' + supplier_code[8..13]
   end
 
+  def address_1
+    _ret = ""
+    if !street_type.blank?
+      _ret += street_type.street_type_code.titleize + ". "
+    end
+    if !street_name.blank?
+      _ret += street_name + " "
+    end
+    if !street_number.blank?
+      _ret += street_number + ", "
+    end
+    if !building.blank?
+      _ret += building.titleize + ", "
+    end
+    if !floor.blank?
+      _ret += floor_human + " "
+    end
+    if !floor_office.blank?
+      _ret += floor_office
+    end
+    _ret
+  end
+
+  def address_2
+    _ret = ""
+    if !zipcode.blank?
+      _ret += zipcode.zipcode + " "
+    end
+    if !town.blank?
+      _ret += town.name + ", "
+    end
+    if !province.blank?
+      _ret += province.name + " "
+      if !province.region.country.blank?
+        _ret += "(" + province.region.country.name + ")"
+      end
+    end
+    _ret
+  end
+
+  def floor_human
+    _ret = floor
+    _floor_is_numeric = true if Float(floor) rescue false
+    if _floor_is_numeric
+      _ret = floor.strip + "\xBA".force_encoding('ISO-8859-1').encode('UTF-8')
+    end
+    _ret
+  end
+
   #
   # Calculated fields
   #
