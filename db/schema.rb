@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150403181208) do
+ActiveRecord::Schema.define(:version => 20150404070003) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -1351,13 +1351,29 @@ ActiveRecord::Schema.define(:version => 20150403181208) do
     t.string   "updated_by"
     t.integer  "organization_id"
     t.integer  "supplier_id"
+    t.integer  "street_type_id"
+    t.string   "street_name"
+    t.string   "street_number"
+    t.string   "building"
+    t.integer  "floor"
+    t.string   "floor_office"
+    t.integer  "zipcode_id"
+    t.integer  "town_id"
+    t.integer  "province_id"
+    t.string   "phone"
+    t.string   "fax"
+    t.string   "email"
   end
 
   add_index "stores", ["company_id"], :name => "index_stores_on_company_id"
   add_index "stores", ["name"], :name => "index_stores_on_name"
   add_index "stores", ["office_id"], :name => "index_stores_on_office_id"
   add_index "stores", ["organization_id"], :name => "index_stores_on_organization_id"
+  add_index "stores", ["province_id"], :name => "index_stores_on_province_id"
+  add_index "stores", ["street_type_id"], :name => "index_stores_on_street_type_id"
   add_index "stores", ["supplier_id"], :name => "index_stores_on_supplier_id"
+  add_index "stores", ["town_id"], :name => "index_stores_on_town_id"
+  add_index "stores", ["zipcode_id"], :name => "index_stores_on_zipcode_id"
 
   create_table "street_types", :force => true do |t|
     t.string   "street_type_code"

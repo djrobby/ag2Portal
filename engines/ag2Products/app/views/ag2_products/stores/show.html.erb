@@ -16,13 +16,66 @@
       <td><%= @store.office.name unless @store.office.blank? %></td>
     </tr>
     <tr>
-      <td><%=t 'activerecord.attributes.store.depot' %>:</td>
-      <td><%= @store.supplier.full_name unless @store.supplier.blank? %></td>
       <td><%=t 'activerecord.attributes.store.location' %>:</td>
       <td><%= @store.location unless @store.location.blank? %></td>
+      <td></td>
+      <td></td>
     </tr>
     <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @store } %>
     <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @store } %>
+  </tbody>
+</table>
+
+<!-- Is depot? -->
+<h4><%= t 'ag2_products.stores.depot' %></h4>
+<table class="table table-condensed">
+  <tbody>
+    <tr>
+      <td><%=t 'activerecord.attributes.store.depot' %>:</td>
+      <td><%= @store.supplier.full_name unless @store.supplier.blank? %></td>
+      <td></td>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- Address -->
+<h4><%= t 'ag2_products.stores.address' %></h4>
+<table class="table table-condensed">
+  <tbody>
+    <tr>
+      <td><%= t 'activerecord.attributes.store.address' %>:</td>
+      <td> <%= @store.street_type.street_type_code.titleize  %>. <%= @store.street_name %> <%= @store.street_number %>
+      <% if !@store.building.nil? %>
+      <%= @store.building.titleize %>
+      <% end %>
+      <% if !@store.floor.nil? %>
+      <%= @store.floor %>&ordm;
+      <% end %>
+      <% if !@store.floor_office.nil? %>
+      <%= @store.floor_office %>
+      <% end %> </td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><%= t 'activerecord.attributes.store.town' %>:</td>
+      <td><%= @store.town.name %></td>
+      <td><%= t 'activerecord.attributes.store.province' %>:</td>
+      <td><%= @store.province.name_region_country %></td>
+    </tr>
+    <tr>
+      <td><%= t 'activerecord.attributes.store.zipcode' %>:</td>
+      <td><%= @store.zipcode.zipcode %></td>
+      <td><%= t 'activerecord.attributes.store.email' %>:</td>
+      <td><%= @store.email %></td>
+    </tr>
+    <tr>
+      <td><%= t 'activerecord.attributes.store.phone' %>:</td>
+      <td><%= @store.phone %></td>
+      <td><%= t 'activerecord.attributes.store.fax' %>:</td>
+      <td><%= @store.fax %></td>
+    </tr>
   </tbody>
 </table>
 

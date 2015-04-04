@@ -96,8 +96,9 @@ report.page.values(form_title: I18n.t("activerecord.models.purchase_order.one"),
 				   payment_title: I18n.t("activerecord.attributes.purchase_order.payment_method"),
 				   store_location_title: I18n.t("activerecord.attributes.store.delivery_location"),
 				   payment_method: @purchase_order.payment_method.description,
-				   store_address_1: @purchase_order.store.name,
-				   store_address_2: @purchase_order.store.location)
+				   store_address_1: @purchase_order.store.address_1,
+				   store_address_2: @purchase_order.store.address_2,
+				   store_phones: @purchase_order.store.phone_and_fax)
 # Page footer
 report.page.values(printed_at: Time.now,
 				   pt: I18n.t("every_report.pt"),

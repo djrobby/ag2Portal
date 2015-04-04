@@ -5,7 +5,9 @@ module Ag2Products
     before_filter :authenticate_user!
     load_and_authorize_resource
     skip_load_and_authorize_resource :only => [:st_update_company_textfield_from_office,
-                                               :st_update_company_and_office_textfields_from_organization]
+                                               :st_update_company_and_office_textfields_from_organization,
+                                               :st_update_province_textfield_from_town,
+                                               :st_update_province_textfield_from_zipcode]
     # Helper methods for sorting
     helper_method :sort_column
 
@@ -42,6 +44,22 @@ module Ag2Products
         @offices_dropdown = @offices_dropdown << [i.id, i.name, i.company.name] 
       end
       @json_data = { "companies" => @companies, "offices" => @offices_dropdown, "suppliers" => @suppliers }
+      render json: @json_data
+    end
+
+    # Update province text field at view from town select
+    def st_update_province_textfield_from_town
+      @town = Town.find(params[:id])
+      @province = Province.find(@town.province)
+      render json: @json_data
+    end
+
+    # Update province and town text fields at view from zip code select
+    def st_update_province_textfield_from_zipcode
+      @zipcode = Zipcode.find(params[:id])
+      @town = Town.find(@zipcode.town)
+      @province = Province.find(@town.province)
+      @json_data = { "town_id" => @town.id, "province_id" => @province.id, "zipcode" => @zipcode.zipcode }
       render json: @json_data
     end
 

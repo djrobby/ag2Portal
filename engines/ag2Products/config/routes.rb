@@ -11,6 +11,12 @@ Ag2Products::Engine.routes.draw do
     match 'stores/st_update_company_and_office_textfields_from_organization/:id', :controller => 'stores', :action => 'st_update_company_and_office_textfields_from_organization'
     match 'st_update_company_and_office_textfields_from_organization/:id', :controller => 'stores', :action => 'st_update_company_and_office_textfields_from_organization'
     match 'stores/:id/st_update_company_and_office_textfields_from_organization/:id', :controller => 'stores', :action => 'st_update_company_and_office_textfields_from_organization'
+    match 'stores/st_update_province_textfield_from_town/:id', :controller => 'stores', :action => 'st_update_province_textfield_from_town'
+    match 'st_update_province_textfield_from_town/:id', :controller => 'stores', :action => 'st_update_province_textfield_from_town'
+    match 'stores/:id/st_update_province_textfield_from_town/:id', :controller => 'stores', :action => 'st_update_province_textfield_from_town'
+    match 'stores/st_update_province_textfield_from_zipcode/:id', :controller => 'stores', :action => 'st_update_province_textfield_from_zipcode'
+    match 'st_update_province_textfield_from_zipcode/:id', :controller => 'stores', :action => 'st_update_province_textfield_from_zipcode'
+    match 'stores/:id/st_update_province_textfield_from_zipcode/:id', :controller => 'stores', :action => 'st_update_province_textfield_from_zipcode'
     #
     match 'products/pr_update_code_textfield/:fam/:org', :controller => 'products', :action => 'pr_update_code_textfield'
     match 'pr_update_code_textfield/:fam/:org', :controller => 'products', :action => 'pr_update_code_textfield'
