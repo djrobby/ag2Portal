@@ -40,6 +40,7 @@ es:
         retention_time: "Plazo retención"
         subtotal: "Subtotal"
         taxable: "B.Imponible"
+        taxable_c: "Base Imponible"
         taxes: "Impuestos"
         total: "Total"
         offer_no: "Nº Oferta prov."
@@ -51,3 +52,4 @@ es:
         approval_date: "Aprobado el"
         approver: "Aprobado por"
         approver_id: "Aprobado por"
+        tax_breakdown: "Detalle desglose impositivo"

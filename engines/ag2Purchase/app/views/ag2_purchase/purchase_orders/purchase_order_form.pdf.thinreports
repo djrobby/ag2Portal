@@ -52,7 +52,7 @@ report.layout.config.list(:default) do |c|
 		# Display list totals
 		e.section.item(:subtotal_c).value(I18n.t("activerecord.attributes.purchase_order.subtotal"))
 		e.section.item(:bonus_c).value(I18n.t("activerecord.attributes.purchase_order.bonus") + " " + number_with_precision(@purchase_order.discount_pct, precision: 2) + "%")
-		e.section.item(:taxable_c).value(I18n.t("activerecord.attributes.purchase_order.taxable"))
+		e.section.item(:taxable_c).value(I18n.t("activerecord.attributes.purchase_order.taxable_c"))
 		e.section.item(:taxes_c).value(I18n.t("activerecord.attributes.purchase_order.taxes"))
 		e.section.item(:total_c).value(I18n.t("activerecord.attributes.purchase_order.total").upcase)
 		e.section.item(:subtotal).value(number_with_precision(@purchase_order.subtotal, precision: 2, delimiter: delimiter))
@@ -60,6 +60,14 @@ report.layout.config.list(:default) do |c|
 		e.section.item(:taxable).value(number_with_precision(@purchase_order.taxable, precision: 2, delimiter: delimiter))
 		e.section.item(:taxes).value(number_with_precision(@purchase_order.taxes, precision: 2, delimiter: delimiter))
 		e.section.item(:total).value(number_with_precision(@purchase_order.total, precision: 2, delimiter: delimiter))
+		# Display tax details
+		e.section.item(:tax_details).value(I18n.t("activerecord.attributes.purchase_order.tax_breakdown"))
+		@purchase_order.tax_breakdown.each do |tb|
+			e.section.item(:tax_list).value(tb[0].to_s.rjust(2, '0') + " " + tb[1] + ": " +
+											number_with_precision(tb[3], precision: 2, delimiter: delimiter) + " × " +
+											number_with_precision(tb[2], precision: 2, delimiter: delimiter) + "% = " +
+											number_with_precision(tb[4], precision: 2, delimiter: delimiter) + "\n")
+		end
 	end
 end
 
@@ -103,6 +111,7 @@ report.page.values(form_title: I18n.t("activerecord.models.purchase_order.one"),
 report.page.values(printed_at: Time.now,
 				   pt: I18n.t("every_report.pt"),
 				   pd: I18n.t("every_report.pd"),
+				   currency_note: I18n.t("every_report.currency_note"),
 				   remarks_title: I18n.t("activerecord.attributes.purchase_order.remarks"),
 				   remarks: @purchase_order.remarks)
 

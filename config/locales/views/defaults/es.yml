@@ -44,3 +44,4 @@ es:
     pt: "Página"
     pd: "de"
     page_subtotals: "Subtotales Página"
+    currency_note: "Todos los importes están expresados en Euros (salvo indicación en contrario)"

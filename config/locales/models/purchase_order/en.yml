@@ -40,6 +40,7 @@ en:
         retention_time: "Retention time"
         subtotal: "Subtotal"
         taxable: "Taxable"
+        taxable_c: "Taxable"
         taxes: "Taxes"
         total: "Total"
         offer_no: "Sup.Offer No."
@@ -51,3 +52,4 @@ en:
         approval_date: "Approved on"
         approver: "Approved by"
         approver_id: "Approved by"
+        tax_breakdown: "Tax breakdown detail"
