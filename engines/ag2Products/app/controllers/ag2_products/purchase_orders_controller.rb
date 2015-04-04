@@ -493,6 +493,23 @@ module Ag2Products
         end
       end
     end
+
+    # Report
+    def purchase_order_form
+      # Search purchase order & items
+      @purchase_order = PurchaseOrder.find(params[:id])
+      @items = @purchase_order.purchase_order_items.order('id')
+
+      title = t("activerecord.models.purchase_order.one")      
+
+      respond_to do |format|
+        # Render PDF
+        format.pdf { send_data render_to_string,
+                     filename: "#{title}_#{@purchase_order.full_no}.pdf",
+                     type: 'application/pdf',
+                     disposition: 'inline' }
+      end
+    end
     
     private
     

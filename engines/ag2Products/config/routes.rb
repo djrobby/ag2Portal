@@ -120,7 +120,9 @@ Ag2Products::Engine.routes.draw do
     resources :stores
     resources :purchase_prices
     resources :stocks
-    resources :purchase_orders
+    resources :purchase_orders do
+      get 'purchase_order_form', on: :collection
+    end
     resources :delivery_notes
     resources :receipt_notes
 
