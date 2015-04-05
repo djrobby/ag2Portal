@@ -8,6 +8,9 @@ class Budget < ActiveRecord::Base
   attr_accessible :budget_items_attributes
   
   has_many :budget_items, dependent: :destroy
+  has_many :charge_accounts, through: :budget_items
+  has_many :charge_groups, through: :charge_accounts
+  has_many :budget_headings, through: :charge_groups
 
   # Nested attributes
   accepts_nested_attributes_for :budget_items,                                 
@@ -51,6 +54,7 @@ class Budget < ActiveRecord::Base
   #
   # Calculated fields
   #
+  # By Items
   def total_income
     _result = 0
     budget_items.each do |i|
@@ -157,6 +161,8 @@ class Budget < ActiveRecord::Base
     end
     _result
   end
+
+  # By Groups
 
   #
   # Records navigator

@@ -243,6 +243,11 @@ module Ag2Tech
     def show
       @breadcrumb = 'read'
       @budget = Budget.find(params[:id])
+      #@items = @budget.budget_items.paginate(:page => params[:page], :per_page => per_page).order('id')
+      @items = @budget.budget_items.order(:id)
+      @accounts = @budget.charge_accounts.order(:account_code)
+      @groups = @budget.charge_groups.order(:group_code)
+      @headings = @budget.budget_headings.order(:heading_code)
   
       respond_to do |format|
         format.html # show.html.erb

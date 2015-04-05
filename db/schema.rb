@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150404070003) do
+ActiveRecord::Schema.define(:version => 20150405101726) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -1066,6 +1066,33 @@ ActiveRecord::Schema.define(:version => 20150404070003) do
   add_index "purchase_prices", ["measure_id"], :name => "index_purchase_prices_on_measure_id"
   add_index "purchase_prices", ["product_id"], :name => "index_purchase_prices_on_product_id"
   add_index "purchase_prices", ["supplier_id"], :name => "index_purchase_prices_on_supplier_id"
+
+  create_table "ratio_groups", :force => true do |t|
+    t.string   "code"
+    t.string   "name"
+    t.integer  "organization_id"
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
+  end
+
+  add_index "ratio_groups", ["code"], :name => "index_ratio_groups_on_code"
+  add_index "ratio_groups", ["organization_id", "code"], :name => "index_ratio_groups_on_organization_and_code", :unique => true
+  add_index "ratio_groups", ["organization_id"], :name => "index_ratio_groups_on_organization_id"
+
+  create_table "ratios", :force => true do |t|
+    t.string   "code"
+    t.string   "name"
+    t.integer  "organization_id"
+    t.integer  "ratio_group_id"
+    t.string   "formula"
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
+  end
+
+  add_index "ratios", ["code"], :name => "index_ratios_on_code"
+  add_index "ratios", ["organization_id", "ratio_group_id", "code"], :name => "index_ratios_on_organization_group_code", :unique => true
+  add_index "ratios", ["organization_id"], :name => "index_ratios_on_organization_id"
+  add_index "ratios", ["ratio_group_id"], :name => "index_ratios_on_ratio_group_id"
 
   create_table "receipt_note_items", :force => true do |t|
     t.integer  "receipt_note_id"

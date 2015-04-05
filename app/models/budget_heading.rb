@@ -3,6 +3,7 @@ class BudgetHeading < ActiveRecord::Base
   attr_accessible :heading_code, :name, :organization_id
 
   has_many :charge_groups
+  has_many :charge_accounts, through: :charge_groups
 
   has_paper_trail
 

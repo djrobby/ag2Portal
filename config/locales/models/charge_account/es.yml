@@ -6,6 +6,8 @@ es:
         one:   Cuenta analítica
         few:   Cuentas analíticas
         other: Cuentas analíticas
+        check_for_budget_items: "Cuenta analítica no puede ser eliminada mientras existan presupuestos vinculados."
+        check_for_work_orders: "Cuenta analítica no puede ser eliminada mientras existan ordenes de trabajo vinculadas."
         check_for_purchase_orders: "Cuenta analítica no puede ser eliminada mientras existan pedidos vinculados."
         check_for_receipt_notes: "Cuenta analítica no puede ser eliminada mientras existan notas de recepción vinculadas."
         check_for_delivery_notes: "Cuenta analítica no puede ser eliminada mientras existan notas de entrega vinculadas."

@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  code: MyString
+  name: MyString
+  organization: 
+  ratio_group: 
+  formula: MyString
+
+two:
+  code: MyString
+  name: MyString
+  organization: 
+  ratio_group: 
+  formula: MyString

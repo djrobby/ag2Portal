@@ -6,6 +6,8 @@ en:
         one:   Analytical account
         few:   Analytical accounts
         other: Analytical accounts
+        check_for_budget_items: "Analytical account cannot be destroyed while linked budgets exist."
+        check_for_work_orders: "Analytical account cannot be destroyed while linked work orders exist."
         check_for_purchase_orders: "Analytical account cannot be destroyed while linked orders exist."
         check_for_receipt_notes: "Analytical account cannot be destroyed while linked receipt notes exist."
         check_for_delivery_notes: "Analytical account cannot be destroyed while linked delivery notes exist."

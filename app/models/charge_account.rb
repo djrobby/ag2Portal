@@ -6,6 +6,7 @@ class ChargeAccount < ActiveRecord::Base
   attr_accessible :closed_at, :ledger_account_id, :name, :opened_at,
                   :project_id, :account_code, :organization_id, :charge_group_id
 
+  has_many :budget_items
   has_many :work_orders
   has_many :purchase_orders
   has_many :purchase_order_items
@@ -92,6 +93,11 @@ class ChargeAccount < ActiveRecord::Base
   private
 
   def check_for_dependent_records
+    # Check for budget items
+    if budget_items.count > 0
+      errors.add(:base, I18n.t('activerecord.models.charge_account.check_for_budget_items'))
+      return false
+    end
     # Check for work orders
     if work_orders.count > 0
       errors.add(:base, I18n.t('activerecord.models.charge_account.check_for_work_orders'))
