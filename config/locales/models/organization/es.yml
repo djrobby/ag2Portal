@@ -16,8 +16,10 @@ es:
         check_for_corp_contacts: "Organización no puede ser eliminada mientras existan contactos vinculados."
         check_for_products: "Organización no puede ser eliminada mientras existan productos vinculados."
         check_for_stores: "Organización no puede ser eliminada mientras existan almacenes vinculadas."
-        check_for_products: "Organización no puede ser eliminada mientras existan vehículos vinculados."
-        check_for_stores: "Organización no puede ser eliminada mientras existan herramientas vinculadas."
+        check_for_vehicles: "Organización no puede ser eliminada mientras existan vehículos vinculados."
+        check_for_tools: "Organización no puede ser eliminada mientras existan herramientas vinculadas."
+        check_for_ratios: "Organización no puede ser eliminada mientras existan ratios vinculados."
+        check_for_ratio_groups: "Organización no puede ser eliminada mientras existan grupos ratios vinculados."
     attributes:
       organization:
         name: "Nombre"

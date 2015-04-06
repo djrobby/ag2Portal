@@ -21,6 +21,9 @@ module Ag2Tech
       render json: @json_data
     end
 
+    #
+    # Default Methods
+    #
     # GET /charge_groups
     # GET /charge_groups.json
     def index

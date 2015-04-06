@@ -6,6 +6,10 @@ module Ag2Admin
     load_and_authorize_resource
     # Helper methods for sorting
     helper_method :sort_column
+
+    #
+    # Default Methods
+    #
     # GET /accounting_groups
     # GET /accounting_groups.json
     def index

@@ -328,29 +328,65 @@ class Ability
     end
     # ag2Tech
     if user.has_role? :ag2Tech_User
-      can :crud, Project
+      can :crud, Budget
+      can :crud, BudgetHeading
+      can :crud, BudgetPeriod
       can :crud, ChargeAccount
-      can :crud, WorkOrderType
+      can :crud, ChargeGroup
+      can :crud, Project
+      can :crud, Ratio
+      can :crud, RatioGroup
+      can :crud, Tool
+      can :crud, Vehicle
       can :crud, WorkOrderLabor
       can :crud, WorkOrderStatus
+      can :crud, WorkOrderType
       can :crud, WorkOrder
       can :crud, WorkOrderItem
+      can :crud, WorkOrderWorker
+      can :crud, WorkOrderSubcontractor
+      can :crud, WorkOrderTool
+      can :crud, WorkOrderVehicle
     elsif user.has_role? :ag2Tech_Guest
-      can :read, Project
+      can :read, Budget
+      can :read, BudgetHeading
+      can :read, BudgetPeriod
       can :read, ChargeAccount
-      can :read, WorkOrderType
+      can :read, ChargeGroup
+      can :read, Project
+      can :read, Ratio
+      can :read, RatioGroup
+      can :read, Tool
+      can :read, Vehicle
       can :read, WorkOrderLabor
       can :read, WorkOrderStatus
+      can :read, WorkOrderType
       can :read, WorkOrder
       can :read, WorkOrderItem
+      can :read, WorkOrderWorker
+      can :read, WorkOrderSubcontractor
+      can :read, WorkOrderTool
+      can :read, WorkOrderVehicle
     elsif user.has_role? :ag2Tech_Banned
-      cannot :manage, Project
+      cannot :manage, Budget
+      cannot :manage, BudgetHeading
+      cannot :manage, BudgetPeriod
       cannot :manage, ChargeAccount
-      cannot :manage, WorkOrderType
+      cannot :manage, ChargeGroup
+      cannot :manage, Project
+      cannot :manage, Ratio
+      cannot :manage, RatioGroup
+      cannot :manage, Tool
+      cannot :manage, Vehicle
       cannot :manage, WorkOrderLabor
       cannot :manage, WorkOrderStatus
+      cannot :manage, WorkOrderType
       cannot :manage, WorkOrder
       cannot :manage, WorkOrderItem
+      cannot :manage, WorkOrderWorker
+      cannot :manage, WorkOrderSubcontractor
+      cannot :manage, WorkOrderTool
+      cannot :manage, WorkOrderVehicle
     end
 
   # Define abilities for the passed in user here. For example:

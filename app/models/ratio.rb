@@ -10,7 +10,7 @@ class Ratio < ActiveRecord::Base
                             :length => { :is => 11 },
                             :format => { with: /\A\d+\Z/, message: :code_invalid },
                             :numericality => { :only_integer => true, :greater_than => 0 },
-                            :uniqueness => { :scope => :organization_id }
+                            :uniqueness => { :scope => [:organization_id, :ratio_group_id] }
   validates :name,          :presence => true
   validates :organization,  :presence => true
   validates :ratio_group,   :presence => true

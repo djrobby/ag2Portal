@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150405101726) do
+ActiveRecord::Schema.define(:version => 20150406100038) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -1073,6 +1073,8 @@ ActiveRecord::Schema.define(:version => 20150405101726) do
     t.integer  "organization_id"
     t.datetime "created_at",      :null => false
     t.datetime "updated_at",      :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
   end
 
   add_index "ratio_groups", ["code"], :name => "index_ratio_groups_on_code"
@@ -1087,6 +1089,8 @@ ActiveRecord::Schema.define(:version => 20150405101726) do
     t.string   "formula"
     t.datetime "created_at",      :null => false
     t.datetime "updated_at",      :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
   end
 
   add_index "ratios", ["code"], :name => "index_ratios_on_code"

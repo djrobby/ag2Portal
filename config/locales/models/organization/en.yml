@@ -18,6 +18,9 @@ en:
         check_for_stores: "Organization cannot be destroyed while linked stores exist."
         check_for_vehicles: "Organization cannot be destroyed while linked vehicles exist."
         check_for_tools: "Organization cannot be destroyed while linked tools exist."
+        check_for_vehicles: "Organization cannot be destroyed while linked vehicles exist."
+        check_for_ratios: "Organization cannot be destroyed while linked ratios exist."
+        check_for_ratio_groups: "Organization cannot be destroyed while linked ratio groups exist."
     attributes:
       organization:
         name: "Name"

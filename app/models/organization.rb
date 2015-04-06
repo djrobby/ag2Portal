@@ -43,13 +43,15 @@ class Organization < ActiveRecord::Base
   has_many :projects
   has_many :work_orders
   has_many :charge_accounts
+  has_many :charge_groups
   has_many :work_order_labors
   has_many :work_order_types
-  has_many :charge_groups
   has_many :budget_headings
   has_many :budgets
   has_many :vehicles
   has_many :tools
+  has_many :ratios
+  has_many :ratio_groups
 
   has_paper_trail
 
@@ -125,6 +127,16 @@ class Organization < ActiveRecord::Base
     # Check for tools
     if tools.count > 0
       errors.add(:base, I18n.t('activerecord.models.organization.check_for_tools'))
+      return false
+    end
+    # Check for ratios
+    if ratios.count > 0
+      errors.add(:base, I18n.t('activerecord.models.organization.check_for_ratios'))
+      return false
+    end
+    # Check for ratio groups
+    if ratio_groups.count > 0
+      errors.add(:base, I18n.t('activerecord.models.organization.check_for_ratio_groups'))
       return false
     end
   end

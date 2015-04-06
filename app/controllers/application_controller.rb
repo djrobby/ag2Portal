@@ -474,6 +474,30 @@ end
     code
   end
 
+  # Ratio code
+  def ra_next_code(organization, group)
+    code = ''
+    # Builds code, if possible
+    group_code = RatioGroup.find(group).group_code rescue '$'
+    if group_code == '$'
+      code = '$err'
+    else
+      group = group_code.rjust(4, '0')
+      if organization == 0
+        last_code = RatioGroup.where("code LIKE ?", "#{group}%").order(:code).maximum(:code)
+      else
+        last_code = RatioGroup.where("code LIKE ? AND organization_id = ?", "#{group}%", "#{organization}").order(:code).maximum(:code)
+      end
+      if last_code.nil?
+        code = group + '0000001'
+      else
+        last_code = last_code[4..10].to_i + 1
+        code = group + last_code.to_s.rjust(7, '0')
+      end
+    end
+    code
+   end
+
   private
   
   # NIF/NIE
