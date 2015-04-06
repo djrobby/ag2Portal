@@ -10,8 +10,8 @@ en:
         check_for_charge_groups: "Ledger account cannot be destroyed while linked analytical groups exist."
         check_for_suppliers: "Ledger account cannot be destroyed while linked suppliers exist."
         check_for_clients: "Ledger account cannot be destroyed while linked clients exist."
-    ledger_account:
-      country:
+    attributes:
+      ledger_account:
         name: "Name"
         code: "Code"
         accounting_group: "Accounting group"

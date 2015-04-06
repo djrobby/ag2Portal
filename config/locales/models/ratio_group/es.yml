@@ -1,0 +1,15 @@
+es:
+  activerecord:
+    models:
+      ratio_group:
+        zero:  Grupos ratios
+        one:   Grupo ratio
+        few:   Grupos ratios
+        other: Grupos ratios
+        check_for_contacts: "Grupo ratio no puede ser eliminado mientras existan ratios vinculadas."
+    attributes:
+      ratio_group:
+        name: "Nombre"
+        code: "Código"
+        organization: "Organización"
+        organization_id: "Organización"

@@ -1,0 +1,20 @@
+en:
+  ag2_tech:
+    ratio_groups:
+      index:
+        title: "Ratio groups"
+        btn_new: "New Ratio group"
+        go_to: "Go to Ratios"
+        back_to_root: "Back to ag2Tech"
+      show:
+        title: "Ratio group"
+        btn_edit: "Edit Ratio group"
+        btn_delete: "Delete Ratio group"
+        subtable_title: "Group Ratios"
+        show_to: "Show Ratio group"
+      edit:
+        title: "Edit Ratio group"
+        btn_show: "Show Ratio group"
+      new:
+        title: "New Ratio group"
+      back_to_main_page: "Back to Ratio groups"

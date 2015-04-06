@@ -1,0 +1,15 @@
+en:
+  activerecord:
+    models:
+      ratio_group:
+        zero:  Ratio groups
+        one:   Ratio group
+        few:   Ratio groups
+        other: Ratio groups
+        check_for_ratios: "Ratio group cannot be destroyed while linked ratios exist."
+    ratio_group:
+      ratio_group:
+        name: "Name"
+        code: "Code"
+        organization: "Organization"
+        organization_id: "Organization"

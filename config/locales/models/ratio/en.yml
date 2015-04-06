@@ -1,0 +1,17 @@
+en:
+  activerecord:
+    models:
+      ratio:
+        zero:  Ratios
+        one:   Ratio
+        few:   Ratios
+        other: Ratios
+        check_for_budget_ratios: "Ratio cannot be destroyed while linked budgets exist."
+    attributes:
+      ratio:
+        name: "Name"
+        code: "Code"
+        ratio_group: "Ratio group"
+        ratio_group_id: "Ratio group"
+        organization: "Organization"
+        organization_id: "Organization"

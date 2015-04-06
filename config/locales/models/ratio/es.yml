@@ -1,0 +1,17 @@
+es:
+  activerecord:
+    models:
+      ratio:
+        zero:  Ratios
+        one:   Ratio
+        few:   Ratios
+        other: Ratios
+        check_for_budget_ratios: "Ratio no puede ser eliminado mientras existan presupuestos vinculadas."
+    attributes:
+      ratio:
+        name: "Nombre"
+        code: "Código"
+        ratio_group: "Grupo ratio"
+        ratio_group_id: "Grupo ratio"
+        organization: "Organización"
+        organization_id: "Organización"
