@@ -478,15 +478,15 @@ end
   def ra_next_code(organization, group)
     code = ''
     # Builds code, if possible
-    group_code = RatioGroup.find(group).group_code rescue '$'
+    group_code = RatioGroup.find(group).code rescue '$'
     if group_code == '$'
       code = '$err'
     else
       group = group_code.rjust(4, '0')
       if organization == 0
-        last_code = RatioGroup.where("code LIKE ?", "#{group}%").order(:code).maximum(:code)
+        last_code = Ratio.where("code LIKE ?", "#{group}%").order(:code).maximum(:code)
       else
-        last_code = RatioGroup.where("code LIKE ? AND organization_id = ?", "#{group}%", "#{organization}").order(:code).maximum(:code)
+        last_code = Ratio.where("code LIKE ? AND organization_id = ?", "#{group}%", "#{organization}").order(:code).maximum(:code)
       end
       if last_code.nil?
         code = group + '0000001'

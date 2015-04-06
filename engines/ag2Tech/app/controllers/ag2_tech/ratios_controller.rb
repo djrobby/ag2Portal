@@ -46,15 +46,11 @@ module Ag2Tech
       manage_filter_state
       init_oco if !session[:organization]
   
-      @search = Ratio.search do
-        fulltext params[:search]
-        if session[:organization] != '0'
-          with :organization_id, session[:organization]
-        end
-        order_by :code, :asc
-        paginate :page => params[:page] || 1, :per_page => per_page
+      if session[:organization] != '0'
+        @ratios = Ratio.where(organization_id: session[:organization]).paginate(:page => params[:page], :per_page => per_page).order(sort_column + ' ' + sort_direction)
+      else
+        @ratios = Ratio.paginate(:page => params[:page], :per_page => per_page).order(sort_column + ' ' + sort_direction)
       end
-      @ratios = @search.results
 
       respond_to do |format|
         format.html # index.html.erb

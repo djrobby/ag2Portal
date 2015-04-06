@@ -1,0 +1,35 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  budget: 
+  ratio: 
+  amount: 9.99
+  month_01: 9.99
+  month_02: 9.99
+  month_03: 9.99
+  month_04: 9.99
+  month_05: 9.99
+  month_06: 9.99
+  month_07: 9.99
+  month_08: 9.99
+  month_09: 9.99
+  month_10: 9.99
+  month_11: 9.99
+  month_12: 9.99
+
+two:
+  budget: 
+  ratio: 
+  amount: 9.99
+  month_01: 9.99
+  month_02: 9.99
+  month_03: 9.99
+  month_04: 9.99
+  month_05: 9.99
+  month_06: 9.99
+  month_07: 9.99
+  month_08: 9.99
+  month_09: 9.99
+  month_10: 9.99
+  month_11: 9.99
+  month_12: 9.99

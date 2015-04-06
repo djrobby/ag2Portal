@@ -328,9 +328,11 @@ class Ability
     end
     # ag2Tech
     if user.has_role? :ag2Tech_User
-      can :crud, Budget
       can :crud, BudgetHeading
       can :crud, BudgetPeriod
+      can :crud, Budget
+      can :crud, BudgetItem
+      can :crud, BudgetRatio
       can :crud, ChargeAccount
       can :crud, ChargeGroup
       can :crud, Project
@@ -348,9 +350,11 @@ class Ability
       can :crud, WorkOrderTool
       can :crud, WorkOrderVehicle
     elsif user.has_role? :ag2Tech_Guest
-      can :read, Budget
       can :read, BudgetHeading
       can :read, BudgetPeriod
+      can :read, Budget
+      can :read, BudgetItem
+      can :read, BudgetRatio
       can :read, ChargeAccount
       can :read, ChargeGroup
       can :read, Project
@@ -368,9 +372,11 @@ class Ability
       can :read, WorkOrderTool
       can :read, WorkOrderVehicle
     elsif user.has_role? :ag2Tech_Banned
-      cannot :manage, Budget
       cannot :manage, BudgetHeading
       cannot :manage, BudgetPeriod
+      cannot :manage, Budget
+      cannot :manage, BudgetItem
+      cannot :manage, BudgetRatio
       cannot :manage, ChargeAccount
       cannot :manage, ChargeGroup
       cannot :manage, Project

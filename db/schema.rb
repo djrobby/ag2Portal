@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150406100038) do
+ActiveRecord::Schema.define(:version => 20150406174435) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -143,6 +143,31 @@ ActiveRecord::Schema.define(:version => 20150406100038) do
   add_index "budget_periods", ["organization_id"], :name => "index_budget_periods_on_organization_id"
   add_index "budget_periods", ["period_code"], :name => "index_budget_periods_on_period_code"
   add_index "budget_periods", ["starting_at"], :name => "index_budget_periods_on_starting_at"
+
+  create_table "budget_ratios", :force => true do |t|
+    t.integer  "budget_id"
+    t.integer  "ratio_id"
+    t.decimal  "amount",     :precision => 13, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "month_01",   :precision => 13, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "month_02",   :precision => 13, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "month_03",   :precision => 13, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "month_04",   :precision => 13, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "month_05",   :precision => 13, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "month_06",   :precision => 13, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "month_07",   :precision => 13, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "month_08",   :precision => 13, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "month_09",   :precision => 13, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "month_10",   :precision => 13, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "month_11",   :precision => 13, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "month_12",   :precision => 13, :scale => 4, :default => 0.0, :null => false
+    t.datetime "created_at",                                                 :null => false
+    t.datetime "updated_at",                                                 :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  add_index "budget_ratios", ["budget_id"], :name => "index_budget_ratios_on_budget_id"
+  add_index "budget_ratios", ["ratio_id"], :name => "index_budget_ratios_on_ratio_id"
 
   create_table "budgets", :force => true do |t|
     t.string   "budget_no"

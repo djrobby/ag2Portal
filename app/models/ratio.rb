@@ -38,19 +38,12 @@ class Ratio < ActiveRecord::Base
     name.blank? ? "" : self.name[0,40]
   end
 
-  searchable do
-    text :code, :name
-    string :code
-    integer :ratio_group_id
-    integer :organization_id
-  end
-
   private
   
   def check_for_budget_ratios
-    if budget_ratios.count > 0
-      errors.add(:base, I18n.t('activerecord.models.ratio_group.check_for_budget_ratios'))
-      return false
-    end
+#    if budget_ratios.count > 0
+#      errors.add(:base, I18n.t('activerecord.models.ratio_group.check_for_budget_ratios'))
+#      return false
+#    end
   end
 end
