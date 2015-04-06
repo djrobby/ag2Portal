@@ -37,3 +37,9 @@ es:
       vehicles:
         items: "Vehículos"
         item: "Vehículo"
+      ratios:
+        items: "Ratios"
+        item: "Ratio"
+      ratio_groups:
+        items: "Grupos ratios"
+        item: "Grupo"

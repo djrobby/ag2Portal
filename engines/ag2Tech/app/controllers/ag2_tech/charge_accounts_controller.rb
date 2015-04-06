@@ -45,10 +45,12 @@ module Ag2Tech
     def index
       manage_filter_state
       project = params[:Project]
+      group = params[:Group]
       # OCO
       init_oco if !session[:organization]
       # Initialize select_tags
       @projects = projects_dropdown if @projects.nil?
+      @groups = groups_dropdown if @groups.nil?
   
       current_projects = @projects.blank? ? [0] : current_projects_for_index(@projects)
       @search = ChargeAccount.search do
@@ -62,6 +64,9 @@ module Ag2Tech
         end
         if !project.blank?
           with :project_id, project
+        end
+        if !group.blank?
+          with :charge_group_id, group
         end
         order_by :account_code, :asc
         paginate :page => params[:page] || 1, :per_page => per_page
@@ -220,6 +225,12 @@ module Ag2Tech
         session[:Project] = params[:Project]
       elsif session[:Project]
         params[:Project] = session[:Project]
+      end
+      # group
+      if params[:Group]
+        session[:Group] = params[:Group]
+      elsif session[:Group]
+        params[:Group] = session[:Group]
       end
     end
   end

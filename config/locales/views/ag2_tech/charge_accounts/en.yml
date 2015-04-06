@@ -6,6 +6,7 @@ en:
         btn_new: "New Analytical account"
         back_to_root: "Back to ag2Tech"
         label_project: "Project"
+        label_group: "Group"
         label_others: "Others"
         btn_apply: "Apply Filter"
       show:

@@ -1,21 +1,6 @@
-<h1>Listing ratio_groups</h1>
+<%= render '/layouts/ag2_tech/rgroupsbreadcrumb' %>
 
-<table>
-  <tr>
-    <th></th>
-    <th></th>
-    <th></th>
-  </tr>
-
-<% @ratio_groups.each do |ratio_group| %>
-  <tr>
-    <td><%= link_to 'Show', ratio_group %></td>
-    <td><%= link_to 'Edit', edit_ratio_group_path(ratio_group) %></td>
-    <td><%= link_to 'Destroy', ratio_group, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-  </tr>
-<% end %>
-</table>
-
-<br />
-
-<%= link_to 'New Ratio group', new_ratio_group_path %>
+<h3><%=t '.title' %></h3>
+<div class="span7" id="div_table">
+  <%= render 'ratio_groups' %>
+</div>

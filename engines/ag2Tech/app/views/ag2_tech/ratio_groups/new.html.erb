@@ -1,5 +1,7 @@
-<h1>New ratio_group</h1>
+<%= render '/layouts/ag2_tech/rgroupsbreadcrumb' %>
+
+<h3><%=t '.title' %></h3>
 
 <%= render 'form' %>
 
-<%= link_to 'Back', ratio_groups_path %>
+<%= link_to t("ag2_tech.ratio_groups.back_to_main_page"), ratio_groups_path %>

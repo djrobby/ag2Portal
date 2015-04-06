@@ -101,6 +101,13 @@ Ag2Tech::Engine.routes.draw do
     match 'vehicles/ve_update_name_textfield_from_product/:product', :controller => 'vehicles', :action => 've_update_name_textfield_from_product'
     match 've_update_name_textfield_from_product/:product', :controller => 'vehicles', :action => 've_update_name_textfield_from_product'
     match 'vehicles/:id/ve_update_name_textfield_from_product/:product', :controller => 'vehicles', :action => 've_update_name_textfield_from_product'
+    #
+    match 'ratios/ra_generate_code/:group/:org', :controller => 'ratios', :action => 'ra_generate_code'
+    match 'ra_generate_code/:group/:org', :controller => 'ratios', :action => 'ra_generate_code'
+    match 'ratios/:id/ra_generate_code/:group/:org', :controller => 'ratios', :action => 'ra_generate_code'
+    match 'ratios/ra_update_group_from_organization/:org', :controller => 'ratios', :action => 'ra_update_group_from_organization'
+    match 'ra_update_group_from_organization/:org', :controller => 'ratios', :action => 'ra_update_group_from_organization'
+    match 'ratios/:id/ra_update_group_from_organization/:org', :controller => 'ratios', :action => 'ra_update_group_from_organization'
     
     # Resources
     resources :projects

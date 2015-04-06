@@ -13,12 +13,14 @@
 
   $(window).bind("load", function() {
     $("#Project").select2("val", "<%= params[:Project] %>");
+    $("#Group").select2("val", "<%= params[:Group] %>");
   });
 
   jQuery(function($) {
     // when the #removeFilter button clicked
     $("#removeFilter").click(function() {
       $("#Project").select2("val", "");
+      $("#Group").select2("val", "");
       $("#search").val("");
       // no AJAX
       //_thisForm.submit();
@@ -43,6 +45,9 @@
         <!-- Project -->
         <%= label_tag I18n.t("ag2_tech.charge_accounts.index.label_project"), nil, :class => 'form-label' %>
         <%= select_tag "Project", options_from_collection_for_select(@projects, "id", "full_name"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
+        <!-- Group -->
+        <%= label_tag I18n.t("ag2_tech.charge_accounts.index.label_group"), nil, :class => 'form-label-under-sel2' %>
+        <%= select_tag "Group", options_from_collection_for_select(@groups, "id", "full_name"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
         <!-- Others -->
         <%= label_tag I18n.t("ag2_tech.charge_accounts.index.label_others"), nil, :class => 'form-label-under-sel2' %>
         <%= text_field_tag :search, params[:search], :class => 'x-large-text-field shrinked' %>

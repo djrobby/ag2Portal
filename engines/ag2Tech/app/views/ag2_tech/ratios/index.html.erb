@@ -1,21 +1,6 @@
-<h1>Listing ratios</h1>
+<%= render '/layouts/ag2_tech/ratiosbreadcrumb' %>
 
-<table>
-  <tr>
-    <th></th>
-    <th></th>
-    <th></th>
-  </tr>
-
-<% @ratios.each do |ratio| %>
-  <tr>
-    <td><%= link_to 'Show', ratio %></td>
-    <td><%= link_to 'Edit', edit_ratio_path(ratio) %></td>
-    <td><%= link_to 'Destroy', ratio, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-  </tr>
-<% end %>
-</table>
-
-<br />
-
-<%= link_to 'New Ratio', new_ratio_path %>
+<h3><%=t '.title' %></h3>
+<div class="span11" id="div_table">
+  <%= render 'ratios' %>
+</div>

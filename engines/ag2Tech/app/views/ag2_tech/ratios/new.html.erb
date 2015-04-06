@@ -1,5 +1,7 @@
-<h1>New ratio</h1>
+<%= render '/layouts/ag2_tech/ratiosbreadcrumb' %>
+
+<h3><%=t '.title' %></h3>
 
 <%= render 'form' %>
 
-<%= link_to 'Back', ratios_path %>
+<%= link_to t("ag2_tech.ratios.back_to_main_page"), ratios_path %>

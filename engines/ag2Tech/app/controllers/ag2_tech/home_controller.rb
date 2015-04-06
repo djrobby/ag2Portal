@@ -15,6 +15,7 @@ module Ag2Tech
       session[:direction] = nil      
       session[:ifilter] = nil      
       session[:Period] = nil      
+      session[:Group] = nil      
     end
   end
 end

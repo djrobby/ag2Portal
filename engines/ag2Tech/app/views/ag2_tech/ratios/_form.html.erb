@@ -1,17 +1,196 @@
-<%= form_for(@ratio) do |f| %>
-  <% if @ratio.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@ratio.errors.count, "error") %> prohibited this ratio from being saved:</h2>
+<script>
+  var text_field_color;
+  var old_grp = '';
+  var old_org = '';
+  var old_code = '';
 
-      <ul>
-      <% @ratio.errors.full_messages.each do |msg| %>
-        <li><%= msg %></li>
-      <% end %>
-      </ul>
-    </div>
-  <% end %>
+  $(document).ready(function() {
+    // Save default text color
+    text_field_color = $("#ratio_code").css('color')
 
-  <div class="actions">
-    <%= f.submit %>
-  </div>
+    // Disable fields if #ratio_code blank
+    var code = $('#ratio_code').val();
+    if (code == "")
+      code = "0";
+    if (code == "0") {
+      // Empty code: Disable
+      $('#submit_btn').hide();
+    } else {
+      // Code OK: Enable
+      $('#submit_btn').show();
+      old_grp = $('#ratio_ratio_group_id').val();
+    }
+
+    // Disable generate_code_btn if ratio_organization_id blank
+    var order = $('#ratio_organization_id').val();
+    if (order == "")
+      order = "0";
+    if (order == "0") {
+      // Empty organization: Hide
+      $('#generate_code_btn').hide();
+    } else {
+      // Organization OK: Show (if not updating)
+      old_org = $('#ratio_organization_id').val();
+      old_code = $('#ratio_code').val();
+      if ('<%= @breadcrumb %>' == "update") {
+        $('#generate_code_btn').hide();
+      } else {
+        $('#generate_code_btn').show();
+      }
+    }
+    
+    // Can't change code if editing
+    if ('<%= @breadcrumb %>' == "update") {
+      $('#ratio_code').prop('readonly', true);
+    } else {
+      $('#ratio_code').prop('readonly', false);
+    }
+  });
+
+  jQuery(function($) {
+    // when the #ratio_code field changes
+    $("#ratio_code").change(function() {
+      var order = $('#ratio_code').val();
+      if (order == "")
+        order = "0";
+      if (order == "0") {
+        // Empty order: Disable
+        $('#submit_btn').hide();
+      } else {
+        // Order OK: Enable
+        $('#submit_btn').show();
+      }
+    });
+
+    // when #generate_code_btn is clicked
+    $("#generate_code_btn").click(function() {
+      // make a POST call and replace the content
+      var grp = $('select#ratio_ratio_group_id :selected').val();
+      if (grp == "")
+        grp = "$";
+      var org = $('select#ratio_organization_id :selected').val();
+      if (org == "")
+        org = "$";
+      jQuery.getJSON('ra_generate_code/' + grp + '/' + org, function(data) {
+        $("#ratio_code").val(data.code);
+        if ($("#ratio_code").val() == "$err") {
+          $("#ratio_code").css('color', 'red');
+          alert('<%= I18n.t("ag2_tech.ratios.code_error") %>');
+          $('#ratio_code').select();
+        } else {
+          $("#ratio_code").css('color', text_field_color);
+          $("#ratio_code").trigger("change");
+        }
+      });
+      return false;
+    });
+
+    // when the #ratio_organization_id field changes
+    $("#ratio_organization_id").change(function() {
+      // make a POST call and replace the content
+      var order = $('select#ratio_organization_id :selected').val();
+      if (order == "")
+        order = "0";
+      jQuery.getJSON('ra_update_group_from_organization/' + order, function(data) {
+        var g = data.groups;
+        // Groups
+        $("#ratio_ratio_group_id").html("");
+        $("#ratio_ratio_group_id").val("");
+        $("#ratio_ratio_group_id").append($('<option></option>').val("").html(""));
+        if (!g.length) {
+          $.each(data, function(id, option) {
+            if (id == 'groups' && option != "") {
+              $("#ratio_ratio_group_id").append($('<option></option>').val(option.id).html(option.code + " " + option.name));
+            }
+          });
+        } else {
+          $.each(g, function(id, option) {
+            $("#ratio_ratio_group_id").append($('<option></option>').val(option.id).html(option.code + " " + option.name));
+          });
+        }
+      });
+      if (order == '0') $("#ratio_ratio_group_id").val(0);
+      // Disable generate_code_btn if ratio_organization_id blank
+      show_hide_generate_code_btn();
+      return false;
+    });
+
+    // when the #ratio_ratio_group_id field changes
+    $("#ratio_ratio_group_id").change(function() {
+      var grp = $('select#ratio_ratio_group_id :selected').val();
+      if (grp == "")
+        grp = "0";
+      if (grp == "0") {
+        // Empty group: Disable
+        $('#ratio_code').prop('disabled', true);
+        $('#generate_code_btn').hide();
+        $('#submit_btn').hide();
+      } else {
+        // Group OK: Enable
+        $('#ratio_code').prop('disabled', false);
+        $('#generate_code_btn').show();
+        $('#submit_btn').show();
+      }
+      // Disable generate_code_btn if charge_account_charge_group_id blank
+      show_hide_generate_code_btn();
+    });
+  });
+  
+  function show_hide_generate_code_btn() {
+    // Disable generate_code_btn if ratio_organization_id and ratio_ratio_group_id are blank
+    var grp = $('select#ratio_ratio_group_id :selected').val();
+    if (grp == "")
+      grp = "$";
+    var org = $('select#ratio_organization_id :selected').val();
+    if (org == "")
+      org = "$";
+    if (grp != "$" && org != "$") {
+      // Show (if not updating)
+      if ('<%= @breadcrumb == 'update' %>') {
+        if (old_org == $('#ratio_organization_id').val() && old_grp == $('#ratio_ratio_group_id').val()) {
+          $('#ratio_code').val(old_code);
+          $("#ratio_code").css('color', text_field_color);
+          $('#generate_code_btn').hide();
+        } else {
+          $('#generate_code_btn').show();
+        }
+      } else {
+        $('#generate_code_btn').show();
+      }
+    } else {
+      // Hide
+      $('#generate_code_btn').hide();
+    }    
+  }
+</script>
+
+<%= simple_form_for @ratio, :html => {:class => 'form-vertical well' } do |f| %>
+<%= f.error_notification %>
+<%= display_base_errors resource %>
+<div>
+  <label class="multi-field-label-two"> <%= f.input :code, autofocus: true, input_html: { class: 'x-large-text-field', maxlength: 11 }, label_html: { class: 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.input :name, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %> </label>
+</div>
+<div>
+  <label class="multi-field-label-two">
+    <% if session[:organization] != '0' %>
+    <%= f.association :organization, collection: Organization.where("id = ?", "#{session[:organization]}").all, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' }, include_blank: false %>
+    <% elsif current_user.organizations.count > 0 %>
+    <%= f.association :organization, collection: current_user.organizations.order('name'), input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' }, include_blank: false %>
+    <% else %>
+    <%= f.association :organization, collection: Organization.order('name'), input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %>
+    <% end %>
+  </label>
+  <label class="multi-field-label-two">
+    <%= f.association :ratio_group, collection: @groups, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %>
+  </label>
+</div>
+<table class="form-table">
+  <tbody>
+    <tr class="form-tr">
+      <td class="form-td-three left-winged"> <%= f.button :submit, :class => 'btn-primary', :id => 'submit_btn' %> </td>
+      <td class="form-td-three right-winged"><a href="#" id="generate_code_btn" class="btn btn-warning"><%=t 'ag2_tech.ratios.generate_code_btn' %></a></td>
+    </tr>
+  </tbody>
+</table>
 <% end %>

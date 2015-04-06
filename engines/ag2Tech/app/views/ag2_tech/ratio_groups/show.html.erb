@@ -1,5 +1,40 @@
-<p id="notice"><%= notice %></p>
+<%= render '/layouts/ag2_tech/rgroupsbreadcrumb' %>
 
+<h3><%=t '.title' %></h3>
+<table class="table">
+  <tbody>
+    <tr>
+      <td>Id:</td>
+      <td><%= @ratio_group.id %></td>
+      <td><%=t 'activerecord.attributes.ratio_group.code' %>:</td>
+      <td><b><%= @ratio_group.code %></b></td>
+    </tr>
+      <td><%=t 'activerecord.attributes.ratio_group.name' %>:</td>
+      <td><%= @ratio_group.name %></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @ratio_group } %>
+    <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @ratio_group } %>
+  </tbody>
+</table>
 
-<%= link_to 'Edit', edit_ratio_group_path(@ratio_group) %> |
-<%= link_to 'Back', ratio_groups_path %>
+<%= render partial: '/layouts/crud/update_delete_new', locals:
+{ model: RatioGroup, update_path: edit_ratio_group_path(@ratio_group), update_txt: t('.btn_edit'),
+delete_path: @ratio_group, delete_txt: t('.btn_delete'), msg: t("activerecord.models.ratio_group.one"), txt: @ratio_group.full_name,
+new_path: new_ratio_group_path, new_txt: t('ag2_tech.ratio_groups.index.btn_new') } %>
+
+<% if (@ratios.count > 0) %>
+<h4><%=t '.subtable_title' %></h4>
+<table class="table table-condensed table-striped shrinked">
+  <thead>
+    <%= render '/layouts/ag2_tech/ratiosheader' %>
+  </thead>
+  <tbody>
+    <%= render :partial => '/layouts/ag2_tech/ratios', :locals => { :ratios => @ratios } %>
+  </tbody>
+</table>
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @ratios } %>
+<% end %>
+
+<%= link_to t("ag2_tech.ratio_groups.back_to_main_page"), ratio_groups_path %>

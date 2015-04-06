@@ -35,11 +35,7 @@ class Ratio < ActiveRecord::Base
   end
 
   def partial_name
-    name.blank? ? "" : self.name[0,30]
-  end
-
-  def partial_group_name
-    ratio_group.blank? ? "" : ratio_group.name[0,30]
+    name.blank? ? "" : self.name[0,40]
   end
 
   searchable do

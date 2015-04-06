@@ -1,6 +1,6 @@
 es:
   ag2_tech:
-    ratio_groups:
+    ratios:
       index:
         title: "Ratios"
         btn_new: "Nuevo Ratio"
@@ -17,3 +17,5 @@ es:
       new:
         title: "Nuevo Ratio"
       back_to_main_page: "Volver a Ratios"
+      generate_code_btn: "Código de Ratio"
+      code_error: "Imposible generar Código de Ratio: No has elegido Organización o Grupo."

@@ -1,6 +1,6 @@
 en:
   ag2_tech:
-    ratio_groups:
+    ratios:
       index:
         title: "Ratios"
         btn_new: "New Ratio"
@@ -17,3 +17,5 @@ en:
       new:
         title: "New Ratio"
       back_to_main_page: "Back to Ratios"
+      generate_code_btn: "Ratio Code"
+      code_error: "Unable to generate Ratio Code: No Organization or Group chosen."
