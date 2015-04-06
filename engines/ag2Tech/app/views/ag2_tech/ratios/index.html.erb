@@ -1,0 +1,21 @@
+<h1>Listing ratios</h1>
+
+<table>
+  <tr>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @ratios.each do |ratio| %>
+  <tr>
+    <td><%= link_to 'Show', ratio %></td>
+    <td><%= link_to 'Edit', edit_ratio_path(ratio) %></td>
+    <td><%= link_to 'Destroy', ratio, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Ratio', new_ratio_path %>

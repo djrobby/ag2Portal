@@ -115,6 +115,8 @@ Ag2Tech::Engine.routes.draw do
     resources :budgets
     resources :tools
     resources :vehicles
+    resources :ratios
+    resources :ratio_groups
     
     # Root
     root :to => 'home#index'

@@ -1,0 +1,17 @@
+<%= form_for(@ratio) do |f| %>
+  <% if @ratio.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@ratio.errors.count, "error") %> prohibited this ratio from being saved:</h2>
+
+      <ul>
+      <% @ratio.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>
