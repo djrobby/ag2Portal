@@ -2,6 +2,14 @@
 
 <h3><%=t '.title' %></h3>
 <table class="table">
+  <!-- first label -->
+  <col width="13%" />
+  <!-- first text field -->
+  <col width="37%" />
+  <!-- second label -->
+  <col width="13%" />
+  <!-- second text field -->
+  <col width="37%" />
   <tbody>
     <tr>
       <td><%=t :"activerecord.attributes.ticket.id" %>:</td>
@@ -22,8 +30,8 @@
     <tr>
       <td><%=t :"activerecord.attributes.ticket.ticket_message" %>:</td>
       <td><%= @ticket.ticket_message %></td>
-      <td></td>
-      <td></td>
+      <td>Cc:</td>
+      <td><%= @ticket.cc.email unless @ticket.cc.blank? %></td>
     </tr>
     <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @ticket } %>
     <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @ticket } %>
@@ -32,12 +40,6 @@
       <td><%= @ticket.office.name unless @ticket.office.blank? %></td>
       <td><%=t :"activerecord.attributes.ticket.source_ip" %>:</td>
       <td><%= @ticket.source_ip unless @ticket.source_ip.blank? %></td>
-    </tr>
-    <tr>
-      <td>Cc:</td>
-      <td><%= @ticket.cc.email unless @ticket.cc.blank? %></td>
-      <td></td>
-      <td></td>
     </tr>
     <tr>
       <td><%=t :"activerecord.attributes.ticket.assign_at" %>:</td>
