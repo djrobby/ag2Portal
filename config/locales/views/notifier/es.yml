@@ -20,6 +20,8 @@ es:
       subject: "aGestiona2: Su solicitud de soporte ha sido actualizada"
       number: "Solicitud Nº: "
       created_at: "Creada el: "
+      created_by: "Creada por: "
+      office: "Oficina: "
       category: "Categoría: "
       priority: "Prioridad: "
       title: "Asunto: "

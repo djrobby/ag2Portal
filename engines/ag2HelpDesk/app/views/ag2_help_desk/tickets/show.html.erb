@@ -5,26 +5,19 @@
   <tbody>
     <tr>
       <td><%=t :"activerecord.attributes.ticket.id" %>:</td>
-      <td><b><%= @ticket.id.to_s.rjust(7, '0') %></b></td>
       <% if !@ticket.attachment.blank? %>
-      <td><%=t :"activerecord.attributes.ticket.attachment" %>:</td>
-      <td class="highlighted"><%=t :"activerecord.attributes.ticket.attach_exist" %></td>
+      <td><b><%= @ticket.id.to_s.rjust(7, '0') %></b><a style="margin-left: 1em;" href="#attachment"><i class="icon-paperclip-black"></a></td>
       <% else %>
-      <td></td>
-      <td></td>
+      <td><b><%= @ticket.id.to_s.rjust(7, '0') %></b></td>
       <% end %>
+      <td><%=t :"activerecord.attributes.ticket.ticket_subject" %>:</td>
+      <td><%= @ticket.ticket_subject %></td>
     </tr>
     <tr>
       <td><%=t :"activerecord.attributes.ticket.ticket_category" %>:</td>
       <td><%= @ticket.ticket_category.name.titleize %></td>
       <td><%=t :"activerecord.attributes.ticket.ticket_priority" %>:</td>
       <td><%= @ticket.ticket_priority.name.titleize %></td>
-    </tr>
-    <tr>
-      <td><%=t :"activerecord.attributes.ticket.ticket_subject" %>:</td>
-      <td><%= @ticket.ticket_subject %></td>
-      <td></td>
-      <td></td>
     </tr>
     <tr>
       <td><%=t :"activerecord.attributes.ticket.ticket_message" %>:</td>
@@ -39,6 +32,12 @@
       <td><%= @ticket.office.name unless @ticket.office.blank? %></td>
       <td><%=t :"activerecord.attributes.ticket.source_ip" %>:</td>
       <td><%= @ticket.source_ip unless @ticket.source_ip.blank? %></td>
+    </tr>
+    <tr>
+      <td>Cc:</td>
+      <td><%= @ticket.cc.email unless @ticket.cc.blank? %></td>
+      <td></td>
+      <td></td>
     </tr>
     <tr>
       <td><%=t :"activerecord.attributes.ticket.assign_at" %>:</td>
@@ -71,6 +70,8 @@ new_path: new_ticket_path, new_txt: t('ag2_help_desk.tickets.index.btn_new') } %
 <% if !@ticket.attachment.blank? %>
 <br />
 <br />
+<a name="attachment"></a>
+<%=t :"activerecord.attributes.ticket.attachment" %>:
 <div id="dd_files">
   <% if session[:resolution] == "LD" %>
   <%= image_tag @ticket.attachment.url(:small) %> <!-- small image size -->

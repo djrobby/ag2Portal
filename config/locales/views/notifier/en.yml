@@ -20,6 +20,8 @@ en:
       subject: "aGestiona2: Your support ticket has been updated"
       number: "Ticket #: "
       created_at: "Created at: "
+      created_by: "Created by: "
+      office: "Office: "
       category: "Category: "
       priority: "Priority: "
       title: "Subject: "

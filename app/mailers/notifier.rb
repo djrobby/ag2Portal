@@ -15,18 +15,28 @@ class Notifier < ActionMailer::Base
   def ticket_created(ticket)
     @ticket = ticket
 
-    user = User.find(ticket.created_by)
+    user = User.find(ticket.created_by) rescue nil
+    cc = User.find(ticket.cc_id) rescue nil
+    recipients = ticket.hd_email
     if !user.nil?
-      mail from: user.email, to: ticket.hd_email
+      if !cc.nil?
+        recipients += "," + cc.email
+      end
+      mail from: user.email, to: recipients
     end
   end
 
   def ticket_updated(ticket)
     @ticket = ticket
 
-    user = User.find(ticket.created_by)
+    user = User.find(ticket.created_by) rescue nil
+    cc = User.find(ticket.cc_id) rescue nil
     if !user.nil?
-      mail to: user.email
+      recipients = user.email
+      if !cc.nil?
+        recipients += "," + cc.email
+      end
+      mail to: recipients
     end
   end
 end

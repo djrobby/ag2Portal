@@ -11,6 +11,7 @@
   <thead>
     <tr>
       <th><%= t :"activerecord.attributes.ticket.id" %></th>
+      <th></th>
       <th><%= t :created_at %></th>
       <th><%= t :created_by %></th>
       <th><%= t :"activerecord.attributes.ticket.ticket_subject" %></th>
@@ -22,6 +23,11 @@
     <% @tickets.each do |ticket| %>
     <tr>
       <td><%= link_to ticket.id.to_s.rjust(7, '0'), ticket %></td>
+      <% if !ticket.attachment.blank? %>
+      <td style="width: 14px"><i class="icon-paperclip-black"></td>
+      <% else %>
+      <td></td>
+      <% end %>
       <td><%= ticket.created_at.strftime("%d/%m/%Y %H:%M:%S") %></td>
       <td><%= User.find(ticket.created_by).email unless ticket.created_by.blank? %></td>
       <td><%= ticket.ticket_subject %></td>

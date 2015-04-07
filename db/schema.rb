@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150406174435) do
+ActiveRecord::Schema.define(:version => 20150407055155) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -1739,6 +1739,7 @@ ActiveRecord::Schema.define(:version => 20150406174435) do
     t.string   "source_ip"
     t.string   "hd_email"
     t.integer  "organization_id"
+    t.integer  "cc_id"
   end
 
   add_index "tickets", ["assign_at"], :name => "index_tickets_on_assign_at"
