@@ -141,10 +141,94 @@
 <% end %> <!-- end @workers.count > 0 -->
 
 <!-- Subcontractors -->
+<table class="form-table">
+  <tbody>
+    <tr class="form-tr underlined-tr">
+      <td class="form-td-two left-winged">
+        <h4><%= t 'ag2_tech.work_orders.subcontractors_info' %></h4>
+      </td>
+      <td class="form-td-two right-winged">
+        <%= link_to t(".print"), work_orders_path, :class => 'btn btn-warning' %>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<% if (@subcontractors.count > 0) %>
+<table class="table table-condensed table-striped shrinked">
+  <thead>
+    <%= render 'subcontractors_header' %>
+  </thead>
+  <tfoot>
+    <%= render partial: 'subcontractors_footer', :locals => { order: @work_order } %>
+  </tfoot>
+  <tbody>
+    <%= render partial: 'subcontractor', collection: @subcontractors %>
+  </tbody>
+</table>
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @subcontractors } %>
+<% else %>
+<%= render :partial => '/layouts/paginationunbordered', :locals => { :ivar => @subcontractors } %>
+<% end %> <!-- end @subcontractors.count > 0 -->
 
 <!-- Tools -->
+<table class="form-table">
+  <tbody>
+    <tr class="form-tr underlined-tr">
+      <td class="form-td-two left-winged">
+        <h4><%= t 'ag2_tech.work_orders.tools_info' %></h4>
+      </td>
+      <td class="form-td-two right-winged">
+        <%= link_to t(".print"), work_orders_path, :class => 'btn btn-warning' %>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<% if (@tools.count > 0) %>
+<table class="table table-condensed table-striped shrinked">
+  <thead>
+    <%= render 'tools_header' %>
+  </thead>
+  <tfoot>
+    <%= render partial: 'tools_footer', :locals => { order: @work_order } %>
+  </tfoot>
+  <tbody>
+    <%= render partial: 'tool', collection: @tools %>
+  </tbody>
+</table>
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @tools } %>
+<% else %>
+<%= render :partial => '/layouts/paginationunbordered', :locals => { :ivar => @tools } %>
+<% end %> <!-- end @tools.count > 0 -->
 
 <!-- Vehicles -->
+<table class="form-table">
+  <tbody>
+    <tr class="form-tr underlined-tr">
+      <td class="form-td-two left-winged">
+        <h4><%= t 'ag2_tech.work_orders.vehicles_info' %></h4>
+      </td>
+      <td class="form-td-two right-winged">
+        <%= link_to t(".print"), work_orders_path, :class => 'btn btn-warning' %>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<% if (@vehicles.count > 0) %>
+<table class="table table-condensed table-striped shrinked">
+  <thead>
+    <%= render 'vehicles_header' %>
+  </thead>
+  <tfoot>
+    <%= render partial: 'vehicles_footer', :locals => { order: @work_order } %>
+  </tfoot>
+  <tbody>
+    <%= render partial: 'vehicle', collection: @vehicles %>
+  </tbody>
+</table>
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @vehicles } %>
+<% else %>
+<%= render :partial => '/layouts/paginationunbordered', :locals => { :ivar => @vehicles } %>
+<% end %> <!-- end @vehicles.count > 0 -->
 
 <!-- Remarks -->
 <table class="table">

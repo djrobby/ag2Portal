@@ -447,6 +447,22 @@
   </tbody>
 </table>
 <%= render 'workers_table', f: f %>
+<!-- Subcontractors -->
+<table class="form-table">
+  <tbody>
+    <tr class="form-tr underlined-tr">
+      <td class="form-td-two left-winged">
+        <h4><%= t 'ag2_tech.work_orders.subcontractors_info' %></h4>
+      </td>
+      <td class="form-td-two right-winged">
+        <%= link_to_add_fields(t("ag2_tech.work_orders.btn_new_subcontractor"), f, :work_order_subcontractors, "subcontractor_fields", "new-subcontractor-fields", class: "btn btn-warning fnt-new-subcontractor-btn") %>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<%= render 'subcontractors_table', f: f %>
+<!-- Tools -->
+<!-- Vehicles -->
 <!-- Remarks -->
 <%= f.input :remarks, as: :text, input_html: { class: 'x-large-text-field', rows: 3 }, label_html: { class: 'form-label' } %>
 <!-- Buttons -->

@@ -195,11 +195,27 @@ module Ag2Tech
       costs = number_with_precision(costs.round(4), precision: 4)
       # Setup JSON
       @json_data = { "cost" => cost.to_s, "costs" => costs.to_s }
+      render json: @json_data
+    end
 
-      respond_to do |format|
-        format.html # wo_update_costs_from_worker.html.erb does not exist! JSON only
-        format.json { render json: @json_data }
+    # Update cost text fields at view from supplier select
+    def wo_update_costs_from_supplier
+      supplier = params[:supplier]
+      minutes = params[:minutes].to_f / 100
+      cost = 0
+      costs = 0
+      if tool != '0'
+        @tool = Tool.find(tool)
+        # Assignment
+        cost = @tool.cost
+        costs = minutes * cost
       end
+      # Format numbers
+      cost = number_with_precision(cost.round(4), precision: 4)
+      costs = number_with_precision(costs.round(4), precision: 4)
+      # Setup JSON
+      @json_data = { "cost" => cost.to_s, "costs" => costs.to_s }
+      render json: @json_data
     end
 
     # Update cost text fields at view from tool select

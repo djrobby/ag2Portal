@@ -6,7 +6,7 @@
 
   $(document).ready(function() {
     // Retrieves parent values
-    _f = $("#fnt-worker").closest('form')[0];
+    _f = $("#fnt-supplier").closest('form')[0];
     _p = $('select#work_order_project_id :selected').val();
     if (_p == "") _p = "0";
     _date = $('#work_order_started_at').data('datepicker').date;
@@ -24,20 +24,38 @@
   });
 
   jQuery(function($) {
-    // when the #fnt-worker field changes
-    $("#fnt-worker").change(function() {
+    // when the #fnt-supplier field changes
+    $("#fnt-supplier").change(function() {
       // make a POST call and replace the content
-      var worker = $('select#fnt-worker :selected').val();
-      if (worker == "")
-        worker = "0";
-      var hours = $('#fnt-hours').val();
-      if (hours == "")
-        hours = "0";
+      var supplier = $('select#fnt-supplier :selected').val();
+      if (supplier == "")
+        supplier = "0";
+      var pct = $('#fnt-enforcement-pct').val();
+      if (pct == "")
+        pct = "0";
       // Right formatted for passing as REST parameter
-      hours = parseInt(right_number(hours, 4) * 10000);
-      jQuery.getJSON('wo_update_costs_from_worker/' + worker + '/' + hours + '/' + _p + '/' + _year, function(data) {
-        $("#fnt-costw").val(data.cost);
-        $("#fnt-costsw").val(data.costs);
+      pct = parseInt(right_number(hours, 4) * 10000);
+      jQuery.getJSON('wo_update_costs_from_supplier/' + worker + '/' + hours + '/' + _p + '/' + _year, function(data) {
+        $("#fnt-costsub").val(data.cost);
+        $("#fnt-costssub").val(data.costs);
+      });
+      return false;
+    });
+
+    // when the #fnt-purchase-order field changes
+    $("#fnt-purchase-order").change(function() {
+      // make a POST call and replace the content
+      var order = $('fnt-purchase-order :selected').val();
+      if (order == "")
+        order = "0";
+      var pct = $('#fnt-enforcement-pct').val();
+      if (pct == "")
+        pct = "0";
+      // Right formatted for passing as REST parameter
+      pct = parseInt(right_number(hours, 4) * 10000);
+      jQuery.getJSON('wo_update_costs_from_supplier/' + worker + '/' + hours + '/' + _p + '/' + _year, function(data) {
+        $("#fnt-costsub").val(data.cost);
+        $("#fnt-costssub").val(data.costs);
       });
       return false;
     });
@@ -85,24 +103,25 @@
   <% e = t(:item_error) %>
   <div class="modal-header">
     <a class="close" data-dismiss="modal">×</a>
-    <h3><%= t("ag2_tech.work_orders.add_worker") %></h3>
+    <h3><%= t("ag2_tech.work_orders.add_subcontractor") %></h3>
     <span class="shrinked"><%= I18n.t(:mandatory_subtitle) %></span>
   </div>
   <div class="modal-body">
-    <%= f.association :worker, collection: @workers, input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-worker', data: { validation: "required", "validation-error-msg" => "#{e}" } }, label_html: { class: 'form-label' } %>
-    <%= f.input :hours, as: :string, input_html: { value: (number_with_precision(f.object.hours, precision: 4) if f.object.hours), class: 'mid-text-field number-text-field field', id: 'fnt-hours' }, label_html: { class: 'form-label' } %>
-    <%= f.input :cost, as: :string, input_html: { value: (number_with_precision(f.object.cost, precision: 4) if f.object.cost), class: 'mid-text-field number-text-field field', id: 'fnt-costw' }, label_html: { class: 'form-label' } %>
-    <%= f.input :costs, disabled: true, as: :string, input_html: { value: (number_with_precision(f.object.costs, precision: 4) if f.object.costs), class: 'mid-text-field number-text-field sub-disabled-field field', id: 'fnt-costsw' }, label_html: { class: 'form-label' } %>
+    <%= f.association :supplier, collection: @suppliers, input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-supplier', data: { validation: "required", "validation-error-msg" => "#{e}" } }, label_html: { class: 'form-label' } %>
+    <%= f.association :purchase_order, collection: @orders, input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-purchase-order', data: { validation: "required", "validation-error-msg" => "#{e}" } }, label_html: { class: 'form-label' } %>
+    <%= f.input :enforcement_pct, as: :string, input_html: { value: (number_with_precision(f.object.enforcement_pct, precision: 2) if f.object.enforcement_pct), class: 'mid-text-field number-text-field field', id: 'fnt-enforcement-pct' }, label_html: { class: 'form-label' } %>
+    <%= f.input :cost, disabled: true, as: :string, input_html: { value: (number_with_precision(f.object.cost, precision: 4) if f.object.cost), class: 'mid-text-field number-text-field field', id: 'fnt-costsub' }, label_html: { class: 'form-label' } %>
+    <%= f.input :costs, disabled: true, as: :string, input_html: { value: (number_with_precision(f.object.costs, precision: 4) if f.object.costs), class: 'mid-text-field number-text-field sub-disabled-field field', id: 'fnt-costssub' }, label_html: { class: 'form-label' } %>
     <%= f.input :_destroy, as: :hidden, input_html: { class: 'field' } %>
   </div>
   <div class="modal-footer">
     <span class="left-floated shrinked" style="vertical-align: bottom"><%= t("ag2_tech.work_orders.add_item_to", var: @work_order.full_no) unless @work_order.order_no.blank? %></span>
-    <button id="addWorkerButton" type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><%= t('ag2_tech.work_orders.btn_add_item') %></button>
-    <button id="cancelWorkerButton" type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><%= t :close_button %></button>
+    <button id="addSubcontractorButton" type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><%= t('ag2_tech.work_orders.btn_add_item') %></button>
+    <button id="cancelSubcontractorButton" type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><%= t :close_button %></button>
   </div>
 </div>
 
 <script type="text/javascript">
   sel2NoMatch = '<%= t("select2.no_matches") %>';
-  wo_workerFieldsUI.init(sel2NoMatch);
+  wo_subcontractorFieldsUI.init(sel2NoMatch);
 </script>
