@@ -2,7 +2,7 @@
   var _f = '';
 
   $(document).ready(function() {
-    $('.wsel2').select2({
+    $('.ssel2').select2({
       formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
       dropdownCssClass: 'shrinked',
       dropdownAutoWidth: true,
@@ -10,53 +10,65 @@
     });
 
     // Trigger to display totals at table foot
-    $('#workers-table').bind('totals', function(event) {
+    $('#subcontractors-table').bind('totals', function(event) {
       // Sum necessary values from table rows
-      var hours = 0;
+      var pct = 0;
       var costs = 0;
       var count = 0;
-      $('#workers-table tr.fields:visible').each(function() {
-        hours += parseFloat(right_number($(this).find('input.fnt-hours').val(), 4));
-        costs += parseFloat(right_number($(this).find('input.fnt-costsw').val(), 4));
+      $('#subcontractors-table tr.fields:visible').each(function() {
+        pct += parseFloat(right_number($(this).find('input.fnt-enforcement-pct').val(), 2));
+        costs += parseFloat(right_number($(this).find('input.fnt-costssub').val(), 4));
         count += 1;
       });
-      hours = parseInt(right_number(hours.toString(), 4) * 10000);
+      pct = parseInt(right_number(hours.toString(), 2) * 100);
       costs = parseInt(right_number(costs.toString(), 4) * 10000);
-      jQuery.getJSON('wo_worker_totals/' + hours + '/' + costs + '/' + count, function(data) {
-        document.getElementById('foot-hours').innerHTML = data.hours;
-        document.getElementById('foot-hours-avg').innerHTML = data.average;
-        document.getElementById('foot-totalw').innerHTML = data.total;
+      jQuery.getJSON('wo_subcontractor_totals/' + pct + '/' + costs + '/' + count, function(data) {
+        //document.getElementById('foot-pct-avg').innerHTML = data.average;
+        document.getElementById('foot-totalsub').innerHTML = data.total;
       });
     });
     // Update and display totals
-    $('#workers-table').trigger('totals');
+    $('#subcontractors-table').trigger('totals');
     // Retrieves parent values
-    _f = $(".fnt-worker").closest('form')[0];
+    _f = $(".fnt-supplier").closest('form')[0];
   }); 
 
   jQuery(function($) {
-    // when the .fnt-worker field changes
-    $(".fnt-worker").change(function() {
+    // when the .fnt-supplier field changes
+    $(".fnt-supplier").change(function() {
       // preserve the current object
       var _this = (this);
-      // Obtain current year
-      var dd = $('#work_order_started_at').val();
-      if (dd == "") {
-        dd = new Date();
-      } else {
-        dd = new Date(dd);
-      }
-      var yy = _date.getFullYear();
       // make a POST call and replace the content
-      project = $('select#work_order_project_id :selected').val();
-      if (project == "")
-        project = "0";      
-      var worker = $(this).closest('tr').find('select.fnt-worker :selected').val();
-      if (worker == "")
-        worker = "0";
-      var hours = $(this).closest('tr').find('.fnt-hours').val();
-      if (hours == "")
-        hours = "0";
+      var supplier = $(this).closest('tr').find('select.fnt-supplier :selected').val();
+      if (supplier == "")
+        supplier = "0";
+      var pct = $(this).closest('tr').find('.fnt-enforcement-pct').val();
+      if (pct == "")
+        pct = "0";
+      // Right formatted for passing as REST parameter
+      pct = parseInt(right_number(pct, 2) * 100);
+      jQuery.getJSON('wo_update_orders_costs_from_supplier/' + supplier + '/' + pct, function(data) {
+        $("#fnt-costsub").val(data.cost);
+        $("#fnt-costssub").val(data.costs);
+        var p = data.order;
+        // Purchase order
+        $("#fnt-purchase-order").html("");
+        $("#fnt-purchase-order").select2("val", "");
+        $("#fnt-purchase-order").append($('<option></option>').val("").html(""));
+        if (!p.length) {
+          $.each(data, function(id, option) {
+            if (id == 'order' && option != "") {
+              $("#fnt-purchase-order").append($('<option></option>').val(option.id).html(option.project_code.substring(0,3) + "-" + option.project_code.substring(3,6) + "-" + option.project_code.substring(6,12) + " " + option.name));
+            }
+          });
+        } else {
+          $.each(p, function(id, option) {
+            $("#fnt-purchase-order").append($('<option></option>').val(option.id).html(option.project_code.substring(0,3) + "-" + option.project_code.substring(3,6) + "-" + option.project_code.substring(6,12) + " " + option.name));
+          });
+        }
+      });
+      return false;
+      // make a POST call and replace the content
       // Right formatted for passing as REST parameter
       hours = parseInt(right_number(hours, 4) * 10000);
       jQuery.getJSON('wo_update_costs_from_worker/' + worker + '/' + hours + '/' + project + '/' + yy, function(data) {
@@ -66,16 +78,36 @@
       return false;
     });
 
-    // when the .fnt-hours field changes
-    $(".fnt-hours").change(function() {
+    // when the .fnt-purchase-order field changes
+    $(".fnt-purchase-order").change(function() {
+      // preserve the current object
+      var _this = (this);
+      // make a POST call and replace the content
+      var order = $(this).closest('tr').find('select.fnt-purchase-order :selected').val();
+      if (order == "")
+        order = "0";
+      var pct = $(this).closest('tr').find('.fnt-enforcement-pct').val();
+      if (pct == "")
+        pct = "0";
+      // Right formatted for passing as REST parameter
+      pct = parseInt(right_number(pct, 2) * 100);
+      jQuery.getJSON('wo_update_costs_from_puchase_order/' + order + '/' + pct, function(data) {
+        $(_this).closest('tr').find('.fnt-costsub').val(data.cost);
+        $(_this).closest('tr').find('.fnt-costssub').val(data.costs);
+      });
+      return false;
+    });
+
+    // when the .fnt-enforcement-pct field changes
+    $(".fnt-enforcement-pct").change(function() {
       // preserve the current object
       var _this = (this);
       recalculate(_this);
       return false;
     });
 
-    // when the .fnt-costw field changes
-    $(".fnt-costw").change(function() {
+    // when the .fnt-costsub field changes
+    $(".fnt-costsub").change(function() {
       // preserve the current object
       var _this = (this);
       recalculate(_this);
@@ -85,21 +117,21 @@
     // Recalculate amounts & prices
     function recalculate(_this) {
       // make a POST call and replace the content
-      var cost = $(_this).closest('tr').find('.fnt-costw').val();
+      var cost = $(_this).closest('tr').find('.fnt-costsub').val();
       if (cost == "")
         cost = "0";
-      var hours = $(_this).closest('tr').find('.fnt-hours').val();
-      if (hours == "")
-        hours = "0";
+      var pct = $(_this).closest('tr').find('.fnt-enforcement-pct').val();
+      if (pct == "")
+        pct = "0";
       // Right formatted for passing as REST parameter
       cost = parseInt(right_number(cost, 4) * 10000);
-      hours = parseInt(right_number(hours, 4) * 10000);
-      jQuery.getJSON('wo_update_costs_from_cost_or_hours/' + cost + '/' + hours, function(data) {
-        $(_this).closest('tr').find('.fnt-costw').val(data.cost);
-        $(_this).closest('tr').find('.fnt-hours').val(data.hours);
-        $(_this).closest('tr').find('.fnt-costsw').val(data.costs);
+      pct = parseInt(right_number(hours, 2) * 100);
+      jQuery.getJSON('wo_update_costs_from_cost_or_enforcement_pct/' + cost + '/' + pct, function(data) {
+        $(_this).closest('tr').find('.fnt-costsub').val(data.cost);
+        $(_this).closest('tr').find('.fnt-enforcement-pct').val(data.pct);
+        $(_this).closest('tr').find('.fnt-costssub').val(data.costs);
         // Update and display totals
-        $('#workers-table').trigger('totals');
+        $('#subcontractors-table').trigger('totals');
       });
     }
 
@@ -140,8 +172,8 @@
   <tbody>
     <%= f.simple_fields_for :work_order_subcontractors, defaults: { input_html: { class: 'sub-form' } } do |i| %>
     <tr class="fields">
-      <td><%= i.association :supplier, label: false, wrapper: false, collection: @suppliers, input_html: { class: 'wsel2 fnt-supplier' } %></td>
-      <td><%= i.association :purchase_order, label: false, wrapper: false, collection: @orders, input_html: { class: 'wsel2 fnt-purchase-order' } %></td>
+      <td><%= i.association :supplier, label: false, wrapper: false, collection: @suppliers, input_html: { class: 'ssel2 fnt-supplier' } %></td>
+      <td><%= i.association :purchase_order, label: false, wrapper: false, collection: @orders, input_html: { class: 'ssel2 fnt-purchase-order' } %></td>
       <td><%= i.input :enforcement_pct, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.enforcement_pct, precision: 2) if i.object.enforcement_pct), class: 'sub-number-text-field fnt-enforcement-pct' } %></td>
       <td><%= i.input :cost, disabled: true, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.cost, precision: 4) if i.object.cost), class: 'sub-number-text-field fnt-costsub' } %></td>
       <td><%= i.input :costs, disabled: true, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.costs, precision: 4) if i.object.costs), class: 'sub-number-text-field sub-disabled-field fnt-costssub' } %></td>

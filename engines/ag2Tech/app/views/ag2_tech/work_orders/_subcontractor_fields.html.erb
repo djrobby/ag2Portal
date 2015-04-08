@@ -1,22 +1,5 @@
 <script>
-  var _f = '';
-  var _p = '';
-  var _date = '';
-  var _year = '';
-
   $(document).ready(function() {
-    // Retrieves parent values
-    _f = $("#fnt-supplier").closest('form')[0];
-    _p = $('select#work_order_project_id :selected').val();
-    if (_p == "") _p = "0";
-    _date = $('#work_order_started_at').data('datepicker').date;
-    if (_date == "") {
-      _date = new Date();
-    } else {
-      _date = new Date(_date);
-    }
-    _year = _date.getFullYear();
-
     // Set focus
     $(".modal").on('shown', function() {
       $(this).find(".form-label:first").focus();
@@ -34,10 +17,26 @@
       if (pct == "")
         pct = "0";
       // Right formatted for passing as REST parameter
-      pct = parseInt(right_number(hours, 4) * 10000);
-      jQuery.getJSON('wo_update_costs_from_supplier/' + worker + '/' + hours + '/' + _p + '/' + _year, function(data) {
+      pct = parseInt(right_number(pct, 2) * 100);
+      jQuery.getJSON('wo_update_orders_costs_from_supplier/' + supplier + '/' + pct, function(data) {
         $("#fnt-costsub").val(data.cost);
         $("#fnt-costssub").val(data.costs);
+        var p = data.order;
+        // Purchase order
+        $("#fnt-purchase-order").html("");
+        $("#fnt-purchase-order").select2("val", "");
+        $("#fnt-purchase-order").append($('<option></option>').val("").html(""));
+        if (!p.length) {
+          $.each(data, function(id, option) {
+            if (id == 'order' && option != "") {
+              $("#fnt-purchase-order").append($('<option></option>').val(option.id).html(option.project_code.substring(0,3) + "-" + option.project_code.substring(3,6) + "-" + option.project_code.substring(6,12) + " " + option.name));
+            }
+          });
+        } else {
+          $.each(p, function(id, option) {
+            $("#fnt-purchase-order").append($('<option></option>').val(option.id).html(option.project_code.substring(0,3) + "-" + option.project_code.substring(3,6) + "-" + option.project_code.substring(6,12) + " " + option.name));
+          });
+        }
       });
       return false;
     });
@@ -45,31 +44,31 @@
     // when the #fnt-purchase-order field changes
     $("#fnt-purchase-order").change(function() {
       // make a POST call and replace the content
-      var order = $('fnt-purchase-order :selected').val();
+      var order = $('select#fnt-purchase-order :selected').val();
       if (order == "")
         order = "0";
       var pct = $('#fnt-enforcement-pct').val();
       if (pct == "")
         pct = "0";
       // Right formatted for passing as REST parameter
-      pct = parseInt(right_number(hours, 4) * 10000);
-      jQuery.getJSON('wo_update_costs_from_supplier/' + worker + '/' + hours + '/' + _p + '/' + _year, function(data) {
+      pct = parseInt(right_number(pct, 2) * 100);
+      jQuery.getJSON('wo_update_costs_from_puchase_order/' + order + '/' + pct, function(data) {
         $("#fnt-costsub").val(data.cost);
         $("#fnt-costssub").val(data.costs);
       });
       return false;
     });
 
-    // when the #fnt-hours field changes
-    $("#fnt-hours").change(function() {
+    // when the #fnt-enforcement-pct field changes
+    $("#fnt-enforcement-pct").change(function() {
       // preserve the current object
       var _this = (this);
       recalculate(_this);
       return false;
     });
 
-    // when the #fnt-costw field changes
-    $("#fnt-costw").change(function() {
+    // when the #fnt-costsub field changes
+    $("#fnt-costsub").change(function() {
       // preserve the current object
       var _this = (this);
       recalculate(_this);
@@ -79,21 +78,21 @@
     // Recalculate amounts & prices
     function recalculate(_this) {
       // make a POST call and replace the content
-      var cost = $('#fnt-costw').val();
+      var cost = $('#fnt-costsub').val();
       if (cost == "")
         cost = "0";
-      var hours = $('#fnt-hours').val();
-      if (hours == "")
-        hours = "0";
+      var pct = $('#fnt-enforcement-pct').val();
+      if (pct == "")
+        pct = "0";
       // Right formatted for passing as REST parameter
       cost = parseInt(right_number(cost, 4) * 10000);
-      hours = parseInt(right_number(hours, 4) * 10000);
-      jQuery.getJSON('wo_update_costs_from_cost_or_hours/' + cost + '/' + hours, function(data) {
-        $('#fnt-costw').val(data.cost);
-        $('#fnt-hours').val(data.hours);
-        $('#fnt-costsw').val(data.costs);
+      pct = parseInt(right_number(hours, 2) * 100);
+      jQuery.getJSON('wo_update_costs_from_cost_or_enforcement_pct/' + cost + '/' + pct, function(data) {
+        $('#fnt-costsub').val(data.cost);
+        $('#fnt-enforcement-pct').val(data.pct);
+        $('#fnt-costssub').val(data.costs);
         // Update and display totals
-        $('#workers-table').trigger('totals');
+        $('#subcontractors-table').trigger('totals');
       });
     }
   })
