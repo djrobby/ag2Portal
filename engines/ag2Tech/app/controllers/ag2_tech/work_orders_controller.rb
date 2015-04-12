@@ -10,18 +10,25 @@ module Ag2Tech
                                                :wo_update_petitioner_textfield_from_client,
                                                :wo_item_totals,
                                                :wo_worker_totals,
+                                               :wo_subcontractor_totals,
+                                               :wo_tool_totals,
+                                               :wo_vehicle_totals,
                                                :wo_update_description_prices_from_product,
                                                :wo_update_costs_from_worker,
                                                :wo_update_amount_and_costs_from_price_or_quantity,
                                                :wo_update_costs_from_cost_or_hours,
                                                :wo_update_project_textfields_from_organization,
                                                :wo_generate_no,
-                                               :wo_tool_totals,
-                                               :wo_vehicle_totals,
                                                :wo_update_costs_from_tool,
                                                :wo_update_costs_from_vehicle,
                                                :wo_update_costs_from_cost_or_minutes,
-                                               :wo_update_costs_from_cost_or_distance]
+                                               :wo_update_costs_from_cost_or_distance,
+                                               :wo_update_orders_costs_from_supplier,
+                                               :wo_update_costs_from_purchase_order,
+                                               :wo_update_costs_from_cost_or_enforcement_pct]
+    #
+    # Subforms
+    #
     # Calculate and format item totals properly
     def wo_item_totals
       qty = params[:qty].to_f / 10000
@@ -60,6 +67,18 @@ module Ag2Tech
       total = number_with_precision(total.round(4), precision: 4)
       # Setup JSON hash
       @json_data = { "hours" => hours.to_s, "average" => average.to_s, "total" => total.to_s }
+      render json: @json_data
+    end
+
+    # Calculate and format subcontractor totals properly
+    def wo_subcontractor_totals
+      pct = params[:pct].to_f / 100
+      costs = params[:costs].to_f / 10000
+      count = params[:count].to_i
+      # Format output values
+      total = number_with_precision(costs.round(4), precision: 4)
+      # Setup JSON hash
+      @json_data = { "total" => total.to_s }
       render json: @json_data
     end
 
@@ -197,18 +216,43 @@ module Ag2Tech
       @json_data = { "cost" => cost.to_s, "costs" => costs.to_s }
       render json: @json_data
     end
-
-    # Update cost text fields at view from supplier select
-    def wo_update_costs_from_supplier
+    
+    # Update purchase order select and costs fields at view from supplier select
+    def wo_update_orders_costs_from_supplier
       supplier = params[:supplier]
-      minutes = params[:minutes].to_f / 100
+      pct = params[:pct]
       cost = 0
       costs = 0
-      if tool != '0'
-        @tool = Tool.find(tool)
+      if supplier != '0'
+        @supplier = Supplier.find(supplier)
+        @orders = @supplier.blank? ? orders_dropdown : @supplier.purchase_orders.order(:supplier_id, :order_no, :id)
+      else
+        @orders = orders_dropdown
+      end
+      # Purchase orders array
+      @orders_dropdown = []
+      @areas.each do |i|
+        @orders_dropdown = @orders_dropdown << [i.id, i.full_no, i.order_date, i.supplier.full_name] 
+      end
+      # Format numbers
+      cost = number_with_precision(cost.round(4), precision: 4)
+      costs = number_with_precision(costs.round(4), precision: 4)
+      # Setup JSON
+      @json_data = { "cost" => cost.to_s, "costs" => costs.to_s, "order" => @orders_dropdown }
+      render json: @json_data
+    end
+
+    # Update cost text fields at view from purchase order select
+    def wo_update_costs_from_purchase_order
+      order = params[:order]
+      pct = params[:pct].to_f / 100
+      cost = 0
+      costs = 0
+      if order != '0'
+        @order = PurchaseOrder.find(order)
         # Assignment
-        cost = @tool.cost
-        costs = minutes * cost
+        cost = @order.taxable
+        costs = pct * cost
       end
       # Format numbers
       cost = number_with_precision(cost.round(4), precision: 4)
@@ -310,6 +354,18 @@ module Ag2Tech
       end
     end
 
+    # Update costs text field at view -subcontractor- (enforment_pct or cost changed)
+    def wo_update_costs_from_cost_or_enforcement_pct
+      cost = params[:cost].to_f / 10000
+      pct = params[:pct].to_f / 100
+      costs = minutes * cost
+      pct = number_with_precision(minutes.round(2), precision: 2)
+      cost = number_with_precision(cost.round(4), precision: 4)
+      costs = number_with_precision(costs.round(4), precision: 4)
+      @json_data = { "pct" => pct.to_s, "cost" => cost.to_s, "costs" => costs.to_s }
+      render json: @json_data 
+    end
+
     # Update costs text field at view -tool- (minutes or cost changed)
     def wo_update_costs_from_cost_or_minutes
       cost = params[:cost].to_f / 10000
@@ -336,6 +392,9 @@ module Ag2Tech
       render json: @json_data 
     end
     
+    #
+    # Main form
+    #
     # Update account text field at view from project select
     def wo_update_account_textfield_from_project
       project = params[:id]
@@ -401,6 +460,10 @@ module Ag2Tech
         @workers = @organization.blank? ? workers_dropdown : @organization.workers.order(:worker_code)
         @areas = @organization.blank? ? areas_dropdown : organization_areas(@organization)
         @products = @organization.blank? ? products_dropdown : @organization.products.order(:product_code)
+        @suppliers = @organization.blank? ? suppliers_dropdown : @organization.suppliers.order(:supplier_code)
+        @orders = @organization.blank? ? orders_dropdown : @organization.purchase_orders.order(:supplier_id, :order_no, :id)
+        @tools = @organization.blank? ? tools_dropdown : @organization.tools.order(:serial_no)
+        @vehicles = @organization.blank? ? vehicles_dropdown : @organization.vehicles.order(:registration)
       else
         @projects = projects_dropdown
         @types = work_order_types_dropdown
@@ -411,6 +474,10 @@ module Ag2Tech
         @workers = workers_dropdown
         @areas = areas_dropdown
         @products = products_dropdown
+        @suppliers = suppliers_dropdown
+        @orders = orders_dropdown
+        @tools = tools_dropdown
+        @vehicles = vehicles_dropdown
       end
       @areas_dropdown = []
       @areas.each do |i|
@@ -419,7 +486,9 @@ module Ag2Tech
       @json_data = { "project" => @projects, "type" => @types, "labor" => @labors,
                      "client" => @clients, "charge_account" => @charge_accounts,
                      "store" => @stores, "worker" => @workers,
-                     "area" => @areas_dropdown, "product" => @products }
+                     "area" => @areas_dropdown, "product" => @products,
+                     "supplier" => @suppliers, "order" => @orders,
+                     "tool" => @tools, "vehicle" => @vehicles }
       render json: @json_data
     end
 
@@ -568,7 +637,7 @@ module Ag2Tech
           @workers = workers_dropdown
           @products = products_dropdown
           @suppliers = suppliers_dropdown
-          @purchase_orders = purchase_orders_dropdown
+          @orders = orders_dropdown
           @tools = tools_dropdown
           @vehicles = vehicles_dropdown
           format.html { render action: "new" }

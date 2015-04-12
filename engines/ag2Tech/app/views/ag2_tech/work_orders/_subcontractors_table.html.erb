@@ -48,32 +48,24 @@
       // Right formatted for passing as REST parameter
       pct = parseInt(right_number(pct, 2) * 100);
       jQuery.getJSON('wo_update_orders_costs_from_supplier/' + supplier + '/' + pct, function(data) {
-        $("#fnt-costsub").val(data.cost);
-        $("#fnt-costssub").val(data.costs);
+        $(_this).closest('tr').find('.fnt-costsub').val(data.cost);
+        $(_this).closest('tr').find('.fnt-costssub').val(data.costs);
         var p = data.order;
         // Purchase order
-        $("#fnt-purchase-order").html("");
-        $("#fnt-purchase-order").select2("val", "");
-        $("#fnt-purchase-order").append($('<option></option>').val("").html(""));
+        $(_this).closest('tr').find('.fnt-purchase-order').html("");
+        $(_this).closest('tr').find('.fnt-purchase-order').select2("val", "");
+        $(_this).closest('tr').find('.fnt-purchase-order').append($('<option></option>').val("").html(""));
         if (!p.length) {
           $.each(data, function(id, option) {
             if (id == 'order' && option != "") {
-              $("#fnt-purchase-order").append($('<option></option>').val(option.id).html(option.project_code.substring(0,3) + "-" + option.project_code.substring(3,6) + "-" + option.project_code.substring(6,12) + " " + option.name));
+              $(_this).closest('tr').find('.fnt-purchase-order').append($('<option></option>').val(option[0]).html(option[1] + " " + es_date(option[2]) + " " + option[3]));
             }
           });
         } else {
           $.each(p, function(id, option) {
-            $("#fnt-purchase-order").append($('<option></option>').val(option.id).html(option.project_code.substring(0,3) + "-" + option.project_code.substring(3,6) + "-" + option.project_code.substring(6,12) + " " + option.name));
+            $(_this).closest('tr').find('.fnt-purchase-order').append($('<option></option>').val(option[0]).html(option[1] + " " + es_date(option[2]) + " " + option[3]));
           });
         }
-      });
-      return false;
-      // make a POST call and replace the content
-      // Right formatted for passing as REST parameter
-      hours = parseInt(right_number(hours, 4) * 10000);
-      jQuery.getJSON('wo_update_costs_from_worker/' + worker + '/' + hours + '/' + project + '/' + yy, function(data) {
-        $(_this).closest('tr').find('.fnt-costw').val(data.cost);
-        $(_this).closest('tr').find('.fnt-costsw').val(data.costs);
       });
       return false;
     });
@@ -91,7 +83,7 @@
         pct = "0";
       // Right formatted for passing as REST parameter
       pct = parseInt(right_number(pct, 2) * 100);
-      jQuery.getJSON('wo_update_costs_from_puchase_order/' + order + '/' + pct, function(data) {
+      jQuery.getJSON('wo_update_costs_from_purchase_order/' + order + '/' + pct, function(data) {
         $(_this).closest('tr').find('.fnt-costsub').val(data.cost);
         $(_this).closest('tr').find('.fnt-costssub').val(data.costs);
       });

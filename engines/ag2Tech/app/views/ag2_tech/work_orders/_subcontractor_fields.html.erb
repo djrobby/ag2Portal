@@ -29,12 +29,12 @@
         if (!p.length) {
           $.each(data, function(id, option) {
             if (id == 'order' && option != "") {
-              $("#fnt-purchase-order").append($('<option></option>').val(option.id).html(option.project_code.substring(0,3) + "-" + option.project_code.substring(3,6) + "-" + option.project_code.substring(6,12) + " " + option.name));
+              $("#fnt-purchase-order").append($('<option></option>').val(option[0]).html(option[1] + " " + es_date(option[2]) + " " + option[3]));
             }
           });
         } else {
           $.each(p, function(id, option) {
-            $("#fnt-purchase-order").append($('<option></option>').val(option.id).html(option.project_code.substring(0,3) + "-" + option.project_code.substring(3,6) + "-" + option.project_code.substring(6,12) + " " + option.name));
+            $("#fnt-purchase-order").append($('<option></option>').val(option[0]).html(option[1] + " " + es_date(option[2]) + " " + option[3]));
           });
         }
       });
@@ -52,7 +52,7 @@
         pct = "0";
       // Right formatted for passing as REST parameter
       pct = parseInt(right_number(pct, 2) * 100);
-      jQuery.getJSON('wo_update_costs_from_puchase_order/' + order + '/' + pct, function(data) {
+      jQuery.getJSON('wo_update_costs_from_purchase_order/' + order + '/' + pct, function(data) {
         $("#fnt-costsub").val(data.cost);
         $("#fnt-costssub").val(data.costs);
       });

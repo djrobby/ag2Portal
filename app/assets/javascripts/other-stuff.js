@@ -39,7 +39,7 @@ function es_time(d) {
   var hh = d.getHours();
   var mm = d.getMinutes();
   var ss = d.getSeconds();
-  var o = (hh<10 ? '0' : '') + hh + ':' + (mm<10 ? '0' : '') + mm + ':' + ':' + (ss<10 ? '0' : '') + ss;
+  var o = (hh<10 ? '0' : '') + hh + ':' + (mm<10 ? '0' : '') + mm + ':' + (ss<10 ? '0' : '') + ss;
   return o;
 }
 

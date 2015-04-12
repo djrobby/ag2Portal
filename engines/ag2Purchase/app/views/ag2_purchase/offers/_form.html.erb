@@ -112,7 +112,7 @@
         if (!w.length) {
           $.each(data, function(id, option) {
             if (id == 'type' && option != "") {
-              $("#offer_work_order_id").append($('<option></option>').val(option.id).html(option.offer_no.substring(0,10) + "-" + option.offer_no.substring(10,14) + "-" + option.offer_no.substring(14,20) + " " + option.description.substring(0,41)));
+              $("#offer_work_order_id").append($('<option></option>').val(option.id).html(option.order_no.substring(0,10) + "-" + option.order_no.substring(10,14) + "-" + option.order_no.substring(14,20) + " " + option.description.substring(0,41)));
             }
           });
         } else {
@@ -366,7 +366,7 @@
         if (!w.length) {
           $.each(data, function(id, option) {
             if (id == 'work_order' && option != "") {
-              $("#offer_work_order_id").append($('<option></option>').val(option.id).html(option.offer_no.substring(0,10) + "-" + option.offer_no.substring(10,14) + "-" + option.offer_no.substring(14,20) + " " + option.description));
+              $("#offer_work_order_id").append($('<option></option>').val(option.id).html(option.order_no.substring(0,10) + "-" + option.order_no.substring(10,14) + "-" + option.order_no.substring(14,20) + " " + option.description));
             }
           });
         } else {
