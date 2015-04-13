@@ -125,7 +125,9 @@ Ag2Tech::Engine.routes.draw do
     resources :projects
     resources :charge_accounts
     resources :charge_groups
-    resources :work_orders
+    resources :work_orders do
+      get 'work_order_form', on: :collection
+    end
     resources :work_order_labors
     resources :work_order_statuses
     resources :work_order_types

@@ -694,6 +694,27 @@ module Ag2Tech
         end
       end
     end
+
+    # Report
+    def work_order_form
+      # Search work order & items
+      @work_order = WorkOrder.find(params[:id])
+      @items = @work_order.work_order_items.order('id')
+      @workers = @work_order.work_order_workers.order('id')
+      @subcontractors = @work_order.work_order_subcontractors.order('id')
+      @tools = @work_order.work_order_tools.order('id')
+      @vehicles = @work_order.work_order_vehicles.order('id')
+
+      title = t("activerecord.models.work_order.one")      
+
+      respond_to do |format|
+        # Render PDF
+        format.pdf { send_data render_to_string,
+                     filename: "#{title}_#{@work_order.full_no}.pdf",
+                     type: 'application/pdf',
+                     disposition: 'inline' }
+      end
+    end
     
     private
     
