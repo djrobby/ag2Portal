@@ -97,7 +97,7 @@ class WorkOrder < ActiveRecord::Base
   end
 
   def full_no
-    # Order no (Project code & year & sequential number) => PPPPPPPPPP-YYYY-NNNNNN
+    # Order no (Project code & year & sequential number) => PPPPPPPPPPPP-YYYY-NNNNNN
     order_no.blank? ? "" : order_no[0..11] + '-' + order_no[12..15] + '-' + order_no[16..21]
   end
 
