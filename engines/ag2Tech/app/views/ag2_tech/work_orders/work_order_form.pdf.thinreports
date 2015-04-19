@@ -36,39 +36,39 @@ end
 # Items
 report.layout.config.list(:items) do |c|
 	# Define the variables used in list
-	c.use_stores page_quantity: 0, page_discount: 0, page_amount: 0, page_tax: 0
+	c.use_stores i_page_quantity: 0, i_page_costs: 0, i_page_amount: 0, i_page_tax: 0
 
 	# On list page footer insertion
 	c.events.on :page_footer_insert do |e|
 		# Display page sutotals
 		e.section.item(:page_subtotals).value(I18n.t("every_report.page_subtotals"))
-		e.section.item(:page_quantity).value(number_with_precision(e.store.page_quantity, precision: 4))
-		e.section.item(:page_discount).value(number_with_precision(e.store.page_discount, precision: 4))
-		e.section.item(:page_amount).value(number_with_precision(e.store.page_amount, precision: 4))
-		e.section.item(:page_tax).value(number_with_precision(e.store.page_tax, precision: 4))
+		e.section.item(:i_page_quantity).value(number_with_precision(e.store.i_page_quantity, precision: 4))
+		e.section.item(:i_page_costs).value(number_with_precision(e.store.i_page_costs, precision: 4))
+		e.section.item(:i_page_amount).value(number_with_precision(e.store.i_page_amount, precision: 4))
+		e.section.item(:i_page_tax).value(number_with_precision(e.store.i_page_tax, precision: 4))
 		# Initialize subtotals to 0
 		e.store.page_quantity = 0
-		e.store.page_discount = 0
-		e.store.page_amount = 0
-		e.store.page_tax = 0
+		e.store.i_page_costs = 0
+		e.store.i_page_amount = 0
+		e.store.i_page_tax = 0
 	end
 	# On list footer insertion
 	c.events.on :footer_insert do |e|
 		# Display list totals
-		e.section.item(:subtotal_c).value(I18n.t("activerecord.attributes.work_order.subtotal"))
-		e.section.item(:bonus_c).value(I18n.t("activerecord.attributes.work_order.bonus") + " " + number_with_precision(@work_order.discount_pct, precision: 2) + "%")
-		e.section.item(:taxable_c).value(I18n.t("activerecord.attributes.work_order.taxable_c"))
-		e.section.item(:taxes_c).value(I18n.t("activerecord.attributes.work_order.taxes"))
-		e.section.item(:total_c).value(I18n.t("activerecord.attributes.work_order.total").upcase)
-		e.section.item(:subtotal).value(number_with_precision(@work_order.subtotal, precision: 2, delimiter: delimiter))
-		e.section.item(:bonus).value(number_with_precision(@work_order.bonus, precision: 2, delimiter: delimiter))
-		e.section.item(:taxable).value(number_with_precision(@work_order.taxable, precision: 2, delimiter: delimiter))
-		e.section.item(:taxes).value(number_with_precision(@work_order.taxes, precision: 2, delimiter: delimiter))
-		e.section.item(:total).value(number_with_precision(@work_order.total, precision: 2, delimiter: delimiter))
+		e.section.item(:i_costs_c).value(I18n.t("activerecord.attributes.work_order.bonus")
+		e.section.item(:i_subtotal_c).value(I18n.t("activerecord.attributes.work_order.subtotal"))
+		e.section.item(:i_taxable_c).value(I18n.t("activerecord.attributes.work_order.taxable_c"))
+		e.section.item(:i_taxes_c).value(I18n.t("activerecord.attributes.work_order.taxes"))
+		e.section.item(:i_total_c).value(I18n.t("activerecord.attributes.work_order.total").upcase)
+		e.section.item(:i_costs).value(number_with_precision(@work_order.bonus, precision: 2, delimiter: delimiter))
+		e.section.item(:i_subtotal).value(number_with_precision(@work_order.subtotal, precision: 2, delimiter: delimiter))
+		e.section.item(:i_taxable).value(number_with_precision(@work_order.taxable, precision: 2, delimiter: delimiter))
+		e.section.item(:i_taxes).value(number_with_precision(@work_order.taxes, precision: 2, delimiter: delimiter))
+		e.section.item(:i_total).value(number_with_precision(@work_order.total, precision: 2, delimiter: delimiter))
 		# Display tax details
-		e.section.item(:tax_details).value(I18n.t("activerecord.attributes.work_order.tax_breakdown"))
+		e.section.item(:i_tax_details).value(I18n.t("activerecord.attributes.work_order.tax_breakdown"))
 		@work_order.tax_breakdown.each do |tb|
-			e.section.item(:tax_list).value(tb[0].to_s.rjust(2, '0') + " " + tb[1] + ": " +
+			e.section.item(:i_tax_list).value(tb[0].to_s.rjust(2, '0') + " " + tb[1] + ": " +
 											number_with_precision(tb[3], precision: 2, delimiter: delimiter) + " × " +
 											number_with_precision(tb[2], precision: 2, delimiter: delimiter) + "% = " +
 											number_with_precision(tb[4], precision: 2, delimiter: delimiter) + "\n")
@@ -99,25 +99,48 @@ report.page.values(form_title: I18n.t("activerecord.models.work_order.one"),
 				   order_no: @work_order.full_no,
 				   order_date_title: I18n.t("activerecord.attributes.work_order.order_date") + ":",
 				   order_date: @work_order.created_at.strftime("%d/%m/%Y"),
-				   master_order_title: I18n.t("activerecord.attributes.work_order.master_order") + ":",
+				   master_order_title: I18n.t("activerecord.attributes.work_order.master_order_report") + ":",
 				   master_order: @work_order.master_order.full_no,
 				   description_title: I18n.t("activerecord.attributes.work_order.description") + ":",
 				   description: @work_order.description,
 				   project_title: I18n.t("activerecord.attributes.work_order.project") + ":",
 				   project: @work_order.project.full_name,
-
-				   supplier_address_2: @work_order.supplier.address_2,
-				   supplier_fiscal_id: I18n.t("activerecord.attributes.supplier.fiscal_id_c") + ": " + @work_order.supplier.fiscal_id,
-				   petitioner_name: @work_order.project.office.name,
-				   petitioner_address_1: @work_order.project.office.address_1,
-				   petitioner_address_2: @work_order.project.office.address_2,
-				   petitioner_phones_email: @work_order.project.office.phone_fax_email,
-				   payment_title: I18n.t("activerecord.attributes.work_order.payment_method"),
-				   store_location_title: I18n.t("activerecord.attributes.store.delivery_location"),
-				   payment_method: @work_order.payment_method.description,
-				   store_address_1: @work_order.store.address_1,
-				   store_address_2: @work_order.store.address_2,
-				   store_phones: @work_order.store.phone_and_fax)
+				   type_title: I18n.t("activerecord.attributes.work_order.work_order_type") + ":",
+				   type: @work_order.work_order_type,
+				   labor_title: I18n.t("activerecord.attributes.work_order.work_order_labor") + ":",
+				   labor: @work_order.work_order_labor,
+				   area_title: I18n.t("activerecord.attributes.work_order.area") + ":",
+				   area: @work_order.area.full_name,
+				   in_charge_title: I18n.t("activerecord.attributes.work_order.in_charge") + ":",
+				   in_charge: @work_order.in_charge.full_name,
+				   charge_account_title: I18n.t("activerecord.attributes.work_order.charge_account") + ":",
+				   charge_account: @work_order.charge_account.full_name,
+				   store_title: I18n.t("activerecord.attributes.work_order.store") + ":",
+				   store: @work_order.store.name,
+				   client_title: I18n.t("activerecord.attributes.work_order.client") + ":",
+				   client: @work_order.client.full_name,
+				   petitioner_title: I18n.t("activerecord.attributes.work_order.petitioner") + ":",
+				   petitioner: @work_order.petitioner,
+				   location_title: I18n.t("activerecord.attributes.work_order.location") + ":",
+				   location: @work_order.location,
+				   pub_record_title: I18n.t("activerecord.attributes.work_order.pub_record_report") + ":",
+				   pub_record: @work_order.pub_record,
+				   status_title: I18n.t("activerecord.attributes.work_order.work_order_status") + ":",
+				   status: @work_order.work_order_status.name,
+				   started_at_title: I18n.t("activerecord.attributes.work_order.started_at") + ":",
+				   started_at: @work_order.started_at.strftime("%d/%m/%Y"),
+				   completed_at_title: I18n.t("activerecord.attributes.work_order.completed_at") + ":",
+				   completed_at: @work_order.completed_at.strftime("%d/%m/%Y"),
+				   closed_at_title: I18n.t("activerecord.attributes.work_order.closed_at") + ":",
+				   closed_at: @work_order.closed_at.strftime("%d/%m/%Y"),
+				   reported_at_title: I18n.t("activerecord.attributes.work_order.reported_at") + ":",
+				   reported_at: @work_order.reported_at.strftime("%d/%m/%Y %H:%M:%S"),
+				   approved_at_title: I18n.t("activerecord.attributes.work_order.approved_at") + ":",
+				   approved_at: @work_order.approved_at.strftime("%d/%m/%Y %H:%M:%S"),
+				   certified_at_title: I18n.t("activerecord.attributes.work_order.certified_at") + ":",
+				   certified_at: @work_order.certified_at.strftime("%d/%m/%Y"),
+				   posted_at_title: I18n.t("activerecord.attributes.work_order.posted_at") + ":",
+				   posted_at: @work_order.posted_at.strftime("%d/%m/%Y"))
 # Page footer
 report.page.values(printed_at: Time.now,
 				   pt: I18n.t("every_report.pt"),

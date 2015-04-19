@@ -205,6 +205,39 @@ class WorkOrder < ActiveRecord::Base
     end
     costs
   end
+
+  # Returns multidimensional array containing different tax type in each line
+  # Each line contains 5 elements: Id, Description, Tax %, Amount & Tax
+  def tax_breakdown
+    tt = []
+    # Only if items
+    if work_order_items.count > 0
+      # Store first tax type & initialize
+      prev_tt_id = work_order_items.first.tax_type_id
+      prev_tt_net_tax = 0
+      prev_tt_net = 0
+      tax_type = TaxType.find(prev_tt_id) rescue nil
+      # Loop thru items, ordered by tax type
+      work_order_items.order(:tax_type_id).each do |i|
+        # if tax type changes
+        if i.tax_type_id != prev_tt_id
+          # Store previous tax type data
+          tt = tt << [prev_tt_id, tax_type.nil? ? "" : tax_type.description, tax_type.nil? ? 0 : tax_type.tax, prev_tt_net, prev_tt_net_tax]
+          # Store current tax type & initialize
+          prev_tt_id = i.tax_type_id
+          prev_tt_net_tax = 0
+          prev_tt_net = 0
+          tax_type = TaxType.find(prev_tt_id) rescue nil
+        end
+        # Add amounts while current tax type
+        prev_tt_net_tax += i.tax
+        prev_tt_net += i.amount
+      end
+      # Store last unsaved tax type data
+      tt = tt << [prev_tt_id, tax_type.nil? ? "" : tax_type.description, tax_type.nil? ? 0 : tax_type.tax, prev_tt_net, prev_tt_net_tax]
+    end
+    tt
+  end
   
   #
   # Records navigator
