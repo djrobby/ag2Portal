@@ -13,6 +13,7 @@ en:
         product: "Product"
         product_id: "Product"
         product_c: "Code"
+        code: "Reference"
         description: "Description"
         description_c: "Concept"
         quantity: "Quantity"

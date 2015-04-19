@@ -41,13 +41,13 @@ report.layout.config.list(:items) do |c|
 	# On list page footer insertion
 	c.events.on :page_footer_insert do |e|
 		# Display page sutotals
-		e.section.item(:page_subtotals).value(I18n.t("every_report.page_subtotals"))
+		e.section.item(:i_page_subtotals).value(I18n.t("every_report.page_subtotals"))
 		e.section.item(:i_page_quantity).value(number_with_precision(e.store.i_page_quantity, precision: 4))
 		e.section.item(:i_page_costs).value(number_with_precision(e.store.i_page_costs, precision: 4))
 		e.section.item(:i_page_amount).value(number_with_precision(e.store.i_page_amount, precision: 4))
 		e.section.item(:i_page_tax).value(number_with_precision(e.store.i_page_tax, precision: 4))
 		# Initialize subtotals to 0
-		e.store.page_quantity = 0
+		e.store.i_page_quantity = 0
 		e.store.i_page_costs = 0
 		e.store.i_page_amount = 0
 		e.store.i_page_tax = 0
@@ -55,12 +55,12 @@ report.layout.config.list(:items) do |c|
 	# On list footer insertion
 	c.events.on :footer_insert do |e|
 		# Display list totals
-		e.section.item(:i_costs_c).value(I18n.t("activerecord.attributes.work_order.bonus")
+		e.section.item(:i_costs_c).value(I18n.t("activerecord.attributes.work_order.item_costs")
 		e.section.item(:i_subtotal_c).value(I18n.t("activerecord.attributes.work_order.subtotal"))
-		e.section.item(:i_taxable_c).value(I18n.t("activerecord.attributes.work_order.taxable_c"))
+		e.section.item(:i_taxable_c).value(I18n.t("activerecord.attributes.work_order.taxable"))
 		e.section.item(:i_taxes_c).value(I18n.t("activerecord.attributes.work_order.taxes"))
 		e.section.item(:i_total_c).value(I18n.t("activerecord.attributes.work_order.total").upcase)
-		e.section.item(:i_costs).value(number_with_precision(@work_order.bonus, precision: 2, delimiter: delimiter))
+		e.section.item(:i_costs).value(number_with_precision(@work_order.item_costs, precision: 2, delimiter: delimiter))
 		e.section.item(:i_subtotal).value(number_with_precision(@work_order.subtotal, precision: 2, delimiter: delimiter))
 		e.section.item(:i_taxable).value(number_with_precision(@work_order.taxable, precision: 2, delimiter: delimiter))
 		e.section.item(:i_taxes).value(number_with_precision(@work_order.taxes, precision: 2, delimiter: delimiter))
@@ -75,9 +75,36 @@ report.layout.config.list(:items) do |c|
 		end
 	end
 end
+
 # Workers
+report.layout.config.list(:workers) do |c|
+	# Define the variables used in list
+	c.use_stores w_page_hours: 0, w_page_costs: 0
+
+	# On list page footer insertion
+	c.events.on :page_footer_insert do |e|
+		# Display page sutotals
+		e.section.item(:w_page_subtotals).value(I18n.t("every_report.page_subtotals"))
+		e.section.item(:w_page_hours).value(number_with_precision(e.store.w_page_hours, precision: 4))
+		e.section.item(:w_page_costs).value(number_with_precision(e.store.w_page_costs, precision: 4))
+		# Initialize subtotals to 0
+		e.store.page_hours = 0
+		e.store.i_page_costs = 0
+	end
+	# On list footer insertion
+	c.events.on :footer_insert do |e|
+		# Display list totals
+		e.section.item(:w_hours_c).value(I18n.t("activerecord.attributes.work_order.hours")
+		e.section.item(:w_costs_c).value(I18n.t("activerecord.attributes.work_order.worker_costs")
+		e.section.item(:w_hours).value(number_with_precision(@work_order.hours, precision: 2, delimiter: delimiter))
+		e.section.item(:w_costs).value(number_with_precision(@work_order.worker_costs, precision: 2, delimiter: delimiter))
+	end
+end
+
 # Subcontractors
+
 # Tools
+
 # Vehicles
 
 
@@ -149,39 +176,72 @@ report.page.values(printed_at: Time.now,
 				   remarks_title: I18n.t("activerecord.attributes.work_order.remarks"),
 				   remarks: @work_order.remarks)
 
-# List header
+#
+# List headers
+#
+# Items
 report.page.list(:items).header do |header|
-	header.item(:no_c).value "#"
-	header.item(:product_c).value I18n.t("activerecord.attributes.work_order_item.code")
-	header.item(:description_c).value I18n.t("activerecord.attributes.work_order_item.description_c")
-	header.item(:quantity_c).value I18n.t("activerecord.attributes.work_order_item.quantity_c")
-	header.item(:price_c).value I18n.t("activerecord.attributes.work_order_item.price_c")
-	header.item(:discount_c).value I18n.t("activerecord.attributes.work_order_item.discount_c")
-	header.item(:amount_c).value I18n.t("activerecord.attributes.work_order_item.amount_c")
-	header.item(:tax_c).value I18n.t("activerecord.attributes.work_order_item.tax_c")
-	header.item(:delivery_date_c).value I18n.t("activerecord.attributes.work_order_item.delivery_date")
+	header.item(:i_no_c).value "#"
+	header.item(:i_product_c).value I18n.t("activerecord.attributes.work_order_item.code")
+	header.item(:i_description_c).value I18n.t("activerecord.attributes.work_order_item.description_c")
+	header.item(:i_quantity_c).value I18n.t("activerecord.attributes.work_order_item.quantity_c")
+	header.item(:i_cost_c).value I18n.t("activerecord.attributes.work_order_item.cost_c")
+	header.item(:i_costs_c).value I18n.t("activerecord.attributes.work_order_item.costs_c")
+	header.item(:i_price_c).value I18n.t("activerecord.attributes.work_order_item.price_c")
+	header.item(:i_amount_c).value I18n.t("activerecord.attributes.work_order_item.amount_c")
+	header.item(:i_tax_c).value I18n.t("activerecord.attributes.work_order_item.tax_c")
 end
 
-# List detail
+# Workers
+report.page.list(:workers).header do |header|
+	header.item(:w_no_c).value "#"
+	header.item(:w_worker_c).value I18n.t("activerecord.attributes.work_order_item.code")
+	header.item(:w_hours_c).value I18n.t("activerecord.attributes.work_order_item.quantity_c")
+	header.item(:w_cost_c).value I18n.t("activerecord.attributes.work_order_item.cost_c")
+	header.item(:w_costs_c).value I18n.t("activerecord.attributes.work_order_item.costs_c")
+end
+
+#
+# List details
+#
+# Items
 no = 0
 @items.each do |i|
 	report.page.list(:items).add_row do |row|
 		no = no + 1
-    	row.item(:no).value no
-    	row.item(:product).value i.product.full_code unless i.product.blank?
-    	row.item(:description).value i.description unless i.description.blank?
-    	row.item(:quantity).value number_with_precision(i.quantity, precision: 4) unless i.quantity.blank?
-    	row.item(:price).value number_with_precision(i.price, precision: 4) unless i.price.blank?
-    	row.item(:discount).value number_with_precision(i.discount, precision: 4) unless i.discount.blank?
-    	row.item(:amount).value number_with_precision(i.amount, precision: 4) unless i.amount.blank?
-    	row.item(:tax).value number_with_precision(i.tax, precision: 4) unless i.tax.blank?
-    	row.item(:delivery_date).value i.delivery_date.strftime("%d/%m/%Y") unless i.delivery_date.blank?
+    	row.item(:i_no).value no
+    	row.item(:i_product).value i.product.full_code unless i.product.blank?
+    	row.item(:i_description).value i.description unless i.description.blank?
+    	row.item(:i_quantity).value number_with_precision(i.quantity, precision: 4) unless i.quantity.blank?
+    	row.item(:i_cost).value number_with_precision(i.cost, precision: 4) unless i.cost.blank?
+    	row.item(:i_costs).value number_with_precision(i.costs, precision: 4) unless i.costs.blank?
+    	row.item(:i_price).value number_with_precision(i.price, precision: 4) unless i.price.blank?
+    	row.item(:i_amount).value number_with_precision(i.amount, precision: 4) unless i.amount.blank?
+    	row.item(:i_tax).value number_with_precision(i.tax, precision: 4) unless i.tax.blank?
 	end
 	# Store page subtotals
     report.page.list(:items) do |list|
-		list.store.page_quantity += i.quantity
-		list.store.page_discount += i.discount
-		list.store.page_amount += i.amount
-		list.store.page_tax += i.tax
+		list.store.i_page_quantity += i.quantity
+		list.store.i_page_costs += i.costs
+		list.store.i_page_amount += i.amount
+		list.store.i_page_tax += i.tax
+    end	
+end
+
+# Workers
+no = 0
+@workers.each do |i|
+	report.page.list(:workers).add_row do |row|
+		no = no + 1
+    	row.item(:no).value no
+    	row.item(:w_worker).value i.worker.full_name unless i.worker.blank?
+    	row.item(:w_hours).value number_with_precision(i.hours, precision: 4) unless i.hours.blank?
+    	row.item(:w_cost).value number_with_precision(i.cost, precision: 4) unless i.cost.blank?
+    	row.item(:w_costs).value number_with_precision(i.costs, precision: 4) unless i.costs.blank?
+	end
+	# Store page subtotals
+    report.page.list(:workers) do |list|
+		list.store.i_page_hours += i.quantity
+		list.store.i_page_costs += i.costs
     end	
 end
