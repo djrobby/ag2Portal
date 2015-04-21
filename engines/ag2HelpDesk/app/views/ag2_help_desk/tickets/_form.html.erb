@@ -93,7 +93,7 @@
   <label class="multi-field-label-two"> <%= f.association :ticket_priority, collection: TicketPriority.all(order: 'id'), :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
 </div>
 <%= f.input :ticket_subject, :input_html => { :class => 'large-text-field', :maxlength => 30 }, :label_html => { :class => 'form-label' } %>
-<%= f.input :ticket_message, :as => :text, :input_html => { :class => 'x-large-text-field', :rows => 3 }, :label_html => { :class => 'form-label' } %>
+<%= f.input :ticket_message, :as => :text, :input_html => { :class => 'x-large-text-field', :rows => 3, :maxlength => 254 }, :label_html => { :class => 'form-label' } %>
 <div>
   <label class="multi-field-label-two"> <%= f.input :created_by, collection: User.all(order: 'email'), :input_html => { :class => 'x-large-text-field sel2' }, :label_html => { :class => 'form-label' } %> </label>
   <label class="multi-field-label-two"> <%= f.input :updated_by, collection: User.all(order: 'email'), :input_html => { :class => 'x-large-text-field sel2' }, :label_html => { :class => 'form-label' } %> </label>
@@ -110,7 +110,7 @@
   <label class="multi-field-label-two"> <%= f.input :assign_at, :start_year => Time.now.year - 100, :end_year => Time.now.year + 100, :as => :string, :input_html => { :value => (f.object.assign_at.strftime("%d/%m/%Y %H:%M:%S") if f.object.assign_at), :class => 'large-text-field date_picker' }, :label_html => { :class => 'form-label' } %> </label>
   <label class="multi-field-label-two"> <%= f.input :status_changed_at, :start_year => Time.now.year - 100, :end_year => Time.now.year + 100, :as => :string, :input_html => { :value => (f.object.status_changed_at.strftime("%d/%m/%Y %H:%M:%S") if f.object.status_changed_at), :class => 'large-text-field date_picker' }, :label_html => { :class => 'form-label' } %> </label>
 </div>
-<%= f.input :status_changed_message, :as => :text, :input_html => { :class => 'x-large-text-field', :rows => 3 }, :label_html => { :class => 'form-label' } %>
+<%= f.input :status_changed_message, :as => :text, :input_html => { :class => 'x-large-text-field', :rows => 3, :maxlength => 254 }, :label_html => { :class => 'form-label' } %>
 <!-- Attachment -->
 <table class="form-table">
   <tbody>
