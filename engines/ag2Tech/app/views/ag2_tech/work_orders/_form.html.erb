@@ -462,7 +462,33 @@
 </table>
 <%= render 'subcontractors_table', f: f %>
 <!-- Tools -->
+<table class="form-table">
+  <tbody>
+    <tr class="form-tr underlined-tr">
+      <td class="form-td-two left-winged">
+        <h4><%= t 'ag2_tech.work_orders.tools_info' %></h4>
+      </td>
+      <td class="form-td-two right-winged">
+        <%= link_to_add_fields(t("ag2_tech.work_orders.btn_new_tool"), f, :work_order_tools, "tool_fields", "new-tool-fields", class: "btn btn-warning fnt-new-tool-btn") %>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<%= render 'tools_table', f: f %>
 <!-- Vehicles -->
+<table class="form-table">
+  <tbody>
+    <tr class="form-tr underlined-tr">
+      <td class="form-td-two left-winged">
+        <h4><%= t 'ag2_tech.work_orders.vehicles_info' %></h4>
+      </td>
+      <td class="form-td-two right-winged">
+        <%= link_to_add_fields(t("ag2_tech.work_orders.btn_new_vehicle"), f, :work_order_vehicles, "vehicle_fields", "new-vehicle-fields", class: "btn btn-warning fnt-new-vehicle-btn") %>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<%= render 'vehicles_table', f: f %>
 <!-- Remarks -->
 <%= f.input :remarks, as: :text, input_html: { class: 'x-large-text-field', rows: 3 }, label_html: { class: 'form-label' } %>
 <!-- Buttons -->

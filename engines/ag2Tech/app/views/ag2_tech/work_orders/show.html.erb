@@ -1,3 +1,17 @@
+<script>
+  jQuery(function($) {
+    // when #print_report_btn is clicked
+    $("#print_report_btn").click(function() {
+      // make a POST call and get report
+      var id = $('#id').html();
+      if (id == "")
+        return;
+      window.open("work_order_form.pdf?id=" + id, "_blank");
+      return false;
+    });
+  });
+</script>
+
 <%= render '/layouts/ag2_tech/wordersbreadcrumb' %>
 
 <h3><%=t '.title' %></h3>
@@ -5,7 +19,7 @@
   <tbody>
     <tr>
       <td>Id:</td>
-      <td><%= @work_order.id %></td>
+      <td id="id"><%= @work_order.id %></td>
       <td><%=t 'activerecord.attributes.work_order.order_no' %>:</td>
       <td><b><%= @work_order.full_no %></b></td>
     </tr>
@@ -88,7 +102,7 @@
         <h4><%= t 'ag2_tech.work_orders.items_info' %></h4>
       </td>
       <td class="form-td-two right-winged">
-        <%= link_to t(".print"), work_orders_path, :class => 'btn btn-warning' %>
+        <a href="#" id="print_report_btn" class="btn btn-warning"><%= t '.print' %></a>
       </td>
     </tr>
   </tbody>
@@ -118,7 +132,7 @@
         <h4><%= t 'ag2_tech.work_orders.workers_info' %></h4>
       </td>
       <td class="form-td-two right-winged">
-        <%= link_to t(".print"), work_orders_path, :class => 'btn btn-warning' %>
+        <a href="#" id="print_report_btn" class="btn btn-warning"><%= t '.print' %></a>
       </td>
     </tr>
   </tbody>
@@ -148,7 +162,7 @@
         <h4><%= t 'ag2_tech.work_orders.subcontractors_info' %></h4>
       </td>
       <td class="form-td-two right-winged">
-        <%= link_to t(".print"), work_orders_path, :class => 'btn btn-warning' %>
+        <a href="#" id="print_report_btn" class="btn btn-warning"><%= t '.print' %></a>
       </td>
     </tr>
   </tbody>
@@ -178,7 +192,7 @@
         <h4><%= t 'ag2_tech.work_orders.tools_info' %></h4>
       </td>
       <td class="form-td-two right-winged">
-        <%= link_to t(".print"), work_orders_path, :class => 'btn btn-warning' %>
+        <a href="#" id="print_report_btn" class="btn btn-warning"><%= t '.print' %></a>
       </td>
     </tr>
   </tbody>
@@ -208,7 +222,7 @@
         <h4><%= t 'ag2_tech.work_orders.vehicles_info' %></h4>
       </td>
       <td class="form-td-two right-winged">
-        <%= link_to t(".print"), work_orders_path, :class => 'btn btn-warning' %>
+        <a href="#" id="print_report_btn" class="btn btn-warning"><%= t '.print' %></a>
       </td>
     </tr>
   </tbody>

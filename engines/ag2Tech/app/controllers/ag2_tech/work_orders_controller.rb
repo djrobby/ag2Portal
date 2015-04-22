@@ -917,7 +917,7 @@ module Ag2Tech
     def vehicles_dropdown_edit(_work_order)
       _a = nil
       if !_work_order.nil? && !_work_order.project.nil?
-        _a = Vehicle.where('office_id = ? OR (office_id IS NULL AND company_id = ?) OR (office_id IS NULL AND company_id IS NULL AND organization_id = ?)', _work_order.project.office_id, _work_order.project.company_id, _work_order.organization_id).order(:serial_no)
+        _a = Vehicle.where('office_id = ? OR (office_id IS NULL AND company_id = ?) OR (office_id IS NULL AND company_id IS NULL AND organization_id = ?)', _work_order.project.office_id, _work_order.project.company_id, _work_order.organization_id).order(:registration)
       else
         _a = vehicles_dropdown
       end
