@@ -29,12 +29,12 @@
         if (!p.length) {
           $.each(data, function(id, option) {
             if (id == 'order' && option != "") {
-              $("#fnt-purchase-order").append($('<option></option>').val(option[0]).html(option[1] + " " + es_date(option[2]) + " " + option[3]));
+              $("#fnt-purchase-order").append($('<option></option>').val(option[0]).html(option[1] + " " + option[2] + " " + option[3]));
             }
           });
         } else {
           $.each(p, function(id, option) {
-            $("#fnt-purchase-order").append($('<option></option>').val(option[0]).html(option[1] + " " + es_date(option[2]) + " " + option[3]));
+            $("#fnt-purchase-order").append($('<option></option>').val(option[0]).html(option[1] + " " + option[2] + " " + option[3]));
           });
         }
       });
@@ -86,7 +86,7 @@
         pct = "0";
       // Right formatted for passing as REST parameter
       cost = parseInt(right_number(cost, 4) * 10000);
-      pct = parseInt(right_number(hours, 2) * 100);
+      pct = parseInt(right_number(pct, 2) * 100);
       jQuery.getJSON('wo_update_costs_from_cost_or_enforcement_pct/' + cost + '/' + pct, function(data) {
         $('#fnt-costsub').val(data.cost);
         $('#fnt-enforcement-pct').val(data.pct);

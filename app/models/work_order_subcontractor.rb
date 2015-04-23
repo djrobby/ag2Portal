@@ -22,6 +22,6 @@ class WorkOrderSubcontractor < ActiveRecord::Base
   end
   
   def costs
-    enforcement_pct * cost
+    (enforcement_pct / 100) * cost
   end
 end

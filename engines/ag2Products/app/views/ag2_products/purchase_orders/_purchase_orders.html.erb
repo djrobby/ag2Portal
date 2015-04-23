@@ -27,7 +27,7 @@
       <td><%= order.order_status.name %></td>
       <td><%= order.supplier.full_name[0,40] %></td>
       <td><%= order.offer.offer_no unless order.offer.blank? %></td>
-      <td align="right"><%= number_with_precision(order.total, precision: 4) unless order.total.blank? %></td>
+      <td align="right"><%= number_with_precision(order.total, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless order.total.blank? %></td>
       <td> <%= render :partial => '/layouts/crud/edit', :locals => { :model => PurchaseOrder, :path => edit_purchase_order_path(order) } %>
       <%= render :partial => '/layouts/crud/delete', :locals => { :model => PurchaseOrder, :path => order, :msg => t("activerecord.models.purchase_order.one"), :txt => order.order_no } %> </td>
     </tr>

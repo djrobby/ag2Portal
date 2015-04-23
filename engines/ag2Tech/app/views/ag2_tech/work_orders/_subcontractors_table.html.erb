@@ -20,7 +20,7 @@
         costs += parseFloat(right_number($(this).find('input.fnt-costssub').val(), 4));
         count += 1;
       });
-      pct = parseInt(right_number(hours.toString(), 2) * 100);
+      pct = parseInt(right_number(pct.toString(), 2) * 100);
       costs = parseInt(right_number(costs.toString(), 4) * 10000);
       jQuery.getJSON('wo_subcontractor_totals/' + pct + '/' + costs + '/' + count, function(data) {
         //document.getElementById('foot-pct-avg').innerHTML = data.average;
@@ -117,7 +117,7 @@
         pct = "0";
       // Right formatted for passing as REST parameter
       cost = parseInt(right_number(cost, 4) * 10000);
-      pct = parseInt(right_number(hours, 2) * 100);
+      pct = parseInt(right_number(pct, 2) * 100);
       jQuery.getJSON('wo_update_costs_from_cost_or_enforcement_pct/' + cost + '/' + pct, function(data) {
         $(_this).closest('tr').find('.fnt-costsub').val(data.cost);
         $(_this).closest('tr').find('.fnt-enforcement-pct').val(data.pct);

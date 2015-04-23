@@ -18,7 +18,24 @@ class Tool < ActiveRecord::Base
 
   validates_attachment_content_type :image, :content_type => /\Aimage\/.*\Z/
 
+  before_validation :fields_to_uppercase
   before_destroy :check_for_dependent_records
+
+  def fields_to_uppercase
+    if !self.serial_no.blank?
+      self[:serial_no].upcase!
+    end
+    if !self.name.blank?
+      self[:name].upcase!
+    end
+    if !self.brand.blank?
+      self[:brand].upcase!
+    end
+    if !self.model.blank?
+      self[:model].upcase!
+    end
+    true
+  end
 
   def to_label
     "#{full_name}"

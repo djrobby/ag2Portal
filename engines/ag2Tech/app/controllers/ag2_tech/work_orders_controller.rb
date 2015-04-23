@@ -231,8 +231,8 @@ module Ag2Tech
       end
       # Purchase orders array
       @orders_dropdown = []
-      @areas.each do |i|
-        @orders_dropdown = @orders_dropdown << [i.id, i.full_no, i.order_date, i.supplier.full_name] 
+      @orders.each do |i|
+        @orders_dropdown = @orders_dropdown << [i.id, i.full_no, i.order_date.strftime("%d/%m/%Y"), i.supplier.full_name] 
       end
       # Format numbers
       cost = number_with_precision(cost.round(4), precision: 4)
@@ -358,8 +358,8 @@ module Ag2Tech
     def wo_update_costs_from_cost_or_enforcement_pct
       cost = params[:cost].to_f / 10000
       pct = params[:pct].to_f / 100
-      costs = minutes * cost
-      pct = number_with_precision(minutes.round(2), precision: 2)
+      costs = (pct / 100) * cost
+      pct = number_with_precision(pct.round(2), precision: 2)
       cost = number_with_precision(cost.round(4), precision: 4)
       costs = number_with_precision(costs.round(4), precision: 4)
       @json_data = { "pct" => pct.to_s, "cost" => cost.to_s, "costs" => costs.to_s }

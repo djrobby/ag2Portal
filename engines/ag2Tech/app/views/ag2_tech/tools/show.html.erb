@@ -24,7 +24,7 @@
       <td><%=t 'activerecord.attributes.tool.product' %>:</td>
       <td><%= @tool.product.full_name unless @tool.product.blank? %></td>
       <td><%=t 'activerecord.attributes.tool.cost' %>:</td>
-      <td><%= number_with_precision(@tool.cost, precision: 4) unless @tool.cost.blank? %></td>
+      <td><%= number_with_precision(@tool.cost, precision: 4, delimiter: I18n.locale == :es ? "." : ",") unless @tool.cost.blank? %></td>
     </tr>
     </tr>
       <td><%=t 'activerecord.attributes.tool.brand' %>:</td>

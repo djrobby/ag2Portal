@@ -68,7 +68,7 @@ class WorkOrder < ActiveRecord::Base
 
   validates :order_no,          :presence => true,
                                 :length => { :is => 22 },
-                                :format => { with: /\A\d+\Z/, message: :code_invalid },
+                                :format => { with: /\A[a-zA-Z\d]+\Z/, message: :code_invalid },
                                 :uniqueness => { :scope => :organization_id }
   validates :description,       :presence => true,
                                 :length => { :maximum => 100 }

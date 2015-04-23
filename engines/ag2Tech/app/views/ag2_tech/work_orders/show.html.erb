@@ -89,7 +89,7 @@
       <td><%= t :"activerecord.attributes.work_order.master_order" %>:</td>
       <td><%= @work_order.master_order unless @work_order.master_order.blank? %></td>
       <td class="highlighted bolded"><%= t :"activerecord.attributes.work_order.total_costs" %>:</td>
-      <td class="highlighted bolded"><%= number_with_precision(@work_order.total_costs, precision: 4) unless @work_order.total_costs.blank? %></td>
+      <td class="highlighted bolded"><%= number_with_precision(@work_order.total_costs, precision: 4, delimiter: I18n.locale == :es ? "." : ",") unless @work_order.total_costs.blank? %></td>
     </tr>
   </tbody>
 </table>
@@ -102,7 +102,7 @@
         <h4><%= t 'ag2_tech.work_orders.items_info' %></h4>
       </td>
       <td class="form-td-two right-winged">
-        <a href="#" id="print_report_btn" class="btn btn-warning"><%= t '.print' %></a>
+        <a href="#" id="print_report_btn" class="btn btn-warning"><i class="icon-print icon-white"></i> <%= t '.print' %></a>
       </td>
     </tr>
   </tbody>
@@ -132,7 +132,7 @@
         <h4><%= t 'ag2_tech.work_orders.workers_info' %></h4>
       </td>
       <td class="form-td-two right-winged">
-        <a href="#" id="print_report_btn" class="btn btn-warning"><%= t '.print' %></a>
+        <a href="#" id="print_report_btn"><i class="icon-arrow-up"></i></a>
       </td>
     </tr>
   </tbody>
@@ -162,7 +162,7 @@
         <h4><%= t 'ag2_tech.work_orders.subcontractors_info' %></h4>
       </td>
       <td class="form-td-two right-winged">
-        <a href="#" id="print_report_btn" class="btn btn-warning"><%= t '.print' %></a>
+        <a href="#" id="print_report_btn"><i class="icon-arrow-up"></i></a>
       </td>
     </tr>
   </tbody>
@@ -192,7 +192,7 @@
         <h4><%= t 'ag2_tech.work_orders.tools_info' %></h4>
       </td>
       <td class="form-td-two right-winged">
-        <a href="#" id="print_report_btn" class="btn btn-warning"><%= t '.print' %></a>
+        <a href="#" id="print_report_btn"><i class="icon-arrow-up"></i></a>
       </td>
     </tr>
   </tbody>
@@ -222,7 +222,7 @@
         <h4><%= t 'ag2_tech.work_orders.vehicles_info' %></h4>
       </td>
       <td class="form-td-two right-winged">
-        <a href="#" id="print_report_btn" class="btn btn-warning"><%= t '.print' %></a>
+        <a href="#" id="print_report_btn"><i class="icon-arrow-up"></i></a>
       </td>
     </tr>
   </tbody>

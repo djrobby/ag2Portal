@@ -25,7 +25,7 @@
       <td><%= m.name %></td>
       <td><%= m.brand unless m.brand.blank? %></td>
       <td><%= m.model unless m.model.blank? %></td>
-      <td align="right"><%= number_with_precision(m.cost, precision: 4) unless m.cost.blank? %></td>
+      <td align="right"><%= number_with_precision(m.cost, precision: 4, delimiter: I18n.locale == :es ? "." : ",") unless m.cost.blank? %></td>
       <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => Vehicle, :path => edit_vehicle_path(m) } %>
       <%= render :partial => '/layouts/crud/delete', :locals => { :model => Vehicle, :path => m, :msg => t("activerecord.models.vehicle.one"), :txt => m.full_name } %> </td>
     </tr>

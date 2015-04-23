@@ -7,7 +7,8 @@ module Ag2Tech
     load_and_authorize_resource
     skip_load_and_authorize_resource :only => [:ve_update_company_textfield_from_office,
                                                :ve_update_company_and_office_textfields_from_organization,
-                                               :ve_update_name_textfield_from_product]
+                                               :ve_update_name_textfield_from_product,
+                                               :ve_update_cost]
     # Helper methods for sorting
     helper_method :sort_column
     
@@ -60,6 +61,15 @@ module Ag2Tech
       cost = number_with_precision(cost.round(4), precision: 4)
       # Setup JSON
       @json_data = { "description" => description, "cost" => cost.to_s, "manufacturer" => manufacturer }
+      render json: @json_data
+    end
+
+    def ve_update_cost
+      cost = params[:cost].to_f / 10000
+      # Format number
+      cost = number_with_precision(cost.round(4), precision: 4)
+      # Setup JSON
+      @json_data = { "cost" => cost.to_s }
       render json: @json_data
     end
 

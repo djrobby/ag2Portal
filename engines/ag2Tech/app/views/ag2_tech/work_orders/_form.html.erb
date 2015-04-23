@@ -367,6 +367,27 @@
         $(this).find('input.fnt-hours').val(qty);
         $(this).find('input.fnt-costw').val(cost);
       });
+      // Must change decimal separator, if comma, in subcontractors table numeric fields
+      $('#subcontractors-table tr.fields').each(function() {
+        qty = $(this).find('input.fnt-enforcement-pct').val().replace(",", ".");
+        cost = $(this).find('input.fnt-costsub').val().replace(",", ".");
+        $(this).find('input.fnt-enforcement-pct').val(qty);
+        $(this).find('input.fnt-costsub').val(cost);
+      });
+      // Must change decimal separator, if comma, in tools table numeric fields
+      $('#tools-table tr.fields').each(function() {
+        qty = $(this).find('input.fnt-minutes').val().replace(",", ".");
+        cost = $(this).find('input.fnt-costt').val().replace(",", ".");
+        $(this).find('input.fnt-minutes').val(qty);
+        $(this).find('input.fnt-costt').val(cost);
+      });
+      // Must change decimal separator, if comma, in vehicles table numeric fields
+      $('#vehicles-table tr.fields').each(function() {
+        qty = $(this).find('input.fnt-distance').val().replace(",", ".");
+        cost = $(this).find('input.fnt-costv').val().replace(",", ".");
+        $(this).find('input.fnt-distance').val(qty);
+        $(this).find('input.fnt-costv').val(cost);
+      });
       //e.preventDefault();
     });
   });

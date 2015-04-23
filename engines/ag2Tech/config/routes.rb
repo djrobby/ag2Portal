@@ -103,6 +103,9 @@ Ag2Tech::Engine.routes.draw do
     match 'tools/tl_update_name_textfield_from_product/:product', :controller => 'tools', :action => 'tl_update_name_textfield_from_product'
     match 'tl_update_name_textfield_from_product/:product', :controller => 'tools', :action => 'tl_update_name_textfield_from_product'
     match 'tools/:id/tl_update_name_textfield_from_product/:product', :controller => 'tools', :action => 'tl_update_name_textfield_from_product'
+    match 'tools/tl_update_cost/:cost', :controller => 'tools', :action => 'tl_update_cost'
+    match 'tl_update_cost/:cost', :controller => 'tools', :action => 'tl_update_cost'
+    match 'tools/:id/tl_update_cost/:cost', :controller => 'tools', :action => 'tl_update_cost'
     #
     match 'vehicles/ve_update_company_textfield_from_office/:id', :controller => 'vehicles', :action => 've_update_company_textfield_from_office'
     match 've_update_company_textfield_from_office/:id', :controller => 'vehicles', :action => 've_update_company_textfield_from_office'
@@ -113,6 +116,9 @@ Ag2Tech::Engine.routes.draw do
     match 'vehicles/ve_update_name_textfield_from_product/:product', :controller => 'vehicles', :action => 've_update_name_textfield_from_product'
     match 've_update_name_textfield_from_product/:product', :controller => 'vehicles', :action => 've_update_name_textfield_from_product'
     match 'vehicles/:id/ve_update_name_textfield_from_product/:product', :controller => 'vehicles', :action => 've_update_name_textfield_from_product'
+    match 'vehicles/ve_update_cost/:cost', :controller => 'vehicles', :action => 've_update_cost'
+    match 've_update_cost/:cost', :controller => 'vehicles', :action => 've_update_cost'
+    match 'vehicles/:id/ve_update_cost/:cost', :controller => 'vehicles', :action => 've_update_cost'
     #
     match 'ratios/ra_generate_code/:group/:org', :controller => 'ratios', :action => 'ra_generate_code'
     match 'ra_generate_code/:group/:org', :controller => 'ratios', :action => 'ra_generate_code'

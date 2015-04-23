@@ -17,7 +17,7 @@
       var count = 0;
       $('#vehicles-table tr.fields:visible').each(function() {
         distance += parseFloat(right_number($(this).find('input.fnt-distance').val(), 2));
-        costs += parseFloat(right_number($(this).find('input.fnt-costsw').val(), 4));
+        costs += parseFloat(right_number($(this).find('input.fnt-costsv').val(), 4));
         count += 1;
       });
       distance = parseInt(right_number(distance.toString(), 2) * 100);
