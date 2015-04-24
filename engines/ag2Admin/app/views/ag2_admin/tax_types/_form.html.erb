@@ -1,9 +1,13 @@
 <script>
+  var _thisForm = '';
+
   $(document).ready(function() {
     $('.date_picker').datepicker({
       format : 'dd/mm/yyyy',
       weekStart : 1
     });
+    // Initialize form variable
+    _thisForm = $("#tax_type_expiration").closest('form')[0];
   });
 
   jQuery(function($) {
@@ -25,7 +29,27 @@
       })
       return false;
     });
-  })
+
+    // when the #tax_type_tax field changes
+    $("#tax_type_tax").change(function() {
+      var total = $('#tax_type_tax').val();
+      if (total == "")
+        total = "0";
+      // Right formatted for passing as REST parameter
+      total = parseInt(right_number(total, 2) * 100);
+      jQuery.getJSON('tt_update_tax/' + total, function(data) {
+        $('#tax_type_tax').val(data.total);
+      });
+      return false;
+    });
+    
+    // when submit    
+    $(_thisForm).on('submit', function() {
+      // Must change decimal separator, if comma, in numeric fields
+      var total = $('#tax_type_tax').val().replace(",", ".");
+      $('#tax_type_tax').val(total);
+    });
+  });
 </script>
 
 <%= simple_form_for @tax_type, :html => {:class => 'form-vertical well', id: :edit_tax_type } do |f| %>

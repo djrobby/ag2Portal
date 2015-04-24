@@ -4,7 +4,7 @@ es:
       index:
         entities: "Entidades"
         companies: "Empresas"
-        offices: "Oficinas"
+        offices: "Oficinas y Servicios"
         countries: "Países"
         regions: "Regiones"
         provinces: "Provincias"

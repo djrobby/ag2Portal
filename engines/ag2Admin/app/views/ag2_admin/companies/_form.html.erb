@@ -1,11 +1,14 @@
 <script>
   var text_field_color;
+  var _thisForm = '';
 
   $(document).ready(function() {
     // Setup drag & drop
     dd_import_files('#dd_files', '#image_content', 'co_update_attachment');
     // Save default text color
     text_field_color = $("#company_phone").css('color')
+    // Initialize form variable
+    _thisForm = $("#company_phone").closest('form')[0];
     // Icon inside text field: Validate Fiscal Id
     $('input.iconify').wrap('<span class="validateicon" title="<%=t('ag2_admin.companies.validate_btn') %>" />').after($('<span/>').click(function() {
       // make a POST call and replace the content
@@ -61,6 +64,49 @@
     $("#company_logo").change(function() {
       readImageFromInput(this, '#dd_files');
     });
+
+    // when the #company_max_order_total field changes
+    $("#company_max_order_total").change(function() {
+      // preserve the current object
+      var _this = (this);
+      recalculate(_this);
+      return false;
+    });
+
+    // when the #company_max_order_price field changes
+    $("#company_max_order_price").change(function() {
+      // preserve the current object
+      var _this = (this);
+      recalculate(_this);
+      return false;
+    });
+    
+    // when submit    
+    $(_thisForm).on('submit', function() {
+      // Must change decimal separator, if comma, in numeric fields
+      var total = $('#company_max_order_total').val().replace(",", ".");
+      var price = $('#company_max_order_price').val().replace(",", ".");
+      $('#company_max_order_total').val(total);
+      $('#company_max_order_price').val(price);
+    });
+    
+    // Recalculate amounts & prices
+    function recalculate(_this) {
+      // make a POST call and replace the content
+      var total = $('#company_max_order_total').val();
+      if (total == "")
+        total = "0";
+      var price = $('#company_max_order_price').val();
+      if (price == "")
+        price = "0";
+      // Right formatted for passing as REST parameter
+      total = parseInt(right_number(total, 2) * 100);
+      price = parseInt(right_number(price, 4) * 10000);
+      jQuery.getJSON('co_update_total_and_price/' + total + '/' + price, function(data) {
+        $('#company_max_order_total').val(data.total);
+        $('#company_max_order_price').val(data.price);
+      });
+    }
   });
 </script>
 
@@ -137,7 +183,7 @@
 <!-- Commercial info -->
 <h4><%=t 'ag2_admin.companies.commercial_info' %></h4>
 <div>
-  <label class="multi-field-label-two"> <%= f.input :max_order_total, as: :string, input_html: { value: (number_with_precision(f.object.max_order_total, precision: 4) if f.object.max_order_total), class: 'large-text-field number-text-field' }, label_html: { class: 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.input :max_order_total, as: :string, input_html: { value: (number_with_precision(f.object.max_order_total, precision: 2) if f.object.max_order_total), class: 'large-text-field number-text-field' }, label_html: { class: 'form-label' } %> </label>
   <label class="multi-field-label-two"> <%= f.input :max_order_price, as: :string, input_html: { value: (number_with_precision(f.object.max_order_price, precision: 4) if f.object.max_order_price), class: 'large-text-field number-text-field' }, label_html: { class: 'form-label' } %> </label>
 </div>
 <!-- Buttons -->

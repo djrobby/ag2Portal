@@ -2,7 +2,7 @@ en:
   ag2_admin:
     offices:
       index:
-        title: "Offices"
+        title: "Offices & Services"
         btn_new: "New Office"
         go_to: "Go to Companies"
         back_to_root: "Back to ag2Admin"
@@ -18,6 +18,6 @@ en:
         btn_show: "Show Office"
       new:
         title: "New Office"
-      back_to_main_page: "Back to Offices"
+      back_to_main_page: "Back to Offices & Services"
       generate_code_btn: "Office Code"
       commercial_info: "Commercial Info"

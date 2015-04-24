@@ -161,8 +161,8 @@ module Ag2Purchase
 
     # Format amount properly
     def su_format_amount
-      num = params[:num].to_f / 10000
-      num = number_with_precision(num.round(4), precision: 4)
+      num = params[:num].to_f / 100
+      num = number_with_precision(num.round(2), precision: 2)
       @json_data = { "num" => num.to_s }
       render json: @json_data
     end

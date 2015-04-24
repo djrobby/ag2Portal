@@ -12,4 +12,4 @@ es:
         worker_salary_id: "Id Salario"
         salary_concept: "Concepto"
         salary_concept_id: "Concepto"
-        amount: "Importe"
+        amount: "Importe €"

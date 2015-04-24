@@ -14,7 +14,7 @@ es:
         items: "Labores para OT"
         item: "Labor"
       work_order_statuses:
-        items: "Estados de OT"
+        items: "Estados de  OT"
         item: "Estado"
       work_order_types:
         items: "Tipos de OT"

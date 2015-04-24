@@ -1,11 +1,11 @@
 <% salaries.each do |salary| %>
 <tr>
   <td><%= salary.year %></td>
-  <td align="right"><%= number_to_currency(salary.gross_salary, locale: :es) %></td>
-  <td align="right"><%= number_to_currency(salary.variable_salary, locale: :es) %></td>
-  <td align="right"><%= number_to_currency(salary.social_security_cost, locale: :es) %></td>
-  <td align="right"><%= number_to_currency(salary.total_cost, locale: :es) %></td>
-  <td align="right"><%= number_to_percentage(salary.day_pct, precision: 2, locale: :es) %></td>
+  <td align="right"><%= number_with_precision(salary.gross_salary, precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></td>
+  <td align="right"><%= number_with_precision(salary.variable_salary, precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></td>
+  <td align="right"><%= number_with_precision(salary.social_security_cost, precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></td>
+  <td align="right"><%= number_with_precision(salary.total_cost, precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></td>
+  <td align="right"><%= number_to_percentage(salary.day_pct, precision: 2, locale: I18n.locale) %></td>
   <td align="center"> <% if salary.active %> <i class="icon-thumbs-up"></i> <% end %> </td>
   <td align="right">
     <%= link_to worker_salary_path(salary, item: salary.worker_item), :class => 'btn btn-mini' do %> <i class="icon-eye-open"></i> <% end %>

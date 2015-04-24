@@ -121,6 +121,15 @@ class Worker < ActiveRecord::Base
   def age
     (Date.current - borned_on).round / 365
   end
+
+  def floor_human
+    _ret = floor
+    _floor_is_numeric = true if Float(floor) rescue false
+    if _floor_is_numeric
+      _ret = floor.strip + "\xBA".force_encoding('ISO-8859-1').encode('UTF-8')
+    end
+    _ret
+  end
   
   #
   # Records navigator

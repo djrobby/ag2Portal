@@ -54,7 +54,7 @@
       <%= @client.building.titleize %>
       <% end %>
       <% if !@client.floor.blank? %>
-      <%= @client.floor %>&ordm;
+      <%= @client.floor_human %>
       <% end %>
       <% if !@client.floor_office.blank? %>
       <%= @client.floor_office %>

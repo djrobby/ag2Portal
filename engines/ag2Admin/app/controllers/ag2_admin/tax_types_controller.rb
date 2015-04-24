@@ -2,8 +2,11 @@ require_dependency "ag2_admin/application_controller"
 
 module Ag2Admin
   class TaxTypesController < ApplicationController
+    include ActionView::Helpers::NumberHelper
     before_filter :authenticate_user!
     load_and_authorize_resource
+    skip_load_and_authorize_resource :only => [:expire,
+                                               :tt_update_tax]
     # Helper methods for sorting
     helper_method :sort_column
     
@@ -30,6 +33,16 @@ module Ag2Admin
         format.html # expire.html.erb does not exist! JSON only
         format.json { render json: @json_data }
       end
+    end
+
+    # Update tax text field at view (formatting)
+    def tt_update_tax
+      total = params[:total].to_f / 100
+      # Format number
+      total = number_with_precision(total.round(2), precision: 2)
+      # Setup JSON
+      @json_data = { "total" => total.to_s }
+      render json: @json_data
     end
 
     #

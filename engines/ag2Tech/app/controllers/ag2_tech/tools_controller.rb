@@ -64,6 +64,7 @@ module Ag2Tech
       render json: @json_data
     end
 
+    # Update cost text field at view (formatting)
     def tl_update_cost
       cost = params[:cost].to_f / 10000
       # Format number

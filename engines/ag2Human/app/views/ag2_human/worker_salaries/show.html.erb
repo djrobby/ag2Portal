@@ -23,21 +23,21 @@
     </tr>
     <tr>
       <td><%= t :"activerecord.attributes.worker_salary.gross_salary" %>:</td>
-      <td><%= number_to_currency(@worker_salary.gross_salary, locale: :es) %></td>
+      <td><%= number_with_precision(@worker_salary.gross_salary, precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></td>
       <td><%= t :"activerecord.attributes.worker_salary.variable_salary" %>:</td>
-      <td><%= number_to_currency(@worker_salary.variable_salary, locale: :es) %></td>
+      <td><%= number_with_precision(@worker_salary.variable_salary, precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></td>
     </tr>
     <tr>
       <td><%= t :"activerecord.attributes.worker_salary.social_security_cost" %>:</td>
-      <td><%= number_to_currency(@worker_salary.social_security_cost, locale: :es) %></td>
+      <td><%= number_with_precision(@worker_salary.social_security_cost, precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></td>
       <td><%= t :"activerecord.attributes.worker_salary.total_cost" %>:</td>
-      <td><%= number_to_currency(@worker_salary.total_cost, locale: :es) %></td>
+      <td><%= number_with_precision(@worker_salary.total_cost, precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></td>
     </tr>
     <tr>
       <td><%= t :"activerecord.attributes.worker_salary.day_pct" %>:</td>
-      <td><%= number_to_percentage(@worker_salary.day_pct, precision: 2, locale: :es) %></td>
+      <td><%= number_to_percentage(@worker_salary.day_pct, precision: 2, locale: I18n.locale) %></td>
       <td><%= t :"activerecord.attributes.worker_salary.overtime" %>:</td>
-      <td><%= number_to_currency(@worker_salary.overtime, locale: :es) %></td>
+      <td><%= number_with_precision(@worker_salary.overtime, precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></td>
     </tr>
     <tr>
       <td><%= t :"activerecord.attributes.worker_salary.active" %>:</td>

@@ -113,7 +113,7 @@ module Ag2Tech
     private
 
     def sort_column
-      WorkOrderType.column_names.include?(params[:sort]) ? params[:sort] : "name"
+      WorkOrderType.column_names.include?(params[:sort]) ? params[:sort] : "id"
     end
 
     # Keeps filter state

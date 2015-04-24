@@ -29,7 +29,7 @@
       <td><%= offer.supplier.full_name unless offer.supplier.blank? %></td>
       <td><%= offer.offer_request.request_no unless offer.offer_request.blank? %></td>
       <td><%= offer.project.full_name unless offer.project.blank? %></td>
-      <td align="right"><%= number_with_precision(offer.total, precision: 4) unless offer.total.blank? %></td>
+      <td align="right"><%= number_with_precision(offer.total, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless offer.total.blank? %></td>
       <td> <%= render :partial => '/layouts/crud/edit', :locals => { :model => Offer, :path => edit_offer_path(offer) } %>
       <%= render :partial => '/layouts/crud/delete', :locals => { :model => Offer, :path => offer, :msg => t("activerecord.models.offer.one"), :txt => offer.offer_no } %> </td>
     </tr>

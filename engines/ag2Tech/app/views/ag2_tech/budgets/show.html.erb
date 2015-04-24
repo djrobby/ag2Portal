@@ -31,9 +31,9 @@
     <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @budget } %>
     <tr>
       <td class="highlighted bolded"><%= t :"activerecord.attributes.budget.total_income" %>:</td>
-      <td class="highlighted bolded"><%= number_with_precision(@budget.total_income, precision: 4) unless @budget.total_income.blank? %></td>
+      <td class="highlighted bolded"><%= number_with_precision(@budget.total_income, precision: 4, delimiter: I18n.locale == :es ? "." : ",") unless @budget.total_income.blank? %></td>
       <td class="highlighted bolded"><%= t :"activerecord.attributes.budget.total_expenditure" %>:</td>
-      <td class="highlighted bolded"><%= number_with_precision(@budget.total_expenditure, precision: 4) unless @budget.total_expenditure.blank? %></td>
+      <td class="highlighted bolded"><%= number_with_precision(@budget.total_expenditure, precision: 4, delimiter: I18n.locale == :es ? "." : ",") unless @budget.total_expenditure.blank? %></td>
     </tr>
   </tbody>
 </table>

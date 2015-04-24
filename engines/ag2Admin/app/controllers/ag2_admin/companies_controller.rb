@@ -2,11 +2,13 @@ require_dependency "ag2_admin/application_controller"
 
 module Ag2Admin
   class CompaniesController < ApplicationController
+    include ActionView::Helpers::NumberHelper
     before_filter :authenticate_user!
     load_and_authorize_resource
     skip_load_and_authorize_resource :only => [:update_province_textfield_from_town,
                                                :update_province_textfield_from_zipcode,
-                                               :co_update_attachment]
+                                               :co_update_attachment,
+                                               :co_update_total_and_price]
     # Helper methods for
     # => sorting
     # => allow edit (hide buttons)
@@ -52,6 +54,18 @@ module Ag2Admin
         format.html # update_province_textfield.html.erb does not exist! JSON only
         format.json { render json: @json_data }
       end
+    end
+
+    # Update total & price text fields at view (formatting)
+    def co_update_total_and_price
+      total = params[:total].to_f / 100
+      price = params[:price].to_f / 10000
+      # Format number
+      total = number_with_precision(total.round(2), precision: 2)
+      price = number_with_precision(price.round(4), precision: 4)
+      # Setup JSON
+      @json_data = { "total" => total.to_s, "price" => price.to_s }
+      render json: @json_data
     end
 
     #

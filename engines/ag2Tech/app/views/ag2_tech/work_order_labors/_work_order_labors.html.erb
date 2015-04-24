@@ -10,6 +10,7 @@
 <table class="table table-condensed table-striped">
   <thead>
     <tr>
+      <th><%= sortable "id", 'Id' %></th>
       <th><%= sortable "name", t('activerecord.attributes.work_order_labor.name') %></th>
       <th></th>
     </tr>
@@ -17,6 +18,7 @@
   <tbody>
     <% @work_order_labors.each do |labor| %>
     <tr>
+      <td><%= labor.id %></td>
       <td><%= link_to labor.name, labor %></td>
       <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => WorkOrderLabor, :path => edit_work_order_labor_path(labor) } %>
       <%= render :partial => '/layouts/crud/delete', :locals => { :model => WorkOrderLabor, :path => labor, :msg => t("activerecord.models.work_order_labor.one"), :txt => labor.name } %> </td>

@@ -1,9 +1,35 @@
 <script>
+  var _thisForm = '';
+
   $(document).ready(function() {
     $('.sel2').select2({
       formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; }
     });
+    // Initialize form variable
+    _thisForm = $("#worker_salary_item_amount").closest('form')[0];
   });
+
+  jQuery(function($) {
+    // when the #worker_salary_item_amount field changes
+    $("#worker_salary_item_amount").change(function() {
+      var amount = $('#worker_salary_item_amount').val();
+      if (amount == "")
+        amount = "0";
+      // Right formatted for passing as REST parameter
+      amount = parseInt(right_number(amount, 4) * 10000);
+      jQuery.getJSON('wsi_update_amount/' + amount, function(data) {
+        $('#worker_salary_item_amount').val(data.amount);
+      });
+      return false;
+    });
+    
+    // when submit    
+    $(_thisForm).on('submit', function() {
+      // Must change decimal separator, if comma, in numeric fields
+      var amount = $('#worker_salary_item_amount').val().replace(",", ".");
+      $('#worker_salary_item_amount').val(amount);
+    });
+  });  
 </script>
 
 <%= simple_form_for @worker_salary_item, :html => {:class => 'form-vertical well' } do |f| %>

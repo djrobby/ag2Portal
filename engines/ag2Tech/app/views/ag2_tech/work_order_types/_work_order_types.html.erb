@@ -10,6 +10,7 @@
 <table class="table table-condensed table-striped">
   <thead>
     <tr>
+      <th><%= sortable "id", 'Id' %></th>
       <th><%= sortable "name", t('activerecord.attributes.work_order_type.name') %></th>
       <th></th>
     </tr>
@@ -17,6 +18,7 @@
   <tbody>
     <% @work_order_types.each do |type| %>
     <tr>
+      <td><%= type.id %></td>
       <td><%= link_to type.name, type %></td>
       <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => WorkOrderType, :path => edit_work_order_type_path(type) } %>
       <%= render :partial => '/layouts/crud/delete', :locals => { :model => WorkOrderType, :path => type, :msg => t("activerecord.models.work_order_type.one"), :txt => type.name } %> </td>

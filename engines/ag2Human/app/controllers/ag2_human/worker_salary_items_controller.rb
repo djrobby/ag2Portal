@@ -2,9 +2,24 @@ require_dependency "ag2_human/application_controller"
 
 module Ag2Human
   class WorkerSalaryItemsController < ApplicationController
+    include ActionView::Helpers::NumberHelper
     before_filter :authenticate_user!
     load_and_authorize_resource
+    skip_load_and_authorize_resource :only => [:wsi_update_amount]
 
+    # Update cost text field at view (formatting)
+    def wsi_update_amount
+      amount = params[:amount].to_f / 10000
+      # Format number
+      amount = number_with_precision(amount.round(4), precision: 4)
+      # Setup JSON
+      @json_data = { "amount" => amount.to_s }
+      render json: @json_data
+    end
+
+    #
+    # Default Methods
+    #
     # GET /worker_salary_items
     # GET /worker_salary_items.json
     def index

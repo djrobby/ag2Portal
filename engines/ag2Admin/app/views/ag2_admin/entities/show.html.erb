@@ -51,7 +51,7 @@
       <%= @entity.building.titleize %>
       <% end %>
       <% if !@entity.floor.blank? %>
-      <%= @entity.floor %>&ordm;
+      <%= @entity.floor_human %>
       <% end %>
       <% if !@entity.floor_office.blank? %>
       <%= @entity.floor_office %>

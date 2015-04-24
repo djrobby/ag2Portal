@@ -11,6 +11,7 @@ Ag2Human::Engine.routes.draw do
     match 'ag2_timerecord_track' => 'ag2_timerecord_track#index', :as => :ag2_timerecord_track
 
     # Routes for jQuery POSTs
+    # Workers
     match 'workers/update_province_textfield_from_town/:id', :controller => 'workers', :action => 'update_province_textfield_from_town'
     match 'workers/:id/update_province_textfield_from_town/:id', :controller => 'workers', :action => 'update_province_textfield_from_town'
     match 'workers/update_province_textfield_from_zipcode/:id', :controller => 'workers', :action => 'update_province_textfield_from_zipcode'
@@ -32,15 +33,30 @@ Ag2Human::Engine.routes.draw do
     match 'wk_validate_fiscal_id_textfield/:id', :controller => 'workers', :action => 'validate_fiscal_id_textfield'
     match 'workers/:id/wk_validate_fiscal_id_textfield/:id', :controller => 'workers', :action => 'validate_fiscal_id_textfield'
     #
+    # Time record
     match 'worker_report', :controller => 'ag2_timerecord_track', :action => 'worker_report'
     match 'office_report', :controller => 'ag2_timerecord_track', :action => 'office_report'
     match 'update_workers_select_from_office/:id', :controller => 'ag2_timerecord_track', :action => 'update_workers_select_from_office'
     #
+    # Worker items
     match 'worker_items/update_company_textfield_from_office/:id', :controller => 'worker_items', :action => 'update_company_textfield_from_office'
+    match 'update_company_textfield_from_office/:id', :controller => 'worker_items', :action => 'update_company_textfield_from_office'
     match 'worker_items/:id/update_company_textfield_from_office/:id', :controller => 'worker_items', :action => 'update_company_textfield_from_office'
     #
+    # Worker salaries
+    match 'worker_salaries/ws_update_amounts/:gs/:vs/:ss/:dp/:ot', :controller => 'worker_salaries', :action => 'ws_update_amounts'
+    match 'ws_update_amounts/:gs/:vs/:ss/:dp/:ot', :controller => 'worker_salaries', :action => 'wsi_update_amount'
+    match 'worker_salaries/:id/ws_update_amounts/:gs/:vs/:ss/:dp/:ot', :controller => 'worker_salaries', :action => 'ws_update_amounts'
+    #
+    # Worker salary items
+    match 'worker_salary_items/wsi_update_amount/:amount', :controller => 'worker_salary_items', :action => 'wsi_update_amount'
+    match 'wsi_update_amount/:amount', :controller => 'worker_salary_items', :action => 'wsi_update_amount'
+    match 'worker_salary_items/:id/wsi_update_amount/:amount', :controller => 'worker_salary_items', :action => 'wsi_update_amount'
+    #
+    # Data import
     match 'data_import', :controller => 'import', :action => 'data_import'
     #
+    # Departments
     match 'departments/de_update_worker_select_from_company/:department', :controller => 'departments', :action => 'de_update_worker_select_from_company'
     match 'de_update_worker_select_from_company/:department', :controller => 'departments', :action => 'de_update_worker_select_from_company'
     match 'departments/:id/de_update_worker_select_from_company/:department', :controller => 'departments', :action => 'de_update_worker_select_from_company'

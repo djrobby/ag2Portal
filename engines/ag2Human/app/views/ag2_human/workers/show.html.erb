@@ -83,7 +83,7 @@
       <%= @worker.building.titleize %>
       <% end %>
       <% if !@worker.floor.nil? %>
-      <%= @worker.floor %>&ordm;
+      <%= @worker.floor_human %>
       <% end %>
       <% if !@worker.floor_office.nil? %>
       <%= @worker.floor_office %>

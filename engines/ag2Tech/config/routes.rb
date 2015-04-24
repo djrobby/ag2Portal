@@ -14,6 +14,9 @@ Ag2Tech::Engine.routes.draw do
     match 'projects/pr_generate_code/:company/:type', :controller => 'projects', :action => 'pr_generate_code'
     match 'pr_generate_code/:company/:type', :controller => 'projects', :action => 'pr_generate_code'
     match 'projects/:id/pr_generate_code/:company/:type', :controller => 'projects', :action => 'pr_generate_code'
+    match 'projects/pr_update_total_and_price/:total/:price', :controller => 'projects', :action => 'pr_update_total_and_price'
+    match 'pr_update_total_and_price/:total/:price', :controller => 'projects', :action => 'pr_update_total_and_price'
+    match 'projects/:id/pr_update_total_and_price/:total/:price', :controller => 'projects', :action => 'pr_update_total_and_price'
     #
     match 'charge_accounts/cc_generate_code/:group/:org', :controller => 'charge_accounts', :action => 'cc_generate_code'
     match 'cc_generate_code/:group/:org', :controller => 'charge_accounts', :action => 'cc_generate_code'

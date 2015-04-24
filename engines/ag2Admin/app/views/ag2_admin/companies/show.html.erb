@@ -103,9 +103,9 @@
   <tbody>
     <tr>
       <td><%= t :"activerecord.attributes.company.max_order_total" %>:</td>
-      <td><%= number_with_precision(@company.max_order_total) unless @company.max_order_total.blank? %></td>
+      <td><%= number_with_precision(@company.max_order_total, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless @company.max_order_total.blank? %></td>
       <td><%= t :"activerecord.attributes.company.max_order_price" %>:</td>
-      <td><%= number_with_precision(@company.max_order_price) unless @company.max_order_price.blank? %></td>
+      <td><%= number_with_precision(@company.max_order_price, precision: 4, delimiter: I18n.locale == :es ? "." : ",") unless @company.max_order_price.blank? %></td>
     </tr>
   </tbody>
 </table>

@@ -1,4 +1,11 @@
 <script>
+  var _thisForm = '';
+
+  $(document).ready(function() {
+    // Initialize form variable
+    _thisForm = $("#office_office_code").closest('form')[0];
+  });
+
   jQuery(function($) {
     // when the #office_town_id field changes
     $("#office_town_id").change(function() {
@@ -39,7 +46,50 @@
       })
       return false;
     });
-  })
+
+    // when the #office_max_order_total field changes
+    $("#office_max_order_total").change(function() {
+      // preserve the current object
+      var _this = (this);
+      recalculate(_this);
+      return false;
+    });
+
+    // when the #office_max_order_price field changes
+    $("#office_max_order_price").change(function() {
+      // preserve the current object
+      var _this = (this);
+      recalculate(_this);
+      return false;
+    });
+    
+    // when submit    
+    $(_thisForm).on('submit', function() {
+      // Must change decimal separator, if comma, in numeric fields
+      var total = $('#office_max_order_total').val().replace(",", ".");
+      var price = $('#office_max_order_price').val().replace(",", ".");
+      $('#office_max_order_total').val(total);
+      $('#office_max_order_price').val(price);
+    });
+    
+    // Recalculate amounts & prices
+    function recalculate(_this) {
+      // make a POST call and replace the content
+      var total = $('#office_max_order_total').val();
+      if (total == "")
+        total = "0";
+      var price = $('#office_max_order_price').val();
+      if (price == "")
+        price = "0";
+      // Right formatted for passing as REST parameter
+      total = parseInt(right_number(total, 2) * 100);
+      price = parseInt(right_number(price, 4) * 10000);
+      jQuery.getJSON('co_update_total_and_price/' + total + '/' + price, function(data) {
+        $('#office_max_order_total').val(data.total);
+        $('#office_max_order_price').val(data.price);
+      });
+    }
+  });
 </script>
 
 <%= simple_form_for @office, :html => {:class => 'form-vertical well' } do |f| %>
@@ -77,7 +127,7 @@
 <!-- Commercial info -->
 <h4><%=t 'ag2_admin.offices.commercial_info' %></h4>
 <div>
-  <label class="multi-field-label-two"> <%= f.input :max_order_total, as: :string, input_html: { value: (number_with_precision(f.object.max_order_total, precision: 4) if f.object.max_order_total), class: 'large-text-field number-text-field' }, label_html: { class: 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.input :max_order_total, as: :string, input_html: { value: (number_with_precision(f.object.max_order_total, precision: 2) if f.object.max_order_total), class: 'large-text-field number-text-field' }, label_html: { class: 'form-label' } %> </label>
   <label class="multi-field-label-two"> <%= f.input :max_order_price, as: :string, input_html: { value: (number_with_precision(f.object.max_order_price, precision: 4) if f.object.max_order_price), class: 'large-text-field number-text-field' }, label_html: { class: 'form-label' } %> </label>
 </div>
 <!-- Buttons -->

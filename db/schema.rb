@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150407055155) do
+ActiveRecord::Schema.define(:version => 20150424110604) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -243,7 +243,7 @@ ActiveRecord::Schema.define(:version => 20150407055155) do
     t.string   "street_name"
     t.string   "street_number"
     t.string   "building"
-    t.integer  "floor"
+    t.string   "floor"
     t.string   "floor_office"
     t.integer  "zipcode_id"
     t.integer  "town_id"
@@ -532,7 +532,7 @@ ActiveRecord::Schema.define(:version => 20150407055155) do
     t.string   "street_name"
     t.string   "street_number"
     t.string   "building"
-    t.integer  "floor"
+    t.string   "floor"
     t.string   "floor_office"
     t.integer  "zipcode_id"
     t.integer  "town_id"
@@ -2222,7 +2222,7 @@ ActiveRecord::Schema.define(:version => 20150407055155) do
     t.string   "street_name"
     t.string   "street_number"
     t.string   "building"
-    t.integer  "floor"
+    t.string   "floor"
     t.string   "floor_office"
     t.integer  "zipcode_id"
     t.integer  "town_id"

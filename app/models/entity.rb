@@ -61,6 +61,15 @@ class Entity < ActiveRecord::Base
     end
   end
 
+  def floor_human
+    _ret = floor
+    _floor_is_numeric = true if Float(floor) rescue false
+    if _floor_is_numeric
+      _ret = floor.strip + "\xBA".force_encoding('ISO-8859-1').encode('UTF-8')
+    end
+    _ret
+  end
+
   def self.find_by_fiscal_id_and_organization(_fiscal_id, _organization)
     Entity.where("fiscal_id = ? AND organization_id = ?", _fiscal_id, _organization).first 
   end

@@ -8,6 +8,8 @@ Ag2Gest::Engine.routes.draw do
     # Routes to search
 
     # Routes for jQuery POSTs
+    #
+    # Clients 
     match 'clients/update_province_textfield_from_town/:id', :controller => 'clients', :action => 'update_province_textfield_from_town'
     match 'clients/:id/update_province_textfield_from_town/:id', :controller => 'clients', :action => 'update_province_textfield_from_town'
     match 'clients/update_province_textfield_from_zipcode/:id', :controller => 'clients', :action => 'update_province_textfield_from_zipcode'
@@ -25,6 +27,11 @@ Ag2Gest::Engine.routes.draw do
     match 'clients/et_validate_fiscal_id_textfield/:id', :controller => 'clients', :action => 'et_validate_fiscal_id_textfield'
     match 'et_validate_fiscal_id_textfield/:id', :controller => 'clients', :action => 'et_validate_fiscal_id_textfield'
     match 'clients/:id/et_validate_fiscal_id_textfield/:id', :controller => 'clients', :action => 'et_validate_fiscal_id_textfield'
+    #
+    # Payment methods
+    match 'payment_methods/pm_format_numbers/:num', :controller => 'payment_methods', :action => 'pm_format_numbers'
+    match 'pm_format_numbers/:num', :controller => 'payment_methods', :action => 'pm_format_numbers'
+    match 'payment_methods/:id/pm_format_numbers/:num', :controller => 'payment_methods', :action => 'pm_format_numbers'
 
     # Resources
     resources :clients

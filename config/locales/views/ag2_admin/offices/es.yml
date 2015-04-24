@@ -2,7 +2,7 @@ es:
   ag2_admin:
     offices:
       index:
-        title: "Oficinas"
+        title: "Oficinas y Servicios"
         btn_new: "Nueva Oficina"
         go_to: "Ir a Empresas"
         back_to_root: "Volver a ag2Admin"
@@ -18,6 +18,6 @@ es:
         btn_show: "Ver Oficina"
       new:
         title: "Nueva Oficina"
-      back_to_main_page: "Volver a Oficinas"
+      back_to_main_page: "Volver a Oficinas y Servicios "
       generate_code_btn: "Código de Oficina"
       commercial_info: "Información Comercial"

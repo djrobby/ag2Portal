@@ -1,0 +1,37 @@
+<script>
+  $(document).ready(function() {
+    $("#div_table th a, #div_table #pages a").on("click", function() {
+      $.getScript(this.href);
+      return false;
+    });
+  }); 
+</script>
+
+<table class="table table-condensed table-striped shrinked">
+  <thead>
+    <tr>
+      <th><%= t 'activerecord.attributes.supplier_payment.payment_no' %></th>
+      <th align="center"><%= t 'activerecord.attributes.supplier_payment.payment_date' %></th>
+      <th><%= t 'activerecord.attributes.supplier_payment.supplier' %></th>
+      <th><%= t 'activerecord.attributes.supplier_payment.supplier_invoice' %></th>
+      <th><%= t 'activerecord.attributes.supplier_payment.payment_method' %></th>
+      <th align="right"><%= t 'activerecord.attributes.supplier_payment.amount' %></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @supplier_payments.each do |payment| %>
+    <tr>
+      <td><%= link_to payment.payment_no, payment %></td>
+      <td align="center"><%= payment.payment_date.strftime("%d/%m/%Y") unless payment.payment_date.blank? %></td>
+      <td><%= payment.supplier.name unless payment.supplier.blank? %></td>
+      <td><%= payment.supplier_invoice.invoice_no unless payment.supplier_invoice.blank? %></td>
+      <td><%= payment.payment_method.description unless payment.payment_method.blank? %></td>
+      <td align="right"><%= number_with_precision(payment.amount, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless payment.amount.blank? %></td>
+      <td> <%= render :partial => '/layouts/crud/edit', :locals => { :model => SupplierPayment, :path => edit_supplier_payment_path(payment) } %>
+      <%= render :partial => '/layouts/crud/delete', :locals => { :model => SupplierPayment, :path => payment, :msg => t("activerecord.models.supplier_payment.one"), :txt => payment.payment_no } %> </td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @supplier_payments } %>

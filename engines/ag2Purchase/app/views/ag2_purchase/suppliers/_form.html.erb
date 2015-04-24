@@ -290,7 +290,7 @@
       if (num == "")
         num = "0";
       // Right formatted for passing as REST parameter
-      num = parseInt(right_number(num, 4) * 10000);
+      num = parseInt(right_number(num, 2) * 100);
       jQuery.getJSON('su_format_amount/' + num, function(data) {
         $('#supplier_max_orders_sum').val(data.num);
       });

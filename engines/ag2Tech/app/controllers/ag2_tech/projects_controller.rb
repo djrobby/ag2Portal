@@ -2,11 +2,13 @@ require_dependency "ag2_tech/application_controller"
 
 module Ag2Tech
   class ProjectsController < ApplicationController
+    include ActionView::Helpers::NumberHelper
     before_filter :authenticate_user!
     load_and_authorize_resource
     skip_load_and_authorize_resource :only => [:pr_update_company_textfield_from_office,
                                                :pr_update_company_and_office_textfields_from_organization,
-                                               :pr_generate_code]
+                                               :pr_generate_code,
+                                               :pr_update_total_and_price]
     
     # Update company text field at view from office select
     def pr_update_company_textfield_from_office
@@ -54,6 +56,18 @@ module Ag2Tech
         code = pr_next_code(company, type)
       end
       @json_data = { "code" => code }
+      render json: @json_data
+    end
+
+    # Update total & price text fields at view (formatting)
+    def pr_update_total_and_price
+      total = params[:total].to_f / 100
+      price = params[:price].to_f / 10000
+      # Format number
+      total = number_with_precision(total.round(2), precision: 2)
+      price = number_with_precision(price.round(4), precision: 4)
+      # Setup JSON
+      @json_data = { "total" => total.to_s, "price" => price.to_s }
       render json: @json_data
     end
 

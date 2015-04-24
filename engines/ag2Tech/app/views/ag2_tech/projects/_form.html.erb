@@ -3,6 +3,7 @@
   var old_com = '';
   var old_typ = '';
   var old_code = '';
+  var _thisForm = '';
 
   $(document).ready(function() {
     $('.date_picker').datepicker({
@@ -11,6 +12,9 @@
     }).on('changeDate', function(e){
       $('.date_picker').datepicker('hide');
     });
+
+    // Initialize form variable
+    _thisForm = $("#project_project_code").closest('form')[0];
 
     // Save default text color
     text_field_color = $("#project_project_code").css('color')
@@ -182,6 +186,49 @@
       }
       return false;
     });
+
+    // when the #project_max_order_total field changes
+    $("#project_max_order_total").change(function() {
+      // preserve the current object
+      var _this = (this);
+      recalculate(_this);
+      return false;
+    });
+
+    // when the #project_max_order_price field changes
+    $("#project_max_order_price").change(function() {
+      // preserve the current object
+      var _this = (this);
+      recalculate(_this);
+      return false;
+    });
+    
+    // when submit    
+    $(_thisForm).on('submit', function() {
+      // Must change decimal separator, if comma, in numeric fields
+      var total = $('#project_max_order_total').val().replace(",", ".");
+      var price = $('#project_max_order_price').val().replace(",", ".");
+      $('#project_max_order_total').val(total);
+      $('#project_max_order_price').val(price);
+    });
+    
+    // Recalculate amounts & prices
+    function recalculate(_this) {
+      // make a POST call and replace the content
+      var total = $('#project_max_order_total').val();
+      if (total == "")
+        total = "0";
+      var price = $('#project_max_order_price').val();
+      if (price == "")
+        price = "0";
+      // Right formatted for passing as REST parameter
+      total = parseInt(right_number(total, 2) * 100);
+      price = parseInt(right_number(price, 4) * 10000);
+      jQuery.getJSON('pr_update_total_and_price/' + total + '/' + price, function(data) {
+        $('#project_max_order_total').val(data.total);
+        $('#project_max_order_price').val(data.price);
+      });
+    }
   });
   
   function show_hide_generate_code_btn() {
@@ -254,7 +301,7 @@
 <!-- Commercial info -->
 <h4><%=t 'ag2_tech.projects.commercial_info' %></h4>
 <div>
-  <label class="multi-field-label-two"> <%= f.input :max_order_total, as: :string, input_html: { value: (number_with_precision(f.object.max_order_total, precision: 4) if f.object.max_order_total), class: 'large-text-field number-text-field' }, label_html: { class: 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.input :max_order_total, as: :string, input_html: { value: (number_with_precision(f.object.max_order_total, precision: 2) if f.object.max_order_total), class: 'large-text-field number-text-field' }, label_html: { class: 'form-label' } %> </label>
   <label class="multi-field-label-two"> <%= f.input :max_order_price, as: :string, input_html: { value: (number_with_precision(f.object.max_order_price, precision: 4) if f.object.max_order_price), class: 'large-text-field number-text-field' }, label_html: { class: 'form-label' } %> </label>
 </div>
 <!-- Buttons -->

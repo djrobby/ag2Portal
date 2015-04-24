@@ -20,7 +20,7 @@
       <td><%=t 'activerecord.attributes.purchase_price.supplier' %>:</td>
       <td><%= @purchase_price.supplier.full_name %></td>
       <td><%=t 'activerecord.attributes.purchase_price.price' %>:</td>
-      <td><%= number_with_precision(@purchase_price.price, precision: 4) unless @purchase_price.price.blank? %></td>
+      <td><%= number_with_precision(@purchase_price.price, precision: 4, delimiter: I18n.locale == :es ? "." : ",") unless @purchase_price.price.blank? %></td>
     </tr>
     <tr>
       <td><%=t 'activerecord.attributes.purchase_price.measure' %>:</td>

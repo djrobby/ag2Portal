@@ -19,7 +19,7 @@
       <td><%=t 'activerecord.attributes.product_family.max_orders_count' %>:</td>
       <td><%= @product_family.max_orders_count unless @product_family.max_orders_count.blank? %></td>
       <td><%=t 'activerecord.attributes.product_family.max_orders_sum' %>:</td>
-      <td><%= number_with_precision(@product_family.max_orders_sum, precision: 2) unless @product_family.max_orders_sum.blank? %></td>
+      <td><%= number_with_precision(@product_family.max_orders_sum, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless @product_family.max_orders_sum.blank? %></td>
     </tr>
     <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @product_family } %>
     <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @product_family } %>
