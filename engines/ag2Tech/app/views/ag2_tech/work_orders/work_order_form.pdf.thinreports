@@ -316,7 +316,7 @@ no = 0
     	row.item(:s_no).value no
     	row.item(:s_supplier).value i.supplier.full_name unless i.supplier.blank?
     	row.item(:s_order).value i.purchase_order.full_no unless i.purchase_order.blank?
-    	row.item(:s_enforcement_pct).value number_with_precision(i.enforcement_pct, precision: 4) unless i.enforcement_pct.blank?
+    	row.item(:s_enforcement_pct).value number_with_precision(i.enforcement_pct, precision: 2) unless i.enforcement_pct.blank?
     	row.item(:s_cost).value number_with_precision(i.cost, precision: 4) unless i.cost.blank?
     	row.item(:s_costs).value number_with_precision(i.costs, precision: 4) unless i.costs.blank?
 	end
