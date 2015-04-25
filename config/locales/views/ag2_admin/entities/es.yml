@@ -24,7 +24,6 @@ es:
         entity_fiscal_short: "Id Fiscal es demasiado corto (8 caracteres mínimo)"
         submit: "La entidad ha sido creada."
       back_to_main_page: "Volver a Entidades"
-      validate_btn: "Validar"
       fiscal_error: "Id Fiscal erróneo."
       fiscal_name: "Nombre de Id Fiscal no hallado."
       personal_info: "Información de la Entidad"

@@ -22,7 +22,6 @@ es:
         title: "Nueva Solicitud"
       back_to_main_page: "Volver a Solicitudes de oferta"
       generate_code_btn: "Nº de Solicitud"
-      validate_btn: "Validar"
       code_error: "Imposible generar Nº de Solicitud: No has elegido Proyecto."
       items_info: "Items de la Solicitud"
       delete_item: "Borrar este Item"

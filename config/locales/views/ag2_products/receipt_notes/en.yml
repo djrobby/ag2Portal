@@ -22,7 +22,6 @@ en:
         title: "New Receipt note"
       back_to_main_page: "Back to Receipt notes"
       generate_code_btn: "Receipt note No."
-      validate_btn: "Validate"
       code_error: "Unable to generate Receipt note No.: No Activity chosen."
       items_info: "Receipt note Items"
       delete_item: "Delete this Item"

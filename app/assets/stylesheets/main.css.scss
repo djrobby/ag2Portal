@@ -247,9 +247,17 @@ th .current:focus {
   display: inline-block;
   width: 23.09%;
 }
+.multi-field-label-three-thinner-quarter {
+  display: inline-block;
+  width: 24.65%;
+}
 .multi-field-label-three-wider {
   display: inline-block;
   width: 53.09%;
+}
+.multi-field-label-three-wider-half {
+  display: inline-block;
+  width: 50%;
 }
 .multi-field-label-four {
   display: inline-block;
@@ -390,6 +398,24 @@ span.clearicon span {
   cursor: pointer;
 }
 span.clearicon input {
+  padding-right: 16px;
+}
+/* Generate button */
+span.generateicon {
+  position: relative;
+}
+span.generateicon span {
+  position: absolute;
+  display: block;
+  top: -3px;
+  right: 2px;
+  width: 16px;
+  height: 16px;
+  z-index: 1;
+  background: url('icon/glyph/black/halflings/play.png');
+  cursor: pointer;
+}
+span.generateicon input {
   padding-right: 16px;
 }
 

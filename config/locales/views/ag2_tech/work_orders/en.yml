@@ -24,7 +24,6 @@ en:
         title: "New Work order"
       back_to_main_page: "Back to Work orders"
       generate_code_btn: "Order No."
-      validate_btn: "Validate"
       no_error: "Unable to generate Order No.: No Project chosen."
       items_info: "Order Products"
       workers_info: "Order Workers"

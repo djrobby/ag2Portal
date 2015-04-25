@@ -22,7 +22,6 @@ es:
         title: "Nueva Nota de recepción"
       back_to_main_page: "Volver a Notas de recepción"
       generate_code_btn: "Nº de Nota de recepción"
-      validate_btn: "Validar"
       code_error: "Imposible generar Nº de Recepción: No has elegido Actividad."
       items_info: "Items de la Nota de recepción"
       delete_item: "Borrar este Item"

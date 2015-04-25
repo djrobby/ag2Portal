@@ -29,7 +29,6 @@ en:
       back_to_main_page: "Back to Budgets"
       generate_code_btn: "Budget No."
       new_btn: "Generate new or Inherit previous"
-      validate_btn: "Validate"
       no_error: "Unable to generate Budget No.: No Project or Period chosen, or No. has already been taken."
       new_error: "Unable to generate new Budget: No Project or Period chosen, or process error."
       new_success: "Budget %{var} has been generated."

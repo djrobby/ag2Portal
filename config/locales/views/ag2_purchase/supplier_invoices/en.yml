@@ -22,7 +22,6 @@ en:
         title: "New Invoice"
       back_to_main_page: "Back to Invoices"
       generate_code_btn: "Invoice No."
-      validate_btn: "Validate"
       code_error: "Unable to generate Invoice No.: No Activity chosen."
       items_info: "Invoice Items"
       delete_item: "Delete this Item"

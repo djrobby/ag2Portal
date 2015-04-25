@@ -28,7 +28,6 @@ es:
       back_to_main_page: "Volver a Presupuestos"
       generate_code_btn: "Nº de Presupuesto"
       new_btn: "Generar nuevo o Heredar anterior"
-      validate_btn: "Validar"
       no_error: "Imposible generar Nº de Presupuesto: No has elegido Proyecto o Periodo, o Nº ya está en uso."
       new_error: "Imposible generar nuevo Presupuesto: No has elegido Proyecto o Periodo, o error de proceso."
       new_success: "Presupuesto %{var} ha sido generado."

@@ -20,5 +20,4 @@ es:
         title: "Nueva Cuenta analítica"
       back_to_main_page: "Volver a Cuentas analíticas"
       generate_code_btn: "Código de Cuenta"
-      validate_btn: "Validar"
       code_error: "Imposible generar Código de Cuenta: No has elegido Organización o Grupo."

@@ -13,7 +13,7 @@
     // Setup drag & drop
     dd_import_files('#dd_files', '#image_content', 'wk_update_attachment');
     // Icon inside text field: Validate Fiscal Id
-    $('input.iconify').wrap('<span class="validateicon" title="<%=t('ag2_human.workers.validate_btn') %>" />').after($('<span/>').click(function() {
+    $('input.iconify').wrap('<span class="validateicon" title="<%=t('validate') %>" />').after($('<span/>').click(function() {
       // make a POST call and replace the content
       var worker = $('#worker_fiscal_id').val();
       if (worker == "")

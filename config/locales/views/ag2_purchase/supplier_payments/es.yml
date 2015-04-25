@@ -22,5 +22,4 @@ es:
         title: "Nueva Pago"
       back_to_main_page: "Volver a Pagos"
       generate_code_btn: "Nº de Pago"
-      validate_btn: "Validar"
       code_error: "Imposible generar Nº de Pago: No has elegido Actividad."

@@ -22,7 +22,6 @@ es:
         title: "Nueva Factura"
       back_to_main_page: "Volver a Facturas"
       generate_code_btn: "Nº de Factura"
-      validate_btn: "Validar"
       code_error: "Imposible generar Nº de Factura: No has elegido Actividad."
       items_info: "Items de la Factura"
       delete_item: "Borrar este Item"

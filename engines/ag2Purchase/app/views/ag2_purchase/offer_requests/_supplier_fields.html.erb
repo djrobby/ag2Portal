@@ -23,7 +23,7 @@
     <%= f.input :_destroy, as: :hidden, input_html: { class: 'field' } %>
   </div>
   <div class="modal-footer">
-    <span class="left-floated" style="vertical-align: bottom"><%= t("ag2_purchase.offer_requests.add_item_to", var: @offer_request.invoice_no) unless @offer_request.invoice_no.blank? %></span>
+    <span class="left-floated" style="vertical-align: bottom"><%= t("ag2_purchase.offer_requests.add_item_to", var: @offer_request.request_no) unless @offer_request.request_no.blank? %></span>
     <button id="addSupplierButton" type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><%= t('ag2_purchase.offer_requests.btn_add_item') %></button>
     <button id="cancelSupplierButton" type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><%= t :close_button %></button>
   </div>

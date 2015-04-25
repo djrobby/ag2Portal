@@ -20,5 +20,4 @@ en:
         title: "New Analytical account"
       back_to_main_page: "Back to Analytical accounts"
       generate_code_btn: "Account Code"
-      validate_btn: "Validate"
       code_error: "Unable to generate Account Code: No Organization or Group chosen."

@@ -216,9 +216,13 @@
         var td = $('<td>');
         var link = $('<a>', {
             href: '#',
-            onclick: 'remove_fields(this); return false;',
-            title: 'Delete this Item.'
+            onclick: 'remove_fields(this); $("#items-table").trigger("totals"); return false;'
         }).append($('<i>', { class: 'icon-trash' }));
+        //var link = $('<a>', {
+        //    href: '#',
+        //    onclick: 'remove_fields(this); return false;',
+        //    title: 'Delete this Item.'
+        //}).append($('<i>', { class: 'icon-trash' }));
         
         /*
          * Hide existing rows for disposal
@@ -338,7 +342,7 @@
           newCol.appendTo(newRow);
           // :_destroy
           newCol = $('<td/>');
-          newCol.append("<%= link_to_remove_fields('<i class="icon-trash"></i>'.html_safe, i) %>");
+          newCol.append(link);
           newCol.appendTo(newRow);
 
           newRow.append(table);

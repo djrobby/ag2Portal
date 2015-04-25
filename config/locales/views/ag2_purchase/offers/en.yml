@@ -22,7 +22,6 @@ en:
         title: "New Offer"
       back_to_main_page: "Back to Offers"
       generate_code_btn: "Offer No."
-      validate_btn: "Validate"
       code_error: "Unable to generate Offer No.: No Activity chosen."
       items_info: "Offer Items"
       delete_item: "Delete this Item"

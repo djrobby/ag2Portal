@@ -27,7 +27,7 @@
     // Save default text color
     text_field_color = $("#entity_phone").css('color')
     // Icon inside text field: Validate Fiscal Id
-    $('input.iconify').wrap('<span class="validateicon" title="<%=t('ag2_admin.entities.validate_btn') %>" />').after($('<span/>').click(function() {
+    $('input.iconify').wrap('<span class="validateicon" title="<%=t('validate') %>" />').after($('<span/>').click(function() {
       // make a POST call and replace the content
       var entity = $('#entity_fiscal_id').val();
       if (entity == "")

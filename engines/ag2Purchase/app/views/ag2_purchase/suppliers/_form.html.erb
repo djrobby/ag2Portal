@@ -5,6 +5,29 @@
   var old_code = '';
 
   $(document).ready(function() {
+    $('select.sel2').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      allowClear: true
+    });
+
+    // Disable generate_code_btn if supplier_organization_id blank
+    var supplier = $('#supplier_organization_id').val();
+    if (supplier == "")
+      supplier = "$";
+    if (supplier == "$") {
+      // Empty organization: Hide
+      $('#generate_code_btn').hide();
+    } else {
+      // Organization OK: Show (if not updating)
+      old_value = $('#supplier_organization_id').val();
+      old_code = $('#supplier_supplier_code').val();
+      if ('<%= @breadcrumb %>' == "update") {
+        $('#generate_code_btn').hide();
+      } else {
+        $('#generate_code_btn').show();
+      }
+    }
+
     // Disable fields if Fiscal Id blank
     var contact = $('#supplier_fiscal_id').val();
     if (contact == "")
@@ -26,7 +49,7 @@
     text_field_color = $("#supplier_supplier_code").css('color')
     
     // Icon inside text field: Validate Fiscal Id
-    $('input.iconify').wrap('<span class="validateicon" title="<%=t('ag2_purchase.suppliers.validate_btn') %>" />').after($('<span/>').click(function() {
+    $('input.iconify').wrap('<span class="validateicon" title="<%=t('validate') %>" />').after($('<span/>').click(function() {
       //$(this).prev('input').val('').focus();
       // make a POST call and replace the content
       var supplier = $('#supplier_fiscal_id').val();
@@ -85,26 +108,14 @@
     }));
     $('#supplier_fiscal_id').focus();
 
+    // Icon inside text field: Generate Code
+    $('input.geniconify').wrap('<span class="generateicon" title="<%=t('generate') %>" />').after($('<span/>').click(function() {
+      $('#generate_code_btn').trigger("click");
+      return false;
+    }));
+
     // Initialized form variable
     _thisForm = $("#supplier_fiscal_id").closest('form')[0];
-
-    // Disable generate_code_btn if supplier_organization_id blank
-    var supplier = $('#supplier_organization_id').val();
-    if (supplier == "")
-      supplier = "$";
-    if (supplier == "$") {
-      // Empty organization: Hide
-      $('#generate_code_btn').hide();
-    } else {
-      // Organization OK: Show (if not updating)
-      old_value = $('#supplier_organization_id').val();
-      old_code = $('#supplier_supplier_code').val();
-      if ('<%= @breadcrumb %>' == "update") {
-        $('#generate_code_btn').hide();
-      } else {
-        $('#generate_code_btn').show();
-      }
-    }
     
     // Can't change code if editing
     if ('<%= @breadcrumb %>' == "update") {
@@ -238,6 +249,9 @@
     
     // when #generate_code_btn is clicked
     $("#generate_code_btn").click(function() {
+      var supplier = $('#supplier_fiscal_id').val();
+      if (supplier == "")
+        return;
       // make a POST call and replace the content
       var activities = $('#checked_activities').val();
       if (activities == "")
@@ -338,8 +352,24 @@
 <%= f.error_notification %>
 <%= display_base_errors resource %>
 <div>
+  <label class="multi-field-label-two">
+    <% if session[:organization] != '0' %>
+    <%= f.association :organization, disabled: true, collection: Organization.where("id = ?", "#{session[:organization]}").all, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' }, include_blank: false %>
+    <% elsif current_user.organizations.count > 0 %>
+    <%= f.association :organization, collection: current_user.organizations.order('name'), input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' }, include_blank: false %>
+    <% else %>
+    <%= f.association :organization, collection: Organization.order('name'), input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %>
+    <% end %>
+  </label>
+  <label class="multi-field-label-two">
+<div id="c_b">
+<%= f.input :activity_ids, collection: Activity.order('description'), as: :check_boxes, label_method: lambda {|t| t.description}, label_html: { :class => 'form-label' }, item_wrapper_class: 'inline' %>
+</div>
+  </label>
+</div>
+<div>
   <label class="multi-field-label-two"><%= f.input :fiscal_id, :required => true, :autofocus => true, :input_html => { onkeyup: "caps(this)", :class => 'large-text-field iconify' }, :label_html => { :class => 'form-label' } %> </label>
-  <label class="multi-field-label-two"> <%= f.input :supplier_code, :required => true, :input_html => { :class => 'large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.input :supplier_code, :required => true, :input_html => { :class => 'large-text-field geniconify' }, :label_html => { :class => 'form-label' } %> </label>
 </div>
 <%= f.input :name, :required => true, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %>
 <div>

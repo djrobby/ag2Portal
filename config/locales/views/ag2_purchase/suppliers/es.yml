@@ -24,7 +24,6 @@ es:
         title: "Nuevo Proveedor"
       back_to_main_page: "Volver a Proveedores"
       generate_code_btn: "Código de Proveedor"
-      validate_btn: "Validar"
       personal_info: "Información del Proveedor"
       commercial_info: "Información Contable y Comercial"
       fiscal_error: "Id Fiscal erróneo o Entidad (Sujeto Pasivo) no existe."

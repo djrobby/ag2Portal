@@ -34,6 +34,8 @@ en:
   next: "Next"
   prev: "Previous"
   duplicate: "Duplicate"
+  validate: "Validate"
+  generate: "Generate"
   mandatory_subtitle: "Remember that the fields marked with * are mandatory!"
   item_error: "can't be blank"
   dd_image_message: "Drop image here"

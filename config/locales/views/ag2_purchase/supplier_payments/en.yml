@@ -21,5 +21,4 @@ en:
         title: "New Payment"
       back_to_main_page: "Back to Payments"
       generate_code_btn: "Payment No."
-      validate_btn: "Validate"
       code_error: "Unable to generate Payment No.: No Activity chosen."

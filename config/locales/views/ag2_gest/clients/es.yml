@@ -17,7 +17,6 @@ es:
         title: "Nuevo Cliente"
       back_to_main_page: "Volver a Clientes"
       generate_code_btn: "Código de Cliente"
-      validate_btn: "Validar"
       personal_info: "Información del Cliente"
       commercial_info: "Información Contable y Comercial"
       fiscal_error: "Id Fiscal erróneo o Entidad (Sujeto Pasivo) no existe."

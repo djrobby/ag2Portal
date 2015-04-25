@@ -22,7 +22,6 @@ es:
         title: "Nueva Oferta"
       back_to_main_page: "Volver a Ofertas"
       generate_code_btn: "Nº de Oferta"
-      validate_btn: "Validar"
       code_error: "Imposible generar Nº de Oferta: No has elegido Actividad."
       items_info: "Items de la Oferta"
       delete_item: "Borrar este Item"

@@ -17,7 +17,6 @@ en:
         title: "New Client"
       back_to_main_page: "Back to Clients"
       generate_code_btn: "Client Code"
-      validate_btn: "Validate"
       personal_info: "Client Info"
       commercial_info: "Accounting & Commercial Info"
       fiscal_error: "Wrong Fiscal Id or Entity (TaxPayer) does not exist."

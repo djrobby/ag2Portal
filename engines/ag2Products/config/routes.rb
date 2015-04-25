@@ -5,6 +5,7 @@ Ag2Products::Engine.routes.draw do
 
     # Routes for jQuery POSTs
     # Numbers with decimals (.) must be multiplied (by 1xxx and the same zeroes x positions) before passed as REST parameter! 
+    # Stores
     match 'stores/st_update_company_textfield_from_office/:id', :controller => 'stores', :action => 'st_update_company_textfield_from_office'
     match 'st_update_company_textfield_from_office/:id', :controller => 'stores', :action => 'st_update_company_textfield_from_office'
     match 'stores/:id/st_update_company_textfield_from_office/:id', :controller => 'stores', :action => 'st_update_company_textfield_from_office'
@@ -18,6 +19,7 @@ Ag2Products::Engine.routes.draw do
     match 'st_update_province_textfield_from_zipcode/:id', :controller => 'stores', :action => 'st_update_province_textfield_from_zipcode'
     match 'stores/:id/st_update_province_textfield_from_zipcode/:id', :controller => 'stores', :action => 'st_update_province_textfield_from_zipcode'
     #
+    # Products
     match 'products/pr_update_code_textfield/:fam/:org', :controller => 'products', :action => 'pr_update_code_textfield'
     match 'pr_update_code_textfield/:fam/:org', :controller => 'products', :action => 'pr_update_code_textfield'
     match 'products/:id/pr_update_code_textfield/:fam/:org', :controller => 'products', :action => 'pr_update_code_textfield'
@@ -34,18 +36,22 @@ Ag2Products::Engine.routes.draw do
     match 'pr_update_attachment', :controller => 'products', :action => 'pr_update_attachment'
     match 'products/:id/pr_update_attachment', :controller => 'products', :action => 'pr_update_attachment'
     #
+    # Families
     match 'product_families/pf_format_numbers/:num', :controller => 'product_families', :action => 'pf_format_numbers'
     match 'pf_format_numbers/:num', :controller => 'product_families', :action => 'pf_format_numbers'
     match 'product_families/:id/pf_format_numbers/:num', :controller => 'product_families', :action => 'pf_format_numbers'
     #
+    # Stocks
     match 'stocks/st_format_numbers/:num', :controller => 'stocks', :action => 'st_format_numbers'
     match 'st_format_numbers/:num', :controller => 'stocks', :action => 'st_format_numbers'
     match 'stocks/:id/st_format_numbers/:num', :controller => 'stocks', :action => 'st_format_numbers'
     #
+    # Prices
     match 'purchase_prices/pp_format_numbers/:num', :controller => 'purchase_prices', :action => 'pp_format_numbers'
     match 'pp_format_numbers/:num', :controller => 'purchase_prices', :action => 'pp_format_numbers'
     match 'purchase_prices/:id/pp_format_numbers/:num', :controller => 'purchase_prices', :action => 'pp_format_numbers'
     #
+    # Delivery notes
     match 'delivery_notes/dn_totals/:qty/:amount/:costs/:tax/:discount_p', :controller => 'delivery_notes', :action => 'dn_totals'
     match 'dn_totals/:qty/:amount/:costs/:tax/:discount_p', :controller => 'delivery_notes', :action => 'dn_totals'
     match 'delivery_notes/:id/dn_totals/:qty/:amount/:costs/:tax/:discount_p', :controller => 'delivery_notes', :action => 'dn_totals'
@@ -80,6 +86,7 @@ Ag2Products::Engine.routes.draw do
     match 'dn_generate_no/:org', :controller => 'delivery_notes', :action => 'dn_generate_no'
     match 'delivery_notes/:id/dn_generate_no/:org', :controller => 'delivery_notes', :action => 'dn_generate_no'
     #
+    # Receipt notes
     match 'receipt_notes/rn_totals/:qty/:amount/:tax/:discount_p', :controller => 'receipt_notes', :action => 'rn_totals'
     match 'rn_totals/:qty/:amount/:tax/:discount_p', :controller => 'receipt_notes', :action => 'rn_totals'
     match 'receipt_notes/:id/rn_totals/:qty/:amount/:tax/:discount_p', :controller => 'receipt_notes', :action => 'rn_totals'
@@ -110,6 +117,47 @@ Ag2Products::Engine.routes.draw do
     match 'receipt_notes/rn_update_project_textfields_from_organization/:org', :controller => 'receipt_notes', :action => 'rn_update_project_textfields_from_organization'
     match 'rn_update_project_textfields_from_organization/:org', :controller => 'receipt_notes', :action => 'rn_update_project_textfields_from_organization'
     match 'receipt_notes/:id/rn_update_project_textfields_from_organization/:org', :controller => 'receipt_notes', :action => 'rn_update_project_textfields_from_organization'
+    #
+    # Purchase orders 
+    match 'purchase_orders/po_update_description_prices_from_product_store/:product/:qty/:store', :controller => 'purchase_orders', :action => 'po_update_description_prices_from_product_store'
+    match 'po_update_description_prices_from_product_store/:product/:qty/:store', :controller => 'purchase_orders', :action => 'po_update_description_prices_from_product_store'
+    match 'purchase_orders/:id/po_update_description_prices_from_product_store/:product/:qty/:store', :controller => 'purchase_orders', :action => 'po_update_description_prices_from_product_store'
+    match 'purchase_orders/po_update_description_prices_from_product/:product/:qty', :controller => 'purchase_orders', :action => 'po_update_description_prices_from_product'
+    match 'po_update_description_prices_from_product/:product/:qty', :controller => 'purchase_orders', :action => 'po_update_description_prices_from_product'
+    match 'purchase_orders/:id/po_update_description_prices_from_product/:product/:qty', :controller => 'purchase_orders', :action => 'po_update_description_prices_from_product'
+    match 'purchase_orders/po_update_amount_from_price_or_quantity/:price/:qty/:tax_type/:discount_p/:discount/:product', :controller => 'purchase_orders', :action => 'po_update_amount_from_price_or_quantity'
+    match 'po_update_amount_from_price_or_quantity/:price/:qty/:tax_type/:discount_p/:discount/:product', :controller => 'purchase_orders', :action => 'po_update_amount_from_price_or_quantity'
+    match 'purchase_orders/:id/po_update_amount_from_price_or_quantity/:price/:qty/:tax_type/:discount_p/:discount/:product', :controller => 'purchase_orders', :action => 'po_update_amount_from_price_or_quantity'
+    match 'purchase_orders/po_update_charge_account_from_order/:order', :controller => 'purchase_orders', :action => 'po_update_charge_account_from_order'
+    match 'po_update_charge_account_from_order/:price/:qty/:order', :controller => 'purchase_orders', :action => 'po_update_charge_account_from_order'
+    match 'purchase_orders/:id/po_update_charge_account_from_order/:order', :controller => 'purchase_orders', :action => 'po_update_charge_account_from_order'
+    match 'purchase_orders/po_update_charge_account_from_project/:order', :controller => 'purchase_orders', :action => 'po_update_charge_account_from_project'
+    match 'po_update_charge_account_from_project/:price/:qty/:order', :controller => 'purchase_orders', :action => 'po_update_charge_account_from_project'
+    match 'purchase_orders/:id/po_update_charge_account_from_project/:order', :controller => 'purchase_orders', :action => 'po_update_charge_account_from_project'
+    match 'purchase_orders/po_update_offer_select_from_supplier/:supplier', :controller => 'purchase_orders', :action => 'po_update_offer_select_from_supplier'
+    match 'po_update_offer_select_from_supplier/:supplier', :controller => 'purchase_orders', :action => 'po_update_offer_select_from_supplier'
+    match 'purchase_orders/:id/po_update_offer_select_from_supplier/:supplier', :controller => 'purchase_orders', :action => 'po_update_offer_select_from_supplier'
+    match 'purchase_orders/po_format_number/:num', :controller => 'purchase_orders', :action => 'po_format_number'
+    match 'po_format_number/:num', :controller => 'purchase_orders', :action => 'po_format_number'
+    match 'purchase_orders/:id/po_format_number/:num', :controller => 'purchase_orders', :action => 'po_format_number'
+    match 'purchase_orders/po_totals/:qty/:amount/:tax/:discount_p', :controller => 'purchase_orders', :action => 'po_totals'
+    match 'po_totals/:qty/:amount/:tax/:discount_p', :controller => 'purchase_orders', :action => 'po_totals'
+    match 'purchase_orders/:id/po_totals/:qty/:amount/:tax/:discount_p', :controller => 'purchase_orders', :action => 'po_totals'
+    match 'purchase_orders/po_current_stock/:product/:store', :controller => 'purchase_orders', :action => 'po_current_stock'
+    match 'po_current_stock/:product/:store', :controller => 'purchase_orders', :action => 'po_current_stock'
+    match 'purchase_orders/:id/po_current_stock/:product/:store', :controller => 'purchase_orders', :action => 'po_current_stock'
+    match 'purchase_orders/po_update_project_textfields_from_organization/:org', :controller => 'purchase_orders', :action => 'po_update_project_textfields_from_organization'
+    match 'po_update_project_textfields_from_organization/:org', :controller => 'purchase_orders', :action => 'po_update_project_textfields_from_organization'
+    match 'purchase_orders/:id/po_update_project_textfields_from_organization/:org', :controller => 'purchase_orders', :action => 'po_update_project_textfields_from_organization'
+    match 'purchase_orders/po_generate_no/:project', :controller => 'purchase_orders', :action => 'po_generate_no'
+    match 'po_generate_no/:project', :controller => 'purchase_orders', :action => 'po_generate_no'
+    match 'purchase_orders/:id/po_generate_no/:project', :controller => 'purchase_orders', :action => 'po_generate_no'
+    match 'purchase_orders/po_product_stock/:product/:qty/:store', :controller => 'purchase_orders', :action => 'po_product_stock'
+    match 'po_product_stock/:product/:qty/:store', :controller => 'purchase_orders', :action => 'po_product_stock'
+    match 'purchase_orders/:id/po_product_stock/:product/:qty/:store', :controller => 'purchase_orders', :action => 'po_product_stock'
+    match 'purchase_orders/po_product_all_stocks/:product', :controller => 'purchase_orders', :action => 'po_product_all_stocks'
+    match 'po_product_all_stocks/:product', :controller => 'purchase_orders', :action => 'po_product_all_stocks'
+    match 'purchase_orders/:id/po_product_all_stocks/:product', :controller => 'purchase_orders', :action => 'po_product_all_stocks'
 
     # Resources
     resources :products
