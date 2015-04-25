@@ -4,7 +4,9 @@ Ag2Tech::Engine.routes.draw do
     get "home/index"
 
     # Routes for jQuery POSTs
-    # Numbers with decimals (.) must be multiplied (by 1xxx and the same zeroes x positions) before passed as REST parameter! 
+    # Numbers with decimals (.) must be multiplied (by 1xxx and the same zeroes x positions) before passed as REST parameter!
+    # 
+    # Projects
     match 'projects/pr_update_company_textfield_from_office/:id', :controller => 'projects', :action => 'pr_update_company_textfield_from_office'
     match 'pr_update_company_textfield_from_office/:id', :controller => 'projects', :action => 'pr_update_company_textfield_from_office'
     match 'projects/:id/pr_update_company_textfield_from_office/:id', :controller => 'projects', :action => 'pr_update_company_textfield_from_office'
@@ -18,6 +20,7 @@ Ag2Tech::Engine.routes.draw do
     match 'pr_update_total_and_price/:total/:price', :controller => 'projects', :action => 'pr_update_total_and_price'
     match 'projects/:id/pr_update_total_and_price/:total/:price', :controller => 'projects', :action => 'pr_update_total_and_price'
     #
+    # Accounts
     match 'charge_accounts/cc_generate_code/:group/:org', :controller => 'charge_accounts', :action => 'cc_generate_code'
     match 'cc_generate_code/:group/:org', :controller => 'charge_accounts', :action => 'cc_generate_code'
     match 'charge_accounts/:id/cc_generate_code/:group/:org', :controller => 'charge_accounts', :action => 'cc_generate_code'
@@ -25,10 +28,12 @@ Ag2Tech::Engine.routes.draw do
     match 'cc_update_project_textfields_from_organization/:org', :controller => 'charge_accounts', :action => 'cc_update_project_textfields_from_organization'
     match 'charge_accounts/:id/cc_update_project_textfields_from_organization/:org', :controller => 'charge_accounts', :action => 'cc_update_project_textfields_from_organization'
     #
+    # Groups
     match 'charge_groups/cg_update_heading_textfield_from_organization/:org', :controller => 'charge_groups', :action => 'cg_update_heading_textfield_from_organization'
     match 'cg_update_heading_textfield_from_organization/:org', :controller => 'charge_groups', :action => 'cg_update_heading_textfield_from_organization'
     match 'charge_groups/:id/cg_update_heading_textfield_from_organization/:org', :controller => 'charge_groups', :action => 'cg_update_heading_textfield_from_organization'
     #
+    # Work orders
     match 'work_orders/wo_update_account_textfield_from_project/:id', :controller => 'work_orders', :action => 'wo_update_account_textfield_from_project'
     match 'wo_update_account_textfield_from_project/:id', :controller => 'work_orders', :action => 'wo_update_account_textfield_from_project'
     match 'work_orders/:id/wo_update_account_textfield_from_project/:id', :controller => 'work_orders', :action => 'wo_update_account_textfield_from_project'
@@ -93,10 +98,12 @@ Ag2Tech::Engine.routes.draw do
     match 'wo_generate_no/:project', :controller => 'work_orders', :action => 'wo_generate_no'
     match 'work_orders/:id/wo_generate_no/:project', :controller => 'work_orders', :action => 'wo_generate_no'
     #
+    # Headings
     match 'budget_headings/bh_update_textfields_to_uppercase/:name', :controller => 'budget_headings', :action => 'bh_update_textfields_to_uppercase'
     match 'bh_update_textfields_to_uppercase/:name', :controller => 'budget_headings', :action => 'bh_update_textfields_to_uppercase'
     match 'budget_headings/:id/bh_update_textfields_to_uppercase/:name', :controller => 'budget_headings', :action => 'bh_update_textfields_to_uppercase'
     #
+    # Tools
     match 'tools/tl_update_company_textfield_from_office/:id', :controller => 'tools', :action => 'tl_update_company_textfield_from_office'
     match 'tl_update_company_textfield_from_office/:id', :controller => 'tools', :action => 'tl_update_company_textfield_from_office'
     match 'tools/:id/tl_update_company_textfield_from_office/:id', :controller => 'tools', :action => 'tl_update_company_textfield_from_office'
@@ -110,6 +117,7 @@ Ag2Tech::Engine.routes.draw do
     match 'tl_update_cost/:cost', :controller => 'tools', :action => 'tl_update_cost'
     match 'tools/:id/tl_update_cost/:cost', :controller => 'tools', :action => 'tl_update_cost'
     #
+    # Vehicles
     match 'vehicles/ve_update_company_textfield_from_office/:id', :controller => 'vehicles', :action => 've_update_company_textfield_from_office'
     match 've_update_company_textfield_from_office/:id', :controller => 'vehicles', :action => 've_update_company_textfield_from_office'
     match 'vehicles/:id/ve_update_company_textfield_from_office/:id', :controller => 'vehicles', :action => 've_update_company_textfield_from_office'
@@ -123,12 +131,18 @@ Ag2Tech::Engine.routes.draw do
     match 've_update_cost/:cost', :controller => 'vehicles', :action => 've_update_cost'
     match 'vehicles/:id/ve_update_cost/:cost', :controller => 'vehicles', :action => 've_update_cost'
     #
+    # Ratios
     match 'ratios/ra_generate_code/:group/:org', :controller => 'ratios', :action => 'ra_generate_code'
     match 'ra_generate_code/:group/:org', :controller => 'ratios', :action => 'ra_generate_code'
     match 'ratios/:id/ra_generate_code/:group/:org', :controller => 'ratios', :action => 'ra_generate_code'
     match 'ratios/ra_update_group_from_organization/:org', :controller => 'ratios', :action => 'ra_update_group_from_organization'
     match 'ra_update_group_from_organization/:org', :controller => 'ratios', :action => 'ra_update_group_from_organization'
     match 'ratios/:id/ra_update_group_from_organization/:org', :controller => 'ratios', :action => 'ra_update_group_from_organization'
+    #
+    # Budgets
+    match 'budgets/bu_generate_no/:project/:period', :controller => 'budgets', :action => 'bu_generate_no'
+    match 'bu_generate_no/:project/:period', :controller => 'budgets', :action => 'bu_generate_no'
+    match 'budgets/:id/bu_generate_no/:project/:period', :controller => 'budgets', :action => 'bu_generate_no'
     
     # Resources
     resources :projects

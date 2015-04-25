@@ -19,6 +19,12 @@
     // Save default text color
     text_field_color = $("#charge_account_account_code").css('color')
 
+    // Icon inside text field: Generate No
+    $('input.iconify').wrap('<span class="generateicon" title="<%=t('generate') %>" />').after($('<span/>').click(function() {
+      $('#generate_code_btn').trigger("click");
+      return false;
+    }));
+
     // Disable fields if #charge_account_account_code blank
     var code = $('#charge_account_account_code').val();
     if (code == "")
@@ -122,7 +128,7 @@
         }
         // Groups
         $("#charge_account_charge_group_id").html("");
-        $("#charge_account_charge_group_id").val("");
+        $("#charge_account_charge_group_id").select2("val", "");
         $("#charge_account_charge_group_id").append($('<option></option>').val("").html(""));
         if (!g.length) {
           $.each(data, function(id, option) {
@@ -136,7 +142,7 @@
           });
         }
       });
-      if (order == '0') $("#charge_account_charge_group_id").val(0);
+      $("#charge_account_charge_group_id").val(0);
       // Disable generate_code_btn if charge_account_organization_id blank
       show_hide_generate_code_btn();
       return false;
@@ -173,7 +179,7 @@
       org = "$";
     if (grp != "$" && org != "$") {
       // Show (if not updating)
-      if ('<%= @breadcrumb == 'update' %>') {
+      if ('<%= @breadcrumb %>' == "update") {
         if (old_org == $('#charge_account_organization_id').val() && old_grp == $('#charge_account_charge_group_id').val()) {
           $('#charge_account_account_code').val(old_code);
           $("#charge_account_account_code").css('color', text_field_color);
@@ -195,21 +201,25 @@
 <%= f.error_notification %>
 <%= display_base_errors resource %>
 <div>
-  <label class="multi-field-label-two"> <%= f.input :account_code, autofocus: true, input_html: { class: 'mid-text-field', maxlength: 11 }, label_html: { class: 'form-label' } %> </label>
+  <label class="multi-field-label-two">
+    <% if session[:organization] != '0' %>
+    <%= f.association :organization, disabled: true, collection: Organization.where("id = ?", "#{session[:organization]}").all, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' }, include_blank: false %>
+    <% elsif current_user.organizations.count > 0 %>
+    <%= f.association :organization, collection: current_user.organizations.order('name'), input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' }, include_blank: false %>
+    <% else %>
+    <%= f.association :organization, collection: Organization.order('name'), input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %>
+    <% end %>
+  </label>
+  <label class="multi-field-label-two"> <%= f.association :charge_group, collection: @groups, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
+</div>
+<div>
+  <label class="multi-field-label-two"> <%= f.input :account_code, input_html: { class: 'mid-text-field iconify', maxlength: 11 }, label_html: { class: 'form-label' } %> </label>
   <label class="multi-field-label-two"> <%= f.input :name, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %> </label>
 </div>
-<% if session[:organization] != '0' %>
-<%= f.association :organization, collection: Organization.where("id = ?", "#{session[:organization]}").all, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' }, include_blank: false %>
-<% elsif current_user.organizations.count > 0 %>
-<%= f.association :organization, collection: current_user.organizations.order('name'), input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' }, include_blank: false %>
-<% else %>
-<%= f.association :organization, collection: Organization.order('name'), input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %>
-<% end %>
 <div>
-  <label class="multi-field-label-two"> <%= f.association :charge_group, collection: @groups, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %> </label>
-  <label class="multi-field-label-two"> <%= f.association :ledger_account, collection: @ledger_accounts, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.association :project, collection: @projects, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.association :ledger_account, collection: @ledger_accounts, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
 </div>
-<%= f.association :project, collection: @projects, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %>
 <div>
   <label class="multi-field-label-two"> <%= f.input :opened_at, start_year: Time.now.year - 100, end_year: Time.now.year + 100, as: :string, input_html: { value: (f.object.opened_at.strftime("%d/%m/%Y") if f.object.opened_at), class: 'mid-text-field date_picker' }, label_html: { class: 'form-label-under-sel2' } %> </label>
   <label class="multi-field-label-two"> <%= f.input :closed_at, start_year: Time.now.year - 100, end_year: Time.now.year + 100, as: :string, input_html: { value: (f.object.closed_at.strftime("%d/%m/%Y") if f.object.closed_at), class: 'mid-text-field date_picker' }, label_html: { class: 'form-label' } %> </label>

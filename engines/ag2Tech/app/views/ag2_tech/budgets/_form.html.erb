@@ -14,6 +14,12 @@
     // Initialized form variable
     _thisForm = $("#budget_budget_no").closest('form')[0];
 
+    // Icon inside text field: Generate No
+    $('input.iconify').wrap('<span class="generateicon" title="<%=t('generate') %>" />').after($('<span/>').click(function() {
+      $('#generate_code_btn').trigger("click");
+      return false;
+    }));
+
     // Disable fields if Budget# blank
     var order = $('#budget_budget_no').val();
     if (order == "")
@@ -28,15 +34,18 @@
       $('.fnt-new-btn').show();
     }
 
-    // Disable generate_code_btn if budget_project_id blank
+    // Disable generate_code_btn if budget_project_id or budget_budget_period_id blank
     var order = $('#budget_project_id').val();
     if (order == "")
       order = "0";
-    if (order == "0") {
+    var period = $('#budget_budget_period_id').val();
+    if (period == "")
+      period = "0";
+    if (order == "0" || period == "0") {
       // Empty project: Hide
       $('#generate_code_btn').hide();
     } else {
-      // Project OK: Show (if not updating)
+      // Project & period OK: Show (if not updating)
       if ('<%= @breadcrumb %>' == "update") {
         $('#generate_code_btn').hide();
       } else {
@@ -50,12 +59,15 @@
     } else {
       $('#budget_budget_no').prop('readonly', false);
     }
+    
+    // Set initial focus
+    $(this).find(".form-label:first").focus();
   });
   
   jQuery(function($) {
-    // when the #budget_order_no field changes
-    $("#budget_order_no").change(function() {
-      var order = $('#budget_order_no').val();
+    // when the #budget_budget_no field changes
+    $("#budget_budget_no").change(function() {
+      var order = $('#budget_budget_no').val();
       if (order == "")
         order = "0";
       if (order == "0") {
@@ -171,13 +183,7 @@
         });
       });
       // Disable generate_code_btn if budget_project_id blank
-      if (order == "0") {
-        // Empty project: Hide
-        $('#generate_code_btn').hide();
-      } else {
-        // Project OK: Show
-        $('#generate_code_btn').show();
-      }
+      show_hide_generate_code_btn();
       return false;
     });
     
@@ -188,13 +194,7 @@
       if (order == "")
         order = "0";
       // Disable generate_code_btn if budget_budget_period_id blank
-      if (order == "0") {
-        // Empty period: Hide
-        $('#generate_code_btn').hide();
-      } else {
-        // Period OK: Show
-        $('#generate_code_btn').show();
-      }
+      show_hide_generate_code_btn();
       return false;
     });
     
@@ -235,25 +235,46 @@
       //e.preventDefault();
     });
   });
+  
+  function show_hide_generate_code_btn() {
+    // Disable generate_code_btn if budget_project_id and budget_budget_period_id are blank
+    var product = $('select#budget_project_id :selected').val();
+    if (product == "")
+      product = "$";
+    var org = $('select#budget_budget_period_id :selected').val();
+    if (org == "")
+      org = "$";
+    if (product != "$" && org != "$") {
+      // Show (if not updating)
+      if ('<%= @breadcrumb %>' == "update") {
+        $('#generate_code_btn').hide();
+      } else {
+        $('#generate_code_btn').show();
+      }
+    } else {
+      // Hide
+      $('#generate_code_btn').hide();
+    }    
+  }
 </script>
 
 <%= simple_form_for @budget, :html => { :class => 'form-vertical well' } do |f| %>
 <%= f.error_notification %>
 <%= display_base_errors resource %>
 <% if session[:organization] != '0' %>
-<%= f.association :organization, autofocus: true, collection: Organization.where("id = ?", "#{session[:organization]}").all, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' }, include_blank: false %>
+<%= f.association :organization, disabled: true, collection: Organization.where("id = ?", "#{session[:organization]}").all, input_html: { class: 'x-large-text-field sel2/) { |match|  }' }, label_html: { class: 'form-label' }, include_blank: false %>
 <% elsif current_user.organizations.count > 0 %>
-<%= f.association :organization, autofocus: true, collection: current_user.organizations.order('name'), input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' }, include_blank: false %>
+<%= f.association :organization, collection: current_user.organizations.order('name'), input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' }, include_blank: false %>
 <% else %>
-<%= f.association :organization, autofocus: true, collection: Organization.order('name'), input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %>
+<%= f.association :organization, collection: Organization.order('name'), input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %>
 <% end %>
 <div>
   <label class="multi-field-label-two"> <%= f.association :project, collection: @projects, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
   <label class="multi-field-label-two"> <%= f.association :budget_period, collection: @periods, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
 </div>
 <div>
-  <label class="multi-field-label-two"> <%= f.input :description, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label-under-sel2' } %> </label>
-  <label class="multi-field-label-two"> <%= f.input :budget_no, input_html: { class: 'mid-text-field' }, label_html: { class: 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.input :budget_no, input_html: { class: 'mid-text-field iconify' }, label_html: { class: 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.input :description, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %> </label>
 </div>
 <!-- Items -->
 <table class="form-table">

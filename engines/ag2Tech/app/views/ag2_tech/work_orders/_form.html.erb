@@ -28,6 +28,12 @@
     // Initialized form variable
     _thisForm = $("#work_order_order_no").closest('form')[0];
 
+    // Icon inside text field: Generate No
+    $('input.iconify').wrap('<span class="generateicon" title="<%=t('generate') %>" />').after($('<span/>').click(function() {
+      $('#generate_code_btn').trigger("click");
+      return false;
+    }));
+
     // Disable fields if Order# blank
     var order = $('#work_order_order_no').val();
     if (order == "")
@@ -62,6 +68,9 @@
     } else {
       $('#work_order_order_no').prop('readonly', false);
     }
+    
+    // Set initial focus
+    $(this).find(".form-label:first").focus();
   });
   
   jQuery(function($) {
@@ -396,19 +405,23 @@
 <%= simple_form_for @work_order, :html => { :class => 'form-vertical well' } do |f| %>
 <%= f.error_notification %>
 <%= display_base_errors resource %>
-<%= f.input :description, autofocus: true, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %>
-<% if session[:organization] != '0' %>
-<%= f.association :organization, collection: Organization.where("id = ?", "#{session[:organization]}").all, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' }, include_blank: false %>
-<% elsif current_user.organizations.count > 0 %>
-<%= f.association :organization, collection: current_user.organizations.order('name'), input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' }, include_blank: false %>
-<% else %>
-<%= f.association :organization, collection: Organization.order('name'), input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %>
-<% end %>
-<%= f.association :project, collection: @projects, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %>
 <div>
-  <label class="multi-field-label-two"> <%= f.association :work_order_type, collection: @types, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label-under-sel2' } %> </label>
-  <label class="multi-field-label-two"> <%= f.input :order_no, input_html: { class: 'mid-text-field' }, label_html: { class: 'form-label' } %> </label>
+  <label class="multi-field-label-two">
+    <% if session[:organization] != '0' %>
+    <%= f.association :organization, disabled: true, collection: Organization.where("id = ?", "#{session[:organization]}").all, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' }, include_blank: false %>
+    <% elsif current_user.organizations.count > 0 %>
+    <%= f.association :organization, collection: current_user.organizations.order('name'), input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' }, include_blank: false %>
+    <% else %>
+    <%= f.association :organization, collection: Organization.order('name'), input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %>
+    <% end %>
+  </label>
+  <label class="multi-field-label-two"> <%= f.association :project, collection: @projects, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
 </div>
+<div>
+  <label class="multi-field-label-two"> <%= f.association :work_order_type, collection: @types, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.input :order_no, input_html: { class: 'mid-text-field iconify' }, label_html: { class: 'form-label' } %> </label>
+</div>
+<%= f.input :description, autofocus: true, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %>
 <div>
   <label class="multi-field-label-two"> <%= f.association :work_order_labor, collection: @labors, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %> </label>
   <label class="multi-field-label-two"> <%= f.association :work_order_status, collection: WorkOrderStatus.all(order: 'id'), input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %> </label>

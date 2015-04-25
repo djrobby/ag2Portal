@@ -4,6 +4,11 @@
   var old_code = '';
 
   $(document).ready(function() {
+    $('select.sel2').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      allowClear: true
+    });
+
     // Disable fields if Fiscal Id blank
     var contact = $('#client_fiscal_id').val();
     if (contact == "")
@@ -68,7 +73,7 @@
           $("#client_cellular").val(data.cellular);
           $("#client_email").val(data.email);
           $("#client_active").prop('checked', true);
-          $("#client_organization_id").val(data.organization_id);
+          $("#client_organization_id").select2("val", data.organization_id);
           // Enable fields
           $('#client_client_code').prop('disabled', false);
           $('#client_name').prop('disabled', false);
@@ -82,6 +87,12 @@
       return false;
     }));
     $('#client_fiscal_id').focus();
+
+    // Icon inside text field: Generate Code
+    $('input.geniconify').wrap('<span class="generateicon" title="<%=t('generate') %>" />').after($('<span/>').click(function() {
+      $('#generate_code_btn').trigger("click");
+      return false;
+    }));
 
     // Disable generate_code_btn if client_organization_id blank
     var client = $('#client_organization_id').val();
@@ -107,6 +118,9 @@
     } else {
       $('#client_client_code').prop('readonly', false);
     }
+    
+    // Set initial focus
+    $(this).find(".form-label:first").focus();
   });
   
   jQuery(function($) {
@@ -280,22 +294,20 @@
 <%= simple_form_for @client, :html => {:class => 'form-vertical well' } do |f| %>
 <%= f.error_notification %>
 <%= display_base_errors resource %>
+<% if session[:organization] != '0' %>
+<%= f.association :organization, disabled: true, collection: Organization.where("id = ?", "#{session[:organization]}").all, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' }, include_blank: false %>
+<% elsif current_user.organizations.count > 0 %>
+<%= f.association :organization, collection: current_user.organizations.order('name'), input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' }, include_blank: false %>
+<% else %>
+<%= f.association :organization, collection: Organization.order('name'), input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %>
+<% end %>
 <div>
-  <label class="multi-field-label-three"><%= f.input :fiscal_id, required: true, autofocus: true, input_html: { onkeyup: "caps(this)", class: 'large-text-field iconify' }, label_html: { class: 'form-label' } %> </label>
-  <label class="multi-field-label-three"> <%= f.input :client_code, required: true, input_html: { onkeydown: "only_digit(event)", class: 'large-text-field', maxlength: 11 }, label_html: { class: 'form-label' } %> </label>
-  <label class="multi-field-label-three"> <%= f.input :active, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' }, :boolean_style => :inline %> </label>
+  <label class="multi-field-label-two"><%= f.input :fiscal_id, required: true, input_html: { onkeyup: "caps(this)", class: 'large-text-field iconify' }, label_html: { class: 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.input :client_code, required: true, input_html: { onkeydown: "only_digit(event)", class: 'large-text-field geniconify', maxlength: 11 }, label_html: { class: 'form-label' } %> </label>
 </div>
 <%= f.input :name, :required => true, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %>
 <div>
-  <label class="multi-field-label-two">
-    <% if session[:organization] != '0' %>
-    <%= f.association :organization, collection: Organization.where("id = ?", "#{session[:organization]}").all, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' }, include_blank: false %>
-    <% elsif current_user.organizations.count > 0 %>
-    <%= f.association :organization, collection: current_user.organizations.order('name'), input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' }, include_blank: false %>
-    <% else %>
-    <%= f.association :organization, collection: Organization.order('name'), input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %>
-    <% end %>
-  </label>
+  <label class="multi-field-label-two"> <%= f.input :active, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' }, :boolean_style => :inline %> </label>
   <label class="multi-field-label-two"> <%= f.input :is_contact, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' }, :boolean_style => :inline %> </label>
 </div>
 <h4><%=t 'ag2_gest.clients.personal_info' %></h4>

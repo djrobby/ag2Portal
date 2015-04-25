@@ -209,7 +209,7 @@ module Ag2Tech
     end
 
     def ledger_accounts_dropdown
-      session[:organization] != '0' ? LedgerAccount.where(organization_id: session[:organization].to_i).order(:group_code) : LedgerAccount.order(:group_code)
+      session[:organization] != '0' ? LedgerAccount.where(organization_id: session[:organization].to_i).order(:code) : LedgerAccount.order(:code)
     end
     
     # Keeps filter state

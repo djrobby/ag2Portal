@@ -6,6 +6,11 @@
   var old_code = '';
 
   $(document).ready(function() {
+    $('select.sel2').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      allowClear: true
+    });
+
     // Setup drag & drop
     dd_import_files('#dd_files', '#image_content', 'pr_update_attachment');
     // Disable fields if Product Family blank
@@ -35,6 +40,12 @@
     // Initialized form variable
     _thisForm = $("#product_product_family_id").closest('form')[0];
 
+    // Icon inside text field: Generate Code
+    $('input.iconify').wrap('<span class="generateicon" title="<%=t('generate') %>" />').after($('<span/>').click(function() {
+      $('#generate_code_btn').trigger("click");
+      return false;
+    }));
+
     // Disable generate_code_btn if product_organization_id blank
     var org = $('#product_organization_id').val();
     if (org == "")
@@ -59,6 +70,9 @@
     } else {
       $('#product_product_code').prop('readonly', false);
     }
+    
+    // Set initial focus
+    $(this).find(".form-label:first").focus();
   });
 
   jQuery(function($) {
@@ -246,7 +260,7 @@
       org = "$";
     if (product != "$" && org != "$") {
       // Show (if not updating)
-      if ('<%= @breadcrumb == 'update' %>') {
+      if ('<%= @breadcrumb %>' == "update") {
         if (old_org == $('#product_organization_id').val() && old_fam == $('#product_product_family_id').val()) {
           $('#product_product_code').val(old_code);
           $("#product_product_code").css('color', text_field_color);
@@ -267,22 +281,26 @@
 <%= simple_form_for @product, html: { class: 'form-vertical well' } do |f| %>
 <%= f.error_notification %>
 <%= display_base_errors resource %>
-<% if session[:organization] != '0' %>
-<%= f.association :organization, collection: Organization.where("id = ?", "#{session[:organization]}").all, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' }, include_blank: false %>
-<% elsif current_user.organizations.count > 0 %>
-<%= f.association :organization, collection: current_user.organizations.order('name'), input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' }, include_blank: false %>
-<% else %>
-<%= f.association :organization, collection: Organization.order('name'), input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %>
-<% end %>
 <div>
-  <label class="multi-field-label-two"> <%= f.association :product_family, autofocus: true, collection: @product_families, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %> </label>
-  <label class="multi-field-label-two"> <%= f.input :product_code, input_html: { class: 'large-text-field' }, label_html: { class: 'form-label' } %> </label>
+  <label class="multi-field-label-two">
+    <% if session[:organization] != '0' %>
+    <%= f.association :organization, disabled: true, collection: Organization.where("id = ?", "#{session[:organization]}").all, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' }, include_blank: false %>
+    <% elsif current_user.organizations.count > 0 %>
+    <%= f.association :organization, collection: current_user.organizations.order('name'), input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' }, include_blank: false %>
+    <% else %>
+    <%= f.association :organization, collection: Organization.order('name'), input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %>
+    <% end %>
+  </label>
+  <label class="multi-field-label-two"> <%= f.association :product_family, collection: @product_families, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
 </div>
-<%= f.input :main_description, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %>
-<%= f.input :aux_description, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %>
 <div>
-  <label class="multi-field-label-two"> <%= f.association :product_type, collection: ProductType.all(order: 'description'), input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %> </label>
-  <label class="multi-field-label-two"> <%= f.input :active, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' }, boolean_style: :inline %> </label>
+  <label class="multi-field-label-three"> <%= f.input :product_code, input_html: { class: 'large-text-field iconify' }, label_html: { class: 'form-label' } %> </label>
+  <label class="multi-field-label-three"> <%= f.association :product_type, collection: ProductType.all(order: 'description'), input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %> </label>
+  <label class="multi-field-label-three"> <%= f.input :active, input_html: { class: 'mid-text-field' }, label_html: { class: 'form-label' }, boolean_style: :inline %> </label>
+</div>
+<div>
+  <label class="multi-field-label-two"> <%= f.input :main_description, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.input :aux_description, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %> </label>
 </div>
 <div>
   <label class="multi-field-label-two"> <%= f.association :measure, collection: Measure.all(order: 'description'), input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %> </label>

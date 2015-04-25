@@ -528,8 +528,10 @@
 <% else %>
 <%= f.association :organization, collection: Organization.order('name'), input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %>
 <% end %>
-<%= f.association :supplier, collection: @suppliers, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %>
-<%= f.association :offer_request, collection: @offer_requests, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %>
+<div>
+  <label class="multi-field-label-two"> <%= f.association :supplier, collection: @suppliers, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.association :offer_request, collection: @offer_requests, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
+</div>
 <div>
   <label class="multi-field-label-two"> <%= f.association :project, collection: @projects, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
   <label class="multi-field-label-two"> <%= f.association :work_order, collection: @work_orders, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>

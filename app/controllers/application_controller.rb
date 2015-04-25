@@ -371,14 +371,14 @@ end
     code = ''
     # Builds code, if possible
     project_code = Project.find(project).project_code rescue '$'
-    period_code = BudgetPeriod.find(period).code rescue '$'
+    period_code = BudgetPeriod.find(period).period_code rescue '$'
     if project_code == '$' || period_code == '$'
       code = '$err'
     else
       project = project_code[0,12].upcase.rjust(12, '0')
       period = period_code[0,8].upcase.rjust(8, '0')
       last_no = Budget.where("buget_no LIKE ?", "#{project}#{period}")
-      if last_no.nil?
+      if !last_no.nil?
         code = project + period
       else
         code = '$err'
