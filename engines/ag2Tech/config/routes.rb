@@ -143,7 +143,25 @@ Ag2Tech::Engine.routes.draw do
     match 'budgets/bu_generate_no/:project/:period', :controller => 'budgets', :action => 'bu_generate_no'
     match 'bu_generate_no/:project/:period', :controller => 'budgets', :action => 'bu_generate_no'
     match 'budgets/:id/bu_generate_no/:project/:period', :controller => 'budgets', :action => 'bu_generate_no'
-    
+    match 'budgets/bu_update_project_textfield_from_organization/:order', :controller => 'budgets', :action => 'bu_update_project_textfield_from_organization'
+    match 'bu_update_project_textfield_from_organization/:order', :controller => 'budgets', :action => 'bu_update_project_textfield_from_organization'
+    match 'budgets/:id/bu_update_project_textfield_from_organization/:order', :controller => 'budgets', :action => 'bu_update_project_textfield_from_organization'
+    match 'budgets/bu_update_account_textfields_from_project/:order', :controller => 'budgets', :action => 'bu_update_account_textfields_from_project'
+    match 'bu_update_account_textfields_from_project/:order', :controller => 'budgets', :action => 'bu_update_account_textfields_from_project'
+    match 'budgets/:id/bu_update_account_textfields_from_project/:order', :controller => 'budgets', :action => 'bu_update_account_textfields_from_project'
+    match 'budgets/bu_update_corrected/:cor', :controller => 'budgets', :action => 'bu_update_corrected'
+    match 'bu_update_corrected/:cor', :controller => 'budgets', :action => 'bu_update_corrected'
+    match 'budgets/:id/bu_update_corrected/:cor', :controller => 'budgets', :action => 'bu_update_corrected'
+    match 'budgets/bu_update_annual/:m01/:m02/:m03/:m04/:m05/:m06/:m07/:m08/:m09/:m10/:m11/:m12', :controller => 'budgets', :action => 'bu_update_annual'
+    match 'bu_update_annual/:m01/:m02/:m03/:m04/:m05/:m06/:m07/:m08/:m09/:m10/:m11/:m12', :controller => 'budgets', :action => 'bu_update_annual'
+    match 'budgets/:id/bu_update_annual/:m01/:m02/:m03/:m04/:m05/:m06/:m07/:m08/:m09/:m10/:m11/:m12', :controller => 'budgets', :action => 'bu_update_annual'
+    match 'budgets/bu_item_totals/:m01/:m02/:m03/:m04/:m05/:m06/:m07/:m08/:m09/:m10/:m11/:m12/:anu/:cor', :controller => 'budgets', :action => 'bu_item_totals'
+    match 'bu_item_totals/:m01/:m02/:m03/:m04/:m05/:m06/:m07/:m08/:m09/:m10/:m11/:m12/:anu/:cor', :controller => 'budgets', :action => 'bu_item_totals'
+    match 'budgets/:id/bu_item_totals/:m01/:m02/:m03/:m04/:m05/:m06/:m07/:m08/:m09/:m10/:m11/:m12/:anu/:cor', :controller => 'budgets', :action => 'bu_item_totals'
+    match 'budgets/bu_new/:project/:period/:budget', :controller => 'budgets', :action => 'bu_new'
+    match 'bu_new/:project/:period/:budget', :controller => 'budgets', :action => 'bu_new'
+    match 'budgets/:id/bu_new/:project/:period/:budget', :controller => 'budgets', :action => 'bu_new'
+
     # Resources
     resources :projects
     resources :charge_accounts

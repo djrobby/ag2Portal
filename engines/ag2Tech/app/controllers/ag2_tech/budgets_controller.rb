@@ -2,6 +2,7 @@ require_dependency "ag2_tech/application_controller"
 
 module Ag2Tech
   class BudgetsController < ApplicationController
+    include ActionView::Helpers::NumberHelper
     before_filter :authenticate_user!
     load_and_authorize_resource
     skip_load_and_authorize_resource :only => [:bu_item_totals,
@@ -85,7 +86,7 @@ module Ag2Tech
     
     # Update item-table account text fields at view from project select
     def bu_update_account_textfields_from_project
-      project = params[:project]
+      project = params[:order]
       if project != '0'
         @project = Project.find(project)
         @charge_account = @project.blank? ? charge_accounts_dropdown : charge_accounts_dropdown_edit(@project.id)
@@ -100,7 +101,7 @@ module Ag2Tech
 
     # Update project text field at view from organization select
     def bu_update_project_textfield_from_organization
-      organization = params[:org]
+      organization = params[:order]
       if organization != '0'
         @organization = Organization.find(organization)
         @projects = @organization.blank? ? projects_dropdown : @organization.projects.order(:project_code)
@@ -243,8 +244,8 @@ module Ag2Tech
     def show
       @breadcrumb = 'read'
       @budget = Budget.find(params[:id])
-      #@items = @budget.budget_items.paginate(:page => params[:page], :per_page => per_page).order('id')
-      @items = @budget.budget_items.order(:id)
+      @items = @budget.budget_items.paginate(:page => params[:page], :per_page => per_page).order('id')
+      #@items = @budget.budget_items.order(:id)
       @accounts = @budget.charge_accounts.order(:account_code)
       @groups = @budget.charge_groups.order(:group_code)
       @headings = @budget.budget_headings.order(:heading_code)

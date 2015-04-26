@@ -14,7 +14,8 @@ class PaymentMethod < ActiveRecord::Base
 
   has_paper_trail
 
-  validates :description,   :presence => true
+  validates :description,   :presence => true,
+                            :uniqueness => { :scope => :organization_id }
   validates :flow,          :presence => true,
                             :numericality => { :only_integer => true, :greater_than => 0, :less_than_or_equal_to => 3 }
   validates :organization,  :presence => true

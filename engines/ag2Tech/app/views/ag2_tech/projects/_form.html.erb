@@ -21,7 +21,7 @@
     _thisForm = $("#project_project_code").closest('form')[0];
 
     // Save default text color
-    text_field_color = $("#project_project_code").css('color')
+    text_field_color = $("#project_project_code").css('color');
 
     // Icon inside text field: Generate No
     $('input.iconify').wrap('<span class="generateicon" title="<%=t('generate') %>" />').after($('<span/>').click(function() {
@@ -278,7 +278,7 @@
 <div>
   <label class="multi-field-label-two">
     <% if session[:organization] != '0' %>
-    <%= f.association :organization, disabled: true, collection: Organization.where("id = ?", "#{session[:organization]}").all, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' }, include_blank: false %>
+    <%= f.association :organization, collection: Organization.where("id = ?", "#{session[:organization]}").all, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' }, include_blank: false %>
     <% elsif current_user.organizations.count > 0 %>
     <%= f.association :organization, collection: current_user.organizations.order('name'), input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' }, include_blank: false %>
     <% else %>

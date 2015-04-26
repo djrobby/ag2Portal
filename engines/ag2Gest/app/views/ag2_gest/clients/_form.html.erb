@@ -118,9 +118,6 @@
     } else {
       $('#client_client_code').prop('readonly', false);
     }
-    
-    // Set initial focus
-    $(this).find(".form-label:first").focus();
   });
   
   jQuery(function($) {
@@ -295,7 +292,7 @@
 <%= f.error_notification %>
 <%= display_base_errors resource %>
 <% if session[:organization] != '0' %>
-<%= f.association :organization, disabled: true, collection: Organization.where("id = ?", "#{session[:organization]}").all, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' }, include_blank: false %>
+<%= f.association :organization, collection: Organization.where("id = ?", "#{session[:organization]}").all, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' }, include_blank: false %>
 <% elsif current_user.organizations.count > 0 %>
 <%= f.association :organization, collection: current_user.organizations.order('name'), input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' }, include_blank: false %>
 <% else %>

@@ -28,8 +28,8 @@
       <td><%= budget.description[0,40] %></td>
       <td><%= budget.project.full_code unless budget.project.blank? %></td>
       <td><%= budget.budget_period.name unless budget.budget_period.blank? %></td>
-      <td> <%= render :partial => '/layouts/crud/edit', :locals => { :model => Budget, :path => edit_budget_path(order) } %>
-      <%= render :partial => '/layouts/crud/delete', :locals => { :model => Budget, :path => order, :msg => t("activerecord.models.budget.one"), :txt => budget.budget_no } %> </td>
+      <td> <%= render :partial => '/layouts/crud/edit', :locals => { :model => Budget, :path => edit_budget_path(budget) } %>
+      <%= render :partial => '/layouts/crud/delete', :locals => { :model => Budget, :path => budget, :msg => t("activerecord.models.budget.one"), :txt => budget.budget_no } %> </td>
     </tr>
     <% end %>
   </tbody>

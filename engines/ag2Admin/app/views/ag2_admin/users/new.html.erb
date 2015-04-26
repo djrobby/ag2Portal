@@ -14,8 +14,12 @@
   <label class="multi-field-label-two"> <%= f.input :password, :required => true, :label_html => { :class => 'form-label' } %> </label>
   <label class="multi-field-label-two"> <%= f.input :password_confirmation, :required => true, :label_html => { :class => 'form-label' } %> </label>
 </div>
+<!-- Multiple select boxes: See suppliers _form (select2 & script) -->
+<!-- Roles check-boxes -->
+<div>
 <%= f.input :role_ids, :collection => Role.all(order: 'name'), :as => :check_boxes, :label_method => lambda {|t| t.name}, :label_html => { :class => 'form-label' }, :item_wrapper_class => 'inline' %>
 <br />
+</div>
 <%= f.button :submit, nil, :class => 'btn-primary' %>
 <% end %>
 

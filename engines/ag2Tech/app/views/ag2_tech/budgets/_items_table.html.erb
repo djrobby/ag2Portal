@@ -54,9 +54,9 @@
       m12 = parseInt(right_number(m12.toString(), 4) * 10000);
       anu = parseInt(right_number(anu.toString(), 4) * 10000);
       cor = parseInt(right_number(cor.toString(), 4) * 10000);
-      jQuery.getJSON('bu_item_totals/' + m01 + '/' + m02 + '/' + m03 + '/' + m04 + '/' +,
-                                         m05 + '/' + m06 + '/' + m07 + '/' + m08 + '/' +,
-                                         m09 + '/' + m10 + '/' + m11 + '/' + m12 + '/' +,
+      jQuery.getJSON('bu_item_totals/' + m01 + '/' + m02 + '/' + m03 + '/' + m04 + '/' +
+                                         m05 + '/' + m06 + '/' + m07 + '/' + m08 + '/' +
+                                         m09 + '/' + m10 + '/' + m11 + '/' + m12 + '/' +
                                          anu + '/' + cor, function(data) {
         document.getElementById('foot-total01').innerHTML = data.total01;
         document.getElementById('foot-total02').innerHTML = data.total02;
@@ -232,7 +232,7 @@
       m12 = parseInt(right_number(m12.toString(), 4) * 10000);
       jQuery.getJSON('bu_update_annual/' + m01 + '/' + m02 + '/' + m03 + '/' + m04 + '/' +
                                            m05 + '/' + m06 + '/' + m07 + '/' + m08 + '/' +
-                                           m09 + '/' + m10 + '/' + m11 + '/' + m12 + '/' +, function(data) {
+                                           m09 + '/' + m10 + '/' + m11 + '/' + m12, function(data) {
         $(_this).closest('tr').find('.fnt-month01').val(data.month01);
         $(_this).closest('tr').find('.fnt-month02').val(data.month02);
         $(_this).closest('tr').find('.fnt-month03').val(data.month03);

@@ -257,7 +257,8 @@
       if (supplier == "")
         return;
       // make a POST call and replace the content
-      var activities = $('#checked_activities').val();
+      var activities = $('#supplier_activity_ids').val();
+      //var activities = $('#checked_activities').val();
       if (activities == "")
         activities = "$";
       var supplier = $('#supplier_organization_id').val();
@@ -358,7 +359,7 @@
 <div>
   <label class="multi-field-label-two">
     <% if session[:organization] != '0' %>
-    <%= f.association :organization, disabled: true, collection: Organization.where("id = ?", "#{session[:organization]}").all, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' }, include_blank: false %>
+    <%= f.association :organization, collection: Organization.where("id = ?", "#{session[:organization]}").all, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' }, include_blank: false %>
     <% elsif current_user.organizations.count > 0 %>
     <%= f.association :organization, collection: current_user.organizations.order('name'), input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' }, include_blank: false %>
     <% else %>
@@ -366,9 +367,7 @@
     <% end %>
   </label>
   <label class="multi-field-label-two">
-<div id="c_b">
-<%= f.input :activity_ids, collection: Activity.order('description'), as: :check_boxes, label_method: lambda {|t| t.description}, label_html: { :class => 'form-label' }, item_wrapper_class: 'inline' %>
-</div>
+    <%= f.input :activity_ids, collection: Activity.order('description'), input_html: { class: 'x-large-text-field sel2', multiple: 'multiple' }, label_html: { :class => 'form-label' } %>
   </label>
 </div>
 <div>
@@ -421,11 +420,12 @@
   <label class="multi-field-label-three"> <%= f.input :max_orders_count, input_html: { class: 'large-text-field number-text-field' }, label_html: { class: 'form-label' } %> </label>
   <label class="multi-field-label-three"> <%= f.input :max_orders_sum, as: :string, input_html: { value: (number_with_precision(f.object.max_orders_sum, precision: 2) if f.object.max_orders_sum), class: 'large-text-field number-text-field' }, label_html: { class: 'form-label' } %> </label>
 </div>
-<div id="c_b">
-<%= f.input :activity_ids, collection: Activity.order('description'), as: :check_boxes, label_method: lambda {|t| t.description}, label_html: { :class => 'form-label' }, item_wrapper_class: 'inline' %>
-</div>
+<!-- Old activities checkboxes (hidden now) -->
+<div id="c_b" class='hidden-text-field'>
+<%= f.input :activity_ids, collection: Activity.order('description'), as: :check_boxes, input_html: { id: 'activities_boxes' }, label_method: lambda {|t| t.description}, label_html: { :class => 'form-label' }, item_wrapper_class: 'inline' %>
 <input id="checked_activities" type="hidden">
 <br />
+</div>
 <!-- Buttons -->
 <table class="form-table">
   <tbody>

@@ -25,6 +25,7 @@ es:
         entity_type_alert: "¡Debes inidicar Nombres o Empresa dependiendo del tipo de Entidad!"
         entity_fiscal_short: "Id Fiscal es demasiado corto (8 caracteres mínimo)"
         submit: "Presupuesto ha sido generado."
+        label_budgets: "Presupuesto base anterior"
       back_to_main_page: "Volver a Presupuestos"
       generate_code_btn: "Nº de Presupuesto"
       new_btn: "Generar nuevo o Heredar anterior"

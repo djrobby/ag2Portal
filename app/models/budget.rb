@@ -169,19 +169,19 @@ class Budget < ActiveRecord::Base
   # Records navigator
   #
   def to_first
-    Budget.order("buget_no").first
+    Budget.order("budget_no").first
   end
 
   def to_prev
-    Budget.where("buget_no < ?", id).order("buget_no").last
+    Budget.where("budget_no < ?", id).order("budget_no").last
   end
 
   def to_next
-    Budget.where("buget_no > ?", id).order("buget_no").first
+    Budget.where("budget_no > ?", id).order("budget_no").first
   end
 
   def to_last
-    Budget.order("buget_no").last
+    Budget.order("budget_no").last
   end
 
   searchable do

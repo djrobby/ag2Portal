@@ -226,6 +226,9 @@ th .current:focus {
 .number-text-field {
   text-align: right;
 }
+.hidden-text-field {
+  display: none;
+}
 /* Multi-field form text fields (inside label tag) */
 .multi-field-label-two {
   display: inline-block;

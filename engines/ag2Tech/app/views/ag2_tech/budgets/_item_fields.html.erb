@@ -168,7 +168,7 @@
       m12 = parseInt(right_number(m12.toString(), 4) * 10000);
       jQuery.getJSON('bu_update_annual/' + m01 + '/' + m02 + '/' + m03 + '/' + m04 + '/' +
                                            m05 + '/' + m06 + '/' + m07 + '/' + m08 + '/' +
-                                           m09 + '/' + m10 + '/' + m11 + '/' + m12 + '/' +, function(data) {
+                                           m09 + '/' + m10 + '/' + m11 + '/' + m12, function(data) {
         $('#fnt-month01').val(data.month01);
         $('#fnt-month02').val(data.month02);
         $('#fnt-month03').val(data.month03);
