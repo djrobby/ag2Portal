@@ -69,11 +69,11 @@
     <% offices_count = current_user.offices.count %>
     <%= label_tag I18n.t("ag2_admin.users.oco.label_office"), nil, class: 'form-label' %>
     <% if offices_count == 1 %>
-    <%= select_tag "Office", options_from_collection_for_select(current_user.offices.order('name'), "id", "name"), class: 'x-large-text-field', include_blank: false %>
+    <%= select_tag "Office", options_from_collection_for_select(current_user.offices.where('NOT office_code LIKE ?', '99999%').order(:name), "id", "name"), class: 'x-large-text-field', include_blank: false %>
     <% elsif offices_count > 0 %>
-    <%= select_tag "Office", options_from_collection_for_select(current_user.offices.order('name'), "id", "name"), prompt: "", class: 'x-large-text-field' %>
+    <%= select_tag "Office", options_from_collection_for_select(current_user.offices.where('NOT office_code LIKE ?', '99999%').order(:name), "id", "name"), prompt: "", class: 'x-large-text-field' %>
     <% else %>
-    <%= select_tag "Office", options_from_collection_for_select(Office.order('name'), "id", "name"), prompt: "", class: 'x-large-text-field' %>
+    <%= select_tag "Office", options_from_collection_for_select(Office.where('NOT office_code LIKE ?', '99999%').order(:name), "id", "name"), prompt: "", class: 'x-large-text-field' %>
     <% end %>
     <!-- Company -->
     <% companies_count = current_user.companies.count %>

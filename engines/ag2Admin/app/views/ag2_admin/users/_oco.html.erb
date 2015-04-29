@@ -7,7 +7,8 @@
     <div class="modal-body">
       <%= hidden_field_tag :referrer, users_path %>
       <div class="modal-options">
-        <%= f.input :office_ids, :collection => Office.order('name'), :as => :check_boxes, :label_method => lambda {|t| t.name}, :label => false, :item_wrapper_class => 'inline' %>
+        <%= f.input :office_ids, :collection => Office.where('NOT office_code LIKE ?', '99999%').order(:name), :as => :check_boxes, :label_method => lambda {|t| t.name}, :label => false, :item_wrapper_class => 'inline' %>
+
       </div>
       <div class="modal-options" style="padding-top: 5px">
         <%= f.input :company_ids, :collection => Company.order('name'), :as => :check_boxes, :label_method => lambda {|t| t.name}, :label => false, :item_wrapper_class => 'inline' %>
