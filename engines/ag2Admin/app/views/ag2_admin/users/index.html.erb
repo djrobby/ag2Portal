@@ -9,10 +9,12 @@
     }
   }).ajaxSuccess(function() {
     // hide loader on success
-    $("#loader").hide();
+    if (changing == false) {
+      $("#loader").hide();
+    }
     //$("#loader").css("display","none");
   });
-  
+
   jQuery(function($) {
     // when the #user_office_ids_? check_box changes
     $("[id ^=user_office_ids]").change(function() {
