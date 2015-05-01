@@ -1,8 +1,12 @@
 <script>
+  var changing = false;
+  
   $(document).ajaxStart(function() {
     // show loader on start
-    $("#div_table").html("");
-    $("#loader").show();
+    if (changing == false) {
+      $("#div_table").html("");
+      $("#loader").show();
+    }
   }).ajaxSuccess(function() {
     // hide loader on success
     $("#loader").hide();
@@ -35,6 +39,26 @@
         $("input:checkbox[id=user_organization_ids_" + data.organization_id + "]").prop('checked', chkd);
       });
       return false;
+    });
+    
+    // when .btn_roles clicked
+    $(".btn_roles").click(function() {
+      changing = true;
+    });
+    
+    // when .btn_oco clicked
+    $(".btn_oco").click(function() {
+      changing = true;
+    });
+    
+    // when .submit_btn clicked
+    $(".submit_btn").click(function() {
+      changing = false;
+    });
+    
+    // when .close_btn clicked
+    $(".close_btn").click(function() {
+      changing = false;
     });
   });
 </script>

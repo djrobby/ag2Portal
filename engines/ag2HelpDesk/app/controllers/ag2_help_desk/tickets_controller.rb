@@ -69,13 +69,14 @@ module Ag2HelpDesk
       manage_filter_state
       id = params[:Id]
       user = params[:User]
-      office = params[:Office]
+      office = params[:OfficeT]
       from = params[:From]
       to = params[:To]
       category = params[:Category]
       priority = params[:Priority]
       status = params[:Status]
       technician = params[:Technician]
+      destination = params[:Destination]
       # OCO
       init_oco if !session[:organization]
 
@@ -116,6 +117,9 @@ module Ag2HelpDesk
         end
         if !technician.blank?
           with :technician_id, technician
+        end
+        if !destination.blank?
+          with :hd_email, destination
         end
         order_by :id, :desc
         paginate :page => params[:page] || 1, :per_page => per_page
@@ -304,11 +308,21 @@ module Ag2HelpDesk
     def mail_to
       _to = "helpdesk@aguaygestion.com"
       begin
+        # OCO company active: e-mail address from company
         if session[:company] != '0'
           company = Company.find(session[:company])
-          if !company.nil?
-            _to = company.hd_email
+          _to = company.hd_email unless company.nil?
+        elsif !current_user.nil?  # e-mail address from current user
+          _to = default_mail unless default_mail.nil?
+        else  # e-mail address from OCO organization
+          if session[:organization] != '0'
+            organization = Organization.find(session[:organization])
+            _to = organization.hd_email unless organization.nil?
           end
+        end
+        # Verify _to is ok
+        if _to.blank?
+          _to = "helpdesk@aguaygestion.com"
         end
       rescue => e
         _to = "helpdesk@aguaygestion.com"
@@ -362,6 +376,21 @@ module Ag2HelpDesk
         end
       end
       _office
+    end
+    
+    def default_mail
+      _mail = nil
+      _user = User.find(current_user)
+      if !_user.nil?
+        _worker = Worker.find_by_user_id(_user)
+        if !_worker.nil?
+          _item = _worker.worker_items.first
+          if !_item.nil?
+            _mail = _item.company.hd_email rescue nil
+          end
+        end
+      end
+      _mail
     end
 
     def default_organization
@@ -425,10 +454,10 @@ module Ag2HelpDesk
         params[:User] = session[:User]
       end
       # office
-      if params[:Office]
-        session[:Office] = params[:Office]
-      elsif session[:Office]
-        params[:Office] = session[:Office]
+      if params[:OfficeT]
+        session[:OfficeT] = params[:OfficeT]
+      elsif session[:OfficeT]
+        params[:OfficeT] = session[:OfficeT]
       end
       # from
       if params[:From]
@@ -465,6 +494,12 @@ module Ag2HelpDesk
         session[:Technician] = params[:Technician]
       elsif session[:Technician]
         params[:Technician] = session[:Technician]
+      end
+      # destination
+      if params[:Destination]
+        session[:Destination] = params[:Destination]
+      elsif session[:Destination]
+        params[:Destination] = session[:Destination]
       end
     end
   end

@@ -32,6 +32,7 @@ es:
         hd_email: "Email de soporte"
         organization: "Organización"
         organization_id: "Organización"
+        destination: "Destino"
     errors:
       ticket:
         popup: "Error: ¡Solicitud no pudo ser creada!"

@@ -30,7 +30,7 @@
       <td><%= user.current_sign_in_at.utc.getlocal.strftime("%d/%m/%Y %H:%M:%S") unless user.current_sign_in_at.nil? %></td>
       <td><%= user.current_sign_in_ip unless user.current_sign_in_ip.nil? %></td>
       <td><a data-toggle="modal" href="#role-options-<%= user.id %>" class="btn btn-mini btn_roles" type="button" id="<%= user.id %>"><%= t 'ag2_admin.users.index.btn_role' %></a> <%= render user %>
-        <a data-toggle="modal" href="#oco-options-<%= user.id %>" class="btn btn-mini" type="button"><%= t 'ag2_admin.users.index.btn_oco' %></a> <%= render partial: 'oco', locals: { user: user } %>
+        <a data-toggle="modal" href="#oco-options-<%= user.id %>" class="btn btn-mini btn_oco" type="button"><%= t 'ag2_admin.users.index.btn_oco' %></a> <%= render partial: 'oco', locals: { user: user } %>
       <%= render :partial => '/layouts/crud/edit', :locals => { :model => User, :path => edit_user_path(user) } %>
       <%= render :partial => '/layouts/crud/delete', :locals => { :model => User, :path => user, :msg => I18n.t("activerecord.models.user.one"), :txt => user.name } unless user == current_user %> </td>
     </tr>

@@ -7,13 +7,14 @@ module Ag2HelpDesk
       session[:search] = nil
       session[:Id] = nil      
       session[:User] = nil
-      session[:Office] = nil      
+      session[:OfficeT] = nil      
       session[:From] = nil      
       session[:To] = nil
       session[:Category] = nil
       session[:Priority] = nil      
       session[:Status] = nil      
       session[:Technician] = nil      
+      session[:Domain] = nil      
       session[:sort] = nil
       session[:direction] = nil      
     end

@@ -32,6 +32,7 @@ en:
         hd_email: "Support email"
         organization: "Organization"
         organization_id: "Organization"
+        destination: "Destination"
     errors:
       ticket:
         popup: "Error: Ticket cannot be created!"

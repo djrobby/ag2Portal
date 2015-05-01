@@ -9,8 +9,8 @@
       <%= f.input :role_ids, :collection => Role.all(order: 'name'), :as => :check_boxes, :label_method => lambda {|t| t.name}, :label => false, :item_wrapper_class => 'inline' %>
     </div>
     <div class="modal-footer">
-      <%= f.submit I18n.t('ag2_admin.users.index.btn_change_role'), :class => "btn btn-primary" %>
-      <a class="btn btn-primary" data-dismiss="modal" href="#"><%=t :close_button %></a>
+      <%= f.submit I18n.t('ag2_admin.users.index.btn_change_role'), :class => "btn btn-primary submit_btn" %>
+      <a class="btn btn-primary close_btn" data-dismiss="modal" href="#"><%=t :close_button %></a>
     </div>
   <% end %>
 </div>

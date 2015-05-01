@@ -1,38 +1,58 @@
 <script>
   var _thisForm = '';
+  var changing = false;
 
 	$(document).ready(function() {
+    $('.sel2').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      dropdownCssClass: 'shrinked',
+      dropdownAutoWidth: true
+    });
   	$('.date_picker').datepicker({
   	 format:'dd/mm/yyyy',weekStart:1
   	});
     // Initialized form variable
     _thisForm = $("#removeFilter").closest('form')[0];
 	});
+  
+  $(document).ajaxStart(function() {
+    // show loader on start
+    if (changing == false) {
+      $("#div_table").html("");
+      $("#loader").show();
+    }
+  }).ajaxSuccess(function() {
+    // hide loader on success
+    $("#loader").hide();
+    //$("#loader").css("display","none");
+  });
 
   $(window).bind("load", function() {
     $("#Id").val("<%= params[:Id] %>");
-    $("#User").val("<%= params[:User] %>");
-    $("#Office").val("<%= params[:Office] %>");
+    $("#User").select2("val", "<%= params[:User] %>");
+    $("#OfficeT").select2("val", "<%= params[:Office] %>");
     $("#From").val("<%= params[:From] %>");
     $("#To").val("<%= params[:To] %>");
     $("#Category").val("<%= params[:Category] %>");
     $("#Priority").val("<%= params[:Priority] %>");
     $("#Status").val("<%= params[:Status] %>");
     $("#Technician").val("<%= params[:Technician] %>");
+    $("#Destination").val("<%= params[:Destination] %>");
   });
 
   jQuery(function($) {
     // when the #removeFilter button clicked
     $("#removeFilter").click(function() {
       $("#Id").val("");
-      $("#User").val("");
-      $("#Office").val("");
+      $("#User").select2("val", "");
+      $("#OfficeT").select2("val", "");
       $("#From").val("");
       $("#To").val("");
       $("#Category").val("");
       $("#Priority").val("");
       $("#Status").val("");
       $("#Technician").val("");
+      $("#Destination").val("");
       $("#search").val("");
       // no AJAX
       //_thisForm.submit();
@@ -57,12 +77,12 @@
         <%= text_field_tag "Id", nil, :class => 'x-large-text-field shrinked number-text-field' %>
         <!-- User -->
         <%= label_tag I18n.t("created_by"), nil, :class => 'form-label' %>
-        <%= select_tag "User", options_from_collection_for_select(User.all, "id", "email"), :prompt => "", :class => 'x-large-text-field shrinked' %>
+        <%= select_tag "User", options_from_collection_for_select(User.all, "id", "email"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
         <!-- Office -->
-        <%= label_tag I18n.t("activerecord.attributes.ticket.office"), nil, :class => 'form-label' %>
-        <%= select_tag "Office", options_from_collection_for_select(Office.all, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked' %>
+        <%= label_tag I18n.t("activerecord.attributes.ticket.office"), nil, :class => 'form-label-under-sel2' %>
+        <%= select_tag "OfficeT", options_from_collection_for_select(Office.all, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
         <!-- Dates -->
-        <%= label_tag I18n.t("ag2_help_desk.tickets.index.label_from"), nil, :class => 'form-label' %>
+        <%= label_tag I18n.t("ag2_help_desk.tickets.index.label_from"), nil, :class => 'form-label-under-sel2' %>
         <%= text_field_tag "From", params[:date], :class =>  'x-large-text-field shrinked date_picker' %>
         <%= label_tag I18n.t("ag2_help_desk.tickets.index.label_to"), nil, :class => 'form-label' %>
         <%= text_field_tag "To", params[:date], :class =>  'x-large-text-field shrinked date_picker' %>
@@ -78,6 +98,9 @@
         <!-- Technician -->
         <%= label_tag I18n.t("activerecord.attributes.ticket.technician"), nil, :class => 'form-label' %>
         <%= select_tag "Technician", options_from_collection_for_select(Technician.all, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked' %>
+        <!-- Destination -->
+        <%= label_tag I18n.t("activerecord.attributes.ticket.destination"), nil, :class => 'form-label' %>
+        <%= select_tag "Destination", options_for_select(Ticket.destinations), :prompt => "", :class => 'x-large-text-field shrinked' %>
         <!-- Others -->
         <%= label_tag I18n.t("ag2_help_desk.tickets.index.label_others"), nil, :class => 'form-label' %>
         <%= text_field_tag :search, params[:search], :class => 'x-large-text-field shrinked' %>
@@ -93,8 +116,11 @@
       </div><!-- /.sidebar-nav -->
     </div><!-- /.span3 -->
 
-    <div class="span9" id="div_table">
-      <%= render 'tickets' %>
+    <div class="span9">
+      <div id="loader"></div>
+      <div id="div_table">
+        <%= render 'tickets' %>
+      </div>
     </div><!-- /.span9 -->
   </div><!-- /.row-fluid -->
 </div><!-- /.container-fluid -->

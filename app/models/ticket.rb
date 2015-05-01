@@ -28,8 +28,26 @@ class Ticket < ActiveRecord::Base
   after_create :send_create_email
   before_update :status_changed
 
+  def self.destinations
+    destinations = []
+    # loop thru existing tickets
+    Ticket.all.each do |u|
+      # check if destination already exists
+      exists = false
+      for i in 0...destinations.size
+        if u.hd_email == destinations[i]
+          exists = true          
+        end
+      end
+      if exists == false
+        destinations = destinations << u.hd_email
+      end
+    end        
+    destinations
+  end
+
   searchable do
-    text :ticket_message, :ticket_subject, :created_by
+    text :ticket_message, :ticket_subject, :created_by, :hd_email
     integer :ticket_category_id
     integer :ticket_priority_id
     integer :ticket_status_id
@@ -40,6 +58,7 @@ class Ticket < ActiveRecord::Base
     time :assign_at
     string :created_by
     integer :organization_id
+    string :hd_email
   end
 
   private
