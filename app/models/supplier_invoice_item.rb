@@ -14,7 +14,7 @@ class SupplierInvoiceItem < ActiveRecord::Base
 
   has_paper_trail
 
-  validates :supplier_invoice,  :presence => true
+  #validates :supplier_invoice,  :presence => true
   validates :description,       :presence => true,
                                 :length => { :maximum => 40 }
   validates :product,           :presence => true

@@ -6,7 +6,7 @@ class SupplierInvoiceApproval < ActiveRecord::Base
 
   has_paper_trail
 
-  validates :supplier_invoice,  :presence => true
+  #validates :supplier_invoice,  :presence => true
   validates :approver,          :presence => true
   validates :approval_date,     :presence => true
   validates :approved_amount,   :presence => true,

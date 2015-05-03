@@ -6,7 +6,7 @@ class WorkOrderSubcontractor < ActiveRecord::Base
 
   has_paper_trail
 
-  validates :work_order,      :presence => true
+  #validates :work_order,      :presence => true
   validates :supplier,        :presence => true
   validates :purchase_order,  :presence => true
 

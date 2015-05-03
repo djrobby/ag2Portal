@@ -7,7 +7,7 @@ class BudgetItem < ActiveRecord::Base
 
   has_paper_trail
 
-  validates :budget,            :presence => true
+  #validates :budget,            :presence => true
   validates :charge_account,    :presence => true
   validates :month_01,          :numericality => true
   validates :month_02,          :numericality => true

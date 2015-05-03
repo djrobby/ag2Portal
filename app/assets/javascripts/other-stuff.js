@@ -2,7 +2,12 @@
  * Capitalizes character on each key press (onkeyup)
  */
 function caps(e) {
-  e.value = e.value.toUpperCase();
+  var actualValue = e.value;         
+  var upperValue = e.value.toUpperCase();
+  if (actualValue != upperValue) {
+    e.value = upperValue;         
+  }   
+  //e.value = e.value.toUpperCase();
 }
 
 /*

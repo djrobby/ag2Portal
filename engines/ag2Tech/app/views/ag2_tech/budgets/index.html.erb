@@ -12,6 +12,7 @@
   }); 
 
   $(window).bind("load", function() {
+    $("#No").val("<%= params[:No] %>");
     $("#Project").select2("val", "<%= params[:Project] %>");
     $("#Period").select2("val", "<%= params[:Period] %>");
   });
@@ -19,6 +20,7 @@
   jQuery(function($) {
     // when the #removeFilter button clicked
     $("#removeFilter").click(function() {
+      $("#No").val("");
       $("#Project").select2("val", "");
       $("#Period").select2("val", "");
       $("#search").val("");
@@ -39,6 +41,9 @@
     <div class="span3">
       <div class="well sidebar-nav">
         <%= form_tag "budgets", :method => 'get', :remote => true do %>
+        <!-- No -->
+        <%= label_tag I18n.t("activerecord.attributes.budget.budget_no"), nil, :class => 'form-label' %>
+        <%= text_field_tag "No", nil, :class => 'x-large-text-field shrinked number-text-field', onkeyup: "caps(this)" %>
         <!-- Project -->
         <%= label_tag I18n.t("ag2_tech.budgets.index.label_project"), nil, :class => 'form-label' %>
         <%= select_tag "Project", options_from_collection_for_select(@projects, "id", "full_name"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>

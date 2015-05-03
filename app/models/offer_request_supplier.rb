@@ -5,6 +5,6 @@ class OfferRequestSupplier < ActiveRecord::Base
 
   has_paper_trail
 
-  validates :offer_request, :presence => true
+  #validates :offer_request, :presence => true
   validates :supplier,      :presence => true
 end

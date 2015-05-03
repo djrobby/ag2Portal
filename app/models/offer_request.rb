@@ -31,7 +31,7 @@ class OfferRequest < ActiveRecord::Base
   validates :request_date,    :presence => true
   validates :request_no,      :presence => true,
                               :length => { :is => 22 },
-                              :format => { with: /\A\d+\Z/, message: :code_invalid },
+                              :format => { with: /\A[a-zA-Z\d]+\Z/, message: :code_invalid },
                               :uniqueness => { :scope => :organization_id }
   validates :payment_method,  :presence => true
   validates :project,         :presence => true
@@ -124,6 +124,7 @@ class OfferRequest < ActiveRecord::Base
     text :request_no
     string :request_no
     integer :payment_method_id
+    integer :id, :multiple => true
     integer :project_id, :multiple => true
     integer :store_id
     integer :work_order_id

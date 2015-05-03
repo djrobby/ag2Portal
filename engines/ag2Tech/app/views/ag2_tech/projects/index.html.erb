@@ -7,6 +7,7 @@
   }); 
 
   $(window).bind("load", function() {
+    $("#No").val("<%= params[:No] %>");
     $("#WrkrCompany").val("<%= params[:WrkrCompany] %>");
     $("#Office").val("<%= params[:WrkrOffice] %>");
   });
@@ -31,6 +32,7 @@
     
     // when the #removeFilter button clicked
     $("#removeFilter").click(function() {
+      $("#No").val("");
       $("#WrkrCompany").val("");
       $("#WrkrOffice").val("");
       $("#search").val("");
@@ -51,6 +53,9 @@
     <div class="span3">
       <div class="well sidebar-nav">
         <%= form_tag "projects", :method => 'get', :remote => true do %>
+        <!-- No -->
+        <%= label_tag I18n.t("activerecord.attributes.project.project_code"), nil, :class => 'form-label' %>
+        <%= text_field_tag "No", nil, :class => 'x-large-text-field shrinked number-text-field', onkeyup: "caps(this)" %>
         <!-- Company -->
         <%= label_tag I18n.t("ag2_tech.projects.index.label_company"), nil, :class => 'form-label' %>
         <% if session[:company] != '0' %>

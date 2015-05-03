@@ -5,7 +5,7 @@ class BudgetRatio < ActiveRecord::Base
                   :month_01, :month_02, :month_03, :month_04, :month_05, :month_06, :month_07, :month_08, :month_09, :month_10, :month_11, :month_12
   has_paper_trail
 
-  validates :budget,            :presence => true
+  #validates :budget,            :presence => true
   validates :ratio,             :presence => true
   validates :month_01,          :numericality => true
   validates :month_02,          :numericality => true

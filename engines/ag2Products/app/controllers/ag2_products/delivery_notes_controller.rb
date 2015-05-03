@@ -295,6 +295,7 @@ module Ag2Products
     # GET /delivery_notes.json
     def index
       manage_filter_state
+      no = params[:No]
       client = params[:Client]
       project = params[:Project]
       order = params[:Order]
@@ -309,6 +310,12 @@ module Ag2Products
       @search = DeliveryNote.search do
         with :project_id, current_projects
         fulltext params[:search]
+        if session[:organization] != '0'
+          with :organization_id, session[:organization]
+        end
+        if !no.blank?
+          with :delivery_no, no
+        end
         if !client.blank?
           with :client_id, client
         end
@@ -554,6 +561,12 @@ module Ag2Products
         session[:search] = params[:search]
       elsif session[:search]
         params[:search] = session[:search]
+      end
+      # no
+      if params[:No]
+        session[:No] = params[:No]
+      elsif session[:No]
+        params[:No] = session[:No]
       end
       # client
       if params[:Client]

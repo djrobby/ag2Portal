@@ -78,6 +78,7 @@ module Ag2Tech
     # GET /projects.json
     def index
       manage_filter_state
+      no = params[:No]
       company = params[:WrkrCompany]
       office = params[:WrkrOffice]
       # OCO
@@ -102,6 +103,9 @@ module Ag2Tech
         fulltext params[:search]
         if session[:organization] != '0'
           with :organization_id, session[:organization]
+        end
+        if !no.blank?
+          with :project_code, no
         end
         if !company.blank?
           with :company_id, company
@@ -262,6 +266,12 @@ module Ag2Tech
         session[:search] = params[:search]
       elsif session[:search]
         params[:search] = session[:search]
+      end
+      # no
+      if params[:No]
+        session[:No] = params[:No]
+      elsif session[:No]
+        params[:No] = session[:No]
       end
       # company
       if params[:WrkrCompany]

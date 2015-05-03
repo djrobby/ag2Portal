@@ -58,8 +58,8 @@
         $("#fnt-amount").val(data.amount);
         $("#fnt-tax-type").val(data.type);
         $("#fnt-tax").val(data.tax);
-        $('#fnt-discount-pct').val("0,00");
-        $('#fnt-discount').val("0,0000");
+        //$('#fnt-discount-pct').val("0,00");
+        //$('#fnt-discount').val("0,0000");
         $("#current-stock").html(data.stock);
       });
       return false;
@@ -230,21 +230,22 @@
       var tax_type = $('#fnt-tax-type').val();
       if (tax_type == "")
         tax_type = "0";
-      var discount_p = $('#fnt-discount-pct').val();
-      if (discount_p == "")
-        discount_p = "0";
-      var discount = $('#fnt-discount').val();
-      if (discount == "")
-        discount = "0";
+      //var discount_p = $('#fnt-discount-pct').val();
+      //if (discount_p == "")
+      //  discount_p = "0";
+      //var discount = $('#fnt-discount').val();
+      //if (discount == "")
+      //  discount = "0";
       var product = $('select#fnt-product :selected').val();
       if (product == "")
         product = "0";
       // Right formatted for passing as REST parameter
       price = parseInt(right_number(price, 4) * 10000);
       qty = parseInt(right_number(qty, 4) * 10000);
-      discount_p = parseInt(right_number(discount_p, 2) * 100);
-      discount = parseInt(right_number(discount, 4) * 10000);
-      jQuery.getJSON('or_update_amount_from_price_or_quantity/' + price + '/' + qty + '/' + tax_type + '/' + discount_p + '/' + discount + '/' + product, function(data) {
+      //discount_p = parseInt(right_number(discount_p, 2) * 100);
+      //discount = parseInt(right_number(discount, 4) * 10000);
+      //jQuery.getJSON('or_update_amount_from_price_or_quantity/' + price + '/' + qty + '/' + tax_type + '/' + discount_p + '/' + discount + '/' + product, function(data) {
+      jQuery.getJSON('or_update_amount_from_price_or_quantity/' + price + '/' + qty + '/' + tax_type + '/' + product, function(data) {
         $('#fnt-quantity').val(data.quantity);
         $('#fnt-price').val(data.price);
         $('#fnt-amount').val(data.amount);

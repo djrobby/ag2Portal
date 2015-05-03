@@ -14,7 +14,7 @@ class PurchaseOrderItem < ActiveRecord::Base
 
   has_paper_trail
 
-  validates :purchase_order,  :presence => true
+  #validates :purchase_order,  :presence => true
   validates :description,     :presence => true,
                               :length => { :maximum => 40 }
   validates :product,         :presence => true

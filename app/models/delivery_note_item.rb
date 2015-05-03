@@ -16,7 +16,7 @@ class DeliveryNoteItem < ActiveRecord::Base
 
   has_paper_trail
 
-  validates :delivery_note,   :presence => true
+  #validates :delivery_note,   :presence => true
   validates :description,     :presence => true,
                               :length => { :maximum => 40 }
   validates :product,         :presence => true

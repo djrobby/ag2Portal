@@ -293,6 +293,7 @@ module Ag2Purchase
     # GET /supplier_invoices.json
     def index
       manage_filter_state
+      no = params[:No]
       supplier = params[:Supplier]
       project = params[:Project]
       order = params[:Order]
@@ -307,6 +308,12 @@ module Ag2Purchase
       @search = SupplierInvoice.search do
         with :project_id, current_projects
         fulltext params[:search]
+        if session[:organization] != '0'
+          with :organization_id, session[:organization]
+        end
+        if !no.blank?
+          with :invoice_no, no
+        end
         if !supplier.blank?
           with :supplier_id, supplier
         end
@@ -556,6 +563,12 @@ module Ag2Purchase
         session[:search] = params[:search]
       elsif session[:search]
         params[:search] = session[:search]
+      end
+      # no
+      if params[:No]
+        session[:No] = params[:No]
+      elsif session[:No]
+        params[:No] = session[:No]
       end
       # supplier
       if params[:Supplier]

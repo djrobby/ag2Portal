@@ -14,7 +14,7 @@ class SaleOfferItem < ActiveRecord::Base
 
   has_paper_trail
 
-  validates :sale_offer,      :presence => true
+  #validates :sale_offer,      :presence => true
   validates :description,     :presence => true,
                               :length => { :maximum => 40 }
   validates :product,         :presence => true

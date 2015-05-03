@@ -120,7 +120,9 @@ var or_rowBuilder = function() {
               // Add new column to row...
               var td = $('<td/>').append($(this));
               // ...hiding this if applicable
-              if (this.id === 'fnt-tax-type') {
+              if (this.id === 'fnt-work-order' || this.id === 'fnt-project' ||
+                this.id === 'fnt-charge-account' || this.id === 'fnt-store' ||
+                this.id === 'fnt-tax-type') {
                 td = $('<td style="display:none;"/>').append($(this));
               }
               // If destroy field, add delete link also

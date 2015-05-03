@@ -59,8 +59,8 @@
         $(_this).closest('tr').find('.fnt-amount').val(data.amount);
         $(_this).closest('tr').find('.fnt-tax').val(data.tax);
         $(_this).closest('tr').find(".fnt-tax-type").val(data.type);
-        $(_this).closest('tr').find('.fnt-discount-pct').val("0,00");
-        $(_this).closest('tr').find('.fnt-discount').val("0,0000");
+        //$(_this).closest('tr').find('.fnt-discount-pct').val("0,00");
+        //$(_this).closest('tr').find('.fnt-discount').val("0,0000");
       });
       return false;
     });
@@ -109,21 +109,22 @@
       var tax_type = $(_this).closest('tr').find('.fnt-tax-type').val();
       if (tax_type == "")
         tax_type = "0";
-      var discount_p = $(_this).closest('tr').find('.fnt-discount-pct').val();
-      if (discount_p == "")
-        discount_p = "0";
-      var discount = $(_this).closest('tr').find('.fnt-discount').val();
-      if (discount == "")
-        discount = "0";
+      //var discount_p = $(_this).closest('tr').find('.fnt-discount-pct').val();
+      //if (discount_p == "")
+      //  discount_p = "0";
+      //var discount = $(_this).closest('tr').find('.fnt-discount').val();
+      //if (discount == "")
+      //  discount = "0";
       var product = $(this).closest('tr').find('select.fnt-product :selected').val();
       if (product == "")
         product = "0";
       // Right formatted for passing as REST parameter
       price = parseInt(right_number(price, 4) * 10000);
       qty = parseInt(right_number(qty, 4) * 10000);
-      discount_p = parseInt(right_number(discount_p, 2) * 100);
-      discount = parseInt(right_number(discount, 4) * 10000);
-      jQuery.getJSON('or_update_amount_from_price_or_quantity/' + price + '/' + qty + '/' + tax_type + '/' + discount_p + '/' + discount + '/' + product, function(data) {
+      //discount_p = parseInt(right_number(discount_p, 2) * 100);
+      //discount = parseInt(right_number(discount, 4) * 10000);
+      //jQuery.getJSON('or_update_amount_from_price_or_quantity/' + price + '/' + qty + '/' + tax_type + '/' + discount_p + '/' + discount + '/' + product, function(data) {
+      jQuery.getJSON('or_update_amount_from_price_or_quantity/' + price + '/' + qty + '/' + tax_type + '/' + product, function(data) {
         $(_this).closest('tr').find('.fnt-quantity').val(data.quantity);
         $(_this).closest('tr').find('.fnt-price').val(data.price);
         $(_this).closest('tr').find('.fnt-amount').val(data.amount);

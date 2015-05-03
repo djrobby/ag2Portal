@@ -451,12 +451,12 @@ end
       _items.each do |i|
         _current_items = _current_items << i.worker_id
       end
-      # Add workers without items
+      # Add workers without items, if OCO not active (test office only, company implicit)
       if session[:office] && session[:office] == '0'
-      _workers_no_item = Worker.includes(:worker_items).where(worker_items: { worker_id: nil })
-      _workers_no_item.each do |i|
-        _current_items = _current_items << i.id
-      end
+        _workers_no_item = Worker.includes(:worker_items).where(worker_items: { worker_id: nil })
+        _workers_no_item.each do |i|
+          _current_items = _current_items << i.id
+        end
       end
       _current_items
     end

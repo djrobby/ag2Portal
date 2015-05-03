@@ -5,7 +5,7 @@ class WorkOrderTool < ActiveRecord::Base
 
   has_paper_trail
 
-  validates :work_order,  :presence => true
+  #validates :work_order,  :presence => true
   validates :tool,        :presence => true
 
   #

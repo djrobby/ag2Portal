@@ -119,8 +119,8 @@ module Ag2Purchase
       price = params[:price].to_f / 10000
       qty = params[:qty].to_f / 10000
       tax_type = params[:tax_type].to_i
-      discount_p = params[:discount_p].to_f / 100
-      discount = params[:discount].to_f / 10000
+      #discount_p = params[:discount_p].to_f / 100
+      #discount = params[:discount].to_f / 10000
       product = params[:product]
       if tax_type.blank? || tax_type == "0"
         if !product.blank? && product != "0"
@@ -130,19 +130,20 @@ module Ag2Purchase
         end
       end
       tax = TaxType.find(tax_type).tax
-      if discount_p > 0
-        discount = price * (discount_p / 100)
-      end
-      amount = qty * (price - discount)
+      #if discount_p > 0
+      #  discount = price * (discount_p / 100)
+      #end
+      #amount = qty * (price - discount)
+      amount = qty * price
       tax = amount * (tax / 100)
       qty = number_with_precision(qty.round(4), precision: 4)
       price = number_with_precision(price.round(4), precision: 4)
       amount = number_with_precision(amount.round(4), precision: 4)
       tax = number_with_precision(tax.round(4), precision: 4)
-      discount_p = number_with_precision(discount_p.round(2), precision: 2)
-      discount = number_with_precision(discount.round(4), precision: 4)
-      @json_data = { "quantity" => qty.to_s, "price" => price.to_s, "amount" => amount.to_s, "tax" => tax.to_s,
-                     "discountp" => discount_p.to_s, "discount" => discount.to_s }
+      #discount_p = number_with_precision(discount_p.round(2), precision: 2)
+      #discount = number_with_precision(discount.round(4), precision: 4)
+      @json_data = { "quantity" => qty.to_s, "price" => price.to_s, "amount" => amount.to_s, "tax" => tax.to_s }
+      #               "discountp" => discount_p.to_s, "discount" => discount.to_s }
 
       respond_to do |format|
         format.html # or_update_amount_from_price_or_quantity.html.erb does not exist! JSON only
@@ -363,6 +364,7 @@ module Ag2Purchase
     # GET /offer_requests.json
     def index
       manage_filter_state
+      no = params[:No]
       supplier = params[:Supplier]
       project = params[:Project]
       order = params[:Order]
@@ -373,12 +375,26 @@ module Ag2Purchase
       @projects = projects_dropdown if @projects.nil?
       @work_orders = work_orders_dropdown if @work_orders.nil?
 
+      if !supplier.blank?
+        @request_suppliers = OfferRequestSupplier.group(:offer_request_id).where(supplier_id: supplier)
+      else
+        @request_suppliers = OfferRequestSupplier.group(:offer_request_id)
+      end
+
+      current_suppliers = @request_suppliers.blank? ? [0] : current_suppliers_for_index(@request_suppliers)
       current_projects = @projects.blank? ? [0] : current_projects_for_index(@projects)
+      
       @search = OfferRequest.search do
         with :project_id, current_projects
         fulltext params[:search]
+        if session[:organization] != '0'
+          with :organization_id, session[:organization]
+        end
+        if !no.blank?
+          with :request_no, no
+        end
         if !supplier.blank?
-          with :supplier_id, supplier
+          with :id, current_suppliers
         end
         if !project.blank?
           with :project_id, project
@@ -523,6 +539,15 @@ module Ag2Purchase
       _current_projects
     end
     
+    def current_suppliers_for_index(_suppliers)
+      _current_suppliers = []
+      # Add suppliers found
+      _suppliers.each do |i|
+        _current_suppliers = _current_suppliers << i.offer_request_id
+      end
+      _current_suppliers
+    end
+    
     def project_stores(_project)
       if !_project.company.blank? && !_project.office.blank?
         _store = Store.where("(company_id = ? AND office_id = ?) OR (company_id IS NULL AND NOT supplier_id IS NULL)", _project.company.id, _project.office.id).order(:name)
@@ -616,6 +641,12 @@ module Ag2Purchase
         session[:search] = params[:search]
       elsif session[:search]
         params[:search] = session[:search]
+      end
+      # no
+      if params[:No]
+        session[:No] = params[:No]
+      elsif session[:No]
+        params[:No] = session[:No]
       end
       # supplier
       if params[:Supplier]

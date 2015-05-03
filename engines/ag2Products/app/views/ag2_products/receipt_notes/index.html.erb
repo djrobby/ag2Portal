@@ -12,6 +12,7 @@
   }); 
 
   $(window).bind("load", function() {
+    $("#No").val("<%= params[:No] %>");
     $("#Supplier").select2("val", "<%= params[:Supplier] %>");
     $("#Project").select2("val", "<%= params[:Project] %>");
     $("#Order").select2("val", "<%= params[:Order] %>");
@@ -20,6 +21,7 @@
   jQuery(function($) {
     // when the #removeFilter button clicked
     $("#removeFilter").click(function() {
+      $("#No").val("");
       $("#Supplier").select2("val", "");
       $("#Project").select2("val", "");
       $("#Order").select2("val", "");
@@ -41,6 +43,9 @@
     <div class="span3">
       <div class="well sidebar-nav">
         <%= form_tag "receipt_notes", :method => 'get', :remote => true do %>
+        <!-- No -->
+        <%= label_tag I18n.t("activerecord.attributes.receipt_note.receipt_no"), nil, :class => 'form-label' %>
+        <%= text_field_tag "No", nil, :class => 'x-large-text-field shrinked number-text-field', onkeyup: "caps(this)" %>
         <!-- Supplier -->
         <%= label_tag I18n.t("ag2_products.receipt_notes.index.label_supplier"), nil, :class => 'form-label' %>
         <%= select_tag "Supplier", options_from_collection_for_select(@suppliers_s, "id", "full_name"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>

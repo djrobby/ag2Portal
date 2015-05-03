@@ -134,9 +134,14 @@ Ag2Purchase::Engine.routes.draw do
     match 'offer_requests/or_update_description_prices_from_product/:product/:qty', :controller => 'offer_requests', :action => 'or_update_description_prices_from_product'
     match 'or_update_description_prices_from_product/:product/:qty', :controller => 'offer_requests', :action => 'or_update_description_prices_from_product'
     match 'offer_requests/:id/or_update_description_prices_from_product/:product/:qty', :controller => 'offer_requests', :action => 'or_update_description_prices_from_product'
-    match 'offer_requests/or_update_amount_from_price_or_quantity/:price/:qty/:tax_type/:discount_p/:discount/:product', :controller => 'offer_requests', :action => 'or_update_amount_from_price_or_quantity'
-    match 'or_update_amount_from_price_or_quantity/:price/:qty/:tax_type/:discount_p/:discount/:product', :controller => 'offer_requests', :action => 'or_update_amount_from_price_or_quantity'
-    match 'offer_requests/:id/or_update_amount_from_price_or_quantity/:price/:qty/:tax_type/:discount_p/:discount/:product', :controller => 'offer_requests', :action => 'or_update_amount_from_price_or_quantity'
+    #match 'offer_requests/or_update_amount_from_price_or_quantity/:price/:qty/:tax_type/:discount_p/:discount/:product', :controller => 'offer_requests', :action => 'or_update_amount_from_price_or_quantity'
+    #match 'or_update_amount_from_price_or_quantity/:price/:qty/:tax_type/:discount_p/:discount/:product', :controller => 'offer_requests', :action => 'or_update_amount_from_price_or_quantity'
+    #match 'offer_requests/:id/or_update_amount_from_price_or_quantity/:price/:qty/:tax_type/:discount_p/:discount/:product', :controller => 'offer_requests', :action => 'or_update_amount_from_price_or_quantity'
+
+    match 'offer_requests/or_update_amount_from_price_or_quantity/:price/:qty/:tax_type/:product', :controller => 'offer_requests', :action => 'or_update_amount_from_price_or_quantity'
+    match 'or_update_amount_from_price_or_quantity/:price/:qty/:tax_type/:product', :controller => 'offer_requests', :action => 'or_update_amount_from_price_or_quantity'
+    match 'offer_requests/:id/or_update_amount_from_price_or_quantity/:price/:qty/:tax_type/:product', :controller => 'offer_requests', :action => 'or_update_amount_from_price_or_quantity'
+
     match 'offer_requests/or_update_charge_account_from_order/:order', :controller => 'offer_requests', :action => 'or_update_charge_account_from_order'
     match 'or_update_charge_account_from_order/:price/:qty/:order', :controller => 'offer_requests', :action => 'or_update_charge_account_from_order'
     match 'offer_requests/:id/or_update_charge_account_from_order/:order', :controller => 'offer_requests', :action => 'or_update_charge_account_from_order'

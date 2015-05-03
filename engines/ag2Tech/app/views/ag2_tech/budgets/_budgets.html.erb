@@ -20,11 +20,11 @@
   <tbody>
     <% @budgets.each do |budget| %>
     <% if !budget.approval_date.blank? %>
-    <tr>
-      <% else %>
-    <tr class="inactive-row">
-      <% end %>
-      <td><%= link_to budget.budget_no, budget %></td>
+      <tr>
+    <% else %>
+      <tr class="inactive-row">
+    <% end %>
+      <td><%= link_to budget.full_no, budget %></td>
       <td><%= budget.description[0,40] %></td>
       <td><%= budget.project.full_code unless budget.project.blank? %></td>
       <td><%= budget.budget_period.name unless budget.budget_period.blank? %></td>

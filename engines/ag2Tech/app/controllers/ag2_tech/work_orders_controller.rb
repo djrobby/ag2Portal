@@ -509,6 +509,7 @@ module Ag2Tech
     # GET /work_orders.json
     def index
       manage_filter_state
+      no = params[:No]
       project = params[:Project]
       type = params[:Type]
       status = params[:Status]
@@ -525,6 +526,9 @@ module Ag2Tech
         fulltext params[:search]
         if session[:organization] != '0'
           with :organization_id, session[:organization]
+        end
+        if !no.blank?
+          with :order_no, no
         end
         if !project.blank?
           with :project_id, project
@@ -931,6 +935,12 @@ module Ag2Tech
         session[:search] = params[:search]
       elsif session[:search]
         params[:search] = session[:search]
+      end
+      # no
+      if params[:No]
+        session[:No] = params[:No]
+      elsif session[:No]
+        params[:No] = session[:No]
       end
       # project
       if params[:Project]

@@ -22,8 +22,8 @@
   <tbody>
     <% @offer_requests.each do |request| %>
     <tr>
-      <td><%= link_to order.request_no, request %></td>
-      <td align="center"><%= request.order_date.strftime("%d/%m/%Y") unless request.order_date.blank? %></td>
+      <td><%= link_to request.full_no, request %></td>
+      <td align="center"><%= request.request_date.strftime("%d/%m/%Y") unless request.request_date.blank? %></td>
       <td align="center"><%= request.deadline_date.strftime("%d/%m/%Y") unless request.deadline_date.blank? %></td>
       <td><%= request.project.full_name unless request.project.blank? %></td>
       <td><%= request.approved_offer.partial_name unless request.approved_offer.blank? %></td>

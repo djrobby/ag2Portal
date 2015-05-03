@@ -336,6 +336,7 @@ module Ag2Products
     # GET /purchase_orders.json
     def index
       manage_filter_state
+      no = params[:No]
       project = params[:Project]
       supplier = params[:Supplier]
       status = params[:Status]
@@ -350,6 +351,12 @@ module Ag2Products
       @search = PurchaseOrder.search do
         with :project_id, current_projects
         fulltext params[:search]
+        if session[:organization] != '0'
+          with :organization_id, session[:organization]
+        end
+        if !no.blank?
+          with :order_no, no
+        end
         if !project.blank?
           with :project_id, project
         end
@@ -618,6 +625,12 @@ module Ag2Products
         session[:search] = params[:search]
       elsif session[:search]
         params[:search] = session[:search]
+      end
+      # no
+      if params[:No]
+        session[:No] = params[:No]
+      elsif session[:No]
+        params[:No] = session[:No]
       end
       # supplier
       if params[:Supplier]

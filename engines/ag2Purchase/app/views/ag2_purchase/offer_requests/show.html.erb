@@ -11,7 +11,7 @@
     /*
      * Very special functions!
      */
-    // Approve offer from selected table row, when the .icon-ok clicked
+    // Approve offer from selected offers_table row, when the .icon-ok clicked
     $(".icon-ok").click(function() {
       var current_row = $(this).closest("tr");
       var _offer = current_row.find(".offer-id").text();
@@ -35,7 +35,7 @@
       return false;
     });
 
-    // Disapprove offer from selected table row, when the .icon-remove clicked
+    // Disapprove offer from selected offers_table row, when the .icon-remove clicked
     $(".icon-remove").click(function() {
       var current_row = $(this).closest("tr");
       text_field_color = current_row.css('color')
@@ -56,6 +56,16 @@
       });
       return false;
     });
+
+    // when #print_report_btn is clicked
+    $("#print_report_btn").click(function() {
+      // make a POST call and get report
+      var id = $('#id').html();
+      if (id == "")
+        return;
+      //window.open("offer_request_form.pdf?id=" + id, "_blank");
+      return false;
+    });
   });
 </script>
 
@@ -66,9 +76,9 @@
   <tbody>
     <tr>
       <td>Id:</td>
-      <td class="offer-request-id"><%= @offer_request.id %></td>
+      <td id="id" class="offer-request-id"><%= @offer_request.id %></td>
       <td><%=t 'activerecord.attributes.offer_request.request_no' %>:</td>
-      <td><b><%= @offer_request.request_no %></b></td>
+      <td><b><%= @offer_request.full_no %></b></td>
     </tr>
     <tr>
       <td><%=t 'activerecord.attributes.offer_request.request_date' %>:</td>
@@ -113,7 +123,7 @@
         <h4><%= t 'ag2_purchase.offer_requests.items_info' %></h4>
       </td>
       <td class="form-td-two right-winged">
-        <%= link_to t(".print"), offer_requests_path, :class => 'btn btn-warning' %>
+        <a href="#" id="print_report_btn" class="btn btn-warning"><i class="icon-print icon-white"></i> <%= t '.print' %></a>
       </td>
     </tr>
   </tbody>
@@ -143,7 +153,7 @@
         <h4><%= t 'ag2_purchase.offer_requests.suppliers_info' %></h4>
       </td>
       <td class="form-td-two right-winged">
-        <%= link_to t(".print"), offer_requests_path, :class => 'btn btn-warning' %>
+        <a href="#" id="print_report_btn"><i class="icon-arrow-up"></i></a>
       </td>
     </tr>
   </tbody>
@@ -179,7 +189,18 @@ new_path: new_offer_request_path, new_txt: t('ag2_purchase.offer_requests.index.
 
 <!-- Offers -->
 <% if (@offers.count > 0) %>
-<h4><%=t 'ag2_purchase.offer_requests.offers_info' %></h4>
+<table class="form-table">
+  <tbody>
+    <tr class="form-tr underlined-tr">
+      <td class="form-td-two left-winged">
+        <h4><%=t 'ag2_purchase.offer_requests.offers_info' %></h4>
+      </td>
+      <td class="form-td-two right-winged">
+        <a href="#" id="print_report_btn"><i class="icon-arrow-up"></i></a>
+      </td>
+    </tr>
+  </tbody>
+</table>
 <table id="offers_table" class="table table-condensed table-striped shrinked">
   <thead>
     <%= render 'offers_header' %>
