@@ -214,7 +214,9 @@ Ag2Purchase::Engine.routes.draw do
     resources :purchase_orders do
       get 'purchase_order_form', on: :collection
     end
-    resources :offer_requests
+    resources :offer_requests do
+      get 'offer_request_form', on: :collection
+    end
     resources :offers
     resources :supplier_invoices
     resources :supplier_payments
