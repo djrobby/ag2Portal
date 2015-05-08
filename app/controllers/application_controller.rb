@@ -496,8 +496,11 @@ end
       end
     end
     code
-   end
+  end
 
+  #
+  # Privates
+  #
   private
   
   # NIF/NIE

@@ -1,4 +1,6 @@
 class OfferRequest < ActiveRecord::Base
+  include ModelsModule
+
   belongs_to :payment_method
   belongs_to :project
   belongs_to :approved_offer, class_name: 'Offer'
@@ -99,6 +101,12 @@ class OfferRequest < ActiveRecord::Base
 
   def quantity
     offer_request_items.sum("quantity")
+  end
+
+  # Returns multidimensional array containing different tax type in each line
+  # Each line contains 5 elements: Id, Description, Tax %, Net amount & Net tax
+  def tax_breakdown
+    tt = global_tax_breakdown(offer_request_items, true)
   end
 
   #
