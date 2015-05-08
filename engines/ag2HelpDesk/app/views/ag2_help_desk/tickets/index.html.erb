@@ -13,6 +13,8 @@
   	});
     // Initialized form variable
     _thisForm = $("#removeFilter").closest('form')[0];
+    // Trigger auto-refresh div_table every 60 seconds
+    //setTimeout(executeQuery, 60000);
 	});
   
   $(document).ajaxStart(function() {
@@ -60,6 +62,16 @@
       $("#submit_btn").trigger("click");
     });
   });
+
+  // Refresh div_table content
+  function executeQuery() {
+    $.ajax({
+      success: function(data) {
+        $("#div_table").html("<%= escape_javascript(render('tickets')) %>");
+      }
+    });
+    setTimeout(executeQuery, 60000);
+  }
 </script>
 
 <%= render '/layouts/ag2_help_desk/ticketsbreadcrumb' %>
@@ -111,6 +123,8 @@
         <% end %>
         <!-- New -->
         <%= render :partial => '/layouts/ag2_help_desk/crud/ticket_new', :locals => { :txt => I18n.t("ag2_help_desk.tickets.index.btn_new") } %>
+        <!-- Refresh -->
+        <%= link_to I18n.t("ag2_help_desk.tickets.index.refresh"), ag2_help_desk.tickets_path, remote: true %><br />
         <!-- Back -->
         <%= link_to I18n.t("ag2_help_desk.tickets.index.back_to_root"), ag2_help_desk.root_path %>
       </div><!-- /.sidebar-nav -->
