@@ -59,7 +59,7 @@ a:focus {
   float: left;
 }
 .right-floated {
-  flaot: right;
+  float: right;
 }
 .footer-nav-li {
   padding-top: 6px;
@@ -861,6 +861,12 @@ tfoot {
   background-image: image-url("icon/glyph/black/halflings/paperclip.png");
   background-position: 0px 0px;
   background-repeat: no-repeat;
+}
+/* Refresh icon (AJAX) */
+.icon-refresh-link {
+  float: right;
+  margin: -14px -14px 0 0;
+  padding: 0 0 0 0;
 }
 
 /*

@@ -1,0 +1,31 @@
+# List header
+report.page.list(:default).header do |header|
+	header.item(:no_c).value "#"
+	header.item(:product_c).value I18n.t("activerecord.attributes.offer_request_item.code")
+	header.item(:description_c).value I18n.t("activerecord.attributes.offer_request_item.description_c")
+	header.item(:quantity_c).value I18n.t("activerecord.attributes.offer_request_item.quantity_c")
+	header.item(:price_c).value I18n.t("activerecord.attributes.offer_request_item.price_c")
+	header.item(:amount_c).value I18n.t("activerecord.attributes.offer_request_item.amount_c")
+	header.item(:tax_c).value I18n.t("activerecord.attributes.offer_request_item.tax_c")
+end
+
+# List detail
+no = 0
+@items.each do |i|
+	report.page.list(:default).add_row do |row|
+		no = no + 1
+    	row.item(:no).value no
+    	row.item(:product).value i.product.full_code unless i.product.blank?
+    	row.item(:description).value i.description unless i.description.blank?
+    	row.item(:quantity).value number_with_precision(i.quantity, precision: 4) unless i.quantity.blank?
+    	row.item(:price).value number_with_precision(i.price, precision: 4) unless i.price.blank?
+    	row.item(:amount).value number_with_precision(i.amount, precision: 4) unless i.amount.blank?
+    	row.item(:tax).value number_with_precision(i.tax, precision: 4) unless i.tax.blank?
+	end
+	# Store page subtotals
+    report.page.list(:default) do |list|
+		list.store.page_quantity += i.quantity
+		list.store.page_amount += i.amount
+		list.store.page_tax += i.tax
+    end	
+end

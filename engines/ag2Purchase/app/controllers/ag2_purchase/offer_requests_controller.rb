@@ -534,6 +534,7 @@ module Ag2Purchase
       # Search offer request & items
       @offer_request = OfferRequest.find(params[:id])
       @items = @offer_request.offer_request_items.order('id')
+      @suppliers = @offer_request.offer_request_suppliers.order('id')
 
       title = t("activerecord.models.offer_request.one")      
 

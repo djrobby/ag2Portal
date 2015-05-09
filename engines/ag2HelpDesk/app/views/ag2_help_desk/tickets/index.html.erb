@@ -83,6 +83,9 @@
 
     <div class="span3">
       <div class="well sidebar-nav">
+        <!-- Refresh -->
+        <%= link_to ag2_help_desk.tickets_path, title: I18n.t("ag2_help_desk.tickets.index.refresh"), class: "icon-refresh-link", remote: true do %> <i class="icon-refresh"></i> <% end %>
+        <!-- Search form -->
         <%= form_tag "tickets", :method => 'get', :remote => true do %>
         <!-- Nº -->
         <%= label_tag I18n.t("activerecord.attributes.ticket.id"), nil, :class => 'form-label' %>
@@ -123,8 +126,6 @@
         <% end %>
         <!-- New -->
         <%= render :partial => '/layouts/ag2_help_desk/crud/ticket_new', :locals => { :txt => I18n.t("ag2_help_desk.tickets.index.btn_new") } %>
-        <!-- Refresh -->
-        <%= link_to I18n.t("ag2_help_desk.tickets.index.refresh"), ag2_help_desk.tickets_path, remote: true %><br />
         <!-- Back -->
         <%= link_to I18n.t("ag2_help_desk.tickets.index.back_to_root"), ag2_help_desk.root_path %>
       </div><!-- /.sidebar-nav -->

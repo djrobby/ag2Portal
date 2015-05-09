@@ -44,6 +44,7 @@ es:
   dd_files_message: "Deja los archivos aquí"
   every_report:
     pt: "Página"
+    pt_plural: "Páginas"
     pd: "de"
     page_subtotals: "Subtotales Página"
     currency_note: "Todos los importes están expresados en Euros (salvo indicación en contrario)"
