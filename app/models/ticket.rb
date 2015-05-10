@@ -9,7 +9,7 @@ class Ticket < ActiveRecord::Base
   attr_accessible :assign_at, :status_changed_at, :status_changed_message, :ticket_message, :ticket_subject,
                   :ticket_category_id, :ticket_priority_id, :ticket_status_id, :technician_id, :office_id,
                   :attachment, :created_by, :updated_by, :source_ip, :hd_email, :organization_id, :cc_id
-  has_attached_file :attachment, :styles => { :medium => "192x192>", :small => "128x128>" }, :default_url => "/images/missing/:style/ticket.png"
+  has_attached_file :attachment, :styles => { :medium => "192x192>", :small => "128x128>", :pdf_thumbnail => ["", :jpg] }, :default_url => "/images/missing/:style/ticket.png"
 
   has_paper_trail
 
@@ -22,8 +22,9 @@ class Ticket < ActiveRecord::Base
   validates :status_changed_message,  :presence => true, :if => :status_message_required?
   validates :organization,            :presence => true
 
-  validates_attachment_content_type :attachment, :content_type => /\Aimage\/.*\Z/
-
+  validates_attachment_content_type :attachment, :content_type => [/\Aimage\/.*\Z/, 'application/pdf'], :message => :attachment_invalid
+  #validates_attachment_content_type :attachment, :content_type => ['image/jpeg', 'image/png', 'image/gif', 'application/pdf']
+  
   before_create :assign_default_status_and_office
   after_create :send_create_email
   before_update :status_changed

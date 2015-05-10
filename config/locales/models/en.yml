@@ -6,6 +6,8 @@ en:
           attributes:
             product_code:
               code_invalid: "invalid"
+            image:
+              attachment_invalid: "invalid (must be JPG, PNG, GIF or BMP)"
         product_family:
           attributes:
             family_code:
@@ -26,6 +28,10 @@ en:
           attributes:
             request_no:
               code_invalid: "invalid"
+        offer:
+          attributes:
+            attachment:
+              attachment_invalid: "invalid (must be JPG, PNG, GIF or BMP)"
         purchase_order:
           attributes:
             order_no:
@@ -70,3 +76,7 @@ en:
           attributes:
             code:
               code_invalid: "invalid (must be one numeric digit)"
+        ticket:
+          attributes:
+            attachment:
+              attachment_invalid: "invalid (must be JPG, PNG, GIF or BMP)"
