@@ -137,11 +137,9 @@ Ag2Purchase::Engine.routes.draw do
     #match 'offer_requests/or_update_amount_from_price_or_quantity/:price/:qty/:tax_type/:discount_p/:discount/:product', :controller => 'offer_requests', :action => 'or_update_amount_from_price_or_quantity'
     #match 'or_update_amount_from_price_or_quantity/:price/:qty/:tax_type/:discount_p/:discount/:product', :controller => 'offer_requests', :action => 'or_update_amount_from_price_or_quantity'
     #match 'offer_requests/:id/or_update_amount_from_price_or_quantity/:price/:qty/:tax_type/:discount_p/:discount/:product', :controller => 'offer_requests', :action => 'or_update_amount_from_price_or_quantity'
-
     match 'offer_requests/or_update_amount_from_price_or_quantity/:price/:qty/:tax_type/:product', :controller => 'offer_requests', :action => 'or_update_amount_from_price_or_quantity'
     match 'or_update_amount_from_price_or_quantity/:price/:qty/:tax_type/:product', :controller => 'offer_requests', :action => 'or_update_amount_from_price_or_quantity'
     match 'offer_requests/:id/or_update_amount_from_price_or_quantity/:price/:qty/:tax_type/:product', :controller => 'offer_requests', :action => 'or_update_amount_from_price_or_quantity'
-
     match 'offer_requests/or_update_charge_account_from_order/:order', :controller => 'offer_requests', :action => 'or_update_charge_account_from_order'
     match 'or_update_charge_account_from_order/:price/:qty/:order', :controller => 'offer_requests', :action => 'or_update_charge_account_from_order'
     match 'offer_requests/:id/or_update_charge_account_from_order/:order', :controller => 'offer_requests', :action => 'or_update_charge_account_from_order'
@@ -204,6 +202,10 @@ Ag2Purchase::Engine.routes.draw do
     match 'offers/of_generate_order/:offer', :controller => 'offers', :action => 'of_generate_order'
     match 'of_generate_order/:offer', :controller => 'offers', :action => 'of_generate_order'
     match 'offers/:id/of_generate_order/:offer', :controller => 'offers', :action => 'of_generate_order'
+
+    match 'offers/of_update_request_select_from_supplier/:supplier', :controller => 'offers', :action => 'of_update_request_select_from_supplier'
+    match 'of_update_request_select_from_supplier/:supplier', :controller => 'offers', :action => 'of_update_request_select_from_supplier'
+    match 'offers/:id/of_update_request_select_from_supplier/:supplier', :controller => 'offers', :action => 'of_update_request_select_from_supplier'
 
     # Resources
     resources :suppliers

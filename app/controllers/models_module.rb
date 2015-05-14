@@ -42,4 +42,12 @@ module ModelsModule
     end
     tt
   end
+
+  #
+  # Formatting
+  #
+  def formatted_date(_date)
+    _format = I18n.locale == :es ? "%d/%m/%Y" : "%m-%d-%Y"
+    _date.strftime(_format)
+  end
 end

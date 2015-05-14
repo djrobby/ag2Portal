@@ -1,4 +1,6 @@
 class Offer < ActiveRecord::Base
+  include ModelsModule
+
   belongs_to :offer_request
   belongs_to :supplier
   belongs_to :payment_method
@@ -51,7 +53,7 @@ class Offer < ActiveRecord::Base
       full_name += self.offer_no
     end
     if !self.offer_date.blank?
-      full_name += " " + self.offer_date.to_s
+      full_name += " " + formatted_date(self.offer_date)
     end
     if !self.supplier.blank?
       full_name += " " + self.supplier.full_name

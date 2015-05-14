@@ -58,12 +58,12 @@
         if (!p.length) {
           $.each(data, function(id, option) {
             if (id == 'order' && option != "") {
-              $(_this).closest('tr').find('.fnt-purchase-order').append($('<option></option>').val(option[0]).html(option[1] + " " + es_date(option[2]) + " " + option[3]));
+              $(_this).closest('tr').find('.fnt-purchase-order').append($('<option></option>').val(option[0]).html(option[1] + " " + option[2] + " " + option[3]));
             }
           });
         } else {
           $.each(p, function(id, option) {
-            $(_this).closest('tr').find('.fnt-purchase-order').append($('<option></option>').val(option[0]).html(option[1] + " " + es_date(option[2]) + " " + option[3]));
+            $(_this).closest('tr').find('.fnt-purchase-order').append($('<option></option>').val(option[0]).html(option[1] + " " + option[2] + " " + option[3]));
           });
         }
       });

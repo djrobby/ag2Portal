@@ -18,7 +18,16 @@ class ApplicationController < ActionController::Base
   helper_method :sort_direction
   helper_method :init_oco
   helper_method :current_oco
-
+  helper_method :formatted_date
+  
+  #
+  # Formatting
+  #
+  def formatted_date(_date)
+    _format = I18n.locale == :es ? "%d/%m/%Y" : "%m-%d-%Y"
+    _date.strftime(_format)
+  end
+  
   #
   # OCO
   #

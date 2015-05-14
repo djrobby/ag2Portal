@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150424110604) do
+ActiveRecord::Schema.define(:version => 20150514161829) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -763,12 +763,12 @@ ActiveRecord::Schema.define(:version => 20150424110604) do
     t.string   "offer_no"
     t.date     "offer_date"
     t.string   "remarks"
-    t.datetime "created_at",                                                        :null => false
-    t.datetime "updated_at",                                                        :null => false
+    t.datetime "created_at",                                                              :null => false
+    t.datetime "updated_at",                                                              :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
-    t.decimal  "discount_pct",      :precision => 6,  :scale => 2, :default => 0.0, :null => false
-    t.decimal  "discount",          :precision => 13, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "discount_pct",            :precision => 6,  :scale => 2, :default => 0.0, :null => false
+    t.decimal  "discount",                :precision => 13, :scale => 4, :default => 0.0, :null => false
     t.integer  "project_id"
     t.integer  "store_id"
     t.integer  "work_order_id"
@@ -776,6 +776,10 @@ ActiveRecord::Schema.define(:version => 20150424110604) do
     t.integer  "organization_id"
     t.integer  "approver_id"
     t.datetime "approval_date"
+    t.string   "attachment_file_name"
+    t.string   "attachment_content_type"
+    t.integer  "attachment_file_size"
+    t.datetime "attachment_updated_at"
   end
 
   add_index "offers", ["approver_id"], :name => "index_offers_on_approver_id"

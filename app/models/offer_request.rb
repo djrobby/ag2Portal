@@ -51,10 +51,7 @@ class OfferRequest < ActiveRecord::Base
       full_name += self.request_no
     end
     if !self.request_date.blank?
-      full_name += " " + self.request_date
-    end
-    if !self.project.blank?
-      full_name += " " + self.project.full_name
+      full_name += " " + formatted_date(self.request_date)
     end
     full_name
   end

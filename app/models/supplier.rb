@@ -25,6 +25,7 @@ class Supplier < ActiveRecord::Base
   has_many :receipt_notes
   has_many :purchase_orders
   has_many :offer_request_suppliers
+  has_many :offer_requests, through: :offer_request_suppliers
   has_many :offers
   has_many :supplier_invoices
   has_many :supplier_payments

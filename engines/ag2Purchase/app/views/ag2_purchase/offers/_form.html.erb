@@ -70,6 +70,7 @@
         order = "0";
       jQuery.getJSON('of_update_project_textfields_from_organization/' + order, function(data) {
         var c = data.supplier;
+        var r = data.offer_request;
         var p = data.project;
         var w = data.work_order;
         var h = data.charge_account
@@ -88,6 +89,21 @@
         } else {
           $.each(c, function(id, option) {
             $("#offer_supplier_id").append($('<option></option>').val(option.id).html(option.supplier_code.substring(0,4) + "-" + option.supplier_code.substring(4,8) + "-" + option.supplier_code.substring(8,14) + " " + option.name));
+          });
+        }
+        // Offer request
+        $("#offer_offer_request_id").html("");
+        $("#offer_offer_request_id").select2("val", "");
+        $("#offer_offer_request_id").append($('<option></option>').val("").html(""));
+        if (!r.length) {
+          $.each(data, function(id, option) {
+            if (id == 'offer_request' && option != "") {
+              $("#offer_offer_request_id").append($('<option></option>').val(option[0]).html(option[1] + " " + option[2]));
+            }
+          });
+        } else {
+          $.each(r, function(id, option) {
+            $("#offer_offer_request_id").append($('<option></option>').val(option[0]).html(option[1] + " " + option[2]));
           });
         }
         // Project
@@ -117,7 +133,7 @@
           });
         } else {
           $.each(w, function(id, option) {
-            $("#offer_work_order_id").append($('<option></option>').val(option.id).html(option.offer_no.substring(0,10) + "-" + option.offer_no.substring(10,14) + "-" + option.offer_no.substring(14,20) + " " + option.description.substring(0,41)));
+            $("#offer_work_order_id").append($('<option></option>').val(option.id).html(option.order_no.substring(0,10) + "-" + option.order_no.substring(10,14) + "-" + option.order_no.substring(14,20) + " " + option.description.substring(0,41)));
           });
         }
         // Charge account
@@ -180,12 +196,21 @@
       if (supplier == "")
         supplier = "0";
       jQuery.getJSON('of_update_request_select_from_supplier/' + supplier, function(data) {
+        var r = data.offer_request;
         $("#offer_offer_request_id").html("");
         $("#offer_offer_request_id").select2("val", "");
         $("#offer_offer_request_id").append($('<option></option>').val("").html(""));
-        $.each(data, function(id, option) {
-          $("#offer_offer_request_id").append($('<option></option>').val(option.id).html(option.offer_no + ' ' + option.offer_date + ' ' + option.supplier.name));
-        });
+        if (!r.length) {
+          $.each(data, function(id, option) {
+            if (id == 'offer_request' && option != "") {
+              $("#offer_offer_request_id").append($('<option></option>').val(option[0]).html(option[1] + " " + option[2]));
+            }
+          });
+        } else {
+          $.each(r, function(id, option) {
+            $("#offer_offer_request_id").append($('<option></option>').val(option[0]).html(option[1] + " " + option[2]));
+          });
+        }
         //$("#offer_offer_request_id").val(data.id);
       });
       return false;
@@ -275,7 +300,7 @@
             newCol.appendTo(newRow);
           });
           // :discount_pct
-          num = parseInt(right_number(option.discount_pct, 2) * 100);
+          num = parseInt(right_number('0', 2) * 100);
           jQuery.getJSON('of_format_number/' + num, function(num_data) {
             newCol = $('<td/>');
             css = 'sub-number-text-field fnt-discount-pct'
@@ -284,7 +309,7 @@
             newCol.appendTo(newRow);
           });
           // :discount
-          num = parseInt(right_number(option.discount, 4) * 10000);
+          num = parseInt(right_number('0', 4) * 10000);
           jQuery.getJSON('of_format_number_4/' + num, function(num_data) {
             newCol = $('<td/>');
             css = 'sub-number-text-field fnt-discount'
@@ -293,7 +318,7 @@
             newCol.appendTo(newRow);
           });
           // :amount
-          num = parseInt(right_number(option.amount, 4) * 10000);
+          num = parseInt(right_number((option.price * option.quantity).toString(), 4) * 10000);
           jQuery.getJSON('of_format_number_4/' + num, function(num_data) {
             newCol = $('<td/>');
             css = 'sub-number-text-field sub-disabled-field fnt-amount'

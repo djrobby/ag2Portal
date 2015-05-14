@@ -16,6 +16,7 @@ module Ag2Purchase
                                                :of_current_stock,
                                                :of_update_project_textfields_from_organization,
                                                :of_update_items_table_from_request,
+                                               :of_update_request_select_from_supplier,
                                                :of_generate_order]
     # Calculate and format totals properly
     def of_totals
@@ -248,7 +249,11 @@ module Ag2Purchase
         @payment_methods = payment_methods_dropdown
         @products = products_dropdown
       end
-      @json_data = { "supplier" => @suppliers, "project" => @projects, "work_order" => @work_orders,
+      # Offer requests array
+      @requests_dropdown = offer_requests_array(@offer_requests)
+      # Setup JSON
+      @json_data = { "supplier" => @suppliers, "offer_request" => @requests_dropdown,
+                     "project" => @projects, "work_order" => @work_orders,
                      "charge_account" => @charge_accounts, "store" => @stores,
                      "payment_method" => @payment_methods, "product" => @products }
       render json: @json_data
@@ -259,9 +264,25 @@ module Ag2Purchase
       request = params[:request]
       @request_items = nil
       if request != '0'
-        @request_items = OfferRequest.find(_request).offer_request_items.order(:id)
+        @request_items = OfferRequest.find(request).offer_request_items.order(:id)
       end
       render json: @request_items
+    end
+
+    # Update offer request select at view from supplier
+    def of_update_request_select_from_supplier
+      supplier = params[:supplier]
+      if supplier != '0'
+        @supplier = Supplier.find(supplier)
+        @offer_requests = @supplier.blank? ? offer_requests_dropdown : @supplier.offer_requests(:request_no)
+      else
+        @offer_requests = offer_requests_dropdown
+      end
+      # Offer requests array
+      @requests_dropdown = offer_requests_array(@offer_requests)
+      # Setup JSON
+      @json_data = { "offer_request" => @requests_dropdown }
+      render json: @json_data
     end
 
     # Generate purchase order
@@ -603,6 +624,14 @@ module Ag2Purchase
     def offer_requests_dropdown
       session[:organization] != '0' ? OfferRequest.where(organization_id: session[:organization].to_i).order(:request_no) : OfferRequest.order(:request_no)
     end    
+    
+    def offer_requests_array(_requests)
+      _requests_array = []
+      _requests.each do |i|
+        _requests_array = _requests_array << [i.id, i.full_no, formatted_date(i.request_date)] 
+      end
+      _requests_array
+    end
     
     # Keeps filter state
     def manage_filter_state

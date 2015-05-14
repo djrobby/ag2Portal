@@ -230,10 +230,7 @@ module Ag2Tech
         @orders = orders_dropdown
       end
       # Purchase orders array
-      @orders_dropdown = []
-      @orders.each do |i|
-        @orders_dropdown = @orders_dropdown << [i.id, i.full_no, i.order_date.strftime("%d/%m/%Y"), i.supplier.full_name] 
-      end
+      @orders_dropdown = orders_array(@orders)
       # Format numbers
       cost = number_with_precision(cost.round(4), precision: 4)
       costs = number_with_precision(costs.round(4), precision: 4)
@@ -730,6 +727,14 @@ module Ag2Tech
       _current_projects
     end
     
+    def orders_array(_orders)
+      _orders_array = []
+      _orders.each do |i|
+        _orders_array = _orders_array << [i.id, i.full_no, i.order_date.strftime("%d/%m/%Y"), i.supplier.full_name] 
+      end
+      _orders_array
+    end
+    
     def project_stores(_project)
       if !_project.company.blank? && !_project.office.blank?
         _store = Store.where("(company_id = ? AND office_id = ?) OR (company_id IS NULL AND NOT supplier_id IS NULL)", _project.company.id, _project.office.id).order(:name)
@@ -886,6 +891,14 @@ module Ag2Tech
         _a = orders_dropdown
       end
       _a
+    end
+    
+    def orders_array(_orders)
+      _orders_array = []
+      _orders.each do |i|
+        _orders_array = _orders_array << [i.id, i.full_no, formatted_date(i.order_date), i.supplier.full_name] 
+      end
+      _orders_array
     end
 
     def tools_dropdown

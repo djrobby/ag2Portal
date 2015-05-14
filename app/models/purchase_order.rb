@@ -49,7 +49,7 @@ class PurchaseOrder < ActiveRecord::Base
   def full_name
     full_name = full_no
     if !self.order_date.blank?
-      full_name += " " + self.order_date.to_s
+      full_name += " " + formatted_date(self.order_date)
     end
     if !self.supplier.blank?
       full_name += " " + self.supplier.full_name
@@ -69,7 +69,7 @@ class PurchaseOrder < ActiveRecord::Base
     # Order no (Project code & year & sequential number) => PPPPPPPPPPPP-YYYY-NNNNNN
     order_no.blank? ? "" : order_no[0..11] + '-' + order_no[12..15] + '-' + order_no[16..21]
   end
-
+  
   #
   # Calculated fields
   #
