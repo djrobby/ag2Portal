@@ -7,7 +7,7 @@ class Technician < ActiveRecord::Base
   has_paper_trail
 
   validates :name,          :presence => true
-  validates :user,          :presence => true,
+  validates :user_id,       :presence => true,
                             :uniqueness => { :scope => :organization_id }
   validates :organization,  :presence => true
 

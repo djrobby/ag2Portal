@@ -17,7 +17,7 @@
   <% end %>
   <% if @technician %>
   <li>
-    <a href="<%= ticket_statuses_path %>"><%=t :"ag2_help_desk.breadcrumb.technicians.items" %></a><span class="divider">></span>
+    <a href="<%= technicians_path %>"><%=t :"ag2_help_desk.breadcrumb.technicians.items" %></a><span class="divider">></span>
   </li>
   <% if @breadcrumb == 'read' || @breadcrumb == 'update' %>
   <%=t :"ag2_help_desk.breadcrumb.technicians.item" %>
