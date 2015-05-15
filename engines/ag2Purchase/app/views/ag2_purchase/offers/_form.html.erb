@@ -1,6 +1,7 @@
 <script>
   var text_field_color;
   var _thisForm = '';
+  var _nestedForm;
   
   $(document).ready(function() {
     $('select.sel2').select2({
@@ -42,6 +43,14 @@
       $('#offer_offer_no').prop('readonly', true);
     } else {
       $('#offer_offer_no').prop('readonly', false);
+    }
+    
+    /*
+     * Very special!
+     * Add new item table rows from selected offer request
+     */
+    if ($('.fields').length) {
+      _nestedForm = $('.fields').last().clone();
     }
   });
   
@@ -327,10 +336,11 @@
           });
         }
         if (m_id != 0) $("#offer_payment_method_id").select2("val", m_id);
+        
         /*
          * Table objects
          */
-        var table = '#items-table';
+        var table = '#items-table tbody';
         var tr = $('<tr>', { class: 'fields' });
         var td = $('<td>');
         var link = $('<a>', {
@@ -353,7 +363,6 @@
         
         /*
          * Add new rows
-         */
         $.each(items, function(id, option) {
           newRow = tr.clone();
           
@@ -466,6 +475,7 @@
 
           newRow.appendTo(table);
         });
+         */
       });
       // Update and display totals
       $('#items-table').trigger('totals');
