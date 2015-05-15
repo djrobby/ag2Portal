@@ -127,7 +127,7 @@
         $("#offer_work_order_id").append($('<option></option>').val("").html(""));
         if (!w.length) {
           $.each(data, function(id, option) {
-            if (id == 'type' && option != "") {
+            if (id == 'work_order' && option != "") {
               $("#offer_work_order_id").append($('<option></option>').val(option.id).html(option.order_no.substring(0,10) + "-" + option.order_no.substring(10,14) + "-" + option.order_no.substring(14,20) + " " + option.description.substring(0,41)));
             }
           });
@@ -233,6 +233,100 @@
       if (request == "")
         request = "0";
       jQuery.getJSON('of_update_items_table_from_request/' + request, function(data) {
+        var p = data.project;
+        var w = data.work_order;
+        var h = data.charge_account
+        var s = data.store
+        var m = data.payment_method
+        var items = data.request_items;
+        var p_id = data.project_id;
+        var w_id = data.work_order_id;
+        var c_id = data.charge_account_id;
+        var s_id = data.store_id;
+        var m_id = data.payment_method_id;
+        /*
+         * Linked selects
+         */
+        // Project
+        $("#offer_project_id").html("");
+        $("#offer_project_id").select2("val", "");
+        $("#offer_project_id").append($('<option></option>').val("").html(""));
+        if (!p.length) {
+          $.each(data, function(id, option) {
+            if (id == 'project' && option != "") {
+              $("#offer_project_id").append($('<option></option>').val(option.id).html(option.project_code.substring(0,3) + "-" + option.project_code.substring(3,6) + "-" + option.project_code.substring(6,12) + " " + option.name));
+            }
+          });
+        } else {
+          $.each(p, function(id, option) {
+            $("#offer_project_id").append($('<option></option>').val(option.id).html(option.project_code.substring(0,3) + "-" + option.project_code.substring(3,6) + "-" + option.project_code.substring(6,12) + " " + option.name));
+          });
+        }
+        if (p_id != 0) $("#offer_project_id").select2("val", p_id);
+        // Work order
+        $("#offer_work_order_id").html("");
+        $("#offer_work_order_id").select2("val", "");
+        $("#offer_work_order_id").append($('<option></option>').val("").html(""));
+        if (!w.length) {
+          $.each(data, function(id, option) {
+            if (id == 'work_order' && option != "") {
+              $("#offer_work_order_id").append($('<option></option>').val(option.id).html(option.order_no.substring(0,10) + "-" + option.order_no.substring(10,14) + "-" + option.order_no.substring(14,20) + " " + option.description.substring(0,41)));
+            }
+          });
+        } else {
+          $.each(w, function(id, option) {
+            $("#offer_work_order_id").append($('<option></option>').val(option.id).html(option.order_no.substring(0,10) + "-" + option.order_no.substring(10,14) + "-" + option.order_no.substring(14,20) + " " + option.description.substring(0,41)));
+          });
+        }
+        if (w_id != 0) $("#offer_work_order_id").select2("val", w_id);
+        // Charge account
+        $("#offer_charge_account_id").html("");
+        $("#offer_charge_account_id").select2("val", "");
+        $("#offer_charge_account_id").append($('<option></option>').val("").html(""));
+        if (!h.length) {
+          $.each(data, function(id, option) {
+            if (id == 'charge_account' && option != "") {
+              $("#offer_charge_account_id").append($('<option></option>').val(option.id).html(option.account_code.substring(0,4) + "-" + option.account_code.substring(4,11) + " " + option.name));
+            }
+          });
+        } else {
+          $.each(h, function(id, option) {
+            $("#offer_charge_account_id").append($('<option></option>').val(option.id).html(option.account_code.substring(0,4) + "-" + option.account_code.substring(4,11) + " " + option.name));
+          });
+        }
+        if (c_id != 0) $("#offer_charge_account_id").select2("val", c_id);
+        // Store
+        $("#offer_store_id").html("");
+        $("#offer_store_id").select2("val", "");
+        $("#offer_store_id").append($('<option></option>').val("").html(""));
+        if (!s.length) {
+          $.each(data, function(id, option) {
+            if (id == 'store' && option != "") {
+              $("#offer_store_id").append($('<option></option>').val(option.id).html(option.name));
+            }
+          });
+        } else {
+          $.each(s, function(id, option) {
+            $("#offer_store_id").append($('<option></option>').val(option.id).html(option.name));
+          });
+        }
+        if (s_id != 0) $("#offer_store_id").select2("val", s_id);
+        // Payment method
+        $("#offer_payment_method_id").html("");
+        $("#offer_payment_method_id").val("");
+        $("#offer_payment_method_id").append($('<option></option>').val("").html(""));
+        if (!m.length) {
+          $.each(data, function(id, option) {
+            if (id == 'payment_method' && option != "") {
+              $("#offer_payment_method_id").append($('<option></option>').val(option.id).html(option.description));
+            }
+          });
+        } else {
+          $.each(m, function(id, option) {
+            $("#offer_payment_method_id").append($('<option></option>').val(option.id).html(option.description));
+          });
+        }
+        if (m_id != 0) $("#offer_payment_method_id").select2("val", m_id);
         /*
          * Table objects
          */
@@ -260,20 +354,20 @@
         /*
          * Add new rows
          */
-        $.each(data, function(id, option) {
+        $.each(items, function(id, option) {
           newRow = tr.clone();
           
           // :product
           newCol = $('<td/>');
           css = 'isel2 fnt-product'
           newCol.addClass(css);
-          newCol.append(option.product_id);
+          newCol.append(option[1]);
           newCol.appendTo(newRow);
           // :description
           newCol = $('<td/>');
           css = 'sub-alfanumeric-text-field fnt-description'
           newCol.addClass(css);
-          newCol.append(option.description);
+          newCol.append(option[2]);
           newCol.appendTo(newRow);
           // :code
           newCol = $('<td style="display:none;"/>')
@@ -282,7 +376,7 @@
           newCol.append('');
           newCol.appendTo(newRow);
           // :quantity
-          num = parseInt(right_number(option.quantity, 4) * 10000);
+          num = parseInt(right_number(option[3], 4) * 10000);
           jQuery.getJSON('of_format_number_4/' + num, function(num_data) {
             newCol = $('<td/>');
             css = 'sub-number-text-field fnt-quantity'
@@ -291,7 +385,7 @@
             newCol.appendTo(newRow);
           });
           // :price
-          num = parseInt(right_number(option.price, 4) * 10000);
+          num = parseInt(right_number(option[4], 4) * 10000);
           jQuery.getJSON('of_format_number_4/' + num, function(num_data) {
             newCol = $('<td/>');
             css = 'sub-number-text-field fnt-price'
@@ -318,7 +412,7 @@
             newCol.appendTo(newRow);
           });
           // :amount
-          num = parseInt(right_number((option.price * option.quantity).toString(), 4) * 10000);
+          num = parseInt(right_number(option[5], 4) * 10000);
           jQuery.getJSON('of_format_number_4/' + num, function(num_data) {
             newCol = $('<td/>');
             css = 'sub-number-text-field sub-disabled-field fnt-amount'
@@ -330,10 +424,10 @@
           newCol = $('<td style="display:none;"/>')
           css = 'sub-alfanumeric-text-field fnt-tax-type'
           newCol.addClass(css);
-          newCol.append(option.tax_type_id);
+          newCol.append(option[6]);
           newCol.appendTo(newRow);
           // :tax
-          num = parseInt(right_number(option.tax, 4) * 10000);
+          num = parseInt(right_number(option[7], 4) * 10000);
           jQuery.getJSON('of_format_number_4/' + num, function(num_data) {
             newCol = $('<td/>');
             css = 'sub-number-text-field sub-disabled-field fnt-tax'
@@ -345,37 +439,42 @@
           newCol = $('<td style="display:none;"/>')
           css = 'isel2 fnt-work-order'
           newCol.addClass(css);
-          newCol.append(option.work_order_id);
+          newCol.append(option[8]);
           newCol.appendTo(newRow);
           // :project
           newCol = $('<td style="display:none;"/>')
           css = 'isel2 fnt-project'
           newCol.addClass(css);
-          newCol.append(option.project_id);
+          newCol.append(option[9]);
           newCol.appendTo(newRow);
           // :charge_account
           newCol = $('<td style="display:none;"/>')
           css = 'isel2 fnt-charge-account'
           newCol.addClass(css);
-          newCol.append(option.charge_account_id);
+          newCol.append(option[10]);
           newCol.appendTo(newRow);
           // :store
           newCol = $('<td style="display:none;"/>')
           css = 'isel2 fnt-store'
           newCol.addClass(css);
-          newCol.append(option.store_id);
+          newCol.append(option[11]);
           newCol.appendTo(newRow);
           // :_destroy
           newCol = $('<td/>');
           newCol.append(link);
           newCol.appendTo(newRow);
 
-          newRow.append(table);
+          newRow.appendTo(table);
         });
       });
       // Update and display totals
       $('#items-table').trigger('totals');
-      return false;
+      // Request not selected
+      if (request == "0") {
+        $("#offer_project_id").val(0);
+        $("#offer_project_id").trigger("change");
+      }
+      //return false;
     });
 
     // when the #offer_project_id field changes
@@ -400,7 +499,7 @@
           });
         } else {
           $.each(w, function(id, option) {
-            $("#offer_work_order_id").append($('<option></option>').val(option.id).html(option.offer_no.substring(0,10) + "-" + option.offer_no.substring(10,14) + "-" + option.offer_no.substring(14,20) + " " + option.description));
+            $("#offer_work_order_id").append($('<option></option>').val(option.id).html(option.order_no.substring(0,10) + "-" + option.order_no.substring(10,14) + "-" + option.order_no.substring(14,20) + " " + option.description));
           });
         }
         // Charge Account

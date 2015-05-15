@@ -7,26 +7,26 @@
     var _f = $("#fnt-product").closest('form')[0];
     // Project
     $("#fnt-project").html("");
-    $('#supplier_invoice_project_id option').clone().appendTo('#fnt-project');
-    var _p = $('#supplier_invoice_project_id :selected').val();
+    $('#offer_project_id option').clone().appendTo('#fnt-project');
+    var _p = $('#offer_project_id :selected').val();
     if (_p == "") _p = "0";
     $('#fnt-project').val(_p);
     // Work Order
     $("#fnt-work-order").html("");
-    $('#supplier_invoice_work_order_id option').clone().appendTo('#fnt-work-order');
-    var _o = $('#supplier_invoice_work_order_id :selected').val();
+    $('#offer_work_order_id option').clone().appendTo('#fnt-work-order');
+    var _o = $('#offer_work_order_id :selected').val();
     if (_o == "") _o = "0";
     $('#fnt-work-order').val(_o);
     // Charge Account
     $("#fnt-charge-account").html("");
-    $('#supplier_invoice_charge_account_id option').clone().appendTo('#fnt-charge-account');
-    var _c = $('#supplier_invoice_charge_account_id :selected').val();
+    $('#offer_charge_account_id option').clone().appendTo('#fnt-charge-account');
+    var _c = $('#offer_charge_account_id :selected').val();
     if (_c == "") _c = "0";
     $('#fnt-charge-account').val(_c);
     // Store
     $("#fnt-store").html("");
-    $('#supplier_invoice_store_id option').clone().appendTo('#fnt-store');
-    var _s = $('#supplier_invoice_store_id :selected').val();
+    $('#offer_store_id option').clone().appendTo('#fnt-store');
+    var _s = $('#offer_store_id :selected').val();
     if (_s == "") _s = "0";
     $('#fnt-store').val(_s);
 

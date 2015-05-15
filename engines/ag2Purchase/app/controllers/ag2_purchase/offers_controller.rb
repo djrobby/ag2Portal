@@ -263,10 +263,42 @@ module Ag2Purchase
     def of_update_items_table_from_request
       request = params[:request]
       @request_items = nil
+      project_id = 0
+      work_order_id = 0
+      charge_account_id = 0
+      store_id = 0
+      payment_method_id = 0
       if request != '0'
-        @request_items = OfferRequest.find(request).offer_request_items.order(:id)
+        @offer_request = OfferRequest.find(request)
+        @request_items = @offer_request.offer_request_items.order(:id) rescue nil
+        @projects = @offer_request.blank? ? projects_dropdown : @offer_request.project
+        @work_orders = @offer_request.blank? ? work_orders_dropdown : @offer_request.work_order
+        @charge_accounts = @offer_request.blank? ? charge_accounts_dropdown : @offer_request.charge_account
+        @stores = @offer_request.blank? ? stores_dropdown : @offer_request.store
+        @payment_methods = @offer_request.blank? ? payment_methods_dropdown : @offer_request.payment_method
+        project_id = @projects.id rescue 0
+        work_order_id = @work_orders.id rescue 0
+        charge_account_id = @charge_accounts.id rescue 0
+        store_id = @stores.id rescue 0
+        payment_method_id = @payment_methods.id rescue 0
+      else
+        @projects = projects_dropdown
+        @work_orders = work_orders_dropdown
+        @charge_accounts = charge_accounts_dropdown
+        @stores = stores_dropdown
+        @payment_methods = payment_methods_dropdown
       end
-      render json: @request_items
+      # Offer request items array
+      @items_dropdown = offer_request_items_array(@request_items)
+      # Setup JSON
+      @json_data = { "project" => @projects, "work_order" => @work_orders,
+                     "charge_account" => @charge_accounts, "store" => @stores,
+                     "payment_method" => @payment_methods, "request_items" => @items_dropdown,
+                     "project_id" => project_id, "work_order_id" => work_order_id,
+                     "charge_account_id" => charge_account_id, "store_id" => store_id,
+                     "payment_method_id" => payment_method_id }
+      render json: @json_data
+      #render json: @request_items
     end
 
     # Update offer request select at view from supplier
@@ -631,6 +663,15 @@ module Ag2Purchase
         _requests_array = _requests_array << [i.id, i.full_no, formatted_date(i.request_date)] 
       end
       _requests_array
+    end
+    
+    def offer_request_items_array(_items)
+      _items_array = []
+      _items.each do |i|
+        _items_array = _items_array << [i.id, i.product_id, i.description, i.quantity, i.price, i.amount, i.tax_type_id,
+                                        i.tax, i.work_order_id, i.project_id, i.charge_account_id, i.store_id] 
+      end
+      _items_array
     end
     
     # Keeps filter state
