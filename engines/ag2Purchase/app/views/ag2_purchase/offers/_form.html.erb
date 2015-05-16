@@ -352,11 +352,12 @@
         
         /*
          * Hide existing rows for disposal
+         */
         $('#items-table tr.fields').each(function() {
           _link = $(this).find('.icon-trash')
           remove_fields(_link);
         });
-         */
+
         /*
          * Add new rows
          */
@@ -391,48 +392,43 @@
           newCol.append(newObj);
           newCol.appendTo(newRow);
           // :quantity
-          num = parseInt(right_number(option[3], 4) * 10000);
           newCol = $('<td/>');
           newObj = $('<input type=\"text\" />');
           css = 'sub-number-text-field fnt-quantity'
           newObj.addClass(css);
-          newObj.val(num);
+          newObj.val(option[3]);
           newCol.append(newObj);
           newRow.append(newCol);
           // :price
-          num = parseInt(right_number(option[4], 4) * 10000);
           newCol = $('<td/>');
           newObj = $('<input type=\"text\" />');
           css = 'sub-number-text-field fnt-price'
           newObj.addClass(css);
-          newObj.val(num);
+          newObj.val(option[4]);
           newCol.append(newObj);
           newRow.append(newCol);
           // :discount_pct
-          num = 0;
           newCol = $('<td/>');
           newObj = $('<input type=\"text\" />');
           css = 'sub-number-text-field fnt-discount-pct'
           newObj.addClass(css);
-          newObj.val(num);
+          newObj.val(option[5]);
           newCol.append(newObj);
           newRow.append(newCol);
           // :discount
-          num = 0;
           newCol = $('<td/>');
           newObj = $('<input type=\"text\" />');
           css = 'sub-number-text-field fnt-discount'
           newObj.addClass(css);
-          newObj.val(num);
+          newObj.val(option[6]);
           newCol.append(newObj);
           newRow.append(newCol);
           // :amount
-          num = parseInt(right_number(option[5], 4) * 10000);
           newCol = $('<td/>');
           newObj = $('<input type=\"text\" />');
           css = 'sub-number-text-field sub-disabled-field fnt-amount'
           newObj.addClass(css);
-          newObj.val(num);
+          newObj.val(option[7]);
           newCol.append(newObj);
           newRow.append(newCol);
           // :tax_type
@@ -443,27 +439,29 @@
           $.each(taxes, function(i, o) {
             newObj.append($('<option></option>').val(o.id).html(o.description + " (" + o.tax + ")"));
           });
-          newObj.val(option[6]);
+          newObj.val(option[8]);
           newCol.append(newObj);
           newRow.append(newCol);
           // :tax
-          num = parseInt(right_number(option[7], 4) * 10000);
           newCol = $('<td/>');
           newObj = $('<input type=\"text\" />');
           css = 'sub-number-text-field sub-disabled-field fnt-tax'
           newObj.addClass(css);
-          newObj.val(num);
+          newObj.val(option[9]);
           newCol.append(newObj);
           newRow.append(newCol);
           // :work_order
+          w = data.work_order;
           newCol = $('<td style="display:none;"/>')
           newObj = $('<select/>');
           css = 'isel2 fnt-work-order'
           newObj.addClass(css);
-          $.each(w, function(i, o) {
-            //newObj.append($('<option></option>').val(o.id).html(o.order_no.substring(0,10) + "-" + o.order_no.substring(10,14) + "-" + o.order_no.substring(14,20) + " " + o.description.substring(0,41)));
+          $.each(data, function(i, o) {
+            if (i == 'work_order' && o != "") {
+              newObj.append($('<option></option>').val(p.id).html(o.order_no.substring(0,10) + "-" + o.order_no.substring(10,14) + "-" + o.order_no.substring(14,20) + " " + o.description.substring(0,41)));
+            }
           });
-          newObj.select2("val", option[8]);
+          newObj.select2("val", option[10]);
           newCol.append(newObj);
           newCol.appendTo(newRow);
           // :project
@@ -471,10 +469,12 @@
           newObj = $('<select/>');
           css = 'isel2 fnt-project'
           newObj.addClass(css);
-          $.each(p, function(i, o) {
-            //newObj.append($('<option></option>').val(o.id).html(o.project_code.substring(0,3) + "-" + o.project_code.substring(3,6) + "-" + o.project_code.substring(6,12) + " " + o.name));
+          $.each(data, function(i, o) {
+            if (i == 'project' && o != "") {
+              newObj.append($('<option></option>').val(o.id).html(o.project_code.substring(0,3) + "-" + o.project_code.substring(3,6) + "-" + o.project_code.substring(6,12) + " " + o.name));
+            }
           });
-          newObj.select2("val", option[9]);
+          newObj.select2("val", option[11]);
           newCol.append(newObj);
           newCol.appendTo(newRow);
           // :charge_account
@@ -482,10 +482,12 @@
           newObj = $('<select/>');
           css = 'isel2 fnt-charge-account'
           newObj.addClass(css);
-          $.each(h, function(i, o) {
-            //newObj.append($('<option></option>').val(o.id).html(o.account_code.substring(0,4) + "-" + o.account_code.substring(4,11) + " " + o.name));
+          $.each(data, function(i, o) {
+            if (i == 'charge_account' && o != "") {
+              newObj.append($('<option></option>').val(o.id).html(o.account_code.substring(0,4) + "-" + o.account_code.substring(4,11) + " " + o.name));
+            }
           });
-          newObj.select2("val", option[10]);
+          newObj.select2("val", option[12]);
           newCol.append(newObj);
           newCol.appendTo(newRow);
           // :store
@@ -493,10 +495,12 @@
           newObj = $('<select/>');
           css = 'isel2 fnt-store'
           newObj.addClass(css);
-          $.each(s, function(i, o) {
-            //newObj.append($('<option></option>').val(o.id).html(o.name));
+          $.each(data, function(i, o) {
+            if (i == 'store' && o != "") {
+              newObj.append($('<option></option>').val(o.id).html(o.name));
+            }
           });
-          newObj.select2("val", option[11]);
+          newObj.select2("val", option[13]);
           newCol.append(newObj);
           newCol.appendTo(newRow);
           // :_destroy
@@ -506,14 +510,16 @@
 
           /*
            * Format numbers
-          jQuery.getJSON('of_format_number_4/' + num, function(num_data) {
-            newCol = $('<td/>');
-            newObj = $('<input type=\"text\" />');
-            css = 'sub-number-text-field sub-disabled-field fnt-tax'
-            newObj.addClass(css);
-            newObj.val(num_data.num);
-            newCol.append(newObj);
-            newRow.append(newCol);
+          newRow.find('.sub-number-text-field').each(function() {
+            num = '0';
+            alert($(this).val());
+            if ($(this).hasClass('fnt-discount-pct')) {
+              num = right_number($(this).val(), 2);
+            } else {
+              num = right_number($(this).val(), 4);
+            }
+            alert(num);
+            $(this).val(num);
           });
            */
           
@@ -528,124 +534,6 @@
           dropdownAutoWidth: true,
           containerCssClass: 'sub-select2-field'
         });
-        
-
-        
-        /*
-         * Add new rows
-        $.each(items, function(id, option) {
-          newRow = tr.clone();
-          
-          // :product
-          newCol = $('<td/>');
-          css = 'isel2 fnt-product'
-          newCol.addClass(css);
-          newCol.append(option[1]);
-          newCol.appendTo(newRow);
-          // :description
-          newCol = $('<td/>');
-          css = 'sub-alfanumeric-text-field fnt-description'
-          newCol.addClass(css);
-          newCol.append(option[2]);
-          newCol.appendTo(newRow);
-          // :code
-          newCol = $('<td style="display:none;"/>')
-          css = 'sub-alfanumeric-text-field fnt-code'
-          newCol.addClass(css);
-          newCol.append('');
-          newCol.appendTo(newRow);
-          // :quantity
-          num = parseInt(right_number(option[3], 4) * 10000);
-          jQuery.getJSON('of_format_number_4/' + num, function(num_data) {
-            newCol = $('<td/>');
-            css = 'sub-number-text-field fnt-quantity'
-            newCol.addClass(css);
-            newCol.append(num_data.num);
-            newCol.appendTo(newRow);
-          });
-          // :price
-          num = parseInt(right_number(option[4], 4) * 10000);
-          jQuery.getJSON('of_format_number_4/' + num, function(num_data) {
-            newCol = $('<td/>');
-            css = 'sub-number-text-field fnt-price'
-            newCol.addClass(css);
-            newCol.append(num_data.num);
-            newCol.appendTo(newRow);
-          });
-          // :discount_pct
-          num = parseInt(right_number('0', 2) * 100);
-          jQuery.getJSON('of_format_number/' + num, function(num_data) {
-            newCol = $('<td/>');
-            css = 'sub-number-text-field fnt-discount-pct'
-            newCol.addClass(css);
-            newCol.append(num_data.num);
-            newCol.appendTo(newRow);
-          });
-          // :discount
-          num = parseInt(right_number('0', 4) * 10000);
-          jQuery.getJSON('of_format_number_4/' + num, function(num_data) {
-            newCol = $('<td/>');
-            css = 'sub-number-text-field fnt-discount'
-            newCol.addClass(css);
-            newCol.append(num_data.num);
-            newCol.appendTo(newRow);
-          });
-          // :amount
-          num = parseInt(right_number(option[5], 4) * 10000);
-          jQuery.getJSON('of_format_number_4/' + num, function(num_data) {
-            newCol = $('<td/>');
-            css = 'sub-number-text-field sub-disabled-field fnt-amount'
-            newCol.addClass(css);
-            newCol.append(num_data.num);
-            newCol.appendTo(newRow);
-          });
-          // :tax_type
-          newCol = $('<td style="display:none;"/>')
-          css = 'sub-alfanumeric-text-field fnt-tax-type'
-          newCol.addClass(css);
-          newCol.append(option[6]);
-          newCol.appendTo(newRow);
-          // :tax
-          num = parseInt(right_number(option[7], 4) * 10000);
-          jQuery.getJSON('of_format_number_4/' + num, function(num_data) {
-            newCol = $('<td/>');
-            css = 'sub-number-text-field sub-disabled-field fnt-tax'
-            newCol.addClass(css);
-            newCol.append(num_data.num);
-            newCol.appendTo(newRow);
-          });
-          // :work_order
-          newCol = $('<td style="display:none;"/>')
-          css = 'isel2 fnt-work-order'
-          newCol.addClass(css);
-          newCol.append(option[8]);
-          newCol.appendTo(newRow);
-          // :project
-          newCol = $('<td style="display:none;"/>')
-          css = 'isel2 fnt-project'
-          newCol.addClass(css);
-          newCol.append(option[9]);
-          newCol.appendTo(newRow);
-          // :charge_account
-          newCol = $('<td style="display:none;"/>')
-          css = 'isel2 fnt-charge-account'
-          newCol.addClass(css);
-          newCol.append(option[10]);
-          newCol.appendTo(newRow);
-          // :store
-          newCol = $('<td style="display:none;"/>')
-          css = 'isel2 fnt-store'
-          newCol.addClass(css);
-          newCol.append(option[11]);
-          newCol.appendTo(newRow);
-          // :_destroy
-          newCol = $('<td/>');
-          newCol.append(link);
-          newCol.appendTo(newRow);
-
-          newRow.appendTo(table);
-        });
-         */
       });
       // Update and display totals
       $('#items-table').trigger('totals');

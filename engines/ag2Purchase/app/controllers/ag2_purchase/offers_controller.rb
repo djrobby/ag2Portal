@@ -672,8 +672,15 @@ module Ag2Purchase
       _items_array = []
       if !_items.nil?
         _items.each do |i|
-          _items_array = _items_array << [i.id, i.product_id, i.description, i.quantity, i.price, i.amount, i.tax_type_id,
-                                          i.tax, i.work_order_id, i.project_id, i.charge_account_id, i.store_id] 
+          _items_array = _items_array << [i.id, i.product_id, i.description,
+                                          number_with_precision(i.quantity.round(4), precision: 4),
+                                          number_with_precision(i.price.round(4), precision: 4),
+                                          number_with_precision(0.round(2), precision: 2),
+                                          number_with_precision(0.round(4), precision: 4),
+                                          number_with_precision(i.amount.round(4), precision: 4),
+                                          i.tax_type_id,
+                                          number_with_precision(i.tax.round(4), precision: 4),
+                                          i.work_order_id, i.project_id, i.charge_account_id, i.store_id] 
         end
       end
       _items_array
