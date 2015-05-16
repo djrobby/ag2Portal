@@ -276,6 +276,7 @@ module Ag2Purchase
         @charge_accounts = @offer_request.blank? ? charge_accounts_dropdown : @offer_request.charge_account
         @stores = @offer_request.blank? ? stores_dropdown : @offer_request.store
         @payment_methods = @offer_request.blank? ? payment_methods_dropdown : @offer_request.payment_method
+        @products = @offer_request.blank? ? products_dropdown : @offer_request.organization.products.order(:product_code)
         project_id = @projects.id rescue 0
         work_order_id = @work_orders.id rescue 0
         charge_account_id = @charge_accounts.id rescue 0
@@ -287,18 +288,20 @@ module Ag2Purchase
         @charge_accounts = charge_accounts_dropdown
         @stores = stores_dropdown
         @payment_methods = payment_methods_dropdown
+        @products = products_dropdown
       end
+      @tax_types = TaxType.where('expiration IS NULL').order('description')
       # Offer request items array
       @items_dropdown = offer_request_items_array(@request_items)
       # Setup JSON
       @json_data = { "project" => @projects, "work_order" => @work_orders,
                      "charge_account" => @charge_accounts, "store" => @stores,
-                     "payment_method" => @payment_methods, "request_items" => @items_dropdown,
+                     "payment_method" => @payment_methods, "product" => @products,
+                     "tax_type" => @tax_types, "request_items" => @items_dropdown,
                      "project_id" => project_id, "work_order_id" => work_order_id,
                      "charge_account_id" => charge_account_id, "store_id" => store_id,
                      "payment_method_id" => payment_method_id }
       render json: @json_data
-      #render json: @request_items
     end
 
     # Update offer request select at view from supplier
@@ -667,9 +670,11 @@ module Ag2Purchase
     
     def offer_request_items_array(_items)
       _items_array = []
-      _items.each do |i|
-        _items_array = _items_array << [i.id, i.product_id, i.description, i.quantity, i.price, i.amount, i.tax_type_id,
-                                        i.tax, i.work_order_id, i.project_id, i.charge_account_id, i.store_id] 
+      if !_items.nil?
+        _items.each do |i|
+          _items_array = _items_array << [i.id, i.product_id, i.description, i.quantity, i.price, i.amount, i.tax_type_id,
+                                          i.tax, i.work_order_id, i.project_id, i.charge_account_id, i.store_id] 
+        end
       end
       _items_array
     end

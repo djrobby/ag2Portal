@@ -39,7 +39,7 @@ module ApplicationHelper
   # f:            The parent form - ie. f (usually the form in _form.html.erb)
   # association:  The association data object defined on parent model with accepts_nested_attributes_for (usually items) - ie. :purchase_order_items
   # fields_partial: Partial view name, the one in _item_fields.html.erb - ie. "item_fields" that contains the modal window
-  # modal:          Div id (modal window)
+  # modal:          Div id (modal window) - ie. "new-item-fields"
   # options: class: "btn btn-warning", title: t("ag2_purchase.purchase_orders.add_item")
   def link_to_add_fields(name, f, association, fields_partial, modal, options = {})
     sel2NoMatch = t("select2.no_matches")

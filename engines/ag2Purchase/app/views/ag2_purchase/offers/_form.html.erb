@@ -1,7 +1,7 @@
 <script>
   var text_field_color;
   var _thisForm = '';
-  var _nestedForm;
+  var nestedForm;
   
   $(document).ready(function() {
     $('select.sel2').select2({
@@ -49,8 +49,8 @@
      * Very special!
      * Add new item table rows from selected offer request
      */
+      nestedForm = $('#new-item-fields .modal-body').clone();
     if ($('.fields').length) {
-      _nestedForm = $('.fields').last().clone();
     }
   });
   
@@ -247,6 +247,8 @@
         var h = data.charge_account
         var s = data.store
         var m = data.payment_method
+        var prods = data.product
+        var taxes = data.tax_type
         var items = data.request_items;
         var p_id = data.project_id;
         var w_id = data.work_order_id;
@@ -347,19 +349,187 @@
             href: '#',
             onclick: 'remove_fields(this); $("#items-table").trigger("totals"); return false;'
         }).append($('<i>', { class: 'icon-trash' }));
-        //var link = $('<a>', {
-        //    href: '#',
-        //    onclick: 'remove_fields(this); return false;',
-        //    title: 'Delete this Item.'
-        //}).append($('<i>', { class: 'icon-trash' }));
         
         /*
          * Hide existing rows for disposal
-         */
         $('#items-table tr.fields').each(function() {
           _link = $(this).find('.icon-trash')
           remove_fields(_link);
         });
+         */
+        /*
+         * Add new rows
+         */
+        $.each(items, function(id, option) {
+          newRow = tr.clone();
+          
+          // :product
+          newCol = $('<td/>');
+          newObj = $('<select/>');
+          css = 'isel2 fnt-product'
+          newObj.addClass(css);
+          $.each(prods, function(i, o) {
+            newObj.append($('<option></option>').val(o.id).html(o.product_code.substring(0,4) + "-" + o.product_code.substring(4,6) + " " + o.main_description));
+          });
+          newObj.select2("val", option[1]);
+          newCol.append(newObj);
+          newCol.appendTo(newRow);
+          // :description
+          newCol = $('<td/>');
+          newObj = $('<input type=\"text\" />');
+          css = 'sub-alfanumeric-text-field fnt-description'
+          newObj.addClass(css);
+          newObj.val(option[2]);
+          newCol.append(newObj);
+          newCol.appendTo(newRow);
+          // :code
+          newCol = $('<td style=\"display:none;\"/>')
+          newObj = $('<input type=\"text\" />');
+          css = 'sub-alfanumeric-text-field fnt-code'
+          newObj.addClass(css);
+          newObj.val('');
+          newCol.append(newObj);
+          newCol.appendTo(newRow);
+          // :quantity
+          num = parseInt(right_number(option[3], 4) * 10000);
+          newCol = $('<td/>');
+          newObj = $('<input type=\"text\" />');
+          css = 'sub-number-text-field fnt-quantity'
+          newObj.addClass(css);
+          newObj.val(num);
+          newCol.append(newObj);
+          newRow.append(newCol);
+          // :price
+          num = parseInt(right_number(option[4], 4) * 10000);
+          newCol = $('<td/>');
+          newObj = $('<input type=\"text\" />');
+          css = 'sub-number-text-field fnt-price'
+          newObj.addClass(css);
+          newObj.val(num);
+          newCol.append(newObj);
+          newRow.append(newCol);
+          // :discount_pct
+          num = 0;
+          newCol = $('<td/>');
+          newObj = $('<input type=\"text\" />');
+          css = 'sub-number-text-field fnt-discount-pct'
+          newObj.addClass(css);
+          newObj.val(num);
+          newCol.append(newObj);
+          newRow.append(newCol);
+          // :discount
+          num = 0;
+          newCol = $('<td/>');
+          newObj = $('<input type=\"text\" />');
+          css = 'sub-number-text-field fnt-discount'
+          newObj.addClass(css);
+          newObj.val(num);
+          newCol.append(newObj);
+          newRow.append(newCol);
+          // :amount
+          num = parseInt(right_number(option[5], 4) * 10000);
+          newCol = $('<td/>');
+          newObj = $('<input type=\"text\" />');
+          css = 'sub-number-text-field sub-disabled-field fnt-amount'
+          newObj.addClass(css);
+          newObj.val(num);
+          newCol.append(newObj);
+          newRow.append(newCol);
+          // :tax_type
+          newCol = $('<td style=\"display:none;\"/>')
+          newObj = $('<select/>');
+          css = 'sub-alfanumeric-text-field fnt-tax-type'
+          newObj.addClass(css);
+          $.each(taxes, function(i, o) {
+            newObj.append($('<option></option>').val(o.id).html(o.description + " (" + o.tax + ")"));
+          });
+          newObj.val(option[6]);
+          newCol.append(newObj);
+          newRow.append(newCol);
+          // :tax
+          num = parseInt(right_number(option[7], 4) * 10000);
+          newCol = $('<td/>');
+          newObj = $('<input type=\"text\" />');
+          css = 'sub-number-text-field sub-disabled-field fnt-tax'
+          newObj.addClass(css);
+          newObj.val(num);
+          newCol.append(newObj);
+          newRow.append(newCol);
+          // :work_order
+          newCol = $('<td style="display:none;"/>')
+          newObj = $('<select/>');
+          css = 'isel2 fnt-work-order'
+          newObj.addClass(css);
+          $.each(w, function(i, o) {
+            //newObj.append($('<option></option>').val(o.id).html(o.order_no.substring(0,10) + "-" + o.order_no.substring(10,14) + "-" + o.order_no.substring(14,20) + " " + o.description.substring(0,41)));
+          });
+          newObj.select2("val", option[8]);
+          newCol.append(newObj);
+          newCol.appendTo(newRow);
+          // :project
+          newCol = $('<td style="display:none;"/>')
+          newObj = $('<select/>');
+          css = 'isel2 fnt-project'
+          newObj.addClass(css);
+          $.each(p, function(i, o) {
+            //newObj.append($('<option></option>').val(o.id).html(o.project_code.substring(0,3) + "-" + o.project_code.substring(3,6) + "-" + o.project_code.substring(6,12) + " " + o.name));
+          });
+          newObj.select2("val", option[9]);
+          newCol.append(newObj);
+          newCol.appendTo(newRow);
+          // :charge_account
+          newCol = $('<td style="display:none;"/>')
+          newObj = $('<select/>');
+          css = 'isel2 fnt-charge-account'
+          newObj.addClass(css);
+          $.each(h, function(i, o) {
+            //newObj.append($('<option></option>').val(o.id).html(o.account_code.substring(0,4) + "-" + o.account_code.substring(4,11) + " " + o.name));
+          });
+          newObj.select2("val", option[10]);
+          newCol.append(newObj);
+          newCol.appendTo(newRow);
+          // :store
+          newCol = $('<td style="display:none;"/>')
+          newObj = $('<select/>');
+          css = 'isel2 fnt-store'
+          newObj.addClass(css);
+          $.each(s, function(i, o) {
+            //newObj.append($('<option></option>').val(o.id).html(o.name));
+          });
+          newObj.select2("val", option[11]);
+          newCol.append(newObj);
+          newCol.appendTo(newRow);
+          // :_destroy
+          newCol = $('<td/>');
+          newCol.append(link);
+          newCol.appendTo(newRow);
+
+          /*
+           * Format numbers
+          jQuery.getJSON('of_format_number_4/' + num, function(num_data) {
+            newCol = $('<td/>');
+            newObj = $('<input type=\"text\" />');
+            css = 'sub-number-text-field sub-disabled-field fnt-tax'
+            newObj.addClass(css);
+            newObj.val(num_data.num);
+            newCol.append(newObj);
+            newRow.append(newCol);
+          });
+           */
+          
+          newRow.appendTo(table);
+        });
+
+        // Apply select2 to added row selects
+        $('select.isel2').select2('destroy');
+        $('select.isel2').select2({
+          formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+          dropdownCssClass: 'shrinked',
+          dropdownAutoWidth: true,
+          containerCssClass: 'sub-select2-field'
+        });
+        
+
         
         /*
          * Add new rows
