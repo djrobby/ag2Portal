@@ -15,7 +15,7 @@ class Offer < ActiveRecord::Base
                   :project_id, :store_id, :work_order_id, :charge_account_id,
                   :organization_id, :approver_id, :approval_date, :attachment
   attr_accessible :offer_items_attributes
-  has_attached_file :attachment, :styles => { :medium => "192x192>", :small => "128x128>", :pdf_thumbnail => ["", :jpg] }, :default_url => "/images/missing/:style/attachment.png"
+  has_attached_file :attachment, :styles => { :medium => "192x192>", :small => "128x128>" }, :default_url => "/images/missing/:style/attachment.png"
   
   has_many :offer_items, dependent: :destroy
   has_many :purchase_orders
@@ -39,7 +39,7 @@ class Offer < ActiveRecord::Base
   validates :project,         :presence => true
   validates :organization,    :presence => true
 
-  validates_attachment_content_type :attachment, :content_type => [/\Aimage\/.*\Z/, 'application/pdf'], :message => :attachment_invalid
+  validates_attachment_content_type :attachment, :content_type => /\Aimage\/.*\Z/, :message => :attachment_invalid
 
   before_destroy :check_for_dependent_records
 
