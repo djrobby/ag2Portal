@@ -15,6 +15,7 @@ es:
         btn_edit: "Editar Oferta"
         btn_delete: "Borrar Oferta"
         print: "Imprimir"
+        show_to: "Ver Solicitud de oferta"
       edit:
         title: "Editar Oferta"
         btn_show: "Ver Oferta"

@@ -18,6 +18,16 @@
       });
       return false;
     });
+
+    // when #print_report_btn is clicked
+    $("#print_report_btn").click(function() {
+      // make a POST call and get report
+      var id = $('#id').html();
+      if (id == "")
+        return;
+      //window.open("offer_form.pdf?id=" + id, "_blank");
+      return false;
+    });
   });  
 </script>
 
@@ -28,15 +38,21 @@
   <tbody>
     <tr>
       <td>Id:</td>
-      <td><%= @offer.id %></td>
+      <td id="id"><%= @offer.id %></td>
       <td><%=t 'activerecord.attributes.offer.offer_no' %>:</td>
       <td><b><%= @offer.offer_no %></b></td>
     </tr>
     <tr>
       <td><%=t 'activerecord.attributes.offer.offer_date' %>:</td>
-      <td><%= @offer.offer_date.strftime("%d/%m/%Y") unless @offer.offer_date.blank? %></td>
-      <td><%=t 'activerecord.attributes.offer.deadline_date' %>:</td>
-      <td><%= @offer.deadline_date.strftime("%d/%m/%Y") unless @offer.deadline_date.blank? %></td>
+      <td><%= formatted_date(@offer.offer_date) unless @offer.offer_date.blank? %></td>
+      <td><%=t 'activerecord.attributes.offer.payment_method' %>:</td>
+      <td> <%= @offer.payment_method.description %> </td>
+    </tr>
+    <tr>
+      <td><%=t 'activerecord.attributes.offer.supplier' %>:</td>
+      <td><%= @offer.supplier.full_name unless @offer.supplier.blank? %></td>
+      <td><%=t 'activerecord.attributes.offer.offer_request' %>:</td>
+      <td><%= @offer.offer_request.full_name unless @offer.offer_request.blank? %></td>
     </tr>
     <tr>
       <td><%=t 'activerecord.attributes.offer.project' %>:</td>
@@ -51,14 +67,8 @@
       <td> <%= @offer.store.name unless @offer.store.blank? %> </td>
     </tr>
     <tr>
-      <td><%=t 'activerecord.attributes.offer.payment_method' %>:</td>
-      <td> <%= @offer.payment_method.description %> </td>
-      <td><%=t 'activerecord.attributes.offer.approved_offer' %>:</td>
-      <td> <%= @offer.approved_offer.full_name unless @offer.approved_offer.blank? %> </td>
-    </tr>
-    <tr>
       <td><%=t 'activerecord.attributes.offer.approval_date' %>:</td>
-      <td><%= @offer.approval_date.strftime("%d/%m/%Y") unless @offer.approval_date.blank? %></td>
+      <td><%= formatted_timestamp(@offer.approval_date) unless @offer.approval_date.blank? %></td>
       <td><%=t 'activerecord.attributes.offer.approver' %>:</td>
       <td> <%= @offer.approver.email unless @offer.approver.blank? %> </td>
     </tr>
@@ -75,7 +85,7 @@
         <h4><%= t 'ag2_purchase.offers.items_info' %></h4>
       </td>
       <td class="form-td-two right-winged">
-        <%= link_to t(".print"), offers_path, :class => 'btn btn-warning' %>
+        <a href="#" id="print_report_btn" class="btn btn-warning"><i class="icon-print icon-white"></i> <%= t '.print' %></a>
       </td>
     </tr>
   </tbody>
@@ -107,12 +117,24 @@
   </tbody>
 </table>
 
-<%= render partial: '/layouts/crud/update_delete_new', locals:
-{ model: Offer, update_path: edit_offer_path(@offer), update_txt: t('.btn_edit'),
-delete_path: @offer, delete_txt: t('.btn_delete'), msg: t("activerecord.models.offer.one"), txt: @offer.offer_no,
-new_path: new_offer_path, new_txt: t('ag2_purchase.offers.index.btn_new') } %>
-
-<!-- Generate purchase order -->
-<a href="#" id="generate_order" class="btn btn-warning"><%=t 'ag2_purchase.offers.generate_order_btn' %></a>
-
+<!-- Buttons -->
+<table class="form-table">
+  <tbody>
+    <tr class="form-tr">
+      <td class="form-td-two left-winged">
+        <%= render partial: '/layouts/crud/update_delete_new_no_br', locals:
+        { model: Offer, update_path: edit_offer_path(@offer), update_txt: t('.btn_edit'),
+        delete_path: @offer, delete_txt: t('.btn_delete'), msg: t("activerecord.models.offer.one"), txt: @offer.offer_no,
+        new_path: new_offer_path, new_txt: t('ag2_purchase.offers.index.btn_new') } %>
+      </td>
+      <td class="form-td-two right-winged">
+        <!-- Generate purchase order -->
+        <a href="#" id="generate_order" class="btn btn-warning"><i class="icon-download-alt icon-white"></i> <%=t 'ag2_purchase.offers.generate_order_btn' %></a>
+        <br />
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br />
+<%= link_to t('ag2_purchase.offers.show.show_to'), @offer.offer_request %> |
 <%= link_to t("ag2_purchase.offers.back_to_main_page"), offers_path %>

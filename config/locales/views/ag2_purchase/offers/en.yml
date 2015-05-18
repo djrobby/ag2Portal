@@ -15,6 +15,7 @@ en:
         btn_edit: "Edit Offer"
         btn_delete: "Delete Offer"
         print: "Print"
+        show_to: "Show Offer request"
       edit:
         title: "Edit Offer"
         btn_show: "Show Offer"

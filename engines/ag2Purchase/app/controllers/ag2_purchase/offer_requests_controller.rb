@@ -306,8 +306,12 @@ module Ag2Purchase
       if !_approver_id.nil?
         _approver = User.find(_approver_id).email        
       end
+      # Approval date
+      if !_approval_date.nil?
+        _approval_date = formatted_timestamp(_approval_date)
+      end
 
-      @json_data = { "code" => code, "approver" => _approver, "approval_date" => _approval_date.strftime("%d/%m/%Y %H:%M:%S") }
+      @json_data = { "code" => code, "approver" => _approver, "approval_date" => _approval_date }
       render json: @json_data
     end
 

@@ -42,6 +42,8 @@ es:
   dd_images_message: "Deja las imágenes aquí"
   dd_file_message: "Deja el archivo aquí"
   dd_files_message: "Deja los archivos aquí"
+  approve: "Aprobar"
+  disapprove: "Desaprobar"
   every_report:
     pt: "Página"
     pt_plural: "Páginas"

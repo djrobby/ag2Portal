@@ -42,6 +42,8 @@ en:
   dd_images_message: "Drop images here"
   dd_file_message: "Drop file here"
   dd_files_message: "Drop files here"
+  approve: "Approve"
+  disapprove: "Disapprove"
   every_report:
     pt: "Page"
     pt_plural: "Pages"

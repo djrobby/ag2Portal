@@ -1,9 +1,13 @@
+<% if !offer.approver_id.blank? %>
+<tr style="color: red";>
+<% else %>
 <tr>
+<% end %>
   <td class="offer-id"><%= offer.id %></td>
   <td><%= link_to offer.offer_no, offer %></td>
-  <td align="center"><%= offer.offer_date.strftime("%d/%m/%Y") unless offer.offer_date.blank? %></td>
+  <td align="center"><%= formatted_date(offer.offer_date) unless offer.offer_date.blank? %></td>
   <td><%= offer.supplier.full_name %></td>
-  <td align="right"><%= number_with_precision(offer.total, precision: 4) unless offer.total.blank? %></td>
-  <td><a href="#"><i class="icon-ok"></i></a></td>
-  <td><a href="#"><i class="icon-remove"></i></a></td>
+  <td align="right"><%= number_with_precision(offer.total, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless offer.total.blank? %></td>
+  <td style="width: 2%;" align="right"><a href="#" title="<%= t(:approve) %>"><i class="icon-ok"></i></a></td>
+  <td style="width: 2%;" align="right"><a href="#" title="<%= t(:disapprove) %>"><i class="icon-remove"></i></a></td>
 </tr>
