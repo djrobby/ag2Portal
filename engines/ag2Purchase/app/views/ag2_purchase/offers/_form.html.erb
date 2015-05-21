@@ -343,6 +343,7 @@
          * Table objects
          */
         var table = '#items-table tbody';
+        var items_form = $(table).closest('form')[0];
         var tr = $('<tr>', { class: 'fields' });
         var td = $('<td>');
         var link = $('<a>', {
@@ -357,6 +358,7 @@
           _link = $(this).find('.icon-trash')
           remove_fields(_link);
         });
+
 
         /*
          * Add new rows
