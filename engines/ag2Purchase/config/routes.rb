@@ -196,16 +196,18 @@ Ag2Purchase::Engine.routes.draw do
     match 'offers/of_update_project_textfields_from_organization/:org', :controller => 'offers', :action => 'of_update_project_textfields_from_organization'
     match 'of_update_project_textfields_from_organization/:org', :controller => 'offers', :action => 'of_update_project_textfields_from_organization'
     match 'offers/:id/of_update_project_textfields_from_organization/:org', :controller => 'offers', :action => 'of_update_project_textfields_from_organization'
-    match 'offers/of_update_items_table_from_request/:request', :controller => 'offers', :action => 'of_update_items_table_from_request'
-    match 'of_update_items_table_from_request/:request', :controller => 'offers', :action => 'of_update_items_table_from_request'
-    match 'offers/:id/of_update_items_table_from_request/:request', :controller => 'offers', :action => 'of_update_items_table_from_request'
-    match 'offers/of_generate_order/:offer', :controller => 'offers', :action => 'of_generate_order'
-    match 'of_generate_order/:offer', :controller => 'offers', :action => 'of_generate_order'
-    match 'offers/:id/of_generate_order/:offer', :controller => 'offers', :action => 'of_generate_order'
-
+    match 'offers/of_update_selects_from_request/:request', :controller => 'offers', :action => 'of_update_selects_from_request'
+    match 'of_update_selects_from_request/:request', :controller => 'offers', :action => 'of_update_selects_from_request'
+    match 'offers/:id/of_update_selects_from_request/:request', :controller => 'offers', :action => 'of_update_selects_from_request'
     match 'offers/of_update_request_select_from_supplier/:supplier', :controller => 'offers', :action => 'of_update_request_select_from_supplier'
     match 'of_update_request_select_from_supplier/:supplier', :controller => 'offers', :action => 'of_update_request_select_from_supplier'
     match 'offers/:id/of_update_request_select_from_supplier/:supplier', :controller => 'offers', :action => 'of_update_request_select_from_supplier'
+    match 'offers/of_generate_offer/:offer', :controller => 'offers', :action => 'of_generate_offer'
+    match 'of_generate_offer/:offer', :controller => 'offers', :action => 'of_generate_offer'
+    match 'offers/:id/of_generate_offer/:offer', :controller => 'offers', :action => 'of_generate_offer'
+    match 'offers/of_generate_order/:offer', :controller => 'offers', :action => 'of_generate_order'
+    match 'of_generate_order/:offer', :controller => 'offers', :action => 'of_generate_order'
+    match 'offers/:id/of_generate_order/:offer', :controller => 'offers', :action => 'of_generate_order'
 
     # Resources
     resources :suppliers

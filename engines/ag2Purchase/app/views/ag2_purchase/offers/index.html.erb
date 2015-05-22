@@ -31,6 +31,11 @@
       // AJAX
       $("#submit_btn").trigger("click");
     });
+
+    // when the #new_from_request field changes
+    $("#new_from_request").click(function() {
+      alert('1');
+    });
   });
 </script>
 
@@ -65,6 +70,8 @@
         <% end %>
         <!-- Buttons -->
         <%= render :partial => '/layouts/crud/new', :locals => { :model => Offer, :path => new_offer_path, :txt => t(".btn_new") } %>
+        <button id="new_from_request" type="button" class="btn btn-warning" data-dismiss="modal" aria-hidden="true"><%= t(".btn_new_from_request") %></button>
+        <br /><br />
         <%= link_to t(".back_to_root"), ag2_purchase.root_path %>
       </div><!-- /.sidebar-nav -->
     </div><!-- /.span3 -->
@@ -74,3 +81,5 @@
     </div><!-- /.span9 -->
   </div><!-- /.row-fluid -->
 </div><!-- /.container-fluid -->
+<!-- Modal: New offer from request -->
+<%= render 'new_offer_from_request' %>

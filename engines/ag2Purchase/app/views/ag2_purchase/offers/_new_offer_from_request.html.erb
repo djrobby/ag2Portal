@@ -1,0 +1,113 @@
+<!-- Modal -->
+<script>
+  $(document).ready(function() {
+    $("#Office").val(<%= session[:office] %>);
+    $("#Company").val(<%= session[:company] %>);
+    $("#Organization").val(<%= session[:organization] %>);
+  });
+
+  jQuery(function($) {
+    $('#btn_accept').click(function() {
+      var office = $('#Office :selected').val();
+      var company = $('#Company :selected').val();
+      var organization = $('#Organization :selected').val();
+      if (office == "") office = 0;
+      if (company == "") company = 0;
+      if (organization == "") organization = 0;
+      jQuery.getJSON('/oco_set_session/' + office + '/' + company + '/' + organization, function(data) {
+        // Hide the modal and exit
+        var changed = !((office == <%= session[:office] %>) && (company == <%= session[:company] %>) && (organization == <%= session[:organization] %>));
+        $("#oco").modal('hide');
+        if (changed) window.location = "<%= main_app.root_path %>";
+      })
+      return false;
+    });
+
+    // when the #Office field changes
+    $("#Office").change(function() {
+      // make a POST call and replace the content
+      var user = $('#Office :selected').val();
+      if (user == "") user = "0";
+      jQuery.getJSON('/oco_company_organization_from_office/' + user, function(data) {
+        $("#Company").val(data.company_id);
+        $("#Organization").val(data.organization_id);
+      })
+      return false;
+    });
+
+    // when the #Company field changes
+    $("#Company").change(function() {
+      // make a POST call and replace the content
+      var user = $('#Company :selected').val();
+      if (user == "") user = "0";
+      $("#Office").val(0);
+      jQuery.getJSON('/oco_organization_from_company/' + user, function(data) {
+        $("#Organization").val(data.organization_id);
+      })
+      return false;
+    });
+
+    // when the #Organization field changes
+    $("#Organization").change(function() {
+      // make a POST call and replace the content
+      var user = $('#Organization :selected').val();
+      if (user == "") user = "0";
+      $("#Office").val(0);
+      $("#Company").val(0);
+      return false;
+    });
+  })
+</script>
+
+<div id="new-offer-from-request" class="modal hide fade in" data-backdrop="static" style="display: none;">
+  <div class="modal-header">
+    <a class="close" data-dismiss="modal">&#215;</a>
+    <h3><%= t('ag2_purchase.offers.btn_new_from_request') %></h3>
+  </div>
+  <div class="modal-body">
+    <!-- Supplier -->
+    <% offices_count = current_user.offices.count %>
+    <%= label_tag I18n.t("ag2_admin.users.oco.label_office"), nil, class: 'form-label' %>
+    <% if offices_count == 1 %>
+    <%= select_tag "Office", options_from_collection_for_select(current_user.offices.where('NOT office_code LIKE ?', '99999%').order(:name), "id", "name"), class: 'x-large-text-field', include_blank: false %>
+    <% elsif offices_count > 0 %>
+    <%= select_tag "Office", options_from_collection_for_select(current_user.offices.where('NOT office_code LIKE ?', '99999%').order(:name), "id", "name"), prompt: "", class: 'x-large-text-field' %>
+    <% else %>
+    <%= select_tag "Office", options_from_collection_for_select(Office.where('NOT office_code LIKE ?', '99999%').order(:name), "id", "name"), prompt: "", class: 'x-large-text-field' %>
+    <% end %>
+    <!-- Offer request -->
+    <% companies_count = current_user.companies.count %>
+    <%= label_tag I18n.t("ag2_admin.users.oco.label_company"), nil, class: 'form-label' %>
+    <% if companies_count == 1 %>
+    <%= select_tag "Company", options_from_collection_for_select(current_user.companies.order('name'), "id", "name"), class: 'x-large-text-field', include_blank: false %>
+    <% elsif companies_count > 0 %>
+    <%= select_tag "Company", options_from_collection_for_select(current_user.companies.order('name'), "id", "name"), prompt: "", class: 'x-large-text-field' %>
+    <% else %>
+    <%= select_tag "Company", options_from_collection_for_select(Company.order('name'), "id", "name"), prompt: "", class: 'x-large-text-field' %>
+    <% end %>
+    <!-- Offer No -->
+    <% organizations_count = current_user.organizations.count %>
+    <%= label_tag I18n.t("ag2_admin.users.oco.label_organization"), nil, class: 'form-label' %>
+    <% if organizations_count == 1 %>
+    <%= select_tag "Organization", options_from_collection_for_select(current_user.organizations.order('name'), "id", "name"), class: 'x-large-text-field', include_blank: false %>
+    <% elsif organizations_count > 0 %>
+    <%= select_tag "Organization", options_from_collection_for_select(current_user.organizations.order('name'), "id", "name"), prompt: "", class: 'x-large-text-field' %>
+    <% else %>
+    <%= select_tag "Organization", options_from_collection_for_select(Organization.order('name'), "id", "name"), prompt: "", class: 'x-large-text-field' %>
+    <% end %>
+    <!-- Offer date -->
+    <% organizations_count = current_user.organizations.count %>
+    <%= label_tag I18n.t("ag2_admin.users.oco.label_organization"), nil, class: 'form-label' %>
+    <% if organizations_count == 1 %>
+    <%= select_tag "Organization", options_from_collection_for_select(current_user.organizations.order('name'), "id", "name"), class: 'x-large-text-field', include_blank: false %>
+    <% elsif organizations_count > 0 %>
+    <%= select_tag "Organization", options_from_collection_for_select(current_user.organizations.order('name'), "id", "name"), prompt: "", class: 'x-large-text-field' %>
+    <% else %>
+    <%= select_tag "Organization", options_from_collection_for_select(Organization.order('name'), "id", "name"), prompt: "", class: 'x-large-text-field' %>
+    <% end %>
+  </div>
+  <div class="modal-footer">
+    <a class="btn btn-primary" href="#" id="btn_accept"><%= t :generate %></a>
+    <a class="btn btn-primary" data-dismiss="modal" href="#"><%= t :close_button %></a>
+  </div>
+</div>

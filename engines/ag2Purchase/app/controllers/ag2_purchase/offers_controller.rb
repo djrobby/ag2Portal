@@ -15,8 +15,9 @@ module Ag2Purchase
                                                :of_format_number_4,
                                                :of_current_stock,
                                                :of_update_project_textfields_from_organization,
-                                               :of_update_items_table_from_request,
+                                               :of_update_selects_from_request,
                                                :of_update_request_select_from_supplier,
+                                               :of_generate_offer,
                                                :of_generate_order]
     # Calculate and format totals properly
     def of_totals
@@ -259,10 +260,9 @@ module Ag2Purchase
       render json: @json_data
     end
 
-    # Update offer items table at view from request items
-    def of_update_items_table_from_request
+    # Update selects at view from request
+    def of_update_selects_from_request
       request = params[:request]
-      @request_items = nil
       project_id = 0
       work_order_id = 0
       charge_account_id = 0
@@ -270,7 +270,6 @@ module Ag2Purchase
       payment_method_id = 0
       if request != '0'
         @offer_request = OfferRequest.find(request)
-        @request_items = @offer_request.offer_request_items.order(:id) rescue nil
         @projects = @offer_request.blank? ? projects_dropdown : @offer_request.project
         @work_orders = @offer_request.blank? ? work_orders_dropdown : @offer_request.work_order
         @charge_accounts = @offer_request.blank? ? charge_accounts_dropdown : @offer_request.charge_account
@@ -290,14 +289,10 @@ module Ag2Purchase
         @payment_methods = payment_methods_dropdown
         @products = products_dropdown
       end
-      @tax_types = TaxType.where('expiration IS NULL').order('description')
-      # Offer request items array
-      @items_dropdown = offer_request_items_array(@request_items)
       # Setup JSON
       @json_data = { "project" => @projects, "work_order" => @work_orders,
                      "charge_account" => @charge_accounts, "store" => @stores,
                      "payment_method" => @payment_methods, "product" => @products,
-                     "tax_type" => @tax_types, "request_items" => @items_dropdown,
                      "project_id" => project_id, "work_order_id" => work_order_id,
                      "charge_account_id" => charge_account_id, "store_id" => store_id,
                      "payment_method_id" => payment_method_id }
@@ -320,6 +315,72 @@ module Ag2Purchase
       render json: @json_data
     end
 
+    # Generate new offer from offer request
+    def of_generate_offer
+      request = params[:request]
+      offer_no = params[:offer_no]
+      offer_date = params[:offer_date]
+      supplier = params[:supplier]
+      offer = nil
+      offer_item = nil
+      code = ''
+
+      if request != '0'
+        offer_request = OfferRequest.find(request) rescue nil
+        offer_request_items = offer_request.offer_request_items rescue nil
+        if !offer_request.nil? && !offer_request_items.nil?
+          # Try to save new offer
+          offer = Offer.new
+          offer.offer_no = offer_no
+          offer.offer_date = offer_date
+          offer.offer_request_id = offer_request.id
+          offer.supplier_id = supplier
+          offer.payment_method_id = offer_request.payment_method_id
+          offer.created_by = current_user.id if !current_user.nil?
+          offer.discount_pct = offer_request.discount_pct
+          offer.discount = offer_request.discount
+          offer.project_id = offer_request.project_id
+          offer.store_id = offer_request.store_id
+          offer.work_order_id = offer_request.work_order_id
+          offer.charge_account_id = offer_request.charge_account_id
+          offer.organization_id = offer_request.organization_id
+          if offer.save
+            # Try to save new offer items
+            offer_request_items.each do |i|
+              offer_item = OfferItem.new
+              offer_item.offer_id = offer.id
+              offer_item.product_id = i.product_id
+              offer_item.description = i.description
+              offer_item.quantity = i.quantity
+              offer_item.price = i.price
+              offer_item.tax_type_id = i.tax_type_id
+              offer_item.created_by = current_user.id if !current_user.nil?
+              offer_item.project_id = i.project_id
+              offer_item.store_id = i.store_id
+              offer_item.work_order_id = i.work_order_id
+              offer_item.charge_account_id = i.charge_account_id
+              if !offer_item.save?
+                # Can't save offer item (exit)
+                code = '$write'
+                break
+              end   # !offer_item.save?
+            end   # do |i|
+          else
+            # Can't save offer
+            code = '$write'
+          end   # offer.save?
+        else
+          # Offer request or items not found
+          code = '$err'
+        end   # !offer_request.nil? && !offer_request_items.nil?
+      else
+        # Offer request 0
+        code = '$err'
+      end   # request != '0'
+      @json_data = { "code" => code }
+      render json: @json_data
+    end
+
     # Generate purchase order
     def of_generate_order
       o = params[:offer]
@@ -332,7 +393,7 @@ module Ag2Purchase
           # Generate new purchase order no.
           code = (offer.project.nil || offer.project == 0) ? '$err' : po_next_no(project)
           if code != '$err'
-            # Attempt save purchase order
+            # Try to save purchase order
             order = PurchaseOrder.new
             order.discount = offer.discount
             order.discount_pct = offer.discount_pct
@@ -354,7 +415,7 @@ module Ag2Purchase
             order.approver_id = nil
             order.approval_date = nil
             if order.save?
-              # Attempt save purchase order items
+              # Try to save purchase order items
               offer.offer_items.each do |i|
                 item = PurchaseOrderItem.new
                 item.code = i.code

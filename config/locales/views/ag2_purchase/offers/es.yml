@@ -4,6 +4,7 @@ es:
       index:
         title: "Ofertas"
         btn_new: "Nueva Oferta"
+        btn_new_from_request: "Nueva Oferta desde Solicitud"
         back_to_root: "Volver a ag2Purchase"
         label_supplier: "Proveedor"
         label_project: "Proyecto"
