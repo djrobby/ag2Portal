@@ -59,52 +59,25 @@
   })
 </script>
 
-<div id="new-offer-from-request" class="modal hide fade in" data-backdrop="static" style="display: none;">
+<div id="new-offer-from-request" class="modal hide fade" data-backdrop="static" style="display: none;">
   <div class="modal-header">
     <a class="close" data-dismiss="modal">&#215;</a>
-    <h3><%= t('ag2_purchase.offers.btn_new_from_request') %></h3>
+    <h3><%= t('ag2_purchase.offers.index.btn_new_from_request') %></h3>
+    <span class="shrinked"><%= I18n.t(:mandatory_subtitle) %></span>
   </div>
   <div class="modal-body">
     <!-- Supplier -->
-    <% offices_count = current_user.offices.count %>
-    <%= label_tag I18n.t("ag2_admin.users.oco.label_office"), nil, class: 'form-label' %>
-    <% if offices_count == 1 %>
-    <%= select_tag "Office", options_from_collection_for_select(current_user.offices.where('NOT office_code LIKE ?', '99999%').order(:name), "id", "name"), class: 'x-large-text-field', include_blank: false %>
-    <% elsif offices_count > 0 %>
-    <%= select_tag "Office", options_from_collection_for_select(current_user.offices.where('NOT office_code LIKE ?', '99999%').order(:name), "id", "name"), prompt: "", class: 'x-large-text-field' %>
-    <% else %>
-    <%= select_tag "Office", options_from_collection_for_select(Office.where('NOT office_code LIKE ?', '99999%').order(:name), "id", "name"), prompt: "", class: 'x-large-text-field' %>
-    <% end %>
+    <label for="Supplier" class="form-label"> <abbr title="requerido">*</abbr> <%= I18n.t("activerecord.attributes.offer.supplier") %></label>
+    <%= select_tag "Supplier", options_from_collection_for_select(@suppliers, "id", "full_name"), :prompt => "", :class => 'x-large-text-field nsel2' %>
     <!-- Offer request -->
-    <% companies_count = current_user.companies.count %>
-    <%= label_tag I18n.t("ag2_admin.users.oco.label_company"), nil, class: 'form-label' %>
-    <% if companies_count == 1 %>
-    <%= select_tag "Company", options_from_collection_for_select(current_user.companies.order('name'), "id", "name"), class: 'x-large-text-field', include_blank: false %>
-    <% elsif companies_count > 0 %>
-    <%= select_tag "Company", options_from_collection_for_select(current_user.companies.order('name'), "id", "name"), prompt: "", class: 'x-large-text-field' %>
-    <% else %>
-    <%= select_tag "Company", options_from_collection_for_select(Company.order('name'), "id", "name"), prompt: "", class: 'x-large-text-field' %>
-    <% end %>
+    <label for="Request" class="form-label-under-sel2"> <abbr title="requerido">*</abbr> <%= I18n.t("activerecord.attributes.offer.offer_request") %></label>
+    <%= select_tag "Request", options_from_collection_for_select(@offer_requests, "id", "full_name"), :prompt => "", :class => 'x-large-text-field nsel2' %>
     <!-- Offer No -->
-    <% organizations_count = current_user.organizations.count %>
-    <%= label_tag I18n.t("ag2_admin.users.oco.label_organization"), nil, class: 'form-label' %>
-    <% if organizations_count == 1 %>
-    <%= select_tag "Organization", options_from_collection_for_select(current_user.organizations.order('name'), "id", "name"), class: 'x-large-text-field', include_blank: false %>
-    <% elsif organizations_count > 0 %>
-    <%= select_tag "Organization", options_from_collection_for_select(current_user.organizations.order('name'), "id", "name"), prompt: "", class: 'x-large-text-field' %>
-    <% else %>
-    <%= select_tag "Organization", options_from_collection_for_select(Organization.order('name'), "id", "name"), prompt: "", class: 'x-large-text-field' %>
-    <% end %>
+    <label for="No" class="form-label-under-sel2"> <abbr title="requerido">*</abbr> <%= I18n.t("activerecord.attributes.offer.offer_no") %></label>
+    <%= text_field_tag "No", nil, :class => 'x-large-text-field' %>
     <!-- Offer date -->
-    <% organizations_count = current_user.organizations.count %>
-    <%= label_tag I18n.t("ag2_admin.users.oco.label_organization"), nil, class: 'form-label' %>
-    <% if organizations_count == 1 %>
-    <%= select_tag "Organization", options_from_collection_for_select(current_user.organizations.order('name'), "id", "name"), class: 'x-large-text-field', include_blank: false %>
-    <% elsif organizations_count > 0 %>
-    <%= select_tag "Organization", options_from_collection_for_select(current_user.organizations.order('name'), "id", "name"), prompt: "", class: 'x-large-text-field' %>
-    <% else %>
-    <%= select_tag "Organization", options_from_collection_for_select(Organization.order('name'), "id", "name"), prompt: "", class: 'x-large-text-field' %>
-    <% end %>
+    <label for="Date" class="form-label"> <abbr title="requerido">*</abbr> <%= I18n.t("activerecord.attributes.offer.offer_date") %></label>
+    <%= text_field_tag "Date", nil, class: 'mid-text-field ndate_picker' %>
   </div>
   <div class="modal-footer">
     <a class="btn btn-primary" href="#" id="btn_accept"><%= t :generate %></a>

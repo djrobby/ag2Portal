@@ -472,6 +472,7 @@ module Ag2Purchase
       @suppliers = suppliers_dropdown if @suppliers.nil?
       @projects = projects_dropdown if @projects.nil?
       @work_orders = work_orders_dropdown if @work_orders.nil?
+      @offer_requests = offer_requests_dropdown if @offer_requests.nil?
 
       current_projects = @projects.blank? ? [0] : current_projects_for_index(@projects)
       @search = Offer.search do

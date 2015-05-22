@@ -266,6 +266,10 @@ th .current:focus {
   display: inline-block;
   width: 24.59%;
 }
+label.required_:before {
+  content: "*"
+}
+
 /* Sub-Form (items) text fields */
 .sub-bordered-input {
   background-color: #ffffff !important;
