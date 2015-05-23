@@ -16,7 +16,8 @@ module Ag2Products
                                                :po_current_stock,
                                                :po_update_project_textfields_from_organization,
                                                :po_generate_no,
-                                               :po_product_stock]
+                                               :po_product_stock,
+                                               :po_approve_order]
     # Update offer select at view from supplier select
     def po_update_offer_select_from_supplier
       supplier = params[:supplier]
@@ -327,6 +328,51 @@ module Ag2Products
                      type: 'application/pdf',
                      disposition: 'inline' }
       end
+    end
+
+    # Approve order
+    def po_approve_order
+      _order = params[:order]
+      code = '$err'
+      _approver_id = nil
+      _approver = nil
+      _approval_date = nil
+
+      order = PurchaseOrder.find(_order)
+      if !order.nil?
+        if order.approver_id.blank?
+          # Can approve offer
+          _approver_id = current_user.id
+          _approval_date = DateTime.now
+          order.approver_id = _approver_id
+          order.approval_date = _approval_date
+          # Attempt approve
+          if order.save
+            # Success
+            code = '$ok'
+          else
+            # Can't save purchase order
+            code = '$write'
+          end
+        else
+          # This order is already approved
+          code = '$warn'
+        end
+      else
+        # Purchase order not found
+        code = '$err'
+      end
+      # Approver data
+      if !_approver_id.nil?
+        _approver = User.find(_approver_id).email        
+      end
+      # Approval date
+      if !_approval_date.nil?
+        _approval_date = formatted_timestamp(_approval_date)
+      end
+
+      @json_data = { "code" => code, "approver" => _approver, "approval_date" => _approval_date }
+      render json: @json_data
     end
 
     #

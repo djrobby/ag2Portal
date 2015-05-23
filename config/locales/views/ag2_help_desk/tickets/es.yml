@@ -11,7 +11,6 @@ es:
         btn_apply: "Aplicar Filtro"
         change_status_title: "Cambiar Estado de Nº %{ticket}"
         btn_change_status: "Cambiar Estado"
-        refresh: "Refrescar"
       show:
         title: "Solicitud"
         btn_edit: "Editar Solicitud"

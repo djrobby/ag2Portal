@@ -1,5 +1,40 @@
 <script>
+  $(document).ready(function() {
+    // Show generate_order_btn based on approval
+    approver = $('#approver').html();
+    if (approver == "") {
+      $('#print_report_btn').hide();
+      $('#approve_order_btn').show();
+    } else {
+      $('#print_report_btn').show();
+      $('#approve_order_btn').hide();
+    }
+  });
+
   jQuery(function($) {
+    // when #approve_order_btn is clicked
+    $("#approve_order_btn").click(function() {
+      // make a POST call and replace the content
+      var order = $('#id').html();
+      if (order == "")
+        order = "0";
+      jQuery.getJSON('po_approve_order/' + order, function(data) {
+        if (data.code == "$err") {
+          alert('<%= I18n.t("ag2_purchase.purchase_orders.approve_order_error") %>');
+        } else if (data.code == "$write") {
+          alert('<%= I18n.t("ag2_purchase.purchase_orders.approve_order_write") %>');
+        } else if (data.code == "$warn") {
+          alert('<%= I18n.t("ag2_purchase.purchase_orders.approve_order_warn") %>');
+        } else {
+          $('#approver').text(data.approver);
+          $('#approval_date').text(data.approval_date);
+          $('#approve_order_btn').hide();
+          $('#print_report_btn').show();
+        }
+      });
+      return false;
+    });
+
     // when #print_report_btn is clicked
     $("#print_report_btn").click(function() {
       // make a POST call and get report
@@ -25,7 +60,7 @@
     </tr>
     <tr>
       <td><%=t 'activerecord.attributes.purchase_order.order_date' %>:</td>
-      <td><%= @purchase_order.order_date.strftime("%d/%m/%Y") unless @purchase_order.order_date.blank? %></td>
+      <td><%= formatted_date(@purchase_order.order_date) unless @purchase_order.order_date.blank? %></td>
       <td><%=t 'activerecord.attributes.purchase_order.order_status' %>:</td>
       <td> <%= @purchase_order.order_status.name %> </td>
     </tr>
@@ -61,9 +96,9 @@
     </tr>
     <tr>
       <td><%=t 'activerecord.attributes.purchase_order.approval_date' %>:</td>
-      <td><%= @purchase_order.approval_date.strftime("%d/%m/%Y") unless @purchase_order.approval_date.blank? %></td>
+      <td id="approval_date"><%= formatted_timestamp(@purchase_order.approval_date) unless @purchase_order.approval_date.blank? %></td>
       <td><%=t 'activerecord.attributes.purchase_order.approver' %>:</td>
-      <td> <%= @purchase_order.approver.email unless @purchase_order.approver.blank? %> </td>
+      <td id="approver"><%= @purchase_order.approver.email unless @purchase_order.approver.blank? %></td>
     </tr>
     <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @purchase_order } %>
     <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @purchase_order } %>
@@ -110,9 +145,24 @@
   </tbody>
 </table>
 
-<%= render partial: '/layouts/crud/update_delete_new', locals:
-{ model: PurchaseOrder, update_path: edit_purchase_order_path(@purchase_order), update_txt: t('.btn_edit'),
-delete_path: @purchase_order, delete_txt: t('.btn_delete'), msg: t("activerecord.models.purchase_order.one"), txt: @purchase_order.order_no,
-new_path: new_purchase_order_path, new_txt: t('ag2_purchase.purchase_orders.index.btn_new') } %>
+<!-- Buttons -->
+<table class="form-table">
+  <tbody>
+    <tr class="form-tr">
+      <td class="form-td-two left-winged">
+        <%= render partial: '/layouts/crud/update_delete_new_no_br', locals:
+        { model: PurchaseOrder, update_path: edit_purchase_order_path(@purchase_order), update_txt: t('.btn_edit'),
+        delete_path: @purchase_order, delete_txt: t('.btn_delete'), msg: t("activerecord.models.purchase_order.one"), txt: @purchase_order.full_no,
+        new_path: new_purchase_order_path, new_txt: t('ag2_purchase.purchase_orders.index.btn_new') } %>
+      </td>
+      <td class="form-td-two right-winged">
+        <!-- Approve purchase order -->
+        <a href="#" id="approve_order_btn" class="btn btn-warning"><i class="icon-ok icon-white"></i> <%=t :approve %></a>
+        <br />
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br />
 
 <%= link_to t("ag2_purchase.purchase_orders.back_to_main_page"), purchase_orders_path %>

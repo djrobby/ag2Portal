@@ -36,6 +36,7 @@ es:
   duplicate: "Duplicados"
   validate: "Validar"
   generate: "Generar"
+  refresh: "Refrescar"
   mandatory_subtitle: "¡Recuerda que los campos marcados con * son obligatorios!"
   item_error: "no puede estar en blanco"
   dd_image_message: "Deja la imagen aquí"

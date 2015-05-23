@@ -68,6 +68,26 @@ function right_number(n, l) {
 }
 
 /*
+ * Format date string
+ * n parameter must be a string, l parameter must be current localization (I18n.locale)
+ * returns YYYYMMDD formatted string
+ */
+function right_date(n, l) {
+  var dd = '', mm = '', yy = '', o = '';
+  if (l = 'es') {   // DD/MM/YYYY
+    dd = n.substring(0,2);
+    mm = n.substring(3,5);
+    yy = n.substring(6,10);
+  } else {          // MM-DD-YYYY
+    mm = n.substring(0,2);
+    dd = n.substring(3,5);
+    yy = n.substring(6,10);
+  }
+  o = yy + mm + dd;
+  return o;
+}
+
+/*
  * AJAX sorting
  * $(document).ready at each index view
  */

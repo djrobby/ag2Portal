@@ -158,6 +158,9 @@ Ag2Products::Engine.routes.draw do
     match 'purchase_orders/po_product_all_stocks/:product', :controller => 'purchase_orders', :action => 'po_product_all_stocks'
     match 'po_product_all_stocks/:product', :controller => 'purchase_orders', :action => 'po_product_all_stocks'
     match 'purchase_orders/:id/po_product_all_stocks/:product', :controller => 'purchase_orders', :action => 'po_product_all_stocks'
+    match 'purchase_orders/po_approve_order/:order', :controller => 'purchase_orders', :action => 'po_approve_order'
+    match 'po_approve_order/:order', :controller => 'purchase_orders', :action => 'po_approve_order'
+    match 'purchase_orders/:id/po_approve_order/:order', :controller => 'purchase_orders', :action => 'po_approve_order'
 
     # Resources
     resources :products

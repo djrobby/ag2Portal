@@ -17,7 +17,7 @@ module Ag2Purchase
                                                :po_update_project_textfields_from_organization,
                                                :po_generate_no,
                                                :po_product_stock,
-                                               :purchase_order_form]
+                                               :po_approve_order]
     # Update offer select at view from supplier select
     def po_update_offer_select_from_supplier
       supplier = params[:supplier]
@@ -303,31 +303,49 @@ module Ag2Purchase
       render json: stocks, include: :store
     end
 
-    # Purchase order form (report)
-    def purchase_order_form
-      id = params[:id]
-      if id.blank? 
-        return
+    # Approve order
+    def po_approve_order
+      _order = params[:order]
+      code = '$err'
+      _approver_id = nil
+      _approver = nil
+      _approval_date = nil
+
+      order = PurchaseOrder.find(_order)
+      if !order.nil?
+        if order.approver_id.blank?
+          # Can approve offer
+          _approver_id = current_user.id
+          _approval_date = DateTime.now
+          order.approver_id = _approver_id
+          order.approval_date = _approval_date
+          # Attempt approve
+          if order.save
+            # Success
+            code = '$ok'
+          else
+            # Can't save purchase order
+            code = '$write'
+          end
+        else
+          # This order is already approved
+          code = '$warn'
+        end
+      else
+        # Purchase order not found
+        code = '$err'
+      end
+      # Approver data
+      if !_approver_id.nil?
+        _approver = User.find(_approver_id).email        
+      end
+      # Approval date
+      if !_approval_date.nil?
+        _approval_date = formatted_timestamp(_approval_date)
       end
 
-      # Search purchase order
-      @purchase_order = PurchaseOrder.find(id)
-      @purchase_order_items = @purchase_order.purchase_order_items
-      # File name
-      filename = I18n.t("activerecord.models.purchase_order.one")
-      #from = Time.parse(@from).strftime("%Y-%m-%d")
-      #to = Time.parse(@to).strftime("%Y-%m-%d")
-      
-      respond_to do |format|
-        # Execute procedure and load aux table
-        #ActiveRecord::Base.connection.execute("CALL generate_timerecord_reports(0, '#{from}', '#{to}', #{office});")
-        #@time_records = TimerecordReport.all
-        # Render PDF
-        format.pdf { send_data render_to_string,
-                     filename: "#{filename}_#{@purchase_order.full_no}_#{id}.pdf",
-                     type: 'application/pdf',
-                     disposition: 'inline' }
-      end
+      @json_data = { "code" => code, "approver" => _approver, "approval_date" => _approval_date }
+      render json: @json_data
     end
 
     #

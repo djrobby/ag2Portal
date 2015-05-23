@@ -36,3 +36,6 @@ es:
       generate_order_error: "Imposible generar Pedido: Oferta inválida."
       generate_order_write: "Imposible guardar nuevo Pedido."
       generate_order_ok: "Pedido %{var} ha sido generado."
+      generate_offer_error: "Imposible generar Oferta: Solicitud inválida."
+      generate_offer_write: "Imposible guardar nueva Oferta."
+      generate_offer_ok: "Oferta %{var} ha sido generada."

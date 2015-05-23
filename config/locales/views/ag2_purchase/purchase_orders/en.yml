@@ -34,3 +34,6 @@ en:
       item_error: "can't be blank"
       stocks_warning: "This product has stocks in other stores!"
       info_btn: "Stocks"
+      approve_order_error: "Order not found."
+      approve_order_write: "Unable to save Order."
+      approve_order_warn: "This Order is already approved."

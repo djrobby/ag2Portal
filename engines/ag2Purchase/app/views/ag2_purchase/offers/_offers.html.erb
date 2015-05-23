@@ -11,6 +11,7 @@
   <thead>
     <tr>
       <th>Id</th>
+      <th></th>
       <th><%= t 'activerecord.attributes.offer.offer_no' %></th>
       <th align="center"><%= t 'activerecord.attributes.offer.offer_date' %></th>
       <th><%= t 'activerecord.attributes.offer.supplier' %></th>
@@ -22,11 +23,16 @@
   </thead>
   <tbody>
     <% @offers.each do |offer| %>
-    <tr>
+    <% if !offer.approver_id.blank? %>
+      <tr style="color: red";>
+    <% else %>
+      <tr>
+    <% end %>
       <td><%= offer.id %></td>
+      <td><%= offer.purchase_orders.count unless offer.purchase_orders.count == 0 %></td>
       <td><%= link_to offer.offer_no, offer %></td>
       <td align="center"><%= formatted_date(offer.offer_date) unless offer.offer_date.blank? %></td>
-      <td><%= offer.supplier.full_name unless offer.supplier.blank? %></td>
+      <td><%= offer.supplier.partial_name unless offer.supplier.blank? %></td>
       <td><%= offer.offer_request.full_no unless offer.offer_request.blank? %></td>
       <td><%= offer.project.full_code unless offer.project.blank? %></td>
       <td align="right"><%= number_with_precision(offer.total, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless offer.total.blank? %></td>

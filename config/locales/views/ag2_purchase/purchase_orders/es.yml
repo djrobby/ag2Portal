@@ -34,3 +34,6 @@ es:
       item_error: "no puede estar en blanco"
       stocks_warning: "¡Este producto tiene existencias en otras almacenes!"
       info_btn: "Existencias"
+      approve_order_error: "Pedido no encontrado."
+      approve_order_write: "Imposible guardar Pedido."
+      approve_order_warn: "Este Pedido ya está aprobado."

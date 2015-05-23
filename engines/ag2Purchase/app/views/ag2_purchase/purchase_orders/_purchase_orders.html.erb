@@ -21,9 +21,13 @@
   </thead>
   <tbody>
     <% @purchase_orders.each do |order| %>
-    <tr>
+    <% if !order.approver_id.blank? %>
+      <tr style="color: red";>
+    <% else %>
+      <tr>
+    <% end %>
       <td><%= link_to order.full_no, order %></td>
-      <td align="center"><%= order.order_date.strftime("%d/%m/%Y") unless order.order_date.blank? %></td>
+      <td align="center"><%= formatted_date(order.order_date) unless order.order_date.blank? %></td>
       <td><%= order.order_status.name %></td>
       <td><%= order.supplier.full_name[0,40] %></td>
       <td><%= order.offer.offer_no unless order.offer.blank? %></td>

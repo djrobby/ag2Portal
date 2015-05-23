@@ -70,7 +70,7 @@
         $("#div_table").html("<%= escape_javascript(render('tickets')) %>");
       }
     });
-    setTimeout(executeQuery, 60000);
+    //setTimeout(executeQuery, 60000);
   }
 </script>
 
@@ -84,7 +84,7 @@
     <div class="span3">
       <div class="well sidebar-nav">
         <!-- Refresh -->
-        <%= link_to ag2_help_desk.tickets_path, title: I18n.t("ag2_help_desk.tickets.index.refresh"), class: "icon-refresh-link", remote: true do %> <i class="icon-refresh"></i> <% end %>
+        <%= link_to ag2_help_desk.tickets_path, title: I18n.t(:refresh), class: "icon-refresh-link", remote: true do %> <i class="icon-refresh"></i> <% end %>
         <!-- Search form -->
         <%= form_tag "tickets", :method => 'get', :remote => true do %>
         <!-- Nº -->

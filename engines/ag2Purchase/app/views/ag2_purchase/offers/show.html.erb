@@ -1,9 +1,19 @@
 <script>
+  $(document).ready(function() {
+    // Show generate_order_btn based on approval
+    approver = $('#approver').html();
+    if (approver == "") {
+      $('#generate_order_btn').hide();
+    } else {
+      $('#generate_order_btn').show();
+    }
+  });
+
   jQuery(function($) {
     // when #generate_order_btn is clicked
     $("#generate_order_btn").click(function() {
       // make a POST call and replace the content
-      var offer = $('#offer_id').val();
+      var offer = $('#id').html();
       if (offer == "")
         offer = "0";
       jQuery.getJSON('of_generate_order/' + offer, function(data) {
@@ -12,7 +22,7 @@
         } else if (data.code == "$write") {
           alert('<%= I18n.t("ag2_purchase.offers.generate_order_write") %>');
         } else {
-          alert('<%= I18n.t("ag2_purchase.offers.generate_order_ok") %>');
+          alert(data.code);
           $('#generate_order_btn').hide();
         }
       });
@@ -70,7 +80,7 @@
       <td><%=t 'activerecord.attributes.offer.approval_date' %>:</td>
       <td><%= formatted_timestamp(@offer.approval_date) unless @offer.approval_date.blank? %></td>
       <td><%=t 'activerecord.attributes.offer.approver' %>:</td>
-      <td> <%= @offer.approver.email unless @offer.approver.blank? %> </td>
+      <td id="approver"><%= @offer.approver.email unless @offer.approver.blank? %></td>
     </tr>
     <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @offer } %>
     <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @offer } %>
@@ -129,12 +139,13 @@
       </td>
       <td class="form-td-two right-winged">
         <!-- Generate purchase order -->
-        <a href="#" id="generate_order" class="btn btn-warning"><i class="icon-download-alt icon-white"></i> <%=t 'ag2_purchase.offers.generate_order_btn' %></a>
+        <a href="#" id="generate_order_btn" class="btn btn-warning"><i class="icon-download-alt icon-white"></i> <%=t 'ag2_purchase.offers.generate_order_btn' %></a>
         <br />
       </td>
     </tr>
   </tbody>
 </table>
 <br />
+
 <%= link_to t('ag2_purchase.offers.show.show_to'), @offer.offer_request %> |
 <%= link_to t("ag2_purchase.offers.back_to_main_page"), offers_path %>

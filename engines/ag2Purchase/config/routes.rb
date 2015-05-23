@@ -74,6 +74,9 @@ Ag2Purchase::Engine.routes.draw do
     match 'purchase_orders/po_product_all_stocks/:product', :controller => 'purchase_orders', :action => 'po_product_all_stocks'
     match 'po_product_all_stocks/:product', :controller => 'purchase_orders', :action => 'po_product_all_stocks'
     match 'purchase_orders/:id/po_product_all_stocks/:product', :controller => 'purchase_orders', :action => 'po_product_all_stocks'
+    match 'purchase_orders/po_approve_order/:order', :controller => 'purchase_orders', :action => 'po_approve_order'
+    match 'po_approve_order/:order', :controller => 'purchase_orders', :action => 'po_approve_order'
+    match 'purchase_orders/:id/po_approve_order/:order', :controller => 'purchase_orders', :action => 'po_approve_order'
     #
     # Purchase order Reports
     #match 'purchase_order_form', :controller => 'purchase_orders', :action => 'purchase_order_form'
@@ -202,9 +205,9 @@ Ag2Purchase::Engine.routes.draw do
     match 'offers/of_update_request_select_from_supplier/:supplier', :controller => 'offers', :action => 'of_update_request_select_from_supplier'
     match 'of_update_request_select_from_supplier/:supplier', :controller => 'offers', :action => 'of_update_request_select_from_supplier'
     match 'offers/:id/of_update_request_select_from_supplier/:supplier', :controller => 'offers', :action => 'of_update_request_select_from_supplier'
-    match 'offers/of_generate_offer/:offer', :controller => 'offers', :action => 'of_generate_offer'
-    match 'of_generate_offer/:offer', :controller => 'offers', :action => 'of_generate_offer'
-    match 'offers/:id/of_generate_offer/:offer', :controller => 'offers', :action => 'of_generate_offer'
+    match 'offers/of_generate_offer/:supplier/:request/:offer_no/:offer_date', :controller => 'offers', :action => 'of_generate_offer'
+    match 'of_generate_offer/:supplier/:request/:offer_no/:offer_date', :controller => 'offers', :action => 'of_generate_offer'
+    match 'offers/:id/of_generate_offer/:supplier/:request/:offer_no/:offer_date', :controller => 'offers', :action => 'of_generate_offer'
     match 'offers/of_generate_order/:offer', :controller => 'offers', :action => 'of_generate_order'
     match 'of_generate_order/:offer', :controller => 'offers', :action => 'of_generate_order'
     match 'offers/:id/of_generate_order/:offer', :controller => 'offers', :action => 'of_generate_order'

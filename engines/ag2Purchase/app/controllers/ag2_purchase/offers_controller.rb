@@ -317,10 +317,10 @@ module Ag2Purchase
 
     # Generate new offer from offer request
     def of_generate_offer
+      supplier = params[:supplier]
       request = params[:request]
       offer_no = params[:offer_no]
-      offer_date = params[:offer_date]
-      supplier = params[:supplier]
+      offer_date = params[:offer_date]  # YYYYMMDD
       offer = nil
       offer_item = nil
       code = ''
@@ -329,6 +329,8 @@ module Ag2Purchase
         offer_request = OfferRequest.find(request) rescue nil
         offer_request_items = offer_request.offer_request_items rescue nil
         if !offer_request.nil? && !offer_request_items.nil?
+          # Format offer_date
+          offer_date = (offer_date[0..3] + '-' + offer_date[4..5] + '-' + offer_date[6..7]).to_date
           # Try to save new offer
           offer = Offer.new
           offer.offer_no = offer_no
@@ -359,7 +361,7 @@ module Ag2Purchase
               offer_item.store_id = i.store_id
               offer_item.work_order_id = i.work_order_id
               offer_item.charge_account_id = i.charge_account_id
-              if !offer_item.save?
+              if !offer_item.save
                 # Can't save offer item (exit)
                 code = '$write'
                 break
@@ -377,6 +379,9 @@ module Ag2Purchase
         # Offer request 0
         code = '$err'
       end   # request != '0'
+      if code == ''
+        code = I18n.t("ag2_purchase.offers.generate_offer_ok", var: offer.id.to_s)
+      end
       @json_data = { "code" => code }
       render json: @json_data
     end
@@ -391,7 +396,7 @@ module Ag2Purchase
         offer_items = offer.offer_items rescue nil
         if !offer.nil? && !offer_items.nil?
           # Generate new purchase order no.
-          code = (offer.project.nil || offer.project == 0) ? '$err' : po_next_no(project)
+          code = (offer.project.nil? || offer.project == 0) ? '$err' : po_next_no(offer.project)
           if code != '$err'
             # Try to save purchase order
             order = PurchaseOrder.new
@@ -414,9 +419,9 @@ module Ag2Purchase
             order.organization_id = offer.organization_id
             order.approver_id = nil
             order.approval_date = nil
-            if order.save?
+            if order.save
               # Try to save purchase order items
-              offer.offer_items.each do |i|
+              offer_items.each do |i|
                 item = PurchaseOrderItem.new
                 item.code = i.code
                 item.delivery_date = i.delivery_date
@@ -432,7 +437,7 @@ module Ag2Purchase
                 item.store_id = i.store_id
                 item.work_order_id = i.work_order_id
                 item.charge_account_id = i.charge_account_id
-                if !item.save?
+                if !item.save
                   # Can't save order item (exit)
                   code = '$write'
                   break
@@ -451,6 +456,9 @@ module Ag2Purchase
         # Offer 0
         code = '$err'
       end   # o != '0'
+      if code != '' && code != '$err' && code != '$write'
+        code = I18n.t("ag2_purchase.offers.generate_order_ok", var: order.full_no)
+      end
       @json_data = { "code" => code }
       render json: @json_data
     end
