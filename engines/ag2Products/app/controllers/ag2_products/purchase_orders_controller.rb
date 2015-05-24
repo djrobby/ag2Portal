@@ -11,6 +11,7 @@ module Ag2Products
                                                :po_update_charge_account_from_project,
                                                :po_update_amount_from_price_or_quantity,
                                                :po_update_offer_select_from_supplier,
+                                               :po_update_selects_from_offer,
                                                :po_format_numbers,
                                                :po_totals,
                                                :po_current_stock,
@@ -31,6 +32,45 @@ module Ag2Products
       @offers_dropdown = offers_array(@offers)
       # Setup JSON
       @json_data = { "offer" => @offers_dropdown }
+      render json: @json_data
+    end
+
+    # Update selects at view from offer
+    def po_update_selects_from_offer
+      o = params[:o]
+      project_id = 0
+      work_order_id = 0
+      charge_account_id = 0
+      store_id = 0
+      payment_method_id = 0
+      if o != '0'
+        @offer = Offer.find(o)
+        @projects = @offer.blank? ? projects_dropdown : @offer.project
+        @work_orders = @offer.blank? ? work_orders_dropdown : @offer.work_order
+        @charge_accounts = @offer.blank? ? charge_accounts_dropdown : @offer.charge_account
+        @stores = @offer.blank? ? stores_dropdown : @offer.store
+        @payment_methods = @offer.blank? ? payment_methods_dropdown : @offer.payment_method
+        @products = @offer.blank? ? products_dropdown : @offer.organization.products.order(:product_code)
+        project_id = @projects.id rescue 0
+        work_order_id = @work_orders.id rescue 0
+        charge_account_id = @charge_accounts.id rescue 0
+        store_id = @stores.id rescue 0
+        payment_method_id = @payment_methods.id rescue 0
+      else
+        @projects = projects_dropdown
+        @work_orders = work_orders_dropdown
+        @charge_accounts = charge_accounts_dropdown
+        @stores = stores_dropdown
+        @payment_methods = payment_methods_dropdown
+        @products = products_dropdown
+      end
+      # Setup JSON
+      @json_data = { "project" => @projects, "work_order" => @work_orders,
+                     "charge_account" => @charge_accounts, "store" => @stores,
+                     "payment_method" => @payment_methods, "product" => @products,
+                     "project_id" => project_id, "work_order_id" => work_order_id,
+                     "charge_account_id" => charge_account_id, "store_id" => store_id,
+                     "payment_method_id" => payment_method_id }
       render json: @json_data
     end
 

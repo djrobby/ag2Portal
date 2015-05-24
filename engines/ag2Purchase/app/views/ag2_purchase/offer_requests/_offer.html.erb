@@ -1,7 +1,7 @@
 <% if !offer.approver_id.blank? %>
-<tr style="color: red";>
+  <tr class="approved-tr">
 <% else %>
-<tr>
+  <tr>
 <% end %>
   <td class="offer-id"><%= offer.id %></td>
   <td><%= link_to offer.offer_no, offer %></td>

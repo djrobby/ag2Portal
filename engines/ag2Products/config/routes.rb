@@ -117,6 +117,9 @@ Ag2Products::Engine.routes.draw do
     match 'receipt_notes/rn_update_project_textfields_from_organization/:org', :controller => 'receipt_notes', :action => 'rn_update_project_textfields_from_organization'
     match 'rn_update_project_textfields_from_organization/:org', :controller => 'receipt_notes', :action => 'rn_update_project_textfields_from_organization'
     match 'receipt_notes/:id/rn_update_project_textfields_from_organization/:org', :controller => 'receipt_notes', :action => 'rn_update_project_textfields_from_organization'
+    match 'receipt_notes/rn_update_selects_from_order/:o', :controller => 'receipt_notes', :action => 'rn_update_selects_from_order'
+    match 'rn_update_selects_from_order/:o', :controller => 'receipt_notes', :action => 'rn_update_selects_from_order'
+    match 'receipt_notes/:id/rn_update_selects_from_order/:o', :controller => 'receipt_notes', :action => 'rn_update_selects_from_order'
     #
     # Purchase orders 
     match 'purchase_orders/po_update_description_prices_from_product_store/:product/:qty/:store', :controller => 'purchase_orders', :action => 'po_update_description_prices_from_product_store'
@@ -161,6 +164,9 @@ Ag2Products::Engine.routes.draw do
     match 'purchase_orders/po_approve_order/:order', :controller => 'purchase_orders', :action => 'po_approve_order'
     match 'po_approve_order/:order', :controller => 'purchase_orders', :action => 'po_approve_order'
     match 'purchase_orders/:id/po_approve_order/:order', :controller => 'purchase_orders', :action => 'po_approve_order'
+    match 'purchase_orders/po_update_selects_from_offer/:o', :controller => 'purchase_orders', :action => 'po_update_selects_from_offer'
+    match 'po_update_selects_from_offer/:o', :controller => 'purchase_orders', :action => 'po_update_selects_from_offer'
+    match 'purchase_orders/:id/po_update_selects_from_offer/:o', :controller => 'purchase_orders', :action => 'po_update_selects_from_offer'
 
     # Resources
     resources :products

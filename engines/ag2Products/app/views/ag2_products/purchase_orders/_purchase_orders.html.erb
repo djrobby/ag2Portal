@@ -22,7 +22,7 @@
   <tbody>
     <% @purchase_orders.each do |order| %>
     <% if !order.approver_id.blank? %>
-      <tr style="color: red";>
+      <tr class="approved-tr">
     <% else %>
       <tr>
     <% end %>

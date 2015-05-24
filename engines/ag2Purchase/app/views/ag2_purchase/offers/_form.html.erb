@@ -313,7 +313,7 @@
             $("#offer_payment_method_id").append($('<option></option>').val(option.id).html(option.description));
           });
         }
-        if (m_id != 0) $("#offer_payment_method_id").select2("val", m_id);
+        if (m_id != 0) $("#offer_payment_method_id").val(m_id);
       });
       // Request not selected
       if (request == "0") {

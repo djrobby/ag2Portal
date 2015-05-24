@@ -21,7 +21,11 @@
   </thead>
   <tbody>
     <% @tickets.each do |ticket| %>
-    <tr>
+    <% if ticket.ticket_status_id == 4 %>
+      <tr class="inactive-row">
+    <% else %>
+      <tr>
+    <% end %>
       <td><%= link_to ticket.id.to_s.rjust(7, '0'), ticket %></td>
       <% if !ticket.attachment.blank? %>
       <td style="width: 14px"><i class="icon-paperclip-black"></td>

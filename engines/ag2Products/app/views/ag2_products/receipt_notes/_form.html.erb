@@ -192,6 +192,113 @@
       return false;
     });
 
+    // when the #receipt_note_purchase_order_id field changes
+    $("#receipt_note_purchase_order_id").change(function() {
+      // make a POST call and replace the content
+      var o = $('select#receipt_note_purchase_order_id :selected').val();
+      if (o == "")
+        o = "0";
+      jQuery.getJSON('rn_update_selects_from_order/' + o, function(data) {
+        var p = data.project;
+        var w = data.work_order;
+        var h = data.charge_account
+        var s = data.store
+        var m = data.payment_method
+        var prods = data.product
+        var p_id = data.project_id;
+        var w_id = data.work_order_id;
+        var c_id = data.charge_account_id;
+        var s_id = data.store_id;
+        var m_id = data.payment_method_id;
+        // Project
+        $("#receipt_note_project_id").html("");
+        $("#receipt_note_project_id").select2("val", "");
+        $("#receipt_note_project_id").append($('<option></option>').val("").html(""));
+        if (!p.length) {
+          $.each(data, function(id, option) {
+            if (id == 'project' && option != "") {
+              $("#receipt_note_project_id").append($('<option></option>').val(option.id).html(option.project_code.substring(0,3) + "-" + option.project_code.substring(3,6) + "-" + option.project_code.substring(6,12) + " " + option.name));
+            }
+          });
+        } else {
+          $.each(p, function(id, option) {
+            $("#receipt_note_project_id").append($('<option></option>').val(option.id).html(option.project_code.substring(0,3) + "-" + option.project_code.substring(3,6) + "-" + option.project_code.substring(6,12) + " " + option.name));
+          });
+        }
+        if (p_id != 0) $("#receipt_note_project_id").select2("val", p_id);
+        // Work order
+        $("#receipt_note_work_order_id").html("");
+        $("#receipt_note_work_order_id").select2("val", "");
+        $("#receipt_note_work_order_id").append($('<option></option>').val("").html(""));
+        if (!w.length) {
+          $.each(data, function(id, option) {
+            if (id == 'work_order' && option != "") {
+              $("#receipt_note_work_order_id").append($('<option></option>').val(option.id).html(option.order_no.substring(0,10) + "-" + option.order_no.substring(10,14) + "-" + option.order_no.substring(14,20) + " " + option.description.substring(0,41)));
+            }
+          });
+        } else {
+          $.each(w, function(id, option) {
+            $("#receipt_note_work_order_id").append($('<option></option>').val(option.id).html(option.order_no.substring(0,10) + "-" + option.order_no.substring(10,14) + "-" + option.order_no.substring(14,20) + " " + option.description.substring(0,41)));
+          });
+        }
+        if (w_id != 0) $("#receipt_note_work_order_id").select2("val", w_id);
+        // Charge account
+        $("#receipt_note_charge_account_id").html("");
+        $("#receipt_note_charge_account_id").select2("val", "");
+        $("#receipt_note_charge_account_id").append($('<option></option>').val("").html(""));
+        if (!h.length) {
+          $.each(data, function(id, option) {
+            if (id == 'charge_account' && option != "") {
+              $("#receipt_note_charge_account_id").append($('<option></option>').val(option.id).html(option.account_code.substring(0,4) + "-" + option.account_code.substring(4,11) + " " + option.name));
+            }
+          });
+        } else {
+          $.each(h, function(id, option) {
+            $("#receipt_note_charge_account_id").append($('<option></option>').val(option.id).html(option.account_code.substring(0,4) + "-" + option.account_code.substring(4,11) + " " + option.name));
+          });
+        }
+        if (c_id != 0) $("#receipt_note_charge_account_id").select2("val", c_id);
+        // Store
+        $("#receipt_note_store_id").html("");
+        $("#receipt_note_store_id").select2("val", "");
+        $("#receipt_note_store_id").append($('<option></option>').val("").html(""));
+        if (!s.length) {
+          $.each(data, function(id, option) {
+            if (id == 'store' && option != "") {
+              $("#receipt_note_store_id").append($('<option></option>').val(option.id).html(option.name));
+            }
+          });
+        } else {
+          $.each(s, function(id, option) {
+            $("#receipt_note_store_id").append($('<option></option>').val(option.id).html(option.name));
+          });
+        }
+        if (s_id != 0) $("#receipt_note_store_id").select2("val", s_id);
+        // Payment method
+        $("#receipt_note_payment_method_id").html("");
+        $("#receipt_note_payment_method_id").val("");
+        $("#receipt_note_payment_method_id").append($('<option></option>').val("").html(""));
+        if (!m.length) {
+          $.each(data, function(id, option) {
+            if (id == 'payment_method' && option != "") {
+              $("#receipt_note_payment_method_id").append($('<option></option>').val(option.id).html(option.description));
+            }
+          });
+        } else {
+          $.each(m, function(id, option) {
+            $("#receipt_note_payment_method_id").append($('<option></option>').val(option.id).html(option.description));
+          });
+        }
+        if (m_id != 0) $("#receipt_note_payment_method_id").val(m_id);
+      });
+      // Offer not selected
+      if (o == "0") {
+        $("#receipt_note_project_id").val(0);
+        $("#receipt_note_project_id").trigger("change");
+      }
+      //return false;
+    });
+
     // when the #receipt_note_project_id field changes
     $("#receipt_note_project_id").change(function() {
       // make a POST call and replace the content

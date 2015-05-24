@@ -24,7 +24,7 @@
   <tbody>
     <% @offers.each do |offer| %>
     <% if !offer.approver_id.blank? %>
-      <tr style="color: red";>
+      <tr class="approved-tr">
     <% else %>
       <tr>
     <% end %>

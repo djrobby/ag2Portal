@@ -243,7 +243,7 @@
     // when the #purchase_order_offer_id field changes
     $("#purchase_order_offer_id").change(function() {
       // make a POST call and replace the content
-      var o = $('select#offer_offer_request_id :selected').val();
+      var o = $('select#purchase_order_offer_id :selected').val();
       if (o == "")
         o = "0";
       jQuery.getJSON('po_update_selects_from_offer/' + o, function(data) {
@@ -259,90 +259,90 @@
         var s_id = data.store_id;
         var m_id = data.payment_method_id;
         // Project
-        $("#offer_project_id").html("");
-        $("#offer_project_id").select2("val", "");
-        $("#offer_project_id").append($('<option></option>').val("").html(""));
+        $("#purchase_order_project_id").html("");
+        $("#purchase_order_project_id").select2("val", "");
+        $("#purchase_order_project_id").append($('<option></option>').val("").html(""));
         if (!p.length) {
           $.each(data, function(id, option) {
             if (id == 'project' && option != "") {
-              $("#offer_project_id").append($('<option></option>').val(option.id).html(option.project_code.substring(0,3) + "-" + option.project_code.substring(3,6) + "-" + option.project_code.substring(6,12) + " " + option.name));
+              $("#purchase_order_project_id").append($('<option></option>').val(option.id).html(option.project_code.substring(0,3) + "-" + option.project_code.substring(3,6) + "-" + option.project_code.substring(6,12) + " " + option.name));
             }
           });
         } else {
           $.each(p, function(id, option) {
-            $("#offer_project_id").append($('<option></option>').val(option.id).html(option.project_code.substring(0,3) + "-" + option.project_code.substring(3,6) + "-" + option.project_code.substring(6,12) + " " + option.name));
+            $("#purchase_order_project_id").append($('<option></option>').val(option.id).html(option.project_code.substring(0,3) + "-" + option.project_code.substring(3,6) + "-" + option.project_code.substring(6,12) + " " + option.name));
           });
         }
-        if (p_id != 0) $("#offer_project_id").select2("val", p_id);
+        if (p_id != 0) $("#purchase_order_project_id").select2("val", p_id);
         // Work order
-        $("#offer_work_order_id").html("");
-        $("#offer_work_order_id").select2("val", "");
-        $("#offer_work_order_id").append($('<option></option>').val("").html(""));
+        $("#purchase_order_work_order_id").html("");
+        $("#purchase_order_work_order_id").select2("val", "");
+        $("#purchase_order_work_order_id").append($('<option></option>').val("").html(""));
         if (!w.length) {
           $.each(data, function(id, option) {
             if (id == 'work_order' && option != "") {
-              $("#offer_work_order_id").append($('<option></option>').val(option.id).html(option.order_no.substring(0,10) + "-" + option.order_no.substring(10,14) + "-" + option.order_no.substring(14,20) + " " + option.description.substring(0,41)));
+              $("#purchase_order_work_order_id").append($('<option></option>').val(option.id).html(option.order_no.substring(0,10) + "-" + option.order_no.substring(10,14) + "-" + option.order_no.substring(14,20) + " " + option.description.substring(0,41)));
             }
           });
         } else {
           $.each(w, function(id, option) {
-            $("#offer_work_order_id").append($('<option></option>').val(option.id).html(option.order_no.substring(0,10) + "-" + option.order_no.substring(10,14) + "-" + option.order_no.substring(14,20) + " " + option.description.substring(0,41)));
+            $("#purchase_order_work_order_id").append($('<option></option>').val(option.id).html(option.order_no.substring(0,10) + "-" + option.order_no.substring(10,14) + "-" + option.order_no.substring(14,20) + " " + option.description.substring(0,41)));
           });
         }
-        if (w_id != 0) $("#offer_work_order_id").select2("val", w_id);
+        if (w_id != 0) $("#purchase_order_work_order_id").select2("val", w_id);
         // Charge account
-        $("#offer_charge_account_id").html("");
-        $("#offer_charge_account_id").select2("val", "");
-        $("#offer_charge_account_id").append($('<option></option>').val("").html(""));
+        $("#purchase_order_charge_account_id").html("");
+        $("#purchase_order_charge_account_id").select2("val", "");
+        $("#purchase_order_charge_account_id").append($('<option></option>').val("").html(""));
         if (!h.length) {
           $.each(data, function(id, option) {
             if (id == 'charge_account' && option != "") {
-              $("#offer_charge_account_id").append($('<option></option>').val(option.id).html(option.account_code.substring(0,4) + "-" + option.account_code.substring(4,11) + " " + option.name));
+              $("#purchase_order_charge_account_id").append($('<option></option>').val(option.id).html(option.account_code.substring(0,4) + "-" + option.account_code.substring(4,11) + " " + option.name));
             }
           });
         } else {
           $.each(h, function(id, option) {
-            $("#offer_charge_account_id").append($('<option></option>').val(option.id).html(option.account_code.substring(0,4) + "-" + option.account_code.substring(4,11) + " " + option.name));
+            $("#purchase_order_charge_account_id").append($('<option></option>').val(option.id).html(option.account_code.substring(0,4) + "-" + option.account_code.substring(4,11) + " " + option.name));
           });
         }
-        if (c_id != 0) $("#offer_charge_account_id").select2("val", c_id);
+        if (c_id != 0) $("#purchase_order_charge_account_id").select2("val", c_id);
         // Store
-        $("#offer_store_id").html("");
-        $("#offer_store_id").select2("val", "");
-        $("#offer_store_id").append($('<option></option>').val("").html(""));
+        $("#purchase_order_store_id").html("");
+        $("#purchase_order_store_id").select2("val", "");
+        $("#purchase_order_store_id").append($('<option></option>').val("").html(""));
         if (!s.length) {
           $.each(data, function(id, option) {
             if (id == 'store' && option != "") {
-              $("#offer_store_id").append($('<option></option>').val(option.id).html(option.name));
+              $("#purchase_order_store_id").append($('<option></option>').val(option.id).html(option.name));
             }
           });
         } else {
           $.each(s, function(id, option) {
-            $("#offer_store_id").append($('<option></option>').val(option.id).html(option.name));
+            $("#purchase_order_store_id").append($('<option></option>').val(option.id).html(option.name));
           });
         }
-        if (s_id != 0) $("#offer_store_id").select2("val", s_id);
+        if (s_id != 0) $("#purchase_order_store_id").select2("val", s_id);
         // Payment method
-        $("#offer_payment_method_id").html("");
-        $("#offer_payment_method_id").val("");
-        $("#offer_payment_method_id").append($('<option></option>').val("").html(""));
+        $("#purchase_order_payment_method_id").html("");
+        $("#purchase_order_payment_method_id").val("");
+        $("#purchase_order_payment_method_id").append($('<option></option>').val("").html(""));
         if (!m.length) {
           $.each(data, function(id, option) {
             if (id == 'payment_method' && option != "") {
-              $("#offer_payment_method_id").append($('<option></option>').val(option.id).html(option.description));
+              $("#purchase_order_payment_method_id").append($('<option></option>').val(option.id).html(option.description));
             }
           });
         } else {
           $.each(m, function(id, option) {
-            $("#offer_payment_method_id").append($('<option></option>').val(option.id).html(option.description));
+            $("#purchase_order_payment_method_id").append($('<option></option>').val(option.id).html(option.description));
           });
         }
-        if (m_id != 0) $("#offer_payment_method_id").select2("val", m_id);
+        if (m_id != 0) $("#purchase_order_payment_method_id").val(m_id);
       });
-      // Request not selected
-      if (request == "0") {
-        $("#offer_project_id").val(0);
-        $("#offer_project_id").trigger("change");
+      // Offer not selected
+      if (o == "0") {
+        $("#purchase_order_project_id").val(0);
+        $("#purchase_order_project_id").trigger("change");
       }
       //return false;
     });

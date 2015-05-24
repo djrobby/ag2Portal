@@ -77,6 +77,9 @@ Ag2Purchase::Engine.routes.draw do
     match 'purchase_orders/po_approve_order/:order', :controller => 'purchase_orders', :action => 'po_approve_order'
     match 'po_approve_order/:order', :controller => 'purchase_orders', :action => 'po_approve_order'
     match 'purchase_orders/:id/po_approve_order/:order', :controller => 'purchase_orders', :action => 'po_approve_order'
+    match 'purchase_orders/po_update_selects_from_offer/:o', :controller => 'purchase_orders', :action => 'po_update_selects_from_offer'
+    match 'po_update_selects_from_offer/:o', :controller => 'purchase_orders', :action => 'po_update_selects_from_offer'
+    match 'purchase_orders/:id/po_update_selects_from_offer/:o', :controller => 'purchase_orders', :action => 'po_update_selects_from_offer'
     #
     # Purchase order Reports
     #match 'purchase_order_form', :controller => 'purchase_orders', :action => 'purchase_order_form'
