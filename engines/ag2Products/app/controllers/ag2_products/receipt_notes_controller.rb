@@ -24,11 +24,11 @@ module Ag2Products
       else
         @orders = orders_dropdown
       end
-
-      respond_to do |format|
-        format.html # rn_update_order_select_from_supplier.html.erb does not exist! JSON only
-        format.json { render json: @orders }
-      end
+      # Offers array
+      @orders_dropdown = orders_array(@orders)
+      # Setup JSON
+      @json_data = { "order" => @orders_dropdown }
+      render json: @json_data
     end
 
     # Calculate and format totals properly
@@ -257,8 +257,6 @@ module Ag2Products
     #
     # Default Methods
     #
-    # GET /supplier_invoices
-    # GET /supplier_invoices.json
     # GET /receipt_notes
     # GET /receipt_notes.json
     def index
@@ -521,6 +519,14 @@ module Ag2Products
     def products_dropdown
       session[:organization] != '0' ? Product.where(organization_id: session[:organization].to_i).order(:product_code) : Product.order(:product_code)
     end    
+    
+    def orders_array(_orders)
+      _array = []
+      _orders.each do |i|
+        _array = _array << [i.id, i.full_no, formatted_date(i.order_date), i.supplier.full_name] 
+      end
+      _array
+    end
     
     # Keeps filter state
     def manage_filter_state

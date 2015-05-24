@@ -27,11 +27,11 @@ module Ag2Purchase
       else
         @offers = offers_dropdown
       end
-
-      respond_to do |format|
-        format.html # po_update_offer_textfield_from_supplier.html.erb does not exist! JSON only
-        format.json { render json: @offers }
-      end
+      # Offers array
+      @offers_dropdown = offers_array(@offers)
+      # Setup JSON
+      @json_data = { "offer" => @offers_dropdown }
+      render json: @json_data
     end
 
     # Calculate and format totals properly
@@ -636,6 +636,14 @@ module Ag2Purchase
     def products_dropdown
       session[:organization] != '0' ? Product.where(organization_id: session[:organization].to_i).order(:product_code) : Product.order(:product_code)
     end    
+    
+    def offers_array(_offers)
+      _array = []
+      _offers.each do |i|
+        _array = _array << [i.id, i.offer_no, formatted_date(i.offer_date), i.supplier.full_name] 
+      end
+      _array
+    end
 
     # Keeps filter state
     def manage_filter_state

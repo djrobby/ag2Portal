@@ -221,13 +221,21 @@
       if (supplier == "")
         supplier = "0";
       jQuery.getJSON('po_update_offer_select_from_supplier/' + supplier, function(data) {
+        var o = data.offer;
         $("#purchase_order_offer_id").html("");
         $("#purchase_order_offer_id").select2("val", "");
         $("#purchase_order_offer_id").append($('<option></option>').val("").html(""));
-        $.each(data, function(id, option) {
-          $("#purchase_order_offer_id").append($('<option></option>').val(option.id).html(option.offer_no + ' ' + option.offer_date + ' ' + option.supplier.name));
-        });
-        //$("#purchase_order_offer_id").val(data.id);
+        if (!o.length) {
+          $.each(data, function(id, option) {
+            if (id == 'offer' && option != "") {
+              $("#purchase_order_offer_id").append($('<option></option>').val(option[0]).html(option[1] + " " + option[2] + " " + option[3]));
+            }
+          });
+        } else {
+          $.each(o, function(id, option) {
+            $("#purchase_order_offer_id").append($('<option></option>').val(option[0]).html(option[1] + " " + option[2] + " " + option[3]));
+          });
+        }
       });
       return false;
     });
