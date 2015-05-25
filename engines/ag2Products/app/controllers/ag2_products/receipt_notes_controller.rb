@@ -308,9 +308,9 @@ module Ag2Products
       # OCO
       init_oco if !session[:organization]
       # Initialize select_tags
-      @suppliers_s = suppliers_dropdown if @suppliers_s.nil?
-      @projects_s = projects_dropdown if @projects_s.nil?
-      @work_orders_s = work_orders_dropdown if @work_orders_s.nil?
+      @projects = projects_dropdown if @projects.nil?
+      @suppliers = suppliers_dropdown if @suppliers.nil?
+      @work_orders = work_orders_dropdown if @work_orders.nil?
 
       current_projects = @projects.blank? ? [0] : current_projects_for_index(@projects)
       @search = ReceiptNote.search do
