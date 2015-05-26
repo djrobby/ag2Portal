@@ -1,3 +1,17 @@
+<script>
+  jQuery(function($) {
+    // when #print_report_btn is clicked
+    $("#print_report_btn").click(function() {
+      // make a POST call and get report
+      var id = $('#id').html();
+      if (id == "")
+        return;
+      //window.open("receipt_note_form.pdf?id=" + id, "_blank");
+      return false;
+    });
+  });  
+</script>
+
 <%= render '/layouts/ag2_products/receiptsbreadcrumb' %>
 
 <h3><%=t '.title' %></h3>
@@ -5,13 +19,13 @@
   <tbody>
     <tr>
       <td>Id:</td>
-      <td><%= @receipt_note.id %></td>
+      <td id="id"><%= @receipt_note.id %></td>
       <td><%=t 'activerecord.attributes.receipt_note.receipt_no' %>:</td>
       <td><b><%= @receipt_note.receipt_no %></b></td>
     </tr>
     <tr>
       <td><%=t 'activerecord.attributes.receipt_note.receipt_date' %>:</td>
-      <td><%= @receipt_note.receipt_date.strftime("%d/%m/%Y") unless @receipt_note.receipt_date.blank? %></td>
+      <td><%= formatted_date(@receipt_note.receipt_date) unless @receipt_note.receipt_date.blank? %></td>
       <td><%=t 'activerecord.attributes.receipt_note.offer' %>:</td>
       <td><%= @receipt_note.purchase_order.order_no unless @receipt_note.purchase_order.blank? %></td>
     </tr>
@@ -52,7 +66,7 @@
         <h4><%= t 'ag2_products.receipt_notes.items_info' %></h4>
       </td>
       <td class="form-td-two right-winged">
-        <%= link_to t(".print"), receipt_notes_path, :class => 'btn btn-warning' %>
+        <a href="#" id="print_report_btn" class="btn btn-warning"><i class="icon-print icon-white"></i> <%= t '.print' %></a>
       </td>
     </tr>
   </tbody>

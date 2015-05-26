@@ -1,4 +1,6 @@
 class SaleOffer < ActiveRecord::Base
+  include ModelsModule
+  
   belongs_to :client
   belongs_to :payment_method
   belongs_to :sale_offer_status
@@ -43,12 +45,9 @@ class SaleOffer < ActiveRecord::Base
   end
 
   def full_name
-    full_name = ""
-    if !self.offer_no.blank?
-      full_name += self.offer_no
-    end
+    full_name = full_no
     if !self.offer_date.blank?
-      full_name += " " + self.offer_date.to_s
+      full_name += " " + formatted_date(self.offer_date)
     end
     if !self.client.blank?
       full_name += " " + self.client.full_name
@@ -57,14 +56,16 @@ class SaleOffer < ActiveRecord::Base
   end
 
   def partial_name
-    partial_name = ""
-    if !self.offer_no.blank?
-      partial_name += self.offer_no
-    end
+    partial_name = full_no
     if !self.client.blank?
       partial_name += " " + self.client.name[0,40]
     end
     partial_name
+  end
+
+  def full_no
+    # Offer no (Project code & year & sequential number) => PPPPPPPPPPPP-YYYY-NNNNNN
+    offer_no.blank? ? "" : offer_no[0..11] + '-' + offer_no[12..15] + '-' + offer_no[16..21]
   end
 
   #

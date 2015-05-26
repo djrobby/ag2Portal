@@ -1,3 +1,17 @@
+<script>
+  jQuery(function($) {
+    // when #print_report_btn is clicked
+    $("#print_report_btn").click(function() {
+      // make a POST call and get report
+      var id = $('#id').html();
+      if (id == "")
+        return;
+      //window.open("delivery_note_form.pdf?id=" + id, "_blank");
+      return false;
+    });
+  });  
+</script>
+
 <%= render '/layouts/ag2_products/deliveriesbreadcrumb' %>
 
 <h3><%=t '.title' %></h3>
@@ -5,14 +19,14 @@
   <tbody>
     <tr>
       <td>Id:</td>
-      <td><%= @delivery_note.id %></td>
+      <td id="id"><%= @delivery_note.id %></td>
       <td><%=t 'activerecord.attributes.delivery_note.delivery_no' %>:</td>
-      <td><b><%= @delivery_note.delivery_no %></b></td>
+      <td><b><%= @delivery_note.full_no %></b></td>
     </tr>
     <tr>
-      <td><%=t 'activerecord.attributes.delivery_note.receipt_date' %>:</td>
-      <td><%= @delivery_note.receipt_date.strftime("%d/%m/%Y") unless @delivery_note.receipt_date.blank? %></td>
-      <td><%=t 'activerecord.attributes.delivery_note.offer' %>:</td>
+      <td><%=t 'activerecord.attributes.delivery_note.delivery_date' %>:</td>
+      <td><%= formatted_date(@delivery_note.delivery_date) unless @delivery_note.delivery_date.blank? %></td>
+      <td><%=t 'activerecord.attributes.delivery_note.sale_offer' %>:</td>
       <td><%= @delivery_note.sale_offer.offer_no unless @delivery_note.sale_offer.blank? %></td>
     </tr>
     <tr>
@@ -46,7 +60,7 @@
         <h4><%= t 'ag2_products.delivery_notes.items_info' %></h4>
       </td>
       <td class="form-td-two right-winged">
-        <%= link_to t(".print"), delivery_notes_path, :class => 'btn btn-warning' %>
+        <a href="#" id="print_report_btn" class="btn btn-warning"><i class="icon-print icon-white"></i> <%= t '.print' %></a>
       </td>
     </tr>
   </tbody>
