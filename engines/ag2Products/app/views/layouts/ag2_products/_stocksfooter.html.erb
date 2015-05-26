@@ -1,7 +1,9 @@
 <tr>
   <td></td>
   <td></td>
-  <td></td>
   <td align="right"><%= t :"activerecord.attributes.product.stock" %></td>
+  <td align="right"><%= number_with_precision(product.initial, precision: 4) unless product.initial.blank? %></td>
+  <td align="right"><%= number_with_precision(product.receipts, precision: 4) unless product.receipts.blank? %></td>
+  <td align="right"><%= number_with_precision(product.deliveries, precision: 4) unless product.deliveries.blank? %></td>
   <td align="right"><%= number_with_precision(product.stock, precision: 4) unless product.stock.blank? %></td>
 </tr>

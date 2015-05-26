@@ -47,3 +47,5 @@ es:
         fax: "Fax"
         email: "Email"
         address: "Dirección"
+        receipts: "Entradas"
+        deliveries: "Salidas"

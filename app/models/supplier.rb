@@ -142,7 +142,7 @@ class Supplier < ActiveRecord::Base
   # Calculated fields
   #
   def active_yes_no
-    active ? 'Yes' : 'No'
+    active ? I18n.t(:yes_on) : I18n.t(:no_off)
   end
 
   #

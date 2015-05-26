@@ -19,3 +19,5 @@ es:
         minimum: "Mínimo"
         location: "Ubicación"
         maximum: "Máximo"
+        receipts: "Entradas"
+        deliveries: "Salidas"

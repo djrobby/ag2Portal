@@ -81,11 +81,15 @@ class Product < ActiveRecord::Base
   # Calculated fields
   #
   def active_yes_no
-    active ? 'Yes' : 'No'
+    active ? I18n.t(:yes_on) : I18n.t(:no_off)
   end
 
   def stock
     stocks.sum("current")
+  end
+
+  def initial
+    stocks.sum("initial")
   end
   
   def not_jit_stock
@@ -96,6 +100,14 @@ class Product < ActiveRecord::Base
       end
     end
     _s    
+  end
+
+  def receipts
+    receipt_note_items.sum("quantity")
+  end
+
+  def deliveries
+    delivery_note_items.sum("quantity")
   end
 
   #

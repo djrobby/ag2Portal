@@ -1,4 +1,6 @@
 en:
+  yes_on: "Yes"
+  no_off: "No"
   activerecord:
     errors:
       models:

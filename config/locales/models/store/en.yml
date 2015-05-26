@@ -47,3 +47,5 @@ en:
         fax: "Fax"
         email: "Email"
         address: "Address"
+        receipts: "Receipts"
+        deliveries: "Deliveries"

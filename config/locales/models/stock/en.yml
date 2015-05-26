@@ -19,3 +19,5 @@ en:
         minimum: "Minimum"
         location: "Location"
         maximum: "Maximum"
+        receipts: "Receipts"
+        deliveries: "Deliveries"

@@ -48,6 +48,14 @@ class Store < ActiveRecord::Base
     stocks.sum("current")
   end
 
+  def receipts
+    receipt_note_items.sum("quantity")
+  end
+
+  def deliveries
+    delivery_note_items.sum("quantity")
+  end
+
   def address_1
     _ret = ""
     if !street_type.blank?
