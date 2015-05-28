@@ -48,6 +48,10 @@ class Store < ActiveRecord::Base
     stocks.sum("current")
   end
 
+  def initial
+    stocks.sum("initial")
+  end
+
   def receipts
     receipt_note_items.sum("quantity")
   end

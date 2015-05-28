@@ -24,7 +24,7 @@ en:
         location: "Internal name"
         supplier: "Supplier"
         supplier_id: "Supplier"
-        stock: "Total stock"
+        stock: "Totals"
         depot: "JIT Depot"
         organization: "Organization"
         organization_id: "Organization"

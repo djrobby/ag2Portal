@@ -23,7 +23,7 @@ class ReceiptNoteItem < ActiveRecord::Base
   validates :product,             :presence => true
   validates :tax_type,            :presence => true
   validates :store,               :presence => true
-  validates :work_order,          :presence => true
+  #validates :work_order,          :presence => true
   validates :charge_account,      :presence => true
   validates :project,             :presence => true
   validates :quantity,            :numericality => true
@@ -170,7 +170,7 @@ class ReceiptNoteItem < ActiveRecord::Base
       _stock = Stock.find_by_product_and_store(_product, _store)
       if _stock.nil?
         # Insert a new empty record if Stock doesn't exist
-        _stock = Stock.create(product: _product, store: _store, initial: 0, current: 0, minimum: 0, maximum: 0, location: nil)
+        _stock = Stock.create(product_id: _product.id, store_id: _store.id, initial: 0, current: 0, minimum: 0, maximum: 0, location: nil)
       end
     end
     true
@@ -181,7 +181,7 @@ class ReceiptNoteItem < ActiveRecord::Base
     _purchase_price = PurchasePrice.find_by_product_and_supplier(_product, _supplier)
     if _purchase_price.nil?
       # Insert a new empty record if PurchasePrice doesn't exist
-      _purchase_price = PurchasePrice.create(product: _product, supplier: _supplier, code: nil, price: 0, measure: _product.measure, factor: 1, prev_code: nil, prev_price: 0)
+      _purchase_price = PurchasePrice.create(product_id: _product.id, supplier_id: _supplier.id, code: nil, price: 0, measure_id: _product.measure.id, factor: 1, prev_code: nil, prev_price: 0)
     end
     true
   end

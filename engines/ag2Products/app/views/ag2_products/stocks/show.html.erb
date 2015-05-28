@@ -8,11 +8,11 @@
       <td>Id:</td>
       <td><%= @stock.id %></td>
       <td><%=t 'activerecord.attributes.stock.product' %>:</td>
-      <td><%= @stock.product.full_name %></td>
+      <td><b><%= @stock.product.full_name %></b></td>
     </tr>
     <tr>
       <td><%=t 'activerecord.attributes.stock.store' %>:</td>
-      <td><%= @stock.store.name %></td>
+      <td><b><%= @stock.store.name %></b></td>
       <td><%=t 'activerecord.attributes.stock.location' %>:</td>
       <td><%= @stock.location unless @stock.location.blank? %></td>
     </tr>
@@ -25,8 +25,14 @@
     <tr>
       <td><%=t 'activerecord.attributes.stock.initial' %>:</td>
       <td><%= number_with_precision(@stock.initial, precision: 4) unless @stock.initial.blank? %></td>
-      <td><%=t 'activerecord.attributes.stock.current' %>:</td>
-      <td><%= number_with_precision(@stock.current, precision: 4) unless @stock.current.blank? %></td>
+      <td class="highlighted bolded"><%=t 'activerecord.attributes.stock.current' %>:</td>
+      <td class="highlighted bolded"><%= number_with_precision(@stock.current, precision: 4) unless @stock.current.blank? %></td>
+    </tr>
+    <tr>
+      <td><%=t 'activerecord.attributes.stock.receipts' %>:</td>
+      <td><%= number_with_precision(@stock.receipts, precision: 4) unless @stock.receipts.blank? %></td>
+      <td><%=t 'activerecord.attributes.stock.deliveries' %>:</td>
+      <td><%= number_with_precision(@stock.deliveries, precision: 4) unless @stock.deliveries.blank? %></td>
     </tr>
     <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @stock } %>
     <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @stock } %>

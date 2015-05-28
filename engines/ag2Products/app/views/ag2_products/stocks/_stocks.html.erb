@@ -19,12 +19,16 @@
       <th align="right"><%= t :"activerecord.attributes.stock.minimum" %></th>
       <th align="right"><%= t :"activerecord.attributes.stock.maximum" %></th>
       <th align="right"><%= t :"activerecord.attributes.stock.initial" %></th>
+      <th align="right"><%= t :"activerecord.attributes.stock.receipts" %></th>
+      <th align="right"><%= t :"activerecord.attributes.stock.deliveries" %></th>
       <th align="right"><%= t :"activerecord.attributes.stock.current" %></th>
       <% else %> <!-- !@store.nil? -->
       <th><%= t :"activerecord.attributes.stock.product" %></th>
       <th align="right"><%= t :"activerecord.attributes.stock.minimum" %></th>
       <th align="right"><%= t :"activerecord.attributes.stock.maximum" %></th>
       <th align="right"><%= t :"activerecord.attributes.stock.initial" %></th>
+      <th align="right"><%= t :"activerecord.attributes.stock.receipts" %></th>
+      <th align="right"><%= t :"activerecord.attributes.stock.deliveries" %></th>
       <th align="right"><%= t :"activerecord.attributes.stock.current" %></th>
       <% end %>
       <th></th>
@@ -42,12 +46,16 @@
       <td align="right"><%= number_with_precision(stock.minimum, precision: 4) unless stock.minimum.blank? %></td>
       <td align="right"><%= number_with_precision(stock.maximum, precision: 4) unless stock.maximum.blank? %></td>
       <td align="right"><%= number_with_precision(stock.initial, precision: 4) unless stock.initial.blank? %></td>
+      <td align="right"><%= number_with_precision(stock.receipts, precision: 4) unless stock.receipts.blank? %></td>
+      <td align="right"><%= number_with_precision(stock.deliveries, precision: 4) unless stock.deliveries.blank? %></td>
       <td align="right"><%= number_with_precision(stock.current, precision: 4) unless stock.current.blank? %></td>
       <% else %> <!-- !@store.nil? -->
       <td><%= link_to stock.product.full_name, stock %></td>
       <td align="right"><%= number_with_precision(stock.minimum, precision: 4) unless stock.minimum.blank? %></td>
       <td align="right"><%= number_with_precision(stock.maximum, precision: 4) unless stock.maximum.blank? %></td>
       <td align="right"><%= number_with_precision(stock.initial, precision: 4) unless stock.initial.blank? %></td>
+      <td align="right"><%= number_with_precision(stock.receipts, precision: 4) unless stock.receipts.blank? %></td>
+      <td align="right"><%= number_with_precision(stock.deliveries, precision: 4) unless stock.deliveries.blank? %></td>
       <td align="right"><%= number_with_precision(stock.current, precision: 4) unless stock.current.blank? %></td>
       <% end %>
       <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => Stock, :path => edit_stock_path(stock) } %>

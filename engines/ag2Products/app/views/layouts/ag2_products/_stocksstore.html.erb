@@ -4,6 +4,8 @@
   <td align="right"><%= number_with_precision(w.minimum, precision: 4) unless w.minimum.blank? %></td>
   <td align="right"><%= number_with_precision(w.maximum, precision: 4) unless w.maximum.blank? %></td>
   <td align="right"><%= number_with_precision(w.initial, precision: 4) unless w.initial.blank? %></td>
+  <td align="right"><%= number_with_precision(w.receipts, precision: 4) unless w.receipts.blank? %></td>
+  <td align="right"><%= number_with_precision(w.deliveries, precision: 4) unless w.deliveries.blank? %></td>
   <td align="right"><%= number_with_precision(w.current, precision: 4) unless w.current.blank? %></td>
 </tr>
 <% end %>
