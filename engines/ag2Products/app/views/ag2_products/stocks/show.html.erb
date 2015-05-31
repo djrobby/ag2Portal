@@ -44,6 +44,68 @@
 delete_path: @stock, delete_txt: t('.btn_delete'), msg: t("activerecord.models.stock.one"), txt: @stock.product.full_name + "->" + @stock.store.name,
 new_path: new_stock_path, new_txt: t('ag2_products.stocks.index.btn_new') } %>
 
+<!-- Receipts -->
+<h4><%=t 'activerecord.attributes.stock.receipts' %></h4>
+<% if (@receipts.count > 0) %>
+<table class="table table-condensed table-striped">
+  <!-- id -->
+  <col width="9%" />
+  <!-- date -->
+  <col width="15%" />
+  <!-- no -->
+  <col width="16%" />
+  <!-- quantity -->
+  <col width="15%" />
+  <!-- price -->
+  <col width="15%" />
+  <!-- discount -->
+  <col width="15%" />
+  <!-- amount -->
+  <col width="15%" />
+  <thead>
+    <%= render 'receiptsheader' %>
+  </thead>
+  <tfoot>
+    <%= render :partial => 'receiptsfooter', :locals => { :stock => @stock } %>
+  </tfoot>
+  <tbody>
+    <%= render :partial => 'receipts', :locals => { :receipts => @receipts } %>
+  </tbody>
+</table>
+<% end %>
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @receipts } %>
+<!-- Deliveries -->
+<h4><%=t 'activerecord.attributes.stock.deliveries' %></h4>
+<% if (@deliveries.count > 0) %>
+<table class="table table-condensed table-striped">
+  <!-- id -->
+  <col width="9%" />
+  <!-- date -->
+  <col width="15%" />
+  <!-- no -->
+  <col width="16%" />
+  <!-- quantity -->
+  <col width="15%" />
+  <!-- price -->
+  <col width="15%" />
+  <!-- discount -->
+  <col width="15%" />
+  <!-- amount -->
+  <col width="15%" />
+  <thead>
+    <%= render 'deliveriesheader' %>
+  </thead>
+  <tfoot>
+    <%= render :partial => 'deliveriesfooter', :locals => { :stock => @stock } %>
+  </tfoot>
+  <tbody>
+    <%= render :partial => 'deliveries', :locals => { :deliveries => @deliveries } %>
+  </tbody>
+</table>
+<% end %>
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @deliveries } %>
+
+<!-- Go back link -->
 <% if @product %>
 <%= link_to t("ag2_products.stocks.back_to_main_page"), stocks_path(product: @product) %>
 <% elsif @store %>

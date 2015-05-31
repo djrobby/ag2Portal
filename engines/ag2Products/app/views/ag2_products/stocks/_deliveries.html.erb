@@ -1,0 +1,11 @@
+<% deliveries.each do |m| %>
+<tr>
+  <td><%= m.id %></td>
+  <td align="center"><%= formatted_date(m.delivery_note.delivery_date) unless m.delivery_note.delivery_date.blank? %></td>
+  <td><%= m.delivery_note.full_no %></td>
+  <td align="right"><%= number_with_precision(m.quantity, precision: 4) unless m.quantity.blank? %></td>
+  <td align="right"><%= number_with_precision(m.price, precision: 4) unless m.price.blank? %></td>
+  <td align="right"><%= number_with_precision(m.discount, precision: 4) unless m.discount.blank? %></td>
+  <td align="right"><%= number_with_precision(m.amount, precision: 4) unless m.amount.blank? %></td>
+</tr>
+<% end %>

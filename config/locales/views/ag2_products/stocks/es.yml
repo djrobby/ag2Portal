@@ -14,6 +14,7 @@ es:
         title: "Existencia"
         btn_edit: "Editar Existencia"
         btn_delete: "Borrar Existencia"
+        subtable_title: "Movimientos"
       edit:
         title: "Editar Existencia"
         btn_show: "Ver Existencia"

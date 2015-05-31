@@ -1,0 +1,9 @@
+<tr>
+  <td></td>
+  <td></td>
+  <td align="right"><%= t :"activerecord.attributes.product.stock" %></td>
+  <td align="right"><%= number_with_precision(stock.receipts, precision: 4) unless stock.receipts.blank? %></td>
+  <td align="right"><%= number_with_precision(stock.receipts_price_avg, precision: 4) unless stock.receipts_price_avg.blank? %></td>
+  <td align="right"><%= number_with_precision(stock.receipts_discount, precision: 4) unless stock.receipts_discount.blank? %></td>
+  <td align="right"><%= number_with_precision(stock.receipts_amount, precision: 4) unless stock.receipts_amount.blank? %></td>
+</tr>

@@ -25,8 +25,8 @@ en:
       new:
         title: "New Product"
       receipts_deliveries:
-        title: "Movements "
-        return_to: "Back to Product"
+        title: "Movements"
+        return_to: "Back to Product movements"
       back_to_main_page: "Back to Products"
       generate_code_btn: "Product Code"
       commercial_info: "Commercial Info"

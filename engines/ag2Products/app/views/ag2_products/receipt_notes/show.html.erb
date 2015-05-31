@@ -103,4 +103,7 @@
 delete_path: @receipt_note, delete_txt: t('.btn_delete'), msg: t("activerecord.models.receipt_note.one"), txt: @receipt_note.receipt_no,
 new_path: new_receipt_note_path, new_txt: t('ag2_products.receipt_notes.index.btn_new') } %>
 
+<% if !session[:return_to_prod].nil? %>
+<%= link_to session[:return_to_prod], session[:return_to_prod_url] %> |
+<% end %>
 <%= link_to t("ag2_products.receipt_notes.back_to_main_page"), receipt_notes_path %>

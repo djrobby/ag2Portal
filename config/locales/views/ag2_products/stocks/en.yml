@@ -14,6 +14,7 @@ en:
         title: "Stock"
         btn_edit: "Edit Stock"
         btn_delete: "Delete Stock"
+        subtable_title: "Movements"
       edit:
         title: "Edit Stock"
         btn_show: "Show Stock"

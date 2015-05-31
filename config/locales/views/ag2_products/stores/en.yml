@@ -17,8 +17,8 @@ en:
       new:
         title: "New Store"
       receipts_deliveries:
-        title: "Movements "
-        return_to: "Back to Store"
+        title: "Movements"
+        return_to: "Back to Store movements"
       back_to_main_page: "Back to Stores"
       stocks: "Stocks"
       depot: "JIT Depot?"

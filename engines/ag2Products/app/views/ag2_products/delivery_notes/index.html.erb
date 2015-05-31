@@ -34,6 +34,8 @@
   });
 </script>
 
+<% session[:return_to_prod] = nil %>
+<% session[:return_to_prod_url] = nil %>
 <%= render '/layouts/ag2_products/deliveriesbreadcrumb' %>
 <h3><%= t '.title' %></h3>
 

@@ -8,14 +8,55 @@ class Stock < ActiveRecord::Base
   validates :product,  :presence => true
   validates :store,    :presence => true
 
+  # Receipts
+  def receipt_note_items
+    ReceiptNoteItem.where(product_id: self.product, store_id: self.store)
+  end
   def receipts
-    ReceiptNoteItem.where(product_id: self.product, store_id: self.store).sum("quantity")
+    receipt_note_items.sum("quantity")
+    #ReceiptNoteItem.where(product_id: self.product, store_id: self.store).sum("quantity")
+  end
+  def receipts_price_avg
+    receipt_note_items.sum("price") / receipt_note_items.count
+  end
+  def receipts_discount
+    receipt_note_items.sum("discount")
+  end
+  def receipts_amount
+    _sum = 0
+    receipt_note_items.each do |i|
+      if !i.amount.blank?
+        _sum += i.amount
+      end
+    end
+    _sum
   end
 
+  # Deliveries
+  def delivery_note_items
+    DeliveryNoteItem.where(product_id: self.product, store_id: self.store)
+  end
   def deliveries
-    DeliveryNoteItem.where(product_id: self.product, store_id: self.store).sum("quantity")
+    delivery_note_items.sum("quantity")
+    #DeliveryNoteItem.where(product_id: self.product, store_id: self.store).sum("quantity")
+  end
+  def deliveries_price_avg
+    delivery_note_items.sum("price") / delivery_note_items.count
+  end
+  def deliveries_discount
+    delivery_note_items.sum("discount")
+  end
+  def deliveries_amount
+    _sum = 0
+    delivery_note_items.each do |i|
+      if !i.amount.blank?
+        _sum += i.amount
+      end
+    end
+    _sum
   end
 
+  # Self user defined methods
   def self.find_by_product_and_store(_product, _store)
     Stock.where("product_id = ? AND store_id = ?", _product, _store).first 
   end

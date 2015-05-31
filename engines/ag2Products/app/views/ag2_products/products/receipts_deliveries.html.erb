@@ -11,6 +11,10 @@
   </tr>
 </table>
 
+<!-- Link to return here -->
+<% session[:return_to_prod] = I18n.t('ag2_products.products.receipts_deliveries.return_to') %>
+<% session[:return_to_prod_url] = "#{request.protocol}#{request.host_with_port}#{request.fullpath}" %>
+
 <div class="container-fluid">
   <div class="row-fluid">
     <div class="span12" id="div_table">
@@ -62,9 +66,9 @@
         <tbody>
           <% @receipts.each do |m| %>
           <tr>
-            <td><%= m.id %></td>
+            <td><%= m.receipt_note.id %></td>
             <td align="center"><%= formatted_date(m.receipt_note.receipt_date) unless m.receipt_note.receipt_date.blank? %></td>
-            <td><%= m.receipt_note.receipt_no %></td>
+            <td><%= link_to m.receipt_note.receipt_no, m.receipt_note %></td>
             <td><%= m.store.name unless m.store.blank? %></td>
             <td align="right"><%= number_with_precision(m.quantity, precision: 4) unless m.quantity.blank? %></td>
             <td align="right"><%= number_with_precision(m.price, precision: 4) unless m.price.blank? %></td>
@@ -124,9 +128,9 @@
         <tbody>
           <% @deliveries.each do |m| %>
           <tr>
-            <td><%= m.id %></td>
+            <td><%= m.delivery_note.id %></td>
             <td align="center"><%= formatted_date(m.delivery_note.delivery_date) unless m.delivery_note.delivery_date.blank? %></td>
-            <td><%= m.delivery_note.full_no %></td>
+            <td><%= link_to m.delivery_note.full_no, m.delivery_note %></td>
             <td><%= m.store.name unless m.store.blank? %></td>
             <td align="right"><%= number_with_precision(m.quantity, precision: 4) unless m.quantity.blank? %></td>
             <td align="right"><%= number_with_precision(m.price, precision: 4) unless m.price.blank? %></td>
@@ -139,7 +143,7 @@
       <% end %>
       <%= render :partial => '/layouts/pagination', :locals => { :ivar => @deliveries } %>
 
-      <%= link_to t(".return_to"), @product %>
+      <%= link_to t("ag2_products.products.show.return_to"), @product %>
     </div><!-- /.span12 -->
   </div><!-- /.row-fluid -->
 </div><!-- /.container-fluid -->

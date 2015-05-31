@@ -17,8 +17,8 @@ es:
       new:
         title: "Nuevo Almacén"
       receipts_deliveries:
-        title: "Movimientos "
-        return_to: "Volver a Almacén"
+        title: "Movimientos"
+        return_to: "Volver a Movimientos de almacén"
       back_to_main_page: "Volver a Almacenes"
       stocks: "Existencias"
       depot: "¿Depósito JIT?"
