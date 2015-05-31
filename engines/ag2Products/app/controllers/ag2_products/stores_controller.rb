@@ -182,6 +182,22 @@ module Ag2Products
       end
     end
 
+    # GET /receipts_deliveries
+    # GET /receipts_deliveries.json
+    def receipts_deliveries
+      @store = Store.find(params[:id])
+      # OCO
+      init_oco if !session[:organization]
+      # Receipts & Deliveries
+      @receipts = @store.receipt_note_items.joins(:receipt_note).order('receipt_date desc').paginate(:page => params[:page], :per_page => per_page)
+      @deliveries = @store.delivery_note_items.joins(:delivery_note).order('delivery_date desc').paginate(:page => params[:page], :per_page => per_page)
+
+      respond_to do |format|
+        format.html # receipts_deliveries.html.erb
+        format.json { render json: { :store => @store, :receipts => @receipts, :deliveries => @deliveries } }
+      end
+    end
+
     private
 
     def sort_column

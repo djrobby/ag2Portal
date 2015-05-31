@@ -106,7 +106,7 @@ class SupplierInvoice < ActiveRecord::Base
     avg, cnt = 0, 0
     supplier_payments.each do |i|
       if !i.payment_date.blank?
-        avg = Time.parse(i.payment_date.to_s).to_f
+        avg += Time.parse(i.payment_date.to_s).to_f
         cnt += 1
       end
     end

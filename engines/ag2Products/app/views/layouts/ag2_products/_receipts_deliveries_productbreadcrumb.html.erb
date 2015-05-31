@@ -1,0 +1,24 @@
+<% content_for :title, "aGestiona2 | ag2Products | ag2Stocks" %>
+<% content_for :icon, "/assets/icon/ag2Products.png" %>
+<% content_for :alt, "ag2Stocks" %>
+
+<!-- Breadcrumb -->
+<ul class="breadcrumb">
+  <li>
+    <a href="<%= main_app.root_path %>"><i class="icon-home"></i></a><span class="divider">></span>
+  </li>
+  <li>
+    <a href="<%= ag2_products.root_path %>">ag2Logistics</a><span class="divider">></span>
+  </li>
+  <li>
+    <a href="<%= ag2_products.products_path %>"><%=t "ag2_products.breadcrumb.products.items" %></a><span class="divider">></span>
+  </li>
+  <li>
+    <a href="<%= ag2_products.product_path(@product) %>"><%= @product.full_code %></a><span class="divider">></span>
+  </li>
+  <li>
+    <%= t "ag2_products.products.receipts_deliveries.title" %>
+  </li>
+  <!-- Close -->
+  <a class="close" href="<%= ag2_products.root_path %>">&#215;</a>
+</ul>

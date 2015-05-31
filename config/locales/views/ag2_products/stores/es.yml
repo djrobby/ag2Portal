@@ -16,6 +16,9 @@ es:
         btn_show: "Ver Almacén"
       new:
         title: "Nuevo Almacén"
+      receipts_deliveries:
+        title: "Movimientos "
+        return_to: "Volver a Almacén"
       back_to_main_page: "Volver a Almacenes"
       stocks: "Existencias"
       depot: "¿Depósito JIT?"

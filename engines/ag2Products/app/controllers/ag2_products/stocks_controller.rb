@@ -65,6 +65,9 @@ module Ag2Products
       @product = $product
       @store = $store
       @stock = Stock.find(params[:id])
+      # Receipts & Deliveries
+      @receipts = ReceiptNoteItem.joins(:receipt_note).where(product_id: @stock.product, store_id: @stock.store).order('receipt_date desc').paginate(:page => params[:page], :per_page => per_page)
+      @deliveries = DeliveryNoteItem.joins(:delivery_note).where(product_id: @stock.product, store_id: @stock.store).order('delivery_date desc').paginate(:page => params[:page], :per_page => per_page)
   
       respond_to do |format|
         format.html # show.html.erb
@@ -146,6 +149,22 @@ module Ag2Products
         format.html { redirect_to stocks_url,
                       notice: (crud_notice('destroyed', @stock) + "#{undo_link(@stock)}").html_safe }
         format.json { head :no_content }
+      end
+    end
+
+    # GET /receipts_deliveries
+    # GET /receipts_deliveries.json
+    def receipts_deliveries
+      @stock = Stock.find(params[:id])
+      # OCO
+      init_oco if !session[:organization]
+      # Receipts & Deliveries
+      @receipts = ReceiptNoteItem.joins(:receipt_note).where(product_id: @stock.product, store_id: @stock.store).order('receipt_date desc').paginate(:page => params[:page], :per_page => per_page)
+      @deliveries = DeliveryNoteItem.joins(:delivery_note).where(product_id: @stock.product, store_id: @stock.store).order('delivery_date desc').paginate(:page => params[:page], :per_page => per_page)
+
+      respond_to do |format|
+        format.html # receipts_deliveries.html.erb
+        format.json { render json: { :stock => @stock, :receipts => @receipts, :deliveries => @deliveries } }
       end
     end
 

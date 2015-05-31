@@ -169,14 +169,18 @@ Ag2Products::Engine.routes.draw do
     match 'purchase_orders/:id/po_update_selects_from_offer/:o', :controller => 'purchase_orders', :action => 'po_update_selects_from_offer'
 
     # Resources
-    resources :products
     resources :product_families
     resources :product_types
     resources :measures
     resources :manufacturers
-    resources :stores
-    resources :purchase_prices
+    resources :products do
+      get 'receipts_deliveries', on: :collection
+    end
+    resources :stores do
+      get 'receipts_deliveries', on: :collection
+    end
     resources :stocks
+    resources :purchase_prices
     resources :purchase_orders do
       get 'purchase_order_form', on: :collection
     end

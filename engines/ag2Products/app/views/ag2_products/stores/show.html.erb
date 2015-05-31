@@ -91,6 +91,7 @@ new_path: new_store_path, new_txt: t('ag2_products.stores.index.btn_new') } %>
         <h4><%=t '.subtable_title' %></h4>
       </td>
       <td class="form-td-two right-winged">
+        <%= link_to t("ag2_products.stores.receipts_deliveries.title"), receipts_deliveries_stores_path(id: @store), :class => 'btn btn-warning' %>
         <%= render partial: '/layouts/ag2_products/storestocks', locals: { store: @store } %>
       </td>
     </tr>

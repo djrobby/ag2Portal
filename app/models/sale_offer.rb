@@ -121,7 +121,7 @@ class SaleOffer < ActiveRecord::Base
     avg, cnt = 0, 0
     sale_offer_items.each do |i|
       if !i.delivery_date.blank?
-        avg = Time.parse(i.delivery_date.to_s).to_f
+        avg += Time.parse(i.delivery_date.to_s).to_f
         cnt += 1
       end
     end

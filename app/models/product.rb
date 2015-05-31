@@ -72,6 +72,14 @@ class Product < ActiveRecord::Base
     full_name
   end
 
+  def partial_name
+    full_name = full_code
+    if !self.main_description.blank?
+      full_name += " " + self.main_description[0,25]
+    end
+    full_name
+  end
+
   def full_code
     # Product code (Family code & sequential number) => FFFF-NNNNNN
     product_code.blank? ? "" : product_code[0..3] + '-' + product_code[4..9]
@@ -102,12 +110,74 @@ class Product < ActiveRecord::Base
     _s    
   end
 
+  # Receipts
   def receipts
     receipt_note_items.sum("quantity")
   end
+  def receipts_price_avg
+    receipt_note_items.sum("price") / receipt_note_items.count
+  end
+  def receipts_discount
+    receipt_note_items.sum("discount")
+  end
+  def receipts_amount
+    _sum = 0
+    receipt_note_items.each do |i|
+      if !i.amount.blank?
+        _sum += i.amount
+      end
+    end
+    _sum
+  end
+  def receipts_tax
+    _sum = 0
+    receipt_note_items.each do |i|
+      if !i.tax.blank?
+        _sum += i.tax
+      end
+    end
+    _sum
+  end
 
+  # Deliveries
   def deliveries
     delivery_note_items.sum("quantity")
+  end
+  def deliveries_price_avg
+    delivery_note_items.sum("price") / delivery_note_items.count
+  end
+  def deliveries_cost_avg
+    delivery_note_items.sum("cost") / delivery_note_items.count
+  end
+  def deliveries_discount
+    delivery_note_items.sum("discount")
+  end
+  def deliveries_amount
+    _sum = 0
+    delivery_note_items.each do |i|
+      if !i.amount.blank?
+        _sum += i.amount
+      end
+    end
+    _sum
+  end
+  def deliveries_costs
+    _sum = 0
+    delivery_note_items.each do |i|
+      if !i.costs.blank?
+        _sum += i.costs
+      end
+    end
+    _sum
+  end
+  def deliveries_tax
+    _sum = 0
+    delivery_note_items.each do |i|
+      if !i.tax.blank?
+        _sum += i.tax
+      end
+    end
+    _sum
   end
 
   #

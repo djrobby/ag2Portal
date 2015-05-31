@@ -662,6 +662,14 @@ tfoot {
   vertical-align: center !important;
   text-align: right !important;
 }
+.header-with-image .header-title h3 {
+  margin: 0 !important;
+  font-family: inherit;
+  font-weight: bold;
+  /*line-height: 20px;*/
+  color: inherit;
+  text-rendering: optimizelegibility;  
+}
 /*
  * Icons
  */
