@@ -1,0 +1,18 @@
+es:
+  ag2_admin:
+    notifications:
+      index:
+        title: "Notificaciones"
+        btn_new: "Nueva Notificación"
+        back_to_root: "Volver a ag2Config"
+      show:
+        title: "Notificación"
+        btn_edit: "Editar Notificación"
+        btn_delete: "Borrar Notificación"
+        return_to: "Volver a Notificación"
+      edit:
+        title: "Editar Notificación"
+        btn_show: "Ver Notificación"
+      new:
+        title: "Nueva Notificación"
+      back_to_main_page: "Volver a Notificaciones"

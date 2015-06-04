@@ -1,0 +1,31 @@
+<%= render '/layouts/ag2_admin/notificationsbreadcrumb' %>
+
+<h3><%=t '.title' %></h3>
+<div class="span11">
+  <table class="table table-condensed table-striped">
+    <thead>
+      <tr>
+        <th><%=sortable "id", 'Id' %></th>
+        <th><%=sortable "name", t('activerecord.attributes.notification.name') %></th>
+        <th><%= sortable "action", t('activerecord.attributes.notification.action') %></th>
+        <th><%= sortable "table", t('activerecord.attributes.notification.table') %></th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @notifications.each do |notification| %>
+      <tr>
+        <td><%= notification.id %></td>
+        <td><%= link_to notification.name, notification %></td>
+        <td><%= notification.crud_label unless notification.action.blank? %></td>
+        <td><%= notification.table unless notification.table.blank? %></td>
+        <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => Notification, :path => edit_notification_path(notification) } %>
+        <%= render :partial => '/layouts/crud/delete', :locals => { :model => Notification, :path => notification, :msg => I18n.t("activerecord.models.notification.one"), :txt => notification.name } %> </td>
+      </tr>
+      <% end %>
+    </tbody>
+  </table>
+  <%= render :partial => '/layouts/pagination', :locals => { :ivar => @notifications } %>
+  <%= render :partial => '/layouts/crud/new', :locals => { :model => Notification, :path => new_notification_path, :txt => t(".btn_new") } %>
+  <%= link_to t(".back_to_root"), ag2_admin.config_path %>
+</div>

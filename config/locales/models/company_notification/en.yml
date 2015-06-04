@@ -1,0 +1,19 @@
+en:
+  activerecord:
+    models:
+      company_notification:
+        zero:  Company notifications
+        one:   Company notification
+        few:   Company notifications
+        other: Company notifications
+    attributes:
+      company_notification:
+        company: "Company"
+        company_id: "Company"
+        notification: "Notification"
+        notification_id: "Notification"
+        user: "User"
+        user_id: "User"
+        role: "Function"
+        role_1: "Approve"
+        role_2: "Notify"

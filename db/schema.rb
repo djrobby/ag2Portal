@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150514161829) do
+ActiveRecord::Schema.define(:version => 20150604112830) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -345,6 +345,20 @@ ActiveRecord::Schema.define(:version => 20150514161829) do
   add_index "companies", ["town_id"], :name => "index_companies_on_town_id"
   add_index "companies", ["zipcode_id"], :name => "index_companies_on_zipcode_id"
 
+  create_table "company_notifications", :force => true do |t|
+    t.integer  "company_id"
+    t.integer  "notification_id"
+    t.integer  "user_id"
+    t.integer  "role",            :limit => 2
+    t.datetime "created_at",                   :null => false
+    t.datetime "updated_at",                   :null => false
+  end
+
+  add_index "company_notifications", ["company_id"], :name => "index_company_notifications_on_company_id"
+  add_index "company_notifications", ["notification_id"], :name => "index_company_notifications_on_notification_id"
+  add_index "company_notifications", ["role"], :name => "index_company_notifications_on_role"
+  add_index "company_notifications", ["user_id"], :name => "index_company_notifications_on_user_id"
+
   create_table "contract_types", :force => true do |t|
     t.string   "name"
     t.string   "ct_code"
@@ -653,6 +667,19 @@ ActiveRecord::Schema.define(:version => 20150514161829) do
 
   add_index "measures", ["description"], :name => "index_measures_on_description"
 
+  create_table "notifications", :force => true do |t|
+    t.string   "name"
+    t.string   "table"
+    t.integer  "action",     :limit => 2
+    t.datetime "created_at",              :null => false
+    t.datetime "updated_at",              :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  add_index "notifications", ["action"], :name => "index_notifications_on_action"
+  add_index "notifications", ["table"], :name => "index_notifications_on_table"
+
   create_table "offer_items", :force => true do |t|
     t.integer  "offer_id"
     t.integer  "product_id"
@@ -794,6 +821,20 @@ ActiveRecord::Schema.define(:version => 20150514161829) do
   add_index "offers", ["store_id"], :name => "index_offers_on_store_id"
   add_index "offers", ["supplier_id"], :name => "index_offers_on_supplier_id"
   add_index "offers", ["work_order_id"], :name => "index_offers_on_work_order_id"
+
+  create_table "office_notifications", :force => true do |t|
+    t.integer  "office_id"
+    t.integer  "notification_id"
+    t.integer  "user_id"
+    t.integer  "role",            :limit => 2
+    t.datetime "created_at",                   :null => false
+    t.datetime "updated_at",                   :null => false
+  end
+
+  add_index "office_notifications", ["notification_id"], :name => "index_office_notifications_on_notification_id"
+  add_index "office_notifications", ["office_id"], :name => "index_office_notifications_on_office_id"
+  add_index "office_notifications", ["role"], :name => "index_office_notifications_on_role"
+  add_index "office_notifications", ["user_id"], :name => "index_office_notifications_on_user_id"
 
   create_table "offices", :force => true do |t|
     t.string   "name"

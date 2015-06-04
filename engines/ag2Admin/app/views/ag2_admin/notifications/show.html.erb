@@ -1,0 +1,28 @@
+<%= render '/layouts/ag2_admin/notificationsbreadcrumb' %>
+
+<h3><%= t '.title' %></h3>
+<table class="table">
+  <tbody>
+    <tr>
+      <td>Id:</td>
+      <td><%= @notification.id %></td>
+      <td><%=t 'activerecord.attributes.notification.name' %>:</td>
+      <td><%= @notification.name %></td>
+    </tr>
+    <tr>
+      <td><%=t 'activerecord.attributes.notification.action' %>:</td>
+      <td><%= @notification.crud_label unless @notification.action.blank? %></td>
+      <td><%=t 'activerecord.attributes.notification.table' %>:</td>
+      <td><%= @notification.table unless @notification.table.blank? %></td>
+    </tr>
+    <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @notification } %>
+    <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @notification } %>
+  </tbody>
+</table>
+
+<%= render :partial => '/layouts/crud/update_delete_new', locals:
+{ model: Notification, update_path: edit_notification_path(@notification), update_txt: t('ag2_admin.notifications.show.btn_edit'),
+delete_path: @notification, delete_txt: t('ag2_admin.notifications.show.btn_delete'), msg: t("activerecord.models.notification.one"), :txt => @notification.name,
+new_path: new_notification_path, new_txt: t('ag2_admin.notifications.index.btn_new') } %>
+
+<%= link_to I18n.t('ag2_admin.notifications.back_to_main_page'), notifications_path %>

@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  office: 
+  notification: 
+  user: 
+  role: 1
+
+two:
+  office: 
+  notification: 
+  user: 
+  role: 1

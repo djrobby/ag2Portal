@@ -16,6 +16,7 @@ class Office < ActiveRecord::Base
   has_many :corp_contacts, :order => 'last_name, first_name'
   has_many :tickets
   has_many :projects
+  has_many :office_notifications
 
   has_paper_trail
 

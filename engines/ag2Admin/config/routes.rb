@@ -118,6 +118,7 @@ Ag2Admin::Engine.routes.draw do
     resources :accounting_groups
     resources :ledger_accounts
     resources :payment_methods
+    resources :notifications
     
     # Root
     root :to => 'home#index'

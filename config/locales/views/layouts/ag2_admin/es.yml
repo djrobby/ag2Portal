@@ -70,3 +70,6 @@ es:
       payment_methods:
         items: "Formas de pago"
         item: "Forma de pago"
+      notifications:
+        items: "Notificaciones"
+        item: "Notificación"

@@ -1,0 +1,16 @@
+en:
+  activerecord:
+    models:
+      notification:
+        zero:  Notifications
+        one:   Notification
+        few:   Notifications
+        other: Notifications
+    attributes:
+      notification:
+        name: "Name"
+        action: "Event"
+        table: "Table"
+        crud_1: "Create"
+        crud_2: "Update"
+        crud_3: "Delete"

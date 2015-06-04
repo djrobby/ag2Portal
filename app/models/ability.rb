@@ -21,6 +21,7 @@ class Ability
     # Users can't manage configurations
     cannot :manage, App
     cannot :manage, DataImportConfig
+    cannot :manage, Notification
     cannot :manage, Organization
     cannot :manage, Role
     cannot :manage, Site
@@ -41,8 +42,10 @@ class Ability
     # ag2Admin
     if user.has_role? :ag2Admin_User
       can :crud, Company
+      can :crud, CompanyNotification
       can :crud, Country
       can :crud, Office
+      can :crud, OfficeNotification
       can :crud, Province
       can :crud, Region
       can :crud, StreetType
@@ -58,8 +61,10 @@ class Ability
       can :crud, PaymentMethod
     elsif user.has_role? :ag2Admin_Guest
       can :read, Company
+      can :read, CompanyNotification
       can :read, Country
       can :read, Office
+      can :read, OfficeNotification
       can :read, Province
       can :read, Region
       can :read, StreetType
@@ -75,8 +80,10 @@ class Ability
       can :read, PaymentMethod
     elsif user.has_role? :ag2Admin_Banned
       cannot :manage, Company
+      cannot :manage, CompanyNotification
       cannot :manage, Country
       cannot :manage, Office
+      cannot :manage, OfficeNotification
       cannot :manage, Province
       cannot :manage, Region
       cannot :manage, StreetType
@@ -101,6 +108,7 @@ class Ability
       can :manage, User
       can :manage, Guide
       can :manage, Subguide
+      can :manage, Notification
     elsif user.has_role? :ag2Config_Guest
       can :read, App
       can :read, DataImportConfig
@@ -110,6 +118,7 @@ class Ability
       can :read, User
       can :read, Guide
       can :read, Subguide
+      can :read, Notification
     elsif user.has_role? :ag2Config_Banned
       cannot :manage, App
       cannot :manage, DataImportConfig
@@ -119,6 +128,7 @@ class Ability
       cannot :manage, User
       cannot :manage, Guide
       cannot :manage, Subguide
+      cannot :manage, Notification
     end
     # ag2Directory
     if user.has_role? :ag2Directory_User

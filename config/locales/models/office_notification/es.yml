@@ -1,0 +1,19 @@
+es:
+  activerecord:
+    models:
+      office_notification:
+        zero:  Notificaciones de oficina
+        one:   Notificación de oficina
+        few:   Notificaciones de oficina
+        other: Notificaciones de oficina
+    attributes:
+      office_notification:
+        office: "Oficina"
+        office_id: "Oficina"
+        notification: "Notificación"
+        notification_id: "Notificación"
+        user: "Usuario"
+        user_id: "Usuario"
+        role: "Función"
+        role_1: "Aprobar"
+        role_2: "Notificar"
