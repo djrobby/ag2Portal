@@ -6,8 +6,12 @@ class OfficeNotification < ActiveRecord::Base
 
   has_paper_trail
 
+  validates :notification,  :presence => true
+  validates :user,          :presence => true
+  validates :role,          :presence => true
+
   def role_label
-    role_label = case action
+    role_label = case role
       when 1 then I18n.t('activerecord.attributes.office_notification.role_1')
       when 2 then I18n.t('activerecord.attributes.office_notification.role_2')
       else 'N/A'

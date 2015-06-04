@@ -10,13 +10,19 @@ class Office < ActiveRecord::Base
                   :street_type_id, :street_name, :street_number, :building, :floor, :floor_office,
                   :zipcode_id, :town_id, :province_id, :phone, :fax, :cellular, :email,
                   :created_by, :updated_by, :nomina_id, :max_order_total, :max_order_price
+  attr_accessible :office_notifications_attributes
 
   has_many :workers
   has_many :worker_items
   has_many :corp_contacts, :order => 'last_name, first_name'
   has_many :tickets
   has_many :projects
-  has_many :office_notifications
+  has_many :office_notifications, dependent: :destroy
+
+  # Nested attributes
+  accepts_nested_attributes_for :office_notifications,                                 
+                                :reject_if => :all_blank,
+                                :allow_destroy => true
 
   has_paper_trail
 

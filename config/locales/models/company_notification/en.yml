@@ -2,10 +2,10 @@ en:
   activerecord:
     models:
       company_notification:
-        zero:  Company notifications
-        one:   Company notification
-        few:   Company notifications
-        other: Company notifications
+        zero:  Notifications for company
+        one:   Notification for company
+        few:   Notifications for company
+        other: Notifications for company
     attributes:
       company_notification:
         company: "Company"

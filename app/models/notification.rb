@@ -6,7 +6,8 @@ class Notification < ActiveRecord::Base
 
   has_paper_trail
 
-  validates :name,    :presence => true
+  validates :name,    :presence => true,
+                      :length => { :maximum => 40 }
   validates :action,  :presence => true
   validates :table,   :presence => true
 

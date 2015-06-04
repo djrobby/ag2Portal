@@ -80,6 +80,7 @@ module Ag2Admin
     def show
       @breadcrumb = 'read'
       @office = Office.find(params[:id])
+      @notifications = @office.office_notifications.paginate(:page => params[:page], :per_page => per_page).order('id')
 
       respond_to do |format|
         format.html # show.html.erb
@@ -93,6 +94,8 @@ module Ag2Admin
       #      internal
       @breadcrumb = 'create'
       @office = Office.new
+      @notifications = notifications_dropdown
+      @users = users_dropdown
 
       respond_to do |format|
         format.html # new.html.erb
@@ -105,6 +108,8 @@ module Ag2Admin
       #      internal
       @breadcrumb = 'update'
       @office = Office.find(params[:id])
+      @notifications = notifications_dropdown
+      @users = users_dropdown
     end
 
     # POST /offices
@@ -120,6 +125,8 @@ module Ag2Admin
           format.html { redirect_to @office, notice: crud_notice('created', @office) }
           format.json { render json: @office, status: :created, location: @office }
         else
+          @notifications = notifications_dropdown
+          @users = users_dropdown
           format.html { render action: "new" }
           format.json { render json: @office.errors, status: :unprocessable_entity }
         end
@@ -140,6 +147,8 @@ module Ag2Admin
                         notice: (crud_notice('updated', @office) + "#{undo_link(@office)}").html_safe }
           format.json { head :no_content }
         else
+          @notifications = notifications_dropdown
+          @users = users_dropdown
           format.html { render action: "edit" }
           format.json { render json: @office.errors, status: :unprocessable_entity }
         end
@@ -164,6 +173,14 @@ module Ag2Admin
     end
 
     private
+
+    def notifications_dropdown
+      Notification.order(:name)
+    end
+
+    def users_dropdown
+      User.order(:email)
+    end
 
     def sort_column
       Office.column_names.include?(params[:sort]) ? params[:sort] : "office_code"

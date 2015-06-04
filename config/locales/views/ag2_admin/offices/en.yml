@@ -21,3 +21,8 @@ en:
       back_to_main_page: "Back to Offices & Services"
       generate_code_btn: "Office Code"
       commercial_info: "Commercial Info"
+      add_notification: "Add new Notification Rule"
+      add_item_to: "Office %{var}"
+      btn_add_item: "Add"
+      notifications_info: "Notification rules"
+      btn_new_notification: "New Rule"

@@ -1,0 +1,57 @@
+<script>
+  var _f = '';
+
+  $(document).ready(function() {
+    $('.wsel2').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      dropdownCssClass: 'shrinked',
+      dropdownAutoWidth: true,
+      containerCssClass: 'sub-select2-field'
+    });
+    // Retrieves parent values
+    _f = $(".fnt-notification").closest('form')[0];
+  }); 
+
+  jQuery(function($) {
+    /*
+     * Very special function!
+     * This one re-calculate table totals after delete an item
+     * When the .icon-trash clicked
+     * Replace behavior of link_to_remove_fields
+     * (the same was done in nested_si.js)
+     */
+    $(".icon-trash").click(function() {
+      remove_fields(this);
+    });
+  });
+</script>
+
+<table id="notifications-table" class="table table-condensed table-striped shrinked fixed">
+  <!-- notification -->
+  <col width="55%" />
+  <!-- user -->
+  <col width="30%" />
+  <!-- role -->
+  <col width="10%" />
+  <!-- button -->
+  <col width="5%" />
+  <thead>
+    <%= render 'notifications_header' %>
+  </thead>
+  <tbody>
+    <%= f.simple_fields_for :company_notifications, defaults: { input_html: { class: 'sub-form' } } do |i| %>
+    <tr class="fields">
+      <td><%= i.association :notification, label: false, wrapper: false, collection: @notifications, input_html: { class: 'wsel2 fnt-notification' } %></td>
+      <td><%= i.association :user, label: false, wrapper: false, collection: @users, input_html: { class: 'wsel2 fnt-user' } %></td>
+      <td><%= i.input :role, label: false, wrapper: false,
+        collection: [[1, t('activerecord.attributes.office_notification.role_1')],
+                     [2, t('activerecord.attributes.office_notification.role_2')]],
+                     as: :select, label_method: :last, value_method: :first,
+                     input_html: { class: 'wsel2 fnt-role' } %></td>
+      <% if @breadcrumb == 'create' || @breadcrumb == 'update' %>
+      <td><%= link_to_remove_fields('<i class="icon-trash"></i>'.html_safe, i) %></td>
+      <% end %>
+    </tr>
+    <% end %>
+  </tbody>
+</table>

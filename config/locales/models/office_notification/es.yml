@@ -2,10 +2,10 @@ es:
   activerecord:
     models:
       office_notification:
-        zero:  Notificaciones de oficina
-        one:   Notificación de oficina
-        few:   Notificaciones de oficina
-        other: Notificaciones de oficina
+        zero:  Notificaciones para oficina
+        one:   Notificación para oficina
+        few:   Notificaciones para oficina
+        other: Notificaciones para oficina
     attributes:
       office_notification:
         office: "Oficina"

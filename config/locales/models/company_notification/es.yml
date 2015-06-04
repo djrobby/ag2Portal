@@ -2,10 +2,10 @@ es:
   activerecord:
     models:
       company_notification:
-        zero:  Notificaciones de empresa
-        one:   Notificación de empresa
-        few:   Notificaciones de empresa
-        other: Notificaciones de empresa
+        zero:  Notificaciones para empresa
+        one:   Notificación para empresa
+        few:   Notificaciones para empresa
+        other: Notificaciones para empresa
     attributes:
       company_notification:
         office: "Empresa"

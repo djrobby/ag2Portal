@@ -21,3 +21,8 @@ es:
       back_to_main_page: "Volver a Oficinas y Servicios "
       generate_code_btn: "Código de Oficina"
       commercial_info: "Información Comercial"
+      add_notification: "Agregar nueva Regla de Notificación"
+      add_item_to: "Oficina %{var}"
+      btn_add_item: "Agregar"
+      notifications_info: "Reglas de notificación"
+      btn_new_notification: "Nueva Regla"

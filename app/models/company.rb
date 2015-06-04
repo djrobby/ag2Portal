@@ -12,12 +12,19 @@ class Company < ActiveRecord::Base
                   :created_by, :updated_by, :organization_id, :hd_email, :website,
                   :max_order_total, :max_order_price
   has_attached_file :logo, :styles => { :original => "160x160>", :medium => "120x120>", :small => "80x80>" }, :default_url => "/images/missing/:style/company.png"
+  attr_accessible :company_notifications_attributes
 
   has_many :offices
   has_many :workers
   has_many :worker_items
   has_many :corp_contacts, :order => 'last_name, first_name'
   has_many :projects
+  has_many :company_notifications, dependent: :destroy
+
+  # Nested attributes
+  accepts_nested_attributes_for :company_notifications,                                 
+                                :reject_if => :all_blank,
+                                :allow_destroy => true
 
   has_paper_trail
 

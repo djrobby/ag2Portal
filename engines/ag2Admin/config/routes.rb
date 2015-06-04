@@ -26,6 +26,9 @@ Ag2Admin::Engine.routes.draw do
     match 'companies/co_update_total_and_price/:total/:price', :controller => 'companies', :action => 'co_update_total_and_price'
     match 'co_update_total_and_price/:total/:price', :controller => 'companies', :action => 'co_update_total_and_price'
     match 'companies/:id/co_update_total_and_price/:total/:price', :controller => 'companies', :action => 'co_update_total_and_price'
+    match 'companies/co_update_from_organization/:company', :controller => 'companies', :action => 'co_update_from_organization'
+    match 'co_update_from_organization/:company', :controller => 'companies', :action => 'co_update_from_organization'
+    match 'companies/:id/co_update_from_organization/:company', :controller => 'companies', :action => 'co_update_from_organization'
     #
     # Offices 
     match 'offices/update_province_textfield_from_town/:id', :controller => 'offices', :action => 'update_province_textfield_from_town'

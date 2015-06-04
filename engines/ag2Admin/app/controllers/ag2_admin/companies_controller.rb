@@ -8,7 +8,8 @@ module Ag2Admin
     skip_load_and_authorize_resource :only => [:update_province_textfield_from_town,
                                                :update_province_textfield_from_zipcode,
                                                :co_update_attachment,
-                                               :co_update_total_and_price]
+                                               :co_update_total_and_price,
+                                               :co_update_from_organization]
     # Helper methods for
     # => sorting
     # => allow edit (hide buttons)
@@ -68,6 +69,20 @@ module Ag2Admin
       render json: @json_data
     end
 
+    # Update users from organization select
+    def co_update_from_organization
+      organization = params[:company]
+      if organization != '0'
+        @organization = Organization.find(organization)
+        @users = @organization.blank? ? users_dropdown : users_dropdown
+        #@users = @organization.blank? ? users_dropdown : @organization.users.order(:email)
+      else
+        @users = users_dropdown
+      end
+      @json_data = { "users" => @users }
+      render json: @json_data
+    end
+
     #
     # Default Methods
     #
@@ -94,6 +109,7 @@ module Ag2Admin
       @breadcrumb = 'read'
       @company = Company.find(params[:id])
       @offices = @company.offices
+      @notifications = @company.company_notifications.paginate(:page => params[:page], :per_page => per_page).order('id')
 
       respond_to do |format|
         format.html # show.html.erb
@@ -106,6 +122,8 @@ module Ag2Admin
     def new
       @breadcrumb = 'create'
       @company = Company.new
+      @notifications = notifications_dropdown
+      @users = users_dropdown
       $attachment = Attachment.new
       destroy_attachment
 
@@ -119,6 +137,8 @@ module Ag2Admin
     def edit
       @breadcrumb = 'update'
       @company = Company.find(params[:id])
+      @notifications = notifications_dropdown
+      @users = users_dropdown
       $attachment = Attachment.new
       destroy_attachment
     end
@@ -141,6 +161,8 @@ module Ag2Admin
           format.html { redirect_to @company, notice: crud_notice('created', @company) }
           format.json { render json: @company, status: :created, location: @company }
         else
+          @notifications = notifications_dropdown
+          @users = users_dropdown
           $attachment.destroy
           $attachment = Attachment.new
           format.html { render action: "new" }
@@ -168,6 +190,8 @@ module Ag2Admin
                         notice: (crud_notice('updated', @company) + "#{undo_link(@company)}").html_safe }
           format.json { head :no_content }
         else
+          @notifications = notifications_dropdown
+          @users = users_dropdown
           $attachment.destroy
           $attachment = Attachment.new
           format.html { render action: "edit" }
@@ -194,6 +218,14 @@ module Ag2Admin
     end
 
     private
+
+    def notifications_dropdown
+      Notification.order(:name)
+    end
+
+    def users_dropdown
+      User.order(:email)
+    end
 
     def sort_column
       Company.column_names.include?(params[:sort]) ? params[:sort] : "fiscal_id"

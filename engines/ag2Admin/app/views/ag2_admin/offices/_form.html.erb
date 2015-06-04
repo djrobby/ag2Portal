@@ -130,6 +130,20 @@
   <label class="multi-field-label-two"> <%= f.input :max_order_total, as: :string, input_html: { value: (number_with_precision(f.object.max_order_total, precision: 2) if f.object.max_order_total), class: 'large-text-field number-text-field' }, label_html: { class: 'form-label' } %> </label>
   <label class="multi-field-label-two"> <%= f.input :max_order_price, as: :string, input_html: { value: (number_with_precision(f.object.max_order_price, precision: 4) if f.object.max_order_price), class: 'large-text-field number-text-field' }, label_html: { class: 'form-label' } %> </label>
 </div>
+<!-- Notifications -->
+<table class="form-table">
+  <tbody>
+    <tr class="form-tr underlined-tr">
+      <td class="form-td-two left-winged">
+        <h4><%= t 'ag2_admin.offices.notifications_info' %></h4>
+      </td>
+      <td class="form-td-two right-winged">
+        <%= link_to_add_fields(t("ag2_admin.offices.btn_new_notification"), f, :office_notifications, "notification_fields", "new-notification-fields", class: "btn btn-warning fnt-new-notification-btn") %>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<%= render 'notifications_table', f: f %>
 <!-- Buttons -->
 <table class="form-table">
   <tbody>

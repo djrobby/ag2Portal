@@ -110,6 +110,39 @@
   </tbody>
 </table>
 
+<!-- Notificatons -->
+<table class="form-table">
+  <tbody>
+    <tr class="form-tr underlined-tr">
+      <td class="form-td-two left-winged">
+        <h4><%= t 'ag2_admin.companies.notifications_info' %></h4>
+      </td>
+      <td class="form-td-two right-winged">
+        <a href="#" id="print_report_btn"><i class="icon-arrow-up"></i></a>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<% if (@notifications.count > 0) %>
+<table class="table table-condensed table-striped shrinked">
+  <!-- notification -->
+  <col width="55%" />
+  <!-- user -->
+  <col width="30%" />
+  <!-- role -->
+  <col width="15%" />
+  <thead>
+    <%= render 'notifications_header' %>
+  </thead>
+  <tbody>
+    <%= render partial: 'notification', collection: @notifications %>
+  </tbody>
+</table>
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @notifications } %>
+<% else %>
+<%= render :partial => '/layouts/paginationunbordered', :locals => { :ivar => @notifications } %>
+<% end %> <!-- end @notifications.count > 0 -->
+
 <%= render :partial => '/layouts/crud/update_delete_new', locals:
 { model: Company, update_path: edit_company_path(@company), update_txt: t('ag2_admin.companies.show.btn_edit'),
 delete_path: @company, delete_txt: t('ag2_admin.companies.show.btn_delete'), msg: t("activerecord.models.company.one"), :txt => @company.name,

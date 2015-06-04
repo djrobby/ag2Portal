@@ -10,7 +10,7 @@
 <%= simple_form_for @notification, :html => { :class => 'form-vertical well' } do |f| %>
 <%= f.error_notification %>
 <%= display_base_errors resource %>
-<%= f.input :name, :autofocus => true, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %>
+<%= f.input :name, :autofocus => true, :input_html => { :class => 'x-large-text-field', maxlength: 40 }, :label_html => { :class => 'form-label' } %>
 <div>
 
   <label class="multi-field-label-two">
