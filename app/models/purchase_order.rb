@@ -41,6 +41,7 @@ class PurchaseOrder < ActiveRecord::Base
   validates :organization,    :presence => true
 
   before_destroy :check_for_dependent_records
+  after_save :notify_on_save
 
   def to_label
     "#{full_name}"
@@ -176,6 +177,7 @@ class PurchaseOrder < ActiveRecord::Base
 
   private
 
+  # Before destroy
   def check_for_dependent_records
     # Check for receipt notes
     if receipt_notes.count > 0
@@ -188,4 +190,34 @@ class PurchaseOrder < ActiveRecord::Base
       return false
     end
   end
+
+  #
+  # Notifiers
+  #
+  # After save
+  def notify_on_save
+    Notifier.purchase_order_saved(self).deliver
+    if check_if_approval_is_required
+      Notifier.purchase_order_saved_with_approval(self).deliver
+    end     
+  end
+
+  #
+  # Helper methods for notifiers
+  #
+  # Need approval?
+  def check_if_approval_is_required
+    check_by_families
+  end
+
+  # Maximums by product family
+  # Returns true if approval is required, otherwise false
+  def check_by_families
+    _r = false
+    # global_family_breakdown returns multidimensional array containing different product family in each line
+    # Each line contains 5 elements: Family Id, max_orders_count, max_orders_sum, Quantity sum & Net amount sum
+    pfs = global_family_breakdown(purchase_order_items.joins(:product).order(:product_family_id))
+    pf = pfs.detect { |f| (f[3] > f[1]) || (f[4] > f[2]) }
+    _r = pf.nil? ? false : true
+  end 
 end

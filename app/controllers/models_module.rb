@@ -58,4 +58,41 @@ module ModelsModule
     _format = I18n.locale == :es ? "%H:%M:%S" : "%H:%M:%S"
     _date.strftime(_format)
   end
+
+  #
+  # Family Breakdown
+  #
+  # Returns multidimensional array containing different product family in each line
+  # Each line contains 5 elements: Family Id, max_orders_count, max_orders_sum, Quantity sum & Net amount sum 
+  # items must be joined with :product & ordered by :product_family_id
+  def global_family_breakdown(items)
+    pf = []
+    # Only if items
+    if items.count > 0
+      # Store first family & initialize
+      prev_pf_id = items.first.product.product_family_id
+      prev_pf_quantity = 0
+      prev_pf_net = 0
+      product_family = ProductFamily.find(prev_pf_id) rescue nil
+      # Loop thru items, previously ordered by product family
+      items.each do |i|
+        # if family changed
+        if i.product.product_family_id != prev_pf_id
+          # Store previous family data
+          pf = pf << [prev_pf_id, product_family.nil? ? 0 : product_family.max_orders_count, product_family.nil? ? 0 : product_family.max_orders_sum, prev_pf_quantity, prev_pf_net]
+          # Store current family & initialize
+          prev_pf_id = i.product.product_family_id
+          prev_pf_quantity = 0
+          prev_pf_net = 0
+          product_family = ProductFamily.find(prev_pf_id) rescue nil
+        end
+        # Add net amount & quantity while current family
+        prev_pf_quantity += i.quantity
+        prev_pf_net += i.net
+      end
+      # Store last unsaved family data
+      pf = pf << [prev_pf_id, product_family.nil? ? 0 : product_family.max_orders_count, product_family.nil? ? 0 : product_family.max_orders_sum, prev_pf_quantity, prev_pf_net]
+    end
+    pf
+  end
 end
