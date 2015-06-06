@@ -95,4 +95,139 @@ module ModelsModule
     end
     pf
   end
+
+  #
+  # Project Breakdown
+  #
+  # Returns multidimensional array containing different project in each line
+  # Each line contains 5 elements: Project Id, max_order_total, max_order_price, Net amount sum by project & Item net price
+  # items must be ordered by :project_id
+  def global_project_breakdown(items)
+    pf = []   # 4 items array
+    a = []    # 5 items returning array
+    # Only if items
+    if items.count > 0
+      # First: Sum net amounts
+      # Store first project & initialize
+      prev_pf_id = items.first.project_id
+      prev_pf_net = 0
+      project = Project.find(prev_pf_id) rescue nil
+      # Loop thru items, previously ordered by project
+      items.each do |i|
+        # if project changed
+        if i.project_id != prev_pf_id
+          # Store previous project data
+          pf = pf << [prev_pf_id, project.nil? ? 0 : project.max_order_total, project.nil? ? 0 : project.max_order_price, prev_pf_net]
+          # Store current project & initialize
+          prev_pf_id = i.project_id
+          prev_pf_net = 0
+        end
+        # Add net amount while current project
+        prev_pf_net += i.net
+      end
+      # Store last unsaved project data
+      pf = pf << [prev_pf_id, project.nil? ? 0 : project.max_order_total, project.nil? ? 0 : project.max_order_price, prev_pf_net]
+            
+      # Second: Returning array with item prices
+      items.each do |i|
+        # Search project in pf
+        d = pf.detect { |f| f[0] == i.project_id }
+        # Add row to array 
+        a = a << [d[0], d[1], d[2], d[3], i.net_price]
+      end
+    end
+
+    # Returns a
+    a
+  end
+
+  #
+  # Office Breakdown
+  #
+  # Returns multidimensional array containing different office in each line
+  # Each line contains 5 elements: Office Id, max_order_total, max_order_price, Net amount sum by project & Item net price
+  # items must be joined with :project & ordered by :office_id
+  def global_office_breakdown(items)
+    pf = []   # 4 items array
+    a = []    # 5 items returning array
+    # Only if items
+    if items.count > 0
+      # First: Sum net amounts
+      # Store first office & initialize
+      prev_pf_id = items.first.project.office_id
+      prev_pf_net = 0
+      office = Office.find(prev_pf_id) rescue nil
+      # Loop thru items, previously ordered by office
+      items.each do |i|
+        # if office changed
+        if i.project.office_id != prev_pf_id
+          # Store previous office data
+          pf = pf << [prev_pf_id, office.nil? ? 0 : office.max_order_total, office.nil? ? 0 : office.max_order_price, prev_pf_net]
+          # Store current project & initialize
+          prev_pf_id = i.project.office_id
+          prev_pf_net = 0
+        end
+        # Add net amount while current project
+        prev_pf_net += i.net
+      end
+      # Store last unsaved project data
+      pf = pf << [prev_pf_id, office.nil? ? 0 : office.max_order_total, office.nil? ? 0 : office.max_order_price, prev_pf_net]
+            
+      # Second: Returning array with item prices
+      items.each do |i|
+        # Search office in pf
+        d = pf.detect { |f| f[0] == i.project.office_id }
+        # Add row to array 
+        a = a << [d[0], d[1], d[2], d[3], i.net_price]
+      end
+    end
+
+    # Returns a
+    a
+  end
+
+  #
+  # Company Breakdown
+  #
+  # Returns multidimensional array containing different company in each line
+  # Each line contains 5 elements: Company Id, max_order_total, max_order_price, Net amount sum by project & Item net price
+  # items must be joined with :project & ordered by :company_id
+  def global_office_breakdown(items)
+    pf = []   # 4 items array
+    a = []    # 5 items returning array
+    # Only if items
+    if items.count > 0
+      # First: Sum net amounts
+      # Store first office & initialize
+      prev_pf_id = items.first.project.company_id
+      prev_pf_net = 0
+      company = Company.find(prev_pf_id) rescue nil
+      # Loop thru items, previously ordered by office
+      items.each do |i|
+        # if company changed
+        if i.project.company_id != prev_pf_id
+          # Store previous office data
+          pf = pf << [prev_pf_id, company.nil? ? 0 : company.max_order_total, company.nil? ? 0 : company.max_order_price, prev_pf_net]
+          # Store current project & initialize
+          prev_pf_id = i.project.company_id
+          prev_pf_net = 0
+        end
+        # Add net amount while current project
+        prev_pf_net += i.net
+      end
+      # Store last unsaved project data
+      pf = pf << [prev_pf_id, company.nil? ? 0 : company.max_order_total, company.nil? ? 0 : company.max_order_price, prev_pf_net]
+            
+      # Second: Returning array with item prices
+      items.each do |i|
+        # Search office in pf
+        d = pf.detect { |f| f[0] == i.project.company_id }
+        # Add row to array 
+        a = a << [d[0], d[1], d[2], d[3], i.net_price]
+      end
+    end
+
+    # Returns a
+    a
+  end
 end

@@ -1,0 +1,21 @@
+<%=t '.number' %><%= @ticket.id.to_s.rjust(7, '0') %>
+<%=t '.created_at' %><%= @ticket.created_at.utc.getlocal.strftime("%d/%m/%Y %H:%M:%S") %>
+<%=t '.created_by' %><%= User.find(@ticket.created_by).email unless @ticket.created_by.blank? %>
+<%=t '.office' %><%= @ticket.office.name unless @ticket.office.blank? %>
+<%=t '.category' %><%= @ticket.ticket_category.name %>
+<%=t '.priority' %><%= @ticket.ticket_priority.name %>
+
+<%=t '.title' %><%= @ticket.ticket_subject %>
+-------
+<%=t '.assign_at' %><%= @ticket.assign_at.utc.getlocal.strftime("%d/%m/%Y %H:%M:%S") unless @ticket.assign_at.blank? %>
+<%=t '.technician' %><%= @ticket.technician.name.titleize unless @ticket.technician.blank? %> (<%= @ticket.technician.user.email unless @ticket.technician.blank? %>)
+<%=t '.status' %>*<%= @ticket.ticket_status.name.titleize unless @ticket.ticket_status.blank? %>*
+<%=t '.status_changed_at' %><%= @ticket.status_changed_at.utc.getlocal.strftime("%d/%m/%Y %H:%M:%S") unless @ticket.status_changed_at.blank? %>
+-------
+<%=t '.status_changed_message' %>
+<%= @ticket.status_changed_message unless @ticket.status_changed_message.blank? %>
+
+<%=t 'notifier.do_not_reply' %>
+
+# Target URL
+<%= ag2_purchase.purchase_order_url(@purchase_order, :host => "agestiona2.aguaygestion.com") %>

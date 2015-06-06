@@ -60,7 +60,7 @@ class Notifier < ActionMailer::Base
   end
   
   #  
-  # Recipients
+  # Recipients based on Notifications
   # action: 1=Create 2=Update 3=Delete
   # role: 1=Approve 2=Notify
   #  

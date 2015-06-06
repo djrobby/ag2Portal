@@ -37,7 +37,7 @@ class PurchaseOrderItem < ActiveRecord::Base
   # Calculated fields
   #
   def amount
-    quantity * (price - discount)
+    quantity * net_price
   end
 
   def tax
@@ -50,6 +50,10 @@ class PurchaseOrderItem < ActiveRecord::Base
 
   def net_tax
     tax - (tax * (purchase_order.discount_pct / 100)) if !purchase_order.discount_pct.blank?
+  end
+
+  def net_price
+    price - discount
   end
     
   def balance
