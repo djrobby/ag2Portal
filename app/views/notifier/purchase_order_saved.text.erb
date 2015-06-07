@@ -1,19 +1,19 @@
-<%=t '.number' %><%= @ticket.id.to_s.rjust(7, '0') %>
-<%=t '.created_at' %><%= @ticket.created_at.utc.getlocal.strftime("%d/%m/%Y %H:%M:%S") %>
-<%=t '.created_by' %><%= User.find(@ticket.created_by).email unless @ticket.created_by.blank? %>
-<%=t '.office' %><%= @ticket.office.name unless @ticket.office.blank? %>
-<%=t '.category' %><%= @ticket.ticket_category.name %>
-<%=t '.priority' %><%= @ticket.ticket_priority.name %>
+<%=t '.number' %><%= @purchase_order.id.to_s.rjust(7, '0') %>
+<%=t '.created_at' %><%= @purchase_order.created_at.utc.getlocal.strftime("%d/%m/%Y %H:%M:%S") %>
+<%=t '.created_by' %><%= User.find(@purchase_order.created_by).email unless @purchase_order.created_by.blank? %>
+<%=t '.office' %><%= @purchase_order.office.name unless @purchase_order.office.blank? %>
+<%=t '.category' %><%= @purchase_order.ticket_category.name %>
+<%=t '.priority' %><%= @purchase_order.ticket_priority.name %>
 
-<%=t '.title' %><%= @ticket.ticket_subject %>
+<%=t '.title' %><%= @purchase_order.ticket_subject %>
 -------
-<%=t '.assign_at' %><%= @ticket.assign_at.utc.getlocal.strftime("%d/%m/%Y %H:%M:%S") unless @ticket.assign_at.blank? %>
-<%=t '.technician' %><%= @ticket.technician.name.titleize unless @ticket.technician.blank? %> (<%= @ticket.technician.user.email unless @ticket.technician.blank? %>)
-<%=t '.status' %>*<%= @ticket.ticket_status.name.titleize unless @ticket.ticket_status.blank? %>*
-<%=t '.status_changed_at' %><%= @ticket.status_changed_at.utc.getlocal.strftime("%d/%m/%Y %H:%M:%S") unless @ticket.status_changed_at.blank? %>
+<%=t '.assign_at' %><%= @purchase_order.assign_at.utc.getlocal.strftime("%d/%m/%Y %H:%M:%S") unless @purchase_order.assign_at.blank? %>
+<%=t '.technician' %><%= @purchase_order.technician.name.titleize unless @purchase_order.technician.blank? %> (<%= @purchase_order.technician.user.email unless @purchase_order.technician.blank? %>)
+<%=t '.status' %>*<%= @purchase_order.ticket_status.name.titleize unless @purchase_order.ticket_status.blank? %>*
+<%=t '.status_changed_at' %><%= @purchase_order.status_changed_at.utc.getlocal.strftime("%d/%m/%Y %H:%M:%S") unless @purchase_order.status_changed_at.blank? %>
 -------
 <%=t '.status_changed_message' %>
-<%= @ticket.status_changed_message unless @ticket.status_changed_message.blank? %>
+<%= @purchase_order.status_changed_message unless @purchase_order.status_changed_message.blank? %>
 
 <%=t 'notifier.do_not_reply' %>
 

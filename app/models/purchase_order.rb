@@ -41,7 +41,8 @@ class PurchaseOrder < ActiveRecord::Base
   validates :organization,    :presence => true
 
   before_destroy :check_for_dependent_records
-  after_save :notify_on_save
+  after_create :notify_on_create
+  after_update :notify_on_update
 
   def to_label
     "#{full_name}"
@@ -194,12 +195,31 @@ class PurchaseOrder < ActiveRecord::Base
   #
   # Notifiers
   #
-  # After save
-  def notify_on_save
+  # After create
+  def notify_on_create
+    # Always notify on create
     Notifier.purchase_order_saved(self).deliver
     if check_if_approval_is_required
       Notifier.purchase_order_saved_with_approval(self).deliver
     end     
+  end
+
+  # After update
+  def notify_on_update
+    # Notify only if key values changed
+    items_changed = false
+    purchase_order_items.each do |i|
+      if i.changed?
+        items_changed = true
+        break
+      end
+    end
+    if self.changed? || items_changed
+      Notifier.purchase_order_saved(self).deliver
+      if check_if_approval_is_required
+        Notifier.purchase_order_saved_with_approval(self).deliver
+      end     
+    end
   end
 
   #

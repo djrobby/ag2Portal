@@ -30,4 +30,16 @@ es:
       status: "Estado actual: "
       status_changed_at: "Ultimo cambio de estado: "
       status_changed_message: "Mensaje de soporte técnico: "
+    purchase_order_saved:
+      number: "Pedido Nº: "
+      created_at: "Creado el: "
+      created_by: "Creado por: "
+      updated_at: "Actualizado el: "
+      updated_by: "Actualizado por: "
+    purchase_order_saved_with_approval:
+      number: "Pedido Nº: "
+      created_at: "Creado el: "
+      created_by: "Creado por: "
+      updated_at: "Actualizado el: "
+      updated_by: "Actualizado por: "
     do_not_reply: "No responda directamente a este e-mail: Ha sido enviado desde un sistema desatendido."

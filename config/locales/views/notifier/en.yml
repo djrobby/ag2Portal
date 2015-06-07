@@ -30,4 +30,16 @@ en:
       status: "Current status: "
       status_changed_at: "Status changed at: "
       status_changed_message: "Support message: "
+    purchase_order_saved:
+      number: "Purchase Order #: "
+      created_at: "Created at: "
+      created_by: "Created by: "
+      updated_at: "Updated at: "
+      updated_by: "Updated by: "
+    purchase_order_saved_with_approval:
+      number: "Purchase Order #: "
+      created_at: "Created at: "
+      created_by: "Created by: "
+      updated_at: "Updated at: "
+      updated_by: "Updated by: "
     do_not_reply: "Do not reply directly to this e-mail: It was sent from an unattended mailbox."
