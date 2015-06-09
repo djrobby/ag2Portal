@@ -1,8 +1,10 @@
 class Notifier < ActionMailer::Base
+  helper NotifierHelper
+  
   default from: "agestiona2@aguaygestion.com"
 
   # Subject can be set in your I18n file at config/locales/en.yml
-  # with the following lookup:
+  # with the following lookup (example):
   #
   #   en.notifier.user_created.subject
   #
@@ -43,19 +45,27 @@ class Notifier < ActionMailer::Base
   end
 
   # Purchase order
-  def purchase_order_saved(purchase_order)
+  def purchase_order_saved(purchase_order, action)
     @purchase_order = purchase_order
-    recipients = notify(purchase_order, 1, 2)
+    @current_host = current_host
+    recipients = notify_to(purchase_order, action, 2)
+    #recipients = "spsisys@gmail.com"
     if recipients != ''
-      mail to: recipients
+      mail to: recipients do |format|
+        format.html
+      end
     end
   end
 
-  def purchase_order_saved_with_approval(purchase_order)
+  def purchase_order_saved_with_approval(purchase_order, action)
     @purchase_order = purchase_order
-    recipients = notify(purchase_order, 1, 1)
+    @current_host = current_host
+    recipients = notify_to(purchase_order, action, 1)
+    #recipients = "spsisys@gmail.com"
     if recipients != ''
-      mail to: recipients
+      mail to: recipients do |format|
+        format.html
+      end
     end
   end
   
@@ -65,7 +75,7 @@ class Notifier < ActionMailer::Base
   # role: 1=Approve 2=Notify
   #  
   # Notification recipients
-  def notify(_ivar, _action, _role)
+  def notify_to(_ivar, _action, _role)
     _recipients = ''
     _by_company = nil
     _by_office = nil
@@ -82,7 +92,14 @@ class Notifier < ActionMailer::Base
       # By office
       _by_office = office_notification_recipients(_office, _notification, _role)
       # Setup recipients
-      _recipients = (_by_company.nil? ? '' : _by_company) + (_by_office.nil? ? '' : _by_office)
+      if !_by_company.nil? && !_by_office.nil?
+        _recipients = _by_company + "," + _by_office
+      elsif !_by_company.nil? && _by_office.nil?
+        _recipients = _by_company
+      elsif _by_company.nil? && !_by_office.nil?
+        _recipients = _by_office
+      end
+      #_recipients = (_by_company.nil? ? '' : _by_company) + (_by_office.nil? ? '' : _by_office)
     end
     _recipients
   end
@@ -91,7 +108,7 @@ class Notifier < ActionMailer::Base
   def company_notification_recipients(_company, _notification, _role)
     _recipients = nil
     if !_company.blank?
-      _notifications = CompanyNotification.where(notification_id: _notification.id, role: _role) rescue nil
+      _notifications = _company.company_notifications.where(notification_id: _notification.id, role: _role) rescue nil
       _recipients = recipients_string(_notifications)
     end
     _recipients
@@ -101,7 +118,7 @@ class Notifier < ActionMailer::Base
   def office_notification_recipients(_office, _notification, _role)
     _recipients = nil
     if !_office.blank?
-      _notifications = OfficeNotification.where(notification_id: _notification.id, role: _role) rescue nil
+      _notifications = _office.office_notifications.where(notification_id: _notification.id, role: _role) rescue nil
       _recipients = recipients_string(_notifications)
     end
     _recipients
@@ -112,12 +129,16 @@ class Notifier < ActionMailer::Base
     if !_notifications.blank?
       _notifications.each do |n|
         if _recipients.nil?
-          recipients += n.user.email
+          _recipients = n.user.email
         else
-          recipients += "," + n.user.email
+          _recipients += "," + n.user.email
         end
       end
     end
     _recipients
+  end
+  
+  def current_host
+    Rails.env.development? ? 'localhost:3000' : 'agestiona2.aguaygestion.com'
   end
 end

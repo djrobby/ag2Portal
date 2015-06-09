@@ -1,18 +1,19 @@
-<%=t '.number' %><%= @ticket.id.to_s.rjust(7, '0') %>
-<%=t '.created_at' %><%= @ticket.created_at.utc.getlocal.strftime("%d/%m/%Y %H:%M:%S") %>
-<%=t '.created_by' %><%= User.find(@ticket.created_by).email unless @ticket.created_by.blank? %>
-<%=t '.office' %><%= @ticket.office.name unless @ticket.office.blank? %>
-<%=t '.category' %><%= @ticket.ticket_category.name %>
-<%=t '.priority' %><%= @ticket.ticket_priority.name %>
+<%=t 'activerecord.models.purchase_order.one' %> <%=t 'activerecord.attributes.purchase_order.order_no_report' %>: <%= @purchase_order.full_no %>
+-------
+<%=t 'activerecord.attributes.purchase_order.order_date' %>: <%= formatted_date(@purchase_order.order_date) unless @purchase_order.order_date.blank? %>
+<%=t 'activerecord.attributes.purchase_order.order_status' %>: <%= @purchase_order.order_status.name %>
+<%=t 'activerecord.attributes.purchase_order.supplier' %>: <%= @purchase_order.supplier.full_name %>
+<%=t 'activerecord.attributes.purchase_order.offer' %>: <%= @purchase_order.offer.offer_no unless @purchase_order.offer.blank? %>
+<%=t 'activerecord.attributes.purchase_order.project' %>: <%= @purchase_order.project.full_name unless @purchase_order.project.blank? %>
+<%=t 'activerecord.attributes.purchase_order.work_order' %>: <%= @purchase_order.work_order.full_name unless @purchase_order.work_order.blank? %>
+<%=t 'activerecord.attributes.purchase_order.payment_method' %>: <%= @purchase_order.payment_method.description unless @purchase_order.payment_method.blank? %>
+<%=t 'activerecord.attributes.purchase_order.total' %>: <%= number_with_precision(@purchase_order.total, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless @purchase_order.total.blank? %>
 
-<%=t '.title' %><%= @ticket.ticket_subject %>
+<%=t :created_at %> <%= formatted_timestamp(@purchase_order.created_at.utc.getlocal) %> <%=t :by %> <%= User.find(@purchase_order.created_by).email unless @purchase_order.created_by.blank? %>
+<%=t :updated_at %> <%= formatted_timestamp(@purchase_order.updated_at.utc.getlocal) %> <%=t :by %> <%= User.find(@purchase_order.updated_by).email unless @purchase_order.updated_by.blank? %>
 -------
-<%=t '.assign_at' %><%= @ticket.assign_at.utc.getlocal.strftime("%d/%m/%Y %H:%M:%S") unless @ticket.assign_at.blank? %>
-<%=t '.technician' %><%= @ticket.technician.name.titleize unless @ticket.technician.blank? %> (<%= @ticket.technician.user.email unless @ticket.technician.blank? %>)
-<%=t '.status' %>*<%= @ticket.ticket_status.name.titleize unless @ticket.ticket_status.blank? %>*
-<%=t '.status_changed_at' %><%= @ticket.status_changed_at.utc.getlocal.strftime("%d/%m/%Y %H:%M:%S") unless @ticket.status_changed_at.blank? %>
--------
-<%=t '.status_changed_message' %>
-<%= @ticket.status_changed_message unless @ticket.status_changed_message.blank? %>
+<%=t '.approval' %>
+
+<%=t '.link' %>: <%= ag2_purchase.purchase_order_url(:id => @purchase_order.id, :host => @current_host) %>
 
 <%=t 'notifier.do_not_reply' %>

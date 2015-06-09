@@ -7,8 +7,8 @@
   <% end %>
   <td><%= t :updated_at %>:</td>
   <% if ivar == @time_record && ivar.created_by == ivar.updated_by %>
-  <td><%= formatted_timestamp(ivar.created_at) %></td>
+  <td><%= formatted_timestamp(ivar.updated_at) %></td>
   <% else %>
-  <td><%= formatted_timestamp(ivar.created_at.utc.getlocal) %></td>
+  <td><%= formatted_timestamp(ivar.updated_at.utc.getlocal) %></td>
   <% end %>
 </tr>

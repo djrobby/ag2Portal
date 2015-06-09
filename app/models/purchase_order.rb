@@ -198,9 +198,9 @@ class PurchaseOrder < ActiveRecord::Base
   # After create
   def notify_on_create
     # Always notify on create
-    Notifier.purchase_order_saved(self).deliver
+    Notifier.purchase_order_saved(self, 1).deliver
     if check_if_approval_is_required
-      Notifier.purchase_order_saved_with_approval(self).deliver
+      Notifier.purchase_order_saved_with_approval(self, 1).deliver
     end     
   end
 
@@ -215,9 +215,9 @@ class PurchaseOrder < ActiveRecord::Base
       end
     end
     if self.changed? || items_changed
-      Notifier.purchase_order_saved(self).deliver
+      Notifier.purchase_order_saved(self, 2).deliver
       if check_if_approval_is_required
-        Notifier.purchase_order_saved_with_approval(self).deliver
+        Notifier.purchase_order_saved_with_approval(self, 2).deliver
       end     
     end
   end
