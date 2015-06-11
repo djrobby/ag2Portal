@@ -7,5 +7,7 @@
 <% if can? :create, model %>
 <%= link_to new_txt, new_path, :class => 'btn btn-primary' %>
 <% end %>
+<% if (can? :create, model) || (can? :destroy, model) || (can? :update, model) %>
 <br />
+<% end %>
 <br />

@@ -42,10 +42,12 @@ class Ability
     # ag2Admin
     if user.has_role? :ag2Admin_User
       can :crud, Company
-      can :crud, CompanyNotification
+      #can :crud, CompanyNotification
+      can :read, CompanyNotification
       can :crud, Country
       can :crud, Office
-      can :crud, OfficeNotification
+      #can :crud, OfficeNotification
+      can :read, OfficeNotification
       can :crud, Province
       can :crud, Region
       can :crud, StreetType

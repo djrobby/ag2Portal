@@ -105,6 +105,20 @@ class ApplicationController < ActionController::Base
   end
   
   #
+  # Approvers
+  #
+  def company_approver(ivar, company, current_user_id)
+    table = ivar.class.table_name
+    notifications = company.company_notifications.joins(:notification).where('notifications.table = ? AND company_notifications.role = ? AND company_notifications.user_id = ?', table, 1, current_user_id) rescue nil
+    !notifications.blank?
+  end
+
+  def office_approver(ivar, office, current_user_id)
+    table = ivar.class.table_name
+    notifications = office.office_notifications.joins(:notification).where('notifications.table = ? AND office_notifications.role = ? AND office_notifications.user_id = ?', table, 1, current_user_id) rescue nil
+    !notifications.blank?
+  end
+  #
   # Display
   #
   def letters

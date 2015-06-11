@@ -43,6 +43,14 @@ class Notifier < ActionMailer::Base
       mail to: recipients
     end
   end
+  
+  def ticket_assigned(ticket)
+    @ticket = ticket
+    @current_host = current_host
+    mail to: ticket.technician.user.email do |format|
+      format.html
+    end    
+  end
 
   # Purchase order
   def purchase_order_saved(purchase_order, action)

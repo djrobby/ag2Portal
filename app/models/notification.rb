@@ -20,6 +20,7 @@ class Notification < ActiveRecord::Base
       when 1 then I18n.t('activerecord.attributes.notification.crud_1')
       when 2 then I18n.t('activerecord.attributes.notification.crud_2')
       when 3 then I18n.t('activerecord.attributes.notification.crud_3')
+      when 4 then I18n.t('activerecord.attributes.notification.crud_4')
       else 'N/A'
     end
   end

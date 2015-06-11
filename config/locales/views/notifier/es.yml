@@ -30,6 +30,9 @@ es:
       status: "Estado actual: "
       status_changed_at: "Ultimo cambio de estado: "
       status_changed_message: "Mensaje de soporte técnico: "
+    ticket_assigned:
+      subject: "aGestiona2: Solicitud de soporte te ha sido asignada"
+      htmllink: "Ver esta solicitud"
     purchase_order_saved:
       subject: "aGestiona2: Pedido creado o actualizado"
       link: "Puedes ver este pedido en el siguiente enlace"

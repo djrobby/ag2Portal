@@ -30,6 +30,9 @@ en:
       status: "Current status: "
       status_changed_at: "Status changed at: "
       status_changed_message: "Support message: "
+    ticket_assigned:
+      subject: "aGestiona2: Support ticket has been assigned to you"
+      htmllink: "Show this ticket"
     purchase_order_saved:
       subject: "aGestiona2: Purchase order created or updated"
       link: "You can see this order on the following link"

@@ -103,6 +103,10 @@ class Ticket < ActiveRecord::Base
       # Status forwarded to start/end task
       if self.ticket_status_id > 1 && self.assign_at.blank?
         self.assign_at = Time.now
+        # Ticket has been assigned: Notify technician if it's not over
+        if self.ticket_status_id < 4 && !self.technician.blank?
+          Notifier.ticket_assigned(self).deliver
+        end
       end
       # Status reverted to initial
       if self.ticket_status_id <= 1

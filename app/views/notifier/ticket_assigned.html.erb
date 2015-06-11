@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
+  </head>
+  <body>
+    <h3><%= t 'activerecord.models.ticket.one' %> <%= t 'activerecord.attributes.ticket.id' %>: <%= @ticket.id.to_s.rjust(7, '0') %></h3>
+    <div>
+      <%=t 'activerecord.attributes.ticket.ticket_subject' %>: <%= @ticket.ticket_subject %>
+      <br />
+      <%=t 'activerecord.attributes.ticket.ticket_category' %>: <%= @ticket.ticket_category.name %>
+      <br />
+      <%=t 'activerecord.attributes.ticket.ticket_priority' %>: <%= @ticket.ticket_priority.name %>
+      <br />
+      <%=t 'activerecord.attributes.ticket.assign_at' %>: <%= formatted_timestamp(@ticket.assign_at.utc.getlocal) unless @ticket.assign_at.blank? %>
+      <br />
+      <%=t 'activerecord.attributes.ticket.ticket_status' %>: <%= @ticket.ticket_status.name.titleize unless @ticket.ticket_status.blank? %>
+      <br />
+      <p>
+        <%= t :created_at %> <%= formatted_timestamp(@ticket.created_at.utc.getlocal) %> <%= t :by %> <%= User.find(@ticket.created_by).email unless @ticket.created_by.blank? %>
+        <br />
+        <%= t :updated_at %> <%= formatted_timestamp(@ticket.updated_at.utc.getlocal) %> <%= t :by %> <%= User.find(@ticket.updated_by).email unless @ticket.updated_by.blank? %>
+      </p>
+      <p>
+        <a href="<%= ag2_help_desk.ticket_url(:id => @ticket.id, :host => @current_host) %>"><%= t '.htmllink' %></a>
+      </p>
+      <br />
+      <p>
+        <%= t 'notifier.do_not_reply' %>
+      </p>
+    </div>
+  </body>
+</html>

@@ -74,6 +74,11 @@
   </tbody>
 </table>
 
+<%= render partial: '/layouts/crud/update_delete_new', locals:
+{ model: Office, update_path: edit_office_path(@office), update_txt: t('.btn_edit'),
+delete_path: @office, delete_txt: t('.btn_delete'), msg: t("activerecord.models.office.one"), :txt => @office.name,
+new_path: new_office_path, new_txt: t('ag2_admin.offices.index.btn_new') } %>
+
 <!-- Notificatons -->
 <table class="form-table">
   <tbody>
@@ -106,11 +111,6 @@
 <% else %>
 <%= render :partial => '/layouts/paginationunbordered', :locals => { :ivar => @notifications } %>
 <% end %> <!-- end @notifications.count > 0 -->
-
-<%= render partial: '/layouts/crud/update_delete_new', locals:
-{ model: Office, update_path: edit_office_path(@office), update_txt: t('.btn_edit'),
-delete_path: @office, delete_txt: t('.btn_delete'), msg: t("activerecord.models.office.one"), :txt => @office.name,
-new_path: new_office_path, new_txt: t('ag2_admin.offices.index.btn_new') } %>
 
 <%= link_to I18n.t('ag2_admin.offices.show.show_to'), @office.company %> |
 <%= link_to I18n.t('ag2_admin.offices.back_to_main_page'), offices_path %>

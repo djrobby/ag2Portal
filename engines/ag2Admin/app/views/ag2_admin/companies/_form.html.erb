@@ -200,19 +200,21 @@
   <label class="multi-field-label-two"> <%= f.input :max_order_price, as: :string, input_html: { value: (number_with_precision(f.object.max_order_price, precision: 4) if f.object.max_order_price), class: 'large-text-field number-text-field' }, label_html: { class: 'form-label' } %> </label>
 </div>
 <!-- Notifications -->
-<table class="form-table">
-  <tbody>
-    <tr class="form-tr underlined-tr">
-      <td class="form-td-two left-winged">
-        <h4><%= t 'ag2_admin.companies.notifications_info' %></h4>
-      </td>
-      <td class="form-td-two right-winged">
-        <%= link_to_add_fields(t("ag2_admin.companies.btn_new_notification"), f, :company_notifications, "notification_fields", "new-notification-fields", class: "btn btn-warning fnt-new-notification-btn") %>
-      </td>
-    </tr>
-  </tbody>
-</table>
-<%= render 'notifications_table', f: f %>
+<% if can? :crud, CompanyNotification %>
+  <table class="form-table">
+    <tbody>
+      <tr class="form-tr underlined-tr">
+        <td class="form-td-two left-winged">
+          <h4><%= t 'ag2_admin.companies.notifications_info' %></h4>
+        </td>
+        <td class="form-td-two right-winged">
+          <%= link_to_add_fields(t("ag2_admin.companies.btn_new_notification"), f, :company_notifications, "notification_fields", "new-notification-fields", class: "btn btn-warning fnt-new-notification-btn") %>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <%= render 'notifications_table', f: f %>
+<% end %>
 <!-- Buttons -->
 <%= f.button :submit, :class => 'btn-primary', :id => 'submit_btn' %>
 <% end %>

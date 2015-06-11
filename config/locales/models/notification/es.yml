@@ -12,5 +12,6 @@ es:
         action: "Evento"
         table: "Tabla"
         crud_1: "Crear"
-        crud_2: "Actualizar"
-        crud_3: "Borrar"
+        crud_2: "Leer"
+        crud_3: "Actualizar"
+        crud_4: "Borrar"

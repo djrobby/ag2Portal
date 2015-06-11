@@ -108,7 +108,7 @@ module Ag2Admin
     def show
       @breadcrumb = 'read'
       @company = Company.find(params[:id])
-      @offices = @company.offices
+      @offices = @company.offices.paginate(:page => params[:page], :per_page => per_page).order(:office_code)
       @notifications = @company.company_notifications.paginate(:page => params[:page], :per_page => per_page).order('id')
 
       respond_to do |format|

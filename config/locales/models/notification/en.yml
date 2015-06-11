@@ -12,5 +12,6 @@ en:
         action: "Event"
         table: "Table"
         crud_1: "Create"
-        crud_2: "Update"
-        crud_3: "Delete"
+        crud_2: "Read"
+        crud_3: "Update"
+        crud_4: "Delete"

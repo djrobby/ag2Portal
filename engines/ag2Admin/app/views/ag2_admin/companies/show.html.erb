@@ -110,6 +110,11 @@
   </tbody>
 </table>
 
+<%= render :partial => '/layouts/crud/update_delete_new', locals:
+{ model: Company, update_path: edit_company_path(@company), update_txt: t('ag2_admin.companies.show.btn_edit'),
+delete_path: @company, delete_txt: t('ag2_admin.companies.show.btn_delete'), msg: t("activerecord.models.company.one"), :txt => @company.name,
+new_path: new_company_path, new_txt: t('ag2_admin.companies.index.btn_new') } %>
+
 <!-- Notificatons -->
 <table class="form-table">
   <tbody>
@@ -143,11 +148,7 @@
 <%= render :partial => '/layouts/paginationunbordered', :locals => { :ivar => @notifications } %>
 <% end %> <!-- end @notifications.count > 0 -->
 
-<%= render :partial => '/layouts/crud/update_delete_new', locals:
-{ model: Company, update_path: edit_company_path(@company), update_txt: t('ag2_admin.companies.show.btn_edit'),
-delete_path: @company, delete_txt: t('ag2_admin.companies.show.btn_delete'), msg: t("activerecord.models.company.one"), :txt => @company.name,
-new_path: new_company_path, new_txt: t('ag2_admin.companies.index.btn_new') } %>
-
+<!-- Offices -->
 <% if (@offices.count > 0) %>
 <h4><%= t '.subtable_title' %></h4>
 <table class="table table-condensed table-striped">
@@ -168,6 +169,7 @@ new_path: new_company_path, new_txt: t('ag2_admin.companies.index.btn_new') } %>
     <% end %>
   </tbody>
 </table>
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @offices } %>
 <% end %>
 
 <%= link_to I18n.t('ag2_admin.companies.show.show_to'), @company.organization %> |

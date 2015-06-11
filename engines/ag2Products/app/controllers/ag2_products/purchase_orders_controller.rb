@@ -470,6 +470,9 @@ module Ag2Products
       @breadcrumb = 'read'
       @purchase_order = PurchaseOrder.find(params[:id])
       @items = @purchase_order.purchase_order_items.paginate(:page => params[:page], :per_page => per_page).order('id')
+      # Approvers
+      @is_approver = company_approver(@purchase_order, @purchase_order.project.company, current_user.id) ||
+                     office_approver(@purchase_order, @purchase_order.project.office, current_user.id)
   
       respond_to do |format|
         format.html # show.html.erb

@@ -157,8 +157,10 @@
       </td>
       <td class="form-td-two right-winged">
         <!-- Approve purchase order -->
-        <a href="#" id="approve_order_btn" class="btn btn-warning"><i class="icon-ok icon-white"></i> <%=t :approve %></a>
-        <br />
+        <% if @is_approver %>
+          <a href="#" id="approve_order_btn" class="btn btn-warning"><i class="icon-ok icon-white"></i> <%=t :approve %></a>
+          <br />
+        <% end %>
       </td>
     </tr>
   </tbody>
