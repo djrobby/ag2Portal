@@ -126,8 +126,8 @@ class OfferRequest < ActiveRecord::Base
     text :request_no
     string :request_no
     integer :payment_method_id
-    integer :id, :multiple => true
-    integer :project_id, :multiple => true
+    integer :id, :multiple => true          # Multiple search values accepted in one search (current_suppliers)
+    integer :project_id, :multiple => true  # Multiple search values accepted in one search (current_projects)
     integer :store_id
     integer :work_order_id
     integer :charge_account_id

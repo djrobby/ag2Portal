@@ -388,6 +388,9 @@ module Ag2Purchase
       current_suppliers = @request_suppliers.blank? ? [0] : current_suppliers_for_index(@request_suppliers)
       current_projects = @projects.blank? ? [0] : current_projects_for_index(@projects)
       
+      # Inverse no search is required
+      no = !no.blank? && no[0] == '%' ? inverse_no_search(no) : no
+      
       @search = OfferRequest.search do
         with :project_id, current_projects
         fulltext params[:search]
@@ -395,7 +398,8 @@ module Ag2Purchase
           with :organization_id, session[:organization]
         end
         if !no.blank?
-          with :request_no, no
+          #with :request_no, no
+          with(:request_no).starting_with(no)
         end
         if !supplier.blank?
           with :id, current_suppliers
@@ -662,6 +666,10 @@ module Ag2Purchase
     def products_dropdown
       session[:organization] != '0' ? Product.where(organization_id: session[:organization].to_i).order(:product_code) : Product.order(:product_code)
     end    
+
+    def inverse_no_search(no)
+      OfferRequest.where('request_no LIKE ?', "%#{no}").first.request_no
+    end
 
     # Keeps filter state
     def manage_filter_state
