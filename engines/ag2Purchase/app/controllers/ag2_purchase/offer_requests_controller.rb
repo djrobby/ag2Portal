@@ -426,6 +426,13 @@ module Ag2Purchase
       @items = @offer_request.offer_request_items.paginate(:page => params[:page], :per_page => per_page).order('id')
       @suppliers = @offer_request.offer_request_suppliers.paginate(:page => params[:page], :per_page => per_page).order('id')
       @offers = @offer_request.offers.paginate(:page => params[:page], :per_page => per_page).order('id')
+      # Offer Approvers
+      @is_approver = false
+      if @offers.count > 0
+        offer = @offers.first
+        @is_approver = company_approver(offer, offer.project.company, current_user.id) ||
+                       office_approver(offer, offer.project.office, current_user.id)
+      end
   
       respond_to do |format|
         format.html # show.html.erb

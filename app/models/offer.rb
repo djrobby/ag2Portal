@@ -42,6 +42,8 @@ class Offer < ActiveRecord::Base
   validates_attachment_content_type :attachment, :content_type => /\Aimage\/.*\Z/, :message => :attachment_invalid
 
   before_destroy :check_for_dependent_records
+  after_create :notify_on_create
+  after_update :notify_on_update
 
   def to_label
     "#{full_name}"
@@ -152,5 +154,43 @@ class Offer < ActiveRecord::Base
       errors.add(:base, I18n.t('activerecord.models.offer.check_for_purchase_orders'))
       return false
     end
+  end
+
+  #
+  # Notifiers
+  #
+  # After create
+  def notify_on_create
+    # Always notify on create
+    Notifier.offer_saved(self, 1).deliver
+    if check_if_approval_is_required
+      Notifier.offer_saved_with_approval(self, 1).deliver
+    end     
+  end
+
+  # After update
+  def notify_on_update
+    # Notify only if key values changed
+    items_changed = false
+    offer_items.each do |i|
+      if i.changed?
+        items_changed = true
+        break
+      end
+    end
+    if self.changed? || items_changed
+      Notifier.offer_saved(self, 3).deliver
+      if check_if_approval_is_required
+        Notifier.offer_saved_with_approval(self, 3).deliver
+      end     
+    end
+  end
+
+  #
+  # Helper methods for notifiers
+  #
+  # Need approval?
+  def check_if_approval_is_required
+    !offer_request.blank?
   end
 end

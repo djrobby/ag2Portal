@@ -175,7 +175,7 @@ module Ag2Admin
     private
 
     def notifications_dropdown
-      Notification.order(:name)
+      Notification.order(:id)
     end
 
     def users_dropdown

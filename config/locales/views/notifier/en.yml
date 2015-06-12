@@ -43,4 +43,14 @@ en:
       htmllink: "Show this order"
       approval: "** Your approval is required **"
       htmlapproval: "Approve this order"
+    offer_saved:
+      subject: "aGestiona2: Supplier offer created or updated"
+      link: "You can see this offer on the following link"
+      htmllink: "Show this offer"
+    offer_saved_with_approval:
+      subject: "aGestiona2: Supplier offer created or updated (Approval required)"
+      link: "You can see this offer on the following link"
+      htmllink: "Show this offer"
+      approval: "** Your approval is required **"
+      htmlapproval: "Approve this offer"
     do_not_reply: "Do not reply directly to this e-mail: It was sent from an unattended mailbox."

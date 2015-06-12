@@ -76,6 +76,29 @@ class Notifier < ActionMailer::Base
       end
     end
   end
+
+  # Offer & Offer request
+  def offer_saved(offer, action)
+    @offer = offer
+    @current_host = current_host
+    recipients = notify_to(offer, action, 2)
+    if recipients != ''
+      mail to: recipients do |format|
+        format.html
+      end
+    end
+  end
+
+  def offer_saved_with_approval(offer, action)
+    @offer = offer
+    @current_host = current_host
+    recipients = notify_to(offer, action, 1)
+    if recipients != ''
+      mail to: recipients do |format|
+        format.html
+      end
+    end
+  end
   
   #  
   # Recipients based on Notifications

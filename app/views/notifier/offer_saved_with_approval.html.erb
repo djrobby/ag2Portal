@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
+  </head>
+  <body>
+    <h3><%= t 'activerecord.models.offer.one' %> <%= t 'activerecord.attributes.offer.offer_no_report' %>: <%= @offer.offer_no %></h3>
+    <div>
+      <%= t 'activerecord.attributes.offer.offer_date' %>: <%= formatted_date(@offer.offer_date) unless @offer.offer_date.blank? %>
+      <br />
+      <%= t 'activerecord.attributes.offer.supplier' %>: <%= @offer.supplier.full_name %>
+      <br />
+      <%= t 'activerecord.attributes.offer.offer_request' %>: <%= @offer.offer_request.full_name unless @offer.offer_request.blank? %>
+      <br />
+      <%= t 'activerecord.attributes.offer.project' %>: <%= @offer.project.full_name unless @offer.project.blank? %>
+      <br />
+      <%= t 'activerecord.attributes.offer.work_order' %>: <%= @offer.work_order.full_name unless @offer.work_order.blank? %>
+      <br />
+      <%= t 'activerecord.attributes.offer.payment_method' %>: <%= @offer.payment_method.description unless @offer.payment_method.blank? %>
+      <br />
+      <h4 style="color: #a67326;"><%= t 'activerecord.attributes.offer.total' %>: <%= number_with_precision(@offer.total, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless @offer.total.blank? %></h4>
+      <p>
+        <%= t :created_at %> <%= formatted_timestamp(@offer.created_at.utc.getlocal) %> <%= t :by %> <%= User.find(@offer.created_by).email unless @offer.created_by.blank? %>
+        <br />
+        <%= t :updated_at %> <%= formatted_timestamp(@offer.updated_at.utc.getlocal) %> <%= t :by %> <%= User.find(@offer.updated_by).email unless @offer.updated_by.blank? %>
+      </p>
+      <p>
+        <a href="<%= ag2_purchase.offer_url(:id => @offer.id, :host => @current_host) %>"><%= t '.htmlapproval' %></a>
+      </p>
+      <br />
+      <p>
+        <%= t 'notifier.do_not_reply' %>
+      </p>
+    </div>
+  </body>
+</html>

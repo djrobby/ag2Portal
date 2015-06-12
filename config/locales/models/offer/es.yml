@@ -16,6 +16,7 @@ es:
         payment_method: "Forma de pago"
         payment_method_id: "Forma de pago"
         offer_no: "Nº"
+        offer_no_report: "Nº"
         offer_date: "Fecha"
         remarks: "Comentarios"
         discount_pct: "% Dto."

@@ -16,6 +16,7 @@ en:
         payment_method: "Payment method"
         payment_method_id: "Payment method"
         offer_no: "No."
+        offer_no_report: "No"
         offer_date: "Date"
         remarks: "Remarks"
         discount_pct: "Disc.%"

@@ -106,7 +106,7 @@ module Ag2Admin
     private
 
     def sort_column
-      Notification.column_names.include?(params[:sort]) ? params[:sort] : "name"
+      Notification.column_names.include?(params[:sort]) ? params[:sort] : "id"
     end
   end
 end

@@ -43,4 +43,14 @@ es:
       htmllink: "Ver este pedido"
       approval: "** Se requiere tu aprobación **"
       htmlapproval: "Aprueba este pedido"
+    offer_saved:
+      subject: "aGestiona2: Oferta de proveedor creada o actualizada"
+      link: "Puedes ver esta oferta en el siguiente enlace"
+      htmllink: "Ver esta oferta"
+    offer_saved_with_approval:
+      subject: "aGestiona2: Oferta de proveedor creada o actualizada (Aprobación requerida)"
+      link: "Puedes ver esta oferta en el siguiente enlace"
+      htmllink: "Ver esta oferta"
+      approval: "** Se requiere tu aprobación **"
+      htmlapproval: "Aprueba esta oferta"
     do_not_reply: "No responda directamente a este e-mail: Ha sido enviado desde un sistema desatendido."

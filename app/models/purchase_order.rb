@@ -215,7 +215,7 @@ class PurchaseOrder < ActiveRecord::Base
       end
     end
     if self.changed? || items_changed
-      Notifier.purchase_order_saved(self, 2).deliver
+      Notifier.purchase_order_saved(self, 3).deliver
       if check_if_approval_is_required
         Notifier.purchase_order_saved_with_approval(self, 3).deliver
       end     
