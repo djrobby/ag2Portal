@@ -79,10 +79,13 @@ class Project < ActiveRecord::Base
 
   searchable do
     text :project_code, :name
-    string :project_code
+    string :project_code, :multiple => true   # Multiple search values accepted in one search (inverse_no_search)
     integer :company_id
     integer :office_id
     integer :organization_id
+    string :sort_no do
+      project_code
+    end
   end
 
   private

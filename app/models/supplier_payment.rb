@@ -38,7 +38,7 @@ class SupplierPayment < ActiveRecord::Base
 
   searchable do
     text :payment_no
-    string :payment_no
+    string :payment_no, :multiple => true   # Multiple search values accepted in one search (inverse_no_search)
     integer :id
     integer :payment_method_id
     integer :supplier_id
@@ -47,5 +47,8 @@ class SupplierPayment < ActiveRecord::Base
     integer :supplier_invoice_approval_id
     date :payment_date
     integer :organization_id
+    string :sort_no do
+      payment_no
+    end
   end
 end

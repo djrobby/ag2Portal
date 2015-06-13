@@ -84,10 +84,13 @@ class ChargeAccount < ActiveRecord::Base
 
   searchable do
     text :account_code, :name
-    string :account_code
+    string :account_code, :multiple => true   # Multiple search values accepted in one search (inverse_no_search)
     integer :project_id, :multiple => true
     integer :charge_group_id
     integer :organization_id
+    string :sort_no do
+      account_code
+    end
   end
 
   private

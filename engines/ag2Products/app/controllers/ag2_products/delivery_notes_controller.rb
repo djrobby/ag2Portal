@@ -306,7 +306,11 @@ module Ag2Products
       @projects = projects_dropdown if @projects.nil?
       @work_orders = work_orders_dropdown if @work_orders.nil?
 
+      # Arrays for search
       current_projects = @projects.blank? ? [0] : current_projects_for_index(@projects)
+      # If inverse no search is required
+      no = !no.blank? && no[0] == '%' ? inverse_no_search(no) : no
+      
       @search = DeliveryNote.search do
         with :project_id, current_projects
         fulltext params[:search]
@@ -314,7 +318,11 @@ module Ag2Products
           with :organization_id, session[:organization]
         end
         if !no.blank?
-          with :delivery_no, no
+          if no.class == Array
+            with :delivery_no, no
+          else
+            with(:delivery_no).starting_with(no)
+          end
         end
         if !client.blank?
           with :client_id, client
@@ -325,7 +333,7 @@ module Ag2Products
         if !order.blank?
           with :work_order_id, order
         end
-        order_by :delivery_no, :asc
+        order_by :sort_no, :asc
         paginate :page => params[:page] || 1, :per_page => per_page
       end
       @delivery_notes = @search.results
@@ -462,6 +470,15 @@ module Ag2Products
         _current_projects = _current_projects << i.id
       end
       _current_projects
+    end
+
+    def inverse_no_search(no)
+      _numbers = []
+      # Add numbers found
+      DeliveryNote.where('delivery_no LIKE ?', "#{no}").each do |i|
+        _numbers = _numbers << i.delivery_no
+      end
+      _numbers = _numbers.blank? ? no : _numbers
     end
     
     def project_stores(_project)

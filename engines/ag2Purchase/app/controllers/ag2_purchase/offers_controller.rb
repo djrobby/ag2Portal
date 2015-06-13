@@ -482,7 +482,11 @@ module Ag2Purchase
       @work_orders = work_orders_dropdown if @work_orders.nil?
       @offer_requests = offer_requests_dropdown if @offer_requests.nil?
 
+      # Arrays for search
       current_projects = @projects.blank? ? [0] : current_projects_for_index(@projects)
+      # If inverse no search is required
+      no = !no.blank? && no[0] == '%' ? inverse_no_search(no) : no
+      
       @search = Offer.search do
         with :project_id, current_projects
         fulltext params[:search]
@@ -490,7 +494,11 @@ module Ag2Purchase
           with :organization_id, session[:organization]
         end
         if !no.blank?
-          with :offer_no, no
+          if no.class == Array
+            with :offer_no, no
+          else
+            with(:offer_no).starting_with(no)
+          end
         end
         if !supplier.blank?
           with :supplier_id, supplier
@@ -638,6 +646,15 @@ module Ag2Purchase
         _current_projects = _current_projects << i.id
       end
       _current_projects
+    end
+
+    def inverse_no_search(no)
+      _numbers = []
+      # Add numbers found
+      Offer.where('offer_no LIKE ?', "#{no}").each do |i|
+        _numbers = _numbers << i.offer_no
+      end
+      _numbers = _numbers.blank? ? no : _numbers
     end
     
     def project_stores(_project)

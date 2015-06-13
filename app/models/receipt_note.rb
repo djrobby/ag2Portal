@@ -123,7 +123,7 @@ class ReceiptNote < ActiveRecord::Base
 
   searchable do
     text :receipt_no
-    string :receipt_no
+    string :receipt_no, :multiple => true   # Multiple search values accepted in one search (inverse_no_search)
     integer :id
     integer :payment_method_id
     integer :project_id, :multiple => true

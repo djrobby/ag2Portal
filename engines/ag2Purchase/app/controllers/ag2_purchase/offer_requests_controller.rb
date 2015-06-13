@@ -385,10 +385,10 @@ module Ag2Purchase
         @request_suppliers = OfferRequestSupplier.group(:offer_request_id)
       end
 
+      # Arrays for search
       current_suppliers = @request_suppliers.blank? ? [0] : current_suppliers_for_index(@request_suppliers)
       current_projects = @projects.blank? ? [0] : current_projects_for_index(@projects)
-      
-      # Inverse no search is required
+      # If inverse no search is required
       no = !no.blank? && no[0] == '%' ? inverse_no_search(no) : no
       
       @search = OfferRequest.search do
@@ -398,8 +398,11 @@ module Ag2Purchase
           with :organization_id, session[:organization]
         end
         if !no.blank?
-          #with :request_no, no
-          with(:request_no).starting_with(no)
+          if no.class == Array
+            with :request_no, no
+          else
+            with(:request_no).starting_with(no)
+          end
         end
         if !supplier.blank?
           with :id, current_suppliers
@@ -410,7 +413,7 @@ module Ag2Purchase
         if !order.blank?
           with :work_order_id, order
         end
-        order_by :request_no, :asc
+        order_by :sort_no, :asc
         paginate :page => params[:page] || 1, :per_page => per_page
       end
       @offer_requests = @search.results
@@ -580,6 +583,15 @@ module Ag2Purchase
       end
       _current_suppliers
     end
+
+    def inverse_no_search(no)
+      _numbers = []
+      # Add numbers found
+      OfferRequest.where('request_no LIKE ?', "#{no}").each do |i|
+        _numbers = _numbers << i.request_no
+      end
+      _numbers = _numbers.blank? ? no : _numbers
+    end
     
     def project_stores(_project)
       if !_project.company.blank? && !_project.office.blank?
@@ -666,10 +678,6 @@ module Ag2Purchase
     def products_dropdown
       session[:organization] != '0' ? Product.where(organization_id: session[:organization].to_i).order(:product_code) : Product.order(:product_code)
     end    
-
-    def inverse_no_search(no)
-      OfferRequest.where('request_no LIKE ?', "%#{no}").first.request_no
-    end
 
     # Keeps filter state
     def manage_filter_state

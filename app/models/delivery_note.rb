@@ -136,7 +136,7 @@ class DeliveryNote < ActiveRecord::Base
 
   searchable do
     text :delivery_no
-    string :delivery_no
+    string :delivery_no, :multiple => true    # Multiple search values accepted in one search (inverse_no_search)
     integer :payment_method_id
     integer :project_id, :multiple => true
     integer :store_id
@@ -145,6 +145,9 @@ class DeliveryNote < ActiveRecord::Base
     integer :client_id
     date :delivery_date
     integer :organization_id
+    string :sort_no do
+      delivery_no
+    end
   end
 
   private

@@ -124,7 +124,7 @@ class OfferRequest < ActiveRecord::Base
 
   searchable do
     text :request_no
-    string :request_no
+    string :request_no, :multiple => true   # Multiple search values accepted in one search (inverse_no_search)
     integer :payment_method_id
     integer :id, :multiple => true          # Multiple search values accepted in one search (current_suppliers)
     integer :project_id, :multiple => true  # Multiple search values accepted in one search (current_projects)
@@ -137,6 +137,9 @@ class OfferRequest < ActiveRecord::Base
     date :deadline_date
     date :approval_date
     integer :organization_id
+    string :sort_no do
+      request_no
+    end
   end
 
   private

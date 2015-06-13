@@ -186,9 +186,12 @@ class Budget < ActiveRecord::Base
 
   searchable do
     text :budget_no, :description
-    string :budget_no
+    string :budget_no, :multiple => true   # Multiple search values accepted in one search (inverse_no_search)
     integer :project_id
     integer :budget_period_id
     integer :organization_id
+    string :sort_no do
+      budget_no
+    end
   end
 end

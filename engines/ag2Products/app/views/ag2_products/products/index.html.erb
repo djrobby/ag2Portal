@@ -7,6 +7,7 @@
   }); 
 
   $(window).bind("load", function() {
+    $("#No").val("<%= params[:No] %>");
     $("#Type").val("<%= params[:Type] %>");
     $("#Family").val("<%= params[:Family] %>");
     $("#Measure").val("<%= params[:Measure] %>");
@@ -17,6 +18,7 @@
   jQuery(function($) {
     // when the #removeFilter button clicked
     $("#removeFilter").click(function() {
+      $("#No").val("");
       $("#Type").val("");
       $("#Family").val("");
       $("#Measure").val("");
@@ -45,6 +47,9 @@
     <div class="span3">
       <div class="well sidebar-nav">
         <%= form_tag "products", :method => 'get', :remote => true do %>
+        <!-- No -->
+        <%= label_tag I18n.t("activerecord.attributes.product.product_code"), nil, :class => 'form-label' %>
+        <%= text_field_tag "No", nil, :class => 'x-large-text-field shrinked number-text-field', onkeyup: "caps(this)" %>
         <!-- Type -->
         <%= label_tag I18n.t("ag2_products.products.index.label_type"), nil, :class => 'form-label' %>
         <%= select_tag "Type", options_from_collection_for_select(ProductType.order('description').all, "id", "description"), :prompt => "", :class => 'x-large-text-field shrinked' %>

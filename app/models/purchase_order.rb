@@ -163,7 +163,7 @@ class PurchaseOrder < ActiveRecord::Base
 
   searchable do
     text :order_no, :supplier_offer_no
-    string :order_no
+    string :order_no, :multiple => true     # Multiple search values accepted in one search (inverse_no_search)
     integer :supplier_id
     integer :payment_method_id
     integer :order_status_id
@@ -174,6 +174,9 @@ class PurchaseOrder < ActiveRecord::Base
     integer :offer_id
     date :order_date
     integer :organization_id
+    string :sort_no do
+      order_no
+    end
   end
 
   private

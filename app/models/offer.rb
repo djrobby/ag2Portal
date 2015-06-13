@@ -134,7 +134,7 @@ class Offer < ActiveRecord::Base
 
   searchable do
     text :offer_no
-    string :offer_no
+    string :offer_no, :multiple => true   # Multiple search values accepted in one search (inverse_no_search)
     integer :id
     integer :supplier_id
     integer :payment_method_id

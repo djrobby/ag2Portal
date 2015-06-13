@@ -312,7 +312,11 @@ module Ag2Products
       @suppliers = suppliers_dropdown if @suppliers.nil?
       @work_orders = work_orders_dropdown if @work_orders.nil?
 
+      # Arrays for search
       current_projects = @projects.blank? ? [0] : current_projects_for_index(@projects)
+      # If inverse no search is required
+      no = !no.blank? && no[0] == '%' ? inverse_no_search(no) : no
+
       @search = ReceiptNote.search do
         with :project_id, current_projects
         fulltext params[:search]
@@ -320,7 +324,11 @@ module Ag2Products
           with :organization_id, session[:organization]
         end
         if !no.blank?
-          with :request_no, no
+          if no.class == Array
+            with :receipt_no, no
+          else
+            with(:receipt_no).starting_with(no)
+          end
         end
         if !supplier.blank?
           with :supplier_id, supplier
@@ -468,6 +476,15 @@ module Ag2Products
         _current_projects = _current_projects << i.id
       end
       _current_projects
+    end
+
+    def inverse_no_search(no)
+      _numbers = []
+      # Add numbers found
+      ReceiptNote.where('receipt_no LIKE ?', "#{no}").each do |i|
+        _numbers = _numbers << i.receipt_no
+      end
+      _numbers = _numbers.blank? ? no : _numbers
     end
     
     def project_stores(_project)

@@ -215,7 +215,11 @@ module Ag2Tech
       @projects = projects_dropdown if @projects.nil?
       @periods = periods_dropdown if @periods.nil?
       
+      # Arrays for search
       current_projects = @projects.blank? ? [0] : current_projects_for_index(@projects)
+      # If inverse no search is required
+      no = !no.blank? && no[0] == '%' ? inverse_no_search(no) : no
+      
       @search = Budget.search do
         with :project_id, current_projects
         fulltext params[:search]
@@ -223,7 +227,11 @@ module Ag2Tech
           with :organization_id, session[:organization]
         end
         if !no.blank?
-          with :budget_no, no
+          if no.class == Array
+            with :budget_no, no
+          else
+            with(:budget_no).starting_with(no)
+          end
         end
         if !project.blank?
           with :project_id, project
@@ -231,7 +239,7 @@ module Ag2Tech
         if !period.blank?
           with :budget_period_id, period
         end
-        order_by :budget_no, :asc
+        order_by :sort_no, :asc
         paginate :page => params[:page] || 1, :per_page => per_page
       end
       @budgets = @search.results
@@ -353,6 +361,15 @@ module Ag2Tech
         _current_projects = _current_projects << i.id
       end
       _current_projects
+    end
+
+    def inverse_no_search(no)
+      _numbers = []
+      # Add numbers found
+      Budget.where('budget_no LIKE ?', "#{no}").each do |i|
+        _numbers = _numbers << i.budget_no
+      end
+      _numbers = _numbers.blank? ? no : _numbers
     end
 
     def projects_dropdown

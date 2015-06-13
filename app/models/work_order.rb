@@ -235,7 +235,7 @@ class WorkOrder < ActiveRecord::Base
 
   searchable do
     text :order_no, :description, :petitioner
-    string :order_no
+    string :order_no, :multiple => true   # Multiple search values accepted in one search (inverse_no_search)
     integer :charge_account_id
     integer :project_id, :multiple => true
     integer :client_id
@@ -247,6 +247,9 @@ class WorkOrder < ActiveRecord::Base
     date :completed_at
     date :closed_at
     integer :organization_id
+    string :sort_no do
+      order_no
+    end
   end
 
   private

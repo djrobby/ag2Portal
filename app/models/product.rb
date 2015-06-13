@@ -213,7 +213,7 @@ class Product < ActiveRecord::Base
 
   searchable do
     text :product_code, :main_description, :aux_description, :manufacturer_p_code
-    string :product_code
+    string :product_code, :multiple => true   # Multiple search values accepted in one search (inverse_no_search)
     string :main_description
     integer :product_type_id
     integer :product_family_id
@@ -221,6 +221,9 @@ class Product < ActiveRecord::Base
     integer :manufacturer_id
     integer :tax_type_id
     integer :organization_id
+    string :sort_no do
+      product_code
+    end
   end
 
   private

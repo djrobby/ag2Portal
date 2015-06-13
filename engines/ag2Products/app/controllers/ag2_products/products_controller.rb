@@ -86,6 +86,7 @@ module Ag2Products
     # GET /products.json
     def index
       manage_filter_state
+      no = params[:No]
       type = params[:Type]
       family = params[:Family]
       measure = params[:Measure]
@@ -97,6 +98,9 @@ module Ag2Products
       # Initialize select_tags
       @product_families = families_dropdown if @product_families.nil?
   
+      # If inverse no search is required
+      no = !no.blank? && no[0] == '%' ? inverse_no_search(no) : no
+      
       @search = Product.search do
         fulltext params[:search]
         if session[:organization] != '0'
@@ -104,6 +108,13 @@ module Ag2Products
         end
         if !letter.blank? && letter != "%"
           with(:main_description).starting_with(letter)
+        end
+        if !no.blank?
+          if no.class == Array
+            with :product_code, no
+          else
+            with(:product_code).starting_with(no)
+          end
         end
         if !type.blank?
           with :product_type_id, type
@@ -120,7 +131,7 @@ module Ag2Products
         if !tax.blank?
           with :tax_type_id, tax
         end
-        order_by :product_code, :asc
+        order_by :sort_no, :asc
         paginate :page => params[:page] || 1, :per_page => per_page
       end
       @products = @search.results
@@ -261,6 +272,15 @@ module Ag2Products
     end
 
     private
+
+    def inverse_no_search(no)
+      _numbers = []
+      # Add numbers found
+      Product.where('product_code LIKE ?', "#{no}").each do |i|
+        _numbers = _numbers << i.product_code
+      end
+      _numbers = _numbers.blank? ? no : _numbers
+    end
     
     def families_dropdown
       _families = session[:organization] != '0' ? ProductFamily.where(organization_id: session[:organization].to_i).order(:family_code) : ProductFamily.order(:family_code)  
@@ -273,6 +293,12 @@ module Ag2Products
         session[:search] = params[:search]
       elsif session[:search]
         params[:search] = session[:search]
+      end
+      # no
+      if params[:No]
+        session[:No] = params[:No]
+      elsif session[:No]
+        params[:No] = session[:No]
       end
       # type
       if params[:Type]

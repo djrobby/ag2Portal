@@ -406,7 +406,11 @@ module Ag2Purchase
       @suppliers = suppliers_dropdown if @suppliers.nil?
       @statuses = OrderStatus.order('id') if @statuses.nil?
 
+      # Arrays for search
       current_projects = @projects.blank? ? [0] : current_projects_for_index(@projects)
+      # If inverse no search is required
+      no = !no.blank? && no[0] == '%' ? inverse_no_search(no) : no
+
       @search = PurchaseOrder.search do
         with :project_id, current_projects
         fulltext params[:search]
@@ -414,7 +418,11 @@ module Ag2Purchase
           with :organization_id, session[:organization]
         end
         if !no.blank?
-          with :order_no, no
+          if no.class == Array
+            with :order_no, no
+          else
+            with(:order_no).starting_with(no)
+          end
         end
         if !project.blank?
           with :project_id, project
@@ -425,7 +433,7 @@ module Ag2Purchase
         if !status.blank?
           with :order_status_id, status
         end
-        order_by :order_no, :asc
+        order_by :sort_no, :asc
         paginate :page => params[:page] || 1, :per_page => per_page
       end
       @purchase_orders = @search.results
@@ -588,6 +596,15 @@ module Ag2Purchase
         _current_projects = _current_projects << i.id
       end
       _current_projects
+    end
+
+    def inverse_no_search(no)
+      _numbers = []
+      # Add numbers found
+      PurchaseOrder.where('order_no LIKE ?', "#{no}").each do |i|
+        _numbers = _numbers << i.order_no
+      end
+      _numbers = _numbers.blank? ? no : _numbers
     end
     
     def project_stores(_project)

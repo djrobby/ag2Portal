@@ -17,13 +17,21 @@ module Ag2Purchase
       supplier = params[:Supplier]
       invoice = params[:Invoice]
 
+      # Arrays for search
+      # If inverse no search is required
+      no = !no.blank? && no[0] == '%' ? inverse_no_search(no) : no
+      
       @search = SupplierPayment.search do
         fulltext params[:search]
         if session[:organization] != '0'
           with :organization_id, session[:organization]
         end
         if !no.blank?
-          with :payment_no, no
+          if no.class == Array
+            with :payment_no, no
+          else
+            with(:payment_no).starting_with(no)
+          end
         end
         if !supplier.blank?
           with :supplier_id, supplier
@@ -132,6 +140,15 @@ module Ag2Purchase
     end
 
     private
+
+    def inverse_no_search(no)
+      _numbers = []
+      # Add numbers found
+      SupplierPayment.where('payment_no LIKE ?', "#{no}").each do |i|
+        _numbers = _numbers << i.payment_no
+      end
+      _numbers = _numbers.blank? ? no : _numbers
+    end
     
     # Keeps filter state
     def manage_filter_state
