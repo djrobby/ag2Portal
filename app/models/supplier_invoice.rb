@@ -10,6 +10,7 @@ class SupplierInvoice < ActiveRecord::Base
                   :supplier_id, :payment_method_id, :project_id, :work_order_id, :charge_account_id,
                   :posted_at, :organization_id, :receipt_note_id
   attr_accessible :supplier_invoice_items_attributes, :supplier_invoice_approvals_attributes
+  has_attached_file :attachment, :styles => { :medium => "192x192>", :small => "128x128>" }, :default_url => "/images/missing/:style/attachment.png"
 
   has_many :supplier_invoice_items, dependent: :destroy
   has_many :supplier_invoice_approvals, dependent: :destroy

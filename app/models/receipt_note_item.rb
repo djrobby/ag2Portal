@@ -65,6 +65,10 @@ class ReceiptNoteItem < ActiveRecord::Base
   def net_tax
     tax - (tax * (receipt_note.discount_pct / 100)) if !receipt_note.discount_pct.blank?
   end
+    
+  def balance
+    quantity - supplier_invoice_items.sum("quantity")
+  end
 
   private
 

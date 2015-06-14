@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150604112830) do
+ActiveRecord::Schema.define(:version => 20150614071420) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -1208,20 +1208,24 @@ ActiveRecord::Schema.define(:version => 20150604112830) do
     t.integer  "payment_method_id"
     t.date     "receipt_date"
     t.string   "remarks"
-    t.decimal  "discount_pct",      :precision => 6,  :scale => 2, :default => 0.0, :null => false
-    t.decimal  "discount",          :precision => 13, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "discount_pct",            :precision => 6,  :scale => 2, :default => 0.0, :null => false
+    t.decimal  "discount",                :precision => 13, :scale => 4, :default => 0.0, :null => false
     t.integer  "project_id"
     t.integer  "store_id"
     t.integer  "work_order_id"
     t.integer  "charge_account_id"
-    t.decimal  "retention_pct",     :precision => 6,  :scale => 2, :default => 0.0, :null => false
+    t.decimal  "retention_pct",           :precision => 6,  :scale => 2, :default => 0.0, :null => false
     t.integer  "retention_time"
-    t.datetime "created_at",                                                        :null => false
-    t.datetime "updated_at",                                                        :null => false
+    t.datetime "created_at",                                                              :null => false
+    t.datetime "updated_at",                                                              :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
     t.integer  "purchase_order_id"
     t.integer  "organization_id"
+    t.string   "attachment_file_name"
+    t.string   "attachment_content_type"
+    t.integer  "attachment_file_size"
+    t.datetime "attachment_updated_at"
   end
 
   add_index "receipt_notes", ["charge_account_id"], :name => "index_receipt_notes_on_charge_account_id"
@@ -1588,18 +1592,22 @@ ActiveRecord::Schema.define(:version => 20150604112830) do
     t.integer  "payment_method_id"
     t.date     "invoice_date"
     t.string   "remarks"
-    t.decimal  "discount_pct",      :precision => 6,  :scale => 2, :default => 0.0, :null => false
-    t.decimal  "discount",          :precision => 13, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "discount_pct",            :precision => 6,  :scale => 2, :default => 0.0, :null => false
+    t.decimal  "discount",                :precision => 13, :scale => 4, :default => 0.0, :null => false
     t.integer  "project_id"
     t.integer  "work_order_id"
     t.integer  "charge_account_id"
-    t.datetime "created_at",                                                        :null => false
-    t.datetime "updated_at",                                                        :null => false
+    t.datetime "created_at",                                                              :null => false
+    t.datetime "updated_at",                                                              :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
     t.date     "posted_at"
     t.integer  "organization_id"
     t.integer  "receipt_note_id"
+    t.string   "attachment_file_name"
+    t.string   "attachment_content_type"
+    t.integer  "attachment_file_size"
+    t.datetime "attachment_updated_at"
   end
 
   add_index "supplier_invoices", ["charge_account_id"], :name => "index_supplier_invoices_on_charge_account_id"

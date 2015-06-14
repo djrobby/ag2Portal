@@ -11,6 +11,7 @@ class ReceiptNote < ActiveRecord::Base
                   :supplier_id, :payment_method_id, :project_id, :store_id, :work_order_id, :charge_account_id,
                   :purchase_order_id, :organization_id
   attr_accessible :receipt_note_items_attributes
+  has_attached_file :attachment, :styles => { :medium => "192x192>", :small => "128x128>" }, :default_url => "/images/missing/:style/attachment.png"
 
   has_many :receipt_note_items, dependent: :destroy
   has_many :supplier_invoice_items
@@ -100,6 +101,16 @@ class ReceiptNote < ActiveRecord::Base
 
   def quantity
     receipt_note_items.sum("quantity")
+  end
+  
+  def balance
+    balance = 0
+    receipt_note_items.each do |i|
+      if !i.balance.blank?
+        balance += i.balance
+      end
+    end
+    balance
   end
 
   #
