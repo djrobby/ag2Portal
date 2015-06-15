@@ -14,6 +14,7 @@ class ReceiptNote < ActiveRecord::Base
   has_attached_file :attachment, :styles => { :medium => "192x192>", :small => "128x128>" }, :default_url => "/images/missing/:style/attachment.png"
 
   has_many :receipt_note_items, dependent: :destroy
+  has_many :receipt_note_item_balances, through: :receipt_note_items
   has_many :supplier_invoice_items
 
   # Nested attributes
@@ -104,13 +105,26 @@ class ReceiptNote < ActiveRecord::Base
   end
   
   def balance
-    balance = 0
-    receipt_note_items.each do |i|
-      if !i.balance.blank?
-        balance += i.balance
+    receipt_note_item_balances.sum("balance")
+  end
+
+  #
+  # Class (self) user defined methods
+  #
+  def self.unbilled(organization, _ordered)
+    if !organization.blank?
+      if !_ordered
+        joins(:receipt_note_item_balances).where('`receipt_notes`.`organization_id` = ? AND `receipt_note_item_balances`.`balance` > ?', organization, 0)
+      else
+        joins(:receipt_note_item_balances).where('`receipt_notes`.`organization_id` = ? AND `receipt_note_item_balances`.`balance` > ?', organization, 0).order(:supplier_id, :receipt_no, :id)
+      end
+    else
+      if !_ordered
+        joins(:receipt_note_item_balances).where('`receipt_note_item_balances`.`balance` > ?', 0)
+      else
+        joins(:receipt_note_item_balances).where('`receipt_note_item_balances`.`balance` > ?', 0).order(:supplier_id, :receipt_no, :id)
       end
     end
-    balance
   end
 
   #

@@ -18,6 +18,7 @@ class PurchaseOrder < ActiveRecord::Base
   attr_accessible :purchase_order_items_attributes
   
   has_many :purchase_order_items, dependent: :destroy
+  has_many :purchase_order_item_balances, through: :purchase_order_items
   has_many :receipt_notes
   has_many :receipt_note_items
 
@@ -108,13 +109,7 @@ class PurchaseOrder < ActiveRecord::Base
   end
   
   def balance
-    balance = 0
-    purchase_order_items.each do |i|
-      if !i.balance.blank?
-        balance += i.balance
-      end
-    end
-    balance
+    purchase_order_item_balances.sum("balance")
   end
 
   def quantity
@@ -140,6 +135,26 @@ class PurchaseOrder < ActiveRecord::Base
   # Each line contains 5 elements: Id, Description, Tax %, Net amount & Net tax
   def tax_breakdown
     tt = global_tax_breakdown(purchase_order_items, true)
+  end
+
+  #
+  # Class (self) user defined methods
+  #
+  def self.undelivered(organization, _ordered)
+    joins(:purchase_order_item_balances).where('purchase_orders.organization_id = ?', organization).group('purchase_orders.supplier_id, purchase_orders.order_no, purchase_orders.id').having('sum(purchase_order_item_balances.balance) > ?', 0)
+    if !organization.blank?
+      if !_ordered
+        joins(:purchase_order_item_balances).where('purchase_orders.organization_id = ?', organization).group('purchase_orders.id').having('sum(purchase_order_item_balances.balance) > ?', 0)
+      else
+        joins(:purchase_order_item_balances).where('purchase_orders.organization_id = ?', organization).group('purchase_orders.supplier_id, purchase_orders.order_no, purchase_orders.id').having('sum(purchase_order_item_balances.balance) > ?', 0)
+      end
+    else
+      if !_ordered
+        joins(:purchase_order_item_balances).group('purchase_orders.id').having('sum(purchase_order_item_balances.balance) > ?', 0)
+      else
+        joins(:purchase_order_item_balances).group('purchase_orders.supplier_id, purchase_orders.order_no, purchase_orders.id').having('sum(purchase_order_item_balances.balance) > ?', 0)
+      end
+    end
   end
 
   #

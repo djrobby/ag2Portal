@@ -11,6 +11,7 @@ class PurchaseOrderItem < ActiveRecord::Base
                   :store_id, :work_order_id, :charge_account_id
 
   has_many :receipt_note_items
+  has_one :purchase_order_item_balance
 
   has_paper_trail
 
@@ -57,7 +58,8 @@ class PurchaseOrderItem < ActiveRecord::Base
   end
     
   def balance
-    quantity - receipt_note_items.sum("quantity")
+    purchase_order_item_balance.balance
+    #quantity - receipt_note_items.sum("quantity")
   end
 
   private

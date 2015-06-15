@@ -14,6 +14,7 @@ class ReceiptNoteItem < ActiveRecord::Base
                   :charge_account_id, :project_id
 
   has_many :supplier_invoice_items
+  has_one :receipt_note_item_balance
 
   has_paper_trail
 
@@ -67,7 +68,8 @@ class ReceiptNoteItem < ActiveRecord::Base
   end
     
   def balance
-    quantity - supplier_invoice_items.sum("quantity")
+    receipt_note_item_balance.balance
+    #quantity - supplier_invoice_items.sum("quantity")
   end
 
   private

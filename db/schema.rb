@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150614071420) do
+ActiveRecord::Schema.define(:version => 20150615190541) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -1044,6 +1044,13 @@ ActiveRecord::Schema.define(:version => 20150614071420) do
   add_index "provinces", ["ine_cpro"], :name => "index_provinces_on_ine_cpro"
   add_index "provinces", ["region_id"], :name => "index_provinces_on_region_id"
 
+  create_table "purchase_order_item_balances", :id => false, :force => true do |t|
+    t.integer "purchase_order_item_id",                                      :default => 0,   :null => false
+    t.decimal "purchase_order_item_quantity", :precision => 12, :scale => 4, :default => 0.0, :null => false
+    t.decimal "receipt_quantity",             :precision => 34, :scale => 4
+    t.decimal "balance",                      :precision => 35, :scale => 4
+  end
+
   create_table "purchase_order_items", :force => true do |t|
     t.integer  "purchase_order_id"
     t.integer  "product_id"
@@ -1167,6 +1174,13 @@ ActiveRecord::Schema.define(:version => 20150614071420) do
   add_index "ratios", ["organization_id", "ratio_group_id", "code"], :name => "index_ratios_on_organization_group_code", :unique => true
   add_index "ratios", ["organization_id"], :name => "index_ratios_on_organization_id"
   add_index "ratios", ["ratio_group_id"], :name => "index_ratios_on_ratio_group_id"
+
+  create_table "receipt_note_item_balances", :id => false, :force => true do |t|
+    t.integer "receipt_note_item_id",                                      :default => 0,   :null => false
+    t.decimal "receipt_note_item_quantity", :precision => 12, :scale => 4, :default => 0.0, :null => false
+    t.decimal "invoiced_quantity",          :precision => 34, :scale => 4
+    t.decimal "balance",                    :precision => 35, :scale => 4
+  end
 
   create_table "receipt_note_items", :force => true do |t|
     t.integer  "receipt_note_id"

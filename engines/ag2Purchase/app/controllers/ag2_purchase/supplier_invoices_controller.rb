@@ -537,7 +537,7 @@ module Ag2Purchase
     end
 
     def receipts_dropdown
-      _receipts = session[:organization] != '0' ? ReceiptNote.where(organization_id: session[:organization].to_i).order(:supplier_id, :receipt_no, :id) : ReceiptNote.order(:supplier_id, :receipt_no, :id)
+      session[:organization] != '0' ? ReceiptNote.unbilled(session[:organization].to_i, true) : ReceiptNote.unbilled(nil, true)
     end
 
     def charge_accounts_dropdown

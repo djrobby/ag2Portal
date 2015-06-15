@@ -56,7 +56,9 @@ class Stock < ActiveRecord::Base
     _sum
   end
 
-  # Self user defined methods
+  #
+  # Class (self) user defined methods
+  #
   def self.find_by_product_and_store(_product, _store)
     Stock.where("product_id = ? AND store_id = ?", _product, _store).first 
   end
