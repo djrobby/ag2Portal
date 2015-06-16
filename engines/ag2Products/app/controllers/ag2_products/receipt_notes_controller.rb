@@ -21,11 +21,12 @@ module Ag2Products
       supplier = params[:supplier]
       if supplier != '0'
         @supplier = Supplier.find(supplier)
-        @orders = @supplier.blank? ? orders_dropdown : @supplier.purchase_orders.order(:supplier_id, :order_no, :id)
+        @orders = @supplier.blank? ? orders_dropdown : @supplier.purchase_orders.undelivered(@supplier.organization_id, true)
+        #@orders = @supplier.blank? ? orders_dropdown : @supplier.purchase_orders.order(:supplier_id, :order_no, :id)
       else
         @orders = orders_dropdown
       end
-      # Offers array
+      # Orders array
       @orders_dropdown = orders_array(@orders)
       # Setup JSON
       @json_data = { "order" => @orders_dropdown }
@@ -388,7 +389,7 @@ module Ag2Products
     def edit
       @breadcrumb = 'update'
       @receipt_note = ReceiptNote.find(params[:id])
-      @orders = @receipt_note.supplier.blank? ? orders_dropdown : @receipt_note.supplier.purchase_orders.order(:supplier_id, :order_no, :id)
+      @orders = @receipt_note.supplier.blank? ? orders_dropdown : @receipt_note.supplier.purchase_orders.undelivered(@receipt_note.organization_id, true)
       @projects = projects_dropdown_edit(@receipt_note.project)
       @work_orders = @receipt_note.project.blank? ? work_orders_dropdown : @receipt_note.project.work_orders.order(:order_no)
       @charge_accounts = work_order_charge_account(@receipt_note)
@@ -437,7 +438,7 @@ module Ag2Products
                         notice: (crud_notice('updated', @receipt_note) + "#{undo_link(@receipt_note)}").html_safe }
           format.json { head :no_content }
         else
-          @orders = @receipt_note.supplier.blank? ? orders_dropdown : @receipt_note.supplier.purchase_orders.order(:supplier_id, :order_no, :id)
+          @orders = @receipt_note.supplier.blank? ? orders_dropdown : @receipt_note.supplier.purchase_orders.undelivered(@receipt_note.organization_id, true)
           @projects = projects_dropdown_edit(@receipt_note.project)
           @work_orders = @receipt_note.project.blank? ? work_orders_dropdown : @receipt_note.project.work_orders.order(:order_no)
           @charge_accounts = work_order_charge_account(@receipt_note)

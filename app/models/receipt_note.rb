@@ -1,4 +1,6 @@
 class ReceiptNote < ActiveRecord::Base
+  include ModelsModule
+  
   belongs_to :supplier
   belongs_to :payment_method
   belongs_to :project
@@ -46,7 +48,7 @@ class ReceiptNote < ActiveRecord::Base
       full_name += self.receipt_no
     end
     if !self.receipt_date.blank?
-      full_name += " " + self.receipt_date.to_s
+      full_name += " " + formatted_date(self.receipt_date)
     end
     if !self.supplier.blank?
       full_name += " " + self.supplier.full_name
@@ -114,15 +116,15 @@ class ReceiptNote < ActiveRecord::Base
   def self.unbilled(organization, _ordered)
     if !organization.blank?
       if !_ordered
-        joins(:receipt_note_item_balances).where('`receipt_notes`.`organization_id` = ? AND `receipt_note_item_balances`.`balance` > ?', organization, 0)
+        joins(:receipt_note_item_balances).where('receipt_notes.organization_id = ?', organization).group('receipt_notes.id').having('sum(receipt_note_item_balances.balance) > ?', 0)
       else
-        joins(:receipt_note_item_balances).where('`receipt_notes`.`organization_id` = ? AND `receipt_note_item_balances`.`balance` > ?', organization, 0).order(:supplier_id, :receipt_no, :id)
+        joins(:receipt_note_item_balances).where('receipt_notes.organization_id = ?', organization).group('receipt_notes.supplier_id, receipt_notes.receipt_no, receipt_notes.id').having('sum(receipt_note_item_balances.balance) > ?', 0)
       end
     else
       if !_ordered
-        joins(:receipt_note_item_balances).where('`receipt_note_item_balances`.`balance` > ?', 0)
+        joins(:receipt_note_item_balances).group('receipt_notes.id').having('sum(receipt_note_item_balances.balance) > ?', 0)
       else
-        joins(:receipt_note_item_balances).where('`receipt_note_item_balances`.`balance` > ?', 0).order(:supplier_id, :receipt_no, :id)
+        joins(:receipt_note_item_balances).group('receipt_notes.supplier_id, receipt_notes.receipt_no, receipt_notes.id').having('sum(receipt_note_item_balances.balance) > ?', 0)
       end
     end
   end

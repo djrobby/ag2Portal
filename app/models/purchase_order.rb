@@ -141,7 +141,6 @@ class PurchaseOrder < ActiveRecord::Base
   # Class (self) user defined methods
   #
   def self.undelivered(organization, _ordered)
-    joins(:purchase_order_item_balances).where('purchase_orders.organization_id = ?', organization).group('purchase_orders.supplier_id, purchase_orders.order_no, purchase_orders.id').having('sum(purchase_order_item_balances.balance) > ?', 0)
     if !organization.blank?
       if !_ordered
         joins(:purchase_order_item_balances).where('purchase_orders.organization_id = ?', organization).group('purchase_orders.id').having('sum(purchase_order_item_balances.balance) > ?', 0)

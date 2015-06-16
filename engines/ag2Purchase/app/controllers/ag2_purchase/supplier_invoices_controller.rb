@@ -23,15 +23,16 @@ module Ag2Purchase
       supplier = params[:supplier]
       if supplier != '0'
         @supplier = Supplier.find(supplier)
-        @notes = @supplier.blank? ? receipts_dropdown : @supplier.receipt_notes.order(:supplier_id, :receipt_no, :id)
+        @receipt_notes = @supplier.blank? ? receipts_dropdown : @supplier.receipt_notes.unbilled(@supplier.organization_id, true)
+        #@notes = @supplier.blank? ? receipts_dropdown : @supplier.receipt_notes.order(:supplier_id, :receipt_no, :id)
       else
-        @notes = receipts_dropdown
+        @receipt_notes = receipts_dropdown
       end
-
-      respond_to do |format|
-        format.html # si_update_order_select_from_supplier.html.erb does not exist! JSON only
-        format.json { render json: @orders }
-      end
+      # Notes array
+      @notes_dropdown = notes_array(@receipt_notes)
+      # Setup JSON
+      @json_data = { "note" => @notes_dropdown }
+      render json: @json_data
     end
 
     # Calculate and format item totals properly
@@ -572,6 +573,14 @@ module Ag2Purchase
     def products_dropdown
       session[:organization] != '0' ? Product.where(organization_id: session[:organization].to_i).order(:product_code) : Product.order(:product_code)
     end    
+    
+    def notes_array(_notes)
+      _array = []
+      _notes.each do |i|
+        _array = _array << [i.id, i.receipt_no, formatted_date(i.receipt_date), i.supplier.full_name] 
+      end
+      _array
+    end
     
     # Keeps filter state
     def manage_filter_state
