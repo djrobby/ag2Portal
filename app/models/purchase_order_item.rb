@@ -1,4 +1,6 @@
 class PurchaseOrderItem < ActiveRecord::Base
+  include ModelsModule
+  
   belongs_to :purchase_order
   belongs_to :product
   belongs_to :tax_type
@@ -27,6 +29,18 @@ class PurchaseOrderItem < ActiveRecord::Base
 
   before_validation :fields_to_uppercase
   before_destroy :check_for_dependent_records
+
+  def to_label
+    "#{full_item}"
+  end
+
+  def full_item
+    full_item = self.id.to_s + ": " + self.product.full_code + " " + self.description[0,20]
+    full_item += " " + (!self.quantity.blank? ? formatted_number(self.quantity, 4) : formatted_number(0, 4))
+    full_item += " " + (!self.net_price.blank? ? formatted_number(self.net_price, 4) : formatted_number(0, 4))
+    full_item += " " + (!self.amount.blank? ? formatted_number(self.amount, 4) : formatted_number(0, 4))
+    full_item += " (" + (!self.balance.blank? ? formatted_number(self.balance, 4) : formatted_number(0, 4)) + ")"
+  end
 
   def fields_to_uppercase
     if !self.description.blank?

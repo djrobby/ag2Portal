@@ -5,6 +5,12 @@
      */
     // Form
     var _f = $("#fnt-product").closest('form')[0];
+    // Purchase Order
+    $("#fnt-purchase-order").html("");
+    $('#receipt_note_purchase_order_id option').clone().appendTo('#fnt-purchase-order');
+    var _po = $('#receipt_note_purchase_order_id :selected').val();
+    if (_po == "") _po = "0";
+    $('#fnt-purchase-order').val(_po);
     // Project
     $("#fnt-project").html("");
     $('#receipt_note_project_id option').clone().appendTo('#fnt-project');
@@ -29,7 +35,9 @@
     var _s = $('#receipt_note_store_id :selected').val();
     if (_s == "") _s = "0";
     $('#fnt-store').val(_s);
-
+    // Product & Order item
+    init();
+    
     // Set focus
     $(".modal").on('shown', function() {
       $(this).find(".form-label:first").focus();
@@ -98,12 +106,12 @@
         if (!c.length) {
           $.each(data, function(id, option) {
             if (id == 'charge_account' && option != "") {
-              $("#fnt-charge-account").append($('<option></option>').val(option.id).html(option.account_code + " " + option.name));
+              $("#fnt-charge-account").append($('<option></option>').val(option.id).html(option.account_code.substring(0,4) + "-" + option.account_code.substring(4,11) + " " + option.name));
             }
           });
         } else {
           $.each(c, function(id, option) {
-            $("#fnt-charge-account").append($('<option></option>').val(option.id).html(option.account_code + " " + option.name));
+            $("#fnt-charge-account").append($('<option></option>').val(option.id).html(option.account_code.substring(0,4) + "-" + option.account_code.substring(4,11) + " " + option.name));
           });
         }
         if (c_id != 0) $("#fnt-charge-account").select2("val", c_id);
@@ -159,12 +167,12 @@
         if (!c.length) {
           $.each(data, function(id, option) {
             if (id == 'charge_account') {
-              $("#fnt-charge-account").append($('<option></option>').val(option.id).html(option.account_code + " " + option.name));
+              $("#fnt-charge-account").append($('<option></option>').val(option.id).html(option.account_code.substring(0,4) + "-" + option.account_code.substring(4,11) + " " + option.name));
             }
           });
         } else {
           $.each(c, function(id, option) {
-            $("#fnt-charge-account").append($('<option></option>').val(option.id).html(option.account_code + " " + option.name));
+            $("#fnt-charge-account").append($('<option></option>').val(option.id).html(option.account_code.substring(0,4) + "-" + option.account_code.substring(4,11) + " " + option.name));
           });
         }
         // Store
@@ -184,6 +192,127 @@
         }
       });
       return false;
+    });
+    // when the #fnt-purchase-order field changes
+    $("#fnt-purchase-order").change(function() {
+      // make a POST call and replace the content
+      var o = $('select#fnt-purchase-order :selected').val();
+      if (o == "")
+        o = "0";
+      jQuery.getJSON('rn_update_selects_from_order/' + o, function(data) {
+        var p = data.project;
+        var w = data.work_order;
+        var h = data.charge_account
+        var s = data.store
+        var m = data.payment_method
+        var prods = data.product
+        var p_id = data.project_id;
+        var w_id = data.work_order_id;
+        var c_id = data.charge_account_id;
+        var s_id = data.store_id;
+        var m_id = data.payment_method_id;
+        var i = data.order_item
+        // Project
+        $("#fnt-project").html("");
+        $("#fnt-project").select2("val", "");
+        $("#fnt-project").append($('<option></option>').val("").html(""));
+        if (!p.length) {
+          $.each(data, function(id, option) {
+            if (id == 'project' && option != "") {
+              $("#fnt-project").append($('<option></option>').val(option.id).html(option.project_code.substring(0,3) + "-" + option.project_code.substring(3,6) + "-" + option.project_code.substring(6,12) + " " + option.name));
+            }
+          });
+        } else {
+          $.each(p, function(id, option) {
+            $("#fnt-project").append($('<option></option>').val(option.id).html(option.project_code.substring(0,3) + "-" + option.project_code.substring(3,6) + "-" + option.project_code.substring(6,12) + " " + option.name));
+          });
+        }
+        if (p_id != 0) $("#fnt-project").select2("val", p_id);
+        // Work order
+        $("#fnt-work-order").html("");
+        $("#fnt-work-order").select2("val", "");
+        $("#fnt-work-order").append($('<option></option>').val("").html(""));
+        if (!w.length) {
+          $.each(data, function(id, option) {
+            if (id == 'work_order' && option != "") {
+              $("#fnt-work-order").append($('<option></option>').val(option.id).html(option.order_no.substring(0,10) + "-" + option.order_no.substring(10,14) + "-" + option.order_no.substring(14,20) + " " + option.description.substring(0,41)));
+            }
+          });
+        } else {
+          $.each(w, function(id, option) {
+            $("#fnt-work-order").append($('<option></option>').val(option.id).html(option.order_no.substring(0,10) + "-" + option.order_no.substring(10,14) + "-" + option.order_no.substring(14,20) + " " + option.description.substring(0,41)));
+          });
+        }
+        if (w_id != 0) $("#fnt-work-order").select2("val", w_id);
+        // Charge account
+        $("#fnt-charge-account").html("");
+        $("#fnt-charge-account").select2("val", "");
+        $("#fnt-charge-account").append($('<option></option>').val("").html(""));
+        if (!h.length) {
+          $.each(data, function(id, option) {
+            if (id == 'charge_account' && option != "") {
+              $("#fnt-charge-account").append($('<option></option>').val(option.id).html(option.account_code.substring(0,4) + "-" + option.account_code.substring(4,11) + " " + option.name));
+            }
+          });
+        } else {
+          $.each(h, function(id, option) {
+            $("#fnt-charge-account").append($('<option></option>').val(option.id).html(option.account_code.substring(0,4) + "-" + option.account_code.substring(4,11) + " " + option.name));
+          });
+        }
+        if (c_id != 0) $("#fnt-charge-account").select2("val", c_id);
+        // Store
+        $("#fnt-store").html("");
+        $("#fnt-store").select2("val", "");
+        $("#fnt-store").append($('<option></option>').val("").html(""));
+        if (!s.length) {
+          $.each(data, function(id, option) {
+            if (id == 'store' && option != "") {
+              $("#fnt-store").append($('<option></option>').val(option.id).html(option.name));
+            }
+          });
+        } else {
+          $.each(s, function(id, option) {
+            $("#fnt-store").append($('<option></option>').val(option.id).html(option.name));
+          });
+        }
+        if (s_id != 0) $("#fnt-store").select2("val", s_id);
+        // Product
+        $("#fnt-product").html("");
+        $("#fnt-product").select2("val", "");
+        $("#fnt-product").append($('<option></option>').val("").html(""));
+        if (!prods.length) {
+          $.each(data, function(id, option) {
+            if (id == 'product' && option != "") {
+              $("#fnt-product").append($('<option></option>').val(option[0]).html(option[1] + " " + option[2]));
+            }
+          });
+        } else {
+          $.each(prods, function(id, option) {
+            $("#fnt-product").append($('<option></option>').val(option[0]).html(option[1] + " " + option[2]));
+          });
+        }
+        // Order item
+        $("#fnt-purchase-order-item").html("");
+        $("#fnt-purchase-order-item").select2("val", "");
+        $("#fnt-purchase-order-item").append($('<option></option>').val("").html(""));
+        if (!i.length) {
+          $.each(data, function(id, option) {
+            if (id == 'order_item' && option != "") {
+              $("#fnt-purchase-order-item").append($('<option></option>').val(option[0]).html(option[1] + " " + option[2] + " " + option[3] + " " + option[4] + " " + option[5] + " " + option[6] + " " + option[7]));
+            }
+          });
+        } else {
+          $.each(i, function(id, option) {
+            $("#fnt-purchase-order-item").append($('<option></option>').val(option[0]).html(option[1] + " " + option[2] + " " + option[3] + " " + option[4] + " " + option[5] + " " + option[6] + " " + option[7]));
+          });
+        }
+      });
+      // Order not selected
+      if (o == "0") {
+        $("#fnt-project").val(0);
+        $("#fnt-project").trigger("change");
+      }
+      //return false;
     });
 
     // when the #fnt-quantity field changes
@@ -253,9 +382,73 @@
         $('#fnt-discount').val(data.discount);
         // Update and display totals
         $('#items-table').trigger('totals');
-      })
+      });
     }
-  })
+  });
+
+  // Initialize
+  function init() {
+    // make a POST call and replace the content
+    var o = $('select#receipt_note_purchase_order_id :selected').val();
+    if (o != "" && o != "0") {
+      jQuery.getJSON('rn_update_selects_from_order/' + o, function(data) {
+        var prods = data.product
+        var i = data.order_item
+        // Product
+        $("#fnt-product").html("");
+        $("#fnt-product").select2("val", "");
+        $("#fnt-product").append($('<option></option>').val("").html(""));
+        if (!prods.length) {
+          $.each(data, function(id, option) {
+            if (id == 'product' && option != "") {
+              $("#fnt-product").append($('<option></option>').val(option[0]).html(option[1] + " " + option[2]));
+            }
+          });
+        } else {
+          $.each(prods, function(id, option) {
+            $("#fnt-product").append($('<option></option>').val(option[0]).html(option[1] + " " + option[2]));
+          });
+        }
+        // Order item
+        $("#fnt-purchase-order-item").html("");
+        $("#fnt-purchase-order-item").select2("val", "");
+        $("#fnt-purchase-order-item").append($('<option></option>').val("").html(""));
+        if (!i.length) {
+          $.each(data, function(id, option) {
+            if (id == 'order_item' && option != "") {
+              $("#fnt-purchase-order-item").append($('<option></option>').val(option[0]).html(option[1] + " " + option[2] + " " + option[3] + " " + option[4] + " " + option[5] + " " + option[6] + " " + option[7]));
+            }
+          });
+        } else {
+          $.each(i, function(id, option) {
+            $("#fnt-purchase-order-item").append($('<option></option>').val(option[0]).html(option[1] + " " + option[2] + " " + option[3] + " " + option[4] + " " + option[5] + " " + option[6] + " " + option[7]));
+          });
+        }
+      });
+    } else {
+      var order = $('select#receipt_note_organization_id :selected').val();
+      if (order == "")
+        order = "0";
+      jQuery.getJSON('rn_update_project_textfields_from_organization/' + order, function(data) {
+        var prods = data.product
+        // Product
+        $("#fnt-product").html("");
+        $("#fnt-product").select2("val", "");
+        $("#fnt-product").append($('<option></option>').val("").html(""));
+        if (!prods.length) {
+          $.each(data, function(id, option) {
+            if (id == 'product' && option != "") {
+              $("#fnt-product").append($('<option></option>').val(option[0]).html(option[1] + " " + option[2]));
+            }
+          });
+        } else {
+          $.each(prods, function(id, option) {
+            $("#fnt-product").append($('<option></option>').val(option[0]).html(option[1] + " " + option[2]));
+          });
+        }
+      });
+    }
+  }
 </script>
 
 <div id="new-item-fields" class="modal hide fade" data-backdrop="static">
@@ -266,6 +459,8 @@
     <span class="shrinked"><%= I18n.t(:mandatory_subtitle) %></span>
   </div>
   <div class="modal-body">
+    <%= f.association :purchase_order, collection: @orders, input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-purchase-order' }, label_html: { class: 'form-label' } %>
+    <%= f.association :purchase_order_item, collection: @order_items, input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-purchase-order-item' }, label_html: { class: 'form-label' } %>
     <%= f.association :project, collection: @projects, input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-project', data: { validation: "required", "validation-error-msg" => "#{e}" } }, label_html: { class: 'form-label' } %>
     <%= f.association :work_order, collection: @work_orders, input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-work-order' }, label_html: { class: 'form-label' } %>
     <%= f.association :charge_account, collection: @charge_accounts, input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-charge-account', data: { validation: "required", "validation-error-msg" => "#{e}" } }, label_html: { class: 'form-label' } %>

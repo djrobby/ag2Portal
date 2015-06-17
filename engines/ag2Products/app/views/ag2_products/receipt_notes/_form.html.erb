@@ -68,6 +68,7 @@
         var h = data.charge_account
         var s = data.store
         var m = data.payment_method
+        var prods = data.product
         // Supplier
         $("#receipt_note_supplier_id").html("");
         $("#receipt_note_supplier_id").select2("val", "");
@@ -210,6 +211,7 @@
         var c_id = data.charge_account_id;
         var s_id = data.store_id;
         var m_id = data.payment_method_id;
+        var i = data.order_item
         // Project
         $("#receipt_note_project_id").html("");
         $("#receipt_note_project_id").select2("val", "");

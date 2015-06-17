@@ -121,6 +121,7 @@ var rn_rowBuilder = function() {
               if (this.id === 'fnt-code' || this.id === 'fnt-delivery-date' ||
                 this.id === 'fnt-work-order' || this.id === 'fnt-project' ||
                 this.id === 'fnt-charge-account' || this.id === 'fnt-store' ||
+                this.id === 'fnt-purchase-order' || this.id === 'fnt-purchase-order-item' ||
                 this.id === 'fnt-tax-type') {
                 td = $('<td style="display:none;"/>').append($(this));
               }

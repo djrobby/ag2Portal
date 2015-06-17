@@ -1,4 +1,6 @@
 module ModelsModule
+  include ActionView::Helpers::NumberHelper
+
   #
   # Tax Breakdown
   #
@@ -57,6 +59,10 @@ module ModelsModule
   def formatted_time(_date)
     _format = I18n.locale == :es ? "%H:%M:%S" : "%H:%M:%S"
     _date.strftime(_format)
+  end
+  def formatted_number(_number, _decimals)
+    _delimiter = I18n.locale == :es ? "." : ","
+    number_with_precision(_number.round(_decimals), precision: _decimals, delimiter: _delimiter)
   end
 
   #

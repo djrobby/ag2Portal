@@ -13,6 +13,7 @@ module Ag2Products
                                                :rn_update_charge_account_from_project,
                                                :rn_update_order_select_from_supplier,
                                                :rn_update_selects_from_order,
+                                               :rn_update_product_select_from_order_item,
                                                :rn_format_number,
                                                :rn_current_stock,
                                                :rn_update_project_textfields_from_organization]
@@ -33,7 +34,7 @@ module Ag2Products
       render json: @json_data
     end
 
-    # Update selects at view from offer
+    # Update selects at view from purchase order
     def rn_update_selects_from_order
       o = params[:o]
       project_id = 0
@@ -43,18 +44,24 @@ module Ag2Products
       payment_method_id = 0
       if o != '0'
         @order = PurchaseOrder.find(o)
+        @order_items = @order.blank? ? [] : order_items_dropdown(@order)
         @projects = @order.blank? ? projects_dropdown : @order.project
         @work_orders = @order.blank? ? work_orders_dropdown : @order.work_order
         @charge_accounts = @order.blank? ? charge_accounts_dropdown : @order.charge_account
         @stores = @order.blank? ? stores_dropdown : @order.store
         @payment_methods = @order.blank? ? payment_methods_dropdown : @order.payment_method
-        @products = @order.blank? ? products_dropdown : @order.organization.products.order(:product_code)
+        if @order_items.blank?
+          @products = @order.blank? ? products_dropdown : @order.organization.products.order(:product_code)
+        else
+          @products = @order.products.group(:product_code)
+        end
         project_id = @projects.id rescue 0
         work_order_id = @work_orders.id rescue 0
         charge_account_id = @charge_accounts.id rescue 0
         store_id = @stores.id rescue 0
         payment_method_id = @payment_methods.id rescue 0
       else
+        @order_items = []
         @projects = projects_dropdown
         @work_orders = work_orders_dropdown
         @charge_accounts = charge_accounts_dropdown
@@ -62,14 +69,24 @@ module Ag2Products
         @payment_methods = payment_methods_dropdown
         @products = products_dropdown
       end
+      # Order items array
+      @order_items_dropdown = order_items_array(@order_items)
+      # Products array
+      @products_dropdown = products_array(@products)
       # Setup JSON
       @json_data = { "project" => @projects, "work_order" => @work_orders,
                      "charge_account" => @charge_accounts, "store" => @stores,
-                     "payment_method" => @payment_methods, "product" => @products,
+                     "payment_method" => @payment_methods, "product" => @products_dropdown,
                      "project_id" => project_id, "work_order_id" => work_order_id,
                      "charge_account_id" => charge_account_id, "store_id" => store_id,
-                     "payment_method_id" => payment_method_id }
+                     "payment_method_id" => payment_method_id, "order_item" => @order_items_dropdown }
       render json: @json_data
+    end
+
+    # Update product select at view from purchase order item
+    def rn_update_product_select_from_order_item
+        product_id = @products.id rescue 0
+      
     end
 
     # Calculate and format totals properly
@@ -289,9 +306,12 @@ module Ag2Products
         @payment_methods = payment_methods_dropdown
         @products = products_dropdown
       end
+      # Products array
+      @products_dropdown = products_array(@products)
+      # Setup JSON
       @json_data = { "supplier" => @suppliers, "project" => @projects, "work_order" => @work_orders,
                      "charge_account" => @charge_accounts, "store" => @stores,
-                     "payment_method" => @payment_methods, "product" => @products }
+                     "payment_method" => @payment_methods, "product" => @products_dropdown }
       render json: @json_data
     end
 
@@ -378,6 +398,7 @@ module Ag2Products
       @suppliers = suppliers_dropdown
       @payment_methods = payment_methods_dropdown
       @products = products_dropdown
+      @order_items = []
   
       respond_to do |format|
         format.html # new.html.erb
@@ -396,7 +417,13 @@ module Ag2Products
       @stores = work_order_store(@receipt_note)
       @suppliers = @receipt_note.organization.blank? ? suppliers_dropdown : @receipt_note.organization.suppliers(:supplier_code)
       @payment_methods = @receipt_note.organization.blank? ? payment_methods_dropdown : payment_payment_methods(@receipt_note.organization_id)
-      @products = @receipt_note.organization.blank? ? products_dropdown : @receipt_note.organization.products(:product_code)
+      @order_items = @receipt_note.purchase_order.blank? ? [] : order_items_dropdown(@receipt_note.purchase_order)
+      #@products = @receipt_note.organization.blank? ? products_dropdown : @receipt_note.organization.products(:product_code)
+      if @order_items.blank?
+        @products = @receipt_note.organization.blank? ? products_dropdown : @receipt_note.organization.products(:product_code)
+      else
+        @products = @order_items.first.products.group(:product_code)
+      end
     end
   
     # POST /receipt_notes
@@ -419,6 +446,7 @@ module Ag2Products
           @suppliers = suppliers_dropdown
           @payment_methods = payment_methods_dropdown
           @products = products_dropdown
+          @order_items = []
           format.html { render action: "new" }
           format.json { render json: @receipt_note.errors, status: :unprocessable_entity }
         end
@@ -445,7 +473,12 @@ module Ag2Products
           @stores = work_order_store(@receipt_note)
           @suppliers = @receipt_note.organization.blank? ? suppliers_dropdown : @receipt_note.organization.suppliers(:supplier_code)
           @payment_methods = @receipt_note.organization.blank? ? payment_methods_dropdown : payment_payment_methods(@receipt_note.organization_id)
-          @products = @receipt_note.organization.blank? ? products_dropdown : @receipt_note.organization.products(:product_code)
+          @order_items = @receipt_note.purchase_order.blank? ? [] : order_items_dropdown(@receipt_note.purchase_order)
+          if @order_items.blank?
+            @products = @receipt_note.organization.blank? ? products_dropdown : @receipt_note.organization.products(:product_code)
+          else
+            @products = @order_items.first.products.group(:product_code)
+          end
           format.html { render action: "edit" }
           format.json { render json: @receipt_note.errors, status: :unprocessable_entity }
         end
@@ -545,6 +578,10 @@ module Ag2Products
       session[:organization] != '0' ? PurchaseOrder.undelivered(session[:organization].to_i, true) : PurchaseOrder.undelivered(nil, true)
       #_orders = session[:organization] != '0' ? PurchaseOrder.where(organization_id: session[:organization].to_i).order(:supplier_id, :order_no, :id) : PurchaseOrder.order(:supplier_id, :order_no, :id)
     end
+    
+    def order_items_dropdown(_order)
+      _order.purchase_order_items.joins(:purchase_order_item_balance).where('purchase_order_item_balances.balance > ?', 0)
+    end
 
     def charge_accounts_dropdown
       _accounts = session[:organization] != '0' ? ChargeAccount.where(organization_id: session[:organization].to_i).order(:account_code) : ChargeAccount.order(:account_code)
@@ -583,6 +620,26 @@ module Ag2Products
       _array = []
       _orders.each do |i|
         _array = _array << [i.id, i.full_no, formatted_date(i.order_date), i.supplier.full_name] 
+      end
+      _array
+    end
+    
+    def order_items_array(_order_items)
+      _array = []
+      _order_items.each do |i|
+        _array = _array << [ i.id, i.id.to_s + ":", i.product.full_code, i.description[0,20],
+                           (!i.quantity.blank? ? formatted_number(i.quantity, 4) : formatted_number(0, 4)),
+                           (!i.net_price.blank? ? formatted_number(i.net_price, 4) : formatted_number(0, 4)),
+                           (!i.amount.blank? ? formatted_number(i.amount, 4) : formatted_number(0, 4)),
+                           "(" + (!i.balance.blank? ? formatted_number(i.balance, 4) : formatted_number(0, 4)) + ")" ]
+      end
+      _array
+    end
+    
+    def products_array(_products)
+      _array = []
+      _products.each do |i|
+        _array = _array << [i.id, i.full_code, i.main_description[0,40]] 
       end
       _array
     end

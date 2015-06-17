@@ -17,6 +17,7 @@ class ReceiptNote < ActiveRecord::Base
 
   has_many :receipt_note_items, dependent: :destroy
   has_many :receipt_note_item_balances, through: :receipt_note_items
+  has_many :products, through: :receipt_note_items
   has_many :supplier_invoice_items
 
   # Nested attributes

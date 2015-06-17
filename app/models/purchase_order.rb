@@ -19,6 +19,7 @@ class PurchaseOrder < ActiveRecord::Base
   
   has_many :purchase_order_items, dependent: :destroy
   has_many :purchase_order_item_balances, through: :purchase_order_items
+  has_many :products, through: :purchase_order_items
   has_many :receipt_notes
   has_many :receipt_note_items
 

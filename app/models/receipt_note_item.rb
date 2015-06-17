@@ -37,6 +37,18 @@ class ReceiptNoteItem < ActiveRecord::Base
   after_create :update_stock_and_price_on_create
   after_update :update_stock_and_price_on_update
 
+  def to_label
+    "#{full_item}"
+  end
+
+  def full_item
+    full_item = self.id.to_s + ": " + self.product.full_code + " " + self.description[0,20]
+    full_item += " " + (!self.quantity.blank? ? formatted_number(self.quantity, 4) : formatted_number(0, 4))
+    full_item += " " + (!self.net_price.blank? ? formatted_number(self.net_price, 4) : formatted_number(0, 4))
+    full_item += " " + (!self.amount.blank? ? formatted_number(self.amount, 4) : formatted_number(0, 4))
+    full_item += " (" + (!self.balance.blank? ? formatted_number(self.balance, 4) : formatted_number(0, 4)) + ")"
+  end
+
   def fields_to_uppercase
     if !self.description.blank?
       self[:description].upcase!
@@ -48,7 +60,7 @@ class ReceiptNoteItem < ActiveRecord::Base
   # Calculated fields
   #
   def amount
-    quantity * (price - discount)
+    quantity * net_price
   end
 
   def amount_was
@@ -65,6 +77,10 @@ class ReceiptNoteItem < ActiveRecord::Base
 
   def net_tax
     tax - (tax * (receipt_note.discount_pct / 100)) if !receipt_note.discount_pct.blank?
+  end
+
+  def net_price
+    price - discount
   end
     
   def balance
