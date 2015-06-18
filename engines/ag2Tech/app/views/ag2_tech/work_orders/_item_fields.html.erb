@@ -6,6 +6,8 @@
     var _f = $("#fnt-product").closest('form')[0];
     _s = $('select#work_order_store_id :selected').val();
     if (_s == "") _s = "0";
+    // Product
+    initP();
 
     // Set focus
     $(".modal").on('shown', function() {
@@ -96,7 +98,33 @@
         $('#items-table').trigger('totals');
       });
     }
-  })
+  });
+
+  // Initialize
+  function initP() {
+    // make a POST call and replace the content
+    var order = $('select#work_order_organization_id :selected').val();
+    if (order == "")
+      order = "0";
+    jQuery.getJSON('wo_update_project_textfields_from_organization/' + order, function(data) {
+      var prods = data.product
+      // Product
+      $("#fnt-product").html("");
+      $("#fnt-product").select2("val", "");
+      $("#fnt-product").append($('<option></option>').val("").html(""));
+      if (!prods.length) {
+        $.each(data, function(id, option) {
+          if (id == 'product' && option != "") {
+            $("#fnt-product").append($('<option></option>').val(option[0]).html(option[1] + " " + option[2]));
+          }
+        });
+      } else {
+        $.each(prods, function(id, option) {
+          $("#fnt-product").append($('<option></option>').val(option[0]).html(option[1] + " " + option[2]));
+        });
+      }
+    });
+  }
 </script>
 
 <div id="new-item-fields" class="modal hide fade" data-backdrop="static">

@@ -18,6 +18,7 @@ class Offer < ActiveRecord::Base
   has_attached_file :attachment, :styles => { :medium => "192x192>", :small => "128x128>" }, :default_url => "/images/missing/:style/attachment.png"
   
   has_many :offer_items, dependent: :destroy
+  has_many :products, through: :offer_items
   has_many :purchase_orders
   #has_one :approver_offer_request, class_name: 'OfferRequest', foreign_key: 'approved_offer_id'
 

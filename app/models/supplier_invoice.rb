@@ -14,6 +14,7 @@ class SupplierInvoice < ActiveRecord::Base
 
   has_many :supplier_invoice_items, dependent: :destroy
   has_many :supplier_invoice_approvals, dependent: :destroy
+  has_many :products, through: :supplier_invoice_items
   has_many :supplier_payments
 
   # Nested attributes

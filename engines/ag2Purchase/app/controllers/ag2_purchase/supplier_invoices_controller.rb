@@ -6,6 +6,8 @@ module Ag2Purchase
     before_filter :authenticate_user!
     load_and_authorize_resource
     skip_load_and_authorize_resource :only => [:si_update_receipt_select_from_supplier,
+                                               :si_update_selects_from_note,
+                                               :si_update_product_select_from_note_item,
                                                :si_item_totals,
                                                :si_approval_totals,
                                                :si_update_description_prices_from_product_store,
@@ -32,6 +34,68 @@ module Ag2Purchase
       @notes_dropdown = notes_array(@receipt_notes)
       # Setup JSON
       @json_data = { "note" => @notes_dropdown }
+      render json: @json_data
+    end
+
+    # Update selects at view from receipt note
+    def si_update_selects_from_note
+      o = params[:o]
+      project_id = 0
+      work_order_id = 0
+      charge_account_id = 0
+      store_id = 0
+      payment_method_id = 0
+      if o != '0'
+        @receipt_note = ReceiptNote.find(o)
+        @note_items = @receipt_note.blank? ? [] : note_items_dropdown(@receipt_note)
+        @projects = @receipt_note.blank? ? projects_dropdown : @receipt_note.project
+        @work_orders = @receipt_note.blank? ? work_orders_dropdown : @receipt_note.work_order
+        @charge_accounts = @receipt_note.blank? ? charge_accounts_dropdown : @receipt_note.charge_account
+        @stores = @receipt_note.blank? ? stores_dropdown : @receipt_note.store
+        @payment_methods = @receipt_note.blank? ? payment_methods_dropdown : @receipt_note.payment_method
+        if @note_items.blank?
+          @products = @receipt_note.blank? ? products_dropdown : @receipt_note.organization.products.order(:product_code)
+        else
+          @products = @receipt_note.products.group(:product_code)
+        end
+        project_id = @projects.id rescue 0
+        work_order_id = @work_orders.id rescue 0
+        charge_account_id = @charge_accounts.id rescue 0
+        store_id = @stores.id rescue 0
+        payment_method_id = @payment_methods.id rescue 0
+      else
+        @note_items = []
+        @projects = projects_dropdown
+        @work_orders = work_orders_dropdown
+        @charge_accounts = charge_accounts_dropdown
+        @stores = stores_dropdown
+        @payment_methods = payment_methods_dropdown
+        @products = products_dropdown
+      end
+      # Note items array
+      @note_items_dropdown = note_items_array(@note_items)
+      # Products array
+      @products_dropdown = products_array(@products)
+      # Setup JSON
+      @json_data = { "project" => @projects, "work_order" => @work_orders,
+                     "charge_account" => @charge_accounts, "store" => @stores,
+                     "payment_method" => @payment_methods, "product" => @products_dropdown,
+                     "project_id" => project_id, "work_order_id" => work_order_id,
+                     "charge_account_id" => charge_account_id, "store_id" => store_id,
+                     "payment_method_id" => payment_method_id, "note_item" => @note_items_dropdown }
+      render json: @json_data
+    end
+
+    # Update product select at view from receipt note item
+    def si_update_product_select_from_note_item
+      i = params[:i]
+      product_id = 0
+      if i != '0'
+        @item = ReceiptNoteItem.find(i)
+        product_id = @item.blank? ? 0 : @item.product_id
+      end
+      # Setup JSON
+      @json_data = { "product" => product_id }
       render json: @json_data
     end
 
@@ -281,6 +345,9 @@ module Ag2Purchase
         @payment_methods = payment_methods_dropdown
         @products = products_dropdown
       end
+      # Products array
+      @products_dropdown = products_array(@products)
+      # Setup JSON
       @json_data = { "supplier" => @suppliers, "project" => @projects, "work_order" => @work_orders,
                      "charge_account" => @charge_accounts, "store" => @stores,
                      "payment_method" => @payment_methods, "product" => @products }
@@ -371,6 +438,7 @@ module Ag2Purchase
       @suppliers = suppliers_dropdown
       @payment_methods = payment_methods_dropdown
       @products = products_dropdown
+      @note_items = []
   
       respond_to do |format|
         format.html # new.html.erb
@@ -383,14 +451,20 @@ module Ag2Purchase
       @breadcrumb = 'update'
       @supplier_invoice = SupplierInvoice.find(params[:id])
       # _form ivars
-      @receipt_notes = @supplier_invoice.supplier.blank? ? receipts_dropdown : @supplier_invoice.supplier.receipt_notes.order(:supplier_id, :receipt_no, :id)
+      @receipt_notes = @supplier_invoice.supplier.blank? ? receipts_dropdown : @supplier_invoice.supplier.receipt_notes.unbilled(@supplier_invoice.organization_id, true)
       @projects = projects_dropdown_edit(@supplier_invoice.project)
       @work_orders = @supplier_invoice.project.blank? ? work_orders_dropdown : @supplier_invoice.project.work_orders.order(:order_no)
       @charge_accounts = work_order_charge_account(@supplier_invoice)
       @stores = work_order_store(@supplier_invoice)
       @suppliers = suppliers_dropdown
       @payment_methods = @supplier_invoice.organization.blank? ? payment_methods_dropdown : payment_payment_methods(@supplier_invoice.organization_id)      
-      @products = @supplier_invoice.organization.blank? ? products_dropdown : @supplier_invoice.organization.products(:product_code)
+      @note_items = @supplier_invoice.receipt_note.blank? ? [] : note_items_dropdown(@supplier_invoice.receipt_note)
+      #@products = @supplier_invoice.organization.blank? ? products_dropdown : @supplier_invoice.organization.products(:product_code)
+      if @note_items.blank?
+        @products = @supplier_invoice.organization.blank? ? products_dropdown : @supplier_invoice.organization.products(:product_code)
+      else
+        @products = @note_items.first.receipt_note.products.group(:product_code)
+      end
       # Special to approvals
       @invoice_debt = number_with_precision(@supplier_invoice.debt.round(4), precision: 4)
     end
@@ -415,6 +489,7 @@ module Ag2Purchase
           @suppliers = suppliers_dropdown
           @payment_methods = payment_methods_dropdown
           @products = products_dropdown
+          @note_items = []
           format.html { render action: "new" }
           format.json { render json: @supplier_invoice.errors, status: :unprocessable_entity }
         end
@@ -434,14 +509,19 @@ module Ag2Purchase
                         notice: (crud_notice('updated', @supplier_invoice) + "#{undo_link(@supplier_invoice)}").html_safe }
           format.json { head :no_content }
         else
-          @receipt_notes = @supplier_invoice.supplier.blank? ? receipts_dropdown : @supplier_invoice.supplier.receipt_notes.order(:supplier_id, :receipt_no, :id)
+          @receipt_notes = @supplier_invoice.supplier.blank? ? receipts_dropdown : @supplier_invoice.supplier.receipt_notes.unbilled(@supplier_invoice.organization_id, true)
           @projects = projects_dropdown_edit(@supplier_invoice.project)
           @work_orders = @supplier_invoice.project.blank? ? work_orders_dropdown : @supplier_invoice.project.work_orders.order(:order_no)
           @charge_accounts = work_order_charge_account(@supplier_invoice)
           @stores = work_order_store(@supplier_invoice)
           @suppliers = suppliers_dropdown
           @payment_methods = @supplier_invoice.organization.blank? ? payment_methods_dropdown : payment_payment_methods(@supplier_invoice.organization_id)      
-          @products = @supplier_invoice.organization.blank? ? products_dropdown : @supplier_invoice.organization.products(:product_code)
+          @note_items = @supplier_invoice.receipt_note.blank? ? [] : note_items_dropdown(@supplier_invoice.receipt_note)
+          if @note_items.blank?
+            @products = @supplier_invoice.organization.blank? ? products_dropdown : @supplier_invoice.organization.products(:product_code)
+          else
+            @products = @note_items.first.receipt_note.products.group(:product_code)
+          end
           format.html { render action: "edit" }
           format.json { render json: @supplier_invoice.errors, status: :unprocessable_entity }
         end
@@ -540,6 +620,10 @@ module Ag2Purchase
     def receipts_dropdown
       session[:organization] != '0' ? ReceiptNote.unbilled(session[:organization].to_i, true) : ReceiptNote.unbilled(nil, true)
     end
+    
+    def note_items_dropdown(_note)
+      _note.receipt_note_items.joins(:receipt_note_item_balance).where('receipt_note_item_balances.balance > ?', 0)
+    end
 
     def charge_accounts_dropdown
       _accounts = session[:organization] != '0' ? ChargeAccount.where(organization_id: session[:organization].to_i).order(:account_code) : ChargeAccount.order(:account_code)
@@ -578,6 +662,26 @@ module Ag2Purchase
       _array = []
       _notes.each do |i|
         _array = _array << [i.id, i.receipt_no, formatted_date(i.receipt_date), i.supplier.full_name] 
+      end
+      _array
+    end
+    
+    def note_items_array(_note_items)
+      _array = []
+      _order_items.each do |i|
+        _array = _array << [ i.id, i.id.to_s + ":", i.product.full_code, i.description[0,20],
+                           (!i.quantity.blank? ? formatted_number(i.quantity, 4) : formatted_number(0, 4)),
+                           (!i.net_price.blank? ? formatted_number(i.net_price, 4) : formatted_number(0, 4)),
+                           (!i.amount.blank? ? formatted_number(i.amount, 4) : formatted_number(0, 4)),
+                           "(" + (!i.balance.blank? ? formatted_number(i.balance, 4) : formatted_number(0, 4)) + ")" ]
+      end
+      _array
+    end
+    
+    def products_array(_products)
+      _array = []
+      _products.each do |i|
+        _array = _array << [i.id, i.full_code, i.main_description[0,40]] 
       end
       _array
     end

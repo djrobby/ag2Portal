@@ -1,5 +1,9 @@
 <script>
   $(document).ready(function() {
+    // Retrieves parent values
+    // Tool
+    initT();
+
     // Set focus
     $(".modal").on('shown', function() {
       $(this).find(".form-label:first").focus();
@@ -61,7 +65,33 @@
         $('#tools-table').trigger('totals');
       });
     }
-  })
+  });
+
+  // Initialize
+  function initT() {
+    // make a POST call and replace the content
+    var order = $('select#work_order_organization_id :selected').val();
+    if (order == "")
+      order = "0";
+    jQuery.getJSON('wo_update_project_textfields_from_organization/' + order, function(data) {
+      var to = data.tool
+      // Tool
+      $("#fnt-tool").html("");
+      $("#fnt-tool").select2("val", "");
+      $("#fnt-tool").append($('<option></option>').val("").html(""));
+      if (!to.length) {
+        $.each(data, function(id, option) {
+          if (id == 'tool' && option != "") {
+            $("#fnt-tool").append($('<option></option>').val(option[0]).html(option[1] + " " + option[2]));
+          }
+        });
+      } else {
+        $.each(to, function(id, option) {
+          $("#fnt-tool").append($('<option></option>').val(option[0]).html(option[1] + " " + option[2]));
+        });
+      }
+    });
+  }
 </script>
 
 <div id="new-tool-fields" class="modal hide fade" data-backdrop="static">

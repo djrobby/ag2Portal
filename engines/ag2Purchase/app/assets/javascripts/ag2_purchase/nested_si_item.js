@@ -119,7 +119,8 @@ var si_rowBuilder = function() {
               // Add new column to row...
               var td = $('<td/>').append($(this));
               // ...hiding this if applicable
-              if (this.id === 'fnt-tax-type') {
+              if (this.id === 'fnt-receipt-note' || this.id === 'fnt-receipt-note-item' ||
+                  this.id === 'fnt-tax-type') {
                 td = $('<td style="display:none;"/>').append($(this));
               }
               // If destroy field, add delete link also

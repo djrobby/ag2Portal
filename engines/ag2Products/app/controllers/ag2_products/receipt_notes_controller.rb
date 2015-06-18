@@ -85,8 +85,15 @@ module Ag2Products
 
     # Update product select at view from purchase order item
     def rn_update_product_select_from_order_item
-        product_id = @products.id rescue 0
-      
+      i = params[:i]
+      product_id = 0
+      if i != '0'
+        @item = PurchaseOrderItem.find(i)
+        product_id = @item.blank? ? 0 : @item.product_id
+      end
+      # Setup JSON
+      @json_data = { "product" => product_id }
+      render json: @json_data
     end
 
     # Calculate and format totals properly
@@ -422,7 +429,7 @@ module Ag2Products
       if @order_items.blank?
         @products = @receipt_note.organization.blank? ? products_dropdown : @receipt_note.organization.products(:product_code)
       else
-        @products = @order_items.first.products.group(:product_code)
+        @products = @order_items.first.purchase_order.products.group(:product_code)
       end
     end
   

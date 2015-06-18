@@ -43,11 +43,17 @@
       $('#submit_btn').hide();
       $('.fnt-new-btn').hide();
       $('.fnt-new-worker-btn').hide();
+      $('.fnt-new-subcontractor-btn').hide();
+      $('.fnt-new-tool-btn').hide();
+      $('.fnt-new-vehicle-btn').hide();
     } else {
       // Order OK: Enable
       $('#submit_btn').show();
       $('.fnt-new-btn').show();
       $('.fnt-new-worker-btn').show();
+      $('.fnt-new-subcontractor-btn').show();
+      $('.fnt-new-tool-btn').show();
+      $('.fnt-new-vehicle-btn').show();
     }
 
     // Disable generate_code_btn if work_order_project_id blank
@@ -84,11 +90,17 @@
         $('#submit_btn').hide();
         $('.fnt-new-btn').hide();
         $('.fnt-new-worker-btn').hide();
+        $('.fnt-new-subcontractor-btn').hide();
+        $('.fnt-new-tool-btn').hide();
+        $('.fnt-new-vehicle-btn').hide();
       } else {
         // Order OK: Enable
         $('#submit_btn').show();
         $('.fnt-new-btn').show();
         $('.fnt-new-worker-btn').show();
+        $('.fnt-new-subcontractor-btn').show();
+        $('.fnt-new-tool-btn').show();
+        $('.fnt-new-vehicle-btn').show();
       }
     });
     
@@ -127,6 +139,11 @@
         var s = data.store
         var w = data.worker
         var a = data.area
+        var prods = data.product
+        var su = data.supplier
+        var po = data.order
+        var to = data.tool
+        var ve = data.vehicle
         // Project
         $("#work_order_project_id").html("");
         $("#work_order_project_id").select2("val", "");

@@ -62,6 +62,32 @@
       });
     }
   });
+
+  // Initialize
+  function initT() {
+    // make a POST call and replace the content
+    var order = $('select#work_order_organization_id :selected').val();
+    if (order == "")
+      order = "0";
+    jQuery.getJSON('wo_update_project_textfields_from_organization/' + order, function(data) {
+      var ve = data.vehicle
+      // Tool
+      $("#fnt-vehicle").html("");
+      $("#fnt-vehicle").select2("val", "");
+      $("#fnt-vehicle").append($('<option></option>').val("").html(""));
+      if (!ve.length) {
+        $.each(data, function(id, option) {
+          if (id == 'vehicle' && option != "") {
+            $("#fnt-vehicle").append($('<option></option>').val(option[0]).html(option[1] + " " + option[2]));
+          }
+        });
+      } else {
+        $.each(ve, function(id, option) {
+          $("#fnt-vehicle").append($('<option></option>').val(option[0]).html(option[1] + " " + option[2]));
+        });
+      }
+    });
+  }
 </script>
 
 <div id="new-vehicle-fields" class="modal hide fade" data-backdrop="static">

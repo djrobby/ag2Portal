@@ -476,16 +476,21 @@ module Ag2Tech
         @tools = tools_dropdown
         @vehicles = vehicles_dropdown
       end
-      @areas_dropdown = []
-      @areas.each do |i|
-        @areas_dropdown = @areas_dropdown << [i.id, i.name, i.department.name] 
-      end
+      # Areas array
+      @areas_dropdown = areas_array(@areas)
+      # Products array
+      @products_dropdown = products_array(@products)
+      # Tools array
+      @tools_dropdown = tools_array(@tools)
+      # Vehicles array
+      @vehicles_dropdown = vehicles_array(@vehicles)
+      # Setup JSON
       @json_data = { "project" => @projects, "type" => @types, "labor" => @labors,
                      "client" => @clients, "charge_account" => @charge_accounts,
                      "store" => @stores, "worker" => @workers,
-                     "area" => @areas_dropdown, "product" => @products,
+                     "area" => @areas_dropdown, "product" => @products_dropdown,
                      "supplier" => @suppliers, "order" => @orders,
-                     "tool" => @tools, "vehicle" => @vehicles }
+                     "tool" => @tools_dropdown, "vehicle" => @vehicles_dropdown }
       render json: @json_data
     end
 
@@ -956,6 +961,38 @@ module Ag2Tech
         _a = vehicles_dropdown
       end
       _a
+    end
+
+    def areas_array(_areas)
+      _array = []
+      _areas.each do |i|
+        _array = _array << [i.id, i.name, i.department.name]
+      end
+      _array
+    end
+    
+    def products_array(_products)
+      _array = []
+      _products.each do |i|
+        _array = _array << [i.id, i.full_code, i.main_description[0,40]] 
+      end
+      _array
+    end
+    
+    def tools_array(_tools)
+      _array = []
+      _tools.each do |i|
+        _array = _array << [i.id, i.serial_no, i.name[0,40]] 
+      end
+      _array
+    end
+    
+    def vehicles_array(_vehicles)
+      _array = []
+      _vehicles.each do |i|
+        _array = _array << [i.id, i.registration, i.name[0,40]] 
+      end
+      _array
     end
     
     # Keeps filter state

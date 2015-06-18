@@ -16,6 +16,7 @@ class OfferRequest < ActiveRecord::Base
 
   has_many :offer_request_items, dependent: :destroy
   has_many :offer_request_suppliers, dependent: :destroy
+  has_many :products, through: :offer_request_items
   has_many :offers
 
   # Nested attributes

@@ -270,9 +270,12 @@ module Ag2Products
         @payment_methods = payment_methods_dropdown
         @products = products_dropdown
       end
+      # Products array
+      @products_dropdown = products_array(@products)
+      # Setup JSON
       @json_data = { "client" => @clients, "project" => @projects, "work_order" => @work_orders,
                      "charge_account" => @charge_accounts, "store" => @stores,
-                     "payment_method" => @payment_methods, "product" => @products }
+                     "payment_method" => @payment_methods, "product" => @products_dropdown }
       render json: @json_data
     end
 
@@ -575,6 +578,14 @@ module Ag2Products
       _array = []
       _offers.each do |i|
         _array = _array << [i.id, i.full_no, formatted_date(i.offer_date), i.client.full_name] 
+      end
+      _array
+    end
+    
+    def products_array(_products)
+      _array = []
+      _products.each do |i|
+        _array = _array << [i.id, i.full_code, i.main_description[0,40]] 
       end
       _array
     end

@@ -192,6 +192,8 @@
       <td style="display:none;"><%= i.association :work_order, label: false, wrapper: false, input_html: { class: 'isel2 fnt-work-order' } %></td>
       <td style="display:none;"><%= i.association :project, label: false, wrapper: false, input_html: { class: 'isel2 fnt-project' } %></td>
       <td style="display:none;"><%= i.association :charge_account, label: false, wrapper: false, input_html: { class: 'isel2 fnt-charge-account' } %></td>
+      <td style="display:none;"><%= i.association :receipt_note, label: false, wrapper: false, input_html: { class: 'isel2 fnt-receipt-note' } %></td>
+      <td style="display:none;"><%= i.association :receipt_note_item, label: false, wrapper: false, input_html: { class: 'isel2 fnt-receipt-note-item' } %></td>
       <% if @breadcrumb == 'create' || @breadcrumb == 'update' %>
       <td><%= link_to_remove_fields('<i class="icon-trash"></i>'.html_safe, i) %></td>
       <% end %>

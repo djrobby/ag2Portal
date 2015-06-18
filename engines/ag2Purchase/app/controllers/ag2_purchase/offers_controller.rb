@@ -252,11 +252,13 @@ module Ag2Purchase
       end
       # Offer requests array
       @requests_dropdown = offer_requests_array(@offer_requests)
+      # Products array
+      @products_dropdown = products_array(@products)
       # Setup JSON
       @json_data = { "supplier" => @suppliers, "offer_request" => @requests_dropdown,
                      "project" => @projects, "work_order" => @work_orders,
                      "charge_account" => @charge_accounts, "store" => @stores,
-                     "payment_method" => @payment_methods, "product" => @products }
+                     "payment_method" => @payment_methods, "product" => @products_dropdown }
       render json: @json_data
     end
 
@@ -270,12 +272,17 @@ module Ag2Purchase
       payment_method_id = 0
       if request != '0'
         @offer_request = OfferRequest.find(request)
+        @request_items = @offer_request.blank? ? [] : @offer_request.offer_request_items
         @projects = @offer_request.blank? ? projects_dropdown : @offer_request.project
         @work_orders = @offer_request.blank? ? work_orders_dropdown : @offer_request.work_order
         @charge_accounts = @offer_request.blank? ? charge_accounts_dropdown : @offer_request.charge_account
         @stores = @offer_request.blank? ? stores_dropdown : @offer_request.store
         @payment_methods = @offer_request.blank? ? payment_methods_dropdown : @offer_request.payment_method
-        @products = @offer_request.blank? ? products_dropdown : @offer_request.organization.products.order(:product_code)
+        if @request_items.blank?
+          @products = @offer_request.blank? ? products_dropdown : @offer_request.organization.products.order(:product_code)
+        else
+          @products = @offer_request.products.group(:product_code)
+        end
         project_id = @projects.id rescue 0
         work_order_id = @work_orders.id rescue 0
         charge_account_id = @charge_accounts.id rescue 0
@@ -289,10 +296,12 @@ module Ag2Purchase
         @payment_methods = payment_methods_dropdown
         @products = products_dropdown
       end
+      # Products array
+      @products_dropdown = products_array(@products)
       # Setup JSON
       @json_data = { "project" => @projects, "work_order" => @work_orders,
                      "charge_account" => @charge_accounts, "store" => @stores,
-                     "payment_method" => @payment_methods, "product" => @products,
+                     "payment_method" => @payment_methods, "product" => @products_dropdown,
                      "project_id" => project_id, "work_order_id" => work_order_id,
                      "charge_account_id" => charge_account_id, "store_id" => store_id,
                      "payment_method_id" => payment_method_id }
@@ -771,6 +780,14 @@ module Ag2Purchase
         end
       end
       _items_array
+    end
+    
+    def products_array(_products)
+      _array = []
+      _products.each do |i|
+        _array = _array << [i.id, i.full_code, i.main_description[0,40]] 
+      end
+      _array
     end
     
     # Keeps filter state

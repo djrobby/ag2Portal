@@ -16,6 +16,8 @@
       _date = new Date(_date);
     }
     _year = _date.getFullYear();
+    // Worker
+    initW();
 
     // Set focus
     $(".modal").on('shown', function() {
@@ -78,7 +80,33 @@
         $('#workers-table').trigger('totals');
       });
     }
-  })
+  });
+
+  // Initialize
+  function initW() {
+    // make a POST call and replace the content
+    var order = $('select#work_order_organization_id :selected').val();
+    if (order == "")
+      order = "0";
+    jQuery.getJSON('wo_update_project_textfields_from_organization/' + order, function(data) {
+      var w = data.worker
+      // Worker
+      $("#fnt-worker").html("");
+      $("#fnt-worker").select2("val", "");
+      $("#fnt-worker").append($('<option></option>').val("").html(""));
+      if (!w.length) {
+        $.each(data, function(id, option) {
+          if (id == 'worker' && option != "") {
+            $("#fnt-worker").append($('<option></option>').val(option.id).html(option.last_name + ", " + option.first_name));
+          }
+        });
+      } else {
+        $.each(w, function(id, option) {
+          $("#fnt-worker").append($('<option></option>').val(option.id).html(option.last_name + ", " + option.first_name));
+        });
+      }
+    });
+  }
 </script>
 
 <div id="new-worker-fields" class="modal hide fade" data-backdrop="static">

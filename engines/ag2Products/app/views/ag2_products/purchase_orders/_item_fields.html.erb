@@ -38,6 +38,8 @@
     var _s = $('#purchase_order_store_id :selected').val();
     if (_s == "") _s = "0";
     $('#fnt-store').val(_s);
+    // Product
+    init();
 
     // Set focus
     $(".modal").on('shown', function() {
@@ -122,12 +124,12 @@
         if (!c.length) {
           $.each(data, function(id, option) {
             if (id == 'charge_account' && option != "") {
-              $("#fnt-charge-account").append($('<option></option>').val(option.id).html(option.account_code + " " + option.name));
+              $("#fnt-charge-account").append($('<option></option>').val(option.id).html(option.account_code.substring(0,4) + "-" + option.account_code.substring(4,11) + " " + option.name));
             }
           });
         } else {
           $.each(c, function(id, option) {
-            $("#fnt-charge-account").append($('<option></option>').val(option.id).html(option.account_code + " " + option.name));
+            $("#fnt-charge-account").append($('<option></option>').val(option.id).html(option.account_code.substring(0,4) + "-" + option.account_code.substring(4,11) + " " + option.name));
           });
         }
         if (c_id != 0) $("#fnt-charge-account").select2("val", c_id);
@@ -183,12 +185,12 @@
         if (!c.length) {
           $.each(data, function(id, option) {
             if (id == 'charge_account' && option != "") {
-              $("#fnt-charge-account").append($('<option></option>').val(option.id).html(option.account_code + " " + option.name));
+              $("#fnt-charge-account").append($('<option></option>').val(option.id).html(option.account_code.substring(0,4) + "-" + option.account_code.substring(4,11) + " " + option.name));
             }
           });
         } else {
           $.each(c, function(id, option) {
-            $("#fnt-charge-account").append($('<option></option>').val(option.id).html(option.account_code + " " + option.name));
+            $("#fnt-charge-account").append($('<option></option>').val(option.id).html(option.account_code.substring(0,4) + "-" + option.account_code.substring(4,11) + " " + option.name));
           });
         }
         // Store
@@ -304,6 +306,32 @@
       })
     }
   });
+
+  // Initialize
+  function init() {
+    // make a POST call and replace the content
+    var order = $('select#purchase_order_organization_id :selected').val();
+    if (order == "")
+      order = "0";
+    jQuery.getJSON('po_update_project_textfields_from_organization/' + order, function(data) {
+      var prods = data.product
+      // Product
+      $("#fnt-product").html("");
+      $("#fnt-product").select2("val", "");
+      $("#fnt-product").append($('<option></option>').val("").html(""));
+      if (!prods.length) {
+        $.each(data, function(id, option) {
+          if (id == 'product' && option != "") {
+            $("#fnt-product").append($('<option></option>').val(option[0]).html(option[1] + " " + option[2]));
+          }
+        });
+      } else {
+        $.each(prods, function(id, option) {
+          $("#fnt-product").append($('<option></option>').val(option[0]).html(option[1] + " " + option[2]));
+        });
+      }
+    });
+  }
 </script>
 
 <div id="new-item-fields" class="modal hide fade" data-backdrop="static">

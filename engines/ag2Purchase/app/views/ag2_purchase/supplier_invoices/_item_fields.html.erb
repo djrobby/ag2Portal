@@ -31,6 +31,8 @@
     if (_s == "") _s = "0";
     $('#fnt-store').val(_s);
     */
+    // Product & Note item
+    init();
 
     // Set focus
     $(".modal").on('shown', function() {
@@ -105,12 +107,12 @@
         if (!c.length) {
           $.each(data, function(id, option) {
             if (id == 'charge_account' && option != "") {
-              $("#fnt-charge-account").append($('<option></option>').val(option.id).html(option.account_code + " " + option.name));
+              $("#fnt-charge-account").append($('<option></option>').val(option.id).html(option.account_code.substring(0,4) + "-" + option.account_code.substring(4,11) + " " + option.name));
             }
           });
         } else {
           $.each(c, function(id, option) {
-            $("#fnt-charge-account").append($('<option></option>').val(option.id).html(option.account_code + " " + option.name));
+            $("#fnt-charge-account").append($('<option></option>').val(option.id).html(option.account_code.substring(0,4) + "-" + option.account_code.substring(4,11) + " " + option.name));
           });
         }
         if (c_id != 0) $("#fnt-charge-account").select2("val", c_id);
@@ -168,12 +170,12 @@
         if (!c.length) {
           $.each(data, function(id, option) {
             if (id == 'charge_account') {
-              $("#fnt-charge-account").append($('<option></option>').val(option.id).html(option.account_code + " " + option.name));
+              $("#fnt-charge-account").append($('<option></option>').val(option.id).html(option.account_code.substring(0,4) + "-" + option.account_code.substring(4,11) + " " + option.name));
             }
           });
         } else {
           $.each(c, function(id, option) {
-            $("#fnt-charge-account").append($('<option></option>').val(option.id).html(option.account_code + " " + option.name));
+            $("#fnt-charge-account").append($('<option></option>').val(option.id).html(option.account_code.substring(0,4) + "-" + option.account_code.substring(4,11) + " " + option.name));
           });
         }
         // Store
@@ -267,6 +269,70 @@
       })
     }
   })
+
+  // Initialize
+  function init() {
+    // make a POST call and replace the content
+    var o = $('select#supplier_invoice_receipt_note_id :selected').val();
+    if (o != "" && o != "0") {
+      jQuery.getJSON('si_update_selects_from_note/' + o, function(data) {
+        var prods = data.product
+        var i = data.note_item
+        // Product
+        $("#fnt-product").html("");
+        $("#fnt-product").select2("val", "");
+        $("#fnt-product").append($('<option></option>').val("").html(""));
+        if (!prods.length) {
+          $.each(data, function(id, option) {
+            if (id == 'product' && option != "") {
+              $("#fnt-product").append($('<option></option>').val(option[0]).html(option[1] + " " + option[2]));
+            }
+          });
+        } else {
+          $.each(prods, function(id, option) {
+            $("#fnt-product").append($('<option></option>').val(option[0]).html(option[1] + " " + option[2]));
+          });
+        }
+        // Note item
+        $("#fnt-receipt-note-item").html("");
+        $("#fnt-receipt-note-item").select2("val", "");
+        $("#fnt-receipt-note-item").append($('<option></option>').val("").html(""));
+        if (!i.length) {
+          $.each(data, function(id, option) {
+            if (id == 'note_item' && option != "") {
+              $("#fnt-receipt-note-item").append($('<option></option>').val(option[0]).html(option[1] + " " + option[2] + " " + option[3] + " " + option[4] + " " + option[5] + " " + option[6] + " " + option[7]));
+            }
+          });
+        } else {
+          $.each(i, function(id, option) {
+            $("#fnt-receipt-note-item").append($('<option></option>').val(option[0]).html(option[1] + " " + option[2] + " " + option[3] + " " + option[4] + " " + option[5] + " " + option[6] + " " + option[7]));
+          });
+        }
+      });
+    } else {
+      var order = $('select#supplier_invoice_organization_id :selected').val();
+      if (order == "")
+        order = "0";
+      jQuery.getJSON('si_update_project_textfields_from_organization/' + order, function(data) {
+        var prods = data.product
+        // Product
+        $("#fnt-product").html("");
+        $("#fnt-product").select2("val", "");
+        $("#fnt-product").append($('<option></option>').val("").html(""));
+        if (!prods.length) {
+          $.each(data, function(id, option) {
+            if (id == 'product' && option != "") {
+              $("#fnt-product").append($('<option></option>').val(option[0]).html(option[1] + " " + option[2]));
+            }
+          });
+        } else {
+          $.each(prods, function(id, option) {
+            $("#fnt-product").append($('<option></option>').val(option[0]).html(option[1] + " " + option[2]));
+          });
+        }
+      });
+    }
+  }
 </script>
 
 <div id="new-item-fields" class="modal hide fade" data-backdrop="static">
@@ -277,6 +343,8 @@
     <span class="shrinked"><%= I18n.t(:mandatory_subtitle) %></span>
   </div>
   <div class="modal-body">
+    <%= f.association :receipt_note, collection: @receipt_notes, input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-receipt-note' }, label_html: { class: 'form-label' } %>
+    <%= f.association :receipt_note_item, collection: @note_items, input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-receipt-note-item' }, label_html: { class: 'form-label' } %>
     <%= f.association :project, collection: @projects, input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-project', data: { validation: "required", "validation-error-msg" => "#{e}" } }, label_html: { class: 'form-label' } %>
     <%= f.association :work_order, collection: @work_orders, input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-work-order', data: { validation: "required", "validation-error-msg" => "#{e}" } }, label_html: { class: 'form-label' } %>
     <%= f.association :charge_account, collection: @charge_accounts, input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-charge-account', data: { validation: "required", "validation-error-msg" => "#{e}" } }, label_html: { class: 'form-label' } %>
