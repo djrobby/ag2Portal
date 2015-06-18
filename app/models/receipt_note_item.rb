@@ -36,6 +36,7 @@ class ReceiptNoteItem < ActiveRecord::Base
   before_save :check_for_new_stock_and_price
   after_create :update_stock_and_price_on_create
   after_update :update_stock_and_price_on_update
+  after_destroy :update_stock_and_price_on_destroy
 
   def to_label
     "#{full_item}"
@@ -64,7 +65,10 @@ class ReceiptNoteItem < ActiveRecord::Base
   end
 
   def amount_was
-    quantity_was * (price_was - discount_was)
+    quantity_prev = quantity_was rescue quantity
+    price_prev = price_was rescue price
+    discount_prev = discount_was rescue discount
+    quantity_prev * (price_prev - discount_prev)
   end
 
   def tax
@@ -132,57 +136,89 @@ class ReceiptNoteItem < ActiveRecord::Base
   # After update
   # Updates Stock & PurchasePrice (current and previous)
   def update_stock_and_price_on_update
+    # What has changed?
+    product_has_changed = product_changed? rescue false
+    store_has_changed = store_changed? rescue false
+    quantity_has_changed = quantity_changed? rescue false
+    supplier_has_changed = receipt_note.supplier_changed? rescue false
+    price_has_changed = price_changed? rescue false
+    code_has_changed = code_changed? rescue false
+    # Previous values
+    product_prev = product_was rescue product
+    store_prev = store_was rescue store
+    quantity_prev = quantity_was rescue quantity
+    supplier_prev = receipt_note.supplier_was rescue receipt_note.supplier
+    amount_prev = amount_was rescue amount
+    price_prev = price_was rescue price
     # Stock
-    if product_changed? || store_changed?
+    if product_has_changed || store_has_changed
       # Current Stock
       if !update_stock(product, store, quantity, true)
         return false
       end
       # Roll back Previous Stock
-      if !update_stock(product_was, store_was, quantity_was, false)
+      if !update_stock(product_prev, store_prev, quantity_prev, false)
         return false
       end
-    elsif quantity_changed?
+    elsif quantity_has_changed
       # Current Stock
-      if !update_stock(product, store, quantity - quantity_was, true)
+      if !update_stock(product, store, quantity - quantity_prev, true)
         return false
       end
     end
     # PurchasePrice
-    if product_changed? || receipt_note.supplier_changed?
+    if product_has_changed || supplier_has_changed
       # Current PurchasePrice
       if !update_purchase_price(product, receipt_note.supplier, price, code, 1)
         return false
       end
       # Roll back Previous PurchasePrice
-      if !update_purchase_price(product_was, receipt_note.supplier_was, price, code, 2)
+      if !update_purchase_price(product_prev, supplier_prev, price, code, 2)
         return false
       end
-    elsif price_changed? || code_changed?
+    elsif price_has_changed || code_has_changed
       # Current PurchasePrice
       if !update_purchase_price(product, receipt_note.supplier, price, code, 0)
         return false
       end
     end
     # Product
-    if product_changed?
+    if product_has_changed
       # Current Product
       if !update_product(product, amount, quantity, price, true, 1)
         return false
       end
       # Previous Product
-      if !update_product(product_was, amount_was, quantity_was, price_was, false, 2)
+      if !update_product(product_prev, amount_prev, quantity_prev, price_prev, false, 2)
         return false
       end
-    elsif quantity_changed? || price_changed?
+    elsif quantity_has_changed || price_has_changed
       # Current Product
-      if !update_product(product, amount - amount_was, quantity - quantity_was, price, true, 0)
+      if !update_product(product, amount - amount_prev, quantity - quantity_prev, price, true, 0)
         return false
       end
     end
     true
   end
-  
+
+  # After destroy
+  # Updates Stock & PurchasePrice (current)
+  def update_stock_and_price_on_destroy
+    # Update current Stock
+    if !update_stock(product, store, quantity, false)
+      return false
+    end
+    # Update current PurchasePrice
+    if !update_purchase_price(product, receipt_note.supplier, price, code, 2)
+      return false
+    end
+    # Update current Product
+    if !update_product(product, amount, quantity, price, false, 2)
+      return false
+    end
+    true
+  end
+    
   #
   # Helper methods for triggers
   #
@@ -231,7 +267,7 @@ class ReceiptNoteItem < ActiveRecord::Base
   #                           2 prev_price & prev_code => price & code (roll back values)
   def update_purchase_price(_product, _supplier, _price, _code, _change_previous)
     _purchase_price = PurchasePrice.find_by_product_and_supplier(_product, _supplier)
-    if _purchase_price.nil?
+    if !_purchase_price.nil?
       if _change_previous == 0
         _purchase_price.attributes = { price: _price, code: _code }
       elsif _change_previous == 1

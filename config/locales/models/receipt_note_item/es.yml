@@ -7,6 +7,7 @@ es:
         few:   Items de nota de recepción
         other: Items de nota de recepción
         check_for_supplier_invoices: "Item de nota de recepción no puede ser eliminado mientras existan facturas S vinculadas."
+        quantity_greater_than_balance: "¡La cantidad introducida (%{qty}) es mayor que el saldo restante (%{bal})!"
     attributes:
       receipt_note_item:
         receipt_note: "Nota de recepción"
@@ -45,3 +46,4 @@ es:
         work_order_id: "Orden de trabajo"
         charge_account: "Cuenta analítica"
         charge_account_id: "Cuenta analítica"
+        balance: "Saldo"

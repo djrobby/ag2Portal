@@ -193,6 +193,7 @@
       });
       return false;
     });
+
     // when the #fnt-purchase-order field changes
     $("#fnt-purchase-order").change(function() {
       // make a POST call and replace the content
@@ -315,10 +316,39 @@
       //return false;
     });
 
+    // when the #fnt-purchase-order-item field changes
+    $("#fnt-purchase-order-item").change(function() {
+      // make a POST call and replace the content
+      var i = $('select#fnt-purchase-order-item :selected').val();
+      if (i == "")
+        i = "0";
+      jQuery.getJSON('rn_update_product_select_from_order_item/' + i, function(data) {
+        var p_id = data.product;
+        // Product
+        if (p_id != 0) $("#fnt-product").select2("val", p_id);
+        $("#fnt-product").trigger("change");
+      });
+      return false;
+    });
+
     // when the #fnt-quantity field changes
     $("#fnt-quantity").change(function() {
       // preserve the current object
       var _this = (this);
+      // balance check
+      var i = $('select#fnt-purchase-order-item :selected').val();
+      if (i == "")
+        i = "0";
+      var qty = $('#fnt-quantity').val();
+      if (qty == "")
+        qty = "0";
+      qty = parseInt(right_number(qty, 4) * 10000);
+      jQuery.getJSON('rn_item_balance_check/' + i + '/' + qty, function(data) {
+        if (data.alert != "") {
+          alert(data.alert);
+        }
+      });
+      // recalculate & format
       recalculate(_this);
       return false;
     });

@@ -14,6 +14,7 @@ module Ag2Products
                                                :rn_update_order_select_from_supplier,
                                                :rn_update_selects_from_order,
                                                :rn_update_product_select_from_order_item,
+                                               :rn_item_balance_check,
                                                :rn_format_number,
                                                :rn_current_stock,
                                                :rn_update_project_textfields_from_organization]
@@ -93,6 +94,25 @@ module Ag2Products
       end
       # Setup JSON
       @json_data = { "product" => product_id }
+      render json: @json_data
+    end
+
+    # Is quantity greater than item remaining balance?
+    def rn_item_balance_check
+      i = params[:i]
+      qty = params[:qty].to_f / 10000
+      bal = 0
+      alert = ""
+      if i != '0'
+        bal = PurchaseOrderItem.find(i).balance rescue 0
+        if qty > bal
+          qty = number_with_precision(qty.round(4), precision: 4, delimiter: I18n.locale == :es ? "." : ",")
+          bal = number_with_precision(bal.round(4), precision: 4, delimiter: I18n.locale == :es ? "." : ",")
+          alert = I18n.t("activerecord.models.receipt_note_item.quantity_greater_than_balance", qty: qty, bal: bal)
+        end
+      end
+      # Setup JSON
+      @json_data = { "alert" => alert }
       render json: @json_data
     end
 

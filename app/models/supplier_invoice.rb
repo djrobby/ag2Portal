@@ -148,7 +148,6 @@ class SupplierInvoice < ActiveRecord::Base
     integer :id
     integer :payment_method_id
     integer :project_id, :multiple => true
-    integer :store_id
     integer :work_order_id
     integer :charge_account_id
     date :invoice_date

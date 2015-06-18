@@ -10,7 +10,7 @@ class PurchasePrice < ActiveRecord::Base
   validates :product,  :presence => true
   validates :supplier, :presence => true
   validates :measure,  :presence => true
-  validates :code,     :presence => true
+  #validates :code,     :presence => true
 
   after_save :update_reference_price_if_favorite
 

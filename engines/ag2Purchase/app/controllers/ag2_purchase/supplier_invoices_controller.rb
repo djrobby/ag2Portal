@@ -8,6 +8,7 @@ module Ag2Purchase
     skip_load_and_authorize_resource :only => [:si_update_receipt_select_from_supplier,
                                                :si_update_selects_from_note,
                                                :si_update_product_select_from_note_item,
+                                               :si_item_balance_check,
                                                :si_item_totals,
                                                :si_approval_totals,
                                                :si_update_description_prices_from_product_store,
@@ -96,6 +97,25 @@ module Ag2Purchase
       end
       # Setup JSON
       @json_data = { "product" => product_id }
+      render json: @json_data
+    end
+
+    # Is quantity greater than item unbilled balance?
+    def si_item_balance_check
+      i = params[:i]
+      qty = params[:qty].to_f / 10000
+      bal = 0
+      alert = ""
+      if i != '0'
+        bal = ReceiptNoteItem.find(i).balance rescue 0
+        if qty > bal
+          qty = number_with_precision(qty.round(4), precision: 4, delimiter: I18n.locale == :es ? "." : ",")
+          bal = number_with_precision(bal.round(4), precision: 4, delimiter: I18n.locale == :es ? "." : ",")
+          alert = I18n.t("activerecord.models.supplier_invoice_item.quantity_greater_than_balance", qty: qty, bal: bal)
+        end
+      end
+      # Setup JSON
+      @json_data = { "alert" => alert }
       render json: @json_data
     end
 
@@ -668,7 +688,7 @@ module Ag2Purchase
     
     def note_items_array(_note_items)
       _array = []
-      _order_items.each do |i|
+      _note_items.each do |i|
         _array = _array << [ i.id, i.id.to_s + ":", i.product.full_code, i.description[0,20],
                            (!i.quantity.blank? ? formatted_number(i.quantity, 4) : formatted_number(0, 4)),
                            (!i.net_price.blank? ? formatted_number(i.net_price, 4) : formatted_number(0, 4)),

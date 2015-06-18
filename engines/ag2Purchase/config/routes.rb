@@ -135,6 +135,9 @@ Ag2Purchase::Engine.routes.draw do
     match 'supplier_invoices/si_update_product_select_from_note_item/:i', :controller => 'supplier_invoices', :action => 'si_update_product_select_from_note_item'
     match 'si_update_product_select_from_note_item/:i', :controller => 'supplier_invoices', :action => 'si_update_product_select_from_note_item'
     match 'supplier_invoices/:id/si_update_product_select_from_note_item/:i', :controller => 'supplier_invoices', :action => 'si_update_product_select_from_note_item'
+    match 'supplier_invoices/si_item_balance_check/:i/:qty', :controller => 'supplier_invoices', :action => 'si_item_balance_check'
+    match 'si_item_balance_check/:i/:qty', :controller => 'supplier_invoices', :action => 'si_item_balance_check'
+    match 'supplier_invoices/:id/si_item_balance_check/:i/:qty', :controller => 'supplier_invoices', :action => 'si_item_balance_check'
     #
     # Offer requests
     match 'offer_requests/or_totals/:qty/:amount/:tax/:discount_p', :controller => 'offer_requests', :action => 'or_totals'

@@ -6,6 +6,7 @@ en:
         one:   Invoice item
         few:   Invoice items
         other: Invoice items
+        quantity_greater_than_balance: "The amount entered (%{qty}) is greater than the unbilled balance (%{bal})!"
     attributes:
       supplier_invoice_item:
         supplier_invoice: "Invoice"

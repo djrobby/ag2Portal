@@ -34,6 +34,7 @@ class DeliveryNoteItem < ActiveRecord::Base
   before_validation :fields_to_uppercase
   after_create :update_stock_on_create
   after_update :update_stock_on_update
+  after_destroy :update_stock_on_destroy
 
   def fields_to_uppercase
     if !self.description.blank?
@@ -93,21 +94,39 @@ class DeliveryNoteItem < ActiveRecord::Base
   # After update
   # Updates Stock (current and previous)
   def update_stock_on_update
+    # What has changed?
+    product_has_changed = product_changed? rescue false
+    store_has_changed = store_changed? rescue false
+    quantity_has_changed = quantity_changed? rescue false
+    # Previous values
+    product_prev = product_was rescue product
+    store_prev = store_was rescue store
+    quantity_prev = quantity_was rescue quantity
     # Stock
-    if product_changed? || store_changed?
+    if product_has_changed || store_has_changed
       # Current Stock
       if !update_stock(product, store, quantity, true)
         return false
       end
       # Roll back Previous Stock
-      if !update_stock(product_was, store_was, quantity_was, false)
+      if !update_stock(product_prev, store_prev, quantity_prev, false)
         return false
       end
-    elsif quantity_changed?
+    elsif quantity_has_changed
       # Current Stock
-      if !update_stock(product, store, quantity - quantity_was, true)
+      if !update_stock(product, store, quantity - quantity_prev, true)
         return false
       end
+    end
+    true
+  end
+
+  # After destroy
+  # Updates Stock (current)
+  def update_stock_on_destroy
+    # Update current Stock
+    if !update_stock(product, store, quantity, false)
+      return false
     end
     true
   end

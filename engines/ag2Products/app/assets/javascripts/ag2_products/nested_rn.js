@@ -116,8 +116,9 @@ var rn_rowBuilder = function() {
               css = css + ' string';
               $(this).removeAttr('class');
               $(this).addClass(css);
-              // Add new column to row
+              // Add new column to row...
               var td = $('<td/>').append($(this));
+              // ...hiding this if applicable
               if (this.id === 'fnt-code' || this.id === 'fnt-delivery-date' ||
                 this.id === 'fnt-work-order' || this.id === 'fnt-project' ||
                 this.id === 'fnt-charge-account' || this.id === 'fnt-store' ||

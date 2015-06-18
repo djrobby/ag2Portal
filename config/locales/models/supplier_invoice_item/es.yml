@@ -6,6 +6,7 @@ es:
         one:   Item de factura
         few:   Items de factura
         other: Items de factura
+        quantity_greater_than_balance: "¡La cantidad introducida (%{qty}) es mayor que el saldo no facturado (%{bal})!"
     attributes:
       supplier_invoice_item:
         supplier_invoice: "Factura"

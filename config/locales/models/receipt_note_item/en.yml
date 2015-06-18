@@ -7,6 +7,7 @@ en:
         few:   Receipt note items
         other: Receipt note items
         check_for_supplier_invoices: "Receipt note item cannot be destroyed while linked S invoices exist."
+        quantity_greater_than_balance: "The amount entered (%{qty}) is greater than the remaining balance (%{bal})!"
     attributes:
       receipt_note_item:
         receipt_note: "Receipt note"
@@ -45,3 +46,4 @@ en:
         work_order_id: "Work order"
         charge_account: "Analytical account"
         charge_account_id: "Analytical account"
+        balance: "Balance"
