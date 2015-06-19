@@ -23,7 +23,9 @@
     <% @receipt_notes.each do |note| %>
     <tr>
       <td><%= note.id %></td>
-      <td><%= link_to note.receipt_no, note %></td>
+      <td><%= link_to note.receipt_no, note %>
+        <% if !note.attachment.blank? %><i class="icon-paperclip-black" style="margin-left: 0.2em;"><% end %>
+      </td>
       <td align="center"><%= formatted_date(note.receipt_date) unless note.receipt_date.blank? %></td>
       <td><%= note.supplier.full_name unless note.supplier.blank? %></td>
       <td><%= note.project.full_code unless note.project.blank? %></td>

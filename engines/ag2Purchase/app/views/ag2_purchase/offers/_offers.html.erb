@@ -30,7 +30,9 @@
     <% end %>
       <td><%= offer.id %></td>
       <td><%= offer.purchase_orders.count unless offer.purchase_orders.count == 0 %></td>
-      <td><%= link_to offer.offer_no, offer %></td>
+      <td><%= link_to offer.offer_no, offer %>
+        <% if !offer.attachment.blank? %><i class="icon-paperclip-black" style="margin-left: 0.2em;"><% end %>
+      </td>
       <td align="center"><%= formatted_date(offer.offer_date) unless offer.offer_date.blank? %></td>
       <td><%= offer.supplier.partial_name unless offer.supplier.blank? %></td>
       <td><%= offer.offer_request.full_no unless offer.offer_request.blank? %></td>

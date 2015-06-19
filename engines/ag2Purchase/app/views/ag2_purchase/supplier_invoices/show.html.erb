@@ -5,9 +5,13 @@
   <tbody>
     <tr>
       <td>Id:</td>
-      <td><%= @supplier_invoice.id %></td>
+      <td id="id"><%= @supplier_invoice.id %></td>
       <td><%=t 'activerecord.attributes.supplier_invoice.invoice_no' %>:</td>
+      <% if !@supplier_invoice.attachment.blank? %>
+      <td><b><%= @supplier_invoice.invoice_no %></b><a style="margin-left: 1em;" href="#attachment"><i class="icon-paperclip-black"></i></a></td>
+      <% else %>
       <td><b><%= @supplier_invoice.invoice_no %></b></td>
+      <% end %>
     </tr>
     <tr>
       <td><%=t 'activerecord.attributes.supplier_invoice.invoice_date' %>:</td>
@@ -114,3 +118,20 @@ delete_path: @supplier_invoice, delete_txt: t('.btn_delete'), msg: t("activereco
 new_path: new_supplier_invoice_path, new_txt: t('ag2_purchase.supplier_invoices.index.btn_new') } %>
 
 <%= link_to t("ag2_purchase.supplier_invoices.back_to_main_page"), supplier_invoices_path %>
+
+<!-- Attachment -->
+<% if !@supplier_invoice.attachment.blank? %>
+<br />
+<br />
+<a name="attachment"></a>
+<%=t :"activerecord.attributes.supplier_invoice.attachment" %>:
+<div id="dd_files">
+  <% if session[:resolution] == "LD" %>
+  <%= image_tag @supplier_invoice.attachment.url(:small) %> <!-- small image size -->
+  <% elsif session[:resolution] == "SD" %>
+  <%= image_tag @supplier_invoice.attachment.url(:medium) %> <!-- medium image size -->
+  <% else %>
+  <%= image_tag @supplier_invoice.attachment.url %> <!-- big image size -->
+  <% end %>
+</div>
+<% end %>

@@ -48,13 +48,13 @@
   <tbody>
     <tr>
       <td>Id:</td>
-      <td id="id"><%= @offer.id %>
-        <% if !@offer.attachment.blank? %>
-        <a style="margin-left: 1em;" href="#attachment"><i class="icon-paperclip-black"></i></a>
-        <% end %>
-      </td>
+      <td id="id"><%= @offer.id %></td>
       <td><%=t 'activerecord.attributes.offer.offer_no' %>:</td>
+      <% if !@offer.attachment.blank? %>
+      <td><b><%= @offer.offer_no %></b><a style="margin-left: 1em;" href="#attachment"><i class="icon-paperclip-black"></i></a></td>
+      <% else %>
       <td><b><%= @offer.offer_no %></b></td>
+      <% end %>
     </tr>
     <tr>
       <td><%=t 'activerecord.attributes.offer.offer_date' %>:</td>
@@ -159,7 +159,7 @@
 <br />
 <br />
 <a name="attachment"></a>
-<%=t :"activerecord.attributes.ticket.attachment" %>:
+<%=t :"activerecord.attributes.offer.attachment" %>:
 <div id="dd_files">
   <% if session[:resolution] == "LD" %>
   <%= image_tag @offer.attachment.url(:small) %> <!-- small image size -->

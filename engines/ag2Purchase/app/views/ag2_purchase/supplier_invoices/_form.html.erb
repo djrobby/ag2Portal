@@ -16,6 +16,8 @@
     if ($('#supplier_invoice_invoice_date').val() == "") {
       $('#supplier_invoice_invoice_date').datepicker('setValue', es_date(new Date()));
     }
+    // Setup drag & drop
+    dd_import_files('#dd_files', '#image_content', 'si_update_attachment');
 
     // Save default text color
     text_field_color = $("#supplier_invoice_order_no").css('color')
@@ -41,6 +43,11 @@
   });
   
   jQuery(function($) {
+    // when the #supplier_invoice_attachment field changes
+    $("#supplier_invoice_attachment").change(function() {
+      readImageFromInput(this, '#dd_files');
+    });
+
     // when the #supplier_invoice_invoice_no field changes
     $("#supplier_invoice_invoice_no").change(function() {
       var order = $('#supplier_invoice_invoice_no').val();
@@ -517,6 +524,24 @@
 <% end %>
 <!-- Remarks -->
 <%= f.input :remarks, as: :text, input_html: { class: 'x-large-text-field', rows: 3 }, label_html: { class: 'form-label' } %>
+<!-- Attachment -->
+<table class="form-table">
+  <tbody>
+    <tr class="form-tr">
+      <td class="form-td-two left-winged"> <%= f.input :attachment, as: :file, input_html: { accept: 'image/*' }, label_html: { class: 'form-label' } %> </td>
+      <td class="form-td-two right-winged">
+      <div id="dd_files">
+        <% if !@supplier_invoice.attachment_file_name.nil? %>
+          <span id="image_text"></span>
+          <img id="image_content" src="<%= @supplier_invoice.attachment.url %>">
+        <% else %>
+          <span id="image_text"><%= t 'dd_image_message' %></span>
+          <img id="image_content" hidden>
+        <% end %>
+      </div></td>
+    </tr>
+  </tbody>
+</table>
 <!-- Special hidden Id -->
 <%= f.input :id, as: :hidden, input_html: { id: 'hidden_id' } %>
 <!-- Buttons -->

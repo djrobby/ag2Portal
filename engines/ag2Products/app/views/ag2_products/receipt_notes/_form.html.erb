@@ -16,6 +16,8 @@
     if ($('#receipt_note_receipt_date').val() == "") {
       $('#receipt_note_receipt_date').datepicker('setValue', es_date(new Date()));
     }
+    // Setup drag & drop
+    dd_import_files('#dd_files', '#image_content', 'rn_update_attachment');
 
     // Save default text color
     text_field_color = $("#receipt_note_order_no").css('color')
@@ -39,6 +41,11 @@
   });
   
   jQuery(function($) {
+    // when the #receipt_note_attachment field changes
+    $("#receipt_note_attachment").change(function() {
+      readImageFromInput(this, '#dd_files');
+    });
+
     // when the #receipt_note_receipt_no field changes
     $("#receipt_note_receipt_no").change(function() {
       var order = $('#receipt_note_receipt_no').val();
@@ -511,6 +518,24 @@
 <%= render 'items_table', f: f %>
 <!-- Remarks -->
 <%= f.input :remarks, as: :text, input_html: { class: 'x-large-text-field', rows: 3 }, label_html: { class: 'form-label' } %>
+<!-- Attachment -->
+<table class="form-table">
+  <tbody>
+    <tr class="form-tr">
+      <td class="form-td-two left-winged"> <%= f.input :attachment, as: :file, input_html: { accept: 'image/*' }, label_html: { class: 'form-label' } %> </td>
+      <td class="form-td-two right-winged">
+      <div id="dd_files">
+        <% if !@receipt_note.attachment_file_name.nil? %>
+          <span id="image_text"></span>
+          <img id="image_content" src="<%= @receipt_note.attachment.url %>">
+        <% else %>
+          <span id="image_text"><%= t 'dd_image_message' %></span>
+          <img id="image_content" hidden>
+        <% end %>
+      </div></td>
+    </tr>
+  </tbody>
+</table>
 <!-- Buttons -->
 <%= f.button :submit, class: 'btn-primary', id: 'submit_btn' %>
 <% end %>

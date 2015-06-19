@@ -21,7 +21,11 @@
       <td>Id:</td>
       <td id="id"><%= @receipt_note.id %></td>
       <td><%=t 'activerecord.attributes.receipt_note.receipt_no' %>:</td>
+      <% if !@receipt_note.attachment.blank? %>
+      <td><b><%= @receipt_note.receipt_no %></b><a style="margin-left: 1em;" href="#attachment"><i class="icon-paperclip-black"></i></a></td>
+      <% else %>
       <td><b><%= @receipt_note.receipt_no %></b></td>
+      <% end %>
     </tr>
     <tr>
       <td><%=t 'activerecord.attributes.receipt_note.receipt_date' %>:</td>
@@ -107,3 +111,20 @@ new_path: new_receipt_note_path, new_txt: t('ag2_products.receipt_notes.index.bt
 <%= link_to session[:return_to_prod], session[:return_to_prod_url] %> |
 <% end %>
 <%= link_to t("ag2_products.receipt_notes.back_to_main_page"), receipt_notes_path %>
+
+<!-- Attachment -->
+<% if !@receipt_note.attachment.blank? %>
+<br />
+<br />
+<a name="attachment"></a>
+<%=t :"activerecord.attributes.receipt_note.attachment" %>:
+<div id="dd_files">
+  <% if session[:resolution] == "LD" %>
+  <%= image_tag @receipt_note.attachment.url(:small) %> <!-- small image size -->
+  <% elsif session[:resolution] == "SD" %>
+  <%= image_tag @receipt_note.attachment.url(:medium) %> <!-- medium image size -->
+  <% else %>
+  <%= image_tag @receipt_note.attachment.url %> <!-- big image size -->
+  <% end %>
+</div>
+<% end %>

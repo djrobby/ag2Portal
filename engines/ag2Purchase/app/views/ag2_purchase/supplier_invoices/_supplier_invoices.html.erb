@@ -23,7 +23,9 @@
     <% @supplier_invoices.each do |invoice| %>
     <tr>
       <td><%= invoice.id %></td>
-      <td><%= link_to invoice.invoice_no, invoice %></td>
+      <td><%= link_to invoice.invoice_no, invoice %>
+        <% if !invoice.attachment.blank? %><i class="icon-paperclip-black" style="margin-left: 0.2em;"><% end %>
+      </td>
       <td align="center"><%= invoice.invoice_date.strftime("%d/%m/%Y") unless invoice.invoice_date.blank? %></td>
       <td><%= invoice.supplier.full_name[0,40] unless invoice.supplier.blank? %></td>
       <td><%= invoice.project.full_code unless invoice.project.blank? %></td>

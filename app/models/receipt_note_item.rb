@@ -1,4 +1,6 @@
 class ReceiptNoteItem < ActiveRecord::Base
+  include ModelsModule
+  
   belongs_to :receipt_note
   belongs_to :purchase_order
   belongs_to :purchase_order_item
