@@ -18,7 +18,27 @@ module Ag2Purchase
                                                :of_update_selects_from_request,
                                                :of_update_request_select_from_supplier,
                                                :of_generate_offer,
-                                               :of_generate_order]
+                                               :of_generate_order,
+                                               :of_update_attachment]
+    # Public attachment for drag&drop
+    $attachment = nil
+  
+    # Update attached file from drag&drop
+    def of_update_attachment
+      if !$attachment.nil?
+        $attachment.destroy
+        $attachment = Attachment.new
+      end
+      $attachment.avatar = params[:file]
+      $attachment.id = 1
+      $attachment.save!
+      if $attachment.save
+        render json: { "image" => $attachment.avatar }
+      else
+        render json: { "image" => "" }
+      end
+    end
+
     # Calculate and format totals properly
     def of_totals
       qty = params[:qty].to_f / 10000
@@ -548,6 +568,8 @@ module Ag2Purchase
     def new
       @breadcrumb = 'create'
       @offer = Offer.new
+      $attachment = Attachment.new
+      destroy_attachment
       @projects = projects_dropdown
       @work_orders = work_orders_dropdown
       @charge_accounts = charge_accounts_dropdown
@@ -567,6 +589,8 @@ module Ag2Purchase
     def edit
       @breadcrumb = 'update'
       @offer = Offer.find(params[:id])
+      $attachment = Attachment.new
+      destroy_attachment
       @projects = projects_dropdown_edit(@offer.project)
       @work_orders = @offer.project.blank? ? work_orders_dropdown : @offer.project.work_orders.order(:order_no)
       @charge_accounts = work_order_charge_account(@offer)
@@ -583,12 +607,20 @@ module Ag2Purchase
       @breadcrumb = 'create'
       @offer = Offer.new(params[:offer])
       @offer.created_by = current_user.id if !current_user.nil?
+      # Should use attachment from drag&drop?
+      if @offer.attachment.blank? && !$attachment.avatar.blank?
+        @offer.attachment = $attachment.avatar
+      end
   
       respond_to do |format|
         if @offer.save
+          $attachment.destroy
+          $attachment = nil
           format.html { redirect_to @offer, notice: crud_notice('created', @offer) }
           format.json { render json: @offer, status: :created, location: @offer }
         else
+          $attachment.destroy
+          $attachment = Attachment.new
           @projects = projects_dropdown
           @work_orders = work_orders_dropdown
           @charge_accounts = charge_accounts_dropdown
@@ -609,13 +641,21 @@ module Ag2Purchase
       @breadcrumb = 'update'
       @offer = Offer.find(params[:id])
       @offer.updated_by = current_user.id if !current_user.nil?
+      # Should use attachment from drag&drop?
+      if $attachment != nil && !$attachment.avatar.blank? && $attachment.updated_at > @offer.updated_at
+        @offer.attachment = $attachment.avatar
+      end
   
       respond_to do |format|
         if @offer.update_attributes(params[:offer])
+          destroy_attachment
+          $attachment = nil
           format.html { redirect_to @offer,
                         notice: (crud_notice('updated', @offer) + "#{undo_link(@offer)}").html_safe }
           format.json { head :no_content }
         else
+          destroy_attachment
+          $attachment = Attachment.new
           @projects = projects_dropdown_edit(@offer.project)
           @work_orders = @offer.project.blank? ? work_orders_dropdown : @offer.project.work_orders.order(:order_no)
           @charge_accounts = work_order_charge_account(@offer)
@@ -648,6 +688,12 @@ module Ag2Purchase
     end
 
     private
+    
+    def destroy_attachment
+      if $attachment != nil
+        $attachment.destroy        
+      end
+    end
     
     def current_projects_for_index(_projects)
       _current_projects = []

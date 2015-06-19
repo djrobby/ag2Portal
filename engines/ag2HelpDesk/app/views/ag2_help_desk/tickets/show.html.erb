@@ -14,7 +14,7 @@
     <tr>
       <td><%=t :"activerecord.attributes.ticket.id" %>:</td>
       <% if !@ticket.attachment.blank? %>
-      <td><b><%= @ticket.id.to_s.rjust(7, '0') %></b><a style="margin-left: 1em;" href="#attachment"><i class="icon-paperclip-black"></a></td>
+      <td><b><%= @ticket.id.to_s.rjust(7, '0') %></b><a style="margin-left: 1em;" href="#attachment"><i class="icon-paperclip-black"></i></a></td>
       <% else %>
       <td><b><%= @ticket.id.to_s.rjust(7, '0') %></b></td>
       <% end %>

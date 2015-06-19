@@ -138,6 +138,9 @@ Ag2Purchase::Engine.routes.draw do
     match 'supplier_invoices/si_item_balance_check/:i/:qty', :controller => 'supplier_invoices', :action => 'si_item_balance_check'
     match 'si_item_balance_check/:i/:qty', :controller => 'supplier_invoices', :action => 'si_item_balance_check'
     match 'supplier_invoices/:id/si_item_balance_check/:i/:qty', :controller => 'supplier_invoices', :action => 'si_item_balance_check'
+    match 'supplier_invoices/si_update_attachment', :controller => 'supplier_invoices', :action => 'si_update_attachment'
+    match 'si_update_attachment', :controller => 'supplier_invoices', :action => 'si_update_attachment'
+    match 'supplier_invoices/:id/si_update_attachment', :controller => 'supplier_invoices', :action => 'si_update_attachment'
     #
     # Offer requests
     match 'offer_requests/or_totals/:qty/:amount/:tax/:discount_p', :controller => 'offer_requests', :action => 'or_totals'
@@ -223,6 +226,9 @@ Ag2Purchase::Engine.routes.draw do
     match 'offers/of_generate_order/:offer', :controller => 'offers', :action => 'of_generate_order'
     match 'of_generate_order/:offer', :controller => 'offers', :action => 'of_generate_order'
     match 'offers/:id/of_generate_order/:offer', :controller => 'offers', :action => 'of_generate_order'
+    match 'offers/of_update_attachment', :controller => 'offers', :action => 'of_update_attachment'
+    match 'of_update_attachment', :controller => 'offers', :action => 'of_update_attachment'
+    match 'offers/:id/of_update_attachment', :controller => 'offers', :action => 'of_update_attachment'
 
     # Resources
     resources :suppliers

@@ -42,3 +42,4 @@ es:
         organization_id: "Organización"
         receipt_note: "Nota de recepción"
         receipt_note_id: "Nota de recepción"
+        attachment: "Adjunto (Imágen)"

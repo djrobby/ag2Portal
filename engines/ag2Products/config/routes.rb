@@ -126,6 +126,9 @@ Ag2Products::Engine.routes.draw do
     match 'receipt_notes/rn_item_balance_check/:i/:qty', :controller => 'receipt_notes', :action => 'rn_item_balance_check'
     match 'rn_item_balance_check/:i/:qty', :controller => 'receipt_notes', :action => 'rn_item_balance_check'
     match 'receipt_notes/:id/rn_item_balance_check/:i/:qty', :controller => 'receipt_notes', :action => 'rn_item_balance_check'
+    match 'receipt_notes/rn_update_attachment', :controller => 'receipt_notes', :action => 'rn_update_attachment'
+    match 'rn_update_attachment', :controller => 'receipt_notes', :action => 'rn_update_attachment'
+    match 'receipt_notes/:id/rn_update_attachment', :controller => 'receipt_notes', :action => 'rn_update_attachment'
     #
     # Purchase orders 
     match 'purchase_orders/po_update_description_prices_from_product_store/:product/:qty/:store', :controller => 'purchase_orders', :action => 'po_update_description_prices_from_product_store'

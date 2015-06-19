@@ -20,7 +20,27 @@ module Ag2Purchase
                                                :si_update_charge_account_from_project,
                                                :si_format_number,
                                                :si_current_stock,
-                                               :si_update_project_textfields_from_organization]
+                                               :si_update_project_textfields_from_organization,
+                                               :si_update_attachment]
+    # Public attachment for drag&drop
+    $attachment = nil
+  
+    # Update attached file from drag&drop
+    def si_update_attachment
+      if !$attachment.nil?
+        $attachment.destroy
+        $attachment = Attachment.new
+      end
+      $attachment.avatar = params[:file]
+      $attachment.id = 1
+      $attachment.save!
+      if $attachment.save
+        render json: { "image" => $attachment.avatar }
+      else
+        render json: { "image" => "" }
+      end
+    end
+
     # Update receipt note select at view from supplier select
     def si_update_receipt_select_from_supplier
       supplier = params[:supplier]
@@ -450,6 +470,8 @@ module Ag2Purchase
     def new
       @breadcrumb = 'create'
       @supplier_invoice = SupplierInvoice.new
+      $attachment = Attachment.new
+      destroy_attachment
       @receipt_notes = receipts_dropdown
       @projects = projects_dropdown
       @work_orders = work_orders_dropdown
@@ -470,6 +492,8 @@ module Ag2Purchase
     def edit
       @breadcrumb = 'update'
       @supplier_invoice = SupplierInvoice.find(params[:id])
+      $attachment = Attachment.new
+      destroy_attachment
       # _form ivars
       @receipt_notes = @supplier_invoice.supplier.blank? ? receipts_dropdown : @supplier_invoice.supplier.receipt_notes.unbilled(@supplier_invoice.organization_id, true)
       @projects = projects_dropdown_edit(@supplier_invoice.project)
@@ -495,12 +519,20 @@ module Ag2Purchase
       @breadcrumb = 'create'
       @supplier_invoice = SupplierInvoice.new(params[:supplier_invoice])
       @supplier_invoice.created_by = current_user.id if !current_user.nil?
+      # Should use attachment from drag&drop?
+      if @supplier_invoice.attachment.blank? && !$attachment.avatar.blank?
+        @supplier_invoice.attachment = $attachment.avatar
+      end
   
       respond_to do |format|
         if @supplier_invoice.save
+          $attachment.destroy
+          $attachment = nil
           format.html { redirect_to @supplier_invoice, notice: crud_notice('created', @supplier_invoice) }
           format.json { render json: @supplier_invoice, status: :created, location: @supplier_invoice }
         else
+          $attachment.destroy
+          $attachment = Attachment.new
           @receipt_notes = receipts_dropdown
           @projects = projects_dropdown
           @work_orders = work_orders_dropdown
@@ -522,13 +554,21 @@ module Ag2Purchase
       @breadcrumb = 'update'
       @supplier_invoice = SupplierInvoice.find(params[:id])
       @supplier_invoice.updated_by = current_user.id if !current_user.nil?
+      # Should use attachment from drag&drop?
+      if $attachment != nil && !$attachment.avatar.blank? && $attachment.updated_at > @supplier_invoice.updated_at
+        @supplier_invoice.attachment = $attachment.avatar
+      end
   
       respond_to do |format|
         if @supplier_invoice.update_attributes(params[:supplier_invoice])
+          destroy_attachment
+          $attachment = nil
           format.html { redirect_to @supplier_invoice,
                         notice: (crud_notice('updated', @supplier_invoice) + "#{undo_link(@supplier_invoice)}").html_safe }
           format.json { head :no_content }
         else
+          destroy_attachment
+          $attachment = Attachment.new
           @receipt_notes = @supplier_invoice.supplier.blank? ? receipts_dropdown : @supplier_invoice.supplier.receipt_notes.unbilled(@supplier_invoice.organization_id, true)
           @projects = projects_dropdown_edit(@supplier_invoice.project)
           @work_orders = @supplier_invoice.project.blank? ? work_orders_dropdown : @supplier_invoice.project.work_orders.order(:order_no)
@@ -566,6 +606,12 @@ module Ag2Purchase
     end
 
     private
+    
+    def destroy_attachment
+      if $attachment != nil
+        $attachment.destroy        
+      end
+    end
     
     def current_projects_for_index(_projects)
       _current_projects = []

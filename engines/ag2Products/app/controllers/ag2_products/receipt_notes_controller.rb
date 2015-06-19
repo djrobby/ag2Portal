@@ -17,7 +17,27 @@ module Ag2Products
                                                :rn_item_balance_check,
                                                :rn_format_number,
                                                :rn_current_stock,
-                                               :rn_update_project_textfields_from_organization]
+                                               :rn_update_project_textfields_from_organization,
+                                               :rn_update_attachment]
+    # Public attachment for drag&drop
+    $attachment = nil
+  
+    # Update attached file from drag&drop
+    def rn_update_attachment
+      if !$attachment.nil?
+        $attachment.destroy
+        $attachment = Attachment.new
+      end
+      $attachment.avatar = params[:file]
+      $attachment.id = 1
+      $attachment.save!
+      if $attachment.save
+        render json: { "image" => $attachment.avatar }
+      else
+        render json: { "image" => "" }
+      end
+    end
+
     # Update purchase order select at view from supplier select
     def rn_update_order_select_from_supplier
       supplier = params[:supplier]
@@ -417,6 +437,8 @@ module Ag2Products
     def new
       @breadcrumb = 'create'
       @receipt_note = ReceiptNote.new
+      $attachment = Attachment.new
+      destroy_attachment
       @orders = orders_dropdown
       @projects = projects_dropdown
       @work_orders = work_orders_dropdown
@@ -437,6 +459,8 @@ module Ag2Products
     def edit
       @breadcrumb = 'update'
       @receipt_note = ReceiptNote.find(params[:id])
+      $attachment = Attachment.new
+      destroy_attachment
       @orders = @receipt_note.supplier.blank? ? orders_dropdown : @receipt_note.supplier.purchase_orders.undelivered(@receipt_note.organization_id, true)
       @projects = projects_dropdown_edit(@receipt_note.project)
       @work_orders = @receipt_note.project.blank? ? work_orders_dropdown : @receipt_note.project.work_orders.order(:order_no)
@@ -459,12 +483,20 @@ module Ag2Products
       @breadcrumb = 'create'
       @receipt_note = ReceiptNote.new(params[:receipt_note])
       @receipt_note.created_by = current_user.id if !current_user.nil?
+      # Should use attachment from drag&drop?
+      if @receipt_note.attachment.blank? && !$attachment.avatar.blank?
+        @receipt_note.attachment = $attachment.avatar
+      end
   
       respond_to do |format|
         if @receipt_note.save
+          $attachment.destroy
+          $attachment = nil
           format.html { redirect_to @receipt_note, notice: crud_notice('created', @receipt_note) }
           format.json { render json: @receipt_note, status: :created, location: @receipt_note }
         else
+          $attachment.destroy
+          $attachment = Attachment.new
           @orders = orders_dropdown
           @projects = projects_dropdown
           @work_orders = work_orders_dropdown
@@ -486,13 +518,21 @@ module Ag2Products
       @breadcrumb = 'update'
       @receipt_note = ReceiptNote.find(params[:id])
       @receipt_note.updated_by = current_user.id if !current_user.nil?
+      # Should use attachment from drag&drop?
+      if $attachment != nil && !$attachment.avatar.blank? && $attachment.updated_at > @receipt_note.updated_at
+        @receipt_note.attachment = $attachment.avatar
+      end
   
       respond_to do |format|
         if @receipt_note.update_attributes(params[:receipt_note])
+          destroy_attachment
+          $attachment = nil
           format.html { redirect_to @receipt_note,
                         notice: (crud_notice('updated', @receipt_note) + "#{undo_link(@receipt_note)}").html_safe }
           format.json { head :no_content }
         else
+          destroy_attachment
+          $attachment = Attachment.new
           @orders = @receipt_note.supplier.blank? ? orders_dropdown : @receipt_note.supplier.purchase_orders.undelivered(@receipt_note.organization_id, true)
           @projects = projects_dropdown_edit(@receipt_note.project)
           @work_orders = @receipt_note.project.blank? ? work_orders_dropdown : @receipt_note.project.work_orders.order(:order_no)
@@ -530,6 +570,12 @@ module Ag2Products
     end
     
     private
+    
+    def destroy_attachment
+      if $attachment != nil
+        $attachment.destroy        
+      end
+    end
     
     def current_projects_for_index(_projects)
       _current_projects = []

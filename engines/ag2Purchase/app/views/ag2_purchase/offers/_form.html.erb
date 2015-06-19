@@ -16,6 +16,8 @@
     if ($('#offer_offer_date').val() == "") {
       $('#offer_offer_date').datepicker('setValue', es_date(new Date()));
     }
+    // Setup drag & drop
+    dd_import_files('#dd_files', '#image_content', 'of_update_attachment');
 
     // Save default text color
     text_field_color = $("#offer_offer_no").css('color')
@@ -46,6 +48,11 @@
   });
   
   jQuery(function($) {
+    // when the #ticket_attachment field changes
+    $("#ticket_attachment").change(function() {
+      readImageFromInput(this, '#dd_files');
+    });
+
     // when the #offer_offer_no field changes
     $("#offer_offer_no").change(function() {
       var order = $('#offer_offer_no').val();
@@ -530,6 +537,24 @@
 <%= render 'items_table', f: f %>
 <!-- Remarks -->
 <%= f.input :remarks, as: :text, input_html: { class: 'x-large-text-field', rows: 3 }, label_html: { class: 'form-label' } %>
+<!-- Attachment -->
+<table class="form-table">
+  <tbody>
+    <tr class="form-tr">
+      <td class="form-td-two left-winged"> <%= f.input :attachment, as: :file, input_html: { accept: 'image/*' }, label_html: { class: 'form-label' } %> </td>
+      <td class="form-td-two right-winged">
+      <div id="dd_files">
+        <% if !@offer.attachment_file_name.nil? %>
+          <span id="image_text"></span>
+          <img id="image_content" src="<%= @offer.attachment.url %>">
+        <% else %>
+          <span id="image_text"><%= t 'dd_image_message' %></span>
+          <img id="image_content" hidden>
+        <% end %>
+      </div></td>
+    </tr>
+  </tbody>
+</table>
 <!-- Buttons -->
 <%= f.button :submit, class: 'btn-primary', id: 'submit_btn' %>
 <% end %>
