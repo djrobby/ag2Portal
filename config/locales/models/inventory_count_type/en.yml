@@ -1,0 +1,12 @@
+en:
+  activerecord:
+    models:
+      inventory_count_type:
+        zero:  Inventory count types
+        one:   Inventory count type
+        few:   Inventory count types
+        other: Inventory count types
+        check_for_inventory_counts: "Count type cannot be destroyed while linked inventory counts exist."
+    attributes:
+      inventory_count_type:
+        name: "Name"

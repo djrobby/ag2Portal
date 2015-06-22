@@ -1,0 +1,12 @@
+es:
+  activerecord:
+    models:
+      inventory_count_type:
+        zero:  Tipos de recuento de inventario
+        one:   Tipo de recuento de inventario
+        few:   Tipos de recuento de inventario
+        other: Tipos de recuento de inventario
+        check_for_charge_accounts: "Tipo de recuento no puede ser eliminado mientras existan recuentos de inventario vinculados."
+    attributes:
+      inventory_count_type:
+        name: "Nombre"
