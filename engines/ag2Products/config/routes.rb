@@ -196,6 +196,7 @@ Ag2Products::Engine.routes.draw do
     resources :delivery_notes
     resources :receipt_notes
     resources :inventory_count_types
+    resources :inventory_counts
 
     # Root
     root :to => 'home#index'

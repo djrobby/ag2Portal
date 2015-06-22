@@ -1,0 +1,19 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  count_no: MyString
+  count_date: 2015-06-22
+  inventory_count_type: 
+  store: 
+  product_family: 
+  organization: 
+  remarks: MyString
+
+two:
+  count_no: MyString
+  count_date: 2015-06-22
+  inventory_count_type: 
+  store: 
+  product_family: 
+  organization: 
+  remarks: MyString

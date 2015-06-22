@@ -1,4 +1,6 @@
 class DeliveryNote < ActiveRecord::Base
+  include ModelsModule
+  
   belongs_to :client
   belongs_to :payment_method
   belongs_to :project
@@ -41,7 +43,7 @@ class DeliveryNote < ActiveRecord::Base
   def full_name
     full_name = full_no
     if !self.delivery_date.blank?
-      full_name += " " + self.delivery_date.to_s
+      full_name += " " + formatted_date(self.delivery_date)
     end
     if !self.work_order.blank?
       full_name += " " + self.work_order.full_name
@@ -56,7 +58,7 @@ class DeliveryNote < ActiveRecord::Base
   def partial_name
     partial_name = full_no
     if !self.delivery_date.blank?
-      full_name += " " + self.delivery_date.to_s
+      full_name += " " + formatted_date(self.delivery_date)
     end
     partial_name
   end

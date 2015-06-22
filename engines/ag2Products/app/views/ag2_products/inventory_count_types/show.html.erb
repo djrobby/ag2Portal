@@ -1,5 +1,21 @@
-<p id="notice"><%= notice %></p>
+<%= render '/layouts/ag2_products/ctypesbreadcrumb' %>
 
+<h3><%=t '.title' %></h3>
+<table class="table">
+  <tbody>
+    <tr>
+      <td>Id:</td>
+      <td><%= @inventory_count_type.id %></td>
+      <td><%=t 'activerecord.attributes.inventory_count_type.name' %>:</td>
+      <td><%= @inventory_count_type.name %></td>
+    </tr>
+    <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @inventory_count_type } %>
+    <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @inventory_count_type } %>
+  </tbody>
+</table>
 
-<%= link_to 'Edit', edit_inventory_count_type_path(@inventory_count_type) %> |
-<%= link_to 'Back', inventory_count_types_path %>
+<%= render partial: '/layouts/crud/update_new', locals:
+{ model: InventoryCountType, update_path: edit_inventory_count_type_path(@inventory_count_type), update_txt: t('.btn_edit'),
+new_path: new_inventory_count_type_path, new_txt: t('ag2_products.inventory_count_types.index.btn_new') } %>
+
+<%= link_to t("ag2_products.inventory_count_types.back_to_main_page"), inventory_count_types_path %>

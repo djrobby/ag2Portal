@@ -1,5 +1,7 @@
-<h1>New inventory_count_type</h1>
+<%= render '/layouts/ag2_products/ctypesbreadcrumb' %>
+
+<h3><%=t '.title' %></h3>
 
 <%= render 'form' %>
 
-<%= link_to 'Back', inventory_count_types_path %>
+<%= link_to t("ag2_products.inventory_count_types.back_to_main_page"), inventory_count_types_path %>

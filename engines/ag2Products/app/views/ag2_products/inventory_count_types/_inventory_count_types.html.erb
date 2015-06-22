@@ -1,0 +1,31 @@
+<script>
+  $(document).ready(function() {
+    $("#div_table th a, #div_table #pages a").on("click", function() {
+      $.getScript(this.href);
+      return false;
+    });
+  }); 
+</script>
+
+<table class="table table-condensed table-striped">
+  <thead>
+    <tr>
+      <th><%= sortable "id", 'Id' %></th>
+      <th><%= sortable "name", t('activerecord.attributes.inventory_count_type.name') %></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @inventory_count_types.each do |m| %>
+    <tr>
+      <td><%= m.id %></td>
+      <td><%= link_to m.name, m %></td>
+      <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => InventoryCountType, :path => edit_inventory_count_type_path(m) } %>
+      <%= render :partial => '/layouts/crud/delete', :locals => { :model => InventoryCountType, :path => m, :msg => t("activerecord.models.inventory_count_type.one"), :txt => m.name } unless m.id < 3 %> </td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @inventory_count_types } %>
+<%= render :partial => '/layouts/crud/new', :locals => { :model => InventoryCountType, :path => new_inventory_count_type_path, :txt => t("ag2_products.inventory_count_types.index.btn_new") } %>
+<%= link_to t("ag2_products.product_types.index.back_to_root"), ag2_products.root_path %>

@@ -82,3 +82,7 @@ es:
           attributes:
             attachment:
               attachment_invalid: "inválido (debe ser JPG, PNG, GIF o BMP)"
+        inventory_count:
+          attributes:
+            count_no:
+              code_invalid: "inválido"

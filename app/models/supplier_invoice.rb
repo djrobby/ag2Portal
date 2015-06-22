@@ -1,4 +1,6 @@
 class SupplierInvoice < ActiveRecord::Base
+  include ModelsModule
+  
   belongs_to :supplier
   belongs_to :payment_method
   belongs_to :project
@@ -49,7 +51,7 @@ class SupplierInvoice < ActiveRecord::Base
       full_name += self.invoice_no
     end
     if !self.invoice_date.blank?
-      full_name += " " + self.invoice_date.to_s
+      full_name += " " + formatted_date(self.invoice_date)
     end
     if !self.supplier.blank?
       full_name += " " + self.supplier.full_name

@@ -1,0 +1,18 @@
+en:
+  ag2_products:
+    inventory_count_types:
+      index:
+        title: "Inventory count types"
+        btn_new: "New Count type"
+        back_to_root: "Back to ag2Logistics"
+      show:
+        title: "Inventory count type"
+        btn_edit: "Edit Count type"
+        btn_delete: "Delete Count type"
+        return_to: "Back to Product type"
+      edit:
+        title: "Edit Inventory count type"
+        btn_show: "Show Inventory count type"
+      new:
+        title: "New Inventory count type"
+      back_to_main_page: "Back to Inventory count types"

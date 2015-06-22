@@ -1,21 +1,6 @@
-<h1>Listing inventory_count_types</h1>
+<%= render '/layouts/ag2_products/ctypesbreadcrumb' %>
 
-<table>
-  <tr>
-    <th></th>
-    <th></th>
-    <th></th>
-  </tr>
-
-<% @inventory_count_types.each do |inventory_count_type| %>
-  <tr>
-    <td><%= link_to 'Show', inventory_count_type %></td>
-    <td><%= link_to 'Edit', edit_inventory_count_type_path(inventory_count_type) %></td>
-    <td><%= link_to 'Destroy', inventory_count_type, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-  </tr>
-<% end %>
-</table>
-
-<br />
-
-<%= link_to 'New Inventory count type', new_inventory_count_type_path %>
+<h3><%=t '.title' %></h3>
+<div class="span6" id="div_table">
+  <%= render 'inventory_count_types' %>
+</div>

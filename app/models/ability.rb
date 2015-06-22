@@ -307,6 +307,10 @@ class Ability
       can :crud, ReceiptNoteItem
       can :crud, Store
       can :crud, Stock
+      #can :crud, InventoryCountType
+      can :read, InventoryCountType
+      can :crud, InventoryCount
+      can :crud, InventoryCountItem
     elsif user.has_role? :ag2Logistics_Guest
       can :read, DeliveryNote
       can :read, DeliveryNoteItem
@@ -321,7 +325,9 @@ class Ability
       can :read, ReceiptNote
       can :read, ReceiptNoteItem
       can :read, Store
-      can :read, Stock
+      can :read, InventoryCountType
+      can :read, InventoryCount
+      can :read, InventoryCountItem
     elsif user.has_role? :ag2Logistics_Banned
       cannot :manage, DeliveryNote
       cannot :manage, DeliveryNoteItem
@@ -337,6 +343,9 @@ class Ability
       cannot :manage, ReceiptNoteItem
       cannot :manage, Store
       cannot :manage, Stock
+      cannot :manage, InventoryCountType
+      cannot :manage, InventoryCount
+      cannot :manage, InventoryCountItem
     end
     # ag2Tech
     if user.has_role? :ag2Tech_User

@@ -34,3 +34,6 @@ es:
       receipt_notes:
         items: "Notas de recepción"
         item: "Recepción"
+      ctypes:
+        items: "Tipos de recuento de inventario"
+        item: "Tipo"

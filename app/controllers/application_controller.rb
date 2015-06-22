@@ -536,6 +536,24 @@ end
     end
     code
   end
+  
+  # Inventory count no
+  def ic_next_no(store)
+    year = Time.new.year
+    code = ''
+    store = store.to_s if store.is_a? Fixnum
+    store = store.rjust(4, '0')
+    year = year.to_s if year.is_a? Fixnum
+    year = year.rjust(4, '0')
+    last_no = InventoryCount.where("count_no LIKE ?", "#{st}#ore{year}%").order(:count_no).maximum(:count_no)
+    if last_no.nil?
+      code = store + year + '000001'
+    else
+      last_no = last_no[14..19].to_i + 1
+      code = store + year + last_no.to_s.rjust(6, '0')
+    end
+    code
+  end
 
   #
   # Privates

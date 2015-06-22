@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150622124701) do
+ActiveRecord::Schema.define(:version => 20150622171428) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -629,11 +629,48 @@ ActiveRecord::Schema.define(:version => 20150622124701) do
   add_index "insurances", ["name"], :name => "index_insurances_on_name"
   add_index "insurances", ["organization_id"], :name => "index_insurances_on_organization_id"
 
+  create_table "inventory_count_items", :force => true do |t|
+    t.integer  "inventory_count_id"
+    t.integer  "product_id"
+    t.decimal  "quantity",           :precision => 12, :scale => 4, :default => 0.0, :null => false
+    t.datetime "created_at",                                                         :null => false
+    t.datetime "updated_at",                                                         :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  add_index "inventory_count_items", ["inventory_count_id"], :name => "index_inventory_count_items_on_inventory_count_id"
+  add_index "inventory_count_items", ["product_id"], :name => "index_inventory_count_items_on_product_id"
+
   create_table "inventory_count_types", :force => true do |t|
     t.string   "name"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
   end
+
+  create_table "inventory_counts", :force => true do |t|
+    t.string   "count_no"
+    t.date     "count_date"
+    t.integer  "inventory_count_type_id"
+    t.integer  "store_id"
+    t.integer  "product_family_id"
+    t.integer  "organization_id"
+    t.string   "remarks"
+    t.datetime "created_at",              :null => false
+    t.datetime "updated_at",              :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  add_index "inventory_counts", ["count_date"], :name => "index_inventory_counts_on_count_date"
+  add_index "inventory_counts", ["count_no"], :name => "index_inventory_counts_on_count_no"
+  add_index "inventory_counts", ["inventory_count_type_id"], :name => "index_inventory_counts_on_inventory_count_type_id"
+  add_index "inventory_counts", ["organization_id", "count_no"], :name => "index_inventory_counts_on_organization_id_and_count_no", :unique => true
+  add_index "inventory_counts", ["organization_id"], :name => "index_inventory_counts_on_organization_id"
+  add_index "inventory_counts", ["product_family_id"], :name => "index_inventory_counts_on_product_family_id"
+  add_index "inventory_counts", ["store_id"], :name => "index_inventory_counts_on_store_id"
 
   create_table "ledger_accounts", :force => true do |t|
     t.string   "code"

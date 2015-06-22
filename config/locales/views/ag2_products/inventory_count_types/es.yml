@@ -1,0 +1,18 @@
+es:
+  ag2_products:
+    inventory_count_types:
+      index:
+        title: "Tipos de recuento de inventario"
+        btn_new: "Nuevo Tipo de recuento"
+        back_to_root: "Volver a ag2Logistics"
+      show:
+        title: "Tipo de recuento de inventario"
+        btn_edit: "Editar Tipo de recuento"
+        btn_delete: "Borrar Tipo de recuento"
+        return_to: "Volver a Tipo de producto"
+      edit:
+        title: "Editar Tipo de recuento de inventario"
+        btn_show: "Ver Tipo de recuento de inventario"
+      new:
+        title: "Nuevo Tipo de recuento de inventario"
+      back_to_main_page: "Volver a Tipos de recuento de inventario"

@@ -34,3 +34,6 @@ en:
       receipt_notes:
         items: "Receipt notes"
         item: "Note"
+      ctypes:
+        items: "Inventory count types"
+        item: "Type"
