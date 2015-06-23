@@ -31,6 +31,7 @@ class Organization < ActiveRecord::Base
   has_many :stores
   has_many :delivery_notes
   has_many :receipt_notes
+  has_many :inventory_counts
   # purchase
   has_many :suppliers
   has_many :payment_methods

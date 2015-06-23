@@ -1,0 +1,29 @@
+en:
+  ag2_products:
+    inventory_counts:
+      index:
+        title: "Inventory counts"
+        btn_new: "New Inventory count"
+        back_to_root: "Back to ag2Logistics"
+        label_others: "Others"
+        btn_apply: "Apply Filter"
+      show:
+        title: "Inventory count"
+        btn_edit: "Edit Inventory count"
+        btn_delete: "Delete Inventory count"
+        print: "Print"
+      edit:
+        title: "Edit Inventory count"
+        btn_show: "Show Inventory count"
+      new:
+        title: "New Inventory count"
+      back_to_main_page: "Back to Inventory counts"
+      generate_code_btn: "Inventory count No."
+      no_error: "Unable to generate Inventory count No.: No Store chosen."
+      items_info: "Inventory count Items"
+      delete_item: "Delete this Item"
+      add_item: "Add new Item"
+      add_item_to: "Count %{var}"
+      btn_new_item: "New Item"
+      btn_add_item: "Add"
+      item_error: "can't be blank"

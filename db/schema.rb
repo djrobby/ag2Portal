@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150622171428) do
+ActiveRecord::Schema.define(:version => 20150623091945) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -662,6 +662,7 @@ ActiveRecord::Schema.define(:version => 20150622171428) do
     t.datetime "updated_at",              :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
+    t.boolean  "confirmed"
   end
 
   add_index "inventory_counts", ["count_date"], :name => "index_inventory_counts_on_count_date"

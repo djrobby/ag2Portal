@@ -1,6 +1,8 @@
-<h1>Editing inventory_count</h1>
+<%= render '/layouts/ag2_products/icountsbreadcrumb' %>
+
+<h3><%=t '.title' %></h3>
 
 <%= render 'form' %>
 
-<%= link_to 'Show', @inventory_count %> |
-<%= link_to 'Back', inventory_counts_path %>
+<%= link_to t(".btn_show"), @inventory_count %> |
+<%= link_to t("ag2_products.inventory_counts.back_to_main_page"), inventory_counts_path %>

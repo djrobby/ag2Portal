@@ -1,0 +1,36 @@
+<tr>
+  <td></td>
+  <td align="right"><%= t :"activerecord.attributes.delivery_note.quantity" %> | <%= t :"activerecord.attributes.delivery_note.subtotal" %></td>
+  <td align="right"><%= number_with_precision(note.quantity, precision: 4) unless note.quantity.blank? %></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td align="right"><%= number_with_precision(note.subtotal, precision: 4) unless note.subtotal.blank? %></td>
+  <td></td>
+</tr>
+<tr>
+  <td></td>
+  <td align="right"><%= t :"activerecord.attributes.delivery_note.bonus" %> | <%= t :"activerecord.attributes.delivery_note.taxable" %> | <%= t :"activerecord.attributes.delivery_note.taxes" %></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td align="right"><%= number_with_precision(note.discount_pct, precision: 2) unless note.discount_pct.blank? %></td>
+  <td align="right"><%= number_with_precision(note.bonus, precision: 4) unless note.bonus.blank? %></td>
+  <td align="right"><%= number_with_precision(note.taxable, precision: 4) unless note.taxable.blank? %></td>
+  <td align="right"><%= number_with_precision(note.taxes, precision: 4) unless note.taxes.blank? %></td>
+</tr>
+<tr class="totals">
+  <td></td>
+  <td align="right"><%= t :"activerecord.attributes.delivery_note.item_costs" %> | <%= t :"activerecord.attributes.delivery_note.total" %></td>
+  <td></td>
+  <td></td>
+  <td align="right"><%= number_with_precision(note.costs, precision: 4) unless note.costs.blank? %></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td align="right"><%= number_with_precision(note.total, precision: 4) unless note.total.blank? %></td>
+  <td></td>
+</tr>

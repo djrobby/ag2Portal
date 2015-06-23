@@ -1,0 +1,35 @@
+<script>
+  $(document).ready(function() {
+    $("#div_table th a, #div_table #pages a").on("click", function() {
+      $.getScript(this.href);
+      return false;
+    });
+  }); 
+</script>
+
+<table class="table table-condensed table-striped shrinked">
+  <thead>
+    <tr>
+      <th><%= t 'activerecord.attributes.inventory_count.count_no' %></th>
+      <th align="center"><%= t 'activerecord.attributes.inventory_count.count_date' %></th>
+      <th><%= t 'activerecord.attributes.inventory_count.store' %></th>
+      <th><%= t 'activerecord.attributes.inventory_count.product_family' %></th>
+      <th align="right"><%= t 'activerecord.attributes.inventory_count.quantity' %></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @inventory_counts.each do |note| %>
+    <tr>
+      <td><%= link_to note.full_no, note %></td>
+      <td align="center"><%= formatted_date(note.count_date) unless note.count_date.blank? %></td>
+      <td><%= note.store.name unless note.store.blank? %></td>
+      <td><%= note.product_family.full_name unless note.product_family.blank? %></td>
+      <td align="right"><%= number_with_precision(note.quantity, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless note.quantity.blank? %></td>
+      <td> <%= render :partial => '/layouts/crud/edit', :locals => { :model => InventoryCount, :path => edit_inventory_count_path(note) } %>
+      <%= render :partial => '/layouts/crud/delete', :locals => { :model => InventoryCount, :path => note, :msg => t("activerecord.models.inventory_count.one"), :txt => note.count_no } %> </td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @inventory_counts } %>

@@ -1,0 +1,29 @@
+es:
+  ag2_products:
+    inventory_counts:
+      index:
+        title: "Recuentos de inventario"
+        btn_new: "Nuevo Recuento de inventario"
+        back_to_root: "Volver a ag2Logistics"
+        label_others: "Otros"
+        btn_apply: "Aplicar Filtro"
+      show:
+        title: "Recuento de inventario"
+        btn_edit: "Editar Recuento de inventario"
+        btn_delete: "Borrar Recuento de inventario"
+        print: "Imprimir"
+      edit:
+        title: "Editar Recuento de inventario"
+        btn_show: "Ver Recuento de inventario"
+      new:
+        title: "Nuevo Recuento de inventario"
+      back_to_main_page: "Volver a Recuentos de inventario"
+      generate_code_btn: "Nº de Recuento de inventario"
+      no_error: "Imposible generar Nº de Recuento: No has elegido Almacén."
+      items_info: "Items del Recuento de inventario"
+      delete_item: "Borrar este Item"
+      add_item: "Agregar nuevo Item"
+      add_item_to: "Recuento %{var}"
+      btn_new_item: "Nuevo Item"
+      btn_add_item: "Agregar"
+      item_error: "no puede estar en blanco"

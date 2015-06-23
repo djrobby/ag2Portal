@@ -1,0 +1,22 @@
+es:
+  activerecord:
+    models:
+      inventory_count:
+        zero:  Recuentos de inventario
+        one:   Recuento de inventario
+        few:   Recuentos de inventario
+        other: Recuentos de inventario
+    attributes:
+      inventory_count:
+        count_no: "Nº"
+        store: "Almacén"
+        store_id: "Almacén"
+        product_family: "Familia"
+        product_family_id: "Familia"
+        organization: "Organización"
+        organization_id: "Organización"
+        count_date: "Fecha"
+        remarks: "Comentarios"
+        office: "Oficina"
+        company: "Empresa"
+        quantity: "Artículos"
