@@ -14,6 +14,7 @@ es:
         check_for_offer_requests: "Almacén no puede ser eliminada mientras existan solicitudes vinculadas."
         check_for_offers: "Almacén no puede ser eliminada mientras existan ofertas vinculadas."
         check_for_sale_offers: "Almacén no puede ser eliminada mientras existan presupuestos vinculados."
+        check_for_counts: "Almacén no puede ser eliminada mientras existan recuentos de inventario vinculados."
     attributes:
       store:
         name: "Nombre"

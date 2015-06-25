@@ -14,6 +14,7 @@ en:
         check_for_offer_requests: "Store cannot be destroyed while linked requests exist."
         check_for_offers: "Store cannot be destroyed while linked offers exist."
         check_for_sale_offers: "Store cannot be destroyed while linked offers exist."
+        check_for_counts: "Store cannot be destroyed while linked inventory counts exist."
     attributes:
       store:
         name: "Name"

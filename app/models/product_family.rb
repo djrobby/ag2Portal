@@ -13,6 +13,7 @@ class ProductFamily < ActiveRecord::Base
   validates :organization,  :presence => true
 
   has_many :products
+  has_many :stocks, :through => :products
 
   before_validation :fields_to_uppercase
 
@@ -36,6 +37,24 @@ class ProductFamily < ActiveRecord::Base
       full_name += " " + self.name[0,40]
     end
     full_name
+  end
+  
+  #
+  # Calculated fields
+  #
+  def stock
+    stocks.sum("current")
+  end
+
+  def stock_by_store(_store)
+    stocks.where("store_id = ?", _store).sum("current")
+  end
+
+  #
+  # Class (self) user defined methods
+  #
+  def self.by_store(_store)
+    joins(:stocks).where("store_id = ?", _store).group("product_families.family_code") 
   end
 
   private

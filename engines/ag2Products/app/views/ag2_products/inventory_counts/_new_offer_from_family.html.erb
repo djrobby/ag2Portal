@@ -1,0 +1,78 @@
+<!-- Modal -->
+<script>
+  jQuery(function($) {
+    $('#btn_accept').click(function() {
+      var store = $('#Store_ :selected').val();
+      var family = $('#Family_ :selected').val();
+      if ((store == "") || (family == "")) {
+        // Error
+        alert('<%= I18n.t(:mandatory_subtitle) %>');
+        return false;
+      }
+      // make the POST call
+      jQuery.getJSON('of_generate_count/' + store + '/' + family, function(data) {
+        // AJAX refresh index table is necessary
+        $(".icon-refresh-link").click();
+        // Go on based on result
+        if (data.code == "$err") {
+          alert('<%= I18n.t("ag2_products.inventory_counts.generate_count_error") %>');
+        } else if (data.code == "$write") {
+          alert('<%= I18n.t("ag2_products.inventory_counts.generate_count_write") %>');
+        } else {
+          // Hide the modal and exit
+          alert(data.code);
+          $("#new-offer-from-family").modal('hide');
+          //window.location = "<%= ag2_products.inventory_counts_path %>";
+        }
+      });
+      return false;
+    });
+
+    // when the #Supplier_ field changes
+    $("#Store_").change(function() {
+      // make a POST call and replace the content
+      var store = $('#Store_ :selected').val();
+      if (store == "") store = 0;
+      jQuery.getJSON('of_update_family_select_from_store/' + store, function(data) {
+        var r = data.product_families;
+        $("#Family_").html("");
+        $("#Family_").select2("val", "");
+        $("#Family_").append($('<option></option>').val("").html(""));
+        if (!r.length) {
+          $.each(data, function(id, option) {
+            if (id == 'product_families' && option != "") {
+              $("#Family_").append($('<option></option>').val(option.id).html(option.family_code + " " + option.name.substring(0,41)));
+            }
+          });
+        } else {
+          $.each(r, function(id, option) {
+            $("#Family_").append($('<option></option>').val(option.id).html(option.family_code + " " + option.name.substring(0,41)));
+          });
+        }
+      });
+      // AJAX refresh index table is necessary
+      $(".icon-refresh-link").click();
+      return false;
+    });
+  });
+</script>
+
+<div id="new-offer-from-family" class="modal hide fade" data-backdrop="static" style="display: none;">
+  <div class="modal-header">
+    <a class="close" data-dismiss="modal">&#215;</a>
+    <h3><%= t('ag2_purchase.offers.index.btn_new_from_family') %></h3>
+    <span class="shrinked"><%= I18n.t(:mandatory_subtitle) %></span>
+  </div>
+  <div class="modal-body">
+    <!-- Store -->
+    <label for="Store_" class="form-label"> <abbr title="requerido">*</abbr> <%= I18n.t("activerecord.attributes.inventory_count.store") %></label>
+    <%= select_tag "Store_", options_from_collection_for_select(@stores, "id", "name"), :prompt => "", :class => 'x-large-text-field nsel2' %>
+    <!-- Family -->
+    <label for="Family_" class="form-label-under-sel2"> <abbr title="requerido">*</abbr> <%= I18n.t("activerecord.attributes.inventory_count.product_family") %></label>
+    <%= select_tag "Family_", options_from_collection_for_select(@families, "id", "full_name"), :prompt => "", :class => 'x-large-text-field nsel2' %>
+  </div>
+  <div class="modal-footer">
+    <a class="btn btn-primary" href="#" id="btn_accept"><%= t :generate %></a>
+    <a class="btn btn-primary" data-dismiss="modal" href="#" id="btn_close"><%= t :close_button %></a>
+  </div>
+</div>

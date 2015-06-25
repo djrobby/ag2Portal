@@ -4,6 +4,7 @@ es:
       index:
         title: "Recuentos de inventario"
         btn_new: "Nuevo Recuento de inventario"
+        btn_new_from_request: "Nuevo Recuento para Familia"
         back_to_root: "Volver a ag2Logistics"
         label_others: "Otros"
         btn_apply: "Aplicar Filtro"
@@ -27,3 +28,6 @@ es:
       btn_new_item: "Nuevo Item"
       btn_add_item: "Agregar"
       item_error: "no puede estar en blanco"
+      generate_count_error: "Imposible generar Recuento de inventario: Almacén o Familia inválida."
+      generate_count_write: "Imposible guardar nuevo Recuento de inventario."
+      generate_count_ok: "Recuento de inventario %{var} ha sido generado."

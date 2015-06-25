@@ -26,6 +26,7 @@ class Product < ActiveRecord::Base
   has_many :sale_offer_items
   has_many :vehicles
   has_many :tools
+  has_many :inventory_count_items
 
   has_paper_trail
 
@@ -288,6 +289,11 @@ class Product < ActiveRecord::Base
     # Check for tools
     if tools.count > 0
       errors.add(:base, I18n.t('activerecord.models.product.check_for_tools'))
+      return false
+    end
+    # Check for inventory count items
+    if inventory_count_items.count > 0
+      errors.add(:base, I18n.t('activerecord.models.product.check_for_counts'))
       return false
     end
   end

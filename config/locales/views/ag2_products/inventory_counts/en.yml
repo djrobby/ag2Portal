@@ -4,6 +4,7 @@ en:
       index:
         title: "Inventory counts"
         btn_new: "New Inventory count"
+        btn_new_from_family: "New Count for Family"
         back_to_root: "Back to ag2Logistics"
         label_others: "Others"
         btn_apply: "Apply Filter"
@@ -27,3 +28,6 @@ en:
       btn_new_item: "New Item"
       btn_add_item: "Add"
       item_error: "can't be blank"
+      generate_count_error: "Inventory count can not be generated: Store or Family invalid."
+      generate_count_write: "Unable to save new Inventory count."
+      generate_count_ok: "Inventory count %{var} has been generated."

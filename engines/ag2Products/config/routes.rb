@@ -176,6 +176,20 @@ Ag2Products::Engine.routes.draw do
     match 'purchase_orders/po_update_selects_from_offer/:o', :controller => 'purchase_orders', :action => 'po_update_selects_from_offer'
     match 'po_update_selects_from_offer/:o', :controller => 'purchase_orders', :action => 'po_update_selects_from_offer'
     match 'purchase_orders/:id/po_update_selects_from_offer/:o', :controller => 'purchase_orders', :action => 'po_update_selects_from_offer'
+    #
+    # Inventory counts 
+    match 'inventory_counts/ic_totals/:qty', :controller => 'inventory_counts', :action => 'ic_totals'
+    match 'ic_totals/:qty', :controller => 'inventory_counts', :action => 'ic_totals'
+    match 'delivery_notes/:id/ic_totals/:qty', :controller => 'inventory_counts', :action => 'ic_totals'
+    match 'inventory_counts/ic_update_family_select_from_store/:store', :controller => 'inventory_counts', :action => 'ic_update_family_select_from_store'
+    match 'ic_update_family_select_from_store/:store', :controller => 'inventory_counts', :action => 'ic_update_family_select_from_store'
+    match 'inventory_counts/:id/ic_update_family_select_from_store/:store', :controller => 'inventory_counts', :action => 'ic_update_family_select_from_store'
+    match 'inventory_counts/ic_generate_count/:store/:family', :controller => 'inventory_counts', :action => 'ic_generate_count'
+    match 'ic_generate_count/:store/:family', :controller => 'inventory_counts', :action => 'ic_generate_count'
+    match 'inventory_counts/:id/ic_generate_count/:store/:family', :controller => 'inventory_counts', :action => 'ic_generate_count'
+    match 'inventory_counts/ic_generate_no/:store', :controller => 'inventory_counts', :action => 'ic_generate_no'
+    match 'ic_generate_no/:store', :controller => 'inventory_counts', :action => 'ic_generate_no'
+    match 'inventory_counts/:id/ic_generate_no/:store', :controller => 'inventory_counts', :action => 'ic_generate_no'
 
     # Resources
     resources :product_families

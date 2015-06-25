@@ -18,6 +18,7 @@ en:
         check_for_sale_offers: "Product cannot be destroyed while linked offers exist."
         check_for_vehicles: "Product cannot be destroyed while linked vehicles exist."
         check_for_tools: "Product cannot be destroyed while linked tools exist."
+        check_for_counts: "Product cannot be destroyed while linked inventory counts exist."
     attributes:
       product:
         product_code: "Code"

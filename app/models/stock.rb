@@ -70,6 +70,10 @@ class Stock < ActiveRecord::Base
   def self.find_by_product_all_stocks(_product)
     Stock.includes(:store).where("product_id = ?", _product) 
   end
+
+  def self.find_by_store_and_family(_store, _family)
+    joins(:product).where("store_id = ? AND products.product_family_id = ?", _store, _family) 
+  end
   
   searchable do
     integer :product_id

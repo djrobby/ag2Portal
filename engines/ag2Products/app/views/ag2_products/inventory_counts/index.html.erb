@@ -7,6 +7,10 @@
       dropdownCssClass: 'shrinked',
       dropdownAutoWidth: true
     });
+    $('.nsel2').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      allowClear: true
+    });
     // Initialized form variable
     _thisForm = $("#Store").closest('form')[0];
   }); 
@@ -29,6 +33,11 @@
       // AJAX
       $("#submit_btn").trigger("click");
     });
+
+    // when the #new_from_family field changes
+    $("#new_from_family").click(function() {
+      $("#new-offer-from-family").modal('show');
+    });
   });
 </script>
 
@@ -40,6 +49,9 @@
 
     <div class="span3">
       <div class="well sidebar-nav">
+        <!-- Refresh -->
+        <%= link_to ag2_products.inventory_counts_path, title: I18n.t(:refresh), class: "icon-refresh-link", remote: true do %> <i class="icon-refresh"></i> <% end %>
+        <!-- Search form -->
         <%= form_tag "inventory_counts", :method => 'get', :remote => true do %>
         <!-- No -->
         <%= label_tag I18n.t("activerecord.attributes.inventory_count.count_no"), nil, :class => 'form-label' %>
@@ -60,6 +72,8 @@
         <% end %>
         <!-- Buttons -->
         <%= render :partial => '/layouts/crud/new', :locals => { :model => InventoryCount, :path => new_inventory_count_path, :txt => t(".btn_new") } %>
+        <button id="new_from_family" type="button" class="btn btn-warning" data-dismiss="modal" aria-hidden="true"><%= t(".btn_new_from_family") %></button>
+        <br /><br />
         <%= link_to t(".back_to_root"), ag2_products.root_path %>
       </div><!-- /.sidebar-nav -->
     </div><!-- /.span3 -->

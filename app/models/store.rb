@@ -28,6 +28,7 @@ class Store < ActiveRecord::Base
   has_many :offers_items
   has_many :sale_offers
   has_many :sale_offer_items
+  has_many :inventory_counts
 
   has_paper_trail
 
@@ -258,6 +259,11 @@ class Store < ActiveRecord::Base
     # Check for sale offer items
     if sale_offer_items.count > 0
       errors.add(:base, I18n.t('activerecord.models.store.check_for_sale_offers'))
+      return false
+    end
+    # Check for inventory counts
+    if inventory_counts.count > 0
+      errors.add(:base, I18n.t('activerecord.models.store.check_for_counts'))
       return false
     end
   end
