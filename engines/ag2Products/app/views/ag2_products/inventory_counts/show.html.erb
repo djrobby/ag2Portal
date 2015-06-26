@@ -1,5 +1,105 @@
-<p id="notice"><%= notice %></p>
+<script>
+  jQuery(function($) {
+    // when #print_report_btn is clicked
+    $("#print_report_btn").click(function() {
+      // make a POST call and get report
+      var id = $('#id').html();
+      if (id == "")
+        return;
+      window.open("inventory_count_form.pdf?id=" + id, "_blank");
+      return false;
+    });
+  });  
+</script>
 
+<%= render '/layouts/ag2_products/icountsbreadcrumb' %>
 
-<%= link_to 'Edit', edit_inventory_count_path(@inventory_count) %> |
-<%= link_to 'Back', inventory_counts_path %>
+<h3><%=t '.title' %></h3>
+<table class="table">
+  <tbody>
+    <tr>
+      <td>Id:</td>
+      <td id="id"><%= @inventory_count.id %></td>
+      <td><%=t 'activerecord.attributes.inventory_count.count_no' %>:</td>
+      <td><b><%= @inventory_count.full_no %></b></td>
+    </tr>
+    <tr>
+      <td><%=t 'activerecord.attributes.inventory_count.count_date' %>:</td>
+      <td><%= formatted_date(@inventory_count.count_date) unless @inventory_count.count_date.blank? %></td>
+      <td><%=t 'activerecord.attributes.inventory_count.inventory_count_type' %>:</td>
+      <td><%= @inventory_count.inventory_count_type.name unless @inventory_count.inventory_count_type.blank? %></td>
+    </tr>
+    <tr>
+      <td><%=t 'activerecord.attributes.inventory_count.store' %>:</td>
+      <td> <%= @inventory_count.store.name unless @inventory_count.store.blank? %> </td>
+      <td><%=t 'activerecord.attributes.inventory_count.product_family' %>:</td>
+      <td> <%= @inventory_count.product_family.full_name unless @inventory_count.product_family.blank? %> </td>
+    </tr>
+    <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @inventory_count } %>
+    <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @inventory_count } %>
+  </tbody>
+</table>
+
+<!-- Items -->
+<table class="form-table">
+  <tbody>
+    <tr class="form-tr underlined-tr">
+      <td class="form-td-two left-winged">
+        <h4><%= t 'ag2_products.inventory_counts.items_info' %></h4>
+      </td>
+      <td class="form-td-two right-winged">
+        <a href="#" id="print_report_btn" class="btn btn-warning"><i class="icon-print icon-white"></i> <%= t '.print' %></a>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<% if (@items.count > 0) %>
+<table class="table table-condensed table-striped shrinked">
+  <thead>
+    <%= render 'items_header' %>
+  </thead>
+  <tfoot>
+    <%= render partial: 'items_footer', :locals => { note: @inventory_count } %>
+  </tfoot>
+  <tbody>
+    <%= render partial: 'item', collection: @items %>
+  </tbody>
+</table>
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @items } %>
+<% else %>
+<%= render :partial => '/layouts/paginationunbordered', :locals => { :ivar => @items } %>
+<% end %> <!-- end @items.count > 0 -->
+
+<!-- Remarks -->
+<table class="table">
+  <tbody>
+    <tr>
+      <td style="width: 12%"><%= t :"activerecord.attributes.inventory_count.remarks" %>:</td>
+      <td style="width: 88%"><%= @inventory_count.remarks unless @inventory_count.remarks.blank? %></td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- Buttons -->
+<table class="form-table">
+  <tbody>
+    <tr class="form-tr">
+      <td class="form-td-two left-winged">
+        <%= render partial: '/layouts/crud/update_delete_new', locals:
+        { model: InventoryCount, update_path: edit_inventory_count_path(@inventory_count), update_txt: t('.btn_edit'),
+        delete_path: @inventory_count, delete_txt: t('.btn_delete'), msg: t("activerecord.models.inventory_count.one"), txt: @inventory_count.count_no,
+        new_path: new_inventory_count_path, new_txt: t('ag2_products.inventory_counts.index.btn_new') } %>
+      </td>
+      <td class="form-td-two right-winged">
+        <!-- Confirm inventory count -->
+        <% if @is_approver %>
+          <a href="#" id="approve_order_btn" class="btn btn-warning"><i class="icon-ok icon-white"></i> <%=t :approve %></a>
+          <br />
+        <% end %>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br />
+
+<%= link_to t("ag2_products.inventory_counts.back_to_main_page"), inventory_counts_path %>
