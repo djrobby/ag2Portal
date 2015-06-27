@@ -1,17 +1,237 @@
-<%= form_for(@inventory_count) do |f| %>
-  <% if @inventory_count.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@inventory_count.errors.count, "error") %> prohibited this inventory_count from being saved:</h2>
+<script>
+  var text_field_color;
+  var _thisForm = '';
+  
+  $(document).ready(function() {
+    $('select.sel2').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      allowClear: true
+    });
+    $('.date_picker').datepicker({
+      format : 'dd/mm/yyyy',
+      weekStart : 1
+    }).on('changeDate', function(e){
+      $('.date_picker').datepicker('hide');
+    });
+    if ($('#inventory_count_count_date').val() == "") {
+      $('#inventory_count_count_date').datepicker('setValue', es_date(new Date()));
+    }
 
-      <ul>
-      <% @inventory_count.errors.full_messages.each do |msg| %>
-        <li><%= msg %></li>
+    // Save default text color
+    text_field_color = $("#inventory_count_count_no").css('color')
+    
+    // Initialized form variable
+    _thisForm = $("#inventory_count_count_no").closest('form')[0];
+
+    // Icon inside text field: Generate No
+    $('input.iconify').wrap('<span class="generateicon" title="<%=t('generate') %>" />').after($('<span/>').click(function() {
+      $('#generate_code_btn').trigger("click");
+      return false;
+    }));
+
+    // Disable fields if Count# blank
+    var order = $('#inventory_count_count_no').val();
+    if (order == "")
+      order = "0";
+    if (order == "0") {
+      // Empty order: Disable
+      $('#submit_btn').hide();
+      $('.fnt-new-btn').hide();
+    } else {
+      // Order OK: Enable
+      $('#submit_btn').show();
+      $('.fnt-new-btn').show();
+    }
+
+    // Disable generate_code_btn if inventory_count_organization_id blank
+    var order = $('#inventory_count_organization_id').val();
+    if (order == "")
+      order = "0";
+    if (order == "0") {
+      // Empty project: Hide
+      $('#generate_code_btn').hide();
+    } else {
+      // Project OK: Show
+      $('#generate_code_btn').show();
+    }
+    
+    // Can't change count no if editing
+    if ('<%= @breadcrumb %>' == "update") {
+      $('#inventory_count_count_no').prop('readonly', true);
+    } else {
+      $('#inventory_count_count_no').prop('readonly', false);
+    }
+    
+    // Set initial focus
+    $(this).find(".form-label:first").focus();
+  });
+  
+  jQuery(function($) {
+    // when the #inventory_count_count_no field changes
+    $("#inventory_count_count_no").change(function() {
+      var order = $('#inventory_count_count_no').val();
+      if (order == "")
+        order = "0";
+      if (order == "0") {
+        // Empty order: Disable
+        $('#submit_btn').hide();
+        $('.fnt-new-btn').hide();
+      } else {
+        // Order: OK: Enable
+        $('#submit_btn').show();
+        $('.fnt-new-btn').show();
+      }
+    });
+    
+    // when #generate_code_btn is clicked
+    $("#generate_code_btn").click(function() {
+      // make a POST call and replace the content
+      var store = $('select#inventory_count_store_id :selected').val();
+      if (store == "")
+        store = "$";
+      jQuery.getJSON('ic_generate_no/' + store, function(data) {
+        $("#inventory_count_count_no").val(data.code);
+        if ($("#inventory_count_count_no").val() == "$err") {
+          $("#inventory_count_count_no").css('color', 'red');
+          alert('<%= I18n.t("ag2_products.inventory_counts.no_error") %>');
+          $('#inventory_count_count_no').select();
+        } else {
+          $("#inventory_count_count_no").css('color', text_field_color);
+          $('#inventory_count_count_no').trigger("change");
+        }
+      });
+      return false;
+    });
+
+    // when the #inventory_count_organization_id field changes
+    $("#inventory_count_organization_id").change(function() {
+      // make a POST call and replace the content
+      var org = $('select#inventory_count_organization_id :selected').val();
+      if (org == "")
+        org = "0";
+      jQuery.getJSON('ic_update_from_organization/' + org, function(data) {
+        var s = data.store
+        var prods = data.product
+        $("#inventory_count_store_id").html("");
+        $("#inventory_count_store_id").select2("val", "");
+        $("#inventory_count_store_id").append($('<option></option>').val("").html(""));
+        if (!s.length) {
+          $.each(data, function(id, option) {
+            if (id == 'store' && option != "") {
+              $("#inventory_count_store_id").append($('<option></option>').val(option.id).html(option.name));
+            }
+          });
+        } else {
+          $.each(s, function(id, option) {
+            $("#inventory_count_store_id").append($('<option></option>').val(option.id).html(option.name));
+          });
+        }
+      });
+      // Disable generate_code_btn if inventory_count_organization_id blank
+      if (org == "0") {
+        // Empty project: Hide
+        $('#generate_code_btn').hide();
+        $("#inventory_count_project_id").val(0);
+      } else {
+        // Project OK: Show
+        $('#generate_code_btn').show();
+      }
+      return false;
+    });
+
+    // when the #inventory_count_store_id field changes
+    $("#inventory_count_store_id").change(function() {
+      // make a POST call and replace the content
+      var store = $('select#inventory_count_store_id :selected').val();
+      if (store == "")
+        store = "0";
+      jQuery.getJSON('ic_update_family_select_from_store/' + store, function(data) {
+        var f = data.product_families;
+        $("#inventory_count_product_family_id").html("");
+        $("#inventory_count_product_family_id").select2("val", "");
+        $("#inventory_count_product_family_id").append($('<option></option>').val("").html(""));
+        if (!f.length) {
+          $.each(data, function(id, option) {
+            if (id == 'technicians' && option != "") {
+              $("#inventory_count_product_family_id").append($('<option></option>').val(option.id).html(option.family_code + " " + option.name.substring(0,41)));
+            }
+          });
+        } else {
+          $.each(f, function(id, option) {
+            $("#inventory_count_product_family_id").append($('<option></option>').val(option.id).html(option.family_code + " " + option.name.substring(0,41)));
+          });
+        }
+      });
+      return false;
+    });
+    
+    // when submit    
+    $(_thisForm).on('submit', function() {
+      // Must change decimal separator, if comma, in items table numeric fields
+      var qty = '';
+      var initial = '';
+      var current = '';
+      $('tr.fields').each(function() {
+        qty = $(this).find('input.fnt-quantity').val().replace(",", ".");
+        initial = $(this).find('input.fnt-initial').val().replace(",", ".");
+        current = $(this).find('input.fnt-current').val().replace(",", ".");
+        $(this).find('input.fnt-quantity').val(qty);
+        $(this).find('input.fnt-initial').val(price);
+        $(this).find('input.fnt-current').val(cost);
+      });
+      //e.preventDefault();
+    });
+  });
+</script>
+
+<%= simple_form_for @inventory_count, html: { class: 'form-vertical well' } do |f| %>
+<%= f.error_notification %>
+<%= display_base_errors resource %>
+<div>
+  <label class="multi-field-label-two">
+    <% if session[:organization] != '0' %>
+    <%= f.association :organization, collection: Organization.where("id = ?", "#{session[:organization]}").all, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' }, include_blank: false %>
+    <% elsif current_user.organizations.count > 0 %>
+    <%= f.association :organization, collection: current_user.organizations.order('name'), input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' }, include_blank: false %>
+    <% else %>
+    <%= f.association :organization, collection: Organization.order('name'), input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %>
+    <% end %>
+  </label>
+  <label class="multi-field-label-two"> <%= f.association :store, collection: @stores, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
+</div>
+<div>
+  <label class="multi-field-label-two"> <%= f.input :count_no, autofocus: true, input_html: { class: 'mid-text-field iconify' }, label_html: { class: 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.input :count_date, start_year: Time.now.year - 100, end_year: Time.now.year + 100, as: :string, input_html: { value: (f.object.count_date.strftime("%d/%m/%Y") if f.object.count_date), class: 'mid-text-field date_picker' }, label_html: { class: 'form-label' } %> </label>
+</div>
+<div>
+  <label class="multi-field-label-two"> <%= f.association :inventory_count_type, collection: InventoryCountType.order(:id), input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.association :product_family, collection: @families, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
+</div>
+<!-- Items -->
+<table class="form-table">
+  <tbody>
+    <tr class="form-tr underlined-tr">
+      <td class="form-td-two left-winged">
+        <h4><%= t 'ag2_products.inventory_counts.items_info' %></h4>
+      </td>
+      <td class="form-td-two right-winged">
+        <%= link_to_add_fields(t("ag2_products.inventory_counts.btn_new_item"), f, :inventory_count_items, "item_fields", "new-item-fields", class: "btn btn-warning fnt-new-btn") %>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<%= render 'items_table', f: f %>
+<!-- Remarks -->
+<%= f.input :remarks, as: :text, input_html: { class: 'x-large-text-field', rows: 3 }, label_html: { class: 'form-label' } %>
+<!-- Buttons -->
+<table class="form-table">
+  <tbody>
+    <tr class="form-tr">
+      <td class="form-td-three left-winged"> <%= f.button :submit, :class => 'btn-primary', :id => 'submit_btn' %> </td>
+      <% if @breadcrumb == 'create'%>
+      <td class="form-td-three right-winged"><a href="#" id="generate_code_btn" class="btn btn-warning"><%=t 'ag2_products.inventory_counts.generate_code_btn' %></a></td>
       <% end %>
-      </ul>
-    </div>
-  <% end %>
-
-  <div class="actions">
-    <%= f.submit %>
-  </div>
+    </tr>
+  </tbody>
+</table>
 <% end %>

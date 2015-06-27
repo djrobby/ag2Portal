@@ -28,12 +28,12 @@
       return false;
     });
 
-    // when the #Supplier_ field changes
+    // when the #Store_ field changes
     $("#Store_").change(function() {
       // make a POST call and replace the content
       var store = $('#Store_ :selected').val();
       if (store == "") store = 0;
-      jQuery.getJSON('of_update_family_select_from_store/' + store, function(data) {
+      jQuery.getJSON('ic_update_family_select_from_store/' + store, function(data) {
         var r = data.product_families;
         $("#Family_").html("");
         $("#Family_").select2("val", "");

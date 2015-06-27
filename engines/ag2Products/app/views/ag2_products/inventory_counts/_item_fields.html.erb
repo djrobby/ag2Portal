@@ -32,7 +32,7 @@
       //qty = qty.replace(",", ".") * 10000;
       jQuery.getJSON('ic_update_from_product_store/' + product + '/' + qty + '/' + _s, function(data) {
         $("#fnt-initial").val(data.initial);
-        $("#fnt-current").val(data.current);
+        $("#fnt-current").val(data.stock);
         $("#current-stock").html(data.stock);
       });
       return false;
@@ -52,15 +52,10 @@
       var qty = $('#fnt-quantity').val();
       if (qty == "")
         qty = "0";
-      var product = $('select#fnt-product :selected').val();
-      if (product == "")
-        product = "0";
       // Right formatted for passing as REST parameter
       qty = parseInt(right_number(qty, 4) * 10000);
-      jQuery.getJSON('ic_update_stocks_from_quantity/' + qty + '/' + product + '/' + _s, function(data) {
+      jQuery.getJSON('ic_totals/' + qty, function(data) {
         $('#fnt-quantity').val(data.quantity);
-        $("#fnt-initial").val(data.initial);
-        $("#fnt-current").val(data.current);
         // Update and display totals
         $('#items-table').trigger('totals');
       });
@@ -70,10 +65,10 @@
   // Initialize
   function init() {
     // make a POST call and replace the content
-    var order = $('select#inventory_count_organization_id :selected').val();
-    if (order == "")
-      order = "0";
-    jQuery.getJSON('ic_update_from_organization/' + order, function(data) {
+    var org = $('select#inventory_count_organization_id :selected').val();
+    if (org == "")
+      org = "0";
+    jQuery.getJSON('ic_update_from_organization/' + org, function(data) {
       var prods = data.product
       // Product
       $("#fnt-product").html("");

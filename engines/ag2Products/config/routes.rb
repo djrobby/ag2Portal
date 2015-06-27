@@ -193,12 +193,12 @@ Ag2Products::Engine.routes.draw do
     match 'inventory_counts/ic_update_from_product_store/:product/:qty/:store', :controller => 'inventory_counts', :action => 'ic_update_from_product_store'
     match 'ic_update_from_product_store/:product/:qty/:store', :controller => 'inventory_counts', :action => 'ic_update_from_product_store'
     match 'inventory_counts/:id/ic_update_from_product_store/:product/:qty/:store', :controller => 'inventory_counts', :action => 'ic_update_from_product_store'
-    match 'inventory_counts/ic_update_stocks_from_quantity/:qty/:product/:store', :controller => 'inventory_counts', :action => 'ic_update_stocks_from_quantity'
-    match 'ic_update_stocks_from_quantity/:qty/:product/:store', :controller => 'inventory_counts', :action => 'ic_update_stocks_from_quantity'
-    match 'inventory_counts/:id/ic_update_stocks_from_quantity/:qty/:product/:store', :controller => 'inventory_counts', :action => 'ic_update_stocks_from_quantity'
     match 'inventory_counts/ic_update_from_organization/:org', :controller => 'inventory_counts', :action => 'ic_update_from_organization'
     match 'ic_update_from_organization/:org', :controller => 'inventory_counts', :action => 'ic_update_from_organization'
     match 'inventory_counts/:id/ic_update_from_organization/:org', :controller => 'inventory_counts', :action => 'ic_update_from_organization'
+    match 'inventory_counts/ic_approve_count/:order', :controller => 'inventory_counts', :action => 'ic_approve_count'
+    match 'ic_approve_count/:order', :controller => 'inventory_counts', :action => 'ic_approve_count'
+    match 'inventory_counts/:id/ic_approve_count/:order', :controller => 'inventory_counts', :action => 'ic_approve_count'
 
     # Resources
     resources :product_families

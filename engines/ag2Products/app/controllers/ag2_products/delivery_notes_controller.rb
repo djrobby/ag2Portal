@@ -390,9 +390,9 @@ module Ag2Products
       @work_orders = @delivery_note.project.blank? ? work_orders_dropdown : @delivery_note.project.work_orders.order(:order_no)
       @charge_accounts = work_order_charge_account(@delivery_note)
       @stores = work_order_store(@delivery_note)
-      @clients = @delivery_note.organization.blank? ? clients_dropdown : @delivery_note.organization.clients(:client_code)
+      @clients = @delivery_note.organization.blank? ? clients_dropdown : @delivery_note.organization.clients.order(:client_code)
       @payment_methods = @delivery_note.organization.blank? ? payment_methods_dropdown : collection_payment_methods(@delivery_note.organization_id)
-      @products = @delivery_note.organization.blank? ? products_dropdown : @delivery_note.organization.products(:product_code)
+      @products = @delivery_note.organization.blank? ? products_dropdown : @delivery_note.organization.products.order(:product_code)
     end
   
     # POST /delivery_notes
@@ -439,9 +439,9 @@ module Ag2Products
           @work_orders = @delivery_note.project.blank? ? work_orders_dropdown : @delivery_note.project.work_orders.order(:order_no)
           @charge_accounts = work_order_charge_account(@delivery_note)
           @stores = work_order_store(@delivery_note)
-          @clients = @delivery_note.organization.blank? ? clients_dropdown : @delivery_note.organization.clients(:client_code)
+          @clients = @delivery_note.organization.blank? ? clients_dropdown : @delivery_note.organization.clients.order(:client_code)
           @payment_methods = @delivery_note.organization.blank? ? payment_methods_dropdown : collection_payment_methods(@delivery_note.organization_id)
-          @products = @delivery_note.organization.blank? ? products_dropdown : @delivery_note.organization.products(:product_code)
+          @products = @delivery_note.organization.blank? ? products_dropdown : @delivery_note.organization.products.order(:product_code)
           format.html { render action: "edit" }
           format.json { render json: @delivery_note.errors, status: :unprocessable_entity }
         end
