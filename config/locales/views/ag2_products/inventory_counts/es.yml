@@ -31,3 +31,6 @@ es:
       generate_count_error: "Imposible generar Recuento de inventario: Almacén o Familia inválida."
       generate_count_write: "Imposible guardar nuevo Recuento de inventario."
       generate_count_ok: "Recuento de inventario %{var} ha sido generado."
+      approve_count_error: "Recuento de inventario no encontrado."
+      approve_count_write: "Imposible guardar Recuento de inventario."
+      approve_count_warn: "Este Recuento de inventario ya está aprobado."

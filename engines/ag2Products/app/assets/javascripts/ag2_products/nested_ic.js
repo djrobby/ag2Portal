@@ -118,12 +118,6 @@ var ic_rowBuilder = function() {
               $(this).addClass(css);
               // Add new column to row
               var td = $('<td/>').append($(this));
-              if (this.id === 'fnt-code' || this.id === 'fnt-delivery-date' ||
-                this.id === 'fnt-work-order' || this.id === 'fnt-project' ||
-                this.id === 'fnt-charge-account' || this.id === 'fnt-store' ||
-                this.id === 'fnt-tax-type') {
-                td = $('<td style="display:none;"/>').append($(this));
-              }
               // If destroy field, add delete link also
               if (this.id.indexOf("_destroy") != -1) {
                 var td = $('<td/>').append($(this), newLink);
@@ -131,9 +125,6 @@ var ic_rowBuilder = function() {
               td.appendTo(newRow);
             }
         });
-        // link
-        //var td = $('<td/>').append(newLink);
-        //td.appendTo(newRow);
 
         return newRow;
     };

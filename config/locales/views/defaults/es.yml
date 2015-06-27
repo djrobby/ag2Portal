@@ -46,6 +46,7 @@ es:
   dd_files_message: "Deja los archivos aquí"
   approve: "Aprobar"
   disapprove: "Desaprobar"
+  confirm: "Confirmar"
   every_report:
     pt: "Página"
     pt_plural: "Páginas"

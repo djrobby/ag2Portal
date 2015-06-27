@@ -22,3 +22,5 @@ en:
         office: "Office"
         company: "Company"
         quantity: "Articles"
+        approval_date: "Approved on"
+        approver: "Approved by"

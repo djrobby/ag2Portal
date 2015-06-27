@@ -1,0 +1,21 @@
+es:
+  activerecord:
+    models:
+      inventory_count_item:
+        zero:  Items de recuento de inventario
+        one:   Item de recuento de inventario
+        few:   Items de recuento de inventario
+        other: Items de recuento de inventario
+    attributes:
+      inventory_count_item:
+        inventory_count: "Recuento de inventario"
+        inventory_count_id: "Recuento de inventario"
+        product: "Producto"
+        product_id: "Producto"
+        product_c: "Cód."
+        quantity: "Cantidad"
+        quantity_c: "Cant."
+        initial: "Inicial"
+        current: "Actual"
+        initial_stock_by_store: "Inicial ahora"
+        current_stock_by_store: "Actual ahora"

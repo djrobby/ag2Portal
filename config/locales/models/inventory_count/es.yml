@@ -22,3 +22,5 @@ es:
         office: "Oficina"
         company: "Empresa"
         quantity: "Artículos"
+        approval_date: "Aprobado el"
+        approver: "Aprobado por"

@@ -21,6 +21,8 @@ class PurchaseOrderItem < ActiveRecord::Base
   validates :description,     :presence => true,
                               :length => { :maximum => 40 }
   validates :product,         :presence => true
+  validates :quantity,        :numericality => true
+  validates :price,           :numericality => true
   validates :tax_type,        :presence => true
   validates :project,         :presence => true
   validates :store,           :presence => true

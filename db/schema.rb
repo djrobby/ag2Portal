@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150623091945) do
+ActiveRecord::Schema.define(:version => 20150627102033) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -637,6 +637,8 @@ ActiveRecord::Schema.define(:version => 20150623091945) do
     t.datetime "updated_at",                                                         :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
+    t.decimal  "initial",            :precision => 12, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "current",            :precision => 12, :scale => 4, :default => 0.0, :null => false
   end
 
   add_index "inventory_count_items", ["inventory_count_id"], :name => "index_inventory_count_items_on_inventory_count_id"
@@ -662,9 +664,11 @@ ActiveRecord::Schema.define(:version => 20150623091945) do
     t.datetime "updated_at",              :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
-    t.boolean  "confirmed"
+    t.integer  "approver_id"
+    t.datetime "approval_date"
   end
 
+  add_index "inventory_counts", ["approver_id"], :name => "index_inventory_counts_on_approver_id"
   add_index "inventory_counts", ["count_date"], :name => "index_inventory_counts_on_count_date"
   add_index "inventory_counts", ["count_no"], :name => "index_inventory_counts_on_count_no"
   add_index "inventory_counts", ["inventory_count_type_id"], :name => "index_inventory_counts_on_inventory_count_type_id"

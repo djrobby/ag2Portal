@@ -1,0 +1,21 @@
+en:
+  activerecord:
+    models:
+      inventory_count_item:
+        zero:  Inventory count items
+        one:   Inventory count item
+        few:   Inventory count items
+        other: Inventory count items
+    attributes:
+      inventory_count_item:
+        inventory_count: "Inventory count"
+        inventory_count_id: "Inventory count"
+        product: "Product"
+        product_id: "Product"
+        product_c: "Code"
+        quantity: "Quantity"
+        quantity_c: "Qty."
+        initial: "Initial"
+        current: "Current"
+        initial_stock_by_store: "Initial now"
+        current_stock_by_store: "Current now"

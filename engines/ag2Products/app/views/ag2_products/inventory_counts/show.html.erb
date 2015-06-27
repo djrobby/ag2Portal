@@ -1,5 +1,40 @@
 <script>
+  $(document).ready(function() {
+    // Show confirm_btn based on approval
+    approver = $('#approver').html();
+    if (approver == "") {
+      $('#print_report_btn').hide();
+      $('#approve_count_btn').show();
+    } else {
+      $('#print_report_btn').show();
+      $('#approve_count_btn').hide();
+    }
+  });
+
   jQuery(function($) {
+    // when #approve_count_btn is clicked
+    $("#approve_count_btn").click(function() {
+      // make a POST call and replace the content
+      var order = $('#id').html();
+      if (order == "")
+        order = "0";
+      jQuery.getJSON('ic_approve_count/' + order, function(data) {
+        if (data.code == "$err") {
+          alert('<%= I18n.t("ag2_purchase.inventory_counts.approve_count_error") %>');
+        } else if (data.code == "$write") {
+          alert('<%= I18n.t("ag2_purchase.inventory_counts.approve_count_write") %>');
+        } else if (data.code == "$warn") {
+          alert('<%= I18n.t("ag2_purchase.inventory_counts.approve_count_warn") %>');
+        } else {
+          $('#approver').text(data.approver);
+          $('#approval_date').text(data.approval_date);
+          $('#approve_count_btn').hide();
+          $('#print_report_btn').show();
+        }
+      });
+      return false;
+    });
+
     // when #print_report_btn is clicked
     $("#print_report_btn").click(function() {
       // make a POST call and get report
@@ -34,6 +69,12 @@
       <td> <%= @inventory_count.store.name unless @inventory_count.store.blank? %> </td>
       <td><%=t 'activerecord.attributes.inventory_count.product_family' %>:</td>
       <td> <%= @inventory_count.product_family.full_name unless @inventory_count.product_family.blank? %> </td>
+    </tr>
+    <tr>
+      <td><%=t 'activerecord.attributes.inventory_count.approval_date' %>:</td>
+      <td id="approval_date"><%= formatted_timestamp(@inventory_count.approval_date) unless @inventory_count.approval_date.blank? %></td>
+      <td><%=t 'activerecord.attributes.inventory_count.approver' %>:</td>
+      <td id="approver"><%= @inventory_count.approver.email unless @inventory_count.approver.blank? %></td>
     </tr>
     <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @inventory_count } %>
     <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @inventory_count } %>
@@ -91,9 +132,9 @@
         new_path: new_inventory_count_path, new_txt: t('ag2_products.inventory_counts.index.btn_new') } %>
       </td>
       <td class="form-td-two right-winged">
-        <!-- Confirm inventory count -->
+        <!-- Approve inventory count -->
         <% if @is_approver %>
-          <a href="#" id="approve_order_btn" class="btn btn-warning"><i class="icon-ok icon-white"></i> <%=t :approve %></a>
+          <a href="#" id="approve_count_btn" class="btn btn-warning"><i class="icon-ok icon-white"></i> <%=t :approve %></a>
           <br />
         <% end %>
       </td>

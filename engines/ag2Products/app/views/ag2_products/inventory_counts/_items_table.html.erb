@@ -1,5 +1,14 @@
 <script>
   $(document).ready(function() {
+    /*
+     * Retrieves parent values
+     */
+    // Form
+    var _f = $("#fnt-product").closest('form')[0];
+    // Store
+    var _s = $('#inventory_count_store_id :selected').val();
+    if (_s == "") _s = "0";
+
     $('.isel2').select2({
       formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
       dropdownCssClass: 'shrinked',
@@ -11,32 +20,12 @@
     $('#items-table').bind('totals', function(event) {
       // Sum necessary values from table rows
       var qty = 0;
-      var costs = 0;
-      var amount = 0;
-      var tax = 0;
       $('#items-table tr.fields:visible').each(function() {
         qty += parseFloat(right_number($(this).find('input.fnt-quantity').val(), 4));
-        costs += parseFloat(right_number($(this).find('input.fnt-costs').val(), 4));
-        amount += parseFloat(right_number($(this).find('input.fnt-amount').val(), 4));
-        tax += parseFloat(right_number($(this).find('input.fnt-tax').val(), 4));
       });
       qty = parseInt(right_number(qty.toString(), 4) * 10000);
-      costs = parseInt(right_number(costs.toString(), 4) * 10000);
-      amount = parseInt(right_number(amount.toString(), 4) * 10000);
-      tax = parseInt(right_number(tax.toString(), 4) * 10000);
-      // Bonus
-      var discount_p = $('#delivery_note_discount_pct').val();
-      if (discount_p == "")
-        discount_p = "0";
-      discount_p = parseInt(right_number(discount_p, 2) * 100);
-      jQuery.getJSON('dn_totals/' + qty + '/' + amount + '/' + costs + '/' + tax + '/' + discount_p, function(data) {
+      jQuery.getJSON('ic_totals/' + qty, function(data) {
         document.getElementById('foot-quantity').innerHTML = data.qty;
-        document.getElementById('foot-costs').innerHTML = data.costs;
-        document.getElementById('foot-amount').innerHTML = data.amount;
-        document.getElementById('foot-tax').innerHTML = data.tax;
-        document.getElementById('foot-discount').innerHTML = data.discount;
-        document.getElementById('foot-taxable').innerHTML = data.taxable;
-        document.getElementById('foot-total').innerHTML = data.total;
       });
     });
     // Update and display totals
@@ -57,16 +46,9 @@
         qty = "0";
       // Right formatted for passing as REST parameter
       qty = parseInt(right_number(qty, 4) * 10000);
-      jQuery.getJSON('dn_update_description_prices_from_product/' + product + '/' + qty, function(data) {
-        $(_this).closest('tr').find('.fnt-description').val(data.description);
-        $(_this).closest('tr').find('.fnt-cost').val(data.cost);
-        $(_this).closest('tr').find('.fnt-costs').val(data.costs);
-        $(_this).closest('tr').find('.fnt-price').val(data.price);
-        $(_this).closest('tr').find('.fnt-amount').val(data.amount);
-        $(_this).closest('tr').find('.fnt-tax').val(data.tax);
-        $(_this).closest('tr').find(".fnt-tax-type").val(data.type);
-        $(_this).closest('tr').find('.fnt-discount-pct').val("0,00");
-        $(_this).closest('tr').find('.fnt-discount').val("0,0000");
+      jQuery.getJSON('ic_update_from_product_store/' + product + '/' + qty + '/' + _s, function(data) {
+        $(_this).closest('tr').find('.fnt-initial').val(data.initial);
+        $(_this).closest('tr').find('.fnt-current').val(data.current);
       });
       return false;
     });
@@ -78,60 +60,13 @@
       recalculate(_this);
       return false;
     });
-
-    // when the .fnt-price field changes
-    $(".fnt-price").change(function() {
-      // preserve the current object
-      var _this = (this);
-      recalculate(_this);
-      return false;
-    });
-
-    // when the .fnt-discount-pct field changes
-    $(".fnt-discount-pct").change(function() {
-      // preserve the current object
-      var _this = (this);
-      recalculate(_this);
-      return false;
-    });
-
-    // when the .fnt-discount field changes
-    $(".fnt-discount").change(function() {
-      // preserve the current object
-      var _this = (this);
-      recalculate(_this);
-      return false;
-    });
-
-    // when the .fnt-cost field changes
-    $(".fnt-cost").change(function() {
-      // preserve the current object
-      var _this = (this);
-      recalculate(_this);
-      return false;
-    });
     
     // Recalculate amounts & prices
     function recalculate(_this) {
       // make a POST call and replace the content
-      var cost = $(_this).closest('tr').find('.fnt-cost').val();
-      if (cost == "")
-        cost = "0";
-      var price = $(_this).closest('tr').find('.fnt-price').val();
-      if (price == "")
-        price = "0";
       var qty = $(_this).closest('tr').find('.fnt-quantity').val();
       if (qty == "")
         qty = "0";
-      var tax_type = $(_this).closest('tr').find('.fnt-tax-type').val();
-      if (tax_type == "")
-        tax_type = "0";
-      var discount_p = $(_this).closest('tr').find('.fnt-discount-pct').val();
-      if (discount_p == "")
-        discount_p = "0";
-      var discount = $(_this).closest('tr').find('.fnt-discount').val();
-      if (discount == "")
-        discount = "0";
       var product = $(this).closest('tr').find('select.fnt-product :selected').val();
       if (product == "")
         product = "0";
@@ -141,15 +76,10 @@
       qty = parseInt(right_number(qty, 4) * 10000);
       discount_p = parseInt(right_number(discount_p, 2) * 100);
       discount = parseInt(right_number(discount, 4) * 10000);
-      jQuery.getJSON('dn_update_amount_and_costs_from_price_or_quantity/' + cost + '/' + price + '/' + qty + '/' + tax_type + '/' + discount_p + '/' + discount + '/' + product, function(data) {
+      jQuery.getJSON('ic_update_stocks_from_quantity/' + qty + '/' + product + '/' + _s, function(data) {
         $(_this).closest('tr').find('.fnt-quantity').val(data.quantity);
-        $(_this).closest('tr').find('.fnt-cost').val(data.cost);
-        $(_this).closest('tr').find('.fnt-costs').val(data.costs);
-        $(_this).closest('tr').find('.fnt-price').val(data.price);
-        $(_this).closest('tr').find('.fnt-amount').val(data.amount);
-        $(_this).closest('tr').find('.fnt-tax').val(data.tax);
-        $(_this).closest('tr').find('.fnt-discount-pct').val(data.discountp);
-        $(_this).closest('tr').find('.fnt-discount').val(data.discount);
+        $(_this).closest('tr').find('.fnt-initial').val(data.initial);
+        $(_this).closest('tr').find('.fnt-current').val(data.current);
         // Update and display totals
         $('#items-table').trigger('totals');
       });
@@ -173,25 +103,13 @@
 
 <table id="items-table" class="table table-condensed table-striped shrinked fixed">
   <!-- product -->
+  <col width="50%" />
+  <!-- initial -->
   <col width="15%" />
-  <!-- description -->
-  <col width="25%" />
+  <!-- current -->
+  <col width="15%" />
   <!-- quantity -->
-  <col width="7%" />
-  <!-- cost -->
-  <col width="7%" />
-  <!-- costs -->
-  <col width="7%" />
-  <!-- price -->
-  <col width="7%" />
-  <!-- discount_pct -->
-  <col width="6%" />
-  <!-- discount -->
-  <col width="7%" />
-  <!-- amount -->
-  <col width="7%" />
-  <!-- tax -->
-  <col width="7%" />
+  <col width="15%" />
   <!-- button -->
   <col width="5%" />
   <thead>
@@ -201,23 +119,12 @@
     <%= render 'items_table_footer', f: f %>
   </tfoot>
   <tbody>
-    <%= f.simple_fields_for :delivery_note_items, defaults: { input_html: { class: 'sub-form' } } do |i| %>
+    <%= f.simple_fields_for :inventory_count_items, defaults: { input_html: { class: 'sub-form' } } do |i| %>
     <tr class="fields">
-      <td><%= i.association :product, label: false, wrapper: false, collection: Product.all(order: 'product_code'), input_html: { class: 'isel2 fnt-product' } %></td>
-      <td><%= i.input :description, label: false, wrapper: false, input_html: { onkeyup: "caps(this)", class: 'sub-alfanumeric-text-field fnt-description', maxlength: 40 } %></td>
+      <td><%= i.association :product, label: false, wrapper: false, collection: @products, input_html: { class: 'isel2 fnt-product' } %></td>
+      <td><%= i.input :initial, disabled: true, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.initial, precision: 4) if i.object.initial), class: 'sub-number-text-field sub-disabled-field fnt-initial' } %></td>
+      <td><%= i.input :current, disabled: true, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.current, precision: 4) if i.object.current), class: 'sub-number-text-field sub-disabled-field fnt-current' } %></td>
       <td><%= i.input :quantity, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.quantity, precision: 4) if i.object.quantity), class: 'sub-number-text-field fnt-quantity' } %></td>
-      <td><%= i.input :cost, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.cost, precision: 4) if i.object.cost), class: 'sub-number-text-field fnt-cost' } %></td>
-      <td><%= i.input :costs, disabled: true, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.costs, precision: 4) if i.object.costs), class: 'sub-number-text-field sub-disabled-field fnt-costs' } %></td>
-      <td><%= i.input :price, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.price, precision: 4) if i.object.price), class: 'sub-number-text-field fnt-price' } %></td>
-      <td><%= i.input :discount_pct, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.discount_pct, precision: 2) if i.object.discount_pct), class: 'sub-number-text-field fnt-discount-pct' } %></td>
-      <td><%= i.input :discount, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.discount, precision: 4) if i.object.discount), class: 'sub-number-text-field fnt-discount' } %></td>
-      <td><%= i.input :amount, disabled: true, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.amount, precision: 4) if i.object.amount), class: 'sub-number-text-field sub-disabled-field fnt-amount' } %></td>
-      <td style="display:none;"><%= i.association :tax_type, label: false, wrapper: false, input_html: { class: 'sub-alfanumeric-text-field fnt-tax-type' } %></td>
-      <td><%= i.input :tax, disabled: true, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.tax, precision: 4) if i.object.tax), class: 'sub-number-text-field sub-disabled-field fnt-tax' } %></td>
-      <td style="display:none;"><%= i.association :work_order, label: false, wrapper: false, input_html: { class: 'isel2 fnt-work-order' } %></td>
-      <td style="display:none;"><%= i.association :project, label: false, wrapper: false, input_html: { class: 'isel2 fnt-project' } %></td>
-      <td style="display:none;"><%= i.association :charge_account, label: false, wrapper: false, input_html: { class: 'isel2 fnt-charge-account' } %></td>
-      <td style="display:none;"><%= i.association :store, label: false, wrapper: false, input_html: { class: 'isel2 fnt-store' } %></td>
       <% if @breadcrumb == 'create' || @breadcrumb == 'update' %>
       <td><%= link_to_remove_fields('<i class="icon-trash"></i>'.html_safe, i) %></td>
       <% end %>

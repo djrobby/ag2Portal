@@ -8,8 +8,11 @@ module Ag2Products
     skip_load_and_authorize_resource :only => [:ic_totals,
                                                :ic_update_family_select_from_store,
                                                :ic_generate_count,
-                                               :ic_generate_no]
-
+                                               :ic_generate_no,
+                                               :ic_approve_count,
+                                               :ic_update_from_product_store,
+                                               :ic_update_stocks_from_quantity,
+                                               :ic_update_from_organization]
     # Calculate and format totals properly
     def ic_totals
       qty = params[:qty].to_f / 10000
@@ -97,6 +100,161 @@ module Ag2Products
       render json: @json_data
     end
 
+    # Approve inventory count
+    def ic_approve_count
+      _order = params[:order]
+      code = '$err'
+      _approver_id = nil
+      _approver = nil
+      _approval_date = nil
+
+      order = PurchaseOrder.find(_order)
+      if !order.nil?
+        if order.approver_id.blank?
+          # Can approve offer
+          _approver_id = current_user.id
+          _approval_date = DateTime.now
+          order.approver_id = _approver_id
+          order.approval_date = _approval_date
+          # Attempt approve
+          if order.save
+            # Success
+            code = '$ok'
+          else
+            # Can't save purchase order
+            code = '$write'
+          end
+        else
+          # This order is already approved
+          code = '$warn'
+        end
+      else
+        # Purchase order not found
+        code = '$err'
+      end
+      # Approver data
+      if !_approver_id.nil?
+        _approver = User.find(_approver_id).email        
+      end
+      # Approval date
+      if !_approval_date.nil?
+        _approval_date = formatted_timestamp(_approval_date)
+      end
+
+      @json_data = { "code" => code, "approver" => _approver, "approval_date" => _approval_date }
+      render json: @json_data
+    end
+
+    def ic_update_from_product_store
+      product = params[:product]
+      store = params[:store]
+      description = ""
+      qty = 0
+      cost = 0
+      costs = 0
+      price = 0
+      amount = 0
+      tax_type_id = 0
+      tax_type_tax = 0
+      tax = 0
+      current_stock = 0
+      if product != '0'
+        @product = Product.find(product)
+        @prices = @product.purchase_prices
+        # Assignment
+        description = @product.main_description[0,40]
+        qty = params[:qty].to_f / 10000
+        cost = @product.reference_price
+        costs = qty * cost
+        price = @product.sell_price
+        amount = qty * price
+        tax_type_id = @product.tax_type.id
+        tax_type_tax = @product.tax_type.tax
+        tax = amount * (tax_type_tax / 100)
+        if store != 0
+          current_stock = Stock.find_by_product_and_store(product, store).current rescue 0
+        end
+      end
+      # Format numbers
+      cost = number_with_precision(cost.round(4), precision: 4)
+      costs = number_with_precision(costs.round(4), precision: 4)
+      price = number_with_precision(price.round(4), precision: 4)
+      amount = number_with_precision(amount.round(4), precision: 4)
+      tax = number_with_precision(tax.round(4), precision: 4)
+      current_stock = number_with_precision(current_stock.round(4), precision: 4)
+      # Setup JSON hash
+      @json_data = { "description" => description,
+                     "cost" => cost.to_s, "costs" => costs.to_s,
+                     "price" => price.to_s, "amount" => amount.to_s,
+                     "tax" => tax.to_s, "type" => tax_type_id, "stock" => current_stock.to_s }
+      render json: @json_data
+    end
+
+    def ic_update_stocks_from_quantity
+      cost = params[:cost].to_f / 10000
+      price = params[:price].to_f / 10000
+      qty = params[:qty].to_f / 10000
+      tax_type = params[:tax_type].to_i
+      discount_p = params[:discount_p].to_f / 100
+      discount = params[:discount].to_f / 10000
+      product = params[:product]
+      if tax_type.blank? || tax_type == "0"
+        if !product.blank? && product != "0"
+          tax_type = Product.find(product).tax_type.id
+        else
+          tax_type = TaxType.where('expiration IS NULL').order('id').first.id
+        end
+      end
+      tax = TaxType.find(tax_type).tax
+      if discount_p > 0
+        discount = price * (discount_p / 100)
+      end
+      amount = qty * (price - discount)
+      costs = qty * cost
+      tax = amount * (tax / 100)
+      qty = number_with_precision(qty.round(4), precision: 4)
+      cost = number_with_precision(cost.round(4), precision: 4)
+      costs = number_with_precision(costs.round(4), precision: 4)
+      price = number_with_precision(price.round(4), precision: 4)
+      amount = number_with_precision(amount.round(4), precision: 4)
+      tax = number_with_precision(tax.round(4), precision: 4)
+      discount_p = number_with_precision(discount_p.round(2), precision: 2)
+      discount = number_with_precision(discount.round(4), precision: 4)
+      @json_data = { "quantity" => qty.to_s, "cost" => cost.to_s, "costs" => costs.to_s, 
+                     "price" => price.to_s, "amount" => amount.to_s, "tax" => tax.to_s,
+                     "discountp" => discount_p.to_s, "discount" => discount.to_s }
+      render json: @json_data
+    end
+
+    def ic_update_from_organization
+      organization = params[:org]
+      if organization != '0'
+        @organization = Organization.find(organization)
+        @clients = @organization.blank? ? clients_dropdown : @organization.clients.order(:client_code)
+        @projects = @organization.blank? ? projects_dropdown : @organization.projects.order(:project_code)
+        @work_orders = @organization.blank? ? work_orders_dropdown : @organization.work_orders.order(:order_no)
+        @charge_accounts = @organization.blank? ? charge_accounts_dropdown : @organization.charge_accounts.order(:account_code)
+        @stores = @organization.blank? ? stores_dropdown : @organization.stores.order(:name)
+        @payment_methods = @organization.blank? ? payment_methods_dropdown : collection_payment_methods(@organization.id)
+        @products = @organization.blank? ? products_dropdown : @organization.products.order(:product_code)
+      else
+        @clients = clients_dropdown
+        @projects = projects_dropdown
+        @work_orders = work_orders_dropdown
+        @charge_accounts = charge_accounts_dropdown
+        @stores = stores_dropdown
+        @payment_methods = payment_methods_dropdown
+        @products = products_dropdown
+      end
+      # Products array
+      @products_dropdown = products_array(@products)
+      # Setup JSON
+      @json_data = { "client" => @clients, "project" => @projects, "work_order" => @work_orders,
+                     "charge_account" => @charge_accounts, "store" => @stores,
+                     "payment_method" => @payment_methods, "product" => @products_dropdown }
+      render json: @json_data
+    end
+
     #
     # Default Methods
     #
@@ -152,6 +310,9 @@ module Ag2Products
       @breadcrumb = 'read'
       @inventory_count = InventoryCount.find(params[:id])
       @items = @inventory_count.inventory_count_items.paginate(:page => params[:page], :per_page => per_page).order('id')
+      # Approvers
+      @is_approver = company_approver(@inventory_count, @inventory_count.store.company, current_user.id) ||
+                     office_approver(@inventory_count, @inventory_count.store.office, current_user.id)
   
       respond_to do |format|
         format.html # show.html.erb

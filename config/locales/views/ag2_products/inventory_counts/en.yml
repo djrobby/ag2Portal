@@ -31,3 +31,6 @@ en:
       generate_count_error: "Inventory count can not be generated: Store or Family invalid."
       generate_count_write: "Unable to save new Inventory count."
       generate_count_ok: "Inventory count %{var} has been generated."
+      approve_count_error: "Inventory count not found."
+      approve_count_write: "Unable to save Inventory count."
+      approve_count_warn: "This Inventory count is already approved."
