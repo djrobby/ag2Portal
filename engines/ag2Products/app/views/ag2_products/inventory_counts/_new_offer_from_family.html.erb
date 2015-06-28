@@ -10,7 +10,7 @@
         return false;
       }
       // make the POST call
-      jQuery.getJSON('of_generate_count/' + store + '/' + family, function(data) {
+      jQuery.getJSON('ic_generate_count/' + store + '/' + family, function(data) {
         // AJAX refresh index table is necessary
         $(".icon-refresh-link").click();
         // Go on based on result
@@ -60,7 +60,7 @@
 <div id="new-offer-from-family" class="modal hide fade" data-backdrop="static" style="display: none;">
   <div class="modal-header">
     <a class="close" data-dismiss="modal">&#215;</a>
-    <h3><%= t('ag2_purchase.offers.index.btn_new_from_family') %></h3>
+    <h3><%= t('ag2_products.inventory_counts.index.btn_new_from_family') %></h3>
     <span class="shrinked"><%= I18n.t(:mandatory_subtitle) %></span>
   </div>
   <div class="modal-body">

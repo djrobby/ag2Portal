@@ -12,6 +12,7 @@
     <tr>
       <th><%= t 'activerecord.attributes.inventory_count.count_no' %></th>
       <th align="center"><%= t 'activerecord.attributes.inventory_count.count_date' %></th>
+      <th><%= t 'activerecord.attributes.inventory_count.inventory_count_type' %></th>
       <th><%= t 'activerecord.attributes.inventory_count.store' %></th>
       <th><%= t 'activerecord.attributes.inventory_count.product_family' %></th>
       <th align="right"><%= t 'activerecord.attributes.inventory_count.quantity' %></th>
@@ -23,11 +24,12 @@
     <tr>
       <td><%= link_to note.full_no, note %></td>
       <td align="center"><%= formatted_date(note.count_date) unless note.count_date.blank? %></td>
+      <td><%= note.inventory_count_type.name unless note.inventory_count_type.blank? %></td>
       <td><%= note.store.name unless note.store.blank? %></td>
       <td><%= note.product_family.full_name unless note.product_family.blank? %></td>
       <td align="right"><%= number_with_precision(note.quantity, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless note.quantity.blank? %></td>
       <td> <%= render :partial => '/layouts/crud/edit', :locals => { :model => InventoryCount, :path => edit_inventory_count_path(note) } %>
-      <%= render :partial => '/layouts/crud/delete', :locals => { :model => InventoryCount, :path => note, :msg => t("activerecord.models.inventory_count.one"), :txt => note.count_no } %> </td>
+      <%= render :partial => '/layouts/crud/delete', :locals => { :model => InventoryCount, :path => note, :msg => t("activerecord.models.inventory_count.one"), :txt => note.full_no } %> </td>
     </tr>
     <% end %>
   </tbody>

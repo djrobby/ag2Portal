@@ -9,6 +9,7 @@ module Ag2Products
       session[:No] = nil      
       session[:Type] = nil      
       session[:Family] = nil
+      session[:Store] = nil
       session[:Measure] = nil      
       session[:Manufacturer] = nil
       session[:Tax] = nil      

@@ -1,12 +1,12 @@
 <script>
+  var _s = '';
+  
   $(document).ready(function() {
     /*
      * Retrieves parent values
      */
-    // Form
-    var _f = $("#fnt-product").closest('form')[0];
     // Store
-    var _s = $('#inventory_count_store_id :selected').val();
+    _s = $('#inventory_count_store_id :selected').val();
     if (_s == "") _s = "0";
 
     $('.isel2').select2({
@@ -48,7 +48,7 @@
       qty = parseInt(right_number(qty, 4) * 10000);
       jQuery.getJSON('ic_update_from_product_store/' + product + '/' + qty + '/' + _s, function(data) {
         $(_this).closest('tr').find('.fnt-initial').val(data.initial);
-        $(_this).closest('tr').find('.fnt-current').val(data.current);
+        $(_this).closest('tr').find('.fnt-current').val(data.stock);
       });
       return false;
     });
@@ -70,7 +70,7 @@
       // Right formatted for passing as REST parameter
       qty = parseInt(right_number(qty, 4) * 10000);
       jQuery.getJSON('ic_totals/' + qty, function(data) {
-        $(_this).closest('tr').find('.fnt-quantity').val(data.quantity);
+        $(_this).closest('tr').find('.fnt-quantity').val(data.qty);
         // Update and display totals
         $('#items-table').trigger('totals');
       });
@@ -113,8 +113,8 @@
     <%= f.simple_fields_for :inventory_count_items, defaults: { input_html: { class: 'sub-form' } } do |i| %>
     <tr class="fields">
       <td><%= i.association :product, label: false, wrapper: false, collection: @products, input_html: { class: 'isel2 fnt-product' } %></td>
-      <td><%= i.input :initial, disabled: true, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.initial, precision: 4) if i.object.initial), class: 'sub-number-text-field sub-disabled-field fnt-initial' } %></td>
-      <td><%= i.input :current, disabled: true, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.current, precision: 4) if i.object.current), class: 'sub-number-text-field sub-disabled-field fnt-current' } %></td>
+      <td><%= i.input :initial, readonly: true, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.initial, precision: 4) if i.object.initial), class: 'sub-number-text-field sub-disabled-field fnt-initial' } %></td>
+      <td><%= i.input :current, readonly: true, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.current, precision: 4) if i.object.current), class: 'sub-number-text-field sub-disabled-field fnt-current' } %></td>
       <td><%= i.input :quantity, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.quantity, precision: 4) if i.object.quantity), class: 'sub-number-text-field fnt-quantity' } %></td>
       <% if @breadcrumb == 'create' || @breadcrumb == 'update' %>
       <td><%= link_to_remove_fields('<i class="icon-trash"></i>'.html_safe, i) %></td>

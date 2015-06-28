@@ -43,8 +43,8 @@
       $('.fnt-new-btn').show();
     }
 
-    // Disable generate_code_btn if inventory_count_organization_id blank
-    var order = $('#inventory_count_organization_id').val();
+    // Disable generate_code_btn if inventory_count_store_id blank
+    var order = $('#inventory_count_store_id').val();
     if (order == "")
       order = "0";
     if (order == "0") {
@@ -127,14 +127,11 @@
           });
         }
       });
-      // Disable generate_code_btn if inventory_count_organization_id blank
+      // Disable generate_code_btn if inventory_count_store_id blank
       if (org == "0") {
         // Empty project: Hide
         $('#generate_code_btn').hide();
-        $("#inventory_count_project_id").val(0);
-      } else {
-        // Project OK: Show
-        $('#generate_code_btn').show();
+        $("#inventory_count_store_id").val(0);
       }
       return false;
     });
@@ -162,6 +159,14 @@
           });
         }
       });
+      // Disable generate_code_btn if inventory_count_store_id blank
+      if (store == "0") {
+        // Empty store Hide
+        $('#generate_code_btn').hide();
+      } else {
+        // Store OK: Show
+        $('#generate_code_btn').show();
+      }
       return false;
     });
     
@@ -176,8 +181,8 @@
         initial = $(this).find('input.fnt-initial').val().replace(",", ".");
         current = $(this).find('input.fnt-current').val().replace(",", ".");
         $(this).find('input.fnt-quantity').val(qty);
-        $(this).find('input.fnt-initial').val(price);
-        $(this).find('input.fnt-current').val(cost);
+        $(this).find('input.fnt-initial').val(initial);
+        $(this).find('input.fnt-current').val(current);
       });
       //e.preventDefault();
     });

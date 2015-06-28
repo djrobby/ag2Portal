@@ -29,7 +29,7 @@
       <td><%= request.approved_offer.partial_name unless request.approved_offer.blank? %></td>
       <td align="right"><%= number_with_precision(request.total, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless request.total.blank? %></td>
       <td> <%= render :partial => '/layouts/crud/edit', :locals => { :model => OfferRequest, :path => edit_offer_request_path(request) } %>
-      <%= render :partial => '/layouts/crud/delete', :locals => { :model => OfferRequest, :path => request, :msg => t("activerecord.models.offer_request.one"), :txt => request.request_no } %> </td>
+      <%= render :partial => '/layouts/crud/delete', :locals => { :model => OfferRequest, :path => request, :msg => t("activerecord.models.offer_request.one"), :txt => request.full_no } %> </td>
     </tr>
     <% end %>
   </tbody>

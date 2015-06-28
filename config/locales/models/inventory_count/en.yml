@@ -9,6 +9,7 @@ en:
     attributes:
       inventory_count:
         count_no: "No."
+        count_no_report: "No"
         count_date: "Date"
         inventory_count_type: "Type"
         inventory_count_type_id: "Type"

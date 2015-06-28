@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
+  </head>
+  <body>
+    <h3><%= t 'activerecord.models.inventory_count.one' %> <%= t 'activerecord.attributes.inventory_count.count_no_report' %>: <%= @inventory_count.full_no %></h3>
+    <div>
+      <%= t 'activerecord.attributes.inventory_count.count_date' %>: <%= formatted_date(@inventory_count.count_date) unless @inventory_count.count_date.blank? %>
+      <br />
+      <%= t 'activerecord.attributes.inventory_count.inventory_count_type' %>: <%= @inventory_count.inventory_count_type.name unless @inventory_count.inventory_count_type.blank? %>
+      <br />
+      <%= t 'activerecord.attributes.inventory_count.store' %>: <%= @inventory_count.store.name %>
+      <br />
+      <h4 style="color: #a67326;"><%= t 'activerecord.attributes.inventory_count.quantity' %>: <%= number_with_precision(@inventory_count.quantity, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless @inventory_count.quantity.blank? %></h4>
+      <p>
+        <%= t :created_at %> <%= formatted_timestamp(@inventory_count.created_at.utc.getlocal) %> <%= t :by %> <%= User.find(@inventory_count.created_by).email unless @inventory_count.created_by.blank? %>
+        <br />
+        <%= t :updated_at %> <%= formatted_timestamp(@inventory_count.updated_at.utc.getlocal) %> <%= t :by %> <%= User.find(@inventory_count.updated_by).email unless @inventory_count.updated_by.blank? %>
+      </p>
+      <p>
+        <a href="<%= ag2_products.inventory_count_url(:id => @inventory_count.id, :host => @current_host) %>"><%= t '.htmlapproval' %></a>
+      </p>
+      <br />
+      <p>
+        <%= t 'notifier.do_not_reply' %>
+      </p>
+    </div>
+  </body>
+</html>

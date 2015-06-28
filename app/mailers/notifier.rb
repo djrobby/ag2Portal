@@ -99,6 +99,29 @@ class Notifier < ActionMailer::Base
       end
     end
   end
+
+  # Inventory count
+  def inventory_count_saved(inventory_count, action)
+    @inventory_count = inventory_count
+    @current_host = current_host
+    recipients = notify_to(inventory_count, action, 2)
+    if recipients != ''
+      mail to: recipients do |format|
+        format.html
+      end
+    end
+  end
+
+  def inventory_count_saved_with_approval(inventory_count, action)
+    @inventory_count = inventory_count
+    @current_host = current_host
+    recipients = notify_to(inventory_count, action, 1)
+    if recipients != ''
+      mail to: recipients do |format|
+        format.html
+      end
+    end
+  end
   
   #  
   # Recipients based on Notifications
@@ -112,8 +135,19 @@ class Notifier < ActionMailer::Base
     _by_office = nil
     _table = _ivar.class.table_name
     _project = _ivar.project rescue nil
-    _office = _project.office rescue nil
-    _company = _project.company rescue nil
+    _store = _ivar.store rescue nil
+    _office = nil
+    _company = nil
+    # Search office & company
+    if !_project.blank?
+      # From project
+      _office = _project.office rescue nil
+      _company = _project.company rescue nil
+    elsif !_store.blank?
+      # From store
+      _office = _store.office rescue nil
+      _company = _store.company rescue nil
+    end
     # First notification for the searched table & action
     _notification = Notification.where(table: _table, action: _action).first rescue nil
     # Only if notification

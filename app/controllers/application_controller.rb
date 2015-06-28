@@ -545,7 +545,7 @@ end
     store = store.rjust(4, '0')
     year = year.to_s if year.is_a? Fixnum
     year = year.rjust(4, '0')
-    last_no = InventoryCount.where("count_no LIKE ?", "#{st}#ore{year}%").order(:count_no).maximum(:count_no)
+    last_no = InventoryCount.where("count_no LIKE ?", "#{store}#{year}%").order(:count_no).maximum(:count_no)
     if last_no.nil?
       code = store + year + '000001'
     else

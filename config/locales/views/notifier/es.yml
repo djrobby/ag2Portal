@@ -53,4 +53,14 @@ es:
       htmllink: "Ver esta oferta"
       approval: "** Se requiere tu aprobación **"
       htmlapproval: "Aprueba esta oferta"
+    inventory_count_saved:
+      subject: "aGestiona2: Recuento de inventario creado o actualizado"
+      link: "Puedes ver este recuento en el siguiente enlace"
+      htmllink: "Ver este recuento"
+    inventory_count_saved_with_approval:
+      subject: "aGestiona2: Recuento de inventario creado o actualizado (Aprobación requerida)"
+      link: "Puedes ver este recuento en el siguiente enlace"
+      htmllink: "Ver esta recuento"
+      approval: "** Se requiere tu aprobación **"
+      htmlapproval: "Aprueba este recuento"
     do_not_reply: "No responda directamente a este e-mail: Ha sido enviado desde un sistema desatendido."

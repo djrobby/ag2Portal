@@ -1,5 +1,6 @@
 <script>
   var _thisForm = '';
+  var changing = false;
 
   $(document).ready(function() {
     $('.sel2').select2({
@@ -15,8 +16,20 @@
     _thisForm = $("#Store").closest('form')[0];
   }); 
 
+  $(document).ajaxStart(function() {
+    // show loader on start
+    if (changing == false) {
+      $("#div_table").html("");
+      $("#loader").show();
+    }
+  }).ajaxSuccess(function() {
+    // hide loader on success
+    $("#loader").hide();
+  });
+
   $(window).bind("load", function() {
     $("#No").val("<%= params[:No] %>");
+    $("#Type").select2("val", "<%= params[:Type] %>");
     $("#Store").select2("val", "<%= params[:Store] %>");
     $("#Family").select2("val", "<%= params[:Family] %>");
   });
@@ -25,6 +38,7 @@
     // when the #removeFilter button clicked
     $("#removeFilter").click(function() {
       $("#No").val("");
+      $("#Type").select2("val", "");
       $("#Store").select2("val", "");
       $("#Family").select2("val", "");
       $("#search").val("");
@@ -56,8 +70,11 @@
         <!-- No -->
         <%= label_tag I18n.t("activerecord.attributes.inventory_count.count_no"), nil, :class => 'form-label' %>
         <%= text_field_tag "No", nil, :class => 'x-large-text-field shrinked number-text-field', onkeyup: "caps(this)" %>
+        <!-- Type -->
+        <%= label_tag I18n.t("activerecord.attributes.inventory_count.inventory_count_type"), nil, :class => 'form-label' %>
+        <%= select_tag "Type", options_from_collection_for_select(@types, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
         <!-- Store -->
-        <%= label_tag I18n.t("activerecord.attributes.inventory_count.store"), nil, :class => 'form-label' %>
+        <%= label_tag I18n.t("activerecord.attributes.inventory_count.store"), nil, :class => 'form-label-under-sel2' %>
         <%= select_tag "Store", options_from_collection_for_select(@stores, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
         <!-- Family -->
         <%= label_tag I18n.t("activerecord.attributes.inventory_count.product_family"), nil, :class => 'form-label-under-sel2' %>
@@ -78,8 +95,13 @@
       </div><!-- /.sidebar-nav -->
     </div><!-- /.span3 -->
 
-    <div class="span9" id="div_table">
-      <%= render 'inventory_counts' %>
+    <div class="span9">
+      <div id="loader"></div>
+      <div id="div_table">
+        <%= render 'inventory_counts' %>
+      </div>
     </div><!-- /.span9 -->
   </div><!-- /.row-fluid -->
 </div><!-- /.container-fluid -->
+<!-- Modal: New offer from request -->
+<%= render 'new_offer_from_family' %>

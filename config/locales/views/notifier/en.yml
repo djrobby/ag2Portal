@@ -53,4 +53,14 @@ en:
       htmllink: "Show this offer"
       approval: "** Your approval is required **"
       htmlapproval: "Approve this offer"
+    inventory_count_saved:
+      subject: "aGestiona2: Inventory count created or updated"
+      link: "You can see this count on the following link"
+      htmllink: "Show this count"
+    inventory_count_saved_with_approval:
+      subject: "aGestiona2: Inventory count created or updated (Approval required)"
+      link: "You can see this count on the following link"
+      htmllink: "Show this count"
+      approval: "** Your approval is required **"
+      htmlapproval: "Approve this count"
     do_not_reply: "Do not reply directly to this e-mail: It was sent from an unattended mailbox."

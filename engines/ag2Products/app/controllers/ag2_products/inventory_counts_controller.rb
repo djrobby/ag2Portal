@@ -87,7 +87,7 @@ module Ag2Products
         code = '$err'
       end   # store != '0' && family != '0'
       if code == ''
-        code = I18n.t("ag2_products.inventory_counts.generate_count_ok", var: inventory_count.id.to_s)
+        code = I18n.t("ag2_products.inventory_counts.generate_count_ok", var: inventory_count.full_no)
       end
       @json_data = { "code" => code }
       render json: @json_data
@@ -124,13 +124,26 @@ module Ag2Products
             # Success
             code = '$ok'
             # Update stocks
-            inventory_count.inventory_count_items each do |i|
-              
-            end
+            inventory_count.inventory_count_items.each do |i|
+              stock = Stock.find_by_product_and_store(i.product_id, inventory_count.store_id)
+              if inventory_count.inventory_count_type_id == 1      # Initial
+                stock.initial = i.quantity
+                stock.current = i.quantity + stock.receipts - stock.deliveries
+              elsif inventory_count.inventory_count_type_id == 2   # Regularization
+                stock.current = i.quantity
+                stock.initial = i.quantity - stock.receipts + stock.deliveries
+              end
+              # Save stock
+              if !stock.save
+                # Can't save count
+                code = '$write'
+                break
+              end
+            end   # do |i|
           else
             # Can't save count
             code = '$write'
-          end
+          end   # inventory_count.save
         else
           # This count is already approved
           code = '$warn'
@@ -146,6 +159,10 @@ module Ag2Products
       # Approval date
       if !_approval_date.nil?
         _approval_date = formatted_timestamp(_approval_date)
+      end
+      # Success
+      if code == '' || code == '$ok'
+        code = I18n.t("ag2_products.inventory_counts.approve_count_ok", var: inventory_count.full_no)
       end
 
       @json_data = { "code" => code, "approver" => _approver, "approval_date" => _approval_date }
@@ -200,6 +217,7 @@ module Ag2Products
     def index
       manage_filter_state
       no = params[:No]
+      type = params[:Type]
       store = params[:Store]
       family = params[:Family]
       # OCO
@@ -207,11 +225,12 @@ module Ag2Products
       # Initialize select_tags
       @stores = stores_dropdown if @stores.nil?
       @families = families_dropdown if @families.nil?
+      @types = InventoryCountType.order(:id) if @types.nil?
 
       # If inverse no search is required
       no = !no.blank? && no[0] == '%' ? inverse_no_search(no) : no
       
-      @search = DeliveryNote.search do
+      @search = InventoryCount.search do
         fulltext params[:search]
         if session[:organization] != '0'
           with :organization_id, session[:organization]
@@ -228,6 +247,9 @@ module Ag2Products
         end
         if !family.blank?
           with :product_family_id, family
+        end
+        if !type.blank?
+          with :inventory_count_type_id, type
         end
         order_by :sort_no, :asc
         paginate :page => params[:page] || 1, :per_page => per_page
@@ -277,7 +299,7 @@ module Ag2Products
       @breadcrumb = 'update'
       @inventory_count = InventoryCount.find(params[:id])
       @stores = @inventory_count.organization.blank? ? stores_dropdown : @inventory_count.organization.stores.order(:name)
-      if @inventory_count.store.blank
+      if @inventory_count.store.blank?
         @families = @inventory_count.organization.blank? ? families_dropdown : @inventory_count.organization.product_families.order(:family_code)
         @products = @inventory_count.organization.blank? ? products_dropdown : @inventory_count.organization.products.order(:product_code)
       else
@@ -321,7 +343,7 @@ module Ag2Products
           format.json { head :no_content }
         else
           @stores = @inventory_count.organization.blank? ? stores_dropdown : @inventory_count.organization.stores.order(:name)
-          if @inventory_count.store.blank
+          if @inventory_count.store.blank?
             @families = @inventory_count.organization.blank? ? families_dropdown : @inventory_count.organization.product_families.order(:family_code)
             @products = @inventory_count.organization.blank? ? products_dropdown : @inventory_count.organization.products.order(:product_code)
           else
@@ -403,6 +425,12 @@ module Ag2Products
         session[:No] = params[:No]
       elsif session[:No]
         params[:No] = session[:No]
+      end
+      # type
+      if params[:Type]
+        session[:Type] = params[:Type]
+      elsif session[:Type]
+        params[:Type] = session[:Type]
       end
       # store
       if params[:Store]

@@ -185,7 +185,7 @@
 
 <%= render partial: '/layouts/crud/update_delete_new', locals:
 { model: OfferRequest, update_path: edit_offer_request_path(@offer_request), update_txt: t('.btn_edit'),
-delete_path: @offer_request, delete_txt: t('.btn_delete'), msg: t("activerecord.models.offer_request.one"), txt: @offer_request.request_no,
+delete_path: @offer_request, delete_txt: t('.btn_delete'), msg: t("activerecord.models.offer_request.one"), txt: @offer_request.full_no,
 new_path: new_offer_request_path, new_txt: t('ag2_purchase.offer_requests.index.btn_new') } %>
 
 <!-- Offers -->

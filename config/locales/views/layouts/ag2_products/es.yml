@@ -37,3 +37,6 @@ es:
       ctypes:
         items: "Tipos de recuento de inventario"
         item: "Tipo"
+      inventory_counts:
+        items: "Recuentos de inventario"
+        item: "Recuento"

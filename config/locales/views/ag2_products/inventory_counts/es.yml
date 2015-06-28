@@ -3,15 +3,15 @@ es:
     inventory_counts:
       index:
         title: "Recuentos de inventario"
-        btn_new: "Nuevo Recuento de inventario"
-        btn_new_from_request: "Nuevo Recuento para Familia"
+        btn_new: "Nuevo Recuento"
+        btn_new_from_family: "Nuevo Recuento para Familia"
         back_to_root: "Volver a ag2Logistics"
         label_others: "Otros"
         btn_apply: "Aplicar Filtro"
       show:
         title: "Recuento de inventario"
-        btn_edit: "Editar Recuento de inventario"
-        btn_delete: "Borrar Recuento de inventario"
+        btn_edit: "Editar Recuento"
+        btn_delete: "Borrar Recuento"
         print: "Imprimir"
       edit:
         title: "Editar Recuento de inventario"
@@ -34,3 +34,4 @@ es:
       approve_count_error: "Recuento de inventario no encontrado."
       approve_count_write: "Imposible guardar Recuento de inventario."
       approve_count_warn: "Este Recuento de inventario ya está aprobado."
+      approve_count_ok: "Recuento de inventario %{var} ha sido aprobado y confirmado."

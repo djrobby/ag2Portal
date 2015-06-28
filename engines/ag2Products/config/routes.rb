@@ -180,7 +180,7 @@ Ag2Products::Engine.routes.draw do
     # Inventory counts 
     match 'inventory_counts/ic_totals/:qty', :controller => 'inventory_counts', :action => 'ic_totals'
     match 'ic_totals/:qty', :controller => 'inventory_counts', :action => 'ic_totals'
-    match 'delivery_notes/:id/ic_totals/:qty', :controller => 'inventory_counts', :action => 'ic_totals'
+    match 'inventory_counts/:id/ic_totals/:qty', :controller => 'inventory_counts', :action => 'ic_totals'
     match 'inventory_counts/ic_update_family_select_from_store/:store', :controller => 'inventory_counts', :action => 'ic_update_family_select_from_store'
     match 'ic_update_family_select_from_store/:store', :controller => 'inventory_counts', :action => 'ic_update_family_select_from_store'
     match 'inventory_counts/:id/ic_update_family_select_from_store/:store', :controller => 'inventory_counts', :action => 'ic_update_family_select_from_store'

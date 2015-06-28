@@ -34,3 +34,4 @@ en:
       approve_count_error: "Inventory count not found."
       approve_count_write: "Unable to save Inventory count."
       approve_count_warn: "This Inventory count is already approved."
+      approve_count_ok: "Inventory count %{var} has been approved & confirmed."

@@ -94,7 +94,7 @@
 
 <%= render partial: '/layouts/crud/update_delete_new', locals:
 { model: DeliveryNote, update_path: edit_delivery_note_path(@delivery_note), update_txt: t('.btn_edit'),
-delete_path: @delivery_note, delete_txt: t('.btn_delete'), msg: t("activerecord.models.delivery_note.one"), txt: @delivery_note.delivery_no,
+delete_path: @delivery_note, delete_txt: t('.btn_delete'), msg: t("activerecord.models.delivery_note.one"), txt: @delivery_note.full_no,
 new_path: new_delivery_note_path, new_txt: t('ag2_products.delivery_notes.index.btn_new') } %>
 
 <% if !session[:return_to_prod].nil? %>

@@ -20,12 +20,13 @@
         order = "0";
       jQuery.getJSON('ic_approve_count/' + order, function(data) {
         if (data.code == "$err") {
-          alert('<%= I18n.t("ag2_purchase.inventory_counts.approve_count_error") %>');
+          alert('<%= I18n.t("ag2_products.inventory_counts.approve_count_error") %>');
         } else if (data.code == "$write") {
-          alert('<%= I18n.t("ag2_purchase.inventory_counts.approve_count_write") %>');
+          alert('<%= I18n.t("ag2_products.inventory_counts.approve_count_write") %>');
         } else if (data.code == "$warn") {
-          alert('<%= I18n.t("ag2_purchase.inventory_counts.approve_count_warn") %>');
+          alert('<%= I18n.t("ag2_products.inventory_counts.approve_count_warn") %>');
         } else {
+          alert(data.code);
           $('#approver').text(data.approver);
           $('#approval_date').text(data.approval_date);
           $('#approve_count_btn').hide();
@@ -126,9 +127,9 @@
   <tbody>
     <tr class="form-tr">
       <td class="form-td-two left-winged">
-        <%= render partial: '/layouts/crud/update_delete_new', locals:
+        <%= render partial: '/layouts/crud/update_delete_new_no_br', locals:
         { model: InventoryCount, update_path: edit_inventory_count_path(@inventory_count), update_txt: t('.btn_edit'),
-        delete_path: @inventory_count, delete_txt: t('.btn_delete'), msg: t("activerecord.models.inventory_count.one"), txt: @inventory_count.count_no,
+        delete_path: @inventory_count, delete_txt: t('.btn_delete'), msg: t("activerecord.models.inventory_count.one"), txt: @inventory_count.full_no,
         new_path: new_inventory_count_path, new_txt: t('ag2_products.inventory_counts.index.btn_new') } %>
       </td>
       <td class="form-td-two right-winged">

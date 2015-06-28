@@ -37,3 +37,6 @@ en:
       ctypes:
         items: "Inventory count types"
         item: "Type"
+      inventory_counts:
+        items: "Inventory counts"
+        item: "Count"
