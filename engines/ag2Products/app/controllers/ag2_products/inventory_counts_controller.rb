@@ -57,7 +57,7 @@ module Ag2Products
           inventory_count.count_date = Time.now.to_date
           inventory_count.inventory_count_type_id = 2
           inventory_count.store_id = store
-          inventory.count.product_family_id = family
+          inventory_count.product_family_id = family
           inventory_count.organization_id = Store.find(store).organization_id rescue nil
           inventory_count.created_by = current_user.id if !current_user.nil?
           if inventory_count.save
@@ -67,6 +67,8 @@ module Ag2Products
               inventory_count_item.inventory_count_id = inventory_count.id
               inventory_count_item.product_id = i.product_id
               inventory_count_item.quantity = 0
+              inventory_count_item.initial = i.initial
+              inventory_count_item.current = i.current
               inventory_count_item.created_by = current_user.id if !current_user.nil?
               if !inventory_count_item.save
                 # Can't save offer item (exit)
