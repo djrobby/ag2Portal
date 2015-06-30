@@ -128,12 +128,25 @@ module Ag2Products
             # Update stocks
             inventory_count.inventory_count_items.each do |i|
               stock = Stock.find_by_product_and_store(i.product_id, inventory_count.store_id)
-              if inventory_count.inventory_count_type_id == 1      # Initial
+              if !stock.nil?
+                # Updates existing stock
+                if inventory_count.inventory_count_type_id == 1      # Initial
+                  stock.initial = i.quantity
+                  stock.current = i.quantity + stock.receipts - stock.deliveries
+                elsif inventory_count.inventory_count_type_id == 2   # Regularization
+                  stock.current = i.quantity
+                  stock.initial = i.quantity - stock.receipts + stock.deliveries
+                end
+              else
+                # New stock
+                stock = Stock.new
+                stock.product_id = i.product_id
+                stock.store_id = inventory_count.store_id
                 stock.initial = i.quantity
-                stock.current = i.quantity + stock.receipts - stock.deliveries
-              elsif inventory_count.inventory_count_type_id == 2   # Regularization
                 stock.current = i.quantity
-                stock.initial = i.quantity - stock.receipts + stock.deliveries
+                stock.minimum = 0
+                stock.maximum = 0
+                stock.created_by = current_user.id if !current_user.nil?
               end
               # Save stock
               if !stock.save
@@ -273,7 +286,8 @@ module Ag2Products
       @items = @inventory_count.inventory_count_items.paginate(:page => params[:page], :per_page => per_page).order('id')
       # Approvers
       @is_approver = company_approver(@inventory_count, @inventory_count.store.company, current_user.id) ||
-                     office_approver(@inventory_count, @inventory_count.store.office, current_user.id)
+                     office_approver(@inventory_count, @inventory_count.store.office, current_user.id) ||
+                     (current_user.has_role? :Approver)
   
       respond_to do |format|
         format.html # show.html.erb

@@ -459,6 +459,7 @@ module Ag2Purchase
       # Approvers
       @is_approver = company_approver(@purchase_order, @purchase_order.project.company, current_user.id) ||
                      office_approver(@purchase_order, @purchase_order.project.office, current_user.id)
+                     #(current_user.has_role? :Administrator)
   
       respond_to do |format|
         format.html # show.html.erb

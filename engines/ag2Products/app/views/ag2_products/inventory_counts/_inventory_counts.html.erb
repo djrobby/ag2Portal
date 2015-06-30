@@ -21,7 +21,11 @@
   </thead>
   <tbody>
     <% @inventory_counts.each do |note| %>
-    <tr>
+    <% if !note.approver_id.blank? %>
+      <tr class="approved-tr">
+    <% else %>
+      <tr>
+    <% end %>
       <td><%= link_to note.full_no, note %></td>
       <td align="center"><%= formatted_date(note.count_date) unless note.count_date.blank? %></td>
       <td><%= note.inventory_count_type.name unless note.inventory_count_type.blank? %></td>
