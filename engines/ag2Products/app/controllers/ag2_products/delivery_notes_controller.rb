@@ -464,6 +464,23 @@ module Ag2Products
         end
       end
     end
+
+    # Delivery note form (report)
+    def delivery_note_form
+      # Search delivery note & items
+      @delivery_note = DeliveryNote.find(params[:id])
+      @items = @delivery_note.delivery_note_items
+
+      title = t("activerecord.models.delivery_note.one")      
+
+      respond_to do |format|
+        # Render PDF
+        format.pdf { send_data render_to_string,
+                     filename: "#{title}_#{@delivery_note.full_no}.pdf",
+                     type: 'application/pdf',
+                     disposition: 'inline' }
+      end
+    end
     
     private
     

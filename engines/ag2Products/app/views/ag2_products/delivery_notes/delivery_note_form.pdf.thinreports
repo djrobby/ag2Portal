@@ -1,4 +1,4 @@
-if @purchase_order.nil?
+if @delivery_note.nil?
 	return
 end
 if @items.count <= 0
@@ -8,7 +8,7 @@ end
 # Localization for numbers
 delimiter = I18n.locale == :es ? "." : ","
 
-report.set_layout tlf: 'reports/purchase_order_form', layout_options: { default: true }
+report.set_layout tlf: 'reports/delivery_note_form', layout_options: { default: true }
 
 #
 # Report events
@@ -50,19 +50,19 @@ report.layout.config.list(:default) do |c|
 	# On list footer insertion
 	c.events.on :footer_insert do |e|
 		# Display list totals
-		e.section.item(:subtotal_c).value(I18n.t("activerecord.attributes.purchase_order.subtotal"))
-		e.section.item(:bonus_c).value(I18n.t("activerecord.attributes.purchase_order.bonus") + " " + number_with_precision(@purchase_order.discount_pct, precision: 2) + "%")
-		e.section.item(:taxable_c).value(I18n.t("activerecord.attributes.purchase_order.taxable_c"))
-		e.section.item(:taxes_c).value(I18n.t("activerecord.attributes.purchase_order.taxes"))
-		e.section.item(:total_c).value(I18n.t("activerecord.attributes.purchase_order.total").upcase)
-		e.section.item(:subtotal).value(number_with_precision(@purchase_order.subtotal, precision: 2, delimiter: delimiter))
-		e.section.item(:bonus).value(number_with_precision(@purchase_order.bonus, precision: 2, delimiter: delimiter))
-		e.section.item(:taxable).value(number_with_precision(@purchase_order.taxable, precision: 2, delimiter: delimiter))
-		e.section.item(:taxes).value(number_with_precision(@purchase_order.taxes, precision: 2, delimiter: delimiter))
-		e.section.item(:total).value(number_with_precision(@purchase_order.total, precision: 2, delimiter: delimiter))
+		e.section.item(:subtotal_c).value(I18n.t("activerecord.attributes.delivery_note.subtotal"))
+		e.section.item(:bonus_c).value(I18n.t("activerecord.attributes.delivery_note.bonus") + " " + number_with_precision(@delivery_note.discount_pct, precision: 2) + "%")
+		e.section.item(:taxable_c).value(I18n.t("activerecord.attributes.delivery_note.taxable_c"))
+		e.section.item(:taxes_c).value(I18n.t("activerecord.attributes.delivery_note.taxes"))
+		e.section.item(:total_c).value(I18n.t("activerecord.attributes.delivery_note.total").upcase)
+		e.section.item(:subtotal).value(number_with_precision(@delivery_note.subtotal, precision: 2, delimiter: delimiter))
+		e.section.item(:bonus).value(number_with_precision(@delivery_note.bonus, precision: 2, delimiter: delimiter))
+		e.section.item(:taxable).value(number_with_precision(@delivery_note.taxable, precision: 2, delimiter: delimiter))
+		e.section.item(:taxes).value(number_with_precision(@delivery_note.taxes, precision: 2, delimiter: delimiter))
+		e.section.item(:total).value(number_with_precision(@delivery_note.total, precision: 2, delimiter: delimiter))
 		# Display tax details
-		e.section.item(:tax_details).value(I18n.t("activerecord.attributes.purchase_order.tax_breakdown"))
-		@purchase_order.tax_breakdown.each do |tb|
+		e.section.item(:tax_details).value(I18n.t("activerecord.attributes.delivery_note.tax_breakdown"))
+		@delivery_note.tax_breakdown.each do |tb|
 			e.section.item(:tax_list).value(tb[0].to_s.rjust(2, '0') + " " + tb[1] + ": " +
 											number_with_precision(tb[3], precision: 2, delimiter: delimiter) + " × " +
 											number_with_precision(tb[2], precision: 2, delimiter: delimiter) + "% = " +
@@ -75,57 +75,57 @@ end
 report.start_new_page
 
 # Page header: Image block for Logo
-report.page.values company_logo: "public/" + @purchase_order.project.company.logo.url(:original).split("?").first unless @purchase_order.project.company.logo.blank?
+report.page.values company_logo: "public/" + @delivery_note.project.company.logo.url(:original).split("?").first unless @delivery_note.project.company.logo.blank?
 # Page header: Company
-report.page.values(company_name: @purchase_order.project.company.name,
-				   company_address_1: @purchase_order.project.company.address_1,
-				   company_address_2: @purchase_order.project.company.address_2,
-				   company_phones: @purchase_order.project.company.phone_and_fax,
-				   company_email: @purchase_order.project.company.email_and_website,
-				   company_fiscal_id: I18n.t("activerecord.attributes.company.fiscal_id_c") + ": " + @purchase_order.project.company.fiscal_id)
+report.page.values(company_name: @delivery_note.project.company.name,
+				   company_address_1: @delivery_note.project.company.address_1,
+				   company_address_2: @delivery_note.project.company.address_2,
+				   company_phones: @delivery_note.project.company.phone_and_fax,
+				   company_email: @delivery_note.project.company.email_and_website,
+				   company_fiscal_id: I18n.t("activerecord.attributes.company.fiscal_id_c") + ": " + @delivery_note.project.company.fiscal_id)
 # Page header: Others
-report.page.values(form_title: I18n.t("activerecord.models.purchase_order.one"),
-				   order_no_title: I18n.t("activerecord.attributes.purchase_order.order_no_report") + ":",
-				   order_no: @purchase_order.full_no,
-				   order_date_title: I18n.t("activerecord.attributes.purchase_order.order_date") + ":",
-				   order_date: @purchase_order.order_date.strftime("%d/%m/%Y"),
-				   offer_title: I18n.t("activerecord.attributes.purchase_order.offer") + ":",
-				   offer: @purchase_order.offer.offer_no,
-				   supplier_title: I18n.t("activerecord.attributes.purchase_order.supplier"),
-				   petitioner_title: I18n.t("activerecord.attributes.purchase_order.office_c"),
-				   supplier_name: @purchase_order.supplier.name,
-				   supplier_address_1: @purchase_order.supplier.address_1,
-				   supplier_address_2: @purchase_order.supplier.address_2,
-				   supplier_fiscal_id: I18n.t("activerecord.attributes.supplier.fiscal_id_c") + ": " + @purchase_order.supplier.fiscal_id,
-				   petitioner_name: @purchase_order.project.office.name,
-				   petitioner_address_1: @purchase_order.project.office.address_1,
-				   petitioner_address_2: @purchase_order.project.office.address_2,
-				   petitioner_phones_email: @purchase_order.project.office.phone_fax_email,
-				   payment_title: I18n.t("activerecord.attributes.purchase_order.payment_method"),
+report.page.values(form_title: I18n.t("activerecord.models.delivery_note.one"),
+				   order_no_title: I18n.t("activerecord.attributes.delivery_note.order_no_report") + ":",
+				   order_no: @delivery_note.full_no,
+				   order_date_title: I18n.t("activerecord.attributes.delivery_note.order_date") + ":",
+				   order_date: @delivery_note.order_date.strftime("%d/%m/%Y"),
+				   offer_title: I18n.t("activerecord.attributes.delivery_note.offer") + ":",
+				   offer: @delivery_note.offer.offer_no,
+				   supplier_title: I18n.t("activerecord.attributes.delivery_note.supplier"),
+				   petitioner_title: I18n.t("activerecord.attributes.delivery_note.office_c"),
+				   supplier_name: @delivery_note.supplier.name,
+				   supplier_address_1: @delivery_note.supplier.address_1,
+				   supplier_address_2: @delivery_note.supplier.address_2,
+				   supplier_fiscal_id: I18n.t("activerecord.attributes.supplier.fiscal_id_c") + ": " + @delivery_note.supplier.fiscal_id,
+				   petitioner_name: @delivery_note.project.office.name,
+				   petitioner_address_1: @delivery_note.project.office.address_1,
+				   petitioner_address_2: @delivery_note.project.office.address_2,
+				   petitioner_phones_email: @delivery_note.project.office.phone_fax_email,
+				   payment_title: I18n.t("activerecord.attributes.delivery_note.payment_method"),
 				   store_location_title: I18n.t("activerecord.attributes.store.delivery_location"),
-				   payment_method: @purchase_order.payment_method.description,
-				   store_address_1: @purchase_order.store.address_1,
-				   store_address_2: @purchase_order.store.address_2,
-				   store_phones: @purchase_order.store.phone_and_fax)
+				   payment_method: @delivery_note.payment_method.description,
+				   store_address_1: @delivery_note.store.address_1,
+				   store_address_2: @delivery_note.store.address_2,
+				   store_phones: @delivery_note.store.phone_and_fax)
 # Page footer
 report.page.values(printed_at: Time.now,
 				   pt: I18n.t("every_report.pt"),
 				   pd: I18n.t("every_report.pd"),
 				   currency_note: I18n.t("every_report.currency_note"),
-				   remarks_title: I18n.t("activerecord.attributes.purchase_order.remarks"),
-				   remarks: @purchase_order.remarks)
+				   remarks_title: I18n.t("activerecord.attributes.delivery_note.remarks"),
+				   remarks: @delivery_note.remarks)
 
 # List header
 report.page.list(:default).header do |header|
 	header.item(:no_c).value "#"
-	header.item(:product_c).value I18n.t("activerecord.attributes.purchase_order_item.code")
-	header.item(:description_c).value I18n.t("activerecord.attributes.purchase_order_item.description_c")
-	header.item(:quantity_c).value I18n.t("activerecord.attributes.purchase_order_item.quantity_c")
-	header.item(:price_c).value I18n.t("activerecord.attributes.purchase_order_item.price_c")
-	header.item(:discount_c).value I18n.t("activerecord.attributes.purchase_order_item.discount_c")
-	header.item(:amount_c).value I18n.t("activerecord.attributes.purchase_order_item.amount_c")
-	header.item(:tax_c).value I18n.t("activerecord.attributes.purchase_order_item.tax_c")
-	header.item(:delivery_date_c).value I18n.t("activerecord.attributes.purchase_order_item.delivery_date")
+	header.item(:product_c).value I18n.t("activerecord.attributes.delivery_note_item.code")
+	header.item(:description_c).value I18n.t("activerecord.attributes.delivery_note_item.description_c")
+	header.item(:quantity_c).value I18n.t("activerecord.attributes.delivery_note_item.quantity_c")
+	header.item(:price_c).value I18n.t("activerecord.attributes.delivery_note_item.price_c")
+	header.item(:discount_c).value I18n.t("activerecord.attributes.delivery_note_item.discount_c")
+	header.item(:amount_c).value I18n.t("activerecord.attributes.delivery_note_item.amount_c")
+	header.item(:tax_c).value I18n.t("activerecord.attributes.delivery_note_item.tax_c")
+	header.item(:delivery_date_c).value I18n.t("activerecord.attributes.delivery_note_item.delivery_date")
 end
 
 # List detail

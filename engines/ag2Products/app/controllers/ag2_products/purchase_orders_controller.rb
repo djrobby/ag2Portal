@@ -349,7 +349,7 @@ module Ag2Products
     end
 
     # Purchase order form (report)
-    def purchase_order_form
+    def purchase_order_form_
       id = params[:id]
       if id.blank? 
         return

@@ -388,6 +388,23 @@ module Ag2Products
         end
       end
     end
+
+    # Inventory count form (report)
+    def inventory_count_form
+      # Search inventory count & items
+      @inventory_count = InventoryCount.find(params[:id])
+      @items = @inventory_count.inventory_count_items
+
+      title = t("activerecord.models.inventory_count.one")      
+
+      respond_to do |format|
+        # Render PDF
+        format.pdf { send_data render_to_string,
+                     filename: "#{title}_#{@inventory_count.full_no}.pdf",
+                     type: 'application/pdf',
+                     disposition: 'inline' }
+      end
+    end
     
     private
 
