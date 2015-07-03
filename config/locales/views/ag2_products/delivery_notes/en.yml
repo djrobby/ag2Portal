@@ -15,6 +15,7 @@ en:
         btn_edit: "Edit Delivery note"
         btn_delete: "Delete Delivery note"
         print: "Print"
+        print_client: "For the Customer"
       edit:
         title: "Edit Delivery note"
         btn_show: "Show Delivery note"

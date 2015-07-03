@@ -216,10 +216,15 @@ Ag2Products::Engine.routes.draw do
     resources :purchase_orders do
       get 'purchase_order_form', on: :collection
     end
-    resources :delivery_notes
+    resources :delivery_notes do
+      get 'delivery_note_form', on: :collection
+      get 'delivery_note_form_client', on: :collection
+    end
     resources :receipt_notes
     resources :inventory_count_types
-    resources :inventory_counts
+    resources :inventory_counts do
+      get 'inventory_count_form', on: :collection
+    end
 
     # Root
     root :to => 'home#index'

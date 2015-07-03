@@ -9,6 +9,16 @@
       window.open("delivery_note_form.pdf?id=" + id, "_blank");
       return false;
     });
+
+    // when #print_report_btn_client is clicked
+    $("#print_report_btn_client").click(function() {
+      // make a POST call and get report
+      var id = $('#id').html();
+      if (id == "")
+        return;
+      window.open("delivery_note_form_client.pdf?id=" + id, "_blank");
+      return false;
+    });
   });  
 </script>
 
@@ -61,6 +71,9 @@
       </td>
       <td class="form-td-two right-winged">
         <a href="#" id="print_report_btn" class="btn btn-warning"><i class="icon-print icon-white"></i> <%= t '.print' %></a>
+        <% if !@delivery_note.client.blank? %>
+          <a href="#" id="print_report_btn_client" class="btn btn-warning"><i class="icon-print icon-white"></i> <%= t '.print_client' %></a>
+        <% end %>
       </td>
     </tr>
   </tbody>

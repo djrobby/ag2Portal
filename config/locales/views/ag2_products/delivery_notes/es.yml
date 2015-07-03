@@ -15,6 +15,7 @@ es:
         btn_edit: "Editar Nota de entrega"
         btn_delete: "Borrar Nota de entrega"
         print: "Imprimir"
+        print_client: "Para el Cliente"
       edit:
         title: "Editar Nota de entrega"
         btn_show: "Ver Nota de entrega"
