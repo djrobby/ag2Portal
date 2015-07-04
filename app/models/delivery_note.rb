@@ -117,6 +117,12 @@ class DeliveryNote < ActiveRecord::Base
     delivery_note_items.sum("quantity")
   end
 
+  # Returns multidimensional array containing different tax type in each line
+  # Each line contains 5 elements: Id, Description, Tax %, Net amount & Net tax
+  def tax_breakdown
+    tt = global_tax_breakdown(delivery_note_items, false)
+  end
+
   #
   # Records navigator
   #

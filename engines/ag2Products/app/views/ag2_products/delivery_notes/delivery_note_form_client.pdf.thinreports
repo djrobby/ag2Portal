@@ -8,7 +8,7 @@ end
 # Localization for numbers
 delimiter = I18n.locale == :es ? "." : ","
 
-report.set_layout tlf: 'reports/delivery_note_form', layout_options: { default: true }
+report.set_layout tlf: 'reports/delivery_note_form_client', layout_options: { default: true }
 
 #
 # Report events
@@ -83,27 +83,28 @@ report.page.values(company_name: @delivery_note.project.company.name,
 				   company_phones: @delivery_note.project.company.phone_and_fax,
 				   company_email: @delivery_note.project.company.email_and_website,
 				   company_fiscal_id: I18n.t("activerecord.attributes.company.fiscal_id_c") + ": " + @delivery_note.project.company.fiscal_id)
+# Page header: Possibly null values
+report.page.values offer: @delivery_note.sale_offer unless @delivery_note.sale_offer.blank?
+report.page.values payment_method: @delivery_note.payment_method.description unless @delivery_note.payment_method.blank?
 # Page header: Others
 report.page.values(form_title: I18n.t("activerecord.models.delivery_note.one"),
-				   order_no_title: I18n.t("activerecord.attributes.delivery_note.order_no_report") + ":",
-				   order_no: @delivery_note.full_no,
-				   order_date_title: I18n.t("activerecord.attributes.delivery_note.order_date") + ":",
-				   order_date: @delivery_note.order_date.strftime("%d/%m/%Y"),
-				   offer_title: I18n.t("activerecord.attributes.delivery_note.offer") + ":",
-				   offer: @delivery_note.offer.offer_no,
-				   supplier_title: I18n.t("activerecord.attributes.delivery_note.supplier"),
-				   petitioner_title: I18n.t("activerecord.attributes.delivery_note.office_c"),
-				   supplier_name: @delivery_note.supplier.name,
-				   supplier_address_1: @delivery_note.supplier.address_1,
-				   supplier_address_2: @delivery_note.supplier.address_2,
-				   supplier_fiscal_id: I18n.t("activerecord.attributes.supplier.fiscal_id_c") + ": " + @delivery_note.supplier.fiscal_id,
-				   petitioner_name: @delivery_note.project.office.name,
-				   petitioner_address_1: @delivery_note.project.office.address_1,
-				   petitioner_address_2: @delivery_note.project.office.address_2,
-				   petitioner_phones_email: @delivery_note.project.office.phone_fax_email,
+				   delivery_no_title: I18n.t("activerecord.attributes.delivery_note.delivery_no_report") + ":",
+				   delivery_no: @delivery_note.full_no,
+				   delivery_date_title: I18n.t("activerecord.attributes.delivery_note.delivery_date") + ":",
+				   delivery_date: @delivery_note.delivery_date.strftime("%d/%m/%Y"),
+				   offer_title: I18n.t("activerecord.attributes.delivery_note.sale_offer") + ":",
+				   client_title: I18n.t("activerecord.attributes.delivery_note.client"),
+				   sender_title: I18n.t("activerecord.attributes.delivery_note.office_c"),
+				   client_name: @delivery_note.client.name,
+				   client_address_1: @delivery_note.client.address_1,
+				   client_address_2: @delivery_note.client.address_2,
+				   client_fiscal_id: I18n.t("activerecord.attributes.client.fiscal_id_c") + ": " + @delivery_note.client.fiscal_id,
+				   sender_name: @delivery_note.project.office.name,
+				   sender_address_1: @delivery_note.project.office.address_1,
+				   sender_address_2: @delivery_note.project.office.address_2,
+				   sender_phones_email: @delivery_note.project.office.phone_fax_email,
 				   payment_title: I18n.t("activerecord.attributes.delivery_note.payment_method"),
 				   store_location_title: I18n.t("activerecord.attributes.store.delivery_location"),
-				   payment_method: @delivery_note.payment_method.description,
 				   store_address_1: @delivery_note.store.address_1,
 				   store_address_2: @delivery_note.store.address_2,
 				   store_phones: @delivery_note.store.phone_and_fax)
@@ -118,14 +119,13 @@ report.page.values(printed_at: Time.now,
 # List header
 report.page.list(:default).header do |header|
 	header.item(:no_c).value "#"
-	header.item(:product_c).value I18n.t("activerecord.attributes.delivery_note_item.code")
+	header.item(:product_c).value I18n.t("activerecord.attributes.delivery_note_item.product_c")
 	header.item(:description_c).value I18n.t("activerecord.attributes.delivery_note_item.description_c")
 	header.item(:quantity_c).value I18n.t("activerecord.attributes.delivery_note_item.quantity_c")
 	header.item(:price_c).value I18n.t("activerecord.attributes.delivery_note_item.price_c")
 	header.item(:discount_c).value I18n.t("activerecord.attributes.delivery_note_item.discount_c")
 	header.item(:amount_c).value I18n.t("activerecord.attributes.delivery_note_item.amount_c")
 	header.item(:tax_c).value I18n.t("activerecord.attributes.delivery_note_item.tax_c")
-	header.item(:delivery_date_c).value I18n.t("activerecord.attributes.delivery_note_item.delivery_date")
 end
 
 # List detail
@@ -141,7 +141,6 @@ no = 0
     	row.item(:discount).value number_with_precision(i.discount, precision: 4) unless i.discount.blank?
     	row.item(:amount).value number_with_precision(i.amount, precision: 4) unless i.amount.blank?
     	row.item(:tax).value number_with_precision(i.tax, precision: 4) unless i.tax.blank?
-    	row.item(:delivery_date).value i.delivery_date.strftime("%d/%m/%Y") unless i.delivery_date.blank?
 	end
 	# Store page subtotals
     report.page.list(:default) do |list|

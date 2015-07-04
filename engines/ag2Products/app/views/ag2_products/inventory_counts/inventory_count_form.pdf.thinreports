@@ -37,6 +37,7 @@ report.layout.config.list(:default) do |c|
 	c.events.on :page_footer_insert do |e|
 		# Display page sutotals
 		e.section.item(:page_subtotals).value(I18n.t("every_report.page_subtotals"))
+		e.section.item(:page_quantity).value(number_with_precision(e.store.page_quantity, precision: 4))
 		# Initialize subtotals to 0
 		e.store.page_quantity = 0
 	end
@@ -62,6 +63,10 @@ if !@inventory_count.store.company.blank?
 					   company_email: @inventory_count.store.company.email_and_website,
 					   company_fiscal_id: I18n.t("activerecord.attributes.company.fiscal_id_c") + ": " + @inventory_count.store.company.fiscal_id)
 end
+# Page header: Possibly null values
+report.page.values family: @inventory_count.product_family.full_name unless @inventory_count.product_family.blank?
+report.page.values approval_date: @inventory_count.approval_date.strftime("%d/%m/%Y %H:%M:%S") unless @inventory_count.approval_date.blank?
+report.page.values approver: @inventory_count.approver.email unless @inventory_count.approver.blank?
 # Page header: Others
 report.page.values(form_title: I18n.t("activerecord.models.inventory_count.one"),
 				   count_no_title: I18n.t("activerecord.attributes.inventory_count.count_no_report") + ":",
@@ -69,13 +74,12 @@ report.page.values(form_title: I18n.t("activerecord.models.inventory_count.one")
 				   count_date_title: I18n.t("activerecord.attributes.inventory_count.count_date") + ":",
 				   count_date: @inventory_count.count_date.strftime("%d/%m/%Y"),
 				   approval_date_title: I18n.t("activerecord.attributes.inventory_count.approval_date") + ":",
-				   approval_date: @inventory_count.approval_date.strftime("%d/%m/%Y %H:%M:%S"),
-				   type_title: I18n.t("activerecord.attributes.inventory_count.inventory_count_type"),
-				   store_title: I18n.t("activerecord.attributes.inventory_count.store"),
-				   family_title: I18n.t("activerecord.attributes.inventory_count.product_family"),
+				   approver_title: I18n.t("activerecord.attributes.inventory_count.approver") + ":",
+				   type_title: I18n.t("activerecord.attributes.inventory_count.inventory_count_type") + ":",
+				   store_title: I18n.t("activerecord.attributes.inventory_count.store") + ":",
+				   family_title: I18n.t("activerecord.attributes.inventory_count.product_family") + ":",
 				   type: @inventory_count.inventory_count_type.name,
-				   store: @inventory_count.store.name,
-				   family: @inventory_count.product_family.full_name)
+				   store: @inventory_count.store.name)
 # Page footer
 report.page.values(printed_at: Time.now,
 				   pt: I18n.t("every_report.pt"),

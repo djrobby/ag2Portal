@@ -489,7 +489,7 @@ module Ag2Products
       @items = @delivery_note.delivery_note_items
 
       title = t("activerecord.models.delivery_note.one")
-      tail = @delivery_note.client.full_code      
+      tail = t("activerecord.attributes.delivery_note.client") + ' ' + @delivery_note.client.full_code      
 
       respond_to do |format|
         # Render PDF
