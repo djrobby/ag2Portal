@@ -122,6 +122,29 @@ class Notifier < ActionMailer::Base
       end
     end
   end
+
+  # Supplier invoice & Payment
+  def supplier_invoice_saved(supplier_invoice, action)
+    @supplier_invoice = supplier_invoice
+    @current_host = current_host
+    recipients = notify_to(supplier_invoice, action, 2)
+    if recipients != ''
+      mail to: recipients do |format|
+        format.html
+      end
+    end
+  end
+
+  def supplier_invoice_saved_with_approval(supplier_invoice, action)
+    @supplier_invoice = supplier_invoice
+    @current_host = current_host
+    recipients = notify_to(supplier_invoice, action, 1)
+    if recipients != ''
+      mail to: recipients do |format|
+        format.html
+      end
+    end
+  end
   
   #  
   # Recipients based on Notifications

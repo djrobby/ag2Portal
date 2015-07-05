@@ -4,6 +4,8 @@ class SupplierInvoiceApproval < ActiveRecord::Base
   attr_accessible :approval_date, :approved_amount, :remarks,
                   :supplier_invoice_id, :approver_id
 
+  has_many :supplier_payments
+
   has_paper_trail
 
   #validates :supplier_invoice,  :presence => true
