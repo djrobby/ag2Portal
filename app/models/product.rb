@@ -73,6 +73,17 @@ class Product < ActiveRecord::Base
     full_name
   end
 
+  def full_name_and_code
+    full_name = full_code
+    if !self.main_description.blank?
+      full_name += " " + self.main_description[0,40]
+    end
+    if !self.manufacturer_p_code.blank?
+      full_name += " *" + self.manufacturer_p_code
+    end
+    full_name
+  end
+
   def partial_name
     full_name = full_code
     if !self.main_description.blank?

@@ -4,12 +4,6 @@
   var text_field_color;
 
   $(document).ready(function() {
-    $('.wsel2').select2({
-      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
-      dropdownCssClass: 'shrinked',
-      dropdownAutoWidth: true,
-      containerCssClass: 'sub-select2-field'
-    });
     $('.wdatepicker').datepicker({
       format : 'dd/mm/yyyy',
       weekStart : 1
@@ -18,7 +12,7 @@
     });
 
     // Save default text color
-    text_field_color = $(".fnt-approver").css('color')
+    //text_field_color = $(".fnt-approver").css('color')
 
     // Trigger to display totals at table foot
     $('#approvals-table').bind('totals', function(event) {
@@ -54,7 +48,7 @@
         $(_this).closest('tr').find('.fnt-approved-amount').val(data.amount);
         if (data.amount == "$err") {
           $(_this).closest('tr').find('.fnt-approved-amount').css('color', 'red');
-          alert('<%= I18n.t("ag2_purchase.supplier_invoices.approval_error", var: @invoice_debt) %>');
+          alert('<%= I18n.t("ag2_purchase.supplier_invoices.approval_error", var: @invoice_debt, bal: @invoice_not_yet_approved) %>');
           $(_this).closest('tr').find('.fnt-approved-amount').select();
         } else {
           $(_this).closest('tr').find('.fnt-approved-amount').css('color', text_field_color);
@@ -100,8 +94,8 @@
   <tbody>
     <%= f.simple_fields_for :supplier_invoice_approvals, defaults: { input_html: { class: 'sub-form' } } do |i| %>
     <tr class="fields">
-      <td><%= i.input :approver, disabled: true, label: false, wrapper: false, input_html: { class: 'sub-alfanumeric-text-field sub-disabled-field fnt-approver' } %></td>
-      <td><%= i.input :approval_date, label: false, wrapper: false, as: :string, start_year: Time.now.year - 100, end_year: Time.now.year + 100, input_html: { value: (f.object.approval_date.strftime("%d/%m/%Y") if f.object.approval_date), class: 'sub-alfanumeric-text-field wdatepicker fnt-approval-date' } %></td>
+      <td><%= i.association :approver, collection: @users, include_blank: false, readonly: true, label: false, wrapper: false, input_html: { class: 'sub-alfanumeric-text-field sub-disabled-field fnt-approver' } %></td>
+      <td><%= i.input :approval_date, label: false, wrapper: false, as: :string, start_year: Time.now.year - 100, end_year: Time.now.year + 100, input_html: { value: (i.object.approval_date.strftime("%d/%m/%Y") if i.object.approval_date), class: 'sub-alfanumeric-text-field wdatepicker fnt-approval-date' } %></td>
       <td><%= i.input :approved_amount, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.approved_amount, precision: 4) if i.object.approved_amount), class: 'sub-number-text-field fnt-approved-amount' } %></td>
       <td><%= i.input :remarks, label: false, wrapper: false, input_html: { class: 'sub-alfanumeric-text-field fnt-remarks', maxlength: 40 } %></td>
       <% if @breadcrumb == 'create' || @breadcrumb == 'update' %>

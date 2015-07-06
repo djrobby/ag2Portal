@@ -443,12 +443,12 @@
     
     // when submit    
     $(_thisForm).on('submit', function() {
-      // Must change decimal separator, if comma, in items table numeric fields
       var price = '';
       var qty = '';
       var discount_p = '';
       var discount = '';
-      $('tr.fields').each(function() {
+      // Must change decimal separator, if comma, in items table numeric fields
+      $('#items-table tr.fields').each(function() {
         qty = $(this).find('input.fnt-quantity').val().replace(",", ".");
         price = $(this).find('input.fnt-price').val().replace(",", ".");
         discount_p = $(this).find('input.fnt-discount-pct').val().replace(",", ".");
@@ -457,6 +457,11 @@
         $(this).find('input.fnt-price').val(price);
         $(this).find('input.fnt-discount-pct').val(discount_p);
         $(this).find('input.fnt-discount').val(discount);
+      });
+      // Must change decimal separator, if comma, in approvals table numeric fields
+      $('#approvals-table tr.fields').each(function() {
+        price = $(this).find('input.fnt-approved-amount').val().replace(",", ".");
+        $(this).find('input.fnt-approved-amount').val(price);
       });
       // Must change decimal separator, if comma, in numeric fields
       var num = $('#supplier_invoice_discount_pct').val().replace(",", ".");

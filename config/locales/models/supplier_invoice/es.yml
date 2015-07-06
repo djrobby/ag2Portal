@@ -35,7 +35,7 @@ es:
         bonus: "Bonificación"
         debt: "Adeudado"
         paid: "Pagado"
-        approved_to_paid: "Aprobado para pagar"
+        approved_to_pay: "Aprobado para pagar"
         payment_avg_date: "Fecha media de pago"
         payment_period: "Plazo medio de pago"
         organization: "Organización"

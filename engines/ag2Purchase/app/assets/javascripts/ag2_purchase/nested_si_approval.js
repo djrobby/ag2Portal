@@ -109,9 +109,9 @@ var si_w_rowBuilder = function() {
               // Apply CSS
               css = this.id;
               if ($(this).hasClass('fsel2')) css = css + ' select wsel2';
-              if ($(this).hasClass('idatepicker')) css = css + ' wdatepicker';
+              if ($(this).hasClass('idatepicker')) css = css + ' wdatepicker sub-alfanumeric-text-field';
               if ($(this).hasClass('number-text-field')) css = css + ' sub-number-text-field';
-              if ($(this).hasClass('sub-disabled-field')) css = css + ' sub-disabled-field';
+              if ($(this).hasClass('sub-disabled-field')) css = css + ' sub-disabled-field sub-alfanumeric-text-field';
               if (css === this.id) css = css + ' sub-alfanumeric-text-field';
               if (css.indexOf("wsel2") == -1) css = css + ' sub-bordered-input';
               css = css + ' string';

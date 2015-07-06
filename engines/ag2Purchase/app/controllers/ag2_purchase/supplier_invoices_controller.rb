@@ -283,7 +283,8 @@ module Ag2Purchase
       amount = params[:amount].to_f / 10000
       invoice_id = params[:invoice]
       debt = SupplierInvoice.find(invoice_id).debt rescue -1
-      amount = amount > debt? ? '$err' : number_with_precision(amount.round(4), precision: 4)
+      not_yet_approved = SupplierInvoice.find(invoice_id).amount_not_yet_approved rescue -1
+      amount = (amount > debt || amount > not_yet_approved) ? '$err' : number_with_precision(amount.round(4), precision: 4)
       @json_data = { "amount" => amount.to_s }
       render json: @json_data
     end
@@ -292,7 +293,8 @@ module Ag2Purchase
     def si_current_invoice_debt
       invoice_id = params[:invoice]
       debt = SupplierInvoice.find(invoice_id).debt rescue -1
-      debt = number_with_precision(debt.round(4), precision: 4)
+      not_yet_approved = SupplierInvoice.find(invoice_id).amount_not_yet_approved rescue -1
+      debt = debt < not_yet_approved ? number_with_precision(debt.round(4), precision: 4) : number_with_precision(not_yet_approved.round(4), precision: 4)
       @json_data = { "debt" => debt.to_s }
       render json: @json_data
     end
@@ -481,6 +483,8 @@ module Ag2Purchase
       @payment_methods = payment_methods_dropdown
       @products = products_dropdown
       @note_items = []
+      # Special to approvals
+      @users = User.where('id = ?', current_user.id)
   
       respond_to do |format|
         format.html # new.html.erb
@@ -511,6 +515,8 @@ module Ag2Purchase
       end
       # Special to approvals
       @invoice_debt = number_with_precision(@supplier_invoice.debt.round(4), precision: 4)
+      @invoice_not_yet_approved = number_with_precision(@supplier_invoice.amount_not_yet_approved.round(4), precision: 4)
+      @users = User.where('id = ?', current_user.id)
     end
   
     # POST /supplier_invoices
@@ -542,6 +548,7 @@ module Ag2Purchase
           @payment_methods = payment_methods_dropdown
           @products = products_dropdown
           @note_items = []
+          @users = User.where('id = ?', current_user.id)
           format.html { render action: "new" }
           format.json { render json: @supplier_invoice.errors, status: :unprocessable_entity }
         end
@@ -582,6 +589,7 @@ module Ag2Purchase
           else
             @products = @note_items.first.receipt_note.products.group(:product_code)
           end
+          @users = User.where('id = ?', current_user.id)
           format.html { render action: "edit" }
           format.json { render json: @supplier_invoice.errors, status: :unprocessable_entity }
         end

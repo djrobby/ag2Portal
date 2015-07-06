@@ -127,6 +127,10 @@ class SupplierInvoice < ActiveRecord::Base
     supplier_invoice_approvals.sum("approved_amount")
   end
   
+  def amount_not_yet_approved
+    total - approved_to_pay
+  end
+  
   #
   # Records navigator
   #

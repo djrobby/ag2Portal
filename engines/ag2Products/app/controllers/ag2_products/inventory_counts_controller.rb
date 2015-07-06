@@ -440,6 +440,7 @@ module Ag2Products
     def products_array(_products)
       _array = []
       _products.each do |i|
+        #_array = _array << [i.id, i.full_code, i.main_description[0,40], '*' + i.manufacturer_p_code] 
         _array = _array << [i.id, i.full_code, i.main_description[0,40]] 
       end
       _array

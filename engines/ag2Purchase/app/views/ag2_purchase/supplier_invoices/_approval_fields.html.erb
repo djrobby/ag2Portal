@@ -4,24 +4,31 @@
   var text_field_color;
 
   $(document).ready(function() {
+    $('.idatepicker').datepicker({
+      format : 'dd/mm/yyyy',
+      weekStart : 1
+    }).on('changeDate', function(e){
+      $('.idatepicker').datepicker('hide');
+    });
+
     // Retrieves parent values
     _f = $("#fnt-approver").closest('form')[0];
     _i = $('#hidden_id').val();
     if (_i == "") _i = "0";
 
     // Save default text color
-    text_field_color = $(".fnt-approver").css('color')
+    text_field_color = $("#fnt-approver").css('color')
 
     // Set #fnt-approver
     if ($('#fnt-approver').val() == "") {
-      $('#fnt-approver').val('<%= current_user.email %>');
+      $('#fnt-approver').val('<%= current_user.id %>');
     }
     // Set #fnt-approval-date
     if ($('#fnt-approval-date').val() == "") {
       $('#fnt-approval-date').datepicker('setValue', es_date(new Date()));
     }
     // Set #fnt-approved-amount
-    if ($('#fnt-approved-amount').val() == "") {
+    if ($('#fnt-approved-amount').val() == "0,0000" || $('#fnt-approved-amount').val() == "0.0000" || $('#fnt-approved-amount').val() == "") {
       jQuery.getJSON('si_current_invoice_debt/' + _i, function(data) {
         $('#fnt-approved-amount').val(data.debt);
       });
@@ -39,8 +46,8 @@
       // can't approve more than current debt
       // preserve the current object
       var _this = (this);
-      recalculate(_this);
-      return false;
+      //recalculate(_this);
+      //return false;
 
       // can't approve more than current debt
       var amount = $('#fnt-approved-amount').val();
@@ -51,7 +58,7 @@
         $('#fnt-approved-amount').val(data.amount);
         if (data.amount == "$err") {
           $('#fnt-approved-amount').css('color', 'red');
-          alert('<%= I18n.t("ag2_purchase.supplier_invoices.approval_error", var: @invoice_debt) %>');
+          alert('<%= I18n.t("ag2_purchase.supplier_invoices.approval_error", var: @invoice_debt, bal: @invoice_not_yet_approved) %>');
           $('#fnt-approved-amount').select();
         } else {
           $('#fnt-approved-amount').css('color', text_field_color);
@@ -72,7 +79,7 @@
     <span class="shrinked"><%= I18n.t(:mandatory_subtitle) %></span>
   </div>
   <div class="modal-body">
-    <%= f.input :approver, disabled: true, input_html: { class: 'x-large-text-field sub-disabled-field field', id: 'fnt-approver', data: { validation: "required", "validation-error-msg" => "#{e}" } }, label_html: { class: 'form-label' } %>
+    <%= f.association :approver, collection: @users, include_blank: false, readonly: true, input_html: { class: 'x-large-text-field sub-disabled-field field', id: 'fnt-approver', data: { validation: "required", "validation-error-msg" => "#{e}" } }, label_html: { class: 'form-label' } %>
     <%= f.input :approval_date, start_year: Time.now.year - 100, end_year: Time.now.year + 100, as: :string, input_html: { value: (f.object.approval_date.strftime("%d/%m/%Y") if f.object.approval_date), class: 'mid-text-field idatepicker field', id: 'fnt-approval-date', data: { validation: "required", "validation-error-msg" => "#{e}" } }, label_html: { class: 'form-label' } %>
     <%= f.input :approved_amount, as: :string, input_html: { value: (number_with_precision(f.object.approved_amount, precision: 4) if f.object.approved_amount), class: 'mid-text-field number-text-field field', id: 'fnt-approved-amount', data: { validation: "required", "validation-error-msg" => "#{e}" } }, label_html: { class: 'form-label' } %>
     <%= f.input :remarks, input_html: { class: 'x-large-text-field field', maxlength: 40, id: 'fnt-remarks' }, label_html: { class: 'form-label' } %>

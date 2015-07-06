@@ -34,4 +34,4 @@ es:
       delete_approval: "Borrar esta Aprobación"
       add_approval: "Agregar nueva Aprobación"
       btn_new_approval: "Nueva Aprobación"
-      approval_error: "Total aprobado no deber ser mayor que el importe adeudado (%{var})"
+      approval_error: "Total aprobado no deber ser mayor que el importe adeudado (%{var}) o el pendiente de aprobación (%{bal})."

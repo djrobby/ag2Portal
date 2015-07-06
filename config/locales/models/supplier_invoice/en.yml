@@ -35,7 +35,7 @@ en:
         bonus: "Bonus"
         debt: "Due"
         paid: "Paid"
-        approved_to_paid: "Approved to pay"
+        approved_to_pay: "Approved to pay"
         payment_avg_date: "Avg.payment date"
         payment_period: "Avg.payment period"
         organization: "Organization"
