@@ -83,6 +83,11 @@ module Ag2Purchase
     def new
       @breadcrumb = 'create'
       @supplier_payment = SupplierPayment.new
+      @suppliers = suppliers_dropdown
+      @supplier_invoices = invoices_dropdown
+      @approvals = approvals_dropdown
+      @users = User.where('id = ?', current_user.id)
+      @payment_methods = payment_methods_dropdown
   
       respond_to do |format|
         format.html # new.html.erb
@@ -159,6 +164,14 @@ module Ag2Purchase
         _numbers = _numbers << i.payment_no
       end
       _numbers = _numbers.blank? ? no : _numbers
+    end
+
+    def suppliers_dropdown
+      _suppliers = session[:organization] != '0' ? Supplier.where(organization_id: session[:organization].to_i).order(:supplier_code) : Supplier.order(:supplier_code)
+    end
+
+    def invoices_dropdown
+      session[:organization] != '0' ? SupplierInvoice.unbilled(session[:organization].to_i, true) : SupplierInvoice.unbilled(nil, true)
     end
     
     # Keeps filter state
