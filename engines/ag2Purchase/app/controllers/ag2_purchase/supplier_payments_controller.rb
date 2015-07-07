@@ -5,6 +5,17 @@ module Ag2Purchase
     include ActionView::Helpers::NumberHelper
     before_filter :authenticate_user!
     load_and_authorize_resource
+    skip_load_and_authorize_resource :only => [:sp_generate_no]
+
+    # Update delivery number at view (generate_code_btn)
+    def sp_generate_no
+      organization = params[:org]
+
+      # Builds no, if possible
+      code = organization == '$' ? '$err' : sp_next_no(organization)
+      @json_data = { "code" => code }
+      render json: @json_data
+    end
 
     #
     # Default Methods
@@ -39,7 +50,7 @@ module Ag2Purchase
         if !invoice.blank?
           with :supplier_invoice_id, invoice
         end
-        order_by :payment_no, :asc
+        order_by :sort_no, :asc
         paginate :page => params[:page] || 1, :per_page => per_page
       end
       @supplier_payments = @search.results

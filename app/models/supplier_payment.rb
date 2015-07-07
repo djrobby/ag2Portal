@@ -18,6 +18,7 @@ class SupplierPayment < ActiveRecord::Base
   validates :approver,          :presence => true
   validates :payment_no,        :presence => true,
                                 :length => { :is => 14 },
+                                :format => { with: /\A\d+\Z/, message: :code_invalid },
                                 :uniqueness => { :scope => :organization_id }
   validates :payment_date,      :presence => true
   validates :amount,            :presence => true,

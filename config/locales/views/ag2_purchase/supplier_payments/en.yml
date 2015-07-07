@@ -21,4 +21,4 @@ en:
         title: "New Payment"
       back_to_main_page: "Back to Payments"
       generate_code_btn: "Payment No."
-      code_error: "Unable to generate Payment No.: No Activity chosen."
+      no_error: "Unable to generate Payment No.: No Organization chosen."

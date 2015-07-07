@@ -554,6 +554,24 @@ end
     end
     code
   end
+  
+  # Supplier payment no
+  def sp_next_no(organization)
+    year = Time.new.year
+    code = ''
+    organization = organization.to_s if organization.is_a? Fixnum
+    organization = organization.rjust(4, '0')
+    year = year.to_s if year.is_a? Fixnum
+    year = year.rjust(4, '0')
+    last_no = SupplierPayment.where("payment_no LIKE ?", "#{organization}#{year}%").order(:payment_no).maximum(:payment_no)
+    if last_no.nil?
+      code = organization + year + '000001'
+    else
+      last_no = last_no[14..19].to_i + 1
+      code = organization + year + last_no.to_s.rjust(6, '0')
+    end
+    code
+  end
 
   #
   # Privates

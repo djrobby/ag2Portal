@@ -23,7 +23,7 @@
     <% @supplier_payments.each do |payment| %>
     <tr>
       <td><%= link_to payment.payment_no, payment %></td>
-      <td align="center"><%= payment.payment_date.strftime("%d/%m/%Y") unless payment.payment_date.blank? %></td>
+      <td align="center"><%= formatted_date(payment.payment_date) unless payment.payment_date.blank? %></td>
       <td><%= payment.supplier.name unless payment.supplier.blank? %></td>
       <td><%= payment.supplier_invoice.invoice_no unless payment.supplier_invoice.blank? %></td>
       <td><%= payment.payment_method.description unless payment.payment_method.blank? %></td>

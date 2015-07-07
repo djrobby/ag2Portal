@@ -1,5 +1,50 @@
-<p id="notice"><%= notice %></p>
+<%= render '/layouts/ag2_purchase/paymentsbreadcrumb' %>
 
+<h3><%= t '.title' %></h3>
+<table class="table">
+  <tbody>
+    <tr>
+      <td>Id:</td>
+      <td><%= @supplier_payment.id %></td>
+      <td><%= t 'activerecord.attributes.supplier_payment.payment_no' %>:</td>
+      <td><b><%= @supplier_payment.payment_no %></b></td>
+    </tr>
+    <tr>
+      <td><%= t 'activerecord.attributes.supplier_payment.payment_date' %>:</td>
+      <td><%= formatted_date(@supplier_payment.payment_date) unless @supplier_payment.payment_date.blank? %></td>
+      <td><%= t 'activerecord.attributes.supplier_payment.supplier_invoice' %>:</td>
+      <td><%= @supplier_payment.supplier_invoice.invoice_no unless @supplier_payment.supplier_invoice.blank? %></td>
+    </tr>
+    <tr>
+      <td><%= t 'activerecord.attributes.supplier_payment.supplier' %>:</td>
+      <td><%= @supplier_payment.supplier.full_name unless @supplier_payment.supplier.blank? %></td>
+      <td><%= t 'activerecord.attributes.supplier_payment.payment_method' %>:</td>
+      <td><%= @supplier_payment.payment_method.description unless @supplier_payment.payment_method.blank? %></td>
+    </tr>
+    <tr>
+      <td><%=t 'activerecord.attributes.supplier_payment.approver' %>:</td>
+      <td id="approver"><%= @supplier_payment.approver.email unless @supplier_payment.approver.blank? %></td>
+      <td class="highlighted bolded"><%= t "activerecord.attributes.supplier_payment.amount" %>:</td>
+      <td class="highlighted bolded"><%= number_with_precision(@supplier_payment.amount, precision: 4, delimiter: I18n.locale == :es ? "." : ",") unless @supplier_payment.amount.blank? %></td>
+    </tr>
+    <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @supplier_payment } %>
+    <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @supplier_payment } %>
+  </tbody>
+</table>
 
-<%= link_to 'Edit', edit_supplier_payment_path(@supplier_payment) %> |
+<!-- Remarks -->
+<table class="table">
+  <tbody>
+    <tr>
+      <td style="width: 12%"><%= t "activerecord.attributes.supplier_payment.remarks" %>:</td>
+      <td style="width: 88%"><%= @supplier_payment.remarks unless @supplier_payment.remarks.blank? %></td>
+    </tr>
+  </tbody>
+</table>
+
+<%= render partial: '/layouts/crud/update_delete_new', locals:
+{ model: SupplierPayment, update_path: edit_supplier_payment_path(@supplier_payment), update_txt: t('.btn_edit'),
+delete_path: @supplier_payment, delete_txt: t('.btn_delete'), msg: t("activerecord.models.supplier_payment.one"), txt: @supplier_payment.payment_no,
+new_path: new_supplier_payment_path, new_txt: t('ag2_purchase.supplier_payments.index.btn_new') } %>
+
 <%= link_to 'Back', supplier_payments_path %>

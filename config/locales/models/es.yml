@@ -86,3 +86,7 @@ es:
           attributes:
             count_no:
               code_invalid: "inválido"
+        supplier_payment:
+          attributes:
+            payment_no:
+              code_invalid: "inválido"
