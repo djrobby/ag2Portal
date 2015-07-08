@@ -108,12 +108,9 @@
         org = "0";
       jQuery.getJSON('sp_update_from_organization/' + org, function(data) {
         var c = data.supplier;
-        var p = data.project;
-        var w = data.work_order;
-        var h = data.charge_account
-        var s = data.store
+        var i = data.invoice;
+        var a = data.approval;
         var m = data.payment_method
-        var prods = data.product
         // Supplier
         $("#supplier_payment_supplier_id").html("");
         $("#supplier_payment_supplier_id").select2("val", "");
@@ -133,15 +130,30 @@
         $("#supplier_payment_supplier_invoice_id").html("");
         $("#supplier_payment_supplier_invoice_id").select2("val", "");
         $("#supplier_payment_supplier_invoice_id").append($('<option></option>').val("").html(""));
-        if (!o.length) {
+        if (!i.length) {
           $.each(data, function(id, option) {
-            if (id == 'note' && option != "") {
-              $("#supplier_payment_supplier_invoice_id").append($('<option></option>').val(option[0]).html(option[1] + " " + option[2] + " " + option[3]));
+            if (id == 'invoice' && option != "") {
+              $("#supplier_payment_supplier_invoice_id").append($('<option></option>').val(option[0]).html(option[1] + " " + option[2] + " " + option[3] + ": " + option[4] + " - " + option[5] + " - " + option[6]));
             }
           });
         } else {
-          $.each(o, function(id, option) {
-            $("#supplier_payment_supplier_invoice_id").append($('<option></option>').val(option[0]).html(option[1] + " " + option[2] + " " + option[3]));
+          $.each(i, function(id, option) {
+            $("#supplier_payment_supplier_invoice_id").append($('<option></option>').val(option[0]).html(option[1] + " " + option[2] + " " + option[3] + ": " + option[4] + " - " + option[5] + " - " + option[6]));
+          });
+        }
+        // Approvals
+        $("#supplier_payment_supplier_invoice_approval_id").html("");
+        $("#supplier_payment_supplier_invoice_approval_id").select2("val", "");
+        $("#supplier_payment_supplier_invoice_approval_id").append($('<option></option>').val("").html(""));
+        if (!a.length) {
+          $.each(data, function(id, option) {
+            if (id == 'approval' && option != "") {
+              $("#supplier_payment_supplier_invoice_approval_id").append($('<option></option>').val(option[0]).html(option[1] + " " + option[2] + " " + option[3] + " " + option[4]));
+            }
+          });
+        } else {
+          $.each(a, function(id, option) {
+            $("#supplier_payment_supplier_invoice_approval_id").append($('<option></option>').val(option[0]).html(option[1] + " " + option[2] + " " + option[3] + " " + option[4]));
           });
         }
         // Payment method
@@ -160,9 +172,9 @@
           });
         }
       });
-      if (order == "0") {
-        $("#supplier_payment_supplier_invoice_id").val(0);
-        $("#supplier_payment_supplier_invoice_id").trigger("change");
+      if (org == "0") {
+        $("#supplier_payment_supplier_id").val(0);
+        $("#supplier_payment_supplier_id").trigger("change");
       }
       return false;
     });
@@ -174,23 +186,61 @@
       if (supplier == "")
         supplier = "0";
       jQuery.getJSON('sp_update_from_supplier/' + supplier, function(data) {
-        var o = data.note;
+        var i = data.invoice;
+        var a = data.approval;
+        var m = data.payment_method
+        var m_id = data.payment_method_id;
         // Invoice
         $("#supplier_payment_supplier_invoice_id").html("");
         $("#supplier_payment_supplier_invoice_id").select2("val", "");
         $("#supplier_payment_supplier_invoice_id").append($('<option></option>').val("").html(""));
-        if (!o.length) {
+        if (!i.length) {
           $.each(data, function(id, option) {
-            if (id == 'note' && option != "") {
-              $("#supplier_payment_supplier_invoice_id").append($('<option></option>').val(option[0]).html(option[1] + " " + option[2] + " " + option[3]));
+            if (id == 'invoice' && option != "") {
+              $("#supplier_payment_supplier_invoice_id").append($('<option></option>').val(option[0]).html(option[1] + " " + option[2] + " " + option[3] + ": " + option[4] + " - " + option[5] + " - " + option[6]));
             }
           });
         } else {
-          $.each(o, function(id, option) {
-            $("#supplier_payment_supplier_invoice_id").append($('<option></option>').val(option[0]).html(option[1] + " " + option[2] + " " + option[3]));
+          $.each(i, function(id, option) {
+            $("#supplier_payment_supplier_invoice_id").append($('<option></option>').val(option[0]).html(option[1] + " " + option[2] + " " + option[3] + ": " + option[4] + " - " + option[5] + " - " + option[6]));
           });
         }
+        // Approvals
+        $("#supplier_payment_supplier_invoice_approval_id").html("");
+        $("#supplier_payment_supplier_invoice_approval_id").select2("val", "");
+        $("#supplier_payment_supplier_invoice_approval_id").append($('<option></option>').val("").html(""));
+        if (!a.length) {
+          $.each(data, function(id, option) {
+            if (id == 'approval' && option != "") {
+              $("#supplier_payment_supplier_invoice_approval_id").append($('<option></option>').val(option[0]).html(option[1] + " " + option[2] + " " + option[3] + " " + option[4]));
+            }
+          });
+        } else {
+          $.each(a, function(id, option) {
+            $("#supplier_payment_supplier_invoice_approval_id").append($('<option></option>').val(option[0]).html(option[1] + " " + option[2] + " " + option[3] + " " + option[4]));
+          });
+        }
+        // Payment method
+        $("#supplier_payment_payment_method_id").html("");
+        $("#supplier_payment_payment_method_id").val("");
+        $("#supplier_payment_payment_method_id").append($('<option></option>').val("").html(""));
+        if (!m.length) {
+          $.each(data, function(id, option) {
+            if (id == 'payment_method' && option != "") {
+              $("#supplier_payment_payment_method_id").append($('<option></option>').val(option.id).html(option.description));
+            }
+          });
+        } else {
+          $.each(m, function(id, option) {
+            $("#supplier_payment_payment_method_id").append($('<option></option>').val(option.id).html(option.description));
+          });
+        }
+        if (m_id != 0) $("#supplier_payment_payment_method_id").val(m_id);
       });
+      if (supplier == "0") {
+        $("#supplier_payment_supplier_invoice_id").val(0);
+        $("#supplier_payment_supplier_invoice_id").trigger("change");
+      }
       return false;
     });
 
@@ -201,34 +251,24 @@
       if (o == "")
         o = "0";
       jQuery.getJSON('sp_update_from_invoice/' + o, function(data) {
-        var p = data.project;
-        var w = data.work_order;
-        var h = data.charge_account
-        var s = data.store
+        var a = data.approval;
         var m = data.payment_method
-        var prods = data.product
-        var p_id = data.project_id;
-        var w_id = data.work_order_id;
-        var c_id = data.charge_account_id;
-        var s_id = data.store_id;
         var m_id = data.payment_method_id;
-        var i = data.note_item
         // Approvals
         $("#supplier_payment_supplier_invoice_approval_id").html("");
         $("#supplier_payment_supplier_invoice_approval_id").select2("val", "");
         $("#supplier_payment_supplier_invoice_approval_id").append($('<option></option>').val("").html(""));
-        if (!p.length) {
+        if (!a.length) {
           $.each(data, function(id, option) {
-            if (id == 'project' && option != "") {
-              $("#supplier_payment_supplier_invoice_approval_id").append($('<option></option>').val(option.id).html(option.project_code.substring(0,3) + "-" + option.project_code.substring(3,6) + "-" + option.project_code.substring(6,12) + " " + option.name));
+            if (id == 'approval' && option != "") {
+              $("#supplier_payment_supplier_invoice_approval_id").append($('<option></option>').val(option[0]).html(option[1] + " " + option[2] + " " + option[3] + " " + option[4]));
             }
           });
         } else {
-          $.each(p, function(id, option) {
-            $("#supplier_payment_supplier_invoice_approval_id").append($('<option></option>').val(option.id).html(option.project_code.substring(0,3) + "-" + option.project_code.substring(3,6) + "-" + option.project_code.substring(6,12) + " " + option.name));
+          $.each(a, function(id, option) {
+            $("#supplier_payment_supplier_invoice_approval_id").append($('<option></option>').val(option[0]).html(option[1] + " " + option[2] + " " + option[3] + " " + option[4]));
           });
         }
-        if (p_id != 0) $("#supplier_payment_supplier_invoice_approval_id").select2("val", p_id);
         // Payment method
         $("#supplier_payment_payment_method_id").html("");
         $("#supplier_payment_payment_method_id").val("");
@@ -249,32 +289,46 @@
       // Invoice not selected
       if (o == "0") {
         $("#supplier_payment_supplier_invoice_approval_id").val(0);
+        $("#supplier_payment_supplier_invoice_approval_id").trigger("change");
       }
-      //return false;
+      return false;
+    });
+
+    // when the #supplier_payment_supplier_invoice_approval_id field changes
+    $("#supplier_payment_supplier_invoice_approval_id").change(function() {
+      // make a POST call and replace the content
+      var o = $('select#supplier_payment_supplier_invoice_approval_id :selected').val();
+      if (o == "")
+        o = "0";
+      jQuery.getJSON('sp_update_from_approval/' + o, function(data) {
+        var r = data.approver;
+        var t = data.amount;
+        // Approver
+        if (r != 0) $("#supplier_payment_approver_id").select2("val", r);
+        // Amount
+        $("#supplier_payment_amount").val(t);
+      });
+      return false;
     });
 
     // when the #supplier_payment_amount field changes
-    $("#supplier_invoice_amount").change(function() {
-      var num = $('#supplier_invoice_amount').val();
+    $("#supplier_payment_amount").change(function() {
+      var num = $('#supplier_payment_amount').val();
       if (num == "")
         num = "0";
       // Right formatted for passing as REST parameter
-      num = parseInt(right_number(num, 2) * 100);
-      jQuery.getJSON('si_format_number/' + num, function(data) {
-        $('#supplier_invoice_amount').val(data.num);
+      num = parseInt(right_number(num, 4) * 10000);
+      jQuery.getJSON('sp_format_number/' + num, function(data) {
+        $('#supplier_payment_amount').val(data.num);
       });
       return false;
     });
     
     // when submit    
     $(_thisForm).on('submit', function() {
-      var price = '';
-      var qty = '';
-      var discount_p = '';
-      var discount = '';
       // Must change decimal separator, if comma, in numeric fields
-      var num = $('#supplier_invoice_discount_pct').val().replace(",", ".");
-      $('#supplier_invoice_discount_pct').val(num);
+      var num = $('#supplier_payment_amount').val().replace(",", ".");
+      $('#supplier_payment_amount').val(num);
       //e.preventDefault();
     });
   });
@@ -304,11 +358,10 @@
 </div>
 <div>
   <label class="multi-field-label-two"> <%= f.association :payment_method, collection: @payment_methods, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %> </label>
-  <label class="multi-field-label-two"> <%= f.association :amount, as: :string, input_html: { value: (number_with_precision(f.object.amount, precision: 4) if f.object.amount), class: 'x-large-text-field number-text-field' }, label_html: { class: 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.input :amount, as: :string, input_html: { value: (number_with_precision(f.object.amount, precision: 4) if f.object.amount), class: 'x-large-text-field number-text-field' }, label_html: { class: 'form-label' } %> </label>
 </div>
 <!-- Remarks -->
 <%= f.input :remarks, as: :text, input_html: { class: 'x-large-text-field', rows: 3 }, label_html: { class: 'form-label' } %>
-<% end %>
 <!-- Buttons -->
 <table class="form-table">
   <tbody>

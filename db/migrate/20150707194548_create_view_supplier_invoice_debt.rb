@@ -1,7 +1,7 @@
 class CreateViewSupplierInvoiceDebt < ActiveRecord::Migration
   def up
     execute 'create view supplier_invoice_debts as
-    select `supplier_invoices`.`id` AS `supplier_invoice_id`,`supplier_invoices`.`organization_id` AS `organization_id`,`supplier_invoices`.`invoice_no` AS `invoice_no`,
+    select `supplier_invoices`.`id` AS `supplier_invoice_id`,`supplier_invoices`.`organization_id` AS `organization_id`,`supplier_invoices`.`supplier_id` AS `supplier_id`,`supplier_invoices`.`invoice_no` AS `invoice_no`,
     coalesce(sum((`supplier_invoice_items`.`quantity` * (`supplier_invoice_items`.`price` - `supplier_invoice_items`.`discount`))),0) AS `subtotal`,
     (case when ((`supplier_invoices`.`discount_pct` = 0) or isnull(`supplier_invoices`.`discount_pct`)) then coalesce(sum(((`supplier_invoice_items`.`quantity` * (`supplier_invoice_items`.`price` - `supplier_invoice_items`.`discount`)) * (`tax_types`.`tax` / 100))),0) else (coalesce(sum(((`supplier_invoice_items`.`quantity` * (`supplier_invoice_items`.`price` - `supplier_invoice_items`.`discount`)) * (`tax_types`.`tax` / 100))),0) * (`supplier_invoices`.`discount_pct` / 100)) end) AS `taxes`,
     (case when ((`supplier_invoices`.`discount_pct` = 0) or isnull(`supplier_invoices`.`discount_pct`)) then 0 else (coalesce(sum((`supplier_invoice_items`.`quantity` * (`supplier_invoice_items`.`price` - `supplier_invoice_items`.`discount`))),0) * (`supplier_invoices`.`discount_pct` / 100)) end) AS `bonus`,

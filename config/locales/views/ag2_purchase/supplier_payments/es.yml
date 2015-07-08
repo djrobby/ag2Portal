@@ -18,7 +18,7 @@ es:
         title: "Editar Pago"
         btn_show: "Ver Pago"
       new:
-        title: "Nueva Pago"
+        title: "Nuevo Pago"
       back_to_main_page: "Volver a Pagos"
       generate_code_btn: "Nº de Pago"
       no_error: "Imposible generar Nº de Pago: No has elegido Organización."

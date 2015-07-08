@@ -240,9 +240,15 @@ Ag2Purchase::Engine.routes.draw do
     match 'supplier_payments/sp_update_from_supplier/:supplier', :controller => 'supplier_payments', :action => 'sp_update_from_supplier'
     match 'sp_update_from_supplier/:supplier', :controller => 'supplier_payments', :action => 'sp_update_from_supplier'
     match 'supplier_payments/:id/sp_update_from_supplier/:supplier', :controller => 'supplier_payments', :action => 'sp_update_from_supplier'
-    match 'supplier_payments/sp_update_from_invoice/:supplier', :controller => 'supplier_payments', :action => 'sp_update_from_invoice'
-    match 'sp_update_from_invoice/:supplier', :controller => 'supplier_payments', :action => 'sp_update_from_invoice'
-    match 'supplier_payments/:id/sp_update_from_invoice/:supplier', :controller => 'supplier_payments', :action => 'sp_update_from_invoice'
+    match 'supplier_payments/sp_update_from_invoice/:o', :controller => 'supplier_payments', :action => 'sp_update_from_invoice'
+    match 'sp_update_from_invoice/:o', :controller => 'supplier_payments', :action => 'sp_update_from_invoice'
+    match 'supplier_payments/:id/sp_update_from_invoice/:o', :controller => 'supplier_payments', :action => 'sp_update_from_invoice'
+    match 'supplier_payments/sp_update_from_approval/:o', :controller => 'supplier_payments', :action => 'sp_update_from_approval'
+    match 'sp_update_from_approval/:o', :controller => 'supplier_payments', :action => 'sp_update_from_approval'
+    match 'supplier_payments/:id/sp_update_from_approval/:o', :controller => 'supplier_payments', :action => 'sp_update_from_approval'
+    match 'supplier_payments/sp_format_number/:num', :controller => 'supplier_payments', :action => 'sp_format_number'
+    match 'sp_format_number/:num', :controller => 'supplier_payments', :action => 'sp_format_number'
+    match 'supplier_payments/:id/sp_format_number/:num', :controller => 'supplier_payments', :action => 'sp_format_number'
 
     # Resources
     resources :suppliers

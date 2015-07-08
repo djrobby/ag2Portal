@@ -40,6 +40,7 @@ class Organization < ActiveRecord::Base
   has_many :purchase_orders
   has_many :supplier_invoices
   has_many :supplier_payments
+  has_many :supplier_invoice_debts
   # tech
   has_many :projects
   has_many :work_orders

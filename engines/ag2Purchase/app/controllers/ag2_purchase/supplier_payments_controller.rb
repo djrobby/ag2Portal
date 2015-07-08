@@ -8,9 +8,10 @@ module Ag2Purchase
     skip_load_and_authorize_resource :only => [:sp_generate_no,
                                                :sp_update_from_organization,
                                                :sp_update_from_supplier,
-                                               :sp_update_from_invoice]
-
-    # Update delivery number at view (generate_code_btn)
+                                               :sp_update_from_invoice,
+                                               :sp_update_from_approval,
+                                               :sp_format_number]
+    # Update payment number at view (generate_code_btn)
     def sp_generate_no
       organization = params[:org]
 
@@ -21,15 +22,88 @@ module Ag2Purchase
     end
 
     def sp_update_from_organization
-      
+      organization = params[:org]
+      if organization != '0'
+        @organization = Organization.find(organization)
+        @suppliers = @organization.blank? ? suppliers_dropdown : @organization.suppliers.order(:supplier_code)
+        invoices = @organization.blank? ? invoices_dropdown : @organization.supplier_invoice_debts.order(:supplier_invoice_id)
+        #@supplier_invoices = @organization.blank? ? invoices_array(invoices_dropdown) : invoices_array(@organization.supplier_invoice_debts.order(:supplier_invoice_id))
+        #@approvals = approvals_dropdown(@supplier_invoices)
+        @payment_methods = @organization.blank? ? payment_methods_dropdown : payment_payment_methods(@organization.id)
+      else
+        @suppliers = suppliers_dropdown
+        invoices = invoices_dropdown
+        @payment_methods = payment_methods_dropdown
+      end
+      @supplier_invoices = invoices_array(invoices)
+      @approvals = approvals_dropdown(invoices)
+      # Setup JSON
+      @json_data = { "supplier" => @suppliers, "invoice" => @supplier_invoices,
+                     "approval" => @approvals, "payment_method" => @payment_methods }
+      render json: @json_data
     end
 
     def sp_update_from_supplier
-      
+      supplier = params[:supplier]
+      payment_method_id = 0
+      if supplier != '0'
+        @supplier = Supplier.find(supplier)
+        invoices = @supplier.blank? ? invoices_dropdown : @supplier.supplier_invoice_debts.order(:supplier_invoice_id)
+        #@supplier_invoices = @supplier.blank? ? invoices_array(invoices_dropdown) : invoices_array(@supplier.supplier_invoice_debts.order(:supplier_invoice_id))
+        #@approvals = approvals_dropdown(@supplier_invoices)
+        @payment_methods = @supplier.blank? ? payment_methods_dropdown : @supplier.payment_method
+        payment_method_id = @payment_methods.id rescue 0
+      else
+        invoices = invoices_dropdown
+        @payment_methods = payment_methods_dropdown
+      end
+      @supplier_invoices = invoices_array(invoices)
+      @approvals = approvals_dropdown(invoices)
+      # Setup JSON
+      @json_data = { "invoice" => @supplier_invoices, "approval" => @approvals,
+                     "payment_method" => @payment_methods, "payment_method_id" => payment_method_id }
+      render json: @json_data
     end
 
     def sp_update_from_invoice
-      
+      invoice = params[:o]
+      payment_method_id = 0
+      if invoice != '0'
+        @supplier_invoice = SupplierInvoiceDebt.where(supplier_invoice_id: invoice)
+        @approvals = approvals_dropdown(@supplier_invoice)
+        @payment_methods = @supplier_invoice.blank? ? payment_methods_dropdown : @supplier_invoice.payment_method
+        payment_method_id = @payment_methods.id rescue 0
+      else
+        @approvals = approvals_dropdown(invoices_dropdown)
+        @payment_methods = payment_methods_dropdown
+      end
+      # Setup JSON
+      @json_data = { "approval" => @approvals,
+                     "payment_method" => @payment_methods, "payment_method_id" => payment_method_id }
+      render json: @json_data
+    end
+
+    def sp_update_from_approval
+      approval = params[:o]
+      approver = 0
+      amount = 0
+      if approval != '0'
+        @approval = SupplierInvoiceApproval.find(approval)
+        approver = @approval.approver_id rescue 0
+        amount = @approval.approved_amount rescue 0
+      end
+      amount = number_with_precision(amount.round(4), precision: 4)
+      # Setup JSON
+      @json_data = { "approver" => @approvals, "amount" => amount.to_s }
+      render json: @json_data
+    end
+
+    # Format numbers properly
+    def sp_format_number
+      num = params[:num].to_f / 10000
+      num = number_with_precision(num.round(4), precision: 4)
+      @json_data = { "num" => num.to_s }
+      render json: @json_data
     end
 
     #
@@ -99,8 +173,10 @@ module Ag2Purchase
       @breadcrumb = 'create'
       @supplier_payment = SupplierPayment.new
       @suppliers = suppliers_dropdown
-      @supplier_invoices = invoices_array(invoices_dropdown)
-      @approvals = approvals_dropdown
+      invoices = invoices_dropdown
+      @supplier_invoices = invoices
+      @approvals = approvals_dropdown_on_model(invoices)
+      #@approvals = approvals_dropdown(invoices)
       @users = User.all
       @payment_methods = payment_methods_dropdown
   
@@ -115,8 +191,9 @@ module Ag2Purchase
       @breadcrumb = 'update'
       @supplier_payment = SupplierPayment.find(params[:id])
       @suppliers = suppliers_dropdown
-      @supplier_invoices = invoices_array(invoices_dropdown)
-      @approvals = approvals_dropdown
+      invoices = invoices_dropdown
+      @supplier_invoices = invoices
+      @approvals = approvals_dropdown(invoices)
       @users = User.all
       @payment_methods = payment_methods_dropdown
     end
@@ -134,8 +211,9 @@ module Ag2Purchase
           format.json { render json: @supplier_payment, status: :created, location: @supplier_payment }
         else
           @suppliers = suppliers_dropdown
-          @supplier_invoices = invoices_array(invoices_dropdown)
-          @approvals = approvals_dropdown
+          invoices = invoices_dropdown
+          @supplier_invoices = invoices
+          @approvals = approvals_dropdown(invoices)
           @users = User.all
           @payment_methods = payment_methods_dropdown
           format.html { render action: "new" }
@@ -158,8 +236,9 @@ module Ag2Purchase
           format.json { head :no_content }
         else
           @suppliers = suppliers_dropdown
-          @supplier_invoices = invoices_array(invoices_dropdown)
-          @approvals = approvals_dropdown
+          invoices = invoices_dropdown
+          @supplier_invoices = invoices
+          @approvals = approvals_dropdown(invoices)
           @users = User.all
           @payment_methods = payment_methods_dropdown
           format.html { render action: "edit" }
@@ -210,23 +289,35 @@ module Ag2Purchase
         _array = _array << [ i.supplier_invoice_id, i.invoice_no,
                              formatted_date(i.supplier_invoice.invoice_date),
                              i.supplier_invoice.supplier.full_name,
-                             (!i.total.blank? ? formatted_number(i.total, 4) : formatted_number(0, 4)),
-                             (!i.paid.blank? ? formatted_number(i.paid, 4) : formatted_number(0, 4)),
-                             (!i.debt.blank? ? formatted_number(i.debt, 4) : formatted_number(0, 4)) ]
+                             (!i.total.blank? ? formatted_number(i.total, 2) : formatted_number(0, 2)),
+                             (!i.paid.blank? ? formatted_number(i.paid, 2) : formatted_number(0, 2)),
+                             (!i.debt.blank? ? formatted_number(i.debt, 2) : formatted_number(0, 2)) ]
       end
       _array
     end
 
-    def approvals_dropdown  # returns array
+    def approvals_dropdown_on_model(_invoices)  # returns array of model
       _array = []
-      invoices = invoices_dropdown
-      invoices.each do |i|
+      _invoices.each do |i|           # i = SupplierInvoiceDebt
         approvals = i.supplier_invoice.supplier_invoice_approvals
         if approvals.count > 0
-          approvals.each do |a|
-            _array = _array << [ i.id, i.supplier_invoice.invoice_no, 
-                                 i.approver.email, formatted_timestamp(i.approval_date),
-                                (!i.approved_amount.blank? ? formatted_number(i.approved_amount, 4) : formatted_number(0, 4)) ]
+          approvals.each do |a|       # a = SupplierInvoiceApproval
+            _array = _array << a
+          end
+        end
+      end
+      _array
+    end
+
+    def approvals_dropdown(_invoices) # returns array
+      _array = []
+      _invoices.each do |i|           # i = SupplierInvoiceDebt
+        approvals = i.supplier_invoice.supplier_invoice_approvals
+        if approvals.count > 0
+          approvals.each do |a|       # a = SupplierInvoiceApproval
+            _array = _array << [ a.id, i.supplier_invoice.invoice_no, 
+                                 a.approver.email, formatted_date(a.approval_date),
+                                (!a.approved_amount.blank? ? formatted_number(a.approved_amount, 4) : formatted_number(0, 4)) ]
           end
         end
       end

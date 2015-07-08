@@ -1620,6 +1620,7 @@ ActiveRecord::Schema.define(:version => 20150707194548) do
   create_table "supplier_invoice_debts", :id => false, :force => true do |t|
     t.integer "supplier_invoice_id", :limit => 8
     t.integer "organization_id"
+    t.integer "supplier_id"
     t.string  "invoice_no"
     t.decimal "subtotal",                         :precision => 47, :scale => 8
     t.decimal "taxes",                            :precision => 65, :scale => 20

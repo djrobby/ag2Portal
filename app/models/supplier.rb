@@ -29,6 +29,7 @@ class Supplier < ActiveRecord::Base
   has_many :offers
   has_many :supplier_invoices
   has_many :supplier_payments
+  has_many :supplier_invoice_debts
   
   has_paper_trail
 
