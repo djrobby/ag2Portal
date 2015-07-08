@@ -5,7 +5,10 @@ module Ag2Purchase
     include ActionView::Helpers::NumberHelper
     before_filter :authenticate_user!
     load_and_authorize_resource
-    skip_load_and_authorize_resource :only => [:sp_generate_no]
+    skip_load_and_authorize_resource :only => [:sp_generate_no,
+                                               :sp_update_from_organization,
+                                               :sp_update_from_supplier,
+                                               :sp_update_from_invoice]
 
     # Update delivery number at view (generate_code_btn)
     def sp_generate_no
@@ -15,6 +18,18 @@ module Ag2Purchase
       code = organization == '$' ? '$err' : sp_next_no(organization)
       @json_data = { "code" => code }
       render json: @json_data
+    end
+
+    def sp_update_from_organization
+      
+    end
+
+    def sp_update_from_supplier
+      
+    end
+
+    def sp_update_from_invoice
+      
     end
 
     #
@@ -84,9 +99,9 @@ module Ag2Purchase
       @breadcrumb = 'create'
       @supplier_payment = SupplierPayment.new
       @suppliers = suppliers_dropdown
-      @supplier_invoices = invoices_dropdown
+      @supplier_invoices = invoices_array(invoices_dropdown)
       @approvals = approvals_dropdown
-      @users = User.where('id = ?', current_user.id)
+      @users = User.all
       @payment_methods = payment_methods_dropdown
   
       respond_to do |format|
@@ -99,6 +114,11 @@ module Ag2Purchase
     def edit
       @breadcrumb = 'update'
       @supplier_payment = SupplierPayment.find(params[:id])
+      @suppliers = suppliers_dropdown
+      @supplier_invoices = invoices_array(invoices_dropdown)
+      @approvals = approvals_dropdown
+      @users = User.all
+      @payment_methods = payment_methods_dropdown
     end
   
     # POST /supplier_payments
@@ -113,6 +133,11 @@ module Ag2Purchase
           format.html { redirect_to @supplier_payment, notice: crud_notice('created', @supplier_payment) }
           format.json { render json: @supplier_payment, status: :created, location: @supplier_payment }
         else
+          @suppliers = suppliers_dropdown
+          @supplier_invoices = invoices_array(invoices_dropdown)
+          @approvals = approvals_dropdown
+          @users = User.all
+          @payment_methods = payment_methods_dropdown
           format.html { render action: "new" }
           format.json { render json: @supplier_payment.errors, status: :unprocessable_entity }
         end
@@ -132,6 +157,11 @@ module Ag2Purchase
                         notice: (crud_notice('updated', @supplier_payment) + "#{undo_link(@supplier_payment)}").html_safe }
           format.json { head :no_content }
         else
+          @suppliers = suppliers_dropdown
+          @supplier_invoices = invoices_array(invoices_dropdown)
+          @approvals = approvals_dropdown
+          @users = User.all
+          @payment_methods = payment_methods_dropdown
           format.html { render action: "edit" }
           format.json { render json: @supplier_payment.errors, status: :unprocessable_entity }
         end
@@ -167,11 +197,53 @@ module Ag2Purchase
     end
 
     def suppliers_dropdown
-      _suppliers = session[:organization] != '0' ? Supplier.where(organization_id: session[:organization].to_i).order(:supplier_code) : Supplier.order(:supplier_code)
+      session[:organization] != '0' ? Supplier.where(organization_id: session[:organization].to_i).order(:supplier_code) : Supplier.order(:supplier_code)
     end
 
     def invoices_dropdown
-      session[:organization] != '0' ? SupplierInvoice.unbilled(session[:organization].to_i, true) : SupplierInvoice.unbilled(nil, true)
+      session[:organization] != '0' ? SupplierInvoiceDebt.where(organization_id: session[:organization].to_i).order(:supplier_invoice_id) : SupplierInvoiceDebt.order(:supplier_invoice_id)
+    end
+    
+    def invoices_array(_invoices) # based on SupplierInvoiceDebt
+      _array = []
+      _invoices.each do |i|
+        _array = _array << [ i.supplier_invoice_id, i.invoice_no,
+                             formatted_date(i.supplier_invoice.invoice_date),
+                             i.supplier_invoice.supplier.full_name,
+                             (!i.total.blank? ? formatted_number(i.total, 4) : formatted_number(0, 4)),
+                             (!i.paid.blank? ? formatted_number(i.paid, 4) : formatted_number(0, 4)),
+                             (!i.debt.blank? ? formatted_number(i.debt, 4) : formatted_number(0, 4)) ]
+      end
+      _array
+    end
+
+    def approvals_dropdown  # returns array
+      _array = []
+      invoices = invoices_dropdown
+      invoices.each do |i|
+        approvals = i.supplier_invoice.supplier_invoice_approvals
+        if approvals.count > 0
+          approvals.each do |a|
+            _array = _array << [ i.id, i.supplier_invoice.invoice_no, 
+                                 i.approver.email, formatted_timestamp(i.approval_date),
+                                (!i.approved_amount.blank? ? formatted_number(i.approved_amount, 4) : formatted_number(0, 4)) ]
+          end
+        end
+      end
+      _array
+    end
+
+    def payment_methods_dropdown
+      session[:organization] != '0' ? payment_payment_methods(session[:organization].to_i) : payment_payment_methods(0)
+    end
+    
+    def payment_payment_methods(_organization)
+      if _organization != 0
+        _methods = PaymentMethod.where("(flow = 3 OR flow = 2) AND organization_id = ?", _organization).order(:description)
+      else
+        _methods = PaymentMethod.where("flow = 3 OR flow = 2").order(:description)
+      end
+      _methods
     end
     
     # Keeps filter state

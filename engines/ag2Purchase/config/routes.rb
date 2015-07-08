@@ -229,6 +229,20 @@ Ag2Purchase::Engine.routes.draw do
     match 'offers/of_update_attachment', :controller => 'offers', :action => 'of_update_attachment'
     match 'of_update_attachment', :controller => 'offers', :action => 'of_update_attachment'
     match 'offers/:id/of_update_attachment', :controller => 'offers', :action => 'of_update_attachment'
+    #
+    # Supplier payments
+    match 'supplier_payments/sp_generate_no/:org', :controller => 'supplier_payments', :action => 'sp_generate_no'
+    match 'sp_generate_no/:org', :controller => 'supplier_payments', :action => 'sp_generate_no'
+    match 'supplier_payments/:id/sp_generate_no/:org', :controller => 'supplier_payments', :action => 'sp_generate_no'
+    match 'supplier_payments/sp_update_from_organization/:org', :controller => 'supplier_payments', :action => 'sp_update_from_organization'
+    match 'sp_update_from_organization/:org', :controller => 'supplier_payments', :action => 'sp_update_from_organization'
+    match 'supplier_payments/:id/sp_update_from_organization/:org', :controller => 'supplier_payments', :action => 'sp_update_from_organization'
+    match 'supplier_payments/sp_update_from_supplier/:supplier', :controller => 'supplier_payments', :action => 'sp_update_from_supplier'
+    match 'sp_update_from_supplier/:supplier', :controller => 'supplier_payments', :action => 'sp_update_from_supplier'
+    match 'supplier_payments/:id/sp_update_from_supplier/:supplier', :controller => 'supplier_payments', :action => 'sp_update_from_supplier'
+    match 'supplier_payments/sp_update_from_invoice/:supplier', :controller => 'supplier_payments', :action => 'sp_update_from_invoice'
+    match 'sp_update_from_invoice/:supplier', :controller => 'supplier_payments', :action => 'sp_update_from_invoice'
+    match 'supplier_payments/:id/sp_update_from_invoice/:supplier', :controller => 'supplier_payments', :action => 'sp_update_from_invoice'
 
     # Resources
     resources :suppliers
