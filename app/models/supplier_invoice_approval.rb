@@ -1,4 +1,6 @@
 class SupplierInvoiceApproval < ActiveRecord::Base
+  include ModelsModule
+  
   belongs_to :supplier_invoice
   belongs_to :approver, :class_name => 'User'
   attr_accessible :approval_date, :approved_amount, :remarks,
@@ -20,23 +22,17 @@ class SupplierInvoiceApproval < ActiveRecord::Base
 
   def full_name
     full_name = ""
-    if !self.invoice_no.blank?
-      full_name += self.invoice_no
+    if !self.supplier_invoice.invoice_no.blank?
+      full_name += self.supplier_invoice.invoice_no
     end
-    if !self.supplier_invoice.invoice_date.blank?
-      full_name += " " + formatted_date(self.supplier_invoice.invoice_date)
+    if !self.approver.blank?
+      full_name += " " + self.approver.email
     end
-    if !self.supplier_invoice.supplier.blank?
-      full_name += " " + self.supplier_invoice.supplier.full_name
+    if !self.approval_date.blank?
+      full_name += " " + formatted_date(self.approval_date)
     end
-    if !self.total.blank?
-      full_name += ": " + formatted_number(self.total, 2)
-    end
-    if !self.paid.blank?
-      full_name += " - " + formatted_number(self.paid, 2)
-    end
-    if !self.debt.blank?
-      full_name += " - " + formatted_number(self.debt, 2)
+    if !self.approved_amount.blank?
+      full_name += " " + formatted_number(self.approved_amount, 4)
     end
     full_name
   end

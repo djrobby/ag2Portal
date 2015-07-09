@@ -517,6 +517,9 @@ module Ag2Purchase
       @invoice_debt = number_with_precision(@supplier_invoice.debt.round(4), precision: 4)
       @invoice_not_yet_approved = number_with_precision(@supplier_invoice.amount_not_yet_approved.round(4), precision: 4)
       @users = User.where('id = ?', current_user.id)
+      @is_approver = company_approver(@supplier_invoice, @supplier_invoice.project.company, current_user.id) ||
+                     office_approver(@supplier_invoice, @supplier_invoice.project.office, current_user.id) ||
+                     (current_user.has_role? :Approver)
     end
   
     # POST /supplier_invoices

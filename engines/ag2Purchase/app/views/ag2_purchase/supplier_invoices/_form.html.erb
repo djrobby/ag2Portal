@@ -513,7 +513,7 @@
 <%= render 'items_table', f: f %>
 <!-- Approvals -->
 <!-- Only for approvers! -->
-<% if @breadcrumb == 'update'%>
+<% if @breadcrumb == 'update' && @is_approver %>
 <table class="form-table">
   <tbody>
     <tr class="form-tr underlined-tr">

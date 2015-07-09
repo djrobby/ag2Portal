@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150707194548) do
+ActiveRecord::Schema.define(:version => 20150709072037) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -1725,6 +1725,8 @@ ActiveRecord::Schema.define(:version => 20150707194548) do
     t.string   "payment_no"
     t.integer  "organization_id"
     t.integer  "supplier_invoice_approval_id"
+    t.integer  "created_by"
+    t.integer  "updated_by"
   end
 
   add_index "supplier_payments", ["approver_id"], :name => "index_supplier_payments_on_approver_id"

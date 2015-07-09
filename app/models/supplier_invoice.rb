@@ -131,26 +131,6 @@ class SupplierInvoice < ActiveRecord::Base
   def amount_not_yet_approved
     total - approved_to_pay
   end
-
-  #
-  # Class (self) user defined methods
-  #
-  def self.unpaid(organization, _ordered)
-    if !organization.blank?
-      if !_ordered
-        joins(:supplier_payments).where('supplier_invoices.organization_id = ?', organization).group('supplier_invoices.id').having('sum(supplier_payments.amount) < ?', 0)
-        joins(:receipt_note_item_balances).where('receipt_notes.organization_id = ?', organization).group('receipt_notes.id').having('sum(receipt_note_item_balances.balance) > ?', 0)
-      else
-        joins(:receipt_note_item_balances).where('receipt_notes.organization_id = ?', organization).group('receipt_notes.supplier_id, receipt_notes.receipt_no, receipt_notes.id').having('sum(receipt_note_item_balances.balance) > ?', 0)
-      end
-    else
-      if !_ordered
-        joins(:receipt_note_item_balances).group('receipt_notes.id').having('sum(receipt_note_item_balances.balance) > ?', 0)
-      else
-        joins(:receipt_note_item_balances).group('receipt_notes.supplier_id, receipt_notes.receipt_no, receipt_notes.id').having('sum(receipt_note_item_balances.balance) > ?', 0)
-      end
-    end
-  end
   
   #
   # Records navigator
@@ -175,6 +155,7 @@ class SupplierInvoice < ActiveRecord::Base
     text :invoice_no
     string :invoice_no, :multiple => true   # Multiple search values accepted in one search (inverse_no_search)
     integer :id
+    integer :supplier_id
     integer :payment_method_id
     integer :project_id, :multiple => true
     integer :work_order_id
@@ -220,6 +201,7 @@ class SupplierInvoice < ActiveRecord::Base
   #
   # Need approval?
   def check_if_approval_is_required
+    # should not notify if only approvals were changed
     true
   end
 end

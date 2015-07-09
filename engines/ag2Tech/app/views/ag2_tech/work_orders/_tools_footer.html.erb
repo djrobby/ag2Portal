@@ -2,5 +2,5 @@
   <td align="right"><%= t :"activerecord.attributes.work_order.tool_minutes" %> | <%= t :"activerecord.attributes.work_order.tool_costs" %></td>
   <td align="right"><%= number_with_precision(order.tool_minutes, precision: 2) unless order.tool_minutes.blank? %></td>
   <td></td>
-  <td align="right"><%= number_with_precision(order.tool_costs, precision: 4) unless order.tool_costs.blank? %></td>
+  <td align="right"><%= number_with_precision(order.tool_costs, precision: 4, delimiter: I18n.locale == :es ? "." : ",") unless order.tool_costs.blank? %></td>
 </tr>

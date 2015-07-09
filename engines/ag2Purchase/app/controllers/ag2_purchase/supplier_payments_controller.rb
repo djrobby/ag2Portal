@@ -71,7 +71,7 @@ module Ag2Purchase
       if invoice != '0'
         @supplier_invoice = SupplierInvoiceDebt.where(supplier_invoice_id: invoice)
         @approvals = approvals_dropdown(@supplier_invoice)
-        @payment_methods = @supplier_invoice.blank? ? payment_methods_dropdown : @supplier_invoice.payment_method
+        @payment_methods = @supplier_invoice.blank? ? payment_methods_dropdown : @supplier_invoice.first.supplier_invoice.payment_method
         payment_method_id = @payment_methods.id rescue 0
       else
         @approvals = approvals_dropdown(invoices_dropdown)
@@ -94,7 +94,7 @@ module Ag2Purchase
       end
       amount = number_with_precision(amount.round(4), precision: 4)
       # Setup JSON
-      @json_data = { "approver" => @approvals, "amount" => amount.to_s }
+      @json_data = { "approver" => approver, "amount" => amount.to_s }
       render json: @json_data
     end
 
@@ -193,7 +193,7 @@ module Ag2Purchase
       @suppliers = suppliers_dropdown
       invoices = invoices_dropdown
       @supplier_invoices = invoices
-      @approvals = approvals_dropdown(invoices)
+      @approvals = approvals_dropdown_on_model(invoices)
       @users = User.all
       @payment_methods = payment_methods_dropdown
     end
@@ -213,7 +213,7 @@ module Ag2Purchase
           @suppliers = suppliers_dropdown
           invoices = invoices_dropdown
           @supplier_invoices = invoices
-          @approvals = approvals_dropdown(invoices)
+          @approvals = approvals_dropdown_on_model(invoices)
           @users = User.all
           @payment_methods = payment_methods_dropdown
           format.html { render action: "new" }
@@ -238,7 +238,7 @@ module Ag2Purchase
           @suppliers = suppliers_dropdown
           invoices = invoices_dropdown
           @supplier_invoices = invoices
-          @approvals = approvals_dropdown(invoices)
+          @approvals = approvals_dropdown_on_model(invoices)
           @users = User.all
           @payment_methods = payment_methods_dropdown
           format.html { render action: "edit" }

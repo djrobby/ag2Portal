@@ -25,6 +25,6 @@
   <td></td>
   <td></td>
   <td></td>
-  <td align="right"><%= number_with_precision(note.total, precision: 4) unless note.total.blank? %></td>
+  <td align="right"><%= number_with_precision(note.total, precision: 4, delimiter: I18n.locale == :es ? "." : ",") unless note.total.blank? %></td>
   <td></td>
 </tr>

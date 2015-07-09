@@ -7,7 +7,7 @@
       <td>Id:</td>
       <td><%= @supplier_payment.id %></td>
       <td><%= t 'activerecord.attributes.supplier_payment.payment_no' %>:</td>
-      <td><b><%= @supplier_payment.payment_no %></b></td>
+      <td><b><%= @supplier_payment.full_no %></b></td>
     </tr>
     <tr>
       <td><%= t 'activerecord.attributes.supplier_payment.payment_date' %>:</td>
@@ -44,7 +44,7 @@
 
 <%= render partial: '/layouts/crud/update_delete_new', locals:
 { model: SupplierPayment, update_path: edit_supplier_payment_path(@supplier_payment), update_txt: t('.btn_edit'),
-delete_path: @supplier_payment, delete_txt: t('.btn_delete'), msg: t("activerecord.models.supplier_payment.one"), txt: @supplier_payment.payment_no,
+delete_path: @supplier_payment, delete_txt: t('.btn_delete'), msg: t("activerecord.models.supplier_payment.one"), txt: @supplier_payment.full_no,
 new_path: new_supplier_payment_path, new_txt: t('ag2_purchase.supplier_payments.index.btn_new') } %>
 
-<%= link_to 'Back', supplier_payments_path %>
+<%= link_to t("ag2_purchase.supplier_payments.back_to_main_page"), supplier_payments_path %>

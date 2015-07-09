@@ -36,6 +36,25 @@ class SupplierPayment < ActiveRecord::Base
   def invoice_debt
     supplier_invoice.debt
   end
+  
+  #
+  # Records navigator
+  #
+  def to_first
+    SupplierPayment.order("id").first
+  end
+
+  def to_prev
+    SupplierPayment.where("id < ?", id).order("id").last
+  end
+
+  def to_next
+    SupplierPayment.where("id > ?", id).order("id").first
+  end
+
+  def to_last
+    SupplierPayment.order("id").last
+  end
 
   searchable do
     text :payment_no
