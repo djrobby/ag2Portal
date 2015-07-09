@@ -15,7 +15,7 @@
     </tr>
     <tr>
       <td><%=t 'activerecord.attributes.supplier_invoice.invoice_date' %>:</td>
-      <td><%= @supplier_invoice.invoice_date.strftime("%d/%m/%Y") unless @supplier_invoice.invoice_date.blank? %></td>
+      <td><%= formatted_date(@supplier_invoice.invoice_date) unless @supplier_invoice.invoice_date.blank? %></td>
       <td><%=t 'activerecord.attributes.supplier_invoice.receipt_note' %>:</td>
       <td><%= @supplier_invoice.receipt_note.receipt_no unless @supplier_invoice.receipt_note.blank? %></td>
     </tr>

@@ -6,5 +6,6 @@
   <td><%= approval.approver.email %></td>
   <td align="center"><%= approval.approval_date.strftime("%d/%m/%Y") %></td>
   <td align="right"><%= number_with_precision(approval.approved_amount, precision: 4) %></td>
+  <td align="right"><%= number_with_precision(approval.paid, precision: 4) %></td>
   <td><%= approval.remarks[0,40] %></td>
 </tr>

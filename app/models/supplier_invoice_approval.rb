@@ -43,4 +43,12 @@ class SupplierInvoiceApproval < ActiveRecord::Base
   def invoice_debt
     supplier_invoice.debt
   end
+
+  def paid
+    supplier_payments.sum("amount")
+  end
+  
+  def debt
+    approved_amount - paid
+  end
 end

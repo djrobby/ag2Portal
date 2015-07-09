@@ -182,9 +182,7 @@ class SupplierInvoice < ActiveRecord::Base
   def notify_on_create
     # Always notify on create
     Notifier.supplier_invoice_saved(self, 1).deliver
-    if check_if_approval_is_required
-      Notifier.supplier_invoice_saved_with_approval(self, 1).deliver
-    end     
+    Notifier.supplier_invoice_saved_with_approval(self, 1).deliver
   end
 
   # After update
@@ -202,6 +200,10 @@ class SupplierInvoice < ActiveRecord::Base
   # Need approval?
   def check_if_approval_is_required
     # should not notify if only approvals were changed
-    true
+    _r = false
+    if self.changed?
+      _r = true
+    end
+    _r
   end
 end

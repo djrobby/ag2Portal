@@ -1,6 +1,7 @@
 <tr class="totals">
-  <td align="right"><%= t :"activerecord.attributes.supplier_invoice.approved_to_pay" %></td>
+  <td align="right"><%= t :"activerecord.attributes.supplier_invoice.approved_to_pay" %> | <%= t :"activerecord.attributes.supplier_invoice.paid" %></td>
   <td></td>
   <td align="right"><%= number_with_precision(note.approved_to_pay, precision: 4, delimiter: I18n.locale == :es ? "." : ",") unless note.approved_to_pay.blank? %></td>
+  <td align="right"><%= number_with_precision(note.paid, precision: 4, delimiter: I18n.locale == :es ? "." : ",") unless note.paid.blank? %></td>
   <td></td>
 </tr>

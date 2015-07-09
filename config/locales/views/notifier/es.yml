@@ -63,4 +63,14 @@ es:
       htmllink: "Ver esta recuento"
       approval: "** Se requiere tu aprobación **"
       htmlapproval: "Aprueba este recuento"
+    supplier_invoice_saved:
+      subject: "aGestiona2: Factura de proveedor creada o actualizada"
+      link: "Puedes ver esta factura en el siguiente enlace"
+      htmllink: "Ver esta factura"
+    supplier_invoice_saved_with_approval:
+      subject: "aGestiona2: Factura de proveedor creada o actualizada (Aprobación requerida)"
+      link: "Puedes ver esta factura en el siguiente enlace"
+      htmllink: "Ver esta factura"
+      approval: "** Se requiere tu aprobación **"
+      htmlapproval: "Aprueba esta factura"
     do_not_reply: "No responda directamente a este e-mail: Ha sido enviado desde un sistema desatendido."

@@ -302,7 +302,9 @@ module Ag2Purchase
         approvals = i.supplier_invoice.supplier_invoice_approvals
         if approvals.count > 0
           approvals.each do |a|       # a = SupplierInvoiceApproval
-            _array = _array << a
+            if a.debt > 0
+              _array = _array << a
+            end
           end
         end
       end
@@ -315,9 +317,11 @@ module Ag2Purchase
         approvals = i.supplier_invoice.supplier_invoice_approvals
         if approvals.count > 0
           approvals.each do |a|       # a = SupplierInvoiceApproval
-            _array = _array << [ a.id, i.supplier_invoice.invoice_no, 
-                                 a.approver.email, formatted_date(a.approval_date),
-                                (!a.approved_amount.blank? ? formatted_number(a.approved_amount, 4) : formatted_number(0, 4)) ]
+            if a.debt > 0
+              _array = _array << [ a.id, i.supplier_invoice.invoice_no, 
+                                   a.approver.email, formatted_date(a.approval_date),
+                                  (!a.debt.blank? ? formatted_number(a.debt, 4) : formatted_number(0, 4)) ]
+            end 
           end
         end
       end

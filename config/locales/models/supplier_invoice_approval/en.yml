@@ -16,3 +16,5 @@ en:
         approver_id: "Approved by"
         remarks: "Remarks"
         invoice_debt: "Current debt"
+        debt: "Due"
+        paid: "Paid"

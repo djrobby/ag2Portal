@@ -63,4 +63,14 @@ en:
       htmllink: "Show this count"
       approval: "** Your approval is required **"
       htmlapproval: "Approve this count"
+    supplier_invoice_saved:
+      subject: "aGestiona2: Supplier invoice created or updated"
+      link: "You can see this inovice on the following link"
+      htmllink: "Show this invoice"
+    supplier_invoice_saved_with_approval:
+      subject: "aGestiona2: Supplier invoice created or updated (Approval required)"
+      link: "You can see this inovice on the following link"
+      htmllink: "Show this invoice"
+      approval: "** Your approval is required **"
+      htmlapproval: "Approve this invoice"
     do_not_reply: "Do not reply directly to this e-mail: It was sent from an unattended mailbox."

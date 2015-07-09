@@ -4,30 +4,28 @@
     <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
   </head>
   <body>
-    <h3><%= t 'activerecord.models.purchase_order.one' %> <%= t 'activerecord.attributes.purchase_order.order_no_report' %>: <%= @purchase_order.full_no %></h3>
+    <h3><%= t 'activerecord.models.supplier_invoice.one' %> <%= t 'activerecord.attributes.supplier_invoice.invoice_no' %>: <%= @supplier_invoice.invoice_no %></h3>
     <div>
-      <%= t 'activerecord.attributes.purchase_order.order_date' %>: <%= formatted_date(@purchase_order.order_date) unless @purchase_order.order_date.blank? %>
+      <%= t 'activerecord.attributes.supplier_invoice.invoice_date' %>: <%= formatted_date(@supplier_invoice.invoice_date) unless @supplier_invoice.invoice_date.blank? %>
       <br />
-      <%= t 'activerecord.attributes.purchase_order.order_status' %>: <%= @purchase_order.order_status.name %>
+      <%= t 'activerecord.attributes.supplier_invoice.supplier' %>: <%= @supplier_invoice.supplier.full_name %>
       <br />
-      <%= t 'activerecord.attributes.purchase_order.supplier' %>: <%= @purchase_order.supplier.full_name %>
+      <%= t 'activerecord.attributes.supplier_invoice.receipt_note' %>: <%= @supplier_invoice.receipt_note.receipt_no unless @supplier_invoice.receipt_note.blank? %>
       <br />
-      <%= t 'activerecord.attributes.purchase_order.offer' %>: <%= @purchase_order.offer.offer_no unless @purchase_order.offer.blank? %>
+      <%= t 'activerecord.attributes.supplier_invoice.project' %>: <%= @supplier_invoice.project.full_name unless @supplier_invoice.project.blank? %>
       <br />
-      <%= t 'activerecord.attributes.purchase_order.project' %>: <%= @purchase_order.project.full_name unless @purchase_order.project.blank? %>
+      <%= t 'activerecord.attributes.supplier_invoice.work_order' %>: <%= @supplier_invoice.work_order.full_name unless @supplier_invoice.work_order.blank? %>
       <br />
-      <%= t 'activerecord.attributes.purchase_order.work_order' %>: <%= @purchase_order.work_order.full_name unless @purchase_order.work_order.blank? %>
+      <%= t 'activerecord.attributes.supplier_invoice.payment_method' %>: <%= @supplier_invoice.payment_method.description unless @supplier_invoice.payment_method.blank? %>
       <br />
-      <%= t 'activerecord.attributes.purchase_order.payment_method' %>: <%= @purchase_order.payment_method.description unless @purchase_order.payment_method.blank? %>
-      <br />
-      <h4 style="color: #a67326;"><%= t 'activerecord.attributes.purchase_order.total' %>: <%= number_with_precision(@purchase_order.total, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless @purchase_order.total.blank? %></h4>
+      <h4 style="color: #a67326;"><%= t 'activerecord.attributes.supplier_invoice.total' %>: <%= number_with_precision(@supplier_invoice.total, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless @supplier_invoice.total.blank? %></h4>
       <p>
-        <%= t :created_at %> <%= formatted_timestamp(@purchase_order.created_at.utc.getlocal) %> <%= t :by %> <%= User.find(@purchase_order.created_by).email unless @purchase_order.created_by.blank? %>
+        <%= t :created_at %> <%= formatted_timestamp(@supplier_invoice.created_at.utc.getlocal) %> <%= t :by %> <%= User.find(@supplier_invoice.created_by).email unless @supplier_invoice.created_by.blank? %>
         <br />
-        <%= t :updated_at %> <%= formatted_timestamp(@purchase_order.updated_at.utc.getlocal) %> <%= t :by %> <%= User.find(@purchase_order.updated_by).email unless @purchase_order.updated_by.blank? %>
+        <%= t :updated_at %> <%= formatted_timestamp(@supplier_invoice.updated_at.utc.getlocal) %> <%= t :by %> <%= User.find(@supplier_invoice.updated_by).email unless @supplier_invoice.updated_by.blank? %>
       </p>
       <p>
-        <a href="<%= ag2_purchase.purchase_order_url(:id => @purchase_order.id, :host => @current_host) %>"><%= t '.htmllink' %></a>
+        <a href="<%= ag2_purchase.supplier_invoice_url(:id => @supplier_invoice.id, :host => @current_host) %>"><%= t '.htmllink' %></a>
       </p>
       <br />
       <p>

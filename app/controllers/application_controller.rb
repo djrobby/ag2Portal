@@ -438,7 +438,7 @@ end
     if last_no.nil?
       code = organization + year + '000001'
     else
-      last_no = last_no[14..19].to_i + 1
+      last_no = last_no[8..13].to_i + 1
       code = organization + year + last_no.to_s.rjust(6, '0')
     end
     code
@@ -567,7 +567,7 @@ end
     if last_no.nil?
       code = organization + year + '000001'
     else
-      last_no = last_no[14..19].to_i + 1
+      last_no = last_no[8..13].to_i + 1
       code = organization + year + last_no.to_s.rjust(6, '0')
     end
     code
