@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  town: 
+  street_type: 
+  street_name: MyString
+
+two:
+  town: 
+  street_type: 
+  street_name: MyString

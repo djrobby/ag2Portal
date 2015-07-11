@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150709072037) do
+ActiveRecord::Schema.define(:version => 20150711081737) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -1543,6 +1543,20 @@ ActiveRecord::Schema.define(:version => 20150709072037) do
   add_index "stores", ["town_id"], :name => "index_stores_on_town_id"
   add_index "stores", ["zipcode_id"], :name => "index_stores_on_zipcode_id"
 
+  create_table "street_directories", :force => true do |t|
+    t.integer  "town_id"
+    t.integer  "street_type_id"
+    t.string   "street_name"
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  add_index "street_directories", ["street_name"], :name => "index_street_directories_on_street_name"
+  add_index "street_directories", ["street_type_id"], :name => "index_street_directories_on_street_type_id"
+  add_index "street_directories", ["town_id"], :name => "index_street_directories_on_town_id"
+
   create_table "street_types", :force => true do |t|
     t.string   "street_type_code"
     t.string   "street_type_description"
@@ -1618,17 +1632,30 @@ ActiveRecord::Schema.define(:version => 20150709072037) do
   add_index "supplier_invoice_approvals", ["supplier_invoice_id"], :name => "index_supplier_invoice_approvals_on_supplier_invoice_id"
 
   create_table "supplier_invoice_debts", :id => false, :force => true do |t|
-    t.integer "supplier_invoice_id",                                 :default => 0, :null => false
+    t.integer "supplier_invoice_id", :limit => 8
     t.integer "organization_id"
     t.integer "supplier_id"
     t.string  "invoice_no"
-    t.decimal "subtotal",            :precision => 47, :scale => 8
-    t.decimal "taxes",               :precision => 65, :scale => 20
-    t.decimal "bonus",               :precision => 57, :scale => 14
-    t.decimal "taxable",             :precision => 58, :scale => 14
-    t.decimal "total",               :precision => 65, :scale => 20
-    t.decimal "paid",                :precision => 35, :scale => 4
-    t.decimal "debt",                :precision => 65, :scale => 20
+    t.decimal "subtotal",                         :precision => 47, :scale => 8
+    t.decimal "taxes",                            :precision => 65, :scale => 20
+    t.decimal "bonus",                            :precision => 57, :scale => 14
+    t.decimal "taxable",                          :precision => 58, :scale => 14
+    t.decimal "total",                            :precision => 65, :scale => 20
+    t.decimal "paid",                             :precision => 35, :scale => 4
+    t.decimal "debt",                             :precision => 65, :scale => 20
+  end
+
+  create_table "supplier_invoice_debts_manual", :id => false, :force => true do |t|
+    t.integer "id",              :limit => 8
+    t.integer "organization_id"
+    t.string  "invoice_no"
+    t.decimal "subtotal",                     :precision => 47, :scale => 8
+    t.decimal "taxes",                        :precision => 65, :scale => 20
+    t.decimal "bonus",                        :precision => 57, :scale => 14
+    t.decimal "taxable",                      :precision => 58, :scale => 14
+    t.decimal "total",                        :precision => 65, :scale => 20
+    t.decimal "paid",                         :precision => 35, :scale => 4
+    t.decimal "debt",                         :precision => 65, :scale => 20
   end
 
   create_table "supplier_invoice_items", :force => true do |t|

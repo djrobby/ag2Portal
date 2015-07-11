@@ -29,7 +29,7 @@ class Office < ActiveRecord::Base
   validates :name,         :presence => true
   validates :company,      :presence => true
   validates :office_code,  :presence => true,
-                           :length => { :minimum => 5 },
+                           :length => { :minimum => 5, :maximum => 8 },
                            :uniqueness => true
   validates :street_type,  :presence => true
   validates :zipcode,      :presence => true
