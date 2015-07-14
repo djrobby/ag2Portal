@@ -17,7 +17,7 @@
   <% end %>
   <% if @order_status %>
   <li>
-    <a href="<%= activities_path %>"><%=t :"ag2_purchase.breadcrumb.order_statuses.items" %></a><span class="divider">></span>
+    <a href="<%= order_statuses_path %>"><%=t :"ag2_purchase.breadcrumb.order_statuses.items" %></a><span class="divider">></span>
   </li>
   <% if @breadcrumb == 'read' || @breadcrumb == 'update' %>
   <%=t :"ag2_purchase.breadcrumb.order_statuses.item" %>

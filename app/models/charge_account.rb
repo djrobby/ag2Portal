@@ -29,7 +29,7 @@ class ChargeAccount < ActiveRecord::Base
                               :length => { :is => 11 },
                               :format => { with: /\A\d+\Z/, message: :code_invalid },
                               :numericality => { :only_integer => true, :greater_than => 0 },
-                              :uniqueness => { :scope => :organization_id }
+                              :uniqueness => { :scope => [:organization_id, :charge_group_id] }
   validates :name,            :presence => true
   validates :opened_at,       :presence => true
   validates :organization,    :presence => true

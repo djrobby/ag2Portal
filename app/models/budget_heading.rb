@@ -13,7 +13,7 @@ class BudgetHeading < ActiveRecord::Base
                               :numericality => { :only_integer => true, :greater_than => 0 },
                               :uniqueness => { :scope => :organization_id }
   validates :name,            :presence => true,
-                              :length => { :in => 5..40 }
+                              :length => { :in => 3..40 }
   validates :organization,    :presence => true
 
   before_destroy :check_for_dependent_records
