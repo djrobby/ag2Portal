@@ -63,9 +63,9 @@
           $("#client_building").val(data.building);
           $("#client_floor").val(data.floor);
           $("#client_floor_office").val(data.floor_office);
-          $("#client_zipcode_id").val(data.zipcode_id);
-          $("#client_town_id").val(data.town_id);
-          $("#client_province_id").val(data.province_id);
+          $("#client_zipcode_id").select2("val", data.zipcode_id);
+          $("#client_town_id").select2("val", data.town_id);
+          $("#client_province_id").select2("val", data.province_id);
           $("#client_region_id").val(data.region_id);
           $("#client_country_id").val(data.country_id);
           $("#client_phone").val(data.phone);
@@ -155,7 +155,7 @@
       if (contact == "")
         contact = "0";
       jQuery.getJSON('update_province_textfield_from_town/' + contact, function(data) {
-        $("#client_province_id").val(data.province_id);
+        $("#client_province_id").select2("val", data.province_id);
         $("#client_region_id").val(data.region_id);
         $("#client_country_id").val(data.country_id);
       })
@@ -182,8 +182,8 @@
       if (contact == "")
         contact = "0";
       jQuery.getJSON('update_province_textfield_from_zipcode/' + contact, function(data) {
-        $("#client_town_id").val(data.town_id);
-        $("#client_province_id").val(data.province_id);
+        $("#client_town_id").select2("val", data.town_id);
+        $("#client_province_id").select2("val", data.province_id);
         $("#client_region_id").val(data.region_id);
         $("#client_country_id").val(data.country_id);
       })
@@ -223,9 +223,9 @@
           $("#client_building").val(data.building);
           $("#client_floor").val(data.floor);
           $("#client_floor_office").val(data.floor_office);
-          $("#client_zipcode_id").val(data.zipcode_id);
-          $("#client_town_id").val(data.town_id);
-          $("#client_province_id").val(data.province_id);
+          $("#client_zipcode_id").select2("val", data.zipcode_id);
+          $("#client_town_id").select2("val", data.town_id);
+          $("#client_province_id").select2("val", data.province_id);
           $("#client_region_id").val(data.region_id);
           $("#client_country_id").val(data.country_id);
           $("#client_phone").val(data.phone);
@@ -327,12 +327,12 @@
   <label class="multi-field-label-three-thinner"> <%= f.input :floor_office, :input_html => { :class => 'large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
 </div>
 <div>
-  <label class="multi-field-label-three"> <%= f.association :zipcode, collection: Zipcode.all(order: 'zipcode'), :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
-  <label class="multi-field-label-three"> <%= f.association :town, collection: Town.all(order: 'name'), :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
-  <label class="multi-field-label-three"> <%= f.association :province, collection: Province.all(order: 'name'), :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-three"> <%= f.association :zipcode, collection: Zipcode.all(order: 'zipcode'), :input_html => { :class => 'x-large-text-field sel2' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-three"> <%= f.association :town, collection: Town.all(order: 'name'), :input_html => { :class => 'x-large-text-field sel2' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-three"> <%= f.association :province, collection: Province.all(order: 'name'), :input_html => { :class => 'x-large-text-field sel2' }, :label_html => { :class => 'form-label' } %> </label>
 </div>
 <div>
-  <label class="multi-field-label-two"> <%= f.association :region, collection: Region.all(order: 'name'), :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.association :region, collection: Region.all(order: 'name'), :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label-under-sel2' } %> </label>
   <label class="multi-field-label-two"> <%= f.association :country, collection: Country.all(order: 'name'), :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
 </div>
 <%= f.input :remarks, :as => :text, :input_html => { :class => 'x-large-text-field', :rows => 2 }, :label_html => { :class => 'form-label' } %>
@@ -347,7 +347,9 @@
   <tbody>
     <tr class="form-tr">
       <td class="form-td-three left-winged"> <%= f.button :submit, :class => 'btn-primary', :id => 'submit_btn' %> </td>
+      <% if @breadcrumb == 'create'%>
       <td class="form-td-three right-winged"><a href="#" id="generate_code_btn" class="btn btn-warning"><%=t 'ag2_gest.clients.generate_code_btn' %></a></td>
+      <% end %>
     </tr>
   </tbody>
 </table>

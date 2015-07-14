@@ -3,6 +3,10 @@
   var _thisForm = '';
 
   $(document).ready(function() {
+    $('.sel2').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      allowClear: true
+    });
     // Setup drag & drop
     dd_import_files('#dd_files', '#image_content', 'co_update_attachment');
     // Save default text color
@@ -42,7 +46,7 @@
       if (company == "")
         company = "0";
       jQuery.getJSON('update_province_textfield_from_town/' + company, function(data) {
-        $("#company_province_id").val(data.id);
+        $("#company_province_id").select2("val", data.id);
       })
       return false;
     });
@@ -54,8 +58,8 @@
       if (company == "")
         company = "0";
       jQuery.getJSON('update_province_textfield_from_zipcode/' + company, function(data) {
-        $("#company_town_id").val(data.town_id);
-        $("#company_province_id").val(data.province_id);
+        $("#company_town_id").select2("val", data.town_id);
+        $("#company_province_id").select2("val", data.province_id);
       })
       return false;
     });
@@ -153,12 +157,12 @@
   <label class="multi-field-label-three-thinner"> <%= f.input :floor_office, :input_html => { :class => 'large-text-field number-text-field' }, :label_html => { :class => 'form-label' } %> </label>
 </div>
 <div>
-  <label class="multi-field-label-three"> <%= f.association :zipcode, collection: Zipcode.all(order: 'zipcode'), :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
-  <label class="multi-field-label-three"> <%= f.association :town, collection: Town.all(order: 'name'), :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
-  <label class="multi-field-label-three"> <%= f.association :province, collection: Province.all(order: 'name'), :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-three"> <%= f.association :zipcode, collection: Zipcode.all(order: 'zipcode'), :input_html => { :class => 'x-large-text-field sel2' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-three"> <%= f.association :town, collection: Town.all(order: 'name'), :input_html => { :class => 'x-large-text-field sel2' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-three"> <%= f.association :province, collection: Province.all(order: 'name'), :input_html => { :class => 'x-large-text-field sel2' }, :label_html => { :class => 'form-label' } %> </label>
 </div>
 <div>
-  <label class="multi-field-label-two"><%= f.input :email, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %></label>
+  <label class="multi-field-label-two"><%= f.input :email, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label-under-sel2' } %></label>
   <label class="multi-field-label-two"><%= f.input :website, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %></label>
 </div>
 <!-- Support e-mail -->

@@ -1,5 +1,6 @@
 <script>
   var _thisForm = '';
+  var changing = false;
 
   $(document).ready(function() {
     $('.sel2').select2({
@@ -10,6 +11,17 @@
     // Initialized form variable
     _thisForm = $("#Project").closest('form')[0];
   }); 
+
+  $(document).ajaxStart(function() {
+    // show loader on start
+    if (changing == false) {
+      $("#div_table").html("");
+      $("#loader").show();
+    }
+  }).ajaxSuccess(function() {
+    // hide loader on success
+    $("#loader").hide();
+  });
 
   $(window).bind("load", function() {
     $("#No").val("<%= params[:No] %>");
@@ -42,6 +54,9 @@
 
     <div class="span3">
       <div class="well sidebar-nav">
+        <!-- Refresh -->
+        <%= link_to ag2_tech.work_orders_path, title: I18n.t(:refresh), class: "icon-refresh-link", remote: true do %> <i class="icon-refresh"></i> <% end %>
+        <!-- Search form -->
         <%= form_tag "work_orders", :method => 'get', :remote => true do %>
         <!-- No -->
         <%= label_tag I18n.t("activerecord.attributes.work_order.order_no"), nil, :class => 'form-label' %>
@@ -69,8 +84,11 @@
       </div><!-- /.sidebar-nav -->
     </div><!-- /.span3 -->
 
-    <div class="span9" id="div_table">
-      <%= render 'work_orders' %>
+    <div class="span9">
+      <div id="loader"></div>
+      <div id="div_table">
+        <%= render 'work_orders' %>
+      </div>
     </div><!-- /.span9 -->
   </div><!-- /.row-fluid -->
 </div><!-- /.container-fluid -->

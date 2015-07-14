@@ -1,10 +1,22 @@
 <script>
   var _thisForm = '';
+  var changing = false;
 
   $(document).ready(function() {
     // Initialized form variable
     _thisForm = $("#removeFilter").closest('form')[0];
   }); 
+
+  $(document).ajaxStart(function() {
+    // show loader on start
+    if (changing == false) {
+      $("#div_table").html("");
+      $("#loader").show();
+    }
+  }).ajaxSuccess(function() {
+    // hide loader on success
+    $("#loader").hide();
+  });
 
   $(window).bind("load", function() {
     $("#No").val("<%= params[:No] %>");
@@ -52,6 +64,9 @@
 
     <div class="span3">
       <div class="well sidebar-nav">
+        <!-- Refresh -->
+        <%= link_to ag2_tech.projects_path, title: I18n.t(:refresh), class: "icon-refresh-link", remote: true do %> <i class="icon-refresh"></i> <% end %>
+        <!-- Search form -->
         <%= form_tag "projects", :method => 'get', :remote => true do %>
         <!-- No -->
         <%= label_tag I18n.t("activerecord.attributes.project.project_code"), nil, :class => 'form-label' %>
@@ -84,8 +99,11 @@
       </div><!-- /.sidebar-nav -->
     </div><!-- /.span3 -->
 
-    <div class="span9" id="div_table">
-      <%= render 'projects' %>
+    <div class="span9">
+      <div id="loader"></div>
+      <div id="div_table">
+        <%= render 'projects' %>
+      </div>
     </div><!-- /.span9 -->
   </div><!-- /.row-fluid -->
 </div><!-- /.container-fluid -->
