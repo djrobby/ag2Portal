@@ -1632,17 +1632,30 @@ ActiveRecord::Schema.define(:version => 20150711081737) do
   add_index "supplier_invoice_approvals", ["supplier_invoice_id"], :name => "index_supplier_invoice_approvals_on_supplier_invoice_id"
 
   create_table "supplier_invoice_debts", :id => false, :force => true do |t|
-    t.integer "supplier_invoice_id",                                 :default => 0, :null => false
+    t.integer "supplier_invoice_id", :limit => 8
     t.integer "organization_id"
     t.integer "supplier_id"
     t.string  "invoice_no"
-    t.decimal "subtotal",            :precision => 47, :scale => 8
-    t.decimal "taxes",               :precision => 65, :scale => 20
-    t.decimal "bonus",               :precision => 57, :scale => 14
-    t.decimal "taxable",             :precision => 58, :scale => 14
-    t.decimal "total",               :precision => 65, :scale => 20
-    t.decimal "paid",                :precision => 35, :scale => 4
-    t.decimal "debt",                :precision => 65, :scale => 20
+    t.decimal "subtotal",                         :precision => 47, :scale => 8
+    t.decimal "taxes",                            :precision => 65, :scale => 20
+    t.decimal "bonus",                            :precision => 57, :scale => 14
+    t.decimal "taxable",                          :precision => 58, :scale => 14
+    t.decimal "total",                            :precision => 65, :scale => 20
+    t.decimal "paid",                             :precision => 35, :scale => 4
+    t.decimal "debt",                             :precision => 65, :scale => 20
+  end
+
+  create_table "supplier_invoice_debts_manual", :id => false, :force => true do |t|
+    t.integer "id",              :limit => 8
+    t.integer "organization_id"
+    t.string  "invoice_no"
+    t.decimal "subtotal",                     :precision => 47, :scale => 8
+    t.decimal "taxes",                        :precision => 65, :scale => 20
+    t.decimal "bonus",                        :precision => 57, :scale => 14
+    t.decimal "taxable",                      :precision => 58, :scale => 14
+    t.decimal "total",                        :precision => 65, :scale => 20
+    t.decimal "paid",                         :precision => 35, :scale => 4
+    t.decimal "debt",                         :precision => 65, :scale => 20
   end
 
   create_table "supplier_invoice_items", :force => true do |t|

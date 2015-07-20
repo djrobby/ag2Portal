@@ -294,7 +294,7 @@ module Ag2Purchase
         @suppliers = @organization.blank? ? suppliers_dropdown : @organization.suppliers.order(:supplier_code)
         @projects = @organization.blank? ? projects_dropdown : @organization.projects.order(:project_code)
         @work_orders = @organization.blank? ? work_orders_dropdown : @organization.work_orders.order(:order_no)
-        @charge_accounts = @organization.blank? ? charge_accounts_dropdown : @organization.charge_accounts.order(:account_code)
+        @charge_accounts = @organization.blank? ? charge_accounts_dropdown : @organization.charge_accounts.expenditures
         @stores = @organization.blank? ? stores_dropdown : @organization.stores.order(:name)
         @payment_methods = @organization.blank? ? payment_methods_dropdown : payment_payment_methods(@organization.id)
         @products = @organization.blank? ? products_dropdown : @organization.products.order(:product_code)
@@ -671,11 +671,13 @@ module Ag2Purchase
     end
 
     def charge_accounts_dropdown
-      _accounts = session[:organization] != '0' ? ChargeAccount.where(organization_id: session[:organization].to_i).order(:account_code) : ChargeAccount.order(:account_code)
+      #_accounts = session[:organization] != '0' ? ChargeAccount.where(organization_id: session[:organization].to_i).order(:account_code) : ChargeAccount.order(:account_code)
+      session[:organization] != '0' ? ChargeAccount.expenditures.where(organization_id: session[:organization].to_i) : ChargeAccount.expenditures
     end
 
     def charge_accounts_dropdown_edit(_project)
-      _accounts = ChargeAccount.where('project_id = ? OR project_id IS NULL', _project).order(:account_code)
+      #_accounts = ChargeAccount..where('project_id = ? OR project_id IS NULL', _project).order(:account_code)
+      ChargeAccount.expenditures.where('project_id = ? OR project_id IS NULL', _project)
     end
 
     def stores_dropdown
