@@ -12,7 +12,7 @@ es:
         zipcodes: "Cód.Postales"
         street_types: "Tipos de Vía"
         departments: "Departamentos"
-        areas: "Áreas"
+        areas: "Áreas/Sectores"
         tax_types: "Tipos Impositivos"
         accounting_groups: "Grupos Contables"
         ledger_accounts: "Cuentas Contables"

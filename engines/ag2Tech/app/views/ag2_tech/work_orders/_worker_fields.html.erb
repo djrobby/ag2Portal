@@ -84,11 +84,18 @@
 
   // Initialize
   function initW() {
+    var ajax_path = 'wo_update_project_textfields_from_organization/';
     // make a POST call and replace the content
-    var order = $('select#work_order_organization_id :selected').val();
-    if (order == "")
-      order = "0";
-    jQuery.getJSON('wo_update_project_textfields_from_organization/' + order, function(data) {
+    var order = $('select#work_order_project_id :selected').val();
+    if (order != "") {
+      ajax_path = 'wo_update_account_textfield_from_project/';
+    } else {
+      order = $('select#work_order_organization_id :selected').val();
+      if (order == "") {
+        order = '0';
+      }
+    }
+    jQuery.getJSON(ajax_path + order, function(data) {
       var w = data.worker
       // Worker
       $("#fnt-worker").html("");

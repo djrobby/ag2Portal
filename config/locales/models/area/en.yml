@@ -2,11 +2,11 @@ en:
   activerecord:
     models:
       area:
-        zero:  Areas
-        one:   Area
-        few:   Areas
-        other: Areas
-        check_for_work_orders: "Area cannot be destroyed while linked work orders exist."
+        zero:  Areas/Sectors
+        one:   Area/Sector
+        few:   Areas/Sectors
+        other: Areas/Sectors
+        check_for_work_orders: "Area/Sector cannot be destroyed while linked work orders exist."
     attributes:
       area:
         name: "Name"

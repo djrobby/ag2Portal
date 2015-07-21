@@ -12,7 +12,7 @@ en:
         zipcodes: "ZIP codes"
         street_types: "Street Types"
         departments: "Departments"
-        areas: "Areas"
+        areas: "Areas/Sectors"
         tax_types: "Tax Types"
         accounting_groups: "Accounting Groups"
         ledger_accounts: "Ledger Accounts"

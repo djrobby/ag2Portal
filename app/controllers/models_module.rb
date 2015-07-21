@@ -198,7 +198,7 @@ module ModelsModule
   # Returns multidimensional array containing different company in each line
   # Each line contains 5 elements: Company Id, max_order_total, max_order_price, Net amount sum by project & Item net price
   # items must be joined with :project & ordered by :company_id
-  def global_office_breakdown(items)
+  def global_company_breakdown(items)
     pf = []   # 4 items array
     a = []    # 5 items returning array
     # Only if items

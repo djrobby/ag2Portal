@@ -183,6 +183,7 @@ report.page.values reported_at: @work_order.reported_at.strftime("%d/%m/%Y %H:%M
 report.page.values approved_at: @work_order.approved_at.strftime("%d/%m/%Y %H:%M:%S") unless @work_order.approved_at.blank?
 report.page.values certified_at: @work_order.certified_at.strftime("%d/%m/%Y") unless @work_order.certified_at.blank?
 report.page.values posted_at: @work_order.posted_at.strftime("%d/%m/%Y") unless @work_order.posted_at.blank?
+report.page.values client: @work_order.client.full_name unless @work_order.client.blank?
 # Page header: Others
 report.page.values(form_title: I18n.t("activerecord.models.work_order.one"),
 				   order_no_title: I18n.t("activerecord.attributes.work_order.order_no_report") + ":",
@@ -207,7 +208,6 @@ report.page.values(form_title: I18n.t("activerecord.models.work_order.one"),
 				   store_title: I18n.t("activerecord.attributes.work_order.store") + ":",
 				   store: @work_order.store.name,
 				   client_title: I18n.t("activerecord.attributes.work_order.client") + ":",
-				   client: @work_order.client.full_name,
 				   petitioner_title: I18n.t("activerecord.attributes.work_order.petitioner") + ":",
 				   petitioner: @work_order.petitioner,
 				   location_title: I18n.t("activerecord.attributes.work_order.location") + ":",

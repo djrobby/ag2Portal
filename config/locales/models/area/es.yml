@@ -2,11 +2,11 @@ es:
   activerecord:
     models:
       area:
-        zero:  Áreas
-        one:   Área
-        few:   Áreas
-        other: Áreas
-        check_for_work_orders: "Área no puede ser eliminada mientras existan ordenes de trabajo vinculadas."
+        zero:  Áreas/Sectores
+        one:   Área/Sector
+        few:   Áreas/Sectores
+        other: Áreas/Sectores
+        check_for_work_orders: "Área/Sector no puede ser eliminada mientras existan ordenes de trabajo vinculadas."
     attributes:
       area:
         name: "Nombre"

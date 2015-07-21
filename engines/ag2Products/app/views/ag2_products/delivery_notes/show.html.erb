@@ -40,7 +40,7 @@
       <td><%= @delivery_note.sale_offer.offer_no unless @delivery_note.sale_offer.blank? %></td>
     </tr>
     <tr>
-      <td><%=t 'activerecord.attributes.delivery_note.supplier' %>:</td>
+      <td><%=t 'activerecord.attributes.delivery_note.client' %>:</td>
       <td><%= @delivery_note.client.full_name unless @delivery_note.client.blank? %></td>
       <td><%=t 'activerecord.attributes.delivery_note.payment_method' %>:</td>
       <td> <%= @delivery_note.payment_method.description unless @delivery_note.payment_method.blank? %> </td>

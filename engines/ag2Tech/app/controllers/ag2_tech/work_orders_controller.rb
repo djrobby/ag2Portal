@@ -171,9 +171,9 @@ module Ag2Tech
     # Update cost text fields at view from worker select
     def wo_update_costs_from_worker
       worker = params[:worker]
+      hours = params[:hours].to_f / 10000
       project = params[:project]
       year = params[:year].to_i
-      hours = params[:hours].to_f / 10000
       cost = 0
       costs = 0
       worker_item = nil
