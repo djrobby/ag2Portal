@@ -63,6 +63,13 @@ class ChargeAccount < ActiveRecord::Base
     charge_group.blank? ? "" : charge_group.name[0,30]
   end
 
+  #
+  # Calculated fields
+  #
+  def active_yes_no
+    closed_at.blank? ? I18n.t(:yes_on) : I18n.t(:no_off)
+  end
+
   def flow
     self.charge_group.flow
   end  
@@ -71,23 +78,23 @@ class ChargeAccount < ActiveRecord::Base
   # Class (self) user defined methods
   #
   def self.incomes
-    joins(:charge_group).where("charge_groups.flow = ? OR charge_groups.flow = ?", 1, 3).order(:account_code)
+    joins(:charge_group).where("(charge_groups.flow = ? OR charge_groups.flow = ?) AND charge_accounts.closed_at IS NULL", 1, 3).order(:account_code)
   end
 
   def self.expenditures
-    joins(:charge_group).where("charge_groups.flow = ? OR charge_groups.flow = ?", 2, 3).order(:account_code)
+    joins(:charge_group).where("(charge_groups.flow = ? OR charge_groups.flow = ?) AND charge_accounts.closed_at IS NULL", 2, 3).order(:account_code)
   end
 
   def self.incomes_and_expenditures
-    joins(:charge_group).where("charge_groups.flow = ?", 3).order(:account_code)
+    joins(:charge_group).where("charge_groups.flow = ? AND charge_accounts.closed_at IS NULL", 3).order(:account_code)
   end
 
   def self.incomes_only
-    joins(:charge_group).where("charge_groups.flow = ?", 1).order(:account_code)
+    joins(:charge_group).where("charge_groups.flow = ? AND charge_accounts.closed_at IS NULL", 1).order(:account_code)
   end
 
   def self.expenditures_only
-    joins(:charge_group).where("charge_groups.flow = ?", 2).order(:account_code)
+    joins(:charge_group).where("charge_groups.flow = ? AND charge_accounts.closed_at IS NULL", 2).order(:account_code)
   end
 
   #
