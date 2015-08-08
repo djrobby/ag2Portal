@@ -626,6 +626,8 @@ end
       end
     elsif is_a?(GuideController)
       "guide"
+    elsif is_a?(ErrorsController)
+      "errors"
     else
       "application"
     end

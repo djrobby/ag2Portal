@@ -13,6 +13,10 @@ Ag2Portal::Application.configure do
   config.consider_all_requests_local       = true
   config.action_controller.perform_caching = false
 
+  # Full error reports are disabled and caching is turned on (to test error pages)
+  #config.consider_all_requests_local       = false
+  #config.action_controller.perform_caching = true
+
   # Don't care if the mailer can't send
   config.action_mailer.raise_delivery_errors = false
 

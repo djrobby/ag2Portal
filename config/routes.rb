@@ -19,6 +19,11 @@ Ag2Portal::Application.routes.draw do
     #
     match 'guide/gu_content_from_guide/:name', :controller => 'guide', :action => 'gu_content_from_guide'
     match 'guide/gu_content_from_subguide/:name', :controller => 'guide', :action => 'gu_content_from_subguide'
+
+    # Routes for custom error pages
+    get '/404', to: 'errors#file_not_found'
+    get '/422', to: 'errors#unprocessable'
+    get '/500', to: 'errors#internal_server_error'
         
     # Root
     root :to => "welcome#index"

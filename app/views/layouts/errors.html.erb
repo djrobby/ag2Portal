@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= content_for?(:title) ? yield(:title) : "aGestiona2 | ag2Portal" %></title>
+    <meta name="description" content="aGestiona2 ag2Portal">
+    <meta name="author" content="Nestor Rodriguez (SPSI) para AYG">
+    <%= favicon_link_tag "/favicon.ico?1" %>
+    <%= stylesheet_link_tag    "application", :media => "all" %>
+    <%= csrf_meta_tags %>
+    <%= yield(:head) %>
+    <style type="text/css">
+      body { background-color: #fff; color: #666; text-align: center; }
+      div.dialog {
+        width: 25em;
+        padding: 0 4em;
+        margin: 4em auto 0 auto;
+        border: 1px solid #ccc;
+        border-right-color: #999;
+        border-bottom-color: #999;
+      }
+      h2 { color: #f00; }
+    </style>
+  </head>
+  <body>
+    <script type="text/javascript">
+            window.I18n = <%= current_translations.to_json.html_safe %></script>
+    <!-- Header NavBar -->
+    <header class="navbar navbar-fixed-top">
+      <nav class="navbar-inner">
+        <div class="container">
+          <%= render '/layouts/errorshead' %>
+        </div>
+      </nav>
+    </header>
+    <!-- Main container -->
+    <div id="main" role="main">
+      <div class="container">
+        <div class="row">
+          <div class="span12">
+            <%= render '/layouts/messages' %>
+            <%= yield %>
+          </div>
+        </div>
+      </div>
+    </div><!-- /#main -->
+    <!-- Footer NavBar -->
+    <footer class="navbar navbar-fixed-bottom">
+      <div class="navbar-inner">
+        <div class="container">
+          <%= render '/layouts/guidefoot' %>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
