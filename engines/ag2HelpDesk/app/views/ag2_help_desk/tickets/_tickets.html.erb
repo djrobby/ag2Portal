@@ -32,7 +32,7 @@
       <% else %>
       <td></td>
       <% end %>
-      <td><%= ticket.created_at.strftime("%d/%m/%Y %H:%M:%S") %></td>
+      <td><%= formatted_timestamp(ticket.created_at.utc.getlocal) %></td>
       <td><%= User.find(ticket.created_by).email unless ticket.created_by.blank? %></td>
       <td><%= ticket.ticket_subject %></td>
       <td><%= ticket.ticket_status.name.titleize unless ticket.ticket_status.blank? %></td>
