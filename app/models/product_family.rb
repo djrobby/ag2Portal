@@ -14,6 +14,7 @@ class ProductFamily < ActiveRecord::Base
 
   has_many :products
   has_many :stocks, :through => :products
+  has_many :product_family_stocks
 
   before_validation :fields_to_uppercase
 
@@ -46,6 +47,14 @@ class ProductFamily < ActiveRecord::Base
     stocks.sum("current")
   end
 
+  def initial
+    product_family_stocks.sum("initial")
+  end
+
+  def current
+    product_family_stocks.sum("current")
+  end
+
   def stock_by_store(_store)
     stocks.where("store_id = ?", _store).sum("current")
   end
@@ -53,8 +62,16 @@ class ProductFamily < ActiveRecord::Base
   #
   # Class (self) user defined methods
   #
+  def self.all_store
+    joins(:stocks).group("product_families.family_code") 
+  end
+
   def self.by_store(_store)
     joins(:stocks).where("store_id = ?", _store).group("product_families.family_code") 
+  end
+
+  def self.by_family(_family)
+    joins(:stocks).where("product_families.id = ?", _family).group("product_families.family_code") 
   end
 
   private

@@ -31,12 +31,16 @@
 delete_path: @product_family, delete_txt: t('.btn_delete'), msg: t("activerecord.models.product_family.one"), txt: @product_family.name,
 new_path: new_product_family_path, new_txt: t('ag2_products.product_families.index.btn_new') } %>
 
+<!-- Products -->
 <% if (@products.count > 0) %>
 <h4><%=t '.subtable_title' %></h4>
 <table class="table table-condensed table-striped">
   <thead>
     <%= render '/layouts/ag2_products/productsheader' %>
   </thead>
+  <tfoot>
+    <%= render :partial => '/layouts/ag2_products/productsfooter', :locals => { :family => @product_family } %>
+  </tfoot>
   <tbody>
     <% session[:return_to] = I18n.t('ag2_products.product_families.show.return_to') %>
     <% session[:return_to_url] = "#{request.protocol}#{request.host_with_port}#{request.fullpath}" %>
@@ -44,6 +48,23 @@ new_path: new_product_family_path, new_txt: t('ag2_products.product_families.ind
   </tbody>
 </table>
 <%= render :partial => '/layouts/pagination', :locals => { :ivar => @products } %>
+<% end %>
+
+<!-- Stocks -->
+<% if (@stocks.count > 0) %>
+<h4><%=t '.subtable_stocks_title' %></h4>
+<table class="table table-condensed table-striped">
+  <thead>
+    <%= render '/layouts/ag2_products/fstocksheader' %>
+  </thead>
+  <tfoot>
+    <%= render :partial => '/layouts/ag2_products/fstocksfooter', :locals => { :family => @product_family } %>
+  </tfoot>
+  <tbody>
+    <%= render :partial => '/layouts/ag2_products/fstocks', :locals => { :stocks => @stocks } %>
+  </tbody>
+</table>
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @stocks } %>
 <% end %>
 
 <%= link_to t("ag2_products.product_families.back_to_main_page"), product_families_path %>

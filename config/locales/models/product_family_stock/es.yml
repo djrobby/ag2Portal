@@ -1,0 +1,14 @@
+es:
+  activerecord:
+    models:
+      product_family_stock:
+        zero:  Existencias
+        one:   Existencia
+        few:   Existencias
+        other: Existencias
+    attributes:
+      product_family_stock:
+        store: "Almacén"
+        store_id: "Almacén"
+        initial: "Inicial"
+        current: "Actual"

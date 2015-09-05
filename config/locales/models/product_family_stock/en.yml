@@ -1,0 +1,14 @@
+en:
+  activerecord:
+    models:
+      product_family_stock:
+        zero:  Stocks
+        one:   Stock
+        few:   Stocks
+        other: Stocks
+    attributes:
+      product_family_stock:
+        store: "Store"
+        store_id: "Store"
+        initial: "Initial"
+        current: "Current"

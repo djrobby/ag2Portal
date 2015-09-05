@@ -9,7 +9,8 @@ en:
         title: "Product family"
         btn_edit: "Edit Product family"
         btn_delete: "Delete Product family"
-        subtable_title: "Product family Products"
+        subtable_title: "Family Products"
+        subtable_stocks_title: "Family Stocks"
         return_to: "Back to Product family"
       edit:
         title: "Edit Product family"

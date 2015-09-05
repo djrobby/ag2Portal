@@ -83,6 +83,8 @@ report.page.values(company_name: @purchase_order.project.company.name,
 				   company_phones: @purchase_order.project.company.phone_and_fax,
 				   company_email: @purchase_order.project.company.email_and_website,
 				   company_fiscal_id: I18n.t("activerecord.attributes.company.fiscal_id_c") + ": " + @purchase_order.project.company.fiscal_id)
+# Page header: Possibly null values
+report.page.values offer: @purchase_order.offer.offer_no unless @purchase_order.offer.blank?
 # Page header: Others
 report.page.values(form_title: I18n.t("activerecord.models.purchase_order.one"),
 				   order_no_title: I18n.t("activerecord.attributes.purchase_order.order_no_report") + ":",
@@ -90,7 +92,6 @@ report.page.values(form_title: I18n.t("activerecord.models.purchase_order.one"),
 				   order_date_title: I18n.t("activerecord.attributes.purchase_order.order_date") + ":",
 				   order_date: @purchase_order.order_date.strftime("%d/%m/%Y"),
 				   offer_title: I18n.t("activerecord.attributes.purchase_order.offer") + ":",
-				   offer: @purchase_order.offer.offer_no,
 				   supplier_title: I18n.t("activerecord.attributes.purchase_order.supplier"),
 				   petitioner_title: I18n.t("activerecord.attributes.purchase_order.office_c"),
 				   supplier_name: @purchase_order.supplier.name,

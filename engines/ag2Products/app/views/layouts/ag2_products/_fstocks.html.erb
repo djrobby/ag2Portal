@@ -1,0 +1,7 @@
+<% stocks.each do |w| %>
+<tr>
+  <td><%= w.store_name %></td>
+  <td align="right"><%= number_with_precision(w.initial, precision: 4) unless w.initial.blank? %></td>
+  <td align="right"><%= number_with_precision(w.current, precision: 4) unless w.current.blank? %></td>
+</tr>
+<% end %>

@@ -391,6 +391,7 @@ module Ag2Products
           _approval_date = DateTime.now
           order.approver_id = _approver_id
           order.approval_date = _approval_date
+          order.order_status_id = 2
           # Attempt approve
           if order.save
             # Success
@@ -618,6 +619,12 @@ module Ag2Products
                      filename: "#{title}_#{@purchase_order.full_no}.pdf",
                      type: 'application/pdf',
                      disposition: 'inline' }
+      end
+      
+      # Updates status
+      if @purchase_order.order_status_id < 3
+        @purchase_order.order_status_id = 3
+        @purchase_order.save
       end
     end
     

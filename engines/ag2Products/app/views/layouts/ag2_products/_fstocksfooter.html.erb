@@ -1,0 +1,5 @@
+<tr>
+  <td align="right"><%= t :"activerecord.attributes.product.current_stock" %></td>
+  <td align="right"><%= number_with_precision(family.initial, precision: 4) unless family.initial.blank? %></td>
+  <td align="right"><%= number_with_precision(family.current, precision: 4) unless family.current.blank? %></td>
+</tr>
