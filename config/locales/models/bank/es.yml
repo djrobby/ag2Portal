@@ -1,0 +1,15 @@
+es:
+  activerecord:
+    models:
+      bank:
+        zero:  Bancos
+        one:   Banco
+        few:   Bancos
+        other: Bancos
+        check_for_supplier_bank_accounts: "Banco no puede ser eliminado mientras existan cuentas de proveedores vinculadas."
+        check_for_client_bank_accounts: "Banco no puede ser eliminado mientras existan cuentas de clientes vinculadas."
+    attributes:
+      bank:
+        code: "Código"
+        name: "Nombre"
+        swift: "Código SWIFT"

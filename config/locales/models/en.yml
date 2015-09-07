@@ -90,3 +90,11 @@ en:
           attributes:
             payment_no:
               code_invalid: "invalid"
+        bank:
+          attributes:
+            code:
+              code_invalid: "invalid"
+        bank_office:
+          attributes:
+            code:
+              code_invalid: "invalid"

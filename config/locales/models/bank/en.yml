@@ -1,0 +1,15 @@
+en:
+  activerecord:
+    models:
+      bank:
+        zero:  Banks
+        one:   Bank
+        few:   Banks
+        other: Banks
+        check_for_supplier_bank_accounts: "Bank cannot be destroyed while linked supplier accounts exist."
+        check_for_client_bank_accounts: "Bank cannot be destroyed while linked client accounts exist."
+    attributes:
+      bank:
+        code: "Code"
+        name: "Name"
+        swift: "SWIFT Code"

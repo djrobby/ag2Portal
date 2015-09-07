@@ -1,0 +1,39 @@
+en:
+  activerecord:
+    models:
+      bank_office:
+        zero:  Bank offices
+        one:   Bank office
+        few:   Bank offices
+        other: Bank offices
+        check_for_supplier_bank_accounts: "Bank office cannot be destroyed while linked supplier accounts exist."
+        check_for_client_bank_accounts: "Bank office cannot be destroyed while linked client accounts exist."
+    attributes:
+      bank_office:
+        code: "Code"
+        name: "Name"
+        swift: "SWIFT Code"
+        province: "Province"
+        province_id: "Province"
+        town: "Town"
+        town_id: "Town"
+        zipcode: "Zip Code"
+        zipcode_id: "Zip Code"
+        region: "Region"
+        region_id: "Region"
+        country: "Country"
+        country_id: "Country"
+        street_type: "Street Type"
+        street_type_id: "Street Type"
+        street_name: "Street name"
+        street_number: "Number"
+        building: "Building"
+        floor: "Floor"
+        floor_office: "Office"
+        phone: "Phone"
+        extension: "Extension"
+        fax: "Fax"
+        cellular: "Cellular"
+        email: "Email"
+        full_name: "Full Name"
+        address: "Address"

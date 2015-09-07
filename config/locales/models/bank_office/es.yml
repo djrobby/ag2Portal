@@ -1,0 +1,39 @@
+es:
+  activerecord:
+    models:
+      bank_office:
+        zero:  Oficinas bancarias
+        one:   Oficina bancaria
+        few:   Oficinas bancarias
+        other: Oficinas bancarias
+        check_for_supplier_bank_accounts: "Oficina bancaria no puede ser eliminada mientras existan cuentas de proveedores vinculadas."
+        check_for_client_bank_accounts: "Oficina bancaria no puede ser eliminada mientras existan cuentas de clientes vinculadas."
+    attributes:
+      bank_office:
+        code: "Código"
+        name: "Nombre"
+        swift: "Código SWIFT"
+        province: "Provincia"
+        province_id: "Provincia"
+        town: "Población"
+        town_id: "Población"
+        zipcode: "Código postal"
+        zipcode_id: "Código postal"
+        region: "Región"
+        region_id: "Región"
+        country: "País"
+        country_id: "País"
+        street_type: "Tipo de vía"
+        street_type_id: "Tipo de vía"
+        street_name: "Nombre de vía"
+        street_number: "Nº"
+        building: "Edificio/Bloque"
+        floor: "Planta"
+        floor_office: "Oficina"
+        phone: "Teléfono"
+        extension: "Extensión"
+        fax: "Fax"
+        cellular: "Móvil"
+        email: "Email"
+        full_name: "Nombre completo"
+        address: "Dirección"
