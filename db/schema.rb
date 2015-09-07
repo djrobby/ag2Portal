@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150905072456) do
+ActiveRecord::Schema.define(:version => 20150907100422) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -72,6 +72,69 @@ ActiveRecord::Schema.define(:version => 20150905072456) do
     t.integer  "avatar_file_size"
     t.datetime "avatar_updated_at"
   end
+
+  create_table "bank_account_classes", :force => true do |t|
+    t.string   "name"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  add_index "bank_account_classes", ["name"], :name => "index_bank_account_classes_on_name"
+
+  create_table "bank_offices", :force => true do |t|
+    t.string   "code"
+    t.string   "name"
+    t.integer  "bank_id"
+    t.string   "swift"
+    t.integer  "street_type_id"
+    t.string   "street_name"
+    t.string   "street_number"
+    t.string   "building"
+    t.string   "floor"
+    t.string   "floor_office"
+    t.integer  "zipcode_id"
+    t.integer  "town_id"
+    t.integer  "province_id"
+    t.integer  "region_id"
+    t.integer  "country_id"
+    t.string   "phone"
+    t.string   "extension"
+    t.string   "fax"
+    t.string   "cellular"
+    t.string   "email"
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  add_index "bank_offices", ["bank_id", "code"], :name => "index_bank_offices_on_bank_id_and_code", :unique => true
+  add_index "bank_offices", ["bank_id"], :name => "index_bank_offices_on_bank_id"
+  add_index "bank_offices", ["code"], :name => "index_bank_offices_on_code"
+  add_index "bank_offices", ["country_id"], :name => "index_bank_offices_on_country_id"
+  add_index "bank_offices", ["name"], :name => "index_bank_offices_on_name"
+  add_index "bank_offices", ["province_id"], :name => "index_bank_offices_on_province_id"
+  add_index "bank_offices", ["region_id"], :name => "index_bank_offices_on_region_id"
+  add_index "bank_offices", ["street_type_id"], :name => "index_bank_offices_on_street_type_id"
+  add_index "bank_offices", ["swift"], :name => "index_bank_offices_on_swift"
+  add_index "bank_offices", ["town_id"], :name => "index_bank_offices_on_town_id"
+  add_index "bank_offices", ["zipcode_id"], :name => "index_bank_offices_on_zipcode_id"
+
+  create_table "banks", :force => true do |t|
+    t.string   "code"
+    t.string   "name"
+    t.string   "swift"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  add_index "banks", ["code"], :name => "index_banks_on_code", :unique => true
+  add_index "banks", ["name"], :name => "index_banks_on_name"
+  add_index "banks", ["swift"], :name => "index_banks_on_swift"
 
   create_table "budget_groups", :force => true do |t|
     t.integer  "budget_id"
@@ -1603,6 +1666,35 @@ ActiveRecord::Schema.define(:version => 20150905072456) do
   add_index "subguides", ["guide_id"], :name => "index_subguides_on_guide_id"
   add_index "subguides", ["name"], :name => "index_subguides_on_name", :unique => true
   add_index "subguides", ["sort_order"], :name => "index_subguides_on_sort_order"
+
+  create_table "supplier_bank_accounts", :force => true do |t|
+    t.integer  "supplier_id"
+    t.integer  "bank_account_class_id"
+    t.integer  "country_id"
+    t.string   "iban_dc"
+    t.integer  "bank_id"
+    t.integer  "bank_office_id"
+    t.string   "ccc_dc"
+    t.string   "account_no"
+    t.string   "holder_fiscal_id"
+    t.string   "holder_name"
+    t.date     "starting_at"
+    t.date     "ending_at"
+    t.datetime "created_at",            :null => false
+    t.datetime "updated_at",            :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  add_index "supplier_bank_accounts", ["account_no"], :name => "index_supplier_bank_accounts_on_account_no"
+  add_index "supplier_bank_accounts", ["bank_account_class_id"], :name => "index_supplier_bank_accounts_on_bank_account_class_id"
+  add_index "supplier_bank_accounts", ["bank_id"], :name => "index_supplier_bank_accounts_on_bank_id"
+  add_index "supplier_bank_accounts", ["bank_office_id"], :name => "index_supplier_bank_accounts_on_bank_office_id"
+  add_index "supplier_bank_accounts", ["country_id"], :name => "index_supplier_bank_accounts_on_country_id"
+  add_index "supplier_bank_accounts", ["holder_fiscal_id"], :name => "index_supplier_bank_accounts_on_holder_fiscal_id"
+  add_index "supplier_bank_accounts", ["holder_name"], :name => "index_supplier_bank_accounts_on_holder_name"
+  add_index "supplier_bank_accounts", ["supplier_id", "bank_account_class_id", "country_id", "iban_dc", "bank_id", "bank_office_id", "ccc_dc", "account_no"], :name => "index_supplier_bank_accounts_on_supplier_and_class_and_no", :unique => true
+  add_index "supplier_bank_accounts", ["supplier_id"], :name => "index_supplier_bank_accounts_on_supplier_id"
 
   create_table "supplier_contacts", :force => true do |t|
     t.integer  "supplier_id"
