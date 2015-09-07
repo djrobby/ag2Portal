@@ -1,0 +1,13 @@
+es:
+  activerecord:
+    models:
+      bank_account_class:
+        zero:  Clases de cuentas bancarias
+        one:   Clase de cuenta bancaria
+        few:   Clases de cuentas bancarias
+        other: Clases de cuentas bancarias
+        check_for_supplier_bank_accounts: "Clase de cuenta bancaria no puede ser eliminada mientras existan cuentas de proveedores vinculadas."
+        check_for_client_bank_accounts: "Clase de cuenta bancaria no puede ser eliminada mientras existan cuentas de clientes vinculadas."
+    attributes:
+      bank_account_class:
+        name: "Nombre"

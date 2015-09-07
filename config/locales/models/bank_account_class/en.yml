@@ -1,0 +1,13 @@
+en:
+  activerecord:
+    models:
+      bank_account_class:
+        zero:  Bank account classes
+        one:   Bank account class
+        few:   Bank account classes
+        other: Bank account classes
+        check_for_supplier_bank_accounts: "Bank account class cannot be destroyed while linked supplier accounts exist."
+        check_for_client_bank_accounts: "Bank account class cannot be destroyed while linked client accounts exist."
+    attributes:
+      bank_account_class:
+        name: "Name"
