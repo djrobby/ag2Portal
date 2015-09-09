@@ -13,6 +13,8 @@ en:
         code: "Code"
         name: "Name"
         swift: "SWIFT Code"
+        bank: "Bank"
+        bank_id: "Bank"
         province: "Province"
         province_id: "Province"
         town: "Town"

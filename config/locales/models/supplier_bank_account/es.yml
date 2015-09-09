@@ -1,0 +1,28 @@
+es:
+  activerecord:
+    models:
+      supplier_bank_account:
+        zero:  Cuentas bancarias del proveedor
+        one:   Cuenta bancaria del proveedor
+        few:   Cuentas bancarias del proveedor
+        other: Cuentas bancarias del proveedor
+    attributes:
+      supplier_bank_account:
+        supplier: "Proveedor"
+        supplier_id: "Proveedor"
+        bank_account_class: "Clase"
+        bank_account_class_id: "Clase"
+        country: "País"
+        country_id: "País"
+        iban_dc: "DC IBAN"
+        bank: "Banco"
+        bank_id: "Banco"
+        bank_office: "Oficina"
+        bank_office_id: "Oficina"
+        ccc_dc: "DC CCC"
+        account_no: "Nº Cuenta"
+        holder_name: "Titular"
+        holder_fiscal_id: "Id Fiscal CIF/NIF"
+        holder_fiscal_id_c: "CIF/NIF"
+        e_format: "Cuenta"
+        p_format: "Cuenta"

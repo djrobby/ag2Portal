@@ -1,0 +1,28 @@
+en:
+  activerecord:
+    models:
+      supplier_bank_account:
+        zero:  Supplier bank accounts
+        one:   Supplier bank account
+        few:   Suppliers bank accounts
+        other: Suppliers bank accounts
+    attributes:
+      supplier_bank_account:
+        supplier: "Supplier"
+        supplier_id: "Supplier"
+        bank_account_class: "Class"
+        bank_account_class_id: "Class"
+        country: "Country"
+        country_id: "Country"
+        iban_dc: "IBAN CD"
+        bank: "Bank"
+        bank_id: "Bank"
+        bank_office: "Office"
+        bank_office_id: "Office"
+        ccc_dc: "CCC CD"
+        account_no: "Account No"
+        holder_name: "Holder"
+        holder_fiscal_id: "Fiscal Id"
+        holder_fiscal_id_c: "Fiscal Id"
+        e_format: "Account"
+        p_format: "Account"

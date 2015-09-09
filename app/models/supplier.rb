@@ -20,6 +20,7 @@ class Supplier < ActiveRecord::Base
   attr_accessible :activity_ids
 
   has_many :supplier_contacts, dependent: :destroy
+  has_many :supplier_bank_accounts, dependent: :destroy
   has_many :purchase_prices, dependent: :destroy
   has_many :products, :through => :purchase_prices
   has_many :receipt_notes

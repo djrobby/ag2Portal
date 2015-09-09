@@ -98,3 +98,11 @@ es:
           attributes:
             code:
               code_invalid: "inválido"
+        supplier_bank_account:
+          attributes:
+            iban_dc:
+              dc_invalid: "inválido (deben ser dos dígitos numéricos)"
+            ccc_dc:
+              dc_invalid: "inválido (deben ser dos dígitos numéricos)"
+            account_no:
+              code_invalid: "inválido (deben ser diez dígitos numéricos)"
