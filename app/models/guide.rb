@@ -7,7 +7,8 @@ class Guide < ActiveRecord::Base
 
   has_paper_trail
 
-  validates :name,        :presence => true
+  validates :name,        :presence => true,
+                          :uniqueness => true
   validates :description, :presence => true
   validates :site,        :presence => true
   validates :sort_order,  :presence => true

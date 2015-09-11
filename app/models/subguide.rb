@@ -4,7 +4,8 @@ class Subguide < ActiveRecord::Base
 
   has_paper_trail
 
-  validates :name,        :presence => true
+  validates :name,        :presence => true,
+                          :uniqueness => true
   validates :description, :presence => true
   validates :guide,       :presence => true
   validates :sort_order,  :presence => true
