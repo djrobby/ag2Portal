@@ -41,6 +41,9 @@ class Ability
     #
     # ag2Admin
     if user.has_role? :ag2Admin_User
+      can :crud, Bank
+      can :crud, BankOffice
+      can :crud, BankAccountClass
       can :crud, Company
       #can :crud, CompanyNotification
       can :read, CompanyNotification
@@ -62,6 +65,9 @@ class Ability
       can :crud, LedgerAccount
       can :crud, PaymentMethod
     elsif user.has_role? :ag2Admin_Guest
+      can :read, Bank
+      can :read, BankOffice
+      can :read, BankAccountClass
       can :read, Company
       can :read, CompanyNotification
       can :read, Country
@@ -81,6 +87,9 @@ class Ability
       can :read, LedgerAccount
       can :read, PaymentMethod
     elsif user.has_role? :ag2Admin_Banned
+      cannot :manage, Bank
+      cannot :manage, BankOffice
+      cannot :manage, BankAccountClass
       cannot :manage, Company
       cannot :manage, CompanyNotification
       cannot :manage, Country

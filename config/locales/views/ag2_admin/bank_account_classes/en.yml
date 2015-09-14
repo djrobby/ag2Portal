@@ -1,0 +1,17 @@
+en:
+  ag2_admin:
+    bank_account_classes:
+      index:
+        title: "Bank account classes"
+        btn_new: "New Class"
+        back_to_root: "Back to ag2Admin"
+      show:
+        title: "Bank account class"
+        btn_edit: "Edit Class"
+        btn_delete: "Delete Class"
+      edit:
+        title: "Edit Class"
+        btn_show: "Show Class"
+      new:
+        title: "New Class"
+      back_to_main_page: "Back to Bank account classes"

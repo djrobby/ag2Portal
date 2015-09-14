@@ -73,3 +73,12 @@ en:
       notifications:
         items: "Notifications"
         item: "Notification"
+      banks:
+        items: "Banks"
+        item: "Bank"
+      bank_offices:
+        items: "Bank offices"
+        item: "Office"
+      bank_account_classes:
+        items: "Bank account classes"
+        item: "Class"

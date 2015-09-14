@@ -17,3 +17,6 @@ en:
         accounting_groups: "Accounting Groups"
         ledger_accounts: "Ledger Accounts"
         payment_methods: "Payment Methods"
+        banks: "Banks"
+        bank_offices: "Bank Offices"
+        bank_account_classes: "Bank Acct.Classes"

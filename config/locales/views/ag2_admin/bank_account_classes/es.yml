@@ -1,0 +1,17 @@
+es:
+  ag2_admin:
+    bank_account_classes:
+      index:
+        title: "Clases de cuentas bancarias"
+        btn_new: "Nueva Clase"
+        back_to_root: "Volver a ag2Admin"
+      show:
+        title: "Clase de cuenta bancaria"
+        btn_edit: "Editar Clase"
+        btn_delete: "Borrar Clase"
+      edit:
+        title: "Editar Clase"
+        btn_show: "Ver Clase"
+      new:
+        title: "Nueva Clase"
+      back_to_main_page: "Volver a Clases de cuentas bancarias"

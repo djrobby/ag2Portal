@@ -1,0 +1,48 @@
+<%= render '/layouts/ag2_admin/banksbreadcrumb' %>
+
+<h3><%=t '.title' %></h3>
+<table class="table">
+  <tbody>
+    <tr>
+      <td>Id:</td>
+      <td><%= @bank.id %></td>
+      <td><%=t 'activerecord.attributes.bank.code' %>:</td>
+      <td><b><%= @bank.code unless @bank.code.blank? %></b></td>
+    </tr>
+    <tr>
+      <td><%=t 'activerecord.attributes.bank.name' %>:</td>
+      <td><%= @bank.name unless @bank.name.blank? %></td>
+      <td><%=t 'activerecord.attributes.bank.swift' %>:</td>
+      <td><%= @bank.swift unless @bank.swift.blank? %></td>
+    </tr>
+    <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @bank } %>
+    <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @bank } %>
+  </tbody>
+</table>
+
+<%= render partial: '/layouts/crud/update_delete_new', locals:
+{ model: Bank, update_path: edit_bank_path(@bank), update_txt: t('.btn_edit'),
+delete_path: @bank, delete_txt: t('.btn_delete'), msg: t("activerecord.models.bank.one"), :txt => @bank.code,
+new_path: new_bank_path, new_txt: t('ag2_admin.banks.index.btn_new') } %>
+
+<% if (@bank_offices.count > 0) %>
+<h4><%= t '.subtable_title' %></h4>
+<table class="table table-condensed table-striped">
+  <thead>
+    <tr>
+      <th><%=t 'activerecord.attributes.bank_office.code' %></th>
+      <th><%=t 'activerecord.attributes.bank_office.name' %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @bank_offices.each do |office| %>
+    <tr>
+      <td><%= link_to office.code, office %></td>
+      <td><%= office.name %></td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
+<% end %>
+
+<%= link_to I18n.t('ag2_admin.banks.back_to_main_page'), banks_path %>

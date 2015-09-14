@@ -1,0 +1,34 @@
+<script>
+  $(document).ready(function() {
+    $("#div_table th a, #div_table #pages a").on("click", function() {
+      $.getScript(this.href);
+      return false;
+    });
+  }); 
+</script>
+
+<table class="table table-condensed table-striped">
+  <thead>
+    <tr>
+      <th><%= sortable "code", t('activerecord.attributes.bank.code') %></th>
+      <th><%= sortable "name", t('activerecord.attributes.bank.name') %></th>
+      <th><%= sortable "swift", t('activerecord.attributes.bank.swift') %></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @banks.each do |bank| %>
+    <tr>
+      <td><%= link_to bank.code, bank %></td>
+      <td><%= bank.name unless bank.name.blank? %></td>
+      <td><%= bank.swift unless bank.swift.blank? %></td>
+      <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => bank, :path => edit_bank_path(bank) } %>
+      <%= render :partial => '/layouts/crud/delete', :locals => { :model => bank, :path => bank, :msg => I18n.t("activerecord.models.bank.one"), :txt => bank.code } %> </td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @banks } %>
+<%= render :partial => '/layouts/crud/new', :locals => { :model => bank, :path => new_bank_path, :txt => I18n.t("ag2_admin.banks.index.btn_new") } %>
+<%= link_to I18n.t("ag2_admin.banks.index.go_to_child"), bank_offices_path %> |
+<%= link_to I18n.t("ag2_admin.banks.index.back_to_root"), ag2_admin.root_path %>

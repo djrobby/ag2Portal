@@ -1,0 +1,19 @@
+en:
+  ag2_admin:
+    banks:
+      index:
+        title: "Banks"
+        btn_new: "New Bank"
+        go_to_child: "Go to Bank Offices"
+        back_to_root: "Back to ag2Admin"
+      show:
+        title: "Bank"
+        btn_edit: "Edit Bank"
+        btn_delete: "Delete Bank"
+        subtable_title: "Bank Offices"
+      edit:
+        title: "Edit Bank"
+        btn_show: "Show Bank"
+      new:
+        title: "New Bank"
+      back_to_main_page: "Back to Banks"
