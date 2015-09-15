@@ -10,4 +10,4 @@ es:
         check_for_client_bank_accounts: "Clase de cuenta bancaria no puede ser eliminada mientras existan cuentas de clientes vinculadas."
     attributes:
       bank_account_class:
-        name: "Nombre"
+        name: "Para"

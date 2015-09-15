@@ -8,7 +8,7 @@ class BankOffice < ActiveRecord::Base
   belongs_to :country
   attr_accessible :building, :cellular, :code, :email, :extension, :fax, :floor, :floor_office, :name, :phone,
                   :street_name, :street_number, :bank_id, :street_type_id, :zipcode_id, :town_id, :province_id,
-                  :region_id, :country_id
+                  :region_id, :country_id, :swift
 
   has_many :supplier_bank_accounts
 
@@ -43,6 +43,36 @@ class BankOffice < ActiveRecord::Base
       full_name += " " + self.name
     end
     full_name
+  end
+
+  def full_code
+    _ret = ""
+    if !self.bank.blank?
+      _ret += self.bank.code
+    end
+    if !self.code.blank?
+      _ret += " " + self.code
+    end
+    _ret    
+  end
+
+  def full_address
+    _ret = ""
+    if !street_type.blank?
+      _ret += street_type.street_type_code.titleize + ". "
+    end
+    if !street_name.blank?
+      _ret += street_name + " "
+    end
+    if !street_number.blank?
+      _ret += street_number + ", "
+    end
+    if !zipcode.blank?
+      _ret += zipcode.zipcode + " "
+    end
+    if !town.blank?
+      _ret += town.name
+    end    
   end
 
   def address_1
@@ -90,6 +120,17 @@ class BankOffice < ActiveRecord::Base
     _floor_is_numeric = true if Float(floor) rescue false
     if _floor_is_numeric
       _ret = floor.strip + "\xBA".force_encoding('ISO-8859-1').encode('UTF-8')
+    end
+    _ret
+  end
+
+  def phone_and_fax
+    _ret = ""
+    if !self.phone.blank?
+      _ret += I18n.t("activerecord.attributes.company.phone_c") + ": " + self.phone.strip
+    end
+    if !self.fax.blank?
+      _ret += _ret.blank? ? I18n.t("activerecord.attributes.company.fax") + ": " + self.fax.strip : " / " + I18n.t("activerecord.attributes.company.fax") + ": " + self.fax.strip
     end
     _ret
   end

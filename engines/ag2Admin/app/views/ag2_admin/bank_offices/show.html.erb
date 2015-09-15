@@ -1,5 +1,77 @@
-<p id="notice"><%= notice %></p>
+<%= render '/layouts/ag2_admin/bofficesbreadcrumb' %>
 
+<h3><%=t '.title' %></h3>
+<table class="table">
+  <tbody>
+    <tr>
+      <td>Id:</td>
+      <td><%= @bank_office.id %></td>
+      <td><%=t 'activerecord.attributes.bank_office.code' %>:</td>
+      <td><b><%= @bank_office.code unless @bank_office.code.blank? %></b></td>
+    </tr>
+    <tr>
+      <td><%=t 'activerecord.attributes.bank_office.name' %>:</td>
+      <td><%= @bank_office.name unless @bank_office.name.blank? %></td>
+      <td><%=t 'activerecord.attributes.bank_office.bank' %>:</td>
+      <td><%= @bank_office.bank.full_name unless @bank_office.bank.blank? %></td>
+    </tr>
+    <tr>
+      <td><%= t :"activerecord.attributes.bank_office.phone" %>:</td>
+      <td><%= @bank_office.phone %>
+      <% if !@bank_office.extension.blank? %>
+      (<%= @bank_office.extension %>)
+      <% end %> </td>
+      <td><%= t :"activerecord.attributes.bank_office.fax" %>:</td>
+      <td><%= @bank_office.fax %></td>
+    </tr>
+    <tr>
+      <td><%= t :"activerecord.attributes.bank_office.cellular" %>:</td>
+      <td><%= @bank_office.cellular %></td>
+      <td><%= t :"activerecord.attributes.bank_office.email" %>:</td>
+      <td><%= @bank_office.email %></td>
+    </tr>
+    <tr>
+      <td><%= t :"activerecord.attributes.bank_office.address" %>:</td>
+      <td> <%= @bank_office.street_type.street_type_code.titleize %>. <%= @bank_office.street_name %> <%= @bank_office.street_number %>
+      <% if !@bank_office.building.blank? %>
+      <%= @bank_office.building.titleize %>
+      <% end %>
+      <% if !@bank_office.floor.blank? %>
+      <%= @bank_office.floor_human %>
+      <% end %>
+      <% if !@bank_office.floor_office.blank? %>
+      <%= @bank_office.floor_office %>
+      <% end %> </td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><%= t :"activerecord.attributes.bank_office.town" %>:</td>
+      <td><%= @bank_office.town.name %></td>
+      <td><%= t :"activerecord.attributes.bank_office.province" %>:</td>
+      <td><%= @bank_office.province.name_and_region %></td>
+    </tr>
+    <tr>
+      <td><%= t :"activerecord.attributes.bank_office.zipcode" %>:</td>
+      <td><%= @bank_office.zipcode.zipcode %></td>
+      <td><%= t :"activerecord.attributes.bank_office.country" %>:</td>
+      <td><%= @bank_office.country.name %></td>
+    </tr>
+    <tr>
+      <td><%=t 'activerecord.attributes.bank_office.swift' %>:</td>
+      <td><%= @bank_office.swift unless @bank_office.swift.blank? %></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @bank_office } %>
+    <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @bank_office } %>
+  </tbody>
+</table>
 
-<%= link_to 'Edit', edit_bank_office_path(@bank_office) %> |
-<%= link_to 'Back', bank_offices_path %>
+<%= render partial: '/layouts/crud/update_delete_new', locals:
+{ model: BankOffice, update_path: edit_bank_office_path(@bank_office), update_txt: t('.btn_edit'),
+delete_path: @bank_office, delete_txt: t('.btn_delete'), msg: t("activerecord.models.bank_office.one"), :txt => @bank_office.full_code,
+new_path: new_bank_office_path, new_txt: t('ag2_admin.bank_offices.index.btn_new') } %>
+
+<%= link_to I18n.t('ag2_admin.bank_offices.show.show_to'), @bank_office.bank %> |
+<%= link_to I18n.t('ag2_admin.bank_offices.back_to_main_page'), bank_offices_path %>

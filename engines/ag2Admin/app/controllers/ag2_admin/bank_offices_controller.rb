@@ -4,9 +4,53 @@ module Ag2Admin
   class BankOfficesController < ApplicationController
     before_filter :authenticate_user!
     load_and_authorize_resource
+    skip_load_and_authorize_resource :only => [:bo_update_province_textfield_from_town,
+                                               :bo_update_province_textfield_from_zipcode,
+                                               :bo_update_country_textfield_from_region,
+                                               :bo_update_region_textfield_from_province]
     # Helper methods for sorting
     helper_method :sort_column
 
+    # Update province, region and country text fields at view from town select
+    def bo_update_province_textfield_from_town
+      @town = Town.find(params[:id])
+      @province = Province.find(@town.province)
+      @region = Region.find(@province.region)
+      @country = Country.find(@region.country)
+      @json_data = { "province_id" => @province.id, "region_id" => @region.id, "country_id" => @country.id }
+      render json: @json_data
+    end
+
+    # Update town, province, region and country text fields at view from zip code select
+    def bo_update_province_textfield_from_zipcode
+      @zipcode = Zipcode.find(params[:id])
+      @town = Town.find(@zipcode.town)
+      @province = Province.find(@town.province)
+      @region = Region.find(@province.region)
+      @country = Country.find(@region.country)
+      @json_data = { "town_id" => @town.id, "province_id" => @province.id, "region_id" => @region.id, "country_id" => @country.id }
+      render json: @json_data
+    end
+
+    # Update country text field at view from region select
+    def bo_update_country_textfield_from_region
+      @region = Region.find(params[:id])
+      @country = Country.find(@region.country)
+      render json: @country
+    end
+
+    # Update region and country text fields at view from town select
+    def bo_update_region_textfield_from_province
+      @province = Province.find(params[:id])
+      @region = Region.find(@province.region)
+      @country = Country.find(@region.country)
+      @json_data = { "region_id" => @region.id, "country_id" => @country.id }
+      render json: @json_data
+    end
+
+    #
+    # Default Methods
+    #
     # GET /bank_offices
     # GET /bank_offices.json
     def index

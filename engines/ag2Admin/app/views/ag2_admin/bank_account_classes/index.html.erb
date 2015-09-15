@@ -1,21 +1,6 @@
-<h1>Listing bank_account_classes</h1>
+<%= render '/layouts/ag2_admin/baclassesbreadcrumb' %>
 
-<table>
-  <tr>
-    <th></th>
-    <th></th>
-    <th></th>
-  </tr>
-
-<% @bank_account_classes.each do |bank_account_class| %>
-  <tr>
-    <td><%= link_to 'Show', bank_account_class %></td>
-    <td><%= link_to 'Edit', edit_bank_account_class_path(bank_account_class) %></td>
-    <td><%= link_to 'Destroy', bank_account_class, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-  </tr>
-<% end %>
-</table>
-
-<br />
-
-<%= link_to 'New Bank account class', new_bank_account_class_path %>
+<h3><%=t '.title' %></h3>
+<div class="span6" id="div_table">
+  <%= render 'bank_account_classes' %>
+</div>

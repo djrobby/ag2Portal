@@ -95,6 +95,16 @@ Ag2Admin::Engine.routes.draw do
     match 'payment_methods/pm_format_numbers/:num', :controller => 'payment_methods', :action => 'pm_format_numbers'
     match 'pm_format_numbers/:num', :controller => 'payment_methods', :action => 'pm_format_numbers'
     match 'payment_methods/:id/pm_format_numbers/:num', :controller => 'payment_methods', :action => 'pm_format_numbers'
+    #
+    # Bank offices 
+    match 'bank_offices/bo_update_province_textfield_from_town/:id', :controller => 'bank_offices', :action => 'bo_update_province_textfield_from_town'
+    match 'bank_offices/:id/bo_update_province_textfield_from_town/:id', :controller => 'bank_offices', :action => 'bo_update_province_textfield_from_town'
+    match 'bank_offices/bo_update_province_textfield_from_zipcode/:id', :controller => 'bank_offices', :action => 'bo_update_province_textfield_from_zipcode'
+    match 'bank_offices/:id/bo_update_province_textfield_from_zipcode/:id', :controller => 'bank_offices', :action => 'bo_update_province_textfield_from_zipcode'
+    match 'bank_offices/bo_update_country_textfield_from_region/:id', :controller => 'bank_offices', :action => 'bo_update_country_textfield_from_region'
+    match 'bank_offices/:id/bo_update_country_textfield_from_region/:id', :controller => 'bank_offices', :action => 'bo_update_country_textfield_from_region'
+    match 'bank_offices/bo_update_region_textfield_from_province/:id', :controller => 'bank_offices', :action => 'bo_update_region_textfield_from_province'
+    match 'bank_offices/:id/bo_update_region_textfield_from_province/:id', :controller => 'bank_offices', :action => 'bo_update_region_textfield_from_province'
 
     # Resources
     resources :users
@@ -122,6 +132,9 @@ Ag2Admin::Engine.routes.draw do
     resources :ledger_accounts
     resources :payment_methods
     resources :notifications
+    resources :banks
+    resources :bank_offices
+    resources :bank_account_classes
     
     # Root
     root :to => 'home#index'

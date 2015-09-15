@@ -107,7 +107,7 @@ module Ag2Admin
     private
 
     def sort_column
-      BankAccountClass.column_names.include?(params[:sort]) ? params[:sort] : "name"
+      BankAccountClass.column_names.include?(params[:sort]) ? params[:sort] : "id"
     end
 
     # Keeps filter state

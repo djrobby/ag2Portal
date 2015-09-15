@@ -1,6 +1,8 @@
-<h1>Editing bank_office</h1>
+<%= render '/layouts/ag2_admin/bofficesbreadcrumb' %>
+
+<h3><%=t '.title' %></h3>
 
 <%= render 'form' %>
 
-<%= link_to 'Show', @bank_office %> |
-<%= link_to 'Back', bank_offices_path %>
+<%= link_to I18n.t('ag2_admin.bank_offices.edit.btn_show'), @bank_office %> |
+<%= link_to I18n.t('ag2_admin.bank_offices.back_to_main_page'), bank_offices_path %>

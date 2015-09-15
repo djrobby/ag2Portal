@@ -32,13 +32,17 @@ new_path: new_bank_path, new_txt: t('ag2_admin.banks.index.btn_new') } %>
     <tr>
       <th><%=t 'activerecord.attributes.bank_office.code' %></th>
       <th><%=t 'activerecord.attributes.bank_office.name' %></th>
+      <th><%=t 'activerecord.attributes.bank_office.address' %></th>
+      <th><%=t 'activerecord.attributes.bank_office.phone' %></th>
     </tr>
   </thead>
   <tbody>
     <% @bank_offices.each do |office| %>
     <tr>
       <td><%= link_to office.code, office %></td>
-      <td><%= office.name %></td>
+      <td><%= office.name unless office.name.blank? %></td>
+      <td><%= office.full_address unless office.full_address.blank? %></td>
+      <td><%= office.phone unless office.phone.blank? %></td>
     </tr>
     <% end %>
   </tbody>

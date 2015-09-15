@@ -1,5 +1,21 @@
-<p id="notice"><%= notice %></p>
+<%= render '/layouts/ag2_admin/baclassesbreadcrumb' %>
 
+<h3><%=t '.title' %></h3>
+<table class="table">
+  <tbody>
+    <tr>
+      <td>Id:</td>
+      <td><%= @bank_account_class.id %></td>
+      <td><%=t :"activerecord.attributes.bank_account_class.name" %>:</td>
+      <td><%= @bank_account_class.name.titleize %></td>
+    </tr>
+    <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @bank_account_class } %>
+    <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @bank_account_class } %>
+  </tbody>
+</table>
 
-<%= link_to 'Edit', edit_bank_account_class_path(@bank_account_class) %> |
-<%= link_to 'Back', bank_account_classes_path %>
+<%= render partial: '/layouts/crud/update_new', locals:
+{ model: BankAccountClass, update_path: edit_bank_account_class_path(@bank_account_class), update_txt: t('.btn_edit'),
+new_path: new_bank_account_class_path, new_txt: t('ag2_admin.bank_account_classes.index.btn_new') } %>
+
+<%= link_to I18n.t("ag2_admin.bank_account_classes.back_to_main_page"), bank_account_classes_path %>

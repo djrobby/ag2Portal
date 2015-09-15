@@ -1,0 +1,31 @@
+<script>
+  $(document).ready(function() {
+    $("#div_table th a, #div_table #pages a").on("click", function() {
+      $.getScript(this.href);
+      return false;
+    });
+  }); 
+</script>
+
+<table class="table table-condensed table-striped">
+  <thead>
+    <tr>
+      <th><%= sortable "id", 'Id' %></th>
+      <th><%= sortable "name", t('activerecord.attributes.bank_account_class.name') %></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @bank_account_classes.each do |t| %>
+    <tr>
+      <td><%= t.id %></td>
+      <td><%= link_to t.name.titleize, t %></td>
+      <td> <%= render :partial => '/layouts/crud/edit', :locals => { :model => BankAccountClass, :path => edit_bank_account_class_path(t) } %>
+      <%= render :partial => '/layouts/crud/delete', :locals => { :model => BankAccountClass, :path => t, :msg => I18n.t("activerecord.models.bank_account_class.one"), :txt => t.name } unless t.id < 8 %> </td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @bank_account_classes } %>
+<%= render :partial => '/layouts/crud/new', :locals => { :model => BankAccountClass, :path => new_bank_account_class_path, :txt => I18n.t("ag2_admin.bank_account_classes.index.btn_new") } %>
+<%= link_to I18n.t("ag2_admin.bank_account_classes.index.back_to_root"), ag2_admin.root_path %>

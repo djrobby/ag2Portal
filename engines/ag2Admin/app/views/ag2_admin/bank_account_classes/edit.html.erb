@@ -1,6 +1,8 @@
-<h1>Editing bank_account_class</h1>
+<%= render '/layouts/ag2_admin/baclassesbreadcrumb' %>
+
+<h3><%=t '.title' %></h3>
 
 <%= render 'form' %>
 
-<%= link_to 'Show', @bank_account_class %> |
-<%= link_to 'Back', bank_account_classes_path %>
+<%= link_to I18n.t('ag2_admin.bank_account_classes.edit.btn_show'), @bank_account_class %> |
+<%= link_to I18n.t('ag2_admin.bank_account_classes.back_to_main_page'), bank_account_classes_path %>

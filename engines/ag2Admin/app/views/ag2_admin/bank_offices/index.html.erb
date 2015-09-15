@@ -1,21 +1,6 @@
-<h1>Listing bank_offices</h1>
+<%= render '/layouts/ag2_admin/bofficesbreadcrumb' %>
 
-<table>
-  <tr>
-    <th></th>
-    <th></th>
-    <th></th>
-  </tr>
-
-<% @bank_offices.each do |bank_office| %>
-  <tr>
-    <td><%= link_to 'Show', bank_office %></td>
-    <td><%= link_to 'Edit', edit_bank_office_path(bank_office) %></td>
-    <td><%= link_to 'Destroy', bank_office, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-  </tr>
-<% end %>
-</table>
-
-<br />
-
-<%= link_to 'New Bank office', new_bank_office_path %>
+<h3><%=t '.title' %></h3>
+<div class="span11" id="div_table">
+  <%= render 'bank_offices' %>
+</div>

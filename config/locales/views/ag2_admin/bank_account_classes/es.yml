@@ -10,7 +10,7 @@ es:
         btn_edit: "Editar Clase"
         btn_delete: "Borrar Clase"
       edit:
-        title: "Editar Clase"
+        title: "Editar Clase de cuenta bancaria"
         btn_show: "Ver Clase"
       new:
         title: "Nueva Clase"

@@ -1,17 +1,10 @@
-<%= form_for(@bank) do |f| %>
-  <% if @bank.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@bank.errors.count, "error") %> prohibited this bank from being saved:</h2>
-
-      <ul>
-      <% @bank.errors.full_messages.each do |msg| %>
-        <li><%= msg %></li>
-      <% end %>
-      </ul>
-    </div>
-  <% end %>
-
-  <div class="actions">
-    <%= f.submit %>
-  </div>
+<%= simple_form_for @bank, :html => {:class => 'form-vertical well' } do |f| %>
+<%= f.error_notification %>
+<%= display_base_errors resource %>
+<div>
+  <label class="multi-field-label-two"> <%= f.input :code, :autofocus => true, :input_html => { :class => 'mid-text-field', maxlength: 4 }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.input :swift, :input_html => { onkeyup: "caps(this)", :class => 'large-text-field', maxlength: 11 }, :label_html => { :class => 'form-label' } %> </label>
+</div>
+<%= f.input :name, :required => true, :input_html => { :class => 'large-text-field' }, :label_html => { :class => 'form-label' } %>
+<%= f.button :submit, :class => 'btn-primary' %>
 <% end %>

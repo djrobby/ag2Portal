@@ -1,19 +1,19 @@
 es:
   ag2_admin:
-    banks:
+    bank_offices:
       index:
-        title: "Bancos"
-        btn_new: "Nuevo Banco"
-        go_to_child: "Ir a Oficinas Bancarias"
+        title: "Oficinas bancarias"
+        btn_new: "Nueva Oficina"
+        go_to: "Ir a Bancos"
         back_to_root: "Volver a ag2Admin"
       show:
-        title: "Banco"
-        btn_edit: "Editar Banco"
-        btn_delete: "Borrar Banco"
-        subtable_title: "Oficinas del Banco"
+        title: "Oficina bancaria"
+        btn_edit: "Editar Oficina"
+        btn_delete: "Borrar Oficina"
+        show_to: "Ver Banco"
       edit:
-        title: "Editar Banco"
-        btn_show: "Ver Banco"
+        title: "Editar Oficina bancaria"
+        btn_show: "Ver Oficina"
       new:
-        title: "Nuevo Banco"
-      back_to_main_page: "Volver a Bancos"
+        title: "Nueva Oficina"
+      back_to_main_page: "Volver a Oficinas bancarias"

@@ -149,29 +149,29 @@
   <!-- Apps 4 -->
   <li class="span2">
     <% if (session[:resolution] == "LD")%>
-    <a href="<%= departments_path %>" class="thumbnail centered"><img src="/assets/icon/ag2Banks.png" width="48" height="48" alt="ag2Banks" /><h5 class="h5-narrow"><%=t ".banks" %></h5></a>
+    <a href="<%= banks_path %>" class="thumbnail centered"><img src="/assets/icon/ag2Banks.png" width="48" height="48" alt="ag2Banks" /><h5 class="h5-narrow"><%=t ".banks" %></h5></a>
     <% elsif session[:resolution] == "SD" %>
-    <a href="<%= departments_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/ag2Banks72.png" width="72" height="72" alt="ag2Banks" /><h5 class="h5-narrow"><%=t ".banks" %></h5></a>
+    <a href="<%= banks_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/ag2Banks72.png" width="72" height="72" alt="ag2Banks" /><h5 class="h5-narrow"><%=t ".banks" %></h5></a>
     <% else %>
-    <a href="<%= departments_path %>" class="thumbnail centered"><img src="/assets/pict/ag2Banks96.png" width="96" height="96" alt="ag2Banks" /><h5 class="h5-narrow"><%=t ".banks" %></h5></a>
+    <a href="<%= banks_path %>" class="thumbnail centered"><img src="/assets/pict/ag2Banks96.png" width="96" height="96" alt="ag2Banks" /><h5 class="h5-narrow"><%=t ".banks" %></h5></a>
     <% end %>
   </li>
   <li class="span2">
     <% if (session[:resolution] == "LD")%>
-    <a href="<%= areas_path %>" class="thumbnail centered"><img src="/assets/icon/ag2BankOffices.png" width="48" height="48" alt="ag2BankOffices" /><h5 class="h5-narrow"><%=t ".bank_offices" %></h5></a>
+    <a href="<%= bank_offices_path %>" class="thumbnail centered"><img src="/assets/icon/ag2BankOffices.png" width="48" height="48" alt="ag2BankOffices" /><h5 class="h5-narrow"><%=t ".bank_offices" %></h5></a>
     <% elsif session[:resolution] == "SD" %>
-    <a href="<%= areas_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/ag2BankOffices72.png" width="72" height="72" alt="ag2BankOffices" /><h5 class="h5-narrow"><%=t ".bank_offices" %></h5></a>
+    <a href="<%= bank_offices_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/ag2BankOffices72.png" width="72" height="72" alt="ag2BankOffices" /><h5 class="h5-narrow"><%=t ".bank_offices" %></h5></a>
     <% else %>
-    <a href="<%= areas_path %>" class="thumbnail centered"><img src="/assets/pict/ag2BankOffices96.png" width="96" height="96" alt="ag2BankOffices" /><h5 class="h5-narrow"><%=t ".bank_offices" %></h5></a>
+    <a href="<%= bank_offices_path %>" class="thumbnail centered"><img src="/assets/pict/ag2BankOffices96.png" width="96" height="96" alt="ag2BankOffices" /><h5 class="h5-narrow"><%=t ".bank_offices" %></h5></a>
     <% end %>
   </li>
   <li class="span2">
     <% if (session[:resolution] == "LD")%>
-    <a href="<%= tax_types_path %>" class="thumbnail centered"><img src="/assets/icon/ag2BankAccountClasses.png" width="48" height="48" alt="ag2BankAccountClasses" /><h5 class="h5-narrow"><%=t ".bank_account_classes" %></h5></a>
+    <a href="<%= bank_account_classes_path %>" class="thumbnail centered"><img src="/assets/icon/ag2BankAccountClasses.png" width="48" height="48" alt="ag2BankAccountClasses" /><h5 class="h5-narrow"><%=t ".bank_account_classes" %></h5></a>
     <% elsif session[:resolution] == "SD" %>
-    <a href="<%= tax_types_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/ag2BankAccountClasses72.png" width="72" height="72" alt="ag2BankAccountClasses" /><h5 class="h5-narrow"><%=t ".bank_account_classes" %></h5></a>
+    <a href="<%= bank_account_classes_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/ag2BankAccountClasses72.png" width="72" height="72" alt="ag2BankAccountClasses" /><h5 class="h5-narrow"><%=t ".bank_account_classes" %></h5></a>
     <% else %>
-    <a href="<%= tax_types_path %>" class="thumbnail centered"><img src="/assets/pict/ag2BankAccountClasses96.png" width="96" height="96" alt="ag2BankAccountClasses" /><h5 class="h5-narrow"><%=t ".bank_account_classes" %></h5></a>
+    <a href="<%= bank_account_classes_path %>" class="thumbnail centered"><img src="/assets/pict/ag2BankAccountClasses96.png" width="96" height="96" alt="ag2BankAccountClasses" /><h5 class="h5-narrow"><%=t ".bank_account_classes" %></h5></a>
     <% end %>
   </li>
   <li class="span2">
