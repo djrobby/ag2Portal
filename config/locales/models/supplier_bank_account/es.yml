@@ -26,3 +26,5 @@ es:
         holder_fiscal_id_c: "CIF/NIF"
         e_format: "Cuenta"
         p_format: "Cuenta"
+        starting_at: "Activada el"
+        ending_at: "Expiró el"

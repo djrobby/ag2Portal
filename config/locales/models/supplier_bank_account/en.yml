@@ -26,3 +26,5 @@ en:
         holder_fiscal_id_c: "Fiscal Id"
         e_format: "Account"
         p_format: "Account"
+        starting_at: "Activated on"
+        ending_at: "Expired on"

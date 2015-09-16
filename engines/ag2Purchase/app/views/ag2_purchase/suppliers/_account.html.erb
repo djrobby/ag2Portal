@@ -1,0 +1,12 @@
+<% if !account.ending_at.blank? %>
+  <tr class="inactive-row">
+<% else %>
+  <tr>
+<% end %>
+  <td><%= account.bank_account_class.name %></td>
+  <td><%= account.e_format_with_spaces %></td>
+  <td><%= account.holder_fiscal_id %></td>
+  <td><%= account.holder_name %></td>
+  <td align="center"><%= account.starting_at.strftime("%d/%m/%Y") %></td>
+  <td align="center"><%= account.ending_at.strftime("%d/%m/%Y") unless account.ending_at.blank? %></td>
+</tr>

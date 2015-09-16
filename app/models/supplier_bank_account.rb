@@ -28,6 +28,7 @@ class SupplierBankAccount < ActiveRecord::Base
   validates :holder_fiscal_id,    :presence => true,
                                   :length => { :minimum => 8 }
   validates :holder_name,         :presence => true
+  validates :starting_at,         :presence => true
 
   before_validation :fields_to_uppercase
   before_destroy :check_for_dependent_records
@@ -54,22 +55,45 @@ class SupplierBankAccount < ActiveRecord::Base
   def e_format
     _f = ""
     if !self.country.blank?
-      _f += self.country.code
+      _f += self.country.code.strip
     end
     if !self.iban_dc.blank?
-      _f += self.iban_dc
+      _f += self.iban_dc.strip
     end
     if !self.bank.blank?
-      _f += self.bank.code
+      _f += self.bank.code.strip
     end
     if !self.bank_office.blank?
-      _f += self.bank_office.code
+      _f += self.bank_office.code.strip
     end
     if !self.ccc_dc.blank?
-      _f += self.ccc_dc
+      _f += self.ccc_dc.strip
     end
     if !self.account_no.blank?
-      _f += self.account_no
+      _f += self.account_no.strip
+    end
+    _f
+  end
+
+  def e_format_with_spaces
+    _f = ""
+    if !self.country.blank?
+      _f += self.country.code.strip
+    end
+    if !self.iban_dc.blank?
+      _f += self.iban_dc.strip
+    end
+    if !self.bank.blank?
+      _f += " " + self.bank.code.strip
+    end
+    if !self.bank_office.blank?
+      _f += " " + self.bank_office.code.strip
+    end
+    if !self.ccc_dc.blank?
+      _f += " " + self.ccc_dc.strip
+    end
+    if !self.account_no.blank?
+      _f += self.account_no[0,2] + " " + self.account_no[2,4] + " " + self.account_no[6,4]
     end
     _f
   end
@@ -77,19 +101,19 @@ class SupplierBankAccount < ActiveRecord::Base
   def p_format
     _f = "IBAN "
     if !self.country.blank?
-      _f += self.country.code
+      _f += self.country.code.strip
     end
     if !self.iban_dc.blank?
-      _f += self.iban_dc
+      _f += self.iban_dc.strip
     end
     if !self.bank.blank?
-      _f += " " + self.bank.code
+      _f += " " + self.bank.code.strip
     end
     if !self.bank_office.blank?
-      _f += " " + self.bank_office.code
+      _f += " " + self.bank_office.code.strip
     end
     if !self.ccc_dc.blank?
-      _f += " " + self.ccc_dc
+      _f += " " + self.ccc_dc.strip
     end
     if !self.account_no.blank?
       _f += self.account_no[0,2] + " " + self.account_no[2,4] + " " + self.account_no[6,4]
