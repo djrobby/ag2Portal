@@ -420,6 +420,20 @@
   <label class="multi-field-label-three"> <%= f.input :max_orders_count, input_html: { class: 'large-text-field number-text-field' }, label_html: { class: 'form-label' } %> </label>
   <label class="multi-field-label-three"> <%= f.input :max_orders_sum, as: :string, input_html: { value: (number_with_precision(f.object.max_orders_sum, precision: 2) if f.object.max_orders_sum), class: 'large-text-field number-text-field' }, label_html: { class: 'form-label' } %> </label>
 </div>
+<!-- Bank accounts -->
+<table class="form-table">
+  <tbody>
+    <tr class="form-tr underlined-tr">
+      <td class="form-td-two left-winged">
+        <h4><%= t 'ag2_purchase.suppliers.accounts_info' %></h4>
+      </td>
+      <td class="form-td-two right-winged">
+        <%= link_to_add_fields(t("ag2_purchase.suppliers.btn_new_account"), f, :supplier_bank_accounts, "account_fields", "new-account-fields", class: "btn btn-warning fnt-new-btn") %>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<%= render 'accounts_table', f: f %>
 <!-- Old activities checkboxes (hidden now) -->
 <div id="c_b" class='hidden-text-field'>
 <%= f.input :activity_ids, collection: Activity.order('description'), as: :check_boxes, input_html: { id: 'activities_boxes' }, label_method: lambda {|t| t.description}, label_html: { :class => 'form-label' }, item_wrapper_class: 'inline' %>

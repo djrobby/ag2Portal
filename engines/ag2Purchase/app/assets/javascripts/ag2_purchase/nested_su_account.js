@@ -9,13 +9,13 @@
  * >> This global methods are in main nested.js!!
  */
 
-var su_itemFieldsUI = {
+var su_accountFieldsUI = {
     init: function(sel2NoMatches) {
         var validationSettings = {
             errorMessagePosition : 'element'
         };
 
-        $('#addButton').on('click', function(e) {
+        $('#addAccountButton').on('click', function(e) {
             var isValid = $('#new-item-fields').validate(false, validationSettings);
             if(!isValid) {
                 e.stopPropagation();
@@ -25,7 +25,7 @@ var su_itemFieldsUI = {
             su_formHandler.hideForm();
         });
 
-        $('#cancelButton').on('click', function(e) {
+        $('#cancelAccountButton').on('click', function(e) {
           su_formHandler.removeFields();
           su_formHandler.hideForm();
         });
@@ -33,8 +33,8 @@ var su_itemFieldsUI = {
 };
 
 var su_cfg = {
-    formId: '#new-item-fields',
-    tableId: '#items-table',
+    formId: '#new-account-fields',
+    tableId: '#accounts-table',
     inputFieldClassSelector: '.field',
     getTBodySelector: function() {
         return this.tableId + ' tbody';
@@ -79,8 +79,8 @@ var su_formHandler = {
 
     // Public method for hiding the data entry fields.
     hideForm: function() {
-        // Update and display totals
-        $('#items-table').trigger('totals');
+        // Update and display totals NOT HERE!
+        //$('#accounts-table').trigger('totals');
         // Hide modal
         $(su_cfg.formId).modal('hide');
     }
