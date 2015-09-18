@@ -19,14 +19,17 @@
     <span class="shrinked"><%= I18n.t(:mandatory_subtitle) %></span>
   </div>
   <div class="modal-body">
-    <%= f.association :notification, collection: @notifications, input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-notification', data: { validation: "required", "validation-error-msg" => "#{e}" } }, label_html: { class: 'form-label' } %>
-    <%= f.association :user, collection: @users, input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-user', data: { validation: "required", "validation-error-msg" => "#{e}" } }, label_html: { class: 'form-label' } %>
-    <%= f.input :role,
-      collection: [[1, t('activerecord.attributes.company_notification.role_1')],
-                   [2, t('activerecord.attributes.company_notification.role_2')]],
-                   as: :select, label_method: :last, value_method: :first,
-                   input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-role', data: { validation: "required", "validation-error-msg" => "#{e}" } },
-                   label_html: { class: 'form-label' } %>
+    <%= f.association :bank_account_class, collection: @classes, input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-class', data: { validation: "required", "validation-error-msg" => "#{e}" } }, label_html: { class: 'form-label' } %>
+    <%= f.association :country, collection: @countries, input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-country', data: { validation: "required", "validation-error-msg" => "#{e}" } }, label_html: { class: 'form-label' } %>
+    <%= f.input :iban_dc, input_html: { onkeyup: "caps(this)", class: 'x-large-text-field field', maxlength: 2, id: 'fnt-iban-dc', data: { validation: "required", "validation-error-msg" => "#{e}" }, onkeyup: "caps(this)" }, label_html: { class: 'form-label' } %>
+    <%= f.association :bank, collection: @banks, input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-bank', data: { validation: "required", "validation-error-msg" => "#{e}" } }, label_html: { class: 'form-label' } %>
+    <%= f.association :bank_office, collection: @offices, input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-office', data: { validation: "required", "validation-error-msg" => "#{e}" } }, label_html: { class: 'form-label' } %>
+    <%= f.input :ccc_dc, input_html: { onkeyup: "caps(this)", class: 'x-large-text-field field', maxlength: 2, id: 'fnt-ccc-dc', data: { validation: "required", "validation-error-msg" => "#{e}" }, onkeyup: "caps(this)" }, label_html: { class: 'form-label' } %>
+    <%= f.input :account_no, input_html: { onkeyup: "caps(this)", class: 'x-large-text-field field', maxlength: 10, id: 'fnt-account', data: { validation: "required", "validation-error-msg" => "#{e}" }, onkeyup: "caps(this)" }, label_html: { class: 'form-label' } %>
+    <%= f.input :holder_fiscal_id, input_html: { onkeyup: "caps(this)", class: 'x-large-text-field field', id: 'fnt-fiscal-id', data: { validation: "required", "validation-error-msg" => "#{e}" }, onkeyup: "caps(this)" }, label_html: { class: 'form-label' } %>
+    <%= f.input :holder_name, input_html: { onkeyup: "caps(this)", class: 'x-large-text-field field', maxlength: 10, id: 'fnt-name', data: { validation: "required", "validation-error-msg" => "#{e}" }, onkeyup: "caps(this)" }, label_html: { class: 'form-label' } %>
+    <%= f.input :starting_at, start_year: Time.now.year - 100, end_year: Time.now.year + 100, as: :string, input_html: { value: (f.object.starting_at.strftime("%d/%m/%Y") if f.object.starting_at), class: 'mid-text-field idatepicker field', id: 'fnt-starting-at' }, label_html: { class: 'form-label' } %>
+    <%= f.input :ending_at, start_year: Time.now.year - 100, end_year: Time.now.year + 100, as: :string, input_html: { value: (f.object.ending_at.strftime("%d/%m/%Y") if f.object.ending_at), class: 'mid-text-field idatepicker field', id: 'fnt-ending-at' }, label_html: { class: 'form-label' } %>
     <%= f.input :_destroy, as: :hidden, input_html: { class: 'field' } %>
   </div>
   <div class="modal-footer">
