@@ -16,7 +16,7 @@ var su_accountFieldsUI = {
         };
 
         $('#addAccountButton').on('click', function(e) {
-            var isValid = $('#new-item-fields').validate(false, validationSettings);
+            var isValid = $('#new-account-fields').validate(false, validationSettings);
             if(!isValid) {
                 e.stopPropagation();
                 return false;
@@ -53,8 +53,8 @@ var su_formHandler = {
         su_rowBuilder.addRow(su_cfg.getTBodySelector(), inputFields);
 
         // Apply select2 to added row selects
-        $('select.isel2').select2('destroy');
-        $('select.isel2').select2({
+        $('select.wsel2').select2('destroy');
+        $('select.wsel2').select2({
           formatNoMatches: function(m) { return sel2NoMatches; },
           dropdownCssClass: 'shrinked',
           dropdownAutoWidth: true,
@@ -108,11 +108,11 @@ var su_rowBuilder = function() {
             if (this.id.indexOf("s2") == -1) {
               // Apply CSS
               css = this.id;
-              if ($(this).hasClass('fsel2')) css = css + ' select isel2';
+              if ($(this).hasClass('fsel2')) css = css + ' select wsel2';
               if ($(this).hasClass('number-text-field')) css = css + ' sub-number-text-field';
               if ($(this).hasClass('sub-disabled-field')) css = css + ' sub-disabled-field';
               if (css === this.id) css = css + ' sub-alfanumeric-text-field';
-              if (css.indexOf("isel2") == -1) css = css + ' sub-bordered-input';
+              if (css.indexOf("wsel2") == -1) css = css + ' sub-bordered-input';
               css = css + ' string';
               $(this).removeAttr('class');
               $(this).addClass(css);
@@ -120,10 +120,7 @@ var su_rowBuilder = function() {
               var td = $('<td/>').append($(this));
               // ...hiding this if applicable
               /*
-              if (this.id === 'fnt-code' || this.id === 'fnt-delivery-date' ||
-                this.id === 'fnt-work-order' || this.id === 'fnt-project' ||
-                this.id === 'fnt-charge-account' || this.id === 'fnt-store' ||
-                this.id === 'fnt-tax-type') {
+              if (this.id === 'fnt-tax-type') {
                 td = $('<td style="display:none;"/>').append($(this));
               }
               */

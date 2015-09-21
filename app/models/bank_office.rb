@@ -42,6 +42,9 @@ class BankOffice < ActiveRecord::Base
     if !self.name.blank?
       full_name += " " + self.name
     end
+    if !self.bank.blank?
+      full_name += " (" + self.bank.code + ")"
+    end
     full_name
   end
 

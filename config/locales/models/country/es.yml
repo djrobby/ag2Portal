@@ -11,6 +11,8 @@ es:
         check_for_entities: "País no puede ser eliminado mientras existan entidades vinculadas."
         check_for_suppliers: "País no puede ser eliminado mientras existan proveedores vinculados."
         check_for_clients: "País no puede ser eliminado mientras existan clientes vinculados."
+        check_for_supplier_bank_accounts: "País no puede ser eliminado mientras existan cuentas de proveedores vinculadas."
+        check_for_client_bank_accounts: "País no puede ser eliminado mientras existan cuentas de clientes vinculadas."
     attributes:
       country:
         name: "Nombre"

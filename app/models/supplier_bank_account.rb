@@ -31,11 +31,10 @@ class SupplierBankAccount < ActiveRecord::Base
   validates :starting_at,         :presence => true
 
   before_validation :fields_to_uppercase
-  before_destroy :check_for_dependent_records
 
   def fields_to_uppercase
-    if !self.fiscal_id.blank?
-      self[:fiscal_id].upcase!
+    if !self.holder_fiscal_id.blank?
+      self[:holder_fiscal_id].upcase!
     end
     true
   end
@@ -119,20 +118,5 @@ class SupplierBankAccount < ActiveRecord::Base
       _f += self.account_no[0,2] + " " + self.account_no[2,4] + " " + self.account_no[6,4]
     end
     _f
-  end
-  
-  private
-
-  def check_for_dependent_records
-    # Check for supplier bank accounts
-    if supplier_bank_accounts.count > 0
-      errors.add(:base, I18n.t('activerecord.models.bank_office.check_for_supplier_bank_accounts'))
-      return false
-    end
-    # Check for client bank accounts
-    if client_bank_accounts.count > 0
-      errors.add(:base, I18n.t('activerecord.models.bank_office.check_for_client_bank_accounts'))
-      return false
-    end
   end
 end

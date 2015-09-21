@@ -7,7 +7,8 @@ class Country < ActiveRecord::Base
   has_many :entities
   has_many :suppliers
   has_many :clients
-
+  has_many :supplier_bank_accounts
+  
   has_paper_trail
 
   validates :name,  :presence => true
@@ -22,6 +23,17 @@ class Country < ActiveRecord::Base
     if !self.code.blank?
       self[:code].upcase!
     end
+  end
+
+  def full_name
+    full_name = ""
+    if !self.code.blank?
+      full_name += self.code
+    end
+    if !self.name.blank?
+      full_name += " " + self.name
+    end
+    full_name
   end
 
   private
@@ -50,6 +62,16 @@ class Country < ActiveRecord::Base
     # Check for clients
     if clients.count > 0
       errors.add(:base, I18n.t('activerecord.models.country.check_for_clients'))
+      return false
+    end
+    # Check for supplier bank accounts
+    if supplier_bank_accounts.count > 0
+      errors.add(:base, I18n.t('activerecord.models.country.check_for_supplier_bank_accounts'))
+      return false
+    end
+    # Check for client bank accounts
+    if client_bank_accounts.count > 0
+      errors.add(:base, I18n.t('activerecord.models.country.check_for_client_bank_accounts'))
       return false
     end
   end

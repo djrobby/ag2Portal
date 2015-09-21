@@ -11,6 +11,8 @@ en:
         check_for_entities: "Country cannot be destroyed while linked entities exist."
         check_for_suppliers: "Country cannot be destroyed while linked suppliers exist."
         check_for_clients: "Country cannot be destroyed while linked clients exist."
+        check_for_supplier_bank_accounts: "Country cannot be destroyed while linked supplier accounts exist."
+        check_for_client_bank_accounts: "Country cannot be destroyed while linked client accounts exist."
     attributes:
       country:
         name: "Name"

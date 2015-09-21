@@ -33,6 +33,9 @@ Ag2Purchase::Engine.routes.draw do
     match 'suppliers/et_validate_fiscal_id_textfield/:id', :controller => 'suppliers', :action => 'et_validate_fiscal_id_textfield'
     match 'et_validate_fiscal_id_textfield/:id', :controller => 'suppliers', :action => 'et_validate_fiscal_id_textfield'
     match 'suppliers/:id/et_validate_fiscal_id_textfield/:id', :controller => 'suppliers', :action => 'et_validate_fiscal_id_textfield'
+    match 'suppliers/su_update_office_select_from_bank/:bank', :controller => 'suppliers', :action => 'su_update_office_select_from_bank'
+    match 'su_update_office_select_from_bank/:bank', :controller => 'suppliers', :action => 'su_update_office_select_from_bank'
+    match 'suppliers/:id/su_update_office_select_from_bank/:bank', :controller => 'suppliers', :action => 'su_update_office_select_from_bank'
     #
     # Purchase orders 
     match 'purchase_orders/po_update_description_prices_from_product_store/:product/:qty/:store', :controller => 'purchase_orders', :action => 'po_update_description_prices_from_product_store'

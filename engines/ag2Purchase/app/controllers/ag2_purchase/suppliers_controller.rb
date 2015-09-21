@@ -13,7 +13,8 @@ module Ag2Purchase
                                                :et_validate_fiscal_id_textfield,
                                                :validate_fiscal_id_textfield,
                                                :su_format_amount,
-                                               :su_format_percentage]
+                                               :su_format_percentage,
+                                               :su_update_office_select_from_bank]
     # Update country text field at view from region select
     def update_country_textfield_from_region
       @region = Region.find(params[:id])
@@ -203,6 +204,22 @@ module Ag2Purchase
       render json: @json_data
     end
 
+    # Update office select at view from bank select
+    def su_update_office_select_from_bank
+      bank = params[:bank]
+      if bank != '0'
+        @bank = Bank.find(bank)
+        @offices = @bank.blank? ? bank_offices_dropdown : @bank.bank_offices.order(:bank_id, :code)
+      else
+        @offices = bank_offices_dropdown
+      end
+      # Offers array
+      @offices_dropdown = bank_offices_array(@offices)
+      # Setup JSON
+      @json_data = { "office" => @offices_dropdown }
+      render json: @json_data
+    end
+
     #
     # Default Methods
     #
@@ -256,6 +273,10 @@ module Ag2Purchase
       @breadcrumb = 'create'
       @supplier = Supplier.new
       @ledger_accounts = ledger_accounts_dropdown
+      @classes = bank_account_classes_dropdown
+      @countries = countries_dropdown
+      @banks = banks_dropdown
+      @offices = bank_offices_dropdown
 
       respond_to do |format|
         format.html # new.html.erb
@@ -268,6 +289,10 @@ module Ag2Purchase
       @breadcrumb = 'update'
       @supplier = Supplier.find(params[:id])
       @ledger_accounts = @supplier.organization.blank? ? ledger_accounts_dropdown : @supplier.organization.ledger_accounts.order(:code)
+      @classes = bank_account_classes_dropdown
+      @countries = countries_dropdown
+      @banks = banks_dropdown
+      @offices = bank_offices_dropdown
     end
 
     # POST /suppliers
@@ -283,6 +308,10 @@ module Ag2Purchase
           format.json { render json: @supplier, status: :created, location: @supplier }
         else
           @ledger_accounts = ledger_accounts_dropdown
+          @classes = bank_account_classes_dropdown
+          @countries = countries_dropdown
+          @banks = banks_dropdown
+          @offices = bank_offices_dropdown
           format.html { render action: "new" }
           format.json { render json: @supplier.errors, status: :unprocessable_entity }
         end
@@ -303,6 +332,10 @@ module Ag2Purchase
           format.json { head :no_content }
         else
           @ledger_accounts = @supplier.organization.blank? ? ledger_accounts_dropdown : @supplier.organization.ledger_accounts.order(:code)
+          @classes = bank_account_classes_dropdown
+          @countries = countries_dropdown
+          @banks = banks_dropdown
+          @offices = bank_offices_dropdown
           format.html { render action: "edit" }
           format.json { render json: @supplier.errors, status: :unprocessable_entity }
         end
@@ -330,6 +363,30 @@ module Ag2Purchase
 
     def ledger_accounts_dropdown
       session[:organization] != '0' ? LedgerAccount.where(organization_id: session[:organization].to_i).order(:code) : LedgerAccount.order(:code)
+    end
+
+    def bank_account_classes_dropdown
+      BankAccountClass.where('id >= ?', 5).order(:id)
+    end
+
+    def countries_dropdown
+      Country.order(:code)
+    end
+    
+    def banks_dropdown
+      Bank.order(:code)
+    end
+    
+    def bank_offices_dropdown
+      BankOffice.order(:bank_id, :code)
+    end
+    
+    def bank_offices_array(_offices)
+      _array = []
+      _offices.each do |i|
+        _array = _array << [i.id, i.code, i.name, "(" + i.bank.code + ")"] 
+      end
+      _array
     end
 
     # Keeps filter state

@@ -18,6 +18,7 @@ class Supplier < ActiveRecord::Base
                   :created_by, :updated_by, :entity_id, :organization_id,
                   :is_contact, :shared_contact_id, :order_authorization
   attr_accessible :activity_ids
+  attr_accessible :supplier_bank_accounts_attributes
 
   has_many :supplier_contacts, dependent: :destroy
   has_many :supplier_bank_accounts, dependent: :destroy
@@ -31,8 +32,15 @@ class Supplier < ActiveRecord::Base
   has_many :supplier_invoices
   has_many :supplier_payments
   has_many :supplier_invoice_debts
+
+  # Nested attributes
+  accepts_nested_attributes_for :supplier_bank_accounts,                                 
+                                :reject_if => :all_blank,
+                                :allow_destroy => true
   
   has_paper_trail
+
+  validates_associated :supplier_bank_accounts
 
   validates :name,            :presence => true
   validates :supplier_code,   :presence => true,
