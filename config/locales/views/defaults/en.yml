@@ -26,7 +26,7 @@ en:
   about_special_thanks_title_html: "<b>Special Thanks</b>"
   about_special_thanks_css_html: "CSS Contribution: "
   about_special_thanks_advise_html: "General Advice: "
-  about_third_pary_apps_html: "<b>Free Third-Party Tools used with permission</b>"
+  about_third_pary_apps_html: "<b>Third-Party Tools used with permission</b>"
   error: "Error"
   error_file_not_found_h: "The page you were looking for doesn't exist."
   error_file_not_found_p: "You may have mistyped the address or the page may have moved."

@@ -44,13 +44,15 @@
           document.getElementById("body").innerHTML = '';
         }
         previousLink = _this;
+        $('html,body').animate({
+          scrollTop: $("body").position().top},'slow');
       });
     }
   });
 </script>
 
 <div class="row-fluid" style="padding-top: 12px">
-  <div class="span4 well sidebar-nav">
+  <div class="span4 well sidebar-nav" style="overflow-y: scroll; height: 550px;">
     <table id="index">
       <tbody>
         <% @guides.each do |g| %>
@@ -66,7 +68,7 @@
       </tbody>
     </table>
   </div>
-  <div class="span8" id="content">
+  <div class="span8" id="content" style="padding-right: 12px; overflow-y: scroll; height: 550px;">
     <h4 id="name" class="guide-h4"><%= @guide.name.html_safe %></h4>
     <div style="padding-left: 1em;">
       <p><b id="description"><%= @guide.description.html_safe %></b></p>

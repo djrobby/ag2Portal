@@ -26,7 +26,7 @@ es:
   about_special_thanks_title_html: "<b>Agradecimientos especiales</b>"
   about_special_thanks_css_html: "Colaboración CSS: "
   about_special_thanks_advise_html: "Asesoramiento General: "
-  about_third_pary_apps_html: "<b>Herramientas Libres de Terceros usadas con autorización</b>"
+  about_third_pary_apps_html: "<b>Herramientas de Terceros usadas con autorización</b>"
   error: "Error"
   error_file_not_found_h: "La página que estás buscando no existe."
   error_file_not_found_p: "Es posible que hayas escrito mal la dirección o la página ha sido movida."
