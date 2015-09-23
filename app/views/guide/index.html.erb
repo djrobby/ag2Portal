@@ -1,12 +1,30 @@
 <script>
   var previousLink;
+  var contentHeight;
+  var windowHeight;
+  var topHeight;
+  var bottomHeight;
 
   $(document).ready(function() {
     var _links = document.getElementById('index').rows[0].cells[0].getElementsByTagName("a");
     previousLink = _links[0];
     previousLink.style.color = "#da4f49";
+    // Set div height upon current window height
+    topHeight = $(".navbar-fixed-top").height();
+    bottomHeight = $(".navbar-fixed-bottom").height();
+    resizeDiv();
+    /*
+    contentHeight = $(window).height() - $(".navbar-fixed-top").height() - $(".navbar-fixed-bottom").height() - 75;
+    $(".span4").height(contentHeight);
+    $(".span8").height(contentHeight);
+    */
   });
-  
+
+  $(window).resize(function() {
+    // Set div height upon current window height
+    resizeDiv();
+  });
+    
   jQuery(function($) {
     // when the .guide link is clicked
     $(".guide").click(function(e) {
@@ -49,6 +67,14 @@
       });
     }
   });
+
+  // Resize div
+  function resizeDiv() {
+    windowHeight = $(window).height();
+    contentHeight = windowHeight - topHeight - bottomHeight - 75;
+    $(".span4").height(contentHeight);
+    $(".span8").height(contentHeight);
+  }
 </script>
 
 <div class="row-fluid" style="padding-top: 12px">
