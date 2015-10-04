@@ -50,6 +50,9 @@ Ag2Products::Engine.routes.draw do
     match 'purchase_prices/pp_format_numbers/:num', :controller => 'purchase_prices', :action => 'pp_format_numbers'
     match 'pp_format_numbers/:num', :controller => 'purchase_prices', :action => 'pp_format_numbers'
     match 'purchase_prices/:id/pp_format_numbers/:num', :controller => 'purchase_prices', :action => 'pp_format_numbers'
+    match 'purchase_prices/pp_format_numbers_2/:num', :controller => 'purchase_prices', :action => 'pp_format_numbers_2'
+    match 'pp_format_numbers_2/:num', :controller => 'purchase_prices', :action => 'pp_format_numbers_2'
+    match 'purchase_prices/:id/pp_format_numbers_2/:num', :controller => 'purchase_prices', :action => 'pp_format_numbers_2'
     #
     # Delivery notes
     match 'delivery_notes/dn_totals/:qty/:amount/:costs/:tax/:discount_p', :controller => 'delivery_notes', :action => 'dn_totals'

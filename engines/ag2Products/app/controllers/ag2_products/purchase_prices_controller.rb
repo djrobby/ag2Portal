@@ -16,6 +16,12 @@ module Ag2Products
       @json_data = { "num" => num.to_s }
       render json: @json_data
     end
+    def pp_format_numbers_2
+      num = params[:num].to_f / 100
+      num = number_with_precision(num.round(2), precision: 4)
+      @json_data = { "num" => num.to_s }
+      render json: @json_data
+    end
     
     # GET /purchase_prices
     # GET /purchase_prices.json

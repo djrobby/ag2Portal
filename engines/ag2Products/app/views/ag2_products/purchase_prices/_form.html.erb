@@ -36,13 +36,28 @@
       return false;
     });
 
+    // when the #purchase_price_discount_rate field changes
+    $("#purchase_price_discount_rate").change(function() {
+      var num = $('#purchase_price_discount_rate').val();
+      if (num == "")
+        num = "0";
+      // Right formatted for passing as REST parameter
+      num = parseInt(right_number(num, 2) * 100);
+      jQuery.getJSON('pp_format_numbers_2/' + num, function(data) {
+        $('#purchase_price_discount_rate').val(data.num);
+      });
+      return false;
+    });
+
     // when submit    
     $(_thisForm).on('submit', function() {
       // Must change decimal separator, if comma, in numeric fields
       var p = $('#purchase_price_price').val().replace(",", ".");
       var f = $('#purchase_price_factor').val().replace(",", ".");
+      var f = $('#purchase_price_discount_rate').val().replace(",", ".");
       $('#purchase_price_price').val(p);
       $('#purchase_price_factor').val(f);
+      $('#purchase_price_discount_rate').val(f);
     });
   });  
 </script>
@@ -63,11 +78,12 @@
 <div>
   <label class="multi-field-label-two"> <%= f.association :measure, collection: Measure.all(order: 'description'), input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %> </label>
   <label class="multi-field-label-two"> <%= f.input :factor, as: :string, input_html: { value: (number_with_precision(f.object.factor, precision: 4) if f.object.factor), class: 'large-text-field number-text-field' }, label_html: { class: 'form-label' } %> </label>
+  <label class="multi-field-label-three"> <%= f.input :favorite, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' }, boolean_style: :inline %> </label>
 </div>
 <div>
   <label class="multi-field-label-three"> <%= f.input :code, input_html: { class: 'large-text-field' }, label_html: { class: 'form-label' } %> </label>
   <label class="multi-field-label-three"> <%= f.input :price, as: :string, input_html: { value: (number_with_precision(f.object.price, precision: 4) if f.object.price), class: 'large-text-field number-text-field' }, label_html: { class: 'form-label' } %> </label>
-  <label class="multi-field-label-three"> <%= f.input :favorite, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' }, boolean_style: :inline %> </label>
+  <label class="multi-field-label-three"> <%= f.input :discount_rate, as: :string, input_html: { value: (number_with_precision(f.object.discount_rate, precision: 2) if f.object.discount_rate), class: 'large-text-field number-text-field' }, label_html: { class: 'form-label' } %> </label>
 </div>
 <%= f.button :submit, :class => 'btn-primary' %>
 <% end %>
