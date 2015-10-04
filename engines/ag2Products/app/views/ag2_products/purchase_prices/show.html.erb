@@ -8,7 +8,7 @@
       <td>Id:</td>
       <td><%= @purchase_price.id %></td>
       <td><%=t 'activerecord.attributes.purchase_price.code' %>:</td>
-      <td><%= @purchase_price.code unless @purchase_price.code.blank? %></td>
+      <td><b><%= @purchase_price.code unless @purchase_price.code.blank? %></b></td>
     </tr>
     <tr>
       <td><%=t 'activerecord.attributes.purchase_price.product' %>:</td>
@@ -20,7 +20,13 @@
       <td><%=t 'activerecord.attributes.purchase_price.supplier' %>:</td>
       <td><%= @purchase_price.supplier.full_name %></td>
       <td><%=t 'activerecord.attributes.purchase_price.price' %>:</td>
-      <td><%= number_with_precision(@purchase_price.price, precision: 4, delimiter: I18n.locale == :es ? "." : ",") unless @purchase_price.price.blank? %></td>
+      <td class="highlighted bolded"><%= number_with_precision(@purchase_price.price, precision: 4, delimiter: I18n.locale == :es ? "." : ",") unless @purchase_price.price.blank? %></td>
+    </tr>
+    <tr>
+      <td><%=t 'activerecord.attributes.purchase_price.discount_rate' %>:</td>
+      <td><%= number_with_precision(@purchase_price.discount_rate, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless @purchase_price.discount_rate.blank? %></td>
+      <td></td>
+      <td></td>
     </tr>
     <tr>
       <td><%=t 'activerecord.attributes.purchase_price.measure' %>:</td>

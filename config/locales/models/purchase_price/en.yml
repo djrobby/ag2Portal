@@ -20,3 +20,5 @@ en:
         measure_id: "Measure"
         factor: "C Factor"
         favorite: "Favorite?"
+        discount_rate: "Discount rate %"
+        discount_rate_c: "DR %"

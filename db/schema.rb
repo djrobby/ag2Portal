@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150907100422) do
+ActiveRecord::Schema.define(:version => 20151004070253) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -1259,16 +1259,17 @@ ActiveRecord::Schema.define(:version => 20150907100422) do
     t.integer  "product_id"
     t.integer  "supplier_id"
     t.string   "code"
-    t.decimal  "price",       :precision => 12, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "price",         :precision => 12, :scale => 4, :default => 0.0, :null => false
     t.integer  "measure_id"
-    t.decimal  "factor",      :precision => 12, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "factor",        :precision => 12, :scale => 4, :default => 0.0, :null => false
     t.boolean  "favorite"
-    t.datetime "created_at",                                                  :null => false
-    t.datetime "updated_at",                                                  :null => false
+    t.datetime "created_at",                                                    :null => false
+    t.datetime "updated_at",                                                    :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
     t.string   "prev_code"
-    t.decimal  "prev_price",  :precision => 12, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "prev_price",    :precision => 12, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "discount_rate", :precision => 12, :scale => 2, :default => 0.0, :null => false
   end
 
   add_index "purchase_prices", ["code"], :name => "index_purchase_prices_on_code"

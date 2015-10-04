@@ -2,6 +2,7 @@
 <tr>
   <td><%= w.product.full_code %> <%= w.product.main_description[0,40] %></td>
   <td><%= w.code unless w.code.blank? %></td>
+  <td align="right"><%= number_with_precision(w.discount_rate, precision: 2) unless w.discount_rate.blank? %></td>
   <td align="right"><%= number_with_precision(w.price, precision: 4) unless w.price.blank? %></td>
 </tr>
 <% end %>

@@ -46,6 +46,7 @@ en:
         ledger_account: "Ledger account"
         ledger_account_id: "Ledger account"
         discount_rate: "Discount rate %"
+        discount_rate_c: "SDR %"
         active: "Active?"
         max_orders_count: "Max quantity per order"
         max_orders_sum: "Max amount per order €"

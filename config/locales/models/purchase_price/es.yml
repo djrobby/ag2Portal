@@ -20,3 +20,5 @@ es:
         measure_id: "U.Medida"
         factor: "Factor C"
         favorite: "¿Favorito?"
+        discount_rate: "Tasa descuento %"
+        discount_rate_c: "TD %"
