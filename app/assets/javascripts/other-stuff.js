@@ -91,3 +91,16 @@ function right_date(n, l) {
  * AJAX sorting
  * $(document).ready at each index view
  */
+
+/*
+ * Scroll & movement
+ */
+// Modal body (go top & go bottom)
+function scrollToAnchorModal(aid) {
+  $('.modal-body').animate({scrollTop: $(aid).position().top});
+}
+//Modal body (go to & focus)
+function goToAnchorModal(aid) {
+  scrollToAnchorModal(aid);
+  $(aid).focus();
+}

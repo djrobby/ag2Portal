@@ -197,7 +197,10 @@
     <span class="shrinked"><%= I18n.t(:mandatory_subtitle) %></span>
   </div>
   <div class="modal-body">
-    <%= f.association :charge_account, collection: @charge_accounts, input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-account', data: { validation: "required", "validation-error-msg" => "#{e}" } }, label_html: { class: 'form-label' } %>
+    <a href="javascript:scrollToAnchorModal('#fnt-corrected');" style="float: right" id="go-bottom"><i class="icon-arrow-down" title="<%=t(:bottom) %>"></i></a>
+    <div style="overflow: hidden; padding-left: 0em;">
+      <%= f.association :charge_account, collection: @charge_accounts, input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-account', data: { validation: "required", "validation-error-msg" => "#{e}" } }, label_html: { class: 'form-label fnt-account-label' } %>
+    </div>
     <%= f.input :month_01, as: :string, input_html: { value: (number_with_precision(f.object.month_01, precision: 4) if f.object.month_01), class: 'mid-text-field number-text-field field', id: 'fnt-month01' }, label_html: { class: 'form-label' } %>
     <%= f.input :month_02, as: :string, input_html: { value: (number_with_precision(f.object.month_02, precision: 4) if f.object.month_02), class: 'mid-text-field number-text-field field', id: 'fnt-month02' }, label_html: { class: 'form-label' } %>
     <%= f.input :month_03, as: :string, input_html: { value: (number_with_precision(f.object.month_03, precision: 4) if f.object.month_03), class: 'mid-text-field number-text-field field', id: 'fnt-month03' }, label_html: { class: 'form-label' } %>
@@ -211,7 +214,11 @@
     <%= f.input :month_11, as: :string, input_html: { value: (number_with_precision(f.object.month_11, precision: 4) if f.object.month_11), class: 'mid-text-field number-text-field field', id: 'fnt-month11' }, label_html: { class: 'form-label' } %>
     <%= f.input :month_12, as: :string, input_html: { value: (number_with_precision(f.object.month_12, precision: 4) if f.object.month_12), class: 'mid-text-field number-text-field field', id: 'fnt-month12' }, label_html: { class: 'form-label' } %>
     <%= f.input :annual, disabled: true, as: :string, input_html: { value: (number_with_precision(f.object.annual, precision: 4) if f.object.annual), class: 'mid-text-field number-text-field sub-disabled-field field', id: 'fnt-annual' }, label_html: { class: 'form-label' } %>
-    <%= f.input :corrected_amount, as: :string, input_html: { value: (number_with_precision(f.object.corrected_amount, precision: 4) if f.object.corrected_amount), class: 'mid-text-field number-text-field field', id: 'fnt-corrected' }, label_html: { class: 'form-label' } %>
+    <a href="javascript:scrollToAnchorModal('#fnt-account');" style="float: right" id="go-top"><i class="icon-arrow-up" title="<%=t(:top) %>"></i></a>
+    <a href="javascript:goToAnchorModal('.fnt-account-label');" style="float: right" id="go-to"><i class="icon-bookmark" title="<%=t(:goto_acnt) %>"></i></a>
+    <div style="overflow: hidden; padding-left: 0em;">
+      <%= f.input :corrected_amount, as: :string, input_html: { value: (number_with_precision(f.object.corrected_amount, precision: 4) if f.object.corrected_amount), class: 'mid-text-field number-text-field field', id: 'fnt-corrected' }, label_html: { class: 'form-label' } %>
+    </div>
     <%= f.input :_destroy, as: :hidden, input_html: { class: 'field' } %>
   </div>
   <div class="modal-footer">
