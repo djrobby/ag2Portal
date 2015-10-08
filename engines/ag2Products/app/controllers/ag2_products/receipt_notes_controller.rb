@@ -390,29 +390,32 @@ module Ag2Products
       if order != '0'
         purchase_order = PurchaseOrer.find(order) rescue nil
         purchase_order_items = purchase_order.purchase_order_items rescue nil
-        if !purchase_order_items.nil? && !purchase_order_items.nil?
+        if !purchase_order.nil? && !purchase_order_items.nil?
           # Format offer_date
           note_date = (note_date[0..3] + '-' + note_date[4..5] + '-' + note_date[6..7]).to_date
           # Try to save new note
-          note = Offer.new
-          note.offer_no = offer_no
-          note.offer_date = offer_date
-          note.offer_request_id = offer_request.id
+          note = ReceiptNote.new
+          note.receipt_no = note_no
           note.supplier_id = supplier
-          note.payment_method_id = offer_request.payment_method_id
+          note.payment_method_id = purchase_order.payment_method_id
+          note.receipt_date = note_date
+          note.discount_pct = purchase_order.discount_pct
+          note.discount = purchase_order.discount
+          note.project_id = purchase_order.project_id
+          note.store_id = purchase_order.store_id
+          note.work_order_id = purchase_order.work_order_id
+          note.charge_account_id = purchase_order.charge_account_id
+          note.retention_pct = purchase_order.retention_pct
+          note.retention_time = purchase_order.retention_time
           note.created_by = current_user.id if !current_user.nil?
-          note.discount_pct = offer_request.discount_pct
-          note.discount = offer_request.discount
-          note.project_id = offer_request.project_id
-          note.store_id = offer_request.store_id
-          note.work_order_id = offer_request.work_order_id
-          note.charge_account_id = offer_request.charge_account_id
-          note.organization_id = offer_request.organization_id
+          note.purchase_order_id = purchase_order.id
+          note.organization_id = purchase_order.organization_id
           if note.save
             # Try to save new note items
-            offer_request_items.each do |i|
-              note_item = OfferItem.new
-              note_item.offer_id = offer.id
+            purchase_order_items.each do |i|
+              note_item = ReceiptNoteItem.new
+              note_item.receipt_note_id = note.id
+              note_item.purchase_order_item_id = i.id
               note_item.product_id = i.product_id
               note_item.description = i.description
               note_item.quantity = i.quantity
