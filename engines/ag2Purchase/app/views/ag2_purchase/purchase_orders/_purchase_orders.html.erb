@@ -26,7 +26,15 @@
     <% else %>
       <tr>
     <% end %>
-      <td><%= link_to order.full_no, order %></td>
+      <td><%= link_to order.full_no, order %>
+        <% if order.balance <= 0 %> <!-- fully received -->
+        <i class="icon-star" style="margin-left: 0.2em;">
+        <% elsif order.balance == order.quantity %> <!-- not received -->
+        <i class="icon-warning-sign" style="margin-left: 0.2em;">
+        <% else %> <!-- partially received -->
+        <i class="icon-star-empty" style="margin-left: 0.2em;">
+        <% end %>
+      </td>
       <td align="center"><%= formatted_date(order.order_date) unless order.order_date.blank? %></td>
       <td><%= order.order_status.name %></td>
       <td><%= order.supplier.full_name[0,40] %></td>

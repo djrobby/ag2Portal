@@ -4,6 +4,7 @@ es:
       index:
         title: "Notas de recepción"
         btn_new: "Nueva Nota de recepción"
+        btn_new_from_purchase_order: "Nueva Nota desde Pedido"
         back_to_root: "Volver a ag2Logistics"
         label_supplier: "Proveedor"
         label_project: "Proyecto"
@@ -30,3 +31,6 @@ es:
       btn_new_item: "Nuevo Item"
       btn_add_item: "Agregar"
       item_error: "no puede estar en blanco"
+      generate_note_error: "Imposible generar Nota de recepción: Pedido inválido."
+      generate_note_write: "Imposible guardar nueva Nota de recepción."
+      generate_note_ok: "Nota de recepción %{var} ha sido generada."

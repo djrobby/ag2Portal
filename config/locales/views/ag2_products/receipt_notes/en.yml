@@ -4,6 +4,7 @@ en:
       index:
         title: "Receipt notes"
         btn_new: "New Receipt note"
+        btn_new_from_purchase_order: "New Note from Order"
         back_to_root: "Back to ag2Logistics"
         label_supplier: "Supplier"
         label_project: "Project"
@@ -30,3 +31,6 @@ en:
       btn_new_item: "New Item"
       btn_add_item: "Add"
       item_error: "can't be blank"
+      generate_note_error: "Receipt note can not be generated: Order invalid."
+      generate_note_write: "Unable to save new Receipt note."
+      generate_note_ok: "Receipt note %{var} has been generated."

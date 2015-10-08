@@ -18,6 +18,7 @@ module Ag2Products
                                                :rn_format_number,
                                                :rn_current_stock,
                                                :rn_update_project_textfields_from_organization,
+                                               :rn_generate_note,
                                                :rn_update_attachment]
     # Public attachment for drag&drop
     $attachment = nil
@@ -362,6 +363,77 @@ module Ag2Products
       render json: @json_data
     end
 
+    # Generate new receipt note from purchase order
+    def rn_generate_note
+      supplier = params[:supplier]
+      order = params[:request]
+      note_no = params[:offer_no]
+      note_date = params[:offer_date]  # YYYYMMDD
+      note = nil
+      note_item = nil
+      code = ''
+
+      if request != '0'
+        offer_request = OfferRequest.find(request) rescue nil
+        offer_request_items = offer_request.offer_request_items rescue nil
+        if !offer_request.nil? && !offer_request_items.nil?
+          # Format offer_date
+          offer_date = (offer_date[0..3] + '-' + offer_date[4..5] + '-' + offer_date[6..7]).to_date
+          # Try to save new offer
+          offer = Offer.new
+          offer.offer_no = offer_no
+          offer.offer_date = offer_date
+          offer.offer_request_id = offer_request.id
+          offer.supplier_id = supplier
+          offer.payment_method_id = offer_request.payment_method_id
+          offer.created_by = current_user.id if !current_user.nil?
+          offer.discount_pct = offer_request.discount_pct
+          offer.discount = offer_request.discount
+          offer.project_id = offer_request.project_id
+          offer.store_id = offer_request.store_id
+          offer.work_order_id = offer_request.work_order_id
+          offer.charge_account_id = offer_request.charge_account_id
+          offer.organization_id = offer_request.organization_id
+          if offer.save
+            # Try to save new offer items
+            offer_request_items.each do |i|
+              offer_item = OfferItem.new
+              offer_item.offer_id = offer.id
+              offer_item.product_id = i.product_id
+              offer_item.description = i.description
+              offer_item.quantity = i.quantity
+              offer_item.price = i.price
+              offer_item.tax_type_id = i.tax_type_id
+              offer_item.created_by = current_user.id if !current_user.nil?
+              offer_item.project_id = i.project_id
+              offer_item.store_id = i.store_id
+              offer_item.work_order_id = i.work_order_id
+              offer_item.charge_account_id = i.charge_account_id
+              if !offer_item.save
+                # Can't save offer item (exit)
+                code = '$write'
+                break
+              end   # !offer_item.save?
+            end   # do |i|
+          else
+            # Can't save offer
+            code = '$write'
+          end   # offer.save?
+        else
+          # Offer request or items not found
+          code = '$err'
+        end   # !offer_request.nil? && !offer_request_items.nil?
+      else
+        # Offer request 0
+        code = '$err'
+      end   # request != '0'
+      if code == ''
+        code = I18n.t("ag2_purchase.offers.generate_offer_ok", var: offer.id.to_s)
+      end
+      @json_data = { "code" => code }
+      render json: @json_data
+    end
+
     #
     # Default Methods
     #
@@ -379,6 +451,7 @@ module Ag2Products
       @projects = projects_dropdown if @projects.nil?
       @suppliers = suppliers_dropdown if @suppliers.nil?
       @work_orders = work_orders_dropdown if @work_orders.nil?
+      @orders = orders_dropdown if @orders.nil?
 
       # Arrays for search
       current_projects = @projects.blank? ? [0] : current_projects_for_index(@projects)
