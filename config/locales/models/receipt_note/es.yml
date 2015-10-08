@@ -10,11 +10,13 @@ es:
     attributes:
       receipt_note:
         receipt_no: "Nº"
+        receipt_no_c: "Nº documento Proveedor"
         supplier: "Proveedor"
         supplier_id: "Proveedor"
         payment_method: "Forma de pago"
         payment_method_id: "Forma de pago"
         receipt_date: "Fecha"
+        receipt_date_c: "Fecha documento Proveedor"
         remarks: "Comentarios"
         discount_pct: "% Dto."
         discount: "Descuento"

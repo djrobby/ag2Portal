@@ -135,6 +135,9 @@ Ag2Products::Engine.routes.draw do
     match 'receipt_notes/rn_generate_note/:supplier/:request/:offer_no/:offer_date', :controller => 'receipt_notes', :action => 'rn_generate_note'
     match 'rn_generate_note/:supplier/:request/:offer_no/:offer_date', :controller => 'receipt_notes', :action => 'rn_generate_note'
     match 'receipt_notes/:id/rn_generate_note/:supplier/:request/:offer_no/:offer_date', :controller => 'receipt_notes', :action => 'rn_generate_note'
+    match 'receipt_notes/rn_current_balance/:order', :controller => 'receipt_notes', :action => 'rn_current_balance'
+    match 'rn_current_balance/:order', :controller => 'receipt_notes', :action => 'rn_current_balance'
+    match 'receipt_notes/:id/rn_current_balance/:order', :controller => 'receipt_notes', :action => 'rn_current_balance'
     #
     # Purchase orders 
     match 'purchase_orders/po_update_description_prices_from_product_store/:product/:qty/:store', :controller => 'purchase_orders', :action => 'po_update_description_prices_from_product_store'

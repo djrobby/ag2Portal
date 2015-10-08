@@ -363,6 +363,20 @@ module Ag2Products
       render json: @json_data
     end
 
+    # Update current balance text field at view from order select
+    def rn_current_balance
+      order = params[:order]
+      current_balance = 0
+      if order != '0'
+        current_balance = PurchaseOrder.find(order).balance rescue 0
+      end
+      # Format numbers
+      current_balance = number_with_precision(current_balance.round(4), precision: 4)
+      # Setup JSON
+      @json_data = { "balance" => current_balance.to_s }
+      render json: @json_data
+    end
+
     # Generate new receipt note from purchase order
     def rn_generate_note
       supplier = params[:supplier]
@@ -373,62 +387,62 @@ module Ag2Products
       note_item = nil
       code = ''
 
-      if request != '0'
-        offer_request = OfferRequest.find(request) rescue nil
-        offer_request_items = offer_request.offer_request_items rescue nil
-        if !offer_request.nil? && !offer_request_items.nil?
+      if order != '0'
+        purchase_order = PurchaseOrer.find(order) rescue nil
+        purchase_order_items = purchase_order.purchase_order_items rescue nil
+        if !purchase_order_items.nil? && !purchase_order_items.nil?
           # Format offer_date
-          offer_date = (offer_date[0..3] + '-' + offer_date[4..5] + '-' + offer_date[6..7]).to_date
-          # Try to save new offer
-          offer = Offer.new
-          offer.offer_no = offer_no
-          offer.offer_date = offer_date
-          offer.offer_request_id = offer_request.id
-          offer.supplier_id = supplier
-          offer.payment_method_id = offer_request.payment_method_id
-          offer.created_by = current_user.id if !current_user.nil?
-          offer.discount_pct = offer_request.discount_pct
-          offer.discount = offer_request.discount
-          offer.project_id = offer_request.project_id
-          offer.store_id = offer_request.store_id
-          offer.work_order_id = offer_request.work_order_id
-          offer.charge_account_id = offer_request.charge_account_id
-          offer.organization_id = offer_request.organization_id
-          if offer.save
-            # Try to save new offer items
+          note_date = (note_date[0..3] + '-' + note_date[4..5] + '-' + note_date[6..7]).to_date
+          # Try to save new note
+          note = Offer.new
+          note.offer_no = offer_no
+          note.offer_date = offer_date
+          note.offer_request_id = offer_request.id
+          note.supplier_id = supplier
+          note.payment_method_id = offer_request.payment_method_id
+          note.created_by = current_user.id if !current_user.nil?
+          note.discount_pct = offer_request.discount_pct
+          note.discount = offer_request.discount
+          note.project_id = offer_request.project_id
+          note.store_id = offer_request.store_id
+          note.work_order_id = offer_request.work_order_id
+          note.charge_account_id = offer_request.charge_account_id
+          note.organization_id = offer_request.organization_id
+          if note.save
+            # Try to save new note items
             offer_request_items.each do |i|
-              offer_item = OfferItem.new
-              offer_item.offer_id = offer.id
-              offer_item.product_id = i.product_id
-              offer_item.description = i.description
-              offer_item.quantity = i.quantity
-              offer_item.price = i.price
-              offer_item.tax_type_id = i.tax_type_id
-              offer_item.created_by = current_user.id if !current_user.nil?
-              offer_item.project_id = i.project_id
-              offer_item.store_id = i.store_id
-              offer_item.work_order_id = i.work_order_id
-              offer_item.charge_account_id = i.charge_account_id
-              if !offer_item.save
-                # Can't save offer item (exit)
+              note_item = OfferItem.new
+              note_item.offer_id = offer.id
+              note_item.product_id = i.product_id
+              note_item.description = i.description
+              note_item.quantity = i.quantity
+              note_item.price = i.price
+              note_item.tax_type_id = i.tax_type_id
+              note_item.created_by = current_user.id if !current_user.nil?
+              note_item.project_id = i.project_id
+              note_item.store_id = i.store_id
+              note_item.work_order_id = i.work_order_id
+              note_item.charge_account_id = i.charge_account_id
+              if !note_item.save
+                # Can't save note item (exit)
                 code = '$write'
                 break
-              end   # !offer_item.save?
+              end   # !note_item.save?
             end   # do |i|
           else
-            # Can't save offer
+            # Can't save note
             code = '$write'
           end   # offer.save?
         else
-          # Offer request or items not found
+          # Purchase order or items not found
           code = '$err'
-        end   # !offer_request.nil? && !offer_request_items.nil?
+        end   # !purchase_order_items.nil? && !purchase_order_items.nil?
       else
-        # Offer request 0
+        # Purchase order 0
         code = '$err'
-      end   # request != '0'
+      end   # order != '0'
       if code == ''
-        code = I18n.t("ag2_purchase.offers.generate_offer_ok", var: offer.id.to_s)
+        code = I18n.t("ag2_purchase.receipt_notes.generate_note_ok", var: note.id.to_s)
       end
       @json_data = { "code" => code }
       render json: @json_data

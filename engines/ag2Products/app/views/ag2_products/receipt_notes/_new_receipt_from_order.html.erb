@@ -64,6 +64,19 @@
       $(".icon-refresh-link").click();
       return false;
     });
+
+    // when the #Request_ field changes
+    $("#Request_").change(function() {
+      // make a POST call and replace the content
+      var order = $('#Request_ :selected').val();
+      if (order == "") order = 0;
+      jQuery.getJSON('rn_current_balance/' + order, function(data) {
+        $("#current-balance").html(data.balance);
+      });
+      // AJAX refresh index table is necessary
+      //$(".icon-refresh-link").click();
+      return false;
+    });
   });
 </script>
 
@@ -81,13 +94,15 @@
     <label for="Request_" class="form-label-under-sel2"> <abbr title="requerido">*</abbr> <%= I18n.t("activerecord.attributes.receipt_note.purchase_order") %></label>
     <%= select_tag "Request_", options_from_collection_for_select(@orders, "id", "full_name"), :prompt => "", :class => 'x-large-text-field nsel2' %>
     <!-- Receipt note No -->
-    <label for="No_" class="form-label-under-sel2"> <abbr title="requerido">*</abbr> <%= I18n.t("activerecord.attributes.receipt_note.receipt_no") %></label>
+    <label for="No_" class="form-label-under-sel2"> <abbr title="requerido">*</abbr> <%= I18n.t("activerecord.attributes.receipt_note.receipt_no_c") %></label>
     <%= text_field_tag "No_", nil, :class => 'x-large-text-field' %>
     <!-- Receipt note date -->
-    <label for="Date_" class="form-label"> <abbr title="requerido">*</abbr> <%= I18n.t("activerecord.attributes.receipt_note.receipt_date") %></label>
+    <label for="Date_" class="form-label"> <abbr title="requerido">*</abbr> <%= I18n.t("activerecord.attributes.receipt_note.receipt_date_c") %></label>
     <%= text_field_tag "Date_", nil, class: 'mid-text-field ndate_picker' %>
   </div>
   <div class="modal-footer">
+    <span class="left-floated shrinked" style="vertical-align: bottom"><%= t("activerecord.attributes.purchase_order.balance_c") %>=</span>
+    <span class="left-floated shrinked" style="vertical-align: bottom" id="current-balance">0,0000</span>
     <a class="btn btn-primary" href="#" id="btn_accept"><%= t :generate %></a>
     <a class="btn btn-primary" data-dismiss="modal" href="#" id="btn_close"><%= t :close_button %></a>
   </div>

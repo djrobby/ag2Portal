@@ -45,6 +45,7 @@ en:
         total: "Total"
         offer_no: "Sup.Offer No."
         balance: "Balance"
+        balance_c: "Balance selected order"
         quantity: "Articles"
         bonus: "Bonus"
         organization: "Organization"

@@ -45,6 +45,7 @@ es:
         total: "Total"
         offer_no: "Nº Oferta prov."
         balance: "Saldo"
+        balance_c: "Saldo pedido elegido"
         quantity: "Artículos"
         bonus: "Bonificación"
         organization: "Organización"

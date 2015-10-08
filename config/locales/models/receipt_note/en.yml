@@ -10,11 +10,13 @@ en:
     attributes:
       receipt_note:
         receipt_no: "No."
+        receipt_no_c: "Supplier document No."
         supplier: "Supplier"
         supplier_id: "Supplier"
         payment_method: "Payment method"
         payment_method_id: "Payment method"
         receipt_date: "Date"
+        receipt_date_c: "Supplier document Date"
         remarks: "Remarks"
         discount_pct: "Disc.%"
         discount: "Discount"
