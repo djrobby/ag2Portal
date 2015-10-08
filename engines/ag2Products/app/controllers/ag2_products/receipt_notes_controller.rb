@@ -388,7 +388,7 @@ module Ag2Products
       code = ''
 
       if order != '0'
-        purchase_order = PurchaseOrer.find(order) rescue nil
+        purchase_order = PurchaseOrder.find(order) rescue nil
         purchase_order_items = purchase_order.purchase_order_items rescue nil
         if !purchase_order.nil? && !purchase_order_items.nil?
           # Format offer_date
@@ -396,7 +396,7 @@ module Ag2Products
           # Try to save new note
           note = ReceiptNote.new
           note.receipt_no = note_no
-          note.supplier_id = supplier
+          note.supplier_id = purchase_order.supplier_id
           note.payment_method_id = purchase_order.payment_method_id
           note.receipt_date = note_date
           note.discount_pct = purchase_order.discount_pct
@@ -418,14 +418,18 @@ module Ag2Products
               note_item.purchase_order_item_id = i.id
               note_item.product_id = i.product_id
               note_item.description = i.description
-              note_item.quantity = i.quantity
+              note_item.quantity = i.balance
               note_item.price = i.price
+              note_item.discount_pct = i.discount_pct
+              note_item.discount = i.discount
               note_item.tax_type_id = i.tax_type_id
-              note_item.created_by = current_user.id if !current_user.nil?
-              note_item.project_id = i.project_id
               note_item.store_id = i.store_id
               note_item.work_order_id = i.work_order_id
               note_item.charge_account_id = i.charge_account_id
+              note_item.created_by = current_user.id if !current_user.nil?
+              note_item.code = i.code
+              note_item.purchase_order_id = i.purchase_order_id
+              note_item.project_id = i.project_id
               if !note_item.save
                 # Can't save note item (exit)
                 code = '$write'
@@ -435,7 +439,7 @@ module Ag2Products
           else
             # Can't save note
             code = '$write'
-          end   # offer.save?
+          end   # note.save?
         else
           # Purchase order or items not found
           code = '$err'
@@ -445,7 +449,7 @@ module Ag2Products
         code = '$err'
       end   # order != '0'
       if code == ''
-        code = I18n.t("ag2_purchase.receipt_notes.generate_note_ok", var: note.id.to_s)
+        code = I18n.t("ag2_products.receipt_notes.generate_note_ok", var: note.id.to_s)
       end
       @json_data = { "code" => code }
       render json: @json_data

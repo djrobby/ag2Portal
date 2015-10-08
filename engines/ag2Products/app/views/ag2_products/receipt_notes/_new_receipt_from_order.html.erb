@@ -25,9 +25,9 @@
         $(".icon-refresh-link").click();
         // Go on based on result
         if (data.code == "$err") {
-          alert('<%= I18n.t("ag2_purchase.receipt_notes.generate_note_error") %>');
+          alert('<%= I18n.t("ag2_products.receipt_notes.generate_note_error") %>');
         } else if (data.code == "$write") {
-          alert('<%= I18n.t("ag2_purchase.receipt_notes.generate_note_write") %>');
+          alert('<%= I18n.t("ag2_products.receipt_notes.generate_note_write") %>');
         } else {
           // Hide the modal and exit
           alert(data.code);
@@ -74,7 +74,7 @@
         $("#current-balance").html(data.balance);
       });
       // AJAX refresh index table is necessary
-      //$(".icon-refresh-link").click();
+      $(".icon-refresh-link").click();
       return false;
     });
   });
