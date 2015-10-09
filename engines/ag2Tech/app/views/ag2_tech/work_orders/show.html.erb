@@ -9,6 +9,16 @@
       window.open("work_order_form.pdf?id=" + id, "_blank");
       return false;
     });
+
+    // when #print_report_btn_empty is clicked
+    $("#print_report_btn_empty").click(function() {
+      // make a POST call and get report
+      var id = $('#id').html();
+      if (id == "")
+        return;
+      window.open("work_order_form_empty.pdf?id=" + id, "_blank");
+      return false;
+    });
   });
 </script>
 
@@ -103,6 +113,7 @@
       </td>
       <td class="form-td-two right-winged">
         <a href="#" id="print_report_btn" class="btn btn-warning"><i class="icon-print icon-white"></i> <%= t '.print' %></a>
+        <a href="#" id="print_report_btn_empty" class="btn btn-warning"><i class="icon-print icon-white"></i> <%= t '.print_empty' %></a>
       </td>
     </tr>
   </tbody>

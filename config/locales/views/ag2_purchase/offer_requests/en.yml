@@ -15,6 +15,7 @@ en:
         btn_edit: "Edit Request"
         btn_delete: "Delete Request"
         print: "Print"
+        print_no_prices: "Without Prices"
       edit:
         title: "Edit Request"
         btn_show: "Show Request"

@@ -67,6 +67,16 @@
       window.open("offer_request_form.pdf?id=" + id, "_blank");
       return false;
     });
+
+    // when #print_report_btn_no_prices is clicked
+    $("#print_report_btn_no_prices").click(function() {
+      // make a POST call and get report
+      var id = $('#id').html();
+      if (id == "")
+        return;
+      window.open("offer_request_form_no_prices.pdf?id=" + id, "_blank");
+      return false;
+    });
   });
 </script>
 
@@ -125,6 +135,7 @@
       </td>
       <td class="form-td-two right-winged">
         <a href="#" id="print_report_btn" class="btn btn-warning"><i class="icon-print icon-white"></i> <%= t '.print' %></a>
+        <a href="#" id="print_report_btn_no_prices" class="btn btn-warning"><i class="icon-print icon-white"></i> <%= t '.print_no_prices' %></a>
       </td>
     </tr>
   </tbody>
