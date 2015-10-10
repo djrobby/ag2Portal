@@ -569,6 +569,24 @@ module Ag2Purchase
       end
     end
 
+    # Report no prices
+    def offer_request_form_no_prices
+      # Search offer request & items
+      @offer_request = OfferRequest.find(params[:id])
+      @items = @offer_request.offer_request_items.order('id')
+      @suppliers = @offer_request.offer_request_suppliers.order('id')
+
+      title = t("activerecord.models.offer_request.one")      
+
+      respond_to do |format|
+        # Render PDF
+        format.pdf { send_data render_to_string,
+                     filename: "#{title}_#{@offer_request.full_no}.pdf",
+                     type: 'application/pdf',
+                     disposition: 'inline' }
+      end
+    end
+
     private
     
     def current_projects_for_index(_projects)

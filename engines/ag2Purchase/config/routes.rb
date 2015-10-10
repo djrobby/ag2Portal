@@ -264,6 +264,7 @@ Ag2Purchase::Engine.routes.draw do
     end
     resources :offer_requests do
       get 'offer_request_form', on: :collection
+      get 'offer_request_form_no_prices', on: :collection
     end
     resources :offers
     resources :supplier_invoices

@@ -17,7 +17,7 @@ es:
         btn_edit: "Editar Orden de trabajo"
         btn_delete: "Borrar Orden de trabajo"
         print: "Imprimir"
-        print_empty: "Formulario vacío"
+        print_empty: "Para rellenar"
       edit:
         title: "Editar Orden de trabajo"
         btn_show: "Ver Orden de trabajo"

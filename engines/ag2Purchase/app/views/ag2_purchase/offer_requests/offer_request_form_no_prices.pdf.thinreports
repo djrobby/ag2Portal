@@ -1,0 +1,71 @@
+if @offer_request.nil?
+	return
+end
+if @items.count <= 0
+	return
+end
+
+# Localization for numbers
+delimiter = I18n.locale == :es ? "." : ","
+suppliers = @suppliers.count <= 0 ? 1 : @suppliers.count
+
+# Choose report layout depending on whether there are suppliers
+if @suppliers.count <= 0
+	report.set_layout tlf: 'reports/offer_request_form_ns_no_prices', layout_options: { default: true }
+else
+	report.set_layout tlf: 'reports/offer_request_form_no_prices', layout_options: { default: true }
+end
+
+#
+# Report events
+#
+# On page create
+report.events.on :page_create do |e|
+	# Set page-number
+	e.page.item(:page_no).value(e.page.no)
+end
+# On report generate
+report.events.on :generate do |e|
+	e.pages.each do |page|
+		# Set total-page-number
+		page.item(:page_count).value(e.report.page_count / suppliers)
+	end
+end
+
+#
+# List configuration (stores & events)
+#
+report.layout.config.list(:default) do |c|
+	# Define the variables used in list
+	c.use_stores page_quantity: 0
+
+	# On list page footer insertion
+	c.events.on :page_footer_insert do |e|
+		# Display page sutotals
+		e.section.item(:page_subtotals).value(I18n.t("every_report.page_subtotals"))
+		e.section.item(:page_quantity).value(number_with_precision(e.store.page_quantity, precision: 4))
+		# Initialize subtotals to 0
+		e.store.page_quantity = 0
+	end
+	# On list footer insertion
+	c.events.on :footer_insert do |e|
+		# Display list totals
+		e.section.item(:total_c).value(I18n.t("activerecord.attributes.offer_request.total").upcase)
+		e.section.item(:total).value(number_with_precision(@offer_request.quantity, precision: 4, delimiter: delimiter))
+	end
+end
+
+#
+# Choose report partials depending on whether there are suppliers
+#
+if @suppliers.count > 0
+	# One form for each supplier
+	@suppliers.each do |s|
+		report.partial! 'offer_request_form_header_footer', s: s	# passing current s
+		report.partial! 'offer_request_form_list_no_prices'
+	end
+else
+	# No suppliers
+	report.partial! 'offer_request_form_ns_header_footer'
+	report.partial! 'offer_request_form_list_no_prices'
+end

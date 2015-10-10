@@ -729,6 +729,22 @@ module Ag2Tech
                      disposition: 'inline' }
       end
     end
+
+    # Report empty
+    def work_order_form_empty
+      # Search work order & items
+      @work_order = WorkOrder.find(params[:id])
+
+      title = t("activerecord.models.work_order.one")      
+
+      respond_to do |format|
+        # Render PDF
+        format.pdf { send_data render_to_string,
+                     filename: "#{title}_#{@work_order.full_no}.pdf",
+                     type: 'application/pdf',
+                     disposition: 'inline' }
+      end
+    end
     
     private
     
