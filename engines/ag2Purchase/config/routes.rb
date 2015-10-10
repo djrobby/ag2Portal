@@ -83,6 +83,10 @@ Ag2Purchase::Engine.routes.draw do
     match 'purchase_orders/po_update_selects_from_offer/:o', :controller => 'purchase_orders', :action => 'po_update_selects_from_offer'
     match 'po_update_selects_from_offer/:o', :controller => 'purchase_orders', :action => 'po_update_selects_from_offer'
     match 'purchase_orders/:id/po_update_selects_from_offer/:o', :controller => 'purchase_orders', :action => 'po_update_selects_from_offer'
+
+    match 'purchase_orders/send_purchase_order_form/:id', :controller => 'purchase_orders', :action => 'send_purchase_order_form'
+    match 'send_purchase_order_form/:id', :controller => 'purchase_orders', :action => 'send_purchase_order_form'
+    match 'purchase_orders/:id/send_purchase_order_form/:id', :controller => 'purchase_orders', :action => 'send_purchase_order_form'
     #
     # Purchase order Reports
     #match 'purchase_order_form', :controller => 'purchase_orders', :action => 'purchase_order_form'

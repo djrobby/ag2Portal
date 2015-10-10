@@ -16,6 +16,7 @@ en:
         btn_edit: "Edit Order"
         btn_delete: "Delete Order"
         print: "Print"
+        send: "Send"
       edit:
         title: "Edit Order"
         btn_show: "Show Order"

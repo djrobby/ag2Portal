@@ -44,6 +44,22 @@
       window.open("purchase_order_form.pdf?id=" + id, "_blank");
       return false;
     });
+
+    // when #send_report_btn is clicked
+    $("#send_report_btn").click(function() {
+      // make a POST call and get report
+      var id = $('#id').html();
+      if (id == "")
+        return;
+      jQuery.getJSON('send_purchase_order_form/' + id, function(data) {
+        if (data.code == "$err") {
+          alert('<%= I18n.t(:send_error) %>');
+        } else {
+          alert('<%= I18n.t(:send_ok) %>');
+        }
+      });
+      return false;
+    });
   });
 </script>
 
@@ -113,6 +129,7 @@
         <h4><%= t 'ag2_purchase.purchase_orders.items_info' %></h4>
       </td>
       <td class="form-td-two right-winged">
+        <a href="#" id="send_report_btn" class="btn btn-warning"><i class="icon-envelope icon-white"></i> <%= t '.send' %></a>
         <a href="#" id="print_report_btn" class="btn btn-warning"><i class="icon-print icon-white"></i> <%= t '.print' %></a>
       </td>
     </tr>

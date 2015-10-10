@@ -56,6 +56,8 @@ en:
   approve: "Approve"
   disapprove: "Disapprove"
   confirm: "Confirm"
+  send_error: "Oh oh! Your e-mail could not be sent."
+  send_ok: "Your e-mail has been sent."
   every_report:
     pt: "Page"
     pt_plural: "Pages"

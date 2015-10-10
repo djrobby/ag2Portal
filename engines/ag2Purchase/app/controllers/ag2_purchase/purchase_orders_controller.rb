@@ -18,7 +18,8 @@ module Ag2Purchase
                                                :po_update_project_textfields_from_organization,
                                                :po_generate_no,
                                                :po_product_stock,
-                                               :po_approve_order]
+                                               :po_approve_order,
+                                               :send_purchase_order_form]
     # Update offer select at view from supplier select
     def po_update_offer_select_from_supplier
       supplier = params[:supplier]
@@ -392,6 +393,21 @@ module Ag2Purchase
 
       @json_data = { "code" => code, "approver" => _approver, "approval_date" => _approval_date }
       render json: @json_data
+    end
+
+    # Email Report (jQuery)
+    def send_purchase_order_form
+      code = '$err'
+
+      # Search purchase order & items
+      @purchase_order = PurchaseOrder.find(params[:id])
+      @items = @purchase_order.purchase_order_items.order('id')
+
+      title = t("activerecord.models.purchase_order.one")      
+      #pdf = send_data render_to_string, filename: "#{title}_#{@purchase_order.full_no}.pdf", type: 'application/pdf'     
+      pdf = render_to_string(filename: "#{title}_#{@purchase_order.full_no}.pdf", type: 'application/pdf')     
+
+      redirect_to @purchase_order
     end
 
     #

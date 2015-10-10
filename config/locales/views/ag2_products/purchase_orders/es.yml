@@ -16,6 +16,7 @@ es:
         btn_edit: "Editar Pedido"
         btn_delete: "Borrar Pedido"
         print: "Imprimir"
+        send: "Enviar"
       edit:
         title: "Editar Pedido"
         btn_show: "Ver Pedido"
