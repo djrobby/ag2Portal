@@ -4,9 +4,11 @@
     approver = $('#approver').html();
     if (approver == "") {
       $('#print_report_btn').hide();
+      $('#send_report_btn').hide();
       $('#approve_order_btn').show();
     } else {
       $('#print_report_btn').show();
+      $('#send_report_btn').show();
       $('#approve_order_btn').hide();
     }
   });
@@ -30,6 +32,7 @@
           $('#approval_date').text(data.approval_date);
           $('#approve_order_btn').hide();
           $('#print_report_btn').show();
+          $('#send_report_btn').show();
         }
       });
       return false;

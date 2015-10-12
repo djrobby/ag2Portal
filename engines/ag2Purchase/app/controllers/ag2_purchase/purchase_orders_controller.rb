@@ -397,17 +397,15 @@ module Ag2Purchase
 
     # Email Report (jQuery)
     def send_purchase_order_form
-      code = '$err'
-
       # Search purchase order & items
       @purchase_order = PurchaseOrder.find(params[:id])
       @items = @purchase_order.purchase_order_items.order('id')
 
-      title = t("activerecord.models.purchase_order.one")      
       #pdf = send_data render_to_string, filename: "#{title}_#{@purchase_order.full_no}.pdf", type: 'application/pdf'     
-      pdf = render_to_string(filename: "#{title}_#{@purchase_order.full_no}.pdf", type: 'application/pdf')     
-
-      redirect_to @purchase_order
+      code = send_email(params[:id])
+      
+      @json_data = { "code" => code }
+      render json: @json_data
     end
 
     #
@@ -742,6 +740,18 @@ module Ag2Purchase
         _array = _array << [i.id, i.full_code, i.main_description[0,40]] 
       end
       _array
+    end
+
+    def send_email(_purchase_order)
+      code = '$err'
+      # Search purchase order & items
+      @purchase_order = PurchaseOrder.find(_purchase_order)
+      @items = @purchase_order.purchase_order_items.order('id')
+
+      title = t("activerecord.models.purchase_order.one")      
+      pdf = render_to_string(filename: "#{title}_#{@purchase_order.full_no}.pdf", type: 'application/pdf')
+      
+      code
     end
 
     # Keeps filter state
