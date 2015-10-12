@@ -1,5 +1,7 @@
 <script>
   $(document).ready(function() {
+    // Hide send_messages div
+    $("#send_mesages").hide();
     // Show generate_order_btn based on approval
     approver = $('#approver').html();
     if (approver == "") {
@@ -56,15 +58,27 @@
         return;
       jQuery.getJSON('send_purchase_order_form/' + id, function(data) {
         if (data.code == "$err") {
-          alert('<%= I18n.t(:send_error) %>');
+          $("#send_mesages").removeClass('alert-info').addClass('alert-warning')
         } else {
-          alert('<%= I18n.t(:send_ok) %>');
+          $("#send_mesages").removeClass('alert-warning').addClass('alert-info')
         }
+        $("#flash").html(data.message);
+        $("#send_mesages").show();
       });
       return false;
     });
+    
+    // close send_messages div when .close is clicked
+    $(".close").click(function() {
+      $("#send_mesages").hide();
+    });
   });
 </script>
+
+<div id="send_mesages" class="alert alert-warning">
+  <a class="close">&#215;</a>
+  <%= content_tag :div, "", :id => "flash" %>  
+</div>
 
 <%= render '/layouts/ag2_purchase/ordersbreadcrumb' %>
 

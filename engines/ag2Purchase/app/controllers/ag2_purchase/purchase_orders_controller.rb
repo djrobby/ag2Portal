@@ -403,8 +403,8 @@ module Ag2Purchase
 
       #pdf = send_data render_to_string, filename: "#{title}_#{@purchase_order.full_no}.pdf", type: 'application/pdf'     
       code = send_email(params[:id])
-      
-      @json_data = { "code" => code }
+      message = code == '$err' ? t(:send_error) : t(:send_ok)
+      @json_data = { "code" => code, "message" => message }
       render json: @json_data
     end
 
@@ -743,14 +743,15 @@ module Ag2Purchase
     end
 
     def send_email(_purchase_order)
-      code = '$err'
+      code = '$ok'
+
       # Search purchase order & items
       @purchase_order = PurchaseOrder.find(_purchase_order)
       @items = @purchase_order.purchase_order_items.order('id')
 
       title = t("activerecord.models.purchase_order.one")      
       pdf = render_to_string(filename: "#{title}_#{@purchase_order.full_no}.pdf", type: 'application/pdf')
-      
+
       code
     end
 
