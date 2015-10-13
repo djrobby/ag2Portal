@@ -53,11 +53,11 @@ class ChargeGroup < ActiveRecord::Base
   end
 
   def to_prev
-    ChargeGroup.where("group_code < ?", id).order("group_code").last
+    ChargeGroup.where("group_code < ?", group_code).order("group_code").last
   end
 
   def to_next
-    ChargeGroup.where("group_code > ?", id).order("group_code").first
+    ChargeGroup.where("group_code > ?", group_code).order("group_code").first
   end
 
   def to_last

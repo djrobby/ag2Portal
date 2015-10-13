@@ -105,11 +105,11 @@ class ChargeAccount < ActiveRecord::Base
   end
 
   def to_prev
-    ChargeAccount.where("account_code < ?", id).order("account_code").last
+    ChargeAccount.where("account_code < ?", account_code).order("account_code").last
   end
 
   def to_next
-    ChargeAccount.where("account_code > ?", id).order("account_code").first
+    ChargeAccount.where("account_code > ?", account_code).order("account_code").first
   end
 
   def to_last
