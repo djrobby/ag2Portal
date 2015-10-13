@@ -88,7 +88,10 @@
       var org = $('select#charge_account_organization_id :selected').val();
       if (org == "")
         org = "$";
-      jQuery.getJSON('cc_generate_code/' + grp + '/' + org, function(data) {
+      var prj = $('select#charge_account_project_id :selected').val();
+      if (prj == "")
+        prj = "0";
+      jQuery.getJSON('cc_generate_code/' + grp + '/' + org + '/' + prj, function(data) {
         $("#charge_account_account_code").val(data.code);
         if ($("#charge_account_account_code").val() == "$err") {
           $("#charge_account_account_code").css('color', 'red');
@@ -213,12 +216,12 @@
   <label class="multi-field-label-two"> <%= f.association :charge_group, collection: @groups, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
 </div>
 <div>
-  <label class="multi-field-label-two"> <%= f.input :account_code, input_html: { class: 'mid-text-field iconify', maxlength: 11 }, label_html: { class: 'form-label' } %> </label>
-  <label class="multi-field-label-two"> <%= f.input :name, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %> </label>
-</div>
-<div>
   <label class="multi-field-label-two"> <%= f.association :project, collection: @projects, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
   <label class="multi-field-label-two"> <%= f.association :ledger_account, collection: @ledger_accounts, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
+</div>
+<div>
+  <label class="multi-field-label-two"> <%= f.input :account_code, input_html: { class: 'mid-text-field iconify', maxlength: 11 }, label_html: { class: 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.input :name, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %> </label>
 </div>
 <div>
   <label class="multi-field-label-two"> <%= f.input :opened_at, start_year: Time.now.year - 100, end_year: Time.now.year + 100, as: :string, input_html: { value: (f.object.opened_at.strftime("%d/%m/%Y") if f.object.opened_at), class: 'mid-text-field date_picker' }, label_html: { class: 'form-label-under-sel2' } %> </label>

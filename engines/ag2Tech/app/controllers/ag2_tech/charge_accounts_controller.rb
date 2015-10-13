@@ -26,12 +26,13 @@ module Ag2Tech
     def cc_generate_code
       group = params[:group]
       organization = params[:org]
+      project = params[:prj]
 
       # Builds code, if possible
       if group == '$' || organization == '$'
         code = '$err'
       else
-        code = cc_next_code(organization, group)
+        code = cc_next_code(organization, group, project)
       end
       @json_data = { "code" => code }
       render json: @json_data

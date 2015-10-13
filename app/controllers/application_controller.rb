@@ -382,7 +382,7 @@ end
   end
 
   # Charge account code
-  def cc_next_code(organization, group)
+  def cc_next_code(organization, group, project)
     code = ''
     # Builds code, if possible
     group_code = ChargeGroup.find(group).group_code rescue '$'
@@ -390,16 +390,26 @@ end
       code = '$err'
     else
       group = group_code.rjust(4, '0')
+      project = project.rjust(3, '0')
       if organization == 0
-        last_code = ChargeAccount.where("account_code LIKE ?", "#{group}%").order(:account_code).maximum(:account_code)
+        if project == '000'
+          last_code = ChargeAccount.where("account_code LIKE ? AND (project_id = ? OR project_id IS NULL)", "#{group}%", "#{project}").order(:account_code).maximum(:account_code)
+        else
+          last_code = ChargeAccount.where("account_code LIKE ? AND project_id = ?", "#{group}%", "#{project}").order(:account_code).maximum(:account_code)
+        end
       else
-        last_code = ChargeAccount.where("account_code LIKE ? AND organization_id = ?", "#{group}%", "#{organization}").order(:account_code).maximum(:account_code)
+        if project == '000'
+          last_code = ChargeAccount.where("account_code LIKE ? AND (project_id = ? OR project_id IS NULL) AND organization_id = ?", "#{group}%", "#{project}", "#{organization}").order(:account_code).maximum(:account_code)
+        else
+          last_code = ChargeAccount.where("account_code LIKE ? AND project_id = ? AND organization_id = ?", "#{group}%", "#{project}", "#{organization}").order(:account_code).maximum(:account_code)
+        end
       end
+      code = group + project
       if last_code.nil?
-        code = group + '0000001'
+        code += '0001'
       else
-        last_code = last_code[4..10].to_i + 1
-        code = group + last_code.to_s.rjust(7, '0')
+        last_code = last_code[7..10].to_i + 1
+        code += last_code.to_s.rjust(4, '0')
       end
     end
     code

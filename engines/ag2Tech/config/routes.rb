@@ -21,9 +21,9 @@ Ag2Tech::Engine.routes.draw do
     match 'projects/:id/pr_update_total_and_price/:total/:price', :controller => 'projects', :action => 'pr_update_total_and_price'
     #
     # Accounts
-    match 'charge_accounts/cc_generate_code/:group/:org', :controller => 'charge_accounts', :action => 'cc_generate_code'
-    match 'cc_generate_code/:group/:org', :controller => 'charge_accounts', :action => 'cc_generate_code'
-    match 'charge_accounts/:id/cc_generate_code/:group/:org', :controller => 'charge_accounts', :action => 'cc_generate_code'
+    match 'charge_accounts/cc_generate_code/:group/:org/:prj', :controller => 'charge_accounts', :action => 'cc_generate_code'
+    match 'cc_generate_code/:group/:org/:prj', :controller => 'charge_accounts', :action => 'cc_generate_code'
+    match 'charge_accounts/:id/cc_generate_code/:group/:org/:prj', :controller => 'charge_accounts', :action => 'cc_generate_code'
     match 'charge_accounts/cc_update_project_textfields_from_organization/:org', :controller => 'charge_accounts', :action => 'cc_update_project_textfields_from_organization'
     match 'cc_update_project_textfields_from_organization/:org', :controller => 'charge_accounts', :action => 'cc_update_project_textfields_from_organization'
     match 'charge_accounts/:id/cc_update_project_textfields_from_organization/:org', :controller => 'charge_accounts', :action => 'cc_update_project_textfields_from_organization'
