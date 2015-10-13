@@ -51,7 +51,7 @@ class ChargeAccount < ActiveRecord::Base
   end
 
   def full_code
-    # Account code (Group code & sequential number) => OOOO-NNNNNNN
+    # Account code (Group code & project id & sequential number) => GGGG-PPPNNNN
     account_code.blank? ? "" : account_code[0..3] + '-' + account_code[4..10]
   end
 
