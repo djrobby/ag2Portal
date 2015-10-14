@@ -332,6 +332,7 @@ render json: @json_data
       # Where is it in trabaja.dbf?
     end
     
+    # Second, update worker item(s) RESET aux data...
     def update_worker_item(worker, source, company, office, new, cctagene)
       # Dont't need to look for auxiliary data, already done at update_worker
       if new
@@ -342,8 +343,8 @@ render json: @json_data
         worker.office_id = office.id unless office.id.blank?
         worker.department_id = @department.id unless @department.id.blank?
         worker.professional_group_id = @professional_group.id unless @professional_group.id.blank?
-        worker.starting_at = source.dfecalta unless source.dfecalta.blank?
-        worker.issue_starting_at = source.dfecini unless source.dfecini.blank?
+        worker.starting_at = source.dfecini unless source.dfecini.blank?
+        worker.issue_starting_at = source.dfecant unless source.dfecant.blank?
         worker.contract_type_id = @contract_type.id unless @contract_type.id.blank?
         worker.collective_agreement_id = @collective_agreement.id unless @collective_agreement.id.blank?
         worker.position = sanitize_string(source.cpuesto, true, false, false, true) unless source.cpuesto.blank?
@@ -364,11 +365,11 @@ render json: @json_data
         if !@collective_agreement.id.blank? && worker.collective_agreement_id != @collective_agreement.id
           worker.collective_agreement_id = @collective_agreement.id
         end
-        if !source.dfecalta.blank? && worker.starting_at != source.dfecalta
-          worker.starting_at = source.dfecalta
+        if !source.dfecini.blank? && worker.starting_at != source.dfecini
+          worker.starting_at = source.dfecini
         end
-        if !source.dfecini.blank? && worker.issue_starting_at != source.dfecini
-          worker.issue_starting_at = source.dfecini
+        if !source.dfecant.blank? && worker.issue_starting_at != source.dfecant
+          worker.issue_starting_at = source.dfecant
         end
         if !cctagene.nil?
           if worker.contribution_account_code != sanitize_string(cctagene, true, false, false, false)
@@ -384,17 +385,20 @@ render json: @json_data
       if worker.contribution_account_code.blank?
         worker.contribution_account_code = "no_existe"
       end
-      if worker.starting_at.blank? && !source.dfecini.blank?
-        worker.starting_at = source.dfecini
+      if worker.starting_at.blank? && !source.dfecalta.blank?
+        worker.starting_at = source.dfecalta
       end
-      if worker.issue_starting_at.blank? && !source.dfecalta.blank?
-        worker.issue_starting_at = source.dfecalta
+      if worker.issue_starting_at.blank? && !source.dfecini.blank?
+        worker.issue_starting_at = source.dfecini
       end
 
+      # Reset default auxiliary data
+      set_defaults
       # Bye
       return worker
     end
     
+    # First, update worker SEARCH aux data...
     def update_worker(worker, source, company, office, new, cctagene)
       # Look for auxiliary data (other tables)
       search_aux_data(source)
@@ -431,7 +435,7 @@ render json: @json_data
         #worker.professional_group_id = @professional_group.id unless @professional_group.id.blank?
         #worker.starting_at = source.dfecalta unless source.dfecalta.blank?
         #worker.issue_starting_at = source.dfecini unless source.dfecini.blank?
-        worker.starting_at = source.dfecini unless source.dfecini.blank?
+        worker.starting_at = source.dfecalta unless source.dfecalta.blank?
         #if !cctagene.nil?
         #  worker.contribution_account_code = sanitize_string(cctagene, true, false, false, false)
         #else
@@ -529,8 +533,8 @@ render json: @json_data
         #if !source.dfecini.blank? && worker.issue_starting_at != source.dfecini
         #  worker.issue_starting_at = source.dfecini
         #end
-        if !source.dfecini.blank? && worker.starting_at != source.dfecini
-          worker.starting_at = source.dfecini
+        if !source.dfecalta.blank? && worker.starting_at != source.dfecalta
+          worker.starting_at = source.dfecalta
         end
         #if !cctagene.nil?
         #  if worker.contribution_account_code != sanitize_string(cctagene, true, false, false, false)
@@ -560,8 +564,6 @@ render json: @json_data
       #  worker.issue_starting_at = source.dfecalta
       #end
       
-      # Reset default auxiliary data
-      set_defaults
       # Bye
       return worker
     end
