@@ -18,7 +18,8 @@ module Ag2Products
                                                :po_update_project_textfields_from_organization,
                                                :po_generate_no,
                                                :po_product_stock,
-                                               :po_approve_order]
+                                               :po_approve_order,
+                                               :send_purchase_order_form]
     # Update offer select at view from supplier select
     def po_update_offer_select_from_supplier
       supplier = params[:supplier]
@@ -421,6 +422,19 @@ module Ag2Products
       render json: @json_data
     end
 
+    # Email Report (jQuery)
+    def send_purchase_order_form
+      # Search purchase order & items
+      @purchase_order = PurchaseOrder.find(params[:id])
+      @items = @purchase_order.purchase_order_items.order('id')
+
+      #pdf = send_data render_to_string, filename: "#{title}_#{@purchase_order.full_no}.pdf", type: 'application/pdf'     
+      code = send_email(params[:id])
+      message = code == '$err' ? t(:send_error) : t(:send_ok)
+      @json_data = { "code" => code, "message" => message }
+      render json: @json_data
+    end
+
     #
     # Default Methods
     #
@@ -751,6 +765,19 @@ module Ag2Products
         _array = _array << [i.id, i.full_code, i.main_description[0,40]] 
       end
       _array
+    end
+
+    def send_email(_purchase_order)
+      code = '$ok'
+
+      # Search purchase order & items
+      @purchase_order = PurchaseOrder.find(_purchase_order)
+      @items = @purchase_order.purchase_order_items.order('id')
+
+      title = t("activerecord.models.purchase_order.one")      
+      pdf = render_to_string(filename: "#{title}_#{@purchase_order.full_no}.pdf", type: 'application/pdf')
+
+      code
     end
 
     # Keeps filter state

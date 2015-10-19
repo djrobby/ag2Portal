@@ -12,7 +12,7 @@ class Notifier < ActionMailer::Base
   def user_created(user)
     @user = user
 
-    mail from: user.email, to: "helpdesk@aguaygestion.com"
+    mail reply_to: user.email, to: "helpdesk@aguaygestion.com"
   end
 
   # Ticket
@@ -26,7 +26,7 @@ class Notifier < ActionMailer::Base
       if !cc.nil?
         recipients += "," + cc.email
       end
-      mail from: user.email, to: recipients
+      mail reply_to: user.email, to: recipients
     end
   end
   
@@ -75,6 +75,14 @@ class Notifier < ActionMailer::Base
         format.html
       end
     end
+  end
+
+  def send_purchase_order(purchase_order, _from, _to, title, pdf)
+    @purchase_order = purchase_order
+    @from = _from
+    _subject = t("notifier.send_purchase_order.subject") + @purchase_order.project.company.name
+    attachments[title] = pdf
+    mail reply_to: _from, to: _to, subject: _subject
   end
 
   # Offer & Offer request

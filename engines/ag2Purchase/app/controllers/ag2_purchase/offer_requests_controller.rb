@@ -16,7 +16,8 @@ module Ag2Purchase
                                                :or_update_project_textfields_from_organization,
                                                :or_generate_no,
                                                :or_approve_offer,
-                                               :or_disapprove_offer]
+                                               :or_disapprove_offer,
+                                               :send_offer_request_form]
     # Calculate and format totals properly
     def or_totals
       qty = params[:qty].to_f / 10000
@@ -361,6 +362,18 @@ module Ag2Purchase
         code = '$err'
       end
       @json_data = { "code" => code }
+      render json: @json_data
+    end
+
+    # Email Report (jQuery)
+    def send_offer_request_form
+      # Search purchase order & items
+      @offer_request = OfferRequest.find(params[:id])
+      @items = @offer_request.offer_request_items.order('id')
+
+      code = send_email(params[:id])
+      message = code == '$err' ? t(:send_error) : t(:send_ok)
+      @json_data = { "code" => code, "message" => message }
       render json: @json_data
     end
 

@@ -3,6 +3,8 @@
   var current_row;
 
   $(document).ready(function() {
+    // Hide send_messages div
+    $("#send_mesages").hide();
     // Save default text color
     text_field_color = $("table#offers_table tr:even").css('color')
   });
@@ -77,8 +79,36 @@
       window.open("offer_request_form_no_prices.pdf?id=" + id, "_blank");
       return false;
     });
+
+    // when #send_report_btn is clicked
+    $("#send_report_btn").click(function() {
+      // make a POST call and get report
+      var id = $('#id').html();
+      if (id == "")
+        return;
+      jQuery.getJSON('send_offer_request_form/' + id, function(data) {
+        if (data.code == "$err") {
+          $("#send_mesages").removeClass('alert-info').addClass('alert-warning')
+        } else {
+          $("#send_mesages").removeClass('alert-warning').addClass('alert-info')
+        }
+        $("#flash").html(data.message);
+        $("#send_mesages").show();
+      });
+      return false;
+    });
+    
+    // close send_messages div when .close is clicked
+    $(".close").click(function() {
+      $("#send_mesages").hide();
+    });
   });
 </script>
+
+<div id="send_mesages" class="alert alert-warning">
+  <a class="close">&#215;</a>
+  <%= content_tag :div, "", :id => "flash" %>  
+</div>
 
 <%= render '/layouts/ag2_purchase/requestsbreadcrumb' %>
 
@@ -134,6 +164,7 @@
         <h4><%= t 'ag2_purchase.offer_requests.items_info' %></h4>
       </td>
       <td class="form-td-two right-winged">
+        <a href="#" id="send_report_btn" class="btn btn-warning"><i class="icon-envelope icon-white"></i> <%= t '.send' %></a>
         <a href="#" id="print_report_btn" class="btn btn-warning"><i class="icon-print icon-white"></i> <%= t '.print' %></a>
         <a href="#" id="print_report_btn_no_prices" class="btn btn-warning"><i class="icon-print icon-white"></i> <%= t '.print_no_prices' %></a>
       </td>

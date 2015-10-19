@@ -398,8 +398,8 @@ module Ag2Purchase
     # Email Report (jQuery)
     def send_purchase_order_form
       # Search purchase order & items
-      @purchase_order = PurchaseOrder.find(params[:id])
-      @items = @purchase_order.purchase_order_items.order('id')
+      #@purchase_order = PurchaseOrder.find(params[:id])
+      #@items = @purchase_order.purchase_order_items.order('id')
 
       #pdf = send_data render_to_string, filename: "#{title}_#{@purchase_order.full_no}.pdf", type: 'application/pdf'     
       code = send_email(params[:id])
@@ -744,13 +744,24 @@ module Ag2Purchase
 
     def send_email(_purchase_order)
       code = '$ok'
+      from = nil
+      to = nil
 
       # Search purchase order & items
       @purchase_order = PurchaseOrder.find(_purchase_order)
       @items = @purchase_order.purchase_order_items.order('id')
 
-      title = t("activerecord.models.purchase_order.one")      
+      title = t("activerecord.models.purchase_order.one") + "_" + @purchase_order.full_no + ".pdf"       
       pdf = render_to_string(filename: "#{title}_#{@purchase_order.full_no}.pdf", type: 'application/pdf')
+      from = !current_user.nil? ? User.find(current_user.id).email : User.find(@purchase_order.created_by).email
+      to = !@purchase_order.supplier.email.blank? ? @purchase_order.supplier.email : nil
+      
+      if from.blank? || to.blank?
+        code = "$err"
+      else
+        # Send e-mail
+        Notifier.send_purchase_order(@purchase_order, from, to, title, pdf).deliver
+      end
 
       code
     end

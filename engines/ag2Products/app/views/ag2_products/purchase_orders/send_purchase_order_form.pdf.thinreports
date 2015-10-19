@@ -1,0 +1,154 @@
+if @purchase_order.nil?
+	return
+end
+if @items.count <= 0
+	return
+end
+
+# Localization for numbers
+delimiter = I18n.locale == :es ? "." : ","
+
+report.set_layout tlf: 'reports/purchase_order_form', layout_options: { default: true }
+
+#
+# Report events
+#
+# On page create
+report.events.on :page_create do |e|
+	# Set page-number
+	e.page.item(:page_no).value(e.page.no)
+end
+# On report generate
+report.events.on :generate do |e|
+	e.pages.each do |page|
+		# Set total-page-number
+		page.item(:page_count).value(e.report.page_count)
+	end
+end
+
+#
+# List configuration (stores & events)
+#
+report.layout.config.list(:default) do |c|
+	# Define the variables used in list
+	c.use_stores page_quantity: 0, page_discount: 0, page_amount: 0, page_tax: 0
+
+	# On list page footer insertion
+	c.events.on :page_footer_insert do |e|
+		# Display page sutotals
+		e.section.item(:page_subtotals).value(I18n.t("every_report.page_subtotals"))
+		e.section.item(:page_quantity).value(number_with_precision(e.store.page_quantity, precision: 4))
+		e.section.item(:page_discount).value(number_with_precision(e.store.page_discount, precision: 4))
+		e.section.item(:page_amount).value(number_with_precision(e.store.page_amount, precision: 4))
+		e.section.item(:page_tax).value(number_with_precision(e.store.page_tax, precision: 4))
+		# Initialize subtotals to 0
+		e.store.page_quantity = 0
+		e.store.page_discount = 0
+		e.store.page_amount = 0
+		e.store.page_tax = 0
+	end
+	# On list footer insertion
+	c.events.on :footer_insert do |e|
+		# Display list totals
+		e.section.item(:subtotal_c).value(I18n.t("activerecord.attributes.purchase_order.subtotal"))
+		e.section.item(:bonus_c).value(I18n.t("activerecord.attributes.purchase_order.bonus") + " " + number_with_precision(@purchase_order.discount_pct, precision: 2) + "%")
+		e.section.item(:taxable_c).value(I18n.t("activerecord.attributes.purchase_order.taxable_c"))
+		e.section.item(:taxes_c).value(I18n.t("activerecord.attributes.purchase_order.taxes"))
+		e.section.item(:total_c).value(I18n.t("activerecord.attributes.purchase_order.total").upcase)
+		e.section.item(:subtotal).value(number_with_precision(@purchase_order.subtotal, precision: 2, delimiter: delimiter))
+		e.section.item(:bonus).value(number_with_precision(@purchase_order.bonus, precision: 2, delimiter: delimiter))
+		e.section.item(:taxable).value(number_with_precision(@purchase_order.taxable, precision: 2, delimiter: delimiter))
+		e.section.item(:taxes).value(number_with_precision(@purchase_order.taxes, precision: 2, delimiter: delimiter))
+		e.section.item(:total).value(number_with_precision(@purchase_order.total, precision: 2, delimiter: delimiter))
+		# Display tax details
+		e.section.item(:tax_details).value(I18n.t("activerecord.attributes.purchase_order.tax_breakdown"))
+		@purchase_order.tax_breakdown.each do |tb|
+			e.section.item(:tax_list).value(tb[0].to_s.rjust(2, '0') + " " + tb[1] + ": " +
+											number_with_precision(tb[3], precision: 2, delimiter: delimiter) + " × " +
+											number_with_precision(tb[2], precision: 2, delimiter: delimiter) + "% = " +
+											number_with_precision(tb[4], precision: 2, delimiter: delimiter) + "\n")
+		end
+	end
+end
+
+# New page & start
+report.start_new_page
+
+# Page header: Image block for Logo
+report.page.values company_logo: "public/" + @purchase_order.project.company.logo.url(:original).split("?").first unless @purchase_order.project.company.logo.blank?
+# Page header: Company
+report.page.values(company_name: @purchase_order.project.company.name,
+				   company_address_1: @purchase_order.project.company.address_1,
+				   company_address_2: @purchase_order.project.company.address_2,
+				   company_phones: @purchase_order.project.company.phone_and_fax,
+				   company_email: @purchase_order.project.company.email_and_website,
+				   company_fiscal_id: I18n.t("activerecord.attributes.company.fiscal_id_c") + ": " + @purchase_order.project.company.fiscal_id)
+# Page header: Possibly null values
+report.page.values offer: @purchase_order.offer.offer_no unless @purchase_order.offer.blank?
+# Page header: Others
+report.page.values(form_title: I18n.t("activerecord.models.purchase_order.one"),
+				   order_no_title: I18n.t("activerecord.attributes.purchase_order.order_no_report") + ":",
+				   order_no: @purchase_order.full_no,
+				   order_date_title: I18n.t("activerecord.attributes.purchase_order.order_date") + ":",
+				   order_date: @purchase_order.order_date.strftime("%d/%m/%Y"),
+				   offer_title: I18n.t("activerecord.attributes.purchase_order.offer") + ":",
+				   supplier_title: I18n.t("activerecord.attributes.purchase_order.supplier"),
+				   petitioner_title: I18n.t("activerecord.attributes.purchase_order.office_c"),
+				   supplier_name: @purchase_order.supplier.name,
+				   supplier_address_1: @purchase_order.supplier.address_1,
+				   supplier_address_2: @purchase_order.supplier.address_2,
+				   supplier_fiscal_id: I18n.t("activerecord.attributes.supplier.fiscal_id_c") + ": " + @purchase_order.supplier.fiscal_id,
+				   petitioner_name: @purchase_order.project.office.name,
+				   petitioner_address_1: @purchase_order.project.office.address_1,
+				   petitioner_address_2: @purchase_order.project.office.address_2,
+				   petitioner_phones_email: @purchase_order.project.office.phone_fax_email,
+				   payment_title: I18n.t("activerecord.attributes.purchase_order.payment_method"),
+				   store_location_title: I18n.t("activerecord.attributes.store.delivery_location"),
+				   payment_method: @purchase_order.payment_method.description,
+				   store_address_1: @purchase_order.store.address_1,
+				   store_address_2: @purchase_order.store.address_2,
+				   store_phones: @purchase_order.store.phone_and_fax)
+# Page footer
+report.page.values(printed_at: Time.now,
+				   pt: I18n.t("every_report.pt"),
+				   pd: I18n.t("every_report.pd"),
+				   currency_note: I18n.t("every_report.currency_note"),
+				   remarks_title: I18n.t("activerecord.attributes.purchase_order.remarks"),
+				   remarks: @purchase_order.remarks)
+
+# List header
+report.page.list(:default).header do |header|
+	header.item(:no_c).value "#"
+	header.item(:product_c).value I18n.t("activerecord.attributes.purchase_order_item.code")
+	header.item(:description_c).value I18n.t("activerecord.attributes.purchase_order_item.description_c")
+	header.item(:quantity_c).value I18n.t("activerecord.attributes.purchase_order_item.quantity_c")
+	header.item(:price_c).value I18n.t("activerecord.attributes.purchase_order_item.price_c")
+	header.item(:discount_c).value I18n.t("activerecord.attributes.purchase_order_item.discount_c")
+	header.item(:amount_c).value I18n.t("activerecord.attributes.purchase_order_item.amount_c")
+	header.item(:tax_c).value I18n.t("activerecord.attributes.purchase_order_item.tax_c")
+	header.item(:delivery_date_c).value I18n.t("activerecord.attributes.purchase_order_item.delivery_date")
+end
+
+# List detail
+no = 0
+@items.each do |i|
+	report.page.list(:default).add_row do |row|
+		no = no + 1
+    	row.item(:no).value no
+    	row.item(:product).value i.product.full_code unless i.product.blank?
+    	row.item(:description).value i.description unless i.description.blank?
+    	row.item(:quantity).value number_with_precision(i.quantity, precision: 4) unless i.quantity.blank?
+    	row.item(:price).value number_with_precision(i.price, precision: 4) unless i.price.blank?
+    	row.item(:discount).value number_with_precision(i.discount, precision: 4) unless i.discount.blank?
+    	row.item(:amount).value number_with_precision(i.amount, precision: 4) unless i.amount.blank?
+    	row.item(:tax).value number_with_precision(i.tax, precision: 4) unless i.tax.blank?
+    	row.item(:delivery_date).value i.delivery_date.strftime("%d/%m/%Y") unless i.delivery_date.blank?
+	end
+	# Store page subtotals
+    report.page.list(:default) do |list|
+		list.store.page_quantity += i.quantity
+		list.store.page_discount += i.discount
+		list.store.page_amount += i.amount
+		list.store.page_tax += i.tax
+    end	
+end

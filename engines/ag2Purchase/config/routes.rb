@@ -189,6 +189,10 @@ Ag2Purchase::Engine.routes.draw do
     match 'offer_requests/or_disapprove_offer/:offer/:offer_request', :controller => 'offer_requests', :action => 'or_disapprove_offer'
     match 'or_disapprove_offer/:offer/:offer_request', :controller => 'offer_requests', :action => 'or_disapprove_offer'
     match 'offer_requests/:id/or_disapprove_offer/:offer/:offer_request', :controller => 'offer_requests', :action => 'or_disapprove_offer'
+
+    match 'offer_requests/send_offer_request_form/:id', :controller => 'offer_requests', :action => 'send_offer_request_form'
+    match 'send_offer_request_form/:id', :controller => 'offer_requests', :action => 'send_offer_request_form'
+    match 'offer_requests/:id/send_offer_request_form/:id', :controller => 'offer_requests', :action => 'send_offer_request_form'
     #
     # Offers
     match 'offers/of_totals/:qty/:amount/:tax/:discount_p', :controller => 'offers', :action => 'of_totals'

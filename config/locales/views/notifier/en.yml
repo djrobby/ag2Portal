@@ -1,5 +1,6 @@
 en:
   notifier:
+    footer: "This e-mail, its content and attachments, are intended solely to specified recipients. The information is confidential as provided by current legislation. If you receive this message by mistake, please inform the sender and delete it immediately because you are not authorized to use, disclose, distribute, print or copy all or part of the information contained."
     user_created:
       subject: "aGestiona2: New user created"
       dear_admin: "Dear Administrator,"
@@ -43,6 +44,12 @@ en:
       htmllink: "Show this order"
       approval: "** Your approval is required **"
       htmlapproval: "Approve this order"
+    send_purchase_order:
+      subject: "New Purchase Order from "
+      dear_supplier: "Dear Supplier,"
+      new_purchase_order: "In the attached file, you will find our Order No. "
+      deliver: "Please, proceed with the delivery of the goods and/or services requested, under the terms and conditions set forth herein."
+      thanks: "Thank you."
     offer_saved:
       subject: "aGestiona2: Supplier offer created or updated"
       link: "You can see this offer on the following link"

@@ -1,5 +1,6 @@
 es:
   notifier:
+    footer: "Este correo-e, su contenido y sus documentos adjuntos, están dirigidos exclusivamente a los destinatarios especificados. La información contenida es Confidencial según lo establece la legalidad vigente. Si usted recibe este mensaje por error, por favor comuníquelo inmediatamente al remitente y elimínelo, ya que usted no está autorizado a su uso, revelación, distribución, impresión o copia de toda o alguna parte de la información contenida."
     user_created:
       subject: "aGestiona2: Nuevo usuario creado"
       dear_admin: "Estimado/a Administrador/a,"
@@ -43,6 +44,12 @@ es:
       htmllink: "Ver este pedido"
       approval: "** Se requiere tu aprobación **"
       htmlapproval: "Aprueba este pedido"
+    send_purchase_order:
+      subject: "Nuevo Pedido de "
+      dear_supplier: "Estimado/a Proveedor/a,"
+      new_purchase_order: "En el fichero adjunto, encontrará nuestro Pedido Nº "
+      deliver: "Por favor, proceda con la entrega de los bienes y/o servicios solicitados, según los términos y condiciones establecidos en este documento."
+      thanks: "Gracias."
     offer_saved:
       subject: "aGestiona2: Oferta de proveedor creada o actualizada"
       link: "Puedes ver esta oferta en el siguiente enlace"
