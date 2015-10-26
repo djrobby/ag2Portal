@@ -4,17 +4,15 @@ end
 if @items.count <= 0
 	return
 end
+if @supplier.blank?
+	return
+end
 
 # Localization for numbers
 delimiter = I18n.locale == :es ? "." : ","
-suppliers = @suppliers.count <= 0 ? 1 : @suppliers.count
 
-# Choose report layout depending on whether there are suppliers
-if @suppliers.count <= 0
-	report.set_layout tlf: 'reports/offer_request_form_ns_no_prices', layout_options: { default: true }
-else
-	report.set_layout tlf: 'reports/offer_request_form_no_prices', layout_options: { default: true }
-end
+# Report layout: No prices with supplier info
+report.set_layout tlf: 'reports/offer_request_form_no_prices', layout_options: { default: true }
 
 #
 # Report events
@@ -28,7 +26,7 @@ end
 report.events.on :generate do |e|
 	e.pages.each do |page|
 		# Set total-page-number
-		page.item(:page_count).value(e.report.page_count / suppliers)
+		page.item(:page_count).value(e.report.page_count)
 	end
 end
 
@@ -55,17 +53,6 @@ report.layout.config.list(:default) do |c|
 	end
 end
 
-#
-# Choose report partials depending on whether there are suppliers
-#
-if @suppliers.count > 0
-	# One form for each supplier
-	@suppliers.each do |s|
-		report.partial! 'offer_request_form_header_footer', s: s	# passing current s
-		report.partial! 'offer_request_form_list_no_prices'
-	end
-else
-	# No suppliers
-	report.partial! 'offer_request_form_ns_header_footer'
-	report.partial! 'offer_request_form_list_no_prices'
-end
+# Report partials: No prices with supplier info
+report.partial! 'offer_request_form_header_footer', s: @supplier	# passing current supplier
+report.partial! 'offer_request_form_list_no_prices'

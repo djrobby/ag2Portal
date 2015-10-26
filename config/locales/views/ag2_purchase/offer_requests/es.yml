@@ -16,6 +16,8 @@ es:
         btn_delete: "Borrar Solicitud"
         print: "Imprimir"
         print_no_prices: "Sin Precios"
+        print_with_prices: "Con Precios"
+        send: "Enviar"
       edit:
         title: "Editar Solicitud"
         btn_show: "Ver Solicitud"

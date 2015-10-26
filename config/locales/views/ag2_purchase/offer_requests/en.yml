@@ -16,6 +16,8 @@ en:
         btn_delete: "Delete Request"
         print: "Print"
         print_no_prices: "Without Prices"
+        print_with_prices: "With Prices"
+        send: "Send"
       edit:
         title: "Edit Request"
         btn_show: "Show Request"

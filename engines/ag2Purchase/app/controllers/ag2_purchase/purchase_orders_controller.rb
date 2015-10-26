@@ -749,10 +749,11 @@ module Ag2Purchase
 
       # Search purchase order & items
       @purchase_order = PurchaseOrder.find(_purchase_order)
-      @items = @purchase_order.purchase_order_items.order('id')
+      @items = @purchase_order.purchase_order_items.order(:id)
 
       title = t("activerecord.models.purchase_order.one") + "_" + @purchase_order.full_no + ".pdf"       
-      pdf = render_to_string(filename: "#{title}_#{@purchase_order.full_no}.pdf", type: 'application/pdf')
+      #pdf = render_to_string(filename: "#{title}_#{@purchase_order.full_no}.pdf", type: 'application/pdf')
+      pdf = render_to_string(filename: "#{title}", type: 'application/pdf')
       from = !current_user.nil? ? User.find(current_user.id).email : User.find(@purchase_order.created_by).email
       to = !@purchase_order.supplier.email.blank? ? @purchase_order.supplier.email : nil
       

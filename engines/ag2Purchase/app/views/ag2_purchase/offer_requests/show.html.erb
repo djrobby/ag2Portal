@@ -164,9 +164,11 @@
         <h4><%= t 'ag2_purchase.offer_requests.items_info' %></h4>
       </td>
       <td class="form-td-two right-winged">
-        <a href="#" id="send_report_btn" class="btn btn-warning"><i class="icon-envelope icon-white"></i> <%= t '.send' %></a>
-        <a href="#" id="print_report_btn" class="btn btn-warning"><i class="icon-print icon-white"></i> <%= t '.print' %></a>
-        <a href="#" id="print_report_btn_no_prices" class="btn btn-warning"><i class="icon-print icon-white"></i> <%= t '.print_no_prices' %></a>
+        <% if (@suppliers.count > 0) %>
+          <a href="#" id="send_report_btn" class="btn btn-warning"><i class="icon-envelope icon-white"></i> <%= t '.send' %></a>
+        <% end %>
+        <a href="#" id="print_report_btn_no_prices" class="btn btn-warning"><i class="icon-print icon-white"></i> <%= t '.print' %></a>
+        <a href="#" id="print_report_btn" class="btn btn-warning"><i class="icon-print icon-white"></i> <%= t '.print_with_prices' %></a>
       </td>
     </tr>
   </tbody>

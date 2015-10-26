@@ -108,6 +108,14 @@ class Notifier < ActionMailer::Base
     end
   end
 
+  def send_offer_request(offer_request, _from, _to, title, pdf)
+    @offer_request = offer_request
+    @from = _from
+    _subject = t("notifier.send_offer_request.subject") + @offer_request.project.company.name
+    attachments[title] = pdf
+    mail reply_to: _from, to: _to, subject: _subject
+  end
+
   # Inventory count
   def inventory_count_saved(inventory_count, action)
     @inventory_count = inventory_count

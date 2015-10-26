@@ -367,10 +367,6 @@ module Ag2Purchase
 
     # Email Report (jQuery)
     def send_offer_request_form
-      # Search purchase order & items
-      @offer_request = OfferRequest.find(params[:id])
-      @items = @offer_request.offer_request_items.order('id')
-
       code = send_email(params[:id])
       message = code == '$err' ? t(:send_error) : t(:send_ok)
       @json_data = { "code" => code, "message" => message }
@@ -720,6 +716,43 @@ module Ag2Purchase
         _array = _array << [i.id, i.full_code, i.main_description[0,40]] 
       end
       _array
+    end
+
+    def send_email(_offer_request)
+      code = '$ok'
+      from = nil
+
+      # Search offer request & items
+      @offer_request = OfferRequest.find(_offer_request)
+      @items = @offer_request.offer_request_items.order(:id)
+      @suppliers = @offer_request.offer_request_suppliers.order(:id)
+
+      title = t("activerecord.models.offer_request.one") + "_" + @offer_request.full_no + ".pdf"       
+      from = !current_user.nil? ? User.find(current_user.id).email : User.find(@offer_request.created_by).email
+      
+      # Arrays of supplier email addresses & pdf's
+      to = []
+      pdf = []
+      @suppliers.each do |i|
+        _to = !i.supplier.email.blank? ? i.supplier.email : nil
+        if !_to.blank?
+          @supplier = i
+          _pdf = render_to_string(filename: "#{title}", type: 'application/pdf')
+          to = to << _to 
+          pdf = pdf << _pdf 
+        end
+      end
+      
+      if from.blank? || to.count <= 0
+        code = "$err"
+      else
+        # Send e-mail(s)
+        for i in 0..to.count-1
+          Notifier.send_offer_request(@offer_request, from, to[i], title, pdf[i]).deliver
+        end
+      end
+
+      code
     end
 
     # Keeps filter state

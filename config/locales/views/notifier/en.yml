@@ -60,6 +60,12 @@ en:
       htmllink: "Show this offer"
       approval: "** Your approval is required **"
       htmlapproval: "Approve this offer"
+    send_offer_request:
+      subject: "New Offer Request from "
+      dear_supplier: "Dear Supplier,"
+      new_offer_request: "In the attached file, you will find our Request No. "
+      deliver: "Please, proceed to offer the goods and/or services requested, under the terms and conditions set forth herein."
+      thanks: "Thank you."
     inventory_count_saved:
       subject: "aGestiona2: Inventory count created or updated"
       link: "You can see this count on the following link"

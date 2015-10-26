@@ -60,6 +60,12 @@ es:
       htmllink: "Ver esta oferta"
       approval: "** Se requiere tu aprobación **"
       htmlapproval: "Aprueba esta oferta"
+    send_offer_request:
+      subject: "Nueva Solicitud de Oferta de "
+      dear_supplier: "Estimado/a Proveedor/a,"
+      new_offer_request: "En el fichero adjunto, encontrará nuestra Solicitud Nº "
+      deliver: "Por favor, proceda a ofertar los bienes y/o servicios solicitados, según los términos y condiciones establecidos en este documento."
+      thanks: "Gracias."
     inventory_count_saved:
       subject: "aGestiona2: Recuento de inventario creado o actualizado"
       link: "Puedes ver este recuento en el siguiente enlace"
