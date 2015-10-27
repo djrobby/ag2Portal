@@ -4,6 +4,7 @@ es:
       index:
         title: "Facturas"
         btn_new: "Nueva Factura"
+        btn_new_from_receipt_note: "Nueva Factura desde NªRecep"
         back_to_root: "Volver a ag2Purchase"
         label_supplier: "Proveedor"
         label_project: "Proyecto"

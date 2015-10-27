@@ -43,6 +43,11 @@
       // AJAX
       $("#submit_btn").trigger("click");
     });
+
+    // when the #new_from_receipt_note button clicked
+    $("#new_from_receipt_note").click(function() {
+      $("#new-invoice-from-receipt").modal('show');
+    });
   });
 </script>
 
@@ -80,6 +85,8 @@
         <% end %>
         <!-- Buttons -->
         <%= render :partial => '/layouts/crud/new', :locals => { :model => SupplierInvoice, :path => new_supplier_invoice_path, :txt => t(".btn_new") } %>
+        <button id="new_from_receipt_note" type="button" class="btn btn-warning" data-dismiss="modal" aria-hidden="true"><%= t(".btn_new_from_receipt_note") %></button>
+        <br /><br />
         <%= link_to t(".back_to_root"), ag2_purchase.root_path %>
       </div><!-- /.sidebar-nav -->
     </div><!-- /.span3 -->
@@ -92,3 +99,5 @@
     </div><!-- /.span9 -->
   </div><!-- /.row-fluid -->
 </div><!-- /.container-fluid -->
+<!-- Modal: New supplier invoice from receipt note -->
+<%= render 'new_invoice_from_receipt' %>

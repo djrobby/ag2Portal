@@ -10,11 +10,13 @@ en:
     attributes:
       supplier_invoice:
         invoice_no: "No."
+        invoice_no_c: "Supplier invoice No."
         supplier: "Supplier"
         supplier_id: "Supplier"
         payment_method: "Payment method"
         payment_method_id: "Payment method"
         invoice_date: "Date"
+        invoice_date_c: "Supplier invoice Date"
         remarks: "Remarks"
         discount_pct: "Disc.%"
         discount: "Discount"

@@ -21,6 +21,8 @@ module Ag2Purchase
                                                :si_format_number,
                                                :si_current_stock,
                                                :si_update_project_textfields_from_organization,
+                                               :si_receipt_total,
+                                               :si_generate_invoice,
                                                :si_update_attachment]
     # Public attachment for drag&drop
     $attachment = nil
@@ -393,6 +395,98 @@ module Ag2Purchase
       @json_data = { "supplier" => @suppliers, "project" => @projects, "work_order" => @work_orders,
                      "charge_account" => @charge_accounts, "store" => @stores,
                      "payment_method" => @payment_methods, "product" => @products }
+      render json: @json_data
+    end
+
+    # Update receipt note total text field at view from receipt select
+    def si_receipt_total
+      order = params[:order]
+      current_balance = 0
+      if order != '0'
+        current_balance = PurchaseOrder.find(order).balance rescue 0
+      end
+      # Format numbers
+      current_balance = number_with_precision(current_balance.round(4), precision: 4)
+      # Setup JSON
+      @json_data = { "balance" => current_balance.to_s }
+      render json: @json_data
+    end
+
+    # Generate new invoice from receipt note
+    def si_generate_invoice
+      supplier = params[:supplier]
+      order = params[:request]
+      note_no = params[:offer_no]
+      note_date = params[:offer_date]  # YYYYMMDD
+      note = nil
+      note_item = nil
+      code = ''
+
+      if order != '0'
+        purchase_order = PurchaseOrder.find(order) rescue nil
+        purchase_order_items = purchase_order.purchase_order_items rescue nil
+        if !purchase_order.nil? && !purchase_order_items.nil?
+          # Format offer_date
+          note_date = (note_date[0..3] + '-' + note_date[4..5] + '-' + note_date[6..7]).to_date
+          # Try to save new note
+          note = ReceiptNote.new
+          note.receipt_no = note_no
+          note.supplier_id = purchase_order.supplier_id
+          note.payment_method_id = purchase_order.payment_method_id
+          note.receipt_date = note_date
+          note.discount_pct = purchase_order.discount_pct
+          note.discount = purchase_order.discount
+          note.project_id = purchase_order.project_id
+          note.store_id = purchase_order.store_id
+          note.work_order_id = purchase_order.work_order_id
+          note.charge_account_id = purchase_order.charge_account_id
+          note.retention_pct = purchase_order.retention_pct
+          note.retention_time = purchase_order.retention_time
+          note.created_by = current_user.id if !current_user.nil?
+          note.purchase_order_id = purchase_order.id
+          note.organization_id = purchase_order.organization_id
+          if note.save
+            # Try to save new note items
+            purchase_order_items.each do |i|
+              note_item = ReceiptNoteItem.new
+              note_item.receipt_note_id = note.id
+              note_item.purchase_order_item_id = i.id
+              note_item.product_id = i.product_id
+              note_item.description = i.description
+              note_item.quantity = i.balance
+              note_item.price = i.price
+              note_item.discount_pct = i.discount_pct
+              note_item.discount = i.discount
+              note_item.tax_type_id = i.tax_type_id
+              note_item.store_id = i.store_id
+              note_item.work_order_id = i.work_order_id
+              note_item.charge_account_id = i.charge_account_id
+              note_item.created_by = current_user.id if !current_user.nil?
+              note_item.code = i.code
+              note_item.purchase_order_id = i.purchase_order_id
+              note_item.project_id = i.project_id
+              if !note_item.save
+                # Can't save note item (exit)
+                code = '$write'
+                break
+              end   # !note_item.save?
+            end   # do |i|
+          else
+            # Can't save note
+            code = '$write'
+          end   # note.save?
+        else
+          # Purchase order or items not found
+          code = '$err'
+        end   # !purchase_order_items.nil? && !purchase_order_items.nil?
+      else
+        # Purchase order 0
+        code = '$err'
+      end   # order != '0'
+      if code == ''
+        code = I18n.t("ag2_products.receipt_notes.generate_note_ok", var: note.id.to_s)
+      end
+      @json_data = { "code" => code }
       render json: @json_data
     end
 

@@ -10,11 +10,13 @@ es:
     attributes:
       supplier_invoice:
         invoice_no: "Nº"
+        invoice_no_c: "Nº factura Proveedor"
         supplier: "Proveedor"
         supplier_id: "Proveedor"
         payment_method: "Forma de pago"
         payment_method_id: "Forma de pago"
         invoice_date: "Fecha"
+        invoice_date_c: "Fecha factura Proveedor"
         remarks: "Comentarios"
         discount_pct: "% Dto."
         discount: "Descuento"

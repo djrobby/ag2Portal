@@ -148,6 +148,12 @@ Ag2Purchase::Engine.routes.draw do
     match 'supplier_invoices/si_update_attachment', :controller => 'supplier_invoices', :action => 'si_update_attachment'
     match 'si_update_attachment', :controller => 'supplier_invoices', :action => 'si_update_attachment'
     match 'supplier_invoices/:id/si_update_attachment', :controller => 'supplier_invoices', :action => 'si_update_attachment'
+    match 'supplier_invoices/si_generate_invoice/:supplier/:request/:offer_no/:offer_date', :controller => 'supplier_invoices', :action => 'si_generate_invoice'
+    match 'si_generate_invoice/:supplier/:request/:offer_no/:offer_date', :controller => 'supplier_invoices', :action => 'si_generate_invoice'
+    match 'supplier_invoices/:id/si_generate_invoice/:supplier/:request/:offer_no/:offer_date', :controller => 'supplier_invoices', :action => 'si_generate_invoice'
+    match 'supplier_invoices/si_receipt_total/:order', :controller => 'supplier_invoices', :action => 'si_receipt_total'
+    match 'si_receipt_total/:order', :controller => 'supplier_invoices', :action => 'si_receipt_total'
+    match 'supplier_invoices/:id/si_receipt_total/:order', :controller => 'supplier_invoices', :action => 'si_receipt_total'
     #
     # Offer requests
     match 'offer_requests/or_totals/:qty/:amount/:tax/:discount_p', :controller => 'offer_requests', :action => 'or_totals'
