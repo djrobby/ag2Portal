@@ -22,7 +22,7 @@ class DeliveryNoteItem < ActiveRecord::Base
   validates :product,         :presence => true
   validates :tax_type,        :presence => true
   validates :store,           :presence => true
-  validates :work_order,      :presence => true
+  #validates :work_order,      :presence => true
   validates :charge_account,  :presence => true
   validates :project,         :presence => true
   validates :quantity,        :numericality => true

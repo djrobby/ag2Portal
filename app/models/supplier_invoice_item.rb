@@ -19,7 +19,7 @@ class SupplierInvoiceItem < ActiveRecord::Base
                                 :length => { :maximum => 40 }
   validates :product,           :presence => true
   validates :tax_type,          :presence => true
-  validates :work_order,        :presence => true
+  #validates :work_order,        :presence => true
   validates :charge_account,    :presence => true
   validates :project,           :presence => true
   validates :receipt_note_item, :presence => true, :if => "!receipt_note_id.blank?"
