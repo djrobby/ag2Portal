@@ -34,7 +34,7 @@
       <td><%= contact.cellular unless contact.cellular.blank? %></td>
       <td><%= contact.email unless contact.email.blank? %></td>
       <td><a data-toggle="modal" href="#contactinfo<%= contact.id.to_s %>" class="btn btn-mini"><i class="icon-eye-open"></i></a> <%= render :partial => '/layouts/crud/edit', :locals => { :model => SharedContact, :path => edit_shared_contact_path(contact) } %>
-      <%= render :partial => '/layouts/crud/delete', :locals => { :model => SharedContact, :path => contact, :msg => I18n.t("activerecord.models.shared_contact.one"), :txt => contact.full_name + " - " + contact.company_name } %> </td>
+      <%= render :partial => '/layouts/crud/delete', :locals => { :model => SharedContact, :path => contact, :msg => I18n.t("activerecord.models.shared_contact.one"), txt: contact.existing_name } %> </td>
     </tr>
     <% end %>
   </tbody>

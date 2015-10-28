@@ -5,7 +5,7 @@
 <%= image_tag @corp_contact.avatar.url(:medium) %> <!-- medium image size --> <% else %>
 <%= image_tag @corp_contact.avatar.url %> <!-- big image size --> <% end %>
 <%= @corp_contact.full_name %> </h3>
-<table class="table">
+<table class="table odd_even_table">
   <tbody>
     <tr>
       <td><%=t :"activerecord.attributes.corp_contact.office" %></td>

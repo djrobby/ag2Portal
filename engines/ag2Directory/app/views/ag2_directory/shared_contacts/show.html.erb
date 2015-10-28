@@ -1,7 +1,7 @@
 <%= render '/layouts/ag2_directory/sharedcontactsbreadcrumb' %>
 
 <h3><%=t '.title' %></h3>
-<table class="table">
+<table class="table odd_even_table">
   <tbody>
     <tr>
       <td>Id:</td>
@@ -76,7 +76,7 @@
 
 <%= render partial: '/layouts/crud/update_delete_new', locals:
 { model: SharedContact, update_path: edit_shared_contact_path(@shared_contact), update_txt: t('.btn_edit'),
-delete_path: @shared_contact, delete_txt: t('.btn_delete'), msg: t("activerecord.models.shared_contact.one"), txt: @shared_contact.full_name + " - " + @shared_contact.company,
+delete_path: @shared_contact, delete_txt: t('.btn_delete'), msg: t("activerecord.models.shared_contact.one"), txt: @shared_contact.existing_name,
 new_path: new_shared_contact_path, new_txt: t('ag2_directory.shared_contacts.index.btn_new') } %>
 
 <%= link_to I18n.t("ag2_directory.shared_contacts.back_to_main_page"), shared_contacts_path %>
