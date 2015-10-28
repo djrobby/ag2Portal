@@ -45,3 +45,4 @@ es:
         max_order_total: "Importe máx. por pedido €"
         max_order_price: "Precio máx. por ítem pedido €"
         website: "Sitio web"
+        overtime_pct: "% para calcular hora extra"

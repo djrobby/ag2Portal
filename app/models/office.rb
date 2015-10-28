@@ -9,7 +9,7 @@ class Office < ActiveRecord::Base
   attr_accessible :name, :company_id, :office_code,
                   :street_type_id, :street_name, :street_number, :building, :floor, :floor_office,
                   :zipcode_id, :town_id, :province_id, :phone, :fax, :cellular, :email,
-                  :created_by, :updated_by, :nomina_id, :max_order_total, :max_order_price
+                  :created_by, :updated_by, :nomina_id, :max_order_total, :max_order_price, :overtime_pct
   attr_accessible :office_notifications_attributes
 
   has_many :workers

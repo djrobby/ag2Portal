@@ -23,6 +23,7 @@ en:
       fiscal_name: "Fiscal Id Name not found."
       invoices_info: "Invoices Info"
       commercial_info: "Commercial Info"
+      employment_info: "Employment Info"
       add_notification: "Add new Notification Rule"
       add_item_to: "Company %{var}"
       btn_add_item: "Add"

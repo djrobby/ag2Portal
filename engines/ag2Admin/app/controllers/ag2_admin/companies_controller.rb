@@ -61,11 +61,13 @@ module Ag2Admin
     def co_update_total_and_price
       total = params[:total].to_f / 100
       price = params[:price].to_f / 10000
+      overtime = params[:overtime].to_f / 100
       # Format number
       total = number_with_precision(total.round(2), precision: 2)
       price = number_with_precision(price.round(4), precision: 4)
+      overtime = number_with_precision(overtime.round(2), precision: 2)
       # Setup JSON
-      @json_data = { "total" => total.to_s, "price" => price.to_s }
+      @json_data = { "total" => total.to_s, "price" => price.to_s, "overtime" => overtime.to_s }
       render json: @json_data
     end
 

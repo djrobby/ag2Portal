@@ -90,6 +90,14 @@
       return false;
     });
 
+    // when the #company_overtime_pct field changes
+    $("#company_overtime_pct").change(function() {
+      // preserve the current object
+      var _this = (this);
+      recalculate(_this);
+      return false;
+    });
+
     // when the #company_max_order_price field changes
     $("#company_max_order_price").change(function() {
       // preserve the current object
@@ -103,8 +111,10 @@
       // Must change decimal separator, if comma, in numeric fields
       var total = $('#company_max_order_total').val().replace(",", ".");
       var price = $('#company_max_order_price').val().replace(",", ".");
+      var overtime = $('#company_overtime_pct').val().replace(",", ".");
       $('#company_max_order_total').val(total);
       $('#company_max_order_price').val(price);
+      $('#company_overtime_pct').val(overtime);
     });
     
     // Recalculate amounts & prices
@@ -116,12 +126,17 @@
       var price = $('#company_max_order_price').val();
       if (price == "")
         price = "0";
+      var overtime = $('#company_overtime_pct').val();
+      if (overtime == "")
+        overtime = "0";
       // Right formatted for passing as REST parameter
       total = parseInt(right_number(total, 2) * 100);
       price = parseInt(right_number(price, 4) * 10000);
-      jQuery.getJSON('co_update_total_and_price/' + total + '/' + price, function(data) {
+      overtime = parseInt(right_number(overtime, 2) * 100);
+      jQuery.getJSON('co_update_total_and_price/' + total + '/' + price + '/' + overtime, function(data) {
         $('#company_max_order_total').val(data.total);
         $('#company_max_order_price').val(data.price);
+        $('#company_overtime_pct').val(data.overtime);
       });
     }
   });
@@ -202,6 +217,11 @@
 <div>
   <label class="multi-field-label-two"> <%= f.input :max_order_total, as: :string, input_html: { value: (number_with_precision(f.object.max_order_total, precision: 2) if f.object.max_order_total), class: 'large-text-field number-text-field' }, label_html: { class: 'form-label' } %> </label>
   <label class="multi-field-label-two"> <%= f.input :max_order_price, as: :string, input_html: { value: (number_with_precision(f.object.max_order_price, precision: 4) if f.object.max_order_price), class: 'large-text-field number-text-field' }, label_html: { class: 'form-label' } %> </label>
+</div>
+<!-- Employment info -->
+<h4><%=t 'ag2_admin.companies.employment_info' %></h4>
+<div>
+  <label class="multi-field-label-two"> <%= f.input :overtime_pct, as: :string, input_html: { value: (number_with_precision(f.object.overtime_pct, precision: 2) if f.object.overtime_pct), class: 'large-text-field number-text-field' }, label_html: { class: 'form-label' } %> </label>
 </div>
 <!-- Notifications -->
 <% if can? :crud, CompanyNotification %>

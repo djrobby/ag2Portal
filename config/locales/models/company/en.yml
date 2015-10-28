@@ -45,3 +45,4 @@ en:
         max_order_total: "Max amount per order €"
         max_order_price: "Max price per order item €"
         website: "Website"
+        overtime_pct: "% to calculate overtime"

@@ -23,6 +23,7 @@ es:
       fiscal_name: "Nombre de Id Fiscal no hallado."
       invoices_info: "Información sobre Facturas"
       commercial_info: "Información Comercial"
+      employment_info: "Información Laboral"
       add_notification: "Agregar nueva Regla de Notificación"
       add_item_to: "Empresa %{var}"
       btn_add_item: "Agregar"

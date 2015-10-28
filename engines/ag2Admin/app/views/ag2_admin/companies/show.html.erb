@@ -100,12 +100,37 @@
 <!-- Commercial info -->
 <h4><%=t 'ag2_admin.companies.commercial_info' %></h4>
 <table class="table">
+  <!-- max order total -->
+  <col width="25%" />
+  <col width="25%" />
+  <!-- max order price -->
+  <col width="25%" />
+  <col width="25%" />
   <tbody>
     <tr>
       <td><%= t :"activerecord.attributes.company.max_order_total" %>:</td>
       <td><%= number_with_precision(@company.max_order_total, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless @company.max_order_total.blank? %></td>
       <td><%= t :"activerecord.attributes.company.max_order_price" %>:</td>
       <td><%= number_with_precision(@company.max_order_price, precision: 4, delimiter: I18n.locale == :es ? "." : ",") unless @company.max_order_price.blank? %></td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- Employment info -->
+<h4><%=t 'ag2_admin.companies.employment_info' %></h4>
+<table class="table">
+  <!-- overtime -->
+  <col width="25%" />
+  <col width="25%" />
+  <!-- ... -->
+  <col width="25%" />
+  <col width="25%" />
+  <tbody>
+    <tr>
+      <td><%= t :"activerecord.attributes.company.overtime_pct" %>:</td>
+      <td><%= number_with_precision(@company.overtime_pct, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless @company.overtime_pct.blank? %></td>
+      <td></td>
+      <td></td>
     </tr>
   </tbody>
 </table>
