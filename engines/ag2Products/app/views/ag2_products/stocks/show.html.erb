@@ -2,13 +2,13 @@
 
 <h3><%=t '.title' %></h3>
 
-<table class="table">
+<table class="table odd_even_table">
   <tbody>
     <tr>
       <td>Id:</td>
       <td><%= @stock.id %></td>
       <td><%=t 'activerecord.attributes.stock.product' %>:</td>
-      <td><b><%= @stock.product.full_name %></b></td>
+      <td class="highlighted bolded"><%= @stock.product.full_name %></td>
     </tr>
     <tr>
       <td><%=t 'activerecord.attributes.stock.store' %>:</td>

@@ -1,13 +1,13 @@
 <%= render '/layouts/ag2_products/familiesbreadcrumb' %>
 
 <h3><%=t '.title' %></h3>
-<table class="table">
+<table class="table odd_even_table">
   <tbody>
     <tr>
       <td>Id:</td>
       <td><%= @product_family.id %></td>
       <td><%=t 'activerecord.attributes.product_family.family_code' %>:</td>
-      <td><%= @product_family.family_code %></td>
+      <td class="highlighted bolded"><%= @product_family.family_code %></td>
     </tr>
     <tr>
       <td><%=t 'activerecord.attributes.product_family.name' %>:</td>

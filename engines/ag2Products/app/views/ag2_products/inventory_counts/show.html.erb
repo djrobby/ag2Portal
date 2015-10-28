@@ -51,13 +51,13 @@
 <%= render '/layouts/ag2_products/icountsbreadcrumb' %>
 
 <h3><%=t '.title' %></h3>
-<table class="table">
+<table class="table odd_even_table">
   <tbody>
     <tr>
       <td>Id:</td>
       <td id="id"><%= @inventory_count.id %></td>
       <td><%=t 'activerecord.attributes.inventory_count.count_no' %>:</td>
-      <td><b><%= @inventory_count.full_no %></b></td>
+      <td class="highlighted bolded"><%= @inventory_count.full_no %></td>
     </tr>
     <tr>
       <td><%=t 'activerecord.attributes.inventory_count.count_date' %>:</td>

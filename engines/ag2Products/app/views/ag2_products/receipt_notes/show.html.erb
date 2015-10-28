@@ -15,16 +15,16 @@
 <%= render '/layouts/ag2_products/receiptsbreadcrumb' %>
 
 <h3><%=t '.title' %></h3>
-<table class="table">
+<table class="table odd_even_table">
   <tbody>
     <tr>
       <td>Id:</td>
       <td id="id"><%= @receipt_note.id %></td>
       <td><%=t 'activerecord.attributes.receipt_note.receipt_no' %>:</td>
       <% if !@receipt_note.attachment.blank? %>
-      <td><b><%= @receipt_note.receipt_no %></b><a style="margin-left: 1em;" href="#attachment"><i class="icon-paperclip-black"></i></a></td>
+      <td class="highlighted bolded"><%= @receipt_note.receipt_no %><a style="margin-left: 1em;" href="#attachment"><i class="icon-paperclip-black"></i></a></td>
       <% else %>
-      <td><b><%= @receipt_note.receipt_no %></b></td>
+      <td class="highlighted bolded"><%= @receipt_note.receipt_no %></td>
       <% end %>
     </tr>
     <tr>

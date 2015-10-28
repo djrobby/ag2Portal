@@ -25,13 +25,13 @@
 <%= render '/layouts/ag2_products/deliveriesbreadcrumb' %>
 
 <h3><%=t '.title' %></h3>
-<table class="table">
+<table class="table odd_even_table">
   <tbody>
     <tr>
       <td>Id:</td>
       <td id="id"><%= @delivery_note.id %></td>
       <td><%=t 'activerecord.attributes.delivery_note.delivery_no' %>:</td>
-      <td><b><%= @delivery_note.full_no %></b></td>
+      <td class="highlighted bolded"><%= @delivery_note.full_no %></td>
     </tr>
     <tr>
       <td><%=t 'activerecord.attributes.delivery_note.delivery_date' %>:</td>
