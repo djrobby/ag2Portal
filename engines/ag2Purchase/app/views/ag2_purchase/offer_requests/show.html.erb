@@ -113,13 +113,13 @@
 <%= render '/layouts/ag2_purchase/requestsbreadcrumb' %>
 
 <h3><%=t '.title' %></h3>
-<table id="offer_request_table" class="table">
+<table id="offer_request_table" class="table odd_even_table">
   <tbody>
     <tr>
       <td>Id:</td>
       <td id="id" class="offer-request-id"><%= @offer_request.id %></td>
       <td><%=t 'activerecord.attributes.offer_request.request_no' %>:</td>
-      <td><b><%= @offer_request.full_no %></b></td>
+      <td class="highlighted bolded"><%= @offer_request.full_no %></td>
     </tr>
     <tr>
       <td><%=t 'activerecord.attributes.offer_request.request_date' %>:</td>

@@ -1,13 +1,13 @@
 <%= render '/layouts/ag2_purchase/suppliersbreadcrumb' %>
 
 <h3><%= t '.title' %></h3>
-<table class="table">
+<table class="table odd_even_table">
   <tbody>
     <tr>
       <td>Id:</td>
       <td><%= @supplier.id %></td>
       <td><%= t 'activerecord.attributes.supplier.supplier_code' %>:</td>
-      <td><b><%= @supplier.full_code %></b></td>
+      <td class="highlighted bolded"><%= @supplier.full_code %></td>
     </tr>
     <tr>
       <td><%= t 'activerecord.attributes.supplier.fiscal_id' %>:</td>

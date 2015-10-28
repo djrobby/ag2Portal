@@ -1,16 +1,16 @@
 <%= render '/layouts/ag2_purchase/invoicesbreadcrumb' %>
 
 <h3><%=t '.title' %></h3>
-<table class="table">
+<table class="table odd_even_table">
   <tbody>
     <tr>
       <td>Id:</td>
       <td id="id"><%= @supplier_invoice.id %></td>
       <td><%=t 'activerecord.attributes.supplier_invoice.invoice_no' %>:</td>
       <% if !@supplier_invoice.attachment.blank? %>
-      <td><b><%= @supplier_invoice.invoice_no %></b><a style="margin-left: 1em;" href="#attachment"><i class="icon-paperclip-black"></i></a></td>
+      <td class="highlighted bolded"><%= @supplier_invoice.invoice_no %><a style="margin-left: 1em;" href="#attachment"><i class="icon-paperclip-black"></i></a></td>
       <% else %>
-      <td><b><%= @supplier_invoice.invoice_no %></b></td>
+      <td class="highlighted bolded"><%= @supplier_invoice.invoice_no %></td>
       <% end %>
     </tr>
     <tr>
