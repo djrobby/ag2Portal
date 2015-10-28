@@ -18,13 +18,13 @@
     </td>
   </tr>
 </table>
-<table class="table">
+<table class="table odd_even_table">
   <tbody>
     <tr>
       <td>Id:</td>
       <td><%= @company.id %></td>
       <td><%= t 'activerecord.attributes.company.fiscal_id' %>:</td>
-      <td><b><%= @company.fiscal_id %></b></td>
+      <td class="highlighted bolded"><%= @company.fiscal_id %></td>
     </tr>
     <tr>
       <td><%= t 'activerecord.attributes.company.organization' %>:</td>
@@ -80,7 +80,11 @@
 
 <!-- Invoices info -->
 <h4><%= t 'ag2_admin.companies.invoices_info' %></h4>
-<table class="table table-condensed">
+<table class="table table-condensed odd_even_table">
+  <col width="25%" />
+  <col width="25%" />
+  <col width="25%" />
+  <col width="25%" />
   <tbody>
     <tr>
       <td><%= t 'activerecord.attributes.company.invoice_code' %>:</td>
@@ -99,7 +103,7 @@
 
 <!-- Commercial info -->
 <h4><%=t 'ag2_admin.companies.commercial_info' %></h4>
-<table class="table">
+<table class="table odd_even_table">
   <!-- max order total -->
   <col width="25%" />
   <col width="25%" />
@@ -118,7 +122,7 @@
 
 <!-- Employment info -->
 <h4><%=t 'ag2_admin.companies.employment_info' %></h4>
-<table class="table">
+<table class="table odd_even_table">
   <!-- overtime -->
   <col width="25%" />
   <col width="25%" />

@@ -1,13 +1,13 @@
 <%= render '/layouts/ag2_admin/provincesbreadcrumb' %>
 
 <h3><%= @province.name %></h3>
-<table class="table">
+<table class="table odd_even_table">
   <tbody>
     <tr>
       <td>Id:</td>
       <td><%= @province.id %></td>
       <td><%=t 'activerecord.attributes.province.ine_cpro' %>:</td>
-      <td><b><%= @province.ine_cpro %></b></td>
+      <td class="highlighted bolded"><%= @province.ine_cpro %></td>
     </tr>
     <tr>
       <td><%=t 'activerecord.attributes.province.region' %>:</td>

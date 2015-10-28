@@ -1,13 +1,13 @@
 <%= render '/layouts/ag2_admin/banksbreadcrumb' %>
 
 <h3><%=t '.title' %></h3>
-<table class="table">
+<table class="table odd_even_table">
   <tbody>
     <tr>
       <td>Id:</td>
       <td><%= @bank.id %></td>
       <td><%=t 'activerecord.attributes.bank.code' %>:</td>
-      <td><b><%= @bank.code unless @bank.code.blank? %></b></td>
+      <td class="highlighted bolded"><%= @bank.code unless @bank.code.blank? %></td>
     </tr>
     <tr>
       <td><%=t 'activerecord.attributes.bank.name' %>:</td>

@@ -1,13 +1,13 @@
 <%= render '/layouts/ag2_admin/guidesbreadcrumb' %>
 
 <h3><%= t '.title' %></h3>
-<table class="table">
+<table class="table odd_even_table">
   <tbody>
     <tr>
       <td>Id:</td>
       <td><%= @guide.id %></td>
       <td><%=t 'activerecord.attributes.guide.sort_order' %>:</td>
-      <td><b><%= @guide.sort_order %></b></td>
+      <td class="highlighted bolded"><%= @guide.sort_order %></td>
     </tr>
     <tr>
       <td><%=t 'activerecord.attributes.guide.name' %>:</td>

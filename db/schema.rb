@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20151004070253) do
+ActiveRecord::Schema.define(:version => 20151028105402) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -397,6 +397,7 @@ ActiveRecord::Schema.define(:version => 20151004070253) do
     t.decimal  "max_order_total",     :precision => 13, :scale => 4, :default => 0.0, :null => false
     t.decimal  "max_order_price",     :precision => 12, :scale => 4, :default => 0.0, :null => false
     t.string   "website"
+    t.decimal  "overtime_pct",        :precision => 6,  :scale => 2, :default => 0.0, :null => false
   end
 
   add_index "companies", ["fiscal_id"], :name => "index_companies_on_fiscal_id"
@@ -971,6 +972,7 @@ ActiveRecord::Schema.define(:version => 20151004070253) do
     t.string   "nomina_id"
     t.decimal  "max_order_total", :precision => 13, :scale => 4, :default => 0.0, :null => false
     t.decimal  "max_order_price", :precision => 12, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "overtime_pct",    :precision => 6,  :scale => 2, :default => 0.0, :null => false
   end
 
   add_index "offices", ["company_id"], :name => "index_offices_on_company_id"

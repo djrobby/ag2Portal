@@ -1,13 +1,13 @@
 <%= render '/layouts/ag2_admin/subguidesbreadcrumb' %>
 
 <h3><%= t '.title' %></h3>
-<table class="table">
+<table class="table odd_even_table">
   <tbody>
     <tr>
       <td>Id:</td>
       <td><%= @subguide.id %></td>
       <td><%=t 'activerecord.attributes.subguide.sort_order' %>:</td>
-      <td><b><%= @subguide.sort_order %></b></td>
+      <td class="highlighted bolded"><%= @subguide.sort_order %></td>
     </tr>
     <tr>
       <td><%=t 'activerecord.attributes.subguide.guide' %>:</td>

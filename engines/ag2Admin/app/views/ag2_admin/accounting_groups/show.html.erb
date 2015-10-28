@@ -1,13 +1,13 @@
 <%= render '/layouts/ag2_admin/agroupsbreadcrumb' %>
 
 <h3><%=t '.title' %></h3>
-<table class="table">
+<table class="table odd_even_table">
   <tbody>
     <tr>
       <td>Id:</td>
       <td><%= @accounting_group.id %></td>
       <td><%=t 'activerecord.attributes.accounting_group.code' %>:</td>
-      <td><b><%= @accounting_group.code %></b></td>
+      <td class="highlighted bolded"><%= @accounting_group.code %></td>
     </tr>
     <tr>
       <td><%=t 'activerecord.attributes.accounting_group.name' %>:</td>

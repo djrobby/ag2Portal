@@ -1,13 +1,13 @@
 <%= render '/layouts/ag2_admin/usersbreadcrumb' %>
 
 <h3><%= @user.email %></h3>
-<table class="table">
+<table class="table odd_even_table">
   <tbody>
     <tr>
       <td>Id:</td>
       <td><%= @user.id %></td>
       <td><%= t 'activerecord.attributes.user.name' %>:</td>
-      <td><b><%= @user.name %></b></td>
+      <td class="highlighted bolded"><%= @user.name %></td>
     </tr>
     <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @user } %>
     <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @user } %>

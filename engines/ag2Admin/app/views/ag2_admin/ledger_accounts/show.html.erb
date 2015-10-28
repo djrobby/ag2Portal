@@ -1,13 +1,13 @@
 <%= render '/layouts/ag2_admin/laccountsbreadcrumb' %>
 
 <h3><%=t '.title' %></h3>
-<table class="table">
+<table class="table odd_even_table">
   <tbody>
     <tr>
       <td>Id:</td>
       <td><%= @ledger_account.id %></td>
       <td><%=t 'activerecord.attributes.ledger_account.code' %>:</td>
-      <td><b><%= @ledger_account.code %></b></td>
+      <td class="highlighted bolded"><%= @ledger_account.code %></td>
     </tr>
     <tr>
       <td><%=t 'activerecord.attributes.ledger_account.name' %>:</td>

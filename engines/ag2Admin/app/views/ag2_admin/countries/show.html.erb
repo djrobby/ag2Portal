@@ -1,13 +1,13 @@
 <%= render '/layouts/ag2_admin/countriesbreadcrumb' %>
 
 <h3><%= @country.name %></h3>
-<table class="table">
+<table class="table odd_even_table">
   <tbody>
     <tr>
       <td>Id:</td>
       <td><%= @country.id %></td>
       <td><%=t 'activerecord.attributes.country.code' %>:</td>
-      <td><b><%= @country.code %></b></td>
+      <td class="highlighted bolded"><%= @country.code %></td>
     </tr>
     <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @country } %>
     <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @country } %>

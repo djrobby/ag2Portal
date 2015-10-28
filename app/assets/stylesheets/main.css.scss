@@ -671,6 +671,53 @@ tfoot {
   text-rendering: optimizelegibility;  
 }
 /*
+ * Show Tables (odd & even columns) blue background
+ */
+.TFtableCol {
+  width:100%; 
+  border-collapse:collapse; 
+}
+.TFtableCol td { 
+  padding:7px;
+  border:#4e95f4 1px solid;
+}
+/* improve visual readability for IE8 and below */
+.TFtableCol tr {
+  background: #b8d1f3;
+}
+/*  Define the background color for all the ODD table columns  */
+.TFtableCol tr td:nth-child(odd) { 
+  background: #b8d1f3;
+}
+/*  Define the background color for all the EVEN table columns  */
+.TFtableCol tr td:nth-child(even) {
+  background: #dae5f4;
+}
+/*
+ * Show Tables (odd & even columns) bold titles
+ */
+.odd_even_table {
+  width:100%; 
+}
+.odd_even_table td { 
+}
+/* improve visual readability for IE8 and below */
+.odd_even_table tr {
+  background: #ffffff;
+}
+/*  Define the background color for all the ODD table columns  */
+.odd_even_table tr td:nth-child(odd) {
+  font-weight: bold;
+  /*color: #006dcc;
+  *color: #006dcc;
+  color: #777777;*/
+  text-rendering: optimizelegibility;
+}
+/*  Define the background color for all the EVEN table columns  */
+.odd_even_table tr td:nth-child(even) {
+  background: #ffffff;
+}
+/*
  * Icons
  */
 [class^="ico-"],

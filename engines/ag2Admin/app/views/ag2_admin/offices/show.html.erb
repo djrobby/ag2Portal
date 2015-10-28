@@ -1,13 +1,13 @@
 <%= render '/layouts/ag2_admin/officesbreadcrumb' %>
 
 <h3><%= @office.name %></h3>
-<table class="table">
+<table class="table odd_even_table">
   <tbody>
     <tr>
       <td>Id:</td>
       <td><%= @office.id %></td>
       <td><%= t 'activerecord.attributes.office.office_code' %>:</td>
-      <td><b><%= @office.office_code unless @office.office_code.nil? %></b></td>
+      <td class="highlighted bolded"><%= @office.office_code unless @office.office_code.nil? %></td>
     </tr>
     <tr>
       <td><%= t 'activerecord.attributes.office.company' %>:</td>
@@ -63,7 +63,7 @@
 
 <!-- Commercial info -->
 <h4><%=t 'ag2_admin.offices.commercial_info' %></h4>
-<table class="table">
+<table class="table odd_even_table">
   <!-- max order total -->
   <col width="25%" />
   <col width="25%" />
@@ -82,7 +82,7 @@
 
 <!-- Employment info -->
 <h4><%=t 'ag2_admin.offices.employment_info' %></h4>
-<table class="table">
+<table class="table odd_even_table">
   <!-- overtime -->
   <col width="25%" />
   <col width="25%" />

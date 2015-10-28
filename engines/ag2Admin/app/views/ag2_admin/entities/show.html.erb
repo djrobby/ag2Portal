@@ -1,7 +1,7 @@
 <%= render '/layouts/ag2_admin/entitiesbreadcrumb' %>
 
 <h3><%= t '.title' %></h3>
-<table class="table">
+<table class="table odd_even_table">
   <tbody>
     <tr>
       <td>Id:</td>
@@ -11,7 +11,7 @@
     </tr>
     <tr>
       <td><%= t :"activerecord.attributes.entity.fiscal_id" %>:</td>
-      <td><b><%= @entity.fiscal_id unless @entity.fiscal_id.blank? %></b></td>
+      <td class="highlighted bolded"><%= @entity.fiscal_id unless @entity.fiscal_id.blank? %></td>
       <td><%= t :"activerecord.attributes.entity.entity_type" %>:</td>
       <td><%= @entity.entity_type.name %></td>
     </tr>

@@ -1,13 +1,13 @@
 <%= render '/layouts/ag2_admin/departmentsbreadcrumb' %>
 
 <h3><%=t '.title' %></h3>
-<table class="table">
+<table class="table odd_even_table">
   <tbody>
     <tr>
       <td>Id:</td>
       <td><%= @department.id %></td>
       <td><%=t 'activerecord.attributes.department.code' %>:</td>
-      <td><b><%= @department.code %></b></td>
+      <td class="highlighted bolded"><%= @department.code %></td>
     </tr>
     <tr>
       <td><%=t 'activerecord.attributes.department.name' %>:</td>
