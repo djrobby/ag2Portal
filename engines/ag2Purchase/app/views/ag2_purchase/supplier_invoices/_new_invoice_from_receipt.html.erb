@@ -44,13 +44,13 @@
       var supplier = $('#Supplier_ :selected').val();
       if (supplier == "") supplier = 0;
       jQuery.getJSON('si_update_receipt_select_from_supplier/' + supplier, function(data) {
-        var r = data.order;
+        var r = data.note;
         $("#Request_").html("");
         $("#Request_").select2("val", "");
         $("#Request_").append($('<option></option>').val("").html(""));
         if (!r.length) {
           $.each(data, function(id, option) {
-            if (id == 'order' && option != "") {
+            if (id == 'note' && option != "") {
               $("#Request_").append($('<option></option>').val(option[0]).html(option[1] + " " + option[2] + " " + option[3]));
             }
           });
@@ -70,8 +70,8 @@
       // make a POST call and replace the content
       var order = $('#Request_ :selected').val();
       if (order == "") order = 0;
-      jQuery.getJSON('si_receipt_total/' + order, function(data) {
-        $("#receipt-total").html(data.total);
+      jQuery.getJSON('si_current_balance/' + order, function(data) {
+        $("#current-balance").html(data.balance);
       });
       // AJAX refresh index table is necessary
       $(".icon-refresh-link").click();
@@ -92,7 +92,7 @@
     <%= select_tag "Supplier_", options_from_collection_for_select(@suppliers, "id", "full_name"), :prompt => "", :class => 'x-large-text-field nsel2' %>
     <!-- Receipt note -->
     <label for="Request_" class="form-label-under-sel2"> <abbr title="requerido">*</abbr> <%= I18n.t("activerecord.attributes.supplier_invoice.receipt_note") %></label>
-    <%= select_tag "Request_", options_from_collection_for_select(@orders, "id", "full_name"), :prompt => "", :class => 'x-large-text-field nsel2' %>
+    <%= select_tag "Request_", options_from_collection_for_select(@receipt_notes, "id", "full_name"), :prompt => "", :class => 'x-large-text-field nsel2' %>
     <!-- Invoice No -->
     <label for="No_" class="form-label-under-sel2"> <abbr title="requerido">*</abbr> <%= I18n.t("activerecord.attributes.supplier_invoice.invoice_no_c") %></label>
     <%= text_field_tag "No_", nil, :class => 'x-large-text-field' %>
@@ -101,8 +101,8 @@
     <%= text_field_tag "Date_", nil, class: 'mid-text-field ndate_picker' %>
   </div>
   <div class="modal-footer">
-    <span class="left-floated shrinked" style="vertical-align: bottom"><%= t("activerecord.attributes.receipt_note.total") %>=</span>
-    <span class="left-floated shrinked" style="vertical-align: bottom" id="receipt-total">0,0000</span>
+    <span class="left-floated shrinked" style="vertical-align: bottom"><%= t("activerecord.attributes.receipt_note.balance_c") %>=</span>
+    <span class="left-floated shrinked" style="vertical-align: bottom" id="current-balance">0,0000</span>
     <a class="btn btn-primary" href="#" id="btn_accept"><%= t :generate %></a>
     <a class="btn btn-primary" data-dismiss="modal" href="#" id="btn_close"><%= t :close_button %></a>
   </div>

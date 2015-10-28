@@ -38,6 +38,8 @@ es:
         taxable: "Base imponible"
         taxes: "Impuestos"
         total: "Total"
+        balance: "No faturado"
+        balance_c: "No facturado nota elegida"
         quantity: "Artículos"
         bonus: "Bonificación"
         organization: "Organización"

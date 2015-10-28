@@ -36,3 +36,6 @@ es:
       add_approval: "Agregar nueva Aprobación"
       btn_new_approval: "Nueva Aprobación"
       approval_error: "Total aprobado no deber ser mayor que el importe adeudado (%{var}) o el pendiente de aprobación (%{bal})."
+      generate_invoice_error: "Imposible generar Factura: Nª de recepción inválida."
+      generate_invoice_write: "Imposible guardar nueva Factura."
+      generate_invoice_ok: "Factura %{var} ha sido generada."

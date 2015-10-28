@@ -38,6 +38,8 @@ en:
         taxable: "Taxable"
         taxes: "Taxes"
         total: "Total"
+        balance: "Unbilled"
+        balance_c: "Unbilled selected note"
         quantity: "Articles"
         bonus: "Bonus"
         organization: "Organization"

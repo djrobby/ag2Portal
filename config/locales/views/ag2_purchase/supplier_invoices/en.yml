@@ -36,3 +36,6 @@ en:
       add_approval: "Add new Approval"
       btn_new_approval: "New Approval"
       approval_error: "Total approved must not be greater than the amount due (%{var}) or pending approval amount (%{bal})."
+      generate_invoice_error: "Invoice can not be generated: Receipt note invalid."
+      generate_invoice_write: "Unable to save new Invoice."
+      generate_invoice_ok: "Invoice %{var} has been generated."

@@ -413,28 +413,30 @@ module Ag2Products
           if note.save
             # Try to save new note items
             purchase_order_items.each do |i|
-              note_item = ReceiptNoteItem.new
-              note_item.receipt_note_id = note.id
-              note_item.purchase_order_item_id = i.id
-              note_item.product_id = i.product_id
-              note_item.description = i.description
-              note_item.quantity = i.balance
-              note_item.price = i.price
-              note_item.discount_pct = i.discount_pct
-              note_item.discount = i.discount
-              note_item.tax_type_id = i.tax_type_id
-              note_item.store_id = i.store_id
-              note_item.work_order_id = i.work_order_id
-              note_item.charge_account_id = i.charge_account_id
-              note_item.created_by = current_user.id if !current_user.nil?
-              note_item.code = i.code
-              note_item.purchase_order_id = i.purchase_order_id
-              note_item.project_id = i.project_id
-              if !note_item.save
-                # Can't save note item (exit)
-                code = '$write'
-                break
-              end   # !note_item.save?
+              if i.balance != 0 # Only items not received yet
+                note_item = ReceiptNoteItem.new
+                note_item.receipt_note_id = note.id
+                note_item.purchase_order_item_id = i.id
+                note_item.product_id = i.product_id
+                note_item.description = i.description
+                note_item.quantity = i.balance
+                note_item.price = i.price
+                note_item.discount_pct = i.discount_pct
+                note_item.discount = i.discount
+                note_item.tax_type_id = i.tax_type_id
+                note_item.store_id = i.store_id
+                note_item.work_order_id = i.work_order_id
+                note_item.charge_account_id = i.charge_account_id
+                note_item.created_by = current_user.id if !current_user.nil?
+                note_item.code = i.code
+                note_item.purchase_order_id = i.purchase_order_id
+                note_item.project_id = i.project_id
+                if !note_item.save
+                  # Can't save note item (exit)
+                  code = '$write'
+                  break
+                end   # !note_item.save?
+              end   # i.balance != 0
             end   # do |i|
           else
             # Can't save note
