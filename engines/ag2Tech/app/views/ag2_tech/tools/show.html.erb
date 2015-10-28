@@ -1,13 +1,13 @@
 <%= render '/layouts/ag2_tech/toolsbreadcrumb' %>
 
 <h3><%=t '.title' %></h3>
-<table class="table">
+<table class="table odd_even_table">
   <tbody>
     <tr>
       <td>Id:</td>
       <td><%= @tool.id %></td>
       <td><%=t 'activerecord.attributes.tool.serial_no' %>:</td>
-      <td><b><%= @tool.serial_no %></b></td>
+      <td class="highlighted bolded"><%= @tool.serial_no %></td>
     </tr>
       <td><%=t 'activerecord.attributes.tool.name' %>:</td>
       <td><%= @tool.name %></td>

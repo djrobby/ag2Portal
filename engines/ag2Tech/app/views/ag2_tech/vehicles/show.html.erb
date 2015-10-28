@@ -1,13 +1,13 @@
 <%= render '/layouts/ag2_tech/vehiclesbreadcrumb' %>
 
 <h3><%=t '.title' %></h3>
-<table class="table">
+<table class="table odd_even_table">
   <tbody>
     <tr>
       <td>Id:</td>
       <td><%= @vehicle.id %></td>
       <td><%=t 'activerecord.attributes.vehicle.registration' %>:</td>
-      <td><b><%= @vehicle.registration %></b></td>
+      <td class="highlighted bolded"><%= @vehicle.registration %></td>
     </tr>
       <td><%=t 'activerecord.attributes.vehicle.name' %>:</td>
       <td><%= @vehicle.name %></td>

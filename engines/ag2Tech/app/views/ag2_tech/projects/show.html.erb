@@ -1,13 +1,13 @@
 <%= render '/layouts/ag2_tech/projectsbreadcrumb' %>
 
 <h3><%=t '.title' %></h3>
-<table class="table">
+<table class="table odd_even_table">
   <tbody>
     <tr>
       <td>Id:</td>
       <td><%= @project.id %></td>
       <td><%=t 'activerecord.attributes.project.project_code' %>:</td>
-      <td><b><%= @project.full_code %></b></td>
+      <td class="highlighted bolded"><%= @project.full_code %></td>
     </tr>
     <tr>
       <td><%=t 'activerecord.attributes.project.name' %>:</td>

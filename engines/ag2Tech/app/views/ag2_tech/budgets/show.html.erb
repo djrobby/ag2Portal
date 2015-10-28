@@ -1,13 +1,13 @@
 <%= render '/layouts/ag2_tech/budgetsbreadcrumb' %>
 
 <h3><%=t '.title' %></h3>
-<table class="table">
+<table class="table odd_even_table">
   <tbody>
     <tr>
       <td>Id:</td>
       <td><%= @budget.id %></td>
       <td><%=t 'activerecord.attributes.budget.budget_no' %>:</td>
-      <td><b><%= @budget.full_no %></b></td>
+      <td class="highlighted bolded"><%= @budget.full_no %></td>
     </tr>
     <tr>
       <td><%=t 'activerecord.attributes.budget.description' %>:</td>

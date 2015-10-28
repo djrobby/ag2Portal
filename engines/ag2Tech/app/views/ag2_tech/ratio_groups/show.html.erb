@@ -1,13 +1,13 @@
 <%= render '/layouts/ag2_tech/rgroupsbreadcrumb' %>
 
 <h3><%=t '.title' %></h3>
-<table class="table">
+<table class="table odd_even_table">
   <tbody>
     <tr>
       <td>Id:</td>
       <td><%= @ratio_group.id %></td>
       <td><%=t 'activerecord.attributes.ratio_group.code' %>:</td>
-      <td><b><%= @ratio_group.code %></b></td>
+      <td class="highlighted bolded"><%= @ratio_group.code %></td>
     </tr>
       <td><%=t 'activerecord.attributes.ratio_group.name' %>:</td>
       <td><%= @ratio_group.name %></td>

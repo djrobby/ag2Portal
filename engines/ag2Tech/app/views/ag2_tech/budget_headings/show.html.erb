@@ -1,7 +1,7 @@
 <%= render '/layouts/ag2_tech/bheadingsbreadcrumb' %>
 
 <h3><%=t '.title' %></h3>
-<table class="table">
+<table class="table odd_even_table">
   <tbody>
     <tr>
       <td>Id:</td>
@@ -10,7 +10,7 @@
       <td></td>
     </tr>
       <td><%=t 'activerecord.attributes.budget_heading.heading_code' %>:</td>
-      <td><b><%= @budget_heading.heading_code %></b></td>
+      <td class="highlighted bolded"><%= @budget_heading.heading_code %></td>
       <td><%=t 'activerecord.attributes.budget_heading.name' %>:</td>
       <td><%= @budget_heading.name %></td>
     </tr>

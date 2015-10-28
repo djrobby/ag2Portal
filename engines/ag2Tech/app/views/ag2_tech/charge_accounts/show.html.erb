@@ -1,13 +1,13 @@
 <%= render '/layouts/ag2_tech/caccountsbreadcrumb' %>
 
 <h3><%=t '.title' %></h3>
-<table class="table">
+<table class="table odd_even_table">
   <tbody>
     <tr>
       <td>Id:</td>
       <td><%= @charge_account.id %></td>
       <td><%=t 'activerecord.attributes.charge_account.account_code' %>:</td>
-      <td><b><%= @charge_account.full_code %></b></td>
+      <td class="highlighted bolded"><%= @charge_account.full_code %></td>
     </tr>
       <td><%=t 'activerecord.attributes.charge_account.name' %>:</td>
       <td><%= @charge_account.name %></td>
