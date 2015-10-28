@@ -1,13 +1,13 @@
 <%= render '/layouts/ag2_gest/clientsbreadcrumb' %>
 
 <h3><%= t '.title' %></h3>
-<table class="table">
+<table class="table odd_even_table">
   <tbody>
     <tr>
       <td>Id:</td>
       <td><%= @client.id %></td>
       <td><%= t 'activerecord.attributes.client.client_code' %>:</td>
-      <td><b><%= @client.full_code %></b></td>
+      <td class="highlighted bolded"><%= @client.full_code %></td>
     </tr>
     <tr>
       <td><%= t 'activerecord.attributes.client.fiscal_id' %>:</td>
