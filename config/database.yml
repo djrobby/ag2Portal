@@ -40,4 +40,4 @@ production:
   username: root
   password: root
   socket: /tmp/mysql.sock
-  host: ag2back
+  host: ag2backclone
