@@ -2,6 +2,13 @@ Ag2Purchase::Engine.routes.draw do
   scope "(:locale)", :locale => /en|es/ do
     # Get
     get "home/index"
+
+    # Routes to Control&Tracking
+    match 'ag2_purchase_track' => 'ag2_purchase_track#index', :as => :ag2_purchase_track
+    #
+    # Control&Tracking
+    match 'worker_report', :controller => 'ag2_purchase_track', :action => 'worker_report'
+    match 'office_report', :controller => 'ag2_purchase_track', :action => 'office_report'
     
     # Patterns
     DECIMAL_PATTERN = /-?\d+(\.\d+)/

@@ -3,6 +3,14 @@ Ag2Products::Engine.routes.draw do
     # Get
     get "home/index"
 
+    # Routes to Control&Tracking
+    match 'ag2_products_track' => 'ag2_products_track#index', :as => :ag2_products_track
+    #
+    # Control&Tracking
+    match 'worker_report', :controller => 'ag2_products_track', :action => 'worker_report'
+    match 'office_report', :controller => 'ag2_products_track', :action => 'office_report'
+    #match 'update_workers_select_from_office/:id', :controller => 'ag2_timerecord_track', :action => 'update_workers_select_from_office'
+
     # Routes for jQuery POSTs
     # Numbers with decimals (.) must be multiplied (by 1xxx and the same zeroes x positions) before passed as REST parameter! 
     # Stores

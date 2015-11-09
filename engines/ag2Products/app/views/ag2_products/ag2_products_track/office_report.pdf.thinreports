@@ -1,0 +1,153 @@
+if @time_records.count <= 0
+	return
+end
+
+report.set_layout tlf: 'reports/office_report', layout_options: { default: true }
+
+#
+# Report events
+#
+# On page create
+report.events.on :page_create do |e|
+	# Set page-number
+	e.page.item(:page_no).value(e.page.no)
+end
+# On report generate
+report.events.on :generate do |e|
+	e.pages.each do |page|
+		# Set total-page-number
+		page.item(:page_count).value(e.report.page_count)
+	end
+end
+
+report.start_new_page
+
+# Page header
+report.page.values report_title: I18n.t("ag2_human.ag2_timerecord_track.office_report.report_title")
+report.page.values office_title: I18n.t("ag2_human.ag2_timerecord_track.office_report.office_title")
+report.page.values from_title: I18n.t("ag2_human.ag2_timerecord_track.every_report.from_title")
+report.page.values to_title: I18n.t("ag2_human.ag2_timerecord_track.every_report.to_title")
+report.page.values office: @office.name
+report.page.values from: @from
+report.page.values to: @to
+# Page footer
+report.page.values printed_at: Time.now
+report.page.values pt: I18n.t("ag2_human.ag2_timerecord_track.every_report.pt")
+report.page.values pd: I18n.t("ag2_human.ag2_timerecord_track.every_report.pd")
+
+# List header
+report.page.list(:default).header.item(:worker_col).value I18n.t("ag2_human.ag2_timerecord_track.every_report.worker_col")
+report.page.list(:default).header.item(:date_col).value I18n.t("ag2_human.ag2_timerecord_track.every_report.date_col")
+report.page.list(:default).header.item(:rec1_col).value I18n.t("ag2_human.ag2_timerecord_track.every_report.rec1_col")
+report.page.list(:default).header.item(:rec2_col).value I18n.t("ag2_human.ag2_timerecord_track.every_report.rec2_col")
+report.page.list(:default).header.item(:rec3_col).value I18n.t("ag2_human.ag2_timerecord_track.every_report.rec3_col")
+report.page.list(:default).header.item(:rec4_col).value I18n.t("ag2_human.ag2_timerecord_track.every_report.rec4_col")
+report.page.list(:default).header.item(:rec5_col).value I18n.t("ag2_human.ag2_timerecord_track.every_report.rec5_col")
+report.page.list(:default).header.item(:rec6_col).value I18n.t("ag2_human.ag2_timerecord_track.every_report.rec6_col")
+report.page.list(:default).header.item(:rec7_col).value I18n.t("ag2_human.ag2_timerecord_track.every_report.rec7_col")
+report.page.list(:default).header.item(:rec8_col).value I18n.t("ag2_human.ag2_timerecord_track.every_report.rec8_col")
+report.page.list(:default).header.item(:rec_count_col).value I18n.t("ag2_human.ag2_timerecord_track.every_report.rec_count_col")
+report.page.list(:default).header.item(:worked_time_col).value I18n.t("ag2_human.ag2_timerecord_track.every_report.worked_time_col")
+
+worker_id = @time_records.first.tr_worker_id
+worker_name = @time_records.first.worker.full_name
+sum_worked_time = 0
+sum_rec_count = 0
+sum_rows = 0
+hh = 0
+mm = 0
+ss = 0
+acum_ss = 0
+
+report.page.values sum_aggregate_title: I18n.t("ag2_human.ag2_timerecord_track.every_report.sum_aggregate_title")
+report.page.values sum_worked_time_title: I18n.t("ag2_human.ag2_timerecord_track.every_report.sum_worked_time_title")
+report.page.values sum_rec_count_title: I18n.t("ag2_human.ag2_timerecord_track.every_report.sum_rec_count_title")
+report.page.values sum_rows_title: I18n.t("ag2_human.ag2_timerecord_track.every_report.sum_rows_title")
+
+# List detail
+@time_records.each do |t|
+	report.page.list(:default).add_row do |row|
+  		# If worker changed
+  		if !t.tr_worker_id.blank? && (t.tr_worker_id != worker_id)
+  			# Seconds to minutes with remainder
+  			ss = ss / 60.0
+  			mm += ss.to_i
+  			ss = ((ss - ss.to_i) * 60).to_i
+  			# Minutes to hours with remainder
+  			mm = mm / 60.0
+  			hh += mm.to_i
+  			mm = ((mm - mm.to_i) * 60).to_i
+  			# Average time worked
+			average_time = Time.at(acum_ss / sum_rows).utc.strftime("%H:%M:%S")
+  			# Display
+			report.page.values sum_worker: worker_name
+			report.page.values sum_worked_time: hh.to_s.rjust(4, '0') + ':' + mm.to_s.rjust(2, '0')
+			report.page.values sum_rec_count: sum_rec_count
+			report.page.values sum_rows: sum_rows
+			report.page.list(:default).page_break
+			report.page.values average: I18n.t("ag2_human.ag2_timerecord_track.every_report.average_title") + average_time
+			# Reset
+  			worker_id = t.tr_worker_id
+  			worker_name = t.worker.full_name
+  			hh = 0
+  			mm = 0
+  			ss = 0
+  			acum_ss = 0
+			sum_rec_count = 0
+			sum_rows = 0
+  		end
+    	row.item(:worker).value t.worker.full_name unless t.tr_worker_id.blank? || sum_rows > 0
+    	row.item(:date).value t.tr_date.strftime("%d/%m/%Y") unless t.tr_date.blank?
+    	row.item(:time1).value t.tr_time_1.strftime("%H:%M") unless t.tr_time_1.blank?
+    	row.item(:type1).value t.type1.name unless t.tr_type_id_1.blank?
+    	row.item(:code1).value t.code1.name unless t.tr_code_id_1.blank?
+    	row.item(:time2).value t.tr_time_2.strftime("%H:%M") unless t.tr_time_2.blank?
+    	row.item(:type2).value t.type2.name unless t.tr_type_id_2.blank?
+    	row.item(:code2).value t.code2.name unless t.tr_code_id_2.blank?
+    	row.item(:time3).value t.tr_time_3.strftime("%H:%M") unless t.tr_time_3.blank?
+    	row.item(:type3).value t.type3.name unless t.tr_type_id_3.blank?
+    	row.item(:code3).value t.code3.name unless t.tr_code_id_3.blank?
+    	row.item(:time4).value t.tr_time_4.strftime("%H:%M") unless t.tr_time_4.blank?
+    	row.item(:type4).value t.type4.name unless t.tr_type_id_4.blank?
+    	row.item(:code4).value t.code4.name unless t.tr_code_id_4.blank?
+    	row.item(:time5).value t.tr_time_5.strftime("%H:%M") unless t.tr_time_5.blank?
+    	row.item(:type5).value t.type5.name unless t.tr_type_id_5.blank?
+    	row.item(:code5).value t.code5.name unless t.tr_code_id_5.blank?
+    	row.item(:time6).value t.tr_time_6.strftime("%H:%M") unless t.tr_time_6.blank?
+    	row.item(:type6).value t.type6.name unless t.tr_type_id_6.blank?
+    	row.item(:code6).value t.code6.name unless t.tr_code_id_6.blank?
+    	row.item(:time7).value t.tr_time_7.strftime("%H:%M") unless t.tr_time_7.blank?
+    	row.item(:type7).value t.type7.name unless t.tr_type_id_7.blank?
+    	row.item(:code7).value t.code7.name unless t.tr_code_id_7.blank?
+    	row.item(:time8).value t.tr_time_8.strftime("%H:%M") unless t.tr_time_8.blank?
+    	row.item(:type8).value t.type8.name unless t.tr_type_id_8.blank?
+    	row.item(:code8).value t.code8.name unless t.tr_code_id_8.blank?
+    	row.item(:rec_count).value t.tr_rec_count unless t.tr_rec_count.blank?
+    	row.item(:worked_time).value t.tr_worked_time.strftime("%H:%M") unless t.tr_worked_time.blank?
+
+		# Sum
+		hh += t.tr_worked_time.strftime("%H").to_i
+		mm += t.tr_worked_time.strftime("%M").to_f
+		ss += t.tr_worked_time.strftime("%S").to_f
+		acum_ss += (t.tr_worked_time.strftime("%H").to_i * 3600) + (t.tr_worked_time.strftime("%M").to_i * 60) + (t.tr_worked_time.strftime("%S").to_i)
+		sum_rec_count = sum_rec_count + t.tr_rec_count
+		sum_rows = sum_rows + 1
+	end
+	# Last change: Display aggregate totals
+  	# Seconds to minutes with remainder
+  	ss = ss / 60.0
+  	mm += ss.to_i
+  	ss = ((ss - ss.to_i) * 60).to_i
+  	# Minutes to hours with remainder
+  	mm = mm / 60.0
+  	hh += mm.to_i
+  	mm = ((mm - mm.to_i) * 60).to_i
+  	# Average time worked
+	average_time = Time.at(acum_ss / sum_rows).utc.strftime("%H:%M:%S")
+	# Display
+	report.page.values sum_worker: worker_name
+	report.page.values sum_worked_time: hh.to_s.rjust(4, '0') + ':' + mm.to_s.rjust(2, '0')
+	report.page.values sum_rec_count: sum_rec_count
+	report.page.values sum_rows: sum_rows
+	report.page.values average: I18n.t("ag2_human.ag2_timerecord_track.every_report.average_title") + average_time
+end

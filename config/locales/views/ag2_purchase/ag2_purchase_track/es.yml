@@ -1,7 +1,8 @@
 es:
-  ag2_human:
-    ag2_timerecord_track:
+  ag2_purchase:
+    ag2_purchase_track:
       index:
+        back_to_root: "Volver a ag2Purchase"
         btn_worker: "Informe por Trabajador"
         btn_office: "Informe por Oficina"
       office_report:

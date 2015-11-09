@@ -3,7 +3,7 @@ class PurchasePrice < ActiveRecord::Base
   belongs_to :supplier
   belongs_to :measure
   attr_accessible :code, :factor, :favorite, :price, :product_id, :supplier_id, :measure_id,
-                  :prev_code, :prev_price
+                  :prev_code, :prev_price, :discount_rate
 
   has_paper_trail
 
@@ -32,7 +32,7 @@ class PurchasePrice < ActiveRecord::Base
   # After save
   def update_reference_price_if_favorite
     if favorite
-      product.reference_price = price
+      product.reference_price = price - (price * (discount_rate / 100))
       if !product.save
         return false
       end      

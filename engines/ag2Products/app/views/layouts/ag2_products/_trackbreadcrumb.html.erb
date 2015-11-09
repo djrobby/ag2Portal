@@ -1,0 +1,17 @@
+<% content_for :title, "aGestiona2 | ag2Logistics" %>
+<% content_for :icon, "/assets/icon/ag2LogisticsTrack.png" %>
+<% content_for :alt, "ag2Logistics Control&Tracking" %>
+
+<!-- Breadcrumb -->
+<ul class="breadcrumb">
+  <li>
+    <a href="<%= main_app.root_path %>"><i class="icon-home"></i></a><span class="divider">></span>
+  </li>
+  <li>
+    <a href="<%= ag2_products.root_path %>">ag2Logistics</a><span class="divider">></span>
+  </li>
+  <li>
+    <%=t "control_tracking.track" %>
+  </li>
+  <a class="close" href="<%= ag2_products.root_path %>">&#215;</a>
+</ul>

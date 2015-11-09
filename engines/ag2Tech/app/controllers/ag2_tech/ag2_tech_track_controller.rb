@@ -1,7 +1,7 @@
-require_dependency "ag2_purchase/application_controller"
+require_dependency "ag2_tech/application_controller"
 
-module Ag2Purchase
-  class Ag2PurchaseTrackController < ApplicationController
+module Ag2Tech
+  class Ag2TechTrackController < ApplicationController
     before_filter :authenticate_user!
     skip_load_and_authorize_resource :only => [:worker_report,
                                                :office_report,

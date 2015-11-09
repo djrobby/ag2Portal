@@ -1,7 +1,8 @@
 es:
-  ag2_human:
-    ag2_timerecord_track:
+  ag2_tech:
+    ag2_tech_track:
       index:
+        back_to_root: "Volver a ag2Tech"
         btn_worker: "Informe por Trabajador"
         btn_office: "Informe por Oficina"
       office_report:

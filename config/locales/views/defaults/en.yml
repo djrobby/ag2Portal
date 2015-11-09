@@ -58,6 +58,13 @@ en:
   confirm: "Confirm"
   send_error: "<b>Oh oh!</b> Your e-mail could not be sent."
   send_ok: "Your e-mail has been sent."
+  control_tracking:
+    track: "Control&Tracking"
+    task: "%{var} Reports"
+    description: "Control&Tracking will generate reports using %{var} updated data. Fill in the desired search data in the filters box and then click on the button of the report you want to get."
+    how_go_back_h: "To return to this page once you visualize the report, click on the Back or Previous Page button of your browser."
+    how_go_back_f: "If the report opens in a new browser tab or window, simply click on the Close button of that tab or window."
+    caution: "Note that not all filters listed in the filters box, apply to all available reports! Dates are always mandatory."
   every_report:
     pt: "Page"
     pt_plural: "Pages"
