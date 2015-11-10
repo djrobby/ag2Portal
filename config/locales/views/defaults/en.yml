@@ -65,6 +65,8 @@ en:
     how_go_back_h: "To return to this page once you visualize the report, click on the Back or Previous Page button of your browser."
     how_go_back_f: "If the report opens in a new browser tab or window, simply click on the Close button of that tab or window."
     caution: "Note that not all filters listed in the filters box, apply to all available reports! Dates are always mandatory."
+    label_from: "From"
+    label_to: "To"
   every_report:
     pt: "Page"
     pt_plural: "Pages"

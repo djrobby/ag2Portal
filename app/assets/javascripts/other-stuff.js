@@ -11,6 +11,14 @@ function caps(e) {
 }
 
 /*
+ * Replace spaces & special characters with underscores (special for tag label for)
+ */
+function replace_with_underscore(l) {
+  var r = l.replace(/[^a-z0-9\s]/gi, '_').replace(/ /g,'_');
+  return r;
+}
+
+/*
  * Checks if it is a numeric digit on each key press (onkeydown)
  */
 function only_digit(e) {

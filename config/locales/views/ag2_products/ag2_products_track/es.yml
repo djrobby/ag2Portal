@@ -3,8 +3,16 @@ es:
     ag2_products_track:
       index:
         back_to_root: "Volver a ag2Logistics"
-        btn_worker: "Informe por Trabajador"
-        btn_office: "Informe por Oficina"
+        report_btn: "Generar Informe seleccionado"
+        label_report: "Informe"
+        label_project: "Proyecto"
+        label_supplier: "Proveedor"
+        label_store: "Almacén"
+        label_work_order: "Orden de trabajo"
+        label_charge_account: "Cuenta analítica"
+        label_order_status: "Estado del pedido"
+        label_family: "Familia de producto"
+        label_product: "Producto"
       office_report:
         report_title: "Marcajes por Oficina"
         office_title: "Oficina:"

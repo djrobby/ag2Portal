@@ -42,7 +42,7 @@
         <!-- Product -->
         <%= label_tag I18n.t("ag2_products.stocks.index.label_product"), nil, :class => 'form-label' %>
         <% if @product.nil? %>
-        <%= select_tag "Products", options_from_collection_for_select(Product.order('main_description').all, "id", "full_name"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
+        <%= select_tag "Products", options_from_collection_for_select(Product.order(:product_code).all, "id", "full_name"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
         <% else %>
         <%= select_tag "product", options_from_collection_for_select(Product.where("id = ?", "#{@product.id}").all, "id", "full_name", @product.id), class: 'x-large-text-field shrinked' %>
         <% end %>

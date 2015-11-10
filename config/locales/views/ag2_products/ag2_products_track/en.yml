@@ -3,8 +3,16 @@ en:
     ag2_products_track:
       index:
         back_to_root: "Back to ag2Logistics"
-        btn_worker: "Worker Report"
-        btn_office: "Office Report"
+        report_btn: "Generate selected Report"
+        label_report: "Report"
+        label_project: "Project"
+        label_supplier: "Supplier"
+        label_store: "Store"
+        label_work_order: "Work order"
+        label_charge_account: "Analytical account"
+        label_order_status: "Order status"
+        label_family: "Product family"
+        label_product: "Product"
       office_report:
         report_title: "Time records by Office"
         office_title: "Office:"
