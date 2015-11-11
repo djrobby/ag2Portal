@@ -8,62 +8,186 @@
     });
     $('.sel2').select2({
       formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
-      containerCssClass: 'left-winged'
+      containerCssClass: 'left-winged',
+      allowClear: true
     });
+    // Hide report button
+    $('#report_btn').hide();
   }); 
 
   jQuery(function($) {
-    // when #worker_report_btn is clicked
-    $("#worker_report_btn").click(function() {
-      // make a POST call and get report
-      var worker = $('select#Worker :selected').val();
-      var from = $('#From').val();
-      var to = $('#To').val();
-      var office = $('select#Office :selected').val();
-      var code = $('select#Code :selected').val();
-      if ((worker == "") || (from == "") || (to == ""))
-        return;
-      window.open("worker_report.pdf?worker=" + worker + "&from=" + from + "&to=" + to + "&office=" + office + "&code=" + code, "_blank");
-      //window.location = "worker_report.pdf?worker=" + worker + "&from=" + from + "&to=" + to + "&office=" + office + "&code=" + code;
-      //jQuery.getJSON('worker_report/' + worker + '/' + from + '/' + to + '/' + office + '/' + code, function(data) {
-      //})
+    // when the #Report field changes
+    $("#Report").change(function() {
+      var report = $('#Report :selected').index();
+      if (report == "")
+        report = 0;
+      switch (report) {
+        case 1:
+          // Inventory count
+          show("#Project", "<%= t(".label_project") %>");
+          hide("#Supplier", "<%= t(".label_supplier") %>");
+          show("#Store", "<%= t(".label_store") %>");
+          hide("#Order", "<%= t(".label_work_order") %>");
+          hide("#Account", "<%= t(".label_charge_account") %>");
+          hide("#Status", "<%= t(".label_order_status") %>");
+          show("#Family", "<%= t(".label_family") %>");
+          show("#Product", "<%= t(".label_product") %>");
+          $('#report_btn').show();
+          break;
+        case 2:
+          // Purchase order
+          show("#Project", "<%= t(".label_project") %>");
+          show("#Supplier", "<%= t(".label_supplier") %>");
+          show("#Store", "<%= t(".label_store") %>");
+          show("#Order", "<%= t(".label_work_order") %>");
+          show("#Account", "<%= t(".label_charge_account") %>");
+          show("#Status", "<%= t(".label_order_status") %>");
+          hide("#Family", "<%= t(".label_family") %>");
+          show("#Product", "<%= t(".label_product") %>");
+          $('#report_btn').show();
+          break;
+        case 3:
+          // Receipt note
+          show("#Project", "<%= t(".label_project") %>");
+          show("#Supplier", "<%= t(".label_supplier") %>");
+          show("#Store", "<%= t(".label_store") %>");
+          show("#Order", "<%= t(".label_work_order") %>");
+          show("#Account", "<%= t(".label_charge_account") %>");
+          hide("#Status", "<%= t(".label_order_status") %>");
+          hide("#Family", "<%= t(".label_family") %>");
+          show("#Product", "<%= t(".label_product") %>");
+          $('#report_btn').show();
+          break;
+        case 4:
+          // Delivery note
+          show("#Project", "<%= t(".label_project") %>");
+          hide("#Supplier", "<%= t(".label_supplier") %>");
+          show("#Store", "<%= t(".label_store") %>");
+          show("#Order", "<%= t(".label_work_order") %>");
+          show("#Account", "<%= t(".label_charge_account") %>");
+          hide("#Status", "<%= t(".label_order_status") %>");
+          hide("#Family", "<%= t(".label_family") %>");
+          show("#Product", "<%= t(".label_product") %>");
+          $('#report_btn').show();
+          break;
+        case 5:
+          // Stock
+          show("#Project", "<%= t(".label_project") %>");
+          hide("#Supplier", "<%= t(".label_supplier") %>");
+          show("#Store", "<%= t(".label_store") %>");
+          hide("#Order", "<%= t(".label_work_order") %>");
+          hide("#Account", "<%= t(".label_charge_account") %>");
+          hide("#Status", "<%= t(".label_order_status") %>");
+          show("#Family", "<%= t(".label_family") %>");
+          show("#Product", "<%= t(".label_product") %>");
+          $('#report_btn').show();
+          break;
+        default:
+          show("#Project", "<%= t(".label_project") %>");
+          show("#Supplier", "<%= t(".label_supplier") %>");
+          show("#Store", "<%= t(".label_store") %>");
+          show("#Order", "<%= t(".label_work_order") %>");
+          show("#Account", "<%= t(".label_charge_account") %>");
+          show("#Status", "<%= t(".label_order_status") %>");
+          show("#Family", "<%= t(".label_family") %>");
+          show("#Product", "<%= t(".label_product") %>");
+          $('#report_btn').hide();
+      }
       return false;
     });
 
-    // when #offce_report_btn is clicked
-    $("#offce_report_btn").click(function() {
+    // when #report_btn is clicked
+    $("#report_btn").click(function() {
       // make a POST call and get report
-      var worker = $('select#Worker :selected').val();
+      var report = $('#Report :selected').index();
+      if (report == "")
+        return;
+      var detailed = $('#detailed').prop('checked');
       var from = $('#From').val();
       var to = $('#To').val();
-      var office = $('select#Office :selected').val();
-      var code = $('select#Code :selected').val();
-      if ((office == "") || (from == "") || (to == ""))
+      if ((from == "") || (to == ""))
         return;
-      window.open("office_report.pdf?worker=" + worker + "&from=" + from + "&to=" + to + "&office=" + office + "&code=" + code, "_blank");
-      //window.location = "office_report.pdf?worker=" + worker + "&from=" + from + "&to=" + to + "&office=" + office + "&code=" + code;
-      //jQuery.get('office_report/' + worker, function(data) {
-      //})
+      switch (report) {
+        case 1:
+          // Inventory count
+          var project = $('select#Project :selected').val();
+          var store = $('select#Store :selected').val();
+          var family = $('select#Family :selected').val();
+          var product = $('select#Product :selected').val();
+          if ((project == "") && (store == "") && (family == "") && (product == ""))
+            return;
+          window.open("inventory_report.pdf?detailed=" + detailed + "project=" + project + "&from=" + from + "&to=" + to + "&store=" + store + "&family=" + family + "&product=" + product, "_blank");
+          break;
+        case 2:
+          // Purchase order
+          var project = $('select#Project :selected').val();
+          var supplier = $('select#Supplier :selected').val();
+          var store = $('select#Store :selected').val();
+          var order = $('select#Order :selected').val();
+          var account = $('select#Account :selected').val();
+          var status = $('select#Status :selected').val();
+          var product = $('select#Product :selected').val();
+          if ((project == "") && (supplier == "") && (store == "") && (order == "") && (account == "") && (status == "") && (product == ""))
+            return;
+          window.open("order_report.pdf?detailed=" + detailed + "project=" + project + "&from=" + from + "&to=" + to + "&supplier=" + supplier + "&store=" + store + "&order=" + order + "&account=" + account + "&status=" + status + "&product=" + product, "_blank");
+          break;
+        case 3:
+          // Receipt note
+          var project = $('select#Project :selected').val();
+          var supplier = $('select#Supplier :selected').val();
+          var store = $('select#Store :selected').val();
+          var order = $('select#Order :selected').val();
+          var account = $('select#Account :selected').val();
+          var product = $('select#Product :selected').val();
+          if ((project == "") && (supplier == "") && (store == "") && (order == "") && (account == "") && (product == ""))
+            return;
+          window.open("receipt_report.pdf?detailed=" + detailed + "project=" + project + "&from=" + from + "&to=" + to + "&supplier=" + supplier + "&store=" + store + "&order=" + order + "&account=" + account + "&product=" + product, "_blank");
+          break;
+        case 4:
+          // Delivery note
+          var project = $('select#Project :selected').val();
+          var store = $('select#Store :selected').val();
+          var order = $('select#Order :selected').val();
+          var account = $('select#Account :selected').val();
+          var product = $('select#Product :selected').val();
+          if ((project == "") && (store == "") && (order == "") && (account == "") && (product == ""))
+            return;
+          window.open("delivery_report.pdf?detailed=" + detailed + "project=" + project + "&from=" + from + "&to=" + to + "&store=" + store + "&order=" + order + "&account=" + account + "&product=" + product, "_blank");
+          break;
+        case 5:
+          // Stock
+          var project = $('select#Project :selected').val();
+          var store = $('select#Store :selected').val();
+          var family = $('select#Family :selected').val();
+          var product = $('select#Product :selected').val();
+          if ((project == "") && (store == "") && (family == "") && (product == ""))
+            return;
+          window.open("stock_report.pdf?detailed=" + detailed + "project=" + project + "&from=" + from + "&to=" + to + "&store=" + store + "&family=" + family + "&product=" + product, "_blank");
+          break;
+      }
       return false;
     });
-
-    // when the #Office field changes
-    $("#Office").change(function() {
-      // make a POST call and replace the content
-      var worker = $('#Office :selected').val();
-      if (worker == "")
-        worker = "0";
-      jQuery.getJSON('update_workers_select_from_office/' + worker, function(data) {
-        $("#Worker").html("");
-        $("#Worker").select2("val", "");
-        $("#Worker").append($('<option></option>').val("").html(""));
-        $.each(data, function(id, option) {
-          $("#Worker").append($('<option></option>').val(option.id).html(option.last_name + ', ' + option.first_name));
-        });
-      })
-      return false;
-    });
-  })
+    
+    function hide(_select, _label) {
+      _label = replace_with_underscore(_label);
+      $('label[for=' + _label + ']').hide();
+      $(_select).removeClass('sel2');
+      $(_select).select2('destroy');
+      $(_select).hide();      
+    }
+    
+    function show(_select, _label) {
+      _label = replace_with_underscore(_label);
+      $('label[for=' + _label + ']').show();
+      $(_select).addClass('sel2');
+      $(_select).show();
+      $(_select).select2({
+        formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+        containerCssClass: 'left-winged',
+        allowClear: true
+      });
+    }
+  });
 </script>
 
 <%= render '/layouts/ag2_tech/trackbreadcrumb' %>
@@ -92,33 +216,47 @@
   </div>
   <div class="span5 track-box">
     <div align="center">
-      <%= form_tag "ag2_products_track", :method => 'get' do %>
-      <!-- Office -->
-      <%= label_tag I18n.t("ag2_human.workers.index.label_office"), nil, :class => 'form-label' %>
-      <%= select_tag "Office", options_from_collection_for_select(@offices, "id", "name"), :prompt => "", :class => 'x-large-text-field' %>
-      <!-- Worker -->
-      <%= label_tag I18n.t("ag2_human.time_records.index.label_worker"), nil, :class => 'form-label' %>
-      <%= select_tag "Worker", options_from_collection_for_select(@workers, "id", "full_name"), :prompt => "", :class => 'x-large-text-field sel2' %>
+      <%= form_tag "ag2_tech_track", :method => 'get' do %>
+      <!-- Report -->
+      <%= label_tag t(".label_report"), nil, :class => 'form-label' %>
+      <%= select_tag "Report", options_for_select(@reports), :prompt => "", :class => 'x-large-text-field sel2' %>
+      <!-- Project -->
+      <%= label_tag t(".label_project"), nil, :class => 'form-label-under-sel2' %>
+      <%= select_tag "Project", options_from_collection_for_select(@projects, "id", "full_name"), :prompt => "", :class => 'x-large-text-field sel2' %>
+      <!-- Supplier -->
+      <%= label_tag t(".label_supplier"), nil, :class => 'form-label-under-sel2' %>
+      <%= select_tag "Supplier", options_from_collection_for_select(@suppliers, "id", "full_name"), :prompt => "", :class => 'x-large-text-field sel2' %>
+      <!-- Store -->
+      <%= label_tag t(".label_store"), nil, :class => 'form-label-under-sel2' %>
+      <%= select_tag "Store", options_from_collection_for_select(@stores, "id", "name"), :prompt => "", :class => 'x-large-text-field sel2' %>
+      <!-- Work order -->
+      <%= label_tag t(".label_work_order"), nil, :class => 'form-label-under-sel2' %>
+      <%= select_tag "Order", options_from_collection_for_select(@work_orders, "id", "full_name"), :prompt => "", :class => 'x-large-text-field sel2' %>
+      <!-- Charge account -->
+      <%= label_tag t(".label_charge_account"), nil, :class => 'form-label-under-sel2' %>
+      <%= select_tag "Account", options_from_collection_for_select(@charge_accounts, "id", "full_name"), :prompt => "", :class => 'x-large-text-field sel2' %>
       <!-- Dates -->
-      <%= label_tag I18n.t("ag2_human.time_records.index.label_from"), nil, :class => 'form-label-under-sel2' %>
+      <%= label_tag t("control_tracking.label_from"), nil, :class => 'form-label-under-sel2' %>
       <%= text_field_tag "From", params[:date], :class =>  'mid-text-field date_picker centered' %>
-      <%= label_tag I18n.t("ag2_human.time_records.index.label_to"), nil, :class => 'form-label' %>
+      <%= label_tag t("control_tracking.label_to"), nil, :class => 'form-label' %>
       <%= text_field_tag "To", params[:date], :class =>  'mid-text-field date_picker centered' %>
-      <!-- Code -->
+      <!-- Purchase order Status -->
+      <%= label_tag t(".label_order_status"), nil, :class => 'form-label' %>
+      <%= select_tag "Status", options_from_collection_for_select(@statuses, "id", "name"), :prompt => "", :class => 'x-large-text-field sel2' %>
+      <!-- Product Family -->
+      <%= label_tag t(".label_family"), nil, :class => 'form-label-under-sel2' %>
+      <%= select_tag "Family", options_from_collection_for_select(@families, "id", "full_name"), :prompt => "", :class => 'x-large-text-field sel2' %>
+      <!-- Product -->
       <!-- Last tag into <p></p> tags for spacing -->
       <p>
-        <%= label_tag I18n.t("ag2_human.time_records.index.label_code"), nil, :class => 'form-label' %>
-        <%= select_tag "Code", options_from_collection_for_select(TimerecordCode.all, "id", "name"), :prompt => "", :class => 'x-large-text-field' %>
+        <%= label_tag t(".label_product"), nil, :class => 'form-label-under-sel2' %>
+        <%= select_tag "Product", options_from_collection_for_select(@products, "id", "full_name"), :prompt => "", :class => 'x-large-text-field sel2' %>
       </p>
       <!-- Buttons -->
       <p>
-        <a href="#" id="worker_report_btn" class="btn btn-primary"><%= t '.btn_worker' %></a>
+        <a href="#" id="report_btn" class="btn btn-primary form-button-under-sel2"><%= t '.report_btn' %></a>
+        <%= check_box_tag 'detailed', nil, nil, title: t("control_tracking.detailed") %>
       </p>
-      <!-- Last button without <p></p> tags for spacing -->
-      <a href="#" id="offce_report_btn" class="btn btn-primary"><%= t '.btn_office' %></a>
-      <!-- <a href="<%#= office_report_path(worker: 3, format: 'pdf') %>" id="offce1_report_btn" class="btn btn-primary"><%= t '.btn_office' %></a> -->
-      <br />
-      <br />
       <!-- Links -->
       <%= link_to t(".back_to_root"), ag2_tech.root_path %>
       <% end %>

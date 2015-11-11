@@ -7,8 +7,14 @@ Ag2Purchase::Engine.routes.draw do
     match 'ag2_purchase_track' => 'ag2_purchase_track#index', :as => :ag2_purchase_track
     #
     # Control&Tracking
-    match 'worker_report', :controller => 'ag2_purchase_track', :action => 'worker_report'
-    match 'office_report', :controller => 'ag2_purchase_track', :action => 'office_report'
+    match 'pu_track_project_has_changed/:order', :controller => 'ag2_purchase_track', :action => 'pu_track_project_has_changed'
+    match 'pu_track_family_has_changed/:order', :controller => 'ag2_purchase_track', :action => 'pu_track_family_has_changed'
+    # Reports
+    match 'inventory_report', :controller => 'ag2_purchase_track', :action => 'inventory_report'
+    match 'order_report', :controller => 'ag2_purchase_track', :action => 'order_report'
+    match 'receipt_report', :controller => 'ag2_purchase_track', :action => 'receipt_report'
+    match 'delivery_report', :controller => 'ag2_purchase_track', :action => 'delivery_report'
+    match 'stock_report', :controller => 'ag2_purchase_track', :action => 'stock_report'
     
     # Patterns
     DECIMAL_PATTERN = /-?\d+(\.\d+)/

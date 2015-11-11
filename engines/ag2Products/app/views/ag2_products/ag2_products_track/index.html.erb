@@ -250,30 +250,6 @@
           window.open("stock_report.pdf?detailed=" + detailed + "project=" + project + "&from=" + from + "&to=" + to + "&store=" + store + "&family=" + family + "&product=" + product, "_blank");
           break;
       }
-
-      var worker = $('select#Worker :selected').val();
-      var office = $('select#Office :selected').val();
-      var code = $('select#Code :selected').val();
-      if ((worker == "") || (from == "") || (to == ""))
-        return;
-      window.open("worker_report.pdf?worker=" + worker + "&from=" + from + "&to=" + to + "&office=" + office + "&code=" + code, "_blank");
-      return false;
-    });
-
-    // when #offce_report_btn is clicked
-    $("#offce_report_btn").click(function() {
-      // make a POST call and get report
-      var worker = $('select#Worker :selected').val();
-      var from = $('#From').val();
-      var to = $('#To').val();
-      var office = $('select#Office :selected').val();
-      var code = $('select#Code :selected').val();
-      if ((office == "") || (from == "") || (to == ""))
-        return;
-      window.open("office_report.pdf?worker=" + worker + "&from=" + from + "&to=" + to + "&office=" + office + "&code=" + code, "_blank");
-      //window.location = "office_report.pdf?worker=" + worker + "&from=" + from + "&to=" + to + "&office=" + office + "&code=" + code;
-      //jQuery.get('office_report/' + worker, function(data) {
-      //})
       return false;
     });
     
