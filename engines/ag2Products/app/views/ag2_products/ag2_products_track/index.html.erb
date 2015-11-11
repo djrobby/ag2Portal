@@ -186,68 +186,72 @@
       // make a POST call and get report
       var report = $('#Report :selected').index();
       if (report == "")
-        report = 0;
+        return;
+      var detailed = $('#detailed').prop('checked');
+      var from = $('#From').val();
+      var to = $('#To').val();
+      if ((from == "") || (to == ""))
+        return;
       switch (report) {
         case 1:
           // Inventory count
-          show("#Project", "<%= t(".label_project") %>");
-          hide("#Supplier", "<%= t(".label_supplier") %>");
-          show("#Store", "<%= t(".label_store") %>");
-          hide("#Order", "<%= t(".label_work_order") %>");
-          hide("#Account", "<%= t(".label_charge_account") %>");
-          hide("#Status", "<%= t(".label_order_status") %>");
-          show("#Family", "<%= t(".label_family") %>");
-          show("#Product", "<%= t(".label_product") %>");
+          var project = $('select#Project :selected').val();
+          var store = $('select#Store :selected').val();
+          var family = $('select#Family :selected').val();
+          var product = $('select#Product :selected').val();
+          if ((project == "") && (store == "") && (family == "") && (product == ""))
+            return;
+          window.open("inventory_report.pdf?detailed=" + detailed + "project=" + project + "&from=" + from + "&to=" + to + "&store=" + store + "&family=" + family + "&product=" + product, "_blank");
           break;
         case 2:
           // Purchase order
-          show("#Project", "<%= t(".label_project") %>");
-          show("#Supplier", "<%= t(".label_supplier") %>");
-          show("#Store", "<%= t(".label_store") %>");
-          show("#Order", "<%= t(".label_work_order") %>");
-          show("#Account", "<%= t(".label_charge_account") %>");
-          show("#Status", "<%= t(".label_order_status") %>");
-          hide("#Family", "<%= t(".label_family") %>");
-          show("#Product", "<%= t(".label_product") %>");
+          var project = $('select#Project :selected').val();
+          var supplier = $('select#Supplier :selected').val();
+          var store = $('select#Store :selected').val();
+          var order = $('select#Order :selected').val();
+          var account = $('select#Account :selected').val();
+          var status = $('select#Status :selected').val();
+          var product = $('select#Product :selected').val();
+          if ((project == "") && (supplier == "") && (store == "") && (order == "") && (account == "") && (status == "") && (product == ""))
+            return;
+          window.open("order_report.pdf?detailed=" + detailed + "project=" + project + "&from=" + from + "&to=" + to + "&supplier=" + supplier + "&store=" + store + "&order=" + order + "&account=" + account + "&status=" + status + "&product=" + product, "_blank");
           break;
         case 3:
           // Receipt note
-          show("#Project", "<%= t(".label_project") %>");
-          show("#Supplier", "<%= t(".label_supplier") %>");
-          show("#Store", "<%= t(".label_store") %>");
-          show("#Order", "<%= t(".label_work_order") %>");
-          show("#Account", "<%= t(".label_charge_account") %>");
-          hide("#Status", "<%= t(".label_order_status") %>");
-          hide("#Family", "<%= t(".label_family") %>");
-          show("#Product", "<%= t(".label_product") %>");
+          var project = $('select#Project :selected').val();
+          var supplier = $('select#Supplier :selected').val();
+          var store = $('select#Store :selected').val();
+          var order = $('select#Order :selected').val();
+          var account = $('select#Account :selected').val();
+          var product = $('select#Product :selected').val();
+          if ((project == "") && (supplier == "") && (store == "") && (order == "") && (account == "") && (product == ""))
+            return;
+          window.open("receipt_report.pdf?detailed=" + detailed + "project=" + project + "&from=" + from + "&to=" + to + "&supplier=" + supplier + "&store=" + store + "&order=" + order + "&account=" + account + "&product=" + product, "_blank");
           break;
         case 4:
           // Delivery note
-          show("#Project", "<%= t(".label_project") %>");
-          hide("#Supplier", "<%= t(".label_supplier") %>");
-          show("#Store", "<%= t(".label_store") %>");
-          show("#Order", "<%= t(".label_work_order") %>");
-          show("#Account", "<%= t(".label_charge_account") %>");
-          hide("#Status", "<%= t(".label_order_status") %>");
-          hide("#Family", "<%= t(".label_family") %>");
-          show("#Product", "<%= t(".label_product") %>");
+          var project = $('select#Project :selected').val();
+          var store = $('select#Store :selected').val();
+          var order = $('select#Order :selected').val();
+          var account = $('select#Account :selected').val();
+          var product = $('select#Product :selected').val();
+          if ((project == "") && (store == "") && (order == "") && (account == "") && (product == ""))
+            return;
+          window.open("delivery_report.pdf?detailed=" + detailed + "project=" + project + "&from=" + from + "&to=" + to + "&store=" + store + "&order=" + order + "&account=" + account + "&product=" + product, "_blank");
           break;
         case 5:
           // Stock
-          show("#Project", "<%= t(".label_project") %>");
-          hide("#Supplier", "<%= t(".label_supplier") %>");
-          show("#Store", "<%= t(".label_store") %>");
-          hide("#Order", "<%= t(".label_work_order") %>");
-          hide("#Account", "<%= t(".label_charge_account") %>");
-          hide("#Status", "<%= t(".label_order_status") %>");
-          show("#Family", "<%= t(".label_family") %>");
-          show("#Product", "<%= t(".label_product") %>");
+          var project = $('select#Project :selected').val();
+          var store = $('select#Store :selected').val();
+          var family = $('select#Family :selected').val();
+          var product = $('select#Product :selected').val();
+          if ((project == "") && (store == "") && (family == "") && (product == ""))
+            return;
+          window.open("stock_report.pdf?detailed=" + detailed + "project=" + project + "&from=" + from + "&to=" + to + "&store=" + store + "&family=" + family + "&product=" + product, "_blank");
           break;
       }
 
       var worker = $('select#Worker :selected').val();
-      var from = $('#From').val();
-      var to = $('#To').val();
       var office = $('select#Office :selected').val();
       var code = $('select#Code :selected').val();
       if ((worker == "") || (from == "") || (to == ""))
@@ -360,6 +364,7 @@
       <!-- Buttons -->
       <p>
         <a href="#" id="report_btn" class="btn btn-primary form-button-under-sel2"><%= t '.report_btn' %></a>
+        <%= check_box_tag 'detailed', nil, nil, title: t("control_tracking.detailed") %>
       </p>
       <!-- Links -->
       <%= link_to t(".back_to_root"), ag2_products.root_path %>

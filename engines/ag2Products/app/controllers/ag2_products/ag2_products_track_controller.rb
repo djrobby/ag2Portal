@@ -3,11 +3,13 @@ require_dependency "ag2_products/application_controller"
 module Ag2Products
   class Ag2ProductsTrackController < ApplicationController
     before_filter :authenticate_user!
-    skip_load_and_authorize_resource :only => [:worker_report,
-                                               :office_report,
+    skip_load_and_authorize_resource :only => [:inventory_report,
+                                               :order_report,
+                                               :receipt_report,
+                                               :delivery_report,
+                                               :stock_report,
                                                :pr_track_project_has_changed,
-                                               :pr_track_family_has_changed,
-                                               :update_workers_select_from_office]
+                                               :pr_track_family_has_changed]
 
     # Update work order, charge account and store select fields at view from project select
     def pr_track_project_has_changed
@@ -41,42 +43,29 @@ module Ag2Products
       render json: @json_data
     end
 
-    # Update workers from office select
-    def update_workers_select_from_office
-      if params[:id] == '0'
-        @workers = Worker.order('worker_code')
-      else
-        office = Office.find(params[:id])
-        if !office.nil?
-          @workers = office.workers.order('worker_code')
-        else
-          @workers = Worker.order('worker_code')
-        end
-      end
-
-      respond_to do |format|
-        format.html # update_company_textfield_from_office.html.erb does not exist! JSON only
-        format.json { render json: @workers }
-      end
-    end
-
-    # Worker report
-    def worker_report
-      worker = params[:worker]
+    # Inventory counts report
+    def inventory_report
+      detailed = params[:detailed]
+      project = params[:project]
       @from = params[:from]
       @to = params[:to]
-      office = params[:office]
-      code = params[:code]
+      store = params[:store]
+      family = params[:family]
+      product = params[:product]
 
-      if worker.blank? || @from.blank? || @to.blank? 
+      # Dates are mandatory
+      if @from.blank? || @to.blank? 
         return
       end
 
-      # Search worker
-      @worker = Worker.find(worker)
+      # Search necessary data
+      #@worker = Worker.find(worker)
+      
       # Format dates
       from = Time.parse(@from).strftime("%Y-%m-%d")
       to = Time.parse(@to).strftime("%Y-%m-%d")
+      # Setup filename
+      title = t("activerecord.models.inventory_count.few") + "_#{from}_#{to}.pdf"      
       
       respond_to do |format|
         # Execute procedure and load aux table
@@ -84,37 +73,157 @@ module Ag2Products
         @time_records = TimerecordReport.all
         # Render PDF
         format.pdf { send_data render_to_string,
-                     filename: "ag2TimeRecord_#{@worker.worker_code}_#{from}_#{to}.pdf",
+                     filename: "#{title}.pdf",
                      type: 'application/pdf',
                      disposition: 'inline' }
       end
     end
 
-    # Office report
-    def office_report
-      worker = params[:worker]
+    # Purchase orders report
+    def order_report
+      detailed = params[:detailed]
+      project = params[:project]
       @from = params[:from]
       @to = params[:to]
-      office = params[:office]
-      code = params[:code]
+      supplier = params[:supplier]
+      store = params[:store]
+      order = params[:order]
+      account = params[:account]
+      status = params[:status]
+      product = params[:product]
 
-      if office.blank? || @from.blank? || @to.blank? 
+      # Dates are mandatory
+      if @from.blank? || @to.blank? 
         return
       end
 
-      # Search office
-      @office = Office.find(office)
+      # Search necessary data
+      #@worker = Worker.find(worker)
+      
       # Format dates
       from = Time.parse(@from).strftime("%Y-%m-%d")
       to = Time.parse(@to).strftime("%Y-%m-%d")
+      # Setup filename
+      title = t("activerecord.models.purchase_order.few") + "_#{from}_#{to}.pdf"      
       
       respond_to do |format|
         # Execute procedure and load aux table
-        ActiveRecord::Base.connection.execute("CALL generate_timerecord_reports(0, '#{from}', '#{to}', #{office});")
+        ActiveRecord::Base.connection.execute("CALL generate_timerecord_reports(#{worker}, '#{from}', '#{to}', 0);")
         @time_records = TimerecordReport.all
         # Render PDF
         format.pdf { send_data render_to_string,
-                     filename: "ag2TimeRecord_#{@office.office_code}_#{from}_#{to}.pdf",
+                     filename: "#{title}.pdf",
+                     type: 'application/pdf',
+                     disposition: 'inline' }
+      end
+    end
+
+    # Receipt notes report
+    def receipt_report
+      detailed = params[:detailed]
+      project = params[:project]
+      @from = params[:from]
+      @to = params[:to]
+      supplier = params[:supplier]
+      store = params[:store]
+      order = params[:order]
+      account = params[:account]
+      product = params[:product]
+
+      # Dates are mandatory
+      if @from.blank? || @to.blank? 
+        return
+      end
+
+      # Search necessary data
+      #@worker = Worker.find(worker)
+      
+      # Format dates
+      from = Time.parse(@from).strftime("%Y-%m-%d")
+      to = Time.parse(@to).strftime("%Y-%m-%d")
+      # Setup filename
+      title = t("activerecord.models.receipt_note.few") + "_#{from}_#{to}.pdf"      
+      
+      respond_to do |format|
+        # Execute procedure and load aux table
+        ActiveRecord::Base.connection.execute("CALL generate_timerecord_reports(#{worker}, '#{from}', '#{to}', 0);")
+        @time_records = TimerecordReport.all
+        # Render PDF
+        format.pdf { send_data render_to_string,
+                     filename: "#{title}.pdf",
+                     type: 'application/pdf',
+                     disposition: 'inline' }
+      end
+    end
+
+    # Delivery notes report
+    def delivery_report
+      detailed = params[:detailed]
+      project = params[:project]
+      @from = params[:from]
+      @to = params[:to]
+      store = params[:store]
+      order = params[:order]
+      account = params[:account]
+      product = params[:product]
+
+      # Dates are mandatory
+      if @from.blank? || @to.blank? 
+        return
+      end
+
+      # Search necessary data
+      #@worker = Worker.find(worker)
+      
+      # Format dates
+      from = Time.parse(@from).strftime("%Y-%m-%d")
+      to = Time.parse(@to).strftime("%Y-%m-%d")
+      # Setup filename
+      title = t("activerecord.models.delivery_note.few") + "_#{from}_#{to}.pdf"      
+      
+      respond_to do |format|
+        # Execute procedure and load aux table
+        ActiveRecord::Base.connection.execute("CALL generate_timerecord_reports(#{worker}, '#{from}', '#{to}', 0);")
+        @time_records = TimerecordReport.all
+        # Render PDF
+        format.pdf { send_data render_to_string,
+                     filename: "#{title}.pdf",
+                     type: 'application/pdf',
+                     disposition: 'inline' }
+      end
+    end
+
+    # Stock report
+    def stock_report
+      detailed = params[:detailed]
+      project = params[:project]
+      @from = params[:from]
+      @to = params[:to]
+      store = params[:store]
+      family = params[:family]
+      product = params[:product]
+
+      # Dates are mandatory
+      if @from.blank? || @to.blank? 
+        return
+      end
+
+      # Search necessary data
+      #@worker = Worker.find(worker)
+      
+      # Format dates
+      from = Time.parse(@from).strftime("%Y-%m-%d")
+      to = Time.parse(@to).strftime("%Y-%m-%d")
+      # Setup filename
+      title = t("activerecord.models.stock.few") + "_#{from}_#{to}.pdf"      
+      
+      respond_to do |format|
+        # Execute procedure and load aux table
+        ActiveRecord::Base.connection.execute("CALL generate_timerecord_reports(#{worker}, '#{from}', '#{to}', 0);")
+        @time_records = TimerecordReport.all
+        # Render PDF
+        format.pdf { send_data render_to_string,
+                     filename: "#{title}.pdf",
                      type: 'application/pdf',
                      disposition: 'inline' }
       end

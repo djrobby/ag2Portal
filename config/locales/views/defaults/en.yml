@@ -67,6 +67,8 @@ en:
     caution: "Note that not all filters listed in the filters box, apply to all available reports! Dates are always mandatory."
     label_from: "From"
     label_to: "To"
+    summarized: "Summarized"
+    detailed: "Detailed"
   every_report:
     pt: "Page"
     pt_plural: "Pages"
