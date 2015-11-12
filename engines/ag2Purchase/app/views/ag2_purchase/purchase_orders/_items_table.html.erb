@@ -59,8 +59,9 @@
         $(_this).closest('tr').find('.fnt-amount').val(data.amount);
         $(_this).closest('tr').find('.fnt-tax').val(data.tax);
         $(_this).closest('tr').find(".fnt-tax-type").val(data.type);
-        $(_this).closest('tr').find('.fnt-discount-pct').val("0,00");
-        $(_this).closest('tr').find('.fnt-discount').val("0,0000");
+        $(_this).closest('tr').find('.fnt-discount-pct').val(data.discountp);
+        $(_this).closest('tr').find('.fnt-discount').val(data.discount);
+        $(_this).closest('tr').find('.fnt-code').val(data.code);
       });
       return false;
     });
