@@ -108,9 +108,12 @@ module Ag2Products
     def po_update_description_prices_from_product_store
       product = params[:product]
       store = params[:store]
+      supplier = params[:supplier]
       description = ""
       qty = 0
       price = 0
+      discount_p = 0
+      discount = 0
       amount = 0
       tax_type_id = 0
       tax_type_tax = 0
@@ -119,12 +122,16 @@ module Ag2Products
       product_stock = 0
       if product != '0'
         @product = Product.find(product)
-        @prices = @product.purchase_prices
         # Assignment
         description = @product.main_description[0,40]
         qty = params[:qty].to_f / 10000
-        price = @product.reference_price
-        amount = qty * price
+        # Use purchase price, if any. Otherwise, the reference price
+        #price = @product.reference_price
+        price, discount_p = product_price_to_apply(@product, supplier)
+        if discount_p > 0
+          discount = price * (discount_p / 100)
+        end
+        amount = qty * (price - discount)
         tax_type_id = @product.tax_type.id
         tax_type_tax = @product.tax_type.tax
         tax = amount * (tax_type_tax / 100)
@@ -139,10 +146,13 @@ module Ag2Products
       amount = number_with_precision(amount.round(4), precision: 4)
       current_stock = number_with_precision(current_stock.round(4), precision: 4)
       product_stock = number_with_precision(product_stock.round(4), precision: 4)
+      discount_p = number_with_precision(discount_p.round(2), precision: 2)
+      discount = number_with_precision(discount.round(4), precision: 4)
       # Setup JSON
       @json_data = { "description" => description, "price" => price.to_s, "amount" => amount.to_s,
                      "tax" => tax.to_s, "type" => tax_type_id,
-                     "stock" => current_stock.to_s, "product_stock" => product_stock.to_s }
+                     "stock" => current_stock.to_s, "product_stock" => product_stock.to_s,
+                     "discountp" => discount_p, "discount" => discount }
       render json: @json_data
     end
 
@@ -152,18 +162,23 @@ module Ag2Products
       description = ""
       qty = 0
       price = 0
+      discount_p = 0
+      discount = 0
       amount = 0
       tax_type_id = 0
       tax_type_tax = 0
       tax = 0
       if product != '0'
         @product = Product.find(product)
-        @prices = @product.purchase_prices
         # Assignment
         description = @product.main_description[0,40]
         qty = params[:qty].to_f / 10000
-        price = @product.reference_price
-        amount = qty * price
+        # Use purchase price, if any. Otherwise, the reference price
+        price, discount_p = product_price_to_apply(@product, supplier)
+        if discount_p > 0
+          discount = price * (discount_p / 100)
+        end
+        amount = qty * (price - discount)
         tax_type_id = @product.tax_type.id
         tax_type_tax = @product.tax_type.tax
         tax = amount * (tax_type_tax / 100)
@@ -174,7 +189,8 @@ module Ag2Products
       amount = number_with_precision(amount.round(4), precision: 4)
       # Setup JSON
       @json_data = { "description" => description, "price" => price.to_s, "amount" => amount.to_s,
-                     "tax" => tax.to_s, "type" => tax_type_id }
+                     "tax" => tax.to_s, "type" => tax_type_id,
+                     "discountp" => discount_p, "discount" => discount }
       render json: @json_data
     end
 
@@ -424,11 +440,6 @@ module Ag2Products
 
     # Email Report (jQuery)
     def send_purchase_order_form
-      # Search purchase order & items
-      @purchase_order = PurchaseOrder.find(params[:id])
-      @items = @purchase_order.purchase_order_items.order('id')
-
-      #pdf = send_data render_to_string, filename: "#{title}_#{@purchase_order.full_no}.pdf", type: 'application/pdf'     
       code = send_email(params[:id])
       message = code == '$err' ? t(:send_error) : t(:send_ok)
       @json_data = { "code" => code, "message" => message }
@@ -750,7 +761,7 @@ module Ag2Products
     def products_dropdown
       session[:organization] != '0' ? Product.where(organization_id: session[:organization].to_i).order(:product_code) : Product.order(:product_code)
     end    
-    
+
     def offers_array(_offers)
       _array = []
       _offers.each do |i|
@@ -767,15 +778,44 @@ module Ag2Products
       _array
     end
 
+    # Use purchase price, if any. Otherwise, the reference price
+    # _product is the instance variable @product
+    # _supplier is a variable containing supplier_id
+    def product_price_to_apply(_product, _supplier)
+      _price = 0
+      _discount_rate = 0
+      _purchase_price = PurchasePrice.find_by_product_and_supplier(_product.id, _supplier)
+      if !_purchase_price.nil?
+        _price = _purchase_price.price
+        _discount_rate = _purchase_price.discount_rate
+      else
+        _price = _product.reference_price
+        _discount_rate = Supplier.find(_supplier).discount_rate rescue 0      
+      end
+      return _price, _discount_rate
+    end    
+
     def send_email(_purchase_order)
       code = '$ok'
+      from = nil
+      to = nil
 
       # Search purchase order & items
       @purchase_order = PurchaseOrder.find(_purchase_order)
-      @items = @purchase_order.purchase_order_items.order('id')
+      @items = @purchase_order.purchase_order_items.order(:id)
 
-      title = t("activerecord.models.purchase_order.one")      
-      pdf = render_to_string(filename: "#{title}_#{@purchase_order.full_no}.pdf", type: 'application/pdf')
+      title = t("activerecord.models.purchase_order.one") + "_" + @purchase_order.full_no + ".pdf"       
+      #pdf = render_to_string(filename: "#{title}_#{@purchase_order.full_no}.pdf", type: 'application/pdf')
+      pdf = render_to_string(filename: "#{title}", type: 'application/pdf')
+      from = !current_user.nil? ? User.find(current_user.id).email : User.find(@purchase_order.created_by).email
+      to = !@purchase_order.supplier.email.blank? ? @purchase_order.supplier.email : nil
+      
+      if from.blank? || to.blank?
+        code = "$err"
+      else
+        # Send e-mail
+        Notifier.send_purchase_order(@purchase_order, from, to, title, pdf).deliver
+      end
 
       code
     end

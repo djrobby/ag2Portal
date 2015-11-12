@@ -39,7 +39,7 @@
 </table>
 
 <h4><%= t 'ag2_purchase.suppliers.personal_info' %></h4>
-<table class="table">
+<table class="table odd_even_table">
   <tbody>
     <tr>
       <td><%= t 'activerecord.attributes.supplier.phone' %>:</td>
@@ -85,7 +85,7 @@
 
 <!-- Commercial info -->
 <h4><%= t 'ag2_purchase.suppliers.commercial_info' %></h4>
-<table class="table">
+<table class="table odd_even_table">
   <tbody>
     <tr>
       <td><%= t :"activerecord.attributes.supplier.payment_method" %>:</td>
@@ -199,7 +199,7 @@ new_path: new_supplier_path, new_txt: t('ag2_purchase.suppliers.index.btn_new') 
   </tbody>
 </table>
 <% if (@prices.count > 0) %>
-<table class="table table-condensed table-striped shrinked">
+<table class="table table-condensed table-striped">
   <thead>
     <%= render '/layouts/ag2_products/pricessupplierheader' %>
   </thead>

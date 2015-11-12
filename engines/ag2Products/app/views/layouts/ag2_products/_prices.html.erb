@@ -4,7 +4,8 @@
   <td><%= w.supplier.name %></td>
   <td><%= w.code unless w.code.blank? %></td>
   <td align="right"><%= number_with_precision(w.supplier.discount_rate, precision: 2) unless w.supplier.discount_rate.blank? %></td>
-  <td align="right"><%= number_with_precision(w.discount_rate, precision: 2) unless w.discount_rate.blank? %></td>
   <td align="right"><%= number_with_precision(w.price, precision: 4) unless w.price.blank? %></td>
+  <td align="right"><%= number_with_precision(w.discount_rate, precision: 2) unless w.discount_rate.blank? %></td>
+  <td align="right"><%= number_with_precision(w.net_price, precision: 4) unless w.net_price.blank? %></td>
 </tr>
 <% end %>

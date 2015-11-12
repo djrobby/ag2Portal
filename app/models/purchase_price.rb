@@ -18,6 +18,14 @@ class PurchasePrice < ActiveRecord::Base
     PurchasePrice.where("product_id = ? AND supplier_id = ?", _product, _supplier).first  
   end
 
+  def discount
+    price * (discount_rate / 100)
+  end
+
+  def net_price
+    price - discount
+  end
+
   searchable do
     text :code
     integer :product_id
@@ -31,11 +39,14 @@ class PurchasePrice < ActiveRecord::Base
   
   # After save
   def update_reference_price_if_favorite
+    _ret = true
     if favorite
-      product.reference_price = price - (price * (discount_rate / 100))
+      #product.reference_price = price - (price * (discount_rate / 100))
+      product.reference_price = price
       if !product.save
-        return false
+        _ret = false
       end      
     end
+    _ret
   end
 end

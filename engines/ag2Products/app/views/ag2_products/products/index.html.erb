@@ -3,6 +3,11 @@
   var changing = false;
 
   $(document).ready(function() {
+    $('.sel2').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      dropdownCssClass: 'shrinked',
+      dropdownAutoWidth: true
+    });
     // Initialized form variable
     _thisForm = $("#Type").closest('form')[0];
   }); 
@@ -21,7 +26,7 @@
   $(window).bind("load", function() {
     $("#No").val("<%= params[:No] %>");
     $("#Type").val("<%= params[:Type] %>");
-    $("#Family").val("<%= params[:Family] %>");
+    $("#Family").select2("val", "<%= params[:Family] %>");
     $("#Measure").val("<%= params[:Measure] %>");
     $("#Manufacturer").val("<%= params[:Manufacturer] %>");
     $("#Tax").val("<%= params[:Tax] %>");
@@ -32,7 +37,7 @@
     $("#removeFilter").click(function() {
       $("#No").val("");
       $("#Type").val("");
-      $("#Family").val("");
+      $("#Family").select2("val", "");
       $("#Measure").val("");
       $("#Manufacturer").val("");
       $("#Tax").val("");
@@ -70,9 +75,9 @@
         <%= select_tag "Type", options_from_collection_for_select(ProductType.order('description').all, "id", "description"), :prompt => "", :class => 'x-large-text-field shrinked' %>
         <!-- Family -->
         <%= label_tag I18n.t("ag2_products.products.index.label_family"), nil, :class => 'form-label' %>
-        <%= select_tag "Family", options_from_collection_for_select(@product_families, "id", "full_name"), :prompt => "", :class => 'x-large-text-field shrinked' %>
+        <%= select_tag "Family", options_from_collection_for_select(@product_families, "id", "full_name"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
         <!-- Measure -->
-        <%= label_tag I18n.t("ag2_products.products.index.label_measure"), nil, :class => 'form-label' %>
+        <%= label_tag I18n.t("ag2_products.products.index.label_measure"), nil, :class => 'form-label-under-sel2' %>
         <%= select_tag "Measure", options_from_collection_for_select(Measure.order('description').all, "id", "description"), :prompt => "", :class => 'x-large-text-field shrinked' %>
         <!-- Manufacturer -->
         <%= label_tag I18n.t("ag2_products.products.index.label_manufacturer"), nil, :class => 'form-label' %>

@@ -1,4 +1,6 @@
 <script>
+  var _supplier;
+
   $(document).ready(function() {
     $('.isel2').select2({
       formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
@@ -6,6 +8,10 @@
       dropdownAutoWidth: true,
       containerCssClass: 'sub-select2-field'
     });
+
+    // Supplier
+    _supplier = $('#purchase_order_supplier_id :selected').val();
+    if (_supplier == "") _supplier = "0";
 
     // Trigger to display totals at table foot
     $('#items-table').bind('totals', function(event) {
@@ -53,14 +59,14 @@
         qty = "0";
       // Right formatted for passing as REST parameter
       qty = parseInt(right_number(qty, 4) * 10000);
-      jQuery.getJSON('po_update_description_prices_from_product/' + product + '/' + qty, function(data) {
+      jQuery.getJSON('po_update_description_prices_from_product/' + product + '/' + qty + '/' + _supplier, function(data) {
         $(_this).closest('tr').find('.fnt-description').val(data.description);
         $(_this).closest('tr').find('.fnt-price').val(data.price);
         $(_this).closest('tr').find('.fnt-amount').val(data.amount);
         $(_this).closest('tr').find('.fnt-tax').val(data.tax);
         $(_this).closest('tr').find(".fnt-tax-type").val(data.type);
-        $(_this).closest('tr').find('.fnt-discount-pct').val("0,00");
-        $(_this).closest('tr').find('.fnt-discount').val("0,0000");
+        $(_this).closest('tr').find('.fnt-discount-pct').val(data.discountp);
+        $(_this).closest('tr').find('.fnt-discount').val(data.discount);
       });
       return false;
     });

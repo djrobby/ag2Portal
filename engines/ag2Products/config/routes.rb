@@ -153,12 +153,12 @@ Ag2Products::Engine.routes.draw do
     match 'receipt_notes/:id/rn_current_balance/:order', :controller => 'receipt_notes', :action => 'rn_current_balance'
     #
     # Purchase orders 
-    match 'purchase_orders/po_update_description_prices_from_product_store/:product/:qty/:store', :controller => 'purchase_orders', :action => 'po_update_description_prices_from_product_store'
-    match 'po_update_description_prices_from_product_store/:product/:qty/:store', :controller => 'purchase_orders', :action => 'po_update_description_prices_from_product_store'
-    match 'purchase_orders/:id/po_update_description_prices_from_product_store/:product/:qty/:store', :controller => 'purchase_orders', :action => 'po_update_description_prices_from_product_store'
-    match 'purchase_orders/po_update_description_prices_from_product/:product/:qty', :controller => 'purchase_orders', :action => 'po_update_description_prices_from_product'
-    match 'po_update_description_prices_from_product/:product/:qty', :controller => 'purchase_orders', :action => 'po_update_description_prices_from_product'
-    match 'purchase_orders/:id/po_update_description_prices_from_product/:product/:qty', :controller => 'purchase_orders', :action => 'po_update_description_prices_from_product'
+    match 'purchase_orders/po_update_description_prices_from_product_store/:product/:qty/:store/:supplier', :controller => 'purchase_orders', :action => 'po_update_description_prices_from_product_store'
+    match 'po_update_description_prices_from_product_store/:product/:qty/:store/:supplier', :controller => 'purchase_orders', :action => 'po_update_description_prices_from_product_store'
+    match 'purchase_orders/:id/po_update_description_prices_from_product_store/:product/:qty/:store/:supplier', :controller => 'purchase_orders', :action => 'po_update_description_prices_from_product_store'
+    match 'purchase_orders/po_update_description_prices_from_product/:product/:qty/:supplier', :controller => 'purchase_orders', :action => 'po_update_description_prices_from_product'
+    match 'po_update_description_prices_from_product/:product/:qty/:supplier', :controller => 'purchase_orders', :action => 'po_update_description_prices_from_product'
+    match 'purchase_orders/:id/po_update_description_prices_from_product/:product/:qty/:supplier', :controller => 'purchase_orders', :action => 'po_update_description_prices_from_product'
     match 'purchase_orders/po_update_amount_from_price_or_quantity/:price/:qty/:tax_type/:discount_p/:discount/:product', :controller => 'purchase_orders', :action => 'po_update_amount_from_price_or_quantity'
     match 'po_update_amount_from_price_or_quantity/:price/:qty/:tax_type/:discount_p/:discount/:product', :controller => 'purchase_orders', :action => 'po_update_amount_from_price_or_quantity'
     match 'purchase_orders/:id/po_update_amount_from_price_or_quantity/:price/:qty/:tax_type/:discount_p/:discount/:product', :controller => 'purchase_orders', :action => 'po_update_amount_from_price_or_quantity'

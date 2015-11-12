@@ -20,13 +20,13 @@
       <td><%=t 'activerecord.attributes.purchase_price.supplier' %>:</td>
       <td><%= @purchase_price.supplier.full_name %></td>
       <td><%=t 'activerecord.attributes.purchase_price.price' %>:</td>
-      <td class="highlighted bolded"><%= number_with_precision(@purchase_price.price, precision: 4, delimiter: I18n.locale == :es ? "." : ",") unless @purchase_price.price.blank? %></td>
+      <td><%= number_with_precision(@purchase_price.price, precision: 4, delimiter: I18n.locale == :es ? "." : ",") unless @purchase_price.price.blank? %></td>
     </tr>
     <tr>
       <td><%=t 'activerecord.attributes.purchase_price.discount_rate' %>:</td>
       <td><%= number_with_precision(@purchase_price.discount_rate, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless @purchase_price.discount_rate.blank? %></td>
-      <td></td>
-      <td></td>
+      <td><%=t 'activerecord.attributes.purchase_price.net_price' %>:</td>
+      <td class="highlighted bolded"><%= number_with_precision(@purchase_price.net_price, precision: 4, delimiter: I18n.locale == :es ? "." : ",") unless @purchase_price.net_price.blank? %></td>
     </tr>
     <tr>
       <td><%=t 'activerecord.attributes.purchase_price.measure' %>:</td>
