@@ -22,7 +22,7 @@
     <% @products.each do |product| %>
     <tr>
       <td><%= link_to product.full_code, product %></td>
-      <td><%= product.main_description %></td>
+      <td><%= product.main_description[0,50] %></td>
       <td><%= product.product_type.description %></td>
       <td><%= product.product_family.name %></td>
       <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => Product, :path => edit_product_path(product) } %>
