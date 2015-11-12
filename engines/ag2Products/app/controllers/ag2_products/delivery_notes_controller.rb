@@ -79,7 +79,7 @@ module Ag2Products
         # Assignment
         description = @product.main_description[0,40]
         qty = params[:qty].to_f / 10000
-        cost = @product.reference_price
+        cost = @product.average_price > 0 ? @product.average_price : @product.reference_price
         costs = qty * cost
         price = @product.sell_price
         amount = qty * price
@@ -123,7 +123,7 @@ module Ag2Products
         # Assignment
         description = @product.main_description[0,40]
         qty = params[:qty].to_f / 10000
-        cost = @product.reference_price
+        cost = @product.average_price > 0 ? @product.average_price : @product.reference_price
         costs = qty * cost
         price = @product.sell_price
         amount = qty * price
@@ -624,6 +624,11 @@ module Ag2Products
       end
       _array
     end
+
+    # Use average price, if any. Otherwise, the reference price
+    def product_price_to_apply(_product)
+      @product.average_price > 0 ? @product.average_price : @product.reference_price
+    end    
     
     # Keeps filter state
     def manage_filter_state
