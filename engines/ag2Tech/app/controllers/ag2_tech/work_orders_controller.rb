@@ -138,7 +138,7 @@ module Ag2Tech
         # Assignment
         description = @product.main_description[0,40]
         qty = params[:qty].to_f / 10000
-        cost = @product.reference_price
+        cost = @product.average_price > 0 ? @product.average_price : @product.reference_price
         costs = qty * cost
         price = @product.sell_price
         amount = qty * price

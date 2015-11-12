@@ -20,6 +20,10 @@ module Ag2Products
                                                :po_product_stock,
                                                :po_approve_order,
                                                :send_purchase_order_form]
+    # Helper methods for
+    # => allow edit (hide buttons)
+    helper_method :cannot_edit
+
     # Update offer select at view from supplier select
     def po_update_offer_select_from_supplier
       supplier = params[:supplier]
@@ -659,6 +663,13 @@ module Ag2Products
     end
     
     private
+    
+    # Can't edit or delete when
+    # => User isn't administrator
+    # => Order is approved
+    def cannot_edit(_order)
+      !session[:is_administrator] && !_order.approver_id.blank?
+    end
     
     def current_projects_for_index(_projects)
       _current_projects = []

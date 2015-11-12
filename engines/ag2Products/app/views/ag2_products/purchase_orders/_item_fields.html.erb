@@ -352,7 +352,7 @@
     <div style="overflow: hidden; padding-left: 0em;">
       <%= f.association :project, collection: @projects, input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-project', data: { validation: "required", "validation-error-msg" => "#{e}" } }, label_html: { class: 'form-label' } %>
     </div>
-    <%= f.association :work_order, collection: @work_orders, input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-work-order', data: { validation: "required", "validation-error-msg" => "#{e}" } }, label_html: { class: 'form-label' } %>
+    <%= f.association :work_order, collection: @work_orders, input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-work-order' }, label_html: { class: 'form-label' } %>
     <%= f.association :charge_account, collection: @charge_accounts, input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-charge-account', data: { validation: "required", "validation-error-msg" => "#{e}" } }, label_html: { class: 'form-label' } %>
     <%= f.association :store, collection: @stores, input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-store', data: { validation: "required", "validation-error-msg" => "#{e}" } }, label_html: { class: 'form-label' } %>
     <a href="#" style="float: left" id="infoButton"><i class="icon-info-sign" title="<%=t('ag2_purchase.purchase_orders.info_btn') %>"></i></a>

@@ -4,7 +4,7 @@ es:
       index:
         title: "Recuentos de inventario"
         btn_new: "Nuevo Recuento"
-        btn_new_from_family: "Nuevo Recuento para Familia"
+        btn_new_from_family: "Nuevo Recuento por Familia"
         back_to_root: "Volver a ag2Logistics"
         label_others: "Otros"
         btn_apply: "Aplicar Filtro"

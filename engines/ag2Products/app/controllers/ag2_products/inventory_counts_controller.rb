@@ -12,6 +12,10 @@ module Ag2Products
                                                :ic_approve_count,
                                                :ic_update_from_product_store,
                                                :ic_update_from_organization]
+    # Helper methods for
+    # => allow edit (hide buttons)
+    helper_method :cannot_edit
+
     # Calculate and format totals properly
     def ic_totals
       qty = params[:qty].to_f / 10000
@@ -407,6 +411,13 @@ module Ag2Products
     end
     
     private
+    
+    # Can't edit or delete when
+    # => User isn't administrator
+    # => Order is approved
+    def cannot_edit(_count)
+      !session[:is_administrator] && !_count.approver_id.blank?
+    end
 
     def inverse_no_search(no)
       _numbers = []

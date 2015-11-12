@@ -32,8 +32,8 @@
       <td><%= note.store.name unless note.store.blank? %></td>
       <td><%= note.product_family.full_name unless note.product_family.blank? %></td>
       <td align="right"><%= number_with_precision(note.quantity, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless note.quantity.blank? %></td>
-      <td> <%= render :partial => '/layouts/crud/edit', :locals => { :model => InventoryCount, :path => edit_inventory_count_path(note) } %>
-      <%= render :partial => '/layouts/crud/delete', :locals => { :model => InventoryCount, :path => note, :msg => t("activerecord.models.inventory_count.one"), :txt => note.full_no } %> </td>
+      <td> <%= render :partial => '/layouts/crud/edit', :locals => { :model => InventoryCount, :path => edit_inventory_count_path(note) } unless cannot_edit(note) %>
+      <%= render :partial => '/layouts/crud/delete', :locals => { :model => InventoryCount, :path => note, :msg => t("activerecord.models.inventory_count.one"), :txt => note.full_no } unless cannot_edit(note) %> </td>
     </tr>
     <% end %>
   </tbody>

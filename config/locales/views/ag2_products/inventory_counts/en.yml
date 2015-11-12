@@ -4,7 +4,7 @@ en:
       index:
         title: "Inventory counts"
         btn_new: "New Inventory count"
-        btn_new_from_family: "New Count for Family"
+        btn_new_from_family: "New Count by Family"
         back_to_root: "Back to ag2Logistics"
         label_others: "Others"
         btn_apply: "Apply Filter"

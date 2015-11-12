@@ -184,10 +184,14 @@
   <tbody>
     <tr class="form-tr">
       <td class="form-td-two left-winged">
+        <% if cannot_edit(@purchase_order) %>
+        <%= render partial: '/layouts/crud/new_no_br', locals: { model: PurchaseOrder, path: new_purchase_order_path, txt: t('ag2_purchase.purchase_orders.index.btn_new') } %>
+        <% else %>
         <%= render partial: '/layouts/crud/update_delete_new_no_br', locals:
         { model: PurchaseOrder, update_path: edit_purchase_order_path(@purchase_order), update_txt: t('.btn_edit'),
         delete_path: @purchase_order, delete_txt: t('.btn_delete'), msg: t("activerecord.models.purchase_order.one"), txt: @purchase_order.full_no,
         new_path: new_purchase_order_path, new_txt: t('ag2_purchase.purchase_orders.index.btn_new') } %>
+        <% end %>
       </td>
       <td class="form-td-two right-winged">
         <!-- Approve purchase order -->

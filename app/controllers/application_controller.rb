@@ -48,6 +48,8 @@ class ApplicationController < ActionController::Base
   # OCO
   #
   def init_oco
+    session[:administrator] = false
+    
     if user_signed_in?
       if !session[:office]
         session[:office] = '0'
@@ -89,6 +91,9 @@ class ApplicationController < ActionController::Base
           end
         end
       end
+      
+      # Administrator?
+      session[:is_administrator] = current_user.has_role? :Administrator      
     end    
   end
   
@@ -124,6 +129,7 @@ class ApplicationController < ActionController::Base
     notifications = office.office_notifications.joins(:notification).where('notifications.table = ? AND office_notifications.role = ? AND office_notifications.user_id = ?', table, 1, current_user_id) rescue nil
     !notifications.blank?
   end
+
   #
   # Display
   #

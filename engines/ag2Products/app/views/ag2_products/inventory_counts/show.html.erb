@@ -127,10 +127,14 @@
   <tbody>
     <tr class="form-tr">
       <td class="form-td-two left-winged">
+        <% if cannot_edit(@inventory_count) %>
+        <%= render partial: '/layouts/crud/new_no_br', locals: { model: InventoryCount, path: new_inventory_count_path, txt: t('ag2_products.inventory_counts.index.btn_new') } %>
+        <% else %>
         <%= render partial: '/layouts/crud/update_delete_new_no_br', locals:
         { model: InventoryCount, update_path: edit_inventory_count_path(@inventory_count), update_txt: t('.btn_edit'),
         delete_path: @inventory_count, delete_txt: t('.btn_delete'), msg: t("activerecord.models.inventory_count.one"), txt: @inventory_count.full_no,
         new_path: new_inventory_count_path, new_txt: t('ag2_products.inventory_counts.index.btn_new') } %>
+        <% end %>
       </td>
       <td class="form-td-two right-winged">
         <!-- Approve inventory count -->
