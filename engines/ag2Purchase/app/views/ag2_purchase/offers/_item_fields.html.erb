@@ -1,4 +1,6 @@
 <script>
+  var _supplier;
+
   $(document).ready(function() {
     /*
      * Retrieves parent values
@@ -29,6 +31,9 @@
     var _s = $('#offer_store_id :selected').val();
     if (_s == "") _s = "0";
     $('#fnt-store').val(_s);
+    // Supplier
+    _supplier = $('#offer_supplier_id :selected').val();
+    if (_supplier == "") _supplier = "0";
     // Product
     init();
 
@@ -54,14 +59,15 @@
       // Right formatted for passing as REST parameter
       qty = parseInt(right_number(qty, 4) * 10000);
       //qty = qty.replace(",", ".") * 10000;
-      jQuery.getJSON('of_update_description_prices_from_product_store/' + product + '/' + qty + '/' + store, function(data) {
+      jQuery.getJSON('of_update_description_prices_from_product_store/' + product + '/' + qty + '/' + store + '/' + _supplier, function(data) {
         $("#fnt-description").val(data.description);
         $("#fnt-price").val(data.price);
         $("#fnt-amount").val(data.amount);
         $("#fnt-tax-type").val(data.type);
         $("#fnt-tax").val(data.tax);
-        $('#fnt-discount-pct').val("0,00");
-        $('#fnt-discount').val("0,0000");
+        $('#fnt-discount-pct').val(data.discountp);
+        $('#fnt-discount').val(data.discount);
+        $('#fnt-code').val(data.code);
         $("#current-stock").html(data.stock);
       });
       return false;

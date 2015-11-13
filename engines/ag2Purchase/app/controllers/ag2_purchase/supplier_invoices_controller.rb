@@ -182,9 +182,13 @@ module Ag2Purchase
     def si_update_description_prices_from_product_store
       product = params[:product]
       store = params[:store]
+      supplier = params[:supplier]
       description = ""
       qty = 0
       price = 0
+      discount_p = 0
+      discount = 0
+      code = ""
       amount = 0
       tax_type_id = 0
       tax_type_tax = 0
@@ -196,8 +200,12 @@ module Ag2Purchase
         # Assignment
         description = @product.main_description[0,40]
         qty = params[:qty].to_f / 10000
-        price = @product.reference_price
-        amount = qty * price
+        # Use purchase price, if any. Otherwise, the reference price
+        price, discount_p, code = product_price_to_apply(@product, supplier)
+        if discount_p > 0
+          discount = price * (discount_p / 100)
+        end
+        amount = qty * (price - discount)
         tax_type_id = @product.tax_type.id
         tax_type_tax = @product.tax_type.tax
         tax = amount * (tax_type_tax / 100)
@@ -210,18 +218,25 @@ module Ag2Purchase
       tax = number_with_precision(tax.round(4), precision: 4)
       amount = number_with_precision(amount.round(4), precision: 4)
       current_stock = number_with_precision(current_stock.round(4), precision: 4)
+      discount_p = number_with_precision(discount_p.round(2), precision: 2)
+      discount = number_with_precision(discount.round(4), precision: 4)
       # Setup JSON hash
       @json_data = { "description" => description, "price" => price.to_s, "amount" => amount.to_s,
-                     "tax" => tax.to_s, "type" => tax_type_id, "stock" => current_stock.to_s }
+                     "tax" => tax.to_s, "type" => tax_type_id, "stock" => current_stock.to_s,
+                     "discountp" => discount_p, "discount" => discount, "code" => code }
       render json: @json_data
     end
 
     # Update description and prices text fields at view from product select
     def si_update_description_prices_from_product
       product = params[:product]
+      supplier = params[:supplier]
       description = ""
       qty = 0
       price = 0
+      discount_p = 0
+      discount = 0
+      code = ""
       amount = 0
       tax_type_id = 0
       tax_type_tax = 0
@@ -232,8 +247,12 @@ module Ag2Purchase
         # Assignment
         description = @product.main_description[0,40]
         qty = params[:qty].to_f / 10000
-        price = @product.reference_price
-        amount = qty * price
+        # Use purchase price, if any. Otherwise, the reference price
+        price, discount_p, code = product_price_to_apply(@product, supplier)
+        if discount_p > 0
+          discount = price * (discount_p / 100)
+        end
+        amount = qty * (price - discount)
         tax_type_id = @product.tax_type.id
         tax_type_tax = @product.tax_type.tax
         tax = amount * (tax_type_tax / 100)
@@ -242,9 +261,12 @@ module Ag2Purchase
       price = number_with_precision(price.round(4), precision: 4)
       tax = number_with_precision(tax.round(4), precision: 4)
       amount = number_with_precision(amount.round(4), precision: 4)
+      discount_p = number_with_precision(discount_p.round(2), precision: 2)
+      discount = number_with_precision(discount.round(4), precision: 4)
       # Setup JSON hash
       @json_data = { "description" => description, "price" => price.to_s, "amount" => amount.to_s,
-                     "tax" => tax.to_s, "type" => tax_type_id }
+                     "tax" => tax.to_s, "type" => tax_type_id,
+                     "discountp" => discount_p, "discount" => discount, "code" => code }
       render json: @json_data
     end
 
@@ -394,7 +416,7 @@ module Ag2Purchase
       # Setup JSON
       @json_data = { "supplier" => @suppliers, "project" => @projects, "work_order" => @work_orders,
                      "charge_account" => @charge_accounts, "store" => @stores,
-                     "payment_method" => @payment_methods, "product" => @products }
+                     "payment_method" => @payment_methods, "product" => @products_dropdown }
       render json: @json_data
     end
 
@@ -855,6 +877,25 @@ module Ag2Purchase
       end
       _array
     end
+
+    # Use purchase price, if any. Otherwise, the reference price
+    # _product is the instance variable @product
+    # _supplier is a variable containing supplier_id
+    def product_price_to_apply(_product, _supplier)
+      _price = 0
+      _discount_rate = 0
+      _code = ""
+      _purchase_price = PurchasePrice.find_by_product_and_supplier(_product.id, _supplier)
+      if !_purchase_price.nil?
+        _price = _purchase_price.price
+        _discount_rate = _purchase_price.discount_rate
+        _code = _purchase_price.code
+      else
+        _price = _product.reference_price
+        _discount_rate = Supplier.find(_supplier).discount_rate rescue 0      
+      end
+      return _price, _discount_rate, _code
+    end    
     
     # Keeps filter state
     def manage_filter_state
