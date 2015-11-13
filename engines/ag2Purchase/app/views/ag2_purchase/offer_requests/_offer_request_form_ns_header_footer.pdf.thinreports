@@ -31,4 +31,5 @@ report.page.values(printed_at: Time.now,
 				   currency_note: I18n.t("every_report.currency_note"),
 				   remarks_title: I18n.t("activerecord.attributes.offer_request.remarks"),
 				   remarks: @offer_request.remarks,
+				   about_values: I18n.t("activerecord.attributes.offer_request.about_values"),
 				   other_notes: I18n.t("activerecord.attributes.offer_request.other_notes"))
