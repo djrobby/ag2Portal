@@ -49,6 +49,7 @@ class Organization < ActiveRecord::Base
   has_many :work_order_labors
   has_many :work_order_types
   has_many :budget_headings
+  has_many :budget_periods
   has_many :budgets
   has_many :vehicles
   has_many :tools

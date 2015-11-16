@@ -3,13 +3,28 @@ en:
     ag2_purchase_track:
       index:
         back_to_root: "Back to ag2Purchase"
-        btn_worker: "Worker Report"
-        btn_office: "Office Report"
-      office_report:
-        report_title: "Time records by Office"
-        office_title: "Office:"
-      worker_report:
-        report_title: "Time records by Worker"
+        report_btn: "Generate selected Report"
+        label_report: "Report"
+        label_project: "Project"
+        label_supplier: "Supplier"
+        label_store: "Store"
+        label_work_order: "Work order"
+        label_charge_account: "Analytical account"
+        label_order_status: "Order status"
+        label_family: "Product family"
+        label_product: "Product"
+      request_report:
+        report_title: "Offer requests"
+      offer_report:
+        report_title: "Offers"
+      order_report:
+        report_title: "Purchase orders"
+      invoice_report:
+        report_title: "Invoices"
+      payment_report:
+        report_title: "Payments"
+      supplier_report:
+        report_title: "Suppliers"
       every_report:
         pt: "Page"
         pd: "of"

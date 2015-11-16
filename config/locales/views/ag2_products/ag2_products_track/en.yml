@@ -13,11 +13,16 @@ en:
         label_order_status: "Order status"
         label_family: "Product family"
         label_product: "Product"
-      office_report:
-        report_title: "Time records by Office"
-        office_title: "Office:"
-      worker_report:
-        report_title: "Time records by Worker"
+      inventory_report:
+        report_title: "Inventory counts"
+      order_report:
+        report_title: "Purchase orders"
+      receipt_report:
+        report_title: "Receipt notes"
+      delivery_report:
+        report_title: "Delivery notes"
+      stock_report:
+        report_title: "Stocks"
       every_report:
         pt: "Page"
         pd: "of"

@@ -3,13 +3,28 @@ es:
     ag2_purchase_track:
       index:
         back_to_root: "Volver a ag2Purchase"
-        btn_worker: "Informe por Trabajador"
-        btn_office: "Informe por Oficina"
-      office_report:
-        report_title: "Marcajes por Oficina"
-        office_title: "Oficina:"
-      worker_report:
-        report_title: "Marcajes por Trabajador"
+        report_btn: "Generar Informe seleccionado"
+        label_report: "Informe"
+        label_project: "Proyecto"
+        label_supplier: "Proveedor"
+        label_store: "Almacén"
+        label_work_order: "Orden de trabajo"
+        label_charge_account: "Cuenta analítica"
+        label_order_status: "Estado del pedido"
+        label_family: "Familia de producto"
+        label_product: "Producto"
+      request_report:
+        report_title: "Solicitudes de oferta"
+      offer_report:
+        report_title: "Ofertas"
+      order_report:
+        report_title: "Pedidos"
+      invoice_report:
+        report_title: "Facturas"
+      payment_report:
+        report_title: "Pagos"
+      supplier_report:
+        report_title: "Proveedores"
       every_report:
         pt: "Página"
         pd: "de"

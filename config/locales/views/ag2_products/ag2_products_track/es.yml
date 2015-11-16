@@ -13,11 +13,16 @@ es:
         label_order_status: "Estado del pedido"
         label_family: "Familia de producto"
         label_product: "Producto"
-      office_report:
-        report_title: "Marcajes por Oficina"
-        office_title: "Oficina:"
-      worker_report:
-        report_title: "Marcajes por Trabajador"
+      inventory_report:
+        report_title: "Recuentos de inventario"
+      order_report:
+        report_title: "Pedidos"
+      receipt_report:
+        report_title: "Notas de recepción"
+      delivery_report:
+        report_title: "Notas de entrega"
+      stock_report:
+        report_title: "Existencias"
       every_report:
         pt: "Página"
         pd: "de"

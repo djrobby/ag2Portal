@@ -3,13 +3,18 @@ es:
     ag2_tech_track:
       index:
         back_to_root: "Volver a ag2Tech"
-        btn_worker: "Informe por Trabajador"
-        btn_office: "Informe por Oficina"
-      office_report:
-        report_title: "Marcajes por Oficina"
-        office_title: "Oficina:"
-      worker_report:
-        report_title: "Marcajes por Trabajador"
+        report_btn: "Generar Informe seleccionado"
+        label_report: "Informe"
+        label_project: "Proyecto"
+        label_work_order: "Orden de trabajo"
+        label_charge_account: "Cuenta analítica"
+        label_budget_period: "Periodo presupuestario"
+      project_report:
+        report_title: "Proyectos"
+      budget_report:
+        report_title: "Presupuestos"
+      work_report:
+        report_title: "Ordenes de trabajo"
       every_report:
         pt: "Página"
         pd: "de"

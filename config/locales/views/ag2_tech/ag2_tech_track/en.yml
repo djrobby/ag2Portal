@@ -3,13 +3,18 @@ en:
     ag2_tech_track:
       index:
         back_to_root: "Back to ag2Tech"
-        btn_worker: "Worker Report"
-        btn_office: "Office Report"
-      office_report:
-        report_title: "Time records by Office"
-        office_title: "Office:"
-      worker_report:
-        report_title: "Time records by Worker"
+        report_btn: "Generate selected Report"
+        label_report: "Report"
+        label_project: "Project"
+        label_work_order: "Work order"
+        label_charge_account: "Analytical account"
+        label_budget_period: "Budget period"
+      project_report:
+        report_title: "Projects"
+      budget_report:
+        report_title: "Budgets"
+      work_report:
+        report_title: "Work orders"
       every_report:
         pt: "Page"
         pd: "of"

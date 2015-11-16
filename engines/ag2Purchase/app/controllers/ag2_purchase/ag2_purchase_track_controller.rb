@@ -3,16 +3,17 @@ require_dependency "ag2_purchase/application_controller"
 module Ag2Purchase
   class Ag2PurchaseTrackController < ApplicationController
     before_filter :authenticate_user!
-    skip_load_and_authorize_resource :only => [:inventory_report,
+    skip_load_and_authorize_resource :only => [:request_report,
+                                               :offer_report,
                                                :order_report,
-                                               :receipt_report,
-                                               :delivery_report,
-                                               :stock_report,
+                                               :invoice_report,
+                                               :payment_report,
+                                               :supplier_report,
                                                :pu_track_project_has_changed,
                                                :pu_track_family_has_changed]
 
     # Update work order, charge account and store select fields at view from project select
-    def pr_track_project_has_changed
+    def pu_track_project_has_changed
       project = params[:order]
       if project != '0'
         @project = Project.find(project)
@@ -29,7 +30,7 @@ module Ag2Purchase
     end
 
     # Update product select fields at view from family select
-    def pr_track_family_has_changed
+    def pu_track_family_has_changed
       family = params[:order]
       if family != '0'
         @family = ProductFamily.find(family)
@@ -43,14 +44,15 @@ module Ag2Purchase
       render json: @json_data
     end
 
-    # Inventory counts report
-    def inventory_report
+    # Offer request report
+    def request_report
       detailed = params[:detailed]
       project = params[:project]
       @from = params[:from]
       @to = params[:to]
-      store = params[:store]
-      family = params[:family]
+      supplier = params[:supplier]
+      order = params[:order]
+      account = params[:account]
       product = params[:product]
 
       # Dates are mandatory
@@ -65,7 +67,187 @@ module Ag2Purchase
       from = Time.parse(@from).strftime("%Y-%m-%d")
       to = Time.parse(@to).strftime("%Y-%m-%d")
       # Setup filename
-      title = t("activerecord.models.inventory_count.few") + "_#{from}_#{to}.pdf"      
+      title = t("activerecord.models.offer_request.few") + "_#{from}_#{to}.pdf"      
+      
+      respond_to do |format|
+        # Execute procedure and load aux table
+        ActiveRecord::Base.connection.execute("CALL generate_timerecord_reports(#{worker}, '#{from}', '#{to}', 0);")
+        @time_records = TimerecordReport.all
+        # Render PDF
+        format.pdf { send_data render_to_string,
+                     filename: "#{title}.pdf",
+                     type: 'application/pdf',
+                     disposition: 'inline' }
+      end
+    end
+
+    # Offers report
+    def offer_report
+      detailed = params[:detailed]
+      project = params[:project]
+      @from = params[:from]
+      @to = params[:to]
+      supplier = params[:supplier]
+      order = params[:order]
+      account = params[:account]
+      product = params[:product]
+
+      # Dates are mandatory
+      if @from.blank? || @to.blank? 
+        return
+      end
+
+      # Search necessary data
+      #@worker = Worker.find(worker)
+      
+      # Format dates
+      from = Time.parse(@from).strftime("%Y-%m-%d")
+      to = Time.parse(@to).strftime("%Y-%m-%d")
+      # Setup filename
+      title = t("activerecord.models.offer.few") + "_#{from}_#{to}.pdf"      
+      
+      respond_to do |format|
+        # Execute procedure and load aux table
+        ActiveRecord::Base.connection.execute("CALL generate_timerecord_reports(#{worker}, '#{from}', '#{to}', 0);")
+        @time_records = TimerecordReport.all
+        # Render PDF
+        format.pdf { send_data render_to_string,
+                     filename: "#{title}.pdf",
+                     type: 'application/pdf',
+                     disposition: 'inline' }
+      end
+    end
+
+    # Purchase orders report
+    def order_report
+      detailed = params[:detailed]
+      project = params[:project]
+      @from = params[:from]
+      @to = params[:to]
+      supplier = params[:supplier]
+      order = params[:order]
+      account = params[:account]
+      status = params[:status]
+      product = params[:product]
+
+      # Dates are mandatory
+      if @from.blank? || @to.blank? 
+        return
+      end
+
+      # Search necessary data
+      #@worker = Worker.find(worker)
+      
+      # Format dates
+      from = Time.parse(@from).strftime("%Y-%m-%d")
+      to = Time.parse(@to).strftime("%Y-%m-%d")
+      # Setup filename
+      title = t("activerecord.models.purchase_order.few") + "_#{from}_#{to}.pdf"      
+      
+      respond_to do |format|
+        # Execute procedure and load aux table
+        ActiveRecord::Base.connection.execute("CALL generate_timerecord_reports(#{worker}, '#{from}', '#{to}', 0);")
+        @time_records = TimerecordReport.all
+        # Render PDF
+        format.pdf { send_data render_to_string,
+                     filename: "#{title}.pdf",
+                     type: 'application/pdf',
+                     disposition: 'inline' }
+      end
+    end
+
+    # Supplier invoices report
+    def invoice_report
+      detailed = params[:detailed]
+      project = params[:project]
+      @from = params[:from]
+      @to = params[:to]
+      supplier = params[:supplier]
+      order = params[:order]
+      account = params[:account]
+      product = params[:product]
+
+      # Dates are mandatory
+      if @from.blank? || @to.blank? 
+        return
+      end
+
+      # Search necessary data
+      #@worker = Worker.find(worker)
+      
+      # Format dates
+      from = Time.parse(@from).strftime("%Y-%m-%d")
+      to = Time.parse(@to).strftime("%Y-%m-%d")
+      # Setup filename
+      title = t("activerecord.models.supplier_invoice.few") + "_#{from}_#{to}.pdf"      
+      
+      respond_to do |format|
+        # Execute procedure and load aux table
+        ActiveRecord::Base.connection.execute("CALL generate_timerecord_reports(#{worker}, '#{from}', '#{to}', 0);")
+        @time_records = TimerecordReport.all
+        # Render PDF
+        format.pdf { send_data render_to_string,
+                     filename: "#{title}.pdf",
+                     type: 'application/pdf',
+                     disposition: 'inline' }
+      end
+    end
+
+    # Supplier payments report
+    def payment_report
+      detailed = params[:detailed]
+      project = params[:project]
+      @from = params[:from]
+      @to = params[:to]
+      supplier = params[:supplier]
+
+      # Dates are mandatory
+      if @from.blank? || @to.blank? 
+        return
+      end
+
+      # Search necessary data
+      #@worker = Worker.find(worker)
+      
+      # Format dates
+      from = Time.parse(@from).strftime("%Y-%m-%d")
+      to = Time.parse(@to).strftime("%Y-%m-%d")
+      # Setup filename
+      title = t("activerecord.models.supplier_payment.few") + "_#{from}_#{to}.pdf"      
+      
+      respond_to do |format|
+        # Execute procedure and load aux table
+        ActiveRecord::Base.connection.execute("CALL generate_timerecord_reports(#{worker}, '#{from}', '#{to}', 0);")
+        @time_records = TimerecordReport.all
+        # Render PDF
+        format.pdf { send_data render_to_string,
+                     filename: "#{title}.pdf",
+                     type: 'application/pdf',
+                     disposition: 'inline' }
+      end
+    end
+
+    # Suppliers report
+    def supplier_report
+      detailed = params[:detailed]
+      project = params[:project]
+      @from = params[:from]
+      @to = params[:to]
+      supplier = params[:supplier]
+
+      # Dates are mandatory
+      if @from.blank? || @to.blank? 
+        return
+      end
+
+      # Search necessary data
+      #@worker = Worker.find(worker)
+      
+      # Format dates
+      from = Time.parse(@from).strftime("%Y-%m-%d")
+      to = Time.parse(@to).strftime("%Y-%m-%d")
+      # Setup filename
+      title = t("activerecord.models.supplier.few") + "_#{from}_#{to}.pdf"      
       
       respond_to do |format|
         # Execute procedure and load aux table
@@ -95,7 +277,7 @@ module Ag2Purchase
       @work_orders = @organization.blank? ? work_orders_dropdown : @organization.work_orders.order(:order_no)
       @charge_accounts = @organization.blank? ? charge_accounts_dropdown : @organization.charge_accounts.order(:account_code)
       @statuses = OrderStatus.order('id')
-      @families = @organization.blank? ? families_dropdown : @organization.product_families.order(:family_code)
+      #@families = @organization.blank? ? families_dropdown : @organization.product_families.order(:family_code)
       @products = @organization.blank? ? products_dropdown : @organization.products.order(:product_code)
     end
     
@@ -103,12 +285,12 @@ module Ag2Purchase
     
     def reports_array()
       _array = []
-      _array = _array << t("activerecord.models.inventory_count.few")
+      _array = _array << t("activerecord.models.offer_request.few")
+      _array = _array << t("activerecord.models.offer.few")
       _array = _array << t("activerecord.models.purchase_order.few")
-      _array = _array << t("activerecord.models.receipt_note.few")
-      _array = _array << t("activerecord.models.delivery_note.few")
-      #_array = _array << t("activerecord.models.product.few")
-      _array = _array << t("activerecord.models.stock.few")
+      _array = _array << t("activerecord.models.supplier_invoice.few")
+      _array = _array << t("activerecord.models.supplier_payment.few")
+      _array = _array << t("activerecord.models.supplier.few")
       _array
     end
 
