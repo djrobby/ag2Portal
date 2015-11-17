@@ -3,15 +3,15 @@ en:
     budget_periods:
       index:
         title: "Budget periods"
-        btn_new: "New Budget period"
+        btn_new: "New Period"
         back_to_root: "Back to ag2Tech"
         expired_only: "Only expired"
         current_only: "Only current"
         all: "All"
       show:
         title: "Budget period"
-        btn_edit: "Edit Budget period"
-        btn_delete: "Delete Budget period"
+        btn_edit: "Edit Period"
+        btn_delete: "Delete Period"
         subtable_title: "Period Budgets"
         return_to: "Back to Budget period"
       edit:

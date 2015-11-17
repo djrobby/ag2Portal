@@ -3,21 +3,21 @@ es:
     budget_periods:
       index:
         title: "Periodos presupuestarios"
-        btn_new: "Nuevo Periodo presupuestario"
+        btn_new: "Nuevo Periodo"
         back_to_root: "Volver a ag2Tech"
         expired_only: "Solo expirados"
         current_only: "Solo vigentes"
         all: "Todos"
       show:
         title: "Periodo presupuestario"
-        btn_edit: "Editar Periodo presupuestario"
-        btn_delete: "Borrar Periodo presupuestario"
+        btn_edit: "Editar Periodo"
+        btn_delete: "Borrar Periodo"
         subtable_title: "Presupuestos del Periodo"
         return_to: "Volver a Periodo presupuestario"
       edit:
         title: "Editar Periodo presupuestario"
         btn_show: "Ver Periodo presupuestario"
       new:
-        title: "Nuevo Grupo analítico"
+        title: "Nuevo Periodo presupuestario"
       back_to_main_page: "Volver a Periodos presupuestarios"
       code_error: "Imposible generar Código de Grupo: No has elegido Organización."

@@ -25,48 +25,32 @@
         case 1:
           // Project
           show("#Project", "<%= t(".label_project") %>");
-          hide("#Supplier", "<%= t(".label_supplier") %>");
-          show("#Store", "<%= t(".label_store") %>");
-          hide("#Order", "<%= t(".label_work_order") %>");
-          hide("#Account", "<%= t(".label_charge_account") %>");
-          hide("#Status", "<%= t(".label_order_status") %>");
-          show("#Family", "<%= t(".label_family") %>");
-          show("#Product", "<%= t(".label_product") %>");
+          show("#Order", "<%= t(".label_work_order") %>");
+          show("#Account", "<%= t(".label_charge_account") %>");
+          hide("#Period", "<%= t(".label_budget_period") %>");
           $('#report_btn').show();
           break;
         case 2:
           // Budget
           show("#Project", "<%= t(".label_project") %>");
-          show("#Supplier", "<%= t(".label_supplier") %>");
-          show("#Store", "<%= t(".label_store") %>");
-          show("#Order", "<%= t(".label_work_order") %>");
+          hide("#Order", "<%= t(".label_work_order") %>");
           show("#Account", "<%= t(".label_charge_account") %>");
-          show("#Status", "<%= t(".label_order_status") %>");
-          hide("#Family", "<%= t(".label_family") %>");
-          show("#Product", "<%= t(".label_product") %>");
+          show("#Period", "<%= t(".label_budget_period") %>");
           $('#report_btn').show();
           break;
         case 3:
           // Work order
           show("#Project", "<%= t(".label_project") %>");
-          show("#Supplier", "<%= t(".label_supplier") %>");
-          show("#Store", "<%= t(".label_store") %>");
           show("#Order", "<%= t(".label_work_order") %>");
           show("#Account", "<%= t(".label_charge_account") %>");
-          hide("#Status", "<%= t(".label_order_status") %>");
-          hide("#Family", "<%= t(".label_family") %>");
-          show("#Product", "<%= t(".label_product") %>");
+          hide("#Period", "<%= t(".label_budget_period") %>");
           $('#report_btn').show();
           break;
         default:
           show("#Project", "<%= t(".label_project") %>");
-          show("#Supplier", "<%= t(".label_supplier") %>");
-          show("#Store", "<%= t(".label_store") %>");
           show("#Order", "<%= t(".label_work_order") %>");
           show("#Account", "<%= t(".label_charge_account") %>");
-          show("#Status", "<%= t(".label_order_status") %>");
-          show("#Family", "<%= t(".label_family") %>");
-          show("#Product", "<%= t(".label_product") %>");
+          show("#Period", "<%= t(".label_budget_period") %>");
           $('#report_btn').hide();
       }
       return false;
@@ -130,37 +114,29 @@
         case 1:
           // Project
           var project = $('select#Project :selected').val();
-          var store = $('select#Store :selected').val();
-          var family = $('select#Family :selected').val();
-          var product = $('select#Product :selected').val();
-          if ((project == "") && (store == "") && (family == "") && (product == ""))
+          var order = $('select#Order :selected').val();
+          var account = $('select#Account :selected').val();
+          if ((project == "") && (order == "") && (family == "") && (account == ""))
             return;
-          window.open("project_report.pdf?detailed=" + detailed + "project=" + project + "&from=" + from + "&to=" + to + "&store=" + store + "&family=" + family + "&product=" + product, "_blank");
+          window.open("project_report.pdf?detailed=" + detailed + "project=" + project + "&from=" + from + "&to=" + to + "&order=" + order + "&account=" + account, "_blank");
           break;
         case 2:
           // Budget
           var project = $('select#Project :selected').val();
-          var supplier = $('select#Supplier :selected').val();
-          var store = $('select#Store :selected').val();
-          var order = $('select#Order :selected').val();
           var account = $('select#Account :selected').val();
-          var status = $('select#Status :selected').val();
-          var product = $('select#Product :selected').val();
-          if ((project == "") && (supplier == "") && (store == "") && (order == "") && (account == "") && (status == "") && (product == ""))
+          var period = $('select#Period :selected').val();
+          if ((project == "") && (account == "") && (period == ""))
             return;
-          window.open("budget_report.pdf?detailed=" + detailed + "project=" + project + "&from=" + from + "&to=" + to + "&supplier=" + supplier + "&store=" + store + "&order=" + order + "&account=" + account + "&status=" + status + "&product=" + product, "_blank");
+          window.open("budget_report.pdf?detailed=" + detailed + "project=" + project + "&from=" + from + "&to=" + to + "&account=" + account + "&period=" + period, "_blank");
           break;
         case 3:
           // Work order
           var project = $('select#Project :selected').val();
-          var supplier = $('select#Supplier :selected').val();
-          var store = $('select#Store :selected').val();
           var order = $('select#Order :selected').val();
           var account = $('select#Account :selected').val();
-          var product = $('select#Product :selected').val();
-          if ((project == "") && (supplier == "") && (store == "") && (order == "") && (account == "") && (product == ""))
+          if ((project == "") && (order == "") && (account == ""))
             return;
-          window.open("work_report.pdf?detailed=" + detailed + "project=" + project + "&from=" + from + "&to=" + to + "&supplier=" + supplier + "&store=" + store + "&order=" + order + "&account=" + account + "&product=" + product, "_blank");
+          window.open("work_report.pdf?detailed=" + detailed + "project=" + project + "&from=" + from + "&to=" + to + "&order=" + order + "&account=" + account, "_blank");
           break;
       }
       return false;
@@ -236,7 +212,7 @@
       <!-- Last tag into <p></p> tags for spacing -->
       <p>
         <%= label_tag t(".label_budget_period"), nil, :class => 'form-label' %>
-        <%= select_tag "Product", options_from_collection_for_select(@periods, "id", "full_name"), :prompt => "", :class => 'x-large-text-field sel2' %>
+        <%= select_tag "Period", options_from_collection_for_select(@periods, "id", "full_name"), :prompt => "", :class => 'x-large-text-field sel2' %>
       </p>
       <!-- Buttons -->
       <p>

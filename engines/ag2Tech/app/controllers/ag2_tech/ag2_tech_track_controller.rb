@@ -30,6 +30,8 @@ module Ag2Tech
       project = params[:project]
       @from = params[:from]
       @to = params[:to]
+      order = params[:order]
+      account = params[:account]
 
       # Dates are mandatory
       if @from.blank? || @to.blank? 
@@ -113,7 +115,7 @@ module Ag2Tech
       from = Time.parse(@from).strftime("%Y-%m-%d")
       to = Time.parse(@to).strftime("%Y-%m-%d")
       # Setup filename
-      title = t("activerecord.models.budget.few") + "_#{from}_#{to}.pdf"      
+      title = t("activerecord.models.work_order.few") + "_#{from}_#{to}.pdf"      
       
       respond_to do |format|
         # Execute procedure and load aux table
