@@ -210,11 +210,11 @@ module Ag2Tech
 
     def projects_dropdown
       if session[:office] != '0'
-        _projects = Project.where(office_id: session[:office].to_i).order(:project_code)
+        _projects = Project.active_only.where(office_id: session[:office].to_i)
       elsif session[:company] != '0'
-        _projects = Project.where(company_id: session[:company].to_i).order(:project_code)
+        _projects = Project.active_only.where(company_id: session[:company].to_i)
       else
-        _projects = session[:organization] != '0' ? Project.where(organization_id: session[:organization].to_i).order(:project_code) : Project.order(:project_code)
+        _projects = session[:organization] != '0' ? Project.active_only.where(organization_id: session[:organization].to_i) : Project.active_only
       end
     end
 

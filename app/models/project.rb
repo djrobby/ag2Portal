@@ -59,6 +59,20 @@ class Project < ActiveRecord::Base
   end
 
   #
+  # Calculated fields
+  #
+  def active_yes_no
+    closed_at.blank? ? I18n.t(:yes_on) : I18n.t(:no_off)
+  end
+
+  #
+  # Class (self) user defined methods
+  #
+  def self.active_only
+    where("closed_at IS NULL").order(:project_code)
+  end
+
+  #
   # Records navigator
   #
   def to_first

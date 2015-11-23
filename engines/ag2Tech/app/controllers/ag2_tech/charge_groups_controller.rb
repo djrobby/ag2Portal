@@ -48,7 +48,8 @@ module Ag2Tech
     def show
       @breadcrumb = 'read'
       @charge_group = ChargeGroup.find(params[:id])
-      @charge_accounts = @charge_group.charge_accounts.paginate(:page => params[:page], :per_page => per_page).order(:account_code)
+      @charge_accounts = charge_accounts_by_group(@charge_group)
+      #@charge_accounts = @charge_group.charge_accounts.paginate(:page => params[:page], :per_page => per_page).order(:account_code)
   
       respond_to do |format|
         format.html # show.html.erb
@@ -174,6 +175,35 @@ module Ag2Tech
 
     def ledger_accounts_dropdown
       session[:organization] != '0' ? LedgerAccount.where(organization_id: session[:organization].to_i).order(:code) : LedgerAccount.order(:code)
+    end
+
+    def projects_dropdown
+      _projects = nil
+      _oco = false
+      if session[:office] != '0'
+        _projects = Project.active_only.where(office_id: session[:office].to_i)
+        _oco = true
+      elsif session[:company] != '0'
+        _projects = Project.active_only.where(company_id: session[:company].to_i)
+        _oco = true
+      elsif session[:organization] != '0'
+        _projects = Project.active_only.where(organization_id: session[:organization].to_i)
+        _oco = true
+      end
+      return _projects, _oco
+    end
+
+    def charge_accounts_by_group(_group)
+      _projects, _oco = projects_dropdown
+      if _oco == false
+        _accounts = _group.charge_accounts.paginate(:page => params[:page], :per_page => per_page).order(:account_code)
+      else
+        if _projects.blank?
+          _accounts = _group.charge_accounts.where(project_id: 0).paginate(:page => params[:page], :per_page => per_page).order(:account_code)
+        else
+          _accounts = _group.charge_accounts.where(project_id: _projects.first.id).paginate(:page => params[:page], :per_page => per_page).order(:account_code)
+        end
+      end
     end
 
     # Keeps filter state

@@ -28,7 +28,7 @@
       <% end %>
       <td><%= link_to project.full_code, project %></td>
       <td><%= project.name %></td>
-      <td><%= project.company.name unless project.company.blank? %></td>
+      <td><%= project.company.name[0,50] unless project.company.blank? %></td>
       <td><%= project.office.name unless project.office.blank? %></td>
       <td align="center"><%= project.opened_at.strftime("%d/%m/%Y") unless project.opened_at.blank? %></td>
       <td align="center"><%= project.closed_at.strftime("%d/%m/%Y") unless project.closed_at.blank? %></td>
