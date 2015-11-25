@@ -7,7 +7,8 @@ module Ag2Products
     skip_load_and_authorize_resource :only => [:st_update_company_textfield_from_office,
                                                :st_update_company_and_office_textfields_from_organization,
                                                :st_update_province_textfield_from_town,
-                                               :st_update_province_textfield_from_zipcode]
+                                               :st_update_province_textfield_from_zipcode,
+                                               :receipts_deliveries]
     # Helper methods for sorting
     helper_method :sort_column
 

@@ -9,7 +9,8 @@ module Ag2Products
                                                :pr_format_amount,
                                                :pr_markup,
                                                :pr_update_family_textfield_from_organization,
-                                               :pr_update_attachment]
+                                               :pr_update_attachment,
+                                               :receipts_deliveries]
     # Public attachment for drag&drop
     $attachment = nil
   
