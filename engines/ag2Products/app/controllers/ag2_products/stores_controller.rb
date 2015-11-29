@@ -52,7 +52,7 @@ module Ag2Products
     def st_update_province_textfield_from_town
       @town = Town.find(params[:id])
       @province = Province.find(@town.province)
-      render json: @json_data
+      render json: @province
     end
 
     # Update province and town text fields at view from zip code select
