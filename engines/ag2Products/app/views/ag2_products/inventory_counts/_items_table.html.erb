@@ -20,11 +20,12 @@
     $('#items-table').bind('totals', function(event) {
       // Sum necessary values from table rows
       var qty = 0;
+      var tbl = true;
       $('#items-table tr.fields:visible').each(function() {
         qty += parseFloat(right_number($(this).find('input.fnt-quantity').val(), 4));
       });
       qty = parseInt(right_number(qty.toString(), 4) * 10000);
-      jQuery.getJSON('ic_totals/' + qty, function(data) {
+      jQuery.getJSON('ic_totals/' + qty + "/" + tbl, function(data) {
         document.getElementById('foot-quantity').innerHTML = data.qty;
       });
     });
@@ -57,19 +58,20 @@
     $(".fnt-quantity").change(function() {
       // preserve the current object
       var _this = (this);
-      recalculate(_this);
+      recalculate_ic_table(_this);
       return false;
     });
     
     // Recalculate amounts & prices
-    function recalculate(_this) {
+    function recalculate_ic_table(_this) {
       // make a POST call and replace the content
+      var tbl = true;
       var qty = $(_this).closest('tr').find('.fnt-quantity').val();
       if (qty == "")
         qty = "0";
       // Right formatted for passing as REST parameter
-      qty = parseInt(right_number(qty, 4) * 10000);
-      jQuery.getJSON('ic_totals/' + qty, function(data) {
+      //qty = parseInt(right_number(qty, 4) * 10000);
+      jQuery.getJSON('ic_totals/' + qty + "/" + tbl, function(data) {
         $(_this).closest('tr').find('.fnt-quantity').val(data.qty);
         // Update and display totals
         $('#items-table').trigger('totals');

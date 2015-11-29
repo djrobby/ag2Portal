@@ -45,22 +45,33 @@
     $("#fnt-quantity").change(function() {
       // preserve the current object
       var _this = (this);
-      recalculate(_this);
+      recalculate_ic_fields(_this);
       return false;
     });
 
     // Recalculate amounts & prices
-    function recalculate(_this) {
+    function recalculate_ic_fields(_this) {
       // make a POST call and replace the content
+      var tbl = false;
       var qty = $('#fnt-quantity').val();
+      if (typeof qty === "undefined") {
+        tbl = true;
+        qty = $(_this).closest('tr').find('.fnt-quantity').val();
+      }
       if (qty == "")
         qty = "0";
       // Right formatted for passing as REST parameter
       qty = parseInt(right_number(qty, 4) * 10000);
-      jQuery.getJSON('ic_totals/' + qty, function(data) {
-        $('#fnt-quantity').val(data.qty);
-        // Update and display totals
-        $('#items-table').trigger('totals');
+      jQuery.getJSON('ic_totals/' + qty + "/" + tbl, function(data) {
+        if (data.tbl == "true") {
+          $(_this).closest('tr').find('.fnt-quantity').val(data.qty);
+          // Table: Update and display totals is necessary
+          $('#items-table').trigger('totals');
+        } else {
+          $('#fnt-quantity').val(data.qty);
+          // Fields: Update and display totals already did in nested
+        }
+        //$('#items-table').trigger('totals');
       });
     }
   });

@@ -19,10 +19,11 @@ module Ag2Products
     # Calculate and format totals properly
     def ic_totals
       qty = params[:qty].to_f / 10000
+      tbl = params[:tbl]
       # Format output values
       qty = number_with_precision(qty.round(4), precision: 4)
       # Setup JSON hash
-      @json_data = { "qty" => qty.to_s }
+      @json_data = { "qty" => qty.to_s, "tbl" => tbl.to_s }
       render json: @json_data
     end
 
