@@ -89,8 +89,10 @@
         <% end %>
         <!-- Buttons -->
         <%= render :partial => '/layouts/crud/new', :locals => { :model => InventoryCount, :path => new_inventory_count_path, :txt => t(".btn_new") } %>
+        <% if can? :update, InventoryCount %>
         <button id="new_from_family" type="button" class="btn btn-warning" data-dismiss="modal" aria-hidden="true"><%= t(".btn_new_from_family") %></button>
         <br /><br />
+        <% end %>
         <%= link_to t(".back_to_root"), ag2_products.root_path %>
       </div><!-- /.sidebar-nav -->
     </div><!-- /.span3 -->

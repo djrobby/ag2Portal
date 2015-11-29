@@ -319,7 +319,7 @@ module Ag2Products
       @breadcrumb = 'update'
       @inventory_count = InventoryCount.find(params[:id])
       @stores = @inventory_count.organization.blank? ? stores_dropdown : @inventory_count.organization.stores.order(:name)
-      if @inventory_count.store.blank?
+      if @inventory_count.store.blank? || @inventory_count.inventory_count_type_id == 1
         @families = @inventory_count.organization.blank? ? families_dropdown : @inventory_count.organization.product_families.order(:family_code)
         @products = @inventory_count.organization.blank? ? products_dropdown : @inventory_count.organization.products.order(:product_code)
       else
