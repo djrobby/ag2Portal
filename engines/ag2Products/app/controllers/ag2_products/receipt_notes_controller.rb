@@ -143,6 +143,7 @@ module Ag2Products
       amount = params[:amount].to_f / 10000
       tax = params[:tax].to_f / 10000
       discount_p = params[:discount_p].to_f / 100
+      tbl = params[:tbl]
       # Bonus
       discount = discount_p != 0 ? amount * (discount_p / 100) : 0
       # Taxable
@@ -160,7 +161,7 @@ module Ag2Products
       total = number_with_precision(total.round(4), precision: 4)
       # Setup JSON hash
       @json_data = { "qty" => qty.to_s, "amount" => amount.to_s, "tax" => tax.to_s,
-                     "discount" => discount.to_s, "taxable" => taxable.to_s, "total" => total.to_s }
+                     "discount" => discount.to_s, "taxable" => taxable.to_s, "total" => total.to_s, "tbl" => tbl.to_s }
       render json: @json_data
     end
 

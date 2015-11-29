@@ -19,6 +19,7 @@
       var qty = 0;
       var amount = 0;
       var tax = 0;
+      var tbl = true;
       $('#items-table tr.fields:visible').each(function() {
         qty += parseFloat(right_number($(this).find('input.fnt-quantity').val(), 4));
         amount += parseFloat(right_number($(this).find('input.fnt-amount').val(), 4));
@@ -32,7 +33,7 @@
       if (discount_p == "")
         discount_p = "0";
       discount_p = parseInt(right_number(discount_p, 2) * 100);
-      jQuery.getJSON('si_item_totals/' + qty + '/' + amount + '/' + tax + '/' + discount_p, function(data) {
+      jQuery.getJSON('si_item_totals/' + qty + '/' + amount + '/' + tax + '/' + discount_p + "/" + tbl, function(data) {
         document.getElementById('foot-quantity').innerHTML = data.qty;
         document.getElementById('foot-amount').innerHTML = data.amount;
         document.getElementById('foot-tax').innerHTML = data.tax;
@@ -76,7 +77,7 @@
     $(".fnt-quantity").change(function() {
       // preserve the current object
       var _this = (this);
-      recalculate(_this);
+      recalculate_si_table(_this);
       return false;
     });
 
@@ -84,7 +85,7 @@
     $(".fnt-price").change(function() {
       // preserve the current object
       var _this = (this);
-      recalculate(_this);
+      recalculate_si_table(_this);
       return false;
     });
 
@@ -92,7 +93,7 @@
     $(".fnt-discount-pct").change(function() {
       // preserve the current object
       var _this = (this);
-      recalculate(_this);
+      recalculate_si_table(_this);
       return false;
     });
 
@@ -100,13 +101,14 @@
     $(".fnt-discount").change(function() {
       // preserve the current object
       var _this = (this);
-      recalculate(_this);
+      recalculate_si_table(_this);
       return false;
     });
     
     // Recalculate amounts & prices
-    function recalculate(_this) {
+    function recalculate_si_table(_this) {
       // make a POST call and replace the content
+      var tbl = true;
       var price = $(_this).closest('tr').find('.fnt-price').val();
       if (price == "")
         price = "0";
@@ -130,7 +132,7 @@
       qty = parseInt(right_number(qty, 4) * 10000);
       discount_p = parseInt(right_number(discount_p, 2) * 100);
       discount = parseInt(right_number(discount, 4) * 10000);
-      jQuery.getJSON('si_update_amount_from_price_or_quantity/' + price + '/' + qty + '/' + tax_type + '/' + discount_p + '/' + discount + '/' + product, function(data) {
+      jQuery.getJSON('si_update_amount_from_price_or_quantity/' + price + '/' + qty + '/' + tax_type + '/' + discount_p + '/' + discount + '/' + product + "/" + tbl, function(data) {
         $(_this).closest('tr').find('.fnt-quantity').val(data.quantity);
         $(_this).closest('tr').find('.fnt-price').val(data.price);
         $(_this).closest('tr').find('.fnt-amount').val(data.amount);

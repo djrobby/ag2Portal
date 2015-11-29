@@ -70,7 +70,7 @@
       if (qty == "")
         qty = "0";
       // Right formatted for passing as REST parameter
-      //qty = parseInt(right_number(qty, 4) * 10000);
+      qty = parseInt(right_number(qty, 4) * 10000);
       jQuery.getJSON('ic_totals/' + qty + "/" + tbl, function(data) {
         $(_this).closest('tr').find('.fnt-quantity').val(data.qty);
         // Update and display totals

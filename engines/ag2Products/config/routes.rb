@@ -68,9 +68,9 @@ Ag2Products::Engine.routes.draw do
     match 'purchase_prices/:id/pp_format_numbers_2/:num', :controller => 'purchase_prices', :action => 'pp_format_numbers_2'
     #
     # Delivery notes
-    match 'delivery_notes/dn_totals/:qty/:amount/:costs/:tax/:discount_p', :controller => 'delivery_notes', :action => 'dn_totals'
-    match 'dn_totals/:qty/:amount/:costs/:tax/:discount_p', :controller => 'delivery_notes', :action => 'dn_totals'
-    match 'delivery_notes/:id/dn_totals/:qty/:amount/:costs/:tax/:discount_p', :controller => 'delivery_notes', :action => 'dn_totals'
+    match 'delivery_notes/dn_totals/:qty/:amount/:costs/:tax/:discount_p/:tbl', :controller => 'delivery_notes', :action => 'dn_totals'
+    match 'dn_totals/:qty/:amount/:costs/:tax/:discount_p/:tbl', :controller => 'delivery_notes', :action => 'dn_totals'
+    match 'delivery_notes/:id/dn_totals/:qty/:amount/:costs/:tax/:discount_p/:tbl', :controller => 'delivery_notes', :action => 'dn_totals'
     match 'delivery_notes/dn_update_description_prices_from_product_store/:product/:qty/:store', :controller => 'delivery_notes', :action => 'dn_update_description_prices_from_product_store'
     match 'dn_update_description_prices_from_product_store/:product/:qty/:store', :controller => 'delivery_notes', :action => 'dn_update_description_prices_from_product_store'
     match 'delivery_notes/:id/dn_update_description_prices_from_product_store/:product/:qty/:store', :controller => 'delivery_notes', :action => 'dn_update_description_prices_from_product_store'
@@ -103,9 +103,9 @@ Ag2Products::Engine.routes.draw do
     match 'delivery_notes/:id/dn_generate_no/:org', :controller => 'delivery_notes', :action => 'dn_generate_no'
     #
     # Receipt notes
-    match 'receipt_notes/rn_totals/:qty/:amount/:tax/:discount_p', :controller => 'receipt_notes', :action => 'rn_totals'
-    match 'rn_totals/:qty/:amount/:tax/:discount_p', :controller => 'receipt_notes', :action => 'rn_totals'
-    match 'receipt_notes/:id/rn_totals/:qty/:amount/:tax/:discount_p', :controller => 'receipt_notes', :action => 'rn_totals'
+    match 'receipt_notes/rn_totals/:qty/:amount/:tax/:discount_p/:tbl', :controller => 'receipt_notes', :action => 'rn_totals'
+    match 'rn_totals/:qty/:amount/:tax/:discount_p/:tbl', :controller => 'receipt_notes', :action => 'rn_totals'
+    match 'receipt_notes/:id/rn_totals/:qty/:amount/:tax/:discount_p/:tbl', :controller => 'receipt_notes', :action => 'rn_totals'
     match 'receipt_notes/rn_update_description_prices_from_product_store/:product/:qty/:store/:supplier', :controller => 'receipt_notes', :action => 'rn_update_description_prices_from_product_store'
     match 'rn_update_description_prices_from_product_store/:product/:qty/:store/:supplier', :controller => 'receipt_notes', :action => 'rn_update_description_prices_from_product_store'
     match 'receipt_notes/:id/rn_update_description_prices_from_product_store/:product/:qty/:store/:supplier', :controller => 'receipt_notes', :action => 'rn_update_description_prices_from_product_store'
@@ -174,9 +174,9 @@ Ag2Products::Engine.routes.draw do
     match 'purchase_orders/po_format_number/:num', :controller => 'purchase_orders', :action => 'po_format_number'
     match 'po_format_number/:num', :controller => 'purchase_orders', :action => 'po_format_number'
     match 'purchase_orders/:id/po_format_number/:num', :controller => 'purchase_orders', :action => 'po_format_number'
-    match 'purchase_orders/po_totals/:qty/:amount/:tax/:discount_p', :controller => 'purchase_orders', :action => 'po_totals'
-    match 'po_totals/:qty/:amount/:tax/:discount_p', :controller => 'purchase_orders', :action => 'po_totals'
-    match 'purchase_orders/:id/po_totals/:qty/:amount/:tax/:discount_p', :controller => 'purchase_orders', :action => 'po_totals'
+    match 'purchase_orders/po_totals/:qty/:amount/:tax/:discount_p/:tbl', :controller => 'purchase_orders', :action => 'po_totals'
+    match 'po_totals/:qty/:amount/:tax/:discount_p/:tbl', :controller => 'purchase_orders', :action => 'po_totals'
+    match 'purchase_orders/:id/po_totals/:qty/:amount/:tax/:discount_p/:tbl', :controller => 'purchase_orders', :action => 'po_totals'
     match 'purchase_orders/po_current_stock/:product/:store', :controller => 'purchase_orders', :action => 'po_current_stock'
     match 'po_current_stock/:product/:store', :controller => 'purchase_orders', :action => 'po_current_stock'
     match 'purchase_orders/:id/po_current_stock/:product/:store', :controller => 'purchase_orders', :action => 'po_current_stock'
