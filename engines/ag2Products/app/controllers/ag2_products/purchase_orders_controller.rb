@@ -87,7 +87,6 @@ module Ag2Products
       amount = params[:amount].to_f / 10000
       tax = params[:tax].to_f / 10000
       discount_p = params[:discount_p].to_f / 100
-      tbl = params[:tbl]
       # Bonus
       discount = discount_p != 0 ? amount * (discount_p / 100) : 0
       # Taxable
@@ -105,7 +104,7 @@ module Ag2Products
       total = number_with_precision(total.round(4), precision: 4)
       # Setup JSON hash
       @json_data = { "qty" => qty.to_s, "amount" => amount.to_s, "tax" => tax.to_s,
-                     "discount" => discount.to_s, "taxable" => taxable.to_s, "total" => total.to_s, "tbl" => tbl.to_s }
+                     "discount" => discount.to_s, "taxable" => taxable.to_s, "total" => total.to_s }
       render json: @json_data
     end
 
@@ -212,6 +211,7 @@ module Ag2Products
       discount_p = params[:discount_p].to_f / 100
       discount = params[:discount].to_f / 10000
       product = params[:product]
+      tbl = params[:tbl]
       if tax_type.blank? || tax_type == "0"
         if !product.blank? && product != "0"
           tax_type = Product.find(product).tax_type.id
@@ -232,7 +232,7 @@ module Ag2Products
       discount_p = number_with_precision(discount_p.round(2), precision: 2)
       discount = number_with_precision(discount.round(4), precision: 4)
       @json_data = { "quantity" => qty.to_s, "price" => price.to_s, "amount" => amount.to_s, "tax" => tax.to_s,
-                     "discountp" => discount_p.to_s, "discount" => discount.to_s }
+                     "discountp" => discount_p.to_s, "discount" => discount.to_s, "tbl" => tbl.to_s }
 
       respond_to do |format|
         format.html # po_update_amount_from_price_or_quantity.html.erb does not exist! JSON only

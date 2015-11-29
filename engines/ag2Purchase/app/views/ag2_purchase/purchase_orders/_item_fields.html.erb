@@ -274,24 +274,49 @@
     });
     
     // Recalculate amounts & prices
-    function recalculate(_this) {
+    function recalculate_po_fields(_this) {
       // make a POST call and replace the content
+      var tbl = false;
       var price = $('#fnt-price').val();
+      if (typeof price === "undefined") {
+        tbl = true;
+        price = $(_this).closest('tr').find('.fnt-price').val();
+      }
       if (price == "")
         price = "0";
       var qty = $('#fnt-quantity').val();
+      if (typeof qty === "undefined") {
+        tbl = true;
+        qty = $(_this).closest('tr').find('.fnt-quantity').val();
+      }
       if (qty == "")
         qty = "0";
       var tax_type = $('#fnt-tax-type').val();
+      if (typeof tax_type === "undefined") {
+        tbl = true;
+        tax_type = $(_this).closest('tr').find('.fnt-tax-type').val();
+      }
       if (tax_type == "")
         tax_type = "0";
       var discount_p = $('#fnt-discount-pct').val();
+      if (typeof discount_p === "undefined") {
+        tbl = true;
+        discount_p = $(_this).closest('tr').find('.fnt-discount-pct').val();
+      }
       if (discount_p == "")
         discount_p = "0";
       var discount = $('#fnt-discount').val();
+      if (typeof discount === "undefined") {
+        tbl = true;
+        discount = $(_this).closest('tr').find('.fnt-discount').val();
+      }
       if (discount == "")
         discount = "0";
       var product = $('select#fnt-product :selected').val();
+      if (typeof product === "undefined") {
+        tbl = true;
+        product = $(this).closest('tr').find('select.fnt-product :selected').val();
+      }
       if (product == "")
         product = "0";
       // Right formatted for passing as REST parameter
@@ -299,16 +324,26 @@
       qty = parseInt(right_number(qty, 4) * 10000);
       discount_p = parseInt(right_number(discount_p, 2) * 100);
       discount = parseInt(right_number(discount, 4) * 10000);
-      jQuery.getJSON('po_update_amount_from_price_or_quantity/' + price + '/' + qty + '/' + tax_type + '/' + discount_p + '/' + discount + '/' + product, function(data) {
-        $('#fnt-price').val(data.price);
-        $('#fnt-quantity').val(data.quantity);
-        $('#fnt-amount').val(data.amount);
-        $('#fnt-tax').val(data.tax);
-        $('#fnt-discount-pct').val(data.discountp);
-        $('#fnt-discount').val(data.discount);
-        // Update and display totals
-        $('#items-table').trigger('totals');
-      })
+      jQuery.getJSON('po_update_amount_from_price_or_quantity/' + price + '/' + qty + '/' + tax_type + '/' + discount_p + '/' + discount + '/' + product + "/" + tbl, function(data) {
+        if (data.tbl == "true") {
+          $(_this).closest('tr').find('.fnt-price').val(data.price);
+          $(_this).closest('tr').find('.fnt-quantity').val(data.quantity);
+          $(_this).closest('tr').find('.fnt-amount').val(data.amount);
+          $(_this).closest('tr').find('.fnt-tax').val(data.tax);
+          $(_this).closest('tr').find('.fnt-discount-pct').val(data.discountp);
+          $(_this).closest('tr').find('.fnt-discount').val(data.discount);
+          // Table: Update and display totals is necessary
+          $('#items-table').trigger('totals');
+        } else {
+          $('#fnt-price').val(data.price);
+          $('#fnt-quantity').val(data.quantity);
+          $('#fnt-amount').val(data.amount);
+          $('#fnt-tax').val(data.tax);
+          $('#fnt-discount-pct').val(data.discountp);
+          $('#fnt-discount').val(data.discount);
+          // Fields: Update and display totals already did in nested
+        }
+      });
     }
   });
 
