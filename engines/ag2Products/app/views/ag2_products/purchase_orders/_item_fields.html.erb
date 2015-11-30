@@ -54,14 +54,29 @@
   jQuery(function($) {
     // when the #fnt-product field changes
     $("#fnt-product").change(function() {
+      // preserve the current object
+      var _this = (this);
       // make a POST call and replace the content
+      var tbl = false;
       var product = $('select#fnt-product :selected').val();
+      if (typeof product === "undefined") {
+        tbl = true;
+        product = $(_this).closest('tr').find('select.fnt-product :selected').val();
+      }
       if (product == "")
         product = "0";
       var qty = $('#fnt-quantity').val();
+      if (typeof qty === "undefined") {
+        tbl = true;
+        qty = $(_this).closest('tr').find('.fnt-quantity').val();
+      }
       if (qty == "")
         qty = "0";
       var store = $('select#fnt-store :selected').val();
+      if (typeof store === "undefined") {
+        tbl = true;
+        store = $(_this).closest('tr').find('select.fnt-store :selected').val();
+      }
       if (store == "")
         store = "0";
       // Right formatted for passing as REST parameter
@@ -69,16 +84,30 @@
       var _sstock = 0;
       var _pstock = 0;
       //qty = qty.replace(",", ".") * 10000;
-      jQuery.getJSON('po_update_description_prices_from_product_store/' + product + '/' + qty + '/' + store + '/' + _supplier, function(data) {
-        $("#fnt-description").val(data.description);
-        $("#fnt-price").val(data.price);
-        $("#fnt-amount").val(data.amount);
-        $("#fnt-tax-type").val(data.type);
-        $("#fnt-tax").val(data.tax);
-        $('#fnt-discount-pct').val(data.discountp);
-        $('#fnt-discount').val(data.discount);
-        $('#fnt-code').val(data.code);
-        $("#current-stock").html(data.stock);
+      jQuery.getJSON('po_update_description_prices_from_product_store/' + product + '/' + qty + '/' + store + '/' + _supplier + '/' + tbl, function(data) {
+        if (data.tbl == "true") {
+          $(_this).closest('tr').find('.fnt-description').val(data.description);
+          $(_this).closest('tr').find('.fnt-price').val(data.price);
+          $(_this).closest('tr').find('.fnt-amount').val(data.amount);
+          $(_this).closest('tr').find('.fnt-tax').val(data.tax);
+          $(_this).closest('tr').find(".fnt-tax-type").val(data.type);
+          $(_this).closest('tr').find('.fnt-discount-pct').val(data.discountp);
+          $(_this).closest('tr').find('.fnt-discount').val(data.discount);
+          $(_this).closest('tr').find('.fnt-code').val(data.code);
+        } else {
+          $("#fnt-description").val(data.description);
+          $("#fnt-price").val(data.price);
+          $("#fnt-amount").val(data.amount);
+          $("#fnt-tax-type").val(data.type);
+          $("#fnt-tax").val(data.tax);
+          $('#fnt-discount-pct').val(data.discountp);
+          $('#fnt-discount').val(data.discount);
+          $('#fnt-code').val(data.code);
+          $("#current-stock").html(data.stock);
+        }
+        // Update and display totals is necessary
+        $('#items-table').trigger('totals');
+        // Stock warning
         _sstock = parseFloat(data.stock);
         _pstock = parseFloat(data.product_stock);
         if ((_pstock - _sstock) > 0) {
@@ -315,7 +344,7 @@
       var product = $('select#fnt-product :selected').val();
       if (typeof product === "undefined") {
         tbl = true;
-        product = $(this).closest('tr').find('select.fnt-product :selected').val();
+        product = $(_this).closest('tr').find('select.fnt-product :selected').val();
       }
       if (product == "")
         product = "0";
@@ -332,8 +361,6 @@
           $(_this).closest('tr').find('.fnt-tax').val(data.tax);
           $(_this).closest('tr').find('.fnt-discount-pct').val(data.discountp);
           $(_this).closest('tr').find('.fnt-discount').val(data.discount);
-          // Table: Update and display totals is necessary
-          $('#items-table').trigger('totals');
         } else {
           $('#fnt-price').val(data.price);
           $('#fnt-quantity').val(data.quantity);
@@ -341,8 +368,9 @@
           $('#fnt-tax').val(data.tax);
           $('#fnt-discount-pct').val(data.discountp);
           $('#fnt-discount').val(data.discount);
-          // Fields: Update and display totals already did in nested
         }
+        // Update and display totals is necessary
+        $('#items-table').trigger('totals');
       });
     }
   });

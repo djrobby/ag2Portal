@@ -23,20 +23,36 @@
   jQuery(function($) {
     // when the #fnt-product field changes
     $("#fnt-product").change(function() {
+      // preserve the current object
+      var _this = (this);
       // make a POST call and replace the content
+      var tbl = false;
       var product = $('select#fnt-product :selected').val();
+      if (typeof product === "undefined") {
+        tbl = true;
+        product = $(this).closest('tr').find('select.fnt-product :selected').val();
+      }
       if (product == "")
         product = "0";
       var qty = $('#fnt-quantity').val();
+      if (typeof qty === "undefined") {
+        tbl = true;
+        qty = $(_this).closest('tr').find('.fnt-quantity').val();
+      }
       if (qty == "")
         qty = "0";
       // Right formatted for passing as REST parameter
       qty = parseInt(right_number(qty, 4) * 10000);
       //qty = qty.replace(",", ".") * 10000;
-      jQuery.getJSON('ic_update_from_product_store/' + product + '/' + qty + '/' + _s, function(data) {
-        $("#fnt-initial").val(data.initial);
-        $("#fnt-current").val(data.stock);
-        $("#current-stock").html(data.stock);
+      jQuery.getJSON('ic_update_from_product_store/' + product + '/' + qty + '/' + _s + "/" + tbl, function(data) {
+        if (data.tbl == "true") {
+          $(_this).closest('tr').find('.fnt-initial').val(data.initial);
+          $(_this).closest('tr').find('.fnt-current').val(data.stock);
+        } else {
+          $("#fnt-initial").val(data.initial);
+          $("#fnt-current").val(data.stock);
+          $("#current-stock").html(data.stock);
+        }
       });
       return false;
     });
@@ -71,7 +87,6 @@
           $('#fnt-quantity').val(data.qty);
           // Fields: Update and display totals already did in nested
         }
-        //$('#items-table').trigger('totals');
       });
     }
   });

@@ -2,6 +2,19 @@
   var text_field_color;
   var _thisForm = '';
   
+  // Show or hide button(s) to add new item
+  function show_new(_show) {
+    if (_show == true) {
+      $('#submit_btn').show();
+      $('.fnt-new-btn').show();
+      $('#icon-new-btn').show();      
+    } else {
+      $('#submit_btn').hide();
+      $('.fnt-new-btn').hide();
+      $('#icon-new-btn').hide();      
+    }
+  }
+  
   $(document).ready(function() {
     $('select.sel2').select2({
       formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
@@ -31,12 +44,10 @@
       order = "0";
     if (order == "0") {
       // Empty order: Disable
-      $('#submit_btn').hide();
-      $('.fnt-new-btn').hide();
+      show_new(false);
     } else {
       // Order OK: Enable
-      $('#submit_btn').show();
-      $('.fnt-new-btn').show();
+      show_new(true);
     }
   });
   
@@ -53,12 +64,10 @@
         order = "0";
       if (order == "0") {
         // Empty order: Disable
-        $('#submit_btn').hide();
-        $('.fnt-new-btn').hide();
+        show_new(false);
       } else {
         // Order: OK: Enable
-        $('#submit_btn').show();
-        $('.fnt-new-btn').show();
+        show_new(true);
       }
     });
 
@@ -477,14 +486,14 @@
   <label class="multi-field-label-two"> <%= f.input :receipt_date, start_year: Time.now.year - 100, end_year: Time.now.year + 100, as: :string, input_html: { value: (f.object.receipt_date.strftime("%d/%m/%Y") if f.object.receipt_date), class: 'mid-text-field date_picker' }, label_html: { class: 'form-label' } %> </label>
 </div>
 <% if session[:organization] != '0' %>
-<%= f.association :organization, collection: Organization.where("id = ?", "#{session[:organization]}").all, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' }, include_blank: false %>
+<%= f.association :organization, collection: Organization.where("id = ?", "#{session[:organization]}").all, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' }, include_blank: false %>
 <% elsif current_user.organizations.count > 0 %>
-<%= f.association :organization, collection: current_user.organizations.order('name'), input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' }, include_blank: false %>
+<%= f.association :organization, collection: current_user.organizations.order('name'), input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' }, include_blank: false %>
 <% else %>
-<%= f.association :organization, collection: Organization.order('name'), input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %>
+<%= f.association :organization, collection: Organization.order('name'), input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %>
 <% end %>
 <div>
-  <label class="multi-field-label-two"> <%= f.association :supplier, collection: @suppliers, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.association :supplier, collection: @suppliers, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label-under-sel2' } %> </label>
   <label class="multi-field-label-two"> <%= f.association :purchase_order, collection: @orders, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
 </div>
 <div>
@@ -510,7 +519,7 @@
         <h4><%= t 'ag2_products.receipt_notes.items_info' %></h4>
       </td>
       <td class="form-td-two right-winged">
-        <%= link_to_add_fields(t("ag2_products.receipt_notes.btn_new_item"), f, :receipt_note_items, "item_fields", "new-item-fields", class: "btn btn-warning fnt-new-btn") %>
+        <%= link_to_add_fields('<i class="icon-plus icon-white"></i>'.html_safe + " " + t("ag2_products.receipt_notes.btn_new_item"), f, :receipt_note_items, "item_fields", "new-item-fields", class: "btn btn-warning fnt-new-btn") %>
       </td>
     </tr>
   </tbody>

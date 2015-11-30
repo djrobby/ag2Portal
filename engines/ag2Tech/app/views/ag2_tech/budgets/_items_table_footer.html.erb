@@ -1,5 +1,8 @@
 <tr class="totals-shrinked">
-  <td align="right"><%= t :"activerecord.attributes.budget.total" %></td>
+  <td>
+    <a id="icon-new-btn" href="#" onclick="javascript:$('.fnt-new-btn').click(); return false;"><i class="icon-plus"></i></a>
+    <span class="right-floated"><%= t :"activerecord.attributes.budget.total" %></span>
+  </td>
   <td align="right" id="foot-total01"><%= number_with_precision('0', precision: 4) %></td>
   <td align="right" id="foot-total02"><%= number_with_precision('0', precision: 4) %></td>
   <td align="right" id="foot-total03"><%= number_with_precision('0', precision: 4) %></td>

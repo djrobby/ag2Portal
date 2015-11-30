@@ -41,30 +41,59 @@
   jQuery(function($) {
     // when the #fnt-product field changes
     $("#fnt-product").change(function() {
+      // preserve the current object
+      var _this = (this);
       // make a POST call and replace the content
+      var tbl = false;
       var product = $('select#fnt-product :selected').val();
+      if (typeof product === "undefined") {
+        tbl = true;
+        product = $(_this).closest('tr').find('select.fnt-product :selected').val();
+      }
       if (product == "")
         product = "0";
       var qty = $('#fnt-quantity').val();
+      if (typeof qty === "undefined") {
+        tbl = true;
+        qty = $(_this).closest('tr').find('.fnt-quantity').val();
+      }
       if (qty == "")
         qty = "0";
       var store = $('select#fnt-store :selected').val();
+      if (typeof store === "undefined") {
+        tbl = true;
+        store = $(_this).closest('tr').find('select.fnt-store :selected').val();
+      }
       if (store == "")
         store = "0";
       // Right formatted for passing as REST parameter
       qty = parseInt(right_number(qty, 4) * 10000);
       //qty = qty.replace(",", ".") * 10000;
-      jQuery.getJSON('dn_update_description_prices_from_product_store/' + product + '/' + qty + '/' + store, function(data) {
-        $("#fnt-description").val(data.description);
-        $("#fnt-cost").val(data.cost);
-        $("#fnt-costs").val(data.costs);
-        $("#fnt-price").val(data.price);
-        $("#fnt-amount").val(data.amount);
-        $("#fnt-tax-type").val(data.type);
-        $("#fnt-tax").val(data.tax);
-        $('#fnt-discount-pct').val("0,00");
-        $('#fnt-discount').val("0,0000");
-        $("#current-stock").html(data.stock);
+      jQuery.getJSON('dn_update_description_prices_from_product_store/' + product + '/' + qty + '/' + store + '/' + tbl, function(data) {
+        if (data.tbl == "true") {
+          $(_this).closest('tr').find('.fnt-description').val(data.description);
+          $(_this).closest('tr').find('.fnt-cost').val(data.cost);
+          $(_this).closest('tr').find('.fnt-costs').val(data.costs);
+          $(_this).closest('tr').find('.fnt-price').val(data.price);
+          $(_this).closest('tr').find('.fnt-amount').val(data.amount);
+          $(_this).closest('tr').find('.fnt-tax').val(data.tax);
+          $(_this).closest('tr').find(".fnt-tax-type").val(data.type);
+          $(_this).closest('tr').find('.fnt-discount-pct').val("0,00");
+          $(_this).closest('tr').find('.fnt-discount').val("0,0000");
+        } else {
+          $("#fnt-description").val(data.description);
+          $("#fnt-cost").val(data.cost);
+          $("#fnt-costs").val(data.costs);
+          $("#fnt-price").val(data.price);
+          $("#fnt-amount").val(data.amount);
+          $("#fnt-tax-type").val(data.type);
+          $("#fnt-tax").val(data.tax);
+          $('#fnt-discount-pct').val("0,00");
+          $('#fnt-discount').val("0,0000");
+          $("#current-stock").html(data.stock);
+        }
+        // Update and display totals is necessary
+        $('#items-table').trigger('totals');
       });
       return false;
     });
@@ -194,7 +223,33 @@
     $("#fnt-quantity").change(function() {
       // preserve the current object
       var _this = (this);
-      recalculate(_this);
+      // stock check
+      var store = $('select#fnt-store :selected').val();
+      if (typeof store === "undefined") {
+        store = $(_this).closest('tr').find('select.fnt-store :selected').val();
+      }
+      if (store == "")
+        store = "0";
+      var qty = $('#fnt-quantity').val();
+      if (typeof qty === "undefined") {
+        qty = $(_this).closest('tr').find('.fnt-quantity').val();
+      }
+      if (qty == "")
+        qty = "0";
+      var product = $('select#fnt-product :selected').val();
+      if (typeof product === "undefined") {
+        product = $(_this).closest('tr').find('select.fnt-product :selected').val();
+      }
+      if (product == "")
+        product = "0";
+      qty = parseInt(right_number(qty, 4) * 10000);
+      jQuery.getJSON('dn_item_stock_check/' + store + '/' + product + '/' + qty, function(data) {
+        if (data.alert != "") {
+          alert(data.alert);
+        }
+      });
+      // recalculate & format
+      recalculate_dn_fields(_this);
       return false;
     });
 
@@ -202,7 +257,7 @@
     $("#fnt-price").change(function() {
       // preserve the current object
       var _this = (this);
-      recalculate(_this);
+      recalculate_dn_fields(_this);
       return false;
     });
 
@@ -210,7 +265,7 @@
     $("#fnt-discount-pct").change(function() {
       // preserve the current object
       var _this = (this);
-      recalculate(_this);
+      recalculate_dn_fields(_this);
       return false;
     });
 
@@ -218,7 +273,7 @@
     $("#fnt-discount").change(function() {
       // preserve the current object
       var _this = (this);
-      recalculate(_this);
+      recalculate_dn_fields(_this);
       return false;
     });
 
@@ -226,7 +281,7 @@
     $("#fnt-cost").change(function() {
       // preserve the current object
       var _this = (this);
-      recalculate(_this);
+      recalculate_dn_fields(_this);
       return false;
     });
 
@@ -299,8 +354,6 @@
           $(_this).closest('tr').find('.fnt-tax').val(data.tax);
           $(_this).closest('tr').find('.fnt-discount-pct').val(data.discountp);
           $(_this).closest('tr').find('.fnt-discount').val(data.discount);
-          // Table: Update and display totals is necessary
-          $('#items-table').trigger('totals');
         } else {
           $('#fnt-quantity').val(data.quantity);
           $("#fnt-cost").val(data.cost);
@@ -310,8 +363,9 @@
           $('#fnt-tax').val(data.tax);
           $('#fnt-discount-pct').val(data.discountp);
           $('#fnt-discount').val(data.discount);
-          // Fields: Update and display totals already did in nested
         }
+        // Update and display totals is necessary
+        $('#items-table').trigger('totals');
       });
     }
   });

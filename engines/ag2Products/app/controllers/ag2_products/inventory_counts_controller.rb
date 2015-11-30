@@ -193,6 +193,7 @@ module Ag2Products
     def ic_update_from_product_store
       product = params[:product]
       store = params[:store]
+      tbl = params[:tbl]
       initial_stock = 0
       current_stock = 0
       if product != '0' && store != '0'
@@ -205,7 +206,7 @@ module Ag2Products
       initial_stock = number_with_precision(initial_stock.round(4), precision: 4)
       current_stock = number_with_precision(current_stock.round(4), precision: 4)
       # Setup JSON hash
-      @json_data = { "initial" => initial_stock.to_s, "stock" => current_stock.to_s }
+      @json_data = { "initial" => initial_stock.to_s, "stock" => current_stock.to_s, "tbl" => tbl.to_s }
       render json: @json_data
     end
 

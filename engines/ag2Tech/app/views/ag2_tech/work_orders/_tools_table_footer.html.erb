@@ -1,5 +1,8 @@
 <tr class="totals">
-  <td align="right"><%= t :"activerecord.attributes.work_order.tool_minutes" %> | <%= t :"activerecord.attributes.work_order.tool_costs" %></td>
+  <td>
+    <a id="icon-new-tool-btn" href="#" onclick="javascript:$('.fnt-new-tool-btn').click(); return false;"><i class="icon-plus"></i></a>
+    <span class="right-floated"><%= t :"activerecord.attributes.work_order.tool_minutes" %> | <%= t :"activerecord.attributes.work_order.tool_costs" %></span>
+  </td>
   <td align="right" id="foot-minutes"><%= number_with_precision('0', precision: 2) %></td>
   <td></td>
   <td align="right" id="foot-totalt"><%= number_with_precision('0', precision: 4) %></td>

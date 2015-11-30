@@ -51,15 +51,21 @@
       // preserve the current object
       var _this = (this);
       // make a POST call and replace the content
+      var tbl = true;
       var product = $(this).closest('tr').find('select.fnt-product :selected').val();
       if (product == "")
         product = "0";
       var qty = $(this).closest('tr').find('.fnt-quantity').val();
       if (qty == "")
         qty = "0";
+      var store = $(_this).closest('tr').find('select.fnt-store :selected').val();
+      if (store == "")
+        store = "0";
       // Right formatted for passing as REST parameter
       qty = parseInt(right_number(qty, 4) * 10000);
-      jQuery.getJSON('po_update_description_prices_from_product/' + product + '/' + qty + '/' + _supplier, function(data) {
+      var _sstock = 0;
+      var _pstock = 0;
+      jQuery.getJSON('po_update_description_prices_from_product_store/' + product + '/' + qty + '/' + store + '/' + _supplier + '/' + tbl, function(data) {
         $(_this).closest('tr').find('.fnt-description').val(data.description);
         $(_this).closest('tr').find('.fnt-price').val(data.price);
         $(_this).closest('tr').find('.fnt-amount').val(data.amount);
@@ -68,6 +74,22 @@
         $(_this).closest('tr').find('.fnt-discount-pct').val(data.discountp);
         $(_this).closest('tr').find('.fnt-discount').val(data.discount);
         $(_this).closest('tr').find('.fnt-code').val(data.code);
+        // Update and display totals is necessary
+        $('#items-table').trigger('totals');
+        // Stock warning
+        _sstock = parseFloat(data.stock);
+        _pstock = parseFloat(data.product_stock);
+        if ((_pstock - _sstock) > 0) {
+          jQuery.getJSON('po_product_stock/' + product + '/' + qty + '/' + store, function(data) {
+            if (data != null) {
+              var a = '<%= I18n.t("ag2_purchase.purchase_orders.stocks_warning") %>\n';
+              $.each(data, function(id, option) {
+                a += '\n' + option.store.name + ' = ' + option.current;
+              });
+              alert(a);
+            }
+          });
+        }
       });
       return false;
     });

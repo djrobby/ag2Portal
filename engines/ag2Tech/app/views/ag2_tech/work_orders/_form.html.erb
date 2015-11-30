@@ -2,6 +2,35 @@
   var text_field_color;
   var _thisForm = '';
   
+  // Show or hide button(s) to add new item
+  function show_new(_show) {
+    if (_show == true) {
+      $('#submit_btn').show();
+      $('.fnt-new-btn').show();
+      $('.fnt-new-worker-btn').show();
+      $('.fnt-new-subcontractor-btn').show();
+      $('.fnt-new-tool-btn').show();
+      $('.fnt-new-vehicle-btn').show();
+      $('#icon-new-btn').show();      
+      $('#icon-new-worker-btn').show();      
+      $('#icon-new-subcontractor-btn').show();      
+      $('#icon-new-tool-btn').show();      
+      $('#icon-new-vehicle-btn').show();      
+    } else {
+      $('#submit_btn').hide();
+      $('.fnt-new-btn').hide();
+      $('.fnt-new-worker-btn').hide();
+      $('.fnt-new-subcontractor-btn').hide();
+      $('.fnt-new-tool-btn').hide();
+      $('.fnt-new-vehicle-btn').hide();
+      $('#icon-new-btn').hide();      
+      $('#icon-new-worker-btn').hide();      
+      $('#icon-new-subcontractor-btn').hide();      
+      $('#icon-new-tool-btn').hide();      
+      $('#icon-new-vehicle-btn').hide();      
+    }
+  }
+  
   $(document).ready(function() {
     $('select.sel2').select2({
       formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
@@ -40,20 +69,10 @@
       order = "0";
     if (order == "0") {
       // Empty order: Disable
-      $('#submit_btn').hide();
-      $('.fnt-new-btn').hide();
-      $('.fnt-new-worker-btn').hide();
-      $('.fnt-new-subcontractor-btn').hide();
-      $('.fnt-new-tool-btn').hide();
-      $('.fnt-new-vehicle-btn').hide();
+      show_new(false);
     } else {
       // Order OK: Enable
-      $('#submit_btn').show();
-      $('.fnt-new-btn').show();
-      $('.fnt-new-worker-btn').show();
-      $('.fnt-new-subcontractor-btn').show();
-      $('.fnt-new-tool-btn').show();
-      $('.fnt-new-vehicle-btn').show();
+      show_new(true);
     }
 
     // Disable generate_code_btn if work_order_project_id blank
@@ -87,20 +106,10 @@
         order = "0";
       if (order == "0") {
         // Empty order: Disable
-        $('#submit_btn').hide();
-        $('.fnt-new-btn').hide();
-        $('.fnt-new-worker-btn').hide();
-        $('.fnt-new-subcontractor-btn').hide();
-        $('.fnt-new-tool-btn').hide();
-        $('.fnt-new-vehicle-btn').hide();
+        show_new(false);
       } else {
-        // Order OK: Enable
-        $('#submit_btn').show();
-        $('.fnt-new-btn').show();
-        $('.fnt-new-worker-btn').show();
-        $('.fnt-new-subcontractor-btn').show();
-        $('.fnt-new-tool-btn').show();
-        $('.fnt-new-vehicle-btn').show();
+        // Order: OK: Enable
+        show_new(true);
       }
     });
     
@@ -478,7 +487,7 @@
         <h4><%= t 'ag2_tech.work_orders.items_info' %></h4>
       </td>
       <td class="form-td-two right-winged">
-        <%= link_to_add_fields(t("ag2_tech.work_orders.btn_new_item"), f, :work_order_items, "item_fields", "new-item-fields", class: "btn btn-warning fnt-new-btn") %>
+        <%= link_to_add_fields('<i class="icon-plus icon-white"></i>'.html_safe + " " + t("ag2_tech.work_orders.btn_new_item"), f, :work_order_items, "item_fields", "new-item-fields", class: "btn btn-warning fnt-new-btn") %>
       </td>
     </tr>
   </tbody>
@@ -492,7 +501,7 @@
         <h4><%= t 'ag2_tech.work_orders.workers_info' %></h4>
       </td>
       <td class="form-td-two right-winged">
-        <%= link_to_add_fields(t("ag2_tech.work_orders.btn_new_worker"), f, :work_order_workers, "worker_fields", "new-worker-fields", class: "btn btn-warning fnt-new-worker-btn") %>
+        <%= link_to_add_fields('<i class="icon-plus icon-white"></i>'.html_safe + " " + t("ag2_tech.work_orders.btn_new_worker"), f, :work_order_workers, "worker_fields", "new-worker-fields", class: "btn btn-warning fnt-new-worker-btn") %>
       </td>
     </tr>
   </tbody>
@@ -506,7 +515,7 @@
         <h4><%= t 'ag2_tech.work_orders.subcontractors_info' %></h4>
       </td>
       <td class="form-td-two right-winged">
-        <%= link_to_add_fields(t("ag2_tech.work_orders.btn_new_subcontractor"), f, :work_order_subcontractors, "subcontractor_fields", "new-subcontractor-fields", class: "btn btn-warning fnt-new-subcontractor-btn") %>
+        <%= link_to_add_fields('<i class="icon-plus icon-white"></i>'.html_safe + " " + t("ag2_tech.work_orders.btn_new_subcontractor"), f, :work_order_subcontractors, "subcontractor_fields", "new-subcontractor-fields", class: "btn btn-warning fnt-new-subcontractor-btn") %>
       </td>
     </tr>
   </tbody>
@@ -520,7 +529,7 @@
         <h4><%= t 'ag2_tech.work_orders.tools_info' %></h4>
       </td>
       <td class="form-td-two right-winged">
-        <%= link_to_add_fields(t("ag2_tech.work_orders.btn_new_tool"), f, :work_order_tools, "tool_fields", "new-tool-fields", class: "btn btn-warning fnt-new-tool-btn") %>
+        <%= link_to_add_fields('<i class="icon-plus icon-white"></i>'.html_safe + " " + t("ag2_tech.work_orders.btn_new_tool"), f, :work_order_tools, "tool_fields", "new-tool-fields", class: "btn btn-warning fnt-new-tool-btn") %>
       </td>
     </tr>
   </tbody>
@@ -534,7 +543,7 @@
         <h4><%= t 'ag2_tech.work_orders.vehicles_info' %></h4>
       </td>
       <td class="form-td-two right-winged">
-        <%= link_to_add_fields(t("ag2_tech.work_orders.btn_new_vehicle"), f, :work_order_vehicles, "vehicle_fields", "new-vehicle-fields", class: "btn btn-warning fnt-new-vehicle-btn") %>
+        <%= link_to_add_fields('<i class="icon-plus icon-white"></i>'.html_safe + " " + t("ag2_tech.work_orders.btn_new_vehicle"), f, :work_order_vehicles, "vehicle_fields", "new-vehicle-fields", class: "btn btn-warning fnt-new-vehicle-btn") %>
       </td>
     </tr>
   </tbody>

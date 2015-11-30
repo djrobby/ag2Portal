@@ -15,6 +15,7 @@ module Ag2Products
                                                :dn_format_number,
                                                :dn_current_stock,
                                                :dn_update_project_textfields_from_organization,
+                                               :dn_item_stock_check,
                                                :dn_generate_no]
     # Update sale offer select at view from client select
     def dn_update_offer_select_from_client
@@ -63,6 +64,7 @@ module Ag2Products
     def dn_update_description_prices_from_product_store
       product = params[:product]
       store = params[:store]
+      tbl = params[:tbl]
       description = ""
       qty = 0
       cost = 0
@@ -101,7 +103,7 @@ module Ag2Products
       @json_data = { "description" => description,
                      "cost" => cost.to_s, "costs" => costs.to_s,
                      "price" => price.to_s, "amount" => amount.to_s,
-                     "tax" => tax.to_s, "type" => tax_type_id, "stock" => current_stock.to_s }
+                     "tax" => tax.to_s, "type" => tax_type_id, "stock" => current_stock.to_s, "tbl" => tbl.to_s }
       render json: @json_data
     end
 
@@ -277,6 +279,26 @@ module Ag2Products
       @json_data = { "client" => @clients, "project" => @projects, "work_order" => @work_orders,
                      "charge_account" => @charge_accounts, "store" => @stores,
                      "payment_method" => @payment_methods, "product" => @products_dropdown }
+      render json: @json_data
+    end
+
+    # Is quantity greater than current stock?
+    def dn_item_stock_check
+      store = params[:store]
+      product = params[:product]
+      qty = params[:qty].to_f / 10000
+      stock = 0
+      alert = ""
+      if product != '0' && store != '0'
+        stock = Stock.find_by_product_and_store(product, store).current rescue 0
+        if qty > stock
+          qty = number_with_precision(qty.round(4), precision: 4, delimiter: I18n.locale == :es ? "." : ",")
+          stock = number_with_precision(stock.round(4), precision: 4, delimiter: I18n.locale == :es ? "." : ",")
+          alert = I18n.t("activerecord.models.delivery_note_item.quantity_greater_than_stock", qty: qty, stock: stock)
+        end
+      end
+      # Setup JSON
+      @json_data = { "alert" => alert }
       render json: @json_data
     end
 

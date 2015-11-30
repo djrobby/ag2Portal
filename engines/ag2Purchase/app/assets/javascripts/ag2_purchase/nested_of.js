@@ -112,7 +112,7 @@ var of_rowBuilder = function() {
               if ($(this).hasClass('fsel2')) css = css + ' select isel2';
               if ($(this).hasClass('number-text-field')) css = css + ' sub-number-text-field';
               if ($(this).hasClass('sub-disabled-field')) css = css + ' sub-disabled-field';
-              if (css === this.id) css = css + ' sub-alfanumeric-text-field';
+              if (css === '') css = css + ' sub-alfanumeric-text-field';
               if (css.indexOf("isel2") == -1) css = css + ' sub-bordered-input';
               css = css + ' string ' + id;
               $(this).removeAttr('class');

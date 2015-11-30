@@ -2,6 +2,23 @@
   var text_field_color;
   var _thisForm = '';
   
+  // Show or hide button(s) to add new item
+  function show_new(_show) {
+    if (_show == true) {
+      $('#submit_btn').show();
+      $('.fnt-new-btn').show();
+      $('.fnt-new-approval-btn').show();
+      $('#icon-new-btn').show();      
+      $('#icon-new-approval-btn').show();      
+    } else {
+      $('#submit_btn').hide();
+      $('.fnt-new-btn').hide();
+      $('.fnt-new-approval-btn').hide();
+      $('#icon-new-btn').hide();      
+      $('#icon-new-approval-btn').hide();      
+    }
+  }
+  
   $(document).ready(function() {
     $('select.sel2').select2({
       formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
@@ -31,14 +48,10 @@
       order = "0";
     if (order == "0") {
       // Empty order: Disable
-      $('#submit_btn').hide();
-      $('.fnt-new-btn').hide();
-      $('.fnt-new-approval-btn').hide();
+      show_new(false);
     } else {
       // Order OK: Enable
-      $('#submit_btn').show();
-      $('.fnt-new-btn').show();
-      $('.fnt-new-approval-btn').show();
+      show_new(true);
     }
   });
   
@@ -55,14 +68,10 @@
         order = "0";
       if (order == "0") {
         // Empty order: Disable
-        $('#submit_btn').hide();
-        $('.fnt-new-btn').hide();
-        $('.fnt-new-approval-btn').hide();
+        show_new(false);
       } else {
         // Order: OK: Enable
-        $('#submit_btn').show();
-        $('.fnt-new-btn').show();
-        $('.fnt-new-approval-btn').show();
+        show_new(true);
       }
     });
 
@@ -505,7 +514,7 @@
         <h4><%= t 'ag2_purchase.supplier_invoices.items_info' %></h4>
       </td>
       <td class="form-td-two right-winged">
-        <%= link_to_add_fields(t("ag2_purchase.supplier_invoices.btn_new_item"), f, :supplier_invoice_items, "item_fields", "new-item-fields", class: "btn btn-warning fnt-new-btn") %>
+        <%= link_to_add_fields('<i class="icon-plus icon-white"></i>'.html_safe + " " + t("ag2_purchase.supplier_invoices.btn_new_item"), f, :supplier_invoice_items, "item_fields", "new-item-fields", class: "btn btn-warning fnt-new-btn") %>
       </td>
     </tr>
   </tbody>
@@ -521,7 +530,7 @@
         <h4><%= t 'ag2_purchase.supplier_invoices.approvals_info' %></h4>
       </td>
       <td class="form-td-two right-winged">
-        <%= link_to_add_fields(t("ag2_purchase.supplier_invoices.btn_new_approval"), f, :supplier_invoice_approvals, "approval_fields", "new-approval-fields", class: "btn btn-warning fnt-new-approval-btn") %>
+        <%= link_to_add_fields('<i class="icon-plus icon-white"></i>'.html_safe + " " + t("ag2_purchase.supplier_invoices.btn_new_approval"), f, :supplier_invoice_approvals, "approval_fields", "new-approval-fields", class: "btn btn-warning fnt-new-approval-btn") %>
       </td>
     </tr>
   </tbody>

@@ -114,6 +114,7 @@ module Ag2Purchase
       product = params[:product]
       store = params[:store]
       supplier = params[:supplier]
+      tbl = params[:tbl]
       description = ""
       qty = 0
       price = 0
@@ -158,7 +159,7 @@ module Ag2Purchase
       @json_data = { "description" => description, "price" => price.to_s, "amount" => amount.to_s,
                      "tax" => tax.to_s, "type" => tax_type_id,
                      "stock" => current_stock.to_s, "product_stock" => product_stock.to_s,
-                     "discountp" => discount_p, "discount" => discount, "code" => code }
+                     "discountp" => discount_p, "discount" => discount, "code" => code, "tbl" => tbl.to_s }
       render json: @json_data
     end
 

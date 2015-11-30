@@ -113,7 +113,7 @@ var si_w_rowBuilder = function() {
               if ($(this).hasClass('idatepicker')) css = css + ' wdatepicker sub-alfanumeric-text-field';
               if ($(this).hasClass('number-text-field')) css = css + ' sub-number-text-field';
               if ($(this).hasClass('sub-disabled-field')) css = css + ' sub-disabled-field sub-alfanumeric-text-field';
-              if (css === this.id) css = css + ' sub-alfanumeric-text-field';
+              if (css === '') css = css + ' sub-alfanumeric-text-field';
               if (css.indexOf("wsel2") == -1) css = css + ' sub-bordered-input';
               css = css + ' string ' + id;
               $(this).removeAttr('class');

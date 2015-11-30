@@ -7,6 +7,7 @@ en:
         few:   Delivery note items
         other: Delivery note items
         check_for_client_invoices: "Delivery note item cannot be destroyed while linked invoices exist."
+        quantity_greater_than_stock: "The amount entered (%{qty}) is greater than the current stock (%{stock})!"
     attributes:
       delivery_note_item:
         delivery_note: "Delivery note"

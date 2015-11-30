@@ -13,7 +13,10 @@
   <td></td>
 </tr>
 <tr class="totals">
-  <td align="right"><%= t :"activerecord.attributes.work_order.worker_costs" %></td>
+  <td>
+    <a id="icon-new-worker-btn" href="#" onclick="javascript:$('.fnt-new-worker-btn').click(); return false;"><i class="icon-plus"></i></a>
+    <span class="right-floated"><%= t :"activerecord.attributes.work_order.worker_costs" %></span>
+  </td>
   <td></td>
   <td></td>
   <td align="right" id="foot-totalw"><%= number_with_precision('0', precision: 4) %></td>

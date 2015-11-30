@@ -67,6 +67,8 @@
         $(_this).closest('tr').find(".fnt-tax-type").val(data.type);
         $(_this).closest('tr').find('.fnt-discount-pct').val("0,00");
         $(_this).closest('tr').find('.fnt-discount').val("0,0000");
+        // Update and display totals is necessary
+        $('#items-table').trigger('totals');
       });
       return false;
     });
@@ -75,6 +77,23 @@
     $(".fnt-quantity").change(function() {
       // preserve the current object
       var _this = (this);
+      // stock check
+      var store = $(_this).closest('tr').find('select.fnt-store :selected').val();
+      if (store == "")
+        store = "0";
+      var qty = $(_this).closest('tr').find('.fnt-quantity').val();
+      if (qty == "")
+        qty = "0";
+      var product = $(_this).closest('tr').find('select.fnt-product :selected').val();
+      if (product == "")
+        product = "0";
+      qty = parseInt(right_number(qty, 4) * 10000);
+      jQuery.getJSON('dn_item_stock_check/' + store + '/' + product + '/' + qty, function(data) {
+        if (data.alert != "") {
+          alert(data.alert);
+        }
+      });
+      // recalculate & format
       recalculate_dn_table(_this);
       return false;
     });

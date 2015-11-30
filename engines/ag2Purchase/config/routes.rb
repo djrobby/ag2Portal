@@ -52,9 +52,9 @@ Ag2Purchase::Engine.routes.draw do
     match 'suppliers/:id/su_update_office_select_from_bank/:bank', :controller => 'suppliers', :action => 'su_update_office_select_from_bank'
     #
     # Purchase orders 
-    match 'purchase_orders/po_update_description_prices_from_product_store/:product/:qty/:store/:supplier', :controller => 'purchase_orders', :action => 'po_update_description_prices_from_product_store'
-    match 'po_update_description_prices_from_product_store/:product/:qty/:store/:supplier', :controller => 'purchase_orders', :action => 'po_update_description_prices_from_product_store'
-    match 'purchase_orders/:id/po_update_description_prices_from_product_store/:product/:qty/:store/:supplier', :controller => 'purchase_orders', :action => 'po_update_description_prices_from_product_store'
+    match 'purchase_orders/po_update_description_prices_from_product_store/:product/:qty/:store/:supplier/:tbl', :controller => 'purchase_orders', :action => 'po_update_description_prices_from_product_store'
+    match 'po_update_description_prices_from_product_store/:product/:qty/:store/:supplier/:tbl', :controller => 'purchase_orders', :action => 'po_update_description_prices_from_product_store'
+    match 'purchase_orders/:id/po_update_description_prices_from_product_store/:product/:qty/:store/:supplier/:tbl', :controller => 'purchase_orders', :action => 'po_update_description_prices_from_product_store'
     match 'purchase_orders/po_update_description_prices_from_product/:product/:qty/:supplier', :controller => 'purchase_orders', :action => 'po_update_description_prices_from_product'
     match 'po_update_description_prices_from_product/:product/:qty/:supplier', :controller => 'purchase_orders', :action => 'po_update_description_prices_from_product'
     match 'purchase_orders/:id/po_update_description_prices_from_product/:product/:qty/:supplier', :controller => 'purchase_orders', :action => 'po_update_description_prices_from_product'

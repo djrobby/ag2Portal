@@ -68,6 +68,8 @@
         $(_this).closest('tr').find('.fnt-discount-pct').val(data.discountp);
         $(_this).closest('tr').find('.fnt-discount').val(data.discount);
         $(_this).closest('tr').find('.fnt-code').val(data.code);
+        // Update and display totals is necessary
+        $('#items-table').trigger('totals');
       });
       return false;
     });
@@ -76,6 +78,20 @@
     $(".fnt-quantity").change(function() {
       // preserve the current object
       var _this = (this);
+      // balance check
+      var i = $(_this).closest('tr').find('select.fnt-purchase-order-item :selected').val();
+      if (i == "")
+        i = "0";
+      var qty = $(_this).closest('tr').find('.fnt-quantity').val();
+      if (qty == "")
+        qty = "0";
+      qty = parseInt(right_number(qty, 4) * 10000);
+      jQuery.getJSON('rn_item_balance_check/' + i + '/' + qty, function(data) {
+        if (data.alert != "") {
+          alert(data.alert);
+        }
+      });
+      // recalculate & format
       recalculate_rn_table(_this);
       return false;
     });
@@ -123,7 +139,7 @@
       var discount = $(_this).closest('tr').find('.fnt-discount').val();
       if (discount == "")
         discount = "0";
-      var product = $(this).closest('tr').find('select.fnt-product :selected').val();
+      var product = $(_this).closest('tr').find('select.fnt-product :selected').val();
       if (product == "")
         product = "0";
       // Right formatted for passing as REST parameter

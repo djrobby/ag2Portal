@@ -2,6 +2,21 @@
   var text_field_color;
   var _thisForm = '';
   
+  // Show or hide button(s) to add new item
+  function show_new(_show) {
+    if (_show == true) {
+      $('#submit_btn').show();
+      $('.fnt-new-btn').show();
+      $('.fnt-new-supplier-btn').show();
+      $('#icon-new-btn').show();      
+    } else {
+      $('#submit_btn').hide();
+      $('.fnt-new-btn').hide();
+      $('.fnt-new-supplier-btn').hide();
+      $('#icon-new-btn').hide();      
+    }
+  }
+  
   $(document).ready(function() {
     $('select.sel2').select2({
       formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
@@ -35,14 +50,10 @@
       order = "0";
     if (order == "0") {
       // Empty order: Disable
-      $('#submit_btn').hide();
-      $('.fnt-new-btn').hide();
-      $('.fnt-new-supplier-btn').hide();
+      show_new(false);
     } else {
       // Order OK: Enable
-      $('#submit_btn').show();
-      $('.fnt-new-btn').show();
-      $('.fnt-new-supplier-btn').show();
+      show_new(true);
     }
 
     // Disable generate_code_btn if offer_request_project_id blank
@@ -76,14 +87,10 @@
         order = "0";
       if (order == "0") {
         // Empty order: Disable
-        $('#submit_btn').hide();
-        $('.fnt-new-btn').hide();
-        $('.fnt-new-supplier-btn').hide();
+        show_new(false);
       } else {
         // Order: OK: Enable
-        $('#submit_btn').show();
-        $('.fnt-new-btn').show();
-        $('.fnt-new-supplier-btn').show();
+        show_new(true);
       }
     });
     
@@ -395,7 +402,7 @@
         <h4><%= t 'ag2_purchase.offer_requests.items_info' %></h4>
       </td>
       <td class="form-td-two right-winged">
-        <%= link_to_add_fields(t("ag2_purchase.offer_requests.btn_new_item"), f, :offer_request_items, "item_fields", "new-item-fields", class: "btn btn-warning fnt-new-btn") %>
+        <%= link_to_add_fields('<i class="icon-plus icon-white"></i>'.html_safe + " " + t("ag2_purchase.offer_requests.btn_new_item"), f, :offer_request_items, "item_fields", "new-item-fields", class: "btn btn-warning fnt-new-btn") %>
       </td>
     </tr>
   </tbody>
@@ -409,7 +416,7 @@
         <h4><%= t 'ag2_purchase.offer_requests.suppliers_info' %></h4>
       </td>
       <td class="form-td-two right-winged">
-        <%= link_to_add_fields(t("ag2_purchase.offer_requests.btn_new_supplier"), f, :offer_request_suppliers, "supplier_fields", "new-supplier-fields", class: "btn btn-warning fnt-new-supplier-btn") %>
+        <%= link_to_add_fields('<i class="icon-plus icon-white"></i>'.html_safe + " " + t("ag2_purchase.offer_requests.btn_new_supplier"), f, :offer_request_suppliers, "supplier_fields", "new-supplier-fields", class: "btn btn-warning fnt-new-supplier-btn") %>
       </td>
     </tr>
   </tbody>
