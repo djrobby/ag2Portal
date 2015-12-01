@@ -40,6 +40,7 @@
       // preserve the current object
       var _this = (this);
       // make a POST call and replace the content
+      var tbl = true;
       var vehicle = $(this).closest('tr').find('select.fnt-vehicle :selected').val();
       if (vehicle == "")
         vehicle = "0";
@@ -48,9 +49,11 @@
         distance = "0";
       // Right formatted for passing as REST parameter
       distance = parseInt(right_number(distance, 2) * 100);
-      jQuery.getJSON('wo_update_costs_from_vehicle/' + vehicle + '/' + distance, function(data) {
+      jQuery.getJSON('wo_update_costs_from_vehicle/' + vehicle + '/' + distance + '/' + tbl, function(data) {
         $(_this).closest('tr').find('.fnt-costv').val(data.cost);
         $(_this).closest('tr').find('.fnt-costsv').val(data.costs);
+        // Update and display totals is necessary
+        $('#vehicles-table').trigger('totals');
       });
       return false;
     });
@@ -59,7 +62,7 @@
     $(".fnt-distance").change(function() {
       // preserve the current object
       var _this = (this);
-      recalculate(_this);
+      recalculate_wov_table(_this);
       return false;
     });
 
@@ -67,13 +70,14 @@
     $(".fnt-costv").change(function() {
       // preserve the current object
       var _this = (this);
-      recalculate(_this);
+      recalculate_wov_table(_this);
       return false;
     });
     
     // Recalculate amounts & prices
-    function recalculate(_this) {
+    function recalculate_wov_table(_this) {
       // make a POST call and replace the content
+      var tbl = true;
       var cost = $(_this).closest('tr').find('.fnt-costv').val();
       if (cost == "")
         cost = "0";
@@ -83,7 +87,7 @@
       // Right formatted for passing as REST parameter
       cost = parseInt(right_number(cost, 4) * 10000);
       distance = parseInt(right_number(distance, 2) * 100);
-      jQuery.getJSON('wo_update_costs_from_cost_or_distance/' + cost + '/' + distance, function(data) {
+      jQuery.getJSON('wo_update_costs_from_cost_or_distance/' + cost + '/' + distance + '/' + tbl, function(data) {
         $(_this).closest('tr').find('.fnt-distance').val(data.distance);
         $(_this).closest('tr').find('.fnt-costv').val(data.cost);
         $(_this).closest('tr').find('.fnt-costsv').val(data.costs);

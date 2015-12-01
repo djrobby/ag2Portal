@@ -9,18 +9,36 @@
   jQuery(function($) {
     // when the #fnt-vehicle field changes
     $("#fnt-vehicle").change(function() {
+      // preserve the current object
+      var _this = (this);
       // make a POST call and replace the content
+      var tbl = false;
       var vehicle = $('select#fnt-vehicle :selected').val();
+      if (typeof vehicle === "undefined") {
+        tbl = true;
+        vehicle = $(_this).closest('tr').find('select.fnt-vehicle :selected').val();
+      }
       if (vehicle == "")
         vehicle = "0";
       var distance = $('#fnt-distance').val();
+      if (typeof distance === "undefined") {
+        tbl = true;
+        distance = $(_this).closest('tr').find('.fnt-distance').val();
+      }
       if (distance == "")
         distance = "0";
       // Right formatted for passing as REST parameter
       distance = parseInt(right_number(distance, 2) * 100);
-      jQuery.getJSON('wo_update_costs_from_vehicle/' + vehicle + '/' + distance, function(data) {
-        $("#fnt-costv").val(data.cost);
-        $("#fnt-costsv").val(data.costs);
+      jQuery.getJSON('wo_update_costs_from_vehicle/' + vehicle + '/' + distance + '/' + tbl, function(data) {
+        if (data.tbl == "true") {
+          $(_this).closest('tr').find('.fnt-costv').val(data.cost);
+          $(_this).closest('tr').find('.fnt-costsv').val(data.costs);
+        } else {
+          $("#fnt-costv").val(data.cost);
+          $("#fnt-costsv").val(data.costs);
+        }
+        // Update and display totals is necessary
+        $('#vehicles-table').trigger('totals');
       });
       return false;
     });
@@ -44,19 +62,34 @@
     // Recalculate amounts & prices
     function recalculate(_this) {
       // make a POST call and replace the content
+      var tbl = false;
       var cost = $('#fnt-costv').val();
+      if (typeof cost === "undefined") {
+        tbl = true;
+        cost = $(_this).closest('tr').find('.fnt-costv').val();
+      }
       if (cost == "")
         cost = "0";
       var distance = $('#fnt-distance').val();
+      if (typeof distance === "undefined") {
+        tbl = true;
+        distance = $(_this).closest('tr').find('.fnt-distance').val();
+      }
       if (distance == "")
         distance = "0";
       // Right formatted for passing as REST parameter
       cost = parseInt(right_number(cost, 4) * 10000);
       distance = parseInt(right_number(distance, 2) * 100);
-      jQuery.getJSON('wo_update_costs_from_cost_or_distance/' + cost + '/' + distance, function(data) {
-        $('#fnt-distance').val(data.distance);
-        $('#fnt-costv').val(data.cost);
-        $('#fnt-costsv').val(data.costs);
+      jQuery.getJSON('wo_update_costs_from_cost_or_distance/' + cost + '/' + distance + '/' + tbl, function(data) {
+        if (data.tbl == "true") {
+          $(_this).closest('tr').find('.fnt-distance').val(data.distance);
+          $(_this).closest('tr').find('.fnt-costv').val(data.cost);
+          $(_this).closest('tr').find('.fnt-costsv').val(data.costs);
+        } else {
+          $('#fnt-distance').val(data.distance);
+          $('#fnt-costv').val(data.cost);
+          $('#fnt-costsv').val(data.costs);
+        }
         // Update and display totals
         $('#vehicles-table').trigger('totals');
       });

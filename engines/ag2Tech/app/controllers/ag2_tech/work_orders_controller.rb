@@ -288,6 +288,7 @@ module Ag2Tech
     def wo_update_costs_from_vehicle
       vehicle = params[:vehicle]
       distance = params[:distance].to_f / 100
+      tbl = params[:tbl]
       cost = 0
       costs = 0
       if vehicle != '0'
@@ -300,7 +301,7 @@ module Ag2Tech
       cost = number_with_precision(cost.round(4), precision: 4)
       costs = number_with_precision(costs.round(4), precision: 4)
       # Setup JSON
-      @json_data = { "cost" => cost.to_s, "costs" => costs.to_s }
+      @json_data = { "cost" => cost.to_s, "costs" => costs.to_s, "tbl" => tbl.to_s }
       render json: @json_data
     end
 
@@ -389,12 +390,13 @@ module Ag2Tech
     def wo_update_costs_from_cost_or_distance
       cost = params[:cost].to_f / 10000
       distance = params[:distance].to_f / 100
+      tbl = params[:tbl]
       costs = distance * cost
       distance = number_with_precision(distance.round(2), precision: 2)
       cost = number_with_precision(cost.round(4), precision: 4)
       costs = number_with_precision(costs.round(4), precision: 4)
       @json_data = { "distance" => distance.to_s,
-                     "cost" => cost.to_s, "costs" => costs.to_s }
+                     "cost" => cost.to_s, "costs" => costs.to_s, "tbl" => tbl.to_s }
       render json: @json_data 
     end
     
