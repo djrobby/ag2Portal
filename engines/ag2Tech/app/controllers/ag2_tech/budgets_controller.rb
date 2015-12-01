@@ -56,8 +56,9 @@ module Ag2Tech
     # Update corrected text field at view
     def bu_update_corrected
       corrected = params[:cor].to_f / 10000
+      tbl = params[:tbl]
       corrected = number_with_precision(corrected.round(4), precision: 4)
-      @json_data = { "corrected" => corrected.to_s }
+      @json_data = { "corrected" => corrected.to_s, "tbl" => tbl.to_s }
       render json: @json_data
     end
 
@@ -75,12 +76,26 @@ module Ag2Tech
       total10 = params[:m10].to_f / 10000
       total11 = params[:m11].to_f / 10000
       total12 = params[:m12].to_f / 10000
+      tbl = params[:tbl]
       annual = total01 + total02 + total03 + total04 + total05 + total06 +
                total07 + total08 + total09 + total10 + total11 + total12
-      @json_data = { "total01" => total01.to_s, "total02" => total02.to_s, "total03" => total03.to_s, "total04" => total04.to_s,
-                     "total05" => total05.to_s, "total06" => total06.to_s, "total07" => total07.to_s, "total08" => total08.to_s,
-                     "total09" => total09.to_s, "total10" => total10.to_s, "total11" => total11.to_s, "total12" => total12.to_s,
-                     "annual" => annual.to_s }
+      total01 = number_with_precision(total01.round(4), precision: 4)
+      total02 = number_with_precision(total02.round(4), precision: 4)
+      total03 = number_with_precision(total03.round(4), precision: 4)
+      total04 = number_with_precision(total04.round(4), precision: 4)
+      total05 = number_with_precision(total05.round(4), precision: 4)
+      total06 = number_with_precision(total06.round(4), precision: 4)
+      total07 = number_with_precision(total07.round(4), precision: 4)
+      total08 = number_with_precision(total08.round(4), precision: 4)
+      total09 = number_with_precision(total09.round(4), precision: 4)
+      total10 = number_with_precision(total10.round(4), precision: 4)
+      total11 = number_with_precision(total11.round(4), precision: 4)
+      total12 = number_with_precision(total12.round(4), precision: 4)
+      annual = number_with_precision(annual.round(4), precision: 4)
+      @json_data = { "month01" => total01.to_s, "month02" => total02.to_s, "month03" => total03.to_s, "month04" => total04.to_s,
+                     "month05" => total05.to_s, "month06" => total06.to_s, "month07" => total07.to_s, "month08" => total08.to_s,
+                     "month09" => total09.to_s, "month10" => total10.to_s, "month11" => total11.to_s, "month12" => total12.to_s,
+                     "annual" => annual.to_s, "tbl" => tbl.to_s }
       render json: @json_data
     end
     
@@ -134,6 +149,7 @@ module Ag2Tech
       project = params[:project]
       period = params[:period]
       budget = params[:budget]
+      @new_budget = nil
 
       # Generate new, if possible
       if project == '$' || period == '$'
@@ -166,13 +182,13 @@ module Ag2Tech
             if !_pbudget.nil?
               _pitems = BudgetItem.where(budget_id: budget).order(:id)
               if !_pitems.nil? && _pitems.count > 0
-                @new_budget = create_budget(code, _pbudget.description, _pbudget.project_id, _pbudget.organization_id, _pbudget.budget_period_id)
+                @new_budget = create_budget(code, _pbudget.description, _pbudget.project_id, _pbudget.organization_id, period)
                 if !@new_budget.nil?
                   _pitems.each do |_item|
                     _item_id = create_budget_item(@new_budget.id, _item.charge_account_id,
                                                   _item.month_01, _item.month_02, _item.month_03, _item.month_04,
-                                                  _item.month_05, _item.month_06, _item.month_07, _item_month_08,
-                                                  _item.month_09, _item.month_10, _item.month_11, _item_month_12)
+                                                  _item.month_05, _item.month_06, _item.month_07, _item.month_08,
+                                                  _item.month_09, _item.month_10, _item.month_11, _item.month_12)
                     if _item_id == 0
                       code = "$err"
                       break
@@ -190,13 +206,13 @@ module Ag2Tech
           end
         end
       end
+
       if code != '$err'
-        # If no error, show new budget
-        redirect_to @new_budget, notice: crud_notice('created', @new_budget)
+        @json_data = { "code" => code, "message" => t("ag2_tech.budgets.new_success", var: @new_budget.budget_no), "to" => ag2_tech.budget_path(@new_budget) }
       else
-        @json_data = { "code" => code }
-        render json: @json_data
+        @json_data = { "code" => code, "message" => t("ag2_tech.budgets.new_error"), "to" => nil }
       end
+      render json: @json_data
     end
 
     #
@@ -277,6 +293,7 @@ module Ag2Tech
       @periods = periods_dropdown
       @charge_accounts = charge_accounts_dropdown
       @old_budgets = budgets_dropdown
+      @new_budget = Budget.first
   
       respond_to do |format|
         format.html # new.html.erb
@@ -439,6 +456,7 @@ module Ag2Tech
       _budget.project_id = project_id
       _budget.organization_id = organization_id
       _budget.budget_period_id = budget_period_id
+      _budget.created_by = current_user.id if !current_user.nil?
       if _budget.save
         _new_budget = _budget
       end
@@ -464,6 +482,7 @@ module Ag2Tech
       _budget_item.month_11 = month_11
       _budget_item.month_12 = month_12
       _budget_item.corrected_amount = 0
+      _budget_item.created_by = current_user.id if !current_user.nil?
       if _budget_item.save
         _id = _budget_item.id
       end

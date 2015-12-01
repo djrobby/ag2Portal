@@ -82,49 +82,49 @@
     // when the .fnt-month01 field changes
     $(".fnt-month01").change(function() {
       var _this = (this);
-      recalculate(_this);
+      recalculate_bu_table(_this);
       return false;
     });
 
     // when the .fnt-month02 field changes
     $(".fnt-month02").change(function() {
       var _this = (this);
-      recalculate(_this);
+      recalculate_bu_table(_this);
       return false;
     });
 
     // when the .fnt-month03 field changes
     $(".fnt-month03").change(function() {
       var _this = (this);
-      recalculate(_this);
+      recalculate_bu_table(_this);
       return false;
     });
 
     // when the .fnt-month04 field changes
     $(".fnt-month04").change(function() {
       var _this = (this);
-      recalculate(_this);
+      recalculate_bu_table(_this);
       return false;
     });
 
     // when the .fnt-month05 field changes
     $(".fnt-month05").change(function() {
       var _this = (this);
-      recalculate(_this);
+      recalculate_bu_table(_this);
       return false;
     });
 
     // when the .fnt-month06 field changes
     $(".fnt-month06").change(function() {
       var _this = (this);
-      recalculate(_this);
+      recalculate_bu_table(_this);
       return false;
     });
 
     // when the .fnt-month07 field changes
     $(".fnt-month07").change(function() {
       var _this = (this);
-      recalculate(_this);
+      recalculate_bu_table(_this);
       return false;
     });
 
@@ -138,39 +138,40 @@
     // when the .fnt-month09 field changes
     $(".fnt-month09").change(function() {
       var _this = (this);
-      recalculate(_this);
+      recalculate_bu_table(_this);
       return false;
     });
 
     // when the .fnt-month10 field changes
     $(".fnt-month10").change(function() {
       var _this = (this);
-      recalculate(_this);
+      recalculate_bu_table(_this);
       return false;
     });
 
     // when the .fnt-month11 field changes
     $(".fnt-month11").change(function() {
       var _this = (this);
-      recalculate(_this);
+      recalculate_bu_table(_this);
       return false;
     });
 
     // when the .fnt-month12 field changes
     $(".fnt-month12").change(function() {
       var _this = (this);
-      recalculate(_this);
+      recalculate_bu_table(_this);
       return false;
     });
 
     // when the .fnt-corrected field changes
     $(".fnt-corrected").change(function() {
+      var tbl = true;
       var cor = $(_this).closest('tr').find('.fnt-corrected').val();
       if (cor == "")
         cor = "0";
       // Right formatted for passing as REST parameter
       cor = parseInt(right_number(cor, 4) * 10000);
-      jQuery.getJSON('bu_update_corrected/' + cor, function(data) {
+      jQuery.getJSON('bu_update_corrected/' + cor + "/" + tbl, function(data) {
         $(_this).closest('tr').find('.fnt-corrected').val(data.corrected);
         // Update and display totals
         $('#items-table').trigger('totals');
@@ -179,8 +180,9 @@
     });
     
     // Recalculate amounts
-    function recalculate(_this) {
+    function recalculate_bu_table(_this) {
       // make a POST call and replace the content
+      var tbl = true;
       var m01 = $(_this).closest('tr').find('.fnt-month01').val();
       if (m01 == "")
         m01 = "0";
@@ -232,7 +234,7 @@
       m12 = parseInt(right_number(m12.toString(), 4) * 10000);
       jQuery.getJSON('bu_update_annual/' + m01 + '/' + m02 + '/' + m03 + '/' + m04 + '/' +
                                            m05 + '/' + m06 + '/' + m07 + '/' + m08 + '/' +
-                                           m09 + '/' + m10 + '/' + m11 + '/' + m12, function(data) {
+                                           m09 + '/' + m10 + '/' + m11 + '/' + m12 + "/" + tbl, function(data) {
         $(_this).closest('tr').find('.fnt-month01').val(data.month01);
         $(_this).closest('tr').find('.fnt-month02').val(data.month02);
         $(_this).closest('tr').find('.fnt-month03').val(data.month03);

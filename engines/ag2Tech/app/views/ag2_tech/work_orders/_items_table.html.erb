@@ -1,4 +1,7 @@
 <script>
+  var _f = '';
+  var _s = "0";
+
   $(document).ready(function() {
     $('.isel2').select2({
       formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
@@ -6,6 +9,10 @@
       dropdownAutoWidth: true,
       containerCssClass: 'sub-select2-field'
     });
+
+    // Retrieves parent values
+    _f = $(".fnt-product").closest('form')[0];
+    _s = $('select#work_order_store_id :selected').val();
 
     // Trigger to display totals at table foot
     $('#items-table').bind('totals', function(event) {
@@ -43,6 +50,7 @@
       // preserve the current object
       var _this = (this);
       // make a POST call and replace the content
+      var tbl = true;
       var product = $(this).closest('tr').find('select.fnt-product :selected').val();
       if (product == "")
         product = "0";
@@ -51,7 +59,7 @@
         qty = "0";
       // Right formatted for passing as REST parameter
       qty = parseInt(right_number(qty, 4) * 10000);
-      jQuery.getJSON('wo_update_description_prices_from_product/' + product + '/' + qty, function(data) {
+      jQuery.getJSON('wo_update_description_prices_from_product/' + product + '/' + qty + '/' + _s + '/' + tbl, function(data) {
         $(_this).closest('tr').find('.fnt-description').val(data.description);
         $(_this).closest('tr').find('.fnt-cost').val(data.cost);
         $(_this).closest('tr').find('.fnt-costs').val(data.costs);
@@ -59,6 +67,8 @@
         $(_this).closest('tr').find('.fnt-amount').val(data.amount);
         $(_this).closest('tr').find(".fnt-tax-type").val(data.type);
         $(_this).closest('tr').find('.fnt-tax').val(data.tax);
+        // Update and display totals is necessary
+        $('#items-table').trigger('totals');
       });
       return false;
     });
@@ -67,7 +77,7 @@
     $(".fnt-quantity").change(function() {
       // preserve the current object
       var _this = (this);
-      recalculate(_this);
+      recalculate_woi_table(_this);
       return false;
     });
 
@@ -75,7 +85,7 @@
     $(".fnt-price").change(function() {
       // preserve the current object
       var _this = (this);
-      recalculate(_this);
+      recalculate_woi_table(_this);
       return false;
     });
 
@@ -83,13 +93,14 @@
     $(".fnt-cost").change(function() {
       // preserve the current object
       var _this = (this);
-      recalculate(_this);
+      recalculate_woi_table(_this);
       return false;
     });
     
     // Recalculate amounts & prices
-    function recalculate(_this) {
+    function recalculate_woi_table(_this) {
       // make a POST call and replace the content
+      var tbl = true;
       var cost = $(_this).closest('tr').find('.fnt-cost').val();
       if (cost == "")
         cost = "0";
@@ -109,7 +120,7 @@
       cost = parseInt(right_number(cost, 4) * 10000);
       price = parseInt(right_number(price, 4) * 10000);
       qty = parseInt(right_number(qty, 4) * 10000);
-      jQuery.getJSON('wo_update_amount_and_costs_from_price_or_quantity/' + cost + '/' + price + '/' + qty + '/' + tax_type + '/' + product, function(data) {
+      jQuery.getJSON('wo_update_amount_and_costs_from_price_or_quantity/' + cost + '/' + price + '/' + qty + '/' + tax_type + '/' + product + "/" + tbl, function(data) {
         $(_this).closest('tr').find('.fnt-quantity').val(data.quantity);
         $(_this).closest('tr').find('.fnt-cost').val(data.cost);
         $(_this).closest('tr').find('.fnt-costs').val(data.costs);

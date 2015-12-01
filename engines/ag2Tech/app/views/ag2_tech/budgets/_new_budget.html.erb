@@ -21,17 +21,13 @@
         budget = "$";
       jQuery.getJSON('bu_new/' + order + '/' + period + '/' + budget, function(data) {
         $("#budget_budget_no").val(data.code);
+        alert(data.message);
         if ($("#budget_budget_no").val() == "$err") {
           $("#budget_budget_no").css('color', 'red');
-          alert('<%= I18n.t("ag2_tech.budgets.new_error") %>');
           $("#new-budget").modal('hide');
         } else {
-          // If no error, controller has redirected to show.html.erb
-          /*
-          $("#budget_order_no").css('color', text_field_color);
-          alert('<%= I18n.t("ag2_tech.budgets.new_success", var: @new_budget_no) %>');
-          $('#budget_order_no').trigger("change");
-          */
+          $("#budget_budget_no").css('color', text_field_color);
+          window.location = data.to;
         }
       });
       //return false;

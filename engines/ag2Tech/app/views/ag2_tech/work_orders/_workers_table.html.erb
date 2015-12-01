@@ -9,6 +9,9 @@
       containerCssClass: 'sub-select2-field'
     });
 
+    // Retrieves parent values
+    _f = $(".fnt-worker").closest('form')[0];
+
     // Trigger to display totals at table foot
     $('#workers-table').bind('totals', function(event) {
       // Sum necessary values from table rows
@@ -30,8 +33,6 @@
     });
     // Update and display totals
     $('#workers-table').trigger('totals');
-    // Retrieves parent values
-    _f = $(".fnt-worker").closest('form')[0];
   }); 
 
   jQuery(function($) {
@@ -48,6 +49,7 @@
       }
       var yy = _date.getFullYear();
       // make a POST call and replace the content
+      var tbl = true;
       project = $('select#work_order_project_id :selected').val();
       if (project == "")
         project = "0";      
@@ -59,9 +61,11 @@
         hours = "0";
       // Right formatted for passing as REST parameter
       hours = parseInt(right_number(hours, 4) * 10000);
-      jQuery.getJSON('wo_update_costs_from_worker/' + worker + '/' + hours + '/' + project + '/' + yy, function(data) {
+      jQuery.getJSON('wo_update_costs_from_worker/' + worker + '/' + hours + '/' + project + '/' + yy + '/' + tbl, function(data) {
         $(_this).closest('tr').find('.fnt-costw').val(data.cost);
         $(_this).closest('tr').find('.fnt-costsw').val(data.costs);
+        // Update and display totals
+        $('#workers-table').trigger('totals');
       });
       return false;
     });
@@ -70,7 +74,7 @@
     $(".fnt-hours").change(function() {
       // preserve the current object
       var _this = (this);
-      recalculate(_this);
+      recalculate_wow_table(_this);
       return false;
     });
 
@@ -78,13 +82,14 @@
     $(".fnt-costw").change(function() {
       // preserve the current object
       var _this = (this);
-      recalculate(_this);
+      recalculate_wow_table(_this);
       return false;
     });
     
     // Recalculate amounts & prices
-    function recalculate(_this) {
+    function recalculate_wow_table(_this) {
       // make a POST call and replace the content
+      var tbl = true;
       var cost = $(_this).closest('tr').find('.fnt-costw').val();
       if (cost == "")
         cost = "0";
@@ -94,7 +99,7 @@
       // Right formatted for passing as REST parameter
       cost = parseInt(right_number(cost, 4) * 10000);
       hours = parseInt(right_number(hours, 4) * 10000);
-      jQuery.getJSON('wo_update_costs_from_cost_or_hours/' + cost + '/' + hours, function(data) {
+      jQuery.getJSON('wo_update_costs_from_cost_or_hours/' + cost + '/' + hours + "/" + tbl, function(data) {
         $(_this).closest('tr').find('.fnt-costw').val(data.cost);
         $(_this).closest('tr').find('.fnt-hours').val(data.hours);
         $(_this).closest('tr').find('.fnt-costsw').val(data.costs);

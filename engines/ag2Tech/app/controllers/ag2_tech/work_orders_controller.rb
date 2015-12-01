@@ -122,6 +122,7 @@ module Ag2Tech
     def wo_update_description_prices_from_product
       product = params[:product]
       store = params[:store]
+      tbl = params[:tbl]
       description = ""
       qty = 0
       cost = 0
@@ -160,7 +161,7 @@ module Ag2Tech
       @json_data = { "description" => description,
                      "cost" => cost.to_s, "costs" => costs.to_s,
                      "price" => price.to_s, "amount" => amount.to_s,
-                     "tax" => tax.to_s, "type" => tax_type_id, "stock" => current_stock.to_s }
+                     "tax" => tax.to_s, "type" => tax_type_id, "stock" => current_stock.to_s, "tbl" => tbl.to_s }
 
       respond_to do |format|
         format.html # wo_update_description_prices_from_product.html.erb does not exist! JSON only
@@ -174,6 +175,7 @@ module Ag2Tech
       hours = params[:hours].to_f / 10000
       project = params[:project]
       year = params[:year].to_i
+      tbl = params[:tbl]
       cost = 0
       costs = 0
       worker_item = nil
@@ -213,7 +215,7 @@ module Ag2Tech
       cost = number_with_precision(cost.round(4), precision: 4)
       costs = number_with_precision(costs.round(4), precision: 4)
       # Setup JSON
-      @json_data = { "cost" => cost.to_s, "costs" => costs.to_s }
+      @json_data = { "cost" => cost.to_s, "costs" => costs.to_s, "tbl" => tbl.to_s }
       render json: @json_data
     end
     
@@ -221,6 +223,7 @@ module Ag2Tech
     def wo_update_orders_costs_from_supplier
       supplier = params[:supplier]
       pct = params[:pct]
+      tbl = params[:tbl]
       cost = 0
       costs = 0
       if supplier != '0'
@@ -235,7 +238,7 @@ module Ag2Tech
       cost = number_with_precision(cost.round(4), precision: 4)
       costs = number_with_precision(costs.round(4), precision: 4)
       # Setup JSON
-      @json_data = { "cost" => cost.to_s, "costs" => costs.to_s, "order" => @orders_dropdown }
+      @json_data = { "cost" => cost.to_s, "costs" => costs.to_s, "order" => @orders_dropdown, "tbl" => tbl.to_s }
       render json: @json_data
     end
 
@@ -243,19 +246,20 @@ module Ag2Tech
     def wo_update_costs_from_purchase_order
       order = params[:order]
       pct = params[:pct].to_f / 100
+      tbl = params[:tbl]
       cost = 0
       costs = 0
       if order != '0'
         @order = PurchaseOrder.find(order)
         # Assignment
         cost = @order.taxable
-        costs = pct * cost
+        costs = (pct / 100) * cost
       end
       # Format numbers
       cost = number_with_precision(cost.round(4), precision: 4)
       costs = number_with_precision(costs.round(4), precision: 4)
       # Setup JSON
-      @json_data = { "cost" => cost.to_s, "costs" => costs.to_s }
+      @json_data = { "cost" => cost.to_s, "costs" => costs.to_s, "tbl" => tbl.to_s }
       render json: @json_data
     end
 
@@ -263,6 +267,7 @@ module Ag2Tech
     def wo_update_costs_from_tool
       tool = params[:tool]
       minutes = params[:minutes].to_f / 100
+      tbl = params[:tbl]
       cost = 0
       costs = 0
       if tool != '0'
@@ -275,7 +280,7 @@ module Ag2Tech
       cost = number_with_precision(cost.round(4), precision: 4)
       costs = number_with_precision(costs.round(4), precision: 4)
       # Setup JSON
-      @json_data = { "cost" => cost.to_s, "costs" => costs.to_s }
+      @json_data = { "cost" => cost.to_s, "costs" => costs.to_s, "tbl" => tbl.to_s }
       render json: @json_data
     end
 
@@ -306,6 +311,7 @@ module Ag2Tech
       qty = params[:qty].to_f / 10000
       tax_type = params[:tax_type].to_i
       product = params[:product]
+      tbl = params[:tbl]
       if tax_type.blank? || tax_type == "0"
         if !product.blank? && product != "0"
           tax_type = Product.find(product).tax_type.id
@@ -326,7 +332,7 @@ module Ag2Tech
       @json_data = { "quantity" => qty.to_s,
                      "cost" => cost.to_s, "costs" => costs.to_s, 
                      "price" => price.to_s, "amount" => amount.to_s, 
-                     "tax" => tax.to_s }
+                     "tax" => tax.to_s, "tbl" => tbl.to_s }
 
       respond_to do |format|
         format.html # wo_update_amount_and_costs_from_price_or_quantity.html.erb does not exist! JSON only
@@ -338,12 +344,13 @@ module Ag2Tech
     def wo_update_costs_from_cost_or_hours
       cost = params[:cost].to_f / 10000
       hours = params[:hours].to_f / 10000
+      tbl = params[:tbl]
       costs = hours * cost
       hours = number_with_precision(hours.round(4), precision: 4)
       cost = number_with_precision(cost.round(4), precision: 4)
       costs = number_with_precision(costs.round(4), precision: 4)
       @json_data = { "hours" => hours.to_s,
-                     "cost" => cost.to_s, "costs" => costs.to_s } 
+                     "cost" => cost.to_s, "costs" => costs.to_s, "tbl" => tbl.to_s } 
 
       respond_to do |format|
         format.html # wo_update_costs_from_cost_or_hours.html.erb does not exist! JSON only
@@ -355,11 +362,12 @@ module Ag2Tech
     def wo_update_costs_from_cost_or_enforcement_pct
       cost = params[:cost].to_f / 10000
       pct = params[:pct].to_f / 100
+      tbl = params[:tbl]
       costs = (pct / 100) * cost
       pct = number_with_precision(pct.round(2), precision: 2)
       cost = number_with_precision(cost.round(4), precision: 4)
       costs = number_with_precision(costs.round(4), precision: 4)
-      @json_data = { "pct" => pct.to_s, "cost" => cost.to_s, "costs" => costs.to_s }
+      @json_data = { "pct" => pct.to_s, "cost" => cost.to_s, "costs" => costs.to_s, "tbl" => tbl.to_s }
       render json: @json_data 
     end
 
@@ -367,12 +375,13 @@ module Ag2Tech
     def wo_update_costs_from_cost_or_minutes
       cost = params[:cost].to_f / 10000
       minutes = params[:minutes].to_f / 100
+      tbl = params[:tbl]
       costs = minutes * cost
       minutes = number_with_precision(minutes.round(2), precision: 2)
       cost = number_with_precision(cost.round(4), precision: 4)
       costs = number_with_precision(costs.round(4), precision: 4)
       @json_data = { "minutes" => minutes.to_s,
-                     "cost" => cost.to_s, "costs" => costs.to_s }
+                     "cost" => cost.to_s, "costs" => costs.to_s, "tbl" => tbl.to_s }
       render json: @json_data 
     end
 

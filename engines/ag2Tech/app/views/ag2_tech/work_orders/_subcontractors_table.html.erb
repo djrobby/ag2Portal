@@ -39,6 +39,7 @@
       // preserve the current object
       var _this = (this);
       // make a POST call and replace the content
+      var tbl = true;
       var supplier = $(this).closest('tr').find('select.fnt-supplier :selected').val();
       if (supplier == "")
         supplier = "0";
@@ -47,11 +48,13 @@
         pct = "0";
       // Right formatted for passing as REST parameter
       pct = parseInt(right_number(pct, 2) * 100);
-      jQuery.getJSON('wo_update_orders_costs_from_supplier/' + supplier + '/' + pct, function(data) {
+      jQuery.getJSON('wo_update_orders_costs_from_supplier/' + supplier + '/' + pct + '/' + tbl, function(data) {
         $(_this).closest('tr').find('.fnt-costsub').val(data.cost);
         $(_this).closest('tr').find('.fnt-costssub').val(data.costs);
-        var p = data.order;
+        // Update and display totals is necessary
+        $('#subcontractors-table').trigger('totals');
         // Purchase order
+        var p = data.order;
         $(_this).closest('tr').find('.fnt-purchase-order').html("");
         $(_this).closest('tr').find('.fnt-purchase-order').select2("val", "");
         $(_this).closest('tr').find('.fnt-purchase-order').append($('<option></option>').val("").html(""));
@@ -75,6 +78,7 @@
       // preserve the current object
       var _this = (this);
       // make a POST call and replace the content
+      var tbl = true;
       var order = $(this).closest('tr').find('select.fnt-purchase-order :selected').val();
       if (order == "")
         order = "0";
@@ -83,9 +87,11 @@
         pct = "0";
       // Right formatted for passing as REST parameter
       pct = parseInt(right_number(pct, 2) * 100);
-      jQuery.getJSON('wo_update_costs_from_purchase_order/' + order + '/' + pct, function(data) {
+      jQuery.getJSON('wo_update_costs_from_purchase_order/' + order + '/' + pct + '/' + tbl, function(data) {
         $(_this).closest('tr').find('.fnt-costsub').val(data.cost);
         $(_this).closest('tr').find('.fnt-costssub').val(data.costs);
+        // Update and display totals is necessary
+        $('#subcontractors-table').trigger('totals');
       });
       return false;
     });
@@ -94,7 +100,7 @@
     $(".fnt-enforcement-pct").change(function() {
       // preserve the current object
       var _this = (this);
-      recalculate(_this);
+      recalculate_wos_table(_this);
       return false;
     });
 
@@ -102,13 +108,14 @@
     $(".fnt-costsub").change(function() {
       // preserve the current object
       var _this = (this);
-      recalculate(_this);
+      recalculate_wos_table(_this);
       return false;
     });
     
     // Recalculate amounts & prices
-    function recalculate(_this) {
+    function recalculate_wos_table(_this) {
       // make a POST call and replace the content
+      var tbl = true;
       var cost = $(_this).closest('tr').find('.fnt-costsub').val();
       if (cost == "")
         cost = "0";
@@ -118,7 +125,7 @@
       // Right formatted for passing as REST parameter
       cost = parseInt(right_number(cost, 4) * 10000);
       pct = parseInt(right_number(pct, 2) * 100);
-      jQuery.getJSON('wo_update_costs_from_cost_or_enforcement_pct/' + cost + '/' + pct, function(data) {
+      jQuery.getJSON('wo_update_costs_from_cost_or_enforcement_pct/' + cost + '/' + pct + "/" + tbl, function(data) {
         $(_this).closest('tr').find('.fnt-costsub').val(data.cost);
         $(_this).closest('tr').find('.fnt-enforcement-pct').val(data.pct);
         $(_this).closest('tr').find('.fnt-costssub').val(data.costs);

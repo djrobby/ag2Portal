@@ -432,8 +432,8 @@ end
     else
       project = project_code[0,12].upcase.rjust(12, '0')
       period = period_code[0,8].upcase.rjust(8, '0')
-      last_no = Budget.where("buget_no LIKE ?", "#{project}#{period}")
-      if !last_no.nil?
+      last_no = Budget.where("budget_no = ?", "#{project}#{period}")
+      if last_no.blank?
         code = project + period
       else
         code = '$err'

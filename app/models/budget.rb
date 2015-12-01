@@ -44,7 +44,7 @@ class Budget < ActiveRecord::Base
   end
 
   def full_no
-    # Budget no. (Project code & budget period code & sequential number) => PPPPPPPPPPPP-BBBBBBBB
+    # Budget no. (Project code & budget period code) => PPPPPPPPPPPP-BBBBBBBB
     budget_no.blank? ? "" : budget_no[0..11] + '-' + budget_no[12..19]
   end
 
@@ -133,7 +133,7 @@ class Budget < ActiveRecord::Base
   def total_annual
     _result = 0
     budget_items.each do |i|
-      if !i.amount.blank?
+      if i.amount != 0
         _result += i.amount
       else
         _result += (i.month_01 + i.month_02 + i.month_03 + i.month_04 + i.month_04 + i.month_06 +

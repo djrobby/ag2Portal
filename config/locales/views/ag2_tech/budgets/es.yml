@@ -31,7 +31,7 @@ es:
       new_btn: "Generar nuevo o Heredar anterior"
       no_error: "Imposible generar Nº de Presupuesto: No has elegido Proyecto o Periodo, o Nº ya está en uso."
       new_error: "Imposible generar nuevo Presupuesto: No has elegido Proyecto o Periodo, o error de proceso."
-      new_success: "Presupuesto %{var} ha sido generado."
+      new_success: "Presupuesto %{var} ha sido generado. Serás dirigido/a al mismo."
       items_info: "Items del Presupuesto"
       delete_item: "Borrar este Item"
       add_item: "Agregar nuevo Item"

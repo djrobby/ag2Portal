@@ -40,6 +40,7 @@
       // preserve the current object
       var _this = (this);
       // make a POST call and replace the content
+      var tbl = true;
       var tool = $(this).closest('tr').find('select.fnt-tool :selected').val();
       if (tool == "")
         tool = "0";
@@ -48,9 +49,11 @@
         minutes = "0";
       // Right formatted for passing as REST parameter
       minutes = parseInt(right_number(minutes, 2) * 100);
-      jQuery.getJSON('wo_update_costs_from_tool/' + tool + '/' + minutes, function(data) {
+      jQuery.getJSON('wo_update_costs_from_tool/' + tool + '/' + minutes + '/' + tbl, function(data) {
         $(_this).closest('tr').find('.fnt-costt').val(data.cost);
         $(_this).closest('tr').find('.fnt-costst').val(data.costs);
+        // Update and display totals is necessary
+        $('#tools-table').trigger('totals');
       });
       return false;
     });
@@ -59,7 +62,7 @@
     $(".fnt-minutes").change(function() {
       // preserve the current object
       var _this = (this);
-      recalculate(_this);
+      recalculate_wot_table(_this);
       return false;
     });
 
@@ -67,13 +70,14 @@
     $(".fnt-costt").change(function() {
       // preserve the current object
       var _this = (this);
-      recalculate(_this);
+      recalculate_wot_table(_this);
       return false;
     });
     
     // Recalculate costs
-    function recalculate(_this) {
+    function recalculate_wot_table(_this) {
       // make a POST call and replace the content
+      var tbl = true;
       var cost = $(_this).closest('tr').find('.fnt-costt').val();
       if (cost == "")
         cost = "0";
@@ -83,7 +87,7 @@
       // Right formatted for passing as REST parameter
       cost = parseInt(right_number(cost, 4) * 10000);
       minutes = parseInt(right_number(minutes, 2) * 100);
-      jQuery.getJSON('wo_update_costs_from_cost_or_minutes/' + cost + '/' + minutes, function(data) {
+      jQuery.getJSON('wo_update_costs_from_cost_or_minutes/' + cost + '/' + minutes + '/' + tbl, function(data) {
         $(_this).closest('tr').find('.fnt-minutes').val(data.minutes);
         $(_this).closest('tr').find('.fnt-costt').val(data.cost);
         $(_this).closest('tr').find('.fnt-costst').val(data.costs);

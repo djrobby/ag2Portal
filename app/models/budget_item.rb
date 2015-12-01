@@ -28,7 +28,7 @@ class BudgetItem < ActiveRecord::Base
   #
   # Amounts must be positive or negative based on charge_group.flow, and must be validated at data-entry!
   def annual
-    if amount.blank?
+    if amount == 0
       month_01 + month_02 + month_03 + month_04 + month_05 + month_06 +
       month_07 + month_08 + month_09 + month_10 + month_11 + month_12 
     else
