@@ -15,6 +15,8 @@ module Ag2Purchase
                                                :or_current_stock,
                                                :or_update_project_textfields_from_organization,
                                                :or_generate_no,
+                                               :or_product_stock,
+                                               :or_product_all_stocks,
                                                :or_approve_offer,
                                                :or_disapprove_offer,
                                                :send_offer_request_form]
@@ -50,6 +52,7 @@ module Ag2Purchase
     def or_update_description_prices_from_product_store
       product = params[:product]
       store = params[:store]
+      tbl = params[:tbl]
       description = ""
       qty = 0
       price = 0
@@ -58,9 +61,10 @@ module Ag2Purchase
       tax_type_tax = 0
       tax = 0
       current_stock = 0
+      product_stock = 0
       if product != '0'
         @product = Product.find(product)
-        @prices = @product.purchase_prices
+        #@prices = @product.purchase_prices
         # Assignment
         description = @product.main_description[0,40]
         qty = params[:qty].to_f / 10000
@@ -69,6 +73,7 @@ module Ag2Purchase
         tax_type_id = @product.tax_type.id
         tax_type_tax = @product.tax_type.tax
         tax = amount * (tax_type_tax / 100)
+        product_stock = @product.not_jit_stock
         if store != 0
           current_stock = Stock.find_by_product_and_store(product, store).current rescue 0
         end
@@ -78,9 +83,11 @@ module Ag2Purchase
       tax = number_with_precision(tax.round(4), precision: 4)
       amount = number_with_precision(amount.round(4), precision: 4)
       current_stock = number_with_precision(current_stock.round(4), precision: 4)
+      product_stock = number_with_precision(product_stock.round(4), precision: 4)
       # Setup JSON
       @json_data = { "description" => description, "price" => price.to_s, "amount" => amount.to_s,
-                     "tax" => tax.to_s, "type" => tax_type_id, "stock" => current_stock.to_s }
+                     "tax" => tax.to_s, "type" => tax_type_id, "stock" => current_stock.to_s,
+                     "product_stock" => product_stock.to_s, "tbl" => tbl.to_s }
       render json: @json_data
     end
 
@@ -124,6 +131,7 @@ module Ag2Purchase
       #discount_p = params[:discount_p].to_f / 100
       #discount = params[:discount].to_f / 10000
       product = params[:product]
+      tbl = params[:tbl]
       if tax_type.blank? || tax_type == "0"
         if !product.blank? && product != "0"
           tax_type = Product.find(product).tax_type.id
@@ -144,7 +152,7 @@ module Ag2Purchase
       tax = number_with_precision(tax.round(4), precision: 4)
       #discount_p = number_with_precision(discount_p.round(2), precision: 2)
       #discount = number_with_precision(discount.round(4), precision: 4)
-      @json_data = { "quantity" => qty.to_s, "price" => price.to_s, "amount" => amount.to_s, "tax" => tax.to_s }
+      @json_data = { "quantity" => qty.to_s, "price" => price.to_s, "amount" => amount.to_s, "tax" => tax.to_s, "tbl" => tbl.to_s }
       #               "discountp" => discount_p.to_s, "discount" => discount.to_s }
 
       respond_to do |format|
@@ -258,6 +266,28 @@ module Ag2Purchase
       code = project == '$' ? '$err' : or_next_no(project)
       @json_data = { "code" => code }
       render json: @json_data
+    end
+
+    # Product stock by store
+    def or_product_stock
+      product = params[:product]
+      qty = params[:qty].to_f / 10000
+      store = params[:store]
+      stocks = nil
+      if product != '0' && store != 0
+        stocks = Stock.find_by_product_and_not_store_and_positive(product, store)
+      end
+      render json: stocks, include: :store
+    end
+
+    # infoButton
+    def or_product_all_stocks
+      product = params[:product]
+      stocks = nil
+      if product != '0'
+        stocks = Stock.find_by_product_all_stocks(product)
+      end
+      render json: stocks, include: :store
     end
 
     # Approve offer

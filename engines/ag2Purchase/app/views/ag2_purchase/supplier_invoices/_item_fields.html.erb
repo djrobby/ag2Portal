@@ -54,32 +54,48 @@
   jQuery(function($) {
     // when the #fnt-product field changes
     $("#fnt-product").change(function() {
+      // preserve the current object
+      var _this = (this);
       // make a POST call and replace the content
+      var tbl = false;
       var product = $('select#fnt-product :selected').val();
+      if (typeof product === "undefined") {
+        tbl = true;
+        product = $(_this).closest('tr').find('select.fnt-product :selected').val();
+      }
       if (product == "")
         product = "0";
       var qty = $('#fnt-quantity').val();
+      if (typeof qty === "undefined") {
+        tbl = true;
+        qty = $(_this).closest('tr').find('.fnt-quantity').val();
+      }
       if (qty == "")
         qty = "0";
-      /*
-      var store = $('select#fnt-store :selected').val();
-      if (store == "")
-        store = "0";
-      */
-     var store = "0";
       // Right formatted for passing as REST parameter
       qty = parseInt(right_number(qty, 4) * 10000);
-      //qty = qty.replace(",", ".") * 10000;
-      jQuery.getJSON('si_update_description_prices_from_product_store/' + product + '/' + qty + '/' + store + '/' + _supplier, function(data) {
-        $("#fnt-description").val(data.description);
-        $("#fnt-price").val(data.price);
-        $("#fnt-amount").val(data.amount);
-        $("#fnt-tax-type").val(data.type);
-        $("#fnt-tax").val(data.tax);
-        $('#fnt-discount-pct').val(data.discountp);
-        $('#fnt-discount').val(data.discount);
-        $('#fnt-code').val(data.code);
-        //$("#current-stock").html(data.stock);
+      jQuery.getJSON('si_update_description_prices_from_product/' + product + '/' + qty + '/' + _supplier + '/' + tbl, function(data) {
+        if (data.tbl == "true") {
+          $(_this).closest('tr').find('.fnt-description').val(data.description);
+          $(_this).closest('tr').find('.fnt-price').val(data.price);
+          $(_this).closest('tr').find('.fnt-amount').val(data.amount);
+          $(_this).closest('tr').find('.fnt-tax').val(data.tax);
+          $(_this).closest('tr').find(".fnt-tax-type").val(data.type);
+          $(_this).closest('tr').find('.fnt-discount-pct').val(data.discountp);
+          $(_this).closest('tr').find('.fnt-discount').val(data.discount);
+          $(_this).closest('tr').find('.fnt-code').val(data.code);
+        } else {
+          $("#fnt-description").val(data.description);
+          $("#fnt-price").val(data.price);
+          $("#fnt-amount").val(data.amount);
+          $("#fnt-tax-type").val(data.type);
+          $("#fnt-tax").val(data.tax);
+          $('#fnt-discount-pct').val(data.discountp);
+          $('#fnt-discount').val(data.discount);
+          $('#fnt-code').val(data.code);
+        }
+        // Update and display totals is necessary
+        $('#items-table').trigger('totals');
       });
       return false;
     });
@@ -356,9 +372,15 @@
       var _this = (this);
       // balance check
       var i = $('select#fnt-receipt-note-item :selected').val();
+      if (typeof i === "undefined") {
+        i = $(_this).closest('tr').find('select.fnt-receipt-note-item :selected').val();
+      }
       if (i == "")
         i = "0";
       var qty = $('#fnt-quantity').val();
+      if (typeof qty === "undefined") {
+        qty = $(_this).closest('tr').find('.fnt-quantity').val();
+      }
       if (qty == "")
         qty = "0";
       qty = parseInt(right_number(qty, 4) * 10000);
@@ -455,8 +477,6 @@
           $(_this).closest('tr').find('.fnt-tax').val(data.tax);
           $(_this).closest('tr').find('.fnt-discount-pct').val(data.discountp);
           $(_this).closest('tr').find('.fnt-discount').val(data.discount);
-          // Table: Update and display totals is necessary
-          $('#items-table').trigger('totals');
         } else {
           $('#fnt-quantity').val(data.quantity);
           $('#fnt-price').val(data.price);
@@ -464,8 +484,9 @@
           $('#fnt-tax').val(data.tax);
           $('#fnt-discount-pct').val(data.discountp);
           $('#fnt-discount').val(data.discount);
-          // Fields: Update and display totals already did in nested
         }
+        // Update and display totals is necessary
+        $('#items-table').trigger('totals');
       });
     }
   });
@@ -568,9 +589,7 @@
     <%= f.input :_destroy, as: :hidden, input_html: { class: 'field' } %>
   </div>
   <div class="modal-footer">
-    <span class="left-floated shrinked" style="vertical-align: bottom"><%= t("ag2_purchase.supplier_invoices.add_item_to", var: @supplier_invoice.invoice_no) unless @supplier_invoice.invoice_no.blank? %>&#8226;</span>
-    <span class="left-floated shrinked" style="vertical-align: bottom"><%= t("activerecord.attributes.stock.current") %>=</span>
-    <span class="left-floated shrinked" style="vertical-align: bottom" id="current-stock">0,0000</span>
+    <span class="left-floated shrinked" style="vertical-align: bottom"><%= t("ag2_purchase.supplier_invoices.add_item_to", var: @supplier_invoice.invoice_no) unless @supplier_invoice.invoice_no.blank? %></span>
     <button id="addButton" type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><%= t('ag2_purchase.supplier_invoices.btn_add_item') %></button>
     <button id="cancelButton" type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><%= t :close_button %></button>
   </div>

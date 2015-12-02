@@ -72,6 +72,7 @@ module Ag2Purchase
       product = params[:product]
       store = params[:store]
       supplier = params[:supplier]
+      tbl = params[:tbl]
       description = ""
       qty = 0
       price = 0
@@ -112,7 +113,7 @@ module Ag2Purchase
       # Setup JSON
       @json_data = { "description" => description, "price" => price.to_s, "amount" => amount.to_s,
                      "tax" => tax.to_s, "type" => tax_type_id, "stock" => current_stock.to_s,
-                     "discountp" => discount_p, "discount" => discount, "code" => code }
+                     "discountp" => discount_p, "discount" => discount, "code" => code, "tbl" => tbl.to_s }
       render json: @json_data
     end
 
@@ -167,6 +168,7 @@ module Ag2Purchase
       discount_p = params[:discount_p].to_f / 100
       discount = params[:discount].to_f / 10000
       product = params[:product]
+      tbl = params[:tbl]
       if tax_type.blank? || tax_type == "0"
         if !product.blank? && product != "0"
           tax_type = Product.find(product).tax_type.id
@@ -187,7 +189,7 @@ module Ag2Purchase
       discount_p = number_with_precision(discount_p.round(2), precision: 2)
       discount = number_with_precision(discount.round(4), precision: 4)
       @json_data = { "quantity" => qty.to_s, "price" => price.to_s, "amount" => amount.to_s, "tax" => tax.to_s,
-                     "discountp" => discount_p.to_s, "discount" => discount.to_s }
+                     "discountp" => discount_p.to_s, "discount" => discount.to_s, "tbl" => tbl.to_s }
 
       respond_to do |format|
         format.html # or_update_amount_from_price_or_quantity.html.erb does not exist! JSON only

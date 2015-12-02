@@ -43,27 +43,41 @@
   jQuery(function($) {
     // when the #fnt-approved-amount field changes
     $("#fnt-approved-amount").change(function() {
-      // can't approve more than current debt
       // preserve the current object
       var _this = (this);
-      //recalculate(_this);
-      //return false;
-
       // can't approve more than current debt
+      var tbl = false;
       var amount = $('#fnt-approved-amount').val();
+      if (typeof amount === "undefined") {
+        tbl = true;
+        amount = $(_this).closest('tr').find('.fnt-approved-amount').val();
+      }
       if (amount == "")
         amount = "0";
       amount = parseInt(right_number(amount, 4) * 10000);
-      jQuery.getJSON('si_update_approved_amount/' + amount + '/' + _i, function(data) {
-        $('#fnt-approved-amount').val(data.amount);
-        if (data.amount == "$err") {
-          $('#fnt-approved-amount').css('color', 'red');
-          alert('<%= I18n.t("ag2_purchase.supplier_invoices.approval_error", var: @invoice_debt, bal: @invoice_not_yet_approved) %>');
-          $('#fnt-approved-amount').select();
+      jQuery.getJSON('si_update_approved_amount/' + amount + '/' + _i + '/' + tbl, function(data) {
+        if (data.tbl == "true") {
+          $(_this).closest('tr').find('.fnt-approved-amount').val(data.amount);
+          if (data.amount == "$err") {
+            $(_this).closest('tr').find('.fnt-approved-amount').css('color', 'red');
+            alert('<%= I18n.t("ag2_purchase.supplier_invoices.approval_error", var: @invoice_debt, bal: @invoice_not_yet_approved) %>');
+            $(_this).closest('tr').find('.fnt-approved-amount').select();
+          } else {
+            $(_this).closest('tr').find('.fnt-approved-amount').css('color', text_field_color);
+            // Update and display totals
+            $('#approvals-table').trigger('totals');
+          }
         } else {
-          $('#fnt-approved-amount').css('color', text_field_color);
-          // Update and display totals
-          $('#approvals-table').trigger('totals');
+          $('#fnt-approved-amount').val(data.amount);
+          if (data.amount == "$err") {
+            $('#fnt-approved-amount').css('color', 'red');
+            alert('<%= I18n.t("ag2_purchase.supplier_invoices.approval_error", var: @invoice_debt, bal: @invoice_not_yet_approved) %>');
+            $('#fnt-approved-amount').select();
+          } else {
+            $('#fnt-approved-amount').css('color', text_field_color);
+            // Update and display totals
+            $('#approvals-table').trigger('totals');
+          }
         }
       });
       return false;
@@ -86,7 +100,7 @@
     <%= f.input :_destroy, as: :hidden, input_html: { class: 'field' } %>
   </div>
   <div class="modal-footer">
-    <span class="left-floated" style="vertical-align: bottom"><%= t("ag2_purchase.supplier_invoices.add_item_to", var: @supplier_invoice.invoice_no) unless @supplier_invoice.invoice_no.blank? %></span>
+    <span class="left-floated shrinked" style="vertical-align: bottom"><%= t("ag2_purchase.supplier_invoices.add_item_to", var: @supplier_invoice.invoice_no) unless @supplier_invoice.invoice_no.blank? %></span>
     <button id="addApprovalButton" type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><%= t('ag2_purchase.supplier_invoices.btn_add_item') %></button>
     <button id="cancelApprovalButton" type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><%= t :close_button %></button>
   </div>

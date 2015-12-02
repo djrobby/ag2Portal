@@ -19,7 +19,6 @@
       var qty = 0;
       var amount = 0;
       var tax = 0;
-      var tbl = true;
       $('#items-table tr.fields:visible').each(function() {
         qty += parseFloat(right_number($(this).find('input.fnt-quantity').val(), 4));
         amount += parseFloat(right_number($(this).find('input.fnt-amount').val(), 4));
@@ -33,7 +32,7 @@
       if (discount_p == "")
         discount_p = "0";
       discount_p = parseInt(right_number(discount_p, 2) * 100);
-      jQuery.getJSON('si_item_totals/' + qty + '/' + amount + '/' + tax + '/' + discount_p + "/" + tbl, function(data) {
+      jQuery.getJSON('si_item_totals/' + qty + '/' + amount + '/' + tax + '/' + discount_p, function(data) {
         document.getElementById('foot-quantity').innerHTML = data.qty;
         document.getElementById('foot-amount').innerHTML = data.amount;
         document.getElementById('foot-tax').innerHTML = data.tax;
@@ -52,6 +51,7 @@
       // preserve the current object
       var _this = (this);
       // make a POST call and replace the content
+      var tbl = true;
       var product = $(this).closest('tr').find('select.fnt-product :selected').val();
       if (product == "")
         product = "0";
@@ -60,7 +60,7 @@
         qty = "0";
       // Right formatted for passing as REST parameter
       qty = parseInt(right_number(qty, 4) * 10000);
-      jQuery.getJSON('si_update_description_prices_from_product/' + product + '/' + qty + '/' + _supplier, function(data) {
+      jQuery.getJSON('si_update_description_prices_from_product/' + product + '/' + qty + '/' + _supplier + '/' + tbl, function(data) {
         $(_this).closest('tr').find('.fnt-description').val(data.description);
         $(_this).closest('tr').find('.fnt-price').val(data.price);
         $(_this).closest('tr').find('.fnt-amount').val(data.amount);
@@ -69,6 +69,8 @@
         $(_this).closest('tr').find('.fnt-discount-pct').val(data.discountp);
         $(_this).closest('tr').find('.fnt-discount').val(data.discount);
         $(_this).closest('tr').find('.fnt-code').val(data.code);
+        // Update and display totals is necessary
+        $('#items-table').trigger('totals');
       });
       return false;
     });
@@ -77,6 +79,20 @@
     $(".fnt-quantity").change(function() {
       // preserve the current object
       var _this = (this);
+      // balance check
+      var i = $(_this).closest('tr').find('select.fnt-receipt-note-item :selected').val();
+      if (i == "")
+        i = "0";
+      var qty = $(_this).closest('tr').find('.fnt-quantity').val();
+      if (qty == "")
+        qty = "0";
+      qty = parseInt(right_number(qty, 4) * 10000);
+      jQuery.getJSON('rn_item_balance_check/' + i + '/' + qty, function(data) {
+        if (data.alert != "") {
+          alert(data.alert);
+        }
+      });
+      // recalculate & format
       recalculate_si_table(_this);
       return false;
     });

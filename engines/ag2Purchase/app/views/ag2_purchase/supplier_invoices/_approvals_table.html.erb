@@ -38,13 +38,15 @@
   jQuery(function($) {
     // when the .fnt-approved-amount field changes
     $(".fnt-approved-amount").change(function() {
-      // can't approve more than current debt
+      // preserve the current object
       var _this = (this);
+      // can't approve more than current debt
+      var tbl = true;
       var amount = $(_this).closest('tr').find('.fnt-approved-amount').val();
       if (amount == "")
         amount = "0";
       amount = parseInt(right_number(amount, 4) * 10000);
-      jQuery.getJSON('si_update_approved_amount/' + amount + '/' + _i, function(data) {
+      jQuery.getJSON('si_update_approved_amount/' + amount + '/' + _i + '/' + tbl, function(data) {
         $(_this).closest('tr').find('.fnt-approved-amount').val(data.amount);
         if (data.amount == "$err") {
           $(_this).closest('tr').find('.fnt-approved-amount').css('color', 'red');

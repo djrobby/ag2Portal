@@ -196,7 +196,6 @@ module Ag2Purchase
       current_stock = 0
       if product != '0'
         @product = Product.find(product)
-        @prices = @product.purchase_prices
         # Assignment
         description = @product.main_description[0,40]
         qty = params[:qty].to_f / 10000
@@ -231,6 +230,7 @@ module Ag2Purchase
     def si_update_description_prices_from_product
       product = params[:product]
       supplier = params[:supplier]
+      tbl = params[:tbl]
       description = ""
       qty = 0
       price = 0
@@ -243,7 +243,6 @@ module Ag2Purchase
       tax = 0
       if product != '0'
         @product = Product.find(product)
-        @prices = @product.purchase_prices
         # Assignment
         description = @product.main_description[0,40]
         qty = params[:qty].to_f / 10000
@@ -266,7 +265,7 @@ module Ag2Purchase
       # Setup JSON hash
       @json_data = { "description" => description, "price" => price.to_s, "amount" => amount.to_s,
                      "tax" => tax.to_s, "type" => tax_type_id,
-                     "discountp" => discount_p, "discount" => discount, "code" => code }
+                     "discountp" => discount_p, "discount" => discount, "code" => code, "tbl" => tbl.to_s }
       render json: @json_data
     end
 
@@ -307,10 +306,11 @@ module Ag2Purchase
     def si_update_approved_amount
       amount = params[:amount].to_f / 10000
       invoice_id = params[:invoice]
+      tbl = params[:tbl]
       debt = SupplierInvoice.find(invoice_id).debt rescue -1
       not_yet_approved = SupplierInvoice.find(invoice_id).amount_not_yet_approved rescue -1
       amount = (amount > debt || amount > not_yet_approved) ? '$err' : number_with_precision(amount.round(4), precision: 4)
-      @json_data = { "amount" => amount.to_s }
+      @json_data = { "amount" => amount.to_s, "tbl" => tbl.to_s }
       render json: @json_data
     end
     

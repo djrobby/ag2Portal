@@ -18,6 +18,7 @@ module Ag2Purchase
                                                :po_update_project_textfields_from_organization,
                                                :po_generate_no,
                                                :po_product_stock,
+                                               :po_product_all_stocks,
                                                :po_approve_order,
                                                :send_purchase_order_form]
     # Helper methods for
