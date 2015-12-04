@@ -13,6 +13,8 @@ en:
     sign_up: "Sign up"
     login: "Login"
     sign_out: "Sign out"
+    engines:
+      home: "Home page"
   not_found:
     header: "Warning"
     body_title: "The requested resource is not available."

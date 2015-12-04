@@ -72,7 +72,9 @@ a:focus {
   color: #777777;
   text-shadow: 0 1px 0 #ffffff;
 }
-
+.dropdown-menu-submenu {
+    min-width: 160px !important;;
+}
 /*
  * Pretty Hyperlinks
  */
@@ -731,7 +733,7 @@ tfoot {
   background-position: 0px 0px;
   background-repeat: no-repeat;
 }
-/* Apps */
+/* Sites */
 .ico-admin {
   background-image: image-url("icon/ag2/admin.png");
 }
@@ -761,6 +763,82 @@ tfoot {
 }
 .ico-tech {
   background-image: image-url("icon/ag2/tech.png");
+}
+.ico-time {
+  background-image: image-url("icon/ag2/time.png");
+}
+.ico-track {
+  background-image: image-url("icon/ag2/track.png");
+}
+/* Apps */
+.ico-accounts {
+  background-image: image-url("icon/ag2/accounts.png");
+}
+.ico-budgets {
+  background-image: image-url("icon/ag2/budgets.png");
+}
+.ico-clients {
+  background-image: image-url("icon/ag2/clients.png");
+}
+.ico-companies {
+  background-image: image-url("icon/ag2/companies.png");
+}
+.ico-corp {
+  background-image: image-url("icon/ag2/contacts_c.png");
+}
+.ico-counts {
+  background-image: image-url("icon/ag2/counts.png");
+}
+.ico-deliveries {
+  background-image: image-url("icon/ag2/deliveries.png");
+}
+.ico-entities {
+  background-image: image-url("icon/ag2/entities.png");
+}
+.ico-invoices {
+  background-image: image-url("icon/ag2/invoices.png");
+}
+.ico-offices {
+  background-image: image-url("icon/ag2/offices.png");
+}
+.ico-orders {
+  background-image: image-url("icon/ag2/orders.png");
+}
+.ico-offers {
+  background-image: image-url("icon/ag2/offers.png");
+}
+.ico-payments {
+  background-image: image-url("icon/ag2/payments.png");
+}
+.ico-projects {
+  background-image: image-url("icon/ag2/projects.png");
+}
+.ico-products {
+  background-image: image-url("icon/ag2/products.png");
+}
+.ico-receipts {
+  background-image: image-url("icon/ag2/receipts.png");
+}
+.ico-requests {
+  background-image: image-url("icon/ag2/requests.png");
+}
+.ico-shared {
+  background-image: image-url("icon/ag2/contacts_s.png");
+}
+.ico-suppliers {
+  background-image: image-url("icon/ag2/suppliers.png");
+}
+.ico-tickets {
+  background-image: image-url("icon/ag2/tickets.png");
+}
+.ico-records {
+  background-image: image-url("icon/ag2/time_r.png");
+}
+.ico-worders {
+  background-image: image-url("icon/ag2/work_o.png");
+}
+.ico-workers {
+  background-image: image-url("icon/ag2/workers.png");
 }
 /* Tools */
 .ico-gmail {

@@ -13,6 +13,8 @@ es:
     sign_up: "Crea tu cuenta"
     login: "Inicia sesión"
     sign_out: "Cierra sesión"
+    engines:
+      home: "Página de inicio"
   not_found:
     header: "Advertencia"
     body_title: "El recurso solicitado no está disponible."
