@@ -62,7 +62,7 @@
       var order = $('select#Project :selected').val();
       if (order == "")
         order = "0";
-      jQuery.getJSON('pr_track_project_has_changed/' + order, function(data) {
+      jQuery.getJSON('te_track_project_has_changed/' + order, function(data) {
         var w = data.work_order;
         var c = data.charge_account;
         // Work Order

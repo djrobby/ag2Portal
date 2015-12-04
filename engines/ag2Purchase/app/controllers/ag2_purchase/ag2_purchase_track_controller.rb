@@ -15,15 +15,16 @@ module Ag2Purchase
     # Update work order, charge account and store select fields at view from project select
     def pu_track_project_has_changed
       project = params[:order]
+      projects = projects_dropdown
       if project != '0'
         @project = Project.find(project)
-        @work_order = @project.blank? ? work_orders_dropdown : @project.work_orders.order(:order_no)
-        @charge_account = @project.blank? ? charge_accounts_dropdown : charge_accounts_dropdown_edit(@project.id)
-        @store = project_stores(@project)
+        @work_order = @project.blank? ? projects_work_orders(projects) : @project.work_orders.order(:order_no)
+        @charge_account = @project.blank? ? projects_charge_accounts(projects) : charge_accounts_dropdown_edit(@project.id)
+        @store = @project.blank? ? projects_stores(projects) : project_stores(@project)
       else
-        @work_order = work_orders_dropdown
-        @charge_account = charge_accounts_dropdown
-        @store = stores_dropdown
+        @work_order = projects_work_orders(projects)
+        @charge_account = projects_charge_accounts(projects)
+        @store = projects_stores(projects)
       end
       @json_data = { "work_order" => @work_order, "charge_account" => @charge_account, "store" => @store }
       render json: @json_data
@@ -271,14 +272,14 @@ module Ag2Purchase
         @organization = Organization.find(session[:organization].to_i)
       end
       
-      @projects = @organization.blank? ? projects_dropdown : @organization.projects.order(:project_code)
-      @suppliers = @organization.blank? ? suppliers_dropdown : @organization.suppliers.order(:supplier_code)
-      @stores = @organization.blank? ? stores_dropdown : @organization.stores.order(:name)
-      @work_orders = @organization.blank? ? work_orders_dropdown : @organization.work_orders.order(:order_no)
-      @charge_accounts = @organization.blank? ? charge_accounts_dropdown : @organization.charge_accounts.order(:account_code)
+      @projects = projects_dropdown
+      @suppliers = suppliers_dropdown
+      @stores = projects_stores(@projects)
+      @work_orders = projects_work_orders(@projects)
+      @charge_accounts = projects_charge_accounts(@projects)
       @statuses = OrderStatus.order('id')
-      #@families = @organization.blank? ? families_dropdown : @organization.product_families.order(:family_code)
-      @products = @organization.blank? ? products_dropdown : @organization.products.order(:product_code)
+      #@families = families_dropdown
+      @products = products_dropdown
     end
     
     private
@@ -312,21 +313,85 @@ module Ag2Purchase
       session[:organization] != '0' ? Store.where(organization_id: session[:organization].to_i).order(:name) : Store.order(:name)
     end
     
+    # Stores belonging to current project
     def project_stores(_project)
-      if !_project.company.blank? && !_project.office.blank?
-        _store = Store.where("(company_id = ? AND office_id = ?) OR (company_id IS NULL AND NOT supplier_id IS NULL)", _project.company.id, _project.office.id).order(:name)
-      elsif !_project.company.blank? && _project.office.blank?
-        _store = Store.where("(company_id = ?) OR (company_id IS NULL AND NOT supplier_id IS NULL)", _project.company.id).order(:name)
-      elsif _project.company.blank? && !_project.office.blank?
-        _store = Store.where("(office_id = ?) OR (company_id IS NULL AND NOT supplier_id IS NULL)", _project.office.id).order(:name)
+      _array = []
+      _stores = nil
+
+      # Adding global stores, not JIT, belonging to current project's company
+      if !_project.company.blank?
+        _stores = Store.where("company_id = ? AND office_id IS NULL AND supplier_id IS NULL", _project.company_id)
+      elsif session[:company] != '0'
+        _stores = Store.where("company_id = ? AND office_id IS NULL AND supplier_id IS NULL", session[:company].to_i)
       else
-        _store = stores_dropdown
+        _stores = session[:organization] != '0' ? Store.where("organization_id = ? AND office_id IS NULL AND supplier_id IS NULL", session[:organization].to_i) : Store.all
       end
-      _store
+      ret_array(_array, _stores)
+      # Adding stores belonging to current project and JIT stores
+      if !_project.company.blank? && !_project.office.blank?
+        _stores = Store.where("(company_id = ? AND office_id = ?) OR (company_id IS NULL AND NOT supplier_id IS NULL)", _project.company.id, _project.office.id).order(:name)
+      elsif !_project.company.blank? && _project.office.blank?
+        _stores = Store.where("(company_id = ?) OR (company_id IS NULL AND NOT supplier_id IS NULL)", _project.company.id).order(:name)
+      elsif _project.company.blank? && !_project.office.blank?
+        _stores = Store.where("(office_id = ?) OR (company_id IS NULL AND NOT supplier_id IS NULL)", _project.office.id).order(:name)
+      else
+        _stores = stores_dropdown
+      end
+      ret_array(_array, _stores)
+      # Returning founded stores
+      _stores = Store.where(id: _array).order(:name)
+    end
+
+    # Stores belonging to projects
+    def projects_stores(_projects)
+      _array = []
+      _ret = nil
+
+      # Adding global stores, not JIT, belonging to current company
+      if session[:company] != '0'
+        _ret = Store.where("company_id = ? AND office_id IS NULL AND supplier_id IS NULL", session[:company].to_i)
+      else
+        _ret = session[:organization] != '0' ? Store.where("organization_id = ? AND office_id IS NULL AND supplier_id IS NULL", session[:organization].to_i) : Store.all
+      end
+      ret_array(_array, _ret)
+
+      # Adding stores belonging to current projects (projects have company and office)
+      _projects.each do |i|
+        if !i.company.blank? && !i.office.blank?
+          _ret = Store.where("(company_id = ? AND office_id = ?)", i.company_id, i.office_id)
+        elsif !i.company.blank? && i.office.blank?
+          _ret = Store.where("(company_id = ?)", i.company_id)
+        elsif i.company.blank? && !i.office.blank?
+          _ret = Store.where("(office_id = ?)", i.office_id)
+        end
+        ret_array(_array, _ret)
+      end
+
+      # Adding JIT stores
+      _ret = Store.where("(company_id IS NULL AND NOT supplier_id IS NULL)")
+      ret_array(_array, _ret)
+
+      # Returning founded stores
+      _ret = Store.where(id: _array).order(:name)
     end
 
     def work_orders_dropdown
       _orders = session[:organization] != '0' ? WorkOrder.where(organization_id: session[:organization].to_i).order(:order_no) : WorkOrder.order(:order_no)
+    end
+
+    # Work orders belonging to projects
+    def projects_work_orders(_projects)
+      _array = []
+      _ret = nil
+
+      # Adding work orders belonging to current projects
+      _projects.each do |i|
+        _ret = WorkOrder.where(project_id: i.id)
+        ret_array(_array, _ret)
+      end
+
+      # Returning founded work orders
+      _ret = WorkOrder.where(id: _array).order(:order_no)
     end
 
     def charge_accounts_dropdown
@@ -335,6 +400,25 @@ module Ag2Purchase
 
     def charge_accounts_dropdown_edit(_project)
       _accounts = ChargeAccount.where('project_id = ? OR project_id IS NULL', _project).order(:account_code)
+    end
+
+    # Charge accounts belonging to projects
+    def projects_charge_accounts(_projects)
+      _array = []
+      _ret = nil
+
+      # Adding charge accounts belonging to current projects
+      _projects.each do |i|
+        _ret = ChargeAccount.where(project_id: i.id)
+        ret_array(_array, _ret)
+      end
+
+      # Adding global charge accounts
+      _ret = ChargeAccount.where('project_id IS NULL')
+      ret_array(_array, _ret)
+
+      # Returning founded charge accounts
+      _ret = ChargeAccount.where(id: _array).order(:account_code)
     end
     
     def families_dropdown
@@ -351,6 +435,12 @@ module Ag2Purchase
         _array = _array << [i.id, i.full_code, i.main_description[0,40]] 
       end
       _array
+    end
+    
+    def ret_array(_array, _ret)
+      _ret.each do |_r|
+        _array = _array << _r.id unless _array.include? _r.id
+      end
     end
   end
 end

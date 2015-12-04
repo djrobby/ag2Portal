@@ -12,13 +12,14 @@ module Ag2Tech
     # Update work order, charge account select fields at view from project select
     def te_track_project_has_changed
       project = params[:order]
+      projects = projects_dropdown
       if project != '0'
         @project = Project.find(project)
-        @work_order = @project.blank? ? work_orders_dropdown : @project.work_orders.order(:order_no)
-        @charge_account = @project.blank? ? charge_accounts_dropdown : charge_accounts_dropdown_edit(@project.id)
+        @work_order = @project.blank? ? projects_work_orders(projects) : @project.work_orders.order(:order_no)
+        @charge_account = @project.blank? ? projects_charge_accounts(projects) : charge_accounts_dropdown_edit(@project.id)
       else
-        @work_order = work_orders_dropdown
-        @charge_account = charge_accounts_dropdown
+        @work_order = projects_work_orders(projects)
+        @charge_account = projects_charge_accounts(projects)
       end
       @json_data = { "work_order" => @work_order, "charge_account" => @charge_account }
       render json: @json_data
@@ -139,10 +140,10 @@ module Ag2Tech
         @organization = Organization.find(session[:organization].to_i)
       end
       
-      @projects = @organization.blank? ? projects_dropdown : @organization.projects.order(:project_code)
-      @work_orders = @organization.blank? ? work_orders_dropdown : @organization.work_orders.order(:order_no)
-      @charge_accounts = @organization.blank? ? charge_accounts_dropdown : @organization.charge_accounts.order(:account_code)
-      @periods = @organization.blank? ? periods_dropdown : @organization.budget_periods.order(:period_code)
+      @projects = projects_dropdown
+      @work_orders = projects_work_orders(@projects)
+      @charge_accounts = projects_charge_accounts(@projects)
+      @periods = periods_dropdown
     end
     
     private
@@ -169,6 +170,21 @@ module Ag2Tech
       _orders = session[:organization] != '0' ? WorkOrder.where(organization_id: session[:organization].to_i).order(:order_no) : WorkOrder.order(:order_no)
     end
 
+    # Work orders belonging to projects
+    def projects_work_orders(_projects)
+      _array = []
+      _ret = nil
+
+      # Adding work orders belonging to current projects
+      _projects.each do |i|
+        _ret = WorkOrder.where(project_id: i.id)
+        ret_array(_array, _ret)
+      end
+
+      # Returning founded work orders
+      _ret = WorkOrder.where(id: _array).order(:order_no)
+    end
+
     def charge_accounts_dropdown
       _accounts = session[:organization] != '0' ? ChargeAccount.where(organization_id: session[:organization].to_i).order(:account_code) : ChargeAccount.order(:account_code)
     end
@@ -177,8 +193,33 @@ module Ag2Tech
       _accounts = ChargeAccount.where('project_id = ? OR project_id IS NULL', _project).order(:account_code)
     end
 
+    # Charge accounts belonging to projects
+    def projects_charge_accounts(_projects)
+      _array = []
+      _ret = nil
+
+      # Adding charge accounts belonging to current projects
+      _projects.each do |i|
+        _ret = ChargeAccount.where(project_id: i.id)
+        ret_array(_array, _ret)
+      end
+
+      # Adding global charge accounts
+      _ret = ChargeAccount.where('project_id IS NULL')
+      ret_array(_array, _ret)
+
+      # Returning founded charge accounts
+      _ret = ChargeAccount.where(id: _array).order(:account_code)
+    end
+
     def periods_dropdown
       session[:organization] != '0' ? BudgetPeriod.where(organization_id: session[:organization].to_i).order(:period_code) : BudgetPeriod.order(:period_code)
+    end
+    
+    def ret_array(_array, _ret)
+      _ret.each do |_r|
+        _array = _array << _r.id unless _array.include? _r.id
+      end
     end
   end
 end
