@@ -1,0 +1,14 @@
+en:
+  activerecord:
+    models:
+      store_office:
+        zero:  Offices supplied
+        one:   Office supplied
+        few:   Offices supplied
+        other: Offices supplied
+    attributes:
+      store_office:
+        store: "Store"
+        store_id: "Store"
+        office: "Office"
+        office_id: "Office"

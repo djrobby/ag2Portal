@@ -1,9 +1,34 @@
 <script>
+  // Show or hide button(s) to add new item
+  function show_new(_show) {
+    if (_show == true) {
+      $('#offices-table-header').show();
+      $('#offices-table').show();
+      $('.fnt-new-office-btn').show();
+    } else {
+      $('#offices-table-header').hide();
+      $('#offices-table').hide();
+      $('.fnt-new-office-btn').hide();
+    }
+  }
+
   $(document).ready(function() {
     $('select.sel2').select2({
       formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
       allowClear: true
     });
+
+    // Disable fields if #store_office_id blank
+    var order = $('#store_office_id').val();
+    if (order == "")
+      order = "0";
+    if (order == "0") {
+      // Empty office: Enable office table
+      show_new(true);
+    } else {
+      // Office OK: Disable office table
+      show_new(false);
+    }
   });
 
   jQuery(function($) {
@@ -14,8 +39,15 @@
       if (store == "")
         store = "0";
       jQuery.getJSON('st_update_company_textfield_from_office/' + store, function(data) {
-        $("#store_company_id").val(data.id);
+        $("#store_company_id").select2("val", data.id);
       })
+      if (store == "0") {
+        // Empty office: Enable office table
+        show_new(true);
+      } else {
+        // Office OK: Disable office table
+        show_new(false);
+      }
       return false;
     });
 
@@ -31,7 +63,7 @@
         var s = data.suppliers;
         // Companies
         $("#store_company_id").html("");
-        $("#store_company_id").val("");
+        $("#store_company_id").select2("val", "");
         $("#store_company_id").append($('<option></option>').val("").html(""));
         if (!c.length) {
           $.each(data, function(id, option) {
@@ -46,7 +78,7 @@
         }
         // Offices
         $("#store_office_id").html("");
-        $("#store_office_id").val("");
+        $("#store_office_id").select2("val", "");
         $("#store_office_id").append($('<option></option>').val("").html(""));
         if (!o.length) {
           $.each(data, function(id, option) {
@@ -122,26 +154,26 @@
 <div>
   <label class="multi-field-label-two">
     <% if session[:office] != '0' %>
-    <%= f.association :office, collection: Office.where("id = ?", "#{session[:office]}").all, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' }, include_blank: false %>
+    <%= f.association :office, collection: Office.where("id = ?", "#{session[:office]}").all, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' }, include_blank: false %>
     <% elsif current_user.offices.count > 0 %>
-    <%= f.association :office, collection: current_user.offices.order('name'), input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' }, include_blank: false %>
+    <%= f.association :office, collection: current_user.offices.order('name'), input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' }, include_blank: false %>
     <% else %>
-    <%= f.association :office, collection: @offices, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %>
+    <%= f.association :office, collection: @offices, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %>
     <% end %>
   </label>
   <label class="multi-field-label-two">
     <% if session[:company] != '0' %>
-    <%= f.association :company, collection: Company.where("id = ?", "#{session[:company]}").all, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' }, include_blank: false %>
+    <%= f.association :company, collection: Company.where("id = ?", "#{session[:company]}").all, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' }, include_blank: false %>
     <% elsif current_user.companies.count > 0 %>
-    <%= f.association :company, collection: current_user.companies.order('name'), input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' }, include_blank: false %>
+    <%= f.association :company, collection: current_user.companies.order('name'), input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' }, include_blank: false %>
     <% else %>
-    <%= f.association :company, collection: @companies, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %>
+    <%= f.association :company, collection: @companies, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %>
     <% end %>
   </label>
 </div>
 <!-- Is depot? -->
 <h4><%= t 'ag2_products.stores.depot' %></h4>
-<%= f.association :supplier, collection: @suppliers, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %>
+<%= f.association :supplier, collection: @suppliers, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label-under-sel2' } %>
 <!-- Address -->
 <br />
 <h4><%= t 'ag2_products.stores.address' %></h4>
@@ -165,6 +197,20 @@
   <label class="multi-field-label-two"><%= f.input :fax, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %></label>
 </div>
 <%= f.input :email, :input_html => { :class => 'large-text-field' }, :label_html => { :class => 'form-label' } %>
+<!-- Offices -->
+<table class="form-table" id="offices-table-header">
+  <tbody>
+    <tr class="form-tr underlined-tr">
+      <td class="form-td-two left-winged">
+        <h4><%= t 'ag2_products.stores.offices_info' %></h4>
+      </td>
+      <td class="form-td-two right-winged">
+        <%= link_to_add_fields('<i class="icon-plus icon-white"></i>'.html_safe + " " + t("ag2_products.stores.btn_new_office"), f, :store_offices, "office_fields", "new-office-fields", class: "btn btn-warning fnt-new-office-btn") %>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<%= render 'offices_table', f: f %>
 
 <%= f.button :submit, :class => 'btn-primary form-button-under-sel2' %>
 <% end %>

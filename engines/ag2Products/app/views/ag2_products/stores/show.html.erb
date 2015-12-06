@@ -79,6 +79,31 @@
   </tbody>
 </table>
 
+<!-- Offices -->
+<% if (@offices.count > 0) %>
+<table class="form-table">
+  <tbody>
+    <tr class="form-tr underlined-tr">
+      <td class="form-td-two left-winged">
+        <h4><%= t 'ag2_products.stores.offices_info' %></h4>
+      </td>
+      <td class="form-td-two right-winged">
+        <a href="#" id="print_report_btn"><i class="icon-arrow-up"></i></a>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<table class="table table-condensed table-striped shrinked">
+  <thead>
+    <%= render 'offices_header' %>
+  </thead>
+  <tbody>
+    <%= render partial: 'office', collection: @offices %>
+  </tbody>
+</table>
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @offices } %>
+<% end %> <!-- end @offices.count > 0 -->
+
 <%= render partial: '/layouts/crud/update_delete_new', locals:
 { model: Store, update_path: edit_store_path(@store), update_txt: t('.btn_edit'),
 delete_path: @store, delete_txt: t('.btn_delete'), msg: t("activerecord.models.store.one"), txt: @store.name,

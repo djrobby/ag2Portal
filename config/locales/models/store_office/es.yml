@@ -1,0 +1,14 @@
+es:
+  activerecord:
+    models:
+      store_office:
+        zero:  Oficinas abastecidas
+        one:   Oficina abastecida
+        few:   Oficinas abastecidas
+        other: Oficinas abastecidas
+    attributes:
+      store_office:
+        store: "Almacén"
+        store_id: "Almacén"
+        office: "Oficina"
+        office_id: "Oficina"

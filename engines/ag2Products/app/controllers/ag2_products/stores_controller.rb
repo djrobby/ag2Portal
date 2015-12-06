@@ -91,6 +91,7 @@ module Ag2Products
       reset_stock_prices_filter
       @breadcrumb = 'read'
       @store = Store.find(params[:id])
+      @offices = @store.store_offices.paginate(:page => params[:page], :per_page => per_page).order('id')
       @stocks = @store.stocks.paginate(:page => params[:page], :per_page => per_page).order('product_id')
   
       respond_to do |format|

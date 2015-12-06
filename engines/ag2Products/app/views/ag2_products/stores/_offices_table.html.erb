@@ -1,0 +1,47 @@
+<script>
+  var _f = '';
+
+  $(document).ready(function() {
+    $('.wsel2').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      dropdownCssClass: 'shrinked',
+      dropdownAutoWidth: true,
+      containerCssClass: 'sub-select2-field'
+    });
+    // Retrieves parent values
+    _f = $(".fnt-office").closest('form')[0];
+  }); 
+
+  jQuery(function($) {
+    /*
+     * Very special function!
+     * This one re-calculate table totals after delete an item
+     * When the .icon-trash clicked
+     * Replace behavior of link_to_remove_fields
+     * (the same was done in nested_si.js)
+     */
+    $(".icon-trash").click(function() {
+      remove_fields(this);
+    });
+  });
+</script>
+
+<table id="offices-table" class="table table-condensed table-striped shrinked fixed">
+  <!-- supplier -->
+  <col width="95%" />
+  <!-- button -->
+  <col width="5%" />
+  <thead>
+    <%= render 'offices_header' %>
+  </thead>
+  <tbody>
+    <%= f.simple_fields_for :store_offices, defaults: { input_html: { class: 'sub-form' } } do |i| %>
+    <tr class="fields">
+      <td><%= i.association :office, label: false, wrapper: false, collection: @offices, input_html: { class: 'wsel2 fnt-office' } %></td>
+      <% if @breadcrumb == 'create' || @breadcrumb == 'update' %>
+      <td><%= link_to_remove_fields('<i class="icon-trash"></i>'.html_safe, i) %></td>
+      <% end %>
+    </tr>
+    <% end %>
+  </tbody>
+</table>

@@ -11,6 +11,7 @@ class Store < ActiveRecord::Base
                   :organization_id, :supplier_id,
                   :street_type_id, :street_name, :street_number, :building, :floor, :floor_office,
                   :zipcode_id, :town_id, :province_id, :phone, :fax, :email
+  attr_accessible :store_offices_attributes
 
   has_many :stocks
   has_many :products, :through => :stocks
@@ -29,8 +30,16 @@ class Store < ActiveRecord::Base
   has_many :sale_offers
   has_many :sale_offer_items
   has_many :inventory_counts
+  has_many :store_offices, dependent: :destroy
+
+  # Nested attributes
+  accepts_nested_attributes_for :store_offices,                                 
+                                :reject_if => :all_blank,
+                                :allow_destroy => true
 
   has_paper_trail
+
+  validates_associated :store_offices
 
   validates :name,          :presence => true
   validates :company,       :presence => true, :if => "supplier.blank?"

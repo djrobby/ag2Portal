@@ -23,3 +23,8 @@ es:
       stocks: "Existencias"
       depot: "¿Depósito JIT?"
       address: "Ubicación"
+      offices_info: "Oficinas abastecidas"
+      btn_new_office: "Nueva Oficina"
+      add_office: "Agregar nueva Oficina"
+      add_item_to: "Almacén %{var}"
+      btn_add_item: "Agregar"

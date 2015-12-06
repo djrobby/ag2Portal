@@ -23,3 +23,8 @@ en:
       stocks: "Stocks"
       depot: "JIT Depot?"
       address: "Location"
+      offices_info: "Offices supplied"
+      btn_new_office: "New Office"
+      add_office: "Add new Office"
+      add_item_to: "Store %{var}"
+      btn_add_item: "Add"

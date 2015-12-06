@@ -1,0 +1,35 @@
+<script>
+  var _f = '';
+
+  $(document).ready(function() {
+    // Retrieves parent values
+    _f = $("#fnt-office").closest('form')[0];
+    // Set focus
+    $(".modal").on('shown', function() {
+      $(this).find(".form-label:first").focus();
+    });
+  });
+</script>
+
+<div id="new-office-fields" class="modal hide fade" data-backdrop="static">
+  <% e = t(:item_error) %>
+  <div class="modal-header">
+    <a class="close" data-dismiss="modal">×</a>
+    <h3><%= t("ag2_products.stores.add_office") %></h3>
+    <span class="shrinked"><%= I18n.t(:mandatory_subtitle) %></span>
+  </div>
+  <div class="modal-body">
+    <%= f.association :office, collection: @offices, input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-office', data: { validation: "required", "validation-error-msg" => "#{e}" } }, label_html: { class: 'form-label' } %>
+    <%= f.input :_destroy, as: :hidden, input_html: { class: 'field' } %>
+  </div>
+  <div class="modal-footer">
+    <span class="left-floated" style="vertical-align: bottom"><%= t("ag2_products.stores.add_item_to", var: @store.name) unless @store.name.blank? %></span>
+    <button id="addOfficeButton" type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><%= t('ag2_products.stores.btn_add_item') %></button>
+    <button id="cancelOfficeButton" type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><%= t :close_button %></button>
+  </div>
+</div>
+
+<script type="text/javascript">
+  sel2NoMatch = '<%= t("select2.no_matches") %>';
+  st_officeFieldsUI.init(sel2NoMatch);
+</script>
