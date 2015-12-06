@@ -320,7 +320,7 @@ module Ag2Products
     def edit
       @breadcrumb = 'update'
       @inventory_count = InventoryCount.find(params[:id])
-      @stores = @inventory_count.organization.blank? ? stores_dropdown : @inventory_count.organization.stores.order(:name)
+      @stores = stores_dropdown
       if @inventory_count.store.blank? || @inventory_count.inventory_count_type_id == 1
         @families = @inventory_count.organization.blank? ? families_dropdown : @inventory_count.organization.product_families.order(:family_code)
         @products = @inventory_count.organization.blank? ? products_dropdown : @inventory_count.organization.products.order(:product_code)
@@ -431,7 +431,13 @@ module Ag2Products
     end
 
     def stores_dropdown
-      session[:organization] != '0' ? Store.where(organization_id: session[:organization].to_i).order(:name) : Store.order(:name)
+      if session[:office] != '0'
+        _stores = Store.where(office_id: session[:office].to_i).order(:name)
+      elsif session[:company] != '0'
+        _stores = Store.where(company_id: session[:company].to_i).order(:name)
+      else
+        _stores = session[:organization] != '0' ? Store.where(organization_id: session[:organization].to_i).order(:name) : Store.order(:name)
+      end
     end
     
     def families_dropdown

@@ -52,6 +52,7 @@ module Ag2Purchase
       @from = params[:from]
       @to = params[:to]
       supplier = params[:supplier]
+      store = params[:store]
       order = params[:order]
       account = params[:account]
       product = params[:product]
@@ -89,6 +90,7 @@ module Ag2Purchase
       @from = params[:from]
       @to = params[:to]
       supplier = params[:supplier]
+      store = params[:store]
       order = params[:order]
       account = params[:account]
       product = params[:product]
@@ -126,6 +128,7 @@ module Ag2Purchase
       @from = params[:from]
       @to = params[:to]
       supplier = params[:supplier]
+      store = params[:store]
       order = params[:order]
       account = params[:account]
       status = params[:status]
@@ -368,7 +371,7 @@ module Ag2Purchase
       end
 
       # Adding JIT stores
-      _ret = Store.where("(company_id IS NULL AND NOT supplier_id IS NULL)")
+      _ret = session[:organization] != '0' ? Store.where("organization_id = ? AND company_id IS NULL AND NOT supplier_id IS NULL", session[:organization].to_i) : Store.where("(company_id IS NULL AND NOT supplier_id IS NULL)")
       ret_array(_array, _ret)
 
       # Returning founded stores

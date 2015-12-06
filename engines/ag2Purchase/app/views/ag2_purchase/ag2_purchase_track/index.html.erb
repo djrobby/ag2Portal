@@ -26,6 +26,7 @@
           // Offer request
           show("#Project", "<%= t(".label_project") %>");
           show("#Supplier", "<%= t(".label_supplier") %>");
+          show("#Store", "<%= t(".label_store") %>");
           show("#Order", "<%= t(".label_work_order") %>");
           show("#Account", "<%= t(".label_charge_account") %>");
           hide("#Status", "<%= t(".label_order_status") %>");
@@ -36,6 +37,7 @@
           // Offer
           show("#Project", "<%= t(".label_project") %>");
           show("#Supplier", "<%= t(".label_supplier") %>");
+          show("#Store", "<%= t(".label_store") %>");
           show("#Order", "<%= t(".label_work_order") %>");
           show("#Account", "<%= t(".label_charge_account") %>");
           hide("#Status", "<%= t(".label_order_status") %>");
@@ -46,6 +48,7 @@
           // Purchase order
           show("#Project", "<%= t(".label_project") %>");
           show("#Supplier", "<%= t(".label_supplier") %>");
+          show("#Store", "<%= t(".label_store") %>");
           show("#Order", "<%= t(".label_work_order") %>");
           show("#Account", "<%= t(".label_charge_account") %>");
           show("#Status", "<%= t(".label_order_status") %>");
@@ -56,6 +59,7 @@
           // Supplier invoice
           show("#Project", "<%= t(".label_project") %>");
           show("#Supplier", "<%= t(".label_supplier") %>");
+          hide("#Store", "<%= t(".label_store") %>");
           show("#Order", "<%= t(".label_work_order") %>");
           show("#Account", "<%= t(".label_charge_account") %>");
           hide("#Status", "<%= t(".label_order_status") %>");
@@ -66,6 +70,7 @@
           // Supplier payment
           show("#Project", "<%= t(".label_project") %>");
           show("#Supplier", "<%= t(".label_supplier") %>");
+          hide("#Store", "<%= t(".label_store") %>");
           hide("#Order", "<%= t(".label_work_order") %>");
           hide("#Account", "<%= t(".label_charge_account") %>");
           hide("#Status", "<%= t(".label_order_status") %>");
@@ -76,6 +81,7 @@
           // Supplier
           show("#Project", "<%= t(".label_project") %>");
           show("#Supplier", "<%= t(".label_supplier") %>");
+          hide("#Store", "<%= t(".label_store") %>");
           hide("#Order", "<%= t(".label_work_order") %>");
           hide("#Account", "<%= t(".label_charge_account") %>");
           hide("#Status", "<%= t(".label_order_status") %>");
@@ -85,6 +91,7 @@
         default:
           show("#Project", "<%= t(".label_project") %>");
           show("#Supplier", "<%= t(".label_supplier") %>");
+          show("#Store", "<%= t(".label_store") %>");
           show("#Order", "<%= t(".label_work_order") %>");
           show("#Account", "<%= t(".label_charge_account") %>");
           show("#Status", "<%= t(".label_order_status") %>");
@@ -134,6 +141,21 @@
             $("#Account").append($('<option></option>').val(option.id).html(option.account_code.substring(0,4) + "-" + option.account_code.substring(4,11) + " " + option.name));
           });
         }
+        // Store
+        $("#Store").html("");
+        $("#Store").select2("val", "");
+        $("#Store").append($('<option></option>').val("").html(""));
+        if (!s.length) {
+          $.each(data, function(id, option) {
+            if (id == 'store' && option != "") {
+              $("#Store").append($('<option></option>').val(option.id).html(option.name));
+            }
+          });
+        } else {
+          $.each(s, function(id, option) {
+            $("#Store").append($('<option></option>').val(option.id).html(option.name));
+          });
+        }
       });
       return false;
     });
@@ -154,35 +176,38 @@
           // Offer request
           var project = $('select#Project :selected').val();
           var supplier = $('select#Supplier :selected').val();
+          var store = $('select#Store :selected').val();
           var order = $('select#Order :selected').val();
           var account = $('select#Account :selected').val();
           var product = $('select#Product :selected').val();
           if ((project == "") && (supplier == "") && (product == ""))
             return;
-          window.open("request_report.pdf?detailed=" + detailed + "project=" + project + "&from=" + from + "&to=" + to + "&supplier=" + supplier + "&order=" + order + "&account=" + account + "&product=" + product, "_blank");
+          window.open("request_report.pdf?detailed=" + detailed + "project=" + project + "&from=" + from + "&to=" + to + "&supplier=" + supplier + "&store=" + store + "&order=" + order + "&account=" + account + "&product=" + product, "_blank");
           break;
         case 2:
           // Offer
           var project = $('select#Project :selected').val();
           var supplier = $('select#Supplier :selected').val();
+          var store = $('select#Store :selected').val();
           var order = $('select#Order :selected').val();
           var account = $('select#Account :selected').val();
           var product = $('select#Product :selected').val();
           if ((project == "") && (supplier == "") && (product == ""))
             return;
-          window.open("offer_report.pdf?detailed=" + detailed + "project=" + project + "&from=" + from + "&to=" + to + "&supplier=" + supplier + "&order=" + order + "&account=" + account + "&product=" + product, "_blank");
+          window.open("offer_report.pdf?detailed=" + detailed + "project=" + project + "&from=" + from + "&to=" + to + "&supplier=" + supplier + "&store=" + store + "&order=" + order + "&account=" + account + "&product=" + product, "_blank");
           break;
         case 3:
           // Purchase order
           var project = $('select#Project :selected').val();
           var supplier = $('select#Supplier :selected').val();
+          var store = $('select#Store :selected').val();
           var order = $('select#Order :selected').val();
           var account = $('select#Account :selected').val();
           var status = $('select#Status :selected').val();
           var product = $('select#Product :selected').val();
           if ((project == "") && (supplier == "") && (order == "") && (account == "") && (status == "") && (product == ""))
             return;
-          window.open("order_report.pdf?detailed=" + detailed + "project=" + project + "&from=" + from + "&to=" + to + "&supplier=" + supplier + "&order=" + order + "&account=" + account + "&status=" + status + "&product=" + product, "_blank");
+          window.open("order_report.pdf?detailed=" + detailed + "project=" + project + "&from=" + from + "&to=" + to + "&supplier=" + supplier + "&store=" + store + "&order=" + order + "&account=" + account + "&status=" + status + "&product=" + product, "_blank");
           break;
         case 4:
           // Supplier invoice
@@ -272,6 +297,9 @@
       <!-- Supplier -->
       <%= label_tag t(".label_supplier"), nil, :class => 'form-label-under-sel2' %>
       <%= select_tag "Supplier", options_from_collection_for_select(@suppliers, "id", "full_name"), :prompt => "", :class => 'x-large-text-field sel2' %>
+      <!-- Store -->
+      <%= label_tag t(".label_store"), nil, :class => 'form-label-under-sel2' %>
+      <%= select_tag "Store", options_from_collection_for_select(@stores, "id", "name"), :prompt => "", :class => 'x-large-text-field sel2' %>
       <!-- Work order -->
       <%= label_tag t(".label_work_order"), nil, :class => 'form-label-under-sel2' %>
       <%= select_tag "Order", options_from_collection_for_select(@work_orders, "id", "full_name"), :prompt => "", :class => 'x-large-text-field sel2' %>

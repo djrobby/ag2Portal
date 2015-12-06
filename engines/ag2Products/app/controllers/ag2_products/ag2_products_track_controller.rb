@@ -337,7 +337,7 @@ module Ag2Products
       end
 
       # Adding JIT stores
-      _ret = Store.where("(company_id IS NULL AND NOT supplier_id IS NULL)")
+      _ret = session[:organization] != '0' ? Store.where("organization_id = ? AND company_id IS NULL AND NOT supplier_id IS NULL", session[:organization].to_i) : Store.where("(company_id IS NULL AND NOT supplier_id IS NULL)")
       ret_array(_array, _ret)
 
       # Returning founded stores
