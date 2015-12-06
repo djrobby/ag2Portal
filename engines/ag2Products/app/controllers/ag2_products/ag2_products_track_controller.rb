@@ -18,7 +18,7 @@ module Ag2Products
       if project != '0'
         @project = Project.find(project)
         @work_order = @project.blank? ? projects_work_orders(projects) : @project.work_orders.order(:order_no)
-        @charge_account = @project.blank? ? projects_charge_accounts(projects) : charge_accounts_dropdown_edit(@project.id)
+        @charge_account = @project.blank? ? projects_charge_accounts(projects) : charge_accounts_dropdown_edit(@project)
         @store = @project.blank? ? projects_stores(projects) : project_stores(@project)
       else
         @work_order = projects_work_orders(projects)
@@ -296,17 +296,20 @@ module Ag2Products
         _stores = session[:organization] != '0' ? Store.where("organization_id = ? AND office_id IS NULL AND supplier_id IS NULL", session[:organization].to_i) : Store.all
       end
       ret_array(_array, _stores)
-      # Adding stores belonging to current project and JIT stores
+      # Adding stores belonging to current project
       if !_project.company.blank? && !_project.office.blank?
-        _stores = Store.where("(company_id = ? AND office_id = ?) OR (company_id IS NULL AND NOT supplier_id IS NULL)", _project.company.id, _project.office.id).order(:name)
+        _stores = Store.where("(company_id = ? AND office_id = ?)", _project.company.id, _project.office.id)
       elsif !_project.company.blank? && _project.office.blank?
-        _stores = Store.where("(company_id = ?) OR (company_id IS NULL AND NOT supplier_id IS NULL)", _project.company.id).order(:name)
+        _stores = Store.where("(company_id = ?)", _project.company.id)
       elsif _project.company.blank? && !_project.office.blank?
-        _stores = Store.where("(office_id = ?) OR (company_id IS NULL AND NOT supplier_id IS NULL)", _project.office.id).order(:name)
+        _stores = Store.where("(office_id = ?)", _project.office.id)
       else
         _stores = stores_dropdown
       end
       ret_array(_array, _stores)
+      # Adding JIT stores
+      _ret = session[:organization] != '0' ? Store.where("organization_id = ? AND company_id IS NULL AND NOT supplier_id IS NULL", session[:organization].to_i) : Store.where("(company_id IS NULL AND NOT supplier_id IS NULL)")
+      ret_array(_array, _ret)
       # Returning founded stores
       _stores = Store.where(id: _array).order(:name)
     end
@@ -368,7 +371,7 @@ module Ag2Products
     end
 
     def charge_accounts_dropdown_edit(_project)
-      _accounts = ChargeAccount.where('project_id = ? OR project_id IS NULL', _project).order(:account_code)
+      _accounts = ChargeAccount.where('project_id = ? OR (project_id IS NULL AND organization_id = ?)', _project, _project.organization_id).order(:account_code)
     end
 
     # Charge accounts belonging to projects

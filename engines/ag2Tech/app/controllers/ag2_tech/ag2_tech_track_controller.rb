@@ -16,7 +16,7 @@ module Ag2Tech
       if project != '0'
         @project = Project.find(project)
         @work_order = @project.blank? ? projects_work_orders(projects) : @project.work_orders.order(:order_no)
-        @charge_account = @project.blank? ? projects_charge_accounts(projects) : charge_accounts_dropdown_edit(@project.id)
+        @charge_account = @project.blank? ? projects_charge_accounts(projects) : charge_accounts_dropdown_edit(@project)
       else
         @work_order = projects_work_orders(projects)
         @charge_account = projects_charge_accounts(projects)
@@ -190,7 +190,7 @@ module Ag2Tech
     end
 
     def charge_accounts_dropdown_edit(_project)
-      _accounts = ChargeAccount.where('project_id = ? OR project_id IS NULL', _project).order(:account_code)
+      _accounts = ChargeAccount.where('project_id = ? OR (project_id IS NULL AND organization_id = ?)', _project.id, _project.organization_id).order(:account_code)
     end
 
     # Charge accounts belonging to projects
