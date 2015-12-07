@@ -405,7 +405,7 @@ module Ag2Purchase
     end
 
     def charge_accounts_dropdown_edit(_project)
-      _accounts = ChargeAccount.where('project_id = ? OR (project_id IS NULL AND organization_id = ?)', _project, _project.organization_id).order(:account_code)
+      _accounts = ChargeAccount.where('project_id = ? OR (project_id IS NULL AND organization_id = ?)', _project.id, _project.organization_id).order(:account_code)
     end
 
     # Charge accounts belonging to projects

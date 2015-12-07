@@ -246,6 +246,7 @@ module Ag2Purchase
     # Update charge account and store text fields at view from work order select
     def po_update_charge_account_from_order
       order = params[:order]
+      projects = projects_dropdown
       charge_account_id = 0
       store_id = 0
       if order != '0'
@@ -256,13 +257,13 @@ module Ag2Purchase
         @store = @order.store
         store_id = @store.id rescue 0
         if @charge_account.blank?
-          @charge_account = @project.blank? ? charge_accounts_dropdown : charge_accounts_dropdown_edit(@project.id)
+          @charge_account = @project.blank? ? projects_charge_accounts(projects) : charge_accounts_dropdown_edit(@project)
         end
         if @store.blank?
           @store = project_stores(@project)
         end
       else
-        @charge_account = charge_accounts_dropdown
+        @charge_account = projects_charge_accounts(projects)
         @store = stores_dropdown
       end
       @json_data = { "charge_account" => @charge_account, "store" => @store,
@@ -273,14 +274,15 @@ module Ag2Purchase
     # Update work order, charge account and store text fields at view from project select
     def po_update_charge_account_from_project
       project = params[:order]
+      projects = projects_dropdown
       if project != '0'
         @project = Project.find(project)
         @work_order = @project.blank? ? work_orders_dropdown : @project.work_orders.order(:order_no)
-        @charge_account = @project.blank? ? charge_accounts_dropdown : charge_accounts_dropdown_edit(@project.id)
+        @charge_account = @project.blank? ? projects_charge_accounts(projects) : charge_accounts_dropdown_edit(@project)
         @store = project_stores(@project)
       else
         @work_order = work_orders_dropdown
-        @charge_account = charge_accounts_dropdown
+        @charge_account = projects_charge_accounts(projects)
         @store = stores_dropdown
       end
       @json_data = { "work_order" => @work_order, "charge_account" => @charge_account, "store" => @store }
@@ -519,7 +521,7 @@ module Ag2Purchase
       @offers = offers_dropdown
       @projects = projects_dropdown
       @work_orders = work_orders_dropdown
-      @charge_accounts = charge_accounts_dropdown
+      @charge_accounts = projects_charge_accounts(@projects)
       @stores = stores_dropdown
       @suppliers = suppliers_dropdown
       @payment_methods = payment_methods_dropdown
@@ -566,7 +568,7 @@ module Ag2Purchase
           @offers = offers_dropdown
           @projects = projects_dropdown
           @work_orders = work_orders_dropdown
-          @charge_accounts = charge_accounts_dropdown
+          @charge_accounts = projects_charge_accounts(@projects)
           @stores = stores_dropdown
           @suppliers = suppliers_dropdown
           @payment_methods = payment_methods_dropdown
@@ -670,22 +672,66 @@ module Ag2Purchase
       _numbers = _numbers.blank? ? no : _numbers
     end
     
+    # Stores belonging to selected project
     def project_stores(_project)
+      _array = []
+      _stores = nil
+
+      # Adding stores belonging to current project only
+      # Stores with exclusive office
       if !_project.company.blank? && !_project.office.blank?
-        _store = Store.where("(company_id = ? AND office_id = ?) OR (company_id IS NULL AND NOT supplier_id IS NULL)", _project.company.id, _project.office.id).order(:name)
+        _stores = Store.where("(company_id = ? AND office_id = ?)", _project.company.id, _project.office.id)
       elsif !_project.company.blank? && _project.office.blank?
-        _store = Store.where("(company_id = ?) OR (company_id IS NULL AND NOT supplier_id IS NULL)", _project.company.id).order(:name)
+        _stores = Store.where("(company_id = ?)", _project.company.id)
       elsif _project.company.blank? && !_project.office.blank?
-        _store = Store.where("(office_id = ?) OR (company_id IS NULL AND NOT supplier_id IS NULL)", _project.office.id).order(:name)
+        _stores = Store.where("(office_id = ?)", _project.office.id)
       else
-        _store = stores_dropdown
+        _stores = nil
       end
-      _store
+      ret_array(_array, _stores, 'id')
+      # Stores with multiple offices
+      if !_project.office.blank?
+        _stores = StoreOffice.where("office_id = ?", _project.office.id)
+        ret_array(_array, _stores, 'store_id')
+      end
+
+      # Returning founded stores
+      _stores = Store.where(id: _array).order(:name)
+    end
+
+    # Charge accounts belonging to projects
+    def projects_charge_accounts(_projects)
+      _array = []
+      _ret = nil
+
+      # Adding charge accounts belonging to current projects
+      _projects.each do |i|
+        _ret = ChargeAccount.expenditures.where(project_id: i.id)
+        ret_array(_array, _ret, 'id')
+      end
+
+      # Adding global charge accounts belonging to projects organizations
+      _sort_projects_by_organization = _projects.sort { |a,b| a.organization_id <=> b.organization_id }
+      _previous_organization = _sort_projects_by_organization.first.organization_id
+      _sort_projects_by_organization.each do |i|
+        if _previous_organization != i.organization_id
+          # when organization changes, process previous
+          _ret = ChargeAccount.expenditures.where('(project_id IS NULL AND charge_accounts.organization_id = ?)', _previous_organization)
+          ret_array(_array, _ret, 'id')
+          _previous_organization = i.organization_id
+        end
+      end
+      # last organization, process previous
+      _ret = ChargeAccount.expenditures.where('(project_id IS NULL AND charge_accounts.organization_id = ?)', _previous_organization)
+      ret_array(_array, _ret, 'id')
+
+      # Returning founded charge accounts
+      _ret = ChargeAccount.where(id: _array).order(:account_code)
     end
 
     def work_order_charge_account(_order)
       if _order.work_order.blank? || _order.work_order.charge_account.blank?
-        _charge_account = _order.project.blank? ? charge_accounts_dropdown : charge_accounts_dropdown_edit(_order.project_id)
+        _charge_account = _order.project.blank? ? projects_charge_accounts(projects) : charge_accounts_dropdown_edit(_order.project)
       else
         _charge_account = ChargeAccount.where("id = ?", _order.work_order.charge_account)
       end
@@ -734,7 +780,7 @@ module Ag2Purchase
 
     def charge_accounts_dropdown_edit(_project)
       #_accounts = ChargeAccount..where('project_id = ? OR project_id IS NULL', _project).order(:account_code)
-      ChargeAccount.expenditures.where('project_id = ? OR project_id IS NULL', _project)
+      ChargeAccount.expenditures.where('project_id = ? OR (project_id IS NULL AND charge_accounts.organization_id = ?)', _project, _project.organization_id)
     end
 
     def stores_dropdown
@@ -776,6 +822,15 @@ module Ag2Purchase
         _array = _array << [i.id, i.full_code, i.main_description[0,40]] 
       end
       _array
+    end
+    
+    # Returns _array from _ret table/model filled with _id attribute
+    def ret_array(_array, _ret, _id)
+      if !_ret.nil?
+        _ret.each do |_r|
+          _array = _array << _r.read_attribute(_id) unless _array.include? _r.read_attribute(_id)
+        end
+      end
     end
 
     # Use purchase price, if any. Otherwise, the reference price

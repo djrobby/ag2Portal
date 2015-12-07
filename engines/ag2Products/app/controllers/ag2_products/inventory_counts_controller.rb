@@ -431,6 +431,24 @@ module Ag2Products
     end
 
     def stores_dropdown
+      _array = []
+      _stores = nil
+      _store_offices = nil
+
+      if session[:office] != '0'
+        _stores = Store.where(office_id: session[:office].to_i)
+        _store_offices = StoreOffice.where("office_id = ?", session[:office].to_i)
+      elsif session[:company] != '0'
+        _stores = Store.where(company_id: session[:company].to_i)
+      else
+        _stores = session[:organization] != '0' ? Store.where(organization_id: session[:organization].to_i) : Store.order
+      end
+      
+      # Returning founded stores
+      ret_array(_array, _stores, 'id')
+      ret_array(_array, _store_offices, 'store_id')
+      _stores = Store.where(id: _array).order(:name)
+=begin
       if session[:office] != '0'
         _stores = Store.where(office_id: session[:office].to_i).order(:name)
       elsif session[:company] != '0'
@@ -438,6 +456,7 @@ module Ag2Products
       else
         _stores = session[:organization] != '0' ? Store.where(organization_id: session[:organization].to_i).order(:name) : Store.order(:name)
       end
+=end
     end
     
     def families_dropdown
@@ -463,6 +482,15 @@ module Ag2Products
         _array = _array << [i.id, i.full_code, i.main_description[0,40]] 
       end
       _array
+    end
+    
+    # Returns _array from _ret table/model filled with _id attribute
+    def ret_array(_array, _ret, _id)
+      if !_ret.nil?
+        _ret.each do |_r|
+          _array = _array << _r.read_attribute(_id) unless _array.include? _r.read_attribute(_id)
+        end
+      end
     end
     
     # Keeps filter state

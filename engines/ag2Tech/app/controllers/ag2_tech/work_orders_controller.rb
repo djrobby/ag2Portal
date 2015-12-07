@@ -464,7 +464,7 @@ module Ag2Tech
         @types = @organization.blank? ? work_order_types_dropdown : @organization.work_order_types.order(:name)
         @labors = @organization.blank? ? work_order_labors_dropdown : @organization.work_order_labors.order(:name)
         @clients = @organization.blank? ? clients_dropdown : @organization.clients.order(:client_code)
-        @charge_accounts = @organization.blank? ? charge_accounts_dropdown : @organization.charge_accounts.order(:account_code)
+        @charge_accounts = @organization.blank? ? charge_accounts_dropdown : @organization.charge_accounts.expenditures
         @stores = @organization.blank? ? stores_dropdown : @organization.stores.order(:name)
         @workers = @organization.blank? ? workers_dropdown : @organization.workers.order(:worker_code)
         @areas = @organization.blank? ? areas_dropdown : organization_areas(@organization)
@@ -600,7 +600,6 @@ module Ag2Tech
       @types = work_order_types_dropdown
       @labors = work_order_labors_dropdown
       @areas = areas_dropdown
-      #@charge_accounts = charge_accounts_dropdown
       @charge_accounts = projects_charge_accounts(@projects)
       @stores = stores_dropdown
       @clients = clients_dropdown
@@ -628,7 +627,7 @@ module Ag2Tech
       @types = work_order_types_dropdown_edit(@work_order.work_order_type)
       @labors = work_order_labors_dropdown_edit(@work_order.work_order_labor)
       @areas = areas_dropdown
-      @charge_accounts = @work_order.project.blank? ? charge_accounts_dropdown : charge_accounts_dropdown_edit(@work_order.project)
+      @charge_accounts = @work_order.project.blank? ? projects_charge_accounts(@projects) : charge_accounts_dropdown_edit(@work_order.project)
       @stores = project_stores(@work_order.project)
       @clients = clients_dropdown
       # Form & Sub-forms
@@ -658,7 +657,7 @@ module Ag2Tech
           @types = work_order_types_dropdown
           @labors = work_order_labors_dropdown
           @areas = areas_dropdown
-          @charge_accounts = charge_accounts_dropdown
+          @charge_accounts = projects_charge_accounts(@projects)
           @stores = stores_dropdown
           @clients = clients_dropdown
           @workers = workers_dropdown
@@ -690,7 +689,7 @@ module Ag2Tech
           @types = work_order_types_dropdown_edit(@work_order.work_order_type)
           @labors = work_order_labors_dropdown_edit(@work_order.work_order_labor)
           @areas = areas_dropdown
-          @charge_accounts = @work_order.project.blank? ? charge_accounts_dropdown : charge_accounts_dropdown_edit(@work_order.project)
+          @charge_accounts = @work_order.project.blank? ? projects_charge_accounts(@projects) : charge_accounts_dropdown_edit(@work_order.project)
           @stores = project_stores(@work_order.project)
           @clients = clients_dropdown
           @workers = project_workers(@work_order.project)
@@ -778,11 +777,13 @@ module Ag2Tech
       _numbers = _numbers.blank? ? no : _numbers
     end
     
+    # Stores belonging to selected project
     def project_stores(_project)
       _array = []
       _stores = nil
 
       # Adding stores belonging to current project only
+      # Stores with exclusive office
       if !_project.company.blank? && !_project.office.blank?
         _stores = Store.where("(company_id = ? AND office_id = ?)", _project.company.id, _project.office.id)
       elsif !_project.company.blank? && _project.office.blank?
@@ -792,8 +793,16 @@ module Ag2Tech
       else
         _stores = nil
       end
-      ret_array(_array, _stores)
+      ret_array(_array, _stores, 'id')
+      # Stores with multiple offices
+      if !_project.office.blank?
+        _stores = StoreOffice.where("office_id = ?", _project.office.id)
+        ret_array(_array, _stores, 'store_id')
+      end
 
+      # Returning founded stores
+      _stores = Store.where(id: _array).order(:name)
+=begin
       if _stores.blank?
         # Adding company stores, not JIT, if OCO office is not active
         if session[:office] == '0' && !_project.company.blank?
@@ -809,11 +818,10 @@ module Ag2Tech
           ret_array(_array, _stores)
         end
       end
-
-      # Returning founded stores
-      _stores = Store.where(id: _array).order(:name)
+=end
     end
 
+    # Workers belonging to selected project
     def project_workers(_project)
       if !_project.company.blank? && !_project.office.blank?  # Company & office
         _worker = company_office_workers(_project.company, _project.office)
@@ -825,6 +833,36 @@ module Ag2Tech
         _worker = Worker.order(:worker_code)
       end
       _worker
+    end
+
+    # Charge accounts belonging to projects
+    def projects_charge_accounts(_projects)
+      _array = []
+      _ret = nil
+
+      # Adding charge accounts belonging to current projects
+      _projects.each do |i|
+        _ret = ChargeAccount.expenditures.where(project_id: i.id)
+        ret_array(_array, _ret, 'id')
+      end
+
+      # Adding global charge accounts belonging to projects organizations
+      _sort_projects_by_organization = _projects.sort { |a,b| a.organization_id <=> b.organization_id }
+      _previous_organization = _sort_projects_by_organization.first.organization_id
+      _sort_projects_by_organization.each do |i|
+        if _previous_organization != i.organization_id
+          # when organization changes, process previous
+          _ret = ChargeAccount.expenditures.where('(project_id IS NULL AND charge_accounts.organization_id = ?)', _previous_organization)
+          ret_array(_array, _ret, 'id')
+          _previous_organization = i.organization_id
+        end
+      end
+      # last organization, process previous
+      _ret = ChargeAccount.expenditures.where('(project_id IS NULL AND charge_accounts.organization_id = ?)', _previous_organization)
+      ret_array(_array, _ret, 'id')
+
+      # Returning founded charge accounts
+      _ret = ChargeAccount.where(id: _array).order(:account_code)
     end
     
     def company_office_workers(_company, _office)
@@ -906,11 +944,12 @@ module Ag2Tech
     end
 
     def charge_accounts_dropdown
-      session[:organization] != '0' ? ChargeAccount.where(organization_id: session[:organization].to_i).order(:account_code) : ChargeAccount.order(:account_code)
+      session[:organization] != '0' ? ChargeAccount.expenditures.where(organization_id: session[:organization].to_i) : ChargeAccount.expenditures
     end
 
     def charge_accounts_dropdown_edit(_project)
-      _accounts = ChargeAccount.where('project_id = ? OR (project_id IS NULL AND organization_id = ?)', _project, _project.organization_id).order(:account_code)
+      #_accounts = ChargeAccount.where('project_id = ? OR (project_id IS NULL AND organization_id = ?)', _project.id, _project.organization_id).order(:account_code)
+      ChargeAccount.expenditures.where('project_id = ? OR (project_id IS NULL AND charge_accounts.organization_id = ?)', _project, _project.organization_id)
     end
 
     def workers_dropdown
@@ -918,14 +957,23 @@ module Ag2Tech
     end
 
     def stores_dropdown
+      _array = []
+      _stores = nil
+      _store_offices = nil
+
       if session[:office] != '0'
-        _stores = Store.where(office_id: session[:office].to_i).order(:name)
+        _stores = Store.where(office_id: session[:office].to_i)
+        _store_offices = StoreOffice.where("office_id = ?", session[:office].to_i)
       elsif session[:company] != '0'
-        _stores = Store.where(company_id: session[:company].to_i).order(:name)
+        _stores = Store.where(company_id: session[:company].to_i)
       else
-        _stores = session[:organization] != '0' ? Store.where(organization_id: session[:organization].to_i).order(:name) : Store.order(:name)
+        _stores = session[:organization] != '0' ? Store.where(organization_id: session[:organization].to_i) : Store.order
       end
-      #session[:organization] != '0' ? Store.where(organization_id: session[:organization].to_i).order(:name) : Store.order(:name)
+      
+      # Returning founded stores
+      ret_array(_array, _stores, 'id')
+      ret_array(_array, _store_offices, 'store_id')
+      _stores = Store.where(id: _array).order(:name)
     end
 
     def areas_dropdown
@@ -1046,29 +1094,13 @@ module Ag2Tech
       _array
     end
     
-    def ret_array(_array, _ret)
-      _ret.each do |_r|
-        _array = _array << _r.id unless _array.include? _r.id
+    # Returns _array from _ret table/model filled with _id attribute
+    def ret_array(_array, _ret, _id)
+      if !_ret.nil?
+        _ret.each do |_r|
+          _array = _array << _r.read_attribute(_id) unless _array.include? _r.read_attribute(_id)
+        end
       end
-    end
-
-    # Charge accounts belonging to projects
-    def projects_charge_accounts(_projects)
-      _array = []
-      _ret = nil
-
-      # Adding charge accounts belonging to current projects
-      _projects.each do |i|
-        _ret = ChargeAccount.where(project_id: i.id)
-        ret_array(_array, _ret)
-      end
-
-      # Adding global charge accounts
-      _ret = ChargeAccount.where('project_id IS NULL')
-      ret_array(_array, _ret)
-
-      # Returning founded charge accounts
-      _ret = ChargeAccount.where(id: _array).order(:account_code)
     end
     
     # Keeps filter state
