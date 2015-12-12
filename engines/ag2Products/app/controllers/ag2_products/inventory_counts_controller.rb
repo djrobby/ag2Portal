@@ -30,7 +30,8 @@ module Ag2Products
     # Update product & family select at view from store
     def ic_update_family_select_from_store
       store = params[:store]
-      if store != '0'
+      type = params[:type].to_i
+      if store != '0' && type != 1
         @store = Store.find(store)
         @families = @store.blank? ? families_dropdown : ProductFamily.by_store(@store)
         @products = @store.blank? ? products_dropdown : @store.products.order(:product_code)
@@ -49,42 +50,58 @@ module Ag2Products
     def ic_generate_count
       store = params[:store]
       family = params[:family]
+      type = params[:type].to_i
       count = nil
       count_item = nil
       code = ''
 
       if store != '0' && family != '0'
-        stocks = Stock.find_by_store_and_family(store, family) rescue nil
+        if type == 1  # Initial
+          stocks = ProductFamily.find(family).products.where(active: true) rescue nil
+        else          # Regularization
+          stocks = Stock.find_by_store_and_family(store, family) rescue nil
+        end
         if !stocks.nil?
-          # Try save new inventory count
-          inventory_count = InventoryCount.new
-          inventory_count.count_no = ic_next_no(store)
-          inventory_count.count_date = Time.now.to_date
-          inventory_count.inventory_count_type_id = 2
-          inventory_count.store_id = store
-          inventory_count.product_family_id = family
-          inventory_count.organization_id = Store.find(store).organization_id rescue nil
-          inventory_count.created_by = current_user.id if !current_user.nil?
-          if inventory_count.save
-            # Try to save new inventory count items
-            stocks.each do |i|
-              inventory_count_item = InventoryCountItem.new
-              inventory_count_item.inventory_count_id = inventory_count.id
-              inventory_count_item.product_id = i.product_id
-              inventory_count_item.quantity = 0
-              inventory_count_item.initial = i.initial
-              inventory_count_item.current = i.current
-              inventory_count_item.created_by = current_user.id if !current_user.nil?
-              if !inventory_count_item.save
-                # Can't save offer item (exit)
-                code = '$write'
-                break
-              end   # !inventory_count_item.save
-            end   # do |i|
+          if stocks.count <= 0
+            # No Products
+            code = '$no_products'
           else
-            # Can't save inventory count
-            code = '$write'
-          end   # inventory_count.save
+            # Try save new inventory count
+            inventory_count = InventoryCount.new
+            inventory_count.count_no = ic_next_no(store)
+            inventory_count.count_date = Time.now.to_date
+            inventory_count.inventory_count_type_id = type
+            inventory_count.store_id = store
+            inventory_count.product_family_id = family
+            inventory_count.organization_id = Store.find(store).organization_id rescue nil
+            inventory_count.created_by = current_user.id if !current_user.nil?
+            if inventory_count.save
+              # Try to save new inventory count items
+              stocks.each do |i|
+                inventory_count_item = InventoryCountItem.new
+                inventory_count_item.inventory_count_id = inventory_count.id
+                inventory_count_item.quantity = 0
+                if type == 1
+                  inventory_count_item.product_id = i.id
+                  inventory_count_item.initial = 0
+                  inventory_count_item.current = 0
+                else
+                  inventory_count_item.product_id = i.product_id
+                  inventory_count_item.initial = i.initial
+                  inventory_count_item.current = i.current
+                end
+                inventory_count_item.created_by = current_user.id if !current_user.nil?
+                if !inventory_count_item.save
+                  # Can't save offer item (exit)
+                  code = '$write'
+                  break
+                end   # !inventory_count_item.save
+              end   # do |i|
+            else
+              # Can't save inventory count
+              code = '$write'
+            end   # inventory_count.save
+          end   # stocks.count <= 0
         else
           # Stocks not found
           code = '$err'
@@ -470,7 +487,7 @@ module Ag2Products
     def families_array(_families)
       _array = []
       _families.each do |i|
-        _requests_array = _array << [i.id, i.family_code, i.name[0,40]] 
+        _array = _array << [i.id, i.family_code, i.name[0,40]] 
       end
       _array
     end

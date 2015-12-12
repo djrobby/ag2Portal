@@ -140,7 +140,7 @@
       if (org == "0") {
         // Empty project: Hide
         $('#generate_code_btn').hide();
-        $("#inventory_count_store_id").val(0);
+        $("#inventory_count_store_id").select2("val", 0);
       }
       return false;
     });
@@ -151,7 +151,10 @@
       var store = $('select#inventory_count_store_id :selected').val();
       if (store == "")
         store = "0";
-      jQuery.getJSON('ic_update_family_select_from_store/' + store, function(data) {
+      var type = $('select#inventory_count_inventory_count_type_id :selected').val();
+      if (type == "")
+        type = "0";
+      jQuery.getJSON('ic_update_family_select_from_store/' + store + '/' + type, function(data) {
         var f = data.product_families;
         $("#inventory_count_product_family_id").html("");
         $("#inventory_count_product_family_id").select2("val", "");
