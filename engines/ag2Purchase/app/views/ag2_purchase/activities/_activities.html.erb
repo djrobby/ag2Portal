@@ -10,6 +10,7 @@
 <table class="table table-condensed table-striped">
   <thead>
     <tr>
+      <th><%= sortable "id", 'Id' %></th>
       <th><%= sortable "description", t('activerecord.attributes.activity.description') %></th>
       <th></th>
     </tr>
@@ -17,6 +18,7 @@
   <tbody>
     <% @activities.each do |activity| %>
     <tr>
+      <td><%= activity.id %></td>
       <td><%= link_to activity.description, activity %></td>
       <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => Activity, :path => edit_activity_path(activity) } %>
       <%= render :partial => '/layouts/crud/delete', :locals => { :model => Activity, :path => activity, :msg => t("activerecord.models.activity.one"), :txt => activity.description } %> </td>
