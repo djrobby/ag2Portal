@@ -12,6 +12,7 @@ class InventoryCount < ActiveRecord::Base
   attr_accessible :inventory_count_items_attributes
 
   has_many :inventory_count_items, dependent: :destroy
+  has_many :products, through: :inventory_count_items
 
   # Nested attributes
   accepts_nested_attributes_for :inventory_count_items,                                 

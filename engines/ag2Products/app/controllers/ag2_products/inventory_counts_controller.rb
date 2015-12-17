@@ -326,6 +326,7 @@ module Ag2Products
       @stores = stores_dropdown
       @families = families_dropdown
       @products = products_dropdown
+      @products_table = products_dropdown
   
       respond_to do |format|
         format.html # new.html.erb
@@ -345,6 +346,7 @@ module Ag2Products
         @families = ProductFamily.by_store(@inventory_count.store)
         @products = @inventory_count.store.products.order(:product_code)
       end
+      @products_table = @inventory_count.products
     end
   
     # POST /inventory_counts
@@ -371,8 +373,14 @@ module Ag2Products
     # PUT /inventory_counts/1
     # PUT /inventory_counts/1.json
     def update
+=begin
       @breadcrumb = 'update'
       @inventory_count = InventoryCount.find(params[:id])
+      @inventory_count.assign_attributes(params[:inventory_count])
+      if !@inventory_count.changed?
+        return
+      end
+      
       @inventory_count.updated_by = current_user.id if !current_user.nil?
   
       respond_to do |format|
@@ -391,6 +399,54 @@ module Ag2Products
           end
           format.html { render action: "edit" }
           format.json { render json: @inventory_count.errors, status: :unprocessable_entity }
+        end
+      end
+=end
+      @breadcrumb = 'update'
+      @inventory_count = InventoryCount.find(params[:id])
+
+      items_changed = false
+      params[:inventory_count][:inventory_count_items_attributes].values.each do |new_item|
+        current_item = InventoryCountItem.find(new_item[:id]) rescue nil
+        if (current_item.nil?) || ((current_item.product_id != new_item[:product_id].to_i) || (current_item.quantity.to_f != new_item[:quantity].to_f))
+          items_changed = true
+          break
+        end
+      end
+      master_changed = false
+      if ((params[:inventory_count][:count_date].to_date != @inventory_count.count_date) ||
+          (params[:inventory_count][:count_no].to_s != @inventory_count.count_no) ||
+          (params[:inventory_count][:remarks].to_s != @inventory_count.remarks) ||
+          (params[:inventory_count][:inventory_count_type_id].to_i != @inventory_count.inventory_count_type_id.to_i) ||
+          (params[:inventory_count][:store_id].to_i != @inventory_count.store_id.to_i) ||
+          (params[:inventory_count][:product_family_id].to_i != @inventory_count.product_family_id.to_i) ||
+          (params[:inventory_count][:organization_id].to_i != @inventory_count.organization_id.to_i))
+        master_changed = true
+      end
+      #@inventory_count.inventory_count_items.assign_attributes(params[:inventory_count][:inventory_count_items_attributes])
+
+      respond_to do |format|
+        if master_changed || items_changed
+          @inventory_count.updated_by = current_user.id if !current_user.nil?
+          if @inventory_count.update_attributes(params[:inventory_count])
+            format.html { redirect_to @inventory_count,
+                          notice: (crud_notice('updated', @inventory_count) + "#{undo_link(@inventory_count)}").html_safe }
+            format.json { head :no_content }
+          else
+            @stores = @inventory_count.organization.blank? ? stores_dropdown : @inventory_count.organization.stores.order(:name)
+            if @inventory_count.store.blank?
+              @families = @inventory_count.organization.blank? ? families_dropdown : @inventory_count.organization.product_families.order(:family_code)
+              @products = @inventory_count.organization.blank? ? products_dropdown : @inventory_count.organization.products.order(:product_code)
+            else
+              @families = ProductFamily.by_store(@inventory_count.store)
+              @products = @inventory_count.store.products.order(:product_code)
+            end
+            format.html { render action: "edit" }
+            format.json { render json: @inventory_count.errors, status: :unprocessable_entity }
+          end
+        else
+          format.html { redirect_to @inventory_count }
+          format.json { head :no_content }
         end
       end
     end

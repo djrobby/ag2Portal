@@ -9,6 +9,47 @@
     _s = $('#inventory_count_store_id :selected').val();
     if (_s == "") _s = "0";
 
+    // Icon inside text field: Edit
+    $('input.iconify_item').wrap('<span class="editicon" />').after($('<span/>').click(function() {
+      alert($(this).closest('tr').find('.fnt-product').val());
+      
+      // preserve the current object
+      var _this = (this);
+      // Remove wrap
+      $(this).unwrap();
+      // Replace input with select
+      $(this).closest('tr').find('.fnt-product').replaceWith('<select class="isel2 fnt-product"></select>');     
+
+      // make a POST call and fill select
+      var org = $('select#inventory_count_organization_id :selected').val();
+      if (org == "")
+        org = "0";
+      jQuery.getJSON('ic_update_from_organization/' + org, function(data) {
+        var prods = data.product
+        // Product
+        $(_this).closest('tr').find('.fnt-product').append($('<option></option>').val("").html(""));
+        if (!prods.length) {
+          $.each(data, function(id, option) {
+            if (id == 'product' && option != "") {
+              $(_this).closest('tr').find('.fnt-product').append($('<option></option>').val(option[0]).html(option[1] + " " + option[2]));
+            }
+          });
+        } else {
+          $.each(prods, function(id, option) {
+            $(_this).closest('tr').find('.fnt-product').append($('<option></option>').val(option[0]).html(option[1] + " " + option[2]));
+          });
+        }
+      });
+      // Apply select2
+      $(this).closest('tr').find('.fnt-product').select2({
+        formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+        dropdownCssClass: 'shrinked',
+        dropdownAutoWidth: true,
+        containerCssClass: 'sub-select2-field'
+      });
+      return false;
+    }));
+
     $('.isel2').select2({
       formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
       dropdownCssClass: 'shrinked',
@@ -97,7 +138,6 @@
 
 <table id="items-table" class="table table-condensed table-striped shrinked fixed">
   <!-- product -->
-  <col width="0%" />
   <col width="50%" />
   <!-- initial -->
   <col width="15%" />
@@ -116,8 +156,7 @@
   <tbody>
     <%= f.simple_fields_for :inventory_count_items, defaults: { input_html: { class: 'sub-form' } } do |i| %>
     <tr class="fields">
-      <td><%= i.input :product_id, label: false, wrapper: false, as: :hidden, input_html: { class: 'iconify_item sub-alfanumeric-text-field sub-disabled-field fnt-product' } %></td>
-      <td><%= i.input :thing, readonly: true, label: false, wrapper: false, as: :string, input_html: { value: (i.object.product.full_name if i.object.product_id), class: 'iconify_item sub-alfanumeric-text-field sub-disabled-field fnt-product' } %></td>
+      <td><%= i.input :product_id, readonly: true, label: false, wrapper: false, as: :string, input_html: { value: (i.object.product_id if i.object.product_id), class: 'iconify_item sub-alfanumeric-text-field sub-disabled-field fnt-product' } %></td>
       <td><%= i.input :initial, readonly: true, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.initial, precision: 4) if i.object.initial), class: 'sub-number-text-field sub-disabled-field fnt-initial' } %></td>
       <td><%= i.input :current, readonly: true, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.current, precision: 4) if i.object.current), class: 'sub-number-text-field sub-disabled-field fnt-current' } %></td>
       <td><%= i.input :quantity, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.quantity, precision: 4) if i.object.quantity), class: 'sub-number-text-field fnt-quantity' } %></td>

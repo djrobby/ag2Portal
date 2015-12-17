@@ -1,7 +1,8 @@
 class InventoryCountItem < ActiveRecord::Base
   belongs_to :inventory_count
   belongs_to :product
-  attr_accessible :quantity, :inventory_count_id, :product_id, :initial, :current
+  attr_accessor :thing
+  attr_accessible :quantity, :inventory_count_id, :product_id, :initial, :current, :thing
 
   has_paper_trail
 
