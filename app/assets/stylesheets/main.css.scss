@@ -427,6 +427,24 @@ span.generateicon span {
 span.generateicon input {
   padding-right: 16px;
 }
+/* Edit button */
+span.editicon {
+  position: relative;
+}
+span.editicon span {
+  position: absolute;
+  display: block;
+  top: 1px;
+  right: 2px;
+  width: 14px;
+  height: 14px;
+  z-index: 1;
+  background: url('icon/glyph/black/halflings/pencil14.png');
+  cursor: pointer;
+}
+span.editicon input {
+  padding-right: 14px;
+}
 
 /*
  * Bands - Toolbars
