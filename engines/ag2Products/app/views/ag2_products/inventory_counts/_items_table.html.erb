@@ -108,7 +108,7 @@
   <!-- button -->
   <col width="5%" />
   <thead>
-    <%= render 'items_header' %>
+    <%= render 'items_table_header' %>
   </thead>
   <tfoot>
     <%= render 'items_table_footer', f: f %>
@@ -116,8 +116,8 @@
   <tbody>
     <%= f.simple_fields_for :inventory_count_items, defaults: { input_html: { class: 'sub-form' } } do |i| %>
     <tr class="fields">
-      <td><%= i.input :product_id, label: false, wrapper: false, as: :hidden, input_html: { class: 'iconify_item sub-alfanumeric-text-field sub-disabled-field fnt-product' } %></td>
-      <td><%= i.input :thing, readonly: true, label: false, wrapper: false, as: :string, input_html: { value: (i.object.product.full_name if i.object.product_id), class: 'iconify_item sub-alfanumeric-text-field sub-disabled-field fnt-product' } %></td>
+      <td><%= i.input :product_id, label: false, wrapper: false, as: :hidden, input_html: { class: 'sub-alfanumeric-text-field sub-disabled-field fnt-product' } %></td>
+      <td><%= i.input :thing, readonly: true, label: false, wrapper: false, as: :string, input_html: { value: (i.object.product.full_name if i.object.product_id), class: 'iconify_item sub-alfanumeric-text-field sub-disabled-field fnt-thing' } %></td>
       <td><%= i.input :initial, readonly: true, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.initial, precision: 4) if i.object.initial), class: 'sub-number-text-field sub-disabled-field fnt-initial' } %></td>
       <td><%= i.input :current, readonly: true, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.current, precision: 4) if i.object.current), class: 'sub-number-text-field sub-disabled-field fnt-current' } %></td>
       <td><%= i.input :quantity, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.quantity, precision: 4) if i.object.quantity), class: 'sub-number-text-field fnt-quantity' } %></td>
