@@ -1,6 +1,7 @@
 <script>
   var _f = '';
   var _s = '';
+  var _org = '';
   
   $(document).ready(function() {
     /*
@@ -12,7 +13,38 @@
     _s = $('#inventory_count_store_id :selected').val();
     if (_s == "") _s = "0";
     // Product
-    init();
+    //init();
+
+    // Fill fnt-product (convert to select2 and paginate)
+    _org = $('select#inventory_count_organization_id :selected').val();
+    if (_org == "") _org = "0";
+    $("#fnt-product").select2({
+      placeholder: "Search for a product",
+      minimumInputLength: 1,
+      ajax: {
+        url: 'ic_products_from_organization',
+        dataType: 'json',
+        quietMillis: 300,
+        data: function (search, page) {
+          return {
+            term: search,
+            page_limit: '<%= per_page %>',
+            page: page,
+            org: _org
+          };
+        },
+        results: function (data, page) {
+          var per_page = '<%= per_page %>';
+          var more = (page * per_page) < data.total;
+          return {
+            results: data.products,
+            more: more
+          };
+        }
+      },
+      formatResult: productFormatResult,
+      formatSelection: productFormatSelection 
+    });
 
     // Set focus
     $(".modal").on('shown', function() {
@@ -27,7 +59,8 @@
       var _this = (this);
       // make a POST call and replace the content
       var tbl = false;
-      var product = $('select#fnt-product :selected').val();
+      //var product = $('select#fnt-product :selected').val();
+      var product = $('#fnt-product').val();
       if (typeof product === "undefined") {
         tbl = true;
         product = $(this).closest('tr').find('select.fnt-product :selected').val();
@@ -91,6 +124,28 @@
     }
   });
 
+  // Format select2 product results 
+  function productFormatResult(product) {
+      var markup = "<table><tr>";
+      markup += "<td>" + product[1] + ' ' + product[2] + "</td>";
+      markup += "</tr></table>"
+/*      
+      if ( user.uid !== null) {
+           markup += "<td class='movie-image'><img src='" + user.avatar + "'/></td>";
+      }
+      else if (user.uid == null) {
+          var gravatar = user.avatar + 40
+           markup += "<td class='movie-image'><img src='" + gravatar + "'/></td>";
+       }
+*/  
+  
+      markup = product[1] + ' ' + product[2];
+      return markup;
+  }
+  // Format select2 product selection 
+  function productFormatSelection(product) {
+      return (product[1] + ' ' + product[2]);
+  }
   // Initialize
   function init() {
     // make a POST call and replace the content
@@ -126,6 +181,7 @@
     <span class="shrinked"><%= I18n.t(:mandatory_subtitle) %></span>
   </div>
   <div class="modal-body">
+    <!--<input type="hidden" id="fnt-product" class: 'x-large-text-field  field'/>-->
     <%= f.input :product, input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-product', data: { validation: "required", "validation-error-msg" => "#{e}" } }, label_html: { class: 'form-label' } %>
     <%= f.input :initial, readonly: true, as: :string, input_html: { value: (number_with_precision(f.object.initial, precision: 4) if f.object.initial), class: 'mid-text-field number-text-field sub-disabled-field field', id: 'fnt-initial' }, label_html: { class: 'form-label' } %>
     <%= f.input :current, readonly: true, as: :string, input_html: { value: (number_with_precision(f.object.current, precision: 4) if f.object.current), class: 'mid-text-field number-text-field sub-disabled-field field', id: 'fnt-current' }, label_html: { class: 'form-label' } %>

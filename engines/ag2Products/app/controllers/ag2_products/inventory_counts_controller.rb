@@ -11,7 +11,8 @@ module Ag2Products
                                                :ic_generate_no,
                                                :ic_approve_count,
                                                :ic_update_from_product_store,
-                                               :ic_update_from_organization]
+                                               :ic_update_from_organization,
+                                               :ic_products_from_organization]
     # Helper methods for
     # => allow edit (hide buttons)
     helper_method :cannot_edit
@@ -247,6 +248,26 @@ module Ag2Products
       render json: @json_data
     end
 
+    def ic_products_from_organization
+      organization = params[:org]
+      if organization != '0'
+        @organization = Organization.find(organization)
+        @products = @organization.blank? ? products_dropdown : @organization.products.order(:product_code)
+      else
+        @products = products_dropdown
+      end
+      if params[:term]
+        @products = @products.where("product_code LIKE ? OR main_description LIKE ?", "%#{params[:term]}%", "%#{params[:term]}%")
+      end
+      # Products paginate
+      @products = @products.paginate(:page => params[:page], :per_page => per_page)
+      @products_dropdown = products_array(@products)
+      # Returns JSON
+      render json: { :products => @products_dropdown,
+                     :total => @products.count,
+                     :links => { :self => @products.current_page , :next => @products.next_page} }
+    end
+
     #
     # Default Methods
     #
@@ -346,7 +367,7 @@ module Ag2Products
         @families = ProductFamily.by_store(@inventory_count.store)
         @products = @inventory_count.store.products.order(:product_code)
       end
-      @products_table = @inventory_count.products
+      #@products = @products.paginate(:page => params[:page], :per_page => per_page)
     end
   
     # POST /inventory_counts
