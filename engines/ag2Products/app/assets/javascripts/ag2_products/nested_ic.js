@@ -119,7 +119,7 @@ var ic_rowBuilder = function() {
                 // Add hidden column to row
                 td = $('<td/>').append(hid);
                 td.appendTo(newRow);
-                // Add new column to row
+                // Add new column
                 td = $('<td/>').append(txt);
               } else {
                 // If it isn't a select2 select, change class
@@ -131,7 +131,7 @@ var ic_rowBuilder = function() {
                 $(this).removeAttr('class');
                 $(this).removeAttr('id');
                 $(this).addClass(css);
-                // Add new column to row
+                // Add new column
                 td = $('<td/>').append($(this));
                 // If destroy field, add delete link also
                 if (id.indexOf("_destroy") != -1) {
