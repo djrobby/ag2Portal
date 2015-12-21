@@ -115,7 +115,7 @@ var or_w_rowBuilder = function() {
               if ($(this).hasClass('fsel2')) {
                 // If it's a select2 select, convert to new text inputs
                 hid = '<input class="sub-alfanumeric-text-field sub-disabled-field ' + id + '" type="text" name="' + $(this).attr('name') + '" value="' + $(this).val() + '">';
-                txt = '<input class="iconify_item sub-alfanumeric-text-field sub-disabled-field fnt-thing" type="text" value="' + $("option:selected", this).text() + '">';
+                txt = '<input class="iconify_item sub-alfanumeric-text-field sub-disabled-field fnt-thing" type="text" value="' + $("option:selected", this).text() + '" readonly>';
                 // Add hidden column to row
                 td = $('<td/>').append(hid);
                 td.appendTo(newRow);

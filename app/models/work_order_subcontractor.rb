@@ -2,7 +2,8 @@ class WorkOrderSubcontractor < ActiveRecord::Base
   belongs_to :work_order
   belongs_to :supplier
   belongs_to :purchase_order
-  attr_accessible :enforcement_pct, :work_order_id, :supplier_id, :purchase_order_id
+  attr_accessor :thing_supplier, :thing_order
+  attr_accessible :enforcement_pct, :work_order_id, :supplier_id, :purchase_order_id, :thing_supplier, :thing_order
 
   has_paper_trail
 

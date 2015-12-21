@@ -1,4 +1,7 @@
 <tr>
+  <% if @breadcrumb == 'create' || @breadcrumb == 'update' %>
+  <th></th>
+  <% end %>
   <th><%= t "activerecord.attributes.work_order_vehicle.vehicle" %></th>
   <th align="right"><%= t "activerecord.attributes.work_order_vehicle.distance" %></th>
   <th align="right"><%= t "activerecord.attributes.work_order_vehicle.cost" %></th>

@@ -1,7 +1,8 @@
 class WorkOrderTool < ActiveRecord::Base
   belongs_to :work_order
   belongs_to :tool
-  attr_accessible :cost, :minutes, :work_order_id, :tool_id
+  attr_accessor :thing
+  attr_accessible :cost, :minutes, :work_order_id, :tool_id, :thing
 
   has_paper_trail
 

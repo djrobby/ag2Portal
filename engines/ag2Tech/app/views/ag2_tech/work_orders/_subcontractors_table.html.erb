@@ -151,8 +151,10 @@
 
 <table id="subcontractors-table" class="table table-condensed table-striped shrinked fixed">
   <!-- supplier -->
+  <col width="0%" />
   <col width="40%" />
   <!-- purchase_order -->
+  <col width="0%" />
   <col width="20%" />
   <!-- enforcement_pct -->
   <col width="11%" />
@@ -171,8 +173,10 @@
   <tbody>
     <%= f.simple_fields_for :work_order_subcontractors, defaults: { input_html: { class: 'sub-form' } } do |i| %>
     <tr class="fields">
-      <td><%= i.association :supplier, label: false, wrapper: false, collection: @suppliers, input_html: { class: 'ssel2 fnt-supplier' } %></td>
-      <td><%= i.association :purchase_order, label: false, wrapper: false, collection: @orders, input_html: { class: 'ssel2 fnt-purchase-order' } %></td>
+      <td><%= i.input :supplier_id, label: false, wrapper: false, as: :hidden, input_html: { class: 'sub-alfanumeric-text-field sub-disabled-field fnt-supplier' } %></td>
+      <td><%= i.input :thing_supplier, readonly: true, label: false, wrapper: false, as: :string, input_html: { value: (i.object.supplier.full_name if i.object.supplier_id), class: 'iconify_item sub-alfanumeric-text-field sub-disabled-field fnt-thing' } %></td>
+      <td><%= i.input :purchase_order_id, label: false, wrapper: false, as: :hidden, input_html: { class: 'sub-alfanumeric-text-field sub-disabled-field fnt-purchase-order' } %></td>
+      <td><%= i.input :thing_order, readonly: true, label: false, wrapper: false, as: :string, input_html: { value: (i.object.purchase_order.full_name if i.object.purchase_order_id), class: 'iconify_item sub-alfanumeric-text-field sub-disabled-field fnt-thing' } %></td>
       <td><%= i.input :enforcement_pct, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.enforcement_pct, precision: 2) if i.object.enforcement_pct), class: 'sub-number-text-field fnt-enforcement-pct' } %></td>
       <td><%= i.input :cost, disabled: true, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.cost, precision: 4) if i.object.cost), class: 'sub-number-text-field fnt-costsub' } %></td>
       <td><%= i.input :costs, disabled: true, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.costs, precision: 4) if i.object.costs), class: 'sub-number-text-field sub-disabled-field fnt-costssub' } %></td>

@@ -1,5 +1,11 @@
 <tr>
+  <% if @breadcrumb == 'create' || @breadcrumb == 'update' %>
+  <th></th>
+  <% end %>
   <th><%= t "activerecord.attributes.work_order_subcontractor.supplier" %></th>
+  <% if @breadcrumb == 'create' || @breadcrumb == 'update' %>
+  <th></th>
+  <% end %>
   <th><%= t "activerecord.attributes.work_order_subcontractor.purchase_order" %></th>
   <th align="right"><%= t "activerecord.attributes.work_order_subcontractor.enforcement_pct" %></th>
   <th align="right"><%= t "activerecord.attributes.work_order_subcontractor.cost" %></th>

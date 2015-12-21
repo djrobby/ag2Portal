@@ -1,7 +1,8 @@
 class WorkOrderWorker < ActiveRecord::Base
   belongs_to :work_order
   belongs_to :worker
-  attr_accessible :cost, :hours, :work_order_id, :worker_id
+  attr_accessor :thing
+  attr_accessible :cost, :hours, :work_order_id, :worker_id, :thing
 
   has_paper_trail
 

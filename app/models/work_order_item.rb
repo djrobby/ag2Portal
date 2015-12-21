@@ -3,8 +3,9 @@ class WorkOrderItem < ActiveRecord::Base
   belongs_to :product
   belongs_to :tax_type
   belongs_to :store
+  attr_accessor :thing
   attr_accessible :cost, :description, :price, :quantity,
-                  :work_order_id, :product_id, :tax_type_id, :store_id
+                  :work_order_id, :product_id, :tax_type_id, :store_id, :thing
 
   has_paper_trail
 

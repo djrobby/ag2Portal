@@ -1,4 +1,7 @@
 <tr>
+  <% if @breadcrumb == 'create' || @breadcrumb == 'update' %>
+  <th></th>
+  <% end %>
   <th><%= t "activerecord.attributes.budget_item.charge_account_c" %></th>
   <th align="right"><%= t "activerecord.attributes.budget_item.month_01_c" %></th>
   <th align="right"><%= t "activerecord.attributes.budget_item.month_02_c" %></th>

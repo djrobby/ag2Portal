@@ -1,7 +1,8 @@
 class WorkOrderVehicle < ActiveRecord::Base
   belongs_to :work_order
   belongs_to :vehicle
-  attr_accessible :cost, :distance, :work_order_id, :vehicle_id
+  attr_accessor :thing
+  attr_accessible :cost, :distance, :work_order_id, :vehicle_id, :thing
 
   has_paper_trail
 

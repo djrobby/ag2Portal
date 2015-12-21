@@ -125,6 +125,7 @@
 
 <table id="workers-table" class="table table-condensed table-striped shrinked fixed">
   <!-- worker -->
+  <col width="0%" />
   <col width="60%" />
   <!-- hours -->
   <col width="11%" />
@@ -143,7 +144,8 @@
   <tbody>
     <%= f.simple_fields_for :work_order_workers, defaults: { input_html: { class: 'sub-form' } } do |i| %>
     <tr class="fields">
-      <td><%= i.association :worker, label: false, wrapper: false, collection: @workers, input_html: { class: 'wsel2 fnt-worker' } %></td>
+      <td><%= i.input :worker_id, label: false, wrapper: false, as: :hidden, input_html: { class: 'sub-alfanumeric-text-field sub-disabled-field fnt-worker' } %></td>
+      <td><%= i.input :thing, readonly: true, label: false, wrapper: false, as: :string, input_html: { value: (i.object.worker.full_name if i.object.worker_id), class: 'iconify_item sub-alfanumeric-text-field sub-disabled-field fnt-thing' } %></td>
       <td><%= i.input :hours, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.hours, precision: 4) if i.object.hours), class: 'sub-number-text-field fnt-hours' } %></td>
       <td><%= i.input :cost, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.cost, precision: 4) if i.object.cost), class: 'sub-number-text-field fnt-costw' } %></td>
       <td><%= i.input :costs, disabled: true, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.costs, precision: 4) if i.object.costs), class: 'sub-number-text-field sub-disabled-field fnt-costsw' } %></td>

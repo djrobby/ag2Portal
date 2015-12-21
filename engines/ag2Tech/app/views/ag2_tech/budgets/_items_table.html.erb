@@ -270,6 +270,7 @@
 
 <table id="items-table" class="table table-condensed table-striped shrinked fixed">
   <!-- account -->
+  <col width="0%" />
   <col width="11%" />
   <!-- month01 -->
   <col width="6%" />
@@ -310,7 +311,8 @@
   <tbody>
     <%= f.simple_fields_for :budget_items, defaults: { input_html: { class: 'sub-form' } } do |i| %>
     <tr class="fields">
-      <td><%= i.association :charge_account, label: false, wrapper: false, collection: @charge_accounts, input_html: { class: 'isel2 fnt-account' } %></td>
+      <td><%= i.input :charge_account_id, label: false, wrapper: false, as: :hidden, input_html: { class: 'sub-alfanumeric-text-field sub-disabled-field fnt-account' } %></td>
+      <td><%= i.input :thing, readonly: true, label: false, wrapper: false, as: :string, input_html: { value: (i.object.charge_account.full_name if i.object.charge_account_id), class: 'iconify_item sub-alfanumeric-text-field sub-disabled-field fnt-thing' } %></td>
       <td><%= i.input :month_01, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.month_01, precision: 4) if i.object.month_01), class: 'sub-number-text-field fnt-month01' } %></td>
       <td><%= i.input :month_02, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.month_02, precision: 4) if i.object.month_02), class: 'sub-number-text-field fnt-month02' } %></td>
       <td><%= i.input :month_03, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.month_03, precision: 4) if i.object.month_03), class: 'sub-number-text-field fnt-month03' } %></td>

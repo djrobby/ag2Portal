@@ -149,6 +149,7 @@
 
 <table id="items-table" class="table table-condensed table-striped shrinked fixed">
   <!-- product -->
+  <col width="0%" />
   <col width="16%" />
   <!-- description -->
   <col width="25%" />
@@ -175,7 +176,8 @@
   <tbody>
     <%= f.simple_fields_for :work_order_items, defaults: { input_html: { class: 'sub-form' } } do |i| %>
     <tr class="fields">
-      <td><%= i.association :product, label: false, wrapper: false, collection: @products, input_html: { class: 'isel2 fnt-product' } %></td>
+      <td><%= i.input :product_id, label: false, wrapper: false, as: :hidden, input_html: { class: 'sub-alfanumeric-text-field sub-disabled-field fnt-product' } %></td>
+      <td><%= i.input :thing, readonly: true, label: false, wrapper: false, as: :string, input_html: { value: (i.object.product.full_name if i.object.product_id), class: 'iconify_item sub-alfanumeric-text-field sub-disabled-field fnt-thing' } %></td>
       <td><%= i.input :description, label: false, wrapper: false, input_html: { onkeyup: "caps(this)", class: 'sub-alfanumeric-text-field fnt-description', maxlength: 40 } %></td>
       <td><%= i.input :quantity, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.quantity, precision: 4) if i.object.quantity), class: 'sub-number-text-field fnt-quantity' } %></td>
       <td><%= i.input :cost, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.cost, precision: 4) if i.object.cost), class: 'sub-number-text-field fnt-cost' } %></td>

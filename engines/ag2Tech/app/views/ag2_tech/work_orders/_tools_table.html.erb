@@ -113,6 +113,7 @@
 
 <table id="tools-table" class="table table-condensed table-striped shrinked fixed">
   <!-- tool -->
+  <col width="0%" />
   <col width="60%" />
   <!-- minutes -->
   <col width="11%" />
@@ -131,7 +132,8 @@
   <tbody>
     <%= f.simple_fields_for :work_order_tools, defaults: { input_html: { class: 'sub-form' } } do |i| %>
     <tr class="fields">
-      <td><%= i.association :tool, label: false, wrapper: false, collection: @tools, input_html: { class: 'tsel2 fnt-tool' } %></td>
+      <td><%= i.input :tool_id, label: false, wrapper: false, as: :hidden, input_html: { class: 'sub-alfanumeric-text-field sub-disabled-field fnt-tool' } %></td>
+      <td><%= i.input :thing, readonly: true, label: false, wrapper: false, as: :string, input_html: { value: (i.object.tool.full_name if i.object.tool_id), class: 'iconify_item sub-alfanumeric-text-field sub-disabled-field fnt-thing' } %></td>
       <td><%= i.input :minutes, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.minutes, precision: 2) if i.object.minutes), class: 'sub-number-text-field fnt-minutes' } %></td>
       <td><%= i.input :cost, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.cost, precision: 4) if i.object.cost), class: 'sub-number-text-field fnt-costt' } %></td>
       <td><%= i.input :costs, disabled: true, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.costs, precision: 4) if i.object.costs), class: 'sub-number-text-field sub-disabled-field fnt-costst' } %></td>
