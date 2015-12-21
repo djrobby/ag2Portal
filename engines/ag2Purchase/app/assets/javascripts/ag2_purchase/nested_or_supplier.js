@@ -140,6 +140,7 @@ var or_w_rowBuilder = function() {
               }
               // Add new column(s) to row
               td.appendTo(newRow);
+            }
 /*
             var id = '';
             var css = '';

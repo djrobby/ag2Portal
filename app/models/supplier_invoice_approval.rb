@@ -3,8 +3,9 @@ class SupplierInvoiceApproval < ActiveRecord::Base
   
   belongs_to :supplier_invoice
   belongs_to :approver, :class_name => 'User'
+  attr_accessor :thing
   attr_accessible :approval_date, :approved_amount, :remarks,
-                  :supplier_invoice_id, :approver_id
+                  :supplier_invoice_id, :approver_id, :thing
 
   has_many :supplier_payments
 

@@ -1,10 +1,16 @@
 <tr>
-  <th><%= t "activerecord.attributes.supplier_invoice_approval.approver" %></th>
-  <th align="center"><%= t "activerecord.attributes.supplier_invoice_approval.approval_date" %></th>
-  <th align="right"><%= t "activerecord.attributes.supplier_invoice_approval.approved_amount" %></th>
-  <th align="right"><%= t "activerecord.attributes.supplier_invoice_approval.paid" %></th>
-  <th><%= t "activerecord.attributes.supplier_invoice_approval.remarks" %></th>
   <% if @breadcrumb == 'create' || @breadcrumb == 'update' %>
-  <th></th>
+    <th></th>
+    <th><%= t "activerecord.attributes.supplier_invoice_approval.approver" %></th>
+    <th><%= t "activerecord.attributes.supplier_invoice_approval.approval_date" %></th>
+    <th align="right"><%= t "activerecord.attributes.supplier_invoice_approval.approved_amount" %></th>
+    <th><%= t "activerecord.attributes.supplier_invoice_approval.remarks" %></th>
+    <th></th>
+  <% else %>
+    <th><%= t "activerecord.attributes.supplier_invoice_approval.approver" %></th>
+    <th align="center"><%= t "activerecord.attributes.supplier_invoice_approval.approval_date" %></th>
+    <th align="right"><%= t "activerecord.attributes.supplier_invoice_approval.approved_amount" %></th>
+    <th align="right"><%= t "activerecord.attributes.supplier_invoice_approval.paid" %></th>
+    <th><%= t "activerecord.attributes.supplier_invoice_approval.remarks" %></th>
   <% end %>
 </tr>

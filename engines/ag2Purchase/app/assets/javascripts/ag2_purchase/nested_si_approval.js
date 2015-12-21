@@ -112,7 +112,7 @@ var si_w_rowBuilder = function() {
             if (this.id.indexOf("s2") == -1) {
               // Setup new field(s)
               id = this.id;
-              if ($(this).hasClass('fsel2')) {
+              if (id == 'fnt-approver') {
                 // If it's a select2 select, convert to new text inputs
                 hid = '<input class="sub-alfanumeric-text-field sub-disabled-field ' + id + '" type="text" name="' + $(this).attr('name') + '" value="' + $(this).val() + '">';
                 txt = '<input class="iconify_item sub-alfanumeric-text-field sub-disabled-field fnt-thing" type="text" value="' + $("option:selected", this).text() + '">';
@@ -141,6 +141,7 @@ var si_w_rowBuilder = function() {
               }
               // Add new column(s) to row
               td.appendTo(newRow);
+            }
 /*
             var id = '';
             var css = '';

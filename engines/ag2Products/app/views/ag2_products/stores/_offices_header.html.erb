@@ -1,4 +1,7 @@
 <tr>
+  <% if @breadcrumb == 'create' || @breadcrumb == 'update' %>
+  <th></th>
+  <% end %>
   <th><%= t "activerecord.attributes.store.name" %></th>
   <% if @breadcrumb == 'create' || @breadcrumb == 'update' %>
   <th></th>

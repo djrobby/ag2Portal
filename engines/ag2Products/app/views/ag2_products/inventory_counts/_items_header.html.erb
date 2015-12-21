@@ -1,4 +1,7 @@
 <tr>
+  <% if @breadcrumb == 'create' || @breadcrumb == 'update' %>
+  <th></th>
+  <% end %>
   <th><%= t "activerecord.attributes.inventory_count_item.product" %></th>
   <th align="right"><%= t "activerecord.attributes.inventory_count_item.initial" %></th>
   <th align="right"><%= t "activerecord.attributes.inventory_count_item.current" %></th>

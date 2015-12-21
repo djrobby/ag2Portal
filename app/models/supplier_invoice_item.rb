@@ -7,10 +7,11 @@ class SupplierInvoiceItem < ActiveRecord::Base
   belongs_to :work_order
   belongs_to :charge_account
   belongs_to :project
+  attr_accessor :thing
   attr_accessible :code, :description, :discount, :discount_pct, :price, :quantity,
                   :supplier_invoice_id, :receipt_note_id, :receipt_note_item_id,
                   :product_id, :tax_type_id, :work_order_id, :charge_account_id,
-                  :project_id
+                  :project_id, :thing
 
   has_paper_trail
 

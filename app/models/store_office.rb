@@ -1,7 +1,8 @@
 class StoreOffice < ActiveRecord::Base
   belongs_to :store
   belongs_to :office
-  attr_accessible :store_id, :office_id
+  attr_accessor :thing
+  attr_accessible :store_id, :office_id, :thing
 
   has_paper_trail
 

@@ -28,6 +28,7 @@
 
 <table id="offices-table" class="table table-condensed table-striped shrinked fixed">
   <!-- supplier -->
+  <col width="0%" />
   <col width="95%" />
   <!-- button -->
   <col width="5%" />
@@ -37,7 +38,8 @@
   <tbody>
     <%= f.simple_fields_for :store_offices, defaults: { input_html: { class: 'sub-form' } } do |i| %>
     <tr class="fields">
-      <td><%= i.association :office, label: false, wrapper: false, collection: @offices, input_html: { class: 'wsel2 fnt-office' } %></td>
+      <td><%= i.input :office_id, label: false, wrapper: false, as: :hidden, input_html: { class: 'sub-alfanumeric-text-field sub-disabled-field fnt-office' } %></td>
+      <td><%= i.input :thing, readonly: true, label: false, wrapper: false, as: :string, input_html: { value: (i.object.office.name if i.object.office_id), class: 'iconify_item sub-alfanumeric-text-field sub-disabled-field fnt-thing' } %></td>
       <% if @breadcrumb == 'create' || @breadcrumb == 'update' %>
       <td><%= link_to_remove_fields('<i class="icon-trash"></i>'.html_safe, i) %></td>
       <% end %>

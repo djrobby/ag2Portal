@@ -8,9 +8,10 @@ class DeliveryNoteItem < ActiveRecord::Base
   belongs_to :work_order
   belongs_to :charge_account
   belongs_to :project
+  attr_accessor :thing
   attr_accessible :cost, :description, :discount, :discount_pct, :price, :quantity,
                   :delivery_note_id, :sale_offer_id, :sale_offer_item_id, :product_id,
-                  :tax_type_id, :store_id, :work_order_id, :charge_account_id, :project_id
+                  :tax_type_id, :store_id, :work_order_id, :charge_account_id, :project_id, :thing
 
   has_many :client_invoice_items
 

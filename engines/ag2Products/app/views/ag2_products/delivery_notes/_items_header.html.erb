@@ -1,4 +1,7 @@
 <tr>
+  <% if @breadcrumb == 'create' || @breadcrumb == 'update' %>
+  <th></th>
+  <% end %>
   <th><%= t "activerecord.attributes.delivery_note_item.product_c" %></th>
   <th><%= t "activerecord.attributes.delivery_note_item.description_c" %></th>
   <th align="right"><%= t "activerecord.attributes.delivery_note_item.quantity_c" %></th>

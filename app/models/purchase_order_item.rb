@@ -8,9 +8,10 @@ class PurchaseOrderItem < ActiveRecord::Base
   belongs_to :store
   belongs_to :work_order
   belongs_to :charge_account
+  attr_accessor :thing
   attr_accessible :code, :delivery_date, :description, :discount, :discount_pct, :quantity, :price,
                   :purchase_order_id, :product_id, :tax_type_id, :project_id,
-                  :store_id, :work_order_id, :charge_account_id
+                  :store_id, :work_order_id, :charge_account_id, :thing
 
   has_many :receipt_note_items
   has_one :purchase_order_item_balance

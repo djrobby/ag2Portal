@@ -112,8 +112,8 @@ var si_rowBuilder = function() {
             if (this.id.indexOf("s2") == -1) {
               // Setup new field(s)
               id = this.id;
-              if ($(this).hasClass('fsel2')) {
-                // If it's a select2 select, convert to new text inputs
+              if ($(this).hasClass('fsel2') && id == 'fnt-product') {
+                // If it's a not editable select2 select, convert to new text inputs
                 hid = '<input class="sub-alfanumeric-text-field sub-disabled-field ' + id + '" type="text" name="' + $(this).attr('name') + '" value="' + $(this).val() + '">';
                 txt = '<input class="iconify_item sub-alfanumeric-text-field sub-disabled-field fnt-thing" type="text" value="' + $("option:selected", this).text() + '">';
                 // Add hidden column to row
@@ -122,7 +122,8 @@ var si_rowBuilder = function() {
                 // Add new column to row
                 td = $('<td/>').append(txt);
               } else {
-                // If it isn't a select2 select, change class
+                // Otherwise, change class
+                if ($(this).hasClass('fsel2')) css = css + ' select isel2';
                 if ($(this).hasClass('number-text-field')) css = css + ' sub-number-text-field';
                 if ($(this).hasClass('sub-disabled-field')) css = css + ' sub-disabled-field';
                 if (css === '') css = css + ' sub-alfanumeric-text-field';
@@ -148,6 +149,7 @@ var si_rowBuilder = function() {
               }
               // Add new column(s) to row
               td.appendTo(newRow);
+            }
 /*
             var id = '';
             var css = '';

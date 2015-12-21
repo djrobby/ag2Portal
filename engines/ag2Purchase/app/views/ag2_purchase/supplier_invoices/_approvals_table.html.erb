@@ -78,6 +78,7 @@
 
 <table id="approvals-table" class="table table-condensed table-striped shrinked fixed">
   <!-- approver -->
+  <col width="0%" />
   <col width="30%" />
   <!-- approval_date -->
   <col width="15%" />
@@ -88,7 +89,7 @@
   <!-- button -->
   <col width="5%" />
   <thead>
-    <%= render 'approvals_table_header' %>
+    <%= render 'approvals_header' %>
   </thead>
   <tfoot>
     <%= render 'approvals_table_footer', f: f %>
@@ -96,7 +97,8 @@
   <tbody>
     <%= f.simple_fields_for :supplier_invoice_approvals, defaults: { input_html: { class: 'sub-form' } } do |i| %>
     <tr class="fields">
-      <td><%= i.association :approver, collection: @users, include_blank: false, readonly: true, label: false, wrapper: false, input_html: { class: 'sub-alfanumeric-text-field sub-disabled-field fnt-approver' } %></td>
+      <td><%= i.input :approver_id, label: false, wrapper: false, as: :hidden, input_html: { class: 'sub-alfanumeric-text-field sub-disabled-field fnt-approver' } %></td>
+      <td><%= i.input :thing, readonly: true, label: false, wrapper: false, as: :string, input_html: { value: (i.object.approver.email if i.object.approver_id), class: 'iconify_item sub-alfanumeric-text-field sub-disabled-field fnt-thing' } %></td>
       <td><%= i.input :approval_date, label: false, wrapper: false, as: :string, start_year: Time.now.year - 100, end_year: Time.now.year + 100, input_html: { value: (i.object.approval_date.strftime("%d/%m/%Y") if i.object.approval_date), class: 'sub-alfanumeric-text-field wdatepicker fnt-approval-date' } %></td>
       <td><%= i.input :approved_amount, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.approved_amount, precision: 4) if i.object.approved_amount), class: 'sub-number-text-field fnt-approved-amount' } %></td>
       <td><%= i.input :remarks, label: false, wrapper: false, input_html: { class: 'sub-alfanumeric-text-field fnt-remarks', maxlength: 40 } %></td>

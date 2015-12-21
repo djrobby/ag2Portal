@@ -1,5 +1,6 @@
 <tr>
   <td></td>
+  <td></td>
   <td align="right"><%= t :"activerecord.attributes.offer_request.quantity" %> | <%= t :"activerecord.attributes.offer_request.subtotal" %></td>
   <td align="right" id="foot-quantity"><%= number_with_precision('0', precision: 4) %></td>
   <td></td>
@@ -9,6 +10,7 @@
 </tr>
 <tr>
   <td></td>
+  <td></td>
   <td align="right"><%= t :"activerecord.attributes.offer_request.bonus" %> | <%= t :"activerecord.attributes.offer_request.taxable" %> | <%= t :"activerecord.attributes.offer_request.taxes" %></td>
   <td align="right"><%= f.input :discount_pct, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(f.object.discount_pct, precision: 2) if f.object.discount_pct), class: 'sub-number-text-field' } %></td>
   <td align="right" id="foot-discount"><%= number_with_precision('0', precision: 4) %></td>
@@ -17,6 +19,7 @@
   <td></td>
 </tr>
 <tr class="totals">
+  <td></td>
   <td><a id="icon-new-btn" href="#" onclick="javascript:$('.fnt-new-btn').click(); return false;"><i class="icon-plus"></i></a></td>
   <td align="right"><%= t :"activerecord.attributes.offer_request.total" %></td>
   <td></td>
