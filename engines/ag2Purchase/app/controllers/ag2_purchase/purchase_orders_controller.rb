@@ -582,30 +582,6 @@ module Ag2Purchase
     # PUT /purchase_orders/1
     # PUT /purchase_orders/1.json
     def update
-=begin
-      @breadcrumb = 'update'
-      @purchase_order = PurchaseOrder.find(params[:id])
-      @purchase_order.updated_by = current_user.id if !current_user.nil?
-  
-      respond_to do |format|
-        if @purchase_order.update_attributes(params[:purchase_order])
-          format.html { redirect_to @purchase_order,
-                        notice: (crud_notice('updated', @purchase_order) + "#{undo_link(@purchase_order)}").html_safe }
-          format.json { head :no_content }
-        else
-          @offers = @purchase_order.supplier.blank? ? offers_dropdown : @purchase_order.supplier.offers.order(:supplier_id, :offer_no, :id)
-          @projects = projects_dropdown_edit(@purchase_order.project)
-          @work_orders = @purchase_order.project.blank? ? work_orders_dropdown : @purchase_order.project.work_orders.order(:order_no)
-          @charge_accounts = work_order_charge_account(@purchase_order)
-          @stores = work_order_store(@purchase_order)
-          @suppliers = @purchase_order.organization.blank? ? suppliers_dropdown : @purchase_order.organization.suppliers(:supplier_code)
-          @payment_methods = @purchase_order.organization.blank? ? payment_methods_dropdown : payment_payment_methods(@purchase_order.organization_id)
-          @products = @purchase_order.organization.blank? ? products_dropdown : @purchase_order.organization.products(:product_code)
-          format.html { render action: "edit" }
-          format.json { render json: @purchase_order.errors, status: :unprocessable_entity }
-        end
-      end
-=end
       @breadcrumb = 'update'
       @purchase_order = PurchaseOrder.find(params[:id])
 
@@ -613,19 +589,19 @@ module Ag2Purchase
       params[:purchase_order][:purchase_order_items_attributes].values.each do |new_item|
         current_item = PurchaseOrderItem.find(new_item[:id]) rescue nil
         if ((current_item.nil?) || (new_item[:_destroy] != "false") ||
-           ((current_item.product_id != new_item[:product_id].to_i) ||
+           ((current_item.product_id.to_i != new_item[:product_id].to_i) ||
             (current_item.description != new_item[:description]) ||
             (current_item.code != new_item[:code]) ||
             (current_item.quantity.to_f != new_item[:quantity].to_f) ||
             (current_item.price.to_f != new_item[:price].to_f) ||
             (current_item.discount_pct.to_f != new_item[:discount_pct].to_f) ||
             (current_item.discount.to_f != new_item[:discount].to_f) ||
-            (current_item.tax_type_id != new_item[:tax_type_id].to_i) ||
+            (current_item.tax_type_id.to_i != new_item[:tax_type_id].to_i) ||
             (current_item.delivery_date != new_item[:delivery_date].to_date) ||
-            (current_item.project_id != new_item[:project_id].to_i) ||
-            (current_item.work_order_id != new_item[:work_order_id].to_i) ||
-            (current_item.charge_account_id != new_item[:charge_account_id].to_i) ||
-            (current_item.store_id != new_item[:store_id].to_i)))
+            (current_item.project_id.to_i != new_item[:project_id].to_i) ||
+            (current_item.work_order_id.to_i != new_item[:work_order_id].to_i) ||
+            (current_item.charge_account_id.to_i != new_item[:charge_account_id].to_i) ||
+            (current_item.store_id.to_i != new_item[:store_id].to_i)))
           items_changed = true
           break
         end

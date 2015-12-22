@@ -394,35 +394,6 @@ module Ag2Products
     # PUT /inventory_counts/1
     # PUT /inventory_counts/1.json
     def update
-=begin
-      @breadcrumb = 'update'
-      @inventory_count = InventoryCount.find(params[:id])
-      @inventory_count.assign_attributes(params[:inventory_count])
-      if !@inventory_count.changed?
-        return
-      end
-      
-      @inventory_count.updated_by = current_user.id if !current_user.nil?
-  
-      respond_to do |format|
-        if @inventory_count.update_attributes(params[:inventory_count])
-          format.html { redirect_to @inventory_count,
-                        notice: (crud_notice('updated', @inventory_count) + "#{undo_link(@inventory_count)}").html_safe }
-          format.json { head :no_content }
-        else
-          @stores = @inventory_count.organization.blank? ? stores_dropdown : @inventory_count.organization.stores.order(:name)
-          if @inventory_count.store.blank?
-            @families = @inventory_count.organization.blank? ? families_dropdown : @inventory_count.organization.product_families.order(:family_code)
-            @products = @inventory_count.organization.blank? ? products_dropdown : @inventory_count.organization.products.order(:product_code)
-          else
-            @families = ProductFamily.by_store(@inventory_count.store)
-            @products = @inventory_count.store.products.order(:product_code)
-          end
-          format.html { render action: "edit" }
-          format.json { render json: @inventory_count.errors, status: :unprocessable_entity }
-        end
-      end
-=end
       @breadcrumb = 'update'
       @inventory_count = InventoryCount.find(params[:id])
 
@@ -456,8 +427,8 @@ module Ag2Products
                           notice: (crud_notice('updated', @inventory_count) + "#{undo_link(@inventory_count)}").html_safe }
             format.json { head :no_content }
           else
-            @stores = @inventory_count.organization.blank? ? stores_dropdown : @inventory_count.organization.stores.order(:name)
-            if @inventory_count.store.blank?
+            @stores = stores_dropdown
+            if @inventory_count.store.blank? || @inventory_count.inventory_count_type_id == 1
               @families = @inventory_count.organization.blank? ? families_dropdown : @inventory_count.organization.product_families.order(:family_code)
               @products = @inventory_count.organization.blank? ? products_dropdown : @inventory_count.organization.products.order(:product_code)
             else

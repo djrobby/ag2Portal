@@ -635,43 +635,6 @@ module Ag2Products
     # PUT /receipt_notes/1
     # PUT /receipt_notes/1.json
     def update
-=begin
-      @breadcrumb = 'update'
-      @receipt_note = ReceiptNote.find(params[:id])
-      @receipt_note.updated_by = current_user.id if !current_user.nil?
-      # Should use attachment from drag&drop?
-      if $attachment != nil && !$attachment.avatar.blank? && $attachment.updated_at > @receipt_note.updated_at
-        @receipt_note.attachment = $attachment.avatar
-      end
-  
-      respond_to do |format|
-        if @receipt_note.update_attributes(params[:receipt_note])
-          destroy_attachment
-          $attachment = nil
-          format.html { redirect_to @receipt_note,
-                        notice: (crud_notice('updated', @receipt_note) + "#{undo_link(@receipt_note)}").html_safe }
-          format.json { head :no_content }
-        else
-          destroy_attachment
-          $attachment = Attachment.new
-          @orders = @receipt_note.supplier.blank? ? orders_dropdown : @receipt_note.supplier.purchase_orders.undelivered(@receipt_note.organization_id, true)
-          @projects = projects_dropdown_edit(@receipt_note.project)
-          @work_orders = @receipt_note.project.blank? ? work_orders_dropdown : @receipt_note.project.work_orders.order(:order_no)
-          @charge_accounts = work_order_charge_account(@receipt_note)
-          @stores = work_order_store(@receipt_note)
-          @suppliers = @receipt_note.organization.blank? ? suppliers_dropdown : @receipt_note.organization.suppliers(:supplier_code)
-          @payment_methods = @receipt_note.organization.blank? ? payment_methods_dropdown : payment_payment_methods(@receipt_note.organization_id)
-          @order_items = @receipt_note.purchase_order.blank? ? [] : order_items_dropdown(@receipt_note.purchase_order)
-          if @order_items.blank?
-            @products = @receipt_note.organization.blank? ? products_dropdown : @receipt_note.organization.products(:product_code)
-          else
-            @products = @order_items.first.products.group(:product_code)
-          end
-          format.html { render action: "edit" }
-          format.json { render json: @receipt_note.errors, status: :unprocessable_entity }
-        end
-      end
-=end
       @breadcrumb = 'update'
       @receipt_note = ReceiptNote.find(params[:id])
 
@@ -742,7 +705,7 @@ module Ag2Products
             if @order_items.blank?
               @products = @receipt_note.organization.blank? ? products_dropdown : @receipt_note.organization.products(:product_code)
             else
-              @products = @order_items.first.products.group(:product_code)
+              @products = @order_items.first.purchase_order.products.group(:product_code)
             end
             format.html { render action: "edit" }
             format.json { render json: @receipt_note.errors, status: :unprocessable_entity }

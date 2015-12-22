@@ -449,30 +449,6 @@ module Ag2Products
     # PUT /delivery_notes/1
     # PUT /delivery_notes/1.json
     def update
-=begin
-      @breadcrumb = 'update'
-      @delivery_note = DeliveryNote.find(params[:id])
-      @delivery_note.updated_by = current_user.id if !current_user.nil?
-  
-      respond_to do |format|
-        if @delivery_note.update_attributes(params[:delivery_note])
-          format.html { redirect_to @delivery_note,
-                        notice: (crud_notice('updated', @delivery_note) + "#{undo_link(@delivery_note)}").html_safe }
-          format.json { head :no_content }
-        else
-          @offers = @delivery_note.client.blank? ? offers_dropdown : @delivery_note.client.sale_offers.order(:client_id, :offer_no, :id)
-          @projects = projects_dropdown_edit(@purchase_order.project)
-          @work_orders = @delivery_note.project.blank? ? work_orders_dropdown : @delivery_note.project.work_orders.order(:order_no)
-          @charge_accounts = work_order_charge_account(@delivery_note)
-          @stores = work_order_store(@delivery_note)
-          @clients = @delivery_note.organization.blank? ? clients_dropdown : @delivery_note.organization.clients.order(:client_code)
-          @payment_methods = @delivery_note.organization.blank? ? payment_methods_dropdown : collection_payment_methods(@delivery_note.organization_id)
-          @products = @delivery_note.organization.blank? ? products_dropdown : @delivery_note.organization.products.order(:product_code)
-          format.html { render action: "edit" }
-          format.json { render json: @delivery_note.errors, status: :unprocessable_entity }
-        end
-      end
-=end
       @breadcrumb = 'update'
       @delivery_note = DeliveryNote.find(params[:id])
 
@@ -521,7 +497,7 @@ module Ag2Products
             format.json { head :no_content }
           else
             @offers = @delivery_note.client.blank? ? offers_dropdown : @delivery_note.client.sale_offers.order(:client_id, :offer_no, :id)
-            @projects = projects_dropdown_edit(@purchase_order.project)
+            @projects = projects_dropdown_edit(@delivery_note.project)
             @work_orders = @delivery_note.project.blank? ? work_orders_dropdown : @delivery_note.project.work_orders.order(:order_no)
             @charge_accounts = work_order_charge_account(@delivery_note)
             @stores = work_order_store(@delivery_note)
