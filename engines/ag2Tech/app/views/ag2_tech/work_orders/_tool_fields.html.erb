@@ -20,7 +20,7 @@
       var tool = $('select#fnt-tool :selected').val();
       if (typeof tool === "undefined") {
         tbl = true;
-        tool = $(_this).closest('tr').find('select.fnt-tool :selected').val();
+        tool = $(_this).closest('tr').find('.fnt-tool').val();
       }
       if (tool == "")
         tool = "0";

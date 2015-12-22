@@ -16,7 +16,7 @@
       var supplier = $('select#fnt-supplier :selected').val();
       if (typeof supplier === "undefined") {
         tbl = true;
-        supplier = $(_this).closest('tr').find('select.fnt-supplier :selected').val();
+        supplier = $(_this).closest('tr').find('.fnt-supplier').val();
       }
       if (supplier == "")
         supplier = "0";

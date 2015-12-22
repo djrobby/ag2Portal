@@ -41,7 +41,7 @@
       var _this = (this);
       // make a POST call and replace the content
       var tbl = true;
-      var tool = $(this).closest('tr').find('select.fnt-tool :selected').val();
+      var tool = $(this).closest('tr').find('.fnt-tool').val();
       if (tool == "")
         tool = "0";
       var minutes = $(this).closest('tr').find('.fnt-minutes').val();

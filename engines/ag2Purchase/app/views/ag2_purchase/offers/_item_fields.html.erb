@@ -53,7 +53,7 @@
       var product = $('select#fnt-product :selected').val();
       if (typeof product === "undefined") {
         tbl = true;
-        product = $(_this).closest('tr').find('select.fnt-product :selected').val();
+        product = $(_this).closest('tr').find('.fnt-product').val();
       }
       if (product == "")
         product = "0";
@@ -297,7 +297,7 @@
       var product = $('select#fnt-product :selected').val();
       if (typeof product === "undefined") {
         tbl = true;
-        product = $(_this).closest('tr').find('select.fnt-product :selected').val();
+        product = $(_this).closest('tr').find('.fnt-product').val();
       }
       if (product == "")
         product = "0";

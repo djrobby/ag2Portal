@@ -40,7 +40,7 @@
       var _this = (this);
       // make a POST call and replace the content
       var tbl = true;
-      var supplier = $(this).closest('tr').find('select.fnt-supplier :selected').val();
+      var supplier = $(this).closest('tr').find('.fnt-supplier').val();
       if (supplier == "")
         supplier = "0";
       var pct = $(this).closest('tr').find('.fnt-enforcement-pct').val();

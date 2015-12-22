@@ -41,7 +41,7 @@
       var _this = (this);
       // make a POST call and replace the content
       var tbl = true;
-      var vehicle = $(this).closest('tr').find('select.fnt-vehicle :selected').val();
+      var vehicle = $(this).closest('tr').find('.fnt-vehicle').val();
       if (vehicle == "")
         vehicle = "0";
       var distance = $(this).closest('tr').find('.fnt-distance').val();

@@ -134,8 +134,14 @@ no = 0
 @items.each do |i|
 	report.page.list(:default).add_row do |row|
 		no = no + 1
+		code = ""
+		if i.code.blank?
+			code = i.product.full_code unless i.product.blank?
+		else
+			code = i.code
+		end
     	row.item(:no).value no
-    	row.item(:product).value i.product.full_code unless i.product.blank?
+    	row.item(:product).value code
     	row.item(:description).value i.description unless i.description.blank?
     	row.item(:quantity).value number_with_precision(i.quantity, precision: 4) unless i.quantity.blank?
     	row.item(:price).value number_with_precision(i.price, precision: 4) unless i.price.blank?

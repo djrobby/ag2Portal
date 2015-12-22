@@ -35,7 +35,7 @@
       var worker = $('select#fnt-worker :selected').val();
       if (typeof worker === "undefined") {
         tbl = true;
-        worker = $(_this).closest('tr').find('select.fnt-worker :selected').val();
+        worker = $(_this).closest('tr').find('.fnt-worker').val();
       }
       if (worker == "")
         worker = "0";

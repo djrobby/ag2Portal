@@ -16,7 +16,7 @@
       var vehicle = $('select#fnt-vehicle :selected').val();
       if (typeof vehicle === "undefined") {
         tbl = true;
-        vehicle = $(_this).closest('tr').find('select.fnt-vehicle :selected').val();
+        vehicle = $(_this).closest('tr').find('.fnt-vehicle').val();
       }
       if (vehicle == "")
         vehicle = "0";

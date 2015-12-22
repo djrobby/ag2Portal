@@ -53,7 +53,7 @@
       project = $('select#work_order_project_id :selected').val();
       if (project == "")
         project = "0";      
-      var worker = $(this).closest('tr').find('select.fnt-worker :selected').val();
+      var worker = $(this).closest('tr').find('.fnt-worker').val();
       if (worker == "")
         worker = "0";
       var hours = $(this).closest('tr').find('.fnt-hours').val();
