@@ -449,6 +449,7 @@ module Ag2Products
     # PUT /delivery_notes/1
     # PUT /delivery_notes/1.json
     def update
+=begin
       @breadcrumb = 'update'
       @delivery_note = DeliveryNote.find(params[:id])
       @delivery_note.updated_by = current_user.id if !current_user.nil?
@@ -469,6 +470,70 @@ module Ag2Products
           @products = @delivery_note.organization.blank? ? products_dropdown : @delivery_note.organization.products.order(:product_code)
           format.html { render action: "edit" }
           format.json { render json: @delivery_note.errors, status: :unprocessable_entity }
+        end
+      end
+=end
+      @breadcrumb = 'update'
+      @delivery_note = DeliveryNote.find(params[:id])
+
+      items_changed = false
+      params[:delivery_note][:delivery_note_items_attributes].values.each do |new_item|
+        current_item = DeliveryNoteItem.find(new_item[:id]) rescue nil
+        if ((current_item.nil?) || (new_item[:_destroy] != "false") ||
+           ((current_item.product_id.to_i != new_item[:product_id].to_i) ||
+            (current_item.description != new_item[:description]) ||
+            (current_item.quantity.to_f != new_item[:quantity].to_f) ||
+            (current_item.cost.to_f != new_item[:cost].to_f) ||
+            (current_item.price.to_f != new_item[:price].to_f) ||
+            (current_item.discount_pct.to_f != new_item[:discount_pct].to_f) ||
+            (current_item.discount.to_f != new_item[:discount].to_f) ||
+            (current_item.tax_type_id.to_i != new_item[:tax_type_id].to_i) ||
+            (current_item.project_id.to_i != new_item[:project_id].to_i) ||
+            (current_item.work_order_id.to_i != new_item[:work_order_id].to_i) ||
+            (current_item.charge_account_id.to_i != new_item[:charge_account_id].to_i) ||
+            (current_item.store_id.to_i != new_item[:store_id].to_i)))
+          items_changed = true
+          break
+        end
+      end
+      master_changed = false
+      if ((params[:delivery_note][:organization_id].to_i != @delivery_note.organization_id.to_i) ||
+          (params[:delivery_note][:project_id].to_i != @delivery_note.project_id.to_i) ||
+          (params[:delivery_note][:delivery_no].to_s != @delivery_note.delivery_no) ||
+          (params[:delivery_note][:delivery_date].to_date != @delivery_note.delivery_date) ||
+          (params[:delivery_note][:client_id].to_i != @delivery_note.client_id.to_i) ||
+          (params[:delivery_note][:sale_offer_id].to_i != @delivery_note.sale_offer_id.to_i) ||
+          (params[:delivery_note][:work_order_id].to_i != @delivery_note.work_order_id.to_i) ||
+          (params[:delivery_note][:charge_account_id].to_i != @delivery_note.charge_account_id.to_i) ||
+          (params[:delivery_note][:store_id].to_i != @delivery_note.store_id.to_i) ||
+          (params[:delivery_note][:payment_method_id].to_i != @delivery_note.payment_method_id.to_i) ||
+          (params[:delivery_note][:discount_pct].to_f != @delivery_note.discount_pct.to_f) ||
+          (params[:delivery_note][:remarks].to_s != @delivery_note.remarks))
+        master_changed = true
+      end
+  
+      respond_to do |format|
+        if master_changed || items_changed
+          @delivery_note.updated_by = current_user.id if !current_user.nil?
+          if @delivery_note.update_attributes(params[:delivery_note])
+            format.html { redirect_to @delivery_note,
+                          notice: (crud_notice('updated', @delivery_note) + "#{undo_link(@delivery_note)}").html_safe }
+            format.json { head :no_content }
+          else
+            @offers = @delivery_note.client.blank? ? offers_dropdown : @delivery_note.client.sale_offers.order(:client_id, :offer_no, :id)
+            @projects = projects_dropdown_edit(@purchase_order.project)
+            @work_orders = @delivery_note.project.blank? ? work_orders_dropdown : @delivery_note.project.work_orders.order(:order_no)
+            @charge_accounts = work_order_charge_account(@delivery_note)
+            @stores = work_order_store(@delivery_note)
+            @clients = @delivery_note.organization.blank? ? clients_dropdown : @delivery_note.organization.clients.order(:client_code)
+            @payment_methods = @delivery_note.organization.blank? ? payment_methods_dropdown : collection_payment_methods(@delivery_note.organization_id)
+            @products = @delivery_note.organization.blank? ? products_dropdown : @delivery_note.organization.products.order(:product_code)
+            format.html { render action: "edit" }
+            format.json { render json: @delivery_note.errors, status: :unprocessable_entity }
+          end
+        else
+          format.html { redirect_to @delivery_note }
+          format.json { head :no_content }
         end
       end
     end

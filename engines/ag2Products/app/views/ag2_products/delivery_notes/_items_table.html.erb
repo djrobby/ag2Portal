@@ -49,7 +49,7 @@
       // preserve the current object
       var _this = (this);
       // make a POST call and replace the content
-      var product = $(this).closest('tr').find('select.fnt-product :selected').val();
+      var product = $(this).closest('tr').find('.fnt-product').val();
       if (product == "")
         product = "0";
       var qty = $(this).closest('tr').find('.fnt-quantity').val();
@@ -84,7 +84,7 @@
       var qty = $(_this).closest('tr').find('.fnt-quantity').val();
       if (qty == "")
         qty = "0";
-      var product = $(_this).closest('tr').find('select.fnt-product :selected').val();
+      var product = $(_this).closest('tr').find('.fnt-product').val();
       if (product == "")
         product = "0";
       qty = parseInt(right_number(qty, 4) * 10000);
@@ -152,7 +152,7 @@
       var discount = $(_this).closest('tr').find('.fnt-discount').val();
       if (discount == "")
         discount = "0";
-      var product = $(this).closest('tr').find('select.fnt-product :selected').val();
+      var product = $(_this).closest('tr').find('.fnt-product').val();
       if (product == "")
         product = "0";
       // Right formatted for passing as REST parameter

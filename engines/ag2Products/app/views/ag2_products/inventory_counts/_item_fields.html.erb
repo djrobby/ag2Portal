@@ -27,11 +27,10 @@
       var _this = (this);
       // make a POST call and replace the content
       var tbl = false;
-      //var product = $('select#fnt-product :selected').val();
-      var product = $('#fnt-product').val();
+      var product = $('select#fnt-product :selected').val();
       if (typeof product === "undefined") {
         tbl = true;
-        product = $(this).closest('tr').find('select.fnt-product :selected').val();
+        product = $(this).closest('tr').find('.fnt-product').val();
       }
       if (product == "")
         product = "0";

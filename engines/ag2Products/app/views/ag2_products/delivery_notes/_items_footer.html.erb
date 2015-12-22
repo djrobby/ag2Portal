@@ -24,7 +24,7 @@
 </tr>
 <tr class="totals">
   <td></td>
-  <td align="right"><%= t :"activerecord.attributes.delivery_note.item_costs" %> | <%= t :"activerecord.attributes.delivery_note.total" %></td>
+  <td align="right"><%= t :"activerecord.attributes.delivery_note.costs" %> | <%= t :"activerecord.attributes.delivery_note.total" %></td>
   <td></td>
   <td></td>
   <td align="right"><%= number_with_precision(note.costs, precision: 4, delimiter: I18n.locale == :es ? "." : ",") unless note.costs.blank? %></td>

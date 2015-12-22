@@ -635,6 +635,7 @@ module Ag2Products
     # PUT /receipt_notes/1
     # PUT /receipt_notes/1.json
     def update
+=begin
       @breadcrumb = 'update'
       @receipt_note = ReceiptNote.find(params[:id])
       @receipt_note.updated_by = current_user.id if !current_user.nil?
@@ -668,6 +669,87 @@ module Ag2Products
           end
           format.html { render action: "edit" }
           format.json { render json: @receipt_note.errors, status: :unprocessable_entity }
+        end
+      end
+=end
+      @breadcrumb = 'update'
+      @receipt_note = ReceiptNote.find(params[:id])
+
+      items_changed = false
+      params[:receipt_note][:receipt_note_items_attributes].values.each do |new_item|
+        current_item = ReceiptNoteItem.find(new_item[:id]) rescue nil
+        if ((current_item.nil?) || (new_item[:_destroy] != "false") ||
+           ((current_item.product_id.to_i != new_item[:product_id].to_i) ||
+            (current_item.description != new_item[:description]) ||
+            (current_item.code != new_item[:code]) ||
+            (current_item.quantity.to_f != new_item[:quantity].to_f) ||
+            (current_item.price.to_f != new_item[:price].to_f) ||
+            (current_item.discount_pct.to_f != new_item[:discount_pct].to_f) ||
+            (current_item.discount.to_f != new_item[:discount].to_f) ||
+            (current_item.tax_type_id.to_i != new_item[:tax_type_id].to_i) ||
+            (current_item.purchase_order_id.to_i != new_item[:purchase_order_id].to_i) ||
+            (current_item.purchase_order_item_id.to_i != new_item[:purchase_order_item_id].to_i) ||
+            (current_item.project_id.to_i != new_item[:project_id].to_i) ||
+            (current_item.work_order_id.to_i != new_item[:work_order_id].to_i) ||
+            (current_item.charge_account_id.to_i != new_item[:charge_account_id].to_i) ||
+            (current_item.store_id.to_i != new_item[:store_id].to_i)))
+          items_changed = true
+          break
+        end
+      end
+      master_changed = false
+      if ((params[:receipt_note][:organization_id].to_i != @receipt_note.organization_id.to_i) ||
+          (params[:receipt_note][:project_id].to_i != @receipt_note.project_id.to_i) ||
+          (params[:receipt_note][:receipt_no].to_s != @receipt_note.receipt_no) ||
+          (params[:receipt_note][:receipt_date].to_date != @receipt_note.receipt_date) ||
+          (params[:receipt_note][:supplier_id].to_i != @receipt_note.supplier_id.to_i) ||
+          (params[:receipt_note][:purchase_order_id].to_i != @receipt_note.purchase_order_id.to_i) ||
+          (params[:receipt_note][:work_order_id].to_i != @receipt_note.work_order_id.to_i) ||
+          (params[:receipt_note][:charge_account_id].to_i != @receipt_note.charge_account_id.to_i) ||
+          (params[:receipt_note][:store_id].to_i != @receipt_note.store_id.to_i) ||
+          (params[:receipt_note][:payment_method_id].to_i != @receipt_note.payment_method_id.to_i) ||
+          (params[:receipt_note][:retention_pct].to_f != @receipt_note.retention_pct.to_f) ||
+          (params[:receipt_note][:retention_time].to_i != @receipt_note.retention_time.to_i) ||
+          (params[:receipt_note][:discount_pct].to_f != @receipt_note.discount_pct.to_f) ||
+          (params[:receipt_note][:remarks].to_s != @receipt_note.remarks))
+        master_changed = true
+      end
+  
+      respond_to do |format|
+        if master_changed || items_changed
+          @receipt_note.updated_by = current_user.id if !current_user.nil?
+          # Should use attachment from drag&drop?
+          if $attachment != nil && !$attachment.avatar.blank? && $attachment.updated_at > @receipt_note.updated_at
+            @receipt_note.attachment = $attachment.avatar
+          end
+          if @receipt_note.update_attributes(params[:receipt_note])
+            destroy_attachment
+            $attachment = nil
+            format.html { redirect_to @receipt_note,
+                          notice: (crud_notice('updated', @receipt_note) + "#{undo_link(@receipt_note)}").html_safe }
+            format.json { head :no_content }
+          else
+            destroy_attachment
+            $attachment = Attachment.new
+            @orders = @receipt_note.supplier.blank? ? orders_dropdown : @receipt_note.supplier.purchase_orders.undelivered(@receipt_note.organization_id, true)
+            @projects = projects_dropdown_edit(@receipt_note.project)
+            @work_orders = @receipt_note.project.blank? ? work_orders_dropdown : @receipt_note.project.work_orders.order(:order_no)
+            @charge_accounts = work_order_charge_account(@receipt_note)
+            @stores = work_order_store(@receipt_note)
+            @suppliers = @receipt_note.organization.blank? ? suppliers_dropdown : @receipt_note.organization.suppliers(:supplier_code)
+            @payment_methods = @receipt_note.organization.blank? ? payment_methods_dropdown : payment_payment_methods(@receipt_note.organization_id)
+            @order_items = @receipt_note.purchase_order.blank? ? [] : order_items_dropdown(@receipt_note.purchase_order)
+            if @order_items.blank?
+              @products = @receipt_note.organization.blank? ? products_dropdown : @receipt_note.organization.products(:product_code)
+            else
+              @products = @order_items.first.products.group(:product_code)
+            end
+            format.html { render action: "edit" }
+            format.json { render json: @receipt_note.errors, status: :unprocessable_entity }
+          end
+        else
+          format.html { redirect_to @receipt_note }
+          format.json { head :no_content }
         end
       end
     end

@@ -429,7 +429,9 @@ module Ag2Products
       items_changed = false
       params[:inventory_count][:inventory_count_items_attributes].values.each do |new_item|
         current_item = InventoryCountItem.find(new_item[:id]) rescue nil
-        if (current_item.nil?) || ((current_item.product_id != new_item[:product_id].to_i) || (current_item.quantity.to_f != new_item[:quantity].to_f))
+        if ((current_item.nil?) || (new_item[:_destroy] != "false") ||
+           ((current_item.product_id.to_i != new_item[:product_id].to_i) ||
+            (current_item.quantity.to_f != new_item[:quantity].to_f)))
           items_changed = true
           break
         end

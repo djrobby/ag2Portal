@@ -13,7 +13,7 @@ class DeliveryNoteItem < ActiveRecord::Base
                   :delivery_note_id, :sale_offer_id, :sale_offer_item_id, :product_id,
                   :tax_type_id, :store_id, :work_order_id, :charge_account_id, :project_id, :thing
 
-  has_many :client_invoice_items
+  #has_many :client_invoice_items
 
   has_paper_trail
 
@@ -31,7 +31,7 @@ class DeliveryNoteItem < ActiveRecord::Base
   validates :cost,            :numericality => true
   validates :sale_offer_item, :presence => true, :if => "!sale_offer_id.blank?"
 
-  before_destroy :check_for_dependent_records
+  #before_destroy :check_for_dependent_records
   before_validation :fields_to_uppercase
   after_create :update_stock_on_create
   after_update :update_stock_on_update
