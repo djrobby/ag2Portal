@@ -19,16 +19,24 @@ module Ag2Purchase
                                                :of_update_request_select_from_supplier,
                                                :of_generate_offer,
                                                :of_generate_order,
+                                               :of_attachment_changed,
                                                :of_update_attachment]
     # Public attachment for drag&drop
     $attachment = nil
-  
+    $attachment_changed = false
+
+    # Attachment has changed
+    def of_attachment_changed
+      $attachment_changed = true
+    end  
+
     # Update attached file from drag&drop
     def of_update_attachment
       if !$attachment.nil?
         $attachment.destroy
         $attachment = Attachment.new
       end
+      $attachment_changed = true
       $attachment.avatar = params[:file]
       $attachment.id = 1
       $attachment.save!
@@ -280,7 +288,7 @@ module Ag2Purchase
       if organization != '0'
         @organization = Organization.find(organization)
         @suppliers = @organization.blank? ? suppliers_dropdown : @organization.suppliers.order(:supplier_code)
-        @offer_requests = @organization.blank? ? offer_requests_dropdown : @organization.offer_requests.order(:request_no)
+        @offer_requests = @organization.blank? ? offer_requests_dropdown : @organization.offer_requests.not_approved(@organization.id)
         @projects = @organization.blank? ? projects_dropdown : @organization.projects.order(:project_code)
         @work_orders = @organization.blank? ? work_orders_dropdown : @organization.work_orders.order(:order_no)
         @charge_accounts = @organization.blank? ? charge_accounts_dropdown : @organization.charge_accounts.expenditures
@@ -360,7 +368,7 @@ module Ag2Purchase
       supplier = params[:supplier]
       if supplier != '0'
         @supplier = Supplier.find(supplier)
-        @offer_requests = @supplier.blank? ? offer_requests_dropdown : @supplier.offer_requests(:request_no)
+        @offer_requests = @supplier.blank? ? offer_requests_dropdown : @supplier.offer_requests.not_approved(@supplier.organization_id)
       else
         @offer_requests = offer_requests_dropdown
       end
@@ -595,6 +603,7 @@ module Ag2Purchase
     def new
       @breadcrumb = 'create'
       @offer = Offer.new
+      $attachment_changed = false
       $attachment = Attachment.new
       destroy_attachment
       @projects = projects_dropdown
@@ -616,6 +625,7 @@ module Ag2Purchase
     def edit
       @breadcrumb = 'update'
       @offer = Offer.find(params[:id])
+      $attachment_changed = false
       $attachment = Attachment.new
       destroy_attachment
       @projects = projects_dropdown_edit(@offer.project)
@@ -623,7 +633,7 @@ module Ag2Purchase
       @charge_accounts = work_order_charge_account(@offer)
       @stores = work_order_store(@offer)
       @suppliers = @offer.organization.blank? ? suppliers_dropdown : @offer.organization.suppliers(:supplier_code)
-      @offer_requests = @offer.organization.blank? ? offer_requests_dropdown : @offer.organization.offer_requests(:request_no)
+      @offer_requests = @offer.organization.blank? ? offer_requests_dropdown : @offer.organization.offer_requests.approved(@offer.organization_id)
       @payment_methods = @offer.organization.blank? ? payment_methods_dropdown : payment_payment_methods(@offer.organization_id)
       @products = @offer.organization.blank? ? products_dropdown : @offer.organization.products(:product_code)
     end
@@ -640,6 +650,7 @@ module Ag2Purchase
       end
   
       respond_to do |format|
+        $attachment_changed = false
         if @offer.save
           $attachment.destroy
           $attachment = nil
@@ -667,32 +678,80 @@ module Ag2Purchase
     def update
       @breadcrumb = 'update'
       @offer = Offer.find(params[:id])
-      @offer.updated_by = current_user.id if !current_user.nil?
+
+      master_changed = false
       # Should use attachment from drag&drop?
       if $attachment != nil && !$attachment.avatar.blank? && $attachment.updated_at > @offer.updated_at
         @offer.attachment = $attachment.avatar
       end
+      if @offer.attachment.dirty? || $attachment_changed
+        master_changed = true
+      end
+
+      items_changed = false
+      if params[:offer][:offer_items_attributes]
+        params[:offer][:offer_items_attributes].values.each do |new_item|
+          current_item = OfferItem.find(new_item[:id]) rescue nil
+          if ((current_item.nil?) || (new_item[:_destroy] != "false") ||
+             ((current_item.product_id.to_i != new_item[:product_id].to_i) ||
+              (current_item.description != new_item[:description]) ||
+              (current_item.code != new_item[:code]) ||
+              (current_item.quantity.to_f != new_item[:quantity].to_f) ||
+              (current_item.price.to_f != new_item[:price].to_f) ||
+              (current_item.discount_pct.to_f != new_item[:discount_pct].to_f) ||
+              (current_item.discount.to_f != new_item[:discount].to_f) ||
+              (current_item.tax_type_id.to_i != new_item[:tax_type_id].to_i) ||
+              (current_item.project_id.to_i != new_item[:project_id].to_i) ||
+              (current_item.work_order_id.to_i != new_item[:work_order_id].to_i) ||
+              (current_item.charge_account_id.to_i != new_item[:charge_account_id].to_i) ||
+              (current_item.store_id.to_i != new_item[:store_id].to_i)))
+            items_changed = true
+            break
+          end
+        end
+      end
+      if ((params[:offer][:organization_id].to_i != @offer.organization_id.to_i) ||
+          (params[:offer][:project_id].to_i != @offer.project_id.to_i) ||
+          (params[:offer][:offer_no].to_s != @offer.offer_no) ||
+          (params[:offer][:offer_date].to_date != @offer.offer_date) ||
+          (params[:offer][:supplier_id].to_i != @offer.supplier_id.to_i) ||
+          (params[:offer][:offer_request_id].to_i != @offer.offer_request_id.to_i) ||
+          (params[:offer][:work_order_id].to_i != @offer.work_order_id.to_i) ||
+          (params[:offer][:charge_account_id].to_i != @offer.charge_account_id.to_i) ||
+          (params[:offer][:store_id].to_i != @offer.store_id.to_i) ||
+          (params[:offer][:payment_method_id].to_i != @offer.payment_method_id.to_i) ||
+          (params[:offer][:discount_pct].to_f != @offer.discount_pct.to_f) ||
+          (params[:offer][:remarks].to_s != @offer.remarks))
+        master_changed = true
+      end
   
       respond_to do |format|
-        if @offer.update_attributes(params[:offer])
-          destroy_attachment
-          $attachment = nil
-          format.html { redirect_to @offer,
-                        notice: (crud_notice('updated', @offer) + "#{undo_link(@offer)}").html_safe }
-          format.json { head :no_content }
+        if master_changed || items_changed
+          @offer.updated_by = current_user.id if !current_user.nil?
+          $attachment_changed = false
+          if @offer.update_attributes(params[:offer])
+            destroy_attachment
+            $attachment = nil
+            format.html { redirect_to @offer,
+                          notice: (crud_notice('updated', @offer) + "#{undo_link(@offer)}").html_safe }
+            format.json { head :no_content }
+          else
+            $attachment = Attachment.new
+            destroy_attachment
+            @projects = projects_dropdown_edit(@offer.project)
+            @work_orders = @offer.project.blank? ? work_orders_dropdown : @offer.project.work_orders.order(:order_no)
+            @charge_accounts = work_order_charge_account(@offer)
+            @stores = work_order_store(@offer)
+            @suppliers = @offer.organization.blank? ? suppliers_dropdown : @offer.organization.suppliers(:supplier_code)
+            @offer_requests = @offer.organization.blank? ? offer_requests_dropdown : @offer.organization.offer_requests.approved(@offer.organization_id)
+            @payment_methods = @offer.organization.blank? ? payment_methods_dropdown : payment_payment_methods(@offer.organization_id)
+            @products = @offer.organization.blank? ? products_dropdown : @offer.organization.products(:product_code)
+            format.html { render action: "edit" }
+            format.json { render json: @offer.errors, status: :unprocessable_entity }
+          end
         else
-          destroy_attachment
-          $attachment = Attachment.new
-          @projects = projects_dropdown_edit(@offer.project)
-          @work_orders = @offer.project.blank? ? work_orders_dropdown : @offer.project.work_orders.order(:order_no)
-          @charge_accounts = work_order_charge_account(@offer)
-          @stores = work_order_store(@offer)
-          @suppliers = @offer.organization.blank? ? suppliers_dropdown : @offer.organization.suppliers(:supplier_code)
-          @offer_requests = @offer.organization.blank? ? offer_requests_dropdown : @offer.organization.offer_requests(:request_no)
-          @payment_methods = @offer.organization.blank? ? payment_methods_dropdown : payment_payment_methods(@offer.organization_id)
-          @products = @offer.organization.blank? ? products_dropdown : @offer.organization.products(:product_code)
-          format.html { render action: "edit" }
-          format.json { render json: @offer.errors, status: :unprocessable_entity }
+          format.html { redirect_to @offer }
+          format.json { head :no_content }
         end
       end
     end
@@ -870,7 +929,8 @@ module Ag2Purchase
     end    
 
     def offer_requests_dropdown
-      session[:organization] != '0' ? OfferRequest.where(organization_id: session[:organization].to_i).order(:request_no) : OfferRequest.order(:request_no)
+      session[:organization] != '0' ? OfferRequest.not_approved(session[:organization].to_i) : OfferRequest.not_approved(nil)
+      #session[:organization] != '0' ? OfferRequest.where(organization_id: session[:organization].to_i).order(:request_no) : OfferRequest.order(:request_no)
     end    
     
     def offer_requests_array(_requests)

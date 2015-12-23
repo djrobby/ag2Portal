@@ -62,6 +62,8 @@
     // when the #offer_attachment field changes
     $("#offer_attachment").change(function() {
       readImageFromInput(this, '#dd_files');
+      jQuery.getJSON('of_attachment_changed', function(data) {
+      });
     });
 
     // when the #offer_offer_no field changes

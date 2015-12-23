@@ -13,7 +13,6 @@
       <th><%= t 'activerecord.attributes.offer_request.request_no' %></th>
       <th align="center"><%= t 'activerecord.attributes.offer_request.request_date' %></th>
       <th align="center"><%= t 'activerecord.attributes.offer_request.deadline_date' %></th>
-      <th><%= t 'activerecord.attributes.offer_request.project' %></th>
       <th><%= t 'activerecord.attributes.offer_request.approved_offer' %></th>
       <th align="right"><%= t 'activerecord.attributes.offer_request.total' %></th>
       <th></th>
@@ -25,7 +24,6 @@
       <td><%= link_to request.full_no, request %></td>
       <td align="center"><%= formatted_date(request.request_date) unless request.request_date.blank? %></td>
       <td align="center"><%= formatted_date(request.deadline_date) unless request.deadline_date.blank? %></td>
-      <td><%= request.project.full_code unless request.project.blank? %></td>
       <td><%= request.approved_offer.partial_name unless request.approved_offer.blank? %></td>
       <td align="right"><%= number_with_precision(request.total, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless request.total.blank? %></td>
       <td> <%= render :partial => '/layouts/crud/edit', :locals => { :model => OfferRequest, :path => edit_offer_request_path(request) } %>

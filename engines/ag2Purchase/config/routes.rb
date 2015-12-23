@@ -162,6 +162,9 @@ Ag2Purchase::Engine.routes.draw do
     match 'supplier_invoices/si_update_attachment', :controller => 'supplier_invoices', :action => 'si_update_attachment'
     match 'si_update_attachment', :controller => 'supplier_invoices', :action => 'si_update_attachment'
     match 'supplier_invoices/:id/si_update_attachment', :controller => 'supplier_invoices', :action => 'si_update_attachment'
+    match 'supplier_invoices/si_attachment_changed', :controller => 'supplier_invoices', :action => 'si_attachment_changed'
+    match 'si_attachment_changed', :controller => 'supplier_invoices', :action => 'si_attachment_changed'
+    match 'supplier_invoices/:id/si_attachment_changed', :controller => 'supplier_invoices', :action => 'si_attachment_changed'
     match 'supplier_invoices/si_generate_invoice/:supplier/:request/:offer_no/:offer_date', :controller => 'supplier_invoices', :action => 'si_generate_invoice'
     match 'si_generate_invoice/:supplier/:request/:offer_no/:offer_date', :controller => 'supplier_invoices', :action => 'si_generate_invoice'
     match 'supplier_invoices/:id/si_generate_invoice/:supplier/:request/:offer_no/:offer_date', :controller => 'supplier_invoices', :action => 'si_generate_invoice'
@@ -265,6 +268,9 @@ Ag2Purchase::Engine.routes.draw do
     match 'offers/of_update_attachment', :controller => 'offers', :action => 'of_update_attachment'
     match 'of_update_attachment', :controller => 'offers', :action => 'of_update_attachment'
     match 'offers/:id/of_update_attachment', :controller => 'offers', :action => 'of_update_attachment'
+    match 'offers/of_attachment_changed', :controller => 'offers', :action => 'of_attachment_changed'
+    match 'of_attachment_changed', :controller => 'offers', :action => 'of_attachment_changed'
+    match 'offers/:id/of_attachment_changed', :controller => 'offers', :action => 'of_attachment_changed'
     #
     # Supplier payments
     match 'supplier_payments/sp_generate_no/:org', :controller => 'supplier_payments', :action => 'sp_generate_no'

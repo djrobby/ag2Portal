@@ -105,6 +105,25 @@ class OfferRequest < ActiveRecord::Base
   end
 
   #
+  # Class (self) user defined methods
+  #
+  def self.approved(organization)
+    if !organization.blank?
+      where('NOT approved_offer_id IS NULL AND organization_id = ?', organization).order(:request_no)
+    else
+      where('NOT approved_offer_id IS NULL').order(:request_no)
+    end
+  end
+
+  def self.not_approved(organization)
+    if !organization.blank?
+      where('approved_offer_id IS NULL AND organization_id = ?', organization).order(:request_no)
+    else
+      where('approved_offer_id IS NULL').order(:request_no)
+    end
+  end
+
+  #
   # Records navigator
   #
   def to_first

@@ -55,6 +55,8 @@
     // when the #receipt_note_attachment field changes
     $("#receipt_note_attachment").change(function() {
       readImageFromInput(this, '#dd_files');
+      jQuery.getJSON('rn_attachment_changed', function(data) {
+      });
     });
 
     // when the #receipt_note_receipt_no field changes

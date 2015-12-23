@@ -23,9 +23,16 @@ module Ag2Purchase
                                                :si_update_project_textfields_from_organization,
                                                :si_current_balance,
                                                :si_generate_invoice,
+                                               :si_attachment_changed,
                                                :si_update_attachment]
     # Public attachment for drag&drop
     $attachment = nil
+    $attachment_changed = false
+
+    # Attachment has changed
+    def si_attachment_changed
+      $attachment_changed = true
+    end  
   
     # Update attached file from drag&drop
     def si_update_attachment
@@ -33,6 +40,7 @@ module Ag2Purchase
         $attachment.destroy
         $attachment = Attachment.new
       end
+      $attachment_changed = true
       $attachment.avatar = params[:file]
       $attachment.id = 1
       $attachment.save!
@@ -590,6 +598,7 @@ module Ag2Purchase
     def new
       @breadcrumb = 'create'
       @supplier_invoice = SupplierInvoice.new
+      $attachment_changed = false
       $attachment = Attachment.new
       destroy_attachment
       @receipt_notes = receipts_dropdown
@@ -614,6 +623,7 @@ module Ag2Purchase
     def edit
       @breadcrumb = 'update'
       @supplier_invoice = SupplierInvoice.find(params[:id])
+      $attachment_changed = false
       $attachment = Attachment.new
       destroy_attachment
       # _form ivars
@@ -652,6 +662,7 @@ module Ag2Purchase
       end
   
       respond_to do |format|
+        $attachment_changed = false
         if @supplier_invoice.save
           $attachment.destroy
           $attachment = nil
@@ -681,38 +692,105 @@ module Ag2Purchase
     def update
       @breadcrumb = 'update'
       @supplier_invoice = SupplierInvoice.find(params[:id])
-      @supplier_invoice.updated_by = current_user.id if !current_user.nil?
+
+      master_changed = false
       # Should use attachment from drag&drop?
       if $attachment != nil && !$attachment.avatar.blank? && $attachment.updated_at > @supplier_invoice.updated_at
         @supplier_invoice.attachment = $attachment.avatar
       end
+      if @supplier_invoice.attachment.dirty? || $attachment_changed
+        master_changed = true
+      end
+
+      items_changed = false
+      if params[:supplier_invoice][:supplier_invoice_approvals_attributes]
+        params[:supplier_invoice][:supplier_invoice_approvals_attributes].values.each do |new_item|
+          current_item = SupplierInvoiceApproval.find(new_item[:id]) rescue nil
+          if ((current_item.nil?) || (new_item[:_destroy] != "false") ||
+             ((current_item.approver_id.to_i != new_item[:approver_id].to_i) ||
+              (current_item.approval_date != new_item[:approval_date].to_date) ||
+              (current_item.approved_amount.to_f != new_item[:approved_amount].to_f) ||
+              (current_item.remarks != new_item[:remarks])))
+            items_changed = true
+            break
+          end
+        end
+      end
+      if !items_changed && params[:supplier_invoice][:supplier_invoice_items_attributes]
+        params[:supplier_invoice][:supplier_invoice_items_attributes].values.each do |new_item|
+          current_item = SupplierInvoiceItem.find(new_item[:id]) rescue nil
+          if ((current_item.nil?) || (new_item[:_destroy] != "false") ||
+             ((current_item.product_id.to_i != new_item[:product_id].to_i) ||
+              (current_item.description != new_item[:description]) ||
+              (current_item.code != new_item[:code]) ||
+              (current_item.quantity.to_f != new_item[:quantity].to_f) ||
+              (current_item.price.to_f != new_item[:price].to_f) ||
+              (current_item.discount_pct.to_f != new_item[:discount_pct].to_f) ||
+              (current_item.discount.to_f != new_item[:discount].to_f) ||
+              (current_item.tax_type_id.to_i != new_item[:tax_type_id].to_i) ||
+              (current_item.receipt_note_id.to_i != new_item[:receipt_note_id].to_i) ||
+              (current_item.receipt_note_item_id.to_i != new_item[:receipt_note_item_id].to_i) ||
+              (current_item.project_id.to_i != new_item[:project_id].to_i) ||
+              (current_item.work_order_id.to_i != new_item[:work_order_id].to_i) ||
+              (current_item.charge_account_id.to_i != new_item[:charge_account_id].to_i)))
+            items_changed = true
+            break
+          end
+        end
+      end
+      if ((params[:supplier_invoice][:organization_id].to_i != @supplier_invoice.organization_id.to_i) ||
+          (params[:supplier_invoice][:project_id].to_i != @supplier_invoice.project_id.to_i) ||
+          (params[:supplier_invoice][:invoice_no].to_s != @supplier_invoice.invoice_no) ||
+          (params[:supplier_invoice][:invoice_date].to_date != @supplier_invoice.invoice_date) ||
+          (params[:supplier_invoice][:supplier_id].to_i != @supplier_invoice.supplier_id.to_i) ||
+          (params[:supplier_invoice][:receipt_note_id].to_i != @supplier_invoice.receipt_note_id.to_i) ||
+          (params[:supplier_invoice][:work_order_id].to_i != @supplier_invoice.work_order_id.to_i) ||
+          (params[:supplier_invoice][:charge_account_id].to_i != @supplier_invoice.charge_account_id.to_i) ||
+          (params[:supplier_invoice][:payment_method_id].to_i != @supplier_invoice.payment_method_id.to_i) ||
+          (params[:supplier_invoice][:discount_pct].to_f != @supplier_invoice.discount_pct.to_f) ||
+          (params[:supplier_invoice][:remarks].to_s != @supplier_invoice.remarks))
+        master_changed = true
+      end
   
       respond_to do |format|
-        if @supplier_invoice.update_attributes(params[:supplier_invoice])
-          destroy_attachment
-          $attachment = nil
-          format.html { redirect_to @supplier_invoice,
-                        notice: (crud_notice('updated', @supplier_invoice) + "#{undo_link(@supplier_invoice)}").html_safe }
-          format.json { head :no_content }
-        else
-          destroy_attachment
-          $attachment = Attachment.new
-          @receipt_notes = @supplier_invoice.supplier.blank? ? receipts_dropdown : @supplier_invoice.supplier.receipt_notes.unbilled(@supplier_invoice.organization_id, true)
-          @projects = projects_dropdown_edit(@supplier_invoice.project)
-          @work_orders = @supplier_invoice.project.blank? ? work_orders_dropdown : @supplier_invoice.project.work_orders.order(:order_no)
-          @charge_accounts = work_order_charge_account(@supplier_invoice)
-          @stores = work_order_store(@supplier_invoice)
-          @suppliers = suppliers_dropdown
-          @payment_methods = @supplier_invoice.organization.blank? ? payment_methods_dropdown : payment_payment_methods(@supplier_invoice.organization_id)      
-          @note_items = @supplier_invoice.receipt_note.blank? ? [] : note_items_dropdown(@supplier_invoice.receipt_note)
-          if @note_items.blank?
-            @products = @supplier_invoice.organization.blank? ? products_dropdown : @supplier_invoice.organization.products(:product_code)
+        if master_changed || items_changed
+          @supplier_invoice.updated_by = current_user.id if !current_user.nil?
+          $attachment_changed = false
+          if @supplier_invoice.update_attributes(params[:supplier_invoice])
+            destroy_attachment
+            $attachment = nil
+            format.html { redirect_to @supplier_invoice,
+                          notice: (crud_notice('updated', @supplier_invoice) + "#{undo_link(@supplier_invoice)}").html_safe }
+            format.json { head :no_content }
           else
-            @products = @note_items.first.receipt_note.products.group(:product_code)
+            destroy_attachment
+            $attachment = Attachment.new
+            @receipt_notes = @supplier_invoice.supplier.blank? ? receipts_dropdown : @supplier_invoice.supplier.receipt_notes.unbilled(@supplier_invoice.organization_id, true)
+            @projects = projects_dropdown_edit(@supplier_invoice.project)
+            @work_orders = @supplier_invoice.project.blank? ? work_orders_dropdown : @supplier_invoice.project.work_orders.order(:order_no)
+            @charge_accounts = work_order_charge_account(@supplier_invoice)
+            @stores = work_order_store(@supplier_invoice)
+            @suppliers = suppliers_dropdown
+            @payment_methods = @supplier_invoice.organization.blank? ? payment_methods_dropdown : payment_payment_methods(@supplier_invoice.organization_id)      
+            @note_items = @supplier_invoice.receipt_note.blank? ? [] : note_items_dropdown(@supplier_invoice.receipt_note)
+            if @note_items.blank?
+              @products = @supplier_invoice.organization.blank? ? products_dropdown : @supplier_invoice.organization.products(:product_code)
+            else
+              @products = @note_items.first.receipt_note.products.group(:product_code)
+            end
+            # Special to approvals
+            @invoice_debt = number_with_precision(@supplier_invoice.debt.round(4), precision: 4)
+            @invoice_not_yet_approved = number_with_precision(@supplier_invoice.amount_not_yet_approved.round(4), precision: 4)
+            @users = User.where('id = ?', current_user.id)
+            @is_approver = company_approver(@supplier_invoice, @supplier_invoice.project.company, current_user.id) ||
+                           office_approver(@supplier_invoice, @supplier_invoice.project.office, current_user.id) ||
+                           (current_user.has_role? :Approver)
+            format.html { render action: "edit" }
+            format.json { render json: @supplier_invoice.errors, status: :unprocessable_entity }
           end
-          @users = User.where('id = ?', current_user.id)
-          format.html { render action: "edit" }
-          format.json { render json: @supplier_invoice.errors, status: :unprocessable_entity }
+        else
+          format.html { redirect_to @supplier_invoice }
+          format.json { head :no_content }
         end
       end
     end

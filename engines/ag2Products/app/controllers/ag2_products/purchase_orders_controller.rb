@@ -630,24 +630,26 @@ module Ag2Products
       @purchase_order = PurchaseOrder.find(params[:id])
 
       items_changed = false
-      params[:purchase_order][:purchase_order_items_attributes].values.each do |new_item|
-        current_item = PurchaseOrderItem.find(new_item[:id]) rescue nil
-        if ((current_item.nil?) || (new_item[:_destroy] != "false") ||
-           ((current_item.product_id.to_i != new_item[:product_id].to_i) ||
-            (current_item.description != new_item[:description]) ||
-            (current_item.code != new_item[:code]) ||
-            (current_item.quantity.to_f != new_item[:quantity].to_f) ||
-            (current_item.price.to_f != new_item[:price].to_f) ||
-            (current_item.discount_pct.to_f != new_item[:discount_pct].to_f) ||
-            (current_item.discount.to_f != new_item[:discount].to_f) ||
-            (current_item.tax_type_id.to_i != new_item[:tax_type_id].to_i) ||
-            (current_item.delivery_date != new_item[:delivery_date].to_date) ||
-            (current_item.project_id.to_i != new_item[:project_id].to_i) ||
-            (current_item.work_order_id.to_i != new_item[:work_order_id].to_i) ||
-            (current_item.charge_account_id.to_i != new_item[:charge_account_id].to_i) ||
-            (current_item.store_id.to_i != new_item[:store_id].to_i)))
-          items_changed = true
-          break
+      if params[:purchase_order][:purchase_order_items_attributes]
+        params[:purchase_order][:purchase_order_items_attributes].values.each do |new_item|
+          current_item = PurchaseOrderItem.find(new_item[:id]) rescue nil
+          if ((current_item.nil?) || (new_item[:_destroy] != "false") ||
+             ((current_item.product_id.to_i != new_item[:product_id].to_i) ||
+              (current_item.description != new_item[:description]) ||
+              (current_item.code != new_item[:code]) ||
+              (current_item.quantity.to_f != new_item[:quantity].to_f) ||
+              (current_item.price.to_f != new_item[:price].to_f) ||
+              (current_item.discount_pct.to_f != new_item[:discount_pct].to_f) ||
+              (current_item.discount.to_f != new_item[:discount].to_f) ||
+              (current_item.tax_type_id.to_i != new_item[:tax_type_id].to_i) ||
+              (current_item.delivery_date != new_item[:delivery_date].to_date) ||
+              (current_item.project_id.to_i != new_item[:project_id].to_i) ||
+              (current_item.work_order_id.to_i != new_item[:work_order_id].to_i) ||
+              (current_item.charge_account_id.to_i != new_item[:charge_account_id].to_i) ||
+              (current_item.store_id.to_i != new_item[:store_id].to_i)))
+            items_changed = true
+            break
+          end
         end
       end
       master_changed = false

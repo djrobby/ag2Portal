@@ -16,7 +16,6 @@
       <th align="center"><%= t 'activerecord.attributes.offer.offer_date' %></th>
       <th><%= t 'activerecord.attributes.offer.supplier' %></th>
       <th><%= t 'activerecord.attributes.offer.offer_request' %></th>
-      <th><%= t 'activerecord.attributes.offer.project' %></th>
       <th align="right"><%= t 'activerecord.attributes.offer.total' %></th>
       <th></th>
     </tr>
@@ -36,7 +35,6 @@
       <td align="center"><%= formatted_date(offer.offer_date) unless offer.offer_date.blank? %></td>
       <td><%= offer.supplier.partial_name unless offer.supplier.blank? %></td>
       <td><%= offer.offer_request.full_no unless offer.offer_request.blank? %></td>
-      <td><%= offer.project.full_code unless offer.project.blank? %></td>
       <td align="right"><%= number_with_precision(offer.total, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless offer.total.blank? %></td>
       <td> <%= render :partial => '/layouts/crud/edit', :locals => { :model => Offer, :path => edit_offer_path(offer) } %>
       <%= render :partial => '/layouts/crud/delete', :locals => { :model => Offer, :path => offer, :msg => t("activerecord.models.offer.one"), :txt => offer.offer_no } %> </td>

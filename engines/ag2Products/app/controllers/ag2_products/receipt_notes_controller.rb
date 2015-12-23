@@ -19,9 +19,16 @@ module Ag2Products
                                                :rn_current_stock,
                                                :rn_update_project_textfields_from_organization,
                                                :rn_generate_note,
+                                               :rn_attachment_changed,
                                                :rn_update_attachment]
     # Public attachment for drag&drop
     $attachment = nil
+    $attachment_changed = false
+
+    # Attachment has changed
+    def rn_attachment_changed
+      $attachment_changed = true
+    end  
   
     # Update attached file from drag&drop
     def rn_update_attachment
@@ -29,6 +36,7 @@ module Ag2Products
         $attachment.destroy
         $attachment = Attachment.new
       end
+      $attachment_changed = true
       $attachment.avatar = params[:file]
       $attachment.id = 1
       $attachment.save!
@@ -557,6 +565,7 @@ module Ag2Products
     def new
       @breadcrumb = 'create'
       @receipt_note = ReceiptNote.new
+      $attachment_changed = false
       $attachment = Attachment.new
       destroy_attachment
       @orders = orders_dropdown
@@ -579,6 +588,7 @@ module Ag2Products
     def edit
       @breadcrumb = 'update'
       @receipt_note = ReceiptNote.find(params[:id])
+      $attachment_changed = false
       $attachment = Attachment.new
       destroy_attachment
       @orders = @receipt_note.supplier.blank? ? orders_dropdown : @receipt_note.supplier.purchase_orders.undelivered(@receipt_note.organization_id, true)
@@ -609,6 +619,7 @@ module Ag2Products
       end
   
       respond_to do |format|
+        $attachment_changed = false
         if @receipt_note.save
           $attachment.destroy
           $attachment = nil
@@ -638,29 +649,39 @@ module Ag2Products
       @breadcrumb = 'update'
       @receipt_note = ReceiptNote.find(params[:id])
 
+      master_changed = false
+      # Should use attachment from drag&drop?
+      if $attachment != nil && !$attachment.avatar.blank? && $attachment.updated_at > @receipt_note.updated_at
+        @receipt_note.attachment = $attachment.avatar
+      end
+      if @receipt_note.attachment.dirty? || $attachment_changed
+        master_changed = true
+      end
+
       items_changed = false
-      params[:receipt_note][:receipt_note_items_attributes].values.each do |new_item|
-        current_item = ReceiptNoteItem.find(new_item[:id]) rescue nil
-        if ((current_item.nil?) || (new_item[:_destroy] != "false") ||
-           ((current_item.product_id.to_i != new_item[:product_id].to_i) ||
-            (current_item.description != new_item[:description]) ||
-            (current_item.code != new_item[:code]) ||
-            (current_item.quantity.to_f != new_item[:quantity].to_f) ||
-            (current_item.price.to_f != new_item[:price].to_f) ||
-            (current_item.discount_pct.to_f != new_item[:discount_pct].to_f) ||
-            (current_item.discount.to_f != new_item[:discount].to_f) ||
-            (current_item.tax_type_id.to_i != new_item[:tax_type_id].to_i) ||
-            (current_item.purchase_order_id.to_i != new_item[:purchase_order_id].to_i) ||
-            (current_item.purchase_order_item_id.to_i != new_item[:purchase_order_item_id].to_i) ||
-            (current_item.project_id.to_i != new_item[:project_id].to_i) ||
-            (current_item.work_order_id.to_i != new_item[:work_order_id].to_i) ||
-            (current_item.charge_account_id.to_i != new_item[:charge_account_id].to_i) ||
-            (current_item.store_id.to_i != new_item[:store_id].to_i)))
-          items_changed = true
-          break
+      if params[:receipt_note][:receipt_note_items_attributes]
+        params[:receipt_note][:receipt_note_items_attributes].values.each do |new_item|
+          current_item = ReceiptNoteItem.find(new_item[:id]) rescue nil
+          if ((current_item.nil?) || (new_item[:_destroy] != "false") ||
+             ((current_item.product_id.to_i != new_item[:product_id].to_i) ||
+              (current_item.description != new_item[:description]) ||
+              (current_item.code != new_item[:code]) ||
+              (current_item.quantity.to_f != new_item[:quantity].to_f) ||
+              (current_item.price.to_f != new_item[:price].to_f) ||
+              (current_item.discount_pct.to_f != new_item[:discount_pct].to_f) ||
+              (current_item.discount.to_f != new_item[:discount].to_f) ||
+              (current_item.tax_type_id.to_i != new_item[:tax_type_id].to_i) ||
+              (current_item.purchase_order_id.to_i != new_item[:purchase_order_id].to_i) ||
+              (current_item.purchase_order_item_id.to_i != new_item[:purchase_order_item_id].to_i) ||
+              (current_item.project_id.to_i != new_item[:project_id].to_i) ||
+              (current_item.work_order_id.to_i != new_item[:work_order_id].to_i) ||
+              (current_item.charge_account_id.to_i != new_item[:charge_account_id].to_i) ||
+              (current_item.store_id.to_i != new_item[:store_id].to_i)))
+            items_changed = true
+            break
+          end
         end
       end
-      master_changed = false
       if ((params[:receipt_note][:organization_id].to_i != @receipt_note.organization_id.to_i) ||
           (params[:receipt_note][:project_id].to_i != @receipt_note.project_id.to_i) ||
           (params[:receipt_note][:receipt_no].to_s != @receipt_note.receipt_no) ||
@@ -681,10 +702,7 @@ module Ag2Products
       respond_to do |format|
         if master_changed || items_changed
           @receipt_note.updated_by = current_user.id if !current_user.nil?
-          # Should use attachment from drag&drop?
-          if $attachment != nil && !$attachment.avatar.blank? && $attachment.updated_at > @receipt_note.updated_at
-            @receipt_note.attachment = $attachment.avatar
-          end
+          $attachment_changed = false
           if @receipt_note.update_attributes(params[:receipt_note])
             destroy_attachment
             $attachment = nil

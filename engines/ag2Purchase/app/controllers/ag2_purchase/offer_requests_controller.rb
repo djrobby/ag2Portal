@@ -555,23 +555,72 @@ module Ag2Purchase
     def update
       @breadcrumb = 'update'
       @offer_request = OfferRequest.find(params[:id])
-      @offer_request.updated_by = current_user.id if !current_user.nil?
+
+      items_changed = false
+      if params[:offer_request][:offer_request_suppliers_attributes]
+        params[:offer_request][:offer_request_suppliers_attributes].values.each do |new_item|
+          current_item = OfferRequestSupplier.find(new_item[:id]) rescue nil
+          if ((current_item.nil?) || (new_item[:_destroy] != "false") ||
+             ((current_item.supplier_id.to_i != new_item[:supplier_id].to_i)))
+            items_changed = true
+            break
+          end
+        end
+      end
+      if !items_changed && params[:offer_request][:offer_request_items_attributes]
+        params[:offer_request][:offer_request_items_attributes].values.each do |new_item|
+          current_item = OfferRequestItem.find(new_item[:id]) rescue nil
+          if ((current_item.nil?) || (new_item[:_destroy] != "false") ||
+             ((current_item.product_id.to_i != new_item[:product_id].to_i) ||
+              (current_item.description != new_item[:description]) ||
+              (current_item.quantity.to_f != new_item[:quantity].to_f) ||
+              (current_item.price.to_f != new_item[:price].to_f) ||
+              (current_item.tax_type_id.to_i != new_item[:tax_type_id].to_i) ||
+              (current_item.project_id.to_i != new_item[:project_id].to_i) ||
+              (current_item.work_order_id.to_i != new_item[:work_order_id].to_i) ||
+              (current_item.charge_account_id.to_i != new_item[:charge_account_id].to_i) ||
+              (current_item.store_id.to_i != new_item[:store_id].to_i)))
+            items_changed = true
+            break
+          end
+        end
+      end
+      master_changed = false
+      if ((params[:offer_request][:organization_id].to_i != @offer_request.organization_id.to_i) ||
+          (params[:offer_request][:project_id].to_i != @offer_request.project_id.to_i) ||
+          (params[:offer_request][:request_no].to_s != @offer_request.request_no) ||
+          (params[:offer_request][:request_date].to_date != @offer_request.request_date) ||
+          (params[:offer_request][:deadline_date].to_date != @offer_request.deadline_date) ||
+          (params[:offer_request][:work_order_id].to_i != @offer_request.work_order_id.to_i) ||
+          (params[:offer_request][:charge_account_id].to_i != @offer_request.charge_account_id.to_i) ||
+          (params[:offer_request][:store_id].to_i != @offer_request.store_id.to_i) ||
+          (params[:offer_request][:payment_method_id].to_i != @offer_request.payment_method_id.to_i) ||
+          (params[:offer_request][:discount_pct].to_f != @offer_request.discount_pct.to_f) ||
+          (params[:offer_request][:remarks].to_s != @offer_request.remarks))
+        master_changed = true
+      end
   
       respond_to do |format|
-        if @offer_request.update_attributes(params[:offer_request])
-          format.html { redirect_to @offer_request,
-                        notice: (crud_notice('updated', @offer_request) + "#{undo_link(@offer_request)}").html_safe }
-          format.json { head :no_content }
+        if master_changed || items_changed
+          @offer_request.updated_by = current_user.id if !current_user.nil?
+          if @offer_request.update_attributes(params[:offer_request])
+            format.html { redirect_to @offer_request,
+                          notice: (crud_notice('updated', @offer_request) + "#{undo_link(@offer_request)}").html_safe }
+            format.json { head :no_content }
+          else
+            @projects = projects_dropdown_edit(@offer_request.project)
+            @work_orders = @offer_request.project.blank? ? work_orders_dropdown : @offer_request.project.work_orders.order(:order_no)
+            @charge_accounts = work_order_charge_account(@offer_request)
+            @stores = work_order_store(@offer_request)
+            @suppliers = @offer_request.organization.blank? ? suppliers_dropdown : @offer_request.organization.suppliers(:supplier_code)
+            @payment_methods = @offer_request.organization.blank? ? payment_methods_dropdown : payment_payment_methods(@offer_request.organization_id)
+            @products = @offer_request.organization.blank? ? products_dropdown : @offer_request.organization.products(:product_code)
+            format.html { render action: "edit" }
+            format.json { render json: @offer_request.errors, status: :unprocessable_entity }
+          end
         else
-          @projects = projects_dropdown_edit(@offer_request.project)
-          @work_orders = @offer_request.project.blank? ? work_orders_dropdown : @offer_request.project.work_orders.order(:order_no)
-          @charge_accounts = work_order_charge_account(@offer_request)
-          @stores = work_order_store(@offer_request)
-          @suppliers = @offer_request.organization.blank? ? suppliers_dropdown : @offer_request.organization.suppliers(:supplier_code)
-          @payment_methods = @offer_request.organization.blank? ? payment_methods_dropdown : payment_payment_methods(@offer_request.organization_id)
-          @products = @offer_request.organization.blank? ? products_dropdown : @offer_request.organization.products(:product_code)
-          format.html { render action: "edit" }
-          format.json { render json: @offer_request.errors, status: :unprocessable_entity }
+          format.html { redirect_to @offer_request }
+          format.json { head :no_content }
         end
       end
     end

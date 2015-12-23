@@ -59,6 +59,8 @@
     // when the #supplier_invoice_attachment field changes
     $("#supplier_invoice_attachment").change(function() {
       readImageFromInput(this, '#dd_files');
+      jQuery.getJSON('si_attachment_changed', function(data) {
+      });
     });
 
     // when the #supplier_invoice_invoice_no field changes

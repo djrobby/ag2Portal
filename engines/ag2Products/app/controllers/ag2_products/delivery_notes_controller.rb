@@ -453,23 +453,25 @@ module Ag2Products
       @delivery_note = DeliveryNote.find(params[:id])
 
       items_changed = false
-      params[:delivery_note][:delivery_note_items_attributes].values.each do |new_item|
-        current_item = DeliveryNoteItem.find(new_item[:id]) rescue nil
-        if ((current_item.nil?) || (new_item[:_destroy] != "false") ||
-           ((current_item.product_id.to_i != new_item[:product_id].to_i) ||
-            (current_item.description != new_item[:description]) ||
-            (current_item.quantity.to_f != new_item[:quantity].to_f) ||
-            (current_item.cost.to_f != new_item[:cost].to_f) ||
-            (current_item.price.to_f != new_item[:price].to_f) ||
-            (current_item.discount_pct.to_f != new_item[:discount_pct].to_f) ||
-            (current_item.discount.to_f != new_item[:discount].to_f) ||
-            (current_item.tax_type_id.to_i != new_item[:tax_type_id].to_i) ||
-            (current_item.project_id.to_i != new_item[:project_id].to_i) ||
-            (current_item.work_order_id.to_i != new_item[:work_order_id].to_i) ||
-            (current_item.charge_account_id.to_i != new_item[:charge_account_id].to_i) ||
-            (current_item.store_id.to_i != new_item[:store_id].to_i)))
-          items_changed = true
-          break
+      if params[:delivery_note][:delivery_note_items_attributes]
+        params[:delivery_note][:delivery_note_items_attributes].values.each do |new_item|
+          current_item = DeliveryNoteItem.find(new_item[:id]) rescue nil
+          if ((current_item.nil?) || (new_item[:_destroy] != "false") ||
+             ((current_item.product_id.to_i != new_item[:product_id].to_i) ||
+              (current_item.description != new_item[:description]) ||
+              (current_item.quantity.to_f != new_item[:quantity].to_f) ||
+              (current_item.cost.to_f != new_item[:cost].to_f) ||
+              (current_item.price.to_f != new_item[:price].to_f) ||
+              (current_item.discount_pct.to_f != new_item[:discount_pct].to_f) ||
+              (current_item.discount.to_f != new_item[:discount].to_f) ||
+              (current_item.tax_type_id.to_i != new_item[:tax_type_id].to_i) ||
+              (current_item.project_id.to_i != new_item[:project_id].to_i) ||
+              (current_item.work_order_id.to_i != new_item[:work_order_id].to_i) ||
+              (current_item.charge_account_id.to_i != new_item[:charge_account_id].to_i) ||
+              (current_item.store_id.to_i != new_item[:store_id].to_i)))
+            items_changed = true
+            break
+          end
         end
       end
       master_changed = false
