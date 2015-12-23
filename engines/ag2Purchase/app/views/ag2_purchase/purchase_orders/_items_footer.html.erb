@@ -14,7 +14,7 @@
   <td align="right"><%= t :"activerecord.attributes.purchase_order.bonus" %> | <%= t :"activerecord.attributes.purchase_order.taxable" %> | <%= t :"activerecord.attributes.purchase_order.taxes" %></td>
   <td></td>
   <td></td>
-  <td align="right"><%= number_with_precision(order.discount_pct, precision: 2) unless order.discount_pct.blank? %></td>
+  <td align="right"><%= number_with_precision(order.discount_pct, precision: 2) + "%" unless order.discount_pct.blank? %></td>
   <td align="right"><%= number_with_precision(order.bonus, precision: 4) unless order.bonus.blank? %></td>
   <td align="right"><%= number_with_precision(order.taxable, precision: 4) unless order.taxable.blank? %></td>
   <td align="right"><%= number_with_precision(order.taxes, precision: 4) unless order.taxes.blank? %></td>

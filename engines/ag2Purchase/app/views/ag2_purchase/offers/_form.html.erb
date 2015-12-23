@@ -49,13 +49,6 @@
       // Order OK: Enable
       show_new(true);
     }
-    
-    // Can't change order no if editing
-    if ('<%= @breadcrumb %>' == "update") {
-      $('#offer_offer_no').prop('readonly', true);
-    } else {
-      $('#offer_offer_no').prop('readonly', false);
-    }
   });
   
   jQuery(function($) {

@@ -336,19 +336,57 @@ module Ag2Tech
     def update
       @breadcrumb = 'update'
       @budget = Budget.find(params[:id])
-      @budget.updated_by = current_user.id if !current_user.nil?
+
+      items_changed = false
+      if params[:budget][:budget_items_attributes]
+        params[:budget][:budget_items_attributes].values.each do |new_item|
+          current_item = BudgetItem.find(new_item[:id]) rescue nil
+          if ((current_item.nil?) || (new_item[:_destroy] != "false") ||
+             ((current_item.charge_account_id.to_i != new_item[:charge_account_id].to_i) ||
+              (current_item.month_01.to_f != new_item[:month_01].to_f) ||
+              (current_item.month_02.to_f != new_item[:month_02].to_f) ||
+              (current_item.month_03.to_f != new_item[:month_03].to_f) ||
+              (current_item.month_04.to_f != new_item[:month_04].to_f) ||
+              (current_item.month_05.to_f != new_item[:month_05].to_f) ||
+              (current_item.month_06.to_f != new_item[:month_06].to_f) ||
+              (current_item.month_07.to_f != new_item[:month_07].to_f) ||
+              (current_item.month_08.to_f != new_item[:month_08].to_f) ||
+              (current_item.month_09.to_f != new_item[:month_09].to_f) ||
+              (current_item.month_10.to_f != new_item[:month_10].to_f) ||
+              (current_item.month_11.to_f != new_item[:month_11].to_f) ||
+              (current_item.month_12.to_f != new_item[:month_12].to_f) ||
+              (current_item.corrected_amount.to_f != new_item[:corrected_amount].to_f)))
+            items_changed = true
+            break
+          end
+        end
+      end
+      master_changed = false
+      if ((params[:budget][:organization_id].to_i != @budget.organization_id.to_i) ||
+          (params[:budget][:project_id].to_i != @budget.project_id.to_i) ||
+          (params[:budget][:budget_period_id].to_i != @budget.budget_period_id.to_i) ||
+          (params[:budget][:budget_no].to_s != @budget.budget_no) ||
+          (params[:budget][:description].to_s != @budget.description))
+        master_changed = true
+      end
   
       respond_to do |format|
-        if @budget.update_attributes(params[:budget])
-          format.html { redirect_to @budget,
-                        notice: (crud_notice('updated', @budget) + "#{undo_link(@budget)}").html_safe }
-          format.json { head :no_content }
+        if master_changed || items_changed
+          @budget.updated_by = current_user.id if !current_user.nil?
+          if @budget.update_attributes(params[:budget])
+            format.html { redirect_to @budget,
+                          notice: (crud_notice('updated', @budget) + "#{undo_link(@budget)}").html_safe }
+            format.json { head :no_content }
+          else
+            @projects = projects_dropdown
+            @periods = periods_dropdown
+            @charge_accounts = @budget.project.blank? ? charge_accounts_dropdown : charge_accounts_dropdown_edit(@budget.project_id)
+            format.html { render action: "edit" }
+            format.json { render json: @budget.errors, status: :unprocessable_entity }
+          end
         else
-          @projects = projects_dropdown
-          @periods = periods_dropdown
-          @charge_accounts = @budget.project.blank? ? charge_accounts_dropdown : charge_accounts_dropdown_edit(@budget.project_id)
-          format.html { render action: "edit" }
-          format.json { render json: @budget.errors, status: :unprocessable_entity }
+          format.html { redirect_to @budget }
+          format.json { head :no_content }
         end
       end
     end
