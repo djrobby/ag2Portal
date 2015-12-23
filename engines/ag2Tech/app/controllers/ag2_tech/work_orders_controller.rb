@@ -677,29 +677,131 @@ module Ag2Tech
     def update
       @breadcrumb = 'update'
       @work_order = WorkOrder.find(params[:id])
-      @work_order.updated_by = current_user.id if !current_user.nil?
+
+      items_changed = false
+      # Vehicles
+      if params[:work_order][:work_order_vehicles_attributes]
+        params[:work_order][:work_order_vehicles_attributes].values.each do |new_item|
+          current_item = WorkOrderVehicle.find(new_item[:id]) rescue nil
+          if ((current_item.nil?) || (new_item[:_destroy] != "false") ||
+             ((current_item.vehicle_id.to_i != new_item[:vehicle_id].to_i) ||
+              (current_item.distance.to_f != new_item[:distance].to_f) ||
+              (current_item.cost.to_f != new_item[:cost].to_f)))
+            items_changed = true
+            break
+          end
+        end
+      end
+      # Tools
+      if !items_changed && params[:work_order][:work_order_tools_attributes]
+        params[:work_order][:work_order_tools_attributes].values.each do |new_item|
+          current_item = WorkOrderTool.find(new_item[:id]) rescue nil
+          if ((current_item.nil?) || (new_item[:_destroy] != "false") ||
+             ((current_item.tool_id.to_i != new_item[:tool_id].to_i) ||
+              (current_item.minutes.to_f != new_item[:minutes].to_f) ||
+              (current_item.cost.to_f != new_item[:cost].to_f)))
+            items_changed = true
+            break
+          end
+        end
+      end
+      # Subcontractors
+      if !items_changed && params[:work_order][:work_order_subcontractors_attributes]
+        params[:work_order][:work_order_subcontractors_attributes].values.each do |new_item|
+          current_item = WorkOrderSubcontractor.find(new_item[:id]) rescue nil
+          if ((current_item.nil?) || (new_item[:_destroy] != "false") ||
+             ((current_item.supplier_id.to_i != new_item[:supplier_id].to_i) ||
+              (current_item.purchase_order_id.to_i != new_item[:purchase_order_id].to_i) ||
+              (current_item.enforcement_pct.to_f != new_item[:enforcement_pct].to_f)))
+            items_changed = true
+            break
+          end
+        end
+      end
+      # Workers
+      if !items_changed && params[:work_order][:work_order_workers_attributes]
+        params[:work_order][:work_order_workers_attributes].values.each do |new_item|
+          current_item = WorkOrderWorker.find(new_item[:id]) rescue nil
+          if ((current_item.nil?) || (new_item[:_destroy] != "false") ||
+             ((current_item.worker_id.to_i != new_item[:worker_id].to_i) ||
+              (current_item.hours.to_f != new_item[:hours].to_f) ||
+              (current_item.cost.to_f != new_item[:cost].to_f)))
+            items_changed = true
+            break
+          end
+        end
+      end
+      # Items
+      if !items_changed && params[:work_order][:work_order_items_attributes]
+        params[:work_order][:work_order_items_attributes].values.each do |new_item|
+          current_item = WorkOrderItem.find(new_item[:id]) rescue nil
+          if ((current_item.nil?) || (new_item[:_destroy] != "false") ||
+             ((current_item.product_id.to_i != new_item[:product_id].to_i) ||
+              (current_item.description != new_item[:description]) ||
+              (current_item.quantity.to_f != new_item[:quantity].to_f) ||
+              (current_item.cost.to_f != new_item[:cost].to_f) ||
+              (current_item.price.to_f != new_item[:price].to_f) ||
+              (current_item.tax_type_id.to_i != new_item[:tax_type_id].to_i)))
+            items_changed = true
+            break
+          end
+        end
+      end
+      master_changed = false
+      if ((params[:work_order][:organization_id].to_i != @work_order.organization_id.to_i) ||
+          (params[:work_order][:project_id].to_i != @work_order.project_id.to_i) ||
+          (params[:work_order][:client_id].to_i != @work_order.client_id.to_i) ||
+          (params[:work_order][:work_order_type_id].to_i != @work_order.work_order_type_id.to_i) ||
+          (params[:work_order][:description] != @work_order.description) ||
+          (params[:work_order][:work_order_labor_id].to_i != @work_order.work_order_labor_id.to_i) ||
+          (params[:work_order][:work_order_status_id].to_i != @work_order.work_order_status_id.to_i) ||
+          (params[:work_order][:area_id].to_i != @work_order.area_id.to_i) ||
+          (params[:work_order][:in_charge_id].to_i != @work_order.in_charge_id.to_i) ||
+          (params[:work_order][:charge_account_id].to_i != @work_order.charge_account_id.to_i) ||
+          (params[:work_order][:store_id].to_i != @work_order.store_id.to_i) ||
+          (params[:work_order][:client_id].to_i != @work_order.client_id.to_i) ||
+          (params[:work_order][:petitioner] != @work_order.petitioner) ||
+          (params[:work_order][:location] != @work_order.location) ||
+          (params[:work_order][:pub_record] != @work_order.pub_record) ||
+          (params[:work_order][:started_at].to_datetime != @work_order.started_at) ||
+          (params[:work_order][:completed_at].to_datetime != @work_order.completed_at) ||
+          (params[:work_order][:closed_at].to_datetime != @work_order.closed_at) ||
+          (params[:work_order][:reported_at].to_datetime != @work_order.reported_at) ||
+          (params[:work_order][:approved_at].to_datetime != @work_order.approved_at) ||
+          (params[:work_order][:certified_at].to_datetime != @work_order.certified_at) ||
+          (params[:work_order][:posted_at].to_datetime != @work_order.posted_at) ||
+          (params[:work_order][:remarks].to_s != @work_order.remarks))
+        master_changed = true
+      end
+      #@work_order.work_order_items.assign_attributes(params[:work_order][:work_order_items_attributes])
   
       respond_to do |format|
-        if @work_order.update_attributes(params[:work_order])
-          format.html { redirect_to @work_order,
-                        notice: (crud_notice('updated', @work_order) + "#{undo_link(@work_order)}").html_safe }
-          format.json { head :no_content }
+        if master_changed || items_changed
+          @work_order.updated_by = current_user.id if !current_user.nil?
+          if @work_order.update_attributes(params[:work_order])
+            format.html { redirect_to @work_order,
+                          notice: (crud_notice('updated', @work_order) + "#{undo_link(@work_order)}").html_safe }
+            format.json { head :no_content }
+          else
+            @projects = projects_dropdown_edit(@work_order.project)
+            @types = work_order_types_dropdown_edit(@work_order.work_order_type)
+            @labors = work_order_labors_dropdown_edit(@work_order.work_order_labor)
+            @areas = areas_dropdown
+            @charge_accounts = @work_order.project.blank? ? projects_charge_accounts(@projects) : charge_accounts_dropdown_edit(@work_order.project)
+            @stores = project_stores(@work_order.project)
+            @clients = clients_dropdown
+            @workers = project_workers(@work_order.project)
+            @products = @work_order.organization.blank? ? products_dropdown : @work_order.organization.products(:product_code)
+            @suppliers = @work_order.organization.blank? ? suppliers_dropdown : @work_order.organization.suppliers(:supplier_code)
+            @orders = orders_dropdown_edit(@work_order, nil)
+            @tools = tools_dropdown_edit(@work_order)
+            @vehicles = vehicles_dropdown_edit(@work_order)
+            format.html { render action: "edit" }
+            format.json { render json: @work_order.errors, status: :unprocessable_entity }
+          end
         else
-          @projects = projects_dropdown_edit(@work_order.project)
-          @types = work_order_types_dropdown_edit(@work_order.work_order_type)
-          @labors = work_order_labors_dropdown_edit(@work_order.work_order_labor)
-          @areas = areas_dropdown
-          @charge_accounts = @work_order.project.blank? ? projects_charge_accounts(@projects) : charge_accounts_dropdown_edit(@work_order.project)
-          @stores = project_stores(@work_order.project)
-          @clients = clients_dropdown
-          @workers = project_workers(@work_order.project)
-          @products = @work_order.organization.blank? ? products_dropdown : @work_order.organization.products(:product_code)
-          @suppliers = @work_order.organization.blank? ? suppliers_dropdown : @work_order.organization.suppliers(:supplier_code)
-          @orders = orders_dropdown_edit(@work_order, nil)
-          @tools = tools_dropdown_edit(@work_order)
-          @vehicles = vehicles_dropdown_edit(@work_order)
-          format.html { render action: "edit" }
-          format.json { render json: @work_order.errors, status: :unprocessable_entity }
+          format.html { redirect_to @work_order }
+          format.json { head :no_content }
         end
       end
     end

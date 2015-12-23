@@ -48,7 +48,7 @@
     }).on('changeDate', function(e){
       var dt = es_date(e.date) + ' ' + es_time(e.date);
       $(this).val(dt);
-      $('.date_picker').datepicker('hide');
+      $('.date_picker_time').datepicker('hide');
     });
     
     // Save default text color
@@ -469,15 +469,15 @@
   <label class="multi-field-label-two"> <%= f.input :pub_record, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %> </label>
 </div>
 <div>
-  <label class="multi-field-label-three"> <%= f.input :started_at, start_year: Time.now.year - 100, end_year: Time.now.year + 100, as: :string, input_html: { value: (f.object.started_at.strftime("%d/%m/%Y") if f.object.started_at), class: 'large-text-field date_picker' }, label_html: { class: 'form-label-under-sel2' } %> </label>
-  <label class="multi-field-label-three"> <%= f.input :completed_at, start_year: Time.now.year - 100, end_year: Time.now.year + 100, as: :string, input_html: { value: (f.object.completed_at.strftime("%d/%m/%Y") if f.object.completed_at), class: 'large-text-field date_picker' }, label_html: { class: 'form-label' } %> </label>
-  <label class="multi-field-label-three"> <%= f.input :closed_at, start_year: Time.now.year - 100, end_year: Time.now.year + 100, as: :string, input_html: { value: (f.object.closed_at.strftime("%d/%m/%Y") if f.object.closed_at), class: 'large-text-field date_picker' }, label_html: { class: 'form-label' } %> </label>
+  <label class="multi-field-label-three"> <%= f.input :started_at, start_year: Time.now.year - 100, end_year: Time.now.year + 100, as: :string, input_html: { value: (f.object.started_at.strftime("%d/%m/%Y %H:%M:%S") if f.object.started_at), class: 'large-text-field date_picker_time' }, label_html: { class: 'form-label-under-sel2' } %> </label>
+  <label class="multi-field-label-three"> <%= f.input :completed_at, start_year: Time.now.year - 100, end_year: Time.now.year + 100, as: :string, input_html: { value: (f.object.completed_at.strftime("%d/%m/%Y %H:%M:%S") if f.object.completed_at), class: 'large-text-field date_picker_time' }, label_html: { class: 'form-label' } %> </label>
+  <label class="multi-field-label-three"> <%= f.input :closed_at, start_year: Time.now.year - 100, end_year: Time.now.year + 100, as: :string, input_html: { value: (f.object.closed_at.strftime("%d/%m/%Y %H:%M:%S") if f.object.closed_at), class: 'large-text-field date_picker_time' }, label_html: { class: 'form-label' } %> </label>
 </div>
 <div>
   <label class="multi-field-label-four"> <%= f.input :reported_at, start_year: Time.now.year - 100, end_year: Time.now.year + 100, as: :string, input_html: { value: (f.object.reported_at.strftime("%d/%m/%Y %H:%M:%S") if f.object.reported_at), class: 'm-large-text-field date_picker_time' }, label_html: { class: 'form-label-under-sel2' } %> </label>
   <label class="multi-field-label-four"> <%= f.input :approved_at, start_year: Time.now.year - 100, end_year: Time.now.year + 100, as: :string, input_html: { value: (f.object.approved_at.strftime("%d/%m/%Y %H:%M:%S") if f.object.approved_at), class: 'm-large-text-field date_picker_time' }, label_html: { class: 'form-label' } %> </label>
-  <label class="multi-field-label-four"> <%= f.input :certified_at, start_year: Time.now.year - 100, end_year: Time.now.year + 100, as: :string, input_html: { value: (f.object.certified_at.strftime("%d/%m/%Y") if f.object.certified_at), class: 'm-large-text-field date_picker' }, label_html: { class: 'form-label' } %> </label>
-  <label class="multi-field-label-four"> <%= f.input :posted_at, start_year: Time.now.year - 100, end_year: Time.now.year + 100, as: :string, input_html: { value: (f.object.posted_at.strftime("%d/%m/%Y") if f.object.posted_at), class: 'm-large-text-field date_picker' }, label_html: { class: 'form-label' } %> </label>
+  <label class="multi-field-label-four"> <%= f.input :certified_at, start_year: Time.now.year - 100, end_year: Time.now.year + 100, as: :string, input_html: { value: (f.object.certified_at.strftime("%d/%m/%Y %H:%M:%S") if f.object.certified_at), class: 'm-large-text-field date_picker_time' }, label_html: { class: 'form-label' } %> </label>
+  <label class="multi-field-label-four"> <%= f.input :posted_at, start_year: Time.now.year - 100, end_year: Time.now.year + 100, as: :string, input_html: { value: (f.object.posted_at.strftime("%d/%m/%Y %H:%M:%S") if f.object.posted_at), class: 'm-large-text-field date_picker_time' }, label_html: { class: 'form-label' } %> </label>
 </div>
 <!-- Items -->
 <table class="form-table">

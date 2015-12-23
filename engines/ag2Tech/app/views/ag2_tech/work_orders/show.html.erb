@@ -73,13 +73,13 @@
       <td><%=t 'activerecord.attributes.work_order.work_order_status' %>:</td>
       <td><%= @work_order.work_order_status.name %></td>
       <td><%= t :"activerecord.attributes.work_order.started_at" %>:</td>
-      <td><%= @work_order.started_at.strftime("%d/%m/%Y") unless @work_order.started_at.blank? %></td>
+      <td><%= @work_order.started_at.strftime("%d/%m/%Y %H:%M:%S") unless @work_order.started_at.blank? %></td>
     </tr>
     <tr>
       <td><%= t :"activerecord.attributes.work_order.completed_at" %>:</td>
-      <td><%= @work_order.completed_at.strftime("%d/%m/%Y") unless @work_order.completed_at.blank? %></td>
+      <td><%= @work_order.completed_at.strftime("%d/%m/%Y %H:%M:%S") unless @work_order.completed_at.blank? %></td>
       <td><%= t :"activerecord.attributes.work_order.closed_at" %>:</td>
-      <td><%= @work_order.closed_at.strftime("%d/%m/%Y") unless @work_order.closed_at.blank? %></td>
+      <td><%= @work_order.closed_at.strftime("%d/%m/%Y %H:%M:%S") unless @work_order.closed_at.blank? %></td>
     </tr>
     <tr>
       <td><%= t :"activerecord.attributes.work_order.reported_at" %>:</td>
@@ -89,9 +89,9 @@
     </tr>
     <tr>
       <td><%= t :"activerecord.attributes.work_order.certified_at" %>:</td>
-      <td><%= @work_order.certified_at.strftime("%d/%m/%Y") unless @work_order.certified_at.blank? %></td>
+      <td><%= @work_order.certified_at.strftime("%d/%m/%Y %H:%M:%S") unless @work_order.certified_at.blank? %></td>
       <td><%= t :"activerecord.attributes.work_order.posted_at" %>:</td>
-      <td><%= @work_order.posted_at.strftime("%d/%m/%Y") unless @work_order.posted_at.blank? %></td>
+      <td><%= @work_order.posted_at.strftime("%d/%m/%Y %H:%M:%S") unless @work_order.posted_at.blank? %></td>
     </tr>
     <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @work_order } %>
     <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @work_order } %>
