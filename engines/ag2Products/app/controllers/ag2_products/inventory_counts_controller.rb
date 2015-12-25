@@ -529,7 +529,7 @@ module Ag2Products
     end
     
     def families_dropdown
-      _families = session[:organization] != '0' ? ProductFamily.where(organization_id: session[:organization].to_i).order(:family_code) : ProductFamily.order(:family_code)  
+      session[:organization] != '0' ? ProductFamily.where(organization_id: session[:organization].to_i).order(:family_code) : ProductFamily.order(:family_code)  
     end
 
     def products_dropdown
