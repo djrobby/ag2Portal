@@ -264,6 +264,8 @@ class Ability
       can :crud, SupplierInvoiceApproval
       can :crud, SupplierInvoiceItem
       can :crud, SupplierPayment
+      # Sepecial ag2Admin roles
+      can :crud, Entity
     elsif user.has_role? :ag2Purchase_Guest
       can :read, Activity
       can :read, Offer
