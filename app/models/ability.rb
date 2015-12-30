@@ -9,15 +9,15 @@ class Ability
     # Not logged-in users can't manage anything
     if user.nil?
       cannot :manage, :all
-      return      
+      return
     end
-    
+
     # Administrators (administrator role) can manage all
     if user.has_role? :Administrator
       can :manage, :all
       return
     end
-    
+
     # Users can't manage configurations
     cannot :manage, App
     cannot :manage, DataImportConfig
@@ -33,7 +33,7 @@ class Ability
 
     # Users can manage attachments
     can :manage, Attachment
-    
+
     #
     # Users according to their roles
     # IMPORTANT!
@@ -258,6 +258,7 @@ class Ability
       can :crud, PurchaseOrder
       can :crud, PurchaseOrderItem
       can :crud, Supplier
+      can :crud, SupplierBankAccount
       can :crud, SupplierContact
       can :crud, SupplierInvoice
       can :crud, SupplierInvoiceApproval
@@ -276,6 +277,7 @@ class Ability
       can :read, PurchaseOrder
       can :read, PurchaseOrderItem
       can :read, Supplier
+      can :read, SupplierBankAccount
       can :read, SupplierContact
       can :read, SupplierInvoice
       can :read, SupplierInvoiceApproval
@@ -294,6 +296,7 @@ class Ability
       cannot :manage, PurchaseOrder
       cannot :manage, PurchaseOrderItem
       cannot :manage, Supplier
+      cannot :manage, SupplierBankAccount
       cannot :manage, SupplierContact
       cannot :manage, SupplierInvoice
       cannot :manage, SupplierInvoiceApproval
