@@ -16,22 +16,6 @@ function dd_import_files(_dd_tag_target, _dd_pre_viewer, _dd_update_attached_pat
       e.preventDefault();
     if (e.stopPropagation)
       e.stopPropagation();
-    $(this).$.ajax({
-      url: '/path/to/file',
-      type: 'default GET (Other values: POST)',
-      dataType: 'default: Intelligent Guess (Other values: xml, json, script, or html)',
-      data: {param1: 'value1'},
-    })
-    .done(function() {
-      console.log("success");
-    })
-    .fail(function() {
-      console.log("error");
-    })
-    .always(function() {
-      console.log("complete");
-    });
-    
 
     e.dataTransfer.dropEffect = 'copy';
   });
