@@ -73,7 +73,7 @@
     </tr>
     <tr>
       <td><%=t 'activerecord.attributes.inventory_count.approval_date' %>:</td>
-      <td id="approval_date"><%= formatted_timestamp(@inventory_count.approval_date) unless @inventory_count.approval_date.blank? %></td>
+      <td id="approval_date"><%= formatted_timestamp(@inventory_count.approval_date.utc.getlocal) unless @inventory_count.approval_date.blank? %></td>
       <td><%=t 'activerecord.attributes.inventory_count.approver' %>:</td>
       <td id="approver"><%= @inventory_count.approver.email unless @inventory_count.approver.blank? %></td>
     </tr>

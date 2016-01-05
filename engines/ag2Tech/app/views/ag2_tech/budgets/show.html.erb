@@ -23,7 +23,7 @@
     </tr>
     <tr>
       <td><%=t 'activerecord.attributes.budget.approval_date' %>:</td>
-      <td><%= @budget.approval_date.strftime("%d/%m/%Y") unless @budget.approval_date.blank? %></td>
+      <td><%= formatted_timestamp(@budget.approval_date.utc.getlocal) unless @budget.approval_date.blank? %></td>
       <td><%=t 'activerecord.attributes.budget.approver' %>:</td>
       <td> <%= @budget.approver.email unless @budget.approver.blank? %> </td>
     </tr>

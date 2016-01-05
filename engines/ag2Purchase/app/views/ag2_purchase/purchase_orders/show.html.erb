@@ -129,7 +129,7 @@
     </tr>
     <tr>
       <td><%=t 'activerecord.attributes.purchase_order.approval_date' %>:</td>
-      <td id="approval_date"><%= formatted_timestamp(@purchase_order.approval_date) unless @purchase_order.approval_date.blank? %></td>
+      <td id="approval_date"><%= formatted_timestamp(@purchase_order.approval_date.utc.getlocal) unless @purchase_order.approval_date.blank? %></td>
       <td><%=t 'activerecord.attributes.purchase_order.approver' %>:</td>
       <td id="approver"><%= @purchase_order.approver.email unless @purchase_order.approver.blank? %></td>
     </tr>

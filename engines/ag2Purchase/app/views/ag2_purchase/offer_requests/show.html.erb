@@ -147,7 +147,7 @@
     </tr>
     <tr>
       <td><%=t 'activerecord.attributes.offer_request.approval_date' %>:</td>
-      <td class="offer-request-approval-date"><%= formatted_timestamp(@offer_request.approval_date) unless @offer_request.approval_date.blank? %></td>
+      <td class="offer-request-approval-date"><%= formatted_timestamp(@offer_request.approval_date.utc.getlocal) unless @offer_request.approval_date.blank? %></td>
       <td><%=t 'activerecord.attributes.offer_request.approver' %>:</td>
       <td class="offer-request-approver"> <%= @offer_request.approver.email unless @offer_request.approver.blank? %> </td>
     </tr>
