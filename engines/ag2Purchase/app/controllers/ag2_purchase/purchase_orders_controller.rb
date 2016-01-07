@@ -20,6 +20,7 @@ module Ag2Purchase
                                                :po_product_stock,
                                                :po_product_all_stocks,
                                                :po_approve_order,
+                                               :purchase_order_form,
                                                :send_purchase_order_form]
     # Helper methods for
     # => allow edit (hide buttons)
@@ -95,7 +96,7 @@ module Ag2Purchase
       # Taxes
       tax = tax - (tax * (discount_p / 100)) if discount_p != 0
       # Total
-      total = taxable + tax      
+      total = taxable + tax
       # Format output values
       qty = number_with_precision(qty.round(4), precision: 4)
       amount = number_with_precision(amount.round(4), precision: 4)
@@ -415,7 +416,7 @@ module Ag2Purchase
       end
       # Approver data
       if !_approver_id.nil?
-        _approver = User.find(_approver_id).email        
+        _approver = User.find(_approver_id).email
       end
       # Approval date
       if !_approval_date.nil?
@@ -432,7 +433,7 @@ module Ag2Purchase
       #@purchase_order = PurchaseOrder.find(params[:id])
       #@items = @purchase_order.purchase_order_items.order('id')
 
-      #pdf = send_data render_to_string, filename: "#{title}_#{@purchase_order.full_no}.pdf", type: 'application/pdf'     
+      #pdf = send_data render_to_string, filename: "#{title}_#{@purchase_order.full_no}.pdf", type: 'application/pdf'
       code = send_email(params[:id])
       message = code == '$err' ? t(:send_error) : t(:send_ok)
       @json_data = { "code" => code, "message" => message }
@@ -488,14 +489,14 @@ module Ag2Purchase
         paginate :page => params[:page] || 1, :per_page => per_page
       end
       @purchase_orders = @search.results
-  
+
       respond_to do |format|
         format.html # index.html.erb
         format.json { render json: @purchase_orders }
         format.js
       end
     end
-  
+
     # GET /purchase_orders/1
     # GET /purchase_orders/1.json
     def show
@@ -506,13 +507,13 @@ module Ag2Purchase
       @is_approver = company_approver(@purchase_order, @purchase_order.project.company, current_user.id) ||
                      office_approver(@purchase_order, @purchase_order.project.office, current_user.id)
                      #(current_user.has_role? :Administrator)
-  
+
       respond_to do |format|
         format.html # show.html.erb
         format.json { render json: @purchase_order }
       end
     end
-  
+
     # GET /purchase_orders/new
     # GET /purchase_orders/new.json
     def new
@@ -527,13 +528,13 @@ module Ag2Purchase
       @payment_methods = payment_methods_dropdown
       @products = products_dropdown
       #@purchase_order.purchase_order_items.build
-  
+
       respond_to do |format|
         format.html # new.html.erb
         format.json { render json: @purchase_order }
       end
     end
-  
+
     # GET /purchase_orders/1/edit
     def edit
       @breadcrumb = 'update'
@@ -552,14 +553,14 @@ module Ag2Purchase
       #@stores = @purchase_order.store.blank? ? Store.order(:name) : Store.where('id = ?', @purchase_order.store)
       #@items = @purchase_order.purchase_order_items.order('id')
     end
-  
+
     # POST /purchase_orders
     # POST /purchase_orders.json
     def create
       @breadcrumb = 'create'
       @purchase_order = PurchaseOrder.new(params[:purchase_order])
       @purchase_order.created_by = current_user.id if !current_user.nil?
-  
+
       respond_to do |format|
         if @purchase_order.save
           format.html { redirect_to @purchase_order, notice: crud_notice('created', @purchase_order) }
@@ -578,7 +579,7 @@ module Ag2Purchase
         end
       end
     end
-  
+
     # PUT /purchase_orders/1
     # PUT /purchase_orders/1.json
     def update
@@ -626,7 +627,7 @@ module Ag2Purchase
           (params[:purchase_order][:remarks].to_s != @purchase_order.remarks))
         master_changed = true
       end
-  
+
       respond_to do |format|
         if master_changed || items_changed
           @purchase_order.updated_by = current_user.id if !current_user.nil?
@@ -652,7 +653,7 @@ module Ag2Purchase
         end
       end
     end
-  
+
     # DELETE /purchase_orders/1
     # DELETE /purchase_orders/1.json
     def destroy
@@ -676,7 +677,7 @@ module Ag2Purchase
       @purchase_order = PurchaseOrder.find(params[:id])
       @items = @purchase_order.purchase_order_items.order('id')
 
-      title = t("activerecord.models.purchase_order.one")      
+      title = t("activerecord.models.purchase_order.one")
 
       respond_to do |format|
         # Render PDF
@@ -685,23 +686,23 @@ module Ag2Purchase
                      type: 'application/pdf',
                      disposition: 'inline' }
       end
-      
+
       # Updates status
       if @purchase_order.order_status_id < 3
         @purchase_order.order_status_id = 3
         @purchase_order.save
       end
     end
-    
+
     private
-    
+
     # Can't edit or delete when
     # => User isn't administrator
     # => Order is approved
     def cannot_edit(_order)
       !session[:is_administrator] && !_order.approver_id.blank?
     end
-    
+
     def current_projects_for_index(_projects)
       _current_projects = []
       _projects.each do |i|
@@ -718,7 +719,7 @@ module Ag2Purchase
       end
       _numbers = _numbers.blank? ? no : _numbers
     end
-    
+
     # Stores belonging to selected project
     def project_stores(_project)
       _array = []
@@ -841,7 +842,7 @@ module Ag2Purchase
     def payment_methods_dropdown
       _methods = session[:organization] != '0' ? payment_payment_methods(session[:organization].to_i) : payment_payment_methods(0)
     end
-    
+
     def payment_payment_methods(_organization)
       if _organization != 0
         _methods = PaymentMethod.where("(flow = 3 OR flow = 2) AND organization_id = ?", _organization).order(:description)
@@ -853,24 +854,24 @@ module Ag2Purchase
 
     def products_dropdown
       session[:organization] != '0' ? Product.where(organization_id: session[:organization].to_i).order(:product_code) : Product.order(:product_code)
-    end    
-    
+    end
+
     def offers_array(_offers)
       _array = []
       _offers.each do |i|
-        _array = _array << [i.id, i.offer_no, formatted_date(i.offer_date), i.supplier.full_name] 
+        _array = _array << [i.id, i.offer_no, formatted_date(i.offer_date), i.supplier.full_name]
       end
       _array
     end
-    
+
     def products_array(_products)
       _array = []
       _products.each do |i|
-        _array = _array << [i.id, i.full_code, i.main_description[0,40]] 
+        _array = _array << [i.id, i.full_code, i.main_description[0,40]]
       end
       _array
     end
-    
+
     # Returns _array from _ret table/model filled with _id attribute
     def ret_array(_array, _ret, _id)
       if !_ret.nil?
@@ -894,10 +895,10 @@ module Ag2Purchase
         _code = _purchase_price.code
       else
         _price = _product.reference_price
-        _discount_rate = Supplier.find(_supplier).discount_rate rescue 0      
+        _discount_rate = Supplier.find(_supplier).discount_rate rescue 0
       end
       return _price, _discount_rate, _code
-    end    
+    end
 
     def send_email(_purchase_order)
       code = '$ok'
@@ -908,12 +909,12 @@ module Ag2Purchase
       @purchase_order = PurchaseOrder.find(_purchase_order)
       @items = @purchase_order.purchase_order_items.order(:id)
 
-      title = t("activerecord.models.purchase_order.one") + "_" + @purchase_order.full_no + ".pdf"       
+      title = t("activerecord.models.purchase_order.one") + "_" + @purchase_order.full_no + ".pdf"
       #pdf = render_to_string(filename: "#{title}_#{@purchase_order.full_no}.pdf", type: 'application/pdf')
       pdf = render_to_string(filename: "#{title}", type: 'application/pdf')
       from = !current_user.nil? ? User.find(current_user.id).email : User.find(@purchase_order.created_by).email
       to = !@purchase_order.supplier.email.blank? ? @purchase_order.supplier.email : nil
-      
+
       if from.blank? || to.blank?
         code = "$err"
       else
