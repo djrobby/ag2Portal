@@ -8,7 +8,7 @@ module Ag2Directory
                                                :cc_update_attachment]
     # Public attachment for drag&drop
     $attachment = nil
-  
+
     # Update attached file from drag&drop
     def cc_update_attachment
       if !$attachment.nil?
