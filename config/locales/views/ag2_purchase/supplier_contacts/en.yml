@@ -4,7 +4,7 @@ en:
       index:
         title: "Supplier contacts"
         btn_new: "New Contact"
-        back_to_main_app: "Back to Suppliers"
+        back_to_main_app: "Go to Suppliers"
         back_to_root: "Back to ag2Purchase"
         label_supplier: "Supplier"
         label_others: "Others"

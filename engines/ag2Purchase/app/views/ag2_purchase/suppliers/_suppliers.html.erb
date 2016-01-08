@@ -44,5 +44,4 @@
 </table>
 <%= render :partial => '/layouts/pagination', :locals => { :ivar => @suppliers } %>
 <%= render :partial => '/layouts/crud/new', :locals => { :model => Supplier, :path => new_supplier_path, :txt => t("ag2_purchase.suppliers.index.btn_new") } %>
-<%= link_to I18n.t("go_to_child_app", :scope => :"ag2_purchase.suppliers.index"), supplier_contacts_path %> |
 <%= link_to t("ag2_purchase.suppliers.index.back_to_root"), ag2_purchase.root_path %>

@@ -10,11 +10,6 @@ module Ag2Purchase
     # GET /activities
     # GET /activities.json
     def index
-      # filters keep unmodified, only if the calling view (referrer) belongs to this controller
-      if (request.referrer.exclude? "ag2_purchase") || (request.referrer.exclude? "activities")
-        reset_session_variables_for_filters
-      end
-
       manage_filter_state
       @activities = Activity.paginate(:page => params[:page], :per_page => per_page).order(sort_column + ' ' + sort_direction)
 

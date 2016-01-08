@@ -23,11 +23,6 @@ module Ag2Purchase
     # GET /payment_methods
     # GET /payment_methods.json
     def index
-      # filters keep unmodified, only if the calling view (referrer) belongs to this controller
-      if (request.referrer.exclude? "ag2_purchase") || (request.referrer.exclude? "payment_methods")
-        reset_session_variables_for_filters
-      end
-
       manage_filter_state
       filter = params[:ifilter]
       init_oco if !session[:organization]
