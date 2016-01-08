@@ -19,6 +19,7 @@ module Ag2Purchase
                                                :or_product_all_stocks,
                                                :or_approve_offer,
                                                :or_disapprove_offer,
+                                               :offer_request_form,
                                                :send_offer_request_form]
     # Calculate and format totals properly
     def or_totals
@@ -34,7 +35,7 @@ module Ag2Purchase
       # Taxes
       tax = tax - (tax * (discount_p / 100)) if discount_p != 0
       # Total
-      total = taxable + tax      
+      total = taxable + tax
       # Format output values
       qty = number_with_precision(qty.round(4), precision: 4)
       amount = number_with_precision(amount.round(4), precision: 4)
@@ -341,7 +342,7 @@ module Ag2Purchase
       end
       # Approver data
       if !_approver_id.nil?
-        _approver = User.find(_approver_id).email        
+        _approver = User.find(_approver_id).email
       end
       # Approval date
       if !_approval_date.nil?
@@ -435,7 +436,7 @@ module Ag2Purchase
       current_projects = @projects.blank? ? [0] : current_projects_for_index(@projects)
       # If inverse no search is required
       no = !no.blank? && no[0] == '%' ? inverse_no_search(no) : no
-      
+
       @search = OfferRequest.search do
         with :project_id, current_projects
         fulltext params[:search]
@@ -462,14 +463,14 @@ module Ag2Purchase
         paginate :page => params[:page] || 1, :per_page => per_page
       end
       @offer_requests = @search.results
-  
+
       respond_to do |format|
         format.html # index.html.erb
         format.json { render json: @offer_requests }
         format.js
       end
     end
-  
+
     # GET /offer_requests/1
     # GET /offer_requests/1.json
     def show
@@ -486,13 +487,13 @@ module Ag2Purchase
                        office_approver(offer, offer.project.office, current_user.id)
                        #(current_user.has_role? :Administrator)
       end
-  
+
       respond_to do |format|
         format.html # show.html.erb
         format.json { render json: @offer_request }
       end
     end
-  
+
     # GET /offer_requests/new
     # GET /offer_requests/new.json
     def new
@@ -505,13 +506,13 @@ module Ag2Purchase
       @suppliers = suppliers_dropdown
       @payment_methods = payment_methods_dropdown
       @products = products_dropdown
-  
+
       respond_to do |format|
         format.html # new.html.erb
         format.json { render json: @offer_request }
       end
     end
-  
+
     # GET /offer_requests/1/edit
     def edit
       @breadcrumb = 'update'
@@ -524,14 +525,14 @@ module Ag2Purchase
       @payment_methods = @offer_request.organization.blank? ? payment_methods_dropdown : payment_payment_methods(@offer_request.organization_id)
       @products = @offer_request.organization.blank? ? products_dropdown : @offer_request.organization.products(:product_code)
     end
-  
+
     # POST /offer_requests
     # POST /offer_requests.json
     def create
       @breadcrumb = 'create'
       @offer_request = OfferRequest.new(params[:offer_request])
       @offer_request.created_by = current_user.id if !current_user.nil?
-  
+
       respond_to do |format|
         if @offer_request.save
           format.html { redirect_to @offer_request, notice: crud_notice('created', @offer_request) }
@@ -549,7 +550,7 @@ module Ag2Purchase
         end
       end
     end
-  
+
     # PUT /offer_requests/1
     # PUT /offer_requests/1.json
     def update
@@ -599,7 +600,7 @@ module Ag2Purchase
           (params[:offer_request][:remarks].to_s != @offer_request.remarks))
         master_changed = true
       end
-  
+
       respond_to do |format|
         if master_changed || items_changed
           @offer_request.updated_by = current_user.id if !current_user.nil?
@@ -624,7 +625,7 @@ module Ag2Purchase
         end
       end
     end
-  
+
     # DELETE /offer_requests/1
     # DELETE /offer_requests/1.json
     def destroy
@@ -649,7 +650,7 @@ module Ag2Purchase
       @items = @offer_request.offer_request_items.order('id')
       @suppliers = @offer_request.offer_request_suppliers.order('id')
 
-      title = t("activerecord.models.offer_request.one")      
+      title = t("activerecord.models.offer_request.one")
 
       respond_to do |format|
         # Render PDF
@@ -667,7 +668,7 @@ module Ag2Purchase
       @items = @offer_request.offer_request_items.order('id')
       @suppliers = @offer_request.offer_request_suppliers.order('id')
 
-      title = t("activerecord.models.offer_request.one")      
+      title = t("activerecord.models.offer_request.one")
 
       respond_to do |format|
         # Render PDF
@@ -679,7 +680,7 @@ module Ag2Purchase
     end
 
     private
-    
+
     def current_projects_for_index(_projects)
       _current_projects = []
       _projects.each do |i|
@@ -687,7 +688,7 @@ module Ag2Purchase
       end
       _current_projects
     end
-    
+
     def current_suppliers_for_index(_suppliers)
       _current_suppliers = []
       # Add suppliers found
@@ -705,7 +706,7 @@ module Ag2Purchase
       end
       _numbers = _numbers.blank? ? no : _numbers
     end
-    
+
     def project_stores(_project)
       _array = []
       _stores = nil
@@ -822,7 +823,7 @@ module Ag2Purchase
     def payment_methods_dropdown
       _methods = session[:organization] != '0' ? payment_payment_methods(session[:organization].to_i) : payment_payment_methods(0)
     end
-    
+
     def payment_payment_methods(_organization)
       if _organization != 0
         _methods = PaymentMethod.where("(flow = 3 OR flow = 2) AND organization_id = ?", _organization).order(:description)
@@ -834,16 +835,16 @@ module Ag2Purchase
 
     def products_dropdown
       session[:organization] != '0' ? Product.where(organization_id: session[:organization].to_i).order(:product_code) : Product.order(:product_code)
-    end    
-    
+    end
+
     def products_array(_products)
       _array = []
       _products.each do |i|
-        _array = _array << [i.id, i.full_code, i.main_description[0,40]] 
+        _array = _array << [i.id, i.full_code, i.main_description[0,40]]
       end
       _array
     end
-    
+
     # Returns _array from _ret table/model filled with _id attribute
     def ret_array(_array, _ret, _id)
       if !_ret.nil?
@@ -862,9 +863,9 @@ module Ag2Purchase
       @items = @offer_request.offer_request_items.order(:id)
       @suppliers = @offer_request.offer_request_suppliers.order(:id)
 
-      title = t("activerecord.models.offer_request.one") + "_" + @offer_request.full_no + ".pdf"       
+      title = t("activerecord.models.offer_request.one") + "_" + @offer_request.full_no + ".pdf"
       from = !current_user.nil? ? User.find(current_user.id).email : User.find(@offer_request.created_by).email
-      
+
       # Arrays of supplier email addresses & pdf's
       to = []
       pdf = []
@@ -873,11 +874,11 @@ module Ag2Purchase
         if !_to.blank?
           @supplier = i
           _pdf = render_to_string(filename: "#{title}", type: 'application/pdf')
-          to = to << _to 
-          pdf = pdf << _pdf 
+          to = to << _to
+          pdf = pdf << _pdf
         end
       end
-      
+
       if from.blank? || to.count <= 0
         code = "$err"
       else

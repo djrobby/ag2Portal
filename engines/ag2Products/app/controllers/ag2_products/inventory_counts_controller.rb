@@ -12,6 +12,7 @@ module Ag2Products
                                                :ic_approve_count,
                                                :ic_update_from_product_store,
                                                :ic_update_from_organization,
+                                               :inventory_count_form,
                                                :ic_products_from_organization]
     # Helper methods for
     # => allow edit (hide buttons)
@@ -192,7 +193,7 @@ module Ag2Products
       end
       # Approver data
       if !_approver_id.nil?
-        _approver = User.find(_approver_id).email        
+        _approver = User.find(_approver_id).email
       end
       # Approval date
       if !_approval_date.nil?
@@ -288,7 +289,7 @@ module Ag2Products
 
       # If inverse no search is required
       no = !no.blank? && no[0] == '%' ? inverse_no_search(no) : no
-      
+
       @search = InventoryCount.search do
         fulltext params[:search]
         if session[:organization] != '0'
@@ -314,14 +315,14 @@ module Ag2Products
         paginate :page => params[:page] || 1, :per_page => per_page
       end
       @inventory_counts = @search.results
-  
+
       respond_to do |format|
         format.html # index.html.erb
         format.json { render json: @inventory_counts }
         format.js
       end
     end
-  
+
     # GET /inventory_counts/1
     # GET /inventory_counts/1.json
     def show
@@ -332,13 +333,13 @@ module Ag2Products
       @is_approver = company_approver(@inventory_count, @inventory_count.store.company, current_user.id) ||
                      office_approver(@inventory_count, @inventory_count.store.office, current_user.id) ||
                      (current_user.has_role? :Approver)
-  
+
       respond_to do |format|
         format.html # show.html.erb
         format.json { render json: @inventory_count }
       end
     end
-  
+
     # GET /inventory_counts/new
     # GET /inventory_counts/new.json
     def new
@@ -348,13 +349,13 @@ module Ag2Products
       @families = families_dropdown
       @products = products_dropdown
       @products_table = products_dropdown
-  
+
       respond_to do |format|
         format.html # new.html.erb
         format.json { render json: @inventory_count }
       end
     end
-  
+
     # GET /inventory_counts/1/edit
     def edit
       @breadcrumb = 'update'
@@ -369,14 +370,14 @@ module Ag2Products
       end
       #@products = @products.paginate(:page => params[:page], :per_page => per_page)
     end
-  
+
     # POST /inventory_counts
     # POST /inventory_counts.json
     def create
       @breadcrumb = 'create'
       @inventory_count = InventoryCount.new(params[:inventory_count])
       @inventory_count.created_by = current_user.id if !current_user.nil?
-  
+
       respond_to do |format|
         if @inventory_count.save
           format.html { redirect_to @inventory_count, notice: crud_notice('created', @inventory_count) }
@@ -390,7 +391,7 @@ module Ag2Products
         end
       end
     end
-  
+
     # PUT /inventory_counts/1
     # PUT /inventory_counts/1.json
     def update
@@ -446,7 +447,7 @@ module Ag2Products
         end
       end
     end
-  
+
     # DELETE /inventory_counts/1
     # DELETE /inventory_counts/1.json
     def destroy
@@ -470,7 +471,7 @@ module Ag2Products
       @inventory_count = InventoryCount.find(params[:id])
       @items = @inventory_count.inventory_count_items
 
-      title = t("activerecord.models.inventory_count.one")      
+      title = t("activerecord.models.inventory_count.one")
 
       respond_to do |format|
         # Render PDF
@@ -480,9 +481,9 @@ module Ag2Products
                      disposition: 'inline' }
       end
     end
-    
+
     private
-    
+
     # Can't edit or delete when
     # => User isn't administrator
     # => Order is approved
@@ -512,7 +513,7 @@ module Ag2Products
       else
         _stores = session[:organization] != '0' ? Store.where(organization_id: session[:organization].to_i) : Store.order
       end
-      
+
       # Returning founded stores
       ret_array(_array, _stores, 'id')
       ret_array(_array, _store_offices, 'store_id')
@@ -527,32 +528,32 @@ module Ag2Products
       end
 =end
     end
-    
+
     def families_dropdown
-      session[:organization] != '0' ? ProductFamily.where(organization_id: session[:organization].to_i).order(:family_code) : ProductFamily.order(:family_code)  
+      session[:organization] != '0' ? ProductFamily.where(organization_id: session[:organization].to_i).order(:family_code) : ProductFamily.order(:family_code)
     end
 
     def products_dropdown
       session[:organization] != '0' ? Product.where(organization_id: session[:organization].to_i).order(:product_code) : Product.order(:product_code)
-    end    
-    
+    end
+
     def families_array(_families)
       _array = []
       _families.each do |i|
-        _array = _array << [i.id, i.family_code, i.name[0,40]] 
+        _array = _array << [i.id, i.family_code, i.name[0,40]]
       end
       _array
     end
-    
+
     def products_array(_products)
       _array = []
       _products.each do |i|
-        #_array = _array << [i.id, i.full_code, i.main_description[0,40], '*' + i.manufacturer_p_code] 
-        _array = _array << [i.id, i.full_code, i.main_description[0,40]] 
+        #_array = _array << [i.id, i.full_code, i.main_description[0,40], '*' + i.manufacturer_p_code]
+        _array = _array << [i.id, i.full_code, i.main_description[0,40]]
       end
       _array
     end
-    
+
     # Returns _array from _ret table/model filled with _id attribute
     def ret_array(_array, _ret, _id)
       if !_ret.nil?
@@ -561,7 +562,7 @@ module Ag2Products
         end
       end
     end
-    
+
     # Keeps filter state
     def manage_filter_state
       # search

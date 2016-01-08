@@ -16,6 +16,7 @@ module Ag2Products
                                                :dn_current_stock,
                                                :dn_update_project_textfields_from_organization,
                                                :dn_item_stock_check,
+                                               :delivery_note_form,
                                                :dn_generate_no]
     # Update sale offer select at view from client select
     def dn_update_offer_select_from_client
@@ -45,7 +46,7 @@ module Ag2Products
       # Taxable
       taxable = amount
       # Total
-      total = taxable + tax      
+      total = taxable + tax
       # Format output values
       qty = number_with_precision(qty.round(4), precision: 4)
       amount = number_with_precision(amount.round(4), precision: 4)
@@ -179,7 +180,7 @@ module Ag2Products
       tax = number_with_precision(tax.round(4), precision: 4)
       discount_p = number_with_precision(discount_p.round(2), precision: 2)
       discount = number_with_precision(discount.round(4), precision: 4)
-      @json_data = { "quantity" => qty.to_s, "cost" => cost.to_s, "costs" => costs.to_s, 
+      @json_data = { "quantity" => qty.to_s, "cost" => cost.to_s, "costs" => costs.to_s,
                      "price" => price.to_s, "amount" => amount.to_s, "tax" => tax.to_s,
                      "discountp" => discount_p.to_s, "discount" => discount.to_s, "tbl" => tbl.to_s }
       render json: @json_data
@@ -338,7 +339,7 @@ module Ag2Products
       current_projects = @projects.blank? ? [0] : current_projects_for_index(@projects)
       # If inverse no search is required
       no = !no.blank? && no[0] == '%' ? inverse_no_search(no) : no
-      
+
       @search = DeliveryNote.search do
         with :project_id, current_projects
         fulltext params[:search]
@@ -372,20 +373,20 @@ module Ag2Products
         format.js
       end
     end
-  
+
     # GET /delivery_notes/1
     # GET /delivery_notes/1.json
     def show
       @breadcrumb = 'read'
       @delivery_note = DeliveryNote.find(params[:id])
       @items = @delivery_note.delivery_note_items.paginate(:page => params[:page], :per_page => per_page).order('id')
-  
+
       respond_to do |format|
         format.html # show.html.erb
         format.json { render json: @delivery_note }
       end
     end
-  
+
     # GET /delivery_notes/new
     # GET /delivery_notes/new.json
     def new
@@ -399,13 +400,13 @@ module Ag2Products
       @clients = clients_dropdown
       @payment_methods = payment_methods_dropdown
       @products = products_dropdown
-  
+
       respond_to do |format|
         format.html # new.html.erb
         format.json { render json: @delivery_note }
       end
     end
-  
+
     # GET /delivery_notes/1/edit
     def edit
       @breadcrumb = 'update'
@@ -419,14 +420,14 @@ module Ag2Products
       @payment_methods = @delivery_note.organization.blank? ? payment_methods_dropdown : collection_payment_methods(@delivery_note.organization_id)
       @products = @delivery_note.organization.blank? ? products_dropdown : @delivery_note.organization.products.order(:product_code)
     end
-  
+
     # POST /delivery_notes
     # POST /delivery_notes.json
     def create
       @breadcrumb = 'create'
       @delivery_note = DeliveryNote.new(params[:delivery_note])
       @delivery_note.created_by = current_user.id if !current_user.nil?
-  
+
       respond_to do |format|
         if @delivery_note.save
           format.html { redirect_to @delivery_note, notice: crud_notice('created', @delivery_note) }
@@ -445,7 +446,7 @@ module Ag2Products
         end
       end
     end
-  
+
     # PUT /delivery_notes/1
     # PUT /delivery_notes/1.json
     def update
@@ -489,7 +490,7 @@ module Ag2Products
           (params[:delivery_note][:remarks].to_s != @delivery_note.remarks))
         master_changed = true
       end
-  
+
       respond_to do |format|
         if master_changed || items_changed
           @delivery_note.updated_by = current_user.id if !current_user.nil?
@@ -515,7 +516,7 @@ module Ag2Products
         end
       end
     end
-  
+
     # DELETE /delivery_notes/1
     # DELETE /delivery_notes/1.json
     def destroy
@@ -539,7 +540,7 @@ module Ag2Products
       @delivery_note = DeliveryNote.find(params[:id])
       @items = @delivery_note.delivery_note_items
 
-      title = t("activerecord.models.delivery_note.one")      
+      title = t("activerecord.models.delivery_note.one")
 
       respond_to do |format|
         # Render PDF
@@ -557,7 +558,7 @@ module Ag2Products
       @items = @delivery_note.delivery_note_items
 
       title = t("activerecord.models.delivery_note.one")
-      tail = t("activerecord.attributes.delivery_note.client") + ' ' + @delivery_note.client.full_code      
+      tail = t("activerecord.attributes.delivery_note.client") + ' ' + @delivery_note.client.full_code
 
       respond_to do |format|
         # Render PDF
@@ -567,9 +568,9 @@ module Ag2Products
                      disposition: 'inline' }
       end
     end
-    
+
     private
-    
+
     def current_projects_for_index(_projects)
       _current_projects = []
       _projects.each do |i|
@@ -586,7 +587,7 @@ module Ag2Products
       end
       _numbers = _numbers.blank? ? no : _numbers
     end
-    
+
     # Stores belonging to selected project
     def project_stores(_project)
       _array = []
@@ -710,7 +711,7 @@ module Ag2Products
       else
         _stores = session[:organization] != '0' ? Store.where(organization_id: session[:organization].to_i) : Store.order
       end
-      
+
       # Returning founded stores
       ret_array(_array, _stores, 'id')
       ret_array(_array, _store_offices, 'store_id')
@@ -724,7 +725,7 @@ module Ag2Products
     def payment_methods_dropdown
       _methods = session[:organization] != '0' ? collection_payment_methods(session[:organization].to_i) : collection_payment_methods(0)
     end
-    
+
     def collection_payment_methods(_organization)
       if _organization != 0
         _methods = PaymentMethod.where("(flow = 3 OR flow = 1) AND organization_id = ?", _organization).order(:description)
@@ -736,24 +737,24 @@ module Ag2Products
 
     def products_dropdown
       session[:organization] != '0' ? Product.where(organization_id: session[:organization].to_i).order(:product_code) : Product.order(:product_code)
-    end    
-    
+    end
+
     def offers_array(_offers)
       _array = []
       _offers.each do |i|
-        _array = _array << [i.id, i.full_no, formatted_date(i.offer_date), i.client.full_name] 
+        _array = _array << [i.id, i.full_no, formatted_date(i.offer_date), i.client.full_name]
       end
       _array
     end
-    
+
     def products_array(_products)
       _array = []
       _products.each do |i|
-        _array = _array << [i.id, i.full_code, i.main_description[0,40]] 
+        _array = _array << [i.id, i.full_code, i.main_description[0,40]]
       end
       _array
     end
-    
+
     # Returns _array from _ret table/model filled with _id attribute
     def ret_array(_array, _ret, _id)
       if !_ret.nil?
@@ -766,8 +767,8 @@ module Ag2Products
     # Use average price, if any. Otherwise, the reference price
     def product_price_to_apply(_product)
       @product.average_price > 0 ? @product.average_price : @product.reference_price
-    end    
-    
+    end
+
     # Keeps filter state
     def manage_filter_state
       # search

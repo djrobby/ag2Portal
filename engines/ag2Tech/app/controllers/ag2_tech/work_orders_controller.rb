@@ -25,6 +25,7 @@ module Ag2Tech
                                                :wo_update_costs_from_cost_or_distance,
                                                :wo_update_orders_costs_from_supplier,
                                                :wo_update_costs_from_purchase_order,
+                                               :work_order_form,
                                                :wo_update_costs_from_cost_or_enforcement_pct]
     #
     # Subforms
@@ -38,7 +39,7 @@ module Ag2Tech
       # Taxable
       taxable = amount
       # Total
-      total = taxable + tax      
+      total = taxable + tax
       # Format output values
       qty = number_with_precision(qty.round(4), precision: 4)
       amount = number_with_precision(amount.round(4), precision: 4)
@@ -60,7 +61,7 @@ module Ag2Tech
       # Hours average
       average = count > 0 ? hours / count : 0
       # Total
-      total = costs      
+      total = costs
       # Format output values
       hours = number_with_precision(hours.round(4), precision: 4)
       average = number_with_precision(average.round(4), precision: 4)
@@ -90,7 +91,7 @@ module Ag2Tech
       # Minutes average
       average = count > 0 ? minutes / count : 0
       # Total
-      total = costs      
+      total = costs
       # Format output values
       minutes = number_with_precision(minutes.round(2), precision: 2)
       average = number_with_precision(average.round(2), precision: 2)
@@ -108,7 +109,7 @@ module Ag2Tech
       # Minutes average
       average = count > 0 ? distance / count : 0
       # Total
-      total = costs      
+      total = costs
       # Format output values
       distance = number_with_precision(distance.round(2), precision: 2)
       average = number_with_precision(average.round(2), precision: 2)
@@ -181,7 +182,7 @@ module Ag2Tech
       worker_item = nil
       worker_salary = nil
       hours_year = 2080
-      
+
       if worker != '0' && project != '0'
         @worker = Worker.find(worker) rescue nil
         @project = Project.find(project) rescue nil
@@ -218,7 +219,7 @@ module Ag2Tech
       @json_data = { "cost" => cost.to_s, "costs" => costs.to_s, "tbl" => tbl.to_s }
       render json: @json_data
     end
-    
+
     # Update purchase order select and costs fields at view from supplier select
     def wo_update_orders_costs_from_supplier
       supplier = params[:supplier]
@@ -331,8 +332,8 @@ module Ag2Tech
       amount = number_with_precision(amount.round(4), precision: 4)
       tax = number_with_precision(tax.round(4), precision: 4)
       @json_data = { "quantity" => qty.to_s,
-                     "cost" => cost.to_s, "costs" => costs.to_s, 
-                     "price" => price.to_s, "amount" => amount.to_s, 
+                     "cost" => cost.to_s, "costs" => costs.to_s,
+                     "price" => price.to_s, "amount" => amount.to_s,
                      "tax" => tax.to_s, "tbl" => tbl.to_s }
 
       respond_to do |format|
@@ -351,7 +352,7 @@ module Ag2Tech
       cost = number_with_precision(cost.round(4), precision: 4)
       costs = number_with_precision(costs.round(4), precision: 4)
       @json_data = { "hours" => hours.to_s,
-                     "cost" => cost.to_s, "costs" => costs.to_s, "tbl" => tbl.to_s } 
+                     "cost" => cost.to_s, "costs" => costs.to_s, "tbl" => tbl.to_s }
 
       respond_to do |format|
         format.html # wo_update_costs_from_cost_or_hours.html.erb does not exist! JSON only
@@ -369,7 +370,7 @@ module Ag2Tech
       cost = number_with_precision(cost.round(4), precision: 4)
       costs = number_with_precision(costs.round(4), precision: 4)
       @json_data = { "pct" => pct.to_s, "cost" => cost.to_s, "costs" => costs.to_s, "tbl" => tbl.to_s }
-      render json: @json_data 
+      render json: @json_data
     end
 
     # Update costs text field at view -tool- (minutes or cost changed)
@@ -383,7 +384,7 @@ module Ag2Tech
       costs = number_with_precision(costs.round(4), precision: 4)
       @json_data = { "minutes" => minutes.to_s,
                      "cost" => cost.to_s, "costs" => costs.to_s, "tbl" => tbl.to_s }
-      render json: @json_data 
+      render json: @json_data
     end
 
     # Update costs text field at view -vehicle- (distance or cost changed)
@@ -397,9 +398,9 @@ module Ag2Tech
       costs = number_with_precision(costs.round(4), precision: 4)
       @json_data = { "distance" => distance.to_s,
                      "cost" => cost.to_s, "costs" => costs.to_s, "tbl" => tbl.to_s }
-      render json: @json_data 
+      render json: @json_data
     end
-    
+
     #
     # Main form
     #
@@ -538,7 +539,7 @@ module Ag2Tech
       current_projects = @projects.blank? ? [0] : current_projects_for_index(@projects)
       # If inverse no search is required
       no = !no.blank? && no[0] == '%' ? inverse_no_search(no) : no
-      
+
       @search = WorkOrder.search do
         with :project_id, current_projects
         fulltext params[:search]
@@ -565,14 +566,14 @@ module Ag2Tech
         paginate :page => params[:page] || 1, :per_page => per_page
       end
       @work_orders = @search.results
-  
+
       respond_to do |format|
         format.html # index.html.erb
         format.json { render json: @work_orders }
         format.js
       end
     end
-  
+
     # GET /work_orders/1
     # GET /work_orders/1.json
     def show
@@ -583,13 +584,13 @@ module Ag2Tech
       @subcontractors = @work_order.work_order_subcontractors.paginate(:page => params[:page], :per_page => per_page).order('id')
       @tools = @work_order.work_order_tools.paginate(:page => params[:page], :per_page => per_page).order('id')
       @vehicles = @work_order.work_order_vehicles.paginate(:page => params[:page], :per_page => per_page).order('id')
-  
+
       respond_to do |format|
         format.html # show.html.erb
         format.json { render json: @work_order }
       end
     end
-  
+
     # GET /work_orders/new
     # GET /work_orders/new.json
     def new
@@ -611,13 +612,13 @@ module Ag2Tech
       @orders = orders_dropdown
       @tools = tools_dropdown
       @vehicles = vehicles_dropdown
-  
+
       respond_to do |format|
         format.html # new.html.erb
         format.json { render json: @work_order }
       end
     end
-  
+
     # GET /work_orders/1/edit
     def edit
       @breadcrumb = 'update'
@@ -640,14 +641,14 @@ module Ag2Tech
       @tools = tools_dropdown_edit(@work_order)
       @vehicles = vehicles_dropdown_edit(@work_order)
     end
-  
+
     # POST /work_orders
     # POST /work_orders.json
     def create
       @breadcrumb = 'create'
       @work_order = WorkOrder.new(params[:work_order])
       @work_order.created_by = current_user.id if !current_user.nil?
-  
+
       respond_to do |format|
         if @work_order.save
           format.html { redirect_to @work_order, notice: crud_notice('created', @work_order) }
@@ -671,7 +672,7 @@ module Ag2Tech
         end
       end
     end
-  
+
     # PUT /work_orders/1
     # PUT /work_orders/1.json
     def update
@@ -774,7 +775,7 @@ module Ag2Tech
         master_changed = true
       end
       #@work_order.work_order_items.assign_attributes(params[:work_order][:work_order_items_attributes])
-  
+
       respond_to do |format|
         if master_changed || items_changed
           @work_order.updated_by = current_user.id if !current_user.nil?
@@ -805,7 +806,7 @@ module Ag2Tech
         end
       end
     end
-  
+
     # DELETE /work_orders/1
     # DELETE /work_orders/1.json
     def destroy
@@ -833,7 +834,7 @@ module Ag2Tech
       @tools = @work_order.work_order_tools.order('id')
       @vehicles = @work_order.work_order_vehicles.order('id')
 
-      title = t("activerecord.models.work_order.one")      
+      title = t("activerecord.models.work_order.one")
 
       respond_to do |format|
         # Render PDF
@@ -849,7 +850,7 @@ module Ag2Tech
       # Search work order & items
       @work_order = WorkOrder.find(params[:id])
 
-      title = t("activerecord.models.work_order.one")      
+      title = t("activerecord.models.work_order.one")
 
       respond_to do |format|
         # Render PDF
@@ -859,9 +860,9 @@ module Ag2Tech
                      disposition: 'inline' }
       end
     end
-    
+
     private
-    
+
     def current_projects_for_index(_projects)
       _current_projects = []
       _projects.each do |i|
@@ -878,7 +879,7 @@ module Ag2Tech
       end
       _numbers = _numbers.blank? ? no : _numbers
     end
-    
+
     # Stores belonging to selected project
     def project_stores(_project)
       _array = []
@@ -966,7 +967,7 @@ module Ag2Tech
       # Returning founded charge accounts
       _ret = ChargeAccount.where(id: _array).order(:account_code)
     end
-    
+
     def company_office_workers(_company, _office)
       # Company & office
       _workers = Worker.joins(:worker_items).group('worker_items.worker_id').where(worker_items: { company_id: _company, office_id: _office }).order(:worker_code)
@@ -975,18 +976,18 @@ module Ag2Tech
         if _workers.blank? # If not, company
           _workers = Worker.joins(:worker_items).group('worker_items.worker_id').where(worker_items: { company_id: _company }).order(:worker_code)
           if _workers.blank?  # If not, last, all
-            _workers = Worker.order(:worker_code)            
+            _workers = Worker.order(:worker_code)
           end
         end
       end
       _workers
     end
-    
+
     def company_workers(_company)
       # Company
       _workers = Worker.joins(:worker_items).group('worker_items.worker_id').where(worker_items: { company_id: _company }).order(:worker_code)
       if _workers.blank?  # If not, all
-        _workers = Worker.order(:worker_code)            
+        _workers = Worker.order(:worker_code)
       end
       _workers
     end
@@ -997,7 +998,7 @@ module Ag2Tech
       if _workers.blank? # If not, company
         _workers = Worker.joins(:worker_items).group('worker_items.worker_id').where(worker_items: { company_id: _company }).order(:worker_code)
         if _workers.blank?  # If not, last, all
-          _workers = Worker.order(:worker_code)            
+          _workers = Worker.order(:worker_code)
         end
       end
       _workers
@@ -1071,7 +1072,7 @@ module Ag2Tech
       else
         _stores = session[:organization] != '0' ? Store.where(organization_id: session[:organization].to_i) : Store.order
       end
-      
+
       # Returning founded stores
       ret_array(_array, _stores, 'id')
       ret_array(_array, _store_offices, 'store_id')
@@ -1092,7 +1093,7 @@ module Ag2Tech
 
     def products_dropdown
       session[:organization] != '0' ? Product.where(organization_id: session[:organization].to_i).order(:product_code) : Product.order(:product_code)
-    end    
+    end
 
     def suppliers_dropdown
       session[:organization] != '0' ? Supplier.where(organization_id: session[:organization].to_i).order(:supplier_code) : Supplier.order(:supplier_code)
@@ -1101,7 +1102,7 @@ module Ag2Tech
     def orders_dropdown
       session[:organization] != '0' ? PurchaseOrder.where(organization_id: session[:organization].to_i).order(:supplier_id, :order_no, :id) : PurchaseOrder.order(:supplier_id, :order_no, :id)
     end
-    
+
     def orders_dropdown_edit(_work_order, _supplier)
       _a = nil
       if !_work_order.nil? && !_work_order.project.nil? && !_supplier.nil?
@@ -1155,11 +1156,11 @@ module Ag2Tech
       end
       _a
     end
-    
+
     def orders_array(_orders)
       _orders_array = []
       _orders.each do |i|
-        _orders_array = _orders_array << [i.id, i.full_no, formatted_date(i.order_date), i.supplier.full_name] 
+        _orders_array = _orders_array << [i.id, i.full_no, formatted_date(i.order_date), i.supplier.full_name]
       end
       _orders_array
     end
@@ -1171,31 +1172,31 @@ module Ag2Tech
       end
       _array
     end
-    
+
     def products_array(_products)
       _array = []
       _products.each do |i|
-        _array = _array << [i.id, i.full_code, i.main_description[0,40]] 
+        _array = _array << [i.id, i.full_code, i.main_description[0,40]]
       end
       _array
     end
-    
+
     def tools_array(_tools)
       _array = []
       _tools.each do |i|
-        _array = _array << [i.id, i.serial_no, i.name[0,40]] 
+        _array = _array << [i.id, i.serial_no, i.name[0,40]]
       end
       _array
     end
-    
+
     def vehicles_array(_vehicles)
       _array = []
       _vehicles.each do |i|
-        _array = _array << [i.id, i.registration, i.name[0,40]] 
+        _array = _array << [i.id, i.registration, i.name[0,40]]
       end
       _array
     end
-    
+
     # Returns _array from _ret table/model filled with _id attribute
     def ret_array(_array, _ret, _id)
       if !_ret.nil?
@@ -1204,7 +1205,7 @@ module Ag2Tech
         end
       end
     end
-    
+
     # Keeps filter state
     def manage_filter_state
       # search
