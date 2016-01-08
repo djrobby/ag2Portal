@@ -446,6 +446,11 @@ module Ag2Purchase
     # GET /purchase_orders
     # GET /purchase_orders.json
     def index
+      # filters keep unmodified, only if the calling view (referrer) belongs to this controller
+      if (request.referrer.exclude? "ag2_purchase") || (request.referrer.exclude? "purchase_orders")
+        reset_session_variables_for_filters
+      end
+
       manage_filter_state
       no = params[:No]
       project = params[:Project]

@@ -147,7 +147,7 @@ module Ag2Purchase
       @json_data = { "id" => id, "fiscal_id" => fiscal_id, "name" => name,
                      "street_type_id" => street_type_id, "street_name" => street_name,
                      "street_number" => street_number, "building" => building,
-                     "floor" => floor, "floor_office" => floor_office, 
+                     "floor" => floor, "floor_office" => floor_office,
                      "zipcode_id" => zipcode_id, "town_id" => town_id,
                      "province_id" => province_id, "region_id" => region_id,
                      "country_id" => country_id, "phone" => phone,
@@ -226,6 +226,11 @@ module Ag2Purchase
     # GET /suppliers
     # GET /suppliers.json
     def index
+      # filters keep unmodified, only if the calling view (referrer) belongs to this controller
+      if (request.referrer.exclude? "ag2_purchase") || (request.referrer.exclude? "suppliers")
+        reset_session_variables_for_filters
+      end
+
       manage_filter_state
       letter = params[:letter]
       if !session[:organization]
@@ -250,6 +255,8 @@ module Ag2Purchase
         format.json { render json: @suppliers }
         format.js
       end
+      puts "Path:"
+      puts request.referrer
     end
 
     # GET /suppliers/1
@@ -259,7 +266,7 @@ module Ag2Purchase
       @supplier = Supplier.find(params[:id])
       @contacts = @supplier.supplier_contacts.paginate(:page => params[:page], :per_page => per_page).order(:last_name, :first_name)
       @prices = @supplier.purchase_prices.paginate(:page => params[:page], :per_page => per_page).order(:product_id)
-      @accounts = @supplier.supplier_bank_accounts.paginate(:page => params[:page], :per_page => per_page).order(:id)      
+      @accounts = @supplier.supplier_bank_accounts.paginate(:page => params[:page], :per_page => per_page).order(:id)
 
       respond_to do |format|
         format.html # show.html.erb
@@ -372,19 +379,19 @@ module Ag2Purchase
     def countries_dropdown
       Country.order(:code)
     end
-    
+
     def banks_dropdown
       Bank.order(:code)
     end
-    
+
     def bank_offices_dropdown
       BankOffice.order(:bank_id, :code)
     end
-    
+
     def bank_offices_array(_offices)
       _array = []
       _offices.each do |i|
-        _array = _array << [i.id, i.code, i.name, "(" + i.bank.code + ")"] 
+        _array = _array << [i.id, i.code, i.name, "(" + i.bank.code + ")"]
       end
       _array
     end
@@ -412,7 +419,7 @@ module Ag2Purchase
 
     def reset_stock_prices_filter
       session[:Products] = nil
-      session[:Suppliers] = nil      
+      session[:Suppliers] = nil
     end
   end
 end

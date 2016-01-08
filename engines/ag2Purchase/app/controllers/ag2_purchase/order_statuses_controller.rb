@@ -10,53 +10,58 @@ module Ag2Purchase
     # GET /order_statuses
     # GET /order_statuses.json
     def index
+      # filters keep unmodified, only if the calling view (referrer) belongs to this controller
+      if (request.referrer.exclude? "ag2_purchase") || (request.referrer.exclude? "order_statuses")
+        reset_session_variables_for_filters
+      end
+
       manage_filter_state
       @order_statuses = OrderStatus.paginate(:page => params[:page], :per_page => per_page).order(sort_column + ' ' + sort_direction)
-  
+
       respond_to do |format|
         format.html # index.html.erb
         format.json { render json: @order_statuses }
         format.js
       end
     end
-  
+
     # GET /order_statuses/1
     # GET /order_statuses/1.json
     def show
       @breadcrumb = 'read'
       @order_status = OrderStatus.find(params[:id])
-  
+
       respond_to do |format|
         format.html # show.html.erb
         format.json { render json: @order_status }
       end
     end
-  
+
     # GET /order_statuses/new
     # GET /order_statuses/new.json
     def new
       @breadcrumb = 'create'
       @order_status = OrderStatus.new
-  
+
       respond_to do |format|
         format.html # new.html.erb
         format.json { render json: @order_status }
       end
     end
-  
+
     # GET /order_statuses/1/edit
     def edit
       @breadcrumb = 'update'
       @order_status = OrderStatus.find(params[:id])
     end
-  
+
     # POST /order_statuses
     # POST /order_statuses.json
     def create
       @breadcrumb = 'create'
       @order_status = OrderStatus.new(params[:order_status])
       @order_status.created_by = current_user.id if !current_user.nil?
-  
+
       respond_to do |format|
         if @order_status.save
           format.html { redirect_to @order_status, notice: crud_notice('created', @order_status) }
@@ -67,14 +72,14 @@ module Ag2Purchase
         end
       end
     end
-  
+
     # PUT /order_statuses/1
     # PUT /order_statuses/1.json
     def update
       @breadcrumb = 'update'
       @order_status = OrderStatus.find(params[:id])
       @order_status.updated_by = current_user.id if !current_user.nil?
-  
+
       respond_to do |format|
         if @order_status.update_attributes(params[:order_status])
           format.html { redirect_to @order_status,
@@ -86,7 +91,7 @@ module Ag2Purchase
         end
       end
     end
-  
+
     # DELETE /order_statuses/1
     # DELETE /order_statuses/1.json
     def destroy

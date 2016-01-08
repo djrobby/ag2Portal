@@ -28,7 +28,7 @@ module Ag2Purchase
     # Attachment has changed
     def of_attachment_changed
       $attachment_changed = true
-    end  
+    end
 
     # Update attached file from drag&drop
     def of_update_attachment
@@ -61,7 +61,7 @@ module Ag2Purchase
       # Taxes
       tax = tax - (tax * (discount_p / 100)) if discount_p != 0
       # Total
-      total = taxable + tax      
+      total = taxable + tax
       # Format output values
       qty = number_with_precision(qty.round(4), precision: 4)
       amount = number_with_precision(amount.round(4), precision: 4)
@@ -454,7 +454,7 @@ module Ag2Purchase
     def of_generate_order
       o = params[:offer]
       code = ''
-      
+
       if o != '0'
         offer = Offer.find(o) rescue nil
         offer_items = offer.offer_items rescue nil
@@ -526,13 +526,18 @@ module Ag2Purchase
       @json_data = { "code" => code }
       render json: @json_data
     end
-    
+
     #
     # Default Methods
     #
     # GET /offers
     # GET /offers.json
     def index
+      # filters keep unmodified, only if the calling view (referrer) belongs to this controller
+      if (request.referrer.exclude? "ag2_purchase") || (request.referrer.exclude? "offers")
+        reset_session_variables_for_filters
+      end
+
       manage_filter_state
       no = params[:No]
       supplier = params[:Supplier]
@@ -550,7 +555,7 @@ module Ag2Purchase
       current_projects = @projects.blank? ? [0] : current_projects_for_index(@projects)
       # If inverse no search is required
       no = !no.blank? && no[0] == '%' ? inverse_no_search(no) : no
-      
+
       @search = Offer.search do
         with :project_id, current_projects
         fulltext params[:search]
@@ -577,27 +582,27 @@ module Ag2Purchase
         paginate :page => params[:page] || 1, :per_page => per_page
       end
       @offers = @search.results
-  
+
       respond_to do |format|
         format.html # index.html.erb
         format.json { render json: @offers }
         format.js
       end
     end
-  
+
     # GET /offers/1
     # GET /offers/1.json
     def show
       @breadcrumb = 'read'
       @offer = Offer.find(params[:id])
       @items = @offer.offer_items.paginate(:page => params[:page], :per_page => per_page).order('id')
-  
+
       respond_to do |format|
         format.html # show.html.erb
         format.json { render json: @offer }
       end
     end
-  
+
     # GET /offers/new
     # GET /offers/new.json
     def new
@@ -614,13 +619,13 @@ module Ag2Purchase
       @offer_requests = offer_requests_dropdown
       @payment_methods = payment_methods_dropdown
       @products = products_dropdown
-  
+
       respond_to do |format|
         format.html # new.html.erb
         format.json { render json: @offer }
       end
     end
-  
+
     # GET /offers/1/edit
     def edit
       @breadcrumb = 'update'
@@ -637,7 +642,7 @@ module Ag2Purchase
       @payment_methods = @offer.organization.blank? ? payment_methods_dropdown : payment_payment_methods(@offer.organization_id)
       @products = @offer.organization.blank? ? products_dropdown : @offer.organization.products(:product_code)
     end
-  
+
     # POST /offers
     # POST /offers.json
     def create
@@ -648,7 +653,7 @@ module Ag2Purchase
       if @offer.attachment.blank? && !$attachment.avatar.blank?
         @offer.attachment = $attachment.avatar
       end
-  
+
       respond_to do |format|
         $attachment_changed = false
         if @offer.save
@@ -672,7 +677,7 @@ module Ag2Purchase
         end
       end
     end
-  
+
     # PUT /offers/1
     # PUT /offers/1.json
     def update
@@ -724,7 +729,7 @@ module Ag2Purchase
           (params[:offer][:remarks].to_s != @offer.remarks))
         master_changed = true
       end
-  
+
       respond_to do |format|
         if master_changed || items_changed
           @offer.updated_by = current_user.id if !current_user.nil?
@@ -755,7 +760,7 @@ module Ag2Purchase
         end
       end
     end
-  
+
     # DELETE /offers/1
     # DELETE /offers/1.json
     def destroy
@@ -774,13 +779,13 @@ module Ag2Purchase
     end
 
     private
-    
+
     def destroy_attachment
       if $attachment != nil
-        $attachment.destroy        
+        $attachment.destroy
       end
     end
-    
+
     def current_projects_for_index(_projects)
       _current_projects = []
       _projects.each do |i|
@@ -797,7 +802,7 @@ module Ag2Purchase
       end
       _numbers = _numbers.blank? ? no : _numbers
     end
-    
+
     # Stores belonging to selected project
     def project_stores(_project)
       _array = []
@@ -914,7 +919,7 @@ module Ag2Purchase
     def payment_methods_dropdown
       _methods = session[:organization] != '0' ? payment_payment_methods(session[:organization].to_i) : payment_payment_methods(0)
     end
-    
+
     def payment_payment_methods(_organization)
       if _organization != 0
         _methods = PaymentMethod.where("(flow = 3 OR flow = 2) AND organization_id = ?", _organization).order(:description)
@@ -926,21 +931,21 @@ module Ag2Purchase
 
     def products_dropdown
       session[:organization] != '0' ? Product.where(organization_id: session[:organization].to_i).order(:product_code) : Product.order(:product_code)
-    end    
+    end
 
     def offer_requests_dropdown
       session[:organization] != '0' ? OfferRequest.not_approved(session[:organization].to_i) : OfferRequest.not_approved(nil)
       #session[:organization] != '0' ? OfferRequest.where(organization_id: session[:organization].to_i).order(:request_no) : OfferRequest.order(:request_no)
-    end    
-    
+    end
+
     def offer_requests_array(_requests)
       _requests_array = []
       _requests.each do |i|
-        _requests_array = _requests_array << [i.id, i.full_no, formatted_date(i.request_date)] 
+        _requests_array = _requests_array << [i.id, i.full_no, formatted_date(i.request_date)]
       end
       _requests_array
     end
-    
+
     def offer_request_items_array(_items)
       _items_array = []
       if !_items.nil?
@@ -953,20 +958,20 @@ module Ag2Purchase
                                           number_with_precision(i.amount.round(4), precision: 4),
                                           i.tax_type_id,
                                           number_with_precision(i.tax.round(4), precision: 4),
-                                          i.work_order_id, i.project_id, i.charge_account_id, i.store_id] 
+                                          i.work_order_id, i.project_id, i.charge_account_id, i.store_id]
         end
       end
       _items_array
     end
-    
+
     def products_array(_products)
       _array = []
       _products.each do |i|
-        _array = _array << [i.id, i.full_code, i.main_description[0,40]] 
+        _array = _array << [i.id, i.full_code, i.main_description[0,40]]
       end
       _array
     end
-    
+
     # Returns _array from _ret table/model filled with _id attribute
     def ret_array(_array, _ret, _id)
       if !_ret.nil?
@@ -990,11 +995,11 @@ module Ag2Purchase
         _code = _purchase_price.code
       else
         _price = _product.reference_price
-        _discount_rate = Supplier.find(_supplier).discount_rate rescue 0      
+        _discount_rate = Supplier.find(_supplier).discount_rate rescue 0
       end
       return _price, _discount_rate, _code
-    end    
-    
+    end
+
     # Keeps filter state
     def manage_filter_state
       # search

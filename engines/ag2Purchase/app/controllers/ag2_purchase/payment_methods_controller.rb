@@ -23,6 +23,11 @@ module Ag2Purchase
     # GET /payment_methods
     # GET /payment_methods.json
     def index
+      # filters keep unmodified, only if the calling view (referrer) belongs to this controller
+      if (request.referrer.exclude? "ag2_purchase") || (request.referrer.exclude? "payment_methods")
+        reset_session_variables_for_filters
+      end
+
       manage_filter_state
       filter = params[:ifilter]
       init_oco if !session[:organization]
@@ -31,52 +36,52 @@ module Ag2Purchase
       else
         @payment_methods = flow_filter(filter)
       end
-  
+
       respond_to do |format|
         format.html # index.html.erb
         format.json { render json: @payment_methods }
         format.js
       end
     end
-      
+
     # GET /payment_methods/1
     # GET /payment_methods/1.json
     def show
       @breadcrumb = 'read'
       @payment_method = PaymentMethod.find(params[:id])
       @suppliers = @payment_method.suppliers.paginate(:page => params[:page], :per_page => per_page).order('supplier_code')
-  
+
       respond_to do |format|
         format.html # show.html.erb
         format.json { render json: @payment_method }
       end
     end
-  
+
     # GET /payment_methods/new
     # GET /payment_methods/new.json
     def new
       @breadcrumb = 'create'
       @payment_method = PaymentMethod.new
-  
+
       respond_to do |format|
         format.html # new.html.erb
         format.json { render json: @payment_method }
       end
     end
-  
+
     # GET /payment_methods/1/edit
     def edit
       @breadcrumb = 'update'
       @payment_method = PaymentMethod.find(params[:id])
     end
-  
+
     # POST /payment_methods
     # POST /payment_methods.json
     def create
       @breadcrumb = 'create'
       @payment_method = PaymentMethod.new(params[:payment_method])
       @payment_method.created_by = current_user.id if !current_user.nil?
-  
+
       respond_to do |format|
         if @payment_method.save
           format.html { redirect_to @payment_method, notice: crud_notice('created', @payment_method) }
@@ -87,14 +92,14 @@ module Ag2Purchase
         end
       end
     end
-  
+
     # PUT /payment_methods/1
     # PUT /payment_methods/1.json
     def update
       @breadcrumb = 'update'
       @payment_method = PaymentMethod.find(params[:id])
       @payment_method.updated_by = current_user.id if !current_user.nil?
-  
+
       respond_to do |format|
         if @payment_method.update_attributes(params[:payment_method])
           format.html { redirect_to @payment_method,
@@ -106,7 +111,7 @@ module Ag2Purchase
         end
       end
     end
-  
+
     # DELETE /payment_methods/1
     # DELETE /payment_methods/1.json
     def destroy

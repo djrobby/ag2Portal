@@ -112,6 +112,11 @@ module Ag2Purchase
     # GET /supplier_payments
     # GET /supplier_payments.json
     def index
+      # filters keep unmodified, only if the calling view (referrer) belongs to this controller
+      if (request.referrer.exclude? "ag2_purchase") || (request.referrer.exclude? "supplier_payments")
+        reset_session_variables_for_filters
+      end
+
       manage_filter_state
       no = params[:No]
       supplier = params[:Supplier]
@@ -120,7 +125,7 @@ module Ag2Purchase
       # Arrays for search
       # If inverse no search is required
       no = !no.blank? && no[0] == '%' ? inverse_no_search(no) : no
-      
+
       @search = SupplierPayment.search do
         fulltext params[:search]
         if session[:organization] != '0'
@@ -147,26 +152,26 @@ module Ag2Purchase
       # Initialize select_tags
       @suppliers = Supplier.order('name') if @suppliers.nil?
       @invoices = SupplierInvoice.order('id') if @invoices.nil?
-  
+
       respond_to do |format|
         format.html # index.html.erb
         format.json { render json: @supplier_payments }
         format.js
       end
     end
-  
+
     # GET /supplier_payments/1
     # GET /supplier_payments/1.json
     def show
       @breadcrumb = 'read'
       @supplier_payment = SupplierPayment.find(params[:id])
-  
+
       respond_to do |format|
         format.html # show.html.erb
         format.json { render json: @supplier_payment }
       end
     end
-  
+
     # GET /supplier_payments/new
     # GET /supplier_payments/new.json
     def new
@@ -179,13 +184,13 @@ module Ag2Purchase
       #@approvals = approvals_dropdown(invoices)
       @users = User.all
       @payment_methods = payment_methods_dropdown
-  
+
       respond_to do |format|
         format.html # new.html.erb
         format.json { render json: @supplier_payment }
       end
     end
-  
+
     # GET /supplier_payments/1/edit
     def edit
       @breadcrumb = 'update'
@@ -197,14 +202,14 @@ module Ag2Purchase
       @users = User.all
       @payment_methods = payment_methods_dropdown
     end
-  
+
     # POST /supplier_payments
     # POST /supplier_payments.json
     def create
       @breadcrumb = 'create'
       @supplier_payment = SupplierPayment.new(params[:supplier_payment])
       @supplier_payment.created_by = current_user.id if !current_user.nil?
-  
+
       respond_to do |format|
         if @supplier_payment.save
           format.html { redirect_to @supplier_payment, notice: crud_notice('created', @supplier_payment) }
@@ -221,14 +226,14 @@ module Ag2Purchase
         end
       end
     end
-  
+
     # PUT /supplier_payments/1
     # PUT /supplier_payments/1.json
     def update
       @breadcrumb = 'update'
       @supplier_payment = SupplierPayment.find(params[:id])
       @supplier_payment.updated_by = current_user.id if !current_user.nil?
-  
+
       respond_to do |format|
         if @supplier_payment.update_attributes(params[:supplier_payment])
           format.html { redirect_to @supplier_payment,
@@ -246,7 +251,7 @@ module Ag2Purchase
         end
       end
     end
-  
+
     # DELETE /supplier_payments/1
     # DELETE /supplier_payments/1.json
     def destroy
@@ -282,7 +287,7 @@ module Ag2Purchase
     def invoices_dropdown
       session[:organization] != '0' ? SupplierInvoiceDebt.where(organization_id: session[:organization].to_i).order(:supplier_invoice_id) : SupplierInvoiceDebt.order(:supplier_invoice_id)
     end
-    
+
     def invoices_array(_invoices) # based on SupplierInvoiceDebt
       _array = []
       _invoices.each do |i|
@@ -318,10 +323,10 @@ module Ag2Purchase
         if approvals.count > 0
           approvals.each do |a|       # a = SupplierInvoiceApproval
             if a.debt > 0
-              _array = _array << [ a.id, i.supplier_invoice.invoice_no, 
+              _array = _array << [ a.id, i.supplier_invoice.invoice_no,
                                    a.approver.email, formatted_date(a.approval_date),
                                   (!a.debt.blank? ? formatted_number(a.debt, 4) : formatted_number(0, 4)) ]
-            end 
+            end
           end
         end
       end
@@ -331,7 +336,7 @@ module Ag2Purchase
     def payment_methods_dropdown
       session[:organization] != '0' ? payment_payment_methods(session[:organization].to_i) : payment_payment_methods(0)
     end
-    
+
     def payment_payment_methods(_organization)
       if _organization != 0
         _methods = PaymentMethod.where("(flow = 3 OR flow = 2) AND organization_id = ?", _organization).order(:description)
@@ -340,7 +345,7 @@ module Ag2Purchase
       end
       _methods
     end
-    
+
     # Keeps filter state
     def manage_filter_state
       # search
