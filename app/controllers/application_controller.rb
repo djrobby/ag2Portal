@@ -23,7 +23,7 @@ class ApplicationController < ActionController::Base
   helper_method :formatted_date
   helper_method :formatted_timestamp
   helper_method :formatted_time
-  
+
   #
   # Formatting
   #
@@ -43,13 +43,13 @@ class ApplicationController < ActionController::Base
     _delimiter = I18n.locale == :es ? "." : ","
     number_with_precision(_number.round(_decimals), precision: _decimals, delimiter: _delimiter)
   end
-  
+
   #
   # OCO
   #
   def init_oco
     session[:administrator] = false
-    
+
     if user_signed_in?
       if !session[:office]
         session[:office] = '0'
@@ -67,7 +67,7 @@ class ApplicationController < ActionController::Base
       offices = current_user.offices              # O
       companies = current_user.companies          # C
       organizations = current_user.organizations  # O
-      
+
       # Exclusive Office?
       if offices.count == 1
         session[:office] = offices.first.id
@@ -91,12 +91,12 @@ class ApplicationController < ActionController::Base
           end
         end
       end
-      
+
       # Administrator?
-      session[:is_administrator] = current_user.has_role? :Administrator      
-    end    
+      session[:is_administrator] = current_user.has_role? :Administrator
+    end
   end
-  
+
   def current_oco
     oco = ''
     if session[:office] != '0'
@@ -114,7 +114,7 @@ class ApplicationController < ActionController::Base
     end
     oco
   end
-  
+
   #
   # Approvers
   #
@@ -212,7 +212,7 @@ class ApplicationController < ActionController::Base
   def sort_direction
     %w[asc desc].include?(params[:direction]) ? params[:direction] : "asc"
   end
-  
+
   # Char set
   def set_locale
     # I18n.locale = params[:locale] || I18n.default_locale
@@ -231,7 +231,7 @@ class ApplicationController < ActionController::Base
     a = Attachment.find(1) rescue nil
     if !a.nil?
       a.destroy
-    end  
+    end
   end
 
   #
@@ -279,7 +279,7 @@ class ApplicationController < ActionController::Base
     end
     _dc
   end
-  
+
   def fiscal_id_description(code)
     _m = '$err'
     code = '0' if is_numeric?(code)
@@ -304,7 +304,7 @@ end
   # IS NUMERIC
   def is_numeric?(object)
     true if Float(object) rescue false
-  end  
+  end
 
   #
   # Automatic codes & document numbers
@@ -364,7 +364,7 @@ end
     end
     code
   end
-  
+
   # Project code
   def pr_next_code(company, type)
     code = ''
@@ -420,7 +420,7 @@ end
     end
     code
    end
-  
+
   # Budget no
   def bu_next_no(project, period)
     code = ''
@@ -441,7 +441,7 @@ end
     end
     code
   end
-  
+
   # Delivery note no
   def dn_next_no(organization)
     year = Time.new.year
@@ -459,7 +459,7 @@ end
     end
     code
   end
-  
+
   # Purchase order no
   def po_next_no(project)
     year = Time.new.year
@@ -482,7 +482,7 @@ end
     end
     code
   end
-  
+
   # Work order no
   def wo_next_no(project)
     year = Time.new.year
@@ -505,7 +505,7 @@ end
     end
     code
   end
-  
+
   # Offer request no
   def or_next_no(project)
     year = Time.new.year
@@ -552,7 +552,7 @@ end
     end
     code
   end
-  
+
   # Inventory count no
   def ic_next_no(store)
     year = Time.new.year
@@ -570,7 +570,7 @@ end
     end
     code
   end
-  
+
   # Supplier payment no
   def sp_next_no(organization)
     year = Time.new.year
@@ -593,7 +593,7 @@ end
   # Privates
   #
   private
-  
+
   # NIF/NIE
   def calc_dc_individual(fiscal_id)
     'TRWAGMYFPDXBNJZSQVHLCKE'[fiscal_id % 23, 1]

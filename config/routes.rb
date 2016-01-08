@@ -5,7 +5,7 @@ Ag2Portal::Application.routes.draw do
     get "lowres/index"
     get "home/index"
     get "guide/index"
-    
+
     # Devise (the standard route is: devise_for :users) localized
     devise_for :users, :controllers => { :omniauth_callbacks => "users/omniauth_callbacks" }
 
@@ -19,15 +19,16 @@ Ag2Portal::Application.routes.draw do
     #
     match 'guide/gu_content_from_guide/:name', :controller => 'guide', :action => 'gu_content_from_guide'
     match 'guide/gu_content_from_subguide/:name', :controller => 'guide', :action => 'gu_content_from_subguide'
+    match 'reset_filters/:m', :controller => 'engines', :action => 'reset_filters'
 
     # Routes for custom error pages
     get '/404', to: 'errors#file_not_found'
     get '/422', to: 'errors#unprocessable'
     get '/500', to: 'errors#internal_server_error'
-        
+
     # Root
     root :to => "welcome#index"
-  
+
     # Engines
     mount Ag2Admin::Engine => "/ag2_admin"
     mount Ag2Directory::Engine => "/ag2_directory"
@@ -43,7 +44,7 @@ Ag2Portal::Application.routes.draw do
   # match '/:locale' => 'welcome#index'
 
   # get "welcome/index"
-    
+
   # devise_for :users
 
   # The priority is based upon order of creation:
@@ -96,7 +97,7 @@ Ag2Portal::Application.routes.draw do
   # You can have the root of your site routed with "root"
   # just remember to delete public/index.html.
   # root :to => "welcome#index"
-  
+
   # See how all your routes lay out with "rake routes"
 
   # This is a legacy wild controller route that's not recommended for RESTful applications.

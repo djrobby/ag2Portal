@@ -226,11 +226,6 @@ module Ag2Purchase
     # GET /suppliers
     # GET /suppliers.json
     def index
-      # filters keep unmodified, only if the calling view (referrer) belongs to this controller
-      if (request.referrer.exclude? "ag2_purchase") || (request.referrer.exclude? "suppliers")
-        reset_session_variables_for_filters
-      end
-
       manage_filter_state
       letter = params[:letter]
       if !session[:organization]

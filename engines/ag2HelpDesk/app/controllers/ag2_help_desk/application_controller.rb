@@ -1,5 +1,7 @@
 module Ag2HelpDesk
   class ApplicationController < ::ApplicationController
+    mattr_accessor :reset_session_variables_for_filters
+
     layout 'layouts/application'
 
     def reset_session_variables_for_filters

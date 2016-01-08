@@ -25,7 +25,20 @@ module ApplicationHelper
     link_to title, {:sort => column, :direction => direction}, {:class => css_class}
     #link_to title, params.merge(:sort => column, :direction => direction, :page => nil), {:class => css_class}
   end
-  
+
+  #
+  # Hyperlinks which reset session variables for filters
+  #
+  # _module:  The main module of an mounted engine
+  # _link:    The link reference
+  # _title:   The title of the link (including icon if present)
+  # (reset_filters is an ajax function that calls engines_controller#reset_filters method)
+  def link_to_resetting_filters(_module, _link, _title)
+    #_module::ApplicationController.reset_session_variables_for_filters
+    #link_to _title, _link, onclick: "reset_filters(\"#{ _module }\")"
+    link_to_function(_title, "reset_filters(\"#{ _module }\", \"#{ _link }\")")
+  end
+
   #
   # Nested forms
   #
@@ -33,7 +46,7 @@ module ApplicationHelper
   def link_to_remove_fields(name, f, options = {})
     f.hidden_field(:_destroy) + link_to_function(name, "remove_fields(this)", options)
   end
-  
+
   # Add
   # name:         The name of the link - ie. t("ag2_purchase.purchase_orders.btn_new_item")
   # f:            The parent form - ie. f (usually the form in _form.html.erb)

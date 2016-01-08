@@ -1,4 +1,14 @@
 /*
+ * Reset session variables for filters
+ */
+function reset_filters(m, l) {
+  jQuery.getJSON('/reset_filters/' + m, function(data) {
+    alert(l + "\t" + location.pathname);
+    window.location = l;
+  });
+}
+
+/*
  * Capitalizes character on each key press (onkeyup)
  */
 function caps(e) {

@@ -59,12 +59,12 @@
         <li class="dropdown-submenu">
           <a href="<%= ag2_purchase.root_path %>"><i class="ico-purchase"></i> ag2Purchase</a>
           <ul class="dropdown-menu dropdown-menu-submenu" role="menu">
-            <li><a href="<%= ag2_purchase.suppliers_path %>"><i class="ico-suppliers"></i> <%=t "ag2_purchase.home.index.suppliers" %></a></li>
-            <li><a href="<%= ag2_purchase.offer_requests_path %>"><i class="ico-requests"></i> <%=t "ag2_purchase.home.index.offer_requests" %></a></li>
-            <li><a href="<%= ag2_purchase.offers_path %>"><i class="ico-offers"></i> <%=t "ag2_purchase.home.index.offers" %></a></li>
-            <li><a href="<%= ag2_purchase.purchase_orders_path %>"><i class="ico-orders"></i> <%=t "ag2_purchase.home.index.purchase_orders" %></a></li>
-            <li><a href="<%= ag2_purchase.supplier_invoices_path %>"><i class="ico-invoices"></i> <%=t "ag2_purchase.home.index.supplier_invoices" %></a></li>
-            <li><a href="<%= ag2_purchase.supplier_payments_path %>"><i class="ico-payments"></i> <%=t "ag2_purchase.home.index.payments" %></a></li>
+            <li><%= link_to_resetting_filters(Ag2Purchase, ag2_purchase.suppliers_path, '<i class="ico-suppliers"></i>'.html_safe + " " + t("ag2_purchase.home.index.suppliers")) %></li>
+            <li><%= link_to_resetting_filters(Ag2Purchase, ag2_purchase.offer_requests_path, '<i class="ico-requests"></i>'.html_safe + " " + t("ag2_purchase.home.index.offer_requests")) %></li>
+            <li><%= link_to_resetting_filters(Ag2Purchase, ag2_purchase.offers_path, '<i class="ico-offers"></i>'.html_safe + " " + t("ag2_purchase.home.index.offers")) %></li>
+            <li><%= link_to_resetting_filters(Ag2Purchase, ag2_purchase.purchase_orders_path, '<i class="ico-orders"></i>'.html_safe + " " + t("ag2_purchase.home.index.purchase_orders")) %></li>
+            <li><%= link_to_resetting_filters(Ag2Purchase, ag2_purchase.supplier_invoices_path, '<i class="ico-invoices"></i>'.html_safe + " " + t("ag2_purchase.home.index.supplier_invoices")) %></li>
+            <li><%= link_to_resetting_filters(Ag2Purchase, ag2_purchase.supplier_payments_path, '<i class="ico-payments"></i>'.html_safe + " " + t("ag2_purchase.home.index.payments")) %></li>
             <li class="divider"></li>
             <li><a href="<%= ag2_purchase.ag2_purchase_track_path %>"><i class="ico-track"></i> <%=t "control_tracking.track" %></a></li>
           </ul>
