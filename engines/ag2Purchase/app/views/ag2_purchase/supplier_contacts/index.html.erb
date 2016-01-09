@@ -50,7 +50,7 @@
         <% end %>
         <!-- Buttons -->
         <%= render :partial => '/layouts/crud/new', :locals => { :model => SupplierContact, :path => new_supplier_contact_path, :txt => t(".btn_new") } %>
-        <%= link_to t(".back_to_main_app"), suppliers_path %><br />
+        <%= link_to_resetting_filters(Ag2Purchase, ag2_purchase.suppliers_path, t(".back_to_main_app")) %><br />
         <%= link_to t(".back_to_root"), ag2_purchase.root_path %>
       </div><!-- /.sidebar-nav -->
     </div><!-- /.span3 -->

@@ -11,7 +11,7 @@
     <a href="<%= ag2_purchase.root_path %>">ag2Purchase</a><span class="divider">></span>
   </li>
   <li>
-    <a href="<%= ag2_purchase.suppliers_path %>"><%=t "ag2_purchase.breadcrumb.suppliers.items" %></a><span class="divider">></span>
+    <%= link_to_resetting_filters(Ag2Purchase, ag2_purchase.suppliers_path, t("ag2_purchase.breadcrumb.suppliers.items")) %><span class="divider">></span>
   </li>
   <% if @supplier_contacts %>
   <li>
