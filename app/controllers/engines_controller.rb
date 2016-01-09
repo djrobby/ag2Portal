@@ -3,42 +3,57 @@ class EnginesController < ApplicationController
   # Resetting module (engine) session variables for filters
   #
   def reset_filters
-=begin
-    session.delete[:search] if session[:search]
-    session.delete[:letter] if session[:letter]
-    session.delete[:No] if session[:No]
-    session.delete[:Supplier] if session[:Supplier]
-    session.delete[:Status] if session[:Status]
-    session.delete[:Project] if session[:Project]
-    session.delete[:Order] if session[:Order]
-    session.delete[:Invoice] if session[:Invoice]
-    session.delete[:Products] if session[:Products]
-    session.delete[:Suppliers] if session[:Suppliers]
-    session.delete[:sort] if session[:sort]
-    session.delete[:direction] if session[:direction]
-    session.delete[:ifilter] if session[:ifilter]
-=end
-    case params[:m]
-    when "Ag2Admin"
-      Ag2Admin::ApplicationController.reset_session_variables_for_filters
-    when "Ag2Directory"
-      Ag2Directory::ApplicationController.reset_session_variables_for_filters
-    when "Ag2Finance"
-      Ag2Finance::ApplicationController.reset_session_variables_for_filters
-    when "Ag2Gest"
-      Ag2Gest::ApplicationController.reset_session_variables_for_filters
-    when "Ag2HelpDesk"
-      Ag2HelpDesk::ApplicationController.reset_session_variables_for_filters
-    when "Ag2Human"
-      Ag2Human::ApplicationController.reset_session_variables_for_filters
-    when "Ag2Products"
-      Ag2Products::ApplicationController.reset_session_variables_for_filters
-    when "Ag2Purchase"
-      Ag2Purchase::ApplicationController.reset_session_variables_for_filters
-    when "Ag2Tech"
-      Ag2Tech::ApplicationController.reset_session_variables_for_filters
-    end
+    # Shared
+    session[:search] = nil
+    session[:letter] = nil
+    session[:sort] = nil
+    session[:direction] = nil
+    session[:ifilter] = nil
+    session[:From] = nil
+    session[:To] = nil
+    session[:Type] = nil
+    session[:No] = nil
+    session[:Project] = nil
+    session[:Order] = nil
+    session[:Products] = nil
+    session[:Suppliers] = nil
+    session[:Status] = nil
+    session[:WrkrCompany] = nil
+    session[:WrkrOffice] = nil
+    # Ag2Admin
+    # ...
+    # Ag2Directory
+    session[:ContactType] = nil
+    # Ag2Finance
+    # ...
+    # Ag2Gest
+    # ...
+    # Ag2HelpDesk
+    session[:Id] = nil
+    session[:User] = nil
+    session[:OfficeT] = nil
+    session[:Category] = nil
+    session[:Priority] = nil
+    session[:Technician] = nil
+    session[:Domain] = nil
+    # Ag2Human
+    session[:Worker] = nil
+    session[:Code] = nil
+    # Ag2Products
+    session[:Family] = nil
+    session[:Store] = nil
+    session[:Measure] = nil
+    session[:Manufacturer] = nil
+    session[:Tax] = nil
+    session[:Client] = nil
+    session[:Stores] = nil
+    # Ag2Purchase
+    session[:Supplier] = nil
+    session[:Invoice] = nil
+    # Ag2Tech
+    session[:Period] = nil
+    session[:Group] = nil
 
-    render json: { result: "filters" }
+    render json: { result: session[:letter] }
   end
 end

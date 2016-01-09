@@ -19,7 +19,7 @@ Ag2Portal::Application.routes.draw do
     #
     match 'guide/gu_content_from_guide/:name', :controller => 'guide', :action => 'gu_content_from_guide'
     match 'guide/gu_content_from_subguide/:name', :controller => 'guide', :action => 'gu_content_from_subguide'
-    match 'reset_filters/:m', :controller => 'engines', :action => 'reset_filters'
+    match 'reset_filters', :controller => 'engines', :action => 'reset_filters'
 
     # Routes for custom error pages
     get '/404', to: 'errors#file_not_found'

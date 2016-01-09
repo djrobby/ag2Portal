@@ -2,8 +2,7 @@
  * Reset session variables for filters
  */
 function reset_filters(m, l) {
-  jQuery.getJSON('/reset_filters/' + m, function(data) {
-    alert(l + "\t" + location.pathname);
+  jQuery.getJSON('/reset_filters', function(data) {
     window.location = l;
   });
 }

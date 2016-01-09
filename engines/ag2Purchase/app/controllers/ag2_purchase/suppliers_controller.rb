@@ -250,8 +250,6 @@ module Ag2Purchase
         format.json { render json: @suppliers }
         format.js
       end
-      puts "Path:"
-      puts request.referrer
     end
 
     # GET /suppliers/1
