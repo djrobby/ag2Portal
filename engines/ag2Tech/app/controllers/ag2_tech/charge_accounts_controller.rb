@@ -6,7 +6,7 @@ module Ag2Tech
     load_and_authorize_resource
     skip_load_and_authorize_resource :only => [:cc_update_project_textfields_from_organization,
                                                :cc_generate_code]
-    
+
     # Update project text fields at view from organization select
     def cc_update_project_textfields_from_organization
       organization = params[:org]
@@ -53,12 +53,12 @@ module Ag2Tech
       # Initialize select_tags
       @projects = projects_dropdown if @projects.nil?
       @groups = groups_dropdown if @groups.nil?
-  
+
       # Arrays for search
       current_projects = @projects.blank? ? [0] : current_projects_for_index(@projects)
       # If inverse no search is required
       no = !no.blank? && no[0] == '%' ? inverse_no_search(no) : no
-      
+
       @search = ChargeAccount.search do
         any_of do
           with :project_id, current_projects
@@ -92,19 +92,19 @@ module Ag2Tech
         format.js
       end
     end
-  
+
     # GET /charge_accounts/1
     # GET /charge_accounts/1.json
     def show
       @breadcrumb = 'read'
       @charge_account = ChargeAccount.find(params[:id])
-  
+
       respond_to do |format|
         format.html # show.html.erb
         format.json { render json: @charge_account }
       end
     end
-  
+
     # GET /charge_accounts/new
     # GET /charge_accounts/new.json
     def new
@@ -113,29 +113,30 @@ module Ag2Tech
       @projects = projects_dropdown
       @groups = groups_dropdown
       @ledger_accounts = ledger_accounts_dropdown
-  
+
       respond_to do |format|
         format.html # new.html.erb
         format.json { render json: @charge_account }
       end
     end
-  
+
     # GET /charge_accounts/1/edit
     def edit
       @breadcrumb = 'update'
       @charge_account = ChargeAccount.find(params[:id])
       @projects = projects_dropdown_edit(@charge_account.project)
       @groups = @charge_account.organization.blank? ? groups_dropdown : @charge_account.organization.charge_groups.order(:group_code)
-      @ledger_accounts = @charge_account.organization.blank? ? ledger_accounts_dropdown : @charge_account.organization.ledger_accounts.order(:code)
+      #@ledger_accounts = @charge_account.organization.blank? ? ledger_accounts_dropdown : @charge_account.organization.ledger_accounts.order(:code)
+      @ledger_accounts = @charge_account.project.blank? ? ledger_accounts_dropdown : ledger_accounts_dropdown_edit(@charge_account.project_id)
     end
-  
+
     # POST /charge_accounts
     # POST /charge_accounts.json
     def create
       @breadcrumb = 'create'
       @charge_account = ChargeAccount.new(params[:charge_account])
       @charge_account.created_by = current_user.id if !current_user.nil?
-  
+
       respond_to do |format|
         if @charge_account.save
           format.html { redirect_to @charge_account, notice: crud_notice('created', @charge_account) }
@@ -149,14 +150,14 @@ module Ag2Tech
         end
       end
     end
-  
+
     # PUT /charge_accounts/1
     # PUT /charge_accounts/1.json
     def update
       @breadcrumb = 'update'
       @charge_account = ChargeAccount.find(params[:id])
       @charge_account.updated_by = current_user.id if !current_user.nil?
-  
+
       respond_to do |format|
         if @charge_account.update_attributes(params[:charge_account])
           format.html { redirect_to @charge_account,
@@ -165,13 +166,14 @@ module Ag2Tech
         else
           @projects = projects_dropdown_edit(@charge_account.project)
           @groups = @charge_account.organization.blank? ? groups_dropdown : @charge_account.organization.charge_groups.order(:group_code)
-          @ledger_accounts = @charge_account.organization.blank? ? ledger_accounts_dropdown : @charge_account.organization.ledger_accounts.order(:code)
+          #@ledger_accounts = @charge_account.organization.blank? ? ledger_accounts_dropdown : @charge_account.organization.ledger_accounts.order(:code)
+          @ledger_accounts = @charge_account.project.blank? ? ledger_accounts_dropdown : ledger_accounts_dropdown_edit(@charge_account.project_id)
           format.html { render action: "edit" }
           format.json { render json: @charge_account.errors, status: :unprocessable_entity }
         end
       end
     end
-  
+
     # DELETE /charge_accounts/1
     # DELETE /charge_accounts/1.json
     def destroy
@@ -190,7 +192,7 @@ module Ag2Tech
     end
 
     private
-    
+
     def current_projects_for_index(_projects)
       _current_projects = []
       _projects.each do |i|
@@ -233,7 +235,11 @@ module Ag2Tech
     def ledger_accounts_dropdown
       session[:organization] != '0' ? LedgerAccount.where(organization_id: session[:organization].to_i).order(:code) : LedgerAccount.order(:code)
     end
-    
+
+    def ledger_accounts_dropdown_edit(_project)
+      LedgerAccount.where('project_id = ? OR project_id IS NULL', _project).order(:code)
+    end
+
     # Keeps filter state
     def manage_filter_state
       # search
