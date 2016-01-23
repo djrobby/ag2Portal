@@ -5,6 +5,7 @@ module Ag2Tech
     before_filter :authenticate_user!
     load_and_authorize_resource
     skip_load_and_authorize_resource :only => [:cc_update_project_textfields_from_organization,
+                                               :cc_update_account_textfield_from_project,
                                                :cc_generate_code]
 
     # Update project text fields at view from organization select
@@ -14,11 +15,33 @@ module Ag2Tech
         @organization = Organization.find(organization)
         @projects = @organization.blank? ? projects_dropdown : @organization.projects.order(:project_code)
         @groups = @organization.blank? ? groups_dropdown : @organization.charge_groups.order(:group_code)
+        @ledger_accounts = @organization.blank? ? ledger_accounts_dropdown : @organization.ledger_accounts.order(:code)
       else
         @projects = projects_dropdown
         @groups = groups_dropdown
+        @ledger_accounts = ledger_accounts_dropdown
       end
-      @json_data = { "projects" => @projects, "groups" => @groups }
+      # Ledger accounts array
+      @ledger_accounts_dropdown = ledger_accounts_array(@ledger_accounts)
+      # Setup JSON
+      @json_data = { "projects" => @projects, "groups" => @groups, "accounts" => @ledger_accounts_dropdown }
+      render json: @json_data
+    end
+
+    # Update account text field at view from project select
+    def cc_update_account_textfield_from_project
+      project = params[:project]
+      projects = projects_dropdown
+      if project != '0'
+        @project = Project.find(project)
+        @ledger_accounts = @project.blank? ? projects_ledger_accounts(projects) : ledger_accounts_dropdown_edit(@project)
+      else
+        @ledger_accounts = projects_ledger_accounts(projects)
+      end
+      # Ledger accounts array
+      @ledger_accounts_dropdown = ledger_accounts_array(@ledger_accounts)
+      # Setup JSON
+      @json_data = { "accounts" => @ledger_accounts_dropdown }
       render json: @json_data
     end
 
@@ -112,7 +135,7 @@ module Ag2Tech
       @charge_account = ChargeAccount.new
       @projects = projects_dropdown
       @groups = groups_dropdown
-      @ledger_accounts = ledger_accounts_dropdown
+      @ledger_accounts = projects_ledger_accounts(@projects)
 
       respond_to do |format|
         format.html # new.html.erb
@@ -126,8 +149,7 @@ module Ag2Tech
       @charge_account = ChargeAccount.find(params[:id])
       @projects = projects_dropdown_edit(@charge_account.project)
       @groups = @charge_account.organization.blank? ? groups_dropdown : @charge_account.organization.charge_groups.order(:group_code)
-      #@ledger_accounts = @charge_account.organization.blank? ? ledger_accounts_dropdown : @charge_account.organization.ledger_accounts.order(:code)
-      @ledger_accounts = @charge_account.project.blank? ? ledger_accounts_dropdown : ledger_accounts_dropdown_edit(@charge_account.project_id)
+      @ledger_accounts = @charge_account.project.blank? ? projects_ledger_accounts(@projects) : ledger_accounts_dropdown_edit(@charge_account.project)
     end
 
     # POST /charge_accounts
@@ -144,7 +166,7 @@ module Ag2Tech
         else
           @projects = projects_dropdown
           @groups = groups_dropdown
-          @ledger_accounts = ledger_accounts_dropdown
+          @ledger_accounts = projects_ledger_accounts(@projects)
           format.html { render action: "new" }
           format.json { render json: @charge_account.errors, status: :unprocessable_entity }
         end
@@ -166,8 +188,7 @@ module Ag2Tech
         else
           @projects = projects_dropdown_edit(@charge_account.project)
           @groups = @charge_account.organization.blank? ? groups_dropdown : @charge_account.organization.charge_groups.order(:group_code)
-          #@ledger_accounts = @charge_account.organization.blank? ? ledger_accounts_dropdown : @charge_account.organization.ledger_accounts.order(:code)
-          @ledger_accounts = @charge_account.project.blank? ? ledger_accounts_dropdown : ledger_accounts_dropdown_edit(@charge_account.project_id)
+          @ledger_accounts = @charge_account.project.blank? ? projects_ledger_accounts(@projects) : ledger_accounts_dropdown_edit(@charge_account.project)
           format.html { render action: "edit" }
           format.json { render json: @charge_account.errors, status: :unprocessable_entity }
         end
@@ -210,6 +231,36 @@ module Ag2Tech
       _numbers = _numbers.blank? ? no : _numbers
     end
 
+    # Ledger accounts belonging to projects
+    def projects_ledger_accounts(_projects)
+      _array = []
+      _ret = nil
+
+      # Adding ledger accounts belonging to current projects
+      _projects.each do |i|
+        _ret = LedgerAccount.where(project_id: i.id)
+        ret_array(_array, _ret, 'id')
+      end
+
+      # Adding global ledger accounts belonging to projects organizations
+      _sort_projects_by_organization = _projects.sort { |a,b| a.organization_id <=> b.organization_id }
+      _previous_organization = _sort_projects_by_organization.first.organization_id
+      _sort_projects_by_organization.each do |i|
+        if _previous_organization != i.organization_id
+          # when organization changes, process previous
+          _ret = LedgerAccount.where('(project_id IS NULL AND ledger_accounts.organization_id = ?)', _previous_organization)
+          ret_array(_array, _ret, 'id')
+          _previous_organization = i.organization_id
+        end
+      end
+      # last organization, process previous
+      _ret = LedgerAccount.where('(project_id IS NULL AND ledger_accounts.organization_id = ?)', _previous_organization)
+      ret_array(_array, _ret, 'id')
+
+      # Returning founded ledger accounts
+      _ret = LedgerAccount.where(id: _array).order(:code)
+    end
+
     def projects_dropdown
       if session[:office] != '0'
         _projects = Project.active_only.where(office_id: session[:office].to_i)
@@ -237,7 +288,24 @@ module Ag2Tech
     end
 
     def ledger_accounts_dropdown_edit(_project)
-      LedgerAccount.where('project_id = ? OR project_id IS NULL', _project).order(:code)
+      LedgerAccount.where('project_id = ? OR (project_id IS NULL AND ledger_accounts.organization_id = ?)', _project, _project.organization_id).order(:code)
+    end
+
+    def ledger_accounts_array(_accounts)
+      _array = []
+      _accounts.each do |i|
+        _array = _array << [i.id, i.full_name]
+      end
+      _array
+    end
+
+    # Returns _array from _ret table/model filled with _id attribute
+    def ret_array(_array, _ret, _id)
+      if !_ret.nil?
+        _ret.each do |_r|
+          _array = _array << _r.read_attribute(_id) unless _array.include? _r.read_attribute(_id)
+        end
+      end
     end
 
     # Keeps filter state

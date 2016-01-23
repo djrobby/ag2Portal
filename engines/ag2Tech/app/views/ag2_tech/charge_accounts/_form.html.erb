@@ -114,6 +114,7 @@
       jQuery.getJSON('cc_update_project_textfields_from_organization/' + order, function(data) {
         var p = data.projects;
         var g = data.groups;
+        var l = data.accounts;
         // Projects
         $("#charge_account_project_id").html("");
         $("#charge_account_project_id").select2("val", "");
@@ -144,6 +145,21 @@
             $("#charge_account_charge_group_id").append($('<option></option>').val(option.id).html(option.group_code + " " + option.name));
           });
         }
+        // Ledger accounts
+        $("#charge_account_ledger_account_id").html("");
+        $("#charge_account_ledger_account_id").select2("val", "");
+        $("#charge_account_ledger_account_id").append($('<option></option>').val("").html(""));
+        if (!l.length) {
+          $.each(data, function(id, option) {
+            if (id == 'accounts' && option != "") {
+              $("#charge_account_ledger_account_id").append($('<option></option>').val(option[0]).html(option[1]));
+            }
+          });
+        } else {
+          $.each(l, function(id, option) {
+            $("#charge_account_ledger_account_id").append($('<option></option>').val(option[0]).html(option[1]));
+          });
+        }
       });
       $("#charge_account_charge_group_id").val(0);
       // Disable generate_code_btn if charge_account_organization_id blank
@@ -169,6 +185,33 @@
       }
       // Disable generate_code_btn if charge_account_charge_group_id blank
       show_hide_generate_code_btn();
+    });
+
+    // when the #charge_account_project_id field changes
+    $("#charge_account_project_id").change(function() {
+      // make a POST call and replace the content
+      var project = $('select#charge_account_project_id :selected').val();
+      if (project == "")
+        project = "0";
+      jQuery.getJSON('cc_update_account_textfield_from_project/' + project, function(data) {
+        var l = data.accounts;
+        // Ledger accounts
+        $("#charge_account_ledger_account_id").html("");
+        $("#charge_account_ledger_account_id").select2("val", "");
+        $("#charge_account_ledger_account_id").append($('<option></option>').val("").html(""));
+        if (!l.length) {
+          $.each(data, function(id, option) {
+            if (id == 'accounts' && option != "") {
+              $("#charge_account_ledger_account_id").append($('<option></option>').val(option[0]).html(option[1]));
+            }
+          });
+        } else {
+          $.each(l, function(id, option) {
+            $("#charge_account_ledger_account_id").append($('<option></option>').val(option[0]).html(option[1]));
+          });
+        }
+      });
+      return false;
     });
   });
   

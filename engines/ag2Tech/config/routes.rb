@@ -16,7 +16,7 @@ Ag2Tech::Engine.routes.draw do
 
     # Routes for jQuery POSTs
     # Numbers with decimals (.) must be multiplied (by 1xxx and the same zeroes x positions) before passed as REST parameter!
-    # 
+    #
     # Projects
     match 'projects/pr_update_company_textfield_from_office/:id', :controller => 'projects', :action => 'pr_update_company_textfield_from_office'
     match 'pr_update_company_textfield_from_office/:id', :controller => 'projects', :action => 'pr_update_company_textfield_from_office'
@@ -38,6 +38,9 @@ Ag2Tech::Engine.routes.draw do
     match 'charge_accounts/cc_update_project_textfields_from_organization/:org', :controller => 'charge_accounts', :action => 'cc_update_project_textfields_from_organization'
     match 'cc_update_project_textfields_from_organization/:org', :controller => 'charge_accounts', :action => 'cc_update_project_textfields_from_organization'
     match 'charge_accounts/:id/cc_update_project_textfields_from_organization/:org', :controller => 'charge_accounts', :action => 'cc_update_project_textfields_from_organization'
+    match 'charge_accounts/cc_update_account_textfield_from_project/:project', :controller => 'charge_accounts', :action => 'cc_update_account_textfield_from_project'
+    match 'cc_update_account_textfield_from_project/:project', :controller => 'charge_accounts', :action => 'cc_update_account_textfield_from_project'
+    match 'charge_accounts/:id/cc_update_account_textfield_from_project/:project', :controller => 'charge_accounts', :action => 'cc_update_account_textfield_from_project'
     #
     # Groups
     match 'charge_groups/cg_update_heading_textfield_from_organization/:org', :controller => 'charge_groups', :action => 'cg_update_heading_textfield_from_organization'
@@ -191,7 +194,7 @@ Ag2Tech::Engine.routes.draw do
     resources :vehicles
     resources :ratios
     resources :ratio_groups
-    
+
     # Root
     root :to => 'home#index'
   end
