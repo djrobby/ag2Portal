@@ -1,4 +1,10 @@
 <script>
+  $(document).ready(function() {
+    $('select.sel2').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      allowClear: true
+    });
+  });
   jQuery(function($) {
     // when the #charge_group_organization_id field changes
     $("#charge_group_organization_id").change(function() {
@@ -8,9 +14,10 @@
         order = "0";
       jQuery.getJSON('cg_update_heading_textfield_from_organization/' + order, function(data) {
         var h = data.headings;
+        var l = data.accounts;
         // Headings
         $("#charge_group_budget_heading_id").html("");
-        $("#charge_group_budget_heading_id").val("");
+        $("#charge_group_budget_heading_id").select2("val", "");
         $("#charge_group_budget_heading_id").append($('<option></option>').val("").html(""));
         if (!h.length) {
           $.each(data, function(id, option) {
@@ -21,6 +28,21 @@
         } else {
           $.each(h, function(id, option) {
             $("#charge_group_budget_heading_id").append($('<option></option>').val(option.id).html(option.heading_code + " " + option.name));
+          });
+        }
+        // Ledger accounts
+        $("#charge_group_ledger_account_id").html("");
+        $("#charge_group_ledger_account_id").select2("val", "");
+        $("#charge_group_ledger_account_id").append($('<option></option>').val("").html(""));
+        if (!l.length) {
+          $.each(data, function(id, option) {
+            if (id == 'accounts' && option != "") {
+              $("#charge_group_ledger_account_id").append($('<option></option>').val(option[0]).html(option[1]));
+            }
+          });
+        } else {
+          $.each(l, function(id, option) {
+            $("#charge_group_ledger_account_id").append($('<option></option>').val(option[0]).html(option[1]));
           });
         }
       });
@@ -44,8 +66,8 @@
 <%= f.association :organization, collection: Organization.order('name'), input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %>
 <% end %>
 <div>
-  <label class="multi-field-label-two"> <%= f.association :budget_heading, collection: @headings, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %> </label>
-  <label class="multi-field-label-two"> <%= f.association :ledger_account, collection: @ledger_accounts, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.association :budget_heading, collection: @headings, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.association :ledger_account, collection: @ledger_accounts, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
 </div>
 <%= f.input :flow,
   collection: [[1, t('activerecord.attributes.charge_group.flow_1')],

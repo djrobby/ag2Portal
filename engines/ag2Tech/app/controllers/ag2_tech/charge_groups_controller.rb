@@ -7,17 +7,22 @@ module Ag2Tech
     skip_load_and_authorize_resource :only => [:cg_update_heading_textfield_from_organization]
     # Helper methods for sorting
     helper_method :sort_column
-    
+
     # Update budget_heading text fields at view from organization select
     def cg_update_heading_textfield_from_organization
       organization = params[:org]
       if organization != '0'
         @organization = Organization.find(organization)
         @headings = @organization.blank? ? headings_dropdown : @organization.budget_headings.order(:heading_code)
+        @ledger_accounts = @organization.blank? ? ledger_accounts_dropdown : @organization.ledger_accounts.order(:code)
       else
         @headings = headings_dropdown
+        @ledger_accounts = ledger_accounts_dropdown
       end
-      @json_data = { "headings" => @headings }
+      # Ledger accounts array
+      @ledger_accounts_dropdown = ledger_accounts_array(@ledger_accounts)
+      # Setup JSON
+      @json_data = { "headings" => @headings, "accounts" => @ledger_accounts_dropdown }
       render json: @json_data
     end
 
@@ -35,14 +40,14 @@ module Ag2Tech
       else
         @charge_groups = flow_filter(filter)
       end
-  
+
       respond_to do |format|
         format.html # index.html.erb
         format.json { render json: @charge_groups }
         format.js
       end
     end
-  
+
     # GET /charge_groups/1
     # GET /charge_groups/1.json
     def show
@@ -50,13 +55,13 @@ module Ag2Tech
       @charge_group = ChargeGroup.find(params[:id])
       @charge_accounts = charge_accounts_by_group(@charge_group)
       #@charge_accounts = @charge_group.charge_accounts.paginate(:page => params[:page], :per_page => per_page).order(:account_code)
-  
+
       respond_to do |format|
         format.html # show.html.erb
         format.json { render json: @charge_group }
       end
     end
-  
+
     # GET /charge_groups/new
     # GET /charge_groups/new.json
     def new
@@ -64,28 +69,28 @@ module Ag2Tech
       @charge_group = ChargeGroup.new
       @headings = headings_dropdown
       @ledger_accounts = ledger_accounts_dropdown
-  
+
       respond_to do |format|
         format.html # new.html.erb
         format.json { render json: @charge_group }
       end
     end
-  
+
     # GET /charge_groups/1/edit
     def edit
       @breadcrumb = 'update'
       @charge_group = ChargeGroup.find(params[:id])
       @headings = @charge_group.organization.blank? ? headings_dropdown : @charge_group.organization.budget_headings.order(:heading_code)
-      @ledger_accounts = @charge_group.organization.blank? ? ledger_accounts_dropdown : @charge_group.organization.ledger_accounts.order(:code)
+      @ledger_accounts = ledger_accounts_dropdown
     end
-  
+
     # POST /charge_groups
     # POST /charge_groups.json
     def create
       @breadcrumb = 'create'
       @charge_group = ChargeGroup.new(params[:charge_group])
       @charge_group.created_by = current_user.id if !current_user.nil?
-  
+
       respond_to do |format|
         if @charge_group.save
           format.html { redirect_to @charge_group, notice: crud_notice('created', @charge_group) }
@@ -98,14 +103,14 @@ module Ag2Tech
         end
       end
     end
-  
+
     # PUT /charge_groups/1
     # PUT /charge_groups/1.json
     def update
       @breadcrumb = 'update'
       @charge_group = ChargeGroup.find(params[:id])
       @charge_group.updated_by = current_user.id if !current_user.nil?
-  
+
       respond_to do |format|
         if @charge_group.update_attributes(params[:charge_group])
           format.html { redirect_to @charge_group,
@@ -113,13 +118,13 @@ module Ag2Tech
           format.json { head :no_content }
         else
           @headings = @charge_group.organization.blank? ? headings_dropdown : @charge_group.organization.budget_headings.order(:heading_code)
-          @ledger_accounts = @charge_group.organization.blank? ? ledger_accounts_dropdown : @charge_group.organization.ledger_accounts.order(:code)
+          @ledger_accounts = ledger_accounts_dropdown
           format.html { render action: "edit" }
           format.json { render json: @charge_group.errors, status: :unprocessable_entity }
         end
       end
     end
-  
+
     # DELETE /charge_groups/1
     # DELETE /charge_groups/1.json
     def destroy
@@ -169,12 +174,51 @@ module Ag2Tech
       ChargeGroup.column_names.include?(params[:sort]) ? params[:sort] : "group_code"
     end
 
+    # Ledger accounts belonging to projects
+    def projects_ledger_accounts(_projects)
+      _array = []
+      _ret = nil
+
+      # Adding ledger accounts belonging to current projects
+      _projects.each do |i|
+        _ret = LedgerAccount.where(project_id: i.id)
+        ret_array(_array, _ret, 'id')
+      end
+
+      # Adding global ledger accounts belonging to projects organizations
+      _sort_projects_by_organization = _projects.sort { |a,b| a.organization_id <=> b.organization_id }
+      _previous_organization = _sort_projects_by_organization.first.organization_id
+      _sort_projects_by_organization.each do |i|
+        if _previous_organization != i.organization_id
+          # when organization changes, process previous
+          _ret = LedgerAccount.where('(project_id IS NULL AND ledger_accounts.organization_id = ?)', _previous_organization)
+          ret_array(_array, _ret, 'id')
+          _previous_organization = i.organization_id
+        end
+      end
+      # last organization, process previous
+      _ret = LedgerAccount.where('(project_id IS NULL AND ledger_accounts.organization_id = ?)', _previous_organization)
+      ret_array(_array, _ret, 'id')
+
+      # Returning founded ledger accounts
+      _ret = LedgerAccount.where(id: _array).order(:code)
+    end
+
     def headings_dropdown
       session[:organization] != '0' ? BudgetHeading.where(organization_id: session[:organization].to_i).order(:heading_code) : BudgetHeading.order(:heading_code)
     end
 
     def ledger_accounts_dropdown
-      session[:organization] != '0' ? LedgerAccount.where(organization_id: session[:organization].to_i).order(:code) : LedgerAccount.order(:code)
+      _projects, _oco = projects_dropdown
+      if _oco == false
+        LedgerAccount.order(:code)
+      else
+        if _projects.blank?
+          session[:organization] != '0' ? LedgerAccount.where(organization_id: session[:organization].to_i).order(:code) : LedgerAccount.order(:code)
+        else
+          projects_ledger_accounts(_projects)
+        end
+      end
     end
 
     def projects_dropdown
@@ -202,6 +246,23 @@ module Ag2Tech
           _accounts = _group.charge_accounts.where(project_id: 0).paginate(:page => params[:page], :per_page => per_page).order(:account_code)
         else
           _accounts = _group.charge_accounts.where(project_id: _projects.first.id).paginate(:page => params[:page], :per_page => per_page).order(:account_code)
+        end
+      end
+    end
+
+    def ledger_accounts_array(_accounts)
+      _array = []
+      _accounts.each do |i|
+        _array = _array << [i.id, i.full_name]
+      end
+      _array
+    end
+
+    # Returns _array from _ret table/model filled with _id attribute
+    def ret_array(_array, _ret, _id)
+      if !_ret.nil?
+        _ret.each do |_r|
+          _array = _array << _r.read_attribute(_id) unless _array.include? _r.read_attribute(_id)
         end
       end
     end
