@@ -16,14 +16,14 @@ Ag2Purchase::Engine.routes.draw do
     match 'invoice_report', :controller => 'ag2_purchase_track', :action => 'invoice_report'
     match 'payment_report', :controller => 'ag2_purchase_track', :action => 'payment_report'
     match 'supplier_report', :controller => 'ag2_purchase_track', :action => 'supplier_report'
-    
+
     # Patterns
     DECIMAL_PATTERN = /-?\d+(\.\d+)/
-    
+
     # Routes for jQuery POSTs
     # Numbers with decimals (.) must be multiplied (by 1xxx and the same zeroes x positions) before passed as REST parameter!
     #
-    # Suppliers 
+    # Suppliers
     match 'suppliers/update_province_textfield_from_town/:id', :controller => 'suppliers', :action => 'update_province_textfield_from_town'
     match 'suppliers/:id/update_province_textfield_from_town/:id', :controller => 'suppliers', :action => 'update_province_textfield_from_town'
     match 'suppliers/update_province_textfield_from_zipcode/:id', :controller => 'suppliers', :action => 'update_province_textfield_from_zipcode'
@@ -50,8 +50,11 @@ Ag2Purchase::Engine.routes.draw do
     match 'suppliers/su_update_office_select_from_bank/:bank', :controller => 'suppliers', :action => 'su_update_office_select_from_bank'
     match 'su_update_office_select_from_bank/:bank', :controller => 'suppliers', :action => 'su_update_office_select_from_bank'
     match 'suppliers/:id/su_update_office_select_from_bank/:bank', :controller => 'suppliers', :action => 'su_update_office_select_from_bank'
+    match 'suppliers/su_update_textfields_from_organization/:org', :controller => 'suppliers', :action => 'su_update_textfields_from_organization'
+    match 'su_update_textfields_from_organization/:org', :controller => 'suppliers', :action => 'su_update_textfields_from_organization'
+    match 'suppliers/:id/su_update_textfields_from_organization/:org', :controller => 'suppliers', :action => 'su_update_textfields_from_organization'
     #
-    # Purchase orders 
+    # Purchase orders
     match 'purchase_orders/po_update_description_prices_from_product_store/:product/:qty/:store/:supplier/:tbl', :controller => 'purchase_orders', :action => 'po_update_description_prices_from_product_store'
     match 'po_update_description_prices_from_product_store/:product/:qty/:store/:supplier/:tbl', :controller => 'purchase_orders', :action => 'po_update_description_prices_from_product_store'
     match 'purchase_orders/:id/po_update_description_prices_from_product_store/:product/:qty/:store/:supplier/:tbl', :controller => 'purchase_orders', :action => 'po_update_description_prices_from_product_store'

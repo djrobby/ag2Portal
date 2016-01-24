@@ -4,13 +4,32 @@ module Ag2Gest
   class ClientsController < ApplicationController
     before_filter :authenticate_user!
     load_and_authorize_resource
-    skip_load_and_authorize_resource :only => [:update_province_textfield_from_town,
+    skip_load_and_authorize_resource :only => [:cl_update_textfields_from_organization,
+                                               :update_province_textfield_from_town,
                                                :update_province_textfield_from_zipcode,
                                                :update_country_textfield_from_region,
                                                :update_region_textfield_from_province,
                                                :cl_generate_code,
                                                :et_validate_fiscal_id_textfield,
                                                :validate_fiscal_id_textfield]
+    # Update payment method and ledger account text fields at view from organization select
+    def cl_update_textfields_from_organization
+      organization = params[:org]
+      if organization != '0'
+        @organization = Organization.find(organization)
+        @payment_methods = @organization.blank? ? payment_methods_dropdown : payment_payment_methods(@organization.id)
+        @ledger_accounts = @organization.blank? ? ledger_accounts_dropdown : @organization.ledger_accounts.order(:code)
+      else
+        @payment_methods = payment_methods_dropdown
+        @ledger_accounts = ledger_accounts_dropdown
+      end
+      # Ledger accounts array
+      @ledger_accounts_dropdown = ledger_accounts_array(@ledger_accounts)
+      # Setup JSON
+      @json_data = { "payment_method" => @payment_methods, "accounts" => @ledger_accounts_dropdown }
+      render json: @json_data
+    end
+
     # Update country text field at view from region select
     def update_country_textfield_from_region
       @region = Region.find(params[:id])
@@ -138,7 +157,7 @@ module Ag2Gest
       @json_data = { "id" => id, "fiscal_id" => fiscal_id, "name" => name,
                      "street_type_id" => street_type_id, "street_name" => street_name,
                      "street_number" => street_number, "building" => building,
-                     "floor" => floor, "floor_office" => floor_office, 
+                     "floor" => floor, "floor_office" => floor_office,
                      "zipcode_id" => zipcode_id, "town_id" => town_id,
                      "province_id" => province_id, "region_id" => region_id,
                      "country_id" => country_id, "phone" => phone,
@@ -203,85 +222,89 @@ module Ag2Gest
         paginate :page => params[:page] || 1, :per_page => per_page
       end
       @clients = @search.results
-  
+
       respond_to do |format|
         format.html # index.html.erb
         format.json { render json: @clients }
         format.js
       end
     end
-  
+
     # GET /clients/1
     # GET /clients/1.json
     def show
       @breadcrumb = 'read'
       @client = Client.find(params[:id])
-  
+
       respond_to do |format|
         format.html # show.html.erb
         format.json { render json: @client }
       end
     end
-  
+
     # GET /clients/new
     # GET /clients/new.json
     def new
       @breadcrumb = 'create'
       @client = Client.new
+      @payment_methods = payment_methods_dropdown
       @ledger_accounts = ledger_accounts_dropdown
-  
+
       respond_to do |format|
         format.html # new.html.erb
         format.json { render json: @client }
       end
     end
-  
+
     # GET /clients/1/edit
     def edit
       @breadcrumb = 'update'
       @client = Client.find(params[:id])
-      @ledger_accounts = @client.organization.blank? ? ledger_accounts_dropdown : @client.organization.ledger_accounts.order(:code)
+      @payment_methods = @client.organization.blank? ? payment_methods_dropdown : payment_payment_methods(@client.organization_id)
+      @ledger_accounts = ledger_accounts_dropdown
     end
-  
+
     # POST /clients
     # POST /clients.json
     def create
       @breadcrumb = 'create'
       @client = Client.new(params[:client])
       @client.created_by = current_user.id if !current_user.nil?
-  
+
       respond_to do |format|
         if @client.save
           format.html { redirect_to @client, notice: crud_notice('created', @client) }
           format.json { render json: @client, status: :created, location: @client }
         else
+          @payment_methods = payment_methods_dropdown
           @ledger_accounts = ledger_accounts_dropdown
           format.html { render action: "new" }
           format.json { render json: @client.errors, status: :unprocessable_entity }
         end
       end
     end
-  
+
     # PUT /clients/1
     # PUT /clients/1.json
     def update
       @breadcrumb = 'update'
       @client = Client.find(params[:id])
       @client.updated_by = current_user.id if !current_user.nil?
-  
+
       respond_to do |format|
         if @client.update_attributes(params[:client])
           format.html { redirect_to @client,
                         notice: (crud_notice('updated', @client) + "#{undo_link(@client)}").html_safe }
           format.json { head :no_content }
         else
-          @ledger_accounts = @client.organization.blank? ? ledger_accounts_dropdown : @client.organization.ledger_accounts.order(:code)
+          @payment_methods = @client.organization.blank? ? payment_methods_dropdown : payment_payment_methods(@client.organization_id)
+          @ledger_accounts = ledger_accounts_dropdown
           format.html { render action: "edit" }
           format.json { render json: @client.errors, status: :unprocessable_entity }
         end
       end
     end
-  
+
     # DELETE /clients/1
     # DELETE /clients/1.json
     def destroy
@@ -301,8 +324,93 @@ module Ag2Gest
 
     private
 
+    # Ledger accounts belonging to projects
+    def projects_ledger_accounts(_projects)
+      _array = []
+      _ret = nil
+
+      # Adding ledger accounts belonging to current projects
+      _projects.each do |i|
+        _ret = LedgerAccount.where(project_id: i.id)
+        ret_array(_array, _ret, 'id')
+      end
+
+      # Adding global ledger accounts belonging to projects organizations
+      _sort_projects_by_organization = _projects.sort { |a,b| a.organization_id <=> b.organization_id }
+      _previous_organization = _sort_projects_by_organization.first.organization_id
+      _sort_projects_by_organization.each do |i|
+        if _previous_organization != i.organization_id
+          # when organization changes, process previous
+          _ret = LedgerAccount.where('(project_id IS NULL AND ledger_accounts.organization_id = ?)', _previous_organization)
+          ret_array(_array, _ret, 'id')
+          _previous_organization = i.organization_id
+        end
+      end
+      # last organization, process previous
+      _ret = LedgerAccount.where('(project_id IS NULL AND ledger_accounts.organization_id = ?)', _previous_organization)
+      ret_array(_array, _ret, 'id')
+
+      # Returning founded ledger accounts
+      _ret = LedgerAccount.where(id: _array).order(:code)
+    end
+
+    def projects_dropdown
+      _projects = nil
+      _oco = false
+      if session[:office] != '0'
+        _projects = Project.active_only.where(office_id: session[:office].to_i)
+        _oco = true
+      elsif session[:company] != '0'
+        _projects = Project.active_only.where(company_id: session[:company].to_i)
+        _oco = true
+      elsif session[:organization] != '0'
+        _projects = Project.active_only.where(organization_id: session[:organization].to_i)
+        _oco = true
+      end
+      return _projects, _oco
+    end
+
+    def payment_methods_dropdown
+      _methods = session[:organization] != '0' ? payment_payment_methods(session[:organization].to_i) : payment_payment_methods(0)
+    end
+
+    def payment_payment_methods(_organization)
+      if _organization != 0
+        _methods = PaymentMethod.where("(flow = 3 OR flow = 1) AND organization_id = ?", _organization).order(:description)
+      else
+        _methods = PaymentMethod.where("flow = 3 OR flow = 1").order(:description)
+      end
+      _methods
+    end
+
     def ledger_accounts_dropdown
-      session[:organization] != '0' ? LedgerAccount.where(organization_id: session[:organization].to_i).order(:code) : LedgerAccount.order(:code)
+      _projects, _oco = projects_dropdown
+      if _oco == false
+        LedgerAccount.order(:code)
+      else
+        if _projects.blank?
+          session[:organization] != '0' ? LedgerAccount.where(organization_id: session[:organization].to_i).order(:code) : LedgerAccount.order(:code)
+        else
+          projects_ledger_accounts(_projects)
+        end
+      end
+    end
+
+    def ledger_accounts_array(_accounts)
+      _array = []
+      _accounts.each do |i|
+        _array = _array << [i.id, i.full_name]
+      end
+      _array
+    end
+
+    # Returns _array from _ret table/model filled with _id attribute
+    def ret_array(_array, _ret, _id)
+      if !_ret.nil?
+        _ret.each do |_r|
+          _array = _array << _r.read_attribute(_id) unless _array.include? _r.read_attribute(_id)
+        end
+      end
     end
 
     # Keeps filter state

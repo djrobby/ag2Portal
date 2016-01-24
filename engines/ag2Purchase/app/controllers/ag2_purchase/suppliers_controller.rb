@@ -5,7 +5,8 @@ module Ag2Purchase
     include ActionView::Helpers::NumberHelper
     before_filter :authenticate_user!
     load_and_authorize_resource
-    skip_load_and_authorize_resource :only => [:update_province_textfield_from_town,
+    skip_load_and_authorize_resource :only => [:su_update_textfields_from_organization,
+                                               :update_province_textfield_from_town,
                                                :update_province_textfield_from_zipcode,
                                                :update_country_textfield_from_region,
                                                :update_region_textfield_from_province,
@@ -15,6 +16,24 @@ module Ag2Purchase
                                                :su_format_amount,
                                                :su_format_percentage,
                                                :su_update_office_select_from_bank]
+    # Update payment method and ledger account text fields at view from organization select
+    def su_update_textfields_from_organization
+      organization = params[:org]
+      if organization != '0'
+        @organization = Organization.find(organization)
+        @payment_methods = @organization.blank? ? payment_methods_dropdown : payment_payment_methods(@organization.id)
+        @ledger_accounts = @organization.blank? ? ledger_accounts_dropdown : @organization.ledger_accounts.order(:code)
+      else
+        @payment_methods = payment_methods_dropdown
+        @ledger_accounts = ledger_accounts_dropdown
+      end
+      # Ledger accounts array
+      @ledger_accounts_dropdown = ledger_accounts_array(@ledger_accounts)
+      # Setup JSON
+      @json_data = { "payment_method" => @payment_methods, "accounts" => @ledger_accounts_dropdown }
+      render json: @json_data
+    end
+
     # Update country text field at view from region select
     def update_country_textfield_from_region
       @region = Region.find(params[:id])
@@ -272,6 +291,7 @@ module Ag2Purchase
     def new
       @breadcrumb = 'create'
       @supplier = Supplier.new
+      @payment_methods = payment_methods_dropdown
       @ledger_accounts = ledger_accounts_dropdown
       @classes = bank_account_classes_dropdown
       @countries = countries_dropdown
@@ -288,7 +308,8 @@ module Ag2Purchase
     def edit
       @breadcrumb = 'update'
       @supplier = Supplier.find(params[:id])
-      @ledger_accounts = @supplier.organization.blank? ? ledger_accounts_dropdown : @supplier.organization.ledger_accounts.order(:code)
+      @payment_methods = @supplier.organization.blank? ? payment_methods_dropdown : payment_payment_methods(@supplier.organization_id)
+      @ledger_accounts = ledger_accounts_dropdown
       @classes = bank_account_classes_dropdown
       @countries = countries_dropdown
       @banks = banks_dropdown
@@ -307,6 +328,7 @@ module Ag2Purchase
           format.html { redirect_to @supplier, notice: crud_notice('created', @supplier) }
           format.json { render json: @supplier, status: :created, location: @supplier }
         else
+          @payment_methods = payment_methods_dropdown
           @ledger_accounts = ledger_accounts_dropdown
           @classes = bank_account_classes_dropdown
           @countries = countries_dropdown
@@ -331,7 +353,8 @@ module Ag2Purchase
                         notice: (crud_notice('updated', @supplier) + "#{undo_link(@supplier)}").html_safe }
           format.json { head :no_content }
         else
-          @ledger_accounts = @supplier.organization.blank? ? ledger_accounts_dropdown : @supplier.organization.ledger_accounts.order(:code)
+          @payment_methods = @supplier.organization.blank? ? payment_methods_dropdown : payment_payment_methods(@supplier.organization_id)
+          @ledger_accounts = ledger_accounts_dropdown
           @classes = bank_account_classes_dropdown
           @countries = countries_dropdown
           @banks = banks_dropdown
@@ -361,8 +384,76 @@ module Ag2Purchase
 
     private
 
+    # Ledger accounts belonging to projects
+    def projects_ledger_accounts(_projects)
+      _array = []
+      _ret = nil
+
+      # Adding ledger accounts belonging to current projects
+      _projects.each do |i|
+        _ret = LedgerAccount.where(project_id: i.id)
+        ret_array(_array, _ret, 'id')
+      end
+
+      # Adding global ledger accounts belonging to projects organizations
+      _sort_projects_by_organization = _projects.sort { |a,b| a.organization_id <=> b.organization_id }
+      _previous_organization = _sort_projects_by_organization.first.organization_id
+      _sort_projects_by_organization.each do |i|
+        if _previous_organization != i.organization_id
+          # when organization changes, process previous
+          _ret = LedgerAccount.where('(project_id IS NULL AND ledger_accounts.organization_id = ?)', _previous_organization)
+          ret_array(_array, _ret, 'id')
+          _previous_organization = i.organization_id
+        end
+      end
+      # last organization, process previous
+      _ret = LedgerAccount.where('(project_id IS NULL AND ledger_accounts.organization_id = ?)', _previous_organization)
+      ret_array(_array, _ret, 'id')
+
+      # Returning founded ledger accounts
+      _ret = LedgerAccount.where(id: _array).order(:code)
+    end
+
+    def projects_dropdown
+      _projects = nil
+      _oco = false
+      if session[:office] != '0'
+        _projects = Project.active_only.where(office_id: session[:office].to_i)
+        _oco = true
+      elsif session[:company] != '0'
+        _projects = Project.active_only.where(company_id: session[:company].to_i)
+        _oco = true
+      elsif session[:organization] != '0'
+        _projects = Project.active_only.where(organization_id: session[:organization].to_i)
+        _oco = true
+      end
+      return _projects, _oco
+    end
+
+    def payment_methods_dropdown
+      _methods = session[:organization] != '0' ? payment_payment_methods(session[:organization].to_i) : payment_payment_methods(0)
+    end
+
+    def payment_payment_methods(_organization)
+      if _organization != 0
+        _methods = PaymentMethod.where("(flow = 3 OR flow = 2) AND organization_id = ?", _organization).order(:description)
+      else
+        _methods = PaymentMethod.where("flow = 3 OR flow = 2").order(:description)
+      end
+      _methods
+    end
+
     def ledger_accounts_dropdown
-      session[:organization] != '0' ? LedgerAccount.where(organization_id: session[:organization].to_i).order(:code) : LedgerAccount.order(:code)
+      _projects, _oco = projects_dropdown
+      if _oco == false
+        LedgerAccount.order(:code)
+      else
+        if _projects.blank?
+          session[:organization] != '0' ? LedgerAccount.where(organization_id: session[:organization].to_i).order(:code) : LedgerAccount.order(:code)
+        else
+          projects_ledger_accounts(_projects)
+        end
+      end
     end
 
     def bank_account_classes_dropdown
@@ -387,6 +478,23 @@ module Ag2Purchase
         _array = _array << [i.id, i.code, i.name, "(" + i.bank.code + ")"]
       end
       _array
+    end
+
+    def ledger_accounts_array(_accounts)
+      _array = []
+      _accounts.each do |i|
+        _array = _array << [i.id, i.full_name]
+      end
+      _array
+    end
+
+    # Returns _array from _ret table/model filled with _id attribute
+    def ret_array(_array, _ret, _id)
+      if !_ret.nil?
+        _ret.each do |_r|
+          _array = _array << _r.read_attribute(_id) unless _array.include? _r.read_attribute(_id)
+        end
+      end
     end
 
     # Keeps filter state
