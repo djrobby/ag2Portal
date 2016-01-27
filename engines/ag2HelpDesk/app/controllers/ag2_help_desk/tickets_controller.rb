@@ -10,7 +10,7 @@ module Ag2HelpDesk
                                                :ti_update_attachment]
     # Public attachment for drag&drop
     $attachment = nil
-  
+
     # Update attached file from drag&drop
     def ti_update_attachment
       if !$attachment.nil?
@@ -26,7 +26,7 @@ module Ag2HelpDesk
         render json: { "image" => "" }
       end
     end
-    
+
     # Update office text field at view from created_by select
     def ti_update_office_textfield_from_created_by
       office = 0
@@ -40,7 +40,7 @@ module Ag2HelpDesk
       @json_data = { "office" => office }
       render json: @json_data
     end
-    
+
     # Update office text field at view from organization select
     def ti_update_office_textfield_from_organization
       organization = params[:org]
@@ -54,7 +54,7 @@ module Ag2HelpDesk
       end
       @offices_dropdown = []
       @offices.each do |i|
-        @offices_dropdown = @offices_dropdown << [i.id, i.name, i.company.name] 
+        @offices_dropdown = @offices_dropdown << [i.id, i.name, i.company.name]
       end
       @json_data = { "offices" => @offices_dropdown, "technicians" => @technicians }
       render json: @json_data
@@ -213,6 +213,9 @@ module Ag2HelpDesk
       if $attachment != nil && !$attachment.avatar.blank? && $attachment.updated_at > @ticket.updated_at
         @ticket.attachment = $attachment.avatar
       end
+      if (params[:ticket][:updated_by].blank?)
+        params[:ticket][:updated_by] = current_user.id if !current_user.nil?
+      end
 
       respond_to do |format|
         if @ticket.update_attributes(params[:ticket])
@@ -296,15 +299,15 @@ module Ag2HelpDesk
         format.json { render json: @tickets }
       end
     end
-    
+
     private
-    
+
     def destroy_attachment
       if $attachment != nil
-        $attachment.destroy        
+        $attachment.destroy
       end
     end
-    
+
     def mail_to
       _to = "helpdesk@aguaygestion.com"
       begin
@@ -365,7 +368,7 @@ module Ag2HelpDesk
       end
       _organization
     end
-    
+
     def default_office
       _office = 0
       _user = User.find(current_user)
@@ -377,7 +380,7 @@ module Ag2HelpDesk
       end
       _office
     end
-    
+
     def default_mail
       _mail = nil
       _user = User.find(current_user)
@@ -426,13 +429,13 @@ module Ag2HelpDesk
     end
 
     def offices_by_company(_company)
-      _offices = Office.where(company_id: _company).order(:name)      
+      _offices = Office.where(company_id: _company).order(:name)
     end
-    
+
     def technicians_dropdown
-      _technicians = session[:organization] != '0' ? Technician.where(organization_id: session[:organization].to_i).order(:name) : Technician.order(:name)  
+      _technicians = session[:organization] != '0' ? Technician.where(organization_id: session[:organization].to_i).order(:name) : Technician.order(:name)
     end
-    
+
     # Keeps filter state
     def manage_filter_state
       # search
