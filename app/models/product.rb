@@ -27,6 +27,7 @@ class Product < ActiveRecord::Base
   has_many :vehicles
   has_many :tools
   has_many :inventory_count_items
+  has_many :product_company_prices
 
   has_paper_trail
 
@@ -96,7 +97,7 @@ class Product < ActiveRecord::Base
     # Product code (Family code & sequential number) => FFFF-NNNNNN
     product_code.blank? ? "" : product_code[0..3] + '-' + product_code[4..9]
   end
-  
+
   #
   # Calculated fields
   #
@@ -111,7 +112,7 @@ class Product < ActiveRecord::Base
   def initial
     stocks.sum("initial")
   end
-  
+
   def not_jit_stock
     _s = 0
     stocks.each do |s|
@@ -119,7 +120,7 @@ class Product < ActiveRecord::Base
         _s += s.current
       end
     end
-    _s    
+    _s
   end
 
   # Receipts
@@ -308,7 +309,7 @@ class Product < ActiveRecord::Base
       return false
     end
   end
-  
+
   # Before save
   def update_sell_price
     if !reference_price.blank? && !markup.blank?

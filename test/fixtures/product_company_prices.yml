@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  product: 
+  company: 
+  last_price: 9.99
+  average_price: 9.99
+
+two:
+  product: 
+  company: 
+  last_price: 9.99
+  average_price: 9.99
