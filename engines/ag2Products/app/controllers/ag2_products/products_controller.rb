@@ -13,7 +13,7 @@ module Ag2Products
                                                :receipts_deliveries]
     # Public attachment for drag&drop
     $attachment = nil
-  
+
     # Update attached file from drag&drop
     def pr_update_attachment
       if !$attachment.nil?
@@ -66,7 +66,7 @@ module Ag2Products
       @json_data = { "markup" => markup.to_s, "sell" => sell.to_s }
       render json: @json_data
     end
-    
+
     # Update family text field at view from organization select
     def pr_update_family_textfield_from_organization
       organization = params[:org]
@@ -98,10 +98,10 @@ module Ag2Products
       init_oco if !session[:organization]
       # Initialize select_tags
       @product_families = families_dropdown if @product_families.nil?
-  
+
       # If inverse no search is required
       no = !no.blank? && no[0] == '%' ? inverse_no_search(no) : no
-      
+
       @search = Product.search do
         fulltext params[:search]
         if session[:organization] != '0'
@@ -143,7 +143,7 @@ module Ag2Products
         format.js
       end
     end
-  
+
     # GET /products/1
     # GET /products/1.json
     def show
@@ -152,13 +152,13 @@ module Ag2Products
       @product = Product.find(params[:id])
       @stocks = @product.stocks.paginate(:page => params[:page], :per_page => per_page).order('store_id')
       @prices = @product.purchase_prices.paginate(:page => params[:page], :per_page => per_page).order('supplier_id')
-  
+
       respond_to do |format|
         format.html # show.html.erb
         format.json { render json: @product }
       end
     end
-  
+
     # GET /products/new
     # GET /products/new.json
     def new
@@ -167,13 +167,13 @@ module Ag2Products
       @product_families = families_dropdown
       $attachment = Attachment.new
       destroy_attachment
-  
+
       respond_to do |format|
         format.html # new.html.erb
         format.json { render json: @product }
       end
     end
-  
+
     # GET /products/1/edit
     def edit
       @breadcrumb = 'update'
@@ -182,7 +182,7 @@ module Ag2Products
       $attachment = Attachment.new
       destroy_attachment
     end
-  
+
     # POST /products
     # POST /products.json
     def create
@@ -193,7 +193,7 @@ module Ag2Products
       if @product.image.blank? && !$attachment.avatar.blank?
         @product.image = $attachment.avatar
       end
-  
+
       respond_to do |format|
         if @product.save
           $attachment.destroy
@@ -209,7 +209,7 @@ module Ag2Products
         end
       end
     end
-  
+
     # PUT /products/1
     # PUT /products/1.json
     def update
@@ -220,7 +220,7 @@ module Ag2Products
       if !$attachment.avatar.blank? && $attachment.updated_at > @product.updated_at
         @product.image = $attachment.avatar
       end
-  
+
       respond_to do |format|
         if @product.update_attributes(params[:product])
           $attachment.destroy
@@ -237,7 +237,7 @@ module Ag2Products
         end
       end
     end
-  
+
     # DELETE /products/1
     # DELETE /products/1.json
     def destroy
@@ -265,10 +265,11 @@ module Ag2Products
       #@receipts = product.receipt_note_items.includes(:receipt_note).order(:receipt_date)
       @receipts = @product.receipt_note_items.joins(:receipt_note).order('receipt_date desc').paginate(:page => params[:page], :per_page => per_page)
       @deliveries = @product.delivery_note_items.joins(:delivery_note).order('delivery_date desc').paginate(:page => params[:page], :per_page => per_page)
+      @counts = @product.inventory_count_items.joins(:inventory_count).order('count_date desc').paginate(:page => params[:page], :per_page => per_page)
 
       respond_to do |format|
         format.html # receipts_deliveries.html.erb
-        format.json { render json: { :product => @product, :receipts => @receipts, :deliveries => @deliveries } }
+        format.json { render json: { :product => @product, :receipts => @receipts, :deliveries => @deliveries, :counts => @counts } }
       end
     end
 
@@ -282,9 +283,9 @@ module Ag2Products
       end
       _numbers = _numbers.blank? ? no : _numbers
     end
-    
+
     def families_dropdown
-      _families = session[:organization] != '0' ? ProductFamily.where(organization_id: session[:organization].to_i).order(:family_code) : ProductFamily.order(:family_code)  
+      _families = session[:organization] != '0' ? ProductFamily.where(organization_id: session[:organization].to_i).order(:family_code) : ProductFamily.order(:family_code)
     end
 
     # Keeps filter state
@@ -346,8 +347,8 @@ module Ag2Products
 
     def reset_stock_prices_filter
       session[:Products] = nil
-      session[:Stores] = nil      
-      session[:Suppliers] = nil      
+      session[:Stores] = nil
+      session[:Suppliers] = nil
     end
   end
 end

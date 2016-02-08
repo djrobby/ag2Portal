@@ -19,9 +19,59 @@
   <div class="row-fluid">
     <div class="span12" id="div_table">
 
+      <!-- Inventory counts -->
+      <a href="#counts" data-toggle="collapse"><h4><%= t :"activerecord.attributes.product.inventory_counts" %></h4></a>
+      <% if (@counts.count > 0) %>
+      <div id="counts" class="collapse in">
+      <table class="table table-condensed table-striped">
+        <!-- id -->
+        <col width="8%" />
+        <!-- date -->
+        <col width="10%" />
+        <!-- no -->
+        <col width="22%" />
+        <!-- product -->
+        <col width="39%" />
+        <!-- quantity -->
+        <col width="21%" />
+        <thead>
+          <tr>
+            <th>Id</th>
+            <th align="center"><%= t 'activerecord.attributes.inventory_count.count_date' %></th>
+            <th><%= t 'activerecord.attributes.inventory_count.count_no' %></th>
+            <th><%=t "activerecord.attributes.inventory_count_item.product" %></th>
+            <th align="right"><%=t "activerecord.attributes.inventory_count_item.quantity_c" %></th>
+          </tr>
+        </thead>
+        <tfoot>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td align="right"><%= t :"activerecord.attributes.product.stock" %></td>
+            <td align="right"><%= number_with_precision(@store.counts, precision: 4) unless @store.counts.blank? %></td>
+          </tr>
+        </tfoot>
+        <tbody>
+          <% @counts.each do |m| %>
+          <tr>
+            <td><%= m.inventory_count.id %></td>
+            <td align="center"><%= formatted_date(m.inventory_count.count_date) unless m.inventory_count.count_date.blank? %></td>
+            <td><%= link_to m.inventory_count.full_no, m.inventory_count %></td>
+            <td><%= m.product.partial_name unless m.product.blank? %></td>
+            <td align="right"><%= number_with_precision(m.quantity, precision: 4) unless m.quantity.blank? %></td>
+          </tr>
+          <% end %>
+        </tbody>
+      </table>
+      </div>
+      <% end %>
+      <%= render :partial => '/layouts/pagination', :locals => { :ivar => @counts } %>
+
       <!-- Receipts -->
-      <h4><%= t :"activerecord.attributes.store.receipts" %></h4>
+      <a href="#receipts" data-toggle="collapse"><h4><%= t :"activerecord.attributes.store.receipts" %></h4></a>
       <% if (@receipts.count > 0) %>
+      <div id="receipts" class="collapse in">
       <table class="table table-condensed table-striped">
         <!-- id -->
         <col width="5%" />
@@ -78,12 +128,14 @@
           <% end %>
         </tbody>
       </table>
+      </div>
       <% end %>
       <%= render :partial => '/layouts/pagination', :locals => { :ivar => @receipts } %>
 
       <!-- Deliveries -->
-      <h4><%= t :"activerecord.attributes.store.deliveries" %></h4>
+      <a href="#deliveries" data-toggle="collapse"><h4><%= t :"activerecord.attributes.store.deliveries" %></h4></a>
       <% if (@deliveries.count > 0) %>
+      <div id="deliveries" class="collapse in">
       <table class="table table-condensed table-striped">
         <!-- id -->
         <col width="5%" />
@@ -140,6 +192,7 @@
           <% end %>
         </tbody>
       </table>
+      </div>
       <% end %>
       <%= render :partial => '/layouts/pagination', :locals => { :ivar => @deliveries } %>
 

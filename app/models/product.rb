@@ -193,6 +193,11 @@ class Product < ActiveRecord::Base
     _sum
   end
 
+  # Inventory counts
+  def counts
+    inventory_count_items.sum("quantity")
+  end
+
   #
   # Records navigator
   #

@@ -50,5 +50,6 @@ es:
         organization: "Organización"
         organization_id: "Organización"
         image: "Imágen"
+        inventory_counts: "Recuentos de inventario"
         receipts: "Entradas"
         deliveries: "Salidas"

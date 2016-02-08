@@ -30,10 +30,11 @@ class Store < ActiveRecord::Base
   has_many :sale_offers
   has_many :sale_offer_items
   has_many :inventory_counts
+  has_many :inventory_count_items, :through => :inventory_counts
   has_many :store_offices, dependent: :destroy
 
   # Nested attributes
-  accepts_nested_attributes_for :store_offices,                                 
+  accepts_nested_attributes_for :store_offices,
                                 :reject_if => :all_blank,
                                 :allow_destroy => true
 
@@ -130,6 +131,11 @@ class Store < ActiveRecord::Base
       end
     end
     _sum
+  end
+
+  # Inventory counts
+  def counts
+    inventory_count_items.sum("quantity")
   end
 
   def address_1

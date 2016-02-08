@@ -148,4 +148,7 @@
 </table>
 <br />
 
+<% if !session[:return_to_prod].nil? %>
+<%= link_to session[:return_to_prod], session[:return_to_prod_url] %> |
+<% end %>
 <%= link_to t("ag2_products.inventory_counts.back_to_main_page"), inventory_counts_path %>
