@@ -7,6 +7,7 @@ module Ag2HelpDesk
     skip_load_and_authorize_resource :only => [:ti_update_office_textfield_from_created_by,
                                                :ti_update_office_textfield_from_organization,
                                                :popup_new, :my_tickets,
+                                               :tickets_report,
                                                :ti_update_attachment]
     # Public attachment for drag&drop
     $attachment = nil
@@ -297,6 +298,80 @@ module Ag2HelpDesk
       respond_to do |format|
         format.html # my_tickets.html.erb
         format.json { render json: @tickets }
+      end
+    end
+
+    # GET /tickets
+    # GET /tickets.json
+    def tickets_report
+      manage_filter_state
+      id = params[:Id]
+      user = params[:User]
+      office = params[:OfficeT]
+      from = params[:From]
+      to = params[:To]
+      category = params[:Category]
+      priority = params[:Priority]
+      status = params[:Status]
+      technician = params[:Technician]
+      destination = params[:Destination]
+      # OCO
+      init_oco if !session[:organization]
+
+      @search = Ticket.search do
+        fulltext params[:search]
+        if session[:organization] != '0'
+          with :organization_id, session[:organization]
+        end
+        if !id.blank?
+          with :id, id
+        end
+        if !user.blank?
+          with :created_by, user
+        end
+        if !office.blank?
+          with :office_id, office
+        end
+        if !from.blank?
+          any_of do
+            with(:created_at).greater_than(from)
+            with :created_at, from
+          end
+        end
+        if !to.blank?
+          any_of do
+            with(:created_at).less_than(to)
+            with :created_at, to
+          end
+        end
+        if !category.blank?
+          with :ticket_category_id, category
+        end
+        if !priority.blank?
+          with :ticket_priority_id, priority
+        end
+        if !status.blank?
+          with :ticket_status_id, status
+        end
+        if !technician.blank?
+          with :technician_id, technician
+        end
+        if !destination.blank?
+          with :hd_email, destination
+        end
+        order_by :id, :desc
+        paginate :page => params[:page] || 1, :per_page => per_page
+      end
+
+      @tickets = @search.results
+      title = t("activerecord.models.ticket.few")
+
+      respond_to do |format|
+        # Render PDF
+        format.pdf { send_data render_to_string,
+                     filename: "#{title}_#{@tickets.first.created_at}_#{@tickets.last.created_at}.pdf",
+                     type: 'application/pdf',
+                     disposition: 'inline' }
       end
     end
 

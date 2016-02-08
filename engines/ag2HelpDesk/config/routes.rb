@@ -3,7 +3,11 @@ Ag2HelpDesk::Engine.routes.draw do
     # Get
     get "home/index"
 
+    # Control&Tracking
+
     # Routes for jQuery POSTs
+    #
+    # Tickets
     match 'tickets/ti_update_office_textfield_from_created_by/:cb', :controller => 'tickets', :action => 'ti_update_office_textfield_from_created_by'
     match 'ti_update_office_textfield_from_created_by/:cb', :controller => 'tickets', :action => 'ti_update_office_textfield_from_created_by'
     match 'tickets/:id/ti_update_office_textfield_from_created_by/:cb', :controller => 'tickets', :action => 'ti_update_office_textfield_from_created_by'
@@ -13,6 +17,8 @@ Ag2HelpDesk::Engine.routes.draw do
     match 'tickets/ti_update_office_textfield_from_organization/:org', :controller => 'tickets', :action => 'ti_update_office_textfield_from_organization'
     match 'ti_update_office_textfield_from_organization/:org', :controller => 'tickets', :action => 'ti_update_office_textfield_from_organization'
     match 'tickets/:id/ti_update_office_textfield_from_organization/:org', :controller => 'tickets', :action => 'ti_update_office_textfield_from_organization'
+    # Reports
+    match 'tickets_report', :controller => 'tickets', :action => 'tickets_report'
 
     # Resources
     resources :ticket_categories
