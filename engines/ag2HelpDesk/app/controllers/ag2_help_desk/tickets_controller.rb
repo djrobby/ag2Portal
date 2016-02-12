@@ -318,7 +318,7 @@ module Ag2HelpDesk
       # OCO
       init_oco if !session[:organization]
 
-      @search = Ticket.search do
+      search = Ticket.search do
         fulltext params[:search]
         if session[:organization] != '0'
           with :organization_id, session[:organization]
@@ -363,15 +363,15 @@ module Ag2HelpDesk
         paginate :page => params[:page] || 1, :per_page => per_page
       end
 
-      @tickets = @search.results
+      @tickets_report = search.results
       title = t("activerecord.models.ticket.few")
-      @to = @tickets.first.created_at
-      @from = @tickets.last.created_at
+      @to = formatted_date(@tickets_report.first.created_at)
+      @from = formatted_date(@tickets_report.last.created_at)
 
       respond_to do |format|
         # Render PDF
         format.pdf { send_data render_to_string,
-                     filename: "#{title}_#{@from}_#{@to}.pdf",
+                     filename: "#{title}_#{@from}-#{@to}.pdf",
                      type: 'application/pdf',
                      disposition: 'inline' }
       end

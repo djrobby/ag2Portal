@@ -1,4 +1,4 @@
-if @tickets.nil?
+if @tickets_report.nil?
 	return
 end
 
@@ -47,10 +47,10 @@ report.start_new_page
 report.page.values report_title: I18n.t("ag2_help_desk.ag2_helpdesk_track.tickets_report.report_title")
 report.page.values from_title: I18n.t("every_report.from_title")
 report.page.values to_title: I18n.t("every_report.to_title")
-report.page.values from: formatted_date(@from)
-report.page.values to: formatted_date(@to)
+report.page.values from: @from
+report.page.values to: @to
 # Page footer
-report.page.values(printed_at: Time.now,
+report.page.values(printed_at: formatted_timestamp(Time.now),
 				   pt: I18n.t("every_report.pt"),
 				   pd: I18n.t("every_report.pd"))
 
@@ -60,7 +60,8 @@ report.page.list(:default).header do |header|
 	header.item(:created_at_c).value I18n.t(:created_at)
 	header.item(:created_by_c).value I18n.t(:created_by)
 	header.item(:subject_c).value I18n.t("activerecord.attributes.ticket.ticket_subject")
-	header.item(:message_col).value I18n.t("activerecord.attributes.ticket.ticket_message")
+	header.item(:message_c).value I18n.t("activerecord.attributes.ticket.ticket_message")
+	header.item(:priority_c).value I18n.t("activerecord.attributes.ticket.ticket_priority")
 	header.item(:assign_at_c).value I18n.t("activerecord.attributes.ticket.assign_at")
 	header.item(:technician_c).value I18n.t("activerecord.attributes.ticket.technician")
 	header.item(:status_c).value I18n.t("activerecord.attributes.ticket.ticket_status")
@@ -69,17 +70,18 @@ report.page.list(:default).header do |header|
 end
 
 # List detail
-@tickets.each do |i|
+@tickets_report.each do |i|
 	report.page.list(:default).add_row do |row|
 		row.item(:id).value i.id.to_s.rjust(7, '0')
-		row.item(:created_at).value formatted_timestamp(i.created_at.utc.getlocal) unless i.created_at.blank?
+		row.item(:created_at).value formatted_date(i.created_at.utc.getlocal) unless i.created_at.blank?
 		row.item(:created_by).value User.find(i.created_by).email unless i.created_by.blank?
 		row.item(:subject).value i.ticket_subject unless i.ticket_subject.blank?
 		row.item(:message).value i.ticket_message unless i.ticket_message.blank?
-		row.item(:assing_at).value formatted_timestamp(i.assign_at.utc.getlocal) unless i.assign_at.blank?
+		row.item(:priority).value i.ticket_priority.name.titleize unless i.ticket_priority.blank?
+		row.item(:assing_at).value formatted_date(i.assign_at.utc.getlocal) unless i.assign_at.blank?
 		row.item(:technician).value i.technician.name.titleize unless i.technician.blank?
 		row.item(:status).value i.ticket_status.name.titleize unless i.ticket_status.blank?
-		row.item(:status_changed_at).value formatted_timestamp(i.status_changed_at.utc.getlocal) unless i.status_changed_at.blank?
+		row.item(:status_changed_at).value formatted_date(i.status_changed_at.utc.getlocal) unless i.status_changed_at.blank?
 		row.item(:status_changed_message).value i.status_changed_message unless i.status_changed_message.blank?
 	end
 	# Store page subtotals
