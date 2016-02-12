@@ -365,11 +365,13 @@ module Ag2HelpDesk
 
       @tickets = @search.results
       title = t("activerecord.models.ticket.few")
+      @to = @tickets.first.created_at
+      @from = @tickets.last.created_at
 
       respond_to do |format|
         # Render PDF
         format.pdf { send_data render_to_string,
-                     filename: "#{title}_#{@tickets.first.created_at}_#{@tickets.last.created_at}.pdf",
+                     filename: "#{title}_#{@from}_#{@to}.pdf",
                      type: 'application/pdf',
                      disposition: 'inline' }
       end

@@ -75,3 +75,5 @@ es:
     pd: "de"
     page_subtotals: "Subtotales Página"
     currency_note: "Todos los importes están expresados en Euros (salvo indicación en contrario)"
+    from_title: "Desde:"
+    to_title: "Hasta:"

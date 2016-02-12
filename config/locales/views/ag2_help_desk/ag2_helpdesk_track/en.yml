@@ -1,0 +1,15 @@
+en:
+  ag2_help_desk:
+    ag2_helpdesk_track:
+      index:
+        btn_worker: "Worker Report"
+        btn_office: "Office Report"
+      tickets_report:
+        report_title: "Tickets by Date"
+        status_changed_at: "Last St.Chgd"
+      every_report:
+        sum_aggregate_title: "Aggregate for:"
+        sum_worked_time_title: "Total Worked Time:"
+        sum_rec_count_title: "Total Records:"
+        sum_rows_title: "Total Rows (Tickets):"
+        average_title: "Average Worked Time: "
