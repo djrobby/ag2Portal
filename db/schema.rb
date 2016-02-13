@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20160207074628) do
+ActiveRecord::Schema.define(:version => 20160213083345) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -2284,17 +2284,19 @@ ActiveRecord::Schema.define(:version => 20160207074628) do
     t.integer  "work_order_id"
     t.integer  "product_id"
     t.string   "description"
-    t.decimal  "quantity",      :precision => 12, :scale => 4, :default => 0.0, :null => false
-    t.decimal  "cost",          :precision => 12, :scale => 4, :default => 0.0, :null => false
-    t.decimal  "price",         :precision => 12, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "quantity",          :precision => 12, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "cost",              :precision => 12, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "price",             :precision => 12, :scale => 4, :default => 0.0, :null => false
     t.integer  "tax_type_id"
     t.integer  "store_id"
-    t.datetime "created_at",                                                    :null => false
-    t.datetime "updated_at",                                                    :null => false
+    t.datetime "created_at",                                                        :null => false
+    t.datetime "updated_at",                                                        :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
+    t.integer  "charge_account_id"
   end
 
+  add_index "work_order_items", ["charge_account_id"], :name => "index_work_order_items_on_charge_account_id"
   add_index "work_order_items", ["description"], :name => "index_work_order_items_on_description"
   add_index "work_order_items", ["product_id"], :name => "index_work_order_items_on_product_id"
   add_index "work_order_items", ["store_id"], :name => "index_work_order_items_on_store_id"
@@ -2329,8 +2331,10 @@ ActiveRecord::Schema.define(:version => 20160207074628) do
     t.datetime "updated_at",                                                       :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
+    t.integer  "charge_account_id"
   end
 
+  add_index "work_order_subcontractors", ["charge_account_id"], :name => "index_work_order_subcontractors_on_charge_account_id"
   add_index "work_order_subcontractors", ["purchase_order_id"], :name => "index_work_order_subcontractors_on_purchase_order_id"
   add_index "work_order_subcontractors", ["supplier_id"], :name => "index_work_order_subcontractors_on_supplier_id"
   add_index "work_order_subcontractors", ["work_order_id"], :name => "index_work_order_subcontractors_on_work_order_id"
@@ -2338,14 +2342,16 @@ ActiveRecord::Schema.define(:version => 20160207074628) do
   create_table "work_order_tools", :force => true do |t|
     t.integer  "work_order_id"
     t.integer  "tool_id"
-    t.decimal  "minutes",       :precision => 7,  :scale => 2, :default => 0.0, :null => false
-    t.decimal  "cost",          :precision => 12, :scale => 4, :default => 0.0, :null => false
-    t.datetime "created_at",                                                    :null => false
-    t.datetime "updated_at",                                                    :null => false
+    t.decimal  "minutes",           :precision => 7,  :scale => 2, :default => 0.0, :null => false
+    t.decimal  "cost",              :precision => 12, :scale => 4, :default => 0.0, :null => false
+    t.datetime "created_at",                                                        :null => false
+    t.datetime "updated_at",                                                        :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
+    t.integer  "charge_account_id"
   end
 
+  add_index "work_order_tools", ["charge_account_id"], :name => "index_work_order_tools_on_charge_account_id"
   add_index "work_order_tools", ["tool_id"], :name => "index_work_order_tools_on_tool_id"
   add_index "work_order_tools", ["work_order_id"], :name => "index_work_order_tools_on_work_order_id"
 
@@ -2363,28 +2369,32 @@ ActiveRecord::Schema.define(:version => 20160207074628) do
   create_table "work_order_vehicles", :force => true do |t|
     t.integer  "work_order_id"
     t.integer  "vehicle_id"
-    t.decimal  "distance",      :precision => 7,  :scale => 2, :default => 0.0, :null => false
-    t.decimal  "cost",          :precision => 12, :scale => 4, :default => 0.0, :null => false
-    t.datetime "created_at",                                                    :null => false
-    t.datetime "updated_at",                                                    :null => false
+    t.decimal  "distance",          :precision => 7,  :scale => 2, :default => 0.0, :null => false
+    t.decimal  "cost",              :precision => 12, :scale => 4, :default => 0.0, :null => false
+    t.datetime "created_at",                                                        :null => false
+    t.datetime "updated_at",                                                        :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
+    t.integer  "charge_account_id"
   end
 
+  add_index "work_order_vehicles", ["charge_account_id"], :name => "index_work_order_vehicles_on_charge_account_id"
   add_index "work_order_vehicles", ["vehicle_id"], :name => "index_work_order_vehicles_on_vehicle_id"
   add_index "work_order_vehicles", ["work_order_id"], :name => "index_work_order_vehicles_on_work_order_id"
 
   create_table "work_order_workers", :force => true do |t|
     t.integer  "work_order_id"
     t.integer  "worker_id"
-    t.decimal  "hours",         :precision => 9,  :scale => 4, :default => 0.0, :null => false
-    t.decimal  "cost",          :precision => 12, :scale => 4, :default => 0.0, :null => false
-    t.datetime "created_at",                                                    :null => false
-    t.datetime "updated_at",                                                    :null => false
+    t.decimal  "hours",             :precision => 9,  :scale => 4, :default => 0.0, :null => false
+    t.decimal  "cost",              :precision => 12, :scale => 4, :default => 0.0, :null => false
+    t.datetime "created_at",                                                        :null => false
+    t.datetime "updated_at",                                                        :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
+    t.integer  "charge_account_id"
   end
 
+  add_index "work_order_workers", ["charge_account_id"], :name => "index_work_order_workers_on_charge_account_id"
   add_index "work_order_workers", ["work_order_id"], :name => "index_work_order_workers_on_work_order_id"
   add_index "work_order_workers", ["worker_id"], :name => "index_work_order_workers_on_worker_id"
 

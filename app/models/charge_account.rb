@@ -8,6 +8,11 @@ class ChargeAccount < ActiveRecord::Base
 
   has_many :budget_items
   has_many :work_orders
+  has_many :work_order_items
+  has_many :work_order_workers
+  has_many :work_order_tools
+  has_many :work_order_vehicles
+  has_many :work_order_subcontractors
   has_many :purchase_orders
   has_many :purchase_order_items
   has_many :receipt_notes
@@ -20,7 +25,7 @@ class ChargeAccount < ActiveRecord::Base
   has_many :supplier_invoice_items
   has_many :delivery_notes
   has_many :delivery_note_items
-  has_many :sale_offers  
+  has_many :sale_offers
   has_many :sale_offer_items
 
   has_paper_trail
@@ -72,7 +77,7 @@ class ChargeAccount < ActiveRecord::Base
 
   def flow
     self.charge_group.flow
-  end  
+  end
 
   #
   # Class (self) user defined methods
