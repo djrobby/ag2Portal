@@ -1,6 +1,8 @@
 en:
   notifier:
     footer: "This e-mail, its content and attachments, are intended solely to specified recipients. The information is confidential as provided by current legislation. If you receive this message by mistake, please inform the sender and delete it immediately because you are not authorized to use, disclose, distribute, print or copy all or part of the information contained."
+    confirmation: "We ask you to confirm receipt of this e-mail."
+    do_not_reply: "Do not reply directly to this e-mail: It was sent from an unattended mailbox."
     user_created:
       subject: "aGestiona2: New user created"
       dear_admin: "Dear Administrator,"
@@ -86,4 +88,3 @@ en:
       htmllink: "Show this invoice"
       approval: "** Your approval is required **"
       htmlapproval: "Approve this invoice"
-    do_not_reply: "Do not reply directly to this e-mail: It was sent from an unattended mailbox."

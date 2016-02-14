@@ -1,6 +1,8 @@
 es:
   notifier:
     footer: "Este correo-e, su contenido y sus documentos adjuntos, están dirigidos exclusivamente a los destinatarios especificados. La información contenida es Confidencial según lo establece la legalidad vigente. Si usted recibe este mensaje por error, por favor comuníquelo inmediatamente al remitente y elimínelo, ya que usted no está autorizado a su uso, revelación, distribución, impresión o copia de toda o alguna parte de la información contenida."
+    confirmation: "Rogamos confirme la recepción de este correo-e."
+    do_not_reply: "No responda directamente a este e-mail: Ha sido enviado desde un sistema desatendido."
     user_created:
       subject: "aGestiona2: Nuevo usuario creado"
       dear_admin: "Estimado/a Administrador/a,"
@@ -86,4 +88,3 @@ es:
       htmllink: "Ver esta factura"
       approval: "** Se requiere tu aprobación **"
       htmlapproval: "Aprueba esta factura"
-    do_not_reply: "No responda directamente a este e-mail: Ha sido enviado desde un sistema desatendido."

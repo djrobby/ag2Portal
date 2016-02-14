@@ -1,6 +1,6 @@
 class Notifier < ActionMailer::Base
   helper NotifierHelper
-  
+
   default from: "agestiona2@aguaygestion.com"
 
   # Subject can be set in your I18n file at config/locales/en.yml
@@ -29,7 +29,7 @@ class Notifier < ActionMailer::Base
       mail reply_to: user.email, to: recipients
     end
   end
-  
+
   def ticket_updated(ticket)
     @ticket = ticket
 
@@ -43,13 +43,13 @@ class Notifier < ActionMailer::Base
       mail to: recipients
     end
   end
-  
+
   def ticket_assigned(ticket)
     @ticket = ticket
     @current_host = current_host
     mail to: ticket.technician.user.email do |format|
       format.html
-    end    
+    end
   end
 
   # Purchase order
@@ -82,7 +82,7 @@ class Notifier < ActionMailer::Base
     @from = _from
     _subject = t("notifier.send_purchase_order.subject") + @purchase_order.project.company.name
     attachments[title] = pdf
-    mail reply_to: _from, to: _to, subject: _subject
+    mail reply_to: _from, to: _to, bcc: _from, subject: _subject
   end
 
   # Offer & Offer request
@@ -113,7 +113,7 @@ class Notifier < ActionMailer::Base
     @from = _from
     _subject = t("notifier.send_offer_request.subject") + @offer_request.project.company.name
     attachments[title] = pdf
-    mail reply_to: _from, to: _to, subject: _subject
+    mail reply_to: _from, to: _to, bcc: _from, subject: _subject
   end
 
   # Inventory count
@@ -161,12 +161,12 @@ class Notifier < ActionMailer::Base
       end
     end
   end
-  
-  #  
+
+  #
   # Recipients based on Notifications
   # action: 1=Create 2=Update 3=Delete
   # role: 1=Approve 2=Notify
-  #  
+  #
   # Notification recipients
   def notify_to(_ivar, _action, _role)
     _recipients = ''
@@ -207,7 +207,7 @@ class Notifier < ActionMailer::Base
     end
     _recipients
   end
-  
+
   # Company notification recipients
   def company_notification_recipients(_company, _notification, _role)
     _recipients = nil
@@ -217,7 +217,7 @@ class Notifier < ActionMailer::Base
     end
     _recipients
   end
-  
+
   # Office notification recipients
   def office_notification_recipients(_office, _notification, _role)
     _recipients = nil
@@ -227,7 +227,7 @@ class Notifier < ActionMailer::Base
     end
     _recipients
   end
-  
+
   def recipients_string(_notifications)
     _recipients = nil
     if !_notifications.blank?
@@ -241,7 +241,7 @@ class Notifier < ActionMailer::Base
     end
     _recipients
   end
-  
+
   def current_host
     Rails.env.development? ? 'localhost:3000' : 'agestiona2.aguaygestion.com'
   end
