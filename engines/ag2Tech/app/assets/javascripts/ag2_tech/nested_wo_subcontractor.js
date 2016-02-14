@@ -134,6 +134,10 @@ var wo_s_rowBuilder = function() {
                 $(this).addClass(css);
                 // Add new column
                 td = $('<td/>').append($(this));
+                // ...hiding this if applicable
+                if (id === 'fnt-charge-account-sub') {
+                  td = $('<td style="display:none;"/>').append($(this));
+                }
                 // If destroy field, add delete link also
                 if (id.indexOf("_destroy") != -1) {
                   td = $('<td/>').append($(this), newLink);

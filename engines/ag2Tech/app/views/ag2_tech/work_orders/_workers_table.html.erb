@@ -149,6 +149,7 @@
       <td><%= i.input :hours, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.hours, precision: 4) if i.object.hours), class: 'sub-number-text-field fnt-hours' } %></td>
       <td><%= i.input :cost, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.cost, precision: 4) if i.object.cost), class: 'sub-number-text-field fnt-costw' } %></td>
       <td><%= i.input :costs, disabled: true, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.costs, precision: 4) if i.object.costs), class: 'sub-number-text-field sub-disabled-field fnt-costsw' } %></td>
+      <td style="display:none;"><%= i.association :charge_account, label: false, wrapper: false, input_html: { class: 'isel2 fnt-charge-account-w' } %></td>
       <% if @breadcrumb == 'create' || @breadcrumb == 'update' %>
       <td><%= link_to_remove_fields('<i class="icon-trash"></i>'.html_safe, i) %></td>
       <% end %>

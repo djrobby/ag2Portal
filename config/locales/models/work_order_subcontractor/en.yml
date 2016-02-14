@@ -17,3 +17,5 @@ en:
         enforcement_pct: "Enforce %"
         cost: "Cost"
         costs: "Costs"
+        charge_account: "Analytical account"
+        charge_account_id: "Analytical account"

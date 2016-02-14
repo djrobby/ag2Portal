@@ -1,6 +1,14 @@
 <script>
   $(document).ready(function() {
-    // Retrieves parent values
+    /*
+     * Retrieves parent values
+     */
+    // Charge Account
+    $("#fnt-charge-account-t").html("");
+    $('#work_order_charge_account_id option').clone().appendTo('#fnt-charge-account-t');
+    var _c = $('#work_order_charge_account_id :selected').val();
+    if (_c == "") _c = "0";
+    $('#fnt-charge-account-t').val(_c);
     // Tool
     initT();
 
@@ -135,6 +143,7 @@
     <span class="shrinked"><%= I18n.t(:mandatory_subtitle) %></span>
   </div>
   <div class="modal-body">
+    <%= f.association :charge_account, collection: @charge_accounts, input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-charge-account-t', data: { validation: "required", "validation-error-msg" => "#{e}" } }, label_html: { class: 'form-label' } %>
     <%= f.association :tool, collection: @tools, input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-tool', data: { validation: "required", "validation-error-msg" => "#{e}" } }, label_html: { class: 'form-label' } %>
     <%= f.input :minutes, as: :string, input_html: { value: (number_with_precision(f.object.minutes, precision: 2) if f.object.minutes), class: 'mid-text-field number-text-field field', id: 'fnt-minutes' }, label_html: { class: 'form-label' } %>
     <%= f.input :cost, as: :string, input_html: { value: (number_with_precision(f.object.cost, precision: 4) if f.object.cost), class: 'mid-text-field number-text-field field', id: 'fnt-costt' }, label_html: { class: 'form-label' } %>

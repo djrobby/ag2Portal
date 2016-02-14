@@ -32,3 +32,5 @@ es:
         amount: "Importe €"
         tax_c: "Impto."
         tax: "Impto.€"
+        charge_account: "Cuenta analítica"
+        charge_account_id: "Cuenta analítica"

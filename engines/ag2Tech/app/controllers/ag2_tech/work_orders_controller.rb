@@ -686,6 +686,7 @@ module Ag2Tech
           current_item = WorkOrderVehicle.find(new_item[:id]) rescue nil
           if ((current_item.nil?) || (new_item[:_destroy] != "false") ||
              ((current_item.vehicle_id.to_i != new_item[:vehicle_id].to_i) ||
+              (current_item.charge_account_id.to_i != new_item[:charge_account_id].to_i) ||
               (current_item.distance.to_f != new_item[:distance].to_f) ||
               (current_item.cost.to_f != new_item[:cost].to_f)))
             items_changed = true
@@ -699,6 +700,7 @@ module Ag2Tech
           current_item = WorkOrderTool.find(new_item[:id]) rescue nil
           if ((current_item.nil?) || (new_item[:_destroy] != "false") ||
              ((current_item.tool_id.to_i != new_item[:tool_id].to_i) ||
+              (current_item.charge_account_id.to_i != new_item[:charge_account_id].to_i) ||
               (current_item.minutes.to_f != new_item[:minutes].to_f) ||
               (current_item.cost.to_f != new_item[:cost].to_f)))
             items_changed = true
@@ -713,6 +715,7 @@ module Ag2Tech
           if ((current_item.nil?) || (new_item[:_destroy] != "false") ||
              ((current_item.supplier_id.to_i != new_item[:supplier_id].to_i) ||
               (current_item.purchase_order_id.to_i != new_item[:purchase_order_id].to_i) ||
+              (current_item.charge_account_id.to_i != new_item[:charge_account_id].to_i) ||
               (current_item.enforcement_pct.to_f != new_item[:enforcement_pct].to_f)))
             items_changed = true
             break
@@ -725,6 +728,7 @@ module Ag2Tech
           current_item = WorkOrderWorker.find(new_item[:id]) rescue nil
           if ((current_item.nil?) || (new_item[:_destroy] != "false") ||
              ((current_item.worker_id.to_i != new_item[:worker_id].to_i) ||
+              (current_item.charge_account_id.to_i != new_item[:charge_account_id].to_i) ||
               (current_item.hours.to_f != new_item[:hours].to_f) ||
               (current_item.cost.to_f != new_item[:cost].to_f)))
             items_changed = true
@@ -742,6 +746,7 @@ module Ag2Tech
               (current_item.quantity.to_f != new_item[:quantity].to_f) ||
               (current_item.cost.to_f != new_item[:cost].to_f) ||
               (current_item.price.to_f != new_item[:price].to_f) ||
+              (current_item.charge_account_id.to_i != new_item[:charge_account_id].to_i) ||
               (current_item.tax_type_id.to_i != new_item[:tax_type_id].to_i)))
             items_changed = true
             break

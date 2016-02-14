@@ -1,5 +1,15 @@
 <script>
   $(document).ready(function() {
+    /*
+     * Retrieves parent values
+     */
+    // Charge Account
+    $("#fnt-charge-account-sub").html("");
+    $('#work_order_charge_account_id option').clone().appendTo('#fnt-charge-account-sub');
+    var _c = $('#work_order_charge_account_id :selected').val();
+    if (_c == "") _c = "0";
+    $('#fnt-charge-account-sub').val(_c);
+
     // Set focus
     $(".modal").on('shown', function() {
       $(this).find(".form-label:first").focus();
@@ -187,10 +197,11 @@
     <span class="shrinked"><%= I18n.t(:mandatory_subtitle) %></span>
   </div>
   <div class="modal-body">
+    <%= f.association :charge_account, collection: @charge_accounts, input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-charge-account-sub', data: { validation: "required", "validation-error-msg" => "#{e}" } }, label_html: { class: 'form-label' } %>
     <%= f.association :supplier, collection: @suppliers, input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-supplier', data: { validation: "required", "validation-error-msg" => "#{e}" } }, label_html: { class: 'form-label' } %>
     <%= f.association :purchase_order, collection: @orders, input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-purchase-order', data: { validation: "required", "validation-error-msg" => "#{e}" } }, label_html: { class: 'form-label' } %>
     <%= f.input :enforcement_pct, as: :string, input_html: { value: (number_with_precision(f.object.enforcement_pct, precision: 2) if f.object.enforcement_pct), class: 'mid-text-field number-text-field field', id: 'fnt-enforcement-pct' }, label_html: { class: 'form-label' } %>
-    <%= f.input :cost, disabled: true, as: :string, input_html: { value: (number_with_precision(f.object.cost, precision: 4) if f.object.cost), class: 'mid-text-field number-text-field field', id: 'fnt-costsub' }, label_html: { class: 'form-label' } %>
+    <%= f.input :cost, disabled: true, as: :string, input_html: { value: (number_with_precision(f.object.cost, precision: 4) if f.object.cost), class: 'mid-text-field number-text-field sub-disabled-field field', id: 'fnt-costsub' }, label_html: { class: 'form-label' } %>
     <%= f.input :costs, disabled: true, as: :string, input_html: { value: (number_with_precision(f.object.costs, precision: 4) if f.object.costs), class: 'mid-text-field number-text-field sub-disabled-field field', id: 'fnt-costssub' }, label_html: { class: 'form-label' } %>
     <%= f.input :_destroy, as: :hidden, input_html: { class: 'field' } %>
   </div>

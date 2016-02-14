@@ -1,5 +1,15 @@
 <script>
   $(document).ready(function() {
+    /*
+     * Retrieves parent values
+     */
+    // Charge Account
+    $("#fnt-charge-account-v").html("");
+    $('#work_order_charge_account_id option').clone().appendTo('#fnt-charge-account-v');
+    var _c = $('#work_order_charge_account_id :selected').val();
+    if (_c == "") _c = "0";
+    $('#fnt-charge-account-v').val(_c);
+
     // Set focus
     $(".modal").on('shown', function() {
       $(this).find(".form-label:first").focus();
@@ -131,6 +141,7 @@
     <span class="shrinked"><%= I18n.t(:mandatory_subtitle) %></span>
   </div>
   <div class="modal-body">
+    <%= f.association :charge_account, collection: @charge_accounts, input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-charge-account-v', data: { validation: "required", "validation-error-msg" => "#{e}" } }, label_html: { class: 'form-label' } %>
     <%= f.association :vehicle, collection: @vehicles, input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-vehicle', data: { validation: "required", "validation-error-msg" => "#{e}" } }, label_html: { class: 'form-label' } %>
     <%= f.input :distance, as: :string, input_html: { value: (number_with_precision(f.object.distance, precision: 2) if f.object.distance), class: 'mid-text-field number-text-field field', id: 'fnt-distance' }, label_html: { class: 'form-label' } %>
     <%= f.input :cost, as: :string, input_html: { value: (number_with_precision(f.object.cost, precision: 4) if f.object.cost), class: 'mid-text-field number-text-field field', id: 'fnt-costv' }, label_html: { class: 'form-label' } %>

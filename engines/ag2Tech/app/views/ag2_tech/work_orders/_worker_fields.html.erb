@@ -5,10 +5,15 @@
   var _year = '';
 
   $(document).ready(function() {
-    // Retrieves parent values
+    /*
+     * Retrieves parent values
+     */
+    // Form
     _f = $("#fnt-worker").closest('form')[0];
+    // Project
     _p = $('select#work_order_project_id :selected').val();
     if (_p == "") _p = "0";
+    // Started date
     _date = $('#work_order_started_at').data('datepicker').date;
     if (_date == "") {
       _date = new Date();
@@ -16,6 +21,12 @@
       _date = new Date(_date);
     }
     _year = _date.getFullYear();
+    // Charge Account
+    $("#fnt-charge-account-w").html("");
+    $('#work_order_charge_account_id option').clone().appendTo('#fnt-charge-account-w');
+    var _c = $('#work_order_charge_account_id :selected').val();
+    if (_c == "") _c = "0";
+    $('#fnt-charge-account-w').val(_c);
     // Worker
     initW();
 
@@ -157,6 +168,7 @@
     <span class="shrinked"><%= I18n.t(:mandatory_subtitle) %></span>
   </div>
   <div class="modal-body">
+    <%= f.association :charge_account, collection: @charge_accounts, input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-charge-account-w', data: { validation: "required", "validation-error-msg" => "#{e}" } }, label_html: { class: 'form-label' } %>
     <%= f.association :worker, collection: @workers, input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-worker', data: { validation: "required", "validation-error-msg" => "#{e}" } }, label_html: { class: 'form-label' } %>
     <%= f.input :hours, as: :string, input_html: { value: (number_with_precision(f.object.hours, precision: 4) if f.object.hours), class: 'mid-text-field number-text-field field', id: 'fnt-hours' }, label_html: { class: 'form-label' } %>
     <%= f.input :cost, as: :string, input_html: { value: (number_with_precision(f.object.cost, precision: 4) if f.object.cost), class: 'mid-text-field number-text-field field', id: 'fnt-costw' }, label_html: { class: 'form-label' } %>

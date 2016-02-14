@@ -15,3 +15,5 @@ es:
         hours: "Horas"
         cost: "Coste"
         costs: "Costos"
+        charge_account: "Cuenta analítica"
+        charge_account_id: "Cuenta analítica"

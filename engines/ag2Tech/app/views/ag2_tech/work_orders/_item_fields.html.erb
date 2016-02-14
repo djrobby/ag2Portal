@@ -3,10 +3,20 @@
   var _s = "0";
   
   $(document).ready(function() {
-    // Retrieves parent values
+    /*
+     * Retrieves parent values
+     */
+    // Form
     _f = $("#fnt-product").closest('form')[0];
+    // Store
     _s = $('select#work_order_store_id :selected').val();
     if (_s == "") _s = "0";
+    // Charge Account
+    $("#fnt-charge-account").html("");
+    $('#work_order_charge_account_id option').clone().appendTo('#fnt-charge-account');
+    var _c = $('#work_order_charge_account_id :selected').val();
+    if (_c == "") _c = "0";
+    $('#fnt-charge-account').val(_c);
     // Product
     initP();
 
@@ -190,6 +200,7 @@
   </div>
   <div class="modal-body">
     <a href="javascript:scrollToAnchorModal('#fnt-tax');" style="float: right" id="go-bottom"><i class="icon-arrow-down" title="<%=t(:bottom) %>"></i></a>
+    <%= f.association :charge_account, collection: @charge_accounts, input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-charge-account', data: { validation: "required", "validation-error-msg" => "#{e}" } }, label_html: { class: 'form-label' } %>
     <div style="overflow: hidden; padding-left: 0em;">
       <%= f.association :product, collection: @products, input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-product', data: { validation: "required", "validation-error-msg" => "#{e}" } }, label_html: { class: 'form-label fnt-product-label' } %>
     </div>

@@ -12,6 +12,7 @@ class WorkOrderSubcontractor < ActiveRecord::Base
   #validates :work_order,      :presence => true
   validates :supplier,        :presence => true
   validates :purchase_order,  :presence => true
+  validates :charge_account,  :presence => true
 
   #
   # Calculated fields

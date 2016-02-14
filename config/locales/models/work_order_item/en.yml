@@ -32,3 +32,5 @@ en:
         amount: "Amount €"
         tax_c: "Tax"
         tax: "Tax €"
+        charge_account: "Analytical account"
+        charge_account_id: "Analytical account"

@@ -186,6 +186,7 @@
       <td><%= i.input :amount, disabled: true, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.amount, precision: 4) if i.object.amount), class: 'sub-number-text-field sub-disabled-field fnt-amount' } %></td>
       <td style="display:none;"><%= i.association :tax_type, label: false, wrapper: false, input_html: { class: 'sub-alfanumeric-text-field fnt-tax-type' } %></td>
       <td><%= i.input :tax, disabled: true, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.tax, precision: 4) if i.object.tax), class: 'sub-number-text-field sub-disabled-field fnt-tax' } %></td>
+      <td style="display:none;"><%= i.association :charge_account, label: false, wrapper: false, input_html: { class: 'isel2 fnt-charge-account' } %></td>
       <% if @breadcrumb == 'create' || @breadcrumb == 'update' %>
       <td><%= link_to_remove_fields('<i class="icon-trash"></i>'.html_safe, i) %></td>
       <% end %>

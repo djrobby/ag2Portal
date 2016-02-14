@@ -136,7 +136,7 @@ var wo_rowBuilder = function() {
                 // Add new column to row
                 td = $('<td/>').append($(this));
                 // ...hiding this if applicable
-                if (id === 'fnt-tax-type') {
+                if (id === 'fnt-charge-account' || id === 'fnt-tax-type') {
                   td = $('<td style="display:none;"/>').append($(this));
                 }
                 // If destroy field, add delete link also

@@ -112,7 +112,7 @@ var wo_w_rowBuilder = function() {
             if (this.id.indexOf("s2") == -1) {
               // Setup new field(s)
               id = this.id;
-              if ($(this).hasClass('fsel2')) {
+              if ($(this).hasClass('fsel2') && id == 'fnt-worker') {
                 // If it's a select2 select, convert to new text inputs
                 hid = '<input class="sub-alfanumeric-text-field sub-disabled-field ' + id + '" type="text" name="' + $(this).attr('name') + '" value="' + $(this).val() + '">';
                 txt = '<input class="iconify_item sub-alfanumeric-text-field sub-disabled-field fnt-thing" type="text" value="' + $("option:selected", this).text() + '" readonly>';
@@ -133,6 +133,10 @@ var wo_w_rowBuilder = function() {
                 $(this).addClass(css);
                 // Add new column
                 td = $('<td/>').append($(this));
+                // ...hiding this if applicable
+                if (id === 'fnt-charge-account-w') {
+                  td = $('<td style="display:none;"/>').append($(this));
+                }
                 // If destroy field, add delete link also
                 if (id.indexOf("_destroy") != -1) {
                   td = $('<td/>').append($(this), newLink);

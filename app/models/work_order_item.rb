@@ -12,9 +12,10 @@ class WorkOrderItem < ActiveRecord::Base
   has_paper_trail
 
   #validates :work_order,  :presence => true
-  validates :description, :presence => true
-  validates :product,     :presence => true
-  validates :tax_type,    :presence => true
+  validates :description,     :presence => true
+  validates :product,         :presence => true
+  validates :tax_type,        :presence => true
+  validates :charge_account,  :presence => true
 
   before_validation :fields_to_uppercase
 

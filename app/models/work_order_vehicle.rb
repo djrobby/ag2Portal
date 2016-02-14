@@ -10,6 +10,7 @@ class WorkOrderVehicle < ActiveRecord::Base
 
   #validates :work_order,  :presence => true
   validates :vehicle,     :presence => true
+  validates :charge_account,  :presence => true
 
   #
   # Calculated fields
