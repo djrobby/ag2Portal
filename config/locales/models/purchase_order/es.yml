@@ -54,3 +54,6 @@ es:
         approver: "Aprobado por"
         approver_id: "Aprobado por"
         tax_breakdown: "Detalle desglose impositivo"
+        store_address_1: "Dirección de entrega (línea 1)"
+        store_address_2: "Dirección de entrega (línea 2)"
+        store_phones: "Teléfono y Fax para entrega"

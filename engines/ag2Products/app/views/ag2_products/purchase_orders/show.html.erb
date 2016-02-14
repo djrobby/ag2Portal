@@ -179,6 +179,25 @@
   </tbody>
 </table>
 
+<!-- Delivery address -->
+<h4><%= t 'activerecord.attributes.store.delivery_location' %></h4>
+<table class="table">
+  <tbody>
+    <tr>
+      <td style="width: 22%"><%= t "activerecord.attributes.purchase_order.store_address_1" %>:</td>
+      <td style="width: 78%"><%= @purchase_order.store_address_1 unless @purchase_order.store_address_1.blank? %></td>
+    </tr>
+    <tr>
+      <td style="width: 12%"><%= t "activerecord.attributes.purchase_order.store_address_2" %>:</td>
+      <td style="width: 88%"><%= @purchase_order.store_address_2 unless @purchase_order.store_address_2.blank? %></td>
+    </tr>
+    <tr>
+      <td style="width: 12%"><%= t "activerecord.attributes.purchase_order.store_phones" %>:</td>
+      <td style="width: 88%"><%= @purchase_order.store_phones unless @purchase_order.store_phones.blank? %></td>
+    </tr>
+  </tbody>
+</table>
+
 <!-- Buttons -->
 <table class="form-table">
   <tbody>

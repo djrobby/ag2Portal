@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20160213083345) do
+ActiveRecord::Schema.define(:version => 20160214073327) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -1256,6 +1256,9 @@ ActiveRecord::Schema.define(:version => 20160213083345) do
     t.integer  "organization_id"
     t.integer  "approver_id"
     t.datetime "approval_date"
+    t.string   "store_address_1"
+    t.string   "store_address_2"
+    t.string   "store_phones"
   end
 
   add_index "purchase_orders", ["approver_id"], :name => "index_purchase_orders_on_approver_id"

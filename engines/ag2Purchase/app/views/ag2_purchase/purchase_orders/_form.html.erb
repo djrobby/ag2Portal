@@ -466,7 +466,10 @@
             $("#purchase_order_store_id").append($('<option></option>').val(option.id).html(option.name));
           });
         }
-        if (s_id != 0) $("#purchase_order_store_id").select2("val", s_id);
+        if (s_id != 0) {
+          $("#purchase_order_store_id").select2("val", s_id);
+          $("#purchase_order_store_id").trigger("change");
+        }
       });
       return false;
     });
@@ -495,6 +498,20 @@
       num = parseInt(right_number(num, 2) * 100);
       jQuery.getJSON('po_format_number/' + num, function(data) {
         $('#purchase_order_retention_pct').val(data.num);
+      });
+      return false;
+    });
+
+    // when the #purchase_order_store_id field changes
+    $("#purchase_order_store_id").change(function() {
+      // make a POST call and replace the content
+      var order = $('select#purchase_order_store_id :selected').val();
+      if (order == "")
+        order = "0";
+      jQuery.getJSON('po_update_addresses_from_store/' + order, function(data) {
+        $('#purchase_order_store_address_1').val(data.address_1);
+        $('#purchase_order_store_address_2').val(data.address_2);
+        $('#purchase_order_store_phones').val(data.phones);
       });
       return false;
     });
@@ -578,6 +595,11 @@
 <%= render 'items_table', f: f %>
 <!-- Remarks -->
 <%= f.input :remarks, as: :text, input_html: { class: 'x-large-text-field', rows: 3 }, label_html: { class: 'form-label' } %>
+<!-- Delivery address -->
+<h4><%= t 'activerecord.attributes.store.delivery_location' %></h4>
+<%= f.input :store_address_1, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %>
+<%= f.input :store_address_2, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %>
+<%= f.input :store_phones, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %>
 <!-- Buttons -->
 <table class="form-table">
   <tbody>

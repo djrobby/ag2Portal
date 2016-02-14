@@ -54,3 +54,6 @@ en:
         approver: "Approved by"
         approver_id: "Approved by"
         tax_breakdown: "Tax breakdown detail"
+        store_address_1: "Delivery address (line 1)"
+        store_address_2: "Delivery address (line 2)"
+        store_phones: "Phone & fax for delivery"

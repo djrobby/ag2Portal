@@ -20,11 +20,29 @@ module Ag2Purchase
                                                :po_product_stock,
                                                :po_product_all_stocks,
                                                :po_approve_order,
+                                               :po_update_addresses_from_store,
                                                :purchase_order_form,
                                                :send_purchase_order_form]
     # Helper methods for
     # => allow edit (hide buttons)
     helper_method :cannot_edit
+
+    # Update addresses at view from store select
+    def po_update_addresses_from_store
+      store = params[:store]
+      address_1 = ""
+      address_2 = ""
+      phones = ""
+      if store != '0'
+        store = Store.find(store)
+        address_1 = store.address_1 rescue ""
+        address_2 = store.address_2 rescue ""
+        phones = store.phone_and_fax rescue ""
+      end
+      # Setup JSON
+      @json_data = { "address_1" => address_1, "address_2" => address_2, "phones" => phones }
+      render json: @json_data
+    end
 
     # Update offer select at view from supplier select
     def po_update_offer_select_from_supplier
@@ -624,6 +642,9 @@ module Ag2Purchase
           (params[:purchase_order][:retention_pct].to_f != @purchase_order.retention_pct.to_f) ||
           (params[:purchase_order][:retention_time].to_i != @purchase_order.retention_time.to_i) ||
           (params[:purchase_order][:discount_pct].to_f != @purchase_order.discount_pct.to_f) ||
+          (params[:purchase_order][:store_address_1].to_s != @purchase_order.store_address_1) ||
+          (params[:purchase_order][:store_address_2].to_s != @purchase_order.store_address_2) ||
+          (params[:purchase_order][:store_phones].to_s != @purchase_order.store_phones) ||
           (params[:purchase_order][:remarks].to_s != @purchase_order.remarks))
         master_changed = true
       end

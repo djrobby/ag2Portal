@@ -104,10 +104,17 @@ report.page.values(form_title: I18n.t("activerecord.models.purchase_order.one"),
 				   petitioner_phones_email: @purchase_order.project.office.phone_fax_email,
 				   payment_title: I18n.t("activerecord.attributes.purchase_order.payment_method"),
 				   store_location_title: I18n.t("activerecord.attributes.store.delivery_location"),
-				   payment_method: @purchase_order.payment_method.description,
-				   store_address_1: @purchase_order.store.address_1,
-				   store_address_2: @purchase_order.store.address_2,
-				   store_phones: @purchase_order.store.phone_and_fax)
+				   payment_method: @purchase_order.payment_method.description)
+if @purchase_order.store_address_1.blank? && @purchase_order.store_address_2.blank? && @purchase_order.store_phones.blank?
+	report.page.values store_address_1: @purchase_order.store.address_1
+	report.page.values store_address_2: @purchase_order.store.address_2
+	report.page.values store_phones: @purchase_order.store.phone_and_fax
+else
+	report.page.values store_address_1: @purchase_order.store_address_1
+	report.page.values store_address_2: @purchase_order.store_address_2
+	report.page.values store_phones: @purchase_order.store_phones
+end
+
 # Page footer
 report.page.values(printed_at: Time.now,
 				   pt: I18n.t("every_report.pt"),

@@ -1,6 +1,6 @@
 class PurchaseOrder < ActiveRecord::Base
   include ModelsModule
-  
+
   belongs_to :offer
   belongs_to :supplier
   belongs_to :payment_method
@@ -14,9 +14,10 @@ class PurchaseOrder < ActiveRecord::Base
   attr_accessible :discount, :discount_pct, :order_date, :order_no, :remarks, :supplier_offer_no,
                   :supplier_id, :payment_method_id, :order_status_id, :project_id, :offer_id,
                   :store_id, :work_order_id, :charge_account_id, :retention_pct, :retention_time,
-                  :organization_id, :approver_id, :approval_date
+                  :organization_id, :approver_id, :approval_date,
+                  :store_address_1, :store_address_2, :store_phones
   attr_accessible :purchase_order_items_attributes
-  
+
   has_many :purchase_order_items, dependent: :destroy
   has_many :purchase_order_item_balances, through: :purchase_order_items
   has_many :products, through: :purchase_order_items
@@ -24,13 +25,13 @@ class PurchaseOrder < ActiveRecord::Base
   has_many :receipt_note_items
 
   # Nested attributes
-  accepts_nested_attributes_for :purchase_order_items,                                 
+  accepts_nested_attributes_for :purchase_order_items,
                                 :reject_if => :all_blank,
                                 :allow_destroy => true
   has_paper_trail
 
   validates_associated :purchase_order_items
-  
+
   validates :order_date,      :presence => true
   validates :order_no,        :presence => true,
                               :length => { :is => 22 },
@@ -73,7 +74,7 @@ class PurchaseOrder < ActiveRecord::Base
     # Order no (Project code & year & sequential number) => PPPPPPPPPPPP-YYYY-NNNNNN
     order_no.blank? ? "" : order_no[0..11] + '-' + order_no[12..15] + '-' + order_no[16..21]
   end
-  
+
   #
   # Calculated fields
   #
@@ -90,7 +91,7 @@ class PurchaseOrder < ActiveRecord::Base
   def bonus
     (discount_pct / 100) * subtotal if !discount_pct.blank?
   end
-  
+
   def taxable
     subtotal - bonus - discount
   end
@@ -106,9 +107,9 @@ class PurchaseOrder < ActiveRecord::Base
   end
 
   def total
-    taxable + taxes  
+    taxable + taxes
   end
-  
+
   def balance
     purchase_order_item_balances.sum("balance")
   end
@@ -116,7 +117,7 @@ class PurchaseOrder < ActiveRecord::Base
   def quantity
     purchase_order_items.sum("quantity")
   end
-  
+
   def delivery_avg
     avg, cnt = 0, 0
     purchase_order_items.each do |i|
@@ -129,7 +130,7 @@ class PurchaseOrder < ActiveRecord::Base
   end
 
   def offer_no
-    offer.nil? ? nil : offer.offer_no  
+    offer.nil? ? nil : offer.offer_no
   end
 
   # Returns multidimensional array containing different tax type in each line
@@ -219,7 +220,7 @@ class PurchaseOrder < ActiveRecord::Base
     Notifier.purchase_order_saved(self, 1).deliver
     if check_if_approval_is_required
       Notifier.purchase_order_saved_with_approval(self, 1).deliver
-    end     
+    end
   end
 
   # After update
@@ -236,7 +237,7 @@ class PurchaseOrder < ActiveRecord::Base
       Notifier.purchase_order_saved(self, 3).deliver
       if check_if_approval_is_required
         Notifier.purchase_order_saved_with_approval(self, 3).deliver
-      end     
+      end
     end
   end
 
@@ -259,7 +260,7 @@ class PurchaseOrder < ActiveRecord::Base
     d = a.detect { |f| (f[1] > 0 && (f[3] > f[1])) || (f[2] > 0 && (f[4] > f[2])) }
     _r = d.nil? ? false : true
   end
-  
+
   # Maximums by supplier
   # (quantity & taxable)
   # Returns true if approval is required, otherwise false
@@ -269,7 +270,7 @@ class PurchaseOrder < ActiveRecord::Base
     s = self.supplier.max_orders_sum.blank? ? 0 : self.supplier.max_orders_sum
     _r = (c > 0 && (self.quantity > c)) || (s > 0 && (self.taxable > s))
   end
-  
+
   # Maximums by project
   # (item net sum & item net price)
   # Returns true if approval is required, otherwise false
@@ -281,7 +282,7 @@ class PurchaseOrder < ActiveRecord::Base
     d = a.detect { |f| (f[1] > 0 && (f[3] > f[1])) || (f[2] > 0 && (f[4] > f[2])) }
     _r = d.nil? ? false : true
   end
-  
+
   # Maximums by office
   # (item net sum & item net price)
   # Returns true if approval is required, otherwise false
@@ -293,7 +294,7 @@ class PurchaseOrder < ActiveRecord::Base
     d = a.detect { |f| (f[1] > 0 && (f[3] > f[1])) || (f[2] > 0 && (f[4] > f[2])) }
     _r = d.nil? ? false : true
   end
-  
+
   # Maximums by company
   # (item net sum & item net price)
   # Returns true if approval is required, otherwise false

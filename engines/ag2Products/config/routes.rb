@@ -17,7 +17,7 @@ Ag2Products::Engine.routes.draw do
     match 'stock_report', :controller => 'ag2_products_track', :action => 'stock_report'
 
     # Routes for jQuery POSTs
-    # Numbers with decimals (.) must be multiplied (by 1xxx and the same zeroes x positions) before passed as REST parameter! 
+    # Numbers with decimals (.) must be multiplied (by 1xxx and the same zeroes x positions) before passed as REST parameter!
     # Stores
     match 'stores/st_update_company_textfield_from_office/:id', :controller => 'stores', :action => 'st_update_company_textfield_from_office'
     match 'st_update_company_textfield_from_office/:id', :controller => 'stores', :action => 'st_update_company_textfield_from_office'
@@ -158,7 +158,7 @@ Ag2Products::Engine.routes.draw do
     match 'rn_current_balance/:order', :controller => 'receipt_notes', :action => 'rn_current_balance'
     match 'receipt_notes/:id/rn_current_balance/:order', :controller => 'receipt_notes', :action => 'rn_current_balance'
     #
-    # Purchase orders 
+    # Purchase orders
     match 'purchase_orders/po_update_description_prices_from_product_store/:product/:qty/:store/:supplier/:tbl', :controller => 'purchase_orders', :action => 'po_update_description_prices_from_product_store'
     match 'po_update_description_prices_from_product_store/:product/:qty/:store/:supplier/:tbl', :controller => 'purchase_orders', :action => 'po_update_description_prices_from_product_store'
     match 'purchase_orders/:id/po_update_description_prices_from_product_store/:product/:qty/:store/:supplier/:tbl', :controller => 'purchase_orders', :action => 'po_update_description_prices_from_product_store'
@@ -204,12 +204,14 @@ Ag2Products::Engine.routes.draw do
     match 'purchase_orders/po_update_selects_from_offer/:o', :controller => 'purchase_orders', :action => 'po_update_selects_from_offer'
     match 'po_update_selects_from_offer/:o', :controller => 'purchase_orders', :action => 'po_update_selects_from_offer'
     match 'purchase_orders/:id/po_update_selects_from_offer/:o', :controller => 'purchase_orders', :action => 'po_update_selects_from_offer'
-
+    match 'purchase_orders/po_update_addresses_from_store/:store', :controller => 'purchase_orders', :action => 'po_update_addresses_from_store'
+    match 'po_update_addresses_from_store/:store', :controller => 'purchase_orders', :action => 'po_update_addresses_from_store'
+    match 'purchase_orders/:id/po_update_addresses_from_store/:store', :controller => 'purchase_orders', :action => 'po_update_addresses_from_store'
     match 'purchase_orders/send_purchase_order_form/:id', :controller => 'purchase_orders', :action => 'send_purchase_order_form'
     match 'send_purchase_order_form/:id', :controller => 'purchase_orders', :action => 'send_purchase_order_form'
     match 'purchase_orders/:id/send_purchase_order_form/:id', :controller => 'purchase_orders', :action => 'send_purchase_order_form'
     #
-    # Inventory counts 
+    # Inventory counts
     match 'inventory_counts/ic_totals/:qty/:tbl', :controller => 'inventory_counts', :action => 'ic_totals'
     match 'ic_totals/:qty/:tbl', :controller => 'inventory_counts', :action => 'ic_totals'
     match 'inventory_counts/:id/ic_totals/:qty/:tbl', :controller => 'inventory_counts', :action => 'ic_totals'
