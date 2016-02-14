@@ -833,11 +833,11 @@ module Ag2Tech
     def work_order_form
       # Search work order & items
       @work_order = WorkOrder.find(params[:id])
-      @items = @work_order.work_order_items.order('id')
-      @workers = @work_order.work_order_workers.order('id')
-      @subcontractors = @work_order.work_order_subcontractors.order('id')
-      @tools = @work_order.work_order_tools.order('id')
-      @vehicles = @work_order.work_order_vehicles.order('id')
+      @items = @work_order.work_order_items.order(:id)
+      @workers = @work_order.work_order_workers.order(:id)
+      @subcontractors = @work_order.work_order_subcontractors.order(:id)
+      @tools = @work_order.work_order_tools.order(:id)
+      @vehicles = @work_order.work_order_vehicles.order(:id)
 
       title = t("activerecord.models.work_order.one")
 
