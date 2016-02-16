@@ -4,6 +4,8 @@
   $(document).ready(function() {
     // Hide send_messages div
     $("#send_mesages").hide();
+    // Hide check_stock div
+    $("#check_stock").hide();
     // Show approve_order_btn based on approval
     approver = $('#approver').html();
     if (approver == "") {
@@ -40,6 +42,7 @@
           $('#approval_date').text(data.approval_date);
           $('#approve_order_btn').hide();
           $('#check_stock_btn').hide();
+          $("#check_stock").hide();
           $('#print_report_btn').show();
           $('#send_report_btn').show();
           approve_isvisible = false;
@@ -55,12 +58,42 @@
       if (order == "") order = "0";
       jQuery.getJSON('po_check_stock_before_approve/' + order, function(data) {
         if (data != null) {
-          var a = '';
-          var _table = $('<table/>');
+          var _table = $('<table/>').attr('class', 'table fixed');
+          var _thead = $('<thead/>');
+          var _tbody = $('<tbody/>');
+          var _th;
           var _tr;
           var _td;
           var _id_ant = data[0][0]; // first id
           var _first = true;
+          // Table columns width
+          _table.append('<col width="10%" />');
+          _table.append('<col width="40%" />');
+          _table.append('<col width="14%" />');
+          _table.append('<col width="20%" />');
+          _table.append('<col width="14%" />');
+          _table.append('<col width="2%" />');
+          // Table header
+          _th = $('<th/>').attr('align', 'left'); // product code column title
+          _th.text('<%= t "activerecord.attributes.purchase_order_item.product_c" %>');
+          _thead.append(_th);
+          _th = $('<th/>').attr('align', 'left'); // item description column title
+          _th.text('<%= t "activerecord.attributes.purchase_order_item.description_c" %>');
+          _thead.append(_th);
+          _th = $('<th/>').attr('align', 'right'); // product current stock column title
+          _th.text('<%= t "activerecord.attributes.product.stock" %>');
+          _thead.append(_th);
+          _th = $('<th/>').attr('align', 'left'); // store name column title
+          _th.text('<%= t "activerecord.attributes.store.name_c" %>');
+          _thead.append(_th);
+          _th = $('<th/>').attr('align', 'right'); // store current stock column title
+          _th.text('<%= t "activerecord.attributes.stock.current" %>');
+          _thead.append(_th);
+          _th = $('<th/>').attr('align', 'center'); // is current store column title
+          _th.text('');
+          _thead.append(_th);
+
+          _table.append(_thead);
           // Loop thru array
           $.each(data, function(id, option) {
             _tr = $('<tr/>');
@@ -69,13 +102,13 @@
               _id_ant = option[0];
               _first = false;
 
-              _td = $('<td/>'); // product code
+              _td = $('<td/>').attr('align', 'left'); // product code
               _td.text(option[1]);
               _tr.append(_td);
-              _td = $('<td/>'); // item description
+              _td = $('<td/>').attr('align', 'left'); // item description
               _td.text(option[2]);
               _tr.append(_td);
-              _td = $('<td/>'); // product current stock
+              _td = $('<td/>').attr('align', 'right'); // product current stock
               _td.text(option[3]);
               _tr.append(_td);
             } else {
@@ -89,18 +122,22 @@
               _td.text('');
               _tr.append(_td);
             }
-            _td = $('<td/>'); // store name
+            _td = $('<td/>').attr('align', 'left'); // store name
             _td.text(option[4]);
             _tr.append(_td);
-            _td = $('<td/>'); // store current stock
+            _td = $('<td/>').attr('align', 'right'); // store current stock
             _td.text(option[5]);
             _tr.append(_td);
-            a += '\n' + option[0] + ' ' + option[1] + ' (' + option[2] + ')' + option[3] + ' = ' + option[4];
-            _table.append(_tr);
+            _td = $('<td/>').attr('align', 'center'); // is current store
+            _td.text(option[6]);
+            _tr.append(_td);
+
+            _tbody.append(_tr);
           });
-          $('#check_stock').append('<h4><%= I18n.t("ag2_purchase.purchase_orders.info_btn") %></h4>');
+          _table.append(_tbody);
+          $('#check_stock').append('<h4><%= I18n.t("ag2_purchase.purchase_orders.check_stock_btn") %></h4>');
           $('#check_stock').append(_table);
-          alert(a);
+          $("#check_stock").show();
         }
       });
       return false;
@@ -281,7 +318,7 @@
       <td class="form-td-two right-winged">
         <!-- Approve purchase order -->
         <% if @is_approver %>
-          <a href="#" id="check_stock_btn" class="btn btn-warning"><i class="icon-eye-open icon-white"></i> <%=t :check %></a>
+          <a href="#" id="check_stock_btn" class="btn btn-warning"><i class="icon-eye-open icon-white"></i> <%=t "ag2_purchase.purchase_orders.check_stock_btn" %></a>
           <a href="#" id="approve_order_btn" class="btn btn-warning"><i class="icon-ok icon-white"></i> <%=t :approve %></a>
           <br />
         <% end %>

@@ -18,6 +18,7 @@ en:
     attributes:
       store:
         name: "Name"
+        name_c: "Store"
         company: "Company"
         company_id: "Company"
         office: "Office (exclusive)"

@@ -18,6 +18,7 @@ es:
     attributes:
       store:
         name: "Nombre"
+        name_c: "Almacén"
         company: "Empresa"
         company_id: "Empresa"
         office: "Oficina (exclusiva)"

@@ -35,3 +35,4 @@ es:
       item_error: "no puede estar en blanco"
       stocks_warning: "¡Este producto tiene existencias en otras almacenes!"
       info_btn: "Existencias"
+      check_stock_btn: "Comprobar existencias"

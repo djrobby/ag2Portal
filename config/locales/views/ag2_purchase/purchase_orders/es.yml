@@ -38,3 +38,4 @@ es:
       approve_order_error: "Pedido no encontrado."
       approve_order_write: "Imposible guardar Pedido."
       approve_order_warn: "Este Pedido ya está aprobado."
+      check_stock_btn: "Comprobar existencias"

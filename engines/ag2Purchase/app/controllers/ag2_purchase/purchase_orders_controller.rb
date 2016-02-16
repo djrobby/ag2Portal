@@ -409,9 +409,9 @@ module Ag2Purchase
           stocks = Stock.find_by_product_all_stocks(i.product)
           if !stocks.blank?
             stocks.each do |s|
-
+              _is_current_store = s.store == i.store ? "*" : ""
               _array = _array << [i.id, s.product.full_code, i.description, number_with_precision(i.product.stock.round(4), precision: 4),
-                                  s.store.name, number_with_precision(s.current.round(4), precision: 4)]
+                                  s.store.name, number_with_precision(s.current.round(4), precision: 4), _is_current_store]
             end
           end
         end

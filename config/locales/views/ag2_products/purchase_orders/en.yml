@@ -35,3 +35,4 @@ en:
       item_error: "can't be blank"
       stocks_warning: "This product has stocks in other stores!"
       info_btn: "Stocks"
+      check_stock_btn: "Check inventory"
