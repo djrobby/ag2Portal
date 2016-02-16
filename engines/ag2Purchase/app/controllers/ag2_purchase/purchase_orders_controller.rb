@@ -399,6 +399,26 @@ module Ag2Purchase
       render json: stocks, include: :store
     end
 
+    # Check stocks before approve
+    def po_check_stock_before_approve
+      _order = params[:order]
+      _array = []
+      order = PurchaseOrder.find(_order)
+      if !order.nil?
+        order.purchase_order_items.each do |i|
+          stocks = Stock.find_by_product_all_stocks(i.product)
+          if !stocks.blank?
+            stocks.each do |s|
+
+              _array = _array << [i.id, s.product.full_code, i.description, number_with_precision(i.product.stock.round(4), precision: 4),
+                                  s.store.name, number_with_precision(s.current.round(4), precision: 4)]
+            end
+          end
+        end
+      end
+      render json: _array
+    end
+
     # Approve order
     def po_approve_order
       _order = params[:order]

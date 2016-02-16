@@ -56,6 +56,7 @@ es:
   approve: "Aprobar"
   disapprove: "Desaprobar"
   confirm: "Confirmar"
+  check: "Comprobar"
   send_error: "<b>¡Oh oh!</b> Tu correo-e no pudo ser enviado."
   send_ok: "Tu correo-e ha sido enviado."
   control_tracking:
