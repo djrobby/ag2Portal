@@ -1,17 +1,25 @@
 <script>
+  var approve_isvisible = false;
+
   $(document).ready(function() {
     // Hide send_messages div
     $("#send_mesages").hide();
+    // Hide check_stock div
+    $("#check_stock").hide();
     // Show approve_order_btn based on approval
     approver = $('#approver').html();
     if (approver == "") {
       $('#print_report_btn').hide();
       $('#send_report_btn').hide();
       $('#approve_order_btn').show();
+      $('#check_stock_btn').show();
+      approve_isvisible = true;
     } else {
       $('#print_report_btn').show();
       $('#send_report_btn').show();
       $('#approve_order_btn').hide();
+      $('#check_stock_btn').hide();
+      approve_isvisible = false;
     }
   });
 
@@ -33,8 +41,103 @@
           $('#approver').text(data.approver);
           $('#approval_date').text(data.approval_date);
           $('#approve_order_btn').hide();
+          $('#check_stock_btn').hide();
+          $("#check_stock").hide();
           $('#print_report_btn').show();
           $('#send_report_btn').show();
+          approve_isvisible = false;
+        }
+      });
+      return false;
+    });
+
+    // when #check_stock_btn is clicked
+    $("#check_stock_btn").click(function() {
+      // make a POST call and replace the content
+      var order = $('#id').html();
+      if (order == "") order = "0";
+      jQuery.getJSON('po_check_stock_before_approve/' + order, function(data) {
+        if (data != null) {
+          var _table = $('<table/>').attr('class', 'table fixed');
+          var _thead = $('<thead/>');
+          var _tbody = $('<tbody/>');
+          var _th;
+          var _tr;
+          var _td;
+          var _id_ant = data[0][0]; // first id
+          var _first = true;
+          // Table columns width
+          _table.append('<col width="10%" />');
+          _table.append('<col width="40%" />');
+          _table.append('<col width="14%" />');
+          _table.append('<col width="20%" />');
+          _table.append('<col width="14%" />');
+          _table.append('<col width="2%" />');
+          // Table header
+          _th = $('<th/>').attr('align', 'left'); // product code column title
+          _th.text('<%= t "activerecord.attributes.purchase_order_item.product_c" %>');
+          _thead.append(_th);
+          _th = $('<th/>').attr('align', 'left'); // item description column title
+          _th.text('<%= t "activerecord.attributes.purchase_order_item.description_c" %>');
+          _thead.append(_th);
+          _th = $('<th/>').attr('align', 'right'); // product current stock column title
+          _th.text('<%= t "activerecord.attributes.product.stock" %>');
+          _thead.append(_th);
+          _th = $('<th/>').attr('align', 'left'); // store name column title
+          _th.text('<%= t "activerecord.attributes.store.name_c" %>');
+          _thead.append(_th);
+          _th = $('<th/>').attr('align', 'right'); // store current stock column title
+          _th.text('<%= t "activerecord.attributes.stock.current" %>');
+          _thead.append(_th);
+          _th = $('<th/>').attr('align', 'center'); // is current store column title
+          _th.text('');
+          _thead.append(_th);
+
+          _table.append(_thead);
+          // Loop thru array
+          $.each(data, function(id, option) {
+            _tr = $('<tr/>');
+            if ((_id_ant != option[0]) || _first) {
+              // id changed: print product data
+              _id_ant = option[0];
+              _first = false;
+
+              _td = $('<td/>').attr('align', 'left'); // product code
+              _td.text(option[1]);
+              _tr.append(_td);
+              _td = $('<td/>').attr('align', 'left'); // item description
+              _td.text(option[2]);
+              _tr.append(_td);
+              _td = $('<td/>').attr('align', 'right'); // product current stock
+              _td.text(option[3]);
+              _tr.append(_td);
+            } else {
+              _td = $('<td/>');
+              _td.text('');
+              _tr.append(_td);
+              _td = $('<td/>');
+              _td.text('');
+              _tr.append(_td);
+              _td = $('<td/>');
+              _td.text('');
+              _tr.append(_td);
+            }
+            _td = $('<td/>').attr('align', 'left'); // store name
+            _td.text(option[4]);
+            _tr.append(_td);
+            _td = $('<td/>').attr('align', 'right'); // store current stock
+            _td.text(option[5]);
+            _tr.append(_td);
+            _td = $('<td/>').attr('align', 'center'); // is current store
+            _td.text(option[6]);
+            _tr.append(_td);
+
+            _tbody.append(_tr);
+          });
+          _table.append(_tbody);
+          $('#check_stock').append('<h4><%= I18n.t("ag2_purchase.purchase_orders.check_stock_btn") %></h4>');
+          $('#check_stock').append(_table);
+          $("#check_stock").show();
         }
       });
       return false;
@@ -80,7 +183,7 @@
   <%= content_tag :div, "", :id => "flash" %>  
 </div>
 
-<%= render '/layouts/ag2_products/ordersbreadcrumb' %>
+<%= render '/layouts/ag2_purchase/ordersbreadcrumb' %>
 
 <h3><%=t '.title' %></h3>
 <table class="table odd_even_table">
@@ -170,7 +273,7 @@
 <% end %> <!-- end @items.count > 0 -->
 
 <!-- Remarks -->
-<table class="table">
+<table class="table odd_even_table">
   <tbody>
     <tr>
       <td style="width: 12%"><%= t :"activerecord.attributes.purchase_order.remarks" %>:</td>
@@ -215,6 +318,7 @@
       <td class="form-td-two right-winged">
         <!-- Approve purchase order -->
         <% if @is_approver %>
+          <a href="#" id="check_stock_btn" class="btn btn-warning"><i class="icon-eye-open icon-white"></i> <%=t "ag2_purchase.purchase_orders.check_stock_btn" %></a>
           <a href="#" id="approve_order_btn" class="btn btn-warning"><i class="icon-ok icon-white"></i> <%=t :approve %></a>
           <br />
         <% end %>
@@ -225,3 +329,8 @@
 <br />
 
 <%= link_to t("ag2_purchase.purchase_orders.back_to_main_page"), purchase_orders_path %>
+
+<!-- Check stock div -->
+<p></p>
+<div id="check_stock" class="alert alert-info">
+</div>

@@ -19,6 +19,7 @@ module Ag2Purchase
                                                :po_generate_no,
                                                :po_product_stock,
                                                :po_product_all_stocks,
+                                               :po_check_stock_before_approve,
                                                :po_approve_order,
                                                :po_update_addresses_from_store,
                                                :purchase_order_form,

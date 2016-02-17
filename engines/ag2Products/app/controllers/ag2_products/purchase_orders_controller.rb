@@ -18,6 +18,8 @@ module Ag2Products
                                                :po_update_project_textfields_from_organization,
                                                :po_generate_no,
                                                :po_product_stock,
+                                               :po_product_all_stocks,
+                                               :po_check_stock_before_approve,
                                                :po_approve_order,
                                                :po_update_addresses_from_store,
                                                :purchase_order_form,
@@ -422,6 +424,26 @@ module Ag2Products
                      type: 'application/pdf',
                      disposition: 'inline' }
       end
+    end
+
+    # Check stocks before approve
+    def po_check_stock_before_approve
+      _order = params[:order]
+      _array = []
+      order = PurchaseOrder.find(_order)
+      if !order.nil?
+        order.purchase_order_items.each do |i|
+          stocks = Stock.find_by_product_all_stocks(i.product)
+          if !stocks.blank?
+            stocks.each do |s|
+              _is_current_store = s.store == i.store ? "*" : ""
+              _array = _array << [i.id, s.product.full_code, i.description, number_with_precision(i.product.stock.round(4), precision: 4),
+                                  s.store.name, number_with_precision(s.current.round(4), precision: 4), _is_current_store]
+            end
+          end
+        end
+      end
+      render json: _array
     end
 
     # Approve order
