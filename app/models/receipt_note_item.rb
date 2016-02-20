@@ -1,6 +1,6 @@
 class ReceiptNoteItem < ActiveRecord::Base
   include ModelsModule
-  
+
   belongs_to :receipt_note
   belongs_to :purchase_order
   belongs_to :purchase_order_item
@@ -28,7 +28,7 @@ class ReceiptNoteItem < ActiveRecord::Base
   validates :tax_type,            :presence => true
   validates :store,               :presence => true
   #validates :work_order,          :presence => true
-  validates :charge_account,      :presence => true
+  #validates :charge_account,      :presence => true
   validates :project,             :presence => true
   validates :quantity,            :numericality => true
   validates :price,               :numericality => true
@@ -89,7 +89,7 @@ class ReceiptNoteItem < ActiveRecord::Base
   def net_price
     price - discount
   end
-    
+
   def balance
     receipt_note_item_balance.balance
     #quantity - supplier_invoice_items.sum("quantity")
@@ -106,7 +106,7 @@ class ReceiptNoteItem < ActiveRecord::Base
     end
     true
   end
-  
+
   #
   # Triggers to update linked models
   #
@@ -117,7 +117,7 @@ class ReceiptNoteItem < ActiveRecord::Base
     create_purchase_price_if_necessary(product, receipt_note.supplier)
     true
   end
-    
+
   # After create
   # Updates Stock & PurchasePrice (current)
   def update_stock_and_price_on_create
@@ -135,7 +135,7 @@ class ReceiptNoteItem < ActiveRecord::Base
     end
     true
   end
-  
+
   # After update
   # Updates Stock & PurchasePrice (current and previous)
   def update_stock_and_price_on_update
@@ -221,7 +221,7 @@ class ReceiptNoteItem < ActiveRecord::Base
     end
     true
   end
-    
+
   #
   # Helper methods for triggers
   #
@@ -260,12 +260,12 @@ class ReceiptNoteItem < ActiveRecord::Base
         end
       end
     end
-    true 
+    true
   end
 
   # Update current PurchasePrice attributes: price
   # Warning: If current PurchasePrice is favorite, Product reference_price will be updated automatically: Do not update it later!
-  # Integer change_previous:  0 do nothing on previous values 
+  # Integer change_previous:  0 do nothing on previous values
   #                           1 price & code => prev_price & prev_code (set previous values)
   #                           2 prev_price & prev_code => price & code (roll back values)
   def update_purchase_price(_product, _supplier, _price, _code, _change_previous)
@@ -282,12 +282,12 @@ class ReceiptNoteItem < ActiveRecord::Base
         return false
       end
     end
-    true 
+    true
   end
-  
+
   # Update current Product attributes: last_price, average_price
   # Boolean is_new => true: current/new, false: previous/old
-  # Integer change_previous:  0 do nothing on previous values 
+  # Integer change_previous:  0 do nothing on previous values
   #                           1 last_price => prev_last_price (set previous value)
   #                           2 prev_last_price => last_price (roll back value)
   def update_product(_product, _amount, _quantity, _price, _is_new, _change_previous)
@@ -312,6 +312,6 @@ class ReceiptNoteItem < ActiveRecord::Base
     if !_product.save
       return false
     end
-    true    
+    true
   end
 end
