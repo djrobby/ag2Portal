@@ -37,7 +37,7 @@
       </td>
       <td align="center"><%= formatted_date(order.order_date) unless order.order_date.blank? %></td>
       <td><%= order.order_status.name %></td>
-      <td><%= order.supplier.full_name[0,40] %></td>
+      <td><%= order.supplier.full_name[0,38] %></td>
       <td><%= order.offer.offer_no unless order.offer.blank? %></td>
       <td align="right"><%= number_with_precision(order.total, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless order.total.blank? %></td>
       <td> <%= render :partial => '/layouts/crud/edit', :locals => { :model => PurchaseOrder, :path => edit_purchase_order_path(order) } unless cannot_edit(order) %>

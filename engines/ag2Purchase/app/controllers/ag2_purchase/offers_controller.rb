@@ -454,6 +454,7 @@ module Ag2Purchase
     def of_generate_order
       o = params[:offer]
       code = ''
+      order_path = nil
 
       if o != '0'
         offer = Offer.find(o) rescue nil
@@ -481,8 +482,8 @@ module Ag2Purchase
             order.retention_pct = 0
             order.retention_time = 0
             order.organization_id = offer.organization_id
-            order.approver_id = nil
-            order.approval_date = nil
+            order.approver_id = offer.approver_id
+            order.approval_date = offer.approval_date
             if order.save
               # Try to save purchase order items
               offer_items.each do |i|
@@ -522,8 +523,9 @@ module Ag2Purchase
       end   # o != '0'
       if code != '' && code != '$err' && code != '$write'
         code = I18n.t("ag2_purchase.offers.generate_order_ok", var: order.full_no)
+        order_path = ag2_purchase.purchase_orders_path + "/" + order.id.to_s
       end
-      @json_data = { "code" => code }
+      @json_data = { "code" => code, "path" => order_path }
       render json: @json_data
     end
 

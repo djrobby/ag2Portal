@@ -24,6 +24,7 @@
         } else {
           alert(data.code);
           $('#generate_order_btn').hide();
+          window.location = data.path;
         }
       });
       return false;
