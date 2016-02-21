@@ -18,6 +18,7 @@ module Ag2Products
                                                :po_update_project_textfields_from_organization,
                                                :po_generate_no,
                                                :po_product_stock,
+                                               :po_product_price,
                                                :po_product_all_stocks,
                                                :po_check_stock_before_approve,
                                                :po_approve_order,
@@ -387,6 +388,29 @@ module Ag2Products
         stocks = Stock.find_by_product_and_not_store_and_positive(product, store)
       end
       render json: stocks, include: :store
+    end
+
+    # Product price by supplier: Best product price
+    def po_product_price
+      product = params[:product]
+      supplier = params[:supplier]
+      price = params[:price].to_f / 10000
+      discount = params[:discount].to_f / 10000
+      price = price - discount
+      purchase_price = nil
+      supplier_code = ''
+      net_price = ''
+      if product != '0' && supplier != 0
+        purchase_price = PurchasePrice.find_product_best_price(product) rescue nil
+        if !purchase_price.blank?
+          if purchase_price.supplier_id != supplier && purchase_price.net_price < price
+            supplier_code = purchase_price.supplier.partial_name
+            net_price = purchase_price.net_price.to_s
+          end
+        end
+      end
+      @json_data = { "best_supplier" => supplier_code, "best_price" => net_price }
+      render json: @json_data
     end
 
     # infoButton

@@ -15,7 +15,11 @@ class PurchasePrice < ActiveRecord::Base
   after_save :update_reference_price_if_favorite
 
   def self.find_by_product_and_supplier(_product, _supplier)
-    PurchasePrice.where("product_id = ? AND supplier_id = ?", _product, _supplier).first  
+    PurchasePrice.where("product_id = ? AND supplier_id = ?", _product, _supplier).first
+  end
+
+  def self.find_product_best_price(_product)
+    PurchasePrice.where("product_id = ?", _product).order("(price - (price * (discount_rate / 100)))").first
   end
 
   def discount
@@ -34,9 +38,9 @@ class PurchasePrice < ActiveRecord::Base
     integer :id
     string :code
   end
-  
+
   private
-  
+
   # After save
   def update_reference_price_if_favorite
     _ret = true
@@ -45,7 +49,7 @@ class PurchasePrice < ActiveRecord::Base
       product.reference_price = price
       if !product.save
         _ret = false
-      end      
+      end
     end
     _ret
   end

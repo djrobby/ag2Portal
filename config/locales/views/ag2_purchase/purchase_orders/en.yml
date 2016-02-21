@@ -34,6 +34,7 @@ en:
       btn_add_item: "Add"
       item_error: "can't be blank"
       stocks_warning: "This product has stocks in other stores!"
+      prices_warning: "There is a lower price for this product!"
       info_btn: "Stocks"
       approve_order_error: "Order not found."
       approve_order_write: "Unable to save Order."

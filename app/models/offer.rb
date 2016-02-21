@@ -16,14 +16,14 @@ class Offer < ActiveRecord::Base
                   :organization_id, :approver_id, :approval_date, :attachment
   attr_accessible :offer_items_attributes
   has_attached_file :attachment, :styles => { :medium => "192x192>", :small => "128x128>" }, :default_url => "/images/missing/:style/attachment.png"
-  
+
   has_many :offer_items, dependent: :destroy
   has_many :products, through: :offer_items
   has_many :purchase_orders
   #has_one :approver_offer_request, class_name: 'OfferRequest', foreign_key: 'approved_offer_id'
 
   # Nested attributes
-  accepts_nested_attributes_for :offer_items,                                 
+  accepts_nested_attributes_for :offer_items,
                                 :reject_if => :all_blank,
                                 :allow_destroy => true
 
@@ -91,7 +91,7 @@ class Offer < ActiveRecord::Base
   def bonus
     (discount_pct / 100) * subtotal if !discount_pct.blank?
   end
-  
+
   def taxable
     subtotal - bonus - discount
   end
@@ -107,11 +107,18 @@ class Offer < ActiveRecord::Base
   end
 
   def total
-    taxable + taxes  
+    taxable + taxes
   end
 
   def quantity
     offer_items.sum("quantity")
+  end
+
+  #
+  # Class (self) user defined methods
+  #
+  def self.sorted_by_total
+    all.sort_by(&:total)
   end
 
   #
@@ -166,7 +173,7 @@ class Offer < ActiveRecord::Base
     Notifier.offer_saved(self, 1).deliver
     if check_if_approval_is_required
       Notifier.offer_saved_with_approval(self, 1).deliver
-    end     
+    end
   end
 
   # After update
@@ -183,7 +190,7 @@ class Offer < ActiveRecord::Base
       Notifier.offer_saved(self, 3).deliver
       if check_if_approval_is_required
         Notifier.offer_saved_with_approval(self, 3).deliver
-      end     
+      end
     end
   end
 

@@ -1,4 +1,5 @@
 require_dependency "ag2_purchase/application_controller"
+require 'will_paginate/array'
 
 module Ag2Purchase
   class OfferRequestsController < ApplicationController
@@ -478,7 +479,8 @@ module Ag2Purchase
       @offer_request = OfferRequest.find(params[:id])
       @items = @offer_request.offer_request_items.paginate(:page => params[:page], :per_page => per_page).order('id')
       @suppliers = @offer_request.offer_request_suppliers.paginate(:page => params[:page], :per_page => per_page).order('id')
-      @offers = @offer_request.offers.paginate(:page => params[:page], :per_page => per_page).order('id')
+      @offers = sort_offers_by_total(@offer_request).paginate(:page => params[:page], :per_page => per_page)
+      #@offers = @offer_request.offers.paginate(:page => params[:page], :per_page => per_page).order('id')
       # Offer Approvers
       @is_approver = false
       if @offers.count > 0
@@ -843,6 +845,11 @@ module Ag2Purchase
         _array = _array << [i.id, i.full_code, i.main_description[0,40]]
       end
       _array
+    end
+
+    # Returns offer array sorted by total from _offer_request
+    def sort_offers_by_total(_offer_request)
+      _offer_request.offers.sort_by(&:total)
     end
 
     # Returns _array from _ret table/model filled with _id attribute

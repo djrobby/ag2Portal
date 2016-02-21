@@ -121,6 +121,16 @@
             }
           });
         }
+        // Price warning
+        _price = parseInt(right_number(data.price, 4) * 10000);
+        _discount = parseInt(right_number(data.discount, 4) * 10000);
+        jQuery.getJSON('po_product_price/' + product + '/' + _supplier + '/' + _price + '/' + _discount, function(data) {
+          if (data.best_supplier != "") {
+            var a = '<%= I18n.t("ag2_purchase.purchase_orders.prices_warning") %>\n';
+            a += '\n' + data.best_supplier + ' = ' + data.best_price;
+            alert(a);
+          }
+        });
       });
       return false;
     });
