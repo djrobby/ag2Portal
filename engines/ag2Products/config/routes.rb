@@ -101,9 +101,9 @@ Ag2Products::Engine.routes.draw do
     match 'delivery_notes/dn_update_project_textfields_from_organization/:org', :controller => 'delivery_notes', :action => 'dn_update_project_textfields_from_organization'
     match 'dn_update_project_textfields_from_organization/:org', :controller => 'delivery_notes', :action => 'dn_update_project_textfields_from_organization'
     match 'delivery_notes/:id/dn_update_project_textfields_from_organization/:org', :controller => 'delivery_notes', :action => 'dn_update_project_textfields_from_organization'
-    match 'delivery_notes/dn_generate_no/:org', :controller => 'delivery_notes', :action => 'dn_generate_no'
-    match 'dn_generate_no/:org', :controller => 'delivery_notes', :action => 'dn_generate_no'
-    match 'delivery_notes/:id/dn_generate_no/:org', :controller => 'delivery_notes', :action => 'dn_generate_no'
+    match 'delivery_notes/dn_generate_no/:project', :controller => 'delivery_notes', :action => 'dn_generate_no'
+    match 'dn_generate_no/:project', :controller => 'delivery_notes', :action => 'dn_generate_no'
+    match 'delivery_notes/:id/dn_generate_no/:project', :controller => 'delivery_notes', :action => 'dn_generate_no'
     #
     # Receipt notes
     match 'receipt_notes/rn_totals/:qty/:amount/:tax/:discount_p', :controller => 'receipt_notes', :action => 'rn_totals'

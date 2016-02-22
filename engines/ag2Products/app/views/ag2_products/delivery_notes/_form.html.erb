@@ -95,7 +95,7 @@
     // when #generate_code_btn is clicked
     $("#generate_code_btn").click(function() {
       // make a POST call and replace the content
-      var order = $('select#delivery_note_organization_id :selected').val();
+      var order = $('select#delivery_note_project_id :selected').val();
       if (order == "")
         order = "$";
       jQuery.getJSON('dn_generate_no/' + order, function(data) {

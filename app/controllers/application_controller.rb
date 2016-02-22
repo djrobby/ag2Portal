@@ -443,19 +443,24 @@ end
   end
 
   # Delivery note no
-  def dn_next_no(organization)
+  def dn_next_no(project)
     year = Time.new.year
     code = ''
-    organization = organization.to_s if organization.is_a? Fixnum
-    organization = organization.rjust(4, '0')
-    year = year.to_s if year.is_a? Fixnum
-    year = year.rjust(4, '0')
-    last_no = DeliveryNote.where("delivery_no LIKE ?", "#{organization}#{year}%").order(:delivery_no).maximum(:delivery_no)
-    if last_no.nil?
-      code = organization + year + '000001'
+    # Builds code, if possible
+    project_code = Project.find(project).project_code rescue '$'
+    if project_code == '$'
+      code = '$err'
     else
-      last_no = last_no[8..13].to_i + 1
-      code = organization + year + last_no.to_s.rjust(6, '0')
+      project = project_code.rjust(12, '0')
+      year = year.to_s if year.is_a? Fixnum
+      year = year.rjust(4, '0')
+      last_no = DeliveryNote.where("delivery_no LIKE ?", "#{project}#{year}%").order(:delivery_no).maximum(:delivery_no)
+      if last_no.nil?
+        code = project + year + '000001'
+      else
+        last_no = last_no[16..21].to_i + 1
+        code = project + year + last_no.to_s.rjust(6, '0')
+      end
     end
     code
   end

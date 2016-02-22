@@ -1,6 +1,6 @@
 class DeliveryNote < ActiveRecord::Base
   include ModelsModule
-  
+
   belongs_to :client
   belongs_to :payment_method
   belongs_to :project
@@ -18,7 +18,7 @@ class DeliveryNote < ActiveRecord::Base
   has_many :client_invoice_items
 
   # Nested attributes
-  accepts_nested_attributes_for :delivery_note_items,                                 
+  accepts_nested_attributes_for :delivery_note_items,
                                 :reject_if => :all_blank,
                                 :allow_destroy => true
 
@@ -28,8 +28,8 @@ class DeliveryNote < ActiveRecord::Base
 
   validates :delivery_date,   :presence => true
   validates :delivery_no,     :presence => true,
-                              :length => { :is => 14 },
-                              :format => { with: /\A\d+\Z/, message: :code_invalid },
+                              :length => { :is => 22 },
+                              :format => { with: /\A[a-zA-Z\d]+\Z/, message: :code_invalid },
                               :uniqueness => { :scope => :organization_id }
   validates :project,         :presence => true
   validates :organization,    :presence => true
@@ -64,8 +64,8 @@ class DeliveryNote < ActiveRecord::Base
   end
 
   def full_no
-    # Delivery no (Organization id & year & sequential number) => OOOO-YYYY-NNNNNN
-    delivery_no.blank? ? "" : delivery_no[0..3] + '-' + delivery_no[4..7] + '-' + delivery_no[8..13]
+    # Delivery no (Project code & year & sequential number) => PPPPPPPPPPPP-YYYY-NNNNNN
+    delivery_no.blank? ? "" : delivery_no[0..11] + '-' + delivery_no[12..15] + '-' + delivery_no[16..21]
   end
 
   #
@@ -94,7 +94,7 @@ class DeliveryNote < ActiveRecord::Base
   def bonus
     (discount_pct / 100) * subtotal if !discount_pct.blank?
   end
-  
+
   def taxable
     subtotal - bonus - discount
   end
@@ -110,7 +110,7 @@ class DeliveryNote < ActiveRecord::Base
   end
 
   def total
-    taxable + taxes  
+    taxable + taxes
   end
 
   def quantity

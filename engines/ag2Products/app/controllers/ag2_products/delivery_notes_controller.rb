@@ -307,10 +307,10 @@ module Ag2Products
 
     # Update delivery number at view (generate_code_btn)
     def dn_generate_no
-      organization = params[:org]
+      project = params[:project]
 
       # Builds no, if possible
-      code = organization == '$' ? '$err' : dn_next_no(organization)
+      code = project == '$' ? '$err' : dn_next_no(project)
       @json_data = { "code" => code }
       render json: @json_data
     end
