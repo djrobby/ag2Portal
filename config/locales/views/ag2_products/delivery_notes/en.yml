@@ -23,7 +23,7 @@ en:
         title: "New Delivery note"
       back_to_main_page: "Back to Delivery notes"
       generate_code_btn: "Delivery note No."
-      no_error: "Unable to generate Delivery note No.: No Organization chosen."
+      no_error: "Unable to generate Delivery note No.: No Project chosen."
       items_info: "Delivery note Items"
       delete_item: "Delete this Item"
       add_item: "Add new Item"
