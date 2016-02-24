@@ -17,6 +17,7 @@ module Ag2Purchase
                                                :po_current_stock,
                                                :po_update_project_textfields_from_organization,
                                                :po_generate_no,
+                                               :po_check_stock_and_price,
                                                :po_product_stock,
                                                :po_product_price,
                                                :po_product_all_stocks,
@@ -376,6 +377,55 @@ module Ag2Purchase
       # Builds no, if possible
       code = project == '$' ? '$err' : po_next_no(project)
       @json_data = { "code" => code }
+      render json: @json_data
+    end
+
+    # Check & warning:
+    # Stocks in others stores
+    # Best price from another supplier
+    def po_check_stock_and_price
+      product = params[:product]
+      qty = params[:qty].to_f / 10000
+      store = params[:store]
+      check_stock = params[:check_stock]
+      supplier = params[:supplier]
+      price = params[:price].to_f / 10000
+      discount = params[:discount].to_f / 10000
+
+      stocks = nil
+      stocks_array = nil
+      stock_alert = ''
+      purchase_price = nil
+      price = price - discount
+      supplier_code = ''
+      net_price = ''
+      price_alert = ''
+
+      # Validate stocks if required
+      if check_stock
+        if product != '0' && store != 0
+          stocks = Stock.find_by_product_and_not_store_and_positive(product, store)
+        end
+        # Stocks array
+        stocks_array = stocks_by_store_array(stocks)
+        stock_alert = stocks_array.blank? ? '' : t("ag2_purchase.purchase_orders.stocks_warning")
+      end
+
+      # Validate price
+      if product != '0' && supplier != 0
+        purchase_price = PurchasePrice.find_product_best_price(product) rescue nil
+        if !purchase_price.blank?
+          if purchase_price.supplier_id != supplier && purchase_price.net_price < price
+            supplier_code = purchase_price.supplier.partial_name
+            net_price = number_with_precision(purchase_price.net_price.round(4), precision: 4)
+            price_alert = t("ag2_purchase.purchase_orders.prices_warning")
+          end
+        end
+      end
+
+      # Return JSON
+      @json_data = { "stock_alert" => stock_alert, "stock_stocks" => stocks_array,
+                     "price_alert" => price_alert, "price_supplier" => supplier_code, "price_price" => net_price }
       render json: @json_data
     end
 
@@ -934,6 +984,15 @@ module Ag2Purchase
       _array = []
       _products.each do |i|
         _array = _array << [i.id, i.full_code, i.main_description[0,40]]
+      end
+      _array
+    end
+
+    # Returns array of stores & stocks (others than current validating item)
+    def stocks_by_store_array(_stocks)
+      _array = []
+      _stocks.each do |i|
+        _array = _array << [i.store.name, number_with_precision(i.current.round(4), precision: 4)]
       end
       _array
     end

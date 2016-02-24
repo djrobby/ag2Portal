@@ -84,6 +84,7 @@
       var _sstock = 0;
       var _pstock = 0;
       var _price = 0;
+      var _check_stock = false;
       //qty = qty.replace(",", ".") * 10000;
       jQuery.getJSON('po_update_description_prices_from_product_store/' + product + '/' + qty + '/' + store + '/' + _supplier + '/' + tbl, function(data) {
         if (data.tbl == "true") {
@@ -108,6 +109,35 @@
         }
         // Update and display totals is necessary
         $('#items-table').trigger('totals');
+        // Check stocks & best price, and warn if necessary
+        _sstock = parseFloat(data.stock);
+        _pstock = parseFloat(data.product_stock);
+        _price = parseInt(right_number(data.price, 4) * 10000);
+        _discount = parseInt(right_number(data.discount, 4) * 10000);
+        if ((_pstock - _sstock) > 0) _check_stock = true;
+        jQuery.getJSON('po_check_stock_and_price/' + product + '/' + qty + '/' + store + '/' + _check_stock + '/' + _supplier + '/' + _price + '/' + _discount, function(data) {
+          var sa = data.stock_alert;
+          var ss = data.stock_stocks;
+          var pa = data.price_alert;
+          var ps = data.price_supplier;
+          var pp = data.price_price;
+          var a = "";
+          // Setup stock warning
+          if (sa != "") {
+            a += sa + '';
+            $.each(ss, function(id, option) {
+              a += '\n' + option[0] + ' = ' + option[1];
+            });
+          }
+          // Setup price warning
+          if (pa != "") {
+            if (a != "") a += '\n\n';
+            a += pa + '\n' + ps + ' = ' + pp;
+          }
+          // Warns
+          if (a != "") alert(a);
+        });
+        /*
         // Stock warning
         _sstock = parseFloat(data.stock);
         _pstock = parseFloat(data.product_stock);
@@ -132,6 +162,7 @@
             alert(a);
           }
         });
+        */
       });
       return false;
     });
