@@ -31,7 +31,7 @@ class ChargeAccount < ActiveRecord::Base
   has_paper_trail
 
   validates :account_code,    :presence => true,
-                              :length => { :is => 11 },
+                              :length => { :is => 9 },
                               :format => { with: /\A\d+\Z/, message: :code_invalid },
                               :numericality => { :only_integer => true, :greater_than => 0 },
                               :uniqueness => { :scope => [:organization_id, :charge_group_id] }
@@ -56,8 +56,8 @@ class ChargeAccount < ActiveRecord::Base
   end
 
   def full_code
-    # Account code (Group code & project id & sequential number) => GGGG-PPPNNNN
-    account_code.blank? ? "" : account_code[0..3] + '-' + account_code[4..10]
+    # Account code (Group code & project id & sequential number) => GGGG-PPPNN
+    account_code.blank? ? "" : account_code[0..3] + '-' + account_code[4..8]
   end
 
   def partial_name

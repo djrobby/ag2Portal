@@ -412,14 +412,14 @@ end
       end
       code = group + project
       if last_code.nil?
-        code += '0001'
+        code += '01'
       else
-        last_code = last_code[7..10].to_i + 1
-        code += last_code.to_s.rjust(4, '0')
+        last_code = last_code[7..8].to_i + 1
+        code += last_code.to_s.rjust(2, '0')
       end
     end
     code
-   end
+  end
 
   # Budget no
   def bu_next_no(project, period)
