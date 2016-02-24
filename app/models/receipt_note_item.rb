@@ -126,7 +126,7 @@ class ReceiptNoteItem < ActiveRecord::Base
       return false
     end
     # Update current PurchasePrice
-    if !update_purchase_price(product, receipt_note.supplier, price, code, 1)
+    if !update_purchase_price(product, receipt_note.supplier, price, code, 1, discount_pct)
       return false
     end
     # Update current Product
@@ -146,6 +146,7 @@ class ReceiptNoteItem < ActiveRecord::Base
     supplier_has_changed = receipt_note.supplier_changed? rescue false
     price_has_changed = price_changed? rescue false
     code_has_changed = code_changed? rescue false
+    discount_pct_has_changed = discount_pct_changed? rescue false
     # Previous values
     product_prev = product_was rescue product
     store_prev = store_was rescue store
@@ -172,16 +173,16 @@ class ReceiptNoteItem < ActiveRecord::Base
     # PurchasePrice
     if product_has_changed || supplier_has_changed
       # Current PurchasePrice
-      if !update_purchase_price(product, receipt_note.supplier, price, code, 1)
+      if !update_purchase_price(product, receipt_note.supplier, price, code, 1, discount_pct)
         return false
       end
       # Roll back Previous PurchasePrice
-      if !update_purchase_price(product_prev, supplier_prev, price, code, 2)
+      if !update_purchase_price(product_prev, supplier_prev, price, code, 2, discount_pct)
         return false
       end
-    elsif price_has_changed || code_has_changed
+    elsif price_has_changed || code_has_changed || discount_pct_has_changed
       # Current PurchasePrice
-      if !update_purchase_price(product, receipt_note.supplier, price, code, 0)
+      if !update_purchase_price(product, receipt_note.supplier, price, code, 0, discount_pct)
         return false
       end
     end
@@ -212,7 +213,7 @@ class ReceiptNoteItem < ActiveRecord::Base
       return false
     end
     # Update current PurchasePrice
-    if !update_purchase_price(product, receipt_note.supplier, price, code, 2)
+    if !update_purchase_price(product, receipt_note.supplier, price, code, 2, discount_pct)
       return false
     end
     # Update current Product
@@ -268,15 +269,16 @@ class ReceiptNoteItem < ActiveRecord::Base
   # Integer change_previous:  0 do nothing on previous values
   #                           1 price & code => prev_price & prev_code (set previous values)
   #                           2 prev_price & prev_code => price & code (roll back values)
-  def update_purchase_price(_product, _supplier, _price, _code, _change_previous)
+  def update_purchase_price(_product, _supplier, _price, _code, _change_previous, _discount_pct)
     _purchase_price = PurchasePrice.find_by_product_and_supplier(_product, _supplier)
     if !_purchase_price.nil?
       if _change_previous == 0
-        _purchase_price.attributes = { price: _price, code: _code }
+        _purchase_price.attributes = { price: _price, code: _code, discount_rate: _discount_pct }
       elsif _change_previous == 1
-        _purchase_price.attributes = { price: _price, code: _code, prev_price: _purchase_price.price, prev_code: _purchase_price.code }
+        _purchase_price.attributes = { price: _price, code: _code, discount_rate: _discount_pct,
+                                       prev_price: _purchase_price.price, prev_code: _purchase_price.code, prev_discount_rate: _purchase_price.discount_rate }
       elsif _change_previous == 2
-        _purchase_price.attributes = { price: _purchase_price.prev_price, code: _purchase_price.prev_code }
+        _purchase_price.attributes = { price: _purchase_price.prev_price, code: _purchase_price.prev_code, discount_rate: _purchase_price.prev_discount_rate }
       end
       if !_purchase_price.save
         return false

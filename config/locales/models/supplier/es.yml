@@ -47,7 +47,7 @@ es:
         ledger_account: "Cuenta contable"
         ledger_account_id: "Cuenta contable"
         discount_rate: "Tasa descuento %"
-        discount_rate_c: "TDP %"
+        discount_rate_c: "TDGP %"
         active: "¿Activo?"
         max_orders_count: "Cantidad máx. por pedido"
         max_orders_sum: "Importe máx. por pedido €"
