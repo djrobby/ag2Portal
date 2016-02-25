@@ -11,12 +11,21 @@ class WorkOrder < ActiveRecord::Base
   belongs_to :client
   belongs_to :organization
   belongs_to :in_charge, class_name: 'Worker'
+  #belongs_to :subscriber
+  #belongs_to :meter
+  #belongs_to :meter_model
+  #belongs_to :caliber
+  #belongs_to :meter_owner
+  #belongs_to :meter_location
+  #belongs_to :last_reading, class_name: 'Reading'
   attr_accessible :closed_at, :completed_at, :order_no, :started_at,
                   :work_order_labor_id, :work_order_status_id, :work_order_type_id,
                   :charge_account_id, :project_id, :area_id, :store_id, :client_id,
                   :remarks, :description, :petitioner, :master_order_id, :organization_id,
                   :in_charge_id, :reported_at, :approved_at, :certified_at, :posted_at,
-                  :location, :pub_record
+                  :location, :pub_record, :subscriber_id, :incidences,
+                  :meter_id, :meter_code, :meter_model_id, :caliber_id, :meter_owner_id,
+                  :meter_location_id, :last_reading_id, :current_reading_date, :current_reading_index
   attr_accessible :work_order_items_attributes, :work_order_workers_attributes,
                   :work_order_tools_attributes, :work_order_vehicles_attributes,
                   :work_order_subcontractors_attributes
@@ -38,30 +47,30 @@ class WorkOrder < ActiveRecord::Base
   has_many :supplier_invoice_items
   has_many :delivery_notes
   has_many :delivery_note_items
-  has_many :sale_offers  
+  has_many :sale_offers
   has_many :sale_offer_items
 
   # Nested attributes
-  accepts_nested_attributes_for :work_order_items,                                 
+  accepts_nested_attributes_for :work_order_items,
                                 :reject_if => :all_blank,
                                 :allow_destroy => true
-  accepts_nested_attributes_for :work_order_workers,                                 
+  accepts_nested_attributes_for :work_order_workers,
                                 :reject_if => :all_blank,
                                 :allow_destroy => true
-  accepts_nested_attributes_for :work_order_tools,                                 
+  accepts_nested_attributes_for :work_order_tools,
                                 :reject_if => :all_blank,
                                 :allow_destroy => true
-  accepts_nested_attributes_for :work_order_vehicles,                                 
+  accepts_nested_attributes_for :work_order_vehicles,
                                 :reject_if => :all_blank,
                                 :allow_destroy => true
-  accepts_nested_attributes_for :work_order_subcontractors,                                 
+  accepts_nested_attributes_for :work_order_subcontractors,
                                 :reject_if => :all_blank,
                                 :allow_destroy => true
 
   # Self join
   has_many :suborders, class_name: 'WorkOrder', foreign_key: 'master_order_id'
   belongs_to :master_order, class_name: 'WorkOrder'
-  
+
   has_paper_trail
 
   validates_associated :work_order_items, :work_order_workers,
@@ -125,7 +134,7 @@ class WorkOrder < ActiveRecord::Base
     end
     subtotal
   end
-  
+
   def taxable
     subtotal
   end
@@ -141,7 +150,7 @@ class WorkOrder < ActiveRecord::Base
   end
 
   def total
-    taxable + taxes  
+    taxable + taxes
   end
 
   def quantity
@@ -161,11 +170,11 @@ class WorkOrder < ActiveRecord::Base
   def hours
     work_order_workers.sum("hours")
   end
-  
+
   def hours_avg
     hours / work_order_workers.count
   end
-  
+
   def total_costs
     item_costs + worker_costs + tool_costs + vehicle_costs + subcontractor_costs
   end
@@ -213,7 +222,7 @@ class WorkOrder < ActiveRecord::Base
   def tax_breakdown
     tt = global_tax_breakdown(work_order_items, false)
   end
-  
+
   #
   # Records navigator
   #

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20160224112146) do
+ActiveRecord::Schema.define(:version => 20160225105620) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -2414,8 +2414,8 @@ ActiveRecord::Schema.define(:version => 20160224112146) do
     t.integer  "project_id"
     t.integer  "area_id"
     t.integer  "store_id"
-    t.datetime "created_at",           :null => false
-    t.datetime "updated_at",           :null => false
+    t.datetime "created_at",            :null => false
+    t.datetime "updated_at",            :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
     t.integer  "client_id"
@@ -2431,20 +2431,39 @@ ActiveRecord::Schema.define(:version => 20160224112146) do
     t.datetime "posted_at"
     t.string   "location"
     t.string   "pub_record"
+    t.integer  "subscriber_id"
+    t.string   "incidences"
+    t.integer  "meter_id"
+    t.string   "meter_code"
+    t.integer  "meter_model_id"
+    t.integer  "caliber_id"
+    t.integer  "meter_owner_id"
+    t.integer  "meter_location_id"
+    t.integer  "last_reading_id"
+    t.datetime "current_reading_date"
+    t.integer  "current_reading_index"
   end
 
   add_index "work_orders", ["area_id"], :name => "index_work_orders_on_area_id"
+  add_index "work_orders", ["caliber_id"], :name => "index_work_orders_on_caliber_id"
   add_index "work_orders", ["charge_account_id"], :name => "index_work_orders_on_charge_account_id"
   add_index "work_orders", ["client_id"], :name => "index_work_orders_on_client_id"
   add_index "work_orders", ["completed_at"], :name => "index_work_orders_on_completed_at"
   add_index "work_orders", ["in_charge_id"], :name => "index_work_orders_on_in_charge_id"
+  add_index "work_orders", ["last_reading_id"], :name => "index_work_orders_on_last_reading_id"
   add_index "work_orders", ["master_order_id"], :name => "index_work_orders_on_master_order_id"
+  add_index "work_orders", ["meter_code"], :name => "index_work_orders_on_meter_code"
+  add_index "work_orders", ["meter_id"], :name => "index_work_orders_on_meter_id"
+  add_index "work_orders", ["meter_location_id"], :name => "index_work_orders_on_meter_location_id"
+  add_index "work_orders", ["meter_model_id"], :name => "index_work_orders_on_meter_model_id"
+  add_index "work_orders", ["meter_owner_id"], :name => "index_work_orders_on_meter_owner_id"
   add_index "work_orders", ["order_no"], :name => "index_work_orders_on_order_no"
   add_index "work_orders", ["organization_id", "order_no"], :name => "index_work_orders_on_organization_id_and_order_no", :unique => true
   add_index "work_orders", ["organization_id"], :name => "index_work_orders_on_organization_id"
   add_index "work_orders", ["project_id"], :name => "index_work_orders_on_project_id"
   add_index "work_orders", ["started_at"], :name => "index_work_orders_on_started_at"
   add_index "work_orders", ["store_id"], :name => "index_work_orders_on_store_id"
+  add_index "work_orders", ["subscriber_id"], :name => "index_work_orders_on_subscriber_id"
   add_index "work_orders", ["work_order_labor_id"], :name => "index_work_orders_on_work_order_labor_id"
   add_index "work_orders", ["work_order_status_id"], :name => "index_work_orders_on_work_order_status_id"
   add_index "work_orders", ["work_order_type_id"], :name => "index_work_orders_on_work_order_type_id"
