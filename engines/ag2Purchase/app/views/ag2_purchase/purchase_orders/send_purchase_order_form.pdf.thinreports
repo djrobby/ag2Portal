@@ -106,9 +106,9 @@ report.page.values(form_title: I18n.t("activerecord.models.purchase_order.one"),
 				   store_location_title: I18n.t("activerecord.attributes.store.delivery_location"),
 				   payment_method: @purchase_order.payment_method.description)
 if @purchase_order.store_address_1.blank? && @purchase_order.store_address_2.blank? && @purchase_order.store_phones.blank?
-	report.page.values store_address_1: @purchase_order.store.address_1
-	report.page.values store_address_2: @purchase_order.store.address_2
-	report.page.values store_phones: @purchase_order.store.phone_and_fax
+	report.page.values store_address_1: @purchase_order.store.address_1 unless @purchase_order.store.address_1.blank?
+	report.page.values store_address_2: @purchase_order.store.address_2 unless @purchase_order.store.address_2.blank?
+	report.page.values store_phones: @purchase_order.store.phone_and_fax unless @purchase_order.store.phone_and_fax.blank?
 else
 	report.page.values store_address_1: @purchase_order.store_address_1
 	report.page.values store_address_2: @purchase_order.store_address_2
