@@ -130,7 +130,11 @@ class ReceiptNoteItem < ActiveRecord::Base
       return false
     end
     # Update current Product
-    if !update_product(product, amount, quantity, price, true, 1)
+    if !update_product(product, amount, quantity, net_price, true, 1)
+      return false
+    end
+    # Update current ProductCompanyPrice
+    if !update_product_company_price(product, store.company, amount, quantity, net_price, true, 1)
       return false
     end
     true
@@ -147,6 +151,7 @@ class ReceiptNoteItem < ActiveRecord::Base
     price_has_changed = price_changed? rescue false
     code_has_changed = code_changed? rescue false
     discount_pct_has_changed = discount_pct_changed? rescue false
+    discount_has_changed = discount_changed? rescue false
     # Previous values
     product_prev = product_was rescue product
     store_prev = store_was rescue store
@@ -154,6 +159,9 @@ class ReceiptNoteItem < ActiveRecord::Base
     supplier_prev = receipt_note.supplier_was rescue receipt_note.supplier
     amount_prev = amount_was rescue amount
     price_prev = price_was rescue price
+    discount_pct_prev = discount_pct_was rescue discount_pct
+    discount_prev = discount_was rescue discount
+    net_price_prev = price_prev - discount_prev
     # Stock
     if product_has_changed || store_has_changed
       # Current Stock
@@ -189,19 +197,36 @@ class ReceiptNoteItem < ActiveRecord::Base
     # Product
     if product_has_changed
       # Current Product
-      if !update_product(product, amount, quantity, price, true, 1)
+      if !update_product(product, amount, quantity, net_price, true, 1)
         return false
       end
       # Previous Product
-      if !update_product(product_prev, amount_prev, quantity_prev, price_prev, false, 2)
+      if !update_product(product_prev, amount_prev, quantity_prev, net_price_prev, false, 2)
         return false
       end
-    elsif quantity_has_changed || price_has_changed
+    elsif quantity_has_changed || price_has_changed || discount_has_changed
       # Current Product
-      if !update_product(product, amount - amount_prev, quantity - quantity_prev, price, true, 0)
+      if !update_product(product, amount - amount_prev, quantity - quantity_prev, net_price, true, 0)
         return false
       end
     end
+    # ProductCompanyPrice
+    if product_has_changed || store_has_changed
+      # Current ProductCompanyPrice
+      if !update_product_company_price(product, store.company, amount, quantity, net_price, true, 1)
+        return false
+      end
+      # Previous ProductCompanyPrice
+      if !update_product_company_price(product_prev, store_prev.company, amount_prev, quantity_prev, net_price_prev, false, 2)
+        return false
+      end
+    elsif quantity_has_changed || price_has_changed || discount_has_changed
+      # Current Product
+      if !update_product_company_price(product, store.company, amount - amount_prev, quantity - quantity_prev, net_price, true, 0)
+        return false
+      end
+    end
+    # Everything run smoothly
     true
   end
 
@@ -217,9 +242,22 @@ class ReceiptNoteItem < ActiveRecord::Base
       return false
     end
     # Update current Product
-    if !update_product(product, amount, quantity, price, false, 2)
+    if !update_product(product, amount, quantity, net_price, false, 2)
       return false
     end
+    # Update current Product
+    if !update_product(product, amount, quantity, net_price, false, 2)
+      return false
+    end
+    # Update current Product
+    if !update_product(product, amount, quantity, net_price, false, 2)
+      return false
+    end
+    # Update current ProductCompanyPrice
+    if !update_product_company_price(product, store.company, amount, quantity, net_price, false, 2)
+      return false
+    end
+    # Everything run smoothly
     true
   end
 
@@ -312,6 +350,55 @@ class ReceiptNoteItem < ActiveRecord::Base
     end
     # Save changes
     if !_product.save
+      return false
+    end
+    true
+  end
+
+  # Update current ProductCompanyPrice attributes: last_price, average_price
+  # Boolean is_new => true: current/new, false: previous/old
+  # Integer change_previous:  0 do nothing on previous values
+  #                           1 last_price => prev_last_price (set previous value)
+  #                           2 prev_last_price => last_price (roll back value)
+  def update_product_company_price(_product, _company, _amount, _quantity, _price, _is_new, _change_previous)
+    # Do nothing if company is empty (can go on normally)
+    if _company.blank?
+      return true
+    end
+    # Calc current stock by company
+    _current_stock = 0
+    _stores = _company.stores
+    each _stores do |_s|
+      _current_stock += Stock.find_by_product_and_store(_product, _s).current rescue 0
+      #_current_stock += s.stock
+    end
+    # Current company weighted average price
+    _current_average_price = 0
+    _product_company_price = ProductCompanyPrice.find_by_product_and_company(_product, _company) rescue nil
+    if _product_company_price.nil?
+      _product_company_price = ProductCompanyPrice.create(product_id: _product.id, company_id: _company.id, last_price: 0, average_price: 0, prev_last_price: 0, created_by: current_user.nil? ? nil : current_user.id)
+    else
+      _current_average_price = _product_company_price.average_price
+    end
+    # Calc new Weighted average price
+    if _is_new
+      _new_average_price = ((_current_average_price * _current_stock) + _amount) / (_current_stock + _quantity)
+    else
+      _new_average_price = ((_current_average_price * _current_stock) - _amount) / (_current_stock - _quantity)
+    end
+    _product_company_price.average_price = _new_average_price
+    # Last price
+    if _change_previous == 0
+      _product_company_price.attributes = { last_price: _price }
+    elsif _change_previous == 1
+      _product_company_price.attributes = { last_price: _price, prev_last_price: _product_company_price.last_price }
+    elsif _change_previous == 2
+      _product_company_price.attributes = { last_price: _product_company_price.prev_last_price }
+    end
+    # Updater
+    _product_company_price.updated_by = current_user.id if !current_user.nil?
+    # Save changes
+    if _product_company_price.save
       return false
     end
     true

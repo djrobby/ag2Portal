@@ -20,9 +20,10 @@ class Company < ActiveRecord::Base
   has_many :corp_contacts, :order => 'last_name, first_name'
   has_many :projects
   has_many :company_notifications, dependent: :destroy
+  has_many :stores
 
   # Nested attributes
-  accepts_nested_attributes_for :company_notifications,                                 
+  accepts_nested_attributes_for :company_notifications,
                                 :reject_if => :all_blank,
                                 :allow_destroy => true
 
@@ -101,7 +102,7 @@ class Company < ActiveRecord::Base
     end
     _ret
   end
-  
+
   def email_and_website
     _ret = ""
     if !self.email.blank?
