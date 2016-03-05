@@ -271,6 +271,7 @@ Ag2Products::Engine.routes.draw do
     resources :inventory_counts do
       get 'inventory_count_form', on: :collection
     end
+    resources :product_company_prices
 
     # Root
     root :to => 'home#index'
