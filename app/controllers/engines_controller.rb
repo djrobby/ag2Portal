@@ -47,6 +47,7 @@ class EnginesController < ApplicationController
     session[:Tax] = nil
     session[:Client] = nil
     session[:Stores] = nil
+    session[:Companies] = nil
     # Ag2Purchase
     session[:Supplier] = nil
     session[:Invoice] = nil

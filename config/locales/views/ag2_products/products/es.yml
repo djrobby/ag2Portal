@@ -17,7 +17,8 @@ es:
         btn_edit: "Editar Producto"
         btn_delete: "Borrar Producto"
         subtable_stocks_title: "Existencias del Producto"
-        subtable_prices_title: "Precios del Producto"
+        subtable_prices_title: "Precios del Producto por Proveedor"
+        subtable_wap_title: "Precios del Producto por Empresa"
         return_to: "Volver a Producto"
       edit:
         title: "Editar Producto"
@@ -33,3 +34,4 @@ es:
       code_error: "Imposible generar Código de Producto: No has elegido Organización o Familia."
       stocks: "Existencias"
       prices: "Precios"
+      prices_by_company: "Precios por Empresa"

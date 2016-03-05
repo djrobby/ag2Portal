@@ -150,8 +150,9 @@ module Ag2Products
       reset_stock_prices_filter
       @breadcrumb = 'read'
       @product = Product.find(params[:id])
-      @stocks = @product.stocks.paginate(:page => params[:page], :per_page => per_page).order('store_id')
-      @prices = @product.purchase_prices.paginate(:page => params[:page], :per_page => per_page).order('supplier_id')
+      @stocks = @product.stocks.paginate(:page => params[:page], :per_page => per_page).order(:store_id)
+      @prices = @product.purchase_prices.paginate(:page => params[:page], :per_page => per_page).order(:supplier_id)
+      @prices_by_company = @product.product_company_prices.paginate(:page => params[:page], :per_page => per_page).order(:company_id)
 
       respond_to do |format|
         format.html # show.html.erb
@@ -349,6 +350,7 @@ module Ag2Products
       session[:Products] = nil
       session[:Stores] = nil
       session[:Suppliers] = nil
+      session[:Companies] = nil
     end
   end
 end

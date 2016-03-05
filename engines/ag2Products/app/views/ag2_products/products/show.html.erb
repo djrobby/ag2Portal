@@ -107,6 +107,7 @@
 delete_path: @product, delete_txt: t('.btn_delete'), msg: t("activerecord.models.product.one"), txt: @product.full_name,
 new_path: new_product_path, new_txt: t('ag2_products.products.index.btn_new') } %>
 
+<!-- Stocks -->
 <table class="form-table">
   <tbody>
     <tr class="form-tr underlined-tr">
@@ -137,6 +138,7 @@ new_path: new_product_path, new_txt: t('ag2_products.products.index.btn_new') } 
 <%= render :partial => '/layouts/paginationunbordered', :locals => { :ivar => @stocks } %>
 <% end %>
 
+<!-- Purchase prices -->
 <table class="form-table">
   <tbody>
     <tr class="form-tr underlined-tr">
@@ -156,6 +158,33 @@ new_path: new_product_path, new_txt: t('ag2_products.products.index.btn_new') } 
   </thead>
   <tbody>
     <%= render :partial => '/layouts/ag2_products/prices', :locals => { :prices => @prices } %>
+  </tbody>
+</table>
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @prices } %>
+<% else %>
+<%= render :partial => '/layouts/paginationunbordered', :locals => { :ivar => @prices } %>
+<% end %>
+
+<!-- Prices by company (Weighted average price) -->
+<table class="form-table">
+  <tbody>
+    <tr class="form-tr underlined-tr">
+      <td class="form-td-two left-winged">
+        <h4><%=t '.subtable_wap_title' %></h4>
+      </td>
+      <td class="form-td-two right-winged">
+        <%= render partial: '/layouts/ag2_products/productcompanyprices', locals: { product: @product } %>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<% if (@prices_by_company.count > 0) %>
+<table class="table table-condensed table-striped">
+  <thead>
+    <%= render '/layouts/ag2_products/pricesbycompanyheader' %>
+  </thead>
+  <tbody>
+    <%= render :partial => '/layouts/ag2_products/pricesbycompany', :locals => { :pbc => @prices_by_company } %>
   </tbody>
 </table>
 <%= render :partial => '/layouts/pagination', :locals => { :ivar => @prices } %>

@@ -1,0 +1,18 @@
+es:
+  activerecord:
+    models:
+      product_company_price:
+        zero:  Precios de compra por empresa
+        one:   Precio de compra por empresa
+        few:   Precios de compra por empresa
+        other: Precios de compra por empresa
+    attributes:
+      product_company_price:
+        product: "Producto"
+        product_id: "Producto"
+        company: "Empresa"
+        company_id: "Empresa"
+        supplier: "Proveedor"
+        supplier_id: "Proveedor"
+        last_price: "Último precio"
+        average_price: "Precio medio ponderado"

@@ -17,7 +17,8 @@ en:
         btn_edit: "Edit Product"
         btn_delete: "Delete Product"
         subtable_stocks_title: "Product Stocks"
-        subtable_prices_title: "Product Prices"
+        subtable_prices_title: "Product Prices by Supplier"
+        subtable_wap_title: "Product Prices by Company"
         return_to: "Back to Product"
       edit:
         title: "Edit Product"
@@ -33,3 +34,4 @@ en:
       code_error: "Unable to generate Product Code: No Organization or Family chosen."
       stocks: "Stocks"
       prices: "Prices"
+      prices_by_company: "Prices by Company"

@@ -1,0 +1,20 @@
+en:
+  activerecord:
+    models:
+      product_company_price:
+        zero:  Purchase prices by company
+        one:   Purchase price by company
+        few:   Purchase prices by company
+        other: Purchase prices by company
+    attributes:
+      product_company_price:
+        product: "Product"
+        product_id: "Product"
+        company: "Company"
+        company_id: "Company"
+        supplier: "Supplier"
+        supplier_id: "Supplier"
+        last_price: "Last price €"
+        average_price: "Weighted average price €"
+        last_price_c: "Last price"
+        average_price_c: "Weighted average price"
