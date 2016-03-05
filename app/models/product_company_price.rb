@@ -13,4 +13,11 @@ class ProductCompanyPrice < ActiveRecord::Base
   def self.find_by_product_and_company(_product, _company)
     ProductCompanyPrice.where("product_id = ? AND company_id = ?", _product, _company).first
   end
+
+  searchable do
+    integer :product_id
+    integer :company_id
+    integer :supplier_id
+    integer :id
+  end
 end
