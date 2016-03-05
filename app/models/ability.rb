@@ -255,6 +255,7 @@ class Ability
       can :crud, OrderStatus
       can :crud, PaymentMethod
       can :crud, PurchasePrice
+      can :crud, ProductCompanyPrice
       can :crud, PurchaseOrder
       can :crud, PurchaseOrderItem
       can :crud, PurchaseOrderItemBalance
@@ -277,6 +278,7 @@ class Ability
       can :read, OrderStatus
       can :read, PaymentMethod
       can :read, PurchasePrice
+      can :read, ProductCompanyPrice
       can :read, PurchaseOrder
       can :read, PurchaseOrderItem
       can :read, PurchaseOrderItemBalance
@@ -297,6 +299,7 @@ class Ability
       cannot :manage, OrderStatus
       cannot :manage, PaymentMethod
       cannot :manage, PurchasePrice
+      cannot :manage, ProductCompanyPrice
       cannot :manage, PurchaseOrder
       cannot :manage, PurchaseOrderItem
       cannot :manage, PurchaseOrderItemBalance
@@ -321,6 +324,7 @@ class Ability
       can :crud, PurchaseOrderItem
       can :crud, PurchaseOrderItemBalance
       can :crud, PurchasePrice
+      can :crud, ProductCompanyPrice
       can :crud, ReceiptNote
       can :crud, ReceiptNoteItem
       can :crud, Store
@@ -341,6 +345,7 @@ class Ability
       can :read, PurchaseOrderItem
       can :read, PurchaseOrderItemBalance
       can :read, PurchasePrice
+      can :read, ProductCompanyPrice
       can :read, ReceiptNote
       can :read, ReceiptNoteItem
       can :read, Store
@@ -359,6 +364,7 @@ class Ability
       cannot :manage, PurchaseOrderItem
       cannot :manage, PurchaseOrderItemBalance
       cannot :manage, PurchasePrice
+      cannot :manage, ProductCompanyPrice
       cannot :manage, ReceiptNote
       cannot :manage, ReceiptNoteItem
       cannot :manage, Store
