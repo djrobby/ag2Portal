@@ -67,6 +67,14 @@ Ag2Products::Engine.routes.draw do
     match 'pp_format_numbers_2/:num', :controller => 'purchase_prices', :action => 'pp_format_numbers_2'
     match 'purchase_prices/:id/pp_format_numbers_2/:num', :controller => 'purchase_prices', :action => 'pp_format_numbers_2'
     #
+    # Product prices by company
+    match 'product_company_prices/pp_format_numbers/:num', :controller => 'product_company_prices', :action => 'pp_format_numbers'
+    match 'pp_format_numbers/:num', :controller => 'product_company_prices', :action => 'pp_format_numbers'
+    match 'product_company_prices/:id/pp_format_numbers/:num', :controller => 'product_company_prices', :action => 'pp_format_numbers'
+    match 'product_company_prices/pp_format_numbers_2/:num', :controller => 'product_company_prices', :action => 'pp_format_numbers_2'
+    match 'pp_format_numbers_2/:num', :controller => 'product_company_prices', :action => 'pp_format_numbers_2'
+    match 'product_company_prices/:id/pp_format_numbers_2/:num', :controller => 'product_company_prices', :action => 'pp_format_numbers_2'
+    #
     # Delivery notes
     match 'delivery_notes/dn_totals/:qty/:amount/:costs/:tax/:discount_p', :controller => 'delivery_notes', :action => 'dn_totals'
     match 'dn_totals/:qty/:amount/:costs/:tax/:discount_p', :controller => 'delivery_notes', :action => 'dn_totals'

@@ -40,3 +40,6 @@ es:
       inventory_counts:
         items: "Recuentos de inventario"
         item: "Recuento"
+      product_company_prices:
+        items: "Precios de compra por empresa"
+        item: "Precio"

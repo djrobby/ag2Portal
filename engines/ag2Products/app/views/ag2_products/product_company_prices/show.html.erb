@@ -1,5 +1,45 @@
-<p id="notice"><%= notice %></p>
+<%= render '/layouts/ag2_products/pricesbycompanybreadcrumb' %>
 
+<h3><%=t '.title' %></h3>
 
-<%= link_to 'Edit', edit_product_company_price_path(@product_company_price) %> |
-<%= link_to 'Back', product_company_prices_path %>
+<table class="table odd_even_table">
+  <tbody>
+    <tr>
+      <td>Id:</td>
+      <td><%= @product_company_price.id %></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><%=t 'activerecord.attributes.product_company_price.product' %>:</td>
+      <td><%= @product_company_price.product.full_name %></td>
+      <td><%=t 'activerecord.attributes.product_company_price.company' %>:</td>
+      <td class="highlighted bolded"><%= @product_company_price.company.name unless @product_company_price.company.blank? %></td>
+    </tr>
+    <tr>
+      <td><%=t 'activerecord.attributes.product_company_price.last_price' %>:</td>
+      <td><%= number_with_precision(@product_company_price.last_price, precision: 4, delimiter: I18n.locale == :es ? "." : ",") unless @product_company_price.last_price.blank? %></td>
+      <td><%=t 'activerecord.attributes.product_company_price.supplier' %>:</td>
+      <td><%= @product_company_price.supplier.full_name %></td>
+    </tr>
+    <tr>
+      <td><%=t 'activerecord.attributes.product_company_price.average_price' %>:</td>
+      <td class="highlighted bolded"><%= number_with_precision(@product_company_price.average_price, precision: 4, delimiter: I18n.locale == :es ? "." : ",") unless @product_company_price.average_price.blank? %></td>
+    </tr>
+    <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @product_company_price } %>
+    <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @product_company_price } %>
+  </tbody>
+</table>
+
+<%= render partial: '/layouts/crud/update_delete_new', locals:
+{ model: ProductCompanyPrice, update_path: edit_product_company_price_path(@product_company_price), update_txt: t('.btn_edit'),
+delete_path: @product_company_price, delete_txt: t('.btn_delete'), msg: t("activerecord.models.product_company_price.one"), txt: @product_company_price.product.product_code + "->" + @product_company_price.company.name,
+new_path: new_product_company_price_path, new_txt: t('ag2_products.product_company_prices.index.btn_new') } %>
+
+<% if @product %>
+<%= link_to t("ag2_products.product_company_prices.back_to_main_page"), product_company_prices_path(product: @product) %>
+<% elsif @company %>
+<%= link_to t("ag2_products.product_company_prices.back_to_main_page"), product_company_prices_path(company: @company) %>
+<% else %>
+<%= link_to t("ag2_products.product_company_prices.back_to_main_page"), product_company_prices_path %>
+<% end %>

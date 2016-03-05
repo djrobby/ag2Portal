@@ -40,7 +40,7 @@
 </table>
 
 <%= render partial: '/layouts/crud/update_delete_new', locals:
-{ model: ProductType, update_path: edit_purchase_price_path(@purchase_price), update_txt: t('.btn_edit'),
+{ model: PurchasePrice, update_path: edit_purchase_price_path(@purchase_price), update_txt: t('.btn_edit'),
 delete_path: @purchase_price, delete_txt: t('.btn_delete'), msg: t("activerecord.models.purchase_price.one"), txt: @purchase_price.product.product_code + "->" + @purchase_price.supplier.supplier_code,
 new_path: new_purchase_price_path, new_txt: t('ag2_products.purchase_prices.index.btn_new') } %>
 

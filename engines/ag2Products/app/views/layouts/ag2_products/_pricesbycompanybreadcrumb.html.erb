@@ -1,0 +1,59 @@
+<% content_for :title, "aGestiona2 | ag2Products | ag2Prices" %>
+<% content_for :icon, "/assets/icon/ag2Products.png" %>
+<% content_for :alt, "ag2PricesByCompany" %>
+
+<!-- Breadcrumb -->
+<ul class="breadcrumb">
+  <li>
+    <a href="<%= main_app.root_path %>"><i class="icon-home"></i></a><span class="divider">></span>
+  </li>
+  <% if !session[:return_to_prod].nil? && !@product.nil? %>
+  <li>
+    <a href="<%= ag2_products.root_path %>">ag2Logistics</a><span class="divider">></span>
+  </li>
+  <li>
+    <a href="<%= ag2_products.products_path %>"><%=t "ag2_products.breadcrumb.products.items" %></a><span class="divider">></span>
+  </li>
+  <li>
+    <a href="<%= session[:return_to_prod_url] %>"><%= @product.full_code %></a><span class="divider">></span>
+  </li>
+  <% end %>
+  <% if !session[:return_to_prod].nil? && !@company.nil? %>
+  <li>
+    <a href="<%= ag2_purchase.root_path %>">ag2Admin</a><span class="divider">></span>
+  </li>
+  <li>
+    <a href="<%= ag2_purchase.companies_path %>"><%=t "ag2_admin.breadcrumb.companies.items" %></a><span class="divider">></span>
+  </li>
+  <li>
+    <a href="<%= session[:return_to_prod_url] %>"><%= @company.name %></a><span class="divider">></span>
+  </li>
+  <% end %>
+  
+  <% if @product_company_prices %>
+  <li>
+    <%=t "ag2_products.breadcrumb.product_company_prices.items" %>
+  </li>
+  <% end %>
+  <% if @product_company_price %>
+  <li>
+    <% if !@product.nil? %>
+    <a href="<%= product_company_prices_path(product: @product) %>"><%=t "ag2_products.breadcrumb.product_company_prices.items" %></a><span class="divider">></span>
+    <% elsif !@company.nil? %>
+    <a href="<%= product_company_prices_path(company: @company) %>"><%=t "ag2_products.breadcrumb.product_company_prices.items" %></a><span class="divider">></span>
+    <% else %>
+    <a href="<%= product_company_prices_path %>"><%=t "ag2_products.breadcrumb.product_company_prices.items" %></a><span class="divider">></span>
+    <% end %>
+  </li>
+  <% if @breadcrumb == 'read' || @breadcrumb == 'update' %>
+  <%=t "ag2_products.breadcrumb.product_company_prices.item" %>
+  <% end %>
+  <% if @breadcrumb == 'create' %>
+  <li>
+    <%= t :"breadcrumb.new" %>
+  </li>
+  <% end %>
+  <% end %>
+  <!-- Close -->
+  <a class="close" href="<%= ag2_products.root_path %>">&#215;</a>
+</ul>

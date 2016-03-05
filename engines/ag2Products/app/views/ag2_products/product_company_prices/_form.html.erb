@@ -1,17 +1,71 @@
-<%= form_for(@product_company_price) do |f| %>
-  <% if @product_company_price.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@product_company_price.errors.count, "error") %> prohibited this product_company_price from being saved:</h2>
+<script>
+  var _thisForm = '';
+  $(document).ready(function() {
+    $('.sel2').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; }
+    });
 
-      <ul>
-      <% @product_company_price.errors.full_messages.each do |msg| %>
-        <li><%= msg %></li>
-      <% end %>
-      </ul>
-    </div>
-  <% end %>
+    // Initialized form variable
+    _thisForm = $("#product_company_price_last_price").closest('form')[0];
+  });
 
-  <div class="actions">
-    <%= f.submit %>
-  </div>
+  jQuery(function($) {
+    // when the #product_company_price_last_price field changes
+    $("#product_company_price_last_price").change(function() {
+      var num = $('#product_company_price_last_price').val();
+      if (num == "")
+        num = "0";
+      // Right formatted for passing as REST parameter
+      num = parseInt(right_number(num, 4) * 10000);
+      jQuery.getJSON('pp_format_numbers/' + num, function(data) {
+        $('#product_company_price_last_price').val(data.num);
+      });
+      return false;
+    });
+
+    // when the #product_company_price_average_price field changes
+    $("#product_company_price_average_price").change(function() {
+      var num = $('#product_company_price_average_price').val();
+      if (num == "")
+        num = "0";
+      // Right formatted for passing as REST parameter
+      num = parseInt(right_number(num, 4) * 10000);
+      jQuery.getJSON('pp_format_numbers/' + num, function(data) {
+        $('#product_company_price_average_price').val(data.num);
+      });
+      return false;
+    });
+
+    // when submit    
+    $(_thisForm).on('submit', function() {
+      // Must change decimal separator, if comma, in numeric fields
+      var p = $('#product_company_price_last_price').val().replace(",", ".");
+      var f = $('#product_company_price_average_price').val().replace(",", ".");
+      $('#product_company_price_last_price').val(p);
+      $('#product_company_price_average_price').val(f);
+    });
+  });  
+</script>
+
+<%= simple_form_for @product_company_price, :html => {:class => 'form-vertical well' } do |f| %>
+<%= f.error_notification %>
+<%= display_base_errors resource %>
+<% if @product %>
+<%= f.association :product, autofocus: true, collection: Product.where("id = ?", "#{@product.id}").all, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' }, include_blank: false %>
+<% else %>
+<%= f.association :product, autofocus: true, collection: Product.all(order: 'main_description'), input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %>
+<% end %>
+<% if @company %>
+<%= f.association :company, collection: Company.where("id = ?", "#{@company.id}").all, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' }, include_blank: false %>
+<% else %>
+<%= f.association :company, collection: Company.all(order: 'name'), input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %>
+<% end %>
+<div>
+  <label class="multi-field-label-two"> <%= f.input :last_price, as: :string, input_html: { value: (number_with_precision(f.object.last_price, precision: 4) if f.object.last_price), class: 'large-text-field number-text-field' }, label_html: { class: 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.association :supplier, collection: @suppliers, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %> </label>
+</div>
+<div>
+  <label class="multi-field-label-two"> <%= f.input :average_price, as: :string, input_html: { value: (number_with_precision(f.object.average_price, precision: 4) if f.object.average_price), class: 'large-text-field number-text-field' }, label_html: { class: 'form-label' } %> </label>
+</div>
+<%= f.button :submit, :class => 'btn-primary' %>
 <% end %>

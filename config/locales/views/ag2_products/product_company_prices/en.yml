@@ -1,0 +1,21 @@
+en:
+  ag2_products:
+    product_company_prices:
+      index:
+        title: "Purchase prices by company"
+        btn_new: "New Purchase price"
+        back_to_root: "Back to ag2Logistics"
+        back_to_main_app: "Back to Product"
+        label_product: "Product"
+        label_company: "Company"
+        btn_apply: "Apply Filter"
+      show:
+        title: "Purchase price by company"
+        btn_edit: "Edit Purchase price"
+        btn_delete: "Delete Purchase price"
+      edit:
+        title: "Edit Purchase price by company"
+        btn_show: "Show Purchase price"
+      new:
+        title: "New Purchase price by company"
+      back_to_main_page: "Back to Purchase prices by company"

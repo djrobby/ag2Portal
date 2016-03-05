@@ -1,5 +1,13 @@
-<h1>New product_company_price</h1>
+<%= render '/layouts/ag2_products/pricesbycompanybreadcrumb' %>
+
+<h3><%=t '.title' %></h3>
 
 <%= render 'form' %>
 
-<%= link_to 'Back', product_company_prices_path %>
+<% if @product %>
+<%= link_to t("ag2_products.product_company_prices.back_to_main_page"), product_company_prices_path(product: @product) %>
+<% elsif @company %>
+<%= link_to t("ag2_products.product_company_prices.back_to_main_page"), product_company_prices_path(company: @company) %>
+<% else %>
+<%= link_to t("ag2_products.product_company_prices.back_to_main_page"), product_company_prices_path %>
+<% end %>

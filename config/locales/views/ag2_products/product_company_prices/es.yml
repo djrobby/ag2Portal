@@ -1,0 +1,21 @@
+es:
+  ag2_products:
+    product_company_prices:
+      index:
+        title: "Precios de compra por empresa"
+        btn_new: "Nuevo Precio de compra"
+        back_to_root: "Volver a ag2Logistics"
+        back_to_main_app: "Volver a Producto"
+        label_product: "Producto"
+        label_company: "Empresa"
+        btn_apply: "Aplicar Filtro"
+      show:
+        title: "Precio de compra por empresa"
+        btn_edit: "Editar Precio de compra"
+        btn_delete: "Borrar Precio de compra"
+      edit:
+        title: "Editar Precio de compra por empresa"
+        btn_show: "Ver Precio de compra"
+      new:
+        title: "Nuevo Precio de compra por empresa"
+      back_to_main_page: "Volver a Precios de compra por empresa"

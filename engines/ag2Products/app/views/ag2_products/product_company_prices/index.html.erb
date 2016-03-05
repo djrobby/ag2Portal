@@ -1,21 +1,79 @@
-<h1>Listing product_company_prices</h1>
+<script>
+  var _thisForm = '';
 
-<table>
-  <tr>
-    <th></th>
-    <th></th>
-    <th></th>
-  </tr>
+  $(document).ready(function() {
+    $('.sel2').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      dropdownCssClass: 'shrinked',
+      dropdownAutoWidth: true
+    });
+    // Initialized form variable
+    _thisForm = $("#removeFilter").closest('form')[0];
+  }); 
 
-<% @product_company_prices.each do |product_company_price| %>
-  <tr>
-    <td><%= link_to 'Show', product_company_price %></td>
-    <td><%= link_to 'Edit', edit_product_company_price_path(product_company_price) %></td>
-    <td><%= link_to 'Destroy', product_company_price, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-  </tr>
-<% end %>
-</table>
+  $(window).bind("load", function() {
+    $("#Products").select2("val", "<%= params[:Products] %>");
+    $("#Companies").select2("val", "<%= params[:Companies] %>");
+  });
 
-<br />
+  jQuery(function($) {
+    // when the #removeFilter button clicked
+    $("#removeFilter").click(function() {
+      $("#Products").select2("val", "");
+      $("#Companies").select2("val", "");
+      // no AJAX
+      //_thisForm.submit();
+      // AJAX
+      $("#submit_btn").trigger("click");
+    });
+  });
+</script>
 
-<%= link_to 'New Product company price', new_product_company_price_path %>
+<%= render '/layouts/ag2_products/pricesbycompanybreadcrumb' %>
+
+<h3><%=t '.title' %></h3>
+
+<div class="container-fluid">
+  <div class="row-fluid">
+
+    <div class="span3">
+      <div class="well sidebar-nav">
+        <%= form_tag "product_company_prices", :method => 'get', :remote => true do %>
+        <!-- Product -->
+        <%= label_tag I18n.t("ag2_products.product_company_prices.index.label_product"), nil, :class => 'form-label' %>
+        <% if @product.nil? %>
+        <%= select_tag "Products", options_from_collection_for_select(Product.order('main_description').all, "id", "full_name"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
+        <% else %>
+        <%= select_tag "product", options_from_collection_for_select(Product.where("id = ?", "#{@product.id}").all, "id", "full_name", @product.id), class: 'x-large-text-field shrinked' %>
+        <% end %>
+        <!-- Company -->
+        <% if @company.nil? %>
+        <%= label_tag I18n.t("ag2_products.product_company_prices.index.label_company"), nil, :class => 'form-label' %>
+        <%= select_tag "Companies", options_from_collection_for_select(Company.order('name').all, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
+        <% else %>
+        <%= label_tag I18n.t("ag2_products.product_company_prices.index.label_company"), nil, :class => 'form-label-under-sel2' %>
+        <%= select_tag "supplier", options_from_collection_for_select(Company.where("id = ?", "#{@company.id}").all, "id", "name", @company.id), class: 'x-large-text-field shrinked' %>
+        <% end %>
+        <!-- Submit -->
+        <%= submit_tag I18n.t(:apply_filter_button), :class => 'btn btn-primary form-button-under-sel2', :id => 'submit_btn' %>
+        <!-- Remove filter -->
+        <button id="removeFilter" type="button" class="btn btn-primary form-button-under-sel2" data-dismiss="modal" aria-hidden="true"><%= t :clear_filter_button %></button>
+        <% end %>
+        <!-- Buttons outside search form -->
+        <%= render :partial => '/layouts/crud/new', :locals => { :model => ProductCompanyPrice, :path => new_product_company_price_path, :txt => t(".btn_new") } %>
+        <% if !session[:return_to_prod].nil? && (!@product.nil? || !@company.nil?) %>
+        <%= link_to session[:return_to_prod], session[:return_to_prod_url] %><br />
+        <% end %>
+        <% if @company.nil? %>
+        <%= link_to t(".back_to_root"), ag2_products.root_path %>
+        <% else %>
+        <%= link_to t("ag2_admin.companies.index.back_to_root"), ag2_admin.root_path %>
+        <% end %>
+      </div><!-- /.sidebar-nav -->
+    </div><!-- /.span3 -->
+
+    <div class="span9" id="div_table">
+      <%= render 'product_company_prices' %>
+    </div><!-- /.span9 -->
+  </div><!-- /.row-fluid -->
+</div><!-- /.container-fluid -->

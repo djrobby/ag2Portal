@@ -84,6 +84,7 @@ module Ag2Products
       @product = $product
       @company = $company
       @product_company_price = ProductCompanyPrice.new
+      @suppliers = suppliers_dropdown
 
       respond_to do |format|
         format.html # new.html.erb
@@ -97,6 +98,7 @@ module Ag2Products
       @product = $product
       @company = $company
       @product_company_price = ProductCompanyPrice.find(params[:id])
+      @suppliers = suppliers_dropdown
     end
 
     # POST /product_company_prices
@@ -113,6 +115,7 @@ module Ag2Products
           format.html { redirect_to @product_company_price, notice: crud_notice('created', @product_company_price) }
           format.json { render json: @product_company_price, status: :created, location: @product_company_price }
         else
+          @suppliers = suppliers_dropdown
           format.html { render action: "new" }
           format.json { render json: @product_company_price.errors, status: :unprocessable_entity }
         end
@@ -133,6 +136,7 @@ module Ag2Products
                         notice: (crud_notice('updated', @product_company_price) + "#{undo_link(@product_company_price)}").html_safe }
           format.json { head :no_content }
         else
+          @suppliers = suppliers_dropdown
           format.html { render action: "edit" }
           format.json { render json: @product_company_price.errors, status: :unprocessable_entity }
         end
@@ -159,6 +163,10 @@ module Ag2Products
     end
 
     private
+
+    def suppliers_dropdown
+      session[:organization] != '0' ? Supplier.where(organization_id: session[:organization].to_i).order(:supplier_code) : Supplier.order(:supplier_code)
+    end
 
     def current_product_company
       if !params[:product].blank?
