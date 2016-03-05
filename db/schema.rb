@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20160302095334) do
+ActiveRecord::Schema.define(:version => 20160305063459) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -1025,18 +1025,21 @@ ActiveRecord::Schema.define(:version => 20160302095334) do
   create_table "product_company_prices", :force => true do |t|
     t.integer  "product_id"
     t.integer  "company_id"
-    t.decimal  "last_price",      :precision => 12, :scale => 4, :default => 0.0, :null => false
-    t.decimal  "average_price",   :precision => 12, :scale => 4, :default => 0.0, :null => false
-    t.datetime "created_at",                                                      :null => false
-    t.datetime "updated_at",                                                      :null => false
+    t.decimal  "last_price",       :precision => 12, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "average_price",    :precision => 12, :scale => 4, :default => 0.0, :null => false
+    t.datetime "created_at",                                                       :null => false
+    t.datetime "updated_at",                                                       :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
-    t.decimal  "prev_last_price", :precision => 12, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "prev_last_price",  :precision => 12, :scale => 4, :default => 0.0, :null => false
+    t.integer  "supplier_id"
+    t.integer  "prev_supplier_id"
   end
 
   add_index "product_company_prices", ["company_id"], :name => "index_product_company_prices_on_company_id"
   add_index "product_company_prices", ["product_id", "company_id"], :name => "index_product_company_prices_on_product_and_company", :unique => true
   add_index "product_company_prices", ["product_id"], :name => "index_product_company_prices_on_product_id"
+  add_index "product_company_prices", ["supplier_id"], :name => "index_product_company_prices_on_supplier_id"
 
   create_table "product_families", :force => true do |t|
     t.string   "name"

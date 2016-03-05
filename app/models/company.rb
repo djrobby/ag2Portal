@@ -21,6 +21,7 @@ class Company < ActiveRecord::Base
   has_many :projects
   has_many :company_notifications, dependent: :destroy
   has_many :stores
+  has_many :product_company_prices
 
   # Nested attributes
   accepts_nested_attributes_for :company_notifications,

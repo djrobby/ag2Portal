@@ -9,7 +9,8 @@ class Product < ActiveRecord::Base
                   :main_description, :manufacturer_p_code, :markup, :product_code, :reference_price,
                   :remarks, :sell_price, :warranty_time, :prev_last_price, :image,
                   :product_type_id, :product_family_id, :measure_id, :tax_type_id,
-                  :manufacturer_id, :organization_id
+                  :manufacturer_id, :organization_id, :created_by, :updated_by
+
   has_attached_file :image, :styles => { :original => "160x160>", :medium => "120x120>", :small => "80x80>" }, :default_url => "/images/missing/:style/product.png"
 
   has_many :purchase_prices, dependent: :destroy

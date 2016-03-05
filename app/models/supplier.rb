@@ -32,12 +32,13 @@ class Supplier < ActiveRecord::Base
   has_many :supplier_invoices
   has_many :supplier_payments
   has_many :supplier_invoice_debts
+  has_many :product_company_prices
 
   # Nested attributes
-  accepts_nested_attributes_for :supplier_bank_accounts,                                 
+  accepts_nested_attributes_for :supplier_bank_accounts,
                                 :reject_if => :all_blank,
                                 :allow_destroy => true
-  
+
   has_paper_trail
 
   validates_associated :supplier_bank_accounts
@@ -289,6 +290,6 @@ class Supplier < ActiveRecord::Base
                             email: email, shared_contact_type_id: 2, region_id: region_id,
                             organization_id: organization_id, updated_by: updated_by }
     _contact.save
-    return _contact 
+    return _contact
   end
 end

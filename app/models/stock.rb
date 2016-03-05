@@ -1,7 +1,8 @@
 class Stock < ActiveRecord::Base
   belongs_to :product
   belongs_to :store
-  attr_accessible :current, :initial, :location, :minimum, :maximum, :product_id, :store_id
+  attr_accessible :current, :initial, :location, :minimum, :maximum, :product_id, :store_id,
+                  :created_by, :updated_by
 
   has_paper_trail
 
@@ -60,21 +61,21 @@ class Stock < ActiveRecord::Base
   # Class (self) user defined methods
   #
   def self.find_by_product_and_store(_product, _store)
-    Stock.where("product_id = ? AND store_id = ?", _product, _store).first 
+    Stock.where("product_id = ? AND store_id = ?", _product, _store).first
   end
 
   def self.find_by_product_and_not_store_and_positive(_product, _store)
-    Stock.includes(:store).where("product_id = ? AND store_id != ? AND current > 0 AND stores.supplier_id IS NULL", _product, _store) 
+    Stock.includes(:store).where("product_id = ? AND store_id != ? AND current > 0 AND stores.supplier_id IS NULL", _product, _store)
   end
 
   def self.find_by_product_all_stocks(_product)
-    Stock.includes(:store).where("product_id = ?", _product) 
+    Stock.includes(:store).where("product_id = ?", _product)
   end
 
   def self.find_by_store_and_family(_store, _family)
-    joins(:product).where("store_id = ? AND products.product_family_id = ?", _store, _family) 
+    joins(:product).where("store_id = ? AND products.product_family_id = ?", _store, _family)
   end
-  
+
   searchable do
     integer :product_id
     integer :store_id

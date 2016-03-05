@@ -1,8 +1,9 @@
 class ProductCompanyPrice < ActiveRecord::Base
   belongs_to :product
   belongs_to :company
+  belongs_to :supplier
   attr_accessible :average_price, :last_price, :product_id, :company_id, :prev_last_price,
-                  :created_by, :updated_by
+                  :created_by, :updated_by, :supplier_id, :prev_supplier_id
 
   has_paper_trail
 
