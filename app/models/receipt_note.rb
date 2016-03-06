@@ -1,6 +1,6 @@
 class ReceiptNote < ActiveRecord::Base
   include ModelsModule
-  
+
   belongs_to :supplier
   belongs_to :payment_method
   belongs_to :project
@@ -21,7 +21,7 @@ class ReceiptNote < ActiveRecord::Base
   has_many :supplier_invoice_items
 
   # Nested attributes
-  accepts_nested_attributes_for :receipt_note_items,                                 
+  accepts_nested_attributes_for :receipt_note_items,
                                 :reject_if => :all_blank,
                                 :allow_destroy => true
 
@@ -38,6 +38,7 @@ class ReceiptNote < ActiveRecord::Base
   validates :organization,    :presence => true
 
   before_destroy :check_for_dependent_records
+  after_validation :update_user_in_items
 
   def to_label
     "#{full_name}"
@@ -84,7 +85,7 @@ class ReceiptNote < ActiveRecord::Base
   def bonus
     (discount_pct / 100) * subtotal if !discount_pct.blank?
   end
-  
+
   def taxable
     subtotal - bonus - discount
   end
@@ -100,13 +101,13 @@ class ReceiptNote < ActiveRecord::Base
   end
 
   def total
-    taxable + taxes  
+    taxable + taxes
   end
 
   def quantity
     receipt_note_items.sum("quantity")
   end
-  
+
   def balance
     receipt_note_item_balances.sum("balance")
   end
@@ -172,5 +173,9 @@ class ReceiptNote < ActiveRecord::Base
       errors.add(:base, I18n.t('activerecord.models.receipt_note.check_for_supplier_invoices'))
       return false
     end
+  end
+
+  def update_user_in_items
+    true
   end
 end

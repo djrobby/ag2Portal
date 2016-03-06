@@ -264,9 +264,9 @@ module Ag2Products
       init_oco if !session[:organization]
       # Receipts & Deliveries
       #@receipts = product.receipt_note_items.includes(:receipt_note).order(:receipt_date)
-      @receipts = @product.receipt_note_items.joins(:receipt_note).order('receipt_date desc').paginate(:page => params[:page], :per_page => per_page)
-      @deliveries = @product.delivery_note_items.joins(:delivery_note).order('delivery_date desc').paginate(:page => params[:page], :per_page => per_page)
-      @counts = @product.inventory_count_items.joins(:inventory_count).order('count_date desc').paginate(:page => params[:page], :per_page => per_page)
+      @receipts = @product.receipt_note_items.joins(:receipt_note).order('receipt_date desc, id desc').paginate(:page => params[:page], :per_page => per_page)
+      @deliveries = @product.delivery_note_items.joins(:delivery_note).order('delivery_date desc, id desc').paginate(:page => params[:page], :per_page => per_page)
+      @counts = @product.inventory_count_items.joins(:inventory_count).order('count_date desc, id desc').paginate(:page => params[:page], :per_page => per_page)
 
       respond_to do |format|
         format.html # receipts_deliveries.html.erb

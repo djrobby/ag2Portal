@@ -25,6 +25,8 @@
     <tr>
       <td><%=t 'activerecord.attributes.product_company_price.average_price' %>:</td>
       <td class="highlighted bolded"><%= number_with_precision(@product_company_price.average_price, precision: 4, delimiter: I18n.locale == :es ? "." : ",") unless @product_company_price.average_price.blank? %></td>
+      <td></td>
+      <td></td>
     </tr>
     <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @product_company_price } %>
     <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @product_company_price } %>
