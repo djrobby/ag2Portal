@@ -1,5 +1,6 @@
 <script>
   $(document).ready(function() {
+    $("#proc_mesage").hide();
     // Show generate_order_btn based on approval
     approver = $('#approver').html();
     if (approver == "") {
@@ -12,11 +13,16 @@
   jQuery(function($) {
     // when #generate_order_btn is clicked
     $("#generate_order_btn").click(function() {
+      // Show message
+      $("#proc_mesage").show();
       // make a POST call and replace the content
       var offer = $('#id').html();
       if (offer == "")
         offer = "0";
       jQuery.getJSON('of_generate_order/' + offer, function(data) {
+        // Hide message
+        $("#proc_mesage").hide();
+        // Go on based on result
         if (data.code == "$err") {
           alert('<%= I18n.t("ag2_purchase.offers.generate_order_error") %>');
         } else if (data.code == "$write") {
@@ -41,6 +47,10 @@
     });
   });  
 </script>
+
+<div id="proc_mesage" class="alert alert-info">
+  <%= t(:processing) %>
+</div>
 
 <%= render '/layouts/ag2_purchase/offersbreadcrumb' %>
 

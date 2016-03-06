@@ -1,6 +1,7 @@
 <!-- Modal -->
 <script>
   $(document).ready(function() {
+    $("#proc_mesage").hide();
     if ($('#Date_').val() == "") {
       $('#Date_').datepicker('setValue', es_date(new Date()));
     }
@@ -19,8 +20,12 @@
       }
       // Right formatted date
       offer_date = right_date(offer_date, "<%= I18n.locale %>");
+      // Show message
+      $("#proc_mesage").show();
       // make the POST call
       jQuery.getJSON('si_generate_invoice/' + supplier + '/' + request + '/' + offer_no + '/' + offer_date, function(data) {
+        // Hide message
+        $("#proc_mesage").hide();
         // AJAX refresh index table is necessary
         $(".icon-refresh-link").click();
         // Go on based on result
@@ -31,7 +36,7 @@
         } else {
           // Hide the modal and exit
           alert(data.code);
-          $("#new-receipt-from-order").modal('hide');
+          $("#new-invoice-from-receipt").modal('hide');
           //window.location = "<%= ag2_purchase.supplier_invoices_path %>";
         }
       });
@@ -81,6 +86,9 @@
 </script>
 
 <div id="new-invoice-from-receipt" class="modal hide fade" data-backdrop="static" style="display: none;">
+  <div id="proc_mesage" class="alert alert-info">
+    <%= t(:generating) %>
+  </div>
   <div class="modal-header">
     <a class="close" data-dismiss="modal">&#215;</a>
     <h3><%= t('ag2_purchase.supplier_invoices.index.btn_new_from_receipt_note') %></h3>
