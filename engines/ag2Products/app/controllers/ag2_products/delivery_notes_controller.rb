@@ -17,6 +17,8 @@ module Ag2Products
                                                :dn_update_project_textfields_from_organization,
                                                :dn_item_stock_check,
                                                :delivery_note_form,
+                                               :delivery_note_form_client,
+                                               :delivery_notes_report,
                                                :dn_generate_no]
     # Update sale offer select at view from client select
     def dn_update_offer_select_from_client
@@ -564,6 +566,62 @@ module Ag2Products
         # Render PDF
         format.pdf { send_data render_to_string,
                      filename: "#{title}_#{@delivery_note.full_no}_#{tail}.pdf",
+                     type: 'application/pdf',
+                     disposition: 'inline' }
+      end
+    end
+
+    # Delivery notes report
+    def delivery_notes_report
+      manage_filter_state
+      no = params[:No]
+      client = params[:Client]
+      project = params[:Project]
+      order = params[:Order]
+      # OCO
+      init_oco if !session[:organization]
+      # Initialize projects for array search
+      projects = projects_dropdown
+
+      # Arrays for search
+      current_projects = projects.blank? ? [0] : current_projects_for_index(projects)
+      # If inverse no search is required
+      no = !no.blank? && no[0] == '%' ? inverse_no_search(no) : no
+
+      @search = DeliveryNote.search do
+        with :project_id, current_projects
+        fulltext params[:search]
+        if session[:organization] != '0'
+          with :organization_id, session[:organization]
+        end
+        if !no.blank?
+          if no.class == Array
+            with :delivery_no, no
+          else
+            with(:delivery_no).starting_with(no)
+          end
+        end
+        if !client.blank?
+          with :client_id, client
+        end
+        if !project.blank?
+          with :project_id, project
+        end
+        if !order.blank?
+          with :work_order_id, order
+        end
+        order_by :sort_no, :asc
+      end
+
+      @delivery_notes_report = @search.results
+      title = t("activerecord.models.delivery_note.few")
+      @to = formatted_date(@delivery_notes_report.first.created_at)
+      @from = formatted_date(@delivery_notes_report.last.created_at)
+
+      respond_to do |format|
+        # Render PDF
+        format.pdf { send_data render_to_string,
+                     filename: "#{title}_#{@from}-#{@to}.pdf",
                      type: 'application/pdf',
                      disposition: 'inline' }
       end

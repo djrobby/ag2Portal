@@ -43,6 +43,13 @@
       // AJAX
       $("#submit_btn").trigger("click");
     });
+
+    // when #print_report_btn is clicked
+    $("#print_report_btn").click(function() {
+      // make a POST call and get report
+      window.open("delivery_notes_report.pdf", "_blank");
+      return false;
+    });
   });
 </script>
 
@@ -82,6 +89,10 @@
         <% end %>
         <!-- Buttons -->
         <%= render :partial => '/layouts/crud/new', :locals => { :model => ReceiptNote, :path => new_delivery_note_path, :txt => t(".btn_new") } %>
+        <!-- Control&Tracking -->
+        <a href="#" id="print_report_btn" class="btn btn-warning"><i class="icon-print icon-white"></i> <%= t 'ag2_products.home.index.control' %></a>
+        <br /><br />
+        <!-- Back -->
         <%= link_to t(".back_to_root"), ag2_products.root_path %>
       </div><!-- /.sidebar-nav -->
     </div><!-- /.span3 -->

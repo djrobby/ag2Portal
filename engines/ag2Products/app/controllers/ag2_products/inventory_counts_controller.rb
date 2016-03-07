@@ -13,6 +13,7 @@ module Ag2Products
                                                :ic_update_from_product_store,
                                                :ic_update_from_organization,
                                                :inventory_count_form,
+                                               :inventory_counts_report,
                                                :ic_products_from_organization]
     # Helper methods for
     # => allow edit (hide buttons)
@@ -477,6 +478,57 @@ module Ag2Products
         # Render PDF
         format.pdf { send_data render_to_string,
                      filename: "#{title}_#{@inventory_count.full_no}.pdf",
+                     type: 'application/pdf',
+                     disposition: 'inline' }
+      end
+    end
+
+    # Inventory counts report
+    def inventory_counts_report
+      manage_filter_state
+      no = params[:No]
+      type = params[:Type]
+      store = params[:Store]
+      family = params[:Family]
+      # OCO
+      init_oco if !session[:organization]
+
+      # If inverse no search is required
+      no = !no.blank? && no[0] == '%' ? inverse_no_search(no) : no
+
+      @search = InventoryCount.search do
+        fulltext params[:search]
+        if session[:organization] != '0'
+          with :organization_id, session[:organization]
+        end
+        if !no.blank?
+          if no.class == Array
+            with :count_no, no
+          else
+            with(:count_no).starting_with(no)
+          end
+        end
+        if !store.blank?
+          with :store_id, store
+        end
+        if !family.blank?
+          with :product_family_id, family
+        end
+        if !type.blank?
+          with :inventory_count_type_id, type
+        end
+        order_by :sort_no, :asc
+      end
+
+      @inventory_counts_report = @search.results
+      title = t("activerecord.models.inventory_count.few")
+      @to = formatted_date(@inventory_counts_report.first.created_at)
+      @from = formatted_date(@inventory_counts_report.last.created_at)
+
+      respond_to do |format|
+        # Render PDF
+        format.pdf { send_data render_to_string,
+                     filename: "#{title}_#{@from}-#{@to}.pdf",
                      type: 'application/pdf',
                      disposition: 'inline' }
       end

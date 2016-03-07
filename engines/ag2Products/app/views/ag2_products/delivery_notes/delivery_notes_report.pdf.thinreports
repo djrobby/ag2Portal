@@ -1,0 +1,82 @@
+if @delivery_notes_report.nil?
+	return
+end
+
+# Localization for numbers
+delimiter = I18n.locale == :es ? "." : ","
+
+report.set_layout tlf: 'reports/delivery_notes_report', layout_options: { default: true }
+
+#
+# Report events
+#
+# On page create
+report.events.on :page_create do |e|
+	# Set page-number
+	e.page.item(:page_no).value(e.page.no)
+end
+# On report generate
+report.events.on :generate do |e|
+	e.pages.each do |page|
+		# Set total-page-number
+		page.item(:page_count).value(e.report.page_count)
+	end
+end
+
+#
+# List configuration (stores & events)
+#
+report.layout.config.list(:default) do |c|
+	# Define the variables used in list
+	c.use_stores page_rows: 0
+
+	# On list page footer insertion
+	c.events.on :page_footer_insert do |e|
+		# Display page sutotals
+		e.section.item(:sum_rows_title).value(I18n.t("ag2_products.delivery_notes.every_report.sum_rows_title"))
+		e.section.item(:sum_rows).value(e.store.page_rows)
+		# Initialize subtotals to 0
+		#e.store.page_rows = 0
+	end
+end
+
+# New page & start
+report.start_new_page
+
+# Page header
+report.page.values report_title: I18n.t("ag2_products.delivery_notes.delivery_note.report_title")
+report.page.values from_title: I18n.t("every_report.from_title")
+report.page.values to_title: I18n.t("every_report.to_title")
+report.page.values from: @from
+report.page.values to: @to
+# Page footer
+report.page.values(printed_at: formatted_timestamp(Time.now),
+				   pt: I18n.t("every_report.pt"),
+				   pd: I18n.t("every_report.pd"))
+
+
+# List header
+report.page.list(:default).header do |header|
+	header.item(:delivery_no_c).value I18n.t("activerecord.attributes.delivery_note.delivery_no")
+	header.item(:delivery_date_c).value I18n.t("activerecord.attributes.delivery_note.delivery_date")
+	header.item(:project_c).value I18n.t("activerecord.attributes.delivery_note.project")
+	header.item(:store_c).value I18n.t("activerecord.attributes.delivery_note.store")
+	header.item(:quantity_c).value I18n.t("activerecord.attributes.delivery_note.quantity")
+	header.item(:total_c).value I18n.t("activerecord.attributes.delivery_note.total")
+end
+
+# List detail
+@delivery_notes_report.each do |i|
+	report.page.list(:default).add_row do |row|
+		row.item(:delivery_no).value i.delivery_no
+		row.item(:delivery_date).value formatted_date(i.delivery_date) unless i.delivery_date.blank?
+		row.item(:project).value i.project.full_name unless i.project.blank?
+		row.item(:store).value i.store.name unless i.store.blank?
+		row.item(:quantity).value number_with_precision(i.quantity, precision: 2) unless i.quantity.blank?
+		row.item(:total).value number_with_precision(i.total, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless i.total.blank?
+	end
+	# Store page subtotals
+  report.page.list(:default) do |list|
+		list.store.page_rows += 1
+	end
+end

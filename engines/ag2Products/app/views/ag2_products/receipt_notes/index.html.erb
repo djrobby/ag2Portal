@@ -58,6 +58,13 @@
     $("#new_from_purchase_order").click(function() {
       $("#new-receipt-from-order").modal('show');
     });
+
+    // when #print_report_btn is clicked
+    $("#print_report_btn").click(function() {
+      // make a POST call and get report
+      window.open("receipt_notes_report.pdf", "_blank");
+      return false;
+    });
   });
 </script>
 
@@ -101,6 +108,10 @@
         <button id="new_from_purchase_order" type="button" class="btn btn-warning" data-dismiss="modal" aria-hidden="true"><%= t(".btn_new_from_purchase_order") %></button>
         <br /><br />
         <% end %>
+        <!-- Control&Tracking -->
+        <a href="#" id="print_report_btn" class="btn btn-warning"><i class="icon-print icon-white"></i> <%= t 'ag2_products.home.index.control' %></a>
+        <br /><br />
+        <!-- Back -->
         <%= link_to t(".back_to_root"), ag2_products.root_path %>
       </div><!-- /.sidebar-nav -->
     </div><!-- /.span3 -->

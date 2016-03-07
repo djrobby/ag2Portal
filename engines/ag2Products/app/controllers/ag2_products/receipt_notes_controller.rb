@@ -18,6 +18,7 @@ module Ag2Products
                                                :rn_format_number,
                                                :rn_current_stock,
                                                :rn_update_project_textfields_from_organization,
+                                               :receipt_notes_report,
                                                :rn_generate_note,
                                                :rn_attachment_changed,
                                                :rn_update_attachment]
@@ -28,8 +29,8 @@ module Ag2Products
     # Attachment has changed
     def rn_attachment_changed
       $attachment_changed = true
-    end  
-  
+    end
+
     # Update attached file from drag&drop
     def rn_update_attachment
       if !$attachment.nil?
@@ -158,7 +159,7 @@ module Ag2Products
       # Taxes
       tax = tax - (tax * (discount_p / 100)) if discount_p != 0
       # Total
-      total = taxable + tax      
+      total = taxable + tax
       # Format output values
       qty = number_with_precision(qty.round(4), precision: 4)
       amount = number_with_precision(amount.round(4), precision: 4)
@@ -539,27 +540,27 @@ module Ag2Products
         paginate :page => params[:page] || 1, :per_page => per_page
       end
       @receipt_notes = @search.results
-  
+
       respond_to do |format|
         format.html # index.html.erb
         format.json { render json: @receipt_notes }
         format.js
       end
     end
-  
+
     # GET /receipt_notes/1
     # GET /receipt_notes/1.json
     def show
       @breadcrumb = 'read'
       @receipt_note = ReceiptNote.find(params[:id])
       @items = @receipt_note.receipt_note_items.paginate(:page => params[:page], :per_page => per_page).order('id')
-  
+
       respond_to do |format|
         format.html # show.html.erb
         format.json { render json: @receipt_note }
       end
     end
-  
+
     # GET /receipt_notes/new
     # GET /receipt_notes/new.json
     def new
@@ -577,13 +578,13 @@ module Ag2Products
       @payment_methods = payment_methods_dropdown
       @products = products_dropdown
       @order_items = []
-  
+
       respond_to do |format|
         format.html # new.html.erb
         format.json { render json: @receipt_note }
       end
     end
-  
+
     # GET /receipt_notes/1/edit
     def edit
       @breadcrumb = 'update'
@@ -606,7 +607,7 @@ module Ag2Products
         @products = @order_items.first.purchase_order.products.group(:product_code)
       end
     end
-  
+
     # POST /receipt_notes
     # POST /receipt_notes.json
     def create
@@ -617,7 +618,7 @@ module Ag2Products
       if @receipt_note.attachment.blank? && !$attachment.avatar.blank?
         @receipt_note.attachment = $attachment.avatar
       end
-  
+
       respond_to do |format|
         $attachment_changed = false
         if @receipt_note.save
@@ -642,7 +643,7 @@ module Ag2Products
         end
       end
     end
-  
+
     # PUT /receipt_notes/1
     # PUT /receipt_notes/1.json
     def update
@@ -698,7 +699,7 @@ module Ag2Products
           (params[:receipt_note][:remarks].to_s != @receipt_note.remarks))
         master_changed = true
       end
-  
+
       respond_to do |format|
         if master_changed || items_changed
           @receipt_note.updated_by = current_user.id if !current_user.nil?
@@ -734,7 +735,7 @@ module Ag2Products
         end
       end
     end
-  
+
     # DELETE /receipt_notes/1
     # DELETE /receipt_notes/1.json
     def destroy
@@ -751,15 +752,73 @@ module Ag2Products
         end
       end
     end
-    
-    private
-    
-    def destroy_attachment
-      if $attachment != nil
-        $attachment.destroy        
+
+    # Receipt notes report
+    def receipt_notes_report
+      manage_filter_state
+      no = params[:No]
+      supplier = params[:Supplier]
+      project = params[:Project]
+      order = params[:Order]
+      # OCO
+      init_oco if !session[:organization]
+      # Initialize projects for array search
+      projects = projects_dropdown
+
+      # Arrays for search
+      current_projects = projects.blank? ? [0] : current_projects_for_index(projects)
+      # If inverse no search is required
+      no = !no.blank? && no[0] == '%' ? inverse_no_search(no) : no
+
+      @search = ReceiptNote.search do
+        with :project_id, current_projects
+        fulltext params[:search]
+        if session[:organization] != '0'
+          with :organization_id, session[:organization]
+        end
+        if !no.blank?
+          if no.class == Array
+            with :receipt_no, no
+          else
+            with(:receipt_no).starting_with(no)
+          end
+        end
+        if !supplier.blank?
+          with :supplier_id, supplier
+        end
+        if !project.blank?
+          with :project_id, project
+        end
+        if !order.blank?
+          with :work_order_id, order
+        end
+        order_by :id, :asc
+        #paginate :page => params[:page] || 1, :per_page => per_page
+      end
+
+      @receipt_notes_report = @search.results
+      title = t("activerecord.models.receipt_note.few")
+      @to = formatted_date(@receipt_notes_report.first.created_at)
+      @from = formatted_date(@receipt_notes_report.last.created_at)
+
+      respond_to do |format|
+        # Render PDF
+        format.pdf { send_data render_to_string,
+                     filename: "#{title}_#{@from}-#{@to}.pdf",
+                     type: 'application/pdf',
+                     disposition: 'inline' }
       end
     end
-    
+# MJ
+
+    private
+
+    def destroy_attachment
+      if $attachment != nil
+        $attachment.destroy
+      end
+    end
+
     def current_projects_for_index(_projects)
       _current_projects = []
       _projects.each do |i|
@@ -776,7 +835,7 @@ module Ag2Products
       end
       _numbers = _numbers.blank? ? no : _numbers
     end
-    
+
     # Stores belonging to selected project
     def project_stores(_project)
       _array = []
@@ -878,7 +937,7 @@ module Ag2Products
       session[:organization] != '0' ? PurchaseOrder.undelivered(session[:organization].to_i, true) : PurchaseOrder.undelivered(nil, true)
       #_orders = session[:organization] != '0' ? PurchaseOrder.where(organization_id: session[:organization].to_i).order(:supplier_id, :order_no, :id) : PurchaseOrder.order(:supplier_id, :order_no, :id)
     end
-    
+
     def order_items_dropdown(_order)
       _order.purchase_order_items.joins(:purchase_order_item_balance).where('purchase_order_item_balances.balance > ?', 0)
     end
@@ -903,7 +962,7 @@ module Ag2Products
     def payment_methods_dropdown
       _methods = session[:organization] != '0' ? payment_payment_methods(session[:organization].to_i) : payment_payment_methods(0)
     end
-    
+
     def payment_payment_methods(_organization)
       if _organization != 0
         _methods = PaymentMethod.where("(flow = 3 OR flow = 2) AND organization_id = ?", _organization).order(:description)
@@ -915,16 +974,16 @@ module Ag2Products
 
     def products_dropdown
       session[:organization] != '0' ? Product.where(organization_id: session[:organization].to_i).order(:product_code) : Product.order(:product_code)
-    end    
-    
+    end
+
     def orders_array(_orders)
       _array = []
       _orders.each do |i|
-        _array = _array << [i.id, i.full_no, formatted_date(i.order_date), i.supplier.full_name] 
+        _array = _array << [i.id, i.full_no, formatted_date(i.order_date), i.supplier.full_name]
       end
       _array
     end
-    
+
     def order_items_array(_order_items)
       _array = []
       _order_items.each do |i|
@@ -936,15 +995,15 @@ module Ag2Products
       end
       _array
     end
-    
+
     def products_array(_products)
       _array = []
       _products.each do |i|
-        _array = _array << [i.id, i.full_code, i.main_description[0,40]] 
+        _array = _array << [i.id, i.full_code, i.main_description[0,40]]
       end
       _array
     end
-    
+
     # Returns _array from _ret table/model filled with _id attribute
     def ret_array(_array, _ret, _id)
       if !_ret.nil?
@@ -968,11 +1027,11 @@ module Ag2Products
         _code = _purchase_price.code
       else
         _price = _product.reference_price
-        _discount_rate = Supplier.find(_supplier).discount_rate rescue 0      
+        _discount_rate = Supplier.find(_supplier).discount_rate rescue 0
       end
       return _price, _discount_rate, _code
-    end    
-    
+    end
+
     # Keeps filter state
     def manage_filter_state
       # search
