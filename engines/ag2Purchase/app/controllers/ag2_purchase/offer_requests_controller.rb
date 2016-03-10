@@ -21,6 +21,7 @@ module Ag2Purchase
                                                :or_approve_offer,
                                                :or_disapprove_offer,
                                                :offer_request_form,
+                                               :offer_request_form_no_prices,
                                                :send_offer_request_form]
     # Calculate and format totals properly
     def or_totals
