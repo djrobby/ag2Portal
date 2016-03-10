@@ -11,7 +11,7 @@ class OfferRequest < ActiveRecord::Base
   belongs_to :organization
   attr_accessible :approval_date, :deadline_date, :request_date, :request_no, :remarks,
                   :discount_pct, :discount, :payment_method_id, :project_id, :approved_offer_id,
-                  :approver_id, :store_id, :work_order_id, :charge_account_id, :organization_id 
+                  :approver_id, :store_id, :work_order_id, :charge_account_id, :organization_id
   attr_accessible :offer_request_items_attributes, :offer_request_suppliers_attributes
 
   has_many :offer_request_items, dependent: :destroy
@@ -20,10 +20,10 @@ class OfferRequest < ActiveRecord::Base
   has_many :offers
 
   # Nested attributes
-  accepts_nested_attributes_for :offer_request_items,                                 
+  accepts_nested_attributes_for :offer_request_items,
                                 :reject_if => :all_blank,
                                 :allow_destroy => true
-  accepts_nested_attributes_for :offer_request_suppliers,                                 
+  accepts_nested_attributes_for :offer_request_suppliers,
                                 :reject_if => :all_blank,
                                 :allow_destroy => true
 
@@ -75,7 +75,7 @@ class OfferRequest < ActiveRecord::Base
   def bonus
     (discount_pct / 100) * subtotal if !discount_pct.blank?
   end
-  
+
   def taxable
     subtotal - bonus - discount
   end
@@ -91,7 +91,7 @@ class OfferRequest < ActiveRecord::Base
   end
 
   def total
-    taxable + taxes  
+    taxable + taxes
   end
 
   def quantity
@@ -101,7 +101,7 @@ class OfferRequest < ActiveRecord::Base
   # Returns multidimensional array containing different tax type in each line
   # Each line contains 5 elements: Id, Description, Tax %, Net amount & Net tax
   def tax_breakdown
-    tt = global_tax_breakdown(offer_request_items, true)
+    global_tax_breakdown(offer_request_items, true)
   end
 
   #
@@ -112,6 +112,14 @@ class OfferRequest < ActiveRecord::Base
       where('NOT approved_offer_id IS NULL AND organization_id = ?', organization).order(:request_no)
     else
       where('NOT approved_offer_id IS NULL').order(:request_no)
+    end
+  end
+
+  def self.approved_and_this(organization, request_id)
+    if !organization.blank?
+      where('(NOT approved_offer_id IS NULL OR id = ?) AND organization_id = ?', request_id, organization).order(:request_no)
+    else
+      where('NOT approved_offer_id IS NULL OR id = ?', request_id).order(:request_no)
     end
   end
 

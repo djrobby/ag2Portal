@@ -635,7 +635,7 @@ module Ag2Purchase
       @charge_accounts = work_order_charge_account(@offer)
       @stores = work_order_store(@offer)
       @suppliers = @offer.organization.blank? ? suppliers_dropdown : @offer.organization.suppliers(:supplier_code)
-      @offer_requests = @offer.organization.blank? ? offer_requests_dropdown : @offer.organization.offer_requests.approved(@offer.organization_id)
+      @offer_requests = @offer.organization.blank? ? offer_requests_dropdown : OfferRequest.approved_and_this(@offer.organization_id, @offer.offer_request_id)
       @payment_methods = @offer.organization.blank? ? payment_methods_dropdown : payment_payment_methods(@offer.organization_id)
       @products = @offer.organization.blank? ? products_dropdown : @offer.organization.products(:product_code)
     end
