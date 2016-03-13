@@ -15,3 +15,4 @@ es:
         max_orders_sum: "Importe máx. por pedido €"
         organization: "Organización"
         organization_id: "Organización"
+        is_meter: "¿Familia de contadores?"

@@ -1,6 +1,7 @@
 class ProductFamily < ActiveRecord::Base
   belongs_to :organization
-  attr_accessible :family_code, :max_orders_count, :max_orders_sum, :name, :organization_id, :order_authorization
+  attr_accessible :family_code, :max_orders_count, :max_orders_sum, :name, :organization_id,
+                  :order_authorization, :is_meter
 
   has_paper_trail
 
@@ -39,7 +40,7 @@ class ProductFamily < ActiveRecord::Base
     end
     full_name
   end
-  
+
   #
   # Calculated fields
   #
@@ -63,15 +64,15 @@ class ProductFamily < ActiveRecord::Base
   # Class (self) user defined methods
   #
   def self.all_store
-    joins(:stocks).group("product_families.family_code") 
+    joins(:stocks).group("product_families.family_code")
   end
 
   def self.by_store(_store)
-    joins(:stocks).where("store_id = ?", _store).group("product_families.family_code") 
+    joins(:stocks).where("store_id = ?", _store).group("product_families.family_code")
   end
 
   def self.by_family(_family)
-    joins(:stocks).where("product_families.id = ?", _family).group("product_families.family_code") 
+    joins(:stocks).where("product_families.id = ?", _family).group("product_families.family_code")
   end
 
   private

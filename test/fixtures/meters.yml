@@ -1,0 +1,27 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  meter_code: MyString
+  meter_model: 
+  caliber: 
+  meter_owner: 
+  manufacturing_date: 2016-03-13
+  manufacturing_year: 1
+  expiry_date: 2016-03-13
+  purchase_date: 2016-03-13
+  first_installation_date: 2016-03-13
+  last_withdrawal_date: 2016-03-13
+  organization: 
+
+two:
+  meter_code: MyString
+  meter_model: 
+  caliber: 
+  meter_owner: 
+  manufacturing_date: 2016-03-13
+  manufacturing_year: 1
+  expiry_date: 2016-03-13
+  purchase_date: 2016-03-13
+  first_installation_date: 2016-03-13
+  last_withdrawal_date: 2016-03-13
+  organization: 

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20160305063459) do
+ActiveRecord::Schema.define(:version => 20160313102805) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -252,6 +252,16 @@ ActiveRecord::Schema.define(:version => 20160305063459) do
   add_index "budgets", ["organization_id", "budget_no"], :name => "index_budgets_on_organization_and_code", :unique => true
   add_index "budgets", ["organization_id"], :name => "index_budgets_on_organization_id"
   add_index "budgets", ["project_id"], :name => "index_budgets_on_project_id"
+
+  create_table "calibers", :force => true do |t|
+    t.integer  "caliber",    :limit => 2, :default => 0, :null => false
+    t.datetime "created_at",                             :null => false
+    t.datetime "updated_at",                             :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  add_index "calibers", ["caliber"], :name => "index_calibers_on_caliber"
 
   create_table "charge_accounts", :force => true do |t|
     t.string   "name"
@@ -779,6 +789,77 @@ ActiveRecord::Schema.define(:version => 20160305063459) do
 
   add_index "measures", ["description"], :name => "index_measures_on_description"
 
+  create_table "meter_locations", :force => true do |t|
+    t.string   "name"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  add_index "meter_locations", ["name"], :name => "index_meter_locations_on_name"
+
+  create_table "meter_models", :force => true do |t|
+    t.integer  "manufacturer_id"
+    t.string   "model"
+    t.string   "brand"
+    t.integer  "meter_type_id"
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  add_index "meter_models", ["brand"], :name => "index_meter_models_on_brand"
+  add_index "meter_models", ["manufacturer_id"], :name => "index_meter_models_on_manufacturer_id"
+  add_index "meter_models", ["meter_type_id"], :name => "index_meter_models_on_meter_type_id"
+  add_index "meter_models", ["model"], :name => "index_meter_models_on_model"
+
+  create_table "meter_owners", :force => true do |t|
+    t.string   "name"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  add_index "meter_owners", ["name"], :name => "index_meter_owners_on_name"
+
+  create_table "meter_types", :force => true do |t|
+    t.string   "name"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  add_index "meter_types", ["name"], :name => "index_meter_types_on_name"
+
+  create_table "meters", :force => true do |t|
+    t.string   "meter_code"
+    t.integer  "meter_model_id"
+    t.integer  "caliber_id"
+    t.integer  "meter_owner_id"
+    t.date     "manufacturing_date"
+    t.integer  "manufacturing_year",      :limit => 2, :default => 0, :null => false
+    t.date     "expiry_date"
+    t.date     "purchase_date"
+    t.date     "first_installation_date"
+    t.date     "last_withdrawal_date"
+    t.integer  "organization_id"
+    t.datetime "created_at",                                          :null => false
+    t.datetime "updated_at",                                          :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  add_index "meters", ["caliber_id"], :name => "index_meters_on_caliber_id"
+  add_index "meters", ["manufacturing_year"], :name => "index_meters_on_manufacturing_year"
+  add_index "meters", ["meter_code"], :name => "index_meters_on_meter_code"
+  add_index "meters", ["meter_model_id"], :name => "index_meters_on_meter_model_id"
+  add_index "meters", ["meter_owner_id"], :name => "index_meters_on_meter_owner_id"
+  add_index "meters", ["organization_id"], :name => "index_meters_on_organization_id"
+
   create_table "notifications", :force => true do |t|
     t.string   "name"
     t.string   "table"
@@ -1052,6 +1133,7 @@ ActiveRecord::Schema.define(:version => 20160305063459) do
     t.integer  "updated_by"
     t.integer  "organization_id"
     t.boolean  "order_authorization"
+    t.boolean  "is_meter"
   end
 
   add_index "product_families", ["family_code"], :name => "index_product_families_on_family_code"
@@ -1067,6 +1149,16 @@ ActiveRecord::Schema.define(:version => 20160305063459) do
     t.string  "store_name"
     t.decimal "initial",           :precision => 34, :scale => 4
     t.decimal "current",           :precision => 34, :scale => 4
+  end
+
+  create_table "product_family_stocks_manual", :id => false, :force => true do |t|
+    t.integer "family_id",                                  :default => 0, :null => false
+    t.string  "family_code"
+    t.string  "family_name"
+    t.integer "store_id"
+    t.string  "store_name"
+    t.decimal "initial",     :precision => 34, :scale => 4
+    t.decimal "current",     :precision => 34, :scale => 4
   end
 
   create_table "product_types", :force => true do |t|
@@ -1772,17 +1864,30 @@ ActiveRecord::Schema.define(:version => 20160305063459) do
   add_index "supplier_invoice_approvals", ["supplier_invoice_id"], :name => "index_supplier_invoice_approvals_on_supplier_invoice_id"
 
   create_table "supplier_invoice_debts", :id => false, :force => true do |t|
-    t.integer "supplier_invoice_id",                                 :default => 0, :null => false
+    t.integer "supplier_invoice_id", :limit => 8
     t.integer "organization_id"
     t.integer "supplier_id"
     t.string  "invoice_no"
-    t.decimal "subtotal",            :precision => 47, :scale => 8
-    t.decimal "taxes",               :precision => 65, :scale => 20
-    t.decimal "bonus",               :precision => 57, :scale => 14
-    t.decimal "taxable",             :precision => 58, :scale => 14
-    t.decimal "total",               :precision => 65, :scale => 20
-    t.decimal "paid",                :precision => 35, :scale => 4
-    t.decimal "debt",                :precision => 65, :scale => 20
+    t.decimal "subtotal",                         :precision => 47, :scale => 8
+    t.decimal "taxes",                            :precision => 65, :scale => 20
+    t.decimal "bonus",                            :precision => 57, :scale => 14
+    t.decimal "taxable",                          :precision => 58, :scale => 14
+    t.decimal "total",                            :precision => 65, :scale => 20
+    t.decimal "paid",                             :precision => 35, :scale => 4
+    t.decimal "debt",                             :precision => 65, :scale => 20
+  end
+
+  create_table "supplier_invoice_debts_manual", :id => false, :force => true do |t|
+    t.integer "id",              :limit => 8
+    t.integer "organization_id"
+    t.string  "invoice_no"
+    t.decimal "subtotal",                     :precision => 47, :scale => 8
+    t.decimal "taxes",                        :precision => 65, :scale => 20
+    t.decimal "bonus",                        :precision => 57, :scale => 14
+    t.decimal "taxable",                      :precision => 58, :scale => 14
+    t.decimal "total",                        :precision => 65, :scale => 20
+    t.decimal "paid",                         :precision => 35, :scale => 4
+    t.decimal "debt",                         :precision => 65, :scale => 20
   end
 
   create_table "supplier_invoice_items", :force => true do |t|

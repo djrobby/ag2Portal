@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  manufacturer: 
+  model: MyString
+  brand: MyString
+  meter_type: 
+
+two:
+  manufacturer: 
+  model: MyString
+  brand: MyString
+  meter_type: 
