@@ -136,7 +136,19 @@ class PurchaseOrder < ActiveRecord::Base
   # Returns multidimensional array containing different tax type in each line
   # Each line contains 5 elements: Id, Description, Tax %, Net amount & Net tax
   def tax_breakdown
-    tt = global_tax_breakdown(purchase_order_items, true)
+    global_tax_breakdown(purchase_order_items, true)
+  end
+
+  # Reception status based on current balance
+  def reception_status
+    if balance <= 0
+      _status = I18n.t("activerecord.attributes.purchase_order.reception_status_total")
+    elsif balance == quantity
+      _status = ""
+    else
+      _status = I18n.t("activerecord.attributes.purchase_order.reception_status_partial")
+    end
+    _status
   end
 
   #

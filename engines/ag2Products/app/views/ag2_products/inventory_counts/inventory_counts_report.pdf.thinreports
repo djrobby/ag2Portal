@@ -33,7 +33,7 @@ report.layout.config.list(:default) do |c|
 	# On list page footer insertion
 	c.events.on :page_footer_insert do |e|
 		# Display page sutotals
-		e.section.item(:sum_rows_title).value(I18n.t("ag2_products.inventory_counts.every_report.sum_rows_title"))
+		e.section.item(:sum_rows_title).value(I18n.t("ag2_products.ag2_products_track.inventory_report.sum_rows_title"))
 		e.section.item(:sum_rows).value(e.store.page_rows)
 		# Initialize subtotals to 0
 		#e.store.page_rows = 0
@@ -44,7 +44,7 @@ end
 report.start_new_page
 
 # Page header
-report.page.values report_title: I18n.t("ag2_products.ag2_products_track.tickets_report.report_title")
+report.page.values report_title: I18n.t("ag2_products.ag2_products_track.inventory_report.report_title")
 report.page.values from_title: I18n.t("every_report.from_title")
 report.page.values to_title: I18n.t("every_report.to_title")
 report.page.values from: @from

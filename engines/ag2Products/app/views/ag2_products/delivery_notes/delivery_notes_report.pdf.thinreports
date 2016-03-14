@@ -28,15 +28,16 @@ end
 #
 report.layout.config.list(:default) do |c|
 	# Define the variables used in list
-	c.use_stores page_rows: 0
+	c.use_stores page_rows: 0, p_quantityfull: 0, p_totalfull: 0
 
 	# On list page footer insertion
 	c.events.on :page_footer_insert do |e|
 		# Display page sutotals
-		e.section.item(:sum_rows_title).value(I18n.t("ag2_products.delivery_notes.every_report.sum_rows_title"))
+		e.section.item(:sum_rows_title).value(I18n.t("ag2_products.ag2_products_track.delivery_report.sum_rows_title"))
 		e.section.item(:sum_rows).value(e.store.page_rows)
-		# Initialize subtotals to 0
-		#e.store.page_rows = 0
+		e.section.item(:full_total_c).value I18n.t("ag2_products.ag2_products_track.every_report.full_total")
+		e.section.item(:quantityfull).value(number_with_precision(e.store.p_quantityfull, precision: 2))
+		e.section.item(:totalfull).value number_with_precision(e.store.p_totalfull, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
 	end
 end
 
@@ -44,7 +45,7 @@ end
 report.start_new_page
 
 # Page header
-report.page.values report_title: I18n.t("ag2_products.delivery_notes.delivery_note.report_title")
+report.page.values report_title: I18n.t("ag2_products.ag2_products_track.delivery_report.report_title")
 report.page.values from_title: I18n.t("every_report.from_title")
 report.page.values to_title: I18n.t("every_report.to_title")
 report.page.values from: @from
@@ -70,7 +71,7 @@ end
 	report.page.list(:default).add_row do |row|
 		row.item(:delivery_no).value i.delivery_no
 		row.item(:delivery_date).value formatted_date(i.delivery_date) unless i.delivery_date.blank?
-		row.item(:project).value i.project.full_name unless i.project.blank?
+		row.item(:project).value i.project.full_code unless i.project.blank?
 		row.item(:store).value i.store.name unless i.store.blank?
 		row.item(:quantity).value number_with_precision(i.quantity, precision: 2) unless i.quantity.blank?
 		row.item(:total).value number_with_precision(i.total, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless i.total.blank?
@@ -78,5 +79,7 @@ end
 	# Store page subtotals
   report.page.list(:default) do |list|
 		list.store.page_rows += 1
+		list.store.p_quantityfull += i.quantity
+		list.store.p_totalfull += i.total
 	end
 end

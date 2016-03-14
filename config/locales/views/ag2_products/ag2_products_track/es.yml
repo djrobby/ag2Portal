@@ -15,12 +15,17 @@ es:
         label_product: "Producto"
       inventory_report:
         report_title: "Recuentos de inventario"
+        sum_rows_title: "Total Filas:"
       order_report:
         report_title: "Pedidos"
+        sum_rows_title: "Total Filas:"
+        reception_status: "Recepción"
       receipt_report:
         report_title: "Notas de recepción"
+        sum_rows_title: "Total Filas:"
       delivery_report:
         report_title: "Notas de entrega"
+        sum_rows_title: "Total Filas:"
       stock_report:
         report_title: "Existencias"
       every_report:
@@ -45,3 +50,4 @@ es:
         sum_rec_count_title: "Total Marcajes:"
         sum_rows_title: "Total Filas (Días):"
         average_title: "Promedio Tiempo Trabajado: "
+        full_total: "Totales:"

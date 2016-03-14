@@ -57,3 +57,6 @@ es:
         store_address_1: "Dirección de entrega (línea 1)"
         store_address_2: "Dirección de entrega (línea 2)"
         store_phones: "Teléfono y Fax para entrega"
+        reception_status: "Recepción"
+        reception_status_total: "Total"
+        reception_status_partial: "Parcial"

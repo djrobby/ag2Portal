@@ -15,12 +15,17 @@ en:
         label_product: "Product"
       inventory_report:
         report_title: "Inventory counts"
+        sum_rows_title: "Total Rows:"
       order_report:
         report_title: "Purchase orders"
+        sum_rows_title: "Total Rows:"
+        reception_status: "Reception"
       receipt_report:
         report_title: "Receipt notes"
+        sum_rows_title: "Total Rows:"
       delivery_report:
         report_title: "Delivery notes"
+        sum_rows_title: "Total Rows:"
       stock_report:
         report_title: "Stocks"
       every_report:
@@ -45,3 +50,4 @@ en:
         sum_rec_count_title: "Total Records:"
         sum_rows_title: "Total Rows (Days):"
         average_title: "Average Worked Time: "
+        full_total: "Totals:"

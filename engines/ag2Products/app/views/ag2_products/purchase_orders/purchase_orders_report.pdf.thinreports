@@ -1,11 +1,11 @@
-if @receipt_notes_report.nil?
+if @purchase_orders_report.nil?
 	return
 end
 
 # Localization for numbers
 delimiter = I18n.locale == :es ? "." : ","
 
-report.set_layout tlf: 'reports/receipt_notes_report', layout_options: { default: true }
+report.set_layout tlf: 'reports/purchase_orders_report', layout_options: { default: true }
 
 #
 # Report events
@@ -30,24 +30,21 @@ report.layout.config.list(:default) do |c|
 	# Define the variables used in list
 	c.use_stores page_rows: 0, p_quantityfull: 0, p_totalfull: 0
 
-	# On list page footer insertion
 	c.events.on :page_footer_insert do |e|
 		# Display page sutotals
-		e.section.item(:sum_rows_title).value(I18n.t("ag2_products.ag2_products_track.receipt_report.sum_rows_title"))
+		e.section.item(:sum_rows_title).value(I18n.t("ag2_products.ag2_products_track.order_report.sum_rows_title"))
 		e.section.item(:sum_rows).value(e.store.page_rows)
 		e.section.item(:full_total_c).value I18n.t("ag2_products.ag2_products_track.every_report.full_total")
 		e.section.item(:quantityfull).value(number_with_precision(e.store.p_quantityfull, precision: 2))
 		e.section.item(:totalfull).value number_with_precision(e.store.p_totalfull, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
-		# Initialize subtotals to 0
-		#e.store.page_rows = 0
-	end
+   end
 end
 
 # New page & start
 report.start_new_page
 
 # Page header
-report.page.values report_title: I18n.t("ag2_products.ag2_products_track.receipt_report.report_title")
+report.page.values report_title: I18n.t("ag2_products.ag2_products_track.order_report.report_title")
 report.page.values from_title: I18n.t("every_report.from_title")
 report.page.values to_title: I18n.t("every_report.to_title")
 report.page.values from: @from
@@ -60,25 +57,27 @@ report.page.values(printed_at: formatted_timestamp(Time.now),
 
 # List header
 report.page.list(:default).header do |header|
-	header.item(:receipt_no_c).value I18n.t("activerecord.attributes.receipt_note.receipt_no")
-	header.item(:receipt_date_c).value I18n.t("activerecord.attributes.receipt_note.receipt_date")
-	header.item(:supplier_c).value I18n.t("activerecord.attributes.receipt_note.supplier")
-	header.item(:project_c).value I18n.t("activerecord.attributes.receipt_note.project")
-	header.item(:store_c).value I18n.t("activerecord.attributes.receipt_note.store")
-	header.item(:quantity_c).value I18n.t("activerecord.attributes.receipt_note.quantity")
-	header.item(:total_c).value I18n.t("activerecord.attributes.receipt_note.total")
+	header.item(:order_no_c).value I18n.t("activerecord.attributes.purchase_order.order_no")
+	header.item(:order_date_c).value I18n.t("activerecord.attributes.purchase_order.order_date")
+	header.item(:order_status_c).value I18n.t("activerecord.attributes.purchase_order.order_status")
+	header.item(:reception_status_c).value I18n.t("activerecord.attributes.purchase_order.reception_status")
+	header.item(:supplier_c).value I18n.t("activerecord.attributes.purchase_order.supplier")
+	header.item(:quantity_c).value I18n.t("activerecord.attributes.purchase_order.quantity")
+	header.item(:total_c).value I18n.t("activerecord.attributes.purchase_order.total")
+	header.item(:approver_c).value I18n.t("activerecord.attributes.purchase_order.approver")
 end
 
 # List detail
-@receipt_notes_report.each do |i|
+@purchase_orders_report.each do |i|
 	report.page.list(:default).add_row do |row|
-		row.item(:receipt_no).value i.receipt_no
-		row.item(:receipt_date).value formatted_date(i.receipt_date) unless i.receipt_date.blank?
+		row.item(:order_no).value i.full_no
+		row.item(:order_date).value formatted_date(i.order_date) unless i.order_date.blank?
+		row.item(:reception_status).value i.reception_status
+		row.item(:order_status).value i.order_status.name
 		row.item(:supplier).value i.supplier.full_code
-		row.item(:project).value i.project.full_code unless i.project.blank?
-		row.item(:store).value i.store.name unless i.store.blank?
     row.item(:quantity).value number_with_precision(i.quantity, precision: 2) unless i.quantity.blank?
 		row.item(:total).value number_with_precision(i.total, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless i.total.blank?
+		row.item(:approver).value i.approver.email unless i.approver.blank?
 	end
 	# Store page subtotals
   report.page.list(:default) do |list|

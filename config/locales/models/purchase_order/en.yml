@@ -57,3 +57,6 @@ en:
         store_address_1: "Delivery address (line 1)"
         store_address_2: "Delivery address (line 2)"
         store_phones: "Phone & fax for delivery"
+        reception_status: "Reception"
+        reception_status_total: "Total"
+        reception_status_partial: "Partial"
