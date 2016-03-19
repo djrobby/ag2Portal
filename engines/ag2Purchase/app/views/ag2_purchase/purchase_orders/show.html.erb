@@ -6,6 +6,8 @@
     $("#send_mesages").hide();
     // Hide check_stock div
     $("#check_stock").hide();
+    // Hide proc_mesage div
+    $("#proc_mesage").hide();
     // Show approve_order_btn based on approval
     approver = $('#approver').html();
     if (approver == "") {
@@ -26,11 +28,15 @@
   jQuery(function($) {
     // when #approve_order_btn is clicked
     $("#approve_order_btn").click(function() {
+      // Show message
+      $("#proc_mesage").show();
       // make a POST call and replace the content
       var order = $('#id').html();
       if (order == "")
         order = "0";
       jQuery.getJSON('po_approve_order/' + order, function(data) {
+        // Hide message
+        $("#proc_mesage").hide();
         if (data.code == "$err") {
           alert('<%= I18n.t("ag2_purchase.purchase_orders.approve_order_error") %>');
         } else if (data.code == "$write") {
@@ -177,6 +183,10 @@
     });
   });
 </script>
+
+<div id="proc_mesage" class="alert alert-info">
+  <%= t(:approving) %>
+</div>
 
 <div id="send_mesages" class="alert alert-warning">
   <a class="close">&#215;</a>

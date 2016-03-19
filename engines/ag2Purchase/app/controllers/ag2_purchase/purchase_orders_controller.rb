@@ -131,7 +131,6 @@ module Ag2Purchase
       render json: @json_data
     end
 
-
     # Update description and prices text fields at view from product & store selects
     def po_update_description_prices_from_product_store
       product = params[:product]
@@ -536,17 +535,17 @@ module Ag2Purchase
         _approval_date = formatted_timestamp(_approval_date)
       end
 
+      # Send approval notification to creator
+      if code == '$ok'
+        send_approve_email(order)
+      end
+
       @json_data = { "code" => code, "approver" => _approver, "approval_date" => _approval_date }
       render json: @json_data
     end
 
     # Email Report (jQuery)
     def send_purchase_order_form
-      # Search purchase order & items
-      #@purchase_order = PurchaseOrder.find(params[:id])
-      #@items = @purchase_order.purchase_order_items.order('id')
-
-      #pdf = send_data render_to_string, filename: "#{title}_#{@purchase_order.full_no}.pdf", type: 'application/pdf'
       code = send_email(params[:id])
       message = code == '$err' ? t(:send_error) : t(:send_ok)
       @json_data = { "code" => code, "message" => message }
@@ -1035,7 +1034,6 @@ module Ag2Purchase
       @items = @purchase_order.purchase_order_items.order(:id)
 
       title = t("activerecord.models.purchase_order.one") + "_" + @purchase_order.full_no + ".pdf"
-      #pdf = render_to_string(filename: "#{title}_#{@purchase_order.full_no}.pdf", type: 'application/pdf')
       pdf = render_to_string(filename: "#{title}", type: 'application/pdf')
       from = !current_user.nil? ? User.find(current_user.id).email : User.find(@purchase_order.created_by).email
       to = !@purchase_order.supplier.email.blank? ? @purchase_order.supplier.email : nil
@@ -1045,6 +1043,24 @@ module Ag2Purchase
       else
         # Send e-mail
         Notifier.send_purchase_order(@purchase_order, from, to, title, pdf).deliver
+      end
+
+      code
+    end
+
+    def send_approve_email(_purchase_order)
+      code = '$ok'
+      from = nil
+      to = nil
+
+      from = !current_user.nil? ? User.find(current_user.id).email : User.find(@purchase_order.approver_id).email
+      to = !_purchase_order.created_by.blank? ? User.find(_purchase_order.created_by).email : nil
+
+      if from.blank? || to.blank?
+        code = "$err"
+      else
+        # Send e-mail
+        Notifier.send_purchase_order_approval(_purchase_order, from, to).deliver
       end
 
       code

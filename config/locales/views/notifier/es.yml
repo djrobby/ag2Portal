@@ -52,6 +52,9 @@ es:
       new_purchase_order: "En el fichero adjunto, encontrará nuestro Pedido Nº "
       deliver: "Por favor, proceda con la entrega de los bienes y/o servicios solicitados, según los términos y condiciones establecidos en este documento."
       thanks: "Gracias."
+    send_purchase_order_approval:
+      subject: "aGestiona2: Pedido aprobado"
+      htmllink: "Ver este pedido"
     offer_saved:
       subject: "aGestiona2: Oferta de proveedor creada o actualizada"
       link: "Puedes ver esta oferta en el siguiente enlace"

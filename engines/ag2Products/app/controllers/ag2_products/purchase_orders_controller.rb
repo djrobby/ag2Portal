@@ -563,6 +563,11 @@ module Ag2Products
         _approval_date = formatted_timestamp(_approval_date)
       end
 
+      # Send approval notification to creator
+      if code == '$ok'
+        send_approve_email(order)
+      end
+
       @json_data = { "code" => code, "approver" => _approver, "approval_date" => _approval_date }
       render json: @json_data
     end
@@ -1132,7 +1137,6 @@ module Ag2Products
       @items = @purchase_order.purchase_order_items.order(:id)
 
       title = t("activerecord.models.purchase_order.one") + "_" + @purchase_order.full_no + ".pdf"
-      #pdf = render_to_string(filename: "#{title}_#{@purchase_order.full_no}.pdf", type: 'application/pdf')
       pdf = render_to_string(filename: "#{title}", type: 'application/pdf')
       from = !current_user.nil? ? User.find(current_user.id).email : User.find(@purchase_order.created_by).email
       to = !@purchase_order.supplier.email.blank? ? @purchase_order.supplier.email : nil
@@ -1142,6 +1146,24 @@ module Ag2Products
       else
         # Send e-mail
         Notifier.send_purchase_order(@purchase_order, from, to, title, pdf).deliver
+      end
+
+      code
+    end
+
+    def send_approve_email(_purchase_order)
+      code = '$ok'
+      from = nil
+      to = nil
+
+      from = !current_user.nil? ? User.find(current_user.id).email : User.find(@purchase_order.approver_id).email
+      to = !_purchase_order.created_by.blank? ? User.find(_purchase_order.created_by).email : nil
+
+      if from.blank? || to.blank?
+        code = "$err"
+      else
+        # Send e-mail
+        Notifier.send_purchase_order_approval(_purchase_order, from, to).deliver
       end
 
       code
