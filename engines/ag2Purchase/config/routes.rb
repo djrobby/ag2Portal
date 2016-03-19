@@ -17,6 +17,8 @@ Ag2Purchase::Engine.routes.draw do
     match 'payment_report', :controller => 'ag2_purchase_track', :action => 'payment_report'
     match 'supplier_report', :controller => 'ag2_purchase_track', :action => 'supplier_report'
 
+    match 'purchase_orders_report', :controller => 'purchase_orders', :action => 'purchase_orders_report'
+
     # Patterns
     DECIMAL_PATTERN = /-?\d+(\.\d+)/
 

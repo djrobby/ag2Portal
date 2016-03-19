@@ -20,6 +20,7 @@ module Ag2Products
                                                :delivery_note_form_client,
                                                :delivery_notes_report,
                                                :dn_generate_no]
+
     # Update sale offer select at view from client select
     def dn_update_offer_select_from_client
       client = params[:client]

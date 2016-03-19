@@ -838,7 +838,7 @@ module Ag2Products
       end
     end
 
-    # Report
+    # Report form
     def purchase_order_form
       # Search purchase order & items
       @purchase_order = PurchaseOrder.find(params[:id])
@@ -870,12 +870,15 @@ module Ag2Products
       status = params[:Status]
       # OCO
       init_oco if !session[:organization]
+      projects = projects_dropdown
 
+      # Arrays for search
+      current_projects = projects.blank? ? [0] : current_projects_for_index(projects)
       # If inverse no search is required
       no = !no.blank? && no[0] == '%' ? inverse_no_search(no) : no
 
       @search = PurchaseOrder.search do
-        with :project_id
+        with :project_id, current_projects
         fulltext params[:search]
         if session[:organization] != '0'
           with :organization_id, session[:organization]

@@ -24,6 +24,7 @@ module Ag2Purchase
                                                :po_check_stock_before_approve,
                                                :po_approve_order,
                                                :po_update_addresses_from_store,
+                                               :purchase_orders_report,
                                                :purchase_order_form,
                                                :send_purchase_order_form]
     # Helper methods for
@@ -786,7 +787,7 @@ module Ag2Purchase
       end
     end
 
-    # Report
+    # Report form
     def purchase_order_form
       # Search purchase order & items
       @purchase_order = PurchaseOrder.find(params[:id])
@@ -806,6 +807,61 @@ module Ag2Purchase
       if @purchase_order.order_status_id < 3
         @purchase_order.order_status_id = 3
         @purchase_order.save
+      end
+    end
+
+    # Purchase orders report
+    def purchase_orders_report
+      manage_filter_state
+      no = params[:No]
+      project = params[:Project]
+      supplier = params[:Supplier]
+      status = params[:Status]
+      # OCO
+      init_oco if !session[:organization]
+      projects = projects_dropdown
+
+      # Arrays for search
+      current_projects = projects.blank? ? [0] : current_projects_for_index(projects)
+      # If inverse no search is required
+      no = !no.blank? && no[0] == '%' ? inverse_no_search(no) : no
+
+      @search = PurchaseOrder.search do
+        with :project_id, current_projects
+        fulltext params[:search]
+        if session[:organization] != '0'
+          with :organization_id, session[:organization]
+        end
+        if !no.blank?
+          if no.class == Array
+            with :order_no, no
+          else
+            with(:order_no).starting_with(no)
+          end
+        end
+        if !project.blank?
+          with :project_id, project
+        end
+        if !supplier.blank?
+          with :supplier_id, supplier
+        end
+        if !status.blank?
+          with :order_status_id, status
+        end
+        order_by :sort_no, :asc
+      end
+
+      @purchase_orders_report = @search.results
+      title = t("activerecord.models.purchase_order.few")
+      @to = formatted_date(@purchase_orders_report.first.created_at)
+      @from = formatted_date(@purchase_orders_report.last.created_at)
+
+      respond_to do |format|
+        # Render PDF
+        format.pdf { send_data render_to_string,
+                      filename: "#{title}_#{@from}-#{@to}.pdf",
+                     type: 'application/pdf',
+                     disposition: 'inline' }
       end
     end
 
