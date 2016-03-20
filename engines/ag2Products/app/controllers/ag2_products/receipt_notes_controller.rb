@@ -793,7 +793,7 @@ module Ag2Products
           with :work_order_id, order
         end
         order_by :id, :asc
-        paginate :page => params[:page] || 1, :per_page => per_page
+        paginate :page => params[:page] || 1, :per_page => ReceiptNote.count
       end
 
       @receipt_notes_report = @search.results

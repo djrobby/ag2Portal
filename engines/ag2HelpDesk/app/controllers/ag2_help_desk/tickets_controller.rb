@@ -360,7 +360,7 @@ module Ag2HelpDesk
           with :hd_email, destination
         end
         order_by :id, :desc
-        paginate :page => params[:page] || 1, :per_page => per_page
+        paginate :page => params[:page] || 1, :per_page => Ticket.count
       end
 
       @tickets_report = search.results
