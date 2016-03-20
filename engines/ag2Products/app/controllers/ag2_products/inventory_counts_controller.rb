@@ -203,6 +203,7 @@ module Ag2Products
       # Success
       if code == '' || code == '$ok'
         code = I18n.t("ag2_products.inventory_counts.approve_count_ok", var: inventory_count.full_no)
+        send_approve_email(inventory_count)
       end
 
       @json_data = { "code" => code, "approver" => _approver, "approval_date" => _approval_date }
@@ -613,6 +614,24 @@ module Ag2Products
           _array = _array << _r.read_attribute(_id) unless _array.include? _r.read_attribute(_id)
         end
       end
+    end
+
+    def send_approve_email(_inventory_count)
+      code = '$ok'
+      from = nil
+      to = nil
+
+      from = !current_user.nil? ? User.find(current_user.id).email : User.find(_inventory_count.approver_id).email
+      to = !_inventory_count.created_by.blank? ? User.find(_inventory_count.created_by).email : nil
+
+      if from.blank? || to.blank?
+        code = "$err"
+      else
+        # Send e-mail
+        Notifier.send_inventory_count_approval(_inventory_count, from, to).deliver
+      end
+
+      code
     end
 
     # Keeps filter state

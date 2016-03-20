@@ -119,6 +119,17 @@ class Notifier < ActionMailer::Base
     end
   end
 
+  def send_offer_approval(offer, _from, _to)
+    @offer = offer
+    @current_host = current_host
+    d = offer.approval_date.utc
+    t = Time.new(d.year, d.month, d.day, d.hour, d.min, d.sec, d.zone)
+    @approved_at = t.getlocal
+    mail reply_to: _from, to: _to do |format|
+      format.html
+    end
+  end
+
   def send_offer_request(offer_request, _from, _to, title, pdf)
     @offer_request = offer_request
     @from = _from
@@ -147,6 +158,17 @@ class Notifier < ActionMailer::Base
       mail to: recipients do |format|
         format.html
       end
+    end
+  end
+
+  def send_inventory_count_approval(inventory_count, _from, _to)
+    @inventory_count = inventory_count
+    @current_host = current_host
+    d = inventory_count.approval_date.utc
+    t = Time.new(d.year, d.month, d.day, d.hour, d.min, d.sec, d.zone)
+    @approved_at = t.getlocal
+    mail reply_to: _from, to: _to do |format|
+      format.html
     end
   end
 

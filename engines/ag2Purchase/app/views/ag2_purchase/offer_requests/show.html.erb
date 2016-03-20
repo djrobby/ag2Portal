@@ -5,6 +5,9 @@
   $(document).ready(function() {
     // Hide send_messages div
     $("#send_mesages").hide();
+    // Hide mesages div
+    $("#approve_mesage").hide();
+    $("#disapprove_mesage").hide();
     // Save default text color
     text_field_color = $("table#offers_table tr:even").css('color')
   });
@@ -19,7 +22,12 @@
       var _offer = current_row.find(".offer-id").text();
       var _offer_request = $('#offer_request_table').find(".offer-request-id").text();
       text_field_color = current_row.css('color')
+      // Show message
+      $("#approve_mesage").show();
+      // make a POST call
       jQuery.getJSON('or_approve_offer/' + _offer + '/' + _offer_request, function(data) {
+        // Hide message
+        $("#approve_mesage").hide();
         if (data.code == "$err") {
           alert('<%= I18n.t("ag2_purchase.offer_requests.approve_offer_error") %>');
         } else if (data.code == "$write") {
@@ -44,7 +52,12 @@
       //text_field_color = current_row.css('color')
       var _offer = current_row.find(".offer-id").text();
       var _offer_request = $('#offer_request_table').find(".offer-request-id").text();
+      // Show message
+      $("#disapprove_mesage").show();
+      // make a POST call
       jQuery.getJSON('or_disapprove_offer/' + _offer + '/' + _offer_request, function(data) {
+        // Hide message
+        $("#disapprove_mesage").hide();
         if (data.code == "$err") {
           alert('<%= I18n.t("ag2_purchase.offer_requests.approve_offer_error") %>');
         } else if (data.code == "$write") {
@@ -104,6 +117,13 @@
     });
   });
 </script>
+
+<div id="approve_mesage" class="alert alert-info">
+  <%= t(:approving) %>
+</div>
+<div id="disapprove_mesage" class="alert alert-info">
+  <%= t(:disapproving) %>
+</div>
 
 <div id="send_mesages" class="alert alert-warning">
   <a class="close">&#215;</a>

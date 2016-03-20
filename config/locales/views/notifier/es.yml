@@ -65,6 +65,9 @@ es:
       htmllink: "Ver esta oferta"
       approval: "** Se requiere tu aprobación **"
       htmlapproval: "Aprueba esta oferta"
+    send_offer_approval:
+      subject: "aGestiona2: Oferta aprobada"
+      htmllink: "Ver esta oferta"
     send_offer_request:
       subject: "Nueva Solicitud de Oferta de "
       dear_supplier: "Estimado/a Proveedor/a,"
@@ -81,6 +84,9 @@ es:
       htmllink: "Ver esta recuento"
       approval: "** Se requiere tu aprobación **"
       htmlapproval: "Aprueba este recuento"
+    send_inventory_count_approval:
+      subject: "aGestiona2: Recuento de inventario aprobado"
+      htmllink: "Ver esta recuento"
     supplier_invoice_saved:
       subject: "aGestiona2: Factura de proveedor creada o actualizada"
       link: "Puedes ver esta factura en el siguiente enlace"

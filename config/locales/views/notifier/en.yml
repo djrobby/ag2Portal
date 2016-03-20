@@ -65,6 +65,9 @@ en:
       htmllink: "Show this offer"
       approval: "** Your approval is required **"
       htmlapproval: "Approve this offer"
+    send_offer_approval:
+      subject: "aGestiona2: Supplier offer approved"
+      htmllink: "Show this offer"
     send_offer_request:
       subject: "New Offer Request from "
       dear_supplier: "Dear Supplier,"
@@ -81,6 +84,9 @@ en:
       htmllink: "Show this count"
       approval: "** Your approval is required **"
       htmlapproval: "Approve this count"
+    send_inventory_count_approval:
+      subject: "aGestiona2: Inventory count approved"
+      htmllink: "Show this count"
     supplier_invoice_saved:
       subject: "aGestiona2: Supplier invoice created or updated"
       link: "You can see this inovice on the following link"

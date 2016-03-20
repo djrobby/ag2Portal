@@ -51,6 +51,7 @@ en:
   generating: "Generating..."
   processing: "Processing..."
   approving: "Approving..."
+  disapproving: "Disapproving..."
   mandatory_subtitle: "Remember that the fields marked with * are mandatory!"
   item_error: "can't be blank"
   dd_image_message: "Drop image here"

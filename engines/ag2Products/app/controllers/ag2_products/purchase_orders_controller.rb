@@ -563,6 +563,7 @@ module Ag2Products
         _approval_date = formatted_timestamp(_approval_date)
       end
 
+      # Success
       # Send approval notification to creator
       if code == '$ok'
         send_approve_email(order)
@@ -1159,7 +1160,7 @@ module Ag2Products
       from = nil
       to = nil
 
-      from = !current_user.nil? ? User.find(current_user.id).email : User.find(@purchase_order.approver_id).email
+      from = !current_user.nil? ? User.find(current_user.id).email : User.find(_purchase_order.approver_id).email
       to = !_purchase_order.created_by.blank? ? User.find(_purchase_order.created_by).email : nil
 
       if from.blank? || to.blank?

@@ -351,6 +351,12 @@ module Ag2Purchase
         _approval_date = formatted_timestamp(_approval_date)
       end
 
+      # Success
+      # Send approval notification to creator
+      if code == '$ok'
+        send_approve_email(offer)
+      end
+
       @json_data = { "code" => code, "approver" => _approver, "approval_date" => _approval_date }
       render json: @json_data
     end
@@ -894,6 +900,24 @@ module Ag2Purchase
         for i in 0..to.count-1
           Notifier.send_offer_request(@offer_request, from, to[i], title, pdf[i]).deliver
         end
+      end
+
+      code
+    end
+
+    def send_approve_email(_offer)
+      code = '$ok'
+      from = nil
+      to = nil
+
+      from = !current_user.nil? ? User.find(current_user.id).email : User.find(_offer.approver_id).email
+      to = !_offer.created_by.blank? ? User.find(_offer.created_by).email : nil
+
+      if from.blank? || to.blank?
+        code = "$err"
+      else
+        # Send e-mail
+        Notifier.send_offer_approval(_offer, from, to).deliver
       end
 
       code
