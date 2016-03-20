@@ -612,6 +612,7 @@ module Ag2Products
           with :work_order_id, order
         end
         order_by :sort_no, :asc
+        paginate :page => params[:page] || 1, :per_page => per_page
       end
 
       @delivery_notes_report = @search.results

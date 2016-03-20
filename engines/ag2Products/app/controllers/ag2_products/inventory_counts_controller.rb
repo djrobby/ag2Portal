@@ -519,6 +519,7 @@ module Ag2Products
           with :inventory_count_type_id, type
         end
         order_by :sort_no, :asc
+        paginate :page => params[:page] || 1, :per_page => per_page
       end
 
       @inventory_counts_report = @search.results

@@ -901,6 +901,7 @@ module Ag2Products
           with :order_status_id, status
         end
         order_by :sort_no, :asc
+        paginate :page => params[:page] || 1, :per_page => per_page
       end
 
       @purchase_orders_report = @search.results
