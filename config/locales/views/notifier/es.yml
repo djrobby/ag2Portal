@@ -20,7 +20,7 @@ es:
       priority: "Prioridad: "
       title: "Asunto: "
     ticket_updated:
-      subject: "aGestiona2: Su solicitud de soporte ha sido actualizada"
+      subject: "aGestiona2: Tu solicitud de soporte ha sido actualizada"
       number: "Solicitud Nº: "
       created_at: "Creada el: "
       created_by: "Creada por: "
@@ -54,6 +54,9 @@ es:
       thanks: "Gracias."
     send_purchase_order_approval:
       subject: "aGestiona2: Pedido aprobado"
+      htmllink: "Ver este pedido"
+    send_purchase_order_notification:
+      subject: "aGestiona2: Notificación - Pedido"
       htmllink: "Ver este pedido"
     offer_saved:
       subject: "aGestiona2: Oferta de proveedor creada o actualizada"

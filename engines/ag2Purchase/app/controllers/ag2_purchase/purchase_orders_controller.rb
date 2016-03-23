@@ -1134,6 +1134,27 @@ module Ag2Purchase
       code
     end
 
+    def send_notification_email(_purchase_order, _user)
+      code = '$ok'
+      from = nil
+      to = nil
+
+      # Search purchase order & items
+      @purchase_order = PurchaseOrder.find(_purchase_order)
+
+      from = !current_user.nil? ? User.find(current_user.id).email : User.find(_purchase_order.created_by).email
+      to = User.find(_user).email rescue nil
+
+      if from.blank? || to.blank?
+        code = "$err"
+      else
+        # Send e-mail
+        Notifier.send_purchase_order_notification(@purchase_order, from, to).deliver
+      end
+
+      code
+    end
+
     # Keeps filter state
     def manage_filter_state
       # search

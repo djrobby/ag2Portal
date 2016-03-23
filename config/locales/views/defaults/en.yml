@@ -63,6 +63,7 @@ en:
   disapprove: "Disapprove"
   confirm: "Confirm"
   notify: "Notify"
+  notification: "notifies you of the following:"
   send: "Send"
   check: "Check"
   send_error: "<b>Oh oh!</b> Your e-mail could not be sent."

@@ -55,6 +55,9 @@ en:
     send_purchase_order_approval:
       subject: "aGestiona2: Purchase order approved"
       htmllink: "Show this order"
+    send_purchase_order_notification:
+      subject: "aGestiona2: Notification - Purchase order"
+      htmllink: "Show this order"
     offer_saved:
       subject: "aGestiona2: Supplier offer created or updated"
       link: "You can see this offer on the following link"

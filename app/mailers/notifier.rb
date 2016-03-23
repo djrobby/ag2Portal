@@ -96,6 +96,18 @@ class Notifier < ActionMailer::Base
     end
   end
 
+  def send_purchase_order_notification(purchase_order, _from, _to)
+    @purchase_order = purchase_order
+    @current_host = current_host
+    #d = purchase_order.approval_date.utc
+    #t = Time.new(d.year, d.month, d.day, d.hour, d.min, d.sec, d.zone)
+    @approved_at = purchase_order.approval_date.utc.getlocal
+    @from = _from
+    mail reply_to: _from, to: _to do |format|
+      format.html
+    end
+  end
+
   # Offer & Offer request
   def offer_saved(offer, action)
     @offer = offer
