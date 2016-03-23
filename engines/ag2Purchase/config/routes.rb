@@ -117,6 +117,10 @@ Ag2Purchase::Engine.routes.draw do
     match 'purchase_orders/send_purchase_order_form/:id', :controller => 'purchase_orders', :action => 'send_purchase_order_form'
     match 'send_purchase_order_form/:id', :controller => 'purchase_orders', :action => 'send_purchase_order_form'
     match 'purchase_orders/:id/send_purchase_order_form/:id', :controller => 'purchase_orders', :action => 'send_purchase_order_form'
+
+    match 'purchase_orders/send_notification/:id/:user', :controller => 'purchase_orders', :action => 'send_notification'
+    match 'send_notification/:id/:user', :controller => 'purchase_orders', :action => 'send_notification'
+    match 'purchase_orders/:id/send_notification/:id/:user', :controller => 'purchase_orders', :action => 'send_notification'
     #
     # Purchase order Reports
     #match 'purchase_order_form', :controller => 'purchase_orders', :action => 'purchase_order_form'

@@ -1,0 +1,58 @@
+<!-- Modal -->
+<script>
+  $(document).ready(function() {
+    $("#notify_mesage").hide();
+  });
+
+  jQuery(function($) {
+    $('#btn_accept').click(function() {
+      var user = $('#User_ :selected').val();
+      var id = $('#id').html();
+      if ((id == "") || (user == "")) {
+        // Error
+        alert('<%= I18n.t(:mandatory_subtitle) %>');
+        return false;
+      }
+      // Show message
+      $("#notify_mesage").show();
+      // make the POST call
+      jQuery.getJSON('send_notification/' + id + '/' + user, function(data) {
+        // Hide message
+        $("#notify_mesage").hide();
+        // AJAX refresh index table is necessary
+        $(".icon-refresh-link").click();
+        // Go on based on result
+        if (data.code == "$err") {
+          $("#send_mesages").removeClass('alert-info').addClass('alert-warning')
+        } else {
+          $("#send_mesages").removeClass('alert-warning').addClass('alert-info')
+        }
+        // Hide the modal and exit
+        $("#notify-order").modal('hide');
+        $("#flash").html(data.message);
+        $("#send_mesages").show();
+      });
+      return false;
+    });
+  });
+</script>
+
+<div id="notify-order" class="modal hide fade" data-backdrop="static" style="display: none;">
+  <div id="notify_mesage" class="alert alert-info">
+    <%= t(:sending) %>
+  </div>
+  <div class="modal-header">
+    <a class="close" data-dismiss="modal">&#215;</a>
+    <h3><%= t(:notify) %></h3>
+    <span class="shrinked"><%= I18n.t(:mandatory_subtitle) %></span>
+  </div>
+  <div class="modal-body">
+    <!-- User -->
+    <label for="User_" class="form-label"> <abbr title="requerido">*</abbr> <%= I18n.t("activerecord.models.user.one") %></label>
+    <%= select_tag "User_", options_from_collection_for_select(@users, "id", "to_label"), :prompt => "", :class => 'x-large-text-field nsel2' %>
+  </div>
+  <div class="modal-footer">
+    <a class="btn btn-primary" href="#" id="btn_accept"><%= t :send %></a>
+    <a class="btn btn-primary" data-dismiss="modal" href="#" id="btn_close"><%= t :close_button %></a>
+  </div>
+</div>

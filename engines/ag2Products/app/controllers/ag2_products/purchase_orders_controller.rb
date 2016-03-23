@@ -26,6 +26,7 @@ module Ag2Products
                                                :po_update_addresses_from_store,
                                                :purchase_orders_report,
                                                :purchase_order_form,
+                                               :send_notification,
                                                :send_purchase_order_form]
     # Helper methods for
     # => allow edit (hide buttons)
@@ -581,6 +582,14 @@ module Ag2Products
       render json: @json_data
     end
 
+    # Notification Email (jQuery)
+    def send_notification
+      code = send_notification_email(params[:id], params[:user])
+      message = code == '$err' ? t(:send_error) : t(:send_ok)
+      @json_data = { "code" => code, "message" => message }
+      render json: @json_data
+    end
+
     #
     # Default Methods
     #
@@ -648,6 +657,8 @@ module Ag2Products
       @is_approver = company_approver(@purchase_order, @purchase_order.project.company, current_user.id) ||
                      office_approver(@purchase_order, @purchase_order.project.office, current_user.id)
                      #(current_user.has_role? :Administrator)
+      # Users (notify)
+      @users = session[:organization] != '0' ? Organization.find(session[:organization].to_i).users.order(:email) : User.order(:email)
 
       respond_to do |format|
         format.html # show.html.erb

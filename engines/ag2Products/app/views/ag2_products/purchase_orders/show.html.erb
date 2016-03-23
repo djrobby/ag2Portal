@@ -12,17 +12,23 @@
     approver = $('#approver').html();
     if (approver == "") {
       $('#print_report_btn').hide();
+      $('#notify_btn').hide();
       $('#send_report_btn').hide();
       $('#approve_order_btn').show();
       $('#check_stock_btn').show();
       approve_isvisible = true;
     } else {
       $('#print_report_btn').show();
+      $('#notify_btn').show();
       $('#send_report_btn').show();
       $('#approve_order_btn').hide();
       $('#check_stock_btn').hide();
       approve_isvisible = false;
     }
+    $('.nsel2').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      allowClear: true
+    });
   });
 
   jQuery(function($) {
@@ -51,6 +57,7 @@
           $("#check_stock").hide();
           $('#print_report_btn').show();
           $('#send_report_btn').show();
+          $('#notify_btn').show();
           approve_isvisible = false;
         }
       });
@@ -176,6 +183,13 @@
       });
       return false;
     });
+
+    // when #notify_btn is clicked
+    $("#notify_btn").click(function() {
+      // make modal visible
+      $("#notify-order").modal('show');
+      return false;
+    });
     
     // close send_messages div when .close is clicked
     $(".close").click(function() {
@@ -259,6 +273,7 @@
         <h4><%= t 'ag2_purchase.purchase_orders.items_info' %></h4>
       </td>
       <td class="form-td-two right-winged">
+        <a href="#" id="notify_btn" class="btn btn-warning"><i class="icon-envelope icon-white"></i> <%= t :notify %></a>
         <a href="#" id="send_report_btn" class="btn btn-warning"><i class="icon-envelope icon-white"></i> <%= t '.send' %></a>
         <a href="#" id="print_report_btn" class="btn btn-warning"><i class="icon-print icon-white"></i> <%= t '.print' %></a>
       </td>
@@ -344,3 +359,6 @@
 <p></p>
 <div id="check_stock" class="alert alert-info">
 </div>
+
+<!-- Modal: Notify order -->
+<%= render 'notify_order' %>
