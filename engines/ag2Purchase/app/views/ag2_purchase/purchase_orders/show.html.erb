@@ -227,14 +227,14 @@
     <tr>
       <td><%=t 'activerecord.attributes.purchase_order.supplier' %>:</td>
       <td><%= @purchase_order.supplier.full_name %></td>
-      <td><%=t 'activerecord.attributes.purchase_order.offer' %>:</td>
-      <td><%= @purchase_order.offer.offer_no unless @purchase_order.offer.blank? %></td>
+      <td><%=t 'activerecord.attributes.supplier.email' %>:</td>
+      <td><%= @purchase_order.supplier.email unless @purchase_order.supplier.email.blank? %></td>
     </tr>
     <tr>
+      <td><%=t 'activerecord.attributes.purchase_order.offer' %>:</td>
+      <td><%= @purchase_order.offer.offer_no unless @purchase_order.offer.blank? %></td>
       <td><%=t 'activerecord.attributes.purchase_order.payment_method' %>:</td>
       <td> <%= @purchase_order.payment_method.description %> </td>
-      <td></td>
-      <td></td>
     </tr>
     <tr>
       <td><%=t 'activerecord.attributes.purchase_order.project' %>:</td>

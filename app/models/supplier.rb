@@ -100,6 +100,17 @@ class Supplier < ActiveRecord::Base
     supplier_code.blank? ? "" : supplier_code[0..3] + '-' + supplier_code[4..7] + '-' + supplier_code[8..13]
   end
 
+  def full_name_and_email
+    full_name = full_code
+    if !self.name.blank?
+      full_name += " " + self.name[0,40]
+    end
+    if !self.email.blank?
+      full_name += " (" + self.email + ")"
+    end
+    full_name
+  end
+
   def address_1
     _ret = ""
     if !street_type.blank?

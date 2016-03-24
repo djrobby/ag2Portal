@@ -15,6 +15,8 @@ report.page.values(supplier_title: I18n.t("activerecord.attributes.offer_request
 				   supplier_address_1: s.supplier.address_1,
 				   supplier_address_2: s.supplier.address_2,
 				   supplier_fiscal_id: I18n.t("activerecord.attributes.supplier.fiscal_id_c") + ": " + s.supplier.fiscal_id)
+# Page header: Possibly null values
+report.page.values deadline_date: @offer_request.deadline_date.strftime("%d/%m/%Y") unless @offer_request.deadline_date.blank?
 # Page header: Others
 report.page.values(form_title: I18n.t("activerecord.models.offer_request.one"),
 				   order_no_title: I18n.t("activerecord.attributes.offer_request.request_no_report") + ":",
@@ -22,7 +24,6 @@ report.page.values(form_title: I18n.t("activerecord.models.offer_request.one"),
 				   order_date_title: I18n.t("activerecord.attributes.offer_request.request_date") + ":",
 				   order_date: @offer_request.request_date.strftime("%d/%m/%Y"),
 				   deadline_date_title: I18n.t("activerecord.attributes.offer_request.deadline_date_report") + ":",
-				   deadline_date: @offer_request.deadline_date.strftime("%d/%m/%Y"),
 				   petitioner_title: I18n.t("activerecord.attributes.offer_request.office_c"),
 				   petitioner_name: @offer_request.project.office.name,
 				   petitioner_address_1: @offer_request.project.office.address_1,
@@ -37,5 +38,6 @@ report.page.values(printed_at: Time.now,
 				   currency_note: I18n.t("every_report.currency_note"),
 				   remarks_title: I18n.t("activerecord.attributes.offer_request.remarks"),
 				   remarks: @offer_request.remarks,
+				   about_offers: I18n.t("activerecord.attributes.offer_request.about_offers"),
 				   about_values: I18n.t("activerecord.attributes.offer_request.about_values"),
 				   other_notes: I18n.t("activerecord.attributes.offer_request.other_notes"))
