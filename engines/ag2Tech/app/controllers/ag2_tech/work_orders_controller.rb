@@ -518,6 +518,15 @@ module Ag2Tech
     end
 
     #
+    # API
+    #
+    # GET /api/work_orders_all
+    def api_work_orders_all
+      @work_orders = WorkOrder.all
+      render json: @work_orders
+    end
+
+    #
     # Default Methods
     #
     # GET /work_orders

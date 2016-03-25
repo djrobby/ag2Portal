@@ -38,6 +38,11 @@ Ag2Portal::Application.routes.draw do
     mount Ag2Products::Engine => "/ag2_products"
     mount Ag2Tech::Engine => "/ag2_tech"
     mount Ag2Gest::Engine => "/ag2_gest"
+
+    # API
+    scope '/api' do
+      #get 'work_orders_all' => 'ag2_tech/work_orders#api_work_orders_all'
+    end
   end
 
   # Index locale

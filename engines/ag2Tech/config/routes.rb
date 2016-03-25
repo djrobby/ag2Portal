@@ -195,6 +195,11 @@ Ag2Tech::Engine.routes.draw do
     resources :ratios
     resources :ratio_groups
 
+    # API
+    scope '/api' do
+        get 'work_orders_all' => 'work_orders#api_work_orders_all'
+    end
+
     # Root
     root :to => 'home#index'
   end
