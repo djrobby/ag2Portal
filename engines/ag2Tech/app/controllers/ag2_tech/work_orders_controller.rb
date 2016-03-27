@@ -518,12 +518,23 @@ module Ag2Tech
     end
 
     #
-    # API
+    # API (ApiWorkOrdersController)
     #
-    # GET /api/work_orders_all
-    def api_work_orders_all
-      @work_orders = WorkOrder.all
+    # GET /api/work_orders
+    def api_work_orders
+      @work_orders = WorkOrder.order(:order_no)
       render json: @work_orders
+    end
+
+    # GET /api/work_orders_by_project
+    def api_work_orders_by_project
+      if params.has_key?(:project_id) && params[:project_id] != '0'
+        @work_orders = WorkOrder.where(project_id: params[:project_id]).order(:order_no)
+        render json: @work_orders
+      else
+        render json: :bad_request, status: :bad_request
+        #render nothing: true, status: :bad_request
+      end
     end
 
     #

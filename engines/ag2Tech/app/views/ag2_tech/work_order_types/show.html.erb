@@ -7,7 +7,7 @@
       <td>Id:</td>
       <td><%= @work_order_type.id %></td>
       <td><%=t 'activerecord.attributes.work_order_type.name' %>:</td>
-      <td><%= @work_order_type.name.titleize %></td>
+      <td><%= @work_order_type.name %></td>
     </tr>
     <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @work_order_type } %>
     <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @work_order_type } %>

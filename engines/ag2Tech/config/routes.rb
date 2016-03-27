@@ -197,7 +197,10 @@ Ag2Tech::Engine.routes.draw do
 
     # API
     scope '/api' do
-        get 'work_orders_all' => 'work_orders#api_work_orders_all'
+      scope '/work_orders' do
+        get '/'                             =>  'api_work_orders#all'
+        get 'by_project(/:project_id)'      =>  'api_work_orders#by_project'
+      end
     end
 
     # Root
