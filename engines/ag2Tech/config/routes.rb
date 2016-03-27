@@ -196,10 +196,15 @@ Ag2Tech::Engine.routes.draw do
     resources :ratio_groups
 
     # API
-    scope '/api' do
-      scope '/work_orders' do
-        get '/'                             =>  'api_work_orders#all'
-        get 'by_project(/:project_id)'      =>  'api_work_orders#by_project'
+    # Warning: The order is very important!
+    # e.g. If /by_project is bellow /:id, /:id method executes and the /by_project never
+    namespace :api do
+      namespace :v1 do
+        scope '/work_orders' do
+          get '/'                             =>  'work_orders#all'
+          get '/by_project(/:project_id)'     =>  'work_orders#by_project'
+          get '/:id'                          =>  'work_orders#one'
+        end
       end
     end
 
