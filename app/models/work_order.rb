@@ -90,6 +90,11 @@ class WorkOrder < ActiveRecord::Base
   validates :work_order_type,   :presence => true
   validates :in_charge,         :presence => true
   validates :organization,      :presence => true
+  validates :started_at,        :presence => true, :if => "!completed_at.blank?"
+  validates :completed_at,      :presence => true, :if => "!closed_at.blank?"
+
+  validate :completed_at_cannot_be_less_than_started_at
+  validate :closed_at_cannot_be_less_than_completed_at
 
   before_destroy :check_for_dependent_records
 
@@ -110,6 +115,18 @@ class WorkOrder < ActiveRecord::Base
   def full_no
     # Order no (Project code & year & sequential number) => PPPPPPPPPPPP-YYYY-NNNNNN
     order_no.blank? ? "" : order_no[0..11] + '-' + order_no[12..15] + '-' + order_no[16..21]
+  end
+
+  def completed_at_cannot_be_less_than_started_at
+    if (!completed_at.blank? and !started_at.blank?) and completed_at < started_at
+      errors.add(:completed_at, :date_invalid)
+    end
+  end
+
+  def closed_at_cannot_be_less_than_completed_at
+    if (!closed_at.blank? and !completed_at.blank?) and closed_at < completed_at
+      errors.add(:closed_at, :date_invalid)
+    end
   end
 
   #
@@ -220,7 +237,46 @@ class WorkOrder < ActiveRecord::Base
   # Returns multidimensional array containing different tax type in each line
   # Each line contains 5 elements: Id, Description, Tax %, Amount & Tax
   def tax_breakdown
-    tt = global_tax_breakdown(work_order_items, false)
+    global_tax_breakdown(work_order_items, false)
+  end
+
+  #
+  # Class (self) user defined methods
+  #
+  # Unstarted
+  def self.unstarted(project = nil)
+    if project.blank?
+      where('started_at IS NULL').order(:order_no)
+    else
+      where('project_id = ? AND started_at IS NULL', project).order(:order_no)
+    end
+  end
+
+  # Started but uncompleted
+  def self.uncompleted(project = nil)
+    if project.blank?
+      where('NOT started_at IS NULL AND completed_at IS NULL').order(:order_no)
+    else
+      where('project_id = ? AND (NOT started_at IS NULL AND completed_at IS NULL)', project).order(:order_no)
+    end
+  end
+
+  # Completed but unclosed
+  def self.unclosed(project = nil)
+    if project.blank?
+      where('NOT completed_at IS NULL AND closed_at IS NULL').order(:order_no)
+    else
+      where('project_id = ? AND (NOT completed_at IS NULL AND closed_at IS NULL)', project).order(:order_no)
+    end
+  end
+
+  # Closed
+  def self.closed(project = nil)
+    if project.blank?
+      where('NOT closed_at IS NULL').order(:order_no)
+    else
+      where('project_id = ? AND (NOT closed_at IS NULL)', project).order(:order_no)
+    end
   end
 
   #

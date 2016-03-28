@@ -54,5 +54,65 @@ module Ag2Tech
         #render nothing: true, status: :bad_request
       end
     end
+
+    # Unstarted
+    # GET /api/work_orders/unstarted(/:project_id)
+    def unstarted
+      if params.has_key?(:project_id) && is_numeric?(params[:project_id]) && params[:project_id] != '0'
+        @work_orders = WorkOrder.unstarted(params[:project_id])
+      else
+        @work_orders = WorkOrder.unstarted
+      end
+      if !@work_orders.blank?
+        render json: @work_orders
+      else
+        render json: :not_found, status: :not_found
+      end
+    end
+
+    # Started but uncompleted
+    # GET /api/work_orders/uncompleted(/:project_id)
+    def uncompleted
+      if params.has_key?(:project_id) && is_numeric?(params[:project_id]) && params[:project_id] != '0'
+        @work_orders = WorkOrder.uncompleted(params[:project_id])
+      else
+        @work_orders = WorkOrder.uncompleted
+      end
+      if !@work_orders.blank?
+        render json: @work_orders
+      else
+        render json: :not_found, status: :not_found
+      end
+    end
+
+    # Completed but unclosed
+    # GET /api/work_orders/unclosed(/:project_id)
+    def unclosed
+      if params.has_key?(:project_id) && is_numeric?(params[:project_id]) && params[:project_id] != '0'
+        @work_orders = WorkOrder.unclosed(params[:project_id])
+      else
+        @work_orders = WorkOrder.unclosed
+      end
+      if !@work_orders.blank?
+        render json: @work_orders
+      else
+        render json: :not_found, status: :not_found
+      end
+    end
+
+    # Closed
+    # GET /api/work_orders/closed(/:project_id)
+    def closed
+      if params.has_key?(:project_id) && is_numeric?(params[:project_id]) && params[:project_id] != '0'
+        @work_orders = WorkOrder.closed(params[:project_id])
+      else
+        @work_orders = WorkOrder.closed
+      end
+      if !@work_orders.blank?
+        render json: @work_orders
+      else
+        render json: :not_found, status: :not_found
+      end
+    end
   end
 end

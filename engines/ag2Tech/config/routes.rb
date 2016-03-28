@@ -203,6 +203,10 @@ Ag2Tech::Engine.routes.draw do
         scope '/work_orders' do
           get '/'                             =>  'work_orders#all'
           get '/by_project(/:project_id)'     =>  'work_orders#by_project'
+          get '/unstarted(/:project_id)'      =>  'work_orders#unstarted'
+          get '/uncompleted(/:project_id)'    =>  'work_orders#uncompleted'
+          get '/unclosed(/:project_id)'       =>  'work_orders#unclosed'
+          get '/closed(/:project_id)'         =>  'work_orders#closed'
           get '/:id'                          =>  'work_orders#one'
         end
       end

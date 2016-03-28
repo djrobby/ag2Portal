@@ -50,6 +50,12 @@ en:
           attributes:
             order_no:
               code_invalid: "invalid"
+            completed_at:
+              date_invalid: "Must be greater than or equal to Started at"
+              date_invalid_full: "Completed at must be greater than or equal to Started at"
+            closed_at:
+              date_invalid: "Must be greater than or equal to Completed at"
+              date_invalid_full: "Closed at must be greater than or equal to Completed at"
         charge_account:
           attributes:
             account_code:
