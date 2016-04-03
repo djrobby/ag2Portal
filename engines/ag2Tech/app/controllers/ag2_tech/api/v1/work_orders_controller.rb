@@ -10,10 +10,19 @@ module Ag2Tech
     #load_and_authorize_resource :class => false
 
     # ag2Tech API
+    # returns JSON
     # scope => /ag2_tech
+    # parameters => (<param>): optional
+    #               project_id: project id
+    #               id: work order id
+    #
     # GET /api/v1/work_orders => all
     # GET /api/v1/work_orders/:id => one
     # GET /api/v1/work_orders/by_project/:project_id => by_project
+    # GET /api/v1/work_orders/unstarted(/:project_id) => unstarted ones
+    # GET /api/v1/work_orders/uncompleted(/:project_id) => started by uncompleted ones
+    # GET /api/v1/work_orders/unclosed(/:project_id) => completed but unclosed ones
+    # GET /api/v1/work_orders/closed(/:project_id) => closed ones
 
     # GET /api/work_orders
     def all
