@@ -157,15 +157,31 @@ class PurchaseOrder < ActiveRecord::Base
   def self.undelivered(organization, _ordered)
     if !organization.blank?
       if !_ordered
-        joins(:purchase_order_item_balances).where('purchase_orders.organization_id = ?', organization).group('purchase_orders.id').having('sum(purchase_order_item_balances.balance) > ?', 0)
+        joins(:purchase_order_item_balances).where('NOT purchase_orders.approver_id IS NULL AND purchase_orders.organization_id = ?', organization).group('purchase_orders.id').having('sum(purchase_order_item_balances.balance) > ?', 0)
       else
-        joins(:purchase_order_item_balances).where('purchase_orders.organization_id = ?', organization).group('purchase_orders.supplier_id, purchase_orders.order_no, purchase_orders.id').having('sum(purchase_order_item_balances.balance) > ?', 0)
+        joins(:purchase_order_item_balances).where('NOT purchase_orders.approver_id IS NULL AND purchase_orders.organization_id = ?', organization).group('purchase_orders.supplier_id, purchase_orders.order_no, purchase_orders.id').having('sum(purchase_order_item_balances.balance) > ?', 0)
       end
     else
       if !_ordered
-        joins(:purchase_order_item_balances).group('purchase_orders.id').having('sum(purchase_order_item_balances.balance) > ?', 0)
+        joins(:purchase_order_item_balances).where('NOT purchase_orders.approver_id IS NULL').group('purchase_orders.id').having('sum(purchase_order_item_balances.balance) > ?', 0)
       else
-        joins(:purchase_order_item_balances).group('purchase_orders.supplier_id, purchase_orders.order_no, purchase_orders.id').having('sum(purchase_order_item_balances.balance) > ?', 0)
+        joins(:purchase_order_item_balances).where('NOT purchase_orders.approver_id IS NULL').group('purchase_orders.supplier_id, purchase_orders.order_no, purchase_orders.id').having('sum(purchase_order_item_balances.balance) > ?', 0)
+      end
+    end
+  end
+
+  def self.approved(organization, _ordered)
+    if !organization.blank?
+      if !_ordered
+        where('purchase_orders.organization_id = ? AND NOT purchase_orders.approver_id IS NULL', organization).order('purchase_orders.id')
+      else
+        where('purchase_orders.organization_id = ? AND NOT purchase_orders.approver_id IS NULL', organization).order('purchase_orders.supplier_id, purchase_orders.order_no, purchase_orders.id')
+      end
+    else
+      if !_ordered
+        where('NOT purchase_orders.approver_id IS NULL').order('purchase_orders.id')
+      else
+        where('NOT purchase_orders.approver_id IS NULL').order('purchase_orders.supplier_id, purchase_orders.order_no, purchase_orders.id')
       end
     end
   end
