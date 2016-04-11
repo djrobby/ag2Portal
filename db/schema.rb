@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20160409070717) do
+ActiveRecord::Schema.define(:version => 20160411123517) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -1167,6 +1167,21 @@ ActiveRecord::Schema.define(:version => 20160409070717) do
     t.datetime "updated_at",  :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
+  end
+
+  create_table "product_valued_stocks", :id => false, :force => true do |t|
+    t.integer "store_id"
+    t.string  "store_name"
+    t.integer "product_family_id",                                :default => 0,   :null => false
+    t.string  "family_code"
+    t.string  "family_name"
+    t.integer "product_id",                                       :default => 0,   :null => false
+    t.string  "product_code"
+    t.string  "main_description"
+    t.decimal "average_price",     :precision => 12, :scale => 4, :default => 0.0, :null => false
+    t.decimal "initial",           :precision => 34, :scale => 4
+    t.decimal "current",           :precision => 34, :scale => 4
+    t.decimal "current_value",     :precision => 13, :scale => 4
   end
 
   create_table "products", :force => true do |t|
