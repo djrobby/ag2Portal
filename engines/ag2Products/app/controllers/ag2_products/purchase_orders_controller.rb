@@ -1162,6 +1162,11 @@ module Ag2Products
       else
         # Send e-mail
         Notifier.send_purchase_order(@purchase_order, from, to, title, pdf).deliver
+        # Updates status
+        if @purchase_order.order_status_id < 4
+          @purchase_order.order_status_id = 4
+          @purchase_order.save
+        end
       end
 
       code

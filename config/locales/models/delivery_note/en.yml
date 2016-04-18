@@ -35,6 +35,7 @@ en:
         charge_account_report: "A. Account"
         sale_offer: "Offer"
         sale_offer_id: "Offer"
+        sale_offer_c: "Offer"
         costs: "Costs"
         subtotal: "Subtotal"
         taxable: "Taxable"

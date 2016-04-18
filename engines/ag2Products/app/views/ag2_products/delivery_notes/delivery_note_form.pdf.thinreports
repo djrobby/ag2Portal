@@ -78,7 +78,7 @@ report.page.values(form_title: I18n.t("activerecord.models.delivery_note.one"),
 				   delivery_no: @delivery_note.full_no,
 				   delivery_date_title: I18n.t("activerecord.attributes.delivery_note.delivery_date") + ":",
 				   delivery_date: @delivery_note.delivery_date.strftime("%d/%m/%Y"),
-				   offer_title: I18n.t("activerecord.attributes.delivery_note.sale_offer") + ":",
+				   offer_title: I18n.t("activerecord.attributes.delivery_note.sale_offer_c") + ":",
 				   project_title: I18n.t("activerecord.attributes.delivery_note.project") + ":",
 				   project: @delivery_note.project.full_name,
 				   client_title: I18n.t("activerecord.attributes.delivery_note.client") + ":",
@@ -122,5 +122,5 @@ no = 0
     report.page.list(:default) do |list|
 		list.store.page_quantity += i.quantity
 		list.store.page_amount += i.costs
-    end	
+    end
 end

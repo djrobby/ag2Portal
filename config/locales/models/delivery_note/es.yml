@@ -35,6 +35,7 @@ es:
         charge_account_report: "Cuenta A"
         sale_offer: "Presupuesto"
         sale_offer_id: "Presupuesto"
+        sale_offer_c: "Presup"
         costs: "Costos"
         subtotal: "Subtotal"
         taxable: "Base imponible"

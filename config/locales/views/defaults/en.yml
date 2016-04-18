@@ -16,6 +16,7 @@ en:
   created_by: "Created by"
   updated_by: "Updated by"
   by: "by"
+  of: " of "
   are_you_sure_to_delete: "Are you sure to delete this "
   about_h: "aGestiona2® is Agua y Gestión platform as a service."
   about_develop_html: "<b>Design & Development</b>"
