@@ -1,4 +1,4 @@
-if @tickets_report.nil?
+if @tickets_report.blank?
 	return
 end
 

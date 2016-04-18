@@ -4,6 +4,8 @@ en:
       index:
         control: "Control&Tracking"
         control_a: "Control&Tracking"
+        control_catalog: "Products Catalog"
+        control_stocks: "Stocks"
         products: "Products"
         families: "Product Families"
         types: "Product Types"

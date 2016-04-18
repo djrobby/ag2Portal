@@ -10,16 +10,19 @@ Ag2Products::Engine.routes.draw do
     match 'pr_track_project_has_changed/:order', :controller => 'ag2_products_track', :action => 'pr_track_project_has_changed'
     match 'pr_track_family_has_changed/:order', :controller => 'ag2_products_track', :action => 'pr_track_family_has_changed'
     # Reports
+    # From Control&Tracking
     match 'inventory_report', :controller => 'ag2_products_track', :action => 'inventory_report'
     match 'order_report', :controller => 'ag2_products_track', :action => 'order_report'
     match 'receipt_report', :controller => 'ag2_products_track', :action => 'receipt_report'
     match 'delivery_report', :controller => 'ag2_products_track', :action => 'delivery_report'
-    match 'stock_report', :controller => 'ag2_products_track', :action => 'stock_report'
-
+    #match 'stock_report', :controller => 'ag2_products_track', :action => 'stock_report'
+    match 'stocks_report', :controller => 'ag2_products_track', :action => 'stocks_report'
+    # From each Index
     match 'inventory_counts_report', :controller => 'inventory_counts', :action => 'inventory_counts_report'
     match 'receipt_notes_report', :controller => 'receipt_notes', :action => 'receipt_notes_report'
     match 'delivery_notes_report', :controller => 'delivery_notes', :action => 'delivery_notes_report'
     match 'purchase_orders_report', :controller => 'purchase_orders', :action => 'purchase_orders_report'
+    match 'products_catalog_report', :controller => 'products', :action => 'products_catalog_report'
 
     # Routes for jQuery POSTs
     # Numbers with decimals (.) must be multiplied (by 1xxx and the same zeroes x positions) before passed as REST parameter!

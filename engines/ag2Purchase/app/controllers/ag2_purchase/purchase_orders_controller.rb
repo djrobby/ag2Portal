@@ -864,16 +864,18 @@ module Ag2Purchase
       end
 
       @purchase_orders_report = @search.results
-      title = t("activerecord.models.purchase_order.few")
-      @to = formatted_date(@purchase_orders_report.first.created_at)
-      @from = formatted_date(@purchase_orders_report.last.created_at)
 
-      respond_to do |format|
-        # Render PDF
-        format.pdf { send_data render_to_string,
-                      filename: "#{title}_#{@from}-#{@to}.pdf",
-                     type: 'application/pdf',
-                     disposition: 'inline' }
+      if !@purchase_orders_report.blank?
+        title = t("activerecord.models.purchase_order.few")
+        @to = formatted_date(@purchase_orders_report.first.created_at)
+        @from = formatted_date(@purchase_orders_report.last.created_at)
+        respond_to do |format|
+          # Render PDF
+          format.pdf { send_data render_to_string,
+                        filename: "#{title}_#{@from}-#{@to}.pdf",
+                       type: 'application/pdf',
+                       disposition: 'inline' }
+        end
       end
     end
 

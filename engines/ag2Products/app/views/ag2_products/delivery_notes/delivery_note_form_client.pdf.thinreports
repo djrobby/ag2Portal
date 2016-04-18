@@ -148,5 +148,5 @@ no = 0
 		list.store.page_discount += i.discount
 		list.store.page_amount += i.amount
 		list.store.page_tax += i.tax
-    end	
+    end
 end

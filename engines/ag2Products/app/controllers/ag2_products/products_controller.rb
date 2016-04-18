@@ -10,6 +10,7 @@ module Ag2Products
                                                :pr_markup,
                                                :pr_update_family_textfield_from_organization,
                                                :pr_update_attachment,
+                                               :products_catalog_report,
                                                :receipts_deliveries]
     # Public attachment for drag&drop
     $attachment = nil
@@ -272,6 +273,73 @@ module Ag2Products
         format.html # receipts_deliveries.html.erb
         format.json { render json: { :product => @product, :receipts => @receipts, :deliveries => @deliveries, :counts => @counts } }
       end
+    end
+
+    # Products catalog report
+    def products_catalog_report
+      manage_filter_state
+      no = params[:No]
+      type = params[:Type]
+      family = params[:Family]
+      measure = params[:Measure]
+      manufacturer = params[:Manufacturer]
+      tax = params[:Tax]
+      letter = params[:letter]
+      # OCO
+      init_oco if !session[:organization]
+      # Initialize select_tags
+      @product_families = families_dropdown if @product_families.nil?
+
+      # If inverse no search is required
+      no = !no.blank? && no[0] == '%' ? inverse_no_search(no) : no
+
+      @search = Product.search do
+        fulltext params[:search]
+        if session[:organization] != '0'
+          with :organization_id, session[:organization]
+        end
+        if !letter.blank? && letter != "%"
+          with(:main_description).starting_with(letter)
+        end
+        if !no.blank?
+          if no.class == Array
+            with :product_code, no
+          else
+            with(:product_code).starting_with(no)
+          end
+        end
+        if !type.blank?
+          with :product_type_id, type
+        end
+        if !family.blank?
+          with :product_family_id, family
+        end
+        if !measure.blank?
+          with :measure_id, measure
+        end
+        if !manufacturer.blank?
+          with :manufacturer_id, manufacturer
+        end
+        if !tax.blank?
+          with :tax_type_id, tax
+        end
+        order_by :product_family_id, :asc
+        paginate :page => params[:page] || 1, :per_page => Product.count
+      end
+
+     @products_catalog_report = @search.results
+     @products_catalog_family =  @products_catalog_report
+
+     if !@products_catalog_report.blank?
+       title = t("activerecord.models.product.few")
+       respond_to do |format|
+         # Render PDF
+         format.pdf { send_data render_to_string,
+                      filename: "#{title}.pdf",
+                      type: 'application/pdf',
+                      disposition: 'inline' }
+       end
+     end
     end
 
     private

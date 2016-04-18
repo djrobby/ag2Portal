@@ -1,4 +1,4 @@
-if @inventory_counts_report.nil?
+if @inventory_counts_report.blank?
 	return
 end
 

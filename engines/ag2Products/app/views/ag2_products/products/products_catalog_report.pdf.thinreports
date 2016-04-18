@@ -1,0 +1,95 @@
+if @products_catalog_report.blank?
+	return
+end
+
+# Localization for numbers
+delimiter = I18n.locale == :es ? "." : ","
+
+report.set_layout tlf: 'reports/products_catalog_report', layout_options: { default: true }
+
+#
+# Report events
+#
+# On page create
+report.events.on :page_create do |e|
+	# Set page-number
+	e.page.item(:page_no).value(e.page.no)
+end
+# On report generate
+report.events.on :generate do |e|
+	e.pages.each do |page|
+		# Set total-page-number
+		page.item(:page_count).value(e.report.page_count)
+	end
+end
+
+#
+# List configuration (stores & events)
+#
+report.layout.config.list(:default) do |c|
+	# Define the variables used in list
+	c.use_stores page_rows: 0
+
+	# On list page footer insertion
+	c.events.on :page_footer_insert do |e|
+		# Display page sutotals
+		e.section.item(:sum_rows_title).value(I18n.t("ag2_products.ag2_products_track.stock_report.sum_rows_title"))
+		e.section.item(:sum_rows).value(e.store.page_rows)
+		# Initialize subtotals to 0
+		#e.store.page_rows = 0
+	end
+end
+
+
+# New page & start
+report.start_new_page
+
+# Page header
+report.page.values report_title: I18n.t("ag2_products.ag2_products_track.stock_report.report_title_catalog")
+
+# Page footer
+report.page.values(printed_at: formatted_timestamp(Time.now),
+				   pt: I18n.t("every_report.pt"),
+				   pd: I18n.t("every_report.pd"))
+
+
+
+# List header
+report.page.list(:default).header do |header|
+	header.item(:image_c).value I18n.t("ag2_products.ag2_products_track.stock_report.image")
+	header.item(:id_c).value I18n.t("ag2_products.ag2_products_track.stock_report.id")
+	header.item(:product_code_c).value I18n.t("activerecord.attributes.product.product_code")
+	header.item(:main_description_c).value I18n.t("activerecord.attributes.product.main_description")
+	header.item(:sell_price_c).value I18n.t("activerecord.attributes.product.sell_price")
+end
+
+# Page Title list
+family_id = @products_catalog_family.first.product_family_id
+
+# List detail
+@products_catalog_report.each do |i|
+
+			if !i.product_family_id.blank? && (i.product_family_id != family_id)
+				report.page.list(:default).page_break
+				report.page.list(:default) do |list|
+					list.store.page_rows = 0
+				end
+				family_id = i.product_family_id
+			end
+
+		report.page.list(:default).add_row do |row|
+			report.page.values product_family_c: I18n.t("activerecord.attributes.product.product_family")+": "
+			report.page.values product_family: i.product_family.full_name
+			row.item(:image).value('public/' + i.image.url.split("?").first) unless i.image.blank?
+			row.item(:id).value i.id
+			row.item(:product_code).value i.full_code
+			row.item(:main_description).value i.main_description
+			row.item(:sell_price).value number_with_precision(i.sell_price, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless i.sell_price.blank?
+		end
+
+	# Store page subtotals
+  report.page.list(:default) do |list|
+		list.store.page_rows += 1
+	end
+
+end

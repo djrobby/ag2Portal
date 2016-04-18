@@ -28,6 +28,11 @@ en:
         sum_rows_title: "Total Rows:"
       stock_report:
         report_title: "Stocks"
+        report_title_catalog: "Products Catalog"
+        sum_rows_title: "Total Articles:"
+        total_full: "Total"
+        image: "Picture"
+        id: "Id"
       every_report:
         pt: "Page"
         pd: "of"

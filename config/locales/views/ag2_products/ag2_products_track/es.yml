@@ -28,6 +28,11 @@ es:
         sum_rows_title: "Total Filas:"
       stock_report:
         report_title: "Existencias"
+        report_title_catalog: "Catálogo de Productos"
+        sum_rows_title: "Total Artículos:"
+        total_full: "Total"
+        image: "Imagen"
+        id: "Id"
       every_report:
         pt: "Página"
         pd: "de"

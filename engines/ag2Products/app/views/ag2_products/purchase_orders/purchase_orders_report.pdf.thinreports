@@ -1,4 +1,4 @@
-if @purchase_orders_report.nil?
+if @purchase_orders_report.blank?
 	return
 end
 

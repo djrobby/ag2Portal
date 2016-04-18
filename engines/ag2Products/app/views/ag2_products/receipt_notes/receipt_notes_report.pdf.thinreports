@@ -1,4 +1,4 @@
-if @receipt_notes_report.nil?
+if @receipt_notes_report.blank?
 	return
 end
 

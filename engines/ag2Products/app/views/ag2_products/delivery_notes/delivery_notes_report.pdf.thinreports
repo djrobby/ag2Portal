@@ -1,4 +1,4 @@
-if @delivery_notes_report.nil?
+if @delivery_notes_report.blank?
 	return
 end
 
