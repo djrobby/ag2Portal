@@ -55,19 +55,19 @@ module Ag2Products
       product = params[:product]
 
       # Dates are mandatory
-      if @from.blank? || @to.blank? 
+      if @from.blank? || @to.blank?
         return
       end
 
       # Search necessary data
       #@worker = Worker.find(worker)
-      
+
       # Format dates
       from = Time.parse(@from).strftime("%Y-%m-%d")
       to = Time.parse(@to).strftime("%Y-%m-%d")
       # Setup filename
-      title = t("activerecord.models.inventory_count.few") + "_#{from}_#{to}.pdf"      
-      
+      title = t("activerecord.models.inventory_count.few") + "_#{from}_#{to}.pdf"
+
       respond_to do |format|
         # Execute procedure and load aux table
         ActiveRecord::Base.connection.execute("CALL generate_timerecord_reports(#{worker}, '#{from}', '#{to}', 0);")
@@ -94,19 +94,19 @@ module Ag2Products
       product = params[:product]
 
       # Dates are mandatory
-      if @from.blank? || @to.blank? 
+      if @from.blank? || @to.blank?
         return
       end
 
       # Search necessary data
       #@worker = Worker.find(worker)
-      
+
       # Format dates
       from = Time.parse(@from).strftime("%Y-%m-%d")
       to = Time.parse(@to).strftime("%Y-%m-%d")
       # Setup filename
-      title = t("activerecord.models.purchase_order.few") + "_#{from}_#{to}.pdf"      
-      
+      title = t("activerecord.models.purchase_order.few") + "_#{from}_#{to}.pdf"
+
       respond_to do |format|
         # Execute procedure and load aux table
         ActiveRecord::Base.connection.execute("CALL generate_timerecord_reports(#{worker}, '#{from}', '#{to}', 0);")
@@ -132,19 +132,19 @@ module Ag2Products
       product = params[:product]
 
       # Dates are mandatory
-      if @from.blank? || @to.blank? 
+      if @from.blank? || @to.blank?
         return
       end
 
       # Search necessary data
       #@worker = Worker.find(worker)
-      
+
       # Format dates
       from = Time.parse(@from).strftime("%Y-%m-%d")
       to = Time.parse(@to).strftime("%Y-%m-%d")
       # Setup filename
-      title = t("activerecord.models.receipt_note.few") + "_#{from}_#{to}.pdf"      
-      
+      title = t("activerecord.models.receipt_note.few") + "_#{from}_#{to}.pdf"
+
       respond_to do |format|
         # Execute procedure and load aux table
         ActiveRecord::Base.connection.execute("CALL generate_timerecord_reports(#{worker}, '#{from}', '#{to}', 0);")
@@ -169,19 +169,19 @@ module Ag2Products
       product = params[:product]
 
       # Dates are mandatory
-      if @from.blank? || @to.blank? 
+      if @from.blank? || @to.blank?
         return
       end
 
       # Search necessary data
       #@worker = Worker.find(worker)
-      
+
       # Format dates
       from = Time.parse(@from).strftime("%Y-%m-%d")
       to = Time.parse(@to).strftime("%Y-%m-%d")
       # Setup filename
-      title = t("activerecord.models.delivery_note.few") + "_#{from}_#{to}.pdf"      
-      
+      title = t("activerecord.models.delivery_note.few") + "_#{from}_#{to}.pdf"
+
       respond_to do |format|
         # Execute procedure and load aux table
         ActiveRecord::Base.connection.execute("CALL generate_timerecord_reports(#{worker}, '#{from}', '#{to}', 0);")
@@ -205,23 +205,26 @@ module Ag2Products
       product = params[:product]
 
       # Dates are mandatory
-      if @from.blank? || @to.blank? 
-        return
-      end
+      @from = Date.today.to_s if @from.blank?
+      @to = Date.today.to_s if @to.blank?
 
-      # Search necessary data
-      #@worker = Worker.find(worker)
-      
       # Format dates
       from = Time.parse(@from).strftime("%Y-%m-%d")
       to = Time.parse(@to).strftime("%Y-%m-%d")
+      # Setup instance variable for report
+      if store.blank? && family.blank?
+        @stocks_report = ProductValuedStock.order(:store_id, :product_family_id)
+      elsif store.blank?
+          @stocks_report = ProductValuedStock.where("product_family_id = ?", family).order(:store_id, :product_family_id)
+      elsif family.blank?
+          @stocks_report = ProductValuedStock.where("store_id = ?", store).order(:store_id, :product_family_id)
+      else
+          @stocks_report = ProductValuedStock.where("store_id = ? AND product_family_id = ?", store, family).order(:store_id, :product_family_id)
+      end
       # Setup filename
-      title = t("activerecord.models.stock.few") + "_#{from}_#{to}.pdf"      
-      
+      title = t("activerecord.models.stock.few") + "_#{from}_#{to}.pdf"
+
       respond_to do |format|
-        # Execute procedure and load aux table
-        ActiveRecord::Base.connection.execute("CALL generate_timerecord_reports(#{worker}, '#{from}', '#{to}', 0);")
-        @time_records = TimerecordReport.all
         # Render PDF
         format.pdf { send_data render_to_string,
                      filename: "#{title}.pdf",
@@ -240,7 +243,7 @@ module Ag2Products
       if session[:organization] != '0'
         @organization = Organization.find(session[:organization].to_i)
       end
-      
+
       @projects = projects_dropdown
       @suppliers = suppliers_dropdown
       @stores = projects_stores(@projects)
@@ -249,10 +252,10 @@ module Ag2Products
       @statuses = OrderStatus.order('id')
       @families = families_dropdown
       @products = products_dropdown
-    end    
-    
+    end
+
     private
-    
+
     def reports_array()
       _array = []
       _array = _array << t("activerecord.models.inventory_count.few")
@@ -272,7 +275,7 @@ module Ag2Products
       else
         _projects = session[:organization] != '0' ? Project.where(organization_id: session[:organization].to_i).order(:project_code) : Project.order(:project_code)
       end
-    end    
+    end
 
     def suppliers_dropdown
       _suppliers = session[:organization] != '0' ? Supplier.where(organization_id: session[:organization].to_i).order(:supplier_code) : Supplier.order(:supplier_code)
@@ -281,7 +284,7 @@ module Ag2Products
     def stores_dropdown
       session[:organization] != '0' ? Store.where(organization_id: session[:organization].to_i).order(:name) : Store.order(:name)
     end
-    
+
     # Stores belonging to current project
     def project_stores(_project)
       _array = []
@@ -392,23 +395,23 @@ module Ag2Products
       # Returning founded charge accounts
       _ret = ChargeAccount.where(id: _array).order(:account_code)
     end
-    
+
     def families_dropdown
-      _families = session[:organization] != '0' ? ProductFamily.where(organization_id: session[:organization].to_i).order(:family_code) : ProductFamily.order(:family_code)  
+      _families = session[:organization] != '0' ? ProductFamily.where(organization_id: session[:organization].to_i).order(:family_code) : ProductFamily.order(:family_code)
     end
 
     def products_dropdown
       session[:organization] != '0' ? Product.where(organization_id: session[:organization].to_i).order(:product_code) : Product.order(:product_code)
-    end    
-    
+    end
+
     def products_array(_products)
       _array = []
       _products.each do |i|
-        _array = _array << [i.id, i.full_code, i.main_description[0,40]] 
+        _array = _array << [i.id, i.full_code, i.main_description[0,40]]
       end
       _array
     end
-    
+
     def ret_array(_array, _ret)
       _ret.each do |_r|
         _array = _array << _r.id unless _array.include? _r.id

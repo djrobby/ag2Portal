@@ -15,8 +15,7 @@ Ag2Products::Engine.routes.draw do
     match 'order_report', :controller => 'ag2_products_track', :action => 'order_report'
     match 'receipt_report', :controller => 'ag2_products_track', :action => 'receipt_report'
     match 'delivery_report', :controller => 'ag2_products_track', :action => 'delivery_report'
-    #match 'stock_report', :controller => 'ag2_products_track', :action => 'stock_report'
-    match 'stocks_report', :controller => 'ag2_products_track', :action => 'stocks_report'
+    match 'stock_report', :controller => 'ag2_products_track', :action => 'stock_report'
     # From each Index
     match 'inventory_counts_report', :controller => 'inventory_counts', :action => 'inventory_counts_report'
     match 'receipt_notes_report', :controller => 'receipt_notes', :action => 'receipt_notes_report'

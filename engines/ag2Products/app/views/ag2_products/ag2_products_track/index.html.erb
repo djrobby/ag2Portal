@@ -190,7 +190,7 @@
       var detailed = $('#detailed').prop('checked');
       var from = $('#From').val();
       var to = $('#To').val();
-      if ((from == "") || (to == ""))
+      if (((from == "") || (to == "")) && report != 5)
         return;
       switch (report) {
         case 1:
@@ -245,7 +245,8 @@
           var store = $('select#Store :selected').val();
           var family = $('select#Family :selected').val();
           var product = $('select#Product :selected').val();
-          if ((project == "") && (store == "") && (family == "") && (product == ""))
+          //if ((project == "") && (store == "") && (family == "") && (product == ""))
+          if ((store == "") && (family == ""))
             return;
           window.open("stock_report.pdf?detailed=" + detailed + "project=" + project + "&from=" + from + "&to=" + to + "&store=" + store + "&family=" + family + "&product=" + product, "_blank");
           break;
