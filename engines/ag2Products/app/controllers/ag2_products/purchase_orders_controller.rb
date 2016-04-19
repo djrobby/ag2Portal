@@ -22,6 +22,7 @@ module Ag2Products
                                                :po_product_price,
                                                :po_product_all_stocks,
                                                :po_check_stock_before_approve,
+                                               :po_check_price_before_approve,
                                                :po_approve_order,
                                                :po_update_addresses_from_store,
                                                :purchase_orders_report,
@@ -516,6 +517,24 @@ module Ag2Products
               _array = _array << [i.id, s.product.full_code, i.description, number_with_precision(i.product.stock.round(4), precision: 4),
                                   s.store.name, number_with_precision(s.current.round(4), precision: 4), _is_current_store]
             end
+          end
+        end
+      end
+      render json: _array
+    end
+
+    # Check prices before approve
+    def po_check_price_before_approve
+      _order = params[:order]
+      _array = []
+      order = PurchaseOrder.find(_order)
+      if !order.nil?
+        order.purchase_order_items.each do |i|
+          prices = PurchasePrice.find_product_best_price(i.product)
+          if !prices.blank?
+            _is_current_price = prices.supplier == order.supplier ? "*" : ""
+            _array = _array << [i.id, prices.product.full_code, i.description, number_with_precision(i.net_price.round(4), precision: 4),
+                                prices.supplier.partial_name, number_with_precision(prices.net_price.round(4), precision: 4), _is_current_price]
           end
         end
       end

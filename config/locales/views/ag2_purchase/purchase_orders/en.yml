@@ -40,3 +40,4 @@ en:
       approve_order_write: "Unable to save Order."
       approve_order_warn: "This Order is already approved."
       check_stock_btn: "Check inventory"
+      check_price_btn: "Comprobar prices"

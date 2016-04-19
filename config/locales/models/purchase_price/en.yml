@@ -24,3 +24,4 @@ en:
         discount_rate_c: "DR %"
         discount: "Discount"
         net_price: "Price €"
+        net_price_c: "Net"

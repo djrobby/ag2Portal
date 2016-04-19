@@ -4,8 +4,9 @@
   $(document).ready(function() {
     // Hide send_messages div
     $("#send_mesages").hide();
-    // Hide check_stock div
+    // Hide check_stock & price div
     $("#check_stock").hide();
+    $("#check_price").hide();
     // Hide proc_mesage div
     $("#proc_mesage").hide();
     // Show approve_order_btn based on approval
@@ -16,6 +17,7 @@
       $('#send_report_btn').hide();
       $('#approve_order_btn').show();
       $('#check_stock_btn').show();
+      $('#check_price_btn').show();
       approve_isvisible = true;
     } else {
       $('#print_report_btn').show();
@@ -23,6 +25,7 @@
       $('#send_report_btn').show();
       $('#approve_order_btn').hide();
       $('#check_stock_btn').hide();
+      $('#check_price_btn').hide();
       approve_isvisible = false;
     }
     $('.nsel2').select2({
@@ -54,7 +57,9 @@
           $('#approval_date').text(data.approval_date);
           $('#approve_order_btn').hide();
           $('#check_stock_btn').hide();
+          $('#check_price_btn').hide();
           $("#check_stock").hide();
+          $("#check_price").hide();
           $('#print_report_btn').show();
           $('#send_report_btn').show();
           $('#notify_btn').show();
@@ -66,6 +71,11 @@
 
     // when #check_stock_btn is clicked
     $("#check_stock_btn").click(function() {
+      if ($("#check_stock").is(":visible")) {
+        $("#check_stock").hide();
+        $("#check_stock").empty();
+        return false;
+      }
       // make a POST call and replace the content
       var order = $('#id').html();
       if (order == "") order = "0";
@@ -151,6 +161,105 @@
           $('#check_stock').append('<h4><%= I18n.t("ag2_purchase.purchase_orders.check_stock_btn") %></h4>');
           $('#check_stock').append(_table);
           $("#check_stock").show();
+          $(document.body).scrollTop($('#check_stock').offset().top);
+        }
+      });
+      return false;
+    });
+
+    // when #check_price_btn is clicked
+    $("#check_price_btn").click(function() {
+      if ($("#check_price").is(":visible")) {
+        $("#check_price").hide();
+        $("#check_price").empty();
+        return false;
+      }
+      // make a POST call and replace the content
+      var order = $('#id').html();
+      if (order == "") order = "0";
+      jQuery.getJSON('po_check_price_before_approve/' + order, function(data) {
+        if (data != null) {
+          var _table = $('<table/>').attr('class', 'table fixed');
+          var _thead = $('<thead/>');
+          var _tbody = $('<tbody/>');
+          var _th;
+          var _tr;
+          var _td;
+          var _id_ant = data[0][0]; // first id
+          var _first = true;
+          // Table columns width
+          _table.append('<col width="10%" />');
+          _table.append('<col width="35%" />');
+          _table.append('<col width="14%" />');
+          _table.append('<col width="25%" />');
+          _table.append('<col width="14%" />');
+          _table.append('<col width="2%" />');
+          // Table header
+          _th = $('<th/>').attr('align', 'left'); // product code column title
+          _th.text('<%= t "activerecord.attributes.purchase_order_item.product_c" %>');
+          _thead.append(_th);
+          _th = $('<th/>').attr('align', 'left'); // item description column title
+          _th.text('<%= t "activerecord.attributes.purchase_order_item.description_c" %>');
+          _thead.append(_th);
+          _th = $('<th/>').attr('align', 'right'); // item net price column title
+          _th.text('<%= t "activerecord.attributes.purchase_order_item.price_c" %>');
+          _thead.append(_th);
+          _th = $('<th/>').attr('align', 'left'); // supplier name column title
+          _th.text('<%= t "activerecord.attributes.purchase_order.supplier" %>');
+          _thead.append(_th);
+          _th = $('<th/>').attr('align', 'right'); // purchase net price column title
+          _th.text('<%= t "activerecord.attributes.purchase_price.net_price_c" %>');
+          _thead.append(_th);
+          _th = $('<th/>').attr('align', 'center'); // is current price column title
+          _th.text('');
+          _thead.append(_th);
+
+          _table.append(_thead);
+          // Loop thru array
+          $.each(data, function(id, option) {
+            _tr = $('<tr/>');
+            if ((_id_ant != option[0]) || _first) {
+              // id changed: print product data
+              _id_ant = option[0];
+              _first = false;
+
+              _td = $('<td/>').attr('align', 'left'); // product code
+              _td.text(option[1]);
+              _tr.append(_td);
+              _td = $('<td/>').attr('align', 'left'); // item description
+              _td.text(option[2]);
+              _tr.append(_td);
+              _td = $('<td/>').attr('align', 'right'); // item net price
+              _td.text(option[3]);
+              _tr.append(_td);
+            } else {
+              _td = $('<td/>');
+              _td.text('');
+              _tr.append(_td);
+              _td = $('<td/>');
+              _td.text('');
+              _tr.append(_td);
+              _td = $('<td/>');
+              _td.text('');
+              _tr.append(_td);
+            }
+            _td = $('<td/>').attr('align', 'left'); // supplier name
+            _td.text(option[4]);
+            _tr.append(_td);
+            _td = $('<td/>').attr('align', 'right'); // purchase net price
+            _td.text(option[5]);
+            _tr.append(_td);
+            _td = $('<td/>').attr('align', 'center'); // is current price
+            _td.text(option[6]);
+            _tr.append(_td);
+
+            _tbody.append(_tr);
+          });
+          _table.append(_tbody);
+          $('#check_price').append('<h4><%= I18n.t("ag2_purchase.purchase_orders.check_price_btn") %></h4>');
+          $('#check_price').append(_table);
+          $("#check_price").show();
+          $(document.body).scrollTop($('#check_price').offset().top);
         }
       });
       return false;
@@ -343,6 +452,7 @@
       <td class="form-td-two right-winged">
         <!-- Approve purchase order -->
         <% if @is_approver %>
+          <a href="#" id="check_price_btn" class="btn btn-warning"><i class="icon-eye-open icon-white"></i> <%=t "ag2_purchase.purchase_orders.check_price_btn" %></a>
           <a href="#" id="check_stock_btn" class="btn btn-warning"><i class="icon-eye-open icon-white"></i> <%=t "ag2_purchase.purchase_orders.check_stock_btn" %></a>
           <a href="#" id="approve_order_btn" class="btn btn-warning"><i class="icon-ok icon-white"></i> <%=t :approve %></a>
           <br />
@@ -354,6 +464,11 @@
 <br />
 
 <%= link_to t("ag2_purchase.purchase_orders.back_to_main_page"), purchase_orders_path %>
+
+<!-- Check price div -->
+<p></p>
+<div id="check_price" class="alert alert-success">
+</div>
 
 <!-- Check stock div -->
 <p></p>

@@ -108,6 +108,9 @@ Ag2Purchase::Engine.routes.draw do
     match 'purchase_orders/po_check_stock_before_approve/:order', :controller => 'purchase_orders', :action => 'po_check_stock_before_approve'
     match 'po_check_stock_before_approve/:order', :controller => 'purchase_orders', :action => 'po_check_stock_before_approve'
     match 'purchase_orders/:id/po_check_stock_before_approve/:order', :controller => 'purchase_orders', :action => 'po_check_stock_before_approve'
+    match 'purchase_orders/po_check_price_before_approve/:order', :controller => 'purchase_orders', :action => 'po_check_price_before_approve'
+    match 'po_check_price_before_approve/:order', :controller => 'purchase_orders', :action => 'po_check_price_before_approve'
+    match 'purchase_orders/:id/po_check_price_before_approve/:order', :controller => 'purchase_orders', :action => 'po_check_price_before_approve'
     match 'purchase_orders/po_update_selects_from_offer/:o', :controller => 'purchase_orders', :action => 'po_update_selects_from_offer'
     match 'po_update_selects_from_offer/:o', :controller => 'purchase_orders', :action => 'po_update_selects_from_offer'
     match 'purchase_orders/:id/po_update_selects_from_offer/:o', :controller => 'purchase_orders', :action => 'po_update_selects_from_offer'
@@ -117,7 +120,6 @@ Ag2Purchase::Engine.routes.draw do
     match 'purchase_orders/send_purchase_order_form/:id', :controller => 'purchase_orders', :action => 'send_purchase_order_form'
     match 'send_purchase_order_form/:id', :controller => 'purchase_orders', :action => 'send_purchase_order_form'
     match 'purchase_orders/:id/send_purchase_order_form/:id', :controller => 'purchase_orders', :action => 'send_purchase_order_form'
-
     match 'purchase_orders/send_notification/:id/:user', :controller => 'purchase_orders', :action => 'send_notification'
     match 'send_notification/:id/:user', :controller => 'purchase_orders', :action => 'send_notification'
     match 'purchase_orders/:id/send_notification/:id/:user', :controller => 'purchase_orders', :action => 'send_notification'
