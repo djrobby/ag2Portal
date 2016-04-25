@@ -41,7 +41,9 @@ class DeliveryNoteItem < ActiveRecord::Base
     if !self.description.blank?
       self[:description].upcase!
     end
-    true
+    #true
+    # Check current Stock
+    check_stock(self.product, self.store, self.quantity)
   end
 
   #
@@ -91,7 +93,7 @@ class DeliveryNoteItem < ActiveRecord::Base
     end
     true
   end
-  
+
   # After update
   # Updates Stock (current and previous)
   def update_stock_on_update
@@ -131,7 +133,7 @@ class DeliveryNoteItem < ActiveRecord::Base
     end
     true
   end
-  
+
   #
   # Helper methods for triggers
   #
@@ -148,6 +150,22 @@ class DeliveryNoteItem < ActiveRecord::Base
         end
       end
     end
-    true 
+    true
+  end
+
+  # Delivery note item's quantity can't be greater than current stock
+  # Warning: Only if product_type is different from 2!
+  def check_stock(_product, _store, _quantity)
+    _check_stock = true
+    if _product.product_type.id != 2
+      _stock = Stock.find_by_product_and_store(_product, _store)
+      if !_stock.nil?
+        if (_stock.current - _quantity) < 0
+          errors.add(:description, I18n.t("activerecord.models.delivery_note_item.quantity_greater_than_stock_item", stock: _stock.current))
+          _check_stock = false
+        end
+      end
+    end
+    _check_stock
   end
 end
