@@ -7,6 +7,7 @@ es:
         few:   Items de pedido
         other: Items de pedido
         check_for_receipt_notes: "Item de pedido no puede ser eliminado mientras existan notas de recepción vinculadas."
+        quantity_greater_than_maximum: "La cantidad introducida (%{qty}) podría dejar las existencias en/sobre máximo (%{maximum})"
     attributes:
       purchase_order_item:
         purchase_order: "Pedido"

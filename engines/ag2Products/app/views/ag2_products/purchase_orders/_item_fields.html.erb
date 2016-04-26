@@ -300,6 +300,32 @@
     $("#fnt-quantity").change(function() {
       // preserve the current object
       var _this = (this);
+      // stock check
+      var store = $('select#fnt-store :selected').val();
+      if (typeof store === "undefined") {
+        store = $(_this).closest('tr').find('select.fnt-store :selected').val();
+      }
+      if (store == "")
+        store = "0";
+      var qty = $('#fnt-quantity').val();
+      if (typeof qty === "undefined") {
+        qty = $(_this).closest('tr').find('.fnt-quantity').val();
+      }
+      if (qty == "")
+        qty = "0";
+      var product = $('select#fnt-product :selected').val();
+      if (typeof product === "undefined") {
+        product = $(_this).closest('tr').find('.fnt-product').val();
+      }
+      if (product == "")
+        product = "0";
+      qty = parseInt(right_number(qty, 4) * 10000);
+      jQuery.getJSON('po_item_stock_check/' + store + '/' + product + '/' + qty, function(data) {
+        if (data.alert != "") {
+          alert(data.alert);
+        }
+      });
+      // recalculate & format
       recalculate_po_fields(_this);
       return false;
     });

@@ -7,6 +7,7 @@ en:
         few:   Purchase order items
         other: Purchase order items
         check_for_receipt_notes: "Purchase order item cannot be destroyed while linked receipt notes exist."
+        quantity_greater_than_maximum: "The amount entered (%{qty}) would leave stocks at/over maximum (%{maximum})!"
     attributes:
       purchase_order_item:
         purchase_order: "Purchase order"

@@ -9,6 +9,7 @@ es:
         check_for_client_invoices: "Item de nota de entrega no puede ser eliminado mientras existan facturas vinculadas."
         quantity_greater_than_stock: "¡La cantidad introducida (%{qty}) es mayor que las existencias actuales (%{stock})!"
         quantity_greater_than_stock_item: "Cant. mayor que existencias actuales (%{stock})"
+        quantity_greater_than_minimum: "La cantidad introducida (%{qty}) dejará las existencias en/bajo mínimo (%{minimum})"
     attributes:
       delivery_note_item:
         delivery_note: "Nota de entrega"

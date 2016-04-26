@@ -289,18 +289,29 @@ module Ag2Products
     end
 
     # Is quantity greater than current stock?
+    # Will quantity leave stock at minimum?
     def dn_item_stock_check
       store = params[:store]
       product = params[:product]
       qty = params[:qty].to_f / 10000
-      stock = 0
+      stock = nil
+      current = 0
+      minimum = 0
       alert = ""
       if product != '0' && store != '0'
-        stock = Stock.find_by_product_and_store(product, store).current rescue 0
-        if qty > stock
-          qty = number_with_precision(qty.round(4), precision: 4, delimiter: I18n.locale == :es ? "." : ",")
-          stock = number_with_precision(stock.round(4), precision: 4, delimiter: I18n.locale == :es ? "." : ",")
-          alert = I18n.t("activerecord.models.delivery_note_item.quantity_greater_than_stock", qty: qty, stock: stock)
+        stock = Stock.find_by_product_and_store(product, store)
+        if !stock.blank?
+          current = stock.current
+          minimum = stock.minimum
+          if qty > current
+            qty = number_with_precision(qty.round(4), precision: 4, delimiter: I18n.locale == :es ? "." : ",")
+            current = number_with_precision(current.round(4), precision: 4, delimiter: I18n.locale == :es ? "." : ",")
+            alert = I18n.t("activerecord.models.delivery_note_item.quantity_greater_than_stock", qty: qty, stock: current)
+          elsif (current - qty) <= minimum
+            qty = number_with_precision(qty.round(4), precision: 4, delimiter: I18n.locale == :es ? "." : ",")
+            minimum = number_with_precision(minimum.round(4), precision: 4, delimiter: I18n.locale == :es ? "." : ",")
+            alert = I18n.t("activerecord.models.delivery_note_item.quantity_greater_than_minimum", qty: qty, minimum: minimum)
+          end
         end
       end
       # Setup JSON

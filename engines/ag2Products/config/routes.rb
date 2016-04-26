@@ -201,6 +201,9 @@ Ag2Products::Engine.routes.draw do
     match 'purchase_orders/po_current_stock/:product/:store', :controller => 'purchase_orders', :action => 'po_current_stock'
     match 'po_current_stock/:product/:store', :controller => 'purchase_orders', :action => 'po_current_stock'
     match 'purchase_orders/:id/po_current_stock/:product/:store', :controller => 'purchase_orders', :action => 'po_current_stock'
+    match 'purchase_orders/po_item_stock_check/:store/:product/:qty', :controller => 'purchase_orders', :action => 'po_item_stock_check'
+    match 'po_item_stock_check/:store/:product/:qty', :controller => 'purchase_orders', :action => 'po_item_stock_check'
+    match 'purchase_orders/:id/po_item_stock_check/:store/:product/:qty', :controller => 'purchase_orders', :action => 'po_item_stock_check'
     match 'purchase_orders/po_update_project_textfields_from_organization/:org', :controller => 'purchase_orders', :action => 'po_update_project_textfields_from_organization'
     match 'po_update_project_textfields_from_organization/:org', :controller => 'purchase_orders', :action => 'po_update_project_textfields_from_organization'
     match 'purchase_orders/:id/po_update_project_textfields_from_organization/:org', :controller => 'purchase_orders', :action => 'po_update_project_textfields_from_organization'
@@ -237,7 +240,6 @@ Ag2Products::Engine.routes.draw do
     match 'purchase_orders/send_purchase_order_form/:id', :controller => 'purchase_orders', :action => 'send_purchase_order_form'
     match 'send_purchase_order_form/:id', :controller => 'purchase_orders', :action => 'send_purchase_order_form'
     match 'purchase_orders/:id/send_purchase_order_form/:id', :controller => 'purchase_orders', :action => 'send_purchase_order_form'
-
     match 'purchase_orders/send_notification/:id/:user', :controller => 'purchase_orders', :action => 'send_notification'
     match 'send_notification/:id/:user', :controller => 'purchase_orders', :action => 'send_notification'
     match 'purchase_orders/:id/send_notification/:id/:user', :controller => 'purchase_orders', :action => 'send_notification'
