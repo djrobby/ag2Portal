@@ -15,6 +15,7 @@ module Ag2Purchase
                                                :po_format_numbers,
                                                :po_totals,
                                                :po_current_stock,
+                                               :po_item_stock_check,
                                                :po_update_project_textfields_from_organization,
                                                :po_generate_no,
                                                :po_check_stock_and_price,
@@ -339,6 +340,32 @@ module Ag2Purchase
       current_stock = number_with_precision(current_stock.round(4), precision: 4)
       # Setup JSON
       @json_data = { "stock" => current_stock.to_s }
+      render json: @json_data
+    end
+
+    # Will quantity leave stock at maximum?
+    def po_item_stock_check
+      store = params[:store]
+      product = params[:product]
+      qty = params[:qty].to_f / 10000
+      stock = nil
+      current = 0
+      maximum = 0
+      alert = ""
+      if product != '0' && store != '0'
+        stock = Stock.find_by_product_and_store(product, store)
+        if !stock.blank?
+          current = stock.current
+          maximum = stock.maximum
+          if (maximum > 0) && ((current + qty) >= maximum)
+            qty = number_with_precision(qty.round(4), precision: 4, delimiter: I18n.locale == :es ? "." : ",")
+            maximum = number_with_precision(maximum.round(4), precision: 4, delimiter: I18n.locale == :es ? "." : ",")
+            alert = I18n.t("activerecord.models.purchase_order_item.quantity_greater_than_maximum", qty: qty, maximum: maximum)
+          end
+        end
+      end
+      # Setup JSON
+      @json_data = { "alert" => alert }
       render json: @json_data
     end
 

@@ -15,6 +15,7 @@ module Ag2Products
                                                :po_format_numbers,
                                                :po_totals,
                                                :po_current_stock,
+                                               :po_item_stock_check,
                                                :po_update_project_textfields_from_organization,
                                                :po_generate_no,
                                                :po_check_stock_and_price,
