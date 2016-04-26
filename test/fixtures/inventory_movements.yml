@@ -1,0 +1,21 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  store: 
+  product: 
+  type: 
+  mdate: 2016-04-26
+  parent_id: 1
+  item_id: 1
+  quantity: 9.99
+  price: 9.99
+
+two:
+  store: 
+  product: 
+  type: 
+  mdate: 2016-04-26
+  parent_id: 1
+  item_id: 1
+  quantity: 9.99
+  price: 9.99
