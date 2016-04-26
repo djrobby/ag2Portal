@@ -25,26 +25,30 @@
       <div id="counts" class="collapse in">
       <table class="table table-condensed table-striped">
         <!-- id -->
-        <col width="8%" />
+        <col width="5%" />
         <!-- date -->
         <col width="10%" />
         <!-- no -->
-        <col width="22%" />
+        <col width="20%" />
         <!-- store -->
-        <col width="39%" />
+        <col width="29%" />
+        <!-- type -->
+        <col width="16%" />
         <!-- quantity -->
-        <col width="21%" />
+        <col width="20%" />
         <thead>
           <tr>
             <th>Id</th>
             <th align="center"><%= t 'activerecord.attributes.inventory_count.count_date' %></th>
             <th><%= t 'activerecord.attributes.inventory_count.count_no' %></th>
             <th><%=t "activerecord.attributes.inventory_count.store" %></th>
+            <th><%=t "activerecord.attributes.inventory_count.inventory_count_type" %></th>
             <th align="right"><%=t "activerecord.attributes.inventory_count_item.quantity_c" %></th>
           </tr>
         </thead>
         <tfoot>
           <tr>
+            <td></td>
             <td></td>
             <td></td>
             <td></td>
@@ -59,6 +63,7 @@
             <td align="center"><%= formatted_date(m.inventory_count.count_date) unless m.inventory_count.count_date.blank? %></td>
             <td><%= link_to m.inventory_count.full_no, m.inventory_count %></td>
             <td><%= m.inventory_count.store.name unless m.inventory_count.store.blank? %></td>
+            <td><%= m.inventory_count.inventory_count_type.name unless m.inventory_count.inventory_count_type.blank? %></td>
             <td align="right"><%= number_with_precision(m.quantity, precision: 4) unless m.quantity.blank? %></td>
           </tr>
           <% end %>
