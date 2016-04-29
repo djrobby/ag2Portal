@@ -5,8 +5,9 @@ class Office < ActiveRecord::Base
   belongs_to :town
   belongs_to :zipcode
   belongs_to :street_type
+  belongs_to :zone
 
-  attr_accessible :name, :company_id, :office_code,
+  attr_accessible :name, :company_id, :office_code, :zone_id,
                   :street_type_id, :street_name, :street_number, :building, :floor, :floor_office,
                   :zipcode_id, :town_id, :province_id, :phone, :fax, :cellular, :email,
                   :created_by, :updated_by, :nomina_id, :max_order_total, :max_order_price, :overtime_pct
@@ -20,7 +21,7 @@ class Office < ActiveRecord::Base
   has_many :office_notifications, dependent: :destroy
 
   # Nested attributes
-  accepts_nested_attributes_for :office_notifications,                                 
+  accepts_nested_attributes_for :office_notifications,
                                 :reject_if => :all_blank,
                                 :allow_destroy => true
 

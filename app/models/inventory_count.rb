@@ -1,6 +1,6 @@
 class InventoryCount < ActiveRecord::Base
   include ModelsModule
-  
+
   belongs_to :inventory_count_type
   belongs_to :store
   belongs_to :product_family
@@ -15,7 +15,7 @@ class InventoryCount < ActiveRecord::Base
   has_many :products, through: :inventory_count_items
 
   # Nested attributes
-  accepts_nested_attributes_for :inventory_count_items,                                 
+  accepts_nested_attributes_for :inventory_count_items,
                                 :reject_if => :all_blank,
                                 :allow_destroy => true
 
@@ -85,7 +85,7 @@ class InventoryCount < ActiveRecord::Base
     text :count_no
     string :count_no, :multiple => true    # Multiple search values accepted in one search (inverse_no_search)
     integer :inventory_count_type_id
-    integer :store_id
+    integer :store_id, :multiple => true
     integer :product_family_id
     date :count_date
     integer :organization_id
@@ -95,7 +95,7 @@ class InventoryCount < ActiveRecord::Base
   end
 
   private
-  
+
   #
   # Notifiers
   #
@@ -105,7 +105,7 @@ class InventoryCount < ActiveRecord::Base
     Notifier.inventory_count_saved(self, 1).deliver
     if check_if_approval_is_required
       Notifier.inventory_count_saved_with_approval(self, 1).deliver
-    end     
+    end
   end
 
   # After update
@@ -114,7 +114,7 @@ class InventoryCount < ActiveRecord::Base
     Notifier.inventory_count_saved(self, 3).deliver
     if check_if_approval_is_required
       Notifier.inventory_count_saved_with_approval(self, 3).deliver
-    end     
+    end
   end
 
   #

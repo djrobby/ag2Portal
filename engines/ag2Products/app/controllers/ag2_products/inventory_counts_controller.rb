@@ -289,10 +289,13 @@ module Ag2Products
       @families = families_dropdown if @families.nil?
       @types = InventoryCountType.order(:id) if @types.nil?
 
+      # Arrays for search
+      current_stores = @stores.blank? ? [0] : current_stores_for_index(@stores)
       # If inverse no search is required
       no = !no.blank? && no[0] == '%' ? inverse_no_search(no) : no
 
       @search = InventoryCount.search do
+        with :store_id, current_stores
         fulltext params[:search]
         if session[:organization] != '0'
           with :organization_id, session[:organization]
@@ -335,6 +338,10 @@ module Ag2Products
       @is_approver = company_approver(@inventory_count, @inventory_count.store.company, current_user.id) ||
                      office_approver(@inventory_count, @inventory_count.store.office, current_user.id) ||
                      (current_user.has_role? :Approver)
+      # If current user is not approver up to here, maybe it's a multioffice store...
+      if !@is_approver
+        @is_approver = multioffice_store_approver(@inventory_count, current_user.id)
+      end
 
       respond_to do |format|
         format.html # show.html.erb
@@ -547,6 +554,14 @@ module Ag2Products
       !session[:is_administrator] && !_count.approver_id.blank?
     end
 
+    def current_stores_for_index(_stores)
+      _current_stores = []
+      _stores.each do |i|
+        _current_stores = _current_stores << i.id
+      end
+      _current_stores
+    end
+
     def inverse_no_search(no)
       _numbers = []
       # Add numbers found
@@ -635,6 +650,23 @@ module Ag2Products
       end
 
       code
+    end
+
+    # Check if store is multioffice, and setup approver based on that
+    def multioffice_store_approver(ivar, current_user_id)
+      is_multoffice_approver = false
+      table = ivar.class.table_name
+      store_offices = StoreOffice.where(store_id: ivar.store_id)
+      if !store_offices.blank?
+        store_offices.each do |o|
+          notifications = o.office.office_notifications.joins(:notification).where('notifications.table = ? AND office_notifications.role = ? AND office_notifications.user_id = ?', table, 1, current_user_id) rescue nil
+          if !notifications.blank?
+            is_multoffice_approver = true
+            break
+          end
+        end
+      end
+      is_multioffice_approver
     end
 
     # Keeps filter state

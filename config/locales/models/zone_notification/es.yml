@@ -1,0 +1,19 @@
+es:
+  activerecord:
+    models:
+      zone_notification:
+        zero:  Notificaciones para zona
+        one:   Notificación para zona
+        few:   Notificaciones para zona
+        other: Notificaciones para zona
+    attributes:
+      zone_notification:
+        zone: "Zona"
+        zone_id: "Zona"
+        notification: "Notificación"
+        notification_id: "Notificación"
+        user: "Usuario"
+        user_id: "Usuario"
+        role: "Función"
+        role_1: "Aprobar"
+        role_2: "Notificar"

@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  name: MyString
+  max_order_total: 9.99
+  max_order_price: 9.99
+  created_by: 1
+  updated_by: 1
+
+two:
+  name: MyString
+  max_order_total: 9.99
+  max_order_price: 9.99
+  created_by: 1
+  updated_by: 1

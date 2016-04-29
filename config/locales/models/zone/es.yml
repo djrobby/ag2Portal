@@ -1,0 +1,14 @@
+es:
+  activerecord:
+    models:
+      zone:
+        zero:  Zonas
+        one:   Zona
+        few:   Zonas
+        other: Zonas
+        check_for_offices: "Zona no puede ser eliminada mientras existan oficinas vinculadas."
+    attributes:
+      zone:
+        name: "Nombre"
+        max_order_total: "Importe máx. por pedido €"
+        max_order_price: "Precio máx. por ítem pedido €"

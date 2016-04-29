@@ -1,0 +1,14 @@
+en:
+  activerecord:
+    models:
+      zone:
+        zero:  Zones
+        one:   Zone
+        few:   Zones
+        other: Zones
+        check_for_offices: "Zone cannot be destroyed while linked offices exist."
+    attributes:
+      zone:
+        name: "Name"
+        max_order_total: "Max amount per order €"
+        max_order_price: "Max price per order item €"
