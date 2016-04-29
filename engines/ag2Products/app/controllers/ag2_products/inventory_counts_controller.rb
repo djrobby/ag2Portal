@@ -654,14 +654,14 @@ module Ag2Products
 
     # Check if store is multioffice, and setup approver based on that
     def multioffice_store_approver(ivar, current_user_id)
-      is_multoffice_approver = false
+      is_multioffice_approver = false
       table = ivar.class.table_name
       store_offices = StoreOffice.where(store_id: ivar.store_id)
       if !store_offices.blank?
         store_offices.each do |o|
           notifications = o.office.office_notifications.joins(:notification).where('notifications.table = ? AND office_notifications.role = ? AND office_notifications.user_id = ?', table, 1, current_user_id) rescue nil
           if !notifications.blank?
-            is_multoffice_approver = true
+            is_multioffice_approver = true
             break
           end
         end
