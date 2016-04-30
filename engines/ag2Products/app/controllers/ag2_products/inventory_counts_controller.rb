@@ -575,12 +575,19 @@ module Ag2Products
       _array = []
       _stores = nil
       _store_offices = nil
+      _offices = 0
 
       if session[:office] != '0'
         _stores = Store.where(office_id: session[:office].to_i)
         _store_offices = StoreOffice.where("office_id = ?", session[:office].to_i)
       elsif session[:company] != '0'
-        _stores = Store.where(company_id: session[:company].to_i)
+        _offices = current_user.offices
+        if _offices.count > 1 # If current user has access to specific active company offices (more than one: not exclusive, previous if)
+          _stores = Store.where('company_id = ? AND office_id IN (?)', session[:company].to_i, _offices)
+          _store_offices = StoreOffice.where("office_id IN (?)", _offices)
+        else
+          _stores = Store.where(company_id: session[:company].to_i)
+        end
       else
         _stores = session[:organization] != '0' ? Store.where(organization_id: session[:organization].to_i) : Store.order
       end
