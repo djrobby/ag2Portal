@@ -2,7 +2,8 @@ class InventoryCountItem < ActiveRecord::Base
   belongs_to :inventory_count
   belongs_to :product
   attr_accessor :thing
-  attr_accessible :quantity, :inventory_count_id, :product_id, :initial, :current, :thing
+  attr_accessible :quantity, :inventory_count_id, :product_id, :initial, :current, :thing,
+                  :price, :average_price
 
   has_paper_trail
 
@@ -11,7 +12,7 @@ class InventoryCountItem < ActiveRecord::Base
 
   def stocks
     product.stocks
-  end  
+  end
 
   #
   # Calculated fields
