@@ -575,7 +575,8 @@ module Ag2Products
       _array = []
       _stores = nil
       _store_offices = nil
-      _offices = 0
+      _offices = nil
+      _companies = nil
 
       if session[:office] != '0'
         _stores = Store.where(office_id: session[:office].to_i)
@@ -589,7 +590,15 @@ module Ag2Products
           _stores = Store.where(company_id: session[:company].to_i)
         end
       else
-        _stores = session[:organization] != '0' ? Store.where(organization_id: session[:organization].to_i) : Store.order
+        _offices = current_user.offices
+        _companies = current_user.companies
+        if _companies.count > 1 and _offices.count > 1 # If current user has access to specific active organization companies or offices (more than one: not exclusive, previous if)
+          _stores = Store.where('company_id IN (?) AND office_id IN (?)', _companies, _offices)
+          _store_offices = StoreOffice.where("office_id IN (?)", _offices)
+        else
+          _stores = session[:organization] != '0' ? Store.where(organization_id: session[:organization].to_i) : Store.order
+        end
+        #_stores = session[:organization] != '0' ? Store.where(organization_id: session[:organization].to_i) : Store.order
       end
 
       # Returning founded stores
