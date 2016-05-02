@@ -738,6 +738,39 @@ module Ag2Products
     end
 
     def projects_dropdown
+      _array = []
+      _projects = nil
+      _offices = nil
+      _companies = nil
+
+      if session[:office] != '0'
+        _stores = Store.where(office_id: session[:office].to_i)
+        _store_offices = StoreOffice.where("office_id = ?", session[:office].to_i)
+      elsif session[:company] != '0'
+        _offices = current_user.offices
+        if _offices.count > 1 # If current user has access to specific active company offices (more than one: not exclusive, previous if)
+          _stores = Store.where('company_id = ? AND office_id IN (?)', session[:company].to_i, _offices)
+          _store_offices = StoreOffice.where("office_id IN (?)", _offices)
+        else
+          _stores = Store.where(company_id: session[:company].to_i)
+        end
+      else
+        _offices = current_user.offices
+        _companies = current_user.companies
+        if _companies.count > 1 and _offices.count > 1 # If current user has access to specific active organization companies or offices (more than one: not exclusive, previous if)
+          _stores = Store.where('company_id IN (?) AND office_id IN (?)', _companies, _offices)
+          _store_offices = StoreOffice.where("office_id IN (?)", _offices)
+        else
+          _stores = session[:organization] != '0' ? Store.where(organization_id: session[:organization].to_i) : Store.order
+        end
+      end
+
+      # Returning founded projects
+      ret_array(_array, _projects, 'id')
+      _projects = Project.where(id: _array).order(:name)
+    end
+
+    def projects_dropdown_old
       if session[:office] != '0'
         _projects = Project.where(office_id: session[:office].to_i).order(:project_code)
       elsif session[:company] != '0'
