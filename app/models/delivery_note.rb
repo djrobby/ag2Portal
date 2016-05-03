@@ -127,19 +127,19 @@ class DeliveryNote < ActiveRecord::Base
   # Records navigator
   #
   def to_first
-    DeliveryNote.order("delivery_no").first
+    DeliveryNote.order("delivery_no desc").first
   end
 
   def to_prev
-    DeliveryNote.where("delivery_no < ?", delivery_no).order("delivery_no").last
+    DeliveryNote.where("delivery_no > ?", delivery_no).order("delivery_no desc").last
   end
 
   def to_next
-    DeliveryNote.where("delivery_no > ?", delivery_no).order("delivery_no").first
+    DeliveryNote.where("delivery_no < ?", delivery_no).order("delivery_no desc").first
   end
 
   def to_last
-    DeliveryNote.order("delivery_no").last
+    DeliveryNote.order("delivery_no desc").last
   end
 
   searchable do

@@ -135,19 +135,19 @@ class ReceiptNote < ActiveRecord::Base
   # Records navigator
   #
   def to_first
-    ReceiptNote.order("id").first
+    ReceiptNote.order("id desc").first
   end
 
   def to_prev
-    ReceiptNote.where("id < ?", id).order("id").last
+    ReceiptNote.where("id > ?", id).order("id desc").last
   end
 
   def to_next
-    ReceiptNote.where("id > ?", id).order("id").first
+    ReceiptNote.where("id < ?", id).order("id desc").first
   end
 
   def to_last
-    ReceiptNote.order("id").last
+    ReceiptNote.order("id desc").last
   end
 
   searchable do

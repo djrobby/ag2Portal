@@ -125,19 +125,19 @@ class Offer < ActiveRecord::Base
   # Records navigator
   #
   def to_first
-    Offer.order("id").first
+    Offer.order("id desc").first
   end
 
   def to_prev
-    Offer.where("id < ?", id).order("id").last
+    Offer.where("id > ?", id).order("id desc").last
   end
 
   def to_next
-    Offer.where("id > ?", id).order("id").first
+    Offer.where("id < ?", id).order("id desc").first
   end
 
   def to_last
-    Offer.order("id").last
+    Offer.order("id desc").last
   end
 
   searchable do

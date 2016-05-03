@@ -139,7 +139,7 @@ module Ag2Purchase
         if !invoice.blank?
           with :supplier_invoice_id, invoice
         end
-        order_by :sort_no, :asc
+        order_by :sort_no, :desc
         paginate :page => params[:page] || 1, :per_page => per_page
       end
       @supplier_payments = @search.results

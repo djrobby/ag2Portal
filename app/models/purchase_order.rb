@@ -190,19 +190,19 @@ class PurchaseOrder < ActiveRecord::Base
   # Records navigator
   #
   def to_first
-    PurchaseOrder.order("order_no").first
+    PurchaseOrder.order("order_no desc").first
   end
 
   def to_prev
-    PurchaseOrder.where("id < ?", id).order("order_no").last
+    PurchaseOrder.where("id > ?", id).order("order_no desc").last
   end
 
   def to_next
-    PurchaseOrder.where("id > ?", id).order("order_no").first
+    PurchaseOrder.where("id < ?", id).order("order_no desc").first
   end
 
   def to_last
-    PurchaseOrder.order("order_no").last
+    PurchaseOrder.order("order_no desc").last
   end
 
   searchable do

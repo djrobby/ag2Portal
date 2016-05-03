@@ -135,19 +135,19 @@ class OfferRequest < ActiveRecord::Base
   # Records navigator
   #
   def to_first
-    OfferRequest.order("request_no").first
+    OfferRequest.order("request_no desc").first
   end
 
   def to_prev
-    OfferRequest.where("request_no < ?", request_no).order("request_no").last
+    OfferRequest.where("request_no > ?", request_no).order("request_no desc").last
   end
 
   def to_next
-    OfferRequest.where("request_no > ?", request_no).order("request_no").first
+    OfferRequest.where("request_no < ?", request_no).order("request_no desc").first
   end
 
   def to_last
-    OfferRequest.order("request_no").last
+    OfferRequest.order("request_no desc").last
   end
 
   searchable do

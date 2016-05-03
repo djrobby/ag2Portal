@@ -36,24 +36,24 @@ class SupplierPayment < ActiveRecord::Base
   def invoice_debt
     supplier_invoice.debt
   end
-  
+
   #
   # Records navigator
   #
   def to_first
-    SupplierPayment.order("id").first
+    SupplierPayment.order("id desc").first
   end
 
   def to_prev
-    SupplierPayment.where("id < ?", id).order("id").last
+    SupplierPayment.where("id > ?", id).order("id desc").last
   end
 
   def to_next
-    SupplierPayment.where("id > ?", id).order("id").first
+    SupplierPayment.where("id < ?", id).order("id desc").first
   end
 
   def to_last
-    SupplierPayment.order("id").last
+    SupplierPayment.order("id desc").last
   end
 
   searchable do

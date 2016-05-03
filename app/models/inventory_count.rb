@@ -66,19 +66,19 @@ class InventoryCount < ActiveRecord::Base
   # Records navigator
   #
   def to_first
-    InventoryCount.order("count_no").first
+    InventoryCount.order("count_no desc").first
   end
 
   def to_prev
-    InventoryCount.where("count_no < ?", count_no).order("count_no").last
+    InventoryCount.where("count_no > ?", count_no).order("count_no desc").last
   end
 
   def to_next
-    InventoryCount.where("count_no > ?", count_no).order("count_no").first
+    InventoryCount.where("count_no < ?", count_no).order("count_no desc").first
   end
 
   def to_last
-    InventoryCount.order("count_no").last
+    InventoryCount.order("count_no desc").last
   end
 
   searchable do

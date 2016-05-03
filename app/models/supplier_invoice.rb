@@ -1,6 +1,6 @@
 class SupplierInvoice < ActiveRecord::Base
   include ModelsModule
-  
+
   belongs_to :supplier
   belongs_to :payment_method
   belongs_to :project
@@ -21,10 +21,10 @@ class SupplierInvoice < ActiveRecord::Base
   has_one :supplier_invoice_debt
 
   # Nested attributes
-  accepts_nested_attributes_for :supplier_invoice_items,                                 
+  accepts_nested_attributes_for :supplier_invoice_items,
                                 :reject_if => :all_blank,
                                 :allow_destroy => true
-  accepts_nested_attributes_for :supplier_invoice_approvals,                                 
+  accepts_nested_attributes_for :supplier_invoice_approvals,
                                 :reject_if => :all_blank,
                                 :allow_destroy => true
 
@@ -78,7 +78,7 @@ class SupplierInvoice < ActiveRecord::Base
   def bonus
     (discount_pct / 100) * subtotal if !discount_pct.blank?
   end
-  
+
   def taxable
     subtotal - bonus - discount
   end
@@ -94,7 +94,7 @@ class SupplierInvoice < ActiveRecord::Base
   end
 
   def total
-    taxable + taxes  
+    taxable + taxes
   end
 
   def quantity
@@ -104,11 +104,11 @@ class SupplierInvoice < ActiveRecord::Base
   def paid
     supplier_payments.sum("amount")
   end
-  
+
   def debt
     total - paid
   end
-  
+
   def payment_avg_date
     avg, cnt = 0, 0
     supplier_payments.each do |i|
@@ -119,36 +119,36 @@ class SupplierInvoice < ActiveRecord::Base
     end
     cnt > 0 ? Date.parse(Time.at(avg / cnt).to_s) : nil
   end
-  
+
   def payment_period
     (invoice_date - payment_avg_date).to_i rescue 0
   end
-  
+
   def approved_to_pay
     supplier_invoice_approvals.sum("approved_amount")
   end
-  
+
   def amount_not_yet_approved
     total - approved_to_pay
   end
-  
+
   #
   # Records navigator
   #
   def to_first
-    SupplierInvoice.order("id").first
+    SupplierInvoice.order("id desc").first
   end
 
   def to_prev
-    SupplierInvoice.where("id < ?", id).order("id").last
+    SupplierInvoice.where("id > ?", id).order("id desc").last
   end
 
   def to_next
-    SupplierInvoice.where("id > ?", id).order("id").first
+    SupplierInvoice.where("id < ?", id).order("id desc").first
   end
 
   def to_last
-    SupplierInvoice.order("id").last
+    SupplierInvoice.order("id desc").last
   end
 
   searchable do
@@ -174,7 +174,7 @@ class SupplierInvoice < ActiveRecord::Base
       return false
     end
   end
-  
+
   #
   # Notifiers
   #
@@ -191,7 +191,7 @@ class SupplierInvoice < ActiveRecord::Base
     Notifier.supplier_invoice_saved(self, 3).deliver
     if check_if_approval_is_required
       Notifier.supplier_invoice_saved_with_approval(self, 3).deliver
-    end     
+    end
   end
 
   #

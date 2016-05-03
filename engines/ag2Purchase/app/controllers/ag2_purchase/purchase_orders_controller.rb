@@ -653,7 +653,7 @@ module Ag2Purchase
         if !status.blank?
           with :order_status_id, status
         end
-        order_by :sort_no, :asc
+        order_by :sort_no, :desc
         paginate :page => params[:page] || 1, :per_page => per_page
       end
       @purchase_orders = @search.results
@@ -1027,6 +1027,36 @@ module Ag2Purchase
     end
 
     def projects_dropdown
+      _array = []
+      _projects = nil
+      _offices = nil
+      _companies = nil
+
+      if session[:office] != '0'
+        _projects = Project.where(office_id: session[:office].to_i).order(:project_code)
+      elsif session[:company] != '0'
+        _offices = current_user.offices
+        if _offices.count > 1 # If current user has access to specific active company offices (more than one: not exclusive, previous if)
+          _projects = Project.where('company_id = ? AND office_id IN (?)', session[:company].to_i, _offices)
+        else
+          _projects = Project.where(company_id: session[:company].to_i).order(:project_code)
+        end
+      else
+        _offices = current_user.offices
+        _companies = current_user.companies
+        if _companies.count > 1 and _offices.count > 1 # If current user has access to specific active organization companies or offices (more than one: not exclusive, previous if)
+          _projects = Project.where('company_id IN (?) AND office_id IN (?)', _companies, _offices)
+        else
+          _projects = session[:organization] != '0' ? Project.where(organization_id: session[:organization].to_i).order(:project_code) : Project.order(:project_code)
+        end
+      end
+
+      # Returning founded projects
+      ret_array(_array, _projects, 'id')
+      _projects = Project.where(id: _array).order(:project_code)
+    end
+
+    def projects_dropdown_old
       if session[:office] != '0'
         _projects = Project.where(office_id: session[:office].to_i).order(:project_code)
       elsif session[:company] != '0'

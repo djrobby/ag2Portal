@@ -316,7 +316,7 @@ module Ag2Products
         if !type.blank?
           with :inventory_count_type_id, type
         end
-        order_by :sort_no, :asc
+        order_by :sort_no, :desc
         paginate :page => params[:page] || 1, :per_page => per_page
       end
       @inventory_counts = @search.results
