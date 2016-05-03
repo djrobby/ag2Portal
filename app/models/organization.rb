@@ -6,6 +6,7 @@ class Organization < ActiveRecord::Base
   has_many :companies
   has_many :entities
   has_many :ledger_accounts
+  has_many :zones
   # directory
   has_many :corp_contacts
   has_many :shared_contacts

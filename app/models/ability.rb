@@ -64,6 +64,8 @@ class Ability
       can :crud, AccountingGroup
       can :crud, LedgerAccount
       can :crud, PaymentMethod
+      can :crud, Zone
+      can :read, ZoneNotification
     elsif user.has_role? :ag2Admin_Guest
       can :read, Bank
       can :read, BankOffice
@@ -86,6 +88,8 @@ class Ability
       can :read, AccountingGroup
       can :read, LedgerAccount
       can :read, PaymentMethod
+      can :read, Zone
+      can :read, ZoneNotification
     elsif user.has_role? :ag2Admin_Banned
       cannot :manage, Bank
       cannot :manage, BankOffice
@@ -108,6 +112,8 @@ class Ability
       cannot :manage, AccountingGroup
       cannot :manage, LedgerAccount
       cannot :manage, PaymentMethod
+      cannot :manage, Zone
+      cannot :manage, ZoneNotification
     end
     # ag2Config
     if user.has_role? :ag2Config_User
