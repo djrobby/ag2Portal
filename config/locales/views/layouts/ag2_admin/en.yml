@@ -82,3 +82,6 @@ en:
       bank_account_classes:
         items: "Bank account classes"
         item: "Class"
+      zones:
+        items: "Zones"
+        item: "Zone"

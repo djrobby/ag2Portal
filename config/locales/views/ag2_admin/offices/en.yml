@@ -13,6 +13,7 @@ en:
         subtable_title: "Company Offices"
         return_to: "Back to Office"
         show_to: "Show Company"
+        show_to_: "Show Zone"
       edit:
         title: "Edit Office"
         btn_show: "Show Office"

@@ -92,6 +92,15 @@
   <!-- Apps 3 -->
   <li class="span2">
     <% if (session[:resolution] == "LD")%>
+    <a href="<%= zones_path %>" class="thumbnail centered"><img src="/assets/icon/ag2Zones.png" width="48" height="48" alt="ag2Zones" /><h5 class="h5-narrow"><%=t ".zones" %></h5></a>
+    <% elsif session[:resolution] == "SD" %>
+    <a href="<%= zones_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/ag2Zones72.png" width="72" height="72" alt="ag2Zones" /><h5 class="h5-narrow"><%=t ".zones" %></h5></a>
+    <% else %>
+    <a href="<%= zones_path %>" class="thumbnail centered"><img src="/assets/pict/ag2Zones96.png" width="96" height="96" alt="ag2Zones" /><h5 class="h5-narrow"><%=t ".zones" %></h5></a>
+    <% end %>
+  </li>
+  <li class="span2">
+    <% if (session[:resolution] == "LD")%>
     <a href="<%= departments_path %>" class="thumbnail centered"><img src="/assets/icon/ag2Departments.png" width="48" height="48" alt="ag2Depts" /><h5 class="h5-narrow"><%=t ".departments" %></h5></a>
     <% elsif session[:resolution] == "SD" %>
     <a href="<%= departments_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/ag2Departments72.png" width="72" height="72" alt="ag2Depts" /><h5 class="h5-narrow"><%=t ".departments" %></h5></a>
@@ -135,6 +144,9 @@
     <a href="<%= ledger_accounts_path %>" class="thumbnail centered"><img src="/assets/pict/ag2LedgerAccounts96.png" width="96" height="96" alt="ag2LedgerAccounts" /><h5 class="h5-narrow"><%=t ".ledger_accounts" %></h5></a>
     <% end %>
   </li>
+</ul><!-- /.thumbnails -->
+<ul class="thumbnails">
+  <!-- Apps 4 -->
   <li class="span2">
     <% if (session[:resolution] == "LD")%>
     <a href="<%= payment_methods_path %>" class="thumbnail centered"><img src="/assets/icon/ag2PaymentMethods.png" width="48" height="48" alt="ag2Tables" /><h5 class="h5-narrow"><%=t ".payment_methods" %></h5></a>
@@ -144,9 +156,6 @@
     <a href="<%= payment_methods_path %>" class="thumbnail centered"><img src="/assets/pict/ag2PaymentMethods96.png" width="96" height="96" alt="ag2Tables" /><h5 class="h5-narrow"><%=t ".payment_methods" %></h5></a>
     <% end %>
   </li>
-</ul><!-- /.thumbnails -->
-<ul class="thumbnails">
-  <!-- Apps 4 -->
   <li class="span2">
     <% if (session[:resolution] == "LD")%>
     <a href="<%= banks_path %>" class="thumbnail centered"><img src="/assets/icon/ag2Banks.png" width="48" height="48" alt="ag2Banks" /><h5 class="h5-narrow"><%=t ".banks" %></h5></a>
@@ -173,8 +182,6 @@
     <% else %>
     <a href="<%= bank_account_classes_path %>" class="thumbnail centered"><img src="/assets/pict/ag2BankAccountClasses96.png" width="96" height="96" alt="ag2BankAccountClasses" /><h5 class="h5-narrow"><%=t ".bank_account_classes" %></h5></a>
     <% end %>
-  </li>
-  <li class="span2">
   </li>
   <li class="span2">
   </li>

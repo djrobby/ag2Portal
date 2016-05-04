@@ -48,14 +48,17 @@
       <td><%= t 'activerecord.attributes.office.email' %>:</td>
       <td><%= @office.email %></td>
     </tr>
-    <% if (current_user.has_role? :Administrator) || (current_user.has_role? :ag2Human_User) || (current_user.has_role? :ag2Human_Guest) %>
     <tr>
+      <td><%= t 'activerecord.attributes.office.zone' %>:</td>
+      <td><%= @office.zone.name unless @office.zone.blank? %></td>
+      <% if (current_user.has_role? :Administrator) || (current_user.has_role? :ag2Human_User) || (current_user.has_role? :ag2Human_Guest) %>
       <td><%= t 'activerecord.attributes.office.nomina_id' %>:</td>
       <td><%= @office.nomina_id unless @office.nomina_id.blank? %></td>
+      <% else %>
       <td></td>
       <td></td>
+      <% end %>
     </tr>
-    <% end %>
     <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @office } %>
     <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @office } %>
   </tbody>
@@ -138,4 +141,7 @@ new_path: new_office_path, new_txt: t('ag2_admin.offices.index.btn_new') } %>
 <% end %> <!-- end @notifications.count > 0 -->
 
 <%= link_to I18n.t('ag2_admin.offices.show.show_to'), @office.company %> |
+<% if !@office.zone.blank? %>
+<%= link_to I18n.t('ag2_admin.offices.show.show_to_'), @office.zone %> |
+<% end %>
 <%= link_to I18n.t('ag2_admin.offices.back_to_main_page'), offices_path %>

@@ -1,0 +1,42 @@
+<script>
+  var _f = '';
+
+  $(document).ready(function() {
+    // Retrieves parent values
+    _f = $("#fnt-notification").closest('form')[0];
+    // Set focus
+    $(".modal").on('shown', function() {
+      $(this).find(".form-label:first").focus();
+    });
+  });
+</script>
+
+<div id="new-notification-fields" class="modal hide fade" data-backdrop="static">
+  <% e = t(:item_error) %>
+  <div class="modal-header">
+    <a class="close" data-dismiss="modal">×</a>
+    <h3><%= t("ag2_admin.zones.add_notification") %></h3>
+    <span class="shrinked"><%= I18n.t(:mandatory_subtitle) %></span>
+  </div>
+  <div class="modal-body">
+    <%= f.association :notification, collection: @notifications, input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-notification', data: { validation: "required", "validation-error-msg" => "#{e}" } }, label_html: { class: 'form-label' } %>
+    <%= f.association :user, collection: @users, input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-user', data: { validation: "required", "validation-error-msg" => "#{e}" } }, label_html: { class: 'form-label' } %>
+    <%= f.input :role,
+      collection: [[1, t('activerecord.attributes.zone_notification.role_1')],
+                   [2, t('activerecord.attributes.zone_notification.role_2')]],
+                   as: :select, label_method: :last, value_method: :first,
+                   input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-role', data: { validation: "required", "validation-error-msg" => "#{e}" } },
+                   label_html: { class: 'form-label' } %>
+    <%= f.input :_destroy, as: :hidden, input_html: { class: 'field' } %>
+  </div>
+  <div class="modal-footer">
+    <span class="left-floated" style="vertical-align: bottom"><%= t("ag2_admin.zones.add_item_to", var: @zone.name) unless @zone.name.blank? %></span>
+    <button id="addNotificationButton" type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><%= t('ag2_admin.zones.btn_add_item') %></button>
+    <button id="cancelNotificationButton" type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><%= t :close_button %></button>
+  </div>
+</div>
+
+<script type="text/javascript">
+  sel2NoMatch = '<%= t("select2.no_matches") %>';
+  zo_notificationFieldsUI.init(sel2NoMatch);
+</script>

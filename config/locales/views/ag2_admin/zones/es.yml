@@ -1,0 +1,27 @@
+es:
+  ag2_admin:
+    zones:
+      index:
+        title: "Zonas"
+        btn_new: "Nueva Zona"
+        go_to: "Ir a Oficinas"
+        back_to_root: "Volver a ag2Admin"
+      show:
+        title: "Zona"
+        btn_edit: "Editar Zona"
+        btn_delete: "Borrar Zona"
+        subtable_title: "Oficinas de la Zona"
+        return_to: "Volver a Zona"
+        show_to: "Ver Organización"
+      edit:
+        title: "Editar Zona"
+        btn_show: "Ver Zona"
+      new:
+        title: "Nueva Zona"
+      back_to_main_page: "Volver a Zonas"
+      commercial_info: "Información Comercial"
+      add_notification: "Agregar nueva Regla de Notificación"
+      add_item_to: "Zona %{var}"
+      btn_add_item: "Agregar"
+      notifications_info: "Reglas de notificación"
+      btn_new_notification: "Nueva Regla"

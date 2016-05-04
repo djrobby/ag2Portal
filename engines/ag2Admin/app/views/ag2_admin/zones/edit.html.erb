@@ -1,6 +1,8 @@
-<h1>Editing zone</h1>
+<%= render '/layouts/ag2_admin/zonesbreadcrumb' %>
+
+<h3><%=t '.title' %></h3>
 
 <%= render 'form' %>
 
-<%= link_to 'Show', @zone %> |
-<%= link_to 'Back', zones_path %>
+<%= link_to I18n.t('ag2_admin.zones.edit.btn_show'), @zone %> |
+<%= link_to I18n.t('ag2_admin.zones.back_to_main_page'), zones_path %>

@@ -1,0 +1,27 @@
+en:
+  ag2_admin:
+    zones:
+      index:
+        title: "Zones"
+        btn_new: "New Zone"
+        go_to: "Go to Offices"
+        back_to_root: "Back to ag2Admin"
+      show:
+        title: "Zone"
+        btn_edit: "Edit Zone"
+        btn_delete: "Delete Zone"
+        subtable_title: "Zone Offices"
+        return_to: "Back to Zone"
+        show_to: "Show Organization"
+      edit:
+        title: "Edit Zone"
+        btn_show: "Show Zone"
+      new:
+        title: "New Zone"
+      back_to_main_page: "Back to Zones"
+      commercial_info: "Commercial Info"
+      add_notification: "Add new Notification Rule"
+      add_item_to: "Zone %{var}"
+      btn_add_item: "Add"
+      notifications_info: "Notification rules"
+      btn_new_notification: "New Rule"

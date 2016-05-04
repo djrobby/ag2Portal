@@ -96,6 +96,8 @@ module Ag2Admin
       @office = Office.new
       @notifications = notifications_dropdown
       @users = users_dropdown
+      @companies = companies_dropdown
+      @zones = zones_dropdown
 
       respond_to do |format|
         format.html # new.html.erb
@@ -110,6 +112,8 @@ module Ag2Admin
       @office = Office.find(params[:id])
       @notifications = notifications_dropdown
       @users = users_dropdown
+      @companies = companies_dropdown
+      @zones = zones_dropdown
     end
 
     # POST /offices
@@ -127,6 +131,8 @@ module Ag2Admin
         else
           @notifications = notifications_dropdown
           @users = users_dropdown
+          @companies = companies_dropdown
+          @zones = zones_dropdown
           format.html { render action: "new" }
           format.json { render json: @office.errors, status: :unprocessable_entity }
         end
@@ -149,6 +155,8 @@ module Ag2Admin
         else
           @notifications = notifications_dropdown
           @users = users_dropdown
+          @companies = companies_dropdown
+          @zones = zones_dropdown
           format.html { render action: "edit" }
           format.json { render json: @office.errors, status: :unprocessable_entity }
         end
@@ -185,7 +193,15 @@ module Ag2Admin
     def sort_column
       Office.column_names.include?(params[:sort]) ? params[:sort] : "office_code"
     end
-    
+
+    def companies_dropdown
+      session[:organization] != '0' ? Company.where(organization_id: session[:organization].to_i).order(:name) : Company.order(:name)
+    end
+
+    def zones_dropdown
+      session[:organization] != '0' ? Zone.where(organization_id: session[:organization].to_i).order(:name) : Zone.order(:name)
+    end
+
     def cannot_edit(_office, _company)
       (session[:office] != '0' && _office != session[:office].to_i) ||
       (session[:company] != '0' && _company != session[:company].to_i)

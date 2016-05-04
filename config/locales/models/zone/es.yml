@@ -12,3 +12,5 @@ es:
         name: "Nombre"
         max_order_total: "Importe máx. por pedido €"
         max_order_price: "Precio máx. por ítem pedido €"
+        organization: "Organización"
+        organization_id: "Organización"

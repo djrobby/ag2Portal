@@ -11,6 +11,20 @@ class Zone < ActiveRecord::Base
                                 :reject_if => :all_blank,
                                 :allow_destroy => true
 
+  has_paper_trail
+
+  validates :name,         :presence => true
+  validates :organization, :presence => true
+
+  before_validation :fields_to_uppercase
+  before_destroy :check_for_dependent_records
+
+  def fields_to_uppercase
+    if !self.name.blank?
+      self[:name].upcase!
+    end
+  end
+
   private
 
   def check_for_dependent_records

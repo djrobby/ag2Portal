@@ -12,3 +12,5 @@ en:
         name: "Name"
         max_order_total: "Max amount per order €"
         max_order_price: "Max price per order item €"
+        organization: "Organization"
+        organization_id: "Organization"

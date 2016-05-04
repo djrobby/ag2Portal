@@ -82,3 +82,6 @@ es:
       bank_account_classes:
         items: "Clases de C.Bancarias"
         item: "Clase"
+      zones:
+        items: "Zonas"
+        item: "Zona"

@@ -39,3 +39,5 @@ en:
         max_order_total: "Max amount per order €"
         max_order_price: "Max price per order item €"
         overtime_pct: "% to calculate overtime"
+        zone: "Zone"
+        zone_id: "Zone"

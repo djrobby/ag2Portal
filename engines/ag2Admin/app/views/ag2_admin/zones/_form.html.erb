@@ -1,17 +1,99 @@
-<%= form_for(@zone) do |f| %>
-  <% if @zone.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@zone.errors.count, "error") %> prohibited this zone from being saved:</h2>
+<script>
+  var text_field_color;
+  var _thisForm = '';
 
-      <ul>
-      <% @zone.errors.full_messages.each do |msg| %>
-        <li><%= msg %></li>
-      <% end %>
-      </ul>
-    </div>
-  <% end %>
+  $(document).ready(function() {
+    // Save default text color
+    text_field_color = $("#zone_name").css('color')
+    // Initialize form variable
+    _thisForm = $("#zone_name").closest('form')[0];
+  });
 
-  <div class="actions">
-    <%= f.submit %>
-  </div>
+  jQuery(function($) {
+    // when the #zone_max_order_total field changes
+    $("#zone_max_order_total").change(function() {
+      // preserve the current object
+      var _this = (this);
+      recalculate(_this);
+      return false;
+    });
+
+    // when the #zone_max_order_price field changes
+    $("#zone_max_order_price").change(function() {
+      // preserve the current object
+      var _this = (this);
+      recalculate(_this);
+      return false;
+    });
+    
+    // when submit    
+    $(_thisForm).on('submit', function() {
+      // Must change decimal separator, if comma, in numeric fields
+      var total = $('#zone_max_order_total').val().replace(",", ".");
+      var price = $('#zone_max_order_price').val().replace(",", ".");
+      $('#zone_max_order_total').val(total);
+      $('#zone_max_order_price').val(price);
+    });
+    
+    // Recalculate amounts & prices
+    function recalculate(_this) {
+      // make a POST call and replace the content
+      var total = $('#zone_max_order_total').val();
+      if (total == "")
+        total = "0";
+      var price = $('#zone_max_order_price').val();
+      if (price == "")
+        price = "0";
+      // Right formatted for passing as REST parameter
+      total = parseInt(right_number(total, 2) * 100);
+      price = parseInt(right_number(price, 4) * 10000);
+      jQuery.getJSON('zo_update_total_and_price/' + total + '/' + price, function(data) {
+        $('#zone_max_order_total').val(data.total);
+        $('#zone_max_order_price').val(data.price);
+      });
+    }
+  });
+</script>
+
+<%= simple_form_for @zone, :html => {:class => 'form-vertical well' } do |f| %>
+<%= f.error_notification %>
+<%= display_base_errors resource %>
+<div>
+  <label class="multi-field-label-two">
+    <%= f.input :name, :required => true, :autofocus => true, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %>
+  </label>
+  <label class="multi-field-label-two">
+    <% if session[:organization] != '0' %>
+    <%= f.association :organization, collection: Organization.where("id = ?", "#{session[:organization]}").all, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' }, include_blank: false %>
+    <% elsif current_user.organizations.count > 0 %>
+    <%= f.association :organization, collection: current_user.organizations.order('name'), input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' }, include_blank: false %>
+    <% else %>
+    <%= f.association :organization, collection: Organization.order('name'), input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %>
+    <% end %>
+  </label>
+</div>
+<!-- Commercial info -->
+<h4><%=t 'ag2_admin.zones.commercial_info' %></h4>
+<div>
+  <label class="multi-field-label-two"> <%= f.input :max_order_total, as: :string, input_html: { value: (number_with_precision(f.object.max_order_total, precision: 2) if f.object.max_order_total), class: 'large-text-field number-text-field' }, label_html: { class: 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.input :max_order_price, as: :string, input_html: { value: (number_with_precision(f.object.max_order_price, precision: 4) if f.object.max_order_price), class: 'large-text-field number-text-field' }, label_html: { class: 'form-label' } %> </label>
+</div>
+<!-- Notifications -->
+<% if can? :crud, ZoneNotification %>
+  <table class="form-table">
+    <tbody>
+      <tr class="form-tr underlined-tr">
+        <td class="form-td-two left-winged">
+          <h4><%= t 'ag2_admin.zones.notifications_info' %></h4>
+        </td>
+        <td class="form-td-two right-winged">
+          <%= link_to_add_fields(t("ag2_admin.zones.btn_new_notification"), f, :zone_notifications, "notification_fields", "new-notification-fields", class: "btn btn-warning fnt-new-notification-btn") %>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <%= render 'notifications_table', f: f %>
+<% end %>
+<!-- Buttons -->
+<%= f.button :submit, :class => 'btn-primary', :id => 'submit_btn' %>
 <% end %>

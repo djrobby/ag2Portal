@@ -10,25 +10,25 @@ $(document).ready(function() {
 <table class="table table-condensed table-striped">
   <thead>
     <tr>
-      <th><%= sortable "fiscal_id", t('activerecord.attributes.company.fiscal_id') %></th>
-      <th><%= sortable "name", t('activerecord.attributes.company.name') %></th>
-      <th><%= sortable "organization_id", t('activerecord.attributes.company.organization') %></th>
+      <th><%= sortable "id", "Id" %></th>
+      <th><%= sortable "name", t('activerecord.attributes.zone.name') %></th>
+      <th><%= sortable "organization_id", t('activerecord.attributes.zone.organization') %></th>
       <th></th>
     </tr>
   </thead>
   <tbody>
-    <% @companies.each do |company| %>
+    <% @zones.each do |zone| %>
     <tr>
-      <td><%= link_to company.fiscal_id, company %></td>
-      <td><%= company.name %></td>
-      <td><%= company.organization.name %></td>
-      <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => Company, :path => edit_company_path(company) } unless cannot_edit(company.id) %>
-      <%= render :partial => '/layouts/crud/delete', :locals => { :model => Company, :path => company, :msg => I18n.t("activerecord.models.company.one"), :txt => company.name } unless cannot_edit(company.id) %> </td>
+      <td><%= zone.id %></td>
+      <td><%= link_to zone.name, zone %></td>
+      <td><%= zone.organization.name %></td>
+      <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => Zone, :path => edit_zone_path(zone) } %>
+      <%= render :partial => '/layouts/crud/delete', :locals => { :model => Zone, :path => zone, :msg => I18n.t("activerecord.models.zone.one"), :txt => zone.name } %> </td>
     </tr>
     <% end %>
   </tbody>
 </table>
-<%= render :partial => '/layouts/pagination', :locals => { :ivar => @companies } %>
-<%= render :partial => '/layouts/crud/new', :locals => { :model => Company, :path => new_company_path, :txt => I18n.t("ag2_admin.companies.index.btn_new") } %>
-<%= link_to I18n.t("ag2_admin.companies.index.go_to"), offices_path %> |
-<%= link_to I18n.t("ag2_admin.companies.index.back_to_root"), ag2_admin.root_path %>
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @zones } %>
+<%= render :partial => '/layouts/crud/new', :locals => { :model => Zone, :path => new_zone_path, :txt => I18n.t("ag2_admin.zones.index.btn_new") } %>
+<%= link_to I18n.t("ag2_admin.zones.index.go_to"), offices_path %> |
+<%= link_to I18n.t("ag2_admin.zones.index.back_to_root"), ag2_admin.root_path %>

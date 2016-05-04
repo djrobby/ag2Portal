@@ -1,5 +1,105 @@
-<p id="notice"><%= notice %></p>
+<%= render '/layouts/ag2_admin/zonesbreadcrumb' %>
 
+<h3><%=t '.title' %></h3>
+<table class="table odd_even_table">
+  <tbody>
+    <tr>
+      <td>Id:</td>
+      <td><%= @zone.id %></td>
+      <td><%= t 'activerecord.attributes.zone.organization' %>:</td>
+      <td><%= @zone.organization.name %></td>
+    </tr>
+    <tr>
+      <td><%= t 'activerecord.attributes.zone.name' %>:</td>
+      <td><%= @zone.name %></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @zone } %>
+    <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @zone } %>
+  </tbody>
+</table>
 
-<%= link_to 'Edit', edit_zone_path(@zone) %> |
-<%= link_to 'Back', zones_path %>
+<!-- Commercial info -->
+<h4><%=t 'ag2_admin.zones.commercial_info' %></h4>
+<table class="table odd_even_table">
+  <!-- max order total -->
+  <col width="25%" />
+  <col width="25%" />
+  <!-- max order price -->
+  <col width="25%" />
+  <col width="25%" />
+  <tbody>
+    <tr>
+      <td><%= t :"activerecord.attributes.zone.max_order_total" %>:</td>
+      <td><%= number_with_precision(@zone.max_order_total, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless @zone.max_order_total.blank? %></td>
+      <td><%= t :"activerecord.attributes.zone.max_order_price" %>:</td>
+      <td><%= number_with_precision(@zone.max_order_price, precision: 4, delimiter: I18n.locale == :es ? "." : ",") unless @zone.max_order_price.blank? %></td>
+    </tr>
+  </tbody>
+</table>
+
+<%= render :partial => '/layouts/crud/update_delete_new', locals:
+{ model: Zone, update_path: edit_zone_path(@zone), update_txt: t('ag2_admin.zones.show.btn_edit'),
+delete_path: @zone, delete_txt: t('ag2_admin.zones.show.btn_delete'), msg: t("activerecord.models.zone.one"), :txt => @zone.name,
+new_path: new_zone_path, new_txt: t('ag2_admin.zones.index.btn_new') } %>
+
+<!-- Notificatons -->
+<table class="form-table">
+  <tbody>
+    <tr class="form-tr underlined-tr">
+      <td class="form-td-two left-winged">
+        <h4><%= t 'ag2_admin.zones.notifications_info' %></h4>
+      </td>
+      <td class="form-td-two right-winged">
+        <a href="#" id="print_report_btn"><i class="icon-arrow-up"></i></a>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<% if (@notifications.count > 0) %>
+<table class="table table-condensed table-striped shrinked">
+  <!-- notification -->
+  <col width="55%" />
+  <!-- user -->
+  <col width="30%" />
+  <!-- role -->
+  <col width="15%" />
+  <thead>
+    <%= render 'notifications_header' %>
+  </thead>
+  <tbody>
+    <%= render partial: 'notification', collection: @notifications %>
+  </tbody>
+</table>
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @notifications } %>
+<% else %>
+<%= render :partial => '/layouts/paginationunbordered', :locals => { :ivar => @notifications } %>
+<% end %> <!-- end @notifications.count > 0 -->
+
+<!-- Offices -->
+<% if (@offices.count > 0) %>
+<h4><%= t '.subtable_title' %></h4>
+<table class="table table-condensed table-striped">
+  <thead>
+    <tr>
+      <th><%= t 'activerecord.attributes.office.office_code' %></th>
+      <th><%= t 'activerecord.attributes.office.name' %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @offices.each do |office| %>
+    <!-- Modal (/layouts/ag_admin/_officeinfo.html.erb) Implementation (ag_directory/corp_contacts/search) -->
+    <tr>
+      <!-- Modal: <td><a data-toggle="modal" href="#officeinfo"><%= office.office_code %></a></td> -->
+      <td><%= link_to office.office_code, office %></td>
+      <td><%= office.name %></td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @offices } %>
+<% end %>
+
+<%= link_to I18n.t('ag2_admin.zones.show.show_to'), @zone.organization %> |
+<%= link_to I18n.t('ag2_admin.zones.back_to_main_page'), zones_path %>
