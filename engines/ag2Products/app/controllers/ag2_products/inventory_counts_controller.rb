@@ -152,8 +152,11 @@ module Ag2Products
           if inventory_count.save
             # Success
             code = '$ok'
-            # Update stocks
+            # *** Update stocks & WAPs ***
             inventory_count.inventory_count_items.each do |i|
+              #
+              # Stock
+              #
               stock = Stock.find_by_product_and_store(i.product_id, inventory_count.store_id)
               if !stock.nil?
                 # Updates existing stock
@@ -177,9 +180,45 @@ module Ag2Products
               end
               # Save stock
               if !stock.save
-                # Can't save count
+                # Can't save stock
                 code = '$write'
                 break
+              end
+              #
+              # WAP
+              #
+              product_company_price = ProductCompanyPrice.find_by_product_and_company(i.product_id, inventory_count.store.company_id)
+              if !product_company_price.nil?
+                # Updates existing WAP by company
+                if product_company_price.average_price != i.price
+                  product_company_price.average_price = i.price
+                end
+              else
+                # New WAP by company
+                product_company_price = ProductCompanyPrice.new
+                product_company_price.product_id = i.product_id
+                product_company_price.company_id = inventory_count.store.company_id
+                product_company_price.average_price = i.price
+                product_company_price.created_by = current_user.id if !current_user.nil?
+              end
+              if product_company_price.average_price_changed?
+                # Save WAP by company
+                if !product_company_price.save
+                  # Can't save WAP by company
+                  code = '$write'
+                  break
+                else
+                  # Product WAP
+                  product = Product.find(i.product_id)
+                  if !product.nil? && product.average_price <= 0
+                    product.average_price = i.price
+                    if !product.save
+                      # Can't save Product WAP
+                      code = '$write'
+                      break
+                    end
+                  end
+                end
               end
             end   # do |i|
           else

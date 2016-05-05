@@ -49,10 +49,12 @@
           $(_this).closest('tr').find('.fnt-initial').val(data.initial);
           $(_this).closest('tr').find('.fnt-current').val(data.stock);
           $(_this).closest('tr').find('.fnt-average-price').val(data.average_price);
+          $(_this).closest('tr').find('.fnt-price').val(data.average_price);
         } else {
           $("#fnt-initial").val(data.initial);
           $("#fnt-current").val(data.stock);
           $("#fnt-average-price").val(data.average_price);
+          $("#fnt-price").val(data.average_price);
           $("#current-stock").html(data.stock);
         }
       });
