@@ -48,9 +48,11 @@
         if (data.tbl == "true") {
           $(_this).closest('tr').find('.fnt-initial').val(data.initial);
           $(_this).closest('tr').find('.fnt-current').val(data.stock);
+          $(_this).closest('tr').find('.fnt-average-price').val(data.average_price);
         } else {
           $("#fnt-initial").val(data.initial);
           $("#fnt-current").val(data.stock);
+          $("#fnt-average-price").val(data.average_price);
           $("#current-stock").html(data.stock);
         }
       });
@@ -59,6 +61,14 @@
 
     // when the #fnt-quantity field changes
     $("#fnt-quantity").change(function() {
+      // preserve the current object
+      var _this = (this);
+      recalculate_ic_fields(_this);
+      return false;
+    });
+
+    // when the #fnt-price field changes
+    $("#fnt-price").change(function() {
       // preserve the current object
       var _this = (this);
       recalculate_ic_fields(_this);
@@ -76,15 +86,25 @@
       }
       if (qty == "")
         qty = "0";
+      var price = $('#fnt-price').val();
+      if (typeof price === "undefined") {
+        tbl = true;
+        price = $(_this).closest('tr').find('.fnt-price').val();
+      }
+      if (price == "")
+        price = "0";
       // Right formatted for passing as REST parameter
       qty = parseInt(right_number(qty, 4) * 10000);
-      jQuery.getJSON('ic_totals/' + qty + "/" + tbl, function(data) {
+      price = parseInt(right_number(price, 4) * 10000);
+      jQuery.getJSON('ic_totals/' + qty + "/" + price + "/" + tbl, function(data) {
         if (data.tbl == "true") {
           $(_this).closest('tr').find('.fnt-quantity').val(data.qty);
+          $(_this).closest('tr').find('.fnt-price').val(data.total);
           // Table: Update and display totals is necessary
           $('#items-table').trigger('totals');
         } else {
           $('#fnt-quantity').val(data.qty);
+          $('#fnt-price').val(data.total);
           // Fields: Update and display totals already did in nested
         }
       });
@@ -130,7 +150,9 @@
     <%= f.association :product, collection: @products, input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-product', data: { validation: "required", "validation-error-msg" => "#{e}" } }, label_html: { class: 'form-label fnt-product-label' } %>
     <%= f.input :initial, readonly: true, as: :string, input_html: { value: (number_with_precision(f.object.initial, precision: 4) if f.object.initial), class: 'mid-text-field number-text-field sub-disabled-field field', id: 'fnt-initial' }, label_html: { class: 'form-label' } %>
     <%= f.input :current, readonly: true, as: :string, input_html: { value: (number_with_precision(f.object.current, precision: 4) if f.object.current), class: 'mid-text-field number-text-field sub-disabled-field field', id: 'fnt-current' }, label_html: { class: 'form-label' } %>
+    <%= f.input :average_price, readonly: true, as: :string, input_html: { value: (number_with_precision(f.object.average_price, precision: 4) if f.object.average_price), class: 'mid-text-field number-text-field sub-disabled-field field', id: 'fnt-average-price' }, label_html: { class: 'form-label' } %>
     <%= f.input :quantity, as: :string, input_html: { value: (number_with_precision(f.object.quantity, precision: 4) if f.object.quantity), class: 'mid-text-field number-text-field field', id: 'fnt-quantity' }, label_html: { class: 'form-label' } %>
+    <%= f.input :price, as: :string, input_html: { value: (number_with_precision(f.object.price, precision: 4) if f.object.price), class: 'mid-text-field number-text-field field', id: 'fnt-price' }, label_html: { class: 'form-label' } %>
     <%= f.input :_destroy, as: :hidden, input_html: { class: 'field' } %>
   </div>
   <div class="modal-footer">

@@ -6,14 +6,14 @@
     <tr>
       <td>Id:</td>
       <td><%= @zone.id %></td>
-      <td><%= t 'activerecord.attributes.zone.organization' %>:</td>
-      <td><%= @zone.organization.name %></td>
-    </tr>
-    <tr>
       <td><%= t 'activerecord.attributes.zone.name' %>:</td>
       <td><%= @zone.name %></td>
-      <td></td>
-      <td></td>
+    </tr>
+    <tr>
+      <td><%= t 'activerecord.attributes.zone.organization' %>:</td>
+      <td><%= @zone.organization.name %></td>
+      <td><%= t 'activerecord.attributes.zone.worker' %>:</td>
+      <td><%= @zone.worker.full_name unless @zone.worker.blank? %></td>
     </tr>
     <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @zone } %>
     <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @zone } %>

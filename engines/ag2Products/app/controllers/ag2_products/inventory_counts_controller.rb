@@ -22,11 +22,13 @@ module Ag2Products
     # Calculate and format totals properly
     def ic_totals
       qty = params[:qty].to_f / 10000
+      total = params[:total].to_f / 10000
       tbl = params[:tbl]
       # Format output values
       qty = number_with_precision(qty.round(4), precision: 4)
+      total = number_with_precision(total.round(4), precision: 4)
       # Setup JSON hash
-      @json_data = { "qty" => qty.to_s, "tbl" => tbl.to_s }
+      @json_data = { "qty" => qty.to_s, "tbl" => tbl.to_s, "total" => total.to_s }
       render json: @json_data
     end
 
@@ -210,24 +212,38 @@ module Ag2Products
       render json: @json_data
     end
 
-    # Update stocks at view from product & store
+    # Update stocks & average price at view from product & store
     def ic_update_from_product_store
       product = params[:product]
       store = params[:store]
       tbl = params[:tbl]
       initial_stock = 0
       current_stock = 0
+      company = nil
+      product_company_price = nil
+      average_price = 0
       if product != '0' && store != '0'
         stock = Stock.find_by_product_and_store(product, store)
-        # Assignment
+        # Stocks
         initial_stock = stock.initial rescue 0
         current_stock = stock.current rescue 0
+        # WAP
+        average_price = Product.find(product).average_price rescue 0
+        company = Store.find(store).company rescue nil
+        if !company.blank?
+          product_company_price = ProductCompanyPrice.find_by_product_and_company(product, company) rescue nil
+          if !product_company_price.blank?
+            average_price = product_company_price.average_price
+          end
+        end
       end
       # Format numbers
       initial_stock = number_with_precision(initial_stock.round(4), precision: 4)
       current_stock = number_with_precision(current_stock.round(4), precision: 4)
+      average_price = number_with_precision(average_price.round(4), precision: 4)
       # Setup JSON hash
-      @json_data = { "initial" => initial_stock.to_s, "stock" => current_stock.to_s, "tbl" => tbl.to_s }
+      @json_data = { "initial" => initial_stock.to_s, "stock" => current_stock.to_s,
+                     "tbl" => tbl.to_s, "average_price" => average_price.to_s }
       render json: @json_data
     end
 

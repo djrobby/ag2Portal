@@ -8,7 +8,7 @@ class InventoryCountItem < ActiveRecord::Base
   has_paper_trail
 
   validates :product,   :presence => true
-  validates :quantity,  :numericality => true
+  validates :quantity,  :numericality => { :greater_than_or_equal_to => 0}
 
   def stocks
     product.stocks
@@ -25,5 +25,9 @@ class InventoryCountItem < ActiveRecord::Base
   def current_stock_by_store
     _store = inventory_count.store_id rescue 0
     stocks.where("store_id = ?", _store).sum("current")
+  end
+
+  def amount
+    quantity * price
   end
 end

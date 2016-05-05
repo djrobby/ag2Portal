@@ -20,13 +20,17 @@
     $('#items-table').bind('totals', function(event) {
       // Sum necessary values from table rows
       var qty = 0;
+      var total = 0;
       var tbl = true;
       $('#items-table tr.fields:visible').each(function() {
         qty += parseFloat(right_number($(this).find('input.fnt-quantity').val(), 4));
+        total += parseFloat(right_number($(this).find('input.fnt-price').val(), 4));
       });
       qty = parseInt(right_number(qty.toString(), 4) * 10000);
-      jQuery.getJSON('ic_totals/' + qty + "/" + tbl, function(data) {
+      total = parseInt(right_number(total.toString(), 4) * 10000);
+      jQuery.getJSON('ic_totals/' + qty + "/" + total + "/" + tbl, function(data) {
         document.getElementById('foot-quantity').innerHTML = data.qty;
+        document.getElementById('foot-total').innerHTML = data.total;
       });
     });
     // Update and display totals
@@ -62,6 +66,14 @@
       recalculate_ic_table(_this);
       return false;
     });
+
+    // when the .fnt-price field changes
+    $(".fnt-price").change(function() {
+      // preserve the current object
+      var _this = (this);
+      recalculate_ic_table(_this);
+      return false;
+    });
     
     // Recalculate amounts & prices
     function recalculate_ic_table(_this) {
@@ -70,10 +82,15 @@
       var qty = $(_this).closest('tr').find('.fnt-quantity').val();
       if (qty == "")
         qty = "0";
+      var price = $(_this).closest('tr').find('.fnt-price').val();
+      if (price == "")
+        price = "0";
       // Right formatted for passing as REST parameter
       qty = parseInt(right_number(qty, 4) * 10000);
-      jQuery.getJSON('ic_totals/' + qty + "/" + tbl, function(data) {
+      price = parseInt(right_number(price, 4) * 10000);
+      jQuery.getJSON('ic_totals/' + qty + "/" + price + "/" + tbl, function(data) {
         $(_this).closest('tr').find('.fnt-quantity').val(data.qty);
+        $(_this).closest('tr').find('.fnt-price').val(data.total);
         // Update and display totals
         $('#items-table').trigger('totals');
       });
@@ -98,13 +115,17 @@
 <table id="items-table" class="table table-condensed table-striped shrinked fixed">
   <!-- product -->
   <col width="0%" />
-  <col width="50%" />
+  <col width="40%" />
   <!-- initial -->
-  <col width="15%" />
+  <col width="11%" />
   <!-- current -->
-  <col width="15%" />
+  <col width="11%" />
+  <!-- average_price -->
+  <col width="11%" />
   <!-- quantity -->
-  <col width="15%" />
+  <col width="11%" />
+  <!-- price -->
+  <col width="11%" />
   <!-- button -->
   <col width="5%" />
   <thead>
@@ -120,7 +141,9 @@
       <td><%= i.input :thing, readonly: true, label: false, wrapper: false, as: :string, input_html: { value: (i.object.product.full_name if i.object.product_id), class: 'iconify_item sub-alfanumeric-text-field sub-disabled-field fnt-thing' } %></td>
       <td><%= i.input :initial, readonly: true, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.initial, precision: 4) if i.object.initial), class: 'sub-number-text-field sub-disabled-field fnt-initial' } %></td>
       <td><%= i.input :current, readonly: true, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.current, precision: 4) if i.object.current), class: 'sub-number-text-field sub-disabled-field fnt-current' } %></td>
+      <td><%= i.input :average_price, readonly: true, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.average_price, precision: 4) if i.object.average_price), class: 'sub-number-text-field sub-disabled-field fnt-average-price' } %></td>
       <td><%= i.input :quantity, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.quantity, precision: 4) if i.object.quantity), class: 'sub-number-text-field fnt-quantity' } %></td>
+      <td><%= i.input :price, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.price, precision: 4) if i.object.price), class: 'sub-number-text-field fnt-price' } %></td>
       <% if @breadcrumb == 'create' || @breadcrumb == 'update' %>
       <td><%= link_to_remove_fields('<i class="icon-trash"></i>'.html_safe, i) %></td>
       <% end %>

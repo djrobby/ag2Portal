@@ -188,13 +188,19 @@
       var qty = '';
       var initial = '';
       var current = '';
+      var average_price = '';
+      var price = '';
       $('tr.fields').each(function() {
         qty = $(this).find('input.fnt-quantity').val().replace(",", ".");
         initial = $(this).find('input.fnt-initial').val().replace(",", ".");
         current = $(this).find('input.fnt-current').val().replace(",", ".");
+        average_price = $(this).find('input.fnt-average-price').val().replace(",", ".");
+        price = $(this).find('input.fnt-price').val().replace(",", ".");
         $(this).find('input.fnt-quantity').val(qty);
         $(this).find('input.fnt-initial').val(initial);
         $(this).find('input.fnt-current').val(current);
+        $(this).find('input.fnt-average-price').val(average_price);
+        $(this).find('input.fnt-price').val(price);
       });
       //e.preventDefault();
     });

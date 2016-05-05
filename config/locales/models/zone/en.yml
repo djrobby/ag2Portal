@@ -14,3 +14,5 @@ en:
         max_order_price: "Max price per order item €"
         organization: "Organization"
         organization_id: "Organization"
+        worker: "Chief"
+        worker_id: "Chief"

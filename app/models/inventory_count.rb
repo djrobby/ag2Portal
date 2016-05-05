@@ -62,6 +62,16 @@ class InventoryCount < ActiveRecord::Base
     inventory_count_items.sum("quantity")
   end
 
+  def total
+    total = 0
+    inventory_count_items.each do |i|
+      if !i.amount.blank?
+        total += i.amount
+      end
+    end
+    total
+  end
+
   #
   # Records navigator
   #

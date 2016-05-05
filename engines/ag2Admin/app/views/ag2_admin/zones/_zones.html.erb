@@ -12,6 +12,7 @@ $(document).ready(function() {
     <tr>
       <th><%= sortable "id", "Id" %></th>
       <th><%= sortable "name", t('activerecord.attributes.zone.name') %></th>
+      <th><%= sortable "worker_id", t('activerecord.attributes.zone.worker') %></th>
       <th><%= sortable "organization_id", t('activerecord.attributes.zone.organization') %></th>
       <th></th>
     </tr>
@@ -21,6 +22,7 @@ $(document).ready(function() {
     <tr>
       <td><%= zone.id %></td>
       <td><%= link_to zone.name, zone %></td>
+      <td><%= zone.worker.full_name unless zone.worker.blank? %></td>
       <td><%= zone.organization.name %></td>
       <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => Zone, :path => edit_zone_path(zone) } %>
       <%= render :partial => '/layouts/crud/delete', :locals => { :model => Zone, :path => zone, :msg => I18n.t("activerecord.models.zone.one"), :txt => zone.name } %> </td>

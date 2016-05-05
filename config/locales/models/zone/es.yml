@@ -14,3 +14,5 @@ es:
         max_order_price: "Precio máx. por ítem pedido €"
         organization: "Organización"
         organization_id: "Organización"
+        worker: "Jefe"
+        worker_id: "Jefe"

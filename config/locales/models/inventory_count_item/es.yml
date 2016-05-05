@@ -19,3 +19,5 @@ es:
         current: "Actual"
         initial_stock_by_store: "Inicial ahora"
         current_stock_by_store: "Actual ahora"
+        price: "PMP"
+        average_price: "PMP Actual"

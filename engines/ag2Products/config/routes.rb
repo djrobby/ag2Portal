@@ -245,9 +245,9 @@ Ag2Products::Engine.routes.draw do
     match 'purchase_orders/:id/send_notification/:id/:user', :controller => 'purchase_orders', :action => 'send_notification'
     #
     # Inventory counts
-    match 'inventory_counts/ic_totals/:qty/:tbl', :controller => 'inventory_counts', :action => 'ic_totals'
-    match 'ic_totals/:qty/:tbl', :controller => 'inventory_counts', :action => 'ic_totals'
-    match 'inventory_counts/:id/ic_totals/:qty/:tbl', :controller => 'inventory_counts', :action => 'ic_totals'
+    match 'inventory_counts/ic_totals/:qty/:total/:tbl', :controller => 'inventory_counts', :action => 'ic_totals'
+    match 'ic_totals/:qty/:total/:tbl', :controller => 'inventory_counts', :action => 'ic_totals'
+    match 'inventory_counts/:id/ic_totals/:qty/:total/:tbl', :controller => 'inventory_counts', :action => 'ic_totals'
     match 'inventory_counts/ic_update_family_select_from_store/:store/:type', :controller => 'inventory_counts', :action => 'ic_update_family_select_from_store'
     match 'ic_update_family_select_from_store/:store/:type', :controller => 'inventory_counts', :action => 'ic_update_family_select_from_store'
     match 'inventory_counts/:id/ic_update_family_select_from_store/:store/:type', :controller => 'inventory_counts', :action => 'ic_update_family_select_from_store'

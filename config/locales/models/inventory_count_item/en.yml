@@ -19,3 +19,5 @@ en:
         current: "Current"
         initial_stock_by_store: "Initial now"
         current_stock_by_store: "Current now"
+        price: "WAP"
+        average_price: "Current WAP"

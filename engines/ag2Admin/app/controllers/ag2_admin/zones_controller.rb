@@ -65,6 +65,7 @@ module Ag2Admin
       @zone = Zone.new
       @notifications = notifications_dropdown
       @users = users_dropdown
+      @workers = workers_dropdown
 
       respond_to do |format|
         format.html # new.html.erb
@@ -78,6 +79,7 @@ module Ag2Admin
       @zone = Zone.find(params[:id])
       @notifications = notifications_dropdown
       @users = users_dropdown
+      @workers = workers_dropdown
     end
 
     # POST /zones
@@ -94,6 +96,7 @@ module Ag2Admin
         else
           @notifications = notifications_dropdown
           @users = users_dropdown
+          @workers = workers_dropdown
           format.html { render action: "new" }
           format.json { render json: @zone.errors, status: :unprocessable_entity }
         end
@@ -115,6 +118,7 @@ module Ag2Admin
         else
           @notifications = notifications_dropdown
           @users = users_dropdown
+          @workers = workers_dropdown
           format.html { render action: "edit" }
           format.json { render json: @zone.errors, status: :unprocessable_entity }
         end
@@ -146,6 +150,18 @@ module Ag2Admin
 
     def users_dropdown
       User.order(:email)
+    end
+
+    def workers_dropdown
+      if session[:company] != '0'
+        _workers = workers_by_company(session[:company].to_i)
+      else
+        _workers = session[:organization] != '0' ? Worker.where(organization_id: session[:organization].to_i).order(:last_name, :first_name) : Worker.order(:last_name, :first_name)
+      end
+    end
+
+    def workers_by_company(_company)
+      _workers = Worker.joins(:worker_items).group('worker_items.worker_id').where(worker_items: { company_id: _company }).order(:last_name, :first_name)
     end
 
     def sort_column

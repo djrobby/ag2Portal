@@ -2,5 +2,7 @@
   <td align="right"><%= t :"activerecord.attributes.inventory_count.quantity" %></td>
   <td></td>
   <td></td>
+  <td></td>
   <td align="right"><%= number_with_precision(note.quantity, precision: 4) unless note.quantity.blank? %></td>
+  <td align="right"><%= number_with_precision(note.total, precision: 4) unless note.total.blank? %></td>
 </tr>

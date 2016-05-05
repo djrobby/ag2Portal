@@ -1,6 +1,8 @@
 class Zone < ActiveRecord::Base
   belongs_to :organization
-  attr_accessible :created_by, :max_order_price, :max_order_total, :name, :updated_by, :organization_id
+  belongs_to :worker
+  attr_accessible :created_by, :max_order_price, :max_order_total, :name, :updated_by,
+                  :organization_id, :worker_id
   attr_accessible :zone_notifications_attributes
 
   has_many :offices
