@@ -56,9 +56,8 @@ module Ag2Products
       store = params[:store]
       family = params[:family]
       type = params[:type].to_i
-      count = nil
-      count_item = nil
       code = ''
+      average_price = 0
 
       if store != '0' && family != '0'
         if type == 1  # Initial
@@ -83,18 +82,32 @@ module Ag2Products
             if inventory_count.save
               # Try to save new inventory count items
               stocks.each do |i|
+                # WAP
+                product_to_search = type == 1 ? i.id : i.product_id
+                average_price = product_average_price(product_to_search, store)
+                # average_price = Product.find(product_to_search).average_price rescue 0
+                # company = Store.find(store).company rescue nil
+                # if !company.blank?
+                #   product_company_price = ProductCompanyPrice.find_by_product_and_company(product, company) rescue nil
+                #   if !product_company_price.blank?
+                #     average_price = product_company_price.average_price
+                #   end
+                # end
+                # New inventory count item
                 inventory_count_item = InventoryCountItem.new
                 inventory_count_item.inventory_count_id = inventory_count.id
                 inventory_count_item.quantity = 0
-                if type == 1
+                if type == 1  # Initial
                   inventory_count_item.product_id = i.id
                   inventory_count_item.initial = 0
                   inventory_count_item.current = 0
-                else
+                else          # Regularization
                   inventory_count_item.product_id = i.product_id
                   inventory_count_item.initial = i.initial
                   inventory_count_item.current = i.current
                 end
+                inventory_count_item.average_price = average_price
+                inventory_count_item.price = average_price
                 inventory_count_item.created_by = current_user.id if !current_user.nil?
                 if !inventory_count_item.save
                   # Can't save offer item (exit)
@@ -258,8 +271,8 @@ module Ag2Products
       tbl = params[:tbl]
       initial_stock = 0
       current_stock = 0
-      company = nil
-      product_company_price = nil
+      # company = nil
+      # product_company_price = nil
       average_price = 0
       if product != '0' && store != '0'
         stock = Stock.find_by_product_and_store(product, store)
@@ -267,14 +280,15 @@ module Ag2Products
         initial_stock = stock.initial rescue 0
         current_stock = stock.current rescue 0
         # WAP
-        average_price = Product.find(product).average_price rescue 0
-        company = Store.find(store).company rescue nil
-        if !company.blank?
-          product_company_price = ProductCompanyPrice.find_by_product_and_company(product, company) rescue nil
-          if !product_company_price.blank?
-            average_price = product_company_price.average_price
-          end
-        end
+        average_price = product_average_price(product, store)
+        # average_price = Product.find(product).average_price rescue 0
+        # company = Store.find(store).company rescue nil
+        # if !company.blank?
+        #   product_company_price = ProductCompanyPrice.find_by_product_and_company(product, company) rescue nil
+        #   if !product_company_price.blank?
+        #     average_price = product_company_price.average_price
+        #   end
+        # end
       end
       # Format numbers
       initial_stock = number_with_precision(initial_stock.round(4), precision: 4)
@@ -284,6 +298,18 @@ module Ag2Products
       @json_data = { "initial" => initial_stock.to_s, "stock" => current_stock.to_s,
                      "tbl" => tbl.to_s, "average_price" => average_price.to_s }
       render json: @json_data
+    end
+
+    def product_average_price(_product, _store)
+      _average_price = Product.find(_product).average_price rescue 0
+      _company = Store.find(_store).company rescue nil
+      if !_company.blank?
+        _product_company_price = ProductCompanyPrice.find_by_product_and_company(_product, _company) rescue nil
+        if !_product_company_price.blank?
+          _average_price = _product_company_price.average_price
+        end
+      end
+      _average_price
     end
 
     # Update product & family select at view from store

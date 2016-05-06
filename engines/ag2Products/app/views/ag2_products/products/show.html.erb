@@ -187,9 +187,9 @@ new_path: new_product_path, new_txt: t('ag2_products.products.index.btn_new') } 
     <%= render :partial => '/layouts/ag2_products/pricesbycompany', :locals => { :pbc => @prices_by_company } %>
   </tbody>
 </table>
-<%= render :partial => '/layouts/pagination', :locals => { :ivar => @prices } %>
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @prices_by_company } %>
 <% else %>
-<%= render :partial => '/layouts/paginationunbordered', :locals => { :ivar => @prices } %>
+<%= render :partial => '/layouts/paginationunbordered', :locals => { :ivar => @prices_by_company } %>
 <% end %>
 
 <% if !session[:return_to].nil? %>
