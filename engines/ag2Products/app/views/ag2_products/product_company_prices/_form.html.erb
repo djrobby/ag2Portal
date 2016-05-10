@@ -55,17 +55,19 @@
 <% else %>
 <%= f.association :product, autofocus: true, collection: Product.all(order: 'main_description'), input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %>
 <% end %>
-<% if @company %>
-<%= f.association :company, collection: Company.where("id = ?", "#{@company.id}").all, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' }, include_blank: false %>
-<% else %>
-<%= f.association :company, collection: Company.all(order: 'name'), input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %>
-<% end %>
 <div>
-  <label class="multi-field-label-two"> <%= f.input :last_price, as: :string, input_html: { value: (number_with_precision(f.object.last_price, precision: 4) if f.object.last_price), class: 'large-text-field number-text-field' }, label_html: { class: 'form-label' } %> </label>
-  <label class="multi-field-label-two"> <%= f.association :supplier, collection: @suppliers, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %> </label>
+  <label class="multi-field-label-two">
+    <% if @company %>
+    <%= f.association :company, collection: Company.where("id = ?", "#{@company.id}").all, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' }, include_blank: false %>
+    <% else %>
+    <%= f.association :company, collection: Company.all(order: 'name'), input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %>
+    <% end %>
+  </label>
+  <label class="multi-field-label-two"> <%= f.association :supplier, collection: @suppliers, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
 </div>
 <div>
   <label class="multi-field-label-two"> <%= f.input :average_price, as: :string, input_html: { value: (number_with_precision(f.object.average_price, precision: 4) if f.object.average_price), class: 'large-text-field number-text-field' }, label_html: { class: 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.input :last_price, as: :string, input_html: { value: (number_with_precision(f.object.last_price, precision: 4) if f.object.last_price), class: 'large-text-field number-text-field' }, label_html: { class: 'form-label' } %> </label>
 </div>
 <%= f.button :submit, :class => 'btn-primary' %>
 <% end %>

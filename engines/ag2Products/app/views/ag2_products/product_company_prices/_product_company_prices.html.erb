@@ -40,18 +40,18 @@
       <td><%= price.product.main_description[0,40] %></td>
       <td><%= price.company.name %></td>
       <td align="right"><%= number_with_precision(price.last_price, precision: 4, delimiter: I18n.locale == :es ? "." : ",") unless price.last_price.blank? %></td>
-      <td><%= price.supplier.full_name %></td>
+      <td><%= price.supplier.full_name unless price.supplier.blank? %></td>
       <td align="right"><%= number_with_precision(price.average_price, precision: 4, delimiter: I18n.locale == :es ? "." : ",") unless price.average_price.blank? %></td>
       <% elsif !@product.nil? %>
       <td><%= link_to price.company.name, price %></td>
       <td align="right"><%= number_with_precision(price.last_price, precision: 4, delimiter: I18n.locale == :es ? "." : ",") unless price.last_price.blank? %></td>
-      <td><%= price.supplier.full_name %></td>
+      <td><%= price.supplier.full_name unless price.supplier.blank? %></td>
       <td align="right"><%= number_with_precision(price.average_price, precision: 4, delimiter: I18n.locale == :es ? "." : ",") unless price.average_price.blank? %></td>
       <% else %> <!-- !@company.nil? -->
       <td><%= link_to price.product.full_code, price %></td>
       <td><%= price.product.main_description[0,40] %></td>
       <td align="right"><%= number_with_precision(price.last_price, precision: 4, delimiter: I18n.locale == :es ? "." : ",") unless price.last_price.blank? %></td>
-      <td><%= price.supplier.full_name %></td>
+      <td><%= price.supplier.full_name unless price.supplier.blank? %></td>
       <td align="right"><%= number_with_precision(price.average_price, precision: 4, delimiter: I18n.locale == :es ? "." : ",") unless price.average_price.blank? %></td>
       <% end %>
       <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => ProductCompanyPrice, :path => edit_product_company_price_path(price) } %>

@@ -45,3 +45,5 @@ en:
         work_order_id: "Work order"
         charge_account: "Analytical account"
         charge_account_id: "Analytical account"
+        net_price_c: "Net"
+        net_price: "Net €"

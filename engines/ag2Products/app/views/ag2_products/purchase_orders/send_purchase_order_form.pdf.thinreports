@@ -39,8 +39,9 @@ report.layout.config.list(:default) do |c|
 		e.section.item(:page_subtotals).value(I18n.t("every_report.page_subtotals"))
 		e.section.item(:page_quantity).value(number_with_precision(e.store.page_quantity, precision: 4))
 		#e.section.item(:page_discount).value(number_with_precision(e.store.page_discount, precision: 4))
-		e.section.item(:page_amount).value(number_with_precision(e.store.page_amount, precision: 4))
-		e.section.item(:page_tax).value(number_with_precision(e.store.page_tax, precision: 4))
+		# From 20160510:
+		#e.section.item(:page_amount).value(number_with_precision(e.store.page_amount, precision: 4))
+		e.section.item(:page_tax).value(number_with_precision(e.store.page_amount, precision: 4))
 		# Initialize subtotals to 0
 		e.store.page_quantity = 0
 		e.store.page_discount = 0
@@ -131,8 +132,12 @@ report.page.list(:default).header do |header|
 	header.item(:quantity_c).value I18n.t("activerecord.attributes.purchase_order_item.quantity_c")
 	header.item(:price_c).value I18n.t("activerecord.attributes.purchase_order_item.price_c")
 	header.item(:discount_c).value I18n.t("activerecord.attributes.purchase_order_item.discount_pct")
-	header.item(:amount_c).value I18n.t("activerecord.attributes.purchase_order_item.amount_c")
-	header.item(:tax_c).value I18n.t("activerecord.attributes.purchase_order_item.tax_c")
+	# Up to 20160510:
+	#header.item(:amount_c).value I18n.t("activerecord.attributes.purchase_order_item.amount_c")
+	#header.item(:tax_c).value I18n.t("activerecord.attributes.purchase_order_item.tax_c")
+	# From 20160510:
+	header.item(:amount_c).value I18n.t("activerecord.attributes.purchase_order_item.net_price_c")
+	header.item(:tax_c).value I18n.t("activerecord.attributes.purchase_order_item.amount_c")
 	header.item(:delivery_date_c).value I18n.t("activerecord.attributes.purchase_order_item.delivery_date")
 end
 
@@ -151,10 +156,17 @@ no = 0
     	row.item(:product).value code
     	row.item(:description).value i.description unless i.description.blank?
     	row.item(:quantity).value number_with_precision(i.quantity, precision: 4) unless i.quantity.blank?
-    	row.item(:price).value number_with_precision(i.net_price, precision: 4) unless i.net_price.blank?
-    	row.item(:discount).value number_with_precision(i.discount_pct, precision: 4) unless i.discount_pct.blank?
-    	row.item(:amount).value number_with_precision(i.amount, precision: 4) unless i.amount.blank?
-    	row.item(:tax).value number_with_precision(i.tax, precision: 4) unless i.tax.blank?
+    	# Up to 20160510:
+    	#row.item(:price).value number_with_precision(i.net_price, precision: 4) unless i.net_price.blank?
+    	#row.item(:discount).value number_with_precision(i.discount_pct, precision: 2) unless i.discount_pct.blank?
+    	# Up to 20160510:
+    	#row.item(:amount).value number_with_precision(i.amount, precision: 4) unless i.amount.blank?
+    	#row.item(:tax).value number_with_precision(i.tax, precision: 4) unless i.tax.blank?
+    	# From 20160510:
+    	row.item(:price).value number_with_precision(i.price, precision: 4) unless i.price.blank?
+    	row.item(:discount).value number_with_precision(i.discount_pct, precision: 2) unless i.discount_pct.blank?
+    	row.item(:amount).value number_with_precision(i.net_price, precision: 4) unless i.net_price.blank?
+    	row.item(:tax).value number_with_precision(i.amount, precision: 4) unless i.amount.blank?
     	row.item(:delivery_date).value i.delivery_date.strftime("%d/%m/%Y") unless i.delivery_date.blank?
 	end
 	# Store page subtotals

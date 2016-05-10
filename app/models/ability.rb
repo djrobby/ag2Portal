@@ -34,6 +34,16 @@ class Ability
     # Users can manage attachments
     can :manage, Attachment
 
+    # Product managers
+    if user.has_role? :Product_Manager
+      can :crud, ProductFamily
+      can :crud, ProductType
+      can :crud, Product
+      can :crud, PurchasePrice
+      can :crud, ProductCompanyPrice
+      can :crud, Stock
+    end
+
     #
     # Users according to their roles
     # IMPORTANT!
