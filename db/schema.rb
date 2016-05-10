@@ -1189,6 +1189,7 @@ ActiveRecord::Schema.define(:version => 20160505064825) do
     t.integer  "updated_by"
   end
 
+<<<<<<< Updated upstream
   create_table "product_valued_stock_by_companies", :id => false, :force => true do |t|
     t.integer "store_id"
     t.string  "store_name"
@@ -1240,6 +1241,8 @@ ActiveRecord::Schema.define(:version => 20160505064825) do
     t.decimal "company_current_value", :precision => 13, :scale => 4
   end
 
+=======
+>>>>>>> Stashed changes
   create_table "products", :force => true do |t|
     t.string   "product_code"
     t.string   "main_description"
@@ -1349,13 +1352,6 @@ ActiveRecord::Schema.define(:version => 20160505064825) do
 
   add_index "provinces", ["ine_cpro"], :name => "index_provinces_on_ine_cpro"
   add_index "provinces", ["region_id"], :name => "index_provinces_on_region_id"
-
-  create_table "purchase_order_item_balances", :id => false, :force => true do |t|
-    t.integer "purchase_order_item_id",                                      :default => 0,   :null => false
-    t.decimal "purchase_order_item_quantity", :precision => 12, :scale => 4, :default => 0.0, :null => false
-    t.decimal "receipt_quantity",             :precision => 34, :scale => 4
-    t.decimal "balance",                      :precision => 35, :scale => 4
-  end
 
   create_table "purchase_order_items", :force => true do |t|
     t.integer  "purchase_order_id"
@@ -1485,13 +1481,6 @@ ActiveRecord::Schema.define(:version => 20160505064825) do
   add_index "ratios", ["organization_id", "ratio_group_id", "code"], :name => "index_ratios_on_organization_group_code", :unique => true
   add_index "ratios", ["organization_id"], :name => "index_ratios_on_organization_id"
   add_index "ratios", ["ratio_group_id"], :name => "index_ratios_on_ratio_group_id"
-
-  create_table "receipt_note_item_balances", :id => false, :force => true do |t|
-    t.integer "receipt_note_item_id",                                      :default => 0,   :null => false
-    t.decimal "receipt_note_item_quantity", :precision => 12, :scale => 4, :default => 0.0, :null => false
-    t.decimal "invoiced_quantity",          :precision => 34, :scale => 4
-    t.decimal "balance",                    :precision => 35, :scale => 4
-  end
 
   create_table "receipt_note_items", :force => true do |t|
     t.integer  "receipt_note_id"
@@ -1934,6 +1923,7 @@ ActiveRecord::Schema.define(:version => 20160505064825) do
   add_index "supplier_invoice_approvals", ["approver_id"], :name => "index_supplier_invoice_approvals_on_approver_id"
   add_index "supplier_invoice_approvals", ["supplier_invoice_id"], :name => "index_supplier_invoice_approvals_on_supplier_invoice_id"
 
+<<<<<<< Updated upstream
   create_table "supplier_invoice_debts", :id => false, :force => true do |t|
     t.integer "supplier_invoice_id", :limit => 8
     t.integer "organization_id"
@@ -1961,6 +1951,8 @@ ActiveRecord::Schema.define(:version => 20160505064825) do
     t.decimal "debt",                         :precision => 65, :scale => 20
   end
 
+=======
+>>>>>>> Stashed changes
   create_table "supplier_invoice_items", :force => true do |t|
     t.integer  "supplier_invoice_id"
     t.integer  "receipt_note_id"
