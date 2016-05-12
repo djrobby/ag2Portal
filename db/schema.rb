@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20160505064825) do
+ActiveRecord::Schema.define(:version => 20160511084002) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -767,6 +767,7 @@ ActiveRecord::Schema.define(:version => 20160505064825) do
   end
 
   add_index "inventory_movements", ["product_id"], :name => "index_inventory_movements_on_product_id"
+  add_index "inventory_movements", ["store_id", "product_id", "type", "parent_id", "item_id"], :name => "index_inventory_movements_unique", :unique => true
   add_index "inventory_movements", ["store_id"], :name => "index_inventory_movements_on_store_id"
 
   create_table "ledger_accounts", :force => true do |t|
