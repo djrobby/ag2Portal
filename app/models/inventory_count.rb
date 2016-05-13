@@ -75,12 +75,13 @@ class InventoryCount < ActiveRecord::Base
   #
   # Class (self) user defined methods
   #
-  # Initials: _store is neccessary, _product is optional
+  # Initials: Count approved initial counts
+  # _store is neccessary, _product is optional
   def self.how_many_initials(_store, _product)
     if _product.blank?
-      where("store_id = ? AND inventory_count_type_id = ?", _store, 1).count
+      where("store_id = ? AND inventory_count_type_id = ? AND NOT approver_id IS NULL", _store, 1).count
     else
-      joins(:inventory_count_items).where("store_id = ? AND inventory_count_type_id = ? AND product_id= ?", _store, 1, _product).count
+      joins(:inventory_count_items).where("store_id = ? AND inventory_count_type_id = ? AND product_id= ? AND NOT approver_id IS NULL", _store, 1, _product).count
     end
   end
 
