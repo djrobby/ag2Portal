@@ -33,10 +33,28 @@
 
     // when the #Type_ field changes
     $("#Type_").change(function() {
+      // make a POST call and replace the content
+      var store = $('#Store_ :selected').val();
+      if (store == "") store = 0;
       var type = $('#Type_ :selected').val();
       if (type == "") type = 0;
-      $("#Store_").select2("val", 0);
-      $("#Store_").change();
+      jQuery.getJSON('ic_update_family_select_from_store/' + store + '/' + type, function(data) {
+        var f = data.product_families;
+        $("#Family_").html("");
+        $("#Family_").select2("val", "");
+        $("#Family_").append($('<option></option>').val("").html(""));
+        if (!f.length) {
+          $.each(data, function(id, option) {
+            if (id == 'technicians' && option != "") {
+              $("#Family_").append($('<option></option>').val(option.id).html(option.family_code + " " + option.name.substring(0,41)));
+            }
+          });
+        } else {
+          $.each(f, function(id, option) {
+            $("#Family_").append($('<option></option>').val(option.id).html(option.family_code + " " + option.name.substring(0,41)));
+          });
+        }
+      });
       switch (type) {
         case '1':
           $("#current-type").html('<%= I18n.t("ag2_products.inventory_counts.type_i") %>');
@@ -47,34 +65,68 @@
         default:
           $("#current-type").html('');
       }
-      if (type == 0) {
-        
-      } 
+      //return false;
     });
 
     // when the #Store_ field changes
     $("#Store_").change(function() {
       // make a POST call and replace the content
-      var type = $('#Type_ :selected').val();
-      if (type == "") type = 0;
       var store = $('#Store_ :selected').val();
       if (store == "") store = 0;
-      jQuery.getJSON('ic_update_family_select_from_store/' + store + '/' + type, function(data) {
-        var r = data.product_families;
-        $("#Family_").html("");
-        $("#Family_").select2("val", "");
-        $("#Family_").append($('<option></option>').val("").html(""));
-        if (!r.length) {
+      jQuery.getJSON('ic_update_type_select_from_store/' + store, function(data) {
+        var t = data.types;
+        var t_id = data.type;
+        $("#Type_").html("");
+        $("#Type_").select2("val", "");
+        $("#Type_").append($('<option></option>').val("").html(""));
+        if (!t.length) {
           $.each(data, function(id, option) {
-            if (id == 'product_families' && option != "") {
-              $("#Family_").append($('<option></option>').val(option.id).html(option.family_code + " " + option.name.substring(0,41)));
+            if (id == 'types' && option != "") {
+              $("#Type_").append($('<option></option>').val(option.id).html(option.name));
             }
           });
         } else {
-          $.each(r, function(id, option) {
-            $("#Family_").append($('<option></option>').val(option.id).html(option.family_code + " " + option.name.substring(0,41)));
+          $.each(t, function(id, option) {
+            $("#Type_").append($('<option></option>').val(option.id).html(option.name));
           });
         }
+        if (t_id != 0 && store != 0) {
+          $("#Type_").select2("val", t_id);
+        switch (t_id) {
+          case 1:
+            $("#current-type").html('<%= I18n.t("ag2_products.inventory_counts.type_i") %>');
+            break;
+          case 2:
+            $("#current-type").html('<%= I18n.t("ag2_products.inventory_counts.type_r") %>');
+            break;
+          default:
+            $("#current-type").html('');
+        }
+        } else {
+          $("#Type_").select2("val", 0);
+          $("#current-type").html('');
+        }
+
+        // Second, update families select
+        var type = $('#Type_ :selected').val();
+        if (type == "") type = 0;
+        jQuery.getJSON('ic_update_family_select_from_store/' + store + '/' + type, function(data) {
+          var r = data.product_families;
+          $("#Family_").html("");
+          $("#Family_").select2("val", "");
+          $("#Family_").append($('<option></option>').val("").html(""));
+          if (!r.length) {
+            $.each(data, function(id, option) {
+              if (id == 'product_families' && option != "") {
+                $("#Family_").append($('<option></option>').val(option.id).html(option.family_code + " " + option.name.substring(0,41)));
+              }
+            });
+          } else {
+            $.each(r, function(id, option) {
+              $("#Family_").append($('<option></option>').val(option.id).html(option.family_code + " " + option.name.substring(0,41)));
+            });
+          }
+        });
       });
       // AJAX refresh index table is necessary
       $(".icon-refresh-link").click();
@@ -90,12 +142,12 @@
     <span class="shrinked"><%= I18n.t(:mandatory_subtitle) %></span>
   </div>
   <div class="modal-body">
-    <!-- Type -->
-    <label for="Type_" class="form-label"> <abbr title="requerido">*</abbr> <%= I18n.t("activerecord.attributes.inventory_count.inventory_count_type") %></label>
-    <%= select_tag "Type_", options_from_collection_for_select(InventoryCountType.order(:id), "id", "name"), :prompt => "", :class => 'x-large-text-field nsel2' %>
     <!-- Store -->
-    <label for="Store_" class="form-label-under-sel2"> <abbr title="requerido">*</abbr> <%= I18n.t("activerecord.attributes.inventory_count.store") %></label>
+    <label for="Store_" class="form-label"> <abbr title="requerido">*</abbr> <%= I18n.t("activerecord.attributes.inventory_count.store") %></label>
     <%= select_tag "Store_", options_from_collection_for_select(@stores, "id", "name"), :prompt => "", :class => 'x-large-text-field nsel2' %>
+    <!-- Type -->
+    <label for="Type_" class="form-label-under-sel2"> <abbr title="requerido">*</abbr> <%= I18n.t("activerecord.attributes.inventory_count.inventory_count_type") %></label>
+    <%= select_tag "Type_", options_from_collection_for_select(InventoryCountType.order(:id), "id", "name"), :prompt => "", :class => 'x-large-text-field nsel2' %>
     <!-- Family -->
     <label for="Family_" class="form-label-under-sel2"> <abbr title="requerido">*</abbr> <%= I18n.t("activerecord.attributes.inventory_count.product_family") %></label>
     <%= select_tag "Family_", options_from_collection_for_select(@families, "id", "full_name"), :prompt => "", :class => 'x-large-text-field nsel2' %>

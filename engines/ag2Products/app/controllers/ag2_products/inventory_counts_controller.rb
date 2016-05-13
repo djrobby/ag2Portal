@@ -6,6 +6,7 @@ module Ag2Products
     before_filter :authenticate_user!
     load_and_authorize_resource
     skip_load_and_authorize_resource :only => [:ic_totals,
+                                               :ic_update_type_select_from_store,
                                                :ic_update_family_select_from_store,
                                                :ic_generate_count,
                                                :ic_generate_no,
@@ -29,6 +30,20 @@ module Ag2Products
       total = number_with_precision(total.round(4), precision: 4)
       # Setup JSON hash
       @json_data = { "qty" => qty.to_s, "tbl" => tbl.to_s, "total" => total.to_s }
+      render json: @json_data
+    end
+
+    # Update type select at view from store
+    def ic_update_type_select_from_store
+      store = params[:store]
+      if store != '0'
+        @store = Store.find(store)
+        @types = !@store.blank? ? @types = type_dropdown(@store.id) : type_dropdown(nil)
+      else
+        @types = type_dropdown(nil)
+      end
+      # Setup JSON
+      @json_data = { "types" => @types, "type" => @types.first.id }
       render json: @json_data
     end
 
@@ -439,6 +454,7 @@ module Ag2Products
       @families = families_dropdown
       @products = products_dropdown
       @products_table = products_dropdown
+      @types = type_dropdown(nil)
 
       respond_to do |format|
         format.html # new.html.erb
@@ -458,6 +474,7 @@ module Ag2Products
         @families = ProductFamily.by_store(@inventory_count.store)
         @products = @inventory_count.store.products.order(:product_code)
       end
+      @types = type_dropdown(@inventory_count.store)
       #@products = @products.paginate(:page => params[:page], :per_page => per_page)
     end
 
@@ -650,6 +667,14 @@ module Ag2Products
         _numbers = _numbers << i.count_no
       end
       _numbers = _numbers.blank? ? no : _numbers
+    end
+
+    def type_dropdown(_store)
+      if !_store.blank? && InventoryCount.how_many_initials(_store, nil) > 0
+        @type = InventoryCountType.where("id > ?", 1).order(:id)
+      else
+        @type = InventoryCountType.order(:id)
+      end
     end
 
     def stores_dropdown

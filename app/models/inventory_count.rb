@@ -73,6 +73,27 @@ class InventoryCount < ActiveRecord::Base
   end
 
   #
+  # Class (self) user defined methods
+  #
+  # Initials: _store is neccessary, _product is optional
+  def self.how_many_initials(_store, _product)
+    if _product.blank?
+      where("store_id = ? AND inventory_count_type_id = ?", _store, 1).count
+    else
+      joins(:inventory_count_items).where("store_id = ? AND inventory_count_type_id = ? AND product_id= ?", _store, 1, _product).count
+    end
+  end
+
+  # Regularizations: _store is neccessary, _product is optional
+  def self.how_many_regularizations(_store, _product)
+    if _product.blank?
+      where("store_id = ? AND inventory_count_type_id = ?", _store, 2).count
+    else
+      joins(:inventory_count_items).where("store_id = ? AND inventory_count_type_id = ? AND product_id= ?", _store, 2, _product).count
+    end
+  end
+
+  #
   # Records navigator
   #
   def to_first
