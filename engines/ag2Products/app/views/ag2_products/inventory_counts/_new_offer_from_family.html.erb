@@ -65,7 +65,9 @@
         default:
           $("#current-type").html('');
       }
-      //return false;
+      // AJAX refresh index table is necessary
+      $(".icon-refresh-link").click();
+      return false;
     });
 
     // when the #Store_ field changes
