@@ -12,10 +12,15 @@ Ag2Products::Engine.routes.draw do
     # Reports
     # From Control&Tracking
     match 'inventory_report', :controller => 'ag2_products_track', :action => 'inventory_report'
+    match 'inventory_items_report', :controller => 'ag2_products_track', :action => 'inventory_items_report'
     match 'order_report', :controller => 'ag2_products_track', :action => 'order_report'
+    match 'order_items_report', :controller => 'ag2_products_track', :action => 'order_items_report'
     match 'receipt_report', :controller => 'ag2_products_track', :action => 'receipt_report'
+    match 'receipt_items_report', :controller => 'ag2_products_track', :action => 'receipt_items_report'
     match 'delivery_report', :controller => 'ag2_products_track', :action => 'delivery_report'
+    match 'delivery_items_report', :controller => 'ag2_products_track', :action => 'delivery_items_report'
     match 'stock_report', :controller => 'ag2_products_track', :action => 'stock_report'
+    match 'stock_companies_report', :controller => 'ag2_products_track', :action => 'stock_companies_report'
     # From each Index
     match 'inventory_counts_report', :controller => 'inventory_counts', :action => 'inventory_counts_report'
     match 'receipt_notes_report', :controller => 'receipt_notes', :action => 'receipt_notes_report'

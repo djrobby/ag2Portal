@@ -24,14 +24,14 @@
       switch (report) {
         case 1:
           // Inventory count
-          show("#Project", "<%= t(".label_project") %>");
+          hide("#Project", "<%= t(".label_project") %>");
           hide("#Supplier", "<%= t(".label_supplier") %>");
           show("#Store", "<%= t(".label_store") %>");
           hide("#Order", "<%= t(".label_work_order") %>");
           hide("#Account", "<%= t(".label_charge_account") %>");
           hide("#Status", "<%= t(".label_order_status") %>");
           show("#Family", "<%= t(".label_family") %>");
-          show("#Product", "<%= t(".label_product") %>");
+          hide("#Product", "<%= t(".label_product") %>");
           $('#report_btn').show();
           break;
         case 2:
@@ -43,7 +43,7 @@
           show("#Account", "<%= t(".label_charge_account") %>");
           show("#Status", "<%= t(".label_order_status") %>");
           hide("#Family", "<%= t(".label_family") %>");
-          show("#Product", "<%= t(".label_product") %>");
+          hide("#Product", "<%= t(".label_product") %>");
           $('#report_btn').show();
           break;
         case 3:
@@ -55,7 +55,7 @@
           show("#Account", "<%= t(".label_charge_account") %>");
           hide("#Status", "<%= t(".label_order_status") %>");
           hide("#Family", "<%= t(".label_family") %>");
-          show("#Product", "<%= t(".label_product") %>");
+          hide("#Product", "<%= t(".label_product") %>");
           $('#report_btn').show();
           break;
         case 4:
@@ -67,12 +67,25 @@
           show("#Account", "<%= t(".label_charge_account") %>");
           hide("#Status", "<%= t(".label_order_status") %>");
           hide("#Family", "<%= t(".label_family") %>");
-          show("#Product", "<%= t(".label_product") %>");
+          hide("#Product", "<%= t(".label_product") %>");
           $('#report_btn').show();
           break;
         case 5:
           // Stock
-          show("#Project", "<%= t(".label_project") %>");
+          hide("#Project", "<%= t(".label_project") %>");
+          hide("#Supplier", "<%= t(".label_supplier") %>");
+          show("#Store", "<%= t(".label_store") %>");
+          hide("#Order", "<%= t(".label_work_order") %>");
+          hide("#Account", "<%= t(".label_charge_account") %>");
+          hide("#Status", "<%= t(".label_order_status") %>");
+          show("#Family", "<%= t(".label_family") %>");
+          show("#Product", "<%= t(".label_product") %>");
+          $('#report_btn').show();
+          break;
+        // MJ
+        case 6:
+          // Stock by Company
+          hide("#Project", "<%= t(".label_project") %>");
           hide("#Supplier", "<%= t(".label_supplier") %>");
           show("#Store", "<%= t(".label_store") %>");
           hide("#Order", "<%= t(".label_work_order") %>");
@@ -190,18 +203,22 @@
       var detailed = $('#detailed').prop('checked');
       var from = $('#From').val();
       var to = $('#To').val();
-      if (((from == "") || (to == "")) && report != 5)
+      if (((from == "") || (to == "")) && report <= 4) // MJ CHANGE != 5 TO <= 4
         return;
       switch (report) {
         case 1:
           // Inventory count
-          var project = $('select#Project :selected').val();
+     //mj var project = $('select#Project :selected').val();
           var store = $('select#Store :selected').val();
           var family = $('select#Family :selected').val();
-          var product = $('select#Product :selected').val();
-          if ((project == "") && (store == "") && (family == "") && (product == ""))
+    // mj var product = $('select#Product :selected').val();
+          if ((store == "") && (family == ""))
             return;
-          window.open("inventory_report.pdf?detailed=" + detailed + "project=" + project + "&from=" + from + "&to=" + to + "&store=" + store + "&family=" + family + "&product=" + product, "_blank");
+          if (detailed == ""){
+           window.open("inventory_report.pdf?detailed=" + detailed + "&from=" + from + "&to=" + to + "&store=" + store + "&family=" + family, "_blank");
+          }else {
+		   window.open("inventory_items_report.pdf?detailed=" + detailed + "&from=" + from + "&to=" + to + "&store=" + store + "&family=" + family, "_blank");
+          }
           break;
         case 2:
           // Purchase order
@@ -211,10 +228,14 @@
           var order = $('select#Order :selected').val();
           var account = $('select#Account :selected').val();
           var status = $('select#Status :selected').val();
-          var product = $('select#Product :selected').val();
-          if ((project == "") && (supplier == "") && (store == "") && (order == "") && (account == "") && (status == "") && (product == ""))
+     //mj var product = $('select#Product :selected').val();
+          if ((project == "") && (supplier == "") && (store == "") && (order == "") && (account == "") && (status == ""))
             return;
-          window.open("order_report.pdf?detailed=" + detailed + "project=" + project + "&from=" + from + "&to=" + to + "&supplier=" + supplier + "&store=" + store + "&order=" + order + "&account=" + account + "&status=" + status + "&product=" + product, "_blank");
+          if (detailed == ""){
+          	window.open("order_report.pdf?detailed=" + detailed + "&project=" + project + "&from=" + from + "&to=" + to + "&supplier=" + supplier + "&store=" + store + "&order=" + order + "&account=" + account + "&status=" + status, "_blank");
+          }else {
+          	window.open("order_items_report.pdf?detailed=" + detailed + "&project=" + project + "&from=" + from + "&to=" + to + "&supplier=" + supplier + "&store=" + store + "&order=" + order + "&account=" + account + "&status=" + status, "_blank");
+          }
           break;
         case 3:
           // Receipt note
@@ -223,10 +244,14 @@
           var store = $('select#Store :selected').val();
           var order = $('select#Order :selected').val();
           var account = $('select#Account :selected').val();
-          var product = $('select#Product :selected').val();
-          if ((project == "") && (supplier == "") && (store == "") && (order == "") && (account == "") && (product == ""))
+     //mj var product = $('select#Product :selected').val();
+          if ((project == "") && (supplier == "") && (store == "") && (order == "") && (account == ""))
             return;
-          window.open("receipt_report.pdf?detailed=" + detailed + "project=" + project + "&from=" + from + "&to=" + to + "&supplier=" + supplier + "&store=" + store + "&order=" + order + "&account=" + account + "&product=" + product, "_blank");
+          if (detailed == ""){
+          	window.open("receipt_report.pdf?detailed=" + detailed + "&project=" + project + "&from=" + from + "&to=" + to + "&supplier=" + supplier + "&store=" + store + "&order=" + order + "&account=" + account, "_blank");
+          }else {
+		  	window.open("receipt_items_report.pdf?detailed=" + detailed + "&project=" + project + "&from=" + from + "&to=" + to + "&supplier=" + supplier + "&store=" + store + "&order=" + order + "&account=" + account, "_blank");
+          } 
           break;
         case 4:
           // Delivery note
@@ -234,22 +259,38 @@
           var store = $('select#Store :selected').val();
           var order = $('select#Order :selected').val();
           var account = $('select#Account :selected').val();
-          var product = $('select#Product :selected').val();
-          if ((project == "") && (store == "") && (order == "") && (account == "") && (product == ""))
+     //mj var product = $('select#Product :selected').val();
+          if ((project == "") && (store == "") && (order == "") && (account == ""))
             return;
-          window.open("delivery_report.pdf?detailed=" + detailed + "project=" + project + "&from=" + from + "&to=" + to + "&store=" + store + "&order=" + order + "&account=" + account + "&product=" + product, "_blank");
+          if (detailed == ""){
+         	window.open("delivery_report.pdf?detailed=" + detailed + "&project=" + project + "&from=" + from + "&to=" + to + "&store=" + store + "&order=" + order + "&account=" + account, "_blank");
+          }else {
+          	window.open("delivery_items_report.pdf?detailed=" + detailed + "&project=" + project + "&from=" + from + "&to=" + to + "&store=" + store + "&order=" + order + "&account=" + account, "_blank");
+          }
           break;
         case 5:
           // Stock
-          var project = $('select#Project :selected').val();
+     //mj var project = $('select#Project :selected').val();
           var store = $('select#Store :selected').val();
           var family = $('select#Family :selected').val();
           var product = $('select#Product :selected').val();
           //if ((project == "") && (store == "") && (family == "") && (product == ""))
           if ((store == "") && (family == ""))
             return;
-          window.open("stock_report.pdf?detailed=" + detailed + "project=" + project + "&from=" + from + "&to=" + to + "&store=" + store + "&family=" + family + "&product=" + product, "_blank");
+          window.open("stock_report.pdf?detailed=" + detailed + "&from=" + from + "&to=" + to + "&store=" + store + "&family=" + family + "&product=" + product, "_blank");
           break;
+         // MJ
+         case 6:
+          // Stock Companies
+     //mj var project = $('select#Project :selected').val();
+          var store = $('select#Store :selected').val();
+          var family = $('select#Family :selected').val();
+          var product = $('select#Product :selected').val();
+          if ((store == "") && (family == ""))
+              return;
+          window.open("stock_companies_report.pdf?detailed=" + detailed + "&from=" + from + "&to=" + to + "&store=" + store + "&family=" + family + "&product=" + product, "_blank");
+          break;
+         // MJ
       }
       return false;
     });

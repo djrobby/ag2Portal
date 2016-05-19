@@ -57,7 +57,6 @@ report.page.values(printed_at: formatted_timestamp(Time.now),
 # List header
 report.page.list(:default).header do |header|
 	header.item(:image_c).value I18n.t("ag2_products.ag2_products_track.stock_report.image")
-	header.item(:id_c).value I18n.t("ag2_products.ag2_products_track.stock_report.id")
 	header.item(:product_code_c).value I18n.t("activerecord.attributes.product.product_code")
 	header.item(:main_description_c).value I18n.t("activerecord.attributes.product.main_description")
 	header.item(:sell_price_c).value I18n.t("activerecord.attributes.product.sell_price")
@@ -92,5 +91,4 @@ family_id = @products_catalog_family.first.product_family_id
   report.page.list(:default) do |list|
 		list.store.page_rows += 1
 	end
-
 end

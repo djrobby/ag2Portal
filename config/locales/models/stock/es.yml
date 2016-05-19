@@ -8,6 +8,7 @@ es:
         other: Existencias
         check_for_orders: "Producto no puede ser eliminado mientras existan pedidos vinculados."
         check_for_stocks: "Producto no puede ser eliminado mientras existan existencias vinculadas."
+        few_companies: Existencias por Empresa
     attributes:
       stock:
         product: "Producto"

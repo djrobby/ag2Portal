@@ -1,11 +1,11 @@
-if @stocks_report.blank?
+if @stock_companies_report.blank?
 	return
 end
 
 # Localization for numbers
 delimiter = I18n.locale == :es ? "." : ","
 
-report.set_layout tlf: 'reports/stock_report', layout_options: { default: true }
+report.set_layout tlf: 'reports/stock_companies_report', layout_options: { default: true }
 
 #
 # Report events
@@ -44,7 +44,7 @@ end
 report.start_new_page
 
 # Page header
-report.page.values report_title: I18n.t("ag2_products.ag2_products_track.stock_report.report_title")
+report.page.values report_title: I18n.t("ag2_products.ag2_products_track.stock_company_report.report_title")
 
 # Page footer
 report.page.values(printed_at: formatted_timestamp(Time.now),
@@ -63,11 +63,22 @@ end
 
 
 # Page Title list
-store_id = @stocks_report.first.store_id
-family_id = @stocks_report.first.product_family_id
+store_id = @stock_companies_report.first.store_id
+family_id = @stock_companies_report.first.product_family_id
 
 # List detail
-@stocks_report.each do |i|
+@stock_companies_report.each do |i|
+
+if !i.store_id.blank? && !i.product_id.blank?
+	pmpstockstore = ProductCompanyPrice.find_by_product_and_company(i.product_id, i.company_id)
+		if !i.store_id.blank? && !i.product_id.blank? && !i.company_average_price.blank?
+			pmpstock = (pmpstockstore.average_price * i.current)
+		else
+			pmpstock = (i.average_price * i.current)
+		end
+else
+	pmpstock = (i.average_price * i.current)
+end
 
 			if !i.store_id.blank? && (i.store_id != store_id)
 				report.page.list(:default).page_break
@@ -91,8 +102,12 @@ family_id = @stocks_report.first.product_family_id
 		report.page.values product_family: i.product.product_family.full_name
 		row.item(:full_name).value i.product.full_name
 		row.item(:current).value number_with_precision(i.current, precision: 4, delimiter: I18n.locale == :es ? "." : ",") unless i.current.blank?
-		row.item(:average_price).value number_with_precision(i.average_price, precision: 4, delimiter: I18n.locale == :es ? "." : ",") unless i.average_price.blank?
-		row.item(:calc).value number_with_precision(i.current_value, precision: 4, delimiter: I18n.locale == :es ? "." : ",") unless i.current_value.blank?
+	if !i.company_average_price.nil?
+		row.item(:average_price).style(:color, '009933').value number_with_precision(i.company_average_price, precision: 4, delimiter: I18n.locale == :es ? "." : ",")
+	else
+		row.item(:average_price).value number_with_precision(i.average_price, precision: 4, delimiter: I18n.locale == :es ? "." : ",")
+	end
+		row.item(:calc).value number_with_precision(pmpstock, precision: 4, delimiter: I18n.locale == :es ? "." : ",")
 	end
 	# Store page subtotals
     report.page.list(:default) do |list|

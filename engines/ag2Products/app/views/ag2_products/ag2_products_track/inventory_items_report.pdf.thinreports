@@ -1,0 +1,106 @@
+if @inventory_items_report.blank?
+	return
+end
+
+# Localization for numbers
+delimiter = I18n.locale == :es ? "." : ","
+
+report.set_layout tlf: 'reports/inventory_items_report', layout_options: { default: true }
+
+#
+# Report events
+#
+# On page create
+report.events.on :page_create do |e|
+	# Set page-number
+	e.page.item(:page_no).value(e.page.no)
+end
+# On report generate
+report.events.on :generate do |e|
+	e.pages.each do |page|
+		# Set total-page-number
+		page.item(:page_count).value(e.report.page_count)
+	end
+end
+
+#
+# List configuration (stores & events)
+#
+report.layout.config.list(:default) do |c|
+	# Define the variables used in list
+	c.use_stores page_rows: 0
+
+	# On list page footer insertion
+	c.events.on :page_footer_insert do |e|
+		# Display page sutotals
+		e.section.item(:sum_rows_title).value(I18n.t("ag2_products.ag2_products_track.inventory_report.sum_rows_title"))
+		e.section.item(:sum_rows).value(e.store.page_rows)
+		# Initialize subtotals to 0
+		#e.store.page_rows = 0
+	end
+end
+
+# New page & start
+report.start_new_page
+
+# Page header
+report.page.values report_title: I18n.t("ag2_products.ag2_products_track.inventory_report.report_title")
+report.page.values from_title: I18n.t("every_report.from_title")
+report.page.values to_title: I18n.t("every_report.to_title")
+report.page.values from: @from
+report.page.values to: @to
+# Page footer
+report.page.values(printed_at: formatted_timestamp(Time.now),
+				   pt: I18n.t("every_report.pt"),
+				   pd: I18n.t("every_report.pd"))
+
+
+# List header
+report.page.list(:default).header do |header|
+		report.page.values count_no_c: I18n.t("activerecord.attributes.inventory_count.count_no")
+		report.page.values count_date_c: I18n.t("activerecord.attributes.inventory_count.count_date")
+		report.page.values inventory_count_type_c: I18n.t("activerecord.attributes.inventory_count.inventory_count_type")
+		report.page.values store_c: I18n.t("activerecord.attributes.inventory_count.store")
+		report.page.values product_family_c: I18n.t("activerecord.attributes.inventory_count.product_family")
+		report.page.values quantity_c: I18n.t("activerecord.attributes.inventory_count_item.quantity")
+		report.page.values approval_date_c: I18n.t("activerecord.attributes.inventory_count.approval_date")
+		report.page.values approver_c: I18n.t("activerecord.attributes.inventory_count.approver")
+	header.item(:product_items_c).value I18n.t("activerecord.attributes.inventory_count_item.product")
+	header.item(:initial_items_c).value I18n.t("activerecord.attributes.inventory_count_item.initial")
+	header.item(:current_items_c).value I18n.t("activerecord.attributes.inventory_count_item.current")
+	header.item(:quantity_items_c).value I18n.t("activerecord.attributes.inventory_count_item.quantity")
+end
+
+count_number = @inventory_items_report.first.inventory_count.count_no
+
+# List detail
+@inventory_items_report.each do |i|
+
+			if !i.inventory_count.count_no.blank? && (i.inventory_count.count_no != count_number)
+				report.page.list(:default).page_break
+				report.page.list(:default) do |list|
+					list.store.page_rows = 0
+				end
+				count_number = i.inventory_count.count_no
+			end
+			
+	report.page.list(:default).add_row do |row|
+		report.page.values count_no: i.inventory_count.full_no
+		report.page.values count_date: formatted_date(i.inventory_count.count_date) unless i.inventory_count.count_date.blank?
+		report.page.values inventory_count_type: i.inventory_count.inventory_count_type.name unless i.inventory_count.inventory_count_type.blank?
+		report.page.values store: i.inventory_count.store.name unless i.inventory_count.store.blank?
+		report.page.values product_family: i.inventory_count.product_family.full_name unless i.inventory_count.product_family.blank?
+		report.page.values quantity: number_with_precision(i.inventory_count.quantity, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless i.inventory_count.quantity.blank?
+		report.page.values approval_date: formatted_timestamp(i.inventory_count.approval_date.utc.getlocal) unless i.inventory_count.approval_date.blank?
+		report.page.values approver: i.inventory_count.approver.email unless i.inventory_count.approver.blank?
+		row.item(:product_items).value i.product.full_name
+		row.item(:initial_items).value number_with_precision(i.initial, precision: 4, delimiter: I18n.locale == :es ? "." : ",") unless i.initial.blank?
+		row.item(:current_items).value number_with_precision(i.current, precision: 4, delimiter: I18n.locale == :es ? "." : ",") unless i.current.blank?
+		row.item(:quantity_items).value number_with_precision(i.quantity, precision: 4, delimiter: I18n.locale == :es ? "." : ",") unless i.quantity.blank?
+	end
+	# Store page subtotals
+  report.page.list(:default) do |list|
+		list.store.page_rows += 1
+	end
+end
+

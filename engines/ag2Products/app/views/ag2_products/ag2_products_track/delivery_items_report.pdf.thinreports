@@ -1,0 +1,103 @@
+if @delivery_items_report.blank?
+	return
+end
+
+# Localization for numbers
+delimiter = I18n.locale == :es ? "." : ","
+
+report.set_layout tlf: 'reports/delivery_items_report', layout_options: { default: true }
+
+#
+# Report events
+#
+# On page create
+report.events.on :page_create do |e|
+	# Set page-number
+	e.page.item(:page_no).value(e.page.no)
+end
+# On report generate
+report.events.on :generate do |e|
+	e.pages.each do |page|
+		# Set total-page-number
+		page.item(:page_count).value(e.report.page_count)
+	end
+end
+
+#
+# List configuration (stores & events)
+#
+report.layout.config.list(:default) do |c|
+	# Define the variables used in list
+	c.use_stores page_rows: 0
+
+	# On list page footer insertion
+	c.events.on :page_footer_insert do |e|
+		# Display page sutotals
+		e.section.item(:sum_rows_title).value(I18n.t("ag2_products.ag2_products_track.delivery_report.sum_rows_title"))
+		e.section.item(:sum_rows).value(e.store.page_rows)
+	end
+end
+
+# New page & start
+report.start_new_page
+
+# Page header
+report.page.values report_title: I18n.t("ag2_products.ag2_products_track.delivery_report.report_title")
+report.page.values from_title: I18n.t("every_report.from_title")
+report.page.values to_title: I18n.t("every_report.to_title")
+report.page.values from: @from
+report.page.values to: @to
+# Page footer
+report.page.values(printed_at: formatted_timestamp(Time.now),
+				   pt: I18n.t("every_report.pt"),
+				   pd: I18n.t("every_report.pd"))
+
+
+# List header
+report.page.list(:default).header do |header|
+	report.page.values delivery_no_c: I18n.t("activerecord.attributes.delivery_note.delivery_no")
+	report.page.values delivery_date_c: I18n.t("activerecord.attributes.delivery_note.delivery_date")
+	report.page.values project_c: I18n.t("activerecord.attributes.delivery_note.project")
+	report.page.values store_c: I18n.t("activerecord.attributes.delivery_note.store")
+	report.page.values quantity_c: I18n.t("activerecord.attributes.delivery_note.quantity")
+	report.page.values total_c: I18n.t("activerecord.attributes.delivery_note.total")
+	header.item(:full_code_items_c).value I18n.t("activerecord.attributes.delivery_note_item.product_c")
+	header.item(:description_items_c).value I18n.t("activerecord.attributes.delivery_note_item.description_c")
+	header.item(:quantity_items_c).value I18n.t("activerecord.attributes.delivery_note_item.quantity_c")
+	header.item(:net_price_items_c).value I18n.t("activerecord.attributes.delivery_note_item.price_c")
+	header.item(:amount_items_c).value I18n.t("activerecord.attributes.delivery_note_item.amount_c")
+	header.item(:balance_items_c).value I18n.t("activerecord.attributes.delivery_note_item.tax ")
+end
+
+delivery_number = @delivery_items_report.first.delivery_note.delivery_no
+
+# List detail
+@delivery_items_report.each do |i|
+
+			if !i.delivery_note.delivery_no.blank? && (i.delivery_note.delivery_no != delivery_number)
+				report.page.list(:default).page_break
+				report.page.list(:default) do |list|
+					list.store.page_rows = 0
+				end
+				delivery_number = i.delivery_note.delivery_no
+			end
+
+	report.page.list(:default).add_row do |row|
+		report.page.values delivery_no: i.delivery_note.delivery_no
+		report.page.values delivery_date: formatted_date(i.delivery_note.delivery_date) unless i.delivery_note.delivery_date.blank?
+		report.page.values project: i.delivery_note.project.full_code unless i.delivery_note.project.blank?
+		report.page.values store: i.delivery_note.store.name unless i.delivery_note.store.blank?
+		report.page.values quantity: number_with_precision(i.delivery_note.quantity, precision: 2) unless i.delivery_note.quantity.blank?
+		report.page.values total: number_with_precision(i.delivery_note.total, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless i.delivery_note.total.blank?
+		row.item(:full_code_items).value i.product.full_code
+		row.item(:description_items).value i.description
+		row.item(:quantity_items).value number_with_precision(i.quantity, precision: 4)
+		row.item(:net_price_items).value number_with_precision(i.price, precision: 4)
+		row.item(:amount_items).value number_with_precision(i.amount, precision: 4)
+		row.item(:balance_items).value number_with_precision(i.tax, precision: 4)
+	end
+	# Store page subtotals
+  report.page.list(:default) do |list|
+		list.store.page_rows += 1
+	end
+end

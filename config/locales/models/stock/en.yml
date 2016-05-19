@@ -8,6 +8,7 @@ en:
         other: Stocks
         check_for_orders: "Product cannot be destroyed while linked orders exist."
         check_for_stocks: "Product cannot be destroyed while linked stocks exist."
+        few_companies: Stocks by Company
     attributes:
       stock:
         product: "Product"
