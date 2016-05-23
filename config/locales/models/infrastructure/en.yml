@@ -1,0 +1,18 @@
+en:
+  activerecord:
+    models:
+      infrastructure:
+        zero:  Infrastructures
+        one:   Infrastructure
+        few:   Infrastructures
+        other: Infrastructures
+        check_for_work_orders: "Infrastructure cannot be destroyed while linked work orders exist."
+    attributes:
+      infrastructure:
+        name: "Description"
+        organization: "Organization"
+        organization_id: "Organization"
+        company: "Company"
+        company_id: "Company"
+        office: "Office"
+        office_id: "Office"

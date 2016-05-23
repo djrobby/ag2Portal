@@ -1,0 +1,17 @@
+<%= form_for(@infrastructure_type) do |f| %>
+  <% if @infrastructure_type.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@infrastructure_type.errors.count, "error") %> prohibited this infrastructure_type from being saved:</h2>
+
+      <ul>
+      <% @infrastructure_type.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

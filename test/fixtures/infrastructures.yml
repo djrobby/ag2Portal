@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  name: MyString
+  infrastructure_type: 
+  organization: 
+  company: 
+  office: 
+
+two:
+  name: MyString
+  infrastructure_type: 
+  organization: 
+  company: 
+  office: 

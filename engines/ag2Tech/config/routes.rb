@@ -184,6 +184,7 @@ Ag2Tech::Engine.routes.draw do
       get 'work_order_form', on: :collection
       get 'work_order_form_empty', on: :collection
     end
+    resources :work_order_areas
     resources :work_order_labors
     resources :work_order_statuses
     resources :work_order_types
@@ -194,6 +195,8 @@ Ag2Tech::Engine.routes.draw do
     resources :vehicles
     resources :ratios
     resources :ratio_groups
+    resources :infrastructures
+    resources :infrastructure_types
 
     # API
     # Warning: The order is very important!

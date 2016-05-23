@@ -47,6 +47,7 @@ class Organization < ActiveRecord::Base
   has_many :work_orders
   has_many :charge_accounts
   has_many :charge_groups
+  has_many :work_order_areas
   has_many :work_order_labors
   has_many :work_order_types
   has_many :budget_headings
@@ -56,6 +57,8 @@ class Organization < ActiveRecord::Base
   has_many :tools
   has_many :ratios
   has_many :ratio_groups
+  has_many :infrastructure_types
+  has_many :infrastructures
 
   has_paper_trail
 

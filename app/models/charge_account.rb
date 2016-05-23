@@ -13,6 +13,7 @@ class ChargeAccount < ActiveRecord::Base
   has_many :work_order_tools
   has_many :work_order_vehicles
   has_many :work_order_subcontractors
+  has_many :work_order_types
   has_many :purchase_orders
   has_many :purchase_order_items
   has_many :receipt_notes

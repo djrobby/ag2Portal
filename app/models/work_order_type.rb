@@ -1,6 +1,7 @@
 class WorkOrderType < ActiveRecord::Base
   belongs_to :organization
-  attr_accessible :name, :organization_id
+  belongs_to :charge_account
+  attr_accessible :name, :organization_id, :charge_account_id
 
   has_many :work_orders
 

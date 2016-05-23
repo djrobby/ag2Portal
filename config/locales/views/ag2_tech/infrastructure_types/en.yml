@@ -1,0 +1,19 @@
+en:
+  ag2_tech:
+    infrastructure_types:
+      index:
+        title: "Infrastructure types"
+        btn_new: "New Infrastructure type"
+        back_to_root: "Back to ag2Tech"
+      show:
+        title: "Infrastructure type"
+        btn_edit: "Edit Infrastructure type"
+        btn_delete: "Delete Infrastructure type"
+        subtable_title: "Infrastructure type Orders"
+        return_to: "Back to Infrastructure type"
+      edit:
+        title: "Edit Infrastructure type"
+        btn_show: "Show Infrastructure type"
+      new:
+        title: "New Infrastructure type"
+      back_to_main_page: "Back to Infrastructure types"

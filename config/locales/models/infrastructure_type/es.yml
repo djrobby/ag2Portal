@@ -1,0 +1,14 @@
+es:
+  activerecord:
+    models:
+      infrastructure_type:
+        zero:  Tipos de infraestructura
+        one:   Tipo de infraestructura
+        few:   Tipos de infraestructura
+        other: Tipos de infraestructura
+        check_for_infrastructures: "Tipo no puede ser eliminado mientras existan infraestructuras vinculadas."
+    attributes:
+      infrastructure_type:
+        name: "Descripción"
+        organization: "Organización"
+        organization_id: "Organización"

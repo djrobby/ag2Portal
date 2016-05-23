@@ -1,0 +1,14 @@
+en:
+  activerecord:
+    models:
+      work_order_area:
+        zero:  WO areas
+        one:   WO area
+        few:   WO areas
+        other: WO areas
+        check_for_work_orders: "Area cannot be destroyed while linked work orders exist."
+    attributes:
+      work_order_area:
+        name: "Description"
+        organization: "Organization"
+        organization_id: "Organization"

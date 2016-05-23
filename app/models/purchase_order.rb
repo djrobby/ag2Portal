@@ -274,7 +274,8 @@ class PurchaseOrder < ActiveRecord::Base
   #
   # Need approval?
   def check_if_approval_is_required
-    check_by_families || check_by_supplier || check_by_project || check_by_office || check_by_company
+    check_by_families || check_by_supplier || check_by_project ||
+    check_by_office || check_by_company || check_by_zone
   end
 
   # Maximums by product family
@@ -331,6 +332,18 @@ class PurchaseOrder < ActiveRecord::Base
     # global_company_breakdown returns multidimensional array containing different company in each line
     # Each line contains 5 elements: Company Id, max_order_total, max_order_price, Net amount sum by project & Item net price
     a = global_company_breakdown(purchase_order_items.joins(:project).order(:company_id))
+    d = a.detect { |f| (f[1] > 0 && (f[3] > f[1])) || (f[2] > 0 && (f[4] > f[2])) }
+    _r = d.nil? ? false : true
+  end
+
+  # Maximums by zone
+  # (item net sum & item net price)
+  # Returns true if approval is required, otherwise false
+  def check_by_zone
+    _r = false
+    # global_zone_breakdown returns multidimensional array containing different zone in each line
+    # Each line contains 5 elements: Zone Id, max_order_total, max_order_price, Net amount sum by project & Item net price
+    a = global_zone_breakdown(purchase_order_items.joins(project: :office).order(:zone_id))
     d = a.detect { |f| (f[1] > 0 && (f[3] > f[1])) || (f[2] > 0 && (f[4] > f[2])) }
     _r = d.nil? ? false : true
   end

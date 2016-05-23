@@ -1,0 +1,19 @@
+en:
+  ag2_tech:
+    work_order_areas:
+      index:
+        title: "WO areas"
+        btn_new: "New WO area"
+        back_to_root: "Back to ag2Tech"
+      show:
+        title: "WO area"
+        btn_edit: "Edit WO area"
+        btn_delete: "Delete WO area"
+        subtable_title: "WO area Orders"
+        return_to: "Back to WO area"
+      edit:
+        title: "Edit WO area"
+        btn_show: "Show WO area"
+      new:
+        title: "New WO area"
+      back_to_main_page: "Back to WO areas"

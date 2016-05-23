@@ -4,6 +4,7 @@ es:
       index:
         control: "Control&Seguimiento"
         control_a: "Control&Seguimto."
+        work_order_areas: "Áreas OT"
         work_order_types: "Tipos de OT"
         work_order_statuses: "Estados de OT"
         work_order_labors: "Labores para OT"
@@ -18,3 +19,5 @@ es:
         vehicles: "Vehículos"
         ratios: "Ratios Presup."
         ratio_groups: "Grupos Ratios"
+        infrastructure_types: "Tipos Infraestructura"
+        infrastructures: "Infraestructuras"

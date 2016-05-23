@@ -217,20 +217,24 @@ class Notifier < ActionMailer::Base
     _recipients = ''
     _by_company = nil
     _by_office = nil
+    _by_zone = nil
     _table = _ivar.class.table_name
     _project = _ivar.project rescue nil
     _store = _ivar.store rescue nil
     _office = nil
     _company = nil
+    _zone = nil
     # Search office & company
     if !_project.blank?
       # From project
       _office = _project.office rescue nil
       _company = _project.company rescue nil
+      _zone = _project.office.zone rescue nil
     elsif !_store.blank?
       # From store
       _office = _store.office rescue nil
       _company = _store.company rescue nil
+      _zone = _store.office.zone rescue nil
     end
     # First notification for the searched table & action
     _notification = Notification.where(table: _table, action: _action).first rescue nil
@@ -240,7 +244,28 @@ class Notifier < ActionMailer::Base
       _by_company = company_notification_recipients(_company, _notification, _role)
       # By office
       _by_office = office_notification_recipients(_office, _notification, _role)
+      # By zone
+      _by_zone = zone_notification_recipients(_zone, _notification, _role)
       # Setup recipients
+=begin
+      if !_by_company.nil? && !_by_office.nil?
+        _recipients = _by_company + "," + _by_office
+      elsif !_by_company.nil? && _by_office.nil?
+        _recipients = _by_company
+      elsif _by_company.nil? && !_by_office.nil?
+        _recipients = _by_office
+      end
+=end
+      if !_by_company.nil?
+        _recipients += _recipients.blank? ? _by_company : "," + _by_company
+      end
+      if !_by_office.nil?
+        _recipients += _recipients.blank? ? _by_office : "," + _by_office
+      end
+      if !_by_zone.nil?
+        _recipients += _recipients.blank? ? _by_zone : "," + _by_zone
+      end
+
       if !_by_company.nil? && !_by_office.nil?
         _recipients = _by_company + "," + _by_office
       elsif !_by_company.nil? && _by_office.nil?
@@ -268,6 +293,16 @@ class Notifier < ActionMailer::Base
     _recipients = nil
     if !_office.blank?
       _notifications = _office.office_notifications.where(notification_id: _notification.id, role: _role) rescue nil
+      _recipients = recipients_string(_notifications)
+    end
+    _recipients
+  end
+
+  # Zone notification recipients
+  def zone_notification_recipients(_zone, _notification, _role)
+    _recipients = nil
+    if !_zone.blank?
+      _notifications = _zone.zone_notifications.where(notification_id: _notification.id, role: _role) rescue nil
       _recipients = recipients_string(_notifications)
     end
     _recipients

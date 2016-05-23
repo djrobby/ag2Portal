@@ -618,8 +618,10 @@ module Ag2Tech
       @work_order = WorkOrder.new
       # Form
       @projects = projects_dropdown
+      @woareas = work_order_areas_dropdown
       @types = work_order_types_dropdown
       @labors = work_order_labors_dropdown
+      @infrastructures = infraestructures_dropdown
       @areas = areas_dropdown
       @charge_accounts = projects_charge_accounts(@projects)
       @stores = stores_dropdown
@@ -645,8 +647,10 @@ module Ag2Tech
       @work_order = WorkOrder.find(params[:id])
       # Form
       @projects = projects_dropdown_edit(@work_order.project)
+      @woareas = work_order_areas_dropdown_edit(@work_order.work_order_area)
       @types = work_order_types_dropdown_edit(@work_order.work_order_type)
       @labors = work_order_labors_dropdown_edit(@work_order.work_order_labor)
+      @infrastructures = infraestructures_dropdown
       @areas = areas_dropdown
       @charge_accounts = @work_order.project.blank? ? projects_charge_accounts(@projects) : charge_accounts_dropdown_edit(@work_order.project)
       @stores = project_stores(@work_order.project)
@@ -675,8 +679,10 @@ module Ag2Tech
           format.json { render json: @work_order, status: :created, location: @work_order }
         else
           @projects = projects_dropdown
+          @woareas = work_order_areas_dropdown
           @types = work_order_types_dropdown
           @labors = work_order_labors_dropdown
+          @infrastructures = infraestructures_dropdown
           @areas = areas_dropdown
           @charge_accounts = projects_charge_accounts(@projects)
           @stores = stores_dropdown
@@ -777,9 +783,11 @@ module Ag2Tech
       if ((params[:work_order][:organization_id].to_i != @work_order.organization_id.to_i) ||
           (params[:work_order][:project_id].to_i != @work_order.project_id.to_i) ||
           (params[:work_order][:client_id].to_i != @work_order.client_id.to_i) ||
+          (params[:work_order][:work_order_area_id].to_i != @work_order.work_order_area_id.to_i) ||
           (params[:work_order][:work_order_type_id].to_i != @work_order.work_order_type_id.to_i) ||
           (params[:work_order][:description] != @work_order.description) ||
           (params[:work_order][:work_order_labor_id].to_i != @work_order.work_order_labor_id.to_i) ||
+          (params[:work_order][:infrastructure_id].to_i != @work_order.infrastructure_id.to_i) ||
           (params[:work_order][:work_order_status_id].to_i != @work_order.work_order_status_id.to_i) ||
           (params[:work_order][:area_id].to_i != @work_order.area_id.to_i) ||
           (params[:work_order][:in_charge_id].to_i != @work_order.in_charge_id.to_i) ||
@@ -810,8 +818,10 @@ module Ag2Tech
             format.json { head :no_content }
           else
             @projects = projects_dropdown_edit(@work_order.project)
+            @woareas = work_order_areas_dropdown_edit(@work_order.work_order_area)
             @types = work_order_types_dropdown_edit(@work_order.work_order_type)
             @labors = work_order_labors_dropdown_edit(@work_order.work_order_labor)
+            @infrastructures = infraestructures_dropdown
             @areas = areas_dropdown
             @charge_accounts = @work_order.project.blank? ? projects_charge_accounts(@projects) : charge_accounts_dropdown_edit(@work_order.project)
             @stores = project_stores(@work_order.project)
@@ -1047,6 +1057,18 @@ module Ag2Tech
       _projects
     end
 
+    def work_order_areas_dropdown
+      session[:organization] != '0' ? WorkOrderArea.where(organization_id: session[:organization].to_i).order(:name) : WorkOrderArea.order(:name)
+    end
+
+    def work_order_areas_dropdown_edit(_area)
+      _areas = work_order_areas_dropdown
+      if _areas.blank?
+        _areas = WorkOrderArea.where(id: _area)
+      end
+      _areas
+    end
+
     def work_order_types_dropdown
       session[:organization] != '0' ? WorkOrderType.where(organization_id: session[:organization].to_i).order(:name) : WorkOrderType.order(:name)
     end
@@ -1069,6 +1091,10 @@ module Ag2Tech
         _labors = WorkOrderLabor.where(id: _labor)
       end
       _labors
+    end
+
+    def infrastructures_dropdown
+      session[:organization] != '0' ? Infrastructure.where(organization_id: session[:organization].to_i).order(:name) : Infrastructure.order(:name)
     end
 
     def charge_accounts_dropdown

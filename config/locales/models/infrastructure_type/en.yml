@@ -1,0 +1,14 @@
+en:
+  activerecord:
+    models:
+      infrastructure_type:
+        zero:  Infrastructure types
+        one:   Infrastructure type
+        few:   Infrastructure types
+        other: Infrastructure types
+        check_for_infrastructures: "Type cannot be destroyed while linked infrastructures exist."
+    attributes:
+      infrastructure_type:
+        name: "Description"
+        organization: "Organization"
+        organization_id: "Organization"

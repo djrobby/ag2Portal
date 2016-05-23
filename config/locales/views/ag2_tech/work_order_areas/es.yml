@@ -1,0 +1,19 @@
+es:
+  ag2_tech:
+    work_order_areas:
+      index:
+        title: "Áreas OT"
+        btn_new: "Nuevo Área OT"
+        back_to_root: "Volver a ag2Tech"
+      show:
+        title: "Área OT"
+        btn_edit: "Editar Área OT"
+        btn_delete: "Borrar Área OT"
+        subtable_title: "Ordenes del Área OT"
+        return_to: "Volver a Área OT"
+      edit:
+        title: "Editar Área OT"
+        btn_show: "Ver Área OT"
+      new:
+        title: "Nuevo Área OT"
+      back_to_main_page: "Volver a Áreas OT"

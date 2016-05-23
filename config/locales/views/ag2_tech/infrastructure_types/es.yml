@@ -1,0 +1,19 @@
+es:
+  ag2_tech:
+    infrastructure_types:
+      index:
+        title: "Tipos de infraestructura"
+        btn_new: "Nuevo Tipo de infraestructura"
+        back_to_root: "Volver a ag2Tech"
+      show:
+        title: "Tipo de infraestructura"
+        btn_edit: "Editar Tipo de infraestructura"
+        btn_delete: "Borrar Tipo de infraestructura"
+        subtable_title: "Ordenes del Tipo de infraestructura"
+        return_to: "Volver a Tipo de infraestructura"
+      edit:
+        title: "Editar Tipo de infraestructura"
+        btn_show: "Ver Tipo de infraestructura"
+      new:
+        title: "Nuevo Tipo de infraestructura"
+      back_to_main_page: "Volver a Tipos de infraestructura"

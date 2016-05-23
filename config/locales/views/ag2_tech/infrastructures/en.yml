@@ -1,0 +1,19 @@
+en:
+  ag2_tech:
+    infrastructures:
+      index:
+        title: "Infrastructures"
+        btn_new: "New Infrastructure"
+        back_to_root: "Back to ag2Tech"
+      show:
+        title: "Infrastructures"
+        btn_edit: "Edit Infrastructure"
+        btn_delete: "Delete Infrastructure"
+        subtable_title: "Infrastructure Orders"
+        return_to: "Back to Infrastructure"
+      edit:
+        title: "Edit Infrastructure"
+        btn_show: "Show Infrastructure"
+      new:
+        title: "New Infrastructure"
+      back_to_main_page: "Back to Infrastructures"

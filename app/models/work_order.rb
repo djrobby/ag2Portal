@@ -1,6 +1,7 @@
 class WorkOrder < ActiveRecord::Base
   include ModelsModule
 
+  belongs_to :work_order_area
   belongs_to :work_order_type
   belongs_to :work_order_status
   belongs_to :work_order_labor
@@ -11,6 +12,7 @@ class WorkOrder < ActiveRecord::Base
   belongs_to :client
   belongs_to :organization
   belongs_to :in_charge, class_name: 'Worker'
+  belongs_to :infrastructure
   #belongs_to :subscriber
   #belongs_to :meter
   #belongs_to :meter_model
@@ -19,11 +21,11 @@ class WorkOrder < ActiveRecord::Base
   #belongs_to :meter_location
   #belongs_to :last_reading, class_name: 'Reading'
   attr_accessible :closed_at, :completed_at, :order_no, :started_at,
-                  :work_order_labor_id, :work_order_status_id, :work_order_type_id,
-                  :charge_account_id, :project_id, :area_id, :store_id, :client_id,
+                  :work_order_labor_id, :work_order_status_id, :work_order_type_id, :work_order_area_id,
+                  :charge_account_id, :project_id, :area_id, :store_id, :client_id, :infrastructure_id,
                   :remarks, :description, :petitioner, :master_order_id, :organization_id,
                   :in_charge_id, :reported_at, :approved_at, :certified_at, :posted_at,
-                  :location, :pub_record, :subscriber_id, :incidences,
+                  :location, :pub_record, :subscriber_id, :incidences, :por_affected,
                   :meter_id, :meter_code, :meter_model_id, :caliber_id, :meter_owner_id,
                   :meter_location_id, :last_reading_id, :current_reading_date, :current_reading_index
   attr_accessible :work_order_items_attributes, :work_order_workers_attributes,
@@ -87,6 +89,7 @@ class WorkOrder < ActiveRecord::Base
   validates :project,           :presence => true
   validates :work_order_labor,  :presence => true
   validates :work_order_status, :presence => true
+  validates :work_order_area,   :presence => true
   validates :work_order_type,   :presence => true
   validates :in_charge,         :presence => true
   validates :organization,      :presence => true

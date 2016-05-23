@@ -1,0 +1,18 @@
+es:
+  activerecord:
+    models:
+      infrastructure:
+        zero:  Infraestructuras
+        one:   Infraestructura
+        few:   Infraestructuras
+        other: Infraestructuras
+        check_for_work_orders: "Infraestructura no puede ser eliminada mientras existan ordenes de trabajo vinculadas."
+    attributes:
+      infrastructure:
+        name: "Descripción"
+        organization: "Organización"
+        organization_id: "Organización"
+        company: "Empresa"
+        company_id: "Empresa"
+        office: "Oficina"
+        office_id: "Oficina"

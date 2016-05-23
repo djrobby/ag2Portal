@@ -398,11 +398,14 @@ class Ability
       can :crud, BudgetRatio
       can :crud, ChargeAccount
       can :crud, ChargeGroup
+      can :crud, InfrastructureType
+      can :crud, Infrastructure
       can :crud, Project
       can :crud, Ratio
       can :crud, RatioGroup
       can :crud, Tool
       can :crud, Vehicle
+      can :crud, WorkOrderArea
       can :crud, WorkOrderLabor
       can :crud, WorkOrderStatus
       can :crud, WorkOrderType
@@ -420,11 +423,14 @@ class Ability
       can :read, BudgetRatio
       can :read, ChargeAccount
       can :read, ChargeGroup
+      can :read, InfrastructureType
+      can :read, Infrastructure
       can :read, Project
       can :read, Ratio
       can :read, RatioGroup
       can :read, Tool
       can :read, Vehicle
+      can :read, WorkOrderArea
       can :read, WorkOrderLabor
       can :read, WorkOrderStatus
       can :read, WorkOrderType
@@ -442,11 +448,14 @@ class Ability
       cannot :manage, BudgetRatio
       cannot :manage, ChargeAccount
       cannot :manage, ChargeGroup
+      cannot :manage, InfrastructureType
+      cannot :manage, Infrastructure
       cannot :manage, Project
       cannot :manage, Ratio
       cannot :manage, RatioGroup
       cannot :manage, Tool
       cannot :manage, Vehicle
+      cannot :manage, WorkOrderArea
       cannot :manage, WorkOrderLabor
       cannot :manage, WorkOrderStatus
       cannot :manage, WorkOrderType

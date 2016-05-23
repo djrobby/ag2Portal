@@ -1,0 +1,14 @@
+es:
+  activerecord:
+    models:
+      work_order_area:
+        zero:  Áreas OT
+        one:   Área OT
+        few:   Áreas OT
+        other: Áreas OT
+        check_for_work_orders: "Área no puede ser eliminada mientras existan ordenes de trabajo vinculadas."
+    attributes:
+      work_order_area:
+        name: "Descripción"
+        organization: "Organización"
+        organization_id: "Organización"
