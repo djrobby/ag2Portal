@@ -26,6 +26,7 @@ en:
       back_to_main_page: "Back to Work orders"
       generate_code_btn: "Order No."
       no_error: "Unable to generate Order No.: No Project chosen."
+      meter_subscriber_info: "Subscriber & Meter"
       items_info: "Order Products"
       workers_info: "Order Workers"
       subcontractors_info: "Order Subcontractors"

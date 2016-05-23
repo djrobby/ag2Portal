@@ -40,10 +40,16 @@
       <td><%= @work_order.project.full_name %></td>
     </tr>
     <tr>
+      <td><%=t 'activerecord.attributes.work_order.work_order_area' %>:</td>
+      <td><%= @work_order.work_order_area.name %></td>
       <td><%=t 'activerecord.attributes.work_order.work_order_type' %>:</td>
       <td><%= @work_order.work_order_type.name %></td>
+    </tr>
+    <tr>
       <td><%=t 'activerecord.attributes.work_order.work_order_labor' %>:</td>
       <td><%= @work_order.work_order_labor.name %></td>
+      <td><%=t 'activerecord.attributes.work_order.infrastructure' %>:</td>
+      <td><%= @work_order.infrastructure.name unless @work_order.infrastructure.blank? %></td>
     </tr>
     <tr>
       <td><%=t 'activerecord.attributes.work_order.area' %>:</td>
@@ -95,6 +101,19 @@
     </tr>
     <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @work_order } %>
     <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @work_order } %>
+    <tr>
+      <td><%= t :"activerecord.attributes.work_order.master_order" %>:</td>
+      <td><%= @work_order.master_order unless @work_order.master_order.blank? %></td>
+      <td class="highlighted bolded"><%= t :"activerecord.attributes.work_order.total_costs" %>:</td>
+      <td class="highlighted bolded"><%= number_with_precision(@work_order.total_costs, precision: 4, delimiter: I18n.locale == :es ? "." : ",") unless @work_order.total_costs.blank? %></td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- Meter & Subscriber -->
+<h4><%= t 'ag2_tech.work_orders.meter_subscriber_info' %></h4>
+<table class="table">
+  <tbody>
     <tr>
       <td><%= t :"activerecord.attributes.work_order.master_order" %>:</td>
       <td><%= @work_order.master_order unless @work_order.master_order.blank? %></td>

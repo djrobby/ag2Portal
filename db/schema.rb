@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20160523095849) do
+ActiveRecord::Schema.define(:version => 20160523142800) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -2643,6 +2643,8 @@ ActiveRecord::Schema.define(:version => 20160523095849) do
     t.datetime "current_reading_date"
     t.integer  "current_reading_index"
     t.boolean  "por_affected"
+    t.integer  "work_order_area_id"
+    t.integer  "infrastructure_id"
   end
 
   add_index "work_orders", ["area_id"], :name => "index_work_orders_on_area_id"
@@ -2651,6 +2653,7 @@ ActiveRecord::Schema.define(:version => 20160523095849) do
   add_index "work_orders", ["client_id"], :name => "index_work_orders_on_client_id"
   add_index "work_orders", ["completed_at"], :name => "index_work_orders_on_completed_at"
   add_index "work_orders", ["in_charge_id"], :name => "index_work_orders_on_in_charge_id"
+  add_index "work_orders", ["infrastructure_id"], :name => "index_work_orders_on_infrastructure_id"
   add_index "work_orders", ["last_reading_id"], :name => "index_work_orders_on_last_reading_id"
   add_index "work_orders", ["master_order_id"], :name => "index_work_orders_on_master_order_id"
   add_index "work_orders", ["meter_code"], :name => "index_work_orders_on_meter_code"
@@ -2665,6 +2668,7 @@ ActiveRecord::Schema.define(:version => 20160523095849) do
   add_index "work_orders", ["started_at"], :name => "index_work_orders_on_started_at"
   add_index "work_orders", ["store_id"], :name => "index_work_orders_on_store_id"
   add_index "work_orders", ["subscriber_id"], :name => "index_work_orders_on_subscriber_id"
+  add_index "work_orders", ["work_order_area_id"], :name => "index_work_orders_on_work_order_area_id"
   add_index "work_orders", ["work_order_labor_id"], :name => "index_work_orders_on_work_order_labor_id"
   add_index "work_orders", ["work_order_status_id"], :name => "index_work_orders_on_work_order_status_id"
   add_index "work_orders", ["work_order_type_id"], :name => "index_work_orders_on_work_order_type_id"

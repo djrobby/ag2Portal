@@ -621,7 +621,7 @@ module Ag2Tech
       @woareas = work_order_areas_dropdown
       @types = work_order_types_dropdown
       @labors = work_order_labors_dropdown
-      @infrastructures = infraestructures_dropdown
+      @infrastructures = infrastructures_dropdown
       @areas = areas_dropdown
       @charge_accounts = projects_charge_accounts(@projects)
       @stores = stores_dropdown
@@ -650,7 +650,7 @@ module Ag2Tech
       @woareas = work_order_areas_dropdown_edit(@work_order.work_order_area)
       @types = work_order_types_dropdown_edit(@work_order.work_order_type)
       @labors = work_order_labors_dropdown_edit(@work_order.work_order_labor)
-      @infrastructures = infraestructures_dropdown
+      @infrastructures = infrastructures_dropdown
       @areas = areas_dropdown
       @charge_accounts = @work_order.project.blank? ? projects_charge_accounts(@projects) : charge_accounts_dropdown_edit(@work_order.project)
       @stores = project_stores(@work_order.project)
@@ -682,7 +682,7 @@ module Ag2Tech
           @woareas = work_order_areas_dropdown
           @types = work_order_types_dropdown
           @labors = work_order_labors_dropdown
-          @infrastructures = infraestructures_dropdown
+          @infrastructures = infrastructures_dropdown
           @areas = areas_dropdown
           @charge_accounts = projects_charge_accounts(@projects)
           @stores = stores_dropdown
@@ -821,7 +821,7 @@ module Ag2Tech
             @woareas = work_order_areas_dropdown_edit(@work_order.work_order_area)
             @types = work_order_types_dropdown_edit(@work_order.work_order_type)
             @labors = work_order_labors_dropdown_edit(@work_order.work_order_labor)
-            @infrastructures = infraestructures_dropdown
+            @infrastructures = infrastructures_dropdown
             @areas = areas_dropdown
             @charge_accounts = @work_order.project.blank? ? projects_charge_accounts(@projects) : charge_accounts_dropdown_edit(@work_order.project)
             @stores = project_stores(@work_order.project)

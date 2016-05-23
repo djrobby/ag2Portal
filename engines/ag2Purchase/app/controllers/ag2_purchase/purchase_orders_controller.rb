@@ -673,8 +673,15 @@ module Ag2Purchase
       @items = @purchase_order.purchase_order_items.paginate(:page => params[:page], :per_page => per_page).order('id')
       # Approvers
       @is_approver = company_approver(@purchase_order, @purchase_order.project.company, current_user.id) ||
-                     office_approver(@purchase_order, @purchase_order.project.office, current_user.id)
+                     office_approver(@purchase_order, @purchase_order.project.office, current_user.id) ||
+                     zone_approver(@purchase_order, @purchase_order.project.office.zone, current_user.id)
                      #(current_user.has_role? :Administrator)
+      ### Can be approved by the creator when the order taxable is less than office max amount ###
+      a = global_office_breakdown(@purchase_order.purchase_order_items.joins(:project).order(:office_id))
+      d = a.detect { |f| (f[1] > 0 && (f[3] > f[1])) || (f[2] > 0 && (f[4] > f[2])) }
+      if !@is_approver && current_user.id == @purchase_order.created_by && d.nil?
+        @is_approver = true
+      end
       # Users (notify)
       @users = session[:organization] != '0' ? Organization.find(session[:organization].to_i).users.order(:email) : User.order(:email)
 

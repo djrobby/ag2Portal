@@ -1,0 +1,31 @@
+<script>
+  $(document).ready(function() {
+    $("#div_table th a, #div_table #pages a").on("click", function() {
+      $.getScript(this.href);
+      return false;
+    });
+  }); 
+</script>
+
+<table class="table table-condensed table-striped">
+  <thead>
+    <tr>
+      <th><%= sortable "id", 'Id' %></th>
+      <th><%= sortable "name", t('activerecord.attributes.infrastructure_type.name') %></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @infrastructure_types.each do |type| %>
+    <tr>
+      <td><%= type.id %></td>
+      <td><%= link_to type.name, type %></td>
+      <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => InfrastructureType, :path => edit_infrastructure_type_path(type) } %>
+      <%= render :partial => '/layouts/crud/delete', :locals => { :model => InfrastructureType, :path => type, :msg => t("activerecord.models.infrastructure_type.one"), :txt => type.name } %> </td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @infrastructure_types } %>
+<%= render :partial => '/layouts/crud/new', :locals => { :model => InfrastructureType, :path => new_infrastructure_type_path, :txt => t("ag2_tech.infrastructure_types.index.btn_new") } %>
+<%= link_to t("ag2_tech.infrastructure_types.index.back_to_root"), ag2_tech.root_path %>

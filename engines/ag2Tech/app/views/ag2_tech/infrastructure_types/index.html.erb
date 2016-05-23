@@ -1,21 +1,6 @@
-<h1>Listing infrastructure_types</h1>
+<%= render '/layouts/ag2_tech/infratypesbreadcrumb' %>
 
-<table>
-  <tr>
-    <th></th>
-    <th></th>
-    <th></th>
-  </tr>
-
-<% @infrastructure_types.each do |infrastructure_type| %>
-  <tr>
-    <td><%= link_to 'Show', infrastructure_type %></td>
-    <td><%= link_to 'Edit', edit_infrastructure_type_path(infrastructure_type) %></td>
-    <td><%= link_to 'Destroy', infrastructure_type, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-  </tr>
-<% end %>
-</table>
-
-<br />
-
-<%= link_to 'New Infrastructure type', new_infrastructure_type_path %>
+<h3><%=t '.title' %></h3>
+<div class="span7" id="div_table">
+  <%= render 'infrastructure_types' %>
+</div>

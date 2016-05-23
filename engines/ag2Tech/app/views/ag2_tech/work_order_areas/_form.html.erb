@@ -1,17 +1,13 @@
-<%= form_for(@work_order_area) do |f| %>
-  <% if @work_order_area.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@work_order_area.errors.count, "error") %> prohibited this work_order_area from being saved:</h2>
-
-      <ul>
-      <% @work_order_area.errors.full_messages.each do |msg| %>
-        <li><%= msg %></li>
-      <% end %>
-      </ul>
-    </div>
-  <% end %>
-
-  <div class="actions">
-    <%= f.submit %>
-  </div>
+<%= simple_form_for @work_order_area, :html => {:class => 'form-vertical well' } do |f| %>
+<%= f.error_notification %>
+<%= display_base_errors resource %>
+<%= f.input :name, :autofocus => true, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %>
+<% if session[:organization] != '0' %>
+<%= f.association :organization, collection: Organization.where("id = ?", "#{session[:organization]}").all, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' }, include_blank: false %>
+<% elsif current_user.organizations.count > 0 %>
+<%= f.association :organization, collection: current_user.organizations.order('name'), input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' }, include_blank: false %>
+<% else %>
+<%= f.association :organization, collection: Organization.order('name'), input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %>
+<% end %>
+<%= f.button :submit, :class => 'btn-primary' %>
 <% end %>

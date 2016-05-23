@@ -1,6 +1,8 @@
-<h1>Editing work_order_area</h1>
+<%= render '/layouts/ag2_tech/worderareasbreadcrumb' %>
+
+<h3><%=t '.title' %></h3>
 
 <%= render 'form' %>
 
-<%= link_to 'Show', @work_order_area %> |
-<%= link_to 'Back', work_order_areas_path %>
+<%= link_to t(".btn_show"), @work_order_area %> |
+<%= link_to t("ag2_tech.work_order_areas.back_to_main_page"), work_order_areas_path %>

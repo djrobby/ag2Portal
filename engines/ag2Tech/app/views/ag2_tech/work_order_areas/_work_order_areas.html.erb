@@ -1,0 +1,31 @@
+<script>
+  $(document).ready(function() {
+    $("#div_table th a, #div_table #pages a").on("click", function() {
+      $.getScript(this.href);
+      return false;
+    });
+  }); 
+</script>
+
+<table class="table table-condensed table-striped">
+  <thead>
+    <tr>
+      <th><%= sortable "id", 'Id' %></th>
+      <th><%= sortable "name", t('activerecord.attributes.work_order_area.name') %></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @work_order_areas.each do |area| %>
+    <tr>
+      <td><%= area.id %></td>
+      <td><%= link_to area.name, area %></td>
+      <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => WorkOrderArea, :path => edit_work_order_area_path(area) } %>
+      <%= render :partial => '/layouts/crud/delete', :locals => { :model => WorkOrderArea, :path => area, :msg => t("activerecord.models.work_order_area.one"), :txt => area.name } %> </td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @work_order_areas } %>
+<%= render :partial => '/layouts/crud/new', :locals => { :model => WorkOrderArea, :path => new_work_order_area_path, :txt => t("ag2_tech.work_order_areas.index.btn_new") } %>
+<%= link_to t("ag2_tech.work_order_areas.index.back_to_root"), ag2_tech.root_path %>

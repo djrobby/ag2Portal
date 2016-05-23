@@ -1,5 +1,37 @@
-<p id="notice"><%= notice %></p>
+<%= render '/layouts/ag2_tech/worderareasbreadcrumb' %>
 
+<h3><%=t '.title' %></h3>
+<table class="table odd_even_table">
+  <tbody>
+    <tr>
+      <td>Id:</td>
+      <td><%= @work_order_area.id %></td>
+      <td><%=t 'activerecord.attributes.work_order_area.name' %>:</td>
+      <td><%= @work_order_area.name %></td>
+    </tr>
+    <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @work_order_area } %>
+    <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @work_order_area } %>
+  </tbody>
+</table>
 
-<%= link_to 'Edit', edit_work_order_area_path(@work_order_area) %> |
-<%= link_to 'Back', work_order_areas_path %>
+<%= render partial: '/layouts/crud/update_delete_new', locals:
+{ model: WorkOrderArea, update_path: edit_work_order_area_path(@work_order_area), update_txt: t('.btn_edit'),
+delete_path: @work_order_area, delete_txt: t('.btn_delete'), msg: t("activerecord.models.work_order_area.one"), txt: @work_order_area.name,
+new_path: new_work_order_area_path, new_txt: t('ag2_tech.work_order_areas.index.btn_new') } %>
+
+<% if (@worker_orders.count > 0) %>
+<h4><%=t '.subtable_title' %></h4>
+<table class="table table-condensed table-striped">
+  <thead>
+    <%= render '/layouts/ag2_tech/wordersheader' %>
+  </thead>
+  <tbody>
+    <% session[:return_to] = I18n.t('.return_to') %>
+    <% session[:return_to_url] = "#{request.protocol}#{request.host_with_port}#{request.fullpath}" %>
+    <%= render :partial => '/layouts/ag2_tech/worders', :locals => { :orders => @worker_orders } %>
+  </tbody>
+</table>
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @worker_orders } %>
+<% end %>
+
+<%= link_to t("ag2_tech.work_order_areas.back_to_main_page"), work_order_areas_path %>

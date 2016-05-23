@@ -26,6 +26,7 @@ es:
       back_to_main_page: "Volver a Ordenes de trabajo"
       generate_code_btn: "Nº de Orden"
       no_error: "Imposible generar Nº de Orden: No has elegido Proyecto."
+      meter_subscriber_info: "Abonado y Contador"
       items_info: "Artículos de la Orden"
       workers_info: "Trabajadores de la Orden"
       subcontractors_info: "Subcontratistas de la Orden"

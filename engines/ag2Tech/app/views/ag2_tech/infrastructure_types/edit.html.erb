@@ -1,6 +1,8 @@
-<h1>Editing infrastructure_type</h1>
+<%= render '/layouts/ag2_tech/infratypesbreadcrumb' %>
+
+<h3><%=t '.title' %></h3>
 
 <%= render 'form' %>
 
-<%= link_to 'Show', @infrastructure_type %> |
-<%= link_to 'Back', infrastructure_types_path %>
+<%= link_to t(".btn_show"), @infrastructure_type %> |
+<%= link_to t("ag2_tech.infrastructure_types.back_to_main_page"), infrastructure_types_path %>

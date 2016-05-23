@@ -16,6 +16,9 @@ es:
       work_order_statuses:
         items: "Estados de  OT"
         item: "Estado"
+      work_order_areas:
+        items: "Áreas OT"
+        item: "Área"
       work_order_types:
         items: "Tipos de OT"
         item: "Tipo"
@@ -43,3 +46,9 @@ es:
       ratio_groups:
         items: "Grupos ratios"
         item: "Grupo"
+      infrastructure_types:
+        items: "Tipos infraestructura"
+        item: "Tipo"
+      infrastructures:
+        items: "Infraestructuras"
+        item: "Infraestructura"

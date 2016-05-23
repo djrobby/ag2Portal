@@ -1,5 +1,37 @@
-<p id="notice"><%= notice %></p>
+<%= render '/layouts/ag2_tech/infratypesbreadcrumb' %>
 
+<h3><%=t '.title' %></h3>
+<table class="table odd_even_table">
+  <tbody>
+    <tr>
+      <td>Id:</td>
+      <td><%= @infrastructure_type.id %></td>
+      <td><%=t 'activerecord.attributes.infrastructure_type.name' %>:</td>
+      <td><%= @infrastructure_type.name %></td>
+    </tr>
+    <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @infrastructure_type } %>
+    <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @infrastructure_type } %>
+  </tbody>
+</table>
 
-<%= link_to 'Edit', edit_infrastructure_type_path(@infrastructure_type) %> |
-<%= link_to 'Back', infrastructure_types_path %>
+<%= render partial: '/layouts/crud/update_delete_new', locals:
+{ model: InfrastructureType, update_path: edit_infrastructure_type_path(@infrastructure_type), update_txt: t('.btn_edit'),
+delete_path: @infrastructure_type, delete_txt: t('.btn_delete'), msg: t("activerecord.models.infrastructure_type.one"), txt: @infrastructure_type.name,
+new_path: new_infrastructure_type_path, new_txt: t('ag2_tech.infrastructure_types.index.btn_new') } %>
+
+<% if (@infrastructures.count > 0) %>
+<h4><%=t '.subtable_title' %></h4>
+<table class="table table-condensed table-striped">
+  <thead>
+    <%= render '/layouts/ag2_tech/wordersheader' %>
+  </thead>
+  <tbody>
+    <% session[:return_to] = I18n.t('.return_to') %>
+    <% session[:return_to_url] = "#{request.protocol}#{request.host_with_port}#{request.fullpath}" %>
+    <%= render :partial => '/layouts/ag2_tech/worders', :locals => { :orders => @worker_orders } %>
+  </tbody>
+</table>
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @worker_orders } %>
+<% end %>
+
+<%= link_to t("ag2_tech.infrastructure_types.back_to_main_page"), infrastructure_types_path %>
