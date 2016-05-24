@@ -112,3 +112,7 @@ en:
               dc_invalid: "invalid (must be two numeric digits)"
             account_no:
               code_invalid: "invalid (must be ten numeric digits)"
+        infrastructure:
+          attributes:
+            code:
+              code_invalid: "invalid"

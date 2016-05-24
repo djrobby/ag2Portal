@@ -9,6 +9,7 @@ en:
         check_for_work_orders: "Infrastructure cannot be destroyed while linked work orders exist."
     attributes:
       infrastructure:
+        code: "Code"
         name: "Description"
         organization: "Organization"
         organization_id: "Organization"

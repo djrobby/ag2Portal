@@ -30,6 +30,7 @@ Ag2Tech::Engine.routes.draw do
     match 'projects/pr_update_total_and_price/:total/:price', :controller => 'projects', :action => 'pr_update_total_and_price'
     match 'pr_update_total_and_price/:total/:price', :controller => 'projects', :action => 'pr_update_total_and_price'
     match 'projects/:id/pr_update_total_and_price/:total/:price', :controller => 'projects', :action => 'pr_update_total_and_price'
+    match 'pr_update_offices_select_from_company/:com', :controller => 'projects', :action => 'pr_update_offices_select_from_company'
     #
     # Accounts
     match 'charge_accounts/cc_generate_code/:group/:org/:prj', :controller => 'charge_accounts', :action => 'cc_generate_code'
@@ -175,6 +176,18 @@ Ag2Tech::Engine.routes.draw do
     match 'budgets/bu_new/:project/:period/:budget', :controller => 'budgets', :action => 'bu_new'
     match 'bu_new/:project/:period/:budget', :controller => 'budgets', :action => 'bu_new'
     match 'budgets/:id/bu_new/:project/:period/:budget', :controller => 'budgets', :action => 'bu_new'
+    #
+    # Infrastructures
+    match 'projects/in_update_company_textfield_from_office/:id', :controller => 'infrastructures', :action => 'in_update_company_textfield_from_office'
+    match 'in_update_company_textfield_from_office/:id', :controller => 'infrastructures', :action => 'in_update_company_textfield_from_office'
+    match 'projects/:id/in_update_company_textfield_from_office/:id', :controller => 'infrastructures', :action => 'in_update_company_textfield_from_office'
+    match 'projects/in_update_company_and_office_textfields_from_organization/:org', :controller => 'infrastructures', :action => 'in_update_company_and_office_textfields_from_organization'
+    match 'in_update_company_and_office_textfields_from_organization/:org', :controller => 'infrastructures', :action => 'in_update_company_and_office_textfields_from_organization'
+    match 'projects/:id/in_update_company_and_office_textfields_from_organization/:org', :controller => 'infrastructures', :action => 'in_update_company_and_office_textfields_from_organization'
+    match 'projects/in_generate_code/:company/:type', :controller => 'infrastructures', :action => 'in_generate_code'
+    match 'in_generate_code/:company/:type', :controller => 'infrastructures', :action => 'in_generate_code'
+    match 'projects/:id/in_generate_code/:company/:type', :controller => 'infrastructures', :action => 'in_generate_code'
+    match 'in_update_offices_select_from_company/:com', :controller => 'infrastructures', :action => 'in_update_offices_select_from_company'
 
     # Resources
     resources :projects

@@ -9,6 +9,7 @@ es:
         check_for_work_orders: "Infraestructura no puede ser eliminada mientras existan ordenes de trabajo vinculadas."
     attributes:
       infrastructure:
+        code: "Código"
         name: "Descripción"
         organization: "Organización"
         organization_id: "Organización"

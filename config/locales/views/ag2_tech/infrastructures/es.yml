@@ -5,6 +5,9 @@ es:
         title: "Infraestructuras"
         btn_new: "Nueva Infraestructura"
         back_to_root: "Volver a ag2Tech"
+        label_office: "Oficina"
+        label_company: "Empresa"
+        label_others: "Otros"
       show:
         title: "Infraestructura"
         btn_edit: "Editar Infraestructura"

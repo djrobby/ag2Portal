@@ -1,0 +1,32 @@
+<script>
+  $(document).ready(function() {
+    $("#div_table th a, #div_table #pages a").on("click", function() {
+      $.getScript(this.href);
+      return false;
+    });
+  }); 
+</script>
+
+<table class="table table-condensed table-striped shrinked">
+  <thead>
+    <tr>
+      <th><%= t 'activerecord.attributes.infrastructure.code' %></th>
+      <th><%= t 'activerecord.attributes.infrastructure.name' %></th>
+      <th><%= t 'activerecord.attributes.infrastructure.company' %></th>
+      <th><%= t 'activerecord.attributes.infrastructure.office' %></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @infrastructures.each do |infrastructure| %>
+      <td><%= link_to infrastructure.code, infrastructure %></td>
+      <td><%= infrastructure.name %></td>
+      <td><%= infrastructure.company.name[0,30] unless infrastructure.company.blank? %></td>
+      <td><%= infrastructure.office.name[0,30] unless infrastructure.office.blank? %></td>
+      <td> <%= render :partial => '/layouts/crud/edit', :locals => { :model => Infrastructure, :path => edit_infrastructure_path(infrastructure) } %>
+      <%= render :partial => '/layouts/crud/delete', :locals => { :model => Infrastructure, :path => infrastructure, :msg => t("activerecord.models.infrastructure.one"), :txt => infrastructure.full_name } %> </td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @infrastructures } %>

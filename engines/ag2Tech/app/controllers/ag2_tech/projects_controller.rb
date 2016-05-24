@@ -8,8 +8,9 @@ module Ag2Tech
     skip_load_and_authorize_resource :only => [:pr_update_company_textfield_from_office,
                                                :pr_update_company_and_office_textfields_from_organization,
                                                :pr_generate_code,
+                                               :pr_update_offices_select_from_company,
                                                :pr_update_total_and_price]
-    
+
     # Update company text field at view from office select
     def pr_update_company_textfield_from_office
       office = params[:id]
@@ -24,7 +25,7 @@ module Ag2Tech
         format.json { render json: @company }
       end
     end
-    
+
     # Update company & office text fields at view from organization select
     def pr_update_company_and_office_textfields_from_organization
       organization = params[:org]
@@ -38,7 +39,7 @@ module Ag2Tech
       end
       @offices_dropdown = []
       @offices.each do |i|
-        @offices_dropdown = @offices_dropdown << [i.id, i.name, i.company.name] 
+        @offices_dropdown = @offices_dropdown << [i.id, i.name, i.company.name]
       end
       @json_data = { "companies" => @companies, "offices" => @offices_dropdown }
       render json: @json_data
@@ -71,6 +72,21 @@ module Ag2Tech
       render json: @json_data
     end
 
+    # Update offices from company select
+    def pr_update_offices_select_from_company
+      if params[:com] == '0'
+        @offices = Office.order('name')
+      else
+        company = Company.find(params[:com])
+        if !company.nil?
+          @offices = company.offices.order('name')
+        else
+          @offices = Office.order('name')
+        end
+      end
+      render json: @offices
+    end
+
     #
     # Default Methods
     #
@@ -101,7 +117,7 @@ module Ag2Tech
 
       # If inverse no search is required
       no = !no.blank? && no[0] == '%' ? inverse_no_search(no) : no
-      
+
       @search = Project.search do
         fulltext params[:search]
         if session[:organization] != '0'
@@ -131,19 +147,19 @@ module Ag2Tech
         format.js
       end
     end
-  
+
     # GET /projects/1
     # GET /projects/1.json
     def show
       @breadcrumb = 'read'
       @project = Project.find(params[:id])
-  
+
       respond_to do |format|
         format.html # show.html.erb
         format.json { render json: @project }
       end
     end
-  
+
     # GET /projects/new
     # GET /projects/new.json
     def new
@@ -151,13 +167,13 @@ module Ag2Tech
       @project = Project.new
       @companies = companies_dropdown
       @offices = offices_dropdown
-  
+
       respond_to do |format|
         format.html # new.html.erb
         format.json { render json: @project }
       end
     end
-  
+
     # GET /projects/1/edit
     def edit
       @breadcrumb = 'update'
@@ -165,14 +181,14 @@ module Ag2Tech
       @companies = @project.organization.blank? ? companies_dropdown : companies_dropdown_edit(@project.organization)
       @offices = @project.organization.blank? ? offices_dropdown : offices_dropdown_edit(@project.organization_id)
     end
-  
+
     # POST /projects
     # POST /projects.json
     def create
       @breadcrumb = 'create'
       @project = Project.new(params[:project])
       @project.created_by = current_user.id if !current_user.nil?
-  
+
       respond_to do |format|
         if @project.save
           format.html { redirect_to @project, notice: crud_notice('created', @project) }
@@ -185,14 +201,14 @@ module Ag2Tech
         end
       end
     end
-  
+
     # PUT /projects/1
     # PUT /projects/1.json
     def update
       @breadcrumb = 'update'
       @project = Project.find(params[:id])
       @project.updated_by = current_user.id if !current_user.nil?
-  
+
       respond_to do |format|
         if @project.update_attributes(params[:project])
           format.html { redirect_to @project,
@@ -206,7 +222,7 @@ module Ag2Tech
         end
       end
     end
-  
+
     # DELETE /projects/1
     # DELETE /projects/1.json
     def destroy
@@ -272,9 +288,9 @@ module Ag2Tech
     end
 
     def offices_by_company(_company)
-      _offices = Office.where(company_id: _company).order(:name)      
+      _offices = Office.where(company_id: _company).order(:name)
     end
-    
+
     # Keeps filter state
     def manage_filter_state
       # search

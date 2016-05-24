@@ -6,7 +6,7 @@
     // Initialized form variable
     _thisForm = $("#removeFilter").closest('form')[0];
   }); 
-
+/*
   $(document).ajaxStart(function() {
     // show loader on start
     if (changing == false) {
@@ -17,28 +17,28 @@
     // hide loader on success
     $("#loader").hide();
   });
-
+*/
   $(window).bind("load", function() {
     $("#No").val("<%= params[:No] %>");
     $("#WrkrCompany").val("<%= params[:WrkrCompany] %>");
-    $("#Office").val("<%= params[:WrkrOffice] %>");
+    $("#WrkrOffice").val("<%= params[:WrkrOffice] %>");
   });
 
   jQuery(function($) {
     // when the #WrkrCompany field changes
     $("#WrkrCompany").change(function() {
       // make a POST call and replace the content
-      var project = $('#WrkrCompany :selected').val();
-      if (project == "")
-        project = "0";
-      jQuery.getJSON('update_offices_select_from_company/' + project, function(data) {
-        $("#Office").html("");
+      var com = $('#WrkrCompany :selected').val();
+      if (com == "")
+        com = "0";
+      jQuery.getJSON('pr_update_offices_select_from_company/' + com, function(data) {
+        $("#WrkrOffice").html("");
         //$("#WrkrOffice").select2("val", "");
         $("#WrkrOffice").append($('<option></option>').val("").html(""));
         $.each(data, function(id, option) {
           $("#WrkrOffice").append($('<option></option>').val(option.id).html(option.name));
         });
-      })
+      });
       return false;
     });
     
@@ -47,6 +47,13 @@
       $("#No").val("");
       $("#WrkrCompany").val("");
       $("#WrkrOffice").val("");
+      jQuery.getJSON('pr_update_offices_select_from_company/0', function(data) {
+        $("#WrkrOffice").html("");
+        $("#WrkrOffice").append($('<option></option>').val("").html(""));
+        $.each(data, function(id, option) {
+          $("#WrkrOffice").append($('<option></option>').val(option.id).html(option.name));
+        });
+      });
       $("#search").val("");
       // no AJAX
       //_thisForm.submit();

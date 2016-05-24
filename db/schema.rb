@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20160523142800) do
+ActiveRecord::Schema.define(:version => 20160524101828) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -712,11 +712,14 @@ ActiveRecord::Schema.define(:version => 20160523142800) do
     t.datetime "updated_at",             :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
+    t.string   "code"
   end
 
+  add_index "infrastructures", ["code"], :name => "index_infrastructures_on_code"
   add_index "infrastructures", ["company_id"], :name => "index_infrastructures_on_company_id"
   add_index "infrastructures", ["infrastructure_type_id"], :name => "index_infrastructures_on_infrastructure_type_id"
   add_index "infrastructures", ["office_id"], :name => "index_infrastructures_on_office_id"
+  add_index "infrastructures", ["organization_id", "code"], :name => "index_infraestructure_unique", :unique => true
   add_index "infrastructures", ["organization_id"], :name => "index_infrastructures_on_organization_id"
 
   create_table "insurances", :force => true do |t|
