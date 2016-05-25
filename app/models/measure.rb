@@ -6,6 +6,7 @@ class Measure < ActiveRecord::Base
   validates :description, :presence => true
 
   has_many :products
+  has_many :purchase_prices
 
   before_destroy :check_for_dependent_records
 
@@ -14,7 +15,7 @@ class Measure < ActiveRecord::Base
   end
 
   private
-  
+
   def check_for_dependent_records
     # Check for products
     if products.count > 0

@@ -152,22 +152,37 @@ no = 0
 		else
 			code = i.code
 		end
-    	row.item(:no).value no
-    	row.item(:product).value code
-    	row.item(:description).value i.description unless i.description.blank?
-    	row.item(:quantity).value number_with_precision(i.quantity, precision: 4) unless i.quantity.blank?
-    	# Up to 20160510:
-    	#row.item(:price).value number_with_precision(i.net_price, precision: 4) unless i.net_price.blank?
-    	#row.item(:discount).value number_with_precision(i.discount_pct, precision: 2) unless i.discount_pct.blank?
-    	# Up to 20160510:
-    	#row.item(:amount).value number_with_precision(i.amount, precision: 4) unless i.amount.blank?
-    	#row.item(:tax).value number_with_precision(i.tax, precision: 4) unless i.tax.blank?
-    	# From 20160510:
-    	row.item(:price).value number_with_precision(i.price, precision: 4) unless i.price.blank?
-    	row.item(:discount).value number_with_precision(i.discount_pct, precision: 2) unless i.discount_pct.blank?
-    	row.item(:amount).value number_with_precision(i.net_price, precision: 4) unless i.net_price.blank?
-    	row.item(:tax).value number_with_precision(i.amount, precision: 4) unless i.amount.blank?
-    	row.item(:delivery_date).value i.delivery_date.strftime("%d/%m/%Y") unless i.delivery_date.blank?
+		### Special to convert internal quantity & price to supplier measures ###
+		quantity = i.quantity
+		price = i.price
+		net_price = i.net_price
+		factor = 1
+		purchase_price = PurchasePrice.find_by_product_and_supplier(i.product_id, @purchase_order.supplier_id) rescue nil
+		if !purchase_price.blank?
+			factor = purchase_price.factor.blank? ? 1 : purchase_price.factor
+			quantity = quantity / factor
+			price = price * factor
+			net_price = net_price * factor
+			if i.code.blank? && !purchase_price.code.blank?
+				code = purchase_price.code
+			end
+		end
+		row.item(:no).value no
+		row.item(:product).value code
+		row.item(:description).value i.description unless i.description.blank?
+		row.item(:quantity).value number_with_precision(quantity, precision: 4) unless quantity.blank?
+		# Up to 20160510:
+		#row.item(:price).value number_with_precision(i.net_price, precision: 4) unless i.net_price.blank?
+		#row.item(:discount).value number_with_precision(i.discount_pct, precision: 2) unless i.discount_pct.blank?
+		# Up to 20160510:
+		#row.item(:amount).value number_with_precision(i.amount, precision: 4) unless i.amount.blank?
+		#row.item(:tax).value number_with_precision(i.tax, precision: 4) unless i.tax.blank?
+		# From 20160510:
+		row.item(:price).value number_with_precision(price, precision: 4) unless price.blank?
+		row.item(:discount).value number_with_precision(i.discount_pct, precision: 2) unless i.discount_pct.blank?
+		row.item(:amount).value number_with_precision(net_price, precision: 4) unless net_price.blank?
+		row.item(:tax).value number_with_precision(i.amount, precision: 4) unless i.amount.blank?
+		row.item(:delivery_date).value i.delivery_date.strftime("%d/%m/%Y") unless i.delivery_date.blank?
 	end
 	# Store page subtotals
     report.page.list(:default) do |list|

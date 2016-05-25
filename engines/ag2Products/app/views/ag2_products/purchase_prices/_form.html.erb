@@ -54,10 +54,10 @@
       // Must change decimal separator, if comma, in numeric fields
       var p = $('#purchase_price_price').val().replace(",", ".");
       var f = $('#purchase_price_factor').val().replace(",", ".");
-      var f = $('#purchase_price_discount_rate').val().replace(",", ".");
+      var d = $('#purchase_price_discount_rate').val().replace(",", ".");
       $('#purchase_price_price').val(p);
       $('#purchase_price_factor').val(f);
-      $('#purchase_price_discount_rate').val(f);
+      $('#purchase_price_discount_rate').val(d);
     });
   });  
 </script>
