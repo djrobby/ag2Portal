@@ -1,5 +1,34 @@
-<p id="notice"><%= notice %></p>
+<%= render '/layouts/ag2_tech/infrasbreadcrumb' %>
 
+<h3><%=t '.title' %></h3>
+<table class="table odd_even_table">
+  <tbody>
+    <tr>
+      <td>Id:</td>
+      <td><%= @infrastructure.id %></td>
+      <td><%=t 'activerecord.attributes.infrastructure.code' %>:</td>
+      <td class="highlighted bolded"><%= @infrastructure.code %></td>
+    </tr>
+    <tr>
+      <td><%=t 'activerecord.attributes.infrastructure.name' %>:</td>
+      <td><%= @infrastructure.name %></td>
+      <td><%=t 'activerecord.attributes.infrastructure.infrastructure_type' %>:</td>
+      <td><%= @infrastructure.infrastructure_type.full_name unless @infrastructure.infrastructure_type.blank? %></td>
+    </tr>
+    <tr>
+      <td><%= t :"activerecord.attributes.infrastructure.company" %>:</td>
+      <td><%= @infrastructure.company.name %></td>
+      <td><%= t :"activerecord.attributes.infrastructure.office" %>:</td>
+      <td><%= @infrastructure.office.name %></td>
+    </tr>
+    <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @infrastructure } %>
+    <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @infrastructure } %>
+  </tbody>
+</table>
 
-<%= link_to 'Edit', edit_infrastructure_path(@infrastructure) %> |
-<%= link_to 'Back', infrastructures_path %>
+<%= render partial: '/layouts/crud/update_delete_new', locals:
+{ model: Infrastructure, update_path: edit_infrastructure_path(@infrastructure), update_txt: t('.btn_edit'),
+delete_path: @infrastructure, delete_txt: t('.btn_delete'), msg: t("activerecord.models.infrastructure.one"), txt: @infrastructure.full_name,
+new_path: new_infrastructure_path, new_txt: t('ag2_tech.infrastructures.index.btn_new') } %>
+
+<%= link_to t("ag2_tech.infrastructures.back_to_main_page"), infrastructures_path %>

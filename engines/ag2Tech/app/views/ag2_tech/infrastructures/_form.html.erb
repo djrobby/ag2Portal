@@ -1,17 +1,328 @@
-<%= form_for(@infrastructure) do |f| %>
-  <% if @infrastructure.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@infrastructure.errors.count, "error") %> prohibited this infrastructure from being saved:</h2>
+<script>
+  var text_field_color;
+  var old_com = '';
+  var old_typ = '';
+  var old_code = '';
+  var _thisForm = '';
 
-      <ul>
-      <% @infrastructure.errors.full_messages.each do |msg| %>
-        <li><%= msg %></li>
-      <% end %>
-      </ul>
-    </div>
-  <% end %>
+  $(document).ready(function() {
+    $('select.sel2').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      allowClear: true
+    });
+    $('.date_picker').datepicker({
+      format : 'dd/mm/yyyy',
+      weekStart : 1
+    }).on('changeDate', function(e){
+      $('.date_picker').datepicker('hide');
+    });
 
-  <div class="actions">
-    <%= f.submit %>
-  </div>
+    // Initialize form variable
+    _thisForm = $("#project_project_code").closest('form')[0];
+
+    // Save default text color
+    text_field_color = $("#project_project_code").css('color');
+
+    // Icon inside text field: Generate No
+    $('input.iconify').wrap('<span class="generateicon" title="<%=t('generate') %>" />').after($('<span/>').click(function() {
+      $('#generate_code_btn').trigger("click");
+      return false;
+    }));
+
+    // Disable fields if #project_project_code blank
+    var code = $('#project_project_code').val();
+    if (code == "")
+      code = "0";
+    if (code == "0") {
+      // Empty code: Disable
+      $('#submit_btn').hide();
+    } else {
+      // Code OK: Enable
+      $('#submit_btn').show();
+      old_typ = $('#project_project_type_id').val();
+    }
+
+    // Disable generate_code_btn if project_company_id blank
+    var order = $('#project_company_id').val();
+    if (order == "")
+      order = "0";
+    if (order == "0") {
+      // Empty company: Hide
+      $('#generate_code_btn').hide();
+    } else {
+      // Company OK: Show (if not updating)
+      old_com = $('#project_company_id').val();
+      old_code = $('#project_project_code').val();
+      if ('<%= @breadcrumb %>' == "update") {
+        $('#generate_code_btn').hide();
+      } else {
+        $('#generate_code_btn').show();
+      }
+    }
+    
+    // Can't change code if editing
+    if ('<%= @breadcrumb %>' == "update") {
+      $('#project_project_code').prop('readonly', true);
+    } else {
+      $('#project_project_code').prop('readonly', false);
+    }
+    
+    // Set initial focus
+    $(this).find(".form-label:first").focus();
+  });
+  
+  jQuery(function($) {
+    // when the #project_project_code field changes
+    $("#project_project_code").change(function() {
+      var order = $('#project_project_code').val();
+      if (order == "")
+        order = "0";
+      if (order == "0") {
+        // Empty order: Disable
+        $('#submit_btn').hide();
+      } else {
+        // Order OK: Enable
+        $('#submit_btn').show();
+      }
+    });
+
+    // when #generate_code_btn is clicked
+    $("#generate_code_btn").click(function() {
+      // make a POST call and replace the content
+      var company = $('select#project_company_id :selected').val();
+      if (company == "")
+        company = "$";
+      var type = $('select#project_project_type_id :selected').val();
+      if (type == "")
+        type = "$";
+      jQuery.getJSON('pr_generate_code/' + company + '/' + type, function(data) {
+        $("#project_project_code").val(data.code);
+        if ($("#project_project_code").val() == "$err") {
+          $("#project_project_code").css('color', 'red');
+          alert('<%= I18n.t("ag2_tech.projects.code_error") %>');
+          $('#project_project_code').select();
+        } else {
+          $("#project_project_code").css('color', text_field_color);
+          $("#project_project_code").trigger("change");
+        }
+      });
+      return false;
+    });
+
+    // when the #project_company_id field changes
+    $("#project_company_id").change(function() {
+      // make a POST call and replace the content
+      var order = $('select#project_company_id :selected').val();
+      if (order == "")
+        order = "0";
+      // Disable generate_code_btn if project_company_id blank
+      show_hide_generate_code_btn();
+      return false;
+    });
+
+    // when the #project_project_type_id field changes
+    $("#project_project_type_id").change(function() {
+      var type = $('select#project_project_type_id :selected').val();
+      if (type == "")
+        type = "0";
+      if (type == "0") {
+        // Empty type: Disable
+        $('#project_project_code').prop('disabled', true);
+        $('#generate_code_btn').hide();
+        $('#submit_btn').hide();
+      } else {
+        // Type OK: Enable
+        $('#project_project_code').prop('disabled', false);
+        $('#generate_code_btn').show();
+        $('#submit_btn').show();
+      }
+      // Disable generate_code_btn if project_project_type_id blank
+      show_hide_generate_code_btn();
+    });
+
+    // when the #project_office_id field changes
+    $("#project_office_id").change(function() {
+      // make a POST call and replace the content
+      var project = $('select#project_office_id :selected').val();
+      if (project == "")
+        project = "0";
+      jQuery.getJSON('pr_update_company_textfield_from_office/' + project, function(data) {
+        $("#project_company_id").val(data.id);
+        $("#project_company_id").trigger("change");
+      })
+      return false;
+    });
+
+    // when the #project_organization_id field changes
+    $("#project_organization_id").change(function() {
+      // make a POST call and replace the content
+      var project = $('select#project_organization_id :selected').val();
+      if (project == "")
+        project = "0";
+      jQuery.getJSON('pr_update_company_and_office_textfields_from_organization/' + project, function(data) {
+        var c = data.companies;
+        var o = data.offices;
+        // Companies
+        $("#project_company_id").html("");
+        $("#project_company_id").val("");
+        $("#project_company_id").append($('<option></option>').val("").html(""));
+        if (!c.length) {
+          $.each(data, function(id, option) {
+            if (id == 'companies' && option != "") {
+              $("#project_company_id").append($('<option></option>').val(option.id).html(option.name));
+            }
+          });
+        } else {
+          $.each(c, function(id, option) {
+            $("#project_company_id").append($('<option></option>').val(option.id).html(option.name));
+          });
+        }
+        // Offices
+        $("#project_office_id").html("");
+        $("#project_office_id").val("");
+        $("#project_office_id").append($('<option></option>').val("").html(""));
+        if (!o.length) {
+          $.each(data, function(id, option) {
+            if (id == 'offices' && option != "") {
+              $("#project_office_id").append($('<option></option>').val(option[0]).html(option[1] + " (" + option[2] + ")"));
+            }
+          });
+        } else {
+          $.each(o, function(id, option) {
+            $("#project_office_id").append($('<option></option>').val(option[0]).html(option[1] + " (" + option[2] + ")"));
+          });
+        }
+      });
+      if (project == "0") {
+        $("#project_company_id").val(0);
+        $("#project_company_id").trigger("change");
+      }
+      return false;
+    });
+
+    // when the #project_max_order_total field changes
+    $("#project_max_order_total").change(function() {
+      // preserve the current object
+      var _this = (this);
+      recalculate(_this);
+      return false;
+    });
+
+    // when the #project_max_order_price field changes
+    $("#project_max_order_price").change(function() {
+      // preserve the current object
+      var _this = (this);
+      recalculate(_this);
+      return false;
+    });
+    
+    // when submit    
+    $(_thisForm).on('submit', function() {
+      // Must change decimal separator, if comma, in numeric fields
+      var total = $('#project_max_order_total').val().replace(",", ".");
+      var price = $('#project_max_order_price').val().replace(",", ".");
+      $('#project_max_order_total').val(total);
+      $('#project_max_order_price').val(price);
+    });
+    
+    // Recalculate amounts & prices
+    function recalculate(_this) {
+      // make a POST call and replace the content
+      var total = $('#project_max_order_total').val();
+      if (total == "")
+        total = "0";
+      var price = $('#project_max_order_price').val();
+      if (price == "")
+        price = "0";
+      // Right formatted for passing as REST parameter
+      total = parseInt(right_number(total, 2) * 100);
+      price = parseInt(right_number(price, 4) * 10000);
+      jQuery.getJSON('pr_update_total_and_price/' + total + '/' + price, function(data) {
+        $('#project_max_order_total').val(data.total);
+        $('#project_max_order_price').val(data.price);
+      });
+    }
+  });
+  
+  function show_hide_generate_code_btn() {
+    // Disable generate_code_btn if project_company_id and project_project_type_id are blank
+    var company = $('select#project_company_id :selected').val();
+    if (company == "")
+      company = "$";
+    var type = $('select#project_project_type_id :selected').val();
+    if (type == "")
+      type = "$";
+    if (company != "$" && type != "$") {
+      // Show (if not updating)
+      if ('<%= @breadcrumb == 'update' %>') {
+        if (old_com == $('#project_company_id').val() && old_typ == $('#project_project_type_id').val()) {
+          $('#project_project_code').val(old_code);
+          $("#project_project_code").css('color', text_field_color);
+          $('#generate_code_btn').hide();
+        } else {
+          $('#generate_code_btn').show();
+        }
+      } else {
+        $('#generate_code_btn').show();
+      }
+    } else {
+      // Hide
+      $('#generate_code_btn').hide();
+    }    
+  }
+</script>
+
+<%= simple_form_for @project, :html => {:class => 'form-vertical well' } do |f| %>
+<%= f.error_notification %>
+<%= display_base_errors resource %>
+<div>
+  <label class="multi-field-label-two">
+    <% if session[:organization] != '0' %>
+    <%= f.association :organization, collection: Organization.where("id = ?", "#{session[:organization]}").all, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' }, include_blank: false %>
+    <% elsif current_user.organizations.count > 0 %>
+    <%= f.association :organization, collection: current_user.organizations.order('name'), input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' }, include_blank: false %>
+    <% else %>
+    <%= f.association :organization, collection: Organization.order('name'), input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %>
+    <% end %>
+  </label>
+  <label class="multi-field-label-two"> <%= f.association :project_type, collection: ProjectType.order('code'), input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
+</div>
+<div>
+  <label class="multi-field-label-two">
+    <% if session[:office] != '0' %>
+    <%= f.association :office, collection: Office.where("id = ?", "#{session[:office]}").all, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' }, include_blank: false %>
+    <% elsif current_user.offices.count > 0 %>
+    <%= f.association :office, collection: current_user.offices.order('name'), input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' }, include_blank: false %>
+    <% else %>
+    <%= f.association :office, collection: @offices, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %>
+    <% end %>
+  </label>
+  <label class="multi-field-label-two">
+    <% if session[:company] != '0' %>
+    <%= f.association :company, collection: Company.where("id = ?", "#{session[:company]}").all, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' }, include_blank: false %>
+    <% elsif current_user.companies.count > 0 %>
+    <%= f.association :company, collection: current_user.companies.order('name'), input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' }, include_blank: false %>
+    <% else %>
+    <%= f.association :company, collection: @companies, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %>
+    <% end %>
+  </label>
+</div>
+<div>
+  <label class="multi-field-label-two"> <%= f.input :project_code, input_html: { class: 'mid-text-field iconify' }, label_html: { class: 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.input :name, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %> </label>
+</div>
+
+<div>
+  <label class="multi-field-label-two"> <%= f.input :opened_at, start_year: Time.now.year - 100, end_year: Time.now.year + 100, as: :string, input_html: { value: (f.object.opened_at.strftime("%d/%m/%Y") if f.object.opened_at), class: 'mid-text-field date_picker' }, label_html: { class: 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.input :closed_at, start_year: Time.now.year - 100, end_year: Time.now.year + 100, as: :string, input_html: { value: (f.object.closed_at.strftime("%d/%m/%Y") if f.object.closed_at), class: 'mid-text-field date_picker' }, label_html: { class: 'form-label' } %> </label>
+</div>
+<!-- Buttons -->
+<table class="form-table">
+  <tbody>
+    <tr class="form-tr">
+      <td class="form-td-three left-winged"> <%= f.button :submit, :class => 'btn-primary', :id => 'submit_btn' %> </td>
+      <td class="form-td-three right-winged"><a href="#" id="generate_code_btn" class="btn btn-warning"><%=t 'ag2_tech.projects.generate_code_btn' %></a></td>
+    </tr>
+  </tbody>
+</table>
 <% end %>
