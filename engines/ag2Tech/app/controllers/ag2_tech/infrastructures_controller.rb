@@ -150,6 +150,7 @@ module Ag2Tech
       @infrastructure = Infrastructure.new
       @companies = companies_dropdown
       @offices = offices_dropdown
+      @infrastructure_types = infrastructure_types_dropdown
 
       respond_to do |format|
         format.html # new.html.erb
@@ -161,8 +162,9 @@ module Ag2Tech
     def edit
       @breadcrumb = 'update'
       @infrastructure = Infrastructure.find(params[:id])
-      @companies = @project.organization.blank? ? companies_dropdown : companies_dropdown_edit(@project.organization)
-      @offices = @project.organization.blank? ? offices_dropdown : offices_dropdown_edit(@project.organization_id)
+      @companies = @infrastructure.organization.blank? ? companies_dropdown : companies_dropdown_edit(@infrastructure.organization)
+      @offices = @infrastructure.organization.blank? ? offices_dropdown : offices_dropdown_edit(@infrastructure.organization_id)
+      @infrastructure_types = @infrastructure.organization.blank? ? infrastructure_types_dropdown : infrastructure_types_dropdown_dropdown_edit(@infrastructure.organization_id)
     end
 
     # POST /infrastructures
@@ -198,8 +200,9 @@ module Ag2Tech
                         notice: (crud_notice('updated', @infrastructure) + "#{undo_link(@infrastructure)}").html_safe }
           format.json { head :no_content }
         else
-          @companies = @project.organization.blank? ? companies_dropdown : companies_dropdown_edit(@project.organization)
-          @offices = @project.organization.blank? ? offices_dropdown : offices_dropdown_edit(@project.organization_id)
+          @companies = @infrastructure.organization.blank? ? companies_dropdown : companies_dropdown_edit(@infrastructure.organization)
+          @offices = @infrastructure.organization.blank? ? offices_dropdown : offices_dropdown_edit(@infrastructure.organization_id)
+          @infrastructure_types = @infrastructure.organization.blank? ? infrastructure_types_dropdown : infrastructure_types_dropdown_dropdown_edit(@infrastructure.organization_id)
           format.html { render action: "edit" }
           format.json { render json: @infrastructure.errors, status: :unprocessable_entity }
         end
@@ -252,6 +255,10 @@ module Ag2Tech
       end
     end
 
+    def infrastructure_types_dropdown
+      session[:organization] != '0' ? InfrastructureType.where(organization_id: session[:organization].to_i).order(:name) : InfrastructureType.order(:name)
+    end
+
     def companies_dropdown_edit(_organization)
       if session[:company] != '0'
         _companies = Company.where(id: session[:company].to_i)
@@ -271,7 +278,15 @@ module Ag2Tech
     end
 
     def offices_by_company(_company)
-      _offices = Office.where(company_id: _company).order(:name)
+      Office.where(company_id: _company).order(:name)
+    end
+
+    def infrastructure_types_dropdown_edit(_organization)
+      if session[:organization] != '0'
+        InfrastructureType.where(organization_id: session[:organization].to_i)
+      else
+        _organization.infrastructure_types.order(:name)
+      end
     end
 
     # Keeps filter state

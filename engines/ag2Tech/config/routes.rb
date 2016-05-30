@@ -184,9 +184,9 @@ Ag2Tech::Engine.routes.draw do
     match 'projects/in_update_company_and_office_textfields_from_organization/:org', :controller => 'infrastructures', :action => 'in_update_company_and_office_textfields_from_organization'
     match 'in_update_company_and_office_textfields_from_organization/:org', :controller => 'infrastructures', :action => 'in_update_company_and_office_textfields_from_organization'
     match 'projects/:id/in_update_company_and_office_textfields_from_organization/:org', :controller => 'infrastructures', :action => 'in_update_company_and_office_textfields_from_organization'
-    match 'projects/in_generate_code/:company/:type', :controller => 'infrastructures', :action => 'in_generate_code'
-    match 'in_generate_code/:company/:type', :controller => 'infrastructures', :action => 'in_generate_code'
-    match 'projects/:id/in_generate_code/:company/:type', :controller => 'infrastructures', :action => 'in_generate_code'
+    match 'projects/in_generate_code/:org/:type', :controller => 'infrastructures', :action => 'in_generate_code'
+    match 'in_generate_code/:org/:type', :controller => 'infrastructures', :action => 'in_generate_code'
+    match 'projects/:id/in_generate_code/:org/:type', :controller => 'infrastructures', :action => 'in_generate_code'
     match 'in_update_offices_select_from_company/:com', :controller => 'infrastructures', :action => 'in_update_offices_select_from_company'
 
     # Resources

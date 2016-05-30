@@ -600,6 +600,24 @@ end
     code
   end
 
+  # Infrastructure code
+  def in_next_code(organization, type)
+    code = ''
+    # Builds code, if possible
+    organization = organization.to_s if organization.is_a? Fixnum
+    organization = organization.rjust(3, '0')
+    type = type.to_s if type.is_a? Fixnum
+    type = type.rjust(3, '0')
+    last_code = Infrastructure.where("code LIKE ?", "#{organization}#{type}%").order(:code).maximum(:code)
+    if last_code.nil?
+      code = organization + type + '000001'
+    else
+      last_code = last_code[6..11].to_i + 1
+      code = organization + type + last_code.to_s.rjust(6, '0')
+    end
+    code
+  end
+
   #
   # Privates
   #

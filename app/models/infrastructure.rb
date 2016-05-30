@@ -32,11 +32,16 @@ class Infrastructure < ActiveRecord::Base
   end
 
   def full_name
-    full_name = self.code
+    full_name = full_code
     if !self.name.blank?
       full_name += " " + self.name[0,40]
     end
     full_name
+  end
+
+  def full_code
+    # Infrastructure code (Organization id & infrastructure type id & sequential number) => OOO-TTT-NNNNNN
+    code.blank? ? "" : code[0..2] + '-' + code[3..5] + '-' + code[6..11]
   end
 
   searchable do

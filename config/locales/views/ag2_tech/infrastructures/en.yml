@@ -20,3 +20,5 @@ en:
       new:
         title: "New Infrastructure"
       back_to_main_page: "Back to Infrastructures"
+      generate_code_btn: "Infrastructure Code"
+      code_error: "Unable to generate Infrastructure Code: No Organization or Type chosen."
