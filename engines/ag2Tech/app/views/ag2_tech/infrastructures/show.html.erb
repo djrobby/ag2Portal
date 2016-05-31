@@ -7,13 +7,13 @@
       <td>Id:</td>
       <td><%= @infrastructure.id %></td>
       <td><%=t 'activerecord.attributes.infrastructure.code' %>:</td>
-      <td class="highlighted bolded"><%= @infrastructure.code %></td>
+      <td class="highlighted bolded"><%= @infrastructure.full_code %></td>
     </tr>
     <tr>
       <td><%=t 'activerecord.attributes.infrastructure.name' %>:</td>
       <td><%= @infrastructure.name %></td>
       <td><%=t 'activerecord.attributes.infrastructure.infrastructure_type' %>:</td>
-      <td><%= @infrastructure.infrastructure_type.full_name unless @infrastructure.infrastructure_type.blank? %></td>
+      <td><%= @infrastructure.infrastructure_type.name unless @infrastructure.infrastructure_type.blank? %></td>
     </tr>
     <tr>
       <td><%= t :"activerecord.attributes.infrastructure.company" %>:</td>

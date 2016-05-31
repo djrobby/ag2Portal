@@ -17,3 +17,5 @@ en:
         company_id: "Company"
         office: "Office"
         office_id: "Office"
+        infrastructure_type: "Type"
+        infrastructure_type_id: "Type"

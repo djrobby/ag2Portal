@@ -27,21 +27,23 @@ module Ag2Tech
         @organization = Organization.find(organization)
         @companies = @organization.blank? ? companies_dropdown : @organization.companies.order(:name)
         @offices = @organization.blank? ? offices_dropdown : Office.joins(:company).where(companies: { organization_id: organization }).order(:name)
+        @infrastructure_types = @organization.blank? ? infrastructure_types_dropdown : @organization.infrastructure_types.order(:name)
       else
         @companies = companies_dropdown
         @offices = offices_dropdown
+        @infrastructure_types = infrastructure_types_dropdown
       end
       @offices_dropdown = []
       @offices.each do |i|
         @offices_dropdown = @offices_dropdown << [i.id, i.name, i.company.name]
       end
-      @json_data = { "companies" => @companies, "offices" => @offices_dropdown }
+      @json_data = { "companies" => @companies, "offices" => @offices_dropdown, "types" => @infrastructure_types }
       render json: @json_data
     end
 
     # Update project code at view (generate_code_btn)
     def in_generate_code
-      organization = params[:organization]
+      organization = params[:org]
       type = params[:type]
 
       # Builds code, if possible
@@ -164,7 +166,7 @@ module Ag2Tech
       @infrastructure = Infrastructure.find(params[:id])
       @companies = @infrastructure.organization.blank? ? companies_dropdown : companies_dropdown_edit(@infrastructure.organization)
       @offices = @infrastructure.organization.blank? ? offices_dropdown : offices_dropdown_edit(@infrastructure.organization_id)
-      @infrastructure_types = @infrastructure.organization.blank? ? infrastructure_types_dropdown : infrastructure_types_dropdown_dropdown_edit(@infrastructure.organization_id)
+      @infrastructure_types = @infrastructure.organization.blank? ? infrastructure_types_dropdown : infrastructure_types_dropdown_edit(@infrastructure.organization)
     end
 
     # POST /infrastructures

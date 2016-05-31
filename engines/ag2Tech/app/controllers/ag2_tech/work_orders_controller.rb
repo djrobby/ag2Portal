@@ -1094,7 +1094,13 @@ module Ag2Tech
     end
 
     def infrastructures_dropdown
-      session[:organization] != '0' ? Infrastructure.where(organization_id: session[:organization].to_i).order(:name) : Infrastructure.order(:name)
+      if session[:office] != '0'
+        Infrastructure.where('office_id = ? OR (office_id IS NULL AND organization_id = ?)', session[:office].to_i, session[:organization].to_i).order(:code)
+      elsif session[:company] != '0'
+        Infrastructure.where('company_id = ? OR (company_id IS NULL AND organization_id = ?)', session[:company].to_i, session[:organization].to_i).order(:code)
+      else
+        session[:organization] != '0' ? Infrastructure.where(organization_id: session[:organization].to_i).order(:code) : Infrastructure.order(:code)
+      end
     end
 
     def charge_accounts_dropdown

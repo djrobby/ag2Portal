@@ -109,23 +109,23 @@
       return false;
     });
 
-    // when the #project_project_type_id field changes
-    $("#project_project_type_id").change(function() {
-      var type = $('select#project_project_type_id :selected').val();
+    // when the #infrastructure_infrastructure_type_id field changes
+    $("#infrastructure_infrastructure_type_id").change(function() {
+      var type = $('select#infrastructure_infrastructure_type_id :selected').val();
       if (type == "")
         type = "0";
       if (type == "0") {
         // Empty type: Disable
-        $('#project_project_code').prop('disabled', true);
+        $('#infrastructure_code').prop('disabled', true);
         $('#generate_code_btn').hide();
         $('#submit_btn').hide();
       } else {
         // Type OK: Enable
-        $('#project_project_code').prop('disabled', false);
+        $('#infrastructure_code').prop('disabled', false);
         $('#generate_code_btn').show();
         $('#submit_btn').show();
       }
-      // Disable generate_code_btn if project_project_type_id blank
+      // Disable generate_code_btn if infrastructure_infrastructure_type_id blank
       show_hide_generate_code_btn();
     });
 
@@ -150,41 +150,58 @@
       jQuery.getJSON('in_update_company_and_office_textfields_from_organization/' + project, function(data) {
         var c = data.companies;
         var o = data.offices;
+        var t = data.types;
         // Companies
-        $("#project_company_id").html("");
-        $("#project_company_id").val("");
-        $("#project_company_id").append($('<option></option>').val("").html(""));
+        $("#infrastructure_company_id").html("");
+        $("#infrastructure_company_id").val("");
+        $("#infrastructure_company_id").append($('<option></option>').val("").html(""));
         if (!c.length) {
           $.each(data, function(id, option) {
             if (id == 'companies' && option != "") {
-              $("#project_company_id").append($('<option></option>').val(option.id).html(option.name));
+              $("#infrastructure_company_id").append($('<option></option>').val(option.id).html(option.name));
             }
           });
         } else {
           $.each(c, function(id, option) {
-            $("#project_company_id").append($('<option></option>').val(option.id).html(option.name));
+            $("#infrastructure_company_id").append($('<option></option>').val(option.id).html(option.name));
           });
         }
         // Offices
-        $("#project_office_id").html("");
-        $("#project_office_id").val("");
-        $("#project_office_id").append($('<option></option>').val("").html(""));
+        $("#infrastructure_office_id").html("");
+        $("#infrastructure_office_id").val("");
+        $("#infrastructure_office_id").append($('<option></option>').val("").html(""));
         if (!o.length) {
           $.each(data, function(id, option) {
             if (id == 'offices' && option != "") {
-              $("#project_office_id").append($('<option></option>').val(option[0]).html(option[1] + " (" + option[2] + ")"));
+              $("#infrastructure_office_id").append($('<option></option>').val(option[0]).html(option[1] + " (" + option[2] + ")"));
             }
           });
         } else {
           $.each(o, function(id, option) {
-            $("#project_office_id").append($('<option></option>').val(option[0]).html(option[1] + " (" + option[2] + ")"));
+            $("#infrastructure_office_id").append($('<option></option>').val(option[0]).html(option[1] + " (" + option[2] + ")"));
+          });
+        }
+        // Types
+        $("#infrastructure_infrastructure_type_id").html("");
+        $("#infrastructure_infrastructure_type_id").select2("val", "");
+        $("#infrastructure_infrastructure_type_id").append($('<option></option>').val("").html(""));
+        if (!t.length) {
+          $.each(data, function(id, option) {
+            if (id == 'types' && option != "") {
+              $("#infrastructure_infrastructure_type_id").append($('<option></option>').val(option.id).html(option.name));
+            }
+          });
+        } else {
+          $.each(t, function(id, option) {
+            $("#infrastructure_infrastructure_type_id").append($('<option></option>').val(option.id).html(option.name));
           });
         }
       });
-      // No organization selected: No company, no office
+      // No organization selected: No company, no office, no type
       if (project == "0") {
         $("#infrastructure_company_id").val(0);
         $("#infrastructure_office_id").val(0);
+        $("#infrastructure_infrastructure_type_id").select2("val", "");
       }
       // Disable generate_code_btn if infrastructure_organization_id blank
       show_hide_generate_code_btn();
