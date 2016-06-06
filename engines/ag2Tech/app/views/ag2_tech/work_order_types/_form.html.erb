@@ -9,5 +9,20 @@
 <% else %>
 <%= f.association :organization, collection: Organization.order('name'), input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %>
 <% end %>
+<!-- Default accounts by project -->
+<table class="form-table">
+  <tbody>
+    <tr class="form-tr underlined-tr">
+      <td class="form-td-two left-winged">
+        <h4><%= t 'ag2_tech.work_order_types.accounts_info' %></h4>
+      </td>
+      <td class="form-td-two right-winged">
+        <%= link_to_add_fields('<i class="icon-plus icon-white"></i>'.html_safe + " " + t("ag2_tech.work_order_types.btn_new_account"), f, :work_order_type_accounts, "account_fields", "new-account-fields", class: "btn btn-warning fnt-new-account-btn") %>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<%= render 'accounts_table', f: f %>
+<!-- Buttons -->
 <%= f.button :submit, :class => 'btn-primary' %>
 <% end %>

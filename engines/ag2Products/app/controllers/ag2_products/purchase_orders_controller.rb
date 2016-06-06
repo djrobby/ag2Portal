@@ -3,6 +3,7 @@ require_dependency "ag2_products/application_controller"
 module Ag2Products
   class PurchaseOrdersController < ApplicationController
     include ActionView::Helpers::NumberHelper
+    include ModelsModule
     before_filter :authenticate_user!
     load_and_authorize_resource
     skip_load_and_authorize_resource :only => [:po_update_description_prices_from_product_store,

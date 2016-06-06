@@ -1,0 +1,16 @@
+es:
+  activerecord:
+    models:
+      work_order_type_account:
+        zero:  Cuentas de tipo de OT
+        one:   Cuenta de tipo de OT
+        few:   Cuentas de tipo de OT
+        other: Cuentas de tipo de OT
+    attributes:
+      work_order_type_account:
+        work_order_type: "Tipo de OT"
+        work_order_type_id: "Tipo de OT"
+        project: "Proyecto"
+        project_id: "Proyecto"
+        charge_account: "Cuenta analítica"
+        charge_account_id: "Cuenta analítica"

@@ -1,0 +1,16 @@
+en:
+  activerecord:
+    models:
+      work_order_type_account:
+        zero:  WO type accounts
+        one:   WO type account
+        few:   WO type accounts
+        other: WO type accounts
+    attributes:
+      work_order_type_account:
+        work_order_type: "WO type"
+        work_order_type_id: "WO type"
+        project: "Project"
+        project_id: "Project"
+        charge_account: "Analytical account"
+        charge_account_id: "Analytical account"

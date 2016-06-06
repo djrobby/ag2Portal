@@ -1,0 +1,36 @@
+<script>
+  var _f = '';
+
+  $(document).ready(function() {
+    // Retrieves parent values
+    _f = $("#fnt-notification").closest('form')[0];
+    // Set focus
+    $(".modal").on('shown', function() {
+      $(this).find(".form-label:first").focus();
+    });
+  });
+</script>
+
+<div id="new-account-fields-fields" class="modal hide fade" data-backdrop="static">
+  <% e = t(:item_error) %>
+  <div class="modal-header">
+    <a class="close" data-dismiss="modal">×</a>
+    <h3><%= t("ag2_tech.work_order_type_accounts.add_account") %></h3>
+    <span class="shrinked"><%= I18n.t(:mandatory_subtitle) %></span>
+  </div>
+  <div class="modal-body">
+    <%= f.association :project, collection: @projects, input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-project', data: { validation: "required", "validation-error-msg" => "#{e}" } }, label_html: { class: 'form-label' } %>
+    <%= f.association :charge_account, collection: @charge_accounts, input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-account', data: { validation: "required", "validation-error-msg" => "#{e}" } }, label_html: { class: 'form-label' } %>
+    <%= f.input :_destroy, as: :hidden, input_html: { class: 'field' } %>
+  </div>
+  <div class="modal-footer">
+    <span class="left-floated" style="vertical-align: bottom"><%= t("ag2_tech.work_order_type_accounts.add_item_to", var: @work_order_type.name) unless @work_order_type.name.blank? %></span>
+    <button id="addAccountButton" type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><%= t('ag2_tech.work_order_type_accounts.btn_add_item') %></button>
+    <button id="cancelAccountButton" type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><%= t :close_button %></button>
+  </div>
+</div>
+
+<script type="text/javascript">
+  sel2NoMatch = '<%= t("select2.no_matches") %>';
+  wot_accountFieldsUI.init(sel2NoMatch);
+</script>

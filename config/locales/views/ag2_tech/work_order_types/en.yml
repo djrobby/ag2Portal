@@ -17,3 +17,8 @@ en:
       new:
         title: "New WO type"
       back_to_main_page: "Back to WO types"
+      add_account: "Add new WO type Account"
+      add_item_to: "WO type %{var}"
+      btn_add_item: "Add"
+      accounts_info: "WO type Accounts"
+      btn_new_account: "New Account"
