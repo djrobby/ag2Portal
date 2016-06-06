@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20160524101828) do
+ActiveRecord::Schema.define(:version => 20160606074041) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -2559,6 +2559,21 @@ ActiveRecord::Schema.define(:version => 20160524101828) do
   add_index "work_order_tools", ["charge_account_id"], :name => "index_work_order_tools_on_charge_account_id"
   add_index "work_order_tools", ["tool_id"], :name => "index_work_order_tools_on_tool_id"
   add_index "work_order_tools", ["work_order_id"], :name => "index_work_order_tools_on_work_order_id"
+
+  create_table "work_order_type_accounts", :force => true do |t|
+    t.integer  "work_order_type_id"
+    t.integer  "project_id"
+    t.integer  "charge_account_id"
+    t.datetime "created_at",         :null => false
+    t.datetime "updated_at",         :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  add_index "work_order_type_accounts", ["charge_account_id"], :name => "index_work_order_type_accounts_on_charge_account_id"
+  add_index "work_order_type_accounts", ["project_id"], :name => "index_work_order_type_accounts_on_project_id"
+  add_index "work_order_type_accounts", ["work_order_type_id", "project_id", "charge_account_id"], :name => "index_wo_type_accounts_unique", :unique => true
+  add_index "work_order_type_accounts", ["work_order_type_id"], :name => "index_work_order_type_accounts_on_work_order_type_id"
 
   create_table "work_order_types", :force => true do |t|
     t.string   "name"

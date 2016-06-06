@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  work_order_type: 
+  project: 
+  charge_account: 
+
+two:
+  work_order_type: 
+  project: 
+  charge_account: 

@@ -4,8 +4,16 @@ class WorkOrderType < ActiveRecord::Base
   attr_accessible :name, :organization_id, :charge_account_id
 
   has_many :work_orders
+  has_many :work_order_type_accounts, dependent: :destroy
+
+  # Nested attributes
+  accepts_nested_attributes_for :work_order_type_accounts,
+                                :reject_if => :all_blank,
+                                :allow_destroy => true
 
   has_paper_trail
+
+  validates_associated :work_order_type_accounts
 
   validates :name,  :presence => true
   validates :organization,    :presence => true
