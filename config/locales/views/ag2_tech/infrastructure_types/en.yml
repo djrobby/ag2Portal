@@ -9,7 +9,7 @@ en:
         title: "Infrastructure type"
         btn_edit: "Edit Infrastructure type"
         btn_delete: "Delete Infrastructure type"
-        subtable_title: "Infrastructure type Orders"
+        subtable_title: "Infrastructure type Infrastructures"
         return_to: "Back to Infrastructure type"
       edit:
         title: "Edit Infrastructure type"

@@ -31,4 +31,20 @@
 delete_path: @infrastructure, delete_txt: t('.btn_delete'), msg: t("activerecord.models.infrastructure.one"), txt: @infrastructure.full_name,
 new_path: new_infrastructure_path, new_txt: t('ag2_tech.infrastructures.index.btn_new') } %>
 
+<% if (@worker_orders.count > 0) %>
+<h4><%=t '.subtable_title' %></h4>
+<table class="table table-condensed table-striped">
+  <thead>
+    <%= render '/layouts/ag2_tech/wordersheader' %>
+  </thead>
+  <tbody>
+    <% session[:return_to] = I18n.t('.return_to') %>
+    <% session[:return_to_url] = "#{request.protocol}#{request.host_with_port}#{request.fullpath}" %>
+    <%= render :partial => '/layouts/ag2_tech/worders', :locals => { :orders => @worker_orders } %>
+  </tbody>
+</table>
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @worker_orders } %>
+<% end %>
+
+<%= link_to t('ag2_tech.infrastructures.show.show_to'), @infrastructure.infrastructure_type %> |
 <%= link_to t("ag2_tech.infrastructures.back_to_main_page"), infrastructures_path %>

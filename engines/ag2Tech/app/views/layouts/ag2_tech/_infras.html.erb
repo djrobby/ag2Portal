@@ -1,0 +1,8 @@
+<% infras.each do |w| %>
+<tr>
+  <td><%= link_to w.full_code, w %></td>
+  <td><%= w.name %></td>
+  <td><%= w.company.name unless w.company.blank? %></td>
+  <td><%= w.office.name unless w.office.blank? %></td>
+</tr>
+<% end %>

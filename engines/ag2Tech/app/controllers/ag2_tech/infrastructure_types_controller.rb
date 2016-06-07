@@ -30,7 +30,7 @@ module Ag2Tech
     def show
       @breadcrumb = 'read'
       @infrastructure_type = InfrastructureType.find(params[:id])
-      @infrastructures = @infrastructure_type.infrastructures.paginate(:page => params[:page], :per_page => per_page).order(:name)
+      @infrastructures = @infrastructure_type.infrastructures.paginate(:page => params[:page], :per_page => per_page).order(:code)
 
       respond_to do |format|
         format.html # show.html.erb

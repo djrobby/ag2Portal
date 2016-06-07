@@ -13,6 +13,7 @@ en:
         btn_edit: "Edit Infrastructure"
         btn_delete: "Delete Infrastructure"
         subtable_title: "Infrastructure Orders"
+        show_to: "Show Infrastructure type"
         return_to: "Back to Infrastructure"
       edit:
         title: "Edit Infrastructure"

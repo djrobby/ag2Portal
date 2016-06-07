@@ -9,7 +9,7 @@ es:
         title: "Tipo de infraestructura"
         btn_edit: "Editar Tipo de infraestructura"
         btn_delete: "Borrar Tipo de infraestructura"
-        subtable_title: "Ordenes del Tipo de infraestructura"
+        subtable_title: "Infraestructuras del Tipo de infraestructura"
         return_to: "Volver a Tipo de infraestructura"
       edit:
         title: "Editar Tipo de infraestructura"

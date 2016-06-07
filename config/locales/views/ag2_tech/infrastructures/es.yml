@@ -13,6 +13,7 @@ es:
         btn_edit: "Editar Infraestructura"
         btn_delete: "Borrar Infraestructura"
         subtable_title: "Ordenes de la Infraestructura"
+        show_to: "Ver Tipo de infraestructura"
         return_to: "Volver a Infraestructura"
       edit:
         title: "Editar Infraestructura"

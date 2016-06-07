@@ -289,4 +289,7 @@
 delete_path: @work_order, delete_txt: t('.btn_delete'), msg: t("activerecord.models.work_order.one"), txt: @work_order.order_no,
 new_path: new_work_order_path, new_txt: t('ag2_tech.work_orders.index.btn_new') } %>
 
+<% if !session[:return_to].nil? %>
+<%= link_to session[:return_to], session[:return_to_url] %> |
+<% end %>
 <%= link_to t("ag2_tech.work_orders.back_to_main_page"), work_orders_path %>

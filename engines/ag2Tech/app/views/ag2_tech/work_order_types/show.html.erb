@@ -54,7 +54,7 @@ new_path: new_work_order_type_path, new_txt: t('ag2_tech.work_order_types.index.
     <%= render '/layouts/ag2_tech/wordersheader' %>
   </thead>
   <tbody>
-    <% session[:return_to] = I18n.t('.return_to') %>
+    <% session[:return_to] = I18n.t('ag2_tech.work_order_types.show.return_to') %>
     <% session[:return_to_url] = "#{request.protocol}#{request.host_with_port}#{request.fullpath}" %>
     <%= render :partial => '/layouts/ag2_tech/worders', :locals => { :orders => @worker_orders } %>
   </tbody>
