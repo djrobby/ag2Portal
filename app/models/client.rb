@@ -63,6 +63,18 @@ class Client < ActiveRecord::Base
     full_name
   end
 
+  def first_name
+    self.entity.first_name
+  end
+
+  def last_name
+    self.entity.last_name
+  end
+
+  def company
+    self.entity.company
+  end
+
   def full_code
     # Client code (Organization id & sequential number) => OOOO-NNNNNNN
     client_code.blank? ? "" : client_code[0..3] + '-' + client_code[4..10]
@@ -249,6 +261,6 @@ class Client < ActiveRecord::Base
                             email: email, shared_contact_type_id: 3, region_id: region_id,
                             organization_id: organization_id, updated_by: updated_by }
     _contact.save
-    return _contact 
+    return _contact
   end
 end

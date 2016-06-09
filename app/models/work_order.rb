@@ -13,12 +13,12 @@ class WorkOrder < ActiveRecord::Base
   belongs_to :organization
   belongs_to :in_charge, class_name: 'Worker'
   belongs_to :infrastructure
-  #belongs_to :subscriber
-  #belongs_to :meter
-  #belongs_to :meter_model
-  #belongs_to :caliber
-  #belongs_to :meter_owner
-  #belongs_to :meter_location
+  belongs_to :subscriber
+  belongs_to :meter
+  belongs_to :meter_model
+  belongs_to :meter_owner
+  belongs_to :meter_location
+  belongs_to :caliber
   #belongs_to :last_reading, class_name: 'Reading'
   attr_accessible :closed_at, :completed_at, :order_no, :started_at,
                   :work_order_labor_id, :work_order_status_id, :work_order_type_id, :work_order_area_id,

@@ -1,0 +1,21 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  client: 
+  office: 
+  center: 
+  subscriber_code: MyString
+  first_name: MyString
+  last_name: MyString
+  company: MyString
+  fiscal_id: MyString
+
+two:
+  client: 
+  office: 
+  center: 
+  subscriber_code: MyString
+  first_name: MyString
+  last_name: MyString
+  company: MyString
+  fiscal_id: MyString

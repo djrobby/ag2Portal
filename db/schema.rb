@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20160606074041) do
+ActiveRecord::Schema.define(:version => 20160609142441) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -262,6 +262,18 @@ ActiveRecord::Schema.define(:version => 20160606074041) do
   end
 
   add_index "calibers", ["caliber"], :name => "index_calibers_on_caliber"
+
+  create_table "centers", :force => true do |t|
+    t.integer  "town_id"
+    t.string   "name"
+    t.boolean  "active"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  add_index "centers", ["town_id"], :name => "index_centers_on_town_id"
 
   create_table "charge_accounts", :force => true do |t|
     t.string   "name"
@@ -1889,6 +1901,33 @@ ActiveRecord::Schema.define(:version => 20160606074041) do
   add_index "subguides", ["guide_id"], :name => "index_subguides_on_guide_id"
   add_index "subguides", ["name"], :name => "index_subguides_on_name", :unique => true
   add_index "subguides", ["sort_order"], :name => "index_subguides_on_sort_order"
+
+  create_table "subscribers", :force => true do |t|
+    t.integer  "client_id"
+    t.integer  "office_id"
+    t.integer  "center_id"
+    t.string   "subscriber_code"
+    t.string   "first_name"
+    t.string   "last_name"
+    t.string   "company"
+    t.string   "fiscal_id"
+    t.date     "starting_at"
+    t.date     "ending_at"
+    t.integer  "street_directory_id"
+    t.datetime "created_at",          :null => false
+    t.datetime "updated_at",          :null => false
+  end
+
+  add_index "subscribers", ["center_id"], :name => "index_subscribers_on_center_id"
+  add_index "subscribers", ["client_id"], :name => "index_subscribers_on_client_id"
+  add_index "subscribers", ["company"], :name => "index_subscribers_on_company"
+  add_index "subscribers", ["first_name"], :name => "index_subscribers_on_first_name"
+  add_index "subscribers", ["fiscal_id"], :name => "index_subscribers_on_fiscal_id"
+  add_index "subscribers", ["last_name"], :name => "index_subscribers_on_last_name"
+  add_index "subscribers", ["office_id", "subscriber_code"], :name => "index_subscribers_unique", :unique => true
+  add_index "subscribers", ["office_id"], :name => "index_subscribers_on_office_id"
+  add_index "subscribers", ["street_directory_id"], :name => "index_subscribers_on_street_directory_id"
+  add_index "subscribers", ["subscriber_code"], :name => "index_subscribers_on_subscriber_code"
 
   create_table "supplier_bank_accounts", :force => true do |t|
     t.integer  "supplier_id"
