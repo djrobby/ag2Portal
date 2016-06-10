@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  project: 
+  office: 
+  routing_code: MyString
+  name: MyString
+
+two:
+  project: 
+  office: 
+  routing_code: MyString
+  name: MyString

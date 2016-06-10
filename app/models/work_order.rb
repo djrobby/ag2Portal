@@ -19,7 +19,7 @@ class WorkOrder < ActiveRecord::Base
   belongs_to :meter_owner
   belongs_to :meter_location
   belongs_to :caliber
-  #belongs_to :last_reading, class_name: 'Reading'
+  belongs_to :last_reading, class_name: 'Reading'
   attr_accessible :closed_at, :completed_at, :order_no, :started_at,
                   :work_order_labor_id, :work_order_status_id, :work_order_type_id, :work_order_area_id,
                   :charge_account_id, :project_id, :area_id, :store_id, :client_id, :infrastructure_id,

@@ -1,0 +1,29 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  project: 
+  billing_frequency: 
+  period: 1
+  description: MyString
+  reading_starting_date: 2016-06-10
+  reading_ending_date: 2016-06-10
+  prebilling_starting_date: 2016-06-10
+  prebilling_ending_date: 2016-06-10
+  billing_starting_date: 2016-06-10
+  billing_ending_date: 2016-06-10
+  charging_starting_date: 2016-06-10
+  charging_ending_date: 2016-06-10
+
+two:
+  project: 
+  billing_frequency: 
+  period: 1
+  description: MyString
+  reading_starting_date: 2016-06-10
+  reading_ending_date: 2016-06-10
+  prebilling_starting_date: 2016-06-10
+  prebilling_ending_date: 2016-06-10
+  billing_starting_date: 2016-06-10
+  billing_ending_date: 2016-06-10
+  charging_starting_date: 2016-06-10
+  charging_ending_date: 2016-06-10

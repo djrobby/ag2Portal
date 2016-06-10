@@ -1,0 +1,27 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  project: 
+  billing_period: 
+  billing_frequency: 
+  reading_type: 
+  meter: 
+  subscriber: 
+  reading_route: 
+  reading_sequence: 1
+  reading_variant: MyString
+  reading_date: 2016-06-10 12:21:16
+  reading_index: 1
+
+two:
+  project: 
+  billing_period: 
+  billing_frequency: 
+  reading_type: 
+  meter: 
+  subscriber: 
+  reading_route: 
+  reading_sequence: 1
+  reading_variant: MyString
+  reading_date: 2016-06-10 12:21:16
+  reading_index: 1
