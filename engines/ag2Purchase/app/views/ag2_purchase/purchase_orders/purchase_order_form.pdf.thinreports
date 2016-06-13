@@ -143,6 +143,10 @@ end
 
 # List detail
 no = 0
+quantity = 0
+price = 0
+net_price = 0
+factor = 1
 @items.each do |i|
 	report.page.list(:default).add_row do |row|
 		no = no + 1
@@ -186,7 +190,7 @@ no = 0
 	end
 	# Store page subtotals
     report.page.list(:default) do |list|
-		list.store.page_quantity += i.quantity
+		list.store.page_quantity += quantity
 		list.store.page_discount += i.discount
 		list.store.page_amount += i.amount
 		list.store.page_tax += i.tax

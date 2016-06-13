@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20160609142441) do
+ActiveRecord::Schema.define(:version => 20160610122031) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -135,6 +135,40 @@ ActiveRecord::Schema.define(:version => 20160609142441) do
   add_index "banks", ["code"], :name => "index_banks_on_code", :unique => true
   add_index "banks", ["name"], :name => "index_banks_on_name"
   add_index "banks", ["swift"], :name => "index_banks_on_swift"
+
+  create_table "billing_frequencies", :force => true do |t|
+    t.string   "name"
+    t.integer  "months",     :limit => 2, :default => 0, :null => false
+    t.integer  "days",       :limit => 2, :default => 0, :null => false
+    t.datetime "created_at",                             :null => false
+    t.datetime "updated_at",                             :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  create_table "billing_periods", :force => true do |t|
+    t.integer  "project_id"
+    t.integer  "billing_frequency_id"
+    t.integer  "period"
+    t.string   "description"
+    t.date     "reading_starting_date"
+    t.date     "reading_ending_date"
+    t.date     "prebilling_starting_date"
+    t.date     "prebilling_ending_date"
+    t.date     "billing_starting_date"
+    t.date     "billing_ending_date"
+    t.date     "charging_starting_date"
+    t.date     "charging_ending_date"
+    t.datetime "created_at",               :null => false
+    t.datetime "updated_at",               :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  add_index "billing_periods", ["billing_frequency_id"], :name => "index_billing_periods_on_billing_frequency_id"
+  add_index "billing_periods", ["period"], :name => "index_billing_periods_on_period"
+  add_index "billing_periods", ["project_id", "period"], :name => "index_billing_periods_unique", :unique => true
+  add_index "billing_periods", ["project_id"], :name => "index_billing_periods_on_project_id"
 
   create_table "budget_groups", :force => true do |t|
     t.integer  "budget_id"
@@ -866,10 +900,12 @@ ActiveRecord::Schema.define(:version => 20160609142441) do
     t.string   "model"
     t.string   "brand"
     t.integer  "meter_type_id"
-    t.datetime "created_at",      :null => false
-    t.datetime "updated_at",      :null => false
+    t.datetime "created_at",                                  :null => false
+    t.datetime "updated_at",                                  :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
+    t.integer  "digits",          :limit => 1, :default => 0, :null => false
+    t.integer  "dials",           :limit => 1, :default => 1, :null => false
   end
 
   add_index "meter_models", ["brand"], :name => "index_meter_models_on_brand"
@@ -1529,6 +1565,67 @@ ActiveRecord::Schema.define(:version => 20160609142441) do
   add_index "ratios", ["organization_id", "ratio_group_id", "code"], :name => "index_ratios_on_organization_group_code", :unique => true
   add_index "ratios", ["organization_id"], :name => "index_ratios_on_organization_id"
   add_index "ratios", ["ratio_group_id"], :name => "index_ratios_on_ratio_group_id"
+
+  create_table "reading_incidence_types", :force => true do |t|
+    t.string   "name"
+    t.boolean  "should_estimate"
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  create_table "reading_routes", :force => true do |t|
+    t.integer  "project_id"
+    t.integer  "office_id"
+    t.string   "routing_code"
+    t.string   "name"
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  add_index "reading_routes", ["office_id", "routing_code"], :name => "index_reading_routes_unique", :unique => true
+  add_index "reading_routes", ["office_id"], :name => "index_reading_routes_on_office_id"
+  add_index "reading_routes", ["project_id"], :name => "index_reading_routes_on_project_id"
+  add_index "reading_routes", ["routing_code"], :name => "index_reading_routes_on_routing_code"
+
+  create_table "reading_types", :force => true do |t|
+    t.string   "name"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  create_table "readings", :force => true do |t|
+    t.integer  "project_id"
+    t.integer  "billing_period_id"
+    t.integer  "billing_frequency_id"
+    t.integer  "reading_type_id"
+    t.integer  "meter_id"
+    t.integer  "subscriber_id"
+    t.integer  "reading_route_id"
+    t.integer  "reading_sequence"
+    t.string   "reading_variant"
+    t.datetime "reading_date"
+    t.integer  "reading_index"
+    t.datetime "created_at",           :null => false
+    t.datetime "updated_at",           :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  add_index "readings", ["billing_frequency_id"], :name => "index_readings_on_billing_frequency_id"
+  add_index "readings", ["billing_period_id"], :name => "index_readings_on_billing_period_id"
+  add_index "readings", ["meter_id"], :name => "index_readings_on_meter_id"
+  add_index "readings", ["project_id", "billing_period_id", "reading_type_id", "meter_id", "reading_date"], :name => "index_readings_unique", :unique => true
+  add_index "readings", ["project_id"], :name => "index_readings_on_project_id"
+  add_index "readings", ["reading_date"], :name => "index_readings_on_reading_date"
+  add_index "readings", ["reading_route_id"], :name => "index_readings_on_reading_route_id"
+  add_index "readings", ["reading_type_id"], :name => "index_readings_on_reading_type_id"
+  add_index "readings", ["subscriber_id"], :name => "index_readings_on_subscriber_id"
 
   create_table "receipt_note_item_balances", :id => false, :force => true do |t|
     t.integer "receipt_note_item_id",                                      :default => 0,   :null => false
