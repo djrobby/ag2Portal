@@ -27,6 +27,8 @@ es:
       generate_code_btn: "Nº de Orden"
       no_error: "Imposible generar Nº de Orden: No has elegido Proyecto."
       meter_subscriber_info: "Abonado y Contador"
+      subscriber_info: "Datos del Abonado"
+      meter_info: "Datos del Contador"
       items_info: "Artículos de la Orden"
       workers_info: "Trabajadores de la Orden"
       subcontractors_info: "Subcontratistas de la Orden"

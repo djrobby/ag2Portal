@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20160610122031) do
+ActiveRecord::Schema.define(:version => 20160615122233) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -885,6 +885,18 @@ ActiveRecord::Schema.define(:version => 20160610122031) do
 
   add_index "measures", ["description"], :name => "index_measures_on_description"
 
+  create_table "meter_brands", :force => true do |t|
+    t.integer  "manufacturer_id"
+    t.string   "brand"
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  add_index "meter_brands", ["brand"], :name => "index_meter_brands_on_brand"
+  add_index "meter_brands", ["manufacturer_id"], :name => "index_meter_brands_on_manufacturer_id"
+
   create_table "meter_locations", :force => true do |t|
     t.string   "name"
     t.datetime "created_at", :null => false
@@ -896,20 +908,18 @@ ActiveRecord::Schema.define(:version => 20160610122031) do
   add_index "meter_locations", ["name"], :name => "index_meter_locations_on_name"
 
   create_table "meter_models", :force => true do |t|
-    t.integer  "manufacturer_id"
     t.string   "model"
-    t.string   "brand"
     t.integer  "meter_type_id"
-    t.datetime "created_at",                                  :null => false
-    t.datetime "updated_at",                                  :null => false
+    t.datetime "created_at",                                 :null => false
+    t.datetime "updated_at",                                 :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
-    t.integer  "digits",          :limit => 1, :default => 0, :null => false
-    t.integer  "dials",           :limit => 1, :default => 1, :null => false
+    t.integer  "digits",         :limit => 1, :default => 0, :null => false
+    t.integer  "dials",          :limit => 1, :default => 1, :null => false
+    t.integer  "meter_brand_id"
   end
 
-  add_index "meter_models", ["brand"], :name => "index_meter_models_on_brand"
-  add_index "meter_models", ["manufacturer_id"], :name => "index_meter_models_on_manufacturer_id"
+  add_index "meter_models", ["meter_brand_id"], :name => "index_meter_models_on_meter_brand_id"
   add_index "meter_models", ["meter_type_id"], :name => "index_meter_models_on_meter_type_id"
   add_index "meter_models", ["model"], :name => "index_meter_models_on_model"
 
@@ -2013,6 +2023,8 @@ ActiveRecord::Schema.define(:version => 20160610122031) do
     t.integer  "street_directory_id"
     t.datetime "created_at",          :null => false
     t.datetime "updated_at",          :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
   end
 
   add_index "subscribers", ["center_id"], :name => "index_subscribers_on_center_id"

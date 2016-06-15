@@ -27,6 +27,8 @@ en:
       generate_code_btn: "Order No."
       no_error: "Unable to generate Order No.: No Project chosen."
       meter_subscriber_info: "Subscriber & Meter"
+      subscriber_info: "Subscriber Data"
+      meter_info: "Meter Data"
       items_info: "Order Products"
       workers_info: "Order Workers"
       subcontractors_info: "Order Subcontractors"

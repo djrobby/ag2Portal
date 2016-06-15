@@ -110,18 +110,32 @@
   </tbody>
 </table>
 
-<!-- Meter & Subscriber -->
-<h4><%= t 'ag2_tech.work_orders.meter_subscriber_info' %></h4>
+<div id="subscriber_meter">
+<!-- Subscriber -->
+<h4><%= t 'ag2_tech.work_orders.subscriber_info' %></h4>
 <table class="table">
   <tbody>
     <tr>
-      <td><%= t :"activerecord.attributes.work_order.master_order" %>:</td>
-      <td><%= @work_order.master_order unless @work_order.master_order.blank? %></td>
-      <td class="highlighted bolded"><%= t :"activerecord.attributes.work_order.total_costs" %>:</td>
-      <td class="highlighted bolded"><%= number_with_precision(@work_order.total_costs, precision: 4, delimiter: I18n.locale == :es ? "." : ",") unless @work_order.total_costs.blank? %></td>
+      <td><%= t :"activerecord.attributes.work_order.subscriber" %>:</td>
+      <td><%= @work_order.subscriber.full_name unless @work_order.subscriber.blank? %></td>
+      <td><%= t :"activerecord.attributes.subscriber.fiscal_id" %>:</td>
+      <td><%= @work_order.subscriber.fiscal_id unless @work_order.subscriber.blank? %></td>
     </tr>
   </tbody>
 </table>
+<!-- Meter -->
+<h4><%= t 'ag2_tech.work_orders.meter_info' %></h4>
+<table class="table">
+  <tbody>
+    <tr>
+      <td><%= t :"activerecord.attributes.work_order.meter" %>:</td>
+      <td><%= @work_order.meter.full_name unless @work_order.meter.blank? %></td>
+      <td><%= t :"activerecord.attributes.work_order.total_costs" %>:</td>
+      <td><%= number_with_precision(@work_order.total_costs, precision: 4, delimiter: I18n.locale == :es ? "." : ",") unless @work_order.total_costs.blank? %></td>
+    </tr>
+  </tbody>
+</table>
+</div>
 
 <!-- Items -->
 <table class="form-table">
@@ -275,11 +289,27 @@
 <% end %> <!-- end @vehicles.count > 0 -->
 
 <!-- Remarks -->
-<table class="table">
+<table class="table odd_even_table">
+  <!-- title1 -->
+  <col width="12%" />
+  <!-- content1 -->
+  <col width="74%" />
+  <!-- title2 -->
+  <col width="12%" />
+  <!-- content2 -->
+  <col width="2%" />
   <tbody>
     <tr>
-      <td style="width: 12%"><%= t :"activerecord.attributes.work_order.remarks" %>:</td>
-      <td style="width: 88%"><%= @work_order.remarks unless @work_order.remarks.blank? %></td>
+      <td><%= t :"activerecord.attributes.work_order.remarks" %>:</td>
+      <td><%= @work_order.remarks unless @work_order.remarks.blank? %></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><%= t :"activerecord.attributes.work_order.incidences" %>:</td>
+      <td><%= @work_order.incidences unless @work_order.incidences.blank? %></td>
+      <td align="right"><%= t :"activerecord.attributes.work_order.por_affected" %>:</td>
+      <td align="right"> <% if @work_order.por_affected %> <i class="icon-thumbs-up"></i> <% else %> <i class="icon-thumbs-down"></i> <% end %> </td>
     </tr>
   </tbody>
 </table>
