@@ -1,0 +1,47 @@
+es:
+  activerecord:
+    models:
+      subscriber:
+        zero:  Abonados
+        one:   Abonado
+        few:   Abonados
+        other: Abonados
+    attributes:
+      subscriber:
+        client: "Id Entidad"
+        client_id: "Id Entidad"
+        office: "Oficina"
+        office_id: "Oficina"
+        center: "Núcleo"
+        center_id: "Núcleo"
+        subscriber_code: "Código"
+        fiscal_id: "Id Fiscal CIF/NIF"
+        fiscal_id_c: "CIF/NIF"
+        last_name: "Last name"
+        first_name: "Name"
+        company: "Company name"
+        full_name: "Full Name"
+        province: "Provincia"
+        province_id: "Provincia"
+        town: "Población"
+        town_id: "Población"
+        zipcode: "Código postal"
+        zipcode_id: "Código postal"
+        street_type: "Tipo de vía"
+        street_type_id: "Tipo de vía"
+        street_name: "Nombre de vía"
+        street_number: "Nº"
+        building: "Edificio/Bloque"
+        floor: "Planta"
+        floor_office: "Oficina"
+        region: "Región"
+        region_id: "Región"
+        country: "País"
+        country_id: "País"
+        phone: "Teléfono"
+        fax: "Fax"
+        cellular: "Móvil"
+        email: "Email"
+        remarks: "Comentarios"
+        address: "Dirección"
+        is_contact: "¿Es contacto?"

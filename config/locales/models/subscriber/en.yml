@@ -1,0 +1,47 @@
+en:
+  activerecord:
+    models:
+      subscriber:
+        zero:  Subscribers
+        one:   Subscriber
+        few:   Subscribers
+        other: Subscribers
+    attributes:
+      subscriber:
+        client: "Client"
+        client_id: "Client"
+        office: "Office"
+        office_id: "Office"
+        center: "Center"
+        center_id: "Center"
+        subscriber_code: "Code"
+        fiscal_id: "Fiscal Id"
+        fiscal_id_c: "Fiscal Id"
+        last_name: "Last name"
+        first_name: "Name"
+        company: "Company name"
+        full_name: "Full Name"
+        province: "Province"
+        province_id: "Province"
+        town: "Town"
+        town_id: "Town"
+        zipcode: "Zip Code"
+        zipcode_id: "Zip Code"
+        street_type: "Street Type"
+        street_type_id: "Street Type"
+        street_name: "Street name"
+        street_number: "Number"
+        building: "Building"
+        floor: "Floor"
+        floor_office: "Office"
+        region: "Region"
+        region_id: "Region"
+        country: "Country"
+        country_id: "Country"
+        phone: "Phone"
+        fax: "Fax"
+        cellular: "Cellular"
+        email: "Email"
+        remarks: "Remarks"
+        address: "Address"
+        is_contact: "Is contact?"
