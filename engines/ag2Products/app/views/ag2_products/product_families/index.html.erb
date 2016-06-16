@@ -1,6 +1,6 @@
 <%= render '/layouts/ag2_products/familiesbreadcrumb' %>
+<%= render :partial => '/layouts/searchhead_remote', :locals => { :title => t(".title"), :path => product_families_path } %>
 
-<h3><%=t '.title' %></h3>
-<div class="span8" id="div_table">
+<div class="span11" id="div_table">
   <%= render 'product_families' %>
 </div>

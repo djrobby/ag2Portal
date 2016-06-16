@@ -28,20 +28,29 @@ module Ag2Products
     # GET /product_families.json
     def index
       manage_filter_state
+      letter = params[:letter]
       init_oco if !session[:organization]
-      if session[:organization] != '0'
-        @product_families = ProductFamily.where(organization_id: session[:organization]).paginate(:page => params[:page], :per_page => per_page).order(sort_column + ' ' + sort_direction)
-      else
-        @product_families = ProductFamily.paginate(:page => params[:page], :per_page => per_page).order(sort_column + ' ' + sort_direction)
+
+      @search = ProductFamily.search do
+        fulltext params[:search]
+        if session[:organization] != '0'
+          with :organization_id, session[:organization]
+        end
+        if !letter.blank? && letter != "%"
+          with(:name).starting_with(letter)
+        end
+        order_by :family_code, :asc
+        paginate :page => params[:page] || 1, :per_page => per_page
       end
-  
+      @product_families = @search.results
+
       respond_to do |format|
         format.html # index.html.erb
         format.json { render json: @product_families }
         format.js
       end
     end
-  
+
     # GET /product_families/1
     # GET /product_families/1.json
     def show
@@ -49,38 +58,38 @@ module Ag2Products
       @product_family = ProductFamily.find(params[:id])
       @products = @product_family.products.paginate(:page => params[:page], :per_page => per_page).order('product_code')
       @stocks = @product_family.product_family_stocks.paginate(:page => params[:page], :per_page => per_page).order('store_id')
-  
+
       respond_to do |format|
         format.html # show.html.erb
         format.json { render json: @product_family }
       end
     end
-  
+
     # GET /product_families/new
     # GET /product_families/new.json
     def new
       @breadcrumb = 'create'
       @product_family = ProductFamily.new
-  
+
       respond_to do |format|
         format.html # new.html.erb
         format.json { render json: @product_family }
       end
     end
-  
+
     # GET /product_families/1/edit
     def edit
       @breadcrumb = 'update'
       @product_family = ProductFamily.find(params[:id])
     end
-  
+
     # POST /product_families
     # POST /product_families.json
     def create
       @breadcrumb = 'create'
       @product_family = ProductFamily.new(params[:product_family])
       @product_family.created_by = current_user.id if !current_user.nil?
-  
+
       respond_to do |format|
         if @product_family.save
           format.html { redirect_to @product_family, notice: crud_notice('created', @product_family) }
@@ -91,14 +100,14 @@ module Ag2Products
         end
       end
     end
-  
+
     # PUT /product_families/1
     # PUT /product_families/1.json
     def update
       @breadcrumb = 'update'
       @product_family = ProductFamily.find(params[:id])
       @product_family.updated_by = current_user.id if !current_user.nil?
-  
+
       respond_to do |format|
         if @product_family.update_attributes(params[:product_family])
           format.html { redirect_to @product_family,
@@ -110,12 +119,12 @@ module Ag2Products
         end
       end
     end
-  
+
     # DELETE /product_families/1
     # DELETE /product_families/1.json
     def destroy
       @product_family = ProductFamily.find(params[:id])
-  
+
       respond_to do |format|
         if @product_family.destroy
           format.html { redirect_to product_families_url,
@@ -136,17 +145,22 @@ module Ag2Products
 
     # Keeps filter state
     def manage_filter_state
-      # sort
-      if params[:sort]
-        session[:sort] = params[:sort]
-      elsif session[:sort]
-        params[:sort] = session[:sort]
+      # search
+      if params[:search]
+        session[:search] = params[:search]
+      elsif session[:search]
+        params[:search] = session[:search]
       end
-      # direction
-      if params[:direction]
-        session[:direction] = params[:direction]
-      elsif session[:direction]
-        params[:direction] = session[:direction]
+      # letter
+      if params[:letter]
+        if params[:letter] == '%'
+          session[:letter] = nil
+          params[:letter] = nil
+        else
+          session[:letter] = params[:letter]
+        end
+      elsif session[:letter]
+        params[:letter] = session[:letter]
       end
     end
   end

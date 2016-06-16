@@ -75,6 +75,13 @@ class ProductFamily < ActiveRecord::Base
     joins(:stocks).where("product_families.id = ?", _family).group("product_families.family_code")
   end
 
+  searchable do
+    text :family_code, :name
+    string :family_code
+    string :name
+    integer :organization_id
+  end
+
   private
 
   def check_for_dependent_records
