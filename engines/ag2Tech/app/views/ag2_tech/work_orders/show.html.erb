@@ -128,10 +128,34 @@
 <table class="table">
   <tbody>
     <tr>
-      <td><%= t :"activerecord.attributes.work_order.meter" %>:</td>
-      <td><%= @work_order.meter.full_name unless @work_order.meter.blank? %></td>
-      <td><%= t :"activerecord.attributes.work_order.total_costs" %>:</td>
-      <td><%= number_with_precision(@work_order.total_costs, precision: 4, delimiter: I18n.locale == :es ? "." : ",") unless @work_order.total_costs.blank? %></td>
+      <td><%= t :"activerecord.attributes.work_order.meter_code" %>:</td>
+      <td><%= @work_order.meter_code unless @work_order.meter_code %></td>
+      <td><%= t :"activerecord.attributes.work_order.meter_model" %>:</td>
+      <td><%= @work_order.meter_model.full_name unless @work_order.meter_model %></td>
+    </tr>
+    <tr>
+      <td><%= t :"activerecord.attributes.work_order.caliber" %>:</td>
+      <td><%= @work_order.caliber.caliber unless @work_order.caliber %></td>
+      <td><%= t :"activerecord.attributes.meter_model.meter_type" %>:</td>
+      <td><%= @work_order.meter.meter_model.meter_type.name unless @work_order.meter.blank? %></td>
+    </tr>
+    <tr>
+      <td><%= t :"activerecord.attributes.work_order.meter_owner" %>:</td>
+      <td><%= @work_order.meter_owner.name unless @work_order.meter_owner.blank? %></td>
+      <td><%= t :"activerecord.attributes.work_order.meter_location" %>:</td>
+      <td><%= @work_order.meter_location.name unless @work_order.meter_location.blank? %></td>
+    </tr>
+    <tr>
+      <td><%= t :"activerecord.attributes.work_order.last_reading" %>:</td>
+      <td><%= @work_order.last_reading.reading_date.strftime("%d/%m/%Y %H:%M:%S") unless @work_order.last_reading.blank? %></td>
+      <td><%= t :"activerecord.attributes.work_order.reading_index" %>:</td>
+      <td><%= @work_order.last_reading.reading_date unless @work_order.last_reading.blank? %></td>
+    </tr>
+    <tr>
+      <td><%= t :"activerecord.attributes.work_order.current_reading" %>:</td>
+      <td><%= @work_order.current_reading_date.strftime("%d/%m/%Y %H:%M:%S") unless @work_order.current_reading_date.blank? %></td>
+      <td><%= t :"activerecord.attributes.work_order.reading_index" %>:</td>
+      <td><%= @work_order.current_reading_index unless @work_order.current_reading_index.blank? %></td>
     </tr>
   </tbody>
 </table>
