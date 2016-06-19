@@ -1,0 +1,18 @@
+en:
+  activerecord:
+    models:
+      meter_model:
+        zero:  Meter models
+        one:   Meter model
+        few:   Meter models
+        other: Meter models
+        check_for_meters: "Meter model cannot be destroyed while linked meters exist."
+    attributes:
+      meter_model:
+        model: "Model"
+        meter_type: "Type"
+        meter_type_id: "Type"
+        digits: "Dials digits"
+        dials: "Dials"
+        meter_brand: "Brand"
+        meter_brand_id: "Brand"

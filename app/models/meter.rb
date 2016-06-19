@@ -8,6 +8,8 @@ class Meter < ActiveRecord::Base
 
   #has_many :meter_details
   has_many :work_orders
+  has_many :subscribers
+  has_many :meter_details, dependent: :destroy
 
   has_paper_trail
 
@@ -79,5 +81,15 @@ class Meter < ActiveRecord::Base
 
   # Before destroy
   def check_for_dependent_records
+    # Check for work orders
+    if work_orders.count > 0
+      errors.add(:base, I18n.t('activerecord.models.meter.check_for_work_orders'))
+      return false
+    end
+    # Check for subscribers
+    if subscribers.count > 0
+      errors.add(:base, I18n.t('activerecord.models.meter.check_for_subscribers'))
+      return false
+    end
   end
 end

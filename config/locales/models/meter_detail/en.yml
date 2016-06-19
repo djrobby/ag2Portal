@@ -1,0 +1,24 @@
+en:
+  activerecord:
+    models:
+      meter_detail:
+        zero:  Meter movements
+        one:   Meter movement
+        few:   Meters movements
+        other: Meters movements
+    attributes:
+      meter_detail:
+        meter: "Meter"
+        meter_id: "Meter"
+        subscriber: "Subscriber"
+        subscriber_id: "Subscriber"
+        installation_date: "Installation date"
+        installation_reading: "Installation reading"
+        meter_location: "Installation location"
+        meter_location_id: "Installation location"
+        withdrawal_date: "Withdrawal date"
+        withdrawal_reading: "Withdrawal date"
+        installation: "Installation"
+        withdrawal: "Withdrawal"
+        date: "Date"
+        reading: "Reading"

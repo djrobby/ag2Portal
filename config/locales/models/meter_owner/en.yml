@@ -1,0 +1,12 @@
+en:
+  activerecord:
+    models:
+      meter_owner:
+        zero:  Meter owners
+        one:   Meter owner
+        few:   Meter owners
+        other: Meter owners
+        check_for_meters: "Meter owner cannot be destroyed while linked meters exist."
+    attributes:
+      meter_owner:
+        name: "Decription"

@@ -32,4 +32,15 @@ class MeterBrand < ActiveRecord::Base
     end
     full_name
   end
+
+  private
+
+  # Before destroy
+  def check_for_dependent_records
+    # Check for meter brands
+    if meter_models.count > 0
+      errors.add(:base, I18n.t('activerecord.models.meter_brand.check_for_meter_models'))
+      return false
+    end
+  end
 end

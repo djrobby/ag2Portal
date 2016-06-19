@@ -1,0 +1,12 @@
+es:
+  activerecord:
+    models:
+      meter_owner:
+        zero:  Propietarios de contador
+        one:   Propietario de contador
+        few:   Propietarios de contador
+        other: Propietarios de contador
+        check_for_meters: "Propietario de contador no puede ser eliminado mientras existan contadores vinculados."
+    attributes:
+      meter_owner:
+        name: "Descripción"

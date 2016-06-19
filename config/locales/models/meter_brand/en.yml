@@ -1,0 +1,14 @@
+en:
+  activerecord:
+    models:
+      meter_brand:
+        zero:  Meter brands
+        one:   Meter brand
+        few:   Meter brands
+        other: Meter brands
+        check_for_meter_models: "Meter brand cannot be destroyed while linked models exist."
+    attributes:
+      meter_brand:
+        manufacturer: "Manufacturer"
+        manufacturer_id: "Manufacturer"
+        name: "Brand"

@@ -1,0 +1,19 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  meter: 
+  subscriber: 
+  installation_date: 2016-06-19
+  installation_reading: 1
+  meter_location: 
+  withdrawal_date: 2016-06-19
+  withdrawal_reading: 1
+
+two:
+  meter: 
+  subscriber: 
+  installation_date: 2016-06-19
+  installation_reading: 1
+  meter_location: 
+  withdrawal_date: 2016-06-19
+  withdrawal_reading: 1

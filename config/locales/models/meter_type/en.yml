@@ -1,0 +1,12 @@
+en:
+  activerecord:
+    models:
+      meter_type:
+        zero:  Meter types
+        one:   Meter type
+        few:   Meter types
+        other: Meter types
+        check_for_meter_models: "Meter type cannot be destroyed while linked models exist."
+    attributes:
+      meter_type:
+        name: "Decription"

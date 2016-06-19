@@ -1,0 +1,12 @@
+en:
+  activerecord:
+    models:
+      meter_location:
+        zero:  Meter locations
+        one:   Meter location
+        few:   Meter locations
+        other: Meter locations
+        check_for_meter_details: "Meter location cannot be destroyed while linked meters exist."
+    attributes:
+      meter_location:
+        name: "Decription"

@@ -1,0 +1,12 @@
+es:
+  activerecord:
+    models:
+      caliber:
+        zero:  Calibres
+        one:   Calibre
+        few:   Calibres
+        other: Calibres
+        check_for_meters: "Calibre no puede ser eliminado mientras existan contadores vinculados."
+    attributes:
+      caliber:
+        caliber: "Calibre"

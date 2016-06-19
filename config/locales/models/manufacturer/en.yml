@@ -6,6 +6,8 @@ en:
         one:   Manufacturer
         few:   Manufacturers
         other: Manufacturers
+        check_for_products: "Manufacturer cannot be destroyed while linked products exist."
+        check_for_meter_brands: "Manufacturer cannot be destroyed while linked meter brands exist."
     attributes:
       manufacturer:
         name: "Name"

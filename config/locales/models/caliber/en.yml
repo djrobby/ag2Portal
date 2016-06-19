@@ -1,0 +1,12 @@
+en:
+  activerecord:
+    models:
+      caliber:
+        zero:  Calibers
+        one:   Caliber
+        few:   Calibers
+        other: Calibers
+        check_for_meters: "Caliber cannot be destroyed while linked meters exist."
+    attributes:
+      caliber:
+        caliber: "Caliber"

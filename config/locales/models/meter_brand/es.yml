@@ -1,0 +1,14 @@
+es:
+  activerecord:
+    models:
+      meter_brand:
+        zero:  Marcas de contador
+        one:   Marca de contador
+        few:   Marcas de contador
+        other: Marcas de contador
+        check_for_meter_models: "Marca de contador no puede ser eliminada mientras existan modelos vinculados."
+    attributes:
+      meter_brand:
+        manufacturer: "Fabricante"
+        manufacturer_id: "Fabricante"
+        brand: "Marca"

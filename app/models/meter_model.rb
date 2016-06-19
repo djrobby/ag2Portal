@@ -35,4 +35,15 @@ class MeterModel < ActiveRecord::Base
     end
     full_name
   end
+
+  private
+
+  # Before destroy
+  def check_for_dependent_records
+    # Check for meters
+    if meters.count > 0
+      errors.add(:base, I18n.t('activerecord.models.meter_model.check_for_meters'))
+      return false
+    end
+  end
 end

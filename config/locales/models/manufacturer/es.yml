@@ -6,6 +6,8 @@ es:
         one:   Fabricante
         few:   Fabricantes
         other: Fabricantes
+        check_for_products: "Fabricante no puede ser eliminado mientras existan productos vinculados."
+        check_for_meter_brands: "Fabricante no puede ser eliminado mientras existan marcas de contador vinculadas."
     attributes:
       manufacturer:
         name: "Nombre"

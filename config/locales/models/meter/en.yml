@@ -1,0 +1,27 @@
+en:
+  activerecord:
+    models:
+      meter:
+        zero:  Meters
+        one:   Meter
+        few:   Meters
+        other: Meters
+        check_for_work_orders: "Meter cannot be destroyed while linked work orders exist."
+        check_for_subscribers: "Meter cannot be destroyed while linked subscribers exist."
+    attributes:
+      meter:
+        meter_code: "Code"
+        meter_model: "Model"
+        meter_model_id: "Model"
+        caliber: "Caliber"
+        caliber_id: "Caliber"
+        meter_owner: "Owner"
+        meter_owner_id: "Owner"
+        manufacturing_date: "Manufacturing date"
+        manufacturing_year: "Manufacturing year"
+        expiry_date: "Expiry date"
+        purchase_date: "Purchase date"
+        first_installation_date: "First installation"
+        last_withdrawal_date: "Last withdrawal"
+        organization: "Organization"
+        organization_id: "Organization"

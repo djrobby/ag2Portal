@@ -116,3 +116,11 @@ es:
           attributes:
             code:
               code_invalid: "inválido"
+        meter_detail:
+          attributes:
+            installation_reading:
+              reading_invalid: "inválido (debe ser nulo o entero mayor que 0)"
+        reading:
+          attributes:
+            reading_index:
+              reading_invalid: "inválido (deber ser entero mayor que 0)"

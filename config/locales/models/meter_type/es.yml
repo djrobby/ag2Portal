@@ -1,0 +1,12 @@
+es:
+  activerecord:
+    models:
+      meter_type:
+        zero:  Tipos de contador
+        one:   Tipo de contador
+        few:   Tipos de contador
+        other: Tipos de contador
+        check_for_meter_models: "Tipo de contador no puede ser eliminado mientras existan modelos vinculados."
+    attributes:
+      meter_type:
+        name: "Descripción"

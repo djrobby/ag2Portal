@@ -1,0 +1,24 @@
+es:
+  activerecord:
+    models:
+      meter_detail:
+        zero:  Movimientos de contador
+        one:   Movimiento de contador
+        few:   Movimientos de contador
+        other: Movimientos de contador
+    attributes:
+      meter_detail:
+        meter: "Contador"
+        meter_id: "Contador"
+        subscriber: "Abonado"
+        subscriber_id: "Abonado"
+        installation_date: "Fecha instalación"
+        installation_reading: "Lectura instalación"
+        meter_location: "Ubicación instalación"
+        meter_location_id: "Ubicación instalación"
+        withdrawal_date: "Fecha retirada"
+        withdrawal_reading: "Lectura retirada"
+        installation: "Instalación"
+        withdrawal: "Retirada"
+        date: "Fecha"
+        reading: "Lectura"

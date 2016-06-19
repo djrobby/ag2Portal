@@ -1,0 +1,18 @@
+es:
+  activerecord:
+    models:
+      meter_model:
+        zero:  Modelos de contador
+        one:   Modelo de contador
+        few:   Modelos de contador
+        other: Modelos de contador
+        check_for_meters: "Modelo de contador no puede ser eliminado mientras existan contadores vinculados."
+    attributes:
+      meter_model:
+        model: "Modelo"
+        meter_type: "Tipo"
+        meter_type_id: "Tipo"
+        digits: "Dígitos esferas"
+        dials: "Esferas"
+        meter_brand: "Marca"
+        meter_brand_id: "Marca"

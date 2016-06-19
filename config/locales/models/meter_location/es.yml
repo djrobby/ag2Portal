@@ -1,0 +1,12 @@
+es:
+  activerecord:
+    models:
+      meter_location:
+        zero:  Ubicaciones de contador
+        one:   Ubicación de contador
+        few:   Ubicaciones de contador
+        other: Ubicaciones de contador
+        check_for_meter_details: "Ubicación de contador no puede ser eliminado mientras existan contadores vinculados."
+    attributes:
+      meter_location:
+        name: "Descripción"
