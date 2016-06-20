@@ -3,9 +3,13 @@ class Subscriber < ActiveRecord::Base
   belongs_to :office
   belongs_to :center
   belongs_to :street_directory
+  belongs_to :zipcode
+  belongs_to :service_point
   attr_accessible :company, :first_name, :fiscal_id, :last_name, :subscriber_code,
                   :starting_at, :ending_at, :created_by, :updated_by,
-                  :client_id, :office_id, :center_id, :street_directory_id
+                  :client_id, :office_id, :center_id, :street_directory_id,
+                  :street_number, :building, :floor, :floor_office, :zipcode_id,
+                  :phone, :fax, :cellular, :email, :service_point_id
 
   has_many :work_orders
 
@@ -21,6 +25,7 @@ class Subscriber < ActiveRecord::Base
                                 :format => { with: /\A\d+\Z/, message: :code_invalid }
   validates :fiscal_id,         :presence => true,
                                 :length => { :minimum => 8 }
+  validates :zipcode,           :presence => true
 
   before_validation :fields_to_uppercase
   before_destroy :check_for_dependent_records
