@@ -5,11 +5,18 @@ class Subscriber < ActiveRecord::Base
   belongs_to :street_directory
   belongs_to :zipcode
   belongs_to :service_point
+  belongs_to :tariff_scheme
+  belongs_to :billing_frequency
+  belongs_to :meter
+  belongs_to :reading_route
+  belongs_to :contracting_request
   attr_accessible :company, :first_name, :fiscal_id, :last_name, :subscriber_code,
                   :starting_at, :ending_at, :created_by, :updated_by,
-                  :client_id, :office_id, :center_id, :street_directory_id,
-                  :street_number, :building, :floor, :floor_office, :zipcode_id,
-                  :phone, :fax, :cellular, :email, :service_point_id
+                  :client_id, :office_id, :center_id, :street_directory_id, :street_number,
+                  :building, :floor, :floor_office, :zipcode_id, :phone, :fax, :cellular, :email,
+                  :service_point_id, :active, :tariff_scheme_id, :billing_frequency_id, :meter_id,
+                  :reading_route_id, :reading_sequence, :reading_variant, :contracting_request_id,
+                  :remarks, :cadastral_reference, :gis_id, :endownments, :inhabitants
 
   has_many :work_orders
 

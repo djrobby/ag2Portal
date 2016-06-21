@@ -20,7 +20,7 @@ class AddOtherFieldsToSubscribers < ActiveRecord::Migration
     add_column :subscribers, :contracting_request_id, :integer
     add_column :subscribers, :remarks, :string
     add_column :subscribers, :cadastral_reference, :string
-    add_column :subscribers, :gis_id, :integer
+    add_column :subscribers, :gis_id, :string
     add_column :subscribers, :endownments, :integer, :limit => 2, :null => false, :default => '0'
     add_column :subscribers, :inhabitants, :integer, :limit => 2, :null => false, :default => '0'
 
@@ -34,9 +34,9 @@ class AddOtherFieldsToSubscribers < ActiveRecord::Migration
     add_index :subscribers, :meter_id
     add_index :subscribers, :reading_route_id
     add_index :subscribers, :reading_sequence
-    add_column :subscribers, :reading_variant, :string
-    add_column :subscribers, :contracting_request_id, :string
-    add_column :subscribers, :cadastral_reference, :string
-    add_column :subscribers, :gis_id, :string
+    add_index :subscribers, :reading_variant
+    add_index :subscribers, :contracting_request_id
+    add_index :subscribers, :cadastral_reference
+    add_index :subscribers, :gis_id
   end
 end

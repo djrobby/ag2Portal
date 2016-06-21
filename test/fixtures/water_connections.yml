@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  water_connection_type: 
+  code: MyString
+  name: MyString
+  gis_id: MyString
+
+two:
+  water_connection_type: 
+  code: MyString
+  name: MyString
+  gis_id: MyString

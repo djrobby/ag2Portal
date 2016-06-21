@@ -1,0 +1,51 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  code: MyString
+  name: MyString
+  service_point_type: 
+  service_point_location: 
+  service_point_purpose: 
+  water_connection: 
+  organization: 
+  company: 
+  office: 
+  cadastral_reference: MyString
+  gis_id: MyString
+  street_directory: 
+  street_number: MyString
+  building: MyString
+  floor: MyString
+  floor_office: MyString
+  zipcode: 
+  diameter: 1
+  verified: false
+  available_for_contract: false
+  reading_route: 
+  reading_sequence: 1
+  reading_variant: MyString
+
+two:
+  code: MyString
+  name: MyString
+  service_point_type: 
+  service_point_location: 
+  service_point_purpose: 
+  water_connection: 
+  organization: 
+  company: 
+  office: 
+  cadastral_reference: MyString
+  gis_id: MyString
+  street_directory: 
+  street_number: MyString
+  building: MyString
+  floor: MyString
+  floor_office: MyString
+  zipcode: 
+  diameter: 1
+  verified: false
+  available_for_contract: false
+  reading_route: 
+  reading_sequence: 1
+  reading_variant: MyString

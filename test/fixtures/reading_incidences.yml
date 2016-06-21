@@ -1,0 +1,9 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  reading: 
+  reading_incidence: 
+
+two:
+  reading: 
+  reading_incidence: 
