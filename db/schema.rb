@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20160619084842) do
+ActiveRecord::Schema.define(:version => 20160622104449) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -1605,6 +1605,18 @@ ActiveRecord::Schema.define(:version => 20160619084842) do
     t.integer  "updated_by"
   end
 
+  create_table "reading_incidences", :force => true do |t|
+    t.integer  "reading_id"
+    t.integer  "reading_incidence_id"
+    t.datetime "created_at",           :null => false
+    t.datetime "updated_at",           :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  add_index "reading_incidences", ["reading_id"], :name => "index_reading_incidences_on_reading_id"
+  add_index "reading_incidences", ["reading_incidence_id"], :name => "index_reading_incidences_on_reading_incidence_id"
+
   create_table "reading_routes", :force => true do |t|
     t.integer  "project_id"
     t.integer  "office_id"
@@ -1845,6 +1857,77 @@ ActiveRecord::Schema.define(:version => 20160619084842) do
   add_index "sale_offers", ["store_id"], :name => "index_sale_offers_on_store_id"
   add_index "sale_offers", ["work_order_id"], :name => "index_sale_offers_on_work_order_id"
 
+  create_table "service_point_locations", :force => true do |t|
+    t.string   "name"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  create_table "service_point_purposes", :force => true do |t|
+    t.string   "name"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  create_table "service_point_types", :force => true do |t|
+    t.string   "name"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  create_table "service_points", :force => true do |t|
+    t.string   "code"
+    t.string   "name"
+    t.integer  "service_point_type_id"
+    t.integer  "service_point_location_id"
+    t.integer  "service_point_purpose_id"
+    t.integer  "water_connection_id"
+    t.integer  "organization_id"
+    t.integer  "company_id"
+    t.integer  "office_id"
+    t.string   "cadastral_reference"
+    t.string   "gis_id"
+    t.integer  "street_directory_id"
+    t.string   "street_number"
+    t.string   "building"
+    t.string   "floor"
+    t.string   "floor_office"
+    t.integer  "zipcode_id"
+    t.integer  "diameter"
+    t.boolean  "verified"
+    t.boolean  "available_for_contract"
+    t.integer  "reading_route_id"
+    t.integer  "reading_sequence"
+    t.string   "reading_variant"
+    t.datetime "created_at",                :null => false
+    t.datetime "updated_at",                :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  add_index "service_points", ["cadastral_reference"], :name => "index_service_points_on_cadastral_reference"
+  add_index "service_points", ["code"], :name => "index_service_points_on_code"
+  add_index "service_points", ["company_id"], :name => "index_service_points_on_company_id"
+  add_index "service_points", ["gis_id"], :name => "index_service_points_on_gis_id"
+  add_index "service_points", ["name"], :name => "index_service_points_on_name"
+  add_index "service_points", ["office_id"], :name => "index_service_points_on_office_id"
+  add_index "service_points", ["organization_id"], :name => "index_service_points_on_organization_id"
+  add_index "service_points", ["reading_route_id"], :name => "index_service_points_on_reading_route_id"
+  add_index "service_points", ["reading_sequence"], :name => "index_service_points_on_reading_sequence"
+  add_index "service_points", ["reading_variant"], :name => "index_service_points_on_reading_variant"
+  add_index "service_points", ["service_point_location_id"], :name => "index_service_points_on_service_point_location_id"
+  add_index "service_points", ["service_point_purpose_id"], :name => "index_service_points_on_service_point_purpose_id"
+  add_index "service_points", ["service_point_type_id"], :name => "index_service_points_on_service_point_type_id"
+  add_index "service_points", ["street_directory_id"], :name => "index_service_points_on_street_directory_id"
+  add_index "service_points", ["water_connection_id"], :name => "index_service_points_on_water_connection_id"
+  add_index "service_points", ["zipcode_id"], :name => "index_service_points_on_zipcode_id"
+
   create_table "sexes", :force => true do |t|
     t.string   "name"
     t.datetime "created_at", :null => false
@@ -2041,22 +2124,59 @@ ActiveRecord::Schema.define(:version => 20160619084842) do
     t.date     "starting_at"
     t.date     "ending_at"
     t.integer  "street_directory_id"
-    t.datetime "created_at",          :null => false
-    t.datetime "updated_at",          :null => false
+    t.datetime "created_at",                                         :null => false
+    t.datetime "updated_at",                                         :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
+    t.string   "street_number"
+    t.string   "building"
+    t.integer  "floor"
+    t.string   "floor_office"
+    t.integer  "zipcode_id"
+    t.string   "phone"
+    t.string   "fax"
+    t.string   "cellular"
+    t.string   "email"
+    t.integer  "service_point_id"
+    t.boolean  "active"
+    t.integer  "tariff_scheme_id"
+    t.integer  "billing_frequency_id"
+    t.integer  "meter_id"
+    t.integer  "reading_route_id"
+    t.integer  "reading_sequence"
+    t.string   "reading_variant"
+    t.integer  "contracting_request_id"
+    t.string   "remarks"
+    t.string   "cadastral_reference"
+    t.string   "gis_id"
+    t.integer  "endownments",            :limit => 2, :default => 0, :null => false
+    t.integer  "inhabitants",            :limit => 2, :default => 0, :null => false
   end
 
+  add_index "subscribers", ["billing_frequency_id"], :name => "index_subscribers_on_billing_frequency_id"
+  add_index "subscribers", ["cadastral_reference"], :name => "index_subscribers_on_cadastral_reference"
+  add_index "subscribers", ["cellular"], :name => "index_subscribers_on_cellular"
   add_index "subscribers", ["center_id"], :name => "index_subscribers_on_center_id"
   add_index "subscribers", ["client_id"], :name => "index_subscribers_on_client_id"
   add_index "subscribers", ["company"], :name => "index_subscribers_on_company"
+  add_index "subscribers", ["contracting_request_id"], :name => "index_subscribers_on_contracting_request_id"
+  add_index "subscribers", ["email"], :name => "index_subscribers_on_email"
   add_index "subscribers", ["first_name"], :name => "index_subscribers_on_first_name"
   add_index "subscribers", ["fiscal_id"], :name => "index_subscribers_on_fiscal_id"
+  add_index "subscribers", ["gis_id"], :name => "index_subscribers_on_gis_id"
   add_index "subscribers", ["last_name"], :name => "index_subscribers_on_last_name"
+  add_index "subscribers", ["meter_id"], :name => "index_subscribers_on_meter_id"
   add_index "subscribers", ["office_id", "subscriber_code"], :name => "index_subscribers_unique", :unique => true
   add_index "subscribers", ["office_id"], :name => "index_subscribers_on_office_id"
+  add_index "subscribers", ["phone"], :name => "index_subscribers_on_phone"
+  add_index "subscribers", ["reading_route_id"], :name => "index_subscribers_on_reading_route_id"
+  add_index "subscribers", ["reading_sequence"], :name => "index_subscribers_on_reading_sequence"
+  add_index "subscribers", ["reading_variant"], :name => "index_subscribers_on_reading_variant"
+  add_index "subscribers", ["service_point_id"], :name => "index_subscribers_on_service_point_id"
   add_index "subscribers", ["street_directory_id"], :name => "index_subscribers_on_street_directory_id"
   add_index "subscribers", ["subscriber_code"], :name => "index_subscribers_on_subscriber_code"
+  add_index "subscribers", ["tariff_scheme_id"], :name => "index_subscribers_on_tariff_scheme_id"
+  add_index "subscribers", ["zipcode_id"], :name => "index_subscribers_on_zipcode_id"
 
   create_table "supplier_bank_accounts", :force => true do |t|
     t.integer  "supplier_id"
@@ -2641,6 +2761,28 @@ ActiveRecord::Schema.define(:version => 20160619084842) do
   end
 
   add_index "versions", ["item_type", "item_id"], :name => "index_versions_on_item_type_and_item_id"
+
+  create_table "water_connection_types", :force => true do |t|
+    t.string   "name"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  create_table "water_connections", :force => true do |t|
+    t.integer  "water_connection_type_id"
+    t.string   "code"
+    t.string   "name"
+    t.string   "gis_id"
+    t.datetime "created_at",               :null => false
+    t.datetime "updated_at",               :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  add_index "water_connections", ["gis_id"], :name => "index_water_connections_on_gis_id"
+  add_index "water_connections", ["water_connection_type_id"], :name => "index_water_connections_on_water_connection_type_id"
 
   create_table "work_order_areas", :force => true do |t|
     t.string   "name"

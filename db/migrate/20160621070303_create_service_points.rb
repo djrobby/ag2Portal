@@ -27,6 +27,8 @@ class CreateServicePoints < ActiveRecord::Migration
 
       t.timestamps
     end
+    add_index :service_points, :code
+    add_index :service_points, :name
     add_index :service_points, :service_point_type_id
     add_index :service_points, :service_point_location_id
     add_index :service_points, :service_point_purpose_id
@@ -37,5 +39,9 @@ class CreateServicePoints < ActiveRecord::Migration
     add_index :service_points, :street_directory_id
     add_index :service_points, :zipcode_id
     add_index :service_points, :reading_route_id
+    add_index :service_points, :reading_sequence
+    add_index :service_points, :reading_variant
+    add_index :service_points, :cadastral_reference
+    add_index :service_points, :gis_id
   end
 end

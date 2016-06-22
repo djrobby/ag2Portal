@@ -9,5 +9,6 @@ class CreateWaterConnections < ActiveRecord::Migration
       t.timestamps
     end
     add_index :water_connections, :water_connection_type_id
+    add_index :water_connections, :gis_id
   end
 end
