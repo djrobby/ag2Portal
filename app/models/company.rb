@@ -22,6 +22,7 @@ class Company < ActiveRecord::Base
   has_many :company_notifications, dependent: :destroy
   has_many :stores
   has_many :product_company_prices
+  has_many :product_valued_stock_by_companies
   has_many :infrastructures
 
   # Nested attributes

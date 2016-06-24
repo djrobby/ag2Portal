@@ -16,6 +16,8 @@ class ProductFamily < ActiveRecord::Base
   has_many :products
   has_many :stocks, :through => :products
   has_many :product_family_stocks
+  has_many :product_valued_stocks
+  has_many :product_valued_stock_by_companies
 
   before_validation :fields_to_uppercase
 

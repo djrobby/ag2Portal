@@ -29,6 +29,8 @@ class Product < ActiveRecord::Base
   has_many :tools
   has_many :inventory_count_items
   has_many :product_company_prices
+  has_many :product_valued_stocks
+  has_many :product_valued_stock_by_companies
 
   has_paper_trail
 

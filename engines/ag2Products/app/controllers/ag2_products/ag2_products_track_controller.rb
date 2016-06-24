@@ -487,13 +487,14 @@ module Ag2Products
       product = params[:product]
 
       # Dates are mandatory
-      if @from.blank? || @to.blank?
-        return
-      end
+      from = Date.today.to_s
+      # if @from.blank? || @to.blank?
+      #   return
+      # end
 
       # Format dates (must use to only!)
-      from = Time.parse(@from).strftime("%Y-%m-%d")
-      to = Time.parse(@to).strftime("%Y-%m-%d")
+      # from = Time.parse(@from).strftime("%Y-%m-%d")
+      # to = Time.parse(@to).strftime("%Y-%m-%d")
 
       # Setup instance variable for report
       if !store.blank? && !family.blank? && !product.blank?
@@ -530,13 +531,14 @@ module Ag2Products
       product = params[:product]
 
       # Dates are mandatory
-      if @from.blank? || @to.blank?
-        return
-      end
+      from = Date.today.to_s
+      # if @from.blank? || @to.blank?
+      #   return
+      # end
 
       # Format dates (must use to only!)
-      from = Time.parse(@from).strftime("%Y-%m-%d")
-      to = Time.parse(@to).strftime("%Y-%m-%d")
+      # from = Time.parse(@from).strftime("%Y-%m-%d")
+      # to = Time.parse(@to).strftime("%Y-%m-%d")
 
       # Setup instance variable for report
       if !store.blank? && !family.blank? && !product.blank?

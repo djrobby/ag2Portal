@@ -1299,24 +1299,6 @@ ActiveRecord::Schema.define(:version => 20160622104449) do
     t.integer  "updated_by"
   end
 
-  create_table "product_valued_stock_by_companies", :id => false, :force => true do |t|
-    t.integer "store_id"
-    t.string  "store_name"
-    t.integer "product_family_id",                                    :default => 0,   :null => false
-    t.string  "family_code"
-    t.string  "family_name"
-    t.integer "product_id",                                           :default => 0,   :null => false
-    t.string  "product_code"
-    t.string  "main_description"
-    t.decimal "average_price",         :precision => 12, :scale => 4, :default => 0.0, :null => false
-    t.decimal "initial",               :precision => 34, :scale => 4
-    t.decimal "current",               :precision => 34, :scale => 4
-    t.decimal "current_value",         :precision => 13, :scale => 4
-    t.integer "company_id"
-    t.decimal "company_average_price", :precision => 12, :scale => 4, :default => 0.0
-    t.decimal "company_current_value", :precision => 13, :scale => 4
-  end
-
   create_table "product_valued_stocks", :id => false, :force => true do |t|
     t.integer "store_id"
     t.string  "store_name"

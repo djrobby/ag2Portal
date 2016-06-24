@@ -32,6 +32,8 @@ class Store < ActiveRecord::Base
   has_many :inventory_counts
   has_many :inventory_count_items, :through => :inventory_counts
   has_many :store_offices, dependent: :destroy
+  has_many :product_valued_stocks
+  has_many :product_valued_stock_by_companies
 
   # Nested attributes
   accepts_nested_attributes_for :store_offices,
