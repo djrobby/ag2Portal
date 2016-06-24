@@ -18,4 +18,5 @@ class MeterType < ActiveRecord::Base
       errors.add(:base, I18n.t('activerecord.models.meter_type.check_for_meter_models'))
       return false
     end
-  endend
+  end
+end
