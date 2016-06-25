@@ -8,15 +8,15 @@ class ProductValuedStockByCompany < ActiveRecord::Base
                   :initial, :current, :current_value,
                   :company_id, :company_average_price, :company_current_value
   # Scopes
-  scope :ordered_by_store_family, -> { order(:store_id, :product_family_id) }
+  scope :ordered_by_store_family, -> { order(:store_id, :family_code, :product_code) }
   #
-  scope :belongs_to_company, -> company { where("company_id = ? OR company_id IS NULL", company) }
+  scope :belongs_to_company, -> company { where("company_id = ? OR company_id IS NULL", company).ordered_by_store_family }
   #
-  scope :belongs_to_company_store, -> company, family { belongs_to_company(company).where("store_id = ?", store) }
-  scope :belongs_to_company_family, -> company, family { belongs_to_company(company).where("product_family_id = ?", family) }
-  scope :belongs_to_company_product, -> company, product { belongs_to_company(company).where("product_id = ?", product) }
+  scope :belongs_to_company_store, -> company, store { belongs_to_company(company).where("store_id = ?", store).ordered_by_store_family }
+  scope :belongs_to_company_family, -> company, family { belongs_to_company(company).where("product_family_id = ?", family).ordered_by_store_family }
+  scope :belongs_to_company_product, -> company, product { belongs_to_company(company).where("product_id = ?", product).ordered_by_store_family }
   #
-  scope :belongs_to_company_store_family, -> company, store, family { belongs_to_company(company).belongs_to_store(store).where("product_family_id = ?", family) }
-  scope :belongs_to_company_store_product, -> company, store, product { belongs_to_company(company).belongs_to_store(store).where("product_id = ?", product) }
-  scope :belongs_to_company_family_product, -> company, family, product { belongs_to_company(company).belongs_to_family(family).where("product_id = ?", product) }
+  scope :belongs_to_company_store_family, -> company, store, family { belongs_to_company(company).belongs_to_store(store).where("product_family_id = ?", family).ordered_by_store_family }
+  scope :belongs_to_company_store_product, -> company, store, product { belongs_to_company(company).belongs_to_store(store).where("product_id = ?", product).ordered_by_store_family }
+  scope :belongs_to_company_family_product, -> company, family, product { belongs_to_company(company).belongs_to_family(family).where("product_id = ?", product).ordered_by_store_family }
 end

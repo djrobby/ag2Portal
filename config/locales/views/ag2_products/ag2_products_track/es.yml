@@ -27,7 +27,7 @@ es:
         report_title: "Notas de entrega"
         sum_rows_title: "Total Filas:"
       stock_report:
-        report_title: "Inventario (PMP global)"
+        report_title: "Inventario Valorado (PMP global)"
         report_title_catalog: "Catálogo de Productos"
         sum_rows_title: "Total Artículos:"
         total_full: "Total"
@@ -35,7 +35,7 @@ es:
         id: "Id"
         average_price: "PMP"
       stock_company_report:
-        report_title: "Inventario (PMP por empresa)"
+        report_title: "Inventario Valorado (PMP por empresa)"
       every_report:
         pt: "Página"
         pd: "de"

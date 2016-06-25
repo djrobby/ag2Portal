@@ -269,24 +269,21 @@
           }
           break;
         case 5:
-          // Stock
-     //mj var project = $('select#Project :selected').val();
+          // Stock valued by global PMP
           var store = $('select#Store :selected').val();
           var family = $('select#Family :selected').val();
           var product = $('select#Product :selected').val();
-          //if ((project == "") && (store == "") && (family == "") && (product == ""))
-          if ((store == "") && (family == ""))
+          if ((store == "") && (family == "") && (product == ""))
             return;
           window.open("stock_report.pdf?detailed=" + detailed + "&from=" + from + "&to=" + to + "&store=" + store + "&family=" + family + "&product=" + product, "_blank");
           break;
          // MJ
          case 6:
-          // Stock Companies
-     //mj var project = $('select#Project :selected').val();
+          // Stock valued by company PMP
           var store = $('select#Store :selected').val();
           var family = $('select#Family :selected').val();
           var product = $('select#Product :selected').val();
-          if ((store == "") && (family == ""))
+          if ((store == "") && (family == "") && (product == ""))
               return;
           window.open("stock_companies_report.pdf?detailed=" + detailed + "&from=" + from + "&to=" + to + "&store=" + store + "&family=" + family + "&product=" + product, "_blank");
           break;

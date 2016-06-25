@@ -481,7 +481,7 @@ module Ag2Products
 
     # Stock report
     def stock_report
-      detailed = params[:detailed]
+      detailed = params[:detailed]  # Not used!
       store = params[:store]
       family = params[:family]
       product = params[:product]
@@ -497,22 +497,33 @@ module Ag2Products
       # to = Time.parse(@to).strftime("%Y-%m-%d")
 
       # Setup instance variable for report
-      if !store.blank? && !family.blank? && !product.blank?
-       @stocks_report = ProductValuedStock.where("store_id = ? AND product_family_id = ? AND product_id",store,family,product).order(:store_id, :product_family_id)
-      elsif !store.blank? && !family.blank? && product.blank?
-       @stocks_report = ProductValuedStock.where("store_id = ? AND product_family_id = ?",store,family).order(:store_id, :product_family_id)
-      elsif !store.blank? && family.blank? && product.blank?
-       @stocks_report = ProductValuedStock.where("store_id = ?",store).order(:store_id, :product_family_id)
-      elsif !store.blank? && family.blank? && !product.blank?
-       @stocks_report = ProductValuedStock.where("store_id = ? AND product_id = ?",store,product).order(:store_id, :product_family_id)
-      elsif store.blank? && !family.blank? && product.blank?
-       @stocks_report = ProductValuedStock.where("product_family_id = ?",family).order(:store_id, :product_family_id)
-      elsif store.blank? && !family.blank? && !product.blank?
-       @stocks_report = ProductValuedStock.where("product_family_id = ? AND product_id = ?",family,product).order(:store_id, :product_family_id)
+      if !product.blank?  # By Product: In one store or in every stores
+        @stocks_report = !store.blank? ? ProductValuedStock.belongs_to_store_product(store, product) : ProductValuedStock.belongs_to_product(product)
+      else
+        if !family.blank?   # By Family: In one store on in every stores
+          @stocks_report = !store.blank? ? ProductValuedStock.belongs_to_store_family(store, family) : ProductValuedStock.belongs_to_family(family)
+        else
+          # By Store: In one store on in every stores
+          @stocks_report = !store.blank? ? ProductValuedStock.belongs_to_store(store) : ProductValuedStock.ordered_by_store_family
+        end
       end
 
+      # if !store.blank? && !family.blank? && !product.blank?
+      #  @stocks_report = ProductValuedStock.where("store_id = ? AND product_family_id = ? AND product_id",store,family,product).order(:store_id, :product_family_id)
+      # elsif !store.blank? && !family.blank? && product.blank?
+      #  @stocks_report = ProductValuedStock.where("store_id = ? AND product_family_id = ?",store,family).order(:store_id, :product_family_id)
+      # elsif !store.blank? && family.blank? && product.blank?
+      #  @stocks_report = ProductValuedStock.where("store_id = ?",store).order(:store_id, :product_family_id)
+      # elsif !store.blank? && family.blank? && !product.blank?
+      #  @stocks_report = ProductValuedStock.where("store_id = ? AND product_id = ?",store,product).order(:store_id, :product_family_id)
+      # elsif store.blank? && !family.blank? && product.blank?
+      #  @stocks_report = ProductValuedStock.where("product_family_id = ?",family).order(:store_id, :product_family_id)
+      # elsif store.blank? && !family.blank? && !product.blank?
+      #  @stocks_report = ProductValuedStock.where("product_family_id = ? AND product_id = ?",family,product).order(:store_id, :product_family_id)
+      # end
+
       # Setup filename
-      title = t("activerecord.models.stock.few") + "_#{from}.pdf"
+      title = t("activerecord.models.stock.few") + "_#{from}"
 
       respond_to do |format|
         # Render PDF
@@ -525,10 +536,19 @@ module Ag2Products
 
     # Stock Companies report
     def stock_companies_report
-      detailed = params[:detailed]
+      detailed = params[:detailed]  # Not used!
       store = params[:store]
       family = params[:family]
       product = params[:product]
+      company = nil
+      if session[:company] != '0'
+        company = Company.find(session[:company].to_i) rescue nil
+      elsif !store.blank?
+        company = Store.find(store).company rescue nil
+      end
+      if company.nil?
+        return
+      end
 
       # Dates are mandatory
       from = Date.today.to_s
@@ -541,24 +561,35 @@ module Ag2Products
       # to = Time.parse(@to).strftime("%Y-%m-%d")
 
       # Setup instance variable for report
-      if !store.blank? && !family.blank? && !product.blank?
-       @stock_companies_report = ProductValuedStockByCompany.where("store_id = ? AND product_family_id = ? AND product_id",store,family,product).order(:store_id, :product_family_id)
-      elsif !store.blank? && !family.blank? && product.blank?
-       @stock_companies_report = ProductValuedStockByCompany.where("store_id = ? AND product_family_id = ?",store,family).order(:store_id, :product_family_id)
-      elsif !store.blank? && family.blank? && product.blank?
-       @stock_companies_report = ProductValuedStockByCompany.where("store_id = ?",store).order(:store_id, :product_family_id)
-      elsif !store.blank? && family.blank? && !product.blank?
-       @stock_companies_report = ProductValuedStockByCompany.where("store_id = ? AND product_id = ?",store,product).order(:store_id, :product_family_id)
-      elsif store.blank? && !family.blank? && product.blank?
-       @stock_companies_report = ProductValuedStockByCompany.where("product_family_id = ?",family).order(:store_id, :product_family_id)
-      elsif store.blank? && !family.blank? && !product.blank?
-       @stock_companies_report = ProductValuedStockByCompany.where("product_family_id = ? AND product_id = ?",family,product).order(:store_id, :product_family_id)
+      if !product.blank?  # By Product: In one store or in every stores
+        @stocks_report = !store.blank? ? ProductValuedStockByCompany.belongs_to_company_store_product(company, store, product) : ProductValuedStockByCompany.belongs_to_company_product(company, product)
+      else
+        if !family.blank?   # By Family: In one store on in every stores
+          @stocks_report = !store.blank? ? ProductValuedStockByCompany.belongs_to_company_store_family(company, store, family) : ProductValuedStockByCompany.belongs_to_company_family(company, family)
+        else
+          # By Store: In one store on in every stores
+          @stocks_report = !store.blank? ? ProductValuedStockByCompany.belongs_to_company_store(company, store) : ProductValuedStockByCompany.belongs_to_company(company)
+        end
       end
+
+      # if !store.blank? && !family.blank? && !product.blank?
+      #  @stock_companies_report = ProductValuedStockByCompany.where("store_id = ? AND product_family_id = ? AND product_id",store,family,product).order(:store_id, :product_family_id)
+      # elsif !store.blank? && !family.blank? && product.blank?
+      #  @stock_companies_report = ProductValuedStockByCompany.where("store_id = ? AND product_family_id = ?",store,family).order(:store_id, :product_family_id)
+      # elsif !store.blank? && family.blank? && product.blank?
+      #  @stock_companies_report = ProductValuedStockByCompany.where("store_id = ?",store).order(:store_id, :product_family_id)
+      # elsif !store.blank? && family.blank? && !product.blank?
+      #  @stock_companies_report = ProductValuedStockByCompany.where("store_id = ? AND product_id = ?",store,product).order(:store_id, :product_family_id)
+      # elsif store.blank? && !family.blank? && product.blank?
+      #  @stock_companies_report = ProductValuedStockByCompany.where("product_family_id = ?",family).order(:store_id, :product_family_id)
+      # elsif store.blank? && !family.blank? && !product.blank?
+      #  @stock_companies_report = ProductValuedStockByCompany.where("product_family_id = ? AND product_id = ?",family,product).order(:store_id, :product_family_id)
+      # end
 
       #@stock_companies_report = ProductValuedStockByCompany.joins(:store).where("product_valued_stock_by_companies.company_id = stores.company_id AND project_id = ? AND store_id = ? AND product_family_id = ? AND product_id = ?",project,store,family,product).order(:store_id, :product_family_id)
 
       # Setup filename
-      title = t("activerecord.models.stock.few") + "_#{from}.pdf"
+      title = t("activerecord.models.stock.few") + "_#{from}"
 
       respond_to do |format|
         # Render PDF

@@ -1,4 +1,4 @@
-if @stock_companies_report.blank?
+if @stocks_report.blank?
 	return
 end
 
@@ -63,54 +63,67 @@ end
 
 
 # Page Title list
-store_id = @stock_companies_report.first.store_id
-family_id = @stock_companies_report.first.product_family_id
+store_id = @stocks_report.first.store_id
+family_id = @stocks_report.first.product_family_id
 
 # List detail
-@stock_companies_report.each do |i|
-
-if !i.store_id.blank? && !i.product_id.blank?
-	pmpstockstore = ProductCompanyPrice.find_by_product_and_company(i.product_id, i.company_id)
-		if !i.store_id.blank? && !i.product_id.blank? && !i.company_average_price.blank?
-			pmpstock = (pmpstockstore.average_price * i.current)
-		else
-			pmpstock = (i.average_price * i.current)
+@stocks_report.each do |i|
+	if !i.company_id.nil? && !i.company_current_value.nil?
+		pmpstock = i.company_current_value
+	else
+		pmpstock = i.current_value
+	end
+	# if !i.store_id.blank? && !i.product_id.blank?
+	# 	pmpstockstore = ProductCompanyPrice.find_by_product_and_company(i.product_id, i.company_id)
+	# 	if !i.store_id.blank? && !i.product_id.blank? && !i.company_average_price.blank?
+	# 		pmpstock = (pmpstockstore.average_price * i.current)
+	# 	else
+	# 		pmpstock = (i.average_price * i.current)
+	# 	end
+	# else
+	# 	pmpstock = (i.average_price * i.current)
+	# end
+	if !i.store_id.blank? && (i.store_id != store_id)
+		report.page.list(:default).page_break
+		report.page.list(:default) do |list|
+			list.store.page_rows = 0
 		end
-else
-	pmpstock = (i.average_price * i.current)
-end
-
-			if !i.store_id.blank? && (i.store_id != store_id)
-				report.page.list(:default).page_break
-				report.page.list(:default) do |list|
-					list.store.page_rows = 0
-				end
-				store_id = i.store_id
-			end
-			if !i.product.product_family_id.blank? && (i.product.product_family_id != family_id)
-				report.page.list(:default).page_break
-				report.page.list(:default) do |list|
-					list.store.page_rows = 0
-				end
-				family_id = i.product.product_family_id
-			end
+		store_id = i.store_id
+	end
+	if !i.product_family_id.blank? && (i.product_family_id != family_id)
+		report.page.list(:default).page_break
+		report.page.list(:default) do |list|
+			list.store.page_rows = 0
+		end
+		family_id = i.product_family_id
+	end
+	# if !i.product.product_family_id.blank? && (i.product.product_family_id != family_id)
+	# 	report.page.list(:default).page_break
+	# 	report.page.list(:default) do |list|
+	# 		list.store.page_rows = 0
+	# 	end
+	# 	family_id = i.product.product_family_id
+	# end
 
 	report.page.list(:default).add_row do |row|
-		report.page.values store_c: I18n.t("activerecord.attributes.stock.store")+": "
-		report.page.values product_family_c: I18n.t("activerecord.attributes.product.product_family")+": "
-		report.page.values store: i.store.name
-		report.page.values product_family: i.product.product_family.full_name
-		row.item(:full_name).value i.product.full_name
+		report.page.values store_c: I18n.t("activerecord.attributes.stock.store") + ": "
+		report.page.values product_family_c: I18n.t("activerecord.attributes.product.product_family") + ": "
+		report.page.values store: i.store_name
+		#report.page.values store: i.store.name
+		report.page.values product_family: i.family_code + " " + i.family_name[0,40]
+		#report.page.values product_family: i.product.product_family.full_name
+		row.item(:full_name).value i.product_code[0..3] + '-' + i.product_code[4..9] + " " + i.main_description[0,40]
+		#row.item(:full_name).value i.product.full_name
 		row.item(:current).value number_with_precision(i.current, precision: 4, delimiter: I18n.locale == :es ? "." : ",") unless i.current.blank?
-	if !i.company_average_price.nil?
-		row.item(:average_price).style(:color, '009933').value number_with_precision(i.company_average_price, precision: 4, delimiter: I18n.locale == :es ? "." : ",")
-	else
-		row.item(:average_price).value number_with_precision(i.average_price, precision: 4, delimiter: I18n.locale == :es ? "." : ",")
-	end
+		if !i.company_average_price.nil?
+			row.item(:average_price).style(:color, '009933').value number_with_precision(i.company_average_price, precision: 4, delimiter: I18n.locale == :es ? "." : ",")
+		else
+			row.item(:average_price).value number_with_precision(i.average_price, precision: 4, delimiter: I18n.locale == :es ? "." : ",")
+		end
 		row.item(:calc).value number_with_precision(pmpstock, precision: 4, delimiter: I18n.locale == :es ? "." : ",")
 	end
 	# Store page subtotals
-    report.page.list(:default) do |list|
+  report.page.list(:default) do |list|
 		list.store.page_rows += 1
 	end
 end
