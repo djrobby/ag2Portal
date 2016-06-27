@@ -626,6 +626,8 @@ module Ag2Tech
       @charge_accounts = projects_charge_accounts(@projects)
       @stores = stores_dropdown
       @clients = clients_dropdown
+      @subscribers = subscribers_dropdown
+      @meters = meters_dropdown
       # Form & Sub-forms
       @workers = workers_dropdown
       # Sub-forms
@@ -655,6 +657,8 @@ module Ag2Tech
       @charge_accounts = @work_order.project.blank? ? projects_charge_accounts(@projects) : charge_accounts_dropdown_edit(@work_order.project)
       @stores = project_stores(@work_order.project)
       @clients = clients_dropdown
+      @subscribers = subscribers_dropdown
+      @meters = meters_dropdown
       # Form & Sub-forms
       @workers = project_workers(@work_order.project)
       # Sub-forms
@@ -687,6 +691,8 @@ module Ag2Tech
           @charge_accounts = projects_charge_accounts(@projects)
           @stores = stores_dropdown
           @clients = clients_dropdown
+          @subscribers = subscribers_dropdown
+          @meters = meters_dropdown
           @workers = workers_dropdown
           @products = products_dropdown
           @suppliers = suppliers_dropdown
@@ -826,6 +832,8 @@ module Ag2Tech
             @charge_accounts = @work_order.project.blank? ? projects_charge_accounts(@projects) : charge_accounts_dropdown_edit(@work_order.project)
             @stores = project_stores(@work_order.project)
             @clients = clients_dropdown
+            @subscribers = subscribers_dropdown
+            @meters = meters_dropdown
             @workers = project_workers(@work_order.project)
             @products = @work_order.organization.blank? ? products_dropdown : @work_order.organization.products(:product_code)
             @suppliers = @work_order.organization.blank? ? suppliers_dropdown : @work_order.organization.suppliers(:supplier_code)
@@ -1141,7 +1149,30 @@ module Ag2Tech
     end
 
     def clients_dropdown
+      # Clients are shared by all organizations
       session[:organization] != '0' ? Client.where(organization_id: session[:organization].to_i).order(:client_code) : Client.order(:client_code)
+    end
+
+    def subscribers_dropdown
+      # Subscribers by current office, company or organization
+      if session[:office] != '0'
+        Subscriber.find_by_office(session[:office].to_i, session[:organization].to_i)
+      elsif session[:company] != '0'
+        Subscriber.find_by_company(session[:company].to_i, session[:organization].to_i)
+      else
+        session[:organization] != '0' ? Subscriber.find_by_organization(session[:organization].to_i) : Subscriber.by_code
+      end
+    end
+
+    def meters_dropdown
+      # Meters by current office, company or organization
+      if session[:office] != '0'
+        Meter.where('office_id = ? OR (office_id IS NULL AND organization_id = ?)', session[:office].to_i, session[:organization].to_i).order(:meter_code)
+      elsif session[:company] != '0'
+        Meter.where('company_id = ? OR (company_id IS NULL AND organization_id = ?)', session[:company].to_i, session[:organization].to_i).order(:meter_code)
+      else
+        session[:organization] != '0' ? Meter.where(organization_id: session[:organization].to_i).order(:meter_code) : Meter.order(:meter_code)
+      end
     end
 
     def organization_areas(_organization)

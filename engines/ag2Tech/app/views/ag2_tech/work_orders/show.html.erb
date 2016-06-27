@@ -129,13 +129,13 @@
   <tbody>
     <tr>
       <td><%= t :"activerecord.attributes.work_order.meter_code" %>:</td>
-      <td><%= @work_order.meter_code unless @work_order.meter_code %></td>
+      <td><%= @work_order.meter_code unless @work_order.meter_code.blank? %></td>
       <td><%= t :"activerecord.attributes.work_order.meter_model" %>:</td>
-      <td><%= @work_order.meter_model.full_name unless @work_order.meter_model %></td>
+      <td><%= @work_order.meter_model.full_name unless @work_order.meter_model.blank? %></td>
     </tr>
     <tr>
       <td><%= t :"activerecord.attributes.work_order.caliber" %>:</td>
-      <td><%= @work_order.caliber.caliber unless @work_order.caliber %></td>
+      <td><%= @work_order.caliber.caliber unless @work_order.caliber.blank? %></td>
       <td><%= t :"activerecord.attributes.meter_model.meter_type" %>:</td>
       <td><%= @work_order.meter.meter_model.meter_type.name unless @work_order.meter.blank? %></td>
     </tr>

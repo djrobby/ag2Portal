@@ -488,8 +488,8 @@
 <!-- Meter & Subscriber -->
 <h4><%= t 'ag2_tech.work_orders.meter_subscriber_info' %></h4>
 <div>
-  <label class="multi-field-label-two"> <%= f.input :location, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %> </label>
-  <label class="multi-field-label-two"> <%= f.input :pub_record, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.association :subscriber, collection: @subscribers, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.association :meter, collection: @meters, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
 </div>
 
 <!-- Items -->

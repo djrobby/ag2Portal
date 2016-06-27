@@ -34,6 +34,9 @@ class Subscriber < ActiveRecord::Base
                                 :length => { :minimum => 8 }
   validates :zipcode,           :presence => true
 
+  # Scopes
+  scope :by_code, -> { order(:subscriber_code) }
+
   before_validation :fields_to_uppercase
   before_destroy :check_for_dependent_records
 
@@ -61,6 +64,24 @@ class Subscriber < ActiveRecord::Base
   def full_code
     # Subscriber code (Office id & sequential number) => OOOO-NNNNNNN
     subscriber_code.blank? ? "" : subscriber_code[0..3] + '-' + subscriber_code[4..10]
+  end
+
+  #
+  # Class (self) user defined methods
+  #
+  def self.find_by_organization(_organization)
+    joins(:office => :company).where("companies.organization_id = ?", _organization).by_code
+    #includes(:office => :company).where("companies.organization_id = ?)", _organization).by_code
+  end
+
+  def self.find_by_company(_company, _organization)
+    joins(:office => :company).where("offices.company_id = ? OR (offices.company_id IS NULL AND companies.organization_id = ?)", _company, _organization).by_code
+    #includes(:office => :company).where("offices.company_id = ? OR (offices.company_id IS NULL AND companies.organization_id = ?)", _company, _organization).by_code
+  end
+
+  def self.find_by_office(_office, _organization)
+    joins(:office => :company).where("office_id = ? OR (office_id IS NULL AND companies.organization_id = ?)", _company, _organization).by_code
+    #includes(:office => :company).where("office_id = ? OR (office_id IS NULL AND companies.organization_id = ?)", _company, _organization).by_code
   end
 
   #

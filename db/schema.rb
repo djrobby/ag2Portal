@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20160622104449) do
+ActiveRecord::Schema.define(:version => 20160627065731) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -979,13 +979,17 @@ ActiveRecord::Schema.define(:version => 20160622104449) do
     t.datetime "updated_at",                                          :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
+    t.integer  "company_id"
+    t.integer  "office_id"
   end
 
   add_index "meters", ["caliber_id"], :name => "index_meters_on_caliber_id"
+  add_index "meters", ["company_id"], :name => "index_meters_on_company_id"
   add_index "meters", ["manufacturing_year"], :name => "index_meters_on_manufacturing_year"
   add_index "meters", ["meter_code"], :name => "index_meters_on_meter_code"
   add_index "meters", ["meter_model_id"], :name => "index_meters_on_meter_model_id"
   add_index "meters", ["meter_owner_id"], :name => "index_meters_on_meter_owner_id"
+  add_index "meters", ["office_id"], :name => "index_meters_on_office_id"
   add_index "meters", ["organization_id"], :name => "index_meters_on_organization_id"
 
   create_table "notifications", :force => true do |t|
@@ -1297,6 +1301,24 @@ ActiveRecord::Schema.define(:version => 20160622104449) do
     t.datetime "updated_at",  :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
+  end
+
+  create_table "product_valued_stock_by_companies", :id => false, :force => true do |t|
+    t.integer "store_id"
+    t.string  "store_name"
+    t.integer "product_family_id",                                    :default => 0,   :null => false
+    t.string  "family_code"
+    t.string  "family_name"
+    t.integer "product_id",                                           :default => 0,   :null => false
+    t.string  "product_code"
+    t.string  "main_description"
+    t.decimal "average_price",         :precision => 12, :scale => 4, :default => 0.0, :null => false
+    t.decimal "initial",               :precision => 34, :scale => 4
+    t.decimal "current",               :precision => 34, :scale => 4
+    t.decimal "current_value",         :precision => 13, :scale => 4
+    t.integer "company_id"
+    t.decimal "company_average_price", :precision => 12, :scale => 4, :default => 0.0
+    t.decimal "company_current_value", :precision => 13, :scale => 4
   end
 
   create_table "product_valued_stocks", :id => false, :force => true do |t|

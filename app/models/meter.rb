@@ -3,10 +3,13 @@ class Meter < ActiveRecord::Base
   belongs_to :caliber
   belongs_to :meter_owner
   belongs_to :organization
+  belongs_to :company
+  belongs_to :office
   attr_accessible :expiry_date, :first_installation_date, :last_withdrawal_date, :manufacturing_date, :manufacturing_year, :meter_code, :purchase_date,
-                  :meter_model_id, :caliber_id, :meter_owner_id, :organization_id, :created_by, :updated_by
+                  :meter_model_id, :caliber_id, :meter_owner_id, :organization_id, :company_id, :office_id,
+                  :created_by, :updated_by
 
-  #has_many :meter_details
+  has_many :meter_details
   has_many :work_orders
   has_many :subscribers
   has_many :meter_details, dependent: :destroy
@@ -24,6 +27,7 @@ class Meter < ActiveRecord::Base
   validates :manufacturing_year,  :presence => true,
                                   :length => { :is => 4 },
                                   :numericality => { :only_integer => true, :greater_than => 0 }
+  validates :organization,        :presence => true
 
   before_validation :fields_to_uppercase
   before_destroy :check_for_dependent_records
