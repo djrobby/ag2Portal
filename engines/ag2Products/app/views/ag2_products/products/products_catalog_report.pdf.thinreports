@@ -81,7 +81,7 @@ family_id = @products_catalog_family.first.product_family_id
 			report.page.values product_family: i.product_family.full_name
 			row.item(:image).value(URI.decode('public' + i.image.url.split("?").first)) unless i.image.blank?
 			#row.item(:image).value('public/' + i.image.url.split("?").first) unless i.image.blank?
-			row.item(:id).value i.id
+			#row.item(:id).value i.id
 			row.item(:product_code).value i.full_code
 			row.item(:main_description).value i.main_description
 			row.item(:sell_price).value number_with_precision(i.sell_price, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless i.sell_price.blank?
