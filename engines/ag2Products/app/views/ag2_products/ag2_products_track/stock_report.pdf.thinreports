@@ -28,7 +28,7 @@ end
 #
 report.layout.config.list(:default) do |c|
 	# Define the variables used in list
-	c.use_stores page_rows: 0, p_current: 0, p_average_price: 0, p_calc: 0
+	c.use_stores page_rows: 0, p_current: 0, p_calc: 0, p_average_price: 0
 
 	# On list page footer insertion
 	c.events.on :page_footer_insert do |e|
@@ -109,8 +109,8 @@ family_id = @stocks_report.first.product_family_id
 	# Store page subtotals
   report.page.list(:default) do |list|
 		list.store.page_rows += 1
-		list.store.p_current += i.current
-		list.store.p_average_price += i.average_price
-		list.store.p_calc += i.current_value
+		a = list.store.p_current += i.current
+		b = list.store.p_calc += i.current_value
+		list.store.p_average_price = (b / a)		
 	end
 end
