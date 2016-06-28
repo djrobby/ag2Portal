@@ -21,6 +21,7 @@ class Entity < ActiveRecord::Base
   validates :last_name,     :presence => true, :if => "company.blank?"
   validates :fiscal_id,     :presence => true,
                             :length => { :minimum => 8 },
+                            :format => { with: /\A[a-zA-Z\d]+\Z/, message: :fiscal_invalid },
                             :uniqueness => { :scope => :organization_id }
   validates :street_type,   :presence => true
   validates :zipcode,       :presence => true
@@ -71,7 +72,7 @@ class Entity < ActiveRecord::Base
   end
 
   def self.find_by_fiscal_id_and_organization(_fiscal_id, _organization)
-    Entity.where("fiscal_id = ? AND organization_id = ?", _fiscal_id, _organization).first 
+    Entity.where("fiscal_id = ? AND organization_id = ?", _fiscal_id, _organization).first
   end
 
   #
@@ -144,7 +145,7 @@ class Entity < ActiveRecord::Base
         errors.add(:base, I18n.t('activerecord.models.entity.update_suppliers'))
       end
     end
-    
+
     # Update linked client
     if !client.nil?
       if entity_type_id < 2

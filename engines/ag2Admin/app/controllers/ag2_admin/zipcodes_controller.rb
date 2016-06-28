@@ -23,13 +23,28 @@ module Ag2Admin
     # GET /zipcodes.json
     def index
       manage_filter_state
-      @zipcodes = Zipcode.paginate(:page => params[:page], :per_page => per_page).order(sort_column + ' ' + sort_direction)
+
+      @search = Zipcode.search do
+        fulltext params[:search]
+        order_by sort_column, sort_direction
+        paginate :page => params[:page] || 1, :per_page => per_page
+      end
+      @zipcodes = @search.results
 
       respond_to do |format|
         format.html # index.html.erb
         format.json { render json: @zipcodes }
         format.js
       end
+
+      # manage_filter_state
+      # @zipcodes = Zipcode.paginate(:page => params[:page], :per_page => per_page).order(sort_column + ' ' + sort_direction)
+
+      # respond_to do |format|
+      #   format.html # index.html.erb
+      #   format.json { render json: @zipcodes }
+      #   format.js
+      # end
     end
 
     # GET /zipcodes/1

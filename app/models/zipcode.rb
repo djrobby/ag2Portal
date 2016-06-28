@@ -26,6 +26,17 @@ class Zipcode < ActiveRecord::Base
     "#{zipcode} - #{town.name} (#{province.name})"
   end
 
+  def town_name
+    town.name
+  end
+
+  searchable do
+    text :zipcode, :town_name
+    string :zipcode
+    integer :town_id
+    integer :province_id
+  end
+
   private
 
   def check_for_dependent_records

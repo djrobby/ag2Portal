@@ -14,6 +14,10 @@ en:
           attributes:
             family_code:
               code_invalid: "invalid (must be numeric)"
+        entity:
+          attributes:
+            fiscal_id:
+              fiscal_invalid: "invalid (must be alphanumeric without blanks or symbols)"
         supplier:
           attributes:
             supplier_code:
