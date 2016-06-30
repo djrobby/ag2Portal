@@ -628,6 +628,11 @@ module Ag2Tech
       @clients = clients_dropdown
       @subscribers = subscribers_dropdown
       @meters = meters_dropdown
+      @meter_models = meters_dropdown
+      @calibers = meters_dropdown
+      @meter_owners = meters_dropdown
+      @meter_locations = meters_dropdown
+      @readings = meters_dropdown
       # Form & Sub-forms
       @workers = workers_dropdown
       # Sub-forms
@@ -659,6 +664,11 @@ module Ag2Tech
       @clients = clients_dropdown
       @subscribers = subscribers_dropdown
       @meters = meters_dropdown
+      @meter_models = meters_dropdown
+      @calibers = meters_dropdown
+      @meter_owners = meters_dropdown
+      @meter_locations = meters_dropdown
+      @readings = meters_dropdown
       # Form & Sub-forms
       @workers = project_workers(@work_order.project)
       # Sub-forms

@@ -21,7 +21,7 @@ class Meter < ActiveRecord::Base
   validates :meter_owner,         :presence => true
   validates :organization,        :presence => true
   validates :meter_code,          :presence => true,
-                                  :length => { :minimum => 4, :maximum => 12 },
+                                  :length => { :minimum => 4, :maximum => 20 },
                                   :uniqueness => { :scope => :organization_id },
                                   :format => { with: /\A[a-zA-Z\d]+\Z/, message: :code_invalid }
   validates :manufacturing_year,  :presence => true,
