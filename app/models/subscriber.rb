@@ -19,6 +19,7 @@ class Subscriber < ActiveRecord::Base
                   :remarks, :cadastral_reference, :gis_id, :endownments, :inhabitants
 
   has_many :work_orders
+  has_many :meter_details
 
   has_paper_trail
 

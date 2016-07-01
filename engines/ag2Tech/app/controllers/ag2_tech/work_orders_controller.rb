@@ -474,6 +474,8 @@ module Ag2Tech
         @orders = @organization.blank? ? orders_dropdown : @organization.purchase_orders.order(:supplier_id, :order_no, :id)
         @tools = @organization.blank? ? tools_dropdown : @organization.tools.order(:serial_no)
         @vehicles = @organization.blank? ? vehicles_dropdown : @organization.vehicles.order(:registration)
+        @subscribers = @organization.blank? ? subscribers_dropdown : @organization.subscribers.by_code
+        @meters = @organization.blank? ? meters_dropdown : @organization.meters.order(:meter_code)
       else
         @projects = projects_dropdown
         @types = work_order_types_dropdown
@@ -488,6 +490,8 @@ module Ag2Tech
         @orders = orders_dropdown
         @tools = tools_dropdown
         @vehicles = vehicles_dropdown
+        @subscribers = subscribers_dropdown
+        @meters = meters_dropdown
       end
       # Areas array
       @areas_dropdown = areas_array(@areas)
@@ -503,7 +507,8 @@ module Ag2Tech
                      "store" => @stores, "worker" => @workers,
                      "area" => @areas_dropdown, "product" => @products_dropdown,
                      "supplier" => @suppliers, "order" => @orders,
-                     "tool" => @tools_dropdown, "vehicle" => @vehicles_dropdown }
+                     "tool" => @tools_dropdown, "vehicle" => @vehicles_dropdown,
+                     "subscriber" => @subscribers, "meter" => @meters }
       render json: @json_data
     end
 
@@ -628,11 +633,11 @@ module Ag2Tech
       @clients = clients_dropdown
       @subscribers = subscribers_dropdown
       @meters = meters_dropdown
-      @meter_models = meters_dropdown
-      @calibers = meters_dropdown
-      @meter_owners = meters_dropdown
-      @meter_locations = meters_dropdown
-      @readings = meters_dropdown
+      @meter_models = meter_models_dropdown
+      @calibers = calibers_dropdown
+      @meter_owners = meter_owners_dropdown
+      @meter_locations = meter_locations_dropdown
+      @readings = readings_dropdown
       # Form & Sub-forms
       @workers = workers_dropdown
       # Sub-forms
@@ -664,11 +669,11 @@ module Ag2Tech
       @clients = clients_dropdown
       @subscribers = subscribers_dropdown
       @meters = meters_dropdown
-      @meter_models = meters_dropdown
-      @calibers = meters_dropdown
-      @meter_owners = meters_dropdown
-      @meter_locations = meters_dropdown
-      @readings = meters_dropdown
+      @meter_models = meter_models_dropdown
+      @calibers = calibers_dropdown
+      @meter_owners = meter_owners_dropdown
+      @meter_locations = meter_locations_dropdown
+      @readings = readings_dropdown
       # Form & Sub-forms
       @workers = project_workers(@work_order.project)
       # Sub-forms
@@ -703,6 +708,11 @@ module Ag2Tech
           @clients = clients_dropdown
           @subscribers = subscribers_dropdown
           @meters = meters_dropdown
+          @meter_models = meter_models_dropdown
+          @calibers = calibers_dropdown
+          @meter_owners = meter_owners_dropdown
+          @meter_locations = meter_locations_dropdown
+          @readings = readings_dropdown
           @workers = workers_dropdown
           @products = products_dropdown
           @suppliers = suppliers_dropdown
@@ -844,6 +854,11 @@ module Ag2Tech
             @clients = clients_dropdown
             @subscribers = subscribers_dropdown
             @meters = meters_dropdown
+            @meter_models = meter_models_dropdown
+            @calibers = calibers_dropdown
+            @meter_owners = meter_owners_dropdown
+            @meter_locations = meter_locations_dropdown
+            @readings = readings_dropdown
             @workers = project_workers(@work_order.project)
             @products = @work_order.organization.blank? ? products_dropdown : @work_order.organization.products(:product_code)
             @suppliers = @work_order.organization.blank? ? suppliers_dropdown : @work_order.organization.suppliers(:supplier_code)
@@ -1175,6 +1190,33 @@ module Ag2Tech
     end
 
     def meters_dropdown
+      # Meters by current office, company or organization
+      if session[:office] != '0'
+        Meter.where('office_id = ? OR (office_id IS NULL AND organization_id = ?)', session[:office].to_i, session[:organization].to_i).order(:meter_code)
+      elsif session[:company] != '0'
+        Meter.where('company_id = ? OR (company_id IS NULL AND organization_id = ?)', session[:company].to_i, session[:organization].to_i).order(:meter_code)
+      else
+        session[:organization] != '0' ? Meter.where(organization_id: session[:organization].to_i).order(:meter_code) : Meter.order(:meter_code)
+      end
+    end
+
+    def meter_models_dropdown
+      MeterModel.by_brand_model
+    end
+
+    def calibers_dropdown
+      Caliber.by_caliber
+    end
+
+    def meter_owners_dropdown
+      MeterOwner.all
+    end
+
+    def meter_locations_dropdown
+      MeterLocation.all
+    end
+
+    def readings_dropdown
       # Meters by current office, company or organization
       if session[:office] != '0'
         Meter.where('office_id = ? OR (office_id IS NULL AND organization_id = ?)', session[:office].to_i, session[:organization].to_i).order(:meter_code)

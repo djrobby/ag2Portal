@@ -5,5 +5,5 @@ class MeterLocation < ActiveRecord::Base
 
   validates :name,  :presence => true
 
-  #has_many :meter_details
+  has_many :meter_details
 end

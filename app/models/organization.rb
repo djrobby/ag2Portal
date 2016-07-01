@@ -4,6 +4,7 @@ class Organization < ActiveRecord::Base
 
   # admin
   has_many :companies
+  has_many :offices, through: :companies
   has_many :entities
   has_many :ledger_accounts
   has_many :zones
@@ -14,6 +15,8 @@ class Organization < ActiveRecord::Base
   # gest
   has_many :clients
   has_many :sale_offers
+  has_many :meters
+  has_many :subscribers, through: :offices
   # helpdesk
   has_many :technicians
   has_many :tickets

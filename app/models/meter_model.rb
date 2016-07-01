@@ -12,6 +12,9 @@ class MeterModel < ActiveRecord::Base
   validates :model,         :presence => true
   validates :digits,        :presence => true
 
+  # Scopes
+  scope :by_brand_model, -> { order(:meter_brand_id, :model) }
+
   before_validation :fields_to_uppercase
   before_destroy :check_for_dependent_records
 

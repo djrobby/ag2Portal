@@ -20,6 +20,8 @@ class Office < ActiveRecord::Base
   has_many :projects
   has_many :office_notifications, dependent: :destroy
   has_many :infrastructures
+  has_many :meters
+  has_many :subscribers
 
   # Nested attributes
   accepts_nested_attributes_for :office_notifications,

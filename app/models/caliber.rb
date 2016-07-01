@@ -7,6 +7,9 @@ class Caliber < ActiveRecord::Base
 
   validates :caliber, :presence => true
 
+  # Scopes
+  scope :by_caliber, -> { order(:caliber) }
+
   before_destroy :check_for_dependent_records
 
   private

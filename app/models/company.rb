@@ -24,6 +24,8 @@ class Company < ActiveRecord::Base
   has_many :product_company_prices
   has_many :product_valued_stock_by_companies
   has_many :infrastructures
+  has_many :meters
+  has_many :subscribers, through: :offices
 
   # Nested attributes
   accepts_nested_attributes_for :company_notifications,
