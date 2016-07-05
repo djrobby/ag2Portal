@@ -3,6 +3,7 @@ class WorkOrderArea < ActiveRecord::Base
   attr_accessible :name, :organization_id
 
   has_many :work_orders
+  has_many :work_order_types
 
   has_paper_trail
 

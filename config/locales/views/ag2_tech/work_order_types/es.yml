@@ -2,23 +2,23 @@ es:
   ag2_tech:
     work_order_types:
       index:
-        title: "Tipos de OT"
-        btn_new: "Nuevo Tipo de OT"
+        title: "Tipos OT"
+        btn_new: "Nuevo Tipo OT"
         back_to_root: "Volver a ag2Tech"
       show:
-        title: "Tipo de OT"
-        btn_edit: "Editar Tipo de OT"
-        btn_delete: "Borrar Tipo de OT"
-        subtable_title: "Ordenes del Tipo de OT"
-        return_to: "Volver a Tipo de OT"
+        title: "Tipo OT"
+        btn_edit: "Editar Tipo OT"
+        btn_delete: "Borrar Tipo OT"
+        subtable_title: "Ordenes del Tipo OT"
+        return_to: "Volver a Tipo OT"
       edit:
-        title: "Editar Tipo de OT"
-        btn_show: "Ver Tipo de OT"
+        title: "Editar Tipo OT"
+        btn_show: "Ver Tipo OT"
       new:
-        title: "Nuevo Tipo de OT"
-      back_to_main_page: "Volver a Tipos de OT"
-      add_account: "Agregar nueva Cuenta al Tipo de OT"
-      add_item_to: "Tipo de OT %{var}"
+        title: "Nuevo Tipo OT"
+      back_to_main_page: "Volver a Tipos OT"
+      add_account: "Agregar nueva Cuenta al Tipo OT"
+      add_item_to: "Tipo OT %{var}"
       btn_add_item: "Agregar"
-      accounts_info: "Cuentas del Tipo de OT"
+      accounts_info: "Cuentas del Tipo OT"
       btn_new_account: "Nueva Cuenta"

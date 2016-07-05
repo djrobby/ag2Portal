@@ -1,10 +1,12 @@
 class WorkOrderType < ActiveRecord::Base
   belongs_to :organization
   belongs_to :charge_account
-  attr_accessible :name, :organization_id, :charge_account_id
+  belongs_to :work_order_area
+  attr_accessible :name, :organization_id, :charge_account_id, :work_order_area_id
 
   has_many :work_orders
   has_many :work_order_type_accounts, dependent: :destroy
+  has_many :work_order_labors
 
   # Nested attributes
   accepts_nested_attributes_for :work_order_type_accounts,

@@ -1,9 +1,10 @@
 class WorkOrderLabor < ActiveRecord::Base
   belongs_to :organization
-  attr_accessible :name, :organization_id
+  belongs_to :work_order_type
+  attr_accessible :name, :organization_id, :work_order_type_id
 
   has_many :work_orders
-  
+
   has_paper_trail
 
   validates :name,  :presence => true
