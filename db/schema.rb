@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20160705101607) do
+ActiveRecord::Schema.define(:version => 20160705120307) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -2812,6 +2812,7 @@ ActiveRecord::Schema.define(:version => 20160705101607) do
     t.integer  "updated_by"
     t.integer  "organization_id"
     t.integer  "work_order_type_id"
+    t.boolean  "subscriber_meter"
   end
 
   add_index "work_order_labors", ["organization_id"], :name => "index_work_order_labors_on_organization_id"
