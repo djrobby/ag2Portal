@@ -12,3 +12,5 @@ es:
         name: "Descripción"
         organization: "Organización"
         organization_id: "Organización"
+        work_order_area: "Área OT"
+        work_order_area_id: "Área OT"

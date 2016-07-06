@@ -32,6 +32,7 @@ module Ag2Tech
       @work_order_type = WorkOrderType.find(params[:id])
       @worker_orders = @work_order_type.work_orders.paginate(:page => params[:page], :per_page => per_page).order(:order_no)
       @accounts = @work_order_type.work_order_type_accounts.paginate(:page => params[:page], :per_page => per_page).order(:id)
+      @labors = @work_order_type.work_order_labors.paginate(:page => params[:page], :per_page => per_page).order(:id)
 
       respond_to do |format|
         format.html # show.html.erb
@@ -44,6 +45,7 @@ module Ag2Tech
     def new
       @breadcrumb = 'create'
       @work_order_type = WorkOrderType.new
+      @areas = work_order_areas_dropdown
 
       respond_to do |format|
         format.html # new.html.erb
@@ -55,6 +57,7 @@ module Ag2Tech
     def edit
       @breadcrumb = 'update'
       @work_order_type = WorkOrderType.find(params[:id])
+      @areas = work_order_areas_dropdown
     end
 
     # POST /work_order_types
@@ -69,6 +72,7 @@ module Ag2Tech
           format.html { redirect_to @work_order_type, notice: crud_notice('created', @work_order_type) }
           format.json { render json: @work_order_type, status: :created, location: @work_order_type }
         else
+          @areas = work_order_areas_dropdown
           format.html { render action: "new" }
           format.json { render json: @work_order_type.errors, status: :unprocessable_entity }
         end
@@ -88,6 +92,7 @@ module Ag2Tech
                         notice: (crud_notice('updated', @work_order_type) + "#{undo_link(@work_order_type)}").html_safe }
           format.json { head :no_content }
         else
+          @areas = work_order_areas_dropdown
           format.html { render action: "edit" }
           format.json { render json: @work_order_type.errors, status: :unprocessable_entity }
         end
@@ -112,6 +117,10 @@ module Ag2Tech
     end
 
     private
+
+    def work_order_areas_dropdown
+      session[:organization] != '0' ? WorkOrderArea.where(organization_id: session[:organization].to_i).order(:id) : WorkOrderArea.order(:id)
+    end
 
     def sort_column
       WorkOrderType.column_names.include?(params[:sort]) ? params[:sort] : "id"
