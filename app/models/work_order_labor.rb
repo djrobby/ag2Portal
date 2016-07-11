@@ -1,7 +1,7 @@
 class WorkOrderLabor < ActiveRecord::Base
   belongs_to :organization
   belongs_to :work_order_type
-  attr_accessible :name, :organization_id, :work_order_type_id
+  attr_accessible :name, :organization_id, :work_order_type_id, :subscriber_meter
 
   has_many :work_orders
 

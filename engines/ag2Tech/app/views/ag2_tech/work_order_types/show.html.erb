@@ -9,6 +9,12 @@
       <td><%=t 'activerecord.attributes.work_order_type.name' %>:</td>
       <td><%= @work_order_type.name %></td>
     </tr>
+    <tr>
+      <td><%=t 'activerecord.attributes.work_order_type.work_order_area' %>:</td>
+      <td><%= @work_order_type.work_order_area.name unless @work_order_type.work_order_area.blank? %></td>
+      <td><%=t 'activerecord.attributes.work_order_type.subscriber_meter' %>:</td>
+      <td> <% if @work_order_type.subscriber_meter %> <i class="icon-thumbs-up"></i> <% else %> <i class="icon-thumbs-down"></i> <% end %> </td>
+    </tr>
     <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @work_order_type } %>
     <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @work_order_type } %>
   </tbody>
@@ -46,6 +52,20 @@ new_path: new_work_order_type_path, new_txt: t('ag2_tech.work_order_types.index.
 <%= render :partial => '/layouts/paginationunbordered', :locals => { :ivar => @accounts } %>
 <% end %> <!-- end @accounts.count > 0 -->
 
+<!-- Labors -->
+<% if (@labors.count > 0) %>
+<h4><%=t '.subtable_labors_title' %></h4>
+<table class="table table-condensed table-striped">
+  <thead>
+    <%= render '/layouts/ag2_tech/wlaborsheader' %>
+  </thead>
+  <tbody>
+    <%= render :partial => '/layouts/ag2_tech/wlabors', :locals => { :types => @labors } %>
+  </tbody>
+</table>
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @labors } %>
+<% end %>
+
 <!-- Work orders -->
 <% if (@worker_orders.count > 0) %>
 <h4><%=t '.subtable_title' %></h4>
@@ -62,4 +82,7 @@ new_path: new_work_order_type_path, new_txt: t('ag2_tech.work_order_types.index.
 <%= render :partial => '/layouts/pagination', :locals => { :ivar => @worker_orders } %>
 <% end %>
 
+<% if !@work_order_type.work_order_area.blank? %>
+<%= link_to t('ag2_tech.work_order_types.show.show_to'), @work_order_type.work_order_area %> |
+<% end %>
 <%= link_to t("ag2_tech.work_order_types.back_to_main_page"), work_order_types_path %>

@@ -11,6 +11,7 @@ en:
         btn_delete: "Delete WO labor"
         subtable_title: "WO labor Orders"
         return_to: "Back to WO labor"
+        show_to: "Show WO type"
       edit:
         title: "Edit WO labor"
         btn_show: "Show WO labor"

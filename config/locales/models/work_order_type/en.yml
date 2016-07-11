@@ -14,3 +14,4 @@ en:
         organization_id: "Organization"
         work_order_area: "WO area"
         work_order_area_id: "WO area"
+        subscriber_meter: "Subscriber/Meter required in WO?"

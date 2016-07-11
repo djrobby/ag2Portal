@@ -9,6 +9,12 @@
       <td><%=t 'activerecord.attributes.work_order_labor.name' %>:</td>
       <td><%= @work_order_labor.name %></td>
     </tr>
+    <tr>
+      <td><%=t 'activerecord.attributes.work_order_labor.work_order_type' %>:</td>
+      <td><%= @work_order_labor.work_order_type.name unless @work_order_labor.work_order_type.blank? %></td>
+      <td><%=t 'activerecord.attributes.work_order_labor.subscriber_meter' %>:</td>
+      <td> <% if @work_order_labor.subscriber_meter %> <i class="icon-thumbs-up"></i> <% else %> <i class="icon-thumbs-down"></i> <% end %> </td>
+    </tr>
     <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @work_order_labor } %>
     <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @work_order_labor } %>
   </tbody>
@@ -34,4 +40,7 @@ new_path: new_work_order_labor_path, new_txt: t('ag2_tech.work_order_labors.inde
 <%= render :partial => '/layouts/pagination', :locals => { :ivar => @worker_orders } %>
 <% end %>
 
+<% if !@work_order_labor.work_order_type.blank? %>
+<%= link_to t('ag2_tech.work_order_labors.show.show_to'), @work_order_labor.work_order_type %> |
+<% end %>
 <%= link_to t("ag2_tech.work_order_labors.back_to_main_page"), work_order_labors_path %>

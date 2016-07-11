@@ -11,6 +11,7 @@ es:
         btn_delete: "Borrar Labor OT"
         subtable_title: "Ordenes de Labor OT"
         return_to: "Volver a Labor OT"
+        show_to: "Ver Tipo OT"
       edit:
         title: "Editar Labor OT"
         btn_show: "Ver Labor OT"

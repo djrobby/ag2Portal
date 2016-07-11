@@ -2,7 +2,7 @@ class WorkOrderType < ActiveRecord::Base
   belongs_to :organization
   belongs_to :charge_account
   belongs_to :work_order_area
-  attr_accessible :name, :organization_id, :charge_account_id, :work_order_area_id
+  attr_accessible :name, :organization_id, :charge_account_id, :work_order_area_id, :subscriber_meter
 
   has_many :work_orders
   has_many :work_order_type_accounts, dependent: :destroy

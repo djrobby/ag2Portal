@@ -10,7 +10,9 @@ es:
         btn_edit: "Editar Tipo OT"
         btn_delete: "Borrar Tipo OT"
         subtable_title: "Ordenes del Tipo OT"
+        subtable_labors_title: "Labores del Tipo OT"
         return_to: "Volver a Tipo OT"
+        show_to: "Ver Área OT"
       edit:
         title: "Editar Tipo OT"
         btn_show: "Ver Tipo OT"

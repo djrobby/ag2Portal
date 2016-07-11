@@ -14,4 +14,4 @@ en:
         organization_id: "Organization"
         work_order_type: "WO type"
         work_order_type_id: "WO type"
-        subscriber_meter: "Subscriber/Meter data required in WO?"
+        subscriber_meter: "Subscriber/Meter required in WO?"

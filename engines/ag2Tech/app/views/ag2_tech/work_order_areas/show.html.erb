@@ -19,6 +19,21 @@
 delete_path: @work_order_area, delete_txt: t('.btn_delete'), msg: t("activerecord.models.work_order_area.one"), txt: @work_order_area.name,
 new_path: new_work_order_area_path, new_txt: t('ag2_tech.work_order_areas.index.btn_new') } %>
 
+<!-- Types -->
+<% if (@types.count > 0) %>
+<h4><%=t '.subtable_types_title' %></h4>
+<table class="table table-condensed table-striped">
+  <thead>
+    <%= render '/layouts/ag2_tech/wtypesheader' %>
+  </thead>
+  <tbody>
+    <%= render :partial => '/layouts/ag2_tech/wtypes', :locals => { :types => @types } %>
+  </tbody>
+</table>
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @types } %>
+<% end %>
+
+<!-- Orders -->
 <% if (@worker_orders.count > 0) %>
 <h4><%=t '.subtable_title' %></h4>
 <table class="table table-condensed table-striped">

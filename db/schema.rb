@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20160705120307) do
+ActiveRecord::Schema.define(:version => 20160711084400) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -2883,6 +2883,7 @@ ActiveRecord::Schema.define(:version => 20160705120307) do
     t.integer  "organization_id"
     t.integer  "charge_account_id"
     t.integer  "work_order_area_id"
+    t.boolean  "subscriber_meter"
   end
 
   add_index "work_order_types", ["charge_account_id"], :name => "index_work_order_types_on_charge_account_id"

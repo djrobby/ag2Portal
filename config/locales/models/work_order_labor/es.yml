@@ -14,4 +14,4 @@ es:
         organization_id: "Organización"
         work_order_type: "Tipo OT"
         work_order_type_id: "Tipo OT"
-        subscriber_meter: "¿Requiere datos de Abonado/Contador en OT?"
+        subscriber_meter: "¿Requiere Abonado/Contador en OT?"

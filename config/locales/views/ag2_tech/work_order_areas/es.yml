@@ -10,6 +10,7 @@ es:
         btn_edit: "Editar Área OT"
         btn_delete: "Borrar Área OT"
         subtable_title: "Ordenes del Área OT"
+        subtable_types_title: "Tipos del Área OT"
         return_to: "Volver a Área OT"
       edit:
         title: "Editar Área OT"
