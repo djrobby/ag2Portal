@@ -30,12 +30,14 @@
         <col width="10%" />
         <!-- no -->
         <col width="20%" />
-        <!-- store -->
+        <!-- product -->
         <col width="29%" />
         <!-- type -->
         <col width="16%" />
         <!-- quantity -->
-        <col width="20%" />
+        <col width="10%" />
+        <!-- price -->
+        <col width="10%" />
         <thead>
           <tr>
             <th>Id</th>
@@ -44,6 +46,7 @@
             <th><%=t "activerecord.attributes.inventory_count_item.product" %></th>
             <th><%=t "activerecord.attributes.inventory_count.inventory_count_type" %></th>
             <th align="right"><%=t "activerecord.attributes.inventory_count_item.quantity_c" %></th>
+            <th align="right"><%=t "activerecord.attributes.inventory_count_item.price" %></th>
           </tr>
         </thead>
         <tfoot>
@@ -54,6 +57,7 @@
             <td></td>
             <td align="right"><%= t :"activerecord.attributes.product.stock" %></td>
             <td align="right"><%= number_with_precision(@store.counts, precision: 4) unless @store.counts.blank? %></td>
+            <td align="right"><%= number_with_precision(@store.counts_price_avg, precision: 4) unless @store.counts_price_avg.blank? %></td>
           </tr>
         </tfoot>
         <tbody>
@@ -65,6 +69,7 @@
             <td><%= m.product.partial_name unless m.product.blank? %></td>
             <td><%= m.inventory_count.inventory_count_type.name unless m.inventory_count.inventory_count_type.blank? %></td>
             <td align="right"><%= number_with_precision(m.quantity, precision: 4) unless m.quantity.blank? %></td>
+            <td align="right"><%= number_with_precision(m.price, precision: 4) unless m.price.blank? %></td>
           </tr>
           <% end %>
         </tbody>
@@ -113,8 +118,9 @@
             <td></td>
             <td align="right"><%= t :"activerecord.attributes.product.stock" %></td>
             <td align="right"><%= number_with_precision(@store.receipts, precision: 4) unless @store.receipts.blank? %></td>
-            <td align="right"><%= number_with_precision(@store.receipts_price_avg, precision: 4) unless @store.receipts_price_avg.blank? %></td>
-            <td align="right"><%= number_with_precision(@store.receipts_discount, precision: 4) unless @store.receipts_discount.blank? %></td>
+            <td align="right"><%= number_with_precision(@store.receipts_price_avg_total, precision: 4) unless @store.receipts_price_avg.blank? %></td>
+            <!--<td align="right"><%#= number_with_precision(@store.receipts_discount, precision: 4) unless @store.receipts_discount.blank? %></td>-->
+            <td align="right"></td>
             <td align="right"><%= number_with_precision(@store.receipts_amount, precision: 4) unless @store.receipts_amount.blank? %></td>
           </tr>
         </tfoot>
@@ -145,26 +151,32 @@
         <!-- id -->
         <col width="5%" />
         <!-- date -->
-        <col width="10%" />
+        <col width="7%" />
         <!-- no -->
-        <col width="20%" />
+        <col width="18%" />
         <!-- product -->
-        <col width="29%" />
+        <col width="28%" />
         <!-- quantity -->
-        <col width="9%" />
+        <col width="7%" />
+        <!-- cost -->
+        <col width="7%" />
+        <!-- costs -->
+        <col width="7%" />
         <!-- price -->
-        <col width="9%" />
+        <col width="7%" />
         <!-- discount -->
-        <col width="9%" />
+        <col width="7%" />
         <!-- amount -->
-        <col width="9%" />
+        <col width="7%" />
         <thead>
           <tr>
             <th>Id</th>
             <th align="center"><%= t 'activerecord.attributes.delivery_note.delivery_date' %></th>
-            <th><%= t :"activerecord.attributes.delivery_note.delivery_no" %></th>
+            <th><%=t "activerecord.attributes.delivery_note.delivery_no" %></th>
             <th><%=t "activerecord.attributes.delivery_note_item.product" %></th>
             <th align="right"><%=t "activerecord.attributes.delivery_note_item.quantity_c" %></th>
+            <th align="right"><%= t "activerecord.attributes.delivery_note_item.cost_c" %></th>
+            <th align="right"><%= t "activerecord.attributes.delivery_note_item.costs_c" %></th>
             <th align="right"><%= t "activerecord.attributes.delivery_note_item.price_c" %></th>
             <th align="right"><%= t "activerecord.attributes.delivery_note_item.discount_c" %></th>
             <th align="right"><%=t "activerecord.attributes.delivery_note_item.amount_c" %></th>
@@ -175,10 +187,13 @@
             <td></td>
             <td></td>
             <td></td>
-            <td align="right"><%= t :"activerecord.attributes.product.stock" %></td>
+            <td align="right"><%=t "activerecord.attributes.product.stock" %></td>
             <td align="right"><%= number_with_precision(@store.deliveries, precision: 4) unless @store.deliveries.blank? %></td>
-            <td align="right"><%= number_with_precision(@store.deliveries_price_avg, precision: 4) unless @store.deliveries_price_avg.blank? %></td>
-            <td align="right"><%= number_with_precision(@store.deliveries_discount, precision: 4) unless @store.deliveries_discount.blank? %></td>
+            <td align="right"><%= number_with_precision(@store.deliveries_cost_avg_total, precision: 4) unless @store.deliveries_cost_avg.blank? %></td>
+            <td align="right"><%= number_with_precision(@store.deliveries_costs, precision: 4) unless @store.deliveries_costs.blank? %></td>
+            <td align="right"><%= number_with_precision(@store.deliveries_price_avg_total, precision: 4) unless @store.deliveries_price_avg.blank? %></td>
+            <!--<td align="right"><%#= number_with_precision(@store.deliveries_discount, precision: 4) unless @store.deliveries_discount.blank? %></td>-->
+            <td align="right"></td>
             <td align="right"><%= number_with_precision(@store.deliveries_amount, precision: 4) unless @store.deliveries_amount.blank? %></td>
           </tr>
         </tfoot>
@@ -190,6 +205,8 @@
             <td><%= link_to m.delivery_note.full_no, m.delivery_note %></td>
             <td><%= m.product.partial_name unless m.product.blank? %></td>
             <td align="right"><%= number_with_precision(m.quantity, precision: 4) unless m.quantity.blank? %></td>
+            <td align="right"><%= number_with_precision(m.cost, precision: 4) unless m.cost.blank? %></td>
+            <td align="right"><%= number_with_precision(m.costs, precision: 4) unless m.costs.blank? %></td>
             <td align="right"><%= number_with_precision(m.price, precision: 4) unless m.price.blank? %></td>
             <td align="right"><%= number_with_precision(m.discount, precision: 4) unless m.discount.blank? %></td>
             <td align="right"><%= number_with_precision(m.amount, precision: 4) unless m.amount.blank? %></td>

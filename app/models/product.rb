@@ -136,6 +136,9 @@ class Product < ActiveRecord::Base
   def receipts_discount
     receipt_note_items.sum("discount")
   end
+  def receipts_discount_avg
+    receipt_note_items.sum("discount") / receipt_note_items.count
+  end
   def receipts_amount
     _sum = 0
     receipt_note_items.each do |i|
@@ -154,6 +157,9 @@ class Product < ActiveRecord::Base
     end
     _sum
   end
+  def receipts_price_avg_total
+    receipts_amount / receipts
+  end
 
   # Deliveries
   def deliveries
@@ -167,6 +173,9 @@ class Product < ActiveRecord::Base
   end
   def deliveries_discount
     delivery_note_items.sum("discount")
+  end
+  def deliveries_discount_avg
+    delivery_note_items.sum("discount") / delivery_note_items.count
   end
   def deliveries_amount
     _sum = 0
@@ -195,10 +204,19 @@ class Product < ActiveRecord::Base
     end
     _sum
   end
+  def deliveries_price_avg_total
+    deliveries_amount / deliveries
+  end
+  def deliveries_cost_avg_total
+    deliveries_costs / deliveries
+  end
 
   # Inventory counts
   def counts
     inventory_count_items.sum("quantity")
+  end
+  def counts_price_avg
+    inventory_count_items.sum("price") / inventory_count_items.count
   end
 
   #

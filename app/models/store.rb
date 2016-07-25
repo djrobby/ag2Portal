@@ -93,6 +93,9 @@ class Store < ActiveRecord::Base
     end
     _sum
   end
+  def receipts_price_avg_total
+    receipts_amount / receipts
+  end
 
   # Deliveries
   def deliveries
@@ -134,10 +137,19 @@ class Store < ActiveRecord::Base
     end
     _sum
   end
+  def deliveries_price_avg_total
+    deliveries_amount / deliveries
+  end
+  def deliveries_cost_avg_total
+    deliveries_costs / deliveries
+  end
 
   # Inventory counts
   def counts
     inventory_count_items.sum("quantity")
+  end
+  def counts_price_avg
+    inventory_count_items.sum("price") / inventory_count_items.count
   end
 
   def address_1

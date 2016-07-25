@@ -1,6 +1,6 @@
 <% pbc.each do |w| %>
 <tr>
-  <td><%= w.company.name %></td>
+  <td><%= w.company.name unless w.company.blank? %></td>
   <td align="right"><%= number_with_precision(w.last_price, precision: 4) unless w.last_price.blank? %></td>
   <td><%= w.supplier.full_name unless w.supplier.blank? %></td>
   <td align="right"><%= number_with_precision(w.average_price, precision: 4) unless w.average_price.blank? %></td>
