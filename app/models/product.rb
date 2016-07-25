@@ -158,7 +158,8 @@ class Product < ActiveRecord::Base
     _sum
   end
   def receipts_price_avg_total
-    receipts_amount / receipts
+    cnt = receipts != 0 ? receipts : 1
+    receipts_amount / cnt
   end
 
   # Deliveries
@@ -205,10 +206,12 @@ class Product < ActiveRecord::Base
     _sum
   end
   def deliveries_price_avg_total
-    deliveries_amount / deliveries
+    cnt = deliveries != 0 ? deliveries : 1
+    deliveries_amount / cnt
   end
   def deliveries_cost_avg_total
-    deliveries_costs / deliveries
+    cnt = deliveries != 0 ? deliveries : 1
+    deliveries_costs / cnt
   end
 
   # Inventory counts
