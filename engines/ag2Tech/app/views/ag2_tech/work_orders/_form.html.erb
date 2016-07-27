@@ -488,6 +488,7 @@
 </div>
 
 <!-- Meter & Subscriber -->
+<% if @subscriber_meter %>
 <div id="subscriber_meter">
   <h4><%= t 'ag2_tech.work_orders.meter_subscriber_info' %></h4>
   <div>
@@ -509,6 +510,7 @@
     <label class="multi-field-label-three"> <%= f.input :current_reading_index, input_html: { onkeydown: "only_digit(event)", class: 'x-large-text-field' }, label_html: { class: 'form-label' } %> </label>
   </div>
 </div>
+<% end %>
 
 <!-- Items -->
 <table class="form-table">

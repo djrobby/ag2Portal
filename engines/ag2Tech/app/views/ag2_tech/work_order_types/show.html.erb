@@ -60,7 +60,7 @@ new_path: new_work_order_type_path, new_txt: t('ag2_tech.work_order_types.index.
     <%= render '/layouts/ag2_tech/wlaborsheader' %>
   </thead>
   <tbody>
-    <%= render :partial => '/layouts/ag2_tech/wlabors', :locals => { :types => @labors } %>
+    <%= render :partial => '/layouts/ag2_tech/wlabors', :locals => { :labors => @labors } %>
   </tbody>
 </table>
 <%= render :partial => '/layouts/pagination', :locals => { :ivar => @labors } %>

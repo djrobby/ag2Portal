@@ -651,6 +651,7 @@ module Ag2Tech
       @meter_owners = meter_owners_dropdown
       @meter_locations = meter_locations_dropdown
       @readings = readings_dropdown
+      @subscriber_meter = false
       # Form & Sub-forms
       @workers = workers_dropdown
       # Sub-forms
@@ -687,6 +688,7 @@ module Ag2Tech
       @meter_owners = meter_owners_dropdown
       @meter_locations = meter_locations_dropdown
       @readings = readings_dropdown
+      @subscriber_meter = subscriber_meter_required(@work_order)
       # Form & Sub-forms
       @workers = project_workers(@work_order.project)
       # Sub-forms
@@ -732,6 +734,7 @@ module Ag2Tech
           @orders = orders_dropdown
           @tools = tools_dropdown
           @vehicles = vehicles_dropdown
+          @subscriber_meter = false
           format.html { render action: "new" }
           format.json { render json: @work_order.errors, status: :unprocessable_entity }
         end
@@ -880,6 +883,7 @@ module Ag2Tech
             @orders = orders_dropdown_edit(@work_order, nil)
             @tools = tools_dropdown_edit(@work_order)
             @vehicles = vehicles_dropdown_edit(@work_order)
+            @subscriber_meter = subscriber_meter_required(@work_order)
             format.html { render action: "edit" }
             format.json { render json: @work_order.errors, status: :unprocessable_entity }
           end
@@ -1310,6 +1314,21 @@ module Ag2Tech
         _a = vehicles_dropdown
       end
       _a
+    end
+
+    def subscriber_meter_required(_work_order)
+      _required = false
+      _labor = _work_order.work_order_labor rescue nil
+      _type = _work_order.work_order_type rescue nil
+      # By labor
+      if !_labor.nil?
+        _required = _labor.subscriber_meter
+      end
+      # By type
+      if !_required && !_type.nil?
+        _required = _type.subscriber_meter
+      end
+      _required.blank? ? false : _required
     end
 
     def orders_array(_orders)

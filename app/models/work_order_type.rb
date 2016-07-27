@@ -17,8 +17,8 @@ class WorkOrderType < ActiveRecord::Base
 
   validates_associated :work_order_type_accounts
 
-  validates :name,  :presence => true
-  validates :organization,    :presence => true
+  validates :name,          :presence => true
+  validates :organization,  :presence => true
 
   before_destroy :check_for_dependent_records
 

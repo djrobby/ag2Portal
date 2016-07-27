@@ -12,6 +12,7 @@
     <tr>
       <th><%= sortable "id", 'Id' %></th>
       <th><%= sortable "name", t('activerecord.attributes.work_order_labor.name') %></th>
+      <th><%= sortable "work_order_type_id", t('activerecord.attributes.work_order_labor.work_order_type') %></th>
       <th></th>
     </tr>
   </thead>
@@ -20,6 +21,7 @@
     <tr>
       <td><%= labor.id %></td>
       <td><%= link_to labor.name, labor %></td>
+      <td><%= labor.work_order_type.name unless labor.work_order_type.blank? %></td>
       <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => WorkOrderLabor, :path => edit_work_order_labor_path(labor) } %>
       <%= render :partial => '/layouts/crud/delete', :locals => { :model => WorkOrderLabor, :path => labor, :msg => t("activerecord.models.work_order_labor.one"), :txt => labor.name } %> </td>
     </tr>

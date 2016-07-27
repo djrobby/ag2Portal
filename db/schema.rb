@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20160727072231) do
+ActiveRecord::Schema.define(:version => 20160727121130) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -2811,13 +2811,13 @@ ActiveRecord::Schema.define(:version => 20160727072231) do
 
   create_table "work_order_labors", :force => true do |t|
     t.string   "name"
-    t.datetime "created_at",         :null => false
-    t.datetime "updated_at",         :null => false
+    t.datetime "created_at",                            :null => false
+    t.datetime "updated_at",                            :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
     t.integer  "organization_id"
     t.integer  "work_order_type_id"
-    t.boolean  "subscriber_meter"
+    t.boolean  "subscriber_meter",   :default => false
   end
 
   add_index "work_order_labors", ["organization_id"], :name => "index_work_order_labors_on_organization_id"
@@ -2881,14 +2881,14 @@ ActiveRecord::Schema.define(:version => 20160727072231) do
 
   create_table "work_order_types", :force => true do |t|
     t.string   "name"
-    t.datetime "created_at",         :null => false
-    t.datetime "updated_at",         :null => false
+    t.datetime "created_at",                            :null => false
+    t.datetime "updated_at",                            :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
     t.integer  "organization_id"
     t.integer  "charge_account_id"
     t.integer  "work_order_area_id"
-    t.boolean  "subscriber_meter"
+    t.boolean  "subscriber_meter",   :default => false
   end
 
   add_index "work_order_types", ["charge_account_id"], :name => "index_work_order_types_on_charge_account_id"
