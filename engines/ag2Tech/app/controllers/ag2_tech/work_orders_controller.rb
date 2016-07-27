@@ -475,6 +475,7 @@ module Ag2Tech
       if organization != '0'
         @organization = Organization.find(organization)
         @projects = @organization.blank? ? projects_dropdown : @organization.projects.order(:project_code)
+        @woareas = @organization.blank? ? work_order_areas_dropdown : @organization.work_order_areas.order(:name)
         @types = @organization.blank? ? work_order_types_dropdown : @organization.work_order_types.order(:name)
         @labors = @organization.blank? ? work_order_labors_dropdown : @organization.work_order_labors.order(:name)
         @clients = @organization.blank? ? clients_dropdown : @organization.clients.order(:client_code)
@@ -491,6 +492,7 @@ module Ag2Tech
         @meters = @organization.blank? ? meters_dropdown : @organization.meters.order(:meter_code)
       else
         @projects = projects_dropdown
+        @woareas = work_order_areas_dropdown
         @types = work_order_types_dropdown
         @labors = work_order_labors_dropdown
         @clients = clients_dropdown
@@ -515,7 +517,8 @@ module Ag2Tech
       # Vehicles array
       @vehicles_dropdown = vehicles_array(@vehicles)
       # Setup JSON
-      @json_data = { "project" => @projects, "type" => @types, "labor" => @labors,
+      @json_data = { "project" => @projects, "woarea" => @woareas,
+                     "type" => @types, "labor" => @labors,
                      "client" => @clients, "charge_account" => @charge_accounts,
                      "store" => @stores, "worker" => @workers,
                      "area" => @areas_dropdown, "product" => @products_dropdown,
@@ -622,6 +625,7 @@ module Ag2Tech
       @subcontractors = @work_order.work_order_subcontractors.paginate(:page => params[:page], :per_page => per_page).order('id')
       @tools = @work_order.work_order_tools.paginate(:page => params[:page], :per_page => per_page).order('id')
       @vehicles = @work_order.work_order_vehicles.paginate(:page => params[:page], :per_page => per_page).order('id')
+      @subscriber_meter = subscriber_meter_required(@work_order)
 
       respond_to do |format|
         format.html # show.html.erb
@@ -651,7 +655,7 @@ module Ag2Tech
       @meter_owners = meter_owners_dropdown
       @meter_locations = meter_locations_dropdown
       @readings = readings_dropdown
-      @subscriber_meter = false
+      @subscriber_meter = 'false'
       # Form & Sub-forms
       @workers = workers_dropdown
       # Sub-forms
@@ -1317,18 +1321,18 @@ module Ag2Tech
     end
 
     def subscriber_meter_required(_work_order)
-      _required = false
+      _required = 'false'
       _labor = _work_order.work_order_labor rescue nil
       _type = _work_order.work_order_type rescue nil
       # By labor
       if !_labor.nil?
-        _required = _labor.subscriber_meter
+        _required = _labor.subscriber_meter.to_s
       end
       # By type
-      if !_required && !_type.nil?
-        _required = _type.subscriber_meter
+      if _required != 'true' && !_type.nil?
+        _required = _type.subscriber_meter.to_s
       end
-      _required.blank? ? false : _required
+      _required.blank? ? 'false' : _required
     end
 
     def orders_array(_orders)

@@ -87,6 +87,13 @@
       $('#generate_code_btn').show();
     }
     
+    // Show or hide subscriber_meter div
+    if ('<%= @subscriber_meter %>' == "true") {
+      $('#subscriber_meter').show();
+    } else {
+      $('#subscriber_meter').hide();
+    }
+    
     // Can't change order no if editing
     if ('<%= @breadcrumb %>' == "update") {
       $('#work_order_order_no').prop('readonly', true);
@@ -141,6 +148,7 @@
         order = "0";
       jQuery.getJSON('wo_update_project_textfields_from_organization/' + order, function(data) {
         var p = data.project;
+        var wa = data.woarea;
         var t = data.type;
         var l = data.labor;
         var c = data.client;
@@ -168,6 +176,21 @@
         } else {
           $.each(p, function(id, option) {
             $("#work_order_project_id").append($('<option></option>').val(option.id).html(option.project_code.substring(0,3) + "-" + option.project_code.substring(3,6) + "-" + option.project_code.substring(6,12) + " " + option.name));
+          });
+        }
+        // WO area
+        $("#work_order_work_order_area_id").html("");
+        $("#work_order_work_order_area_id").val("");
+        $("#work_order_work_order_area_id").append($('<option></option>').val("").html(""));
+        if (!wa.length) {
+          $.each(data, function(id, option) {
+            if (id == 'woarea' && option != "") {
+              $("#work_order_work_order_area_id").append($('<option></option>').val(option.id).html(option.name));
+            }
+          });
+        } else {
+          $.each(wa, function(id, option) {
+            $("#work_order_work_order_area_id").append($('<option></option>').val(option.id).html(option.name));
           });
         }
         // Type
@@ -488,7 +511,6 @@
 </div>
 
 <!-- Meter & Subscriber -->
-<% if @subscriber_meter %>
 <div id="subscriber_meter">
   <h4><%= t 'ag2_tech.work_orders.meter_subscriber_info' %></h4>
   <div>
@@ -510,7 +532,6 @@
     <label class="multi-field-label-three"> <%= f.input :current_reading_index, input_html: { onkeydown: "only_digit(event)", class: 'x-large-text-field' }, label_html: { class: 'form-label' } %> </label>
   </div>
 </div>
-<% end %>
 
 <!-- Items -->
 <table class="form-table">

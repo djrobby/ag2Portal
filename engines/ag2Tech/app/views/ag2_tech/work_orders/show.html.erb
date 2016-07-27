@@ -1,4 +1,13 @@
 <script>
+  $(document).ready(function() {
+    // Show or hide subscriber_meter div
+    if ('<%= @subscriber_meter %>' == "true") {
+      $('#subscriber_meter').show();
+    } else {
+      $('#subscriber_meter').hide();
+    }
+  });
+
   jQuery(function($) {
     // when #print_report_btn is clicked
     $("#print_report_btn").click(function() {
