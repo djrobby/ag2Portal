@@ -1,5 +1,7 @@
 <script>
   var _f = '';
+  var project = '';
+  var type = '';
 
   $(document).ready(function() {
     $('.wsel2').select2({
@@ -53,6 +55,9 @@
       project = $('select#work_order_project_id :selected').val();
       if (project == "")
         project = "0";      
+      type = $('select#work_order_hours_type :selected').val();
+      if (type == "")
+        type = "0";      
       var worker = $(this).closest('tr').find('.fnt-worker').val();
       if (worker == "")
         worker = "0";
@@ -61,7 +66,7 @@
         hours = "0";
       // Right formatted for passing as REST parameter
       hours = parseInt(right_number(hours, 4) * 10000);
-      jQuery.getJSON('wo_update_costs_from_worker/' + worker + '/' + hours + '/' + project + '/' + yy + '/' + tbl, function(data) {
+      jQuery.getJSON('wo_update_costs_from_worker/' + worker + '/' + hours + '/' + project + '/' + yy + '/' + tbl+ '/' + type, function(data) {
         $(_this).closest('tr').find('.fnt-costw').val(data.cost);
         $(_this).closest('tr').find('.fnt-costsw').val(data.costs);
         // Update and display totals

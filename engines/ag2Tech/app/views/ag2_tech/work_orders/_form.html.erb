@@ -528,10 +528,13 @@
 <table class="form-table">
   <tbody>
     <tr class="form-tr underlined-tr">
-      <td class="form-td-two left-winged">
+      <td class="form-td-three left-winged">
         <h4><%= t 'ag2_tech.work_orders.workers_info' %></h4>
       </td>
-      <td class="form-td-two right-winged">
+      <td class="form-td-three">
+        <%= f.input :hours_type, label: false, wrapper: false, collection: WorkOrder::HOURS_TYPES, label_method: :last, value_method: :first, include_blank: false, input_html: { class: 'x-large-text-field' } %>
+      </td>
+      <td class="form-td-three right-winged">
         <%= link_to_add_fields('<i class="icon-plus icon-white"></i>'.html_safe + " " + t("ag2_tech.work_orders.btn_new_worker"), f, :work_order_workers, "worker_fields", "new-worker-fields", class: "btn btn-warning fnt-new-worker-btn") %>
       </td>
     </tr>

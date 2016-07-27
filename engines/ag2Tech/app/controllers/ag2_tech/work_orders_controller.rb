@@ -177,11 +177,13 @@ module Ag2Tech
       project = params[:project]
       year = params[:year].to_i
       tbl = params[:tbl]
+      hours_type = params[:type].to_i
       cost = 0
       costs = 0
       worker_item = nil
       worker_salary = nil
       hours_year = 2080
+      overtime_pct = 0
 
       if worker != '0' && project != '0'
         @worker = Worker.find(worker) rescue nil
@@ -207,6 +209,17 @@ module Ag2Tech
               # One year = 2080 hours
               cost = (worker_salary.total_cost / hours_year) * (worker_salary.day_pct / 100)
             end
+          end
+          # Overtime hours?
+          if hours_type > 0
+            # First, by office
+            overtime_pct = Office.find(@project.office).overtime_pct rescue 0
+            if overtime_pct == 0
+              # Then, by company
+              overtime_pct = Company.find(@project.company).overtime_pct rescue 0
+            end
+            # Add overtime to cost
+            cost = cost * (1 + (overtime_pct / 100))
           end
         end
       end
@@ -805,6 +818,7 @@ module Ag2Tech
           end
         end
       end
+      # Master
       master_changed = false
       if ((params[:work_order][:organization_id].to_i != @work_order.organization_id.to_i) ||
           (params[:work_order][:project_id].to_i != @work_order.project_id.to_i) ||
@@ -830,6 +844,7 @@ module Ag2Tech
           (params[:work_order][:approved_at].to_datetime != @work_order.approved_at) ||
           (params[:work_order][:certified_at].to_datetime != @work_order.certified_at) ||
           (params[:work_order][:posted_at].to_datetime != @work_order.posted_at) ||
+          (params[:work_order][:hours_type].to_i != @work_order.hours_type) ||
           (params[:work_order][:remarks].to_s != @work_order.remarks))
         master_changed = true
       end

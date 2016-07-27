@@ -3,6 +3,7 @@
   var _p = '';
   var _date = '';
   var _year = '';
+  var _t = '';
 
   $(document).ready(function() {
     /*
@@ -13,6 +14,9 @@
     // Project
     _p = $('select#work_order_project_id :selected').val();
     if (_p == "") _p = "0";
+    // Hours type
+    _t = $('select#work_order_hours_type :selected').val();
+    if (_t == "") _t = "0";
     // Started date
     _date = $('#work_order_started_at').data('datepicker').date;
     if (_date == "") {
@@ -59,7 +63,7 @@
         hours = "0";
       // Right formatted for passing as REST parameter
       hours = parseInt(right_number(hours, 4) * 10000);
-      jQuery.getJSON('wo_update_costs_from_worker/' + worker + '/' + hours + '/' + _p + '/' + _year + '/' + tbl, function(data) {
+      jQuery.getJSON('wo_update_costs_from_worker/' + worker + '/' + hours + '/' + _p + '/' + _year + '/' + tbl + '/' + _t, function(data) {
         if (data.tbl == "true") {
           $(_this).closest('tr').find('.fnt-costw').val(data.cost);
           $(_this).closest('tr').find('.fnt-costsw').val(data.costs);

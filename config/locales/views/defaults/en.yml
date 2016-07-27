@@ -69,6 +69,11 @@ en:
   check: "Check"
   send_error: "<b>Oh oh!</b> Your e-mail could not be sent."
   send_ok: "Your e-mail has been sent."
+  hours_type:
+    regular: "Regular"
+    overtime: "Overtime"
+    urgency: "Urgency"
+    oncall: "On Call"
   control_tracking:
     track: "Control&Tracking"
     task: "%{var} Reports"

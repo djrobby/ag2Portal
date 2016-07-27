@@ -27,7 +27,7 @@ class WorkOrder < ActiveRecord::Base
                   :in_charge_id, :reported_at, :approved_at, :certified_at, :posted_at,
                   :location, :pub_record, :subscriber_id, :incidences, :por_affected,
                   :meter_id, :meter_code, :meter_model_id, :caliber_id, :meter_owner_id,
-                  :meter_location_id, :last_reading_id, :current_reading_date, :current_reading_index
+                  :meter_location_id, :last_reading_id, :current_reading_date, :current_reading_index, :hours_type
   attr_accessible :work_order_items_attributes, :work_order_workers_attributes,
                   :work_order_tools_attributes, :work_order_vehicles_attributes,
                   :work_order_subcontractors_attributes
@@ -51,6 +51,9 @@ class WorkOrder < ActiveRecord::Base
   has_many :delivery_note_items
   has_many :sale_offers
   has_many :sale_offer_items
+
+  #HOURS_TYPES = [[0, I18n.t("hours_type.regular")], [1, I18n.t("hours_type.overtime")], [2, I18n.t("hours_type.urgency")], [3, I18n.t("hours_type.oncall")]]
+  HOURS_TYPES = {0 => I18n.t("hours_type.regular"), 1 => I18n.t("hours_type.overtime"), 2 => I18n.t("hours_type.urgency"), 3 => I18n.t("hours_type.oncall")}
 
   # Nested attributes
   accepts_nested_attributes_for :work_order_items,
