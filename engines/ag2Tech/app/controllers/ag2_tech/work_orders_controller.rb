@@ -488,14 +488,17 @@ module Ag2Tech
     # Update labor select at view from type select
     def wo_update_labor_select_from_type
       type = params[:type]
+      project = params[:project]
+      account = nil
       if type != '0'
         @type = WorkOrderType.find(type)
         @labors = @type.blank? ? work_order_labors_dropdown : @type.work_order_labors.order(:name)
+        account = type_account(@type, project)
       else
         @labors = work_order_labors_dropdown
       end
       # Setup JSON
-      @json_data = { "labor" => @labors }
+      @json_data = { "labor" => @labors, "account" => account }
       render json: @json_data
     end
 
@@ -1198,6 +1201,20 @@ module Ag2Tech
     def charge_accounts_dropdown_edit(_project)
       #_accounts = ChargeAccount.where('project_id = ? OR (project_id IS NULL AND organization_id = ?)', _project.id, _project.organization_id).order(:account_code)
       ChargeAccount.expenditures.where('project_id = ? OR (project_id IS NULL AND charge_accounts.organization_id = ?)', _project, _project.organization_id)
+    end
+
+    def type_account(_type, _project)
+      # Default analytical account for current work order type
+      _account = nil
+      if !_type.blank?
+        if _project != '0'
+          _account = WorkOrderTypeAccount.where('work_order_type_id = ? AND project_id = ? ', _type, _project).first.charge_account rescue nil
+        end
+        if _account.nil?
+          _account = WorkOrderType.find(_type).charge_account rescue nil
+        end
+      end
+      _account
     end
 
     def workers_dropdown

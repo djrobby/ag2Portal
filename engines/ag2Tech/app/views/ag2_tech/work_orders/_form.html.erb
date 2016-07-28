@@ -456,8 +456,12 @@
       var order = $('select#work_order_work_order_type_id :selected').val();
       if (order == "")
         order = "0";
-      jQuery.getJSON('wo_update_labor_select_from_type/' + order, function(data) {
+      var project = $('select#work_order_project_id :selected').val();
+      if (project == "")
+        project = "0";
+      jQuery.getJSON('wo_update_labor_select_from_type/' + order + '/' + project, function(data) {
         var l = data.labor;
+        var h = data.account
         // Labor
         $("#work_order_work_order_labor_id").html("");
         $("#work_order_work_order_labor_id").select2("val", "");
@@ -473,6 +477,8 @@
             $("#work_order_work_order_labor_id").append($('<option></option>').val(option.id).html(option.name));
           });
         }
+        // Default charge account
+        if (h != null) $("#work_order_charge_account_id").select2("val", h.id);
       });
       return false;
     });
