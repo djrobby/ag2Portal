@@ -55,6 +55,12 @@ Ag2Tech::Engine.routes.draw do
     match 'work_orders/wo_update_worker_select_from_area/:id', :controller => 'work_orders', :action => 'wo_update_worker_select_from_area'
     match 'wo_update_worker_select_from_area/:id', :controller => 'work_orders', :action => 'wo_update_worker_select_from_area'
     match 'work_orders/:id/wo_update_worker_select_from_area/:id', :controller => 'work_orders', :action => 'wo_update_worker_select_from_area'
+    match 'work_orders/wo_update_type_select_from_woarea/:woarea', :controller => 'work_orders', :action => 'wo_update_type_select_from_woarea'
+    match 'wo_update_type_select_from_woarea/:woarea', :controller => 'work_orders', :action => 'wo_update_type_select_from_woarea'
+    match 'work_orders/:id/wo_update_type_select_from_woarea/:woarea', :controller => 'work_orders', :action => 'wo_update_type_select_from_woarea'
+    match 'work_orders/wo_update_labor_select_from_type/:type', :controller => 'work_orders', :action => 'wo_update_labor_select_from_type'
+    match 'wo_update_labor_select_from_type/:type', :controller => 'work_orders', :action => 'wo_update_labor_select_from_type'
+    match 'work_orders/:id/wo_update_labor_select_from_type/:type', :controller => 'work_orders', :action => 'wo_update_labor_select_from_type'
     match 'work_orders/wo_update_petitioner_textfield_from_client/:id', :controller => 'work_orders', :action => 'wo_update_petitioner_textfield_from_client'
     match 'wo_update_petitioner_textfield_from_client/:id', :controller => 'work_orders', :action => 'wo_update_petitioner_textfield_from_client'
     match 'work_orders/:id/wo_update_petitioner_textfield_from_client/:id', :controller => 'work_orders', :action => 'wo_update_petitioner_textfield_from_client'
@@ -112,6 +118,11 @@ Ag2Tech::Engine.routes.draw do
     match 'work_orders/wo_generate_no/:project', :controller => 'work_orders', :action => 'wo_generate_no'
     match 'wo_generate_no/:project', :controller => 'work_orders', :action => 'wo_generate_no'
     match 'work_orders/:id/wo_generate_no/:project', :controller => 'work_orders', :action => 'wo_generate_no'
+    #
+    # Work order types
+    match 'work_order_types/wot_update_account_select_from_project/:project/:tbl', :controller => 'work_order_types', :action => 'wot_update_account_select_from_project'
+    match 'wot_update_account_select_from_project/:project/:tbl', :controller => 'work_order_types', :action => 'wot_update_account_select_from_project'
+    match 'work_order_types/:id/wot_update_account_select_from_project/:project/:tbl', :controller => 'work_order_types', :action => 'wot_update_account_select_from_project'
     #
     # Headings
     match 'budget_headings/bh_update_textfields_to_uppercase/:name', :controller => 'budget_headings', :action => 'bh_update_textfields_to_uppercase'

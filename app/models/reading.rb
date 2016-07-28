@@ -23,4 +23,8 @@ class Reading < ActiveRecord::Base
   validates_numericality_of :reading_index, :only_integer => true,
                                             :greater_than_or_equal_to => 0,
                                             :message => :reading_invalid
+
+  # Scopes
+  scope :by_date_asc, -> { order(:reading_date) }
+  scope :by_date_desc, -> { order('reading_date desc') }
 end

@@ -3,29 +3,71 @@
 
   $(document).ready(function() {
     // Retrieves parent values
-    _f = $("#fnt-notification").closest('form')[0];
+    _f = $("#fnt-project").closest('form')[0];
     // Set focus
     $(".modal").on('shown', function() {
       $(this).find(".form-label:first").focus();
     });
   });
+
+  jQuery(function($) {
+    // when the #fnt-project field changes
+    $("#fnt-project").change(function() {
+      // preserve the current object
+      var _this = (this);
+      // make a POST call and replace the content
+      var tbl = false;
+      var project = $('select#fnt-project :selected').val();
+      if (typeof project === "undefined") {
+        tbl = true;
+        project = $(_this).closest('tr').find('.fnt-project').val();
+      }
+      if (project == "")
+        project = "0";
+      jQuery.getJSON('wot_update_account_select_from_project/' + project + '/' + tbl, function(data) {
+        var h = data.account
+        var $account = '';
+        if (data.tbl == "true") {
+          $account = $(_this).closest('tr').find(".fnt-account");
+        } else {
+          $account = $("#fnt-account");
+        }
+        // Charge account
+        $account.html("");
+        $account.select2("val", "");
+        $account.append($('<option></option>').val("").html(""));
+        if (!h.length) {
+          $.each(data, function(id, option) {
+            if (id == 'account' && option != "") {
+              $account.append($('<option></option>').val(option.id).html(option.account_code.substring(0,4) + "-" + option.account_code.substring(4,11) + " " + option.name));
+            }
+          });
+        } else {
+          $.each(h, function(id, option) {
+            $account.append($('<option></option>').val(option.id).html(option.account_code.substring(0,4) + "-" + option.account_code.substring(4,11) + " " + option.name));
+          });
+        }
+      });
+      return false;
+    });
+});
 </script>
 
 <div id="new-account-fields" class="modal hide fade" data-backdrop="static">
   <% e = t(:item_error) %>
   <div class="modal-header">
     <a class="close" data-dismiss="modal">×</a>
-    <h3><%= t("ag2_tech.work_order_type_accounts.add_account") %></h3>
+    <h3><%= t("ag2_tech.work_order_types.add_account") %></h3>
     <span class="shrinked"><%= I18n.t(:mandatory_subtitle) %></span>
   </div>
   <div class="modal-body">
     <%= f.association :project, collection: @projects, input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-project', data: { validation: "required", "validation-error-msg" => "#{e}" } }, label_html: { class: 'form-label' } %>
-    <%= f.association :charge_account, collection: @charge_accounts, input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-account', data: { validation: "required", "validation-error-msg" => "#{e}" } }, label_html: { class: 'form-label' } %>
+    <%= f.association :charge_account, collection: @accounts, input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-account', data: { validation: "required", "validation-error-msg" => "#{e}" } }, label_html: { class: 'form-label' } %>
     <%= f.input :_destroy, as: :hidden, input_html: { class: 'field' } %>
   </div>
   <div class="modal-footer">
-    <span class="left-floated" style="vertical-align: bottom"><%= t("ag2_tech.work_order_type_accounts.add_item_to", var: @work_order_type.name) unless @work_order_type.name.blank? %></span>
-    <button id="addAccountButton" type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><%= t('ag2_tech.work_order_type_accounts.btn_add_item') %></button>
+    <span class="left-floated" style="vertical-align: bottom"><%= t("ag2_tech.work_order_types.add_item_to", var: @work_order_type.name) unless @work_order_type.name.blank? %></span>
+    <button id="addAccountButton" type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><%= t('ag2_tech.work_order_types.btn_add_item') %></button>
     <button id="cancelAccountButton" type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><%= t :close_button %></button>
   </div>
 </div>

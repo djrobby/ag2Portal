@@ -103,31 +103,43 @@ var wot_n_rowBuilder = function() {
 
         // fields
         $(fields).map(function() {
+            var id = '';
             var css = '';
+            var hid = '';
+            var txt = '';
+            var td;
             // Add only if not select2 link
             if (this.id.indexOf("s2") == -1) {
-              // Apply CSS
-              css = this.id;
-              if ($(this).hasClass('fsel2')) css = css + ' select wsel2';
-              if ($(this).hasClass('number-text-field')) css = css + ' sub-number-text-field';
-              if ($(this).hasClass('sub-disabled-field')) css = css + ' sub-disabled-field';
-              if (css === this.id) css = css + ' sub-alfanumeric-text-field';
-              if (css.indexOf("wsel2") == -1) css = css + ' sub-bordered-input';
-              css = css + ' string';
-              $(this).removeAttr('class');
-              $(this).addClass(css);
-              // Add new column to row
-              var td = $('<td/>').append($(this));
-              // ...hiding this if applicable
-              /*
-              if (this.id === 'fnt-tax-type') {
-                td = $('<td style="display:none;"/>').append($(this));
+              // Setup new field(s)
+              id = this.id;
+              if ($(this).hasClass('fsel2') && (id == 'fnt-project' || id == 'fnt-account')) {
+                // If it's a not editable select2 select, convert to new text inputs
+                hid = '<input class="sub-alfanumeric-text-field sub-disabled-field ' + id + '" type="text" name="' + $(this).attr('name') + '" value="' + $(this).val() + '">';
+                txt = '<input class="iconify_item sub-alfanumeric-text-field sub-disabled-field fnt-thing" type="text" value="' + $("option:selected", this).text() + '" readonly>';
+                // Add hidden column to row
+                td = $('<td/>').append(hid);
+                td.appendTo(newRow);
+                // Add new column
+                td = $('<td/>').append(txt);
+              } else {
+                // Otherwise, change class
+                if ($(this).hasClass('fsel2')) css = css + ' select isel2';
+                if ($(this).hasClass('number-text-field')) css = css + ' sub-number-text-field';
+                if ($(this).hasClass('sub-disabled-field')) css = css + ' sub-disabled-field';
+                if (css === '') css = css + ' sub-alfanumeric-text-field';
+                if (css.indexOf("ssel2") == -1) css = css + ' sub-bordered-input';
+                css = css + ' string ' + id;
+                $(this).removeAttr('class');
+                $(this).removeAttr('id');
+                $(this).addClass(css);
+                // Add new column
+                td = $('<td/>').append($(this));
+                // If destroy field, add delete link also
+                if (id.indexOf("_destroy") != -1) {
+                  td = $('<td/>').append($(this), newLink);
+                }
               }
-              */
-              // If destroy field, add delete link also
-              if (this.id.indexOf("_destroy") != -1) {
-                var td = $('<td/>').append($(this), newLink);
-              }
+              // Add new column(s) to row
               td.appendTo(newRow);
             }
         });

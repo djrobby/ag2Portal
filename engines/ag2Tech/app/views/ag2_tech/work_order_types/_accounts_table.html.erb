@@ -28,8 +28,10 @@
 
 <table id="accounts-table" class="table table-condensed table-striped shrinked fixed">
   <!-- project -->
+  <col width="0%" />
   <col width="50%" />
   <!-- account -->
+  <col width="0%" />
   <col width="45%" />
   <!-- button -->
   <col width="5%" />
@@ -39,8 +41,10 @@
   <tbody>
     <%= f.simple_fields_for :work_order_type_accounts, defaults: { input_html: { class: 'sub-form' } } do |i| %>
     <tr class="fields">
-      <td><%= i.association :project, label: false, wrapper: false, collection: @projects, input_html: { class: 'wsel2 fnt-project' } %></td>
-      <td><%= i.association :charge_account, label: false, wrapper: false, collection: @charge_accounts, input_html: { class: 'wsel2 fnt-account' } %></td>
+      <td><%= i.input :project_id, label: false, wrapper: false, as: :hidden, input_html: { class: 'sub-alfanumeric-text-field sub-disabled-field fnt-project' } %></td>
+      <td><%= i.input :thing_project, readonly: true, label: false, wrapper: false, as: :string, input_html: { value: (i.object.project.full_name if i.object.project_id), class: 'iconify_item sub-alfanumeric-text-field sub-disabled-field fnt-thing' } %></td>
+      <td><%= i.input :charge_account_id, label: false, wrapper: false, as: :hidden, input_html: { class: 'sub-alfanumeric-text-field sub-disabled-field fnt-account' } %></td>
+      <td><%= i.input :thing_account, readonly: true, label: false, wrapper: false, as: :string, input_html: { value: (i.object.charge_account.full_name if i.object.charge_account_id), class: 'iconify_item sub-alfanumeric-text-field sub-disabled-field fnt-thing' } %></td>
       <% if @breadcrumb == 'create' || @breadcrumb == 'update' %>
       <td><%= link_to_remove_fields('<i class="icon-trash"></i>'.html_safe, i) %></td>
       <% end %>

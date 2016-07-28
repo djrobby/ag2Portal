@@ -12,6 +12,8 @@ es:
         name: "Descripción"
         organization: "Organización"
         organization_id: "Organización"
+        charge_account: "Cuenta analítica por defecto"
+        charge_account_id: "Cuenta analítica por defecto"
         work_order_area: "Área OT"
         work_order_area_id: "Área OT"
         subscriber_meter: "¿Requiere Abonado/Contador en OT?"

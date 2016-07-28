@@ -7,8 +7,9 @@ class WorkOrderLabor < ActiveRecord::Base
 
   has_paper_trail
 
-  validates :name,          :presence => true
-  validates :organization,  :presence => true
+  validates :name,            :presence => true
+  validates :work_order_type, :presence => true
+  validates :organization,    :presence => true
 
   before_destroy :check_for_dependent_records
 

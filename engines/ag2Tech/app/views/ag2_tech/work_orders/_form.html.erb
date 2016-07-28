@@ -99,6 +99,7 @@
       $('#work_order_order_no').prop('readonly', true);
     } else {
       $('#work_order_order_no').prop('readonly', false);
+      $('#work_order_work_order_status_id').select2("val", 1);
     }
     
     // Set initial focus
@@ -151,6 +152,7 @@
         var wa = data.woarea;
         var t = data.type;
         var l = data.labor;
+        var i = data.infrastructure
         var c = data.client;
         var h = data.charge_account
         var s = data.store
@@ -180,7 +182,7 @@
         }
         // WO area
         $("#work_order_work_order_area_id").html("");
-        $("#work_order_work_order_area_id").val("");
+        $("#work_order_work_order_area_id").select2("val", "");
         $("#work_order_work_order_area_id").append($('<option></option>').val("").html(""));
         if (!wa.length) {
           $.each(data, function(id, option) {
@@ -195,7 +197,7 @@
         }
         // Type
         $("#work_order_work_order_type_id").html("");
-        $("#work_order_work_order_type_id").val("");
+        $("#work_order_work_order_type_id").select2("val", "");
         $("#work_order_work_order_type_id").append($('<option></option>').val("").html(""));
         if (!t.length) {
           $.each(data, function(id, option) {
@@ -210,7 +212,7 @@
         }
         // Labor
         $("#work_order_work_order_labor_id").html("");
-        $("#work_order_work_order_labor_id").val("");
+        $("#work_order_work_order_labor_id").select2("val", "");
         $("#work_order_work_order_labor_id").append($('<option></option>').val("").html(""));
         if (!l.length) {
           $.each(data, function(id, option) {
@@ -221,6 +223,21 @@
         } else {
           $.each(l, function(id, option) {
             $("#work_order_work_order_labor_id").append($('<option></option>').val(option.id).html(option.name));
+          });
+        }
+        // Infrastructure
+        $("#work_order_work_order_infrastructure_id").html("");
+        $("#work_order_work_order_infrastructure_id").select2("val", "");
+        $("#work_order_work_order_infrastructure_id").append($('<option></option>').val("").html(""));
+        if (!i.length) {
+          $.each(data, function(id, option) {
+            if (id == 'infrastructure' && option != "") {
+              $("#work_order_work_order_infrastructure_id").append($('<option></option>').val(option.id).html(option.name));
+            }
+          });
+        } else {
+          $.each(i, function(id, option) {
+            $("#work_order_work_order_infrastructure_id").append($('<option></option>').val(option.id).html(option.name));
           });
         }
         // Client
@@ -405,6 +422,60 @@
       });
       return false;
     });
+
+    // when the #work_order_work_order_area_id field changes
+    $("#work_order_work_order_area_id").change(function() {
+      // make a POST call and replace the content
+      var order = $('select#work_order_work_order_area_id :selected').val();
+      if (order == "")
+        order = "0";
+      jQuery.getJSON('wo_update_type_select_from_woarea/' + order, function(data) {
+        var t = data.type;
+        // Type
+        $("#work_order_work_order_type_id").html("");
+        $("#work_order_work_order_type_id").select2("val", "");
+        $("#work_order_work_order_type_id").append($('<option></option>').val("").html(""));
+        if (!t.length) {
+          $.each(data, function(id, option) {
+            if (id == 'type' && option != "") {
+              $("#work_order_work_order_type_id").append($('<option></option>').val(option.id).html(option.name));
+            }
+          });
+        } else {
+          $.each(t, function(id, option) {
+            $("#work_order_work_order_type_id").append($('<option></option>').val(option.id).html(option.name));
+          });
+        }
+      });
+      return false;
+    });
+
+    // when the #work_order_work_order_type_id field changes
+    $("#work_order_work_order_type_id").change(function() {
+      // make a POST call and replace the content
+      var order = $('select#work_order_work_order_type_id :selected').val();
+      if (order == "")
+        order = "0";
+      jQuery.getJSON('wo_update_labor_select_from_type/' + order, function(data) {
+        var l = data.labor;
+        // Labor
+        $("#work_order_work_order_labor_id").html("");
+        $("#work_order_work_order_labor_id").select2("val", "");
+        $("#work_order_work_order_labor_id").append($('<option></option>').val("").html(""));
+        if (!l.length) {
+          $.each(data, function(id, option) {
+            if (id == 'labor' && option != "") {
+              $("#work_order_work_order_labor_id").append($('<option></option>').val(option.id).html(option.name));
+            }
+          });
+        } else {
+          $.each(l, function(id, option) {
+            $("#work_order_work_order_labor_id").append($('<option></option>').val(option.id).html(option.name));
+          });
+        }
+      });
+      return false;
+    });
     
     // when submit    
     $(_thisForm).on('submit', function() {
@@ -469,8 +540,8 @@
   <label class="multi-field-label-two"> <%= f.association :project, collection: @projects, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
 </div>
 <div>
-  <label class="multi-field-label-two"> <%= f.association :work_order_area, collection: @woareas, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %> </label>
-  <label class="multi-field-label-two"> <%= f.association :work_order_type, collection: @types, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.association :work_order_area, collection: @woareas, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.association :work_order_type, collection: @types, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
 </div>
 <div>
   <label class="multi-field-label-two"> <%= f.input :order_no, input_html: { class: 'mid-text-field iconify' }, label_html: { class: 'form-label' } %> </label>

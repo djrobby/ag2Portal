@@ -2,7 +2,8 @@ class WorkOrderType < ActiveRecord::Base
   belongs_to :organization
   belongs_to :charge_account
   belongs_to :work_order_area
-  attr_accessible :name, :organization_id, :charge_account_id, :work_order_area_id, :subscriber_meter
+  attr_accessible :name, :organization_id, :charge_account_id, :work_order_area_id, :subscriber_meter,
+                  :work_order_type_accounts_attributes
 
   has_many :work_orders
   has_many :work_order_type_accounts, dependent: :destroy
@@ -17,8 +18,9 @@ class WorkOrderType < ActiveRecord::Base
 
   validates_associated :work_order_type_accounts
 
-  validates :name,          :presence => true
-  validates :organization,  :presence => true
+  validates :name,            :presence => true
+  validates :work_order_area, :presence => true
+  validates :organization,    :presence => true
 
   before_destroy :check_for_dependent_records
 

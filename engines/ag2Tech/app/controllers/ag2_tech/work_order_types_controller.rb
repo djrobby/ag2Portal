@@ -4,9 +4,29 @@ module Ag2Tech
   class WorkOrderTypesController < ApplicationController
     before_filter :authenticate_user!
     load_and_authorize_resource
+    skip_load_and_authorize_resource :only => [:wot_update_account_select_from_project]
+
     # Helper methods for sorting
     helper_method :sort_column
 
+    # Update account select at view from project select
+    def wot_update_account_select_from_project
+      project = params[:project]
+      tbl = params[:tbl]
+      if project != '0'
+        @project = Project.find(project)
+        @accounts = @project.blank? ? project_charge_accounts_dropdown(nil) : @project.charge_accounts.expenditures
+      else
+        @accounts = project_charge_accounts_dropdown(nil)
+      end
+      # Setup JSON
+      @json_data = { "account" => @accounts, "tbl" => tbl.to_s }
+      render json: @json_data
+    end
+
+    #
+    # Default Methods
+    #
     # GET /work_order_types
     # GET /work_order_types.json
     def index
@@ -46,6 +66,9 @@ module Ag2Tech
       @breadcrumb = 'create'
       @work_order_type = WorkOrderType.new
       @woareas = work_order_areas_dropdown
+      @charge_accounts = charge_accounts_dropdown
+      @projects = projects_dropdown
+      @accounts = project_charge_accounts_dropdown(nil)
 
       respond_to do |format|
         format.html # new.html.erb
@@ -58,6 +81,9 @@ module Ag2Tech
       @breadcrumb = 'update'
       @work_order_type = WorkOrderType.find(params[:id])
       @woareas = work_order_areas_dropdown
+      @charge_accounts = charge_accounts_dropdown
+      @projects = projects_dropdown
+      @accounts = project_charge_accounts_dropdown(nil)
     end
 
     # POST /work_order_types
@@ -73,6 +99,9 @@ module Ag2Tech
           format.json { render json: @work_order_type, status: :created, location: @work_order_type }
         else
           @woareas = work_order_areas_dropdown
+          @charge_accounts = charge_accounts_dropdown
+          @projects = projects_dropdown
+          @accounts = project_charge_accounts_dropdown(nil)
           format.html { render action: "new" }
           format.json { render json: @work_order_type.errors, status: :unprocessable_entity }
         end
@@ -93,6 +122,9 @@ module Ag2Tech
           format.json { head :no_content }
         else
           @woareas = work_order_areas_dropdown
+          @charge_accounts = charge_accounts_dropdown
+          @projects = projects_dropdown
+          @accounts = project_charge_accounts_dropdown(nil)
           format.html { render action: "edit" }
           format.json { render json: @work_order_type.errors, status: :unprocessable_entity }
         end
@@ -120,6 +152,29 @@ module Ag2Tech
 
     def work_order_areas_dropdown
       session[:organization] != '0' ? WorkOrderArea.where(organization_id: session[:organization].to_i).order(:id) : WorkOrderArea.order(:id)
+    end
+
+    def charge_accounts_dropdown
+      session[:organization] != '0' ? ChargeAccount.expenditures_no_project.where(organization_id: session[:organization].to_i) : ChargeAccount.expenditures_no_project
+    end
+
+    def project_charge_accounts_dropdown(_project)
+      # Charge accounts by current project
+      if _project.blank?
+        charge_accounts_dropdown
+      else
+        ChargeAccount.expenditures.where('project_id = ?', _project)
+      end
+    end
+
+    def projects_dropdown
+      if session[:office] != '0'
+        _projects = Project.where(office_id: session[:office].to_i).order(:project_code)
+      elsif session[:company] != '0'
+        _projects = Project.where(company_id: session[:company].to_i).order(:project_code)
+      else
+        _projects = session[:organization] != '0' ? Project.where(organization_id: session[:organization].to_i).order(:project_code) : Project.order(:project_code)
+      end
     end
 
     def sort_column

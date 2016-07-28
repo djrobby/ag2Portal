@@ -1,5 +1,11 @@
 <tr>
+  <% if @breadcrumb == 'create' || @breadcrumb == 'update' %>
+  <th></th>
+  <% end %>
   <th><%= t "activerecord.attributes.work_order_type_account.project" %></th>
+  <% if @breadcrumb == 'create' || @breadcrumb == 'update' %>
+  <th></th>
+  <% end %>
   <th><%= t "activerecord.attributes.work_order_type_account.charge_account" %></th>
   <% if @breadcrumb == 'create' || @breadcrumb == 'update' %>
   <th></th>

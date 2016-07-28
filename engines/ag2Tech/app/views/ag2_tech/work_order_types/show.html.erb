@@ -12,8 +12,14 @@
     <tr>
       <td><%=t 'activerecord.attributes.work_order_type.work_order_area' %>:</td>
       <td><%= @work_order_type.work_order_area.name unless @work_order_type.work_order_area.blank? %></td>
+      <td><%=t 'activerecord.attributes.work_order_type.charge_account' %>:</td>
+      <td><%= @work_order_type.charge_account.full_name unless @work_order_type.charge_account.blank? %></td>
+    </tr>
+    <tr>
       <td><%=t 'activerecord.attributes.work_order_type.subscriber_meter' %>:</td>
       <td> <% if @work_order_type.subscriber_meter %> <i class="icon-thumbs-up"></i> <% else %> <i class="icon-thumbs-down"></i> <% end %> </td>
+      <td></td>
+      <td></td>
     </tr>
     <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @work_order_type } %>
     <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @work_order_type } %>

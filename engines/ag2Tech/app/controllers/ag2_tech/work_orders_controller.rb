@@ -7,6 +7,8 @@ module Ag2Tech
     load_and_authorize_resource
     skip_load_and_authorize_resource :only => [:wo_update_account_textfield_from_project,
                                                :wo_update_worker_select_from_area,
+                                               :wo_update_type_select_from_woarea,
+                                               :wo_update_labor_select_from_type,
                                                :wo_update_petitioner_textfield_from_client,
                                                :wo_item_totals,
                                                :wo_worker_totals,
@@ -417,7 +419,7 @@ module Ag2Tech
     #
     # Main form
     #
-    # Update account text field at view from project select
+    # Update account select at view from project select
     def wo_update_account_textfield_from_project
       project = params[:id]
       projects = projects_dropdown
@@ -469,6 +471,34 @@ module Ag2Tech
       end
     end
 
+    # Update type select at view from woarea select
+    def wo_update_type_select_from_woarea
+      woarea = params[:woarea]
+      if woarea != '0'
+        @woarea = WorkOrderArea.find(woarea)
+        @types = @woarea.blank? ? work_order_types_dropdown : @woarea.work_order_types.order(:name)
+      else
+        @types = work_order_types_dropdown
+      end
+      # Setup JSON
+      @json_data = { "type" => @types }
+      render json: @json_data
+    end
+
+    # Update labor select at view from type select
+    def wo_update_labor_select_from_type
+      type = params[:type]
+      if type != '0'
+        @type = WorkOrderType.find(type)
+        @labors = @type.blank? ? work_order_labors_dropdown : @type.work_order_labors.order(:name)
+      else
+        @labors = work_order_labors_dropdown
+      end
+      # Setup JSON
+      @json_data = { "labor" => @labors }
+      render json: @json_data
+    end
+
     # Update project text and other fields at view from organization select
     def wo_update_project_textfields_from_organization
       organization = params[:org]
@@ -478,6 +508,7 @@ module Ag2Tech
         @woareas = @organization.blank? ? work_order_areas_dropdown : @organization.work_order_areas.order(:name)
         @types = @organization.blank? ? work_order_types_dropdown : @organization.work_order_types.order(:name)
         @labors = @organization.blank? ? work_order_labors_dropdown : @organization.work_order_labors.order(:name)
+        @infrastructures = @organization.blank? ? infrastructures_dropdown : @organization.infrastructures.order(:code)
         @clients = @organization.blank? ? clients_dropdown : @organization.clients.order(:client_code)
         @charge_accounts = @organization.blank? ? charge_accounts_dropdown : @organization.charge_accounts.expenditures
         @stores = @organization.blank? ? stores_dropdown : @organization.stores.order(:name)
@@ -495,6 +526,7 @@ module Ag2Tech
         @woareas = work_order_areas_dropdown
         @types = work_order_types_dropdown
         @labors = work_order_labors_dropdown
+        @infrastructures = infrastructures_dropdown
         @clients = clients_dropdown
         @charge_accounts = charge_accounts_dropdown
         @stores = stores_dropdown
@@ -518,7 +550,7 @@ module Ag2Tech
       @vehicles_dropdown = vehicles_array(@vehicles)
       # Setup JSON
       @json_data = { "project" => @projects, "woarea" => @woareas,
-                     "type" => @types, "labor" => @labors,
+                     "type" => @types, "labor" => @labors, "infrastructure" => @infrastructures,
                      "client" => @clients, "charge_account" => @charge_accounts,
                      "store" => @stores, "worker" => @workers,
                      "area" => @areas_dropdown, "product" => @products_dropdown,
@@ -654,7 +686,7 @@ module Ag2Tech
       @calibers = calibers_dropdown
       @meter_owners = meter_owners_dropdown
       @meter_locations = meter_locations_dropdown
-      @readings = readings_dropdown
+      @readings = readings_dropdown(nil, nil, nil)
       @subscriber_meter = 'false'
       # Form & Sub-forms
       @workers = workers_dropdown
@@ -691,7 +723,7 @@ module Ag2Tech
       @calibers = calibers_dropdown
       @meter_owners = meter_owners_dropdown
       @meter_locations = meter_locations_dropdown
-      @readings = readings_dropdown
+      @readings = readings_dropdown(@work_order.project, @work_order.meter, @work_order.subscriber)
       @subscriber_meter = subscriber_meter_required(@work_order)
       # Form & Sub-forms
       @workers = project_workers(@work_order.project)
@@ -1239,14 +1271,12 @@ module Ag2Tech
       MeterLocation.all
     end
 
-    def readings_dropdown
-      # Meters by current office, company or organization
-      if session[:office] != '0'
-        Meter.where('office_id = ? OR (office_id IS NULL AND organization_id = ?)', session[:office].to_i, session[:organization].to_i).order(:meter_code)
-      elsif session[:company] != '0'
-        Meter.where('company_id = ? OR (company_id IS NULL AND organization_id = ?)', session[:company].to_i, session[:organization].to_i).order(:meter_code)
+    def readings_dropdown(_project, _meter, _subscriber)
+      # Readings by current project, meter and subscriber
+      if _project.blank? || _meter.blank? || _subscriber.blank?
+        Reading.where(project_id: nil)
       else
-        session[:organization] != '0' ? Meter.where(organization_id: session[:organization].to_i).order(:meter_code) : Meter.order(:meter_code)
+        Reading.where('project_id = ? AND meter_id = ? AND subscriber_id = ?', _project, _meter, _subscriber).by_date_desc
       end
     end
 
@@ -1318,6 +1348,16 @@ module Ag2Tech
         _a = vehicles_dropdown
       end
       _a
+    end
+
+    def infrastructures_dropdown
+      if session[:office] != '0'
+        Infrastructure.where('office_id = ? OR (office_id IS NULL AND company_id = ?) OR (office_id IS NULL AND company_id IS NULL AND organization_id = ?)', session[:office].to_i, session[:company].to_i, session[:organization].to_i).order(:code)
+      elsif session[:company] != '0'
+        Infrastructure.where('company_id = ? OR (company_id IS NULL AND organization_id = ?)', session[:company].to_i, session[:organization].to_i).order(:code)
+      else
+        session[:organization] != '0' ? Infrastructure.where(organization_id: session[:organization].to_i).order(:code) : Infrastructure.order(:code)
+      end
     end
 
     def subscriber_meter_required(_work_order)

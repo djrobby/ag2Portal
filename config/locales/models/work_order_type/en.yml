@@ -12,6 +12,8 @@ en:
         name: "Description"
         organization: "Organization"
         organization_id: "Organization"
+        charge_account: "Default analytical account"
+        charge_account_id: "Default analytical account"
         work_order_area: "WO area"
         work_order_area_id: "WO area"
         subscriber_meter: "Subscriber/Meter required in WO?"

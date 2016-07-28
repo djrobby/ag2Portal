@@ -104,6 +104,14 @@ class ChargeAccount < ActiveRecord::Base
     joins(:charge_group).where("charge_groups.flow = ? AND charge_accounts.closed_at IS NULL", 2).order(:account_code)
   end
 
+  def self.expenditures_no_project
+    joins(:charge_group).where("(charge_groups.flow = ? OR charge_groups.flow = ?) AND charge_accounts.closed_at IS NULL AND charge_accounts.project_id IS NULL", 2, 3).order(:account_code)
+  end
+
+  def self.no_project
+    where("charge_accounts.closed_at IS NULL AND charge_accounts.project_id IS NULL").order(:account_code)
+  end
+
   #
   # Records navigator
   #
