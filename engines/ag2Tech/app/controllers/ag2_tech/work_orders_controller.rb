@@ -28,6 +28,9 @@ module Ag2Tech
                                                :wo_update_orders_costs_from_supplier,
                                                :wo_update_costs_from_purchase_order,
                                                :work_order_form,
+                                               :work_order_form_sm,
+                                               :work_order_form_empty,
+                                               :work_order_form_empty_sm,
                                                :wo_update_costs_from_cost_or_enforcement_pct]
     #
     # Subforms
@@ -971,8 +974,45 @@ module Ag2Tech
       end
     end
 
+    # Report with subscriber & meter
+    def work_order_form_sm
+      # Search work order & items
+      @work_order = WorkOrder.find(params[:id])
+      @items = @work_order.work_order_items.order(:id)
+      @workers = @work_order.work_order_workers.order(:id)
+      @subcontractors = @work_order.work_order_subcontractors.order(:id)
+      @tools = @work_order.work_order_tools.order(:id)
+      @vehicles = @work_order.work_order_vehicles.order(:id)
+
+      title = t("activerecord.models.work_order.one")
+
+      respond_to do |format|
+        # Render PDF
+        format.pdf { send_data render_to_string,
+                     filename: "#{title}_#{@work_order.full_no}.pdf",
+                     type: 'application/pdf',
+                     disposition: 'inline' }
+      end
+    end
+
     # Report empty
     def work_order_form_empty
+      # Search work order & items
+      @work_order = WorkOrder.find(params[:id])
+
+      title = t("activerecord.models.work_order.one")
+
+      respond_to do |format|
+        # Render PDF
+        format.pdf { send_data render_to_string,
+                     filename: "#{title}_#{@work_order.full_no}.pdf",
+                     type: 'application/pdf',
+                     disposition: 'inline' }
+      end
+    end
+
+    # Report empty with subscriber & meter
+    def work_order_form_empty_sm
       # Search work order & items
       @work_order = WorkOrder.find(params[:id])
 

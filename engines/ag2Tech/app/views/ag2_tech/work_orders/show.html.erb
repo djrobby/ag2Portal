@@ -1,10 +1,14 @@
 <script>
+  var sm_isvisible = false;
+
   $(document).ready(function() {
     // Show or hide subscriber_meter div
     if ('<%= @subscriber_meter %>' == "true") {
       $('#subscriber_meter').show();
+      sm_isvisible = true;
     } else {
       $('#subscriber_meter').hide();
+      sm_isvisible = false;
     }
   });
 
@@ -15,7 +19,11 @@
       var id = $('#id').html();
       if (id == "")
         return;
-      window.open("work_order_form.pdf?id=" + id, "_blank");
+      if (sm_isvisible) {
+        window.open("work_order_form_sm.pdf?id=" + id, "_blank");
+      } else {
+        window.open("work_order_form.pdf?id=" + id, "_blank");
+      }
       return false;
     });
 
@@ -25,7 +33,11 @@
       var id = $('#id').html();
       if (id == "")
         return;
-      window.open("work_order_form_empty.pdf?id=" + id, "_blank");
+      if (sm_isvisible) {
+        window.open("work_order_form_empty_sm.pdf?id=" + id, "_blank");
+      } else {
+        window.open("work_order_form_empty.pdf?id=" + id, "_blank");
+      }
       return false;
     });
   });
@@ -129,6 +141,12 @@
       <td><%= @work_order.subscriber.full_name unless @work_order.subscriber.blank? %></td>
       <td><%= t :"activerecord.attributes.subscriber.fiscal_id_c" %>:</td>
       <td><%= @work_order.subscriber.fiscal_id unless @work_order.subscriber.blank? %></td>
+    </tr>
+    <tr>
+      <td><%= t :"activerecord.attributes.subscriber.address_1" %>:</td>
+      <td><%= @work_order.subscriber.address_1 unless @work_order.subscriber.blank? %></td>
+      <td><%= t :"activerecord.attributes.subscriber.address_2" %>:</td>
+      <td><%= @work_order.subscriber.address_2 unless @work_order.subscriber.blank? %></td>
     </tr>
   </tbody>
 </table>

@@ -1,0 +1,165 @@
+if @work_order.nil?
+	return
+end
+
+# Localization for numbers
+delimiter = I18n.locale == :es ? "." : ","
+
+report.set_layout tlf: 'reports/work_order_form_empty', layout_options: { default: true }
+
+#
+# Report events
+#
+# On page create
+report.events.on :page_create do |e|
+	# Set page-number
+	e.page.item(:page_no).value(e.page.no)
+end
+# On report generate
+report.events.on :generate do |e|
+	e.pages.each do |page|
+		# Set total-page-number
+		page.item(:page_count).value(e.report.page_count)
+	end
+end
+
+# New page & start
+report.start_new_page
+
+# Page header: Image block for Logo
+report.page.values company_logo: "public/" + @work_order.project.company.logo.url(:original).split("?").first unless @work_order.project.company.logo.blank?
+# Page header: Company
+report.page.values(company_name: @work_order.project.company.name,
+				   company_address_1: @work_order.project.company.address_1,
+				   company_address_2: @work_order.project.company.address_2,
+				   company_phones: @work_order.project.company.phone_and_fax,
+				   company_email: @work_order.project.company.email_and_website,
+				   company_fiscal_id: I18n.t("activerecord.attributes.company.fiscal_id_c") + ": " + @work_order.project.company.fiscal_id)
+# Page header: Possibly null values
+report.page.values master_order: @work_order.master_order.full_no unless @work_order.master_order.blank?
+report.page.values started_at: @work_order.started_at.strftime("%d/%m/%Y") unless @work_order.started_at.blank?
+report.page.values completed_at: @work_order.completed_at.strftime("%d/%m/%Y") unless @work_order.completed_at.blank?
+report.page.values closed_at: @work_order.closed_at.strftime("%d/%m/%Y") unless @work_order.closed_at.blank?
+report.page.values reported_at: @work_order.reported_at.strftime("%d/%m/%Y %H:%M:%S") unless @work_order.reported_at.blank?
+report.page.values approved_at: @work_order.approved_at.strftime("%d/%m/%Y %H:%M:%S") unless @work_order.approved_at.blank?
+report.page.values certified_at: @work_order.certified_at.strftime("%d/%m/%Y") unless @work_order.certified_at.blank?
+report.page.values posted_at: @work_order.posted_at.strftime("%d/%m/%Y") unless @work_order.posted_at.blank?
+report.page.values client: @work_order.client.full_name unless @work_order.client.blank?
+# Page header: Others
+report.page.values(form_title: I18n.t("activerecord.models.work_order.one"),
+				   order_no_title: I18n.t("activerecord.attributes.work_order.order_no_report") + ":",
+				   order_no: @work_order.full_no,
+				   order_date_title: I18n.t("activerecord.attributes.work_order.created_at") + ":",
+				   order_date: @work_order.created_at.strftime("%d/%m/%Y"),
+				   master_order_title: I18n.t("activerecord.attributes.work_order.master_order_report") + ":",
+				   description_title: I18n.t("activerecord.attributes.work_order.description") + ":",
+				   description: @work_order.description,
+				   project_title: I18n.t("activerecord.attributes.work_order.project") + ":",
+				   project: @work_order.project.full_name,
+				   type_title: I18n.t("activerecord.attributes.work_order.work_order_type") + ":",
+				   type: @work_order.work_order_type.name,
+				   labor_title: I18n.t("activerecord.attributes.work_order.work_order_labor") + ":",
+				   labor: @work_order.work_order_labor.name,
+				   area_title: I18n.t("activerecord.attributes.work_order.area") + ":",
+				   area: @work_order.area.full_name,
+				   in_charge_title: I18n.t("activerecord.attributes.work_order.in_charge") + ":",
+				   in_charge: @work_order.in_charge.full_name,
+				   charge_account_title: I18n.t("activerecord.attributes.work_order.charge_account_report") + ":",
+				   charge_account: @work_order.charge_account.full_name,
+				   store_title: I18n.t("activerecord.attributes.work_order.store") + ":",
+				   store: @work_order.store.name,
+				   client_title: I18n.t("activerecord.attributes.work_order.client") + ":",
+				   petitioner_title: I18n.t("activerecord.attributes.work_order.petitioner") + ":",
+				   petitioner: @work_order.petitioner,
+				   location_title: I18n.t("activerecord.attributes.work_order.location") + ":",
+				   location: @work_order.location,
+				   pub_record_title: I18n.t("activerecord.attributes.work_order.pub_record_report") + ":",
+				   pub_record: @work_order.pub_record,
+				   status_title: I18n.t("activerecord.attributes.work_order.work_order_status") + ":",
+				   status: @work_order.work_order_status.name,
+				   started_at_title: I18n.t("activerecord.attributes.work_order.started_at_report") + ":",
+				   completed_at_title: I18n.t("activerecord.attributes.work_order.completed_at_report") + ":",
+				   closed_at_title: I18n.t("activerecord.attributes.work_order.closed_at_report") + ":",
+				   reported_at_title: I18n.t("activerecord.attributes.work_order.reported_at_report") + ":",
+				   approved_at_title: I18n.t("activerecord.attributes.work_order.approved_at_report") + ":",
+				   certified_at_title: I18n.t("activerecord.attributes.work_order.certified_at_report") + ":",
+				   posted_at_title: I18n.t("activerecord.attributes.work_order.posted_at_report") + ":"
+				  )
+# Subscriber & meter: Possibly null values
+report.page.values(
+				   subscriber_name_title: I18n.t("activerecord.attributes.work_order.subscriber") + ":",
+				   subscriber_fiscal_id_title: I18n.t("activerecord.attributes.subscriber.fiscal_id_c") + ":",
+				   subscriber_address_1_title: I18n.t("activerecord.attributes.subscriber.address_1") + ":",
+				   meter_code_title: I18n.t("activerecord.attributes.work_order.meter_code") + ":",
+				   meter_model_title: I18n.t("activerecord.attributes.work_order.meter_model") + ":",
+				   caliber_title: I18n.t("activerecord.attributes.work_order.caliber") + ":",
+				   meter_type_title: I18n.t("activerecord.attributes.meter_model.meter_type") + ":",
+				   meter_owner_title: I18n.t("activerecord.attributes.work_order.meter_owner") + ":",
+				   meter_location_title: I18n.t("activerecord.attributes.work_order.meter_location") + ":"
+				  )
+if !@work_order.subscriber.blank?
+	report.page.values subscriber_name: @work_order.subscriber.full_no
+	report.page.values subscriber_fiscal_id: @work_order.subscriber.fiscal_id
+	report.page.values subscriber_address_1: @work_order.subscriber.address_1
+	report.page.values subscriber_address_2: @work_order.subscriber.address_2
+end
+report.page.values meter_code: @work_order.meter_code unless @work_order.meter_code.blank?
+report.page.values meter_model: @work_order.meter_model.full_name unless @work_order.meter_model.blank?
+report.page.values caliber: @work_order.caliber.caliber unless @work_order.caliber.blank?
+report.page.values meter_type: @work_order.meter_model.meter_type.name unless @work_order.meter_model.blank?
+report.page.values meter_owner: @work_order.meter_owner.name unless @work_order.meter_owner.blank?
+report.page.values meter_location: @work_order.meter_location.name unless @work_order.meter_location.blank?
+# Page footer
+report.page.values(printed_at: Time.now,
+				   pt: I18n.t("every_report.pt"),
+				   pd: I18n.t("every_report.pd"),
+				   currency_note: I18n.t("every_report.currency_note"),
+				   remarks_title: I18n.t("activerecord.attributes.work_order.remarks"),
+				   remarks: @work_order.remarks,
+				   total_costs_title: I18n.t("activerecord.attributes.work_order.total_costs") + ":")
+
+#
+# Lists
+#
+# Items
+report.page.values(i_title: I18n.t("ag2_tech.work_orders.items_title"),
+									 i_no_c: "#",
+									 i_product_c: I18n.t("activerecord.attributes.work_order_item.code"),
+									 i_description_c: I18n.t("activerecord.attributes.work_order_item.description_c"),
+									 i_quantity_c: I18n.t("activerecord.attributes.work_order_item.quantity_c"),
+									 i_cost_c: I18n.t("activerecord.attributes.work_order_item.cost_c"),
+									 i_costs_c: I18n.t("activerecord.attributes.work_order_item.costs_c"))
+
+# Workers
+report.page.values(w_title: I18n.t("ag2_tech.work_orders.workers_title"),
+									 w_no_c: "#",
+									 w_worker_c: I18n.t("activerecord.attributes.work_order_worker.worker"),
+									 i_description_c: I18n.t("activerecord.attributes.work_order_item.description_c"),
+									 w_hours_c: I18n.t("activerecord.attributes.work_order_worker.hours"),
+									 w_cost_c: I18n.t("activerecord.attributes.work_order_worker.cost"),
+									 w_costs_c: I18n.t("activerecord.attributes.work_order_worker.costs"))
+
+# Subcontractors
+report.page.values(s_title: I18n.t("ag2_tech.work_orders.subcontractors_title"),
+									 s_no_c: "#",
+									 s_supplier_c: I18n.t("activerecord.attributes.work_order_subcontractor.supplier"),
+									 s_order_c: I18n.t("activerecord.attributes.work_order_subcontractor.purchase_order"),
+									 s_enforcement_pct_c: I18n.t("activerecord.attributes.work_order_subcontractor.enforcement_pct"),
+									 s_cost_c: I18n.t("activerecord.attributes.work_order_subcontractor.cost"),
+									 s_costs_c: I18n.t("activerecord.attributes.work_order_subcontractor.costs"))
+
+# Tools
+report.page.values(t_title: I18n.t("ag2_tech.work_orders.tools_title"),
+									 t_no_c: "#",
+									 t_tool_c: I18n.t("activerecord.attributes.work_order_tool.tool"),
+									 t_minutes_c: I18n.t("activerecord.attributes.work_order_tool.minutes"),
+									 t_cost_c: I18n.t("activerecord.attributes.work_order_tool.cost"),
+									 t_costs_c: I18n.t("activerecord.attributes.work_order_tool.costs"))
+
+# Vehicles
+report.page.values(v_title: I18n.t("ag2_tech.work_orders.vehicles_title"),
+									 v_no_c: "#",
+									 v_vehicle_c: I18n.t("activerecord.attributes.work_order_vehicle.vehicle"),
+									 v_distance_c: I18n.t("activerecord.attributes.work_order_vehicle.distance"),
+									 v_cost_c: I18n.t("activerecord.attributes.work_order_vehicle.cost"),
+									 v_costs_c: I18n.t("activerecord.attributes.work_order_vehicle.costs"))

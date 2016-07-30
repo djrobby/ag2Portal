@@ -44,4 +44,6 @@ en:
         email: "Email"
         remarks: "Remarks"
         address: "Address"
+        address_1: "Service address"
+        address_2: "ZIP/Town"
         is_contact: "Is contact?"

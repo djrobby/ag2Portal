@@ -44,4 +44,6 @@ es:
         email: "Email"
         remarks: "Comentarios"
         address: "Dirección"
+        address_1: "Dirección servicio"
+        address_2: "C.P./Población"
         is_contact: "¿Es contacto?"
