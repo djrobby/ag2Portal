@@ -5,7 +5,7 @@ end
 # Localization for numbers
 delimiter = I18n.locale == :es ? "." : ","
 
-report.set_layout tlf: 'reports/work_order_form', layout_options: { default: true }
+report.set_layout tlf: 'reports/work_order_form_sm', layout_options: { default: true }
 
 #
 # Report events
@@ -184,6 +184,8 @@ report.page.values approved_at: @work_order.approved_at.strftime("%d/%m/%Y %H:%M
 report.page.values certified_at: @work_order.certified_at.strftime("%d/%m/%Y") unless @work_order.certified_at.blank?
 report.page.values posted_at: @work_order.posted_at.strftime("%d/%m/%Y") unless @work_order.posted_at.blank?
 report.page.values client: @work_order.client.full_name unless @work_order.client.blank?
+report.page.values area: @work_order.area.full_name unless @work_order.area.blank?
+report.page.values store: @work_order.store.name unless @work_order.store.blank?
 # Page header: Others
 report.page.values(form_title: I18n.t("activerecord.models.work_order.one"),
 				   order_no_title: I18n.t("activerecord.attributes.work_order.order_no_report") + ":",
@@ -195,18 +197,18 @@ report.page.values(form_title: I18n.t("activerecord.models.work_order.one"),
 				   description: @work_order.description,
 				   project_title: I18n.t("activerecord.attributes.work_order.project") + ":",
 				   project: @work_order.project.full_name,
+				   woarea_title: I18n.t("activerecord.attributes.work_order.work_order_area") + ":",
+				   woarea: @work_order.work_order_area.name,
 				   type_title: I18n.t("activerecord.attributes.work_order.work_order_type") + ":",
 				   type: @work_order.work_order_type.name,
 				   labor_title: I18n.t("activerecord.attributes.work_order.work_order_labor") + ":",
 				   labor: @work_order.work_order_labor.name,
 				   area_title: I18n.t("activerecord.attributes.work_order.area") + ":",
-				   area: @work_order.area.full_name,
 				   in_charge_title: I18n.t("activerecord.attributes.work_order.in_charge") + ":",
 				   in_charge: @work_order.in_charge.full_name,
 				   charge_account_title: I18n.t("activerecord.attributes.work_order.charge_account_report") + ":",
 				   charge_account: @work_order.charge_account.full_name,
 				   store_title: I18n.t("activerecord.attributes.work_order.store") + ":",
-				   store: @work_order.store.name,
 				   client_title: I18n.t("activerecord.attributes.work_order.client") + ":",
 				   petitioner_title: I18n.t("activerecord.attributes.work_order.petitioner") + ":",
 				   petitioner: @work_order.petitioner,
@@ -228,13 +230,15 @@ report.page.values(form_title: I18n.t("activerecord.models.work_order.one"),
 report.page.values(
 				   subscriber_name_title: I18n.t("activerecord.attributes.work_order.subscriber") + ":",
 				   subscriber_fiscal_id_title: I18n.t("activerecord.attributes.subscriber.fiscal_id_c") + ":",
-				   subscriber_address_1_title: I18n.t("activerecord.attributes.subscriber.address_1") + ":",
-				   meter_code_title: I18n.t("activerecord.attributes.work_order.meter_code") + ":",
-				   meter_model_title: I18n.t("activerecord.attributes.work_order.meter_model") + ":",
+				   subscriber_address_1_title: I18n.t("activerecord.attributes.subscriber.address_1_c") + ":",
+				   meter_code_title: I18n.t("activerecord.attributes.work_order.meter_code_c") + ":",
+				   meter_model_title: I18n.t("activerecord.attributes.work_order.meter_model_c") + ":",
 				   caliber_title: I18n.t("activerecord.attributes.work_order.caliber") + ":",
-				   meter_type_title: I18n.t("activerecord.attributes.meter_model.meter_type") + ":",
-				   meter_owner_title: I18n.t("activerecord.attributes.work_order.meter_owner") + ":",
-				   meter_location_title: I18n.t("activerecord.attributes.work_order.meter_location") + ":"
+				   meter_type_title: I18n.t("activerecord.attributes.work_order.meter_type_c") + ":",
+				   meter_owner_title: I18n.t("activerecord.attributes.work_order.meter_owner_c") + ":",
+				   meter_location_title: I18n.t("activerecord.attributes.work_order.meter_location_c") + ":",
+				   last_reading_title: I18n.t("activerecord.attributes.work_order.last_reading_c") + ":",
+				   current_reading_title: I18n.t("activerecord.attributes.work_order.current_reading_c") + ":"
 				  )
 if !@work_order.subscriber.blank?
 	report.page.values subscriber_name: @work_order.subscriber.full_no

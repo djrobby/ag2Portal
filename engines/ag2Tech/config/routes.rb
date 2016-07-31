@@ -207,6 +207,8 @@ Ag2Tech::Engine.routes.draw do
     resources :work_orders do
       get 'work_order_form', on: :collection
       get 'work_order_form_empty', on: :collection
+      get 'work_order_form_sm', on: :collection
+      get 'work_order_form_empty_sm', on: :collection
     end
     resources :work_order_areas
     resources :work_order_labors
