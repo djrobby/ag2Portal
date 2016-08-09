@@ -27,7 +27,6 @@ class Meter < ActiveRecord::Base
   validates :manufacturing_year,  :presence => true,
                                   :length => { :is => 4 },
                                   :numericality => { :only_integer => true, :greater_than => 0 }
-  validates :organization,        :presence => true
 
   before_validation :fields_to_uppercase
   before_destroy :check_for_dependent_records

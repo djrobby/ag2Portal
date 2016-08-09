@@ -17,3 +17,4 @@ es:
       country:
         name: "Nombre"
         code: "Código ISO"
+        prefix: "Prefijo Telefónico"

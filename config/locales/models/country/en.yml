@@ -17,3 +17,4 @@ en:
       country:
         name: "Name"
         code: "ISO Code"
+        prefix: "Phone Prefix"

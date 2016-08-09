@@ -1,5 +1,5 @@
 class Caliber < ActiveRecord::Base
-  attr_accessible :caliber
+  attr_accessible :caliber, :letter_id
 
   has_many :meters
 

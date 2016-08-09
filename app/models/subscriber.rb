@@ -34,6 +34,7 @@ class Subscriber < ActiveRecord::Base
   validates :fiscal_id,         :presence => true,
                                 :length => { :minimum => 8 }
   validates :zipcode,           :presence => true
+  validates :starting_at,       :presence => true
 
   # Scopes
   scope :by_code, -> { order(:subscriber_code) }
