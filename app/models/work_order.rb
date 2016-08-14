@@ -102,6 +102,11 @@ class WorkOrder < ActiveRecord::Base
   validate :completed_at_cannot_be_less_than_started_at
   validate :closed_at_cannot_be_less_than_completed_at
 
+  # Scopes
+  scope :by_no, -> { order(:order_no) }
+  #
+  scope :belongs_to_project, -> project { where("project_id = ?", project).by_no }
+
   before_destroy :check_for_dependent_records
 
   def to_label

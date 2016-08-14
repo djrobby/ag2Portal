@@ -26,8 +26,8 @@ module Ag2Tech
 
     # GET /api/work_orders
     def all
-      @work_orders = WorkOrder.order(:order_no)
-      render json: @work_orders
+      work_orders = WorkOrder.by_no
+      render json: serialized_work_orders(work_orders)
     end
 
     # GET /api/work_orders/:id
@@ -35,14 +35,9 @@ module Ag2Tech
       if !is_numeric?(params[:id]) || params[:id] == '0'
         render json: :bad_request, status: :bad_request
       else
-        @work_order = WorkOrder.find(params[:id]) rescue nil
-        if !@work_order.blank?
-          @items = @work_order.work_order_items.paginate(:page => params[:page], :per_page => per_page).order('id')
-          @workers = @work_order.work_order_workers.paginate(:page => params[:page], :per_page => per_page).order('id')
-          @subcontractors = @work_order.work_order_subcontractors.paginate(:page => params[:page], :per_page => per_page).order('id')
-          @tools = @work_order.work_order_tools.paginate(:page => params[:page], :per_page => per_page).order('id')
-          @vehicles = @work_order.work_order_vehicles.paginate(:page => params[:page], :per_page => per_page).order('id')
-          render json: @work_order
+        work_order = WorkOrder.find(params[:id]) rescue nil
+        if !work_order.blank?
+          render json: Api::V1::WorkOrdersSerializer.new(work_order)
         else
           render json: :not_found, status: :not_found
         end
@@ -52,15 +47,14 @@ module Ag2Tech
     # GET /api/work_orders/by_project/:project_id
     def by_project
       if params.has_key?(:project_id) && is_numeric?(params[:project_id]) && params[:project_id] != '0'
-        @work_orders = WorkOrder.where(project_id: params[:project_id]).order(:order_no)
-        if !@work_orders.blank?
-          render json: @work_orders
+        work_orders = WorkOrder.belongs_to_project(params[:project_id])
+        if !work_orders.blank?
+          render json: serialized_work_orders(work_orders)
         else
           render json: :not_found, status: :not_found
         end
       else
         render json: :bad_request, status: :bad_request
-        #render nothing: true, status: :bad_request
       end
     end
 
@@ -68,12 +62,12 @@ module Ag2Tech
     # GET /api/work_orders/unstarted(/:project_id)
     def unstarted
       if params.has_key?(:project_id) && is_numeric?(params[:project_id]) && params[:project_id] != '0'
-        @work_orders = WorkOrder.unstarted(params[:project_id])
+        work_orders = WorkOrder.unstarted(params[:project_id])
       else
-        @work_orders = WorkOrder.unstarted
+        work_orders = WorkOrder.unstarted
       end
-      if !@work_orders.blank?
-        render json: @work_orders
+      if !work_orders.blank?
+        render json: serialized_work_orders(work_orders)
       else
         render json: :not_found, status: :not_found
       end
@@ -83,12 +77,12 @@ module Ag2Tech
     # GET /api/work_orders/uncompleted(/:project_id)
     def uncompleted
       if params.has_key?(:project_id) && is_numeric?(params[:project_id]) && params[:project_id] != '0'
-        @work_orders = WorkOrder.uncompleted(params[:project_id])
+        work_orders = WorkOrder.uncompleted(params[:project_id])
       else
-        @work_orders = WorkOrder.uncompleted
+        work_orders = WorkOrder.uncompleted
       end
-      if !@work_orders.blank?
-        render json: @work_orders
+      if !work_orders.blank?
+        render json: serialized_work_orders(work_orders)
       else
         render json: :not_found, status: :not_found
       end
@@ -98,12 +92,12 @@ module Ag2Tech
     # GET /api/work_orders/unclosed(/:project_id)
     def unclosed
       if params.has_key?(:project_id) && is_numeric?(params[:project_id]) && params[:project_id] != '0'
-        @work_orders = WorkOrder.unclosed(params[:project_id])
+        work_orders = WorkOrder.unclosed(params[:project_id])
       else
-        @work_orders = WorkOrder.unclosed
+        work_orders = WorkOrder.unclosed
       end
-      if !@work_orders.blank?
-        render json: @work_orders
+      if !work_orders.blank?
+        render json: serialized_work_orders(work_orders)
       else
         render json: :not_found, status: :not_found
       end
@@ -113,15 +107,22 @@ module Ag2Tech
     # GET /api/work_orders/closed(/:project_id)
     def closed
       if params.has_key?(:project_id) && is_numeric?(params[:project_id]) && params[:project_id] != '0'
-        @work_orders = WorkOrder.closed(params[:project_id])
+        work_orders = WorkOrder.closed(params[:project_id])
       else
-        @work_orders = WorkOrder.closed
+        work_orders = WorkOrder.closed
       end
-      if !@work_orders.blank?
-        render json: @work_orders
+      if !work_orders.blank?
+        render json: serialized_work_orders(work_orders)
       else
         render json: :not_found, status: :not_found
       end
+    end
+
+    private
+
+    # Returns JSON list of orders
+    def serialized_work_orders(_orders)
+      ActiveModel::ArraySerializer.new(_orders, each_serializer: Api::V1::WorkOrdersSerializer, root: 'work_orders')
     end
   end
 end
