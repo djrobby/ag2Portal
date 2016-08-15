@@ -76,7 +76,7 @@ Devise.setup do |config|
   # Notice that if you are skipping storage for all authentication paths, you
   # may want to disable generating routes to Devise's sessions controller by
   # passing :skip => :sessions to `devise_for` in your config/routes.rb
-  config.skip_session_storage = [:http_auth]
+  config.skip_session_storage = [:http_auth, :token_auth]
 
   # ==> Configuration for :database_authenticatable
   # For bcrypt, this is the cost for hashing the password and defaults to 10. If
@@ -186,7 +186,7 @@ Devise.setup do |config|
 
   # ==> Configuration for :token_authenticatable
   # Defines name of the authentication token params key
-  # config.token_authentication_key = :auth_token
+  config.token_authentication_key = :auth_token
 
   # ==> Scopes configuration
   # Turn scoped views on. Before rendering "sessions/new", it will first check for
@@ -226,7 +226,7 @@ Devise.setup do |config|
   # OAuth2
   # config.omniauth :google_oauth2, "APP_ID", "APP_SECRET", { access_type: "offline", approval_prompt: "" }
   config.omniauth :google_oauth2, "243106273259.apps.googleusercontent.com", "82EUdRZpsD4VLLZOoPNWNhfy", { access_type: "offline", approval_prompt: "" }
-   
+
   # ==> Warden configuration
   # If you want to use other strategies, that are not supported by Devise, or
   # change the failure app, you can configure them inside the config.warden block.

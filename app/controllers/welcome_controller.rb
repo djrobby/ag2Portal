@@ -5,7 +5,7 @@ class WelcomeController < ApplicationController
   end
 
   private
-    
+
   def oco_grant_access(oco_table)
     if oco_table.count == 0
       # Grant access to all...
@@ -14,7 +14,7 @@ class WelcomeController < ApplicationController
       # Grant access only to exclusive...
       aux = ''
       oco_table.each do |e|
-        aux += e.id.to_s + ';'  
+        aux += e.id.to_s + ';'
       end
       aux.chop!
       return aux

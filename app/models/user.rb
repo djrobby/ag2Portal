@@ -13,13 +13,12 @@ class User < ActiveRecord::Base
   # OAuth2
   # :omniauth_providers => [:google_oauth2]
   devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :trackable, :validatable,
-         :omniauthable,
-         :omniauth_providers => [:google_oauth2]
+         :recoverable, :rememberable, :trackable, :validatable, :token_authenticatable,
+         :omniauthable, :omniauth_providers => [:google_oauth2]
 
   # Setup accessible (or protected) attributes for your model
   attr_accessible :name, :email, :password, :password_confirmation, :remember_me,
-                  :created_by, :updated_by, :real_email
+                  :created_by, :updated_by, :real_email, :authentication_token
   attr_accessible :role_ids, :organization_ids, :company_ids, :office_ids, :project_ids
   # attr_accessible :title, :body
 
@@ -27,6 +26,7 @@ class User < ActiveRecord::Base
 
   validates :name,  :presence => true
 
+  before_save :ensure_authentication_token
   after_create :assign_default_role_and_send_email
 
   has_many :workers # has_one when finished worker_items implementation
@@ -45,13 +45,13 @@ class User < ActiveRecord::Base
       exists = false
       for i in 0...domains.size
         if email_domain == domains[i]
-          exists = true          
+          exists = true
         end
       end
       if exists == false
         domains = domains << email_domain
       end
-    end        
+    end
     domains
   end
 

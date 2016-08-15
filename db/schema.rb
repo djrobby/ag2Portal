@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20160809101303) do
+ActiveRecord::Schema.define(:version => 20160815080520) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -2679,8 +2679,10 @@ ActiveRecord::Schema.define(:version => 20160809101303) do
     t.integer  "created_by"
     t.integer  "updated_by"
     t.boolean  "real_email",             :default => true
+    t.string   "authentication_token"
   end
 
+  add_index "users", ["authentication_token"], :name => "index_users_on_authentication_token", :unique => true
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true
   add_index "users", ["reset_password_token"], :name => "index_users_on_reset_password_token", :unique => true
 
