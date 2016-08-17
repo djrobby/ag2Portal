@@ -10,6 +10,11 @@ class WorkOrderArea < ActiveRecord::Base
   validates :name,          :presence => true
   validates :organization,  :presence => true
 
+  # Scopes
+  scope :by_name, -> { order(:name) }
+  #
+  scope :belongs_to_organization, -> organization { where("organization_id = ?", organization).by_name }
+
   before_destroy :check_for_dependent_records
 
   private

@@ -22,6 +22,13 @@ class WorkOrderType < ActiveRecord::Base
   validates :work_order_area, :presence => true
   validates :organization,    :presence => true
 
+  # Scopes
+  scope :by_name, -> { order(:name) }
+  #
+  scope :belongs_to_organization, -> organization { where("organization_id = ?", organization).by_name }
+  scope :belongs_to_account, -> account { where("charge_account_id = ?", account).by_name }
+  scope :belongs_to_area, -> area { where("work_order_area_id = ?", area).by_name }
+
   before_destroy :check_for_dependent_records
 
   private

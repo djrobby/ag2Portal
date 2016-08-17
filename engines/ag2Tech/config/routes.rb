@@ -230,13 +230,24 @@ Ag2Tech::Engine.routes.draw do
     namespace :api do
       namespace :v1 do
         scope '/work_orders' do
-          get '/'                             =>  'work_orders#all'
-          get '/by_project(/:project_id)'     =>  'work_orders#by_project'
-          get '/unstarted(/:project_id)'      =>  'work_orders#unstarted'
-          get '/uncompleted(/:project_id)'    =>  'work_orders#uncompleted'
-          get '/unclosed(/:project_id)'       =>  'work_orders#unclosed'
-          get '/closed(/:project_id)'         =>  'work_orders#closed'
-          get '/:id'                          =>  'work_orders#one'
+          get '/'                                   =>  'work_orders#all'
+          get '/headers'                            =>  'work_orders#headers'
+          get '/by_project(/:project_id)'           =>  'work_orders#by_project'
+          get '/headers_by_project(/:project_id)'   =>  'work_orders#headers_by_project'
+          get '/unstarted(/:project_id)'            =>  'work_orders#unstarted'
+          get '/uncompleted(/:project_id)'          =>  'work_orders#uncompleted'
+          get '/unclosed(/:project_id)'             =>  'work_orders#unclosed'
+          get '/closed(/:project_id)'               =>  'work_orders#closed'
+          get '/headers/:id'                        =>  'work_orders#header'
+          get '/:id'                                =>  'work_orders#one'
+        end
+        scope '/work_order_areas' do
+          get '/'                                   =>  'work_orders#areas'
+          get '/:id'                                =>  'work_orders#area'
+        end
+        scope '/work_order_types' do
+          get '/'                                   =>  'work_orders#types'
+          get '/:id'                                =>  'work_orders#type'
         end
       end
     end
