@@ -36,7 +36,10 @@ module Ag2Tech
     # GET /api/v1/work_order_areas/:id => area
     # GET /api/v1/work_order_types/ => types
     # GET /api/v1/work_order_types/:id => type
-
+    # GET /api/v1/work_order_statuses/ => statuses
+    # GET /api/v1/work_order_statuses/:id => status
+    # GET /api/v1/work_order_labors/ => labors
+    # GET /api/v1/work_order_labors/:id => labor
 
     # GET /api/work_orders
     def all
@@ -211,6 +214,48 @@ module Ag2Tech
       end
     end
 
+    # Work order Statuses
+    # GET /api/work_orders/statuses
+    def statuses
+      aux = WorkOrderStatus.by_name
+      render json: serialized_work_order_statuses(aux)
+    end
+
+    # GET /api/work_orders/statuses/:id
+    def status
+      if !is_numeric?(params[:id]) || params[:id] == '0'
+        render json: :bad_request, status: :bad_request
+      else
+        aux = WorkOrderStatus.find(params[:id]) rescue nil
+        if !aux.blank?
+          render json: Api::V1::WorkOrderStatusesSerializer.new(aux)
+        else
+          render json: :not_found, status: :not_found
+        end
+      end
+    end
+
+    # Work order Labors
+    # GET /api/work_orders/labors
+    def labors
+      aux = WorkOrderLabor.by_name
+      render json: serialized_work_order_labors(aux)
+    end
+
+    # GET /api/work_orders/labors/:id
+    def labor
+      if !is_numeric?(params[:id]) || params[:id] == '0'
+        render json: :bad_request, status: :bad_request
+      else
+        aux = WorkOrderLabor.find(params[:id]) rescue nil
+        if !aux.blank?
+          render json: Api::V1::WorkOrderLaborsSerializer.new(aux)
+        else
+          render json: :not_found, status: :not_found
+        end
+      end
+    end
+
     private
 
     # Returns JSON list of orders
@@ -228,6 +273,14 @@ module Ag2Tech
 
     def serialized_work_order_types(_aux)
       ActiveModel::ArraySerializer.new(_aux, each_serializer: Api::V1::WorkOrderTypesSerializer, root: 'work_order_types')
+    end
+
+    def serialized_work_order_statuses(_aux)
+      ActiveModel::ArraySerializer.new(_aux, each_serializer: Api::V1::WorkOrderStatusesSerializer, root: 'work_order_statuses')
+    end
+
+    def serialized_work_order_labors(_aux)
+      ActiveModel::ArraySerializer.new(_aux, each_serializer: Api::V1::WorkOrderLaborsSerializer, root: 'work_order_labors')
     end
   end
 end

@@ -249,6 +249,14 @@ Ag2Tech::Engine.routes.draw do
           get '/'                                   =>  'work_orders#types'
           get '/:id'                                =>  'work_orders#type'
         end
+        scope '/work_order_statuses' do
+          get '/'                                   =>  'work_orders#statuses'
+          get '/:id'                                =>  'work_orders#status'
+        end
+        scope '/work_order_labors' do
+          get '/'                                   =>  'work_orders#labors'
+          get '/:id'                                =>  'work_orders#labor'
+        end
       end
     end
 
