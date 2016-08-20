@@ -23,7 +23,7 @@ class Project < ActiveRecord::Base
   has_many :supplier_invoice_items
   has_many :delivery_notes
   has_many :delivery_note_items
-  has_many :sale_offers  
+  has_many :sale_offers
   has_many :sale_offer_items
 
   has_paper_trail
@@ -38,6 +38,14 @@ class Project < ActiveRecord::Base
   validates :office,        :presence => true
   validates :organization,  :presence => true
   validates :project_type,  :presence => true
+
+  # Scopes
+  scope :by_code, -> { order(:project_code) }
+  #
+  scope :belongs_to_organization, -> organization { where("organization_id = ?", organization).by_code }
+  scope :belongs_to_company, -> company { where("company_id = ?", company).by_code }
+  scope :belongs_to_office, -> office { where("office_id = ?", office).by_code }
+  scope :belongs_to_type, -> type { where("project_type_id = ?", type).by_code }
 
   before_destroy :check_for_dependent_records
 

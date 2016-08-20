@@ -12,12 +12,12 @@ module Ag2Tech
     # ag2Tech API
     # returns JSON
     # scope => /ag2_tech
-    # REST parameters => (<param>): optional
-    #               project_id: project id
-    #               id: work order id
     # URL parameters => <auth>: necessary
     #               user_email=...
     #               user_token=...
+    # REST parameters => (<param>): optional
+    #               project_id: project id
+    #               id: work order id
     # General:
     # GET /api/v1/work_orders/<method>[/<param>]?<auth>
     #
@@ -40,6 +40,8 @@ module Ag2Tech
     # GET /api/v1/work_order_statuses/:id => status
     # GET /api/v1/work_order_labors/ => labors
     # GET /api/v1/work_order_labors/:id => labor
+    # GET /api/v1/work_order_infrastructures/ => infrastructures
+    # GET /api/v1/work_order_infrastructures/:id => infrestructure
 
     # GET /api/work_orders
     def all
@@ -217,7 +219,7 @@ module Ag2Tech
     # Work order Statuses
     # GET /api/work_orders/statuses
     def statuses
-      aux = WorkOrderStatus.by_name
+      aux = WorkOrderStatus.all
       render json: serialized_work_order_statuses(aux)
     end
 
@@ -256,15 +258,36 @@ module Ag2Tech
       end
     end
 
+    # Work order Infrastructures
+    # GET /api/work_orders/infrastructures
+    def infrastructures
+      aux = Infrastructure.by_code
+      render json: serialized_work_order_infrastructures(aux)
+    end
+
+    # GET /api/work_orders/infrastructures/:id
+    def infrastructure
+      if !is_numeric?(params[:id]) || params[:id] == '0'
+        render json: :bad_request, status: :bad_request
+      else
+        aux = Infrastructure.find(params[:id]) rescue nil
+        if !aux.blank?
+          render json: Api::V1::WorkOrderInfrastructuresSerializer.new(aux)
+        else
+          render json: :not_found, status: :not_found
+        end
+      end
+    end
+
     private
 
     # Returns JSON list of orders
-    def serialized_work_orders(_orders)
-      ActiveModel::ArraySerializer.new(_orders, each_serializer: Api::V1::WorkOrdersSerializer, root: 'work_orders')
+    def serialized_work_orders(_data)
+      ActiveModel::ArraySerializer.new(_data, each_serializer: Api::V1::WorkOrdersSerializer, root: 'work_orders')
     end
 
-    def serialized_work_orders_header(_orders)
-      ActiveModel::ArraySerializer.new(_orders, each_serializer: Api::V1::WorkOrdersHeaderSerializer, root: 'work_orders')
+    def serialized_work_orders_header(_data)
+      ActiveModel::ArraySerializer.new(_data, each_serializer: Api::V1::WorkOrdersHeaderSerializer, root: 'work_orders')
     end
 
     def serialized_work_order_areas(_aux)
@@ -281,6 +304,10 @@ module Ag2Tech
 
     def serialized_work_order_labors(_aux)
       ActiveModel::ArraySerializer.new(_aux, each_serializer: Api::V1::WorkOrderLaborsSerializer, root: 'work_order_labors')
+    end
+
+    def serialized_work_order_infrastructures(_aux)
+      ActiveModel::ArraySerializer.new(_aux, each_serializer: Api::V1::WorkOrderInfrastructuresSerializer, root: 'work_order_infrastructures')
     end
   end
 end

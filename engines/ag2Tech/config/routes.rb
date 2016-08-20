@@ -226,7 +226,7 @@ Ag2Tech::Engine.routes.draw do
 
     # API
     # Warning: The order is very important!
-    # e.g. If /by_project is bellow /:id, /:id method executes and the /by_project never
+    # i.e. If /by_project is bellow /:id, /:id method executes and the /by_project never
     namespace :api do
       namespace :v1 do
         scope '/work_orders' do
@@ -256,6 +256,21 @@ Ag2Tech::Engine.routes.draw do
         scope '/work_order_labors' do
           get '/'                                   =>  'work_orders#labors'
           get '/:id'                                =>  'work_orders#labor'
+        end
+        scope '/work_order_infrastructures' do
+          get '/'                                   =>  'work_orders#infrastructures'
+          get '/:id'                                =>  'work_orders#infrastructure'
+        end
+        scope '/charge_accounts' do
+          get '/'                                   =>  'charge_accounts#all'
+          get '/by_project(/:project_id)'           =>  'charge_accounts#by_project'
+          get '/:id'                                =>  'charge_accounts#one'
+        end
+        scope '/projects' do
+          get '/'                                   =>  'projects#all'
+          get '/by_type(/:type_id)'                 =>  'projects#by_type'
+          get '/by_office(/:office_id)'             =>  'projects#by_office'
+          get '/:id'                                =>  'projects#one'
         end
       end
     end

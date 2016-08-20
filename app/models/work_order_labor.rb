@@ -11,6 +11,12 @@ class WorkOrderLabor < ActiveRecord::Base
   validates :work_order_type, :presence => true
   validates :organization,    :presence => true
 
+  # Scopes
+  scope :by_name, -> { order(:name) }
+  #
+  scope :belongs_to_organization, -> organization { where("organization_id = ?", organization).by_name }
+  scope :belongs_to_type, -> type { where("work_order_type_id = ?", type).by_name }
+
   before_destroy :check_for_dependent_records
 
   private

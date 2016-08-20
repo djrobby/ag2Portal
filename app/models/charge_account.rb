@@ -43,6 +43,11 @@ class ChargeAccount < ActiveRecord::Base
   validates :charge_group,    :presence => true
   validates :ledger_account,  :presence => true
 
+  # Scopes
+  scope :by_code, -> { order(:account_code) }
+  #
+  scope :belongs_to_project, -> project { where("project_id = ?", project).by_code }
+
   before_destroy :check_for_dependent_records
 
   def to_label
@@ -84,13 +89,25 @@ class ChargeAccount < ActiveRecord::Base
   #
   # Class (self) user defined methods
   #
-  def self.incomes
-    joins(:charge_group).where("(charge_groups.flow = ? OR charge_groups.flow = ?) AND charge_accounts.closed_at IS NULL", 1, 3).order(:account_code)
+  def self.incomes(project = nil)
+    if project.blank?
+      joins(:charge_group).where("(charge_groups.flow = ? OR charge_groups.flow = ?) AND charge_accounts.closed_at IS NULL", 1, 3).order(:account_code)
+    else
+      joins(:charge_group).where("project_id = ? AND (charge_groups.flow = ? OR charge_groups.flow = ?) AND charge_accounts.closed_at IS NULL", project, 1, 3).order(:account_code)
+    end
   end
 
-  def self.expenditures
-    joins(:charge_group).where("(charge_groups.flow = ? OR charge_groups.flow = ?) AND charge_accounts.closed_at IS NULL", 2, 3).order(:account_code)
+  def self.expenditures(project = nil)
+    if project.blank?
+      joins(:charge_group).where("(charge_groups.flow = ? OR charge_groups.flow = ?) AND charge_accounts.closed_at IS NULL", 2, 3).order(:account_code)
+    else
+      joins(:charge_group).where("project_id = ? AND (charge_groups.flow = ? OR charge_groups.flow = ?) AND charge_accounts.closed_at IS NULL", project, 2, 3).order(:account_code)
+    end
   end
+
+  # def self.expenditures
+  #   joins(:charge_group).where("(charge_groups.flow = ? OR charge_groups.flow = ?) AND charge_accounts.closed_at IS NULL", 2, 3).order(:account_code)
+  # end
 
   def self.incomes_and_expenditures
     joins(:charge_group).where("charge_groups.flow = ? AND charge_accounts.closed_at IS NULL", 3).order(:account_code)

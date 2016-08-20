@@ -12,5 +12,8 @@ module Ag2Tech
 
     has_one :work_order_area
     has_one :work_order_type
+    has_one :work_order_status
+    has_one :work_order_labor
+    has_one :project
   end
 end

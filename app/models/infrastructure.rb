@@ -18,6 +18,14 @@ class Infrastructure < ActiveRecord::Base
   validates :infrastructure_type, :presence => true
   validates :organization,        :presence => true
 
+  # Scopes
+  scope :by_code, -> { order(:code) }
+  #
+  scope :belongs_to_organization, -> organization { where("organization_id = ?", organization).by_code }
+  scope :belongs_to_company, -> company { where("company_id = ?", company).by_code }
+  scope :belongs_to_office, -> office { where("office_id = ?", office).by_code }
+  scope :belongs_to_type, -> type { where("infrastructure_type_id = ?", type).by_code }
+
   before_validation :fields_to_uppercase
   before_destroy :check_for_dependent_records
 
