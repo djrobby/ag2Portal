@@ -52,6 +52,13 @@ class Store < ActiveRecord::Base
   validates :town,          :presence => true
   validates :province,      :presence => true
 
+  # Scopes
+  scope :by_name, -> { order(:name) }
+  #
+  scope :belongs_to_organization, -> organization { where("organization_id = ?", organization).by_name }
+  scope :belongs_to_company, -> company { where("company_id = ?", company).by_name }
+  scope :belongs_to_office, -> office { where("office_id = ?", office).by_name }
+
   before_destroy :check_for_dependent_records
 
   #

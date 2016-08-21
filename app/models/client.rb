@@ -38,6 +38,11 @@ class Client < ActiveRecord::Base
   validates :organization,  :presence => true
   validates :payment_method,  :presence => true
 
+  # Scopes
+  scope :by_code, -> { order(:client_code) }
+  #
+  scope :belongs_to_organization, -> organization { where("organization_id = ?", organization).by_code }
+
   before_validation :fields_to_uppercase
   before_destroy :check_for_dependent_records
   after_create :should_create_shared_contact, if: :is_contact?

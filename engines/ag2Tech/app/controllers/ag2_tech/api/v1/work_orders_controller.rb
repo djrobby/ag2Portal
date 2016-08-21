@@ -33,6 +33,11 @@ module Ag2Tech
     # GET /api/v1/work_orders/unclosed(/:project_id) => completed but unclosed ones
     # GET /api/v1/work_orders/closed(/:project_id) => closed ones
     #
+    # Auxilary:
+    # GET /api/v1/work_order_<aux>/<method>[/<param>]?<auth>
+    # REST parameters => (<param>): optional
+    #               id: work order <aux> id
+    #
     # GET /api/v1/work_order_areas/ => areas
     # GET /api/v1/work_order_areas/:id => area
     # GET /api/v1/work_order_types/ => types

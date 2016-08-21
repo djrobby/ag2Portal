@@ -10,7 +10,7 @@ module Ag2Tech
     #               user_token=...
     # REST parameters => (<param>): optional
     #               project_id: project id
-    #               id: work order id
+    #               id: charge account id
     #
     # General:
     # GET /api/v1/charge_accounts/<method>[/<param>]?<auth>

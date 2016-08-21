@@ -272,6 +272,15 @@ Ag2Tech::Engine.routes.draw do
           get '/by_office(/:office_id)'             =>  'projects#by_office'
           get '/:id'                                =>  'projects#one'
         end
+        scope '/stores' do
+          get '/'                                   =>  'stores#all'
+          get '/by_office(/:office_id)'             =>  'stores#by_office'
+          get '/:id'                                =>  'stores#one'
+        end
+        scope '/clients' do
+          get '/'                                   =>  'clients#all'
+          get '/:id'                                =>  'clients#one'
+        end
       end
     end
 

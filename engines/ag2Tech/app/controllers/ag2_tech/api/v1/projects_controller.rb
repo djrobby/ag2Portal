@@ -9,8 +9,9 @@ module Ag2Tech
     #               user_email=...
     #               user_token=...
     # REST parameters => (<param>): optional
-    #               project_id: project id
-    #               id: work order id
+    #               type_id: type id
+    #               office_id: office id
+    #               id: project id
     #
     # General:
     # GET /api/v1/projects/<method>[/<param>]?<auth>
