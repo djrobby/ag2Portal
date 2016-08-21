@@ -35,6 +35,8 @@ class Subscriber < ActiveRecord::Base
                                 :length => { :minimum => 8 }
   validates :zipcode,           :presence => true
   validates :starting_at,       :presence => true
+  validates :first_name,        :presence => true, :if => "company.blank?"
+  validates :last_name,         :presence => true, :if => "company.blank?"
 
   # Scopes
   scope :by_code, -> { order(:subscriber_code) }
@@ -52,20 +54,50 @@ class Subscriber < ActiveRecord::Base
   end
 
   def to_label
-    "#{full_name}"
+    if !self.last_name.blank? && !self.first_name.blank?
+      "#{full_name_and_code}"
+    else
+      "#{full_code} #{company}"
+    end
   end
 
   def full_name
-    full_name = full_code
-    if !self.name.blank?
-      full_name += " " + self.name[0,40]
+    full_name = ""
+    if !self.last_name.blank?
+      full_name += self.last_name
     end
-    full_name
+    if !self.first_name.blank?
+      full_name += ", " + self.first_name
+    end
+    full_name[0,40]
+  end
+
+  def full_name_and_code
+    full_name = ""
+    if !self.last_name.blank?
+      full_name += self.last_name
+    end
+    if !self.first_name.blank?
+      full_name += ", " + self.first_name
+    end
+    full_name = full_code + " " + full_name[0,40]
   end
 
   def full_code
     # Subscriber code (Office id & sequential number) => OOOO-NNNNNNN
     subscriber_code.blank? ? "" : subscriber_code[0..3] + '-' + subscriber_code[4..10]
+  end
+
+  def client_first_name
+    self.client.first_name
+  end
+
+  def client_last_name
+    self.cllient.last_name
+  end
+
+  def client_company
+    self.client.company
   end
 
   def address_1

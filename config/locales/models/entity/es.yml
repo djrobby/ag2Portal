@@ -14,7 +14,7 @@ es:
       entity:
         fiscal_id: "Id Fiscal CIF/NIF"
         last_name: "Apellidos"
-        first_name: "Nombre"
+        first_name: "Nombres"
         company: "Nombre de empresa"
         entity_type: "Tipo"
         entity_type_id: "Tipo"
@@ -40,7 +40,7 @@ es:
         fax: "Fax"
         cellular: "Móvil"
         email: "Email"
-        full_name: "Nombre completo"
+        full_name: "Apellidos y Nombres"
         address: "Dirección"
         organization: "Organización"
         organization_id: "Organización"

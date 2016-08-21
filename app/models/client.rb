@@ -10,7 +10,7 @@ class Client < ActiveRecord::Base
   belongs_to :ledger_account
   belongs_to :payment_method
   attr_accessible :active, :building, :cellular, :client_code, :email, :fax, :fiscal_id, :floor, :floor_office,
-                  :name, :phone, :remarks, :street_name, :street_number, :organization_id,
+                  :first_name, :last_name, :company, :phone, :remarks, :street_name, :street_number, :organization_id,
                   :entity_id, :street_type_id, :zipcode_id, :town_id, :province_id, :region_id, :country_id,
                   :created_by, :updated_by, :is_contact, :shared_contact_id, :ledger_account_id, :payment_method_id
 
@@ -19,7 +19,8 @@ class Client < ActiveRecord::Base
 
   has_paper_trail
 
-  validates :name,          :presence => true
+  validates :first_name,    :presence => true, :if => "company.blank?"
+  validates :last_name,     :presence => true, :if => "company.blank?"
   validates :client_code,   :presence => true,
                             :length => { :is => 11 },
                             :format => { with: /\A\d+\Z/, message: :code_invalid },
@@ -49,35 +50,68 @@ class Client < ActiveRecord::Base
     if !self.client_code.blank?
       self[:client_code].upcase!
     end
+    true
   end
 
   def to_label
-    "#{full_name}"
+    if !self.last_name.blank? && !self.first_name.blank?
+      "#{full_name_and_code}"
+    else
+      "#{full_code} #{company}"
+    end
   end
 
   def full_name
-    full_name = full_code
-    if !self.name.blank?
-      full_name += " " + self.name[0,40]
+    full_name = ""
+    if !self.last_name.blank?
+      full_name += self.last_name
     end
-    full_name
+    if !self.first_name.blank?
+      full_name += ", " + self.first_name
+    end
+    full_name[0,40]
   end
 
-  def first_name
-    self.entity.first_name
+  def full_name_and_code
+    full_name = ""
+    if !self.last_name.blank?
+      full_name += self.last_name
+    end
+    if !self.first_name.blank?
+      full_name += ", " + self.first_name
+    end
+    full_name = full_code + " " + full_name[0,40]
   end
 
-  def last_name
-    self.entity.last_name
+  def full_name_or_company
+    full_name_or_company = ""
+    if !self.last_name.blank? && !self.first_name.blank?
+      full_name_or_company = full_name
+    else
+      full_name_or_company = company
+    end
+    full_name_or_company
   end
 
-  def company
-    self.entity.company
+  def full_name_or_company_and_code
+    full_code + " " + full_name_or_company
   end
 
   def full_code
     # Client code (Organization id & sequential number) => OOOO-NNNNNNN
     client_code.blank? ? "" : client_code[0..3] + '-' + client_code[4..10]
+  end
+
+  def entity_first_name
+    self.entity.first_name
+  end
+
+  def entity_last_name
+    self.entity.last_name
+  end
+
+  def entity_company
+    self.entity.company
   end
 
   def address_1
@@ -156,9 +190,12 @@ class Client < ActiveRecord::Base
   end
 
   searchable do
-    text :client_code, :name, :fiscal_id, :street_name, :phone, :cellular, :email
+    text :client_code, :first_name, :last_name, :company, :fiscal_id, :street_name, :phone, :cellular, :email
     string :client_code
-    string :name
+    string :company
+    string :last_name
+    string :first_name
+    string :fiscal_id
     integer :organization_id
   end
 
@@ -239,7 +276,7 @@ class Client < ActiveRecord::Base
   #
   # Creates new Shared Contact
   def create_shared_contact(_entity)
-    _contact = SharedContact.create(first_name: _entity.first_name, last_name: _entity.last_name, company: _entity.company,
+    _contact = SharedContact.create(first_name: first_name, last_name: last_name, company: company,
                                     fiscal_id: fiscal_id, street_type_id: street_type_id, street_name: street_name,
                                     street_number: street_number, building: building, floor: floor,
                                     floor_office: floor_office, zipcode_id: zipcode_id, town_id: town_id,
@@ -252,7 +289,7 @@ class Client < ActiveRecord::Base
 
   # Updates existing Shared Contact
   def update_shared_contact(_contact, _entity)
-    _contact.attributes = { first_name: _entity.first_name, last_name: _entity.last_name, company: _entity.company,
+    _contact.attributes = { first_name: first_name, last_name: last_name, company: company,
                             fiscal_id: fiscal_id, street_type_id: street_type_id, street_name: street_name,
                             street_number: street_number, building: building, floor: floor,
                             floor_office: floor_office, zipcode_id: zipcode_id, town_id: town_id,

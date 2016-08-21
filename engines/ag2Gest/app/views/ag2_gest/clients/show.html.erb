@@ -16,14 +16,14 @@
       <td><%= @client.entity_id %></td>
     </tr>
     <tr>
-      <td><%= t 'activerecord.attributes.client.name' %>:</td>
-      <td><%= @client.name %></td>
-      <td><%= t 'activerecord.attributes.client.active' %>:</td>
-      <td> <% if @client.active %> <i class="icon-thumbs-up"></i> <% else %> <i class="icon-thumbs-down"></i> <% end %> </td>
+      <td><%= t 'activerecord.attributes.client.company' %>:</td>
+      <td><%= @client.company %></td>
+      <td><%= t 'activerecord.attributes.client.full_name' %>:</td>
+      <td><%= @client.full_name %></td>
     </tr>
     <tr>
-      <td><%= t 'activerecord.attributes.client.organization' %>:</td>
-      <td><%= @client.organization.name unless @client.organization.blank? %></td>
+      <td><%= t 'activerecord.attributes.client.active' %>:</td>
+      <td> <% if @client.active %> <i class="icon-thumbs-up"></i> <% else %> <i class="icon-thumbs-down"></i> <% end %> </td>
       <td><%= t 'activerecord.attributes.client.is_contact' %>:</td>
       <td> <% if @client.is_contact %> <i class="icon-thumbs-up"></i> <% else %> <i class="icon-thumbs-down"></i> <% end %> </td>
     </tr>
@@ -102,7 +102,7 @@
 
 <%= render partial: '/layouts/crud/update_delete_new', locals:
 { model: Client, update_path: edit_client_path(@client), update_txt: t('.btn_edit'),
-delete_path: @client, delete_txt: t('.btn_delete'), msg: t("activerecord.models.client.one"), txt: @client.full_name,
+delete_path: @client, delete_txt: t('.btn_delete'), msg: t("activerecord.models.client.one"), txt: @client.full_name_or_company_and_code,
 new_path: new_client_path, new_txt: t('ag2_gest.clients.index.btn_new') } %>
 
 <% if !session[:return_to].nil? %>

@@ -43,6 +43,14 @@ class Entity < ActiveRecord::Base
     true
   end
 
+  def to_label
+    if !self.last_name.blank? && !self.first_name.blank?
+      "#{fiscal_id} #{full_name}"
+    else
+      "#{fiscal_id} #{company}"
+    end
+  end
+
   def full_name
     full_name = ""
     if !self.last_name.blank?
@@ -51,15 +59,7 @@ class Entity < ActiveRecord::Base
     if !self.first_name.blank?
       full_name += ", " + self.first_name
     end
-    full_name
-  end
-
-  def to_label
-    if !self.last_name.blank? && !self.first_name.blank?
-      "#{fiscal_id} #{full_name}"
-    else
-      "#{fiscal_id} #{company}"
-    end
+    full_name[0,40]
   end
 
   def floor_human
@@ -121,7 +121,7 @@ class Entity < ActiveRecord::Base
   def update_dependent_records
     # Update linked supplier
     if !supplier.nil?
-      if entity_type_id < 2
+      if entity_type_id < 2 # not legal person
         supplier.name = full_name
       else
         supplier.name = company
@@ -148,8 +148,9 @@ class Entity < ActiveRecord::Base
 
     # Update linked client
     if !client.nil?
-      if entity_type_id < 2
-        client.name = full_name
+      if entity_type_id < 2 # not legal person
+        client.full_name = full_name
+        client.last_name = last_name
       else
         client.name = company
       end

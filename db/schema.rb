@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20160815080520) do
+ActiveRecord::Schema.define(:version => 20160821080307) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -357,7 +357,6 @@ ActiveRecord::Schema.define(:version => 20160815080520) do
   create_table "clients", :force => true do |t|
     t.integer  "entity_id"
     t.string   "client_code"
-    t.string   "name"
     t.string   "fiscal_id"
     t.integer  "street_type_id"
     t.string   "street_name"
@@ -385,14 +384,19 @@ ActiveRecord::Schema.define(:version => 20160815080520) do
     t.integer  "shared_contact_id"
     t.integer  "ledger_account_id"
     t.integer  "payment_method_id"
+    t.string   "first_name"
+    t.string   "last_name"
+    t.string   "company"
   end
 
   add_index "clients", ["client_code"], :name => "index_clients_on_client_code"
+  add_index "clients", ["company"], :name => "index_clients_on_company"
   add_index "clients", ["country_id"], :name => "index_clients_on_country_id"
   add_index "clients", ["entity_id"], :name => "index_clients_on_entity_id"
+  add_index "clients", ["first_name"], :name => "index_clients_on_first_name"
   add_index "clients", ["fiscal_id"], :name => "index_clients_on_fiscal_id"
+  add_index "clients", ["last_name"], :name => "index_clients_on_last_name"
   add_index "clients", ["ledger_account_id"], :name => "index_clients_on_ledger_account_id"
-  add_index "clients", ["name"], :name => "index_clients_on_name"
   add_index "clients", ["organization_id", "client_code"], :name => "index_clients_on_organization_id_and_client_code", :unique => true
   add_index "clients", ["organization_id", "fiscal_id"], :name => "index_clients_on_organization_id_and_fiscal_id", :unique => true
   add_index "clients", ["organization_id"], :name => "index_clients_on_organization_id"

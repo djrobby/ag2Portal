@@ -12,10 +12,13 @@ en:
         check_for_client_charges: "Client cannot be destroyed while linked charges exist."
     attributes:
       client:
-        entity: "Entity Id"
+        entity: "Entity"
         entity_id: "Entity Id"
         client_code: "Code"
+        last_name: "Last name"
+        first_name: "First Name"
         name: "Name"
+        company: "Company name"
         fiscal_id: "Fiscal Id"
         fiscal_id_c: "Fiscal Id"
         province: "Province"
@@ -49,3 +52,4 @@ en:
         ledger_account_id: "Ledger account"
         payment_method: "Payment method"
         payment_method_id: "Payment method"
+        full_name: "Full Name"

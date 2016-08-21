@@ -337,7 +337,11 @@
   <label class="multi-field-label-two"><%= f.input :fiscal_id, required: true, input_html: { onkeyup: "caps(this)", class: 'large-text-field iconify' }, label_html: { class: 'form-label' } %> </label>
   <label class="multi-field-label-two"> <%= f.input :client_code, required: true, input_html: { onkeydown: "only_digit(event)", class: 'large-text-field geniconify', maxlength: 11 }, label_html: { class: 'form-label' } %> </label>
 </div>
-<%= f.input :name, :required => true, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %>
+<%= f.input :company, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %>
+<div>
+  <label class="multi-field-label-two"> <%= f.input :last_name, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.input :first_name, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+</div>
 <div>
   <label class="multi-field-label-two"> <%= f.input :active, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' }, :boolean_style => :inline %> </label>
   <label class="multi-field-label-two"> <%= f.input :is_contact, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' }, :boolean_style => :inline %> </label>

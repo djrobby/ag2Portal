@@ -29,7 +29,7 @@
       <% end %>
       <!--<td><a data-toggle="modal" href="#info<%#= client.id.to_s %>"><%#= client.client_code %></a></td>-->
       <td><%= link_to client.full_code, client %></td>
-      <td><%= client.name %></td>
+      <td><%= client.full_name_or_company %></td>
       <td><%= client.fiscal_id %></td>
       <td><%= client.phone unless client.phone.blank? %></td>
       <td><%= client.cellular unless client.cellular.blank? %></td>
@@ -37,7 +37,7 @@
       <!--<td> <%= link_to client, :class => 'btn btn-mini', :id => 'show' do %> <i class="icon-eye-open"></i> <% end %>-->
       <% end %>
       <td> <%= render :partial => '/layouts/crud/edit', :locals => { :model => Client, :path => edit_client_path(client) } %>
-      <%= render :partial => '/layouts/crud/delete', :locals => { :model => Client, :path => client, :msg => t("activerecord.models.client.one"), :txt => client.full_name } %> </td>
+      <%= render :partial => '/layouts/crud/delete', :locals => { :model => Client, :path => client, :msg => t("activerecord.models.client.one"), :txt => client.full_name_or_company_and_code } %> </td>
     </tr>
     <% end %>
   </tbody>

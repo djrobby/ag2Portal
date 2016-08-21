@@ -14,7 +14,7 @@ en:
       entity:
         fiscal_id: "Fiscal Id"
         last_name: "Last name"
-        first_name: "Name"
+        first_name: "First Name"
         company: "Company name"
         entity_type: "Type"
         entity_type_id: "Type"
