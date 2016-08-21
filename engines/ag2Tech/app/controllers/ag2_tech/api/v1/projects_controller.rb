@@ -11,13 +11,14 @@ module Ag2Tech
     # REST parameters => (<param>): optional
     #               project_id: project id
     #               id: work order id
+    #
     # General:
     # GET /api/v1/projects/<method>[/<param>]?<auth>
     #
     # GET /api/v1/projects => all
     # GET /api/v1/projects/:id => one
-    # GET /api/v1/projects/by_type/:project_id => by_type
-    # GET /api/v1/projects/by_type/:project_id => by_type
+    # GET /api/v1/projects/by_type/:type_id => by_type
+    # GET /api/v1/projects/by_office/:office_id => by_office
 
     # GET /api/projects
     def all

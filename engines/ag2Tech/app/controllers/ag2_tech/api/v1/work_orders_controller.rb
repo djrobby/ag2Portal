@@ -18,14 +18,15 @@ module Ag2Tech
     # REST parameters => (<param>): optional
     #               project_id: project id
     #               id: work order id
+    #
     # General:
     # GET /api/v1/work_orders/<method>[/<param>]?<auth>
     #
-    # GET /api/v1/work_orders => all
+    # GET /api/v1/work_orders => all (includes items)
     # GET /api/v1/work_orders/headers => headers (no items)
-    # GET /api/v1/work_orders/:id => one
+    # GET /api/v1/work_orders/:id => one (includes items)
     # GET /api/v1/work_orders/headers/:id => header (one, no items)
-    # GET /api/v1/work_orders/by_project/:project_id => by_project
+    # GET /api/v1/work_orders/by_project/:project_id => by_project (includes items)
     # GET /api/v1/work_orders/headers_by_project/:project_id => headers_by_project (no items)
     # GET /api/v1/work_orders/unstarted(/:project_id) => unstarted ones
     # GET /api/v1/work_orders/uncompleted(/:project_id) => started by uncompleted ones
@@ -41,7 +42,7 @@ module Ag2Tech
     # GET /api/v1/work_order_labors/ => labors
     # GET /api/v1/work_order_labors/:id => labor
     # GET /api/v1/work_order_infrastructures/ => infrastructures
-    # GET /api/v1/work_order_infrastructures/:id => infrestructure
+    # GET /api/v1/work_order_infrastructures/:id => infrastructure
 
     # GET /api/work_orders
     def all
