@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20160822115853) do
+ActiveRecord::Schema.define(:version => 20160822170055) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -135,6 +135,35 @@ ActiveRecord::Schema.define(:version => 20160822115853) do
   add_index "banks", ["code"], :name => "index_banks_on_code", :unique => true
   add_index "banks", ["name"], :name => "index_banks_on_name"
   add_index "banks", ["swift"], :name => "index_banks_on_swift"
+
+  create_table "billable_concepts", :force => true do |t|
+    t.string   "code"
+    t.string   "name"
+    t.string   "billable_document"
+    t.datetime "created_at",        :null => false
+    t.datetime "updated_at",        :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  add_index "billable_concepts", ["code"], :name => "index_billable_concepts_on_code", :unique => true
+
+  create_table "billable_items", :force => true do |t|
+    t.integer  "project_id"
+    t.integer  "billable_concept_id"
+    t.integer  "biller_id"
+    t.integer  "regulation_id"
+    t.datetime "created_at",          :null => false
+    t.datetime "updated_at",          :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  add_index "billable_items", ["billable_concept_id"], :name => "index_billable_items_on_billable_concept_id"
+  add_index "billable_items", ["biller_id"], :name => "index_billable_items_on_biller_id"
+  add_index "billable_items", ["project_id", "billable_concept_id"], :name => "index_billable_items_unique", :unique => true
+  add_index "billable_items", ["project_id"], :name => "index_billable_items_on_project_id"
+  add_index "billable_items", ["regulation_id"], :name => "index_billable_items_on_regulation_id"
 
   create_table "billing_frequencies", :force => true do |t|
     t.string   "name"
@@ -370,6 +399,8 @@ ActiveRecord::Schema.define(:version => 20160822115853) do
     t.date     "ending_at"
     t.datetime "created_at",            :null => false
     t.datetime "updated_at",            :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
   end
 
   add_index "client_bank_accounts", ["account_no"], :name => "index_client_bank_accounts_on_account_no"
@@ -534,6 +565,8 @@ ActiveRecord::Schema.define(:version => 20160822115853) do
     t.boolean  "required"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
   end
 
   create_table "contracting_request_documents", :force => true do |t|
@@ -545,6 +578,8 @@ ActiveRecord::Schema.define(:version => 20160822115853) do
     t.string   "attachment_content_type"
     t.integer  "attachment_file_size"
     t.datetime "attachment_updated_at"
+    t.integer  "created_by"
+    t.integer  "updated_by"
   end
 
   add_index "contracting_request_documents", ["contracting_request_document_type_id"], :name => "index_contracting_request_document_type"
@@ -555,12 +590,16 @@ ActiveRecord::Schema.define(:version => 20160822115853) do
     t.boolean  "requires_work_order"
     t.datetime "created_at",          :null => false
     t.datetime "updated_at",          :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
   end
 
   create_table "contracting_request_types", :force => true do |t|
     t.string   "description"
     t.datetime "created_at",  :null => false
     t.datetime "updated_at",  :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
   end
 
   create_table "contracting_requests", :force => true do |t|
@@ -640,6 +679,8 @@ ActiveRecord::Schema.define(:version => 20160822115853) do
     t.integer  "service_point_id"
     t.datetime "created_at",                     :null => false
     t.datetime "updated_at",                     :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
   end
 
   add_index "contracting_requests", ["bank_id"], :name => "index_contracting_requests_on_bank_id"
@@ -1033,6 +1074,22 @@ ActiveRecord::Schema.define(:version => 20160822115853) do
   add_index "inventory_movements", ["product_id"], :name => "index_inventory_movements_on_product_id"
   add_index "inventory_movements", ["store_id", "product_id", "type", "parent_id", "item_id"], :name => "index_inventory_movements_unique", :unique => true
   add_index "inventory_movements", ["store_id"], :name => "index_inventory_movements_on_store_id"
+
+  create_table "invoice_statuses", :force => true do |t|
+    t.string   "name"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  create_table "invoice_types", :force => true do |t|
+    t.string   "name"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
 
   create_table "ledger_accounts", :force => true do |t|
     t.string   "code"
@@ -1932,6 +1989,29 @@ ActiveRecord::Schema.define(:version => 20160822115853) do
     t.integer  "updated_by"
   end
 
+  create_table "regulation_types", :force => true do |t|
+    t.string   "description"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  create_table "regulations", :force => true do |t|
+    t.integer  "project_id"
+    t.integer  "regulation_type_id"
+    t.string   "description"
+    t.date     "starting_at"
+    t.date     "ending_at"
+    t.datetime "created_at",         :null => false
+    t.datetime "updated_at",         :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  add_index "regulations", ["project_id"], :name => "index_regulations_on_project_id"
+  add_index "regulations", ["regulation_type_id"], :name => "index_regulations_on_regulation_type_id"
+
   create_table "roles", :force => true do |t|
     t.string   "name"
     t.integer  "resource_id"
@@ -2620,6 +2700,83 @@ ActiveRecord::Schema.define(:version => 20160822115853) do
 
   add_index "suppliers_activities", ["supplier_id", "activity_id"], :name => "index_suppliers_activities_on_supplier_id_and_activity_id"
 
+  create_table "tariff_schemes", :force => true do |t|
+    t.integer  "project_id"
+    t.string   "name"
+    t.integer  "tariff_type_id"
+    t.date     "starting_at"
+    t.date     "ending_at"
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  add_index "tariff_schemes", ["project_id"], :name => "index_tariff_schemes_on_project_id"
+  add_index "tariff_schemes", ["tariff_type_id"], :name => "index_tariff_schemes_on_tariff_type_id"
+
+  create_table "tariff_types", :force => true do |t|
+    t.string   "code"
+    t.string   "name"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  add_index "tariff_types", ["code"], :name => "index_tariff_types_on_code", :unique => true
+
+  create_table "tariffs", :force => true do |t|
+    t.integer  "tariff_scheme_id"
+    t.integer  "billable_item_id"
+    t.integer  "tariff_type_id"
+    t.integer  "caliber_id"
+    t.integer  "billing_frequency_id"
+    t.decimal  "fixed_fee",                     :precision => 10, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "variable_fee",                  :precision => 10, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "percentage_fee",                :precision => 6,  :scale => 2, :default => 0.0, :null => false
+    t.string   "percentage_applicable_formula"
+    t.integer  "block1_limit"
+    t.integer  "block2_limit"
+    t.integer  "block3_limit"
+    t.integer  "block4_limit"
+    t.integer  "block5_limit"
+    t.integer  "block6_limit"
+    t.integer  "block7_limit"
+    t.integer  "block8_limit"
+    t.decimal  "block1_fee",                    :precision => 10, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "block2_fee",                    :precision => 10, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "block3_fee",                    :precision => 10, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "block4_fee",                    :precision => 10, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "block5_fee",                    :precision => 10, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "block6_fee",                    :precision => 10, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "block7_fee",                    :precision => 10, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "block8_fee",                    :precision => 10, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "discount_pct_f",                :precision => 6,  :scale => 2, :default => 0.0, :null => false
+    t.decimal  "discount_pct_v",                :precision => 6,  :scale => 2, :default => 0.0, :null => false
+    t.decimal  "discount_pct_p",                :precision => 6,  :scale => 2, :default => 0.0, :null => false
+    t.decimal  "discount_pct_b",                :precision => 6,  :scale => 2, :default => 0.0, :null => false
+    t.integer  "tax_type_f_id"
+    t.integer  "tax_type_v_id"
+    t.integer  "tax_type_p_id"
+    t.integer  "tax_type_b_id"
+    t.datetime "created_at",                                                                    :null => false
+    t.datetime "updated_at",                                                                    :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  add_index "tariffs", ["billable_item_id"], :name => "index_tariffs_on_billable_item_id"
+  add_index "tariffs", ["billing_frequency_id"], :name => "index_tariffs_on_billing_frequency_id"
+  add_index "tariffs", ["caliber_id"], :name => "index_tariffs_on_caliber_id"
+  add_index "tariffs", ["tariff_scheme_id", "billable_item_id", "tariff_type_id", "caliber_id", "billing_frequency_id"], :name => "index_tariffs_unique", :unique => true
+  add_index "tariffs", ["tariff_scheme_id"], :name => "index_tariffs_on_tariff_scheme_id"
+  add_index "tariffs", ["tariff_type_id"], :name => "index_tariffs_on_tariff_type_id"
+  add_index "tariffs", ["tax_type_b_id"], :name => "index_tariffs_on_tax_type_b_id"
+  add_index "tariffs", ["tax_type_f_id"], :name => "index_tariffs_on_tax_type_f_id"
+  add_index "tariffs", ["tax_type_p_id"], :name => "index_tariffs_on_tax_type_p_id"
+  add_index "tariffs", ["tax_type_v_id"], :name => "index_tariffs_on_tax_type_v_id"
+
   create_table "tax_types", :force => true do |t|
     t.string   "description"
     t.decimal  "tax",         :precision => 6, :scale => 2, :default => 0.0, :null => false
@@ -2951,6 +3108,8 @@ ActiveRecord::Schema.define(:version => 20160822115853) do
     t.string   "remarks"
     t.datetime "created_at",               :null => false
     t.datetime "updated_at",               :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
   end
 
   add_index "water_connection_contracts", ["bill_id"], :name => "index_water_connection_contracts_on_bill_id"
@@ -3004,6 +3163,8 @@ ActiveRecord::Schema.define(:version => 20160822115853) do
     t.string   "remarks"
     t.datetime "created_at",                                         :null => false
     t.datetime "updated_at",                                         :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
   end
 
   add_index "water_supply_contracts", ["bill_id"], :name => "index_water_supply_contracts_on_bill_id"
