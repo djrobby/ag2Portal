@@ -1,0 +1,9 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  contracting_request: 
+  contracting_request_document_type: 
+
+two:
+  contracting_request: 
+  contracting_request_document_type: 

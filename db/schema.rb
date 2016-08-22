@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20160821080307) do
+ActiveRecord::Schema.define(:version => 20160822115853) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -354,6 +354,35 @@ ActiveRecord::Schema.define(:version => 20160821080307) do
   add_index "charge_groups", ["organization_id", "group_code"], :name => "index_charge_groups_on_organization_and_code", :unique => true
   add_index "charge_groups", ["organization_id"], :name => "index_charge_groups_on_organization_id"
 
+  create_table "client_bank_accounts", :force => true do |t|
+    t.integer  "client_id"
+    t.integer  "subscriber_id"
+    t.integer  "bank_account_class_id"
+    t.integer  "country_id"
+    t.string   "iban_dc"
+    t.integer  "bank_id"
+    t.integer  "bank_office_id"
+    t.string   "ccc_dc"
+    t.string   "account_no"
+    t.string   "holder_fiscal_id"
+    t.string   "holder_name"
+    t.date     "starting_at"
+    t.date     "ending_at"
+    t.datetime "created_at",            :null => false
+    t.datetime "updated_at",            :null => false
+  end
+
+  add_index "client_bank_accounts", ["account_no"], :name => "index_client_bank_accounts_on_account_no"
+  add_index "client_bank_accounts", ["bank_account_class_id"], :name => "index_client_bank_accounts_on_bank_account_class_id"
+  add_index "client_bank_accounts", ["bank_id"], :name => "index_client_bank_accounts_on_bank_id"
+  add_index "client_bank_accounts", ["bank_office_id"], :name => "index_client_bank_accounts_on_bank_office_id"
+  add_index "client_bank_accounts", ["client_id", "subscriber_id", "bank_account_class_id", "country_id", "iban_dc", "bank_id", "bank_office_id", "ccc_dc", "account_no"], :name => "index_client_bank_accounts_on_client_and_class_and_no", :unique => true
+  add_index "client_bank_accounts", ["client_id"], :name => "index_client_bank_accounts_on_client_id"
+  add_index "client_bank_accounts", ["country_id"], :name => "index_client_bank_accounts_on_country_id"
+  add_index "client_bank_accounts", ["holder_fiscal_id"], :name => "index_client_bank_accounts_on_holder_fiscal_id"
+  add_index "client_bank_accounts", ["holder_name"], :name => "index_client_bank_accounts_on_holder_name"
+  add_index "client_bank_accounts", ["subscriber_id"], :name => "index_client_bank_accounts_on_subscriber_id"
+
   create_table "clients", :force => true do |t|
     t.integer  "entity_id"
     t.string   "client_code"
@@ -499,6 +528,153 @@ ActiveRecord::Schema.define(:version => 20160821080307) do
   add_index "contract_types", ["nomina_id"], :name => "index_contract_types_on_nomina_id"
   add_index "contract_types", ["organization_id", "ct_code"], :name => "index_contract_types_on_organization_id_and_ct_code", :unique => true
   add_index "contract_types", ["organization_id"], :name => "index_contract_types_on_organization_id"
+
+  create_table "contracting_request_document_types", :force => true do |t|
+    t.string   "name"
+    t.boolean  "required"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  create_table "contracting_request_documents", :force => true do |t|
+    t.integer  "contracting_request_id"
+    t.integer  "contracting_request_document_type_id"
+    t.datetime "created_at",                           :null => false
+    t.datetime "updated_at",                           :null => false
+    t.string   "attachment_file_name"
+    t.string   "attachment_content_type"
+    t.integer  "attachment_file_size"
+    t.datetime "attachment_updated_at"
+  end
+
+  add_index "contracting_request_documents", ["contracting_request_document_type_id"], :name => "index_contracting_request_document_type"
+  add_index "contracting_request_documents", ["contracting_request_id"], :name => "index_contracting_request_documents_on_contracting_request_id"
+
+  create_table "contracting_request_statuses", :force => true do |t|
+    t.string   "name"
+    t.boolean  "requires_work_order"
+    t.datetime "created_at",          :null => false
+    t.datetime "updated_at",          :null => false
+  end
+
+  create_table "contracting_request_types", :force => true do |t|
+    t.string   "description"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+  end
+
+  create_table "contracting_requests", :force => true do |t|
+    t.string   "request_no"
+    t.integer  "project_id"
+    t.date     "request_date"
+    t.integer  "entity_id"
+    t.integer  "contracting_request_type_id"
+    t.integer  "contracting_request_status_id"
+    t.string   "r_last_name"
+    t.string   "r_first_name"
+    t.string   "r_fiscal_id"
+    t.integer  "entity_street_directory_id"
+    t.integer  "entity_street_type_id"
+    t.string   "entity_fiscal_id"
+    t.string   "entity_street_name"
+    t.string   "entity_street_number"
+    t.string   "entity_building"
+    t.string   "entity_floor"
+    t.string   "entity_floor_office"
+    t.integer  "entity_zipcode_id"
+    t.integer  "entity_town_id"
+    t.integer  "entity_province_id"
+    t.integer  "entity_region_id"
+    t.integer  "entity_country_id"
+    t.string   "entity_phone"
+    t.string   "entity_fax"
+    t.string   "entity_cellular"
+    t.string   "entity_email"
+    t.string   "client_last_name"
+    t.string   "client_first_name"
+    t.string   "client_company"
+    t.integer  "client_street_directory_id"
+    t.integer  "client_street_type_id"
+    t.string   "client_street_name"
+    t.string   "client_street_number"
+    t.string   "client_building"
+    t.string   "client_floor"
+    t.string   "client_floor_office"
+    t.integer  "client_zipcode_id"
+    t.integer  "client_town_id"
+    t.integer  "client_province_id"
+    t.integer  "client_region_id"
+    t.integer  "client_country_id"
+    t.string   "client_phone"
+    t.string   "client_fax"
+    t.string   "client_cellular"
+    t.string   "client_email"
+    t.string   "subscriber_last_name"
+    t.string   "subscriber_first_name"
+    t.string   "subscriber_company"
+    t.integer  "subscriber_street_directory_id"
+    t.integer  "subscriber_street_type_id"
+    t.string   "subscriber_street_name"
+    t.string   "subscriber_street_number"
+    t.string   "subscriber_building"
+    t.string   "subscriber_floor"
+    t.string   "subscriber_floor_office"
+    t.integer  "subscriber_zipcode_id"
+    t.integer  "subscriber_town_id"
+    t.integer  "subscriber_province_id"
+    t.integer  "subscriber_region_id"
+    t.integer  "subscriber_country_id"
+    t.integer  "subscriber_center_id"
+    t.string   "subscriber_phone"
+    t.string   "subscriber_fax"
+    t.string   "subscriber_cellular"
+    t.string   "subscriber_email"
+    t.integer  "country_id"
+    t.string   "iban_dc"
+    t.integer  "bank_id"
+    t.integer  "bank_office_id"
+    t.string   "ccc_dc"
+    t.string   "account_no"
+    t.integer  "work_order_id"
+    t.integer  "subscriber_id"
+    t.integer  "service_point_id"
+    t.datetime "created_at",                     :null => false
+    t.datetime "updated_at",                     :null => false
+  end
+
+  add_index "contracting_requests", ["bank_id"], :name => "index_contracting_requests_on_bank_id"
+  add_index "contracting_requests", ["bank_office_id"], :name => "index_contracting_requests_on_bank_office_id"
+  add_index "contracting_requests", ["client_country_id"], :name => "index_contracting_requests_on_client_country_id"
+  add_index "contracting_requests", ["client_province_id"], :name => "index_contracting_requests_on_client_province_id"
+  add_index "contracting_requests", ["client_region_id"], :name => "index_contracting_requests_on_client_region_id"
+  add_index "contracting_requests", ["client_street_directory_id"], :name => "index_contracting_requests_on_client_street_directory_id"
+  add_index "contracting_requests", ["client_street_type_id"], :name => "index_contracting_requests_on_client_street_type_id"
+  add_index "contracting_requests", ["client_town_id"], :name => "index_contracting_requests_on_client_town_id"
+  add_index "contracting_requests", ["client_zipcode_id"], :name => "index_contracting_requests_on_client_zipcode_id"
+  add_index "contracting_requests", ["contracting_request_status_id"], :name => "index_contracting_requests_on_contracting_request_status_id"
+  add_index "contracting_requests", ["contracting_request_type_id"], :name => "index_contracting_requests_on_contracting_request_type_id"
+  add_index "contracting_requests", ["country_id"], :name => "index_contracting_requests_on_country_id"
+  add_index "contracting_requests", ["entity_country_id"], :name => "index_contracting_requests_on_entity_country_id"
+  add_index "contracting_requests", ["entity_id"], :name => "index_contracting_requests_on_entity_id"
+  add_index "contracting_requests", ["entity_province_id"], :name => "index_contracting_requests_on_entity_province_id"
+  add_index "contracting_requests", ["entity_region_id"], :name => "index_contracting_requests_on_entity_region_id"
+  add_index "contracting_requests", ["entity_street_directory_id"], :name => "index_contracting_requests_on_entity_street_directory_id"
+  add_index "contracting_requests", ["entity_street_type_id"], :name => "index_contracting_requests_on_entity_street_type_id"
+  add_index "contracting_requests", ["entity_town_id"], :name => "index_contracting_requests_on_entity_town_id"
+  add_index "contracting_requests", ["entity_zipcode_id"], :name => "index_contracting_requests_on_entity_zipcode_id"
+  add_index "contracting_requests", ["project_id"], :name => "index_contracting_requests_on_project_id"
+  add_index "contracting_requests", ["r_fiscal_id"], :name => "index_contracting_requests_on_r_fiscal_id"
+  add_index "contracting_requests", ["service_point_id"], :name => "index_contracting_requests_on_service_point_id"
+  add_index "contracting_requests", ["subscriber_center_id"], :name => "index_contracting_requests_on_subscriber_center_id"
+  add_index "contracting_requests", ["subscriber_country_id"], :name => "index_contracting_requests_on_subscriber_country_id"
+  add_index "contracting_requests", ["subscriber_id"], :name => "index_contracting_requests_on_subscriber_id"
+  add_index "contracting_requests", ["subscriber_province_id"], :name => "index_contracting_requests_on_subscriber_province_id"
+  add_index "contracting_requests", ["subscriber_region_id"], :name => "index_contracting_requests_on_subscriber_region_id"
+  add_index "contracting_requests", ["subscriber_street_directory_id"], :name => "index_contracting_requests_on_subscriber_street_directory_id"
+  add_index "contracting_requests", ["subscriber_street_type_id"], :name => "index_contracting_requests_on_subscriber_street_type_id"
+  add_index "contracting_requests", ["subscriber_town_id"], :name => "index_contracting_requests_on_subscriber_town_id"
+  add_index "contracting_requests", ["subscriber_zipcode_id"], :name => "index_contracting_requests_on_subscriber_zipcode_id"
+  add_index "contracting_requests", ["work_order_id"], :name => "index_contracting_requests_on_work_order_id"
 
   create_table "corp_contacts", :force => true do |t|
     t.string   "first_name"
@@ -2763,6 +2939,28 @@ ActiveRecord::Schema.define(:version => 20160821080307) do
 
   add_index "versions", ["item_type", "item_id"], :name => "index_versions_on_item_type_and_item_id"
 
+  create_table "water_connection_contracts", :force => true do |t|
+    t.integer  "contracting_request_id"
+    t.integer  "water_connection_type_id"
+    t.date     "contract_date"
+    t.integer  "client_id"
+    t.integer  "work_order_id"
+    t.integer  "sale_offer_id"
+    t.integer  "tariff_id"
+    t.integer  "bill_id"
+    t.string   "remarks"
+    t.datetime "created_at",               :null => false
+    t.datetime "updated_at",               :null => false
+  end
+
+  add_index "water_connection_contracts", ["bill_id"], :name => "index_water_connection_contracts_on_bill_id"
+  add_index "water_connection_contracts", ["client_id"], :name => "index_water_connection_contracts_on_client_id"
+  add_index "water_connection_contracts", ["contracting_request_id"], :name => "index_water_connection_contracts_on_contracting_request_id"
+  add_index "water_connection_contracts", ["sale_offer_id"], :name => "index_water_connection_contracts_on_sale_offer_id"
+  add_index "water_connection_contracts", ["tariff_id"], :name => "index_water_connection_contracts_on_tariff_id"
+  add_index "water_connection_contracts", ["water_connection_type_id"], :name => "index_water_connection_contracts_on_water_connection_type_id"
+  add_index "water_connection_contracts", ["work_order_id"], :name => "index_water_connection_contracts_on_work_order_id"
+
   create_table "water_connection_types", :force => true do |t|
     t.string   "name"
     t.datetime "created_at", :null => false
@@ -2784,6 +2982,39 @@ ActiveRecord::Schema.define(:version => 20160821080307) do
 
   add_index "water_connections", ["gis_id"], :name => "index_water_connections_on_gis_id"
   add_index "water_connections", ["water_connection_type_id"], :name => "index_water_connections_on_water_connection_type_id"
+
+  create_table "water_supply_contracts", :force => true do |t|
+    t.integer  "contracting_request_id"
+    t.integer  "client_id"
+    t.integer  "subscriber_id"
+    t.integer  "reading_route_id"
+    t.integer  "work_order_id"
+    t.integer  "meter_id"
+    t.integer  "tariff_scheme_id"
+    t.integer  "bill_id"
+    t.integer  "caliber_id"
+    t.date     "contract_date"
+    t.integer  "reading_sequence"
+    t.string   "cadastral_reference"
+    t.string   "gis_id"
+    t.integer  "endowments",             :limit => 2, :default => 0
+    t.integer  "inhabitants",            :limit => 2, :default => 0
+    t.date     "installation_date"
+    t.integer  "installation_index"
+    t.string   "remarks"
+    t.datetime "created_at",                                         :null => false
+    t.datetime "updated_at",                                         :null => false
+  end
+
+  add_index "water_supply_contracts", ["bill_id"], :name => "index_water_supply_contracts_on_bill_id"
+  add_index "water_supply_contracts", ["caliber_id"], :name => "index_water_supply_contracts_on_caliber_id"
+  add_index "water_supply_contracts", ["client_id"], :name => "index_water_supply_contracts_on_client_id"
+  add_index "water_supply_contracts", ["contracting_request_id"], :name => "index_water_supply_contracts_on_contracting_request_id"
+  add_index "water_supply_contracts", ["meter_id"], :name => "index_water_supply_contracts_on_meter_id"
+  add_index "water_supply_contracts", ["reading_route_id"], :name => "index_water_supply_contracts_on_reading_route_id"
+  add_index "water_supply_contracts", ["subscriber_id"], :name => "index_water_supply_contracts_on_subscriber_id"
+  add_index "water_supply_contracts", ["tariff_scheme_id"], :name => "index_water_supply_contracts_on_tariff_scheme_id"
+  add_index "water_supply_contracts", ["work_order_id"], :name => "index_water_supply_contracts_on_work_order_id"
 
   create_table "work_order_areas", :force => true do |t|
     t.string   "name"
