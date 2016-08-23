@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20160822170055) do
+ActiveRecord::Schema.define(:version => 20160823075513) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -198,6 +198,45 @@ ActiveRecord::Schema.define(:version => 20160822170055) do
   add_index "billing_periods", ["period"], :name => "index_billing_periods_on_period"
   add_index "billing_periods", ["project_id", "period"], :name => "index_billing_periods_unique", :unique => true
   add_index "billing_periods", ["project_id"], :name => "index_billing_periods_on_project_id"
+
+  create_table "bills", :force => true do |t|
+    t.string   "bill_no"
+    t.integer  "project_id"
+    t.integer  "client_id"
+    t.integer  "subscriber_id"
+    t.integer  "invoice_status_id"
+    t.date     "bill_date"
+    t.string   "last_name"
+    t.string   "first_name"
+    t.string   "company"
+    t.string   "fiscal_id"
+    t.integer  "street_type_id"
+    t.string   "street_name"
+    t.string   "street_number"
+    t.string   "building"
+    t.string   "floor"
+    t.string   "floor_office"
+    t.integer  "zipcode_id"
+    t.integer  "town_id"
+    t.integer  "province_id"
+    t.integer  "region_id"
+    t.integer  "country_id"
+    t.datetime "created_at",        :null => false
+    t.datetime "updated_at",        :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  add_index "bills", ["client_id"], :name => "index_bills_on_client_id"
+  add_index "bills", ["country_id"], :name => "index_bills_on_country_id"
+  add_index "bills", ["invoice_status_id"], :name => "index_bills_on_invoice_status_id"
+  add_index "bills", ["project_id"], :name => "index_bills_on_project_id"
+  add_index "bills", ["province_id"], :name => "index_bills_on_province_id"
+  add_index "bills", ["region_id"], :name => "index_bills_on_region_id"
+  add_index "bills", ["street_type_id"], :name => "index_bills_on_street_type_id"
+  add_index "bills", ["subscriber_id"], :name => "index_bills_on_subscriber_id"
+  add_index "bills", ["town_id"], :name => "index_bills_on_town_id"
+  add_index "bills", ["zipcode_id"], :name => "index_bills_on_zipcode_id"
 
   create_table "budget_groups", :force => true do |t|
     t.integer  "budget_id"
@@ -1483,6 +1522,91 @@ ActiveRecord::Schema.define(:version => 20160822170055) do
   add_index "payment_methods", ["flow"], :name => "index_payment_methods_on_flow"
   add_index "payment_methods", ["organization_id"], :name => "index_payment_methods_on_organization_id"
 
+  create_table "pre_bills", :force => true do |t|
+    t.string   "bill_no"
+    t.integer  "project_id"
+    t.integer  "client_id"
+    t.integer  "subscriber_id"
+    t.integer  "invoice_status_id"
+    t.date     "bill_date"
+    t.string   "last_name"
+    t.string   "first_name"
+    t.string   "company"
+    t.string   "fiscal_id"
+    t.integer  "street_type_id"
+    t.string   "street_name"
+    t.string   "street_number"
+    t.string   "building"
+    t.string   "floor"
+    t.string   "floor_office"
+    t.integer  "zipcode_id"
+    t.integer  "town_id"
+    t.integer  "province_id"
+    t.integer  "region_id"
+    t.integer  "country_id"
+    t.integer  "bill_id"
+    t.datetime "confirmation_date"
+    t.datetime "created_at",        :null => false
+    t.datetime "updated_at",        :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  add_index "pre_bills", ["bill_id"], :name => "index_pre_bills_on_bill_id"
+  add_index "pre_bills", ["client_id"], :name => "index_pre_bills_on_client_id"
+  add_index "pre_bills", ["country_id"], :name => "index_pre_bills_on_country_id"
+  add_index "pre_bills", ["invoice_status_id"], :name => "index_pre_bills_on_invoice_status_id"
+  add_index "pre_bills", ["project_id"], :name => "index_pre_bills_on_project_id"
+  add_index "pre_bills", ["province_id"], :name => "index_pre_bills_on_province_id"
+  add_index "pre_bills", ["region_id"], :name => "index_pre_bills_on_region_id"
+  add_index "pre_bills", ["street_type_id"], :name => "index_pre_bills_on_street_type_id"
+  add_index "pre_bills", ["subscriber_id"], :name => "index_pre_bills_on_subscriber_id"
+  add_index "pre_bills", ["town_id"], :name => "index_pre_bills_on_town_id"
+  add_index "pre_bills", ["zipcode_id"], :name => "index_pre_bills_on_zipcode_id"
+
+  create_table "pre_reading_incidences", :force => true do |t|
+    t.integer  "pre_reading_id"
+    t.integer  "reading_incidence_type_id"
+    t.datetime "created_at",                :null => false
+    t.datetime "updated_at",                :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  create_table "pre_readings", :force => true do |t|
+    t.integer  "project_id"
+    t.integer  "billing_period_id"
+    t.integer  "billing_frequency_id"
+    t.integer  "reading_type_id"
+    t.integer  "meter_id"
+    t.integer  "subscriber_id"
+    t.integer  "reading_route_id"
+    t.integer  "reading_sequence"
+    t.string   "reading_variant"
+    t.datetime "reading_date"
+    t.integer  "reading_index"
+    t.integer  "reading_1_id"
+    t.integer  "reading_2_id"
+    t.integer  "reading_index_1"
+    t.integer  "reading_index_2"
+    t.datetime "created_at",           :null => false
+    t.datetime "updated_at",           :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  add_index "pre_readings", ["billing_frequency_id"], :name => "index_pre_readings_on_billing_frequency_id"
+  add_index "pre_readings", ["billing_period_id"], :name => "index_pre_readings_on_billing_period_id"
+  add_index "pre_readings", ["meter_id"], :name => "index_pre_readings_on_meter_id"
+  add_index "pre_readings", ["project_id", "billing_period_id", "reading_type_id", "meter_id", "reading_date"], :name => "index_pre_readings_unique", :unique => true
+  add_index "pre_readings", ["project_id"], :name => "index_pre_readings_on_project_id"
+  add_index "pre_readings", ["reading_1_id"], :name => "index_pre_readings_on_reading_1_id"
+  add_index "pre_readings", ["reading_2_id"], :name => "index_pre_readings_on_reading_2_id"
+  add_index "pre_readings", ["reading_date"], :name => "index_pre_readings_on_reading_date"
+  add_index "pre_readings", ["reading_route_id"], :name => "index_pre_readings_on_reading_route_id"
+  add_index "pre_readings", ["reading_type_id"], :name => "index_pre_readings_on_reading_type_id"
+  add_index "pre_readings", ["subscriber_id"], :name => "index_pre_readings_on_subscriber_id"
+
   create_table "product_company_prices", :force => true do |t|
     t.integer  "product_id"
     t.integer  "company_id"
@@ -1839,15 +1963,15 @@ ActiveRecord::Schema.define(:version => 20160822170055) do
 
   create_table "reading_incidences", :force => true do |t|
     t.integer  "reading_id"
-    t.integer  "reading_incidence_id"
-    t.datetime "created_at",           :null => false
-    t.datetime "updated_at",           :null => false
+    t.datetime "created_at",                :null => false
+    t.datetime "updated_at",                :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
+    t.integer  "reading_incidence_type_id"
   end
 
   add_index "reading_incidences", ["reading_id"], :name => "index_reading_incidences_on_reading_id"
-  add_index "reading_incidences", ["reading_incidence_id"], :name => "index_reading_incidences_on_reading_incidence_id"
+  add_index "reading_incidences", ["reading_incidence_type_id"], :name => "index_reading_incidences_on_reading_incidence_type_id"
 
   create_table "reading_routes", :force => true do |t|
     t.integer  "project_id"
@@ -1889,10 +2013,14 @@ ActiveRecord::Schema.define(:version => 20160822170055) do
     t.datetime "updated_at",                          :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
+    t.integer  "invoice_id"
+    t.integer  "reading_index_1"
+    t.integer  "reading_index_2"
   end
 
   add_index "readings", ["billing_frequency_id"], :name => "index_readings_on_billing_frequency_id"
   add_index "readings", ["billing_period_id"], :name => "index_readings_on_billing_period_id"
+  add_index "readings", ["invoice_id"], :name => "index_readings_on_invoice_id"
   add_index "readings", ["meter_id"], :name => "index_readings_on_meter_id"
   add_index "readings", ["project_id", "billing_period_id", "reading_type_id", "meter_id", "reading_date"], :name => "index_readings_unique", :unique => true
   add_index "readings", ["project_id"], :name => "index_readings_on_project_id"
