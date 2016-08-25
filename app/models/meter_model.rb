@@ -1,7 +1,7 @@
 class MeterModel < ActiveRecord::Base
   belongs_to :meter_type
   belongs_to :meter_brand
-  attr_accessible :model, :meter_type_id, :meter_brand_id, :digits, :dials
+  attr_accessible :model, :meter_type_id, :meter_brand_id, :digits, :dials, :letter_id
 
   has_many :meters
 

@@ -9,6 +9,7 @@ class Client < ActiveRecord::Base
   belongs_to :organization
   belongs_to :ledger_account
   belongs_to :payment_method
+  belongs_to :shared_contact
   attr_accessible :active, :building, :cellular, :client_code, :email, :fax, :fiscal_id, :floor, :floor_office,
                   :first_name, :last_name, :company, :phone, :remarks, :street_name, :street_number, :organization_id,
                   :entity_id, :street_type_id, :zipcode_id, :town_id, :province_id, :region_id, :country_id,
@@ -16,11 +17,13 @@ class Client < ActiveRecord::Base
 
   has_many :delivery_notes
   has_many :sale_offers
+  has_many :client_bank_accounts
 
   has_paper_trail
 
   validates :first_name,    :presence => true, :if => "company.blank?"
   validates :last_name,     :presence => true, :if => "company.blank?"
+  validates :company,       :presence => true, :if => "last_name.blank?"
   validates :client_code,   :presence => true,
                             :length => { :is => 11 },
                             :format => { with: /\A\d+\Z/, message: :code_invalid },

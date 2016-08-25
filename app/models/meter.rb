@@ -9,10 +9,9 @@ class Meter < ActiveRecord::Base
                   :meter_model_id, :caliber_id, :meter_owner_id, :organization_id, :company_id, :office_id,
                   :created_by, :updated_by
 
-  has_many :meter_details
+  has_many :meter_details, dependent: :destroy
   has_many :work_orders
   has_many :subscribers
-  has_many :meter_details, dependent: :destroy
 
   has_paper_trail
 
@@ -27,6 +26,11 @@ class Meter < ActiveRecord::Base
   validates :manufacturing_year,  :presence => true,
                                   :length => { :is => 4 },
                                   :numericality => { :only_integer => true, :greater_than => 0 }
+
+
+  # Scopes
+  scope :by_code, -> { order(:meter_code) }
+  scope :availables, ->(old_subscriber=nil) { select{|m| m.subscriber.nil? or m.id == old_subscriber} }
 
   before_validation :fields_to_uppercase
   before_destroy :check_for_dependent_records
@@ -49,7 +53,23 @@ class Meter < ActiveRecord::Base
     if !self.meter_model.blank?
       full_name += " " + self.meter_model.full_name
     end
+    if !self.caliber.blank?
+      full_name += " " + self.caliber.caliber
+    end
     full_name
+  end
+
+  #
+  # Class (self) user defined methods
+  #
+  def self.filter_organization(session, current_user)
+    if session != '0'
+      Meter.where(organization_id: session.to_i)
+    elsif current_user.organizations.count > 0
+      Meter.where(organization_id: current_user.organizations.map(&:id))
+    else
+      Meter.all
+    end
   end
 
   #

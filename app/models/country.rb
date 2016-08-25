@@ -8,6 +8,7 @@ class Country < ActiveRecord::Base
   has_many :suppliers
   has_many :clients
   has_many :supplier_bank_accounts
+  has_many :client_bank_accounts
 
   has_paper_trail
 
@@ -70,11 +71,9 @@ class Country < ActiveRecord::Base
       return false
     end
     # Check for client bank accounts
-=begin
     if client_bank_accounts.count > 0
       errors.add(:base, I18n.t('activerecord.models.country.check_for_client_bank_accounts'))
       return false
     end
-=end
   end
 end

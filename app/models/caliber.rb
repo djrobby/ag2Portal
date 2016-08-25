@@ -5,12 +5,17 @@ class Caliber < ActiveRecord::Base
 
   has_paper_trail
 
-  validates :caliber, :presence => true
+  validates :caliber, :presence => true,
+                      :numericality => true
 
   # Scopes
   scope :by_caliber, -> { order(:caliber) }
 
   before_destroy :check_for_dependent_records
+
+  def to_label
+    caliber
+  end
 
   private
 

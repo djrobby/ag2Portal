@@ -25,6 +25,15 @@ class Project < ActiveRecord::Base
   has_many :delivery_note_items
   has_many :sale_offers
   has_many :sale_offer_items
+  has_many :bills
+  has_many :billing_periods
+  has_many :billable_items
+  has_many :pre_readings
+  has_many :readings
+  has_many :reading_routes
+  has_many :tariff_shemes
+  has_many :regulations
+  has_many :contracting_requests
 
   has_paper_trail
 

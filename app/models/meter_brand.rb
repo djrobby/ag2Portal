@@ -1,6 +1,6 @@
 class MeterBrand < ActiveRecord::Base
   belongs_to :manufacturer
-  attr_accessible :brand, :manufacturer_id
+  attr_accessible :brand, :manufacturer_id, :letter_id
 
   has_many :meter_models
 
