@@ -4,22 +4,19 @@ class Invoice < ActiveRecord::Base
   belongs_to :invoice_type
   belongs_to :tariff_scheme
   belongs_to :invoice_operation
-  belongs_to :biller, :class_name => “Company”
-  belongs_to :original_invoice, :class_name => “Invoice”
+  belongs_to :biller, :class_name => 'Company'
+  belongs_to :original_invoice, :class_name => 'Invoice'
   belongs_to :billing_period
-  belongs_to :reading_1, class: Reading #lectura base de cálculo de consumo
-  belongs_to :reading_2, class: Reading #lectura del periodo facturado
+  belongs_to :reading_1, :class_name => 'Reading' #lectura base de cálculo de consumo
+  belongs_to :reading_2, :class_name => 'Reading' #lectura del periodo facturado
   belongs_to :charge_account
+
+  attr_accessible :invoice_no, :invoice_date,
+                  :bill_id, :invoice_status_id, :invoice_type_id, :tariff_scheme_id, :invoice_operation_id,
+                  :biller_id, :original_invoice_id, :billing_period_id, :reading_1_id, :reading_2_id, :charge_account_id
 
   has_many :invoice_items
   has_many :client_payments
-
-#nuevos belongs
-#....
-
-
-
-  attr_accessible :invoice_no, :bill_id, :invoice_status_id, :invoice_type_id, :invoice_date, :tariff_scheme_id, :company_id
 
   #
   # Calculated fields

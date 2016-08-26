@@ -5,11 +5,12 @@ class InvoiceItem < ActiveRecord::Base
   belongs_to :product
   belongs_to :measure
 
-  attr_accessible :invoice_id, :code, :description, :quantity, :price, :tax_type_id, :discount, :discount_pct, :tariff_id
+  attr_accessible :invoice_id, :code, :description, :quantity, :price, :tax_type_id, :discount, :discount_pct, :tariff_id,
+                  :product_id, :measure_id
+
   #
   # Calculated fields
   #
-
   def net_price
     price - discount
   end
