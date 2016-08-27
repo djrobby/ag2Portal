@@ -63,23 +63,23 @@ report.page.list(:default).header do |header|
 	header.item(:project_c).value I18n.t("activerecord.attributes.delivery_note.project")
 	header.item(:store_c).value I18n.t("activerecord.attributes.delivery_note.store")
 	header.item(:quantity_c).value I18n.t("activerecord.attributes.delivery_note.quantity")
-	header.item(:total_c).value I18n.t("activerecord.attributes.delivery_note.total")
+	header.item(:total_c).value I18n.t("activerecord.attributes.delivery_note.costs")
 end
 
 # List detail
 @delivery_notes_report.each do |i|
 	report.page.list(:default).add_row do |row|
-		row.item(:delivery_no).value i.delivery_no
+		row.item(:delivery_no).value i.full_no
 		row.item(:delivery_date).value formatted_date(i.delivery_date) unless i.delivery_date.blank?
 		row.item(:project).value i.project.full_code unless i.project.blank?
 		row.item(:store).value i.store.name unless i.store.blank?
 		row.item(:quantity).value number_with_precision(i.quantity, precision: 2) unless i.quantity.blank?
-		row.item(:total).value number_with_precision(i.total, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless i.total.blank?
+		row.item(:total).value number_with_precision(i.costs, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless i.costs.blank?
 	end
 	# Store page subtotals
   report.page.list(:default) do |list|
 		list.store.page_rows += 1
 		list.store.p_quantityfull += i.quantity
-		list.store.p_totalfull += i.total
+		list.store.p_totalfull += i.costs
 	end
 end

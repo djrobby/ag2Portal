@@ -1,5 +1,5 @@
-class InvoiceItem < ActiveRecord::Base
-  belongs_to :invoice
+class PreInvoiceItem < ActiveRecord::Base
+  belongs_to :pre_invoice
   belongs_to :tariff
   belongs_to :tax_type
   belongs_to :product

@@ -60,13 +60,13 @@ report.page.list(:default).header do |header|
 	report.page.values project_c: I18n.t("activerecord.attributes.delivery_note.project")
 	report.page.values store_c: I18n.t("activerecord.attributes.delivery_note.store")
 	report.page.values quantity_c: I18n.t("activerecord.attributes.delivery_note.quantity")
-	report.page.values total_c: I18n.t("activerecord.attributes.delivery_note.total")
+	report.page.values total_c: I18n.t("activerecord.attributes.delivery_note.costs")
 	header.item(:full_code_items_c).value I18n.t("activerecord.attributes.delivery_note_item.product_c")
 	header.item(:description_items_c).value I18n.t("activerecord.attributes.delivery_note_item.description_c")
 	header.item(:quantity_items_c).value I18n.t("activerecord.attributes.delivery_note_item.quantity_c")
-	header.item(:net_price_items_c).value I18n.t("activerecord.attributes.delivery_note_item.price_c")
-	header.item(:amount_items_c).value I18n.t("activerecord.attributes.delivery_note_item.amount_c")
-	header.item(:balance_items_c).value I18n.t("activerecord.attributes.delivery_note_item.tax ")
+	header.item(:net_price_items_c).value I18n.t("activerecord.attributes.delivery_note_item.cost_c")
+	header.item(:amount_items_c).value I18n.t("activerecord.attributes.delivery_note_item.costs_c")
+	header.item(:balance_items_c).value I18n.t("activerecord.attributes.delivery_note_item.amount_c")
 end
 
 delivery_number = @delivery_items_report.first.delivery_note.delivery_no
@@ -83,18 +83,18 @@ delivery_number = @delivery_items_report.first.delivery_note.delivery_no
 			end
 
 	report.page.list(:default).add_row do |row|
-		report.page.values delivery_no: i.delivery_note.delivery_no
+		report.page.values delivery_no: i.delivery_note.full_no
 		report.page.values delivery_date: formatted_date(i.delivery_note.delivery_date) unless i.delivery_note.delivery_date.blank?
 		report.page.values project: i.delivery_note.project.full_code unless i.delivery_note.project.blank?
 		report.page.values store: i.delivery_note.store.name unless i.delivery_note.store.blank?
 		report.page.values quantity: number_with_precision(i.delivery_note.quantity, precision: 2) unless i.delivery_note.quantity.blank?
-		report.page.values total: number_with_precision(i.delivery_note.total, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless i.delivery_note.total.blank?
+		report.page.values total: number_with_precision(i.delivery_note.costs, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless i.delivery_note.costs.blank?
 		row.item(:full_code_items).value i.product.full_code
 		row.item(:description_items).value i.description
 		row.item(:quantity_items).value number_with_precision(i.quantity, precision: 4)
-		row.item(:net_price_items).value number_with_precision(i.price, precision: 4)
-		row.item(:amount_items).value number_with_precision(i.amount, precision: 4)
-		row.item(:balance_items).value number_with_precision(i.tax, precision: 4)
+		row.item(:net_price_items).value number_with_precision(i.cost, precision: 4)
+		row.item(:amount_items).value number_with_precision(i.costs, precision: 4)
+		row.item(:balance_items).value number_with_precision(i.amount, precision: 4)
 	end
 	# Store page subtotals
   report.page.list(:default) do |list|
