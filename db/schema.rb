@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20160827074653) do
+ActiveRecord::Schema.define(:version => 20160827075255) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -1232,6 +1232,8 @@ ActiveRecord::Schema.define(:version => 20160827074653) do
   add_index "invoices", ["biller_id"], :name => "index_invoices_on_biller_id"
   add_index "invoices", ["billing_period_id"], :name => "index_invoices_on_billing_period_id"
   add_index "invoices", ["charge_account_id"], :name => "index_invoices_on_charge_account_id"
+  add_index "invoices", ["invoice_date"], :name => "index_invoices_on_invoice_date"
+  add_index "invoices", ["invoice_no"], :name => "index_invoices_on_invoice_no"
   add_index "invoices", ["invoice_operation_id"], :name => "index_invoices_on_invoice_operation_id"
   add_index "invoices", ["invoice_status_id"], :name => "index_invoices_on_invoice_status_id"
   add_index "invoices", ["invoice_type_id"], :name => "index_invoices_on_invoice_type_id"
@@ -1826,16 +1828,6 @@ ActiveRecord::Schema.define(:version => 20160827074653) do
     t.string  "store_name"
     t.decimal "initial",           :precision => 34, :scale => 4
     t.decimal "current",           :precision => 34, :scale => 4
-  end
-
-  create_table "product_family_stocks_manual", :id => false, :force => true do |t|
-    t.integer "family_id",                                  :default => 0, :null => false
-    t.string  "family_code"
-    t.string  "family_name"
-    t.integer "store_id"
-    t.string  "store_name"
-    t.decimal "initial",     :precision => 34, :scale => 4
-    t.decimal "current",     :precision => 34, :scale => 4
   end
 
   create_table "product_types", :force => true do |t|
@@ -2811,30 +2803,17 @@ ActiveRecord::Schema.define(:version => 20160827074653) do
   add_index "supplier_invoice_approvals", ["supplier_invoice_id"], :name => "index_supplier_invoice_approvals_on_supplier_invoice_id"
 
   create_table "supplier_invoice_debts", :id => false, :force => true do |t|
-    t.integer "supplier_invoice_id", :limit => 8
+    t.integer "supplier_invoice_id",                                 :default => 0, :null => false
     t.integer "organization_id"
     t.integer "supplier_id"
     t.string  "invoice_no"
-    t.decimal "subtotal",                         :precision => 47, :scale => 8
-    t.decimal "taxes",                            :precision => 65, :scale => 20
-    t.decimal "bonus",                            :precision => 57, :scale => 14
-    t.decimal "taxable",                          :precision => 58, :scale => 14
-    t.decimal "total",                            :precision => 65, :scale => 20
-    t.decimal "paid",                             :precision => 35, :scale => 4
-    t.decimal "debt",                             :precision => 65, :scale => 20
-  end
-
-  create_table "supplier_invoice_debts_manual", :id => false, :force => true do |t|
-    t.integer "id",              :limit => 8
-    t.integer "organization_id"
-    t.string  "invoice_no"
-    t.decimal "subtotal",                     :precision => 47, :scale => 8
-    t.decimal "taxes",                        :precision => 65, :scale => 20
-    t.decimal "bonus",                        :precision => 57, :scale => 14
-    t.decimal "taxable",                      :precision => 58, :scale => 14
-    t.decimal "total",                        :precision => 65, :scale => 20
-    t.decimal "paid",                         :precision => 35, :scale => 4
-    t.decimal "debt",                         :precision => 65, :scale => 20
+    t.decimal "subtotal",            :precision => 47, :scale => 8
+    t.decimal "taxes",               :precision => 65, :scale => 20
+    t.decimal "bonus",               :precision => 57, :scale => 14
+    t.decimal "taxable",             :precision => 58, :scale => 14
+    t.decimal "total",               :precision => 65, :scale => 20
+    t.decimal "paid",                :precision => 35, :scale => 4
+    t.decimal "debt",                :precision => 65, :scale => 20
   end
 
   create_table "supplier_invoice_items", :force => true do |t|
@@ -3864,48 +3843,3 @@ ActiveRecord::Schema.define(:version => 20160827074653) do
   add_index "workers", ["worker_type_id"], :name => "index_workers_on_worker_type_id"
   add_index "workers", ["zipcode_id"], :name => "index_workers_on_zipcode_id"
 
-  create_table "zipcodes", :force => true do |t|
-    t.string   "zipcode"
-    t.integer  "town_id"
-    t.integer  "province_id"
-    t.datetime "created_at",  :null => false
-    t.datetime "updated_at",  :null => false
-    t.integer  "created_by"
-    t.integer  "updated_by"
-  end
-
-  add_index "zipcodes", ["province_id"], :name => "index_zipcodes_on_province_id"
-  add_index "zipcodes", ["town_id"], :name => "index_zipcodes_on_town_id"
-  add_index "zipcodes", ["zipcode"], :name => "index_zipcodes_on_zipcode"
-
-  create_table "zone_notifications", :force => true do |t|
-    t.integer  "zone_id"
-    t.integer  "notification_id"
-    t.integer  "user_id"
-    t.integer  "role",            :limit => 2
-    t.datetime "created_at",                   :null => false
-    t.datetime "updated_at",                   :null => false
-  end
-
-  add_index "zone_notifications", ["notification_id"], :name => "index_zone_notifications_on_notification_id"
-  add_index "zone_notifications", ["role"], :name => "index_zone_notifications_on_role"
-  add_index "zone_notifications", ["user_id"], :name => "index_zone_notifications_on_user_id"
-  add_index "zone_notifications", ["zone_id"], :name => "index_zone_notifications_on_zone_id"
-
-  create_table "zones", :force => true do |t|
-    t.string   "name"
-    t.decimal  "max_order_total", :precision => 13, :scale => 4, :default => 0.0, :null => false
-    t.decimal  "decimal",         :precision => 12, :scale => 4, :default => 0.0, :null => false
-    t.decimal  "max_order_price", :precision => 12, :scale => 4, :default => 0.0, :null => false
-    t.integer  "created_by"
-    t.integer  "updated_by"
-    t.datetime "created_at",                                                      :null => false
-    t.datetime "updated_at",                                                      :null => false
-    t.integer  "organization_id"
-    t.integer  "worker_id"
-  end
-
-  add_index "zones", ["organization_id"], :name => "index_zones_on_organization_id"
-  add_index "zones", ["worker_id"], :name => "index_zones_on_worker_id"
-
-end
