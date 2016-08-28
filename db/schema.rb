@@ -3843,3 +3843,48 @@ ActiveRecord::Schema.define(:version => 20160827075255) do
   add_index "workers", ["worker_type_id"], :name => "index_workers_on_worker_type_id"
   add_index "workers", ["zipcode_id"], :name => "index_workers_on_zipcode_id"
 
+  create_table "zipcodes", :force => true do |t|
+    t.string   "zipcode"
+    t.integer  "town_id"
+    t.integer  "province_id"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  add_index "zipcodes", ["province_id"], :name => "index_zipcodes_on_province_id"
+  add_index "zipcodes", ["town_id"], :name => "index_zipcodes_on_town_id"
+  add_index "zipcodes", ["zipcode"], :name => "index_zipcodes_on_zipcode"
+
+  create_table "zone_notifications", :force => true do |t|
+    t.integer  "zone_id"
+    t.integer  "notification_id"
+    t.integer  "user_id"
+    t.integer  "role",            :limit => 2
+    t.datetime "created_at",                   :null => false
+    t.datetime "updated_at",                   :null => false
+  end
+
+  add_index "zone_notifications", ["notification_id"], :name => "index_zone_notifications_on_notification_id"
+  add_index "zone_notifications", ["role"], :name => "index_zone_notifications_on_role"
+  add_index "zone_notifications", ["user_id"], :name => "index_zone_notifications_on_user_id"
+  add_index "zone_notifications", ["zone_id"], :name => "index_zone_notifications_on_zone_id"
+
+  create_table "zones", :force => true do |t|
+    t.string   "name"
+    t.decimal  "max_order_total", :precision => 13, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "decimal",         :precision => 12, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "max_order_price", :precision => 12, :scale => 4, :default => 0.0, :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+    t.datetime "created_at",                                                      :null => false
+    t.datetime "updated_at",                                                      :null => false
+    t.integer  "organization_id"
+    t.integer  "worker_id"
+  end
+
+  add_index "zones", ["organization_id"], :name => "index_zones_on_organization_id"
+  add_index "zones", ["worker_id"], :name => "index_zones_on_worker_id"
+
+end
