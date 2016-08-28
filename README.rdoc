@@ -67,3 +67,5 @@ Producteev
 
 Google Apps
   Google Apps.
+
+IMPORTANT: Solr must be running! (rake sunspot:solr:start [RAILS_ENV=production])
