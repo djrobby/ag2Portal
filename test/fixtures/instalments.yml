@@ -1,0 +1,19 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  instalment_plan: 
+  bill: 
+  invoice: 
+  instalment: 1
+  payday_limit: 2016-08-28
+  amount: 9.99
+  surcharge: 9.99
+
+two:
+  instalment_plan: 
+  bill: 
+  invoice: 
+  instalment: 1
+  payday_limit: 2016-08-28
+  amount: 9.99
+  surcharge: 9.99

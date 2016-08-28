@@ -12,6 +12,8 @@ class Zipcode < ActiveRecord::Base
   has_many :entities
   has_many :suppliers
   has_many :clients
+  has_many :street_directories
+  has_many :service_points
 
   has_paper_trail
 

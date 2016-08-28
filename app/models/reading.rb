@@ -11,6 +11,7 @@ class Reading < ActiveRecord::Base
                   :meter_id, :subscriber_id, :reading_route_id
 
   has_many :reading_incidences
+  has_and_belongs_to_many :reading_incidence_types, join_table: "reading_incidences"
 
   has_paper_trail
 

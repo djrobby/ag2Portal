@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20160827075255) do
+ActiveRecord::Schema.define(:version => 20160828085207) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -1069,6 +1069,44 @@ ActiveRecord::Schema.define(:version => 20160827075255) do
   add_index "infrastructures", ["organization_id", "code"], :name => "index_infraestructure_unique", :unique => true
   add_index "infrastructures", ["organization_id"], :name => "index_infrastructures_on_organization_id"
 
+  create_table "instalment_plans", :force => true do |t|
+    t.string   "instalment_no"
+    t.date     "instalment_date"
+    t.integer  "payment_method_id"
+    t.integer  "client_id"
+    t.integer  "subscriber_id"
+    t.decimal  "surcharge_pct",     :precision => 6, :scale => 2, :default => 0.0, :null => false
+    t.datetime "created_at",                                                       :null => false
+    t.datetime "updated_at",                                                       :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  add_index "instalment_plans", ["client_id"], :name => "index_instalment_plans_on_client_id"
+  add_index "instalment_plans", ["instalment_date"], :name => "index_instalment_plans_on_instalment_date"
+  add_index "instalment_plans", ["instalment_no"], :name => "index_instalment_plans_on_instalment_no"
+  add_index "instalment_plans", ["payment_method_id"], :name => "index_instalment_plans_on_payment_method_id"
+  add_index "instalment_plans", ["subscriber_id"], :name => "index_instalment_plans_on_subscriber_id"
+
+  create_table "instalments", :force => true do |t|
+    t.integer  "instalment_plan_id"
+    t.integer  "bill_id"
+    t.integer  "invoice_id"
+    t.integer  "instalment"
+    t.date     "payday_limit"
+    t.decimal  "amount",             :precision => 12, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "surcharge",          :precision => 12, :scale => 4, :default => 0.0, :null => false
+    t.datetime "created_at",                                                         :null => false
+    t.datetime "updated_at",                                                         :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  add_index "instalments", ["bill_id"], :name => "index_instalments_on_bill_id"
+  add_index "instalments", ["instalment_plan_id"], :name => "index_instalments_on_instalment_plan_id"
+  add_index "instalments", ["invoice_id"], :name => "index_instalments_on_invoice_id"
+  add_index "instalments", ["payday_limit"], :name => "index_instalments_on_payday_limit"
+
   create_table "insurances", :force => true do |t|
     t.string   "name"
     t.datetime "created_at",      :null => false
@@ -1828,6 +1866,16 @@ ActiveRecord::Schema.define(:version => 20160827075255) do
     t.string  "store_name"
     t.decimal "initial",           :precision => 34, :scale => 4
     t.decimal "current",           :precision => 34, :scale => 4
+  end
+
+  create_table "product_family_stocks_manual", :id => false, :force => true do |t|
+    t.integer "family_id",                                  :default => 0, :null => false
+    t.string  "family_code"
+    t.string  "family_name"
+    t.integer "store_id"
+    t.string  "store_name"
+    t.decimal "initial",     :precision => 34, :scale => 4
+    t.decimal "current",     :precision => 34, :scale => 4
   end
 
   create_table "product_types", :force => true do |t|
@@ -2627,11 +2675,13 @@ ActiveRecord::Schema.define(:version => 20160827075255) do
     t.datetime "updated_at",     :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
+    t.integer  "zipcode_id"
   end
 
   add_index "street_directories", ["street_name"], :name => "index_street_directories_on_street_name"
   add_index "street_directories", ["street_type_id"], :name => "index_street_directories_on_street_type_id"
   add_index "street_directories", ["town_id"], :name => "index_street_directories_on_town_id"
+  add_index "street_directories", ["zipcode_id"], :name => "index_street_directories_on_zipcode_id"
 
   create_table "street_types", :force => true do |t|
     t.string   "street_type_code"
@@ -2659,6 +2709,34 @@ ActiveRecord::Schema.define(:version => 20160827075255) do
   add_index "subguides", ["guide_id"], :name => "index_subguides_on_guide_id"
   add_index "subguides", ["name"], :name => "index_subguides_on_name", :unique => true
   add_index "subguides", ["sort_order"], :name => "index_subguides_on_sort_order"
+
+  create_table "subscriber_annotation_classes", :force => true do |t|
+    t.string   "code"
+    t.string   "name"
+    t.integer  "type",       :limit => 1, :default => 1, :null => false
+    t.datetime "created_at",                             :null => false
+    t.datetime "updated_at",                             :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  add_index "subscriber_annotation_classes", ["code"], :name => "index_subscriber_annotation_classes_on_code"
+  add_index "subscriber_annotation_classes", ["type"], :name => "index_subscriber_annotation_classes_on_type"
+
+  create_table "subscriber_annotations", :force => true do |t|
+    t.integer  "subscriber_id"
+    t.integer  "subscriber_annotation_id"
+    t.string   "annotation"
+    t.datetime "created_at",               :null => false
+    t.datetime "updated_at",               :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  add_index "subscriber_annotations", ["created_at"], :name => "index_subscriber_annotations_on_created_at"
+  add_index "subscriber_annotations", ["created_by"], :name => "index_subscriber_annotations_on_created_by"
+  add_index "subscriber_annotations", ["subscriber_annotation_id"], :name => "index_subscriber_annotations_on_subscriber_annotation_id"
+  add_index "subscriber_annotations", ["subscriber_id"], :name => "index_subscriber_annotations_on_subscriber_id"
 
   create_table "subscribers", :force => true do |t|
     t.integer  "client_id"
@@ -2803,17 +2881,30 @@ ActiveRecord::Schema.define(:version => 20160827075255) do
   add_index "supplier_invoice_approvals", ["supplier_invoice_id"], :name => "index_supplier_invoice_approvals_on_supplier_invoice_id"
 
   create_table "supplier_invoice_debts", :id => false, :force => true do |t|
-    t.integer "supplier_invoice_id",                                 :default => 0, :null => false
+    t.integer "supplier_invoice_id", :limit => 8
     t.integer "organization_id"
     t.integer "supplier_id"
     t.string  "invoice_no"
-    t.decimal "subtotal",            :precision => 47, :scale => 8
-    t.decimal "taxes",               :precision => 65, :scale => 20
-    t.decimal "bonus",               :precision => 57, :scale => 14
-    t.decimal "taxable",             :precision => 58, :scale => 14
-    t.decimal "total",               :precision => 65, :scale => 20
-    t.decimal "paid",                :precision => 35, :scale => 4
-    t.decimal "debt",                :precision => 65, :scale => 20
+    t.decimal "subtotal",                         :precision => 47, :scale => 8
+    t.decimal "taxes",                            :precision => 65, :scale => 20
+    t.decimal "bonus",                            :precision => 57, :scale => 14
+    t.decimal "taxable",                          :precision => 58, :scale => 14
+    t.decimal "total",                            :precision => 65, :scale => 20
+    t.decimal "paid",                             :precision => 35, :scale => 4
+    t.decimal "debt",                             :precision => 65, :scale => 20
+  end
+
+  create_table "supplier_invoice_debts_manual", :id => false, :force => true do |t|
+    t.integer "id",              :limit => 8
+    t.integer "organization_id"
+    t.string  "invoice_no"
+    t.decimal "subtotal",                     :precision => 47, :scale => 8
+    t.decimal "taxes",                        :precision => 65, :scale => 20
+    t.decimal "bonus",                        :precision => 57, :scale => 14
+    t.decimal "taxable",                      :precision => 58, :scale => 14
+    t.decimal "total",                        :precision => 65, :scale => 20
+    t.decimal "paid",                         :precision => 35, :scale => 4
+    t.decimal "debt",                         :precision => 65, :scale => 20
   end
 
   create_table "supplier_invoice_items", :force => true do |t|

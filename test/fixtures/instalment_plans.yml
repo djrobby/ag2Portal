@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  instalment_no: MyString
+  instalment_date: 2016-08-28
+  payment_method: 
+  client: 
+  subscriber: 
+  surcharge_pct: 9.99
+
+two:
+  instalment_no: MyString
+  instalment_date: 2016-08-28
+  payment_method: 
+  client: 
+  subscriber: 
+  surcharge_pct: 9.99

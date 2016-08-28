@@ -9,6 +9,7 @@ class StreetType < ActiveRecord::Base
   has_many :entities
   has_many :suppliers
   has_many :clients
+  has_many :street_directories
 
   has_paper_trail
 
@@ -19,7 +20,7 @@ class StreetType < ActiveRecord::Base
 
   before_validation :street_type_code_to_uppercase
   before_destroy :check_for_dependent_records
-  
+
   def street_type_code_to_uppercase
     self[:street_type_code].upcase!
   end

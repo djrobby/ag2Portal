@@ -22,6 +22,7 @@ class Office < ActiveRecord::Base
   has_many :infrastructures
   has_many :meters
   has_many :subscribers
+  has_many :service_points
 
   # Nested attributes
   accepts_nested_attributes_for :office_notifications,

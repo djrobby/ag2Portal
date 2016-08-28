@@ -26,6 +26,7 @@ class Company < ActiveRecord::Base
   has_many :infrastructures
   has_many :meters
   has_many :subscribers, through: :offices
+  has_many :service_points
 
   # Nested attributes
   accepts_nested_attributes_for :company_notifications,

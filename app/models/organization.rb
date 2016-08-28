@@ -17,6 +17,7 @@ class Organization < ActiveRecord::Base
   has_many :sale_offers
   has_many :meters
   has_many :subscribers, through: :offices
+  has_many :service_points
   # helpdesk
   has_many :technicians
   has_many :tickets
