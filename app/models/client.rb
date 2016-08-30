@@ -18,6 +18,7 @@ class Client < ActiveRecord::Base
   has_many :delivery_notes
   has_many :sale_offers
   has_many :client_bank_accounts
+  has_many :bills
 
   has_paper_trail
 

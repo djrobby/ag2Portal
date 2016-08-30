@@ -17,9 +17,19 @@ class Subscriber < ActiveRecord::Base
                   :service_point_id, :active, :tariff_scheme_id, :billing_frequency_id, :meter_id,
                   :reading_route_id, :reading_sequence, :reading_variant, :contracting_request_id,
                   :remarks, :cadastral_reference, :gis_id, :endownments, :inhabitants
+  attr_accessor :reading_index_add, :reading_date_add
 
   has_many :work_orders
   has_many :meter_details
+  has_one :contracting_request
+  has_one :water_supply_contract
+  has_many :readings
+  has_many :pre_readings
+  has_many :bills
+
+  # Nested attributes
+  accepts_nested_attributes_for :readings
+  accepts_nested_attributes_for :meter_details
 
   has_paper_trail
 
@@ -40,6 +50,7 @@ class Subscriber < ActiveRecord::Base
 
   # Scopes
   scope :by_code, -> { order(:subscriber_code) }
+  scope :availables, -> { where(ending_at: nil) }
 
   before_validation :fields_to_uppercase
   before_destroy :check_for_dependent_records
