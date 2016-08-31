@@ -6,3 +6,6 @@ en:
         control_a: "Control&Tracking"
         clients: "Clients"
         payment_methods: "Payment Methods"
+        subscribers: "Subscribers"
+        contracting_requests: "Contracting"
+        tariffs: "Tariffs"

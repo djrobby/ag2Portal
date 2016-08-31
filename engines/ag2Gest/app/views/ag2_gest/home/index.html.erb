@@ -14,11 +14,41 @@
   </li>
   <li class="span4">
     <% if (session[:resolution] == "LD")%>
-    <a href="<%= ag2_products.root_path %>" class="thumbnail centered"><img src="/assets/icon/ag2Logistics.png" width="48" height="48" alt="ag2Logistics" /><h5 class="h5-narrow">ag2Logistics</h5></a>
+    <a href="<%= subscribers_path %>" class="thumbnail centered"><img src="/assets/icon/ag2Subscribers.png" width="48" height="48" alt="ag2Subscribers" /><h5 class="h5-narrow"><%=t ".subscribers" %></h5></a>
     <% elsif session[:resolution] == "SD" %>
-    <a href="<%= ag2_products.root_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/ag2Logistics.png" width="96" height="96" alt="ag2Logistics" /><h5 class="h5-narrow">ag2Logistics</h5></a>
+    <a href="<%= subscribers_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/ag2Subscribers.png" width="96" height="96" alt="ag2Subscribers" /><h5 class="h5-narrow"><%=t ".subscribers" %></h5></a>
     <% else %>
-    <a href="<%= ag2_products.root_path %>" class="thumbnail centered"><img src="/assets/pict/ag2Logistics.png" width="128" height="128" alt="ag2Logistics" /><h5 class="h5-narrow">ag2Logistics</h5></a>
+    <a href="<%= subscribers_path %>" class="thumbnail centered"><img src="/assets/pict/ag2Subscribers.png" width="128" height="128" alt="ag2Subscribers" /><h5 class="h5-narrow"><%=t ".subscribers" %></h5></a>
+    <% end %>
+  </li>
+  <li class="span4">
+    <% if (session[:resolution] == "LD")%>
+    <a data-toggle="modal" href="<%= contracting_requests_path %>" class="thumbnail centered"><img src="/assets/icon/ag2ContractingRequests.png" width="48" height="48" alt="ag2ContractingRequests" /><h5 class="h5-narrow"><%=t ".contracting_requests" %></h5></a>
+    <% elsif session[:resolution] == "SD" %>
+    <a data-toggle="modal" href="<%= contracting_requests_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/ag2ContractingRequests.png" width="96" height="96" alt="ag2ContractingRequests" /><h5 class="h5-narrow"><%=t ".contracting_requests" %></h5></a>
+    <% else %>
+    <a data-toggle="modal" href="<%= contracting_requests_path %>" class="thumbnail centered"><img src="/assets/pict/ag2ContractingRequests.png" width="128" height="128" alt="ag2ContractingRequests" /><h5 class="h5-narrow"><%=t ".contracting_requests" %></h5></a>
+    <% end %>
+  </li>
+</ul><!-- /.thumbnails -->
+<ul class="thumbnails">
+  <!-- Apps 2 -->
+  <li class="span4">
+    <% if (session[:resolution] == "LD")%>
+    <a href="<%= tariff_management_path %>" class="thumbnail centered"><img src="/assets/icon/ag2Tariffs.png" width="48" height="48" alt="ag2Tariffs" /><h5 class="h5-narrow"><%=t ".tariffs" %></h5></a>
+    <% elsif session[:resolution] == "SD" %>
+    <a href="<%= tariff_management_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/ag2Tariffs.png" width="96" height="96" alt="ag2Tariffs" /><h5 class="h5-narrow"><%=t ".tariffs" %></h5></a>
+    <% else %>
+    <a href="<%= tariff_management_path %>" class="thumbnail centered"><img src="/assets/pict/ag2Tariffs.png" width="128" height="128" alt="ag2Tariffs" /><h5 class="h5-narrow"><%=t ".tariffs" %></h5></a>
+    <% end %>
+  </li>
+  <li class="span4">
+    <% if (session[:resolution] == "LD")%>
+    <a href="<%= subscribers_path %>" class="thumbnail centered"><img src="/assets/icon/ag2Subscribers.png" width="48" height="48" alt="ag2Subscribers" /><h5 class="h5-narrow"><%=t ".subscribers" %></h5></a>
+    <% elsif session[:resolution] == "SD" %>
+    <a href="<%= subscribers_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/ag2Subscribers.png" width="96" height="96" alt="ag2Subscribers" /><h5 class="h5-narrow"><%=t ".subscribers" %></h5></a>
+    <% else %>
+    <a href="<%= subscribers_path %>" class="thumbnail centered"><img src="/assets/pict/ag2Subscribers.png" width="128" height="128" alt="ag2Subscribers" /><h5 class="h5-narrow"><%=t ".subscribers" %></h5></a>
     <% end %>
   </li>
   <li class="span4">
@@ -32,7 +62,7 @@
   </li>
 </ul><!-- /.thumbnails -->
 <ul class="thumbnails">
-  <!-- Apps 2 -->
+  <!-- Apps 3 -->
   <li class="span2">
     <% if (session[:resolution] == "LD")%>
     <a href="<%= payment_methods_path %>" class="thumbnail centered"><img src="/assets/icon/ag2PaymentMethods.png" width="48" height="48" alt="ag2Tables" /><h5 class="h5-narrow"><%=t ".payment_methods" %></h5></a>

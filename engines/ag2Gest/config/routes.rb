@@ -35,11 +35,19 @@ Ag2Gest::Engine.routes.draw do
     match 'payment_methods/pm_format_numbers/:num', :controller => 'payment_methods', :action => 'pm_format_numbers'
     match 'pm_format_numbers/:num', :controller => 'payment_methods', :action => 'pm_format_numbers'
     match 'payment_methods/:id/pm_format_numbers/:num', :controller => 'payment_methods', :action => 'pm_format_numbers'
+    #
+    # Tariff management
+    match "tariff_management", controller: "home", action: 'tariff_management'
 
     # Resources
     resources :clients
     resources :sale_offers
     resources :payment_methods
+    resources :subscribers
+    resources :contracting_requests
+    resources :tariff_schemes
+    resources :tariffs
+    resources :tariff_types
 
     # Root
     root :to => 'home#index'

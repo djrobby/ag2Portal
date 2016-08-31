@@ -1,0 +1,21 @@
+<h1>Listing contracting_requests</h1>
+
+<table>
+  <tr>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @contracting_requests.each do |contracting_request| %>
+  <tr>
+    <td><%= link_to 'Show', contracting_request %></td>
+    <td><%= link_to 'Edit', edit_contracting_request_path(contracting_request) %></td>
+    <td><%= link_to 'Destroy', contracting_request, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Contracting request', new_contracting_request_path %>

@@ -6,3 +6,6 @@ es:
         control_a: "Control&Seguimto."
         clients: "Clientes"
         payment_methods: "Formas de Pago"
+        subscribers: "Abonados"
+        contracting_requests: "Contrataciones"
+        tariffs: "Tarifas"

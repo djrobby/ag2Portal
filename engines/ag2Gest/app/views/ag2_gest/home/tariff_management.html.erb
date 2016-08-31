@@ -1,0 +1,75 @@
+<%= render '/layouts/ag2_gest/tariffmbreadcrumb' %>
+
+<!-- Apps Thumbnails -->
+<ul class="thumbnails">
+  <li class="span4">
+  </li>
+  <li class="span4">
+    <% if (session[:resolution] == "LD")%>
+    <a href="<%= tariffs_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/ag2Invoices.png" width="48" height="48" alt="ag2Clients" /><h5 class="h5-narrow">Tarifas</h5></a>
+    <% elsif session[:resolution] == "SD" %>
+    <a href="<%= tariffs_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/ag2Invoices.png" width="96" height="96" alt="ag2Clients" /><h5 class="h5-narrow">Tarifas</h5></a>
+    <% else %>
+    <a href="<%= tariffs_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/ag2Invoices.png" width="128" height="128" alt="ag2Clients" /><h5 class="h5-narrow">Tarifas</h5></a>
+    <% end %>
+  </li>
+  <li class="span4">
+  </li>
+</ul>
+
+<ul class="thumbnails">
+  <li class="span2">
+    <% if (session[:resolution] == "LD")%>
+    <a data-toggle="modal" href="<%= tariff_types_path %>" class="thumbnail centered"><img src="/assets/icon/ag2GestTrack.png" width="48" height="48" alt="ag2Invoices" /><h5 class="h5-narrow">Tipos de tarifas</h5></a>
+    <% elsif session[:resolution] == "SD" %>
+    <a data-toggle="modal" href="<%= tariff_types_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/ag2Requests.png" width="96" height="96" alt="ag2Invoices" /><h5 class="h5-narrow">Tipos de tarifas</h5></a>
+    <% else %>
+    <a data-toggle="modal" href="<%= tariff_types_path %>" class="thumbnail centered"><img src="/assets/pict/ag2GestTrack.png" width="128" height="128" alt="ag2Invoices" /><h5 class="h5-narrow">Tipos de tarifas</h5></a>
+    <% end %>
+  </li>
+  <li class="span2">
+    <% if (session[:resolution] == "LD")%>
+    <a href="<%= billable_concepts_path %>" class="thumbnail centered"><img src="/assets/icon/ag2Readings.png" width="48" height="48" alt="ag2Readings" /><h5 class="h5-narrow">Conceptos facturables</h5></a>
+    <% elsif session[:resolution] == "SD" %>
+    <a href="<%= billable_concepts_path %>" class="thumbnail centered"><%= image_tag 'ag2_gest/ag2Readings.png', width: 96, height: 96, alt: "ag2Readings" %><h5 class="h5-narrow">Conceptos facturables</h5></a>
+    <% else %>
+    <a href="<%= billable_concepts_path %>" class="thumbnail centered"><img src="/assets/pict/ag2Readings.png" width="128" height="128" alt="ag2Readings" /><h5 class="h5-narrow">Conceptos facturables</h5></a>
+    <% end %>
+  </li>
+  <li class="span2">
+    <% if (session[:resolution] == "LD")%>
+    <a data-toggle="modal" href="<%= tariff_schemes_path %>" class="thumbnail centered"><img src="/assets/icon/ag2GestTrack.png" width="48" height="48" alt="ag2Invoices" /><h5 class="h5-narrow">Esquemas tarifarios</h5></a>
+    <% elsif session[:resolution] == "SD" %>
+    <a data-toggle="modal" href="<%= tariff_schemes_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/ag2GestTrack.png" width="96" height="96" alt="ag2Invoices" /><h5 class="h5-narrow">Esquemas tarifarios</h5></a>
+    <% else %>
+    <a data-toggle="modal" href="<%= tariff_schemes_path %>" class="thumbnail centered"><img src="/assets/pict/ag2GestTrack.png" width="128" height="128" alt="ag2Invoices" /><h5 class="h5-narrow">Esquemas tarifarios</h5></a>
+    <% end %>
+  </li>
+  <li class="span2">
+    <% if (session[:resolution] == "LD")%>
+    <a href="<%= calibers_path %>" class="thumbnail centered"><img src="/assets/icon/ag2Logistics.png" width="48" height="48" alt="ag2Logistics" /><h5 class="h5-narrow">Calibre</h5></a>
+    <% elsif session[:resolution] == "SD" %>
+    <a href="<%= calibers_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/ag2Logistics.png" width="96" height="96" alt="ag2Logistics" /><h5 class="h5-narrow">Calibre</h5></a>
+    <% else %>
+    <a href="<%= calibers_path %>" class="thumbnail centered"><img src="/assets/pict/ag2Logistics.png" width="128" height="128" alt="ag2Logistics" /><h5 class="h5-narrow">Calibre</h5></a>
+    <% end %>
+  </li>
+  <li class="span2">
+    <% if (session[:resolution] == "LD")%>
+    <a href="<%= billing_frequencies_path %>" class="thumbnail centered"><img src="/assets/icon/ag2Orders.png" width="48" height="48" alt="ag2SaleOffers" /><h5 class="h5-narrow">Frec. de facturación</h5></a>
+    <% elsif session[:resolution] == "SD" %>
+    <a href="<%= billing_frequencies_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/ag2Orders.png" width="96" height="96" alt="ag2SaleOffers" /><h5 class="h5-narrow">Frec. de facturación</h5></a>
+    <% else %>
+    <a href="<%= billing_frequencies_path %>" class="thumbnail centered"><img src="/assets/pict/ag2Orders.png" width="128" height="128" alt="ag2SaleOffers" /><h5 class="h5-narrow">Frec. de facturación</h5></a>
+    <% end %>
+  </li>
+  <li class="span2">
+    <% if (session[:resolution] == "LD")%>
+    <a href="<%= ag2_admin.tax_types_path %>" class="thumbnail centered"><img src="/assets/icon/ag2Orders.png" width="48" height="48" alt="ag2SaleOffers" /><h5 class="h5-narrow">Tipos de Impuestos</h5></a>
+    <% elsif session[:resolution] == "SD" %>
+    <a href="<%= ag2_admin.tax_types_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/ag2Orders.png" width="96" height="96" alt="ag2SaleOffers" /><h5 class="h5-narrow">Tipos de Impuestos</h5></a>
+    <% else %>
+    <a href="<%= ag2_admin.tax_types_path %>" class="thumbnail centered"><img src="/assets/pict/ag2Orders.png" width="128" height="128" alt="ag2SaleOffers" /><h5 class="h5-narrow">Tipos de Impuestos</h5></a>
+    <% end %>
+  </li>
+</ul><!-- /.thumbnails -->
