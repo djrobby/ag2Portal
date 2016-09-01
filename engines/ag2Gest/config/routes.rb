@@ -56,6 +56,9 @@ Ag2Gest::Engine.routes.draw do
     resources :meters
     resources :pre_readings
     resources :readings
+    resources :bills
+    resources :invoices
+    resources :client_payments
 
     # Root
     root :to => 'home#index'

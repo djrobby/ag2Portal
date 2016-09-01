@@ -12,3 +12,5 @@ es:
         meters: "Contadores"
         readings: "Lecturas"
         sale_offers: "Cotizaciones"
+        bills: "Facturación"
+        client_payments: "Cobros"

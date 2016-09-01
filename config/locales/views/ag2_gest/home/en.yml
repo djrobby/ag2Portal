@@ -12,3 +12,5 @@ en:
         meters: "Meters"
         readings: "Readings"
         sale_offers: "Quotes"
+        bills: "Billing"
+        client_payments: "Bill Collection"

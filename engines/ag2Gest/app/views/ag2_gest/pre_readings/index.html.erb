@@ -1,0 +1,21 @@
+<h1>Listing pre_readings</h1>
+
+<table>
+  <tr>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @pre_readings.each do |pre_reading| %>
+  <tr>
+    <td><%= link_to 'Show', pre_reading %></td>
+    <td><%= link_to 'Edit', edit_pre_reading_path(pre_reading) %></td>
+    <td><%= link_to 'Destroy', pre_reading, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Pre reading', new_pre_reading_path %>

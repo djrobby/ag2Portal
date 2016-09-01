@@ -1,0 +1,21 @@
+<h1>Listing client_payments</h1>
+
+<table>
+  <tr>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @client_payments.each do |client_payment| %>
+  <tr>
+    <td><%= link_to 'Show', client_payment %></td>
+    <td><%= link_to 'Edit', edit_client_payment_path(client_payment) %></td>
+    <td><%= link_to 'Destroy', client_payment, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Client payment', new_client_payment_path %>
