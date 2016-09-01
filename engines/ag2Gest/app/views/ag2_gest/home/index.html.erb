@@ -44,11 +44,41 @@
   </li>
   <li class="span4">
     <% if (session[:resolution] == "LD")%>
-    <a href="<%= subscribers_path %>" class="thumbnail centered"><img src="/assets/icon/ag2Subscribers.png" width="48" height="48" alt="ag2Subscribers" /><h5 class="h5-narrow"><%=t ".subscribers" %></h5></a>
+    <a href="<%= meters_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/ag2Meters.png" width="48" height="48" alt="ag2Meters" /><h5 class="h5-narrow"><%=t ".meters" %></h5></a>
     <% elsif session[:resolution] == "SD" %>
-    <a href="<%= subscribers_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/ag2Subscribers.png" width="96" height="96" alt="ag2Subscribers" /><h5 class="h5-narrow"><%=t ".subscribers" %></h5></a>
+    <a href="<%= meters_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/ag2Meters.png" width="96" height="96" alt="ag2Meters" /><h5 class="h5-narrow"><%=t ".meters" %></h5></a>
     <% else %>
-    <a href="<%= subscribers_path %>" class="thumbnail centered"><img src="/assets/pict/ag2Subscribers.png" width="128" height="128" alt="ag2Subscribers" /><h5 class="h5-narrow"><%=t ".subscribers" %></h5></a>
+    <a href="<%= meters_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/ag2Meters.png" width="128" height="128" alt="ag2Meters" /><h5 class="h5-narrow"><%=t ".meters" %></h5></a>
+    <% end %>
+  </li>
+  <li class="span4">
+    <% if (session[:resolution] == "LD")%>
+    <a href="<%= pre_readings_path %>" class="thumbnail centered"><img src="/assets/icon/ag2Readings.png" width="48" height="48" alt="ag2Readings" /><h5 class="h5-narrow"><%=t ".readings" %></h5></a>
+    <% elsif session[:resolution] == "SD" %>
+    <a href="<%= pre_readings_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/ag2Readings.png" width="96" height="96" alt="ag2Readings" /><h5 class="h5-narrow"><%=t ".readings" %></h5></a>
+    <% else %>
+    <a href="<%= pre_readings_path %>" class="thumbnail centered"><img src="/assets/pict/ag2Readings.png" width="128" height="128" alt="ag2Readings" /><h5 class="h5-narrow"><%=t ".readings" %></h5></a>
+    <% end %>
+  </li>
+</ul><!-- /.thumbnails -->
+<ul class="thumbnails">
+  <!-- Apps 3 -->
+  <li class="span4">
+    <% if (session[:resolution] == "LD")%>
+    <a href="<%= sale_offers_path %>" class="thumbnail centered"><img src="/assets/icon/ag2SaleOffers.png" width="48" height="48" alt="ag2SaleOffers" /><h5 class="h5-narrow"><%=t ".sale_offers" %></h5></a>
+    <% elsif session[:resolution] == "SD" %>
+    <a href="<%= sale_offers_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/ag2SaleOffers.png" width="96" height="96" alt="ag2SaleOffers" /><h5 class="h5-narrow"><%=t ".sale_offers" %></h5></a>
+    <% else %>
+    <a href="<%= sale_offers_path %>" class="thumbnail centered"><img src="/assets/pict/ag2SaleOffers.png" width="128" height="128" alt="ag2SaleOffers" /><h5 class="h5-narrow"><%=t ".sale_offers" %></h5></a>
+    <% end %>
+  </li>
+  <li class="span4">
+    <% if (session[:resolution] == "LD")%>
+    <a href="<%= meters_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/ag2Meters.png" width="48" height="48" alt="ag2Meters" /><h5 class="h5-narrow"><%=t ".meters" %></h5></a>
+    <% elsif session[:resolution] == "SD" %>
+    <a href="<%= meters_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/ag2Meters.png" width="96" height="96" alt="ag2Meters" /><h5 class="h5-narrow"><%=t ".meters" %></h5></a>
+    <% else %>
+    <a href="<%= meters_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/ag2Meters.png" width="128" height="128" alt="ag2Meters" /><h5 class="h5-narrow"><%=t ".meters" %></h5></a>
     <% end %>
   </li>
   <li class="span4">
@@ -62,7 +92,7 @@
   </li>
 </ul><!-- /.thumbnails -->
 <ul class="thumbnails">
-  <!-- Apps 3 -->
+  <!-- Apps 4 -->
   <li class="span2">
     <% if (session[:resolution] == "LD")%>
     <a href="<%= payment_methods_path %>" class="thumbnail centered"><img src="/assets/icon/ag2PaymentMethods.png" width="48" height="48" alt="ag2Tables" /><h5 class="h5-narrow"><%=t ".payment_methods" %></h5></a>

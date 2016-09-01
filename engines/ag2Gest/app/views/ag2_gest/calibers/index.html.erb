@@ -1,0 +1,21 @@
+<h1>Listing calibers</h1>
+
+<table>
+  <tr>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @calibers.each do |caliber| %>
+  <tr>
+    <td><%= link_to 'Show', caliber %></td>
+    <td><%= link_to 'Edit', edit_caliber_path(caliber) %></td>
+    <td><%= link_to 'Destroy', caliber, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Caliber', new_caliber_path %>

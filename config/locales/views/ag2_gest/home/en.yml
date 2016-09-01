@@ -9,3 +9,6 @@ en:
         subscribers: "Subscribers"
         contracting_requests: "Contracting"
         tariffs: "Tariffs"
+        meters: "Meters"
+        readings: "Readings"
+        sale_offers: "Quotes"

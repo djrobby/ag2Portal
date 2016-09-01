@@ -16,7 +16,7 @@ class Subscriber < ActiveRecord::Base
                   :building, :floor, :floor_office, :zipcode_id, :phone, :fax, :cellular, :email,
                   :service_point_id, :active, :tariff_scheme_id, :billing_frequency_id, :meter_id,
                   :reading_route_id, :reading_sequence, :reading_variant, :contracting_request_id,
-                  :remarks, :cadastral_reference, :gis_id, :endownments, :inhabitants
+                  :remarks, :cadastral_reference, :gis_id, :endownments, :inhabitants, :km
   attr_accessor :reading_index_add, :reading_date_add
 
   has_many :work_orders

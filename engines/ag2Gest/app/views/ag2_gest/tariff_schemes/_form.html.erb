@@ -1,0 +1,17 @@
+<%= form_for(@tariff_scheme) do |f| %>
+  <% if @tariff_scheme.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@tariff_scheme.errors.count, "error") %> prohibited this tariff_scheme from being saved:</h2>
+
+      <ul>
+      <% @tariff_scheme.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

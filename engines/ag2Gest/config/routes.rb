@@ -48,6 +48,14 @@ Ag2Gest::Engine.routes.draw do
     resources :tariff_schemes
     resources :tariffs
     resources :tariff_types
+    resources :calibers
+    resources :billing_periods
+    resources :billing_frequencies
+    resources :billable_concepts
+    resources :billable_items
+    resources :meters
+    resources :pre_readings
+    resources :readings
 
     # Root
     root :to => 'home#index'

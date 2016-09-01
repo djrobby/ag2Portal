@@ -9,3 +9,6 @@ es:
         subscribers: "Abonados"
         contracting_requests: "Contrataciones"
         tariffs: "Tarifas"
+        meters: "Contadores"
+        readings: "Lecturas"
+        sale_offers: "Cotizaciones"

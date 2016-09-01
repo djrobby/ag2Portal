@@ -1,0 +1,17 @@
+<%= form_for(@billing_frequency) do |f| %>
+  <% if @billing_frequency.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@billing_frequency.errors.count, "error") %> prohibited this billing_frequency from being saved:</h2>
+
+      <ul>
+      <% @billing_frequency.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

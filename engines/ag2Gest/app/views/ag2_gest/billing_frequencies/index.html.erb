@@ -1,0 +1,21 @@
+<h1>Listing billing_frequencies</h1>
+
+<table>
+  <tr>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @billing_frequencies.each do |billing_frequency| %>
+  <tr>
+    <td><%= link_to 'Show', billing_frequency %></td>
+    <td><%= link_to 'Edit', edit_billing_frequency_path(billing_frequency) %></td>
+    <td><%= link_to 'Destroy', billing_frequency, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Billing frequency', new_billing_frequency_path %>

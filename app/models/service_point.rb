@@ -13,7 +13,7 @@ class ServicePoint < ActiveRecord::Base
                   :gis_id, :name, :reading_sequence, :reading_variant, :street_number, :verified,
                   :service_point_type_id, :service_point_location_id, :service_point_purpose_id,
                   :water_connection_id, :organization_id, :company_id, :office_id, :street_directory_id,
-                  :zipcode_id, :reading_route_id
+                  :zipcode_id, :reading_route_id, :km
 
   has_many :subscribers
 

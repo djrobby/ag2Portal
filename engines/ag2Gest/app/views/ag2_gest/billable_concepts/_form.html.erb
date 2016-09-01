@@ -1,0 +1,17 @@
+<%= form_for(@billable_concept) do |f| %>
+  <% if @billable_concept.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@billable_concept.errors.count, "error") %> prohibited this billable_concept from being saved:</h2>
+
+      <ul>
+      <% @billable_concept.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

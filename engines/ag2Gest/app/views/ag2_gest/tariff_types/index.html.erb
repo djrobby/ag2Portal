@@ -1,0 +1,21 @@
+<h1>Listing tariff_types</h1>
+
+<table>
+  <tr>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @tariff_types.each do |tariff_type| %>
+  <tr>
+    <td><%= link_to 'Show', tariff_type %></td>
+    <td><%= link_to 'Edit', edit_tariff_type_path(tariff_type) %></td>
+    <td><%= link_to 'Destroy', tariff_type, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Tariff type', new_tariff_type_path %>
