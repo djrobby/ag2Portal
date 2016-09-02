@@ -8,9 +8,12 @@ en:
         payment_methods: "Payment Methods"
         subscribers: "Subscribers"
         contracting_requests: "Contracting"
-        tariffs: "Tariffs"
+        tariff_management: "Tariff Management"
         meters: "Meters"
         readings: "Readings"
         sale_offers: "Quotes"
         bills: "Billing"
         client_payments: "Bill Collection"
+      tariff:
+        schemes: "Schemes"
+        tariffs: "Tariffs"

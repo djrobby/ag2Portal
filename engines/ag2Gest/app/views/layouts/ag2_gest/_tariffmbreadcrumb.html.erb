@@ -1,0 +1,17 @@
+<% content_for :title, "aGestiona2 | ag2Gest" %>
+<% content_for :icon, "/assets/icon/ag2Gest.png" %>
+<% content_for :alt, "ag2Gest" %>
+
+<!-- Breadcrumb -->
+<ul class="breadcrumb">
+  <li>
+    <a href="<%= main_app.root_path %>"><i class="icon-home"></i></a><span class="divider">></span>
+  </li>
+	<li>
+    <a href="<%= ag2_gest.root_path %>">ag2Gest</a><span class="divider">></span>
+  </li>
+  <li>
+    <%=t "ag2_gest.home.index.tariff_management" %>
+  </li>
+  <a class="close" href="<%= main_app.root_path %>">&#215;</a>
+</ul>

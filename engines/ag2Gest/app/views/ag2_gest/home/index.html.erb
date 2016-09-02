@@ -35,11 +35,11 @@
   <!-- Apps 2 -->
   <li class="span4">
     <% if (session[:resolution] == "LD")%>
-    <a href="<%= tariff_management_path %>" class="thumbnail centered"><img src="/assets/icon/ag2Tariffs.png" width="48" height="48" alt="ag2Tariffs" /><h5 class="h5-narrow"><%=t ".tariffs" %></h5></a>
+    <a href="<%= tariff_management_path %>" class="thumbnail centered"><img src="/assets/icon/ag2TariffManagement.png" width="48" height="48" alt="ag2Tariffs" /><h5 class="h5-narrow"><%=t ".tariff_management" %></h5></a>
     <% elsif session[:resolution] == "SD" %>
-    <a href="<%= tariff_management_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/ag2Tariffs.png" width="96" height="96" alt="ag2Tariffs" /><h5 class="h5-narrow"><%=t ".tariffs" %></h5></a>
+    <a href="<%= tariff_management_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/ag2TariffManagement.png" width="96" height="96" alt="ag2Tariffs" /><h5 class="h5-narrow"><%=t ".tariff_management" %></h5></a>
     <% else %>
-    <a href="<%= tariff_management_path %>" class="thumbnail centered"><img src="/assets/pict/ag2Tariffs.png" width="128" height="128" alt="ag2Tariffs" /><h5 class="h5-narrow"><%=t ".tariffs" %></h5></a>
+    <a href="<%= tariff_management_path %>" class="thumbnail centered"><img src="/assets/pict/ag2TariffManagement.png" width="128" height="128" alt="ag2Tariffs" /><h5 class="h5-narrow"><%=t ".tariff_management" %></h5></a>
     <% end %>
   </li>
   <li class="span4">
