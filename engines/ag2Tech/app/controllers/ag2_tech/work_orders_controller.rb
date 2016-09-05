@@ -942,7 +942,7 @@ module Ag2Tech
       @work_order = WorkOrder.find(params[:id])
 
       respond_to do |format|
-        if @work_order_type.destroy
+        if @work_order.destroy
           format.html { redirect_to work_orders_url,
                       notice: (crud_notice('destroyed', @work_order) + "#{undo_link(@work_order)}").html_safe }
           format.json { head :no_content }

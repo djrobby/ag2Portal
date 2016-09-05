@@ -9,7 +9,7 @@ module Ag2Tech
     #load_and_authorize_resource :class => WorkOrder
     #load_and_authorize_resource :class => false
 
-    # ag2Tech API
+    # ag2Tech API: R (Queries)
     # returns JSON
     # scope => /ag2_tech
     # URL parameters => <auth>: necessary
@@ -285,7 +285,82 @@ module Ag2Tech
       end
     end
 
+    # ag2Tech API: CUD (Create, Update & Delete)
+    # returns JSON
+    # scope => /ag2_tech
+    # URL parameters => <auth>: necessary
+    #               user_email=...
+    #               user_token=...
+    # REST parameters => (<param>): optional
+    #               id: work order id
+    #
+    # POST /api/v1/work_orders/ => create new <params>
+    # PUT /api/v1/work_orders/:id => update existing <params>
+    # DELETE /api/v1/work_orders/:id => delete existing <id>
+    #
+    # Auxilary:
+    # GET /api/v1/work_order_<aux>/<method>[/<param>]?<auth>
+    # REST parameters => (<param>): optional
+    #               id: work order <aux> id
+    #
+    # GET /api/v1/work_order_areas/ => areas
+    # GET /api/v1/work_order_areas/:id => area
+    # GET /api/v1/work_order_types/ => types
+    # GET /api/v1/work_order_types/:id => type
+    # GET /api/v1/work_order_statuses/ => statuses
+    # GET /api/v1/work_order_statuses/:id => status
+    # GET /api/v1/work_order_labors/ => labors
+    # GET /api/v1/work_order_labors/:id => labor
+    # GET /api/v1/work_order_infrastructures/ => infrastructures
+    # GET /api/v1/work_order_infrastructures/:id => infrastructure
+
+    # POST /api/work_orders
+    def create
+      work_order = WorkOrder.new(params[:work_order])
+      work_order.created_by = current_user.id if !current_user.nil?
+
+      if work_order.save
+        render json: serialized_work_order(work_order), status: :created
+      else
+        render json: format_errors(work_order), status: :unprocessable_entity
+      end
+    end
+
+    # PUT /api/work_orders/:id
+    def update
+      work_order = WorkOrder.find(params[:id])
+      work_order.updated_by = current_user.id if !current_user.nil?
+
+      if work_order.update_attributes(params[:work_order])
+        render json: serialized_work_order(work_order), status: :ok
+      else
+        render json: format_errors(work_order), status: :unprocessable_entity
+      end
+    end
+
+    # DELETE /api/work_orders/:id
+    def destroy
+      work_order = WorkOrder.find(params[:id])
+
+      if work_order.destroy
+        head :no_content
+        #render json: work_order, status: :updated, location: work_order
+      else
+        render json: format_errors(work_order), status: :unprocessable_entity
+      end
+    end
+
     private
+
+    # Returns errors as JSON
+    def format_errors(_data)
+      _data.errors.as_json
+    end
+
+    # Returns JSON formatted order
+    def serialized_work_order(_data)
+      Api::V1::WorkOrdersSerializer.new(_data)
+    end
 
     # Returns JSON list of orders
     def serialized_work_orders(_data)

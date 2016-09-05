@@ -240,6 +240,9 @@ Ag2Tech::Engine.routes.draw do
           get '/closed(/:project_id)'               =>  'work_orders#closed'
           get '/headers/:id'                        =>  'work_orders#header'
           get '/:id'                                =>  'work_orders#one'
+          post '/'                                  =>  'work_orders#create'
+          put '/:id'                                =>  'work_orders#update'
+          delete '/:id'                             =>  'work_orders#destroy'
         end
         scope '/work_order_areas' do
           get '/'                                   =>  'work_orders#areas'
