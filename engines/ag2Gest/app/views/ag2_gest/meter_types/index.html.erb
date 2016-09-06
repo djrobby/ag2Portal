@@ -1,0 +1,21 @@
+<h1>Listing meter_types</h1>
+
+<table>
+  <tr>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @meter_types.each do |meter_type| %>
+  <tr>
+    <td><%= link_to 'Show', meter_type %></td>
+    <td><%= link_to 'Edit', edit_meter_type_path(meter_type) %></td>
+    <td><%= link_to 'Destroy', meter_type, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Meter type', new_meter_type_path %>

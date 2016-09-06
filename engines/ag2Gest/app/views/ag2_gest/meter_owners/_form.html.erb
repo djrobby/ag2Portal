@@ -1,0 +1,17 @@
+<%= form_for(@meter_owner) do |f| %>
+  <% if @meter_owner.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@meter_owner.errors.count, "error") %> prohibited this meter_owner from being saved:</h2>
+
+      <ul>
+      <% @meter_owner.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

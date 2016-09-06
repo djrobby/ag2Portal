@@ -1,0 +1,21 @@
+<h1>Listing meter_brands</h1>
+
+<table>
+  <tr>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @meter_brands.each do |meter_brand| %>
+  <tr>
+    <td><%= link_to 'Show', meter_brand %></td>
+    <td><%= link_to 'Edit', edit_meter_brand_path(meter_brand) %></td>
+    <td><%= link_to 'Destroy', meter_brand, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Meter brand', new_meter_brand_path %>

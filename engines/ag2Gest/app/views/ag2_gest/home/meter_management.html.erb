@@ -1,0 +1,75 @@
+<%= render '/layouts/ag2_gest/metermbreadcrumb' %>
+
+<!-- Apps Thumbnails -->
+<ul class="thumbnails">
+  <!-- Apps 1 -->
+  <li class="span4"></li>
+  <li class="span4">
+    <% if (session[:resolution] == "LD")%>
+    <a href="<%= meters_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/ag2Meters.png" width="48" height="48" alt="ag2Meters" /><h5 class="h5-narrow"><%=t "ag2_gest.home.meter.meters" %></h5></a>
+    <% elsif session[:resolution] == "SD" %>
+    <a href="<%= meters_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/ag2Meters.png" width="96" height="96" alt="ag2Meters" /><h5 class="h5-narrow"><%=t "ag2_gest.home.meter.meters" %></h5></a>
+    <% else %>
+    <a href="<%= meters_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/ag2Meters.png" width="128" height="128" alt="ag2Meters" /><h5 class="h5-narrow"><%=t "ag2_gest.home.meter.meters" %></h5></a>
+    <% end %>
+  </li>
+  <li class="span4"></li>
+</ul><!-- /.thumbnails -->
+
+<ul class="thumbnails">
+  <!-- Apps 2 -->
+  <li class="span2">
+    <% if (session[:resolution] == "LD")%>
+    <a href="<%= meter_types_path %>" class="thumbnail centered"><img src="/assets/icon/TableA.png" width="48" height="48" alt="ag2Tables" /><h5 class="h5-narrow"><%=t "ag2_gest.home.meter.meter_types" %></h5></a>
+    <% elsif session[:resolution] == "SD" %>
+    <a href="<%= meter_types_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/TableA72.png" width="72" height="72" alt="ag2Tables" /><h5 class="h5-narrow"><%=t "ag2_gest.home.meter.meter_types" %></h5></a>
+    <% else %>
+    <a href="<%= meter_types_path %>" class="thumbnail centered"><img src="/assets/pict/TableA96.png" width="96" height="96" alt="ag2Tables" /><h5 class="h5-narrow"><%=t "ag2_gest.home.meter.meter_types" %></h5></a>
+    <% end %>
+  </li>
+  <li class="span2">
+    <% if (session[:resolution] == "LD")%>
+    <a href="<%= meter_brands_path %>" class="thumbnail centered"><img src="/assets/icon/TableA.png" width="48" height="48" alt="ag2Tables" /><h5 class="h5-narrow"><%=t "ag2_gest.home.meter.meter_brands" %></h5></a>
+    <% elsif session[:resolution] == "SD" %>
+    <a href="<%= meter_brands_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/TableA72.png" width="72" height="72" alt="ag2Tables" /><h5 class="h5-narrow"><%=t "ag2_gest.home.meter.meter_brands" %></h5></a>
+    <% else %>
+    <a href="<%= meter_brands_path %>" class="thumbnail centered"><img src="/assets/pict/TableA96.png" width="96" height="96" alt="ag2Tables" /><h5 class="h5-narrow"><%=t "ag2_gest.home.meter.meter_brands" %></h5></a>
+    <% end %>
+  </li>
+  <li class="span2">
+    <% if (session[:resolution] == "LD")%>
+    <a href="<%= meter_models_path %>" class="thumbnail centered"><img src="/assets/icon/TableA.png" width="48" height="48" alt="ag2Tables" /><h5 class="h5-narrow"><%=t "ag2_gest.home.meter.meter_models" %></h5></a>
+    <% elsif session[:resolution] == "SD" %>
+    <a href="<%= meter_models_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/TableA72.png" width="72" height="72" alt="ag2Tables" /><h5 class="h5-narrow"><%=t "ag2_gest.home.meter.meter_models" %></h5></a>
+    <% else %>
+    <a href="<%= meter_models_path %>" class="thumbnail centered"><img src="/assets/pict/TableA96.png" width="96" height="96" alt="ag2Tables" /><h5 class="h5-narrow"><%=t "ag2_gest.home.meter.meter_models" %></h5></a>
+    <% end %>
+  </li>
+  <li class="span2">
+    <% if (session[:resolution] == "LD")%>
+    <a href="<%= meter_locations_path %>" class="thumbnail centered"><img src="/assets/icon/TableA.png" width="48" height="48" alt="ag2Tables" /><h5 class="h5-narrow"><%=t "ag2_gest.home.meter.meter_locations" %></h5></a>
+    <% elsif session[:resolution] == "SD" %>
+    <a href="<%= meter_locations_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/TableA72.png" width="72" height="72" alt="ag2Tables" /><h5 class="h5-narrow"><%=t "ag2_gest.home.meter.meter_locations" %></h5></a>
+    <% else %>
+    <a href="<%= meter_locations_path %>" class="thumbnail centered"><img src="/assets/pict/TableA96.png" width="96" height="96" alt="ag2Tables" /><h5 class="h5-narrow"><%=t "ag2_gest.home.meter.meter_locations" %></h5></a>
+    <% end %>
+  </li>
+  <li class="span2">
+    <% if (session[:resolution] == "LD")%>
+    <a href="<%= meter_owners_path %>" class="thumbnail centered"><img src="/assets/icon/TableA.png" width="48" height="48" alt="ag2Tables" /><h5 class="h5-narrow"><%=t "ag2_gest.home.meter.meter_owners" %></h5></a>
+    <% elsif session[:resolution] == "SD" %>
+    <a href="<%= meter_owners_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/TableA72.png" width="72" height="72" alt="ag2Tables" /><h5 class="h5-narrow"><%=t "ag2_gest.home.meter.meter_owners" %></h5></a>
+    <% else %>
+    <a href="<%= meter_owners_path %>" class="thumbnail centered"><img src="/assets/pict/TableA96.png" width="96" height="96" alt="ag2Tables" /><h5 class="h5-narrow"><%=t "ag2_gest.home.meter.meter_owners" %></h5></a>
+    <% end %>
+  </li>
+  <li class="span2">
+    <% if (session[:resolution] == "LD")%>
+    <a href="<%= calibers_path %>" class="thumbnail centered"><img src="/assets/icon/TableA.png" width="48" height="48" alt="ag2Tables" /><h5 class="h5-narrow"><%=t "ag2_gest.home.meter.calibers" %></h5></a>
+    <% elsif session[:resolution] == "SD" %>
+    <a href="<%= calibers_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/TableA72.png" width="72" height="72" alt="ag2Tables" /><h5 class="h5-narrow"><%=t "ag2_gest.home.meter.calibers" %></h5></a>
+    <% else %>
+    <a href="<%= calibers_path %>" class="thumbnail centered"><img src="/assets/pict/TableA96.png" width="96" height="96" alt="ag2Tables" /><h5 class="h5-narrow"><%=t "ag2_gest.home.meter.calibers" %></h5></a>
+    <% end %>
+  </li>
+</ul><!-- /.thumbnails -->
