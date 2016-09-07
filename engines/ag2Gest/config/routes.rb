@@ -69,7 +69,7 @@ Ag2Gest::Engine.routes.draw do
     resources :meter_models
     resources :meter_locations
     resources :meter_owners
-    resources :caliber
+    resources :calibers
     #
     resources :pre_readings
     resources :readings
