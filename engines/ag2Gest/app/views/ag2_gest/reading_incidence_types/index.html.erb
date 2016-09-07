@@ -1,0 +1,21 @@
+<h1>Listing reading_incidence_types</h1>
+
+<table>
+  <tr>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @reading_incidence_types.each do |reading_incidence_type| %>
+  <tr>
+    <td><%= link_to 'Show', reading_incidence_type %></td>
+    <td><%= link_to 'Edit', edit_reading_incidence_type_path(reading_incidence_type) %></td>
+    <td><%= link_to 'Destroy', reading_incidence_type, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Reading incidence type', new_reading_incidence_type_path %>

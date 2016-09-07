@@ -44,10 +44,17 @@ Ag2Gest::Engine.routes.draw do
 
     # Resources
     resources :clients
-    resources :sale_offers
-    resources :payment_methods
     resources :subscribers
+    #
+    resources :sale_offers
+    #
     resources :contracting_requests
+    resources :water_supply_contracts
+    resources :water_connection_contracts
+    resources :contracting_request_types
+    resources :contracting_request_statuses
+    resources :contracting_request_document_types
+    #
     resources :tariff_schemes
     resources :tariffs
     resources :tariff_types
@@ -55,18 +62,26 @@ Ag2Gest::Engine.routes.draw do
     resources :billing_frequencies
     resources :billable_concepts
     resources :billable_items
+    #
     resources :meters
     resources :meter_types
     resources :meter_brands
     resources :meter_models
     resources :meter_locations
     resources :meter_owners
-    resources :calibers
+    resources :caliber
+    #
     resources :pre_readings
     resources :readings
+    resources :reading_types
+    resources :reading_incidence_types
+    resources :reading_routes
+    #
     resources :bills
     resources :invoices
+    #
     resources :client_payments
+    resources :payment_methods
 
     # Root
     root :to => 'home#index'

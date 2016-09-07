@@ -1,50 +1,66 @@
-<%= render '/layouts/ag2_gest/readingmbreadcrumb' %>
+<%= render '/layouts/ag2_gest/contractingmbreadcrumb' %>
 
 <!-- Apps Thumbnails -->
 <ul class="thumbnails">
   <!-- Apps 1 -->
-  <li class="span2"></li>
   <li class="span4">
     <% if (session[:resolution] == "LD")%>
-    <a href="<%= pre_readings_path %>" class="thumbnail centered"><img src="/assets/icon/ag2PreReadings.png" width="48" height="48" alt="ag2Readings" /><h5 class="h5-narrow"><%=t "ag2_gest.home.reading.pre_readings" %></h5></a>
+    <a href="<%= contracting_requests_path %>" class="thumbnail centered"><img src="/assets/icon/ag2ContractingRequests.png" width="48" height="48" alt="ag2ContractingRequests" /><h5 class="h5-narrow"><%=t "ag2_gest.home.contracting.contracting_requests" %></h5></a>
     <% elsif session[:resolution] == "SD" %>
-    <a href="<%= pre_readings_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/ag2PreReadings.png" width="96" height="96" alt="ag2Readings" /><h5 class="h5-narrow"><%=t "ag2_gest.home.reading.pre_readings" %></h5></a>
+    <a href="<%= contracting_requests_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/ag2ContractingRequests.png" width="96" height="96" alt="ag2ContractingRequests" /><h5 class="h5-narrow"><%=t "ag2_gest.home.contracting.contracting_requests" %></h5></a>
     <% else %>
-    <a href="<%= pre_readings_path %>" class="thumbnail centered"><img src="/assets/pict/ag2PreReadings.png" width="128" height="128" alt="ag2Readings" /><h5 class="h5-narrow"><%=t "ag2_gest.home.reading.pre_readings" %></h5></a>
+    <a href="<%= contracting_requests_path %>" class="thumbnail centered"><img src="/assets/pict/ag2ContractingRequests.png" width="128" height="128" alt="ag2ContractingRequests" /><h5 class="h5-narrow"><%=t "ag2_gest.home.contracting.contracting_requests" %></h5></a>
     <% end %>
   </li>
   <li class="span4">
     <% if (session[:resolution] == "LD")%>
-    <a href="<%= readings_path %>" class="thumbnail centered"><img src="/assets/icon/ag2Readings.png" width="48" height="48" alt="ag2Readings" /><h5 class="h5-narrow"><%=t "ag2_gest.home.reading.readings" %></h5></a>
+    <a href="<%= water_supply_contracts_path %>" class="thumbnail centered"><img src="/assets/icon/ag2SupplyContracts.png" width="48" height="48" alt="ag2SupplyContracts" /><h5 class="h5-narrow"><%=t "ag2_gest.home.contracting.water_supply_contracts" %></h5></a>
     <% elsif session[:resolution] == "SD" %>
-    <a href="<%= readings_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/ag2Readings.png" width="96" height="96" alt="ag2Readings" /><h5 class="h5-narrow"><%=t "ag2_gest.home.reading.readings" %></h5></a>
+    <a href="<%= water_supply_contracts_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/ag2SupplyContracts.png" width="96" height="96" alt="ag2SupplyContracts" /><h5 class="h5-narrow"><%=t "ag2_gest.home.contracting.water_supply_contracts" %></h5></a>
     <% else %>
-    <a href="<%= readings_path %>" class="thumbnail centered"><img src="/assets/pict/ag2Readings.png" width="128" height="128" alt="ag2Readings" /><h5 class="h5-narrow"><%=t "ag2_gest.home.reading.readings" %></h5></a>
+    <a href="<%= water_supply_contracts_path %>" class="thumbnail centered"><img src="/assets/pict/ag2SupplyContracts.png" width="128" height="128" alt="ag2SupplyContracts" /><h5 class="h5-narrow"><%=t "ag2_gest.home.contracting.water_supply_contracts" %></h5></a>
     <% end %>
   </li>
-  <li class="span2"></li>
+  <li class="span4">
+    <% if (session[:resolution] == "LD")%>
+    <a href="<%= water_connection_contracts_path %>" class="thumbnail centered"><img src="/assets/icon/ag2ConnectionContracts.png" width="48" height="48" alt="ag2ConnectionContracts" /><h5 class="h5-narrow"><%=t "ag2_gest.home.contracting.water_connection_contracts" %></h5></a>
+    <% elsif session[:resolution] == "SD" %>
+    <a href="<%= water_connection_contracts_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/ag2ConnectionContracts.png" width="96" height="96" alt="ag2ConnectionContracts" /><h5 class="h5-narrow"><%=t "ag2_gest.home.contracting.water_connection_contracts" %></h5></a>
+    <% else %>
+    <a href="<%= water_connection_contracts_path %>" class="thumbnail centered"><img src="/assets/pict/ag2ConnectionContracts.png" width="128" height="128" alt="ag2ConnectionContracts" /><h5 class="h5-narrow"><%=t "ag2_gest.home.contracting.water_connection_contracts" %></h5></a>
+    <% end %>
+  </li>
 </ul><!-- /.thumbnails -->
 
 <ul class="thumbnails">
   <!-- Apps 2 -->
-  <li class="span4"></li>
+  <li class="span3"></li>
   <li class="span2">
     <% if (session[:resolution] == "LD")%>
-    <a href="<%= tariff_types_path %>" class="thumbnail centered"><img src="/assets/icon/TableA.png" width="48" height="48" alt="ag2Tables" /><h5 class="h5-narrow"><%=t "ag2_gest.home.tariff.tariff_types" %></h5></a>
+    <a href="<%= contracting_request_types_path %>" class="thumbnail centered"><img src="/assets/icon/TableA.png" width="48" height="48" alt="ag2Tables" /><h5 class="h5-narrow"><%=t "ag2_gest.home.contracting.contracting_request_types" %></h5></a>
     <% elsif session[:resolution] == "SD" %>
-    <a href="<%= tariff_types_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/TableA72.png" width="72" height="72" alt="ag2Tables" /><h5 class="h5-narrow"><%=t "ag2_gest.home.tariff.tariff_types" %></h5></a>
+    <a href="<%= contracting_request_types_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/TableA72.png" width="72" height="72" alt="ag2Tables" /><h5 class="h5-narrow"><%=t "ag2_gest.home.contracting.contracting_request_types" %></h5></a>
     <% else %>
-    <a href="<%= tariff_types_path %>" class="thumbnail centered"><img src="/assets/pict/TableA96.png" width="96" height="96" alt="ag2Tables" /><h5 class="h5-narrow"><%=t "ag2_gest.home.tariff.tariff_types" %></h5></a>
+    <a href="<%= contracting_request_types_path %>" class="thumbnail centered"><img src="/assets/pict/TableA96.png" width="96" height="96" alt="ag2Tables" /><h5 class="h5-narrow"><%=t "ag2_gest.home.contracting.contracting_request_types" %></h5></a>
     <% end %>
   </li>
   <li class="span2">
     <% if (session[:resolution] == "LD")%>
-    <a href="<%= billable_concepts_path %>" class="thumbnail centered"><img src="/assets/icon/TableA.png" width="48" height="48" alt="ag2Tables" /><h5 class="h5-narrow"><%=t "ag2_gest.home.tariff.billable_concepts" %></h5></a>
+    <a href="<%= contracting_request_statuses_path %>" class="thumbnail centered"><img src="/assets/icon/TableA.png" width="48" height="48" alt="ag2Tables" /><h5 class="h5-narrow"><%=t "ag2_gest.home.contracting.contracting_request_statuses" %></h5></a>
     <% elsif session[:resolution] == "SD" %>
-    <a href="<%= billable_concepts_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/TableA72.png" width="72" height="72" alt="ag2Tables" /><h5 class="h5-narrow"><%=t "ag2_gest.home.tariff.billable_concepts" %></h5></a>
+    <a href="<%= contracting_request_statuses_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/TableA72.png" width="72" height="72" alt="ag2Tables" /><h5 class="h5-narrow"><%=t "ag2_gest.home.contracting.contracting_request_statuses" %></h5></a>
     <% else %>
-    <a href="<%= billable_concepts_path %>" class="thumbnail centered"><img src="/assets/pict/TableA96.png" width="96" height="96" alt="ag2Tables" /><h5 class="h5-narrow"><%=t "ag2_gest.home.tariff.billable_concepts" %></h5></a>
+    <a href="<%= contracting_request_statuses_path %>" class="thumbnail centered"><img src="/assets/pict/TableA96.png" width="96" height="96" alt="ag2Tables" /><h5 class="h5-narrow"><%=t "ag2_gest.home.contracting.contracting_request_statuses" %></h5></a>
     <% end %>
   </li>
-  <li class="span4"></li>
+  <li class="span2">
+    <% if (session[:resolution] == "LD")%>
+    <a href="<%= contracting_request_document_types_path %>" class="thumbnail centered"><img src="/assets/icon/TableA.png" width="48" height="48" alt="ag2Tables" /><h5 class="h5-narrow"><%=t "ag2_gest.home.contracting.contracting_request_document_types" %></h5></a>
+    <% elsif session[:resolution] == "SD" %>
+    <a href="<%= contracting_request_document_types_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/TableA72.png" width="72" height="72" alt="ag2Tables" /><h5 class="h5-narrow"><%=t "ag2_gest.home.contracting.contracting_request_document_types" %></h5></a>
+    <% else %>
+    <a href="<%= contracting_request_document_types_path %>" class="thumbnail centered"><img src="/assets/pict/TableA96.png" width="96" height="96" alt="ag2Tables" /><h5 class="h5-narrow"><%=t "ag2_gest.home.contracting.contracting_request_document_types" %></h5></a>
+    <% end %>
+  </li>
+  <li class="span3"></li>
 </ul><!-- /.thumbnails -->

@@ -27,24 +27,33 @@
 
 <ul class="thumbnails">
   <!-- Apps 2 -->
-  <li class="span4"></li>
+  <li class="span3"></li>
   <li class="span2">
     <% if (session[:resolution] == "LD")%>
-    <a href="<%= tariff_types_path %>" class="thumbnail centered"><img src="/assets/icon/TableA.png" width="48" height="48" alt="ag2Tables" /><h5 class="h5-narrow"><%=t "ag2_gest.home.tariff.tariff_types" %></h5></a>
+    <a href="<%= reading_types_path %>" class="thumbnail centered"><img src="/assets/icon/TableA.png" width="48" height="48" alt="ag2Tables" /><h5 class="h5-narrow"><%=t "ag2_gest.home.reading.reading_types" %></h5></a>
     <% elsif session[:resolution] == "SD" %>
-    <a href="<%= tariff_types_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/TableA72.png" width="72" height="72" alt="ag2Tables" /><h5 class="h5-narrow"><%=t "ag2_gest.home.tariff.tariff_types" %></h5></a>
+    <a href="<%= reading_types_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/TableA72.png" width="72" height="72" alt="ag2Tables" /><h5 class="h5-narrow"><%=t "ag2_gest.home.reading.reading_types" %></h5></a>
     <% else %>
-    <a href="<%= tariff_types_path %>" class="thumbnail centered"><img src="/assets/pict/TableA96.png" width="96" height="96" alt="ag2Tables" /><h5 class="h5-narrow"><%=t "ag2_gest.home.tariff.tariff_types" %></h5></a>
+    <a href="<%= reading_types_path %>" class="thumbnail centered"><img src="/assets/pict/TableA96.png" width="96" height="96" alt="ag2Tables" /><h5 class="h5-narrow"><%=t "ag2_gest.home.reading.reading_types" %></h5></a>
     <% end %>
   </li>
   <li class="span2">
     <% if (session[:resolution] == "LD")%>
-    <a href="<%= billable_concepts_path %>" class="thumbnail centered"><img src="/assets/icon/TableA.png" width="48" height="48" alt="ag2Tables" /><h5 class="h5-narrow"><%=t "ag2_gest.home.tariff.billable_concepts" %></h5></a>
+    <a href="<%= reading_incidence_types_path %>" class="thumbnail centered"><img src="/assets/icon/TableA.png" width="48" height="48" alt="ag2Tables" /><h5 class="h5-narrow"><%=t "ag2_gest.home.reading.reading_incidence_types" %></h5></a>
     <% elsif session[:resolution] == "SD" %>
-    <a href="<%= billable_concepts_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/TableA72.png" width="72" height="72" alt="ag2Tables" /><h5 class="h5-narrow"><%=t "ag2_gest.home.tariff.billable_concepts" %></h5></a>
+    <a href="<%= reading_incidence_types_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/TableA72.png" width="72" height="72" alt="ag2Tables" /><h5 class="h5-narrow"><%=t "ag2_gest.home.reading.reading_incidence_types" %></h5></a>
     <% else %>
-    <a href="<%= billable_concepts_path %>" class="thumbnail centered"><img src="/assets/pict/TableA96.png" width="96" height="96" alt="ag2Tables" /><h5 class="h5-narrow"><%=t "ag2_gest.home.tariff.billable_concepts" %></h5></a>
+    <a href="<%= reading_incidence_types_path %>" class="thumbnail centered"><img src="/assets/pict/TableA96.png" width="96" height="96" alt="ag2Tables" /><h5 class="h5-narrow"><%=t "ag2_gest.home.reading.reading_incidence_types" %></h5></a>
     <% end %>
   </li>
-  <li class="span4"></li>
+  <li class="span2">
+    <% if (session[:resolution] == "LD")%>
+    <a href="<%= reading_routes_path %>" class="thumbnail centered"><img src="/assets/icon/TableA.png" width="48" height="48" alt="ag2Tables" /><h5 class="h5-narrow"><%=t "ag2_gest.home.reading.reading_routes" %></h5></a>
+    <% elsif session[:resolution] == "SD" %>
+    <a href="<%= reading_routes_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/TableA72.png" width="72" height="72" alt="ag2Tables" /><h5 class="h5-narrow"><%=t "ag2_gest.home.reading.reading_routes" %></h5></a>
+    <% else %>
+    <a href="<%= reading_routes_path %>" class="thumbnail centered"><img src="/assets/pict/TableA96.png" width="96" height="96" alt="ag2Tables" /><h5 class="h5-narrow"><%=t "ag2_gest.home.reading.reading_routes" %></h5></a>
+    <% end %>
+  </li>
+  <li class="span3"></li>
 </ul><!-- /.thumbnails -->

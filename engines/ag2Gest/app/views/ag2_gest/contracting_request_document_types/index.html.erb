@@ -1,0 +1,21 @@
+<h1>Listing contracting_request_document_types</h1>
+
+<table>
+  <tr>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @contracting_request_document_types.each do |contracting_request_document_type| %>
+  <tr>
+    <td><%= link_to 'Show', contracting_request_document_type %></td>
+    <td><%= link_to 'Edit', edit_contracting_request_document_type_path(contracting_request_document_type) %></td>
+    <td><%= link_to 'Destroy', contracting_request_document_type, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Contracting request document type', new_contracting_request_document_type_path %>
