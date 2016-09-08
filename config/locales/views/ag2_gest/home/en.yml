@@ -11,6 +11,7 @@ en:
         tariff_management: "Tariff Management"
         meter_management: "Meter Management"
         reading_management: "Reading Management"
+        service_point_management: "Service Points"
         sale_offers: "Quotes"
         bills: "Billing"
         client_payments: "Bill Collection"
@@ -40,3 +41,10 @@ en:
         contracting_request_types: "Request Types"
         contracting_request_statuses: "Request Statuses"
         contracting_request_document_types: "Documentation Types"
+      service_point:
+        service_points: "Supply Points"
+        service_point_types: "Point Types"
+        service_point_locations: "Point Locations"
+        service_point_purposes: "Point Purposes"
+        water_connections: "Connections"
+        water_connection_types: "Connection Types"

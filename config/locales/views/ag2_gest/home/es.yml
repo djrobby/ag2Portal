@@ -11,6 +11,7 @@ es:
         tariff_management: "Gestión Tarifaria"
         meter_management: "Gestión de Contadores"
         reading_management: "Gestión de Lecturas"
+        service_point_management: "Puntos de Servicio"
         sale_offers: "Cotizaciones"
         bills: "Facturación"
         client_payments: "Cobros"
@@ -40,3 +41,10 @@ es:
         contracting_request_types: "Tipos de Solicitud"
         contracting_request_statuses: "Estados de Solicitud"
         contracting_request_document_types: "Tipos Documentación"
+      service_point:
+        service_points: "Puntos de Suministro"
+        service_point_types: "Tipos de Puntos"
+        service_point_locations: "Emplazamientos Puntos"
+        service_point_purposes: "Propósitos Puntos"
+        water_connections: "Acometidas"
+        water_connection_types: "Tipos de Acometida"

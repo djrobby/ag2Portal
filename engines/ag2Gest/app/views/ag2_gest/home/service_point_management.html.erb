@@ -1,0 +1,59 @@
+<%= render '/layouts/ag2_gest/spointmbreadcrumb' %>
+
+<!-- Apps Thumbnails -->
+<ul class="thumbnails">
+  <!-- Apps 1 -->
+  <li class="span2"></li>
+  <li class="span4">
+    <% if (session[:resolution] == "LD")%>
+    <a href="<%= water_connections_path %>" class="thumbnail centered"><img src="/assets/icon/ag2WaterConnections.png" width="48" height="48" alt="ag2WaterConnections" /><h5 class="h5-narrow"><%=t "ag2_gest.home.service_point.water_connections" %></h5></a>
+    <% elsif session[:resolution] == "SD" %>
+    <a href="<%= water_connections_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/ag2WaterConnections.png" width="96" height="96" alt="ag2WaterConnections" /><h5 class="h5-narrow"><%=t "ag2_gest.home.service_point.water_connections" %></h5></a>
+    <% else %>
+    <a href="<%= water_connections_path %>" class="thumbnail centered"><img src="/assets/pict/ag2WaterConnections.png" width="128" height="128" alt="ag2WaterConnections" /><h5 class="h5-narrow"><%=t "ag2_gest.home.service_point.water_connections" %></h5></a>
+    <% end %>
+  </li>
+  <li class="span4">
+    <% if (session[:resolution] == "LD")%>
+    <a href="<%= service_points_path %>" class="thumbnail centered"><img src="/assets/icon/ag2ServicePoints.png" width="48" height="48" alt="ag2ServicePoints" /><h5 class="h5-narrow"><%=t "ag2_gest.home.service_point.service_points" %></h5></a>
+    <% elsif session[:resolution] == "SD" %>
+    <a href="<%= service_points_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/ag2ServicePoints.png" width="96" height="96" alt="ag2ServicePoints" /><h5 class="h5-narrow"><%=t "ag2_gest.home.service_point.service_points" %></h5></a>
+    <% else %>
+    <a href="<%= service_points_path %>" class="thumbnail centered"><img src="/assets/pict/ag2ServicePoints.png" width="128" height="128" alt="ag2ServicePoints" /><h5 class="h5-narrow"><%=t "ag2_gest.home.service_point.service_points" %></h5></a>
+    <% end %>
+  </li>
+  <li class="span2"></li>
+</ul><!-- /.thumbnails -->
+
+<ul class="thumbnails">
+  <!-- Apps 2 -->
+  <li class="span3"></li>
+  <li class="span2">
+    <% if (session[:resolution] == "LD")%>
+    <a href="<%= reading_types_path %>" class="thumbnail centered"><img src="/assets/icon/TableA.png" width="48" height="48" alt="ag2Tables" /><h5 class="h5-narrow"><%=t "ag2_gest.home.reading.reading_types" %></h5></a>
+    <% elsif session[:resolution] == "SD" %>
+    <a href="<%= reading_types_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/TableA72.png" width="72" height="72" alt="ag2Tables" /><h5 class="h5-narrow"><%=t "ag2_gest.home.reading.reading_types" %></h5></a>
+    <% else %>
+    <a href="<%= reading_types_path %>" class="thumbnail centered"><img src="/assets/pict/TableA96.png" width="96" height="96" alt="ag2Tables" /><h5 class="h5-narrow"><%=t "ag2_gest.home.reading.reading_types" %></h5></a>
+    <% end %>
+  </li>
+  <li class="span2">
+    <% if (session[:resolution] == "LD")%>
+    <a href="<%= reading_incidence_types_path %>" class="thumbnail centered"><img src="/assets/icon/TableA.png" width="48" height="48" alt="ag2Tables" /><h5 class="h5-narrow"><%=t "ag2_gest.home.reading.reading_incidence_types" %></h5></a>
+    <% elsif session[:resolution] == "SD" %>
+    <a href="<%= reading_incidence_types_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/TableA72.png" width="72" height="72" alt="ag2Tables" /><h5 class="h5-narrow"><%=t "ag2_gest.home.reading.reading_incidence_types" %></h5></a>
+    <% else %>
+    <a href="<%= reading_incidence_types_path %>" class="thumbnail centered"><img src="/assets/pict/TableA96.png" width="96" height="96" alt="ag2Tables" /><h5 class="h5-narrow"><%=t "ag2_gest.home.reading.reading_incidence_types" %></h5></a>
+    <% end %>
+  </li>
+  <li class="span2">
+    <% if (session[:resolution] == "LD")%>
+    <a href="<%= reading_routes_path %>" class="thumbnail centered"><img src="/assets/icon/TableA.png" width="48" height="48" alt="ag2Tables" /><h5 class="h5-narrow"><%=t "ag2_gest.home.reading.reading_routes" %></h5></a>
+    <% elsif session[:resolution] == "SD" %>
+    <a href="<%= reading_routes_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/TableA72.png" width="72" height="72" alt="ag2Tables" /><h5 class="h5-narrow"><%=t "ag2_gest.home.reading.reading_routes" %></h5></a>
+    <% else %>
+    <a href="<%= reading_routes_path %>" class="thumbnail centered"><img src="/assets/pict/TableA96.png" width="96" height="96" alt="ag2Tables" /><h5 class="h5-narrow"><%=t "ag2_gest.home.reading.reading_routes" %></h5></a>
+    <% end %>
+  </li>
+  <li class="span3"></li>
+</ul><!-- /.thumbnails -->

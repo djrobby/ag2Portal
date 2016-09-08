@@ -6,14 +6,15 @@ class ServicePoint < ActiveRecord::Base
   belongs_to :organization
   belongs_to :company
   belongs_to :office
+  belongs_to :center
   belongs_to :street_directory
   belongs_to :zipcode
   belongs_to :reading_route
   attr_accessible :available_for_contract, :building, :cadastral_reference, :code, :diameter, :floor, :floor_office,
                   :gis_id, :name, :reading_sequence, :reading_variant, :street_number, :verified,
                   :service_point_type_id, :service_point_location_id, :service_point_purpose_id,
-                  :water_connection_id, :organization_id, :company_id, :office_id, :street_directory_id,
-                  :zipcode_id, :reading_route_id, :km
+                  :water_connection_id, :organization_id, :company_id, :office_id, :center_id,
+                  :street_directory_id, :zipcode_id, :reading_route_id, :km
 
   has_many :subscribers
 

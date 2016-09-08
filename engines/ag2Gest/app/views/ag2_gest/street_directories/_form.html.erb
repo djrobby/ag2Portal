@@ -1,0 +1,17 @@
+<%= form_for(@street_directory) do |f| %>
+  <% if @street_directory.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@street_directory.errors.count, "error") %> prohibited this street_directory from being saved:</h2>
+
+      <ul>
+      <% @street_directory.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

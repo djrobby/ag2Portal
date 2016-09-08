@@ -1,0 +1,21 @@
+<h1>Listing water_connections</h1>
+
+<table>
+  <tr>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @water_connections.each do |water_connection| %>
+  <tr>
+    <td><%= link_to 'Show', water_connection %></td>
+    <td><%= link_to 'Edit', edit_water_connection_path(water_connection) %></td>
+    <td><%= link_to 'Destroy', water_connection, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Water connection', new_water_connection_path %>

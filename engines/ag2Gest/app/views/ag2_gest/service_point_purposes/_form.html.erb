@@ -1,0 +1,17 @@
+<%= form_for(@service_point_purpose) do |f| %>
+  <% if @service_point_purpose.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@service_point_purpose.errors.count, "error") %> prohibited this service_point_purpose from being saved:</h2>
+
+      <ul>
+      <% @service_point_purpose.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

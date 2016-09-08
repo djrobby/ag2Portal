@@ -41,12 +41,14 @@ Ag2Gest::Engine.routes.draw do
     match "meter_management", controller: "home", action: 'meter_management'
     match "reading_management", controller: "home", action: 'reading_management'
     match "contracting_management", controller: "home", action: 'contracting_management'
+    match "service_point_management", controller: "home", action: 'service_point_management'
 
     # Resources
     resources :clients
     resources :subscribers
     #
     resources :sale_offers
+    resources :sale_offer_statuses
     #
     resources :contracting_requests
     resources :water_supply_contracts
@@ -70,6 +72,13 @@ Ag2Gest::Engine.routes.draw do
     resources :meter_locations
     resources :meter_owners
     resources :calibers
+    #
+    resources :service_points
+    resources :water_connections
+    resources :service_point_types
+    resources :water_connection_types
+    resources :service_point_locations
+    resources :service_point_purposes
     #
     resources :pre_readings
     resources :readings
