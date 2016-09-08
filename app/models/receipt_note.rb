@@ -47,7 +47,7 @@ class ReceiptNote < ActiveRecord::Base
   def full_name
     full_name = ""
     if !self.receipt_no.blank?
-      full_name += self.receipt_no
+      full_name += partial_no
     end
     if !self.receipt_date.blank?
       full_name += " " + formatted_date(self.receipt_date)
@@ -67,6 +67,10 @@ class ReceiptNote < ActiveRecord::Base
       partial_name += " " + self.supplier.full_name
     end
     partial_name
+  end
+
+  def partial_no
+    receipt_no[0,14]
   end
 
   #
