@@ -12,9 +12,10 @@ en:
         meter_management: "Meter Management"
         reading_management: "Reading Management"
         service_point_management: "Service Points"
-        sale_offers: "Quotes"
+        sale_offers: "Sale Offers"
         bills: "Billing"
         client_payments: "Bill Collection"
+        sale_offer_statuses: "Sale Offer Statuses"
       tariff:
         schemes: "Schemes"
         tariffs: "Tariffs"
@@ -48,3 +49,9 @@ en:
         service_point_purposes: "Point Purposes"
         water_connections: "Connections"
         water_connection_types: "Connection Types"
+      sale_offer:
+        service_point_types: "Tipos de Puntos"
+        service_point_locations: "Emplazamientos Puntos"
+        service_point_purposes: "Propósitos Puntos"
+        water_connections: "Acometidas"
+        water_connection_types: "Tipos de Acometida"

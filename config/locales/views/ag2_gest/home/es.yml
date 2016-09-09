@@ -12,9 +12,10 @@ es:
         meter_management: "Gestión de Contadores"
         reading_management: "Gestión de Lecturas"
         service_point_management: "Puntos de Servicio"
-        sale_offers: "Cotizaciones"
+        sale_offers: "Ofertas"
         bills: "Facturación"
         client_payments: "Cobros"
+        sale_offer_statuses: "Estados Ofertas"
       tariff:
         schemes: "Esquemas"
         tariffs: "Tarifas"
@@ -43,6 +44,12 @@ es:
         contracting_request_document_types: "Tipos Documentación"
       service_point:
         service_points: "Puntos de Suministro"
+        service_point_types: "Tipos de Puntos"
+        service_point_locations: "Emplazamientos Puntos"
+        service_point_purposes: "Propósitos Puntos"
+        water_connections: "Acometidas"
+        water_connection_types: "Tipos de Acometida"
+      sale_offer:
         service_point_types: "Tipos de Puntos"
         service_point_locations: "Emplazamientos Puntos"
         service_point_purposes: "Propósitos Puntos"

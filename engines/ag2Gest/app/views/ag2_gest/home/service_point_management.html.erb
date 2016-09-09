@@ -6,20 +6,20 @@
   <li class="span2"></li>
   <li class="span4">
     <% if (session[:resolution] == "LD")%>
-    <a href="<%= water_connections_path %>" class="thumbnail centered"><img src="/assets/icon/ag2WaterConnections.png" width="48" height="48" alt="ag2WaterConnections" /><h5 class="h5-narrow"><%=t "ag2_gest.home.service_point.water_connections" %></h5></a>
+    <a href="<%= water_connections_path %>" class="thumbnail centered"><img src="/assets/icon/ag2WaterConnection.png" width="48" height="48" alt="ag2WaterConnections" /><h5 class="h5-narrow"><%=t "ag2_gest.home.service_point.water_connections" %></h5></a>
     <% elsif session[:resolution] == "SD" %>
-    <a href="<%= water_connections_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/ag2WaterConnections.png" width="96" height="96" alt="ag2WaterConnections" /><h5 class="h5-narrow"><%=t "ag2_gest.home.service_point.water_connections" %></h5></a>
+    <a href="<%= water_connections_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/ag2WaterConnection.png" width="96" height="96" alt="ag2WaterConnections" /><h5 class="h5-narrow"><%=t "ag2_gest.home.service_point.water_connections" %></h5></a>
     <% else %>
-    <a href="<%= water_connections_path %>" class="thumbnail centered"><img src="/assets/pict/ag2WaterConnections.png" width="128" height="128" alt="ag2WaterConnections" /><h5 class="h5-narrow"><%=t "ag2_gest.home.service_point.water_connections" %></h5></a>
+    <a href="<%= water_connections_path %>" class="thumbnail centered"><img src="/assets/pict/ag2WaterConnection.png" width="128" height="128" alt="ag2WaterConnections" /><h5 class="h5-narrow"><%=t "ag2_gest.home.service_point.water_connections" %></h5></a>
     <% end %>
   </li>
   <li class="span4">
     <% if (session[:resolution] == "LD")%>
-    <a href="<%= service_points_path %>" class="thumbnail centered"><img src="/assets/icon/ag2ServicePoints.png" width="48" height="48" alt="ag2ServicePoints" /><h5 class="h5-narrow"><%=t "ag2_gest.home.service_point.service_points" %></h5></a>
+    <a href="<%= service_points_path %>" class="thumbnail centered"><img src="/assets/icon/ag2WaterSupply.png" width="48" height="48" alt="ag2ServicePoints" /><h5 class="h5-narrow"><%=t "ag2_gest.home.service_point.service_points" %></h5></a>
     <% elsif session[:resolution] == "SD" %>
-    <a href="<%= service_points_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/ag2ServicePoints.png" width="96" height="96" alt="ag2ServicePoints" /><h5 class="h5-narrow"><%=t "ag2_gest.home.service_point.service_points" %></h5></a>
+    <a href="<%= service_points_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/ag2WaterSupply.png" width="96" height="96" alt="ag2ServicePoints" /><h5 class="h5-narrow"><%=t "ag2_gest.home.service_point.service_points" %></h5></a>
     <% else %>
-    <a href="<%= service_points_path %>" class="thumbnail centered"><img src="/assets/pict/ag2ServicePoints.png" width="128" height="128" alt="ag2ServicePoints" /><h5 class="h5-narrow"><%=t "ag2_gest.home.service_point.service_points" %></h5></a>
+    <a href="<%= service_points_path %>" class="thumbnail centered"><img src="/assets/pict/ag2WaterSupply.png" width="128" height="128" alt="ag2ServicePoints" /><h5 class="h5-narrow"><%=t "ag2_gest.home.service_point.service_points" %></h5></a>
     <% end %>
   </li>
   <li class="span2"></li>
