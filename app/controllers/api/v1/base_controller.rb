@@ -6,7 +6,7 @@ class Api::V1::BaseController < ActionController::Base
   before_filter :authenticate_user_from_token!
   before_filter :authenticate_user!
   before_filter :destroy_session
-  #before_filter :parse_request, :authenticate_user_from_token!
+  before_filter :parse_request
 
   private
 
@@ -15,7 +15,9 @@ class Api::V1::BaseController < ActionController::Base
   end
 
   def parse_request
-    @json = JSON.parse(request.body.read)
+    json = request.body.read
+    @json = json && json.length >= 2 ? JSON.parse(json) : nil
+    #@json = JSON.parse(request.body.read)
   end
 
   def authenticate_user_from_token!

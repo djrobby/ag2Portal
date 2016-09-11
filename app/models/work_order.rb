@@ -44,7 +44,7 @@ class WorkOrder < ActiveRecord::Base
   has_many :offer_requests
   has_many :offer_request_items
   has_many :offers
-  has_many :offers_items
+  has_many :offer_items
   has_many :supplier_invoices
   has_many :supplier_invoice_items
   has_many :delivery_notes
