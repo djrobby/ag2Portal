@@ -1,0 +1,68 @@
+<%= render '/layouts/ag2_gest/billmbreadcrumb' %>
+
+<!-- Apps Thumbnails -->
+<ul class="thumbnails">
+  <!-- Apps 1 -->
+  <li class="span2"></li>
+  <li class="span4">
+    <% if (session[:resolution] == "LD")%>
+    <a href="<%= new_bill_path %>" class="thumbnail centered"><img src="/assets/icon/ag2ServiceBilling.png" width="48" height="48" alt="ag2ServiceInvoices" /><h5 class="h5-narrow"><%=t "ag2_gest.home.bill.service_billing" %></h5></a>
+    <% elsif session[:resolution] == "SD" %>
+    <a href="<%= new_bill_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/ag2ServiceBilling.png" width="96" height="96" alt="ag2ServiceInvoices" /><h5 class="h5-narrow"><%=t "ag2_gest.home.bill.service_billing" %></h5></a>
+    <% else %>
+    <a href="<%= new_bill_path %>" class="thumbnail centered"><img src="/assets/pict/ag2ServiceBilling.png" width="128" height="128" alt="ag2ServiceInvoices" /><h5 class="h5-narrow"><%=t "ag2_gest.home.bill.service_billing" %></h5></a>
+    <% end %>
+  </li>
+  <li class="span4">
+    <% if (session[:resolution] == "LD")%>
+    <a href="<%= new_bill_path %>" class="thumbnail centered"><img src="/assets/icon/ag2Invoice.png" width="48" height="48" alt="ag2CommercialInvoices" /><h5 class="h5-narrow"><%=t "ag2_gest.home.bill.commercial_billing" %></h5></a>
+    <% elsif session[:resolution] == "SD" %>
+    <a href="<%= new_bill_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/ag2Invoice.png" width="96" height="96" alt="ag2CommercialInvoices" /><h5 class="h5-narrow"><%=t "ag2_gest.home.bill.commercial_billing" %></h5></a>
+    <% else %>
+    <a href="<%= new_bill_path %>" class="thumbnail centered"><img src="/assets/pict/ag2Invoice.png" width="128" height="128" alt="ag2CommercialInvoices" /><h5 class="h5-narrow"><%=t "ag2_gest.home.bill.commercial_billing" %></h5></a>
+    <% end %>
+  </li>
+  <li class="span2"></li>
+</ul><!-- /.thumbnails -->
+
+<ul class="thumbnails">
+  <!-- Apps 2 -->
+  <li class="span2"></li>
+  <li class="span2">
+    <% if (session[:resolution] == "LD")%>
+    <a href="<%= invoice_types_path %>" class="thumbnail centered"><img src="/assets/icon/TableA.png" width="48" height="48" alt="ag2Tables" /><h5 class="h5-narrow"><%=t "ag2_gest.home.bill.invoice_types" %></h5></a>
+    <% elsif session[:resolution] == "SD" %>
+    <a href="<%= invoice_types_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/TableA72.png" width="72" height="72" alt="ag2Tables" /><h5 class="h5-narrow"><%=t "ag2_gest.home.bill.invoice_types" %></h5></a>
+    <% else %>
+    <a href="<%= invoice_types_path %>" class="thumbnail centered"><img src="/assets/pict/TableA96.png" width="96" height="96" alt="ag2Tables" /><h5 class="h5-narrow"><%=t "ag2_gest.home.bill.invoice_types" %></h5></a>
+    <% end %>
+  </li>
+  <li class="span2">
+    <% if (session[:resolution] == "LD")%>
+    <a href="<%= invoice_statuses_path %>" class="thumbnail centered"><img src="/assets/icon/TableA.png" width="48" height="48" alt="ag2Tables" /><h5 class="h5-narrow"><%=t "ag2_gest.home.bill.invoice_statuses" %></h5></a>
+    <% elsif session[:resolution] == "SD" %>
+    <a href="<%= invoice_statuses_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/TableA72.png" width="72" height="72" alt="ag2Tables" /><h5 class="h5-narrow"><%=t "ag2_gest.home.bill.invoice_statuses" %></h5></a>
+    <% else %>
+    <a href="<%= invoice_statuses_path %>" class="thumbnail centered"><img src="/assets/pict/TableA96.png" width="96" height="96" alt="ag2Tables" /><h5 class="h5-narrow"><%=t "ag2_gest.home.bill.invoice_statuses" %></h5></a>
+    <% end %>
+  </li>
+  <li class="span2">
+    <% if (session[:resolution] == "LD")%>
+    <a href="<%= invoice_operations_path %>" class="thumbnail centered"><img src="/assets/icon/TableA.png" width="48" height="48" alt="ag2Tables" /><h5 class="h5-narrow"><%=t "ag2_gest.home.bill.invoice_operations" %></h5></a>
+    <% elsif session[:resolution] == "SD" %>
+    <a href="<%= invoice_operations_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/TableA72.png" width="72" height="72" alt="ag2Tables" /><h5 class="h5-narrow"><%=t "ag2_gest.home.bill.invoice_operations" %></h5></a>
+    <% else %>
+    <a href="<%= invoice_operations_path %>" class="thumbnail centered"><img src="/assets/pict/TableA96.png" width="96" height="96" alt="ag2Tables" /><h5 class="h5-narrow"><%=t "ag2_gest.home.bill.invoice_operations" %></h5></a>
+    <% end %>
+  </li>
+  <li class="span2">
+    <% if (session[:resolution] == "LD")%>
+    <a href="<%= billable_items_path %>" class="thumbnail centered"><img src="/assets/icon/TableA.png" width="48" height="48" alt="ag2Tables" /><h5 class="h5-narrow"><%=t "ag2_gest.home.bill.billable_items" %></h5></a>
+    <% elsif session[:resolution] == "SD" %>
+    <a href="<%= billable_items_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/TableA72.png" width="72" height="72" alt="ag2Tables" /><h5 class="h5-narrow"><%=t "ag2_gest.home.bill.billable_items" %></h5></a>
+    <% else %>
+    <a href="<%= billable_items_path %>" class="thumbnail centered"><img src="/assets/pict/TableA96.png" width="96" height="96" alt="ag2Tables" /><h5 class="h5-narrow"><%=t "ag2_gest.home.bill.billable_items" %></h5></a>
+    <% end %>
+  </li>
+  <li class="span2"></li>
+</ul><!-- /.thumbnails -->

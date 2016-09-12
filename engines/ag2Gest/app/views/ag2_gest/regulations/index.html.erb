@@ -1,0 +1,21 @@
+<h1>Listing regulations</h1>
+
+<table>
+  <tr>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @regulations.each do |regulation| %>
+  <tr>
+    <td><%= link_to 'Show', regulation %></td>
+    <td><%= link_to 'Edit', edit_regulation_path(regulation) %></td>
+    <td><%= link_to 'Destroy', regulation, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Regulation', new_regulation_path %>

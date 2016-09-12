@@ -42,10 +42,15 @@ Ag2Gest::Engine.routes.draw do
     match "reading_management", controller: "home", action: 'reading_management'
     match "contracting_management", controller: "home", action: 'contracting_management'
     match "service_point_management", controller: "home", action: 'service_point_management'
+    match "regulation_management", controller: "home", action: 'regulation_management'
+    match "bill_management", controller: "home", action: 'bill_management'
 
     # Resources
     resources :clients
     resources :subscribers
+    #
+    resources :centers
+    resources :street_directories
     #
     resources :sale_offers
     resources :sale_offer_statuses
@@ -60,10 +65,7 @@ Ag2Gest::Engine.routes.draw do
     resources :tariff_schemes
     resources :tariffs
     resources :tariff_types
-    resources :billing_periods
-    resources :billing_frequencies
     resources :billable_concepts
-    resources :billable_items
     #
     resources :meters
     resources :meter_types
@@ -88,6 +90,15 @@ Ag2Gest::Engine.routes.draw do
     #
     resources :bills
     resources :invoices
+    resources :billable_items
+    resources :billing_periods
+    resources :billing_frequencies
+    resources :invoice_types
+    resources :invoice_statuses
+    resources :invoice_operations
+    #
+    resources :regulations
+    resources :regulation_types
     #
     resources :client_payments
     resources :payment_methods

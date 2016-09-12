@@ -1,0 +1,21 @@
+<h1>Listing invoice_types</h1>
+
+<table>
+  <tr>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @invoice_types.each do |invoice_type| %>
+  <tr>
+    <td><%= link_to 'Show', invoice_type %></td>
+    <td><%= link_to 'Edit', edit_invoice_type_path(invoice_type) %></td>
+    <td><%= link_to 'Destroy', invoice_type, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Invoice type', new_invoice_type_path %>

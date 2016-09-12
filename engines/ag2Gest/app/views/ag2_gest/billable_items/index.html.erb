@@ -1,0 +1,21 @@
+<h1>Listing billable_items</h1>
+
+<table>
+  <tr>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @billable_items.each do |billable_item| %>
+  <tr>
+    <td><%= link_to 'Show', billable_item %></td>
+    <td><%= link_to 'Edit', edit_billable_item_path(billable_item) %></td>
+    <td><%= link_to 'Destroy', billable_item, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Billable item', new_billable_item_path %>

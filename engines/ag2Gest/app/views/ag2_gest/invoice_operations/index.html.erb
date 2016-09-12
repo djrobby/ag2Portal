@@ -1,0 +1,21 @@
+<h1>Listing invoice_operations</h1>
+
+<table>
+  <tr>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @invoice_operations.each do |invoice_operation| %>
+  <tr>
+    <td><%= link_to 'Show', invoice_operation %></td>
+    <td><%= link_to 'Edit', edit_invoice_operation_path(invoice_operation) %></td>
+    <td><%= link_to 'Destroy', invoice_operation, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Invoice operation', new_invoice_operation_path %>

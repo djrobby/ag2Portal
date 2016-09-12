@@ -1,0 +1,32 @@
+<%= render '/layouts/ag2_gest/regulationmbreadcrumb' %>
+
+<!-- Apps Thumbnails -->
+<ul class="thumbnails">
+  <!-- Apps 1 -->
+  <li class="span4"></li>
+  <li class="span4">
+    <% if (session[:resolution] == "LD")%>
+    <a href="<%= regulations_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/ag2Regulations.png" width="48" height="48" alt="ag2Regulations" /><h5 class="h5-narrow"><%=t "ag2_gest.home.regulation.regulations" %></h5></a>
+    <% elsif session[:resolution] == "SD" %>
+    <a href="<%= regulations_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/ag2Regulations.png" width="96" height="96" alt="ag2Regulations" /><h5 class="h5-narrow"><%=t "ag2_gest.home.regulation.regulations" %></h5></a>
+    <% else %>
+    <a href="<%= regulations_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/ag2Regulations.png" width="128" height="128" alt="ag2Regulations" /><h5 class="h5-narrow"><%=t "ag2_gest.home.regulation.regulations" %></h5></a>
+    <% end %>
+  </li>
+  <li class="span4"></li>
+</ul><!-- /.thumbnails -->
+
+<ul class="thumbnails">
+  <!-- Apps 2 -->
+  <li class="span5"></li>
+  <li class="span2">
+    <% if (session[:resolution] == "LD")%>
+    <a href="<%= regulation_types_path %>" class="thumbnail centered"><img src="/assets/icon/TableA.png" width="48" height="48" alt="ag2Tables" /><h5 class="h5-narrow"><%=t "ag2_gest.home.regulation.regulation_types" %></h5></a>
+    <% elsif session[:resolution] == "SD" %>
+    <a href="<%= regulation_types_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/TableA72.png" width="72" height="72" alt="ag2Tables" /><h5 class="h5-narrow"><%=t "ag2_gest.home.regulation.regulation_types" %></h5></a>
+    <% else %>
+    <a href="<%= regulation_types_path %>" class="thumbnail centered"><img src="/assets/pict/TableA96.png" width="96" height="96" alt="ag2Tables" /><h5 class="h5-narrow"><%=t "ag2_gest.home.regulation.regulation_types" %></h5></a>
+    <% end %>
+  </li>
+  <li class="span5"></li>
+</ul><!-- /.thumbnails -->
