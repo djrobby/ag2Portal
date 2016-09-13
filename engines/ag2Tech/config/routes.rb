@@ -246,10 +246,14 @@ Ag2Tech::Engine.routes.draw do
         end
         scope '/work_order_areas' do
           get '/'                                   =>  'work_orders#areas'
+          get '/headers'                            =>  'work_orders#area_headers'
+          get '/headers/:id'                        =>  'work_orders#area_header'
           get '/:id'                                =>  'work_orders#area'
         end
         scope '/work_order_types' do
           get '/'                                   =>  'work_orders#types'
+          get '/headers'                            =>  'work_orders#type_headers'
+          get '/headers/:id'                        =>  'work_orders#type_header'
           get '/:id'                                =>  'work_orders#type'
         end
         scope '/work_order_statuses' do
@@ -258,10 +262,14 @@ Ag2Tech::Engine.routes.draw do
         end
         scope '/work_order_labors' do
           get '/'                                   =>  'work_orders#labors'
+          get '/headers'                            =>  'work_orders#labor_headers'
+          get '/headers/:id'                        =>  'work_orders#labor_header'
           get '/:id'                                =>  'work_orders#labor'
         end
         scope '/work_order_infrastructures' do
           get '/'                                   =>  'work_orders#infrastructures'
+          get '/headers'                            =>  'work_orders#infrastructure_headers'
+          get '/headers/:id'                        =>  'work_orders#infrastructure_header'
           get '/:id'                                =>  'work_orders#infrastructure'
         end
         scope '/charge_accounts' do

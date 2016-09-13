@@ -60,16 +60,24 @@ module Ag2Tech
     # REST parameters => (<param>): optional
     #               id: work order <aux> id
     #
-    # GET /api/v1/work_order_areas/ => areas
-    # GET /api/v1/work_order_areas/:id => area
+    # GET /api/v1/work_order_areas/ => areas (include FK data)
+    # GET /api/v1/work_order_areas/headers => headers (no FK)
+    # GET /api/v1/work_order_areas/:id => area (include FK data)
+    # GET /api/v1/work_order_areas/headers/:id => header (one, no FK)
     # GET /api/v1/work_order_types/ => types
+    # GET /api/v1/work_order_types/headers => headers (no FK)
     # GET /api/v1/work_order_types/:id => type
+    # GET /api/v1/work_order_types/headers/:id => header (one, no FK)
     # GET /api/v1/work_order_statuses/ => statuses
     # GET /api/v1/work_order_statuses/:id => status
     # GET /api/v1/work_order_labors/ => labors
+    # GET /api/v1/work_order_labors/headers => headers (no FK)
     # GET /api/v1/work_order_labors/:id => labor
+    # GET /api/v1/work_order_labors/headers/:id => headers (no FK)
     # GET /api/v1/work_order_infrastructures/ => infrastructures
+    # GET /api/v1/work_order_infrastructures/headers => headers (no FK)
     # GET /api/v1/work_order_infrastructures/:id => infrastructure
+    # GET /api/v1/work_order_infrastructures/headers/:id => headers (no FK)
 
     # GET /api/work_orders
     def all
@@ -209,6 +217,12 @@ module Ag2Tech
       render json: serialized_work_order_areas(aux)
     end
 
+    # GET /api/work_orders/areas/headers/
+    def area_headers
+      aux = WorkOrderArea.by_name
+      render json: serialized_work_order_areas_header(aux)
+    end
+
     # GET /api/work_orders/areas/:id
     def area
       if !is_numeric?(params[:id]) || params[:id] == '0'
@@ -223,11 +237,31 @@ module Ag2Tech
       end
     end
 
+    # GET /api/work_orders/areas/header/:id
+    def area_header
+      if !is_numeric?(params[:id]) || params[:id] == '0'
+        render json: :bad_request, status: :bad_request
+      else
+        aux = WorkOrderArea.find(params[:id]) rescue nil
+        if !aux.blank?
+          render json: Api::V1::WorkOrderAreasHeaderSerializer.new(aux)
+        else
+          render json: :not_found, status: :not_found
+        end
+      end
+    end
+
     # Work order Types
     # GET /api/work_orders/types
     def types
       aux = WorkOrderType.by_name
       render json: serialized_work_order_types(aux)
+    end
+
+    # GET /api/work_orders/types/headers/
+    def type_headers
+      aux = WorkOrderType.by_name
+      render json: serialized_work_order_types_header(aux)
     end
 
     # GET /api/work_orders/types/:id
@@ -238,6 +272,20 @@ module Ag2Tech
         aux = WorkOrderType.find(params[:id]) rescue nil
         if !aux.blank?
           render json: Api::V1::WorkOrderTypesSerializer.new(aux)
+        else
+          render json: :not_found, status: :not_found
+        end
+      end
+    end
+
+    # GET /api/work_orders/types/header/:id
+    def type_header
+      if !is_numeric?(params[:id]) || params[:id] == '0'
+        render json: :bad_request, status: :bad_request
+      else
+        aux = WorkOrderType.find(params[:id]) rescue nil
+        if !aux.blank?
+          render json: Api::V1::WorkOrderTypesHeaderSerializer.new(aux)
         else
           render json: :not_found, status: :not_found
         end
@@ -272,6 +320,12 @@ module Ag2Tech
       render json: serialized_work_order_labors(aux)
     end
 
+    # GET /api/work_orders/labors/headers
+    def labor_headers
+      aux = WorkOrderLabor.by_name
+      render json: serialized_work_order_labors_header(aux)
+    end
+
     # GET /api/work_orders/labors/:id
     def labor
       if !is_numeric?(params[:id]) || params[:id] == '0'
@@ -286,11 +340,31 @@ module Ag2Tech
       end
     end
 
+    # GET /api/work_orders/labor/headers/:id
+    def labor_header
+      if !is_numeric?(params[:id]) || params[:id] == '0'
+        render json: :bad_request, status: :bad_request
+      else
+        aux = WorkOrderLabor.find(params[:id]) rescue nil
+        if !aux.blank?
+          render json: Api::V1::WorkOrderLaborsHeaderSerializer.new(aux)
+        else
+          render json: :not_found, status: :not_found
+        end
+      end
+    end
+
     # Work order Infrastructures
     # GET /api/work_orders/infrastructures
     def infrastructures
       aux = Infrastructure.by_code
       render json: serialized_work_order_infrastructures(aux)
+    end
+
+    # GET /api/work_orders/infrastructures/headers
+    def infrastructure_headers
+      aux = Infrastructure.by_code
+      render json: serialized_work_order_infrastructures_header(aux)
     end
 
     # GET /api/work_orders/infrastructures/:id
@@ -301,6 +375,20 @@ module Ag2Tech
         aux = Infrastructure.find(params[:id]) rescue nil
         if !aux.blank?
           render json: Api::V1::WorkOrderInfrastructuresSerializer.new(aux)
+        else
+          render json: :not_found, status: :not_found
+        end
+      end
+    end
+
+    # GET /api/work_orders/infrastructure/headers/:id
+    def infrastructure_header
+      if !is_numeric?(params[:id]) || params[:id] == '0'
+        render json: :bad_request, status: :bad_request
+      else
+        aux = Infrastructure.find(params[:id]) rescue nil
+        if !aux.blank?
+          render json: Api::V1::WorkOrderInfrastructuresHeaderSerializer.new(aux)
         else
           render json: :not_found, status: :not_found
         end
@@ -334,6 +422,47 @@ module Ag2Tech
     # DELETE /api/v1/work_orders/:id => delete existing <id>
 
     # POST /api/work_orders
+    def create_item
+      if @work_order_item.present?
+        render json: :conflict, status: :conflict
+      else
+        @work_order_item = WorkOrderItem.new
+        @work_order_item.assign_attributes(@json['data'])
+        if !@json['data']['created_by']
+          @work_order_item.created_by = current_user.id if !current_user.nil?
+        end
+        if @work_order_item.save
+          render json: serialized_work_order(@work_order_item), status: :created
+        else
+           render json: format_errors(@work_order_item), status: :unprocessable_entity
+        end
+      end
+    end
+
+    # PUT /api/work_orders/:id
+    def update_item
+      @work_order.assign_attributes(@json['data'])
+      if !@json['data']['updated_by']
+        @work_order.updated_by = current_user.id if !current_user.nil?
+      end
+      if @work_order.save
+        render json: serialized_work_order(@work_order), status: :ok
+      else
+        render json: format_errors(@work_order), status: :unprocessable_entity
+      end
+    end
+
+    # DELETE /api/work_orders/:id
+    def destroy_item
+      if @work_order.destroy
+        #head :no_content
+        render json: :deleted, status: :ok
+      else
+        render json: format_errors(@work_order), status: :unprocessable_entity
+      end
+    end
+
+    # POST /api/work_order_items
     def create
       if @work_order.present?
         render json: :conflict, status: :conflict
@@ -349,16 +478,9 @@ module Ag2Tech
            render json: format_errors(@work_order), status: :unprocessable_entity
         end
       end
-      # work_order = WorkOrder.new(params[:work_order])
-      # work_order.created_by = current_user.id if !current_user.nil?
-      # if work_order.save
-      #   render json: serialized_work_order(work_order), status: :created
-      # else
-      #   render json: format_errors(work_order), status: :unprocessable_entity
-      # end
     end
 
-    # PUT /api/work_orders/:id
+    # PUT /api/work_order_item/:id
     def update
       @work_order.assign_attributes(@json['data'])
       if !@json['data']['updated_by']
@@ -378,7 +500,7 @@ module Ag2Tech
       # end
     end
 
-    # DELETE /api/work_orders/:id
+    # DELETE /api/work_order_item/:id
     def destroy
       if @work_order.destroy
         #head :no_content
@@ -423,8 +545,16 @@ module Ag2Tech
       ActiveModel::ArraySerializer.new(_aux, each_serializer: Api::V1::WorkOrderAreasSerializer, root: 'work_order_areas')
     end
 
+    def serialized_work_order_areas_header(_aux)
+      ActiveModel::ArraySerializer.new(_aux, each_serializer: Api::V1::WorkOrderAreasHeaderSerializer, root: 'work_order_areas')
+    end
+
     def serialized_work_order_types(_aux)
       ActiveModel::ArraySerializer.new(_aux, each_serializer: Api::V1::WorkOrderTypesSerializer, root: 'work_order_types')
+    end
+
+    def serialized_work_order_types_header(_aux)
+      ActiveModel::ArraySerializer.new(_aux, each_serializer: Api::V1::WorkOrderTypesHeaderSerializer, root: 'work_order_types')
     end
 
     def serialized_work_order_statuses(_aux)
@@ -435,8 +565,16 @@ module Ag2Tech
       ActiveModel::ArraySerializer.new(_aux, each_serializer: Api::V1::WorkOrderLaborsSerializer, root: 'work_order_labors')
     end
 
+    def serialized_work_order_labors_header(_aux)
+      ActiveModel::ArraySerializer.new(_aux, each_serializer: Api::V1::WorkOrderLaborsHeaderSerializer, root: 'work_order_labors')
+    end
+
     def serialized_work_order_infrastructures(_aux)
       ActiveModel::ArraySerializer.new(_aux, each_serializer: Api::V1::WorkOrderInfrastructuresSerializer, root: 'work_order_infrastructures')
+    end
+
+    def serialized_work_order_infrastructures_header(_aux)
+      ActiveModel::ArraySerializer.new(_aux, each_serializer: Api::V1::WorkOrderInfrastructuresHeaderSerializer, root: 'work_order_infrastructures')
     end
   end
 end
