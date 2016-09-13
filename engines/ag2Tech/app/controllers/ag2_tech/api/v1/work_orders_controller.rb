@@ -422,7 +422,7 @@ module Ag2Tech
     # DELETE /api/v1/work_orders/:id => delete existing <id>
 
     # POST /api/work_orders
-    def create_item
+    def create
       if @work_order_item.present?
         render json: :conflict, status: :conflict
       else
@@ -440,7 +440,7 @@ module Ag2Tech
     end
 
     # PUT /api/work_orders/:id
-    def update_item
+    def update
       @work_order.assign_attributes(@json['data'])
       if !@json['data']['updated_by']
         @work_order.updated_by = current_user.id if !current_user.nil?
@@ -453,7 +453,7 @@ module Ag2Tech
     end
 
     # DELETE /api/work_orders/:id
-    def destroy_item
+    def destroy
       if @work_order.destroy
         #head :no_content
         render json: :deleted, status: :ok
@@ -463,7 +463,7 @@ module Ag2Tech
     end
 
     # POST /api/work_order_items
-    def create
+    def create_item
       if @work_order.present?
         render json: :conflict, status: :conflict
       else
@@ -481,7 +481,7 @@ module Ag2Tech
     end
 
     # PUT /api/work_order_item/:id
-    def update
+    def update_item
       @work_order.assign_attributes(@json['data'])
       if !@json['data']['updated_by']
         @work_order.updated_by = current_user.id if !current_user.nil?
@@ -501,7 +501,7 @@ module Ag2Tech
     end
 
     # DELETE /api/work_order_item/:id
-    def destroy
+    def destroy_item
       if @work_order.destroy
         #head :no_content
         render json: :deleted, status: :ok
