@@ -10,6 +10,8 @@ module Ag2Tech
     #load_and_authorize_resource :class => false
 
     before_filter :find_work_order, only: [:destroy, :update]
+    before_filter :find_work_order_item, only: [:destroy_item, :update_item, :item, :item_header]
+    before_filter :find_work_order_items, only: [:items, :item_headers]
 
     before_filter only: :create do
       if @json.has_key?('data') && @json['data'].respond_to?(:[]) && @json['data']['id']
@@ -17,6 +19,14 @@ module Ag2Tech
       else
         render json: :bad_request, status: :bad_request
         #render nothing: true, status: :bad_request
+      end
+    end
+
+    before_filter only: :create_item do
+      if @json.has_key?('data') && @json['data'].respond_to?(:[]) && @json['data']['id']
+        @work_order_item = WorkOrderItem.find(@json['data']['id']) rescue nil
+      else
+        render json: :bad_request, status: :bad_request
       end
     end
 
@@ -244,7 +254,7 @@ module Ag2Tech
       else
         aux = WorkOrderArea.find(params[:id]) rescue nil
         if !aux.blank?
-          render json: Api::V1::WorkOrderAreasHeaderSerializer.new(aux)
+          render json: Api::V1::WorkOrderAreasHeaderSerializer.new(aux, root: 'work_order_areas')
         else
           render json: :not_found, status: :not_found
         end
@@ -285,7 +295,7 @@ module Ag2Tech
       else
         aux = WorkOrderType.find(params[:id]) rescue nil
         if !aux.blank?
-          render json: Api::V1::WorkOrderTypesHeaderSerializer.new(aux)
+          render json: Api::V1::WorkOrderTypesHeaderSerializer.new(aux, root: 'work_order_types')
         else
           render json: :not_found, status: :not_found
         end
@@ -347,7 +357,7 @@ module Ag2Tech
       else
         aux = WorkOrderLabor.find(params[:id]) rescue nil
         if !aux.blank?
-          render json: Api::V1::WorkOrderLaborsHeaderSerializer.new(aux)
+          render json: Api::V1::WorkOrderLaborsHeaderSerializer.new(aux, root: 'work_order_labors')
         else
           render json: :not_found, status: :not_found
         end
@@ -388,11 +398,41 @@ module Ag2Tech
       else
         aux = Infrastructure.find(params[:id]) rescue nil
         if !aux.blank?
-          render json: Api::V1::WorkOrderInfrastructuresHeaderSerializer.new(aux)
+          render json: Api::V1::WorkOrderInfrastructuresHeaderSerializer.new(aux, root: 'work_order_infrastructures')
         else
           render json: :not_found, status: :not_found
         end
       end
+    end
+
+    #
+    # Linked models (R)
+    #
+    # Work order Items
+    # GET /api/work_order_items
+    def items_all
+      @work_order_items = WorkOrderItem.by_id
+      render json: serialized_work_order_items(@work_order_items)
+    end
+
+    # GET /api/work_order/items/:work_order_id
+    def items
+      render json: serialized_work_order_items(@work_order_items)
+    end
+
+    # GET /api/work_order/items/headers/:work_order_id
+    def item_headers
+      render json: serialized_work_order_items_header(@work_order_items)
+    end
+
+    # GET /api/work_order/items/:id
+    def item
+      render json: Api::V1::WorkOrderItemsSerializer.new(@work_order_item)
+    end
+
+    # GET /api/work_order/items/header/:id
+    def item_header
+      render json: Api::V1::WorkOrderItemsHeaderSerializer.new(@work_order_item, root: 'work_order_items')
     end
 
     # ag2Tech API: CUD (Create, Update & Delete)
@@ -462,51 +502,48 @@ module Ag2Tech
       end
     end
 
+    #
+    # Linked models (CUD)
+    #
+    # Work order Items
     # POST /api/work_order_items
     def create_item
-      if @work_order.present?
+      if @work_order_item.present?
         render json: :conflict, status: :conflict
       else
-        @work_order = WorkOrder.new
-        @work_order.assign_attributes(@json['data'])
+        @work_order_item = WorkOrder.new
+        @work_order_item.assign_attributes(@json['data'])
         if !@json['data']['created_by']
-          @work_order.created_by = current_user.id if !current_user.nil?
+          @work_order_item.created_by = current_user.id if !current_user.nil?
         end
-        if @work_order.save
-          render json: serialized_work_order(@work_order), status: :created
+        if @work_order_item.save
+          render json: serialized_work_order_item(@work_order_item), status: :created
         else
-           render json: format_errors(@work_order), status: :unprocessable_entity
+           render json: format_errors(@work_order_item), status: :unprocessable_entity
         end
       end
     end
 
-    # PUT /api/work_order_item/:id
+    # PUT /api/work_order_items/:id
     def update_item
-      @work_order.assign_attributes(@json['data'])
+      @work_order_item.assign_attributes(@json['data'])
       if !@json['data']['updated_by']
-        @work_order.updated_by = current_user.id if !current_user.nil?
+        @work_order_item.updated_by = current_user.id if !current_user.nil?
       end
-      if @work_order.save
-        render json: serialized_work_order(@work_order), status: :ok
+      if @work_order_item.save
+        render json: serialized_work_order_item(@work_order_item), status: :ok
       else
-        render json: format_errors(@work_order), status: :unprocessable_entity
+        render json: format_errors(@work_order_item), status: :unprocessable_entity
       end
-      # work_order = WorkOrder.find(params[:id])
-      # work_order.updated_by = current_user.id if !current_user.nil?
-      # if work_order.update_attributes(params[:work_order])
-      #   render json: serialized_work_order(work_order), status: :ok
-      # else
-      #   render json: format_errors(work_order), status: :unprocessable_entity
-      # end
     end
 
-    # DELETE /api/work_order_item/:id
+    # DELETE /api/work_order_items/:id
     def destroy_item
-      if @work_order.destroy
+      if @work_order_item.destroy
         #head :no_content
         render json: :deleted, status: :ok
       else
-        render json: format_errors(@work_order), status: :unprocessable_entity
+        render json: format_errors(@work_order_item), status: :unprocessable_entity
       end
     end
 
@@ -519,6 +556,26 @@ module Ag2Tech
       else
         @work_order = WorkOrder.find(params[:id]) rescue nil
         render json: :not_found, status: :not_found unless @work_order.present?
+      end
+    end
+
+    # Returns searched WorkOrderItem
+    def find_work_order_item
+      if !is_numeric?(params[:id]) || params[:id] == '0'
+        render json: :bad_request, status: :bad_request
+      else
+        @work_order_item = WorkOrderItem.find(params[:id]) rescue nil
+        render json: :not_found, status: :not_found unless @work_order_item.present?
+      end
+    end
+
+    # Returns searched WorkOrder's Items
+    def find_work_order_items
+      if !params.has_key?(:work_order_id) || !is_numeric?(params[:work_order_id]) || params[:work_order_id] == '0'
+        render json: :bad_request, status: :bad_request
+      else
+        @work_order_items = WorkOrderItem.belongs_to_work_order(params[:work_order_id])
+        render json: :not_found, status: :not_found unless @work_order_items.present?
       end
     end
 
@@ -575,6 +632,14 @@ module Ag2Tech
 
     def serialized_work_order_infrastructures_header(_aux)
       ActiveModel::ArraySerializer.new(_aux, each_serializer: Api::V1::WorkOrderInfrastructuresHeaderSerializer, root: 'work_order_infrastructures')
+    end
+
+    def serialized_work_order_items(_item)
+      ActiveModel::ArraySerializer.new(_item, each_serializer: Api::V1::WorkOrderItemsSerializer, root: 'work_order_items')
+    end
+
+    def serialized_work_order_items_header(_item)
+      ActiveModel::ArraySerializer.new(_item, each_serializer: Api::V1::WorkOrderItemsHeaderSerializer, root: 'work_order_items')
     end
   end
 end

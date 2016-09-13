@@ -244,6 +244,16 @@ Ag2Tech::Engine.routes.draw do
           put '/:id'                                =>  'work_orders#update'
           delete '/:id'                             =>  'work_orders#destroy'
         end
+        scope '/work_order_items' do
+          get '/'                                   =>  'work_orders#items_all'
+          get '/by_order/:work_order_id'            =>  'work_orders#items'
+          get '/headers_by_order/:work_order_id'    =>  'work_orders#item_headers'
+          get '/headers/:id'                        =>  'work_orders#item_header'
+          get '/:id'                                =>  'work_orders#item'
+          post '/'                                  =>  'work_orders#create_item'
+          put '/:id'                                =>  'work_orders#update_item'
+          delete '/:id'                             =>  'work_orders#destroy_item'
+        end
         scope '/work_order_areas' do
           get '/'                                   =>  'work_orders#areas'
           get '/headers'                            =>  'work_orders#area_headers'
