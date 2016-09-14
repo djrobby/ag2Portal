@@ -12,6 +12,11 @@ class WorkOrderWorker < ActiveRecord::Base
   validates :worker,      :presence => true
   validates :charge_account,  :presence => true
 
+  # Scopes
+  scope :by_id, -> { order(:id) }
+  #
+  scope :belongs_to_work_order, -> work_order { where("work_order_id = ?", work_order).by_id }
+
   #
   # Calculated fields
   #

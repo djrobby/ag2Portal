@@ -12,6 +12,14 @@ module Ag2Tech
     before_filter :find_work_order, only: [:destroy, :update]
     before_filter :find_work_order_item, only: [:destroy_item, :update_item, :item, :item_header]
     before_filter :find_work_order_items, only: [:items, :item_headers]
+    before_filter :find_work_order_worker, only: [:destroy_worker, :update_worker, :worker, :worker_header]
+    before_filter :find_work_order_workers, only: [:workers, :worker_headers]
+    before_filter :find_work_order_tool, only: [:destroy_tool, :update_tool, :tool, :tool_header]
+    before_filter :find_work_order_tools, only: [:tools, :tool_headers]
+    before_filter :find_work_order_vehicle, only: [:destroy_vehicle, :update_vehicle, :vehicle, :vehicle_header]
+    before_filter :find_work_order_vehicles, only: [:vehicles, :vehicle_headers]
+    before_filter :find_work_order_subcontractor, only: [:destroy_subcontractor, :update_subcontractor, :subcontractor, :subcontractor_header]
+    before_filter :find_work_order_subcontractors, only: [:subcontractors, :item_headers]
 
     before_filter only: :create do
       if @json.has_key?('data') && @json['data'].respond_to?(:[]) && @json['data']['id']
@@ -576,6 +584,86 @@ module Ag2Tech
       else
         @work_order_items = WorkOrderItem.belongs_to_work_order(params[:work_order_id])
         render json: :not_found, status: :not_found unless @work_order_items.present?
+      end
+    end
+
+    # Returns searched WorkOrderWorker
+    def find_work_order_worker
+      if !is_numeric?(params[:id]) || params[:id] == '0'
+        render json: :bad_request, status: :bad_request
+      else
+        @work_order_worker = WorkOrderWorker.find(params[:id]) rescue nil
+        render json: :not_found, status: :not_found unless @work_order_worker.present?
+      end
+    end
+
+    # Returns searched WorkOrder's Workers
+    def find_work_order_workers
+      if !params.has_key?(:work_order_id) || !is_numeric?(params[:work_order_id]) || params[:work_order_id] == '0'
+        render json: :bad_request, status: :bad_request
+      else
+        @work_order_workers = WorkOrderWorker.belongs_to_work_order(params[:work_order_id])
+        render json: :not_found, status: :not_found unless @work_order_workers.present?
+      end
+    end
+
+    # Returns searched WorkOrderTool
+    def find_work_order_tool
+      if !is_numeric?(params[:id]) || params[:id] == '0'
+        render json: :bad_request, status: :bad_request
+      else
+        @work_order_tool = WorkOrderTool.find(params[:id]) rescue nil
+        render json: :not_found, status: :not_found unless @work_order_tool.present?
+      end
+    end
+
+    # Returns searched WorkOrder's Tools
+    def find_work_order_tools
+      if !params.has_key?(:work_order_id) || !is_numeric?(params[:work_order_id]) || params[:work_order_id] == '0'
+        render json: :bad_request, status: :bad_request
+      else
+        @work_order_tools = WorkOrderTool.belongs_to_work_order(params[:work_order_id])
+        render json: :not_found, status: :not_found unless @work_order_tools.present?
+      end
+    end
+
+    # Returns searched WorkOrderVehicle
+    def find_work_order_vehicle
+      if !is_numeric?(params[:id]) || params[:id] == '0'
+        render json: :bad_request, status: :bad_request
+      else
+        @work_order_vehicle = WorkOrderVehicle.find(params[:id]) rescue nil
+        render json: :not_found, status: :not_found unless @work_order_vehicle.present?
+      end
+    end
+
+    # Returns searched WorkOrder's Vehicles
+    def find_work_order_vehicles
+      if !params.has_key?(:work_order_id) || !is_numeric?(params[:work_order_id]) || params[:work_order_id] == '0'
+        render json: :bad_request, status: :bad_request
+      else
+        @work_order_vehicles = WorkOrderVehicle.belongs_to_work_order(params[:work_order_id])
+        render json: :not_found, status: :not_found unless @work_order_vehicles.present?
+      end
+    end
+
+    # Returns searched WorkOrderSubcontractor
+    def find_work_order_subcontractor
+      if !is_numeric?(params[:id]) || params[:id] == '0'
+        render json: :bad_request, status: :bad_request
+      else
+        @work_order_subcontractor = WorkOrderSubcontractor.find(params[:id]) rescue nil
+        render json: :not_found, status: :not_found unless @work_order_subcontractor.present?
+      end
+    end
+
+    # Returns searched WorkOrder's Subcontractors
+    def find_work_order_subcontractors
+      if !params.has_key?(:work_order_id) || !is_numeric?(params[:work_order_id]) || params[:work_order_id] == '0'
+        render json: :bad_request, status: :bad_request
+      else
+        @work_order_subcontractors = WorkOrderSubcontractor.belongs_to_work_order(params[:work_order_id])
+        render json: :not_found, status: :not_found unless @work_order_subcontractors.present?
       end
     end
 
