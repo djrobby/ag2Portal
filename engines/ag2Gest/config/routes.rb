@@ -7,6 +7,11 @@ Ag2Gest::Engine.routes.draw do
 
     # Routes to search
 
+    # Routes to Control&Tracking
+    match 'ag2_gest_track' => 'ag2_gest_track#index', :as => :ag2_gest_track
+    #
+    # Control&Tracking
+
     # Routes for jQuery POSTs
     #
     # Clients
