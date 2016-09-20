@@ -493,15 +493,17 @@ module Ag2Tech
       type = params[:type]
       project = params[:project]
       account = nil
+      required = 'false'
       if type != '0'
         @type = WorkOrderType.find(type)
         @labors = @type.blank? ? work_order_labors_dropdown : @type.work_order_labors.order(:name)
         account = type_account(@type, project)
+        required = @type.subscriber_meter.to_s
       else
         @labors = work_order_labors_dropdown
       end
       # Setup JSON
-      @json_data = { "labor" => @labors, "account" => account }
+      @json_data = { "labor" => @labors, "account" => account, "subscriber_meter" => required }
       render json: @json_data
     end
 

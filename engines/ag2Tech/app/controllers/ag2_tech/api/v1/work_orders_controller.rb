@@ -38,6 +38,38 @@ module Ag2Tech
       end
     end
 
+    before_filter only: :create_worker do
+      if @json.has_key?('data') && @json['data'].respond_to?(:[]) && @json['data']['id']
+        @work_order_worker = WorkOrderWorker.find(@json['data']['id']) rescue nil
+      else
+        render json: :bad_request, status: :bad_request
+      end
+    end
+
+    before_filter only: :create_tool do
+      if @json.has_key?('data') && @json['data'].respond_to?(:[]) && @json['data']['id']
+        @work_order_tool = WorkOrderTool.find(@json['data']['id']) rescue nil
+      else
+        render json: :bad_request, status: :bad_request
+      end
+    end
+
+    before_filter only: :create_vehicle do
+      if @json.has_key?('data') && @json['data'].respond_to?(:[]) && @json['data']['id']
+        @work_order_vehicle = WorkOrderVehicle.find(@json['data']['id']) rescue nil
+      else
+        render json: :bad_request, status: :bad_request
+      end
+    end
+
+    before_filter only: :create_subcontractor do
+      if @json.has_key?('data') && @json['data'].respond_to?(:[]) && @json['data']['id']
+        @work_order_subcontractor = WorkOrderSubcontractor.find(@json['data']['id']) rescue nil
+      else
+        render json: :bad_request, status: :bad_request
+      end
+    end
+
     # before_filter only: :create do
     #   unless @json.has_key?('data') && @json['data'].respond_to?(:[]) && @json['data']['id']
     #     render json: :bad_request, status: :bad_request
@@ -519,7 +551,7 @@ module Ag2Tech
       if @work_order_item.present?
         render json: :conflict, status: :conflict
       else
-        @work_order_item = WorkOrder.new
+        @work_order_item = WorkOrderItem.new
         @work_order_item.assign_attributes(@json['data'])
         if !@json['data']['created_by']
           @work_order_item.created_by = current_user.id if !current_user.nil?
@@ -555,8 +587,53 @@ module Ag2Tech
       end
     end
 
+    # Work order Workers
+    # POST /api/work_order_workers
+    def create_worker
+      if @work_order_worker.present?
+        render json: :conflict, status: :conflict
+      else
+        @work_order_worker = WorkOrderWorker.new
+        @work_order_worker.assign_attributes(@json['data'])
+        if !@json['data']['created_by']
+          @work_order_worker.created_by = current_user.id if !current_user.nil?
+        end
+        if @work_order_worker.save
+          render json: serialized_work_order_worker(@work_order_worker), status: :created
+        else
+           render json: format_errors(@work_order_worker), status: :unprocessable_entity
+        end
+      end
+    end
+
+    # PUT /api/work_order_workers/:id
+    def update_worker
+      @work_order_worker.assign_attributes(@json['data'])
+      if !@json['data']['updated_by']
+        @work_order_worker.updated_by = current_user.id if !current_user.nil?
+      end
+      if @work_order_worker.save
+        render json: serialized_work_order_worker(@work_order_worker), status: :ok
+      else
+        render json: format_errors(@work_order_worker), status: :unprocessable_entity
+      end
+    end
+
+    # DELETE /api/work_order_workers/:id
+    def destroy_worker
+      if @work_order_worker.destroy
+        render json: :deleted, status: :ok
+      else
+        render json: format_errors(@work_order_worker), status: :unprocessable_entity
+      end
+    end
+
+    #-----#
     private
 
+    #
+    # Before filter methods
+    #
     # Returns searched WorkOrder
     def find_work_order
       if !is_numeric?(params[:id]) || params[:id] == '0'
@@ -667,6 +744,9 @@ module Ag2Tech
       end
     end
 
+    #
+    # Aux functions
+    #
     # Returns errors as JSON
     def format_errors(_data)
       _data.errors.as_json
@@ -729,5 +809,36 @@ module Ag2Tech
     def serialized_work_order_items_header(_item)
       ActiveModel::ArraySerializer.new(_item, each_serializer: Api::V1::WorkOrderItemsHeaderSerializer, root: 'work_order_items')
     end
-  end
+
+    def serialized_work_order_workers(_item)
+      ActiveModel::ArraySerializer.new(_item, each_serializer: Api::V1::WorkOrderWorkersSerializer, root: 'work_order_workers')
+    end
+
+    def serialized_work_order_workers_header(_item)
+      ActiveModel::ArraySerializer.new(_item, each_serializer: Api::V1::WorkOrderWorkersHeaderSerializer, root: 'work_order_workers')
+    end
+
+    def serialized_work_order_tools(_item)
+      ActiveModel::ArraySerializer.new(_item, each_serializer: Api::V1::WorkOrderToolsSerializer, root: 'work_order_tools')
+    end
+
+    def serialized_work_order_tools_header(_item)
+      ActiveModel::ArraySerializer.new(_item, each_serializer: Api::V1::WorkOrderToolsHeaderSerializer, root: 'work_order_tools')
+    end
+
+    def serialized_work_order_vehicles(_item)
+      ActiveModel::ArraySerializer.new(_item, each_serializer: Api::V1::WorkOrderVehiclesSerializer, root: 'work_order_vehicles')
+    end
+
+    def serialized_work_order_vehicles_header(_item)
+      ActiveModel::ArraySerializer.new(_item, each_serializer: Api::V1::WorkOrderVehiclesHeaderSerializer, root: 'work_order_vehicles')
+    end
+
+    def serialized_work_order_subcontractors(_item)
+      ActiveModel::ArraySerializer.new(_item, each_serializer: Api::V1::WorkOrderSubcontractorsSerializer, root: 'work_order_subcontractors')
+    end
+
+    def serialized_work_order_subcontractors_header(_item)
+      ActiveModel::ArraySerializer.new(_item, each_serializer: Api::V1::WorkOrderSubcontractorsHeaderSerializer, root: 'work_order_subcontractors')
+    end  end
 end

@@ -461,7 +461,8 @@
         project = "0";
       jQuery.getJSON('wo_update_labor_select_from_type/' + order + '/' + project, function(data) {
         var l = data.labor;
-        var h = data.account
+        var h = data.account;
+        var r = data.subscriber_meter;
         // Labor
         $("#work_order_work_order_labor_id").html("");
         $("#work_order_work_order_labor_id").select2("val", "");
@@ -479,6 +480,12 @@
         }
         // Default charge account
         if (h != null) $("#work_order_charge_account_id").select2("val", h.id);
+        // Requieres subscriber & meter?
+        if (r == "true") {
+          $('#subscriber_meter').show();
+        } else {
+          $('#subscriber_meter').hide();
+        }
       });
       return false;
     });

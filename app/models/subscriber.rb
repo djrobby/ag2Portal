@@ -170,7 +170,7 @@ class Subscriber < ActiveRecord::Base
   end
 
   def self.find_by_office(_office, _organization)
-    joins(:office => :company).where("office_id = ? OR (office_id IS NULL AND companies.organization_id = ?)", _company, _organization).by_code
+    joins(:office => :company).where("office_id = ? OR (office_id IS NULL AND companies.organization_id = ?)", _office, _organization).by_code
     #includes(:office => :company).where("office_id = ? OR (office_id IS NULL AND companies.organization_id = ?)", _company, _organization).by_code
   end
 
