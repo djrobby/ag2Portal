@@ -49,9 +49,9 @@ en:
         contracting_request_document_types: "Documentation Types"
       service_point:
         service_points: "Supply Points"
-        service_point_types: "Point Types"
-        service_point_locations: "Point Locations"
-        service_point_purposes: "Point Purposes"
+        service_point_types: "SP Types"
+        service_point_locations: "SP Locations"
+        service_point_purposes: "SP Purposes"
         water_connections: "Connections"
         water_connection_types: "Connection Types"
       sale_offer:

@@ -49,9 +49,9 @@ es:
         contracting_request_document_types: "Tipos Documentación"
       service_point:
         service_points: "Puntos de Suministro"
-        service_point_types: "Tipos de Puntos"
-        service_point_locations: "Emplazamientos Puntos"
-        service_point_purposes: "Propósitos Puntos"
+        service_point_types: "Tipos de PS"
+        service_point_locations: "Emplazamientos PS"
+        service_point_purposes: "Propósitos PS"
         water_connections: "Acometidas"
         water_connection_types: "Tipos de Acometida"
       sale_offer:

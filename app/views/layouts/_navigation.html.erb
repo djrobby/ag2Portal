@@ -25,40 +25,40 @@
             <li class="dropdown-submenu">
               <a href="<%= ag2_gest.contracting_management_path %>"><i class="ico-contracting"></i> <%= t "ag2_gest.home.index.contracting_management" %></a>
               <ul class="dropdown-menu dropdown-menu-submenu" role="menu">
-                <li><%= link_to_resetting_filters(Ag2Gest, ag2_gest.contracting_requests_path, '<i class="ico-records"></i>'.html_safe + " " + t("ag2_gest.home.contracting.contracting_requests")) %></li>
-                <li><%= link_to_resetting_filters(Ag2Gest, ag2_gest.water_supply_contracts_path, '<i class="ico-records"></i>'.html_safe + " " + t("ag2_gest.home.contracting.water_supply_contracts")) %></li>
-                <li><%= link_to_resetting_filters(Ag2Gest, ag2_gest.water_connection_contracts_path, '<i class="ico-records"></i>'.html_safe + " " + t("ag2_gest.home.contracting.water_connection_contracts")) %></li>
+                <li><%= link_to_resetting_filters(Ag2Gest, ag2_gest.contracting_requests_path, '<i class="ico-contractingrequests"></i>'.html_safe + " " + t("ag2_gest.home.contracting.contracting_requests")) %></li>
+                <li><%= link_to_resetting_filters(Ag2Gest, ag2_gest.water_supply_contracts_path, '<i class="ico-supplycontracts"></i>'.html_safe + " " + t("ag2_gest.home.contracting.water_supply_contracts")) %></li>
+                <li><%= link_to_resetting_filters(Ag2Gest, ag2_gest.water_connection_contracts_path, '<i class="ico-connectioncontracts"></i>'.html_safe + " " + t("ag2_gest.home.contracting.water_connection_contracts")) %></li>
               </ul>
             </li>
             <li class="dropdown-submenu">
               <a href="<%= ag2_gest.tariff_management_path %>"><i class="ico-tariff"></i> <%= t "ag2_gest.home.index.tariff_management" %></a>
               <ul class="dropdown-menu dropdown-menu-submenu" role="menu">
-                <li><%= link_to_resetting_filters(Ag2Gest, ag2_gest.tariff_schemes_path, '<i class="ico-records"></i>'.html_safe + " " + t("ag2_gest.home.tariff.schemes")) %></li>
-                <li><%= link_to_resetting_filters(Ag2Gest, ag2_gest.tariffs_path, '<i class="ico-records"></i>'.html_safe + " " + t("ag2_gest.home.tariff.tariffs")) %></li>
+                <li><%= link_to_resetting_filters(Ag2Gest, ag2_gest.tariff_schemes_path, '<i class="ico-tariffschemes"></i>'.html_safe + " " + t("ag2_gest.home.tariff.schemes")) %></li>
+                <li><%= link_to_resetting_filters(Ag2Gest, ag2_gest.tariffs_path, '<i class="ico-tariffs"></i>'.html_safe + " " + t("ag2_gest.home.tariff.tariffs")) %></li>
               </ul>
             </li>
             <li><%= link_to_resetting_filters(Ag2Gest, ag2_gest.meters_path, '<i class="ico-meters"></i>'.html_safe + " " + t("ag2_gest.home.meter.meters")) %></li>
             <li class="dropdown-submenu">
               <a href="<%= ag2_gest.reading_management_path %>"><i class="ico-reading"></i> <%= t "ag2_gest.home.index.reading_management" %></a>
               <ul class="dropdown-menu dropdown-menu-submenu" role="menu">
-                <li><%= link_to_resetting_filters(Ag2Gest, ag2_gest.pre_readings_path, '<i class="ico-records"></i>'.html_safe + " " + t("ag2_gest.home.reading.pre_readings")) %></li>
-                <li><%= link_to_resetting_filters(Ag2Gest, ag2_gest.readings_path, '<i class="ico-records"></i>'.html_safe + " " + t("ag2_gest.home.reading.readings")) %></li>
+                <li><%= link_to_resetting_filters(Ag2Gest, ag2_gest.pre_readings_path, '<i class="ico-prereadings"></i>'.html_safe + " " + t("ag2_gest.home.reading.pre_readings")) %></li>
+                <li><%= link_to_resetting_filters(Ag2Gest, ag2_gest.readings_path, '<i class="ico-readings"></i>'.html_safe + " " + t("ag2_gest.home.reading.readings")) %></li>
               </ul>
             </li>
             <li><%= link_to_resetting_filters(Ag2Gest, ag2_gest.sale_offers_path, '<i class="ico-saleoffers"></i>'.html_safe + " " + t("ag2_gest.home.index.sale_offers")) %></li>
             <li class="dropdown-submenu">
               <a href="<%= ag2_gest.bill_management_path %>"><i class="ico-billing"></i> <%= t "ag2_gest.home.index.bill_management" %></a>
               <ul class="dropdown-menu dropdown-menu-submenu" role="menu">
-                <li><%= link_to_resetting_filters(Ag2Gest, ag2_gest.new_bill_path, '<i class="ico-records"></i>'.html_safe + " " + t("ag2_gest.home.bill.service_billing")) %></li>
-                <li><%= link_to_resetting_filters(Ag2Gest, ag2_gest.new_bill_path, '<i class="ico-records"></i>'.html_safe + " " + t("ag2_gest.home.bill.commercial_billing")) %></li>
+                <li><%= link_to_resetting_filters(Ag2Gest, ag2_gest.new_bill_path, '<i class="ico-servicebilling"></i>'.html_safe + " " + t("ag2_gest.home.bill.service_billing")) %></li>
+                <li><%= link_to_resetting_filters(Ag2Gest, ag2_gest.new_bill_path, '<i class="ico-commercialbilling"></i>'.html_safe + " " + t("ag2_gest.home.bill.commercial_billing")) %></li>
               </ul>
             </li>
             <li><%= link_to_resetting_filters(Ag2Gest, ag2_gest.client_payments_path, '<i class="ico-collections"></i>'.html_safe + " " + t("ag2_gest.home.index.client_payments")) %></li>
             <li class="dropdown-submenu">
               <a href="<%= ag2_gest.service_point_management_path %>"><i class="ico-servicepoint"></i> <%= t "ag2_gest.home.index.service_point_management" %></a>
               <ul class="dropdown-menu dropdown-menu-submenu" role="menu">
-                <li><%= link_to_resetting_filters(Ag2Gest, ag2_gest.water_connections_path, '<i class="ico-records"></i>'.html_safe + " " + t("ag2_gest.home.service_point.water_connections")) %></li>
-                <li><%= link_to_resetting_filters(Ag2Gest, ag2_gest.service_points_path, '<i class="ico-records"></i>'.html_safe + " " + t("ag2_gest.home.service_point.service_points")) %></li>
+                <li><%= link_to_resetting_filters(Ag2Gest, ag2_gest.water_connections_path, '<i class="ico-waterconnection"></i>'.html_safe + " " + t("ag2_gest.home.service_point.water_connections")) %></li>
+                <li><%= link_to_resetting_filters(Ag2Gest, ag2_gest.service_points_path, '<i class="ico-watersupply"></i>'.html_safe + " " + t("ag2_gest.home.service_point.service_points")) %></li>
               </ul>
             </li>
             <li><%= link_to_resetting_filters(Ag2Gest, ag2_gest.regulations_path, '<i class="ico-regulations"></i>'.html_safe + " " + t("ag2_gest.home.regulation.regulations")) %></li>
