@@ -548,7 +548,7 @@ module Ag2Products
           end
         end
       end
-      render json: _array
+      render json: _array.to_json
     end
 
     # Check prices before approve
@@ -566,7 +566,7 @@ module Ag2Products
           end
         end
       end
-      render json: _array
+      render json: _array.to_json
     end
 
     # Approve order
