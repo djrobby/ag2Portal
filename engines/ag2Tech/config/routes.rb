@@ -254,6 +254,46 @@ Ag2Tech::Engine.routes.draw do
           put '/:id'                                =>  'work_orders#update_item'
           delete '/:id'                             =>  'work_orders#destroy_item'
         end
+        scope '/work_order_workers' do
+          get '/'                                   =>  'work_orders#workers_all'
+          get '/by_order/:work_order_id'            =>  'work_orders#workers'
+          get '/headers_by_order/:work_order_id'    =>  'work_orders#worker_headers'
+          get '/headers/:id'                        =>  'work_orders#worker_header'
+          get '/:id'                                =>  'work_orders#worker'
+          post '/'                                  =>  'work_orders#create_worker'
+          put '/:id'                                =>  'work_orders#update_worker'
+          delete '/:id'                             =>  'work_orders#destroy_worker'
+        end
+        scope '/work_order_tools' do
+          get '/'                                   =>  'work_orders#tools_all'
+          get '/by_order/:work_order_id'            =>  'work_orders#tools'
+          get '/headers_by_order/:work_order_id'    =>  'work_orders#tool_headers'
+          get '/headers/:id'                        =>  'work_orders#tool_header'
+          get '/:id'                                =>  'work_orders#tool'
+          post '/'                                  =>  'work_orders#create_tool'
+          put '/:id'                                =>  'work_orders#update_tool'
+          delete '/:id'                             =>  'work_orders#destroy_tool'
+        end
+        scope '/work_order_vehicles' do
+          get '/'                                   =>  'work_orders#vehicles_all'
+          get '/by_order/:work_order_id'            =>  'work_orders#vehicles'
+          get '/headers_by_order/:work_order_id'    =>  'work_orders#vehicle_headers'
+          get '/headers/:id'                        =>  'work_orders#vehicle_header'
+          get '/:id'                                =>  'work_orders#vehicle'
+          post '/'                                  =>  'work_orders#create_vehicle'
+          put '/:id'                                =>  'work_orders#update_vehicle'
+          delete '/:id'                             =>  'work_orders#destroy_vehicle'
+        end
+        scope '/work_order_subcontractors' do
+          get '/'                                   =>  'work_orders#subcontractors_all'
+          get '/by_order/:work_order_id'            =>  'work_orders#subcontractors'
+          get '/headers_by_order/:work_order_id'    =>  'work_orders#subcontractor_headers'
+          get '/headers/:id'                        =>  'work_orders#subcontractor_header'
+          get '/:id'                                =>  'work_orders#subcontractor'
+          post '/'                                  =>  'work_orders#create_subcontractor'
+          put '/:id'                                =>  'work_orders#update_subcontractor'
+          delete '/:id'                             =>  'work_orders#destroy_subcontractor'
+        end
         scope '/work_order_areas' do
           get '/'                                   =>  'work_orders#areas'
           get '/headers'                            =>  'work_orders#area_headers'

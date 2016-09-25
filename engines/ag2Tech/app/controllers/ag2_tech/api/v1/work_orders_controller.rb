@@ -105,6 +105,38 @@ module Ag2Tech
     # GET /api/v1/work_orders/unclosed(/:project_id) => completed but unclosed ones
     # GET /api/v1/work_orders/closed(/:project_id) => closed ones
     #
+    # Linked models:
+    #
+    # GET /api/v1/work_order_items/ => all (includes FK data)
+    # GET /api/v1/work_order_items/by_order/:work_order_id => work order items (includes FK data)
+    # GET /api/v1/work_order_items/headers_by_order/:work_order_id => work order items headers (no FK)
+    # GET /api/v1/work_order_items/headers/:id => work order item header (one, no FK)
+    # GET /api/v1/work_order_items/:id => work order item (includes FK data)
+    #
+    # GET /api/v1/work_order_workers/ => all (includes FK data)
+    # GET /api/v1/work_order_workers/by_order/:work_order_id => work order workers (includes FK data)
+    # GET /api/v1/work_order_workers/headers_by_order/:work_order_id => work order workers headers (no FK)
+    # GET /api/v1/work_order_workers/headers/:id => work order worker header (one, no FK)
+    # GET /api/v1/work_order_workers/:id => work order worker (includes FK data)
+    #
+    # GET /api/v1/work_order_tools/ => all (includes FK data)
+    # GET /api/v1/work_order_tools/by_order/:work_order_id => work order tools (includes FK data)
+    # GET /api/v1/work_order_tools/headers_by_order/:work_order_id => work order tools headers (no FK)
+    # GET /api/v1/work_order_tools/headers/:id => work order tool header (one, no FK)
+    # GET /api/v1/work_order_tools/:id => work order tool (includes FK data)
+    #
+    # GET /api/v1/work_order_vehicles/ => all (includes FK data)
+    # GET /api/v1/work_order_vehicles/by_order/:work_order_id => work order vehicles (includes FK data)
+    # GET /api/v1/work_order_vehicles/headers_by_order/:work_order_id => work order vehicles headers (no FK)
+    # GET /api/v1/work_order_vehicles/headers/:id => work order vehicle header (one, no FK)
+    # GET /api/v1/work_order_vehicles/:id => work order vehicle (includes FK data)
+    #
+    # GET /api/v1/work_order_subcontractors/ => all (includes FK data)
+    # GET /api/v1/work_order_subcontractors/by_order/:work_order_id => work order subcontractors (includes FK data)
+    # GET /api/v1/work_order_subcontractors/headers_by_order/:work_order_id => work order subcontractors headers (no FK)
+    # GET /api/v1/work_order_subcontractors/headers/:id => work order subcontractor header (one, no FK)
+    # GET /api/v1/work_order_subcontractors/:id => work order subcontractor (includes FK data)
+    #
     # Auxilary:
     # GET /api/v1/work_order_<aux>/<method>[/<param>]?<auth>
     # REST parameters => (<param>): optional
@@ -475,6 +507,114 @@ module Ag2Tech
       render json: Api::V1::WorkOrderItemsHeaderSerializer.new(@work_order_item, root: 'work_order_items')
     end
 
+    # Work order Workers
+    # GET /api/work_order_workers
+    def workers_all
+      @work_order_workers = WorkOrderWorker.by_id
+      render json: serialized_work_order_workers(@work_order_workers)
+    end
+
+    # GET /api/work_order/workers/:work_order_id
+    def workers
+      render json: serialized_work_order_workers(@work_order_workers)
+    end
+
+    # GET /api/work_order/workers/headers/:work_order_id
+    def worker_headers
+      render json: serialized_work_order_workers_header(@work_order_workers)
+    end
+
+    # GET /api/work_order/workers/:id
+    def worker
+      render json: Api::V1::WorkOrderWorkersSerializer.new(@work_order_worker)
+    end
+
+    # GET /api/work_order/workers/header/:id
+    def worker_header
+      render json: Api::V1::WorkOrderWorkersHeaderSerializer.new(@work_order_worker, root: 'work_order_workers')
+    end
+
+    # Work order Tools
+    # GET /api/work_order_tools
+    def tools_all
+      @work_order_tools = WorkOrderTool.by_id
+      render json: serialized_work_order_tools(@work_order_tools)
+    end
+
+    # GET /api/work_order/tools/:work_order_id
+    def tools
+      render json: serialized_work_order_tools(@work_order_tools)
+    end
+
+    # GET /api/work_order/tools/headers/:work_order_id
+    def tool_headers
+      render json: serialized_work_order_tools_header(@work_order_tools)
+    end
+
+    # GET /api/work_order/tools/:id
+    def tool
+      render json: Api::V1::WorkOrderToolsSerializer.new(@work_order_tool)
+    end
+
+    # GET /api/work_order/tools/header/:id
+    def tool_header
+      render json: Api::V1::WorkOrderToolsHeaderSerializer.new(@work_order_tool, root: 'work_order_tools')
+    end
+
+    # Work order Vehicles
+    # GET /api/work_order_vehicles
+    def vehicles_all
+      @work_order_vehicles = WorkOrderVehicle.by_id
+      render json: serialized_work_order_vehicles(@work_order_vehicles)
+    end
+
+    # GET /api/work_order/vehicles/:work_order_id
+    def vehicles
+      render json: serialized_work_order_vehicles(@work_order_vehicles)
+    end
+
+    # GET /api/work_order/vehicles/headers/:work_order_id
+    def vehicle_headers
+      render json: serialized_work_order_vehicles_header(@work_order_vehicles)
+    end
+
+    # GET /api/work_order/vehicles/:id
+    def vehicle
+      render json: Api::V1::WorkOrderVehiclesSerializer.new(@work_order_vehicle)
+    end
+
+    # GET /api/work_order/vehicles/header/:id
+    def vehicle_header
+      render json: Api::V1::WorkOrderVehiclesHeaderSerializer.new(@work_order_vehicle, root: 'work_order_vehicles')
+    end
+
+    # Work order Subcontractors
+    # GET /api/work_order_subcontractors
+    def subcontractors_all
+      @work_order_subcontractors = WorkOrderSubcontractor.by_id
+      render json: serialized_work_order_subcontractors(@work_order_subcontractors)
+    end
+
+    # GET /api/work_order/subcontractors/:work_order_id
+    def subcontractors
+      render json: serialized_work_order_subcontractors(@work_order_subcontractors)
+    end
+
+    # GET /api/work_order/subcontractors/headers/:work_order_id
+    def subcontractor_headers
+      render json: serialized_work_order_subcontractors_header(@work_order_subcontractors)
+    end
+
+    # GET /api/work_order/subcontractors/:id
+    def subcontractor
+      render json: Api::V1::WorkOrderSubcontractorsSerializer.new(@work_order_subcontractor)
+    end
+
+    # GET /api/work_order/subcontractors/header/:id
+    def subcontractor_header
+      render json: Api::V1::WorkOrderSubcontractorsHeaderSerializer.new(@work_order_subcontractor, root: 'work_order_subcontractors')
+    end
+
     # ag2Tech API: CUD (Create, Update & Delete)
     # accepts JSON, returns JSON
     # scope => /ag2_tech
@@ -500,6 +640,28 @@ module Ag2Tech
     # POST /api/v1/work_orders/ => create new <data>
     # PUT /api/v1/work_orders/:id => update existing <id><data>
     # DELETE /api/v1/work_orders/:id => delete existing <id>
+    #
+    # Linked models:
+    #
+    # POST /api/v1/work_order_items/ => create new item <data>
+    # PUT /api/v1/work_order_items/:id => update existing item <id><data>
+    # DELETE /api/v1/work_order_items/:id => delete existing item <id>
+    #
+    # POST /api/v1/work_order_workers/ => create new worker <data>
+    # PUT /api/v1/work_order_workers/:id => update existing worker <id><data>
+    # DELETE /api/v1/work_order_workers/:id => delete existing worker <id>
+    #
+    # POST /api/v1/work_order_tools/ => create new tool <data>
+    # PUT /api/v1/work_order_tools/:id => update existing tool <id><data>
+    # DELETE /api/v1/work_order_tools/:id => delete existing tool <id>
+    #
+    # POST /api/v1/work_order_vehicles/ => create new vehicle <data>
+    # PUT /api/v1/work_order_vehicles/:id => update existing vehicle <id><data>
+    # DELETE /api/v1/work_order_vehicles/:id => delete existing vehicle <id>
+    #
+    # POST /api/v1/work_order_subcontractors/ => create new subcontractor <data>
+    # PUT /api/v1/work_order_subcontractors/:id => update existing subcontractor <id><data>
+    # DELETE /api/v1/work_order_subcontractors/:id => delete existing subcontractor <id>
 
     # POST /api/work_orders
     def create
@@ -625,6 +787,129 @@ module Ag2Tech
         render json: :deleted, status: :ok
       else
         render json: format_errors(@work_order_worker), status: :unprocessable_entity
+      end
+    end
+
+    # Work order Tools
+    # POST /api/work_order_tools
+    def create_tool
+      if @work_order_tool.present?
+        render json: :conflict, status: :conflict
+      else
+        @work_order_tool = WorkOrderTool.new
+        @work_order_tool.assign_attributes(@json['data'])
+        if !@json['data']['created_by']
+          @work_order_tool.created_by = current_user.id if !current_user.nil?
+        end
+        if @work_order_tool.save
+          render json: serialized_work_order_tool(@work_order_tool), status: :created
+        else
+           render json: format_errors(@work_order_tool), status: :unprocessable_entity
+        end
+      end
+    end
+
+    # PUT /api/work_order_tools/:id
+    def update_tool
+      @work_order_tool.assign_attributes(@json['data'])
+      if !@json['data']['updated_by']
+        @work_order_tool.updated_by = current_user.id if !current_user.nil?
+      end
+      if @work_order_tool.save
+        render json: serialized_work_order_tool(@work_order_tool), status: :ok
+      else
+        render json: format_errors(@work_order_tool), status: :unprocessable_entity
+      end
+    end
+
+    # DELETE /api/work_order_tools/:id
+    def destroy_tool
+      if @work_order_tool.destroy
+        render json: :deleted, status: :ok
+      else
+        render json: format_errors(@work_order_tool), status: :unprocessable_entity
+      end
+    end
+
+    # Work order Vehicles
+    # POST /api/work_order_vehicles
+    def create_vehicle
+      if @work_order_vehicle.present?
+        render json: :conflict, status: :conflict
+      else
+        @work_order_vehicle = WorkOrderVehicle.new
+        @work_order_vehicle.assign_attributes(@json['data'])
+        if !@json['data']['created_by']
+          @work_order_vehicle.created_by = current_user.id if !current_user.nil?
+        end
+        if @work_order_vehicle.save
+          render json: serialized_work_order_vehicle(@work_order_vehicle), status: :created
+        else
+           render json: format_errors(@work_order_vehicle), status: :unprocessable_entity
+        end
+      end
+    end
+
+    # PUT /api/work_order_vehicles/:id
+    def update_vehicle
+      @work_order_vehicle.assign_attributes(@json['data'])
+      if !@json['data']['updated_by']
+        @work_order_vehicle.updated_by = current_user.id if !current_user.nil?
+      end
+      if @work_order_vehicle.save
+        render json: serialized_work_order_vehicle(@work_order_vehicle), status: :ok
+      else
+        render json: format_errors(@work_order_vehicle), status: :unprocessable_entity
+      end
+    end
+
+    # DELETE /api/work_order_vehicles/:id
+    def destroy_vehicle
+      if @work_order_vehicle.destroy
+        render json: :deleted, status: :ok
+      else
+        render json: format_errors(@work_order_vehicle), status: :unprocessable_entity
+      end
+    end
+
+    # Work order Subcontractors
+    # POST /api/work_order_subcontractors
+    def create_subcontractor
+      if @work_order_subcontractor.present?
+        render json: :conflict, status: :conflict
+      else
+        @work_order_subcontractor = WorkOrderVehicle.new
+        @work_order_subcontractor.assign_attributes(@json['data'])
+        if !@json['data']['created_by']
+          @work_order_subcontractor.created_by = current_user.id if !current_user.nil?
+        end
+        if @work_order_subcontractor.save
+          render json: serialized_work_order_subcontractor(@work_order_subcontractor), status: :created
+        else
+           render json: format_errors(@work_order_subcontractor), status: :unprocessable_entity
+        end
+      end
+    end
+
+    # PUT /api/work_order_subcontractors/:id
+    def update_subcontractor
+      @work_order_subcontractor.assign_attributes(@json['data'])
+      if !@json['data']['updated_by']
+        @work_order_subcontractor.updated_by = current_user.id if !current_user.nil?
+      end
+      if @work_order_subcontractor.save
+        render json: serialized_work_order_subcontractor(@work_order_subcontractor), status: :ok
+      else
+        render json: format_errors(@work_order_subcontractor), status: :unprocessable_entity
+      end
+    end
+
+    # DELETE /api/work_order_subcontractors/:id
+    def destroy_subcontractor
+      if @work_order_subcontractor.destroy
+        render json: :deleted, status: :ok
+      else
+        render json: format_errors(@work_order_subcontractor), status: :unprocessable_entity
       end
     end
 
