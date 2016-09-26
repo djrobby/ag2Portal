@@ -19,7 +19,7 @@ module Ag2Tech
     before_filter :find_work_order_vehicle, only: [:destroy_vehicle, :update_vehicle, :vehicle, :vehicle_header]
     before_filter :find_work_order_vehicles, only: [:vehicles, :vehicle_headers]
     before_filter :find_work_order_subcontractor, only: [:destroy_subcontractor, :update_subcontractor, :subcontractor, :subcontractor_header]
-    before_filter :find_work_order_subcontractors, only: [:subcontractors, :item_headers]
+    before_filter :find_work_order_subcontractors, only: [:subcontractors, :subcontractor_headers]
 
     before_filter only: :create do
       if @json.has_key?('data') && @json['data'].respond_to?(:[]) && @json['data']['id']
