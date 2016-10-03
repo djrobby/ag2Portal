@@ -93,12 +93,12 @@ receipt_number = @receipt_items_report.first.receipt_note.receipt_no
 		report.page.values project: i.receipt_note.project.full_code unless i.receipt_note.project.blank?
 		report.page.values store: i.receipt_note.store.name unless i.receipt_note.store.blank?
 		report.page.values quantity: number_with_precision(i.receipt_note.quantity, precision: 2) unless i.receipt_note.quantity.blank?
-		report.page.values total: number_with_precision(i.receipt_note.total, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless i.receipt_note.total.blank?
+		report.page.values total: number_with_precision(i.receipt_note.taxable, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless i.receipt_note.total.blank?
 		row.item(:full_code_items).value i.product.full_code
 		row.item(:description_items).value i.description
 		row.item(:quantity_items).value number_with_precision(i.quantity, precision: 4)
-		row.item(:net_price_items).value number_with_precision(i.net_price, precision: 4)
-		row.item(:amount_items).value number_with_precision(i.amount, precision: 4)
+		row.item(:net_price_items).value number_with_precision(i.net_price, precision: 4, delimiter: I18n.locale == :es ? "." : ",")
+		row.item(:amount_items).value number_with_precision(i.amount, precision: 4, delimiter: I18n.locale == :es ? "." : ",")
 		row.item(:balance_items).value number_with_precision(i.balance, precision: 4)
 	end
 	# Store page subtotals
