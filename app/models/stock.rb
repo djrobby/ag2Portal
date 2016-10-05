@@ -57,6 +57,12 @@ class Stock < ActiveRecord::Base
     _sum
   end
 
+  # Stock rotation rate
+  # Delivery notes valued at cost (deliveries_costs) divided by WAP (average_price)
+  def rotation_rate
+    deliveries / ((initial + current) / 2)
+  end
+
   #
   # Class (self) user defined methods
   #
@@ -74,6 +80,10 @@ class Stock < ActiveRecord::Base
 
   def self.find_by_store_and_family(_store, _family)
     joins(:product).where("store_id = ? AND products.product_family_id = ?", _store, _family)
+  end
+
+  def self.find_by_product_and_company(_product, _company)
+    joins(:store).where("product_id = ? AND stores.company_id = ?", _product, _company)
   end
 
   searchable do

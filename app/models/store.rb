@@ -162,6 +162,13 @@ class Store < ActiveRecord::Base
     inventory_count_items.sum("price") / inventory_count_items.count
   end
 
+  # Stock rotation rate
+  def rotation_rate
+    deliveries / ((initial + stock) / 2)
+    #deliveries_costs / average_price
+  end
+
+  # Address helpers
   def address_1
     _ret = ""
     if !street_type.blank?

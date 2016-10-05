@@ -124,6 +124,13 @@ class DeliveryNote < ActiveRecord::Base
   end
 
   #
+  # Class (self) user defined methods
+  #
+  def self.find_by_product_and_company(_product, _company)
+    joins(:project, :delivery_note_items).where('projects.company_id = ? AND delivery_note_items.product_id = ?', _company, _product)
+  end
+
+  #
   # Records navigator
   #
   def to_first
