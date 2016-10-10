@@ -60,7 +60,11 @@ class Stock < ActiveRecord::Base
   # Stock rotation rate
   # Delivery notes valued at cost (deliveries_costs) divided by WAP (average_price)
   def rotation_rate
-    deliveries / ((initial + current) / 2)
+    if (initial + current) == 0
+      0
+    else
+      deliveries / ((initial + current) / 2)
+    end
   end
 
   #

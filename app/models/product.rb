@@ -224,7 +224,11 @@ class Product < ActiveRecord::Base
 
   # Stock rotation rate
   def rotation_rate
-    deliveries / ((initial + stock) / 2)
+    if (initial + stock) == 0
+      0
+    else
+      deliveries / ((initial + stock) / 2)
+    end
     #deliveries_costs / average_price
   end
 

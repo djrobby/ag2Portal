@@ -22,3 +22,5 @@ es:
         maximum: "Máximo"
         receipts: "Entradas"
         deliveries: "Salidas"
+        rotation_rate: "Indice Rotación"
+        rotation_rate_c: "IR"

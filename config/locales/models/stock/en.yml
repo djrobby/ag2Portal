@@ -22,3 +22,5 @@ en:
         maximum: "Maximum"
         receipts: "Receipts"
         deliveries: "Deliveries"
+        rotation_rate: "Rotation Rate"
+        rotation_rate_c: "RR"

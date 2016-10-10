@@ -53,3 +53,5 @@ en:
         inventory_counts: "Inventory counts"
         receipts: "Receipts"
         deliveries: "Deliveries"
+        rotation_rate: "Rotation Rate"
+        rotation_rate_c: "RR"

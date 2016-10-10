@@ -53,3 +53,5 @@ es:
         inventory_counts: "Recuentos de inventario"
         receipts: "Entradas"
         deliveries: "Salidas"
+        rotation_rate: "Indice Rotación"
+        rotation_rate_c: "IR"
