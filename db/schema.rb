@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20160908100007) do
+ActiveRecord::Schema.define(:version => 20161011065811) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -1851,6 +1851,7 @@ ActiveRecord::Schema.define(:version => 20160908100007) do
     t.integer  "organization_id"
     t.boolean  "order_authorization"
     t.boolean  "is_meter"
+    t.boolean  "no_order_needed"
   end
 
   add_index "product_families", ["family_code"], :name => "index_product_families_on_family_code"

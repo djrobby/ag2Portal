@@ -16,3 +16,4 @@ en:
         organization: "Organization"
         organization_id: "Organization"
         is_meter: "Meters family?"
+        no_order_needed: "Receipt Note wo Order?"

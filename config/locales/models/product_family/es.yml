@@ -16,3 +16,4 @@ es:
         organization: "Organización"
         organization_id: "Organización"
         is_meter: "¿Familia de contadores?"
+        no_order_needed: "¿Nota de entrega sin Pedido?"

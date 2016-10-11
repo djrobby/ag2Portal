@@ -1,7 +1,7 @@
 class ProductFamily < ActiveRecord::Base
   belongs_to :organization
   attr_accessible :family_code, :max_orders_count, :max_orders_sum, :name, :organization_id,
-                  :order_authorization, :is_meter
+                  :order_authorization, :is_meter, :no_order_needed
 
   has_paper_trail
 
