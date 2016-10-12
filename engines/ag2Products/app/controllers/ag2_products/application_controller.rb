@@ -17,6 +17,7 @@ module Ag2Products
       session[:Client] = nil
       session[:Project] = nil
       session[:Order] = nil
+      session[:Account] = nil
       session[:Products] = nil
       session[:Stores] = nil
       session[:Suppliers] = nil

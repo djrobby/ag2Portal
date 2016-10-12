@@ -28,6 +28,7 @@
     $("#Client").select2("val", "<%= params[:Supplier] %>");
     $("#Project").select2("val", "<%= params[:Project] %>");
     $("#Order").select2("val", "<%= params[:Order] %>");
+    $("#Account").select2("val", "<%= params[:Account] %>");
   });
 
   jQuery(function($) {
@@ -37,6 +38,7 @@
       $("#Client").select2("val", "");
       $("#Project").select2("val", "");
       $("#Order").select2("val", "");
+      $("#Account").select2("val", "");
       $("#search").val("");
       // no AJAX
       //_thisForm.submit();
@@ -79,6 +81,9 @@
         <!-- Work order -->
         <%= label_tag I18n.t("ag2_products.delivery_notes.index.label_work_order"), nil, :class => 'form-label-under-sel2' %>
         <%= select_tag "Order", options_from_collection_for_select(@work_orders, "id", "full_name"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
+        <!-- Charge account -->
+        <%= label_tag I18n.t("ag2_products.delivery_notes.index.label_charge_account"), nil, :class => 'form-label-under-sel2' %>
+        <%= select_tag "Account", options_from_collection_for_select(@charge_accounts, "id", "full_name"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
         <!-- Others -->
         <%= label_tag I18n.t("ag2_products.delivery_notes.index.label_others"), nil, :class => 'form-label-under-sel2' %>
         <%= text_field_tag :search, params[:search], :class => 'x-large-text-field shrinked' %>

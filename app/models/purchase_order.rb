@@ -43,6 +43,9 @@ class PurchaseOrder < ActiveRecord::Base
   validates :project,         :presence => true
   validates :organization,    :presence => true
 
+  # Scopes
+  scope :by_no, -> { order(:order_no) }
+
   before_destroy :check_for_dependent_records
   after_create :notify_on_create
   after_update :notify_on_update
@@ -186,6 +189,15 @@ class PurchaseOrder < ActiveRecord::Base
     end
   end
 
+  # Orders which include product (and projects)
+  def self.has_product(_product, _projects)
+    if !_projects.blank?
+      joins(:purchase_order_items).where("purchase_order_items.product_id = ? AND purchase_orders.project_id IN (?)", _product, _projects).group('purchase_orders.id')
+    else
+      joins(:purchase_order_items).where("purchase_order_items.product_id = ?", _product).group('purchase_orders.id')
+    end
+  end
+
   #
   # Records navigator
   #
@@ -207,6 +219,7 @@ class PurchaseOrder < ActiveRecord::Base
 
   searchable do
     text :order_no, :supplier_offer_no
+    integer :id, :multiple => true          # Multiple search values accepted in one search (current_projects)
     string :order_no, :multiple => true     # Multiple search values accepted in one search (inverse_no_search)
     integer :supplier_id
     integer :payment_method_id

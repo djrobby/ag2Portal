@@ -504,33 +504,6 @@ module Ag2Products
       render json: stocks, include: :store
     end
 
-    # Purchase order form (report)
-    def purchase_order_form_
-      id = params[:id]
-      if id.blank?
-        return
-      end
-
-      # Search purchase order
-      @purchase_order = PurchaseOrder.find(id)
-      @purchase_order_items = @purchase_order.purchase_order_items
-      # File name
-      filename = I18n.t("activerecord.models.purchase_order.one")
-      #from = Time.parse(@from).strftime("%Y-%m-%d")
-      #to = Time.parse(@to).strftime("%Y-%m-%d")
-
-      respond_to do |format|
-        # Execute procedure and load aux table
-        #ActiveRecord::Base.connection.execute("CALL generate_timerecord_reports(0, '#{from}', '#{to}', #{office});")
-        #@time_records = TimerecordReport.all
-        # Render PDF
-        format.pdf { send_data render_to_string,
-                     filename: "#{filename}_#{@purchase_order.full_no}_#{id}.pdf",
-                     type: 'application/pdf',
-                     disposition: 'inline' }
-      end
-    end
-
     # Check stocks before approve
     def po_check_stock_before_approve
       _order = params[:order]
@@ -611,7 +584,6 @@ module Ag2Products
         _approval_date = formatted_timestamp(_approval_date)
       end
 
-      # Success
       # Send approval notification to creator
       if code == '$ok'
         send_approve_email(order)
@@ -647,16 +619,22 @@ module Ag2Products
       no = params[:No]
       project = params[:Project]
       supplier = params[:Supplier]
+      product = params[:Products]
       status = params[:Status]
       # OCO
       init_oco if !session[:organization]
       # Initialize select_tags
       @projects = projects_dropdown if @projects.nil?
       @suppliers = suppliers_dropdown if @suppliers.nil?
+      @products = products_dropdown if @products.nil?
       @statuses = OrderStatus.order('id') if @statuses.nil?
 
       # Arrays for search
       current_projects = @projects.blank? ? [0] : current_projects_for_index(@projects)
+      if !product.blank?
+        @items = PurchaseOrder.has_product(product, current_projects)
+      end
+      current_items = @items.blank? ? [0] : current_items_for_index(@items)
       # If inverse no search is required
       no = !no.blank? && no[0] == '%' ? inverse_no_search(no) : no
 
@@ -678,6 +656,9 @@ module Ag2Products
         end
         if !supplier.blank?
           with :supplier_id, supplier
+        end
+        if !product.blank?
+          with :id, current_items
         end
         if !status.blank?
           with :order_status_id, status
@@ -789,30 +770,6 @@ module Ag2Products
     # PUT /purchase_orders/1
     # PUT /purchase_orders/1.json
     def update
-=begin
-      @breadcrumb = 'update'
-      @purchase_order = PurchaseOrder.find(params[:id])
-      @purchase_order.updated_by = current_user.id if !current_user.nil?
-
-      respond_to do |format|
-        if @purchase_order.update_attributes(params[:purchase_order])
-          format.html { redirect_to @purchase_order,
-                        notice: (crud_notice('updated', @purchase_order) + "#{undo_link(@purchase_order)}").html_safe }
-          format.json { head :no_content }
-        else
-          @offers = @purchase_order.supplier.blank? ? offers_dropdown : @purchase_order.supplier.offers.order(:supplier_id, :offer_no, :id)
-          @projects = projects_dropdown_edit(@purchase_order.project)
-          @work_orders = @purchase_order.project.blank? ? work_orders_dropdown : @purchase_order.project.work_orders.order(:order_no)
-          @charge_accounts = work_order_charge_account(@purchase_order)
-          @stores = work_order_store(@purchase_order)
-          @suppliers = @purchase_order.organization.blank? ? suppliers_dropdown : @purchase_order.organization.suppliers(:supplier_code)
-          @payment_methods = @purchase_order.organization.blank? ? payment_methods_dropdown : payment_payment_methods(@purchase_order.organization_id)
-          @products = @purchase_order.organization.blank? ? products_dropdown : @purchase_order.organization.products(:product_code)
-          format.html { render action: "edit" }
-          format.json { render json: @purchase_order.errors, status: :unprocessable_entity }
-        end
-      end
-=end
       @breadcrumb = 'update'
       @purchase_order = PurchaseOrder.find(params[:id])
 
@@ -996,10 +953,21 @@ module Ag2Products
 
     def current_projects_for_index(_projects)
       _current_projects = []
+      # Add projects found
       _projects.each do |i|
         _current_projects = _current_projects << i.id
       end
       _current_projects
+    end
+
+    # Returns array with Purchase orders ID searched by product
+    def current_items_for_index(_items)
+      _current_items = []
+      # Add purchase orders found
+      _items.each do |i|
+        _current_items = _current_items << i.id
+      end
+      _current_items
     end
 
     def inverse_no_search(no)
@@ -1176,6 +1144,10 @@ module Ag2Products
       session[:organization] != '0' ? Product.where(organization_id: session[:organization].to_i).order(:product_code) : Product.order(:product_code)
     end
 
+    def families_dropdown
+      session[:organization] != '0' ? ProductFamily.where(organization_id: session[:organization].to_i).order(:family_code) : ProductFamily.order(:family_code)
+    end
+
     def offers_array(_offers)
       _array = []
       _offers.each do |i|
@@ -1316,6 +1288,12 @@ module Ag2Products
         session[:Supplier] = params[:Supplier]
       elsif session[:Supplier]
         params[:Supplier] = session[:Supplier]
+      end
+      # product
+      if params[:Products]
+        session[:Products] = params[:Products]
+      elsif session[:Products]
+        params[:Products] = session[:Products]
       end
       # project
       if params[:Project]

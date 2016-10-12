@@ -8,6 +8,7 @@ en:
         label_client: "Client"
         label_project: "Project"
         label_work_order: "Work order"
+        label_charge_account: "Analytical account"
         label_others: "Others"
         btn_apply: "Apply Filter"
       show:

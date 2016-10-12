@@ -15,6 +15,7 @@ class EnginesController < ApplicationController
     session[:No] = nil
     session[:Project] = nil
     session[:Order] = nil
+    session[:Account] = nil
     session[:Products] = nil
     session[:Suppliers] = nil
     session[:Status] = nil

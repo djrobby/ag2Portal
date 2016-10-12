@@ -342,12 +342,15 @@ module Ag2Products
       client = params[:Client]
       project = params[:Project]
       order = params[:Order]
+      account = params[:Account]
       # OCO
       init_oco if !session[:organization]
       # Initialize select_tags
       @clients = clients_dropdown if @clients.nil?
       @projects = projects_dropdown if @projects.nil?
+      #@work_orders = projects_work_orders(@projects) if @work_orders.nil?
       @work_orders = work_orders_dropdown if @work_orders.nil?
+      @charge_accounts = projects_charge_accounts(@projects) if @charge_accounts.nil?
 
       # Arrays for search
       current_projects = @projects.blank? ? [0] : current_projects_for_index(@projects)
@@ -375,6 +378,9 @@ module Ag2Products
         end
         if !order.blank?
           with :work_order_id, order
+        end
+        if !account.blank?
+          with :charge_account_id, account
         end
         order_by :sort_no, :desc
         paginate :page => params[:page] || 1, :per_page => per_page
@@ -718,6 +724,21 @@ module Ag2Products
       _ret = ChargeAccount.where(id: _array).order(:account_code)
     end
 
+    # Work orders belonging to projects
+    def projects_work_orders(_projects)
+      _array = []
+      _ret = nil
+
+      # Adding work orders belonging to current projects
+      _projects.each do |i|
+        _ret = WorkOrder.where(project_id: i.id)
+        ret_array(_array, _ret, 'id')
+      end
+
+      # Returning founded charge accounts
+      _ret = WorkOrder.where(id: _array).order(:order_no)
+    end
+
     def work_order_charge_account(_order)
       projects = projects_dropdown
       if _order.work_order.blank? || _order.work_order.charge_account.blank?
@@ -903,6 +924,12 @@ module Ag2Products
         session[:Order] = params[:Order]
       elsif session[:Order]
         params[:Order] = session[:Order]
+      end
+      # account
+      if params[:Account]
+        session[:Account] = params[:Account]
+      elsif session[:Account]
+        params[:Account] = session[:Account]
       end
     end
   end

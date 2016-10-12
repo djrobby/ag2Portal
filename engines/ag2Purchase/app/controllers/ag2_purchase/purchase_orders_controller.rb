@@ -619,16 +619,22 @@ module Ag2Purchase
       no = params[:No]
       project = params[:Project]
       supplier = params[:Supplier]
+      product = params[:Products]
       status = params[:Status]
       # OCO
       init_oco if !session[:organization]
       # Initialize select_tags
       @projects = projects_dropdown if @projects.nil?
       @suppliers = suppliers_dropdown if @suppliers.nil?
+      @products = products_dropdown if @products.nil?
       @statuses = OrderStatus.order('id') if @statuses.nil?
 
       # Arrays for search
       current_projects = @projects.blank? ? [0] : current_projects_for_index(@projects)
+      if !product.blank?
+        @items = PurchaseOrder.has_product(product, current_projects)
+      end
+      current_items = @items.blank? ? [0] : current_items_for_index(@items)
       # If inverse no search is required
       no = !no.blank? && no[0] == '%' ? inverse_no_search(no) : no
 
@@ -650,6 +656,9 @@ module Ag2Purchase
         end
         if !supplier.blank?
           with :supplier_id, supplier
+        end
+        if !product.blank?
+          with :id, current_items
         end
         if !status.blank?
           with :order_status_id, status
@@ -944,10 +953,21 @@ module Ag2Purchase
 
     def current_projects_for_index(_projects)
       _current_projects = []
+      # Add projects found
       _projects.each do |i|
         _current_projects = _current_projects << i.id
       end
       _current_projects
+    end
+
+    # Returns array with Purchase orders ID searched by product
+    def current_items_for_index(_items)
+      _current_items = []
+      # Add purchase orders found
+      _items.each do |i|
+        _current_items = _current_items << i.id
+      end
+      _current_items
     end
 
     def inverse_no_search(no)
@@ -1091,7 +1111,6 @@ module Ag2Purchase
     end
 
     def charge_accounts_dropdown
-      #_accounts = session[:organization] != '0' ? ChargeAccount.where(organization_id: session[:organization].to_i).order(:account_code) : ChargeAccount.order(:account_code)
       session[:organization] != '0' ? ChargeAccount.expenditures.where(organization_id: session[:organization].to_i) : ChargeAccount.expenditures
     end
 
@@ -1123,6 +1142,10 @@ module Ag2Purchase
 
     def products_dropdown
       session[:organization] != '0' ? Product.where(organization_id: session[:organization].to_i).order(:product_code) : Product.order(:product_code)
+    end
+
+    def families_dropdown
+      session[:organization] != '0' ? ProductFamily.where(organization_id: session[:organization].to_i).order(:family_code) : ProductFamily.order(:family_code)
     end
 
     def offers_array(_offers)
@@ -1265,6 +1288,12 @@ module Ag2Purchase
         session[:Supplier] = params[:Supplier]
       elsif session[:Supplier]
         params[:Supplier] = session[:Supplier]
+      end
+      # product
+      if params[:Products]
+        session[:Products] = params[:Products]
+      elsif session[:Products]
+        params[:Products] = session[:Products]
       end
       # project
       if params[:Project]
