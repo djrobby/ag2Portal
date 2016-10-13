@@ -189,6 +189,15 @@ class PurchaseOrder < ActiveRecord::Base
     end
   end
 
+  # Orders which include product family (and projects)
+  def self.has_family(_family, _projects)
+    if !_projects.blank?
+      joins(:purchase_order_items, :products).where("products.product_family_id = ? AND purchase_orders.project_id IN (?)", _family, _projects).group('purchase_orders.id')
+    else
+      joins(:purchase_order_items, :products).where("products.product_family_id = ?", _family).group('purchase_orders.id')
+    end
+  end
+
   # Orders which include product (and projects)
   def self.has_product(_product, _projects)
     if !_projects.blank?

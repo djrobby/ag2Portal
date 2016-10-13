@@ -619,6 +619,7 @@ module Ag2Products
       no = params[:No]
       project = params[:Project]
       supplier = params[:Supplier]
+      family = params[:Family]
       product = params[:Products]
       status = params[:Status]
       # OCO
@@ -626,11 +627,15 @@ module Ag2Products
       # Initialize select_tags
       @projects = projects_dropdown if @projects.nil?
       @suppliers = suppliers_dropdown if @suppliers.nil?
+      @families = families_dropdown if @families.nil?
       @products = products_dropdown if @products.nil?
       @statuses = OrderStatus.order('id') if @statuses.nil?
 
       # Arrays for search
       current_projects = @projects.blank? ? [0] : current_projects_for_index(@projects)
+      if !family.blank?
+        @items = PurchaseOrder.has_family(family, current_projects)
+      end
       if !product.blank?
         @items = PurchaseOrder.has_product(product, current_projects)
       end
@@ -657,7 +662,7 @@ module Ag2Products
         if !supplier.blank?
           with :supplier_id, supplier
         end
-        if !product.blank?
+        if !family.blank? || !product.blank?
           with :id, current_items
         end
         if !status.blank?

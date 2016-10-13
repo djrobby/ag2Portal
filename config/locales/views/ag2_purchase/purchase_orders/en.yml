@@ -8,6 +8,8 @@ en:
         go_to_child_app: "Go to Supplier contacts"
         label_project: "Project"
         label_supplier: "Supplier"
+        label_product: "Product"
+        label_family: "Family"
         label_status: "Status"
         label_others: "Others"
         btn_apply: "Apply Filter"
