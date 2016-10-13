@@ -1294,6 +1294,12 @@ module Ag2Purchase
       elsif session[:Supplier]
         params[:Supplier] = session[:Supplier]
       end
+      # family
+      if params[:Family]
+        session[:Family] = params[:Family]
+      elsif session[:Family]
+        params[:Family] = session[:Family]
+      end
       # product
       if params[:Products]
         session[:Products] = params[:Products]
