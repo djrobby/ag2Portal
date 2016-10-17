@@ -7,6 +7,12 @@ class RegulationType < ActiveRecord::Base
 
   before_validation :fields_to_uppercase
 
+  def to_label
+    "#{description}"
+  end
+
+  private
+
   def fields_to_uppercase
     if !self.description.blank?
       self[:description].upcase!

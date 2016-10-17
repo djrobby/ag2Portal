@@ -2,7 +2,8 @@ class InstalmentPlan < ActiveRecord::Base
   belongs_to :payment_method
   belongs_to :client
   belongs_to :subscriber
-  attr_accessible :instalment_date, :instalment_no, :surcharge_pct
+  attr_accessible :instalment_date, :instalment_no, :surcharge_pct,
+                  :payment_method_id, :client_id, :subscriber_id
 
   has_many :instalments, dependent: :destroy
 

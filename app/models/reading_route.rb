@@ -1,7 +1,8 @@
 class ReadingRoute < ActiveRecord::Base
+  alias_attribute :route_code, :routing_code
   belongs_to :project
   belongs_to :office
-  attr_accessible :name, :routing_code, :project_id, :office_id
+  attr_accessible :name, :routing_code, :project_id, :office_id, :route_code
 
   has_many :subscribers
   has_many :pre_readings

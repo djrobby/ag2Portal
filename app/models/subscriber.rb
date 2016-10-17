@@ -16,7 +16,8 @@ class Subscriber < ActiveRecord::Base
                   :building, :floor, :floor_office, :zipcode_id, :phone, :fax, :cellular, :email,
                   :service_point_id, :active, :tariff_scheme_id, :billing_frequency_id, :meter_id,
                   :reading_route_id, :reading_sequence, :reading_variant, :contracting_request_id,
-                  :remarks, :cadastral_reference, :gis_id, :endowments, :inhabitants, :km
+                  :remarks, :cadastral_reference, :gis_id, :endowments, :inhabitants, :km, :gis_id_wc
+              
   attr_accessor :reading_index_add, :reading_date_add
 
   has_many :work_orders
@@ -25,6 +26,7 @@ class Subscriber < ActiveRecord::Base
   has_one :water_supply_contract
   has_many :readings
   has_many :pre_readings
+  has_many :pre_bills
   has_many :bills
 
   # Nested attributes

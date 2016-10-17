@@ -2,11 +2,14 @@ class Instalment < ActiveRecord::Base
   belongs_to :instalment_plan
   belongs_to :bill
   belongs_to :invoice
-  attr_accessible :amount, :instalment, :payday_limit, :surcharge
+  attr_accessible :amount, :instalment, :payday_limit, :surcharge,
+                  :instalment_plan_id, :bill_id, :invoice_id
 
-  validates :code,  :presence => true
-  validates :name,  :presence => true
-  validates :type,  :presence => true
+  has_one :client_payment
+
+  # validates :code,  :presence => true
+  # validates :name,  :presence => true
+  # validates :type,  :presence => true
 
   #
   # Calculated fields

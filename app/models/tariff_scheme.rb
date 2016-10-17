@@ -24,33 +24,44 @@ class TariffScheme < ActiveRecord::Base
 
   validate :ending_at_cannot_be_less_than_started_at
 
+  # Scopes
+  scope :belongs_to_projects, -> projects { where(project_id: projects) }
+  scope :actives, -> {where("ending_at IS NULL OR'ending_at' < ?", Date.today)}
+
+  searchable do
+    integer :id
+    text :name
+    string :name
+    string :project_id
+    text :project do
+      project.name
+    end
+    text :company do
+      company.name
+    end
+    text :office do
+      office.name
+    end
+    time :ending_at
+    time :starting_at
+  end
+
+  def office
+    project.office
+  end
+
+  def company
+    project.company
+  end
+
+  def active?
+    ending_at.blank? || ending_at < Date.today
+  end
 
   def contain_tariffs_active
-
-
-
-    tariffs_active = self.tariffs.select{|t| t.tariff_active}.group_by{|t| t.billable_item_id}
-
-    #tariffs = self.tariffs.group_by{|t| t.billable_item_id}
-#
-    #tariffs_active = []
-#
-    #tariffs.each do |tariffs|
-      #contain_tariff_active = false
-      #tariffs[1].each do |tariff|
-        #if tariff.tariff_active
-          #contain_tariff_active = true
-        #end
-      #end
-#
-      #if contain_tariff_active
-        #tariffs_active.push(tariffs)
-      #end
-#
-    #end
-
-    return tariffs_active
-
+    tariffs_active = self.tariffs.joins(:billable_item => :billable_concept)
+    .order("billable_concepts.billable_document,billable_concepts.id")
+    .select{|t| t.tariff_active}.group_by{|t| t.billable_item_id}
   end
 
   def to_label
@@ -59,8 +70,8 @@ class TariffScheme < ActiveRecord::Base
 
   def tariffs_contract(caliber_id)
     unless tariffs.blank?
-      tariffs.select{|t| t.try(:billable_item).try(:billable_concept).try(:billable_document) == 2}
-      .select{|t| t.caliber.try(:id) == caliber_id}
+      tariffs.select{|t| t.try(:billable_item).try(:billable_concept).try(:billable_document).to_s == '2'}
+      .select{|t| t.caliber_id.nil? || t.caliber.try(:id) == caliber_id}
       .group_by{|t| t.try(:billable_item).try(:biller_id)}
     else
       []
@@ -69,8 +80,8 @@ class TariffScheme < ActiveRecord::Base
 
   def tariffs_supply(caliber_id)
     unless tariffs.blank?
-      tariffs.select{|t| t.try(:billable_item).try(:billable_concept).try(:billable_document) == 1}
-      .select{|t| t.caliber.try(:id) == caliber_id}
+      tariffs.select{|t| t.try(:billable_item).try(:billable_concept).try(:billable_document).to_s == '1'}
+      .select{|t| t.caliber_id.nil? || t.caliber.try(:id) == caliber_id}
       .group_by{|t| t.try(:billable_item).try(:biller_id)}
     else
       []

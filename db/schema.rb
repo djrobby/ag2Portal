@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20161011065811) do
+ActiveRecord::Schema.define(:version => 20161015113540) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -153,10 +153,11 @@ ActiveRecord::Schema.define(:version => 20161011065811) do
     t.integer  "billable_concept_id"
     t.integer  "biller_id"
     t.integer  "regulation_id"
-    t.datetime "created_at",          :null => false
-    t.datetime "updated_at",          :null => false
+    t.datetime "created_at",                             :null => false
+    t.datetime "updated_at",                             :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
+    t.boolean  "tariffs_by_caliber",  :default => false
   end
 
   add_index "billable_items", ["billable_concept_id"], :name => "index_billable_items_on_billable_concept_id"
@@ -1264,6 +1265,7 @@ ActiveRecord::Schema.define(:version => 20161011065811) do
     t.datetime "updated_at",                                                            :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
+    t.date     "payday_limit"
   end
 
   add_index "invoices", ["bill_id"], :name => "index_invoices_on_bill_id"
@@ -1700,6 +1702,7 @@ ActiveRecord::Schema.define(:version => 20161011065811) do
     t.datetime "updated_at",        :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
+    t.integer  "pre_group_no"
   end
 
   add_index "pre_bills", ["bill_id"], :name => "index_pre_bills_on_bill_id"
@@ -1764,6 +1767,7 @@ ActiveRecord::Schema.define(:version => 20161011065811) do
     t.datetime "updated_at",                                                            :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
+    t.date     "payday_limit"
   end
 
   add_index "pre_invoices", ["biller_id"], :name => "index_pre_invoices_on_biller_id"

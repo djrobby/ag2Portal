@@ -208,6 +208,21 @@ class Client < ActiveRecord::Base
     integer :organization_id
   end
 
+  # Client code
+  def self.cl_next_code(organization)
+    code = ''
+    organization = organization.to_s if organization.is_a? Fixnum
+    organization = organization.rjust(4, '0')
+    last_code = Client.where("client_code LIKE ?", "#{organization}%").order(:client_code).maximum(:client_code)
+    if last_code.nil?
+      code = organization + '0000001'
+    else
+      last_code = last_code[4..10].to_i + 1
+      code = organization + last_code.to_s.rjust(7, '0')
+    end
+    code
+  end
+
   private
 
   # Before destroy

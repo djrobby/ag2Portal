@@ -14,9 +14,12 @@ class PreInvoice < ActiveRecord::Base
   attr_accessible :invoice_no, :invoice_date, :consumption, :consumption_real, :consumption_estimated, :consumption_other,
                   :discount_pct, :exemption, :confirmation_date,
                   :pre_bill_id, :invoice_status_id, :invoice_type_id, :tariff_scheme_id, :invoice_operation_id,
-                  :biller_id, :billing_period_id, :reading_1_id, :reading_2_id, :charge_account_id, :invoice_id
+                  :biller_id, :billing_period_id, :reading_1_id, :reading_2_id, :charge_account_id, :invoice_id,
+                  :payday_limit
 
   has_many :pre_invoice_items, dependent: :destroy
+
+  alias_attribute :company, :biller
 
   #
   # Calculated fields

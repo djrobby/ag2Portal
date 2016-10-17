@@ -6,7 +6,7 @@ class PreInvoiceItem < ActiveRecord::Base
   belongs_to :measure
 
   attr_accessible :code, :subcode, :description, :quantity, :price, :discount, :discount_pct,
-                  :invoice_id, :tariff_id, :tax_type_id, :product_id, :measure_id
+                  :tariff_id, :tax_type_id, :product_id, :measure_id, :pre_invoice_id
 
   #
   # Calculated fields

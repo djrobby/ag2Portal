@@ -34,7 +34,7 @@ class ContractingRequest < ActiveRecord::Base
   belongs_to :bank_office
 
   delegate :subscriber, to: :water_supply_contract, allow_nil: true
-
+  
   attr_accessible :client_building, :client_cellular, :client_country_id, :client_email,
                   :client_fax, :client_floor, :client_floor_office, :client_phone,
                   :client_province_id, :client_region_id, :client_street_directory_id,
@@ -49,7 +49,7 @@ class ContractingRequest < ActiveRecord::Base
                   :subscriber_floor, :subscriber_floor_office, :subscriber_province_id,
                   :subscriber_region_id, :subscriber_street_directory_id, :subscriber_street_name,
                   :subscriber_street_number, :subscriber_street_type_id, :subscriber_town_id,
-                  :subscriber_zipcode_id, :iban, :country_code, :iban_dc, :cb, :cs, :ccc_dc,
+                  :subscriber_zipcode_id, :iban, :country_id, :iban_dc, :bank_id, :bank_office_id, :ccc_dc,
                   :account_no, :work_order_id, :subscriber_id, :service_point_id, :service_point
 
   attr_accessible :contracting_request_documents_attributes
@@ -58,7 +58,7 @@ class ContractingRequest < ActiveRecord::Base
   accepts_nested_attributes_for :contracting_request_documents
   has_one :water_supply_contract
   has_one :client, through: :entity
-  has_one :water_connection_contracts
+  # has_one :water_connection_contracts
 
   has_paper_trail
 
@@ -69,7 +69,8 @@ class ContractingRequest < ActiveRecord::Base
   validates_associated :contracting_request_documents
   validates :request_no,                  :presence => true,
                                           :length => { :is => 22 },
-                                          :format => { with: /\A[a-zA-Z\d]+\Z/, message: :code_invalid }
+                                          :format => { with: /\A[a-zA-Z\d]+\Z/, message: :code_invalid },
+                                          :uniqueness => { :scope => :project_id }
   validates :project,                     :presence => true
   validates :request_date,                :presence => true
   validates :contracting_request_type,    :presence => true
@@ -154,7 +155,7 @@ class ContractingRequest < ActiveRecord::Base
 
   # check bank account info
   def data_account?
-    !country_code.blank? && !iban_dc.blank? && !cb.blank? && !cs.blank? && !ccc_dc.blank? && !account_no.blank?
+    !country_id.blank? && !iban_dc.blank? && !bank_id.blank? && !bank_office_id.blank? && !ccc_dc.blank? && !account_no.blank?
   end
 
   def to_client
@@ -168,7 +169,7 @@ class ContractingRequest < ActiveRecord::Base
       fiscal_id: entity.fiscal_id,
       floor: client_floor,
       floor_office: client_floor_office,
-      name: entity.company.nil? ? "#{entity.last_name} #{entity.first_name} ": entity.company,
+      # name: entity.company.nil? ? "#{entity.last_name} #{entity.first_name} ": entity.company,
       first_name: entity.first_name,
       last_name: entity.last_name,
       company: entity.company,
@@ -192,7 +193,7 @@ class ContractingRequest < ActiveRecord::Base
       payment_method_id: 1
     )
     # water_supply_contract.update_attributes(client_id: client.id) if water_supply_contract
-    ClientBankAccount.create(client_id: client.id, iban: iban, country_code: string, iban_dc: iban_dc, cb: cb, cs: cs, ccc_dc: ccc_dc, account_no: account_no, fiscal_id: client.fiscal_id, name: "contratacion de servicios") if data_account?
+    ClientBankAccount.create(client_id: client.id, iban: iban, country_id: country_id, iban_dc: iban_dc, bank_id: bank_id, bank_office_id: bank_office_id, ccc_dc: ccc_dc, account_no: account_no, folder_fiscal_id: client.fiscal_id, folder_name: "contratacion de servicios") if data_account?
   end
 
   def to_subscriber
@@ -247,112 +248,107 @@ class ContractingRequest < ActiveRecord::Base
   def to_subrogation
     # assign water_supply_contract to the new subscriber
     # IMPORTANTE COPIAR DATOS DE UNO A UNO Y NO COGERLOS DE WaterSupplyContract
-    water_supply_contract = WaterSupplyContract.new(old_subscriber.water_supply_contract.attributes.except!("id", "created_at", "updated_at"))
-    water_supply_contract.client = client
+    # water_supply_contract = WaterSupplyContract.new(old_subscriber.water_supply_contract.attributes.except!("id", "created_at", "updated_at"))
+    # water_supply_contract.client = client
+    water_supply_contract = WaterSupplyContract.new(
+                              contracting_request_id: id,
+                              client_id: client.id,
+                              reading_route_id: old_subscriber.water_supply_contract.reading_route,
+                              meter_id: old_subscriber.water_supply_contract.meter_id,
+                              contract_date: Date.today,
+                              reading_sequence: old_subscriber.water_supply_contract.reading_sequence,
+                              cadastral_reference: old_subscriber.water_supply_contract.cadastral_reference,
+                              gis_id: old_subscriber.water_supply_contract.gis_id,
+                              remarks: old_subscriber.water_supply_contract.remarks,
+                              caliber_id: old_subscriber.water_supply_contract.caliber_id
+                            )
     water_supply_contract.contracting_request_id = id
     water_supply_contract.save
-    water_supply_contract = WaterSupplyContract.new(
-                              # contracting_request_id: id,
-                              # client_id: client.id,
-                              # subscriber_id: ,
-                              # reading_route_id: ,
-                              # work_order_id: ,
-                              # meter_id: ,
-                              # bill_id: 232,
-                              # contract_date: ,
-                              # reading_sequence: ,
-                              # cadastral_reference: '',
-                              # gis_id: '',
-                              # endowments: 0,
-                              # inhabitants: 0,
-                              # installation_date: ,
-                              # remarks: '',
-                              # tariff_scheme_id: 32,
-                              # caliber_id: 3
-                            )
 
-  # ending old subscriber
+    #
+    # @subscriber = Subscriber.new
+    # @subscriber.assign_attributes(
+    #   active: true,
+    #   billing_frequency_id: water_supply_contract.try(:bill).try(:invoices).try(:first).try(:tariff_scheme).try(:tariffs).try(:first).try(:billing_frequency_id),
+    #   building: subscriber_building,
+    #   cadastral_reference: water_supply_contract.try(:cadastral_reference),
+    #   cellular: entity.cellular,
+    #   center_id: subscriber_center_id,
+    #   client_id: water_supply_contract.client_id,
+    #   # contract: ,
+    #   country_id: subscriber_country_id,
+    #   country_id: subscriber_country_id,
+    #   email: entity.email,
+    #   email: entity.email,
+    #   # ending_at: ,
+    #   endowments: water_supply_contract.try(:endowments),
+    #   fax: entity.fax,
+    #   fiscal_id: entity.fiscal_id,
+    #   floor: subscriber_floor,
+    #   floor_office: subscriber_floor_office,
+    #   gis_id: water_supply_contract.try(:gis_id),
+    #   inhabitants: water_supply_contract.try(:inhabitants),
+    #   name: entity.try(:full_name),
+    #   name: entity.try(:full_name),
+    #   office_id: project.try(:office).try(:id),
+    #   office_id: project.try(:office).try(:id),
+    #   phone: entity.phone,
+    #   phone: entity.phone,
+    #   province_id: subscriber_province_id,
+    #   province_id: subscriber_province_id,
+    #   region_id: subscriber_region_id,
+    #   region_id: subscriber_region_id,
+    #   remarks: try(:water_supply_contract).try(:remarks),
+    #   remarks: try(:water_supply_contract).try(:remarks),
+    #   starting_at: Time.now,
+    #   street_directory_id: subscriber_street_directory_id,
+    #   street_directory_id: subscriber_street_directory_id,
+    #   street_name: subscriber_street_name,
+    #   street_name: subscriber_street_name,
+    #   street_number: subscriber_street_number,
+    #   street_number: subscriber_street_number,
+    #   street_type_id: subscriber_street_type_id,
+    #   street_type_id: subscriber_street_type_id,
+    #   subscriber_code: sub_next_no(project.organization_id),
+    #   subscriber_code: sub_next_no(project.organization_id),
+    #   town_id: subscriber_town_id,
+    #   zipcode_id: subscriber_zipcode_id,
+    #   tariff_scheme_id: water_supply_contract.tariff_scheme_id,
+    #   first_name: entity.first_name,
+    #   last_name: entity.last_name,
+    #   company: entity.company,
+    #   meter_id: old_subscriber.meter_id,
+    #   reading_route_id: old_subscriber.reading_route_id,
+    #   reading_sequence: old_subscriber.reading_sequence,
+    #   reading_variant: old_subscriber.reading_variant,
+    #   service_point_id: old_subscriber.service_point_id
+    # )
+    # @reading = @subscriber.readings.build(
+    #   project_id: project_id,
+    #   # billing_period_id: ,
+    #   billing_frequency_id: water_supply_contract.try(:bill).try(:invoices).try(:first).try(:tariff_scheme).try(:tariffs).try(:first).try(:billing_frequency_id),
+    #   reading_type_id: 4, #readgin type installation
+    #   meter_id: @subscriber.meter_id,
+    #   reading_route_id: @subscriber.reading_route_id,
+    #   reading_sequence: @subscriber.reading_sequence,
+    #   reading_variant:  @subscriber.reading_variant,
+    #   reading_date: Date.today,
+    #   reading_index: old_subscriber.readings.last.reading_index
+    # )
+    # @meter_details = @subscriber.meter_details.build(installation_date: Date.today, installation_reading: old_subscriber.readings.last.reading_index, meter_id: old_subscriber.meter_id)
+    # @meter_details.save
+    # old_subscriber.update_attributes(ending_at: Date.today, meter_id: nil)
+    # # update meter details withdrawal
+    # old_subscriber.meter_details.last.update_attributes(withdrawal_date: Date.today ,
+    #                                                     withdrawal_reading: old_subscriber.readings.last.reading_index)
+    # if @subscriber.save
+    #   water_supply_contract.update_attributes(subscriber_id: @subscriber.id)
+    # else
+    #   false
+    # end
 
-    @subscriber = Subscriber.new
-    @subscriber.assign_attributes(
-      active: true,
-      billing_frequency_id: water_supply_contract.try(:bill).try(:invoices).try(:first).try(:tariff_scheme).try(:tariffs).try(:first).try(:billing_frequency_id),
-      building: subscriber_building,
-      cadastral_reference: water_supply_contract.try(:cadastral_reference),
-      cellular: entity.cellular,
-      center_id: subscriber_center_id,
-      client_id: water_supply_contract.client_id,
-      # contract: ,
-      country_id: subscriber_country_id,
-      country_id: subscriber_country_id,
-      email: entity.email,
-      email: entity.email,
-      # ending_at: ,
-      endowments: water_supply_contract.try(:endowments),
-      fax: entity.fax,
-      fiscal_id: entity.fiscal_id,
-      floor: subscriber_floor,
-      floor_office: subscriber_floor_office,
-      gis_id: water_supply_contract.try(:gis_id),
-      inhabitants: water_supply_contract.try(:inhabitants),
-      name: entity.try(:full_name),
-      name: entity.try(:full_name),
-      office_id: project.try(:office).try(:id),
-      office_id: project.try(:office).try(:id),
-      phone: entity.phone,
-      phone: entity.phone,
-      province_id: subscriber_province_id,
-      province_id: subscriber_province_id,
-      region_id: subscriber_region_id,
-      region_id: subscriber_region_id,
-      remarks: try(:water_supply_contract).try(:remarks),
-      remarks: try(:water_supply_contract).try(:remarks),
-      starting_at: Time.now,
-      street_directory_id: subscriber_street_directory_id,
-      street_directory_id: subscriber_street_directory_id,
-      street_name: subscriber_street_name,
-      street_name: subscriber_street_name,
-      street_number: subscriber_street_number,
-      street_number: subscriber_street_number,
-      street_type_id: subscriber_street_type_id,
-      street_type_id: subscriber_street_type_id,
-      subscriber_code: sub_next_no(project.organization_id),
-      subscriber_code: sub_next_no(project.organization_id),
-      town_id: subscriber_town_id,
-      zipcode_id: subscriber_zipcode_id,
-      tariff_scheme_id: water_supply_contract.tariff_scheme_id,
-      first_name: entity.first_name,
-      last_name: entity.last_name,
-      company: entity.company,
-      meter_id: old_subscriber.meter_id,
-      reading_route_id: old_subscriber.reading_route_id,
-      reading_sequence: old_subscriber.reading_sequence,
-      reading_variant: old_subscriber.reading_variant,
-      service_point_id: old_subscriber.service_point_id
-    )
-    @reading = @subscriber.readings.build(
-      project_id: project_id,
-      # billing_period_id: ,
-      billing_frequency_id: water_supply_contract.try(:bill).try(:invoices).try(:first).try(:tariff_scheme).try(:tariffs).try(:first).try(:billing_frequency_id),
-      reading_type_id: 4, #readgin type installation
-      meter_id: @subscriber.meter_id,
-      reading_route_id: @subscriber.reading_route_id,
-      reading_sequence: @subscriber.reading_sequence,
-      reading_variant:  @subscriber.reading_variant,
-      reading_date: Date.today,
-      reading_index: old_subscriber.readings.last.reading_index
-    )
-    @meter_details = @subscriber.meter_details.build(installation_date: Date.today, installation_reading: old_subscriber.readings.last.reading_index, meter_id: old_subscriber.meter_id)
-    @meter_details.save
-    old_subscriber.update_attributes(ending_at: Date.today, meter_id: nil)
-    # update meter details withdrawal
-    old_subscriber.meter_details.last.update_attributes(withdrawal_date: Date.today ,
-                                                        withdrawal_reading: old_subscriber.readings.last.reading_index)
-    if @subscriber.save
-      water_supply_contract.update_attributes(subscriber_id: @subscriber.id)
-    else
-      false
-    end
+
+
       # water_supply_contract.bill.update_attributes(subscriber_id: @subscriber.id) if @contracting_request.water_supply_contract and @contracting_request.water_supply_contract.bill
     # create new subscriber
     # to_subscriber
@@ -370,17 +366,17 @@ class ContractingRequest < ActiveRecord::Base
     organization = organization.rjust(4, '0')
     last_no = Subscriber.where("subscriber_code LIKE ?", "#{organization}%").order(:subscriber_code).maximum(:subscriber_code)
     if last_no.nil?
-      code = organization + '000001'
+      code = organization + '0000001'
     else
-      last_no = last_no[4..9].to_i + 1
-      code = organization +  last_no.to_s.rjust(6, '0')
+      last_no = last_no[4..10].to_i + 1
+      code = organization +  last_no.to_s.rjust(7, '0')
     end
     code
   end
 
   def status_control(status=nil)
-    if ["INITIAL","INSPECTION","BILLING","INSTALLATION","COMPLETE"].include? status.upcase
-      self.contracting_request_status_id = ContractingRequestStatus.const_get(status.upcase)
+    if ["INITIAL","INSPECTION","BILLING","INSTALLATION","COMPLETE"].include? status.try(:upcase)
+      self.contracting_request_status_id = ContractingRequestStatus.const_get(status.try(:upcase))
     else
 
       if contracting_request_status_id == nil
@@ -401,4 +397,6 @@ class ContractingRequest < ActiveRecord::Base
 
     end
   end
+
+
 end

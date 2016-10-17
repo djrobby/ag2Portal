@@ -1,59 +1,19 @@
 class WaterSupplyContract < ActiveRecord::Base
-  belongs_to :contracting_request
-  belongs_to :client
-  belongs_to :subscriber
-  belongs_to :reading_route
-  belongs_to :work_order
-  belongs_to :meter
-  belongs_to :tariff_scheme
+
   belongs_to :bill
   belongs_to :caliber
+  belongs_to :client
+  belongs_to :contracting_request
+  belongs_to :meter
+  belongs_to :reading_route
+  belongs_to :subscriber
+  belongs_to :tariff_scheme
+  belongs_to :work_order
 
   attr_accessible :bill_id, :cadastral_reference, :caliber_id, :client_id, :contract_date,
                   :contracting_request_id, :endowments, :gis_id, :inhabitants,
-                  :installation_date, :installation_index, :meter_id, :reading_route_id, :reading_sequence,
+                  :installation_date, :meter_id, :reading_route_id, :reading_sequence,
                   :remarks, :subscriber_id, :tariff_scheme_id, :work_order_id
-
-  # validates
-
-  # callbacks
-
-  # methods
-  def generate_bill
-    bill = Bill.create(project_id: contracting_request.project_id,
-                          invoice_status_id: 1, #Nestor
-                          bill_no: bill_next_no(contracting_request.project),
-                          bill_date: Date.today,
-                          subscriber_id: subscriber_id)
-      tariff_scheme.tariffs_contract(caliber_id).each do |tariffs_biller|
-      invoice = Invoice.create(
-        bill_id: bill.id,
-        invoice_no: invoice_next_no(contracting_request.try(:project).try(:company_id)),
-        invoice_date: Date.today,
-        invoice_status_id: 1, #Nestor
-        invoice_type_id: 1,
-        tariff_scheme_id: tariff_scheme.id,
-        company_id: tariffs_biller[0]
-      ) #Nestor
-      tariffs_biller[1].each do |tariff|
-        InvoiceItem.create(
-          invoice_id: invoice.id,
-          code: tariff.try(:billable_item).try(:billable_concept).try(:code),
-          description: tariff.try(:billable_item).try(:billable_concept).try(:name),
-          quantity: 1,
-          price: tariff.try(:fixed_fee),
-          tax_type_id: tariff.try(:tax_type_f_id),
-          discount_pct: tariff.try(:discount_pct_f),
-          tariff_id: tariff.id)
-      end
-    end
-    self.bill_id = bill.id
-    if self.save
-      return bill
-    else
-      return nil
-    end
-  end
 
   searchable do
     string :gis_id
@@ -69,6 +29,78 @@ class WaterSupplyContract < ActiveRecord::Base
   #     []
   #   end
   # end
+
+  def generate_bill
+    bill = Bill.create( bill_no: bill_next_no(contracting_request.project),
+                        project_id: contracting_request.project_id,
+                        invoice_status_id: InvoiceStatus::PENDING,
+                        bill_date: Date.today,
+                        subscriber_id: subscriber_id,
+                        client_id: client_id,
+                        last_name: client.last_name,
+                        first_name: client.first_name,
+                        company: client.company,
+                        fiscal_id: client.fiscal_id,
+                        street_type_id: client.street_type_id,
+                        street_name: client.street_name,
+                        street_number: client.street_number,
+                        building: client.building,
+                        floor: client.floor,
+                        floor_office: client.floor_office,
+                        zipcode_id: client.zipcode_id,
+                        town_id: client.town_id,
+                        province_id: client.province_id,
+                        region_id: client.region_id,
+                        country_id: client.country_id)
+                          # project_id: contracting_request.project_id,
+                          # invoice_status_id: 1, #Nestor
+                          # bill_no: bill_next_no(contracting_request.project),
+                          # bill_date: Date.today,
+                          # subscriber_id: subscriber_id)
+      tariff_scheme.tariffs_contract(caliber_id).each do |tariffs_biller|
+        invoice = Invoice.create( invoice_no: invoice_next_no(contracting_request.try(:project).try(:company_id)),
+                                bill_id: bill.id,
+                                invoice_status_id: InvoiceStatus::PENDING,
+                                invoice_type_id: InvoiceType::CONTRACT,
+                                invoice_date: Date.today,
+                                tariff_scheme_id: tariff_scheme.id,
+                                payday_limit: nil,
+                                invoice_operation_id: InvoiceOperation::INVOICE,
+                                billing_period_id: nil,
+                                reading_1_id: nil,
+                                reading_2_id: nil,
+                                consumption: nil,
+                                consumption_real: nil,
+                                consumption_estimated: nil,
+                                consumption_other: nil,
+                                biller_id: tariffs_biller[0],
+                                discount_pct: 0.0,
+                                exemption: 0.0,
+                                original_invoice_id: nil,
+                                charge_account_id: client.client_bank_accounts.active.first.id,
+                                )
+        tariffs_biller[1].each do |tariff|
+          InvoiceItem.create( invoice_id: invoice.id,
+                              code: tariff.try(:billable_item).try(:billable_concept).try(:code),
+                              description: tariff.try(:billable_item).try(:billable_concept).try(:name),
+                              tariff_id: tariff.id,
+                              price: tariff.try(:fixed_fee),
+                              quantity: 1,
+                              tax_type_id: tariff.try(:tax_type_f_id),
+                              discount_pct: tariff.try(:discount_pct_f),
+                              discount: 0.0,
+                              product_id: nil,
+                              subcode: tariff.try(:billable_item).try(:billable_concept).try(:code),
+                              measure_id: Measure::M3)
+      end
+    end
+    self.bill_id = bill.id
+    if self.save
+      return bill
+    else
+      return nil
+    end
+  end
 
   private
 
@@ -117,4 +149,5 @@ class WaterSupplyContract < ActiveRecord::Base
     end
     code
   end
+
 end

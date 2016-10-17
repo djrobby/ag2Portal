@@ -14,14 +14,19 @@ class PreBill < ActiveRecord::Base
   attr_accessible :bill_date, :bill_no, :first_name, :last_name, :company, :fiscal_id,
                   :project_id, :invoice_status_id, :subscriber_id, :client_id,
                   :street_type_id, :zipcode_id, :town_id, :province_id, :region_id, :country_id,
-                  :bill_id, :confirmation_date
+                  :bill_id, :confirmation_date,
+                  :pre_group_no, :street_name, :street_number, :building, :floor, :floor_office, :created_by, :updated_by
 
-  has_many :invoices
+  has_many :pre_invoices
   has_one :water_supply_contract
   has_many :client_payments
 
+  def reading
+    pre_invoices.try(:first).try(:reading_2)
+  end
+
   def bill_type
-    invoices.first.invoice_type rescue nil
+    pre_invoices.first.invoice_type rescue nil
     #reading.nil? ? "contratacion" : "suministro"
   end
 
@@ -36,11 +41,26 @@ class PreBill < ActiveRecord::Base
 
   def total
     total = 0
-    invoices.each do |i|
+    pre_invoices.each do |i|
       if !i.total.blank?
         total += i.total
       end
     end
     total
   end
+
+  # PreBill no
+  def self.next_no
+    code = ''
+    # Builds code, if possible
+    last_code = PreBill.order(:pre_group_no).maximum(:pre_group_no)
+    if last_code.nil?
+      code = 1
+    else
+      code = last_code + 1
+    end
+    code
+  end
+
 end
+

@@ -10,6 +10,10 @@ class BillingFrequency < ActiveRecord::Base
 
   validate :days_xor_months
 
+  def total_months
+    months.nil? ? days / 30 : months 
+  end
+
   def to_label
     if days.zero?
       return months.to_s + (months==1 ? ' mes' : ' meses')

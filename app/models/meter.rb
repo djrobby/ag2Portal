@@ -11,7 +11,7 @@ class Meter < ActiveRecord::Base
 
   has_many :meter_details, dependent: :destroy
   has_many :work_orders
-  has_many :subscribers
+  has_one :subscriber
 
   has_paper_trail
 
@@ -30,6 +30,7 @@ class Meter < ActiveRecord::Base
 
   # Scopes
   scope :by_code, -> { order(:meter_code) }
+  scope :from_office, ->(office_id) {where(office_id: office_id)}
   scope :availables, ->(old_subscriber=nil) { select{|m| m.subscriber.nil? or m.id == old_subscriber} }
 
   before_validation :fields_to_uppercase
@@ -54,7 +55,7 @@ class Meter < ActiveRecord::Base
       full_name += " " + self.meter_model.full_name
     end
     if !self.caliber.blank?
-      full_name += " " + self.caliber.caliber
+      full_name += " " + self.caliber.caliber.to_s
     end
     full_name
   end
