@@ -1,0 +1,47 @@
+<script>
+  $(document).ready(function() {
+    $("#div_table th a, #div_table #pages a").on("click", function() {
+      $.getScript(this.href);
+      return false;
+    });
+  }); 
+</script>
+
+<table class="table table-condensed table-striped">
+  <thead>
+    <tr>
+      <th><%= sortable "id", t('activerecord.attributes.reading_incidence_type.id') %></th>
+      <th><%= sortable "name", t('activerecord.attributes.reading_incidence_type.name') %></th>
+      <th><%= sortable "should_estimate", t('activerecord.attributes.reading_incidence_type.should_estimate') %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @reading_incidence_types.each do |reading_incidence_type| %>
+    <tr>
+      <td><%= link_to reading_incidence_type.try(:id), reading_incidence_type_path(reading_incidence_type) %></td>
+      <td><%= reading_incidence_type.try(:name) %></td>
+      <td>
+        <% if reading_incidence_type.try(:should_estimate) == true %>
+          <i class="icon-thumbs-up"></i>
+        <% else %>
+          <i class="icon-thumbs-down"></i>
+        <% end %>
+      </td>
+      <td>
+        <%= link_to edit_reading_incidence_type_path(reading_incidence_type), class: "btn btn-mini" do %>
+          <i class="icon-edit"></i>
+        <% end %>
+
+        <%= link_to reading_incidence_type, class: "btn btn-mini", method: :delete, data: { confirm: 'Are you sure?' } do %>
+          <i class="icon-trash"></i>
+        <% end %>
+
+      </td>
+    </tr>
+   <% end %>
+  </tbody>
+</table>
+
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @reading_incidence_types } %>
+<%= render :partial => '/layouts/crud/new', :locals => { :model => ReadingIncidenceType, :path => new_reading_incidence_type_path, :txt => t("ag2_gest.reading_incidence_types.index.btn_new") } %>
+<%= link_to t("ag2_gest.reading_incidence_types.index.back_to_root"), ag2_gest.root_path %>

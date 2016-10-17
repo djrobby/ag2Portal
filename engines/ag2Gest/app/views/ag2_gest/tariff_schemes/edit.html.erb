@@ -1,6 +1,186 @@
-<h1>Editing tariff_scheme</h1>
+<style>
+.accordion-inner {
+    padding: 0px;
+	}
+</style>
+<% billable_document = "" %>
+<% tariff_type_partial = "" %>
+<%= render '/layouts/ag2_gest/tariffschemesbreadcrumb' %>
 
-<%= render 'form' %>
+<h3><%=t @tariff_scheme.name %> - <%= "Tarifas #{@tariff_scheme.tariff_type.name} de #{@tariff_scheme.project.company.town.name}" %></h3>
 
-<%= link_to 'Show', @tariff_scheme %> |
-<%= link_to 'Back', tariff_schemes_path %>
+<%= simple_form_for @tariff_scheme, :html => {:class => 'form-vertical' } do |f| %>
+<div class="accordion" id="accordion2">
+
+<%= f.simple_fields_for :tariffs do |p| %>
+
+	<% if tariff_type_partial != p.object.billable_item.billable_concept.name %>
+		<% unless tariff_type_partial == "" %>
+			</div></div></div>
+			<!-- End <%= tariff_type_partial %> -->
+		<% end %>
+	<% end %>
+
+	<% if billable_document != p.object.billable_item.billable_concept.billable_document %>
+		<% unless billable_document == "" %>
+			</div></div></div>
+			<!-- End <%= billable_document %> -->
+		<% end %>
+		<!-- <%= p.object.billable_item.billable_concept.billable_document.to_s == '1' ? 'servicios' : 'contratación' %> -->
+		<% billable_document = p.object.billable_item.billable_concept.billable_document %>
+		<br>
+		<div class="accordion-group">
+	    <div class="accordion-heading">
+	      <a class="accordion-toggle" data-toggle="collapse" href='#collapse<%="#{p.object.billable_item.billable_concept.billable_document.to_s == '1' ? 'servicios' : 'contratación' }"%>'>
+					<h5 class="text-center"><%= p.object.billable_item.billable_concept.billable_document.to_s == '1' ? 'TARIFAS DE SERVICIOS' : 'TARIFAS DE CONTRACTACIÓN'  %> <span style="font-size:14px">Facturante: <%= p.object.billable_item.biller.name %></span></h5>
+	      </a>
+	    </div>
+	    <div id='collapse<%="#{p.object.billable_item.billable_concept.billable_document.to_s == '1' ? 'servicios' : 'contratación' }"%>' class="accordion-body collapse in">
+	      <div class="accordion-inner well">
+	<% end %>
+
+	<% if tariff_type_partial != p.object.billable_item.billable_concept.name %>
+		<!-- <%= p.object.billable_item.billable_concept.name.upcase %> -->
+		<% tariff_type_partial = p.object.billable_item.billable_concept.name %>
+		<br>
+		<div class="accordion-group">
+	    <div class="accordion-heading">
+	      <a class="accordion-toggle" data-toggle="collapse" href='#collapse<%="#{p.object.billable_item.billable_concept.name.downcase.tr(" ", "_")}"%>'>
+					<h4 class="text-center"><%= p.object.billable_item.billable_concept.name %> <span style="font-size:14px">Facturante: <%= p.object.billable_item.biller.name %></span></h4>
+	      </a>
+	    </div>
+	    <div id='collapse<%="#{p.object.billable_item.billable_concept.name.downcase.tr(" ", "_")}"%>' class="accordion-body collapse in">
+	      <div class="accordion-inner well">
+	<% end %>
+
+	<div class="accordion-group">
+    <div class="accordion-heading">
+      <a class="accordion-toggle" data-toggle="collapse" href='#collapse<%="#{p.object.try(:caliber_id).nil? ? "" : p.object.try(:caliber_id)}#{p.object.billable_item_id}"%>'>
+				<% if p.object.caliber %>
+					<h5 class="text-center" style="margin:0"><%= t('activerecord.attributes.tariff_scheme.caliber_id') %> <%= p.object.caliber.caliber %></h5>
+				<% end %>
+      </a>
+    </div>
+    <div id='collapse<%="#{p.object.try(:caliber_id).nil? ? "" : p.object.try(:caliber_id)}#{p.object.billable_item_id}"%>' class="accordion-body collapse <%= 'in' if p.object.try(:caliber_id).nil? %>">
+      <div class="accordion-inner well">
+      	<div class="row-fluid">
+      		<div class="span6">
+      			<h4 class="text-center"><%= t('activerecord.attributes.tariff_scheme.blocks') %></h4>
+      			<div class="row-fluid">
+      				<div class="span5 offset2"><h5><%= t('activerecord.attributes.tariff_scheme.limit') %></h5></div>
+      				<div class="span5"><h5><%= t('activerecord.attributes.tariff_scheme.price') %></h5></div>
+      			</div>
+						<div class="row-fluid">
+	      			<div class="span2"><h5><%= t('activerecord.attributes.tariff_scheme.block1') %></h5></div>
+	      			<div class="span5"><%= p.input :block1_limit, label: false %></div>
+	      			<div class="span5"><%= p.input :block1_fee, label: false %></div>
+	      		</div>
+						<div class="row-fluid">
+	      			<div class="span2"><h5><%= t('activerecord.attributes.tariff_scheme.block2') %></h5></div>
+	      			<div class="span5"><%= p.input :block2_limit, label: false %></div>
+	      			<div class="span5"><%= p.input :block2_fee, label: false %></div>
+	      		</div>
+						<div class="row-fluid">
+	      			<div class="span2"><h5><%= t('activerecord.attributes.tariff_scheme.block3') %></h5></div>
+	      			<div class="span5"><%= p.input :block3_limit, label: false %></div>
+	      			<div class="span5"><%= p.input :block3_fee, label: false %></div>
+	      		</div>
+						<div class="row-fluid">
+	      			<div class="span2"><h5><%= t('activerecord.attributes.tariff_scheme.block4') %></h5></div>
+	      			<div class="span5"><%= p.input :block4_limit, label: false %></div>
+	      			<div class="span5"><%= p.input :block4_fee, label: false %></div>
+	      		</div>
+						<div class="row-fluid">
+	      			<div class="span2"><h5><%= t('activerecord.attributes.tariff_scheme.block5') %></h5></div>
+	      			<div class="span5"><%= p.input :block5_limit, label: false %></div>
+	      			<div class="span5"><%= p.input :block5_fee, label: false %></div>
+	      		</div>
+						<div class="row-fluid">
+	      			<div class="span2"><h5><%= t('activerecord.attributes.tariff_scheme.block6') %></h5></div>
+	      			<div class="span5"><%= p.input :block6_limit, label: false %></div>
+	      			<div class="span5"><%= p.input :block6_fee, label: false %></div>
+	      		</div>
+						<div class="row-fluid">
+	      			<div class="span2"><h5><%= t('activerecord.attributes.tariff_scheme.block7') %></h5></div>
+	      			<div class="span5"><%= p.input :block7_limit, label: false %></div>
+	      			<div class="span5"><%= p.input :block7_fee, label: false %></div>
+	      		</div>
+						<div class="row-fluid">
+	      			<div class="span2"><h5><%= t('activerecord.attributes.tariff_scheme.block8') %></h5></div>
+	      			<div class="span5"><%= p.input :block8_limit, label: false %></div>
+	      			<div class="span5"><%= p.input :block8_fee, label: false %></div>
+	      		</div>
+      		</div>
+
+      		<div class="span3">
+      			<%= p.association :billing_frequency, collection: BillingFrequency.order('name'), include_blank: false, label_html: { class: 'form-label' }, label: t('activerecord.attributes.tariff_scheme.billing_frequency_id') %>
+      			<%= p.input :fixed_fee, label_html: { class: 'form-label' }, label: t('activerecord.attributes.tariff_scheme.fixed_fee') %>
+			  		<%= p.input :variable_fee, label_html: { class: 'form-label' }, label: t('activerecord.attributes.tariff_scheme.variable_fee') %>
+			  		<%= p.input :percentage_fee, label_html: { class: 'form-label' }, label: t('activerecord.attributes.tariff_scheme.percentage_fee') %>
+			  		<%= p.input :percentage_applicable_formula, label_html: { class: 'form-label' }, label: t('activerecord.attributes.tariff_scheme.percentage_applicable_formula') %>
+      		</div>
+
+      		<div class="span3">
+      			<h4><%= t('activerecord.attributes.tariff_scheme.discounts') %></h4>
+      			<div class="row-fluid">
+	      			<div class="span2"><h5><%= t('activerecord.attributes.tariff_scheme.f') %></h5></div>
+	      			<div class="span10"><%= p.input_field :discount_pct_f, label: false %></div>
+	      		</div>
+	      		<div class="row-fluid">
+	      			<div class="span2"><h5><%= t('activerecord.attributes.tariff_scheme.b') %></h5></div>
+	      			<div class="span10"><%= p.input :discount_pct_b, label: false %></div>
+	      		</div>
+	      		<div class="row-fluid">
+	      			<div class="span2"><h5><%= t('activerecord.attributes.tariff_scheme.v') %></h5></div>
+	      			<div class="span10"><%= p.input :discount_pct_v, label: false %></div>
+	      		</div>
+	      		<div class="row-fluid">
+	      			<div class="span2"><h5><%= t('activerecord.attributes.tariff_scheme.p') %></h5></div>
+	      			<div class="span10"><%= p.input :discount_pct_p, label: false %></div>
+	      		</div>
+
+      			<h4><%= t('activerecord.attributes.tariff_scheme.taxes') %></h4>
+      			<div class="row-fluid">
+	      			<div class="span2"><h5><%= t('activerecord.attributes.tariff_scheme.f') %></h5></div>
+	      			<div class="span10"><%= p.association :tax_type_f, collection: TaxType.all, label: false %></div>
+	      		</div>
+	      		<div class="row-fluid">
+	      			<div class="span2"><h5><%= t('activerecord.attributes.tariff_scheme.b') %></h5></div>
+	      			<div class="span10"><%= p.association :tax_type_b, collection: TaxType.all, label: false %></div>
+	      		</div>
+	      		<div class="row-fluid">
+	      			<div class="span2"><h5><%= t('activerecord.attributes.tariff_scheme.v') %></h5></div>
+	      			<div class="span10"><%= p.association :tax_type_v, collection: TaxType.all, label: false %></div>
+	      		</div>
+	      		<div class="row-fluid">
+	      			<div class="span2"><h5><%= t('activerecord.attributes.tariff_scheme.p') %></h5></div>
+	      			<div class="span10"><%= p.association :tax_type_p, collection: TaxType.all, label: false %></div>
+	      		</div>
+      		</div>
+					<div class="hidden-fields">
+						<%= p.input :tariff_scheme_id, :as => :hidden, :input_html => { :value => p.object.tariff_scheme_id } %>
+						<%= p.input :tariff_type_id, :as => :hidden, :input_html => { :value => p.object.tariff_type_id } %>
+						<%= p.input :caliber_id, :as => :hidden, :input_html => { :value => p.object.caliber_id } if  p.object.caliber_id %>
+						<%= p.input :billable_item_id, :as => :hidden, :input_html => { :value => p.object.billable_item_id } %>
+					</div>
+      	</div>
+
+ 			</div>
+    </div>
+  </div>
+<% end %>
+
+</div></div></div>
+<!-- End <%= tariff_type_partial %> -->
+
+</div></div></div>
+<!-- End <%= billable_document %> -->
+
+</div>
+<!-- End Accordion2 -->
+
+<%= f.button :submit, :class => 'btn-primary' %>
+<% end %>
+
+<%= link_to t('.show'), @tariff_scheme %> |
+<%= link_to t('.back'), tariff_schemes_path %>

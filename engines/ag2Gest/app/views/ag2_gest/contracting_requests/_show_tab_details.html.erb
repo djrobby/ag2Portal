@@ -1,0 +1,35 @@
+<h4><%=t 'ag2_gest.contracting_requests.show.general_info' %></h4>
+<table class="table">
+  <tbody>
+  	<tr>
+  		<td><%=t 'ag2_gest.contracting_requests.show.project' %></td>
+  		<td colspan="6"><%= link_to @contracting_request.try(:project).to_label, ag2_tech.project_path(@contracting_request.project_id) %></td>
+  	</tr>
+    <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @contracting_request } %>
+    <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @contracting_request } %>
+  </tbody>
+</table>
+
+<h4><%=t 'ag2_gest.contracting_requests.show.bank_info' %></h4>
+<div class="row-fluid">
+  <table class="table table-condensed table-striped shrinked stu">
+    <thead>
+    	<th><%= t "activerecord.attributes.contracting_request.country_code" %>:</th>
+      <th><%= t "activerecord.attributes.contracting_request.iban_dc" %>:</th>
+      <th><%= t "activerecord.attributes.contracting_request.cb" %>:</th>
+      <th><%= t "activerecord.attributes.contracting_request.cs" %>:</th>
+      <th><%= t "activerecord.attributes.contracting_request.ccc_dc" %>:</th>
+      <th><%= t "activerecord.attributes.contracting_request.account_no" %>:</th>
+    </thead>
+    <tbody>
+      <tr>
+      	<td><%= @contracting_request.try(:country_id) %></td>
+      	<td><%= @contracting_request.try(:iban_dc) %></td>
+      	<td><%= @contracting_request.try(:bank_id) %></td>
+      	<td><%= @contracting_request.try(:bank_office_id) %></td>
+      	<td><%= @contracting_request.try(:ccc_dc) %></td>
+      	<td><%= @contracting_request.try(:account_no) %></td>
+      </tr>
+    </tbody>
+  </table>
+</div>

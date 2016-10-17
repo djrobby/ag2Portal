@@ -1,21 +1,40 @@
-<h1>Listing readings</h1>
+<script type="text/javascript">
 
-<table>
-  <tr>
-    <th></th>
-    <th></th>
-    <th></th>
-  </tr>
+  $(document).ready(function() {
+    $('.sel2').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      dropdownCssClass: 'shrinked',
+      dropdownAutoWidth: true
+    });
+  });
 
-<% @readings.each do |reading| %>
-  <tr>
-    <td><%= link_to 'Show', reading %></td>
-    <td><%= link_to 'Edit', edit_reading_path(reading) %></td>
-    <td><%= link_to 'Destroy', reading, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-  </tr>
-<% end %>
-</table>
+</script>
 
-<br />
+<%= render '/layouts/ag2_gest/readingsbreadcrumb' %>
 
-<%= link_to 'New Reading', new_reading_path %>
+<%= render :partial => '/layouts/searchhead_remote', :locals => { :title => t(".title"), :path => readings_path } %>
+
+
+<div class="container-fluid">
+  <div class="row-fluid">
+
+    <div class="span3">
+      <div class="well sidebar-nav">
+        <%#= render 'filters' %>
+      </div><!-- /.sidebar-nav -->
+    </div><!-- /.span3 -->
+
+    <div class="span9">
+      <div id="loader"></div>
+      <div id="div_table">
+        <%= render 'readings' %>
+      </div>
+    </div><!-- /.span9 -->
+
+  </div><!-- /.row-fluid -->
+  
+  <%= render :partial => '/layouts/crud/new', :locals => { :model => Reading, :path => new_reading_path, :txt => t("ag2_gest.readings.index.btn_new") } %>
+
+  <%= link_to t("ag2_gest.readings.index.back_to_root"), ag2_gest.root_path %>
+
+</div><!-- /.container-fluid -->

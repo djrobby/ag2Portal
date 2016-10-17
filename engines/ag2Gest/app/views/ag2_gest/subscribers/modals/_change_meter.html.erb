@@ -1,0 +1,271 @@
+<style>
+  #confirm_data {
+    margin-right: 10px;
+  }
+</style>
+<script type="text/javascript">
+  $(document).ready(function(){
+
+    $('select.sel2').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      allowClear: true
+    });
+
+    $('#reading_index_add').prop('disabled', true);
+    $('#reading_date_add').prop('disabled', true);
+    $('#meter_add').prop('disabled', true);
+    $('#button_accept').prop('disabled', true);
+    $('#cancel_data').prop('disabled', true);
+    
+
+    $('#change_meter').on('click', function(){
+
+      //Put values to 0
+      $('#reading_index_quit').val("");
+      $('#reading_date_quit').val("");
+
+    });
+
+  });
+
+  //Via Ajax Indicate Meter associated
+  jQuery(function($) {
+
+    $('#cancel_data').on('click', function(){
+
+      $('#reading_index_add').prop('disabled', true);
+      $('#reading_date_add').prop('disabled', true);
+      $('#meter_add').prop('disabled', true);
+      $('#button_accept').prop('disabled', true);
+      $('#cancel_data').prop('disabled', true);
+
+      $('#confirm_data').prop('disabled', false);
+
+      //Disabled buttons and inputs        
+      var read_index = $('#reading_index_quit').get(0);
+      read_index.readOnly = false;
+
+      var read_date = $('#reading_date_quit').get(0);
+      read_date.readOnly = false;
+
+    });
+
+
+    $('#confirm_data').on('click', function(){
+      
+
+
+      var pattern = /^([0-9]{2})\/([0-9]{2})\/([0-9]{4})$/;
+      var date = $('#reading_date_quit').val();
+
+      if (($('#reading_index_quit').val() != "") && ($('#reading_index_quit').val() != undefined) && (pattern.test(date))) {
+        
+        //Disabled buttons and inputs        
+        var read_index = $('#reading_index_quit').get(0);
+        read_index.readOnly = true;
+
+        var read_date = $('#reading_date_quit').get(0);
+        read_date.readOnly = true;
+
+        $('#confirm_data').prop('disabled', true);
+
+        //Activate buttons and inputs
+        $('#meter_add').prop('disabled', false);
+        $('#reading_index_add').prop('disabled', false);
+        $('#reading_date_add').prop('disabled', false);
+        $('#button_accept').prop('disabled', false);
+        $('#cancel_data').prop('disabled', false);
+  
+      }
+
+    });
+
+    $("#form_change_meter").bind("ajax:success", function(xhr, data, status) {
+      
+      //Clean fields to update after of to insert
+      $('#info_meter, #info_brand, #info_caliber').empty();
+
+      //Update fields
+      $('#info_meter').prepend(`<a href="/es/ag2_gest/es/meters/${data.meter.id}">${data.meter.meter_code}</a>`);
+      $('#info_brand').prepend(`<a href="/es/ag2_gest/es/meter_models/${data.meter_model.id}">${data.meter_model.brand}/${data.meter_model.model}</a>`);
+      $('#info_caliber').prepend(`<a href="/es/ag2_gest/es/calibers/${data.caliber.id}">${data.caliber.caliber}</a>`);
+
+      var reading_add = data.reading;
+      var reading_quit = data.reading_quit;
+
+      //Put values to 0
+      $('#reading_index_quit').val("");
+      $('#reading_date_quit').val("");
+      $('#meter_add').select2("val", "");
+      $('#reading_index_add').val("");
+      $('#reading_date_add').val("");
+
+      //Disabled buttons and inputs        
+      var read_index = $('#reading_index_quit').get(0);
+      read_index.readOnly = false;
+
+      var read_date = $('#reading_date_quit').get(0);
+      read_date.readOnly = false;
+
+      $('#confirm_data').prop('disabled', false);
+
+      //Put buttons like starting
+      $('#reading_index_add').prop('disabled', true);
+      $('#reading_date_add').prop('disabled', true);
+      $('#meter_add').prop('disabled', true);
+      $('#button_accept').prop('disabled', true);
+      $('#cancel_data').prop('disabled', true);
+
+
+      $(".modalMeterChange").modal().hide();
+      $('.modalMeterChange').modal('toggle');
+
+      //Show ReadingIncidenceType ADD
+      var reading_incidence_types = "";
+      var title = "";
+
+      if (data.reading_incidence_types_add[0] == undefined && data.reading_incidence_types_add[0] == null){
+        reading_incidence_types = "-";
+        
+      } else {
+        var str_incidence = data.reading_incidence_types_add.length;
+        /*Añadir los elementos i en función de los incidence types que tenga*/
+        for(var i=0; i < str_incidence; i++) {
+          if (i >= 1) {
+            title += `, `;
+          }
+          title += `${data.reading_incidence_types_add[i]}`;  
+        }
+        reading_incidence_types = `<i title="${title}" class="icon-ok"></i>`;
+      }
+
+      //Show ReadingIncidenceType QUIT
+      var _reading_incidence_types_quit = "";
+      var _title = "";
+
+      if (data.reading_incidence_types_quit[0] == undefined && data.reading_incidence_types_quit[0] == null){
+        _reading_incidence_types_quit = "-";
+        
+      } else {
+        var str_incidence = data.reading_incidence_types_quit.length;
+        /*Añadir los elementos i en función de los incidence types que tenga*/
+        for(var i=0; i < str_incidence; i++) {
+          if (i >= 1) {
+            _title += `, `;
+          }
+          _title += `${data.reading_incidence_types_quit[i]}`;  
+        }
+        _reading_incidence_types_quit = `<i title="${_title}" class="icon-ok"></i>`;
+      }
+
+
+      //Add Readings to the table
+      var date = ``;
+      if (reading_quit.reading_date !== undefined) {
+        date += `${reading_quit.reading_date.substring(8, 10)}/${reading_quit.reading_date.substring(5, 7)}/${reading_quit.reading_date.substring(0, 4)}`;
+      }
+
+      var content = ``;
+      //var name = `po`;
+      //Add reading_quit
+      content += `<tr><td>${reading_quit.id}</td><td>-</td><td><a href="/es/ag2_gest/es/reading_types/${reading_quit.reading_type_id}">${data.reading_type_quit}</a></td><td>${date}</td><td>${reading_quit.reading_index}</td><td>${_reading_incidence_types_quit}</td>`;
+      content += `<td class="a_inline"><a href="/es/ag2_gest/es/readings/${reading_quit.id}/edit" class="btn btn-mini"><i class="icon-edit"></i></a><a href="/es/ag2_gest/es/readings/${reading_quit.id}"class="btn btn-mini" data-confirm="Are you sure?" data-method="delete" rel="nofollow"><i class="icon-trash"></i></a></td></tr>`;
+
+      //Add reading_add
+      date = ``;
+      if (reading_add.reading_date !== undefined) {
+        date += `${reading_add.reading_date.substring(8, 10)}/${reading_add.reading_date.substring(5, 7)}/${reading_add.reading_date.substring(0, 4)}`;
+      }
+
+      content += `<tr><td>${reading_add.id}</td><td>-</td><td><a href="/es/ag2_gest/es/reading_types/${reading_add.reading_type_id}">${data.reading_type_add}</a></td><td>${date}</td><td>${reading_add.reading_index}</td><td>${reading_incidence_types}</td>`;
+      content += `<td class="a_inline"><a href="/es/ag2_gest/es/readings/${reading_add.id}/edit" class="btn btn-mini"><i class="icon-edit"></i></a><a href="/es/ag2_gest/es/readings/${reading_add.id}"class="btn btn-mini" data-confirm="Are you sure?" data-method="delete" rel="nofollow"><i class="icon-trash"></i></a></td></tr>`;
+
+      $('#readings table tbody').after(content);
+
+      //Hide Collapse Options
+      //$('#collapseChangeQuit, #collapseChangeAdd').collapse('hide');
+
+    });
+
+  });//End jQuery function, exclusive $ jQuery function
+
+</script>
+
+<!-- ChangeMeter -->
+<div id="changeMeter" class="modal modalMeterChange hide fade">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+    <h3><%= t('activerecord.attributes.subscriber.change_meter') %></h3>
+  </div>
+
+  <%= simple_form_for [@subscriber, @reading], url: { action: :change_meter, controller: 'subscribers'}, remote: true, :html => { "data-type" => :json, :class => 'form-inline', :id => 'form_change_meter' } do |f| %>
+  
+    <div class="modal-body">
+      <h3><%= t('activerecord.attributes.subscriber.data_deregister_meter') %></h3>
+            
+      <%= f.input :reading_index, label: t('activerecord.attributes.reading.reading'), :required => true, :autofocus => true, :as => :integer, :input_html => { :class => 'x-large-text-field', :id => "reading_index_quit" }, :label_html => { :class => 'form-label' } %>
+      
+      <%= f.input :reading_date, :required => true, :start_year => Time.now.year - 100, :end_year => Time.now.year + 100, :as => :string, :input_html => { :value => (f.object.reading_date.strftime("%d/%m/%Y") if f.object.reading_date), :class => 'mid-text-field date_picker', :id => "reading_date_quit" }, :label_html => { :class => 'form-label' } %> 
+
+      <div class="accordion-group">
+        <div class="accordion-heading">
+          <a class="accordion-toggle" data-toggle="collapse" href="#collapseChangeQuit"><%= t('activerecord.attributes.subscriber.incidences') %></a>
+        </div>
+        <div id="collapseChangeQuit" class="accordion-body collapse">
+          <div class="accordion-inner">
+            <ul class="unstyled">
+              <% ReadingIncidenceType.all.each do |incidence_type| %>
+                <li style="width:50%;float:left;">
+                  <label class="checkbox">
+                    <%= check_box_tag 'incidence_type_ids_quit[]', incidence_type.id %>
+                    <%= h incidence_type.name %>
+                  </label>
+                </li>
+              <% end %>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <button class="btn btn-primary pull-right" id="cancel_data"><%= t('activerecord.attributes.subscriber.cancel') %></button>
+      <button class="btn btn-primary pull-right" id="confirm_data"><%= t('activerecord.attributes.subscriber.confirm') %></button>
+      <br>
+  
+      <h3><%= t('activerecord.attributes.subscriber.data_discharge_meter') %></h3>
+
+      <%= f.association :meter, required: true, collection: Meter.filter_organization(session[:organization], current_user), input_html: { class: 'x-large-text-field sel2', :id => 'meter_add' }, label_html: { class: 'form-label' }, include_blank: true, label: t('activerecord.attributes.contracting_request.meter') %>
+      
+      <%= f.input :reading_index_add, :required => true, label: t('activerecord.attributes.reading.reading'), :input_html => { :class => 'x-large-text-field', :id => 'reading_index_add' }, :label_html => { :class => 'form-label' } %>
+      
+      <%= f.input :reading_date_add, label: t('activerecord.attributes.subscriber.reading_date'), :required => true, :start_year => Time.now.year - 100, :end_year => Time.now.year + 100, :as => :string, :input_html => { :value => (f.object.reading_date.strftime("%d/%m/%Y") if f.object.reading_date), :class => 'mid-text-field date_picker', :id => 'reading_date_add' }, :label_html => { :class => 'form-label' } %> 
+
+      <div class="accordion-group">
+        <div class="accordion-heading">
+          <a class="accordion-toggle" data-toggle="collapse" href="#collapseChangeAdd"><%= t('activerecord.attributes.subscriber.incidences') %></a>
+        </div>
+        <div id="collapseChangeAdd" class="accordion-body collapse">
+          <div class="accordion-inner">
+            <ul class="unstyled">
+              <% ReadingIncidenceType.all.each do |incidence_type| %>
+                <li style="width:50%;float:left;">
+                  <label class="checkbox">
+                    <%= check_box_tag 'incidence_type_ids_add[]', incidence_type.id %>
+                    <%= h incidence_type.name %>
+                  </label>
+                </li>
+              <% end %>
+            </ul>
+          </div>
+        </div>
+      </div>
+      
+    </div>
+        
+    <div class="modal-footer">
+      
+      <%= f.submit t('activerecord.attributes.subscriber.accept'), :class => "btn btn-primary", :id => "button_accept" %>
+      <button class="btn btn-primary" data-dismiss="modal" id="close_modal"><%= t('activerecord.attributes.subscriber.close') %></button>
+    </div>
+
+  <% end %>
+</div>

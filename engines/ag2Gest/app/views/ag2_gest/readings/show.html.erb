@@ -1,5 +1,45 @@
-<p id="notice"><%= notice %></p>
+<%= render '/layouts/ag2_gest/readingsbreadcrumb' %>
 
+<h3><%= t('activerecord.attributes.reading.reading') %> <%=@reading.try(:id) %></h3>
+<table class="table">
+  <tbody>
+    <tr>
+      <td><%= t('activerecord.attributes.reading.id') %>:</td>
+      <td><%= @reading.try(:id) %></td>
+      <td><%= t('activerecord.attributes.reading.reading') %></td>
+      <td><%= @reading.try(:reading_index) %></td>
+    </tr>
+    <tr>
+      <td><%= t('activerecord.attributes.reading.billing_period_id') %>:</td>
+      <td><%= link_to @reading.try(:billing_period).try(:description), ag2_gest.billing_period_path(@reading.billing_period_id) %></td>
+      <td><%= t('activerecord.attributes.reading.billing_frequency_id') %>:</td>
+      <td><%= link_to @reading.try(:billing_frequency).try(:name), ag2_gest.billing_frequency_path(@reading.billing_frequency_id) %></td>
+    </tr>
+    <tr>
+      <td><%= t('activerecord.attributes.reading.reading_type_id') %>:</td>
+      <td><%= link_to @reading.try(:reading_type).try(:name), ag2_gest.reading_type_path(@reading.reading_type_id) %></td>
+      <td><%= t('activerecord.attributes.reading.meter_id') %>:</td>
+      <td><%= link_to @reading.try(:meter).try(:meter_code), ag2_gest.meter_path(@reading.meter_id) %></td>
+    </tr>
+    <tr>
+      <td><%= t('activerecord.attributes.reading.subscriber_id') %>:</td>
+      <td><%= link_to @reading.try(:subscriber).try(:to_label), ag2_gest.subscriber_path(@reading.subscriber_id) %></td>
+      <td><%= t('activerecord.attributes.reading.reading_route_id') %>:</td>
+      <td><%= link_to @reading.try(:reading_route).try(:name), ag2_gest.reading_route_path(@reading.reading_route_id) %></td>
+    </tr>
+    <tr>
+      <td><%= t('activerecord.attributes.reading.project_id') %>:</td>
+      <td><%= link_to @reading.try(:project).try(:name), ag2_tech.project_path(@reading.project_id) %></td>
+      <td><%= t('activerecord.attributes.reading.reading_date') %></td>
+      <td><%= @reading.try(:reading_date).strftime("%d/%m/%Y") unless @reading.try(:reading_date).blank? %></td>
+    </tr>
+    <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @reading } %>
+  </tbody>
+</table>
 
-<%= link_to 'Edit', edit_reading_path(@reading) %> |
-<%= link_to 'Back', readings_path %>
+<%= render partial: '/layouts/crud/update_delete_new', locals:
+{ model: Reading, update_path: edit_reading_path(@reading), update_txt: t('.btn_edit'),
+delete_path: @reading, delete_txt: t('.btn_delete'), msg: t("activerecord.models.reading.one"), :txt => @reading.id,
+new_path: new_reading_path, new_txt: t('ag2_gest.readings.index.btn_new') } %>
+
+<%= link_to I18n.t('ag2_gest.readings.back_to_main_page'), reading_path %>

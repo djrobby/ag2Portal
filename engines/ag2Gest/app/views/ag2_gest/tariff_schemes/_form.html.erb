@@ -1,17 +1,40 @@
-<%= form_for(@tariff_scheme) do |f| %>
-  <% if @tariff_scheme.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@tariff_scheme.errors.count, "error") %> prohibited this tariff_scheme from being saved:</h2>
+<script type="text/javascript">
+  $(document).ready(function() {
+    // Select2
+    $('.date_picker').datepicker({
+        format : 'dd/mm/yyyy',
+        weekStart : 1
+    });
 
-      <ul>
-      <% @tariff_scheme.errors.full_messages.each do |msg| %>
-        <li><%= msg %></li>
-      <% end %>
-      </ul>
+    $('select.sel2').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      allowClear: true
+    });
+  });
+</script>
+<%= simple_form_for @tariff_scheme, :html => {:class => 'form-vertical well' } do |f| %>
+  <%= f.error_notification %>
+  <%= display_base_errors resource %>
+
+  <div class="row-fluid">
+    <div class="span6">
+      <%= f.input :name, :required => true, :autofocus => true, :input_html => { :class => 'x-large-text-field', minlength: 3 }, :label_html => { :class => 'form-label' } %>
     </div>
-  <% end %>
-
-  <div class="actions">
-    <%= f.submit %>
+    <div class="span3">
+      <%= f.association :project, :label => t('activerecord.attributes.tariff_scheme.project_id'), collection: @projects, :input_html => { :class => 'sel2 x-large-text-field' }, label_method: lambda { |st| st.name + " (" + st.project_code + ")" }, :label_html => { :class => 'form-label' } %>
+    </div>
+    <div class="span3">
+      <%= f.association :tariff_type, :required => false, :label => t('activerecord.attributes.tariff_scheme.tariff_type_id'), collection: TariffType.all(order: 'name'), :input_html => { :class => 'sel2 x-large-text-field' }, label_method: lambda { |tt| tt.name + " (" + tt.code + ")" }, :label_html => { :class => 'form-label' } %>
+    </div>
   </div>
+
+  <label class="multi-field-label-two">
+    <%= f.input :starting_at, :required => true, :start_year => Time.now.year - 100, :end_year => Time.now.year + 100, :as => :string, :input_html => { :value => (f.object.starting_at.strftime("%d/%m/%Y") if f.object.starting_at), :class => 'mid-text-field date_picker' }, :label_html => { :class => 'form-label' } %>
+  </label>
+
+  <label class="multi-field-label-two">
+    <%= f.input :ending_at, :required => false, :start_year => Time.now.year - 100, :end_year => Time.now.year + 100, :as => :string, :input_html => { :value => (f.object.ending_at.strftime("%d/%m/%Y") if f.object.ending_at), :class => 'mid-text-field date_picker' }, :label_html => { :class => 'form-label' } %>
+  </label>
+
+  <%= f.button :submit, :class => 'btn-primary' %>
 <% end %>

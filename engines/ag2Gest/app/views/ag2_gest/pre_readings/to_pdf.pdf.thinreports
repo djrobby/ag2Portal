@@ -1,0 +1,105 @@
+report.set_layout tlf: 'reports/reading_apaisado', layout_options: { default: true } #:layout_options is an option ThinReports::Report::Base#use_layout method.
+
+report.start_new_page
+
+# List header name
+report.page.list(:list).header.item(:cod_route).value I18n.t("activerecord.report.pre_reading.reading_route_id")
+report.page.list(:list).header.item(:num_route).value I18n.t("activerecord.report.pre_reading.reading_sequence")
+report.page.list(:list).header.item(:code_subscriber).value I18n.t("activerecord.report.pre_reading.code_subscriber")
+report.page.list(:list).header.item(:name_subscriber).value I18n.t("activerecord.report.pre_reading.name_subscriber")
+report.page.list(:list).header.item(:delivery_address).value I18n.t("activerecord.report.pre_reading.delivery_address")
+report.page.list(:list).header.item(:meter_header).value I18n.t("activerecord.report.pre_reading.meter_id")
+report.page.list(:list).header.item(:caliber).value I18n.t("activerecord.report.pre_reading.caliber")
+report.page.list(:list).header.item(:meter_model).value I18n.t("activerecord.report.pre_reading.meter_model")
+report.page.list(:list).header.item(:date_install).value I18n.t("activerecord.report.pre_reading.date_install")
+report.page.list(:list).header.item(:period).value I18n.t("activerecord.report.pre_reading.period")
+report.page.list(:list).header.item(:bef_re_year).value I18n.t("activerecord.report.pre_reading.reading_index_2")
+report.page.list(:list).header.item(:bef_re_period).value I18n.t("activerecord.report.pre_reading.reading_index_1")
+report.page.list(:list).header.item(:date_re).value I18n.t("activerecord.report.pre_reading.reading_date")
+report.page.list(:list).header.item(:index_read).value I18n.t("activerecord.report.pre_reading.reading_index")
+
+#Time printer
+report.page.values printed_at: Time.now
+
+report.events.on :page_create do |e|
+	# Set page-number
+	e.page.item(:page_no).value(e.page.no)
+
+	#Hide items
+	#if e.page.no > 1
+	#	e.page.item(:form_title).hide
+	#	e.report.page.list(:list).style(:visible, 'none')
+	#end
+
+end
+
+report.events.on :generate do |e|
+	e.pages.each do |page|
+		# Set total-page-number
+		page.item(:page_count).value(e.report.page_count)
+		
+		#Hide 
+		#if e.report.page_count > 1
+			#page.item(:form_title).hide
+		#end
+
+	end
+end
+
+cond = true
+#ORDENAR ARRAY
+@pre_readings.each do |preading|
+	report.page.list(:list).add_row do |row|
+		if cond 
+			row.item(:code_route).value(preading.reading_route.route_code).style(:color, "#6E6E6E")
+			row.item(:number_route).value(preading.reading_sequence).style(:color, "#6E6E6E")
+			row.item(:subscriber).value(preading.subscriber.subscriber_code).style(:color, "#6E6E6E")
+
+			#NOMBRE Y APELLIDOS CON MAYÚSCULAS (CamelCase)
+			#firstname = ""+preading.try(:subscriber).try(:client).try(:entity).try(:first_name)
+			#surname = ""+preading.try(:subscriber).try(:client).try(:entity).try(:last_name)
+			#new_firstname = firstname.slice(0,1).capitalize + firstname.slice(1..-1)
+			#new_surname = surname.slice(0,1).capitalize + surname.slice(1..-1)
+			#row.item(:name_subscriber).value("#{new_firstname} #{new_surname}").style(:color, "#6E6E6E")
+			row.item(:name_subscriber).value("#{preading.try(:subscriber).try(:client).try(:entity).try(:first_name)} #{preading.try(:subscriber).try(:client).try(:entity).try(:last_name)}").style(:color, "#6E6E6E")
+			row.item(:address_subscriber).value("#{preading.try(:subscriber).try(:street_type).try(:street_type_code)} #{preading.try(:subscriber).try(:street_directory).try(:street_name)}#{','} #{preading.try(:subscriber).try(:street_number)}#{','} #{preading.try(:subscriber).try(:building)}#{','} #{preading.try(:subscriber).try(:floor)}#{','} #{preading.try(:subscriber).try(:floor_office)} #{'('}#{preading.try(:subscriber).try(:zipcode).try(:zipcode)}#{')'} #{preading.try(:subscriber).try(:town).try(:name)} ").style(:color, "#6E6E6E")
+			row.item(:meter).value(preading.try(:meter).try(:meter_code)).style(:color, "#6E6E6E")	
+			#row.item(:meter).value(preading.try(:subscriber).try(:meter).try(:meter_code)).style(:color, "#6E6E6E")
+			
+			row.item(:caliber).value(preading.try(:subscriber).try(:meter).try(:caliber).try(:caliber)).style(:color, "#6E6E6E")
+			#row.item(:caliber).value(preading.try(:meter).try(:caliber).try(:caliber)).style(:color, "#6E6E6E")
+			
+			row.item(:model_brand).value("#{preading.try(:meter).try(:meter_model).try(:brand)} #{'/'} #{preading.try(:meter).try(:meter_model).try(:model)}").style(:color, "#6E6E6E")
+
+			#DATE INSTALLATION
+			row.item(:date_installation).value(I18n.localize((MeterDetail.find_by_meter_id_and_subscriber_id(preading.subscriber.meter_id, preading.subscriber.id)).try(:installation_date))).style(:color, "#6E6E6E")  # OR row.item(:date_installation).value((MeterDetail.find_by_meter_id_and_subscriber_id(preading.meter_id, preading.subscriber_id)).try(:installation_date))
+			row.item(:period).value(preading.try(:billing_period).try(:period)).style(:color, "#6E6E6E")
+			row.item(:read_year).value("#{preading.reading_2.try(:billing_period).try(:period)} #{preading.reading_index_2}").style(:color, "#6E6E6E") 
+			row.item(:read_period).value("#{preading.reading_1.try(:billing_period).try(:period)} #{preading.reading_index_1}").style(:color, "#6E6E6E") 
+					
+			cond = false
+		else
+			row.item(:code_route).value(preading.reading_route.route_code)
+			row.item(:number_route).value(preading.reading_sequence)
+			row.item(:subscriber).value(preading.subscriber.subscriber_code)
+
+			#NOMBRE Y APELLIDOS CON MAYÚSCULAS (CamelCase)
+			#firstname = ""+preading.try(:subscriber).try(:client).try(:entity).try(:first_name)
+			#surname = ""+preading.try(:subscriber).try(:client).try(:entity).try(:last_name)
+			#new_firstname = firstname.slice(0,1).capitalize + firstname.slice(1..-1)
+			#new_surname = surname.slice(0,1).capitalize + surname.slice(1..-1)
+			#row.item(:name_subscriber).value("#{new_firstname} #{new_surname}").style(:color, "#6E6E6E")
+			row.item(:name_subscriber).value("#{preading.try(:subscriber).try(:client).try(:entity).try(:first_name)} #{preading.try(:subscriber).try(:client).try(:entity).try(:last_name)}")
+			row.item(:address_subscriber).value("#{preading.try(:subscriber).try(:street_type).try(:street_type_code)} #{preading.try(:subscriber).try(:street_directory).try(:street_name)} #{preading.try(:subscriber).try(:street_number)} #{preading.try(:subscriber).try(:building)} #{preading.try(:subscriber).try(:floor)} #{preading.try(:subscriber).try(:floor_office)} #{preading.try(:subscriber).try(:zipcode).try(:zipcode)} #{preading.try(:subscriber).try(:town).try(:name)} ")
+			row.item(:meter).value(preading.try(:meter).try(:meter_code))
+			row.item(:caliber).value(preading.try(:subscriber).try(:meter).try(:caliber).try(:caliber))
+			row.item(:model_brand).value("#{preading.try(:meter).try(:meter_model).try(:brand)} #{'/'} #{preading.try(:meter).try(:meter_model).try(:model)}")
+			row.item(:date_installation).value(I18n.localize((MeterDetail.find_by_meter_id_and_subscriber_id(preading.subscriber.meter_id, preading.subscriber.id)).try(:installation_date)))
+			row.item(:period).value(preading.try(:billing_period).try(:period))
+			row.item(:read_year).value("#{preading.reading_2.try(:billing_period).try(:period)} #{preading.reading_index_2}").style(:color, "#6E6E6E") 
+			row.item(:read_period).value("#{preading.reading_1.try(:billing_period).try(:period)} #{preading.reading_index_1}").style(:color, "#6E6E6E") 
+
+			cond = true
+		end
+	end
+end

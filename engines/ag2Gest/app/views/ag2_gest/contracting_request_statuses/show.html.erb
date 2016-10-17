@@ -1,5 +1,32 @@
-<p id="notice"><%= notice %></p>
+<%= render '/layouts/ag2_gest/contractingrequeststatusesbreadcrumb' %>
 
+<h3><%= t('.title')%> <%=@contracting_request_status.try(:name) %></h3>
+<table class="table">
+  <tbody>
+    <tr>
+      <td><%= t('activerecord.attributes.contracting_request_status.id') %>:</td>
+      <td colspan="3"><%= @contracting_request_status.try(:id) %></td>
+    </tr>
+    <tr>
+      <td><%= t('activerecord.attributes.contracting_request_status.name') %>:</td>
+      <td><%= @contracting_request_status.try(:name) %></td>
+      <td><%= t('activerecord.attributes.contracting_request_status.requires_work_order') %>:</td>
+      <td>
+        <% if @contracting_request_status.try(:requires_work_order) == true %>
+          <i class="icon-thumbs-up"></i>
+        <% else %>
+          <i class="icon-thumbs-down"></i>
+        <% end %>
+      </td>
+    </tr>
+      <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @contracting_request_status } %>
+      <%#= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @contracting_request_status } %>
+  </tbody>
+</table>
 
-<%= link_to 'Edit', edit_contracting_request_status_path(@contracting_request_status) %> |
-<%= link_to 'Back', contracting_request_statuses_path %>
+<%= render partial: '/layouts/crud/update_delete_new', locals:
+{ model: ContractingRequestStatus, update_path: edit_contracting_request_status_path(@contracting_request_status), update_txt: t('.btn_edit'),
+delete_path: @contracting_request_status, delete_txt: t('.btn_delete'), msg: t("activerecord.models.contracting_request_status.one"), :txt => @contracting_request_status.name,
+new_path: new_contracting_request_status_path, new_txt: t('ag2_gest.contracting_request_statuses.index.btn_new') } %>
+
+<%= link_to I18n.t('ag2_gest.contracting_request_statuses.back_to_main_page'), contracting_request_statuses_path %>

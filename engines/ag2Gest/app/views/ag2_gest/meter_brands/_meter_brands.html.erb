@@ -1,0 +1,45 @@
+<script>
+  $(document).ready(function() {
+    $("#div_table th a, #div_table #pages a").on("click", function() {
+      $.getScript(this.href);
+      return false;
+    });
+    $('select.sel2').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      allowClear: true
+    });
+  });
+</script>
+
+<table class="table table-condensed table-striped">
+  <thead>
+    <tr>
+      <th><%= sortable "id", "Id" %></th>
+      <th><%= sortable "brand", "Marca" %></th>
+      <th><%= sortable "manufacturer", "Fabricante" %></th>
+      <th><%= sortable "letter_id", "Letra" %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @meter_brands.each do |met_brand| %>
+    <tr>
+      <td><%= link_to met_brand.try(:id), meter_brand_path(met_brand) %></td>
+      <td><%= met_brand.try(:brand) %></td>
+      <td><%= met_brand.manufacturer.name %></td>
+      <td><%= met_brand.letter_id %></td>
+      <td>
+        <%= link_to edit_meter_brand_path(met_brand), class: "btn btn-mini" do %>
+          <i class="icon-edit"></i>
+        <% end %>
+        <%= link_to met_brand, class: "btn btn-mini", method: :delete, data: { confirm: 'Are you sure?' } do %>
+          <i class="icon-trash"></i>
+        <% end %>
+      </td>
+    </tr>
+   <% end %>
+  </tbody>
+</table>
+
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @meter_brands } %>
+<%= render :partial => '/layouts/crud/new', :locals => { :model => MeterBrand, :path => new_meter_brand_path, :txt => t("ag2_gest.meter_brands.index.btn_new") } %>
+<%= link_to t("ag2_gest.meter_brands.index.back_to_root"), ag2_gest.root_path %>

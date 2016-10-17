@@ -1,6 +1,8 @@
-<h1>Editing billable_item</h1>
+<%= render '/layouts/ag2_gest/billableitemsbreadcrumb' %>
+
+<h3><%= t('.title') %></h3>
 
 <%= render 'form' %>
 
-<%= link_to 'Show', @billable_item %> |
-<%= link_to 'Back', billable_items_path %>
+<%= link_to t('.show'), @billable_item %> |
+<%= link_to t('.back'), billable_items_path %>

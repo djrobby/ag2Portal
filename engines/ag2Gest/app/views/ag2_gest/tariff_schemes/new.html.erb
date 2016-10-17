@@ -1,5 +1,7 @@
-<h1>New tariff_scheme</h1>
+<%= render '/layouts/ag2_gest/tariffschemesbreadcrumb' %>
+
+<h3><%=t '.title' %></h3>
 
 <%= render 'form' %>
 
-<%= link_to 'Back', tariff_schemes_path %>
+<%= link_to I18n.t('ag2_gest.tariff_schemes.back_to_main_page'), tariff_schemes_path %>

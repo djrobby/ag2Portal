@@ -1,0 +1,46 @@
+<script type="text/javascript">
+  $(document).ready(function() {
+  	// Select2
+  	$('select.sel2').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      allowClear: true
+    });
+  });
+</script>
+
+<% content_for :title, "aGestiona2 | ag2PreReadings" %>
+<% content_for :icon, "/assets/icon/TableA.png" %>
+<% content_for :alt, "ag2PreReadings" %>
+
+<ul class="breadcrumb">
+  <li>
+    <a href="<%= main_app.root_path %>"><i class="icon-home"></i></a><span class="divider">></span>
+  </li>
+  <li>
+    <a href="<%= ag2_gest.root_path %>">ag2Gest</a><span class="divider">></span>
+  </li>
+  <li>
+  	<a href="<%= ag2_gest.pre_readings_path %>">Pre-lecturas</a><span class="divider">></span>
+  </li>
+  <li>Imputar</li>
+</ul>
+
+<h3>Imputar lecturas</h3>
+
+<%= simple_form_for :prereading, url: impute_readings_pre_readings_path, method: :get, :html => {:class => 'form-vertical well', multiple: "multiple"} do |f| %>
+
+<%= f.error_notification %>
+<%= display_base_errors resource %>
+
+<div class="row-fluid">
+  <div class="span6">
+    <%= f.input :period, collection: @billing_periods, input_html: {class: "mid-text-field"}, :label_html => { :class => 'form-label' } %>
+  </div>
+  <div class="span6">
+    <%= f.input :reading_routes, collection: @reading_routes, input_html: {class: "sel2 mid-text-field multiple", multiple: "multiple"}, :label_html => { :class => 'form-label' } %>
+  </div>
+
+  <%= f.button :submit, "Cargar prelecturas", :class => 'btn-primary' %>
+<% end %>
+
+<%= link_to I18n.t('ag2_gest.readings.back_to_main_page'), readings_path %>

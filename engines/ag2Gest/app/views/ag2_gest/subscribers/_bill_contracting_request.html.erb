@@ -1,0 +1,99 @@
+<!-- RENDER1 RECIBO DE CONTRATACIÓN-->
+<div class="accordion">
+  <div class="accordion-group">
+    <div class="accordion-heading row">
+      <div class="span1">
+        <a class="accor accordion-toggle collapsed" data-toggle="collapse" data-parent="#accordion2" href="#collapse-<%= bill.id %>"><i class='icon-plus'></i></a>
+      </div>
+      <div class="span3 soft-padding">
+        <%= bill.try(:full_no) %>
+      </div>
+      <div class="span2 soft-padding">
+        <%= bill.try(:bill_date) %>
+      </div>
+      <div class="span2 soft-padding">
+        <%= bill.try(:bill_type).name %>
+      </div>
+      <div class="span1 soft-padding">
+        <%= bill.try(:total) %>
+      </div>
+      <div class="span2 soft-padding pull-right">
+        <%= link_to "<i class='icon-print icon-white'></i>".html_safe, bill_path(bill) , class: "btn btn-warning btn-mini" %>
+        <%= link_to "<i class='icon-remove icon-white'></i>".html_safe, bill_path(bill) , class: "btn btn-warning btn-mini" %>
+        <%= link_to "<i class='icon-plus icon-white'></i>".html_safe, bill_path(bill) , class: "btn btn-warning btn-mini" %>
+      </div>
+    </div>
+    <div id="collapse-<%= bill.id %>" class="accordion-body collapse">
+      <div class="accordion-inner">
+
+        <% bill.invoices.each do |invoice| %>
+          <div class="row">
+            <div class="span4">
+              <b><%= t('activerecord.attributes.subscriber.invoice_number') %>:</b>
+              <%= invoice.try(:invoice_no) %>
+            </div>
+            <div class="span4">
+              <b><%= t('activerecord.attributes.subscriber.facturante') %>: </b>
+              <%= invoice.try(:biller).try(:name) %>
+            </div>
+            <!-- <div class="span3">
+              <b><%= t('activerecord.attributes.subscriber.total') %>: </b>
+              <%= invoice.try(:total) %>
+            </div> -->
+          </div>
+          <br>
+          <table class="table">
+            <thead>
+              <th><%= t('activerecord.attributes.subscriber.code') %></th>
+              <th><%= t('activerecord.attributes.subscriber.desc') %></th>
+              <th><%= t('activerecord.attributes.subscriber.quan') %></th>
+              <th><%= t('activerecord.attributes.subscriber.price') %></th>
+              <!-- <th><%#= t("activerecord.attributes.contracting_request.amount") %></th> -->
+              <th><%= t('activerecord.attributes.subscriber.vat') %></th>
+              <th><%= t('activerecord.attributes.subscriber.desc') %></th>
+              <th><%= t('activerecord.attributes.subscriber.desc_percent') %></th>
+              <th><%= t('activerecord.attributes.subscriber.total') %></th>
+            </thead>
+            <tbody>
+              <% invoice.invoice_items.each do |item| %>
+                <tr>
+                  <td><%= item.try(:code) %></td>
+                  <!-- <td><%#= link_to item.try(:code), ag2_gest.invoice_item_path(item.id) %></td> -->
+                  <td><%= item.try(:description) %></td>
+                  <td><%= item.try(:quantity) %></td>
+                  <td><%= item.try(:price) %></td>
+                  <%#= item.try(:amount) %><!-- Amount -->
+                  <td><%= item.try(:tax_type).try(:tax) || "0" %>%</td>
+                  <td><%= item.try(:discount) %></td>
+                  <td><%= item.try(:discount_pct) %>%</td>
+                  <td><%= item.total %></td><!-- Total -->
+                </tr>
+              <% end %>
+              <tr class="subtotal">
+                <td colspan="6" class="no-boder"></td>
+                <td class="black-border"><b><%= t('activerecord.attributes.subscriber.subtotal').upcase %></b></td>
+                <td class="black-border"><%= invoice.subtotal %></td>
+              </tr>
+              <% invoice.tax_breakdown.each do |tax| %>
+                <tr>
+                  <td colspan="4" class="no-boder"></td>
+                  <td class="no-boder"><b>Base imponible:</b> <%= tax[1] %></td>
+                  <td class="no-boder"><%= "#{pluralize(tax[3], 'artículo')}"  %></td>
+                  <td><b><%= " #{t('activerecord.attributes.subscriber.vat')} (#{tax[0]}%)" %></b></td>
+                  <td><%= tax[2] %></td>
+                </tr>
+              <% end %>
+              <tr>
+                <td colspan="6" class="black-border"></td>
+                <td class="black-border"><b><%= t('activerecord.attributes.subscriber.total').upcase %></b></td>
+                <td class="black-border"><%= invoice.total %></td>
+              </tr>
+            </tbody>
+          </table>
+          <hr style="border-width: 2px; border-top: 1px solid #000000;">
+        <% end %>
+
+      </div>
+    </div>
+  </div>
+</div>

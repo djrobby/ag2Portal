@@ -1,0 +1,88 @@
+<script type="text/javascript">
+  
+  var _thisForm = ''; //Inicia variable String empty y false 
+  var changing = false; 
+
+  $(document).ready(function () {
+    //Select
+    $(".sel2").select2();
+    // Initialized form variable
+    _thisForm = $("#removeFilter").closest('form')[0];
+
+  });
+
+  $(document).ajaxStart(function() {
+    // show loader on start
+    if (changing == false) {
+      $("#div_table").html("");
+      $("#loader").show();
+    }    
+  }).ajaxSuccess(function(){
+    // hide loader on success Ya ha cargado los objects
+    $("#loader").hide();
+  });
+
+  $(window).bind("load", function() {
+    //$('#name').val("<%= params[:name] %>");
+  });
+
+
+  jQuery(function($) {
+
+    $('#sub_office').change(function() {
+
+    });
+
+
+
+    // when the #removeFilter button clicked
+    $("#removeFilter").click(function() {
+
+      $("#name").val("");
+      $("#sub_town").val("");
+      $("#sub_office").val("");
+      $("#search").val("");
+      $("#submit_btn").trigger("click");
+    });
+
+  });//jQuery End
+
+</script>
+<div class="well sidebar-nav">
+
+  <!-- Refresh -->
+  <%= link_to ag2_gest.subscribers_path, title: I18n.t(:refresh), class: "icon-refresh-link", remote: true do %> <i class="icon-refresh"></i> <% end %>
+
+  <%= form_tag "subscribers", :method => 'get', :remote => true do %>
+    
+    <!-- Name -->
+    <%= label_tag "Nombre", nil, :class => 'form-label' %>
+    <%= text_field_tag :search, params[:search], :class => 'x-large-text-field shrinked' %>
+    
+
+    <!-- Office -->
+    <%#= label_tag "Oficina", nil, :class => 'form-label' %>
+    <%# if session[:office] != '0' %>
+      <%#= select_tag "sub_office", options_from_collection_for_select(@offices, "id", "name"), :class => 'sel2 x-large-text-field shrinked' %>
+    <%# else %>
+      <%#= select_tag "sub_office", options_from_collection_for_select(@offices, "id", "name"), :prompt => "", :class => 'sel2 x-large-text-field shrinked' %>
+    <%# end %>
+
+    <!-- Provinces -->
+    <%#= label_tag "Municipio", nil, :class => 'form-label' %>
+    <%# if session[:office] != '0' %>
+      <%#= select_tag "sub_town", options_from_collection_for_select(@offices, "id", "name"), :class => 'sel2 x-large-text-field shrinked' %>
+    <%# else %>
+      <%#= select_tag "sub_town", options_from_collection_for_select(@offices, "id", "name"), :prompt => "", :class => 'sel2 x-large-text-field shrinked' %>
+    <%# end %>
+    
+    <!-- Fecha de Alta y de baja ¿?¿ -->
+     
+    <!-- Submit -->
+    <%= submit_tag I18n.t(:apply_filter_button), :class => 'btn btn-primary', :id => 'submit_btn' %>
+
+
+    <button id="removeFilter" type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><%= t :clear_filter_button %></button>
+  <% end %>
+
+</div>

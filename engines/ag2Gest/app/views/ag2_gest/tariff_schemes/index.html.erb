@@ -1,21 +1,33 @@
-<h1>Listing tariff_schemes</h1>
+<%= render '/layouts/ag2_gest/tariffschemesbreadcrumb' %>
 
-<table>
-  <tr>
-    <th></th>
-    <th></th>
-    <th></th>
-  </tr>
+<%= render :partial => '/layouts/searchhead_remote', :locals => { :title => t(".title"), :path => tariff_schemes_path } %>
 
-<% @tariff_schemes.each do |tariff_scheme| %>
-  <tr>
-    <td><%= link_to 'Show', tariff_scheme %></td>
-    <td><%= link_to 'Edit', edit_tariff_scheme_path(tariff_scheme) %></td>
-    <td><%= link_to 'Destroy', tariff_scheme, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-  </tr>
-<% end %>
-</table>
+<div class="span12" id="div_table">
+  <%= render 'tariff_schemes' %>
+</div>
 
-<br />
+<!-- Modal -->
+<div id="new-tariff-pct" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <%= form_tag create_pct_tariff_schemes_path, :method=>'post' do%>
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+      <h3 id="myModalLabel">Nueva Tarifa</h3>
+    </div>
+    <div class="modal-body">
 
-<%= link_to 'New Tariff scheme', new_tariff_scheme_path %>
+      <%= label_tag "Esquema a duplicar", nil, :class => 'form-label-under-sel2' %>
+      <%= select_tag "tariff_schemes", options_from_collection_for_select(TariffScheme.belongs_to_projects(@project_ids).actives, "id", "to_label"), :prompt => "", :class => 'x-large-text-field shrinked sel2', required: "required" %>
+
+      <%= label_tag "Incremento porcentual", nil, :class => 'form-label' %>
+      <%= text_field_tag "pct_value", nil, :class => 'x-large-text-field shrinked number-text-field', onkeyup: "caps(this)", type: "number", step: "any", required: "required" %>
+
+      <%= label_tag "Fecha inicio de vigencia", nil, :class => 'form-label' %>
+      <%= text_field_tag "init_date", nil, :class => 'x-large-text-field shrinked number-text-field', onkeyup: "caps(this)", type: "date", required: "required" %>
+
+    </div>
+    <div class="modal-footer">
+      <%= submit_tag "Crear Esquema", :class => 'btn btn-primary', :id => 'submit_btn' %>
+      <button class="btn" data-dismiss="modal" aria-hidden="true">Cerrar</button>
+    </div>
+  <% end %>
+</div>

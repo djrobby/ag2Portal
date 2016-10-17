@@ -1,5 +1,33 @@
-<p id="notice"><%= notice %></p>
+<%= render '/layouts/ag2_gest/centersbreadcrumb' %>
 
+<h3><%=@center.try(:name) %></h3>
+<table class="table">
+  <tbody>
+    <tr>
+      <td><%= t('activerecord.attributes.center.id') %>:</td>
+      <td><%= @center.try(:id) %></td>
+      <td><%= t('activerecord.attributes.center.name') %>:</td>
+      <td><%= @center.try(:name) %></td>
+    </tr>
+    <tr>
+      <td><%= t('activerecord.attributes.center.active') %>:</td>
+      <td>
+        <% if @center.try(:active) == true %>
+          <i class="icon-thumbs-up"></i>
+        <% else %>
+          <i class="icon-thumbs-down"></i>
+        <% end %>
+      </td>
+      <td><%= t('activerecord.attributes.center.town') %>:</td>
+      <td><%= link_to @center.try(:town).try(:name), ag2_admin.town_path(@center.town_id) %></td>
+    </tr>
+    <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @center } %>
+  </tbody>
+</table>
 
-<%= link_to 'Edit', edit_center_path(@center) %> |
-<%= link_to 'Back', centers_path %>
+<%= render partial: '/layouts/crud/update_delete_new', locals:
+{ model: Center, update_path: edit_center_path(@center), update_txt: t('.btn_edit'),
+delete_path: @center, delete_txt: t('.btn_delete'), msg: t("activerecord.models.center.one"), :txt => @center.name,
+new_path: new_center_path, new_txt: t('ag2_gest.centers.index.btn_new') } %>
+
+<%= link_to I18n.t('ag2_gest.centers.back_to_main_page'), centers_path %>

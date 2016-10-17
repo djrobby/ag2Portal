@@ -1,17 +1,12 @@
-<%= form_for(@meter_type) do |f| %>
-  <% if @meter_type.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@meter_type.errors.count, "error") %> prohibited this meter_type from being saved:</h2>
+<%= simple_form_for @meter_type, :html => {:class => 'form-vertical well' } do |f| %>
+  <%= f.error_notification %>
+  <%= display_base_errors resource %>
 
-      <ul>
-      <% @meter_type.errors.full_messages.each do |msg| %>
-        <li><%= msg %></li>
-      <% end %>
-      </ul>
+  <div class="row-fluid">
+    <div class="span12">
+      <%= f.input :name, :required => true, :autofocus => true, :input_html => { :class => 'x-large-text-field'}, :label_html => { :class => 'form-label' } %>
     </div>
-  <% end %>
-
-  <div class="actions">
-    <%= f.submit %>
   </div>
+
+  <%= f.button :submit, :class => 'btn-primary' %>
 <% end %>

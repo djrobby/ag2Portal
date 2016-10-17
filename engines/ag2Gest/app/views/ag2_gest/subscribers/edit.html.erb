@@ -1,6 +1,8 @@
-<h1>Editing subscriber</h1>
+<%= render '/layouts/ag2_gest/subscribersbreadcrumb' %>
+
+<h3><%=t '.title' %></h3>
 
 <%= render 'form' %>
 
-<%= link_to 'Show', @subscriber %> |
-<%= link_to 'Back', subscribers_path %>
+<%= link_to t('.show'), @subscriber %> |
+<%= link_to t('.back'), subscribers_path %>

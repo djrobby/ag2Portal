@@ -1,21 +1,481 @@
-<h1>Listing client_payments</h1>
+<script>
+$(document).ready(function () {
+  $('.sel2').select2({
+    formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+    dropdownCssClass: 'shrinked',
+    dropdownAutoWidth: true
+  });
+  // Date picker
+  $('.date_picker').datepicker({
+    format : 'dd/mm/yyyy',
+    weekStart : 1
+  }).on('changeDate', function(e){
+    $('.date_picker').datepicker('hide');
+  });
 
-<table>
-  <tr>
-    <th></th>
-    <th></th>
-    <th></th>
-  </tr>
+  $('#payments-tabs a').click(function (e) {
+    e.preventDefault();
+    $(this).tab('show');
+  });
 
-<% @client_payments.each do |client_payment| %>
-  <tr>
-    <td><%= link_to 'Show', client_payment %></td>
-    <td><%= link_to 'Edit', edit_client_payment_path(client_payment) %></td>
-    <td><%= link_to 'Destroy', client_payment, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-  </tr>
-<% end %>
-</table>
+  $(".btn-others").click(function (e) {
+    $(".client_payment_payment_method_id").show();
+    $("#client_payment_payment_method_id").prop('disabled', false);
+  });
 
-<br />
+  $(".btn-cash").click(function (e) {
+    $(".client_payment_payment_method_id").hide();
+    $("#client_payment_payment_method_id").prop('disabled', true);
+  });
 
-<%= link_to 'New Client payment', new_client_payment_path %>
+  $(".checkbox-master").click(function () {
+    $(this).parents("table").find("tbody").find("input[type=checkbox]").prop('checked', $(this).prop('checked'));
+	});
+
+  $(".checkbox-main").click(function () {
+    $(".checkbox-slave").prop('checked', $(this).prop('checked'));
+	});
+
+  $(".btn-payment").click(function(){
+    var elements = $( "input:checked" );
+    var invoices_id = [];
+    var debts_array = [];
+    for(var i=0;typeof(elements[i])!='undefined';invoices_id.push(elements[i++].getAttribute('value')));
+    for(var i=0;typeof(elements[i])!='undefined';debts_array.push(elements[i++].getAttribute('data-debt')));
+    var total_debt = 0.0;
+    for (var i = 0; i < debts_array.length; i++) {
+      if(debts_array[i] != null){
+        total_debt += parseFloat(debts_array[i]);
+      }
+    }
+    $(".debt-total").text(total_debt);
+    $("#client_payment_invoices_ids").val(invoices_id.filter(i=>i!=null))
+    $("#client_payment_bank_invoices_ids").val(invoices_id.filter(i=>i!=null))
+    $("#instalment_invoices_ids").val(invoices_id.filter(i=>i!=null))
+
+  });
+
+  $("#client_payment_amount").change(function() {
+    amount = this.value
+    debt = jQuery(this).parents(".modal").find(".debt-total").text()
+    $(".cash-return").text((amount - debt).toFixed(2))
+  })
+
+});
+</script>
+<%= render '/layouts/ag2_gest/clientpaymentsbreadcrumb' %>
+
+<h3><%= 'Cobros' %></h3>
+
+<div class="container-fluid">
+  <div class="row-fluid">
+
+    <div class="span3">
+      <div class="well sidebar-nav">
+        <!-- Refresh -->
+        <%= link_to ag2_gest.client_payments_path, title: I18n.t(:refresh), class: "icon-refresh-link", remote: true do %><i class="icon-refresh"></i><% end %>
+        <!-- Search form -->
+        <%= form_tag "client_payments", :method => 'get', :remote => true do %>
+
+          <%= label_tag "Factura", nil, :class => 'form-label' %>
+          <%= text_field_tag "bill_no", nil, :class => 'x-large-text-field shrinked number-text-field', onkeyup: "caps(this)" %>
+
+          <!-- Client -->
+          <%= label_tag I18n.t("ag2_gest.contracting_requests.index.label_client"), nil, :class => 'form-label' %>
+          <%= select_tag "client", options_from_collection_for_select(@clients, "id", "to_label"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
+
+        	<!-- Project -->
+        	<%= label_tag I18n.t("ag2_gest.contracting_requests.index.label_project"), nil, :class => 'form-label-under-sel2' %>
+        	<%= select_tag "project", options_from_collection_for_select(@projects, "id", "project_code"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
+
+          <!-- BankAccount -->
+        	<%= label_tag "Cuenta Bancaria", nil, :class => 'form-label-under-sel2' %>
+        	<%= select_tag "bank_account", options_for_select([ "SI", "NO" ]), include_blank: true, :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
+
+          <!-- Period -->
+          <%= label_tag "Periodo", nil, :class => 'form-label-under-sel2' %>
+        	<%= select_tag "billing_period[]", options_from_collection_for_select(@billing_periods, "id", "period"), :prompt => "", :class => 'x-large-text-field shrinked sel2 multiple', multiple: true %>
+
+          <!-- Ruta -->
+          <%= label_tag "Ruta", nil, :class => 'form-label-under-sel2' %>
+        	<%= select_tag "reading_routes[]", options_from_collection_for_select(@reading_routes, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked sel2 multiple', multiple: true %>
+
+
+          <br /><br />
+        	<!-- Submit -->
+        	<%= submit_tag I18n.t(:apply_filter_button), :class => 'btn btn-primary', :id => 'submit_btn' %>
+
+
+        	<!-- Remove filter -->
+        	<button id="removeFilter" type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><%= t :clear_filter_button %></button>
+
+        <% end %>
+        <!-- <br /> -->
+        <%= link_to t(".back_to_root"), ag2_gest.root_path %>
+			</div><!-- /.sidebar-nav -->
+    </div><!-- /.span3 -->
+
+    <div class="span9" id="div_table">
+      <div class="span6 text-center"><h4>Facturas</h4></div>
+      <div class="span6 text-center"><h4>Cobros</h4></div>
+      <ul class="nav nav-tabs" id="payments-tabs">
+        <li class="active" style="width:25%"><a href="#pendings">Pendientes</a></li>
+        <li style="width:25%"><a href="#charged">Cobradas</a></li>
+        <li class="pull-right"><a href="#fractionated">Fraccionamientos</a></li>
+        <li class="pull-right"><a href="#others">Otros</a></li>
+        <li class="pull-right"><a href="#banks">Bancos</a></li>
+        <li class="pull-right"><a href="#cash">Caja</a></li>
+      </ul>
+
+      <!-- PENDING TAB -->
+      <div class="tab-content">
+        <div class="tab-pane active" id="pendings">
+
+          <div class="row-fluid">
+            <div class="span12">
+              <input type="checkbox" class="checkbox-main">
+              <a href="#modal-cash" role="button" class="btn btn-primary btn-small btn-payment btn-cash" data-toggle="modal">Caja</a>
+              <a href="#modal-bank" role="button" class="btn btn-primary btn-small btn-payment" data-toggle="modal">Banco</a>
+              <a href="#" class="btn btn-primary btn-small">Ventanilla Bancaria</a>
+              <a href="#modal-fracionated" role="button" class="btn btn-primary btn-small btn-payment" data-toggle="modal">Fraccionamientos</a>
+              <a href="#modal-cash" role="button" class="btn btn-primary btn-small btn-payment btn-others" data-toggle="modal">Otros</a>
+              <a href="#" class="btn btn-primary btn-small pull-right">Devoluciones</a>
+            </div>
+          </div>
+
+          <% @bills_pending.each do |bill| %>
+            <div class="accordion">
+              <div class="accordion-group">
+                <div class="accordion-heading row-fluid">
+                  <div class="span1">
+                    <a class="accor accordion-toggle collapsed" data-toggle="collapse" data-parent="#accordion2" href="#collapse-<%= bill.id %>"><i class='icon-plus'></i></a>
+                  </div>
+                  <div class="span3 soft-padding">
+                    <%= link_to bill.try(:bill_no), bill_path(bill) %>
+                  </div>
+                  <div class="span5 soft-padding">
+                    <%= link_to bill.subscriber.to_label, subscriber_path(bill.subscriber) %>
+                  </div>
+                  <div class="span1 soft-padding">
+                    <%= "Bco." unless bill.subscriber.client.client_bank_accounts.where(ending_at:nil).empty?  %>
+                  </div>
+                  <div class="span2 soft-padding">
+                    <%= bill.total.round(2) %>
+                  </div>
+                </div>
+
+                <div id="collapse-<%= bill.id %>" class="accordion-body collapse">
+                  <div class="accordion-inner">
+                    <table class="table table-condensed table-striped">
+                      <thead>
+                        <tr>
+                          <th><input type="checkbox" class="checkbox-master"></th>
+                          <th>Nº</th>
+                          <th>Fecha</th>
+                          <th>Total</th>
+                          <th>Cobrado</th>
+                          <th>Deuda</th>
+                          <th>Estado</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <% bill.invoices.order("created_at DESC").each do |i| %>
+                          <tr>
+                            <td><%= check_box_tag 'invoice_id', i.id, false, class: "checkbox-slave", :data => {total: i.total, collected: i.collected, debt: i.debt} %></td>
+                            <td><%= i.invoice_no %></td>
+                            <td><%= i.invoice_date %></td>
+                            <td><%= i.total %></td>
+                            <td><%= i.collected %></td>
+                            <td><%= i.debt %></td>
+                            <td><%= i.invoice_status.name %></td>
+                          </tr>
+                        <% end %>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        </div>
+
+        <!-- CHARGED TAB -->
+        <div class="tab-pane" id="charged">
+          <% @bills_charged.each do |bill| %>
+            <div class="accordion">
+              <div class="accordion-group">
+                <div class="accordion-heading row-fluid">
+                  <div class="span1">
+                    <a class="accor accordion-toggle collapsed" data-toggle="collapse" data-parent="#accordion2" href="#collapse-<%= bill.id %>"><i class='icon-plus'></i></a>
+                  </div>
+                  <div class="span3 soft-padding">
+                    <%= link_to bill.try(:bill_no), bill_path(bill) %>
+                  </div>
+                  <div class="span5 soft-padding">
+                    <%= link_to bill.subscriber.to_label, subscriber_path(bill.subscriber) %>
+                  </div>
+                  <div class="span1 soft-padding">
+                    <%= "Bco." unless bill.subscriber.client.client_bank_accounts.where(ending_at:nil).empty?  %>
+                  </div>
+                  <div class="span2 soft-padding">
+                    <%= bill.total.round(2) %>
+                  </div>
+                </div>
+
+                <div id="collapse-<%= bill.id %>" class="accordion-body collapse">
+                  <div class="accordion-inner">
+                    <table class="table table-condensed table-striped">
+                      <thead>
+                        <tr>
+                          <th>Nº</th>
+                          <th>Fecha</th>
+                          <th>Total</th>
+                          <th>Cobrado</th>
+                          <th>Deuda</th>
+                          <th>Estado</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <% bill.invoices.order("created_at DESC").each do |i| %>
+                          <tr>
+                            <td><%= i.invoice_no %></td>
+                            <td><%= i.invoice_date %></td>
+                            <td><%= i.total %></td>
+                            <td><%= i.collected %></td>
+                            <td><%= i.debt %></td>
+                            <td><%= i.invoice_status.name %></td>
+                          </tr>
+                        <% end %>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        </div>
+
+        <!-- CASH TAB -->
+        <div class="tab-pane" id="cash">
+          <div class="row-fluid">
+            <div class="span12">
+              <a href="#" class="btn btn-primary btn-small">Cerrar Caja</a>
+            </div>
+          </div>
+          <table class="table table-condensed table-striped">
+            <thead>
+              <tr>
+                <th><input type="checkbox" class="checkbox-master"></th>
+                <th>Nº</th>
+                <th>Factura</th>
+                <th>Abonado</th>
+                <th>F. pago</th>
+                <th>Cantidad</th>
+                <th>Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @client_payments_cash.each do |client_payment| %>
+                <tr>
+                  <td><input type="checkbox" class="checkbox-master"></td>
+                  <td><%= client_payment.receipt_no %></td>
+                  <td><%= link_to client_payment.bill.try(:bill_no), bill_path(client_payment.bill) %></td>
+                  <td><%= link_to client_payment.subscriber.to_label, subscriber_path(client_payment.subscriber) %></td>
+                  <td><%= client_payment.payment_date %></td>
+                  <td><%= client_payment.amount %></td>
+                  <td><%= client_payment.invoice.total %></td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- BANK TAB -->
+        <div class="tab-pane" id="banks">
+          <div class="row-fluid">
+            <div class="span12">
+              <a href="#" class="btn btn-primary btn-small">Confirmar</a>
+            </div>
+          </div>
+          <table class="table table-condensed table-striped">
+            <thead>
+              <tr>
+                <th><input type="checkbox" class="checkbox-master"></th>
+                <th>Nº</th>
+                <th>Factura</th>
+                <th>Abonado</th>
+                <th>F. pago</th>
+                <th>Cantidad</th>
+                <th>Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @client_payments_bank.each do |client_payment| %>
+                <tr>
+                  <td><input type="checkbox" class="checkbox-master"></td>
+                  <td><%= client_payment.receipt_no %></td>
+                  <td><%= link_to client_payment.bill.try(:bill_no), bill_path(client_payment.bill) %></td>
+                  <td><%= link_to client_payment.subscriber.to_label, subscriber_path(client_payment.subscriber) %></td>
+                  <td><%= client_payment.payment_date %></td>
+                  <td><%= client_payment.amount %></td>
+                  <td><%= client_payment.invoice.total %></td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- OTHERS TAB -->
+        <div class="tab-pane" id="others">
+          <div class="row-fluid">
+            <div class="span12">
+              <a href="#" class="btn btn-primary btn-small">Confirmar</a>
+            </div>
+          </div>
+          <table class="table table-condensed table-striped">
+            <thead>
+              <tr>
+                <th>Nº</th>
+                <th>Factura</th>
+                <th>Abonado</th>
+                <th>F. pago</th>
+                <th>Cantidad</th>
+                <th>Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @client_payments_others.each do |client_payment| %>
+                <tr>
+                  <td><%= client_payment.receipt_no %></td>
+                  <td><%= link_to client_payment.bill.try(:bill_no), bill_path(client_payment.bill) %></td>
+                  <td><%= link_to client_payment.subscriber.to_label, subscriber_path(client_payment.subscriber) %></td>
+                  <td><%= client_payment.payment_date %></td>
+                  <td><%= client_payment.amount %></td>
+                  <td><%= client_payment.invoice.total %></td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- FRACTIONATED TAB -->
+        <div class="tab-pane" id="fractionated">
+          <%= simple_form_for :payment_fractionated, url: instalment_client_payments_path, method: :post do |f|  %>
+            <div class="row-fluid">
+              <div class="span12">
+                <%= f.button :submit, "Cobrar quotas", :class => 'btn btn-primary btn-small' %>
+              </div>
+            </div>
+            <table class="table table-condensed table-striped">
+              <thead>
+                <tr>
+                  <th><input type="checkbox" class="checkbox-master"></th>
+                  <th>Factura</th>
+                  <th>Abonado</th>
+                  <th>Plazo</th>
+                  <th>Limite</th>
+                  <th>Bonus</th>
+                  <th>Total</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% @instalments.each do |instalment| %>
+                  <tr>
+                    <td><%= check_box_tag 'instalment_id', instalment.id, false, class: "checkbox-slave" %></td>
+                    <td><%= link_to instalment.bill.try(:bill_no), bill_path(instalment.bill) %></td>
+                    <td><%= link_to instalment.instalment_plan.subscriber.to_label, subscriber_path(instalment.instalment_plan.subscriber) %></td>
+                    <td><%= instalment.instalment %></td>
+                    <td><%= instalment.payday_limit %></td>
+                    <td><%= instalment.surcharge %></td>
+                    <td><%= instalment.amount %></td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+          <% end %>
+        </div>
+
+      </div>
+    </div>
+
+
+
+    <!-- Modal Cash / Others -->
+    <div id="modal-cash" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="ConfirmarBills" aria-hidden="true">
+      <div class="modal-header">
+        <h4>Caja/Otros</h4>
+      </div>
+      <%= simple_form_for :client_payment, url: cash_others_client_payments_path, method: :post do |f| %>
+        <div class="modal-body">
+          <%= f.input :invoices_ids, :as => :hidden %>
+          <div class="control-group string required meter_manufacturing_date">
+            <label class="string control-label">Total</label>
+            <div class="controls">
+              <span class="debt-total">0</span> €
+            </div>
+          </div>
+          <%= f.input :amount, as: "decimal", inline_label: "Yes" %>
+          <%= f.input :payment_method_id, collection: PaymentMethod.all, inline_label: "Yes" %>
+          <div class="control-group string required meter_manufacturing_date">
+            <label class="string control-label">Vuelta</label>
+            <div class="controls">
+              <span class="cash-return">0</span> €
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <%= f.button :submit, "Confirmar", :class => 'btn btn-primary' %>
+          <button class="btn" data-dismiss="modal" aria-hidden="true">Cerrar</button>
+        </div>
+      <% end %>
+    </div>
+
+    <!-- Modal Bank -->
+    <div id="modal-bank" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="ConfirmarBills" aria-hidden="true">
+      <div class="modal-header">
+        <h4>Banco</h4>
+      </div>
+      <%= simple_form_for :client_payment_bank, url: banks_client_payments_path, method: :post do |f| %>
+        <div class="modal-body">
+          <%= f.input :invoices_ids, :as => :hidden %>
+          <div class="control-group string required meter_manufacturing_date">
+            <label class="string control-label">Total</label>
+            <div class="controls">
+              <span class="debt-total">0</span> €
+            </div>
+          </div>
+          <%= f.input :receipt_no, as: "string", inline_label: "Yes" %>
+        </div>
+        <div class="modal-footer">
+          <%= f.button :submit, "Confirmar", :class => 'btn btn-primary' %>
+          <button class="btn" data-dismiss="modal" aria-hidden="true">Cerrar</button>
+        </div>
+      <% end %>
+    </div>
+
+    <!-- Modal Fractionated -->
+    <div id="modal-fracionated" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="ConfirmarBills" aria-hidden="true">
+      <div class="modal-header">
+        <h4>Aplazamiento</h4>
+      </div>
+      <%= simple_form_for :instalment, url: fractionated_client_payments_path, method: :post do |f| %>
+        <div class="modal-body">
+          <%= f.input :invoices_ids, :as => :hidden %>
+          <div class="control-group string required meter_manufacturing_date">
+            <label class="string control-label">Total</label>
+            <div class="controls">
+              <span class="debt-total">0</span> €
+            </div>
+          </div>
+          <%= f.input :number_inst, label: "Plazos", as: "string", inline_label: "Yes" %>
+          <%= f.input :charge, label: "Cargo", as: "string", inline_label: "Yes" %>
+        </div>
+        <div class="modal-footer">
+          <%= f.button :submit, "Confirmar", :class => 'btn btn-primary' %>
+          <button class="btn" data-dismiss="modal" aria-hidden="true">Cerrar</button>
+        </div>
+      <% end %>
+    </div>
+
+  </div>
+</div>

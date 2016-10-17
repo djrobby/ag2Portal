@@ -1,0 +1,37 @@
+<script>
+  $(document).ready(function() {
+    $("#div_table th a, #div_table #pages a").on("click", function() {
+      $.getScript(this.href);
+      return false;
+    });
+  }); 
+</script>
+
+<table class="table table-condensed table-striped">
+  <thead>
+    <tr>
+      <th><%= sortable "id", t('activerecord.attributes.service_point_location.id') %></th>
+      <th><%= sortable "name", t('activerecord.attributes.service_point_location.name') %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @service_point_locations.each do |service_point_location| %>
+      <tr>
+        <td><%= link_to service_point_location.try(:id), service_point_location_path(service_point_location) %></td>
+        <td><%= service_point_location.try(:name) %></td>
+        <td>
+          <%= link_to edit_service_point_location_path(service_point_location), class: "btn btn-mini" do %>
+            <i class="icon-edit"></i>
+          <% end %>
+          <%= link_to service_point_location, class: "btn btn-mini", method: :delete, data: { confirm: 'Are you sure?' } do %>
+            <i class="icon-trash"></i>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @service_point_locations } %>
+<%= render :partial => '/layouts/crud/new', :locals => { :model => ServicePointLocation, :path => new_service_point_location_path, :txt => t("ag2_gest.service_point_locations.index.btn_new") } %>
+<%= link_to t("ag2_gest.service_point_locations.index.back_to_root"), ag2_gest.root_path %>     

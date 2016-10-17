@@ -1,5 +1,7 @@
-<h1>New reading</h1>
+<%= render '/layouts/ag2_gest/readingsbreadcrumb' %>
+
+<h3><%=t '.title' %></h3>
 
 <%= render 'form' %>
 
-<%= link_to 'Back', readings_path %>
+<%= link_to I18n.t('ag2_gest.readings.back_to_main_page'), readings_path %>

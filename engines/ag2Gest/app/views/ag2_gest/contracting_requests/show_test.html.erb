@@ -1,0 +1,803 @@
+<% content_for :title, "aGestiona2 | ag2Requests" %>
+<% content_for :icon, "/assets/pict/ag2/ag2Subscriber.png" %>
+<% content_for :alt, "ag2Requests" %>
+
+<ul class="breadcrumb">
+  <li>
+    <a href="<%= main_app.root_path %>"><i class="icon-home"></i></a><span class="divider">></span>
+  </li>
+  <li>
+    <a href="<%= ag2_gest.root_path %>">ag2Gest</a><span class="divider">></span>
+  </li>
+  <li>
+    <a href="<%= ag2_gest.contracting_requests_path %>">Solicitudes</a><span class="divider">></span>
+  </li>
+  <li>
+    Solicitud
+  </li>
+  <!-- Records navigator -->
+  <li>
+    <span class="divider"></span>
+  </li>
+  <li>
+    <a href="/es/ag2_gest/es/clients/1" class="notice-icon-button" id="first" title="" data-original-title="Primero">
+    <i class="icon-fast-backward"></i>
+    </a>  
+  </li>
+  <li>
+    <a href="/es/ag2_gest/es/clients/1" class="notice-icon-button" id="prev" title="" data-original-title="Anterior">
+    <i class="icon-backward"></i>
+    </a> 
+  </li>
+  <li>
+    <a href="/es/ag2_gest/es/clients/1" class="notice-icon-button" id="next" title="" data-original-title="Siguiente">
+    <i class="icon-forward"></i>
+    </a>  
+  </li>
+  <li>
+    <a href="/es/ag2_gest/es/clients/1" class="notice-icon-button" id="last" title="" data-original-title="Último">
+    <i class="icon-fast-forward"></i>
+    </a>
+  </li> 
+</ul>
+
+
+
+<div class="row-fluid">
+  <div class="span8">
+    <h3><%= 'Solicitud - Serie 10   Numero 15' %></h3>
+  </div>
+  <div class="span4 pull-right">
+    <a class="btn btn-primary btn-small" href="<%= new_contracting_request_path %>">Nueva Solicitud</a>
+    <a class="btn btn-primary btn-small" href="#">Editar Solicitud</a>
+    <a class="btn btn-primary btn-small" href="#">Borrar Solicitud</a>
+  </div>
+</div>
+<div class="row-fluid">
+  <div class="span12">
+    <h4>Solicitante</h4>
+    <table class="table">
+      <tbody>
+        <tr>
+          <td><b>Tipo</b></td>
+          <td>Contratación</td>
+          <td><b>Estado</b></td>
+          <td>Iniciada</td>
+          <td><b>Fecha</b></td>
+          <td>19/09/2014</td>
+        </tr>
+        <tr>
+          <td><b>Apellidos, Nombre</b></td>
+          <td colspan="3">GONZALEZ MIRANDA, JUAN FRANCISCO</td>
+          <td><b>DNI</b></td>
+          <td>7923414X</td>
+        </tr>
+      </tbody>
+    </table>
+    <h4>Domicilio</h4>
+    <table class="table">
+      <tbody>
+        <tr>
+          <td><b>Dirección</b></td>
+          <td colspan="3">c/ la Parra, nº 8</td>
+          <td><b>CP</b></td>
+          <td>78902</td>
+        </tr>
+        <tr>
+          <td><b>Municipio</b></td>
+          <td>Fregenal de la sierra</td>
+          <td><b>Provincia</b></td>
+          <td>BADAJOZ</td>
+          <td><b>País</b></td>
+          <td>ESPAÑA</td>
+        </tr>
+        <tr>
+          <td><b>Email</b></td>
+          <td colspan="3"><a href="mailto:juanfranciscogonzalezmirando@foobar.com">juanfranciscogonzalezmirando@foobar.com</a></td>
+          <td><b>Tfno.</b></td>
+          <td>655555555</td>
+        </tr>
+      </tbody>
+    </table>
+    <ul class="nav nav-tabs" id="myTab">
+      <li class="active"><a href="#detalles" data-toggle="tab">Detalles</a></li>
+      <li><a href="#suministro" data-toggle="tab">Suministro</a></li> 
+      <li class="disabled"><a href="#acometida" data-toggle="tab">Acometida</a></li> 
+      <li><a href="#notas" data-toggle="tab">Notas</a></li> 
+    </ul>
+
+    <div class="tab-content" id="myTabContent">
+      <div class="tab-pane fade active in" id="detalles">
+      <!---->
+        <h4>Dirección suministro </h4>
+        <div class="row-fluid">
+          <table class="table">
+            <tbody>
+              <tr>
+                <td><b>Dirección</b></td>
+                <td>c/ la Parra</td>
+                <td><b>Número</b></td>
+                <td>8</td>
+                <td><b>Piso</b></td>
+                <td>2</td>
+                <td><b>Puerta</b></td>
+                <td>B</td>
+              </tr>
+              <tr>
+                <td><b>CP</b></td>
+                <td>55555</td>
+                <td><b>Municipio</b></td>
+                <td>Fregenal de la Sierra</td>
+                <td><b>Provincia</b></td>
+                <td>Badajoz</td>
+                <td><b>País</b></td>
+                <td>España</td>
+              </tr>
+              <tr>
+                <td><b>Dirección 2</b></td>
+                <td colspan="7"></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <h4>Datos bancarios </h4>
+        <div class="row-fluid">
+          <table class="table table-condensed table-striped shrinked stu">
+            <thead>
+              <th>Titular</th>
+              <th>NIF Titular</th>
+              <th>Banco</th>
+              <th>Sucursal</th>
+              <th>Control</th>
+              <th>Cuenta IBAN</th>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Pedro Martín García</td>
+                <td>2342352X</td>
+                <td><%= link_to "30", banks_show_test_path %></td>
+                <td><%= link_to "5034", bank_offices_show_test_path %></td>
+                <td>23</td>
+                <td>1234567890</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="tab-pane fade" id="suministro">
+
+        <div class="stepwizard" style="width: 74%;float:left">
+          <div class="stepwizard-row setup-panel">
+              <div class="stepwizard-step">
+                  <a href="#step-1" type="button" class="btn btn-primary btn-circle">1</a>
+                  <p class="text-active">Iniciado</p>
+              </div>
+              <div class="stepwizard-step">
+                  <a href="#step-2" type="button" class="btn btn-default btn-circle" disabled="disabled">2</a>
+                  <p class="text-inactive">Inspección</p>
+              </div>
+              <div class="stepwizard-step">
+                  <a href="#step-3" type="button" class="btn btn-default btn-circle" disabled="disabled">3</a>
+                  <p class="text-inactive">Facturar</p>
+              </div>
+              <div class="stepwizard-step">
+                  <a href="#step-4" type="button" class="btn btn-default btn-circle" disabled="disabled">4</a>
+                  <p class="text-inactive">Cobro</p>
+              </div>
+              <div class="stepwizard-step">
+                  <a href="#step-5" type="button" class="btn btn-default btn-circle" disabled="disabled">5</a>
+                  <p class="text-inactive">Abonado</p>
+              </div>
+              <div class="stepwizard-step">
+                  <a href="#step-6" type="button" class="btn btn-default btn-circle" disabled="disabled">6</a>
+                  <p class="text-inactive">Instalación</p>
+              </div>
+              <div class="stepwizard-step">
+                  <a href="#step-7" type="button" class="btn btn-default btn-circle" disabled="disabled">7</a>
+                  <p class="text-inactive">Finalizado</p>
+              </div>
+          </div>
+        </div>
+
+        <form role="form" class="simple_form form-vertical span3 well">
+          <div class="row-fluid setup-content" id="step-1">
+            <div class="span12">
+              <a class="btn btn-primary btn-block nextBtn">Crear orden de trabajo</a>
+            </div>
+          </div>
+
+          <div class="row-fluid setup-content" id="step-2">
+            <div class="span12">
+              <h5 class="text-center nextBtn" style="margin: 5px 0;">Espera inspección</h5>
+            </div>
+          </div>
+
+          <div class="row-fluid setup-content" id="step-3">
+            <div class="span12">
+              <a class="btn btn-primary btn-block" href="#invoice_modal" role="button" data-toggle="modal">Crear factura</a>
+            </div>
+          </div>
+
+
+          <div class="row-fluid setup-content" id="step-4">
+            <div class="span12">
+              <a class="btn btn-primary btn-block nextBtn">Cobrar factura</a>
+            </div>
+          </div>
+
+          <div class="row-fluid setup-content" id="step-5">
+            <div class="span12">
+              <a class="btn btn-primary btn-block nextBtn">Crear contrato</a>
+            </div>
+          </div>
+
+          <div class="row-fluid setup-content" id="step-6">
+            <div class="span12">
+              <h5 class="text-center nextBtn" style="margin: 5px 0;">Ordén de instalación</h5>
+            </div>
+          </div>
+
+          <div class="row-fluid setup-content" id="step-7">
+            <div class="span12">
+              <a href="/assets/ag2_gest/bill.pdf" target="_blank" class="btn btn-primary btn-block nextBtn">Imprimir contrato</a>
+            </div>
+          </div>
+
+        </form>
+
+        <div class="row-fluid">
+          <div class="span4">
+            <h4>CONCEPTOS CONTRATADOS <a href="#" class="pull-right span1"><i class="icon-trash"></i></a> <a href="#suministro_modal" class="pull-right span1" data-toggle="modal" role="button"><i class="icon-pencil"></i></a></h4>
+            <table class="table table-center table-condensed">
+              <tbody>
+                <tr>
+                  <td><b>Tipo de suministro</b></td>
+                  <td>Domestico</td>
+                </tr>
+                <tr>
+                  <td><b>Tipo de saneamiento</b></td>
+                  <td>Sin saneamiento</td>
+                </tr>
+                <tr>
+                  <td><b>Tipo de depuración</b></td>
+                  <td>Sin depuración</td>
+                </tr>
+                <tr>
+                  <td><b>Tipo de facturación</b></td>
+                  <td>Trimestral</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="span4">
+            <h4>FACTURA</h4>
+            <table class="table table-center table-condensed">
+              <tbody>
+                <tr>
+                  <td><b>Id</b></td>
+                  <td><a href="#">12341</a></td>
+                </tr>
+                <tr>
+                  <td><b>Serie</b></td>
+                  <td>65</td>
+                </tr>
+                <tr>
+                  <td><b>Número</b></td>
+                  <td>1</td>
+                </tr>
+                <tr>
+                  <td><b>Fecha</b></td>
+                  <td>14/09/2013</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="span4">
+            <h4>IMPORTES <a href="#" class="pull-right span1"><i class="icon-trash"></i></a> <a href="#price_modal" class="pull-right span1" data-toggle="modal" role="button"><i class="icon-pencil"></i></a></h4>
+            <table class="table table-center table-condensed">
+              <tbody>
+                <tr>
+                  <td><b>Acometida</b></td>
+                  <td>0,00 €</td>
+                </tr>
+                <tr>
+                  <td><b>Suministro</b></td>
+                  <td>24,60 €</td>
+                </tr>
+                <tr>
+                  <td><b>Saneamiento</b></td>
+                  <td>0,00 €</td>
+                </tr>
+                <tr>
+                  <td><b>Fianza</b></td>
+                  <td>50,00 €</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+        </div>
+
+        <div class="row-fluid">
+          
+          <div class="span4">
+            <h4>ORDENES DE TRABAJO</h4>
+            <table class="table table-center table-condensed">
+              <tbody>
+                <tr>
+                  <td><b>Orden de inspección</b></td>
+                  <td><a href="#">98765</a></td>
+                </tr>
+                <tr>
+                  <td><b>Fecha de inspección</b></td>
+                  <td>14/09/2013</td>
+                </tr>
+                <tr>
+                  <td><b>Orden de instalación</b></td>
+                  <td><a href="#">98764</a></td>
+                </tr>
+                <tr>
+                  <td><b>Fecha de instalación</b></td>
+                  <td>15/09/2013</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="span4">
+            <h4>EQUIPO DE MEDIDA</h4>
+            <table class="table table-center table-condensed">
+              <tbody>
+                <tr>
+                  <td><b>Código contador</b></td>
+                  <td colspan="3">213412-xyz</td>
+                </tr>
+                <tr>
+                  <td><b>Marca/Modelo</b></td>
+                  <td>Samsung/1250-XZ</td>
+                  <td><b>Calibre</b></td>
+                  <td>16</td>
+                </tr>
+                <tr>
+                  <td><b>Lectura inicial</b></td>
+                  <td colspan="3">234</td>
+                </tr>
+                <tr>
+                  <td><b>Fecha de instalación</b></td>
+                  <td colspan="3">13/07/2014</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="span4">
+            <h4>ABONADO</h4>
+            <table class="table table-center table-condensed">
+              <tbody>
+                <tr>
+                  <td><b>Nº abonado</b></td>
+                  <td><a href="<%= subscribers_show_test_path %>">4321-1234515</td>
+                </tr>
+                <tr>
+                  <td><b>Fecha de alta</b></td>
+                  <td>14/09/2013</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          
+        </div>
+      
+      </div>
+
+      <div class="tab-pane fade" id="acometida">
+
+
+      </div>
+
+      <div class="tab-pane fade" id="notas">
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div id="invoice_modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="modal_invoice" aria-hidden="true">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h3 id="myModalLabel">Factura contratación suministro</h3>
+  </div>
+  <div class="modal-body" style="overflow-x: hidden;">
+     
+    <form>
+      <fieldset class="form-horizontal">
+        <legend>Datos personales</legend>
+        <div class="control-group">
+          <label class="control-label"><b>Nombre</b></label>
+          <div class="controls">
+            <input type="text" value="GONZALEZ MIRANDA, JUAN FRANCISCO">
+          </div>
+        </div>
+        <div class="control-group">
+          <label class="control-label"><b>Dirección</b></label>
+          <div class="controls">
+            <input type="text" value="c/ la Parra, nº 8">
+          </div>
+        </div>
+        <div class="control-group">
+          <label class="control-label"><b>CP</b></label>
+          <div class="controls">
+            <input type="text" value="78902">
+          </div>
+        </div>
+        <div class="control-group">
+          <label class="control-label"><b>Población</b></label>
+          <div class="controls">
+            <input type="text" value="Fregenal de la sierra">
+          </div>
+        </div>
+        <div class="control-group">
+          <label class="control-label"><b>Provincia</b></label>
+          <div class="controls">
+            <input type="text" value="BADAJOZ">
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset class="form-horizontal">
+        <legend>Importes</legend>
+        <div class="control-group">
+          <label class="control-label"><b>Acometida</b></label>
+          <div class="controls">
+            <input type="text" value="0.00" class="text-right">
+            <label class="checkbox">
+              <input type="checkbox" checked> con iva
+            </label>
+          </div>
+        </div>
+        <div class="control-group">
+          <label class="control-label"><b>Contratación Suministro</b></label>
+          <div class="controls">
+            <input type="text" value="24.60" class="text-right">
+            <label class="checkbox">
+              <input type="checkbox" checked> con iva
+            </label>
+          </div>
+        </div>
+        <div class="control-group">
+          <label class="control-label"><b>Saneamiento</b></label>
+          <div class="controls">
+            <input type="text" value="0.00" class="text-right">
+            <label class="checkbox">
+              <input type="checkbox" checked> con iva
+            </label>
+          </div>
+        </div>
+        <div class="control-group">
+          <label class="control-label"><b>IVA</b></label>
+          <div class="controls">
+            <input type="text" value="0.00" class="text-right">
+          </div>
+        </div>
+        <div class="control-group">
+          <label class="control-label"><b>Fianza</b></label>
+          <div class="controls">
+            <input type="text" value="50.00" class="text-right">
+          </div>
+        </div>
+        <hr/>
+        <div class="control-group">
+          <label class="control-label"><b>Total</b></label>
+          <div class="controls">
+            <h3 class="span4 offset1">74.60 €</h3>
+          </div>
+        </div>
+      </fieldset>
+    </form>
+
+  </div>
+  <div class="modal-footer">
+    <a href="/assets/ag2_gest/bill.pdf" target="_blank" class="btn btn-primary">Imprimir</a>
+    <a class="btn btn-primary newInvoice">Crear</a>
+    <a class="btn" data-dismiss="modal" aria-hidden="true">Cerrar</a>
+  </div>
+</div>
+
+
+
+<div id="price_modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="modal_invoice" aria-hidden="true">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h3 id="myModalLabel">Importes suministro</h3>
+  </div>
+  <div class="modal-body" style="overflow-x: hidden;">
+     
+    <form class="form-horizontal">
+      <div class="control-group">
+        <label class="control-label"><b>Acometida</b></label>
+        <div class="controls">
+          <input type="text" value="0.00" class="text-right">
+          <label class="checkbox">
+            <input type="checkbox" checked> con iva
+          </label>
+        </div>
+      </div>
+      <div class="control-group">
+        <label class="control-label"><b>Contratación Suministro</b></label>
+        <div class="controls">
+          <input type="text" value="24.60" class="text-right">
+          <label class="checkbox">
+            <input type="checkbox" checked> con iva
+          </label>
+        </div>
+      </div>
+      <div class="control-group">
+        <label class="control-label"><b>Saneamiento</b></label>
+        <div class="controls">
+          <input type="text" value="0.00" class="text-right">
+          <label class="checkbox">
+            <input type="checkbox" checked> con iva
+          </label>
+        </div>
+      </div>
+      <div class="control-group">
+        <label class="control-label"><b>IVA</b></label>
+        <div class="controls">
+          <input type="text" value="0.00" class="text-right">
+        </div>
+      </div>
+      <div class="control-group">
+        <label class="control-label"><b>Fianza</b></label>
+        <div class="controls">
+          <input type="text" value="50.00" class="text-right">
+        </div>
+      </div>
+      <hr/>
+      <div class="control-group">
+        <label class="control-label"><b>Total</b></label>
+        <div class="controls">
+          <h3 class="span4 offset1">74.60 €</h3>
+        </div>
+      </div>
+    </form>
+
+  </div>
+  <div class="modal-footer">
+    <a class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Guardar</a>
+    <a class="btn" data-dismiss="modal" aria-hidden="true">Cerrar</a>
+  </div>
+</div>
+
+
+<div id="suministro_modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="modal_invoice" aria-hidden="true">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h3 id="myModalLabel">Información Suministro</h3>
+  </div>
+  <div class="modal-body" style="overflow-x: hidden;">
+     
+    <form class="form-horizontal">
+      <div class="control-group">
+        <label class="control-label"><b>Tipo de Suministro</b></label>
+        <div class="controls">
+          <select>
+            <option></option>
+            <option>Comercial-Industrial</option>
+            <option selected>Domestico</option>
+            <option>Comunidad</option>
+            <option>Municipal</option>
+            <option>Extrarradio</option>
+          </select>
+        </div>
+      </div>
+      <div class="control-group">
+        <label class="control-label"><b>Tipo de Saneamiento</b></label>
+        <div class="controls">
+          <select>
+            <option></option>
+            <option>Con saneamiento</option>
+            <option selected>Sin saneamiento</option>
+          </select>
+        </div>
+      </div>
+      <div class="control-group">
+        <label class="control-label"><b>Tipo de Depuración</b></label>
+        <div class="controls">
+          <select>
+            <option></option>
+            <option selected>Sin depuración</option>
+            <option>Doméstico</option>
+            <option>Comercial</option>
+            <option>Industrial</option>
+          </select>
+        </div>
+      </div>
+      <div class="control-group">
+        <label class="control-label"><b>Tipo de Facturación</b></label>
+        <div class="controls">
+          <select>
+            <option></option>
+            <option>Bimestral</option>
+            <option>Mensual</option>
+            <option selected>Trimestral</option>
+          </select>
+        </div>
+      </div>
+      
+    </form>
+
+  </div>
+  <div class="modal-footer">
+    <a class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Guardar</a>
+    <a class="btn" data-dismiss="modal" aria-hidden="true">Cerrar</a>
+  </div>
+</div>
+
+
+<style type="text/css">
+.disabled a:hover{
+  color: #aaa;
+  cursor: not-allowed !important;
+}
+.disabled:hover{
+  color: #fff;
+}
+.disabled:focus{
+  color: #fff;
+  background-color: white;
+}
+.stepwizard-step p {
+        margin-top: 10px;
+    }
+
+    .stepwizard-row {
+        display: table-row;
+    }
+
+    .stepwizard {
+        display: table;
+        width: 100%;
+        position: relative;
+    }
+
+    .stepwizard-step button[disabled] {
+        opacity: 1 !important;
+        filter: alpha(opacity=100) !important;
+    }
+
+    .stepwizard-row:before {
+        top: 14px;
+        bottom: 0;
+        position: absolute;
+        content: " ";
+        width: 100%;
+        height: 1px;
+        background-color: #ccc;
+        z-order: 0;
+
+    }
+
+    .stepwizard-step {
+        display: table-cell;
+        text-align: center;
+        position: relative;
+    }
+
+    .btn-circle {
+      width: 30px;
+      text-align: center;
+      padding: 6px 0;
+      font-size: 12px;
+      line-height: 1.428571429;
+      border-radius: 15px;
+    }
+    .disabled {
+       display:inline-block;
+        pointer-events: none;       
+    }
+
+    .text-active{
+      color: #006ccc;
+    }
+
+    .text-inactive{
+      color: #ccc;
+    }
+</style>
+<script type="text/javascript">
+
+$(document).ready(function () {
+
+    var navListItems = $('div.setup-panel div a'),
+            pListItems = $('div.setup-panel div p'),
+            allWells = $('.setup-content'),
+            allNextBtn = $('.nextBtn');
+            allPrevBtn = $('.prevBtn');
+
+    allWells.hide();
+
+    navListItems.click(function (e) {
+        e.preventDefault();
+        var $target = $($(this).attr('href')),
+                $item = $(this);
+
+        if (!$item.hasClass('disabled')) {
+            navListItems.removeClass('btn-primary').addClass('btn-default');
+            pListItems.removeClass("text-active")
+            $item.addClass('btn-primary');
+            $item.siblings("p").addClass("text-active")
+            allWells.hide();
+            $target.show();
+            $target.find('input:eq(0)').focus();
+        }
+    });
+
+    allNextBtn.click(function(){
+        var curStep = $(this).closest(".setup-content"),
+            curStepBtn = curStep.attr("id"),
+            currentStepWizard = $('div.setup-panel div a[href="#' + curStepBtn + '"]').parent().children("a"),
+            nextStepWizard = $('div.setup-panel div a[href="#' + curStepBtn + '"]').parent().next().children("a"),
+            curInputs = curStep.find("input[type='text'],input[type='url']"),
+            isValid = true;
+
+
+        $(".form-group").removeClass("has-error");
+        for(var i=0; i<curInputs.length; i++){
+            if (!curInputs[i].validity.valid){
+                isValid = false;
+                $(curInputs[i]).closest(".form-group").addClass("has-error");
+            }
+        }
+
+        if (isValid)
+            currentStepWizard
+            currentStepWizard.siblings("p").removeClass("text-active")
+            nextStepWizard.siblings("p").removeClass("text-inactive").addClass("text-active")
+            nextStepWizard.removeAttr('disabled').trigger('click');
+    });
+
+    allPrevBtn.click(function(){
+        var curStep = $(this).closest(".setup-content"),
+            curStepBtn = curStep.attr("id"),
+            currentStepWizard = $('div.setup-panel div a[href="#' + curStepBtn + '"]').parent().children("a"),
+            prevStepWizard = $('div.setup-panel div a[href="#' + curStepBtn + '"]').parent().prev().children("a"),
+            curInputs = curStep.find("input[type='text'],input[type='url']"),
+            isValid = true;
+
+        $(".form-group").removeClass("has-error");
+
+        if (isValid)
+            currentStepWizard.siblings("p").removeClass("text-active")
+            prevStepWizard.siblings("p").addClass("text-active")
+            prevStepWizard.trigger('click');
+    });
+
+    $(".newInvoice").click(function(){
+        var curStep = $("#step-3"),
+            curStepBtn = curStep.attr("id"),
+            currentStepWizard = $('div.setup-panel div a[href="#' + curStepBtn + '"]').parent().children("a"),
+            nextStepWizard = $('div.setup-panel div a[href="#' + curStepBtn + '"]').parent().next().children("a"),
+            curInputs = curStep.find("input[type='text'],input[type='url']");
+
+        $('#invoice_modal').modal('hide');
+        currentStepWizard
+        currentStepWizard.siblings("p").removeClass("text-active")
+        nextStepWizard.siblings("p").removeClass("text-inactive").addClass("text-active")
+        nextStepWizard.removeAttr('disabled').trigger('click');
+
+    });
+
+    $('div.setup-panel div a.btn-primary').trigger('click');
+
+    $('a[data-toggle="tab"]').on('click', function(){
+      if ($(this).parent('li').hasClass('disabled')) {
+        return false;
+      };
+    });
+    
+});
+
+</script>

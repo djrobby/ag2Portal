@@ -1,0 +1,42 @@
+<script>
+  $(document).ready(function() {
+    $("#div_table th a, #div_table #pages a").on("click", function() {
+      $.getScript(this.href);
+      return false;
+    });
+  }); 
+</script>
+
+<table class="table table-condensed table-striped">
+  <thead>
+    <tr>
+      <th><%= sortable "id", t('activerecord.attributes.street_directory.id') %></th>
+      <th><%= sortable "street_name", t('activerecord.attributes.street_directory.street_name') %></th>
+      <th><%= sortable "street_type_id", t('activerecord.attributes.street_directory.street_type') %></th>
+      <th><%= sortable "town_id", t('activerecord.attributes.street_directory.town') %></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+  	<% @street_directories.each do |street| %>
+      <tr>
+        <td><%= link_to street.try(:id), street_directory_path(street) %></td>
+        <td><%= street.try(:street_name) %></td>
+        <td><%= street.try(:street_type).try(:street_type_description) %></td>
+        <td><%= street.try(:town).try(:name) %></td>
+        <td>
+          <%= link_to edit_street_directory_path(street), class: "btn btn-mini" do %>
+            <i class="icon-edit"></i>
+          <% end %>
+          <%= link_to street, class: "btn btn-mini", method: :delete, data: { confirm: 'Are you sure?' } do %>
+            <i class="icon-trash"></i>
+          <% end %>
+        </td>
+      </tr>
+   <% end %>
+  </tbody>
+</table>
+
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @street_directories } %>
+<%= render :partial => '/layouts/crud/new', :locals => { :model => StreetDirectory, :path => new_street_directory_path, :txt => t("ag2_gest.street_directories.index.btn_new") } %>
+<%= link_to t("ag2_gest.street_directories.index.back_to_root"), ag2_gest.root_path %>

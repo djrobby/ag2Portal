@@ -1,0 +1,33 @@
+<% content_for :title, "aGestiona2 | ag2GestReadingIncidenceTypes" %>
+<% content_for :icon, "/assets/icon/TableA.png" %>
+<% content_for :alt, "ag2GestReadingIncidenceType" %>
+
+<ul class="breadcrumb">
+  <li>
+    <a href="<%= main_app.root_path %>"><i class="icon-home"></i></a><span class="divider">></span>
+  </li>
+  <li>
+    <a href="<%= ag2_gest.root_path %>">ag2Gest</a><span class="divider">></span>
+  </li>
+  <% if @reading_incidence_types %>
+  <li>
+    <%=t "ag2_gest.breadcrumb.reading_incidence_types.items" %>
+  </li>
+  <% end %>
+  <% if @reading_incidence_type %>
+  <li>
+    <a href="<%= reading_incidence_types_path %>"><%=t :"ag2_gest.breadcrumb.reading_incidence_types.items" %></a><span class="divider">></span>
+  </li>
+  <% if @breadcrumb == 'read' || @breadcrumb == 'update' %>
+  <%=t :"ag2_gest.breadcrumb.reading_incidence_types.item" %>
+  <% end %>
+  <% if @breadcrumb == 'create' %>
+  <li>
+    <%= t :"breadcrumb.new" %>
+  </li>
+  <% end %>
+
+  <% end %>
+  <!-- Close -->
+  <a class="close" href="<%= ag2_gest.root_path %>">&#215;</a>
+</ul>

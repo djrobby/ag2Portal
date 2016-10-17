@@ -1,5 +1,29 @@
-<p id="notice"><%= notice %></p>
+<%= render '/layouts/ag2_gest/contractingrequestdocumenttypesbreadcrumb' %>
 
+<h3><%=@contracting_request_document_type.try(:name) %></h3>
+<table class="table">
+  <tbody>
+    <tr>
+      <td><%= t('activerecord.attributes.contracting_request_document_type.id') %>:</td>
+      <td><%= @contracting_request_document_type.try(:id) %></td>
+      <td><%= t('activerecord.attributes.contracting_request_document_type.name') %>:</td>
+      <td><%= @contracting_request_document_type.try(:name) %></td>
+      <td><%= t('activerecord.attributes.contracting_request_document_type.active') %>:</td>
+      <td>
+        <% if @contracting_request_document_type.try(:required) == true %>
+          <i class="icon-thumbs-up"></i>
+        <% else %>
+          <i class="icon-thumbs-down"></i>
+        <% end %>
+      </td>
+    </tr>
+    <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @contracting_request_document_type } %>
+  </tbody>
+</table>
 
-<%= link_to 'Edit', edit_contracting_request_document_type_path(@contracting_request_document_type) %> |
-<%= link_to 'Back', contracting_request_document_types_path %>
+<%= render partial: '/layouts/crud/update_delete_new', locals:
+{ model: ContractingRequestDocumentType, update_path: edit_contracting_request_document_type_path(@contracting_request_document_type), update_txt: t('.btn_edit'),
+delete_path: @contracting_request_document_type, delete_txt: t('.btn_delete'), msg: t("activerecord.models.contracting_request_document_type.one"), :txt => @contracting_request_document_type.name,
+new_path: new_contracting_request_document_type_path, new_txt: t('ag2_gest.contracting_request_document_types.index.btn_new') } %>
+
+<%= link_to I18n.t('ag2_gest.contracting_request_document_types.back_to_main_page'), contracting_request_document_types_path %>

@@ -1,17 +1,36 @@
-<%= form_for(@sale_offer_status) do |f| %>
-  <% if @sale_offer_status.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@sale_offer_status.errors.count, "error") %> prohibited this sale_offer_status from being saved:</h2>
+<script type="text/javascript">
+  $(document).ready(function() {
+    // Select2
+    $('.date_picker').datepicker({
+        format : 'dd/mm/yyyy',
+        weekStart : 1
+    });
 
-      <ul>
-      <% @sale_offer_status.errors.full_messages.each do |msg| %>
-        <li><%= msg %></li>
-      <% end %>
-      </ul>
+    $('select.sel2').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      allowClear: true
+    });
+  });
+</script>
+
+<%= simple_form_for @sale_offer_status, :html => {:class => 'form-vertical well' } do |f| %>
+  <%= f.error_notification %>
+  <%= display_base_errors resource %>
+
+  <div class="row-fluid">
+    <div class="span6">
+      <%= f.input :name, :required => true, :autofocus => true, :input_html => { :class => 'x-large-text-field'}, :label_html => { :class => 'form-label' } %>
     </div>
-  <% end %>
+    
+    <div class="span3">
+      <%= f.input :approval, :required => true, :autofocus => true, :input_html => { :class => 'x-large-text-field'}, :label_html => { :class => 'form-label' } %>
+    </div>
 
-  <div class="actions">
-    <%= f.submit %>
+    <div class="span3">
+      <%= f.input :notification, :required => true, :autofocus => true, :input_html => { :class => 'x-large-text-field'}, :label_html => { :class => 'form-label' } %>
+    </div>
+
   </div>
+
+  <%= f.button :submit, :class => 'btn-primary' %>
 <% end %>

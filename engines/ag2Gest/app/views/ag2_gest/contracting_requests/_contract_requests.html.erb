@@ -1,0 +1,36 @@
+<script>
+  $(document).ready(function() {
+    $("#div_table th a, #div_table #pages a").on("click", function() {
+      $.getScript(this.href);
+      return false;
+    });
+  });
+
+</script>
+
+<table class="table table-condensed table-striped shrinked">
+  <thead>
+    <tr>
+      <th align="center"><%= sortable "request_no", t('activerecord.attributes.contracting_request.request_no') %></th>
+      <th align="center"><%= t('activerecord.attributes.contracting_request.client') %></th>
+      <th align="center"><%= sortable "contracting_request_type_id", t('activerecord.attributes.contracting_request.contracting_request_type') %></th>
+      <th align="center"><%= sortable "contracting_request_status_id", t('activerecord.attributes.contracting_request.contracting_request_status') %></th>
+      <th align="right"><%= sortable "request_date", t('activerecord.attributes.contracting_request.request_date') %></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @contracting_requests.each do |request| %>
+      <tr>
+        <td><%= link_to request.try(:request_no), ag2_gest.contracting_request_path(request) %></td>
+        <td align="center"><%= request.try(:client_info) %></td>
+        <td align="center"><%= request.try(:contracting_request_type).try(:description) %></td>
+        <td align="center"><%= request.try(:contracting_request_status).try(:name) %></td>
+        <td align="right"><%=l request.try(:request_date) %></td>
+        <td></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @contracting_requests } %>

@@ -1,0 +1,57 @@
+<style>
+  .center {
+    text-align: center!important;
+  }
+</style>
+<script>
+  $(document).ready(function() {
+    $("#div_table th a, #div_table #pages a").on("click", function() {
+      $.getScript(this.href);
+      return false;
+    });
+
+    $(".sel2").select2();
+
+  }); 
+</script>
+
+<table class="table table-condensed table-center table-striped shrinked stu">
+  <thead>
+    <tr>
+    	<th><%= sortable "id", t('activerecord.attributes.reading.id') %></th>
+			<th><%= sortable "subscriber", t('activerecord.attributes.reading.subscriber_id') %></th>
+			<th><%= sortable "meter_id", t('activerecord.attributes.reading.meter_id') %></th>
+			<th class="center"><%= sortable "billing_period_id", t('activerecord.attributes.reading.billing_period_id') %></th>
+			<th><%= sortable "reading_type_id", t('activerecord.attributes.reading.reading_type_id') %></th>
+			<th><%= sortable "reading_date", t('activerecord.attributes.reading.reading_date') %></th>
+			<th><%= sortable "reading", t('activerecord.attributes.reading.reading') %></th>
+			<!-- <th><%#= sortable "consumption", t('activerecord.attributes.reading.consumption') %></th> -->
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+		<% @readings.each do |reading| %>
+	    <tr>
+	      <td><%= link_to reading.try(:id), ag2_gest.reading_path(reading) %></td>
+	      <td><%= reading.try(:subscriber).try(:name) %></td> <!-- subscriber.name -->
+	      <td><%= reading.try(:meter).try(:meter_code) %></td>
+	      <td class="center"><%= reading.try(:billing_period).try(:period) %></td>
+	      <td><%= reading.try(:reading_type).try(:name) %></td>
+	      <td><%= reading.try(:reading_date).strftime("%d/%m/%Y") unless reading.try(:reading_date).blank? %></td>
+				<td><%= reading.try(:reading_index) %></td>
+				<!-- <td><%#= reading.consumption %></td> -->
+
+	      <td class="a_inline">
+	        <%= link_to edit_reading_path(reading), class: "btn btn-mini" do %>
+	          <i class="icon-edit"></i>
+	        <% end %>
+
+	        <%= link_to reading, class: "btn btn-mini", method: :delete, data: { confirm: 'Are you sure?' } do %>
+	          <i class="icon-trash"></i>
+	        <% end %>
+
+	      </td>
+	    </tr>
+	  <% end %>
+	<tbody>
+</table>

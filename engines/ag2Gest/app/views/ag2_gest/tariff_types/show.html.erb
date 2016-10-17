@@ -1,5 +1,26 @@
-<p id="notice"><%= notice %></p>
+<%= render '/layouts/ag2_gest/tarifftypesbreadcrumb' %>
 
+<h3><%= @tariff_type.name + " " + @tariff_type.code %></h3>
+<table class="table">
+  <tbody>
+    <tr>
+      <td><%= t('activerecord.attributes.tariff_type.id') %>:</td>
+      <td colspan="3"><%= @tariff_type.try(:id) %></td>
+    </tr>
+    <tr>
+      <td><%= t('activerecord.attributes.tariff_type.code') %>:</td>
+      <td><%= @tariff_type.try(:code) %></td>
+      <td><%= t('activerecord.attributes.tariff_type.name') %>:</td>
+      <td><%= @tariff_type.try(:name) %></td>
+    </tr>
+      <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @tariff_type } %>
+      <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @tariff_type } %>
+  </tbody>
+</table>
 
-<%= link_to 'Edit', edit_tariff_type_path(@tariff_type) %> |
-<%= link_to 'Back', tariff_types_path %>
+<%= render partial: '/layouts/crud/update_delete_new', locals:
+{ model: TariffType, update_path: edit_tariff_type_path(@tariff_type), update_txt: t('.btn_edit'),
+delete_path: @tariff_type, delete_txt: t('.btn_delete'), msg: t("activerecord.models.tariff_type.one"), :txt => @tariff_type.name,
+new_path: new_tariff_type_path, new_txt: t('ag2_gest.tariff_types.index.btn_new') } %>
+
+<%= link_to I18n.t('ag2_gest.tariff_types.back_to_main_page'), tariff_types_path %>

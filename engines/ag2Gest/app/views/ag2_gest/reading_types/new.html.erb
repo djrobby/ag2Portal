@@ -1,5 +1,7 @@
-<h1>New reading_type</h1>
+<%= render '/layouts/ag2_gest/readingtypesbreadcrumb' %>
+
+<h3><%=t '.title' %></h3>
 
 <%= render 'form' %>
 
-<%= link_to 'Back', reading_types_path %>
+<%= link_to I18n.t('ag2_gest.reading_types.back_to_main_page'), reading_types_path %>

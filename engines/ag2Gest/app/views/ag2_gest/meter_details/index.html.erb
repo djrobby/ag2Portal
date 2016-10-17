@@ -1,0 +1,7 @@
+<%= render '/layouts/ag2_gest/meterdetailsbreadcrumb' %>
+
+<%= render :partial => '/layouts/searchhead_remote', :locals => { :title => t(".title"), :path => meter_details_path } %>
+
+<div class="span12" id="div_table">
+  <%= render 'meter_details' %>
+</div>

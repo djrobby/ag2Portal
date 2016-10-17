@@ -1,5 +1,7 @@
-<h1>New meter</h1>
+<%= render '/layouts/ag2_gest/metersbreadcrumb' %>
+
+<h3><%=t '.title' %></h3>
 
 <%= render 'form' %>
 
-<%= link_to 'Back', meters_path %>
+<%= link_to I18n.t('ag2_gest.meters.back_to_main_page'), meters_path %>

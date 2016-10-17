@@ -1,21 +1,7 @@
-<h1>Listing meter_brands</h1>
+<%= render '/layouts/ag2_gest/meterbrandsbreadcrumb' %>
 
-<table>
-  <tr>
-    <th></th>
-    <th></th>
-    <th></th>
-  </tr>
+<h3><%= t(".title") %></h3>
 
-<% @meter_brands.each do |meter_brand| %>
-  <tr>
-    <td><%= link_to 'Show', meter_brand %></td>
-    <td><%= link_to 'Edit', edit_meter_brand_path(meter_brand) %></td>
-    <td><%= link_to 'Destroy', meter_brand, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-  </tr>
-<% end %>
-</table>
-
-<br />
-
-<%= link_to 'New Meter brand', new_meter_brand_path %>
+<div class="span8" id="div_table">
+  <%= render 'meter_brands' %>
+</div>

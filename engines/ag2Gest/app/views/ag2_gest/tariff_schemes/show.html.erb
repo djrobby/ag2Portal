@@ -1,5 +1,344 @@
-<p id="notice"><%= notice %></p>
+<style>
+  .accordion-inner.well{
+    overflow-x: scroll;
+  }
+  #edit-tariff-modal{
+    width: 1150px !important;
+    left: 25% !important;
+  }
+  #edit-tariff-modal .modal-body {
+    max-height: 450px !important;
+  }
+</style>
+<%= render '/layouts/ag2_gest/tariffschemesbreadcrumb' %>
+
+<h3><%= t('.title') %> <%= @tariff_scheme.name %></h3>
+<table class="table">
+  <tbody>
+    <tr>
+      <td><%= t('activerecord.attributes.tariff_scheme.id') %>:</td>
+      <td ><%= @tariff_scheme.try(:id) %></td>
+      <td><%= t('activerecord.attributes.tariff_scheme.name') %>:</td>
+      <td><%= @tariff_scheme.try(:name) %></td>
+    </tr>
+    <tr>
+      <td><%= t('activerecord.attributes.tariff_scheme.project_id') %>:</td>
+      <td><%= link_to @tariff_scheme.try(:project).try(:name), ag2_tech.project_path(@tariff_scheme.project) %></td>
+      <td><%= t('activerecord.attributes.tariff_scheme.office') %>:</td>
+      <td><%= link_to @tariff_scheme.try(:project).try(:office).try(:name), ag2_admin.office_path(@tariff_scheme.project.office) %></td>
+    </tr>
+    <tr>
+      <td><%= t('activerecord.attributes.tariff_scheme.company') %>:</td>
+      <td><%= link_to @tariff_scheme.try(:project).try(:company).try(:name), ag2_admin.company_path(@tariff_scheme.project.company) %></td>
+      <td><%= t('activerecord.attributes.tariff_scheme.tariff_type_id') %>:</td>
+      <td ><%= link_to @tariff_scheme.try(:tariff_type).try(:name), ag2_gest.tariff_type_path(@tariff_scheme.tariff_type_id) %></td>
+    </tr>
+    <tr>
+      <td><%= t('activerecord.attributes.tariff_scheme.starting_at') %>:</td>
+      <td><%=l @tariff_scheme.try(:starting_at) unless @tariff_scheme.try(:starting_at).blank? %></td>
+      <td><%= t('activerecord.attributes.tariff_scheme.ending_at') %>:</td>
+      <td><%=l @tariff_scheme.try(:ending_at) unless @tariff_scheme.try(:ending_at).blank? %></td>
+    </tr>
+
+      <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @tariff_scheme } %>
+  </tbody>
+</table>
+
+<%= render partial: '/layouts/crud/update_delete_new', locals:
+{ model: TariffScheme, update_path: simple_edit_tariff_scheme_path(@tariff_scheme), update_txt: t('.btn_edit'),
+delete_path: @tariff_scheme, delete_txt: t('.btn_delete'), msg: t("activerecord.models.tariff_scheme.one"), :txt => @tariff_scheme.name,
+new_path: new_tariff_scheme_path, new_txt: t('ag2_gest.tariff_schemes.index.btn_new') } %>
+
+<%= link_to I18n.t('ag2_gest.tariff_schemes.back_to_main_page'), tariff_schemes_path %>
+
+<!-- Associated fees -->
+<% billable_document = "" %>
+
+<h4><%= t('activerecord.attributes.tariff_scheme.tariff_association') %></h4>
+
+<% @tariffs.each do |tariffs| %> <!-- Array de tariffs with index agrupadas -->
+
+  <% if billable_document != BillableItem.find(tariffs.first).billable_concept.billable_document %>
+		<% unless billable_document == "" %>
+			</div></div></div>
+			<!-- End <%= billable_document %> -->
+		<% end %>
+		<!-- <%= BillableItem.find(tariffs.first).billable_concept.billable_document.to_s == '1' ? 'servicios' : 'contratación' %> -->
+		<% billable_document = BillableItem.find(tariffs.first).billable_concept.billable_document %>
+		<br>
+		<div class="accordion-group">
+	    <div class="accordion-heading">
+	      <a class="accordion-toggle" data-toggle="collapse" href='#collapse<%="#{BillableItem.find(tariffs.first).billable_concept.billable_document.to_s == '1' ? 'servicios' : 'contratación' }"%>'>
+					<h5 class="text-center"><%= BillableItem.find(tariffs.first).billable_concept.billable_document.to_s == '1' ? 'TARIFAS DE SERVICIOS' : 'TARIFAS DE CONTRACTACIÓN'  %></h5>
+	      </a>
+	    </div>
+	    <div id='collapse<%="#{BillableItem.find(tariffs.first).billable_concept.billable_document.to_s == '1' ? 'servicios' : 'contratación' }"%>' class="accordion-body collapse in">
+	      <div class="accordion-inner well">
+	<% end %>
+
+  <div class="row-fluid" style="overflow: auto;">
+    <div class="accordion-group">
+	    <div class="accordion-heading">
+	      <a class="accordion-toggle" data-toggle="collapse" href='#collapse<%="#{tariffs[0]}"%>'>
+					<h5 class="text-center"><%= BillableItem.find(tariffs.first).billable_concept.name %></h5>
+	      </a>
+	    </div>
+	    <div id='collapse<%="#{tariffs[0]}"%>' class="accordion-body collapse in">
+	      <div class="accordion-inner well">
+
+          <table class="table table-condensed table-striped">
+            <thead>
+              <tr>
+                <th></th>
+                <th></th>
+                <th><%= t('activerecord.attributes.tariff_scheme.id') %></th>
+                <th><%= t('activerecord.attributes.tariff_scheme.caliber_id') %></th>
+                <th><%= t('activerecord.attributes.tariff_scheme.tariff_type_id') %></th>
+                <th><%= t('activerecord.attributes.tariff_scheme.billing_frequency_id') %></th>
+                <th><%= t('activerecord.attributes.tariff_scheme.fixed_fee') %></th>
+                <th><%= t('activerecord.attributes.tariff_scheme.block1_limit') %></th>
+                <th><%= t('activerecord.attributes.tariff_scheme.block1_fee') %></th>
+                <th><%= t('activerecord.attributes.tariff_scheme.block2_limit') %></th>
+                <th><%= t('activerecord.attributes.tariff_scheme.block2_fee') %></th>
+                <th><%= t('activerecord.attributes.tariff_scheme.block3_limit') %></th>
+                <th><%= t('activerecord.attributes.tariff_scheme.block3_fee') %></th>
+                <th><%= t('activerecord.attributes.tariff_scheme.block4_limit') %></th>
+                <th><%= t('activerecord.attributes.tariff_scheme.block4_fee') %></th>
+                <th><%= t('activerecord.attributes.tariff_scheme.block5_limit') %></th>
+                <th><%= t('activerecord.attributes.tariff_scheme.block5_fee') %></th>
+                <th><%= t('activerecord.attributes.tariff_scheme.block6_limit') %></th>
+                <th><%= t('activerecord.attributes.tariff_scheme.block6_fee') %></th>
+                <th><%= t('activerecord.attributes.tariff_scheme.block7_limit') %></th>
+                <th><%= t('activerecord.attributes.tariff_scheme.block7_fee') %></th>
+                <th><%= t('activerecord.attributes.tariff_scheme.block8_limit') %></th>
+                <th><%= t('activerecord.attributes.tariff_scheme.block8_fee') %></th>
+                <th><%= t('activerecord.attributes.tariff_scheme.variable_fee') %></th>
+                <th><%= t('activerecord.attributes.tariff_scheme.percentage_fee') %></th>
+                <th><%= t('activerecord.attributes.tariff_scheme.percentage_applicable_formula') %></th>
+                <th><%= t('activerecord.attributes.tariff_scheme.discount_pct_f') %></th>
+                <th><%= t('activerecord.attributes.tariff_scheme.discount_pct_b') %></th>
+                <th><%= t('activerecord.attributes.tariff_scheme.discount_pct_v') %></th>
+                <th><%= t('activerecord.attributes.tariff_scheme.discount_pct_p') %></th>
+                <th><%= t('activerecord.attributes.tariff_scheme.tax_type_f_id') %></th>
+                <th><%= t('activerecord.attributes.tariff_scheme.tax_type_b_id') %></th>
+                <th><%= t('activerecord.attributes.tariff_scheme.tax_type_v_id') %></th>
+                <th><%= t('activerecord.attributes.tariff_scheme.tax_type_p_id') %></th>
+              </tr>
+            </thead>
+            <tbody>
+
+              <% tariffs[1].each do |tariff| %>
+                <% if tariff.tariff_active %>
+                  <tr>
+                    <td>
+                      <a href="#" role="button" class="btn btn-mini btn-edit-tariff" data-tariff="<%= tariff.id %>"><i class="icon-edit"></i></a>
+                    </td>
+                    <td>
+                      <%= link_to tariff, class: "btn btn-mini", method: :delete, data: { confirm: 'Are you sure?' } do %>
+                        <i class="icon-trash"></i>
+                      <% end %>
+                    </td>
+                    <td class="id"><%= tariff.try(:id) %></td>
+                    <td class="caliber"><%= tariff.try(:caliber).try(:caliber) %></td>
+                    <td class="tariff_type"><%= tariff.try(:tariff_type).try(:name) %></td>
+                    <td class="billing_frequency" data-id="<%= tariff.try(:billing_frequency).try(:id) %>"><%= tariff.try(:billing_frequency).try(:name) %></td>
+                    <td class="fixed_fee"><%= tariff.try(:fixed_fee) %></td>
+                    <td class="block1_limit"><%= tariff.try(:block1_limit) %></td>
+                    <td class="block1_fee"><%= tariff.try(:block1_fee) %></td>
+                    <td class="block2_limit"><%= tariff.try(:block2_limit) %></td>
+                    <td class="block2_fee"><%= tariff.try(:block2_fee) %></td>
+                    <td class="block3_limit"><%= tariff.try(:block3_limit) %></td>
+                    <td class="block3_fee"><%= tariff.try(:block3_fee) %></td>
+                    <td class="block4_limit"><%= tariff.try(:block4_limit) %></td>
+                    <td class="block4_fee"><%= tariff.try(:block4_fee) %></td>
+                    <td class="block5_limit"><%= tariff.try(:block5_limit) %></td>
+                    <td class="block5_fee"><%= tariff.try(:block5_fee) %></td>
+                    <td class="block6_limit"><%= tariff.try(:block6_limit) %></td>
+                    <td class="block6_fee"><%= tariff.try(:block6_fee) %></td>
+                    <td class="block7_limit"><%= tariff.try(:block7_limit) %></td>
+                    <td class="block7_fee"><%= tariff.try(:block7_fee) %></td>
+                    <td class="block8_limit"><%= tariff.try(:block8_limit) %></td>
+                    <td class="block8_fee"><%= tariff.try(:block8_fee) %></td>
+                    <td class="variable_fee"><%= tariff.try(:variable_fee) %></td>
+                    <td class="percentage_fee"><%= tariff.try(:percentage_fee) %></td>
+                    <td class="percentage_applicable_formula"><%= tariff.try(:percentage_applicable_formula) %></td>
+                    <td class="discount_pct_f"><%= tariff.try(:discount_pct_f) %></td>
+                    <td class="discount_pct_b"><%= tariff.try(:discount_pct_b) %></td>
+                    <td class="discount_pct_v"><%= tariff.try(:discount_pct_v) %></td>
+                    <td class="discount_pct_p"><%= tariff.try(:discount_pct_p) %></td>
+                    <td class="tax_type_f" data-tax-id="<%= tariff.try(:tax_type_f).try(:id) %>"><%= tariff.try(:tax_type_f).try(:tax) %></td>
+                    <td class="tax_type_b" data-tax-id="<%= tariff.try(:tax_type_b).try(:id) %>"><%= tariff.try(:tax_type_b).try(:tax) %></td>
+                    <td class="tax_type_v" data-tax-id="<%= tariff.try(:tax_type_v).try(:id) %>"><%= tariff.try(:tax_type_v).try(:tax) %></td>
+                    <td class="tax_type_p" data-tax-id="<%= tariff.try(:tax_type_p).try(:id) %>"><%= tariff.try(:tax_type_p).try(:tax) %></td>
+                  </tr>
+                <% end %>
+              <% end %>
+
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<% end %>
+</div></div></div>
 
 
-<%= link_to 'Edit', edit_tariff_scheme_path(@tariff_scheme) %> |
-<%= link_to 'Back', tariff_schemes_path %>
+<!-- Modal -->
+<div id="edit-tariff-modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <%= simple_form_for :tariff , url: "/es/ag2_gest/es/tariffs/", method: :put do |p| %>
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h3 id="myModalLabel">Editar tarifa</h3>
+  </div>
+  <div class="modal-body">
+    <div class="row-fluid">
+      <div class="span6">
+        <h4 class="text-center"><%= t('activerecord.attributes.tariff_scheme.blocks') %></h4>
+        <div class="row-fluid">
+          <div class="span5 offset2"><h5><%= t('activerecord.attributes.tariff_scheme.limit') %></h5></div>
+          <div class="span5"><h5><%= t('activerecord.attributes.tariff_scheme.price') %></h5></div>
+        </div>
+        <div class="row-fluid">
+          <div class="span2"><h5><%= t('activerecord.attributes.tariff_scheme.block1') %></h5></div>
+          <div class="span5"><%= p.input :block1_limit, label: false, required: false %></div>
+          <div class="span5"><%= p.input :block1_fee, label: false %></div>
+        </div>
+        <div class="row-fluid">
+          <div class="span2"><h5><%= t('activerecord.attributes.tariff_scheme.block2') %></h5></div>
+          <div class="span5"><%= p.input :block2_limit, label: false, required: false %></div>
+          <div class="span5"><%= p.input :block2_fee, label: false %></div>
+        </div>
+        <div class="row-fluid">
+          <div class="span2"><h5><%= t('activerecord.attributes.tariff_scheme.block3') %></h5></div>
+          <div class="span5"><%= p.input :block3_limit, label: false, required: false %></div>
+          <div class="span5"><%= p.input :block3_fee, label: false %></div>
+        </div>
+        <div class="row-fluid">
+          <div class="span2"><h5><%= t('activerecord.attributes.tariff_scheme.block4') %></h5></div>
+          <div class="span5"><%= p.input :block4_limit, label: false, required: false %></div>
+          <div class="span5"><%= p.input :block4_fee, label: false %></div>
+        </div>
+        <div class="row-fluid">
+          <div class="span2"><h5><%= t('activerecord.attributes.tariff_scheme.block5') %></h5></div>
+          <div class="span5"><%= p.input :block5_limit, label: false, required: false %></div>
+          <div class="span5"><%= p.input :block5_fee, label: false %></div>
+        </div>
+        <div class="row-fluid">
+          <div class="span2"><h5><%= t('activerecord.attributes.tariff_scheme.block6') %></h5></div>
+          <div class="span5"><%= p.input :block6_limit, label: false, required: false %></div>
+          <div class="span5"><%= p.input :block6_fee, label: false %></div>
+        </div>
+        <div class="row-fluid">
+          <div class="span2"><h5><%= t('activerecord.attributes.tariff_scheme.block7') %></h5></div>
+          <div class="span5"><%= p.input :block7_limit, label: false, required: false %></div>
+          <div class="span5"><%= p.input :block7_fee, label: false %></div>
+        </div>
+        <div class="row-fluid">
+          <div class="span2"><h5><%= t('activerecord.attributes.tariff_scheme.block8') %></h5></div>
+          <div class="span5"><%= p.input :block8_limit, label: false, required: false %></div>
+          <div class="span5"><%= p.input :block8_fee, label: false %></div>
+        </div>
+      </div>
+
+      <div class="span3">
+        <%= p.input :billing_frequency_id, collection: BillingFrequency.order('name').collect{|b| [b.name,b.id]}, include_blank: false, label_html: { class: 'form-label' }, label: t('activerecord.attributes.tariff_scheme.billing_frequency_id') %>
+        <%= p.input :fixed_fee, label_html: { class: 'form-label' }, label: t('activerecord.attributes.tariff_scheme.fixed_fee') %>
+        <%= p.input :variable_fee, label_html: { class: 'form-label' }, label: t('activerecord.attributes.tariff_scheme.variable_fee') %>
+        <%= p.input :percentage_fee, label_html: { class: 'form-label' }, label: t('activerecord.attributes.tariff_scheme.percentage_fee') %>
+        <%= p.input :percentage_applicable_formula, required: false, label_html: { class: 'form-label' }, label: t('activerecord.attributes.tariff_scheme.percentage_applicable_formula') %>
+      </div>
+
+      <div class="span3">
+        <h4><%= t('activerecord.attributes.tariff_scheme.discounts') %></h4>
+        <div class="row-fluid">
+          <div class="span2"><h5><%= t('activerecord.attributes.tariff_scheme.f') %></h5></div>
+          <div class="span10"><%= p.input_field :discount_pct_f, label: false %></div>
+        </div>
+        <div class="row-fluid">
+          <div class="span2"><h5><%= t('activerecord.attributes.tariff_scheme.b') %></h5></div>
+          <div class="span10"><%= p.input :discount_pct_b, label: false %></div>
+        </div>
+        <div class="row-fluid">
+          <div class="span2"><h5><%= t('activerecord.attributes.tariff_scheme.v') %></h5></div>
+          <div class="span10"><%= p.input :discount_pct_v, label: false %></div>
+        </div>
+        <div class="row-fluid">
+          <div class="span2"><h5><%= t('activerecord.attributes.tariff_scheme.p') %></h5></div>
+          <div class="span10"><%= p.input :discount_pct_p, label: false %></div>
+        </div>
+
+        <h4><%= t('activerecord.attributes.tariff_scheme.taxes') %></h4>
+        <div class="row-fluid">
+          <div class="span2"><h5><%= t('activerecord.attributes.tariff_scheme.f') %></h5></div>
+          <div class="span10"><%= p.input :tax_type_f_id, collection: TaxType.all.collect{|t| [t.tax,t.id]}, label: false, required: false %></div>
+        </div>
+        <div class="row-fluid">
+          <div class="span2"><h5><%= t('activerecord.attributes.tariff_scheme.b') %></h5></div>
+          <div class="span10"><%= p.input :tax_type_b_id, collection: TaxType.all.collect{|t| [t.tax,t.id]}, label: false, required: false %></div>
+        </div>
+        <div class="row-fluid">
+          <div class="span2"><h5><%= t('activerecord.attributes.tariff_scheme.v') %></h5></div>
+          <div class="span10"><%= p.input :tax_type_v_id, collection: TaxType.all.collect{|t| [t.tax,t.id]}, label: false, required: false %></div>
+        </div>
+        <div class="row-fluid">
+          <div class="span2"><h5><%= t('activerecord.attributes.tariff_scheme.p') %></h5></div>
+          <div class="span10"><%= p.input :tax_type_p_id, collection: TaxType.all.collect{|t| [t.tax,t.id]}, label: false, required: false %></div>
+        </div>
+      </div>
+      <div class="hidden-fields">
+        <%#= p.input :tariff_scheme, :as => :hidden, :input_html => { :value => p.object.tariff_scheme_id } %>
+        <%#= p.input :tariff_type_id, :as => :hidden, :input_html => { :value => p.object.tariff_type_id } %>
+        <%#= p.input :caliber_id, :as => :hidden, :input_html => { :value => p.object.caliber_id } if  p.object.caliber_id %>
+        <%#= p.input :billable_item_id, :as => :hidden, :input_html => { :value => p.object.billable_item_id } %>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+    <button class="btn btn-primary">Save changes</button>
+  </div>
+  <% end %>
+</div>
+
+<script>
+$('.btn-edit-tariff').on('click', function () {
+  row = $(this).parents('tr');
+
+  $('#edit-tariff-modal').find('form').attr('action', "/es/ag2_gest/es/tariffs/"+ $(this).data("tariff"));
+
+  $("#tariff_fixed_fee").val(row.find('.fixed_fee').text());
+  $("#tariff_block1_limit").val(row.find('.block1_limit').text());
+  $("#tariff_block1_fee").val(row.find('.block1_fee').text());
+  $("#tariff_block2_limit").val(row.find('.block2_limit').text());
+  $("#tariff_block2_fee").val(row.find('.block2_fee').text());
+  $("#tariff_block3_limit").val(row.find('.block3_limit').text());
+  $("#tariff_block3_fee").val(row.find('.block3_fee').text());
+  $("#tariff_block4_limit").val(row.find('.block4_limit').text());
+  $("#tariff_block4_fee").val(row.find('.block4_fee').text());
+  $("#tariff_block5_limit").val(row.find('.block5_limit').text());
+  $("#tariff_block5_fee").val(row.find('.block5_fee').text());
+  $("#tariff_block6_limit").val(row.find('.block6_limit').text());
+  $("#tariff_block6_fee").val(row.find('.block6_fee').text());
+  $("#tariff_block7_limit").val(row.find('.block7_limit').text());
+  $("#tariff_block7_fee").val(row.find('.block7_fee').text());
+  $("#tariff_block8_limit").val(row.find('.block8_limit').text());
+  $("#tariff_block8_fee").val(row.find('.block8_fee').text());
+  $("#tariff_variable_fee").val(row.find('.variable_fee').text());
+  $("#tariff_percentage_fee").val(row.find('.percentage_fee').text());
+  $("#tariff_percentage_applicable_formula").val(row.find('.percentage_applicable_formula').text());
+  $("#tariff_discount_pct_f").val(row.find('.discount_pct_f').text());
+  $("#tariff_discount_pct_b").val(row.find('.discount_pct_b').text());
+  $("#tariff_discount_pct_v").val(row.find('.discount_pct_v').text());
+  $("#tariff_discount_pct_p").val(row.find('.discount_pct_p').text());
+  $("#tariff_billing_frequency_id").val(row.find('.billing_frequency').data("id"));
+  $("#tariff_tax_type_f_id").val(row.find('.tax_type_f').data("tax-id"));
+  $("#tariff_tax_type_b_id").val(row.find('.tax_type_b').data("tax-id"));
+  $("#tariff_tax_type_v_id").val(row.find('.tax_type_v').data("tax-id"));
+  $("#tariff_tax_type_p_id").val(row.find('.tax_type_p').data("tax-id"));
+
+  $('#edit-tariff-modal').modal('show');
+})
+
+</script>

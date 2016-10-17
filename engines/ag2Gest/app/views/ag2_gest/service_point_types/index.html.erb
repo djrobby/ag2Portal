@@ -1,21 +1,9 @@
-<h1>Listing service_point_types</h1>
+<%= render '/layouts/ag2_gest/servicepointtypebreadcrumb' %>
 
-<table>
-  <tr>
-    <th></th>
-    <th></th>
-    <th></th>
-  </tr>
+<%#= render :partial => '/layouts/searchhead_remote', :locals => { :title => t(".title"), :path => calibers_path } %>
 
-<% @service_point_types.each do |service_point_type| %>
-  <tr>
-    <td><%= link_to 'Show', service_point_type %></td>
-    <td><%= link_to 'Edit', edit_service_point_type_path(service_point_type) %></td>
-    <td><%= link_to 'Destroy', service_point_type, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-  </tr>
-<% end %>
-</table>
+<h3><%= t(".title") %></h3>
 
-<br />
-
-<%= link_to 'New Service point type', new_service_point_type_path %>
+<div class="span8" id="div_table">
+  <%= render 'service_point_types' %>
+</div>

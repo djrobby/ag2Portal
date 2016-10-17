@@ -1,5 +1,7 @@
-<h1>New invoice_type</h1>
+<%= render '/layouts/ag2_gest/invoicetypesbreadcrumb' %>
+
+<h3><%=t '.title' %></h3>
 
 <%= render 'form' %>
 
-<%= link_to 'Back', invoice_types_path %>
+<%= link_to I18n.t('ag2_gest.invoice_types.back_to_main_page'), invoice_types_path %>

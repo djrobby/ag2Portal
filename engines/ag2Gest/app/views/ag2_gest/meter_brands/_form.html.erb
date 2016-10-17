@@ -1,17 +1,18 @@
-<%= form_for(@meter_brand) do |f| %>
-  <% if @meter_brand.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@meter_brand.errors.count, "error") %> prohibited this meter_brand from being saved:</h2>
+<%= simple_form_for @meter_brand, :html => {:class => 'form-vertical well' } do |f| %>
+  <%= f.error_notification %>
+  <%= display_base_errors resource %>
 
-      <ul>
-      <% @meter_brand.errors.full_messages.each do |msg| %>
-        <li><%= msg %></li>
-      <% end %>
-      </ul>
+  <div class="row-fluid">
+    <div class="span4">
+      <%= f.input :brand, :required => true, :autofocus => true, :input_html => { :class => 'x-large-text-field'}, :label_html => { :class => 'form-label' } %>
     </div>
-  <% end %>
-
-  <div class="actions">
-    <%= f.submit %>
+    <div class="span4">
+      <%= f.association :manufacturer, collection: Manufacturer.order(:name), :required => true, :input_html => { :class => 'sel2 x-large-text-field' }, label_method: lambda { |st| st.name }, value_method: :id, :label_html => { :class => 'form-label' } %>
+    </div>
+    <div class="span4">
+      <%= f.input :letter_id, :input_html => { :class => 'x-large-text-field'}, :label_html => { :class => 'form-label' } %>
+    </div>
   </div>
+
+  <%= f.button :submit, :class => 'btn-primary' %>
 <% end %>

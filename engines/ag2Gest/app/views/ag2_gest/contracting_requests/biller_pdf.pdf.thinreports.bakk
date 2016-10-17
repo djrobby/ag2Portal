@@ -1,0 +1,162 @@
+report.set_layout tlf: 'reports/bill', layout_options: { default: true }
+
+report.start_new_page
+
+report.page.values printed_at: Time.now
+
+report.events.on :page_create do |e|
+	# Set page-number
+	e.page.item(:page_no).value(e.page.no)
+
+	#Hide items
+	#if e.page.no > 1
+	#	e.page.item(:invoice_name).hide
+		#e.report.page.list(:list).style(:visible, 'none')
+	#end
+
+end
+
+#--------------------------DATOS REALES------------------------------------------#
+#LIST OF INVOICES
+@bill.invoices.each do |invoice| #Facturas Ayuntamiento de Getafe
+
+
+	show = invoice.invoice_items.count
+
+	invoice.invoice_items.each_with_index do |item, index| # Tasa Basuras - Tasa de Sumnistro - Tasa de Recogida
+		report.page.list(:default).add_row do |row|
+
+
+			row.item(:prue).value(I18n.t("activerecord.report.biller.loc_invoice")).styles(bold:true)
+
+
+			#Title Invoice
+#			row.item(:loc_invoice).value(I18n.t("activerecord.report.biller.loc_invoice")).styles(bold:true)
+#			row.item(:invoice_number).value(invoice.try(:invoice_no)).styles(bold:true)
+#			row.item(:company).value(invoice.try(:company).try(:name)).styles(bold:true)
+#			row.item(:fiscal).value(I18n.t("activerecord.report.biller.loc_fiscal")).styles(bold:true)
+#			row.item(:fiscal_id).value(invoice.try(:company).try(:fiscal_id)).styles(bold:true)
+#
+#			#Name Attributtes
+#			row.item(:loc_code).value(I18n.t("activerecord.report.biller.loc_code")).style(:color, "#6E6E6E")
+#			row.item(:loc_description).value(I18n.t("activerecord.report.biller.loc_description")).style(:color, "#6E6E6E")
+#			row.item(:loc_quantity).value(I18n.t("activerecord.report.biller.loc_quantity")).style(:color, "#6E6E6E")
+#			row.item(:loc_unit_price).value(I18n.t("activerecord.report.biller.loc_unit_price")).style(:color, "#6E6E6E")
+#			row.item(:loc_amount).value(I18n.t("activerecord.report.biller.loc_amount")).style(:color, "#6E6E6E")
+#			row.item(:loc_tax_type).value(I18n.t("activerecord.report.biller.loc_tax_type")).style(:color, "#6E6E6E")
+#			row.item(:loc_tax).value(I18n.t("activerecord.report.biller.loc_tax")).style(:color, "#6E6E6E")
+#			row.item(:loc_discount).value(I18n.t("activerecord.report.biller.loc_discount")).style(:color, "#6E6E6E")
+#			#row.item(:loc_discount_pct).value(I18n.t("activerecord.report.biller.loc_discount")).style(:color, "#6E6E6E") --> Discount_pct
+#			row.item(:loc_total).value(I18n.t("activerecord.report.biller.loc_total")).style(:color, "#6E6E6E")
+
+			#Attributtes
+			#row.item(:code).value(item.try(:code))
+			row.item(:code).value(index)
+			row.item(:description).value(item.try(:description))
+			row.item(:quantity).value(item.try(:quantity))
+			row.item(:unit_price).value(item.try(:price))
+			row.item(:amount).value(item.try(:amount))
+			row.item(:tax_type).value(item.try(:tax_type).try(:description))
+			row.item(:tax).value(item.try(:tax_type).try(:tax))
+			row.item(:discount).value(item.try(:discount))
+			#row.item(:discount_pct).value(item.try(:discount_pct)) --> Discount_pct
+			
+
+
+			if index+1 == show
+				row.item(:total).value("Total")
+			end
+
+
+		end #End row
+	end #End item
+end #End invoice
+
+
+
+
+
+
+
+
+
+
+
+
+-----------------
+
+
+report.layout.config.list(:advanced_list) do
+  # Define the variables used in list.
+  use_stores :row_count       => 0,
+             :total_row_count => 0
+  
+  # Dispatched at list-page-footer insertion.
+  events.on :page_footer_insert do |e|
+    e.section.item(:page_footer).value("Page row count: #{e.store.row_count}")
+    
+    e.store.total_row_count += e.store.row_count
+    e.store.row_count = 0;
+  end
+  
+  # Dispatched at list-footer insertion.
+  events.on :footer_insert do |e|
+    e.section.item(:footer).value("Row count: #{e.store.total_row_count}")
+  end
+end
+
+
+
+#
+
+#30.times do |t|
+#  # Internaly #start_new_page() method is called,
+#  # the page break automatically.
+#  report.page.list(:advanced_list) do |list|
+#    #list.add_row :detail => "Detail##{t}"
+#    list.store.row_count += 1
+#  end
+#end
+
+@bill.invoices.each do |invoice| 
+	# //Make a list
+	
+	invoice.invoice_items.each_with_index do |item, index| 
+		show = invoice.invoice_items.count #Total InvoiceItems de cada Invoice
+		report.page.list(:advanced_list).add_row do |row|
+
+			row.item(:code).value(index)
+		end
+
+	end
+
+		
+			
+#			report.list(:advanced_list).add_row do |row|
+#				invoice.invoice_items.each_with_index do |item, index|
+#		    	list.add_row :code => index
+#		    	list.add_row :description => "des"
+#		  	end
+#		    #row.item(:code).value(index)
+#		  end
+
+			#list.add_row :code => index
+
+
+#			report.page.list(:advanced_list).add_row do |row|
+#
+				#
+#				row.item(:code).value(index)
+#				row.item(:description).value(item.try(:description))
+#				row.item(:quantity).value(item.try(:quantity))
+#				row.item(:unit_price).value(item.try(:price))
+#				row.item(:amount).value(item.try(:amount))
+#				row.item(:tax_type).value(item.try(:tax_type).try(:description))
+#				row.item(:tax).value(item.try(:tax_type).try(:tax))
+#				row.item(:discount).value(item.try(:discount))
+#
+#			end
+		
+	
+
+end

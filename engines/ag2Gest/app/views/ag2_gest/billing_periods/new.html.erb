@@ -1,5 +1,7 @@
-<h1>New billing_period</h1>
+<%= render '/layouts/ag2_gest/billingperiodsbreadcrumb' %>
+
+<h3><%=t '.title' %></h3>
 
 <%= render 'form' %>
 
-<%= link_to 'Back', billing_periods_path %>
+<%= link_to I18n.t('ag2_gest.billing_periods.back_to_main_page'), billing_periods_path %>

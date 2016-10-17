@@ -1,5 +1,478 @@
-<p id="notice"><%= notice %></p>
+<style>
+  a.pull-right {
+    margin-bottom: 20px;
+  }
+  .soft-padding{
+    padding-top: 8px;
+    padding-bottom: 8px;
+  }
+
+  button:hover + title {
+    display: block!important;
+  }
+
+  .newInvoiceModal {
+    width:600px;
+    height:300px;
+  }
+  .newInvoiceModal .modal-header {
+    background-color:#ccc;
+  }
+  .newInvoiceModal .modal-header button {
+    font-size:30px;
+  }
+  .newInvoiceModal .modal-body {
+    overflow-y: hidden;
+    height: 100%;
+    max-height:190px;
+  }
+    .modal-invoice { width: 80%; margin-left: -40%;/*height: 96%;margin-top: -5%;*/}
+    /*.modal-invoice .modal-body{ max-height: 575px;}*/
+    .mid-text-field {width: 53%;}
+    .large-text-field {width: 90%;}
+    .table-center td, .table-center th {text-align: center;}
+    .zeroPadding {
+      padding: 0 !important;
+    }
+    .icon-chevron-right, .icon-chevron-down{
+      cursor: pointer;
+    }
+
+  .accordion-inner {
+    background-color: #F7F7F7;
+  }
+  #bill-supply-modal {
+    width: 1020px !important;
+    left: 32% !important;
+  }
+</style>
+
+<%= render '/layouts/ag2_gest/subscribersbreadcrumb' %>
+
+<%= link_to t('activerecord.attributes.subscriber.print'), subscriber_pdf_subscriber_path(:format => :pdf), class: "btn btn-warning btn-mini pull-right", target: "_blank" %>
+<table class="table">
+  <tbody>
+    <tr>
+      <td><b><%= t('activerecord.attributes.subscriber.name') %>:</b></td>
+      <td><%= @subscriber.try(:full_name) %></td>
+      <td><b><%= t('activerecord.attributes.subscriber.subscriber_code') %>:</b></td>
+      <td><%= @subscriber.try(:subscriber_code) %></td>
+      <td><b><%= t('activerecord.attributes.subscriber.client_id') %>:</b></td>
+      <td><%= link_to @subscriber.try(:client).try(:client_code), ag2_gest.client_path(@subscriber.client_id) %></td>
+    </tr>
+    <tr>
+      <td><b><%= t('activerecord.attributes.subscriber.fiscal') %>:</b></td>
+      <td><%= @subscriber.try(:fiscal_id) %></td>
+      <td><b><%= t('activerecord.attributes.subscriber.starting_at') %>:</b></td>
+      <td colspan="3"><%= I18n.localize(@subscriber.try(:starting_at)) unless @subscriber.try(:starting_at).blank? %></td>
+    </tr>
+  </tbody>
+</table>
+
+<h4><%= t('activerecord.attributes.subscriber.address_data') %></h4>
+<table class="table">
+  <tbody>
+    <tr>
+      <td><b><%= t('activerecord.attributes.subscriber.direction') %>:</b></td>
+      <td colspan="3"><%= @subscriber.address_1 %></td>
+      <td><b><%= t('activerecord.attributes.subscriber.zipcode_id') %>:</b></td>
+      <td><%= link_to @subscriber.try(:zipcode).try(:zipcode), ag2_admin.zipcode_path(@subscriber.zipcode_id) %></td>
+    </tr>
+    <tr>
+      <td><b><%= t('activerecord.attributes.subscriber.office_id') %>:</b></td>
+      <td><%= link_to @subscriber.try(:office).try(:name), ag2_admin.office_path(@subscriber.office_id) %></td>
+      <td><b><%= t('activerecord.attributes.subscriber.town_id') %>:</b></td>
+      <td><%= @subscriber.try(:center).try(:town).try(:name) %></td>
+      <td><b><%= t('activerecord.attributes.subscriber.province_id') %></b></td>
+      <td><%= @subscriber.try(:center).try(:town).try(:province).try(:name) %></td>
+    </tr>
+    <tr>
+      <td><b><%= t('activerecord.attributes.subscriber.region_id') %>:</b></td>
+      <td><%= @subscriber.try(:center).try(:town).try(:province).try(:region).try(:name) %></td>
+      <td><b><%= t('activerecord.attributes.subscriber.country_id') %>:</b></td>
+      <td><%= @subscriber.try(:center).try(:town).try(:province).try(:region).try(:country).try(:name) %></td>
+      <td><b><%= t('activerecord.attributes.subscriber.center_id') %>:</b></td>
+      <td><%= link_to @subscriber.try(:center).try(:name), ag2_gest.center_path(@subscriber.center_id) %></td>
+    </tr>
+  </tbody>
+</table>
+
+<ul class="nav nav-tabs" id="myTab">
+  <li class="active"><a href="#details" data-toggle="tab"><%= t('activerecord.attributes.subscriber.detail') %></a></li>
+  <li><a href="#readings" data-toggle="tab"><%= t('activerecord.attributes.subscriber.readings') %></a></li>
+  <li><a href="#bills" data-toggle="tab"><%= t('activerecord.attributes.subscriber.invoices') %></a></li>
+  <li><a href="#direction" data-toggle="tab"><%= t('activerecord.attributes.subscriber.data_supply') %></a></li>
+  <li><a href="#debits" data-toggle="tab"><%= t('activerecord.attributes.subscriber.debits') %></a></li>
+  <li><a href="#notes" data-toggle="tab"><%= t('activerecord.attributes.subscriber.notes') %></a></li>
+</ul>
+
+<div class="tab-content" id="myTabContent">
+
+  <!-- DETAILS -->
+  <div class="tab-pane fade active in" id="details">
+    <table class="table">
+      <tbody>
+        <tr>
+          <td><b><%= t('activerecord.attributes.subscriber.contract') %>:</b></td>
+          <td><%= @subscriber.try(:contract) %></td>
+          <td><b><%= t('activerecord.attributes.subscriber.active') %>:</b></td>
+          <% if @subscriber.try(:active) %>
+            <td><i class="icon-thumbs-up"></i></td>
+          <% else %>
+            <td><i class="icon-thumbs-down"></i></td>
+          <% end %>
+          <td><b><%= t('activerecord.attributes.subscriber.tariff_type_id') %>:</b></td>
+          <td><%= link_to @subscriber.try(:tariff_scheme).try(:tariff_type).try(:name), ag2_gest.tariff_type_path(@subscriber.tariff_scheme.tariff_type_id) %></td>
+        <!--   <td><b><%#= t('activerecord.attributes.subscriber.tariff') %>:</b></td>
+          <td><%#= (link_to @subscriber.try(:tariff_scheme).try(:name), ag2_gest.tariff_scheme_path(@subscriber.tariff_scheme)) if @subscriber.tariff_scheme %></td>
+         --></tr>
+        <tr>
+          <td><b><%= t('activerecord.attributes.subscriber.meter_id') %>:</b></td>
+          <td id="info_meter"><%= link_to @subscriber.try(:meter).try(:meter_code), ag2_gest.meter_path(@subscriber.meter_id) unless @subscriber.try(:meter).blank? %></td>
+          <td><b><%= t('activerecord.attributes.subscriber.model') %>:</b></td>
+          <td id="info_brand"><%= @susbcriber.try(:meter).try(:meter_model).try(:full_name) unless @subscriber.try(:meter).blank? %></td>
+          <td><b><%= t('activerecord.attributes.subscriber.caliber') %>:</b></td>
+          <td id="info_caliber"><%= link_to @subscriber.try(:meter).try(:caliber).try(:caliber), ag2_gest.caliber_path(@subscriber.meter.caliber_id) if @subscriber.try(:meter) %></td>
+        </tr>
+        <tr>
+          <td><b><%= t('activerecord.attributes.subscriber.billing_frequency_id') %>:</b></td>
+          <td colspan="6"><%= link_to @subscriber.try(:billing_frequency).try(:name), billing_frequency_path(@subscriber.billing_frequency_id) if @subscriber.billing_frequency %></td>
+        </tr>
+        <tr>
+          <td><b><%= t('activerecord.attributes.subscriber.comments') %>:</b></td>
+          <td colspan="6"><%= @subscriber.try(:remarks) %></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- READINGS -->
+  <div class="tab-pane fade active" id="readings">
+    <div class="row-fluid">
+      <div class="span4">
+
+        <% unless @subscriber.meter.blank? %>
+          <a href="#newReadingModal" id="link_reading" role="button" class="btn btn-mini btn-primary" data-toggle="modal"><%= t('activerecord.attributes.subscriber.reading_new') %></a>
+          <a href="#quitMeter" id="quit_meter" role="button" class="btn btn-mini btn-primary" data-toggle="modal"><%= t('activerecord.attributes.subscriber.remove_meter') %></a>
+          <a href="#changeMeter" id="change_meter" role="button" class="btn btn-mini btn-primary" data-toggle="modal"><%= t('activerecord.attributes.subscriber.change_meter') %></a>
+        <% else %>
+          <a href="#addMeter" id="add_meter" role="button" class="btn btn-mini btn-primary" data-toggle="modal"><%= t('activerecord.attributes.subscriber.data_add_meter') %></a>
+        <% end %>
+      </div>
+
+      <div class="span3">
+        <%= label_tag "Periodo de facturación", nil, :class => 'form-label' %>
+        <%= select_tag "billing_period", options_from_collection_for_select(@billing_periods, "id", "period"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
+      </div>
+      <div class="span3">
+        <%= label_tag t('activerecord.attributes.subscriber.reading_type'), nil, :class => 'form-label' %>
+        <%= select_tag "reading_type", options_from_collection_for_select(@reading_types, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
+      </div>
+    </div>
+    <br>
+
+    <table class="table table-center table-condensed table-striped shrinked stu reading_table">
+      <thead>
+        <tr>
+          <th><%= t('activerecord.attributes.subscriber.id') %></th>
+          <th><%= t('activerecord.attributes.subscriber.period') %></th>
+          <th><%= t('activerecord.attributes.subscriber.type') %></th>
+          <th><%= t('activerecord.attributes.subscriber.date') %></th>
+          <th><%= t('activerecord.attributes.subscriber.reading') %></th>
+          <th><%= t('activerecord.attributes.subscriber.incidences') %></th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @subscriber_readings.order('reading_date DESC').each do |reading| %>
+          <tr>
+            <td><%= reading.try(:id) %></td>
+            <td><%= reading.try(:billing_period).try(:period) %></td>
+            <td><%= link_to reading.try(:reading_type).try(:name), ag2_gest.reading_type_path(reading.try(:reading_type_id)) %></td>
+            <td><%= reading.try(:reading_date).strftime("%d/%m/%Y") unless reading.try(:reading_date).blank? %></td>
+            <td><%= reading.try(:reading_index) %></td>
+            <td>
+              <%if reading.try(:reading_incidence_types).blank? %>
+                -
+              <% else %>
+                <i title="<%= reading.reading_incidence_types.pluck(:name).join(", ") %>" class="icon-ok"></i>
+              <% end %>
+            </td>
+            <td class="a_inline">
+              <%= link_to edit_reading_path(reading), class: "btn btn-mini" do %>
+                <i class="icon-edit"></i>
+              <% end %>
+
+              <%= link_to reading, class: "btn btn-mini", method: :delete, data: { confirm: 'Are you sure?' } do %>
+                <i class="icon-trash"></i>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+    <%= render :partial => '/layouts/pagination', :locals => { :ivar => @subscriber_readings } %>
+  </div>
+
+  <!-- INVOICES / Link to CHARGEINVOICE-->
+  <div class="tab-pane fade active" id="bills">
+    <div class="row">
+      <div class="span12">
+        <button id="collapse-init" class="btn btn-primary" style="display:block; float:right; margin-bottom: 20px;"><%= t('activerecord.attributes.subscriber.show_all') %></button>
+        <a href="#new-bill" role="button" class="btn btn-primary" data-toggle="modal">Nueva factura</a>
+      </div>
+    </div>
+    <div class="row">
+      <div class="span1"></div> <!-- Space for icon-plus -->
+      <div class="span3">
+        <b><%= t('activerecord.attributes.subscriber.receipt') %></b>
+      </div>
+      <div class="span2">
+        <b><%= t('activerecord.attributes.subscriber.date_starting') %></b>
+      </div>
+      <div class="span2">
+        <b><%= t('activerecord.attributes.subscriber.type') %></b>
+      </div>
+      <div class="span2">
+        <b><%= t('activerecord.attributes.subscriber.total') %></b>
+      </div>
+      <div class="span1">
+      </div>
+    </div>
+    <% @subscriber_bills.each do |bill| %>
+
+      <!-- Make two Render (Example Controller) -->
+      <% if !bill.water_supply_contract.nil? %>
+        <!-- RENDER1 RECIBO DE CONTRATACIÓN-->
+        <%= render 'bill_contracting_request', :bill => bill %>
+
+      <% else %>
+        <!-- RENDER2 FACTURA DE SUMINISTRO-->
+        <%= render 'bill_reading', :bill => bill %>
+      <% end %>
+
+    <% end %>
+    <%= render :partial => '/layouts/pagination', :locals => { :ivar => @subscriber_bills } %>
+  </div>
+
+  <!-- CLIENT -->
+  <div class="tab-pane fade active" id="direction">
+    <table class="table">
+      <tbody>
+        <tr>
+          <td><b><%= t('activerecord.attributes.subscriber.name') %></b></td>
+          <td><%= @subscriber.try(:client).try(:full_name) %></td>
+          <td><b><%= t('activerecord.attributes.subscriber.direction') %></b></td>
+          <td><%= @subscriber.try(:client).try(:street_name) %></td>
+          <td><b><%= t('activerecord.attributes.subscriber.number') %></b></td>
+          <td><%= @subscriber.try(:client).try(:street_number) %></td>
+          <td><b><%= t('activerecord.attributes.subscriber.block') %></b></td>
+          <td><%= @subscriber.try(:client).try(:building) %></td>
+          <td><b><%= t('activerecord.attributes.subscriber.floor') %></b></td>
+          <td><%= @subscriber.try(:client).try(:floor) %></td>
+          <td><b><%= t('activerecord.attributes.subscriber.door') %></b></td>
+          <td><%= @subscriber.try(:client).try(:floor_office) %></td>
+        </tr>
+        <tr>
+          <td><b><%= t('activerecord.attributes.subscriber.town_id') %></b></td>
+          <td><%= @subscriber.try(:client).try(:town).try(:name) %></td>
+          <td><b><%= t('activerecord.attributes.subscriber.zipcode_id') %></b></td>
+          <td><%= @subscriber.try(:client).try(:zipcode).try(:zipcode) %></td>
+          <td><b><%= t('activerecord.attributes.subscriber.province_id') %></b></td>
+          <td><%= @subscriber.try(:client).try(:province).try(:name) %></td>
+          <td><b><%= t('activerecord.attributes.subscriber.region_id') %></b></td>
+          <td><%= @subscriber.try(:client).try(:region).try(:name) %></td>
+          <td><b><%= t('activerecord.attributes.subscriber.country_id') %></b></td>
+          <td><%= @subscriber.try(:client).try(:country).try(:name) %></td>
+        </tr>
+        <tr>
+          <td><b><%= t('activerecord.attributes.subscriber.phone') %></b></td>
+          <td><%= @subscriber.try(:client).try(:phone) %></td>
+          <td><b><%= t('activerecord.attributes.subscriber.cellular') %></b></td>
+          <td><%= @subscriber.try(:client).try(:cellular) %></td>
+          <td><b><%= t('activerecord.attributes.subscriber.fax') %></b></td>
+          <td><%= @subscriber.try(:client).try(:fax) %></td>
+          <td><b><%= t('activerecord.attributes.subscriber.email') %></b></td>
+          <td colspan="5"><%= @subscriber.try(:client).try(:email) %></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ClientBankAccount -->
+  <div class="tab-pane fade active" id="debits">
+    <div class="row-fluid">
+      <div class="span12">
+        <a href="#newAccountModal" class="btn btn-mini btn-primary" data-toggle="modal"><%= t('activerecord.attributes.subscriber.new_account') %></a>
+      </div>
+      <table class="table table-condensed table-striped shrinked stu">
+        <thead>
+          <tr>
+            <th><%= t('activerecord.attributes.subscriber.titular') %></th>
+            <th><%= t('activerecord.attributes.subscriber.titular_id') %></th>
+            <th><%= t('activerecord.attributes.subscriber.class') %></th>
+            <th><%= t('activerecord.attributes.subscriber.bank') %></th>
+            <th><%= t('activerecord.attributes.subscriber.sucursal') %></th>
+            <th><%= t('activerecord.attributes.subscriber.control') %></th>
+            <th><%= t('activerecord.attributes.subscriber.account_iban') %></th>
+            <th><%= t('activerecord.attributes.subscriber.ending_at') %></th>
+            <th><%= t('activerecord.attributes.subscriber.active') %></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @subscriber_accounts.each do |client_bank_account| %>
+            <tr>
+              <td><%= client_bank_account.name %></td>
+              <td><%= client_bank_account.try(:client).try(:fiscal_id) %></td>
+              <td><%= client_bank_account.try(:fiscal_id) %></td>
+              <td><%= client_bank_account.try(:bank_account_class) %></td>
+              <td><%= client_bank_account.try(:bank) %></td>
+              <td><%= client_bank_account.try(:bank_office) %></td>
+              <td><%= client_bank_account.try(:country_code) %></td>
+              <td><%= client_bank_account.try(:country_code) %></td>
+              <td><%#= I18n.localize(@client_bank_account.try(:ending_at)) %></td>
+              <td><!-- fecha de caducidad active de la tarjeta o boolean model¿??¿?¿ --></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+      <%= render :partial => '/layouts/pagination', :locals => { :ivar => @subscriber_accounts } %>
+    </div>
+  </div>
+
+  <!-- Notes(Está en blanco) -->
+  <div class="tab-pane fade active" id="notes">
+  </div>
+
+</div>
+
+<!-- MODALS -->
+<%= render '/ag2_gest/subscribers/modals/new_reading' %>
+<%= render '/ag2_gest/subscribers/modals/new_client_bank_account' %>
+<%= render '/ag2_gest/subscribers/modals/charge_invoice' %>
+<%= render '/ag2_gest/subscribers/modals/quit_meter' %>
+<%= render '/ag2_gest/subscribers/modals/add_meter' %>
+<%= render '/ag2_gest/subscribers/modals/change_meter' %>
+<%= render '/ag2_gest/contracting_requests/modals/new_bill' %>
+<!-- Modal -->
+<div id="new-bill" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h3 id="myModalLabel">Nueva factura</h3>
+  </div>
+  <div class="modal-body">
+    <%= simple_form_for :bills, url: simple_bill_subscriber_path(@subscriber), remote: true do |f| %>
+      <%= f.input :billing_period_id, label: 'Periodo', collection: @billing_periods, input_html: {class: "large-text-field"}, :label_html => { :class => 'form-label' } %>
+      <%= f.submit "Crear factura", class: "btn btn-primary" %>
+      <button class="btn" data-dismiss="modal" aria-hidden="true">Cancelar</button>
+    <% end %>
+  </div>
+
+</div>
+
+<!-- modal bill -->
+<div id="bill-supply-modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="modal_invoice" aria-hidden="true">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h3 id="myModalLabel"><%= "Factura de suministro" %></h3>
+  </div>
+  <div class="modal-body" style="overflow-x: hidden;">
+
+    <form id="bill-supply-form" accept-charset="UTF-8" action="" class="form-inline" data-remote="true" data-type="json" method="put" novalidate="novalidate">
+    </form>
+  </div>
+  <div class="modal-footer">
+    <a class="btn btn-primary" id="submit-bill">Actualizar Factura</a>
+    <a class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Cerrar</a>
+  </div>
+</div>
+
+<script type="text/javascript">
+  $.urlParam = function(name){
+    var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
+    if(results == null){
+      return null
+    }else{
+      return results[1] || 0;
+    }
+  }
+
+  $(document).ready(function () {
+
+    $(".icon-chevron-right").click(function(){
+      if ($(this).hasClass('icon-chevron-right')) {
+        $(this).removeClass("icon-chevron-right").addClass("icon-chevron-down");
+      }else{
+        $(this).removeClass("icon-chevron-down").addClass("icon-chevron-right");
+      }
+    });
+
+    $('#myTab a').click(function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      // $(this).tab('show');
+
+      $('#myTab li').removeClass('active');
+      $(this).parent().addClass('active');
+      $('.tab-pane.active').removeClass('active').removeClass('in');
+      $('#'+this.href.split('#')[1]).addClass('active').addClass('in');
+    });
 
 
-<%= link_to 'Edit', edit_subscriber_path(@subscriber) %> |
-<%= link_to 'Back', subscribers_path %>
+    $("#payment-method-select").on("change", function(){
+      if (this.value == "Caja") {
+        $("#cash-machine").removeClass("hide");
+      }
+      else {
+        $("#cash-machine").addClass("hide");
+      }
+    });
+
+    $('.popover-test').popover({
+      html : true,
+    }).popover('toggle');
+
+    var active = true;
+
+    /*Show or Hiden All Bills*/
+    $('#collapse-init').click(function () {
+
+      if (active) {
+        active = false;
+        $('.accordion-body').collapse('show');
+          $('.accordion-toggle').children().removeClass().addClass("icon-minus");
+          $(this).text('Ocultar todos');
+      } else {
+        active = true;
+        $('.accordion-body').collapse('hide');
+        $('.accordion-toggle').children().removeClass().addClass("icon-plus");
+        $(this).text('Ver todos');
+      }
+    });
+
+    $('.accor').click(function () {
+      /*Execute function before than bootstrap*/
+      /*var accordion = $(this).closest(".accordion-group");
+      accordion.children(".accordion-body").hasClass("in");
+
+      if (accordion.children(".accordion-body").hasClass("in")){
+        this.children[0].className = "icon-minus";
+      }else {
+        this.children[0].className = "icon-plus";
+      }*/
+
+      if (this.classList.contains("collapsed")){
+        this.children[0].className = "icon-minus";
+      }else {
+        this.children[0].className = "icon-plus";
+      }
+
+    });
+
+    if($.urlParam('bill') != null){
+
+    };
+
+  });
+
+</script>

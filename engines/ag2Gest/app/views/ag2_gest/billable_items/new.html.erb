@@ -1,5 +1,7 @@
-<h1>New billable_item</h1>
+<%= render '/layouts/ag2_gest/billableitemsbreadcrumb' %>
+
+<h3><%=t '.title' %></h3>
 
 <%= render 'form' %>
 
-<%= link_to 'Back', billable_items_path %>
+<%= link_to I18n.t('ag2_gest.billable_items.back_to_main_page'), billable_items_path %>

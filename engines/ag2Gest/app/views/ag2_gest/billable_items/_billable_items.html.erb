@@ -1,0 +1,46 @@
+<script>
+  $(document).ready(function() {
+    $("#div_table th a, #div_table #pages a").on("click", function() {
+      $.getScript(this.href);
+      return false;
+    });
+  });
+</script>
+
+<table class="table table-condensed table-striped">
+  <thead>
+    <tr>
+      <th><%= sortable "id", t('activerecord.attributes.billable_item.id') %></th>
+      <th><%= sortable "project_id", t('activerecord.attributes.billable_item.project_id') %></th>
+      <th><%= sortable "billable_concept_id", t('activerecord.attributes.billable_item.billable_concept_id') %></th>
+      <th><%= sortable "office_id", t('activerecord.attributes.billable_item.office_id') %></th>
+      <th><%= sortable "biller_id", t('activerecord.attributes.billable_item.biller_id') %></th>
+      <th><%= t('activerecord.attributes.billable_item.tariffs_by_caliber') %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @billable_items.each do |billable| %>
+      <tr>
+        <td><%= link_to billable.try(:id), billable_item_path(billable) %></td>
+        <td><%= billable.try(:project).try(:name) %></td>
+        <td><%= billable.try(:billable_concept).try(:name) %></td>
+        <td><%= billable.try(:office).try(:name) %></td>
+        <td><%= billable.try(:biller).try(:name) %></td>
+        <td><% if billable.try(:tariffs_by_caliber) %> <i class="icon-thumbs-up"></i> <% else %> <i class="icon-thumbs-down"></i> <% end %></td>
+        <td>
+          <%= link_to edit_billable_item_path(billable), class: "btn btn-mini" do%>
+            <i class="icon-edit"></i>
+          <% end %>
+
+          <%= link_to billable, class: "btn btn-mini", method: :delete, data: { confirm: 'Are you sure?' } do %>
+            <i class="icon-trash"></i>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @billable_items } %>
+<%= render :partial => '/layouts/crud/new', :locals => { :model => BillableItem, :path => new_billable_item_path, :txt => t("ag2_gest.billable_items.index.btn_new") } %>
+<%= link_to t("ag2_gest.billable_items.index.back_to_root"), ag2_gest.root_path %>

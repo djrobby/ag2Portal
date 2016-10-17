@@ -1,5 +1,7 @@
-<h1>New street_directory</h1>
+<%= render '/layouts/ag2_gest/sdirectorybreadcrumb' %>
+
+<h3><%=t '.title' %></h3>
 
 <%= render 'form' %>
 
-<%= link_to 'Back', street_directories_path %>
+<%= link_to I18n.t('ag2_gest.street_directories.back_to_main_page'), street_directories_path %>

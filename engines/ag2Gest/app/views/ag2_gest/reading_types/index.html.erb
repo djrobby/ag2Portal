@@ -1,21 +1,9 @@
-<h1>Listing reading_types</h1>
+<%= render '/layouts/ag2_gest/readingtypesbreadcrumb' %>
 
-<table>
-  <tr>
-    <th></th>
-    <th></th>
-    <th></th>
-  </tr>
+<%#= render :partial => '/layouts/searchhead_remote', :locals => { :title => t(".title"), :path => reading_types_path } %>
 
-<% @reading_types.each do |reading_type| %>
-  <tr>
-    <td><%= link_to 'Show', reading_type %></td>
-    <td><%= link_to 'Edit', edit_reading_type_path(reading_type) %></td>
-    <td><%= link_to 'Destroy', reading_type, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-  </tr>
-<% end %>
-</table>
+<h3><%= t(".title") %></h3>
 
-<br />
-
-<%= link_to 'New Reading type', new_reading_type_path %>
+<div class="span8" id="div_table">
+  <%= render 'reading_types' %>
+</div>

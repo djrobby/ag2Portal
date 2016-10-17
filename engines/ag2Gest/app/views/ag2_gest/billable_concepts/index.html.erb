@@ -1,21 +1,9 @@
-<h1>Listing billable_concepts</h1>
+<%= render '/layouts/ag2_gest/billableconceptsbreadcrumb' %>
 
-<table>
-  <tr>
-    <th></th>
-    <th></th>
-    <th></th>
-  </tr>
+<%#= render :partial => '/layouts/searchhead_remote', :locals => { :title => t(".title"), :path => billable_concepts_path } %>
 
-<% @billable_concepts.each do |billable_concept| %>
-  <tr>
-    <td><%= link_to 'Show', billable_concept %></td>
-    <td><%= link_to 'Edit', edit_billable_concept_path(billable_concept) %></td>
-    <td><%= link_to 'Destroy', billable_concept, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-  </tr>
-<% end %>
-</table>
+<h3><%= t(".title") %></h3>
 
-<br />
-
-<%= link_to 'New Billable concept', new_billable_concept_path %>
+<div class="span12" id="div_table">
+  <%= render 'billable_concepts' %>
+</div>

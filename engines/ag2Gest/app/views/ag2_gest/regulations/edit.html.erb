@@ -1,6 +1,8 @@
-<h1>Editing regulation</h1>
+<%= render '/layouts/ag2_gest/regulationbreadcrumb' %>
+
+<h3><%=t '.title' %></h3>
 
 <%= render 'form' %>
 
-<%= link_to 'Show', @regulation %> |
-<%= link_to 'Back', regulations_path %>
+<%= link_to t('.show'), @regulation %> |
+<%= link_to t('.back'), regulations_path %>

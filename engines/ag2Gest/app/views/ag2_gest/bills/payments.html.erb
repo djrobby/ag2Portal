@@ -1,0 +1,183 @@
+<script>
+$(document).ready(function () {
+  // Date picker
+  $('.date_picker').datepicker({
+    format : 'dd/mm/yyyy',
+    weekStart : 1
+  }).on('changeDate', function(e){
+    $('.date_picker').datepicker('hide');
+  });
+
+  $('#payments-tabs a').click(function (e) {
+    e.preventDefault();
+    $(this).tab('show');
+  })
+
+});
+</script>
+
+<% content_for :title, "aGestiona2 | ag2Payments" %>
+<% content_for :icon, "/assets/icon/TableA.png" %>
+<% content_for :alt, "ag2Payments" %>
+
+<ul class="breadcrumb">
+  <li>
+    <a href="<%= main_app.root_path %>"><i class="icon-home"></i></a><span class="divider">></span>
+  </li>
+  <li>
+    <a href="<%= ag2_gest.root_path %>">ag2Gest</a><span class="divider">></span>
+  </li>
+  <li>
+    Cobros
+  </li>
+</ul>
+<h3><%= 'Cobros' %></h3>
+<div class="span12" id="div_table">
+
+  <ul class="nav nav-tabs" id="payments-tabs">
+    <li class="active"><a href="#home">Caja</a></li>
+    <li><a href="#profile">Pendientes</a></li>
+    <li><a href="#messages">Bancos</a></li>
+    <li><a href="#settings">Devoluciones</a></li>
+  </ul>
+
+  <div class="tab-content">
+    <div class="tab-pane active" id="home">
+      <table class="table table-condensed table-striped">
+        <thead>
+          <tr>
+            <th>Nº</th>
+            <th>Abonado</th>
+            <th>Meter</th>
+            <th>Consumo</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @bills.each do |b| %>
+            <tr>
+              <td><%= link_to b.bill_no, bill_path(b) %></td>
+              <td><%= link_to b.subscriber.name_fiscal, subscriber_path(b.subscriber) %></td>
+              <td><%= link_to b.subscriber.try(:meter).try(:meter_code), meters_path(b.subscriber.meter) %></td>
+              <td><%= b.reading.try(:consumption) || 0 %></td>
+              <td><%= b.total %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+    <div class="tab-pane" id="profile">
+      <table class="table table-condensed table-striped">
+        <thead>
+          <tr>
+            <th>Nº</th>
+            <th>Abonado</th>
+            <th>Meter</th>
+            <th>Consumo</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @bills.each do |b| %>
+            <tr>
+              <td><%= link_to b.bill_no, bill_path(b) %></td>
+              <td><%= link_to b.subscriber.name_fiscal, subscriber_path(b.subscriber) %></td>
+              <td><%= link_to b.subscriber.try(:meter).try(:meter_code), meters_path(b.subscriber.meter) %></td>
+              <td><%= b.reading.try(:consumption) || 0 %></td>
+              <td><%= b.total %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+    <div class="tab-pane" id="messages">
+      <table class="table table-condensed table-striped">
+        <thead>
+          <tr>
+            <th>Nº</th>
+            <th>Abonado</th>
+            <th>Meter</th>
+            <th>Consumo</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @bills.each do |b| %>
+            <tr>
+              <td><%= link_to b.bill_no, bill_path(b) %></td>
+              <td><%= link_to b.subscriber.name_fiscal, subscriber_path(b.subscriber) %></td>
+              <td><%= link_to b.subscriber.try(:meter).try(:meter_code), meters_path(b.subscriber.meter) %></td>
+              <td><%= b.reading.try(:consumption) || 0 %></td>
+              <td><%= b.total %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+    <div class="tab-pane" id="settings">
+      <table class="table table-condensed table-striped">
+        <thead>
+          <tr>
+            <th>Nº</th>
+            <th>Abonado</th>
+            <th>Meter</th>
+            <th>Consumo</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @bills.each do |b| %>
+            <tr>
+              <td><%= link_to b.bill_no, bill_path(b) %></td>
+              <td><%= link_to b.subscriber.name_fiscal, subscriber_path(b.subscriber) %></td>
+              <td><%= link_to b.subscriber.try(:meter).try(:meter_code), meters_path(b.subscriber.meter) %></td>
+              <td><%= b.reading.try(:consumption) || 0 %></td>
+              <td><%= b.total %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <br/>
+  <br/>
+  <%= link_to "Volver a ag2Gest", ag2_gest.root_path %>
+</div>
+
+<!-- Button to trigger modal -->
+
+
+<!-- Modal -->
+<div id="confirm-bills" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="ConfirmarBills" aria-hidden="true">
+  <div class="modal-header">
+    <h4>Confirmar facturas</h4>
+  </div>
+  <div class="modal-body">
+    <form class="simple_form form-vertical">
+      <label class="span6">
+        <div class="control-group string required meter_manufacturing_date">
+          <label class="string required control-label form-label" for="meter_manufacturing_date"><abbr title="requerido">*</abbr> Fecha de facturación</label>
+          <div class="controls">
+            <input class="string required mid-text-field date_picker" id="meter_manufacturing_date" name="meter[manufacturing_date]" required="required" size="50" type="text">
+          </div>
+        </div>
+      </label>
+      <label class="span6">
+        <div class="control-group string required meter_manufacturing_date">
+          <label class="string required control-label form-label" for="meter_manufacturing_date"><abbr title="requerido">*</abbr> Fecha de vencimiento</label>
+          <div class="controls">
+            <input class="string required mid-text-field date_picker" id="meter_manufacturing_date" name="meter[manufacturing_date]" required="required" size="50" type="text">
+          </div>
+        </div>
+      </label>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <%= simple_form_for :bills, url: confirm_bills_path, method: :get do |f| %>
+      <%= f.input :ids, :as => :hidden, :input_html => { :value =>  params[:bills] } %>
+      <%= f.button :submit, "Confirmar facturas", :class => 'btn btn-primary' %>
+    <% end %>
+    <button class="btn" data-dismiss="modal" aria-hidden="true">Cerrar</button>
+  </div>
+</div>

@@ -1,0 +1,37 @@
+<script>
+  $(document).ready(function() {
+    $("#div_table th a, #div_table #pages a").on("click", function() {
+      $.getScript(this.href);
+      return false;
+    });
+  }); 
+</script>
+
+<table class="table table-condensed table-striped">
+  <thead>
+    <tr>
+      <th><%= sortable "id", t('activerecord.attributes.invoice_type.id') %></th>
+      <th><%= sortable "name", t('activerecord.attributes.invoice_type.name') %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @invoice_types.each do |invoice_type| %>
+      <tr>
+        <td><%= link_to invoice_type.try(:id), invoice_type_path(invoice_type) %></td>
+        <td><%= invoice_type.try(:name) %></td>
+        <td>
+          <%= link_to edit_invoice_type_path(invoice_type), class: "btn btn-mini" do %>
+            <i class="icon-edit"></i>
+          <% end %>
+          <%= link_to invoice_type, class: "btn btn-mini", method: :delete, data: { confirm: 'Are you sure?' } do %>
+            <i class="icon-trash"></i>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @invoice_types } %>
+<%= render :partial => '/layouts/crud/new', :locals => { :model => InvoiceType, :path => new_invoice_type_path, :txt => t("ag2_gest.invoice_types.index.btn_new") } %>
+<%= link_to t("ag2_gest.invoice_types.index.back_to_root"), ag2_gest.root_path %>     

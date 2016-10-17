@@ -1,6 +1,8 @@
-<h1>Editing reading_type</h1>
+<%= render '/layouts/ag2_gest/readingtypesbreadcrumb' %>
+
+<h3><%= t('.title') %></h3>
 
 <%= render 'form' %>
 
-<%= link_to 'Show', @reading_type %> |
-<%= link_to 'Back', reading_types_path %>
+<%= link_to t('.show'), @reading_type %> |
+<%= link_to t('.back'), reading_types_path %>

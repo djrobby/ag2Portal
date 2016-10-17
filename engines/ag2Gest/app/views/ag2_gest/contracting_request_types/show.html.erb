@@ -1,5 +1,22 @@
-<p id="notice"><%= notice %></p>
+<%= render '/layouts/ag2_gest/contractingrequesttypesbreadcrumb' %>
 
+<h3><%=@contracting_request_type.try(:description) %></h3>
+<table class="table">
+  <tbody>
+    <tr>
+      <td><%= t('activerecord.attributes.contracting_request_type.id') %>:</td>
+      <td><%= @contracting_request_type.try(:id) %></td>
+      <td><%= t('activerecord.attributes.contracting_request_type.description') %>:</td>
+      <td><%= @contracting_request_type.try(:description) %></td>
+    </tr>
+      <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @contracting_request_type } %>
+      <%#= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @contracting_request_type } %>
+  </tbody>
+</table>
 
-<%= link_to 'Edit', edit_contracting_request_type_path(@contracting_request_type) %> |
-<%= link_to 'Back', contracting_request_types_path %>
+<%= render partial: '/layouts/crud/update_delete_new', locals:
+{ model: TariffScheme, update_path: edit_contracting_request_type_path(@contracting_request_type), update_txt: t('.btn_edit'),
+delete_path: @contracting_request_type, delete_txt: t('.btn_delete'), msg: t("activerecord.models.contracting_request_type.one"), :txt => @contracting_request_type.description,
+new_path: new_contracting_request_type_path, new_txt: t('ag2_gest.contracting_request_types.index.btn_new') } %>
+
+<%= link_to I18n.t('ag2_gest.contracting_request_types.back_to_main_page'), contracting_request_types_path %>

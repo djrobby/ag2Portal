@@ -1,0 +1,37 @@
+<script>
+  $(document).ready(function() {
+    $("#div_table th a, #div_table #pages a").on("click", function() {
+      $.getScript(this.href);
+      return false;
+    });
+  }); 
+</script>
+
+<table class="table table-condensed table-striped">
+  <thead>
+    <tr>
+      <th><%= sortable "id", t('activerecord.attributes.contracting_request_type.id') %></th>
+      <th><%= sortable "description", t('activerecord.attributes.contracting_request_type.description') %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @contracting_request_types.each do |cont_request| %>
+    <tr>
+      <td><%= link_to cont_request.try(:id), contracting_request_type_path(cont_request) %></td>
+      <td><%= cont_request.try(:description)  %></td>
+      <td>
+        <%= link_to edit_contracting_request_type_path(cont_request), class: "btn btn-mini" do%>
+          <i class="icon-edit"></i>
+        <% end %>
+        <%= link_to cont_request, class: "btn btn-mini", method: :delete, data: { confirm: 'Are you sure?' } do %>
+          <i class="icon-trash"></i>
+        <% end %>
+      </td>
+    </tr>
+   <% end %>
+  </tbody>
+</table>
+
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @contracting_request_types } %>
+<%= render :partial => '/layouts/crud/new', :locals => { :model => ContractingRequestType, :path => new_contracting_request_type_path, :txt => t("ag2_gest.contracting_request_types.index.btn_new") } %>
+<%= link_to t("ag2_gest.contracting_request_types.index.back_to_root"), ag2_gest.root_path %>

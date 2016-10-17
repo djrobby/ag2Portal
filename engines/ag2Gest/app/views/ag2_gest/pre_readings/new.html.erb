@@ -1,5 +1,32 @@
-<h1>New pre_reading</h1>
+<script type="text/javascript">
+$(document).ready(function() {
+	// Select2
+	$('select.sel2').select2({
+    formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+    allowClear: true
+  });
+});
+</script>
 
-<%= render 'form' %>
+<%= render '/layouts/ag2_gest/readingsbreadcrumb' %>
 
-<%= link_to 'Back', pre_readings_path %>
+<h3>Cargar prelecturas</h3>
+
+<%= simple_form_for :prereading, url: pre_readings_path, method: :post, :html => {:class => 'form-vertical well', multiple: "multiple"} do |f| %>
+<%= f.error_notification %>
+<%= display_base_errors resource %>
+
+<div class="row-fluid">
+  <div class="span6">
+    <%= f.input :period, collection: @billing_periods, input_html: {class: "mid-text-field"}, :label_html => { :class => 'form-label' } %>
+  </div>
+  <div class="span6">
+    <%= f.input :reading_routes, collection: @reading_routes, input_html: {class: "sel2 mid-text-field multiple", multiple: "multiple"}, :label_html => { :class => 'form-label' } %>
+  </div>
+</div>
+
+<%= f.button :submit, "Cargar prelecturas",:class => 'btn-primary' %>
+<% end %>
+
+
+<%= link_to I18n.t('ag2_gest.readings.back_to_main_page'), readings_path %>

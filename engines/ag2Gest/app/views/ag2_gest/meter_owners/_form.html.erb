@@ -1,17 +1,12 @@
-<%= form_for(@meter_owner) do |f| %>
-  <% if @meter_owner.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@meter_owner.errors.count, "error") %> prohibited this meter_owner from being saved:</h2>
+<%= simple_form_for @meter_owner, :html => {:class => 'form-vertical well' } do |f| %>
+  <%= f.error_notification %>
+  <%= display_base_errors resource %>
 
-      <ul>
-      <% @meter_owner.errors.full_messages.each do |msg| %>
-        <li><%= msg %></li>
-      <% end %>
-      </ul>
+  <div class="row-fluid">
+    <div class="span12">
+      <%= f.input :name, :required => true, :autofocus => true, :input_html => { :class => 'x-large-text-field'}, :label_html => { :class => 'form-label' } %>
     </div>
-  <% end %>
-
-  <div class="actions">
-    <%= f.submit %>
   </div>
+
+  <%= f.button :submit, :class => 'btn-primary' %>
 <% end %>

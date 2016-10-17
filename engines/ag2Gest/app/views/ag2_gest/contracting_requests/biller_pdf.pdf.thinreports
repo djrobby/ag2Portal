@@ -1,0 +1,135 @@
+report.set_layout tlf: 'reports/biller_prue', layout_options: { default: true }
+
+report.start_new_page
+
+report.page.values printed_at: Time.now
+
+report.events.on :page_create do |e| #Event página creada -> calcula número de página
+	# Set page-number
+	e.page.item(:page_no).value(e.page.no) #Numero de página
+end
+
+report.events.on :generate do |e|
+	e.pages.each do |page|
+		# Set total-page-number
+		page.item(:page_count).value(e.report.page_count)
+	end
+end
+
+#UP GOOD 
+####### IMP Option para no cortar por la cabecera -> Contar filas y ver si el nuevo tiene espacio
+
+
+def insert_footer(list, item, invoice) #TOTALES POR CADA INVOICE
+
+	list.add_row do |row|
+		row.item(:loc_sub).value("Subtotal").styles(bold:true)
+		row.item(:subtotal).value(invoice.subtotal).styles(bold:true)
+	end
+
+	invoice.tax_breakdown.each do |tax| 
+		
+		list.add_row do |row|
+			row.item(:loc_base).value("Base Imponible")
+			row.item(:base_imponible).value(tax[1])
+			row.item(:articulo).value("#{pluralize(tax[3], 'artículo')}")	
+			row.item(:iva).value("IVA (#{tax[0]})")
+			row.item(:total).value(tax[2])
+		end
+		
+	end
+
+	list.add_row do |row|
+		row.item(:total_invoice).value("Total").styles(bold:true)
+		row.item(:total_invoice_item).value(invoice.total).styles(bold:true)
+	end
+
+end
+
+
+def insert_header(list, invoice) #CABECERA POR CADA INVOICE
+
+	(0..4).each do |index|
+	  list.add_row do |row|
+
+	  	if index == 1
+	  		row.item(:loc_invoice).value(I18n.t("activerecord.report.biller.loc_invoice")).styles(bold:true)
+	  		row.item(:invoice_no).value(invoice.try(:invoice_no))
+	  	end
+
+	  	if index == 2
+	  		row.item(:company).value(invoice.try(:company).try(:name)).styles(bold:true)
+	  	end
+
+	  	if index == 3
+	  		row.item(:cif).value("CIF").styles(bold:true)
+	  		row.item(:fiscal_id).value(invoice.try(:company).try(:fiscal_id)).styles(bold:true)
+	  		row.item(:method_payment).value("Efectivo").styles(bold:true)
+	  	end
+
+
+	  	if index == 4
+	    	row.item(:loc_code).value(I18n.t("activerecord.report.biller.loc_invoice")).styles(bold:true)
+	    	row.item(:loc_description).value(I18n.t("activerecord.report.biller.loc_description")).styles(bold:true)
+	    	row.item(:loc_quantity).value I18n.t("activerecord.report.biller.loc_quantity")
+				row.item(:loc_unit_price).value I18n.t("activerecord.report.biller.loc_unit_price")
+				row.item(:loc_amount).value I18n.t("activerecord.report.biller.loc_amount")
+				#row.item(:tax_type).value("Tipo de Impuesto")
+				row.item(:loc_tax).value I18n.t("activerecord.report.biller.loc_tax")
+				row.item(:loc_discount).value I18n.t("activerecord.report.biller.loc_discount")
+
+				row.item(:loc_discount_pct).value("Descuento %")
+				row.item(:loc_total).value I18n.t("activerecord.report.biller.loc_total")
+	    end
+
+	    #row.item(:border).hide
+	  end
+	end
+  #list.add_row 
+end
+
+loc_invoice = nil
+
+@bill.invoices.each do |invoice|  #BILL.INVOICES do INVOICE
+	
+
+	total_invoices = invoice.invoice_items.count #TOTAL INVOICEITEMS por cada INVOICE
+	report.page.values invoice_name: total_invoices
+
+
+	# Insert group header when invoice has changed
+	unless loc_invoice == invoice.id
+    #loc_invoice = "OLPPPkjnjkhnkj"
+    #ow.item(:loc_invoice).value(I18n.t("activerecord.report.biller.loc_invoice")).styles(bold:true)
+    insert_header(report.list, invoice)
+  end
+
+
+  invoice.invoice_items.each_with_index do |item, index| #Cada Fila de INVOICE do INVOICEITEM
+		
+		report.list.add_row do |row|
+		 	#row.item(:code).value(index)
+		 	row.item(:code).value(item.try(:code))
+			row.item(:description).value(item.try(:description))
+			row.item(:quantity).value(item.try(:quantity))
+			row.item(:unit_price).value(item.try(:price))
+			row.item(:amount).value(item.try(:amount))
+			#row.item(:tax_type).value(item.try(:tax_type).try(:description))
+			row.item(:tax).value(item.try(:tax_type).try(:tax))
+			row.item(:discount).value(item.try(:discount))
+			row.item(:discount_pct).value(item.try(:discount_pct))
+			row.item(:total).value(item.try(:total))
+			
+		
+		end #End Loop Row
+		
+		#INSERT TOTAL
+		if total_invoices == index+1 #Si acaba los invoiceItems llamamos método par añadir los Totales
+			insert_footer(report.list, item, invoice)
+			#Know the rows inserted, if it hasnt space => new page
+		end
+
+
+	end #End Loop Item
+
+end #End Loop Bill 

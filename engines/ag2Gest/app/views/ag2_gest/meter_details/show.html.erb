@@ -1,0 +1,41 @@
+<%= render '/layouts/ag2_gest/meterdetailsbreadcrumb' %>
+
+<h3><%= t(".title")%> <%= @meter_detail.try(:id) %></h3>
+<table class="table">
+  <tbody>
+    <tr>
+      <td><%= t('activerecord.attributes.meter_detail.id') %>:</td>
+      <td colspan="3"><%= @meter_detail.try(:id) %></td>
+    </tr>
+    <tr>
+      <td><%= t('activerecord.attributes.meter_detail.subscriber_id') %>:</td>
+      <td><%= link_to @meter_detail.try(:subscriber).try(:name), ag2_gest.subscriber_path(@meter_detail.subscriber_id) %></td>
+      <td><%= t('activerecord.attributes.meter_detail.meter_id') %>:</td>
+      <td><%= link_to @meter_detail.try(:meter).try(:meter_code), ag2_gest.meter_path(@meter_detail.meter_id) %></td>
+    </tr>
+    <tr>
+      <td><%= t('activerecord.attributes.meter_detail.installation_reading') %>:</td>
+      <td><%= @meter_detail.try(:installation_reading) %></td>
+      <td><%= t('activerecord.attributes.meter_detail.withdrawal_reading') %>:</td>
+      <td><%= @meter_detail.try(:withdrawal_reading) %></td>
+    </tr>
+    <tr>
+      <td><%= t('activerecord.attributes.meter_detail.installation_date') %>:</td>
+      <td><%=l @meter_detail.try(:installation_date) unless @meter_detail.try(:installation_date).blank? %></td>
+      <td><%= t('activerecord.attributes.meter_detail.withdrawal_date') %>:</td>
+      <td><%=l @meter_detail.try(:withdrawal_date) unless @meter_detail.try(:withdrawal_date).blank? %></td>
+    </tr>
+
+    <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @meter_detail } %>
+    <%#= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @meter_detail } %>
+  </tbody>
+</table>
+
+<!-- Create Button calls method generate pdf -->
+
+<%= render partial: '/layouts/crud/update_delete_new', locals:
+{ model: BillableItem, update_path: edit_meter_detail_path(@meter_detail), update_txt: t('.btn_edit'),
+delete_path: @meter_detail, delete_txt: t('.btn_delete'), msg: t("activerecord.models.meter_detail.one"), :txt => @meter_detail.id,
+new_path: new_meter_detail_path, new_txt: t('ag2_gest.meter_details.index.btn_new') } %>
+
+<%= link_to I18n.t('ag2_gest.meter_details.back_to_main_page'), meter_details_path %>

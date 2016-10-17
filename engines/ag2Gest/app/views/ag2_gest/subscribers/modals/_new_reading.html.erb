@@ -1,0 +1,114 @@
+<script type="text/javascript">
+  $(document).ready(function() { //Cuando carga la página
+    /*Select2*/
+    $('select.sel2').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      allowClear: true
+    });
+
+    $('.date_picker').datepicker({
+      format : 'dd/mm/yyyy',
+      weekStart : 1
+    });
+
+    $("#form_new_reading") //Element form
+      .bind("ajax:success", function(xhr, data, status){ //enlazar pasandole param this
+        
+        //Oculto Modal
+        $("#newReadingModal").modal('hide');
+
+        var reading_incidence_types = "";
+        var title = "";
+        
+        if (data.reading_incidence_types[0] == undefined && data.reading_incidence_types[0] == null){
+          reading_incidence_types = "-";
+          
+        } else {
+          var str_incidence = data.reading_incidence_types.length;
+          /*Añadir los elementos i en función de los incidence types que tenga*/
+          
+          for(var i=0; i < str_incidence; i++) {
+            if (i >= 1) {
+              title += `, `;
+            }
+            title += `${data.reading_incidence_types[i]}`;  
+          }
+          reading_incidence_types = `<i title="${title}" class="icon-ok"></i>`;
+        }
+
+        var date =``;
+
+        if (data.reading.reading_date !== undefined) {
+          /*var year = data.reading.reading_date.substring(0, 4);
+          var month = data.reading.reading_date.substring(5, 7);
+          var day = data.reading.reading_date.substring(8, 10);
+          var */
+          date += `${data.reading.reading_date.substring(8, 10)}/${data.reading.reading_date.substring(5, 7)}/${data.reading.reading_date.substring(0, 4)}`;
+        }
+
+        var text = `<tr><td>${data.reading.id}</td><td>${data.billing_period.period}</td><td><a href="/es/ag2_gest/es/reading_types/${data.reading.reading_type_id}">${data.reading_type.name}</a></td><td>${date}</td><td>${data.reading.reading_index}</td><td>${reading_incidence_types}</td>`;
+        text += `<td class="a_inline"><a href="/es/ag2_gest/es/readings/${data.reading.id}/edit" class="btn btn-mini"><i class="icon-edit"></i></a><a href="/es/ag2_gest/es/readings/${data.reading.id}"class="btn btn-mini" data-confirm="Are you sure?" data-method="delete" rel="nofollow"><i class="icon-trash"></i></a></td></tr>`;
+
+        $('#readings table tbody').after(text); 
+
+      })
+      .bind("ajax:error", function(xhr, data, status){ 
+        /*Sí da error*/
+        alert("Error");
+      });
+  });//End Ready
+</script>
+
+<!-- NewReading -->
+<div id="newReadingModal" class="modal hide fade">
+  <%= simple_form_for [@reading], :remote => :true, :html => { "data-type" => :json, :class => 'form-inline', :id => 'form_new_reading' } do |f| %>
+  <div class="modal-header">
+    <a class="close" data-dismiss="modal">&#215;</a>
+    <h3><%= t('activerecord.attributes.subscriber.new_reading') %></h3>
+  </div>
+  <div class="modal-body">
+    <%= f.input :subscriber_id, :as => :hidden, :input_html => { :value => @subscriber.try(:id) } %>
+    
+    <%= f.input :meter_id, :as => :hidden, :input_html => { :value => @subscriber.try(:meter).try(:id) } %>
+    <%= f.input :billing_frequency_id, :as => :hidden, :input_html => { :value => @subscriber.try(:billing_frequency).try(:id) } %>
+    <%= f.input :reading_route_id, :as => :hidden, :input_html => { :value => @subscriber.try(:reading_route).try(:id) } %>
+
+    <%#= f.association :billing_frequency, collection: BillingFrequency.where(), input_html: { class: 'x-large-text-field sel2', :id => "billing_frequency" }, label_html: { class: 'form-label' }, include_blank: true %>
+    <%#= f.association :reading_route, collection: ReadingRoute.all, input_html: { class: 'x-large-text-field sel2', :id => "reading_route" }, label_html: { class: 'form-label' }, include_blank: true %>
+
+    <!-- If Organization / Company or Office  -->
+    
+    <%= f.association :project, collection: @project_dropdown, label: t('activerecord.attributes.subscriber.project'), input_html: { class: 'x-large-text-field sel2', :id => "project" }, :required => true, label_html: { class: 'form-label' }, include_blank: true %>
+    <%= f.association :billing_period, collection: BillingPeriod.all, label: t('activerecord.attributes.subscriber.billing_period'), :required => true, input_html: { class: 'x-large-text-field sel2', :id => "billing_period" }, label_html: { class: 'form-label' }, include_blank: true %>    
+    <%= f.association :reading_type, collection: ReadingType.all, label: t('activerecord.attributes.subscriber.reading_type'), input_html: { class: 'x-large-text-field sel2', :id => "reading_type" }, :required => true, label_html: { class: 'form-label' }, include_blank: true %>  
+    <%= f.input :reading_date, label: t('activerecord.attributes.subscriber.reading_date'), :required => true, :start_year => Time.now.year - 100, :end_year => Time.now.year + 100, :as => :string, :input_html => { :value => (f.object.reading_date.strftime("%d/%m/%Y") if f.object.reading_date), :class => 'mid-text-field date_picker' }, :label_html => { :class => 'form-label' } %> 
+   
+    <%= f.input :reading_index, label: t('activerecord.attributes.reading.reading'), :required => true, :autofocus => true, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %>
+
+    <div class="accordion-group">
+      <div class="accordion-heading">
+        <a class="accordion-toggle" data-toggle="collapse" href="#collapseIncidences"><%= t('activerecord.attributes.subscriber.incidences') %></a>
+      </div>
+      <div id="collapseIncidences" class="accordion-body collapse">
+        <div class="accordion-inner">
+          <ul class="unstyled">
+            <% ReadingIncidenceType.all.each do |incidence_type| %>
+              <li style="width:50%;float:left;">
+                <label class="checkbox">
+                  <%= check_box_tag 'incidence_type_ids[]', incidence_type.id %>
+                  <%= h incidence_type.name %>
+                </label>
+              </li>
+            <% end %>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="modal-footer">
+    <%= f.submit t('activerecord.attributes.subscriber.accept'), :class => "btn btn-primary" %>
+    <a class="btn btn-primary" data-dismiss="modal" href="#"><%= t :close_button %></a>
+  </div>
+  <% end %>
+</div>

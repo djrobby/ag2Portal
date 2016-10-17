@@ -1,17 +1,28 @@
-<%= form_for(@reading_incidence_type) do |f| %>
-  <% if @reading_incidence_type.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@reading_incidence_type.errors.count, "error") %> prohibited this reading_incidence_type from being saved:</h2>
+<script type="text/javascript">
+  $(document).ready(function() {
+    // Select2
+    $('select.sel2').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      allowClear: true
+    });
+  });
+</script>
 
-      <ul>
-      <% @reading_incidence_type.errors.full_messages.each do |msg| %>
-        <li><%= msg %></li>
-      <% end %>
-      </ul>
+<%= simple_form_for @reading_incidence_type, :html => {:class => 'form-vertical well'} do |f| %>
+<%= f.error_notification %>
+<%= display_base_errors resource %>
+
+  <div class="row-fluid">
+      
+    <div class="span4">
+      <%= f.input :name, :required => true, :autofocus => true, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %>
     </div>
-  <% end %>
+    
+    <div class="span4">
+      <%= f.input :should_estimate, :required => true, :autofocus => true, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %>
+    </div>
+    
+  </div>  
+  <%= f.button :submit, :class => 'btn-primary' %>
 
-  <div class="actions">
-    <%= f.submit %>
-  </div>
 <% end %>

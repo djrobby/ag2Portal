@@ -1,6 +1,7 @@
-<h1>Editing contracting_request</h1>
+<%= render '/layouts/ag2_gest/crequestsbreadcrumb' %>
+
+<h3><%=t '.title' %></h3>
 
 <%= render 'form' %>
 
-<%= link_to 'Show', @contracting_request %> |
-<%= link_to 'Back', contracting_requests_path %>
+<%= link_to t("ag2_gest.contracting_requests.back_to_main_page"), contracting_requests_path %>

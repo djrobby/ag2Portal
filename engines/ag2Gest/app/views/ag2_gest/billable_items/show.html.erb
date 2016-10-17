@@ -1,5 +1,39 @@
-<p id="notice"><%= notice %></p>
+<%= render '/layouts/ag2_gest/billableitemsbreadcrumb' %>
 
+<h3><%= t('.title') %> - <%=@billable_item.try(:billable_concept).try(:name) %></h3>
+<table class="table">
+  <tbody>
+    <tr>
+      <td><%= t('activerecord.attributes.billable_item.id') %>:</td>
+      <td colspan="3"><%= @billable_item.try(:id) %></td>
+    </tr>
+    <tr>
+      <td><%= t('activerecord.attributes.billable_item.billable_concept_id') %>:</td>
+      <td><%= link_to @billable_item.try(:billable_concept).try(:name), ag2_gest.billable_concept_path(@billable_item.billable_concept_id) %></td>
+      <td><%= t('activerecord.attributes.billable_item.biller_id') %>:</td>
+      <td><%= link_to @billable_item.try(:biller).try(:name), ag2_admin.company_path(@billable_item.biller_id) %></td>
+    </tr>
+    <tr>
+      <td><%= t('activerecord.attributes.billable_item.office_id') %>:</td>
+      <td><%= link_to @billable_item.try(:project).try(:office).try(:name), ag2_admin.office_path(@billable_item.project.office_id) %></td>
+      <td><%= t('activerecord.attributes.billable_item.project_id') %>:</td>
+      <td><%= link_to @billable_item.try(:project).try(:name), ag2_tech.project_path(@billable_item.project_id) %></td>
+    </tr>
+    <tr>
+      <td><%= t('activerecord.attributes.billable_item.regulation_id') %>:</td>
+      <td><%= link_to @billable_item.try(:regulation).try(:description), ag2_gest.regulation_path(@billable_item.regulation_id) %></td>
+      <td><%= t('activerecord.attributes.billable_item.tariffs_by_caliber') %>:</td>
+      <td><% if @billable_item.try(:tariffs_by_caliber) %> <i class="icon-thumbs-up"></i> <% else %> <i class="icon-thumbs-down"></i> <% end %></td>
+    </tr>
 
-<%= link_to 'Edit', edit_billable_item_path(@billable_item) %> |
-<%= link_to 'Back', billable_items_path %>
+    <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @billable_item } %>
+    <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @billable_item } %>
+  </tbody>
+</table>
+
+<%= render partial: '/layouts/crud/update_delete_new', locals:
+{ model: BillableItem, update_path: edit_billable_item_path(@billable_item), update_txt: t('.btn_edit'),
+delete_path: @billable_item, delete_txt: t('.btn_delete'), msg: t("activerecord.models.billable_item.one"), :txt => @billable_item.id,
+new_path: new_billable_item_path, new_txt: t('ag2_gest.billable_items.index.btn_new') } %>
+
+<%= link_to I18n.t('ag2_gest.billable_items.back_to_main_page'), billable_items_path %>

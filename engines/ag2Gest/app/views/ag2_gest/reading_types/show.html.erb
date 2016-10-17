@@ -1,5 +1,23 @@
-<p id="notice"><%= notice %></p>
+<%= render '/layouts/ag2_gest/readingtypesbreadcrumb' %>
 
+<h3><%=@reading_type.try(:name) %></h3>
+<table class="table">
+  <tbody>
+    
+    <tr>
+      <td><%= t('activerecord.attributes.reading_type.id') %>:</td>
+      <td><%= @reading_type.try(:id) %></td>
+      <td><%= t('activerecord.attributes.reading_type.name') %>:</td>
+      <td><%= @reading_type.try(:name) %></td>
+    </tr>
+    
+    <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @reading_type } %>
+  </tbody>
+</table>
 
-<%= link_to 'Edit', edit_reading_type_path(@reading_type) %> |
-<%= link_to 'Back', reading_types_path %>
+<%= render partial: '/layouts/crud/update_delete_new', locals:
+{ model: ReadingType, update_path: edit_reading_type_path(@reading_type), update_txt: t('.btn_edit'),
+delete_path: @reading_type, delete_txt: t('.btn_delete'), msg: t("activerecord.models.reading_type.one"), :txt => @reading_type.id,
+new_path: new_reading_type_path, new_txt: t('ag2_gest.reading_types.index.btn_new') } %>
+
+<%= link_to I18n.t('ag2_gest.reading_types.back_to_main_page'), reading_types_path %>

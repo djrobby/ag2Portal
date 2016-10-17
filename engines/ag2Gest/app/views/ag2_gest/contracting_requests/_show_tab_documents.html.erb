@@ -1,0 +1,14 @@
+<table class="table">
+  <thead>
+    <th><%= t('activerecord.attributes.contracting_request.type') %></th>
+    <th><%= t('activerecord.attributes.contracting_request.document') %></th>
+  </thead>
+  <tbody>
+    <% @contracting_request.contracting_request_documents.each do |document| %>
+      <tr>
+        <td><%= document.try(:contracting_request_document_type).try(:name) %></td>
+        <td><img id="image_content" src="<%= document.attachment.url(:small) %>"</td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

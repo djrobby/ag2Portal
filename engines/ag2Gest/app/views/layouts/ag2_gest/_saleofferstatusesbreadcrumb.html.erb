@@ -1,0 +1,34 @@
+<% content_for :title, "aGestiona2 | ag2SaleOfferStatus" %>
+<% content_for :icon, "/assets/icon/ag2Orders.png" %>
+<% content_for :alt, "ag2SaleOfferStatus" %>
+
+<!-- Breadcrumb -->
+<ul class="breadcrumb">
+  <li>
+    <a href="<%= main_app.root_path %>"><i class="icon-home"></i></a><span class="divider">></span>
+  </li>
+  <li>
+    <a href="<%= ag2_gest.root_path %>">ag2Gest</a><span class="divider">></span>
+  </li>
+  <% if @sale_offer_statuses %>
+  <li>
+    <%=t "ag2_gest.breadcrumb.sale_offer_statuses.items" %>
+  </li>
+  <% end %>
+  <% if @sale_offer_status %>
+  <li>
+    <a href="<%= sale_offer_statuses_path %>"><%=t :"ag2_gest.breadcrumb.sale_offer_statuses.items" %></a><span class="divider">></span>
+  </li>
+  <% if @breadcrumb == 'read' || @breadcrumb == 'update' %>
+  <%=t :"ag2_gest.breadcrumb.sale_offer_statuses.item" %>
+  <% end %>
+  <% if @breadcrumb == 'create' %>
+  <li>
+    <%= t :"breadcrumb.new" %>
+  </li>
+  <% end %>
+
+  <% end %>
+  <!-- Close -->
+  <a class="close" href="<%= ag2_gest.root_path %>">&#215;</a>
+</ul>

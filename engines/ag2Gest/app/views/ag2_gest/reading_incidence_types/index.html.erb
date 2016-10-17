@@ -1,21 +1,9 @@
-<h1>Listing reading_incidence_types</h1>
+<%= render '/layouts/ag2_gest/readingincidencetypesbreadcrumb' %>
 
-<table>
-  <tr>
-    <th></th>
-    <th></th>
-    <th></th>
-  </tr>
+<%#= render :partial => '/layouts/searchhead_remote', :locals => { :title => t(".title"), :path => reading_incidence_types_path } %>
 
-<% @reading_incidence_types.each do |reading_incidence_type| %>
-  <tr>
-    <td><%= link_to 'Show', reading_incidence_type %></td>
-    <td><%= link_to 'Edit', edit_reading_incidence_type_path(reading_incidence_type) %></td>
-    <td><%= link_to 'Destroy', reading_incidence_type, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-  </tr>
-<% end %>
-</table>
+<h3><%= t(".title") %></h3>
 
-<br />
-
-<%= link_to 'New Reading incidence type', new_reading_incidence_type_path %>
+<div class="span8" id="div_table">
+  <%= render 'reading_incidence_types' %>
+</div>

@@ -1,0 +1,44 @@
+<style>
+	.center {
+    text-align: center!important;
+  }
+</style>
+<script>
+  $(document).ready(function() {
+    $("#div_table th a, #div_table #pages a").on("click", function() {
+      $.getScript(this.href);
+      return false;
+    });
+  });
+</script>
+
+<table class="table table-condensed table-striped">
+	<thead>
+	  <tr>
+      <th><%= sortable "id", "Id" %></th>
+      <th><%= sortable "name", "Nombre" %></th>
+      <th><%= sortable "required", "Requerido" %></th>
+	  </tr>
+	</thead>
+	<tbody>
+	  <% @contracting_request_document_types.each do |contracting_request_document_type| %>
+		  <tr>
+		    <td><%= link_to contracting_request_document_type.id, contracting_request_document_type_path(contracting_request_document_type) %></td>
+		    <td class="center"><%= contracting_request_document_type.try(:name) %></td>
+		    <td class="center"><%= contracting_request_document_type.try(:required) %></td>
+		    <td class="a_inline">
+		      <%= link_to edit_contracting_request_document_type_path(contracting_request_document_type), class: "btn btn-mini" do %>
+		        <i class="icon-edit"></i>
+		      <% end %>
+		      <%= link_to contracting_request_document_type, class: "btn btn-mini", method: :delete, data: { confirm: 'Are you sure?' } do %>
+		        <i class="icon-trash"></i>
+		      <% end %>
+		    </td>
+		  </tr>
+	 	<% end %>
+	</tbody>
+</table>
+
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @contracting_request_document_types } %>
+<%= render :partial => '/layouts/crud/new', :locals => { :model => ContractingRequestDocumentType, :path => new_contracting_request_document_type_path, :txt => "Nuevo" } %>
+<%= link_to "Volver Ag2gest", ag2_gest.root_path %>

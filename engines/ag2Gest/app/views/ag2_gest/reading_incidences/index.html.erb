@@ -1,0 +1,7 @@
+<%= render '/layouts/ag2_gest/readingincidencesbreadcrumb' %>
+
+<%= render :partial => '/layouts/searchhead_remote', :locals => { :title => t(".title"), :path => reading_incidences_path } %>
+
+<div class="span8" id="div_table">
+  <%= render 'reading_incidences' %>
+</div>

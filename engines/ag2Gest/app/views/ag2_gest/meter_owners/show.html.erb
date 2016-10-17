@@ -1,5 +1,21 @@
-<p id="notice"><%= notice %></p>
+<%= render '/layouts/ag2_gest/meterownersbreadcrumb' %>
 
+<h3><%= t(".title")%> <%=@meter_owner.try(:name) %></h3>
+<table class="table">
+  <tbody>
+    <tr>
+      <td><%= t('activerecord.attributes.meter_owner.id') %>:</td>
+      <td><%= @meter_owner.try(:id) %></td>
+      <td><%= t('activerecord.attributes.meter_owner.name') %>:</td>
+      <td><%= @meter_owner.try(:name) %></td>
+    </tr>
+      <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @meter_owner } %>
+  </tbody>
+</table>
 
-<%= link_to 'Edit', edit_meter_owner_path(@meter_owner) %> |
-<%= link_to 'Back', meter_owners_path %>
+<%= render partial: '/layouts/crud/update_delete_new', locals:
+{ model: MeterLocation, update_path: edit_meter_owner_path(@meter_owner), update_txt: t('.btn_edit'),
+delete_path: @meter_owner, delete_txt: t('.btn_delete'), msg: t("activerecord.models.meter_owner.one"), :txt => @meter_owner.name,
+new_path: new_meter_owner_path, new_txt: t('ag2_gest.meter_owners.index.btn_new') } %>
+
+<%= link_to I18n.t('ag2_gest.meter_owners.back_to_main_page'), meter_owners_path %>

@@ -1,21 +1,9 @@
-<h1>Listing meter_types</h1>
+<%= render '/layouts/ag2_gest/metertypesbreadcrumb' %>
 
-<table>
-  <tr>
-    <th></th>
-    <th></th>
-    <th></th>
-  </tr>
+<%#= render :partial => '/layouts/searchhead_remote', :locals => { :title => t(".title"), :path => meter_types_path } %>
 
-<% @meter_types.each do |meter_type| %>
-  <tr>
-    <td><%= link_to 'Show', meter_type %></td>
-    <td><%= link_to 'Edit', edit_meter_type_path(meter_type) %></td>
-    <td><%= link_to 'Destroy', meter_type, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-  </tr>
-<% end %>
-</table>
+<h3><%= t(".title") %></h3>
 
-<br />
-
-<%= link_to 'New Meter type', new_meter_type_path %>
+<div class="span8" id="div_table">
+  <%= render 'meter_types' %>
+</div>

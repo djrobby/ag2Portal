@@ -1,0 +1,36 @@
+<% content_for :title, "aGestiona2 | ag2GestTariffScheme" %>
+<% content_for :icon, "/assets/icon/ag2Gest.png" %>
+<% content_for :alt, "ag2GestTariffScheme" %>
+
+<ul class="breadcrumb">
+  <li>
+    <a href="<%= main_app.root_path %>"><i class="icon-home"></i></a><span class="divider">></span>
+  </li>
+  <li>
+    <a href="<%= ag2_gest.root_path %>">ag2Gest</a><span class="divider">></span>
+  </li>
+  <li>
+    <a href="<%= ag2_gest.tariff_management_path %>">Gestión de tarifas</a><span class="divider">></span>
+  </li>
+  <% if @tariff_schemes %>
+  <li>
+    <%=t "ag2_gest.breadcrumb.tariff_schemes.items" %>
+  </li>
+  <% end %>
+  <% if @tariff_scheme %>
+  <li>
+    <a href="<%= tariff_schemes_path %>"><%=t :"ag2_gest.breadcrumb.tariff_schemes.items" %></a><span class="divider">></span>
+  </li>
+  <% if @breadcrumb == 'read' || @breadcrumb == 'update' %>
+  <%=t :"ag2_gest.breadcrumb.tariff_schemes.item" %>
+  <% end %>
+  <% if @breadcrumb == 'create' %>
+  <li>
+    <%= t :"breadcrumb.new" %>
+  </li>
+  <% end %>
+
+  <% end %>
+  <!-- Close -->
+  <a class="close" href="<%= ag2_gest.root_path %>">&#215;</a>
+</ul>

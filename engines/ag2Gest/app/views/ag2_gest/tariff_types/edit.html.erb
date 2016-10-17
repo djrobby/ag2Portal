@@ -1,6 +1,8 @@
-<h1>Editing tariff_type</h1>
+<%= render '/layouts/ag2_gest/tarifftypesbreadcrumb' %>
+
+<h3><%=t '.title' %></h3>
 
 <%= render 'form' %>
 
-<%= link_to 'Show', @tariff_type %> |
-<%= link_to 'Back', tariff_types_path %>
+<%= link_to t('.show'), @tariff_type %> |
+<%= link_to t('.back'), tariff_types_path %>

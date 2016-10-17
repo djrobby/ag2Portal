@@ -1,5 +1,40 @@
-<p id="notice"><%= notice %></p>
+<%= render '/layouts/ag2_gest/saleofferstatusesbreadcrumb' %>
 
+<h3><%= t('.title')%> <%=@sale_offer_status.name %></h3>
+<table class="table">
+  <tbody>
+    <tr>
+      <td><%= t('activerecord.attributes.sale_offer_status.id') %>:</td>
+      <td ><%= @sale_offer_status.try(:id) %></td>
+      <td><%= t('activerecord.attributes.sale_offer_status.name') %>:</td>
+      <td ><%= @sale_offer_status.try(:name) %></td>
+    </tr>
+    <tr>
+      <td><%= t('activerecord.attributes.sale_offer_status.approval') %>:</td>
+      <td>
+        <% if @sale_offer_status.try(:approval) == true %>
+          <i class="icon-thumbs-up"></i>
+        <% else %>
+          <i class="icon-thumbs-down"></i>
+        <% end %>
+      </td>
+      <td><%= t('activerecord.attributes.sale_offer_status.notification') %>:</td>
+      <td>
+        <% if @sale_offer_status.try(:notification) == true %>
+          <i class="icon-thumbs-up"></i>
+        <% else %>
+          <i class="icon-thumbs-down"></i>
+        <% end %>
+      </td>
+    </tr>
+    <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @sale_offer_status } %>
+    <%#= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @sale_offer_status } %>
+  </tbody>
+</table>
 
-<%= link_to 'Edit', edit_sale_offer_status_path(@sale_offer_status) %> |
-<%= link_to 'Back', sale_offer_statuses_path %>
+<%= render partial: '/layouts/crud/update_delete_new', locals:
+{ model: SaleOfferStatus, update_path: edit_sale_offer_status_path(@sale_offer_status), update_txt: t('.btn_edit'),
+delete_path: @sale_offer_status, delete_txt: t('.btn_delete'), msg: t("activerecord.models.sale_offer_status.one"), :txt => @sale_offer_status.id,
+new_path: new_sale_offer_status_path, new_txt: t('ag2_gest.sale_offer_statuses.index.btn_new') } %>
+
+<%= link_to I18n.t('ag2_gest.sale_offer_statuses.back_to_main_page'), sale_offer_statuses_path %>

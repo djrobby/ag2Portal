@@ -1,0 +1,38 @@
+<script>
+  $(document).ready(function() {
+    $("#div_table th a, #div_table #pages a").on("click", function() {
+      $.getScript(this.href);
+      return false;
+    });
+  }); 
+</script>
+
+<table class="table table-condensed table-striped">
+  <thead>
+    <tr>
+      <th><%= sortable "id", t('activerecord.attributes.reading_type.id') %></th>
+      <th><%= sortable "name", t('activerecord.attributes.reading_type.name') %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @reading_types.each do |reading_type| %>
+    <tr>
+      <td><%= link_to reading_type.try(:id), reading_type_path(reading_type) %></td>
+      <td><%= reading_type.try(:name) %></td>
+      <td>
+        <%= link_to edit_reading_type_path(reading_type), class: "btn btn-mini" do%>
+          <i class="icon-edit"></i>
+        <% end %>
+
+        <%= link_to reading_type, class: "btn btn-mini", method: :delete, data: { confirm: 'Are you sure?' } do %>
+          <i class="icon-trash"></i>
+        <% end %>
+      </td>
+    </tr>
+   <% end %>
+  </tbody>
+</table>
+
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @reading_types } %>
+<%= render :partial => '/layouts/crud/new', :locals => { :model => ReadingType, :path => new_reading_type_path, :txt => t("ag2_gest.reading_types.index.btn_new") } %>
+<%= link_to t("ag2_gest.reading_types.index.back_to_root"), ag2_gest.root_path %>

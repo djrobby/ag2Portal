@@ -1,0 +1,69 @@
+<style>
+	.black-border{
+		border-top: 1px solid black !important;
+	}
+	.no-boder{
+		border-top: 1px solid white !important;
+	}
+</style>
+<h3><%= t("activerecord.attributes.contracting_request.bill_name") %></h3>
+
+<%= link_to "<i class='icon-print icon-white'></i> Imprimir".html_safe, biller_pdf_contracting_request_path(@contracting_request, :format => :pdf), class: "btn btn-warning pull-right", target: "_blank" %>
+
+<% @bill.invoices.each do |invoice| %>
+	<div class="span3" style="padding: 14px; background-color:#E6E6E6;">
+		<h5 ><%= t("activerecord.attributes.contracting_request.invoice_number") %>: <%= invoice.try(:invoice_no) %></h5>
+		<h5><%= invoice.try(:company).try(:name) %> | <%= t("activerecord.attributes.contracting_request.fiscal_id") %> <%= invoice.try(:company).try(:fiscal_id) %></h5>
+		<h5><%= t("activerecord.attributes.contracting_request.payment_method") %> </h5>
+	</div>
+	<table class="table">
+		<thead>
+			<th><%= t("activerecord.attributes.contracting_request.code") %></th>
+			<th><%= t("activerecord.attributes.contracting_request.description") %></th>
+			<th><%= t("activerecord.attributes.contracting_request.quantity") %></th> 
+			<th><%= t("activerecord.attributes.contracting_request.price") %></th>
+			<th><%= t("activerecord.attributes.contracting_request.amount") %></th>
+			<th><%= t("activerecord.attributes.contracting_request.tax") %></th>
+			<th><%= t("activerecord.attributes.contracting_request.discount") %></th>
+			<th><%= t("activerecord.attributes.contracting_request.discount_pct") %></th>
+			<th><%= t("activerecord.attributes.contracting_request.total") %></th>
+		</thead>
+		<tbody>
+			<% invoice.invoice_items.each do |item| %>
+				<tr>
+					<td><%= item.try(:code) %></td>
+					<!-- <td><%#= link_to item.try(:code), ag2_gest.invoice_item_path(item.id) %></td> -->
+					<td><%= item.try(:description) %></td>
+					<td><%= item.try(:quantity) %></td>
+					<td><%= item.try(:price) %></td>
+					<td><%= item.try(:amount) %></td><!-- Amount -->
+					<td><%= item.try(:tax_type).try(:tax) %>%</td>
+					<td><%= item.try(:discount) %></td>
+					<td><%= item.try(:discount_pct) %>%</td>
+					<td><%= item.total %></td><!-- Total -->
+				</tr>
+			<% end %>
+			<tr class="subtotal">
+				<td colspan="7" class="no-boder"></td>
+				<td class="black-border"><b><%= t("activerecord.attributes.contracting_request.subtotal").upcase %></b></td>
+				<td class="black-border"><%= invoice.subtotal %></td>
+			</tr>
+			<% invoice.tax_breakdown.each do |tax| %>
+				<tr>
+					<td colspan="5" class="no-boder"></td>
+					<td class="no-boder"><b><%= t("activerecord.attributes.contracting_request.taxable") %>:</b> <%= tax[1] %></td>
+					<td class="no-boder"><%= "#{pluralize(tax[3], 'artículo')}"  %></td>
+					<td><b><%= t("activerecord.attributes.contracting_request.vat").upcase %> (<%= tax[0] %>%)</b></td>
+					<td><%= tax[2] %></td>
+				</tr>
+			<% end %>
+			<tr>
+				<td colspan="7" class="black-border"></td>
+				<td class="black-border"><b><%= t("activerecord.attributes.contracting_request.total").upcase %></b></td>
+				<td class="black-border"><%= invoice.total %></td>
+			</tr>
+		</tbody>
+	</table>
+	<hr style="border-width: 2px; border-top: 1px solid #000000;">
+
+<% end %>

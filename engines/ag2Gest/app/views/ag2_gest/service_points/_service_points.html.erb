@@ -1,0 +1,47 @@
+<script>
+  $(document).ready(function() {
+    $("#div_table th a, #div_table #pages a").on("click", function() {
+      $.getScript(this.href);
+      return false;
+    });
+  }); 
+</script>
+
+<table class="table table-condensed table-striped">
+  <thead>
+    <tr>
+      <th><%= sortable "id", t('activerecord.attributes.service_point.id') %></th>
+      <th><%= sortable "name", t('activerecord.attributes.service_point.name') %></th>
+      <th><%= sortable "street_type_id", t('activerecord.attributes.service_point.direction') %></th>
+      <th><%= sortable "diameter", t('activerecord.attributes.service_point.diameter') %></th>
+      <th><%= sortable "gis_id", t('activerecord.attributes.service_point.gis_id') %></th>
+      <th><%= sortable "reading_variant", t('activerecord.attributes.service_point.reading_variant_acr') %></th>
+      <th><%= sortable "cadastral_reference", t('activerecord.attributes.service_point.cadastral_reference') %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @service_points.each do |service_point| %>
+      <tr>
+        <td><%= link_to service_point.try(:id), service_point_path(service_point) %></td>
+        <td><%= service_point.try(:name) %></td>
+        <td><%= "#{service_point.try(:street_type).try(:street_type_code)} #{service_point.try(:street_name)}, #{service_point.try(:street_number)}"%></td>
+        <td><%= service_point.try(:diameter) %></td>
+        <td><%= service_point.try(:gis_id) %></td>
+        <td><%= service_point.try(:reading_variant) %></td>
+        <td><%= service_point.try(:cadastral_reference) %></td>
+        <td>
+          <%= link_to edit_service_point_path(service_point), class: "btn btn-mini" do %>
+            <i class="icon-edit"></i>
+          <% end %>
+          <%= link_to service_point, class: "btn btn-mini", method: :delete, data: { confirm: 'Are you sure?' } do %>
+            <i class="icon-trash"></i>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @service_points } %>
+<%= render :partial => '/layouts/crud/new', :locals => { :model => ServicePoint, :path => new_service_point_path, :txt => t("ag2_gest.service_points.index.btn_new") } %>
+<%= link_to t("ag2_gest.service_points.index.back_to_root"), ag2_gest.root_path %>

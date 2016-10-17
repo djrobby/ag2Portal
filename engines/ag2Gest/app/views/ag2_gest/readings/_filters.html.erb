@@ -1,0 +1,34 @@
+<!-- Refresh -->
+<%= link_to ag2_gest.readings_path, title: I18n.t(:refresh), class: "icon-refresh-link", remote: true do %> 
+  <i class="icon-refresh"></i>
+<% end %>
+<!-- Search form -->
+<%= form_tag "readings", :method => 'get', :remote => true do %>
+<!-- Project -->
+<%= label_tag I18n.t("ag2_gest.readings.index.label_project"), nil, :class => 'form-label-under-sel2' %>
+<%#= select_tag "Project", options_from_collection_for_select(@projects, "id", "project_code"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
+<!-- Request Status -->
+<%= label_tag I18n.t("ag2_gest.readings.index.label_request_status"), nil, :class => 'form-label-under-sel2' %>
+<%= select_tag "Meter", options_from_collection_for_select(@meters, "id", "meter_code"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
+<!-- Request Type -->
+<%#= label_tag I18n.t("ag2_gest.readings.index.label_request_type"), nil, :class => 'form-label-under-sel2' %>
+<%#= select_tag "RequestType", options_from_collection_for_select(@request_types, "id", "description"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
+<!-- Work Order -->
+<%#= label_tag I18n.t("ag2_gest.readings.index.label_work_order"), nil, :class => 'form-label-under-sel2' %>
+<%#= select_tag "WorkOrder", options_from_collection_for_select(@work_orders, "id", "order_no"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
+<!-- Otros -->
+<%#= label_tag I18n.t("ag2_gest.readings.index.label_others"), nil, :class => 'form-label' %>
+<%#= text_field_tag "search", nil, :class => 'x-large-text-field shrinked number-text-field', onkeyup: "caps(this)" %>
+<!-- Submit -->
+<%= submit_tag I18n.t(:apply_filter_button), :class => 'btn btn-primary', :id => 'submit_btn' %>
+<!-- Remove filter -->
+<button id="removeFilter" type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><%= t :clear_filter_button %></button>
+<% end %>
+<!-- Buttons -->
+<%= render :partial => '/layouts/crud/new', :locals => { :model => Offer, :path => new_reading_path, :txt => t("ag2_gest.readings.index.btn_new") } %>
+<br />
+<%= link_to "Crear prelecturas", new_pre_readings_path, class: "btn btn-primary" %>
+<br />
+
+<br />
+<%= link_to t("ag2_gest.readings.index.back_to_root"), ag2_gest.root_path %>

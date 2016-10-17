@@ -1,17 +1,23 @@
-<%= form_for(@street_directory) do |f| %>
-  <% if @street_directory.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@street_directory.errors.count, "error") %> prohibited this street_directory from being saved:</h2>
+<script type="text/javascript">
+	$(document).ready(function() {
+	  // Select2
+	  $('select.sel2').select2({
+	    formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+	    allowClear: true
+	  });
+	});
+</script>
 
-      <ul>
-      <% @street_directory.errors.full_messages.each do |msg| %>
-        <li><%= msg %></li>
-      <% end %>
-      </ul>
-    </div>
-  <% end %>
+<%= simple_form_for @street_directory, :html => {:class => 'form-vertical well' } do |f| %>
+	<%= f.error_notification %>
+	<%= display_base_errors resource %>
 
-  <div class="actions">
-    <%= f.submit %>
-  </div>
+	<%= f.input :street_name, :required => true, :autofocus => true, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %>
+
+	<div class="row-fluid">
+	  <%= f.association :street_type, collection: StreetType.all(order: 'street_type_description'), :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: {class: "span4"} %>
+	  <%= f.association :town, collection: Town.all(order: 'province_id, name'), :input_html => { :class => 'sel2 x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: {class: "span8"} %>
+	</div>  
+
+	<%= f.button :submit, :class => 'btn-primary' %>
 <% end %>

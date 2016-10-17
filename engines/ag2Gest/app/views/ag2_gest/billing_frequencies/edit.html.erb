@@ -1,6 +1,8 @@
-<h1>Editing billing_frequency</h1>
+<%= render '/layouts/ag2_gest/billingfrequenciesbreadcrumb' %>
+
+<h3><%= t '.title' %></h3>
 
 <%= render 'form' %>
 
-<%= link_to 'Show', @billing_frequency %> |
-<%= link_to 'Back', billing_frequencies_path %>
+<%= link_to t('.show'), @billing_frequency %> |
+<%= link_to t('.back'), billing_frequencies_path %>

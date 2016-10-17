@@ -1,5 +1,21 @@
-<p id="notice"><%= notice %></p>
+<%= render '/layouts/ag2_gest/meterlocationsbreadcrumb' %>
 
+<h3><%= t(".title")%> <%=@meter_location.try(:name) %></h3>
+<table class="table">
+  <tbody>
+    <tr>
+      <td><%= t('activerecord.attributes.meter_location.id') %>:</td>
+      <td><%= @meter_location.try(:id) %></td>
+      <td><%= t('activerecord.attributes.meter_location.name') %>:</td>
+      <td><%= @meter_location.try(:name) %></td>
+    </tr>
+      <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @meter_location } %>
+  </tbody>
+</table>
 
-<%= link_to 'Edit', edit_meter_location_path(@meter_location) %> |
-<%= link_to 'Back', meter_locations_path %>
+<%= render partial: '/layouts/crud/update_delete_new', locals:
+{ model: MeterLocation, update_path: edit_meter_location_path(@meter_location), update_txt: t('.btn_edit'),
+delete_path: @meter_location, delete_txt: t('.btn_delete'), msg: t("activerecord.models.meter_location.one"), :txt => @meter_location.name,
+new_path: new_meter_location_path, new_txt: t('ag2_gest.meter_locations.index.btn_new') } %>
+
+<%= link_to I18n.t('ag2_gest.meter_locations.back_to_main_page'), meter_locations_path %>

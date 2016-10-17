@@ -1,0 +1,32 @@
+<% content_for :title, "aGestiona2 | ag2ServicePointType" %>
+<% content_for :icon, "/assets/icon/TableA.png" %>
+<% content_for :alt, "ag2ServicePointType" %>
+
+<ul class="breadcrumb">
+  <li>
+    <a href="<%= main_app.root_path %>"><i class="icon-home"></i></a><span class="divider">></span>
+  </li>
+  <li>
+    <a href="<%= ag2_gest.root_path %>">ag2Gest</a><span class="divider">></span>
+  </li>
+  <% if @service_point_types %>
+  <li>
+    <%=t "ag2_gest.breadcrumb.service_point_types.items" %>
+  </li>
+  <% end %>
+  <% if @service_point_type %>
+  <li>
+    <a href="<%= service_point_types_path %>"><%=t :"ag2_gest.breadcrumb.service_point_types.items" %></a><span class="divider">></span>
+  </li>
+  <% if @breadcrumb == 'read' || @breadcrumb == 'update' %>
+  <%=t :"ag2_gest.breadcrumb.service_point_types.item" %>
+  <% end %>
+  <% if @breadcrumb == 'create' %>
+  <li>
+    <%= t :"breadcrumb.new" %>
+  </li>
+  <% end %>
+  <% end %>
+  <!-- Close -->
+  <a class="close" href="<%= ag2_gest.root_path %>">&#215;</a>
+</ul>

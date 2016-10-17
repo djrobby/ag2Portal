@@ -1,5 +1,35 @@
-<p id="notice"><%= notice %></p>
+<%= render '/layouts/ag2_gest/metermodelsbreadcrumb' %>
 
+<h3><%= t(".title")%> <%=@meter_model.try(:model) %></h3>
+<table class="table">
+  <tbody>
+    <tr>
+      <td><%= t('activerecord.attributes.meter_model.id') %>:</td>
+      <td colspan="5"><%= @meter_model.try(:id) %></td>
+    </tr>
+    <tr>
+      <td><%= t('activerecord.attributes.meter_model.model') %>:</td>
+      <td><%= @meter_model.try(:model) %></td>
+      <td><%= t('activerecord.attributes.meter_model.meter_type') %>:</td>
+      <td><%= @meter_model.meter_type.name %></td>
+      <td><%= t('activerecord.attributes.meter_model.meter_brand') %>:</td>
+      <td><%= @meter_model.meter_brand.brand %></td>
+    </tr>
+    <tr>
+      <td><%= t('activerecord.attributes.meter_model.dials') %>:</td>
+      <td><%= @meter_model.dials %></td>
+      <td><%= t('activerecord.attributes.meter_model.digits') %>:</td>
+      <td><%= @meter_model.digits %></td>
+      <td><%= t('activerecord.attributes.meter_model.letter_id') %>:</td>
+      <td><%= @meter_model.letter_id %></td>
+    </tr>
+      <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @meter_model } %>
+  </tbody>
+</table>
 
-<%= link_to 'Edit', edit_meter_model_path(@meter_model) %> |
-<%= link_to 'Back', meter_models_path %>
+<%= render partial: '/layouts/crud/update_delete_new', locals:
+{ model: MeterModel, update_path: edit_meter_model_path(@meter_model), update_txt: t('.btn_edit'),
+delete_path: @meter_model, delete_txt: t('.btn_delete'), msg: t("activerecord.models.meter_model.one"), :txt => @meter_model.model,
+new_path: new_meter_model_path, new_txt: t('ag2_gest.meter_models.index.btn_new') } %>
+
+<%= link_to I18n.t('ag2_gest.meter_models.back_to_main_page'), meter_models_path %>

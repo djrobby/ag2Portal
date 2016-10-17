@@ -1,0 +1,23 @@
+<tr>
+  <% if @breadcrumb == 'create' || @breadcrumb == 'update' %>
+  <th><%= t "activerecord.attributes.supplier_bank_account.bank_account_class" %></th>
+  <th><%= t "activerecord.attributes.supplier_bank_account.country" %></th>
+  <th><%= t "activerecord.attributes.supplier_bank_account.iban_dc_c" %></th>
+  <th><%= t "activerecord.attributes.supplier_bank_account.bank" %></th>
+  <th><%= t "activerecord.attributes.supplier_bank_account.bank_office" %></th>
+  <th><%= t "activerecord.attributes.supplier_bank_account.ccc_dc_c" %></th>
+  <th><%= t "activerecord.attributes.supplier_bank_account.account_no" %></th>
+  <th><%= t "activerecord.attributes.supplier_bank_account.holder_name" %></th>
+  <th><%= t "activerecord.attributes.supplier_bank_account.holder_fiscal_id_c" %></th>
+  <th align="center"><%= t "activerecord.attributes.supplier_bank_account.starting_at" %></th>
+  <th align="center"><%= t "activerecord.attributes.supplier_bank_account.ending_at" %></th>
+  <th></th>
+  <% else %>
+  <th><%= t "activerecord.attributes.supplier_bank_account.bank_account_class" %></th>
+  <th><%= t "activerecord.attributes.supplier_bank_account.e_format" %></th>
+  <th><%= t "activerecord.attributes.supplier_bank_account.holder_name" %></th>
+  <th><%= t "activerecord.attributes.supplier_bank_account.holder_fiscal_id_c" %></th>
+  <th align="center"><%= t "activerecord.attributes.supplier_bank_account.starting_at" %></th>
+  <th align="center"><%= t "activerecord.attributes.supplier_bank_account.ending_at" %></th>
+  <% end %>
+</tr>

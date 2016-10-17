@@ -1,0 +1,53 @@
+<script>
+  $(document).ready(function() {
+    $("#div_table th a, #div_table #pages a").on("click", function() {
+      $.getScript(this.href);
+      return false;
+    });
+  }); 
+</script>
+
+<table class="table table-condensed table-striped">
+  <thead>
+    <tr>
+      <th><%= sortable "id", t('activerecord.attributes.sale_offer_status.id') %></th>
+      <th><%= sortable "name", t('activerecord.attributes.sale_offer_status.name') %></th>
+      <th><%= sortable "approval", t('activerecord.attributes.sale_offer_status.approval') %></th>
+      <th><%= sortable "notification", t('activerecord.attributes.sale_offer_status.notification') %></th>
+    </tr>
+  </thead>
+  <tbody>
+  	<% @sale_offer_statuses.each do |salstatus| %>
+	    <tr>
+	      <td><%= link_to salstatus.try(:id), sale_offer_status_path(salstatus) %></td>
+	      <td><%= salstatus.try(:name) %></td>
+	      <td>
+		      <% if salstatus.try(:approval) == true %>
+		        <i class="icon-thumbs-up"></i>
+		      <% else %>
+		        <i class="icon-thumbs-down"></i>
+		      <% end %>
+	      </td>
+	      <td>
+		      <% if salstatus.try(:notification) == true %>
+		        <i class="icon-thumbs-up"></i>
+		      <% else %>
+		        <i class="icon-thumbs-down"></i>
+		      <% end %>
+	      </td>
+	      <td>
+		      <%= link_to edit_sale_offer_status_path(salstatus), class: "btn btn-mini" do %>
+		        <i class="icon-edit"></i>
+		      <% end %>
+		      <%= link_to salstatus, class: "btn btn-mini", method: :delete, data: { confirm: 'Are you sure?' } do %>
+		        <i class="icon-trash"></i>
+		      <% end %>
+		    </td>
+		  </tr>
+		<% end %>
+	</tbody>
+</table>
+
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @sale_offer_statuses } %>
+<%= render :partial => '/layouts/crud/new', :locals => { :model => SaleOfferStatus, :path => new_sale_offer_status_path, :txt => t("ag2_gest.sale_offer_statuses.index.btn_new") } %>
+<%= link_to t("ag2_gest.sale_offer_statuses.index.back_to_root"), ag2_gest.root_path %>

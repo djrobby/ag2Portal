@@ -1,21 +1,77 @@
-<h1>Listing subscribers</h1>
+<script type="text/javascript">
+  
+  var _thisForm = ''; //Inicia variable String empty y false 
+  var changing = false; 
 
-<table>
-  <tr>
-    <th></th>
-    <th></th>
-    <th></th>
-  </tr>
+  $(document).ready(function() {
+    $('.sel2').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      dropdownCssClass: 'shrinked',
+      dropdownAutoWidth: true
+    });
+ 
+    
+    //Select
+    $(".sel2").select2();
+    // Initialized form variable
+    _thisForm = $("#removeFilter").closest('form')[0];
 
-<% @subscribers.each do |subscriber| %>
-  <tr>
-    <td><%= link_to 'Show', subscriber %></td>
-    <td><%= link_to 'Edit', edit_subscriber_path(subscriber) %></td>
-    <td><%= link_to 'Destroy', subscriber, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-  </tr>
-<% end %>
-</table>
+  });
 
-<br />
+  $(document).ajaxStart(function() {
+    // show loader on start
+    
+    if (changing == false) {
+      $("#div_table").html("");
+      $("#loader").show();
+    }    
+  }).ajaxSuccess(function(){
+    // hide loader on success Ya ha cargado los objects
+    
+    $("#loader").hide();
+  });
 
-<%= link_to 'New Subscriber', new_subscriber_path %>
+  $(window).bind("load", function() {
+    
+    //$('#name').val("<%= params[:name] %>");
+  });
+
+
+  jQuery(function($) {
+
+    $('#sub_office').change(function() {
+      
+    });
+
+
+
+    // when the #removeFilter button clicked
+    $("#removeFilter").click(function() {
+      
+      //$("#name").val("");
+      //$("#sub_town").val("");
+      //$("#sub_office").val("");
+      $("#search").val("");
+      $("#submit_btn").trigger("click");
+    });
+
+  });//jQuery End
+</script>
+
+<%= render '/layouts/ag2_gest/subscribersbreadcrumb' %>
+
+<%#= render :partial => '/layouts/searchhead_remote', :locals => { :title => t(".title"), :path => subscribers_path } %>
+
+<div class="container-fluid">
+  <div class="row-fluid">
+
+		<div class="span3">
+      <%= render 'filters' %>
+    </div>
+    
+    <div class="span9" id="div_table">
+      <%= render 'subscribers' %>
+    </div><!-- /.span9 -->
+
+  </div><!-- /.row-fluid -->
+</div><!-- /.container-fluid -->

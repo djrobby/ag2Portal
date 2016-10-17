@@ -1,5 +1,28 @@
-<p id="notice"><%= notice %></p>
+<%= render '/layouts/ag2_gest/billingfrequenciesbreadcrumb' %>
 
+<h3><%=@billing_frequency.try(:name) %></h3>
+<table class="table">
+  <tbody>
+    <tr>
+      <td><%= t('activerecord.attributes.billing_frequency.frequency_id') %>:</td>
+      <td><%= @billing_frequency.try(:id) %></td>
+      <td><%= t('activerecord.attributes.billing_frequency.name') %>:</td>
+      <td><%= @billing_frequency.try(:name) %></td>
+    </tr>
+    <tr>
+      <td><%= t('activerecord.attributes.billing_frequency.days') %>:</td>
+      <td><%= @billing_frequency.try(:days) %></td>
+      <td><%= t('activerecord.attributes.billing_frequency.months') %>:</td>
+      <td><%= @billing_frequency.try(:months) %></td>
+    </tr>
+      <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @billing_frequency } %>
+      <%#= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @billing_frequency } %>
+  </tbody>
+</table>
 
-<%= link_to 'Edit', edit_billing_frequency_path(@billing_frequency) %> |
-<%= link_to 'Back', billing_frequencies_path %>
+<%= render partial: '/layouts/crud/update_delete_new', locals:
+{ model: BillingFrequency, update_path: edit_billing_frequency_path(@billing_frequency), update_txt: t('.btn_edit'),
+delete_path: @billing_frequency, delete_txt: t('.btn_delete'), msg: t("activerecord.models.billing_frequency.one"), :txt => @billing_frequency.name,
+new_path: new_billing_frequency_path, new_txt: t('ag2_gest.billing_frequencies.index.btn_new') } %>
+
+<%= link_to I18n.t('ag2_gest.billing_frequencies.back_to_main_page'), billing_frequencies_path %>

@@ -1,0 +1,94 @@
+<script type="text/javascript">
+  $(document).ready(function() {
+  // Events post water supply contract
+  // $('select.sel2').select2({
+  //     formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+  //     allowClear: true
+  //   });
+  //
+  // var changeState = function(current, next){
+  //
+  //     current
+  //     current.siblings("p").removeClass("text-active")
+  //     next.siblings("p").removeClass("text-inactive").addClass("text-active")
+  //     next.removeAttr('disabled').trigger('click');
+  //   };
+  $("#water_supply_contract_meter_id").select2().on("change", function(e) {
+      jQuery.getJSON('get_caliber/' + e.val, function(data) {
+        $("#wsc_meter").select2("val",data.id);
+      });
+    })
+    $("#wsc_meter").select2().on("change", function(e) {
+      $("#water_supply_contract_meter_id").select2("val","");
+    })
+
+  $("#form_new_water_supply_contract")
+    .bind("ajax:success", function(xhr, data, status) {
+      // modal water supply contract hide
+      $("#new-water-supply-contract").modal('hide');
+      // if form is post
+      if ($("#form_new_water_supply_contract").attr("method") == "post"){
+        // change form action and method
+        $("#form_new_water_supply_contract").attr("action", "/<%= params[:locale] %>/ag2_gest/<%= params[:locale] %>/contracting_requests/<%= @contracting_request.id %>/water_supply_contracts/" + data.water_supply_contract.id);
+        $("#form_new_water_supply_contract").attr("method", "put");
+        // show crear factura Nestor
+        // $("#inspection-billing").text("Crear Factura");
+        // $("#inspection-billing").attr("href","<%= params[:id] %>/inspection_billing");
+        $("#inspection-billing").removeClass("disabled");
+        // $("#initial-billing").text("Crear Factura");
+        // $("#initial-billing").attr("href","<%= params[:id] %>/initial_billing");
+        $("#initial-billing").removeClass("disabled");
+      }
+      // update data fields
+      $("#water_supply_contract_cadastral_reference").text(data.water_supply_contract.cadastral_reference);
+      $("#water_supply_contract_gis_id").text(data.water_supply_contract.gis_id);
+      $("#water_supply_contract_endowments").text(data.water_supply_contract.endowments);
+      $("#water_supply_contract_inhabitants").text(data.water_supply_contract.inhabitants);
+      $("#water_supply_contract_remarks").text(data.water_supply_contract.remarks);
+      $("#tariff_scheme").attr("href","/<%= params[:locale] %>/ag2_gest/<%= params[:locale] %>/tariff_schemes/" + data.tariff_scheme.id);
+      $("#tariff_scheme").text(data.tariff_scheme.name);
+      $("#tariff_type").text(data.tariff_type.name);
+      $("#tariff_fixed_fee").text(data.tariff+' €');
+      $("#billing_frequency").text(data.billing_frequency);
+      $("#caliber").text(data.caliber);
+      $("#meter_model").text(data.meter_model.brand + "/" + data.meter_model.model);
+      $("#meter_code").text(data.meter.meter_code);
+      /*changeState(currentStepWizard,nextStepWizard);*/
+    })
+    .bind("ajax:error", function(xhr, data, status) {
+      alert('<%= I18n.t("ag2_gest.contracting_request.show.error_water_supply_contract") %>');
+    });
+  });
+</script>
+
+<div id="new-water-supply-contract" class="modal fade" style="display: none;">
+  <%= simple_form_for [@contracting_request, @water_supply_contract], :remote => :true, :html => { "data-type" => :json, :class => 'form-inline', :id => 'form_new_water_supply_contract' } do |f| %>
+    <div class="modal-header">
+      <a class="close" data-dismiss="modal">&#215;</a>
+      <h3><%= I18n.t('ag2_gest.contracting_requests.new_water_supply_contract.title') %></h3>
+    </div>
+    <div class="modal-body">
+      <%#= f.association :tariff, :autofocus => true, collection: Tariffs.all(order: 'name'), :input_html => { :class => 'mid-text-field', :id => 'fnt_entity_type' }, :label_html => { :class => 'form-label' } %>
+      <%#= f.association :tariff, :autofocus => true, collection: ["DOMESTICA", "INDUSTRIAL"], :input_html => { :class => 'x-large-text-field', :id => 'fnt_entity_type' }, :label_html => { :class => 'form-label' } %>
+      <%= f.input :contracting_request_id, :as => :hidden, :input_html => { :value => @contracting_request.id } %>
+      <%= f.input :client_id, :as => :hidden, :input_html => { :value => @contracting_request.client.try(:id) } %>
+      <h4><%= t('activerecord.attributes.contracting_request.tariff_data') %></h4>
+
+      <%= f.association :tariff_scheme, required: true, collection: TariffScheme.where(project_id: @contracting_request.project_id), input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' }, include_blank: true %>
+      <%= f.input :endowments, :input_html => { :class => 'x-large-text-field', :id => 'wsc_endowments' }, :label_html => { :class => 'form-label' } %>
+      <%= f.input :inhabitants, :input_html => { :class => 'x-large-text-field', :id => 'wsc_inhabitants' }, :label_html => { :class => 'form-label' } %>
+      <h4><%= t('activerecord.attributes.contracting_request.measuring_device') %></h4>
+      <%= f.association :meter, collection: Meter.from_office(session[:office]).availables, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' }, include_blank: true, label: t('activerecord.attributes.contracting_request.meter') %>
+      <%= f.association :caliber, required: true, collection: Caliber.order(:caliber).map{|c| [c.caliber,c.id]}, :input_html => { :class => 'x-large-text-field sel2', :id => 'wsc_meter' }, :label_html => { :class => 'form-label' } %>
+      <h4><%= t('activerecord.attributes.contracting_request.others') %></h4>
+      <%= f.input :cadastral_reference, :input_html => { :class => 'x-large-text-field', :id => 'wsc_cadastral_reference' }, :label_html => { :class => 'form-label' } %>
+      <%= f.input :gis_id, :input_html => { :class => 'x-large-text-field', :id => 'wsc_gis_id' }, :label_html => { :class => 'form-label' } %>
+      <%= f.input :remarks, as: :text, :input_html => { :class => 'x-large-text-field', :id => 'wsc_remarks', rows: 5 }, :label_html => { :class => 'form-label' } %>
+
+    </div>
+    <div class="modal-footer">
+      <%= f.submit t("activerecord.attributes.contracting_request.accept"), :class => 'btn btn-primary' %>
+      <a class="btn btn-primary" data-dismiss="modal" href="#"><%= t :close_button %></a>
+    </div>
+  <% end %>
+</div>

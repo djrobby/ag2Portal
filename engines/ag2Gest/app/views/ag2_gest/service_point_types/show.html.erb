@@ -1,5 +1,21 @@
-<p id="notice"><%= notice %></p>
+<%= render '/layouts/ag2_gest/servicepointtypebreadcrumb' %>
 
+<h3><%= t('.title') %> <%=@service_point_type.name %></h3>
+<table class="table">
+  <tbody>
+    <tr>
+      <td><%= t('activerecord.attributes.service_point_type.id') %>:</td>
+      <td><%= @service_point_type.try(:id) %></td>
+      <td><%= t('activerecord.attributes.service_point_type.name') %>:</td>
+      <td><%= @service_point_type.try(:name) %></td>
+    </tr>
+    	<%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @service_point_type } %>
+  </tbody>
+</table>
 
-<%= link_to 'Edit', edit_service_point_type_path(@service_point_type) %> |
-<%= link_to 'Back', service_point_types_path %>
+<%= render partial: '/layouts/crud/update_delete_new', locals:
+{ model: ServicePointType, update_path: edit_service_point_type_path(@service_point_type), update_txt: t('.btn_edit'),
+delete_path: @service_point_type, delete_txt: t('.btn_delete'), msg: t("activerecord.models.service_point_type.one"), :txt => @service_point_type.id,
+new_path: new_service_point_type_path, new_txt: t('ag2_gest.service_point_types.index.btn_new') } %>
+
+<%= link_to I18n.t('ag2_gest.service_point_types.back_to_main_page'), service_point_types_path %>

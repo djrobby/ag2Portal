@@ -1,0 +1,756 @@
+<style>
+  a.pull-right {
+    margin-bottom: 20px;
+  }
+</style>
+<%= render '/layouts/ag2_gest/subscribersbreadcrumb' %>
+
+<%= link_to t('activerecord.attributes.subscriber.print'), subscriber_pdf_subscriber_path(:format => :pdf), class: "btn btn-warning btn-mini pull-right", target: "_blank" %>
+
+<table class="table">
+  <tbody>
+    <tr>
+      <td><b><%= t('activerecord.attributes.subscriber.name') %>:</b></td><!-- Abonado or Nombre ?¿ -->
+      <td><%= @subscriber.try(:name) %></td>
+      <td><b><%= t('activerecord.attributes.subscriber.subscriber_code') %>:</b></td>
+      <td><%= @subscriber.try(:subscriber_code) %></td>
+      <td><b><%= t('activerecord.attributes.subscriber.client_id') %>:</b></td>
+      <td><%= link_to @subscriber.try(:client).try(:client_code), ag2_gest.client_path(@subscriber.client_id) %></td>
+    </tr>
+    <tr>
+      <td><b><%= t('activerecord.attributes.subscriber.fiscal') %>:</b></td>
+      <td><%= @subscriber.try(:fiscal_id) %></td>
+      <td><b><%= t('activerecord.attributes.subscriber.starting_at') %>:</b></td>
+      <td colspan="3"><%= I18n.localize(@subscriber.try(:starting_at)) unless @subscriber.try(:starting_at).blank? %></td>
+      <!-- <td><b><%#= t('activerecord.attributes.subscriber.ending_at') %>:</b></td>
+      <td><%#= @subscriber.try(:ending_at) %></td> -->
+    </tr>
+  </tbody>
+</table>
+
+<h4><%= t('activerecord.attributes.subscriber.address_data') %></h4>
+<table class="table">
+  <tbody>
+    <tr>
+      <td><b><%= t('activerecord.attributes.subscriber.direction') %>:</b></td>
+      <td colspan="3"><%= "#{@subscriber.street_type.street_type_code} #{@subscriber.street_directory.street_name} #{@subscriber.street_number}, #{@subscriber.building} #{@subscriber.floor} #{@subscriber.floor_office}" %></td>
+      <td><b><%= t('activerecord.attributes.subscriber.zipcode_id') %>:</b></td>
+      <td><%= link_to @subscriber.try(:zipcode).try(:zipcode), ag2_admin.zipcode_path(@subscriber.zipcode_id) %></td>
+    </tr>
+    <tr>
+      <td><b><%= t('activerecord.attributes.subscriber.town_id') %>:</b></td>
+      <td><%= link_to @subscriber.try(:town).try(:name), ag2_admin.town_path(@subscriber.town_id) %></td>
+      <td><b><%= t('activerecord.attributes.subscriber.office_id') %>:</b></td>
+      <td><%= link_to @subscriber.try(:office).try(:name), ag2_admin.office_path(@subscriber.office_id) %></td>
+      <td><b><%= t('activerecord.attributes.subscriber.province_id') %>:</b></td>
+      <td><%= link_to @subscriber.try(:province).try(:name), ag2_admin.province_path(@subscriber.province_id) %></td>
+    </tr>
+    <tr>
+      <td><b><%= t('activerecord.attributes.subscriber.region_id') %>:</b></td>
+      <td><%= link_to @subscriber.try(:region).try(:name), ag2_admin.region_path(@subscriber.region_id) %></td>
+      <td><b><%= t('activerecord.attributes.subscriber.country_id') %>:</b></td>
+      <td><%= link_to @subscriber.try(:country).try(:name), ag2_admin.country_path(@subscriber.country_id) %></td>
+      <td><b><%= t('activerecord.attributes.subscriber.center_id') %>:</b></td>
+      <td><%= link_to @subscriber.try(:center).try(:name), ag2_gest.center_path(@subscriber.center_id) %></td>
+    </tr>
+  </tbody>
+</table>
+
+<ul class="nav nav-tabs" id="myTab">
+  <li class="active"><a href="#detalles" data-toggle="tab"><%= t('activerecord.attributes.subscriber.detail') %></a></li>
+  <li><a href="#lecturas" data-toggle="tab"><%= t('activerecord.attributes.subscriber.readings') %></a></li>
+  <li><a href="#facturas" data-toggle="tab"><%= t('activerecord.attributes.subscriber.invoices') %></a></li>
+  <li><a href="#direccion" data-toggle="tab"><%= t('activerecord.attributes.subscriber.data_supply') %></a></li>
+  <li><a href="#domiciliaciones" data-toggle="tab"><%= t('activerecord.attributes.subscriber.debits') %></a></li>
+  <li><a href="#notas" data-toggle="tab"><%= t('activerecord.attributes.subscriber.notes') %></a></li>
+</ul>
+
+<div class="tab-content" id="myTabContent">
+  <div class="tab-pane fade active in" id="detalles">
+    <table class="table">
+      <tbody>
+        <tr>
+          <td><b><%= t('activerecord.attributes.subscriber.contract') %></b></td>
+          <td><%= @subscriber.try(:contract) %></td>
+          <td><b><%= t('activerecord.attributes.subscriber.active') %></b></td>
+          <% if @subscriber.try(:active) %>
+            <td><i class="icon-thumbs-up"></i></td>
+          <% else %>
+            <td><i class="icon-thumbs-down"></i></td>
+          <% end %>
+          <td><b><%= t('activerecord.attributes.subscriber.tariff') %></b></td>
+          <td><%= link_to @subscriber.try(:tariff).try(:tariff_type).try(:name), ag2_gest.tariff_type_path(@subscriber.tariff.tariff_type_id) %></td>
+        </tr>
+        <tr>
+          <td><b><%= t('activerecord.attributes.subscriber.meter_id') %></b></td>
+          <td><%= link_to @subscriber.try(:meter).try(:meter_code), ag2_gest.meter_path(@subscriber.meter_id) %></td>
+          <td><b><%= t('activerecord.attributes.subscriber.model') %></b></td>
+          <td><%= "#{@subscriber.meter.meter_model.model} / #{@subscriber.meter.meter_model.brand}"%></td>
+          <td><b><%= t('activerecord.attributes.subscriber.caliber') %></b></td>
+          <td><%= link_to @subscriber.try(:meter).try(:caliber).try(:caliber), ag2_gest.caliber_path(@subscriber.meter.caliber_id) %></td>
+        </tr>
+        <tr>
+          <td><b><%= t('activerecord.attributes.subscriber.billing_frequency_id') %></b></td>
+          <td colspan="6"><%= link_to @subscriber.try(:billing_frequency).try(:name), ag2_gest.billing_frequency_path(@subscriber.billing_frequency_id) %></td>
+        </tr>
+        <tr>
+          <td><b><%= t('activerecord.attributes.subscriber.comments') %></b></td>
+          <td colspan="6"><%= @subscriber.try(:remarks) %></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  
+  <!-- Readings -->
+  <div class="tab-pane fade active" id="lecturas">
+    <div class="row-fluid">
+      <div class="span4">
+        <a href="#newReadingModal" class="btn btn-mini btn-primary" data-toggle="modal"><%= t('activerecord.attributes.subscriber.reading_new') %></a>
+        <a href="#" class="btn btn-mini btn-primary"><%= t('activerecord.attributes.subscriber.remove_meter') %></a>
+        <a href="#" class="btn btn-mini btn-primary"><%= t('activerecord.attributes.subscriber.change_meter') %></a>
+      </div>
+      <div class="span4">
+        <label class="span4">
+          <%= t('activerecord.attributes.subscriber.period') %>
+        </label>
+        <div class="span8">
+          <select class="input-medium" style="height: 20px;font-size:10px">
+
+            <% @option_period.each do |period, index| %>
+              <% if index = 1 %>
+                <option selected value="<%= index %>"><%= period %></option>
+              <% else %>
+                <option value="<%= index %>"><%= period %></option>
+              <% end %>
+            <% end %>
+          </select>
+        </div>
+      </div>
+
+      <div class="span4">
+        <label class="span4">
+          <%= t('activerecord.attributes.subscriber.reading_type') %>
+        </label>
+        <div class="span8">
+          <select class="input-medium" style="height: 20px;font-size:10px">
+
+            <% @reading_types.each_with_index do |reading_type, index| %>
+              <option value="<%= index %>"><%= reading_type.name %></option>
+            <% end %>
+
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <table class="table table-center table-condensed table-striped shrinked stu">
+      <thead>
+        <tr>
+          <th><%= t('activerecord.attributes.subscriber.id') %></th>
+          <th><%= t('activerecord.attributes.subscriber.period') %></th>
+          <th><%= t('activerecord.attributes.subscriber.type') %></th>
+          <th><%= t('activerecord.attributes.subscriber.date') %></th>
+          <th><%= t('activerecord.attributes.subscriber.reading') %></th>
+          <th><%= t('activerecord.attributes.subscriber.incidences') %></th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+
+        <% @subscriber.readings.order("reading_date DESC").each do |reading| %> <!-- ¿??Falta period -->
+          <tr>
+            <td><%= reading.try(:id) %></td>
+            <td><%= reading.try(:billing_period).try(:period) %></td>
+            <td><%= reading.try(:reading_type).try(:name) %></td>
+            <td><%= reading.try(:reading_date) %></td>
+            <td><%= reading.try(:reading_index) %></td>
+            <td>
+              <%if reading.try(:reading_incidence_types).blank? %>
+                -
+              <% else %>
+                <i title="<%= reading.reading_incidence_types.pluck(:name).join(", ") %>" class="icon-ok"></i>
+              <% end %>
+            </td>
+            <td class="a_inline">
+              <%= link_to edit_reading_path(reading), class: "btn btn-mini" do %>
+                <i class="icon-edit"></i>
+              <% end %>
+
+              <%= link_to reading, class: "btn btn-mini", method: :delete, data: { confirm: 'Are you sure?' } do %>
+                <i class="icon-trash"></i>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+
+    <div class="pagination pagination-small text-center">
+      <ul>
+        <li><a href="#">«</a></li>
+        <li><a href="#">1</a></li>
+        <li><a href="#">2</a></li>
+        <li><a href="#">3</a></li>
+        <li><a href="#">4</a></li>
+        <li><a href="#">5</a></li>
+        <li><a href="#">»</a></li>
+      </ul>
+    </div>
+  </div>
+  
+  <!-- Invoices -->
+  <div class="tab-pane fade active" id="facturas">
+    <div class="row-fluid">
+      <div class="span4">
+        <%= link_to t('activerecord.attributes.subscriber.new_receipt'), subscribers_new_invoice_path, class: "btn btn-mini btn-primary" %>
+        <!-- <a href="#newInvoiceModal" class="btn btn-mini btn-primary" data-toggle="modal">Nueva</a> -->
+      </div>
+      <div class="span6">
+        <div class="span4">
+          <label class="span4"><%= t('activerecord.attributes.subscriber.status') %></label>
+          <div class="span8">
+            <select class="input-mini" style="height: 20px;font-size:10px;width:102px">
+              <option value="1" selected><%= t('activerecord.attributes.subscriber.all') %></option>
+              <option value="1"><%= t('activerecord.attributes.subscriber.pendings') %></option>
+              <option value="1"><%= t('activerecord.attributes.subscriber.charged') %></option>
+              <option value="1"><%= t('activerecord.attributes.subscriber.cash') %></option>
+              <option value="1"><%= t('activerecord.attributes.subscriber.bank') %></option>
+            </select>
+          </div>
+        </div>
+
+        <div class="span4">
+          <label class="span4">
+            <%= t('activerecord.attributes.subscriber.series') %>
+          </label>
+          <div class="span8">
+            <input type="text" style="height: 12px;font-size:10px;width:102px">
+          </div>
+        </div>
+
+        <div class="span4">
+          <label class="span4">
+            <%= t('activerecord.attributes.subscriber.date') %>
+          </label>
+
+          <div class="span8">
+            <input type="date" style="height: 12px;font-size:10px;width:102px">
+          </div>
+        </div>
+
+      </div>
+
+      <div class="span2">
+        <a href="#" class="btn btn-mini btn-primary"><%= t('activerecord.attributes.subscriber.search') %></a>
+        <a href="#" class="btn btn-mini btn-primary"><%= t('activerecord.attributes.subscriber.clean') %></a>
+      </div>
+
+    </div>
+
+    <table class="table table-center table-condensed table-striped shrinked stu">
+      <thead>
+        <tr>
+          <th><%= t('activerecord.attributes.subscriber.id') %></th>
+          <th><%= t('activerecord.attributes.subscriber.receipt') %></th>
+          <th><%= t('activerecord.attributes.subscriber.type') %></th>
+          <th><%= t('activerecord.attributes.subscriber.project') %></th>
+          <th><%= t('activerecord.attributes.subscriber.status') %></th>
+          <th><%= t('activerecord.attributes.subscriber.total') %></th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @subscriber.bills.each do |bill| %>
+          <% bill.invoices.each do |invoice| %>
+            <tr>
+              <td><%= invoice.try(:id) %></td>
+              <td><%= bill.try(:bill_no) %></td>
+              <td><%= invoice.try(:invoice_type).try(:name) %></td>
+              <td><%= bill.try(:project).try(:name) %></td>
+              <% if invoice.try(:invoice_status).try(:name) == "Pendiente" %>
+                <td><span class="label label-important"><%= t('activerecord.attributes.subscriber.pending') %></span></td>
+              <% else %>
+                <td><span class="label label-success"><%= t('activerecord.attributes.subscriber.paid') %></span></td>
+              <% end %>
+              <td>TOTAL</td>
+              <% if invoice.try(:invoice_status).try(:name) == "Pendiente" %>
+                <td><%= link_to t('activerecord.attributes.subscriber.pay_receipt'), subscribers_new_invoice_path, class: "btn btn-mini btn-primary" %></td>
+              <% else %>
+                <td><i class="icon-ok"></i></td>
+              <% end %>
+            </tr>
+          <% end %>
+        <% end %>
+      </tbody>
+    </table>
+
+    <%#= will_paginate @subscribers, class: "pagination pagination-small text-center" %>
+
+    <div class="pagination pagination-small text-center">
+      <ul>
+        <li><a href="#">«</a></li>
+        <li><a href="#">1</a></li>
+        <li><a href="#">2</a></li>
+        <li><a href="#">3</a></li>
+        <li><a href="#">»</a></li>
+      </ul>
+    </div>
+  </div>
+  
+  <!-- Client -->
+  <div class="tab-pane fade active" id="direccion">
+    <table class="table">
+      <tbody>
+        <tr>
+          <td><b><%= t('activerecord.attributes.subscriber.name') %></b></td>
+          <td><%= @subscriber.try(:client).try(:name) %></td>
+          <td><b><%= t('activerecord.attributes.subscriber.direction') %></b></td>
+          <td><%= @subscriber.try(:client).try(:street_name) %></td>
+          <!-- <td><%#= link_to @subscriber.client.street_name, @ag2_gest.client_path(@subscriber.client_id) %></td> -->
+          <td><b><%= t('activerecord.attributes.subscriber.number') %></b></td>
+          <td><%= @subscriber.try(:client).try(:street_number) %></td>
+          <td><b><%= t('activerecord.attributes.subscriber.block') %></b></td>
+          <td><%= @subscriber.try(:client).try(:building) %></td>
+          <td><b><%= t('activerecord.attributes.subscriber.floor') %></b></td>
+          <td><%= @subscriber.try(:client).try(:floor) %></td>
+          <td><b><%= t('activerecord.attributes.subscriber.door') %></b></td>
+          <td><%= @subscriber.try(:client).try(:floor_office) %></td>
+        </tr>
+        <tr>
+          <td><b><%= t('activerecord.attributes.subscriber.town_id') %></b></td>
+          <td><%= @subscriber.try(:client).try(:town).try(:name) %></td>
+          <td><b><%= t('activerecord.attributes.subscriber.zipcode_id') %></b></td>
+          <td><%= @subscriber.try(:client).try(:zipcode).try(:zipcode) %></td>
+          <td><b><%= t('activerecord.attributes.subscriber.province_id') %></b></td>
+          <td><%= @subscriber.try(:client).try(:province).try(:name) %></td>
+          <td><b><%= t('activerecord.attributes.subscriber.region_id') %></b></td>
+          <td><%= @subscriber.try(:client).try(:region).try(:name) %></td>
+          <td><b><%= t('activerecord.attributes.subscriber.country_id') %></b></td>
+          <td><%= @subscriber.try(:client).try(:country).try(:name) %></td>
+        </tr>
+        <tr>
+          <td><b><%= t('activerecord.attributes.subscriber.phone') %></b></td>
+          <td><%= @subscriber.try(:client).try(:phone) %></td>
+          <td><b><%= t('activerecord.attributes.subscriber.cellular') %></b></td>
+          <td><%= @subscriber.try(:client).try(:cellular) %></td>
+          <td><b><%= t('activerecord.attributes.subscriber.fax') %></b></td>
+          <td><%= @subscriber.try(:client).try(:fax) %></td>
+          <td><b><%= t('activerecord.attributes.subscriber.email') %></b></td>
+          <td colspan="5"><%= @subscriber.try(:client).try(:email) %></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  
+  <!-- ClientBankAccount -->
+  <div class="tab-pane fade active" id="domiciliaciones">
+    <div class="row-fluid">
+        <div class="span12">
+          <a href="#newAccountModal" class="btn btn-mini btn-primary" data-toggle="modal">Nueva cuenta</a>
+        </div>
+      <table class="table table-condensed table-striped shrinked stu">
+        <thead>
+          <th><%= t('activerecord.attributes.subscriber.titular') %></th>
+          <th><%= t('activerecord.attributes.subscriber.titular_id') %></th>
+          <th><%= t('activerecord.attributes.subscriber.class') %></th>
+          <th><%= t('activerecord.attributes.subscriber.bank') %></th>
+          <th><%= t('activerecord.attributes.subscriber.sucursal') %></th>
+          <th><%= t('activerecord.attributes.subscriber.control') %></th>
+          <th><%= t('activerecord.attributes.subscriber.account_iban') %></th>
+          <th><%= t('activerecord.attributes.subscriber.ending_at') %></th>
+          <th><%= t('activerecord.attributes.subscriber.active') %></th>
+        </thead>
+        <tbody>
+          <tr>
+            <td><%= @client_bank_account.try(:name) %></td>
+            <td><%= @client_bank_account.try(:fiscal_id) %></td>
+            <td><%= @client_bank_account.try(:bank_account_class) %></td>
+            <td><%= @client_bank_account.try(:bank) %></td>
+            <td><%= @client_bank_account.try(:bank_office) %></td>
+            <td><%= @client_bank_account.try(:country_code) %></td>
+            <td><%= @client_bank_account.try(:country_code) %></td>
+            <td><%#= I18n.localize(@client_bank_account.try(:ending_at)) %></td>
+            <td><!-- fecha de caducidad active de la tarjeta o boolean model¿??¿?¿ --></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  
+  <!-- Notes(Está en blanco) -->
+  <div class="tab-pane fade active" id="notas">
+  </div>
+
+</div>
+
+<!-- NewReading -->
+<!-- <div id="newReadingModal" class="modal hide fade">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+    <h3><%#= t('activerecord.attributes.subscriber.reading_new') %></h3>
+  </div>
+  <div class="modal-body">
+    <form>
+      <div class="row-fluid">
+        <div class="span6">
+          <h4>Contador: <%= link_to @subscriber.meter.meter_code, meter_path(@subscriber.meter_id) %> </h4>
+        </div>
+
+        <div class="span6">
+          <h4>Calibre: <%= @subscriber.meter.caliber.caliber %> </h4>
+        </div>
+
+      </div>
+      <hr>
+      <div class="row-fluid">
+        <div class="span6">
+          <label>Tipo de lectura</label>
+          <select>
+            <% #@reading_types.each_with_index do |reading_type, index| %>
+              <option value="<%= index %>"><%= reading_type.name %></option>
+            <% #end %>
+          </select>
+        
+        </div>
+        <div class="span6">
+          <label>Fecha</label>
+          
+          <input type="date">
+        </div>
+      </div>
+      <div class="row-fluid">
+        <div class="span6 offset3">
+          <label>Consumo actual:</label>
+          <input type="number" value="0" width="10">
+        </div>
+      </div>
+
+      <div class="accordion-group">
+        <div class="accordion-heading">
+          <a class="accordion-toggle" data-toggle="collapse" href="#collapseIncidences">
+            Incidencias
+          </a>
+        </div>
+        <div id="collapseIncidences" class="accordion-body collapse">
+          <div class="accordion-inner">
+            <table class="table">
+              <tr>
+                <td>
+                  <label class="checkbox">
+                    <input type="checkbox">Sin contador
+                  </label>
+                </td>
+                <td>
+                  <label class="checkbox">
+                    <input type="checkbox">No Facturable
+                  </label>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <label class="checkbox">
+                    <input type="checkbox">Derivación
+                  </label>
+                </td>
+                <td>
+                  <label class="checkbox">
+                    <input type="checkbox">Consumo estimado
+                  </label>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <label class="checkbox">
+                    <input type="checkbox">Reconectado
+                  </label>
+                </td>
+                <td>
+                  <label class="checkbox">
+                    <input type="checkbox">Regulación manual
+                  </label>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <label class="checkbox">
+                    <input type="checkbox">No corresponde
+                  </label>
+                </td>
+                <td>
+                  <label class="checkbox">
+                    <input type="checkbox">Octavilla
+                  </label>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <label class="checkbox">
+                    <input type="checkbox">Roto
+                  </label>
+                </td>
+                <td>
+                  <label class="checkbox">
+                    <input type="checkbox">Cerrado
+                  </label>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <label class="checkbox">
+                    <input type="checkbox">Deshabitada sin Lectura
+                  </label>
+                </td>
+                <td>
+                  <label class="checkbox">
+                    <input type="checkbox">Deshabitada con Lectura
+                  </label>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <label class="checkbox">
+                    <input type="checkbox">Avería
+                  </label>
+                </td>
+                <td>
+                  <label class="checkbox">
+                    <input type="checkbox">Consumo excesivo
+                  </label>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <label class="checkbox">
+                    <input type="checkbox">Lectura inferior
+                  </label>
+                </td>
+                <td>
+                  <label class="checkbox">
+                    <input type="checkbox">Vuelta de contador
+                  </label>
+                </td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-primary" data-dismiss="modal">Cerrar</button>
+    <input type="submit" class="btn btn-primary" value="Crear lectura">
+  </div>
+</div> -->
+
+<!-- New ClientBankAccount -->
+<div id="newAccountModal" class="modal hide fade">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+    <h3>Nueva cuenta bancaria</h3>
+  </div>
+  <div class="modal-body">
+    <form>
+      <div class="row-fluid">
+        <div class="span7">
+          <label>Titular cuenta:</label>
+          <input type="text" value="Pedro Martín García" class="input-block-level">
+        </div>
+        <div class="span5">
+          <label>NIF titular:</label>
+          <input type="text" value="234235432-X">
+        </div>
+      </div>
+      <div class="row-fluid">
+        <div class="span2">
+          <label>Banco:</label>
+          <input type="number" value="" class="input-block-level" maxlength="2">
+        </div>
+        <div class="span2">
+          <label>Sucursal:</label>
+          <input type="number" value="" class="input-block-level" maxlength="4">
+        </div>
+        <div class="span2">
+          <label>C.C.:</label>
+          <input type="number" value="" class="input-block-level" maxlength="2">
+        </div>
+        <div class="span6">
+          <label>Cuenta IBAN:</label>
+          <input type="number" value="" class="input-block-level" maxlength="10">
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-primary" data-dismiss="modal">Cerrar</button>
+    <input type="submit" class="btn btn-primary" value="Crear cuenta">
+  </div>
+</div>
+
+<!-- Cobrar Factura -->
+<div id="charge-invoice" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h3 id="myModalLabel">Cobrar factura</h3>
+  </div>
+  <div class="modal-body">
+      <table class="table">
+        <thead>
+          <tr>
+            <th><%= t('activerecord.attributes.subscriber.series') %></th>
+            <th><%= t('activerecord.attributes.subscriber.invoice_number') %></th>
+            <th><%= t('activerecord.attributes.subscriber.subscriber_code') %></th>
+            <th><%= t('activerecord.attributes.subscriber.class_invoice') %></th>
+            <th><%= t('activerecord.attributes.subscriber.pending') %></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>30</td>
+            <td>17</td>
+            <td>4231-111111</td>
+            <td>Acometida</td>
+            <td>236.55 €</td>
+          </tr>
+        </tbody>
+      </table>
+      <form class="form-horizontal">
+        <div class="control-group">
+          <label class="control-label"><b>Forma de pago</b></label>
+          <div class="controls">
+            <select id="payment-method-select">
+              <option></option>
+              <option>Transferencia bancaria</option>
+              <option>Ventanilla bancaria</option>
+              <option>Caja</option>
+            </select>
+          </div>
+        </div>
+      </form>
+
+      <form class="form-horizontal hide" id="cash-machine">
+        <fieldset>
+          <legend>Cobro por ventanilla</legend>
+          <div class="control-group">
+            <label class="control-label"><b>Fecha cobro</b></label>
+            <div class="controls">
+              <input type="date" value="2015-09-17">
+            </div>
+          </div>
+          <div class="control-group">
+            <label class="control-label"><b>Total</b></label>
+            <div class="controls">
+              <input type="text" value="236.55" disabled>
+            </div>
+          </div>
+          <div class="control-group">
+            <label class="control-label"><b>Recibido</b></label>
+            <div class="controls">
+              <input type="text">
+            </div>
+          </div>
+          <div class="control-group">
+            <label class="control-label"><b>Vuelta</b></label>
+            <div class="controls">
+              <input type="text" disabled>
+            </div>
+          </div>
+        </fieldset>
+      </form>
+
+  </div>
+  <div class="modal-footer">
+    <button class="btn" data-dismiss="modal" aria-hidden="true">Cerrar</button>
+    <button class="btn btn-primary">Cobrar</button>
+  </div>
+</div>
+
+<style>
+
+  button:hover + title {
+    display: block!important;
+  }
+
+  .newInvoiceModal {
+    width:600px;
+    height:300px;
+  }
+  .newInvoiceModal .modal-header {
+    background-color:#ccc;
+  }
+  .newInvoiceModal .modal-header button {
+    font-size:30px;
+  }
+  .newInvoiceModal .modal-body {
+    overflow-y: hidden;
+    height: 100%;
+    max-height:190px;
+  }
+    .modal-invoice { width: 80%; margin-left: -40%;/*height: 96%;margin-top: -5%;*/}
+    /*.modal-invoice .modal-body{ max-height: 575px;}*/
+    .mid-text-field {width: 53%;}
+    .large-text-field {width: 90%;}
+    .table-center td, .table-center th {text-align: center;}
+    .zeroPadding {
+      padding: 0 !important;
+    }
+    .icon-chevron-right, .icon-chevron-down{
+      cursor: pointer;
+    }
+</style>
+<script type="text/javascript">
+  $(document).ready(function () {
+
+
+    /*will_paginate*/
+    /*$('.pagination .previous_page').text('«');
+    $('.pagination .next_page').text('»');
+
+    $('.pagination').each(function () {
+      var $bar = $(this);
+      $bar.find('a, .current, span').wrapAll('<ul>');
+      $bar.find('a, .current, span').wrap('<li>');
+
+      $bar.find('em').each(function () {
+        $(this).parent().addClass('disabled');
+        $(this).replaceWith('<a href="#">' + $(this).text() + '</a>');
+      });
+    });*/
+
+
+    $(".icon-chevron-right").click(function(){
+      if ($(this).hasClass('icon-chevron-right')) {
+        $(this).removeClass("icon-chevron-right").addClass("icon-chevron-down");
+      }else{
+        $(this).removeClass("icon-chevron-down").addClass("icon-chevron-right");
+      }
+    });
+
+    $('#myTab a').click(function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      // $(this).tab('show');
+
+      $('#myTab li').removeClass('active');
+      $(this).parent().addClass('active');
+      $('.tab-pane.active').removeClass('active').removeClass('in');
+      $('#'+this.href.split('#')[1]).addClass('active').addClass('in');
+    });
+
+
+    $("#payment-method-select").on("change", function(){
+      if (this.value == "Caja") {
+        $("#cash-machine").removeClass("hide");
+      }
+      else {
+        $("#cash-machine").addClass("hide");
+      }
+    });
+
+    $('.popover-test').popover({
+      html : true,
+    }).popover('toggle');
+
+  });
+
+</script>

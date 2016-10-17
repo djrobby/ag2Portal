@@ -1,6 +1,8 @@
-<h1>Editing meter</h1>
+<%= render '/layouts/ag2_gest/metersbreadcrumb' %>
+
+<h3><%=t '.title' %></h3>
 
 <%= render 'form' %>
 
-<%= link_to 'Show', @meter %> |
-<%= link_to 'Back', meters_path %>
+<%= link_to t('.show'), @meter %> |
+<%= link_to t('.back'), meters_path %>

@@ -1,5 +1,28 @@
-<p id="notice"><%= notice %></p>
+<%= render '/layouts/ag2_gest/billableconceptsbreadcrumb' %>
 
+<h3><%= @billable_concept.try(:name) %></h3>
+<table class="table">
+  <tbody>
+    <tr>
+      <td><%= t('activerecord.attributes.billable_concept.id') %>:</td>
+      <td><%= @billable_concept.try(:id) %></td>
+      <td><%= t('activerecord.attributes.billable_concept.type') %>:</td>
+      <td><%= @billable_concept.try(:document) %></td>
+    </tr>
+    <tr>
+      <td><%= t('activerecord.attributes.billable_concept.name') %>:</td>
+      <td><%= @billable_concept.try(:name) %></td>
+      <td><%= t('activerecord.attributes.billable_concept.code') %>:</td>
+      <td><%= @billable_concept.try(:code) %></td>
+    </tr>
+      <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @billable_concept } %>
+      <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @billable_concept } %>
+  </tbody>
+</table>
 
-<%= link_to 'Edit', edit_billable_concept_path(@billable_concept) %> |
-<%= link_to 'Back', billable_concepts_path %>
+<%= render partial: '/layouts/crud/update_delete_new', locals:
+{ model: BillableConcept, update_path: edit_billable_concept_path(@billable_concept), update_txt: t('.btn_edit'),
+delete_path: @billable_concept, delete_txt: t('.btn_delete'), msg: t("activerecord.models.billable_concept.one"), :txt => @billable_concept.name,
+new_path: new_billable_concept_path, new_txt: t('ag2_gest.billable_concepts.index.btn_new') } %>
+
+<%= link_to I18n.t('ag2_gest.billable_concepts.back_to_main_page'), billable_concepts_path %>

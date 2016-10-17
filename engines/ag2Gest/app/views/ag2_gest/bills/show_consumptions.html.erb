@@ -1,0 +1,85 @@
+<% content_for :title, "aGestiona2 | ag2Bills" %>
+<% content_for :icon, "/assets/icon/TableA.png" %>
+<% content_for :alt, "ag2Bills" %>
+
+<ul class="breadcrumb">
+  <li>
+    <a href="<%= main_app.root_path %>"><i class="icon-home"></i></a><span class="divider">></span>
+  </li>
+  <li>
+    <a href="<%= ag2_gest.root_path %>">ag2Gest</a><span class="divider">></span>
+  </li>
+  <li>
+    <a href="<%= ag2_gest.new_bill_path %>">Facturación masiva</a><span class="divider">></span>
+  </li>
+  <li>
+     Consumos
+  </li>
+</ul>
+
+<h3>Facturación masiva - Consumos</h3>
+<div class="container-fluid">
+  <div class="row-fluid">
+		<div class="span12" id="div_table">
+			<table class="table table-condensed table-striped shrinked stu">
+			  <thead>
+			    <tr>
+			      <th>Ruta</th>
+			      <th>Orden</th>
+            <th>Abonado</th>
+            <th>Dirección suministro</th>
+            <th>Contador</th>
+            <th>Periodo</th>
+			      <th>Lec. año ant.</th>
+			      <th>Lec. per. ant.</th>
+            <th>Lectura</th>
+            <th>Consumo</th>
+			    </tr>
+			  </thead>
+			  <tbody>
+			    <% @readings.each do |reading| %>
+			    	<tr>
+  			    		<td>
+                  <%= reading.try(:reading_route).try(:route_code) %>
+                </td>
+  				      <td>
+                  <%= reading.reading_sequence %>
+                </td>
+                <td>
+                  <%= reading.try(:subscriber).try(:subscriber_code) %>
+                </td>
+                <td>
+                  <%= reading.try(:subscriber).try(:street_directory).try(:street_name) %>
+                </td>
+  				      <td>
+                  <%= reading.try(:meter).try(:meter_code) %>
+                </td>
+                <td>
+                  <%= reading.try(:billing_period).try(:period) %>
+                </td>
+  				      <td>
+                  <%= "#{reading.reading_index_2}"  %>
+                </td>
+  				      <td>
+                  <%= "#{reading.reading_index_1}" %>
+                </td>
+                <td>
+                  <%= "#{reading.reading_index}" %>
+                </td>
+                <td>
+                  <%= "#{reading.consumption}" %>
+                </td>
+            </tr>
+			    <% end %>
+			  </tbody>
+			</table>
+		</div>
+    <div class="row">
+      <a class="btn btn-warning pull-right">Exportar Google Sheets</a>
+      <%= simple_form_for :bill, url: bills_path, method: :post do |f| %>
+        <%= f.input :readings, :as => :hidden, :input_html => { :value =>  @readings.map(&:id) } %>
+        <%= f.button :submit, "Aplicar tarifas", :class => 'btn btn-primary' %>
+      <% end %>
+    </div>
+  </div>
+</div>

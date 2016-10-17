@@ -1,0 +1,58 @@
+<h4><%=t 'ag2_gest.contracting_requests.show.entity_description' %></h4>
+<table class="table">
+  <tbody>
+    <tr>
+      <td><%= t "activerecord.attributes.contracting_request.entity_street_type_id" %>:</td>
+      <td><%= @contracting_request.try(:entity_street_type).try(:street_type_code) %></td>
+      <td><%= t "activerecord.attributes.contracting_request.entity_street_directory_id" %>:</td>
+      <td><%= @contracting_request.try(:entity_street_directory).to_label if @contracting_request.try(:entity_street_directory) %></td>
+    </tr>
+    <tr>
+      <td><%= t "activerecord.attributes.contracting_request.entity_street_name" %>:</td>
+      <td><%= @contracting_request.try(:entity_street_name) %></td>
+      <td><%= t "activerecord.attributes.contracting_request.entity_street_number" %>:</td>
+      <td><%= @contracting_request.try(:entity_street_number) %></td>
+    </tr>
+    <tr>
+      <td><%= t "activerecord.attributes.contracting_request.entity_building" %>:</td>
+      <td><%= @contracting_request.try(:entity_building) %></td>
+      <td><%= t "activerecord.attributes.contracting_request.entity_floor" %>:</td>
+      <td><%= @contracting_request.try(:entity_floor) %></td>
+    </tr>
+    <tr>
+      <td><%= t "activerecord.attributes.contracting_request.entity_floor_office" %>:</td>
+      <td><%= @contracting_request.try(:entity_floor_office) %></td>
+      <td><%= t "activerecord.attributes.contracting_request.entity_zipcode_id" %>:</td>
+      <td><%= @contracting_request.try(:entity_zipcode).try(:zipcode) %></td>
+    </tr>
+    <tr>
+      <td><%= t "activerecord.attributes.contracting_request.entity_town_id" %>:</td>
+      <td><%= @contracting_request.try(:entity_town).try(:name) %></td>      
+      <td><%= t "activerecord.attributes.contracting_request.entity_province_id" %>:</td>
+      <td><%= @contracting_request.try(:entity_province).try(:name) %></td>
+    </tr>
+      <td><%= t "activerecord.attributes.contracting_request.entity_region_id" %>:</td>
+      <td><%= @contracting_request.try(:entity_region).try(:name) %></td>
+      <td><%= t "activerecord.attributes.contracting_request.entity_country_id" %>:</td>
+      <td><%= @contracting_request.try(:entity_country).try(:name) %></td>
+    </tr>
+  </tbody>
+</table>
+
+<h4><%=t 'ag2_gest.contracting_requests.show.r_entity_description' %></h4>
+<table class="table">
+  <tbody>
+    <tr>
+      <td><%= t "activerecord.attributes.contracting_request.r_fiscal_id" %>:</td>
+      <td><%= @contracting_request.try(:r_fiscal_id) %></td>      
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><%= t "activerecord.attributes.contracting_request.r_first_name" %>:</td>
+      <td><%= @contracting_request.try(:r_first_name) %></td>
+      <td><%= t "activerecord.attributes.contracting_request.r_last_name" %>:</td>
+      <td><%= @contracting_request.try(:r_last_name) %></td>
+    </tr>
+  </tbody>
+</table>

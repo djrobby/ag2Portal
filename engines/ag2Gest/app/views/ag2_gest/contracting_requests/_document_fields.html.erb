@@ -1,0 +1,15 @@
+<div class="row-fluid">
+  <div class="span6">
+    <%= f.association :contracting_request_document_type, collection: ContractingRequestDocumentType.all, label: 'Tipo de documento', input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-class', data: { validation: "required"} }, label_html: { class: 'form-label' } %>
+    <%= f.input :attachment, as: :file, input_html: { accept: 'image/*' }, label_html: { class: 'form-label' } %>
+  </div>
+  <div class="span5">
+  	<% if f.object.attachment? %>
+      <div id="dd_files">
+        <img id="image_content" src="<%= f.object.attachment.url(:medium) %>">
+      </div>
+      <%#= f.input :_destroy, :label => "Eliminar imagen", :as => :boolean %>
+    <% end %>
+  </div>
+</div>
+<hr>

@@ -1,5 +1,7 @@
-<h1>New reading_incidence_type</h1>
+<%= render '/layouts/ag2_gest/readingincidencetypesbreadcrumb' %>
+
+<h3><%=t '.title' %></h3>
 
 <%= render 'form' %>
 
-<%= link_to 'Back', reading_incidence_types_path %>
+<%= link_to I18n.t('ag2_gest.reading_incidence_types.back_to_main_page'), reading_incidence_types_path %>

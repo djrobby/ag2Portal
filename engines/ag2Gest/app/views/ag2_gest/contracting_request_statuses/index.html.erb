@@ -1,21 +1,9 @@
-<h1>Listing contracting_request_statuses</h1>
+<%= render '/layouts/ag2_gest/contractingrequeststatusesbreadcrumb' %>
 
-<table>
-  <tr>
-    <th></th>
-    <th></th>
-    <th></th>
-  </tr>
+<%#= render :partial => '/layouts/searchhead_remote', :locals => { :title => t(".title"), :path => contracting_request_statuses_path } %>
 
-<% @contracting_request_statuses.each do |contracting_request_status| %>
-  <tr>
-    <td><%= link_to 'Show', contracting_request_status %></td>
-    <td><%= link_to 'Edit', edit_contracting_request_status_path(contracting_request_status) %></td>
-    <td><%= link_to 'Destroy', contracting_request_status, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-  </tr>
-<% end %>
-</table>
+<h3><%= t(".title") %></h3>
 
-<br />
-
-<%= link_to 'New Contracting request status', new_contracting_request_status_path %>
+<div class="span8" id="div_table">
+  <%= render 'contracting_request_statuses' %>
+</div>

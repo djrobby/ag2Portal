@@ -1,0 +1,237 @@
+<% content_for :title, "aGestiona2 | ag2Subscribers" %>
+<% content_for :icon, "/assets/pict/ag2/ag2Subscriber.png" %>
+<% content_for :alt, "ag2SaleSubscribers" %>
+
+<ul class="breadcrumb">
+  <li>
+    <a href="<%= main_app.root_path %>"><i class="icon-home"></i></a><span class="divider">></span>
+  </li>
+  <li>
+    <a href="<%= ag2_gest.root_path %>">ag2Gest</a><span class="divider">></span>
+  </li>
+  <li>
+    <a href="<%= ag2_gest.subscribers_path %>">Abonados</a><span class="divider">></span>
+  </li>
+  <li>
+    <a href="<%= ag2_gest.subscribers_show_test_path %>">Abonado</a><span class="divider">></span>
+  </li>
+  <li>
+    Ver factura
+  </li>
+</ul>
+
+<h3><%= 'Factura Contratación  31-24006' %></h3>
+
+<table class="table">
+  <tbody>
+    <tr>
+      <td><b>Id</b></td>
+      <td>31002</td>
+      <td><b>Recibo</b></td>
+      <td>5983</td>
+      <td><b>Clase factura</b></td>
+      <td>Acometida</td>
+    </tr>
+    <tr>
+      <td><b>Nº abonado</b></td>
+      <td><a href="../clients/1">4231-111111</a></td>
+      <td><b>Estado factura</b></td>
+      <td>Pendiente</td>
+      <td><b>F. Factura</b></td>
+      <td>31/03/2011</td>
+    </tr>
+    <tr>
+      <td><b>Empresa</b></td>
+      <td>901</td>
+      <td><b>Municipio</b></td>
+      <td>6730</td>
+      <td><b>F. vencimiento</b></td>
+      <td>12/04/2011</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="row">
+  <div class="span12">
+    <a href="#charge-invoice" class="btn btn-primary btn-mini" data-toggle="modal">Cobrar</a>
+    <a href="/assets/ag2_gest/bill.pdf" class="btn btn-primary btn-mini" target="_blank">Imprimir</a>
+    <a href="https://docs.google.com/document/u/0/" class="btn btn-primary btn-mini" target="_blank">GDocs</a>
+  </div>
+</div>
+
+<div class="row">
+  <table class="table table-center table-condensed table-striped shrinked stu span8">
+    <thead>
+      <tr>
+        <th>Línea</th>
+        <th>C. Articulo</th>
+        <th>Concepto</th>
+        <th>Cantidad</th>
+        <th>Precio Unitario</th>
+        <th>B. Imponible</th>
+        <th>IVA</th>
+        <th>Cuota IVA</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>1</td>
+        <td><a href="#">34</a></td>
+        <td>Inst cont valv regist(25) sin cofre ni o civil</td>
+        <td>1</td>
+        <td>98.9</td>
+        <td>98.9</td>
+        <td>18</td>
+        <td>17.8</td>
+      </tr>
+      <tr>
+        <td>1</td>
+        <td><a href="#">100004</a></td>
+        <td>Rotura de válvula</td>
+        <td>1</td>
+        <td>40.03</td>
+        <td>40.03</td>
+        <td>16</td>
+        <td>6.4</td>
+      </tr>
+      <tr>
+        <td>1</td>
+        <td><a href="#">100011</a></td>
+        <td>Reparación en el recinto</td>
+        <td>1</td>
+        <td>30.63</td>
+        <td>30.63</td>
+        <td>16</td>
+        <td>4.9</td>
+      </tr>
+      <tr>
+        <td>1</td>
+        <td><a href="#">1000006</a></td>
+        <td>Reparación tubería de PE de 32mm</td>
+        <td>1</td>
+        <td>32.43</td>
+        <td>32.43</td>
+        <td>16</td>
+        <td>5.19</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <table class="table table-center table-condensed table-striped shrinked stu span4">
+    <tr>
+      <td><h6>Subtotal</h6></td>
+      <td><h6>202.26 €</h6></td>
+    </tr>
+    <tr>
+      <td><h6>Bonificiación</h6></td>
+      <td><h6>0 €</h6></td>
+    </tr>
+    <tr>
+      <td><h6>Base imponible</h6></td>
+      <td><h6>202.26 €</h6></td>
+    </tr>
+    <tr>
+      <td><h6>Cuota IVA</h6></td>
+      <td><h6>34.29 €</h6></td>
+    </tr>
+    <tr>
+      <td><h4>TOTAL</h4></td>
+      <td><h5>236.55 €</h5></td>
+    </tr>
+  </table>
+</div>
+
+<div id="charge-invoice" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h3 id="myModalLabel">Cobrar factura</h3>
+  </div>
+  <div class="modal-body">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Serie</th>
+            <th>Nº Factura</th>
+            <th>Cod abonado</th>
+            <th>Clase factura</th>
+            <th>Pendiente</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>30</td>
+            <td>17</td>
+            <td>4231-111111</td>
+            <td>Acometida</td>
+            <td>236.55 €</td>
+          </tr>
+        </tbody>
+      </table>
+      <form class="form-horizontal">
+        <div class="control-group">
+          <label class="control-label"><b>Forma de pago</b></label>
+          <div class="controls">
+            <select id="payment-method-select">
+              <option></option>
+              <option>Transferencia bancaria</option>
+              <option>Ventanilla bancaria</option>
+              <option>Caja</option>
+            </select>
+          </div>
+        </div>
+      </form>
+
+      <form class="form-horizontal hide" id="cash-machine">
+        <fieldset>
+          <legend>Cobro por ventanilla</legend>
+          <div class="control-group">
+            <label class="control-label"><b>Fecha cobro</b></label>
+            <div class="controls">
+              <input type="date" value="2015-09-17">
+            </div>
+          </div>
+          <div class="control-group">
+            <label class="control-label"><b>Total</b></label>
+            <div class="controls">
+              <input type="text" value="236.55" disabled>
+            </div>
+          </div>
+          <div class="control-group">
+            <label class="control-label"><b>Recibido</b></label>
+            <div class="controls">
+              <input type="text">
+            </div>
+          </div>
+          <div class="control-group">
+            <label class="control-label"><b>Vuelta</b></label>
+            <div class="controls">
+              <input type="text" disabled>
+            </div>
+          </div>
+        </fieldset>
+      </form>
+
+  </div>
+  <div class="modal-footer">
+    <button class="btn" data-dismiss="modal" aria-hidden="true">Cerrar</button>
+    <button class="btn btn-primary">Cobrar</button>
+  </div>
+</div>
+
+<style type="text/css">
+  .hide {
+    display: none;
+  }
+  td h6{
+    margin: 0px;
+  }
+</style>
+<script type="text/javascript">
+  $("#payment-method-select").on("change", function(){
+    if (this.value == "Caja")
+      $("#cash-machine").removeClass("hide")
+    else
+      $("#cash-machine").addClass("hide")
+  });
+</script>
+

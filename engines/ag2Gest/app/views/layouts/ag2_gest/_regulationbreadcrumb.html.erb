@@ -1,0 +1,36 @@
+<% content_for :title, "aGestiona2 | ag2GestRegulation" %>
+<% content_for :icon, "/assets/icon/TableA.png" %>
+<% content_for :alt, "ag2GestRegulation" %>
+
+<ul class="breadcrumb">
+  <li>
+    <a href="<%= main_app.root_path %>"><i class="icon-home"></i></a><span class="divider">></span>
+  </li>
+  <li>
+    <a href="<%= ag2_gest.root_path %>">ag2Gest</a><span class="divider">></span>
+  </li>
+  <li>
+    <a href="<%= ag2_gest.tariff_management_path %>">Gestión de tarifas</a><span class="divider">></span>
+  </li>
+  <% if @regulations %>
+  <li>
+    <%=t "ag2_gest.breadcrumb.regulations.items" %>
+  </li>
+  <% end %>
+  <% if @regulation %>
+  <li>
+    <a href="<%= regulations_path %>"><%=t :"ag2_gest.breadcrumb.regulations.items" %></a><span class="divider">></span>
+  </li>
+  <% if @breadcrumb == 'read' || @breadcrumb == 'update' %>
+  <%=t :"ag2_gest.breadcrumb.regulations.item" %>
+  <% end %>
+  <% if @breadcrumb == 'create' %>
+  <li>
+    <%= t :"breadcrumb.new" %>
+  </li>
+  <% end %>
+
+  <% end %>
+  <!-- Close -->
+  <a class="close" href="<%= ag2_gest.root_path %>">&#215;</a>
+</ul>

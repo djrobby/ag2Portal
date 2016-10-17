@@ -1,0 +1,155 @@
+<script>
+  var _thisForm = '';
+  var changing = false;
+
+  $(document).ready(function() {
+    // Initialized form variable
+    _thisForm = $("#removeFilter").closest('form')[0]; //Get Element Form
+
+    $('select.sel2').select2({ //Select2
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      allowClear: true
+    });
+
+    $('.date_picker').datepicker({
+      format : 'dd/mm/yyyy',
+      weekStart : 1
+    });
+
+    $(document).ajaxStart(function() {
+      
+      // show loader on start
+      if (changing == false) {
+        $("#div_table").html("");
+        $("#loader").show();
+      }
+      }).ajaxSuccess(function() {
+        // hide loader on success
+        $("#loader").hide();
+    });
+
+
+
+
+  }); //End DocumentReady
+
+  /*jQuery(function($) {
+    
+    // when the #meter_models field changes
+    $("#meter_models").change(function() {
+      // make a POST call and replace the content
+      var meter_model = $('#meter_models :selected').val();
+      if (meter_model == ""){
+        meter_model = "0";
+      }
+      jQuery.getJSON('update_meters_select_from_meter_model/' + meter_model, function(data) {
+        $("#meter_models").html("");
+
+
+        
+
+        //$("#WrkrOffice").select2("val", "");
+        //$("#WrkrOffice").append($('<option></option>').val("").html(""));
+        $.each(data, function(id, option) {
+          
+          //$("#WrkrOffice").append($('<option></option>').val(option.id).html(option.name));
+        });
+      });
+      return false;
+    });
+    
+    // when the #removeFilter button clicked
+    $("#removeFilter").click(function() {
+      $("#meter_models").val("");
+      //$("#WrkrCompany").val("");
+      //$("#WrkrOffice").val("");
+      //$("#search").val("");
+      // no AJAX
+      //_thisForm.submit();
+      // AJAX
+      $("#submit_btn").trigger("click");
+    });
+  });*/
+
+
+
+  /*
+
+  
+
+  $(document).ajaxStart(function() {
+    // show loader on start
+    if (changing == false) {
+      $("#div_table").html("");
+      $("#loader").show();
+    }
+  }).ajaxSuccess(function() {
+    // hide loader on success
+    $("#loader").hide();
+  });
+
+  $(window).bind("load", function() {
+    $("#No").val("<%= params[:No] %>");
+    $("#WrkrCompany").val("<%= params[:WrkrCompany] %>");
+    $("#Office").val("<%= params[:WrkrOffice] %>");
+  });
+
+  jQuery(function($) {
+    // when the #WrkrCompany field changes
+    $("#WrkrCompany").change(function() {
+      // make a POST call and replace the content
+      var project = $('#WrkrCompany :selected').val();
+      if (project == "")
+        project = "0";
+      jQuery.getJSON('update_offices_select_from_company/' + project, function(data) {
+        $("#Office").html("");
+        //$("#WrkrOffice").select2("val", "");
+        $("#WrkrOffice").append($('<option></option>').val("").html(""));
+        $.each(data, function(id, option) {
+          $("#WrkrOffice").append($('<option></option>').val(option.id).html(option.name));
+        });
+      })
+      return false;
+    });
+    
+    // when the #removeFilter button clicked
+    $("#removeFilter").click(function() {
+      /*$("#No").val("");
+      $("#WrkrCompany").val("");
+      $("#WrkrOffice").val("");
+      $("#search").val("");
+      // no AJAX
+      //_thisForm.submit();
+      // AJAX
+      $("#submit_btn").trigger("click");
+    });
+  });*/
+</script>
+
+<div class="well sidebar-nav">
+  
+  <!-- Refresh -->
+  <%= link_to ag2_gest.meters_path, title: I18n.t(:refresh), class: "icon-refresh-link", remote: true do %> <i class="icon-refresh"></i> <% end %>
+
+  <%= form_tag "search", :method => 'get' do %>
+    
+    <%= label_tag "Marca/Modelo", nil, :class => 'form-label' %>
+    <%= select_tag "meter_models", options_from_collection_for_select(@meter_models, "id", "full_name"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
+    
+    <%= label_tag "Año de fabricación", nil, :class => 'form-label' %>    
+    <%= select_tag "manufacturing_date", options_from_collection_for_select(@meters, "id", "manufacturing_date"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
+
+    <%#= label_tag "Fecha de caducidad", nil, :class => 'form-label' %>    
+    <%#= select_tag "manufacturing_date", options_from_collection_for_select(@meters, "id", "manufacturing_date"), :prompt => "", :class => 'x-large-text-field shrinked date_picker' %>
+
+    <br><br>
+    <!-- Submit -->
+    <%= submit_tag "Apply Filter",  :class => 'btn btn-primary', :id => 'submit_btn' %>
+
+    <!-- Remove filter -->
+    <button id="removeFilter" type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><%= t :clear_filter_button %></button>
+  <% end %>
+
+  <%= link_to "Volver ag2_gest", ag2_gest.root_path %>
+
+</div>

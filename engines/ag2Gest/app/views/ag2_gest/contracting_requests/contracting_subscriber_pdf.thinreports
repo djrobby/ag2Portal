@@ -1,0 +1,148 @@
+report.set_layout tlf: 'reports/subscriber_contracting', layout_options: { default: true } #:layout_options is an option ThinReports::Report::Base#use_layout method.
+
+report.start_new_page
+
+report.page.values printed_at: Time.now
+
+report.events.on :page_create do |e|
+	# Set page-number
+	e.page.item(:page_no).value(e.page.no)
+end
+
+report.events.on :generate do |e|
+	e.pages.each do |page|
+		# Set total-page-number
+		page.item(:page_count).value(e.report.page_count)
+	end
+end
+
+#SUBSCRIBER
+report.page.item(:subscriber).value I18n.t("activerecord.report.subscriber.subscriber")
+report.page.item(:loc_subscriber_code).value I18n.t("activerecord.report.subscriber.subscriber_code")
+report.page.item(:loc_name).value I18n.t("activerecord.report.subscriber.name")
+report.page.item(:loc_fiscal_id).value I18n.t("activerecord.report.subscriber.fiscal_id")
+
+report.page.item(:name).value(@subscriber.try(:name))
+report.page.item(:subscriber_code).value(@subscriber.try(:subscriber_code))
+report.page.item(:fiscal_id).value(@subscriber.try(:fiscal_id))
+
+report.page.item(:direction).value I18n.t("activerecord.report.subscriber.direction")
+report.page.item(:address_subscriber).value("#{@subscriber.try(:street_type).try(:street_type_description)} #{@subscriber.try(:street_directory).try(:street_name)}, #{@subscriber.try(:street_number)}, #{@subscriber.try(:building)}, #{@subscriber.try(:floor_office)}")
+
+report.page.item(:loc_zipcode_id).value I18n.t("activerecord.report.subscriber.zipcode_id")
+report.page.item(:loc_town_id).value I18n.t("activerecord.report.subscriber.town_id")
+report.page.item(:loc_province_id).value I18n.t("activerecord.report.subscriber.province_id")
+report.page.item(:loc_region_id).value I18n.t("activerecord.report.subscriber.region_id")
+
+report.page.item(:zipcode_id).value(@subscriber.try(:zipcode).try(:zipcode))
+report.page.item(:town_id).value(@subscriber.try(:town).try(:name))
+report.page.item(:province_id).value(@subscriber.try(:province).try(:name))
+report.page.item(:region_id).value(@subscriber.try(:region).try(:name))
+
+report.page.item(:loc_phone).value I18n.t("activerecord.report.subscriber.phone")
+report.page.item(:loc_fax).value I18n.t("activerecord.report.subscriber.fax")
+report.page.item(:loc_cellular).value I18n.t("activerecord.report.subscriber.cellular")
+report.page.item(:loc_email).value I18n.t("activerecord.report.subscriber.email")
+report.page.item(:loc_active).value I18n.t("activerecord.report.subscriber.active")
+
+report.page.item(:phone).value(@subscriber.try(:phone))
+report.page.item(:fax).value(@subscriber.try(:fax))
+report.page.item(:cellular).value(@subscriber.try(:cellular))
+report.page.item(:email).value(@subscriber.try(:email))
+
+if @subscriber.try(:active) == true 
+	report.page.item(:active).value("Sí")
+else
+	report.page.item(:active).value("No")
+end
+
+report.page.item(:loc_starting_at).value I18n.t("activerecord.report.subscriber.starting_at")
+report.page.item(:starting_at).value l @subscriber.try(:starting_at) unless @subscriber.try(:starting_at).blank?
+
+#TARIFF
+report.page.item(:tariff).value I18n.t("activerecord.report.tariff.tariff")
+report.page.item(:loc_tariff_type).value I18n.t("activerecord.report.tariff.loc_tariff_type")
+report.page.item(:loc_billing_frequency).value I18n.t("activerecord.report.tariff.loc_billing_frequency")
+#report.page.item(:tariff_type).value(@subscriber.try(:tariff).try(:tariff_type).try(:))
+report.page.item(:billing_frequency).value(@subscriber.try(:billing_frequency).try(:name))
+report.page.item(:caliber).value(@subscriber.try(:meter).try(:caliber).try(:caliber))
+
+#METER
+report.page.item(:meter).value I18n.t("activerecord.report.meter.meter")
+report.page.item(:loc_meter_code).value I18n.t("activerecord.report.meter.loc_meter_code")
+report.page.item(:loc_manufacturer).value I18n.t("activerecord.report.meter.loc_manufacturer")
+report.page.item(:loc_caliber).value I18n.t("activerecord.report.meter.loc_caliber")
+report.page.item(:loc_manufacturing_year).value I18n.t("activerecord.report.meter.loc_manufacturing_year")
+report.page.item(:loc_meter_model).value I18n.t("activerecord.report.meter.loc_meter_model")
+report.page.item(:loc_first_installation_date).value I18n.t("activerecord.report.meter.loc_first_installation_date")
+report.page.item(:loc_caliber).value I18n.t("activerecord.report.meter.loc_caliber")
+
+report.page.item(:meter_code).value(@subscriber.try(:meter).try(:meter_code))
+report.page.item(:manufacturer).value(@subscriber.try(:meter).try(:manufacturer).try(:name))
+report.page.item(:caliber).value(@subscriber.try(:meter).try(:caliber).try(:caliber))
+report.page.item(:manufacturing_year).value(@subscriber.try(:meter).try(:manufacturing_year))
+report.page.item(:meter_model).value(@subscriber.try(:meter).try(:meter_model).try(:model))
+report.page.item(:first_installation).value l @subscriber.try(:meter).try(:first_installation_date) unless @subscriber.try(:meter).try(:first_installation_date).blank?
+
+
+
+#report.page.item(:loc_id).value I18n.t("activerecord.report.subscriber.id")
+#report.page.item(:loc_client_id).value I18n.t("activerecord.report.subscriber.client_id")
+#report.page.item(:loc_office_id).value I18n.t("activerecord.report.subscriber.office_id")
+#report.page.item(:loc_center_id).value I18n.t("activerecord.report.subscriber.center_id")
+
+
+#report.page.item(:loc_street_directory_id).value I18n.t("activerecord.report.subscriber.street_directory_id")
+#report.page.item(:loc_street_type_id).value I18n.t("activerecord.report.subscriber.street_type_id")
+#report.page.item(:loc_street_name).value I18n.t("activerecord.report.subscriber.street_name")
+#report.page.item(:loc_street_number).value I18n.t("activerecord.report.subscriber.street_number")
+#report.page.item(:loc_building).value I18n.t("activerecord.report.subscriber.building")
+#report.page.item(:loc_floor).value I18n.t("activerecord.report.subscriber.floor")
+#report.page.item(:loc_floor_office).value I18n.t("activerecord.report.subscriber.floor_office")
+
+
+
+#report.page.item(:loc_tariff_id).value I18n.t("activerecord.report.subscriber.tariff_id")
+#report.page.item(:loc_billing_frequency_id).value I18n.t("activerecord.report.subscriber.billing_frequency_id")
+#report.page.item(:loc_meter_id).value I18n.t("activerecord.report.subscriber.meter_id")
+#report.page.item(:loc_reading_route_id).value I18n.t("activerecord.report.subscriber.reading_route_id")
+#report.page.item(:loc_reading_sequence).value I18n.t("activerecord.report.subscriber.reading_sequence")
+#report.page.item(:loc_contract).value I18n.t("activerecord.report.subscriber.contract")
+#report.page.item(:loc_remarks).value I18n.t("activerecord.report.subscriber.remarks")
+#report.page.item(:loc_cadastral_reference).value I18n.t("activerecord.report.subscriber.cadastral_reference")
+#report.page.item(:loc_gis_id).value I18n.t("activerecord.report.subscriber.gis_id")
+#report.page.item(:loc_endowments).value I18n.t("activerecord.report.subscriber.endowments")
+#report.page.item(:loc_inhabitants).value I18n.t("activerecord.report.subscriber.inhabitants")
+#report.page.item(:loc_tariff_scheme_id).value I18n.t("activerecord.report.subscriber.tariff_scheme_id")
+#report.page.item(:id).value(@subscriber.try(:id))
+#report.page.item(:client_id).value(@subscriber.try(:client).try(:name))
+#report.page.item(:office_id).value(@subscriber.try(:office).try(:name))
+#report.page.item(:center_id).value(@subscriber.try(:center).try(:name))
+
+#report.page.item(:street_directory_id).value(@subscriber.try(:street_directory).try(:street_name))
+#report.page.item(:street_type_id).value(@subscriber.try(:street_type).try(:street_type_description))
+#report.page.item(:street_number).value(@subscriber.try(:street_number))
+#report.page.item(:building).value(@subscriber.try(:building))
+#report.page.item(:floor).value(@subscriber.try(:floor))
+#report.page.item(:floor_office).value(@subscriber.try(:floor_office))
+
+
+
+
+#report.page.item(:ending_at).value(@subscriber.try(:ending_at))
+#report.page.item(:tariff_id).value(@subscriber.try(:tariff_id))
+#report.page.item(:billing_frequency_id).value(@subscriber.try(:billing_frequency).try(:name))
+#report.page.item(:meter_id).value(@subscriber.try(:meter).try(:meter_code))
+#report.page.item(:reading_route_id).value(@subscriber.try(:reading_route).try(:route_code))
+#report.page.item(:reading_sequence).value(@subscriber.try(:reading_sequence))
+#report.page.item(:contract).value(@subscriber.try(:contract))
+#report.page.item(:remarks).value(@subscriber.try(:remarks))
+#report.page.item(:cadastral_reference).value(@subscriber.try(:cadastral_reference))
+#report.page.item(:gis_id).value(@subscriber.try(:gis_id))
+#report.page.item(:endowments).value(@subscriber.try(:endowments))
+#report.page.item(:inhabitants).value(@subscriber.try(:inhabitants))
+#report.page.item(:tariff_scheme_id).value(@subscriber.try(:tariff_scheme_id))
+#report.page.item(:client_cellular).value(@subscriber.try(:client_cellular))
+
+
+

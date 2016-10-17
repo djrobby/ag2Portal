@@ -1,21 +1,9 @@
-<h1>Listing reading_routes</h1>
+<%= render '/layouts/ag2_gest/readingroutesbreadcrumb' %>
 
-<table>
-  <tr>
-    <th></th>
-    <th></th>
-    <th></th>
-  </tr>
+<%#= render :partial => '/layouts/searchhead_remote', :locals => { :title => t(".title"), :path => reading_routes_path } %>
 
-<% @reading_routes.each do |reading_route| %>
-  <tr>
-    <td><%= link_to 'Show', reading_route %></td>
-    <td><%= link_to 'Edit', edit_reading_route_path(reading_route) %></td>
-    <td><%= link_to 'Destroy', reading_route, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-  </tr>
-<% end %>
-</table>
+<h3><%= t(".title") %></h3>
 
-<br />
-
-<%= link_to 'New Reading route', new_reading_route_path %>
+<div class="span8" id="div_table">
+  <%= render 'reading_routes' %>
+</div>

@@ -1,0 +1,73 @@
+<script type="text/javascript">
+  $(document).ready(function() {
+    // ajax success for instalation_subscriber
+    
+    /*new_bill*/
+    $("#form_new_subscriber").bind("ajax:success", function(xhr, data, status) {
+      alert("Guardado con exito");
+      //Update
+    });
+
+    $("#form_new_subscriber input").change(function() {
+        
+      //Update 
+
+    });
+
+    $("#submit-bill").click(function () {
+      $("#billing-form").submit();
+    });
+  });
+
+</script>
+
+<%= link_to "<i class='icon-print icon-white'></i> #{t('activerecord.attributes.subscriber.print')}".html_safe, contracting_subscriber_pdf_contracting_request_path(:format => :pdf), class: "btn btn-warning  pull-right", target: "_blank" %>
+
+<br>
+
+<h4><%=t 'ag2_gest.contracting_requests.show.subscriber_description' %></h4>
+<table class="table">
+  <tbody>
+    <tr>
+      <td><%= t "activerecord.attributes.contracting_request.subscriber_street_directory_id" %>:</td>
+      <td><%= @contracting_request.try(:subscriber_street_directory).to_label if @contracting_request.try(:subscriber_street_directory) %></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><%= t "activerecord.attributes.contracting_request.subscriber_street_type_id" %>:</td>
+      <td><%= @contracting_request.try(:subscriber_street_type).try(:street_type_code) %></td>
+    	<td><%= t "activerecord.attributes.contracting_request.subscriber_street_name" %>:</td>
+      <td><%= @contracting_request.try(:subscriber_street_name) %></td>
+    </tr>
+    <tr>
+      <td><%= t "activerecord.attributes.contracting_request.subscriber_street_number" %>:</td>
+      <td><%= @contracting_request.try(:subscriber_street_number) %></td>
+    	<td><%= t "activerecord.attributes.contracting_request.subscriber_building" %>:</td>
+      <td><%= @contracting_request.try(:subscriber_building) %></td>
+    </tr>
+    <tr>
+      <td><%= t "activerecord.attributes.contracting_request.subscriber_floor" %>:</td>
+      <td><%= @contracting_request.try(:subscriber_floor) %></td>
+    	<td><%= t "activerecord.attributes.contracting_request.subscriber_floor_office" %>:</td>
+      <td><%= @contracting_request.try(:subscriber_floor_office) %></td>
+    </tr>
+    <tr>
+      <td><%= t "activerecord.attributes.contracting_request.subscriber_zipcode_id" %>:</td>
+      <td><%= @contracting_request.try(:subscriber_zipcode).try(:zipcode) %></td>
+    	<td><%= t "activerecord.attributes.contracting_request.subscriber_center_id" %>:</td>
+      <td><%= @contracting_request.try(:subscriber_center).try(:name) %></td>      
+    </tr>
+    <tr>
+      <td><%= t "activerecord.attributes.contracting_request.subscriber_town_id" %>:</td>
+      <td><%= @contracting_request.try(:subscriber_town).try(:name) %></td>      
+      <td><%= t "activerecord.attributes.contracting_request.subscriber_province_id" %>:</td>
+      <td><%= @contracting_request.try(:subscriber_province).try(:name) %></td>
+    </tr>
+      <td><%= t "activerecord.attributes.contracting_request.subscriber_region_id" %>:</td>
+      <td><%= @contracting_request.try(:subscriber_region).try(:name) %></td>
+      <td><%= t "activerecord.attributes.contracting_request.subscriber_country_id" %>:</td>
+      <td><%= @contracting_request.try(:subscriber_country).try(:name) %></td>
+    </tr>
+  </tbody>
+</table>

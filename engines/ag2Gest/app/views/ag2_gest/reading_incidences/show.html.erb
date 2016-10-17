@@ -1,0 +1,27 @@
+<%= render '/layouts/ag2_gest/readingincidencesbreadcrumb' %>
+
+<h3><%= t('activerecord.models.reading_incidence.one') %> <%=@reading_incidence.try(:id) %></h3>
+<table class="table">
+  <tbody>
+    <tr>
+      <td><%= t('activerecord.attributes.reading_incidence.id') %>:</td>
+      <td colspan="3"><%= @reading_incidence.try(:id) %></td>
+    </tr>
+    <tr>
+      <td><%= t('activerecord.attributes.reading_incidence.reading_id') %>:</td>
+      <td><%= link_to @reading_incidence.try(:reading).try(:reading_index), ag2_gest.reading_path(@reading_incidence.reading_id) %></td>
+      <td><%= t('activerecord.attributes.reading_incidence.reading_incidence_type_id') %>:</td>
+      <td><%= link_to @reading_incidence.try(:reading_incidence_type).try(:name), ag2_gest.reading_incidence_type_path(@reading_incidence.reading_incidence_type_id) %></td>
+    </tr> 
+    <tr>
+    </tr>
+    <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @reading_incidence } %>
+  </tbody>
+</table>
+
+<%= render partial: '/layouts/crud/update_delete_new', locals:
+{ model: ReadingIncidence, update_path: edit_reading_incidence_path(@reading_incidence), update_txt: t('.btn_edit'),
+delete_path: @reading_incidence, delete_txt: t('.btn_delete'), msg: t("activerecord.models.reading_incidence.one"), :txt => @reading_incidence.id,
+new_path: new_reading_incidence_path, new_txt: t('ag2_gest.reading_incidences.index.btn_new') } %>
+
+<%= link_to I18n.t('ag2_gest.reading_incidences.back_to_main_page'), reading_incidences_path %>

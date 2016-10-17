@@ -1,5 +1,34 @@
-<p id="notice"><%= notice %></p>
+<%= render '/layouts/ag2_gest/regulationbreadcrumb' %>
 
+<h3><%= t('.title') %> <%=@regulation.description %></h3>
+<table class="table">
+  <tbody>
+    <tr>
+      <td><%= t('activerecord.attributes.regulation.id') %>:</td>
+      <td><%= @regulation.try(:id) %></td>
+      <td><%= t('activerecord.attributes.regulation.description') %>:</td>
+      <td><%= @regulation.try(:description) %></td>
+    </tr>
+    <tr>
+      <td><%= t('activerecord.attributes.regulation.project_id') %>:</td>
+      <td><%= link_to @regulation.try(:project).try(:name), ag2_tech.project_path(@regulation.project_id) %></td>
+      <td><%= t('activerecord.attributes.regulation.regulation_type_id') %>:</td>
+      <td><%= link_to @regulation.try(:regulation_type).try(:description), ag2_gest.regulation_type_path(@regulation.regulation_type_id) %></td>
+    </tr>
+    <tr>
+      <td><%= t('activerecord.attributes.regulation.starting_at') %>:</td>
+      <td><%= formatted_timestamp(@regulation.starting_at) %></td>
+      <td><%= t('activerecord.attributes.regulation.ending_at') %>:</td>
+      <td><%= formatted_timestamp(@regulation.ending_at) if @regulation.ending_at %></td>
+    </tr>
+    	<%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @regulation } %>
+      <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @regulation } %>
+  </tbody>
+</table>
 
-<%= link_to 'Edit', edit_regulation_path(@regulation) %> |
-<%= link_to 'Back', regulations_path %>
+<%= render partial: '/layouts/crud/update_delete_new', locals:
+{ model: Regulation, update_path: edit_regulation_path(@regulation), update_txt: t('.btn_edit'),
+delete_path: @regulation, delete_txt: t('.btn_delete'), msg: t("activerecord.models.regulation.one"), :txt => @regulation.id,
+new_path: new_regulation_path, new_txt: t('ag2_gest.regulations.index.btn_new') } %>
+
+<%= link_to I18n.t('ag2_gest.regulations.back_to_main_page'), regulations_path %>

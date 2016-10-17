@@ -1,21 +1,9 @@
-<h1>Listing sale_offer_statuses</h1>
+<%= render '/layouts/ag2_gest/saleofferstatusesbreadcrumb' %>
 
-<table>
-  <tr>
-    <th></th>
-    <th></th>
-    <th></th>
-  </tr>
+<%#= render :partial => '/layouts/searchhead_remote', :locals => { :title => t(".title"), :path => sale_offer_statuses_path } %>
 
-<% @sale_offer_statuses.each do |sale_offer_status| %>
-  <tr>
-    <td><%= link_to 'Show', sale_offer_status %></td>
-    <td><%= link_to 'Edit', edit_sale_offer_status_path(sale_offer_status) %></td>
-    <td><%= link_to 'Destroy', sale_offer_status, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-  </tr>
-<% end %>
-</table>
+<h3><%= t(".title") %></h3>
 
-<br />
-
-<%= link_to 'New Sale offer status', new_sale_offer_status_path %>
+<div class="span8" id="div_table">
+  <%= render 'sale_offer_statuses' %>
+</div>

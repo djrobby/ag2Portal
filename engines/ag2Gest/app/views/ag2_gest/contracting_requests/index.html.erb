@@ -1,21 +1,110 @@
-<h1>Listing contracting_requests</h1>
+<style>
+  .pagination {
+    text-align: center;
+  }
+</style>
 
-<table>
-  <tr>
-    <th></th>
-    <th></th>
-    <th></th>
-  </tr>
+<script type="text/javascript">
+  var _thisForm = '';
+  var changing = false;
 
-<% @contracting_requests.each do |contracting_request| %>
-  <tr>
-    <td><%= link_to 'Show', contracting_request %></td>
-    <td><%= link_to 'Edit', edit_contracting_request_path(contracting_request) %></td>
-    <td><%= link_to 'Destroy', contracting_request, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-  </tr>
-<% end %>
-</table>
+  $(document).ready(function() {
+    $('.sel2').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      dropdownCssClass: 'shrinked',
+      dropdownAutoWidth: true
+    });
+    // Initialized form variable
+    _thisForm = $("#removeFilter").closest('form')[0];
+	});
 
-<br />
 
-<%= link_to 'New Contracting request', new_contracting_request_path %>
+  $(document).ajaxStart(function() {
+    // show loader on start
+    if (changing == false) {
+      $("#div_table").html("");
+      $("#loader").show();
+    }
+  }).ajaxSuccess(function() {
+    // hide loader on success
+    $("#loader").hide();
+  });
+
+  $(window).bind("load", function() {
+    $("#RequestType").val("<%= params[:RequestType] %>");
+    $("#No").val("<%= params[:No] %>");
+    $("#Project").select2("val", "<%= params[:Project] %>");
+    $("#RequestStatus").val("<%= params[:RequestStatus] %>");
+    $("#ClientInfo").val("<%= params[:ClientInfo] %>");
+  });
+
+  jQuery(function($) {
+    $("#removeFilter").click(function() {
+      $("#No").val("");
+      $("#Project").select2("val", "");
+      $("#RequestType").val("");
+      $("#RequestStatus").val("");
+      $("#ClientInfo").val("");
+      // no AJAX
+      //_thisForm.submit();
+      // AJAX
+      $("#submit_btn").trigger("click");
+    });
+  });
+
+</script>
+<%= render '/layouts/ag2_gest/crequestsbreadcrumb' %>
+
+<h3><%= t '.title' %></h3>
+
+<div class="container-fluid">
+  <div class="row-fluid">
+
+    <div class="span3">
+      <div class="well sidebar-nav">
+        <!-- Refresh -->
+        <%= link_to ag2_gest.contracting_requests_path, title: I18n.t(:refresh), class: "icon-refresh-link", remote: true do %><i class="icon-refresh"></i><% end %>
+        <!-- Search form -->
+        <%= form_tag "contracting_requests", :method => 'get', :remote => true do %>
+
+          <%= label_tag I18n.t("activerecord.attributes.project.project_code"), nil, :class => 'form-label' %>
+          <%= text_field_tag "No", nil, :class => 'x-large-text-field shrinked number-text-field', onkeyup: "caps(this)" %>
+
+          <%= label_tag I18n.t("ag2_gest.contracting_requests.index.label_client"), nil, :class => 'form-label' %>
+          <%= text_field_tag "ClientInfo", nil, :class => 'x-large-text-field shrinked number-text-field', onkeyup: "caps(this)" %>
+
+        	<!-- Project -->
+        	<%= label_tag I18n.t("ag2_gest.contracting_requests.index.label_project"), nil, :class => 'form-label-under-sel2' %>
+        	<%= select_tag "Project", options_from_collection_for_select(@projects, "id", "project_code"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
+
+        	<!-- Request Status -->
+        	<%= label_tag I18n.t("ag2_gest.contracting_requests.index.label_request_status"), nil, :class => 'form-label-under-sel2' %>
+        	<%= select_tag "RequestStatus", options_from_collection_for_select(@request_statuses, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked' %>
+
+        	<!-- Request Type -->
+        	<%= label_tag I18n.t("ag2_gest.contracting_requests.index.label_request_type"), nil, :class => 'form-label-under-sel2' %>
+        	<%= select_tag "RequestType", options_from_collection_for_select(@request_types, "id", "description"), :prompt => "", :class => 'x-large-text-field shrinked' %>
+
+        	<!-- Submit -->
+        	<%= submit_tag I18n.t(:apply_filter_button), :class => 'btn btn-primary', :id => 'submit_btn' %>
+
+        	<!-- Remove filter -->
+        	<button id="removeFilter" type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><%= t :clear_filter_button %></button>
+
+        <% end %>
+        <!-- Buttons -->
+        <%= render :partial => '/layouts/crud/new', :locals => { :model => ContractingRequest, :path => new_contracting_request_path, :txt => I18n.t("ag2_gest.contracting_requests.index.btn_new") } %>
+        <%= render :partial => '/layouts/crud/new', :locals => { :model => ContractingRequest, :path => new_contracting_request_path, :txt => I18n.t("ag2_gest.contracting_requests.index.btn_new2") } %>
+        <!-- <br /> -->
+        <%= link_to t(".back_to_root"), ag2_gest.root_path %>
+			</div><!-- /.sidebar-nav -->
+    </div><!-- /.span3 -->
+
+    <div class="span9">
+      <div id="loader"></div>
+      <div id="div_table">
+        <%= render 'contract_requests' %>
+      </div>
+    </div><!-- /.span9 -->
+  </div><!-- /.row-fluid -->
+</div><!-- /.container-fluid -->

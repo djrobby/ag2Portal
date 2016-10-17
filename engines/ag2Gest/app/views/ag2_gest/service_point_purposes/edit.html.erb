@@ -1,6 +1,8 @@
-<h1>Editing service_point_purpose</h1>
+<%= render '/layouts/ag2_gest/servicepointpurposebreadcrumb' %>
+
+<h3><%=t '.title' %></h3>
 
 <%= render 'form' %>
 
-<%= link_to 'Show', @service_point_purpose %> |
-<%= link_to 'Back', service_point_purposes_path %>
+<%= link_to t('.show'), @service_point_purpose %> |
+<%= link_to t('.back'), service_point_purposes_path %>

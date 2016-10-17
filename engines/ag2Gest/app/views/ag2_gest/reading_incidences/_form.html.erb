@@ -1,0 +1,24 @@
+<script type="text/javascript">
+  $(document).ready(function() {
+    // Select2
+    $('select.sel2').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      allowClear: true
+    });
+  });
+</script>
+
+<%= simple_form_for @reading_incidence, :html => {:class => 'form-vertical well' } do |f| %>
+<%= f.error_notification %>
+<%= display_base_errors resource %>
+
+<div class="row-fluid">
+  <div class="span6">
+    <%= f.association :reading, label: t('activerecord.attributes.reading_incidence.reading_id'), collection: Reading.all(), :input_html => { :class => 'sel2 x-large-text-field' }, label_method: lambda { |st| st.reading_index }, value_method: :id, :label_html => { :class => 'form-label' } %>
+  </div>
+  <div class="span6">
+    <%= f.association :reading_incidence_type, label: t('activerecord.attributes.reading_incidence.reading_incidence_type_id'), collection: ReadingIncidenceType.all(order: 'name'), :input_html => { :class => 'sel2 x-large-text-field' }, label_method: lambda { |st| st.name }, value_method: :id, :label_html => { :class => 'form-label' } %>
+  </div>
+</div>  
+<%= f.button :submit, :class => 'btn-primary' %>
+<% end %>

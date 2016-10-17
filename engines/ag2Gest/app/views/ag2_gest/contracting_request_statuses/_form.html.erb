@@ -1,17 +1,30 @@
-<%= form_for(@contracting_request_status) do |f| %>
-  <% if @contracting_request_status.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@contracting_request_status.errors.count, "error") %> prohibited this contracting_request_status from being saved:</h2>
+<script type="text/javascript">
+  $(document).ready(function() {
+    // Select2
+    $('.date_picker').datepicker({
+        format : 'dd/mm/yyyy',
+        weekStart : 1
+    });
 
-      <ul>
-      <% @contracting_request_status.errors.full_messages.each do |msg| %>
-        <li><%= msg %></li>
-      <% end %>
-      </ul>
+    $('select.sel2').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      allowClear: true
+    });
+  });
+</script>
+
+<%= simple_form_for @contracting_request_status, :html => {:class => 'form-vertical well' } do |f| %>
+  <%= f.error_notification %>
+  <%= display_base_errors resource %>
+
+  <div class="row-fluid">
+    <div class="span6">
+      <%= f.input :name, :required => true, :autofocus => true, :input_html => { :class => 'x-large-text-field'}, :label_html => { :class => 'form-label' } %>
     </div>
-  <% end %>
-
-  <div class="actions">
-    <%= f.submit %>
+    <div class="span6">
+      <%= f.input :requires_work_order, :autofocus => true, :input_html => { :class => 'x-large-text-field'}, :label_html => { :class => 'form-label' } %>
+    </div>
   </div>
+    
+  <%= f.button :submit, :class => 'btn-primary' %>
 <% end %>

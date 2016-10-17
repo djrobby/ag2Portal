@@ -1,21 +1,213 @@
-<h1>Listing bills</h1>
+<script>
+$(document).ready(function () {
+  // Date picker
+  $('.date_picker').datepicker({
+    format : 'dd/mm/yyyy',
+    weekStart : 1
+  }).on('changeDate', function(e){
+    $('.date_picker').datepicker('hide');
+  });
+});
 
-<table>
-  <tr>
-    <th></th>
-    <th></th>
-    <th></th>
-  </tr>
+</script>
+<% content_for :title, "aGestiona2 | ag2Bills" %>
+<% content_for :icon, "/assets/icon/TableA.png" %>
+<% content_for :alt, "ag2Bills" %>
 
-<% @bills.each do |bill| %>
-  <tr>
-    <td><%= link_to 'Show', bill %></td>
-    <td><%= link_to 'Edit', edit_bill_path(bill) %></td>
-    <td><%= link_to 'Destroy', bill, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-  </tr>
-<% end %>
-</table>
+<ul class="breadcrumb">
+  <li>
+    <a href="<%= main_app.root_path %>"><i class="icon-home"></i></a><span class="divider">></span>
+  </li>
+  <li>
+    <a href="<%= ag2_gest.root_path %>">ag2Gest</a><span class="divider">></span>
+  </li>
+  <li>
+    Facturación Masiva
+  </li>
+</ul>
+<h3><%= 'Facturación Masiva' %></h3>
+<div class="span12" id="div_table">
 
-<br />
+  <div class="row">
+    <div class="span1"></div> <!-- Space for icon-plus -->
+    <div class="span1">
+      <b>Id</b>
+    </div>
+    <div class="span4">
+      <b>Abonado</b>
+    </div>
+    <div class="span2">
+      <b>Contador</b>
+    </div>
+    <div class="span1">
+      <b>Consumo</b>
+    </div>
+    <div class="span1">
+      <b>Total</b>
+    </div>
+    <div class="span1">
+    </div>
+  </div>
+  <% @bills.each do |b| %>
 
-<%= link_to 'New Bill', new_bill_path %>
+  <!-- RENDER2 FACTURA DE SUMINISTRO-->
+  <div class="accordion">
+    <div class="accordion-group">
+      <div class="accordion-heading row">
+        <div class="span1">
+          <a class="accor accordion-toggle collapsed" data-toggle="collapse" data-parent="#accordion2" href="#collapse-<%= b.id %>"><i class='icon-plus'></i></a>
+        </div>
+        <div class="span1 soft-padding">
+          <%= b.try(:id) %>
+        </div>
+        <div class="span4 soft-padding">
+          <%= link_to b.subscriber.full_name, subscriber_path(b.subscriber) %>
+        </div>
+        <div class="span2 soft-padding">
+          <%= link_to b.subscriber.try(:meter).try(:meter_code), meters_path(b.subscriber.meter) %>
+        </div>
+        <div class="span1 soft-padding">
+          <%= b.reading.try(:consumption) || 0 %>
+        </div>
+        <div class="span1 soft-padding">
+          <%= b.total %>
+        </div>
+        <div class="span1 soft-padding pull-right">
+          <%= link_to bill_path(b, bills: b.pre_group_no), class: "btn btn-mini", method: :delete, data: { confirm: 'Are you sure?' } do %>
+            <i class="icon-trash"></i>
+          <% end %>
+        </div>
+      </div>
+      <div id="collapse-<%= b.id %>" class="accordion-body collapse">
+        <div class="accordion-inner">
+          <% b.pre_invoices.each do |invoice| %>
+            <div><small><%= t("activerecord.attributes.contracting_request.invoice_number") %>: <%= invoice.try(:invoice_no) %></small></div>
+            <div><small><%= invoice.try(:biller).try(:name) %> | <%= t("activerecord.attributes.contracting_request.fiscal_id") %> <%= invoice.try(:biller).try(:fiscal_id) %></small></div>
+            <table class="table">
+              <tr>
+                <th><%= t("activerecord.attributes.contracting_request.code") %></th>
+                <th><%= t("activerecord.attributes.contracting_request.subcode") %></th>
+                <th><%= t("activerecord.attributes.contracting_request.quantity") %></th>
+                <th><%= t("activerecord.attributes.contracting_request.price") %></th>
+                <th><%= t("activerecord.attributes.contracting_request.amount") %></th>
+                <th><%= t("activerecord.attributes.contracting_request.tax") %></th>
+                <th><%= t("activerecord.attributes.contracting_request.discount") %></th>
+                <th><%= t("activerecord.attributes.contracting_request.discount_pct") %></th>
+                <th><%= t("activerecord.attributes.contracting_request.total") %></th>
+              </tr>
+              <% invoice.pre_invoice_items.each do |item| %>
+                <tr>
+                  <td><%= item.code %></td>
+                  <td><%= item.subcode %></td>
+                  <td><%= item.quantity %></td>
+                  <td><%= item.price %></td>
+                  <td><%= item.amount %></td>
+                  <td><%= item.tax_type.try(:tax) %></td>
+                  <td><%= item.discount %></td>
+                  <td><%= item.discount_pct %></td>
+                  <td><%= item.total %></td>
+                </tr>
+              <% end %>
+              <tr class="subtotal">
+                <td colspan="7" class="no-boder"></td>
+                <td class="black-border"><b><%= t('activerecord.attributes.subscriber.subtotal').upcase %></b></td>
+                <td class="black-border"><%= invoice.subtotal %></td>
+              </tr>
+              <% invoice.tax_breakdown.each do |tax| %>
+                <tr>
+                  <td colspan="5" class="no-boder"></td>
+                  <td class="no-boder"><b>Base imponible:</b> <%= tax[1] %></td>
+                  <td class="no-boder"><%= "#{pluralize(tax[3], 'artículo')}"  %></td>
+                  <td><b><%= " #{t('activerecord.attributes.subscriber.vat')} (#{tax[0]}%)" %></b></td>
+                  <td><%= tax[2] %></td>
+                </tr>
+              <% end %>
+              <tr>
+                <td colspan="7" class="black-border"></td>
+                <td class="black-border"><b><%= t('activerecord.attributes.subscriber.total').upcase %></b></td>
+                <td class="black-border"><%= invoice.total %></td>
+              </tr>
+          <% end %>
+          </table>
+        </div>
+      </div>
+    </div>
+    <% end %>
+  </div>
+
+
+
+
+
+
+
+	<!-- <table class="table table-condensed table-striped">
+    <thead>
+      <tr>
+        <th>Nº</th>
+        <th>Abonado</th>
+        <th>Meter</th>
+        <th>Consumo</th>
+        <th>Total</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @bills.each do |b| %>
+        <tr>
+          <td><%= b.id %></td>
+          <td><%= link_to b.subscriber.full_name, subscriber_path(b.subscriber) %></td>
+          <td><%= link_to b.subscriber.try(:meter).try(:meter_code), meters_path(b.subscriber.meter) %></td>
+          <td><%= b.reading.try(:consumption) || 0 %></td>
+          <td><%= b.total %></td>
+          <td>
+            <%= link_to bill_path(b, bills: b.pre_group_no), class: "btn btn-mini", method: :delete, data: { confirm: 'Are you sure?' } do %>
+              <i class="icon-trash"></i>
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table> -->
+	<br/>
+  <a href="#confirm-bills" role="button" class="btn btn-primary" data-toggle="modal">Confirmar facturas</a>
+  <br/>
+  <br/>
+  <%= link_to "Volver a ag2Gest", ag2_gest.root_path %>
+</div>
+
+
+<!-- Modal -->
+<div id="confirm-bills" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="ConfirmarBills" aria-hidden="true">
+  <%= simple_form_for :pre_bill, url: confirm_bills_path, method: :get do |f| %>
+    <%= f.input :ids, :as => :hidden, :input_html => { :value =>  params[:bills] } %>
+    <div class="modal-header">
+      <h4>Confirmar facturas</h4>
+    </div>
+    <div class="modal-body">
+      <%= f.input :confirmation_date,:input_html => {class: "string required mid-text-field date_picker"} %>
+      <!-- <form class="simple_form form-vertical">
+        <label class="span6">
+          <div class="control-group string required meter_manufacturing_date">
+            <label class="string required control-label form-label" for="meter_manufacturing_date"><abbr title="requerido">*</abbr> Fecha de facturación</label>
+            <div class="controls">
+              <input class="string required mid-text-field date_picker" id="meter_manufacturing_date" name="meter[manufacturing_date]" required="required" size="50" type="text">
+            </div>
+          </div>
+        </label> -->
+        <!-- <label class="span6">
+          <div class="control-group string required meter_manufacturing_date">
+            <label class="string required control-label form-label" for="meter_manufacturing_date"><abbr title="requerido">*</abbr> Fecha de vencimiento</label>
+            <div class="controls">
+              <input class="string required mid-text-field date_picker" id="meter_manufacturing_date" name="meter[manufacturing_date]" required="required" size="50" type="text">
+            </div>
+          </div>
+        </label> -->
+      <!-- </form> -->
+    </div>
+    <div class="modal-footer">
+      <%= f.button :submit, "Confirmar facturas", :class => 'btn btn-primary' %>
+      <button class="btn" data-dismiss="modal" aria-hidden="true">Cerrar</button>
+    </div>
+  <% end %>
+</div>

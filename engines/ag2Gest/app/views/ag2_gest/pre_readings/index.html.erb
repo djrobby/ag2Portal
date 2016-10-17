@@ -1,21 +1,59 @@
-<h1>Listing pre_readings</h1>
+<style>
+  .center {
+    text-align: center!important;
+  }
+</style>
+<% content_for :title, "aGestiona2 | ag2PreReadings" %>
+<% content_for :icon, "/assets/icon/TableA.png" %>
+<% content_for :alt, "ag2PreReadings" %>
 
-<table>
-  <tr>
-    <th></th>
-    <th></th>
-    <th></th>
-  </tr>
+<ul class="breadcrumb">
+  <li>
+    <a href="<%= main_app.root_path %>"><i class="icon-home"></i></a><span class="divider">></span>
+  </li>
+  <li>
+    <a href="<%= ag2_gest.root_path %>">ag2Gest</a><span class="divider">></span>
+  </li>
+  <li>
+    Lecturas
+  </li>
+</ul>
 
-<% @pre_readings.each do |pre_reading| %>
-  <tr>
-    <td><%= link_to 'Show', pre_reading %></td>
-    <td><%= link_to 'Edit', edit_pre_reading_path(pre_reading) %></td>
-    <td><%= link_to 'Destroy', pre_reading, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-  </tr>
-<% end %>
-</table>
+<h3>Lecturas</h3>
 
-<br />
+<div class="container-fluid">
+  <div class="row-fluid">
 
-<%= link_to 'New Pre reading', new_pre_reading_path %>
+    <div class="span3">
+      <div class="well sidebar-nav">
+        <!-- Buttons -->
+        <%= link_to t('activerecord.attributes.pre_reading.generate_readings'), new_pre_reading_path, class: "btn btn-block btn-primary" %>
+      	<%= link_to t('activerecord.attributes.pre_reading.impute_readings'), new_impute_pre_readings_path, class: "btn btn-block btn-primary" %>
+        <br /><br />
+        <%= link_to t("ag2_gest.pre_readings.index.back_to_root"), ag2_gest.root_path %>
+      </div><!-- /.sidebar-nav -->
+    </div><!-- /.span3 -->
+
+    <div class="span9" id="div_table">
+      <table class="table table-condensed table-striped shrinked">
+        <thead>
+			    <tr>
+            <th><%= t("activerecord.attributes.pre_reading.reading_route_id") %></th>
+            <th class="center"><%= t("activerecord.attributes.pre_reading.billing_period_id") %></th>
+            <th class="center"><%= t("activerecord.attributes.pre_reading.prereadings_number") %></th>
+			    </tr>
+			  </thead>
+			  <tbody>
+			    <% @pre_readings.each do |pre_reading| %>
+			    	<tr>
+			    		<td ><%= ReadingRoute.find(pre_reading[0][0]).try(:route_code) %></td>
+				      <td class="center"><%= BillingPeriod.find(pre_reading[0][1]).try(:period) %></td>
+				      <td class="center"><%= pre_reading[1].count %></td>
+			    	</tr>
+			    <% end %>
+			  </tbody>
+			</table>
+    </div><!-- /.span9 -->
+
+  </div><!-- /.row-fluid -->
+</div><!-- /.container-fluid -->

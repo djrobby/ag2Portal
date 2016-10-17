@@ -1,6 +1,8 @@
-<h1>Editing center</h1>
+<%= render '/layouts/ag2_gest/centersbreadcrumb' %>
+
+<h3><%=t '.title' %></h3>
 
 <%= render 'form' %>
 
-<%= link_to 'Show', @center %> |
-<%= link_to 'Back', centers_path %>
+<%= link_to t('.show'), @center %> |
+<%= link_to t('.back'), centers_path %>

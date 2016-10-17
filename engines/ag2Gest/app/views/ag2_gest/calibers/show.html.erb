@@ -1,5 +1,21 @@
-<p id="notice"><%= notice %></p>
+<%= render '/layouts/ag2_gest/caliberbreadcrumb' %>
 
+<h3><%= t('activerecord.attributes.caliber.caliber') %> <%=@caliber.caliber %></h3>
+<table class="table">
+  <tbody>
+    <tr>
+      <td><%= t('activerecord.attributes.caliber.caliber_id') %>:</td>
+      <td><%= @caliber.try(:id) %></td>
+      <td><%= t('activerecord.attributes.caliber.caliber') %>:</td>
+      <td><%= @caliber.try(:caliber) %></td>
+    </tr>
+    	<%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @caliber } %>
+  </tbody>
+</table>
 
-<%= link_to 'Edit', edit_caliber_path(@caliber) %> |
-<%= link_to 'Back', calibers_path %>
+<%= render partial: '/layouts/crud/update_delete_new', locals:
+{ model: Caliber, update_path: edit_caliber_path(@caliber), update_txt: t('.btn_edit'),
+delete_path: @caliber, delete_txt: t('.btn_delete'), msg: t("activerecord.models.caliber.one"), :txt => @caliber.id,
+new_path: new_caliber_path, new_txt: t('ag2_gest.calibers.index.btn_new') } %>
+
+<%= link_to I18n.t('ag2_gest.calibers.back_to_main_page'), calibers_path %>

@@ -1,0 +1,118 @@
+<script type="text/javascript">
+  $(document).ready(function() {
+    $("#div_table th a, #div_table #pages a").on("click", function() {
+      $.getScript(this.href);
+      return false;
+    });
+  });
+/*  var _thisForm = '';
+  var changing = false;
+
+  $(document).ready(function () {
+
+    $(".sel2").select2();
+
+    });
+
+    _thisForm = $("#removeFilter").closest('form')[0];
+
+    $(document).ajaxStart(function() {
+    }).ajaxSuccess(function(){
+
+    });
+
+    jQuery(function($) {
+
+      $('#sub_office').change(function() {
+
+    });
+
+
+
+  });*/
+</script>
+
+<!-- <div class="fixed-table-toolbar">
+  <div class="columns columns-right btn-group pull-right">
+    <button class="btn btn-primary btn-small" type="button" name="refresh" title="Refresh"><i class="glyphicon glyphicon-refresh icon-refresh icon-white"></i></button>
+    <button type="button" class="btn btn-primary btn-small dropdown-toggle" data-toggle="dropdown"><i class="glyphicon glyphicon-th icon-th icon-white"></i> <span class="caret"></span></button>
+    <ul class="dropdown-menu" role="menu" style="padding-left: 7px;">
+      <li><label><input type="checkbox" data-field="id" value="1" checked="checked">Código</label></li>
+      <li><label><input type="checkbox" data-field="id" value="1" checked="checked">Nombre</label></li>
+      <li><label><input type="checkbox" data-field="name" value="2" checked="checked">DNI</label></li>
+      <li><label><input type="checkbox" data-field="price" value="3" checked="checked">Dirección</label></li>
+      <li><label><input type="checkbox" data-field="operate" value="4" checked="checked">Población</label></li>
+      <li><label><input type="checkbox" data-field="operate" value="4" checked="checked">Código Postal</label></li>
+    </ul>
+  </div>
+  <div class="pull-right search"><input class="form-control input-large" type="text" placeholder="Buscar" style="height: 16px;"></div>
+</div> -->
+
+
+<table class="table table-condensed table-striped shrinked">
+
+  <thead>
+    <tr>
+      <th><%= t('activerecord.attributes.subscriber.subscriber_code0') %></th>
+      <th><%= t('activerecord.attributes.subscriber.name') %></th>
+      <th><%= t('activerecord.attributes.subscriber.fiscal_id_') %></th>
+      <th><%= t('activerecord.attributes.subscriber.office_id') %></th>
+      <th><%= t('activerecord.attributes.subscriber.town_id') %></th>
+      <th><%= t('activerecord.attributes.subscriber.active_')%></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @subscribers.each do |subscriber| %>
+      <tr>
+        <td><%= link_to subscriber.try(:subscriber_code), subscriber_path(subscriber) %></td>
+        <td><%= subscriber.try(:full_name) %></td>
+        <td><%= subscriber.try(:fiscal_id) %></td>
+        <td><%= subscriber.try(:office).try(:name) %></td>
+        <td><%= subscriber.try(:center).try(:town).try(:name) %></td>
+        <% if subscriber.try(:active) %>
+          <td><i class="icon-thumbs-up"></i></td>
+        <% else %>
+          <td><i class="icon-thumbs-down"></i></td>
+        <% end %>
+      </tr>
+    <% end %>
+  </tbody>
+
+</table>
+
+<%#= render :partial => '/layouts/pagination', :locals => { :ivar => @subscribers } %>
+
+<!-- <div class="row-fluid fixed-table-pagination pagination-small">
+  <div class="pull-left pagination-detail">
+    <small class="pagination-info">Mostrando 1 a 10 de 800 abonados</small>
+  </div>
+  <div class="pull-right pagination-detail">
+    <small class="page-list">
+      <span class="btn-group btn-small dropup">
+        <button type="button" class="btn btn-primary btn-mini dropdown-toggle" data-toggle="dropdown"><small class="page-size">10</small> <span class="caret icon-white"></span></button>
+        <ul class="dropdown-menu" role="menu">
+          <li class="active"><a href="javascript:void(0)">10</a></li>
+          <li><a href="javascript:void(0)">25</a></li>
+          <li><a href="javascript:void(0)">50</a></li>
+          <li><a href="javascript:void(0)">100</a></li>
+          <li><a href="javascript:void(0)">200</a></li>
+        </ul>
+      </span> registros por página
+    </small>
+  </div>
+  <div class="pagination pagination-centered" style="margin-top: -20px;">
+    <ul class="pagination">
+      <li class="page-first disabled"><a href="javascript:void(0)">&lt;&lt;</a></li>
+      <li class="page-pre disabled"><a href="javascript:void(0)">&lt;</a></li>
+      <li class="page-number active disabled"><a href="javascript:void(0)">1</a></li>
+      <li class="page-number"><a href="javascript:void(0)">2</a></li>
+      <li class="page-number"><a href="javascript:void(0)">3</a></li>
+      <li class="page-number"><a href="javascript:void(0)">4</a></li>
+      <li class="page-number"><a href="javascript:void(0)">5</a></li>
+      <li class="page-next"><a href="javascript:void(0)">&gt;</a></li>
+      <li class="page-last"><a href="javascript:void(0)">&gt;&gt;</a></li>
+    </ul>
+  </div>
+</div> -->
+<%= link_to t("ag2_gest.subscribers.index.back_to_root"), ag2_gest.root_path %>

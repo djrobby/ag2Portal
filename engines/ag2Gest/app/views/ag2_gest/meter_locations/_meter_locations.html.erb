@@ -1,0 +1,41 @@
+<script>
+  $(document).ready(function() {
+    $("#div_table th a, #div_table #pages a").on("click", function() {
+      $.getScript(this.href);
+      return false;
+    });
+    $('select.sel2').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      allowClear: true
+    });
+  });
+</script>
+
+<table class="table table-condensed table-striped">
+  <thead>
+    <tr>
+      <th><%= sortable "id", "Id" %></th>
+      <th><%= sortable "name", "Nombre" %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @meter_locations.each do |met_location| %>
+    <tr>
+      <td><%= link_to met_location.try(:id), meter_location_path(met_location) %></td>
+      <td><%= met_location.try(:name) %></td>
+      <td>
+        <%= link_to edit_meter_location_path(met_location), class: "btn btn-mini" do %>
+          <i class="icon-edit"></i>
+        <% end %>
+        <%= link_to met_location, class: "btn btn-mini", method: :delete, data: { confirm: 'Are you sure?' } do %>
+          <i class="icon-trash"></i>
+        <% end %>
+      </td>
+    </tr>
+   <% end %>
+  </tbody>
+</table>
+
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @meter_locations } %>
+<%= render :partial => '/layouts/crud/new', :locals => { :model => MeterType, :path => new_meter_location_path, :txt => t("ag2_gest.meter_locations.index.btn_new") } %>
+<%= link_to t("ag2_gest.meter_models.index.back_to_root"), ag2_gest.root_path %>

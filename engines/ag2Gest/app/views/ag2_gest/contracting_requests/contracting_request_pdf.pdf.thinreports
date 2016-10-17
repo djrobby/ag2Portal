@@ -1,0 +1,257 @@
+
+report.set_layout tlf: 'reports/cont_req_prue', layout_options: { default: true }
+report.start_new_page
+
+report.page.values printed_at: Time.now
+
+report.events.on :page_create do |e|
+	# Set page-number
+	e.page.item(:page_no).value(e.page.no)
+
+	#Hide items
+	#if e.page.no > 1
+	#	e.page.item(:form_title).hide
+	#	e.report.page.list(:list).style(:visible, 'none')
+	#end
+
+end
+
+
+
+report.events.on :generate do |e|
+	e.pages.each do |page|
+		# Set total-page-number
+		page.item(:page_count).value(e.report.page_count)
+
+		#Hide
+		#if e.report.page_count > 1
+			#page.item(:form_title).hide
+		#end
+
+	end
+end
+
+#DATOS CABECERA
+report.page.item(:request).value I18n.t("activerecord.report.contracting_request.request")
+report.page.item(:number).value I18n.t("activerecord.report.contracting_request.number")
+report.page.item(:project).value I18n.t("activerecord.report.contracting_request.project")
+report.page.item(:date).value I18n.t("activerecord.report.contracting_request.date")
+
+report.page.item(:request_no).value(@contracting_request.try(:request_no))
+report.page.item(:project_id).value(@contracting_request.try(:project_id))
+report.page.item(:request_date).value(@contracting_request.try(:request_date).strftime('%d/%m/%Y'))
+
+#DATOS SOLICITANTE
+
+# string = @contracting_request.r_last_name
+# new_string = string.slice(0,1).capitalize + string.slice(1..-1)
+report.page.item(:r_last_name).value(@contracting_request.full_name)
+
+# string = @contracting_request.r_first_name
+# new_string = string.slice(0,1).capitalize + string.slice(1..-1)
+# report.page.item(:r_first_name).value(new_string)
+
+report.page.item(:r_fiscal_id).value(@contracting_request.try(:r_fiscal_id))
+
+#ENTITY
+report.page.item(:loc_entity_street_directory).value I18n.t("activerecord.report.contracting_request.entity_street_directory")
+report.page.item(:loc_entity_street_type).value I18n.t("activerecord.report.contracting_request.entity_street_type")
+report.page.item(:loc_entity_fiscal_id).value I18n.t("activerecord.report.contracting_request.entity_fiscal_id")
+report.page.item(:loc_entity_street_name).value I18n.t("activerecord.report.contracting_request.entity_street_name")
+report.page.item(:loc_entity_street_number).value I18n.t("activerecord.report.contracting_request.entity_street_number")
+report.page.item(:loc_entity_building).value I18n.t("activerecord.report.contracting_request.entity_building")
+report.page.item(:loc_entity_floor).value I18n.t("activerecord.report.contracting_request.entity_floor")
+report.page.item(:loc_entity_floor_office).value I18n.t("activerecord.report.contracting_request.entity_floor_office")
+report.page.item(:loc_entity_zipcode).value I18n.t("activerecord.report.contracting_request.entity_zipcode")
+report.page.item(:loc_entity_town).value I18n.t("activerecord.report.contracting_request.entity_town")
+report.page.item(:loc_entity_province).value I18n.t("activerecord.report.contracting_request.entity_province")
+report.page.item(:loc_entity_region).value I18n.t("activerecord.report.contracting_request.entity_region")
+report.page.item(:loc_entity_country).value(I18n.t("activerecord.report.contracting_request.entity_country"))
+
+report.page.item(:entity_street_directory_id).value(@contracting_request.try(:entity_street_directory).try(:street_name))
+report.page.item(:entity_street_type_id).value(@contracting_request.try(:entity_street_type).try(:street_type_description))
+report.page.item(:entity_fiscal_id).value(@contracting_request.try(:entity).try(:fiscal_id)) #Identification Fiscal
+report.page.item(:entity_street_name).value(@contracting_request.try(:entity).try(:street_name))
+report.page.item(:entity_street_number).value(@contracting_request.try(:entity).try(:street_number))
+report.page.item(:entity_building).value(@contracting_request.try(:entity).try(:building))
+report.page.item(:entity_floor).value(@contracting_request.try(:entity).try(:floor))
+report.page.item(:entity_floor_office).value(@contracting_request.try(:entity).try(:floor_office))
+report.page.item(:entity_zipcode_id).value(@contracting_request.try(:entity_zipcode).try(:zipcode))
+report.page.item(:entity_town_id).value(@contracting_request.try(:entity_town).try(:name))
+report.page.item(:entity_province_id).value(@contracting_request.try(:entity_province).try(:name))
+report.page.item(:entity_region_id).value(@contracting_request.try(:entity_region).try(:name))
+report.page.item(:entity_country_id).value(@contracting_request.try(:entity_country).try(:name))
+
+#-----------------------------------------------------------------------------------------------------------------------------#
+
+#CLIENT
+report.page.item(:loc_client_street_directory).value I18n.t("activerecord.report.contracting_request.client_street_directory")
+report.page.item(:loc_client_street_type).value I18n.t("activerecord.report.contracting_request.client_street_type")
+report.page.item(:loc_client_street_name).value I18n.t("activerecord.report.contracting_request.client_street_name")
+report.page.item(:loc_client_street_number).value I18n.t("activerecord.report.contracting_request.client_street_number")
+report.page.item(:loc_client_building).value I18n.t("activerecord.report.contracting_request.client_building")
+report.page.item(:loc_client_floor).value I18n.t("activerecord.report.contracting_request.client_floor")
+report.page.item(:loc_client_floor_office).value I18n.t("activerecord.report.contracting_request.client_floor_office")
+report.page.item(:loc_client_zipcode_id).value I18n.t("activerecord.report.contracting_request.client_zipcode_id")
+report.page.item(:loc_client_town_id).value I18n.t("activerecord.report.contracting_request.client_town_id")
+report.page.item(:loc_client_province_id).value I18n.t("activerecord.report.contracting_request.client_province_id")
+report.page.item(:loc_client_region_id).value I18n.t("activerecord.report.contracting_request.client_region_id")
+report.page.item(:loc_client_country_id).value I18n.t("activerecord.report.contracting_request.client_country_id")
+report.page.item(:loc_client_phone).value I18n.t("activerecord.report.contracting_request.client_phone")
+report.page.item(:loc_client_fax).value I18n.t("activerecord.report.contracting_request.client_fax")
+report.page.item(:loc_client_cellular).value I18n.t("activerecord.report.contracting_request.client_cellular")
+report.page.item(:loc_client_email).value I18n.t("activerecord.report.contracting_request.client_email")
+
+report.page.item(:client_street_directory_id).value(@contracting_request.try(:client_street_directory).try(:street_name))
+report.page.item(:client_street_type_id).value(@contracting_request.try(:client_street_type).try(:street_type_description))
+report.page.item(:client_street_name).value(@contracting_request.try(:entity).try(:client).try(:street_name))
+report.page.item(:client_street_number).value(@contracting_request.try(:entity).try(:client).try(:street_number))
+report.page.item(:client_building).value(@contracting_request.try(:entity).try(:client).try(:building))
+report.page.item(:client_floor).value(@contracting_request.try(:entity).try(:client).try(:floor))
+report.page.item(:client_floor_office).value(@contracting_request.try(:entity).try(:client).try(:floor_office))
+report.page.item(:client_zipcode_id).value(@contracting_request.try(:client_zipcode).try(:zipcode))
+report.page.item(:client_town_id).value(@contracting_request.try(:client_town).try(:name))
+report.page.item(:client_province_id).value(@contracting_request.try(:client_province).try(:name))
+report.page.item(:client_region_id).value(@contracting_request.try(:client_region).try(:name))
+report.page.item(:client_country_id).value(@contracting_request.try(:client_country).try(:name))
+report.page.item(:client_phone).value(@contracting_request.try(:entity).try(:client).try(:phone))
+report.page.item(:client_fax).value(@contracting_request.try(:entity).try(:client).try(:fax))
+report.page.item(:client_cellular).value(@contracting_request.try(:entity).try(:client).try(:cellular))
+report.page.item(:client_email).value(@contracting_request.try(:entity).try(:client).try(:email))
+
+#-----------------------------------------------------------------------------------------------------------------------------#
+
+#SUBSCRIBER
+report.page.item(:loc_subscriber_street_directory_id).value I18n.t("activerecord.report.subscriber.street_directory_id")
+report.page.item(:loc_subscriber_street_type_id).value I18n.t("activerecord.report.subscriber.street_type_id")
+report.page.item(:loc_subscriber_street_name).value I18n.t("activerecord.report.subscriber.street_name")
+report.page.item(:loc_subscriber_street_number).value I18n.t("activerecord.report.subscriber.street_number")
+report.page.item(:loc_subscriber_building).value I18n.t("activerecord.report.subscriber.building")
+report.page.item(:loc_subscriber_floor).value I18n.t("activerecord.report.subscriber.floor")
+report.page.item(:loc_subscriber_floor_office).value I18n.t("activerecord.report.subscriber.floor_office")
+report.page.item(:loc_subscriber_zipcode_id).value I18n.t("activerecord.report.subscriber.zipcode_id")
+report.page.item(:loc_subscriber_town_id).value I18n.t("activerecord.report.subscriber.town_id")
+report.page.item(:loc_subscriber_province_id).value I18n.t("activerecord.report.subscriber.province_id")
+report.page.item(:loc_subscriber_region_id).value I18n.t("activerecord.report.subscriber.region_id")
+report.page.item(:loc_subscriber_country_id).value I18n.t("activerecord.report.subscriber.country_id")
+report.page.item(:loc_subscriber_center_id).value I18n.t("activerecord.report.subscriber.center_id")
+
+report.page.item(:subscriber_street_directory_id).value(@contracting_request.try(:subscriber_street_directory).try(:street_name))
+report.page.item(:subscriber_street_type_id).value(@contracting_request.try(:subscriber_street_type).try(:street_type_description))
+report.page.item(:subscriber_street_name).value(@contracting_request.try(:subscriber).try(:street_name))
+report.page.item(:subscriber_street_number).value(@contracting_request.try(:subscriber).try(:street_number))
+report.page.item(:subscriber_building).value(@contracting_request.try(:subscriber).try(:building))
+report.page.item(:subscriber_floor).value(@contracting_request.try(:subscriber).try(:floor))
+report.page.item(:subscriber_floor_office).value(@contracting_request.try(:subscriber).try(:floor_office))
+report.page.item(:subscriber_zipcode_id).value(@contracting_request.try(:subscriber_zipcode).try(:zipcode))
+report.page.item(:subscriber_town_id).value(@contracting_request.try(:subscriber_town).try(:name))
+report.page.item(:subscriber_province_id).value(@contracting_request.try(:subscriber_province).try(:name))
+report.page.item(:subscriber_region_id).value(@contracting_request.try(:subscriber_region).try(:name))
+report.page.item(:subscriber_country_id).value(@contracting_request.try(:subscriber_country).try(:name))
+report.page.item(:subscriber_center_id).value(@contracting_request.try(:subscriber_center).try(:name))
+
+#-----------------------------------------------------------------------------------------------------------------------------#
+
+#BANK INFO
+report.page.item(:loc_iban).value I18n.t("activerecord.report.contracting_request.iban")
+report.page.item(:loc_country_code).value I18n.t("activerecord.report.contracting_request.country_code")
+report.page.item(:loc_iban_dc).value I18n.t("activerecord.report.contracting_request.iban_dc")
+report.page.item(:loc_cb).value I18n.t("activerecord.report.contracting_request.cb")
+report.page.item(:loc_cs).value I18n.t("activerecord.report.contracting_request.cs")
+report.page.item(:loc_ccc_dc).value I18n.t("activerecord.report.contracting_request.ccc_dc")
+report.page.item(:loc_account_no).value I18n.t("activerecord.report.contracting_request.account_no")
+
+report.page.item(:iban).value(@contracting_request.try(:iban))
+report.page.item(:country_id).value(@contracting_request.try(:country_code))
+report.page.item(:iban_dc).value(@contracting_request.try(:iban_dc))
+report.page.item(:bank_id).value(@contracting_request.try(:cb))
+report.page.item(:bank_office_id).value(@contracting_request.try(:cs))
+report.page.item(:ccc_dc).value(@contracting_request.try(:ccc_dc))
+report.page.item(:account_no).value(@contracting_request.try(:account_no))
+
+#-----------------------------------------------------------------------------------------------------------------------------#
+#Attributtes of the class
+
+#report.page.item(:loc_work_order_id).value I18n.t("activerecord.report.contracting_request.work_order_id")
+#report.page.item(:loc_subscriber_id).value I18n.t("activerecord.report.contracting_request.loc_subscriber_id")
+#report.page.item(:work_order_id).value(@contracting_request.work_order_id)
+#report.page.item(:subscriber_id).value(@contracting_request.subscriber_id)
+#report.page.item(:id).value(@contracting_request.id)
+
+#report.page.item(:contracting_request_type_id).value(@contracting_request.contracting_request_type.description)
+#report.page.item(:contracting_request_status_id).value(@contracting_request.contracting_request_status.name)
+
+#report.page.item(:created_by).value(@contracting_request.created_by)
+#report.page.item(:updated_by).value(@contracting_request.updated_by)
+#report.page.item(:created_at).value(@contracting_request.created_at)
+#report.page.item(:updated_at).value(@contracting_request.updated_at)
+
+#-----------------------------------------------------------------------------------------------------------------------------#
+
+
+
+#report.page.item(:cadastral_reference).value(@water_supply_contract.cadastral_reference)
+																						#@water_supply_contract.gis_id
+																						#@water_supply_contract.endowments
+																						#@water_supply_contract.inhabitants
+
+
+##BLOCK
+#@water_supply_contract.tariff_scheme
+#@water_supply_contract.tariff.tariff_type.name unless ?¿
+#@water_supply_contract.tariff.fixed_fee.to_s unless ?¿
+#@water_supply_contract.tariff.billing_frequency.name unless ¿?
+#
+##BLOCK
+#@water_supply_contract.meter.caliber.caliber unless @water_supply_contract.meter
+#@contracting_request.water_supply_contract.work_order.work_order_status.name
+#
+##BLOCK ÓRDENES DE TRABAJO
+#@contracting_request.work_order
+#@contracting_request.work_order
+#@contracting_request.water_supply_contract.work_order.full_no unless
+#Orden de instalación --> @contracting_request.water_supply_contract.try(:work_order) unless
+#
+#
+##BLOCK Abonado Cliente
+#@contracting_request.client
+#@contracting_request.subscriber.subscriber_code
+#
+##FACTURA
+#@contracting_request.water_supply_contract.try(:bill)
+#@contracting_request.water_supply_contract.bill.full_no
+#
+#
+#
+##BLOCK
+ #@contracting_request.project.to_label
+
+
+#report.page.item(:).value(@water_supply_contract.gis_id)
+
+#LOOP LIST
+#no = 0
+#@my_array.each do |i|
+#	report.page.list(:default).add_row do |row|
+#		no = no + 1
+#    	row.item(:nu_arra).value(@my_array[no])
+    	#row.item(:product).value i.product.full_code unless i.product.blank?
+    	#row.item(:description).value i.description unless i.description.blank?
+    	#row.item(:quantity).value number_with_precision(i.quantity, precision: 4) unless i.quantity.blank?
+#	end
+
+#end
+
+#report.page.values client_full_name: @contracting_request.entity.full_name if @contracting_request.entity
+#report.page.values subscriber_address: "#{@contracting_request.subscriber_street_directory.try(:street_name) || @contracting_request.subscriber_street_name}, #{@contracting_request.subscriber_street_number}. #{@contracting_request.subscriber_town.name} "
+#report.page.values date_office: @contracting_request.project.office.town.name + " a " + I18n.localize(@contracting_request.created_at, format: :long_date)
+#
+#
+#
+#
+#
+#
+#
+#
+#
+##show_tab_supplly water_supply_contract and asociation

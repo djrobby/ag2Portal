@@ -1,21 +1,9 @@
-<h1>Listing billing_frequencies</h1>
+<%= render '/layouts/ag2_gest/billingfrequenciesbreadcrumb' %>
 
-<table>
-  <tr>
-    <th></th>
-    <th></th>
-    <th></th>
-  </tr>
+<%#= render :partial => '/layouts/searchhead_remote', :locals => { :title => t(".title"), :path => billing_frequencies_path } %>
 
-<% @billing_frequencies.each do |billing_frequency| %>
-  <tr>
-    <td><%= link_to 'Show', billing_frequency %></td>
-    <td><%= link_to 'Edit', edit_billing_frequency_path(billing_frequency) %></td>
-    <td><%= link_to 'Destroy', billing_frequency, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-  </tr>
-<% end %>
-</table>
+<h3><%= t(".title") %></h3>
 
-<br />
-
-<%= link_to 'New Billing frequency', new_billing_frequency_path %>
+<div class="span8" id="div_table">
+ 	<%= render 'billing_frequencies' %>
+</div>

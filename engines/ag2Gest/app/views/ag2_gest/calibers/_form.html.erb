@@ -1,17 +1,18 @@
-<%= form_for(@caliber) do |f| %>
-  <% if @caliber.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@caliber.errors.count, "error") %> prohibited this caliber from being saved:</h2>
+<script type="text/javascript">
+	$(document).ready(function() {
+	  // Select2
+	  $('select.sel2').select2({
+	    formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+	    allowClear: true
+	  });
+	});
+</script>
 
-      <ul>
-      <% @caliber.errors.full_messages.each do |msg| %>
-        <li><%= msg %></li>
-      <% end %>
-      </ul>
-    </div>
-  <% end %>
+<%= simple_form_for @caliber, :html => {:class => 'form-vertical well' } do |f| %>
+	<%= f.error_notification %>
+	<%= display_base_errors resource %>
 
-  <div class="actions">
-    <%= f.submit %>
-  </div>
+	<%= f.input :caliber, :required => true, :autofocus => true, :input_html => { :class => 'x-medium-text-field' }, :label_html => { :class => 'form-label' } %>
+
+	<%= f.button :submit, :class => 'btn-primary' %>
 <% end %>

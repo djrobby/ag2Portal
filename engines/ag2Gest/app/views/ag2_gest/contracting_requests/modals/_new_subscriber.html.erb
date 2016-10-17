@@ -1,0 +1,59 @@
+<div id="new-subscriber" class="modal fade" style="display: none;">
+  <%= simple_form_for [@contracting_request, @subscriber], :remote => :true, :html => { "data-type" => :json, :class => 'form-inline', :id => 'form_new_subscriber' } do |f| %>
+  <div class="modal-header">
+    <a class="close" data-dismiss="modal">&#215;</a>
+    <h3><%= t('activerecord.attributes.contracting_request.data_subscriber') %></h3>
+  </div>
+  <div class="modal-body">
+
+    <h4><%= t('activerecord.attributes.contracting_request.data_meter') %></h4>
+    <% if !session[:office].blank? %>
+      <%= f.association :meter, required: true, collection: Meter.from_office(session[:office]).availables(@contracting_request.try(:old_subscriber).try(:meter_id)).select{|m| m.caliber_id == @water_supply_contract.caliber_id}, selected: @water_supply_contract.meter_id, input_html: { class: 'x-large-text-field sel2', value: @water_supply_contract.try(:meter_id) }, label_html: { class: 'form-label' }, include_blank: true, label: t('activerecord.attributes.contracting_request.meter') %>
+    <% else %>
+      <%= f.association :meter, required: true, collection: Meter.availables(@contracting_request.try(:old_subscriber).try(:meter_id)).select{|m| m.caliber_id == @water_supply_contract.caliber_id}, selected: @water_supply_contract.meter_id, input_html: { class: 'x-large-text-field sel2', value: @water_supply_contract.try(:meter_id) }, label_html: { class: 'form-label' }, include_blank: true, label: t('activerecord.attributes.contracting_request.meter') %>
+    <% end %>
+    <%= f.association :reading_route, required: true, collection: ReadingRoute.where(project_id: @contracting_request.project_id), selected: @contracting_request.try(:old_subscriber).try(:reading_route_id), input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' }, include_blank: true, label: t('activerecord.attributes.contracting_request.reading_route') %>
+    <%= f.input :reading_sequence, required: true, input_html: { class: 'x-large-text-field', value: @contracting_request.try(:old_subscriber).try(:reading_sequence) }, label_html: { class: 'form-label' } %>
+    <%= f.input :reading_variant, input_html: { class: 'x-large-text-field', value: @contracting_request.try(:old_subscriber).try(:reading_variant) }, label_html: { class: 'form-label' } %>
+    <%#= f.input :active, :as => :hidden, :input_html => { :value => "true" } %>
+    <%#= f.input :building, :as => :hidden, :input_html => { :value => @contracting_request.subscriber_building } %>
+    <%#= f.input :center_id, :as => :hidden, :input_html => { :value => @contracting_request.subscriber_center_id, } %>
+    <%#= f.input :client_id, :as => :hidden, :input_html => { :value => @contracting_request.try(:client).try(:id), } %>
+    <%#= f.input :country_id, :as => :hidden, :input_html => { :value => @contracting_request.subscriber_country_id, } %>
+    <%#= f.input :fiscal_id, :as => :hidden, :input_html => { :value => @contracting_request.try(:entity).try(:fiscal_id), } %>
+    <%#= f.input :floor, :as => :hidden, :input_html => { :value => @contracting_request.subscriber_floor, } %>
+    <%#= f.input :floor_office, :as => :hidden, :input_html => { :value => @contracting_request.subscriber_floor_office, } %>
+    <%#= f.input :province_id, :as => :hidden, :input_html => { :value => @contracting_request.subscriber_province_id, } %>
+    <%#= f.input :region_id, :as => :hidden, :input_html => { :value => @contracting_request.subscriber_region_id, } %>
+    <%#= f.input :street_directory_id, :as => :hidden, :input_html => { :value => @contracting_request.subscriber_street_directory_id, } %>
+    <%#= f.input :street_name, :as => :hidden, :input_html => { :value => @contracting_request.subscriber_street_name, } %>
+    <%#= f.input :street_number, :as => :hidden, :input_html => { :value => @contracting_request.subscriber_street_number, } %>
+    <%#= f.input :street_type_id, :as => :hidden, :input_html => { :value => @contracting_request.subscriber_street_type_id, } %>
+    <%#= f.input :town_id, :as => :hidden, :input_html => { :value => @contracting_request.subscriber_town_id, } %>
+    <%#= f.input :zipcode_id, :as => :hidden, :input_html => { :value => @contracting_request.subscriber_zipcode_id, } %>
+    <%#= f.input :cadastral_reference, :as => :hidden, :input_html => { :value => @contracting_request.try(:water_supply_contract).try(:cadastral_reference) } %>
+    <%#= f.input :tariff_scheme_id, :as => :hidden, :input_html => { :value => @contracting_request.try(:water_supply_contract).try(:tariff).try(:tariff_scheme_id) } %>
+    <%#= f.input :endowments, :as => :hidden, :input_html => { :value => @contracting_request.try(:water_supply_contract).try(:endowments), } %>
+    <%#= f.input :gis_id, :as => :hidden, :input_html => { :value => @contracting_request.try(:water_supply_contract).try(:gis_id) } %>
+    <%#= f.input :inhabitants, :as => :hidden, :input_html => { :value => @contracting_request.try(:water_supply_contract).try(:inhabitants) } %>
+    <%#= f.input :meter_id, :as => :hidden, :input_html => { :value => @contracting_request.try(:water_supply_contract).try(:meter_id) } %>
+    <%#= f.input :subscriber_code, :as => :hidden, :input_html => { :value => sub_next_no(project.organization_id) } %>
+
+    <h4><%= t('activerecord.attributes.contracting_request.data_installation_meter') %></h4>
+    <%= f.simple_fields_for :meter_details, @subscriber.meter_details.build do |m| %>
+      <%= m.input :installation_date, required: true, start_year: Time.now.year - 100, end_year: Time.now.year + 100, as: :string, input_html: { value: Date.today.strftime("%d/%m/%Y"), class: 'x-large-text-field date_picker' }, label_html: { class: 'form-label' } %>
+      <%= m.input :installation_reading, required: true, input_html: { class: 'x-large-text-field', value: @contracting_request.try(:old_subscriber).try(:readings).try(:last).try(:reading_index) }, label_html: { class: 'form-label' } %>
+      <%= m.association :meter_location, required: true, collection: MeterLocation.all, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' }, include_blank: true, label: 'Localización contador' %>
+    <% end %>
+
+    <%= f.simple_fields_for :readings, @subscriber.readings.build do |s| %>
+      <%= s.association :billing_period, required: true, collection: BillingPeriod.find_all_by_project_id(@projects_ids), input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' }, include_blank: true, label: t('activerecord.attributes.contracting_request.billing_period_id') %>
+    <% end %>
+
+  </div>
+  <div class="modal-footer">
+    <%= f.submit t("activerecord.attributes.contracting_request.accept"), :class => "btn btn-primary" %>
+    <a class="btn btn-primary" data-dismiss="modal" href="#"><%= t :close_button %></a>
+  </div>
+  <% end %>
+</div>

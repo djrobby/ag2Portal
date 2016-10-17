@@ -1,6 +1,8 @@
-<h1>Editing caliber</h1>
+<%= render '/layouts/ag2_gest/caliberbreadcrumb' %>
+
+<h3><%=t '.title' %></h3>
 
 <%= render 'form' %>
 
-<%= link_to 'Show', @caliber %> |
-<%= link_to 'Back', calibers_path %>
+<%= link_to t('.show'), @caliber %> |
+<%= link_to t('.back'), calibers_path %>

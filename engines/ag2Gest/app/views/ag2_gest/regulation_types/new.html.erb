@@ -1,5 +1,7 @@
-<h1>New regulation_type</h1>
+<%= render '/layouts/ag2_gest/regulationtypebreadcrumb' %>
+
+<h3><%=t '.title' %></h3>
 
 <%= render 'form' %>
 
-<%= link_to 'Back', regulation_types_path %>
+<%= link_to I18n.t('ag2_gest.regulation_types.back_to_main_page'), regulation_types_path %>

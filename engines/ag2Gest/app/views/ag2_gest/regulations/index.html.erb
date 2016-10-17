@@ -1,21 +1,9 @@
-<h1>Listing regulations</h1>
+<%= render '/layouts/ag2_gest/regulationbreadcrumb' %>
 
-<table>
-  <tr>
-    <th></th>
-    <th></th>
-    <th></th>
-  </tr>
+<%#= render :partial => '/layouts/searchhead_remote', :locals => { :title => t(".title"), :path => calibers_path } %>
 
-<% @regulations.each do |regulation| %>
-  <tr>
-    <td><%= link_to 'Show', regulation %></td>
-    <td><%= link_to 'Edit', edit_regulation_path(regulation) %></td>
-    <td><%= link_to 'Destroy', regulation, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-  </tr>
-<% end %>
-</table>
+<h3><%= t(".title") %></h3>
 
-<br />
-
-<%= link_to 'New Regulation', new_regulation_path %>
+<div class="span8" id="div_table">
+  <%= render 'regulations' %>
+</div>

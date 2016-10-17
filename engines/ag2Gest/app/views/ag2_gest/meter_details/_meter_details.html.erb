@@ -1,0 +1,54 @@
+<style>
+  .center {
+    text-align: center!important;
+  }
+</style>
+
+<script>
+  $(document).ready(function() {
+    $("#div_table th a, #div_table #pages a").on("click", function() {
+      $.getScript(this.href);
+      return false;
+    });
+  }); 
+</script>
+
+<table class="table table-condensed table-striped">
+  <thead>
+    <tr>
+      <th><%= sortable "id", t('activerecord.attributes.meter_detail.id') %></th>
+      <th><%= sortable "meter_id", t('activerecord.attributes.meter_detail.meter_id') %></th>
+      <th><%= sortable "subscriber_id", t('activerecord.attributes.meter_detail.subscriber_id') %></th>
+      <th class="center"><%= sortable "installation_reading", t('activerecord.attributes.meter_detail.installation_reading') %></th>
+      <th class="center"><%= sortable "withdrawal_reading", t('activerecord.attributes.meter_detail.withdrawal_reading') %></th>
+      <th class="center"><%= sortable "installation_date", t('activerecord.attributes.meter_detail.installation_date') %></th>
+      <th class="center"><%= sortable "withdrawal_date", t('activerecord.attributes.meter_detail.withdrawal_date') %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @meter_details.each do |meter_detail| %>
+      <tr>
+        <td><%= link_to meter_detail.try(:id), meter_detail_path(meter_detail) %></td>
+        <td><%= meter_detail.try(:meter).try(:meter_code) %></td>
+        <td><%= meter_detail.try(:subscriber).try(:name) %></td>
+        <td class="center"><%= meter_detail.try(:installation_reading) %></td>
+        <td class="center"><%= meter_detail.try(:withdrawal_reading) %></td>
+        <td class="center"><%=l meter_detail.try(:installation_date) unless meter_detail.try(:installation_date).blank? %></td>
+        <td class="center"><%=l meter_detail.try(:withdrawal_date) unless meter_detail.try(:withdrawal_date).blank? %></td>
+        <td class="a_inline">
+          <%= link_to edit_meter_detail_path(meter_detail), class: "btn btn-mini" do%>
+            <i class="icon-edit"></i>
+          <% end %>
+
+          <%= link_to meter_detail, class: "btn btn-mini", method: :delete, data: { confirm: 'Are you sure?' } do %>
+            <i class="icon-trash"></i>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @meter_details } %>
+<%= render :partial => '/layouts/crud/new', :locals => { :model => MeterDetail, :path => new_meter_detail_path, :txt => t("ag2_gest.meter_details.index.btn_new") } %>
+<%= link_to t("ag2_gest.meter_details.index.back_to_root"), ag2_gest.root_path %>

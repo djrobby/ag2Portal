@@ -1,0 +1,42 @@
+<div id="newAccountModal" class="modal hide fade">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+    <h3><%= t('activerecord.attributes.subscriber.new_bank_account') %></h3>
+  </div>
+  <div class="modal-body">
+    <form>
+      <div class="row-fluid">
+        <div class="span7">
+          <label><%= t('activerecord.attributes.subscriber.titular_account') %>:</label>
+          <input type="text" value="Pedro Martín García" class="input-block-level">
+        </div>
+        <div class="span5">
+          <label><%= t('activerecord.attributes.subscriber.titular_id') %>:</label>
+          <input type="text" value="234235432-X">
+        </div>
+      </div>
+      <div class="row-fluid">
+        <div class="span2">
+          <label><%= t('activerecord.attributes.subscriber.bank') %>:</label>
+          <input type="number" value="" class="input-block-level" maxlength="2">
+        </div>
+        <div class="span2">
+          <label><%= t('activerecord.attributes.subscriber.sucursal') %>:</label>
+          <input type="number" value="" class="input-block-level" maxlength="4">
+        </div>
+        <div class="span2">
+          <label><%= t('activerecord.attributes.subscriber.cc') %>:</label>
+          <input type="number" value="" class="input-block-level" maxlength="2">
+        </div>
+        <div class="span6">
+          <label><%= t('activerecord.attributes.subscriber.account_iban') %>:</label>
+          <input type="number" value="" class="input-block-level" maxlength="10">
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-primary" data-dismiss="modal"><%= t('activerecord.attributes.subscriber.close') %></button>
+    <input type="submit" class="btn btn-primary" value="Crear cuenta">
+  </div>
+</div>

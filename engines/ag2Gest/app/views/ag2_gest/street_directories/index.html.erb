@@ -1,21 +1,7 @@
-<h1>Listing street_directories</h1>
+<%= render '/layouts/ag2_gest/sdirectorybreadcrumb' %>
 
-<table>
-  <tr>
-    <th></th>
-    <th></th>
-    <th></th>
-  </tr>
+<h3><%= t('.title') %></h3>
 
-<% @street_directories.each do |street_directory| %>
-  <tr>
-    <td><%= link_to 'Show', street_directory %></td>
-    <td><%= link_to 'Edit', edit_street_directory_path(street_directory) %></td>
-    <td><%= link_to 'Destroy', street_directory, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-  </tr>
-<% end %>
-</table>
-
-<br />
-
-<%= link_to 'New Street directory', new_street_directory_path %>
+<div class="span8" id="div_table">
+  <%= render 'street_directories' %>
+</div>
