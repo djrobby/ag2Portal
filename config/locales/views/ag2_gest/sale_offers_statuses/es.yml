@@ -1,0 +1,25 @@
+es:
+  ag2_gest:
+    sale_offer_statuses:
+      index:
+        title: "Estados de presupuesto"
+        btn_new: "Nuevo Estado de presupuesto"
+        back_to_root: "Volver a ag2Gest"
+      show:
+        title: "Estado de presupuesto"
+        btn_edit: "Editar Estado de presupuesto"
+        btn_delete: "Borrar Estado de presupuesto"
+        return_to: "Volver a Estado de presupuesto"
+      edit:
+        title: "Editar Estado de presupuesto"
+        btn_show: "Ver Estado de presupuesto"
+        show: "Mostrar"
+        back: "Atrás"
+      new:
+        title: "Nuevo Estado de presupuesto"
+      back_to_main_page: "Volver a Estados de presupuestos"
+      generate_code_btn: "Código de Estado de presupuesto"
+      personal_info: "Información del Estado de presupuesto"
+      commercial_info: "Información Contable y Comercial"
+      fiscal_error: "Id Fiscal erróneo o Entidad (Sujeto Pasivo) no existe."
+      code_error: "Imposible generar Código de Estado de presupuesto: No has elegido Organización."

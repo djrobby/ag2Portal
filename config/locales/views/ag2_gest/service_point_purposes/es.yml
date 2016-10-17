@@ -1,0 +1,25 @@
+es:
+  ag2_gest:
+    service_point_purposes:
+      index:
+        title: "Propósito/Destino punto de servicio"
+        btn_new: "Nuevo Propósito/Destino punto de servicio"
+        back_to_root: "Volver a ag2Gest"
+      show:
+        title: "Propósito/Destino punto de servicio"
+        btn_edit: "Editar Propósito/Destino punto de servicio"
+        btn_delete: "Borrar Propósito/Destino punto de servicio"
+        return_to: "Volver a Propósito/Destino puntos de servicios"
+      edit:
+        show: "Mostrar"
+        back: "Atrás"
+        title: "Editar Propósito/Destino punto de servicio"
+        btn_show: "Ver Propósito/Destino punto de servicio"
+      new:
+        title: "Nuevo Propósito/Destino punto de servicio"
+      back_to_main_page: "Volver a Propósito/Destino puntos de servicios"
+      # generate_code_btn: "Código de Emisor de la factura"
+      # personal_info: "Información del Cliente"
+      # commercial_info: "Información Contable y Comercial"
+      # fiscal_error: "Id Fiscal erróneo o Entidad (Sujeto Pasivo) no existe."
+      # code_error: "Imposible generar Código de Cliente: No has elegido Organización."

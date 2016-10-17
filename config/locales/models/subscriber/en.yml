@@ -6,6 +6,14 @@ en:
         one:   Subscriber
         few:   Subscribers
         other: Subscribers
+        check_for_work_orders: "Subscriber cannot be destroyed while linked work orders exist."
+        check_for_meter_details: "Subscriber cannot be destroyed while linked meters exist."
+        check_for_contracting_request: "Subscriber cannot be destroyed while linked requests exist."
+        check_for_water_supply_contract: "Subscriber cannot be destroyed while linked contracts exist."
+        check_for_readings: "Subscriber cannot be destroyed while linked readings exist."
+        check_for_pre_readings: "Subscriber cannot be destroyed while linked readings (unconfirmed) exist."
+        check_for_bills: "Subscriber cannot be destroyed while linked bills exist."
+        check_for_pre_bills: "Subscriber cannot be destroyed while linked pre-bills exist."
     attributes:
       subscriber:
         client: "Client"

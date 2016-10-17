@@ -1,0 +1,25 @@
+en:
+  ag2_gest:
+    subscribers:
+      index:
+        title: "Abonados"
+        btn_new: "Nuevo Abonado"
+        back_to_root: "Volver a ag2Gest"
+      show:
+        title: "Abonado"
+        btn_edit: "Editar Abonado"
+        btn_delete: "Borrar Abonado"
+        return_to: "Volver a Abonado"
+      edit:
+        title: "Editar Abonado"
+        btn_show: "Ver Abonado"
+        show: "Mostrar"
+        back: "Atrás"
+      new:
+        title: "Nuevo Abonado"
+      back_to_main_page: "Volver a Abonados"
+      generate_code_btn: "Código de Abonado"
+      personal_info: "Información del Abonado"
+      commercial_info: "Información Contable y Comercial"
+      fiscal_error: "Id Fiscal erróneo o Entidad (Sujeto Pasivo) no existe."
+      code_error: "Imposible generar Código de Abonado: No has elegido Organización."

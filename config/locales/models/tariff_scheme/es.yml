@@ -1,0 +1,83 @@
+es:
+  activerecord:
+    models:
+      tariff_scheme:
+        zero:  Esquemas tarifarios
+        one:   Esquemas tarifario
+        few:   Esquemas tarifarios
+        other: Esquemas tarifarios
+        # check_for_delivery_notes: "Cliente no puede ser eliminado mientras existan notas de entrega vinculadas."
+        # check_for_sale_offers: "Cliente no puede ser eliminado mientras existan presupuestos vinculados."
+        # check_for_client_invoices: "Cliente no puede ser eliminado mientras existan facturas C vinculadas."
+        # check_for_client_charges: "Cliente no puede ser eliminado mientras existan cobros vinculados."
+    attributes:
+      tariff_scheme:
+        id: "Id"
+        project_id: "Proyecto"
+        office: "Oficina"
+        company: "Empresa"
+        name: "Descripción"
+        successfully: "Esquema tarifario se ha actualizado correctamente."
+        create: "Esquema tarifario se ha creado correctamente."
+        starting_at: "Vigente desde"
+        ending_at: "Vigente hasta"
+        tariff_type_id: "Tipo de tarifa"
+        caliber_id: "Calibre"
+        billing_frequency_id: "Frec. Fact."
+
+        block1_limit: "Límite B1"
+        block2_limit: "Límite B2"
+        block3_limit: "Límite B3"
+        block4_limit: "Límite B4"
+        block5_limit: "Límite B5"
+        block6_limit: "Límite B6"
+        block7_limit: "Límite B7"
+        block8_limit: "Límite B8"
+
+        block1_fee: "Precio B1"
+        block2_fee: "Precio B2"
+        block3_fee: "Precio B3"
+        block4_fee: "Precio B4"
+        block5_fee: "Precio B5"
+        block6_fee: "Precio B6"
+        block7_fee: "Precio B7"
+        block8_fee: "Precio B8"
+
+        fixed_fee: "Cuota fija"
+        variable_fee: "Cuota variable"
+        percentage_fee: "Variable porcentual"
+        percentage_applicable_formula: "Variable porcentual (Fórmula)" #Fórmula
+
+        discount_pct_f: "Dcto. cuota fija"
+        discount_pct_b: "Dcto. variable bloques"
+        discount_pct_v: "Dcto. cuota variable"
+        discount_pct_p: "Dcto. variable porcentual"
+
+        tax_type_f_id: "IVA cuota fija"
+        tax_type_b_id: "IVA variable bloques"
+        tax_type_v_id: "IVA cuota variable"
+        tax_type_p_id: "IVA variable porcentual"
+
+        blocks: "Bloques"
+        price: "Precio"
+        limit: "Límite"
+
+        block1: "B1"
+        block2: "B2"
+        block3: "B3"
+        block4: "B4"
+        block5: "B5"
+        block6: "B6"
+        block7: "B7"
+        block8: "B8"
+
+        discounts: "Descuentos"
+        tax: "Impuesto"
+        taxes: "Impuestos"
+
+        f: "F."
+        b: "B."
+        v: "V."
+        p: "P."
+
+        tariff_association: "Tarifas asociadas"

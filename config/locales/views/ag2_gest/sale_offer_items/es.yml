@@ -1,0 +1,25 @@
+es:
+  ag2_gest:
+    sale_offer_items:
+      index:
+        title: "Ítems de presupuesto"
+        btn_new: "Nuevo Ítem de presupuesto"
+        back_to_root: "Volver a ag2Gest"
+      show:
+        title: "Ítem de presupuesto"
+        btn_edit: "Editar Ítem de presupuesto"
+        btn_delete: "Borrar Ítem de presupuesto"
+        return_to: "Volver a Ítem de presupuesto"
+      edit:
+        title: "Editar Ítem de presupuesto"
+        btn_show: "Ver Ítem de presupuesto"
+        show: "Mostrar"
+        back: "Atrás"
+      new:
+        title: "Nuevo Ítem de presupuesto"
+      back_to_main_page: "Volver a Ítems de presupuesto"
+      generate_code_btn: "Código de Ítem de presupuesto"
+      personal_info: "Información del Ítem de presupuesto"
+      commercial_info: "Información Contable y Comercial"
+      fiscal_error: "Id Fiscal erróneo o Entidad (Sujeto Pasivo) no existe."
+      code_error: "Imposible generar Código de Ítem de presupuesto: No has elegido Organización."

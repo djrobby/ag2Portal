@@ -1,0 +1,25 @@
+es:
+  ag2_gest:
+    reading_incidence_types:
+      index:
+        title: "Tipos de incidencia de lectura"
+        btn_new: "Nuevo Tipo de incidencia de lectura"
+        back_to_root: "Volver a ag2Gest"
+      show:
+        title: "Tipo de incidencia de lectura"
+        btn_edit: "Editar Tipo de incidencia de lectura"
+        btn_delete: "Borrar Tipo de incidencia de lectura"
+        return_to: "Volver a Tipo de incidencia de lectura"
+      edit:
+        show: "Mostrar"
+        back: "Atrás"
+        title: "Editar Tipo de incidencia de lectura"
+        btn_show: "Ver Tipo de incidencia de lectura"
+      new:
+        title: "Nuevo Tipo de incidencia de lectura"
+      back_to_main_page: "Volver a Tipos de incidencia de lecturas"
+      # generate_code_btn: "Código de Tipo de incidencia de lectura"
+      # personal_info: "Información del Cliente"
+      # commercial_info: "Información Contable y Comercial"
+      # fiscal_error: "Id Fiscal erróneo o Entidad (Sujeto Pasivo) no existe."
+      # code_error: "Imposible generar Código de Cliente: No has elegido Organización."

@@ -1,0 +1,22 @@
+es:
+  ag2_gest:
+    meter_types:
+      index:
+        title: "Tipos de contador"
+        btn_new: "Nuevo Tipo de contador"
+        back_to_root: "Volver a ag2Gest"
+      show:
+        title: "Tipo de contador"
+        btn_edit: "Editar Tipo de contador"
+        btn_delete: "Borrar Tipo de contador"
+        return_to: "Volver a Tipo de contador"
+      edit:
+        show: 'Mostrar'
+        back: 'Atrás'
+        title: "Editar Tipo de contador"
+        btn_show: "Ver Tipo de contador"
+        name: "Nombre"
+      new:
+        title: "Nuevo Tipo de contador"
+        name: "Nombre"
+      back_to_main_page: "Volver a Tipos de contador"

@@ -1,0 +1,39 @@
+es:
+  activerecord:
+    models:
+      water_supply_contract:
+        zero:  Contratos de suminitro
+        one:   Contrato de suminitro
+        few:   Contratos de suminitro
+        other: Contratos de suminitro
+    attributes:
+      water_supply_contract:
+        bill_id: "Factura"
+        bill: "Factura"
+        cadastral_reference: "Ref. catastral"
+        client_id: "Cliente"
+        client: "Cliente"
+        caliber: "Calibre"
+        contract_date: "Fecha de contrato"
+        contracting_request_id: "Contratación"
+        contracting_request: "Contratación"
+        endowments: "Dotaciones"
+        gis_id: "GIS Id."
+        inhabitants: "Habitantes"
+        installation_date: "Fecha de instalación"
+        meter_id: "Contador"
+        meter: "Contador"
+        reading_route_id: "Ruta de lectura"
+        reading_route: "Ruta de lectura"
+        reading_sequence: "Secuencia de lectura"
+        remarks: "Comentarios"
+        subscriber_id: "Abonado"
+        subscriber: "Abonado"
+        tariff_id: "Tarifa contratada"
+        tariff: "Tarifa contratada"
+        tariff_scheme: "Esquema tarifario"
+        work_order_id: "Orden de instalación"
+        work_order: "Orden de instalación"
+        successfully: "Contrato de suminitro se ha actualizado correctamente."
+        create: "Contrato de suminitro se ha creado correctamente."
+        created: "Creado"

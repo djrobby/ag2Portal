@@ -1,0 +1,25 @@
+es:
+  ag2_gest:
+    reading_routes:
+      index:
+        title: "Rutas de lectura" 
+        btn_new: "Nuevo Ruta de lectura"
+        back_to_root: "Volver a ag2Gest"
+      show:
+        title: "Ruta de lectura"
+        btn_edit: "Editar Ruta de lectura"
+        btn_delete: "Borrar Ruta de lectura"
+        return_to: "Volver a Ruta de lectura"
+      edit:
+        show: "Mostrar"
+        back: "Atrás"
+        title: "Editar Ruta de lectura"
+        btn_show: "Ver Ruta de lectura"
+      new:
+        title: "Nuevo Ruta de lectura"
+      back_to_main_page: "Volver a Rutas de lectura"
+      # generate_code_btn: "Código de Tipo de incidencia de lectura"
+      # personal_info: "Información del Cliente"
+      # commercial_info: "Información Contable y Comercial"
+      # fiscal_error: "Id Fiscal erróneo o Entidad (Sujeto Pasivo) no existe."
+      # code_error: "Imposible generar Código de Cliente: No has elegido Organización."

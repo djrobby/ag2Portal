@@ -2,20 +2,27 @@ require_dependency "ag2_gest/application_controller"
 
 module Ag2Gest
   class ServicePointLocationsController < ApplicationController
+    
+    before_filter :authenticate_user!
+    load_and_authorize_resource
+    helper_method :sort_column
+
     # GET /service_point_locations
-    # GET /service_point_locations.json
     def index
-      @service_point_locations = ServicePointLocation.all
+      manage_filter_state
+      
+      @service_point_locations = ServicePointLocation.paginate(:page => params[:page], :per_page => 10).order(sort_column + ' ' + sort_direction)
   
       respond_to do |format|
         format.html # index.html.erb
         format.json { render json: @service_point_locations }
+        format.js
       end
     end
-  
+
     # GET /service_point_locations/1
-    # GET /service_point_locations/1.json
     def show
+      @breadcrumb = 'read'
       @service_point_location = ServicePointLocation.find(params[:id])
   
       respond_to do |format|
@@ -23,10 +30,10 @@ module Ag2Gest
         format.json { render json: @service_point_location }
       end
     end
-  
+
     # GET /service_point_locations/new
-    # GET /service_point_locations/new.json
     def new
+      @breadcrumb = 'create'
       @service_point_location = ServicePointLocation.new
   
       respond_to do |format|
@@ -34,20 +41,21 @@ module Ag2Gest
         format.json { render json: @service_point_location }
       end
     end
-  
+
     # GET /service_point_locations/1/edit
     def edit
+      @breadcrumb = 'update'
       @service_point_location = ServicePointLocation.find(params[:id])
     end
-  
+
     # POST /service_point_locations
-    # POST /service_point_locations.json
     def create
+      @breadcrumb = 'create'
       @service_point_location = ServicePointLocation.new(params[:service_point_location])
   
       respond_to do |format|
         if @service_point_location.save
-          format.html { redirect_to @service_point_location, notice: 'Service point location was successfully created.' }
+          format.html { redirect_to @service_point_location, notice: t('activerecord.attributes.service_point_location.create') }
           format.json { render json: @service_point_location, status: :created, location: @service_point_location }
         else
           format.html { render action: "new" }
@@ -55,15 +63,15 @@ module Ag2Gest
         end
       end
     end
-  
-    # PUT /service_point_locations/1
-    # PUT /service_point_locations/1.json
+
+    # PATCH/PUT /service_point_locations/1
     def update
+      @breadcrumb = 'update'
       @service_point_location = ServicePointLocation.find(params[:id])
   
       respond_to do |format|
         if @service_point_location.update_attributes(params[:service_point_location])
-          format.html { redirect_to @service_point_location, notice: 'Service point location was successfully updated.' }
+          format.html { redirect_to @service_point_location, notice: t('activerecord.attributes.service_point_location.successfully') }
           format.json { head :no_content }
         else
           format.html { render action: "edit" }
@@ -71,9 +79,8 @@ module Ag2Gest
         end
       end
     end
-  
+
     # DELETE /service_point_locations/1
-    # DELETE /service_point_locations/1.json
     def destroy
       @service_point_location = ServicePointLocation.find(params[:id])
       @service_point_location.destroy
@@ -83,5 +90,28 @@ module Ag2Gest
         format.json { head :no_content }
       end
     end
+
+    private
+    
+    def sort_column
+      ServicePointLocation.column_names.include?(params[:sort]) ? params[:sort] : "id"
+    end
+  
+    # Keeps filter state
+    def manage_filter_state
+      # sort
+      if params[:sort]
+        session[:sort] = params[:sort]
+      elsif session[:sort]
+        params[:sort] = session[:sort]
+      end
+      # direction
+      if params[:direction]
+        session[:direction] = params[:direction]
+      elsif session[:direction]
+        params[:direction] = session[:direction]
+      end
+    end
+
   end
 end

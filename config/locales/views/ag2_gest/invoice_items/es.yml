@@ -1,0 +1,21 @@
+es:
+  ag2_gest:
+    invoice_items:
+      index:
+        title: "Ítems de facturas"
+        btn_new: "Nueva Item de factura"
+        back_to_root: "Volver a ag2Gest"
+        collection_only: "Para cobros"
+        payment_only: "Para pagos"
+        all: "Todos"
+      show:
+        title: "Item de factura"
+        btn_edit: "Editar Item de factura"
+        btn_delete: "Borrar Item de factura"
+        return_to: "Volver a Item de factura"
+      edit:
+        title: "Editar Item de factura"
+        btn_show: "Ver Item de factura"
+      new:
+        title: "Nueva Item de factura"
+      back_to_main_page: "Volver a Ítems de facturas"

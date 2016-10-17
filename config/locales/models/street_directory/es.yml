@@ -1,0 +1,16 @@
+es:
+  activerecord:
+    models:
+      street_directory:
+        zero:  Callejeros
+        one:   Callejero
+        few:   Callejeros
+        other: Callejeros
+    attributes:
+      street_directory:
+        id: "Id"
+        street_name: "Nombre de la vía"
+        street_type: "Tipo de vía"
+        town: "Población"
+        successfully: "Callejero se ha actualizado correctamente."
+        create: "Callejero se ha creado correctamente."

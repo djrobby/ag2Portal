@@ -1,0 +1,21 @@
+es:
+  ag2_gest:
+    invoice_statuses:
+      index:
+        title: "Estados de facturas"
+        btn_new: "Nueva Estado de factura"
+        back_to_root: "Volver a ag2Gest"
+        collection_only: "Para cobros"
+        payment_only: "Para pagos"
+        all: "Todos"
+      show:
+        title: "Estado de factura"
+        btn_edit: "Editar Estado de factura"
+        btn_delete: "Borrar Estado de factura"
+        return_to: "Volver a Estado de factura"
+      edit:
+        title: "Editar Estado de factura"
+        btn_show: "Ver Estado de factura"
+      new:
+        title: "Nueva Estado de factura"
+      back_to_main_page: "Volver a Estados de facturas"

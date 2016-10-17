@@ -1,0 +1,14 @@
+es:
+  activerecord:
+    models:
+      invoice_type:
+        zero:  Tipos de factura
+        one:   Tipo de factura
+        few:   Tipos de factura
+        other: Tipos de factura
+    attributes:
+      invoice_type:
+        id: "Id"
+        name: "Descripción"
+        successfully: "Tipo de factura se ha actualizado correctamente."
+        create: "Tipo de factura se ha creado correctamente."

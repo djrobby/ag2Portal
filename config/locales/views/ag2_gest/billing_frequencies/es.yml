@@ -1,0 +1,25 @@
+es:
+  ag2_gest:
+    billing_frequencies:
+      index:
+        title: "Frecuencias de facturación"
+        btn_new: "Nueva Frecuencia de facturación"
+        back_to_root: "Volver a ag2Gest"
+      show:
+        title: "Frecuencia de facturación"
+        btn_edit: "Editar Frecuencia de facturación"
+        btn_delete: "Borrar Frecuencia de facturación"
+        return_to: "Volver a Frecuencia de facturación"
+      edit:
+        show: 'Mostrar'
+        back: 'Atrás'
+        title: "Editar Frecuencia de facturación"
+        btn_show: "Ver Frecuencia de facturación"
+      new:
+        title: "Nueva Frecuencia de facturación"
+      back_to_main_page: "Volver a Frecuencia de facturación"
+      # generate_code_btn: "Código de Frecuencia de facturación"
+      # personal_info: "Información del Cliente"
+      # commercial_info: "Información Contable y Comercial"
+      # fiscal_error: "Id Fiscal erróneo o Entidad (Sujeto Pasivo) no existe."
+      # code_error: "Imposible generar Código de Cliente: No has elegido Organización."

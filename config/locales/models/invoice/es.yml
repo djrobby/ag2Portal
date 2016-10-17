@@ -1,0 +1,16 @@
+es:
+  activerecord:
+    models:
+      invoice:
+        zero:  Facturas
+        one:   Factura
+        few:   Facturas
+        other: Facturas
+    attributes:
+      invoice:
+        id: "Id"
+        bill_id: "Recibo"
+        invoice_no: "Nº"
+        invoice_date: "Fecha factura"
+        successfully: "Factura se ha actualizado correctamente."
+        create: "Factura se ha creado correctamente."

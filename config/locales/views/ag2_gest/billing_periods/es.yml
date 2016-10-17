@@ -1,0 +1,25 @@
+es:
+  ag2_gest:
+    billing_periods:
+      index:
+        title: "Periodos de facturación"
+        btn_new: "Nuevo Periodo de facturación"
+        back_to_root: "Volver a ag2Gest"
+      show:
+        title: "Periodo de facturación"
+        btn_edit: "Editar Periodo de facturación"
+        btn_delete: "Borrar Periodo de facturación"
+        return_to: "Volver a Periodo de facturación"
+      edit:
+        show: "Mostrar"
+        back: "Atrás"
+        title: "Editar Periodo de facturación"
+        btn_show: "Ver Periodo de facturación"
+      new:
+        title: "Nuevo Periodo de facturación"
+      back_to_main_page: "Volver a Periodo de facturación"
+      # generate_code_btn: "Código de Periodo de facturación"
+      # personal_info: "Información del Cliente"
+      # commercial_info: "Información Contable y Comercial"
+      # fiscal_error: "Id Fiscal erróneo o Entidad (Sujeto Pasivo) no existe."
+      # code_error: "Imposible generar Código de Cliente: No has elegido Organización."

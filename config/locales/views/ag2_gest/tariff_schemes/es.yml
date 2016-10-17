@@ -1,0 +1,30 @@
+es:
+  ag2_gest:
+    tariff_schemes:
+      index:
+        title: "Esquema tarifario"
+        btn_new: "Nuevo Esquema tarifario"
+        back_to_root: "Volver a ag2Gest"
+      show:
+        title: "Esquema tarifario"
+        btn_edit: "Editar Esquema tarifario"
+        btn_delete: "Borrar Esquema tarifario"
+        return_to: "Volver a Esquema tarifario"
+
+      edit:
+        show: 'Mostrar'
+        back: 'Atrás'
+        title: "Editar Esquema tarifario"
+        btn_show: "Ver Esquema tarifario"
+        project_id: "Proyecto"
+        billable_concept_id: "Esquema tarifario"
+        biller_id: "Emisor de la factura"
+        btn_update: "Actualizar Esquema tarifario"
+      new:
+        title: "Nuevo Esquema tarifario"
+      back_to_main_page: "Volver a Esquema tarifario"
+      # generate_code_btn: "Código de Esquema tarifario"
+      # personal_info: "Información del Cliente"
+      # commercial_info: "Información Contable y Comercial"
+      # fiscal_error: "Id Fiscal erróneo o Entidad (Sujeto Pasivo) no existe."
+      # code_error: "Imposible generar Código de Cliente: No has elegido Organización."

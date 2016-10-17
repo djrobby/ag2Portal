@@ -2,20 +2,28 @@ require_dependency "ag2_gest/application_controller"
 
 module Ag2Gest
   class SaleOfferStatusesController < ApplicationController
-    # GET /sale_offer_statuses
-    # GET /sale_offer_statuses.json
+    
+    before_filter :authenticate_user!
+    load_and_authorize_resource
+    helper_method :sort_column
+
+    # GET /sale_offer_statuses_statuses
+    # GET /sale_offer_statuses_statuses.json
     def index
-      @sale_offer_statuses = SaleOfferStatus.all
-  
+      manage_filter_state
+      @sale_offer_statuses = SaleOfferStatus.paginate(:page => params[:page], :per_page => 10).order(sort_column + ' ' + sort_direction)
+
       respond_to do |format|
         format.html # index.html.erb
         format.json { render json: @sale_offer_statuses }
+        format.js
       end
     end
   
-    # GET /sale_offer_statuses/1
-    # GET /sale_offer_statuses/1.json
+    # GET /sale_offer_statuses_statuses/1
+    # GET /sale_offer_statuses_statuses/1.json
     def show
+      @breadcrumb = 'read'
       @sale_offer_status = SaleOfferStatus.find(params[:id])
   
       respond_to do |format|
@@ -23,31 +31,36 @@ module Ag2Gest
         format.json { render json: @sale_offer_status }
       end
     end
-  
-    # GET /sale_offer_statuses/new
-    # GET /sale_offer_statuses/new.json
+   
+    # GET /sale_offer_statuses_statuses/new
+    # GET /sale_offer_statuses_statuses/new.json
     def new
+      
+      @breadcrumb = 'create'
       @sale_offer_status = SaleOfferStatus.new
   
       respond_to do |format|
         format.html # new.html.erb
         format.json { render json: @sale_offer_status }
       end
+      
     end
   
-    # GET /sale_offer_statuses/1/edit
+    # GET /sale_offer_statuses_statuses/1/edit
     def edit
+      @breadcrumb = 'update'
       @sale_offer_status = SaleOfferStatus.find(params[:id])
     end
   
-    # POST /sale_offer_statuses
-    # POST /sale_offer_statuses.json
+    # POST /sale_offer_statuses_statuses
+    # POST /sale_offer_statuses_statuses.json
     def create
+      @breadcrumb = 'create'
       @sale_offer_status = SaleOfferStatus.new(params[:sale_offer_status])
   
       respond_to do |format|
         if @sale_offer_status.save
-          format.html { redirect_to @sale_offer_status, notice: 'Sale offer status was successfully created.' }
+          format.html { redirect_to @sale_offer_status, notice: t('activerecord.attributes.sale_offer_status.create') }
           format.json { render json: @sale_offer_status, status: :created, location: @sale_offer_status }
         else
           format.html { render action: "new" }
@@ -56,32 +69,56 @@ module Ag2Gest
       end
     end
   
-    # PUT /sale_offer_statuses/1
-    # PUT /sale_offer_statuses/1.json
+    # PUT /sale_offer_statuses_statuses/1
+    # PUT /sale_offer_statuses_statuses/1.json
     def update
-      @sale_offer_status = SaleOfferStatus.find(params[:id])
+      @breadcrumb = 'update'
+      @sale_offer_statuses = SaleOfferStatus.find(params[:id])
   
       respond_to do |format|
-        if @sale_offer_status.update_attributes(params[:sale_offer_status])
-          format.html { redirect_to @sale_offer_status, notice: 'Sale offer status was successfully updated.' }
+        if @sale_offer_statuses.update_attributes(params[:sale_offer_statuses])
+          format.html { redirect_to @sale_offer_statuses, notice: t('activerecord.attributes.sale_offer_status.successfully') }
           format.json { head :no_content }
         else
           format.html { render action: "edit" }
-          format.json { render json: @sale_offer_status.errors, status: :unprocessable_entity }
+          format.json { render json: @sale_offer_statuses.errors, status: :unprocessable_entity }
         end
       end
     end
   
-    # DELETE /sale_offer_statuses/1
-    # DELETE /sale_offer_statuses/1.json
+    # DELETE /sale_offer_statuses_statuses/1
+    # DELETE /sale_offer_statuses_statuses/1.json
     def destroy
-      @sale_offer_status = SaleOfferStatus.find(params[:id])
-      @sale_offer_status.destroy
+      @sale_offer_statuses = SaleOfferStatus.find(params[:id])
+      @sale_offer_statuses.destroy
   
       respond_to do |format|
         format.html { redirect_to sale_offer_statuses_url }
         format.json { head :no_content }
       end
     end
+
+    private
+
+    def sort_column
+      SaleOfferStatus.column_names.include?(params[:sort]) ? params[:sort] : "id"
+    end
+
+    # Keeps filter state
+    def manage_filter_state
+      # sort
+      if params[:sort]
+        session[:sort] = params[:sort]
+      elsif session[:sort]
+        params[:sort] = session[:sort]
+      end
+      # direction
+      if params[:direction]
+        session[:direction] = params[:direction]
+      elsif session[:direction]
+        params[:direction] = session[:direction]
+      end
+    end
+
   end
 end

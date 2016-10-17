@@ -1,0 +1,26 @@
+es:
+  activerecord:
+    models:
+      bill:
+        zero:  Recibos
+        one:   Recibo
+        few:   Recibos
+        other: Recibos
+        # check_for_delivery_notes: "Cliente no puede ser eliminado mientras existan notas de entrega vinculadas."
+        # check_for_sale_offers: "Cliente no puede ser eliminado mientras existan presupuestos vinculados."
+        # check_for_client_invoices: "Cliente no puede ser eliminado mientras existan Recibos C vinculadas."
+        # check_for_client_charges: "Cliente no puede ser eliminado mientras existan cobros vinculados."
+    attributes:
+      bill:
+        id: "Id"
+        bill_no: "Nº"
+        project_id: "Proyecto"
+        bill_date: "Fecha recibo"
+        successfully: "Recibo se ha actualizado correctamente."
+        create: "Recibo se ha creado correctamente."
+        billing: "Facturación Masiva"
+        invoices_created: "Facturas creadas"
+        consumption: "Consumo"
+        total: "Total"
+        export_google: "Exportar Google Sheets" 
+        massive_billing_consumption: "Facturación masiva - Consumos"

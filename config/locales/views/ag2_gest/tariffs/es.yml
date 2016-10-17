@@ -1,0 +1,21 @@
+es:
+  ag2_gest:
+    tariffs:
+      index:
+        title: "Tarifas"
+        btn_new: "Nuevo Tarifa"
+        back_to_root: "Volver a ag2Gest"
+      show:
+        title: "Tarifa"
+        btn_edit: "Editar Tarifa"
+        btn_delete: "Borrar Tarifa"
+        return_to: "Volver a Tarifa"
+      edit:
+        title: "Editar Tarifa"
+        update: "Actualizar Tarifa"
+        btn_show: "Ver Tarifa"
+        show: "Mostrar"
+        back: "Atrás"
+      new:
+        title: "Nuevo Tarifa"
+      back_to_main_page: "Volver a Tarifas"

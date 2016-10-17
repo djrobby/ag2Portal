@@ -1,0 +1,21 @@
+es:
+  ag2_gest:
+    bills:
+      index:
+        title: "Recibos"
+        btn_new: "Nueva Recibo"
+        back_to_root: "Volver a ag2Gest"
+        collection_only: "Para cobros"
+        payment_only: "Para pagos"
+        all: "Todos"
+      show:
+        title: "Recibo"
+        btn_edit: "Editar Recibo"
+        btn_delete: "Borrar Recibo"
+        return_to: "Volver a Recibo"
+      edit:
+        title: "Editar Recibo"
+        btn_show: "Ver Recibo"
+      new:
+        title: "Nueva Recibo"
+      back_to_main_page: "Volver a Recibos"

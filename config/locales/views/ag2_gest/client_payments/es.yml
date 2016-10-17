@@ -1,0 +1,21 @@
+es:
+  ag2_gest:
+    client_payments:
+      index:
+        title: "Pagos de cliente"
+        btn_new: "Nueva Pago de cliente"
+        back_to_root: "Volver a ag2Gest"
+        collection_only: "Para cobros"
+        payment_only: "Para pagos"
+        all: "Todos"
+      show:
+        title: "Pago de cliente"
+        btn_edit: "Editar Pago de cliente"
+        btn_delete: "Borrar Pago de cliente"
+        return_to: "Volver a Pago de cliente"
+      edit:
+        title: "Editar Pago de cliente"
+        btn_show: "Ver Pago de cliente"
+      new:
+        title: "Nueva Pago de cliente"
+      back_to_main_page: "Volver a Pagos de cliente"

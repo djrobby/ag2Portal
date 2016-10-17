@@ -1,0 +1,14 @@
+es:
+  activerecord:
+    models:
+      invoice_status:
+        zero:  Estados de la factura
+        one:   Estado de la factura
+        few:   Estados de la factura
+        other: Estados de la factura
+    attributes:
+      invoice_status:
+        id: "Id"
+        name: "Descripción"
+        successfully: "Estado de la factura se ha actualizado correctamente."
+        create: "Estado de la factura se ha creado correctamente."

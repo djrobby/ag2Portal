@@ -1,0 +1,14 @@
+en:
+  activerecord:
+    models:
+      water_connection_type:
+        zero:  Tipos de acometida
+        one:   Tipo de acometida
+        few:   Tipos de acometida
+        other: Tipos de acometida
+    attributes:
+      water_connection_type:
+        id: "Id"
+        name: "Nombre"
+        successfully: "Tipo de acometida se ha actualizado correctamente."
+        create: "Tipo de acometida se ha creado correctamente."

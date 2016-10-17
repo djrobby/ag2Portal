@@ -1,0 +1,25 @@
+es:
+  ag2_gest:
+    contracting_request_types:
+      index:
+        title: "Tipos de solicitud"
+        btn_new: "Nuevo Tipo de solicitud"
+        back_to_root: "Volver a ag2Gest"
+      show:
+        title: "Tipo de solicitud"
+        btn_edit: "Editar Tipo de solicitud"
+        btn_delete: "Borrar Tipo de solicitud"
+        return_to: "Volver a Tipo de solicitud"
+      edit:
+        show: "Mostrar"
+        back: "Atrás"
+        title: "Editar Tipo de solicitud"
+        btn_show: "Ver Tipo de solicitud"
+      new:
+        title: "Nuevo Tipo de solicitud"
+      back_to_main_page: "Volver a Tipos de solicitudes"
+      # generate_code_btn: "Código de Emisor de la factura"
+      # personal_info: "Información del Cliente"
+      # commercial_info: "Información Contable y Comercial"
+      # fiscal_error: "Id Fiscal erróneo o Entidad (Sujeto Pasivo) no existe."
+      # code_error: "Imposible generar Código de Cliente: No has elegido Organización."

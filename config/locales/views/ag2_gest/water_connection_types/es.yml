@@ -1,0 +1,25 @@
+es:
+  ag2_gest:
+    water_connection_types:
+      index:
+        title: "Tipo de acometidas"
+        btn_new: "Tipo de acometida"
+        back_to_root: "Volver a ag2Gest"
+      show:
+        title: "Tipo de acometida"
+        btn_edit: "Editar Tipo de acometida"
+        btn_delete: "Borrar Tipo de acometida"
+        return_to: "Volver a Tipo de acometida"
+      edit:
+        show: "Mostrar"
+        back: "Atrás"
+        title: "Editar Tipo de acometida"
+        btn_show: "Ver Tipo de acometida"
+      new:
+        title: "Nuevo Tipo de acometida"
+      back_to_main_page: "Volver a Tipo de acometidas"
+      # generate_code_btn: "Código de Tipo de acometida"
+      # personal_info: "Información del Cliente"
+      # commercial_info: "Información Contable y Comercial"
+      # fiscal_error: "Id Fiscal erróneo o Entidad (Sujeto Pasivo) no existe."
+      # code_error: "Imposible generar Código de Cliente: No has elegido Organización."

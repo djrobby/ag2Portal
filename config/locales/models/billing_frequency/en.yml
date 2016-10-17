@@ -1,0 +1,20 @@
+en:
+  activerecord:
+    models:
+      billing_frequency:
+        zero:  Billing frequencies
+        one:   Billing frequency
+        few:   Billing frequencies
+        other: Billing frequencies
+        # check_for_delivery_notes: "Cliente no puede ser eliminado mientras existan notas de entrega vinculadas."
+        # check_for_sale_offers: "Cliente no puede ser eliminado mientras existan presupuestos vinculados."
+        # check_for_client_invoices: "Cliente no puede ser eliminado mientras existan facturas C vinculadas."
+        # check_for_client_charges: "Cliente no puede ser eliminado mientras existan cobros vinculados."
+    attributes:
+      billing_frequency:
+        frequency_id: "Id"
+        name: "Description"
+        months: "Months"
+        days: "Days"
+        successfully: "Billing frequency was successfully updated."
+        create: "Billing frequency was successfully created."

@@ -1,0 +1,21 @@
+es:
+  ag2_gest:
+    tariff_types:
+      index:
+        title: "Tipos de tarifa"
+        btn_new: "Nuevo Tipo de tarifa"
+        back_to_root: "Volver a ag2Gest"
+      show:
+        title: "Tipo de tarifa"
+        btn_edit: "Editar Tipo de tarifa"
+        btn_delete: "Borrar Tipo de tarifa"
+        return_to: "Volver a Tipos de tarifa"
+      edit:
+        title: "Editar Tipo de tarifa"
+        update: "Actualizar Tipo de tarifa"
+        btn_show: "Ver Tipo de tarifa"
+        show: "Mostrar"
+        back: "Atrás"
+      new:
+        title: "Nuevo Tipo de tarifa"
+      back_to_main_page: "Volver a Tipos de tarifa"

@@ -1,0 +1,25 @@
+es:
+  ag2_gest:
+    water_supply_contracts:
+      index:
+        title: "Contratos de suminitro de agua"
+        btn_new: "Contrato de suminitro de agua"
+        back_to_root: "Volver a ag2Gest"
+      show:
+        title: "Contrato de suminitro de agua"
+        btn_edit: "Editar Contrato de suminitro de agua"
+        btn_delete: "Borrar Contrato de suminitro de agua"
+        return_to: "Volver a Contrato de suminitro de agua"
+      edit:
+        show: "Mostrar"
+        back: "Atrás"
+        title: "Editar Contrato de suminitro de agua"
+        btn_show: "Ver Contrato de suminitro de agua"
+      new:
+        title: "Nuevo Contrato de suminitro de agua"
+      back_to_main_page: "Volver a Contratos de suminitro de agua"
+      # generate_code_btn: "Código de Contrato de suminitro de agua"
+      # personal_info: "Información del Cliente"
+      # commercial_info: "Información Contable y Comercial"
+      # fiscal_error: "Id Fiscal erróneo o Entidad (Sujeto Pasivo) no existe."
+      # code_error: "Imposible generar Código de Cliente: No has elegido Organización."

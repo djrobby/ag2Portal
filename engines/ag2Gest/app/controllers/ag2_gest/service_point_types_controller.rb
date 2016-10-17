@@ -2,20 +2,27 @@ require_dependency "ag2_gest/application_controller"
 
 module Ag2Gest
   class ServicePointTypesController < ApplicationController
+    
+    before_filter :authenticate_user!
+    load_and_authorize_resource
+    helper_method :sort_column
+
     # GET /service_point_types
-    # GET /service_point_types.json
     def index
-      @service_point_types = ServicePointType.all
+      manage_filter_state
+      
+      @service_point_types = ServicePointType.paginate(:page => params[:page], :per_page => 10).order(sort_column + ' ' + sort_direction)
   
       respond_to do |format|
         format.html # index.html.erb
         format.json { render json: @service_point_types }
+        format.js
       end
     end
-  
+
     # GET /service_point_types/1
-    # GET /service_point_types/1.json
     def show
+      @breadcrumb = 'read'
       @service_point_type = ServicePointType.find(params[:id])
   
       respond_to do |format|
@@ -23,10 +30,10 @@ module Ag2Gest
         format.json { render json: @service_point_type }
       end
     end
-  
+
     # GET /service_point_types/new
-    # GET /service_point_types/new.json
     def new
+      @breadcrumb = 'create'
       @service_point_type = ServicePointType.new
   
       respond_to do |format|
@@ -34,20 +41,21 @@ module Ag2Gest
         format.json { render json: @service_point_type }
       end
     end
-  
+
     # GET /service_point_types/1/edit
     def edit
+      @breadcrumb = 'update'
       @service_point_type = ServicePointType.find(params[:id])
     end
-  
+
     # POST /service_point_types
-    # POST /service_point_types.json
     def create
+      @breadcrumb = 'create'
       @service_point_type = ServicePointType.new(params[:service_point_type])
   
       respond_to do |format|
         if @service_point_type.save
-          format.html { redirect_to @service_point_type, notice: 'Service point type was successfully created.' }
+          format.html { redirect_to @service_point_type, notice: t('activerecord.attributes.service_point_type.create') }
           format.json { render json: @service_point_type, status: :created, location: @service_point_type }
         else
           format.html { render action: "new" }
@@ -55,15 +63,15 @@ module Ag2Gest
         end
       end
     end
-  
-    # PUT /service_point_types/1
-    # PUT /service_point_types/1.json
+
+    # PATCH/PUT /service_point_types/1
     def update
+      @breadcrumb = 'update'
       @service_point_type = ServicePointType.find(params[:id])
   
       respond_to do |format|
         if @service_point_type.update_attributes(params[:service_point_type])
-          format.html { redirect_to @service_point_type, notice: 'Service point type was successfully updated.' }
+          format.html { redirect_to @service_point_type, notice: t('activerecord.attributes.service_point_type.successfully') }
           format.json { head :no_content }
         else
           format.html { render action: "edit" }
@@ -71,9 +79,8 @@ module Ag2Gest
         end
       end
     end
-  
+
     # DELETE /service_point_types/1
-    # DELETE /service_point_types/1.json
     def destroy
       @service_point_type = ServicePointType.find(params[:id])
       @service_point_type.destroy
@@ -81,6 +88,28 @@ module Ag2Gest
       respond_to do |format|
         format.html { redirect_to service_point_types_url }
         format.json { head :no_content }
+      end
+    end
+
+    private
+
+    def sort_column
+      ServicePointType.column_names.include?(params[:sort]) ? params[:sort] : "id"
+    end
+  
+    # Keeps filter state
+    def manage_filter_state
+      # sort
+      if params[:sort]
+        session[:sort] = params[:sort]
+      elsif session[:sort]
+        params[:sort] = session[:sort]
+      end
+      # direction
+      if params[:direction]
+        session[:direction] = params[:direction]
+      elsif session[:direction]
+        params[:direction] = session[:direction]
       end
     end
   end

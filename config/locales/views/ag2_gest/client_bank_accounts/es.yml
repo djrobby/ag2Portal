@@ -1,0 +1,25 @@
+es:
+  ag2_gest:
+    client_bank_accounts:
+      index:
+        title: "Cuentas bancarias de clientes"
+        btn_new: "Nuevo Cuenta bancaria de cliente"
+        back_to_root: "Volver a ag2Gest"
+      show:
+        title: "Cuenta bancaria de cliente"
+        btn_edit: "Editar Cuenta bancaria de cliente"
+        btn_delete: "Borrar Cuenta bancaria de cliente"
+        return_to: "Volver a Cuenta bancaria de cliente"
+      edit:
+        show: "Mostrar"
+        back: "Atrás"
+        title: "Editar Cuenta bancaria de cliente"
+        btn_show: "Ver Cuenta bancaria de cliente"
+      new:
+        title: "Nuevo Cuenta bancaria de cliente"
+      back_to_main_page: "Volver a Cuentas bancarias de clientes"
+      # generate_code_btn: "Código de Cuenta bancaria de cliente"
+      # personal_info: "Información del Cliente"
+      # commercial_info: "Información Contable y Comercial"
+      # fiscal_error: "Id Fiscal erróneo o Entidad (Sujeto Pasivo) no existe."
+      # code_error: "Imposible generar Código de Cliente: No has elegido Organización."

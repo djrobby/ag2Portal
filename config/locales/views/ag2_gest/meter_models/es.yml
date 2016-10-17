@@ -1,0 +1,28 @@
+es:
+  ag2_gest:
+    meter_models:
+      index:
+        title: "Modelos de contador"
+        btn_new: "Nuevo Modelo de contador"
+        back_to_root: "Volver a ag2Gest"
+      show:
+        title: "Modelo de contador"
+        btn_edit: "Editar Modelo de contador"
+        btn_delete: "Borrar Modelo de contador"
+        return_to: "Volver a Modelo de contador"
+      edit:
+        show: 'Mostrar'
+        back: 'Atrás'
+        title: "Editar Modelo de contador"
+        btn_show: "Ver Modelo de contador"
+        project_id: "Project"
+        billable_concept_id: "Billable Concept"
+        biller_id: "Biller"
+      new:
+        title: "Nuevo Modelo de contador"
+      back_to_main_page: "Volver a Modelos de contador"
+      # generate_code_btn: "Código de Modelo de contador"
+      # personal_info: "Información del Cliente"
+      # commercial_info: "Información Contable y Comercial"
+      # fiscal_error: "Id Fiscal erróneo o Entidad (Sujeto Pasivo) no existe."
+      # code_error: "Imposible generar Código de Cliente: No has elegido Organización."

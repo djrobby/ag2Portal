@@ -1,0 +1,25 @@
+es:
+  ag2_gest:
+    water_connection_contracts:
+      index:
+        title: "Contratos de tipo de acometida"
+        btn_new: "Contrato de tipo de acometida"
+        back_to_root: "Volver a ag2Gest"
+      show:
+        title: "Contrato de tipo de acometida"
+        btn_edit: "Editar Contrato de tipo de acometida"
+        btn_delete: "Borrar Contrato de tipo de acometida"
+        return_to: "Volver a Contrato de tipo de acometida"
+      edit:
+        show: "Mostrar"
+        back: "Atrás"
+        title: "Editar Contrato de tipo de acometida"
+        btn_show: "Ver Contrato de tipo de acometida"
+      new:
+        title: "Nuevo Contrato de tipo de acometida"
+      back_to_main_page: "Volver a Contratos de tipo de acometida"
+      # generate_code_btn: "Código de Contrato de tipo de acometida"
+      # personal_info: "Información del Cliente"
+      # commercial_info: "Información Contable y Comercial"
+      # fiscal_error: "Id Fiscal erróneo o Entidad (Sujeto Pasivo) no existe."
+      # code_error: "Imposible generar Código de Cliente: No has elegido Organización."

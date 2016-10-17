@@ -1,0 +1,18 @@
+es:
+  ag2_gest:
+    invoices:
+      index:
+        title: "Facturas"
+        btn_new: "Nueva Factura"
+        back_to_root: "Volver a ag2Gest"
+      show:
+        title: "Factura"
+        btn_edit: "Editar Factura"
+        btn_delete: "Borrar Factura"
+        return_to: "Volver a Factura"
+      edit:
+        title: "Editar Factura"
+        btn_show: "Ver Factura"
+      new:
+        title: "Nueva Factura"
+      back_to_main_page: "Volver facturas"

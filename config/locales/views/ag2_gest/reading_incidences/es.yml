@@ -1,0 +1,29 @@
+es:
+  ag2_gest:
+    reading_incidences:
+      index:
+        title: "Incidencias de lecturas"
+        btn_new: "Incidencia de lectura"
+        back_to_root: "Volver a ag2Gest"
+      show:
+        title: "Incidencia de lectura"
+        btn_edit: "Editar Incidencia de lectura"
+        btn_delete: "Borrar Incidencia de lectura"
+        return_to: "Volver a Incidencia de lectura"
+      edit:
+        show: "Mostrar"
+        back: "Atrás"
+        title: "Editar Incidencia de lectura"
+        btn_show: "Ver Incidencia de lectura"
+      new:
+        title: "Nuevo Incidencia de lectura"
+      back_to_main_page: "Volver a Incidencias de lecturas"
+    reading_incidence:
+      reading_incidence_type_id: "Tipo de Incidencia de lectura"
+      index:
+        btn_new: "Nueva Incidencia de lectura"
+      # generate_code_btn: "Código de Incidencia de lectura"
+      # personal_info: "Información del Cliente"
+      # commercial_info: "Información Contable y Comercial"
+      # fiscal_error: "Id Fiscal erróneo o Entidad (Sujeto Pasivo) no existe."
+      # code_error: "Imposible generar Código de Cliente: No has elegido Organización."

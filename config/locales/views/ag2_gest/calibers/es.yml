@@ -1,0 +1,25 @@
+es:
+  ag2_gest:
+    calibers:
+      index:
+        title: "Calibres"
+        btn_new: "Nuevo Calibre"
+        back_to_root: "Volver a ag2Gest"
+      show:
+        title: "Calibre"
+        btn_edit: "Editar Calibre"
+        btn_delete: "Borrar Calibre"
+        return_to: "Volver a Calibre"
+      edit:
+        show: 'Mostrar'
+        back: 'Atrás'
+        title: "Editar Calibre"
+        btn_show: "Ver Calibre"
+      new:
+        title: "Nuevo Calibre"
+      back_to_main_page: "Volver a Calibre"
+      # generate_code_btn: "Código de Calibre"
+      # personal_info: "Información del Cliente"
+      # commercial_info: "Información Contable y Comercial"
+      # fiscal_error: "Id Fiscal erróneo o Entidad (Sujeto Pasivo) no existe."
+      # code_error: "Imposible generar Código de Cliente: No has elegido Organización."

@@ -1,0 +1,22 @@
+en:
+  activerecord:
+    models:
+      water_connection_contract:
+        zero:  Contratos de tipo de acometida
+        one:   Contrato de tipo de acometida
+        few:   Contratos de tipo de acometida
+        other: Contratos de tipo de acometida
+    attributes:
+      water_connection_contract:
+        id: "Id"
+        contracting_request_id: "Solicitud"
+        water_connection_type_id: "Tipo de acometida"
+        contract_date: "Fecha de contrato"
+        client_id: "Cliente"
+        work_order_id: "Orden de trabajo"
+        sale_offer_id: "Presupuesto"
+        tariff_id: "Tarifa aplicada"
+        bill_id: "Recibo/factura emitida"
+        remarks: "Comentarios/Observaciones"
+        successfully: "Contrato de tipo de acometida se ha actualizado correctamente."
+        create: "Contrato de tipo de acometida se ha creado correctamente."

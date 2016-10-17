@@ -1,0 +1,20 @@
+en:
+  ag2_gest:
+    tariffs:
+      index:
+        title: "Tariff types"
+        btn_new: "New Tariff type"
+        back_to_root: "Back to ag2Gest"
+      show:
+        title: "Tariff type"
+        btn_edit: "Edit Tariff type"
+        btn_delete: "Delete Tariff type"
+        return_to: "Back to Tariff types"
+      edit:
+        title: "Edit Tariff type"
+        btn_show: "Show Tariff type"
+        show: "Show"
+        back: "Back"
+      new:
+        title: "New Tariff type"
+      back_to_main_page: "Back to Tariff types"

@@ -2,6 +2,13 @@ require_dependency "ag2_gest/application_controller"
 
 module Ag2Gest
   class SaleOffersController < ApplicationController
+    
+    before_filter :authenticate_user!
+    load_and_authorize_resource
+    helper_method :sort_column
+
+
+
     # GET /sale_offers
     # GET /sale_offers.json
     def index
@@ -47,7 +54,7 @@ module Ag2Gest
   
       respond_to do |format|
         if @sale_offer.save
-          format.html { redirect_to @sale_offer, notice: 'Sale offer was successfully created.' }
+          format.html { redirect_to @sale_offer, notice: t('activerecord.attributes.sale_offer.create') }
           format.json { render json: @sale_offer, status: :created, location: @sale_offer }
         else
           format.html { render action: "new" }
@@ -63,7 +70,7 @@ module Ag2Gest
   
       respond_to do |format|
         if @sale_offer.update_attributes(params[:sale_offer])
-          format.html { redirect_to @sale_offer, notice: 'Sale offer was successfully updated.' }
+          format.html { redirect_to @sale_offer, notice: t('activerecord.attributes.sale_offer.succesfully') }
           format.json { head :no_content }
         else
           format.html { render action: "edit" }

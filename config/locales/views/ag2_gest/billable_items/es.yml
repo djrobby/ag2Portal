@@ -1,0 +1,20 @@
+es:
+  ag2_gest:
+    billable_items:
+      index:
+        title: "Conceptos facturables por proyecto"
+        btn_new: "Nuevo Concepto facturable por proyecto"
+        back_to_root: "Volver a ag2Gest"
+      show:
+        title: "Concepto facturable por proyecto"
+        btn_edit: "Editar Concepto facturable por proyecto"
+        btn_delete: "Borrar Concepto facturable por proyecto"
+        return_to: "Volver a Conceptos facturables por proyecto"
+      edit:
+        show: "Mostrar"
+        back: "Atrás"
+        title: "Editar Concepto facturable por proyecto"
+        btn_show: "Ver Concepto facturable por proyecto"
+      new:
+        title: "Nuevo Concepto facturable por proyecto"
+      back_to_main_page: "Volver a Conceptos facturables por proyecto"

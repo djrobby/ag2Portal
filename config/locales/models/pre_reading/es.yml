@@ -1,0 +1,71 @@
+es:
+  activerecord:
+    models:
+      pre_reading:
+        zero:  Pre-lecturas
+        one:   Pre-lectura
+        few:   Pre-lecturas
+        other: Pre-lecturas
+        # check_for_delivery_notes: "Cliente no puede ser eliminado mientras existan notas de entrega vinculadas."
+        # check_for_sale_offers: "Cliente no puede ser eliminado mientras existan presupuestos vinculados."
+        # check_for_client_invoices: "Cliente no puede ser eliminado mientras existan facturas C vinculadas."
+        # check_for_client_charges: "Cliente no puede ser eliminado mientras existan cobros vinculados."
+    attributes:
+      pre_reading:
+        id: "Id"
+        charge: "Cargar prelecturas"
+        impute: "Imputar lecturas"
+        reading_route_id: "Cód. ruta"
+        reading_sequence: "Núm. ruta"
+        meter_id: "Contador"
+        subscriber_id: "Abonado"
+        reading_index_1: "Lect. per. ant."
+        reading_index_2: "Lect. año. ant."
+        reading_date: "Fecha"
+        billing_period_id: "Periodo"
+        index: "Índice"
+        pass_to_definitive: "Pasar a definitivas"
+        loading: "Cargando, espere por favor..."
+        print: "Imprimir"
+        save: "Guardar"
+        incidences: "Incidencias"
+        generate_readings: "Generar lecturas"
+        impute_readings: "Imputar lecturas"
+        prereadings_number: "Nº de prelecturas"
+        route: "Ruta"
+        reading_sequence_acronym: "Nº ruta"
+        delivery_address: "Dirección de suministro"
+        not_found: "Periodo no encontrado"
+
+
+    report:
+      pre_reading:
+        reading_route_id: "Ruta"
+        reading_sequence: "Nº ruta"
+        code_subscriber: "Abonado"
+        name_subscriber: "Nombre Abonado"
+        delivery_address: "Dirección de suministro"
+        meter_id: "Contador"
+        caliber: "Calibre"
+        meter_model: "Marca/Modelo"
+        date_install: "F. instalación"
+        period: "Periodo"
+        reading_index_1: "Lect. per. ant."
+        reading_index_2: "Lect. año. ant."
+        reading_date: "Fecha"
+        reading_index: "Índice"
+
+
+
+
+
+        project_id: "Proyecto"
+        billing_period_id: "Periodo"
+        billing_frequency_id: "Frecuencia de facturación"
+        reading_type_id: "Tipo de lectura"
+        subscriber_id: "Abonado"
+        reading_variant: "Reading variant"
+        reading_1_id: "reading_1_id"
+        reading_2_id: "reading_2_id"
+        created_at: "Creado por"
+        updated_at: "Actualizado por"

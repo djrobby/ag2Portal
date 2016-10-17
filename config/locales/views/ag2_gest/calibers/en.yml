@@ -1,0 +1,27 @@
+en:
+  ag2_gest:
+    calibers:
+      index:
+        title: "Calibers"
+        btn_new: "New Caliber"
+        back_to_root: "Back to ag2Gest"
+      show:
+        title: "Caliber"
+        btn_edit: "Edit Caliber"
+        btn_delete: "Delete Caliber"
+        return_to: "Back to Caliber"
+      edit:
+        show: "Show"
+        back: "Back"
+        title: "Edit Caliber"
+        btn_show: "Show Caliber"
+      new:
+        title: "New Caliber"
+      back_to_main_page: "Back to Calibers"
+      # generate_code_btn: "billable_item Code"
+      # personal_info: "billable_item Info"
+      # commercial_info: "Accounting & Commercial Info"
+      # fiscal_error: "Wrong Fiscal Id or Entity (TaxPayer) does not exist."
+      # code_error: "Unable to generate billable_item Code: No Organization chosen."
+
+      # {:office=>{:one=>"Oficina", :other=>"Oficinas"}, :company=>"Empresa"}

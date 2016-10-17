@@ -1,0 +1,14 @@
+es:
+  activerecord:
+    models:
+      regulation_type:
+        zero:  "Tipo de regulaciones"
+        one:   "Regulaciones"
+        few:   "Tipo de regulaciones"
+        other: "Tipo de regulaciones"
+    attributes:
+      regulation_type:
+        id: "Id"
+        description: "Descripción"
+        successfully: "Tipo de regulación se ha actualizado correctamente."
+        create: "Tipo de regulación se ha creado correctamente."

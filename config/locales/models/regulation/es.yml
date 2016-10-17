@@ -1,0 +1,19 @@
+es:
+  activerecord:
+    models:
+      regulation:
+        zero:  Regulaciones
+        one:   Regulación
+        few:   Regulaciones
+        other: Regulaciones
+    attributes:
+      regulation:
+        id: "Id"
+        project_id: "Proyecto"
+        billing_period_id: "Periodo de Regulación"
+        regulation_type_id: "Tipo de regulación"
+        starting_at: "Fecha de inicio"
+        ending_at: "Fecha de finalización"
+        description: "Descripción"
+        successfully: "Regulación se ha actualizado correctamente."
+        create: "Regulación se ha creado correctamente."

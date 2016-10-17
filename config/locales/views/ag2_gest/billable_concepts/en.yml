@@ -1,0 +1,27 @@
+en:
+  ag2_gest:
+    billable_concepts:
+      index:
+        title: "Billable concepts"
+        btn_new: "New Billable concept"
+        back_to_root: "Back to ag2Gest"
+      show:
+        title: "Billable concept"
+        btn_edit: "Edit Billable concept"
+        btn_delete: "Delete Billable concept"
+        return_to: "Back to Billable concept"
+      edit:
+        title: "Edit Billable concept"
+        btn_show: "Show Billable concept"
+        show: "Show"
+        back: "Back"
+      new:
+        title: "New Billable concept"
+      back_to_main_page: "Back to Billable concept"
+      # generate_code_btn: "billable_item Code"
+      # personal_info: "billable_item Info"
+      # commercial_info: "Accounting & Commercial Info"
+      # fiscal_error: "Wrong Fiscal Id or Entity (TaxPayer) does not exist."
+      # code_error: "Unable to generate billable_item Code: No Organization chosen."
+
+      # {:office=>{:one=>"Oficina", :other=>"Oficinas"}, :company=>"Empresa"}

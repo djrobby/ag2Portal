@@ -1,0 +1,22 @@
+es:
+  ag2_gest:
+    meter_locations:
+      index:
+        title: "Localizaciones de contador"
+        btn_new: "Nuevo Localización de contador"
+        back_to_root: "Volver a ag2Gest"
+      show:
+        title: "Localización de contador"
+        btn_edit: "Editar Localización de contador"
+        btn_delete: "Borrar Localización de contador"
+        return_to: "Volver a Localización de contador"
+      edit:
+        show: 'Mostrar'
+        back: 'Atrás'
+        title: "Editar Localización de contador"
+        btn_show: "Ver Localización de contador"
+        name: "Nombre"
+      new:
+        title: "Nuevo Localización de contador"
+        name: "Nombre"
+      back_to_main_page: "Volver a Localizaciones de contador"

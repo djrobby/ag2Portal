@@ -1,0 +1,25 @@
+es:
+  ag2_gest:
+    centers:
+      index:
+        title: "Núcleos urbanos"
+        btn_new: "Nuevo Núcleo urbano"
+        back_to_root: "Volver a ag2Gest"
+      show:
+        title: "Núcleo urbano"
+        btn_edit: "Editar Núcleo urbano"
+        btn_delete: "Borrar Núcleo urbano"
+        return_to: "Volver a Núcleo urbano"
+      edit:
+        show: "Mostrar"
+        back: "Atrás"
+        title: "Editar Núcleo urbano"
+        btn_show: "Ver Núcleo urbano"
+      new:
+        title: "Nuevo Núcleo urbano"
+      back_to_main_page: "Volver a Núcleos urbanos"
+      # generate_code_btn: "Código de Núcleo urbano"
+      # personal_info: "Información del Cliente"
+      # commercial_info: "Información Contable y Comercial"
+      # fiscal_error: "Id Fiscal erróneo o Entidad (Sujeto Pasivo) no existe."
+      # code_error: "Imposible generar Código de Cliente: No has elegido Organización."

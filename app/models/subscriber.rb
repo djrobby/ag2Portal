@@ -17,7 +17,7 @@ class Subscriber < ActiveRecord::Base
                   :service_point_id, :active, :tariff_scheme_id, :billing_frequency_id, :meter_id,
                   :reading_route_id, :reading_sequence, :reading_variant, :contracting_request_id,
                   :remarks, :cadastral_reference, :gis_id, :endowments, :inhabitants, :km, :gis_id_wc
-              
+
   attr_accessor :reading_index_add, :reading_date_add
 
   has_many :work_orders
@@ -211,5 +211,45 @@ class Subscriber < ActiveRecord::Base
 
   # Before destroy
   def check_for_dependent_records
+    # Check for work orders
+    if work_orders.count > 0
+      errors.add(:base, I18n.t('activerecord.models.subscriber.check_for_work_orders'))
+      return false
+    end
+    # Check for meter details
+    if meter_details.count > 0
+      errors.add(:base, I18n.t('activerecord.models.subscriber.check_for_meter_details'))
+      return false
+    end
+    # Check for contracting requests
+    if contracting_request.count > 0
+      errors.add(:base, I18n.t('activerecord.models.subscriber.check_for_contracting_request'))
+      return false
+    end
+    # Check for water supply contracts
+    if water_supply_contract.count > 0
+      errors.add(:base, I18n.t('activerecord.models.subscriber.check_for_water_supply_contract'))
+      return false
+    end
+    # Check for readings
+    if readings.count > 0
+      errors.add(:base, I18n.t('activerecord.models.subscriber.check_for_readings'))
+      return false
+    end
+    # Check for prereadings
+    if pre_readings.count > 0
+      errors.add(:base, I18n.t('activerecord.models.subscriber.check_for_pre_readings'))
+      return false
+    end
+    # Check for bills
+    if bills.count > 0
+      errors.add(:base, I18n.t('activerecord.models.subscriber.check_for_bills'))
+      return false
+    end
+    # Check for prebills
+    if pre_bills.count > 0
+      errors.add(:base, I18n.t('activerecord.models.subscriber.check_for_pre_bills'))
+      return false
+    end
   end
 end

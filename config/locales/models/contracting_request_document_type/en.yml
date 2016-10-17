@@ -1,0 +1,73 @@
+en:
+  activerecord:
+    models:
+      contracting_request:
+        zero:  Contracting Requests
+        one:   Contracting Request
+        few:   Contracting Requests
+        other: Contracting Requests
+        check_for_delivery_notes: "Client cannot be destroyed while linked delivery notes exist."
+        check_for_sale_offers: "Client cannot be destroyed while linked offers exist."
+        check_for_client_invoices: "Client cannot be destroyed while linked C invoices exist."
+        check_for_client_charges: "Client cannot be destroyed while linked charges exist."
+    attributes:
+      contracting_request:
+        client_building:
+        client_cellular:
+        client_country_id:
+        client_email:
+        client_fax:
+        client_floor:
+        client_floor_office:
+        client_phone:
+        client_province_id:
+        client_region_id:
+        client_street_directory_id:
+        client_street_name:
+        client_street_number:
+        client_street_type_id:
+        client_town_id:
+        client_zipcode_id:
+        entity_building:
+        entity_country_id:
+        entity_floor:
+        entity_floor_office:
+        entity_id:
+        entity_province_id:
+        entity_region_id:
+        entity_street_directory_id:
+        entity_street_name:
+        entity_street_number:
+        entity_street_type_id:
+        entity_town_id:
+        entity_zipcode_id:
+        project_id:
+        r_first_name:
+        r_fiscal_id:
+        r_last_name:
+        request_date:
+        request_no:
+        request_status_id:
+        request_type_id:
+        subscriber_center:
+        subscriber_building:
+        subscriber_country_id:
+        subscriber_floor:
+        subscriber_floor_office:
+        subscriber_province_id:
+        subscriber_region_id:
+        subscriber_street_directory_id:
+        subscriber_street_name:
+        subscriber_street_number:
+        subscriber_street_type_id:
+        subscriber_town_id:
+        subscriber_zipcode_id:
+        iban:
+        country_code:
+        iban_dc:
+        cb:
+        cs:
+        ccc_dc:
+        account_no:
+        work_order_id:
+        subscriber_id:  

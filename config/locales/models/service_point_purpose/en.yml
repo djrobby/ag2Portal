@@ -1,0 +1,7 @@
+en:
+  activerecord:
+    attributes:
+      street_directory:
+        street_name: "Name"
+        street_type: "Type"
+        town: "Town"

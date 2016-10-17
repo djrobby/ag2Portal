@@ -1,0 +1,25 @@
+es:
+  ag2_gest:
+    pre_readings:
+      index:
+        title: "Pre-lecturas"
+        btn_new: "Nueva Pre-lectura"
+        back_to_root: "Volver a ag2Gest"
+      show:
+        title: "Pre-lectura"
+        btn_edit: "Editar Lectura"
+        btn_delete: "Borrar Pre-lectura"
+        return_to: "Volver a Pre-lecturas"
+      edit:
+        show: "Mostrar"
+        back: "Atrás"
+        title: "Editar Pre-lectura"
+        btn_show: "Ver Pre-lectura"
+      new:
+        title: "Nueva Pre-lectura"
+      back_to_main_page: "Volver a Pre-lecturas"
+      # generate_code_btn: "Código de Lectura"
+      # personal_info: "Información del Cliente"
+      # commercial_info: "Información Contable y Comercial"
+      # fiscal_error: "Id Fiscal erróneo o Entidad (Sujeto Pasivo) no existe."
+      # code_error: "Imposible generar Código de Cliente: No has elegido Organización."

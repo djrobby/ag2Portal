@@ -1,0 +1,14 @@
+es:
+  activerecord:
+    models:
+      service_point_location:
+        zero:  "Emplazamiento/situación puntos de servicios"
+        one:   "Emplazamiento/situación punto de servicio"
+        few:   "Emplazamiento/situación puntos de servicios"
+        other: "Emplazamiento/situación puntos de servicios"
+    attributes:
+      service_point_location:
+        id: "Id"
+        name: "Descripción"
+        successfully: "Emplazamiento/situación punto de servicio se ha actualizado correctamente."
+        create: "Emplazamiento/situación punto de servicio se ha creado correctamente."

@@ -1,0 +1,51 @@
+en:
+  activerecord:
+    models:
+      client:
+        zero:  Clients
+        one:   Client
+        few:   Clients
+        other: Clients
+        check_for_delivery_notes: "Client cannot be destroyed while linked delivery notes exist."
+        check_for_sale_offers: "Client cannot be destroyed while linked offers exist."
+        check_for_client_invoices: "Client cannot be destroyed while linked C invoices exist."
+        check_for_client_charges: "Client cannot be destroyed while linked charges exist."
+    attributes:
+      client:
+        entity: "Entity Id"
+        entity_id: "Entity Id"
+        client_code: "Code"
+        name: "Name"
+        fiscal_id: "Fiscal Id"
+        fiscal_id_c: "Fiscal Id"
+        province: "Province"
+        province_id: "Province"
+        town: "Town"
+        town_id: "Town"
+        zipcode: "Zip Code"
+        zipcode_id: "Zip Code"
+        street_type: "Street Type"
+        street_type_id: "Street Type"
+        street_name: "Street name"
+        street_number: "Number"
+        building: "Building"
+        floor: "Floor"
+        floor_office: "Office"
+        region: "Region"
+        region_id: "Region"
+        country: "Country"
+        country_id: "Country"
+        phone: "Phone"
+        fax: "Fax"
+        cellular: "Cellular"
+        email: "Email"
+        active: "Active?"
+        remarks: "Remarks"
+        address: "Address"
+        organization: "Organization"
+        organization_id: "Organization"
+        is_contact: "Is contact?"
+        ledger_account: "Ledger account"
+        ledger_account_id: "Ledger account"
+        payment_method: "Payment method"
+        payment_method_id: "Payment method"

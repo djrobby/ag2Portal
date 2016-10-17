@@ -1,0 +1,23 @@
+es:
+  ag2_gest:
+    contracting_request_documents:
+      index:
+        title: "Documentación aportada"
+        btn_new: "Nueva Documentación aportada"
+        back_to_root: "Volver a ag2Gest"
+      show:
+        title: "Documentación aportada"
+        btn_new: "Nueva Documentación aportada"
+        btn_edit: "Editar Documentación aportada"
+        btn_delete: "Borrar Documentación aportada"
+        return_to: "Volver a Documentación aportada"
+      edit:
+        title: "Editar Documentación aportada"
+        btn_show: "Ver Documentación aportada"
+        update: "Actualizar Documentación aportada"
+        btn_show: "Ver Documentación aportada"
+        show: "Mostrar"
+        back: "Atrás"
+      new:
+        title: "Nueva Documentación aportada"
+      back_to_main_page: "Volver a Documentación aportada"

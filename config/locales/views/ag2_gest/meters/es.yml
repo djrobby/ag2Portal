@@ -1,0 +1,25 @@
+es:
+  ag2_gest:
+    meters:
+      index:
+        title: "Contadores"
+        btn_new: "Nuevo Contador"
+        back_to_root: "Volver a ag2Gest"
+      show:
+        title: "Contador"
+        btn_edit: "Editar Contador"
+        btn_delete: "Borrar Contador"
+        return_to: "Volver a Contador"
+      edit:
+        show: "Mostrar"
+        back: "Atrás"
+        title: "Editar Contador"
+        btn_show: "Ver Contador"
+      new:
+        title: "Nuevo Contador"
+      back_to_main_page: "Volver a Contadores"
+      # generate_code_btn: "Código de Emisor de la factura"
+      # personal_info: "Información del Cliente"
+      # commercial_info: "Información Contable y Comercial"
+      # fiscal_error: "Id Fiscal erróneo o Entidad (Sujeto Pasivo) no existe."
+      # code_error: "Imposible generar Código de Cliente: No has elegido Organización."

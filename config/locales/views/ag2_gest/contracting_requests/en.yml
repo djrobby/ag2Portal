@@ -1,0 +1,28 @@
+en:
+  ag2_gest:
+    contracting_requests:
+      index:
+        title: "Contracting Requests"
+        label_others: "Others"
+        label_project: "Project"
+        label_request_status: "Request Status"
+        label_request_type: "Request Type"
+        label_work_order: "Work_order"
+        btn_new: "New Request"
+        back_to_root: "Back to ag2Gest"
+      show:
+        title: "Contracting Request"
+        btn_edit: "Edit Contracting Request"
+        btn_delete: "Delete Contracting Request"
+        return_to: "Back to Contracting Request"
+      edit:
+        title: "Edit Contracting Request"
+        btn_show: "Show Contracting Request"
+      new:
+        title: "New Contracting Request"
+      back_to_main_page: "Back to Contracting Requests"
+      generate_code_btn: "Contracting Request Code"
+      personal_info: "Contracting Request Info"
+      commercial_info: "Accounting & Commercial Info"
+      fiscal_error: "Wrong Fiscal Id or Entity (TaxPayer) does not exist."
+      code_error: "Unable to generate Contracting Request Code: No Organization chosen."

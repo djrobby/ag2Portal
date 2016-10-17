@@ -1,0 +1,27 @@
+en:
+  ag2_gest:
+    centers:
+      index:
+        title: "Centers"
+        btn_new: "New Center"
+        back_to_root: "Back to ag2Gest"
+      show:
+        title: "Center"
+        btn_edit: "Edit Center"
+        btn_delete: "Delete Center"
+        return_to: "Back to Center"
+      edit:
+        show: "Show"
+        back: "Back"
+        title: "Edit Center"
+        btn_show: "Show Center"
+      new:
+        title: "New Center"
+      back_to_main_page: "Back to Centers"
+      # generate_code_btn: "billable_item Code"
+      # personal_info: "billable_item Info"
+      # commercial_info: "Accounting & Commercial Info"
+      # fiscal_error: "Wrong Fiscal Id or Entity (TaxPayer) does not exist."
+      # code_error: "Unable to generate billable_item Code: No Organization chosen."
+
+      # {:office=>{:one=>"Oficina", :other=>"Oficinas"}, :company=>"Empresa"}

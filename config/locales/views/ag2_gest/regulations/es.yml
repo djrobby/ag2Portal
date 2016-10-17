@@ -1,0 +1,20 @@
+es:
+  ag2_gest:
+    regulations:
+      index:
+        title: "Regulaciones"
+        btn_new: "Nueva Regulación"
+        back_to_root: "Volver a ag2Gest"
+      show:
+        title: "Regulación"
+        btn_edit: "Editar Regulación"
+        btn_delete: "Borrar Regulación"
+        return_to: "Volver a Regulación"
+      edit:
+        show: "Mostrar"
+        back: "Atrás"
+        title: "Editar Regulación"
+        btn_show: "Ver Regulación"
+      new:
+        title: "Nueva Regulación"
+      back_to_main_page: "Volver a Regulación"

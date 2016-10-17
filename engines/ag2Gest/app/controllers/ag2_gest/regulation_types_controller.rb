@@ -2,52 +2,63 @@ require_dependency "ag2_gest/application_controller"
 
 module Ag2Gest
   class RegulationTypesController < ApplicationController
-    # GET /regulation_types
-    # GET /regulation_types.json
+
+    before_filter :authenticate_user!
+    load_and_authorize_resource
+    helper_method :sort_column
+
+    # GET /regulations
     def index
-      @regulation_types = RegulationType.all
-  
+
+      manage_filter_state
+
+      @regulation_types = RegulationType.paginate(:page => params[:page], :per_page => 10).order(sort_column + ' ' + sort_direction)
+
       respond_to do |format|
         format.html # index.html.erb
         format.json { render json: @regulation_types }
+        format.js
       end
     end
-  
-    # GET /regulation_types/1
-    # GET /regulation_types/1.json
+
+    # GET /regulations/1
     def show
+      @breadcrumb = 'read'
       @regulation_type = RegulationType.find(params[:id])
-  
+
       respond_to do |format|
         format.html # show.html.erb
         format.json { render json: @regulation_type }
       end
     end
-  
-    # GET /regulation_types/new
-    # GET /regulation_types/new.json
+
+    # GET /regulations/new
     def new
+
+      @breadcrumb = 'create'
       @regulation_type = RegulationType.new
-  
+
       respond_to do |format|
         format.html # new.html.erb
         format.json { render json: @regulation_type }
       end
     end
-  
-    # GET /regulation_types/1/edit
+
+    # GET /regulations/1/edit
     def edit
+      @breadcrumb = 'update'
       @regulation_type = RegulationType.find(params[:id])
     end
-  
-    # POST /regulation_types
-    # POST /regulation_types.json
+
+    # POST /regulations
     def create
+      @breadcrumb = 'create'
       @regulation_type = RegulationType.new(params[:regulation_type])
-  
+      @regulation_type.created_by = current_user.id if !current_user.nil?
+
       respond_to do |format|
         if @regulation_type.save
-          format.html { redirect_to @regulation_type, notice: 'Regulation type was successfully created.' }
+          format.html { redirect_to @regulation_type, notice: t('activerecord.attributes.regulation_type.create') }
           format.json { render json: @regulation_type, status: :created, location: @regulation_type }
         else
           format.html { render action: "new" }
@@ -55,15 +66,16 @@ module Ag2Gest
         end
       end
     end
-  
-    # PUT /regulation_types/1
-    # PUT /regulation_types/1.json
+
+    # PATCH/PUT /regulations/1
     def update
+      @breadcrumb = 'update'
       @regulation_type = RegulationType.find(params[:id])
-  
+      @regulation_type.updated_by = current_user.id if !current_user.nil?
+
       respond_to do |format|
         if @regulation_type.update_attributes(params[:regulation_type])
-          format.html { redirect_to @regulation_type, notice: 'Regulation type was successfully updated.' }
+          format.html { redirect_to @regulation_type, notice: t('activerecord.attributes.regulation_type.successfully') }
           format.json { head :no_content }
         else
           format.html { render action: "edit" }
@@ -71,17 +83,40 @@ module Ag2Gest
         end
       end
     end
-  
-    # DELETE /regulation_types/1
-    # DELETE /regulation_types/1.json
+
+    # DELETE /regulations/1
     def destroy
       @regulation_type = RegulationType.find(params[:id])
       @regulation_type.destroy
-  
+
       respond_to do |format|
         format.html { redirect_to regulation_types_url }
         format.json { head :no_content }
       end
     end
+
+    private
+
+      # Use callbacks to share common setup or constraints between actions.
+      def sort_column
+        RegulationType.column_names.include?(params[:sort]) ? params[:sort] : "id"
+      end
+
+      # Keeps filter state
+    def manage_filter_state
+      # sort
+      if params[:sort]
+        session[:sort] = params[:sort]
+      elsif session[:sort]
+        params[:sort] = session[:sort]
+      end
+      # direction
+      if params[:direction]
+        session[:direction] = params[:direction]
+      elsif session[:direction]
+        params[:direction] = session[:direction]
+      end
+    end
+
   end
 end
