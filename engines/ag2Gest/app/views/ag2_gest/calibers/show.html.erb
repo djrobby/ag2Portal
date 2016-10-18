@@ -5,11 +5,15 @@
   <tbody>
     <tr>
       <td><%= t('activerecord.attributes.caliber.caliber_id') %>:</td>
-      <td><%= @caliber.try(:id) %></td>
+      <td colspan="3"><%= @caliber.try(:id) %></td>
+    <tr>
       <td><%= t('activerecord.attributes.caliber.caliber') %>:</td>
       <td><%= @caliber.try(:caliber) %></td>
+      <td><%= t('activerecord.attributes.caliber.letter_id') %>:</td>
+      <td><%= @caliber.try(:letter_id) %></td>
     </tr>
     	<%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @caliber } %>
+      <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @caliber } %>
   </tbody>
 </table>
 

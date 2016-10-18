@@ -16,7 +16,8 @@
     <tr>
       <th><%= sortable "id", t('activerecord.attributes.meter_model.id') %></th>
       <th><%= sortable "model", t('activerecord.attributes.meter_model.model') %></th>
-      <th><%= sortable "meter_type_id", t('activerecord.attributes.meter_model.brand') %></th>
+      <th><%= sortable "meter_type_id", t('activerecord.attributes.meter_model.meter_type_id') %></th>
+      <th><%= sortable "meter_type_id", t('activerecord.attributes.meter_model.meter_brand_id') %></th>
     </tr>
   </thead>
   <tbody>
@@ -25,6 +26,7 @@
       <td><%= link_to met_mod.try(:id), meter_model_path(met_mod) %></td>
       <td><%= met_mod.try(:model) %></td>
       <td><%= met_mod.try(:meter_type).try(:name) %></td>
+      <td><%= met_mod.try(:meter_brand).try(:brand) %></td>
       <td>
         <%= link_to edit_meter_model_path(met_mod), class: "btn btn-mini" do %>
           <i class="icon-edit"></i>

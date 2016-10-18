@@ -17,7 +17,7 @@
     });
 
     $(document).ajaxStart(function() {
-      
+
       // show loader on start
       if (changing == false) {
         $("#div_table").html("");
@@ -34,7 +34,7 @@
   }); //End DocumentReady
 
   /*jQuery(function($) {
-    
+
     // when the #meter_models field changes
     $("#meter_models").change(function() {
       // make a POST call and replace the content
@@ -46,18 +46,18 @@
         $("#meter_models").html("");
 
 
-        
+
 
         //$("#WrkrOffice").select2("val", "");
         //$("#WrkrOffice").append($('<option></option>').val("").html(""));
         $.each(data, function(id, option) {
-          
+
           //$("#WrkrOffice").append($('<option></option>').val(option.id).html(option.name));
         });
       });
       return false;
     });
-    
+
     // when the #removeFilter button clicked
     $("#removeFilter").click(function() {
       $("#meter_models").val("");
@@ -75,7 +75,7 @@
 
   /*
 
-  
+
 
   $(document).ajaxStart(function() {
     // show loader on start
@@ -111,7 +111,7 @@
       })
       return false;
     });
-    
+
     // when the #removeFilter button clicked
     $("#removeFilter").click(function() {
       /*$("#No").val("");
@@ -127,29 +127,29 @@
 </script>
 
 <div class="well sidebar-nav">
-  
+
   <!-- Refresh -->
   <%= link_to ag2_gest.meters_path, title: I18n.t(:refresh), class: "icon-refresh-link", remote: true do %> <i class="icon-refresh"></i> <% end %>
 
-  <%= form_tag "search", :method => 'get' do %>
-    
-    <%= label_tag "Marca/Modelo", nil, :class => 'form-label' %>
-    <%= select_tag "meter_models", options_from_collection_for_select(@meter_models, "id", "full_name"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
-    
-    <%= label_tag "Año de fabricación", nil, :class => 'form-label' %>    
-    <%= select_tag "manufacturing_date", options_from_collection_for_select(@meters, "id", "manufacturing_date"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
+  <%= form_tag "meters", :method => 'get', :remote => true do %>
 
-    <%#= label_tag "Fecha de caducidad", nil, :class => 'form-label' %>    
-    <%#= select_tag "manufacturing_date", options_from_collection_for_select(@meters, "id", "manufacturing_date"), :prompt => "", :class => 'x-large-text-field shrinked date_picker' %>
+    <%= label_tag "Código", nil, :class => 'form-label' %>
+    <%= text_field_tag "meter_code", nil, :class => 'x-large-text-field shrinked number-text-field', onkeyup: "caps(this)" %>
+
+    <%= label_tag "Marca/Modelo", nil, :class => 'form-label' %>
+    <%= select_tag "meter_model_id", options_from_collection_for_select(MeterModel.all, "id", "full_name"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
+
+    <%= label_tag "Calibre", nil, :class => 'form-label' %>
+    <%= select_tag "caliber_id", options_from_collection_for_select(Caliber.all, "id", "caliber"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
 
     <br><br>
     <!-- Submit -->
-    <%= submit_tag "Apply Filter",  :class => 'btn btn-primary', :id => 'submit_btn' %>
+    <%= submit_tag "Aplicar Filtro",  :class => 'btn btn-primary', :id => 'submit_btn' %>
 
     <!-- Remove filter -->
     <button id="removeFilter" type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><%= t :clear_filter_button %></button>
   <% end %>
 
-  <%= link_to "Volver ag2_gest", ag2_gest.root_path %>
+  <%= link_to "Volver ag2Gest", ag2_gest.root_path %>
 
 </div>

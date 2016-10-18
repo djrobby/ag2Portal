@@ -23,8 +23,8 @@
     <%= f.input :meter_code, :required => true, :autofocus => true, :input_html => { :class => 'x-large-text-field', maxlength: 12 }, :label_html => { :class => 'form-label' } %>
     </div>
 
-    <div class="span8">
-      <%#= f.association :manufacturer, label: t('activerecord.attributes.meter.manufacturer_id'), collection: Manufacturer.all(), :input_html => { :class => 'sel2 x-large-text-field' }, label_method: lambda { |st| st.name }, value_method: :id, :label_html => { :class => 'form-label' } %>
+    <div class="span4">
+      <%= f.association :office, :required => true, label: t('activerecord.attributes.meter.office_id'), collection: (session[:office].blank? ? Office.all : Office.where(id: session[:office]) ), include_blank: nil, :input_html => { :class => 'sel2 x-large-text-field' }, label_method: lambda { |st| st.to_label }, value_method: :id, :label_html => { :class => 'form-label' } %>
     </div>
   </div>
 
@@ -45,15 +45,15 @@
   </div>
 
   <label class="multi-field-label-two">
-    <%= f.input :expiry_date, :required => true, :start_year => Time.now.year - 100, :end_year => Time.now.year + 100, :as => :string, :input_html => { :value => (f.object.expiry_date.strftime("%d/%m/%Y") if f.object.expiry_date), :class => 'mid-text-field date_picker' }, :label_html => { :class => 'form-label' } %>
+    <%= f.input :expiry_date, :start_year => Time.now.year - 100, :end_year => Time.now.year + 100, :as => :string, :input_html => { :value => (f.object.expiry_date.strftime("%d/%m/%Y") if f.object.expiry_date), :class => 'mid-text-field date_picker' }, :label_html => { :class => 'form-label' } %>
   </label>
 
   <label class="multi-field-label-two">
-    <%= f.input :purchase_date, :required => true, :start_year => Time.now.year - 100, :end_year => Time.now.year + 100, :as => :string, :input_html => { :value => (f.object.purchase_date.strftime("%d/%m/%Y") if f.object.purchase_date), :class => 'mid-text-field date_picker' }, :label_html => { :class => 'form-label' } %>
+    <%= f.input :purchase_date, :start_year => Time.now.year - 100, :end_year => Time.now.year + 100, :as => :string, :input_html => { :value => (f.object.purchase_date.strftime("%d/%m/%Y") if f.object.purchase_date), :class => 'mid-text-field date_picker' }, :label_html => { :class => 'form-label' } %>
   </label>
 
   <label class="multi-field-label-two">
-    <%= f.input :first_installation_date, :required => true, :start_year => Time.now.year - 100, :end_year => Time.now.year + 100, :as => :string, :input_html => { :value => (f.object.first_installation_date.strftime("%d/%m/%Y") if f.object.first_installation_date), :class => 'mid-text-field date_picker' }, :label_html => { :class => 'form-label' } %>
+    <%= f.input :first_installation_date, :start_year => Time.now.year - 100, :end_year => Time.now.year + 100, :as => :string, :input_html => { :value => (f.object.first_installation_date.strftime("%d/%m/%Y") if f.object.first_installation_date), :class => 'mid-text-field date_picker' }, :label_html => { :class => 'form-label' } %>
   </label>
 
   <label class="multi-field-label-two">

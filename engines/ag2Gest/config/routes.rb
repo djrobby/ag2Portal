@@ -164,6 +164,7 @@ Ag2Gest::Engine.routes.draw do
     #
     resources :tariff_schemes do
       post 'create_pct', on: :collection
+      get 'simple_edit', on: :member
     end
     resources :tariffs
     resources :tariff_types

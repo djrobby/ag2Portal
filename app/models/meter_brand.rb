@@ -8,6 +8,7 @@ class MeterBrand < ActiveRecord::Base
 
   validates :manufacturer,  :presence => true
   validates :brand,         :presence => true
+  validates :letter_id,     :length => { :is => 1 }
 
   before_validation :fields_to_uppercase
   before_destroy :check_for_dependent_records

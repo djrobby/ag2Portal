@@ -7,6 +7,7 @@ class Caliber < ActiveRecord::Base
 
   validates :caliber, :presence => true,
                       :numericality => true
+  validates :letter_id,   :length => { :is => 1 }
 
   # Scopes
   scope :by_caliber, -> { order(:caliber) }

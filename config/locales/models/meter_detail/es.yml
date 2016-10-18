@@ -8,6 +8,7 @@ es:
         other: Movimientos de contador
     attributes:
       meter_detail:
+        id: "Id"
         meter: "Contador"
         meter_id: "Contador"
         subscriber: "Abonado"

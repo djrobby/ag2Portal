@@ -10,6 +10,7 @@
       <td><%= @meter_type.try(:name) %></td>
     </tr>
       <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @meter_type } %>
+      <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @meter_type } %>
   </tbody>
 </table>
 

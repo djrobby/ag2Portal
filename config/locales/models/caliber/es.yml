@@ -10,3 +10,5 @@ es:
     attributes:
       caliber:
         caliber: "Calibre"
+        caliber_id: "Id"
+        letter_id: "Letra"

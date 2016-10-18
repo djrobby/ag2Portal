@@ -95,6 +95,7 @@ class Meter < ActiveRecord::Base
   searchable do
     text :meter_code
     string :meter_code
+    integer :office_id
     integer :organization_id
     integer :meter_model_id
     integer :caliber_id

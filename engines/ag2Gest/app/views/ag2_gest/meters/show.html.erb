@@ -31,12 +31,18 @@
       <td><%= t('activerecord.attributes.meter.purchase_date') %>:</td>
       <td><%=l @meter.try(:purchase_date) unless @meter.try(:purchase_date).blank? %></td>
     </tr>
+    <tr>
+      <td><%= t('activerecord.attributes.meter.company_id') %>:</td>
+      <td><%= @meter.try(:company).try(:name) %></td>
+      <td><%= t('activerecord.attributes.meter.office_id') %>:</td>
+      <td><%= @meter.try(:office).try(:name) %></td>
+    </tr>
     <!-- <tr>
       <td><%#= t('activerecord.attributes.meter.last_withdrawal_date') %>:</td>
       <td colspan="3"><%#=l @meter.try(:last_withdrawal) unless @meter.try(:last_withdrawal).blank? %></td>
     </tr> -->
       <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @meter } %>
-      <%#= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @tariff_scheme } %>
+      <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @meter } %>
   </tbody>
 </table>
 
@@ -56,21 +62,21 @@ new_path: new_meter_path, new_txt: t('ag2_gest.meters.index.btn_new') } %>
       <table class="table table-condensed table-striped">
         <thead>
           <tr>
-            <th><%= sortable "id", t('activerecord.attributes.meter_detail.id') %></th>
-            <!-- <th><%#= sortable "meter_id", t('activerecord.attributes.meter_detail.meter_id') %></th> -->
-            <th><%= sortable "subscriber_id", t('activerecord.attributes.meter_detail.subscriber_id') %></th>
-            <th class="center"><%= sortable "installation_reading", t('activerecord.attributes.meter_detail.installation_reading') %></th>
-            <th class="center"><%= sortable "withdrawal_reading", t('activerecord.attributes.meter_detail.withdrawal_reading') %></th>
-            <th class="center"><%= sortable "installation_date", t('activerecord.attributes.meter_detail.installation_date') %></th>
-            <th class="center"><%= sortable "withdrawal_date", t('activerecord.attributes.meter_detail.withdrawal_date') %></th>
+            <th><%= t('activerecord.attributes.meter_detail.id') %></th>
+            <th><%= t('activerecord.attributes.meter_detail.subscriber_id') %></th>
+            <th><%= t('activerecord.attributes.meter_detail.meter_location_id') %></th>
+            <th class="center"><%= t('activerecord.attributes.meter_detail.installation_reading') %></th>
+            <th class="center"><%= t('activerecord.attributes.meter_detail.withdrawal_reading') %></th>
+            <th class="center"><%= t('activerecord.attributes.meter_detail.installation_date') %></th>
+            <th class="center"><%= t('activerecord.attributes.meter_detail.withdrawal_date') %></th>
           </tr>
         </thead>
         <tbody>
           <% @meter.meter_details.order("installation_date DESC").each do |meter_detail| %>
             <tr>
-              <td><%= link_to meter_detail.try(:id), meter_detail_path(meter_detail) %></td>
-        <!--  <td><%#= meter_detail.try(:meter).try(:meter_code) %></td> -->
-              <td><%= meter_detail.try(:subscriber).try(:name) %></td>
+              <td><%=meter_detail.try(:id)%></td>
+              <td><%= link_to meter_detail.try(:subscriber).try(:to_label), ag2_gest.subscriber_path(meter_detail.subscriber) %></td>
+              <td><%=meter_detail.try(:meter_location).try(:name)%></td>
               <td class="center"><%= meter_detail.try(:installation_reading) %></td>
               <td class="center"><%= meter_detail.try(:withdrawal_reading) %></td>
               <td class="center"><%=l meter_detail.try(:installation_date) unless meter_detail.try(:installation_date).blank? %></td>

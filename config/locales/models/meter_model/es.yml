@@ -9,6 +9,7 @@ es:
         check_for_meters: "Modelo de contador no puede ser eliminado mientras existan contadores vinculados."
     attributes:
       meter_model:
+        id: "Id"
         model: "Modelo"
         meter_type: "Tipo"
         meter_type_id: "Tipo"
@@ -16,3 +17,4 @@ es:
         dials: "Esferas"
         meter_brand: "Marca"
         meter_brand_id: "Marca"
+        letter_id: "Letra"

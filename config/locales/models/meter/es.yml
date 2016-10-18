@@ -10,6 +10,7 @@ es:
         check_for_subscribers: "Contador no puede ser eliminado mientras existan abonados vinculados."
     attributes:
       meter:
+        id: "Id"
         meter_code: "Código"
         meter_model: "Modelo"
         meter_model_id: "Modelo"

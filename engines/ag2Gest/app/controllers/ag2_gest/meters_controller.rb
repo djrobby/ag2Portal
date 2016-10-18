@@ -12,35 +12,26 @@ module Ag2Gest
     def index
 
       manage_filter_state
-
-      meter_model = params[:meter_models]
-      if session[:office] != '0'
-        @meters = Meter.where(office_id: session[:office]).paginate(:page => params[:page], :per_page => 10).order(sort_column + ' ' + sort_direction)
-      elsif (session[:organization] != '0')
-        @meters = Meter.where(organization_id: session[:organization]).paginate(:page => params[:page], :per_page => 10).order(sort_column + ' ' + sort_direction)
-      else
-        @meters = Meter.paginate(:page => params[:page], :per_page => 10).order(sort_column + ' ' + sort_direction)
+      @search = Meter.search do
+        if session[:office] != '0'
+          with :office_id, session[:office]
+        elsif session[:organization] != '0'
+          with :organization_id, session[:organization]
+        end
+        if !params[:meter_code].blank?
+          fulltext params[:meter_code]
+        end
+        if !params[:meter_model_id].blank?
+          with :meter_model_id, params[:meter_model_id]
+        end
+        if !params[:caliber_id].blank?
+          with :caliber_id, params[:caliber_id]
+        end
+        order_by sort_column, sort_direction
+        paginate :page => params[:page] || 1, :per_page => 10
       end
 
-      meter_models_ids = @meters.map(&:meter_model_id).uniq #Get ids MeterModel associated
-      @meter_models = MeterModel.where(id: meter_models_ids) #Get MeterModels Associated
-
-      #@offices_ids = Company.find(session[:company]).offices.map(&:id) #Devuelve un solo array con todas las offices ids
-      #@subscribers = Subscriber.where(office_id: @offices_ids).order(:subscriber_code) #Array de Subscribers
-      #@meters = Meter.where(organization_id: session[:organization])
-
-      #@search = Sunspot.search(Meter) do
-        #with(:meter_model_id, 1)
-        #with(:caliber_id, 1)
-      #end
-
-      #@search = Meter.search do
-        #if !meter_model.blank?
-          #with :meter_model_id, meter_model
-        #end
-        #order_by :sort_no, :asc
-        #paginate :page => params[:page] || 1, :per_page => per_page
-      #end
+      @meters = @search.results
 
       respond_to do |format|
         format.html # index.html.erb
@@ -84,8 +75,10 @@ module Ag2Gest
     def create
       @breadcrumb = 'create'
       @meter = Meter.new(params[:meter])
-      @meter.organization_id = session[:organization]
-      @meter.office_id = session[:office]
+      office = Office.find(params[:meter][:office_id])
+      @meter.company_id = office.company_id
+      @meter.organization_id = office.try(:company).try(:organization_id)
+      @meter.created_by = current_user.id if !current_user.nil?
       respond_to do |format|
         if @meter.save
           format.html { redirect_to @meter, notice: t('activerecord.attributes.meter.create') }
@@ -102,6 +95,7 @@ module Ag2Gest
     def update
       @breadcrumb = 'update'
       @meter = Meter.find(params[:id])
+      @meter.updated_by = current_user.id if !current_user.nil?
 
       respond_to do |format|
         if @meter.update_attributes(params[:meter])

@@ -16,6 +16,7 @@
       <td><%= @meter_brand.letter_id %></td>
     </tr>
       <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @meter_brand } %>
+      <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @meter_brand } %>
   </tbody>
 </table>
 

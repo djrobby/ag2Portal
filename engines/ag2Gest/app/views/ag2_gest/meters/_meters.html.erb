@@ -19,14 +19,13 @@
 <table class="table table-condensed table-striped">
   <thead>
     <tr>
-      <th><%= sortable "id", t('activerecord.attributes.meter.id') %></th>
+      <th><%= t('activerecord.attributes.meter.id') %></th>
       <th><%= sortable "meter_code", t('activerecord.attributes.meter.meter_code') %></th>
-      <!-- <th><%#= sortable "manufacturer_id", t('activerecord.attributes.meter.manufacturer_id') %></th> -->
       <th class="center"><%= sortable "meter_model_id", t('activerecord.attributes.meter.meter_model_id') %></th>
-      <!-- <th class="center"><%#= sortable "caliber_id", t('activerecord.attributes.meter.caliber_id') %></th> -->
-      <th class="center"><%= sortable "manufacturing_year", t('activerecord.attributes.meter.manufacturing_year') %></th>
-      <th class="center"><%= sortable "expiry_date", t('activerecord.attributes.meter.expiry_date') %></th>
-      <th class="center"><%= sortable "purchase_date", t('activerecord.attributes.meter.purchase_date') %></th>
+      <th class="center"><%= sortable "caliber_id", t('activerecord.attributes.meter.caliber_id') %></th>
+      <th class="center"><%= t('activerecord.attributes.meter.manufacturing_year') %></th>
+      <th class="center"><%= t('activerecord.attributes.meter.expiry_date') %></th>
+      <th class="center"><%= t('activerecord.attributes.meter.purchase_date') %></th>
     </tr>
   </thead>
   <tbody>
@@ -34,9 +33,8 @@
     <tr>
       <td><%= link_to meter.try(:id), ag2_gest.meter_path(meter) %></td>
       <td><%= meter.try(:meter_code) %></td>
-      <!-- <td><%#= meter.try(:manufacturer).try(:name) %></td> -->
-      <td class="center"><%= meter.try(:meter_model).try(:meter_brand) %></td>
-      <!-- <td class="center"><%#= meter.try(:caliber).try(:caliber) %></td> -->
+      <td class="center"><%= meter.try(:meter_model).try(:full_name) %></td>
+      <td class="center"><%= meter.try(:caliber).try(:caliber) %></td>
       <td class="center"><%= meter.try(:manufacturing_year) %></td>
       <td class="center"><%=l meter.try(:expiry_date) unless meter.try(:expiry_date).blank?  %></td>
       <td class="center"><%=l meter.try(:purchase_date) unless meter.try(:purchase_date).blank? %></td>

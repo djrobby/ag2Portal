@@ -12,7 +12,14 @@
 	<%= f.error_notification %>
 	<%= display_base_errors resource %>
 
-	<%= f.input :caliber, :required => true, :autofocus => true, :input_html => { :class => 'x-medium-text-field' }, :label_html => { :class => 'form-label' } %>
+  <div class="row-fluid">
+		<div class="span4">
+			<%= f.input :caliber, :required => true, :autofocus => true, :input_html => { :class => 'x-medium-text-field' }, :label_html => { :class => 'form-label' } %>
+		</div>
+		<div class="span2">
+			<%= f.input :letter_id, :input_html => { :class => 'x-large-text-field'}, :label_html => { :class => 'form-label' } %>
+		</div>
+	</div>
 
 	<%= f.button :submit, :class => 'btn-primary' %>
 <% end %>
