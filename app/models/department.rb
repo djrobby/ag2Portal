@@ -14,7 +14,7 @@ class Department < ActiveRecord::Base
 
   validates :name,          :presence => true
   validates :code,          :presence => true,
-                            :length => { :in => 3..5 },
+                            :length => { :in => 3..9 },
                             :uniqueness => { :scope => :organization_id }
   validates :organization,  :presence => true
 
@@ -36,9 +36,9 @@ class Department < ActiveRecord::Base
     _nac += " (" + self.company.name[0,40].strip + ")" if !self.company.blank?
     _nac
   end
-  
+
   private
-  
+
   def check_for_dependent_records
     # Check for workers
     if workers.count > 0
