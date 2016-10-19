@@ -52,7 +52,7 @@
       <%= f.association :ticket_category, :autofocus => true, collection: TicketCategory.all(order: 'name'), :input_html => { :class => 'mid-text-field', :id => 'fnt_category', :data => { :validation => "required", "validation-error-msg" => "#{e}" } }, :label_html => { :class => 'form-label' } %>
       <%= f.association :ticket_priority, collection: TicketPriority.user_only, :selected => 1, :input_html => { :class => 'mid-text-field', :id => 'fnt_priority', :data => { :validation => "required", "validation-error-msg" => "#{e}" } }, :label_html => { :class => 'form-label' } %>
       <%= f.input :ticket_subject, :input_html => { :class => 'x-large-text-field', :maxlength => 30, :id => 'fnt_subject', :data => { :validation => "required", "validation-error-msg" => "#{e}" } }, :label_html => { :class => 'form-label' } %>
-      <%= f.input :ticket_message, :as => :text, :input_html => { :class => 'x-large-text-field', :rows => 4, :maxlength => 254, :id => 'fnt_message', :data => { :validation => "required", "validation-error-msg" => "#{e}" } }, :label_html => { :class => 'form-label' } %>
+      <%= f.input :ticket_message, :as => :text, :input_html => { :class => 'x-large-text-field', :rows => 5, :maxlength => 999, :id => 'fnt_message', :data => { :validation => "required", "validation-error-msg" => "#{e}" } }, :label_html => { :class => 'form-label' } %>
       <%= f.input :attachment, :as => :file, :label_html => { :class => 'form-label' } %>
       <%= hidden_field_tag :referrer, "#{request.protocol}#{request.host_with_port}#{request.fullpath}" %>
     </div>

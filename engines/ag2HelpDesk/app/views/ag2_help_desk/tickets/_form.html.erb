@@ -92,8 +92,8 @@
   <label class="multi-field-label-two"> <%= f.association :ticket_category, :autofocus => true, collection: TicketCategory.all(order: 'name'), :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
   <label class="multi-field-label-two"> <%= f.association :ticket_priority, collection: TicketPriority.all(order: 'id'), :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
 </div>
-<%= f.input :ticket_subject, :input_html => { :class => 'large-text-field', :maxlength => 30 }, :label_html => { :class => 'form-label' } %>
-<%= f.input :ticket_message, :as => :text, :input_html => { :class => 'x-large-text-field', :rows => 3, :maxlength => 254 }, :label_html => { :class => 'form-label' } %>
+<%= f.input :ticket_subject, :input_html => { :class => 'x-large-text-field', :maxlength => 30 }, :label_html => { :class => 'form-label' } %>
+<%= f.input :ticket_message, :as => :text, :input_html => { :class => 'x-large-text-field', :rows => 5, :maxlength => 999 }, :label_html => { :class => 'form-label' } %>
 <div>
   <label class="multi-field-label-two"> <%= f.input :created_by, collection: User.all(order: 'email'), :input_html => { :class => 'x-large-text-field sel2' }, :label_html => { :class => 'form-label' } %> </label>
   <label class="multi-field-label-two"> <%= f.input :updated_by, collection: User.all(order: 'email'), :input_html => { :class => 'x-large-text-field sel2' }, :label_html => { :class => 'form-label' } %> </label>

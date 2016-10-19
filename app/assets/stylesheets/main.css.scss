@@ -583,6 +583,12 @@ h4 span {
 .joint {
   margin: 0;
 }
+table.fixed-wrapped {
+  table-layout: fixed;
+}
+table.fixed-wrapped td {
+  word-wrap: break-word;  
+}
 table.fixed {
   table-layout: fixed;
 }
