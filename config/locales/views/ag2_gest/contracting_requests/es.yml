@@ -2,7 +2,7 @@ es:
   ag2_gest:
     contracting_requests:
       index:
-        title: "Contrataciones"
+        title: "Solicitudes de Contratación"
         label_others: "Otros"
         label_project: "Proyecto"
         label_request_status: "Estado contratación"
@@ -12,6 +12,7 @@ es:
         btn_new: "Nueva Solicitud Servicios"
         btn_new2: "Nueva Solicitud Acometida"
         back_to_root: "Volver a ag2Gest"
+        back_to_management: "Volver a Contrataciones"
       show:
         title: "Contratación"
         btn_new: "Nueva Contratación"

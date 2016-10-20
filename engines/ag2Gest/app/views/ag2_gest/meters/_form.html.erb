@@ -57,7 +57,7 @@
   </label>
 
   <label class="multi-field-label-two">
-    <%= f.association :meter_owner, label: 'Meter owner', collection: MeterOwner.all(), :input_html => { :class => 'sel2 x-large-text-field' }, label_method: lambda { |st| st.name }, value_method: :id, :label_html => { :class => 'form-label' }%>
+    <%= f.association :meter_owner, label: t('activerecord.attributes.meter.meter_owner_id'), collection: MeterOwner.all(), :input_html => { :class => 'sel2 x-large-text-field' }, label_method: lambda { |st| st.name }, value_method: :id, :label_html => { :class => 'form-label' }%>
   </label>
 
   <br>

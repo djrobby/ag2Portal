@@ -3,7 +3,7 @@ es:
     models:
       tariff_scheme:
         zero:  Esquemas tarifarios
-        one:   Esquemas tarifario
+        one:   Esquema tarifario
         few:   Esquemas tarifarios
         other: Esquemas tarifarios
         # check_for_delivery_notes: "Cliente no puede ser eliminado mientras existan notas de entrega vinculadas."

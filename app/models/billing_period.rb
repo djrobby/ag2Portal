@@ -14,12 +14,8 @@ class BillingPeriod < ActiveRecord::Base
     Date.new(year,month)
   end
 
-  def date_to_period(date)
-    date.strftime("%Y") + format('%02d',(((date.month - 1) / billing_frequency.months) + 1))
-  end
-
   def previous_period
-    date_to_period(period_to_date - (billing_frequency.months.months || billing_frequency.days.days))
+    date_to_period(period_to_date - time_freq)
   end
 
   def year_period
@@ -31,11 +27,16 @@ class BillingPeriod < ActiveRecord::Base
   end
 
   def to_label
-    "#{period}"
+    "#{period} (#{billing_frequency.try(:name)})"
   end
 
-  def self.date_to_period(date,frequency_months)
-    date.strftime("%Y") + format('%02d',(((date.month - 1) / frequency_months) + 1))
+  private
+  def time_freq
+    billing_frequency.months == 0 ? billing_frequency.days.days : billing_frequency.months.months
+  end
+
+  def date_to_period(date)
+    date.strftime("%Y") + format('%02d',(((date.month - 1) / time_freq) + 1))
   end
 
 end

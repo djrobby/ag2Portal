@@ -21,7 +21,7 @@
     </tr>
     <tr>
       <td><%= t('activerecord.attributes.billable_item.regulation_id') %>:</td>
-      <td><%= link_to @billable_item.try(:regulation).try(:description), ag2_gest.regulation_path(@billable_item.regulation_id) %></td>
+      <td><%= link_to @billable_item.try(:regulation).try(:description), ag2_gest.regulation_path(@billable_item.regulation_id) if @billable_item.regulation %></td>
       <td><%= t('activerecord.attributes.billable_item.tariffs_by_caliber') %>:</td>
       <td><% if @billable_item.try(:tariffs_by_caliber) %> <i class="icon-thumbs-up"></i> <% else %> <i class="icon-thumbs-down"></i> <% end %></td>
     </tr>

@@ -2,22 +2,23 @@ es:
   ag2_gest:
     contracting_request_statuses:
       index:
-        title: "Estados de solicitud"
-        btn_new: "Nuevo Estado de solicitud"
+        title: "Estados de Solicitud"
+        btn_new: "Nuevo Estado de Solicitud"
         back_to_root: "Volver a ag2Gest"
+        back_to_management: "Volver a Contrataciones"
       show:
-        title: "Estado de solicitud"
-        btn_edit: "Editar Estado de solicitud"
-        btn_delete: "Borrar Estado de solicitud"
-        return_to: "Volver a Estado de solicitud"
+        title: "Estado de Solicitud"
+        btn_edit: "Editar Estado de Solicitud"
+        btn_delete: "Borrar Estado de Solicitud"
+        return_to: "Volver a Estado de Solicitud"
       edit:
         show: 'Mostrar'
         back: 'Atrás'
-        title: "Editar Estado de solicitud"
-        btn_show: "Ver Estado de solicitud"
+        title: "Editar Estado de Solicitud"
+        btn_show: "Ver Estado de Solicitud"
       new:
-        title: "Nuevo Estado de solicitud"
-      back_to_main_page: "Volver a Estados de solicitud"
+        title: "Nuevo Estado de Solicitud"
+      back_to_main_page: "Volver a Estados de Solicitud"
       # generate_code_btn: "Código de Emisor de la factura"
       # personal_info: "Información del Cliente"
       # commercial_info: "Información Contable y Comercial"

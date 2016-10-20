@@ -618,6 +618,67 @@ end
     code
   end
 
+  # Bill no
+  def bill_next_no(project)
+    year = Time.new.year
+    code = ''
+    # Builds code, if possible
+    project_code = Project.find(project).project_code rescue '$'
+    if project_code == '$'
+      code = '$err'
+    else
+      project = project_code.rjust(12, '0')
+      year = year.to_s if year.is_a? Fixnum
+      year = year.rjust(4, '0')
+      last_no = Bill.where("bill_no LIKE ?", "#{project}#{year}%").order(:bill_no).maximum(:bill_no)
+      if last_no.nil?
+        code = project + year + '000001'
+      else
+        last_no = last_no[16..21].to_i + 1
+        code = project + year + last_no.to_s.rjust(6, '0')
+      end
+    end
+    code
+  end
+
+  # Invoice no
+  def invoice_next_no(company)
+    year = Time.new.year
+    code = ''
+    # Builds code, if possible
+    company_code = Company.find(company).invoice_code rescue '$'
+    if company_code == '$'
+      code = '$err'
+    else
+      company = company_code.rjust(4, '0')
+      year = year.to_s if year.is_a? Fixnum
+      year = year.rjust(4, '0')
+      last_no = Invoice.where("invoice_no LIKE ?", "#{company}#{year}%").order(:invoice_no).maximum(:invoice_no)
+      if last_no.nil?
+        code = company + year + '000001'
+      else
+        last_no = last_no[8..14].to_i + 1
+        code = company + year + last_no.to_s.rjust(6, '0')
+      end
+    end
+    code
+  end
+
+  def sub_next_no(organization)
+    code = ''
+    organization = organization.to_s if organization.is_a? Fixnum
+    organization = organization.rjust(4, '0')
+    last_no = Subscriber.where("subscriber_code LIKE ?", "#{organization}%").order(:subscriber_code).maximum(:subscriber_code)
+    if last_no.nil?
+      code = organization + '0000001'
+    else
+      last_no = last_no[4..10].to_i + 1
+      code = organization +  last_no.to_s.rjust(7, '0')
+    end
+    code
+  end
+
+
   #
   # Privates
   #

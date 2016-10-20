@@ -64,7 +64,9 @@ module Ag2Gest
           province_id: pre_bill.province_id,
           region_id: pre_bill.region_id,
           country_id: pre_bill.country_id,
-          created_by: (current_user.id if current_user)
+          created_by: (current_user.id if current_user),
+          reading_1_id: pre_bill.reading_1_id,
+          reading_2_id: pre_bill.reading_2_id
         )
         pre_bill.update_attributes(bill_id: bill.id, confirmation_date: params[:pre_bill][:confirmation_date])
         pre_bill.pre_invoices.each do |pre_invoice|
@@ -78,8 +80,6 @@ module Ag2Gest
             payday_limit: nil,
             invoice_operation_id: InvoiceOperation::INVOICE,
             billing_period_id: pre_invoice.billing_period_id,
-            reading_1_id: nil, #¿¿¿???
-            reading_2_id: pre_invoice.reading_2_id,
             consumption: pre_invoice.consumption,
             consumption_real: pre_invoice.consumption_real,
             consumption_estimated: pre_invoice.consumption_estimated,
@@ -88,7 +88,11 @@ module Ag2Gest
             discount_pct: pre_invoice.discount_pct,
             exemption: pre_invoice.exemption,
             charge_account_id: pre_invoice.charge_account_id,
-            created_by: (current_user.id if current_user)
+            created_by: (current_user.id if current_user),
+            reading_1_date: pre_invoice.reading_1_date,
+            reading_2_date: pre_invoice.reading_2_date,
+            reading_1_index: pre_invoice.reading_1_index,
+            reading_2_index: pre_invoice.reading_2_index
           )
           pre_invoice.update_attributes(invoice_id: invoice.id, confirmation_date: params[:pre_bill][:confirmation_date])
           pre_invoice.pre_invoice_items.each do |pre_invoice_item|
@@ -126,7 +130,7 @@ module Ag2Gest
       #   readings = Reading.where(subscriber_id: params[:bill][:subscribers].reject(&:empty?)).where(billing_period_id: params[:bill][:period])
       # end
 
-      subscribers_label = subscribers.map{|s| [s.id, "#{s.full_name_and_code} #{s.address_1}"]}
+      subscribers_label = subscribers.map{|s| [s.id, "#{s.to_label} #{s.address_1}"]}
 
       response_hash = { subscribers: subscribers_label}
       respond_to do |format|
@@ -140,7 +144,6 @@ module Ag2Gest
       billing_period_id = params[:subscribers][:period]
       subscriber_ids = params[:subscribers][:ids].reject(&:empty?)
       @readings = Reading.where(billing_period_id: billing_period_id).where(subscriber_id: subscriber_ids).where('reading_type_id NOT IN (?)',ReadingType::INSTALACION)
-
     end
 
     def index

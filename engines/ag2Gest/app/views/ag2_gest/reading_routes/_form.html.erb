@@ -14,15 +14,18 @@
 
   <div class="row-fluid">
 
-    <%= f.association :project, label: t('activerecord.attributes.reading_route.project_id'),:required => true, collection: @projects, :input_html => { :class => 'sel2 x-large-text-field' }, label_method: lambda { |st| st.name }, value_method: :id, :label_html => { :class => 'form-label' }, wrapper_html: {class: "span4"} %>
+    <!-- <div class="span3">
+      <%#= f.input :route_code, :required => true, :autofocus => true, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %>
+    </div> -->
 
     <div class="span4">
-      <%= f.input :route_code, :required => true, :autofocus => true, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %>
+      <%= f.input :name, :autofocus => true, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %>
     </div>
 
-    <div class="span4">
-      <%= f.input :name, :required => true, :autofocus => true, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %>
-    </div>
+    <%= f.association :project, label: t('activerecord.attributes.reading_route.project_id'), collection: @projects, :input_html => { :class => 'sel2 x-large-text-field' }, label_method: lambda { |st| st.name }, value_method: :id, :label_html => { :class => 'form-label' }, wrapper_html: {class: "span4"} %>
+
+    <%= f.association :office, label: t('activerecord.attributes.reading_route.office_id'), collection: @offices, :input_html => { :class => 'sel2 x-large-text-field' }, label_method: lambda { |st| st.name }, value_method: :id, :label_html => { :class => 'form-label' }, wrapper_html: {class: "span4"} %>
+
 
   </div>
   <%= f.button :submit, :class => 'btn-primary' %>

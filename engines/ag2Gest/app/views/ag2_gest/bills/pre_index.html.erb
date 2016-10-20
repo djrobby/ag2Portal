@@ -28,33 +28,33 @@
       <div class="well sidebar-nav">
         <!-- Buttons -->
         <%= link_to "Generar PreFacturas", new_bill_path, class: "btn btn-block btn-primary" %>
-      	<%= link_to "Confirmar PreFacturas", bills_path, class: "btn btn-block btn-primary" %>
+        <%= link_to "Confirmar PreFacturas", bills_path, class: "btn btn-block btn-primary" %>
         <br /><br />
-        <%= link_to t("ag2_gest.pre_bills.index.back_to_root"), ag2_gest.root_path %>
+        <%= link_to "Volver ag2Gest", ag2_gest.root_path %>
       </div><!-- /.sidebar-nav -->
     </div><!-- /.span3 -->
 
     <div class="span9" id="div_table">
       <table class="table table-condensed table-striped shrinked">
         <thead>
-			    <tr>
+          <tr>
             <th>Grupo nº</th>
             <th>Fecha</th>
             <th>Nº prefacturas</th>
             <th>Total</th>
-			    </tr>
-			  </thead>
-			  <tbody>
-			    <% @pre_bills.each do |pre_bill| %>
-			    	<tr>
+          </tr>
+        </thead>
+        <tbody>
+          <% @pre_bills.each do |pre_bill| %>
+            <tr>
               <td><%= link_to pre_bill[1].first.pre_group_no, bills_path(:bills => pre_bill[1].first.pre_group_no) %></td>
               <td><%=l pre_bill[1].first.bill_date %></td>
               <td><%= pre_bill[1].count %></td>
               <td><%= pre_bill[1].sum{|b| b.total} %></td>
-			    	</tr>
-			    <% end %>
-			  </tbody>
-			</table>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
     </div><!-- /.span9 -->
 
   </div><!-- /.row-fluid -->

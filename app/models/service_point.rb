@@ -20,9 +20,10 @@ class ServicePoint < ActiveRecord::Base
 
   def to_full_label
     if street_directory.nil?
-      "#{street_type.street_type_code} #{street_name}, #{street_number} #{floor} #{floor_office}, (#{town.name})"
+      "No calle asignada (id:#{id})"
     else
       "#{street_directory.street_type.street_type_code} #{street_directory.street_name}, #{street_number} #{floor} #{floor_office}, (#{street_directory.town.name})"
     end
   end
 end
+

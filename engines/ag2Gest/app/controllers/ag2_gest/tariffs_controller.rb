@@ -2,6 +2,20 @@ require_dependency "ag2_gest/application_controller"
 
 module Ag2Gest
   class TariffsController < ApplicationController
+    before_filter :authenticate_user!
+    load_and_authorize_resource
+
+    # GET /tariffs
+    # GET /tariffs.json
+    def index
+      @tariffs = Tariff.all
+
+      respond_to do |format|
+        format.html # index.html.erb
+        format.json { render json: @tariffs }
+        format.js
+      end
+    end
 
     # PUT /tariffs/1
     # PUT /tariffs/1.json

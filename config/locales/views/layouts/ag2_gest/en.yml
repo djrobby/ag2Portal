@@ -7,3 +7,21 @@ en:
       payment_methods:
         items: "Payment methods"
         item: "Payment method"
+      subscribers:
+        items: "Subscribers"
+        item: "Subscriber"
+      contracting_requests:
+        items: "Contracting requests"
+        item: "Request"
+      contracting_request_types:
+        items: "Contracting request types"
+        item: "Type"
+      contracting_request_statuses:
+        items: "Contracting request statuses"
+        item: "Status"
+      contracting_request_document_types:
+        items: "Request document types"
+        item: "Type"
+      tariff_schemes:
+        items: "Tariff schemes"
+        item: "Scheme"

@@ -3,15 +3,16 @@
 <h3><%=@reading_type.try(:name) %></h3>
 <table class="table">
   <tbody>
-    
+
     <tr>
       <td><%= t('activerecord.attributes.reading_type.id') %>:</td>
       <td><%= @reading_type.try(:id) %></td>
       <td><%= t('activerecord.attributes.reading_type.name') %>:</td>
       <td><%= @reading_type.try(:name) %></td>
     </tr>
-    
+
     <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @reading_type } %>
+    <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @reading_type } %>
   </tbody>
 </table>
 

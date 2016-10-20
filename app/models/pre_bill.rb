@@ -10,19 +10,22 @@ class PreBill < ActiveRecord::Base
   belongs_to :region
   belongs_to :country
   belongs_to :bill
+  belongs_to :reading_1, :class_name => 'Reading' #periodo anterior
+  belongs_to :reading_2, :class_name => 'Reading' #año anterior
 
   attr_accessible :bill_date, :bill_no, :first_name, :last_name, :company, :fiscal_id,
                   :project_id, :invoice_status_id, :subscriber_id, :client_id,
                   :street_type_id, :zipcode_id, :town_id, :province_id, :region_id, :country_id,
                   :bill_id, :confirmation_date,
-                  :pre_group_no, :street_name, :street_number, :building, :floor, :floor_office, :created_by, :updated_by
+                  :pre_group_no, :street_name, :street_number, :building, :floor, :floor_office, :created_by, :updated_by,
+                  :reading_1_id, :reading_2_id
 
   has_many :pre_invoices
   has_one :water_supply_contract
   has_many :client_payments
 
   def reading
-    pre_invoices.try(:first).try(:reading_2)
+    reading_2
   end
 
   def bill_type
@@ -63,4 +66,3 @@ class PreBill < ActiveRecord::Base
   end
 
 end
-

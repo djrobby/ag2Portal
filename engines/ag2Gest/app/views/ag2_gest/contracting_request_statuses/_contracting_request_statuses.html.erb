@@ -42,4 +42,4 @@
 
 <%= render :partial => '/layouts/pagination', :locals => { :ivar => @contracting_request_statuses } %>
 <%= render :partial => '/layouts/crud/new', :locals => { :model => ContractingRequestStatus, :path => new_contracting_request_status_path, :txt => t("ag2_gest.contracting_request_statuses.index.btn_new") } %>
-<%= link_to t("ag2_gest.contracting_request_statuses.index.back_to_root"), ag2_gest.root_path %>
+<%= link_to t("ag2_gest.contracting_request_statuses.index.back_to_management"), ag2_gest.contracting_management_path %>

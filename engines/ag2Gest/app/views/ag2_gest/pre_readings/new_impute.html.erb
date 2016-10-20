@@ -1,7 +1,7 @@
 <script type="text/javascript">
   $(document).ready(function() {
-  	// Select2
-  	$('select.sel2').select2({
+    // Select2
+    $('select.sel2').select2({
       formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
       allowClear: true
     });
@@ -20,7 +20,7 @@
     <a href="<%= ag2_gest.root_path %>">ag2Gest</a><span class="divider">></span>
   </li>
   <li>
-  	<a href="<%= ag2_gest.pre_readings_path %>">Pre-lecturas</a><span class="divider">></span>
+    <a href="<%= ag2_gest.pre_readings_path %>">Pre-lecturas</a><span class="divider">></span>
   </li>
   <li>Imputar</li>
 </ul>

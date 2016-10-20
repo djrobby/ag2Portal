@@ -7,6 +7,10 @@ class ContractingRequestDocumentType < ActiveRecord::Base
 
   before_validation :fields_to_uppercase
 
+  def to_label
+    "#{name}"
+  end
+  
   def fields_to_uppercase
     if !self.name.blank?
       self[:name].replace(self[:name].mb_chars.upcase!.to_s)

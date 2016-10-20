@@ -110,9 +110,10 @@ class ContractingRequest < ActiveRecord::Base
 
   # Searchable attributes
   searchable do
+    integer :id
+    string :request_no
     text :request_no
     text :client_info
-    string :request_no
     string :contracting_request_type_id
     string :project_id
     string :contracting_request_status_id
@@ -169,12 +170,10 @@ class ContractingRequest < ActiveRecord::Base
       fiscal_id: entity.fiscal_id,
       floor: client_floor,
       floor_office: client_floor_office,
-      # name: entity.company.nil? ? "#{entity.last_name} #{entity.first_name} ": entity.company,
       first_name: entity.first_name,
       last_name: entity.last_name,
       company: entity.company,
       phone: client_phone,
-      # remarks:,
       street_name: client_street_name,
       street_number: client_street_number,
       organization_id: project.organization.id,
@@ -185,15 +184,10 @@ class ContractingRequest < ActiveRecord::Base
       province_id: client_province_id,
       region_id: client_region_id,
       country_id: client_country_id,
-      # created_by: ,
-      # updated_by:,
-      # is_contact:,
-      # shared_contact_id:,
-      # ledger_account_id:,
+      created_by: entity.created_by,
       payment_method_id: 1
     )
-    # water_supply_contract.update_attributes(client_id: client.id) if water_supply_contract
-    ClientBankAccount.create(client_id: client.id, iban: iban, country_id: country_id, iban_dc: iban_dc, bank_id: bank_id, bank_office_id: bank_office_id, ccc_dc: ccc_dc, account_no: account_no, folder_fiscal_id: client.fiscal_id, folder_name: "contratacion de servicios") if data_account?
+    ClientBankAccount.create(client_id: client.id, country_code: country_id, iban_dc: iban_dc, cb: bank_id, cs: bank_office_id, ccc_dc: ccc_dc, account_no: account_no, fiscal_id: client.fiscal_id, name: "contratacion de servicios") if data_account?
   end
 
   def to_subscriber
@@ -262,7 +256,6 @@ class ContractingRequest < ActiveRecord::Base
                               remarks: old_subscriber.water_supply_contract.remarks,
                               caliber_id: old_subscriber.water_supply_contract.caliber_id
                             )
-    water_supply_contract.contracting_request_id = id
     water_supply_contract.save
 
     #

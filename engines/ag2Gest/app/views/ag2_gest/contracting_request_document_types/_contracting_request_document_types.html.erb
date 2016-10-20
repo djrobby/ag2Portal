@@ -40,5 +40,5 @@
 </table>
 
 <%= render :partial => '/layouts/pagination', :locals => { :ivar => @contracting_request_document_types } %>
-<%= render :partial => '/layouts/crud/new', :locals => { :model => ContractingRequestDocumentType, :path => new_contracting_request_document_type_path, :txt => "Nuevo" } %>
-<%= link_to "Volver Ag2gest", ag2_gest.root_path %>
+<%= render :partial => '/layouts/crud/new', :locals => { :model => ContractingRequestDocumentType, :path => new_contracting_request_document_type_path, :txt => t("ag2_gest.contracting_request_document_types.index.btn_new") } %>
+<%= link_to t("ag2_gest.contracting_requests.index.back_to_management"), ag2_gest.contracting_management_path %>

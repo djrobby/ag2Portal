@@ -10,7 +10,7 @@
     <tr>
       <td><%= t('activerecord.attributes.meter.meter_code') %>:</td>
       <td><%= @meter.try(:meter_code) %></td>
-      <td><%= t('activerecord.attributes.meter.manufacturer_id') %>:</td>
+      <td><%= t('activerecord.attributes.meter.meter_owner_id') %>:</td>
       <td><%= @meter.try(:meter_owner).try(:name) %></td>
     </tr>
     <tr>

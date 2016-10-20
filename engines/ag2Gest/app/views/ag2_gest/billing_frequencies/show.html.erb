@@ -15,8 +15,14 @@
       <td><%= t('activerecord.attributes.billing_frequency.months') %>:</td>
       <td><%= @billing_frequency.try(:months) %></td>
     </tr>
+    <tr>
+      <td><%= t('activerecord.attributes.billing_frequency.fix_measure_id') %>:</td>
+      <td><%= @billing_frequency.try(:fix_measure).try(:description) %></td>
+      <td><%= t('activerecord.attributes.billing_frequency.var_measure_id') %>:</td>
+      <td><%= @billing_frequency.try(:var_measure).try(:description) %></td>
+    </tr>
       <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @billing_frequency } %>
-      <%#= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @billing_frequency } %>
+      <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @billing_frequency } %>
   </tbody>
 </table>
 

@@ -35,7 +35,7 @@ class WaterSupplyContract < ActiveRecord::Base
                         project_id: contracting_request.project_id,
                         invoice_status_id: InvoiceStatus::PENDING,
                         bill_date: Date.today,
-                        subscriber_id: subscriber_id,
+                        subscriber_id: subscriber_id, #nil
                         client_id: client_id,
                         last_name: client.last_name,
                         first_name: client.first_name,
@@ -67,8 +67,6 @@ class WaterSupplyContract < ActiveRecord::Base
                                 payday_limit: nil,
                                 invoice_operation_id: InvoiceOperation::INVOICE,
                                 billing_period_id: nil,
-                                reading_1_id: nil,
-                                reading_2_id: nil,
                                 consumption: nil,
                                 consumption_real: nil,
                                 consumption_estimated: nil,
@@ -77,7 +75,7 @@ class WaterSupplyContract < ActiveRecord::Base
                                 discount_pct: 0.0,
                                 exemption: 0.0,
                                 original_invoice_id: nil,
-                                charge_account_id: client.client_bank_accounts.active.first.id,
+                                charge_account_id: client.client_bank_accounts.active.first.try(:id),
                                 )
         tariffs_biller[1].each do |tariff|
           InvoiceItem.create( invoice_id: invoice.id,
@@ -91,7 +89,7 @@ class WaterSupplyContract < ActiveRecord::Base
                               discount: 0.0,
                               product_id: nil,
                               subcode: tariff.try(:billable_item).try(:billable_concept).try(:code),
-                              measure_id: Measure::M3)
+                              measure_id: tariff.billing_frequency.fix_measure_id)
       end
     end
     self.bill_id = bill.id

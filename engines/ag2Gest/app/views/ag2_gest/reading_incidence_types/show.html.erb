@@ -18,10 +18,11 @@
           <i class="icon-thumbs-down"></i>
         <% end %>
       </td>
-    </tr> 
+    </tr>
     <tr>
     </tr>
     <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @reading_incidence_type } %>
+    <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @reading_incidence_type } %>
   </tbody>
 </table>
 

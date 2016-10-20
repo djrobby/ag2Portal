@@ -16,6 +16,6 @@
 <%= render partial: '/layouts/crud/update_delete_new', locals:
 { model: ServicePointLocation, update_path: edit_service_point_location_path(@service_point_location), update_txt: t('.btn_edit'),
 delete_path: @service_point_location, delete_txt: t('.btn_delete'), msg: t("activerecord.models.service_point_location.one"), :txt => @service_point_location.id,
-new_path: new_caliber_path, new_txt: t('ag2_gest.calibers.index.btn_new') } %>
+new_path: new_service_point_location_path, new_txt: t('ag2_gest.service_point_locations.index.btn_new') } %>
 
 <%= link_to I18n.t('ag2_gest.service_point_locations.back_to_main_page'), service_point_locations_path %>

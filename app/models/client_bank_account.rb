@@ -5,8 +5,16 @@ class ClientBankAccount < ActiveRecord::Base
   belongs_to :country
   belongs_to :bank
   belongs_to :bank_office
-  attr_accessible :account_no, :ccc_dc, :ending_at, :holder_fiscal_id, :holder_name, :iban_dc, :starting_at,
-                  :client_id, :subscriber_id, :bank_account_class_id, :country_id, :bank_id, :bank_office_id
+  attr_accessible :client_id, :subscriber_id, :bank_account_class_id, :account_no, :cb, :ccc_dc, :country_code, :cs,
+                  :ending_at, :fiscal_id, :iban, :iban_dc, :name, :starting_at
+
+  scope :active, -> { where("ending_at IS NULL") }
+
+  alias_attribute :cb, :bank_id
+  alias_attribute :cs, :bank_office_id
+  alias_attribute :fiscal_id, :holder_fiscal_id
+  alias_attribute :name, :holder_name
+  alias_attribute :country_code, :country_id
 
   has_paper_trail
 
@@ -24,7 +32,7 @@ class ClientBankAccount < ActiveRecord::Base
   validates :account_no,          :presence => true,
                                   :length => { :is => 10 },
                                   :format => { with: /\A\d+\Z/, message: :code_invalid },
-                                  :uniqueness => { :scope => [:supplier_id, :bank_account_class_id, :country_id,
+                                  :uniqueness => { :scope => [:bank_account_class_id, :country_id,
                                                               :iban_dc, :bank_id, :bank_office_id, :ccc_dc] }
   validates :holder_fiscal_id,    :presence => true,
                                   :length => { :minimum => 8 }

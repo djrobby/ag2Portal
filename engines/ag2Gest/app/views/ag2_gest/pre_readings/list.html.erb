@@ -2,45 +2,34 @@
 <% content_for :icon, "/assets/icon/TableA.png" %>
 <% content_for :alt, "ag2PreReadings" %>
 
-<ul class="breadcrumb">
-  <li>
-    <a href="<%= main_app.root_path %>"><i class="icon-home"></i></a><span class="divider">></span>
-  </li>
-  <li>
-    <a href="<%= ag2_gest.root_path %>">ag2Gest</a><span class="divider">></span>
-  </li>
-  <li>
-    <a href="<%= ag2_gest.pre_readings_path %>">Pre-lecturas</a><span class="divider">></span>
-  </li>
-  <li>
-     Generar lecturas
-  </li>
-</ul>
+<%= render '/layouts/ag2_gest/prereadingbreadcrumb' %>
 
-<h3>Generar lecturas</h3>
+<h3>Prelecturas Generadas</h3>
+<h5>Periodo: <%= BillingPeriod.find(@period).try(:period) %></h5>
+<h5>Rutas: <%= ReadingRoute.where(id: @routes).map(&:name).join(",") %></h5>
 <div class="container-fluid">
   <div class="row-fluid">
-		<div class="span12" id="div_table">
-			<table class="table table-condensed table-striped shrinked stu">
-			  <thead>
-			    <tr>
-			      <th>Ruta</th>
-			      <th>Nº ruta</th>
+    <div class="span12" id="div_table">
+      <table class="table table-condensed table-striped shrinked stu">
+        <thead>
+          <tr>
+            <th>Ruta</th>
+            <th>Nº ruta</th>
             <th>Abonado</th>
             <th>Dirección suministro</th>
             <th>Contador</th>
             <th>Periodo</th>
-			      <th>Lec. año ant.</th>
-			      <th>Lec. per. ant.</th>
-			    </tr>
-			  </thead>
-			  <tbody>
-			    <% @pre_readings.each_with_index do |pre_reading,index| %>
-			    	<tr>
-  			    		<td>
+            <th>Lec. año ant.</th>
+            <th>Lec. per. ant.</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @pre_readings.each_with_index do |pre_reading,index| %>
+            <tr>
+                <td>
                   <%= pre_reading.try(:reading_route).try(:route_code) %>
                 </td>
-  				      <td>
+                <td>
                   <%= pre_reading.reading_sequence %>
                 </td>
                 <td>
@@ -49,23 +38,23 @@
                 <td>
                   <%= pre_reading.try(:subscriber).try(:street_directory).try(:street_name) %>
                 </td>
-  				      <td>
+                <td>
                   <%= pre_reading.try(:meter).try(:meter_code) %>
                 </td>
                 <td>
                   <%= pre_reading.try(:billing_period).try(:period) %>
                 </td>
-  				      <td>
+                <td>
                   <%= "#{pre_reading.reading_2.try(:billing_period).try(:period)} #{pre_reading.reading_index_2}"  %>
                 </td>
-  				      <td>
+                <td>
                   <%= "#{pre_reading.reading_1.try(:billing_period).try(:period)} #{pre_reading.reading_index_1}" %>
                 </td>
             </tr>
-			    <% end %>
-			  </tbody>
-			</table>
-		</div>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
     <div class="row">
       <%= link_to "Imprimir", to_pdf_pre_readings_path(:format => :pdf, prereading: {reading_routes: @routes, period: @period, project: @project }), class: "btn btn-warning", target: "_blank" %>
       <%= link_to "Enviar tpl", to_pdf_pre_readings_path(:format => :pdf, prereading: {reading_routes: @routes, period: @period, project: @project }), class: "btn btn-warning", target: "_blank" %>

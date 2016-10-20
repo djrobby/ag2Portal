@@ -2,21 +2,22 @@ es:
   ag2_gest:
     contracting_request_types:
       index:
-        title: "Tipos de solicitud"
-        btn_new: "Nuevo Tipo de solicitud"
+        title: "Tipos de Solicitud"
+        btn_new: "Nuevo Tipo de Solicitud"
         back_to_root: "Volver a ag2Gest"
+        back_to_management: "Volver a Contrataciones"
       show:
-        title: "Tipo de solicitud"
-        btn_edit: "Editar Tipo de solicitud"
-        btn_delete: "Borrar Tipo de solicitud"
-        return_to: "Volver a Tipo de solicitud"
+        title: "Tipo de Solicitud"
+        btn_edit: "Editar Tipo de Solicitud"
+        btn_delete: "Borrar Tipo de Solicitud"
+        return_to: "Volver a Tipo de Solicitud"
       edit:
         show: "Mostrar"
         back: "Atrás"
-        title: "Editar Tipo de solicitud"
-        btn_show: "Ver Tipo de solicitud"
+        title: "Editar Tipo de Solicitud"
+        btn_show: "Ver Tipo de Solicitud"
       new:
-        title: "Nuevo Tipo de solicitud"
+        title: "Nuevo Tipo de Solicitud"
       back_to_main_page: "Volver a Tipos de solicitudes"
       # generate_code_btn: "Código de Emisor de la factura"
       # personal_info: "Información del Cliente"

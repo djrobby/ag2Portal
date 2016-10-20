@@ -5,15 +5,19 @@
   <tbody>
     <tr>
       <td><%= t('activerecord.attributes.billing_period.id') %>:</td>
-      <td><%= @billing_period.try(:id) %></td>
-      <td><%= t('activerecord.attributes.billing_period.project_id') %>:</td>
-      <td><%= link_to @billing_period.try(:project).try(:name), ag2_tech.project_path(@billing_period.project_id) %></td>
+      <td colspan="3"><%= @billing_period.try(:id) %></td>
+    </tr>
+    <tr>
+      <td><%= t('activerecord.attributes.billing_period.description') %>:</td>
+      <td><%= @billing_period.try(:description) %></td>
+      <td><%= t('activerecord.attributes.billing_period.period') %>:</td>
+      <td><%= @billing_period.try(:period) %></td>
     </tr>
     <tr>
       <td><%= t('activerecord.attributes.billing_period.billing_frequency_id') %>:</td>
       <td><%= link_to @billing_period.try(:billing_frequency).try(:name), ag2_gest.billing_frequency_path(@billing_period.billing_frequency_id) %></td>
-      <td><%= t('activerecord.attributes.billing_period.description') %>:</td>
-      <td><%= @billing_period.try(:description) %></td>
+      <td><%= t('activerecord.attributes.billing_period.project_id') %>:</td>
+      <td><%= link_to @billing_period.try(:project).try(:name), ag2_tech.project_path(@billing_period.project_id) %></td>
     </tr>
     <tr>
       <td><%= t('activerecord.attributes.billing_period.reading_starting_date') %>:</td>
@@ -40,7 +44,7 @@
       <td><%=l @billing_period.try(:charging_ending_date) unless @billing_period.try(:charging_ending_date).blank? %></td>
     </tr>
       <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @billing_period } %>
-      <%#= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @billing_period } %>
+      <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @billing_period } %>
   </tbody>
 </table>
 

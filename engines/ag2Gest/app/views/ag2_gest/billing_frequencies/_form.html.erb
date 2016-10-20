@@ -13,16 +13,23 @@
 	<%= display_base_errors resource %>
 
 	<div class="row-fluid">
-	  <div class="span6">
+	  <div class="span4">
 		<%= f.input :name, :required => true, :autofocus => true, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %>
 		</div>
-		
+
 		<div class="span2">
-			<%= f.input :days, :required => true, :input_html => { min: 0, max: 99, :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %>
+			<%= f.input :days, :input_html => { min: 0, max: 99, :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %>
 		</div>
 		<div class="span2">
-			<%= f.input :months, :required => true, :autofocus => false, :input_html => { min: 0, max: 99, :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %>
+			<%= f.input :months, :autofocus => false, :input_html => { min: 0, max: 99, :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %>
 		</div>
+
+		<div class="span2">
+      <%= f.association :fix_measure, label: t('activerecord.attributes.billing_frequency.fix_measure_id'), collection: Measure.all(), :input_html => { :class => 'sel2 x-large-text-field' }, :label_html => { :class => 'form-label' }%>
+    </div>
+		<div class="span2">
+      <%= f.association :var_measure, label: t('activerecord.attributes.billing_frequency.var_measure_id'), collection: Measure.all(), :input_html => { :class => 'sel2 x-large-text-field' }, :label_html => { :class => 'form-label' }%>
+    </div>
 	</div>
 	<%= f.button :submit, :class => 'btn-primary' %>
 <% end %>

@@ -1,7 +1,7 @@
 en:
   activerecord:
     models:
-      contracting_request:
+      contracting_request_document_type:
         zero:  Contracting Requests
         one:   Contracting Request
         few:   Contracting Requests
@@ -11,7 +11,7 @@ en:
         check_for_client_invoices: "Client cannot be destroyed while linked C invoices exist."
         check_for_client_charges: "Client cannot be destroyed while linked charges exist."
     attributes:
-      contracting_request:
+      contracting_request_document_type:
         client_building:
         client_cellular:
         client_country_id:

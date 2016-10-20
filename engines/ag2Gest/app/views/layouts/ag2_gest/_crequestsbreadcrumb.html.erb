@@ -1,6 +1,6 @@
-<% content_for :title, "aGestiona2 | ag2Requests" %>
-<% content_for :icon, "/assets/icon/TableA.png" %>
-<% content_for :alt, "ag2Requests" %>
+<% content_for :title, "aGestiona2 | ag2ContractingRequests" %>
+<% content_for :icon, "/assets/icon/ag2ContractingRequest.png" %>
+<% content_for :alt, "ag2ContractingRequests" %>
 
 
 <!-- Breadcrumb -->
@@ -10,6 +10,9 @@
   </li>
   <li>
     <a href="<%= ag2_gest.root_path %>">ag2Gest</a><span class="divider">></span>
+  </li>
+  <li>
+    <a href="<%= ag2_gest.contracting_management_path %>"><%= t "ag2_gest.home.index.contracting_management" %></a><span class="divider">></span>
   </li>
   <% if @contracting_requests %>
   <li>

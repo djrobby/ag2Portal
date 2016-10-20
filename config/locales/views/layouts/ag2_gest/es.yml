@@ -7,3 +7,21 @@ es:
       payment_methods:
         items: "Formas de pago"
         item: "Forma de pago"
+      subscribers:
+        items: "Abonados"
+        item: "Abonado"
+      contracting_requests:
+        items: "Solicitudes de contratación"
+        item: "Solicitud"
+      contracting_request_types:
+        items: "Tipos de solicitud"
+        item: "Tipo"
+      contracting_request_statuses:
+        items: "Estados de solicitud"
+        item: "Estado"
+      contracting_request_document_types:
+        items: "Tipos de documentación"
+        item: "Tipo"
+      tariff_schemes:
+        items: "Esquemas tarifarios"
+        item: "Esquema"

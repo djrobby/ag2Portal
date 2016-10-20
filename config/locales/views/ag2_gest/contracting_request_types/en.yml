@@ -2,11 +2,12 @@ en:
   ag2_gest:
     contracting_request_types:
       index:
-        title: "Contracting request type"
+        title: "Request Types"
         btn_new: "New contracting request type"
         back_to_root: "Back to ag2Gest"
+        back_to_management: "Back to Contracting"
       show:
-        title: "Billable item"
+        title: "Request Type"
         btn_edit: "Edit Billable item"
         btn_delete: "Delete Billable item"
         return_to: "Back to Billable item"

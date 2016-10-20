@@ -7,8 +7,6 @@ class Invoice < ActiveRecord::Base
   belongs_to :biller, :class_name => 'Company'
   belongs_to :original_invoice, :class_name => 'Invoice'
   belongs_to :billing_period
-  belongs_to :reading_1, :class_name => 'Reading' #lectura base de cálculo de consumo
-  belongs_to :reading_2, :class_name => 'Reading' #lectura del periodo facturado
   belongs_to :charge_account
 
   alias_attribute :company, :biller
@@ -16,8 +14,8 @@ class Invoice < ActiveRecord::Base
   attr_accessible :invoice_no, :invoice_date, :consumption, :consumption_real, :consumption_estimated, :consumption_other,
                   :discount_pct, :exemption, :payday_limit,
                   :bill_id, :invoice_status_id, :invoice_type_id, :tariff_scheme_id, :invoice_operation_id,
-                  :biller_id, :original_invoice_id, :billing_period_id, :reading_1_id, :reading_2_id, :charge_account_id,
-                  :created_by, :updated_by
+                  :biller_id, :original_invoice_id, :billing_period_id, :charge_account_id,
+                  :created_by, :updated_by, :reading_1_date, :reading_2_date, :reading_1_index, :reading_2_index
 
   has_many :invoice_items, dependent: :destroy
   has_many :client_payments
@@ -27,20 +25,20 @@ class Invoice < ActiveRecord::Base
   #
   # Calculated fields
   #
-  def reading_1_date
-    reading_1.reading_date
+  def reading_1
+    bill.reading_1
   end
 
-  def reading_2_date
-    reading_2.reading_date
+  def reading_2
+    bill.reading_2
   end
 
-  def reading_1_index
-    reading_1.reading_index
+  def reading_1_id
+    bill.try(:reading_1).try(:id)
   end
 
-  def reading_2_index
-    reading_2.reading_index
+  def reading_2_id
+    bill.try(:reading_2).try(:id)
   end
 
   def tax_breakdown
@@ -64,25 +62,13 @@ class Invoice < ActiveRecord::Base
   def net_tax
     tax_breakdown.sum{|t| t[2]}
   end
-
+  
   def subtotal
-    subtotal = 0
-    invoice_items.each do |i|
-      if !i.total.blank?
-        subtotal += i.total
-      end
-    end
-    subtotal
+    tax_breakdown.sum{|t| t[1]}
   end
 
   def bonus
-    bonus = 0
-    invoice_items.each do |i|
-      if !i.bonus.blank?
-        bonus += i.bonus
-      end
-    end
-    bonus
+    (discount_pct / 100) * subtotal
   end
 
   def taxable
@@ -90,17 +76,11 @@ class Invoice < ActiveRecord::Base
   end
 
   def taxes
-    taxes = 0
-    invoice_items.each do |i|
-      if !i.net_tax.blank?
-        taxes += i.net_tax
-      end
-    end
-    taxes
+    tax_breakdown.sum{|t| t[2]}
   end
 
   def total
-    net_tax + subtotal
+    taxes + taxable
   end
 
   def receivable

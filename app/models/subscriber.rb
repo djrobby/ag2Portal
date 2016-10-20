@@ -16,7 +16,8 @@ class Subscriber < ActiveRecord::Base
                   :building, :floor, :floor_office, :zipcode_id, :phone, :fax, :cellular, :email,
                   :service_point_id, :active, :tariff_scheme_id, :billing_frequency_id, :meter_id,
                   :reading_route_id, :reading_sequence, :reading_variant, :contracting_request_id,
-                  :remarks, :cadastral_reference, :gis_id, :endowments, :inhabitants, :km, :gis_id_wc
+                  :remarks, :cadastral_reference, :gis_id, :endowments, :inhabitants, :km, :gis_id_wc,
+                  :readings_attributes, :meter_details_attributes
 
   attr_accessor :reading_index_add, :reading_date_add
 
@@ -32,6 +33,7 @@ class Subscriber < ActiveRecord::Base
   # Nested attributes
   accepts_nested_attributes_for :readings
   accepts_nested_attributes_for :meter_details
+
 
   has_paper_trail
 
@@ -54,6 +56,7 @@ class Subscriber < ActiveRecord::Base
   scope :by_code, -> { order(:subscriber_code) }
   scope :availables, -> { where(ending_at: nil) }
 
+
   before_validation :fields_to_uppercase
   before_destroy :check_for_dependent_records
 
@@ -75,14 +78,18 @@ class Subscriber < ActiveRecord::Base
   end
 
   def full_name
-    full_name = ""
-    if !self.last_name.blank?
-      full_name += self.last_name
+    if !company.blank?
+      company
+    else
+      full_name = ""
+      if !self.last_name.blank?
+        full_name += self.last_name
+      end
+      if !self.first_name.blank?
+        full_name += ", " + self.first_name
+      end
+      full_name[0,40]
     end
-    if !self.first_name.blank?
-      full_name += ", " + self.first_name
-    end
-    full_name[0,40]
   end
 
   def full_name_and_code
@@ -172,7 +179,7 @@ class Subscriber < ActiveRecord::Base
   end
 
   def self.find_by_office(_office, _organization)
-    joins(:office => :company).where("office_id = ? OR (office_id IS NULL AND companies.organization_id = ?)", _office, _organization).by_code
+    joins(:office => :company).where("office_id = ? OR (office_id IS NULL AND companies.organization_id = ?)", _company, _organization).by_code
     #includes(:office => :company).where("office_id = ? OR (office_id IS NULL AND companies.organization_id = ?)", _company, _organization).by_code
   end
 

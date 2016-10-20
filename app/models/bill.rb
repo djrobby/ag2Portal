@@ -9,11 +9,14 @@ class Bill < ActiveRecord::Base
   belongs_to :province
   belongs_to :region
   belongs_to :country
+  belongs_to :reading_1, :class_name => 'Reading' #periodo anterior
+  belongs_to :reading_2, :class_name => 'Reading' #año anterior
 
   attr_accessible :bill_date, :bill_no, :first_name, :last_name, :company, :fiscal_id,
                   :project_id, :invoice_status_id, :subscriber_id, :client_id,
                   :street_type_id, :street_name, :street_number, :building, :floor, :floor_office,
-                  :zipcode_id, :town_id, :province_id, :region_id, :country_id
+                  :zipcode_id, :town_id, :province_id, :region_id, :country_id, :created_by, :updated_by,
+                  :reading_1_id, :reading_2_id
 
   has_many :invoices
   has_many :client_payments
@@ -22,7 +25,7 @@ class Bill < ActiveRecord::Base
   has_one :pre_bill
 
   def reading
-    invoices.try(:first).try(:reading_1)
+    reading_2
   end
 
   def bill_type

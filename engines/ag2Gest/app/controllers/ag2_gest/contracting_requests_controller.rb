@@ -824,7 +824,7 @@ module Ag2Gest
       @contracting_request.destroy
 
       respond_to do |format|
-        format.html { redirect_to requests_url }
+        format.html { redirect_to contracting_requests_url }
         format.json { head :no_content }
       end
     end

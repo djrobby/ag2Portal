@@ -4,14 +4,14 @@ module Ag2Gest
   class WaterSupplyContractsController < ApplicationController
     # GET /water_supply_contracts
     # GET /water_supply_contracts.json
-    # def index
-    #   @water_supply_contracts = WaterSupplyContract.all
+    def index
+      @water_supply_contracts = WaterSupplyContract.all
 
-    #   respond_to do |format|
-    #     format.html # index.html.erb
-    #     format.json { render json: @water_supply_contracts }
-    #   end
-    # end
+      respond_to do |format|
+        format.html # index.html.erb
+        format.json { render json: @water_supply_contracts }
+      end
+    end
 
     # GET /water_supply_contracts/1
     # GET /water_supply_contracts/1.json

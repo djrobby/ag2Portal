@@ -2,11 +2,11 @@ class TariffScheme < ActiveRecord::Base
   belongs_to :project
   belongs_to :tariff_type
 
-  attr_accessible :ending_at, :name, :starting_at, :project_id, :tariff_type_id
-  attr_accessible :tariffs_attributes
-
   has_many :tariffs, dependent: :destroy
   has_many :invoices
+
+  attr_accessible :ending_at, :name, :starting_at, :project_id, :tariff_type_id,
+                  :tariff, :tariffs_attributes, :created_by, :updated_by
 
   # Nested attributes
   accepts_nested_attributes_for :tariffs,
@@ -22,7 +22,7 @@ class TariffScheme < ActiveRecord::Base
   validates :name,        :presence => true
   validates :starting_at, :presence => true
 
-  validate :ending_at_cannot_be_less_than_started_at
+  validate :end_after_start
 
   # Scopes
   scope :belongs_to_projects, -> projects { where(project_id: projects) }
@@ -59,9 +59,9 @@ class TariffScheme < ActiveRecord::Base
   end
 
   def contain_tariffs_active
-    tariffs_active = self.tariffs.joins(:billable_item => :billable_concept)
-    .order("billable_concepts.billable_document,billable_concepts.id")
-    .select{|t| t.tariff_active}.group_by{|t| t.billable_item_id}
+    tariffs_active = self.tariffs.joins(:caliber).joins(:billable_item => :billable_concept)
+    .order("billable_concepts.billable_document,billable_concepts.id,calibers.caliber")#.select{|t| t.tariff_active}
+    .group_by{|t| t.billable_item_id}
   end
 
   def to_label
@@ -89,19 +89,21 @@ class TariffScheme < ActiveRecord::Base
   end
 
   private
-
+  
   def ending_at_cannot_be_less_than_started_at
-    if (!ending_at.blank? and !started_at.blank?) and ending_at < started_at
+    if (!ending_at.blank? and !starting_at.blank?) and ending_at < starting_at
       errors.add(:ending_at, :date_invalid)
     end
   end
 
-  def end_date_is_after_start_date
+  def end_after_start
     if ending_at and ending_at <= starting_at
-      errors[:ending_at] << "Ha de ser mayor que la fecha de inicio"
+      errors.add(:ending_at, :date_invalid)
       return false
     else
       return true
     end
   end
+
 end
+

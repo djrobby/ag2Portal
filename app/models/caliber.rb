@@ -1,12 +1,12 @@
 class Caliber < ActiveRecord::Base
-  attr_accessible :caliber, :letter_id
+  attr_accessible :caliber, :letter_id, :nominal_flow
 
   has_many :meters
 
   has_paper_trail
 
-  validates :caliber, :presence => true,
-                      :numericality => true
+  validates :caliber,     :presence => true,
+                          :numericality => true
   validates :letter_id,   :length => { :is => 1 }
 
   # Scopes

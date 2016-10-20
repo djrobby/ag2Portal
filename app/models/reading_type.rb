@@ -10,4 +10,11 @@ class ReadingType < ActiveRecord::Base
 
   has_many :pre_readings
   has_many :readings
+
+  validates :name,         :presence => true
+
+  def to_label
+    "#{name}"
+  end
+
 end

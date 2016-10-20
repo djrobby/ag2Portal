@@ -10,6 +10,7 @@ en:
         label_work_order: "Work_order"
         btn_new: "New Request"
         back_to_root: "Back to ag2Gest"
+        back_to_management: "Back to Contracting"
       show:
         title: "Contracting Request"
         btn_edit: "Edit Contracting Request"

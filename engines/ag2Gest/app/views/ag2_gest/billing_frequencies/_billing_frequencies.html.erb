@@ -14,6 +14,8 @@
       <th><%= sortable "name", t('activerecord.attributes.billing_frequency.name') %></th>
       <th><%= sortable "days", t('activerecord.attributes.billing_frequency.days') %></th>
       <th><%= sortable "months", t('activerecord.attributes.billing_frequency.months') %></th>
+      <th><%= sortable "fix_measure_id", t('activerecord.attributes.billing_frequency.fix_measure_id') %></th>
+      <th><%= sortable "var_measure_id", t('activerecord.attributes.billing_frequency.var_measure_id') %></th>
       <th></th>
     </tr>
   </thead>
@@ -24,6 +26,8 @@
         <td><%= billfrec.try(:name) %></td>
         <td><%= billfrec.try(:days) %></td>
         <td><%= billfrec.try(:months) %></td>
+        <td><%= billfrec.try(:fix_measure).try(:description) %></td>
+        <td><%= billfrec.try(:var_measure).try(:description) %></td>
         <td>
           <%= link_to edit_billing_frequency_path(billfrec), class: "btn btn-mini" do %>
             <i class="icon-edit"></i>

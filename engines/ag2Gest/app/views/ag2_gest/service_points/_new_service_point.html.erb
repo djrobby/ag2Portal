@@ -131,6 +131,7 @@
           $("#fnt_region").prop('disabled', false);
           $("#fnt_country").prop('disabled', false);
         } else {
+          debugger
           $("#street_name")[0].value = data.street_name;
           $("#street_name").prop('disabled', true);
         }
@@ -150,36 +151,36 @@
   </div>
   <div class="modal-body">
     <%= f.error_notification %>
+    <%= f.input :organization_id, :as => :hidden, :input_html => { :value => session[:organization] }  %>
     <%= f.input :company_id, :as => :hidden, :input_html => { :value => session[:company] }  %>
     <%= f.input :office_id, :as => :hidden, :input_html => { :value => session[:office] }  %>
     <%= f.input :name, :autofocus => true, :input_html => { :class => 'x-medium-text-field' }, :label_html => { :class => 'form-label' } %>
-    <%= f.input :gis_id, :autofocus => true, :input_html => { :class => 'x-medium-text-field' }, :label_html => { :class => 'form-label' } %>
-    <%= f.input :cadastral_reference, :autofocus => true, :input_html => { :class => 'x-medium-text-field' }, :label_html => { :class => 'form-label' } %>
-    <%= f.input :reading_variant, :autofocus => true, :input_html => { :class => 'x-medium-text-field' }, :label_html => { :class => 'form-label' } %>
-    <%= f.association :service_point_type, label: t('activerecord.attributes.service_point.service_point_type_id'), collection: ServicePointType.all(), :input_html => { :class => 'sel2 x-large-text-field' }, label_method: lambda { |st| st.name }, value_method: :id, :label_html => { :class => 'form-label' }%>
+    <%= f.input :code, :required => true, :input_html => { :class => 'x-medium-text-field' }, :label_html => { :class => 'form-label' } %>
+    <%= f.input :gis_id, :input_html => { :class => 'x-medium-text-field' }, :label_html => { :class => 'form-label' } %>
+    <%= f.input :cadastral_reference, :input_html => { :class => 'x-medium-text-field' }, :label_html => { :class => 'form-label' } %>
+    <%= f.input :reading_variant, :input_html => { :class => 'x-medium-text-field' }, :label_html => { :class => 'form-label' } %>
+    <%= f.association :service_point_type, :required => true, label: t('activerecord.attributes.service_point.service_point_type_id'), collection: ServicePointType.all(), :input_html => { :class => 'sel2 x-large-text-field' }, label_method: lambda { |st| st.name }, value_method: :id, :label_html => { :class => 'form-label' }%>
     <%#= f.association :street_type, label: t('activerecord.attributes.service_point.street_type_id'), collection: StreetType.all(), :input_html => { :class => 'sel2 x-large-text-field' }, label_method: lambda { |st| st.street_type_description }, value_method: :id, :label_html => { :class => 'form-label' }%>
     <% if session[:organization] != '0' %>
-      <%= f.association :street_directory, label: t('activerecord.attributes.service_point.street_directory_id'), collection: StreetDirectory.find_all_by_town_id(Organization.find(session[:organization]).companies.map(&:town_id), order: 'town_id, street_name'), :input_html => { :class => 'sel2 x-large-text-field' }, label_method: lambda { |st| st.street_name }, value_method: :id, :label_html => { :class => 'form-label' }%>
+      <%= f.association :street_directory, :required => true, label: t('activerecord.attributes.service_point.street_directory_id'), collection: StreetDirectory.find_all_by_town_id(Organization.find(session[:organization]).companies.map(&:town_id), order: 'town_id, street_name'), :input_html => { :class => 'sel2 x-large-text-field' }, label_method: lambda { |st| st.street_name }, value_method: :id, :label_html => { :class => 'form-label' }%>
     <% elsif current_user.organizations.count > 0 %>
-      <%= f.association :street_directory, label: t('activerecord.attributes.service_point.street_directory_id'), collection: StreetDirectory.find_all_by_town_id(current_user.organizations.map{|o| o.towns.map(&:id)}.flatten.compact, order: 'town_id, street_name'), :input_html => { :class => 'sel2 x-large-text-field' }, label_method: lambda { |st| st.street_name }, value_method: :id, :label_html => { :class => 'form-label' }%>
+      <%= f.association :street_directory, :required => true, label: t('activerecord.attributes.service_point.street_directory_id'), collection: StreetDirectory.find_all_by_town_id(current_user.organizations.map{|o| o.towns.map(&:id)}.flatten.compact, order: 'town_id, street_name'), :input_html => { :class => 'sel2 x-large-text-field' }, label_method: lambda { |st| st.street_name }, value_method: :id, :label_html => { :class => 'form-label' }%>
     <% else %>
-      <%= f.association :street_directory, label: t('activerecord.attributes.service_point.street_directory_id'), collection: StreetDirectory.all(order: 'town_id, street_name'), :input_html => { :class => 'sel2 x-large-text-field' }, label_method: lambda { |st| st.street_name }, value_method: :id, :label_html => { :class => 'form-label' }%>
+      <%= f.association :street_directory, :required => true, label: t('activerecord.attributes.service_point.street_directory_id'), collection: StreetDirectory.all(order: 'town_id, street_name'), :input_html => { :class => 'sel2 x-large-text-field' }, label_method: lambda { |st| st.street_name }, value_method: :id, :label_html => { :class => 'form-label' }%>
     <% end %>
-    <%#= f.input :street_name, :autofocus => true, :input_html => { :class => 'x-medium-text-field' }, :label_html => { :class => 'form-label' } %>
-    <%= f.input :street_number, :autofocus => true, :input_html => { :class => 'x-medium-text-field' }, :label_html => { :class => 'form-label' } %>
-    <%= f.input :building, :autofocus => true, :input_html => { :class => 'x-medium-text-field' }, :label_html => { :class => 'form-label' } %>
-    <%= f.input :floor, :autofocus => true, :input_html => { :class => 'x-medium-text-field' }, :label_html => { :class => 'form-label' } %>
-    <%= f.input :floor_office, :autofocus => true, :input_html => { :class => 'x-medium-text-field' }, :label_html => { :class => 'form-label' } %>
+    <%#= f.input :street_name, :input_html => { :class => 'x-medium-text-field' }, :label_html => { :class => 'form-label' } %>
+    <%= f.input :street_number, :input_html => { :class => 'x-medium-text-field' }, :label_html => { :class => 'form-label' } %>
+    <%= f.input :building, :input_html => { :class => 'x-medium-text-field' }, :label_html => { :class => 'form-label' } %>
+    <%= f.input :floor, :input_html => { :class => 'x-medium-text-field' }, :label_html => { :class => 'form-label' } %>
+    <%= f.input :floor_office, :input_html => { :class => 'x-medium-text-field' }, :label_html => { :class => 'form-label' } %>
+    <%= f.input :km, :input_html => { :class => 'x-medium-text-field' }, :label_html => { :class => 'form-label' } %>
     <%= f.association :zipcode, label: t('activerecord.attributes.service_point.zipcode_id'), collection: Zipcode.all(order: 'zipcode'), :input_html => { :class => 'sel2 x-large-text-field' }, label_method: lambda { |st| st.zipcode }, value_method: :id, :label_html => { :class => 'form-label' }%>
-    <%#= f.association :town, label: t('activerecord.attributes.service_point.town_id'), collection: Town.all(), :input_html => { :class => 'sel2 x-large-text-field' }, label_method: lambda { |st| st.name }, value_method: :id, :label_html => { :class => 'form-label' }%>
-    <%#= f.association :province, label: t('activerecord.attributes.service_point.province_id'), collection: Province.all(), :input_html => { :class => 'sel2 x-large-text-field' }, label_method: lambda { |st| st.name }, value_method: :id, :label_html => { :class => 'form-label' }%>
-    <%#= f.association :region, label: t('activerecord.attributes.service_point.region_id'), collection: Region.all(), :input_html => { :class => 'sel2 x-large-text-field' }, label_method: lambda { |st| st.name }, value_method: :id, :label_html => { :class => 'form-label' }%>
-    <%#= f.association :country, label: t('activerecord.attributes.service_point.country_id'), collection: Country.all(), :input_html => { :class => 'sel2 x-large-text-field' }, label_method: lambda { |st| st.name }, value_method: :id, :label_html => { :class => 'form-label' }%>
-    <%= f.association :service_point_location, label: t('activerecord.attributes.service_point.service_point_location_id'), collection: ServicePointLocation.all(), :input_html => { :class => 'sel2 x-large-text-field' }, label_method: lambda { |st| st.name }, value_method: :id, :label_html => { :class => 'form-label' }%>
-    <%= f.association :service_point_purpose, label: t('activerecord.attributes.service_point.service_point_purpose_id'), collection: ServicePointPurpose.all(), :input_html => { :class => 'sel2 x-large-text-field' }, label_method: lambda { |st| st.name }, value_method: :id, :label_html => { :class => 'form-label' }%>
-    <%= f.input :diameter, :autofocus => true, :input_html => { :class => 'x-medium-text-field' }, :label_html => { :class => 'form-label' } %>
-    <%= f.input :verified, :autofocus => true, :input_html => { :class => 'x-medium-text-field' }, :label_html => { :class => 'form-label' } %>
-    <%= f.input :available_for_contract, :autofocus => true, :input_html => { :class => 'x-medium-text-field' }, :label_html => { :class => 'form-label' } %>
+    <%= f.association :center, :required => true, label: t('activerecord.attributes.service_point.center_id'), collection: Center.all(order: 'name'), :input_html => { :class => 'sel2 x-large-text-field' }, :label_html => { :class => 'form-label' }%>
+    <%= f.association :service_point_location, :required => true, label: t('activerecord.attributes.service_point.service_point_location_id'), collection: ServicePointLocation.all(), :input_html => { :class => 'sel2 x-large-text-field' }, label_method: lambda { |st| st.name }, value_method: :id, :label_html => { :class => 'form-label' }%>
+    <%= f.association :service_point_purpose, :required => true, label: t('activerecord.attributes.service_point.service_point_purpose_id'), collection: ServicePointPurpose.all(), :input_html => { :class => 'sel2 x-large-text-field' }, label_method: lambda { |st| st.name }, value_method: :id, :label_html => { :class => 'form-label' }%>
+    <%= f.input :diameter, :input_html => { :class => 'x-medium-text-field' }, :label_html => { :class => 'form-label' } %>
+    <%= f.input :verified, :input_html => { :class => 'x-medium-text-field' }, :label_html => { :class => 'form-label' } %>
+    <%= f.input :available_for_contract, :input_html => { :class => 'x-medium-text-field' }, :label_html => { :class => 'form-label' } %>
     <% if session[:organization] != '0' %>
       <%= f.association :reading_route, label: t('activerecord.attributes.service_point.reading_route_id'), collection: Organization.find(session[:organization]).projects.map{|p| p.reading_routes}.flatten, :input_html => { :class => 'sel2 x-large-text-field' }, label_method: lambda { |st| st.name }, value_method: :id, :label_html => { :class => 'form-label' }%>
     <% elsif current_user.organizations.count > 0 %>
@@ -187,7 +188,7 @@
     <% else %>
       <%= f.association :reading_route, label: t('activerecord.attributes.service_point.reading_route_id'), collection: ReadingRoute.all(), :input_html => { :class => 'sel2 x-large-text-field' }, label_method: lambda { |st| st.name }, value_method: :id, :label_html => { :class => 'form-label' }%>
     <% end %>
-    <%= f.input :reading_sequence, :autofocus => true, :input_html => { :class => 'x-medium-text-field' }, :label_html => { :class => 'form-label' } %>
+    <%= f.input :reading_sequence, :input_html => { :class => 'x-medium-text-field' }, :label_html => { :class => 'form-label' } %>
     <%= f.button :submit, :class => 'btn-primary' %>
   <% end %>
   </div>

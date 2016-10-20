@@ -3,15 +3,20 @@
 <h3><%=@reading_route.try(:name) %></h3>
 <table class="table">
   <tbody>
-    
+
     <tr>
       <td><%= t('activerecord.attributes.reading_route.id') %>:</td>
-      <td><%= @reading_route.try(:id) %></td>
-      <td><%= t('activerecord.attributes.reading_route.project_id') %>:</td>
-      <td><%= link_to @reading_route.try(:project).try(:name), ag2_tech.project_path(@reading_route.project_id) %></td>
+      <td colspan="3"><%= @reading_route.try(:id) %></td>
     </tr>
-    
-		<tr>
+
+    <tr>
+      <td><%= t('activerecord.attributes.reading_route.project_id') %>:</td>
+      <td><%= link_to @reading_route.try(:project).try(:name), ag2_tech.project_path(@reading_route.project_id) if @reading_route.project %></td>
+      <td><%= t('activerecord.attributes.reading_route.office_id') %>:</td>
+      <td><%= link_to @reading_route.try(:office).try(:name), ag2_admin.office_path(@reading_route.office_id) if @reading_route.office %></td>
+    </tr>
+
+    <tr>
       <td><%= t('activerecord.attributes.reading_route.route_code') %>:</td>
       <td><%= @reading_route.try(:route_code) %></td>
       <td><%= t('activerecord.attributes.reading_route.name') %>:</td>
@@ -19,6 +24,7 @@
     </tr>
 
     <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @reading_route } %>
+    <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @reading_route } %>
   </tbody>
 </table>
 
@@ -27,4 +33,4 @@
 delete_path: @reading_route, delete_txt: t('.btn_delete'), msg: t("activerecord.models.reading_route.one"), :txt => @reading_route.id,
 new_path: new_reading_route_path, new_txt: t('ag2_gest.reading_routes.index.btn_new') } %>
 
-<%= link_to I18n.t('ag2_gest.reading_routes.back_to_main_page'), reading_route_path %>
+<%= link_to I18n.t('ag2_gest.reading_routes.back_to_main_page'), reading_routes_path %>

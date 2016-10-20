@@ -7,12 +7,14 @@ class Reading < ActiveRecord::Base
   belongs_to :meter
   belongs_to :subscriber
   belongs_to :reading_route
+  belongs_to :reading_1, class_name: "Reading"
+  belongs_to :reading_2, class_name: "Reading"
   has_and_belongs_to_many :reading_incidence_types, join_table: "reading_incidences"
 
   attr_accessible :reading_date, :reading_index, :reading_sequence, :reading_variant,
                   :project_id, :billing_period_id, :billing_frequency_id, :reading_type_id,
                   :meter_id, :subscriber_id, :reading_route_id, :reading_index_1,
-                  :reading_index_2, :reading_incidence_types
+                  :reading_index_2, :reading_incidence_types, :reading_1, :reading_2, :reading_1_id, :reading_2_id
 
   #:reading_incidence_types_attributtes
 
@@ -93,7 +95,9 @@ class Reading < ActiveRecord::Base
                         country_id: subscriber.client.country_id,
                         confirmation_date: nil,
                         bill_id: nil,
-                        created_by: user_id)
+                        created_by: user_id,
+                        reading_1_id: reading_1.try(:id),
+                        reading_2_id: id)
 
     subscriber.tariff_scheme.tariffs_supply(meter.caliber_id).each do |tariffs_biller|
 
@@ -107,8 +111,6 @@ class Reading < ActiveRecord::Base
         payday_limit: nil,
         invoice_operation_id: InvoiceOperation::INVOICE,
         billing_period_id: billing_period_id,
-        reading_1_id: nil, #¿¿¿???
-        reading_2_id: id,
         consumption: consumption,
         consumption_real: consumption,
         consumption_estimated: nil,#¿¿¿???
@@ -116,7 +118,11 @@ class Reading < ActiveRecord::Base
         biller_id: tariffs_biller[0],
         discount_pct: 0.0,#¿¿¿???
         exemption: 0.0,#¿¿¿???
-        charge_account_id: subscriber.client.client_bank_accounts.active.first.id
+        charge_account_id: subscriber.client.client_bank_accounts.active.first.try(:id),
+        reading_1_date: reading_1.try(:reading_date),
+        reading_2_date: reading_date,
+        reading_1_index: reading_1.try(:reading_index),
+        reading_2_index: reading_index
       )
 
       tariffs_biller[1].each do |tariff|
@@ -133,7 +139,7 @@ class Reading < ActiveRecord::Base
             discount: 0.0,#¿¿¿???
             product_id: nil,
             subcode: "CF",
-            measure_id: Measure::M3)
+            measure_id: tariff.billing_frequency.fix_measure_id)
         end
         limit_before = 0
         (1..8).each do |i|
@@ -151,7 +157,7 @@ class Reading < ActiveRecord::Base
               discount: 0.0,#¿¿¿???
               product_id: nil,
               subcode: "BL"+i.to_s,
-              measure_id: Measure::M3)
+              measure_id: tariff.billing_frequency.var_measure_id)
             break
           else
             PreInvoiceItem.create(
@@ -166,7 +172,7 @@ class Reading < ActiveRecord::Base
               discount: 0.0,#¿¿¿???
               product_id: nil,
               subcode: "BL"+i.to_s,
-              measure_id: Measure::M3)
+              measure_id: tariff.billing_frequency.var_measure_id)
             limit_before = tariff.instance_eval("block#{i}_limit")
           end
         end

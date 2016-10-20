@@ -61,10 +61,10 @@ $(document).ready(function () {
           <%= b.try(:id) %>
         </div>
         <div class="span4 soft-padding">
-          <%= link_to b.subscriber.full_name, subscriber_path(b.subscriber) %>
+          <%= link_to b.subscriber.to_label, subscriber_path(b.subscriber) %>
         </div>
         <div class="span2 soft-padding">
-          <%= link_to b.subscriber.try(:meter).try(:meter_code), meters_path(b.subscriber.meter) %>
+          <%= link_to b.subscriber.try(:meter).try(:meter_code), meter_path(b.subscriber.meter) %>
         </div>
         <div class="span1 soft-padding">
           <%= b.reading.try(:consumption) || 0 %>
@@ -141,7 +141,7 @@ $(document).ready(function () {
 
 
 
-	<!-- <table class="table table-condensed table-striped">
+  <!-- <table class="table table-condensed table-striped">
     <thead>
       <tr>
         <th>Nº</th>
@@ -169,7 +169,7 @@ $(document).ready(function () {
       <% end %>
     </tbody>
   </table> -->
-	<br/>
+  <br/>
   <a href="#confirm-bills" role="button" class="btn btn-primary" data-toggle="modal">Confirmar facturas</a>
   <br/>
   <br/>

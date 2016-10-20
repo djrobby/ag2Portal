@@ -96,7 +96,7 @@
         <%= render :partial => '/layouts/crud/new', :locals => { :model => ContractingRequest, :path => new_contracting_request_path, :txt => I18n.t("ag2_gest.contracting_requests.index.btn_new") } %>
         <%= render :partial => '/layouts/crud/new', :locals => { :model => ContractingRequest, :path => new_contracting_request_path, :txt => I18n.t("ag2_gest.contracting_requests.index.btn_new2") } %>
         <!-- <br /> -->
-        <%= link_to t(".back_to_root"), ag2_gest.root_path %>
+        <%= link_to t(".back_to_management"), ag2_gest.contracting_management_path %>
 			</div><!-- /.sidebar-nav -->
     </div><!-- /.span3 -->
 

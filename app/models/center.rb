@@ -13,7 +13,7 @@ class Center < ActiveRecord::Base
   before_destroy :check_for_dependent_records
 
   def to_label
-    caliber
+    "#{name} (#{town.name})"
   end
 
   private

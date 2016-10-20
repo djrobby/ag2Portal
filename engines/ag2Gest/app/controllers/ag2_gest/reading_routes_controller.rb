@@ -1,4 +1,6 @@
 require_dependency "ag2_gest/application_controller"
+require 'will_paginate/array'
+
 
 module Ag2Gest
   class ReadingRoutesController < ApplicationController
@@ -41,11 +43,7 @@ module Ag2Gest
     def new
       @breadcrumb = 'create'
       @reading_route = ReadingRoute.new
-      if current_projects_ids.blank?
-        @projects = Project.all(order: 'name')
-      else
-        @projects = current_projects
-      end
+      set_projects_offices
 
       respond_to do |format|
         format.html # new.html.erb
@@ -57,6 +55,7 @@ module Ag2Gest
     def edit
       @breadcrumb = 'update'
       @reading_route = ReadingRoute.find(params[:id])
+      set_projects_offices
     end
 
     # POST /reading_routes
@@ -64,7 +63,7 @@ module Ag2Gest
     def create
       @breadcrumb = 'create'
       @reading_route = ReadingRoute.new(params[:reading_route])
-
+      set_projects_offices
       respond_to do |format|
         if @reading_route.save
           format.html { redirect_to @reading_route, notice: t('activerecord.attributes.reading_route.create') }
@@ -81,6 +80,7 @@ module Ag2Gest
     def update
       @breadcrumb = 'update'
       @reading_route = ReadingRoute.find(params[:id])
+      set_projects_offices
 
       respond_to do |format|
         if @reading_route.update_attributes(params[:reading_route])
@@ -106,6 +106,22 @@ module Ag2Gest
     end
 
     private
+    def set_projects_offices
+      if current_projects_ids.blank?
+        @projects = Project.all(order: 'name')
+      else
+        @projects = current_projects
+      end
+      if session[:office]
+        @offices = [Office.find(session[:office])]
+      elsif session[:company]
+        @offices = Company.find(session[:company]).offices
+      elsif session[:organization]
+        @offices = Organization.find(session[:organization]).companies.map(&:offices).flatten
+      else
+        @offices = Office.all
+      end
+    end
 
     def sort_column
       ReadingRoute.column_names.include?(params[:sort]) ? params[:sort] : "name"

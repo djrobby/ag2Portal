@@ -6,16 +6,14 @@ class PreInvoice < ActiveRecord::Base
   belongs_to :tariff_scheme
   belongs_to :biller, :class_name => 'Company'
   belongs_to :billing_period
-  belongs_to :reading_1, :class_name => 'Reading' #lectura base de cálculo de consumo
-  belongs_to :reading_2, :class_name => 'Reading' #lectura del periodo facturado
   belongs_to :charge_account
   belongs_to :invoice
 
   attr_accessible :invoice_no, :invoice_date, :consumption, :consumption_real, :consumption_estimated, :consumption_other,
                   :discount_pct, :exemption, :confirmation_date,
                   :pre_bill_id, :invoice_status_id, :invoice_type_id, :tariff_scheme_id, :invoice_operation_id,
-                  :biller_id, :billing_period_id, :reading_1_id, :reading_2_id, :charge_account_id, :invoice_id,
-                  :payday_limit
+                  :biller_id, :billing_period_id, :charge_account_id, :invoice_id,
+                  :payday_limit, :reading_1_date, :reading_2_date, :reading_1_index, :reading_2_index
 
   has_many :pre_invoice_items, dependent: :destroy
 
@@ -24,6 +22,22 @@ class PreInvoice < ActiveRecord::Base
   #
   # Calculated fields
   #
+
+  def reading_1
+    pre_bill.reading_1
+  end
+
+  def reading_2
+    pre_bill.reading_2
+  end
+
+  def reading_1_id
+    pre_bill.try(:reading_1).try(:id)
+  end
+
+  def reading_2_id
+    pre_bill.try(:reading_2).try(:id)
+  end
 
   def tax_breakdown
     pre_invoice_items.group_by{|i| i.tax_type_id}.map do |t|

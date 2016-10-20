@@ -2,22 +2,23 @@ es:
   ag2_gest:
     contracting_request_document_types:
       index:
-        title: "Tipo de documento de contratación"
-        btn_new: "Nueva Tipo de documento de contratación"
+        title: "Tipos de Documentación (aportada)"
+        btn_new: "Nuevo Tipo de Documentación"
         back_to_root: "Volver a ag2Gest"
+        back_to_management: "Volver a Contrataciones"
       show:
-        title: "Tipo de documento de contratación"
-        btn_new: "Nueva Tipo de documento de contratación"
-        btn_edit: "Editar Tipo de documento de contratación"
-        btn_delete: "Borrar Tipo de documento de contratación"
-        return_to: "Volver a Tipo de documento de contratación"
+        title: "Tipo de Documentación  (aportada)"
+        btn_new: "Nuevo Tipo de Documentación"
+        btn_edit: "Editar Tipo de Documentación"
+        btn_delete: "Borrar Tipo de Documentación"
+        return_to: "Volver a Tipo de Documentación"
       edit:
-        title: "Editar Tipo de documento de contratación"
-        btn_show: "Ver Tipo de documento de contratación"
-        update: "Actualizar Tipo de documento de contratación"
-        btn_show: "Ver Tipo de documento de contratación"
+        title: "Editar Tipo de Documentación  (aportada)"
+        btn_show: "Ver Tipo de Documentación"
+        update: "Actualizar Tipo de Documentación"
+        btn_show: "Ver Tipo de Documentación"
         show: "Mostrar"
         back: "Atrás"
       new:
-        title: "Nueva Tipo de documento de contratación"
-      back_to_main_page: "Volver a Tipo de documento de contratación"
+        title: "Nuevo Tipo de Documentación  (aportada)"
+      back_to_main_page: "Volver a Tipos de Documentación"

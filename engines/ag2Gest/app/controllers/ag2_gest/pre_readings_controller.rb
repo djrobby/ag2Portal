@@ -1,4 +1,6 @@
-require_dependency "ag2_gest/application_controller"
+crequire_dependency "ag2_gest/application_controller"
+require 'will_paginate/array'
+
 module Ag2Gest
   class PreReadingsController < ApplicationController
     before_filter :authenticate_user!
@@ -19,9 +21,11 @@ module Ag2Gest
     end
 
     def impute_readings
+      @pre_readings = @pre_readings.paginate(:page => params[:page], :per_page => 30)
     end
 
     def list
+      @pre_readings = @pre_readings.paginate(:page => params[:page], :per_page => 30)
     end
 
     def to_reading
@@ -41,7 +45,9 @@ module Ag2Gest
                               reading_index: pre_reading.reading_index || pre_reading.reading_index_1,
                               reading_index_1: pre_reading.reading_index_1,
                               reading_index_2: pre_reading.reading_index_2,
-                              reading_incidence_types: pre_reading.reading_incidence_types )
+                              reading_incidence_types: pre_reading.reading_incidence_types,
+                              reading_1: pre_reading.reading_1,
+                              reading_2: pre_reading.reading_2 )
         if reading.save
           pre_reading.destroy
         end
@@ -100,12 +106,14 @@ module Ag2Gest
       @breadcrumb = 'create'
       billing_period = BillingPeriod.find @period
       if billing_period #and @pre_readings.where(reading_type_id: 1).empty?
-        subscribers = Subscriber.where(reading_route_id: @routes).order(&:reading_sequence).group_by(&:reading_route_id)
+        subscribers = Subscriber.where(reading_route_id: @routes).availables.where("meter_id IS NOT NULL").order(&:reading_sequence).group_by(&:reading_route_id)
         subscribers.each do |subs|
           subs[1].each do |s|
             if s.pre_readings.where(billing_period_id: billing_period.id).blank?
-              reading1 = Reading.where(meter_id: s.meter_id, billing_period_id: BillingPeriod.find_by_period(billing_period.previous_period).try(:id)).first || s.readings.find_by_reading_type_id(4)
-              reading2 = Reading.where(meter_id: s.meter_id, billing_period_id: BillingPeriod.find_by_period(billing_period.year_period).try(:id)).first
+              pervious_period_id = BillingPeriod.find_by_period_and_billing_frequency_id(billing_period.previous_period,billing_period.billing_frequency_id).try(:id)
+              pervious_year_id = BillingPeriod.find_by_period_and_billing_frequency_id(billing_period.year_period,billing_period.billing_frequency_id).try(:id)
+              reading1 = Reading.where(subscriber_id: s.id, reading_type_id: ReadingType::NORMAL, billing_period_id: pervious_period_id).first || s.readings.where(reading_type_id: 4).last #s.readings.find_by_reading_type_id(4)
+              reading2 = Reading.where(subscriber_id: s.id, reading_type_id: ReadingType::NORMAL, billing_period_id: pervious_year_id).first
               pre_reading = PreReading.new(
                 project_id: billing_period.project_id,
                 billing_period_id: billing_period.id,
@@ -143,7 +151,7 @@ module Ag2Gest
         @prereading.reading_incidence_types << ReadingIncidenceType.where(id:params["incidence_type_ids"])
       end
       # añdadir incidencia vuelta de contador y no existe. ID 4
-      if params[:lap] == "true" and !@prereading.reading_incidence_types.pluck(:id).include? 4
+      if params[:lap] == "true" and !@prereading.reading_incidence_types.map(&:id).include? 4
         @prereading.reading_incidence_types << ReadingIncidenceType.find(4)
       end
       respond_to do |format|

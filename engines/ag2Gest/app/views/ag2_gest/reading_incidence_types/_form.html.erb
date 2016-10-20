@@ -13,16 +13,16 @@
 <%= display_base_errors resource %>
 
   <div class="row-fluid">
-      
+
     <div class="span4">
       <%= f.input :name, :required => true, :autofocus => true, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %>
     </div>
-    
+
     <div class="span4">
-      <%= f.input :should_estimate, :required => true, :autofocus => true, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %>
+      <%= f.input :should_estimate, :autofocus => true, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %>
     </div>
-    
-  </div>  
+
+  </div>
   <%= f.button :submit, :class => 'btn-primary' %>
 
 <% end %>
