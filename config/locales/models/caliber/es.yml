@@ -11,5 +11,5 @@ es:
       caliber:
         caliber: "Calibre"
         caliber_id: "Id"
-        letter_id: "Letra identificación códigos"
+        letter_id: "Letra (ID código)"
         nominal_flow: "Caudal nominal"

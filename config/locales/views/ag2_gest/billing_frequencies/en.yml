@@ -2,22 +2,22 @@ en:
   ag2_gest:
     billing_frequencies:
       index:
-        title: "Billing frequencies"
-        btn_new: "New Billing frequency"
+        title: "Billing Frequencies"
+        btn_new: "New Frequency"
         back_to_root: "Back to ag2Gest"
       show:
-        title: "Billing frequency"
-        btn_edit: "Edit Billing frequency"
-        btn_delete: "Delete Billing frequency"
-        return_to: "Back to Billing frequency"
+        title: "Billing Frequency"
+        btn_edit: "Edit Frequency"
+        btn_delete: "Delete Frequency"
+        return_to: "Back to Frequency"
       edit:
         show: 'Show'
         back: 'Back'
-        title: "Edit Billing frequency"
-        btn_show: "Show Billing frequency"
+        title: "Edit Billing Frequency"
+        btn_show: "Show Billing Frequency"
       new:
-        title: "New Billing frequency"
-      back_to_main_page: "Back to Billing frequencies"
+        title: "New Billing Frequency"
+      back_to_main_page: "Back to Billing Frequencies"
       # generate_code_btn: "billable_item Code"
       # personal_info: "billable_item Info"
       # commercial_info: "Accounting & Commercial Info"

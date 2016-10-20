@@ -10,3 +10,6 @@ en:
     attributes:
       caliber:
         caliber: "Caliber"
+        caliber_id: "Id"
+        letter_id: "Letter (code ID)"
+        nominal_flow: "Nominal flow"

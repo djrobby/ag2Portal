@@ -16,5 +16,7 @@ en:
         name: "Description"
         months: "Months"
         days: "Days"
+        fix_measure_id: "Fix fee measure"
+        var_measure_id: "Variable fee measure"
         successfully: "Billing frequency was successfully updated."
         create: "Billing frequency was successfully created."

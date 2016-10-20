@@ -17,6 +17,5 @@ es:
         name: "Nombre"
         active: "Activo"
         town: "Población/Oficina"
-        days: "Días"
         successfully: "Núcleo urbano se ha actualizado correctamente."
         create: "Núcleo urbano se ha creado correctamente."

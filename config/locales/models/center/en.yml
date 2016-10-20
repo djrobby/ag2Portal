@@ -2,10 +2,10 @@ en:
   activerecord:
     models:
       center:
-        zero:  Centers
-        one:   Center
-        few:   Centers
-        other: Centers
+        zero:  Urban Centers
+        one:   Urban Center
+        few:   Urban Centers
+        other: Urban Centers
         # check_for_delivery_notes: "Cliente no puede ser eliminado mientras existan notas de entrega vinculadas."
         # check_for_sale_offers: "Cliente no puede ser eliminado mientras existan presupuestos vinculados."
         # check_for_client_invoices: "Cliente no puede ser eliminado mientras existan facturas C vinculadas."
@@ -16,6 +16,5 @@ en:
         name: "Name"
         active: "Active"
         town_id: "Town"
-        days: "Days"
         successfully: "Center was successfully updated."
         create: "Center was successfully created."

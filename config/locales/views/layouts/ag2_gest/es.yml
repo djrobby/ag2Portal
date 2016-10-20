@@ -31,3 +31,39 @@ es:
       billable_concepts:
         items: "Conceptos facturables"
         item: "Concepto"
+      sale_offer_statuses:
+        items: "Estados de oferta"
+        item: "Estado"
+      billing_periods:
+        items: "Períodos"
+        item: "Período"
+      billing_frequencies:
+        items: "Frecuencias"
+        item: "Frecuencia"
+      centers:
+        items: "Núcleos urbanos"
+        item: "Núcleo"
+      street_directories:
+        items: "Callejeros"
+        item: "Vía"
+      meters:
+        items: "Contadores"
+        item: "Contador"
+      meter_types:
+        items: "Tipos de contador"
+        item: "Tipo"
+      meter_brands:
+        items: "Marcas de contador"
+        item: "Marca"
+      meter_models:
+        items: "Modelos de contador"
+        item: "Modelo"
+      meter_locations:
+        items: "Ubicaciones de contador"
+        item: "Ubicación"
+      meter_owners:
+        items: "Propietarios de contador"
+        item: "Propietario"
+      calibers:
+        items: "Calibres"
+        item: "Calibre"

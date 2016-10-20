@@ -2,22 +2,23 @@ es:
   ag2_gest:
     meter_brands:
       index:
-        title: "Marcas de contador"
-        btn_new: "Nuevo Marca de contador"
+        title: "Marcas de Contador"
+        btn_new: "Nuevo Marca de Contador"
         back_to_root: "Volver a ag2Gest"
+        back_to_management: "Volver a Gestión de Contadores"
       show:
-        title: "Marca de contador"
-        btn_edit: "Editar Marca de contador"
-        btn_delete: "Borrar Marca de contador"
-        return_to: "Volver a Marca de contador"
+        title: "Marca de Contador"
+        btn_edit: "Editar Marca de Contador"
+        btn_delete: "Borrar Marca de Contador"
+        return_to: "Volver a Marca de Contador"
       edit:
         show: 'Mostrar'
         back: 'Atrás'
-        title: "Editar Marca de contador"
-        btn_show: "Ver Marca de contador"
+        title: "Editar Marca de Contador"
+        btn_show: "Ver Marca de Contador"
         project_id: "Project"
         billable_concept_id: "Billable Concept"
         biller_id: "Biller"
       new:
-        title: "Nueva Marca de contador"
-      back_to_main_page: "Volver a Marcas de contador"
+        title: "Nueva Marca de Contador"
+      back_to_main_page: "Volver a Marcas de Contador"

@@ -10,6 +10,7 @@ en:
         check_for_subscribers: "Meter cannot be destroyed while linked subscribers exist."
     attributes:
       meter:
+        id: "Id"
         meter_code: "Code"
         meter_model: "Model"
         meter_model_id: "Model"
@@ -25,3 +26,5 @@ en:
         last_withdrawal_date: "Last withdrawal"
         organization: "Organization"
         organization_id: "Organization"
+        office_id: "Office"
+        company_id: "Company"

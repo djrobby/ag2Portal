@@ -9,4 +9,5 @@ en:
         check_for_meter_details: "Meter location cannot be destroyed while linked meters exist."
     attributes:
       meter_location:
+        id: "Id"
         name: "Decription"

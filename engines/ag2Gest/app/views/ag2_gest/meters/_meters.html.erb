@@ -52,5 +52,3 @@
 </table>
 
 <%= render :partial => '/layouts/pagination', :locals => { :ivar => @meters } %>
-<%= render :partial => '/layouts/crud/new', :locals => { :model => Meter, :path => new_meter_path, :txt => t("ag2_gest.meters.index.btn_new") } %>
-<%= link_to t("ag2_gest.meters.index.back_to_root"), ag2_gest.root_path %>

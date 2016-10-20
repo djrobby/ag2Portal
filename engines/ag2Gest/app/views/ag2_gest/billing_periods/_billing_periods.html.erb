@@ -15,11 +15,10 @@
 <table class="table table-condensed table-striped">
 	<thead>
 	  <tr>
-	    <th><%= sortable "id", t('activerecord.attributes.billing_period.id') %></th>
+	    <th><%= sortable "period", t('activerecord.attributes.billing_period.period') %></th>
+	    <th><%= sortable "description", t('activerecord.attributes.billing_period.description') %></th>
 	    <th><%= sortable "name", t('activerecord.attributes.billing_period.project_id') %></th>
 	    <th class="center"><%= sortable "billing_frequency_id", t('activerecord.attributes.billing_period.billing_frequency_id') %></th>
-	    <th class="center"><%= sortable "period", t('activerecord.attributes.billing_period.period') %></th>
-	    <th class="center"><%= sortable "description", t('activerecord.attributes.billing_period.description') %></th>
 	    <th class="center"><%= sortable "reading_starting_date", t('activerecord.attributes.billing_period.reading_starting_date') %></th>
 	    <th class="center"><%= sortable "reading_ending_date", t('activerecord.attributes.billing_period.reading_ending_date') %></th>
 <!-- 	    <th><%#= sortable "prebilling_starting_date", t('activerecord.attributes.billing_period.prebilling_starting_date') %></th>
@@ -33,11 +32,10 @@
 	<tbody>
 	  <% @billing_periods.each do |billper| %>
 		  <tr>
-		    <td><%= link_to billper.id, billing_period_path(billper) %></td>
+		    <td><%= link_to billper.try(:period), billing_period_path(billper) %></td>
+		    <td><%= billper.try(:description) %></td>
 		    <td><%= billper.try(:project).try(:name) %></td>
 		    <td class="center"><%= billper.try(:billing_frequency).try(:name) %></td>
-		    <td class="center"><%= billper.try(:period) %></td>
-		    <td class="center"><%= billper.try(:description) %></td>
 		    <td class="center"><%=l billper.try(:reading_starting_date) unless billper.try(:reading_starting_date).blank? %></td>
 				<td class="center"><%=l billper.try(:reading_ending_date) unless billper.try(:reading_ending_date).blank? %></td>
 <!-- 				<td><%#= billper.try(:prebilling_starting_date) %></td>

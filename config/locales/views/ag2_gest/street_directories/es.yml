@@ -2,19 +2,19 @@ es:
   ag2_gest:
     street_directories:
       index:
-        title: "Callejero"
-        btn_new: "Nueva Calle"
+        title: "Callejeros"
+        btn_new: "Nueva Vía"
         back_to_root: "Volver a ag2Gest"
       show:
-        title: "Calle"
-        btn_edit: "Editar Calle"
-        btn_delete: "Borrar Calle"
-        return_to: "Volver a Callejero"
+        title: "Vía"
+        btn_edit: "Editar Vía"
+        btn_delete: "Borrar Vía"
+        return_to: "Volver a Callejeros"
       edit:
         show: "Mostrar"
         back: "Atrás"
-        title: "Editar Calle"
-        btn_show: "Ver Calle"
+        title: "Editar Vía"
+        btn_show: "Ver Vía"
       new:
-        title: "Nueva Calle"
-      back_to_main_page: "Volver a Callejero"
+        title: "Nueva Vía"
+      back_to_main_page: "Volver a Callejeros"

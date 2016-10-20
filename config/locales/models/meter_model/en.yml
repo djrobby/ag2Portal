@@ -9,6 +9,7 @@ en:
         check_for_meters: "Meter model cannot be destroyed while linked meters exist."
     attributes:
       meter_model:
+        id: "Id"
         model: "Model"
         meter_type: "Type"
         meter_type_id: "Type"
@@ -16,3 +17,4 @@ en:
         dials: "Dials"
         meter_brand: "Brand"
         meter_brand_id: "Brand"
+        letter_id: "Letter (code ID)"

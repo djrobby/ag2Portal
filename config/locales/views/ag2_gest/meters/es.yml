@@ -5,6 +5,7 @@ es:
         title: "Contadores"
         btn_new: "Nuevo Contador"
         back_to_root: "Volver a ag2Gest"
+        back_to_management: "Volver a Gestión de Contadores"
       show:
         title: "Contador"
         btn_edit: "Editar Contador"

@@ -2,22 +2,22 @@ es:
   ag2_gest:
     centers:
       index:
-        title: "Núcleos urbanos"
-        btn_new: "Nuevo Núcleo urbano"
+        title: "Núcleos Urbanos"
+        btn_new: "Nuevo Núcleo Urbano"
         back_to_root: "Volver a ag2Gest"
       show:
-        title: "Núcleo urbano"
-        btn_edit: "Editar Núcleo urbano"
-        btn_delete: "Borrar Núcleo urbano"
-        return_to: "Volver a Núcleo urbano"
+        title: "Núcleo Urbano"
+        btn_edit: "Editar Núcleo Urbano"
+        btn_delete: "Borrar Núcleo Urbano"
+        return_to: "Volver a Núcleo Urbano"
       edit:
         show: "Mostrar"
         back: "Atrás"
-        title: "Editar Núcleo urbano"
-        btn_show: "Ver Núcleo urbano"
+        title: "Editar Núcleo Urbano"
+        btn_show: "Ver Núcleo Urbano"
       new:
-        title: "Nuevo Núcleo urbano"
-      back_to_main_page: "Volver a Núcleos urbanos"
+        title: "Nuevo Núcleo Urbano"
+      back_to_main_page: "Volver a Núcleos Urbanos"
       # generate_code_btn: "Código de Núcleo urbano"
       # personal_info: "Información del Cliente"
       # commercial_info: "Información Contable y Comercial"

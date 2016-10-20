@@ -31,3 +31,39 @@ en:
       billable_concepts:
         items: "Billable concepts"
         item: "Concept"
+      sale_offer_statuses:
+        items: "Sale offer statuses"
+        item: "Status"
+      billing_periods:
+        items: "Periods"
+        item: "Period"
+      billing_frequencies:
+        items: "Frequencies"
+        item: "Frequency"
+      centers:
+        items: "Urban centers"
+        item: "Centro"
+      street_directories:
+        items: "Street directories"
+        item: "Street"
+      meters:
+        items: "Meters"
+        item: "Meter"
+      meter_types:
+        items: "Meter types"
+        item: "Type"
+      meter_brands:
+        items: "Meter brands"
+        item: "Brand"
+      meter_models:
+        items: "Meter models"
+        item: "Model"
+      meter_locations:
+        items: "Meter locations"
+        item: "Location"
+      meter_owners:
+        items: "Meter owners"
+        item: "Owner"
+      calibers:
+        items: "Calibers"
+        item: "Caliber"

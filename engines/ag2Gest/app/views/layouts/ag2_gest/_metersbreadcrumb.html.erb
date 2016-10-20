@@ -1,6 +1,6 @@
-<% content_for :title, "aGestiona2 | ag2Meter" %>
-<% content_for :icon, "/assets/icon/TableA.png" %>
-<% content_for :alt, "ag2Meter" %>
+<% content_for :title, "aGestiona2 | ag2Meters" %>
+<% content_for :icon, "/assets/icon/ag2Meters.png" %>
+<% content_for :alt, "ag2Meters" %>
 
 <ul class="breadcrumb">
   <li>
@@ -8,6 +8,9 @@
   </li>
   <li>
     <a href="<%= ag2_gest.root_path %>">ag2Gest</a><span class="divider">></span>
+  </li>
+  <li>
+    <a href="<%= ag2_gest.meter_management_path %>"><%= t "ag2_gest.home.index.meter_management" %></a><span class="divider">></span>
   </li>
   <% if @meters %>
   <li>

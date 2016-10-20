@@ -2,14 +2,14 @@ es:
   activerecord:
     models:
       sale_offer_status:
-        zero:  Estados de presupuesto
-        one:   Estado de presupuesto
-        few:   Estados de presupuesto
-        other: Estados de presupuesto
-        check_for_sale_offers: "Estado de presupuesto no puede ser eliminado mientras existan presupuestos vinculados."
+        zero:  Estados de oferta de venta
+        one:   Estado de oferta de venta
+        few:   Estados de oferta de venta
+        other: Estados de oferta de venta
+        check_for_sale_offers: "Estado de oferta no puede ser eliminada mientras existan ofertas vinculadas."
     attributes:
       sale_offer_status:
         id: "Id"
         name: "Descripción"
-        approval: ¿Requiere aprovación?
+        approval: ¿Requiere aprobación?
         notification: ¿Notifica?

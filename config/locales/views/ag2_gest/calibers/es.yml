@@ -5,6 +5,7 @@ es:
         title: "Calibres"
         btn_new: "Nuevo Calibre"
         back_to_root: "Volver a ag2Gest"
+        back_to_management: "Volver a Gestión de Contadores"
       show:
         title: "Calibre"
         btn_edit: "Editar Calibre"
@@ -17,7 +18,7 @@ es:
         btn_show: "Ver Calibre"
       new:
         title: "Nuevo Calibre"
-      back_to_main_page: "Volver a Calibre"
+      back_to_main_page: "Volver a Calibres"
       # generate_code_btn: "Código de Calibre"
       # personal_info: "Información del Cliente"
       # commercial_info: "Información Contable y Comercial"

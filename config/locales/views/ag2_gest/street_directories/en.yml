@@ -2,14 +2,14 @@ en:
   ag2_gest:
     street_directories:
       index:
-        title: "Street Directory"
+        title: "Street Directories"
         btn_new: "New Street"
         back_to_root: "Back to ag2Gest"
       show:
         title: "Street"
         btn_edit: "Edit Street"
         btn_delete: "Delete Street"
-        return_to: "Back to Street Directory"
+        return_to: "Back to Street Directories"
       edit:
         title: "Edit Street"
         btn_show: "Show Street"

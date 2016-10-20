@@ -9,4 +9,5 @@ en:
         check_for_meters: "Meter owner cannot be destroyed while linked meters exist."
     attributes:
       meter_owner:
+        id: "Id"
         name: "Decription"

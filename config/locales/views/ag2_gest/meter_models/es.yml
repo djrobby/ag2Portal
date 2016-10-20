@@ -2,25 +2,26 @@ es:
   ag2_gest:
     meter_models:
       index:
-        title: "Modelos de contador"
-        btn_new: "Nuevo Modelo de contador"
+        title: "Modelos de Contador"
+        btn_new: "Nuevo Modelo"
         back_to_root: "Volver a ag2Gest"
+        back_to_management: "Volver a Gestión de Contadores"
       show:
-        title: "Modelo de contador"
-        btn_edit: "Editar Modelo de contador"
-        btn_delete: "Borrar Modelo de contador"
-        return_to: "Volver a Modelo de contador"
+        title: "Modelo de Contador"
+        btn_edit: "Editar Modelo"
+        btn_delete: "Borrar Modelo"
+        return_to: "Volver a Modelo de Contador"
       edit:
         show: 'Mostrar'
         back: 'Atrás'
-        title: "Editar Modelo de contador"
-        btn_show: "Ver Modelo de contador"
+        title: "Editar Modelo de Contador"
+        btn_show: "Ver Modelo"
         project_id: "Project"
         billable_concept_id: "Billable Concept"
         biller_id: "Biller"
       new:
-        title: "Nuevo Modelo de contador"
-      back_to_main_page: "Volver a Modelos de contador"
+        title: "Nuevo Modelo de Contador"
+      back_to_main_page: "Volver a Modelos de Contador"
       # generate_code_btn: "Código de Modelo de contador"
       # personal_info: "Información del Cliente"
       # commercial_info: "Información Contable y Comercial"

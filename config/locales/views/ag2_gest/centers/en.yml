@@ -2,22 +2,22 @@ en:
   ag2_gest:
     centers:
       index:
-        title: "Centers"
-        btn_new: "New Center"
+        title: "Urban Centers"
+        btn_new: "New Urban Center"
         back_to_root: "Back to ag2Gest"
       show:
-        title: "Center"
-        btn_edit: "Edit Center"
-        btn_delete: "Delete Center"
-        return_to: "Back to Center"
+        title: "Urban Center"
+        btn_edit: "Edit Urban Center"
+        btn_delete: "Delete Urban Center"
+        return_to: "Back to Urban Center"
       edit:
         show: "Show"
         back: "Back"
-        title: "Edit Center"
-        btn_show: "Show Center"
+        title: "Edit Urban Center"
+        btn_show: "Show Urban Center"
       new:
-        title: "New Center"
-      back_to_main_page: "Back to Centers"
+        title: "New Urban Center"
+      back_to_main_page: "Back to Urban Centers"
       # generate_code_btn: "billable_item Code"
       # personal_info: "billable_item Info"
       # commercial_info: "Accounting & Commercial Info"

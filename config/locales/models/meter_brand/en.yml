@@ -9,6 +9,8 @@ en:
         check_for_meter_models: "Meter brand cannot be destroyed while linked models exist."
     attributes:
       meter_brand:
+        ID: "Id"
         manufacturer: "Manufacturer"
         manufacturer_id: "Manufacturer"
         name: "Brand"
+        letter_id: "Letter (code ID)"

@@ -5,6 +5,7 @@ en:
         title: "Calibers"
         btn_new: "New Caliber"
         back_to_root: "Back to ag2Gest"
+        back_to_management: "Back to Meters Management"
       show:
         title: "Caliber"
         btn_edit: "Edit Caliber"

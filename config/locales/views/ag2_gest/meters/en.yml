@@ -2,20 +2,21 @@ en:
   ag2_gest:
     meters:
       index:
-        title: "Meter"
-        btn_new: "New Metercontracting request type"
+        title: "Meters"
+        btn_new: "New Meter"
         back_to_root: "Back to ag2Gest"
+        back_to_management: "Back to Meters Management"
       show:
-        title: "Billable item"
-        btn_edit: "Edit Billable item"
-        btn_delete: "Delete Billable item"
-        return_to: "Back to Billable item"
+        title: "Meter"
+        btn_edit: "Edit Meter"
+        btn_delete: "Delete Meter"
+        return_to: "Back to Meter"
       edit:
-        title: "Edit Billable item"
-        btn_show: "Show Billable item"
+        title: "Edit Meter"
+        btn_show: "Show Meter"
       new:
         title: "New Billable item"
-      back_to_main_page: "Back to Billable items"
+      back_to_main_page: "Back to Meters"
       # generate_code_btn: "billable_item Code"
       # personal_info: "billable_item Info"
       # commercial_info: "Accounting & Commercial Info"

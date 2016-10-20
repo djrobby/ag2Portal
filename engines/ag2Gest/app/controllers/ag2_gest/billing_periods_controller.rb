@@ -116,7 +116,7 @@ module Ag2Gest
     private
 
     def sort_column
-      BillingPeriod.column_names.include?(params[:sort]) ? params[:sort] : "id"
+      BillingPeriod.column_names.include?(params[:sort]) ? params[:sort] : "period"
     end
 
     # Keeps filter state

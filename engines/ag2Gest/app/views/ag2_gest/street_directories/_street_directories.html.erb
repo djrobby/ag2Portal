@@ -20,8 +20,8 @@
   <tbody>
   	<% @street_directories.each do |street| %>
       <tr>
-        <td><%= link_to street.try(:id), street_directory_path(street) %></td>
-        <td><%= street.try(:street_name) %></td>
+        <td><%= street.try(:id) %></td>
+        <td><%= link_to street.try(:street_name), street_directory_path(street) %></td>
         <td><%= street.try(:street_type).try(:street_type_description) %></td>
         <td><%= street.try(:town).try(:name) %></td>
         <td>

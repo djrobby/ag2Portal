@@ -1,21 +1,22 @@
 en:
   ag2_gest:
-    meter_models:
+    meter_owners:
       index:
-        title: "Meter models"
-        btn_new: "New Meter model"
+        title: "Meter Owners"
+        btn_new: "New Owner"
         back_to_root: "Back to ag2Gest"
+        back_to_management: "Back to Meters Management"
       show:
-        title: "Meter model"
-        btn_edit: "Edit Meter model"
-        btn_delete: "Delete Meter model"
-        return_to: "Back to Meter model"
+        title: "Meter Owner"
+        btn_edit: "Edit Owner"
+        btn_delete: "Delete Owner"
+        return_to: "Back to Meter Owner"
       edit:
-        title: "Edit Meter model"
-        btn_show: "Show Meter model"
+        title: "Edit Meter Owner"
+        btn_show: "Show Owner"
       new:
-        title: "New Meter model"
-      back_to_main_page: "Back to Meter models"
+        title: "New Meter Owner"
+      back_to_main_page: "Back to Meter Owners"
       # generate_code_btn: "billable_item Code"
       # personal_info: "billable_item Info"
       # commercial_info: "Accounting & Commercial Info"

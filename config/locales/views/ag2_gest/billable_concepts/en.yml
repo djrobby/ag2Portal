@@ -5,7 +5,7 @@ en:
         title: "Billable Concepts"
         btn_new: "New Billable Concept"
         back_to_root: "Back to ag2Gest"
-        back_to_management: "Back to Tariff Management"
+        back_to_management: "Back to Tariffs Management"
       show:
         title: "Billable Concept"
         btn_edit: "Edit Billable Concept"

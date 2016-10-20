@@ -9,4 +9,5 @@ en:
         check_for_meter_models: "Meter type cannot be destroyed while linked models exist."
     attributes:
       meter_type:
-        name: "Decription"
+        id: "Id"
+        name: "Description"

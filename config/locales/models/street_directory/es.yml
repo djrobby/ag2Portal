@@ -3,7 +3,7 @@ es:
     models:
       street_directory:
         zero:  Callejeros
-        one:   Callejero
+        one:   Vía
         few:   Callejeros
         other: Callejeros
     attributes:

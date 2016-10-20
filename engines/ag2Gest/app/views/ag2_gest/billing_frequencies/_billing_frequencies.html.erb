@@ -22,8 +22,8 @@
   <tbody>
     <% @billing_frequencies.each do |billfrec| %>
       <tr>
-        <td><%= link_to billfrec.try(:id), billing_frequency_path(billfrec) %></td>
-        <td><%= billfrec.try(:name) %></td>
+        <td><%= billfrec.try(:id) %></td>
+        <td><%= link_to billfrec.try(:name), billing_frequency_path(billfrec) %></td>
         <td><%= billfrec.try(:days) %></td>
         <td><%= billfrec.try(:months) %></td>
         <td><%= billfrec.try(:fix_measure).try(:description) %></td>

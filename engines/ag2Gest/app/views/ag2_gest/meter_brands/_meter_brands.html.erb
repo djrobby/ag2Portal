@@ -42,4 +42,4 @@
 
 <%= render :partial => '/layouts/pagination', :locals => { :ivar => @meter_brands } %>
 <%= render :partial => '/layouts/crud/new', :locals => { :model => MeterBrand, :path => new_meter_brand_path, :txt => t("ag2_gest.meter_brands.index.btn_new") } %>
-<%= link_to t("ag2_gest.meter_brands.index.back_to_root"), ag2_gest.root_path %>
+<%= link_to t("ag2_gest.meter_brands.index.back_to_management"), ag2_gest.meter_management_path %>

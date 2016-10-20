@@ -2,10 +2,10 @@ es:
   activerecord:
     models:
       sale_offer:
-        zero:  Presupuestos
-        one:   Presupuesto
-        few:   Presupuestos
-        other: Presupuestos
+        zero:  Ofertas de venta
+        one:   Oferta de venta
+        few:   Ofertas de venta
+        other: Ofertas de venta
         check_for_purchase_orders: "Presupuesto no puede ser eliminado mientras existan notas de entrega vinculadas."
     attributes:
       sale_offer:

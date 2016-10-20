@@ -2,24 +2,24 @@ es:
   ag2_gest:
     sale_offers:
       index:
-        title: "Presupuestos"
-        btn_new: "Nuevo Presupuesto"
+        title: "Ofertas (venta)"
+        btn_new: "Nueva Oferta"
         back_to_root: "Volver a ag2Gest"
       show:
-        title: "Presupuesto"
-        btn_edit: "Editar Presupuesto"
-        btn_delete: "Borrar Presupuesto"
-        return_to: "Volver a Presupuesto"
+        title: "Oferta (venta)"
+        btn_edit: "Editar Oferta"
+        btn_delete: "Borrar Oferta"
+        return_to: "Volver a Oferta"
       edit:
-        title: "Editar Presupuesto"
-        btn_show: "Ver Presupuesto"
+        title: "Editar Oferta (venta)"
+        btn_show: "Ver Oferta"
         show: "Mostrar"
         back: "Atrás"
       new:
-        title: "Nuevo Presupuesto"
-      back_to_main_page: "Volver a Presupuestos"
-      generate_code_btn: "Código de Presupuesto"
-      personal_info: "Información del Presupuesto"
+        title: "Nuevo Oferta (venta)"
+      back_to_main_page: "Volver a Ofertas"
+      generate_code_btn: "Código de Oferta"
+      personal_info: "Información de la Oferta"
       commercial_info: "Información Contable y Comercial"
       fiscal_error: "Id Fiscal erróneo o Entidad (Sujeto Pasivo) no existe."
-      code_error: "Imposible generar Código de Presupuesto: No has elegido Organización."
+      code_error: "Imposible generar Código de Oferta: No has elegido Organización."

@@ -38,4 +38,4 @@
 
 <%= render :partial => '/layouts/pagination', :locals => { :ivar => @calibers } %>
 <%= render :partial => '/layouts/crud/new', :locals => { :model => Caliber, :path => new_caliber_path, :txt => t("ag2_gest.calibers.index.btn_new") } %>
-<%= link_to t("ag2_gest.calibers.index.back_to_root"), ag2_gest.root_path %>
+<%= link_to t("ag2_gest.calibers.index.back_to_management"), ag2_gest.meter_management_path %>
