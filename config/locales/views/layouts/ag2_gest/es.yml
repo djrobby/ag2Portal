@@ -25,3 +25,9 @@ es:
       tariff_schemes:
         items: "Esquemas tarifarios"
         item: "Esquema"
+      tariff_types:
+        items: "Tipos de tarifa"
+        item: "Tipo"
+      billable_concepts:
+        items: "Conceptos facturables"
+        item: "Concepto"

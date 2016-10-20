@@ -101,7 +101,7 @@ module Ag2Gest
     private
 
     def sort_column
-      TariffType.column_names.include?(params[:sort]) ? params[:sort] : "name"
+      TariffType.column_names.include?(params[:sort]) ? params[:sort] : "code"
     end
 
     # Keeps filter state

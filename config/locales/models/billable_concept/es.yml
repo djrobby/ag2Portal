@@ -18,6 +18,6 @@ es:
         successfully: "Concepto facturable se ha actualizado correctamente."
         create: "Concepto facturable se ha creado correctamente."
         type: "Tipo"
-        document: "Documento facturable"
+        document: "Se usa en"
         supply: "SUMINISTRO"
         contracting: "CONTRATACIÓN"

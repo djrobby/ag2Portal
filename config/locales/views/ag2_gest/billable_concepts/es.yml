@@ -2,21 +2,22 @@ es:
   ag2_gest:
     billable_concepts:
       index:
-        title: "Conceptos facturables"
-        btn_new: "Nuevo Concepto facturable"
+        title: "Conceptos Facturables"
+        btn_new: "Nuevo Concepto Facturable"
         back_to_root: "Volver a ag2Gest"
+        back_to_management: "Volver a Gestión Tarifaria"
       show:
-        title: "Concepto facturable"
-        btn_edit: "Editar Concepto facturable"
-        btn_delete: "Borrar Concepto facturable"
-        return_to: "Volver a Concepto facturable"
+        title: "Concepto Facturable"
+        btn_edit: "Editar Concepto Facturable"
+        btn_delete: "Borrar Concepto Facturable"
+        return_to: "Volver a Concepto Facturable"
       edit:
-        title: "Editar Concepto facturable"
-        btn_show: "Ver Concepto facturable"
+        title: "Editar Concepto Facturable"
+        btn_show: "Ver Concepto Facturable"
         show: "Mostrar"
         back: "Atrás"
       new:
-        title: "Nuevo concepto facturable"
+        title: "Nuevo Concepto Facturable"
       back_to_main_page: "Volver a conceptos facturables"
       # generate_code_btn: "Código de Emisor de la factura"
       # personal_info: "Información del Cliente"

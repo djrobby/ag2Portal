@@ -25,3 +25,9 @@ en:
       tariff_schemes:
         items: "Tariff schemes"
         item: "Scheme"
+      tariff_types:
+        items: "Tariff types"
+        item: "Type"
+      billable_concepts:
+        items: "Billable concepts"
+        item: "Concept"

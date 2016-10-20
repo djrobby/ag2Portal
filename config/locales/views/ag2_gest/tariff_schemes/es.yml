@@ -2,28 +2,28 @@ es:
   ag2_gest:
     tariff_schemes:
       index:
-        title: "Esquemas tarifarios"
-        btn_new: "Nuevo Esquema tarifario"
+        title: "Esquemas Tarifarios"
+        btn_new: "Nuevo Esquema Tarifario"
         back_to_root: "Volver a ag2Gest"
-        back_to_management: "Volver a Contrataciones"
+        back_to_management: "Volver a Gestión Tarifaria"
       show:
-        title: "Esquema tarifario"
-        btn_edit: "Editar Esquema tarifario"
-        btn_delete: "Borrar Esquema tarifario"
-        return_to: "Volver a Esquema tarifario"
+        title: "Esquema Tarifario"
+        btn_edit: "Editar Esquema Tarifario"
+        btn_delete: "Borrar Esquema Tarifario"
+        return_to: "Volver a Esquema Tarifario"
 
       edit:
         show: 'Mostrar'
         back: 'Atrás'
-        title: "Editar Esquema tarifario"
-        btn_show: "Ver Esquema tarifario"
+        title: "Editar Esquema Tarifario"
+        btn_show: "Ver Esquema Tarifario"
         project_id: "Proyecto"
-        billable_concept_id: "Esquema tarifario"
+        billable_concept_id: "Esquema Tarifario"
         biller_id: "Emisor de la factura"
-        btn_update: "Actualizar Esquema tarifario"
+        btn_update: "Actualizar Esquema Tarifario"
       new:
-        title: "Nuevo Esquema tarifario"
-      back_to_main_page: "Volver a Esquemas tarifarios"
+        title: "Nuevo Esquema Tarifario"
+      back_to_main_page: "Volver a Esquemas Tarifarios"
       # generate_code_btn: "Código de Esquema tarifario"
       # personal_info: "Información del Cliente"
       # commercial_info: "Información Contable y Comercial"

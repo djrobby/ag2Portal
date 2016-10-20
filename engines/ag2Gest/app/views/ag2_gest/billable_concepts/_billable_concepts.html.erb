@@ -11,27 +11,20 @@
   <thead>
     <tr>
       <th><%= sortable "id", t('activerecord.attributes.billable_concept.id') %></th>
-      <th><%= sortable "name", t('activerecord.attributes.billable_concept.name') %></th>
       <th><%= sortable "code", t('activerecord.attributes.billable_concept.code') %></th>
+      <th><%= sortable "name", t('activerecord.attributes.billable_concept.name') %></th>
       <th><%= sortable "type", t('activerecord.attributes.billable_concept.type') %></th>
     </tr>
   </thead>
   <tbody>
     <% @billable_concepts.each do |bill| %>
       <tr>
-        <td><%= link_to bill.try(:id), billable_concept_path(bill) %></td>
+        <td><%= bill.try(:id) %></td>
+        <td><%= link_to bill.try(:code), billable_concept_path(bill) %></td>
         <td><%= bill.try(:name) %></td>
-        <td><%= bill.try(:code) %></td>
         <td><%= bill.try(:document) %></td>
-        <td>
-          <%= link_to edit_billable_concept_path(bill), class: "btn btn-mini" do %>
-            <i class="icon-edit"></i>
-          <% end %>
-
-          <%= link_to bill, class: "btn btn-mini", method: :delete, data: { confirm: 'Are you sure?' } do %>
-            <i class="icon-trash"></i>
-          <% end %>
-        </td>
+        <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => BillableConcept, :path => edit_billable_concept_path(bill) } %>
+        <%= render :partial => '/layouts/crud/delete', :locals => { :model => BillableConcept, :path => bill, :msg => t("activerecord.models.billable_concept.one"), :txt => tariff.bill } %> </td>
       </tr>
     <% end %>
   </tbody>
@@ -39,4 +32,4 @@
 
 <%= render :partial => '/layouts/pagination', :locals => { :ivar => @billable_concepts } %>
 <%= render :partial => '/layouts/crud/new', :locals => { :model => BillableConcept, :path => new_billable_concept_path, :txt => t("ag2_gest.billable_concepts.index.btn_new") } %>
-<%= link_to t("ag2_gest.billable_concepts.index.back_to_root"), ag2_gest.root_path %>
+<%= link_to t("ag2_gest.billable_concepts.index.back_to_management"), ag2_gest.tariff_management_path %>

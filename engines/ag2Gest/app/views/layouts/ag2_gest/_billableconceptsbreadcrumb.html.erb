@@ -1,6 +1,6 @@
-<% content_for :title, "aGestiona2 | ag2BillableConcept" %>
+<% content_for :title, "aGestiona2 | ag2BillableConcepts" %>
 <% content_for :icon, "/assets/icon/TableA.png" %>
-<% content_for :alt, "ag2BillableConcept" %>
+<% content_for :alt, "ag2BillableConcepts" %>
 
 <ul class="breadcrumb">
   <li>
@@ -10,7 +10,7 @@
     <a href="<%= ag2_gest.root_path %>">ag2Gest</a><span class="divider">></span>
   </li>
   <li>
-    <a href="<%= ag2_gest.tariff_management_path %>">Gestión de tarifas</a><span class="divider">></span>
+    <a href="<%= ag2_gest.tariff_management_path %>"><%= t "ag2_gest.home.index.tariff_management" %></a><span class="divider">></span>
   </li>
   <% if @billable_concepts %>
   <li>

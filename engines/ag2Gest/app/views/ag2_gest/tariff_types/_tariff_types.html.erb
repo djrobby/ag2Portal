@@ -11,24 +11,18 @@
   <thead>
     <tr>
       <th><%= sortable "id", t('activerecord.attributes.tariff_type.id') %></th>
-      <th><%= sortable "name", t('activerecord.attributes.tariff_type.name') %></th>
       <th><%= sortable "code", t('activerecord.attributes.tariff_type.code') %></th>
+      <th><%= sortable "name", t('activerecord.attributes.tariff_type.name') %></th>
     </tr>
   </thead>
   <tbody>
     <% @tariff_types.each do |tariff| %>
     <tr>
-      <td><%= link_to tariff.try(:id), tariff_type_path(tariff) %></td>
+      <td><%= tariff.try(:id) %></td>
+      <td><%= link_to tariff.try(:code), tariff_type_path(tariff) %></td>
       <td><%= tariff.try(:name) %></td>
-      <td><%= tariff.try(:code) %></td>
-      <td>
-        <%= link_to edit_tariff_type_path(tariff), class: "btn btn-mini" do%>
-          <i class="icon-edit"></i>
-        <% end %>
-        <%= link_to tariff, class: "btn btn-mini", method: :delete, data: { confirm: 'Are you sure?' } do %>
-          <i class="icon-trash"></i>
-        <% end %>
-      </td>
+      <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => TariffType, :path => edit_tariff_type_path(tariff) } %>
+      <%= render :partial => '/layouts/crud/delete', :locals => { :model => TariffType, :path => tariff, :msg => t("activerecord.models.tariff_type.one"), :txt => tariff.name } %> </td>
     </tr>
    <% end %>
   </tbody>
@@ -36,4 +30,4 @@
 
 <%= render :partial => '/layouts/pagination', :locals => { :ivar => @tariff_types } %>
 <%= render :partial => '/layouts/crud/new', :locals => { :model => TariffType, :path => new_tariff_type_path, :txt => t("ag2_gest.tariff_types.index.btn_new") } %>
-<%= link_to t("ag2_gest.tariff_types.index.back_to_root"), ag2_gest.root_path %>
+<%= link_to t("ag2_gest.tariff_types.index.back_to_management"), ag2_gest.tariff_management_path %>
