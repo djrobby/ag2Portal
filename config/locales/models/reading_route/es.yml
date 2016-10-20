@@ -15,6 +15,7 @@ es:
         id: "Id"
         project_id: "Proyecto"
         office: "Oficina"
+        office_id: "Oficina"        
         company: "Empresa"
         route_code: "Código"
         name: "Descripción"

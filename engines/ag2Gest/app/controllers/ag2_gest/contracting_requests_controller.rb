@@ -186,14 +186,15 @@ module Ag2Gest
       @contracting_request = ContractingRequest.find(params[:id])
       # current_user_id = current_user.id if !current_user.nil?
       @work_order = WorkOrder.new(  order_no: wo_next_no(@contracting_request.project),
-                                    work_order_type_id: 1, #WorkOderType inspection Nestor
+                                    work_order_type_id: 25, #WorkOderType inspection Nestor
                                     work_order_status_id: 1, #WorkOderStatus initial Nestor
-                                    work_order_labor_id: 1, # Nestor
-                                    # work_order_area_id: 1, # Nestor
+                                    work_order_labor_id: 132, # Nestor
+                                    work_order_area_id: 3, # Nestor
                                     project_id: @contracting_request.project_id,
                                     client_id: @contracting_request.client.id, # ¿¿??
                                     description: "#{t('activerecord.attributes.contracting_request.number_request')} " + @contracting_request.request_no,
                                     organization_id: @contracting_request.project.organization_id,
+                                    charge_account_id: @contracting_request.project.charge_account.first,
                                     in_charge_id: 1
                                     # started_at:, completed_at:, closed_at:, charge_account_id: 1,area_id:, store_id:, created_by: current_user_id, updated_by: current_user_id, remarks:,petitioner:, master_order_id:, reported_at:, approved_at:, certified_at:, posted_at:, location:, pub_record:,
                                   )
@@ -278,17 +279,29 @@ module Ag2Gest
 
     def initial_billing
       @contracting_request = ContractingRequest.find(params[:id])
+      # @work_order = WorkOrder.new(  order_no: wo_next_no(@contracting_request.project),
+      #                               work_order_type_id: 1, #WorkOderType inspection Nestor
+      #                               work_order_status_id: 1, #WorkOderStatus initial Nestor
+      #                               work_order_labor_id: 1, # Nestor
+      #                               project_id: @contracting_request.project_id,
+      #                               client_id: @contracting_request.client.id, # ¿¿??
+      #                               description:  "#{t('activerecord.attributes.contracting_request.number_request')} " + @contracting_request.request_no,
+      #                               organization_id: @contracting_request.project.organization_id,
+      #                               in_charge_id: 1
+      #                               # started_at:, completed_at:, closed_at:, charge_account_id: 1,area_id:, store_id:, created_by: current_user_id, updated_by: current_user_id, remarks:,petitioner:, master_order_id:, reported_at:, approved_at:, certified_at:, posted_at:, location:, pub_record:,
+      #                             )
       @work_order = WorkOrder.new(  order_no: wo_next_no(@contracting_request.project),
-                                    work_order_type_id: 1, #WorkOderType inspection Nestor
+                                    work_order_type_id: 25, #WorkOderType inspection Nestor
                                     work_order_status_id: 1, #WorkOderStatus initial Nestor
-                                    work_order_labor_id: 1, # Nestor
+                                    work_order_labor_id: 132, # Nestor
+                                    work_order_area_id: 3, # Nestor
                                     project_id: @contracting_request.project_id,
                                     client_id: @contracting_request.client.id, # ¿¿??
-                                    description:  "#{t('activerecord.attributes.contracting_request.number_request')} " + @contracting_request.request_no,
+                                    description: "#{t('activerecord.attributes.contracting_request.number_request')} " + @contracting_request.request_no,
                                     organization_id: @contracting_request.project.organization_id,
+                                    charge_account_id: @contracting_request.project.charge_account.first,
                                     in_charge_id: 1
-                                    # started_at:, completed_at:, closed_at:, charge_account_id: 1,area_id:, store_id:, created_by: current_user_id, updated_by: current_user_id, remarks:,petitioner:, master_order_id:, reported_at:, approved_at:, certified_at:, posted_at:, location:, pub_record:,
-                                  )
+                                    )
       if @work_order.save(:validate => false)
         @contracting_request.work_order = @work_order;
 

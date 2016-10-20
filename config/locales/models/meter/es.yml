@@ -26,3 +26,5 @@ es:
         last_withdrawal_date: "Última retirada"
         organization: "Organización"
         organization_id: "Organización"
+        office_id: "Oficina"
+        company_id: "Empresa"

@@ -9,4 +9,5 @@ es:
         check_for_meters: "Propietario de contador no puede ser eliminado mientras existan contadores vinculados."
     attributes:
       meter_owner:
+        id: "Id"
         name: "Descripción"

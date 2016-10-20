@@ -136,9 +136,9 @@ report.page.item(:loc_subscriber_region_id).value I18n.t("activerecord.report.su
 report.page.item(:loc_subscriber_country_id).value I18n.t("activerecord.report.subscriber.country_id")
 report.page.item(:loc_subscriber_center_id).value I18n.t("activerecord.report.subscriber.center_id")
 
-report.page.item(:subscriber_street_directory_id).value(@contracting_request.try(:subscriber_street_directory).try(:street_name))
+report.page.item(:subscriber_street_directory_id).value(@contracting_request.try(:subscriber_street_directory).try(:to_full_label))
 report.page.item(:subscriber_street_type_id).value(@contracting_request.try(:subscriber_street_type).try(:street_type_description))
-report.page.item(:subscriber_street_name).value(@contracting_request.try(:subscriber).try(:street_name))
+report.page.item(:subscriber_street_name).value(@contracting_request.try(:subscriber).try(:street_directory).try(:street_name))
 report.page.item(:subscriber_street_number).value(@contracting_request.try(:subscriber).try(:street_number))
 report.page.item(:subscriber_building).value(@contracting_request.try(:subscriber).try(:building))
 report.page.item(:subscriber_floor).value(@contracting_request.try(:subscriber).try(:floor))
@@ -161,11 +161,11 @@ report.page.item(:loc_cs).value I18n.t("activerecord.report.contracting_request.
 report.page.item(:loc_ccc_dc).value I18n.t("activerecord.report.contracting_request.ccc_dc")
 report.page.item(:loc_account_no).value I18n.t("activerecord.report.contracting_request.account_no")
 
-report.page.item(:iban).value(@contracting_request.try(:iban))
-report.page.item(:country_id).value(@contracting_request.try(:country_code))
 report.page.item(:iban_dc).value(@contracting_request.try(:iban_dc))
-report.page.item(:bank_id).value(@contracting_request.try(:cb))
-report.page.item(:bank_office_id).value(@contracting_request.try(:cs))
+report.page.item(:country_code).value(@contracting_request.try(:country_id))
+report.page.item(:iban_dc).value(@contracting_request.try(:iban_dc))
+report.page.item(:cb).value(@contracting_request.try(:bank_id))
+report.page.item(:cs).value(@contracting_request.try(:bank_office_id))
 report.page.item(:ccc_dc).value(@contracting_request.try(:ccc_dc))
 report.page.item(:account_no).value(@contracting_request.try(:account_no))
 

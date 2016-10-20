@@ -33,6 +33,7 @@ es:
         floor: "Planta"
         floor_office: "Planta de oficina"
         zipcode_id: "Código postal"
+        center_id: "Núcleo urbano"
         town_id: "Población"
         province_id: "Provincia"
         town: "Población"

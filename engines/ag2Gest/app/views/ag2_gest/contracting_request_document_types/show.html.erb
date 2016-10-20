@@ -8,7 +8,7 @@
       <td><%= @contracting_request_document_type.try(:id) %></td>
       <td><%= t('activerecord.attributes.contracting_request_document_type.name') %>:</td>
       <td><%= @contracting_request_document_type.try(:name) %></td>
-      <td><%= t('activerecord.attributes.contracting_request_document_type.active') %>:</td>
+      <td><%= t('activerecord.attributes.contracting_request_document_type.required') %>:</td>
       <td>
         <% if @contracting_request_document_type.try(:required) == true %>
           <i class="icon-thumbs-up"></i>

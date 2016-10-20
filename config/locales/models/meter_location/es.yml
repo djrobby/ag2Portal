@@ -9,4 +9,5 @@ es:
         check_for_meter_details: "Ubicación de contador no puede ser eliminado mientras existan contadores vinculados."
     attributes:
       meter_location:
+        id: "Id"
         name: "Descripción"

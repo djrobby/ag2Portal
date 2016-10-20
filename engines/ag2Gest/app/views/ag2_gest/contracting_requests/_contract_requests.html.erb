@@ -12,7 +12,7 @@
   <thead>
     <tr>
       <th align="center"><%= sortable "request_no", t('activerecord.attributes.contracting_request.request_no') %></th>
-      <th align="center"><%= t('activerecord.attributes.contracting_request.client') %></th>
+      <th align="center"><%= sortable "client_info", t('activerecord.attributes.contracting_request.client') %></th>
       <th align="center"><%= sortable "contracting_request_type_id", t('activerecord.attributes.contracting_request.contracting_request_type') %></th>
       <th align="center"><%= sortable "contracting_request_status_id", t('activerecord.attributes.contracting_request.contracting_request_status') %></th>
       <th align="right"><%= sortable "request_date", t('activerecord.attributes.contracting_request.request_date') %></th>

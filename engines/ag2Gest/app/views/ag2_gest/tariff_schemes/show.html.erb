@@ -55,36 +55,40 @@ new_path: new_tariff_scheme_path, new_txt: t('ag2_gest.tariff_schemes.index.btn_
 <% billable_document = "" %>
 
 <h4><%= t('activerecord.attributes.tariff_scheme.tariff_association') %></h4>
-
+<div class="row-fluid">
+  <div class="span12">
+    <a href="#" id="all-calibers" class="btn btn-primary">Mostrar todos los calibres</a>
+  </div>
+</div>
 <% @tariffs.each do |tariffs| %> <!-- Array de tariffs with index agrupadas -->
 
   <% if billable_document != BillableItem.find(tariffs.first).billable_concept.billable_document %>
-		<% unless billable_document == "" %>
-			</div></div></div>
-			<!-- End <%= billable_document %> -->
-		<% end %>
-		<!-- <%= BillableItem.find(tariffs.first).billable_concept.billable_document.to_s == '1' ? 'servicios' : 'contratación' %> -->
-		<% billable_document = BillableItem.find(tariffs.first).billable_concept.billable_document %>
-		<br>
-		<div class="accordion-group">
-	    <div class="accordion-heading">
-	      <a class="accordion-toggle" data-toggle="collapse" href='#collapse<%="#{BillableItem.find(tariffs.first).billable_concept.billable_document.to_s == '1' ? 'servicios' : 'contratación' }"%>'>
-					<h5 class="text-center"><%= BillableItem.find(tariffs.first).billable_concept.billable_document.to_s == '1' ? 'TARIFAS DE SERVICIOS' : 'TARIFAS DE CONTRACTACIÓN'  %></h5>
-	      </a>
-	    </div>
-	    <div id='collapse<%="#{BillableItem.find(tariffs.first).billable_concept.billable_document.to_s == '1' ? 'servicios' : 'contratación' }"%>' class="accordion-body collapse in">
-	      <div class="accordion-inner well">
-	<% end %>
+    <% unless billable_document == "" %>
+      </div></div></div>
+      <!-- End <%= billable_document %> -->
+    <% end %>
+    <!-- <%= BillableItem.find(tariffs.first).billable_concept.billable_document.to_s == '1' ? 'servicios' : 'contratación' %> -->
+    <% billable_document = BillableItem.find(tariffs.first).billable_concept.billable_document %>
+    <br>
+    <div class="accordion-group">
+      <div class="accordion-heading">
+        <a class="accordion-toggle" data-toggle="collapse" href='#collapse<%="#{BillableItem.find(tariffs.first).billable_concept.billable_document.to_s == '1' ? 'servicios' : 'contratación' }"%>'>
+          <h5 class="text-center"><%= BillableItem.find(tariffs.first).billable_concept.billable_document.to_s == '1' ? 'TARIFAS DE SERVICIOS' : 'TARIFAS DE CONTRACTACIÓN'  %></h5>
+        </a>
+      </div>
+      <div id='collapse<%="#{BillableItem.find(tariffs.first).billable_concept.billable_document.to_s == '1' ? 'servicios' : 'contratación' }"%>' class="accordion-body collapse in">
+        <div class="accordion-inner well">
+  <% end %>
 
   <div class="row-fluid" style="overflow: auto;">
     <div class="accordion-group">
-	    <div class="accordion-heading">
-	      <a class="accordion-toggle" data-toggle="collapse" href='#collapse<%="#{tariffs[0]}"%>'>
-					<h5 class="text-center"><%= BillableItem.find(tariffs.first).billable_concept.name %></h5>
-	      </a>
-	    </div>
-	    <div id='collapse<%="#{tariffs[0]}"%>' class="accordion-body collapse in">
-	      <div class="accordion-inner well">
+      <div class="accordion-heading">
+        <a class="accordion-toggle" data-toggle="collapse" href='#collapse<%="#{tariffs[0]}"%>'>
+          <h5 class="text-center"><%= BillableItem.find(tariffs.first).billable_concept.name %></h5>
+        </a>
+      </div>
+      <div id='collapse<%="#{tariffs[0]}"%>' class="accordion-body collapse in">
+        <div class="accordion-inner well">
 
           <table class="table table-condensed table-striped">
             <thead>
@@ -128,8 +132,8 @@ new_path: new_tariff_scheme_path, new_txt: t('ag2_gest.tariff_schemes.index.btn_
             <tbody>
 
               <% tariffs[1].each do |tariff| %>
-                <% if tariff.tariff_active %>
-                  <tr>
+                <%# if tariff.tariff_active %>
+                  <tr style="<%= 'display:none' unless tariff.tariff_active %>">
                     <td>
                       <a href="#" role="button" class="btn btn-mini btn-edit-tariff" data-tariff="<%= tariff.id %>"><i class="icon-edit"></i></a>
                     </td>
@@ -171,7 +175,7 @@ new_path: new_tariff_scheme_path, new_txt: t('ag2_gest.tariff_schemes.index.btn_
                     <td class="tax_type_v" data-tax-id="<%= tariff.try(:tax_type_v).try(:id) %>"><%= tariff.try(:tax_type_v).try(:tax) %></td>
                     <td class="tax_type_p" data-tax-id="<%= tariff.try(:tax_type_p).try(:id) %>"><%= tariff.try(:tax_type_p).try(:tax) %></td>
                   </tr>
-                <% end %>
+                <%# end %>
               <% end %>
 
             </tbody>
@@ -296,49 +300,56 @@ new_path: new_tariff_scheme_path, new_txt: t('ag2_gest.tariff_schemes.index.btn_
     </div>
   </div>
   <div class="modal-footer">
-    <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-    <button class="btn btn-primary">Save changes</button>
+    <button class="btn" data-dismiss="modal" aria-hidden="true">Cerrar</button>
+    <button class="btn btn-primary">Guardar cambios</button>
   </div>
   <% end %>
 </div>
 
 <script>
-$('.btn-edit-tariff').on('click', function () {
-  row = $(this).parents('tr');
+$(document).ready(function () {
+  $('#all-calibers').click(function (e) {
+    e.preventDefault();
+    $('tr[style*="display:none"]').show();
+  });
 
-  $('#edit-tariff-modal').find('form').attr('action', "/es/ag2_gest/es/tariffs/"+ $(this).data("tariff"));
+  $('.btn-edit-tariff').on('click', function () {
+    row = $(this).parents('tr');
 
-  $("#tariff_fixed_fee").val(row.find('.fixed_fee').text());
-  $("#tariff_block1_limit").val(row.find('.block1_limit').text());
-  $("#tariff_block1_fee").val(row.find('.block1_fee').text());
-  $("#tariff_block2_limit").val(row.find('.block2_limit').text());
-  $("#tariff_block2_fee").val(row.find('.block2_fee').text());
-  $("#tariff_block3_limit").val(row.find('.block3_limit').text());
-  $("#tariff_block3_fee").val(row.find('.block3_fee').text());
-  $("#tariff_block4_limit").val(row.find('.block4_limit').text());
-  $("#tariff_block4_fee").val(row.find('.block4_fee').text());
-  $("#tariff_block5_limit").val(row.find('.block5_limit').text());
-  $("#tariff_block5_fee").val(row.find('.block5_fee').text());
-  $("#tariff_block6_limit").val(row.find('.block6_limit').text());
-  $("#tariff_block6_fee").val(row.find('.block6_fee').text());
-  $("#tariff_block7_limit").val(row.find('.block7_limit').text());
-  $("#tariff_block7_fee").val(row.find('.block7_fee').text());
-  $("#tariff_block8_limit").val(row.find('.block8_limit').text());
-  $("#tariff_block8_fee").val(row.find('.block8_fee').text());
-  $("#tariff_variable_fee").val(row.find('.variable_fee').text());
-  $("#tariff_percentage_fee").val(row.find('.percentage_fee').text());
-  $("#tariff_percentage_applicable_formula").val(row.find('.percentage_applicable_formula').text());
-  $("#tariff_discount_pct_f").val(row.find('.discount_pct_f').text());
-  $("#tariff_discount_pct_b").val(row.find('.discount_pct_b').text());
-  $("#tariff_discount_pct_v").val(row.find('.discount_pct_v').text());
-  $("#tariff_discount_pct_p").val(row.find('.discount_pct_p').text());
-  $("#tariff_billing_frequency_id").val(row.find('.billing_frequency').data("id"));
-  $("#tariff_tax_type_f_id").val(row.find('.tax_type_f').data("tax-id"));
-  $("#tariff_tax_type_b_id").val(row.find('.tax_type_b').data("tax-id"));
-  $("#tariff_tax_type_v_id").val(row.find('.tax_type_v').data("tax-id"));
-  $("#tariff_tax_type_p_id").val(row.find('.tax_type_p').data("tax-id"));
+    $('#edit-tariff-modal').find('form').attr('action', "/es/ag2_gest/es/tariffs/"+ $(this).data("tariff"));
 
-  $('#edit-tariff-modal').modal('show');
-})
+    $("#tariff_fixed_fee").val(row.find('.fixed_fee').text());
+    $("#tariff_block1_limit").val(row.find('.block1_limit').text());
+    $("#tariff_block1_fee").val(row.find('.block1_fee').text());
+    $("#tariff_block2_limit").val(row.find('.block2_limit').text());
+    $("#tariff_block2_fee").val(row.find('.block2_fee').text());
+    $("#tariff_block3_limit").val(row.find('.block3_limit').text());
+    $("#tariff_block3_fee").val(row.find('.block3_fee').text());
+    $("#tariff_block4_limit").val(row.find('.block4_limit').text());
+    $("#tariff_block4_fee").val(row.find('.block4_fee').text());
+    $("#tariff_block5_limit").val(row.find('.block5_limit').text());
+    $("#tariff_block5_fee").val(row.find('.block5_fee').text());
+    $("#tariff_block6_limit").val(row.find('.block6_limit').text());
+    $("#tariff_block6_fee").val(row.find('.block6_fee').text());
+    $("#tariff_block7_limit").val(row.find('.block7_limit').text());
+    $("#tariff_block7_fee").val(row.find('.block7_fee').text());
+    $("#tariff_block8_limit").val(row.find('.block8_limit').text());
+    $("#tariff_block8_fee").val(row.find('.block8_fee').text());
+    $("#tariff_variable_fee").val(row.find('.variable_fee').text());
+    $("#tariff_percentage_fee").val(row.find('.percentage_fee').text());
+    $("#tariff_percentage_applicable_formula").val(row.find('.percentage_applicable_formula').text());
+    $("#tariff_discount_pct_f").val(row.find('.discount_pct_f').text());
+    $("#tariff_discount_pct_b").val(row.find('.discount_pct_b').text());
+    $("#tariff_discount_pct_v").val(row.find('.discount_pct_v').text());
+    $("#tariff_discount_pct_p").val(row.find('.discount_pct_p').text());
+    $("#tariff_billing_frequency_id").val(row.find('.billing_frequency').data("id"));
+    $("#tariff_tax_type_f_id").val(row.find('.tax_type_f').data("tax-id"));
+    $("#tariff_tax_type_b_id").val(row.find('.tax_type_b').data("tax-id"));
+    $("#tariff_tax_type_v_id").val(row.find('.tax_type_v').data("tax-id"));
+    $("#tariff_tax_type_p_id").val(row.find('.tax_type_p').data("tax-id"));
+
+    $('#edit-tariff-modal').modal('show');
+  })
+});
 
 </script>

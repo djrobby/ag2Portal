@@ -8,7 +8,7 @@ class PreReading < ActiveRecord::Base
   belongs_to :reading_route
   belongs_to :reading_1, class_name: "Reading"
   belongs_to :reading_2, class_name: "Reading"
-  attr_accessible :reading_date, :reading_index, :reading_index_1, :reading_index_2,
+  attr_accessible :reading_1, :reading_2, :reading_date, :reading_index, :reading_index_1, :reading_index_2,
                   :reading_sequence, :reading_variant,
                   :project_id, :billing_period_id, :billing_frequency_id, :reading_type_id,
                   :meter_id, :subscriber_id, :reading_route_id, :reading_1_id, :reading_2_id

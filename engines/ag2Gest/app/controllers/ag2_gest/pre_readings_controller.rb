@@ -1,4 +1,4 @@
-crequire_dependency "ag2_gest/application_controller"
+require_dependency "ag2_gest/application_controller"
 require 'will_paginate/array'
 
 module Ag2Gest

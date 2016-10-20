@@ -9,4 +9,5 @@ es:
         check_for_meter_models: "Tipo de contador no puede ser eliminado mientras existan modelos vinculados."
     attributes:
       meter_type:
+        id: "Id"
         name: "Descripción"

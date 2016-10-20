@@ -102,7 +102,7 @@ module Ag2Gest
     private
 
     def sort_column
-      ContractingRequestStatus.column_names.include?(params[:sort]) ? params[:sort] : "name"
+      ContractingRequestStatus.column_names.include?(params[:sort]) ? params[:sort] : "id"
     end
 
     # Keeps filter state

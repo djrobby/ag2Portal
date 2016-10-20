@@ -12,11 +12,12 @@
     $('.sel2').select2({
       formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
       dropdownCssClass: 'shrinked',
-      dropdownAutoWidth: true
+      dropdownAutoWidth: true,
+      allowClear: true
     });
     // Initialized form variable
     _thisForm = $("#removeFilter").closest('form')[0];
-	});
+  });
 
 
   $(document).ajaxStart(function() {
@@ -73,23 +74,23 @@
           <%= label_tag I18n.t("ag2_gest.contracting_requests.index.label_client"), nil, :class => 'form-label' %>
           <%= text_field_tag "ClientInfo", nil, :class => 'x-large-text-field shrinked number-text-field', onkeyup: "caps(this)" %>
 
-        	<!-- Project -->
-        	<%= label_tag I18n.t("ag2_gest.contracting_requests.index.label_project"), nil, :class => 'form-label-under-sel2' %>
-        	<%= select_tag "Project", options_from_collection_for_select(@projects, "id", "project_code"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
+          <!-- Project -->
+          <%= label_tag I18n.t("ag2_gest.contracting_requests.index.label_project"), nil, :class => 'form-label-under-sel2' %>
+          <%= select_tag "Project", options_from_collection_for_select(@projects, "id", "project_code"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
 
-        	<!-- Request Status -->
-        	<%= label_tag I18n.t("ag2_gest.contracting_requests.index.label_request_status"), nil, :class => 'form-label-under-sel2' %>
-        	<%= select_tag "RequestStatus", options_from_collection_for_select(@request_statuses, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked' %>
+          <!-- Request Status -->
+          <%= label_tag I18n.t("ag2_gest.contracting_requests.index.label_request_status"), nil, :class => 'form-label-under-sel2' %>
+          <%= select_tag "RequestStatus", options_from_collection_for_select(@request_statuses, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked' %>
 
-        	<!-- Request Type -->
-        	<%= label_tag I18n.t("ag2_gest.contracting_requests.index.label_request_type"), nil, :class => 'form-label-under-sel2' %>
-        	<%= select_tag "RequestType", options_from_collection_for_select(@request_types, "id", "description"), :prompt => "", :class => 'x-large-text-field shrinked' %>
+          <!-- Request Type -->
+          <%= label_tag I18n.t("ag2_gest.contracting_requests.index.label_request_type"), nil, :class => 'form-label-under-sel2' %>
+          <%= select_tag "RequestType", options_from_collection_for_select(@request_types, "id", "description"), :prompt => "", :class => 'x-large-text-field shrinked' %>
 
-        	<!-- Submit -->
-        	<%= submit_tag I18n.t(:apply_filter_button), :class => 'btn btn-primary', :id => 'submit_btn' %>
+          <!-- Submit -->
+          <%= submit_tag I18n.t(:apply_filter_button), :class => 'btn btn-primary', :id => 'submit_btn' %>
 
-        	<!-- Remove filter -->
-        	<button id="removeFilter" type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><%= t :clear_filter_button %></button>
+          <!-- Remove filter -->
+          <button id="removeFilter" type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><%= t :clear_filter_button %></button>
 
         <% end %>
         <!-- Buttons -->

@@ -502,7 +502,7 @@
       <tbody>
         <tr>
           <td><b>Referencia</b></td>
-          <td><%= link_to @contracting_request.service_point.name, ag2_gest.service_point_path(@contracting_request.service_point) %></td>
+          <td><%= link_to @contracting_request.service_point.code, ag2_gest.service_point_path(@contracting_request.service_point) %></td>
         </tr>
         <tr>
           <td><b>Dirección</b></td>
@@ -606,7 +606,7 @@
           <td><b><%= t('activerecord.attributes.contracting_request.number_subscriber') %></b></td>
           <td>
             <% if @contracting_request.subscriber %>
-              <%= link_to @contracting_request.subscriber.full_no, subscriber_path(@contracting_request.subscriber) %>
+              <%= link_to @contracting_request.subscriber.full_name, subscriber_path(@contracting_request.subscriber) %>
             <% else %>
               <a id="link_subscriber" href="#"></a>
             <% end %>

@@ -9,6 +9,7 @@ es:
         check_for_sale_offers: "Estado de presupuesto no puede ser eliminado mientras existan presupuestos vinculados."
     attributes:
       sale_offer_status:
+        id: "Id"
         name: "Descripción"
         approval: ¿Requiere aprovación?
         notification: ¿Notifica?
