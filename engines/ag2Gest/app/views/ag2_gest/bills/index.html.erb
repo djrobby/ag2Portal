@@ -33,10 +33,10 @@ $(document).ready(function () {
     <div class="span1">
       <b>Id</b>
     </div>
-    <div class="span4">
+    <div class="span4 text-center">
       <b>Abonado</b>
     </div>
-    <div class="span2">
+    <div class="span1">
       <b>Contador</b>
     </div>
     <div class="span1">
@@ -44,6 +44,9 @@ $(document).ready(function () {
     </div>
     <div class="span1">
       <b>Total</b>
+    </div>
+    <div class="span1">
+      <b>¿Facturado?</b>
     </div>
     <div class="span1">
     </div>
@@ -63,14 +66,17 @@ $(document).ready(function () {
         <div class="span4 soft-padding">
           <%= link_to b.subscriber.to_label, subscriber_path(b.subscriber) %>
         </div>
-        <div class="span2 soft-padding">
+        <div class="span1 soft-padding">
           <%= link_to b.subscriber.try(:meter).try(:meter_code), meter_path(b.subscriber.meter) %>
         </div>
-        <div class="span1 soft-padding">
+        <div class="span1 soft-padding text-center">
           <%= b.reading.try(:consumption) || 0 %>
         </div>
-        <div class="span1 soft-padding">
+        <div class="span1 soft-padding text-center">
           <%= b.total %>
+        </div>
+        <div class="span1 text-center">
+          <% if b.bill %> <i class="icon-thumbs-up"></i> <% else %> <i class="icon-thumbs-down"></i> <% end %>
         </div>
         <div class="span1 soft-padding pull-right">
           <%= link_to bill_path(b, bills: b.pre_group_no), class: "btn btn-mini", method: :delete, data: { confirm: 'Are you sure?' } do %>

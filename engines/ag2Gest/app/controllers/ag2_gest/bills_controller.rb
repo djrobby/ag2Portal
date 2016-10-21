@@ -41,12 +41,12 @@ module Ag2Gest
     def confirm
       # @bills = Bill.where(id: params[:bills][:ids].split("[\"")[1].split("\"]")[0].split("\", \""))
       @pre_bills = PreBill.where(pre_group_no: params[:pre_bill][:ids], bill_id: nil)
+      by_user = current_user.nil? ? nil : current_user.id
       @pre_bills.each do |pre_bill|
-        bill = Bill.create(
-          bill_no: bill_next_no(pre_bill.reading.project),
+        @bill = Bill.create!( bill_no: bill_next_no(pre_bill.project),
           project_id: pre_bill.reading.project_id,
           invoice_status_id: InvoiceStatus::PENDING,
-          bill_date: Date.today,#¿¿¿???
+          bill_date: Date.today,
           subscriber_id: pre_bill.subscriber_id,
           client_id: pre_bill.client_id,
           last_name: pre_bill.last_name,
@@ -64,18 +64,16 @@ module Ag2Gest
           province_id: pre_bill.province_id,
           region_id: pre_bill.region_id,
           country_id: pre_bill.country_id,
-          created_by: (current_user.id if current_user),
+          created_by: by_user,
           reading_1_id: pre_bill.reading_1_id,
           reading_2_id: pre_bill.reading_2_id
         )
-        pre_bill.update_attributes(bill_id: bill.id, confirmation_date: params[:pre_bill][:confirmation_date])
-        pre_bill.pre_invoices.each do |pre_invoice|
-          invoice = Invoice.create(
-            invoice_no: invoice_next_no(pre_bill.reading.project.company_id),
-            bill_id: bill.id,
+        pre_bill.pre_invoices.map do |pre_invoice|
+          @invoice = Invoice.create!(invoice_no: invoice_next_no(pre_bill.project.company_id),
+            bill_id: @bill.id,
             invoice_status_id: InvoiceStatus::PENDING,
             invoice_type_id: InvoiceType::WATER,
-            invoice_date: Date.today,#¿¿¿???
+            invoice_date: Date.today,
             tariff_scheme_id: pre_invoice.tariff_scheme_id,
             payday_limit: nil,
             invoice_operation_id: InvoiceOperation::INVOICE,
@@ -88,16 +86,14 @@ module Ag2Gest
             discount_pct: pre_invoice.discount_pct,
             exemption: pre_invoice.exemption,
             charge_account_id: pre_invoice.charge_account_id,
-            created_by: (current_user.id if current_user),
+            created_by: by_user,
             reading_1_date: pre_invoice.reading_1_date,
             reading_2_date: pre_invoice.reading_2_date,
             reading_1_index: pre_invoice.reading_1_index,
             reading_2_index: pre_invoice.reading_2_index
           )
-          pre_invoice.update_attributes(invoice_id: invoice.id, confirmation_date: params[:pre_bill][:confirmation_date])
-          pre_invoice.pre_invoice_items.each do |pre_invoice_item|
-            InvoiceItem.create(
-              invoice_id: invoice.id,
+          pre_invoice.pre_invoice_items.map do |pre_invoice_item|
+            InvoiceItem.create!( invoice_id: @invoice.id,
               code: pre_invoice_item.code,
               description: pre_invoice_item.description,
               tariff_id: pre_invoice_item.tariff_id,
@@ -109,12 +105,13 @@ module Ag2Gest
               product_id: pre_invoice_item.product_id,
               subcode: pre_invoice_item.subcode,
               measure_id: pre_invoice_item.measure_id,
-              created_by: (current_user.id if current_user)
+              created_by: by_user
             )
           end
         end
+        pre_bill.update_attributes(bill_id: @bill.id,confirmation_date: params[:pre_bill][:confirmation_date])
       end
-      redirect_to pre_index_bills_path
+      redirect_to pre_index_bills_path,notice: "Facturas confirmadas"
     end
 
     def get_subscribers

@@ -6,7 +6,7 @@ class InvoiceItem < ActiveRecord::Base
   belongs_to :measure
 
   attr_accessible :code, :subcode, :description, :quantity, :price, :discount, :discount_pct,
-                  :invoice_id, :tariff_id, :tax_type_id, :product_id, :measure_id
+                  :invoice_id, :tariff_id, :tax_type_id, :product_id, :measure_id, :created_by, :updated_by
 
   before_validation :item_repeat, :on => :create
 

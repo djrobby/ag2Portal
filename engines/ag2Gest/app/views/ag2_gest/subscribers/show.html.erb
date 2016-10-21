@@ -114,7 +114,7 @@
       <tbody>
         <tr>
           <td><b><%= t('activerecord.attributes.subscriber.contract') %>:</b></td>
-          <td><%= @subscriber.try(:contract) %></td>
+          <td><%= link_to @subscriber.water_supply_contract.contracting_request.try(:full_no), ag2_gest.contracting_request_path(@subscriber.water_supply_contract.contracting_request) %></td>
           <td><b><%= t('activerecord.attributes.subscriber.active') %>:</b></td>
           <% if @subscriber.try(:active) %>
             <td><i class="icon-thumbs-up"></i></td>
@@ -130,13 +130,15 @@
           <td><b><%= t('activerecord.attributes.subscriber.meter_id') %>:</b></td>
           <td id="info_meter"><%= link_to @subscriber.try(:meter).try(:meter_code), ag2_gest.meter_path(@subscriber.meter_id) unless @subscriber.try(:meter).blank? %></td>
           <td><b><%= t('activerecord.attributes.subscriber.model') %>:</b></td>
-          <td id="info_brand"><%= @susbcriber.try(:meter).try(:meter_model).try(:full_name) unless @subscriber.try(:meter).blank? %></td>
+          <td id="info_brand"><%= link_to @subscriber.meter.meter_model.model, ag2_gest.meter_model_path(@subscriber.meter.meter_model) unless @subscriber.meter.nil? %></td>
           <td><b><%= t('activerecord.attributes.subscriber.caliber') %>:</b></td>
           <td id="info_caliber"><%= link_to @subscriber.try(:meter).try(:caliber).try(:caliber), ag2_gest.caliber_path(@subscriber.meter.caliber_id) if @subscriber.try(:meter) %></td>
         </tr>
         <tr>
+          <td><b><%= t('activerecord.attributes.subscriber.tariff_scheme_id') %>:</b></td>
+          <td colspan="4"><%= link_to @subscriber.try(:tariff_scheme).try(:name), tariff_scheme_path(@subscriber.tariff_scheme) if @subscriber.tariff_scheme %></td>
           <td><b><%= t('activerecord.attributes.subscriber.billing_frequency_id') %>:</b></td>
-          <td colspan="6"><%= link_to @subscriber.try(:billing_frequency).try(:name), billing_frequency_path(@subscriber.billing_frequency_id) if @subscriber.billing_frequency %></td>
+          <td><%= link_to @subscriber.try(:billing_frequency).try(:name), billing_frequency_path(@subscriber.billing_frequency_id) if @subscriber.billing_frequency %></td>
         </tr>
         <tr>
           <td><b><%= t('activerecord.attributes.subscriber.comments') %>:</b></td>
