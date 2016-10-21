@@ -2,26 +2,27 @@ es:
   ag2_gest:
     reading_incidences:
       index:
-        title: "Incidencias de lecturas"
-        btn_new: "Incidencia de lectura"
+        title: "Incidencias de Lectura"
+        btn_new: "Incidencia de Lectura"
         back_to_root: "Volver a ag2Gest"
+        back_to_management: "Volver a Gestión de Lecturas"
       show:
-        title: "Incidencia de lectura"
-        btn_edit: "Editar Incidencia de lectura"
-        btn_delete: "Borrar Incidencia de lectura"
-        return_to: "Volver a Incidencia de lectura"
+        title: "Incidencia de Lectura"
+        btn_edit: "Editar Incidencia de Lectura"
+        btn_delete: "Borrar Incidencia de Lectura"
+        return_to: "Volver a Incidencia de Lectura"
       edit:
         show: "Mostrar"
         back: "Atrás"
-        title: "Editar Incidencia de lectura"
-        btn_show: "Ver Incidencia de lectura"
+        title: "Editar Incidencia de Lectura"
+        btn_show: "Ver Incidencia de Lectura"
       new:
-        title: "Nuevo Incidencia de lectura"
-      back_to_main_page: "Volver a Incidencias de lecturas"
+        title: "Nuevo Incidencia de Lectura"
+      back_to_main_page: "Volver a Incidencias de Lectura"
     reading_incidence:
-      reading_incidence_type_id: "Tipo de Incidencia de lectura"
+      reading_incidence_type_id: "Tipo de Incidencia de Lectura"
       index:
-        btn_new: "Nueva Incidencia de lectura"
+        btn_new: "Nueva Incidencia de Lectura"
       # generate_code_btn: "Código de Incidencia de lectura"
       # personal_info: "Información del Cliente"
       # commercial_info: "Información Contable y Comercial"

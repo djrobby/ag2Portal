@@ -44,4 +44,4 @@
 
 <%= render :partial => '/layouts/pagination', :locals => { :ivar => @reading_incidence_types } %>
 <%= render :partial => '/layouts/crud/new', :locals => { :model => ReadingIncidenceType, :path => new_reading_incidence_type_path, :txt => t("ag2_gest.reading_incidence_types.index.btn_new") } %>
-<%= link_to t("ag2_gest.reading_incidence_types.index.back_to_root"), ag2_gest.root_path %>
+<%= link_to t("ag2_gest.reading_incidence_types.index.back_to_management"), ag2_gest.reading_management_path %>

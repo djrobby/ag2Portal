@@ -3,9 +3,10 @@
     text-align: center!important;
   }
 </style>
+
 <%= render '/layouts/ag2_gest/prereadingsbreadcrumb' %>
 
-<h3>Prelecturas</h3>
+<h3><%=t '.title' %></h3>
 
 <div class="container-fluid">
   <div class="row-fluid">
@@ -15,8 +16,8 @@
         <!-- Buttons -->
         <%= link_to t('activerecord.attributes.pre_reading.generate_readings'), new_pre_reading_path, class: "btn btn-block btn-primary" %>
         <%= link_to t('activerecord.attributes.pre_reading.impute_readings'), new_impute_pre_readings_path, class: "btn btn-block btn-primary" %>
-        <br /><br />
-        <%= link_to t("ag2_gest.pre_readings.index.back_to_root"), ag2_gest.root_path %>
+        <br />
+        <%= link_to t("ag2_gest.pre_readings.index.back_to_management"), ag2_gest.reading_management_path %>
       </div><!-- /.sidebar-nav -->
     </div><!-- /.span3 -->
 

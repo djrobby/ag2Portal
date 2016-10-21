@@ -34,4 +34,4 @@
 
 <%= render :partial => '/layouts/pagination', :locals => { :ivar => @regulation_types } %>
 <%= render :partial => '/layouts/crud/new', :locals => { :model => RegulationType, :path => new_regulation_type_path, :txt => t("ag2_gest.regulation_types.index.btn_new") } %>
-<%= link_to t("ag2_gest.regulation_types.index.back_to_root"), ag2_gest.root_path %>     
+<%= link_to t("ag2_gest.regulation_types.index.back_to_management"), ag2_gest.regulation_management_path %>     

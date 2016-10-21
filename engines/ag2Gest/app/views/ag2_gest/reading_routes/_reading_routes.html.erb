@@ -38,4 +38,4 @@
 
 <%= render :partial => '/layouts/pagination', :locals => { :ivar => @reading_routes } %>
 <%= render :partial => '/layouts/crud/new', :locals => { :model => ReadingRoute, :path => new_reading_route_path, :txt => t("ag2_gest.reading_routes.index.btn_new") } %>
-<%= link_to t("ag2_gest.reading_routes.index.back_to_root"), ag2_gest.root_path %>
+<%= link_to t("ag2_gest.reading_routes.index.back_to_management"), ag2_gest.reading_management_path %>

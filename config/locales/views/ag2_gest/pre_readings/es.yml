@@ -2,22 +2,23 @@ es:
   ag2_gest:
     pre_readings:
       index:
-        title: "Pre-lecturas"
-        btn_new: "Nueva Pre-lectura"
+        title: "Lecturas no Confirmadas"
+        btn_new: "Nueva Prelectura"
         back_to_root: "Volver a ag2Gest"
+        back_to_management: "Volver a Gestión de Lecturas"
       show:
-        title: "Pre-lectura"
-        btn_edit: "Editar Lectura"
-        btn_delete: "Borrar Pre-lectura"
-        return_to: "Volver a Pre-lecturas"
+        title: "Lectura no Confirmada"
+        btn_edit: "Editar Prelectura"
+        btn_delete: "Borrar Prelectura"
+        return_to: "Volver a Lectura no Confirmada"
       edit:
         show: "Mostrar"
         back: "Atrás"
-        title: "Editar Pre-lectura"
-        btn_show: "Ver Pre-lectura"
+        title: "Editar Lectura no Confirmada"
+        btn_show: "Ver Prelectura"
       new:
-        title: "Nueva Pre-lectura"
-      back_to_main_page: "Volver a Pre-lecturas"
+        title: "Nueva Lectura no Confirmada"
+      back_to_main_page: "Volver a Lecturas no Confirmadas"
       # generate_code_btn: "Código de Lectura"
       # personal_info: "Información del Cliente"
       # commercial_info: "Información Contable y Comercial"

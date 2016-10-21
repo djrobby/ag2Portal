@@ -2,22 +2,23 @@ es:
   ag2_gest:
     reading_routes:
       index:
-        title: "Rutas de lectura" 
-        btn_new: "Nuevo Ruta de lectura"
+        title: "Rutas de Lectura" 
+        btn_new: "Nuevo Ruta"
         back_to_root: "Volver a ag2Gest"
+        back_to_management: "Volver a Gestión de Lecturas"
       show:
-        title: "Ruta de lectura"
-        btn_edit: "Editar Ruta de lectura"
-        btn_delete: "Borrar Ruta de lectura"
-        return_to: "Volver a Ruta de lectura"
+        title: "Ruta de Lectura"
+        btn_edit: "Editar Ruta"
+        btn_delete: "Borrar Ruta"
+        return_to: "Volver a Ruta de Lectura"
       edit:
         show: "Mostrar"
         back: "Atrás"
-        title: "Editar Ruta de lectura"
-        btn_show: "Ver Ruta de lectura"
+        title: "Editar Ruta de Lectura"
+        btn_show: "Ver Ruta"
       new:
-        title: "Nuevo Ruta de lectura"
-      back_to_main_page: "Volver a Rutas de lectura"
+        title: "Nuevo Ruta de Lectura"
+      back_to_main_page: "Volver a Rutas de Lectura"
       # generate_code_btn: "Código de Tipo de incidencia de lectura"
       # personal_info: "Información del Cliente"
       # commercial_info: "Información Contable y Comercial"

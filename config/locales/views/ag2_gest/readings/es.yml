@@ -7,6 +7,7 @@ es:
         back_to_root: "Volver a ag2Gest"
         label_project: "Proyecto"
         label_request_status: "Petición de contrato"
+        back_to_management: "Volver a Gestión de Lecturas"
       show:
         title: "Lectura"
         btn_edit: "Editar Lectura"
@@ -19,7 +20,7 @@ es:
         btn_show: "Ver Lectura"
       new:
         title: "Nueva Lectura"
-      back_to_main_page: "Volver a Lectura"
+      back_to_main_page: "Volver a Lecturas"
       # generate_code_btn: "Código de Lectura"
       # personal_info: "Información del Cliente"
       # commercial_info: "Información Contable y Comercial"

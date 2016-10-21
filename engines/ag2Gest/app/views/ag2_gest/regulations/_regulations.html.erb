@@ -38,4 +38,4 @@
 
 <%= render :partial => '/layouts/pagination', :locals => { :ivar => @regulations } %>
 <%= render :partial => '/layouts/crud/new', :locals => { :model => Regulation, :path => new_regulation_path, :txt => t("ag2_gest.regulations.index.btn_new") } %>
-<%= link_to t("ag2_gest.regulations.index.back_to_root"), ag2_gest.root_path %>     
+<%= link_to t("ag2_gest.regulations.index.back_to_management"), ag2_gest.regulation_management_path %>

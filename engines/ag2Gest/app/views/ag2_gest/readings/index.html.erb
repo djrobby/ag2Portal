@@ -35,6 +35,5 @@
   
   <%= render :partial => '/layouts/crud/new', :locals => { :model => Reading, :path => new_reading_path, :txt => t("ag2_gest.readings.index.btn_new") } %>
 
-  <%= link_to t("ag2_gest.readings.index.back_to_root"), ag2_gest.root_path %>
-
+  <%= link_to t("ag2_gest.readings.index.back_to_management"), ag2_gest.reading_management_path %>
 </div><!-- /.container-fluid -->

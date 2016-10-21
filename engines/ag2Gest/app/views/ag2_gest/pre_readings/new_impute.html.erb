@@ -8,27 +8,11 @@
   });
 </script>
 
-<% content_for :title, "aGestiona2 | ag2PreReadings" %>
-<% content_for :icon, "/assets/icon/TableA.png" %>
-<% content_for :alt, "ag2PreReadings" %>
+<%= render '/layouts/ag2_gest/prereadingsbreadcrumb' %>
 
-<ul class="breadcrumb">
-  <li>
-    <a href="<%= main_app.root_path %>"><i class="icon-home"></i></a><span class="divider">></span>
-  </li>
-  <li>
-    <a href="<%= ag2_gest.root_path %>">ag2Gest</a><span class="divider">></span>
-  </li>
-  <li>
-    <a href="<%= ag2_gest.pre_readings_path %>">Pre-lecturas</a><span class="divider">></span>
-  </li>
-  <li>Imputar</li>
-</ul>
-
-<h3>Imputar lecturas</h3>
+<h3><%=t 'activerecord.attributes.pre_reading.impute_readings' %></h3>
 
 <%= simple_form_for :prereading, url: impute_readings_pre_readings_path, method: :get, :html => {:class => 'form-vertical well', multiple: "multiple"} do |f| %>
-
 <%= f.error_notification %>
 <%= display_base_errors resource %>
 
@@ -39,8 +23,9 @@
   <div class="span6">
     <%= f.input :reading_routes, collection: @reading_routes, input_html: {class: "sel2 mid-text-field multiple", multiple: "multiple"}, :label_html => { :class => 'form-label' } %>
   </div>
+</div>
 
-  <%= f.button :submit, "Cargar prelecturas", :class => 'btn-primary' %>
+<%= f.button :submit, "Cargar e Imputar", :class => 'btn-primary' %>
 <% end %>
 
-<%= link_to I18n.t('ag2_gest.readings.back_to_main_page'), readings_path %>
+<%= link_to I18n.t('ag2_gest.pre_readings.back_to_main_page'), pre_readings_path %>

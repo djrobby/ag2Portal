@@ -2,10 +2,10 @@ es:
   activerecord:
     models:
       reading_incidence_type:
-        zero:  Tipos de incidencia de lectura
-        one:   Tipo de incidencia de lectura
-        few:   Tipos de incidencia de lectura
-        other: Tipos de incidencia de lectura
+        zero:  Tipos incidencia de lectura
+        one:   Tipo incidencia de lectura
+        few:   Tipos incidencia de lectura
+        other: Tipos incidencia de lectura
         # check_for_delivery_notes: "Cliente no puede ser eliminado mientras existan notas de entrega vinculadas."
         # check_for_sale_offers: "Cliente no puede ser eliminado mientras existan presupuestos vinculados."
         # check_for_client_invoices: "Cliente no puede ser eliminado mientras existan facturas C vinculadas."

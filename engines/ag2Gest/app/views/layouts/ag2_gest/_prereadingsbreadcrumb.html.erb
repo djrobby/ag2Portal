@@ -1,6 +1,6 @@
-<% content_for :title, "aGestiona2 | ag2GestPreReading" %>
-<% content_for :icon, "/assets/icon/TableA.png" %>
-<% content_for :alt, "ag2GestPreReading" %>
+<% content_for :title, "aGestiona2 | ag2GestPreReadings" %>
+<% content_for :icon, "/assets/icon/ag2PreReadings.png" %>
+<% content_for :alt, "ag2GestPreReadings" %>
 
 <ul class="breadcrumb">
   <li>
@@ -8,6 +8,9 @@
   </li>
   <li>
     <a href="<%= ag2_gest.root_path %>">ag2Gest</a><span class="divider">></span>
+  </li>
+  <li>
+    <a href="<%= ag2_gest.reading_management_path %>"><%= t "ag2_gest.home.index.reading_management" %></a><span class="divider">></span>
   </li>
   <% if @pre_readings %>
   <li>

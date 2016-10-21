@@ -2,9 +2,10 @@ en:
   ag2_gest:
     reading_incidences:
       index:
-        title: "Billable items"
+        title: "Reading Incidences"
         btn_new: "New Billable item"
         back_to_root: "Back to ag2Gest"
+        back_to_management: "Back to Reading Management"
       show:
         title: "Billable item"
         btn_edit: "Edit Billable item"

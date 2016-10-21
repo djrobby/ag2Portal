@@ -1,17 +1,17 @@
 en:
   activerecord:
     models:
-      billable_item:
-        zero:  Billable items
-        one:   Billable item
-        few:   Billable items
-        other: Billable items
+      reading_route:
+        zero:  Reading routes
+        one:   Reading route
+        few:   Reading routes
+        other: Reading routes
         # check_for_delivery_notes: "Cliente no puede ser eliminado mientras existan notas de entrega vinculadas."
         # check_for_sale_offers: "Cliente no puede ser eliminado mientras existan presupuestos vinculados."
         # check_for_client_invoices: "Cliente no puede ser eliminado mientras existan facturas C vinculadas."
         # check_for_client_charges: "Cliente no puede ser eliminado mientras existan cobros vinculados."
     attributes:
-      billable_item:
+      reading_route:
         biller_id: "Id Biller"
         project_id: "Project"
         billable_concept_id: "Billable concept"

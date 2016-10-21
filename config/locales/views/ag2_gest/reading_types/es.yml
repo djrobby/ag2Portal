@@ -5,6 +5,7 @@ es:
         title: "Tipos de lectura"
         btn_new: "Nuevo Tipo lectura"
         back_to_root: "Volver a ag2Gest"
+        back_to_management: "Volver a Gestión de Lecturas"
       show:
         title: "Tipo de lectura"
         btn_edit: "Editar Tipo de lectura"

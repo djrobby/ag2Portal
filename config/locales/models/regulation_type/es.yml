@@ -2,10 +2,10 @@ es:
   activerecord:
     models:
       regulation_type:
-        zero:  "Tipo de regulaciones"
-        one:   "Regulaciones"
-        few:   "Tipo de regulaciones"
-        other: "Tipo de regulaciones"
+        zero:  "Tipos de regulación"
+        one:   "Tipo de regulación"
+        few:   "Tipos de regulación"
+        other: "Tipos de regulación"
     attributes:
       regulation_type:
         id: "Id"

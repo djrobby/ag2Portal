@@ -18,6 +18,7 @@ module Ag2Gest
       @breadcrumb = 'create'
       @billing_periods = billing_periods_dropdown.select{|b| !b.pre_readings.empty?}
       @reading_routes = reading_routes_dropdown.select{|r| !r.pre_readings.empty?}
+      @pre_readings = 1
     end
 
     def impute_readings

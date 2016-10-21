@@ -5,6 +5,7 @@ es:
         title: "Tarifas"
         btn_new: "Nuevo Tarifa"
         back_to_root: "Volver a ag2Gest"
+        back_to_management: "Volver a Gestión Tarifaria"
       show:
         title: "Tarifa"
         btn_edit: "Editar Tarifa"

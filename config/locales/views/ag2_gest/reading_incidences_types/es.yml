@@ -2,9 +2,10 @@ es:
   ag2_gest:
     reading_incidence_types:
       index:
-        title: "Tipos de incidencia de lectura"
-        btn_new: "Nuevo Tipo de incidencia de lectura"
+        title: "Tipos de Incidencia de lectura"
+        btn_new: "Nuevo Tipo de Incidencia"
         back_to_root: "Volver a ag2Gest"
+        back_to_management: "Volver a Gestión de Lecturas"
       show:
         title: "Tipo de incidencia de lectura"
         btn_edit: "Editar Tipo de incidencia de lectura"

@@ -67,3 +67,24 @@ en:
       calibers:
         items: "Calibers"
         item: "Caliber"
+      readings:
+        items: "Readings"
+        item: "Reading"
+      pre_readings:
+        items: "Unconfirmed Readings"
+        item: "Reading"
+      reading_types:
+        items: "Reading types"
+        item: "Type"
+      reading_incidence_types:
+        items: "Reading incidence types"
+        item: "Type"
+      reading_routes:
+        items: "Reading routes"
+        item: "Route"
+      regulations:
+        items: "Regulations"
+        item: "Regulation"
+      regulation_types:
+        items: "Regulation types"
+        item: "Type"
