@@ -24,6 +24,10 @@ class Bill < ActiveRecord::Base
   has_one :water_supply_contract
   has_one :pre_bill
 
+  def to_label
+    full_no
+  end
+
   def reading
     reading_2
   end

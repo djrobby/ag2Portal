@@ -194,7 +194,7 @@ module Ag2Gest
                                     client_id: @contracting_request.client.id, # ¿¿??
                                     description: "#{t('activerecord.attributes.contracting_request.number_request')} " + @contracting_request.request_no,
                                     organization_id: @contracting_request.project.organization_id,
-                                    charge_account_id: @contracting_request.project.charge_accounts.first,
+                                    charge_account_id: @contracting_request.project.try(:charge_accounts).try(:first).try(:id),
                                     in_charge_id: 1
                                     # started_at:, completed_at:, closed_at:, charge_account_id: 1,area_id:, store_id:, created_by: current_user_id, updated_by: current_user_id, remarks:,petitioner:, master_order_id:, reported_at:, approved_at:, certified_at:, posted_at:, location:, pub_record:,
                                   )
@@ -299,7 +299,7 @@ module Ag2Gest
                                     client_id: @contracting_request.client.id, # ¿¿??
                                     description: "#{t('activerecord.attributes.contracting_request.number_request')} " + @contracting_request.request_no,
                                     organization_id: @contracting_request.project.organization_id,
-                                    charge_account_id: @contracting_request.project.charge_accounts.first,
+                                    charge_account_id: @contracting_request.project.try(:charge_accounts).try(:first).try(:id),
                                     in_charge_id: 1
                                     )
       if @work_order.save(:validate => false)

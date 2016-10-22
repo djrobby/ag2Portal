@@ -16,9 +16,17 @@ class WaterSupplyContract < ActiveRecord::Base
                   :remarks, :subscriber_id, :tariff_scheme_id, :work_order_id
 
   searchable do
-    string :gis_id
+    integer :id
+    text :gis_id
+    string :gis_id, :multiple => true     # Multiple search values accepted in one search (inverse_no_search)
+    integer :contracting_request_id
+    integer :subscriber_id
+    integer :reading_route_id
+    integer :meter_id
+    integer :tariff_scheme_id
+    integer :caliber_id
+    date :contract_date
   end
-
   # def tariffs_contract
   #   tariffs = tariff_scheme.try(:tariffs)
   #   unless tariffs.blank?

@@ -20,6 +20,10 @@ class ReadingRoute < ActiveRecord::Base
     self.routing_code = next_rr(office_id || project.office_id)
   end
 
+  def to_label
+    "#{route_code} (#{name})"
+  end
+
   private
 
     def next_rr(office)

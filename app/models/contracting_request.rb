@@ -34,7 +34,7 @@ class ContractingRequest < ActiveRecord::Base
   belongs_to :bank_office
 
   delegate :subscriber, to: :water_supply_contract, allow_nil: true
-  
+
   attr_accessible :client_building, :client_cellular, :client_country_id, :client_email,
                   :client_fax, :client_floor, :client_floor_office, :client_phone,
                   :client_province_id, :client_region_id, :client_street_directory_id,
@@ -129,6 +129,10 @@ class ContractingRequest < ActiveRecord::Base
   end
 
   def full_name
+    full_no
+  end
+
+  def to_label
     full_no
   end
 

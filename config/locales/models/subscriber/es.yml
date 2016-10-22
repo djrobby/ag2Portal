@@ -56,3 +56,4 @@ es:
         address_2: "C.P./Población"
         is_contact: "¿Es contacto?"
         address_1_c: "Dir. Servicio"
+        active: "¿Activo?"

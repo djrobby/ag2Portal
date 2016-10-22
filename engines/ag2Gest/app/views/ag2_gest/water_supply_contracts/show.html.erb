@@ -1,5 +1,74 @@
-<p id="notice"><%= notice %></p>
+<%= render '/layouts/ag2_gest/watersupplycontractsbreadcrumb' %>
 
+<h3><%=t '.title' %></h3>
+<table class="table odd_even_table">
+  <tbody>
+    <tr>
+      <td>Id:</td>
+      <td colspan="3"><%= @water_supply_contract.id %></td>
+    </tr>
+    <tr>
+      <td><%=t 'activerecord.attributes.water_supply_contract.contracting_request_id' %>:</td>
+      <td><%= link_to @water_supply_contract.contracting_request.to_label, @water_supply_contract.contracting_request unless @water_supply_contract.contracting_request.blank? %></td>
+      <td><%=t 'activerecord.attributes.water_supply_contract.client_id' %>:</td>
+      <td><%= link_to @water_supply_contract.client.to_label, @water_supply_contract.client unless @water_supply_contract.client.blank? %></td>
+    </tr>
+    <tr>
+      <td><%=t 'activerecord.attributes.water_supply_contract.subscriber_id' %>:</td>
+      <td><%= link_to @water_supply_contract.subscriber.to_label, @water_supply_contract.subscriber unless @water_supply_contract.subscriber.blank? %></td>
+      <td><%=t 'activerecord.attributes.water_supply_contract.reading_route_id' %>:</td>
+      <td><%= link_to @water_supply_contract.reading_route.to_label, @water_supply_contract.reading_route unless @water_supply_contract.reading_route.blank? %></td>
+    </tr>
+    <tr>
+      <td><%=t 'activerecord.attributes.water_supply_contract.work_order_id' %>:</td>
+      <td><%= link_to @water_supply_contract.work_order.to_label, @water_supply_contract.work_order unless @water_supply_contract.work_order.blank? %></td>
+      <td><%=t 'activerecord.attributes.water_supply_contract.meter_id' %>:</td>
+      <td><%= link_to @water_supply_contract.meter.to_label, @water_supply_contract.meter unless @water_supply_contract.meter.blank? %></td>
+    </tr>
+    <tr>
+      <td><%=t 'activerecord.attributes.water_supply_contract.tariff_scheme_id' %>:</td>
+      <td><%= link_to @water_supply_contract.tariff_scheme.to_label, @water_supply_contract.tariff_scheme unless @water_supply_contract.tariff_scheme.blank? %></td>
+      <td><%=t 'activerecord.attributes.water_supply_contract.bill_id' %>:</td>
+      <td><%= link_to @water_supply_contract.bill.to_label, @water_supply_contract.bill unless @water_supply_contract.bill.blank? %></td>
+    </tr>
+    <tr>
+      <td><%=t 'activerecord.attributes.water_supply_contract.caliber_id' %>:</td>
+      <td><%= link_to @water_supply_contract.caliber.to_label, @water_supply_contract.caliber unless @water_supply_contract.caliber.blank? %></td>
+      <td><%=t 'activerecord.attributes.water_supply_contract.contract_date' %>:</td>
+      <td><%= @water_supply_contract.contract_date %></td>
+    </tr>
+    <tr>
+      <td><%=t 'activerecord.attributes.water_supply_contract.reading_sequence' %>:</td>
+      <td><%= @water_supply_contract.reading_sequence %></td>
+      <td><%=t 'activerecord.attributes.water_supply_contract.cadastral_reference' %>:</td>
+      <td><%= @water_supply_contract.cadastral_reference %></td>
+    </tr>
+    <tr>
+      <td><%=t 'activerecord.attributes.water_supply_contract.gis_id' %>:</td>
+      <td><%= @water_supply_contract.gis_id %></td>
+      <td><%=t 'activerecord.attributes.water_supply_contract.endowments' %>:</td>
+      <td><%= @water_supply_contract.endowments %></td>
+    </tr>
+    <tr>
+      <td><%=t 'activerecord.attributes.water_supply_contract.inhabitants' %>:</td>
+      <td><%= @water_supply_contract.inhabitants %></td>
+      <td><%=t 'activerecord.attributes.water_supply_contract.installation_date' %>:</td>
+      <td><%= @water_supply_contract.formatted_date(installation_date) if @water_supply_contract.installation_date %></td>
+    </tr>
+    <tr>
+      <td><%=t 'activerecord.attributes.water_supply_contract.installation_index' %>:</td>
+      <td><%= @water_supply_contract.installation_index %></td>
+      <td><%=t 'activerecord.attributes.water_supply_contract.remarks' %>:</td>
+      <td><%= @water_supply_contract.remarks %></td>
+    </tr>
+    <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @water_supply_contract } %>
+    <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @water_supply_contract } %>
+  </tbody>
+</table>
 
-<%= link_to 'Edit', edit_water_supply_contract_path(@water_supply_contract) %> |
-<%= link_to 'Back', water_supply_contracts_path %>
+<%#= render partial: '/layouts/crud/update_delete_new', locals:
+{ model: PaymentMethod, update_path: edit_water_supply_contract_path(@water_supply_contract), update_txt: t('.btn_edit'),
+delete_path: @water_supply_contract, delete_txt: t('.btn_delete'), msg: t("activerecord.models.water_supply_contract.one"), txt: @water_supply_contract.description,
+new_path: new_water_supply_contract_path, new_txt: t('ag2_admin.water_supply_contracts.index.btn_new') } %>
+
+<%= link_to t('ag2_admin.water_supply_contracts.back_to_main_page'), water_supply_contracts_path %>

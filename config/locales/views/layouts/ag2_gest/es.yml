@@ -130,3 +130,9 @@ es:
       billable_items:
         items: "Items facturables"
         item: "Item"
+      water_supply_contracts:
+        items: "Contratos de suministro"
+        item: "Contrato"
+      water_connection_contracts:
+        items: "Contratos de acometida"
+        item: "Contrato"

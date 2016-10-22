@@ -5,24 +5,76 @@ module Ag2Gest
     # GET /water_supply_contracts
     # GET /water_supply_contracts.json
     def index
-      @water_supply_contracts = WaterSupplyContract.all
+      manage_filter_state
+
+      gis_id = params[:Gis]
+      subscriber = params[:Subscriber]
+      readingRoute = params[:ReadingRoute]
+      meter = params[:Meter]
+      order = params[:Order]
+      caliber = params[:Caliber]
+      # OCO
+      init_oco if !session[:organization]
+      # Initialize select_tags
+      @subscribers = subscribers_dropdown if @subscribers.nil?
+      @reading_routes = reading_routes_dropdown if @reading_routes.nil?
+      @meters = meters_dropdown if @meters.nil?
+      @tariff_schemes = tariff_schemes_dropdown if @tariff_schemes.nil?
+      @calibers = calibers_dropdown if @calibers.nil?
+
+      # ContractingRequest for current projects
+      current_contracting_request = ContractingRequest.where(project_id: current_projects_ids).map(&:id)
+
+      # If inverse no search is required
+      gis_id = !gis_id.blank? && gis_id[0] == '%' ? inverse_gis_search(gis_id) : gis_id
+
+      @search = WaterSupplyContract.search do
+        with :contracting_request_id, current_contracting_request
+        fulltext params[:search]
+        if !gis_id.blank?
+          if gis_id.class == Array
+            with :gis_id, gis_id
+          else
+            with(:gis_id).starting_with(gis_id)
+          end
+        end
+        if !subscriber.blank?
+          with :subscriber_id, subscriber
+        end
+        if !readingRoute.blank?
+          with :reading_route_id, readingRoute
+        end
+        if !meter.blank?
+          with :meter_id, meter
+        end
+        if !order.blank?
+          with :tariff_scheme_id, order
+        end
+        if !caliber.blank?
+          with :caliber_id, caliber
+        end
+        order_by :id, :desc
+        paginate :page => params[:page] || 1, :per_page => per_page
+      end
+      @water_supply_contracts = @search.results
 
       respond_to do |format|
         format.html # index.html.erb
         format.json { render json: @water_supply_contracts }
+        format.js
       end
     end
 
     # GET /water_supply_contracts/1
     # GET /water_supply_contracts/1.json
-    # def show
-    #   @water_supply_contract = WaterSupplyContract.find(params[:id])
+    def show
+      @water_supply_contract = WaterSupplyContract.find(params[:id])
 
-    #   respond_to do |format|
-    #     format.html # show.html.erb
-    #     format.json { render json: @water_supply_contract }
-    #   end
-    # end
+      respond_to do |format|
+        format.html # show.html.erb
+        format.json { render json: @water_supply_contract }
+      end
+    end
 
     # GET /water_supply_contracts/new
     # GET /water_supply_contracts/new.json
@@ -55,6 +107,7 @@ module Ag2Gest
       # @tariff = Tariff.find_by_tariff_scheme_id_and_caliber_id_and_billable_item_id(@tariff_scheme.id, @caliber.id, @billable_item.id)
       @water_supply_contract = WaterSupplyContract.new(params[:water_supply_contract])
       # @water_supply_contract.tariff_id = @tariff.try(:id)
+      @water_supply_contract.created_by = current_user.id if !current_user.nil?
       if @water_supply_contract.save
         response_hash = { water_supply_contract: @water_supply_contract }
         response_hash[:tariff_scheme] = @tariff_scheme
@@ -123,5 +176,75 @@ module Ag2Gest
         format.json { head :no_content }
       end
     end
+
+    private
+    def manage_filter_state
+      # subscribers
+      if params[:search]
+        session[:search] = params[:search]
+      elsif session[:search]
+        params[:search] = session[:search]
+      end
+      # no
+      if params[:Subscriber]
+        session[:Subscriber] = params[:Subscriber]
+      elsif session[:Subscriber]
+        params[:Subscriber] = session[:Subscriber]
+      end
+      # reading_routes
+      if params[:ReadingRoute]
+        session[:ReadingRoute] = params[:ReadingRoute]
+      elsif session[:ReadingRoute]
+        params[:ReadingRoute] = session[:ReadingRoute]
+      end
+      # meters
+      if params[:Meter]
+        session[:Meter] = params[:Meter]
+      elsif session[:Meter]
+        params[:Meter] = session[:Meter]
+      end
+      # tariff_schemes
+      if params[:Order]
+        session[:Order] = params[:Order]
+      elsif session[:Order]
+        params[:Order] = session[:Order]
+      end
+      # calibers
+      if params[:Caliber]
+        session[:Caliber] = params[:Caliber]
+      elsif session[:Caliber]
+        params[:Caliber] = session[:Caliber]
+      end
+    end
+
+    def inverse_gis_search(gis)
+      _numbers = []
+      # Add numbers found
+      WaterSupplyContract.where('gis_id LIKE ?', "#{gis}").each do |i|
+        _numbers = _numbers << i.offer_gis
+      end
+      _numbers = _numbers.blank? ? gis : _numbers
+    end
+
+    def subscribers_dropdown
+      Subscriber.where(office_id: current_offices_ids)
+    end
+
+    def reading_routes_dropdown
+      ReadingRoute.where(project_id: current_projects_ids)
+    end
+
+    def meters_dropdown
+      Meter.where(office_id: current_offices_ids)
+    end
+
+    def tariff_schemes_dropdown
+      TariffScheme.where(project_id: current_projects_ids)
+    end
+
+    def calibers_dropdown
+      Caliber.all
+    end
+
   end
 end

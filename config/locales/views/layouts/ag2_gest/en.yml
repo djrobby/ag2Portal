@@ -130,3 +130,9 @@ en:
       billable_items:
         items: "Billable items"
         item: "Item"
+      water_supply_contracts:
+        items: "Supply contracts"
+        item: "Contract"
+      water_connection_contracts:
+        items: "Connection contracts"
+        item: "Contract"
