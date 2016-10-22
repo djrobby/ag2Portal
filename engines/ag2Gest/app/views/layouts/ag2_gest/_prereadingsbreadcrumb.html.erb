@@ -13,10 +13,27 @@
     <a href="<%= ag2_gest.reading_management_path %>"><%= t "ag2_gest.home.index.reading_management" %></a><span class="divider">></span>
   </li>
   <% if @pre_readings %>
-  <li>
-    <%=t "ag2_gest.breadcrumb.pre_readings.items" %>
-  </li>
+    <li>
+      <%=t "ag2_gest.breadcrumb.pre_readings.items" %>
+    </li>
+    <% end %>
+    <% if request.path == "/es/ag2_gest/es/pre_readings/new_impute" %>
+    <li>
+      <span class="divider">></span><a href="<%= ag2_gest.pre_readings_path %>"><%= t('activerecord.attributes.pre_reading.impute_readings') %></a>
+    </li>
+    <li>
+      <span class="divider">></span><%= t('activerecord.attributes.pre_reading.impute_readings') %>
+    </li>
   <% end %>
+  <% if request.path == "/es/ag2_gest/es/pre_readings/impute_readings" %>
+    <li>
+      <span class="divider">></span><a href="<%= ag2_gest.pre_readings_path %>">Prelecturas</a>
+    </li>
+    <li>
+      <span class="divider">></span>Confirmar definitivas
+    </li>
+  <% end %>
+
   <% if @pre_reading %>
   <li>
     <a href="<%= pre_readings_path %>"><%=t :"ag2_gest.breadcrumb.pre_readings.items" %></a><span class="divider">></span>

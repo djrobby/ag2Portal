@@ -24,7 +24,7 @@
       <tr>
         <td><%= link_to service_point.try(:id), service_point_path(service_point) %></td>
         <td><%= service_point.try(:name) %></td>
-        <td><%= "#{service_point.try(:street_type).try(:street_type_code)} #{service_point.try(:street_name)}, #{service_point.try(:street_number)}"%></td>
+        <td><%= "#{service_point.try(:street_directory).try(:to_full_label)}, #{service_point.try(:street_number)}"%></td>
         <td><%= service_point.try(:diameter) %></td>
         <td><%= service_point.try(:gis_id) %></td>
         <td><%= service_point.try(:reading_variant) %></td>

@@ -5,6 +5,19 @@
       formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
       allowClear: true
     });
+
+    // when the #project_id field changes
+    //$("#reading_route_project_id").change(function() {
+    $("#reading_route_project_id").on("change", function (e) {
+      // make a POST call and replace the content
+      var project = $('select#reading_route_project_id :selected').val();
+      if (project == "")
+        project = "0";
+      jQuery.getJSON('/ag2_gest/reading_routes/update_office_textfield_from_project/' + project, function(data) {
+        $("#reading_route_office_id").select2("val", data.office_id);
+      })
+      return false;
+    });
   });
 </script>
 

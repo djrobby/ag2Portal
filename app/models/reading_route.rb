@@ -18,7 +18,6 @@ class ReadingRoute < ActiveRecord::Base
 
   def assign_code_office
     self.routing_code = next_rr(office_id || project.office_id)
-    self.office_id = project.office_id if office_id
   end
 
   private
@@ -27,7 +26,7 @@ class ReadingRoute < ActiveRecord::Base
       code = ''
       office = office.to_i
       office_code = office.to_s.rjust(4, '0')
-      last_code = ReadingRoute.select{|r| r.office_id == office || r.project.office_id == office}.max_by(&:routing_code).try(:routing_code)
+      last_code = ReadingRoute.select{|r| r.office_id == office}.max_by(&:routing_code).try(:routing_code)
       if last_code.nil?
         code = office_code + '000001'
       else

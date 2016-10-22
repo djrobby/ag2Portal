@@ -169,26 +169,9 @@
       display: block;
   }
 </style>
-<% content_for :title, "aGestiona2 | ag2PreReadings" %>
-<% content_for :icon, "/assets/icon/TableA.png" %>
-<% content_for :alt, "ag2PreReadings" %>
+<%= render '/layouts/ag2_gest/prereadingsbreadcrumb' %>
 
-<ul class="breadcrumb">
-  <li>
-    <a href="<%= main_app.root_path %>"><i class="icon-home"></i></a><span class="divider">></span>
-  </li>
-  <li>
-    <a href="<%= ag2_gest.root_path %>">ag2Gest</a><span class="divider">></span>
-  </li>
-  <li>
-    <a href="<%= ag2_gest.pre_readings_path %>">Pre-lecturas</a><span class="divider">></span>
-  </li>
-  <li>
-    Imputar lecturas
-  </li>
-</ul>
-
-<h3>Imputar Lecturas</h3>
+<h3>Confirmar Definitivas</h3>
 <div id="loading-msg" class="alert">
   <strong><%= t('activerecord.attributes.pre_reading.pass_to_definitive') %>Cargando, espere por favor...</strong>
 </div>
@@ -198,30 +181,30 @@
     <%= link_to t('activerecord.attributes.pre_reading.print'), to_pdf_pre_readings_path(:format => :pdf, prereading: {reading_routes: @routes, period: @period, project: @project }), class: "btn btn-primary btn-mini", target: "_blank" %>
   </div>
   <div class="row-fluid">
-		<div class="span12" id="div_table">
-			<table class="table table-condensed table-striped shrinked stu">
-			  <thead>
-			    <tr>
-			      <th><%= t('activerecord.attributes.pre_reading.route') %></th>
-			      <th><%= t('activerecord.attributes.pre_reading.reading_sequence_acronym') %></th>
+    <div class="span12" id="div_table">
+      <table class="table table-condensed table-striped shrinked stu">
+        <thead>
+          <tr>
+            <th><%= t('activerecord.attributes.pre_reading.route') %></th>
+            <th><%= t('activerecord.attributes.pre_reading.reading_sequence_acronym') %></th>
             <th><%= t('activerecord.attributes.pre_reading.subscriber_id') %></th>
             <th><%= t('activerecord.attributes.pre_reading.delivery_address') %></th>
             <th><%= t('activerecord.attributes.pre_reading.meter_id') %></th>
             <th><%= t('activerecord.attributes.pre_reading.billing_period_id') %></th>
-			      <th><%= t('activerecord.attributes.pre_reading.reading_index_2') %></th>
-			      <th><%= t('activerecord.attributes.pre_reading.reading_index_1') %></th>
-			      <th><%= t('activerecord.attributes.pre_reading.reading_date') %></th>
-			      <th colspan="5"><%= t('activerecord.attributes.pre_reading.index') %></th>
-			    </tr>
-			  </thead>
-			  <tbody>
-			    <% @pre_readings.each_with_index do |pre_reading,index| %>
-			    	<tr id="prereading-<%= pre_reading.id %>" class="prereading-row" data-id="<%= pre_reading.id %>" data-index="<%= pre_reading.reading_index %>" data-index-one="<%= pre_reading.reading_index_1 %>" data-consumption-one="<%= pre_reading.try(:reading_1).try(:consumption) %>" data-consumption-two="<%= pre_reading.try(:reading_2).try(:consumption) %>" data-digits="<%= pre_reading.try(:meter).try(:meter_model).try(:digits) %>" data-incedences="<%= pre_reading.reading_incidence_types.pluck(:id) %>">
+            <th><%= t('activerecord.attributes.pre_reading.reading_index_2') %></th>
+            <th><%= t('activerecord.attributes.pre_reading.reading_index_1') %></th>
+            <th><%= t('activerecord.attributes.pre_reading.reading_date') %></th>
+            <th colspan="5"><%= t('activerecord.attributes.pre_reading.index') %></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @pre_readings.each_with_index do |pre_reading,index| %>
+          <tr id="prereading-<%= pre_reading.id %>" class="prereading-row" data-id="<%= pre_reading.id %>" data-index="<%= pre_reading.reading_index %>" data-index-one="<%= pre_reading.reading_index_1 %>" data-consumption-one="<%= pre_reading.try(:reading_1).try(:consumption) %>" data-consumption-two="<%= pre_reading.try(:reading_2).try(:consumption) %>" data-digits="<%= pre_reading.try(:meter).try(:meter_model).try(:digits) %>" data-incedences="<%= pre_reading.reading_incidence_types.map(&:id) %>">
               <%= simple_form_for pre_reading, :remote => true, :html => { "data-type" => :json, :id => "form-prereading-#{pre_reading.id}" } do |f| %>
-  			    		<td <%= "class=row-green" unless pre_reading.incomplete? %>>
+                <td <%= "class=row-green" unless pre_reading.incomplete? %>>
                   <%= pre_reading.try(:reading_route).try(:route_code) %>
                 </td>
-  				      <td <%= "class=row-green" unless pre_reading.incomplete? %>>
+                <td <%= "class=row-green" unless pre_reading.incomplete? %>>
                   <%= pre_reading.reading_sequence %>
                 </td>
                 <td <%= "class=row-green" unless pre_reading.incomplete? %>>
@@ -236,19 +219,19 @@
                 <td <%= "class=row-green" unless pre_reading.incomplete? %>>
                   <%= pre_reading.try(:billing_period).try(:period) %>
                 </td>
-  				      <td style="width:6%" <%= "class=row-green" unless pre_reading.incomplete? %>>
+                <td style="width:6%" <%= "class=row-green" unless pre_reading.incomplete? %>>
                   <%= "#{pre_reading.reading_2.try(:billing_period).try(:period)} <b>#{pre_reading.reading_index_2}</b>".html_safe  %>
                 </td>
-  				      <td style="width:6%" <%= "class=row-green" unless pre_reading.incomplete? %>>
+                <td style="width:6%" <%= "class=row-green" unless pre_reading.incomplete? %>>
                   <%= "#{pre_reading.reading_1.try(:billing_period).try(:period)} <b>#{pre_reading.reading_index_1}</b>".html_safe %>
                 </td>
-  				      <td style="width:15%" <%= "class=row-green" unless pre_reading.incomplete? %>>
+                <td style="width:15%" <%= "class=row-green" unless pre_reading.incomplete? %>>
                   <%= f.input :reading_date, :start_year => Time.now.year - 100, :end_year => Time.now.year + 100, :as => :string, label: false, :input_html => { :value => (pre_reading.reading_date ? pre_reading.reading_date.strftime("%d/%m/%Y") : Date.today.strftime("%d/%m/%Y")), :class => 'large-text-field date_picker input-sm'}, wrapper_html: { class: "pull-left", style: "width: 80%"}  %>
                   <a href="#" class="btn btn-mini btn-primary ">
                     <i class="icon-calendar icon-white"></i>
                   </a>
                 </td>
-  				      <td <%= "class=row-green" unless pre_reading.incomplete? %>>
+                <td <%= "class=row-green" unless pre_reading.incomplete? %>>
                   <%= f.input :reading_index, label: false, :input_html => { :value => (pre_reading.reading_index), :class => 'large-text-field input-sm', tabindex: index+1} %>
                 </td>
                 <td <%= "class=row-green" unless pre_reading.incomplete? %>>
@@ -262,11 +245,12 @@
                 </td>
               <% end %>
             </tr>
-			    <% end %>
-			  </tbody>
-			</table>
-		</div>
-	</div>
+          <% end %>
+        </tbody>
+      </table>
+      <%= render :partial => '/layouts/pagination', :locals => { :ivar => @pre_readings } %>
+    </div>
+  </div>
 </div>
 
 <!-- Modal -->

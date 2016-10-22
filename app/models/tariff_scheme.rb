@@ -59,8 +59,8 @@ class TariffScheme < ActiveRecord::Base
   end
 
   def contain_tariffs_active
-    tariffs_active = self.tariffs.joins(:caliber).joins(:billable_item => :billable_concept)
-    .order("billable_concepts.billable_document,billable_concepts.id,calibers.caliber")#.select{|t| t.tariff_active}
+    tariffs_active = self.tariffs.joins(:billable_item => :billable_concept)
+    .order("billable_concepts.billable_document,billable_concepts.id,tariffs.caliber_id")#.select{|t| t.tariff_active}
     .group_by{|t| t.billable_item_id}
   end
 

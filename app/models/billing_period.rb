@@ -35,8 +35,12 @@ class BillingPeriod < ActiveRecord::Base
     billing_frequency.months == 0 ? billing_frequency.days.days : billing_frequency.months.months
   end
 
+  def month_freq
+    billing_frequency.months == 0 ? (billing_frequency.days / 30).to_i : billing_frequency.months
+  end
+
   def date_to_period(date)
-    date.strftime("%Y") + format('%02d',(((date.month - 1) / time_freq) + 1))
+    date.strftime("%Y") + format('%02d',(((date.month - 1) / month_freq) + 1))
   end
 
 end

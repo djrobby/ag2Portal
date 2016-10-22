@@ -18,6 +18,14 @@ class ServicePoint < ActiveRecord::Base
 
   has_many :subscribers
 
+  validates :code,                    :presence => true
+  validates :service_point_type,      :presence => true
+  validates :service_point_location,  :presence => true
+  validates :service_point_purpose,   :presence => true
+  validates :organization,            :presence => true
+  validates :center,                  :presence => true
+  validates :street_directory,        :presence => true
+
   def to_full_label
     if street_directory.nil?
       "No calle asignada (id:#{id})"

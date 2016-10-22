@@ -11,7 +11,7 @@ class MeterModel < ActiveRecord::Base
   validates :meter_brand,   :presence => true
   validates :model,         :presence => true
   validates :digits,        :presence => true
-  validates :letter_id,     :length => { :is => 1 }
+  validates :letter_id,     :length => { :is => 1 }, allow_blank: true
 
   # Scopes
   scope :by_brand_model, -> { order(:meter_brand_id, :model) }

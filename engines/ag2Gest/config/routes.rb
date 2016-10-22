@@ -197,6 +197,7 @@ Ag2Gest::Engine.routes.draw do
     resources :reading_types
     resources :reading_incidence_types
     resources :reading_routes
+    match 'reading_routes/update_office_textfield_from_project/:id', :controller => 'reading_routes', :action => 'update_office_textfield_from_project'
     #
     resources :bills do
       get 'pre_index', on: :collection
