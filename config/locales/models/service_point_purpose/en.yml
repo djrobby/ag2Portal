@@ -1,7 +1,14 @@
 en:
   activerecord:
+    models:
+      service_point_purpose:
+        zero:  "Propósitos PS"
+        one:   "Propósito PS"
+        few:   "Propósitos PS"
+        other: "Propósitos PS"
     attributes:
-      street_directory:
-        street_name: "Name"
-        street_type: "Type"
-        town: "Town"
+      service_point_purpose:
+        id: "Id"
+        name: "Descripción"
+        successfully: "Propósito PS se ha actualizado correctamente."
+        create: "Propósito PS se ha creado correctamente."

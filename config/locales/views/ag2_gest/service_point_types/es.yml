@@ -2,22 +2,23 @@ es:
   ag2_gest:
     service_point_types:
       index:
-        title: "Tipo de punto de servicio"
-        btn_new: "Nuevo Tipo de punto de servicio"
+        title: "Tipos de PS"
+        btn_new: "Nuevo Tipo de PS"
         back_to_root: "Volver a ag2Gest"
+        back_to_management: "Volver a Puntos de Servicio"
       show:
-        title: "Tipo de punto de servicio"
-        btn_edit: "Editar Tipo de punto de servicio"
-        btn_delete: "Borrar Tipo de punto de servicio"
-        return_to: "Volver a Tipo de puntos de servicios"
+        title: "Tipo de PS"
+        btn_edit: "Editar Tipo de PS"
+        btn_delete: "Borrar Tipo de PS"
+        return_to: "Volver a Tipo de PS"
       edit:
         show: "Mostrar"
         back: "Atrás"
-        title: "Editar Tipo de punto de servicio"
-        btn_show: "Ver Tipo de punto de servicio"
+        title: "Editar Tipo de PS"
+        btn_show: "Ver Tipo de PS"
       new:
-        title: "Nuevo Tipo de punto de servicio"
-      back_to_main_page: "Volver a Tipo de puntos de servicios"
+        title: "Nuevo Tipo de PS"
+      back_to_main_page: "Volver a Tipos de PS"
       # generate_code_btn: "Código de Emisor de la factura"
       # personal_info: "Información del Cliente"
       # commercial_info: "Información Contable y Comercial"

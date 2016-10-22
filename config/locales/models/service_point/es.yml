@@ -2,15 +2,15 @@ es:
   activerecord:
     models:
       service_point:
-        zero:  "Puntos de servicio"
-        one: "Punto de servicio"
-        few:   "Puntos de servicio"
-        other: "Puntos de servicio"
+        zero:  "Puntos de suministro"
+        one: "Punto de suministro"
+        few:   "Puntos de suministro"
+        other: "Puntos de suministro"
     attributes:
       service_point:
         id: "Id"
         name: "Descripción"
-        service_point_type_id: "Tipo de punto de servicio"
+        service_point_type_id: "Tipo"
         service_point_location_id: "Emplazamiento"
         service_point_purpose_id: "Propósito"
         diameter: "Diámetro"
@@ -40,5 +40,5 @@ es:
         region_id: "Región"
         country_id: "País"
         direction: "Dirección"
-        successfully: "Punto de servicio se ha actualizado correctamente."
-        create: "Punto de servicio se ha creado correctamente."
+        successfully: "Punto de suministro se ha actualizado correctamente."
+        create: "Punto de suministro se ha creado correctamente."

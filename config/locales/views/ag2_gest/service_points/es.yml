@@ -2,22 +2,23 @@ es:
   ag2_gest:
     service_points:
       index:
-        title: "Punto de servicio"
-        btn_new: "Nuevo punto de servicio"
+        title: "Puntos de Suministro"
+        btn_new: "Nuevo Punto de Suministro"
         back_to_root: "Volver a ag2Gest"
+        back_to_management: "Volver a Puntos de Servicio"
       show:
-        title: "Punto de servicio"
-        btn_edit: "Editar punto de servicio"
-        btn_delete: "Borrar punto de servicio"
-        return_to: "Volver a puntos de servicio"
+        title: "Punto de Suministro"
+        btn_edit: "Editar Punto de Suministro"
+        btn_delete: "Borrar Punto de Suministro"
+        return_to: "Volver a Puntos de Suministro"
       edit:
         show: "Mostrar"
         back: "Atrás"
-        title: "Editar punto de servicio"
-        btn_show: "Ver punto de servicio"
+        title: "Editar Punto de Suministro"
+        btn_show: "Ver Punto de Suministro"
       new:
-        title: "Nuevo punto de servicio"
-      back_to_main_page: "Volver a puntos de servicio"
+        title: "Nuevo Punto de Suministro"
+      back_to_main_page: "Volver a Puntos de Suministro"
       # generate_code_btn: "Código de Emisor de la factura"
       # personal_info: "Información del Cliente"
       # commercial_info: "Información Contable y Comercial"

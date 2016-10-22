@@ -2,13 +2,13 @@ es:
   activerecord:
     models:
       service_point_type:
-        zero:  "Tipo de puntos de servicios"
-        one: "Tipo de punto de servicio"
-        few:   "Tipo de puntos de servicios"
-        other: "Tipo de puntos de servicios"
+        zero:   "Tipos de PS"
+        one:    "Tipo de PS"
+        few:    "Tipos de PS"
+        other:  "Tipos de PS"
     attributes:
       service_point_type:
         id: "Id"
         name: "Descripción"
-        successfully: "Tipo de punto de servicio se ha actualizado correctamente."
-        create: "Tipo de punto de servicio se ha creado correctamente."
+        successfully: "Tipo de PS se ha actualizado correctamente."
+        create: "Tipo de PS se ha creado correctamente."

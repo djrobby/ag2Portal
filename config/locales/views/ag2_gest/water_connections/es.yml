@@ -1,6 +1,6 @@
 es:
   ag2_gest:
-    water_connection_types:
+    water_connections:
       index:
         title: "Tipos de Acometida"
         btn_new: "Nuevo Tipo de Acometida"

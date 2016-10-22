@@ -34,4 +34,4 @@
 
 <%= render :partial => '/layouts/pagination', :locals => { :ivar => @service_point_purposes } %>
 <%= render :partial => '/layouts/crud/new', :locals => { :model => ServicePointPurpose, :path => new_service_point_purpose_path, :txt => t("ag2_gest.service_point_purposes.index.btn_new") } %>
-<%= link_to t("ag2_gest.service_point_purposes.index.back_to_root"), ag2_gest.root_path %>  
+<%= link_to t("ag2_gest.service_point_purposes.index.back_to_management"), ag2_gest.service_point_management_path %>

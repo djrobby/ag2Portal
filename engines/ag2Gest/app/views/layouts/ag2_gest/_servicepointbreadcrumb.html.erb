@@ -1,6 +1,6 @@
-<% content_for :title, "aGestiona2 | ag2ServicePoint" %>
+<% content_for :title, "aGestiona2 | ag2ServicePoints" %>
 <% content_for :icon, "/assets/icon/TableA.png" %>
-<% content_for :alt, "ag2ServicePoint" %>
+<% content_for :alt, "ag2ServicePoints" %>
 
 <ul class="breadcrumb">
   <li>
@@ -8,6 +8,9 @@
   </li>
   <li>
     <a href="<%= ag2_gest.root_path %>">ag2Gest</a><span class="divider">></span>
+  </li>
+  <li>
+    <a href="<%= ag2_gest.service_point_management_path %>"><%= t "ag2_gest.home.index.service_point_management" %></a><span class="divider">></span>
   </li>
   <% if @service_points %>
   <li>

@@ -88,3 +88,21 @@ en:
       regulation_types:
         items: "Regulation types"
         item: "Type"
+      water_connections:
+        items: "Connections"
+        item: "Connection"
+      water_connection_types:
+        items: "Connection types"
+        item: "Type"
+      service_points:
+        items: "Supply points"
+        item: "SP"
+      service_point_types:
+        items: "SP Types"
+        item: "Type"
+      service_point_locations:
+        items: "SP Locations"
+        item: "Location"
+      service_point_purposes:
+        items: "SP Purposes"
+        item: "Purpose"

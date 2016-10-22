@@ -1,7 +1,14 @@
 en:
   activerecord:
+    models:
+      service_point_type:
+        zero:   "Tipos de PS"
+        one:    "Tipo de PS"
+        few:    "Tipos de PS"
+        other:  "Tipos de PS"
     attributes:
-      street_directory:
-        street_name: "Name"
-        street_type: "Type"
-        town: "Town"
+      service_point_type:
+        id: "Id"
+        name: "Descripción"
+        successfully: "Tipo de PS se ha actualizado correctamente."
+        create: "Tipo de PS se ha creado correctamente."

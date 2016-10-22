@@ -88,3 +88,21 @@ es:
       regulation_types:
         items: "Tipos de regulación"
         item: "Tipo"
+      water_connections:
+        items: "Acometidas"
+        item: "Acometida"
+      water_connection_types:
+        items: "Tipos de acometida"
+        item: "Tipo"
+      service_points:
+        items: "Puntos de suministro"
+        item: "PS"
+      service_point_types:
+        items: "Tipos de PS"
+        item: "Tipo"
+      service_point_locations:
+        items: "Emplazamientos PS"
+        item: "Emplazamiento"
+      service_point_purposes:
+        items: "Propósitos PS"
+        item: "Propósito"

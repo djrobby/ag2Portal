@@ -1,9 +1,9 @@
 en:
   ag2_gest:
-    service_point_types:
+    water_connections:
       index:
-        title: "Meter"
-        btn_new: "New Metercontracting request type"
+        title: "Connection Types"
+        btn_new: "New Billable item"
         back_to_root: "Back to ag2Gest"
         back_to_management: "Back to Service Points"
       show:

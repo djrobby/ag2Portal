@@ -2,13 +2,13 @@ es:
   activerecord:
     models:
       service_point_purpose:
-        zero:  "Propósito/destino puntos de servicios"
-        one:   "Propósito/destino punto de servicio"
-        few:   "Propósito/destino puntos de servicios"
-        other: "Propósito/destino puntos de servicios"
+        zero:  "Propósitos PS"
+        one:   "Propósito PS"
+        few:   "Propósitos PS"
+        other: "Propósitos PS"
     attributes:
       service_point_purpose:
         id: "Id"
         name: "Descripción"
-        successfully: "Propósito/destino punto de servicio se ha actualizado correctamente."
-        create: "Propósito/destino punto de servicio se ha creado correctamente."
+        successfully: "Propósito PS se ha actualizado correctamente."
+        create: "Propósito PS se ha creado correctamente."

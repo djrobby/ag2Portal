@@ -1,13 +1,13 @@
-en:
+es:
   activerecord:
     models:
-      water_connection_type:
-        zero:  Connection types
-        one:   Connection type
-        few:   Connection types
-        other: Connection types
+      water_connection:
+        zero:  Acometidas
+        one:   Acometida
+        few:   Acometidas
+        other: Acometidas
     attributes:
-      water_connection_type:
+      water_connection:
         id: "Id"
         name: "Nombre"
         successfully: "Tipo de acometida se ha actualizado correctamente."

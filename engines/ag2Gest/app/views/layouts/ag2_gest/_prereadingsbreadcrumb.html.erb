@@ -12,42 +12,43 @@
   <li>
     <a href="<%= ag2_gest.reading_management_path %>"><%= t "ag2_gest.home.index.reading_management" %></a><span class="divider">></span>
   </li>
+
   <% if @pre_readings %>
+    <% if (request.path == "/es/ag2_gest/es/pre_readings/impute_readings" || request.path == "/en/ag2_gest/en/pre_readings/impute_readings") %>
+      <li>
+        <a href="<%= ag2_gest.pre_readings_path %>"><%=t "ag2_gest.breadcrumb.pre_readings.items" %></a><span class="divider">></span>
+      </li>
+      <li>
+        Confirmar definitivas
+      </li>
+    <% else %>
+      <li>
+        <%=t "ag2_gest.breadcrumb.pre_readings.items" %>
+      </li>
+    <% end %><!-- (request.path == "/es/ag2_gest/es/pre_readings/impute_readings" || request.path == "/en/ag2_gest/en/pre_readings/impute_readings") -->
+  <% end %><!-- @pre_readings -->
+  <% if (request.path == "/es/ag2_gest/es/pre_readings/new_impute" || request.path == "/en/ag2_gest/en/pre_readings/new_impute") %>
     <li>
-      <%=t "ag2_gest.breadcrumb.pre_readings.items" %>
-    </li>
-    <% end %>
-    <% if request.path == "/es/ag2_gest/es/pre_readings/new_impute" %>
-    <li>
-      <span class="divider">></span><a href="<%= ag2_gest.pre_readings_path %>"><%= t('activerecord.attributes.pre_reading.impute_readings') %></a>
+      <a href="<%= ag2_gest.pre_readings_path %>"><%= t('ag2_gest.breadcrumb.pre_readings.items') %></a><span class="divider">></span>
     </li>
     <li>
-      <span class="divider">></span><%= t('activerecord.attributes.pre_reading.impute_readings') %>
+      <%= t('activerecord.attributes.pre_reading.impute_readings') %>
     </li>
-  <% end %>
-  <% if request.path == "/es/ag2_gest/es/pre_readings/impute_readings" %>
-    <li>
-      <span class="divider">></span><a href="<%= ag2_gest.pre_readings_path %>">Prelecturas</a>
-    </li>
-    <li>
-      <span class="divider">></span>Confirmar definitivas
-    </li>
-  <% end %>
+  <% end %><!-- (request.path == "/es/ag2_gest/es/pre_readings/new_impute" || request.path == "/en/ag2_gest/en/pre_readings/new_impute") -->
 
   <% if @pre_reading %>
-  <li>
-    <a href="<%= pre_readings_path %>"><%=t :"ag2_gest.breadcrumb.pre_readings.items" %></a><span class="divider">></span>
-  </li>
-  <% if @breadcrumb == 'read' || @breadcrumb == 'update' %>
-  <%=t :"ag2_gest.breadcrumb.pre_readings.item" %>
-  <% end %>
-  <% if @breadcrumb == 'create' %>
-  <li>
-    <%= t :"breadcrumb.new" %>
-  </li>
-  <% end %>
-
-  <% end %>
+    <li>
+      <a href="<%= pre_readings_path %>"><%=t :"ag2_gest.breadcrumb.pre_readings.items" %></a><span class="divider">></span>
+    </li>
+    <% if @breadcrumb == 'read' || @breadcrumb == 'update' %>
+      <%=t :"ag2_gest.breadcrumb.pre_readings.item" %>
+    <% end %><!-- @breadcrumb == 'read' || @breadcrumb == 'update' -->
+    <% if @breadcrumb == 'create' %>
+      <li>
+        <%= t :"breadcrumb.new" %>
+      </li>
+    <% end %><!-- @breadcrumb == 'create' -->
+  <% end %><!-- @pre_reading -->
   <!-- Close -->
   <a class="close" href="<%= ag2_gest.root_path %>">&#215;</a>
 </ul>
