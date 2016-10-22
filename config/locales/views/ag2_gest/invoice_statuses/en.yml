@@ -1,22 +1,22 @@
 en:
   ag2_gest:
-    payment_methods:
+    invoice_statuses:
       index:
-        title: "Payment methods"
-        btn_new: "New Payment method"
-        back_to_root: "Back to ag2Gest"
-        collection_only: "For collections"
-        payment_only: "For payments"
-        all: "All"
+        title: "Invoice Statuses"
+        btn_new: "Nueva Estado de factura"
+        back_to_root: "Volver a ag2Gest"
+        collection_only: "Para cobros"
+        payment_only: "Para pagos"
+        all: "Todos"
+        back_to_management: "Back to Billing"
       show:
-        title: "Payment method"
-        btn_edit: "Edit Payment method"
-        btn_delete: "Delete Payment method"
-        subtable_title: "Payment method Suppliers"
-        return_to: "Back to Payment method"
+        title: "Estado de factura"
+        btn_edit: "Editar Estado de factura"
+        btn_delete: "Borrar Estado de factura"
+        return_to: "Volver a Estado de factura"
       edit:
-        title: "Edit Payment method"
-        btn_show: "Show Payment method"
+        title: "Editar Estado de factura"
+        btn_show: "Ver Estado de factura"
       new:
-        title: "New Payment method"
-      back_to_main_page: "Back to Payment methods"
+        title: "Nueva Estado de factura"
+      back_to_main_page: "Volver a Invoice statuss"

@@ -2,10 +2,10 @@ es:
   activerecord:
     models:
       billable_item:
-        zero:  Conceptos facturables por proyecto
-        one:   Concepto facturable por proyecto
-        few:   Conceptos facturables por proyecto
-        other: Conceptos facturables por proyecto
+        zero:  Conceptos facturables
+        one:   Concepto facturable
+        few:   Conceptos facturables
+        other: Conceptos facturables
         # check_for_delivery_notes: "Cliente no puede ser eliminado mientras existan notas de entrega vinculadas."
         # check_for_sale_offers: "Cliente no puede ser eliminado mientras existan presupuestos vinculados."
         # check_for_client_invoices: "Cliente no puede ser eliminado mientras existan facturas C vinculadas."
@@ -20,5 +20,5 @@ es:
         billable_concept_id: "Concepto facturable"
         company_id: "Empresa"
         office_id: "Oficina"
-        successfully: "Concepto facturable por proyecto se ha actualizado correctamente."
-        create: "Concepto facturable por proyecto se ha creado correctamente."
+        successfully: "Concepto facturable se ha actualizado correctamente."
+        create: "Concepto facturable se ha creado correctamente."

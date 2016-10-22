@@ -106,3 +106,27 @@ en:
       service_point_purposes:
         items: "SP Purposes"
         item: "Purpose"
+      service_billing:
+        items: "Mass Billing"
+        item: "Billing"
+      commercial_billing:
+        items: "Commercial Billing"
+        item: "Billing"
+      pre_bills:
+        items: "Prebills"
+        item: "Prebill"
+      bills:
+        items: "Bills"
+        item: "Bill"
+      invoice_types:
+        items: "Invoice types"
+        item: "Type"
+      invoice_statuses:
+        items: "Invoice statuses"
+        item: "Status"
+      invoice_operations:
+        items: "Invoice operations"
+        item: "Operation"
+      billable_items:
+        items: "Billable items"
+        item: "Item"

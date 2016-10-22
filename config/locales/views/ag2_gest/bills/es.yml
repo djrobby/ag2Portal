@@ -8,6 +8,7 @@ es:
         collection_only: "Para cobros"
         payment_only: "Para pagos"
         all: "Todos"
+        back_to_management: "Volver a Facturación"
       show:
         title: "Recibo"
         btn_edit: "Editar Recibo"
@@ -17,5 +18,5 @@ es:
         title: "Editar Recibo"
         btn_show: "Ver Recibo"
       new:
-        title: "Nueva Recibo"
+        title: "Facturación Masiva de Servicios"
       back_to_main_page: "Volver a Recibos"

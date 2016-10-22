@@ -1,6 +1,6 @@
-<% content_for :title, "aGestiona2 | ag2BillableItem" %>
+<% content_for :title, "aGestiona2 | ag2GestInvoiceStatuses" %>
 <% content_for :icon, "/assets/icon/TableA.png" %>
-<% content_for :alt, "ag2BillableItem" %>
+<% content_for :alt, "ag2GestInvoiceStatuses" %>
 
 <ul class="breadcrumb">
   <li>
@@ -12,17 +12,17 @@
   <li>
     <a href="<%= ag2_gest.bill_management_path %>"><%= t "ag2_gest.home.index.bill_management" %></a><span class="divider">></span>
   </li>
-  <% if @billable_items %>
+  <% if @invoice_statuses %>
   <li>
-    <%=t "ag2_gest.breadcrumb.billable_items.items" %>
+    <%=t "ag2_gest.breadcrumb.invoice_statuses.items" %>
   </li>
   <% end %>
-  <% if @billable_item %>
+  <% if @invoice_status %>
   <li>
-    <a href="<%= billable_items_path %>"><%=t :"ag2_gest.breadcrumb.billable_items.items" %></a><span class="divider">></span>
+    <a href="<%= invoice_statuses_path %>"><%=t :"ag2_gest.breadcrumb.invoice_statuses.items" %></a><span class="divider">></span>
   </li>
   <% if @breadcrumb == 'read' || @breadcrumb == 'update' %>
-  <%=t :"ag2_gest.breadcrumb.billable_items.item" %>
+  <%=t :"ag2_gest.breadcrumb.invoice_statuses.item" %>
   <% end %>
   <% if @breadcrumb == 'create' %>
   <li>

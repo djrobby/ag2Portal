@@ -1,27 +1,14 @@
 en:
   activerecord:
     models:
-      inventory_count:
-        zero:  Inventory counts
-        one:   Inventory count
-        few:   Inventory counts
-        other: Inventory counts
+      invoice_item:
+        zero:  Ítems de factura
+        one:   Ítem de factura
+        few:   Ítems de factura
+        other: Ítems de factura
     attributes:
-      inventory_count:
-        count_no: "No."
-        count_no_report: "No"
-        count_date: "Date"
-        inventory_count_type: "Type"
-        inventory_count_type_id: "Type"
-        store: "Store"
-        store_id: "Store"
-        product_family: "Family"
-        product_family_id: "Family"
-        organization: "Organization"
-        organization_id: "Organization"
-        remarks: "Remarks"
-        office: "Office"
-        company: "Company"
-        quantity: "Articles"
-        approval_date: "Approved on"
-        approver: "Approved by"
+      invoice_item:
+        id: "Id"
+        invoice_id: "Factura"
+        successfully: "Ítem de factura se ha actualizado correctamente."
+        create: "Ítem de factura se ha creado correctamente."

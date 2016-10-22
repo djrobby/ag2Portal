@@ -106,3 +106,27 @@ es:
       service_point_purposes:
         items: "Propósitos PS"
         item: "Propósito"
+      service_billing:
+        items: "Masiva"
+        item: "Facturas"
+      commercial_billing:
+        items: "Comercial"
+        item: "Facturas"
+      pre_bills:
+        items: "Prefacturas"
+        item: "Prefactura"
+      bills:
+        items: "Facturas"
+        item: "Factura"
+      invoice_types:
+        items: "Tipos de factura"
+        item: "Tipo"
+      invoice_statuses:
+        items: "Estados de factura"
+        item: "Estado"
+      invoice_operations:
+        items: "Operaciones factura"
+        item: "Operación"
+      billable_items:
+        items: "Items facturables"
+        item: "Item"

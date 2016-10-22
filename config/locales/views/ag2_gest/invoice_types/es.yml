@@ -2,19 +2,20 @@ es:
   ag2_gest:
     invoice_types:
       index:
-        title: "Tipos de factura"
-        btn_new: "Nuevo Tipo de factura"
+        title: "Tipos de Factura"
+        btn_new: "Nuevo Tipo de Factura"
         back_to_root: "Volver a ag2Gest"
+        back_to_management: "Volver a Facturación"
       show:
-        title: "Tipo de factura"
-        btn_edit: "Editar Tipo de factura"
-        btn_delete: "Borrar Tipo de factura"
-        return_to: "Volver a Tipo de factura"
+        title: "Tipo de Factura"
+        btn_edit: "Editar Tipo de Factura"
+        btn_delete: "Borrar Tipo de Factura"
+        return_to: "Volver a Tipo de Factura"
       edit:
-        title: "Editar Tipo de factura"
-        btn_show: "Ver Tipo de factura"
+        title: "Editar Tipo de Factura"
+        btn_show: "Ver Tipo de Factura"
         show: "Mostrar"
         back: "Atrás"
       new:
-        title: "Nuevo Tipo de factura"
-      back_to_main_page: "Volver a Tipos de factura"
+        title: "Nuevo Tipo de Factura"
+      back_to_main_page: "Volver a Tipos de Factura"

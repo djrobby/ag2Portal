@@ -1,0 +1,14 @@
+es:
+  activerecord:
+    models:
+      invoice_operations:
+        zero:  Operaciones factura
+        one:   Operación factura
+        few:   Operaciones factura
+        other: Operaciones factura
+    attributes:
+      invoice_operations:
+        id: "Id"
+        name: Descripción"
+        successfully: "Operación factura se ha actualizado correctamente."
+        create: "Operación factura se ha creado correctamente."

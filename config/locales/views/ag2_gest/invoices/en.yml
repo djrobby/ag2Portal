@@ -1,22 +1,19 @@
 en:
   ag2_gest:
-    payment_methods:
+    invoices:
       index:
-        title: "Payment methods"
-        btn_new: "New Payment method"
-        back_to_root: "Back to ag2Gest"
-        collection_only: "For collections"
-        payment_only: "For payments"
-        all: "All"
+        title: "Facturas"
+        btn_new: "Nueva Factura"
+        back_to_root: "Volver a ag2Gest"
+        back_to_management: "Back to Billing"
       show:
-        title: "Payment method"
-        btn_edit: "Edit Payment method"
-        btn_delete: "Delete Payment method"
-        subtable_title: "Payment method Suppliers"
-        return_to: "Back to Payment method"
+        title: "Factura"
+        btn_edit: "Editar Factura"
+        btn_delete: "Borrar Factura"
+        return_to: "Volver a Factura"
       edit:
-        title: "Edit Payment method"
-        btn_show: "Show Payment method"
+        title: "Editar Factura"
+        btn_show: "Ver Factura"
       new:
-        title: "New Payment method"
-      back_to_main_page: "Back to Payment methods"
+        title: "Nueva Factura"
+      back_to_main_page: "Volver facturas"

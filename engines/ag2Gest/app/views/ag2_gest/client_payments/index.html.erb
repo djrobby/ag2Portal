@@ -121,7 +121,7 @@ $(document).ready(function () {
       <ul class="nav nav-tabs" id="payments-tabs">
         <li class="active" style="width:25%"><a href="#pendings">Pendientes</a></li>
         <li style="width:25%"><a href="#charged">Cobradas</a></li>
-        <li class="pull-right"><a href="#fractionated">Fraccionamientos</a></li>
+        <li class="pull-right"><a href="#fractionated">Aplazamientos</a></li>
         <li class="pull-right"><a href="#others">Otros</a></li>
         <li class="pull-right"><a href="#banks">Bancos</a></li>
         <li class="pull-right"><a href="#cash">Caja</a></li>
@@ -137,7 +137,7 @@ $(document).ready(function () {
               <a href="#modal-cash" role="button" class="btn btn-primary btn-small btn-payment btn-cash" data-toggle="modal">Caja</a>
               <a href="#modal-bank" role="button" class="btn btn-primary btn-small btn-payment" data-toggle="modal">Banco</a>
               <a href="#" class="btn btn-primary btn-small">Ventanilla Bancaria</a>
-              <a href="#modal-fracionated" role="button" class="btn btn-primary btn-small btn-payment" data-toggle="modal">Fraccionamientos</a>
+              <a href="#modal-fracionated" role="button" class="btn btn-primary btn-small btn-payment" data-toggle="modal">Aplazamientos</a>
               <a href="#modal-cash" role="button" class="btn btn-primary btn-small btn-payment btn-others" data-toggle="modal">Otros</a>
               <a href="#" class="btn btn-primary btn-small pull-right">Devoluciones</a>
             </div>
@@ -363,7 +363,7 @@ $(document).ready(function () {
           <%= simple_form_for :payment_fractionated, url: instalment_client_payments_path, method: :post do |f|  %>
             <div class="row-fluid">
               <div class="span12">
-                <%= f.button :submit, "Cobrar quotas", :class => 'btn btn-primary btn-small' %>
+                <%= f.button :submit, "Cobrar cuotas", :class => 'btn btn-primary btn-small' %>
               </div>
             </div>
             <table class="table table-condensed table-striped">

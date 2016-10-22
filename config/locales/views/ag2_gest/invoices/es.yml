@@ -5,6 +5,7 @@ es:
         title: "Facturas"
         btn_new: "Nueva Factura"
         back_to_root: "Volver a ag2Gest"
+        back_to_management: "Volver a Facturación"
       show:
         title: "Factura"
         btn_edit: "Editar Factura"

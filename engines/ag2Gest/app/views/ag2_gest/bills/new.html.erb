@@ -33,7 +33,7 @@
 <%= render '/layouts/ag2_gest/billsbreadcrumb' %>
 
 <div class="row-fluid setup-content">
-  <h3>Facturación masiva</h3>
+  <h3><%= t(".title") %></h3>
   <div class="row-fluid well">
     <%= simple_form_for :bill, url: get_subscribers_bills_path, method: :get, remote: true, "data-type" => :json, :html => {:class => 'form-vertical', multiple: "multiple", id: "form-bill"} do |f| %>
     <%= f.error_notification %>
@@ -50,6 +50,8 @@
         </div>
       </div>
       <%= f.button :submit, "Cargar abonados", :class => 'btn-primary' %>
+      <br /><br />
+      <%= link_to t("ag2_gest.billable_items.index.back_to_management"), ag2_gest.bill_management_path %>
     <% end %>
     <br>
     <br>
@@ -62,6 +64,8 @@
         </div>
       </div>
       <%= g.button :submit, "Ver consumos", :class => 'btn-primary' %>
+      <br /><br />
+      <%= link_to t("ag2_gest.billable_items.index.back_to_management"), ag2_gest.bill_management_path %>
     <% end %>
   </div>
 </div>

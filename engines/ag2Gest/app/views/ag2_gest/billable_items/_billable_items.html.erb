@@ -43,4 +43,4 @@
 
 <%= render :partial => '/layouts/pagination', :locals => { :ivar => @billable_items } %>
 <%= render :partial => '/layouts/crud/new', :locals => { :model => BillableItem, :path => new_billable_item_path, :txt => t("ag2_gest.billable_items.index.btn_new") } %>
-<%= link_to t("ag2_gest.billable_items.index.back_to_root"), ag2_gest.root_path %>
+<%= link_to t("ag2_gest.billable_items.index.back_to_management"), ag2_gest.bill_management_path %>

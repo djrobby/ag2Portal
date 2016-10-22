@@ -34,4 +34,4 @@
 
 <%= render :partial => '/layouts/pagination', :locals => { :ivar => @invoice_types } %>
 <%= render :partial => '/layouts/crud/new', :locals => { :model => InvoiceType, :path => new_invoice_type_path, :txt => t("ag2_gest.invoice_types.index.btn_new") } %>
-<%= link_to t("ag2_gest.invoice_types.index.back_to_root"), ag2_gest.root_path %>     
+<%= link_to t("ag2_gest.invoice_types.index.back_to_management"), ag2_gest.bill_management_path %>

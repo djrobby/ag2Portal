@@ -1,6 +1,6 @@
 en:
   ag2_gest:
-    payment_methods:
+    bills:
       index:
         title: "Payment methods"
         btn_new: "New Payment method"
@@ -8,6 +8,7 @@ en:
         collection_only: "For collections"
         payment_only: "For payments"
         all: "All"
+        back_to_management: "Back to Billing"
       show:
         title: "Payment method"
         btn_edit: "Edit Payment method"
@@ -18,5 +19,5 @@ en:
         title: "Edit Payment method"
         btn_show: "Show Payment method"
       new:
-        title: "New Payment method"
+        title: "Mass Billing of Services"
       back_to_main_page: "Back to Payment methods"

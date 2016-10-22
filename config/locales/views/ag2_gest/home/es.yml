@@ -21,6 +21,9 @@ es:
         billing_periods: "Períodos"
         centers: "Núcleos Urbanos"
         street_directories: "Callejeros"
+        formalities: "Trámites"
+        frauds: "Fraudes"
+        complaints: "Reclamaciones"
       tariff:
         schemes: "Esquemas"
         tariffs: "Tarifas"

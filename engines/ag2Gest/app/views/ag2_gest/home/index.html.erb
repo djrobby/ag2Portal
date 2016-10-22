@@ -113,6 +113,36 @@
   </li>
   <li class="span4">
     <% if (session[:resolution] == "LD")%>
+    <a data-toggle="modal" href="#notfound" class="thumbnail centered"><img src="/assets/icon/ag2Formalities.png" width="48" height="48" alt="ag2Formalities" /><h5 class="h5-narrow"><%=t ".formalities" %></h5></a>
+    <% elsif session[:resolution] == "SD" %>
+    <a data-toggle="modal" href="#notfound" class="thumbnail centered"><img src="/assets/pict/ag2/ag2Formalities.png" width="96" height="96" alt="ag2Formalities" /><h5 class="h5-narrow"><%=t ".formalities" %></h5></a>
+    <% else %>
+    <a data-toggle="modal" href="#notfound" class="thumbnail centered"><img src="/assets/pict/ag2Formalities.png" width="128" height="128" alt="ag2Formalities" /><h5 class="h5-narrow"><%=t ".formalities" %></h5></a>
+    <% end %>
+  </li>
+</ul><!-- /.thumbnails -->
+<ul class="thumbnails">
+  <!-- Apps 5 -->
+  <li class="span4">
+    <% if (session[:resolution] == "LD")%>
+    <a data-toggle="modal" href="#notfound" class="thumbnail centered"><img src="/assets/icon/ag2Frauds.png" width="48" height="48" alt="ag2Frauds" /><h5 class="h5-narrow"><%=t ".frauds" %></h5></a>
+    <% elsif session[:resolution] == "SD" %>
+    <a data-toggle="modal" href="#notfound" class="thumbnail centered"><img src="/assets/pict/ag2/ag2Frauds.png" width="96" height="96" alt="ag2Frauds" /><h5 class="h5-narrow"><%=t ".frauds" %></h5></a>
+    <% else %>
+    <a data-toggle="modal" href="#notfound" class="thumbnail centered"><img src="/assets/pict/ag2Frauds.png" width="128" height="128" alt="ag2Frauds" /><h5 class="h5-narrow"><%=t ".frauds" %></h5></a>
+    <% end %>
+  </li>
+  <li class="span4">
+    <% if (session[:resolution] == "LD")%>
+    <a data-toggle="modal" href="#notfound" class="thumbnail centered"><img src="/assets/icon/ag2Complaints.png" width="48" height="48" alt="ag2Complaints" /><h5 class="h5-narrow"><%=t ".complaints" %></h5></a>
+    <% elsif session[:resolution] == "SD" %>
+    <a data-toggle="modal" href="#notfound" class="thumbnail centered"><img src="/assets/pict/ag2/ag2Complaints.png" width="96" height="96" alt="ag2Complaints" /><h5 class="h5-narrow"><%=t ".complaints" %></h5></a>
+    <% else %>
+    <a data-toggle="modal" href="#notfound" class="thumbnail centered"><img src="/assets/pict/ag2Complaints.png" width="128" height="128" alt="ag2Complaints" /><h5 class="h5-narrow"><%=t ".complaints" %></h5></a>
+    <% end %>
+  </li>
+  <li class="span4">
+    <% if (session[:resolution] == "LD")%>
     <a data-toggle="modal" href="#notfound" class="thumbnail centered"><img src="/assets/icon/ag2GestTrack.png" width="48" height="48" alt="Control Tracking" /><h5 class="h5-narrow"><%=t ".control" %></h5></a>
     <% elsif session[:resolution] == "SD" %>
     <a data-toggle="modal" href="#notfound" class="thumbnail centered"><img src="/assets/pict/ag2/ag2GestTrack.png" width="96" height="96" alt="Control Tracking" /><h5 class="h5-narrow"><%=t ".control" %></h5></a>
@@ -122,7 +152,7 @@
   </li>
 </ul><!-- /.thumbnails -->
 <ul class="thumbnails">
-  <!-- Apps 5 -->
+  <!-- Apps 6 -->
   <li class="span2">
     <% if (session[:resolution] == "LD")%>
     <a href="<%= payment_methods_path %>" class="thumbnail centered"><img src="/assets/icon/ag2PaymentMethods.png" width="48" height="48" alt="ag2Tables" /><h5 class="h5-narrow"><%=t ".payment_methods" %></h5></a>

@@ -1,6 +1,6 @@
-<% content_for :title, "aGestiona2 | ag2GestInvoiceType" %>
+<% content_for :title, "aGestiona2 | ag2GestInvoiceTypes" %>
 <% content_for :icon, "/assets/icon/TableA.png" %>
-<% content_for :alt, "ag2GestInvoiceType" %>
+<% content_for :alt, "ag2GestInvoiceTypes" %>
 
 <ul class="breadcrumb">
   <li>
@@ -8,6 +8,9 @@
   </li>
   <li>
     <a href="<%= ag2_gest.root_path %>">ag2Gest</a><span class="divider">></span>
+  </li>
+  <li>
+    <a href="<%= ag2_gest.bill_management_path %>"><%= t "ag2_gest.home.index.bill_management" %></a><span class="divider">></span>
   </li>
   <% if @invoice_types %>
   <li>

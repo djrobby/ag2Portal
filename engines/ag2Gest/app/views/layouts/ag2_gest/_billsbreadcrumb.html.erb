@@ -9,6 +9,13 @@
   <li>
     <a href="<%= ag2_gest.root_path %>">ag2Gest</a><span class="divider">></span>
   </li>
+  <li>
+    <a href="<%= ag2_gest.bill_management_path %>"><%= t "ag2_gest.home.index.bill_management" %></a><span class="divider">></span>
+  </li>
+  <li>
+    <%= t "ag2_gest.home.bill.service_billing" %>
+  </li>
+
   <% if @bills %>
   <li>
     <%= "Facturación masiva" %>
