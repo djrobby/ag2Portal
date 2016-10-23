@@ -7,7 +7,25 @@ module Ag2Gest
 
     before_filter :authenticate_user!
     load_and_authorize_resource
+    skip_load_and_authorize_resource :only => [ :update_office_textfield_from_project]
     helper_method :sort_column
+
+
+    def update_office_textfield_from_project
+
+      @project = Project.find(params[:id])
+      @office_id = @project.office_id
+      @json_data = { "office_id" => @office_id }
+
+      respond_to do |format|
+        format.html
+        format.json { render json: @json_data }
+      end
+      rescue ActiveRecord::RecordNotFound
+        respond_to do |format|
+          format.json { render json: { "office_id" => "" } }
+        end
+    end
 
     # GET /reading_routes
     # GET /reading_routes.json
@@ -106,22 +124,18 @@ module Ag2Gest
     end
 
     private
-    def set_projects_offices
-      if current_projects_ids.blank?
-        @projects = Project.all(order: 'name')
-      else
-        @projects = current_projects
-      end
 
-      if session[:office] != '0'
+    def set_projects_offices
+      if session[:office]
         @offices = [Office.find(session[:office])]
-      elsif session[:company] != '0'
+      elsif session[:company]
         @offices = Company.find(session[:company]).offices
-      elsif session[:organization] != '0'
+      elsif session[:organization]
         @offices = Organization.find(session[:organization]).companies.map(&:offices).flatten
       else
         @offices = Office.all
       end
+      @projects = Project.where(office_id: @offices.map(&:id))
     end
 
     def sort_column

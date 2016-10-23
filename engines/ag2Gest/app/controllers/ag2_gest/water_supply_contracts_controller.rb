@@ -2,12 +2,14 @@ require_dependency "ag2_gest/application_controller"
 
 module Ag2Gest
   class WaterSupplyContractsController < ApplicationController
+    before_filter :authenticate_user!
+    load_and_authorize_resource
+
     # GET /water_supply_contracts
     # GET /water_supply_contracts.json
     def index
       manage_filter_state
 
-      gis_id = params[:Gis]
       subscriber = params[:Subscriber]
       readingRoute = params[:ReadingRoute]
       meter = params[:Meter]
@@ -25,19 +27,11 @@ module Ag2Gest
       # ContractingRequest for current projects
       current_contracting_request = ContractingRequest.where(project_id: current_projects_ids).map(&:id)
 
-      # If inverse no search is required
-      gis_id = !gis_id.blank? && gis_id[0] == '%' ? inverse_gis_search(gis_id) : gis_id
-
       @search = WaterSupplyContract.search do
-        with :contracting_request_id, current_contracting_request
-        fulltext params[:search]
-        if !gis_id.blank?
-          if gis_id.class == Array
-            with :gis_id, gis_id
-          else
-            with(:gis_id).starting_with(gis_id)
-          end
+        if !current_contracting_request.blank?
+          with :contracting_request_id, current_contracting_request
         end
+        fulltext params[:search]
         if !subscriber.blank?
           with :subscriber_id, subscriber
         end

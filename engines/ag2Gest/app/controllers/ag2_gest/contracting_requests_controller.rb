@@ -3,7 +3,6 @@ require 'will_paginate/array'
 
 module Ag2Gest
   class ContractingRequestsController < ApplicationController
-
     before_filter :authenticate_user!
     load_and_authorize_resource
     skip_load_and_authorize_resource :only => [ :update_province_textfield_from_town,

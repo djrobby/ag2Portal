@@ -19,6 +19,15 @@ module Ag2Gest
       session[:ifilter] = nil
       session[:Period] = nil
       session[:Group] = nil
+
+      session[:ReadingRoute]
+      session[:Meter]
+      session[:Order]
+      session[:Caliber]
+      session[:RequestType]
+      session[:Project]
+      session[:RequestStatus]
+      session[:ClientInfo]
     end
 
     def current_projects

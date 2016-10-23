@@ -2,22 +2,23 @@ es:
   ag2_gest:
     water_supply_contracts:
       index:
-        title: "Contratos de suminitro de agua"
-        btn_new: "Contrato de suminitro de agua"
+        title: "Contratos de Suministro"
+        btn_new: "Contrato de Suministro"
         back_to_root: "Volver a ag2Gest"
+        back_to_management: "Volver a Contrataciones"
       show:
-        title: "Contrato de suminitro de agua"
-        btn_edit: "Editar Contrato de suminitro de agua"
-        btn_delete: "Borrar Contrato de suminitro de agua"
-        return_to: "Volver a Contrato de suminitro de agua"
+        title: "Contrato de Suministro"
+        btn_edit: "Editar Contrato de Suministro"
+        btn_delete: "Borrar Contrato de Suministro"
+        return_to: "Volver a Contrato de Suministro"
       edit:
         show: "Mostrar"
         back: "Atrás"
-        title: "Editar Contrato de suminitro de agua"
-        btn_show: "Ver Contrato de suminitro de agua"
+        title: "Editar Contrato de Suministro"
+        btn_show: "Ver Contrato de Suministro"
       new:
-        title: "Nuevo Contrato de suminitro de agua"
-      back_to_main_page: "Volver a Contratos de suminitro de agua"
+        title: "Nuevo Contrato de Suministro"
+      back_to_main_page: "Volver a Contratos de Suministro"
       # generate_code_btn: "Código de Contrato de suminitro de agua"
       # personal_info: "Información del Cliente"
       # commercial_info: "Información Contable y Comercial"

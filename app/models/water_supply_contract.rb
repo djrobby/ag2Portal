@@ -13,12 +13,10 @@ class WaterSupplyContract < ActiveRecord::Base
   attr_accessible :bill_id, :cadastral_reference, :caliber_id, :client_id, :contract_date,
                   :contracting_request_id, :endowments, :gis_id, :inhabitants,
                   :installation_date, :meter_id, :reading_route_id, :reading_sequence,
-                  :remarks, :subscriber_id, :tariff_scheme_id, :work_order_id
+                  :remarks, :subscriber_id, :tariff_scheme_id, :work_order_id, :installation_index
 
   searchable do
     integer :id
-    text :gis_id
-    string :gis_id, :multiple => true     # Multiple search values accepted in one search (inverse_no_search)
     integer :contracting_request_id
     integer :subscriber_id
     integer :reading_route_id

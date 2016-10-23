@@ -1,21 +1,22 @@
 en:
   ag2_gest:
-    reading_incidences:
+    water_supply_contracts:
       index:
-        title: "Billable items"
-        btn_new: "New Billable item"
+        title: "Supply Contracts"
+        btn_new: "New Supply Contract"
         back_to_root: "Back to ag2Gest"
+        back_to_management: "Back to Contracting"
       show:
-        title: "Billable item"
-        btn_edit: "Edit Billable item"
-        btn_delete: "Delete Billable item"
-        return_to: "Back to Billable item"
+        title: "Supply Contract"
+        btn_edit: "Edit Supply Contract"
+        btn_delete: "Delete Supply Contract"
+        return_to: "Back to Supply Contract"
       edit:
-        title: "Edit Billable item"
-        btn_show: "Show Billable item"
+        title: "Edit Supply Contract"
+        btn_show: "Show Supply Contract"
       new:
-        title: "New Billable item"
-      back_to_main_page: "Back to Billable items"
+        title: "New Supply Contract"
+      back_to_main_page: "Back to Supply Contracts"
       # generate_code_btn: "billable_item Code"
       # personal_info: "billable_item Info"
       # commercial_info: "Accounting & Commercial Info"

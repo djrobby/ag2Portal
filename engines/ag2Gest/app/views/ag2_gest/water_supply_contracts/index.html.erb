@@ -71,9 +71,6 @@
         <%= link_to ag2_gest.water_supply_contracts_path, title: I18n.t(:refresh), class: "icon-refresh-link", remote: true do %> <i class="icon-refresh"></i> <% end %>
         <!-- Search form -->
         <%= form_tag "water_supply_contracts", :method => 'get', :remote => true do %>
-        <!-- Gis -->
-        <%= label_tag I18n.t("activerecord.attributes.water_supply_contract.gis_id"), nil, :class => 'form-label' %>
-        <%= text_field_tag "Gis", nil, :class => 'x-large-text-field shrinked number-text-field', onkeyup: "caps(this)" %>
         <!-- Subscriber -->
         <%= label_tag I18n.t("activerecord.attributes.water_supply_contract.subscriber_id"), nil, :class => 'form-label' %>
         <%= select_tag "Subscriber", options_from_collection_for_select(@subscribers, "id", "to_label"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
@@ -97,7 +94,7 @@
         <!-- Remove filter -->
         <button id="removeFilter" type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><%= t :clear_filter_button %></button>
         <% end %>
-        <%= link_to t(".back_to_root"), ag2_purchase.root_path %>
+        <%= link_to t(".back_to_management"), ag2_gest.contracting_management_path %>
       </div><!-- /.sidebar-nav -->
     </div><!-- /.span3 -->
 

@@ -11,7 +11,6 @@
   <thead>
     <tr>
       <th>Id</th>
-      <th><%= t 'activerecord.attributes.water_supply_contract.gis_id' %></th>
       <th><%= t 'activerecord.attributes.water_supply_contract.contracting_request_id' %></th>
       <th><%= t 'activerecord.attributes.water_supply_contract.subscriber_id' %></th>
       <th align="center"><%= t 'activerecord.attributes.water_supply_contract.contract_date' %></th>
@@ -24,7 +23,6 @@
     <% @water_supply_contracts.each do |water_supply_contract| %>
     <tr>
       <td><%= link_to water_supply_contract.id, water_supply_contract %>
-        <td><%= water_supply_contract.gis_id %>
       <td><%= link_to water_supply_contract.contracting_request.to_label, water_supply_contract.contracting_request unless water_supply_contract.contracting_request.blank? %></td>
       <td><%= link_to water_supply_contract.subscriber.to_label, water_supply_contract.subscriber unless water_supply_contract.subscriber.blank? %></td>
       <td align="center"><%= formatted_date(water_supply_contract.contract_date) unless water_supply_contract.contract_date.blank? %></td>
