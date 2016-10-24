@@ -2,13 +2,14 @@ en:
   ag2_gest:
     bills:
       index:
-        title: "Payment methods"
+        title: "Confirm Mass Billing of Services"
         btn_new: "New Payment method"
         back_to_root: "Back to ag2Gest"
         collection_only: "For collections"
         payment_only: "For payments"
         all: "All"
         back_to_management: "Back to Billing"
+        back_to_pre_index: "Back to Mass Billing of Services"
       show:
         title: "Payment method"
         btn_edit: "Edit Payment method"
@@ -19,5 +20,7 @@ en:
         title: "Edit Payment method"
         btn_show: "Show Payment method"
       new:
+        title: "New Mass Billing of Services"
+      pre_index:
         title: "Mass Billing of Services"
       back_to_main_page: "Back to Payment methods"

@@ -10,22 +10,10 @@ $(document).ready(function () {
 });
 
 </script>
-<% content_for :title, "aGestiona2 | ag2Bills" %>
-<% content_for :icon, "/assets/icon/TableA.png" %>
-<% content_for :alt, "ag2Bills" %>
 
-<ul class="breadcrumb">
-  <li>
-    <a href="<%= main_app.root_path %>"><i class="icon-home"></i></a><span class="divider">></span>
-  </li>
-  <li>
-    <a href="<%= ag2_gest.root_path %>">ag2Gest</a><span class="divider">></span>
-  </li>
-  <li>
-    Facturación Masiva
-  </li>
-</ul>
-<h3><%= 'Facturación Masiva' %></h3>
+<%= render '/layouts/ag2_gest/billsbreadcrumb' %>
+
+<h3><%= t(".title") %></h3>
 <div class="span12" id="div_table">
 
   <div class="row">

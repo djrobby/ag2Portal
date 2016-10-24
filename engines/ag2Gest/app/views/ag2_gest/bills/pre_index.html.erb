@@ -3,23 +3,10 @@
     text-align: center!important;
   }
 </style>
-<% content_for :title, "aGestiona2 | ag2PreBills" %>
-<% content_for :icon, "/assets/icon/TableA.png" %>
-<% content_for :alt, "ag2PreBills" %>
 
-<ul class="breadcrumb">
-  <li>
-    <a href="<%= main_app.root_path %>"><i class="icon-home"></i></a><span class="divider">></span>
-  </li>
-  <li>
-    <a href="<%= ag2_gest.root_path %>">ag2Gest</a><span class="divider">></span>
-  </li>
-  <li>
-    Prefacturas
-  </li>
-</ul>
+<%= render '/layouts/ag2_gest/billsbreadcrumb' %>
 
-<h3>Prefacturas</h3>
+<h3><%= t(".title") %></h3>
 
 <div class="container-fluid">
   <div class="row-fluid">
@@ -30,7 +17,7 @@
         <%= link_to "Generar PreFacturas", new_bill_path, class: "btn btn-block btn-primary" %>
         <%= link_to "Confirmar PreFacturas", bills_path, class: "btn btn-block btn-primary" %>
         <br /><br />
-        <%= link_to "Volver ag2Gest", ag2_gest.root_path %>
+        <%= link_to t("ag2_gest.billable_items.index.back_to_management"), ag2_gest.bill_management_path %>
       </div><!-- /.sidebar-nav -->
     </div><!-- /.span3 -->
 

@@ -2,13 +2,14 @@ es:
   ag2_gest:
     bills:
       index:
-        title: "Recibos"
+        title: "Confirmar Facturación Masiva de Servicios"
         btn_new: "Nueva Recibo"
         back_to_root: "Volver a ag2Gest"
         collection_only: "Para cobros"
         payment_only: "Para pagos"
         all: "Todos"
         back_to_management: "Volver a Facturación"
+        back_to_pre_index: "Volver a Facturación Masiva de Servicios"
       show:
         title: "Recibo"
         btn_edit: "Editar Recibo"
@@ -18,5 +19,7 @@ es:
         title: "Editar Recibo"
         btn_show: "Ver Recibo"
       new:
+        title: "Nueva Facturación Masiva de Servicios"
+      pre_index:
         title: "Facturación Masiva de Servicios"
       back_to_main_page: "Volver a Recibos"

@@ -126,11 +126,11 @@ module Ag2Gest
     private
 
     def set_projects_offices
-      if session[:office]
+      if session[:office] != '0'
         @offices = [Office.find(session[:office])]
-      elsif session[:company]
+      elsif session[:company] != '0'
         @offices = Company.find(session[:company]).offices
-      elsif session[:organization]
+      elsif session[:organization] != '0'
         @offices = Organization.find(session[:organization]).companies.map(&:offices).flatten
       else
         @offices = Office.all
