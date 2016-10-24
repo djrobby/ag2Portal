@@ -1,73 +1,73 @@
-var	form = $("#bill-supply-form");
+var form = $("form.simple_bill");
 var content = '';
-		//content += '<h1>Initial Billing</h1>';
-		//content += `<tbody>`;
+    //content += '<h1>Initial Billing</h1>';
+    //content += `<tbody>`;
 <% unless @pre_bill.pre_invoices.blank?  %>
-		<% @pre_bill.pre_invoices.each_with_index do |invoice, index| %>
+    <% @pre_bill.pre_invoices.each_with_index do |invoice, index| %>
 
-		content += '<h5><%= t("activerecord.attributes.contracting_request.invoice_number") %>: <%= invoice.try(:invoice_no) %></h5>';
-		content += '<h5><%= invoice.try(:company).try(:name) %> | <%= t("activerecord.attributes.contracting_request.fiscal_id") %> <%= invoice.try(:company).try(:fiscal_id) %></h5>';
-		content += '<h5><%= t("activerecord.attributes.contracting_request.payment_method") %> </h5>';
+    content += '<h5><%= t("activerecord.attributes.contracting_request.invoice_number") %>: <%= invoice.try(:invoice_no) %></h5>';
+    content += '<h5><%= invoice.try(:company).try(:name) %> | <%= t("activerecord.attributes.contracting_request.fiscal_id") %> <%= invoice.try(:company).try(:fiscal_id) %></h5>';
+    content += '<h5><%= t("activerecord.attributes.contracting_request.payment_method") %> </h5>';
 
-		content += `<table class="table table<%= index %>">`;
-		content += `<tbody>`;
+    content += `<table class="table table<%= index %>">`;
+    content += `<tbody>`;
 
-		//form.append('<h5><%= t("activerecord.attributes.contracting_request.invoice_number") %>: <%= invoice.try(:invoice_no) %></h5>');
-		//form.append('<h5><%= invoice.try(:company).try(:name) %> | <%= t("activerecord.attributes.contracting_request.fiscal_id") %> <%= invoice.try(:company).try(:fiscal_id) %></h5>');
-		//form.append('<h5><%= t("activerecord.attributes.contracting_request.payment_method") %> </h5>');
+    //form.append('<h5><%= t("activerecord.attributes.contracting_request.invoice_number") %>: <%= invoice.try(:invoice_no) %></h5>');
+    //form.append('<h5><%= invoice.try(:company).try(:name) %> | <%= t("activerecord.attributes.contracting_request.fiscal_id") %> <%= invoice.try(:company).try(:fiscal_id) %></h5>');
+    //form.append('<h5><%= t("activerecord.attributes.contracting_request.payment_method") %> </h5>');
 
-		/*form.append('<h3><%= invoice.company.name %></h3>');*/
-		content+= '<tr><th><%= t("activerecord.attributes.contracting_request.code") %></th><th><%= t("activerecord.attributes.contracting_request.subcode") %></th><th><%= t("activerecord.attributes.contracting_request.quantity") %></th><th><%= t("activerecord.attributes.contracting_request.price") %></th><th><%= t("activerecord.attributes.contracting_request.amount") %></th><th><%= t("activerecord.attributes.contracting_request.tax") %></th><th><%= t("activerecord.attributes.contracting_request.discount") %></th><th><%= t("activerecord.attributes.contracting_request.discount_pct") %></th><th><%= t("activerecord.attributes.contracting_request.total") %></th></tr>';
-		<% invoice.pre_invoice_items.each do |item, index| %>
-			content+= '<tr class="in_item in_item<%= item.id %>">';
-			content+= '<td><%= item.code %></td>';
-			content+= '<td><%= item.subcode %></td>';
-			content+= '<td><input class="mid-text-field input-sm" name="invoice_item[<%= item.id %>]quantity" type="number" value="<%= item.quantity %>"></td>';
-			content+= '<td><input class="mid-text-field input-sm" name="invoice_item[<%= item.id %>]price" type="number" value="<%= item.price %>"></td>';
-			content+= '<td class="td-amount<%= item.id %>"><%= item.amount %></td>';
-			content+= '<td><%= escape_javascript(collection_select("invoice_item["+item.id.to_s+"]", :tax_type_id, TaxType.all, :id, :tax, {include_blank: true, selected: item.tax_type_id}, {:class=>"x-large-text-field"})) %></td>';
-			content+= '<td><input class="mid-text-field input-sm" name="invoice_item[<%= item.id %>]discount" type="number" value="<%= item.discount %>"></td>';
-			content+= '<td class="inp"><input class="mid-text-field input-sm" name="invoice_item[<%= item.id %>]discount_pct" type="number" value="<%= item.discount_pct %>"></td>';
-			content+= '<td class="total total<%= item.id %>"><%= item.total %></td>';
-			content+= '</tr>';
+    /*form.append('<h3><%= invoice.company.name %></h3>');*/
+    content+= '<tr><th><%= t("activerecord.attributes.contracting_request.code") %></th><th><%= t("activerecord.attributes.contracting_request.subcode") %></th><th><%= t("activerecord.attributes.contracting_request.quantity") %></th><th><%= t("activerecord.attributes.contracting_request.price") %></th><th><%= t("activerecord.attributes.contracting_request.amount") %></th><th><%= t("activerecord.attributes.contracting_request.tax") %></th><th><%= t("activerecord.attributes.contracting_request.discount") %></th><th><%= t("activerecord.attributes.contracting_request.discount_pct") %></th><th><%= t("activerecord.attributes.contracting_request.total") %></th></tr>';
+    <% invoice.pre_invoice_items.each do |item, index| %>
+      content+= '<tr class="in_item in_item<%= item.id %>">';
+      content+= '<td><%= item.code %></td>';
+      content+= '<td><%= item.subcode %></td>';
+      content+= '<td><input class="mid-text-field input-sm" name="invoice_item[<%= item.id %>]quantity" type="number" value="<%= item.quantity %>"></td>';
+      content+= '<td><input class="mid-text-field input-sm" name="invoice_item[<%= item.id %>]price" type="number" value="<%= item.price %>"></td>';
+      content+= '<td class="td-amount<%= item.id %>"><%= item.amount %></td>';
+      content+= '<td><%= escape_javascript(collection_select("invoice_item["+item.id.to_s+"]", :tax_type_id, TaxType.all, :id, :tax, {include_blank: true, selected: item.tax_type_id}, {:class=>"x-large-text-field"})) %></td>';
+      content+= '<td><input class="mid-text-field input-sm" name="invoice_item[<%= item.id %>]discount" type="number" value="<%= item.discount %>"></td>';
+      content+= '<td class="inp"><input class="mid-text-field input-sm" name="invoice_item[<%= item.id %>]discount_pct" type="number" value="<%= item.discount_pct %>"></td>';
+      content+= '<td class="total total<%= item.id %>"><%= item.total %></td>';
+      content+= '</tr>';
 
-		<% end %> /*End invoice.invoice_items*/
+    <% end %> /*End invoice.invoice_items*/
 
-			/*Add Subtotal etc dinamyc*/
-			content+= '<tr class="subtotal">';
-			content+= '<td colspan="6" class="no-boder"></td>';
-			content+= '<td class="subtotal black-border"><b><%= t("activerecord.attributes.contracting_request.subtotal").upcase %></b></td>';
-			content+=	'<td class="subtotal<%= index %> black-border"><%= invoice.subtotal %></td>';
-			content+=	'</tr>';
+      /*Add Subtotal etc dinamyc*/
+      content+= '<tr class="subtotal">';
+      content+= '<td colspan="6" class="no-boder"></td>';
+      content+= '<td class="subtotal black-border"><b><%= t("activerecord.attributes.contracting_request.subtotal").upcase %></b></td>';
+      content+= '<td class="subtotal<%= index %> black-border"><%= invoice.subtotal %></td>';
+      content+= '</tr>';
 
-		<% invoice.tax_breakdown.each do |tax| %>
+    <% invoice.tax_breakdown.each do |tax| %>
 
-			content+=	'<tr class="breakdown">';
-			content+=	'<td colspan="3" class="no-boder"></td>';
-			content+=	'<td class="no-boder" colspan="2"><b><%= t("activerecord.attributes.contracting_request.base_imp") %>: </b> <%= tax[1] %></td>';
-			content+=	`<td class="no-boder"><%= "#{pluralize(tax[3], 'artículo')}"  %></td>`;
-			content+=	'<td><b>IVA (<%= tax[0] %>%)</b></td>';
-			content+=	'<td><%= tax[2] %></td>';
-			content+=	'</tr>';
+      content+= '<tr class="breakdown">';
+      content+= '<td colspan="3" class="no-boder"></td>';
+      content+= '<td class="no-boder" colspan="2"><b><%= t("activerecord.attributes.contracting_request.base_imp") %>: </b> <%= tax[1] %></td>';
+      content+= `<td class="no-boder"><%= "#{pluralize(tax[3], 'artículo')}"  %></td>`;
+      content+= '<td><b>IVA (<%= tax[0] %>%)</b></td>';
+      content+= '<td><%= tax[2] %></td>';
+      content+= '</tr>';
 
-		<% end %>
+    <% end %>
 
-		content+=	'<tr>';
-		content+= '<td colspan="6" class="black-border"></td>';
-		content+= '<td class="black-border"><b>TOTAL</b></td>';
-		content+=	'<td class="black-border total_invoice"><%= invoice.total %></td>';
-		content+=	'</tr>';
+    content+= '<tr>';
+    content+= '<td colspan="6" class="black-border"></td>';
+    content+= '<td class="black-border"><b>TOTAL</b></td>';
+    content+= '<td class="black-border total_invoice"><%= invoice.total %></td>';
+    content+= '</tr>';
 
-		/*End Subtotal dinamyc*/
+    /*End Subtotal dinamyc*/
 
-		content += "</tbody>";
-		content += "</table>";
+    content += "</tbody>";
+    content += "</table>";
 
-		content += '<hr style="border-width: 2px; border-top: 1px solid #000000;">';
-		form.append(content);
-		// form.attr("action", "bills/<%= @pre_bill.id %>")
+    content += '<hr style="border-width: 2px; border-top: 1px solid #000000;">';
+    form.append(content);
+    // form.attr("action", "bills/<%= @pre_bill.id %>")
 
-	<% end %> /*End Bill.invoices*/
+  <% end %> /*End Bill.invoices*/
 <% end %> /*End if*/
 console.log(content)
 $("#new-bill").modal("hide");
@@ -75,7 +75,7 @@ $("#bill-supply-modal").modal("show");
 
 $(document).ready(function() {
 
-	$("#bill-suply-form input, #bill-suply-form select").change(function() {
+  $("#bill-suply-form input, #bill-suply-form select").change(function() {
 
 
     /*$('td select').get(0).value; option checkbox*/

@@ -12,22 +12,22 @@
         <%= bill.try(:bill_date) %>
       </div>
       <div class="span2 soft-padding">
-        <%= bill.try(:bill_type).name %>
+        <%= bill.try(:bill_type).try(:name) %>
       </div>
       <div class="span1 soft-padding">
         <%= bill.try(:total) %>
       </div>
       <div class="span2 soft-padding pull-right">
-        <%= link_to "<i class='icon-print icon-white'></i>".html_safe, bill_path(bill) , class: "btn btn-warning btn-mini" %>
-        <%= link_to "<i class='icon-remove icon-white'></i>".html_safe, bill_path(bill) , class: "btn btn-warning btn-mini" %>
+        <%= link_to "<i class='icon-print icon-white'></i>".html_safe, bill_path(bill), target: "_blank", class: "btn btn-warning btn-mini" %>
+        <%= link_to "<i class='icon-remove icon-white'></i>".html_safe, void_subscriber_bill_path(@subscriber,bill) , class: "btn btn-warning btn-mini" %>
         <%= link_to "<i class='icon-plus icon-white'></i>".html_safe, bill_path(bill) , class: "btn btn-warning btn-mini" %>
       </div>
     </div>
     <div id="collapse-<%= bill.id %>" class="accordion-body collapse">
       <div class="accordion-inner">
-		    <% bill.invoices.each do |invoice| %>
-		      <div><small><%= t("activerecord.attributes.contracting_request.invoice_number") %>: <%= invoice.try(:invoice_no) %></small></div>
-		      <div><small><%= invoice.try(:biller).try(:name) %> | <%= t("activerecord.attributes.contracting_request.fiscal_id") %> <%= invoice.try(:biller).try(:fiscal_id) %></small></div>
+        <% bill.invoices.each do |invoice| %>
+          <div><small><%= t("activerecord.attributes.contracting_request.invoice_number") %>: <%= invoice.try(:invoice_no) %></small></div>
+          <div><small><%= invoice.try(:biller).try(:name) %> | <%= t("activerecord.attributes.contracting_request.fiscal_id") %> <%= invoice.try(:biller).try(:fiscal_id) %></small></div>
           <table class="table">
             <tr>
               <th><%= t("activerecord.attributes.contracting_request.code") %></th>
@@ -41,7 +41,7 @@
               <th><%= t("activerecord.attributes.contracting_request.total") %></th>
             </tr>
             <% invoice.invoice_items.each do |item| %>
-		          <tr>
+              <tr>
                 <td><%= item.code %></td>
                 <td><%= item.subcode %></td>
                 <td><%= item.quantity %></td>
@@ -52,7 +52,7 @@
                 <td><%= item.discount_pct %></td>
                 <td><%= item.total %></td>
               </tr>
-		        <% end %>
+            <% end %>
             <tr class="subtotal">
               <td colspan="7" class="no-boder"></td>
               <td class="black-border"><b><%= t('activerecord.attributes.subscriber.subtotal').upcase %></b></td>
@@ -72,7 +72,7 @@
               <td class="black-border"><b><%= t('activerecord.attributes.subscriber.total').upcase %></b></td>
               <td class="black-border"><%= invoice.total %></td>
             </tr>
-		    <% end %>
+        <% end %>
         </table>
       </div>
     </div>

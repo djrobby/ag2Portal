@@ -3,21 +3,21 @@ require_dependency "ag2_gest/application_controller"
 module Ag2Gest
   class BillsController < ApplicationController
 
-    def void
-      @subscriber = Subscriber.find params[:id]
-      @bill = Bill.find params[:bill_id]
-      void_bill(bill)
-      redirect_to subscriber_path(@subscriber, bill: @bill.id)
-    end
+    # def void
+    #   @subscriber = Subscriber.find params[:id]
+    #   @bill = Bill.find params[:bill_id]
+    #   void_bill(bill)
+    #   redirect_to subscriber_path(@subscriber, bill: @bill.id)
+    # end
 
-    def rebilling
-      @subscriber = Subscriber.find params[:id]
-      @bill = Bill.find params[:bill_id]
-      void_bill(bill)
-      @reading = @subscriber.readings.find_by_billing_period_id(params[:bills][:billing_period_id])
-      @bill = @reading.generate_pre_bill
-      redirect_to subscriber_path(@subscriber, bill: @bill.id)
-    end
+    # def rebilling
+    #   @subscriber = Subscriber.find params[:id]
+    #   @bill = Bill.find params[:bill_id]
+    #   void_bill(bill)
+    #   @reading = @subscriber.readings.find_by_billing_period_id(params[:bills][:billing_period_id])
+    #   @bill = @reading.generate_pre_bill
+    #   redirect_to subscriber_path(@subscriber, bill: @bill.id)
+    # end
 
     def bill_supply_pdf
       @bill = Bill.find(params[:id])
@@ -283,35 +283,35 @@ module Ag2Gest
     end
 
     private
-    def void_bill(bill)
-      bill_cancel = bill.dup
-      if bill_cancel.save
-        bill.invoices.each do |invoice|
-          invoice_cancel = Invoice.create(
-            bill_id: bill_cancel.id,
-            invoice_no: invoice.invoice_no,
-            invoice_date: Date.today,
-            invoice_status_id: invoice.invoice_status_id,
-            invoice_type_id: 2,
-            tariff_scheme_id: invoice.tariff_scheme_id,
-            company_id: invoice.company_id
-          )
-          invoice.invoice_items.each do |item|
-            InvoiceItem.create(
-              invoice_id: invoice_cancel.id,
-              code: item.code,
-              description: item.description,
-              quantity: item.quantity,
-              price: item.price * -1,
-              tax_type_id: item.tax_type_id,
-              discount_pct: item.discount_pct,
-              tariff_id: item.tariff_id)
-          end
-        end
-      else
-        return false
-      end
-    end
+    # def void_bill(bill)
+    #   bill_cancel = bill.dup
+    #   if bill_cancel.save
+    #     bill.invoices.each do |invoice|
+    #       invoice_cancel = Invoice.create(
+    #         bill_id: bill_cancel.id,
+    #         invoice_no: invoice.invoice_no,
+    #         invoice_date: Date.today,
+    #         invoice_status_id: invoice.invoice_status_id,
+    #         invoice_type_id: 2,
+    #         tariff_scheme_id: invoice.tariff_scheme_id,
+    #         company_id: invoice.company_id
+    #       )
+    #       invoice.invoice_items.each do |item|
+    #         InvoiceItem.create(
+    #           invoice_id: invoice_cancel.id,
+    #           code: item.code,
+    #           description: item.description,
+    #           quantity: item.quantity,
+    #           price: item.price * -1,
+    #           tax_type_id: item.tax_type_id,
+    #           discount_pct: item.discount_pct,
+    #           tariff_id: item.tariff_id)
+    #       end
+    #     end
+    #   else
+    #     return false
+    #   end
+    # end
 
     def billing_periods_dropdown
       _billing_periods = BillingPeriod.where(project_id: current_projects_ids).order("period DESC")

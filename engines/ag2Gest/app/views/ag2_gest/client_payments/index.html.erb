@@ -15,6 +15,7 @@ $(document).ready(function () {
 
   $('#payments-tabs a').click(function (e) {
     e.preventDefault();
+    $('input:checkbox').removeAttr('checked');
     $(this).tab('show');
   });
 
@@ -30,11 +31,11 @@ $(document).ready(function () {
 
   $(".checkbox-master").click(function () {
     $(this).parents("table").find("tbody").find("input[type=checkbox]").prop('checked', $(this).prop('checked'));
-	});
+  });
 
   $(".checkbox-main").click(function () {
     $(".checkbox-slave").prop('checked', $(this).prop('checked'));
-	});
+  });
 
   $(".btn-payment").click(function(){
     var elements = $( "input:checked" );
@@ -61,6 +62,29 @@ $(document).ready(function () {
     $(".cash-return").text((amount - debt).toFixed(2))
   })
 
+  $("#initial-cash").change(function() {
+    initialCash = parseFloat(this.value)
+    cashed = parseFloat($("#total-cash").text());
+    $("#ending-cash").text((initialCash + cashed).toFixed(2));
+  })
+
+  $("form.bank_confirm").submit(function(){
+   var $input = $(this).find("input[name='bank_confirm[ids]']");
+   var elements = $( "input.checkbox-slave:checked" );
+   var client_payment_ids = [];
+   for(var i=0;typeof(elements[i])!='undefined';client_payment_ids.push(elements[i++].getAttribute('value')));
+   $input.val(client_payment_ids);
+ });
+
+ $("form.payment_fractionated").submit(function(){
+   var $input = $(this).find("input[name='payment_fractionated[ids]']");
+   var elements = $( "input.checkbox-slave:checked" );
+   var instalments_ids = [];
+   for(var i=0;typeof(elements[i])!='undefined';instalments_ids.push(elements[i++].getAttribute('value')));
+   $input.val(instalments_ids);
+  });
+
+
 });
 </script>
 <%= render '/layouts/ag2_gest/clientpaymentsbreadcrumb' %>
@@ -84,35 +108,35 @@ $(document).ready(function () {
           <%= label_tag I18n.t("ag2_gest.contracting_requests.index.label_client"), nil, :class => 'form-label' %>
           <%= select_tag "client", options_from_collection_for_select(@clients, "id", "to_label"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
 
-        	<!-- Project -->
-        	<%= label_tag I18n.t("ag2_gest.contracting_requests.index.label_project"), nil, :class => 'form-label-under-sel2' %>
-        	<%= select_tag "project", options_from_collection_for_select(@projects, "id", "project_code"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
+          <!-- Project -->
+          <%= label_tag I18n.t("ag2_gest.contracting_requests.index.label_project"), nil, :class => 'form-label-under-sel2' %>
+          <%= select_tag "project", options_from_collection_for_select(@projects, "id", "project_code"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
 
           <!-- BankAccount -->
-        	<%= label_tag "Cuenta Bancaria", nil, :class => 'form-label-under-sel2' %>
-        	<%= select_tag "bank_account", options_for_select([ "SI", "NO" ]), include_blank: true, :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
+          <%= label_tag "Cuenta Bancaria", nil, :class => 'form-label-under-sel2' %>
+          <%= select_tag "bank_account", options_for_select([ "SI", "NO" ]), include_blank: true, :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
 
           <!-- Period -->
           <%= label_tag "Periodo", nil, :class => 'form-label-under-sel2' %>
-        	<%= select_tag "billing_period[]", options_from_collection_for_select(@billing_periods, "id", "period"), :prompt => "", :class => 'x-large-text-field shrinked sel2 multiple', multiple: true %>
+          <%= select_tag "billing_period[]", options_from_collection_for_select(@billing_periods, "id", "period"), :prompt => "", :class => 'x-large-text-field shrinked sel2 multiple', multiple: true %>
 
           <!-- Ruta -->
           <%= label_tag "Ruta", nil, :class => 'form-label-under-sel2' %>
-        	<%= select_tag "reading_routes[]", options_from_collection_for_select(@reading_routes, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked sel2 multiple', multiple: true %>
+          <%= select_tag "reading_routes[]", options_from_collection_for_select(@reading_routes, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked sel2 multiple', multiple: true %>
 
 
           <br /><br />
-        	<!-- Submit -->
-        	<%= submit_tag I18n.t(:apply_filter_button), :class => 'btn btn-primary', :id => 'submit_btn' %>
+          <!-- Submit -->
+          <%= submit_tag I18n.t(:apply_filter_button), :class => 'btn btn-primary', :id => 'submit_btn' %>
 
 
-        	<!-- Remove filter -->
-        	<button id="removeFilter" type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><%= t :clear_filter_button %></button>
+          <!-- Remove filter -->
+          <button id="removeFilter" type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><%= t :clear_filter_button %></button>
 
         <% end %>
         <!-- <br /> -->
         <%= link_to t(".back_to_root"), ag2_gest.root_path %>
-			</div><!-- /.sidebar-nav -->
+      </div><!-- /.sidebar-nav -->
     </div><!-- /.span3 -->
 
     <div class="span9" id="div_table">
@@ -122,7 +146,7 @@ $(document).ready(function () {
         <li class="active" style="width:25%"><a href="#pendings">Pendientes</a></li>
         <li style="width:25%"><a href="#charged">Cobradas</a></li>
         <li class="pull-right"><a href="#fractionated">Aplazamientos</a></li>
-        <li class="pull-right"><a href="#others">Otros</a></li>
+        <!-- <li class="pull-right"><a href="#others">Otros</a></li> -->
         <li class="pull-right"><a href="#banks">Bancos</a></li>
         <li class="pull-right"><a href="#cash">Caja</a></li>
       </ul>
@@ -136,10 +160,10 @@ $(document).ready(function () {
               <input type="checkbox" class="checkbox-main">
               <a href="#modal-cash" role="button" class="btn btn-primary btn-small btn-payment btn-cash" data-toggle="modal">Caja</a>
               <a href="#modal-bank" role="button" class="btn btn-primary btn-small btn-payment" data-toggle="modal">Banco</a>
-              <a href="#" class="btn btn-primary btn-small">Ventanilla Bancaria</a>
+              <!-- <a href="#" class="btn btn-primary btn-small">Ventanilla Bancaria</a> -->
               <a href="#modal-fracionated" role="button" class="btn btn-primary btn-small btn-payment" data-toggle="modal">Aplazamientos</a>
               <a href="#modal-cash" role="button" class="btn btn-primary btn-small btn-payment btn-others" data-toggle="modal">Otros</a>
-              <a href="#" class="btn btn-primary btn-small pull-right">Devoluciones</a>
+              <!-- <a href="#" class="btn btn-primary btn-small pull-right">Devoluciones</a> -->
             </div>
           </div>
 
@@ -181,12 +205,12 @@ $(document).ready(function () {
                       <tbody>
                         <% bill.invoices.order("created_at DESC").each do |i| %>
                           <tr>
-                            <td><%= check_box_tag 'invoice_id', i.id, false, class: "checkbox-slave", :data => {total: i.total, collected: i.collected, debt: i.debt} %></td>
+                            <td><%= (check_box_tag 'invoice_id', i.id, false, class: "checkbox-slave", :data => {total: i.total, collected: i.collected, debt: i.debt}) if i.invoice_status_id == 1 %></td>
                             <td><%= i.invoice_no %></td>
                             <td><%= i.invoice_date %></td>
-                            <td><%= i.total %></td>
-                            <td><%= i.collected %></td>
-                            <td><%= i.debt %></td>
+                            <td><%= i.total.round(2) %></td>
+                            <td><%= i.collected.round(2) %></td>
+                            <td><%= i.debt.round(2) %></td>
                             <td><%= i.invoice_status.name %></td>
                           </tr>
                         <% end %>
@@ -240,9 +264,9 @@ $(document).ready(function () {
                           <tr>
                             <td><%= i.invoice_no %></td>
                             <td><%= i.invoice_date %></td>
-                            <td><%= i.total %></td>
-                            <td><%= i.collected %></td>
-                            <td><%= i.debt %></td>
+                            <td><%= i.total.round(2) %></td>
+                            <td><%= i.collected.round(2) %></td>
+                            <td><%= i.debt.round(2) %></td>
                             <td><%= i.invoice_status.name %></td>
                           </tr>
                         <% end %>
@@ -259,13 +283,12 @@ $(document).ready(function () {
         <div class="tab-pane" id="cash">
           <div class="row-fluid">
             <div class="span12">
-              <a href="#" class="btn btn-primary btn-small">Cerrar Caja</a>
+              <a href="#modal-close-cash" role="button" class="btn btn-primary btn-small btn-payment" data-toggle="modal">Cerrar Caja</a>
             </div>
           </div>
           <table class="table table-condensed table-striped">
             <thead>
               <tr>
-                <th><input type="checkbox" class="checkbox-master"></th>
                 <th>Nº</th>
                 <th>Factura</th>
                 <th>Abonado</th>
@@ -277,13 +300,12 @@ $(document).ready(function () {
             <tbody>
               <% @client_payments_cash.each do |client_payment| %>
                 <tr>
-                  <td><input type="checkbox" class="checkbox-master"></td>
                   <td><%= client_payment.receipt_no %></td>
                   <td><%= link_to client_payment.bill.try(:bill_no), bill_path(client_payment.bill) %></td>
                   <td><%= link_to client_payment.subscriber.to_label, subscriber_path(client_payment.subscriber) %></td>
                   <td><%= client_payment.payment_date %></td>
-                  <td><%= client_payment.amount %></td>
-                  <td><%= client_payment.invoice.total %></td>
+                  <td><%= client_payment.amount.round(2) %></td>
+                  <td><%= client_payment.invoice.total.round(2) %></td>
                 </tr>
               <% end %>
             </tbody>
@@ -294,7 +316,10 @@ $(document).ready(function () {
         <div class="tab-pane" id="banks">
           <div class="row-fluid">
             <div class="span12">
-              <a href="#" class="btn btn-primary btn-small">Confirmar</a>
+              <%= simple_form_for :bank_confirm, url: confirm_bank_client_payments_path, method: :post do |f| %>
+                <%= f.input :ids, :as => :hidden %>
+                <%= f.button :submit, "Confirmar Pagos", :class => 'btn btn-primary btn-small' %>
+              <% end %>
             </div>
           </div>
           <table class="table table-condensed table-striped">
@@ -312,13 +337,13 @@ $(document).ready(function () {
             <tbody>
               <% @client_payments_bank.each do |client_payment| %>
                 <tr>
-                  <td><input type="checkbox" class="checkbox-master"></td>
+                  <td><%= check_box_tag 'client_payment_id', client_payment.id, false, class: "checkbox-slave" %></td>
                   <td><%= client_payment.receipt_no %></td>
                   <td><%= link_to client_payment.bill.try(:bill_no), bill_path(client_payment.bill) %></td>
                   <td><%= link_to client_payment.subscriber.to_label, subscriber_path(client_payment.subscriber) %></td>
                   <td><%= client_payment.payment_date %></td>
-                  <td><%= client_payment.amount %></td>
-                  <td><%= client_payment.invoice.total %></td>
+                  <td><%= client_payment.amount.round(2) %></td>
+                  <td><%= client_payment.invoice.total.round(2) %></td>
                 </tr>
               <% end %>
             </tbody>
@@ -350,8 +375,8 @@ $(document).ready(function () {
                   <td><%= link_to client_payment.bill.try(:bill_no), bill_path(client_payment.bill) %></td>
                   <td><%= link_to client_payment.subscriber.to_label, subscriber_path(client_payment.subscriber) %></td>
                   <td><%= client_payment.payment_date %></td>
-                  <td><%= client_payment.amount %></td>
-                  <td><%= client_payment.invoice.total %></td>
+                  <td><%= client_payment.amount.round(2) %></td>
+                  <td><%= client_payment.invoice.total.round(2) %></td>
                 </tr>
               <% end %>
             </tbody>
@@ -363,6 +388,7 @@ $(document).ready(function () {
           <%= simple_form_for :payment_fractionated, url: instalment_client_payments_path, method: :post do |f|  %>
             <div class="row-fluid">
               <div class="span12">
+                <%= f.input :ids, :as => :hidden %>
                 <%= f.button :submit, "Cobrar cuotas", :class => 'btn btn-primary btn-small' %>
               </div>
             </div>
@@ -386,8 +412,8 @@ $(document).ready(function () {
                     <td><%= link_to instalment.instalment_plan.subscriber.to_label, subscriber_path(instalment.instalment_plan.subscriber) %></td>
                     <td><%= instalment.instalment %></td>
                     <td><%= instalment.payday_limit %></td>
-                    <td><%= instalment.surcharge %></td>
-                    <td><%= instalment.amount %></td>
+                    <td><%= instalment.surcharge.round(2) %></td>
+                    <td><%= instalment.amount.round(2) %></td>
                   </tr>
                 <% end %>
               </tbody>
@@ -468,7 +494,44 @@ $(document).ready(function () {
             </div>
           </div>
           <%= f.input :number_inst, label: "Plazos", as: "string", inline_label: "Yes" %>
-          <%= f.input :charge, label: "Cargo", as: "string", inline_label: "Yes" %>
+          <%= f.input :charge, label: "Porcentaje de recargo", as: "string", inline_label: "Yes" %>
+        </div>
+        <div class="modal-footer">
+          <%= f.button :submit, "Confirmar", :class => 'btn btn-primary' %>
+          <button class="btn" data-dismiss="modal" aria-hidden="true">Cerrar</button>
+        </div>
+      <% end %>
+    </div>
+
+    <!-- Modal Close Cash -->
+    <div id="modal-close-cash" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="CerrarCaja" aria-hidden="true">
+      <div class="modal-header">
+        <h4>Cerrar Caja</h4>
+      </div>
+      <%= simple_form_for :close_cash, url: close_cash_client_payments_path, method: :post do |f| %>
+        <div class="modal-body">
+
+          <div class="control-group string required meter_manufacturing_date">
+            <label class="string control-label">Saldo de apertura</label>
+            <div class="controls">
+              <input id="initial-cash" size="50" type="number" step="0.01">
+            </div>
+          </div>
+
+          <div class="control-group string required meter_manufacturing_date">
+            <label class="string control-label">Total cobrado</label>
+            <div class="controls">
+              <span id="total-cash"><%= @client_payments_cash.sum{|c| c.amount.round(2)} %></span> €
+            </div>
+          </div>
+
+          <div class="control-group string required meter_manufacturing_date">
+            <label class="string control-label">Saldo de cierre</label>
+            <div class="controls">
+              <span id="ending-cash" size="50" type="number" step="0.01"><%= @client_payments_cash.sum{|c| c.amount.round(2)} %></span> €
+            </div>
+          </div>
+
         </div>
         <div class="modal-footer">
           <%= f.button :submit, "Confirmar", :class => 'btn btn-primary' %>

@@ -63,7 +63,7 @@ module Ag2Gest
     def edit
       @breadcrumb = 'update'
       @tariff_scheme = TariffScheme.find(params[:id])
-      @billable_items = @tariff_scheme.project.billable_items
+      @billable_items = @tariff_scheme.project.billable_items.joins(:billable_concept).order("billable_concepts.billable_document")
       @caliber = Caliber.all
       @billable_items.each do |b|
         if b.tariffs_by_caliber

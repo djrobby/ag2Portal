@@ -133,6 +133,8 @@ Ag2Gest::Engine.routes.draw do
     match 'subscribers/:id/quit_meter/:id', :controller => 'subscribers', :action => 'quit_meter'#, :via => [:post]
     match 'subscribers/change_meter/:id', :controller => 'subscribers', :action => 'change_meter', :via => [:post]
     match 'subscribers/:id/change_meter/:id', :controller => 'subscribers', :action => 'change_meter', :via => [:post]
+    match 'subscribers/:id/void/:bill_id', :controller => 'subscribers', :action => 'void', :via => [:get], as: "void_subscriber_bill"
+    match 'subscribers/:id/rebilling/:bill_id', :controller => 'subscribers', :action => 'rebilling', :via => [:post], as: "rebilling"
 
     # Resources
     resources :clients
@@ -140,6 +142,7 @@ Ag2Gest::Engine.routes.draw do
       get 'subscriber_pdf', on: :member
       post 'change_meter', on: :member
       post 'simple_bill', on: :member
+      post 'update_simple', on: :member
     end
     #
     resources :centers
@@ -200,14 +203,15 @@ Ag2Gest::Engine.routes.draw do
     resources :reading_routes
     match 'reading_routes/update_office_textfield_from_project/:id', :controller => 'reading_routes', :action => 'update_office_textfield_from_project'
     #
+    # match 'bills/update_simple', :controller => 'bill', :action => 'update_simple'
     resources :bills do
       get 'pre_index', on: :collection
       get 'get_subscribers', on: :collection
       get 'show_consumptions', on: :collection
       get 'confirm', on: :collection
       get 'bill_supply_pdf', on: :member
-      get 'void', on: :member
-      get 'rebilling', on: :member
+      #get 'void', on: :member
+      #get 'rebilling', on: :member
     end
     resources :invoices
     resources :billable_items
@@ -225,6 +229,8 @@ Ag2Gest::Engine.routes.draw do
       post 'banks', on: :collection
       post 'fractionated', on: :collection
       post 'instalment', on: :collection
+      post 'close_cash', on: :collection
+      post 'confirm_bank', on: :collection
     end
     resources :payment_methods
 

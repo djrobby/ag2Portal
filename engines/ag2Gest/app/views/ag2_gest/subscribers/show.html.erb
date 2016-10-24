@@ -380,11 +380,14 @@
   </div>
   <div class="modal-body" style="overflow-x: hidden;">
 
-    <form id="bill-supply-form" accept-charset="UTF-8" action="" class="form-inline" data-remote="true" data-type="json" method="put" novalidate="novalidate">
-    </form>
+    <%= simple_form_for :simple_bill, url: update_simple_subscriber_path(@subscriber), method: "post" do |f| %>
+    <% end %>
+    <!-- <form id="bill-supply-form" action="<%= update_simple_subscriber_path(@subscriber) %>" method="post" accept-charset="UTF-8" action="" class="form-inline" novalidate="novalidate">
+    </form> -->
+
   </div>
   <div class="modal-footer">
-    <a class="btn btn-primary" id="submit-bill">Actualizar Factura</a>
+    <a class="btn btn-primary" id="submit-simple-bill">Actualizar Factura</a>
     <a class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Cerrar</a>
   </div>
 </div>
@@ -475,6 +478,9 @@
 
     };
 
+  });
+  $("#submit-simple-bill").click(function () {
+    $("form.simple_bill").submit();
   });
 
 </script>

@@ -64,9 +64,9 @@ module Ag2Gest
       bill = invoices.first.bill
       charge = params[:instalment][:charge].to_d
       number_quotas = params[:instalment][:number_inst].to_i
-      quota_total = invoices.sum(&:debt) + charge
+      pct_plus = invoices.sum(&:debt) * (charge/100)
+      quota_total = invoices.sum(&:debt) + pct_plus
       single_quota = (quota_total / number_quotas).round(4)
-      debugger
       plan = InstalmentPlan.create( instalment_no: "000000000000-000",
                       instalment_date: Date.today,
                       payment_method_id: 1, #CAMBIAR POR ELECCION
@@ -90,25 +90,57 @@ module Ag2Gest
     end
 
     def instalment
-      instalment = Instalment.find(params[:instalment_id])
-      bill = instalment.bill
-      instalment_plan = instalment.instalment_plan
-      client_payment = ClientPayment.new(receipt_no: "000-0000-0000", payment_type: 3, bill_id: bill.id, invoice_id: nil,
-                           payment_method_id: instalment_plan.payment_method_id, client_id: bill.subscriber.client_id, subscriber_id: bill.subscriber_id,
-                           payment_date: Time.now, confirmation_date: Time.now, amount: instalment.amount, instalment_id: instalment.id,
-                           client_bank_account_id: nil, charge_account_id: nil)
-      if client_payment.save
-        if  instalment_plan.instalments.count == instalment_plan.instalments.map(&:client_payment).compact.count
-          bill.invoices.each do |i|
-            i.invoice_status_id = 99
-            i.save
+      instalment_ids = params[:payment_fractionated][:ids].split(",")
+      instalments = Instalment.where(id: instalment_ids)
+      instalments.each do |instalment|
+        bill = instalment.bill
+        instalment_plan = instalment.instalment_plan
+        client_payment = ClientPayment.new(receipt_no: "000-0000-0000", payment_type: 3, bill_id: bill.id, invoice_id: nil,
+                             payment_method_id: instalment_plan.payment_method_id, client_id: bill.subscriber.client_id, subscriber_id: bill.subscriber_id,
+                             payment_date: Time.now, confirmation_date: Time.now, amount: instalment.amount, instalment_id: instalment.id,
+                             client_bank_account_id: nil, charge_account_id: nil)
+        if client_payment.save
+          if  instalment_plan.instalments.count == instalment_plan.instalments.map(&:client_payment).compact.count
+            bill.invoices.each do |i|
+              i.invoice_status_id = 99
+              i.save
+            end
           end
         end
-        redirect_to client_payments_path, notice: "Cobro realizado con exito"
+      end
+      redirect_to client_payments_path, notice: "Cobro realizado con exito"
+    end
+
+    def close_cash
+      if !current_projects_ids.blank?
+        @bills = Bill.where(project_id: current_projects_ids)
+        @client_payments_cash = @bills.where("invoice_status_id < 99").
+                                      order("created_at DESC").
+                                      map(&:invoices).flatten.
+                                      map(&:client_payments).flatten.
+                                      select{|c| c.payment_type == ClientPayment::CASH and c.confirmation_date.nil?}
+        @client_payments_cash.each do |cp|
+          cp.update_attributes(confirmation_date: Time.now)
+          if cp.invoice.debt == 0
+            cp.invoice.update_attributes(invoice_status_id: 99)
+          end
+        end
+        redirect_to client_payments_path, notice: "Caja cerrada con exito"
       else
-        redirect_to client_payments_path, alert: "Error al realizar el cobro"
+        redirect_to client_payments_path, alert: "Error al cerrar la caja"
       end
     end
+
+    def confirm_bank
+      client_payment_ids = params[:bank_confirm][:ids].split(",")
+      client_payments = ClientPayment.where(id: client_payment_ids)
+      client_payments.each do |cp|
+        cp.update_attributes(confirmation_date: Time.now)
+        cp.invoice.update_attributes(invoice_status_id: 99)
+      end
+      redirect_to client_payments_path, notice: "Pagos confirmados con exito"
+    end
+
 
     def index
       bill_no = params[:bill_no]
@@ -135,15 +167,10 @@ module Ag2Gest
       @projects = current_projects
       @bills_pending = @bills.where("invoice_status_id < 99").order("created_at DESC")
       @bills_charged = @bills.where("invoice_status_id = 99").order("created_at DESC")
-      @client_payments_cash = @bills_pending.map(&:invoices).flatten.map(&:client_payments).flatten.select{|c| c.payment_type == ClientPayment::CASH}
+      @client_payments_cash = @bills_pending.map(&:invoices).flatten.map(&:client_payments).flatten.select{|c| c.payment_type == ClientPayment::CASH and c.confirmation_date.nil?}
       @client_payments_bank = @bills_pending.map(&:invoices).flatten.map(&:client_payments).flatten.select{|c| c.payment_type == ClientPayment::BANK}
       @client_payments_others = @bills.map(&:invoices).flatten.map(&:client_payments).flatten.select{|c| c.payment_type == ClientPayment::OTHERS}
       @instalments = @bills_pending.where(invoice_status_id: InvoiceStatus::FRACTIONATED).map(&:instalments).flatten.map{|i| i  if i.client_payment.nil?}.compact
-
-      # @bills_cash = @bills.where(invoice_status_id: InvoiceStatus::CASH).order("created_at DESC")
-      # @bills_bank = @bills.where(invoice_status_id: InvoiceStatus::BANK).order("created_at DESC")
-      # @bills_refund = @bills.where(invoice_status_id: InvoiceStatus::REFUND).order("created_at DESC")
-      # @bills_charged = @bills.where(invoice_status_id: InvoiceStatus::CHARGED).order("created_at DESC")
       respond_to do |format|
         format.html # index.html.erb
         format.json { render json: @bills }

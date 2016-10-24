@@ -83,7 +83,7 @@
     </tr>
     <tr>
       <td><%= t('activerecord.attributes.service_point.reading_route_id') %>:</td>
-      <td><%= link_to @service_point.try(:reading_route).try(:name), ag2_gest.reading_route_path(@service_point.try(:reading_route).try(:id)) %></td>
+      <td><%= link_to @service_point.try(:reading_route).try(:name), ag2_gest.reading_route_path(@service_point.try(:reading_route).try(:id)) unless @service_point.reading_route.nil? %></td>
       <td><%= t('activerecord.attributes.service_point.reading_sequence') %>:</td>
       <td><%= @service_point.try(:reading_sequence) %></td>
     </tr>

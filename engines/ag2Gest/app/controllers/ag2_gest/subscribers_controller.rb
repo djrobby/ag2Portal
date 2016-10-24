@@ -12,7 +12,34 @@ module Ag2Gest
                                                 :add_meter,
                                                 :quit_meter,
                                                 :change_meter,
-                                                :simple_bill ]
+                                                :simple_bill,
+                                                :void,
+                                                :rebilling ]
+
+    def update_simple
+      @subscriber = Subscriber.find params[:id]
+      params[:invoice_item].each do |obj_inv|
+        pre_invoice_item = PreInvoiceItem.find(obj_inv[0])
+        pre_invoice_item.update_attributes(obj_inv[1])
+      end
+      redirect_to subscriber_path(@subscriber), notice: "PreFactura actualizada correctamente"
+    end
+
+    def void
+      @subscriber = Subscriber.find params[:id]
+      @bill = Bill.find params[:bill_id]
+      void_bill(@bill)
+      redirect_to subscriber_path(@subscriber), notice: "Factura anulada"
+    end
+
+    def rebilling
+      @subscriber = Subscriber.find params[:id]
+      @bill = Bill.find params[:bill_id]
+      void_bill(@bill)
+      @reading = @subscriber.readings.find_by_billing_period_id(params[:bills][:billing_period_id])
+      @bill = @reading.generate_pre_bill
+      redirect_to subscriber_path(@subscriber, bill: @bill.id)
+    end
 
     def add_meter
 
@@ -427,9 +454,9 @@ module Ag2Gest
 
       @project_dropdown = session[:company].blank? ? Project.all : Project.where(company_id: session[:company])
 
-      @subscriber_readings = @subscriber.readings.paginate(:page => params[:page], :per_page => 5)
+      @subscriber_readings = @subscriber.readings.order("created_at DESC").paginate(:page => params[:page], :per_page => 5)
       @subscriber_accounts = @subscriber.client.client_bank_accounts.paginate(:page => params[:page], :per_page => 5)
-      @subscriber_bills = @subscriber.bills.paginate(:page => params[:page], :per_page => 3)
+      @subscriber_bills = @subscriber.bills.order("created_at DESC").paginate(:page => params[:page], :per_page => 3)
 
       #@alliance_towns = @alliance.players.towns.order("rank ASC").paginate(:page => params[:page], :per_page => 1)
       #@bills = Bill.joins(:subscriber).paginate(:page => params[:page], :per_page => 1) #.where('subscriber.bill = ?', params[:id]).paginate(:page => params[:page], :per_page => 1)
@@ -609,6 +636,43 @@ module Ag2Gest
     end
 
     private
+
+    def void_bill(bill)
+      bill_cancel = bill.dup
+      if bill_cancel.save
+        bill.invoices.each do |invoice|
+          new_invoice = invoice.dup
+          new_invoice.bill_id = bill_cancel.id
+          new_invoice.save
+          # invoice_cancel = Invoice.create(
+          #   bill_id: bill_cancel.id,
+          #   invoice_no: invoice.invoice_no,
+          #   invoice_date: Date.today,
+          #   invoice_status_id: invoice.invoice_status_id,
+          #   invoice_type_id: invoice.invoice_type_id,
+          #   tariff_scheme_id: invoice.tariff_scheme_id,
+          #   biller_id: invoice.biller_id
+          # )
+          invoice.invoice_items.each do |item|
+            new_item = item.dup
+            new_item.invoice_id = new_invoice.id
+            new_item.price = new_item.price * -1
+            # InvoiceItem.create(
+            #   invoice_id: invoice_cancel.id,
+            #   code: item.code,
+            #   description: item.description,
+            #   quantity: item.quantity,
+            #   price: item.price * -1,
+            #   tax_type_id: item.tax_type_id,
+            #   discount_pct: item.discount_pct,
+            #   tariff_id: item.tariff_id)
+            new_item.save
+          end
+        end
+      else
+        return false
+      end
+    end
 
     def sort_column
       Subscriber.column_names.include?(params[:sort]) ? params[:sort] : "id"
