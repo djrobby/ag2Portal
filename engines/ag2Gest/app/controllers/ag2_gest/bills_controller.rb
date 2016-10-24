@@ -147,7 +147,11 @@ module Ag2Gest
       if params[:bills]
         @bills = PreBill.where(pre_group_no: params[:bills])
       else
-        @bills = Office.find(session[:office]).subscribers.map(&:pre_bills).flatten
+        if session[:office] != '0'
+          @bills = Office.find(session[:office]).subscribers.map(&:pre_bills).flatten
+        else
+          @bills = PreBill.all
+        end
       end
 
       respond_to do |format|

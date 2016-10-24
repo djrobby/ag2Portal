@@ -113,11 +113,11 @@
   </li>
   <li class="span4">
     <% if (session[:resolution] == "LD")%>
-    <a data-toggle="modal" href="#notfound" class="thumbnail centered"><img src="/assets/icon/ag2Formalities.png" width="48" height="48" alt="ag2Formalities" /><h5 class="h5-narrow"><%=t ".formalities" %></h5></a>
+    <a data-toggle="modal" href="#notfound" class="thumbnail centered"><img src="/assets/icon/ag2DebtManagement.png" width="48" height="48" alt="ag2DebtClaimManagement" /><h5 class="h5-narrow"><%=t ".debt_claim_management" %></h5></a>
     <% elsif session[:resolution] == "SD" %>
-    <a data-toggle="modal" href="#notfound" class="thumbnail centered"><img src="/assets/pict/ag2/ag2Formalities.png" width="96" height="96" alt="ag2Formalities" /><h5 class="h5-narrow"><%=t ".formalities" %></h5></a>
+    <a data-toggle="modal" href="#notfound" class="thumbnail centered"><img src="/assets/pict/ag2/ag2DebtManagement.png" width="96" height="96" alt="ag2DebtClaimManagement" /><h5 class="h5-narrow"><%=t ".debt_claim_management" %></h5></a>
     <% else %>
-    <a data-toggle="modal" href="#notfound" class="thumbnail centered"><img src="/assets/pict/ag2Formalities.png" width="128" height="128" alt="ag2Formalities" /><h5 class="h5-narrow"><%=t ".formalities" %></h5></a>
+    <a data-toggle="modal" href="#notfound" class="thumbnail centered"><img src="/assets/pict/ag2DebtManagement.png" width="128" height="128" alt="ag2DebtClaimManagement" /><h5 class="h5-narrow"><%=t ".debt_claim_management" %></h5></a>
     <% end %>
   </li>
 </ul><!-- /.thumbnails -->
@@ -143,6 +143,20 @@
   </li>
   <li class="span4">
     <% if (session[:resolution] == "LD")%>
+    <a data-toggle="modal" href="#notfound" class="thumbnail centered"><img src="/assets/icon/ag2Formalities.png" width="48" height="48" alt="ag2Formalities" /><h5 class="h5-narrow"><%=t ".formalities" %></h5></a>
+    <% elsif session[:resolution] == "SD" %>
+    <a data-toggle="modal" href="#notfound" class="thumbnail centered"><img src="/assets/pict/ag2/ag2Formalities.png" width="96" height="96" alt="ag2Formalities" /><h5 class="h5-narrow"><%=t ".formalities" %></h5></a>
+    <% else %>
+    <a data-toggle="modal" href="#notfound" class="thumbnail centered"><img src="/assets/pict/ag2Formalities.png" width="128" height="128" alt="ag2Formalities" /><h5 class="h5-narrow"><%=t ".formalities" %></h5></a>
+    <% end %>
+  </li>
+</ul><!-- /.thumbnails -->
+<ul class="thumbnails">
+  <!-- Apps 6 -->
+  <li class="span4">
+  </li>
+  <li class="span4">
+    <% if (session[:resolution] == "LD")%>
     <a data-toggle="modal" href="#notfound" class="thumbnail centered"><img src="/assets/icon/ag2GestTrack.png" width="48" height="48" alt="Control Tracking" /><h5 class="h5-narrow"><%=t ".control" %></h5></a>
     <% elsif session[:resolution] == "SD" %>
     <a data-toggle="modal" href="#notfound" class="thumbnail centered"><img src="/assets/pict/ag2/ag2GestTrack.png" width="96" height="96" alt="Control Tracking" /><h5 class="h5-narrow"><%=t ".control" %></h5></a>
@@ -150,9 +164,11 @@
     <a data-toggle="modal" href="#notfound" class="thumbnail centered"><img src="/assets/pict/ag2GestTrack.png" width="128" height="128" alt="Control Tracking" /><h5 class="h5-narrow"><%=t ".control" %></h5></a>
     <% end %>
   </li>
+  <li class="span4">
+  </li>
 </ul><!-- /.thumbnails -->
 <ul class="thumbnails">
-  <!-- Apps 6 -->
+  <!-- Apps 7 -->
   <li class="span2">
     <% if (session[:resolution] == "LD")%>
     <a href="<%= payment_methods_path %>" class="thumbnail centered"><img src="/assets/icon/ag2PaymentMethods.png" width="48" height="48" alt="ag2Tables" /><h5 class="h5-narrow"><%=t ".payment_methods" %></h5></a>
