@@ -80,7 +80,7 @@
     </tr>
     <tr>
       <td><%=t 'activerecord.attributes.work_order.charge_account' %>:</td>
-      <td><%= @work_order.charge_account.full_name %></td>
+      <td><%= @work_order.charge_account.full_name unless @work_order.charge_account.blank? %></td>
       <td><%=t 'activerecord.attributes.work_order.store' %>:</td>
       <td><%= @work_order.store.name unless @work_order.store.blank? %></td>
     </tr>

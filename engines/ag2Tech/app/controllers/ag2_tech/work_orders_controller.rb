@@ -771,7 +771,7 @@ module Ag2Tech
           @calibers = calibers_dropdown
           @meter_owners = meter_owners_dropdown
           @meter_locations = meter_locations_dropdown
-          @readings = readings_dropdown
+          @readings = readings_dropdown(nil, nil, nil)
           @workers = workers_dropdown
           @products = products_dropdown
           @suppliers = suppliers_dropdown
@@ -920,7 +920,7 @@ module Ag2Tech
             @calibers = calibers_dropdown
             @meter_owners = meter_owners_dropdown
             @meter_locations = meter_locations_dropdown
-            @readings = readings_dropdown
+            @readings = readings_dropdown(@work_order.project, @work_order.meter, @work_order.subscriber)
             @workers = project_workers(@work_order.project)
             @products = @work_order.organization.blank? ? products_dropdown : @work_order.organization.products(:product_code)
             @suppliers = @work_order.organization.blank? ? suppliers_dropdown : @work_order.organization.suppliers(:supplier_code)

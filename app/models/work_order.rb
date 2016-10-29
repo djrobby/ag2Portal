@@ -88,7 +88,7 @@ class WorkOrder < ActiveRecord::Base
                                 :uniqueness => { :scope => :organization_id }
   validates :description,       :presence => true,
                                 :length => { :maximum => 100 }
-  validates :charge_account,    :presence => true
+  #validates :charge_account,    :presence => true
   validates :project,           :presence => true
   validates :work_order_labor,  :presence => true
   validates :work_order_status, :presence => true

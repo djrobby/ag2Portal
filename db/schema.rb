@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20161020100143) do
+ActiveRecord::Schema.define(:version => 20161029064136) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -180,6 +180,18 @@ ActiveRecord::Schema.define(:version => 20161020100143) do
 
   add_index "billing_frequencies", ["fix_measure_id"], :name => "index_billing_frequencies_on_fix_measure_id"
   add_index "billing_frequencies", ["var_measure_id"], :name => "index_billing_frequencies_on_var_measure_id"
+
+  create_table "billing_incidence_types", :force => true do |t|
+    t.string   "name"
+    t.boolean  "is_main"
+    t.string   "code",       :limit => 2
+    t.datetime "created_at",              :null => false
+    t.datetime "updated_at",              :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  add_index "billing_incidence_types", ["code"], :name => "index_billing_incidence_types_on_code"
 
   create_table "billing_periods", :force => true do |t|
     t.integer  "project_id"
@@ -2178,11 +2190,15 @@ ActiveRecord::Schema.define(:version => 20161020100143) do
   create_table "reading_incidence_types", :force => true do |t|
     t.string   "name"
     t.boolean  "should_estimate"
-    t.datetime "created_at",      :null => false
-    t.datetime "updated_at",      :null => false
+    t.datetime "created_at",                   :null => false
+    t.datetime "updated_at",                   :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
+    t.boolean  "is_main"
+    t.string   "code",            :limit => 2
   end
+
+  add_index "reading_incidence_types", ["code"], :name => "index_reading_incidence_types_on_code"
 
   create_table "reading_incidences", :force => true do |t|
     t.integer  "reading_id"
