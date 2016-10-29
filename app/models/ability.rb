@@ -467,6 +467,11 @@ class Ability
       cannot :manage, WorkOrderVehicle
     end
 
+    # ag2Admin
+    if (user.has_role? :ag2Admin_User) || (user.has_role? :ag2Human_User)
+      can :crud, Department
+    end
+
   # Define abilities for the passed in user here. For example:
   #
   #   user ||= User.new # guest user (not logged in)
