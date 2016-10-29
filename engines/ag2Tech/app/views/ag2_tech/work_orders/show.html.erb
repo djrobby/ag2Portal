@@ -68,7 +68,7 @@
     </tr>
     <tr>
       <td><%=t 'activerecord.attributes.work_order.work_order_labor' %>:</td>
-      <td><%= @work_order.work_order_labor.name %></td>
+      <td><%= @work_order.work_order_labor.name unless @work_order.work_order_labor.blank? %></td>
       <td><%=t 'activerecord.attributes.work_order.infrastructure' %>:</td>
       <td><%= @work_order.infrastructure.full_name unless @work_order.infrastructure.blank? %></td>
     </tr>

@@ -35,7 +35,7 @@ es:
         items: "Actividades presupuestos"
         item: "Actividad"
       tools:
-        items: "Herramientas"
+        items: "Máquinas-herramienta"
         item: "Herramienta"
       vehicles:
         items: "Vehículos"

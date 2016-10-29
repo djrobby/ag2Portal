@@ -2,16 +2,16 @@ es:
   activerecord:
     models:
       work_order_tool:
-        zero:  Herramientas de orden de trabajo
-        one:   Herramienta de orden de trabajo
-        few:   Herramientas de orden de trabajo
-        other: Herramientas de orden de trabajo
+        zero:  Máquinas-herramienta de orden de trabajo
+        one:   Máquinas-herramienta de orden de trabajo
+        few:   Máquinas-herramienta de orden de trabajo
+        other: Máquinas-herramienta de orden de trabajo
     attributes:
       work_order_tool:
         work_order: "Orden de trabajo"
         work_order_id: "Orden de trabajo"
-        tool: "Herramienta"
-        tool_id: "Herramienta"
+        tool: "Máquina-herramienta"
+        tool_id: "Máquina-herramienta"
         minutes: "Minutos"
         cost: "Coste"
         costs: "Costos"

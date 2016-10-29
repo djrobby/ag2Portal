@@ -27,6 +27,7 @@ es:
   about_develop_tools_text_html: "Las herramientas de desarrollo utilizadas en aGestiona2, han sido licenciadas por sus autores respectivos, bajo los términos y condiciones detalladas en "
   about_special_thanks_title_html: "<b>Agradecimientos especiales</b>"
   about_special_thanks_css_html: "Colaboración CSS: "
+  about_special_thanks_dev_html: "Colaboración Desarrollo: "
   about_special_thanks_advise_html: "Asesoramiento General: "
   about_third_pary_apps_html: "<b>Herramientas de Terceros usadas con autorización</b>"
   error: "Error"

@@ -78,7 +78,7 @@ es:
         item_costs_title: "Costos artículos"
         worker_costs_title: "Costos mano de obra"
         subcontractor_costs_title: "Costos subcontratistas"
-        tool_costs_title: "Costos herramientas"
+        tool_costs_title: "Costos máquinas-herramienta"
         vehicle_costs_title: "Costos vehículos"
         subtotal: "Subtotal"
         taxable: "Base imponible"

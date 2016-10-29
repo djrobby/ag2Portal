@@ -2,10 +2,10 @@ es:
   activerecord:
     models:
       tool:
-        zero:  Herramientas
-        one:   Herramienta
-        few:   Herramientas
-        other: Herramientas
+        zero:  Máquinas-herramienta
+        one:   Máquina-herramienta
+        few:   Máquinas-herramienta
+        other: Máquinas-herramienta
         check_for_work_orders: "Herramienta no puede ser eliminada mientras existan ordenes de trabajo vinculadas."
     attributes:
       tool:
