@@ -36,6 +36,9 @@ class DeliveryNoteItem < ActiveRecord::Base
   after_create :update_stock_on_create
   after_update :update_stock_on_update
   after_destroy :update_stock_on_destroy
+  # after_create :update_stock_on_create, :update_work_order_on_create
+  # after_update :update_stock_on_update, :update_work_order_on_update
+  # after_destroy :update_stock_on_destroy, :update_work_order_on_destroy
 
   def fields_to_uppercase
     if !self.description.blank?
