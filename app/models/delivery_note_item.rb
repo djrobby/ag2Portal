@@ -84,7 +84,9 @@ class DeliveryNoteItem < ActiveRecord::Base
   #
   # Triggers to update linked models
   #
+  #
   # After create
+  #
   # Updates Stock (current)
   def update_stock_on_create
     # Update current Stock
@@ -94,7 +96,14 @@ class DeliveryNoteItem < ActiveRecord::Base
     true
   end
 
+  # Add new Item to linked Work Order Items
+  def update_work_order_on_create
+    true
+  end
+
+  #
   # After update
+  #
   # Updates Stock (current and previous)
   def update_stock_on_update
     # What has changed?
@@ -124,13 +133,25 @@ class DeliveryNoteItem < ActiveRecord::Base
     true
   end
 
+  # Update linked Work Order Item
+  def update_work_order_on_update
+    true
+  end
+
+  #
   # After destroy
+  #
   # Updates Stock (current)
   def update_stock_on_destroy
     # Update current Stock
     if !update_stock(product, store, quantity, false)
       return false
     end
+    true
+  end
+
+  # Delete linked Work Order Item
+  def update_work_order_on_destroy
     true
   end
 
