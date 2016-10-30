@@ -101,7 +101,15 @@ class DeliveryNoteItem < ActiveRecord::Base
 
   # Add new Item to linked Work Order Items
   def update_work_order_on_create
-    true
+    _ok = true
+    if !work_order.blank?
+      _woi = WorkOrderItem.new(work_order_id: work_order_id, product_id: product_id, description: description, quantity: quantity, cost: cost,
+                               price: price, tax_type_id: tax_type_id, store_id: store_id, created_by: delivery_note.created_by, charge_account_id: charge_account_id)
+      if !_woi.save
+        _ok = false
+      end
+    end
+    _ok
   end
 
   #
@@ -138,7 +146,21 @@ class DeliveryNoteItem < ActiveRecord::Base
 
   # Update linked Work Order Item
   def update_work_order_on_update
-    true
+    _ok = true
+    _woi = WorkOrderItem.find_by_delivery_note_item_id(id)
+    if !_woi.nil?
+      if work_order.blank?
+        _woi.destroy
+      else
+        _woi.attributes = { work_order_id: work_order_id, product_id: product_id, description: description, quantity: quantity, cost: cost,
+                            price: price, tax_type_id: tax_type_id, store_id: store_id, charge_account_id: charge_account_id,
+                            updated_by: delivery_note.updated_by.blank? ? delivery_note.created_by : delivery_note.updated_by }
+        if !_woi.save
+          _ok = false
+        end
+      end
+    end
+    _ok
   end
 
   #
@@ -155,7 +177,12 @@ class DeliveryNoteItem < ActiveRecord::Base
 
   # Delete linked Work Order Item
   def update_work_order_on_destroy
-    true
+    _ok = true
+    _woi = WorkOrderItem.find_by_delivery_note_item_id(id)
+    if !_woi.nil?
+      _woi.destroy
+    end
+    _ok
   end
 
   #
