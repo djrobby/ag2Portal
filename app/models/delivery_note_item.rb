@@ -33,12 +33,12 @@ class DeliveryNoteItem < ActiveRecord::Base
 
   #before_destroy :check_for_dependent_records
   before_validation :fields_to_uppercase
-  after_create :update_stock_on_create
-  after_update :update_stock_on_update
-  after_destroy :update_stock_on_destroy
-  # after_create :update_stock_on_create, :update_work_order_on_create
-  # after_update :update_stock_on_update, :update_work_order_on_update
-  # after_destroy :update_stock_on_destroy, :update_work_order_on_destroy
+  # after_create :update_stock_on_create
+  # after_update :update_stock_on_update
+  # after_destroy :update_stock_on_destroy
+  after_create :update_stock_on_create, :update_work_order_on_create
+  after_update :update_stock_on_update, :update_work_order_on_update
+  after_destroy :update_stock_on_destroy, :update_work_order_on_destroy
 
   def fields_to_uppercase
     if !self.description.blank?
@@ -103,8 +103,10 @@ class DeliveryNoteItem < ActiveRecord::Base
   def update_work_order_on_create
     _ok = true
     if !work_order.blank?
-      _woi = WorkOrderItem.new(work_order_id: work_order_id, product_id: product_id, description: description, quantity: quantity, cost: cost,
-                               price: price, tax_type_id: tax_type_id, store_id: store_id, created_by: delivery_note.created_by, charge_account_id: charge_account_id)
+      _woi = WorkOrderItem.new(work_order_id: work_order_id, product_id: product_id, description: description,
+                               quantity: quantity, cost: cost, price: price, tax_type_id: tax_type_id,
+                               store_id: store_id, charge_account_id: charge_account_id, delivery_note_item_id: id,
+                               created_by: delivery_note.created_by)
       if !_woi.save
         _ok = false
       end

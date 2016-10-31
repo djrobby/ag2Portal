@@ -8,7 +8,8 @@ class WorkOrderItem < ActiveRecord::Base
   attr_accessor :thing
   attr_accessible :cost, :description, :price, :quantity,
                   :work_order_id, :product_id, :tax_type_id, :store_id, :thing,
-                  :charge_account_id, :delivery_note_item_id
+                  :charge_account_id, :delivery_note_item_id,
+                  :created_by, :updated_by
 
   has_paper_trail
 
