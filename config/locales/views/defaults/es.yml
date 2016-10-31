@@ -70,6 +70,7 @@ es:
   check: "Comprobar"
   send_error: "<b>¡Oh oh!</b> Tu correo-e no pudo ser enviado."
   send_ok: "Tu correo-e ha sido enviado."
+  receive_meters: "Contadores"
   hours_type:
     regular: "Normal"
     overtime: "Extra"

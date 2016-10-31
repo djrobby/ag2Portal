@@ -70,6 +70,7 @@ en:
   check: "Check"
   send_error: "<b>Oh oh!</b> Your e-mail could not be sent."
   send_ok: "Your e-mail has been sent."
+  receive_meters: "Meters"
   hours_type:
     regular: "Regular"
     overtime: "Overtime"

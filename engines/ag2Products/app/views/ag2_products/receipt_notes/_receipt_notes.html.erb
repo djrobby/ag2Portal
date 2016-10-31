@@ -26,9 +26,9 @@
       <td><%= link_to note.partial_no, note %>
         <% if !note.attachment.blank? && note.has_meter %>
         <i class="icon-paperclip-black" style="margin-left: 0.2em;">
-        <i class="icon-barcode" style="margin-left: 1.6em;">
+        <i class="icon-barcode" style="margin-left: 1.6em;" title="<%= t(:receive_meters) %>">
         <% elsif note.attachment.blank? && note.has_meter %>
-        <i class="icon-barcode" style="margin-left: 0.2em;">
+        <i class="icon-barcode" style="margin-left: 0.2em;" title="<%= t(:receive_meters) %>">
         <% elsif !note.attachment.blank? && !note.has_meter %>
         <i class="icon-paperclip-black" style="margin-left: 0.2em;">
         <% end %>

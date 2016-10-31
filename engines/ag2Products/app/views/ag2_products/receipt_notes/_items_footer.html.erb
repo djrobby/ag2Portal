@@ -7,6 +7,7 @@
   <td></td>
   <td align="right"><%= number_with_precision(note.subtotal, precision: 4) unless note.subtotal.blank? %></td>
   <td></td>
+  <td></td>
 </tr>
 <tr>
   <td></td>
@@ -17,6 +18,7 @@
   <td align="right"><%= number_with_precision(note.bonus, precision: 4) unless note.bonus.blank? %></td>
   <td align="right"><%= number_with_precision(note.taxable, precision: 4) unless note.taxable.blank? %></td>
   <td align="right"><%= number_with_precision(note.taxes, precision: 4) unless note.taxes.blank? %></td>
+  <td></td>
 </tr>
 <tr class="totals">
   <td></td>
@@ -26,5 +28,6 @@
   <td></td>
   <td></td>
   <td align="right"><%= number_with_precision(note.total, precision: 4, delimiter: I18n.locale == :es ? "." : ",") unless note.total.blank? %></td>
+  <td></td>
   <td></td>
 </tr>

@@ -298,7 +298,9 @@ Ag2Products::Engine.routes.draw do
       get 'delivery_note_form', on: :collection
       get 'delivery_note_form_client', on: :collection
     end
-    resources :receipt_notes
+    resources :receipt_notes do
+      get 'receive_meters', on: :collection
+    end
     resources :inventory_count_types
     resources :inventory_counts do
       get 'inventory_count_form', on: :collection
