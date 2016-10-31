@@ -95,6 +95,11 @@ class ReceiptNoteItem < ActiveRecord::Base
     #quantity - supplier_invoice_items.sum("quantity")
   end
 
+  # The item is meter?
+  def is_meter
+    product.product_family.is_meter || false
+  end
+
   private
 
   # Before destroy

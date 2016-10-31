@@ -116,6 +116,18 @@ class ReceiptNote < ActiveRecord::Base
     receipt_note_item_balances.sum("balance")
   end
 
+  # Has meter items?
+  def has_meter
+    has_meter = false
+    receipt_note_items.each do |i|
+      if i.is_meter
+        has_meter = true
+        break
+      end
+    end
+    has_meter
+  end
+
   #
   # Class (self) user defined methods
   #
