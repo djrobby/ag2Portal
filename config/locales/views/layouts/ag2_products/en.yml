@@ -43,3 +43,4 @@ en:
       product_company_prices:
         items: "Purchase prices by company"
         item: "Price"
+      receive_meters: "Meters"

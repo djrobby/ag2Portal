@@ -21,6 +21,9 @@ en:
         btn_show: "Show Receipt note"
       new:
         title: "New Receipt note"
+      receive_meters:
+        title: "Meters Reception"
+        back_to_note: "Back to Receipt note"
       back_to_main_page: "Back to Receipt notes"
       generate_code_btn: "Receipt note No."
       code_error: "Unable to generate Receipt note No.: No Activity chosen."

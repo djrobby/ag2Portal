@@ -43,3 +43,4 @@ es:
       product_company_prices:
         items: "Precios de compra por empresa"
         item: "Precio"
+      receive_meters: "Contadores"

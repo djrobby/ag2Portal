@@ -21,6 +21,9 @@ es:
         btn_show: "Ver Nota de recepción"
       new:
         title: "Nueva Nota de recepción"
+      receive_meters:
+        title: "Recepción de Contadores"
+        back_to_note: "Volver a Nota de recepción"
       back_to_main_page: "Volver a Notas de recepción"
       generate_code_btn: "Nº de Nota de recepción"
       code_error: "Imposible generar Nº de Recepción: No has elegido Actividad."

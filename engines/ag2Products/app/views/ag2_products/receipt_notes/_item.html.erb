@@ -8,7 +8,7 @@
   <td align="right"><%= number_with_precision(item.amount, precision: 4) %></td>
   <td align="right"><%= number_with_precision(item.tax, precision: 4) %></td>
   <% if item.is_meter %>
-  <td><%= link_to receive_meters_receipt_notes_path do %> <i class="icon-barcode" title="<%= t(:receive_meters) %>"></i> <% end %></td>
+  <td><%= link_to receive_meters_receipt_notes_path(id: item.id) do %> <i class="icon-barcode" title="<%= t(:receive_meters) %>"></i> <% end %></td>
   <% else %>
   <td></td>
   <% end %>

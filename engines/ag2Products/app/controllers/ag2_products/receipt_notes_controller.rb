@@ -21,7 +21,8 @@ module Ag2Products
                                                :receipt_notes_report,
                                                :rn_generate_note,
                                                :rn_attachment_changed,
-                                               :rn_update_attachment]
+                                               :rn_update_attachment,
+                                               :receive_meters]
     # Public attachment for drag&drop
     $attachment = nil
     $attachment_changed = false
@@ -750,6 +751,18 @@ module Ag2Products
           format.html { redirect_to receipt_notes_url, alert: "#{@receipt_note.errors[:base].to_s}".gsub('["', '').gsub('"]', '') }
           format.json { render json: @receipt_note.errors, status: :unprocessable_entity }
         end
+      end
+    end
+
+    # GET /receive_meters
+    # GET /receive_meters.json
+    def receive_meters
+      @item = ReceiptNoteItem.find(params[:id])
+      @receipt_note = @item.receipt_note
+
+      respond_to do |format|
+        format.html # receive_meters.html.erb
+        format.json { render json: { :item => @item, :note => @receipt_note } }
       end
     end
 

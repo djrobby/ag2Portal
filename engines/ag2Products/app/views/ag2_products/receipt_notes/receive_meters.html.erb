@@ -1,6 +1,36 @@
 <script>
 </script>
 
-<%= render '/layouts/ag2_products/receiptsbreadcrumb' %>
+<%= render '/layouts/ag2_products/receivemetersbreadcrumb' %>
 
 <h3><%=t '.title' %></h3>
+
+<div class="row-fluid">
+	<div class="span12 track-box">
+  <table class="table odd_even_table">
+    <tbody>
+      <tr>
+        <td>Id:</td>
+        <td id="id"><%= @receipt_note.id %></td>
+        <td><%=t 'activerecord.attributes.receipt_note.receipt_no' %>:</td>
+        <td class="highlighted bolded"><%= @receipt_note.receipt_no %></td>
+      </tr>
+      <tr>
+        <td><%=t 'activerecord.attributes.receipt_note.supplier' %>:</td>
+        <td><%= @receipt_note.supplier.full_name %></td>
+        <td><%=t 'activerecord.attributes.receipt_note.store' %>:</td>
+        <td> <%= @receipt_note.store.name unless @receipt_note.store.blank? %> </td>
+      </tr>
+      <tr>
+        <td><%=t 'activerecord.attributes.receipt_note_item.product' %>:</td>
+        <td><%= @item.product.full_name %></td>
+        <td><%=t 'activerecord.attributes.receipt_note_item.quantity' %>:</td>
+        <td class="highlighted bolded"><%= number_with_precision(@item.quantity, precision: 4, delimiter: I18n.locale == :es ? "." : ",") unless @item.quantity.blank? %></td>
+      </tr>
+    </tbody>
+  </table>
+	</div>
+</div>
+
+<br/>
+<%= link_to t(".back_to_note"), receipt_note_path(@receipt_note) %>
