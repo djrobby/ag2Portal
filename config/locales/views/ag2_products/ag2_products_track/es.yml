@@ -59,3 +59,4 @@ es:
         sum_rows_title: "Total Filas (Días):"
         average_title: "Promedio Tiempo Trabajado: "
         full_total: "Totales:"
+        cumulative_total: "Total Acumulado:"
