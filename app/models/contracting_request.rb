@@ -125,7 +125,7 @@ class ContractingRequest < ActiveRecord::Base
 
   # Preformated information
   def client_info
-    "#{client.full_name_or_company} #{client.fiscal_id}" if client
+    "#{client.full_name} #{client.fiscal_id}" if client
   end
 
   def full_name
@@ -191,7 +191,17 @@ class ContractingRequest < ActiveRecord::Base
       created_by: entity.created_by,
       payment_method_id: 1
     )
-    ClientBankAccount.create(client_id: client.id, country_code: country_id, iban_dc: iban_dc, cb: bank_id, cs: bank_office_id, ccc_dc: ccc_dc, account_no: account_no, fiscal_id: client.fiscal_id, name: "contratacion de servicios") if data_account?
+    ClientBankAccount.create(client_id: client.id,
+                              bank_account_class_id: 2,
+                              starting_at: Date.today,
+                              country_id: country_id,
+                              iban_dc: iban_dc,
+                              bank_id: bank_id,
+                              bank_office_id: bank_office_id,
+                              ccc_dc: ccc_dc,
+                              account_no: account_no,
+                              holder_fiscal_id: client.fiscal_id,
+                              holder_name: client.to_name) if data_account?
   end
 
   def to_subscriber

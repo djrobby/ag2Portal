@@ -1,4 +1,6 @@
-<script type="text/javascript">
+<script>
+  var _thisForm = '';
+  var changing = false;
 
   $(document).ready(function() {
     $('.sel2').select2({
@@ -6,13 +8,64 @@
       dropdownCssClass: 'shrinked',
       dropdownAutoWidth: true
     });
+    $('.date_picker').datepicker({
+     format:'dd/mm/yyyy',weekStart:1
+    });
+    // Initialized form variable
+    _thisForm = $("#Supplier").closest('form')[0];
   });
 
+  $(document).ajaxStart(function() {
+    // show loader on start
+    if (changing == false) {
+      $("#div_table").html("");
+      $("#loader").show();
+    }
+  }).ajaxSuccess(function() {
+    // hide loader on success
+    $("#loader").hide();
+  });
+
+  $(window).bind("load", function() {
+    $("#Subscriber").select2("val", "<%= params[:Subscriber] %>");
+    $("#Meter").select2("val", "<%= params[:Meter] %>");
+    $("#ReadingDate").select2("val", "<%= params[:ReadingDate] %>");
+    $("#Period").select2("val", "<%= params[:Period] %>");
+    $("#Route").select2("val", "<%= params[:Route] %>");
+    $("#From").val("<%= params[:From] %>");
+    $("#To").val("<%= params[:To] %>");
+    // $("#No").val("<%= params[:No] %>");
+    // $("#Supplier").select2("val", "<%= params[:Supplier] %>");
+    // $("#Invoice").select2("val", "<%= params[:Invoice] %>");
+  });
+
+  jQuery(function($) {
+    // when the #removeFilter button clicked
+    $("#removeFilter").click(function() {
+      $("#Subscriber").select2("val", "");
+      $("#Meter").select2("val", "");
+      $("#ReadingDate").select2("val", "");
+      $("#Period").select2("val", "");
+      $("#Route").select2("val", "");
+      $("#From").val("");
+      $("#To").val("");
+      // $("#No").val("");
+      // $("#Supplier").select2("val", "");
+      // $("#Invoice").select2("val", "");
+      // $("#search").val("");
+      // no AJAX
+      //_thisForm.submit();
+      // AJAX
+      $("#submit_btn").trigger("click");
+    });
+  });
 </script>
 
-<%= render '/layouts/ag2_gest/readingsbreadcrumb' %>
+<% session[:return_to_reading] = nil %>
+<% session[:return_to_reading_url] = nil %>
 
-<%= render :partial => '/layouts/searchhead_remote', :locals => { :title => t(".title"), :path => readings_path } %>
+<%= render '/layouts/ag2_gest/readingsbreadcrumb' %>
+<h3><%= t '.title' %></h3>
 
 
 <div class="container-fluid">
@@ -20,7 +73,36 @@
 
     <div class="span3">
       <div class="well sidebar-nav">
-        <%#= render 'filters' %>
+        <!-- Refresh -->
+        <%= link_to ag2_gest.readings_path, title: I18n.t(:refresh), class: "icon-refresh-link", remote: true do %> <i class="icon-refresh"></i> <% end %>
+        <!-- Search form -->
+        <%= form_tag "readings", :method => 'get', :remote => true do %>
+        <!-- Subscriber -->
+        <%= label_tag I18n.t("ag2_gest.readings.index.label_subscribers"), nil, :class => 'form-label-under-sel2' %>
+        <%= select_tag "Subscriber", options_from_collection_for_select(@subscribers, "id", "to_label"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
+        <!-- Meter -->
+        <%= label_tag I18n.t("ag2_gest.readings.index.label_meters"), nil, :class => 'form-label-under-sel2' %>
+        <%= select_tag "Meter", options_from_collection_for_select(@meters, "id", "to_label"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
+        <!-- Dates -->
+        <%= label_tag I18n.t("ag2_gest.readings.index.label_from"), nil, :class => 'form-label-under-sel2' %>
+        <%= text_field_tag "From", params[:date], :class =>  'x-large-text-field shrinked date_picker' %>
+        <%= label_tag I18n.t("ag2_gest.readings.index.label_to"), nil, :class => 'form-label' %>
+        <%= text_field_tag "To", params[:date], :class =>  'x-large-text-field shrinked date_picker' %>
+        <!-- Period -->
+        <%= label_tag I18n.t("ag2_gest.readings.index.label_periods"), nil, :class => 'form-label-under-sel2' %>
+        <%= select_tag "Period", options_from_collection_for_select(@periods, "id", "to_label"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
+        <!-- Route -->
+        <%= label_tag I18n.t("ag2_gest.readings.index.label_routes"), nil, :class => 'form-label-under-sel2' %>
+        <%= select_tag "Route", options_from_collection_for_select(@routes, "id", "to_label"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
+        <br><br>
+        <!-- Submit -->
+        <%= submit_tag I18n.t(:apply_filter_button), :class => 'btn btn-primary', :id => 'submit_btn' %>
+        <!-- Remove filter -->
+        <button id="removeFilter" type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><%= t :clear_filter_button %></button>
+        <% end %>
+        <!-- Buttons -->
+        <%= render :partial => '/layouts/crud/new', :locals => { :model => Reading, :path => new_reading_path, :txt => t("ag2_gest.readings.index.btn_new") } %>
+        <%= link_to t(".back_to_root"), ag2_gest.root_path %>
       </div><!-- /.sidebar-nav -->
     </div><!-- /.span3 -->
 
@@ -30,10 +112,5 @@
         <%= render 'readings' %>
       </div>
     </div><!-- /.span9 -->
-
   </div><!-- /.row-fluid -->
-  
-  <%= render :partial => '/layouts/crud/new', :locals => { :model => Reading, :path => new_reading_path, :txt => t("ag2_gest.readings.index.btn_new") } %>
-
-  <%= link_to t("ag2_gest.readings.index.back_to_management"), ag2_gest.reading_management_path %>
 </div><!-- /.container-fluid -->

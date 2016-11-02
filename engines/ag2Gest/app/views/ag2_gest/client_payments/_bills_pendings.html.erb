@@ -1,0 +1,68 @@
+<div class="row-fluid">
+  <div class="span12">
+    <input type="checkbox" class="checkbox-main">
+    <a href="#modal-cash" role="button" class="btn btn-primary btn-small btn-payment btn-cash" data-toggle="modal">Caja</a>
+    <a href="#modal-bank" role="button" class="btn btn-primary btn-small btn-payment" data-toggle="modal">Banco</a>
+    <!-- <a href="#" class="btn btn-primary btn-small">Ventanilla Bancaria</a> -->
+    <a href="#modal-fracionated" role="button" class="btn btn-primary btn-small btn-payment" data-toggle="modal">Aplazamientos</a>
+    <a href="#modal-cash" role="button" class="btn btn-primary btn-small btn-payment btn-others" data-toggle="modal">Otros</a>
+    <!-- <a href="#" class="btn btn-primary btn-small pull-right">Devoluciones</a> -->
+  </div>
+</div>
+
+<% @bills_pending.each do |bill| %>
+  <div class="accordion">
+    <div class="accordion-group">
+      <div class="accordion-heading row-fluid">
+        <div class="span1">
+          <a class="accor accordion-toggle collapsed" data-toggle="collapse" data-parent="#accordion2" href="#collapse-<%= bill.id %>"><i class='icon-plus'></i></a>
+        </div>
+        <div class="span3 soft-padding">
+          <%= link_to bill.try(:bill_no), bill_path(bill) %>
+        </div>
+        <div class="span5 soft-padding">
+          <%= link_to bill.client.to_label, client_path(bill.client) if bill.client %>
+        </div>
+        <div class="span1 soft-padding">
+          <%= "Bco." if bill.client.active_bank_accounts?  %>
+        </div>
+        <div class="span2 soft-padding">
+          <%= bill.total.round(2) %>
+        </div>
+      </div>
+
+      <div id="collapse-<%= bill.id %>" class="accordion-body collapse">
+        <div class="accordion-inner">
+          <table class="table table-condensed table-striped">
+            <thead>
+              <tr>
+                <th><input type="checkbox" class="checkbox-master"></th>
+                <th>Nº</th>
+                <th>Fecha</th>
+                <th>Total</th>
+                <th>Cobrado</th>
+                <th>Deuda</th>
+                <th>Estado</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% bill.invoices.order("created_at DESC").each do |i| %>
+                <tr>
+                  <td><%= (check_box_tag 'invoice_id', i.id, false, class: "checkbox-slave", :data => {total: i.total, collected: i.collected, debt: i.debt}) if i.invoice_status_id == 1 %></td>
+                  <td><%= i.invoice_no %></td>
+                  <td><%= i.invoice_date %></td>
+                  <td><%= i.total.round(2) %></td>
+                  <td><%= i.collected.round(2) %></td>
+                  <td><%= i.debt.round(2) %></td>
+                  <td><%= i.invoice_status.name %></td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>
+
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @bills_pending } %>

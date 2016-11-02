@@ -11,6 +11,40 @@ class Instalment < ActiveRecord::Base
   # validates :name,  :presence => true
   # validates :type,  :presence => true
 
+
+  searchable do
+    text :bill_no do
+      bill.bill_no
+    end
+    string :bill_no, :multiple => true do
+      bill.bill_no
+    end   # Multiple search values accepted in one search (inverse_no_search)
+    integer :project_id, :multiple => true do
+      bill.project_id
+    end
+    integer :client_id do
+      bill.client_id
+    end
+    integer :subscriber_id do
+      bill.subscriber_id
+    end
+    integer :entity_id do
+      bill.client.entity_id
+    end
+    boolean :bank_account do
+      bill.client.active_bank_accounts?
+    end
+    integer :billing_period do
+      bill.reading_2.nil? ? nil : bill.reading_2.billing_period_id
+    end
+    integer :reading_route_id do
+      bill.subscriber.nil? ? nil : bill.subscriber.reading_route_id
+    end
+    string :sort_no do
+      bill.bill_no
+    end
+  end
+
   #
   # Calculated fields
   #

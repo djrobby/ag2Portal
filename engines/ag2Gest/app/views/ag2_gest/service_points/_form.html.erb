@@ -102,27 +102,6 @@
 
 
     // when changes street_directory, street_name and street_type changes and disbaled, or enables if empty
-// <<<<<<< HEAD
-//     $("#street_directory").on("change", function(e) {
-//
-//
-//       var street_name = $("#street_directory :selected").attr("data-street-name"),
-//           street_type = $("#street_directory :selected").attr("data-street-type"),
-//           town =        $("#street_directory :selected").attr("data-town");
-//       $("#fnt_street_name").val(street_name);
-//       $("#fnt_street_type").val(street_type);
-//       $("#fnt_town").val(town).trigger( "change" );
-//     });
-//
-//     // when changes street_name or street_type, street_directory disabled or enabled if they are empty
-//     $("#fnt_street_name, #fnt_street_type").change(function(e) {
-//
-//       /*if (($("#fnt_street_name").val().length == 0) && ($("#fnt_street_type").val().length == 0))
-//         $("#street_directory").prop('disabled', false);
-//       else
-//         $("#street_directory").prop('disabled', true);*/
-//     });
-// =======
     $("#street_directory").change(function() {
 
       var contact = $('select#street_directory :selected').val();
@@ -262,10 +241,6 @@
   </div>
 
   <div class="row-fluid">
-
-  </div>
-
-  <!-- <div class="row-fluid">
     <div class="span4">
       <%#= f.association :service_point_purpose, label: t('activerecord.attributes.service_point.service_point_purpose_id'), collection: ServicePointPurpose.all(), :input_html => { :class => 'sel2 x-large-text-field' }, label_method: lambda { |st| st.name }, value_method: :id, :label_html => { :class => 'form-label' }%>
       <%= f.input :available_for_contract, :input_html => { :class => 'x-medium-text-field' }, :label_html => { :class => 'form-label' } %>
@@ -273,7 +248,7 @@
     <div class="span4">
       <%= f.input :verified, :input_html => { :class => 'x-medium-text-field' }, :label_html => { :class => 'form-label' } %>
     </div>
-  </div> -->
+  </div>
 
   <%= f.button :submit, :class => 'btn-primary' %>
 <% end %>

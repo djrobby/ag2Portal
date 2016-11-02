@@ -216,7 +216,11 @@ module Ag2Gest
           with :organization_id, session[:organization]
         end
         if !letter.blank? && letter != "%"
-          with(:name).starting_with(letter)
+          any_of do
+            #with(:last_name).starting_with(letter)
+            with(:full_name).starting_with(letter)
+            with(:company).starting_with(letter)
+          end
         end
         order_by :client_code, :asc
         paginate :page => params[:page] || 1, :per_page => per_page

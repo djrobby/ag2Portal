@@ -1,7 +1,64 @@
+<% session[:return_to_subscriber] = nil %>
+<% session[:return_to_subscriber_url] = nil %>
+
+<%= render '/layouts/ag2_gest/subscribersbreadcrumb' %>
+
+<h3><%=t '.title' %></h3>
+
+<div class="container-fluid">
+  <div class="row-fluid">
+
+    <div class="span3">
+    <div class="well sidebar-nav">
+
+      <!-- Refresh -->
+      <%= link_to ag2_gest.subscribers_path, title: I18n.t(:refresh), class: "icon-refresh-link", remote: true do %> <i class="icon-refresh"></i> <% end %>
+
+      <%= form_tag "subscribers", :method => 'get', :remote => true do %>
+        <!-- Code -->
+        <%= label_tag I18n.t("ag2_gest.subscribers.index.subscriber_code"), nil, :class => 'form-label' %>
+        <%= text_field_tag "SubscriberCode", nil, :class => 'x-large-text-field shrinked number-text-field', onkeyup: "caps(this)" %>
+        <!-- ServicePoint -->
+        <%= label_tag I18n.t("ag2_gest.subscribers.index.service_point"), nil, :class => 'form-label' %>
+        <%= select_tag "ServicePoint", options_from_collection_for_select(@service_points, "id", "to_full_label"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
+        <!-- Meter -->
+        <%= label_tag I18n.t("ag2_gest.subscribers.index.meter"), nil, :class => 'form-label' %>
+        <%= select_tag "Meter", options_from_collection_for_select(@meters, "id", "to_label"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
+        <!-- BillingFrequency -->
+        <%= label_tag I18n.t("ag2_gest.subscribers.index.billing_frequency"), nil, :class => 'form-label' %>
+        <%= select_tag "BillingFrequency", options_from_collection_for_select(BillingFrequency.order(:name), "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
+        <!-- TariffType -->
+        <%= label_tag I18n.t("ag2_gest.subscribers.index.tariff_type"), nil, :class => 'form-label' %>
+        <%= select_tag "TariffType", options_from_collection_for_select(TariffType.order(:name), "id", "to_label"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
+        <!-- Others -->
+        <%= label_tag I18n.t("ag2_gest.subscribers.index.label_others"), nil, :class => 'form-label' %>
+        <%= text_field_tag :search, params[:search], :class => 'x-large-text-field shrinked' %>
+
+        <!-- Submit -->
+        <%= submit_tag I18n.t(:apply_filter_button), :class => 'btn btn-primary', :id => 'submit_btn' %>
+        <!-- Remove filter -->
+        <button id="removeFilter" type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><%= t :clear_filter_button %></button>
+      <% end %>
+
+
+      <!-- Back -->
+      <%= link_to t("ag2_gest.subscribers.index.back_to_root"), ag2_gest.root_path %>
+    </div>
+
+    </div>
+
+    <div class="span9" id="div_table">
+      <%= render 'subscribers' %>
+    </div><!-- /.span9 -->
+
+  </div><!-- /.row-fluid -->
+</div><!-- /.container-fluid -->
+
+
 <script type="text/javascript">
-  
-  var _thisForm = ''; //Inicia variable String empty y false 
-  var changing = false; 
+
+  var _thisForm = ''; //Inicia variable String empty y false
+  var changing = false;
 
   $(document).ready(function() {
     $('.sel2').select2({
@@ -9,10 +66,7 @@
       dropdownCssClass: 'shrinked',
       dropdownAutoWidth: true
     });
- 
-    
-    //Select
-    $(".sel2").select2();
+
     // Initialized form variable
     _thisForm = $("#removeFilter").closest('form')[0];
 
@@ -20,60 +74,37 @@
 
   $(document).ajaxStart(function() {
     // show loader on start
-    
     if (changing == false) {
       $("#div_table").html("");
       $("#loader").show();
-    }    
+    }
   }).ajaxSuccess(function(){
     // hide loader on success Ya ha cargado los objects
-    
     $("#loader").hide();
   });
 
   $(window).bind("load", function() {
-    
-    //$('#name').val("<%= params[:name] %>");
+    $("#SubscriberCode").val("<%= params[:SubscriberCode] %>");
+    $("#ServicePoint").val("<%= params[:ServicePoint] %>");
+    $("#Meter").select2("val", "<%= params[:Meter] %>");
+    $("#BillingFrequency").val("<%= params[:BillingFrequency] %>");
+    $("#TariffType").val("<%= params[:TariffType] %>");
   });
 
 
   jQuery(function($) {
-
-    $('#sub_office').change(function() {
-      
-    });
-
-
-
     // when the #removeFilter button clicked
     $("#removeFilter").click(function() {
-      
-      //$("#name").val("");
-      //$("#sub_town").val("");
-      //$("#sub_office").val("");
+      $("#SubscriberCode").val("");
+      $("#ServicePoint").select2("val", "");
+      $("#Meter").select2("val", "");
+      $("#BillingFrequency").select2("val", "");
+      $("#TariffType").select2("val", "");
       $("#search").val("");
+      // no AJAX
+      //_thisForm.submit();
+      // AJAX
       $("#submit_btn").trigger("click");
     });
-
-  });//jQuery End
+  });
 </script>
-
-<%= render '/layouts/ag2_gest/subscribersbreadcrumb' %>
-
-<%#= render :partial => '/layouts/searchhead_remote', :locals => { :title => t(".title"), :path => subscribers_path } %>
-
-<h3><%=t '.title' %></h3>
-
-<div class="container-fluid">
-  <div class="row-fluid">
-
-		<div class="span3">
-      <%= render 'filters' %>
-    </div>
-    
-    <div class="span9" id="div_table">
-      <%= render 'subscribers' %>
-    </div><!-- /.span9 -->
-
-  </div><!-- /.row-fluid -->
-</div><!-- /.container-fluid -->

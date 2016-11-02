@@ -1,0 +1,36 @@
+<div class="row-fluid">
+  <div class="span12">
+    <%= simple_form_for :bank_confirm, url: confirm_bank_client_payments_path, method: :post do |f| %>
+      <%= f.input :ids, :as => :hidden %>
+      <%= f.button :submit, "Confirmar Pagos", :class => 'btn btn-primary btn-small' %>
+    <% end %>
+  </div>
+</div>
+<table class="table table-condensed table-striped">
+  <thead>
+    <tr>
+      <th><input type="checkbox" class="checkbox-master"></th>
+      <th>Nº</th>
+      <th>Factura</th>
+      <th>Abonado</th>
+      <th>F. pago</th>
+      <th>Cantidad</th>
+      <th>Total</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @client_payments_bank.each do |client_payment| %>
+      <tr>
+        <td><%= check_box_tag 'client_payment_id', client_payment.id, false, class: "checkbox-slave" %></td>
+        <td><%= client_payment.receipt_no %></td>
+        <td><%= link_to client_payment.bill.try(:bill_no), bill_path(client_payment.bill) %></td>
+        <td><%= link_to client_payment.bill.client.to_label, client_path(client_payment.bill.client) %></td>
+        <td><%= client_payment.payment_date %></td>
+        <td><%= client_payment.amount.round(2) %></td>
+        <td><%= client_payment.invoice.total.round(2) %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @client_payments_bank } %>

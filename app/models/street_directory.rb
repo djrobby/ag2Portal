@@ -8,7 +8,10 @@ class StreetDirectory < ActiveRecord::Base
 
   validates :town,        :presence => true
   validates :street_type, :presence => true
-  validates :street_name, :presence => true
+  validates :street_name, :presence => true,
+                          :uniqueness => { scope: [:street_type_id, :town_id] }
+
+  before_save :upcase_street_name
 
   # Scopes
   scope :by_towns, ->(town_ids) { where(town_id: town_ids) }
@@ -19,5 +22,11 @@ class StreetDirectory < ActiveRecord::Base
 
   def to_full_label
     "#{street_type.street_type_code} #{street_name} (#{town.name})"
+  end
+
+  private
+
+  def upcase_street_name
+    self.street_name = street_name.try(:upcase)
   end
 end

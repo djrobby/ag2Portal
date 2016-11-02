@@ -40,6 +40,9 @@ class Reading < ActiveRecord::Base
   scope :by_date_asc, -> { order(:reading_date) }
   scope :by_date_desc, -> { order('reading_date desc') }
 
+  def to_label
+    "#{reading_index} - #{reading_date.strftime("%d/%m/%Y %H:%M")}" if reading_date
+  end
 
   def consumption
     unless reading_index_1.nil? or reading_index.nil?
@@ -179,6 +182,19 @@ class Reading < ActiveRecord::Base
       end
     end
     return pre_bill
+  end
+
+  searchable do
+    integer :id, :multiple => true          # Multiple search values accepted in one search (current_projects)
+    integer :subscriber_id
+    integer :meter_id
+    integer :billing_period_id
+    integer :project_id, :multiple => true  # Multiple search values accepted in one search (current_projects)
+    integer :reading_route_id
+    time :reading_date
+    string :sort_no do
+      subscriber_id
+    end
   end
 
   private

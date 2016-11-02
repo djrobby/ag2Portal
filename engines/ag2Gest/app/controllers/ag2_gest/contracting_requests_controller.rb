@@ -10,6 +10,8 @@ module Ag2Gest
                                                 :update_province_textfield_from_street_directory,
                                                 :update_country_textfield_from_region,
                                                 :update_region_textfield_from_province,
+                                                :update_subscriber_from_service_point,
+                                                :update_bank_offices_from_bank,
                                                 :validate_fiscal_id_textfield,
                                                 :validate_r_fiscal_id_textfield,
                                                 :et_validate_fiscal_id_textfield,
@@ -193,7 +195,7 @@ module Ag2Gest
                                     client_id: @contracting_request.client.id, # ¿¿??
                                     description: "#{t('activerecord.attributes.contracting_request.number_request')} " + @contracting_request.request_no,
                                     organization_id: @contracting_request.project.organization_id,
-                                    charge_account_id: @contracting_request.project.try(:charge_accounts).try(:first).try(:id),
+                                    charge_account_id: 1,
                                     in_charge_id: 1
                                     # started_at:, completed_at:, closed_at:, charge_account_id: 1,area_id:, store_id:, created_by: current_user_id, updated_by: current_user_id, remarks:,petitioner:, master_order_id:, reported_at:, approved_at:, certified_at:, posted_at:, location:, pub_record:,
                                   )
@@ -401,6 +403,45 @@ module Ag2Gest
       end
     end
 
+    def update_bank_offices_from_bank
+      @banks = [Bank.find(params[:id])] || Bank.all
+      @bank_offices = @banks.map(&:bank_offices).flatten.map{|bo| {id:bo.id, text:bo.name }}
+      respond_to do |format|
+        format.html # update_bank_offices_from_bank.html.erb does not exist! JSON only
+        format.json { render json: { "bank_offices" => @bank_offices }  }
+      end
+      rescue ActiveRecord::RecordNotFound
+        respond_to do |format|
+          format.json { render json: { "bank_offices" => "" }}
+        end
+    end
+
+    # Update subscriber from service point
+    def update_subscriber_from_service_point
+      @service_point = ServicePoint.find(params[:id])
+      @json_data = {  street_type_id: @service_point.street_directory.street_type_id,
+                      street_directory_id: @service_point.street_directory_id,
+                      street_number: @service_point.street_number,
+                      building: @service_point.building,
+                      floor: @service_point.floor,
+                      floor_office: @service_point.floor_office,
+                      zipcode_id: @service_point.zipcode_id,
+                      town_id: @service_point.street_directory.town_id,
+                      province_id: @service_point.street_directory.town.province_id,
+                      region_id: @service_point.street_directory.town.province.region_id,
+                      country_id: @service_point.street_directory.town.province.region.country_id,
+                      center_id: @service_point.center_id
+                    }
+      respond_to do |format|
+        format.html # update_subscriber_from_service_point.html.erb does not exist! JSON only
+        format.json { render json: @json_data }
+      end
+      rescue ActiveRecord::RecordNotFound
+        respond_to do |format|
+          format.json { render json: { "subscriber" => "" }}
+        end
+    end
+
     # Update subscriber data if old subscriber exits
     def update_old_subscriber
       @subscriber = Subscriber.find(params[:id])
@@ -561,6 +602,7 @@ module Ag2Gest
         else
           @entity = Entity.find_by_fiscal_id(params[:id])
         end
+        st_directory = StreetDirectory.find_by_street_type_id_and_street_name(1,"La Luz")
         if @entity.nil?
           id = '$err'
           fiscal_id = '$err'
@@ -588,7 +630,8 @@ module Ag2Gest
           cellular = @entity.cellular
           email = @entity.email
           # organization_id = @entity.organization_id
-          street_directory = StreetDirectory.find_by_street_name(@entity.street_name)
+          street_directory = StreetDirectory.find_by_town_id_and_street_type_id_and_street_name(@entity.town_id,@entity.street_type_id,@entity.street_name.try(:upcase))
+          service_point = ServicePoint.where( street_directory_id: street_directory.try(:id),street_number: @entity.street_number ,building: @entity.building ,floor: @entity.floor ,floor_office: @entity.floor_office)
         end
       end
       @json_data = {  "id" => id,
@@ -609,7 +652,8 @@ module Ag2Gest
                       "fax" => fax,
                       "cellular" => cellular,
                       "email" => email,
-                      "street_directory_id" => street_directory.try(:id)
+                      "street_directory_id" => street_directory.try(:id),
+                      "service_point" => service_point.try(:first).try(:id)
                       # "organization_id" => organization_id
                     }
 
@@ -767,7 +811,7 @@ module Ag2Gest
       @projects_ids = current_projects_ids
       _subscribers = Subscriber.where(office_id: current_offices_ids)
       @subscribers = Subscriber.where(office_id: current_offices_ids).availables if !_subscribers.empty?
-      @service_points = ServicePoint.where(office_id: current_offices_ids)
+      @service_points = ServicePoint.where(office_id: current_offices_ids, available_for_contract: true).select{|s| s.subscribers.empty?}
       @offices = current_offices
       respond_to do |format|
         format.html # new.html.erb
@@ -784,7 +828,7 @@ module Ag2Gest
       @projects_ids = current_projects_ids
       _subscribers = Subscriber.where(office_id: current_offices_ids)
       @subscribers = Subscriber.where(office_id: current_offices_ids).availables if !_subscribers.empty?
-      @service_points = ServicePoint.where(office_id: current_offices_ids)
+      @service_points = ServicePoint.where(office_id: current_offices_ids, available_for_contract: true).select{|s| s.subscribers.empty?}
       @offices = current_offices
     end
 
@@ -796,7 +840,7 @@ module Ag2Gest
       @projects_ids = current_projects_ids
       _subscribers = Subscriber.where(office_id: current_offices_ids)
       @subscribers = Subscriber.where(office_id: current_offices_ids).availables if !_subscribers.empty?
-      @service_points = ServicePoint.where(office_id: current_offices_ids)
+      @service_points = ServicePoint.where(office_id: current_offices_ids, available_for_contract: true).select{|s| s.subscribers.empty?}
       @offices = current_offices
       @contracting_request = ContractingRequest.new(params[:contracting_request])
       @contracting_request.contracting_request_status_id = 1

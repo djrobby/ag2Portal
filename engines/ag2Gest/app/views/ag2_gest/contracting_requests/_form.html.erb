@@ -122,6 +122,7 @@
             $("#contracting_request_subscriber_street_type_id").val(data.street_type_id);
             $("#contracting_request_subscriber_street_name").val(data.street_name);
             $("#s2id_contracting_request_subscriber_street_directory").select2("val", data.street_directory_id);
+            // $("#contracting_request_service_point_id").select2("val", data.street_directory_id);
             $("#contracting_request_subscriber_street_number").val(data.street_number);
             $("#contracting_request_subscriber_building").val(data.building);
             $("#contracting_request_subscriber_floor").val(data.floor);
@@ -134,6 +135,7 @@
             $("#contracting_request_subscriber_province_id").select2("val", data.province_id);
             $("#contracting_request_subscriber_region_id").select2("val", data.region_id);
             $("#contracting_request_subscriber_country_id").select2("val", data.country_id);
+            $("#contracting_request_service_point_id").select2("val", data.service_point);
           }else{
             // Disable fields
             // $(".subscriber-field").prop('disabled', true);
@@ -215,6 +217,51 @@
   });
 
   jQuery(function($) {
+    // when the #contracting_request_service_point_id field changes
+    $("#contracting_request_service_point_id").change(function() {
+      // make a POST call and replace the content
+      var contact = $('select#contracting_request_service_point_id :selected').val();
+      if (contact == "")
+        contact = "0";
+      jQuery.getJSON('update_subscriber_from_service_point/' + contact, function(data) {
+        $("#contracting_request_subscriber_street_type_id").val(data.street_type_id);
+        $("#contracting_request_subscriber_street_directory").select2("val",data.street_directory_id);
+        $("#contracting_request_subscriber_street_number").val(data.street_number);
+        $("#contracting_request_subscriber_building").val(data.building);
+        $("#contracting_request_subscriber_floor").val(data.floor);
+        $("#contracting_request_subscriber_floor_office").val(data.floor_office);
+        $("#contracting_request_subscriber_zipcode_id").select2("val",data.zipcode_id);
+        $("#contracting_request_subscriber_town_id").select2("val",data.town_id);
+        $("#contracting_request_subscriber_province_id").select2("val",data.province_id);
+        $("#contracting_request_subscriber_region_id").select2("val",data.region_id);
+        $("#contracting_request_subscriber_country_id").select2("val",data.country_id);
+        $("#contracting_request_subscriber_center_id").select2("val",data.center_id);
+      });
+      return false;
+    });
+
+    // when the #contracting_request_service_point_id field changes
+    $("#contracting_request_bank_id").change(function() {
+      // make a POST call and replace the content
+      var contact = $('select#contracting_request_bank_id :selected').val();
+      if (contact == "")
+        contact = "0";
+      jQuery.getJSON('update_bank_offices_from_bank/' + contact, function(data) {
+        // debugger
+        // $("#contracting_request_bank_id").select2({data:data[$(this).val()]});}).trigger('change');
+        // .select2(data,data.bank_offices);
+        // $("contracting_request_bank_office_id").select2('destroy').empty()
+        // $.each(data.bank_offices, function(index) {
+        //   $("contracting_request_bank_office_id").select2({data: [{id: $(this)[0], text: $(this)[1]}]});
+        // });
+        // debugger
+        $("#contracting_request_bank_office_id").select2({
+          data: data.bank_offices
+        })
+      });
+      return false;
+    });
+
     // when the .contracting_request_type_id field changes
     $('.contracting_request_type_id').select2().on("change", function(e) {
       if($('.contracting_request_type_id').select2("val") == "<%= ContractingRequestType::SUBROGATION %>"){
@@ -245,6 +292,20 @@
       };
     });
 
+    // when the #client_town_id field changes
+    $("#contracting_request_client_town_id").change(function() {
+      // make a POST call and replace the content
+      var contact = $('select#contracting_request_client_town_id :selected').val();
+      if (contact == "")
+        contact = "0";
+      jQuery.getJSON('update_province_textfield_from_town/' + contact, function(data) {
+        $("#contracting_request_client_province_id").val(data.province_id);
+        $("#contracting_request_client_province_id").select2("val", data.province_id);
+        $("#contracting_request_client_region_id").val(data.region_id);
+        $("#contracting_request_client_country_id").val(data.country_id);
+      })
+      return false;
+    });
 
     // when the #row-old-subscriber field changes
     $('#row-old-subscriber select').select2().on("change", function(e) {
@@ -548,6 +609,21 @@
   </div>
 </div>
 
+<!-- 3,5º ROW -->
+<div class="row-fluid">
+  <!-- IBAN INFO -->
+  <h4><%=t 'ag2_gest.contracting_requests.new.service_point' %></h4>
+  <div class="row-fluid">
+    <!-- SERVICE POINT ID -->
+    <%= f.input :service_point_id, collection: @service_points, :required => true, label: false, label_method: lambda { |s| s.to_full_label }, :input_html => { onkeyup: "caps(this)", :class => 'x-large-text-field sel2' }, :label_html => { :class => 'form-label' }%>
+  </div>
+  <div class="row-fluid">
+    <div class="span12">
+      <a href="#new-service-point" role="button" class="btn btn-primary btn-mini btn-warning" data-toggle="modal">Añadir punto de servicio</a>
+    </div>
+  </div>
+</div>
+
 <!-- 4º ROW -->
 <div class="row-fluid">
   <!-- SUBSCRIBER -->
@@ -595,19 +671,6 @@
     <!-- SUBSCRIBER country -->
     <%= f.association :subscriber_country, collection: Country.all(order: 'name'), :input_html => { :class => 'entity-field subscriber-field x-large-text-field sel2' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span4" } %>
     <%= f.association :subscriber_center, collection: Center.all(order: 'name'), :input_html => { :class => 'entity-field subscriber-field x-large-text-field sel2' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span4" } %>
-  </div>
-</div>
-
-<!-- 4,5º ROW -->
-<div class="row-fluid">
-  <!-- IBAN INFO -->
-  <h4>Punto de servicio</h4>
-  <div class="row-fluid">
-    <!-- SERVICE POINT ID -->
-    <%= f.input :service_point_id, collection: @service_points, :required => true, label_method: lambda { |s| s.to_full_label }, :input_html => { onkeyup: "caps(this)", :class => 'x-large-text-field sel2' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span10" } %>
-    <div class="span2" style="margin-top: 25px;">
-      <a href="#new-service-point" role="button" class="btn btn-primary btn-mini btn-warning service-point-plus" data-toggle="modal">Añadir punto de servicio</a>
-    </div>
   </div>
 </div>
 

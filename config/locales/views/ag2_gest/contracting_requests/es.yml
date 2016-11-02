@@ -9,6 +9,8 @@ es:
         label_request_type: "Tipo contratación"
         label_work_order: "Orden de trabajo"
         label_client: "Cliente"
+        label_subscriber: "Abonado"
+        label_entity: "Sujeto pasivo"
         btn_new: "Nueva Solicitud Servicios"
         btn_new2: "Nueva Solicitud Acometida"
         back_to_root: "Volver a ag2Gest"
@@ -44,6 +46,7 @@ es:
         representative: "Representante"
         iban: "Cuenta IBAN"
         documents: "Documentos"
+        service_point: "Punto de suministro"
       new_water_supply_contract:
         title: "Contrato de Suministro"
         tariff_scheme: "Esquema tarifario"
@@ -53,3 +56,4 @@ es:
       commercial_info: "Información Contable y Comercial"
       fiscal_error: "Id Fiscal erróneo o Entidad (Sujeto Pasivo) no existe."
       code_error: "Imposible generar Código de Contratación: No has elegido Proyecto."
+      required_error: "Faltan campos por rellenar"

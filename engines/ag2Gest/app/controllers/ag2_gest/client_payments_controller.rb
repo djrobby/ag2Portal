@@ -143,37 +143,334 @@ module Ag2Gest
 
 
     def index
+      manage_filter_state
       bill_no = params[:bill_no]
       client = params[:client]
+      subscriber = params[:subscriber]
+      entity = params[:entity]
       project = params[:project]
-      bank_account = params[:bank_account]
+      bank_account = params[:bank_account] == "SI" ? true : false
       billing_period = params[:billing_period]
       reading_routes = params[:reading_routes]
 
-      if !current_projects_ids.blank?
-        @bills = Bill.where(project_id: current_projects_ids)
-        @billing_periods = BillingPeriod.where(project_id: current_projects_ids)
-        @reading_routes = ReadingRoute.where(project_id: current_projects_ids)
-      elsif session[:office] == "0" || session[:office].nil?
-        @bills = Bill.where("subscriber_id != 'nil'")
-      else
-        @bills = Office.find(session[:office]).subscribers.map(&:bills).flatten
+      # OCO
+      init_oco if !session[:organization]
+      # Initialize select_tags
+      @billing_periods = billing_periods_dropdown if @billing_periods.nil?
+      @reading_routes = reading_routes_dropdown if @reading_routes.nil?
+      @clients = clients_dropdown if @clients.nil?
+      @projects  = projects_dropdown if @projects.nil?
+      @subscribers  = subscribers_dropdown if @subscribers.nil?
+      @entities  = entities_dropdown if @entities.nil?
+
+      # If inverse no search is required
+      bill_no = !bill_no.blank? && bill_no[0] == '%' ? inverse_no_search(bill_no) : bill_no
+
+      @search_pending = Bill.search do
+        with(:invoice_status_id, 0..98)
+        if !current_projects_ids.blank?
+          with :project_id, current_projects_ids
+        end
+        if !bill_no.blank?
+          if bill_no.class == Array
+            with :bill_no, bill_no
+          else
+            with(:bill_no).starting_with(bill_no)
+          end
+        end
+        if !client.blank?
+          with :client_id, client
+        end
+        if !subscriber.blank?
+          with :subscriber_id, subscriber
+        end
+        if !entity.blank?
+          with :entity_id, entity
+        end
+        if !bank_account.blank?
+          with :bank_account, bank_account
+        end
+        if !reading_routes.blank?
+          with :reading_route_id, reading_routes
+        end
+        order_by :sort_no, :asc
+        paginate :page => params[:page] || 1, :per_page => per_page || 10
       end
-      if session[:organization] != '0'
-        @clients = Client.where(organization_id: session[:organization])
-      else
-        @clients = Client.all
+
+      @search_charged = Bill.search do
+        with :invoice_status_id, 99
+        if !current_projects_ids.blank?
+          with :project_id, current_projects_ids
+        end
+        if !bill_no.blank?
+          if bill_no.class == Array
+            with :bill_no, bill_no
+          else
+            with(:bill_no).starting_with(bill_no)
+          end
+        end
+        if !client.blank?
+          with :client_id, client
+        end
+        if !subscriber.blank?
+          with :subscriber_id, subscriber
+        end
+        if !entity.blank?
+          with :entity_id, entity
+        end
+        if !bank_account.blank?
+          with :bank_account, bank_account
+        end
+        if !reading_routes.blank?
+          with :reading_route_id, reading_routes
+        end
+        order_by :sort_no, :asc
+        paginate :page => params[:page] || 1, :per_page => per_page || 10
       end
-      @projects = current_projects
-      @bills_pending = @bills.where("invoice_status_id < 99").order("created_at DESC")
-      @bills_charged = @bills.where("invoice_status_id = 99").order("created_at DESC")
-      @client_payments_cash = @bills_pending.map(&:invoices).flatten.map(&:client_payments).flatten.select{|c| c.payment_type == ClientPayment::CASH and c.confirmation_date.nil?}
-      @client_payments_bank = @bills_pending.map(&:invoices).flatten.map(&:client_payments).flatten.select{|c| c.payment_type == ClientPayment::BANK}
-      @client_payments_others = @bills.map(&:invoices).flatten.map(&:client_payments).flatten.select{|c| c.payment_type == ClientPayment::OTHERS}
-      @instalments = @bills_pending.where(invoice_status_id: InvoiceStatus::FRACTIONATED).map(&:instalments).flatten.map{|i| i  if i.client_payment.nil?}.compact
+
+      @search_cash = ClientPayment.search do
+        with :payment_type, ClientPayment::CASH
+        if !current_projects_ids.blank?
+          with :project_id, current_projects_ids
+        end
+        if !bill_no.blank?
+          if bill_no.class == Array
+            with :bill_no, bill_no
+          else
+            with(:bill_no).starting_with(bill_no)
+          end
+        end
+        if !client.blank?
+          with :client_id, client
+        end
+        if !subscriber.blank?
+          with :subscriber_id, subscriber
+        end
+        if !entity.blank?
+          with :entity_id, entity
+        end
+        if !bank_account.blank?
+          with :bank_account, bank_account
+        end
+        if !reading_routes.blank?
+          with :reading_route_id, reading_routes
+        end
+        order_by :sort_no, :asc
+        paginate :page => params[:page] || 1, :per_page => per_page || 10
+      end
+
+      @search_bank = ClientPayment.search do
+        with :payment_type, ClientPayment::BANK
+        if !current_projects_ids.blank?
+          with :project_id, current_projects_ids
+        end
+        if !bill_no.blank?
+          if bill_no.class == Array
+            with :bill_no, bill_no
+          else
+            with(:bill_no).starting_with(bill_no)
+          end
+        end
+        if !client.blank?
+          with :client_id, client
+        end
+        if !subscriber.blank?
+          with :subscriber_id, subscriber
+        end
+        if !entity.blank?
+          with :entity_id, entity
+        end
+        if !bank_account.blank?
+          with :bank_account, bank_account
+        end
+        if !reading_routes.blank?
+          with :reading_route_id, reading_routes
+        end
+        order_by :sort_no, :asc
+        paginate :page => params[:page] || 1, :per_page => per_page || 10
+      end
+
+      @search_others = ClientPayment.search do
+        with :payment_type, ClientPayment::OTHERS
+        if !current_projects_ids.blank?
+          with :project_id, current_projects_ids
+        end
+        if !bill_no.blank?
+          if bill_no.class == Array
+            with :bill_no, bill_no
+          else
+            with(:bill_no).starting_with(bill_no)
+          end
+        end
+        if !client.blank?
+          with :client_id, client
+        end
+        if !subscriber.blank?
+          with :subscriber_id, subscriber
+        end
+        if !entity.blank?
+          with :entity_id, entity
+        end
+        if !bank_account.blank?
+          with :bank_account, bank_account
+        end
+        if !reading_routes.blank?
+          with :reading_route_id, reading_routes
+        end
+        order_by :sort_no, :asc
+        paginate :page => params[:page] || 1, :per_page => per_page || 10
+      end
+
+      @search_instalment = Instalment.search do
+        if !current_projects_ids.blank?
+          with :project_id, current_projects_ids
+        end
+        if !bill_no.blank?
+          if bill_no.class == Array
+            with :bill_no, bill_no
+          else
+            with(:bill_no).starting_with(bill_no)
+          end
+        end
+        if !client.blank?
+          with :client_id, client
+        end
+        if !subscriber.blank?
+          with :subscriber_id, subscriber
+        end
+        if !entity.blank?
+          with :entity_id, entity
+        end
+        if !bank_account.blank?
+          with :bank_account, bank_account
+        end
+        if !reading_routes.blank?
+          with :reading_route_id, reading_routes
+        end
+        order_by :sort_no, :asc
+        paginate :page => params[:page] || 1, :per_page => per_page || 10
+      end
+
+      @bills_pending = @search_pending.results
+      @bills_charged = @search_charged.results
+
+      @client_payments_cash = @search_cash.results
+      @client_payments_bank = @search_bank.results
+      @client_payments_others = @search_others.results
+
+      @instalments = @search_instalment.results
+
       respond_to do |format|
         format.html # index.html.erb
-        format.json { render json: @bills }
+        format.json { render json: {bills_pending: @bills_pending, bills_charged: @bills_charged, client_payments_cash: @client_payments_cash, client_payments_bank: @client_payments_bank, client_payments_others: @client_payments_others, instalments: @instalments } }
+        format.js
+      end
+    end
+
+    private
+
+    def inverse_no_search(no)
+      _numbers = []
+      # Add numbers found
+      Subscriber.where('subscriber_code LIKE ?', "#{no}").each do |i|
+        _numbers = _numbers << i.subscriber_code
+      end
+      _numbers = _numbers.blank? ? no : _numbers
+    end
+
+    def billing_periods_dropdown
+      if !current_projects_ids.blank?
+        BillingPeriod.where(project_id: current_projects_ids).order("period")
+      else
+        BillingPeriod.order("period")
+      end
+    end
+
+    def reading_routes_dropdown
+      if !current_projects_ids.blank?
+        ReadingRoute.where(project_id: current_projects_ids).order('name')
+      else
+        ReadingRoute.order('name')
+      end
+    end
+
+    def clients_dropdown
+      if session[:organization] != '0'
+        Client.where(organization_id: session[:organization])
+      else
+        Client.order("created_at DESC")
+      end
+    end
+
+    def projects_dropdown
+      if !current_projects_ids.blank?
+        current_projects
+      else
+        Project.order("name")
+      end
+    end
+
+    def subscribers_dropdown
+      if session[:office_id] != '0'
+        Subscriber.where(office_id: session[:office_id]).order("subscriber_code")
+      else
+        Subscriber.order("subscriber_code")
+      end
+    end
+
+    def entities_dropdown
+      Entity.order("created_at DESC")
+    end
+
+    # Keeps filter state
+    def manage_filter_state
+      # bill_no
+      if params[:bill_no]
+        session[:bill_no] = params[:bill_no]
+      elsif session[:bill_no]
+        params[:bill_no] = session[:bill_no]
+      end
+      # client
+      if params[:client]
+        session[:client] = params[:client]
+      elsif session[:client]
+        params[:client] = session[:client]
+      end
+      # subscriber
+      if params[:subscriber]
+        session[:subscriber] = params[:subscriber]
+      elsif session[:subscriber]
+        params[:subscriber] = session[:subscriber]
+      end
+      # entity
+      if params[:entity]
+        session[:entity] = params[:entity]
+      elsif session[:entity]
+        params[:entity] = session[:entity]
+      end
+      # project
+      if params[:project]
+        session[:project] = params[:project]
+      elsif session[:project]
+        params[:project] = session[:project]
+      end
+      # bank_account
+      if params[:bank_account]
+        session[:bank_account] = params[:bank_account]
+      elsif session[:bank_account]
+        params[:bank_account] = session[:bank_account]
+      end
+      # billing_period
+      if params[:billing_period]
+        session[:billing_period] = params[:billing_period]
+      elsif session[:billing_period]
+        params[:billing_period] = session[:billing_period]
+      end
+      # reading_routes
+      if params[:reading_routes]
+        session[:reading_routes] = params[:reading_routes]
+      elsif session[:reading_routes]
+        params[:reading_routes] = session[:reading_routes]
       end
     end
 

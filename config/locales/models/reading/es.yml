@@ -22,11 +22,15 @@ es:
         reading_route_id: "Ruta"
         reading_date: "Fecha de lectura"
         reading: "Índice de lectura"
+        reading_1: "Lectura periodo anterior"
+        reading_2: "Lectura año anterior"
+        sequence: "Secuencia"
+        variant: "Variante"
         successfully: "Lectura se ha actualizado correctamente."
         create: "Lectura se ha creado correctamente."
         consumption: "Consumo"
     report:
-      reading: 
+      reading:
         cod_route: "Cod. ruta"
         num_route: "Nº ruta"
         meter_header: "Contador"

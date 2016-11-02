@@ -1,3 +1,6 @@
+<% session[:return_to_subscriber] = "Volver a abonado" %>
+<% session[:return_to_subscriber_url] = "#{request.protocol}#{request.host_with_port}#{request.fullpath}" %>
+
 <style>
   a.pull-right {
     margin-bottom: 20px;
@@ -50,18 +53,21 @@
 <%= render '/layouts/ag2_gest/subscribersbreadcrumb' %>
 
 <%= link_to t('activerecord.attributes.subscriber.print'), subscriber_pdf_subscriber_path(:format => :pdf), class: "btn btn-warning btn-mini pull-right", target: "_blank" %>
+<% if !session[:return_to_reading].nil? %>
+  <%= link_to session[:return_to_reading], session[:return_to_reading_url] %><br />
+<% end %>
 <table class="table">
   <tbody>
     <tr>
-      <td><b><%= t('activerecord.attributes.subscriber.name') %>:</b></td>
+      <td><b><%= t('activerecord.attributes.subscriber.full_name') %>:</b></td>
       <td><%= @subscriber.try(:full_name) %></td>
       <td><b><%= t('activerecord.attributes.subscriber.subscriber_code') %>:</b></td>
-      <td><%= @subscriber.try(:subscriber_code) %></td>
+      <td><%= @subscriber.try(:full_code) %></td>
       <td><b><%= t('activerecord.attributes.subscriber.client_id') %>:</b></td>
-      <td><%= link_to @subscriber.try(:client).try(:client_code), ag2_gest.client_path(@subscriber.client_id) %></td>
+      <td><%= link_to @subscriber.try(:client).try(:full_code), ag2_gest.client_path(@subscriber.client_id) %></td>
     </tr>
     <tr>
-      <td><b><%= t('activerecord.attributes.subscriber.fiscal') %>:</b></td>
+      <td><b><%= t('activerecord.attributes.subscriber.fiscal_id_c') %>:</b></td>
       <td><%= @subscriber.try(:fiscal_id) %></td>
       <td><b><%= t('activerecord.attributes.subscriber.starting_at') %>:</b></td>
       <td colspan="3"><%= I18n.localize(@subscriber.try(:starting_at)) unless @subscriber.try(:starting_at).blank? %></td>
@@ -163,53 +169,47 @@
       </div>
 
       <div class="span3">
-        <%= label_tag "Periodo de facturación", nil, :class => 'form-label' %>
-        <%= select_tag "billing_period", options_from_collection_for_select(@billing_periods, "id", "period"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
+        <%#= label_tag "Periodo de facturación", nil, :class => 'form-label' %>
+        <%#= select_tag "billing_period", options_from_collection_for_select(@billing_periods, "id", "period"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
       </div>
       <div class="span3">
-        <%= label_tag t('activerecord.attributes.subscriber.reading_type'), nil, :class => 'form-label' %>
-        <%= select_tag "reading_type", options_from_collection_for_select(@reading_types, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
+        <%#= label_tag t('activerecord.attributes.subscriber.reading_type'), nil, :class => 'form-label' %>
+        <%#= select_tag "reading_type", options_from_collection_for_select(@reading_types, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
       </div>
     </div>
     <br>
 
-    <table class="table table-center table-condensed table-striped shrinked stu reading_table">
+    <table class="table table-condensed table-striped shrinked">
       <thead>
         <tr>
-          <th><%= t('activerecord.attributes.subscriber.id') %></th>
-          <th><%= t('activerecord.attributes.subscriber.period') %></th>
-          <th><%= t('activerecord.attributes.subscriber.type') %></th>
-          <th><%= t('activerecord.attributes.subscriber.date') %></th>
-          <th><%= t('activerecord.attributes.subscriber.reading') %></th>
-          <th><%= t('activerecord.attributes.subscriber.incidences') %></th>
+          <th><%= t('activerecord.attributes.reading.meter_id') %></th>
+          <th><%= t('activerecord.attributes.reading.billing_period_id') %></th>
+          <th><%= t('activerecord.attributes.reading.reading_date') %></th>
+          <th><%= t('activerecord.attributes.reading.reading') %></th>
+          <th></th>
+          <th><%= t('activerecord.attributes.reading.reading_1') %></th>
+          <th><%= t('activerecord.attributes.reading.consumption') %></th>
           <th></th>
         </tr>
       </thead>
       <tbody>
         <% @subscriber_readings.order('reading_date DESC').each do |reading| %>
-          <tr>
-            <td><%= reading.try(:id) %></td>
-            <td><%= reading.try(:billing_period).try(:period) %></td>
-            <td><%= link_to reading.try(:reading_type).try(:name), ag2_gest.reading_type_path(reading.try(:reading_type_id)) %></td>
-            <td><%= reading.try(:reading_date).strftime("%d/%m/%Y") unless reading.try(:reading_date).blank? %></td>
-            <td><%= reading.try(:reading_index) %></td>
-            <td>
-              <%if reading.try(:reading_incidence_types).blank? %>
-                -
-              <% else %>
-                <i title="<%= reading.reading_incidence_types.pluck(:name).join(", ") %>" class="icon-ok"></i>
-              <% end %>
-            </td>
-            <td class="a_inline">
-              <%= link_to edit_reading_path(reading), class: "btn btn-mini" do %>
-                <i class="icon-edit"></i>
-              <% end %>
-
-              <%= link_to reading, class: "btn btn-mini", method: :delete, data: { confirm: 'Are you sure?' } do %>
-                <i class="icon-trash"></i>
-              <% end %>
-            </td>
-          </tr>
+        <tr>
+          <td><%= reading.try(:meter).try(:meter_code) %></td>
+          <td><%= reading.try(:billing_period).try(:period) %></td>
+          <td><%= reading.try(:reading_date).strftime("%d/%m/%Y %H:%M") unless reading.try(:reading_date).blank? %></td>
+          <td align="right"><%= reading.try(:reading_index) %></td>
+          <td>
+            <% unless reading.try(:reading_incidence_types).blank? %>
+              <i title="<%= reading.reading_incidence_types.pluck(:name).join(", ") %>" class="icon-warning-sign"></i>
+            <% end %>
+          </td>
+          <td align="right"><%= reading.try(:reading_1).try(:reading_index) %></td>
+          <td align="right"><%= reading.try(:consumption) %></td>
+          <td><%= link_to reading_path(reading), class: "btn btn-mini" do %><i class="icon-eye-open"></i><% end %>
+          <%= render :partial => '/layouts/crud/edit', :locals => { :model => Reading, :path => edit_reading_path(reading) } %>
+          <%= render :partial => '/layouts/crud/delete', :locals => { :model => Reading, :path => reading, :msg => t("activerecord.models.reading.one"), :txt => reading.id } %> </td>
+        </tr>
         <% end %>
       </tbody>
     </table>
@@ -220,7 +220,7 @@
   <div class="tab-pane fade active" id="bills">
     <div class="row">
       <div class="span12">
-        <button id="collapse-init" class="btn btn-primary" style="display:block; float:right; margin-bottom: 20px;"><%= t('activerecord.attributes.subscriber.show_all') %></button>
+        <button id="collapse-init" class="btn btn-primary" style="display:block; float:right; margin-bottom: 20px;"><%= "Mostrar todos" %></button>
         <a href="#new-bill" role="button" class="btn btn-primary" data-toggle="modal">Nueva factura</a>
       </div>
     </div>

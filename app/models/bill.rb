@@ -85,6 +85,30 @@ class Bill < ActiveRecord::Base
     taxes
   end
 
+  searchable do
+    text :bill_no #, :to_label, :fiscal_id, :phone, :full_name
+    string :bill_no, :multiple => true   # Multiple search values accepted in one search (inverse_no_search)
+    integer :project_id, :multiple => true
+    integer :invoice_status_id
+    integer :client_id
+    integer :subscriber_id
+    integer :entity_id do
+      client.entity_id
+    end
+    boolean :bank_account do
+      client.active_bank_accounts?
+    end
+    integer :billing_period do
+      reading_2.nil? ? nil : reading_2.billing_period_id
+    end
+    integer :reading_route_id do
+      subscriber.nil? ? nil : subscriber.reading_route_id
+    end
+    string :sort_no do
+      bill_no
+    end
+  end
+
 end
 
 

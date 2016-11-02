@@ -17,7 +17,7 @@ es:
     attributes:
       subscriber:
         client: "Id Entidad"
-        client_id: "Id Entidad"
+        client_id: "Cod. Cliente"
         office: "Oficina"
         office_id: "Oficina"
         center: "Núcleo"
@@ -79,6 +79,7 @@ es:
         gis_id: "Gis Id"
         endowments: "Dotaciones"
         inhabitants: "Habitantes"
+        direction: "Dirección"
 
         detail: 'Detalle'
         invoices: "Facturas"

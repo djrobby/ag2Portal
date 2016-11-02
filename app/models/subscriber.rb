@@ -203,15 +203,19 @@ class Subscriber < ActiveRecord::Base
   end
 
   searchable do
-    text :subscriber_code, :first_name, :last_name, :company, :fiscal_id
-    string :subscriber_code
-    string :company
-    string :last_name
-    string :first_name
-    string :fiscal_id
-    integer :client_id
+    text :subscriber_code, :to_label, :fiscal_id, :phone, :full_name
+    string :subscriber_code, :multiple => true   # Multiple search values accepted in one search (inverse_no_search)
+    string :full_name
+    integer :service_point_id
+    integer :meter_id
+    integer :billing_frequency_id
     integer :office_id
-    integer :center_id
+    integer :tariff_type_id do
+      tariff_scheme.tariff_type_id
+    end
+    string :sort_no do
+      subscriber_code
+    end
   end
 
   private

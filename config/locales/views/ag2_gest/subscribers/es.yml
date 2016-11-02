@@ -5,6 +5,12 @@ es:
         title: "Abonados"
         btn_new: "Nuevo Abonado"
         back_to_root: "Volver a ag2Gest"
+        subscriber_code: "Código abonado"
+        service_point: "Punto de suministro"
+        meter: "Contador"
+        billing_frequency: "Frequencia de facturación"
+        tariff_type: "Tipo de tarifa"
+        label_others: "Otros"
       show:
         title: "Abonado"
         btn_edit: "Editar Abonado"

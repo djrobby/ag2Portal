@@ -1,45 +1,144 @@
+<% session[:return_to_reading] = "Volver a lectura" %>
+<% session[:return_to_reading_url] = "#{request.protocol}#{request.host_with_port}#{request.fullpath}" %>
+
 <%= render '/layouts/ag2_gest/readingsbreadcrumb' %>
 
-<h3><%= t('activerecord.attributes.reading.reading') %> <%=@reading.try(:id) %></h3>
+<% if !session[:return_to_subscriber].nil? %>
+  <%= link_to session[:return_to_subscriber], session[:return_to_subscriber_url] %><br />
+<% end %>
+
+<% if !session[:return_to_meter].nil? %>
+  <%= link_to session[:return_to_meter], session[:return_to_meter_url] %><br />
+<% end %>
+
+
+<h3><%=t '.title' %></h3>
+
+
 <table class="table">
   <tbody>
     <tr>
       <td><%= t('activerecord.attributes.reading.id') %>:</td>
-      <td><%= @reading.try(:id) %></td>
-      <td><%= t('activerecord.attributes.reading.reading') %></td>
-      <td><%= @reading.try(:reading_index) %></td>
+      <td colspan="3"><%= @reading.try(:id) %></td>
     </tr>
     <tr>
+      <td><%= t('activerecord.attributes.reading.reading') %>:</td>
+      <td><%= @reading.try(:reading_index) %></td>
+      <td><%= t('activerecord.attributes.reading.consumption') %>:</td>
+      <td><%= @reading.try(:consumption) %></td>
+    </tr>
+    <% unless @reading.reading_incidence_types.blank? %>
+      <td><%= t '.incidences' %> <i class="icon-warning-sign"></i>:</td>
+      <td colspan="3"><%= @reading.reading_incidence_types.pluck(:name).join(", ") %></td>
+    <% end %>
+    <tr>
       <td><%= t('activerecord.attributes.reading.billing_period_id') %>:</td>
-      <td><%= link_to @reading.try(:billing_period).try(:description), ag2_gest.billing_period_path(@reading.billing_period_id) %></td>
+      <td><%= @reading.try(:billing_period).try(:description) %></td>
       <td><%= t('activerecord.attributes.reading.billing_frequency_id') %>:</td>
-      <td><%= link_to @reading.try(:billing_frequency).try(:name), ag2_gest.billing_frequency_path(@reading.billing_frequency_id) %></td>
+      <td><%= @reading.try(:billing_frequency).try(:name) %></td>
     </tr>
     <tr>
       <td><%= t('activerecord.attributes.reading.reading_type_id') %>:</td>
-      <td><%= link_to @reading.try(:reading_type).try(:name), ag2_gest.reading_type_path(@reading.reading_type_id) %></td>
-      <td><%= t('activerecord.attributes.reading.meter_id') %>:</td>
-      <td><%= link_to @reading.try(:meter).try(:meter_code), ag2_gest.meter_path(@reading.meter_id) %></td>
-    </tr>
-    <tr>
-      <td><%= t('activerecord.attributes.reading.subscriber_id') %>:</td>
-      <td><%= link_to @reading.try(:subscriber).try(:to_label), ag2_gest.subscriber_path(@reading.subscriber_id) %></td>
+      <td><%= @reading.try(:reading_type).try(:name) %></td>
       <td><%= t('activerecord.attributes.reading.reading_route_id') %>:</td>
-      <td><%= link_to @reading.try(:reading_route).try(:name), ag2_gest.reading_route_path(@reading.reading_route_id) %></td>
+      <td><%= @reading.try(:reading_route).try(:name) %></td>
     </tr>
     <tr>
       <td><%= t('activerecord.attributes.reading.project_id') %>:</td>
-      <td><%= link_to @reading.try(:project).try(:name), ag2_tech.project_path(@reading.project_id) %></td>
+      <td><%= @reading.try(:project).try(:name) %></td>
       <td><%= t('activerecord.attributes.reading.reading_date') %></td>
-      <td><%= @reading.try(:reading_date).strftime("%d/%m/%Y") unless @reading.try(:reading_date).blank? %></td>
+      <td><%= @reading.try(:reading_date).strftime("%d/%m/%Y %H:%M") unless @reading.try(:reading_date).blank? %></td>
+    </tr>
+    <tr>
+      <td><%= t('activerecord.attributes.reading.sequence') %></td>
+      <td><%= @reading.try(:reading_sequence) %></td>
+      <td><%= t('activerecord.attributes.reading.variant') %></td>
+      <td><%= @reading.try(:reading_variant) %></td>
+    </tr>
+    <tr>
+      <td><%= t('activerecord.attributes.reading.reading_1') %>:</td>
+      <td colspan="3"><%= link_to @reading.try(:reading_1).try(:to_label), ag2_gest.reading_path(@reading.reading_1 , reading: @reading.id) unless @reading.reading_1.nil? %></td>
+    </tr>
+    <tr>
+      <td><%= t('activerecord.attributes.reading.reading_1_index') %>:</td>
+      <td><%= @reading.try(:reading_1).try(:reading_index) %></td>
+      <td><%= t('activerecord.attributes.reading.reading_1_date') %>:</td>
+      <td><%= @reading.try(:reading_1).try(:reading_date).strftime("%d/%m/%Y %H:%M") if @reading.reading_1 %></td>
+    </tr>
+    <tr>
+      <td><%= t('activerecord.attributes.reading.reading_2') %>:</td>
+      <td colspan="3"><%= link_to @reading.try(:reading_2).try(:to_label), ag2_gest.reading_path(@reading.reading_2 , reading: @reading.id) unless @reading.reading_2.nil? %></td>
+    </tr>
+    <tr>
+      <td><%= t('activerecord.attributes.reading.reading_2_index') %>:</td>
+      <td><%= @reading.try(:reading_2).try(:reading_index) %></td>
+      <td><%= t('activerecord.attributes.reading.reading_2_date') %>:</td>
+      <td><%= @reading.try(:reading_2).try(:reading_date).strftime("%d/%m/%Y %H:%M") if @reading.reading_2 %></td>
     </tr>
     <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @reading } %>
+    <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @reading } %>
   </tbody>
 </table>
+
+<h4><%= t '.subscriber' %></h4>
+<table class="table">
+  <tbody>
+    <tr>
+      <td><%= t('activerecord.attributes.subscriber.subscriber_code') %>:</td>
+      <td><%= link_to @reading.try(:subscriber).try(:full_code), ag2_gest.subscriber_path(@reading.subscriber_id, reading: @reading.id) %></td>
+      <td><%= t 'activerecord.attributes.subscriber.full_name' %>:</td>
+      <td colspan="3"><%= @reading.try(:subscriber).try(:full_name) %></td>
+    </tr>
+    <tr>
+      <td><%= t('activerecord.attributes.subscriber.address_1') %>:</td>
+      <td colspan="3"><%= @reading.try(:subscriber).try(:address_1) %></td>
+      <td><%= t('activerecord.attributes.subscriber.zipcode_id') %>:</td>
+      <td><%= @reading.try(:subscriber).try(:zipcode).try(:zipcode) %></td>
+    </tr>
+    <tr>
+      <td><%= t('activerecord.attributes.subscriber.office_id') %>:</td>
+      <td><%= @reading.try(:subscriber).try(:office).try(:name) %></td>
+      <td><%= t('activerecord.attributes.subscriber.town_id') %>:</td>
+      <td><%= @reading.try(:subscriber).try(:center).try(:town).try(:name) %></td>
+      <td><%= t('activerecord.attributes.subscriber.province_id') %></td>
+      <td><%= @reading.try(:subscriber).try(:center).try(:town).try(:province).try(:name) %></td>
+    </tr>
+    <tr>
+      <td><%= t('activerecord.attributes.subscriber.region_id') %>:</td>
+      <td><%= @reading.try(:subscriber).try(:center).try(:town).try(:province).try(:region).try(:name) %></td>
+      <td><%= t('activerecord.attributes.subscriber.country_id') %>:</td>
+      <td><%= @reading.try(:subscriber).try(:center).try(:town).try(:province).try(:region).try(:country).try(:name) %></td>
+      <td><%= t('activerecord.attributes.subscriber.center_id') %>:</td>
+      <td><%= @reading.try(:subscriber).try(:center).try(:name) %></td>
+    </tr>
+  </tbody>
+</table>
+
+<h4><%= t '.meter' %></h4>
+<table class="table">
+    <tr>
+      <td><%= t 'activerecord.attributes.meter.meter_code' %>:</td>
+      <td colspan="3"><%= link_to @reading.try(:meter).try(:meter_code), ag2_gest.meter_path(@reading.meter_id, reading: @reading.id) %></td>
+    </tr>
+    <tr>
+      <td><%= t('activerecord.attributes.meter.meter_model_id') %>:</td>
+      <td><%= @reading.try(:meter).try(:meter_model).try(:model) %></td>
+      <td><%= t('activerecord.attributes.meter_model.meter_brand') %>:</td>
+      <td><%= @reading.try(:meter).try(:meter_model).try(:meter_brand).try(:brand) %></td>
+    </tr>
+    <tr>
+      <td><%= t('activerecord.attributes.meter.meter_owner_id') %>:</td>
+      <td><%= @reading.try(:meter).try(:meter_owner).try(:name) %></td>
+      <td><%= t('activerecord.attributes.meter.caliber_id') %>:</td>
+      <td><%= @reading.try(:meter).try(:caliber).try(:caliber) %></td>
+    </tr>
+  </tbody>
+</table>
+
 
 <%= render partial: '/layouts/crud/update_delete_new', locals:
 { model: Reading, update_path: edit_reading_path(@reading), update_txt: t('.btn_edit'),
 delete_path: @reading, delete_txt: t('.btn_delete'), msg: t("activerecord.models.reading.one"), :txt => @reading.id,
 new_path: new_reading_path, new_txt: t('ag2_gest.readings.index.btn_new') } %>
 
-<%= link_to I18n.t('ag2_gest.readings.back_to_main_page'), reading_path %>
+<%= link_to I18n.t('ag2_gest.readings.back_to_main_page'), readings_path %>

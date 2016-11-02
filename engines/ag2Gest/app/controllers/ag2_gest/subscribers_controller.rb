@@ -154,7 +154,7 @@ module Ag2Gest
                    reading_index_2: nil )
 
       #Put Caliber Nil
-      water_supply_contract = @subscriber.contracting_request.water_supply_contract #WaterSupplyContract.where(subscriber_id: @subscriber.id)
+      water_supply_contract = @subscriber.water_supply_contract #WaterSupplyContract.where(subscriber_id: @subscriber.id)
       water_supply_contract.caliber_id = nil
 
       #Subscriber Quit Meter associated
@@ -329,73 +329,53 @@ module Ag2Gest
     # GET /subscribers
     # GET /subscribers.json
     def index
-
       manage_filter_state
-
-      #search = params[:search]
-
-      #FILTRAR Subscriber por POR SESSION
-      if session[:office] != '0'
-        @subscribers = Subscriber.where(office_id: session[:office]).order(:subscriber_code) #Array de Subscribers
-      elsif session[:company] != '0'
-        @offices_ids = Company.find(session[:company]).offices.map(&:id) #Devuelve un solo array con todas las offices ids
-        @subscribers = Subscriber.where(office_id: @offices_ids).order(:subscriber_code) #Array de Subscribers
-      elsif session[:organization] != '0'
-        @companies_ids = Organization.find(session[:organization]).companies.map(&:id) #Devuelve un solo array con todas las companies ids
-        @offices_ids = Office.where(company_id: @companies_ids).map(&:id) #Devuelve un solo array con todas las offices ids
-        @subscribers = Subscriber.where(office_id: @offices_ids).order(:subscriber_code) #Array de Subscribers
-      end
-
-      #name = params[:name]
-
-      #Filtrar Offices
-      #if session[:office] != '0'
-        #@offices = Office.where(id: session[:office]) if @offices.nil?
-        #office = session[:office]
-      #end
+      subscriber_code = params[:SubscriberCode]
+      service_point = params[:ServicePoint]
+      meter = params[:Meter]
+      billing_frequency = params[:BillingFrequency]
+      tariff_type = params[:TariffType]
+      letter = params[:letter]
+      # OCO
+      init_oco if !session[:organization]
+      # Initialize select_tags
+      @service_points = service_points_dropdown if @service_points.nil?
+      @meters = meters_dropdown if @meters.nil?
 
       # If inverse no search is required
-      #name = !name.blank? && name[0] == '%' ? inverse_no_search(name) : name
-
-      #@search = Subscriber.search do
-        #fulltext params[:search]
-        #if session[:organization] != '0'
-          #@companies_ids = Organization.find(session[:organization]).companies.map(&:id) #Devuelve un solo array con todas las companies ids
-          #@offices_ids = Office.where(company_id: @companies_ids).map(&:id) #Devuelve un solo array con todas las offices ids
-          #@subscribers = Subscriber.where(office_id: @offices_ids).order(:subscriber_code)
-        #end
-
-        ##with :name, search
-
-        ##order_by :sort_no, :asc
-        ##paginate :page => params[:page] || 1, :per_page => per_page
-      #end
-
+      subscriber_code = !subscriber_code.blank? && subscriber_code[0] == '%' ? inverse_no_search(subscriber_code) : subscriber_code
 
       @search = Subscriber.search do
         fulltext params[:search]
-        #order_by :sort_no, :asc
-        paginate :page => params[:page] || 1, :per_page => per_page
+        if session[:office] != '0'
+          with :office_id, session[:office]
+        end
+        if !letter.blank? && letter != "%"
+          with(:full_name).starting_with(letter)
+        end
+        if !subscriber_code.blank?
+          if subscriber_code.class == Array
+            with :subscriber_code, subscriber_code
+          else
+            with(:subscriber_code).starting_with(subscriber_code)
+          end
+        end
+        if !service_point.blank?
+          with :service_point_id, service_point
+        end
+        if !meter.blank?
+          with :meter_id, meter
+        end
+        if !billing_frequency.blank?
+          with :billing_frequency_id, billing_frequency
+        end
+        if !tariff_type.blank?
+          with :tariff_type_id, tariff_type
+        end
+        order_by :sort_no, :asc
+        paginate :page => params[:page] || 1, :per_page => per_page || 10
       end
-
-
-      #@subscriberss = Sunspot.search(Subscriber) do
-        #fulltext params[:search]
-      #end
-
-      #@search = Subscriber.search do
-        #fulltext 'perez' do
-          #fields(:name)
-        #end
-      #end
-
-
-
-      #@subscribers = @search.results
-
-      #@subscribers = @subscribers.paginate(:page => params[:page], :per_page => 20)
-      #@subscribers.paginate(params[:page])
-      #else all? @subscribers = Subscriber.all
+      @subscribers = @search.results
 
       respond_to do |format|
         format.html # index.html.erb
@@ -403,6 +383,7 @@ module Ag2Gest
         format.js
       end
     end
+
 
     def subscriber_pdf
 
@@ -454,9 +435,9 @@ module Ag2Gest
 
       @project_dropdown = session[:company].blank? ? Project.all : Project.where(company_id: session[:company])
 
-      @subscriber_readings = @subscriber.readings.order("created_at DESC").paginate(:page => params[:page], :per_page => 5)
-      @subscriber_accounts = @subscriber.client.client_bank_accounts.paginate(:page => params[:page], :per_page => 5)
-      @subscriber_bills = @subscriber.bills.order("created_at DESC").paginate(:page => params[:page], :per_page => 3)
+      @subscriber_readings = @subscriber.readings.paginate(:page => params[:page], :per_page => 5)
+      @subscriber_accounts = @subscriber.client.client_bank_accounts.paginate(:page => params[:page], :per_page => 10)
+      @subscriber_bills = @subscriber.bills.order("created_at DESC").paginate(:page => params[:page], :per_page => 10)
 
       #@alliance_towns = @alliance.players.towns.order("rank ASC").paginate(:page => params[:page], :per_page => 1)
       #@bills = Bill.joins(:subscriber).paginate(:page => params[:page], :per_page => 1) #.where('subscriber.bill = ?', params[:id]).paginate(:page => params[:page], :per_page => 1)
@@ -563,6 +544,7 @@ module Ag2Gest
         end
         @meter_details = @subscriber.meter_details.build(params_meter_details)
         @meter_details.assign_attributes(meter_id: @subscriber.meter_id)
+        @contracting_request.water_supply_contract.update_attributes(meter_id: @subscriber.meter_id)
         if @subscriber.save
           @contracting_request.status_control
           if @contracting_request.save
@@ -674,33 +656,92 @@ module Ag2Gest
       end
     end
 
-    def sort_column
-      Subscriber.column_names.include?(params[:sort]) ? params[:sort] : "id"
+    def inverse_no_search(no)
+      _numbers = []
+      # Add numbers found
+      Subscriber.where('subscriber_code LIKE ?', "#{no}").each do |i|
+        _numbers = _numbers << i.subscriber_code
+      end
+      _numbers = _numbers.blank? ? no : _numbers
+    end
+
+    def service_points_dropdown
+      if session[:office] != '0'
+        ServicePoint.where(office_id: session[:office]).order(:street_directory_id)
+      elsif session[:company] != '0'
+        ServicePoint.where(company_id: session[:company]).order(:street_directory_id)
+      elsif session[:organization] != '0'
+        ServicePoint.where(organization_id: session[:organization]).order(:street_directory_id)
+      else
+        ServicePoint.order(:street_directory_id)
+      end
+    end
+
+    def meters_dropdown
+      if session[:office] != '0'
+        Meter.where(office_id: session[:office]).order(:meter_code)
+      elsif session[:company] != '0'
+        Meter.where(company_id: session[:company]).order(:meter_code)
+      else
+        Meter.order(:meter_code)
+      end
     end
 
     # Keeps filter state
     def manage_filter_state
-      # sort
-      if params[:sort]
-        session[:sort] = params[:sort]
-      elsif session[:sort]
-        params[:sort] = session[:sort]
-      end
-
-      # direction
-      if params[:direction]
-        session[:direction] = params[:direction]
-      elsif session[:direction]
-        params[:direction] = session[:direction]
-      end
-
       # search
       if params[:search]
         session[:search] = params[:search]
       elsif session[:search]
         params[:search] = session[:search]
       end
-
+      # subscriber_code
+      if params[:SubscriberCode]
+        session[:SubscriberCode] = params[:SubscriberCode]
+      elsif session[:SubscriberCode]
+        params[:SubscriberCode] = session[:SubscriberCode]
+      end
+      # service_point
+      if params[:ServicePoint]
+        session[:ServicePoint] = params[:ServicePoint]
+      elsif session[:ServicePoint]
+        params[:ServicePoint] = session[:ServicePoint]
+      end
+      # meter
+      if params[:Meter]
+        session[:Meter] = params[:Meter]
+      elsif session[:Meter]
+        params[:Meter] = session[:Meter]
+      end
+      # billing_frequency
+      if params[:BillingFrequency]
+        session[:BillingFrequency] = params[:BillingFrequency]
+      elsif session[:BillingFrequency]
+        params[:BillingFrequency] = session[:BillingFrequency]
+      end
+      # manufacturer
+      if params[:Manufacturer]
+        session[:Manufacturer] = params[:Manufacturer]
+      elsif session[:Manufacturer]
+        params[:Manufacturer] = session[:Manufacturer]
+      end
+      # tax
+      if params[:TariffType]
+        session[:TariffType] = params[:TariffType]
+      elsif session[:TariffType]
+        params[:TariffType] = session[:TariffType]
+      end
+      # letter
+      if params[:letter]
+        if params[:letter] == '%'
+          session[:letter] = nil
+          params[:letter] = nil
+        else
+          session[:letter] = params[:letter]
+        end
+      elsif session[:letter]
+        params[:letter] = session[:letter]
+      end
     end
 
   end

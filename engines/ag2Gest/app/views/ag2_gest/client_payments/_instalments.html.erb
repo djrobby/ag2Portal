@@ -1,0 +1,36 @@
+<%= simple_form_for :payment_fractionated, url: instalment_client_payments_path, method: :post do |f|  %>
+  <div class="row-fluid">
+    <div class="span12">
+      <%= f.input :ids, :as => :hidden %>
+      <%= f.button :submit, "Cobrar cuotas", :class => 'btn btn-primary btn-small' %>
+    </div>
+  </div>
+  <table class="table table-condensed table-striped">
+    <thead>
+      <tr>
+        <th><input type="checkbox" class="checkbox-master"></th>
+        <th>Factura</th>
+        <th>Abonado</th>
+        <th>Plazo</th>
+        <th>Limite</th>
+        <th>Bonus</th>
+        <th>Total</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @instalments.each do |instalment| %>
+        <tr>
+          <td><%= check_box_tag 'instalment_id', instalment.id, false, class: "checkbox-slave" %></td>
+          <td><%= link_to instalment.bill.try(:bill_no), bill_path(instalment.bill) %></td>
+          <td><%= link_to instalment.instalment_plan.subscriber.to_label, subscriber_path(instalment.instalment_plan.subscriber) %></td>
+          <td><%= instalment.instalment %></td>
+          <td><%= instalment.payday_limit %></td>
+          <td><%= instalment.surcharge.round(2) %></td>
+          <td><%= instalment.amount.round(2) %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% end %>
+
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @instalments } %>

@@ -22,12 +22,12 @@ report.page.item(:loc_subscriber_code).value I18n.t("activerecord.report.subscri
 report.page.item(:loc_name).value I18n.t("activerecord.report.subscriber.name")
 report.page.item(:loc_fiscal_id).value I18n.t("activerecord.report.subscriber.fiscal_id")
 
-report.page.item(:name).value(@subscriber.try(:name))
+report.page.item(:name).value(@subscriber.try(:full_name))
 report.page.item(:subscriber_code).value(@subscriber.try(:subscriber_code))
 report.page.item(:fiscal_id).value(@subscriber.try(:fiscal_id))
 
 report.page.item(:direction).value I18n.t("activerecord.report.subscriber.direction")
-report.page.item(:address_subscriber).value("#{@subscriber.try(:street_type).try(:street_type_description)} #{@subscriber.try(:street_directory).try(:street_name)}, #{@subscriber.try(:street_number)}, #{@subscriber.try(:building)}, #{@subscriber.try(:floor_office)}")
+report.page.item(:address_subscriber).value("#{@subscriber.try(:street_directory).try(:street_type).try(:street_type_description)} #{@subscriber.try(:street_directory).try(:street_name)}, #{@subscriber.try(:street_number)}, #{@subscriber.try(:building)}, #{@subscriber.try(:floor_office)}")
 
 report.page.item(:loc_zipcode_id).value I18n.t("activerecord.report.subscriber.zipcode_id")
 report.page.item(:loc_town_id).value I18n.t("activerecord.report.subscriber.town_id")
@@ -35,9 +35,9 @@ report.page.item(:loc_province_id).value I18n.t("activerecord.report.subscriber.
 report.page.item(:loc_region_id).value I18n.t("activerecord.report.subscriber.region_id")
 
 report.page.item(:zipcode_id).value(@subscriber.try(:zipcode).try(:zipcode))
-report.page.item(:town_id).value(@subscriber.try(:town).try(:name))
-report.page.item(:province_id).value(@subscriber.try(:province).try(:name))
-report.page.item(:region_id).value(@subscriber.try(:region).try(:name))
+report.page.item(:town_id).value(@subscriber.try(:zipcode).try(:town).try(:name))
+report.page.item(:province_id).value(@subscriber.try(:zipcode).try(:town).try(:province).try(:name))
+report.page.item(:region_id).value(@subscriber.try(:zipcode).try(:town).try(:province).try(:region).try(:name))
 
 report.page.item(:loc_phone).value I18n.t("activerecord.report.subscriber.phone")
 report.page.item(:loc_fax).value I18n.t("activerecord.report.subscriber.fax")
@@ -78,7 +78,7 @@ report.page.item(:loc_first_installation_date).value I18n.t("activerecord.report
 report.page.item(:loc_caliber).value I18n.t("activerecord.report.meter.loc_caliber")
 
 report.page.item(:meter_code).value(@subscriber.try(:meter).try(:meter_code))
-report.page.item(:manufacturer).value(@subscriber.try(:meter).try(:manufacturer).try(:name))
+report.page.item(:manufacturer).value(@subscriber.try(:meter).try(:meter_model).try(:meter_brand).try(:manufacturer).try(:name))
 report.page.item(:caliber).value(@subscriber.try(:meter).try(:caliber).try(:caliber))
 report.page.item(:manufacturing_year).value(@subscriber.try(:meter).try(:manufacturing_year))
 report.page.item(:meter_model).value(@subscriber.try(:meter).try(:meter_model).try(:model))

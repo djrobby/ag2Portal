@@ -11,6 +11,7 @@ class Meter < ActiveRecord::Base
 
   has_many :meter_details, dependent: :destroy
   has_many :work_orders
+  has_many :readings
   has_one :subscriber
 
   has_paper_trail

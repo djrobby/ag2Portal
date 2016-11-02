@@ -1,0 +1,6 @@
+$('#pendings').html("<%= escape_javascript(render('bills_pendings')) %>");
+$('#charged').html("<%= escape_javascript(render('bills_charged')) %>");
+$('#cash').html("<%= escape_javascript(render('payments_cash')) %>");
+$('#banks').html("<%= escape_javascript(render('payments_bank')) %>");
+$('#others').html("<%= escape_javascript(render('payments_other')) %>");
+$('#fractionated').html("<%= escape_javascript(render('instalments')) %>");

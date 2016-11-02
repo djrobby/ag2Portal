@@ -52,6 +52,10 @@ class Client < ActiveRecord::Base
   after_create :should_create_shared_contact, if: :is_contact?
   after_update :should_update_shared_contact, if: :is_contact?
 
+  def active_bank_accounts?
+    !client_bank_accounts.where(ending_at: nil).blank?
+  end
+
   def fields_to_uppercase
     if !self.fiscal_id.blank?
       self[:fiscal_id].upcase!
@@ -67,6 +71,14 @@ class Client < ActiveRecord::Base
       "#{full_name_and_code}"
     else
       "#{full_code} #{company}"
+    end
+  end
+
+  def to_name
+    if !self.last_name.blank? && !self.first_name.blank?
+      "#{full_name}"
+    else
+      "#{company}"
     end
   end
 
@@ -199,11 +211,10 @@ class Client < ActiveRecord::Base
   end
 
   searchable do
-    text :client_code, :first_name, :last_name, :company, :fiscal_id, :street_name, :phone, :cellular, :email
+    text :client_code, :full_name, :company, :fiscal_id, :street_name, :phone, :cellular, :email
     string :client_code
     string :company
-    string :last_name
-    string :first_name
+    string :full_name
     string :fiscal_id
     integer :organization_id
   end

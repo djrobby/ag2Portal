@@ -351,3 +351,5 @@ es:
         loc_manufacturing_year: "Año de fabricación"
         loc_meter_model: "Modelo de contador"
         loc_first_installation_date: "Año de instalación"
+        #mj
+        billing_period_id: "Periodo de facturación"

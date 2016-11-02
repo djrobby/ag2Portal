@@ -51,6 +51,8 @@ Ag2Gest::Engine.routes.draw do
     match "bill_management", controller: "home", action: 'bill_management'
     #
     # Contracting request
+    match 'contracting_requests/update_bank_offices_from_bank/:id', :controller => 'contracting_requests', :action => 'update_bank_offices_from_bank'
+    match 'contracting_requests/update_subscriber_from_service_point/:id', :controller => 'contracting_requests', :action => 'update_subscriber_from_service_point'
     match 'contracting_requests/update_province_textfield_from_town/:id', :controller => 'contracting_requests', :action => 'update_province_textfield_from_town'
     match 'contracting_requests/:id/update_province_textfield_from_town/:id', :controller => 'contracting_requests', :action => 'update_province_textfield_from_town'
     match 'contracting_requests/update_province_textfield_from_zipcode/:id', :controller => 'contracting_requests', :action => 'update_province_textfield_from_zipcode'

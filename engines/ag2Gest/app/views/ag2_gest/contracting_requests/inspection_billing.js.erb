@@ -1,78 +1,75 @@
-alert("INSPECTION BILLING JS");
-
-var	form = $("#billing-form ");
+var form = $("#billing-form ");
 var content = '';
-		//content += '<h1>Initial Billing</h1>';
-		//content += `<tbody>`;
+    //content += '<h1>Initial Billing</h1>';
+    //content += `<tbody>`;
 
 <%# @bill.invoices.each_with_index do |invoice, index| %>
 <% if @contracting_request.try(:water_supply_contract).try(:bill).try(:invoices)  %>
-		<% @contracting_request.water_supply_contract.bill.invoices.each_with_index do |invoice, index| %>
+    <% @contracting_request.water_supply_contract.bill.invoices.each_with_index do |invoice, index| %>
 
-		content += '<h5><%= t("activerecord.attributes.contracting_request.invoice_number") %>: <%= invoice.try(:invoice_no) %></h5>';
-		content += '<h5><%= invoice.try(:company).try(:name) %> | <%= t("activerecord.attributes.contracting_request.fiscal_id") %> <%= invoice.try(:company).try(:fiscal_id) %></h5>';
-		content += '<h5><%= t("activerecord.attributes.contracting_request.payment_method") %> </h5>';
+    content += '<h5><%= t("activerecord.attributes.contracting_request.invoice_number") %>: <%= invoice.try(:invoice_no) %></h5>';
+    content += '<h5><%= invoice.try(:company).try(:name) %> | <%= t("activerecord.attributes.contracting_request.fiscal_id") %> <%= invoice.try(:company).try(:fiscal_id) %></h5>';
+    content += '<h5><%= t("activerecord.attributes.contracting_request.payment_method") %> </h5>';
 
-		content += `<table class="table table<%= index %>">`;
-		content += '<h1>Inspection Billing</h1>';
-		content += `<tbody>`;
+    content += `<table class="table table<%= index %>">`;
+    content += `<tbody>`;
 
-		//form.append('<h5><%= t("activerecord.attributes.contracting_request.invoice_number") %>: <%= invoice.try(:invoice_no) %></h5>');
-		//form.append('<h5><%= invoice.try(:company).try(:name) %> | <%= t("activerecord.attributes.contracting_request.fiscal_id") %> <%= invoice.try(:company).try(:fiscal_id) %></h5>');
-		//form.append('<h5><%= t("activerecord.attributes.contracting_request.payment_method") %> </h5>');
+    //form.append('<h5><%= t("activerecord.attributes.contracting_request.invoice_number") %>: <%= invoice.try(:invoice_no) %></h5>');
+    //form.append('<h5><%= invoice.try(:company).try(:name) %> | <%= t("activerecord.attributes.contracting_request.fiscal_id") %> <%= invoice.try(:company).try(:fiscal_id) %></h5>');
+    //form.append('<h5><%= t("activerecord.attributes.contracting_request.payment_method") %> </h5>');
 
-		/*form.append('<h3><%= invoice.company.name %></h3>');*/
-		content+= '<tr><th><%= t("activerecord.attributes.contracting_request.code") %></th><th><%= t("activerecord.attributes.contracting_request.quantity") %></th><th><%= t("activerecord.attributes.contracting_request.price") %></th><th><%= t("activerecord.attributes.contracting_request.amount") %></th><th><%= t("activerecord.attributes.contracting_request.tax") %></th><th><%= t("activerecord.attributes.contracting_request.discount") %></th><th><%= t("activerecord.attributes.contracting_request.discount_pct") %></th><th><%= t("activerecord.attributes.contracting_request.total") %></th></tr>';
-		
-		<% invoice.invoice_items.each_with_index do |item, index| %>
-			content+= '<tr class="in_item in_item<%= item.id %>">';
-			content+= '<td><%= item.code %></td>';
-			content+= '<td><input class="mid-text-field input-sm" name="invoice_item[<%= item.id %>]quantity" type="number" value="<%= item.quantity %>"></td>';
-			content+= '<td><input class="mid-text-field input-sm" name="invoice_item[<%= item.id %>]price" type="number" value="<%= item.price %>"></td>';
-			content+= '<td class="td-amount<%= item.id %>"><%= item.amount %></td>';
-			content+= '<td><%= escape_javascript(collection_select("invoice_item["+item.id.to_s+"]", :tax_type_id, TaxType.all, :id, :tax, {include_blank: true, selected: item.tax_type_id}, {:class=>"x-large-text-field"})) %></td>';
-			content+= '<td><input class="mid-text-field input-sm" name="invoice_item[<%= item.id %>]discount" type="number" value="<%= item.discount %>"></td>';
-			content+= '<td class="inp"><input class="mid-text-field input-sm" name="invoice_item[<%= item.id %>]discount_pct" type="number" value="<%= item.discount_pct %>"></td>';
-			content+= '<td class="total total<%= item.id %>"><%= item.total %></td>';
-			content+= '</tr>';
+    /*form.append('<h3><%= invoice.company.name %></h3>');*/
+    content+= '<tr><th><%= t("activerecord.attributes.contracting_request.code") %></th><th><%= t("activerecord.attributes.contracting_request.quantity") %></th><th><%= t("activerecord.attributes.contracting_request.price") %></th><th><%= t("activerecord.attributes.contracting_request.amount") %></th><th><%= t("activerecord.attributes.contracting_request.tax") %></th><th><%= t("activerecord.attributes.contracting_request.discount") %></th><th><%= t("activerecord.attributes.contracting_request.discount_pct") %></th><th><%= t("activerecord.attributes.contracting_request.total") %></th></tr>';
 
-		<% end %> /*End invoice.invoice_items*/
+    <% invoice.invoice_items.each_with_index do |item, index| %>
+      content+= '<tr class="in_item in_item<%= item.id %>">';
+      content+= '<td><%= item.code %></td>';
+      content+= '<td><input class="mid-text-field input-sm" name="invoice_item[<%= item.id %>]quantity" type="number" value="<%= item.quantity %>"></td>';
+      content+= '<td><input class="mid-text-field input-sm" name="invoice_item[<%= item.id %>]price" type="number" value="<%= item.price %>"></td>';
+      content+= '<td class="td-amount<%= item.id %>"><%= item.amount %></td>';
+      content+= '<td><%= escape_javascript(collection_select("invoice_item["+item.id.to_s+"]", :tax_type_id, TaxType.all, :id, :tax, {include_blank: true, selected: item.tax_type_id}, {:class=>"x-large-text-field"})) %></td>';
+      content+= '<td><input class="mid-text-field input-sm" name="invoice_item[<%= item.id %>]discount" type="number" value="<%= item.discount %>"></td>';
+      content+= '<td class="inp"><input class="mid-text-field input-sm" name="invoice_item[<%= item.id %>]discount_pct" type="number" value="<%= item.discount_pct %>"></td>';
+      content+= '<td class="total total<%= item.id %>"><%= item.total %></td>';
+      content+= '</tr>';
 
-			/*Add Subtotal etc dinamyc*/
-			content+= '<tr class="subtotal">';
-			content+= '<td colspan="6" class="no-boder"></td>';
-			content+= '<td class="subtotal black-border"><b><%= t("activerecord.attributes.contracting_request.subtotal").upcase %></b></td>';
-			content+=	'<td class="subtotal<%= index %> black-border"><%= invoice.subtotal %></td>';
-			content+=	'</tr>';
-			
-		<% invoice.tax_breakdown.each do |tax| %>
-		
-			content+=	'<tr class="breakdown">';
-			content+=	'<td colspan="3" class="no-boder"></td>';
-			content+=	'<td class="no-boder" colspan="2"><b><%= t("activerecord.attributes.contracting_request.base_imp") %>: </b> <%= tax[1] %></td>';
-			content+=	`<td class="no-boder"><%= "#{pluralize(tax[3], 'artículo')}"  %></td>`;
-			content+=	'<td><b>IVA (<%= tax[0] %>%)</b></td>';
-			content+=	'<td><%= tax[2] %></td>';
-			content+=	'</tr>';
-		
-		<% end %>
+    <% end %> /*End invoice.invoice_items*/
 
-		content+=	'<tr>';
-		content+= '<td colspan="6" class="black-border"></td>';
-		content+= '<td class="black-border"><b>TOTAL</b></td>';
-		content+=	'<td class="black-border total_invoice"><%= invoice.total %></td>';
-		content+=	'</tr>';
+      /*Add Subtotal etc dinamyc*/
+      content+= '<tr class="subtotal">';
+      content+= '<td colspan="6" class="no-boder"></td>';
+      content+= '<td class="subtotal black-border"><b><%= t("activerecord.attributes.contracting_request.subtotal").upcase %></b></td>';
+      content+= '<td class="subtotal<%= index %> black-border"><%= invoice.subtotal %></td>';
+      content+= '</tr>';
 
-		/*End Subtotal dinamyc*/
+    <% invoice.tax_breakdown.each do |tax| %>
 
-		content += "</tbody>";
-		content += "</table>";
+      content+= '<tr class="breakdown">';
+      content+= '<td colspan="3" class="no-boder"></td>';
+      content+= '<td class="no-boder" colspan="2"><b><%= t("activerecord.attributes.contracting_request.base_imp") %>: </b> <%= tax[1] %></td>';
+      content+= `<td class="no-boder"><%= "#{pluralize(tax[3], 'artículo')}"  %></td>`;
+      content+= '<td><b>IVA (<%= tax[0] %>%)</b></td>';
+      content+= '<td><%= tax[2] %></td>';
+      content+= '</tr>';
 
-		content += '<hr style="border-width: 2px; border-top: 1px solid #000000;">';
+    <% end %>
 
-		form.append(content);
+    content+= '<tr>';
+    content+= '<td colspan="6" class="black-border"></td>';
+    content+= '<td class="black-border"><b>TOTAL</b></td>';
+    content+= '<td class="black-border total_invoice"><%= invoice.total %></td>';
+    content+= '</tr>';
 
-	<% end %> /*End Bill.invoices*/
+    /*End Subtotal dinamyc*/
+
+    content += "</tbody>";
+    content += "</table>";
+
+    content += '<hr style="border-width: 2px; border-top: 1px solid #000000;">';
+
+    form.append(content);
+
+  <% end %> /*End Bill.invoices*/
 <% end %> /*End if*/
 $("#billing-modal").modal("show");
 
@@ -87,25 +84,25 @@ var changeState = function(current, next){
   next.removeAttr('disabled').trigger('click');
 };
 var currentStepWizard = $('a[href="#step-2"]'),
-		nextStepWizard = $('a[href="#step-3"]');
+    nextStepWizard = $('a[href="#step-3"]');
 changeState(currentStepWizard,nextStepWizard);
 
 
 $(document).ready(function() {
-	
-	$("#billing-form input, #billing-form select").change(function() {
-    
+
+  $("#billing-form input, #billing-form select").change(function() {
+
 
     /*$('td select').get(0).value; option checkbox*/
     /*this - devuelve elemento atributo name invoice_item[47]quantity
     this.value -> valor*/
 
     /*Get id element*/
-    var _id = this.name.substring(this.name.indexOf("[")+1, this.name.indexOf("]")); //Obtengo el número de name 
+    var _id = this.name.substring(this.name.indexOf("[")+1, this.name.indexOf("]")); //Obtengo el número de name
 
     /*Saber que tipo de input ha cambiado*/
     var str = this.name.substring(this.name.length-3 ,this.name.length);
-    
+
     /*Valor cambiado*/
     var value = this.value;
 
@@ -123,11 +120,11 @@ $(document).ready(function() {
 
     var index_table = $(`.in_item${_id} input`).closest("table").attr('class').substring(11, ($(`.in_item${_id} input`).closest("table").attr('class').length)); //Get number table Cambiada
     var invoice = "." + $(`.in_item${_id} input`).closest("table").attr('class').substring(6, ($(`.in_item${_id} input`).closest("table").attr('class').length)); //Get class identifier table Cambiada
-    
+
 
     if (str == "unt"){ //discount
       _discount = value;
-    } 
+    }
     if (str == "pct"){ //discount_pct
       _discountpct = value;
     }
@@ -168,7 +165,7 @@ $(document).ready(function() {
     $(`.td-amount${_id}`).get(0).innerHTML = amount.toFixed(2);
 
 
-    
+
     /*SUBTOTAL*/
     /*Get Table*/
     //$(`.in_item${_id} input`).closest("table"); //Get element table parent equivalente a INVOICE
@@ -180,7 +177,7 @@ $(document).ready(function() {
       subtotal = subtotal + parseFloat($(invoice).find('td.total')[k].textContent);
     }
 
-    
+
 
     $(`.subtotal${index_table}`).get(0).innerHTML = subtotal.toFixed(2);
     /*END SUBTOTAL*/
@@ -208,8 +205,8 @@ $(document).ready(function() {
     //Todos los impuestos posibles que hay
     var uniqueTaxes = [];
     $.each(taxes, function(i, el){
-      if($.inArray(el, uniqueTaxes) === -1) uniqueTaxes.push(el); //Si valor -1 (No encontrado) -> Push 
-    }); 
+      if($.inArray(el, uniqueTaxes) === -1) uniqueTaxes.push(el); //Si valor -1 (No encontrado) -> Push
+    });
 
     var array_taxes = [];
     for (var z=0; z < uniqueTaxes.length; z++) {
@@ -222,18 +219,18 @@ $(document).ready(function() {
           total_tax += parseFloat(taxes_value[zx].base_imp);
           articulo++;
         }
-      } 
+      }
 
       if (articulo > 1) {
         str_item = "<%= t('activerecord.attributes.contracting_request.items') %>";
       }
-      /*Hacer porcentaje*/ 
-      
+      /*Hacer porcentaje*/
+
       var baseim = total_tax; //BaseImponible
 
       total_tax = ((total_tax * parseFloat(uniqueTaxes[z])) / 100).toFixed(4); //Percentage Calculated for each Group
 
-      array_taxes[z] = {tax: uniqueTaxes[z], percentage_total: total_tax, base_imp: baseim, item: {quantity: articulo, item: str_item }   }; 
+      array_taxes[z] = {tax: uniqueTaxes[z], percentage_total: total_tax, base_imp: baseim, item: {quantity: articulo, item: str_item }   };
 
     }
 
@@ -245,7 +242,7 @@ $(document).ready(function() {
       if (isNaN(array_taxes[taxes].percentage_total) ){
         array_taxes[taxes].percentage_total = 0;
       }
-      
+
       if (array_taxes[taxes].tax == ""){
         array_taxes[taxes].tax = 0;
       }

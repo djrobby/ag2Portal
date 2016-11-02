@@ -1,7 +1,7 @@
 <script type="text/javascript">
-  
-  var _thisForm = ''; //Inicia variable String empty y false 
-  var changing = false; 
+
+  var _thisForm = ''; //Inicia variable String empty y false
+  var changing = false;
 
   $(document).ready(function () {
     //Select
@@ -16,7 +16,7 @@
     if (changing == false) {
       $("#div_table").html("");
       $("#loader").show();
-    }    
+    }
   }).ajaxSuccess(function(){
     // hide loader on success Ya ha cargado los objects
     $("#loader").hide();
@@ -54,11 +54,11 @@
   <%= link_to ag2_gest.subscribers_path, title: I18n.t(:refresh), class: "icon-refresh-link", remote: true do %> <i class="icon-refresh"></i> <% end %>
 
   <%= form_tag "subscribers", :method => 'get', :remote => true do %>
-    
+
     <!-- Name -->
     <%= label_tag "Nombre", nil, :class => 'form-label' %>
     <%= text_field_tag :search, params[:search], :class => 'x-large-text-field shrinked' %>
-    
+
 
     <!-- Office -->
     <%#= label_tag "Oficina", nil, :class => 'form-label' %>
@@ -75,14 +75,15 @@
     <%# else %>
       <%#= select_tag "sub_town", options_from_collection_for_select(@offices, "id", "name"), :prompt => "", :class => 'sel2 x-large-text-field shrinked' %>
     <%# end %>
-    
+
     <!-- Fecha de Alta y de baja ¿?¿ -->
-     
+
     <!-- Submit -->
     <%= submit_tag I18n.t(:apply_filter_button), :class => 'btn btn-primary', :id => 'submit_btn' %>
     <!-- Remove filter -->
     <button id="removeFilter" type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><%= t :clear_filter_button %></button>
   <% end %>
+
 
   <!-- Back -->
   <%= link_to t("ag2_gest.subscribers.index.back_to_root"), ag2_gest.root_path %>
