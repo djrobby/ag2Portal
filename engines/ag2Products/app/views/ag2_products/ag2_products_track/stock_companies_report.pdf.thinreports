@@ -28,17 +28,20 @@ end
 #
 report.layout.config.list(:default) do |c|
 	# Define the variables used in list
-	c.use_stores page_rows: 0, p_current: 0, p_average_price: 0, p_calc: 0
+	c.use_stores page_rows: 0, p_current: 0, p_average_price: 0, p_calc: 0, f_current: 0, f_calc: 0, f_average_price: 0
 
 	# On list page footer insertion
 	c.events.on :page_footer_insert do |e|
 		# Display page sutotals
 		e.section.item(:sum_rows_title).value(I18n.t("ag2_products.ag2_products_track.stock_report.sum_rows_title"))
 		e.section.item(:sum_rows).value(e.store.page_rows)
-		e.section.item(:full_total_c).value I18n.t("ag2_products.ag2_products_track.every_report.full_total")
+		e.section.item(:full_total_c).value I18n.t("ag2_products.ag2_products_track.every_report.cumulative_total")
 		e.section.item(:total_current).value(number_with_precision(e.store.p_current, precision: 4))
 		e.section.item(:total_average_price).value(number_with_precision(e.store.p_average_price, precision: 4))
 		e.section.item(:total_calc).value(number_with_precision(e.store.p_calc, precision: 4))
+		e.section.item(:family_current).value(number_with_precision(e.store.f_current, precision: 4))
+		e.section.item(:family_average_price).value(number_with_precision(e.store.f_average_price, precision: 4))
+		e.section.item(:family_calc).value(number_with_precision(e.store.f_calc, precision: 4))
 		# Initialize subtotals to 0
 		#e.store.page_rows = 0
 	end
@@ -91,6 +94,12 @@ family_id = @stocks_report.first.product_family_id
 		report.page.list(:default).page_break
 		report.page.list(:default) do |list|
 			list.store.page_rows = 0
+			list.store.p_current = 0
+			list.store.p_calc = 0
+			list.store.f_current = 0
+			list.store.f_calc = 0
+			list.store.p_average_price = 0
+			list.store.f_average_price = 0
 		end
 		store_id = i.store_id
 	end
@@ -98,6 +107,9 @@ family_id = @stocks_report.first.product_family_id
 		report.page.list(:default).page_break
 		report.page.list(:default) do |list|
 			list.store.page_rows = 0
+			list.store.f_current = 0
+			list.store.f_calc = 0	
+			list.store.f_average_price = 0
 		end
 		family_id = i.product_family_id
 	end
@@ -129,8 +141,11 @@ family_id = @stocks_report.first.product_family_id
 	# Store page subtotals
   report.page.list(:default) do |list|
 		list.store.page_rows += 1
-		a = list.store.p_current += i.current
-		b = list.store.p_calc += pmpstock
-		list.store.p_average_price = (b / a)	
+		list.store.p_current += i.current
+		list.store.p_calc += i.current_value
+		list.store.p_average_price += i.average_price	
+		list.store.f_current += i.current
+		list.store.f_calc += i.current_value	
+		list.store.f_average_price += i.average_price
 	end
 end
