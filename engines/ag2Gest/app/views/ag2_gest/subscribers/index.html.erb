@@ -22,16 +22,16 @@
         <%= label_tag I18n.t("ag2_gest.subscribers.index.service_point"), nil, :class => 'form-label' %>
         <%= select_tag "ServicePoint", options_from_collection_for_select(@service_points, "id", "to_full_label"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
         <!-- Meter -->
-        <%= label_tag I18n.t("ag2_gest.subscribers.index.meter"), nil, :class => 'form-label' %>
+        <%= label_tag I18n.t("ag2_gest.subscribers.index.meter"), nil, :class => 'form-label-under-sel2' %>
         <%= select_tag "Meter", options_from_collection_for_select(@meters, "id", "to_label"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
         <!-- BillingFrequency -->
-        <%= label_tag I18n.t("ag2_gest.subscribers.index.billing_frequency"), nil, :class => 'form-label' %>
+        <%= label_tag I18n.t("ag2_gest.subscribers.index.billing_frequency"), nil, :class => 'form-label-under-sel2' %>
         <%= select_tag "BillingFrequency", options_from_collection_for_select(BillingFrequency.order(:name), "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
         <!-- TariffType -->
-        <%= label_tag I18n.t("ag2_gest.subscribers.index.tariff_type"), nil, :class => 'form-label' %>
+        <%= label_tag I18n.t("ag2_gest.subscribers.index.tariff_type"), nil, :class => 'form-label-under-sel2' %>
         <%= select_tag "TariffType", options_from_collection_for_select(TariffType.order(:name), "id", "to_label"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
         <!-- Others -->
-        <%= label_tag I18n.t("ag2_gest.subscribers.index.label_others"), nil, :class => 'form-label' %>
+        <%= label_tag I18n.t("ag2_gest.subscribers.index.label_others"), nil, :class => 'form-label-under-sel2' %>
         <%= text_field_tag :search, params[:search], :class => 'x-large-text-field shrinked' %>
 
         <!-- Submit -->

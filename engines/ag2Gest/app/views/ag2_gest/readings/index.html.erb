@@ -89,7 +89,7 @@
         <%= label_tag I18n.t("ag2_gest.readings.index.label_to"), nil, :class => 'form-label' %>
         <%= text_field_tag "To", params[:date], :class =>  'x-large-text-field shrinked date_picker' %>
         <!-- Period -->
-        <%= label_tag I18n.t("ag2_gest.readings.index.label_periods"), nil, :class => 'form-label-under-sel2' %>
+        <%= label_tag I18n.t("ag2_gest.readings.index.label_periods"), nil, :class => 'form-label' %>
         <%= select_tag "Period", options_from_collection_for_select(@periods, "id", "to_label"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
         <!-- Route -->
         <%= label_tag I18n.t("ag2_gest.readings.index.label_routes"), nil, :class => 'form-label-under-sel2' %>

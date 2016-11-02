@@ -759,6 +759,8 @@ module Ag2Products
     def receive_meters
       @item = ReceiptNoteItem.find(params[:id])
       @receipt_note = @item.receipt_note
+      @meter_models = meter_models_dropdown
+      @calibers = calibers_dropdown
 
       respond_to do |format|
         format.html # receive_meters.html.erb
@@ -1019,6 +1021,14 @@ module Ag2Products
 
     def products_dropdown
       session[:organization] != '0' ? Product.where(organization_id: session[:organization].to_i).order(:product_code) : Product.order(:product_code)
+    end
+
+    def meter_models_dropdown
+      MeterModel.all
+    end
+
+    def calibers_dropdown
+      Caliber.by_caliber
     end
 
     def orders_array(_orders)

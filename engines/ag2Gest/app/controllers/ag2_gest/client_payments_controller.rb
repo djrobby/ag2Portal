@@ -47,7 +47,7 @@ module Ag2Gest
       receipt_no = params[:client_payment_bank][:receipt_no]
       invoice_status = InvoiceStatus::BANK
       invoices.each do |i|
-        client_payment = ClientPayment.new(receipt_no: receipt_no, payment_type: 2, bill_id: i.bill_id, invoice_id: i.id,
+        client_payment = ClientPayment.new(receipt_no: "000-0000-0000", payment_type: 2, bill_id: i.bill_id, invoice_id: i.id,
                              payment_method_id: nil, client_id: i.bill.subscriber.client_id, subscriber_id: i.bill.subscriber_id,
                              payment_date: Time.now, confirmation_date: nil, amount: i.debt, instalment_id: nil,
                              client_bank_account_id: nil, charge_account_id: i.charge_account_id)

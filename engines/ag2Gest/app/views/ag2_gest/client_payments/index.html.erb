@@ -1,3 +1,18 @@
+<style>
+  .accordion{
+    background-color: white !important;
+  }
+  .tab-pane{
+    width: 95%;
+    padding: 15px;
+  }
+  #pendings, #charged{
+    background-color: #FDE3A7;
+  }
+  #cash, #banks, #others ,#fractionated{
+    background-color: #FFCCBC;
+  }
+</style>
 <script>
 $(document).ready(function () {
   var _thisForm = '';
@@ -157,11 +172,11 @@ $(document).ready(function () {
           <%= select_tag "client", options_from_collection_for_select(@clients, "id", "to_label"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
 
           <!-- Subscriber -->
-          <%= label_tag I18n.t("ag2_gest.contracting_requests.index.label_subscriber"), nil, :class => 'form-label' %>
+          <%= label_tag I18n.t("ag2_gest.contracting_requests.index.label_subscriber"), nil, :class => 'form-label-under-sel2' %>
           <%= select_tag "subscriber", options_from_collection_for_select(@subscribers, "id", "to_label"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
 
           <!-- Entity -->
-          <%= label_tag I18n.t("ag2_gest.contracting_requests.index.label_entity"), nil, :class => 'form-label' %>
+          <%= label_tag I18n.t("ag2_gest.contracting_requests.index.label_entity"), nil, :class => 'form-label-under-sel2' %>
           <%= select_tag "entity", options_from_collection_for_select(@entities, "id", "to_label"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
 
           <!-- Project -->
@@ -169,17 +184,16 @@ $(document).ready(function () {
           <%= select_tag "project", options_from_collection_for_select(@projects, "id", "project_code"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
 
           <!-- BankAccount -->
-          <%= label_tag "Cuenta Bancaria", nil, :class => 'form-label-under-sel2' %>
+          <%= label_tag I18n.t("ag2_gest.contracting_requests.index.label_bank_account"), nil, :class => 'form-label-under-sel2' %>
           <%= select_tag "bank_account", options_for_select([ "SI", "NO" ]), include_blank: true, :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
 
           <!-- Period -->
-          <%= label_tag "Periodo", nil, :class => 'form-label-under-sel2' %>
+          <%= label_tag I18n.t("ag2_gest.contracting_requests.index.label_billing_period"), nil, :class => 'form-label-under-sel2' %>
           <%= select_tag "billing_period", options_from_collection_for_select(@billing_periods, "id", "period"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
 
           <!-- Ruta -->
-          <%= label_tag "Ruta", nil, :class => 'form-label-under-sel2' %>
-          <%= select_tag "reading_routes", options_from_collection_for_select(@reading_routes, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
-
+          <%#= label_tag "Ruta", nil, :class => 'form-label-under-sel2' %>
+          <%#= select_tag "reading_routes", options_from_collection_for_select(@reading_routes, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
 
           <br /><br />
           <!-- Submit -->

@@ -139,7 +139,7 @@
     <%= label_tag "Marca/Modelo", nil, :class => 'form-label' %>
     <%= select_tag "meter_model_id", options_from_collection_for_select(MeterModel.all, "id", "full_name"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
 
-    <%= label_tag "Calibre", nil, :class => 'form-label' %>
+    <%= label_tag "Calibre", nil, :class => 'form-label-under-sel2' %>
     <%= select_tag "caliber_id", options_from_collection_for_select(Caliber.all, "id", "caliber"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
 
     <br><br>

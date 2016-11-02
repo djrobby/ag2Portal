@@ -72,10 +72,10 @@
         <!-- Search form -->
         <%= form_tag "water_supply_contracts", :method => 'get', :remote => true do %>
         <!-- Subscriber -->
-        <%= label_tag I18n.t("activerecord.attributes.water_supply_contract.subscriber_id"), nil, :class => 'form-label' %>
+        <%= label_tag I18n.t("activerecord.attributes.water_supply_contract.subscriber_id"), nil, :class => 'form-label-under-sel2' %>
         <%= select_tag "Subscriber", options_from_collection_for_select(@subscribers, "id", "to_label"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
         <!-- Reading Route -->
-        <%= label_tag I18n.t("activerecord.attributes.water_supply_contract.reading_route_id"), nil, :class => 'form-label' %>
+        <%= label_tag I18n.t("activerecord.attributes.water_supply_contract.reading_route_id"), nil, :class => 'form-label-under-sel2' %>
         <%= select_tag "ReadingRoute", options_from_collection_for_select(@reading_routes, "id", "to_label"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
         <!-- Meter -->
         <%= label_tag I18n.t("activerecord.attributes.water_supply_contract.meter_id"), nil, :class => 'form-label-under-sel2' %>

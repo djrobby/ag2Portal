@@ -1,10 +1,24 @@
 <script>
+  $(document).ready(function() {
+    $('.sel2').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      dropdownCssClass: 'shrinked',
+      dropdownAutoWidth: true
+    });
+    $('.ndate_picker').datepicker({
+      format : 'dd/mm/yyyy',
+      weekStart : 1
+    }).on('changeDate', function(e){
+      $('.ndate_picker').datepicker('hide');
+    });
+  }); 
 </script>
 
 <%= render '/layouts/ag2_products/receivemetersbreadcrumb' %>
 
 <h3><%=t '.title' %></h3>
 
+<!-- Receipt note data -->
 <div class="row-fluid">
 	<div class="span12 track-box">
   <table class="table odd_even_table">
@@ -26,6 +40,14 @@
         <td><%= @item.product.full_name %></td>
         <td><%=t 'activerecord.attributes.receipt_note_item.quantity' %>:</td>
         <td class="highlighted bolded"><%= number_with_precision(@item.quantity, precision: 4, delimiter: I18n.locale == :es ? "." : ",") unless @item.quantity.blank? %></td>
+      </tr>
+      <tr>
+        <!-- Model -->
+        <td><%=t 'activerecord.models.meter_model.one' %>:</td>
+        <td><%= select_tag "Model", options_from_collection_for_select(@meter_models, "id", "full_name"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %></td>
+        <!-- Caliber -->
+        <td><%=t 'activerecord.models.caliber.one' %>:</td>
+        <td><%= select_tag "Caliber", options_from_collection_for_select(@calibers, "id", "to_label"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %></td>
       </tr>
     </tbody>
   </table>

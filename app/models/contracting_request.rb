@@ -125,7 +125,7 @@ class ContractingRequest < ActiveRecord::Base
 
   # Preformated information
   def client_info
-    "#{client.full_name} #{client.fiscal_id}" if client
+    "#{client.to_name} #{client.fiscal_id}" if client
   end
 
   def full_name
