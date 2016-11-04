@@ -15,7 +15,6 @@
 <table class="table table-condensed table-striped">
   <thead>
     <tr>
-      <th><%= sortable "id", t('activerecord.attributes.tariff_scheme.id') %></th>
       <th><%= sortable "name", t('activerecord.attributes.tariff_scheme.name') %></th>
       <th><%= sortable "project", t('activerecord.attributes.tariff_scheme.project_id') %></th>
       <th><%= sortable "office", t('activerecord.attributes.tariff_scheme.office') %></th>
@@ -27,20 +26,15 @@
   <tbody>
     <% @tariff_schemes.each do |tscheme| %>
       <tr>
-        <td><%= link_to tscheme.id, tariff_scheme_path(tscheme) %></td>
-        <td><%= tscheme.try(:name) %></td>
+        <td><%= link_to tscheme.try(:name), tariff_scheme_path(tscheme) %></td>
         <td><%= tscheme.try(:project).try(:name)  %></td>
         <td><%= tscheme.try(:project).try(:office).try(:name) %></td>
         <td><%= tscheme.try(:project).try(:company).try(:name) %></td>
         <td class="center"><%=l tscheme.try(:starting_at) unless tscheme.try(:starting_at).blank? %></td>
         <td class="center"><%=l tscheme.try(:ending_at) unless tscheme.try(:ending_at).blank? %></td>
         <td>
-          <%= link_to simple_edit_tariff_scheme_path(tscheme), class: "btn btn-mini" do%>
-            <i class="icon-edit"></i>
-          <% end %>
-          <%= link_to tscheme, class: "btn btn-mini", method: :delete, data: { confirm: 'Are you sure?' } do %>
-            <i class="icon-trash"></i>
-          <% end %>
+          <%= render :partial => '/layouts/crud/edit', :locals => { :model => TariffScheme, :path => edit_tariff_scheme_path(tscheme) } %>
+          <%= render :partial => '/layouts/crud/delete', :locals => { :model => TariffScheme, :path => tscheme, :msg => t("activerecord.models.meter.one"), :txt => tscheme.to_label } %>
         </td>
       </tr>
     <% end %>
@@ -48,9 +42,3 @@
 </table>
 
 <%= render :partial => '/layouts/pagination', :locals => { :ivar => @tariff_schemes } %>
-<%= render :partial => '/layouts/crud/new', :locals => { :model => TariffScheme, :path => new_tariff_scheme_path, :txt => t("ag2_gest.tariff_schemes.index.btn_new") } %>
-<!-- Button to trigger modal -->
-<a href="#new-tariff-pct" role="button" class="btn btn-primary" data-toggle="modal">Nueva esquema a partir de otro</a>
-<br>
-<br>
-<%= link_to t("ag2_gest.tariff_schemes.index.back_to_management"), ag2_gest.tariff_management_path %>

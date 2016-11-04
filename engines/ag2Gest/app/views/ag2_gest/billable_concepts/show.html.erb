@@ -1,13 +1,14 @@
 <%= render '/layouts/ag2_gest/billableconceptsbreadcrumb' %>
 
-<h3><%= @billable_concept.try(:name) %></h3>
+<!-- <h3><%= @billable_concept.try(:name) %></h3> -->
+<h3><%= t('.title') %></h3>
 <table class="table">
   <tbody>
     <tr>
       <td><%= t('activerecord.attributes.billable_concept.id') %>:</td>
       <td><%= @billable_concept.try(:id) %></td>
       <td><%= t('activerecord.attributes.billable_concept.type') %>:</td>
-      <td><%= @billable_concept.try(:document) %></td>
+      <td><%= @billable_concept.try(:document) == "SUMINISTRO" ? "FACTURA AGUA" : "FACTURA CONTRATACIÓN" %></td>
     </tr>
     <tr>
       <td><%= t('activerecord.attributes.billable_concept.name') %>:</td>

@@ -14,15 +14,13 @@
 <table class="table table-condensed table-striped">
   <thead>
     <tr>
-      <th><%= sortable "id", "Id" %></th>
       <th><%= sortable "name", "Nombre" %></th>
     </tr>
   </thead>
   <tbody>
     <% @meter_owners.each do |met_owner| %>
     <tr>
-      <td><%= link_to met_owner.try(:id), meter_owner_path(met_owner) %></td>
-      <td><%= met_owner.try(:name) %></td>
+      <td><%= link_to met_owner.try(:name), meter_owner_path(met_owner) %></td>
       <td>
         <%= link_to edit_meter_owner_path(met_owner), class: "btn btn-mini" do %>
           <i class="icon-edit"></i>

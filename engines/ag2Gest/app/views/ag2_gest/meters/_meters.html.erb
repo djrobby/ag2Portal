@@ -19,7 +19,6 @@
 <table class="table table-condensed table-striped">
   <thead>
     <tr>
-      <th><%= t('activerecord.attributes.meter.id') %></th>
       <th><%= sortable "meter_code", t('activerecord.attributes.meter.meter_code') %></th>
       <th class="center"><%= sortable "meter_model_id", t('activerecord.attributes.meter.meter_model_id') %></th>
       <th class="center"><%= sortable "caliber_id", t('activerecord.attributes.meter.caliber_id') %></th>
@@ -31,20 +30,15 @@
   <tbody>
     <% @meters.each do |meter| %>
     <tr>
-      <td><%= link_to meter.try(:id), ag2_gest.meter_path(meter) %></td>
-      <td><%= meter.try(:meter_code) %></td>
+      <td><%= link_to meter.try(:meter_code), ag2_gest.meter_path(meter) %></td>
       <td class="center"><%= meter.try(:meter_model).try(:full_name) %></td>
       <td class="center"><%= meter.try(:caliber).try(:caliber) %></td>
       <td class="center"><%= meter.try(:manufacturing_year) %></td>
       <td class="center"><%=l meter.try(:expiry_date) unless meter.try(:expiry_date).blank?  %></td>
       <td class="center"><%=l meter.try(:purchase_date) unless meter.try(:purchase_date).blank? %></td>
-      <td class="a_inline">
-        <%= link_to edit_meter_path(meter), class: "btn btn-mini" do %>
-          <i class="icon-edit"></i>
-        <% end %>
-        <%= link_to meter, class: "btn btn-mini", method: :delete, data: { confirm: 'Are you sure?' } do %>
-          <i class="icon-trash"></i>
-        <% end %>
+      <td>
+        <%= render :partial => '/layouts/crud/edit', :locals => { :model => Meter, :path => edit_meter_path(meter) } %>
+        <%= render :partial => '/layouts/crud/delete', :locals => { :model => Meter, :path => meter, :msg => t("activerecord.models.meter.one"), :txt => meter.full_name } %>
       </td>
     </tr>
    <% end %>

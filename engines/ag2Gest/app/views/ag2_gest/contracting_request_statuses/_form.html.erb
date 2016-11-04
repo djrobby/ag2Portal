@@ -14,17 +14,18 @@
 </script>
 
 <%= simple_form_for @contracting_request_status, :html => {:class => 'form-vertical well' } do |f| %>
+
   <%= f.error_notification %>
   <%= display_base_errors resource %>
 
   <div class="row-fluid">
     <div class="span6">
-      <%= f.input :name, :required => true, :autofocus => true, :input_html => { :class => 'x-large-text-field'}, :label_html => { :class => 'form-label' } %>
+      <%= f.input :name, :required => true, :input_html => { :class => 'x-large-text-field'}, :label_html => { :class => 'form-label' } %>
     </div>
     <div class="span6">
-      <%= f.input :requires_work_order, :autofocus => true, :input_html => { :class => 'x-large-text-field'}, :label_html => { :class => 'form-label' } %>
+      <%= f.input :requires_work_order, :input_html => { :class => 'x-large-text-field'}, :label_html => { :class => 'form-label' } %>
     </div>
   </div>
-    
+
   <%= f.button :submit, :class => 'btn-primary' %>
 <% end %>

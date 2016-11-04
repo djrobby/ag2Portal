@@ -10,25 +10,56 @@ module Ag2Gest
     # GET /meters
     # GET /meters.json
     def index
-
       manage_filter_state
+
+      code = params[:Code]
+      model = params[:Model]
+      brand = params[:Brand]
+      caliber = params[:Caliber]
+      from = params[:From]
+      to = params[:To]
+      # OCO
+      init_oco if !session[:organization]
+
+      # If inverse no search is required
+      meter_code = !meter_code.blank? && meter_code[0] == '%' ? inverse_no_search(meter_code) : meter_code
+
       @search = Meter.search do
         if session[:office] != '0'
           with :office_id, session[:office]
         elsif session[:organization] != '0'
           with :organization_id, session[:organization]
         end
-        if !params[:meter_code].blank?
-          fulltext params[:meter_code]
+        if !code.blank?
+          if code.class == Array
+            with :meter_code, code
+          else
+            with(:meter_code).starting_with(code)
+          end
         end
-        if !params[:meter_model_id].blank?
-          with :meter_model_id, params[:meter_model_id]
+        if !model.blank?
+          with :meter_model_id, model
         end
-        if !params[:caliber_id].blank?
-          with :caliber_id, params[:caliber_id]
+        if !brand.blank?
+          with :meter_brand_id, brand
+        end
+        if !caliber.blank?
+          with :caliber_id, caliber
+        end
+        if !from.blank?
+          any_of do
+            with(:purchase_date).greater_than(from)
+            with :purchase_date, from
+          end
+        end
+        if !to.blank?
+          any_of do
+            with(:purchase_date).less_than(to)
+            with :purchase_date, to
+          end
         end
         order_by sort_column, sort_direction
-        paginate :page => params[:page] || 1, :per_page => 10
+        paginate :page => params[:page] || 1, :per_page => per_page || 10
       end
 
       @meters = @search.results
@@ -126,8 +157,58 @@ module Ag2Gest
       Meter.column_names.include?(params[:sort]) ? params[:sort] : "meter_code"
     end
 
+    def inverse_no_search(no)
+      _numbers = []
+      # Add numbers found
+      Meter.where('meter_code LIKE ?', "#{no}").each do |i|
+        _numbers = _numbers << i.meter_code
+      end
+      _numbers = _numbers.blank? ? no : _numbers
+    end
+
     # Keeps filter state
     def manage_filter_state
+      # Code
+      if params[:Code]
+        session[:Code] = params[:Code]
+      elsif session[:Code]
+        params[:Code] = session[:Code]
+      end
+
+      # Model
+      if params[:Model]
+        session[:Model] = params[:Model]
+      elsif session[:Model]
+        params[:Model] = session[:Model]
+      end
+
+      # Brand
+      if params[:Brand]
+        session[:Brand] = params[:Brand]
+      elsif session[:Brand]
+        params[:Brand] = session[:Brand]
+      end
+
+      # Caliber
+      if params[:Caliber]
+        session[:Caliber] = params[:Caliber]
+      elsif session[:Caliber]
+        params[:Caliber] = session[:Caliber]
+      end
+
+      # From
+      if params[:From]
+        session[:From] = params[:From]
+      elsif session[:From]
+        params[:From] = session[:From]
+      end
+
+      # To
+      if params[:To]
+        session[:To] = params[:To]
+      elsif session[:To]
+        params[:To] = session[:To]
+      end
       # sort
       if params[:sort]
         session[:sort] = params[:sort]

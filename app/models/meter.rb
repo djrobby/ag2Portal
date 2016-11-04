@@ -99,8 +99,12 @@ class Meter < ActiveRecord::Base
     integer :office_id
     integer :organization_id
     integer :meter_model_id
+    integer :meter_brand_id do
+      meter_model.meter_brand_id
+    end
     integer :caliber_id
     integer :meter_owner_id
+    date :purchase_date
   end
 
   private

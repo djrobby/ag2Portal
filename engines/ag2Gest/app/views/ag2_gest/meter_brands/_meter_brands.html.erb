@@ -14,7 +14,6 @@
 <table class="table table-condensed table-striped">
   <thead>
     <tr>
-      <th><%= sortable "id", "Id" %></th>
       <th><%= sortable "brand", "Marca" %></th>
       <th><%= sortable "manufacturer", "Fabricante" %></th>
       <th><%= sortable "letter_id", "Letra" %></th>
@@ -23,8 +22,7 @@
   <tbody>
     <% @meter_brands.each do |met_brand| %>
     <tr>
-      <td><%= link_to met_brand.try(:id), meter_brand_path(met_brand) %></td>
-      <td><%= met_brand.try(:brand) %></td>
+      <td><%= link_to met_brand.try(:brand), meter_brand_path(met_brand) %></td>
       <td><%= met_brand.manufacturer.name %></td>
       <td><%= met_brand.letter_id %></td>
       <td>

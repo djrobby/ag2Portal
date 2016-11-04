@@ -32,7 +32,16 @@ class TariffScheme < ActiveRecord::Base
     integer :id
     text :name
     string :name
-    string :project_id
+    text :description do
+      name
+    end
+    integer :project_id
+    integer :office_id do
+      project.office_id
+    end
+    integer :company_id do
+      project.company_id
+    end
     text :project do
       project.name
     end
@@ -89,7 +98,7 @@ class TariffScheme < ActiveRecord::Base
   end
 
   private
-  
+
   def ending_at_cannot_be_less_than_started_at
     if (!ending_at.blank? and !starting_at.blank?) and ending_at < starting_at
       errors.add(:ending_at, :date_invalid)
@@ -106,4 +115,3 @@ class TariffScheme < ActiveRecord::Base
   end
 
 end
-

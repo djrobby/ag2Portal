@@ -4,6 +4,12 @@ es:
       index:
         title: "Contadores"
         btn_new: "Nuevo Contador"
+        meter_code: "Código de contador"
+        meter_model_id: "Modelo"
+        meter_brand_id: "Marca"
+        caliber_id: "Calibre"
+        label_from: "Fecha compra desde"
+        label_to: "Fecha compra hasta"
         back_to_root: "Volver a ag2Gest"
         back_to_management: "Volver a Gestión de Contadores"
       show:

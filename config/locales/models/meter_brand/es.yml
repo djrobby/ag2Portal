@@ -9,7 +9,7 @@ es:
         check_for_meter_models: "Marca de contador no puede ser eliminada mientras existan modelos vinculados."
     attributes:
       meter_brand:
-        ID: "Id"
+        id: "Id"
         manufacturer: "Fabricante"
         manufacturer_id: "Fabricante"
         brand: "Marca"

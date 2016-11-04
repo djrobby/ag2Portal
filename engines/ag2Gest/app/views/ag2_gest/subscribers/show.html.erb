@@ -53,9 +53,11 @@
 <%= render '/layouts/ag2_gest/subscribersbreadcrumb' %>
 
 <%= link_to t('activerecord.attributes.subscriber.print'), subscriber_pdf_subscriber_path(:format => :pdf), class: "btn btn-warning btn-mini pull-right", target: "_blank" %>
+
 <% if !session[:return_to_reading].nil? %>
   <%= link_to session[:return_to_reading], session[:return_to_reading_url] %><br />
 <% end %>
+<h3><%= t('.title') %></h3>
 <table class="table">
   <tbody>
     <tr>
@@ -142,9 +144,9 @@
         </tr>
         <tr>
           <td><b><%= t('activerecord.attributes.subscriber.tariff_scheme_id') %>:</b></td>
-          <td colspan="4"><%= link_to @subscriber.try(:tariff_scheme).try(:name), tariff_scheme_path(@subscriber.tariff_scheme) if @subscriber.tariff_scheme %></td>
+          <td><%= link_to @subscriber.try(:tariff_scheme).try(:name), tariff_scheme_path(@subscriber.tariff_scheme) if @subscriber.tariff_scheme %></td>
           <td><b><%= t('activerecord.attributes.subscriber.billing_frequency_id') %>:</b></td>
-          <td><%= link_to @subscriber.try(:billing_frequency).try(:name), billing_frequency_path(@subscriber.billing_frequency_id) if @subscriber.billing_frequency %></td>
+          <td colspan="4"><%= link_to @subscriber.try(:billing_frequency).try(:name), billing_frequency_path(@subscriber.billing_frequency_id) if @subscriber.billing_frequency %></td>
         </tr>
         <tr>
           <td><b><%= t('activerecord.attributes.subscriber.comments') %>:</b></td>

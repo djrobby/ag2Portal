@@ -17,8 +17,8 @@
   <tbody>
     <% @contracting_request_types.each do |cont_request| %>
     <tr>
-      <td><%= link_to cont_request.try(:id), contracting_request_type_path(cont_request) %></td>
-      <td><%= cont_request.try(:description)  %></td>
+      <td><%= cont_request.try(:id)  %></td>
+      <td><%= link_to cont_request.try(:description), contracting_request_type_path(cont_request) %></td>
       <td>
         <%= link_to edit_contracting_request_type_path(cont_request), class: "btn btn-mini" do%>
           <i class="icon-edit"></i>

@@ -12,14 +12,54 @@ module Ag2Gest
     # GET /tariff_schemes.json
     def index
       manage_filter_state
+
+      description = params[:Description]
+      project = params[:Project]
+      office = params[:Office]
+      company = params[:Company]
+      from = params[:From]
+      to = params[:To]
+      # OCO
+      init_oco if !session[:organization]
+      # Initialize select_tags
+      @projects = current_projects if @projects.nil?
       @project_ids = current_projects_ids
+      @offices = current_offices if @offices.nil?
+      @companies = companies_dropdown if @companies.nil?
+
       @search = TariffScheme.search do
         with :project_id, current_projects_ids
         if !params[:search].blank?
           fulltext params[:search]
         end
+        if !description.blank?
+          fulltext description do
+            fields(:description)
+          end
+        end
+        if !project.blank?
+          with :project_id, project
+        end
+        if !office.blank?
+          with :office_id, office
+        end
+        if !company.blank?
+          with :company_id, company
+        end
+        if !from.blank?
+          any_of do
+            with(:starting_at).greater_than(from)
+            with :starting_at, from
+          end
+        end
+        if !to.blank?
+          any_of do
+            with(:ending_at).less_than(to)
+            with :ending_at, to
+          end
+        end
         order_by sort_column, sort_direction
-        paginate :page => params[:page] || 1, :per_page => per_page
+        paginate :page => params[:page] || 1, :per_page => per_page || 10
       end
 
       @tariff_schemes = @search.results
@@ -202,6 +242,16 @@ module Ag2Gest
       TariffScheme.column_names.include?(params[:sort]) ? params[:sort] : "name"
     end
 
+    def companies_dropdown
+      if session[:company] != '0'
+        [Company.find(session[:company])]
+      elsif session[:organization] != '0'
+        Company.where(organization_id: session[:organization]).order("name")
+      else
+        Company.order("name")
+      end
+    end
+
     # Keeps filter state
     def manage_filter_state
       # search
@@ -210,6 +260,48 @@ module Ag2Gest
       elsif session[:search]
         params[:search] = session[:search]
       end
+      # Description
+      if params[:Description]
+        session[:Description] = params[:Description]
+      elsif session[:Description]
+        params[:Description] = session[:Description]
+      end
+
+      # Project
+      if params[:Project]
+        session[:Project] = params[:Project]
+      elsif session[:Project]
+        params[:Project] = session[:Project]
+      end
+
+      # Office
+      if params[:Office]
+        session[:Office] = params[:Office]
+      elsif session[:Office]
+        params[:Office] = session[:Office]
+      end
+
+      # Company
+      if params[:Company]
+        session[:Company] = params[:Company]
+      elsif session[:Company]
+        params[:Company] = session[:Company]
+      end
+
+      # From
+      if params[:From]
+        session[:From] = params[:From]
+      elsif session[:From]
+        params[:From] = session[:From]
+      end
+
+      # To
+      if params[:To]
+        session[:To] = params[:To]
+      elsif session[:To]
+        params[:To] = session[:To]
+      end
+
       # sort
       if params[:sort]
         session[:sort] = params[:sort]

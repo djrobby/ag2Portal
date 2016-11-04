@@ -1,9 +1,116 @@
+<script type="text/javascript">
+  var _thisForm = '';
+  var changing = false;
+
+  $(document).ready(function() {
+    $('.sel2').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      dropdownCssClass: 'shrinked',
+      dropdownAutoWidth: true,
+      allowClear: true
+    });
+    $('.date_picker').datepicker({
+     format:'dd/mm/yyyy',weekStart:1
+    });
+    // Initialized form variable
+    _thisForm = $("#removeFilter").closest('form')[0];
+  });
+
+
+  $(document).ajaxStart(function() {
+    // show loader on start
+    if (changing == false) {
+      $("#div_table").html("");
+      $("#loader").show();
+    }
+  }).ajaxSuccess(function() {
+    // hide loader on success
+    $("#loader").hide();
+  });
+
+  $(window).bind("load", function() {
+    $("#Description").val("<%= params[:Description] %>");
+    $("#Office").select2("val", "<%= params[:Office] %>");
+    $("#Project").select2("val", "<%= params[:Project] %>");
+    $("#Company").select2("val", "<%= params[:Company] %>");
+    $("#From").val("<%= params[:From] %>");
+    $("#To").val("<%= params[:To] %>");
+  });
+
+  jQuery(function($) {
+    $("#removeFilter").click(function() {
+      $("#Description").val("");
+      $("#Office").select2("val", "");
+      $("#Project").select2("val", "");
+      $("#Company").select2("val", "");
+      $("#From").val("");
+      $("#To").val("");
+      $("#No").val("");
+      // no AJAX
+      //_thisForm.submit();
+      // AJAX
+      $("#submit_btn").trigger("click");
+    });
+  });
+
+</script>
+
 <%= render '/layouts/ag2_gest/tariffschemesbreadcrumb' %>
 
 <%= render :partial => '/layouts/searchhead_remote', :locals => { :title => t(".title"), :path => tariff_schemes_path } %>
 
-<div class="span11" id="div_table">
-  <%= render 'tariff_schemes' %>
+<div class="container-fluid">
+  <div class="row-fluid">
+
+    <div class="span3">
+      <div class="well sidebar-nav">
+        <!-- Refresh -->
+        <%= link_to ag2_gest.tariff_schemes_path, title: I18n.t(:refresh), class: "icon-refresh-link", remote: true do %> <i class="icon-refresh"></i> <% end %>
+        <!-- Search form -->
+        <%= form_tag "tariff_schemes", :method => 'get', :remote => true do %>
+        <!-- Description -->
+        <%= label_tag I18n.t("ag2_gest.tariff_schemes.index.label_description"), nil, :class => 'form-label' %>
+        <%= text_field_tag "Description", nil, :class => 'x-large-text-field shrinked number-text-field', onkeyup: "caps(this)" %>
+        <!-- Project -->
+        <%= label_tag I18n.t("ag2_gest.tariff_schemes.index.label_project"), nil, :class => 'form-label' %>
+        <%= select_tag "Project", options_from_collection_for_select(@projects, "id", "to_label"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
+        <!-- Office -->
+        <%= label_tag I18n.t("ag2_gest.tariff_schemes.index.label_office"), nil, :class => 'form-label-under-sel2' %>
+        <%= select_tag "Office", options_from_collection_for_select(@offices, "id", "to_label"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
+        <!-- Company -->
+        <%= label_tag I18n.t("ag2_gest.tariff_schemes.index.label_company"), nil, :class => 'form-label-under-sel2' %>
+        <%= select_tag "Company", options_from_collection_for_select(@companies, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
+        <!-- Dates -->
+        <%= label_tag I18n.t("ag2_gest.tariff_schemes.index.label_from"), nil, :class => 'form-label-under-sel2' %>
+        <%= text_field_tag "From", params[:date], :class =>  'x-large-text-field shrinked date_picker' %>
+        <%= label_tag I18n.t("ag2_gest.tariff_schemes.index.label_to"), nil, :class => 'form-label' %>
+        <%= text_field_tag "To", params[:date], :class =>  'x-large-text-field shrinked date_picker' %>
+        <br><br>
+        <!-- Submit -->
+        <%= submit_tag I18n.t(:apply_filter_button), :class => 'btn btn-primary', :id => 'submit_btn' %>
+        <!-- Remove filter -->
+        <button id="removeFilter" type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><%= t :clear_filter_button %></button>
+        <% end %>
+        <!-- Buttons -->
+        <%= render :partial => '/layouts/crud/new', :locals => { :model => TariffScheme, :path => new_tariff_scheme_path, :txt => t("ag2_gest.tariff_schemes.index.btn_new") } %>
+        <!-- Button to trigger modal -->
+        <a href="#new-tariff-pct" role="button" class="btn btn-warning" data-toggle="modal">Nueva esquema desde otro</a>
+        <br>
+        <br>
+        <%= link_to t("ag2_gest.tariff_schemes.index.back_to_management"), ag2_gest.tariff_management_path %>
+
+      </div><!-- /.sidebar-nav -->
+    </div><!-- /.span3 -->
+
+
+    <div class="span9">
+      <div id="loader"></div>
+      <div id="div_table">
+        <%= render 'tariff_schemes' %>
+      </div>
+    </div>
+
+  </div>
 </div>
 
 <!-- Modal -->

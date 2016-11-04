@@ -10,7 +10,6 @@
 <table class="table table-condensed table-striped">
   <thead>
     <tr>
-      <th><%= sortable "id", t('activerecord.attributes.billable_concept.id') %></th>
       <th><%= sortable "code", t('activerecord.attributes.billable_concept.code') %></th>
       <th><%= sortable "name", t('activerecord.attributes.billable_concept.name') %></th>
       <th><%= sortable "type", t('activerecord.attributes.billable_concept.type') %></th>
@@ -19,10 +18,9 @@
   <tbody>
     <% @billable_concepts.each do |bill| %>
       <tr>
-        <td><%= bill.try(:id) %></td>
         <td><%= link_to bill.try(:code), billable_concept_path(bill) %></td>
         <td><%= bill.try(:name) %></td>
-        <td><%= bill.try(:document) %></td>
+        <td><%= bill.try(:document) == "SUMINISTRO" ? "FACTURA AGUA" : "FACTURA CONTRATACIÓN" %></td>
         <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => BillableConcept, :path => edit_billable_concept_path(bill) } %>
         <%= render :partial => '/layouts/crud/delete', :locals => { :model => BillableConcept, :path => bill, :msg => t("activerecord.models.billable_concept.one"), :txt => bill.name } %> </td>
       </tr>

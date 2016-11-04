@@ -1,6 +1,6 @@
 <%= render '/layouts/ag2_gest/contractingrequestdocumenttypesbreadcrumb' %>
 
-<h3><%=@contracting_request_document_type.try(:name) %></h3>
+<h3><%= t('.title')%></h3>
 <table class="table">
   <tbody>
     <tr>
@@ -18,6 +18,7 @@
       </td>
     </tr>
     <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @contracting_request_document_type } %>
+    <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @contracting_request_document_type } %>
   </tbody>
 </table>
 

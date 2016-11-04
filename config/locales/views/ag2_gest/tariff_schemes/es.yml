@@ -6,6 +6,12 @@ es:
         btn_new: "Nuevo Esquema Tarifario"
         back_to_root: "Volver a ag2Gest"
         back_to_management: "Volver a Gestión Tarifaria"
+        label_description: "Descripción"
+        label_project: "Proyecto"
+        label_office: "Oficina"
+        label_company: "Compañia"
+        label_from: "Vigente desde"
+        label_to: "Vigente hasta"
       show:
         title: "Esquema Tarifario"
         btn_edit: "Editar Esquema Tarifario"

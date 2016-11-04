@@ -18,8 +18,8 @@
   <tbody>
     <% @contracting_request_statuses.each do |cont_status| %>
     <tr>
-      <td><%= link_to cont_status.try(:id), contracting_request_status_path(cont_status) %></td>
-      <td><%= cont_status.try(:name) %></td>
+      <td><%= cont_status.try(:id) %></td>
+      <td><%= link_to cont_status.try(:name), contracting_request_status_path(cont_status) %></td>
       <td>
         <% if cont_status.try(:requires_work_order) == true %>
           <i class="icon-thumbs-up"></i>

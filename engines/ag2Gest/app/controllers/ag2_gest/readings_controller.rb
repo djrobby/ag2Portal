@@ -54,7 +54,7 @@ module Ag2Gest
           with :reading_route_id, route
         end
         order_by :sort_no, :desc
-        paginate :page => params[:page] || 1, :per_page => 10
+        paginate :page => params[:page] || 1, :per_page => per_page || 10
       end
       @readings = @search.results
 

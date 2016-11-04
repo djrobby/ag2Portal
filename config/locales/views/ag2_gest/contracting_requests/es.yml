@@ -18,7 +18,7 @@ es:
         back_to_root: "Volver a ag2Gest"
         back_to_management: "Volver a Contrataciones"
       show:
-        title: "Contratación"
+        title: "Solicitud de contratación"
         btn_new: "Nueva Contratación"
         btn_edit: "Editar Contratación"
         btn_delete: "Borrar Contratación"

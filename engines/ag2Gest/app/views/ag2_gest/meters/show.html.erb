@@ -7,7 +7,7 @@
 <% end %>
 
 
-<h3><%= t('.title') %> <%=@meter.try(:meter_code) %></h3>
+<h3><%= t('.title') %></h3>
 <table class="table">
   <tbody>
     <tr>
@@ -114,7 +114,7 @@ new_path: new_meter_path, new_txt: t('ag2_gest.meters.index.btn_new') } %>
               <td align="right"><%= reading.try(:reading_index) %></td>
               <td>
                 <% unless reading.try(:reading_incidence_types).blank? %>
-                  <i title="<%= reading.reading_incidence_types.pluck(:name).join(", ") %>" class="icon-ok"></i>
+                  <i title="<%= reading.reading_incidence_types.pluck(:name).join(", ") %>" class="icon-warning-sign"></i>
                 <% end %>
               </td>
               <td align="right"><%= reading.try(:reading_1).try(:reading_index) %></td>

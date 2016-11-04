@@ -14,15 +14,13 @@
 <table class="table table-condensed table-striped">
   <thead>
     <tr>
-      <th><%= sortable "id", "Id" %></th>
       <th><%= sortable "name", "Nombre" %></th>
     </tr>
   </thead>
   <tbody>
     <% @meter_types.each do |met_type| %>
     <tr>
-      <td><%= link_to met_type.try(:id), meter_type_path(met_type) %></td>
-      <td><%= met_type.try(:name) %></td>
+      <td><%= link_to met_type.try(:name), meter_type_path(met_type) %></td>
       <td>
         <%= link_to edit_meter_type_path(met_type), class: "btn btn-mini" do %>
           <i class="icon-edit"></i>

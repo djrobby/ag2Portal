@@ -10,7 +10,6 @@
 <table class="table table-condensed table-striped">
   <thead>
     <tr>
-      <th><%= sortable "id", t('activerecord.attributes.tariff_type.id') %></th>
       <th><%= sortable "code", t('activerecord.attributes.tariff_type.code') %></th>
       <th><%= sortable "name", t('activerecord.attributes.tariff_type.name') %></th>
     </tr>
@@ -18,7 +17,6 @@
   <tbody>
     <% @tariff_types.each do |tariff| %>
     <tr>
-      <td><%= tariff.try(:id) %></td>
       <td><%= link_to tariff.try(:code), tariff_type_path(tariff) %></td>
       <td><%= tariff.try(:name) %></td>
       <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => TariffType, :path => edit_tariff_type_path(tariff) } %>

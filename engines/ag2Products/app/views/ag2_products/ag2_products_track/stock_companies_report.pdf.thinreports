@@ -141,11 +141,11 @@ family_id = @stocks_report.first.product_family_id
 	# Store page subtotals
   report.page.list(:default) do |list|
 		list.store.page_rows += 1
-		list.store.p_current += i.current
-		list.store.p_calc += i.current_value
-		list.store.p_average_price += i.average_price	
-		list.store.f_current += i.current
-		list.store.f_calc += i.current_value	
-		list.store.f_average_price += i.average_price
+		a = list.store.p_current += i.current
+		b = list.store.p_calc += pmpstock
+		list.store.p_average_price = (b / a)
+		c = list.store.f_current += i.current
+		d = list.store.f_calc += pmpstock
+		list.store.f_average_price = (d / c)
 	end
 end

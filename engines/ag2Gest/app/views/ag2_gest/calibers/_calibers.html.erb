@@ -10,7 +10,6 @@
 <table class="table table-condensed table-striped">
   <thead>
     <tr>
-      <th><%= sortable "id", t('activerecord.attributes.caliber.caliber_id') %></th>
       <th><%= sortable "caliber", t('activerecord.attributes.caliber.caliber') %></th>
       <th><%= sortable "letter_id", t('activerecord.attributes.caliber.letter_id') %></th>
       <th><%= sortable "nominal_flow", t('activerecord.attributes.caliber.nominal_flow') %></th>
@@ -19,8 +18,7 @@
   <tbody>
     <% @calibers.each do |calib| %>
       <tr>
-        <td><%= link_to calib.try(:id), caliber_path(calib) %></td>
-        <td><%= calib.try(:caliber) %></td>
+        <td><%= link_to calib.try(:caliber), caliber_path(calib) %></td>
         <td><%= calib.try(:letter_id) %></td>
         <td><%= calib.try(:nominal_flow) %></td>
         <td>

@@ -6,7 +6,7 @@ class ContractingRequestStatus < ActiveRecord::Base
   INSTALLATION = 10
   COMPLETE = 11
 
-  attr_accessible :name, :requires_work_order
+  attr_accessible :name, :requires_work_order, :id
 
   has_many :contracting_requests
 
