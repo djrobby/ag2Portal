@@ -78,7 +78,7 @@ module Ag2Products
         @order = PurchaseOrder.find(o)
         @order_items = @order.blank? ? [] : order_items_dropdown(@order)
         @projects = @order.blank? ? projects_dropdown : @order.project
-        @work_orders = @order.blank? ? work_orders_dropdown : @order.work_order
+        @work_orders = @order.blank? ? work_orders_dropdown : WorkOrder.where(id: @order.work_order)
         @charge_accounts = @order.blank? ? charge_accounts_dropdown : @order.charge_account
         @stores = @order.blank? ? stores_dropdown : @order.store
         @payment_methods = @order.blank? ? payment_methods_dropdown : @order.payment_method
@@ -101,12 +101,14 @@ module Ag2Products
         @payment_methods = payment_methods_dropdown
         @products = products_dropdown
       end
+      # Work orders array
+      @orders_dropdown = work_orders_array(@work_orders)
       # Order items array
       @order_items_dropdown = order_items_array(@order_items)
       # Products array
       @products_dropdown = products_array(@products)
       # Setup JSON
-      @json_data = { "project" => @projects, "work_order" => @work_orders,
+      @json_data = { "project" => @projects, "work_order" => @orders_dropdown,
                      "charge_account" => @charge_accounts, "store" => @stores,
                      "payment_method" => @payment_methods, "product" => @products_dropdown,
                      "project_id" => project_id, "work_order_id" => work_order_id,
@@ -340,7 +342,10 @@ module Ag2Products
         @charge_account = projects_charge_accounts(projects)
         @store = stores_dropdown
       end
-      @json_data = { "work_order" => @work_order, "charge_account" => @charge_account, "store" => @store }
+      # Work orders array
+      @orders_dropdown = work_orders_array(@work_order)
+      # Setup JSON
+      @json_data = { "work_order" => @orders_dropdown, "charge_account" => @charge_account, "store" => @store }
       render json: @json_data
     end
 
@@ -388,10 +393,12 @@ module Ag2Products
         @payment_methods = payment_methods_dropdown
         @products = products_dropdown
       end
+      # Work orders array
+      @orders_dropdown = work_orders_array(@work_orders)
       # Products array
       @products_dropdown = products_array(@products)
       # Setup JSON
-      @json_data = { "supplier" => @suppliers, "project" => @projects, "work_order" => @work_orders,
+      @json_data = { "supplier" => @suppliers, "project" => @projects, "work_order" => @orders_dropdown,
                      "charge_account" => @charge_accounts, "store" => @stores,
                      "payment_method" => @payment_methods, "product" => @products_dropdown }
       render json: @json_data
@@ -1055,6 +1062,14 @@ module Ag2Products
       _array = []
       _products.each do |i|
         _array = _array << [i.id, i.full_code, i.main_description[0,40]]
+      end
+      _array
+    end
+
+    def work_orders_array(_orders)
+      _array = []
+      _orders.each do |i|
+        _array = _array << [i.id, i.full_name]
       end
       _array
     end

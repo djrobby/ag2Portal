@@ -104,7 +104,7 @@
         $("#offer_request_request_no").val(data.code);
         if ($("#offer_request_request_no").val() == "$err") {
           $("#offer_request_request_no").css('color', 'red');
-          alert('<%= I18n.t("ag2_purchase.offer_requests.no_error") %>');
+          alert('<%= I18n.t("ag2_purchase.offer_requests.code_error") %>');
           $('#offer_request_request_no').select();
         } else {
           $("#offer_request_request_no").css('color', text_field_color);
@@ -149,12 +149,12 @@
         if (!w.length) {
           $.each(data, function(id, option) {
             if (id == 'type' && option != "") {
-              $("#offer_request_work_order_id").append($('<option></option>').val(option.id).html(option.order_no.substring(0,10) + "-" + option.order_no.substring(10,14) + "-" + option.order_no.substring(14,20) + " " + option.description.substring(0,41)));
+              $("#offer_request_work_order_id").append($('<option></option>').val(option[0]).html(option[1]));
             }
           });
         } else {
           $.each(w, function(id, option) {
-            $("#offer_request_work_order_id").append($('<option></option>').val(option.id).html(option.order_no.substring(0,10) + "-" + option.order_no.substring(10,14) + "-" + option.order_no.substring(14,20) + " " + option.description.substring(0,41)));
+            $("#offer_request_work_order_id").append($('<option></option>').val(option[0]).html(option[1]));
           });
         }
         // Charge account
@@ -227,12 +227,12 @@
         if (!w.length) {
           $.each(data, function(id, option) {
             if (id == 'offer_request' && option != "") {
-              $("#offer_request_work_order_id").append($('<option></option>').val(option.id).html(option.order_no.substring(0,10) + "-" + option.order_no.substring(10,14) + "-" + option.order_no.substring(14,20) + " " + option.description));
+              $("#offer_request_work_order_id").append($('<option></option>').val(option[0]).html(option[1]));
             }
           });
         } else {
           $.each(w, function(id, option) {
-            $("#offer_request_work_order_id").append($('<option></option>').val(option.id).html(option.order_no.substring(0,10) + "-" + option.order_no.substring(10,14) + "-" + option.order_no.substring(14,20) + " " + option.description));
+            $("#offer_request_work_order_id").append($('<option></option>').val(option[0]).html(option[1]));
           });
         }
         // Charge Account

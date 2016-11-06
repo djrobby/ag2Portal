@@ -97,10 +97,12 @@ module Ag2Purchase
         @payment_methods = payment_methods_dropdown
         @products = products_dropdown
       end
+      # Work orders array
+      @orders_dropdown = orders_array(@work_orders)
       # Products array
       @products_dropdown = products_array(@products)
       # Setup JSON
-      @json_data = { "project" => @projects, "work_order" => @work_orders,
+      @json_data = { "project" => @projects, "work_order" => @orders_dropdown,
                      "charge_account" => @charge_accounts, "store" => @stores,
                      "payment_method" => @payment_methods, "product" => @products_dropdown,
                      "project_id" => project_id, "work_order_id" => work_order_id,
@@ -311,7 +313,10 @@ module Ag2Purchase
         @charge_account = projects_charge_accounts(projects)
         @store = stores_dropdown
       end
-      @json_data = { "work_order" => @work_order, "charge_account" => @charge_account, "store" => @store }
+      # Work orders array
+      @orders_dropdown = orders_array(@work_order)
+      # Setup JSON
+      @json_data = { "work_order" => @orders_dropdown, "charge_account" => @charge_account, "store" => @store }
       render json: @json_data
     end
 
@@ -391,10 +396,12 @@ module Ag2Purchase
         @payment_methods = payment_methods_dropdown
         @products = products_dropdown
       end
+      # Work orders array
+      @orders_dropdown = orders_array(@work_orders)
       # Products array
       @products_dropdown = products_array(@products)
       # Setup JSON
-      @json_data = { "supplier" => @suppliers, "project" => @projects, "work_order" => @work_orders,
+      @json_data = { "supplier" => @suppliers, "project" => @projects, "work_order" => @orders_dropdown,
                      "charge_account" => @charge_accounts, "store" => @stores,
                      "payment_method" => @payment_methods, "product" => @products_dropdown }
       render json: @json_data
@@ -1174,6 +1181,14 @@ module Ag2Purchase
       _array = []
       _stocks.each do |i|
         _array = _array << [i.store.name, number_with_precision(i.current.round(4), precision: 4)]
+      end
+      _array
+    end
+
+    def orders_array(_orders)
+      _array = []
+      _orders.each do |i|
+        _array = _array << [i.id, i.full_name]
       end
       _array
     end

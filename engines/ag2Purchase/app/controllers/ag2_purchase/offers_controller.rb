@@ -247,7 +247,10 @@ module Ag2Purchase
         @charge_account = projects_charge_accounts(projects)
         @store = stores_dropdown
       end
-      @json_data = { "work_order" => @work_order, "charge_account" => @charge_account, "store" => @store }
+      # Work orders array
+      @orders_dropdown = orders_array(@work_order)
+      # Setup JSON
+      @json_data = { "work_order" => @orders_dropdown, "charge_account" => @charge_account, "store" => @store }
       render json: @json_data
     end
 
@@ -305,13 +308,15 @@ module Ag2Purchase
         @payment_methods = payment_methods_dropdown
         @products = products_dropdown
       end
+      # Work orders array
+      @orders_dropdown = orders_array(@work_orders)
       # Offer requests array
       @requests_dropdown = offer_requests_array(@offer_requests)
       # Products array
       @products_dropdown = products_array(@products)
       # Setup JSON
       @json_data = { "supplier" => @suppliers, "offer_request" => @requests_dropdown,
-                     "project" => @projects, "work_order" => @work_orders,
+                     "project" => @projects, "work_order" => @orders_dropdown,
                      "charge_account" => @charge_accounts, "store" => @stores,
                      "payment_method" => @payment_methods, "product" => @products_dropdown }
       render json: @json_data
@@ -329,7 +334,7 @@ module Ag2Purchase
         @offer_request = OfferRequest.find(request)
         @request_items = @offer_request.blank? ? [] : @offer_request.offer_request_items
         @projects = @offer_request.blank? ? projects_dropdown : @offer_request.project
-        @work_orders = @offer_request.blank? ? work_orders_dropdown : @offer_request.work_order
+        @work_orders = @offer_request.blank? ? work_orders_dropdown : WorkOrder.where(id: @offer_request.work_order)
         @charge_accounts = @offer_request.blank? ? charge_accounts_dropdown : @offer_request.charge_account
         @stores = @offer_request.blank? ? stores_dropdown : @offer_request.store
         @payment_methods = @offer_request.blank? ? payment_methods_dropdown : @offer_request.payment_method
@@ -351,10 +356,12 @@ module Ag2Purchase
         @payment_methods = payment_methods_dropdown
         @products = products_dropdown
       end
+      # Work orders array
+      @orders_dropdown = orders_array(@work_orders)
       # Products array
       @products_dropdown = products_array(@products)
       # Setup JSON
-      @json_data = { "project" => @projects, "work_order" => @work_orders,
+      @json_data = { "project" => @projects, "work_order" => @orders_dropdown,
                      "charge_account" => @charge_accounts, "store" => @stores,
                      "payment_method" => @payment_methods, "product" => @products_dropdown,
                      "project_id" => project_id, "work_order_id" => work_order_id,
@@ -995,6 +1002,14 @@ module Ag2Purchase
       _array = []
       _products.each do |i|
         _array = _array << [i.id, i.full_code, i.main_description[0,40]]
+      end
+      _array
+    end
+
+    def orders_array(_orders)
+      _array = []
+      _orders.each do |i|
+        _array = _array << [i.id, i.full_name]
       end
       _array
     end

@@ -164,12 +164,12 @@
         if (!w.length) {
           $.each(data, function(id, option) {
             if (id == 'type' && option != "") {
-              $("#purchase_order_work_order_id").append($('<option></option>').val(option.id).html(option.order_no.substring(0,10) + "-" + option.order_no.substring(10,14) + "-" + option.order_no.substring(14,20) + " " + option.description.substring(0,41)));
+              $("#purchase_order_work_order_id").append($('<option></option>').val(option[0]).html(option[1]));
             }
           });
         } else {
           $.each(w, function(id, option) {
-            $("#purchase_order_work_order_id").append($('<option></option>').val(option.id).html(option.order_no.substring(0,10) + "-" + option.order_no.substring(10,14) + "-" + option.order_no.substring(14,20) + " " + option.description.substring(0,41)));
+            $("#purchase_order_work_order_id").append($('<option></option>').val(option[0]).html(option[1]));
           });
         }
         // Charge account
@@ -292,12 +292,12 @@
         if (!w.length) {
           $.each(data, function(id, option) {
             if (id == 'work_order' && option != "") {
-              $("#purchase_order_work_order_id").append($('<option></option>').val(option.id).html(option.order_no.substring(0,10) + "-" + option.order_no.substring(10,14) + "-" + option.order_no.substring(14,20) + " " + option.description.substring(0,41)));
+              $("#purchase_order_work_order_id").append($('<option></option>').val(option[0]).html(option[1]));
             }
           });
         } else {
           $.each(w, function(id, option) {
-            $("#purchase_order_work_order_id").append($('<option></option>').val(option.id).html(option.order_no.substring(0,10) + "-" + option.order_no.substring(10,14) + "-" + option.order_no.substring(14,20) + " " + option.description.substring(0,41)));
+            $("#purchase_order_work_order_id").append($('<option></option>').val(option[0]).html(option[1]));
           });
         }
         if (w_id != 0) $("#purchase_order_work_order_id").select2("val", w_id);
@@ -375,12 +375,12 @@
         if (!w.length) {
           $.each(data, function(id, option) {
             if (id == 'work_order' && option != "") {
-              $("#purchase_order_work_order_id").append($('<option></option>').val(option.id).html(option.order_no.substring(0,10) + "-" + option.order_no.substring(10,14) + "-" + option.order_no.substring(14,20) + " " + option.description));
+              $("#purchase_order_work_order_id").append($('<option></option>').val(option[0]).html(option[1]));
             }
           });
         } else {
           $.each(w, function(id, option) {
-            $("#purchase_order_work_order_id").append($('<option></option>').val(option.id).html(option.order_no.substring(0,10) + "-" + option.order_no.substring(10,14) + "-" + option.order_no.substring(14,20) + " " + option.description));
+            $("#purchase_order_work_order_id").append($('<option></option>').val(option[0]).html(option[1]));
           });
         }
         // Charge Account

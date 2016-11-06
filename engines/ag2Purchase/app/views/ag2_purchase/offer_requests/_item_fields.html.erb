@@ -184,12 +184,12 @@
         if (!w.length) {
           $.each(data, function(id, option) {
             if (id == 'work_order' && option != "") {
-              $("#fnt-work-order").append($('<option></option>').val(option.id).html(option.order_no.substring(0,10) + "-" + option.order_no.substring(10,14) + "-" + option.order_no.substring(14,20) + " " + option.description));
+              $("#fnt-work-order").append($('<option></option>').val(option[0]).html(option[1]));
             }
           });
         } else {
           $.each(w, function(id, option) {
-            $("#fnt-work-order").append($('<option></option>').val(option.id).html(option.order_no.substring(0,10) + "-" + option.order_no.substring(10,14) + "-" + option.order_no.substring(14,20) + " " + option.description));
+            $("#fnt-work-order").append($('<option></option>').val(option[0]).html(option[1]));
           });
         }
         // Charge Account
