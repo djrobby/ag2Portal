@@ -12,7 +12,7 @@
     <% else %>
       <%= f.association :meter, required: true, collection: Meter.availables(@contracting_request.try(:old_subscriber).try(:meter_id)).select{|m| m.caliber_id == @water_supply_contract.caliber_id}, selected: @water_supply_contract.meter_id, input_html: { class: 'x-large-text-field sel2', value: @water_supply_contract.try(:meter_id) }, label_html: { class: 'form-label' }, include_blank: true, label: t('activerecord.attributes.contracting_request.meter') %>
     <% end %>
-    <%= f.association :reading_route, required: true, collection: ReadingRoute.where(project_id: @contracting_request.project_id), selected: @contracting_request.service_point.reading_route_id, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' }, include_blank: true, label: t('activerecord.attributes.contracting_request.reading_route') %>
+    <%= f.association :reading_route, required: true, collection: ReadingRoute.where(project_id: @contracting_request.project_id), selected: @contracting_request.service_point.reading_route_id, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' }, include_blank: true, label: t('activerecord.attributes.contracting_request.reading_route')  unless @contracting_request.service_point.blank? %>
     <%= f.input :reading_sequence, required: true, input_html: { class: 'x-large-text-field', value: @contracting_request.try(:old_subscriber).try(:reading_sequence) }, label_html: { class: 'form-label' } %>
     <%= f.input :reading_variant, input_html: { class: 'x-large-text-field', value: @contracting_request.try(:old_subscriber).try(:reading_variant) }, label_html: { class: 'form-label' } %>
     <%#= f.input :active, :as => :hidden, :input_html => { :value => "true" } %>

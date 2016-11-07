@@ -6,7 +6,7 @@
     width: 95%;
     padding: 15px;
   }
-  #pendings, #charged{
+  #pendings, #unpaid, #charged{
     background-color: #FDE3A7;
   }
   #cash, #banks, #others ,#fractionated{
@@ -213,8 +213,9 @@ $(document).ready(function () {
       <div class="span6 text-center"><h4>Facturas</h4></div>
       <div class="span6 text-center"><h4>Cobros</h4></div>
       <ul class="nav nav-tabs" id="payments-tabs">
-        <li class="active" style="width:25%"><a href="#pendings">Pendientes</a></li>
-        <li style="width:25%"><a href="#charged">Cobradas</a></li>
+        <li class="active" style="width:16%"><a href="#pendings">Pendientes</a></li>
+        <li style="width:16%"><a href="#unpaid">Impagadas</a></li>
+        <li style="width:16%"><a href="#charged">Cobradas</a></li>
         <li class="pull-right"><a href="#fractionated">Aplazamientos</a></li>
         <li class="pull-right"><a href="#others">Otros</a></li>
         <li class="pull-right"><a href="#banks">Bancos</a></li>
@@ -225,6 +226,11 @@ $(document).ready(function () {
       <!-- PENDING TAB -->
         <div class="tab-pane active" id="pendings">
           <%= render 'bills_pendings' %>
+        </div>
+
+        <!-- IMPAID TAB -->
+        <div class="tab-pane" id="unpaid">
+          <%= render 'bills_unpaid' %>
         </div>
 
         <!-- CHARGED TAB -->
@@ -271,7 +277,7 @@ $(document).ready(function () {
               <span class="debt-total">0</span> €
             </div>
           </div>
-          <%= f.input :amount, as: "decimal", inline_label: "Yes" %>
+          <%= f.input :amount, label: I18n.t("ag2_gest.client_payments.index.amount"), as: "decimal", inline_label: "Yes" %>
           <%= f.input :payment_method_id, collection: PaymentMethod.all, inline_label: "Yes" %>
           <div class="control-group string required meter_manufacturing_date">
             <label class="string control-label">Vuelta</label>
@@ -301,7 +307,7 @@ $(document).ready(function () {
               <span class="debt-total">0</span> €
             </div>
           </div>
-          <%= f.input :receipt_no, as: "string", inline_label: "Yes" %>
+          <%= f.input :receipt_no, label: I18n.t("ag2_gest.client_payments.index.receipt_no"), as: "string", inline_label: "Yes" %>
         </div>
         <div class="modal-footer">
           <%= f.button :submit, "Confirmar", :class => 'btn btn-primary' %>

@@ -42,6 +42,7 @@ module Ag2Gest
       # @bills = Bill.where(id: params[:bills][:ids].split("[\"")[1].split("\"]")[0].split("\", \""))
       @pre_bills = PreBill.where(pre_group_no: params[:pre_bill][:ids], bill_id: nil)
       by_user = current_user.nil? ? nil : current_user.id
+      payday_limit = params[:pre_bill][:payday_limit]
       @pre_bills.each do |pre_bill|
         @bill = Bill.create!( bill_no: bill_next_no(pre_bill.project),
           project_id: pre_bill.reading.project_id,
@@ -75,7 +76,7 @@ module Ag2Gest
             invoice_type_id: InvoiceType::WATER,
             invoice_date: Date.today,
             tariff_scheme_id: pre_invoice.tariff_scheme_id,
-            payday_limit: nil,
+            payday_limit: payday_limit.blank? ? pre_invoice.try(:billing_period).try(:billing_ending_date) : payday_limit,
             invoice_operation_id: InvoiceOperation::INVOICE,
             billing_period_id: pre_invoice.billing_period_id,
             consumption: pre_invoice.consumption,

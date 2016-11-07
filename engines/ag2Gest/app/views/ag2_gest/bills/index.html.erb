@@ -179,25 +179,8 @@ $(document).ready(function () {
       <h4>Confirmar facturas</h4>
     </div>
     <div class="modal-body">
-      <%= f.input :confirmation_date,:input_html => {class: "string required mid-text-field date_picker"} %>
-      <!-- <form class="simple_form form-vertical">
-        <label class="span6">
-          <div class="control-group string required meter_manufacturing_date">
-            <label class="string required control-label form-label" for="meter_manufacturing_date"><abbr title="requerido">*</abbr> Fecha de facturación</label>
-            <div class="controls">
-              <input class="string required mid-text-field date_picker" id="meter_manufacturing_date" name="meter[manufacturing_date]" required="required" size="50" type="text">
-            </div>
-          </div>
-        </label> -->
-        <!-- <label class="span6">
-          <div class="control-group string required meter_manufacturing_date">
-            <label class="string required control-label form-label" for="meter_manufacturing_date"><abbr title="requerido">*</abbr> Fecha de vencimiento</label>
-            <div class="controls">
-              <input class="string required mid-text-field date_picker" id="meter_manufacturing_date" name="meter[manufacturing_date]" required="required" size="50" type="text">
-            </div>
-          </div>
-        </label> -->
-      <!-- </form> -->
+      <%= f.input :confirmation_date, required: true, label: I18n.t("ag2_gest.bills.index.confirmation_date"), :label_html => { :class => 'form-label' }, :input_html => {class: "string required mid-text-field date_picker"} %>
+      <%= f.input :payday_limit, required: false, label: I18n.t("ag2_gest.bills.index.payday_limit"), :label_html => { :class => 'form-label' }, :input_html => {class: "mid-text-field date_picker"} %>
     </div>
     <div class="modal-footer">
       <%= f.button :submit, "Confirmar facturas", :class => 'btn btn-primary' %>

@@ -13,6 +13,9 @@ class Instalment < ActiveRecord::Base
 
 
   searchable do
+    integer :client_payment do
+      client_payment.nil? ? nil : client_payment.id
+    end
     text :bill_no do
       bill.bill_no
     end

@@ -322,6 +322,7 @@ module Ag2Gest
       end
 
       @search_instalment = Instalment.search do
+        with :client_payment, nil
         if !current_projects_ids.blank?
           with :project_id, current_projects_ids
         end

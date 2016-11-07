@@ -85,6 +85,18 @@ class Bill < ActiveRecord::Base
     taxes
   end
 
+  def unpaid?
+    if !invoices.select{|i| i.payday_limit.nil?}.blank?
+      false
+    else
+      invoices.select{|i| !i.payday_limit.nil?}.all? {|i| i.payday_limit < Date.today}
+    end
+  end
+
+  def payable?
+    invoices.select{|i| !i.payday_limit.nil?}.all? {|i| i.payday_limit > Date.today}
+  end
+
   searchable do
     text :bill_no #, :to_label, :fiscal_id, :phone, :full_name
     string :bill_no, :multiple => true   # Multiple search values accepted in one search (inverse_no_search)
