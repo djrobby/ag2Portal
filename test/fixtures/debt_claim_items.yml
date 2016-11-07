@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  debt_claim: 
+  bill: 
+  invoice: 
+  debt_claim_status: 
+  payday_limit: 2016-11-07
+
+two:
+  debt_claim: 
+  bill: 
+  invoice: 
+  debt_claim_status: 
+  payday_limit: 2016-11-07

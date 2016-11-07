@@ -79,6 +79,7 @@ en:
         gis_id: "Gis Id"
         endowments: "Dotaciones"
         inhabitants: "Habitantes"
+        pub_record: "PB Record"
 
         detail: 'Detalle'
         invoices: "Facturas"

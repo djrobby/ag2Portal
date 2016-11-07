@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  complaint: 
+  complaint_document_type: 
+  flow: 1
+
+two:
+  complaint: 
+  complaint_document_type: 
+  flow: 1

@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  formality_type: 
+  code: MyString
+  name: MyString
+
+two:
+  formality_type: 
+  code: MyString
+  name: MyString

@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  project: 
+  claim_no: MyString
+  debt_claim_phase: 
+  closed_at: 2016-11-07
+
+two:
+  project: 
+  claim_no: MyString
+  debt_claim_phase: 
+  closed_at: 2016-11-07

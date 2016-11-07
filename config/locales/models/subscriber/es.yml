@@ -65,7 +65,7 @@ es:
         name: "Nombre"
         street_directory_id: "Callejero"
         address_data: "Domicilio de suministro"
-        tariff_type_id: "Uso / Tipo de tarifa"
+        tariff_type_id: "Uso/Tipo tarifa"
         starting_at: "Fecha de alta"
         ending_at: "Fecha de baja"
         tariff_scheme_id: "Tarifa aplicada"
@@ -79,6 +79,7 @@ es:
         gis_id: "Gis Id"
         endowments: "Dotaciones"
         inhabitants: "Habitantes"
+        pub_record: "Registro OP"
         direction: "Dirección"
 
         detail: 'Detalle'

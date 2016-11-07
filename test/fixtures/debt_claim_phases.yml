@@ -1,0 +1,9 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  name: MyString
+  surcharge_pct: 9.99
+
+two:
+  name: MyString
+  surcharge_pct: 9.99

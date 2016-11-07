@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20161030152027) do
+ActiveRecord::Schema.define(:version => 20161107122957) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -638,6 +638,83 @@ ActiveRecord::Schema.define(:version => 20161030152027) do
   add_index "company_notifications", ["role"], :name => "index_company_notifications_on_role"
   add_index "company_notifications", ["user_id"], :name => "index_company_notifications_on_user_id"
 
+  create_table "complaint_classes", :force => true do |t|
+    t.string   "name"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  add_index "complaint_classes", ["name"], :name => "index_complaint_classes_on_name"
+
+  create_table "complaint_document_types", :force => true do |t|
+    t.string   "name"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  add_index "complaint_document_types", ["name"], :name => "index_complaint_document_types_on_name"
+
+  create_table "complaint_documents", :force => true do |t|
+    t.integer  "complaint_id"
+    t.integer  "complaint_document_type_id"
+    t.integer  "flow",                       :limit => 1, :default => 1, :null => false
+    t.datetime "created_at",                                             :null => false
+    t.datetime "updated_at",                                             :null => false
+    t.string   "attachment_file_name"
+    t.string   "attachment_content_type"
+    t.integer  "attachment_file_size"
+    t.datetime "attachment_updated_at"
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  add_index "complaint_documents", ["complaint_document_type_id"], :name => "index_complaint_documents_on_complaint_document_type_id"
+  add_index "complaint_documents", ["complaint_id"], :name => "index_complaint_documents_on_complaint_id"
+  add_index "complaint_documents", ["flow"], :name => "index_complaint_documents_on_flow"
+
+  create_table "complaint_statuses", :force => true do |t|
+    t.string   "name"
+    t.integer  "action",     :limit => 1, :default => 1, :null => false
+    t.datetime "created_at",                             :null => false
+    t.datetime "updated_at",                             :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  add_index "complaint_statuses", ["action"], :name => "index_complaint_statuses_on_action"
+  add_index "complaint_statuses", ["name"], :name => "index_complaint_statuses_on_name"
+
+  create_table "complaints", :force => true do |t|
+    t.string   "complaint_no"
+    t.integer  "complaint_class_id"
+    t.integer  "complaint_status_id"
+    t.integer  "client_id"
+    t.integer  "subscriber_id"
+    t.integer  "project_id"
+    t.string   "description"
+    t.string   "official_sheet"
+    t.datetime "starting_at"
+    t.datetime "ending_at"
+    t.string   "answer",              :limit => 1000
+    t.string   "remarks"
+    t.datetime "created_at",                          :null => false
+    t.datetime "updated_at",                          :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  add_index "complaints", ["client_id"], :name => "index_complaints_on_client_id"
+  add_index "complaints", ["complaint_class_id"], :name => "index_complaints_on_complaint_class_id"
+  add_index "complaints", ["complaint_no"], :name => "index_complaints_on_complaint_no"
+  add_index "complaints", ["complaint_status_id"], :name => "index_complaints_on_complaint_status_id"
+  add_index "complaints", ["official_sheet"], :name => "index_complaints_on_official_sheet"
+  add_index "complaints", ["project_id"], :name => "index_complaints_on_project_id"
+  add_index "complaints", ["subscriber_id"], :name => "index_complaints_on_subscriber_id"
+
   create_table "contract_types", :force => true do |t|
     t.string   "name"
     t.string   "ct_code"
@@ -874,6 +951,61 @@ ActiveRecord::Schema.define(:version => 20161030152027) do
 
   add_index "data_import_configs", ["name"], :name => "index_data_import_configs_on_name"
 
+  create_table "debt_claim_items", :force => true do |t|
+    t.integer  "debt_claim_id"
+    t.integer  "bill_id"
+    t.integer  "invoice_id"
+    t.integer  "debt_claim_status_id"
+    t.date     "payday_limit"
+    t.datetime "created_at",           :null => false
+    t.datetime "updated_at",           :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  add_index "debt_claim_items", ["bill_id"], :name => "index_debt_claim_items_on_bill_id"
+  add_index "debt_claim_items", ["debt_claim_id"], :name => "index_debt_claim_items_on_debt_claim_id"
+  add_index "debt_claim_items", ["debt_claim_status_id"], :name => "index_debt_claim_items_on_debt_claim_status_id"
+  add_index "debt_claim_items", ["invoice_id"], :name => "index_debt_claim_items_on_invoice_id"
+
+  create_table "debt_claim_phases", :force => true do |t|
+    t.string   "name"
+    t.decimal  "surcharge_pct", :precision => 6, :scale => 2, :default => 0.0, :null => false
+    t.datetime "created_at",                                                   :null => false
+    t.datetime "updated_at",                                                   :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  add_index "debt_claim_phases", ["name"], :name => "index_debt_claim_phases_on_name"
+
+  create_table "debt_claim_statuses", :force => true do |t|
+    t.string   "name"
+    t.integer  "action",     :limit => 1, :default => 1, :null => false
+    t.datetime "created_at",                             :null => false
+    t.datetime "updated_at",                             :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  add_index "debt_claim_statuses", ["action"], :name => "index_debt_claim_statuses_on_action"
+  add_index "debt_claim_statuses", ["name"], :name => "index_debt_claim_statuses_on_name"
+
+  create_table "debt_claims", :force => true do |t|
+    t.integer  "project_id"
+    t.string   "claim_no"
+    t.integer  "debt_claim_phase_id"
+    t.date     "closed_at"
+    t.datetime "created_at",          :null => false
+    t.datetime "updated_at",          :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  add_index "debt_claims", ["claim_no"], :name => "index_debt_claims_on_claim_no"
+  add_index "debt_claims", ["debt_claim_phase_id"], :name => "index_debt_claims_on_debt_claim_phase_id"
+  add_index "debt_claims", ["project_id"], :name => "index_debt_claims_on_project_id"
+
   create_table "degree_types", :force => true do |t|
     t.string   "name"
     t.string   "dt_code"
@@ -1035,6 +1167,30 @@ ActiveRecord::Schema.define(:version => 20161030152027) do
   end
 
   add_index "fiscal_descriptions", ["code"], :name => "index_fiscal_descriptions_on_code", :unique => true
+
+  create_table "formalities", :force => true do |t|
+    t.integer  "formality_type_id"
+    t.string   "code"
+    t.string   "name"
+    t.datetime "created_at",        :null => false
+    t.datetime "updated_at",        :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  add_index "formalities", ["code"], :name => "index_formalities_on_code"
+  add_index "formalities", ["formality_type_id"], :name => "index_formalities_on_formality_type_id"
+  add_index "formalities", ["name"], :name => "index_formalities_on_name"
+
+  create_table "formality_types", :force => true do |t|
+    t.string   "name"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  add_index "formality_types", ["name"], :name => "index_formality_types_on_name"
 
   create_table "guides", :force => true do |t|
     t.integer  "site_id"
@@ -1888,6 +2044,16 @@ ActiveRecord::Schema.define(:version => 20161030152027) do
     t.string  "store_name"
     t.decimal "initial",           :precision => 34, :scale => 4
     t.decimal "current",           :precision => 34, :scale => 4
+  end
+
+  create_table "product_family_stocks_manual", :id => false, :force => true do |t|
+    t.integer "family_id",                                  :default => 0, :null => false
+    t.string  "family_code"
+    t.string  "family_name"
+    t.integer "store_id"
+    t.string  "store_name"
+    t.decimal "initial",     :precision => 34, :scale => 4
+    t.decimal "current",     :precision => 34, :scale => 4
   end
 
   create_table "product_types", :force => true do |t|
@@ -2802,6 +2968,7 @@ ActiveRecord::Schema.define(:version => 20161030152027) do
     t.integer  "inhabitants",            :limit => 2, :default => 0, :null => false
     t.string   "km"
     t.string   "gis_id_wc"
+    t.string   "pub_record"
   end
 
   add_index "subscribers", ["billing_frequency_id"], :name => "index_subscribers_on_billing_frequency_id"
@@ -2820,6 +2987,7 @@ ActiveRecord::Schema.define(:version => 20161030152027) do
   add_index "subscribers", ["office_id", "subscriber_code"], :name => "index_subscribers_unique", :unique => true
   add_index "subscribers", ["office_id"], :name => "index_subscribers_on_office_id"
   add_index "subscribers", ["phone"], :name => "index_subscribers_on_phone"
+  add_index "subscribers", ["pub_record"], :name => "index_subscribers_on_pub_record"
   add_index "subscribers", ["reading_route_id"], :name => "index_subscribers_on_reading_route_id"
   add_index "subscribers", ["reading_sequence"], :name => "index_subscribers_on_reading_sequence"
   add_index "subscribers", ["reading_variant"], :name => "index_subscribers_on_reading_variant"
@@ -2906,17 +3074,30 @@ ActiveRecord::Schema.define(:version => 20161030152027) do
   add_index "supplier_invoice_approvals", ["supplier_invoice_id"], :name => "index_supplier_invoice_approvals_on_supplier_invoice_id"
 
   create_table "supplier_invoice_debts", :id => false, :force => true do |t|
-    t.integer "supplier_invoice_id",                                 :default => 0, :null => false
+    t.integer "supplier_invoice_id", :limit => 8
     t.integer "organization_id"
     t.integer "supplier_id"
     t.string  "invoice_no"
-    t.decimal "subtotal",            :precision => 47, :scale => 8
-    t.decimal "taxes",               :precision => 65, :scale => 20
-    t.decimal "bonus",               :precision => 57, :scale => 14
-    t.decimal "taxable",             :precision => 58, :scale => 14
-    t.decimal "total",               :precision => 65, :scale => 20
-    t.decimal "paid",                :precision => 35, :scale => 4
-    t.decimal "debt",                :precision => 65, :scale => 20
+    t.decimal "subtotal",                         :precision => 47, :scale => 8
+    t.decimal "taxes",                            :precision => 65, :scale => 20
+    t.decimal "bonus",                            :precision => 57, :scale => 14
+    t.decimal "taxable",                          :precision => 58, :scale => 14
+    t.decimal "total",                            :precision => 65, :scale => 20
+    t.decimal "paid",                             :precision => 35, :scale => 4
+    t.decimal "debt",                             :precision => 65, :scale => 20
+  end
+
+  create_table "supplier_invoice_debts_manual", :id => false, :force => true do |t|
+    t.integer "id",              :limit => 8
+    t.integer "organization_id"
+    t.string  "invoice_no"
+    t.decimal "subtotal",                     :precision => 47, :scale => 8
+    t.decimal "taxes",                        :precision => 65, :scale => 20
+    t.decimal "bonus",                        :precision => 57, :scale => 14
+    t.decimal "taxable",                      :precision => 58, :scale => 14
+    t.decimal "total",                        :precision => 65, :scale => 20
+    t.decimal "paid",                         :precision => 35, :scale => 4
+    t.decimal "debt",                         :precision => 65, :scale => 20
   end
 
   create_table "supplier_invoice_items", :force => true do |t|

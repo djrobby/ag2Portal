@@ -1,0 +1,29 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  complaint_no: MyString
+  complaint_class: 
+  complaint_status: 
+  client: 
+  subscriber: 
+  project: 
+  description: MyString
+  official_sheet: MyString
+  starting_at: 2016-11-07 12:38:50
+  ending_at: 2016-11-07 12:38:50
+  answer: MyString
+  remarks: MyString
+
+two:
+  complaint_no: MyString
+  complaint_class: 
+  complaint_status: 
+  client: 
+  subscriber: 
+  project: 
+  description: MyString
+  official_sheet: MyString
+  starting_at: 2016-11-07 12:38:50
+  ending_at: 2016-11-07 12:38:50
+  answer: MyString
+  remarks: MyString
