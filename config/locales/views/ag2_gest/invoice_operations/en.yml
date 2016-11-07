@@ -1,0 +1,19 @@
+en:
+  ag2_gest:
+    invoice_operations:
+      index:
+        title: "Invoice Operations"
+        btn_new: "Nueva Operación de Factura"
+        back_to_root: "Volver a ag2Gest"
+        back_to_management: "Volver a Facturación"
+      show:
+        title: "Operación de Factura"
+        btn_edit: "Editar Operación de Factura"
+        btn_delete: "Borrar Operación de Factura"
+        return_to: "Volver a Operación de Factura"
+      edit:
+        title: "Editar Operación de Factura"
+        btn_show: "Ver Operación de Factura"
+      new:
+        title: "Nueva Operación de Factura"
+      back_to_main_page: "Volver a Operaciones de Facturas"

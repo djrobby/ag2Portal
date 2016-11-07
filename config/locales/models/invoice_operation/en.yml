@@ -9,6 +9,6 @@ en:
     attributes:
       invoice_operations:
         id: "Id"
-        name: Description"
+        name: "Description"
         successfully: "Invoice operation se ha actualizado correctamente."
         create: "Invoice operation se ha creado correctamente."

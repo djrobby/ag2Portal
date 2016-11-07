@@ -1,5 +1,22 @@
-<p id="notice"><%= notice %></p>
+<%= render '/layouts/ag2_gest/contractingrequeststatusesbreadcrumb' %>
 
+<h3><%= t('.title')%></h3>
+<table class="table">
+  <tbody>
+    <tr>
+      <td><%= t('activerecord.attributes.invoice_status.id') %>:</td>
+      <td><%= @invoice_status.try(:id) %></td>
+      <td><%= t('activerecord.attributes.invoice_status.name') %>:</td>
+      <td><%= @invoice_status.try(:name) %></td>
+    </tr>
+      <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @invoice_status } %>
+      <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @invoice_status } %>
+  </tbody>
+</table>
 
-<%= link_to 'Edit', edit_invoice_status_path(@invoice_status) %> |
-<%= link_to 'Back', invoice_statuses_path %>
+<%= render partial: '/layouts/crud/update_delete_new', locals:
+{ model: InvoiceStatus, update_path: edit_invoice_status_path(@invoice_status), update_txt: t('.btn_edit'),
+delete_path: @invoice_status, delete_txt: t('.btn_delete'), msg: t("activerecord.models.invoice_status.one"), :txt => @invoice_status.name,
+new_path: new_invoice_status_path, new_txt: t('ag2_gest.invoice_statuses.index.btn_new') } %>
+
+<%= link_to I18n.t('ag2_gest.invoice_statuses.back_to_main_page'), invoice_statuses_path %>

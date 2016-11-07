@@ -1,6 +1,8 @@
-<h1>Editing invoice_status</h1>
+<%= render '/layouts/ag2_gest/invoicestatusessbreadcrumb' %>
+
+<h3><%=t '.title' %></h3>
 
 <%= render 'form' %>
 
-<%= link_to 'Show', @invoice_status %> |
-<%= link_to 'Back', invoice_statuses_path %>
+<%= link_to t('.show'), @invoice_status %> |
+<%= link_to t('.back'), invoice_statuses_path %>
