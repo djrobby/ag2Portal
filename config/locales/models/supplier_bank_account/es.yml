@@ -15,7 +15,7 @@ es:
         country: "País"
         country_id: "País"
         iban_dc: "DC IBAN"
-        iban_dc_c: "IBAN"
+        iban_dc_c: "DC"
         bank: "Banco"
         bank_id: "Banco"
         bank_office: "Oficina"

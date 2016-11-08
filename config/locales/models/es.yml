@@ -1,6 +1,8 @@
 es:
   yes_on: "Si"
   no_off: "No"
+  try_again: "Reintenta"
+  should_try_again: "Deberías intentarlo otra vez..."
   activerecord:
     errors:
       models:
@@ -109,13 +111,14 @@ es:
             code:
               code_invalid: "inválido"
         supplier_bank_account:
+          iban_invalid: "IBAN inválido."
           attributes:
             iban_dc:
               dc_invalid: "inválido (deben ser dos dígitos numéricos)"
             ccc_dc:
               dc_invalid: "inválido (deben ser dos dígitos numéricos)"
             account_no:
-              code_invalid: "inválido (deben ser diez dígitos numéricos)"
+              code_invalid: "inválido (deben ser doce dígitos numéricos)"
         infrastructure:
           attributes:
             code:

@@ -11,7 +11,7 @@
     }
     // Holder Name
     if ($("#fnt-name").val() == "") {
-      _n = $('#supplier_name').val();
+      _n = $('#supplier_name').val().toUpperCase();
       $("#fnt-name").val(_n);
     }
     
@@ -63,9 +63,9 @@
     <%= f.input :iban_dc, input_html: { onkeyup: "caps(this)", class: 'x-large-text-field field', maxlength: 2, id: 'fnt-iban-dc', data: { validation: "required", "validation-error-msg" => "#{e}" }, onkeyup: "caps(this)" }, label_html: { class: 'form-label' } %>
     <%= f.association :bank, collection: @banks, input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-bank', data: { validation: "required", "validation-error-msg" => "#{e}" } }, label_html: { class: 'form-label' } %>
     <%= f.association :bank_office, collection: @offices, input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-office', data: { validation: "required", "validation-error-msg" => "#{e}" } }, label_html: { class: 'form-label' } %>
-    <%= f.input :ccc_dc, input_html: { onkeyup: "caps(this)", class: 'x-large-text-field field', maxlength: 2, id: 'fnt-ccc-dc', data: { validation: "required", "validation-error-msg" => "#{e}" }, onkeyup: "caps(this)" }, label_html: { class: 'form-label' } %>
-    <%= f.input :account_no, input_html: { onkeyup: "caps(this)", class: 'x-large-text-field field', maxlength: 10, id: 'fnt-account', data: { validation: "required", "validation-error-msg" => "#{e}" }, onkeyup: "caps(this)" }, label_html: { class: 'form-label' } %>
-    <%= f.input :holder_name, input_html: { onkeyup: "caps(this)", class: 'x-large-text-field field', maxlength: 10, id: 'fnt-name', data: { validation: "required", "validation-error-msg" => "#{e}" }, onkeyup: "caps(this)" }, label_html: { class: 'form-label' } %>
+    <%#= f.input :ccc_dc, input_html: { onkeyup: "caps(this)", class: 'x-large-text-field field', maxlength: 2, id: 'fnt-ccc-dc', data: { validation: "required", "validation-error-msg" => "#{e}" }, onkeyup: "caps(this)" }, label_html: { class: 'form-label' } %>
+    <%= f.input :account_no, input_html: { onkeyup: "caps(this)", class: 'x-large-text-field field', maxlength: 12, id: 'fnt-account', data: { validation: "required", "validation-error-msg" => "#{e}" }, onkeyup: "caps(this)" }, label_html: { class: 'form-label' } %>
+    <%= f.input :holder_name, input_html: { onkeyup: "caps(this)", class: 'x-large-text-field field', maxlength: 40, id: 'fnt-name', data: { validation: "required", "validation-error-msg" => "#{e}" }, onkeyup: "caps(this)" }, label_html: { class: 'form-label' } %>
     <%= f.input :holder_fiscal_id, input_html: { onkeyup: "caps(this)", class: 'x-large-text-field field', id: 'fnt-fiscal-id', data: { validation: "required", "validation-error-msg" => "#{e}" }, onkeyup: "caps(this)" }, label_html: { class: 'form-label' } %>
     <%= f.input :starting_at, start_year: Time.now.year - 100, end_year: Time.now.year + 100, as: :string, input_html: { value: (f.object.starting_at.strftime("%d/%m/%Y") if f.object.starting_at), class: 'mid-text-field idatepicker field', id: 'fnt-starting-at' }, label_html: { class: 'form-label' } %>
     <%= f.input :ending_at, start_year: Time.now.year - 100, end_year: Time.now.year + 100, as: :string, input_html: { value: (f.object.ending_at.strftime("%d/%m/%Y") if f.object.ending_at), class: 'mid-text-field idatepicker field', id: 'fnt-ending-at' }, label_html: { class: 'form-label' } %>
@@ -80,5 +80,7 @@
 
 <script type="text/javascript">
   sel2NoMatch = '<%= t("select2.no_matches") %>';
-  su_accountFieldsUI.init(sel2NoMatch);
+  invalidIBAN = '<%= t("activerecord.errors.models.supplier_bank_account.iban_invalid") %>';
+  tryAgain = '<%= t("should_try_again") %>';
+  su_accountFieldsUI.init(sel2NoMatch, invalidIBAN, tryAgain);
 </script>

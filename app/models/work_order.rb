@@ -294,19 +294,19 @@ class WorkOrder < ActiveRecord::Base
   # Records navigator
   #
   def to_first
-    WorkOrder.order("order_no").first
+    WorkOrder.order("order_no desc").first
   end
 
   def to_prev
-    WorkOrder.where("order_no < ?", id).order("order_no").last
+    WorkOrder.where("order_no > ?", order_no).order("order_no desc").last
   end
 
   def to_next
-    WorkOrder.where("order_no > ?", id).order("order_no").first
+    WorkOrder.where("order_no < ?", order_no).order("order_no desc").first
   end
 
   def to_last
-    WorkOrder.order("order_no").last
+    WorkOrder.order("order_no desc").last
   end
 
   searchable do

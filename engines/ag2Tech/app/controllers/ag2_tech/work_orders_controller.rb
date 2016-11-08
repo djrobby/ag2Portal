@@ -643,7 +643,7 @@ module Ag2Tech
         if !status.blank?
           with :work_order_status_id, status
         end
-        order_by :sort_no, :asc
+        order_by :sort_no, :desc
         paginate :page => params[:page] || 1, :per_page => per_page
       end
       @work_orders = @search.results

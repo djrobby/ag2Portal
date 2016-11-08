@@ -15,7 +15,8 @@ module Ag2Purchase
                                                :validate_fiscal_id_textfield,
                                                :su_format_amount,
                                                :su_format_percentage,
-                                               :su_update_office_select_from_bank]
+                                               :su_update_office_select_from_bank,
+                                               :su_check_iban]
     # Update payment method and ledger account text fields at view from organization select
     def su_update_textfields_from_organization
       organization = params[:org]
@@ -236,6 +237,37 @@ module Ag2Purchase
       @offices_dropdown = bank_offices_array(@offices)
       # Setup JSON
       @json_data = { "office" => @offices_dropdown }
+      render json: @json_data
+    end
+
+    # Check IBAN
+    def su_check_iban
+      country = params[:country]
+      dc = params[:dc]
+      bank = params[:bank]
+      office = params[:office]
+      account = params[:account]
+      _country = nil
+      _bank = nil
+      _office = nil
+      iban = ''
+
+      if country != '0'
+        _country = Country.find(country)
+        iban += _country.blank? ? 'ES' : _country.code
+      end
+      iban += dc != '0' ? dc : '00'
+      if bank != '0'
+        _bank = Bank.find(bank)
+        iban += _bank.blank? ? '0000' : _bank.code
+      end
+      if office != '0'
+        _office = BankOffice.find(office)
+        iban += _office.blank? ? '0000' : _office.code
+      end
+      iban += account != '0' ? account : '0000000000'
+      # Setup JSON
+      @json_data = { "iban" => iban }
       render json: @json_data
     end
 

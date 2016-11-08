@@ -17,14 +17,14 @@ class SupplierBankAccount < ActiveRecord::Base
                                   :format => { with: /\A\d+\Z/, message: :dc_invalid }
   validates :bank,                :presence => true
   validates :bank_office,         :presence => true
-  validates :ccc_dc,              :presence => true,
-                                  :length => { :is => 2 },
-                                  :format => { with: /\A\d+\Z/, message: :dc_invalid }
+  # validates :ccc_dc,              :presence => true,
+  #                                 :length => { :is => 2 },
+  #                                 :format => { with: /\A\d+\Z/, message: :dc_invalid }
   validates :account_no,          :presence => true,
-                                  :length => { :is => 10 },
+                                  :length => { :is => 12 },
                                   :format => { with: /\A\d+\Z/, message: :code_invalid },
                                   :uniqueness => { :scope => [:supplier_id, :bank_account_class_id, :country_id,
-                                                              :iban_dc, :bank_id, :bank_office_id, :ccc_dc] }
+                                                              :iban_dc, :bank_id, :bank_office_id] }
   validates :holder_fiscal_id,    :presence => true,
                                   :length => { :minimum => 8 }
   validates :holder_name,         :presence => true
@@ -65,9 +65,9 @@ class SupplierBankAccount < ActiveRecord::Base
     if !self.bank_office.blank?
       _f += self.bank_office.code.strip
     end
-    if !self.ccc_dc.blank?
-      _f += self.ccc_dc.strip
-    end
+    # if !self.ccc_dc.blank?
+    #   _f += self.ccc_dc.strip
+    # end
     if !self.account_no.blank?
       _f += self.account_no.strip
     end
@@ -88,11 +88,11 @@ class SupplierBankAccount < ActiveRecord::Base
     if !self.bank_office.blank?
       _f += " " + self.bank_office.code.strip
     end
-    if !self.ccc_dc.blank?
-      _f += " " + self.ccc_dc.strip
-    end
+    # if !self.ccc_dc.blank?
+    #   _f += " " + self.ccc_dc.strip
+    # end
     if !self.account_no.blank?
-      _f += self.account_no[0,2] + " " + self.account_no[2,4] + " " + self.account_no[6,4]
+      _f += " " + self.account_no[0,4] + " " + self.account_no[4,4] + " " + self.account_no[8,4]
     end
     _f
   end
@@ -111,11 +111,11 @@ class SupplierBankAccount < ActiveRecord::Base
     if !self.bank_office.blank?
       _f += " " + self.bank_office.code.strip
     end
-    if !self.ccc_dc.blank?
-      _f += " " + self.ccc_dc.strip
-    end
+    # if !self.ccc_dc.blank?
+    #   _f += " " + self.ccc_dc.strip
+    # end
     if !self.account_no.blank?
-      _f += self.account_no[0,2] + " " + self.account_no[2,4] + " " + self.account_no[6,4]
+      _f += " " + self.account_no[0,4] + " " + self.account_no[4,4] + " " + self.account_no[8,4]
     end
     _f
   end

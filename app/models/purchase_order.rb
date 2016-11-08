@@ -215,11 +215,11 @@ class PurchaseOrder < ActiveRecord::Base
   end
 
   def to_prev
-    PurchaseOrder.where("id > ?", id).order("order_no desc").last
+    PurchaseOrder.where("order_no > ?", order_no).order("order_no desc").last
   end
 
   def to_next
-    PurchaseOrder.where("id < ?", id).order("order_no desc").first
+    PurchaseOrder.where("order_no < ?", order_no).order("order_no desc").first
   end
 
   def to_last
