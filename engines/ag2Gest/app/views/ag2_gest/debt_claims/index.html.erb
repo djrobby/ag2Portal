@@ -1,0 +1,28 @@
+<%= render '/layouts/ag2_gest/debtclaimsbreadcrumb' %>
+
+<h3><%=t '.title' %></h3>
+<div class="span7" id="div_table">
+  <%= render 'debt_claims' %>
+</div>
+
+<h1>Listing debt_claims</h1>
+
+<table>
+  <tr>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @debt_claims.each do |debt_claim| %>
+  <tr>
+    <td><%= link_to 'Show', debt_claim %></td>
+    <td><%= link_to 'Edit', edit_debt_claim_path(debt_claim) %></td>
+    <td><%= link_to 'Destroy', debt_claim, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Debt claim', new_debt_claim_path %>

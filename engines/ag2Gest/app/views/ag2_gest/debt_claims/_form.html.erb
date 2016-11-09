@@ -1,0 +1,17 @@
+<%= form_for(@debt_claim) do |f| %>
+  <% if @debt_claim.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@debt_claim.errors.count, "error") %> prohibited this debt_claim from being saved:</h2>
+
+      <ul>
+      <% @debt_claim.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

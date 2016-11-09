@@ -1,0 +1,28 @@
+<%= render '/layouts/ag2_gest/formalitiesbreadcrumb' %>
+
+<h3><%=t '.title' %></h3>
+<div class="span7" id="div_table">
+  <%= render 'formalities' %>
+</div>
+
+<h1>Listing formalities</h1>
+
+<table>
+  <tr>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @formalities.each do |formality| %>
+  <tr>
+    <td><%= link_to 'Show', formality %></td>
+    <td><%= link_to 'Edit', edit_formality_path(formality) %></td>
+    <td><%= link_to 'Destroy', formality, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Formality', new_formality_path %>

@@ -1,0 +1,31 @@
+<script>
+  $(document).ready(function() {
+    $("#div_table th a, #div_table #pages a").on("click", function() {
+      $.getScript(this.href);
+      return false;
+    });
+  }); 
+</script>
+
+<table class="table table-condensed table-striped">
+  <thead>
+    <tr>
+      <th><%= sortable "id", 'Id' %></th>
+      <th><%= sortable "name", t('activerecord.attributes.complaint.name') %></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @complaints.each do |type| %>
+    <tr>
+      <td><%= type.id %></td>
+      <td><%= link_to type.name, type %></td>
+      <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => Complaint, :path => edit_complaint_path(type) } %>
+      <%= render :partial => '/layouts/crud/delete', :locals => { :model => Complaint, :path => type, :msg => t("activerecord.models.complaint.one"), :txt => type.name } %> </td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @complaints } %>
+<%= render :partial => '/layouts/crud/new', :locals => { :model => Complaint, :path => new_complaint_path, :txt => t("ag2_gest.complaints.index.btn_new") } %>
+<%= link_to t("ag2_gest.complaints.index.back_to_root"), ag2_gest.root_path %>

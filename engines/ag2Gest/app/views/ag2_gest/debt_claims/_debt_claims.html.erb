@@ -1,0 +1,31 @@
+<script>
+  $(document).ready(function() {
+    $("#div_table th a, #div_table #pages a").on("click", function() {
+      $.getScript(this.href);
+      return false;
+    });
+  }); 
+</script>
+
+<table class="table table-condensed table-striped">
+  <thead>
+    <tr>
+      <th><%= sortable "id", 'Id' %></th>
+      <th><%= sortable "name", t('activerecord.attributes.debt_claim.name') %></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @debt_claims.each do |type| %>
+    <tr>
+      <td><%= type.id %></td>
+      <td><%= link_to type.name, type %></td>
+      <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => DebtClaim, :path => edit_debt_claim_path(type) } %>
+      <%= render :partial => '/layouts/crud/delete', :locals => { :model => DebtClaim, :path => type, :msg => t("activerecord.models.debt_claim.one"), :txt => type.name } %> </td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @debt_claims } %>
+<%= render :partial => '/layouts/crud/new', :locals => { :model => DebtClaim, :path => new_debt_claim_path, :txt => t("ag2_gest.debt_claims.index.btn_new") } %>
+<%= link_to t("ag2_gest.debt_claims.index.back_to_root"), ag2_gest.root_path %>

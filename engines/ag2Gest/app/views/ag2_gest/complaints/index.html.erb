@@ -1,0 +1,28 @@
+<%= render '/layouts/ag2_gest/complaintsbreadcrumb' %>
+
+<h3><%=t '.title' %></h3>
+<div class="span7" id="div_table">
+  <%= render 'complaints' %>
+</div>
+
+<h1>Listing complaints</h1>
+
+<table>
+  <tr>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @complaints.each do |complaint| %>
+  <tr>
+    <td><%= link_to 'Show', complaint %></td>
+    <td><%= link_to 'Edit', edit_complaint_path(complaint) %></td>
+    <td><%= link_to 'Destroy', complaint, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Complaint', new_complaint_path %>
