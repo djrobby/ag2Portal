@@ -9,42 +9,6 @@
  * >> This global methods are in main nested.js!!
  */
 
-var isValidIBAN;
-
-/*
- * IBAN Validator
- */
-function validate_iban(invalidIBAN, tryAgain) {
-  isValidIBAN = true;
-
-  var country = $('#fnt-country').val()
-  if (country == "")
-    country = "0";
-  var dc = $('#fnt-iban-dc').val();
-  if (dc == "")
-    dc = "0";
-  var bank = $('#fnt-bank').val();
-  if (bank == "")
-    bank = "0";
-  var office = $('#fnt-office').val();
-  if (office == "")
-    office = "0";
-  var account = $('#fnt-account').val();
-  if (account == "")
-    account = "0";
-  jQuery.getJSON('su_check_iban/' + country + '/' + dc + '/' + bank + '/' + office + '/' + account, function(data) {
-    var iban = data.iban
-    jQuery.getJSON('https://openiban.com/validate/' + iban, function(data) {
-      if (data.valid == false) {
-        alert(data.iban + ' ' + invalidIBAN + '\n' + tryAgain);
-        isValidIBAN = data.valid
-      }
-    });
-  });
-
-  return isValidIBAN;
-}
-
 var su_accountFieldsUI = {
     init: function(sel2NoMatches, invalidIBAN, tryAgain) {
         var validationSettings = {
@@ -52,7 +16,7 @@ var su_accountFieldsUI = {
         };
 
         $('#addAccountButton').on('click', function(e) {
-            validate_iban(invalidIBAN, tryAgain);
+            var isValidIBAN = validate_iban(invalidIBAN, tryAgain, $('#fnt-country').val(), $('#fnt-iban-dc').val(), $('#fnt-bank').val(), $('#fnt-office').val(), $('#fnt-account').val());
             var isValid = $('#new-account-fields').validate(false, validationSettings);
             if (!isValid || !isValidIBAN) {
                 e.stopPropagation();

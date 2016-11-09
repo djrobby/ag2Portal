@@ -108,6 +108,7 @@ class WorkOrder < ActiveRecord::Base
   scope :belongs_to_project, -> project { where("project_id = ?", project).by_no }
 
   before_destroy :check_for_dependent_records
+  before_save :update_status_based_on_dates
 
   def to_label
     "#{full_name}"
@@ -401,5 +402,24 @@ class WorkOrder < ActiveRecord::Base
       errors.add(:base, I18n.t('activerecord.models.work_order.check_for_sale_offers'))
       return false
     end
+  end
+
+  # Before save (create & update)
+  # Update status
+  def update_status_based_on_dates
+    # 1->unstarted
+    # 2->started & uncompleted
+    # 3->completed & unclosed
+    # 4->closed
+    if started_at_was.blank? && !started_at.blank? && work_order_status_id < 2
+      self.work_order_status_id = 2
+    end
+    if completed_at_was.blank? && !completed_at.blank? && work_order_status_id < 3
+      self.work_order_status_id = 3
+    end
+    if closed_at_was.blank? && !closed_at.blank? && work_order_status_id < 4
+      self.work_order_status_id = 4
+    end
+    true
   end
 end

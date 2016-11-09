@@ -242,30 +242,7 @@ module Ag2Purchase
 
     # Check IBAN
     def su_check_iban
-      country = params[:country]
-      dc = params[:dc]
-      bank = params[:bank]
-      office = params[:office]
-      account = params[:account]
-      _country = nil
-      _bank = nil
-      _office = nil
-      iban = ''
-
-      if country != '0'
-        _country = Country.find(country)
-        iban += _country.blank? ? 'ES' : _country.code
-      end
-      iban += dc != '0' ? dc : '00'
-      if bank != '0'
-        _bank = Bank.find(bank)
-        iban += _bank.blank? ? '0000' : _bank.code
-      end
-      if office != '0'
-        _office = BankOffice.find(office)
-        iban += _office.blank? ? '0000' : _office.code
-      end
-      iban += account != '0' ? account : '0000000000'
+      iban = check_iban(params[:country], params[:dc], params[:bank], params[:office], params[:account])
       # Setup JSON
       @json_data = { "iban" => iban }
       render json: @json_data

@@ -121,3 +121,37 @@ function goToAnchorModal(aid) {
   scrollToAnchorModal(aid);
   $(aid).focus();
 }
+
+/*
+ * IBAN Validator
+ */
+function validate_iban(invalidIBAN, tryAgain, c, d, b, o, a) {
+  var isValid = true;
+
+  var country = c;
+  if (country == "")
+    country = "0";
+  var dc = d;
+  if (dc == "")
+    dc = "0";
+  var bank = b;
+  if (bank == "")
+    bank = "0";
+  var office = o;
+  if (office == "")
+    office = "0";
+  var account = a;
+  if (account == "")
+    account = "0";
+  jQuery.getJSON('su_check_iban/' + country + '/' + dc + '/' + bank + '/' + office + '/' + account, function(data) {
+    var iban = data.iban
+    jQuery.getJSON('https://openiban.com/validate/' + iban, function(data) {
+      if (data.valid == false) {
+        alert(data.iban + ' ' + invalidIBAN + '\n' + tryAgain);
+        isValid = data.valid
+      }
+    });
+  });
+
+  return isValid;
+}

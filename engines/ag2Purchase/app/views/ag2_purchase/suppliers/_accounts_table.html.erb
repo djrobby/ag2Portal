@@ -1,5 +1,7 @@
 <script>
   var _f = '';
+  var invalidIBAN = '<%= t("activerecord.errors.models.supplier_bank_account.iban_invalid") %>';
+  var tryAgain = '<%= t("should_try_again") %>';
 
   $(document).ready(function() {
     $('.wsel2').select2({
@@ -44,6 +46,18 @@
           });
         }
       });
+      return false;
+    });
+
+    // when #check_iban_btn is clicked
+    $(".check_iban_btn").click(function() {
+      var country = $(this).closest('tr').find('select.fnt-country :selected').val();
+      var dc = $(this).closest('tr').find('.fnt-iban-dc').val();
+      var bank = $(this).closest('tr').find('select.fnt-bank :selected').val();
+      var office = $(this).closest('tr').find('select.fnt-office :selected').val();
+      var account = $(this).closest('tr').find('.fnt-account').val();
+      var isValidIBAN = validate_iban(invalidIBAN, tryAgain, country, dc, bank, office, account);
+      if (isValidIBAN) alert('OK');
       return false;
     });
 
@@ -103,7 +117,10 @@
       <td><%= i.input :starting_at, label: false, wrapper: false, start_year: Time.now.year - 100, end_year: Time.now.year + 100, as: :string, input_html: { value: (i.object.starting_at.strftime("%d/%m/%Y") if i.object.starting_at), class: 'sub-alfanumeric-text-field idatepicker fnt-starting-at' } %></td>
       <td><%= i.input :ending_at, label: false, wrapper: false, start_year: Time.now.year - 100, end_year: Time.now.year + 100, as: :string, input_html: { value: (i.object.ending_at.strftime("%d/%m/%Y") if i.object.ending_at), class: 'sub-alfanumeric-text-field idatepicker fnt-ending-at' } %></td>
       <% if @breadcrumb == 'create' || @breadcrumb == 'update' %>
-      <td><%= link_to_remove_fields('<i class="icon-trash"></i>'.html_safe, i) %></td>
+      <td>
+        <%= link_to_remove_fields('<i class="icon-trash"></i>'.html_safe, i) %>
+        <a href="#" class="check_iban_btn" title="<%=t('validate') %>"><i class="icon-ok"></i></a>          
+      </td>
       <% end %>
     </tr>
     <% end %>

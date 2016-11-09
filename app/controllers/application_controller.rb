@@ -296,11 +296,30 @@ class ApplicationController < ActionController::Base
     _m
   end
 
-  # IBAN DC
-  # Returns DC if no exception
-  # Exceptions:
-  # => $err = Calculation error
-  # => $par = Parameter error
+  #
+  # Check IBAN
+  # Returns formatted IBAN
+  def check_iban(country, dc, bank, office, account)
+    _country = nil
+    _bank = nil
+    _office = nil
+    _iban = ''
+
+    if country != '0'
+      _country = Country.find(country)
+      _iban += _country.blank? ? 'ES' : _country.code
+    end
+    _iban += dc != '0' ? dc : '00'
+    if bank != '0'
+      _bank = Bank.find(bank)
+      _iban += _bank.blank? ? '0000' : _bank.code
+    end
+    if office != '0'
+      _office = BankOffice.find(office)
+      _iban += _office.blank? ? '0000' : _office.code
+    end
+    _iban += account != '0' ? account : '0000000000'
+  end
 
 =begin
 def default_url_options(options={})
