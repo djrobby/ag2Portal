@@ -12,7 +12,7 @@
     <tr>
       <th><%= t 'activerecord.attributes.work_order.order_no' %></th>
       <th><%= t 'activerecord.attributes.work_order.description' %></th>
-      <th><%= t 'activerecord.attributes.work_order.project' %></th>
+      <th><%= t 'activerecord.attributes.work_order.work_order_area' %></th>
       <th><%= t 'activerecord.attributes.work_order.work_order_type' %></th>
       <th><%= t 'activerecord.attributes.work_order.work_order_status' %></th>
       <th align="center"><%= t 'activerecord.attributes.work_order.started_at' %></th>
@@ -29,8 +29,8 @@
       <% end %>
       <td><%= link_to order.full_no, order %></td>
       <td><%= order.summary[0,20] %></td>
-      <td><%= order.project.full_code unless order.project.blank? %></td>
-      <td><%= order.work_order_type.name unless order.work_order_type.blank? %></td>
+      <td><%= order.work_order_area.short_name unless order.work_order_area.blank? %></td>
+      <td><%= order.work_order_type.short_name unless order.work_order_type.blank? %></td>
       <td><%= order.work_order_status.name unless order.work_order_status.blank? %></td>
       <td align="center"><%= order.started_at.strftime("%d/%m/%Y") unless order.started_at.blank? %></td>
       <td align="center"><%= order.completed_at.strftime("%d/%m/%Y") unless order.completed_at.blank? %></td>

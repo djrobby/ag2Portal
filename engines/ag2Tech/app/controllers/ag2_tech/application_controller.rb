@@ -9,7 +9,9 @@ module Ag2Tech
       session[:letter] = nil
       session[:No] = nil
       session[:Project] = nil
+      session[:Area] = nil
       session[:Type] = nil
+      session[:Labor] = nil
       session[:Status] = nil
       session[:WrkrCompany] = nil
       session[:WrkrOffice] = nil

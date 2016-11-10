@@ -316,7 +316,9 @@ class WorkOrder < ActiveRecord::Base
     integer :charge_account_id
     integer :project_id, :multiple => true
     integer :client_id
+    integer :work_order_area_id
     integer :work_order_type_id
+    integer :work_order_labor_id
     integer :work_order_status_id
     integer :client_id
     integer :master_order_id

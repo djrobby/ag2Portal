@@ -13,6 +13,7 @@ Ag2Tech::Engine.routes.draw do
     match 'project_report', :controller => 'ag2_tech_track', :action => 'project_report'
     match 'budget_report', :controller => 'ag2_tech_track', :action => 'budget_report'
     match 'work_report', :controller => 'ag2_tech_track', :action => 'work_report'
+    match 'work_order_report', :controller => 'work_orders', :action => 'work_order_report'
 
     # Routes for jQuery POSTs
     # Numbers with decimals (.) must be multiplied (by 1xxx and the same zeroes x positions) before passed as REST parameter!

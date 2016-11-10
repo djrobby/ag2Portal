@@ -23,6 +23,7 @@ module Ag2Gest
     # GET /billing_incidence_types/1
     # GET /billing_incidence_types/1.json
     def show
+      @breadcrumb = 'read'
       @billing_incidence_type = BillingIncidenceType.find(params[:id])
 
       respond_to do |format|
@@ -34,6 +35,7 @@ module Ag2Gest
     # GET /billing_incidence_types/new
     # GET /billing_incidence_types/new.json
     def new
+      @breadcrumb = 'create'
       @billing_incidence_type = BillingIncidenceType.new
 
       respond_to do |format|
@@ -44,12 +46,14 @@ module Ag2Gest
 
     # GET /billing_incidence_types/1/edit
     def edit
+      @breadcrumb = 'update'
       @billing_incidence_type = BillingIncidenceType.find(params[:id])
     end
 
     # POST /billing_incidence_types
     # POST /billing_incidence_types.json
     def create
+      @breadcrumb = 'create'
       @billing_incidence_type = BillingIncidenceType.new(params[:billing_incidence_type])
 
       respond_to do |format|
@@ -66,6 +70,7 @@ module Ag2Gest
     # PUT /billing_incidence_types/1
     # PUT /billing_incidence_types/1.json
     def update
+      @breadcrumb = 'update'
       @billing_incidence_type = BillingIncidenceType.find(params[:id])
 
       respond_to do |format|
@@ -83,11 +88,38 @@ module Ag2Gest
     # DELETE /billing_incidence_types/1.json
     def destroy
       @billing_incidence_type = BillingIncidenceType.find(params[:id])
-      @billing_incidence_type.destroy
 
       respond_to do |format|
-        format.html { redirect_to billing_incidence_types_url }
-        format.json { head :no_content }
+        if @billing_incidence_type.destroy
+          format.html { redirect_to billing_incidence_types_url,
+                      notice: (crud_notice('destroyed', @billing_incidence_type) + "#{undo_link(@billing_incidence_type)}").html_safe }
+          format.json { head :no_content }
+        else
+          format.html { redirect_to billing_incidence_types_url, alert: "#{@billing_incidence_type.errors[:base].to_s}".gsub('["', '').gsub('"]', '') }
+          format.json { render json: @billing_incidence_type.errors, status: :unprocessable_entity }
+        end
+      end
+    end
+
+    private
+
+    def sort_column
+      BillingIncidenceType.column_names.include?(params[:sort]) ? params[:sort] : "id"
+    end
+
+    # Keeps filter state
+    def manage_filter_state
+      # sort
+      if params[:sort]
+        session[:sort] = params[:sort]
+      elsif session[:sort]
+        params[:sort] = session[:sort]
+      end
+      # direction
+      if params[:direction]
+        session[:direction] = params[:direction]
+      elsif session[:direction]
+        params[:direction] = session[:direction]
       end
     end
   end

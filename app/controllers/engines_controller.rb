@@ -60,6 +60,8 @@ class EnginesController < ApplicationController
     # Ag2Tech
     session[:Period] = nil
     session[:Group] = nil
+    session[:Area] = nil
+    session[:Labor] = nil
 
     render json: { result: session[:letter] }
   end

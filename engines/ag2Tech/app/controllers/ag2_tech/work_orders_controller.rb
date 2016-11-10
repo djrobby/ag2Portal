@@ -31,6 +31,7 @@ module Ag2Tech
                                                :work_order_form_sm,
                                                :work_order_form_empty,
                                                :work_order_form_empty_sm,
+                                               :work_order_report,
                                                :wo_update_costs_from_cost_or_enforcement_pct]
     #
     # Subforms
@@ -607,12 +608,16 @@ module Ag2Tech
       manage_filter_state
       no = params[:No]
       project = params[:Project]
+      area = params[:Area]
       type = params[:Type]
+      labor = params[:Labor]
       status = params[:Status]
       # OCO
       init_oco if !session[:organization]
       # Initialize select_tags
       @projects = projects_dropdown if @projects.nil?
+      @areas = work_order_areas_dropdown if @areas.nil?
+      @labors = work_order_labors_dropdown if @labors.nil?
       @types = work_order_types_dropdown if @types.nil?
       @statuses = WorkOrderStatus.order('id') if @statuses.nil?
 
@@ -637,8 +642,14 @@ module Ag2Tech
         if !project.blank?
           with :project_id, project
         end
+        if !area.blank?
+          with :work_order_area_id, area
+        end
         if !type.blank?
           with :work_order_type_id, type
+        end
+        if !labor.blank?
+          with :work_order_labor_id, labor
         end
         if !status.blank?
           with :work_order_status_id, status
@@ -1026,6 +1037,68 @@ module Ag2Tech
                      filename: "#{title}_#{@work_order.full_no}.pdf",
                      type: 'application/pdf',
                      disposition: 'inline' }
+      end
+    end
+
+    # work order report
+    def work_order_report
+      manage_filter_state
+      no = params[:No]
+      project = params[:Project]
+      area = params[:Area]
+      type = params[:Type]
+      labor = params[:Labor]
+      status = params[:Status]
+      # OCO
+      init_oco if !session[:organization]
+
+      # If inverse no search is required
+      no = !no.blank? && no[0] == '%' ? inverse_no_search(no) : no
+
+      @search = WorkOrder.search do
+        fulltext params[:search]
+        if session[:organization] != '0'
+          with :organization_id, session[:organization]
+        end
+        if !no.blank?
+          if no.class == Array
+            with :order_no, no
+          else
+            with(:order_no).starting_with(no)
+          end
+        end
+        if !project.blank?
+          with :project_id, project
+        end
+        if !area.blank?
+          with :work_order_area_id, area
+        end
+        if !type.blank?
+          with :work_order_type_id, type
+        end
+        if !labor.blank?
+          with :work_order_labor_id, labor
+        end
+        if !status.blank?
+          with :work_order_status_id, status
+        end
+        order_by :sort_no, :asc
+        paginate :page => params[:page] || 1, :per_page => WorkOrder.count
+      end
+
+      @work_order_report = @search.results
+
+      if !@work_order_report.blank?
+        title = t("activerecord.models.work_order.few")
+        @to = formatted_date(@work_order_report.first.created_at)
+        @from = formatted_date(@work_order_report.last.created_at)
+        respond_to do |format|
+          # Render PDF
+          format.pdf { send_data render_to_string,
+                       filename: "#{title}_#{@from}-#{@to}.pdf",
+                       type: 'application/pdf',
+                       disposition: 'inline' }
+        end
       end
     end
 
@@ -1503,11 +1576,23 @@ module Ag2Tech
       elsif session[:Project]
         params[:Project] = session[:Project]
       end
+      # area
+      if params[:Area]
+        session[:Area] = params[:Area]
+      elsif session[:Area]
+        params[:Area] = session[:Area]
+      end
       # type
       if params[:Type]
         session[:Type] = params[:Type]
       elsif session[:Type]
         params[:Type] = session[:Type]
+      end
+      # labor
+      if params[:Labor]
+        session[:Labor] = params[:Labor]
+      elsif session[:Labor]
+        params[:Labor] = session[:Labor]
       end
       # status
       if params[:Status]

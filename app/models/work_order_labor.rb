@@ -19,6 +19,10 @@ class WorkOrderLabor < ActiveRecord::Base
 
   before_destroy :check_for_dependent_records
 
+  def short_name
+    name[0,20]
+  end
+
   private
 
   def check_for_dependent_records
