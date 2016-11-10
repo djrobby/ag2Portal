@@ -104,7 +104,7 @@ module Ag2Gest
     private
 
     def sort_column
-      BillingIncidenceType.column_names.include?(params[:sort]) ? params[:sort] : "id"
+      BillingIncidenceType.column_names.include?(params[:sort]) ? params[:sort] : "code"
     end
 
     # Keeps filter state

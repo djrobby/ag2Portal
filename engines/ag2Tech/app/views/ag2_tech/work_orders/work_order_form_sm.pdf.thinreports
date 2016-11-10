@@ -186,6 +186,7 @@ report.page.values posted_at: @work_order.posted_at.strftime("%d/%m/%Y") unless 
 report.page.values client: @work_order.client.full_name unless @work_order.client.blank?
 report.page.values area: @work_order.area.full_name unless @work_order.area.blank?
 report.page.values store: @work_order.store.name unless @work_order.store.blank?
+report.page.values charge_account: @work_order.charge_account.full_name unless @work_order.charge_account.blank?
 # Page header: Others
 report.page.values(form_title: I18n.t("activerecord.models.work_order.one"),
 				   order_no_title: I18n.t("activerecord.attributes.work_order.order_no_report") + ":",
@@ -207,7 +208,6 @@ report.page.values(form_title: I18n.t("activerecord.models.work_order.one"),
 				   in_charge_title: I18n.t("activerecord.attributes.work_order.in_charge") + ":",
 				   in_charge: @work_order.in_charge.full_name,
 				   charge_account_title: I18n.t("activerecord.attributes.work_order.charge_account_report") + ":",
-				   charge_account: @work_order.charge_account.full_name,
 				   store_title: I18n.t("activerecord.attributes.work_order.store") + ":",
 				   client_title: I18n.t("activerecord.attributes.work_order.client") + ":",
 				   petitioner_title: I18n.t("activerecord.attributes.work_order.petitioner") + ":",
