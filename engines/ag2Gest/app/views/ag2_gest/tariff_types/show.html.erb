@@ -24,4 +24,7 @@
 delete_path: @tariff_type, delete_txt: t('.btn_delete'), msg: t("activerecord.models.tariff_type.one"), :txt => @tariff_type.name,
 new_path: new_tariff_type_path, new_txt: t('ag2_gest.tariff_types.index.btn_new') } %>
 
+<% if !session[:return_to_subscriber].nil? %>
+  <%= link_to session[:return_to_subscriber], session[:return_to_subscriber_url] %> |
+<% end %>
 <%= link_to I18n.t('ag2_gest.tariff_types.back_to_main_page'), tariff_types_path %>

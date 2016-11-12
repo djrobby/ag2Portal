@@ -131,3 +131,7 @@ en:
           attributes:
             reading_index:
               reading_invalid: "invalid (must be integer greater than 0)"
+        meter:
+          attributes:
+            meter_code:
+              code_invalid: "invalid (must be alphanumeric)"

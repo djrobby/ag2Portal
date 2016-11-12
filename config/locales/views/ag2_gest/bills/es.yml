@@ -11,7 +11,10 @@ es:
         back_to_management: "Volver a Facturación"
         back_to_pre_index: "Volver a Facturación Masiva de Servicios"
         confirmation_date: "Fecha de confirmación"
+        invoice_date: "Fecha de factura"
         payday_limit: "Fecha de vencimiento"
+        label_from: "Desde"
+        label_to: "Hasta"
       show:
         title: "Recibo"
         btn_edit: "Editar Recibo"

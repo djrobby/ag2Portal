@@ -1,11 +1,9 @@
-<% session[:return_to_meter] = "Volver a contador" %>
+<!-- Link to return here -->
+<!-- I18n.t('ag2_gest.meters.show.return_to') -->
+<% session[:return_to_meter] = I18n.t('ag2_gest.meters.show.return_to') %>
 <% session[:return_to_meter_url] = "#{request.protocol}#{request.host_with_port}#{request.fullpath}" %>
 
 <%= render '/layouts/ag2_gest/metersbreadcrumb' %>
-<% if !session[:return_to_reading].nil? %>
-  <%= link_to session[:return_to_reading], session[:return_to_reading_url] %><br />
-<% end %>
-
 
 <h3><%= t('.title') %></h3>
 <table class="table">
@@ -58,6 +56,12 @@
 delete_path: @meter, delete_txt: t('.btn_delete'), msg: t("activerecord.models.meter.one"), :txt => @meter.meter_code,
 new_path: new_meter_path, new_txt: t('ag2_gest.meters.index.btn_new') } %>
 
+<% if !session[:return_to_subscriber].nil? %>
+  <%= link_to session[:return_to_subscriber], session[:return_to_subscriber_url] %> |
+<% end %>
+<% if !session[:return_to_reading].nil? %>
+  <%= link_to session[:return_to_reading], session[:return_to_reading_url] %> |
+<% end %>
 <%= link_to I18n.t('ag2_gest.meters.back_to_main_page'), meters_path %>
 
 <!-- Associated MeterDetails -->

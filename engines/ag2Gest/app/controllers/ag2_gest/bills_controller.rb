@@ -1,4 +1,5 @@
 require_dependency "ag2_gest/application_controller"
+require 'will_paginate/array'
 
 module Ag2Gest
   class BillsController < ApplicationController
@@ -43,11 +44,12 @@ module Ag2Gest
       @pre_bills = PreBill.where(pre_group_no: params[:pre_bill][:ids], bill_id: nil)
       by_user = current_user.nil? ? nil : current_user.id
       payday_limit = params[:pre_bill][:payday_limit]
+      invoice_date = params[:pre_bill][:invoice_date]
       @pre_bills.each do |pre_bill|
         @bill = Bill.create!( bill_no: bill_next_no(pre_bill.project),
           project_id: pre_bill.reading.project_id,
           invoice_status_id: InvoiceStatus::PENDING,
-          bill_date: Date.today,
+          bill_date: invoice_date,
           subscriber_id: pre_bill.subscriber_id,
           client_id: pre_bill.client_id,
           last_name: pre_bill.last_name,
@@ -74,9 +76,9 @@ module Ag2Gest
             bill_id: @bill.id,
             invoice_status_id: InvoiceStatus::PENDING,
             invoice_type_id: InvoiceType::WATER,
-            invoice_date: Date.today,
+            invoice_date: invoice_date,
             tariff_scheme_id: pre_invoice.tariff_scheme_id,
-            payday_limit: payday_limit.blank? ? pre_invoice.try(:billing_period).try(:billing_ending_date) : payday_limit,
+            payday_limit: payday_limit.blank? ? invoice_date : payday_limit,
             invoice_operation_id: InvoiceOperation::INVOICE,
             billing_period_id: pre_invoice.billing_period_id,
             consumption: pre_invoice.consumption,
@@ -162,7 +164,25 @@ module Ag2Gest
     end
 
     def pre_index
-      @pre_bills = PreBill.where(project_id: current_projects_ids).group_by{|p| p.pre_group_no }
+      from  = params[:From]
+      to = params[:To]
+      # OCO
+      init_oco if !session[:organization]
+      if !to.blank? and !from.blank?
+        @pre_bills = PreBill.where(project_id: current_projects_ids).where("bill_date >= ? AND bill_date <= ?",from.to_date, to.to_date).group_by{|p| p.pre_group_no }.to_a.paginate(:page => params[:page] || 1, :per_page => 10)
+      elsif !to.blank?
+        @pre_bills = PreBill.where(project_id: current_projects_ids).where("bill_date <= ?", to.to_date).group_by{|p| p.pre_group_no }.to_a.paginate(:page => params[:page] || 1, :per_page => 10)
+      elsif !from.blank?
+        @pre_bills = PreBill.where(project_id: current_projects_ids).where("bill_date >= ?", from.to_date).group_by{|p| p.pre_group_no }.to_a.paginate(:page => params[:page] || 1, :per_page => 10)
+      else
+        @pre_bills = PreBill.where(project_id: current_projects_ids).group_by{|p| p.pre_group_no }.to_a.paginate(:page => params[:page] || 1, :per_page => 10)
+      end
+
+      respond_to do |format|
+        format.html # index.html.erb
+        format.json { render json: @pre_bills }
+        format.js
+      end
     end
 
     # GET /bills/1

@@ -33,4 +33,7 @@
 delete_path: @reading_route, delete_txt: t('.btn_delete'), msg: t("activerecord.models.reading_route.one"), :txt => @reading_route.id,
 new_path: new_reading_route_path, new_txt: t('ag2_gest.reading_routes.index.btn_new') } %>
 
+<% if !session[:return_to_subscriber].nil? %>
+  <%= link_to session[:return_to_subscriber], session[:return_to_subscriber_url] %> |
+<% end %>
 <%= link_to I18n.t('ag2_gest.reading_routes.back_to_main_page'), reading_routes_path %>

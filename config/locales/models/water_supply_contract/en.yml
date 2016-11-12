@@ -34,6 +34,7 @@ en:
         work_order: "Orden de instalación"
         successfully: "Contrato de suminitro se ha actualizado correctamente."
         create: "Contrato de suminitro se ha creado correctamente."
+        code: "Code"
         #mj
         installation_index: "Index de instalación"
         meters: "Contador"

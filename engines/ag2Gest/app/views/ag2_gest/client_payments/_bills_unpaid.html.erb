@@ -1,3 +1,15 @@
+<div class="row-fluid">
+  <div class="span12">
+    <input type="checkbox" class="checkbox-main">
+    <a href="#modal-cash" role="button" class="btn btn-primary btn-small btn-payment btn-cash" data-toggle="modal">Caja</a>
+    <a href="#modal-bank" role="button" class="btn btn-primary btn-small btn-payment" data-toggle="modal">Banco</a>
+    <!-- <a href="#" class="btn btn-primary btn-small">Ventanilla Bancaria</a> -->
+    <a href="#modal-fracionated" role="button" class="btn btn-primary btn-small btn-payment" data-toggle="modal">Aplazamientos</a>
+    <a href="#modal-cash" role="button" class="btn btn-primary btn-small btn-payment btn-others" data-toggle="modal">Otros</a>
+    <!-- <a href="#" class="btn btn-primary btn-small pull-right">Devoluciones</a> -->
+  </div>
+</div>
+
 <% @bills_pending.each do |bill| %>
   <% unless bill.payable? %>
     <div class="accordion">
@@ -16,7 +28,7 @@
             <%= "Bco." if bill.client.active_bank_accounts?  %>
           </div>
           <div class="span2 soft-padding">
-            <%= bill.total.round(2) %>
+            <%= bill.total.round(4) %>
           </div>
         </div>
 
@@ -25,6 +37,7 @@
             <table class="table table-condensed table-striped">
               <thead>
                 <tr>
+                  <th><input type="checkbox" class="checkbox-master"></th>
                   <th>Nº</th>
                   <th>Fecha</th>
                   <th>Vencimiento</th>
@@ -36,23 +49,24 @@
               </thead>
               <tbody>
                 <% bill.invoices.order("created_at DESC").each do |i| %>
-                  <% if !i.payday_limit.nil? && i.payday_limit < Date.today %>
-                    <tr>
-                      <td><%= i.invoice_no %></td>
-                      <td><%= i.invoice_date %></td>
-                      <td><%= i.payday_limit %></td>
-                      <% if i.bill.try(:instalments).blank? %>
-                        <td><%= i.total.round(4) %></td>
-                        <td><%= i.collected.round(4) %></td>
-                        <td><%= i.debt.round(4) %></td>
-                      <% else %>
-                        <td><%= i.bill.total.round(4) %></td>
-                        <td><%= i.bill.client_payments.sum("amount").round(4) %></td>
-                        <td><%= i.bill.total - i.bill.client_payments.sum("amount").round(4) %></td>
-                      <% end %>
-                      <td><%= i.invoice_status.name %></td>
-                    </tr>
-                  <% end %>
+                <% if !i.payday_limit.nil? && i.payday_limit < Date.today %>
+                  <tr>
+                    <td><%= (check_box_tag 'invoice_id', i.id, false, class: "checkbox-slave", :data => {total: i.total, collected: i.collected, debt: i.debt}) if i.invoice_status_id == 1 %></td>
+                    <td><%= i.invoice_no %></td>
+                    <td><%= i.invoice_date %></td>
+                    <td><%= i.payday_limit %></td>
+                    <% if i.bill.try(:instalments).blank? %>
+                      <td><%= i.total.round(4) %></td>
+                      <td><%= i.collected.round(4) %></td>
+                      <td><%= i.debt.round(4) %></td>
+                    <% else %>
+                      <td><%= i.bill.total.round(4) %></td>
+                      <td><%= i.bill.client_payments.sum("amount").round(4) %></td>
+                      <td><%= i.bill.total - i.bill.client_payments.sum("amount").round(4) %></td>
+                    <% end %>
+                    <td><%= i.invoice_status.name %></td>
+                  </tr>
+                <% end %>
                 <% end %>
               </tbody>
             </table>

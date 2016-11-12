@@ -1,8 +1,38 @@
-<style>
-  .center {
-    text-align: center!important;
-  }
-</style>
+<script>
+  var _thisForm = '';
+  var changing = false;
+
+  $(document).ready(function() {
+    $('.date_picker').datepicker({
+     format:'dd/mm/yyyy',weekStart:1
+    });
+  });
+
+  $(document).ajaxStart(function() {
+    // show loader on start
+    if (changing == false) {
+      $("#div_table").html("");
+      $("#loader").show();
+    }
+  }).ajaxSuccess(function() {
+    // hide loader on success
+    $("#loader").hide();
+  });
+
+  $(window).bind("load", function() {
+    $("#From").val("<%= params[:From] %>");
+    $("#To").val("<%= params[:To] %>");
+  });
+
+  jQuery(function($) {
+    // when the #removeFilter button clicked
+    $("#removeFilter").click(function() {
+      $("#From").val("");
+      $("#To").val("");
+      $("#submit_btn").trigger("click");
+    });
+  });
+</script>
 
 <%= render '/layouts/ag2_gest/billsbreadcrumb' %>
 
@@ -12,36 +42,36 @@
   <div class="row-fluid">
 
     <div class="span3">
-      <div class="well sidebar-nav">
+      <div class="well sidebar-nav">    <!-- Refresh -->
+        <%= link_to ag2_gest.pre_index_bills_path, title: I18n.t(:refresh), class: "icon-refresh-link", remote: true do %> <i class="icon-refresh"></i> <% end %>
+
+        <%= form_tag "pre_index", :method => 'get', :remote => true do %>
+          <!-- Dates -->
+          <%= label_tag I18n.t("ag2_gest.bills.index.label_from"), nil, :class => 'form-label-under-sel2' %>
+          <%= text_field_tag "From", params[:date], :class =>  'x-large-text-field shrinked date_picker' %>
+          <%= label_tag I18n.t("ag2_gest.bills.index.label_to"), nil, :class => 'form-label' %>
+          <%= text_field_tag "To", params[:date], :class =>  'x-large-text-field shrinked date_picker' %>
+          <br><br>
+          <!-- Submit -->
+          <%= submit_tag I18n.t(:apply_filter_button), :class => 'btn btn-primary', :id => 'submit_btn' %>
+
+          <!-- Remove filter -->
+          <button id="removeFilter" type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><%= t :clear_filter_button %></button>
+        <% end %>
         <!-- Buttons -->
-        <%= link_to "Generar PreFacturas", new_bill_path, class: "btn btn-block btn-primary" %>
-        <%= link_to "Confirmar PreFacturas", bills_path, class: "btn btn-block btn-primary" %>
-        <br /><br />
+        <%= link_to "Generar PreFacturas", new_bill_path, class: "btn btn-primary" %>
+        <%#= link_to "Confirmar PreFacturas", bills_path, class: "btn btn-primary" %>
+        <br><br>
+        <!-- Back -->
         <%= link_to t("ag2_gest.billable_items.index.back_to_management"), ag2_gest.bill_management_path %>
-      </div><!-- /.sidebar-nav -->
+      </div>
     </div><!-- /.span3 -->
 
-    <div class="span9" id="div_table">
-      <table class="table table-condensed table-striped shrinked">
-        <thead>
-          <tr>
-            <th>Grupo nº</th>
-            <th>Fecha</th>
-            <th>Nº prefacturas</th>
-            <th>Total</th>
-          </tr>
-        </thead>
-        <tbody>
-          <% @pre_bills.each do |pre_bill| %>
-            <tr>
-              <td><%= link_to pre_bill[1].first.pre_group_no, bills_path(:bills => pre_bill[1].first.pre_group_no) %></td>
-              <td><%=l pre_bill[1].first.bill_date %></td>
-              <td><%= pre_bill[1].count %></td>
-              <td><%= pre_bill[1].sum{|b| b.total} %></td>
-            </tr>
-          <% end %>
-        </tbody>
-      </table>
+    <div class="span9">
+      <div id="loader"></div>
+      <div id="div_table">
+        <%= render "pre_bills" %>
+      </div>
     </div><!-- /.span9 -->
 
   </div><!-- /.row-fluid -->

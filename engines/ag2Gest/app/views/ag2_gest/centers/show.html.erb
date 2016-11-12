@@ -30,4 +30,7 @@
 delete_path: @center, delete_txt: t('.btn_delete'), msg: t("activerecord.models.center.one"), :txt => @center.name,
 new_path: new_center_path, new_txt: t('ag2_gest.centers.index.btn_new') } %>
 
+<% if !session[:return_to_subscriber].nil? %>
+  <%= link_to session[:return_to_subscriber], session[:return_to_subscriber_url] %> |
+<% end %>
 <%= link_to I18n.t('ag2_gest.centers.back_to_main_page'), centers_path %>

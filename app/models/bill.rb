@@ -119,6 +119,7 @@ class Bill < ActiveRecord::Base
     string :sort_no do
       bill_no
     end
+    date :created_at
   end
 
 end

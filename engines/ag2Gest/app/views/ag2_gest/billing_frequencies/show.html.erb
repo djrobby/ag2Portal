@@ -31,4 +31,7 @@
 delete_path: @billing_frequency, delete_txt: t('.btn_delete'), msg: t("activerecord.models.billing_frequency.one"), :txt => @billing_frequency.name,
 new_path: new_billing_frequency_path, new_txt: t('ag2_gest.billing_frequencies.index.btn_new') } %>
 
+<% if !session[:return_to_subscriber].nil? %>
+  <%= link_to session[:return_to_subscriber], session[:return_to_subscriber_url] %> |
+<% end %>
 <%= link_to I18n.t('ag2_gest.billing_frequencies.back_to_main_page'), billing_frequencies_path %>

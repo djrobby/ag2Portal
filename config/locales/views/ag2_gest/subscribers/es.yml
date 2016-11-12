@@ -16,6 +16,12 @@ es:
         btn_edit: "Editar Abonado"
         btn_delete: "Borrar Abonado"
         return_to: "Volver a Abonado"
+        all: "Todas"
+        pendig_only: "Pendientes"
+        unpaid_only: "Impagadas"
+        charged_only: "Cobradas"
+        are_you_sure_to_void: "¿Estás seguro/a de abonar este "
+        are_you_sure_to_rebill: "¿Estás seguro/a de refacturar este "
       edit:
         title: "Editar Abonado"
         btn_show: "Ver Abonado"
@@ -23,6 +29,11 @@ es:
         back: "Atrás"
       new:
         title: "Nuevo Abonado"
+      report:
+        report: "Elige el Informe:"
+        subscriber_report: "Padrón de Abonados"
+        subscriber_tec_report: "Padrón Técnico de Abonados"
+        subscriber_eco_report: "Padrón Económico de Abonados"
       back_to_main_page: "Volver a Abonados"
       generate_code_btn: "Código de Abonado"
       personal_info: "Información del Abonado"

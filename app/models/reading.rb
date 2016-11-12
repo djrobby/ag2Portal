@@ -78,7 +78,7 @@ class Reading < ActiveRecord::Base
                         pre_group_no: (group_no || PreBill.next_no),
                         project_id: project_id,
                         invoice_status_id: InvoiceStatus::PENDING,
-                        bill_date: Date.today,#¿¿¿???
+                        bill_date: (billing_period.try(:prebilling_starting_date) || Date.today),#¿¿¿???
                         subscriber_id: subscriber_id,
                         client_id: subscriber.client_id,
                         last_name: subscriber.client.last_name,
@@ -109,9 +109,9 @@ class Reading < ActiveRecord::Base
         pre_bill_id: pre_bill.id,
         invoice_status_id: InvoiceStatus::PENDING,
         invoice_type_id: InvoiceType::WATER,
-        invoice_date: Date.today,#¿¿¿???
+        invoice_date: billing_period.try(:prebilling_starting_date),#¿¿¿???
         tariff_scheme_id: subscriber.tariff_scheme_id,
-        payday_limit: nil,
+        payday_limit: billing_period.try(:prebilling_ending_date),
         invoice_operation_id: InvoiceOperation::INVOICE,
         billing_period_id: billing_period_id,
         consumption: consumption,
@@ -195,6 +195,7 @@ class Reading < ActiveRecord::Base
     string :sort_no do
       subscriber_id
     end
+    date :created_at
   end
 
   private

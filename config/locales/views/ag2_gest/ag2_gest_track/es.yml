@@ -1,0 +1,38 @@
+es:
+  ag2_gest:
+    ag2_gest_track:
+      index:
+        back_to_root: "Volver a ag2Gest"
+        report_btn: "Generar Informe seleccionado"
+        label_report: "Informe"
+        label_project: "Proyecto"
+        label_work_order: "Orden de trabajo"
+        label_charge_account: "Cuenta analítica"
+        label_budget_period: "Periodo presupuestario"
+      subscriber_report:
+        report_title: "Padrón de Abonados"
+        sum_rows_title: "Total Filas:"
+      every_report:
+        pt: "Página"
+        pd: "de"
+        from_title: "Desde:"
+        to_title: "Hasta:"
+        worker_col: "Trabajador"
+        date_col: "Fecha"
+        rec1_col: "Marcaje 1"
+        rec2_col: "Marcaje 2"
+        rec3_col: "Marcaje 3"
+        rec4_col: "Marcaje 4"
+        rec5_col: "Marcaje 5"
+        rec6_col: "Marcaje 6"
+        rec7_col: "Marcaje 7"
+        rec8_col: "Marcaje 8"
+        rec_count_col: "Cant."
+        worked_time_col: "T.Trabajado"
+        sum_aggregate_title: "Acumulado para:"
+        sum_worked_time_title: "Total Tiempo Trabajado:"
+        sum_rec_count_title: "Total Marcajes:"
+        sum_rows_title: "Total Filas (Días):"
+        average_title: "Promedio Tiempo Trabajado: "
+        full_total: "Totales:"
+        cumulative_total: "Total Acumulado:"

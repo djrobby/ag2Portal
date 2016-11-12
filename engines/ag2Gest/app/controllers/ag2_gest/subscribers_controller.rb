@@ -14,6 +14,9 @@ module Ag2Gest
                                                 :change_meter,
                                                 :simple_bill,
                                                 :void,
+                                                :subscriber_report,
+                                                :subscriber_tec_report,
+                                                :subscriber_eco_report,
                                                 :rebilling ]
 
     def update_simple
@@ -35,10 +38,13 @@ module Ag2Gest
     def rebilling
       @subscriber = Subscriber.find params[:id]
       @bill = Bill.find params[:bill_id]
+      @period = @bill.reading_2.billing_period_id
       void_bill(@bill)
-      @reading = @subscriber.readings.find_by_billing_period_id(params[:bills][:billing_period_id])
-      @bill = @reading.generate_pre_bill
-      redirect_to subscriber_path(@subscriber, bill: @bill.id)
+      @reading = @subscriber.readings.find_by_billing_period_id_and_reading_type_id(@period, ReadingType::NORMAL)
+      @pre_bill = @reading.generate_pre_bill
+      respond_to do |format|
+        format.js { render "simple_bill" }
+      end
     end
 
     def add_meter
@@ -376,6 +382,7 @@ module Ag2Gest
         paginate :page => params[:page] || 1, :per_page => per_page || 10
       end
       @subscribers = @search.results
+      @reports = reports_array
 
       respond_to do |format|
         format.html # index.html.erb
@@ -408,46 +415,59 @@ module Ag2Gest
     # GET /subscribers/1
     # GET /subscribers/1.json
     def show
-      manage_filter_state
+      manage_filter_state_show
+      filter = params[:ifilter]
 
       @breadcrumb = 'read'
-
-      #Obtengo Subscriber
       @subscriber = Subscriber.find(params[:id])
-
-      #@subscriberreadings = Reading.where(:subscriber_id => @subscriber.id).paginate(:page => 10, :per_page => per_page)
-
-      @reading_types = ReadingType.all
-      @client_bank_account = ClientBankAccount.where(client_id: @subscriber.client_id).first
-
-
       @reading = Reading.new
       @client_bank_account = ClientBankAccount.new
 
-
+      #@subscriberreadings = Reading.where(:subscriber_id => @subscriber.id).paginate(:page => 10, :per_page => per_page)
+      # @reading_types = ReadingType.all
+      # @client_bank_account = ClientBankAccount.where(client_id: @subscriber.client_id).active.first
       #Select Option BillingPeriod Associated
-      billing_periods_ids = @subscriber.readings.map(&:billing_period_id).uniq #Ids BillingPeriods associated
-      @billing_periods = BillingPeriod.where(id: billing_periods_ids) #BillingPeriods associated
+      # billing_periods_ids = @subscriber.readings.map(&:billing_period_id).uniq #Ids BillingPeriods associated
+      # @billing_periods = BillingPeriod.where(id: billing_periods_ids) #BillingPeriods associated
+      #
+      # #Select Option ReadingTypes Associated
+      # reading_types_ids = @subscriber.readings.map(&:reading_type_id).uniq
+      # @reading_types = ReadingType.where(id: reading_types_ids) #ReadingTypes associated
 
-      #Select Option ReadingTypes Associated
-      reading_types_ids = @subscriber.readings.map(&:reading_type_id).uniq
-      @reading_types = ReadingType.where(id: reading_types_ids) #ReadingTypes associated
+      # @project_dropdown = session[:company].blank? ? Project.all : Project.where(company_id: session[:company])
 
-      @project_dropdown = session[:company].blank? ? Project.all : Project.where(company_id: session[:company])
-
-      @subscriber_readings = @subscriber.readings.paginate(:page => params[:page], :per_page => 5)
+      # @subscriber_readings = @subscriber.readings.paginate(:page => params[:page], :per_page => 5)
       @subscriber_accounts = @subscriber.client.client_bank_accounts.paginate(:page => params[:page], :per_page => 10)
-      @subscriber_bills = @subscriber.bills.order("created_at DESC").paginate(:page => params[:page], :per_page => 10)
+      # @subscriber_bills = @subscriber.bills.order("created_at DESC").paginate(:page => params[:page], :per_page => 5)
 
       #@alliance_towns = @alliance.players.towns.order("rank ASC").paginate(:page => params[:page], :per_page => 1)
       #@bills = Bill.joins(:subscriber).paginate(:page => params[:page], :per_page => 1) #.where('subscriber.bill = ?', params[:id]).paginate(:page => params[:page], :per_page => 1)
       #@subscribers = Subscriber.joins(:bill).where('bills.subscriber_id = ?', params[:id]).paginate(:page => params[:page], :per_page => 1)
-
       #@subscribers = Bill.joins(:subscriber).paginate(:page => params[:page], :per_page => 5)
+
+      @search_bills = Bill.search do
+        if filter == "pending" or filter == "unpaid"
+          with(:invoice_status_id, 0..98)
+        elsif filter == "charged"
+          with :invoice_status_id, 99
+        end
+        with :subscriber_id, params[:id]
+        order_by :created_at, :asc
+        paginate :page => params[:page] || 1, :per_page => 5
+      end
+
+      @search_readings = Reading.search do
+        with :subscriber_id, params[:id]
+        order_by :created_at, :asc
+        paginate :page => params[:page] || 1, :per_page => 5
+      end
+
+      @subscriber_readings = @search_readings.results
+      @subscriber_bills = @search_bills.results
 
       respond_to do |format|
        format.html # show.html.erb
-       format.json { render json: @subscriber }
+       format.json { render json: @subscriber_bills }
        format.js
       end
     end
@@ -617,13 +637,213 @@ module Ag2Gest
       end
     end
 
+    # subscriber report
+    def subscriber_report
+      manage_filter_state
+      subscriber_code = params[:SubscriberCode]
+      service_point = params[:ServicePoint]
+      meter = params[:Meter]
+      billing_frequency = params[:BillingFrequency]
+      tariff_type = params[:TariffType]
+      letter = params[:letter]
+      # OCO
+      init_oco if !session[:organization]
+
+      # If inverse no search is required
+      subscriber_code = !subscriber_code.blank? && subscriber_code[0] == '%' ? inverse_no_search(subscriber_code) : subscriber_code
+
+      @search = Subscriber.search do
+        fulltext params[:search]
+        if session[:office] != '0'
+          with :office_id, session[:office]
+        end
+        if !letter.blank? && letter != "%"
+          with(:full_name).starting_with(letter)
+        end
+        if !subscriber_code.blank?
+          if subscriber_code.class == Array
+            with :subscriber_code, subscriber_code
+          else
+            with(:subscriber_code).starting_with(subscriber_code)
+          end
+        end
+        if !service_point.blank?
+          with :service_point_id, service_point
+        end
+        if !meter.blank?
+          with :meter_id, meter
+        end
+        if !billing_frequency.blank?
+          with :billing_frequency_id, billing_frequency
+        end
+        if !tariff_type.blank?
+          with :tariff_type_id, tariff_type
+        end
+        order_by :sort_no, :asc
+        order_by :sort_no, :asc
+        paginate :page => params[:page] || 1, :per_page => Subscriber.count
+      end
+
+      @subscriber_report = @search.results
+
+      if !@subscriber_report.blank?
+        title = t("activerecord.models.subscriber.few")
+        @to = formatted_date(@subscriber_report.first.created_at)
+        @from = formatted_date(@subscriber_report.last.created_at)
+        respond_to do |format|
+          # Render PDF
+          format.pdf { send_data render_to_string,
+                       filename: "#{title}_#{@from}-#{@to}.pdf",
+                       type: 'application/pdf',
+                       disposition: 'inline' }
+        end
+      end
+    end
+
+
+     # subscriber tec report
+    def subscriber_tec_report
+      manage_filter_state
+      subscriber_code = params[:SubscriberCode]
+      service_point = params[:ServicePoint]
+      meter = params[:Meter]
+      billing_frequency = params[:BillingFrequency]
+      tariff_type = params[:TariffType]
+      letter = params[:letter]
+      # OCO
+      init_oco if !session[:organization]
+
+      # If inverse no search is required
+      subscriber_code = !subscriber_code.blank? && subscriber_code[0] == '%' ? inverse_no_search(subscriber_code) : subscriber_code
+
+      @search = Subscriber.search do
+        fulltext params[:search]
+        if session[:office] != '0'
+          with :office_id, session[:office]
+        end
+        if !letter.blank? && letter != "%"
+          with(:full_name).starting_with(letter)
+        end
+        if !subscriber_code.blank?
+          if subscriber_code.class == Array
+            with :subscriber_code, subscriber_code
+          else
+            with(:subscriber_code).starting_with(subscriber_code)
+          end
+        end
+        if !service_point.blank?
+          with :service_point_id, service_point
+        end
+        if !meter.blank?
+          with :meter_id, meter
+        end
+        if !billing_frequency.blank?
+          with :billing_frequency_id, billing_frequency
+        end
+        if !tariff_type.blank?
+          with :tariff_type_id, tariff_type
+        end
+        order_by :sort_no, :asc
+        order_by :sort_no, :asc
+        paginate :page => params[:page] || 1, :per_page => Subscriber.count
+      end
+
+      @subscriber_tec_report = @search.results
+
+      if !@subscriber_tec_report.blank?
+        title = t("activerecord.models.subscriber.few")
+        @to = formatted_date(@subscriber_tec_report.first.created_at)
+        @from = formatted_date(@subscriber_tec_report.last.created_at)
+        respond_to do |format|
+          # Render PDF
+          format.pdf { send_data render_to_string,
+                       filename: "#{title}_#{@from}-#{@to}.pdf",
+                       type: 'application/pdf',
+                       disposition: 'inline' }
+        end
+      end
+    end
+
+     # subscriber eco report
+    def subscriber_eco_report
+      manage_filter_state
+      subscriber_code = params[:SubscriberCode]
+      service_point = params[:ServicePoint]
+      meter = params[:Meter]
+      billing_frequency = params[:BillingFrequency]
+      tariff_type = params[:TariffType]
+      letter = params[:letter]
+      # OCO
+      init_oco if !session[:organization]
+
+      # If inverse no search is required
+      subscriber_code = !subscriber_code.blank? && subscriber_code[0] == '%' ? inverse_no_search(subscriber_code) : subscriber_code
+
+      @search = Subscriber.search do
+        fulltext params[:search]
+        if session[:office] != '0'
+          with :office_id, session[:office]
+        end
+        if !letter.blank? && letter != "%"
+          with(:full_name).starting_with(letter)
+        end
+        if !subscriber_code.blank?
+          if subscriber_code.class == Array
+            with :subscriber_code, subscriber_code
+          else
+            with(:subscriber_code).starting_with(subscriber_code)
+          end
+        end
+        if !service_point.blank?
+          with :service_point_id, service_point
+        end
+        if !meter.blank?
+          with :meter_id, meter
+        end
+        if !billing_frequency.blank?
+          with :billing_frequency_id, billing_frequency
+        end
+        if !tariff_type.blank?
+          with :tariff_type_id, tariff_type
+        end
+        order_by :sort_no, :asc
+        order_by :sort_no, :asc
+        paginate :page => params[:page] || 1, :per_page => Subscriber.count
+      end
+
+      @subscriber_eco_report = @search.results
+
+      if !@subscriber_eco_report.blank?
+        title = t("activerecord.models.subscriber.few")
+        @to = formatted_date(@subscriber_eco_report.first.created_at)
+        @from = formatted_date(@subscriber_eco_report.last.created_at)
+        respond_to do |format|
+          # Render PDF
+          format.pdf { send_data render_to_string,
+                       filename: "#{title}_#{@from}-#{@to}.pdf",
+                       type: 'application/pdf',
+                       disposition: 'inline' }
+        end
+      end
+    end
+
     private
+
+    def reports_array()
+      _array = []
+      _array = _array << t("ag2_gest.subscribers.report.subscriber_report")
+      _array = _array << t("ag2_gest.subscribers.report.subscriber_tec_report")
+      _array = _array << t("ag2_gest.subscribers.report.subscriber_eco_report")
+      _array
+    end
 
     def void_bill(bill)
       bill_cancel = bill.dup
+      bill_cancel.bill_no = bill_next_no(bill.project_id)
       if bill_cancel.save
         bill.invoices.each do |invoice|
           new_invoice = invoice.dup
+          new_invoice.invoice_no = invoice_next_no(bill.project.company_id)
           new_invoice.bill_id = bill_cancel.id
           new_invoice.save
           # invoice_cancel = Invoice.create(
@@ -684,6 +904,14 @@ module Ag2Gest
         Meter.where(company_id: session[:company]).order(:meter_code)
       else
         Meter.order(:meter_code)
+      end
+    end
+
+    def manage_filter_state_show
+      if params[:ifilter]
+        session[:ifilter] = params[:ifilter]
+      elsif session[:ifilter]
+        params[:ifilter] = session[:ifilter]
       end
     end
 

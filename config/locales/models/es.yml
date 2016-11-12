@@ -131,3 +131,7 @@ es:
           attributes:
             reading_index:
               reading_invalid: "inválido (deber ser entero mayor que 0)"
+        meter:
+          attributes:
+            meter_code:
+              code_invalid: "inválido (debe ser alfanumérico)"

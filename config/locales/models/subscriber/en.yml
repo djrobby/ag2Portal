@@ -59,6 +59,7 @@ en:
         active: "¿Activo?"
         fiscal_id: "Fiscal Id"
         fiscal_id_c: "Fiscal Id"
+        service_point_id: "Service Point"
 
         subscriber_code0: "Código"
         subscriber_code1: "Código de identificación asignado"
@@ -76,7 +77,8 @@ en:
         reading_variant: "Variante/Fila/Columna de lectura"
         contract: "Nº de contrato"
         cadastral_reference: "Referencia catastral"
-        gis_id: "Gis Id"
+        gis_id: "Gis ID"
+        gis_id_wc: "Gis ID Acometida"
         endowments: "Dotaciones"
         inhabitants: "Habitantes"
         pub_record: "PB Record"

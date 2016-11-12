@@ -40,6 +40,7 @@ es:
         create: "Contrato de suminitro se ha creado correctamente."
         created: "Creado"
         label_others: "Otros"
+        code: "Código"
         #mj
         installation_index: "Index de instalación"
         meters: "Contador"

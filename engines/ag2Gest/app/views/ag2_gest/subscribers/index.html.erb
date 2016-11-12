@@ -40,7 +40,13 @@
         <button id="removeFilter" type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><%= t :clear_filter_button %></button>
       <% end %>
 
-
+      <!-- Report -->
+      <%= label_tag I18n.t("ag2_gest.subscribers.report.report"), nil, :class => 'form-label-under-sel2' %>
+      <%= select_tag "Report", options_for_select(@reports), :prompt => "", :class => 'x-large-text-field shrinked sel3' %>
+        <br /><br />
+        <!-- Control&Tracking -->
+        <a href="#" id="print_report_btn" class="btn btn-warning"><i class="icon-print icon-white"></i> <%= t 'ag2_gest.home.index.control' %></a>
+        <br /><br />
       <!-- Back -->
       <%= link_to t("ag2_gest.subscribers.index.back_to_root"), ag2_gest.root_path %>
     </div>
@@ -65,6 +71,12 @@
       formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
       dropdownCssClass: 'shrinked',
       dropdownAutoWidth: true
+    });
+    $('.sel3').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      dropdownCssClass: 'shrinked',
+      dropdownAutoWidth: true,
+      allowClear: true
     });
 
     // Initialized form variable
@@ -106,5 +118,35 @@
       // AJAX
       $("#submit_btn").trigger("click");
     });
+
+   // when #report_btn is clicked
+    $("#print_report_btn").click(function() {
+      // make a POST call and get report
+      var report = $('#Report :selected').index();
+      if (report == "")
+        return;
+      switch (report) {
+        case 1:
+          // Subscriber
+          window.open("subscriber_report.pdf", "_blank");
+          return false;
+          break;
+
+          case 2:
+          // Subscriber
+          window.open("subscriber_tec_report.pdf", "_blank");
+          return false;
+          break;
+
+          case 3:
+          // Subscriber
+          window.open("subscriber_eco_report.pdf", "_blank");
+          return false;
+          break;
+      }
+      return false;
+    });
+
+
   });
 </script>

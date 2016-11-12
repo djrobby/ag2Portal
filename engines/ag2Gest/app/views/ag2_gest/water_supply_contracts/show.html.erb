@@ -71,4 +71,7 @@
 delete_path: @water_supply_contract, delete_txt: t('.btn_delete'), msg: t("activerecord.models.water_supply_contract.one"), txt: @water_supply_contract.description,
 new_path: new_water_supply_contract_path, new_txt: t('ag2_admin.water_supply_contracts.index.btn_new') } %>
 
- <%= link_to t('ag2_gest.water_supply_contracts.back_to_main_page'), water_supply_contracts_path %>
+ <% if !session[:return_to_subscriber].nil? %>
+  <%= link_to session[:return_to_subscriber], session[:return_to_subscriber_url] %> |
+<% end %>
+<%= link_to t('ag2_gest.water_supply_contracts.back_to_main_page'), water_supply_contracts_path %>

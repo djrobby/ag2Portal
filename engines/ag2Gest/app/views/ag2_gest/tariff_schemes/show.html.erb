@@ -10,6 +10,7 @@
     max-height: 450px !important;
   }
 </style>
+
 <%= render '/layouts/ag2_gest/tariffschemesbreadcrumb' %>
 
 <h3><%= t('.title') %> <%= @tariff_scheme.name %></h3>
@@ -49,6 +50,9 @@
 delete_path: @tariff_scheme, delete_txt: t('.btn_delete'), msg: t("activerecord.models.tariff_scheme.one"), :txt => @tariff_scheme.name,
 new_path: new_tariff_scheme_path, new_txt: t('ag2_gest.tariff_schemes.index.btn_new') } %>
 
+<% if !session[:return_to_subscriber].nil? %>
+  <%= link_to session[:return_to_subscriber], session[:return_to_subscriber_url] %> |
+<% end %>
 <%= link_to I18n.t('ag2_gest.tariff_schemes.back_to_main_page'), tariff_schemes_path %>
 
 <!-- Associated fees -->

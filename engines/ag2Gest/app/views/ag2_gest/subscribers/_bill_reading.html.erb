@@ -19,8 +19,8 @@
       </div>
       <div class="span2 soft-padding pull-right">
         <%= link_to "<i class='icon-print icon-white'></i>".html_safe, bill_path(bill), target: "_blank", class: "btn btn-warning btn-mini" %>
-        <%= link_to "<i class='icon-remove icon-white'></i>".html_safe, void_subscriber_bill_path(@subscriber,bill) , class: "btn btn-warning btn-mini" %>
-        <%= link_to "<i class='icon-plus icon-white'></i>".html_safe, bill_path(bill) , class: "btn btn-warning btn-mini" %>
+        <%= link_to "<i class='icon-remove icon-white'></i>".html_safe, void_subscriber_bill_path(@subscriber,bill) , class: "btn btn-warning btn-mini", data: {confirm: I18n.t("ag2_gest.subscribers.show.are_you_sure_to_void") + "#{t("activerecord.models.bill.one")}? (#{bill.full_no})"} %>
+        <%= link_to "<i class='icon-plus icon-white'></i>".html_safe, rebilling_subscriber_bill_path(@subscriber,bill) , class: "btn btn-warning btn-mini", remote: true, data: {confirm: I18n.t("ag2_gest.subscribers.show.are_you_sure_to_rebill") + "#{t("activerecord.models.bill.one")}? (#{bill.full_no})"} %>
       </div>
     </div>
     <div id="collapse-<%= bill.id %>" class="accordion-body collapse">
@@ -44,19 +44,19 @@
               <tr>
                 <td><%= item.code %></td>
                 <td><%= item.subcode %></td>
-                <td><%= item.quantity %></td>
-                <td><%= item.price %></td>
-                <td><%= item.amount %></td>
-                <td><%= item.tax_type.try(:tax) %></td>
-                <td><%= item.discount %></td>
-                <td><%= item.discount_pct %></td>
-                <td><%= item.total %></td>
+                <td align="right"><%= item.quantity %></td>
+                <td align="right"><%= item.price %></td>
+                <td align="right"><%= item.amount %></td>
+                <td align="right"><%= item.tax_type.try(:tax) %></td>
+                <td align="right"><%= item.discount %></td>
+                <td align="right"><%= item.discount_pct %></td>
+                <td align="right"><%= item.total %></td>
               </tr>
             <% end %>
             <tr class="subtotal">
               <td colspan="7" class="no-boder"></td>
               <td class="black-border"><b><%= t('activerecord.attributes.subscriber.subtotal').upcase %></b></td>
-              <td class="black-border"><%= invoice.subtotal %></td>
+              <td class="black-border" align="right"><%= invoice.subtotal %></td>
             </tr>
             <% invoice.tax_breakdown.each do |tax| %>
               <tr>
@@ -64,13 +64,13 @@
                 <td class="no-boder"><b>Base imponible:</b> <%= tax[1] %></td>
                 <td class="no-boder"><%= "#{pluralize(tax[3], 'artículo')}"  %></td>
                 <td><b><%= " #{t('activerecord.attributes.subscriber.vat')} (#{tax[0]}%)" %></b></td>
-                <td><%= tax[2] %></td>
+                <td align="right"><%= tax[2] %></td>
               </tr>
             <% end %>
             <tr>
               <td colspan="7" class="black-border"></td>
               <td class="black-border"><b><%= t('activerecord.attributes.subscriber.total').upcase %></b></td>
-              <td class="black-border"><%= invoice.total %></td>
+              <td class="black-border" align="right"><%= invoice.total %></td>
             </tr>
         <% end %>
         </table>

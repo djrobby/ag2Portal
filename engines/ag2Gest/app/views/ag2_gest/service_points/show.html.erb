@@ -103,4 +103,7 @@
 delete_path: @service_point, delete_txt: t('.btn_delete'), msg: t("activerecord.models.service_point.one"), :txt => @service_point.id,
 new_path: new_service_point_path, new_txt: t('ag2_gest.service_points.index.btn_new') } %>
 
+<% if !session[:return_to_subscriber].nil? %>
+  <%= link_to session[:return_to_subscriber], session[:return_to_subscriber_url] %> |
+<% end %>
 <%= link_to I18n.t('ag2_gest.service_points.back_to_main_page'), service_points_path %>

@@ -22,9 +22,18 @@ class Invoice < ActiveRecord::Base
 
   before_validation :item_repeat, :on => :create
   after_save :bill_status
+  before_create :assign_payday_limit
   #
   # Calculated fields
   #
+  def unpaid?
+    if payday_limit.nil?
+      false
+    else
+      payday_limit < Date.today
+    end
+  end
+
   def reading_1
     bill.reading_1
   end
@@ -62,7 +71,7 @@ class Invoice < ActiveRecord::Base
   def net_tax
     tax_breakdown.sum{|t| t[2]}
   end
-  
+
   def subtotal
     tax_breakdown.sum{|t| t[1]}
   end
@@ -111,6 +120,10 @@ class Invoice < ActiveRecord::Base
   def bill_status
     b = self.bill
     b.update_attributes(invoice_status_id: b.invoices.map(&:invoice_status_id).min)
+  end
+
+  def assign_payday_limit
+    self.payday_limit = self.invoice_date if self.payday_limit.nil?
   end
 
 end

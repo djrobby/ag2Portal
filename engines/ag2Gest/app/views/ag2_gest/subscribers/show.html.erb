@@ -62,7 +62,7 @@
   <tbody>
     <tr>
       <td><b><%= t('activerecord.attributes.subscriber.full_name') %>:</b></td>
-      <td><%= @subscriber.try(:full_name) %></td>
+      <td colspan="3"><%= @subscriber.try(:full_name) %></td>
       <td><b><%= t('activerecord.attributes.subscriber.subscriber_code') %>:</b></td>
       <td><%= @subscriber.try(:full_code) %></td>
       <td><b><%= t('activerecord.attributes.subscriber.client_id') %>:</b></td>
@@ -72,7 +72,11 @@
       <td><b><%= t('activerecord.attributes.subscriber.fiscal_id_c') %>:</b></td>
       <td><%= @subscriber.try(:fiscal_id) %></td>
       <td><b><%= t('activerecord.attributes.subscriber.starting_at') %>:</b></td>
-      <td colspan="3"><%= I18n.localize(@subscriber.try(:starting_at)) unless @subscriber.try(:starting_at).blank? %></td>
+      <td><%= I18n.localize(@subscriber.try(:starting_at)) unless @subscriber.try(:starting_at).blank? %></td>
+      <td><b><%= t('activerecord.attributes.subscriber.ending_at') %>:</b></td>
+      <td><%= I18n.localize(@subscriber.try(:ending_at)) unless @subscriber.try(:ending_at).blank? %></td>
+      <td><b><%= t('activerecord.attributes.subscriber.active') %>:</b></td>
+      <td> <% if @subscriber.active %> <i class="icon-thumbs-up"></i> <% else %> <i class="icon-thumbs-down"></i> <% end %> </td>
     </tr>
   </tbody>
 </table>
@@ -84,11 +88,11 @@
       <td><b><%= t('activerecord.attributes.subscriber.direction') %>:</b></td>
       <td colspan="3"><%= @subscriber.address_1 %></td>
       <td><b><%= t('activerecord.attributes.subscriber.zipcode_id') %>:</b></td>
-      <td><%= link_to @subscriber.try(:zipcode).try(:zipcode), ag2_admin.zipcode_path(@subscriber.zipcode_id) %></td>
+      <td><%= @subscriber.try(:zipcode).try(:zipcode) %></td>
     </tr>
     <tr>
       <td><b><%= t('activerecord.attributes.subscriber.office_id') %>:</b></td>
-      <td><%= link_to @subscriber.try(:office).try(:name), ag2_admin.office_path(@subscriber.office_id) %></td>
+      <td><%= @subscriber.try(:office).try(:name) %></td>
       <td><b><%= t('activerecord.attributes.subscriber.town_id') %>:</b></td>
       <td><%= @subscriber.try(:center).try(:town).try(:name) %></td>
       <td><b><%= t('activerecord.attributes.subscriber.province_id') %></b></td>
@@ -122,15 +126,7 @@
       <tbody>
         <tr>
           <td><b><%= t('activerecord.attributes.subscriber.contract') %>:</b></td>
-          <td><%= link_to @subscriber.water_supply_contract.contracting_request.try(:full_no), ag2_gest.contracting_request_path(@subscriber.water_supply_contract.contracting_request) %></td>
-          <td><b><%= t('activerecord.attributes.subscriber.active') %>:</b></td>
-          <% if @subscriber.try(:active) %>
-            <td><i class="icon-thumbs-up"></i></td>
-          <% else %>
-            <td><i class="icon-thumbs-down"></i></td>
-          <% end %>
-          <td><b><%= t('activerecord.attributes.subscriber.tariff_type_id') %>:</b></td>
-          <td><%= link_to @subscriber.try(:tariff_scheme).try(:tariff_type).try(:name), ag2_gest.tariff_type_path(@subscriber.tariff_scheme.tariff_type_id) %></td>
+          <td colspan="5"><%= link_to @subscriber.water_supply_contract.contracting_request.try(:full_no), ag2_gest.water_supply_contract_path(@subscriber.water_supply_contract) %></td>
         <!--   <td><b><%#= t('activerecord.attributes.subscriber.tariff') %>:</b></td>
           <td><%#= (link_to @subscriber.try(:tariff_scheme).try(:name), ag2_gest.tariff_scheme_path(@subscriber.tariff_scheme)) if @subscriber.tariff_scheme %></td>
          --></tr>
@@ -145,8 +141,34 @@
         <tr>
           <td><b><%= t('activerecord.attributes.subscriber.tariff_scheme_id') %>:</b></td>
           <td><%= link_to @subscriber.try(:tariff_scheme).try(:name), tariff_scheme_path(@subscriber.tariff_scheme) if @subscriber.tariff_scheme %></td>
+          <td><b><%= t('activerecord.attributes.subscriber.tariff_type_id') %>:</b></td>
+          <td><%= link_to @subscriber.try(:tariff_scheme).try(:tariff_type).try(:name), ag2_gest.tariff_type_path(@subscriber.tariff_scheme.tariff_type_id) %></td>
           <td><b><%= t('activerecord.attributes.subscriber.billing_frequency_id') %>:</b></td>
-          <td colspan="4"><%= link_to @subscriber.try(:billing_frequency).try(:name), billing_frequency_path(@subscriber.billing_frequency_id) if @subscriber.billing_frequency %></td>
+          <td><%= link_to @subscriber.try(:billing_frequency).try(:name), billing_frequency_path(@subscriber.billing_frequency_id) if @subscriber.billing_frequency %></td>
+        </tr>
+        <tr>
+          <td><b><%= t('activerecord.attributes.subscriber.reading_route_id') %>:</b></td>
+          <td><%= link_to @subscriber.try(:reading_route).try(:to_label), reading_route_path(@subscriber.reading_route) if @subscriber.reading_route %></td>
+          <td><b><%= t('activerecord.attributes.subscriber.reading_sequence') %>:</b></td>
+          <td><%= @subscriber.try(:reading_sequence) %></td>
+          <td><b><%= t('activerecord.attributes.subscriber.reading_variant') %>:</b></td>
+          <td><%= @subscriber.try(:reading_variant) %></td>
+        </tr>
+        <tr>
+          <td><b><%= t('activerecord.attributes.subscriber.service_point_id') %>:</b></td>
+          <td><%= link_to @subscriber.try(:service_point).try(:to_full_label), service_point_path(@subscriber.service_point) if @subscriber.service_point %></td>
+          <td><b><%= t('activerecord.attributes.subscriber.cadastral_reference') %>:</b></td>
+          <td><%= @subscriber.try(:cadastral_reference) %></td>
+          <td><b><%= t('activerecord.attributes.subscriber.gis_id_wc') %>:</b></td>
+          <td><%= @subscriber.try(:gis_id_wc) %></td>
+        </tr>
+        <tr>
+          <td><b><%= t('activerecord.attributes.subscriber.endowments') %>:</b></td>
+          <td><%= @subscriber.try(:endowments) %></td>
+          <td><b><%= t('activerecord.attributes.subscriber.inhabitants') %>:</b></td>
+          <td><%= @subscriber.try(:inhabitants) %></td>
+          <td><b><%= t('activerecord.attributes.subscriber.gis_id') %>:</b></td>
+          <td><%= @subscriber.try(:gis_id) %></td>
         </tr>
         <tr>
           <td><b><%= t('activerecord.attributes.subscriber.comments') %>:</b></td>
@@ -158,105 +180,12 @@
 
   <!-- READINGS -->
   <div class="tab-pane fade active" id="readings">
-    <div class="row-fluid">
-      <div class="span4">
-
-        <% unless @subscriber.meter.blank? %>
-          <a href="#newReadingModal" id="link_reading" role="button" class="btn btn-mini btn-primary" data-toggle="modal"><%= t('activerecord.attributes.subscriber.reading_new') %></a>
-          <a href="#quitMeter" id="quit_meter" role="button" class="btn btn-mini btn-primary" data-toggle="modal"><%= t('activerecord.attributes.subscriber.remove_meter') %></a>
-          <a href="#changeMeter" id="change_meter" role="button" class="btn btn-mini btn-primary" data-toggle="modal"><%= t('activerecord.attributes.subscriber.change_meter') %></a>
-        <% else %>
-          <a href="#addMeter" id="add_meter" role="button" class="btn btn-mini btn-primary" data-toggle="modal"><%= t('activerecord.attributes.subscriber.data_add_meter') %></a>
-        <% end %>
-      </div>
-
-      <div class="span3">
-        <%#= label_tag "Periodo de facturación", nil, :class => 'form-label' %>
-        <%#= select_tag "billing_period", options_from_collection_for_select(@billing_periods, "id", "period"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
-      </div>
-      <div class="span3">
-        <%#= label_tag t('activerecord.attributes.subscriber.reading_type'), nil, :class => 'form-label' %>
-        <%#= select_tag "reading_type", options_from_collection_for_select(@reading_types, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
-      </div>
-    </div>
-    <br>
-
-    <table class="table table-condensed table-striped shrinked">
-      <thead>
-        <tr>
-          <th><%= t('activerecord.attributes.reading.meter_id') %></th>
-          <th><%= t('activerecord.attributes.reading.billing_period_id') %></th>
-          <th><%= t('activerecord.attributes.reading.reading_date') %></th>
-          <th><%= t('activerecord.attributes.reading.reading') %></th>
-          <th></th>
-          <th><%= t('activerecord.attributes.reading.reading_1') %></th>
-          <th><%= t('activerecord.attributes.reading.consumption') %></th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        <% @subscriber_readings.order('reading_date DESC').each do |reading| %>
-        <tr>
-          <td><%= reading.try(:meter).try(:meter_code) %></td>
-          <td><%= reading.try(:billing_period).try(:period) %></td>
-          <td><%= reading.try(:reading_date).strftime("%d/%m/%Y %H:%M") unless reading.try(:reading_date).blank? %></td>
-          <td align="right"><%= reading.try(:reading_index) %></td>
-          <td>
-            <% unless reading.try(:reading_incidence_types).blank? %>
-              <i title="<%= reading.reading_incidence_types.pluck(:name).join(", ") %>" class="icon-warning-sign"></i>
-            <% end %>
-          </td>
-          <td align="right"><%= reading.try(:reading_1).try(:reading_index) %></td>
-          <td align="right"><%= reading.try(:consumption) %></td>
-          <td><%= link_to reading_path(reading), class: "btn btn-mini" do %><i class="icon-eye-open"></i><% end %>
-          <%= render :partial => '/layouts/crud/edit', :locals => { :model => Reading, :path => edit_reading_path(reading) } %>
-          <%= render :partial => '/layouts/crud/delete', :locals => { :model => Reading, :path => reading, :msg => t("activerecord.models.reading.one"), :txt => reading.id } %> </td>
-        </tr>
-        <% end %>
-      </tbody>
-    </table>
-    <%= render :partial => '/layouts/pagination', :locals => { :ivar => @subscriber_readings } %>
+    <%= render 'show_tab_readings' %>
   </div>
 
   <!-- INVOICES / Link to CHARGEINVOICE-->
   <div class="tab-pane fade active" id="bills">
-    <div class="row">
-      <div class="span12">
-        <button id="collapse-init" class="btn btn-primary" style="display:block; float:right; margin-bottom: 20px;"><%= "Mostrar todos" %></button>
-        <a href="#new-bill" role="button" class="btn btn-primary" data-toggle="modal">Nueva factura</a>
-      </div>
-    </div>
-    <div class="row">
-      <div class="span1"></div> <!-- Space for icon-plus -->
-      <div class="span3">
-        <b><%= t('activerecord.attributes.subscriber.receipt') %></b>
-      </div>
-      <div class="span2">
-        <b><%= t('activerecord.attributes.subscriber.date_starting') %></b>
-      </div>
-      <div class="span2">
-        <b><%= t('activerecord.attributes.subscriber.type') %></b>
-      </div>
-      <div class="span2">
-        <b><%= t('activerecord.attributes.subscriber.total') %></b>
-      </div>
-      <div class="span1">
-      </div>
-    </div>
-    <% @subscriber_bills.each do |bill| %>
-
-      <!-- Make two Render (Example Controller) -->
-      <% if !bill.water_supply_contract.nil? %>
-        <!-- RENDER1 RECIBO DE CONTRATACIÓN-->
-        <%= render 'bill_contracting_request', :bill => bill %>
-
-      <% else %>
-        <!-- RENDER2 FACTURA DE SUMINISTRO-->
-        <%= render 'bill_reading', :bill => bill %>
-      <% end %>
-
-    <% end %>
-    <%= render :partial => '/layouts/pagination', :locals => { :ivar => @subscriber_bills } %>
+    <%= render 'show_tab_bills' %>
   </div>
 
   <!-- CLIENT -->
@@ -265,7 +194,7 @@
       <tbody>
         <tr>
           <td><b><%= t('activerecord.attributes.subscriber.name') %></b></td>
-          <td><%= @subscriber.try(:client).try(:full_name) %></td>
+          <td><%= @subscriber.try(:client).try(:to_name) %></td>
           <td><b><%= t('activerecord.attributes.subscriber.direction') %></b></td>
           <td><%= @subscriber.try(:client).try(:street_name) %></td>
           <td><b><%= t('activerecord.attributes.subscriber.number') %></b></td>
@@ -484,5 +413,6 @@
   $("#submit-simple-bill").click(function () {
     $("form.simple_bill").submit();
   });
+
 
 </script>

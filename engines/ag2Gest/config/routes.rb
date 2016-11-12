@@ -11,6 +11,9 @@ Ag2Gest::Engine.routes.draw do
     match 'ag2_gest_track' => 'ag2_gest_track#index', :as => :ag2_gest_track
     #
     # Control&Tracking
+    match 'subscriber_report', :controller => 'subscribers', :action => 'subscriber_report'
+    match 'subscriber_tec_report', :controller => 'subscribers', :action => 'subscriber_tec_report'
+    match 'subscriber_eco_report', :controller => 'subscribers', :action => 'subscriber_eco_report'
 
     # Routes for jQuery POSTs
     #
@@ -136,7 +139,7 @@ Ag2Gest::Engine.routes.draw do
     match 'subscribers/change_meter/:id', :controller => 'subscribers', :action => 'change_meter', :via => [:post]
     match 'subscribers/:id/change_meter/:id', :controller => 'subscribers', :action => 'change_meter', :via => [:post]
     match 'subscribers/:id/void/:bill_id', :controller => 'subscribers', :action => 'void', :via => [:get], as: "void_subscriber_bill"
-    match 'subscribers/:id/rebilling/:bill_id', :controller => 'subscribers', :action => 'rebilling', :via => [:post], as: "rebilling"
+    match 'subscribers/:id/rebilling/:bill_id', :controller => 'subscribers', :action => 'rebilling', :via => [:get], as: "rebilling_subscriber_bill"
 
     # Resources
     resources :clients
