@@ -1,5 +1,35 @@
-<p id="notice"><%= notice %></p>
+<%= render '/layouts/ag2_gest/formalitytypesbreadcrumb' %>
 
+<h3><%=t '.title' %></h3>
+<table class="table odd_even_table">
+  <tbody>
+    <tr>
+      <td>Id:</td>
+      <td><%= @formality_type.id %></td>
+      <td><%=t 'activerecord.attributes.formality_type.name' %>:</td>
+      <td><%= @formality_type.name %></td>
+    </tr>
+    <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @formality_type } %>
+    <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @formality_type } %>
+  </tbody>
+</table>
 
-<%= link_to 'Edit', edit_formality_type_path(@formality_type) %> |
-<%= link_to 'Back', formality_types_path %>
+<%= render partial: '/layouts/crud/update_delete_new', locals:
+{ model: InfrastructureType, update_path: edit_formality_type_path(@formality_type), update_txt: t('.btn_edit'),
+delete_path: @formality_type, delete_txt: t('.btn_delete'), msg: t("activerecord.models.formality_type.one"), txt: @formality_type.name,
+new_path: new_formality_type_path, new_txt: t('ag2_gest.formality_types.index.btn_new') } %>
+
+<% if (@formalities.count > 0) %>
+<h4><%=t '.subtable_title' %></h4>
+<table class="table table-condensed table-striped">
+  <thead>
+    <%= render '/layouts/ag2_gest/formalitiesheader' %>
+  </thead>
+  <tbody>
+    <%= render :partial => '/layouts/ag2_gest/formalities', :locals => { :infras => @formalities } %>
+  </tbody>
+</table>
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @formalities } %>
+<% end %>
+
+<%= link_to t("ag2_gest.formality_types.back_to_main_page"), formality_types_path %>

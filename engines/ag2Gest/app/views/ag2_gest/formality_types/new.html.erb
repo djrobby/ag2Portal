@@ -1,5 +1,7 @@
-<h1>New formality_type</h1>
+<%= render '/layouts/ag2_tech/formalitytypesbreadcrumb' %>
+
+<h3><%=t '.title' %></h3>
 
 <%= render 'form' %>
 
-<%= link_to 'Back', formality_types_path %>
+<%= link_to t("ag2_gest.formality_types.back_to_main_page"), formality_types_path %>

@@ -58,7 +58,7 @@ module Ag2Gest
 
       respond_to do |format|
         if @billing_incidence_type.save
-          format.html { redirect_to @billing_incidence_type, notice: 'Billing incidence type was successfully created.' }
+          format.html { redirect_to @billing_incidence_type, notice: crud_notice('created', @billing_incidence_type) }
           format.json { render json: @billing_incidence_type, status: :created, location: @billing_incidence_type }
         else
           format.html { render action: "new" }
@@ -75,7 +75,8 @@ module Ag2Gest
 
       respond_to do |format|
         if @billing_incidence_type.update_attributes(params[:billing_incidence_type])
-          format.html { redirect_to @billing_incidence_type, notice: 'Billing incidence type was successfully updated.' }
+          format.html { redirect_to @billing_incidence_type,
+                        notice: (crud_notice('updated', @billing_incidence_type) + "#{undo_link(@billing_incidence_type)}").html_safe }
           format.json { head :no_content }
         else
           format.html { render action: "edit" }

@@ -58,7 +58,7 @@ module Ag2Gest
 
       respond_to do |format|
         if @complaint_class.save
-          format.html { redirect_to @complaint_class, notice: 'Complaint class was successfully created.' }
+          format.html { redirect_to @complaint_class, notice: crud_notice('created', @complaint_class) }
           format.json { render json: @complaint_class, status: :created, location: @complaint_class }
         else
           format.html { render action: "new" }
@@ -75,7 +75,8 @@ module Ag2Gest
 
       respond_to do |format|
         if @complaint_class.update_attributes(params[:complaint_class])
-          format.html { redirect_to @complaint_class, notice: 'Complaint class was successfully updated.' }
+          format.html { redirect_to @complaint_class,
+                        notice: (crud_notice('updated', @complaint_class) + "#{undo_link(@complaint_class)}").html_safe }
           format.json { head :no_content }
         else
           format.html { render action: "edit" }
