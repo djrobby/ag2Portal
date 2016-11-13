@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20161107122957) do
+ActiveRecord::Schema.define(:version => 20161111131223) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -767,11 +767,14 @@ ActiveRecord::Schema.define(:version => 20161107122957) do
 
   create_table "contracting_request_types", :force => true do |t|
     t.string   "description"
-    t.datetime "created_at",  :null => false
-    t.datetime "updated_at",  :null => false
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
+    t.integer  "formality_id"
   end
+
+  add_index "contracting_request_types", ["formality_id"], :name => "index_contracting_request_types_on_formality_id"
 
   create_table "contracting_requests", :force => true do |t|
     t.string   "request_no"
