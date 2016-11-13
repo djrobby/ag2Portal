@@ -1,0 +1,20 @@
+es:
+  ag2_gest:
+    formality_types:
+      index:
+        title: "Tipos de trámite"
+        btn_new: "Nuevo Tipo de trámite"
+        back_to_root: "Volver a ag2Gest"
+        back_to_management: "Volver a Trámites"
+      show:
+        title: "Tipo de trámite"
+        btn_edit: "Editar Tipo de trámite"
+        btn_delete: "Borrar Tipo de trámite"
+        subtable_title: "Trámites del Tipo de trámite"
+        return_to: "Volver a Tipo de trámite"
+      edit:
+        title: "Editar Tipo de trámite"
+        btn_show: "Ver Tipo de trámite"
+      new:
+        title: "Nuevo Tipo de trámite"
+      back_to_main_page: "Volver a Tipos de trámite"

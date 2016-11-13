@@ -9,7 +9,7 @@ class Formality < ActiveRecord::Base
   validates :code,                :presence => true,
                                   :length => { :is => 3 },
                                   :format => { with: /\A[a-zA-Z\d]+\Z/, message: :code_invalid },
-                                  :uniqueness => { :scope => :organization_id }
+                                  :uniqueness => true
   validates :name,                :presence => true
   validates :formality_type,      :presence => true
 

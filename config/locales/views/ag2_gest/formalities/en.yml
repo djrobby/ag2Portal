@@ -1,0 +1,23 @@
+en:
+  ag2_gest:
+    formalities:
+      index:
+        title: "Formalities"
+        btn_new: "New Formality"
+        back_to_root: "Back to ag2Gest"
+        back_to_management: "Back to Formalities"
+      show:
+        title: "Formalities"
+        btn_edit: "Edit Formality"
+        btn_delete: "Delete Formality"
+        subtable_title: "Formality Query"
+        show_to: "Show Formality type"
+        return_to: "Back to Formality"
+      edit:
+        title: "Edit Formality"
+        btn_show: "Show Formality"
+      new:
+        title: "New Formality"
+      back_to_main_page: "Back to Formalities"
+      generate_code_btn: "Formality Code"
+      code_error: "Unable to generate Formality Code: No Organization or Type chosen."

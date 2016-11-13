@@ -1,0 +1,41 @@
+<%= render '/layouts/ag2_gest/formalitymbreadcrumb' %>
+
+<!-- Apps Thumbnails -->
+<ul class="thumbnails">
+  <!-- Apps 1 -->
+  <li class="span4"></li>
+  <li class="span4">
+    <% if (session[:resolution] == "LD")%>
+    <a data-toggle="modal" href="#notfound" class="thumbnail centered"><img src="/assets/icon/ag2Formalities.png" width="48" height="48" alt="ag2Formalities" /><h5 class="h5-narrow"><%=t "ag2_gest.home.formality.formalities_query" %></h5></a>
+    <% elsif session[:resolution] == "SD" %>
+    <a data-toggle="modal" href="#notfound" class="thumbnail centered"><img src="/assets/pict/ag2/ag2Formalities.png" width="96" height="96" alt="ag2Formalities" /><h5 class="h5-narrow"><%=t "ag2_gest.home.formality.formalities_query" %></h5></a>
+    <% else %>
+    <a data-toggle="modal" href="#notfound" class="thumbnail centered"><img src="/assets/pict/ag2Formalities.png" width="128" height="128" alt="ag2Formalities" /><h5 class="h5-narrow"><%=t "ag2_gest.home.formality.formalities_query" %></h5></a>
+    <% end %>
+  </li>
+  <li class="span4"></li>
+</ul><!-- /.thumbnails -->
+
+<ul class="thumbnails">
+  <!-- Apps 2 -->
+  <li class="span4"></li>
+  <li class="span2">
+    <% if (session[:resolution] == "LD")%>
+    <a href="<%= formalities_path %>" class="thumbnail centered"><img src="/assets/icon/TableA.png" width="48" height="48" alt="ag2Tables" /><h5 class="h5-narrow"><%=t "ag2_gest.home.formality.formalities" %></h5></a>
+    <% elsif session[:resolution] == "SD" %>
+    <a href="<%= formalities_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/TableA72.png" width="72" height="72" alt="ag2Tables" /><h5 class="h5-narrow"><%=t "ag2_gest.home.formality.formalities" %></h5></a>
+    <% else %>
+    <a href="<%= formalities_path %>" class="thumbnail centered"><img src="/assets/pict/TableA96.png" width="96" height="96" alt="ag2Tables" /><h5 class="h5-narrow"><%=t "ag2_gest.home.formality.formalities" %></h5></a>
+    <% end %>
+  </li>
+  <li class="span2">
+    <% if (session[:resolution] == "LD")%>
+    <a href="<%= formality_types_path %>" class="thumbnail centered"><img src="/assets/icon/TableA.png" width="48" height="48" alt="ag2Tables" /><h5 class="h5-narrow"><%=t "ag2_gest.home.formality.formality_types" %></h5></a>
+    <% elsif session[:resolution] == "SD" %>
+    <a href="<%= formality_types_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/TableA72.png" width="72" height="72" alt="ag2Tables" /><h5 class="h5-narrow"><%=t "ag2_gest.home.formality.formality_types" %></h5></a>
+    <% else %>
+    <a href="<%= formality_types_path %>" class="thumbnail centered"><img src="/assets/pict/TableA96.png" width="96" height="96" alt="ag2Tables" /><h5 class="h5-narrow"><%=t "ag2_gest.home.formality.formality_types" %></h5></a>
+    <% end %>
+  </li>
+  <li class="span4"></li>
+</ul><!-- /.thumbnails -->

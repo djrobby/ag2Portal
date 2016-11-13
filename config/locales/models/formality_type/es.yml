@@ -1,0 +1,12 @@
+es:
+  activerecord:
+    models:
+      formality_type:
+        zero:  Tipos de trámite
+        one:   Tipo de trámite
+        few:   Tipos de trámite
+        other: Tipos de trámite
+        check_for_formalities: "Tipo no puede ser eliminado mientras existan trámites vinculados."
+    attributes:
+      formality_type:
+        name: "Descripción"

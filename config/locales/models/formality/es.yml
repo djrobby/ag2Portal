@@ -1,0 +1,15 @@
+es:
+  activerecord:
+    models:
+      formality:
+        zero:  Trámites
+        one:   Trámite
+        few:   Trámites
+        other: Trámites
+        check_for_contracting_request_types: "Trámite no puede ser eliminado mientras existan solicitudes de constratación vinculadas."
+    attributes:
+      formality:
+        code: "Código"
+        name: "Descripción"
+        formality_type: "Tipo"
+        formality_type_id: "Tipo"

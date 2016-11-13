@@ -56,6 +56,7 @@ module Ag2Gest
     def create
       @breadcrumb = 'create'
       @formality_type = FormalityType.new(params[:formality_type])
+      @formality_type.created_by = current_user.id if !current_user.nil?
 
       respond_to do |format|
         if @formality_type.save
@@ -73,6 +74,7 @@ module Ag2Gest
     def update
       @breadcrumb = 'update'
       @formality_type = FormalityType.find(params[:id])
+      @formality_type.updated_by = current_user.id if !current_user.nil?
 
       respond_to do |format|
         if @formality_type.update_attributes(params[:formality_type])

@@ -1,0 +1,20 @@
+en:
+  ag2_gest:
+    formality_types:
+      index:
+        title: "Formality types"
+        btn_new: "New Formality type"
+        back_to_root: "Back to ag2Gest"
+        back_to_management: "Back to Formalities"
+      show:
+        title: "Formality type"
+        btn_edit: "Edit Formality type"
+        btn_delete: "Delete Formality type"
+        subtable_title: "Formality type Formalities"
+        return_to: "Back to Formality type"
+      edit:
+        title: "Edit Formality type"
+        btn_show: "Show Formality type"
+      new:
+        title: "New Formality type"
+      back_to_main_page: "Back to Formality types"

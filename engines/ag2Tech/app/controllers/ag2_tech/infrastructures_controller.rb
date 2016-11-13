@@ -183,6 +183,7 @@ module Ag2Tech
         else
           @companies = companies_dropdown
           @offices = offices_dropdown
+          @infrastructure_types = infrastructure_types_dropdown
           format.html { render action: "new" }
           format.json { render json: @infrastructure.errors, status: :unprocessable_entity }
         end

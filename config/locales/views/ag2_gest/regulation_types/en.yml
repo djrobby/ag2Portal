@@ -2,25 +2,20 @@ en:
   ag2_gest:
     regulation_types:
       index:
-        title: "Billable items"
-        btn_new: "New Billable item"
+        title: "Regulation types"
+        btn_new: "New Regulation type"
         back_to_root: "Back to ag2Gest"
         back_to_management: "Back to Regulations"
       show:
-        title: "Billable item"
-        btn_edit: "Edit Billable item"
-        btn_delete: "Delete Billable item"
-        return_to: "Back to Billable item"
+        title: "Regulation type"
+        btn_edit: "Edit Regulation type"
+        btn_delete: "Delete Regulation type"
+        return_to: "Volver a Regulation type"
       edit:
-        title: "Edit Billable item"
-        btn_show: "Show Billable item"
+        show: "Show"
+        back: "Back"
+        title: "Edit Regulation type"
+        btn_show: "Show Regulation type"
       new:
-        title: "New Billable item"
-      back_to_main_page: "Back to Billable items"
-      # generate_code_btn: "billable_item Code"
-      # personal_info: "billable_item Info"
-      # commercial_info: "Accounting & Commercial Info"
-      # fiscal_error: "Wrong Fiscal Id or Entity (TaxPayer) does not exist."
-      # code_error: "Unable to generate billable_item Code: No Organization chosen."
-
-      # {:office=>{:one=>"Oficina", :other=>"Oficinas"}, :company=>"Empresa"}
+        title: "New Regulation type"
+      back_to_main_page: "Back to Regulation types"

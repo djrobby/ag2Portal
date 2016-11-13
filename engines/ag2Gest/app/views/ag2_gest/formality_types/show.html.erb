@@ -15,7 +15,7 @@
 </table>
 
 <%= render partial: '/layouts/crud/update_delete_new', locals:
-{ model: InfrastructureType, update_path: edit_formality_type_path(@formality_type), update_txt: t('.btn_edit'),
+{ model: FormalityType, update_path: edit_formality_type_path(@formality_type), update_txt: t('.btn_edit'),
 delete_path: @formality_type, delete_txt: t('.btn_delete'), msg: t("activerecord.models.formality_type.one"), txt: @formality_type.name,
 new_path: new_formality_type_path, new_txt: t('ag2_gest.formality_types.index.btn_new') } %>
 
@@ -26,7 +26,7 @@ new_path: new_formality_type_path, new_txt: t('ag2_gest.formality_types.index.bt
     <%= render '/layouts/ag2_gest/formalitiesheader' %>
   </thead>
   <tbody>
-    <%= render :partial => '/layouts/ag2_gest/formalities', :locals => { :infras => @formalities } %>
+    <%= render :partial => '/layouts/ag2_gest/formalities', :locals => { :formalities => @formalities } %>
   </tbody>
 </table>
 <%= render :partial => '/layouts/pagination', :locals => { :ivar => @formalities } %>

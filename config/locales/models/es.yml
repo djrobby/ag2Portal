@@ -135,3 +135,11 @@ es:
           attributes:
             meter_code:
               code_invalid: "inválido (debe ser alfanumérico)"
+        meter:
+          attributes:
+            meter_code:
+              code_invalid: "inválido (debe ser alfanumérico)"
+        formality:
+          attributes:
+            code:
+              code_invalid: "inválido (debe ser alfanumérico)"

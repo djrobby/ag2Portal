@@ -2,20 +2,20 @@ es:
   ag2_gest:
     regulation_types:
       index:
-        title: "Tipos de Tipo de Regulación"
-        btn_new: "Nueva Tipo de Regulación"
+        title: "Tipos de regulación"
+        btn_new: "Nuevo Tipo de regulación"
         back_to_root: "Volver a ag2Gest"
         back_to_management: "Volver a Regulaciones"
       show:
-        title: "Tipo de Regulación"
-        btn_edit: "Editar Tipo de Regulación"
-        btn_delete: "Borrar Tipo de Regulación"
-        return_to: "Volver a Tipo de Regulación"
+        title: "Tipo de regulación"
+        btn_edit: "Editar Tipo de regulación"
+        btn_delete: "Borrar Tipo de regulación"
+        return_to: "Volver a Tipo de regulación"
       edit:
         show: "Mostrar"
         back: "Atrás"
-        title: "Editar Tipo de Regulación"
-        btn_show: "Ver Tipo de Regulación"
+        title: "Editar Tipo de regulación"
+        btn_show: "Ver Tipo de regulación"
       new:
-        title: "Nueva Tipo de Regulación"
-      back_to_main_page: "Volver a Tipos de Regulación"
+        title: "Nuevo Tipo de regulación"
+      back_to_main_page: "Volver a Tipos de regulación"

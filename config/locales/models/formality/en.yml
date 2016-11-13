@@ -1,0 +1,15 @@
+en:
+  activerecord:
+    models:
+      formality:
+        zero:  Formalities
+        one:   Formality
+        few:   Formalities
+        other: Formalities
+        check_for_contracting_request_types: "Formality cannot be destroyed while linked contracting requests exist."
+    attributes:
+      formality:
+        code: "Code"
+        name: "Description"
+        formality_type: "Type"
+        formality_type_id: "Type"

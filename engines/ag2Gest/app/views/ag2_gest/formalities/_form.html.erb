@@ -1,17 +1,22 @@
-<%= form_for(@formality) do |f| %>
-  <% if @formality.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@formality.errors.count, "error") %> prohibited this formality from being saved:</h2>
+<script>
+  $(document).ready(function() {
+    $('select.sel2').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      allowClear: true
+    });
+    
+    // Set initial focus
+    $(this).find(".form-label:first").focus();
+  });
+</script>
 
-      <ul>
-      <% @formality.errors.full_messages.each do |msg| %>
-        <li><%= msg %></li>
-      <% end %>
-      </ul>
-    </div>
-  <% end %>
-
-  <div class="actions">
-    <%= f.submit %>
-  </div>
+<%= simple_form_for @formality, :html => {:class => 'form-vertical well' } do |f| %>
+<%= f.error_notification %>
+<%= display_base_errors resource %>
+<%= f.association :formality_type, collection: @formality_types, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %>
+<div>
+  <label class="multi-field-label-two"> <%= f.input :code, input_html: { class: 'mid-text-field', maxlength: 3, onkeyup: "caps(this)" }, label_html: { class: 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.input :name, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %> </label>
+</div>
+<%= f.button :submit, :class => 'btn-primary' %>
 <% end %>

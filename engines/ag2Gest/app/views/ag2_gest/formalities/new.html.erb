@@ -1,5 +1,7 @@
-<h1>New formality</h1>
+<%= render '/layouts/ag2_gest/formalitiesbreadcrumb' %>
+
+<h3><%=t '.title' %></h3>
 
 <%= render 'form' %>
 
-<%= link_to 'Back', formalities_path %>
+<%= link_to t("ag2_gest.formalities.back_to_main_page"), formalities_path %>

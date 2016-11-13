@@ -15,6 +15,7 @@ en:
         regulation_management: "Regulations"
         bill_management: "Billing"
         debt_claim_management: "Debt Management"
+        formality_management: "Formalities"
         sale_offers: "Sale Offers"
         client_payments: "Bill Collection"
         sale_offer_statuses: "Sale Offer Statuses"
@@ -22,7 +23,6 @@ en:
         billing_frequencies: "Frequencies"
         centers: "Urban Centers"
         street_directories: "Street Directories"
-        formalities: "Formalities"
         frauds: "Frauds"
         complaints: "Complaints"
       tariff:
@@ -74,3 +74,7 @@ en:
         invoice_statuses: "Invoice Statuses"
         invoice_operations: "Invoice Operations"
         billable_items: "Billable Items"
+      formality:
+        formalities_query: "Formalities Query"
+        formalities: "Formalities"
+        formality_types: "Formality Types"

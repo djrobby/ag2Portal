@@ -15,6 +15,7 @@ es:
         regulation_management: "Regulaciones"
         bill_management: "Facturación"
         debt_claim_management: "Gestión de Deudas"
+        formality_management: "Trámites"
         sale_offers: "Ofertas"
         client_payments: "Cobros"
         sale_offer_statuses: "Estados Ofertas"
@@ -22,7 +23,6 @@ es:
         billing_periods: "Períodos"
         centers: "Núcleos Urbanos"
         street_directories: "Callejeros"
-        formalities: "Trámites"
         frauds: "Fraudes"
         complaints: "Reclamaciones"
       tariff:
@@ -74,3 +74,7 @@ es:
         invoice_statuses: "Estados de Factura"
         invoice_operations: "Operaciones Factura"
         billable_items: "Items Facturables"
+      formality:
+        formalities_query: "Consulta de Trámites"
+        formalities: "Trámites"
+        formality_types: "Tipos de Trámite"

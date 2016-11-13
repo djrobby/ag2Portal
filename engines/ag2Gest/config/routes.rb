@@ -52,6 +52,7 @@ Ag2Gest::Engine.routes.draw do
     match "service_point_management", controller: "home", action: 'service_point_management'
     match "regulation_management", controller: "home", action: 'regulation_management'
     match "bill_management", controller: "home", action: 'bill_management'
+    match "formality_management", controller: "home", action: 'formality_management'
     #
     # Contracting request
     match 'contracting_requests/update_bank_offices_from_bank/:id', :controller => 'contracting_requests', :action => 'update_bank_offices_from_bank'
@@ -238,6 +239,9 @@ Ag2Gest::Engine.routes.draw do
       post 'confirm_bank', on: :collection
     end
     resources :payment_methods
+    #
+    resources :formalities
+    resources :formality_types
 
     # Root
     root :to => 'home#index'

@@ -136,3 +136,9 @@ es:
       water_connection_contracts:
         items: "Contratos de acometida"
         item: "Contrato"
+      formalities:
+        items: "Trámites"
+        item: "Trámite"
+      formality_types:
+        items: "Tipos de trámite"
+        item: "Tipo"

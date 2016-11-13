@@ -1,5 +1,29 @@
-<p id="notice"><%= notice %></p>
+<%= render '/layouts/ag2_gest/formalitiesbreadcrumb' %>
 
+<h3><%=t '.title' %></h3>
+<table class="table odd_even_table">
+  <tbody>
+    <tr>
+      <td>Id:</td>
+      <td><%= @formality.id %></td>
+      <td><%=t 'activerecord.attributes.formality.code' %>:</td>
+      <td class="highlighted bolded"><%= @formality.code %></td>
+    </tr>
+    <tr>
+      <td><%=t 'activerecord.attributes.formality.name' %>:</td>
+      <td><%= @formality.name %></td>
+      <td><%=t 'activerecord.attributes.formality.formality_type' %>:</td>
+      <td><%= @formality.formality_type.name unless @formality.formality_type.blank? %></td>
+    </tr>
+    <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @formality } %>
+    <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @formality } %>
+  </tbody>
+</table>
 
-<%= link_to 'Edit', edit_formality_path(@formality) %> |
-<%= link_to 'Back', formalities_path %>
+<%= render partial: '/layouts/crud/update_delete_new', locals:
+{ model: Formality, update_path: edit_formality_path(@formality), update_txt: t('.btn_edit'),
+delete_path: @formality, delete_txt: t('.btn_delete'), msg: t("activerecord.models.formality.one"), txt: @formality.code,
+new_path: new_formality_path, new_txt: t('ag2_gest.formalities.index.btn_new') } %>
+
+<%= link_to t('ag2_gest.formalities.show.show_to'), @formality.formality_type %> |
+<%= link_to t("ag2_gest.formalities.back_to_main_page"), formalities_path %>

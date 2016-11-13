@@ -20,14 +20,14 @@ module Ag2Gest
       session[:Period] = nil
       session[:Group] = nil
 
-      session[:ReadingRoute]
-      session[:Meter]
-      session[:Order]
-      session[:Caliber]
-      session[:RequestType]
-      session[:Project]
-      session[:RequestStatus]
-      session[:ClientInfo]
+      session[:ReadingRoute] = nil
+      session[:Meter] = nil
+      session[:Order] = nil
+      session[:Caliber] = nil
+      session[:RequestType] = nil
+      session[:Project] = nil
+      session[:RequestStatus] = nil
+      session[:ClientInfo] = nil
     end
 
     def current_projects

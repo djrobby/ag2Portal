@@ -136,3 +136,9 @@ en:
       water_connection_contracts:
         items: "Connection contracts"
         item: "Contract"
+      formalities:
+        items: "Formalities"
+        item: "Formality"
+      formality_types:
+        items: "Formality types"
+        item: "Type"
