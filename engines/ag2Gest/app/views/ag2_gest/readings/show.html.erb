@@ -3,17 +3,7 @@
 
 <%= render '/layouts/ag2_gest/readingsbreadcrumb' %>
 
-<% if !session[:return_to_subscriber].nil? %>
-  <%= link_to session[:return_to_subscriber], session[:return_to_subscriber_url] %><br />
-<% end %>
-
-<% if !session[:return_to_meter].nil? %>
-  <%= link_to session[:return_to_meter], session[:return_to_meter_url] %><br />
-<% end %>
-
-
 <h3><%=t '.title' %></h3>
-
 
 <table class="table">
   <tbody>
@@ -141,4 +131,10 @@
 delete_path: @reading, delete_txt: t('.btn_delete'), msg: t("activerecord.models.reading.one"), :txt => @reading.id,
 new_path: new_reading_path, new_txt: t('ag2_gest.readings.index.btn_new') } %>
 
+<% if !session[:return_to_subscriber].nil? %>
+  <%= link_to session[:return_to_subscriber], session[:return_to_subscriber_url] %> |
+<% end %>
+<% if !session[:return_to_meter].nil? %>
+  <%= link_to session[:return_to_meter], session[:return_to_meter_url] %> |
+<% end %>
 <%= link_to I18n.t('ag2_gest.readings.back_to_main_page'), readings_path %>
