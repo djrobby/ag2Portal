@@ -6,7 +6,7 @@ en:
         one:   Formality type
         few:   Formality types
         other: Formality types
-        check_for_infrastructures: "Type cannot be destroyed while linked formalities exist."
+        check_for_formalities: "Type cannot be destroyed while linked formalities exist."
     attributes:
       formality_type:
         name: "Description"

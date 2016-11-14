@@ -1,0 +1,20 @@
+en:
+  ag2_gest:
+    debt_claim_statuses:
+      index:
+        title: "DC Statuses"
+        btn_new: "New DC Status"
+        back_to_root: "Back to ag2Gest"
+        back_to_management: "Back to Debt Management"
+      show:
+        title: "DC Status"
+        btn_edit: "Edit DC Status"
+        btn_delete: "Delete DC Status"
+        subtable_title: "DC Status Formalities"
+        return_to: "Back to DC Status"
+      edit:
+        title: "Edit DC Status"
+        btn_show: "Show DC Status"
+      new:
+        title: "New DC Status"
+      back_to_main_page: "Back to DC Statuses"

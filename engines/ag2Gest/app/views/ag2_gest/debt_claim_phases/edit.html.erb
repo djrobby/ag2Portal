@@ -1,6 +1,8 @@
-<h1>Editing debt_claim_phase</h1>
+<%= render '/layouts/ag2_gest/debtclaimphasesbreadcrumb' %>
+
+<h3><%=t '.title' %></h3>
 
 <%= render 'form' %>
 
-<%= link_to 'Show', @debt_claim_phase %> |
-<%= link_to 'Back', debt_claim_phases_path %>
+<%= link_to t(".btn_show"), @debt_claim_phase %> |
+<%= link_to t("ag2_gest.debt_claim_phases.back_to_main_page"), debt_claim_phases_path %>

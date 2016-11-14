@@ -1,17 +1,9 @@
-<%= form_for(@debt_claim_status) do |f| %>
-  <% if @debt_claim_status.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@debt_claim_status.errors.count, "error") %> prohibited this debt_claim_status from being saved:</h2>
-
-      <ul>
-      <% @debt_claim_status.errors.full_messages.each do |msg| %>
-        <li><%= msg %></li>
-      <% end %>
-      </ul>
-    </div>
-  <% end %>
-
-  <div class="actions">
-    <%= f.submit %>
-  </div>
+<%= simple_form_for @debt_claim_status, :html => {:class => 'form-vertical well' } do |f| %>
+<%= f.error_notification %>
+<%= display_base_errors resource %>
+<div>
+  <label class="multi-field-label-two"> <%= f.input :name, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.input :action, input_html: { class: 'large-text-field number-text-field', maxlength: 1 }, label_html: { class: 'form-label' } %> </label>
+</div>
+<%= f.button :submit, :class => 'btn-primary' %>
 <% end %>

@@ -1,0 +1,13 @@
+es:
+  activerecord:
+    models:
+      debt_claim_phase:
+        zero:  Fases RD
+        one:   Fase RD
+        few:   Fases RD
+        other: Fases RD
+        check_for_debt_claims: "Fase no puede ser eliminada mientras existan reclamaciones vinculadas."
+    attributes:
+      debt_claim_phase:
+        name: "Descripción"
+        surcharge_pct: "% Recargo"

@@ -1,5 +1,28 @@
-<p id="notice"><%= notice %></p>
+<%= render '/layouts/ag2_gest/debtclaimphasesbreadcrumb' %>
 
+<h3><%=t '.title' %></h3>
+<table class="table odd_even_table">
+  <tbody>
+    <tr>
+      <td>Id:</td>
+      <td><%= @debt_claim_phase.id %></td>
+      <td><%=t 'activerecord.attributes.debt_claim_phase.name' %>:</td>
+      <td><%= @debt_claim_phase.name %></td>
+    </tr>
+    <tr>
+      <td><%=t 'activerecord.attributes.debt_claim_phase.surcharge_pct' %>:</td>
+      <td><%= number_with_precision(@debt_claim_phase.surcharge_pct, precision: 2) unless @debt_claim_phase.surcharge_pct.blank? %></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @debt_claim_phase } %>
+    <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @debt_claim_phase } %>
+  </tbody>
+</table>
 
-<%= link_to 'Edit', edit_debt_claim_phase_path(@debt_claim_phase) %> |
-<%= link_to 'Back', debt_claim_phases_path %>
+<%= render partial: '/layouts/crud/update_delete_new', locals:
+{ model: DebtClaimPhase, update_path: edit_debt_claim_phase_path(@debt_claim_phase), update_txt: t('.btn_edit'),
+delete_path: @debt_claim_phase, delete_txt: t('.btn_delete'), msg: t("activerecord.models.debt_claim_phase.one"), txt: @debt_claim_phase.name,
+new_path: new_debt_claim_phase_path, new_txt: t('ag2_gest.debt_claim_phases.index.btn_new') } %>
+
+<%= link_to t("ag2_gest.debt_claim_phases.back_to_main_page"), debt_claim_phases_path %>

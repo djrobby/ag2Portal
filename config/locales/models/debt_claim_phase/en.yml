@@ -1,0 +1,13 @@
+en:
+  activerecord:
+    models:
+      debt_claim_phase:
+        zero:  DC phases
+        one:   DC phase
+        few:   DC phases
+        other: DC phases
+        check_for_debt_claims: "Phase cannot be destroyed while linked claims exist."
+    attributes:
+      debt_claim_phase:
+        name: "Description"
+        surcharge_pct: "Surcharge %"

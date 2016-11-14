@@ -78,3 +78,7 @@ es:
         formalities_query: "Consulta de Trámites"
         formalities: "Trámites"
         formality_types: "Tipos de Trámite"
+      debt_claim:
+        claims: "Reclamaciones de Deuda"
+        phases: "Fases RD"
+        statuses: "Estados RD"

@@ -1,0 +1,20 @@
+es:
+  ag2_gest:
+    debt_claim_phases:
+      index:
+        title: "Fases RD"
+        btn_new: "Nueva Fase RD"
+        back_to_root: "Volver a ag2Gest"
+        back_to_management: "Volver a Gestión de Deudas"
+      show:
+        title: "Fase RD"
+        btn_edit: "Editar Fase RD"
+        btn_delete: "Borrar Fase RD"
+        subtable_title: "Trámites del Fase RD"
+        return_to: "Volver a Fase RD"
+      edit:
+        title: "Editar Fase RD"
+        btn_show: "Ver Fase RD"
+      new:
+        title: "Nueva Fase RD"
+      back_to_main_page: "Volver a Fases RD"

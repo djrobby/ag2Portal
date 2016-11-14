@@ -142,3 +142,9 @@ en:
       formality_types:
         items: "Formality types"
         item: "Type"
+      debt_claim_phases:
+        items: "DC Phases"
+        item: "Phase"
+      debt_claim_statuses:
+        items: "DC Statuses"
+        item: "Status"

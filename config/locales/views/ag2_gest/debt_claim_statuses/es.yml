@@ -1,0 +1,20 @@
+es:
+  ag2_gest:
+    debt_claim_statuses:
+      index:
+        title: "Estados RD"
+        btn_new: "Nueva Estado RD"
+        back_to_root: "Volver a ag2Gest"
+        back_to_management: "Volver a Gestión de Deudas"
+      show:
+        title: "Estado RD"
+        btn_edit: "Editar Estado RD"
+        btn_delete: "Borrar Estado RD"
+        subtable_title: "Trámites del Estado RD"
+        return_to: "Volver a Estado RD"
+      edit:
+        title: "Editar Estado RD"
+        btn_show: "Ver Estado RD"
+      new:
+        title: "Nueva Estado RD"
+      back_to_main_page: "Volver a Estados RD"

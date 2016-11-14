@@ -1,5 +1,7 @@
-<h1>New debt_claim_status</h1>
+<%= render '/layouts/ag2_gest/debtclaimstatusesbreadcrumb' %>
+
+<h3><%=t '.title' %></h3>
 
 <%= render 'form' %>
 
-<%= link_to 'Back', debt_claim_statuses_path %>
+<%= link_to t("ag2_gest.debt_claim_statuses.back_to_main_page"), debt_claim_statuses_path %>

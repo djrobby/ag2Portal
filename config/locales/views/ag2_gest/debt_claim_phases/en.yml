@@ -1,0 +1,20 @@
+en:
+  ag2_gest:
+    debt_claim_phases:
+      index:
+        title: "DC Phases"
+        btn_new: "New DC Phase"
+        back_to_root: "Back to ag2Gest"
+        back_to_management: "Back to Debt Management"
+      show:
+        title: "DC Phase"
+        btn_edit: "Edit DC Phase"
+        btn_delete: "Delete DC Phase"
+        subtable_title: "DC Phase Formalities"
+        return_to: "Back to DC Phase"
+      edit:
+        title: "Edit DC Phase"
+        btn_show: "Show DC Phase"
+      new:
+        title: "New DC Phase"
+      back_to_main_page: "Back to DC Phases"

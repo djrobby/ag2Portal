@@ -142,3 +142,9 @@ es:
       formality_types:
         items: "Tipos de trámite"
         item: "Tipo"
+      debt_claim_phases:
+        items: "Fases RD"
+        item: "Fase"
+      debt_claim_statuses:
+        items: "Estados RD"
+        item: "Estado"

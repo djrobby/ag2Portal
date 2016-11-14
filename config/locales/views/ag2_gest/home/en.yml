@@ -78,3 +78,7 @@ en:
         formalities_query: "Formalities Query"
         formalities: "Formalities"
         formality_types: "Formality Types"
+      debt_claim:
+        claims: "Debt Claims"
+        phases: "DC Phases"
+        statuses: "DC Statuses"

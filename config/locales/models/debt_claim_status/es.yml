@@ -1,0 +1,13 @@
+es:
+  activerecord:
+    models:
+      debt_claim_status:
+        zero:  Estados RD
+        one:   Estado RD
+        few:   Estados RD
+        other: Estados RD
+        check_for_debt_claim_items: "Estado no puede ser eliminado mientras existan reclamaciones vinculadas."
+    attributes:
+      debt_claim_status:
+        name: "Descripción"
+        action: "Acción"
