@@ -60,6 +60,8 @@ es:
         fiscal_id: "Id Fiscal CIF/NIF"
         fiscal_id_c: "CIF/NIF"
         service_point_id: "Punto de Servicio"
+        debt: "Deuda"
+        data_contract: "Datos de contrato"
 
         subscriber_code0: "Código"
         subscriber_code1: "Código de identificación asignado"

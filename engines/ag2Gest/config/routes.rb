@@ -11,9 +11,22 @@ Ag2Gest::Engine.routes.draw do
     match 'ag2_gest_track' => 'ag2_gest_track#index', :as => :ag2_gest_track
     #
     # Control&Tracking
+    # report subscriber
     match 'subscriber_report', :controller => 'subscribers', :action => 'subscriber_report'
     match 'subscriber_tec_report', :controller => 'subscribers', :action => 'subscriber_tec_report'
     match 'subscriber_eco_report', :controller => 'subscribers', :action => 'subscriber_eco_report'
+    # report reading
+    match 'reading_report', :controller => 'readings', :action => 'reading_report'
+    # report bill
+    match 'bill_report', :controller => 'client_payments', :action => 'bill_report'
+    match 'bill_pending_report', :controller => 'client_payments', :action => 'bill_pending_report'
+    match 'bill_unpaid_report', :controller => 'client_payments', :action => 'bill_unpaid_report'
+    match 'bill_charged_report', :controller => 'client_payments', :action => 'bill_charged_report'
+    # report client_payment
+    match 'client_payment_report', :controller => 'client_payments', :action => 'client_payment_report'
+    # report contracting_request
+    match 'contracting_request_report', :controller => 'contracting_requests', :action => 'contracting_request_report'
+    match 'contracting_request_complete_report', :controller => 'contracting_requests', :action => 'contracting_request_complete_report'
 
     # Routes for jQuery POSTs
     #

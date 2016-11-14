@@ -24,3 +24,13 @@ es:
         total: "Total"
         export_google: "Exportar Google Sheets" 
         massive_billing_consumption: "Facturación masiva - Consumos"
+      report:
+        billable_concept: "Conceptos Facturados"
+        client: "Datos de Cliente / Abonado"
+        type: "Tipo de Facturas"
+        subtotal: "Subtotal"
+        taxes: "Impuestos"
+        status: "Estado"
+        debt: "Deuda"
+        Charged: "Cobrado"
+

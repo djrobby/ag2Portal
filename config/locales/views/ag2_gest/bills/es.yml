@@ -15,6 +15,9 @@ es:
         payday_limit: "Fecha de vencimiento"
         label_from: "Desde"
         label_to: "Hasta"
+        total_consumptions: "TOTAL CONSUMOS"
+        total_subscribers: "TOTAL ABONADOS"
+        total_bills: "IMPORTE TOTAL"
       show:
         title: "Recibo"
         btn_edit: "Editar Recibo"

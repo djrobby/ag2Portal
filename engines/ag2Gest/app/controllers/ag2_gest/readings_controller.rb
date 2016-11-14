@@ -209,6 +209,64 @@ module Ag2Gest
       end
     end
 
+     # reading report
+    def reading_report
+      manage_filter_state
+      subscriber = params[:Subscriber]
+      meter = params[:Meter]
+      reading_date = params[:ReadingDate]
+      period = params[:Period]
+      route = params[:Route]
+      from = params[:From]
+      to = params[:To]
+      # OCO
+      init_oco if !session[:organization]
+
+      @search = Reading.search do
+        with :project_id, current_projects_ids
+        if !subscriber.blank?
+          with :subscriber_id, subscriber
+        end
+        if !meter.blank?
+          with :meter_id, meter
+        end
+        if !from.blank?
+          any_of do
+            with(:reading_date).greater_than(from)
+            with :reading_date, from
+          end
+        end
+        if !to.blank?
+          any_of do
+            with(:reading_date).less_than(to)
+            with :reading_date, to
+          end
+        end
+        if !period.blank?
+          with :billing_period_id, period
+        end
+        if !route.blank?
+          with :reading_route_id, route
+        end
+        order_by :sort_no, :desc
+        paginate :page => params[:page] || 1, :per_page => Reading.count
+      end
+      @reading_report = @search.results
+
+      if !@reading_report.blank?
+        title = t("activerecord.models.reading.few")
+        @to = formatted_date(@reading_report.first.created_at)
+        @from = formatted_date(@reading_report.last.created_at)
+        respond_to do |format|
+          # Render PDF
+          format.pdf { send_data render_to_string,
+                       filename: "#{title}_#{@from}-#{@to}.pdf",
+                       type: 'application/pdf',
+                       disposition: 'inline' }
+        end
+      end
+    end
+
     private
 
     def subscribers_dropdown

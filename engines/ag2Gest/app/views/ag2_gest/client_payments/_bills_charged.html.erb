@@ -15,7 +15,7 @@
           <%= "Bco." if bill.client.active_bank_accounts?  %>
         </div>
         <div class="span2 soft-padding">
-          <%= bill.total.round(2) %>
+          <%= number_to_currency(bill.total, :precision => 4, :unit => "€") %>
         </div>
       </div>
 

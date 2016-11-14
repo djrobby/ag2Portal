@@ -52,6 +52,10 @@ es:
       new_water_supply_contract:
         title: "Contrato de Suministro"
         tariff_scheme: "Esquema tarifario"
+      report:
+        report: "Infome a elegir:"
+        contracting_request_report: "Solicitudes de Contratación no completadas"
+        contracting_request_complete_report: "Solicitudes de Contratación completadas"
       back_to_main_page: "Volver a Contrataciones"
       generate_code_btn: "Código de Contratación"
       personal_info: "Información del Contratación"

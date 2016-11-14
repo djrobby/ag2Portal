@@ -285,6 +285,7 @@ es:
       biller:
         loc_code: "Código"
         loc_description: "Descripción"
+        loc_subcode: "Subcódigo"
         loc_quantity: "Cantidad"
         loc_unit_price: "Precio"
         loc_amount: "(Importe cobrado)"

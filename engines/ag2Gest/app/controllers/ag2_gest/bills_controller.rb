@@ -148,18 +148,19 @@ module Ag2Gest
 
     def index
       if params[:bills]
-        @bills = PreBill.where(pre_group_no: params[:bills])
+        @bills = PreBill.where(pre_group_no: params[:bills]).paginate(:page => params[:page] || 1, :per_page => per_page || 20)
       else
         if session[:office] != '0'
-          @bills = Office.find(session[:office]).subscribers.map(&:pre_bills).flatten
+          @bills = Office.find(session[:office]).subscribers.map(&:pre_bills).flatten.paginate(:page => params[:page] || 1, :per_page => 20)
         else
-          @bills = PreBill.all
+          @bills = PreBill.all.paginate(:page => params[:page] || 1, :per_page => 20)
         end
       end
 
       respond_to do |format|
         format.html # index.html.erb
         format.json { render json: @bills }
+        format.js
       end
     end
 

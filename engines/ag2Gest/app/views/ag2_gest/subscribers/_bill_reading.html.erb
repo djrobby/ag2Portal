@@ -18,7 +18,7 @@
         <%= bill.try(:total) %>
       </div>
       <div class="span2 soft-padding pull-right">
-        <%= link_to "<i class='icon-print icon-white'></i>".html_safe, bill_path(bill), target: "_blank", class: "btn btn-warning btn-mini" %>
+        <%= link_to "<i class='icon-print icon-white'></i>".html_safe, bill_supply_pdf_bill_path(bill, :format => :pdf), target: "_blank", class: "btn btn-warning btn-mini" %>
         <%= link_to "<i class='icon-remove icon-white'></i>".html_safe, void_subscriber_bill_path(@subscriber,bill) , class: "btn btn-warning btn-mini", data: {confirm: I18n.t("ag2_gest.subscribers.show.are_you_sure_to_void") + "#{t("activerecord.models.bill.one")}? (#{bill.full_no})"} %>
         <%= link_to "<i class='icon-plus icon-white'></i>".html_safe, rebilling_subscriber_bill_path(@subscriber,bill) , class: "btn btn-warning btn-mini", remote: true, data: {confirm: I18n.t("ag2_gest.subscribers.show.are_you_sure_to_rebill") + "#{t("activerecord.models.bill.one")}? (#{bill.full_no})"} %>
       </div>

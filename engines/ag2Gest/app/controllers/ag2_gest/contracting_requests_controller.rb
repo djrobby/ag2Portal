@@ -774,7 +774,7 @@ module Ag2Gest
         paginate :page => params[:page] || 1, :per_page => per_page
       end
       @contracting_requests = @search.results
-
+      @reports = reports_array
       respond_to do |format|
         format.html # index.html.erb
         format.json { render json: @contracting_requests }
@@ -885,7 +885,116 @@ module Ag2Gest
       end
     end
 
+     # contracting request report
+    def contracting_request_report
+      manage_filter_state
+      request_type = params[:RequestType]
+      no = params[:No]
+      project = params[:Project]
+      request_status = params[:RequestStatus]
+      client_info = params[:ClientInfo]
+      sort = params[:sort]
+      direction = params[:direction]
+      # Arrays for search
+      current_projects = @projects.blank? ? [0] : current_projects_for_index(@projects)
+      # If inverse no search is required
+      no = !no.blank? && no[0] == '%' ? inverse_no_search(no) : no
+
+      @search = ContractingRequest.search do
+        with(:contracting_request_status_id, 0..10)
+        with :project_id, current_projects
+        # fulltext
+        if !client_info.blank?
+          fulltext client_info
+        end
+        if !no.blank?
+          with :request_no, no
+        end
+        if !request_type.blank?
+          with :contracting_request_type_id, request_type
+        end
+        if !sort.blank? and !direction.blank?
+          order_by sort, direction
+        else
+          order_by :request_no, :desc
+        end
+        paginate :page => params[:page] || 1, :per_page => ContractingRequest.count
+      end
+      @contracting_request_report = @search.results
+
+      if !@contracting_request_report.blank?
+        title = t("activerecord.models.contracting_request.few")
+        @to = formatted_date(@contracting_request_report.first.created_at)
+        @from = formatted_date(@contracting_request_report.last.created_at)
+        respond_to do |format|
+          # Render PDF
+          format.pdf { send_data render_to_string,
+                       filename: "#{title}_#{@from}-#{@to}.pdf",
+                       type: 'application/pdf',
+                       disposition: 'inline' }
+        end
+      end
+    end
+
+     # contracting request complete report
+    def contracting_request_complete_report
+      manage_filter_state
+      request_type = params[:RequestType]
+      no = params[:No]
+      project = params[:Project]
+      request_status = params[:RequestStatus]
+      client_info = params[:ClientInfo]
+      sort = params[:sort]
+      direction = params[:direction]
+      # Arrays for search
+      current_projects = @projects.blank? ? [0] : current_projects_for_index(@projects)
+      # If inverse no search is required
+      no = !no.blank? && no[0] == '%' ? inverse_no_search(no) : no
+
+      @search = ContractingRequest.search do
+        with :contracting_request_status_id, 11
+        with :project_id, current_projects
+        # fulltext
+        if !client_info.blank?
+          fulltext client_info
+        end
+        if !no.blank?
+          with :request_no, no
+        end
+        if !request_type.blank?
+          with :contracting_request_type_id, request_type
+        end
+        if !sort.blank? and !direction.blank?
+          order_by sort, direction
+        else
+          order_by :request_no, :desc
+        end
+        paginate :page => params[:page] || 1, :per_page => ContractingRequest.count
+      end
+      @contracting_request_complete_report = @search.results
+
+      if !@contracting_request_complete_report.blank?
+        title = t("activerecord.models.contracting_request.few")
+        @to = formatted_date(@contracting_request_complete_report.first.created_at)
+        @from = formatted_date(@contracting_request_complete_report.last.created_at)
+        respond_to do |format|
+          # Render PDF
+          format.pdf { send_data render_to_string,
+                       filename: "#{title}_#{@from}-#{@to}.pdf",
+                       type: 'application/pdf',
+                       disposition: 'inline' }
+        end
+      end
+    end
+
     private
+
+    def reports_array()
+      _array = []
+      _array = _array << t("ag2_gest.contracting_requests.report.contracting_request_report")
+      _array = _array << t("ag2_gest.contracting_requests.report.contracting_request_complete_report")
+      _array
+    end
 
     def current_projects_for_index(_projects)
       _current_projects = []

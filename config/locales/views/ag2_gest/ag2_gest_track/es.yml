@@ -12,6 +12,7 @@ es:
       subscriber_report:
         report_title: "Padrón de Abonados"
         sum_rows_title: "Total Filas:"
+        sum_rows_debt: "Total Deuda:"
       every_report:
         pt: "Página"
         pd: "de"

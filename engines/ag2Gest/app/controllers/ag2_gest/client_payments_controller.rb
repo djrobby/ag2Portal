@@ -360,15 +360,344 @@ module Ag2Gest
       @client_payments_others = @search_others.results
 
       @instalments = @search_instalment.results
-
+      @reports = reports_array
       respond_to do |format|
         format.html # index.html.erb
         format.json { render json: {bills_pending: @bills_pending, bills_charged: @bills_charged, client_payments_cash: @client_payments_cash, client_payments_bank: @client_payments_bank, client_payments_others: @client_payments_others, instalments: @instalments } }
         format.js
       end
     end
+    # bill report
+    def bill_report
+      manage_filter_state
+      bill_no = params[:bill_no]
+      client = params[:client]
+      subscriber = params[:subscriber]
+      entity = params[:entity]
+      project = params[:project]
+      bank_account = params[:bank_account] == "SI" ? true : false
+      billing_period = params[:billing_period]
+      reading_routes = params[:reading_routes]
+
+      # OCO
+      init_oco if !session[:organization]
+
+      # If inverse no search is required
+      bill_no = !bill_no.blank? && bill_no[0] == '%' ? inverse_no_search(bill_no) : bill_no
+
+      @search = Bill.search do
+        if !current_projects_ids.blank?
+          with :project_id, current_projects_ids
+        end
+        if !bill_no.blank?
+          if bill_no.class == Array
+            with :bill_no, bill_no
+          else
+            with(:bill_no).starting_with(bill_no)
+          end
+        end
+        if !client.blank?
+          with :client_id, client
+        end
+        if !subscriber.blank?
+          with :subscriber_id, subscriber
+        end
+        if !entity.blank?
+          with :entity_id, entity
+        end
+        if !bank_account.blank?
+          with :bank_account, bank_account
+        end
+        if !reading_routes.blank?
+          with :reading_route_id, reading_routes
+        end
+        order_by :sort_no, :asc
+        paginate :page => params[:page] || 1, :per_page => Bill.count
+      end
+
+      @bill_report = @search.results
+
+      if !@bill_report.blank?
+        title = t("activerecord.models.bill.few")
+        @to = formatted_date(@bill_report.first.created_at)
+        @from = formatted_date(@bill_report.last.created_at)
+        respond_to do |format|
+          # Render PDF
+          format.pdf { send_data render_to_string,
+                       filename: "#{title}_#{@from}-#{@to}.pdf",
+                       type: 'application/pdf',
+                       disposition: 'inline' }
+        end
+      end
+    end
+    # bill pending report
+    def bill_pending_report
+      manage_filter_state
+      bill_no = params[:bill_no]
+      client = params[:client]
+      subscriber = params[:subscriber]
+      entity = params[:entity]
+      project = params[:project]
+      bank_account = params[:bank_account] == "SI" ? true : false
+      billing_period = params[:billing_period]
+      reading_routes = params[:reading_routes]
+
+      # OCO
+      init_oco if !session[:organization]
+
+      # If inverse no search is required
+      bill_no = !bill_no.blank? && bill_no[0] == '%' ? inverse_no_search(bill_no) : bill_no
+
+      @search = Bill.search do
+        with(:invoice_status_id, 0..98)
+        if !current_projects_ids.blank?
+          with :project_id, current_projects_ids
+        end
+        if !bill_no.blank?
+          if bill_no.class == Array
+            with :bill_no, bill_no
+          else
+            with(:bill_no).starting_with(bill_no)
+          end
+        end
+        if !client.blank?
+          with :client_id, client
+        end
+        if !subscriber.blank?
+          with :subscriber_id, subscriber
+        end
+        if !entity.blank?
+          with :entity_id, entity
+        end
+        if !bank_account.blank?
+          with :bank_account, bank_account
+        end
+        if !reading_routes.blank?
+          with :reading_route_id, reading_routes
+        end
+        order_by :sort_no, :asc
+        paginate :page => params[:page] || 1, :per_page => Bill.count
+      end
+
+      @bill_pending_report = @search.results
+      if !@bill_pending_report.blank?
+        title = t("activerecord.models.bill.few")
+        @to = formatted_date(@bill_pending_report.first.created_at)
+        @from = formatted_date(@bill_pending_report.last.created_at)
+        respond_to do |format|
+          # Render PDF
+          format.pdf { send_data render_to_string,
+                       filename: "#{title}_#{@from}-#{@to}.pdf",
+                       type: 'application/pdf',
+                       disposition: 'inline' }
+        end
+      end
+    end
+    # bill unpaid report
+    def bill_unpaid_report
+      manage_filter_state
+      bill_no = params[:bill_no]
+      client = params[:client]
+      subscriber = params[:subscriber]
+      entity = params[:entity]
+      project = params[:project]
+      bank_account = params[:bank_account] == "SI" ? true : false
+      billing_period = params[:billing_period]
+      reading_routes = params[:reading_routes]
+
+      # OCO
+      init_oco if !session[:organization]
+
+      # If inverse no search is required
+      bill_no = !bill_no.blank? && bill_no[0] == '%' ? inverse_no_search(bill_no) : bill_no
+
+      @search = Bill.search do
+        with(:invoice_status_id, 0..98)
+        with :payday_limit, unpaid?
+        if !current_projects_ids.blank?
+          with :project_id, current_projects_ids
+        end
+        if !bill_no.blank?
+          if bill_no.class == Array
+            with :bill_no, bill_no
+          else
+            with(:bill_no).starting_with(bill_no)
+          end
+        end
+        if !client.blank?
+          with :client_id, client
+        end
+        if !subscriber.blank?
+          with :subscriber_id, subscriber
+        end
+        if !entity.blank?
+          with :entity_id, entity
+        end
+        if !bank_account.blank?
+          with :bank_account, bank_account
+        end
+        if !reading_routes.blank?
+          with :reading_route_id, reading_routes
+        end
+        order_by :sort_no, :asc
+        paginate :page => params[:page] || 1, :per_page => Bill.count
+      end
+
+      @bill_unpaid_report = @search.results
+
+      if !@bill_unpaid_report.blank?
+        title = t("activerecord.models.bill.few")
+        @to = formatted_date(@bill_unpaid_report.first.created_at)
+        @from = formatted_date(@bill_unpaid_report.last.created_at)
+        respond_to do |format|
+          # Render PDF
+          format.pdf { send_data render_to_string,
+                       filename: "#{title}_#{@from}-#{@to}.pdf",
+                       type: 'application/pdf',
+                       disposition: 'inline' }
+        end
+      end
+    end
+    # bill charged report
+    def bill_charged_report
+      manage_filter_state
+      bill_no = params[:bill_no]
+      client = params[:client]
+      subscriber = params[:subscriber]
+      entity = params[:entity]
+      project = params[:project]
+      bank_account = params[:bank_account] == "SI" ? true : false
+      billing_period = params[:billing_period]
+      reading_routes = params[:reading_routes]
+
+      # OCO
+      init_oco if !session[:organization]
+
+      # If inverse no search is required
+      bill_no = !bill_no.blank? && bill_no[0] == '%' ? inverse_no_search(bill_no) : bill_no
+
+      @search = Bill.search do
+        with :invoice_status_id, 99
+        if !current_projects_ids.blank?
+          with :project_id, current_projects_ids
+        end
+        if !bill_no.blank?
+          if bill_no.class == Array
+            with :bill_no, bill_no
+          else
+            with(:bill_no).starting_with(bill_no)
+          end
+        end
+        if !client.blank?
+          with :client_id, client
+        end
+        if !subscriber.blank?
+          with :subscriber_id, subscriber
+        end
+        if !entity.blank?
+          with :entity_id, entity
+        end
+        if !bank_account.blank?
+          with :bank_account, bank_account
+        end
+        if !reading_routes.blank?
+          with :reading_route_id, reading_routes
+        end
+        order_by :sort_no, :asc
+        paginate :page => params[:page] || 1, :per_page => Bill.count
+      end
+
+      @bill_charged_report = @search.results
+      if !@bill_charged_report.blank?
+        title = t("activerecord.models.bill.few")
+        @to = formatted_date(@bill_charged_report.first.created_at)
+        @from = formatted_date(@bill_charged_report.last.created_at)
+        respond_to do |format|
+          # Render PDF
+          format.pdf { send_data render_to_string,
+                       filename: "#{title}_#{@from}-#{@to}.pdf",
+                       type: 'application/pdf',
+                       disposition: 'inline' }
+        end
+      end
+    end
+
+     # client payment report
+    def client_payment_report
+      manage_filter_state
+      bill_no = params[:bill_no]
+      client = params[:client]
+      subscriber = params[:subscriber]
+      entity = params[:entity]
+      project = params[:project]
+      bank_account = params[:bank_account] == "SI" ? true : false
+      billing_period = params[:billing_period]
+      reading_routes = params[:reading_routes]
+
+      # OCO
+      init_oco if !session[:organization]
+
+      # If inverse no search is required
+      bill_no = !bill_no.blank? && bill_no[0] == '%' ? inverse_no_search(bill_no) : bill_no
+
+      @search = ClientPayment.search do
+        fulltext params[:search]
+        if !current_projects_ids.blank?
+          with :project_id, current_projects_ids
+        end
+        if !bill_no.blank?
+          if bill_no.class == Array
+            with :bill_no, bill_no
+          else
+            with(:bill_no).starting_with(bill_no)
+          end
+        end
+        if !client.blank?
+          with :client_id, client
+        end
+        if !subscriber.blank?
+          with :subscriber_id, subscriber
+        end
+        if !entity.blank?
+          with :entity_id, entity
+        end
+        if !bank_account.blank?
+          with :bank_account, bank_account
+        end
+        if !reading_routes.blank?
+          with :reading_route_id, reading_routes
+        end
+        order_by :sort_no, :asc
+        paginate :page => params[:page] || 1, :per_page => ClientPayment.count
+      end
+
+      @client_payment_report = @search.results
+
+      if !@client_payment_report.blank?
+        title = t("activerecord.models.client_payment.few")
+        @to = formatted_date(@client_payment_report.first.created_at)
+        @from = formatted_date(@client_payment_report.last.created_at)
+        respond_to do |format|
+          # Render PDF
+          format.pdf { send_data render_to_string,
+                       filename: "#{title}_#{@from}-#{@to}.pdf",
+                       type: 'application/pdf',
+                       disposition: 'inline' }
+        end
+      end
+    end
 
     private
+
+    def reports_array()
+      _array = []
+      _array = _array << t("ag2_gest.client_payments.report.bill_report")
+      _array = _array << t("ag2_gest.client_payments.report.bill_pending_report")
+      _array = _array << t("ag2_gest.client_payments.report.bill_unpaid_report")
+      _array = _array << t("ag2_gest.client_payments.report.bill_charged_report")
+      _array = _array << t("ag2_gest.client_payments.report.client_payment_report")
+      _array
+    end
 
     def inverse_no_search(no)
       _numbers = []

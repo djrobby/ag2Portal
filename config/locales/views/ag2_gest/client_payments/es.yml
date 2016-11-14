@@ -20,4 +20,11 @@ es:
         btn_show: "Ver Pago de cliente"
       new:
         title: "Nueva Pago de cliente"
+      report:
+        report: "Infome a elegir:"
+        bill_report: "Facturas"
+        bill_pending_report: "Facturas Pendientes"
+        bill_unpaid_report: "Facturas Impagadas"
+        bill_charged_report: "Facturas Cobradas"
+        client_payment_report: "Cobros"
       back_to_main_page: "Volver a Pagos de cliente"

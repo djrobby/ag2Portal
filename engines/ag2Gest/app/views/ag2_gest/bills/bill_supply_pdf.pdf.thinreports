@@ -68,7 +68,7 @@ def insert_header(list, invoice) #CABECERA POR CADA INVOICE
 
 	  	if index == 4
 	    	row.item(:loc_code).value(I18n.t("activerecord.report.biller.loc_invoice")).styles(bold:true)
-	    	row.item(:loc_description).value(I18n.t("activerecord.report.biller.loc_description")).styles(bold:true)
+	    	row.item(:loc_description).value(I18n.t("activerecord.report.biller.loc_subcode")).styles(bold:true)
 	    	row.item(:loc_quantity).value I18n.t("activerecord.report.biller.loc_quantity")
 				row.item(:loc_unit_price).value I18n.t("activerecord.report.biller.loc_unit_price")
 				row.item(:loc_amount).value I18n.t("activerecord.report.biller.loc_amount")
@@ -87,6 +87,19 @@ def insert_header(list, invoice) #CABECERA POR CADA INVOICE
 end
 
 loc_invoice = nil
+report.list.add_row do |row|
+	row.item(:loc_code).value(I18n.t("activerecord.report.biller.loc_code")).styles(bold:true)
+	row.item(:loc_description).value(I18n.t("activerecord.report.biller.loc_subcode")).styles(bold:true)
+	row.item(:loc_quantity).value I18n.t("activerecord.report.biller.loc_quantity")
+	row.item(:loc_unit_price).value I18n.t("activerecord.report.biller.loc_unit_price")
+	row.item(:loc_amount).value I18n.t("activerecord.report.biller.loc_amount")
+	#row.item(:tax_type).value("Tipo de Impuesto")
+	row.item(:loc_tax).value I18n.t("activerecord.report.biller.loc_tax")
+	row.item(:loc_discount).value I18n.t("activerecord.report.biller.loc_discount")
+
+	row.item(:loc_discount_pct).value("Descuento %")
+	row.item(:loc_total).value I18n.t("activerecord.report.biller.loc_total")
+end
 
 @bill.invoices.each do |invoice|  #BILL.INVOICES do INVOICE
 
@@ -97,10 +110,10 @@ loc_invoice = nil
 
 
 	# Insert info when invoice has changed
-	unless invoice_id == invoice.id
+	# unless invoice_id == invoice.id
     #row.item(:loc_invoice).value(I18n.t("activerecord.report.biller.loc_invoice"))
-    insert_header(report.list, invoice)
-  end
+    # insert_header(report.list, invoice)
+  # end
 
 
   invoice.invoice_items.each_with_index do |item, index| #Cada Fila de INVOICE do INVOICEITEM
@@ -108,7 +121,7 @@ loc_invoice = nil
 		report.list.add_row do |row|
 		 	#row.item(:code).value(index)
 		 	row.item(:code).value(item.try(:code))
-			row.item(:description).value(item.try(:description))
+			row.item(:description).value(item.try(:subcode))
 			row.item(:quantity).value(item.try(:quantity))
 			row.item(:unit_price).value(item.try(:price))
 			row.item(:amount).value(item.try(:amount))

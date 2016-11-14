@@ -18,7 +18,7 @@ es:
         payment_method_id: "Forma de pago"
         payment_date: "Fecha de pago"
         created_at: "Fecha de registro"
-        amount: "Importe cobrado"
+        amount: "Importe a cobrar"
         iban: "Cuenta IBAN"
         country_code: "País"
         iban_dc: "DC IBAN"
@@ -26,5 +26,9 @@ es:
         cs: "Sucursal"
         ccc: "dc CCCC"
         account_no: "Nº de cuenta"
+        receipt_no: "Nº Recibi"
+        total: "Total Cobrado"
+        charged: "Cobrada por:"
+
         successfully: "Pago de cliente se ha actualizado correctamente."
         create: "Pago de cliente se ha creado correctamente."
