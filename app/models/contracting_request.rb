@@ -242,7 +242,7 @@ class ContractingRequest < ActiveRecord::Base
       street_name: subscriber_street_name,
       street_number: subscriber_street_number,
       street_type_id: subscriber_street_type_id,
-      subscriber_code: sub_next_no(project.organization_id),
+      subscriber_code: sub_next_no(project.office_id),
       # tariff_id: (water_supply_contract.tariff_id if water_supply_contract),
       town_id: subscriber_town_id,
       zipcode_id: subscriber_zipcode_id,

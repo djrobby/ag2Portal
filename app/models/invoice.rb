@@ -23,6 +23,20 @@ class Invoice < ActiveRecord::Base
   before_validation :item_repeat, :on => :create
   after_save :bill_status
   before_create :assign_payday_limit
+
+  def invoiced_concepts
+    _codes = ""
+    _ii = invoice_items.group(:code)
+    _ii.each do |r|
+      if _codes == ""
+        _codes += r.code
+      else
+        _codes += ("-" + r.code)
+      end
+    end
+    _codes
+  end
+
   #
   # Calculated fields
   #
@@ -113,6 +127,7 @@ class Invoice < ActiveRecord::Base
   end
 
   private
+
   def item_repeat
     @errors.add(:base, "Invoice repeat") if !Invoice.where(bill_id: bill_id, invoice_type_id: invoice_type_id, invoice_operation_id: invoice_operation_id, billing_period_id: billing_period_id, biller_id: biller_id).blank?
   end

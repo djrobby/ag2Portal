@@ -166,8 +166,8 @@ class Subscriber < ActiveRecord::Base
   end
 
   def total_debt_unpaid
-     bills.map(&:invoices).flatten.map{|i| i.debt if !i.payday_limit or i.payday_limit < Date.today}.compact.sum{|i| i}
-   end
+    bills.map(&:invoices).flatten.map{|i| i.debt if !i.payday_limit or i.payday_limit < Date.today}.compact.sum{|i| i}
+  end
   #
   # Class (self) user defined methods
   #

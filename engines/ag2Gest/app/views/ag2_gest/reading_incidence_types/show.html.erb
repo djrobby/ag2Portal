@@ -1,25 +1,25 @@
 <%= render '/layouts/ag2_gest/readingincidencetypesbreadcrumb' %>
 
-<h3><%= t('activerecord.models.reading_incidence_type.one') %> <%=@reading_incidence_type.id %></h3>
+<h3><%=t '.title' %></h3>
 <table class="table">
   <tbody>
     <tr>
       <td><%= t('activerecord.attributes.reading_incidence_type.id') %>:</td>
-      <td colspan="3"><%= @reading_incidence_type.try(:id) %></td>
+      <td><%= @reading_incidence_type.try(:id) %></td>
+      <td><%=t 'activerecord.attributes.reading_incidence_type.code' %>:</td>
+      <td class="highlighted bolded"><%= @reading_incidence_type.try(:code) %></td>
     </tr>
     <tr>
       <td><%= t('activerecord.attributes.reading_incidence_type.name') %>:</td>
       <td><%= @reading_incidence_type.try(:name) %></td>
-      <td><%= t('activerecord.attributes.reading_incidence_type.should_estimate') %>:</td>
-      <td>
-        <% if @reading_incidence_type.try(:should_estimate) == true %>
-          <i class="icon-thumbs-up"></i>
-        <% else %>
-          <i class="icon-thumbs-down"></i>
-        <% end %>
-      </td>
+      <td></td>
+      <td></td>
     </tr>
     <tr>
+      <td><%= t('activerecord.attributes.reading_incidence_type.should_estimate') %>:</td>
+      <td> <% if @reading_incidence_type.should_estimate %> <i class="icon-thumbs-up"></i> <% else %> <i class="icon-thumbs-down"></i> <% end %> </td>
+      <td><%= t('activerecord.attributes.reading_incidence_type.is_main') %>:</td>
+      <td> <% if @reading_incidence_type.is_main %> <i class="icon-thumbs-up"></i> <% else %> <i class="icon-thumbs-down"></i> <% end %> </td>
     </tr>
     <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @reading_incidence_type } %>
     <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @reading_incidence_type } %>

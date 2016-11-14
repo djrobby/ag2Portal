@@ -40,7 +40,7 @@ class Client < ActiveRecord::Base
   validates :country,       :presence => true
   validates :entity,        :presence => true
   validates :organization,  :presence => true
-  validates :payment_method,  :presence => true
+  validates :payment_method,:presence => true
 
   # Scopes
   scope :by_code, -> { order(:client_code) }

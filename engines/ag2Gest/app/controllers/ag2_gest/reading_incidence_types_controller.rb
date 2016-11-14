@@ -2,9 +2,9 @@ require_dependency "ag2_gest/application_controller"
 
 module Ag2Gest
   class ReadingIncidenceTypesController < ApplicationController
-
     before_filter :authenticate_user!
     load_and_authorize_resource
+    # Helper methods for sorting
     helper_method :sort_column
 
     # GET /reading_incidence_types
@@ -101,7 +101,7 @@ module Ag2Gest
     private
 
     def sort_column
-      ReadingIncidenceType.column_names.include?(params[:sort]) ? params[:sort] : "id"
+      ReadingIncidenceType.column_names.include?(params[:sort]) ? params[:sort] : "code"
     end
 
     # Keeps filter state

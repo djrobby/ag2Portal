@@ -689,6 +689,8 @@ end
     code
   end
 
+  # Subscriber code
+  # BAD! Must user Office, not Organization
   def sub_next_no(organization)
     code = ''
     organization = organization.to_s if organization.is_a? Fixnum

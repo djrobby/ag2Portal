@@ -44,6 +44,19 @@ class Reading < ActiveRecord::Base
     "#{reading_index} - #{reading_date.strftime("%d/%m/%Y %H:%M")}" if reading_date
   end
 
+  def incidences
+    _codes = ""
+    _ii = reading_incidences.group(:reading_incidence_type_id)
+    _ii.each do |r|
+      if _codes == ""
+        _codes += r.reading_incidence_type.code
+      else
+        _codes += ("-" + r.reading_incidence_type.code)
+      end
+    end
+    _codes
+  end
+
   def consumption
     unless reading_index_1.nil? or reading_index.nil?
       if reading_index_1 <= reading_index

@@ -10,15 +10,15 @@
 <table class="table table-condensed table-striped">
   <thead>
     <tr>
-      <th><%= sortable "id", t('activerecord.attributes.reading_incidence_type.id') %></th>
+      <th><%= sortable "code", t('activerecord.attributes.reading_incidence_type.code') %></th>
       <th><%= sortable "name", t('activerecord.attributes.reading_incidence_type.name') %></th>
-      <th><%= sortable "should_estimate", t('activerecord.attributes.reading_incidence_type.should_estimate') %></th>
+      <th><%= t('activerecord.attributes.reading_incidence_type.should_estimate') %></th>
     </tr>
   </thead>
   <tbody>
     <% @reading_incidence_types.each do |reading_incidence_type| %>
     <tr>
-      <td><%= link_to reading_incidence_type.try(:id), reading_incidence_type_path(reading_incidence_type) %></td>
+      <td><%= link_to reading_incidence_type.try(:code), reading_incidence_type_path(reading_incidence_type) %></td>
       <td><%= reading_incidence_type.try(:name) %></td>
       <td>
         <% if reading_incidence_type.try(:should_estimate) == true %>

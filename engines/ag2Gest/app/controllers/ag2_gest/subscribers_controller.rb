@@ -532,7 +532,7 @@ module Ag2Gest
         # street_name: @contracting_request.subscriber_street_name,
         street_number: @contracting_request.subscriber_street_number,
         # street_type_id: @contracting_request.subscriber_street_type_id,
-        subscriber_code: sub_next_no(@contracting_request.project.organization_id),
+        subscriber_code: sub_next_no(@contracting_request.project.office_id),
         # town_id: @contracting_request.subscriber_town_id,
         zipcode_id: @contracting_request.subscriber_zipcode_id,
         tariff_scheme_id: @contracting_request.water_supply_contract.tariff_scheme_id,
