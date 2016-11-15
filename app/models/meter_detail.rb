@@ -3,7 +3,7 @@ class MeterDetail < ActiveRecord::Base
   belongs_to :subscriber
   belongs_to :meter_location
   attr_accessible :installation_date, :installation_reading, :withdrawal_date, :withdrawal_reading,
-                  :meter_id, :subscriber_id, :meter_location_id
+                  :meter_id, :subscriber_id, :meter_location_id, :created_by, :updated_by
 
   has_paper_trail
 
@@ -14,5 +14,7 @@ class MeterDetail < ActiveRecord::Base
                                                     :allow_nil => true,
                                                     :greater_than_or_equal_to => 0,
                                                     :message => :reading_invalid
-end
 
+  # Scopes
+  scope :by_dates, -> { order(:meter_id, :installation_date, :withdrawal_date) }
+end

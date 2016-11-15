@@ -16,6 +16,7 @@ en:
         check_for_pre_bills: "Subscriber cannot be destroyed while linked pre-bills exist."
     attributes:
       subscriber:
+        id: "Id"
         client: "Client"
         client_id: "Client"
         office: "Office"

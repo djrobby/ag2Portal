@@ -39,6 +39,7 @@ class Reading < ActiveRecord::Base
   # Scopes
   scope :by_date_asc, -> { order(:reading_date) }
   scope :by_date_desc, -> { order('reading_date desc') }
+  scope :by_period_date, -> { order('billing_period_id desc, reading_date desc, reading_index') }
 
   def to_label
     "#{reading_index} - #{reading_date.strftime("%d/%m/%Y %H:%M")}" if reading_date

@@ -10,17 +10,17 @@
 <table class="table table-condensed table-striped">
   <thead>
     <tr>
-      <th><%= t('activerecord.attributes.invoice_operation.name') %></th>
       <th><%= t('activerecord.attributes.invoice_operation.id') %></th>
+      <th><%= t('activerecord.attributes.invoice_operation.name') %></th>
     </tr>
   </thead>
   <tbody>
     <% @invoice_operations.each do |invoice_operation| %>
     <tr>
+      <td><%= link_to invoice_operation.try(:id) %></td>
       <td><%= link_to invoice_operation.try(:name), invoice_operation_path(invoice_operation) %></td>
-      <td><%= invoice_operation.try(:id) %></td>
-      <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => InvoiceOperation, :path => edit_invoice_operation_path(invoice_operation) } %>
-      <%= render :partial => '/layouts/crud/delete', :locals => { :model => InvoiceOperation, :path => invoice_operation, :msg => t("activerecord.models.invoice_operation.one"), :txt => invoice_operation.name } %> </td>
+      <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => InvoiceOperation, :path => edit_invoice_operation_path(invoice_operation) } unless cannot_edit(invoice_operation) %>
+      <%= render :partial => '/layouts/crud/delete', :locals => { :model => InvoiceOperation, :path => invoice_operation, :msg => t("activerecord.models.invoice_operation.one"), :txt => invoice_operation.name } unless cannot_edit(invoice_operation) %> </td>
     </tr>
    <% end %>
   </tbody>

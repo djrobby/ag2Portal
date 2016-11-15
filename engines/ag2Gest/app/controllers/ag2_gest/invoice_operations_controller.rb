@@ -2,10 +2,13 @@ require_dependency "ag2_gest/application_controller"
 
 module Ag2Gest
   class InvoiceOperationsController < ApplicationController
-
-        helper_method :sort_column
-        before_filter :authenticate_user!
-        load_and_authorize_resource
+    before_filter :authenticate_user!
+    load_and_authorize_resource
+    # Helper methods for
+    #  => sorting
+    helper_method :sort_column
+    # => allow edit (hide buttons)
+    helper_method :cannot_edit
 
         # GET /invoice_operations
         # GET /invoice_operations.json
@@ -99,27 +102,33 @@ module Ag2Gest
           end
         end
 
-        private
+    private
 
-        def sort_column
-          InvoiceOperation.column_names.include?(params[:sort]) ? params[:sort] : "id"
-        end
+    # Can't edit or delete when
+    # => User isn't administrator
+    # => Invoice status ID is less than 5
+    def cannot_edit(_order)
+      !session[:is_administrator] && _order.id < 5
+    end
 
-        # Keeps filter state
-        def manage_filter_state
-          # sort
-          if params[:sort]
-            session[:sort] = params[:sort]
-          elsif session[:sort]
-            params[:sort] = session[:sort]
-          end
-          # direction
-          if params[:direction]
-            session[:direction] = params[:direction]
-          elsif session[:direction]
-            params[:direction] = session[:direction]
-          end
-        end
+    def sort_column
+      InvoiceOperation.column_names.include?(params[:sort]) ? params[:sort] : "id"
+    end
 
+    # Keeps filter state
+    def manage_filter_state
+      # sort
+      if params[:sort]
+        session[:sort] = params[:sort]
+      elsif session[:sort]
+        params[:sort] = session[:sort]
+      end
+      # direction
+      if params[:direction]
+        session[:direction] = params[:direction]
+      elsif session[:direction]
+        params[:direction] = session[:direction]
       end
     end
+  end
+end

@@ -80,7 +80,7 @@ module Ag2Gest
                     instalment: q,
                     payday_limit: Date.today + q.month,
                     amount: single_quota,
-                    surcharge: (charge / number_quotas).round(2) )
+                    surcharge: (charge / number_quotas) )
       end
       invoices.each do |i|
         i.invoice_status_id = 5
@@ -513,7 +513,7 @@ module Ag2Gest
 
       @search = Bill.search do
         with(:invoice_status_id, 0..98)
-        with :payday_limit, unpaid?
+        #with :payday_limit, unpaid?
         if !current_projects_ids.blank?
           with :project_id, current_projects_ids
         end

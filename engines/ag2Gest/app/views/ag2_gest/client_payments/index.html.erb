@@ -288,7 +288,7 @@ $(document).ready(function () {
         <!-- Control&Tracking -->
         <a href="#" id="print_report_btn" class="btn btn-warning"><i class="icon-print icon-white"></i> <%= t 'ag2_gest.home.index.control' %></a>
         <br /><br />
-        
+
         <!-- <br /> -->
         <%= link_to t(".back_to_root"), ag2_gest.root_path %>
       </div><!-- /.sidebar-nav -->
@@ -446,14 +446,14 @@ $(document).ready(function () {
           <div class="control-group string required meter_manufacturing_date">
             <label class="string control-label">Total cobrado</label>
             <div class="controls">
-              <span id="total-cash"><%= @client_payments_cash.sum{|c| c.amount.round(2)} %></span> €
+              <span id="total-cash"><%= @client_payments_cash.sum{|c| c.amount} %></span> €
             </div>
           </div>
 
           <div class="control-group string required meter_manufacturing_date">
             <label class="string control-label">Saldo de cierre</label>
             <div class="controls">
-              <span id="ending-cash" size="50" type="number" step="0.01"><%= @client_payments_cash.sum{|c| c.amount.round(2)} %></span> €
+              <span id="ending-cash" size="50" type="number" step="0.01"><%= @client_payments_cash.sum{|c| c.amount} %></span> €
             </div>
           </div>
 

@@ -54,12 +54,11 @@ report.page.values(printed_at: formatted_timestamp(Time.now),
 
 # List header
 report.page.list(:default).header do |header|
-	header.item(:contract_c).value I18n.t("activerecord.report.reading.period_header")
-	header.item(:type_c).value I18n.t("activerecord.report.reading.date_header")
-	header.item(:client_c).value I18n.t("activerecord.report.reading.index_header")
-	header.item(:status_c).value I18n.t("activerecord.report.reading.incidences")
-	header.item(:date_c).value I18n.t("activerecord.report.reading.period_header_1")
-	header.item(:user_c).value I18n.t("activerecord.report.reading.date_header_1")
+	header.item(:contract_c).value I18n.t("activerecord.attributes.contracting_request.request_no")
+	header.item(:type_c).value I18n.t("activerecord.attributes.contracting_request.contracting_request_type")
+	header.item(:client_c).value I18n.t("activerecord.attributes.contracting_request.client")
+	header.item(:status_c).value I18n.t("activerecord.attributes.contracting_request.contracting_request_status")
+	header.item(:date_c).value I18n.t("activerecord.attributes.contracting_request.request_date")
 end
 
 
@@ -89,7 +88,7 @@ project_id = @contracting_request_report.first.project_id
 			full_client += i.entity.full_code.to_s
 		end
 		if !i.client.blank?
-			full_client += full_client.blank? ? i.client.full_name : " - " + i.client.full_name.to_s
+			full_client += full_client.blank? ? i.client.full_name_or_company : " - " + i.client.full_name_or_company.to_s
 		else
 			full_client += full_client.blank? ? i.entity.full_name : " - " + i.entity.full_name.to_s
 		end
@@ -101,7 +100,6 @@ project_id = @contracting_request_report.first.project_id
 		row.item(:client).value full_client
 		row.item(:status).value i.contracting_request_status.name
 		row.item(:date).value formatted_date(i.request_date) unless i.request_date.blank?
-		row.item(:user).value i.creates_by.email
 	end
 
 	# Store page subtotals

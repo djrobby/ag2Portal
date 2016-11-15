@@ -2,10 +2,13 @@ require_dependency "ag2_gest/application_controller"
 
 module Ag2Gest
   class InvoiceTypesController < ApplicationController
-
     before_filter :authenticate_user!
     load_and_authorize_resource
+    # Helper methods for
+    #  => sorting
     helper_method :sort_column
+    # => allow edit (hide buttons)
+    helper_method :cannot_edit
 
     # GET /invoice_types
     # GET /invoice_types.json
@@ -100,8 +103,15 @@ module Ag2Gest
 
     private
 
+    # Can't edit or delete when
+    # => User isn't administrator
+    # => Invoice type ID is less than 5
+    def cannot_edit(_order)
+      !session[:is_administrator] && _order.id < 6
+    end
+
     def sort_column
-      InvoiceType.column_names.include?(params[:sort]) ? params[:sort] : "name"
+      InvoiceType.column_names.include?(params[:sort]) ? params[:sort] : "id"
     end
 
     # Keeps filter state

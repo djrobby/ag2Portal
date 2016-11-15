@@ -16,6 +16,7 @@ es:
         check_for_pre_bills: "Abonado no puede ser eliminado mientras existan pre-facturas vinculadas."
     attributes:
       subscriber:
+        id: "Id"
         client: "Id Entidad"
         client_id: "Cod. Cliente"
         office: "Oficina"

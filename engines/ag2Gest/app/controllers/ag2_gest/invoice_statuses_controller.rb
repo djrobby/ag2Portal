@@ -2,10 +2,13 @@ require_dependency "ag2_gest/application_controller"
 
 module Ag2Gest
   class InvoiceStatusesController < ApplicationController
-
-    helper_method :sort_column
     before_filter :authenticate_user!
     load_and_authorize_resource
+    # Helper methods for
+    #  => sorting
+    helper_method :sort_column
+    # => allow edit (hide buttons)
+    helper_method :cannot_edit
 
     # GET /invoice_statuses
     # GET /invoice_statuses.json
@@ -35,7 +38,6 @@ module Ag2Gest
     # GET /invoice_statuses/new
     # GET /invoice_statuses/new.json
     def new
-
       @breadcrumb = 'create'
       @invoice_status = InvoiceStatus.new
 
@@ -100,6 +102,13 @@ module Ag2Gest
     end
 
     private
+
+    # Can't edit or delete when
+    # => User isn't administrator
+    # => Invoice status ID is less than 100
+    def cannot_edit(_order)
+      !session[:is_administrator] && _order.id < 100
+    end
 
     def sort_column
       InvoiceStatus.column_names.include?(params[:sort]) ? params[:sort] : "id"

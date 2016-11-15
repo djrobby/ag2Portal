@@ -1,11 +1,11 @@
-if @contracting_request_report.blank?
+if @contracting_request_complete_report.blank?
 	return
 end
 
 # Localization for numbers
 delimiter = I18n.locale == :es ? "." : ","
 
-report.set_layout tlf: 'reports/contracting_request_report', layout_options: { default: true }
+report.set_layout tlf: 'reports/contracting_request_complete_report', layout_options: { default: true }
 
 #
 # Report events
@@ -28,13 +28,14 @@ end
 #
 report.layout.config.list(:default) do |c|
 	# Define the variables used in list
-	c.use_stores page_rows: 0
+	c.use_stores page_rows: 0, p_total: 0
 
 	# On list page footer insertion
 	c.events.on :page_footer_insert do |e|
 		# Display page sutotals
-		e.section.item(:sum_rows_title).value(I18n.t("ag2_gest.ag2_gest_track.contracting_request_report.sum_rows_title"))
+		e.section.item(:sum_rows_title).value(I18n.t("ag2_gest.ag2_gest_track.every_report.cumulative_total"))
 		e.section.item(:sum_rows).value(e.store.page_rows)
+		e.section.item(:full_total).value(e.store.p_total)
 		# Initialize subtotals to 0
 		#e.store.page_rows = 0
 	end
@@ -54,20 +55,22 @@ report.page.values(printed_at: formatted_timestamp(Time.now),
 
 # List header
 report.page.list(:default).header do |header|
-	header.item(:contract_c).value I18n.t("activerecord.report.reading.period_header")
-	header.item(:type_c).value I18n.t("activerecord.report.reading.date_header")
-	header.item(:client_c).value I18n.t("activerecord.report.reading.index_header")
-	header.item(:status_c).value I18n.t("activerecord.report.reading.incidences")
-	header.item(:date_c).value I18n.t("activerecord.report.reading.period_header_1")
-	header.item(:user_c).value I18n.t("activerecord.report.reading.date_header_1")
+	header.item(:contract_c).value I18n.t("activerecord.attributes.contracting_request.request_no")
+	header.item(:type_c).value I18n.t("activerecord.attributes.contracting_request.contracting_request_type")
+	header.item(:client_c).value I18n.t("activerecord.attributes.contracting_request.client")
+	header.item(:status_c).value I18n.t("activerecord.attributes.contracting_request.contracting_request_status")
+	header.item(:date_c).value I18n.t("activerecord.attributes.contracting_request.request_date")
+	header.item(:subscriber_c).value I18n.t("activerecord.report.subscriber.subscriber")
+	header.item(:invoice_c).value I18n.t("activerecord.attributes.contracting_request.invoice_contract")
+	header.item(:total_c).value I18n.t("activerecord.attributes.contracting_request.total")
 end
 
 
 # Page Title list
-project_id = @contracting_request_report.first.project_id
+project_id = @contracting_request_complete_report.first.project_id
 
 # List detail
-@contracting_request_report.each do |i|
+@contracting_request_complete_report.each do |i|
 	if !i.project_id.blank? && (i.project_id != project_id)
 		report.page.list(:default).page_break
 		report.page.list(:default) do |list|	
@@ -89,23 +92,32 @@ project_id = @contracting_request_report.first.project_id
 			full_client += i.entity.full_code.to_s
 		end
 		if !i.client.blank?
-			full_client += full_client.blank? ? i.client.full_name : " - " + i.client.full_name.to_s
+			full_client += full_client.blank? ? i.client.full_name_or_company : " - " + i.client.full_name_or_company.to_s
 		else
 			full_client += full_client.blank? ? i.entity.full_name : " - " + i.entity.full_name.to_s
 		end
-		if !i.client.blank?
-			full_client += full_client.blank? ? i.client.address_1 : " - " + i.client.address_1.to_s
-		else
-			full_client += full_client.blank? ? i.entity.address_1 : " - " + i.entity.address_1.to_s
-		end
 		row.item(:client).value full_client
+	#data subscriber
+		full_subscriber = ""
+		if !i.subscriber.blank?
+			full_subscriber += i.subscriber.full_code.to_s
+		end
+		if !i.subscriber.blank?
+			full_subscriber += full_subscriber.blank? ? i.subscriber.full_name : " - " + i.subscriber.full_name.to_s
+		end
+		if !i.subscriber.blank?
+			full_subscriber += full_subscriber.blank? ? i.subscriber.address_1 : " - " + i.subscriber.address_1.to_s
+		end
+		row.item(:subscriber).value full_subscriber
 		row.item(:status).value i.contracting_request_status.name
 		row.item(:date).value formatted_date(i.request_date) unless i.request_date.blank?
-		row.item(:user).value i.creates_by.email
+		row.item(:invoice).value i.water_supply_contract.bill.full_no unless i.water_supply_contract.blank?
+		row.item(:total).value number_with_precision(i.water_supply_contract.bill.total, precision: 4, delimiter: I18n.locale == :es ? "." : ",") unless i.water_supply_contract.blank?
 	end
 
 	# Store page subtotals
   report.page.list(:default) do |list|
 		list.store.page_rows += 1
+		list.store.p_total += i.water_supply_contract.bill.total
 	end
 end

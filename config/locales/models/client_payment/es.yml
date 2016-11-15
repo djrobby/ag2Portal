@@ -18,7 +18,7 @@ es:
         payment_method_id: "Forma de pago"
         payment_date: "Fecha de pago"
         created_at: "Fecha de registro"
-        amount: "Importe a cobrar"
+        amount: "Importe"
         iban: "Cuenta IBAN"
         country_code: "País"
         iban_dc: "DC IBAN"

@@ -1,11 +1,11 @@
-if @bill_peding_report.blank?
+if @bill_pending_report.blank?
 	return
 end
 
 # Localization for numbers
 delimiter = I18n.locale == :es ? "." : ","
 
-report.set_layout tlf: 'reports/bill_peding_report', layout_options: { default: true }
+report.set_layout tlf: 'reports/bill_pending_report', layout_options: { default: true }
 
 #
 # Report events
@@ -71,10 +71,10 @@ end
 
 
 # Page Title list
-project_id = @bill_peding_report.first.project_id
+project_id = @bill_pending_report.first.project_id
 
 # List detail
-@bill_peding_report.each do |i|
+@bill_pending_report.each do |i|
 	if !i.project_id.blank? && (i.project_id != project_id)
 		report.page.list(:default).page_break
 		report.page.list(:default) do |list|	

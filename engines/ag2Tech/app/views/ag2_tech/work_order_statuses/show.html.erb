@@ -14,10 +14,14 @@
   </tbody>
 </table>
 
+<% if cannot_edit(@work_order_status) %>
+<%= render partial: '/layouts/crud/new', locals: { model: WorkOrderStatus, path: new_work_order_status_path, txt: t('ag2_tech.work_order_statuses.index.btn_new') } %>
+<% else %>
 <%= render partial: '/layouts/crud/update_delete_new', locals:
 { model: WorkOrderStatus, update_path: edit_work_order_status_path(@work_order_status), update_txt: t('.btn_edit'),
 delete_path: @work_order_status, delete_txt: t('.btn_delete'), msg: t("activerecord.models.work_order_status.one"), txt: @work_order_status.name,
 new_path: new_work_order_status_path, new_txt: t('ag2_tech.work_order_statuses.index.btn_new') } %>
+<% end %>
 
 <% if (@worker_orders.count > 0) %>
 <h4><%=t '.subtable_title' %></h4>

@@ -20,7 +20,7 @@
             <a class="accor accordion-toggle collapsed pull-left" data-toggle="collapse" data-parent="#accordion2" href="#collapse-<%= bill.id %>"><i class='icon-plus'></i></a>
           </div>
           <div class="span3 soft-padding">
-            <%= link_to bill.try(:bill_no), bill_path(bill) %>
+            <%= link_to bill.try(:full_no), bill_path(bill) %>
           </div>
           <div class="span4 soft-padding">
             <%= link_to bill.client.to_label, client_path(bill.client) if bill.client %>
@@ -29,7 +29,7 @@
             <%= "Bco." if bill.client.active_bank_accounts?  %>
           </div>
           <div class="span2 soft-padding">
-            <%= number_to_currency(bill.total, :precision => 4, :unit => "€") %>
+             <%= bill.total %>
           </div>
         </div>
 
@@ -42,10 +42,10 @@
                   <th>Nº</th>
                   <th>Fecha</th>
                   <th>Vencimiento</th>
-                  <th>Total</th>
-                  <th>Cobrado</th>
-                  <th>Deuda</th>
-                  <th>Estado</th>
+                  <th align="right">Total</th>
+                  <th align="right">Cobrado</th>
+                  <th align="right">Deuda</th>
+                  <th align="right">Estado</th>
                 </tr>
               </thead>
               <tbody>
@@ -57,15 +57,15 @@
                       <td><%= i.invoice_date %></td>
                       <td><%= i.payday_limit %></td>
                       <% if i.bill.try(:instalments).blank? %>
-                        <td><%= i.total.round(4) %></td>
-                        <td><%= i.collected.round(4) %></td>
-                        <td><%= i.debt.round(4) %></td>
+                        <td align="right"><%= i.total.round(4) %></td>
+                        <td align="right"><%= i.collected.round(4) %></td>
+                        <td align="right"><%= i.debt.round(4) %></td>
                       <% else %>
-                        <td><%= i.bill.total.round(4) %></td>
-                        <td><%= i.bill.client_payments.sum("amount").round(4) %></td>
-                        <td><%= i.bill.total - i.bill.client_payments.sum("amount").round(4) %></td>
+                        <td align="right"><%= i.bill.total.round(4) %></td>
+                        <td align="right"><%= i.bill.client_payments.sum("amount").round(4) %></td>
+                        <td align="right"><%= i.bill.total - i.bill.client_payments.sum("amount").round(4) %></td>
                       <% end %>
-                      <td><%= i.invoice_status.name %></td>
+                      <td align="right"><%= i.invoice_status.name %></td>
                     </tr>
                   <% end %>
                 <% end %>

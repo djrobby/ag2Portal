@@ -20,9 +20,13 @@
   </tbody>
 </table>
 
+<% if cannot_edit(@order_status) %>
+<%= render partial: '/layouts/crud/new', locals: { model: OrderStatus, path: new_order_status_path, txt: t('ag2_purchase.order_statuses.index.btn_new') } %>
+<% else %>
 <%= render partial: '/layouts/crud/update_delete_new', locals:
 { model: OrderStatus, update_path: edit_order_status_path(@order_status), update_txt: t('.btn_edit'),
 delete_path: @order_status, delete_txt: t('.btn_delete'), msg: t("activerecord.models.order_status.one"), txt: @order_status.name,
 new_path: new_order_status_path, new_txt: t('ag2_purchase.order_statuses.index.btn_new') } %>
+<% end %>
 
 <%= link_to t("ag2_purchase.order_statuses.back_to_main_page"), order_statuses_path %>

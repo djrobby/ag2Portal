@@ -17,16 +17,10 @@
   <tbody>
     <% @invoice_types.each do |invoice_type| %>
       <tr>
-        <td><%= link_to invoice_type.try(:id), invoice_type_path(invoice_type) %></td>
-        <td><%= invoice_type.try(:name) %></td>
-        <td>
-          <%= link_to edit_invoice_type_path(invoice_type), class: "btn btn-mini" do %>
-            <i class="icon-edit"></i>
-          <% end %>
-          <%= link_to invoice_type, class: "btn btn-mini", method: :delete, data: { confirm: 'Are you sure?' } do %>
-            <i class="icon-trash"></i>
-          <% end %>
-        </td>
+        <td><%= invoice_type.try(:id) %></td>
+        <td><%= link_to invoice_type.try(:name), invoice_type_path(invoice_type) %></td>
+        <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => InvoiceType, :path => edit_invoice_type_path(invoice_type) } unless cannot_edit(invoice_type) %>
+        <%= render :partial => '/layouts/crud/delete', :locals => { :model => InvoiceType, :path => invoice_type, :msg => t("activerecord.models.invoice_type.one"), :txt => invoice_type.name } unless cannot_edit(invoice_type) %> </td>
       </tr>
     <% end %>
   </tbody>

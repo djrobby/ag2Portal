@@ -5,19 +5,19 @@
       <th>Factura</th>
       <th>Abonado</th>
       <th>F. pago</th>
-      <th>Importe a cobrar</th>
-      <th>Total</th>
+      <th align="right">Importe a cobrar</th>
+      <th align="right">Total</th>
     </tr>
   </thead>
   <tbody>
     <% @client_payments_others.each do |client_payment| %>
       <tr>
         <td><%= client_payment.receipt_no %></td>
-        <td><%= link_to client_payment.bill.try(:bill_no), bill_path(client_payment.bill) %></td>
+        <td><%= link_to client_payment.bill.try(:full_no), bill_path(client_payment.bill) %></td>
         <td><%= link_to client_payment.bill.client.to_label, client_path(client_payment.bill.client) %></td>
         <td><%= client_payment.payment_date %></td>
-        <td><%= client_payment.amount.round(2) %></td>
-        <td><%= client_payment.invoice.total.round(2) %></td>
+        <td align="right"><%= client_payment.amount %></td>
+        <td align="right"><%= client_payment.invoice.total %></td>
       </tr>
     <% end %>
   </tbody>

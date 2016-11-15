@@ -7,7 +7,7 @@ es:
         back_to_root: "Volver a ag2Gest"
         collection_only: "Para cobros"
         payment_only: "Para pagos"
-        amount: "Importe cobrado"
+        amount: "Importe"
         receipt_no: "Nº de remesa"
         all: "Todos"
       show:

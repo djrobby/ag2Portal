@@ -76,6 +76,8 @@ module Ag2Gest
     def show
       @breadcrumb = 'read'
       @meter = Meter.find(params[:id])
+      @details = @meter.meter_details.by_dates
+      @readings = @meter.readings.by_period_date
 
       respond_to do |format|
         format.html # show.html.erb

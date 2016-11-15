@@ -20,8 +20,8 @@
     <tr>
       <td><%= status.id %></td>
       <td><%= link_to status.name, status %></td>
-      <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => OrderStatus, :path => edit_order_status_path(status) } %>
-      <%= render :partial => '/layouts/crud/delete', :locals => { :model => OrderStatus, :path => status, :msg => t("activerecord.models.order_status.one"), :txt => status.name } %> </td>
+      <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => OrderStatus, :path => edit_order_status_path(status) } unless cannot_edit(status) %>
+      <%= render :partial => '/layouts/crud/delete', :locals => { :model => OrderStatus, :path => status, :msg => t("activerecord.models.order_status.one"), :txt => status.name } unless cannot_edit(status) %> </td>
     </tr>
     <% end %>
   </tbody>

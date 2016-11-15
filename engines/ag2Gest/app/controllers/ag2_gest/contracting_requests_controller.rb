@@ -895,14 +895,13 @@ module Ag2Gest
       client_info = params[:ClientInfo]
       sort = params[:sort]
       direction = params[:direction]
-      # Arrays for search
-      current_projects = @projects.blank? ? [0] : current_projects_for_index(@projects)
+
+
       # If inverse no search is required
       no = !no.blank? && no[0] == '%' ? inverse_no_search(no) : no
 
       @search = ContractingRequest.search do
         with(:contracting_request_status_id, 0..10)
-        with :project_id, current_projects
         # fulltext
         if !client_info.blank?
           fulltext client_info
@@ -946,14 +945,13 @@ module Ag2Gest
       client_info = params[:ClientInfo]
       sort = params[:sort]
       direction = params[:direction]
-      # Arrays for search
-      current_projects = @projects.blank? ? [0] : current_projects_for_index(@projects)
+
+
       # If inverse no search is required
       no = !no.blank? && no[0] == '%' ? inverse_no_search(no) : no
 
       @search = ContractingRequest.search do
         with :contracting_request_status_id, 11
-        with :project_id, current_projects
         # fulltext
         if !client_info.blank?
           fulltext client_info

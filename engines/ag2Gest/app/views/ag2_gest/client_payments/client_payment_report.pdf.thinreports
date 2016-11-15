@@ -33,7 +33,7 @@ report.layout.config.list(:default) do |c|
 	# On list page footer insertion
 	c.events.on :page_footer_insert do |e|
 		# Display page sutotals
-		e.section.item(:sum_rows_title).value(I18n.t("ag2_gest.ag2_gest_track.client_payment_report.sum_rows_title"))
+		e.section.item(:sum_rows_title).value(I18n.t("ag2_gest.ag2_gest_track.every_report.cumulative_total"))
 		e.section.item(:sum_rows).value(e.store.page_rows)
 		e.section.item(:full_amount).value(e.store.p_amount)
 		e.section.item(:full_total).value(e.store.p_total)
@@ -62,6 +62,7 @@ report.page.list(:default).header do |header|
 	header.item(:amount_c).value I18n.t("activerecord.attributes.client_payment.amount")
 	header.item(:total_c).value I18n.t("activerecord.attributes.client_payment.total")
 	header.item(:type_c).value I18n.t("activerecord.attributes.client_payment.charged")
+	header.item(:subscriber_c).value I18n.t("activerecord.attributes.client_payment.subscriber")
 end
 
 
@@ -72,15 +73,42 @@ end
 		row.item(:date).value formatted_date(i.payment_date) unless i.payment_date.blank?
 		row.item(:receipt).value i.receipt_no
 		row.item(:invoice).value i.bill.full_no unless i.bill.blank?
-		row.item(:amount).value i.amount.round(2)
-		#row.item(:total).value i.invoice.total.round(2) unless i.invoice.blank?
-		#row.item(:type)
+	#data client
+		full_subscriber = ""
+		if !i.subscriber.blank?
+			full_subscriber += i.subscriber.full_code.to_s
+		else
+			full_subscriber += i.client.full_code.to_s
+		end
+		if !i.subscriber.blank?
+			full_subscriber += full_subscriber.blank? ? i.subscriber.full_name : " - " + i.subscriber.full_name.to_s
+		else
+			full_subscriber += full_subscriber.blank? ? i.client.full_name : " - " + i.client.full_name.to_s
+		end
+		row.item(:subscriber).value full_subscriber
+		row.item(:amount).value i.amount unless i.amount.blank?
+		row.item(:total).value i.invoice.total unless i.invoice.blank?
+	#cobrado por
+		 pay_type = ""
+		 if i.payment_type == 1
+		 	pay_type = "Caja"
+		 end
+		 if i.payment_type == 2
+		 	pay_type = "Banco"
+		 end
+		 if i.payment_type == 3
+		 	pay_type = "Aplazamiento"
+		 end
+		 if i.payment_type == 4
+		 	pay_type = "Otros"
+		 end
+		row.item(:type).value pay_type
 	end
 
 	# Store page subtotals
   report.page.list(:default) do |list|
 		list.store.page_rows += 1
-		list.store.p_amount += i.amount.round(2)
-		#list.store.p_total += i.invoice.total.round(2)
+		list.store.p_amount += i.amount unless i.amount.blank?
+		list.store.p_total += i.invoice.total unless i.invoice.blank?
 	end
 end

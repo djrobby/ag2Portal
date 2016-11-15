@@ -13,9 +13,13 @@
   </tbody>
 </table>
 
+<% if cannot_edit(@invoice_type) %>
+<%= render partial: '/layouts/crud/new', locals: { model: InvoiceType, path: new_invoice_type_path, txt: t('ag2_gest.invoice_types.index.btn_new') } %>
+<% else %>
 <%= render partial: '/layouts/crud/update_delete_new', locals:
 { model: InvoiceType, update_path: edit_invoice_type_path(@invoice_type), update_txt: t('.btn_edit'),
 delete_path: @invoice_type, delete_txt: t('.btn_delete'), msg: t("activerecord.models.invoice_type.one"), :txt => @invoice_type.id,
 new_path: new_invoice_type_path, new_txt: t('ag2_gest.invoice_types.index.btn_new') } %>
+<% end %>
 
 <%= link_to I18n.t('ag2_gest.invoice_types.back_to_main_page'), invoice_types_path %>

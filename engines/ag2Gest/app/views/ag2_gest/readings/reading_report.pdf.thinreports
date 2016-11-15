@@ -86,7 +86,7 @@ project_id = @reading_report.first.project_id
 		row.item(:period).value i.billing_period.period
 		row.item(:date_lect).value formatted_date(i.reading_date) unless i.reading_date.blank?
 		row.item(:index).value i.reading_index
-# row.item(:incidence_c).value 
+		row.item(:incidence).value i.incidences
 		if !i.reading_1_id.blank?
 			period = i.reading_1.billing_period.period
 			date = formatted_date(i.reading_1.reading_date) 
@@ -99,7 +99,12 @@ project_id = @reading_report.first.project_id
 		row.item(:period_ant).value period
 		row.item(:date_lect_ant).value date
 		row.item(:index_ant).value index
-#row.item(:incidence_c).value 
+		if !i.reading_1_id.blank?
+			incidencia = i.reading_1.incidences
+		else
+			incidencia = ""
+		end
+		row.item(:incidence_ant).value incidencia
 	#data subscriber
 		full_subscriber = ""
 		if !i.subscriber.blank?

@@ -9,7 +9,7 @@
 <div class="row">
   <div class="span3" align="center"><h5><b><%= I18n.t("ag2_gest.bills.index.total_subscribers") %>:</b> <%= @bills.count %></h5></div>
   <div class="span4"><h5><b><%= I18n.t("ag2_gest.bills.index.total_consumptions") %>:</b> <%= @bills.map(&:reading_2).flatten.compact.sum{|r| r.consumption } %> m<sup>3</sup></h5></div>
-  <div class="span4" align="right"><h5><b><%= I18n.t("ag2_gest.bills.index.total_bills") %>:</b> <%= number_to_currency(@bills.sum{|b| b.total}, unit: "€", precision: 4) %></h5></div>
+  <div class="span4" align="right"><h5><b><%= I18n.t("ag2_gest.bills.index.total_bills") %>:</b> <%= @bills.sum{|b| b.total} %></h5></div>
 </div>
 <br/>
 

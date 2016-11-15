@@ -4,8 +4,11 @@ module Ag2Purchase
   class OrderStatusesController < ApplicationController
     before_filter :authenticate_user!
     load_and_authorize_resource
-    # Helper methods for sorting
+    # Helper methods for
+    #  => sorting
     helper_method :sort_column
+    # => allow edit (hide buttons)
+    helper_method :cannot_edit
 
     # GET /order_statuses
     # GET /order_statuses.json
@@ -105,6 +108,13 @@ module Ag2Purchase
     end
 
     private
+
+    # Can't edit or delete when
+    # => User isn't administrator
+    # => Order status ID is less than 5
+    def cannot_edit(_order)
+      !session[:is_administrator] && _order.id < 5
+    end
 
     def sort_column
       OrderStatus.column_names.include?(params[:sort]) ? params[:sort] : "id"

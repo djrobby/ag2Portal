@@ -10,17 +10,17 @@
 <table class="table table-condensed table-striped">
   <thead>
     <tr>
-      <th><%= t('activerecord.attributes.invoice_status.name') %></th>
       <th><%= t('activerecord.attributes.invoice_status.id') %></th>
+      <th><%= t('activerecord.attributes.invoice_status.name') %></th>
     </tr>
   </thead>
   <tbody>
     <% @invoice_statuses.each do |invoice_status| %>
     <tr>
-      <td><%= link_to invoice_status.try(:name), invoice_status_path(invoice_status) %></td>
       <td><%= invoice_status.try(:id) %></td>
-      <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => InvoiceStatus, :path => edit_invoice_status_path(invoice_status) } %>
-      <%= render :partial => '/layouts/crud/delete', :locals => { :model => InvoiceStatus, :path => invoice_status, :msg => t("activerecord.models.invoice_status.one"), :txt => invoice_status.name } %> </td>
+      <td><%= link_to invoice_status.try(:name), invoice_status_path(invoice_status) %></td>
+      <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => InvoiceStatus, :path => edit_invoice_status_path(invoice_status) } unless cannot_edit(invoice_status) %>
+      <%= render :partial => '/layouts/crud/delete', :locals => { :model => InvoiceStatus, :path => invoice_status, :msg => t("activerecord.models.invoice_status.one"), :txt => invoice_status.name } unless cannot_edit(invoice_status) %> </td>
     </tr>
    <% end %>
   </tbody>

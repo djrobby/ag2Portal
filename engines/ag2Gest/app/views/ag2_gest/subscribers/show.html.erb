@@ -61,16 +61,20 @@
 <table class="table">
   <tbody>
     <tr>
+      <td><b><%= t('activerecord.attributes.subscriber.id') %>:</b></td>
+      <td><%= @subscriber.try(:id) %></td>
       <td><b><%= t('activerecord.attributes.subscriber.full_name') %>:</b></td>
-      <td colspan="3"><%= @subscriber.try(:full_name) %></td>
+      <td><%= @subscriber.try(:full_name) %></td>
+      <td><b><%= t('activerecord.attributes.subscriber.fiscal_id_c') %>:</b></td>
+      <td><%= @subscriber.try(:fiscal_id) %></td>
+    </tr>
+    <tr>
       <td><b><%= t('activerecord.attributes.subscriber.subscriber_code') %>:</b></td>
       <td><%= @subscriber.try(:full_code) %></td>
       <td><b><%= t('activerecord.attributes.subscriber.client_id') %>:</b></td>
-      <td><%= link_to @subscriber.try(:client).try(:full_code), ag2_gest.client_path(@subscriber.client_id) %></td>
+      <td colspan="3"><%= link_to @subscriber.try(:client).try(:full_code), ag2_gest.client_path(@subscriber.client_id) %></td>
     </tr>
     <tr>
-      <td><b><%= t('activerecord.attributes.subscriber.fiscal_id_c') %>:</b></td>
-      <td><%= @subscriber.try(:fiscal_id) %></td>
       <td><b><%= t('activerecord.attributes.subscriber.starting_at') %>:</b></td>
       <td><%= I18n.localize(@subscriber.try(:starting_at)) unless @subscriber.try(:starting_at).blank? %></td>
       <td><b><%= t('activerecord.attributes.subscriber.ending_at') %>:</b></td>

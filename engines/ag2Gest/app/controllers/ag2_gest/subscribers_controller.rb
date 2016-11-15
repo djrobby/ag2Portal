@@ -501,6 +501,7 @@ module Ag2Gest
       params_readings = params[:subscriber][:readings_attributes]["0"]
       params[:subscriber].delete :meter_details_attributes
       params[:subscriber].delete :readings_attributes
+      @billing_period = BillingPeriod.find(params_readings[:billing_period_id])
       @subscriber = Subscriber.new(params[:subscriber])
       @subscriber.assign_attributes(
         active: true,
@@ -539,10 +540,11 @@ module Ag2Gest
         first_name: @contracting_request.entity.first_name,
         last_name: @contracting_request.entity.last_name,
         company: @contracting_request.entity.company,
-        service_point_id: @contracting_request.service_point_id
+        service_point_id: @contracting_request.service_point_id,
+        #contracting_request_id: @contracting_request.id
       )
       if @subscriber.save
-        billing_frequency = @contracting_request.water_supply_contract.try(:bill).try(:invoices).try(:first).try(:tariff_scheme).try(:tariffs).try(:first).try(:billing_frequency_id)
+        billing_frequency = @billing_period.billing_frequency_id
         @reading = @subscriber.readings.build(
           project_id: @contracting_request.project_id,
           billing_period_id: params_readings[:billing_period_id],
@@ -562,10 +564,18 @@ module Ag2Gest
           @contracting_request.old_subscriber.meter_details.last.update_attributes(withdrawal_date: Date.today ,
                                                               withdrawal_reading: @contracting_request.old_subscriber.readings.last.reading_index)
         end
-        @meter_details = @subscriber.meter_details.build(params_meter_details)
-        @meter_details.assign_attributes(meter_id: @subscriber.meter_id)
+        # @meter_details = @subscriber.meter_details.build(params_meter_details)
+        # @meter_details.assign_attributes(meter_id: @subscriber.meter_id)
+        @meter_details = MeterDetail.new(
+          meter_id: @subscriber.meter_id,
+          subscriber_id: @subscriber.id,
+          installation_date: params_meter_details[:installation_date],
+          installation_reading: params_meter_details[:installation_reading],
+          meter_location_id: params_meter_details[:meter_location_id],
+          created_by: (current_user.id if !current_user.nil?)
+        )
         @contracting_request.water_supply_contract.update_attributes(meter_id: @subscriber.meter_id)
-        if @subscriber.save
+        if @meter_details.save
           @contracting_request.status_control
           if @contracting_request.save
             @contracting_request.water_supply_contract.update_attributes(subscriber_id: @subscriber.id) if @contracting_request.water_supply_contract
@@ -582,7 +592,7 @@ module Ag2Gest
           end
         else
           respond_to do |format|
-            format.json { render :json => { :errors => @contracting_request.errors.as_json }, :status => 420 }
+            format.json { render :json => { :errors => "Meter detail error" }, :status => 420 }
           end
         end
       else

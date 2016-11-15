@@ -21,12 +21,12 @@
       <% @instalments.each do |instalment| %>
         <tr>
           <td><%= check_box_tag 'instalment_id', instalment.id, false, class: "checkbox-slave" %></td>
-          <td><%= link_to instalment.bill.try(:bill_no), bill_path(instalment.bill) %></td>
+          <td><%= link_to instalment.bill.try(:full_no), bill_path(instalment.bill) %></td>
           <td><%= link_to instalment.instalment_plan.subscriber.to_label, subscriber_path(instalment.instalment_plan.subscriber) %></td>
           <td><%= instalment.instalment %></td>
           <td><%= instalment.payday_limit %></td>
-          <td><%= instalment.surcharge.round(2) %></td>
-          <td><%= instalment.amount.round(2) %></td>
+          <td align="right"><%= instalment.surcharge %></td>
+          <td align="right"><%= instalment.amount %></td>
         </tr>
       <% end %>
     </tbody>

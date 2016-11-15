@@ -13,6 +13,14 @@ es:
         report_title: "Padrón de Abonados"
         sum_rows_title: "Total Filas:"
         sum_rows_debt: "Total Deuda:"
+      reading_report:
+        sum_rows_title: "Total Filas:"
+      bill_report:
+        sum_rows_title: "Total Filas:"
+      client_payment_report:
+        sum_rows_title: "Total Filas:"
+      contracting_reques_report:
+        sum_rows_title: "Total Filas:"
       every_report:
         pt: "Página"
         pd: "de"

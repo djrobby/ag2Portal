@@ -12,7 +12,7 @@
         <%= bill.try(:bill_date) %>
       </div>
       <div class="span2 soft-padding">
-        <%= bill.try(:bill_type).name %>
+        <%= bill.try(:bill_type).name unless bill.bill_type.blank? %>
       </div>
       <div class="span1 soft-padding">
         <%= bill.try(:total) %>
@@ -46,13 +46,13 @@
             <thead>
               <th><%= t('activerecord.attributes.subscriber.code') %></th>
               <th><%= t('activerecord.attributes.subscriber.desc') %></th>
-              <th><%= t('activerecord.attributes.subscriber.quan') %></th>
-              <th><%= t('activerecord.attributes.subscriber.price') %></th>
+              <th align="right"><%= t('activerecord.attributes.subscriber.quan') %></th>
+              <th align="right"><%= t('activerecord.attributes.subscriber.price') %></th>
               <!-- <th><%#= t("activerecord.attributes.contracting_request.amount") %></th> -->
-              <th><%= t('activerecord.attributes.subscriber.vat') %></th>
-              <th><%= t('activerecord.attributes.subscriber.desc') %></th>
-              <th><%= t('activerecord.attributes.subscriber.desc_percent') %></th>
-              <th><%= t('activerecord.attributes.subscriber.total') %></th>
+              <th align="right"><%= t('activerecord.attributes.subscriber.vat') %></th>
+              <th align="right"><%= t('activerecord.attributes.subscriber.desc') %></th>
+              <th align="right"><%= t('activerecord.attributes.subscriber.desc_percent') %></th>
+              <th align="right"><%= t('activerecord.attributes.subscriber.total') %></th>
             </thead>
             <tbody>
               <% invoice.invoice_items.each do |item| %>
