@@ -70,6 +70,7 @@ es:
       bill:
         service_billing: "Masiva de Servicios"
         commercial_billing: "Comercial"
+        invoices: "Facturas"
         invoice_types: "Tipos de Factura"
         invoice_statuses: "Estados de Factura"
         invoice_operations: "Operaciones Factura"

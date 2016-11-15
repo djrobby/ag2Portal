@@ -70,6 +70,7 @@ en:
       bill:
         service_billing: "Mass Billing of Services"
         commercial_billing: "Commercial Billing"
+        invoices: "Invoices"
         invoice_types: "Invoice Types"
         invoice_statuses: "Invoice Statuses"
         invoice_operations: "Invoice Operations"
