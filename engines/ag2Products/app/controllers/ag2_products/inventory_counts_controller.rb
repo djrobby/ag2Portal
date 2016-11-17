@@ -462,6 +462,23 @@ module Ag2Products
       end
     end
 
+    # GET /inventory_counts/new_nc
+    # GET /inventory_counts/new_nc.json
+    def new_nc
+      @breadcrumb = 'create'
+      @inventory_count = InventoryCount.new
+      @stores = stores_dropdown
+      @families = families_dropdown
+      @products = products_dropdown
+      @products_table = products_dropdown
+      @types = type_dropdown(nil)
+
+      respond_to do |format|
+        format.html # new_nc.html.erb
+        format.json { render json: @inventory_count }
+      end
+    end
+
     # GET /inventory_counts/1/edit
     def edit
       @breadcrumb = 'update'

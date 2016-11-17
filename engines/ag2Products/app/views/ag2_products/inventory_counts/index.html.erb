@@ -98,6 +98,7 @@
         <% end %>
         <!-- Buttons -->
         <%= render :partial => '/layouts/crud/new', :locals => { :model => InventoryCount, :path => new_inventory_count_path, :txt => t(".btn_new") } %>
+        <%= render :partial => '/layouts/crud/new', :locals => { :model => InventoryCount, :path => inventory_counts_new_nc_path, :txt => t(".btn_new_nc") } %>
         <% if can? :update, InventoryCount %>
         <button id="new_from_family" type="button" class="btn btn-warning" data-dismiss="modal" aria-hidden="true"><%= t(".btn_new_from_family") %></button>
         <br /><br />

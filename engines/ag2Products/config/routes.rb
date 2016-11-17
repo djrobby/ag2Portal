@@ -277,6 +277,7 @@ Ag2Products::Engine.routes.draw do
     match 'inventory_counts/ic_products_from_organization', :controller => 'inventory_counts', :action => 'ic_products_from_organization'
     match 'ic_products_from_organization', :controller => 'inventory_counts', :action => 'ic_products_from_organization'
     match 'inventory_counts/:id/ic_products_from_organization', :controller => 'inventory_counts', :action => 'ic_products_from_organization'
+    match 'inventory_counts/new_nc', :controller => 'inventory_counts', :action => 'new_nc'
 
     # Resources
     resources :product_families
@@ -304,6 +305,7 @@ Ag2Products::Engine.routes.draw do
     resources :inventory_count_types
     resources :inventory_counts do
       get 'inventory_count_form', on: :collection
+      #get 'new_nc', on: :collection
     end
     resources :product_company_prices
 

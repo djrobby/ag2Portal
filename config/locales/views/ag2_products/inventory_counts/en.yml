@@ -4,6 +4,7 @@ en:
       index:
         title: "Inventory counts"
         btn_new: "New Inventory count"
+        btn_new_nc: "New Quick Inventory count"
         btn_new_from_family: "New Count by Family"
         back_to_root: "Back to ag2Logistics"
         label_others: "Others"
@@ -15,9 +16,11 @@ en:
         print: "Print"
       edit:
         title: "Edit Inventory count"
+        title_nc: "Edit Quick Inventory count"
         btn_show: "Show Inventory count"
       new:
         title: "New Inventory count"
+        title_nc: "New Quick Inventory count"
       back_to_main_page: "Back to Inventory counts"
       generate_code_btn: "Inventory count No."
       no_error: "Unable to generate Inventory count No.: No Store chosen."

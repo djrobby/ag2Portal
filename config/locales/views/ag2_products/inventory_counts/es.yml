@@ -4,6 +4,7 @@ es:
       index:
         title: "Recuentos de inventario"
         btn_new: "Nuevo Recuento"
+        btn_new_nc: "Nuevo Recuento Rápido"
         btn_new_from_family: "Nuevo Recuento por Familia"
         back_to_root: "Volver a ag2Logistics"
         label_others: "Otros"
@@ -15,9 +16,11 @@ es:
         print: "Imprimir"
       edit:
         title: "Editar Recuento de inventario"
+        title_nc: "Editar Recuento Rápido de inventario"
         btn_show: "Ver Recuento de inventario"
       new:
         title: "Nuevo Recuento de inventario"
+        title_nc: "Nuevo Recuento Rápido de inventario"
       back_to_main_page: "Volver a Recuentos de inventario"
       generate_code_btn: "Nº de Recuento de inventario"
       no_error: "Imposible generar Nº de Recuento: No has elegido Almacén."
