@@ -485,11 +485,11 @@
         </tr>
         <tr>
           <td><b><%= t('activerecord.attributes.contracting_request.use') %></b></td>
-          <td id="tariff_type"><%= link_to @water_supply_contract.try(:tariff_scheme).try(:tariff_type).try(:name), tariff_type_path(@water_supply_contract.try(:tariff_scheme).try(:tariff_type)) if @water_supply_contract.tariff_scheme %></td>
+          <td id="tariff_type"><%= @water_supply_contract.try(:tariff_scheme).try(:tariff_type).try(:name) unless @water_supply_contract.tariff_scheme.blank? %></td>
         </tr>
         <!-- <tr>
           <td><b>Importe fijo contratación</b></td>
-          <td id="tariff_fixed_fee"><%#= @water_supply_contract.tariff.fixed_fee.to_s + " €" if @water_supply_contract.tariff %></td>
+          <td id="tariff_fixed_fee"><%#= @water_supply_contract.tariff.fixed_fee.to_s + " " if @water_supply_contract.tariff %></td>
         </tr> -->
         <!-- <tr>
           <td><b>Frec. Facturacion</b></td>
@@ -548,7 +548,7 @@
         <tr>
           <td><b><%= t('activerecord.attributes.contracting_request.inspection_order_installation') %></b></td>
             <% if @contracting_request.work_order %>
-              <td><%= link_to @contracting_request.work_order.full_no, ag2_tech.work_order_path(@contracting_request.work_order) %></td>
+              <td><%= @contracting_request.work_order.full_no %></td>
             <% else %>
               <td><a id="link_work_order_inspection" href="#"></a></td>
             <% end %>
@@ -556,7 +556,7 @@
         <tr>
           <td><b><%= t('activerecord.attributes.contracting_request.state_work_order') %></b></td>
           <% if @contracting_request.work_order %>
-            <td><%= link_to @contracting_request.work_order.work_order_status.name, ag2_tech.work_order_status_path(@contracting_request.work_order.work_order_status)  %></td>
+            <td><%= @contracting_request.work_order.work_order_status.name %></td>
           <% else %>
             <td id="status_work_order_inspection"></td>
           <% end %>
@@ -606,7 +606,7 @@
           <td><b><%= t('activerecord.attributes.contracting_request.number_subscriber') %></b></td>
           <td>
             <% if @contracting_request.subscriber %>
-              <%= link_to @contracting_request.subscriber.full_name, subscriber_path(@contracting_request.subscriber) %>
+              <%= link_to @contracting_request.subscriber.full_code, subscriber_path(@contracting_request.subscriber) %>
             <% else %>
               <a id="link_subscriber" href="#"></a>
             <% end %>
@@ -628,7 +628,7 @@
           <td><b><%= t('activerecord.attributes.contracting_request.bill_number') %></b></td>
           <td>
             <% if @contracting_request.try(:water_supply_contract).try(:bill)  %>
-            <%= link_to @contracting_request.water_supply_contract.bill.bill_no, bill_path(@contracting_request.water_supply_contract.bill_id) %>
+            <%= link_to @contracting_request.water_supply_contract.bill.full_no, bill_path(@contracting_request.water_supply_contract.bill_id) %>
             <% else %>
               <a id="link-bill" href="#"></a>
             <% end %>

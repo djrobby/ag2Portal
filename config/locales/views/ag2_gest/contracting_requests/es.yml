@@ -37,6 +37,7 @@ es:
         entity_description: "Información Solicitante"
         r_entity_description: "Información Representante"
         error_water_supply_contract: "Error al modificar suministro"
+        error_subscriber_exits: "La contratacion ya tiene asignada un abonado"
       edit:
         title: "Editar Contratación"
         btn_show: "Ver Contratación"

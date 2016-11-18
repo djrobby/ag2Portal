@@ -60,6 +60,10 @@ class Subscriber < ActiveRecord::Base
   before_validation :fields_to_uppercase
   before_destroy :check_for_dependent_records
 
+  def total_debt_unpaid
+    bills.map(&:invoices).flatten.map{|i| i.debt if !i.payday_limit or i.payday_limit < Date.today}.compact.sum{|i| i}
+  end
+
   def fields_to_uppercase
     if !self.fiscal_id.blank?
       self[:fiscal_id].upcase!
@@ -236,12 +240,12 @@ class Subscriber < ActiveRecord::Base
       return false
     end
     # Check for contracting requests
-    if contracting_request.count > 0
+    if !water_supply_contract.nil? and !water_supply_contract.try(:contracting_request).nil?
       errors.add(:base, I18n.t('activerecord.models.subscriber.check_for_contracting_request'))
       return false
     end
     # Check for water supply contracts
-    if water_supply_contract.count > 0
+    if !water_supply_contract.nil? and water_supply_contract.count > 0
       errors.add(:base, I18n.t('activerecord.models.subscriber.check_for_water_supply_contract'))
       return false
     end

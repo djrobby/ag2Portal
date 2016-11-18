@@ -10,25 +10,31 @@
 <table class="table table-condensed table-striped">
   <thead>
     <tr>
-      <th><%= sortable "id", t('activerecord.attributes.service_point.id') %></th>
-      <th><%= sortable "name", t('activerecord.attributes.service_point.name') %></th>
       <th><%= sortable "street_type_id", t('activerecord.attributes.service_point.direction') %></th>
+      <th><%= sortable "name", t('activerecord.attributes.service_point.name') %></th>
       <th><%= sortable "diameter", t('activerecord.attributes.service_point.diameter') %></th>
       <th><%= sortable "gis_id", t('activerecord.attributes.service_point.gis_id') %></th>
       <th><%= sortable "reading_variant", t('activerecord.attributes.service_point.reading_variant_acr') %></th>
       <th><%= sortable "cadastral_reference", t('activerecord.attributes.service_point.cadastral_reference') %></th>
+      <th><%= t('activerecord.attributes.service_point.available_for_contract') %>:</th>
     </tr>
   </thead>
   <tbody>
     <% @service_points.each do |service_point| %>
       <tr>
-        <td><%= link_to service_point.try(:id), service_point_path(service_point) %></td>
-        <td><%= service_point.try(:name) %></td>
-        <td><%= "#{service_point.try(:street_directory).try(:to_full_label)}, #{service_point.try(:street_number)}"%></td>
+        <td><%= link_to "#{service_point.try(:street_directory).try(:to_full_label)}, #{service_point.try(:street_number)}", service_point_path(service_point) %></td>
+        <td><%= service_point.try(:name)%></td>
         <td><%= service_point.try(:diameter) %></td>
         <td><%= service_point.try(:gis_id) %></td>
         <td><%= service_point.try(:reading_variant) %></td>
         <td><%= service_point.try(:cadastral_reference) %></td>
+        <td>
+          <% if service_point.try(:available_for_contract) == true %>
+            <i class="icon-thumbs-up"></i>
+          <% else %>
+            <i class="icon-thumbs-down"></i>
+          <% end %>
+        </td>
         <td>
           <%= link_to edit_service_point_path(service_point), class: "btn btn-mini" do %>
             <i class="icon-edit"></i>

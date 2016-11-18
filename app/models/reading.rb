@@ -14,7 +14,7 @@ class Reading < ActiveRecord::Base
   attr_accessible :reading_date, :reading_index, :reading_sequence, :reading_variant,
                   :project_id, :billing_period_id, :billing_frequency_id, :reading_type_id,
                   :meter_id, :subscriber_id, :reading_route_id, :reading_index_1,
-                  :reading_index_2, :reading_incidence_types, :reading_1, :reading_2, :reading_1_id, :reading_2_id
+                  :reading_index_2, :reading_incidence_types, :reading_1, :reading_2, :reading_1_id, :reading_2_id, :created_by, :updated_by
 
   #:reading_incidence_types_attributtes
 
@@ -87,7 +87,7 @@ class Reading < ActiveRecord::Base
     return total + tariff.fixed_fee
   end
 
-  def generate_pre_bill(group_no=nil,user_id=nil)
+  def generate_pre_bill(group_no=nil,user_id=nil,operation_id=1)
     pre_bill = PreBill.create( bill_no: nil, #bill_next_no(subscriber.contracting_request.project),
                         pre_group_no: (group_no || PreBill.next_no),
                         project_id: project_id,
@@ -126,7 +126,7 @@ class Reading < ActiveRecord::Base
         invoice_date: billing_period.try(:prebilling_starting_date),#¿¿¿???
         tariff_scheme_id: subscriber.tariff_scheme_id,
         payday_limit: billing_period.try(:prebilling_ending_date),
-        invoice_operation_id: InvoiceOperation::INVOICE,
+        invoice_operation_id: operation_id,
         billing_period_id: billing_period_id,
         consumption: consumption,
         consumption_real: consumption,

@@ -1,6 +1,6 @@
 <%= render '/layouts/ag2_gest/servicepointpurposebreadcrumb' %>
 
-<h3><%= t('.title') %> <%=@service_point_purpose.name %></h3>
+<h3><%= t('.title') %></h3>
 <table class="table">
   <tbody>
     <tr>
@@ -10,6 +10,7 @@
       <td><%= @service_point_purpose.try(:name) %></td>
     </tr>
     	<%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @service_point_purpose } %>
+    	<%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @service_point_purpose } %>
   </tbody>
 </table>
 

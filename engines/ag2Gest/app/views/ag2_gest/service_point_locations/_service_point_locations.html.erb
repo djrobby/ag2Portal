@@ -10,15 +10,15 @@
 <table class="table table-condensed table-striped">
   <thead>
     <tr>
-      <th><%= sortable "id", t('activerecord.attributes.service_point_location.id') %></th>
       <th><%= sortable "name", t('activerecord.attributes.service_point_location.name') %></th>
+      <th><%= sortable "id", t('activerecord.attributes.service_point_location.id') %></th>
     </tr>
   </thead>
   <tbody>
     <% @service_point_locations.each do |service_point_location| %>
       <tr>
-        <td><%= link_to service_point_location.try(:id), service_point_location_path(service_point_location) %></td>
-        <td><%= service_point_location.try(:name) %></td>
+        <td><%= link_to service_point_location.try(:name), service_point_location_path(service_point_location) %></td>
+        <td><%= service_point_location.try(:id) %></td>
         <td>
           <%= link_to edit_service_point_location_path(service_point_location), class: "btn btn-mini" do %>
             <i class="icon-edit"></i>

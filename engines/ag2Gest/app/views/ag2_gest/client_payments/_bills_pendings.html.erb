@@ -1,4 +1,11 @@
 <div class="row-fluid">
+  <div class="span4"><h5><b><%= I18n.t("ag2_gest.client_payments.index.total") %>:</b> <%= @bills_pending.count unless @bills_pending.blank?  %></h5></div>
+  <div class="span4" align="center"><h5><b><%= I18n.t("ag2_gest.client_payments.index.total_consumptions") %>:</b> <%= @bills_pending.map(&:reading_2).flatten.compact.sum{|r| r.consumption } unless @bills_pending.blank?  %> m<sup>3</sup></h5></div>
+  <div class="span4" align="right"><h5><b><%= I18n.t("ag2_gest.client_payments.index.total_bills") %>:</b> <%= number_with_precision(@bills_pending.sum{|b| b.total}, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless @bills_pending.blank?  %></h5></div>
+</div>
+
+
+<div class="row-fluid">
   <div class="span12">
     <input type="checkbox" class="checkbox-main">
     <a href="#modal-cash" role="button" class="btn btn-primary btn-small btn-payment btn-cash" data-toggle="modal">Caja</a>
@@ -28,8 +35,8 @@
           <div class="span1 soft-padding">
             <%= "Bco." if bill.client.active_bank_accounts?  %>
           </div>
-          <div class="span2 soft-padding">
-             <%= bill.total %>
+          <div align="right" class="span2 soft-padding">
+             <%= number_with_precision(bill.total, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %>
           </div>
         </div>
 
@@ -57,13 +64,13 @@
                       <td><%= i.invoice_date %></td>
                       <td><%= i.payday_limit %></td>
                       <% if i.bill.try(:instalments).blank? %>
-                        <td align="right"><%= i.total.round(4) %></td>
-                        <td align="right"><%= i.collected.round(4) %></td>
-                        <td align="right"><%= i.debt.round(4) %></td>
+                        <td align="right"><%= number_with_precision(i.total, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
+                        <td align="right"><%= number_with_precision(i.collected, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
+                        <td align="right"><%= number_with_precision(i.debt, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
                       <% else %>
-                        <td align="right"><%= i.bill.total.round(4) %></td>
-                        <td align="right"><%= i.bill.client_payments.sum("amount").round(4) %></td>
-                        <td align="right"><%= i.bill.total - i.bill.client_payments.sum("amount").round(4) %></td>
+                        <td align="right"><%= number_with_precision(i.bill.total, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
+                        <td align="right"><%= number_with_precision(i.bill.client_payments.sum("amount"), precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
+                        <td align="right"><%= number_with_precision(i.bill.total - i.bill.client_payments.sum("amount"), precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
                       <% end %>
                       <td align="right"><%= i.invoice_status.name %></td>
                     </tr>

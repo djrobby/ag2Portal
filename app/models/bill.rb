@@ -24,6 +24,10 @@ class Bill < ActiveRecord::Base
   has_one :water_supply_contract
   has_one :pre_bill
 
+  def bill_operation
+    try(:invoices).try(:first).try(:invoice_operation_id)
+  end
+
   def to_label
     full_no
   end

@@ -14,8 +14,8 @@
       <div class="span2 soft-padding">
         <%= bill.try(:bill_type).name unless bill.bill_type.blank? %>
       </div>
-      <div class="span1 soft-padding">
-        <%= bill.try(:total) %>
+      <div align="right" class="span1 soft-padding">
+        <%= number_with_precision(bill.try(:total), precision: 2, delimiter: I18n.locale == :es ? "." : ",") %>
       </div>
       <div class="span2 soft-padding pull-right">
         <%= link_to "<i class='icon-print icon-white'></i>".html_safe, biller_pdf_contracting_request_path(bill.water_supply_contract.contracting_request, :format => :pdf), target: "_blank", class: "btn btn-warning btn-mini" %>
@@ -60,24 +60,24 @@
                   <td><%= item.try(:code) %></td>
                   <!-- <td><%#= link_to item.try(:code), ag2_gest.invoice_item_path(item.id) %></td> -->
                   <td><%= item.try(:description) %></td>
-                  <td align="right"><%= item.try(:quantity) %></td>
-                  <td align="right"><%= item.try(:price) %></td>
+                  <td align="right"><%= number_with_precision(item.try(:quantity), precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
+                  <td align="right"><%= number_with_precision(item.try(:price), precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
                   <%#= item.try(:amount) %><!-- Amount -->
-                  <td align="right"><%= item.try(:tax_type).try(:tax) || "0" %>%</td>
-                  <td align="right"><%= item.try(:discount) %></td>
-                  <td align="right"><%= item.try(:discount_pct) %>%</td>
-                  <td align="right"><%= item.total %></td><!-- Total -->
+                  <td align="right"><%= number_with_precision(item.try(:tax_type).try(:tax) || "0", precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
+                  <td align="right"><%= number_with_precision(item.try(:discount), precision: 4, delimiter: I18n.locale == :es ? "." : ",") %>%</td>
+                  <td align="right"><%= number_with_precision(item.try(:discount_pct), precision: 4, delimiter: I18n.locale == :es ? "." : ",") %>%</td>
+                  <td align="right"><%= number_with_precision(item.total, precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></td><!-- Total -->
                 </tr>
               <% end %>
               <tr class="subtotal">
                 <td colspan="6" class="no-boder"></td>
                 <td class="black-border"><b><%= t('activerecord.attributes.subscriber.subtotal').upcase %></b></td>
-                <td class="black-border" align="right"><%= invoice.subtotal %></td>
+                <td class="black-border" align="right"><%= number_with_precision(invoice.subtotal, precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></td>
               </tr>
               <% invoice.tax_breakdown.each do |tax| %>
                 <tr>
                   <td colspan="4" class="no-boder"></td>
-                  <td class="no-boder"><b>Base imponible:</b> <%= tax[1] %></td>
+                  <td class="no-boder"><b>Base imponible:</b>&nbsp;&nbsp; <%= number_with_precision(tax[1], precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></td>
                   <td class="no-boder"><%= "#{pluralize(tax[3], 'artículo')}"  %></td>
                   <td><b><%= " #{t('activerecord.attributes.subscriber.vat')} (#{tax[0]}%)" %></b></td>
                   <td align="right"><%= tax[2] %></td>
@@ -86,7 +86,7 @@
               <tr>
                 <td colspan="6" class="black-border"></td>
                 <td class="black-border"><b><%= t('activerecord.attributes.subscriber.total').upcase %></b></td>
-                <td class="black-border" align="right"><%= invoice.total %></td>
+                <td class="black-border" align="right"><%= number_with_precision(invoice.total, precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></td>
               </tr>
             </tbody>
           </table>

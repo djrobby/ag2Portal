@@ -844,6 +844,7 @@ module Ag2Gest
       @offices = current_offices
       @contracting_request = ContractingRequest.new(params[:contracting_request])
       @contracting_request.contracting_request_status_id = 1
+      @contracting_request.created_by = current_user.id if !current_user.nil?
       respond_to do |format|
         if @contracting_request.save
           @contracting_request.to_subrogation if @contracting_request.contracting_request_type_id == ContractingRequestType::SUBROGATION

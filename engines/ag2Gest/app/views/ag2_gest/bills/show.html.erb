@@ -51,7 +51,7 @@
           <tr>
             <td>Cuota fija</td>
             <td><%= @subscriber.billing_frequency.to_label if @subscriber.billing_frequency %></td>
-            <td><%= item.try(:tariff).try(:fixed_fee) || 0 %> €</td>
+            <td><%= item.try(:tariff).try(:fixed_fee) || 0 %></td>
           </tr>
           <% unless item.tariff.block1_fee.zero? %>
             <tr>
@@ -63,7 +63,7 @@
             <% unless item.tariff.instance_eval("block#{i}_fee").zero? || overflw %>
               <tr>
                 <td>BLOQUE <%= i %></td>
-                <td><%= item.tariff.instance_eval("block#{i}_limit") %> m<sup>3</sup> (<%= item.tariff.instance_eval("block#{i}_fee") %> €)</td>
+                <td><%= item.tariff.instance_eval("block#{i}_limit") %> m<sup>3</sup> (<%= item.tariff.instance_eval("block#{i}_fee") %>)</td>
                 <% if (item.tariff.instance_eval("block#{i}_limit").nil? or item.tariff.instance_eval("block#{i}_limit") > @reading.consumption)%>
                   <td><%= item.tariff.instance_eval("block#{i}_fee") * (@reading.consumption - (i==1 ? 0 : item.tariff.instance_eval("block#{i-1}_limit")) )%></td>
                 <% else %>

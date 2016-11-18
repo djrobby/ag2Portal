@@ -10,6 +10,12 @@ es:
         amount: "Importe"
         receipt_no: "Nº de remesa"
         all: "Todos"
+        total: "Nº de facturas"
+        total_consumptions: "Total consumos"
+        total_bills: "Importe total"
+        count_payments: "Nº de cobros"
+        total_payments: "Importe total"
+        count_instalments: "Nº de aplazamientos"
       show:
         title: "Pago de cliente"
         btn_edit: "Editar Pago de cliente"

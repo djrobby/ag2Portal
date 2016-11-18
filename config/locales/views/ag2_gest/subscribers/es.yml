@@ -22,6 +22,8 @@ es:
         charged_only: "Cobradas"
         are_you_sure_to_void: "¿Estás seguro/a de abonar este "
         are_you_sure_to_rebill: "¿Estás seguro/a de refacturar este "
+        total_consumptions: "Consumo total"
+        total_bills: "Importe total"
       edit:
         title: "Editar Abonado"
         btn_show: "Ver Abonado"

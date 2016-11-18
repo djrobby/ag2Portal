@@ -1,3 +1,9 @@
+<div class="row-fluid">
+  <div class="span6"><h5><b><%= I18n.t("ag2_gest.client_payments.index.count_instalments") %>:</b> <%= @instalments.count unless @instalments.blank?%></h5></div>
+  <div class="span6" align="right"><h5><b><%= I18n.t("ag2_gest.client_payments.index.total_payments") %>:</b> <%= number_with_precision(@instalments.sum{|b| b.total}, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless @instalments.blank?  %></h5></div>
+</div>
+
+
 <%= simple_form_for :payment_fractionated, url: instalment_client_payments_path, method: :post do |f|  %>
   <div class="row-fluid">
     <div class="span12">
@@ -25,8 +31,8 @@
           <td><%= link_to instalment.instalment_plan.subscriber.to_label, subscriber_path(instalment.instalment_plan.subscriber) %></td>
           <td><%= instalment.instalment %></td>
           <td><%= instalment.payday_limit %></td>
-          <td align="right"><%= instalment.surcharge %></td>
-          <td align="right"><%= instalment.amount %></td>
+          <td align="right"><%= number_with_precision(instalment.surcharge, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
+          <td align="right"><%= number_with_precision(instalment.amount, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
         </tr>
       <% end %>
     </tbody>

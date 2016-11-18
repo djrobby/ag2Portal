@@ -39,7 +39,7 @@ module Ag2Gest
           break
         end
       end
-      redirect_to client_payments_path, notice: "Vuleta de " + acu.to_s
+      redirect_to client_payments_path, notice: "Vuelta de " + acu.to_s
     end
 
     def banks

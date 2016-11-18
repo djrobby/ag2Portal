@@ -4,6 +4,29 @@
       $.getScript(this.href);
       return false;
     });
+    var active = true;
+    $('#collapse-init').click(function () {
+      if (active) {
+        active = false;
+        $('.accordion-body').collapse('show');
+          $('.accordion-toggle').children().removeClass().addClass("icon-minus");
+          $(this).text('Ocultar todos');
+      } else {
+        active = true;
+        $('.accordion-body').collapse('hide');
+        $('.accordion-toggle').children().removeClass().addClass("icon-plus");
+        $(this).text('Ver todos');
+      }
+    });
+
+    $('.accor').click(function () {
+      if (this.classList.contains("collapsed")){
+        this.children[0].className = "icon-minus";
+      }else {
+        this.children[0].className = "icon-plus";
+      }
+    });
+
   });
 </script>
 <div class="row">
@@ -12,22 +35,29 @@
     <%= link_to t('ag2_gest.subscribers.show.pendig_only'), controller: "subscribers", action: "show", ifilter: "pending", :remote => true %> |
     <%= link_to t('ag2_gest.subscribers.show.unpaid_only'), controller: "subscribers", action: "show", ifilter: "unpaid", :remote => true %> |
     <%= link_to t('ag2_gest.subscribers.show.charged_only'), controller: "subscribers", action: "show", ifilter: "charged", :remote => true %>
-    <button id="collapse-init" class="btn btn-primary pull-right" style="margin-left:5px;"><%= "Ver todos" %></button>
-    <a href="#new-bill" role="button" class="btn btn-primary pull-right" style="margin-left:5px;" data-toggle="modal">Nueva factura</a>
+    <button id="collapse-init" class="btn btn-mini btn-primary pull-right" style="margin-left:5px;"><%= "Ver todos" %></button>
+    <a href="#new-bill" role="button" class="btn btn-mini btn-primary pull-right" style="margin-left:5px;" data-toggle="modal">Nueva factura</a>
   </div>
 </div>
+
+<div class="row-fluid">
+  <div class="span6"><h5><b><%= I18n.t("ag2_gest.subscribers.show.total_consumptions") %>:</b> <%= @subscriber_bills.map(&:reading_2).flatten.compact.sum{|r| r.consumption } %> m<sup>3</sup></h5></div>
+  <div class="span6" align="right"><h5><b><%= I18n.t("ag2_gest.subscribers.show.total_bills") %>:</b> <%= @subscriber_bills.sum{|b| b.total} %></h5></div>
+</div>
+
+
 <div class="row">
   <div class="span1"></div> <!-- Space for icon-plus -->
-  <div class="span3">
+  <div align="right" class="span3">
     <b><%= t('activerecord.attributes.subscriber.receipt') %></b>
   </div>
-  <div class="span2">
+  <div align="right" class="span2">
     <b><%= t('activerecord.attributes.subscriber.date_starting') %></b>
   </div>
-  <div class="span2">
+  <div align="right" class="span2">
     <b><%= t('activerecord.attributes.subscriber.type') %></b>
   </div>
-  <div class="span2">
+  <div align="right" class="span2">
     <b><%= t('activerecord.attributes.subscriber.total') %></b>
   </div>
   <div class="span1">

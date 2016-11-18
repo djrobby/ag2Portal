@@ -94,20 +94,26 @@ module Ag2Gest
       @breadcrumb = 'create'
       @contracting_request = ContractingRequest.find(params[:water_supply_contract][:contracting_request_id])
       @tariff_scheme = TariffScheme.find(params[:water_supply_contract][:tariff_scheme_id])
-      @meter = Meter.where(id: params[:water_supply_contract][:meter_id])
-      @meter_model = @meter.blank? ? nil : @meter.first.try(:meter_model)
-      @caliber = @meter.blank? ? Caliber.find(params[:water_supply_contract][:caliber_id]) : @meter.first.try(:caliber)
+      @meter = Meter.find params[:water_supply_contract][:meter_id]
+      @meter_model = @meter.try(:meter_model)
+      @meter_brand = @meter_model.meter_brand unless @meter_model.blank?
+      @caliber = @meter.blank? ? Caliber.find(params[:water_supply_contract][:caliber_id]) : @meter.try(:caliber)
       # @billable_item = BillableItem.find_by_project_id_and_billable_concept_id(@contracting_request.project_id, 3) # 3 for contrataction
       # @tariff = Tariff.find_by_tariff_scheme_id_and_caliber_id_and_billable_item_id(@tariff_scheme.id, @caliber.id, @billable_item.id)
       @water_supply_contract = WaterSupplyContract.new(params[:water_supply_contract])
       # @water_supply_contract.tariff_id = @tariff.try(:id)
       @water_supply_contract.created_by = current_user.id if !current_user.nil?
       if @water_supply_contract.save
+        @meters_availables_subscriber = Meter.from_office(session[:office]).availables(@contracting_request.try(:old_subscriber).try(:meter_id)).select{|m| m.caliber_id == @water_supply_contract.caliber_id}
+        data_meters = Array.new
+        @meters_availables_subscriber.each{|m| data_meters << {id: m.id, text: m.to_label}}
         response_hash = { water_supply_contract: @water_supply_contract }
         response_hash[:tariff_scheme] = @tariff_scheme
         response_hash[:caliber] = @caliber.caliber
         response_hash[:meter] = @meter
+        response_hash[:meters_subscriber] = data_meters
         response_hash[:meter_model] = @meter_model
+        response_hash[:meter_brand] = @meter_brand.try(:brand)
         response_hash[:tariff_type] = @tariff_scheme.tariff_type
         # response_hash[:tariff] = @tariff.fixed_fee.to_s if @tariff
         # response_hash[:billing_frequency] = @tariff.billing_frequency.name if @tariff
@@ -131,18 +137,24 @@ module Ag2Gest
       @tariff_scheme = TariffScheme.find(params[:water_supply_contract][:tariff_scheme_id])
       @meter = Meter.find(params[:water_supply_contract][:meter_id])
       @meter_model = @meter.try(:meter_model)
+      @meter_brand = @meter_model.meter_brand unless @meter_model.blank?
       @caliber = @meter.try(:caliber) || Caliber.find(params[:water_supply_contract][:caliber_id])
       # @billable_item = BillableItem.find_by_project_id_and_billable_concept_id(@contracting_request.project_id, 3) # 3 for contrataction
       # @tariff = Tariff.find_by_tariff_scheme_id_and_caliber_id_and_billable_item_id(@tariff_scheme.id, @caliber.id, @billable_item.id)
       @water_supply_contract = WaterSupplyContract.find(params[:id])
+      @meters_availables_subscriber = Meter.from_office(session[:office]).availables(@contracting_request.try(:old_subscriber).try(:meter_id)).select{|m| m.caliber_id == @water_supply_contract.caliber_id}
+      data_meters = Array.new
+      @meters_availables_subscriber.each{|m| data_meters << {id: m.id, text: m.to_label}}
       # @water_supply_contract.tariff_id = @tariff.try(:id)
-
+      @water_supply_contract.updated_by = current_user.id if !current_user.nil?
       if @water_supply_contract.update_attributes(params[:water_supply_contract])
         response_hash = { water_supply_contract: @water_supply_contract }
         response_hash[:tariff_scheme] = @tariff_scheme
         response_hash[:caliber] = @caliber.caliber
         response_hash[:meter] = @meter
+        response_hash[:meters_subscriber] = data_meters
         response_hash[:meter_model] = @meter_model
+        response_hash[:meter_brand] = @meter_brand.try(:brand)
         response_hash[:tariff_type] = @tariff_scheme.tariff_type
         # response_hash[:tariff] = @tariff.fixed_fee.to_s if @tariff
         # response_hash[:billing_frequency] = @tariff.billing_frequency.name if @tariff

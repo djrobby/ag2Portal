@@ -24,6 +24,8 @@
 
   $("#form_new_water_supply_contract")
     .bind("ajax:success", function(xhr, data, status) {
+      location.reload();
+      return;
       // modal water supply contract hide
       $("#new-water-supply-contract").modal('hide');
       // if form is post
@@ -48,11 +50,18 @@
       $("#tariff_scheme").attr("href","/<%= params[:locale] %>/ag2_gest/<%= params[:locale] %>/tariff_schemes/" + data.tariff_scheme.id);
       $("#tariff_scheme").text(data.tariff_scheme.name);
       $("#tariff_type").text(data.tariff_type.name);
-      $("#tariff_fixed_fee").text(data.tariff+' €');
-      $("#billing_frequency").text(data.billing_frequency);
+      // $("#tariff_fixed_fee").text(data.tariff+' ');
+      // $("#billing_frequency").text(data.billing_frequency);
       $("#caliber").text(data.caliber);
-      $("#meter_model").text(data.meter_model.brand + "/" + data.meter_model.model);
+      $("#meter_model").text(data.meter_brand + "/" + data.meter_model.model);
       $("#meter_code").text(data.meter.meter_code);
+      //update select values for meter subscriber, based on caliber
+      // $('#subscriber_meter_id').select2({
+      //   data: function() { return {results: data.meters_subscriber}; }
+      // });
+      // change meter to new subscriber
+      $("#subscriber_meter_id").select2("val", data.meter.id);
+
       /*changeState(currentStepWizard,nextStepWizard);*/
     })
     .bind("ajax:error", function(xhr, data, status) {
@@ -78,7 +87,7 @@
       <%= f.input :endowments, :input_html => { :class => 'x-large-text-field', :id => 'wsc_endowments' }, :label_html => { :class => 'form-label' } %>
       <%= f.input :inhabitants, :input_html => { :class => 'x-large-text-field', :id => 'wsc_inhabitants' }, :label_html => { :class => 'form-label' } %>
       <h4><%= t('activerecord.attributes.contracting_request.measuring_device') %></h4>
-      <%= f.association :meter, collection: Meter.from_office(session[:office]).availables, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' }, include_blank: true, label: t('activerecord.attributes.contracting_request.meter') %>
+      <%= f.association :meter, collection: Meter.from_office(session[:office]).availables(@contracting_request.try(:old_subscriber).try(:meter_id)), input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' }, include_blank: true, label: t('activerecord.attributes.contracting_request.meter') %>
       <%= f.association :caliber, required: true, collection: Caliber.order(:caliber).map{|c| [c.caliber,c.id]}, :input_html => { :class => 'x-large-text-field sel2', :id => 'wsc_meter' }, :label_html => { :class => 'form-label' } %>
       <h4><%= t('activerecord.attributes.contracting_request.others') %></h4>
       <%= f.input :cadastral_reference, :input_html => { :class => 'x-large-text-field', :id => 'wsc_cadastral_reference' }, :label_html => { :class => 'form-label' } %>

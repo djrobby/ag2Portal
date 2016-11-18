@@ -50,7 +50,7 @@ class ContractingRequest < ActiveRecord::Base
                   :subscriber_region_id, :subscriber_street_directory_id, :subscriber_street_name,
                   :subscriber_street_number, :subscriber_street_type_id, :subscriber_town_id,
                   :subscriber_zipcode_id, :iban, :country_id, :iban_dc, :bank_id, :bank_office_id, :ccc_dc,
-                  :account_no, :work_order_id, :subscriber_id, :service_point_id, :service_point
+                  :account_no, :work_order_id, :subscriber_id, :service_point_id, :service_point, :created_by
 
   attr_accessible :contracting_request_documents_attributes
 
@@ -188,7 +188,7 @@ class ContractingRequest < ActiveRecord::Base
       province_id: client_province_id,
       region_id: client_region_id,
       country_id: client_country_id,
-      created_by: entity.created_by,
+      created_by: created_by,
       payment_method_id: 1
     )
     ClientBankAccount.create(client_id: client.id,

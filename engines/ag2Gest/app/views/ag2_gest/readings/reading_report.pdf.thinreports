@@ -128,7 +128,7 @@ project_id = @reading_report.first.project_id
 		if !i.meter.caliber.blank?
 			full_meter += full_meter.blank? ? i.meter.caliber.caliber : " - " + i.meter.caliber.caliber.to_s
 		end
-		if !i.subscriber.service_point.service_point_location.blank?
+		if !i.subscriber.service_point.blank?
 			full_meter += full_meter.blank? ? i.subscriber.service_point.service_point_location.name : " - " + i.subscriber.service_point.service_point_location.name.to_s
 		end
 		row.item(:meter).value full_meter

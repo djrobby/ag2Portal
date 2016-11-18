@@ -38,10 +38,9 @@ module Ag2Gest
     def rebilling
       @subscriber = Subscriber.find params[:id]
       @bill = Bill.find params[:bill_id]
-      @period = @bill.reading_2.billing_period_id
+      @reading = @bill.reading_2
       void_bill(@bill)
-      @reading = @subscriber.readings.find_by_billing_period_id_and_reading_type_id(@period, ReadingType::NORMAL)
-      @pre_bill = @reading.generate_pre_bill
+      @pre_bill = @reading.generate_pre_bill(nil,nil,3)
       respond_to do |format|
         format.js { render "simple_bill" }
       end
@@ -497,107 +496,113 @@ module Ag2Gest
     # POST /subscribers.json
     def create
       @contracting_request = ContractingRequest.find params[:contracting_request_id]
-      params_meter_details = params[:subscriber][:meter_details_attributes]["0"]
-      params_readings = params[:subscriber][:readings_attributes]["0"]
-      params[:subscriber].delete :meter_details_attributes
-      params[:subscriber].delete :readings_attributes
-      @billing_period = BillingPeriod.find(params_readings[:billing_period_id])
-      @subscriber = Subscriber.new(params[:subscriber])
-      @subscriber.assign_attributes(
-        active: true,
-        billing_frequency_id: @contracting_request.water_supply_contract.try(:bill).try(:invoices).try(:first).try(:tariff_scheme).try(:tariffs).try(:first).try(:billing_frequency_id),
-        building: @contracting_request.subscriber_building,
-        cadastral_reference: @contracting_request.water_supply_contract.try(:cadastral_reference),
-        cellular: @contracting_request.entity.cellular,
-        center_id: @contracting_request.subscriber_center_id,
-        client_id: @contracting_request.water_supply_contract.client_id,
-        # contract: ,
-        # country_id: @contracting_request.subscriber_country_id,
-        email: @contracting_request.entity.email,
-        # ending_at: ,
-        endowments: @contracting_request.water_supply_contract.try(:endowments),
-        fax: @contracting_request.entity.fax,
-        fiscal_id: @contracting_request.entity.fiscal_id,
-        floor: @contracting_request.subscriber_floor,
-        floor_office: @contracting_request.subscriber_floor_office,
-        gis_id: @contracting_request.water_supply_contract.try(:gis_id),
-        inhabitants: @contracting_request.water_supply_contract.try(:inhabitants),
-        # name: @contracting_request.entity.try(:full_name),
-        office_id: @contracting_request.project.try(:office).try(:id),
-        phone: @contracting_request.entity.phone,
-        # province_id: @contracting_request.subscriber_province_id,
-        # region_id: @contracting_request.subscriber_region_id,
-        remarks: @contracting_request.try(:water_supply_contract).try(:remarks),
-        starting_at: Time.now,
-        street_directory_id: @contracting_request.subscriber_street_directory_id,
-        # street_name: @contracting_request.subscriber_street_name,
-        street_number: @contracting_request.subscriber_street_number,
-        # street_type_id: @contracting_request.subscriber_street_type_id,
-        subscriber_code: sub_next_no(@contracting_request.project.office_id),
-        # town_id: @contracting_request.subscriber_town_id,
-        zipcode_id: @contracting_request.subscriber_zipcode_id,
-        tariff_scheme_id: @contracting_request.water_supply_contract.tariff_scheme_id,
-        first_name: @contracting_request.entity.first_name,
-        last_name: @contracting_request.entity.last_name,
-        company: @contracting_request.entity.company,
-        service_point_id: @contracting_request.service_point_id,
-        #contracting_request_id: @contracting_request.id
-      )
-      if @subscriber.save
-        billing_frequency = @billing_period.billing_frequency_id
-        @reading = @subscriber.readings.build(
-          project_id: @contracting_request.project_id,
-          billing_period_id: params_readings[:billing_period_id],
-          billing_frequency_id: billing_frequency,
-          reading_type_id: 4, #installation
-          meter_id: @subscriber.meter_id,
-          reading_route_id: @subscriber.reading_route_id,
-          reading_sequence: @subscriber.reading_sequence,
-          reading_variant:  @subscriber.reading_variant,
-          reading_date: params_meter_details[:installation_date],
-          reading_index: params_meter_details[:installation_reading]
+      if !@contracting_request.subscriber.nil?
+        redirect_to contracting_request_path(@contracting_request), alert: I18n.t("ag2_gest.contracting_requests.show.error_subscriber_exits")
+      else
+        params_meter_details = params[:subscriber][:meter_details_attributes]["0"]
+        params_readings = params[:subscriber][:readings_attributes]["0"]
+        params[:subscriber].delete :meter_details_attributes
+        params[:subscriber].delete :readings_attributes
+        @billing_period = BillingPeriod.find(params_readings[:billing_period_id])
+        @subscriber = Subscriber.new(params[:subscriber])
+        @subscriber.assign_attributes(
+          active: true,
+          billing_frequency_id: @contracting_request.water_supply_contract.try(:bill).try(:invoices).try(:first).try(:tariff_scheme).try(:tariffs).try(:first).try(:billing_frequency_id),
+          building: @contracting_request.subscriber_building,
+          cadastral_reference: @contracting_request.water_supply_contract.try(:cadastral_reference),
+          cellular: @contracting_request.entity.cellular,
+          center_id: @contracting_request.subscriber_center_id,
+          client_id: @contracting_request.water_supply_contract.client_id,
+          # contract: ,
+          # country_id: @contracting_request.subscriber_country_id,
+          email: @contracting_request.entity.email,
+          # ending_at: ,
+          endowments: @contracting_request.water_supply_contract.try(:endowments),
+          fax: @contracting_request.entity.fax,
+          fiscal_id: @contracting_request.entity.fiscal_id,
+          floor: @contracting_request.subscriber_floor,
+          floor_office: @contracting_request.subscriber_floor_office,
+          gis_id: @contracting_request.water_supply_contract.try(:gis_id),
+          inhabitants: @contracting_request.water_supply_contract.try(:inhabitants),
+          # name: @contracting_request.entity.try(:full_name),
+          office_id: @contracting_request.project.try(:office).try(:id),
+          phone: @contracting_request.entity.phone,
+          # province_id: @contracting_request.subscriber_province_id,
+          # region_id: @contracting_request.subscriber_region_id,
+          remarks: @contracting_request.try(:water_supply_contract).try(:remarks),
+          starting_at: Time.now,
+          street_directory_id: @contracting_request.subscriber_street_directory_id,
+          # street_name: @contracting_request.subscriber_street_name,
+          street_number: @contracting_request.subscriber_street_number,
+          # street_type_id: @contracting_request.subscriber_street_type_id,
+          subscriber_code: sub_next_no(@contracting_request.project.office_id),
+          # town_id: @contracting_request.subscriber_town_id,
+          zipcode_id: @contracting_request.subscriber_zipcode_id,
+          tariff_scheme_id: @contracting_request.water_supply_contract.tariff_scheme_id,
+          first_name: @contracting_request.entity.first_name,
+          last_name: @contracting_request.entity.last_name,
+          company: @contracting_request.entity.company,
+          service_point_id: @contracting_request.service_point_id,
+          #contracting_request_id: @contracting_request.id
         )
-        # SUBROGATION
-        if @contracting_request.old_subscriber
-          @contracting_request.old_subscriber.update_attributes(ending_at: Date.today, meter_id: nil)
-          # update meter details withdrawal
-          @contracting_request.old_subscriber.meter_details.last.update_attributes(withdrawal_date: Date.today ,
-                                                              withdrawal_reading: @contracting_request.old_subscriber.readings.last.reading_index)
-        end
-        # @meter_details = @subscriber.meter_details.build(params_meter_details)
-        # @meter_details.assign_attributes(meter_id: @subscriber.meter_id)
-        @meter_details = MeterDetail.new(
-          meter_id: @subscriber.meter_id,
-          subscriber_id: @subscriber.id,
-          installation_date: params_meter_details[:installation_date],
-          installation_reading: params_meter_details[:installation_reading],
-          meter_location_id: params_meter_details[:meter_location_id],
-          created_by: (current_user.id if !current_user.nil?)
-        )
-        @contracting_request.water_supply_contract.update_attributes(meter_id: @subscriber.meter_id)
-        if @meter_details.save
-          @contracting_request.status_control
-          if @contracting_request.save
-            @contracting_request.water_supply_contract.update_attributes(subscriber_id: @subscriber.id) if @contracting_request.water_supply_contract
-            @contracting_request.water_supply_contract.bill.update_attributes(subscriber_id: @subscriber.id) if @contracting_request.water_supply_contract and @contracting_request.water_supply_contract.bill
-            response_hash = { subscriber: @subscriber }
-            response_hash[:reading] = @reading
-            respond_to do |format|
-              format.json { render json: response_hash }
+        if @subscriber.save
+          billing_frequency = @billing_period.billing_frequency_id
+          @reading = Reading.create(
+            subscriber_id: @subscriber.id,
+            project_id: @contracting_request.project_id,
+            billing_period_id: params_readings[:billing_period_id],
+            billing_frequency_id: billing_frequency,
+            reading_type_id: 4,
+            meter_id: @subscriber.meter_id,
+            reading_route_id: @subscriber.reading_route_id,
+            reading_sequence: @subscriber.reading_sequence,
+            reading_variant:  @subscriber.reading_variant,
+            reading_date: params_meter_details[:installation_date],
+            reading_index: params_meter_details[:installation_reading],
+            created_by: (current_user.id if !current_user.nil?)
+          )
+          # SUBROGATION
+          if @contracting_request.old_subscriber
+            @contracting_request.old_subscriber.update_attributes(ending_at: Date.today, meter_id: nil)
+            # update meter details withdrawal
+            @contracting_request.old_subscriber.meter_details.last.update_attributes(withdrawal_date: Date.today ,
+                                                                withdrawal_reading: @contracting_request.old_subscriber.readings.last.reading_index)
+          end
+          # @meter_details = @subscriber.meter_details.build(params_meter_details)
+          # @meter_details.assign_attributes(meter_id: @subscriber.meter_id)
+          @meter_details = MeterDetail.new(
+            meter_id: @subscriber.meter_id,
+            subscriber_id: @subscriber.id,
+            installation_date: params_meter_details[:installation_date],
+            installation_reading: params_meter_details[:installation_reading],
+            meter_location_id: params_meter_details[:meter_location_id],
+            created_by: (current_user.id if !current_user.nil?)
+          )
+          @contracting_request.water_supply_contract.update_attributes(meter_id: @subscriber.meter_id)
+          if @meter_details.save
+            @contracting_request.status_control
+            if @contracting_request.save
+              @contracting_request.water_supply_contract.update_attributes(subscriber_id: @subscriber.id) if @contracting_request.water_supply_contract
+              @contracting_request.water_supply_contract.bill.update_attributes(subscriber_id: @subscriber.id) if @contracting_request.water_supply_contract and @contracting_request.water_supply_contract.bill
+              response_hash = { subscriber: @subscriber }
+              response_hash[:reading] = @reading
+              respond_to do |format|
+                format.json { render json: response_hash }
+              end
+            else
+              respond_to do |format|
+                format.json { render :json => { :errors => @subscriber.errors.as_json }, :status => 420 }
+              end
             end
           else
             respond_to do |format|
-              format.json { render :json => { :errors => @subscriber.errors.as_json }, :status => 420 }
+              format.json { render :json => { :errors => "Meter detail error" }, :status => 420 }
             end
           end
         else
           respond_to do |format|
-            format.json { render :json => { :errors => "Meter detail error" }, :status => 420 }
+            format.json { render :json => { :errors => @subscriber.errors.as_json }, :status => 420 }
           end
-        end
-      else
-        respond_to do |format|
-          format.json { render :json => { :errors => @subscriber.errors.as_json }, :status => 420 }
         end
       end
     end
@@ -855,6 +860,8 @@ module Ag2Gest
           new_invoice = invoice.dup
           new_invoice.invoice_no = invoice_next_no(bill.project.company_id)
           new_invoice.bill_id = bill_cancel.id
+          new_invoice.invoice_operation_id = InvoiceOperation::CANCELATION
+          new_invoice.original_invoice_id = invoice.id
           new_invoice.save
           # invoice_cancel = Invoice.create(
           #   bill_id: bill_cancel.id,

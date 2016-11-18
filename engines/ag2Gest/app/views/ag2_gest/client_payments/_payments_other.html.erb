@@ -1,3 +1,9 @@
+<div class="row-fluid">
+  <div class="span6"><h5><b><%= I18n.t("ag2_gest.client_payments.index.count_payments") %>:</b> <%= @client_payments_others.count unless @client_payments_others.blank?%></h5></div>
+  <div class="span6" align="right"><h5><b><%= I18n.t("ag2_gest.client_payments.index.total_payments") %>:</b> <%= number_with_precision(@client_payments_others.sum{|b| b.amount}, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless @client_payments_others.blank?  %></h5></div>
+</div>
+
+
 <table class="table table-condensed table-striped">
   <thead>
     <tr>
@@ -16,8 +22,8 @@
         <td><%= link_to client_payment.bill.try(:full_no), bill_path(client_payment.bill) %></td>
         <td><%= link_to client_payment.bill.client.to_label, client_path(client_payment.bill.client) %></td>
         <td><%= client_payment.payment_date %></td>
-        <td align="right"><%= client_payment.amount %></td>
-        <td align="right"><%= client_payment.invoice.total %></td>
+        <td align="right"><%= number_with_precision(client_payment.amount, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
+        <td align="right"><%= number_with_precision(client_payment.invoice.total, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
       </tr>
     <% end %>
   </tbody>

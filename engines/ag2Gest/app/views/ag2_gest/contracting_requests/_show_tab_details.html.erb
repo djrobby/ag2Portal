@@ -3,7 +3,7 @@
   <tbody>
   	<tr>
   		<td><%=t 'ag2_gest.contracting_requests.show.project' %></td>
-  		<td colspan="6"><%= link_to @contracting_request.try(:project).to_label, ag2_tech.project_path(@contracting_request.project_id) %></td>
+  		<td colspan="6"><%= @contracting_request.try(:project).to_label %></td>
   	</tr>
     <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @contracting_request } %>
     <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @contracting_request } %>

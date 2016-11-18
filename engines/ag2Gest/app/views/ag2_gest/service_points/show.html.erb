@@ -1,6 +1,6 @@
 <%= render '/layouts/ag2_gest/servicepointbreadcrumb' %>
 
-<h3><%= t('.title') %> <%=@service_point.name %></h3>
+<h3><%= t('.title') %></h3>
 <table class="table">
   <tbody>
     <tr>
@@ -17,13 +17,13 @@
     </tr>
     <tr>
       <td><%= t('activerecord.attributes.service_point.service_point_type_id') %>:</td>
-      <td><%= link_to @service_point.try(:service_point_type).try(:name), ag2_gest.service_point_type_path(@service_point.try(:service_point_type).try(:id)) %></td>
+      <td><%= @service_point.try(:service_point_type).try(:name) %></td>
       <td><%= t('activerecord.attributes.service_point.street_type_id') %>:</td>
-      <td><%= link_to @service_point.try(:street_directory).try(:street_type).try(:street_type_description), ag2_admin.street_type_path(@service_point.try(:street_directory).try(:street_type).try(:id)) %></td>
+      <td><%= @service_point.try(:street_directory).try(:street_type).try(:street_type_description) %></td>
     </tr>
     <tr>
       <td><%= t('activerecord.attributes.service_point.street_directory_id') %>:</td>
-      <td><%= link_to @service_point.try(:street_directory).try(:street_name), ag2_gest.street_directory_path(@service_point.try(:street_directory).try(:id))  %></td>
+      <td><%= @service_point.try(:street_directory).try(:to_full_label) %></td>
       <td><%= t('activerecord.attributes.service_point.street_name') %>:</td>
       <td><%= @service_point.try(:street_directory).try(:street_name) %></td>
     </tr>
@@ -41,25 +41,25 @@
     </tr>
     <tr>
       <td><%= t('activerecord.attributes.service_point.zipcode_id') %>:</td>
-      <td><%= link_to @service_point.try(:zipcode).try(:zipcode), ag2_admin.zipcodes_path(@service_point.try(:zipcode).try(:id))  %></td>
+      <td><%= @service_point.try(:zipcode).try(:to_label) %></td>
       <td><%= t('activerecord.attributes.service_point.town_id') %>:</td>
-      <td><%= link_to @service_point.try(:street_directory).try(:town).try(:name), ag2_admin.zipcode_path(@service_point.try(:street_directory).try(:town).try(:id))  %></td>
+      <td><%= @service_point.try(:street_directory).try(:town).try(:name) %></td>
     </tr>
     <tr>
       <td><%= t('activerecord.attributes.service_point.province_id') %>:</td>
-      <td><%= link_to @service_point.try(:street_directory).try(:town).try(:province).try(:name), ag2_admin.province_path(@service_point.try(:street_directory).try(:town).try(:province).try(:id))  %></td>
+      <td><%= @service_point.try(:street_directory).try(:town).try(:province).try(:name) %></td>
       <td><%= t('activerecord.attributes.service_point.region_id') %>:</td>
-      <td><%= link_to @service_point.try(:street_directory).try(:town).try(:province).try(:region).try(:name), ag2_admin.region_path(@service_point.try(:street_directory).try(:town).try(:province).try(:region).try(:id))  %></td>
+      <td><%= @service_point.try(:street_directory).try(:town).try(:province).try(:region).try(:name) %></td>
     </tr>
     <tr>
       <td><%= t('activerecord.attributes.service_point.country_id') %>:</td>
-      <td><%= link_to @service_point.try(:street_directory).try(:town).try(:province).try(:region).try(:country).try(:name), ag2_admin.country_path(@service_point.try(:street_directory).try(:town).try(:province).try(:region).try(:country).try(:id))  %></td>
+      <td><%= @service_point.try(:street_directory).try(:town).try(:province).try(:region).try(:country).try(:name) %></td>
       <td><%= t('activerecord.attributes.service_point.service_point_location_id') %>:</td>
-      <td><%= link_to @service_point.try(:service_point_location).try(:name), ag2_gest.service_point_location_path(@service_point.try(:service_point_location_id)) %></td>
+      <td><%= @service_point.try(:service_point_location).try(:name) %></td>
     </tr>
     <tr>
       <td><%= t('activerecord.attributes.service_point.service_point_purpose_id') %>:</td>
-      <td><%= link_to @service_point.try(:service_point_purpose).try(:name), ag2_gest.service_point_purpose_path(@service_point.try(:service_point_purpose_id))  %></td>
+      <td><%= @service_point.try(:service_point_purpose).try(:name) %></td>
       <td><%= t('activerecord.attributes.service_point.diameter') %>:</td>
       <td><%= @service_point.try(:diameter) %></td>
     </tr>
@@ -83,18 +83,19 @@
     </tr>
     <tr>
       <td><%= t('activerecord.attributes.service_point.reading_route_id') %>:</td>
-      <td><%= link_to @service_point.try(:reading_route).try(:name), ag2_gest.reading_route_path(@service_point.try(:reading_route).try(:id)) unless @service_point.reading_route.nil? %></td>
+      <td><%= @service_point.try(:reading_route).try(:name) unless @service_point.reading_route.nil? %></td>
       <td><%= t('activerecord.attributes.service_point.reading_sequence') %>:</td>
       <td><%= @service_point.try(:reading_sequence) %></td>
     </tr>
     <tr>
       <td><%= t('activerecord.attributes.service_point.company_id') %>:</td>
-      <td><%= link_to @service_point.try(:company).try(:name), ag2_admin.company_path(@service_point.try(:office).try(:company).try(:id)) %></td>
+      <td><%= @service_point.try(:company).try(:name) %></td>
       <td><%= t('activerecord.attributes.service_point.office_id') %>:</td>
-      <td><%= link_to @service_point.try(:office).try(:name), ag2_admin.office_path(@service_point.try(:office).try(:id)) %></td>
+      <td><%= @service_point.try(:office).try(:name) %></td>
     </tr>
 
     <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @service_point } %>
+    <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @service_point } %>
   </tbody>
 </table>
 
