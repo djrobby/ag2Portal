@@ -1,0 +1,4 @@
+<tr>
+  <td align="right"><%= t :"activerecord.attributes.inventory_count.quantity" %></td>
+  <td align="right"><%= number_with_precision(note.quantity, precision: 4) unless note.quantity.blank? %></td>
+</tr>

@@ -589,6 +589,39 @@ module Ag2Products
       end
     end
 
+    # GET /inventory_counts/new_nc
+    # GET /inventory_counts/new_nc.json
+    def new_nc
+      @breadcrumb = 'create'
+      @inventory_count = InventoryCount.new
+      @stores = stores_dropdown
+      @families = families_dropdown
+      @products = products_dropdown
+      @products_table = products_dropdown
+      @types = type_dropdown(nil)
+      @inventory_count.quick = true
+
+      respond_to do |format|
+        format.html # new_nc.html.erb
+        format.json { render json: @inventory_count }
+      end
+    end
+
+    # GET /inventory_counts/1/edit_nc
+    def edit_nc
+      @breadcrumb = 'update'
+      @inventory_count = InventoryCount.find(params[:id])
+      @stores = stores_dropdown
+      if @inventory_count.store.blank? || @inventory_count.inventory_count_type_id == 1
+        @families = @inventory_count.organization.blank? ? families_dropdown : @inventory_count.organization.product_families.order(:family_code)
+        @products = @inventory_count.organization.blank? ? products_dropdown : @inventory_count.organization.products.order(:product_code)
+      else
+        @families = ProductFamily.by_store(@inventory_count.store)
+        @products = @inventory_count.store.products.order(:product_code)
+      end
+      @types = type_dropdown(@inventory_count.store)
+    end
+
     # Inventory count form (report)
     def inventory_count_form
       # Search inventory count & items

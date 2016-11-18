@@ -17,12 +17,12 @@
     });
 
     // Trigger to display totals at table foot
-    $('#items-table').bind('totals', function(event) {
+    $('#items-table-nc').bind('totals', function(event) {
       // Sum necessary values from table rows
       var qty = 0;
       var total = 0;
       var tbl = true;
-      $('#items-table tr.fields:visible').each(function() {
+      $('#items-table-nc tr.fields:visible').each(function() {
         qty += parseFloat(right_number($(this).find('input.fnt-quantity').val(), 4));
         total += parseFloat(right_number($(this).find('input.fnt-price').val(), 4));
       });
@@ -30,11 +30,11 @@
       total = parseInt(right_number(total.toString(), 4) * 10000);
       jQuery.getJSON('ic_totals/' + qty + "/" + total + "/" + tbl, function(data) {
         document.getElementById('foot-quantity').innerHTML = data.qty;
-        document.getElementById('foot-total').innerHTML = data.total;
+        //document.getElementById('foot-total').innerHTML = data.total;
       });
     });
     // Update and display totals
-    $('#items-table').trigger('totals');
+    $('#items-table-nc').trigger('totals');
   }); 
 
   jQuery(function($) {
@@ -112,38 +112,30 @@
   });
 </script>
 
-<table id="items-table" class="table table-condensed table-striped shrinked fixed">
+<table id="items-table-nc" class="table table-condensed table-striped shrinked fixed">
   <!-- product -->
   <col width="0%" />
-  <col width="40%" />
-  <!-- initial -->
-  <col width="11%" />
-  <!-- current -->
-  <col width="11%" />
-  <!-- average_price -->
-  <col width="11%" />
+  <col width="60%" />
   <!-- quantity -->
-  <col width="11%" />
-  <!-- price -->
-  <col width="11%" />
+  <col width="24%" />
   <!-- button -->
   <col width="5%" />
   <thead>
-    <%= render 'items_header' %>
+    <%= render 'items_header_nc' %>
   </thead>
   <tfoot>
-    <%= render 'items_table_footer', f: f %>
+    <%= render 'items_table_footer_nc', f: f %>
   </tfoot>
   <tbody>
     <%= f.simple_fields_for :inventory_count_items, defaults: { input_html: { class: 'sub-form' } } do |i| %>
     <tr class="fields">
       <td><%= i.input :product_id, label: false, wrapper: false, as: :hidden, input_html: { class: 'sub-alfanumeric-text-field sub-disabled-field fnt-product' } %></td>
       <td><%= i.input :thing, readonly: true, label: false, wrapper: false, as: :string, input_html: { value: (i.object.product.full_name if i.object.product_id), class: 'iconify_item sub-alfanumeric-text-field sub-disabled-field fnt-thing' } %></td>
-      <td><%= i.input :initial, readonly: true, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.initial, precision: 4) if i.object.initial), class: 'sub-number-text-field sub-disabled-field fnt-initial' } %></td>
-      <td><%= i.input :current, readonly: true, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.current, precision: 4) if i.object.current), class: 'sub-number-text-field sub-disabled-field fnt-current' } %></td>
-      <td><%= i.input :average_price, readonly: true, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.average_price, precision: 4) if i.object.average_price), class: 'sub-number-text-field sub-disabled-field fnt-average-price' } %></td>
+      <td style="display:none;"><%= i.input :initial, readonly: true, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.initial, precision: 4) if i.object.initial), class: 'sub-number-text-field sub-disabled-field fnt-initial' } %></td>
+      <td style="display:none;"><%= i.input :current, readonly: true, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.current, precision: 4) if i.object.current), class: 'sub-number-text-field sub-disabled-field fnt-current' } %></td>
+      <td style="display:none;"><%= i.input :average_price, readonly: true, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.average_price, precision: 4) if i.object.average_price), class: 'sub-number-text-field sub-disabled-field fnt-average-price' } %></td>
       <td><%= i.input :quantity, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.quantity, precision: 4) if i.object.quantity), class: 'sub-number-text-field fnt-quantity' } %></td>
-      <td><%= i.input :price, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.price, precision: 4) if i.object.price), class: 'sub-number-text-field fnt-price' } %></td>
+      <td style="display:none;"><%= i.input :price, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.price, precision: 4) if i.object.price), class: 'sub-number-text-field fnt-price' } %></td>
       <% if @breadcrumb == 'create' || @breadcrumb == 'update' %>
       <td><%= link_to_remove_fields('<i class="icon-trash"></i>'.html_safe, i) %></td>
       <% end %>

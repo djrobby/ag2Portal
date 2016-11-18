@@ -55,7 +55,7 @@
           $("#fnt-current").val(data.stock);
           $("#fnt-average-price").val(data.average_price);
           $("#fnt-price").val(data.average_price);
-          $("#current-stock").html(data.stock);
+          //$("#current-stock").html(data.stock);
         }
       });
       return false;
@@ -140,7 +140,7 @@
   }
 </script>
 
-<div id="new-item-fields" class="modal hide fade" data-backdrop="static">
+<div id="new-item-fields-nc" class="modal hide fade" data-backdrop="static">
   <% e = t(:item_error) %>
   <div class="modal-header">
     <a class="close" data-dismiss="modal">×</a>
@@ -148,19 +148,18 @@
     <span class="shrinked"><%= I18n.t(:mandatory_subtitle) %></span>
   </div>
   <div class="modal-body">
-    <!--<input type="hidden" id="fnt-product" class: 'x-large-text-field  field'/>-->
     <%= f.association :product, collection: @products, input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-product', data: { validation: "required", "validation-error-msg" => "#{e}" } }, label_html: { class: 'form-label fnt-product-label' } %>
-    <%= f.input :initial, readonly: true, as: :string, input_html: { value: (number_with_precision(f.object.initial, precision: 4) if f.object.initial), class: 'mid-text-field number-text-field sub-disabled-field field', id: 'fnt-initial' }, label_html: { class: 'form-label' } %>
-    <%= f.input :current, readonly: true, as: :string, input_html: { value: (number_with_precision(f.object.current, precision: 4) if f.object.current), class: 'mid-text-field number-text-field sub-disabled-field field', id: 'fnt-current' }, label_html: { class: 'form-label' } %>
-    <%= f.input :average_price, readonly: true, as: :string, input_html: { value: (number_with_precision(f.object.average_price, precision: 4) if f.object.average_price), class: 'mid-text-field number-text-field sub-disabled-field field', id: 'fnt-average-price' }, label_html: { class: 'form-label' } %>
+    <%= f.input :initial, as: :hidden, input_html: { value: (number_with_precision(f.object.initial, precision: 4) if f.object.initial), class: 'mid-text-field number-text-field sub-disabled-field field', id: 'fnt-initial' }, label_html: { class: 'form-label' } %>
+    <%= f.input :current, as: :hidden, input_html: { value: (number_with_precision(f.object.current, precision: 4) if f.object.current), class: 'mid-text-field number-text-field sub-disabled-field field', id: 'fnt-current' }, label_html: { class: 'form-label' } %>
+    <%= f.input :average_price, as: :hidden, input_html: { value: (number_with_precision(f.object.average_price, precision: 4) if f.object.average_price), class: 'mid-text-field number-text-field sub-disabled-field field', id: 'fnt-average-price' }, label_html: { class: 'form-label' } %>
     <%= f.input :quantity, as: :string, input_html: { value: (number_with_precision(f.object.quantity, precision: 4) if f.object.quantity), class: 'mid-text-field number-text-field field', id: 'fnt-quantity' }, label_html: { class: 'form-label' } %>
-    <%= f.input :price, as: :string, input_html: { value: (number_with_precision(f.object.price, precision: 4) if f.object.price), class: 'mid-text-field number-text-field field', id: 'fnt-price' }, label_html: { class: 'form-label' } %>
+    <%= f.input :price, as: :hidden, input_html: { value: (number_with_precision(f.object.price, precision: 4) if f.object.price), class: 'mid-text-field number-text-field field', id: 'fnt-price' }, label_html: { class: 'form-label' } %>
     <%= f.input :_destroy, as: :hidden, input_html: { class: 'field' } %>
   </div>
   <div class="modal-footer">
     <span class="left-floated shrinked" style="vertical-align: bottom"><%= t("ag2_products.inventory_counts.add_item_to", var: @inventory_count.count_no) unless @inventory_count.count_no.blank? %>&#8226;</span>
-    <span class="left-floated shrinked" style="vertical-align: bottom"><%= t("activerecord.attributes.stock.current") %>=</span>
-    <span class="left-floated shrinked" style="vertical-align: bottom" id="current-stock">0,0000</span>
+    <!--<span class="left-floated shrinked" style="vertical-align: bottom"><%= t("activerecord.attributes.stock.current") %>=</span>-->
+    <!--<span class="left-floated shrinked" style="vertical-align: bottom" id="current-stock">0,0000</span>-->
     <button id="addButton" type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><%= t('ag2_products.inventory_counts.btn_add_item') %></button>
     <button id="cancelButton" type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><%= t :close_button %></button>
   </div>
@@ -168,5 +167,5 @@
 
 <script type="text/javascript">
   sel2NoMatch = '<%= t("select2.no_matches") %>';
-  ic_itemFieldsUI.init(sel2NoMatch);
+  ic_nc_itemFieldsUI.init(sel2NoMatch);
 </script>

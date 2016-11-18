@@ -293,12 +293,12 @@
         <h4><%= t 'ag2_products.inventory_counts.items_info' %></h4>
       </td>
       <td class="form-td-two right-winged">
-        <%= link_to_add_fields('<i class="icon-plus icon-white"></i>'.html_safe + " " + t("ag2_products.inventory_counts.btn_new_item"), f, :inventory_count_items, "item_fields", "new-item-fields", class: "btn btn-warning fnt-new-btn") %>
+        <%= link_to_add_fields('<i class="icon-plus icon-white"></i>'.html_safe + " " + t("ag2_products.inventory_counts.btn_new_item"), f, :inventory_count_items, "item_fields_nc", "new-item-fields-nc", class: "btn btn-warning fnt-new-btn") %>
       </td>
     </tr>
   </tbody>
 </table>
-<%= render 'items_table', f: f %>
+<%= render 'items_table_nc', f: f %>
 <!-- Remarks -->
 <%= f.input :remarks, as: :text, input_html: { class: 'x-large-text-field', rows: 3 }, label_html: { class: 'form-label' } %>
 <!-- Buttons -->
