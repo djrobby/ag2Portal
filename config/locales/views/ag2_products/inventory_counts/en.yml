@@ -14,6 +14,7 @@ en:
         btn_edit: "Edit Inventory count"
         btn_delete: "Delete Inventory count"
         print: "Print"
+        print_dif: "With differences"
       edit:
         title: "Edit Inventory count"
         title_nc: "Edit Quick Inventory count"

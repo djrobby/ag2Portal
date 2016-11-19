@@ -25,3 +25,5 @@ en:
         quantity: "Articles"
         approval_date: "Approved on"
         approver: "Approved by"
+        quick: "Quick"
+        quick_c: "Q"

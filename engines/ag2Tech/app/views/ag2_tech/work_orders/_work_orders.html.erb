@@ -27,7 +27,9 @@
       <% else %>
     <tr class="inactive-row">
       <% end %>
-      <td><%= link_to order.full_no, order %></td>
+      <td>
+        <%= link_to order.full_no, order %>
+      </td>
       <td><%= order.summary[0,20] %></td>
       <td><%= order.work_order_area.short_name unless order.work_order_area.blank? %></td>
       <td><%= order.work_order_type.short_name unless order.work_order_type.blank? %></td>

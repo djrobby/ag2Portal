@@ -147,7 +147,10 @@
       var order = $('select#work_order_organization_id :selected').val();
       if (order == "")
         order = "0";
-      jQuery.getJSON('wo_update_project_textfields_from_organization/' + order, function(data) {
+      var id = $('#work_order_id').val();
+      if (id == "")
+        id = "0";
+      jQuery.getJSON('wo_update_project_textfields_from_organization/' + order + '/' + id, function(data) {
         var p = data.project;
         var wa = data.woarea;
         var t = data.type;
@@ -165,6 +168,7 @@
         var ve = data.vehicle
         var su = data.subscriber
         var me = data.meter
+        var m = data.master_order;
         // Project
         $("#work_order_project_id").html("");
         $("#work_order_project_id").select2("val", "");
@@ -315,6 +319,21 @@
             $("#work_order_area_id").append($('<option></option>').val(option[0]).html(option[1] + " (" + option[2] + ")"));
           });
         }
+        // Work order
+        $("#work_order_master_order_id").html("");
+        $("#work_order_master_order_id").select2("val", "");
+        $("#work_order_master_order_id").append($('<option></option>').val("").html(""));
+        if (!m.length) {
+          $.each(data, function(id, option) {
+            if (id == 'master_order' && option != "") {
+              $("#work_order_master_order_id").append($('<option></option>').val(option[0]).html(option[1]));
+            }
+          });
+        } else {
+          $.each(m, function(id, option) {
+            $("#work_order_master_order_id").append($('<option></option>').val(option[0]).html(option[1]));
+          });
+        }
       });
       if (order == "0") {
         $("#work_order_project_id").val(0);
@@ -329,10 +348,17 @@
       var order = $('select#work_order_project_id :selected').val();
       if (order == "")
         order = "0";
-      jQuery.getJSON('wo_update_account_textfield_from_project/' + order, function(data) {
+      var org = $('select#work_order_organization_id :selected').val();
+      if (org == "")
+        org = "0";
+      var id = $('#work_order_id').val();
+      if (id == "")
+        id = "0";
+      jQuery.getJSON('wo_update_account_textfield_from_project/' + order + '/' + org + "/" + id, function(data) {
         var c = data.charge_account;
         var s = data.store;
         var w = data.worker;
+        var m = data.master_order;
         // Charge account
         $("#work_order_charge_account_id").html("");
         $("#work_order_charge_account_id").select2("val", "");
@@ -379,6 +405,21 @@
           });
         }
         // Should change #work_order_workers_worker_id
+        // Work order
+        $("#work_order_master_order_id").html("");
+        $("#work_order_master_order_id").select2("val", "");
+        $("#work_order_master_order_id").append($('<option></option>').val("").html(""));
+        if (!m.length) {
+          $.each(data, function(id, option) {
+            if (id == 'master_order' && option != "") {
+              $("#work_order_master_order_id").append($('<option></option>').val(option[0]).html(option[1]));
+            }
+          });
+        } else {
+          $.each(m, function(id, option) {
+            $("#work_order_master_order_id").append($('<option></option>').val(option[0]).html(option[1]));
+          });
+        }
       });
       // Disable generate_code_btn if work_order_project_id blank
       if (order == "0") {
@@ -540,6 +581,7 @@
 <%= simple_form_for @work_order, :html => { :class => 'form-vertical well' } do |f| %>
 <%= f.error_notification %>
 <%= display_base_errors resource %>
+<%= f.input :id, as: :hidden, input_html: { class: 'mid-text-field' }, label_html: { class: 'form-label' } %>
 <div>
   <label class="multi-field-label-two">
     <% if session[:organization] != '0' %>
@@ -558,12 +600,15 @@
 </div>
 <div>
   <label class="multi-field-label-two"> <%= f.input :order_no, input_html: { class: 'mid-text-field iconify' }, label_html: { class: 'form-label' } %> </label>
-  <label class="multi-field-label-two"> <%= f.input :description, autofocus: true, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.input :description, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %> </label>
 </div>
 <div>
-  <label class="multi-field-label-three"> <%= f.association :work_order_status, collection: WorkOrderStatus.all(order: 'id'), input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
-  <label class="multi-field-label-three"> <%= f.association :work_order_labor, collection: @labors, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
-  <label class="multi-field-label-three"> <%= f.association :infrastructure, collection: @infrastructures, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.association :work_order_status, collection: WorkOrderStatus.all(order: 'id'), input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.association :master_order, collection: @master_order, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
+</div>
+<div>
+  <label class="multi-field-label-two"> <%= f.association :work_order_labor, collection: @labors, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.association :infrastructure, collection: @infrastructures, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
 </div>
 <div>
   <label class="multi-field-label-two"> <%= f.association :area, collection: @areas, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>

@@ -12,7 +12,9 @@ es:
         check_for_offer_requests: "Orden de trabajo no puede ser eliminada mientras existan solicitudes vinculadas."
         check_for_offers: "Orden de trabajo no puede ser eliminada mientras existan ofertas vinculadas."
         check_for_supplier_invoices: "Orden de trabajo no puede ser eliminada mientras existan facturas S vinculadas."
-        check_for_sale_offers: "Orden de trabajo no puede ser eliminada mientras existan presupuestos vinculados."
+        check_for_sale_offers: "Orden de trabajo no puede ser eliminada mientras existan ofertas vinculadas."
+        check_for_suborders: "Orden de trabajo no puede ser eliminada mientras existan subórdenes vinculadas."
+        check_for_unclosed_suborders: "Orden de trabajo no puede ser cerrada mientras existan subórdenes no cerradas vinculadas."
     attributes:
       work_order:
         order_no: "Nº"
@@ -122,3 +124,7 @@ es:
         meter_location_c: "Ubicación"
         last_reading_c: "Ultima lectura"
         current_reading_c: "Lectura actual"
+        suborders: "Subórdenes"
+        suborders_c: "S"
+        master: "Maestra"
+        master_c: "M"

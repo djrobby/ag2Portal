@@ -260,7 +260,7 @@ report.page.values(printed_at: Time.now,
 				   remarks_title: I18n.t("activerecord.attributes.work_order.remarks"),
 				   remarks: @work_order.remarks,
 				   total_costs_title: I18n.t("activerecord.attributes.work_order.total_costs") + ":",
-				   total_costs: number_with_precision(@work_order.total_costs, precision: 2, delimiter: delimiter))
+				   total_costs: number_with_precision(@work_order.this_total_costs, precision: 2, delimiter: delimiter))
 
 #
 # Lists

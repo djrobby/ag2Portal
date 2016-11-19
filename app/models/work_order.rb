@@ -106,9 +106,14 @@ class WorkOrder < ActiveRecord::Base
   scope :by_no, -> { order(:order_no) }
   #
   scope :belongs_to_project, -> project { where("project_id = ?", project).by_no }
+  scope :belongs_to_project_unclosed, -> project { where("project_id = ? AND closed_at IS NULL", project).by_no }
+  scope :belongs_to_organization_unclosed, -> org { where("organization_id = ? AND closed_at IS NULL", org).by_no }
+  scope :belongs_to_project_unclosed_without_this, -> project, this { where("project_id = ? AND closed_at IS NULL AND id <> ?", project, this).by_no }
+  scope :belongs_to_organization_unclosed_without_this, -> org, this { where("organization_id = ? AND closed_at IS NULL AND id <> ?", org, this).by_no }
 
   before_destroy :check_for_dependent_records
   before_save :update_status_based_on_dates
+  before_save :update_dates_based_on_status
 
   def to_label
     "#{full_name}"
@@ -126,7 +131,7 @@ class WorkOrder < ActiveRecord::Base
 
   def full_no
     # Order no (Project code & year & sequential number) => PPPPPPPPPPPP-YYYY-NNNNNN
-    order_no.blank? ? "" : order_no[0..11] + '-' + order_no[12..15] + '-' + order_no[16..21]
+    order_no.blank? ? "" : order_no[0..11] + '-' + order_no[12..15] + '-' + order_no[16..21] + complete_full_no_if_suborders
   end
 
   def completed_at_cannot_be_less_than_started_at
@@ -204,8 +209,12 @@ class WorkOrder < ActiveRecord::Base
     hours / work_order_workers.count
   end
 
-  def total_costs
+  def this_total_costs
     item_costs + worker_costs + tool_costs + vehicle_costs + subcontractor_costs
+  end
+
+  def total_costs
+    item_costs + worker_costs + tool_costs + vehicle_costs + subcontractor_costs + suborder_costs
   end
 
   def tool_costs
@@ -246,10 +255,35 @@ class WorkOrder < ActiveRecord::Base
     costs
   end
 
+  def suborder_costs
+    costs = 0
+    suborders.each do |i|
+      if !i.total_costs.blank?
+        costs += i.total_costs
+      end
+    end
+    costs
+  end
+
   # Returns multidimensional array containing different tax type in each line
   # Each line contains 5 elements: Id, Description, Tax %, Amount & Tax
   def tax_breakdown
     global_tax_breakdown(work_order_items, false)
+  end
+
+  # Are there unclosed linked suborders?
+  def are_there_unclosed_suborders?
+    suborders.unclosed_only.count > 0 ? true : false
+  end
+
+  # Are there unclosed linked suborders?
+  def have_suborders?
+    suborders.count > 0 ? true : false
+  end
+
+  # Are there unclosed linked suborders?
+  def complete_full_no_if_suborders
+    have_suborders? ? I18n.t('activerecord.attributes.work_order.master_c') : ""
   end
 
   #
@@ -279,6 +313,32 @@ class WorkOrder < ActiveRecord::Base
       where('NOT completed_at IS NULL AND closed_at IS NULL').order(:order_no)
     else
       where('project_id = ? AND (NOT completed_at IS NULL AND closed_at IS NULL)', project).order(:order_no)
+    end
+  end
+
+  # Unclosed
+  def self.unclosed_only(project = nil)
+    if project.blank?
+      where('closed_at IS NULL').by_no
+    else
+      where('project_id = ? AND closed_at IS NULL', project).by_no
+    end
+  end
+
+  # Unclosed withoout current
+  def self.unclosed_only_without_this(project = nil, this = nil)
+    if project.blank?
+      if this.blank?
+        where('closed_at IS NULL').by_no
+      else
+        where('closed_at IS NULL AND id <> ?', this).by_no
+      end
+    else
+      if this.blank?
+        where('project_id = ? AND closed_at IS NULL', project).by_no
+      else
+        where('project_id = ? AND closed_at IS NULL AND id <> ?', project, this).by_no
+      end
     end
   end
 
@@ -404,15 +464,24 @@ class WorkOrder < ActiveRecord::Base
       errors.add(:base, I18n.t('activerecord.models.work_order.check_for_sale_offers'))
       return false
     end
+    # Check for suborders
+    if suborders.count > 0
+      errors.add(:base, I18n.t('activerecord.models.work_order.check_for_suborders'))
+      return false
+    end
   end
 
+  #
   # Before save (create & update)
+  #
+  # Status and related dates
+  # 1->unstarted
+  # 2->started & uncompleted
+  # 3->completed & unclosed
+  # 4->closed
+  #
   # Update status
   def update_status_based_on_dates
-    # 1->unstarted
-    # 2->started & uncompleted
-    # 3->completed & unclosed
-    # 4->closed
     if started_at_was.blank? && !started_at.blank? && work_order_status_id < 2
       self.work_order_status_id = 2
     end
@@ -420,7 +489,34 @@ class WorkOrder < ActiveRecord::Base
       self.work_order_status_id = 3
     end
     if closed_at_was.blank? && !closed_at.blank? && work_order_status_id < 4
+      # Cannot close order if there is unclosed suborders
+      if are_there_unclosed_suborders?
+        self.closed_at = closed_at_was
+        errors.add(:base, I18n.t('activerecord.models.work_order.check_for_unclosed_suborders'))
+        return false
+      end
       self.work_order_status_id = 4
+    end
+    true
+  end
+
+  # Update dates
+  def update_dates_based_on_status
+    if work_order_status_id != work_order_status_id_was
+      if work_order_status_id == 2 && started_at.blank?
+        self.started_at = Time.now
+      end
+      if work_order_status_id == 3 && completed_at.blank?
+        self.completed_at = Time.now
+      end
+      if work_order_status_id == 4 && closed_at.blank?
+        # Cannot close order if there are unclosed suborders
+        if are_there_unclosed_suborders?
+          errors.add(:base, I18n.t('activerecord.models.work_order.check_for_unclosed_suborders'))
+          return false
+        end
+        self.closed_at = Time.now
+      end
     end
     true
   end

@@ -5,7 +5,7 @@ end
 # Localization for numbers
 delimiter = I18n.locale == :es ? "." : ","
 
-report.set_layout tlf: 'reports/work_order_form', layout_options: { default: true }
+report.set_layout tlf: 'reports/work_order_form_ok', layout_options: { default: true }
 
 #
 # Report events
@@ -198,8 +198,8 @@ report.page.values(form_title: I18n.t("activerecord.models.work_order.one"),
 				   description: @work_order.description,
 				   project_title: I18n.t("activerecord.attributes.work_order.project") + ":",
 				   project: @work_order.project.full_name,
-				   # woarea_title: I18n.t("activerecord.attributes.work_order.work_order_area") + ":",
-				   # woarea: @work_order.work_order_area.name,
+				   woarea_title: I18n.t("activerecord.attributes.work_order.work_order_area") + ":",
+				   woarea: @work_order.work_order_area.name,
 				   type_title: I18n.t("activerecord.attributes.work_order.work_order_type") + ":",
 				   type: @work_order.work_order_type.name,
 				   labor_title: I18n.t("activerecord.attributes.work_order.work_order_labor") + ":",
@@ -234,7 +234,7 @@ report.page.values(printed_at: Time.now,
 				   remarks_title: I18n.t("activerecord.attributes.work_order.remarks"),
 				   remarks: @work_order.remarks,
 				   total_costs_title: I18n.t("activerecord.attributes.work_order.total_costs") + ":",
-				   total_costs: number_with_precision(@work_order.total_costs, precision: 2, delimiter: delimiter))
+				   total_costs: number_with_precision(@work_order.this_total_costs, precision: 2, delimiter: delimiter))
 
 #
 # Lists

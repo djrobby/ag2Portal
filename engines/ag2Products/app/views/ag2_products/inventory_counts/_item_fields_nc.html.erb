@@ -103,7 +103,7 @@
           $(_this).closest('tr').find('.fnt-quantity').val(data.qty);
           $(_this).closest('tr').find('.fnt-price').val(data.total);
           // Table: Update and display totals is necessary
-          $('#items-table').trigger('totals');
+          $('#items-table-nc').trigger('totals');
         } else {
           $('#fnt-quantity').val(data.qty);
           $('#fnt-price').val(data.total);

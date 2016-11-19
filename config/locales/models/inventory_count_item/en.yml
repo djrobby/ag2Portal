@@ -21,3 +21,5 @@ en:
         current_stock_by_store: "Current now"
         price: "WAP"
         average_price: "Current WAP"
+        difference: "Difference"
+        difference_c: "Dif."

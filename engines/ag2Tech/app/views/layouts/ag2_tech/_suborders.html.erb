@@ -1,0 +1,14 @@
+<% suborders.each do |order| %>
+<tr>
+  <td>
+    <%= link_to order.full_no, order %>
+  </td>
+  <td><%= order.summary[0,20] %></td>
+  <td><%= order.work_order_area.short_name unless order.work_order_area.blank? %></td>
+  <td><%= order.work_order_type.short_name unless order.work_order_type.blank? %></td>
+  <td><%= order.work_order_status.name unless order.work_order_status.blank? %></td>
+  <td align="center"><%= order.started_at.strftime("%d/%m/%Y") unless order.started_at.blank? %></td>
+  <td align="center"><%= order.completed_at.strftime("%d/%m/%Y") unless order.completed_at.blank? %></td>
+  <td align="right"><%= number_with_precision(order.total_costs, precision: 4, delimiter: I18n.locale == :es ? "." : ",") unless order.total_costs.blank? %></td>
+</tr>
+<% end %>

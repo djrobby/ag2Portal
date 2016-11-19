@@ -21,3 +21,5 @@ es:
         current_stock_by_store: "Actual ahora"
         price: "PMP"
         average_price: "PMP Actual"
+        difference: "Diferencia"
+        difference_c: "Dif."

@@ -26,7 +26,10 @@
     <% else %>
       <tr>
     <% end %>
-      <td><%= link_to note.full_no, note %></td>
+      <td>
+        <%= link_to note.full_no, note %>
+        <% if note.quick %> <span class="default-link"><%=t 'activerecord.attributes.inventory_count.quick_c' %></span><% end %>
+      </td>
       <td align="center"><%= formatted_date(note.count_date) unless note.count_date.blank? %></td>
       <td><%= note.inventory_count_type.name unless note.inventory_count_type.blank? %></td>
       <td><%= note.store.name unless note.store.blank? %></td>
@@ -34,7 +37,7 @@
       <td align="right"><%= number_with_precision(note.quantity, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless note.quantity.blank? %></td>
       <td>
         <% if note.quick %>
-        <%= render :partial => '/layouts/crud/edit', :locals => { :model => InventoryCount, :path => inventory_counts_edit_nc_path(note) } unless cannot_edit(note) %>
+        <%= render :partial => '/layouts/crud/edit', :locals => { :model => InventoryCount, :path => edit_nc_inventory_count_path(note) } unless cannot_edit(note) %>
         <% else %>
         <%= render :partial => '/layouts/crud/edit', :locals => { :model => InventoryCount, :path => edit_inventory_count_path(note) } unless cannot_edit(note) %>
         <% end %>

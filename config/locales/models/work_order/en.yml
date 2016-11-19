@@ -13,6 +13,8 @@ en:
         check_for_offers: "Work order cannot be destroyed while linked offers exist."
         check_for_supplier_invoices: "Work order cannot be destroyed while linked S invoices exist."
         check_for_sale_offers: "Work order cannot be destroyed while linked offers exist."
+        check_for_suborders: "Work order cannot be destroyed while linked suborders exist."
+        check_for_unclosed_suborders: "Work order cannot be closed while linked unclosed suborders exist."
     attributes:
       work_order:
         order_no: "No."
@@ -122,3 +124,7 @@ en:
         meter_location_c: "Location"
         last_reading_c: "Last reading"
         current_reading_c: "Current reading"
+        suborders: "Suborders"
+        suborders_c: "S"
+        master: "Master"
+        master_c: "M"

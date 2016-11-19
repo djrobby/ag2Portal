@@ -30,4 +30,8 @@ class InventoryCountItem < ActiveRecord::Base
   def amount
     quantity * price
   end
+
+  def difference
+    quantity - current
+  end
 end

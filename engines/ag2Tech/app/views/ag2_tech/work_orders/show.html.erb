@@ -52,7 +52,9 @@
       <td>Id:</td>
       <td id="id"><%= @work_order.id %></td>
       <td><%=t 'activerecord.attributes.work_order.order_no' %>:</td>
-      <td class="highlighted bolded"><%= @work_order.full_no %></td>
+      <td class="highlighted bolded">
+        <%= @work_order.full_no %>
+      </td>
     </tr>
     <tr>
       <td><%=t 'activerecord.attributes.work_order.description' %>:</td>
@@ -124,7 +126,7 @@
     <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @work_order } %>
     <tr>
       <td><%= t :"activerecord.attributes.work_order.master_order" %>:</td>
-      <td><%= @work_order.master_order unless @work_order.master_order.blank? %></td>
+      <td><%= link_to @work_order.master_order.full_no, @work_order.master_order unless @work_order.master_order.blank? %></td>
       <td class="highlighted bolded"><%= t :"activerecord.attributes.work_order.total_costs" %>:</td>
       <td class="highlighted bolded"><%= number_with_precision(@work_order.total_costs, precision: 4, delimiter: I18n.locale == :es ? "." : ",") unless @work_order.total_costs.blank? %></td>
     </tr>
@@ -369,6 +371,30 @@
 { model: WorkOrder, update_path: edit_work_order_path(@work_order), update_txt: t('.btn_edit'),
 delete_path: @work_order, delete_txt: t('.btn_delete'), msg: t("activerecord.models.work_order.one"), txt: @work_order.order_no,
 new_path: new_work_order_path, new_txt: t('ag2_tech.work_orders.index.btn_new') } %>
+
+<% if (@suborders.count > 0) %>
+<table class="form-table">
+  <tbody>
+    <tr class="form-tr underlined-tr">
+      <td class="form-td-two left-winged">
+        <h4><%=t '.subtable_title' %></h4>
+      </td>
+      <td class="form-td-two right-winged">
+        <a href="#" id="print_report_btn"><i class="icon-arrow-up"></i></a>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<table class="table table-condensed table-striped shrinked">
+  <thead>
+    <%= render '/layouts/ag2_tech/subordersheader' %>
+  </thead>
+  <tbody>
+    <%= render :partial => '/layouts/ag2_tech/suborders', :locals => { :suborders => @suborders } %>
+  </tbody>
+</table>
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @suborders } %>
+<% end %>
 
 <% if !session[:return_to].nil? %>
 <%= link_to session[:return_to], session[:return_to_url] %> |

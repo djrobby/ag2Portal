@@ -20,6 +20,7 @@ en:
         btn_delete: "Delete Work order"
         print: "Print"
         print_empty: "Form to fill"
+        subtable_title: "Suborders"
       edit:
         title: "Edit Work order"
         btn_show: "Show Work order"

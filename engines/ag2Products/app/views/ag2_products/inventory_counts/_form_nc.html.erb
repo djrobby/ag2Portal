@@ -278,13 +278,14 @@
   <label class="multi-field-label-two"> <%= f.association :store, collection: @stores, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
 </div>
 <div>
-  <label class="multi-field-label-two"> <%= f.input :count_no, autofocus: true, input_html: { class: 'mid-text-field iconify' }, label_html: { class: 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.input :count_no, input_html: { class: 'mid-text-field iconify' }, label_html: { class: 'form-label' } %></label>
   <label class="multi-field-label-two"> <%= f.input :count_date, start_year: Time.now.year - 100, end_year: Time.now.year + 100, as: :string, input_html: { value: (f.object.count_date.strftime("%d/%m/%Y") if f.object.count_date), class: 'mid-text-field date_picker' }, label_html: { class: 'form-label' } %> </label>
 </div>
 <div>
   <label class="multi-field-label-two"> <%= f.association :inventory_count_type, collection: @types, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
-  <label class="multi-field-label-two"> <%= f.association :product_family, collection: @families, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.association :product_family, as: :hidden, collection: @families, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
 </div>
+<%= f.input :quick, as: :hidden, input_html: { class: 'mid-text-field' }, label_html: { class: 'form-label' } %>
 <!-- Items -->
 <table class="form-table">
   <tbody>

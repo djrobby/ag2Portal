@@ -92,7 +92,7 @@
         $(_this).closest('tr').find('.fnt-quantity').val(data.qty);
         $(_this).closest('tr').find('.fnt-price').val(data.total);
         // Update and display totals
-        $('#items-table').trigger('totals');
+        $('#items-table-nc').trigger('totals');
       });
     }
 
@@ -106,7 +106,7 @@
     $(".icon-trash").click(function() {
       remove_fields(this);
       // Update and display totals
-      $('#items-table').trigger('totals');
+      $('#items-table-nc').trigger('totals');
       //return false;
     });
   });

@@ -3,7 +3,7 @@
  * Very important!!:
  *  1. remove_fields() & add_fields() are in main nested.js!!
  *  1. Modal window must be named (ie, 'new-item-fields')
- *  2. Items table must be named (ie. 'items-table')
+ *  2. Items table must be named (ie. 'items-table-nc')
  *  3. Each row in Items table must have 'class="fields"'
  *  4. Each field in modal window, to add to the table, must have 'class="field"'
  * >> This global methods are in main nested.js!!
@@ -80,7 +80,7 @@ var ic_nc_formHandler = {
     // Public method for hiding the data entry fields.
     hideForm: function() {
         // Update and display totals
-        $('#items-table').trigger('totals');
+        $('#items-table-nc').trigger('totals');
         // Hide modal
         $(ic_nc_cfg.formId).modal('hide');
     }

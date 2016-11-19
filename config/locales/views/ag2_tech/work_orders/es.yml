@@ -20,6 +20,7 @@ es:
         btn_delete: "Borrar Orden de trabajo"
         print: "Imprimir"
         print_empty: "Para rellenar"
+        subtable_title: "Subórdenes"
       edit:
         title: "Editar Orden de trabajo"
         btn_show: "Ver Orden de trabajo"

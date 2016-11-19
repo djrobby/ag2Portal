@@ -462,23 +462,6 @@ module Ag2Products
       end
     end
 
-    # GET /inventory_counts/new_nc
-    # GET /inventory_counts/new_nc.json
-    def new_nc
-      @breadcrumb = 'create'
-      @inventory_count = InventoryCount.new
-      @stores = stores_dropdown
-      @families = families_dropdown
-      @products = products_dropdown
-      @products_table = products_dropdown
-      @types = type_dropdown(nil)
-
-      respond_to do |format|
-        format.html # new_nc.html.erb
-        format.json { render json: @inventory_count }
-      end
-    end
-
     # GET /inventory_counts/1/edit
     def edit
       @breadcrumb = 'update'
@@ -624,6 +607,23 @@ module Ag2Products
 
     # Inventory count form (report)
     def inventory_count_form
+      # Search inventory count & items
+      @inventory_count = InventoryCount.find(params[:id])
+      @items = @inventory_count.inventory_count_items
+
+      title = t("activerecord.models.inventory_count.one")
+
+      respond_to do |format|
+        # Render PDF
+        format.pdf { send_data render_to_string,
+                     filename: "#{title}_#{@inventory_count.full_no}.pdf",
+                     type: 'application/pdf',
+                     disposition: 'inline' }
+      end
+    end
+
+    # Inventory count form (report with differences)
+    def inventory_count_form_dif
       # Search inventory count & items
       @inventory_count = InventoryCount.find(params[:id])
       @items = @inventory_count.inventory_count_items

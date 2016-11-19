@@ -425,24 +425,27 @@ module Ag2Tech
     #
     # Update account select at view from project select
     def wo_update_account_textfield_from_project
-      project = params[:id]
+      project = params[:project]
+      organization = params[:org]
+      id = params[:id]
       projects = projects_dropdown
       if project != '0'
         @project = Project.find(project)
         @charge_account = @project.blank? ? projects_charge_accounts(projects) : charge_accounts_dropdown_edit(@project)
         @store = project_stores(@project)
         @worker = project_workers(@project)
+        @master_order = master_orders_dropdown(@project, organization == '0' ? nil : organization, id == '0' ? nil : id)
       else
         @charge_account = projects_charge_accounts(projects)
         @store = stores_dropdown
         @worker = workers_dropdown
+        @master_order = master_orders_dropdown(nil, organization == '0' ? nil : organization, id == '0' ? nil : id)
       end
-      @json_data = { "charge_account" => @charge_account, "store" => @store, "worker" => @worker }
-
-      respond_to do |format|
-        format.html # wo_update_account_textfield_from_project.html.erb does not exist! JSON only
-        format.json { render json: @json_data }
-      end
+      # Work orders array
+      @orders_dropdown = orders_array(@master_order)
+      # Setup JSON
+      @json_data = { "charge_account" => @charge_account, "store" => @store, "worker" => @worker, "master_order" => @orders_dropdown }
+      render json: @json_data
     end
 
     # Update in charge (worker) select at view from area select
@@ -511,6 +514,7 @@ module Ag2Tech
     # Update project text and other fields at view from organization select
     def wo_update_project_textfields_from_organization
       organization = params[:org]
+      id = params[:id]
       if organization != '0'
         @organization = Organization.find(organization)
         @projects = @organization.blank? ? projects_dropdown : @organization.projects.order(:project_code)
@@ -530,6 +534,7 @@ module Ag2Tech
         @vehicles = @organization.blank? ? vehicles_dropdown : @organization.vehicles.order(:registration)
         @subscribers = @organization.blank? ? subscribers_dropdown : @organization.subscribers.by_code
         @meters = @organization.blank? ? meters_dropdown : @organization.meters.order(:meter_code)
+        @master_order = @organization.blank? ? master_orders_dropdown(nil, nil, id == '0' ? nil : id) : @organization.work_orders.unclosed_only_without_this(nil, id == '0' ? nil : id)
       else
         @projects = projects_dropdown
         @woareas = work_order_areas_dropdown
@@ -548,6 +553,7 @@ module Ag2Tech
         @vehicles = vehicles_dropdown
         @subscribers = subscribers_dropdown
         @meters = meters_dropdown
+        @master_order = master_orders_dropdown(nil, nil, id == '0' ? nil : id)
       end
       # Areas array
       @areas_dropdown = areas_array(@areas)
@@ -557,6 +563,8 @@ module Ag2Tech
       @tools_dropdown = tools_array(@tools)
       # Vehicles array
       @vehicles_dropdown = vehicles_array(@vehicles)
+      # Work orders array
+      @orders_dropdown = orders_array(@master_order)
       # Setup JSON
       @json_data = { "project" => @projects, "woarea" => @woareas,
                      "type" => @types, "labor" => @labors, "infrastructure" => @infrastructures,
@@ -565,7 +573,7 @@ module Ag2Tech
                      "area" => @areas_dropdown, "product" => @products_dropdown,
                      "supplier" => @suppliers, "order" => @orders,
                      "tool" => @tools_dropdown, "vehicle" => @vehicles_dropdown,
-                     "subscriber" => @subscribers, "meter" => @meters }
+                     "subscriber" => @subscribers, "meter" => @meters, "master_order" => @orders_dropdown }
       render json: @json_data
     end
 
@@ -677,6 +685,7 @@ module Ag2Tech
       @tools = @work_order.work_order_tools.paginate(:page => params[:page], :per_page => per_page).order('id')
       @vehicles = @work_order.work_order_vehicles.paginate(:page => params[:page], :per_page => per_page).order('id')
       @subscriber_meter = subscriber_meter_required(@work_order)
+      @suborders = @work_order.suborders.paginate(:page => params[:page], :per_page => per_page).by_no
 
       respond_to do |format|
         format.html # show.html.erb
@@ -707,6 +716,7 @@ module Ag2Tech
       @meter_locations = meter_locations_dropdown
       @readings = readings_dropdown(nil, nil, nil)
       @subscriber_meter = 'false'
+      @master_order = master_orders_dropdown
       # Form & Sub-forms
       @workers = workers_dropdown
       # Sub-forms
@@ -744,6 +754,7 @@ module Ag2Tech
       @meter_locations = meter_locations_dropdown
       @readings = readings_dropdown(@work_order.project, @work_order.meter, @work_order.subscriber)
       @subscriber_meter = subscriber_meter_required(@work_order)
+      @master_order = master_orders_dropdown(@work_order.project, nil, @work_order)
       # Form & Sub-forms
       @workers = project_workers(@work_order.project)
       # Sub-forms
@@ -790,6 +801,7 @@ module Ag2Tech
           @tools = tools_dropdown
           @vehicles = vehicles_dropdown
           @subscriber_meter = false
+          @master_order = master_orders_dropdown
           format.html { render action: "new" }
           format.json { render json: @work_order.errors, status: :unprocessable_entity }
         end
@@ -903,6 +915,7 @@ module Ag2Tech
           (params[:work_order][:certified_at].to_datetime != @work_order.certified_at) ||
           (params[:work_order][:posted_at].to_datetime != @work_order.posted_at) ||
           (params[:work_order][:hours_type].to_i != @work_order.hours_type) ||
+          (params[:work_order][:master_order_id].to_i != @work_order.master_order_id.to_i) ||
           (params[:work_order][:remarks].to_s != @work_order.remarks))
         master_changed = true
       end
@@ -939,6 +952,7 @@ module Ag2Tech
             @tools = tools_dropdown_edit(@work_order)
             @vehicles = vehicles_dropdown_edit(@work_order)
             @subscriber_meter = subscriber_meter_required(@work_order)
+            @master_order = master_orders_dropdown(@work_order.project, nil, @work_order)
             format.html { render action: "edit" }
             format.json { render json: @work_order.errors, status: :unprocessable_entity }
           end
@@ -1387,6 +1401,29 @@ module Ag2Tech
       end
     end
 
+    def master_orders_dropdown(_project = nil, _organization = nil, _this = nil)
+      # Master work orders by project or organization
+      if !_project.blank?
+        if !_this.blank?
+          WorkOrder.belongs_to_project_unclosed_without_this(_project, _this)
+        else
+          WorkOrder.belongs_to_project_unclosed(_project)
+        end
+      elsif !_organization.blank?
+        if !_this.blank?
+          WorkOrder.belongs_to_organization_unclosed_without_this(_organization, _this)
+        else
+          WorkOrder.belongs_to_organization_unclosed(_organization)
+        end
+      else
+        if !_this.blank?
+          session[:organization] != '0' ? WorkOrder.belongs_to_organization_unclosed_without_this(session[:organization].to_i, _this) : WorkOrder.unclosed_only_without_this(_this)
+        else
+          session[:organization] != '0' ? WorkOrder.belongs_to_organization_unclosed(session[:organization].to_i) : WorkOrder.unclosed_only
+        end
+      end
+    end
+
     def meter_models_dropdown
       MeterModel.by_brand_model
     end
@@ -1543,6 +1580,14 @@ module Ag2Tech
       _array = []
       _vehicles.each do |i|
         _array = _array << [i.id, i.registration, i.name[0,40]]
+      end
+      _array
+    end
+
+    def orders_array(_orders)
+      _array = []
+      _orders.each do |i|
+        _array = _array << [i.id, i.full_name]
       end
       _array
     end
