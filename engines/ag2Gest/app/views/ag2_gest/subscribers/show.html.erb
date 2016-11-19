@@ -138,7 +138,7 @@
           <td><b><%= t('activerecord.attributes.subscriber.meter_id') %>:</b></td>
           <td id="info_meter"><%= link_to @subscriber.try(:meter).try(:meter_code), ag2_gest.meter_path(@subscriber.meter_id) unless @subscriber.try(:meter).blank? %></td>
           <td><b><%= t('activerecord.attributes.subscriber.model') %>:</b></td>
-          <td id="info_brand"><%= link_to @subscriber.meter.meter_model.model, ag2_gest.meter_model_path(@subscriber.meter.meter_model) unless @subscriber.meter.nil? %></td>
+          <td id="info_brand"><%= link_to @subscriber.meter.meter_model.full_name, ag2_gest.meter_model_path(@subscriber.meter.meter_model) unless @subscriber.meter.nil? %></td>
           <td><b><%= t('activerecord.attributes.subscriber.caliber') %>:</b></td>
           <td id="info_caliber"><%= link_to @subscriber.try(:meter).try(:caliber).try(:caliber), ag2_gest.caliber_path(@subscriber.meter.caliber_id) if @subscriber.try(:meter) %></td>
         </tr>

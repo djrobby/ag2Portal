@@ -1,6 +1,6 @@
 <%= render '/layouts/ag2_gest/regulationbreadcrumb' %>
 
-<h3><%= t('.title') %> <%=@regulation.description %></h3>
+<h3><%= t('.title') %></h3>
 <table class="table">
   <tbody>
     <tr>
@@ -11,9 +11,9 @@
     </tr>
     <tr>
       <td><%= t('activerecord.attributes.regulation.project_id') %>:</td>
-      <td><%= link_to @regulation.try(:project).try(:name), ag2_tech.project_path(@regulation.project_id) %></td>
+      <td><%= @regulation.try(:project).try(:name) %></td>
       <td><%= t('activerecord.attributes.regulation.regulation_type_id') %>:</td>
-      <td><%= link_to @regulation.try(:regulation_type).try(:description), ag2_gest.regulation_type_path(@regulation.regulation_type_id) %></td>
+      <td><%= @regulation.try(:regulation_type).try(:description) %></td>
     </tr>
     <tr>
       <td><%= t('activerecord.attributes.regulation.starting_at') %>:</td>

@@ -35,14 +35,8 @@
             <i class="icon-thumbs-down"></i>
           <% end %>
         </td>
-        <td>
-          <%= link_to edit_service_point_path(service_point), class: "btn btn-mini" do %>
-            <i class="icon-edit"></i>
-          <% end %>
-          <%= link_to service_point, class: "btn btn-mini", method: :delete, data: { confirm: 'Are you sure?' } do %>
-            <i class="icon-trash"></i>
-          <% end %>
-        </td>
+        <td> <%= render :partial => '/layouts/crud/edit', :locals => { :model => ServicePoint, :path =>  edit_service_point_path(service_point) } %>
+        <%= render :partial => '/layouts/crud/delete', :locals => { :model => ServicePoint, :path => service_point, :msg => t("activerecord.models.service_point.one"), :txt => service_point.to_full_label } %> </td>
       </tr>
     <% end %>
   </tbody>

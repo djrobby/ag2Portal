@@ -12,21 +12,16 @@
     <tr>
       <th><%= sortable "id", t('activerecord.attributes.regulation_type.id') %></th>
       <th><%= sortable "description", t('activerecord.attributes.regulation_type.description') %></th>
+      <th></th>
     </tr>
   </thead>
   <tbody>
     <% @regulation_types.each do |regulation_type| %>
       <tr>
-        <td><%= link_to regulation_type.try(:id), regulation_type_path(regulation_type) %></td>
-        <td><%= regulation_type.try(:description) %></td>
-        <td>
-          <%= link_to edit_regulation_type_path(regulation_type), class: "btn btn-mini" do %>
-            <i class="icon-edit"></i>
-          <% end %>
-          <%= link_to regulation_type, class: "btn btn-mini", method: :delete, data: { confirm: 'Are you sure?' } do %>
-            <i class="icon-trash"></i>
-          <% end %>
-        </td>
+        <td><%= regulation_type.try(:id) %></td>
+        <td><%= link_to regulation_type.try(:description), regulation_type_path(regulation_type) %></td>
+        <td> <%= render :partial => '/layouts/crud/edit', :locals => { :model => RegulationType, :path => edit_regulation_type_path(regulation_type) } %>
+        <%= render :partial => '/layouts/crud/delete', :locals => { :model => RegulationType, :path => regulation_type, :msg => t("activerecord.models.regulation_type.one"), :txt => regulation_type.description } %> </td>
       </tr>
     <% end %>
   </tbody>

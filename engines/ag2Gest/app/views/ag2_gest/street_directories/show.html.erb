@@ -11,9 +11,9 @@
     </tr>
     <tr>
       <td><%= t('activerecord.attributes.street_directory.street_type') %></td>
-      <td><%= link_to @street_directory.try(:street_type).try(:street_type_description), ag2_admin.street_type_path(@street_directory.street_type_id)  %></td>
+      <td><%= @street_directory.try(:street_type).try(:street_type_description) %></td>
       <td><%= t('activerecord.attributes.street_directory.town') %></td>
-      <td><%= link_to @street_directory.try(:town).try(:name), ag2_admin.town_path(@street_directory.town_id)%></td>
+      <td><%= @street_directory.try(:town).try(:name)%></td>
     </tr>
     <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @street_directory } %>
     <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @street_directory } %>

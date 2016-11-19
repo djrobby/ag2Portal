@@ -10,23 +10,18 @@
 <table class="table table-condensed table-striped">
   <thead>
     <tr>
-      <th><%= sortable "name", t('activerecord.attributes.service_point_purpose.name') %></th>
       <th><%= sortable "id", t('activerecord.attributes.service_point_purpose.id') %></th>
+      <th><%= sortable "name", t('activerecord.attributes.service_point_purpose.name') %></th>
+      <th></th>
     </tr>
   </thead>
   <tbody>
     <% @service_point_purposes.each do |service_point_purpose| %>
       <tr>
-        <td><%= link_to service_point_purpose.try(:name), service_point_purpose_path(service_point_purpose) %></td>
         <td><%= service_point_purpose.try(:id) %></td>
-        <td>
-          <%= link_to edit_service_point_purpose_path(service_point_purpose), class: "btn btn-mini" do %>
-            <i class="icon-edit"></i>
-          <% end %>
-          <%= link_to service_point_purpose, class: "btn btn-mini", method: :delete, data: { confirm: 'Are you sure?' } do %>
-            <i class="icon-trash"></i>
-          <% end %>
-        </td>
+        <td><%= link_to service_point_purpose.try(:name), service_point_purpose_path(service_point_purpose) %></td>
+        <td> <%= render :partial => '/layouts/crud/edit', :locals => { :model => ServicePointPurpose, :path => edit_service_point_purpose_path(service_point_purpose) } %>
+        <%= render :partial => '/layouts/crud/delete', :locals => { :model => ServicePointPurpose, :path => service_point_purpose, :msg => t("activerecord.models.service_point_purpose.one"), :txt => service_point_purpose.name } %> </td>
       </tr>
     <% end %>
   </tbody>

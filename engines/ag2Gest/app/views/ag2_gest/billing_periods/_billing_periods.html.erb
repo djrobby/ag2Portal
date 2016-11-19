@@ -18,9 +18,10 @@
 	    <th><%= sortable "period", t('activerecord.attributes.billing_period.period') %></th>
 	    <th><%= sortable "description", t('activerecord.attributes.billing_period.description') %></th>
 	    <th><%= sortable "name", t('activerecord.attributes.billing_period.project_id') %></th>
-	    <th class="center"><%= sortable "billing_frequency_id", t('activerecord.attributes.billing_period.billing_frequency_id') %></th>
+	    <th><%= sortable "billing_frequency_id", t('activerecord.attributes.billing_period.billing_frequency_id') %></th>
 	    <th class="center"><%= sortable "reading_starting_date", t('activerecord.attributes.billing_period.reading_starting_date') %></th>
 	    <th class="center"><%= sortable "reading_ending_date", t('activerecord.attributes.billing_period.reading_ending_date') %></th>
+      <th></th>
 <!-- 	    <th><%#= sortable "prebilling_starting_date", t('activerecord.attributes.billing_period.prebilling_starting_date') %></th>
 	    <th><%#= sortable "prebilling_ending_date", t('activerecord.attributes.billing_period.prebilling_ending_date') %></th>
 			<th><%#= sortable "billing_starting_date", t('activerecord.attributes.billing_period.billing_starting_date') %></th>
@@ -35,7 +36,7 @@
 		    <td><%= link_to billper.try(:period), billing_period_path(billper) %></td>
 		    <td><%= billper.try(:description) %></td>
 		    <td><%= billper.try(:project).try(:name) %></td>
-		    <td class="center"><%= billper.try(:billing_frequency).try(:name) %></td>
+		    <td><%= billper.try(:billing_frequency).try(:name) %></td>
 		    <td class="center"><%=l billper.try(:reading_starting_date) unless billper.try(:reading_starting_date).blank? %></td>
 				<td class="center"><%=l billper.try(:reading_ending_date) unless billper.try(:reading_ending_date).blank? %></td>
 <!-- 				<td><%#= billper.try(:prebilling_starting_date) %></td>
@@ -44,14 +45,8 @@
 				<td><%#= billper.try(:billing_ending_date) %></td>
 				<td><%#= billper.try(:charging_starting_date) %></td>
 				<td><%#= billper.try(:charging_ending_date) %></td> -->
-		    <td class="a_inline">
-		      <%= link_to edit_billing_period_path(billper), class: "btn btn-mini" do %>
-		        <i class="icon-edit"></i>
-		      <% end %>
-		      <%= link_to billper, class: "btn btn-mini", method: :delete, data: { confirm: 'Are you sure?' } do %>
-		        <i class="icon-trash"></i>
-		      <% end %>
-		    </td>
+        <td> <%= render :partial => '/layouts/crud/edit', :locals => { :model => BillingPeriod, :path => edit_billing_period_path(billper) } %>
+        <%= render :partial => '/layouts/crud/delete', :locals => { :model => BillingPeriod, :path => billper, :msg => t("activerecord.models.billing_period.one"), :txt => billper.to_label } %> </td>
 		  </tr>
 	 	<% end %>
 	</tbody>

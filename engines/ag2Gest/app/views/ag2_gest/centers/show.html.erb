@@ -19,9 +19,10 @@
         <% end %>
       </td>
       <td><%= t('activerecord.attributes.center.town') %>:</td>
-      <td><%= link_to @center.try(:town).try(:name), ag2_admin.town_path(@center.town_id) %></td>
+      <td><%= @center.try(:town).try(:name)%></td>
     </tr>
     <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @center } %>
+    <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @center } %>
   </tbody>
 </table>
 

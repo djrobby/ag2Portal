@@ -5,16 +5,16 @@
       <div class="span1">
         <a class="accor accordion-toggle collapsed" data-toggle="collapse" data-parent="#accordion2" href="#collapse-<%= bill.id %>"><i class='icon-plus'></i></a>
       </div>
-      <div class="span3 soft-padding">
+      <div class="span3">
         <%= bill.try(:full_no) %>
       </div>
-      <div class="span2 soft-padding">
+      <div class="span2">
         <%= bill.try(:bill_date) %>
       </div>
-      <div class="span2 soft-padding">
+      <div class="span2">
         <%= bill.try(:bill_type).try(:name) %>
       </div>
-      <div align="right" class="span1 soft-padding">
+      <div align="right" class="span1">
         <%= number_with_precision(bill.try(:total), precision: 2, delimiter: I18n.locale == :es ? "." : ",") %>
       </div>
       <div class="span2 soft-padding pull-right">

@@ -10,17 +10,18 @@
 <table class="table table-condensed table-striped">
   <thead>
     <tr>
-      <th><%= sortable "id", t('activerecord.attributes.sale_offer_status.id') %></th>
+      <th><%= sortable "id", 'Id' %></th>
       <th><%= sortable "name", t('activerecord.attributes.sale_offer_status.name') %></th>
       <th><%= sortable "approval", t('activerecord.attributes.sale_offer_status.approval') %></th>
       <th><%= sortable "notification", t('activerecord.attributes.sale_offer_status.notification') %></th>
+      <th></th>
     </tr>
   </thead>
   <tbody>
   	<% @sale_offer_statuses.each do |salstatus| %>
 	    <tr>
-	      <td><%= link_to salstatus.try(:id), sale_offer_status_path(salstatus) %></td>
-	      <td><%= salstatus.try(:name) %></td>
+        <td><%= salstatus.try(:id) %></td>
+	      <td><%= link_to salstatus.try(:name), sale_offer_status_path(salstatus) %></td>
 	      <td>
 		      <% if salstatus.try(:approval) == true %>
 		        <i class="icon-thumbs-up"></i>
@@ -35,14 +36,8 @@
 		        <i class="icon-thumbs-down"></i>
 		      <% end %>
 	      </td>
-	      <td>
-		      <%= link_to edit_sale_offer_status_path(salstatus), class: "btn btn-mini" do %>
-		        <i class="icon-edit"></i>
-		      <% end %>
-		      <%= link_to salstatus, class: "btn btn-mini", method: :delete, data: { confirm: 'Are you sure?' } do %>
-		        <i class="icon-trash"></i>
-		      <% end %>
-		    </td>
+        <td> <%= render :partial => '/layouts/crud/edit', :locals => { :model => SaleOfferStatus, :path => edit_sale_offer_status_path(salstatus) } %>
+        <%= render :partial => '/layouts/crud/delete', :locals => { :model => SaleOfferStatus, :path => salstatus, :msg => t("activerecord.models.sale_offer_status.one"), :txt => salstatus.name } %> </td>
 		  </tr>
 		<% end %>
 	</tbody>

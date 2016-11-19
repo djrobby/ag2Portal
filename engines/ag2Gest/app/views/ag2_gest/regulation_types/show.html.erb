@@ -1,6 +1,6 @@
 <%= render '/layouts/ag2_gest/regulationtypebreadcrumb' %>
 
-<h3><%= t('.title') %> <%=@regulation_type.description %></h3>
+<h3><%= t('.title') %></h3>
 <table class="table">
   <tbody>
     <tr>
@@ -16,7 +16,7 @@
 
 <%= render partial: '/layouts/crud/update_delete_new', locals:
 { model: RegulationType, update_path: edit_regulation_type_path(@regulation_type), update_txt: t('.btn_edit'),
-delete_path: @regulation_type, delete_txt: t('.btn_delete'), msg: t("activerecord.models.regulation_type.one"), :txt => @regulation_type.id,
+delete_path: @regulation_type, delete_txt: t('.btn_delete'), msg: t("activerecord.models.regulation_type.one"), :txt => @regulation_type.description,
 new_path: new_regulation_type_path, new_txt: t('ag2_gest.regulation_types.index.btn_new') } %>
 
 <%= link_to I18n.t('ag2_gest.regulation_types.back_to_main_page'), regulation_types_path %>

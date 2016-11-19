@@ -17,7 +17,7 @@
       <th><%= t('activerecord.attributes.subscriber.fiscal_id_') %></th>
       <th><%= t('activerecord.attributes.subscriber.office_id') %></th>
       <th><%= t('activerecord.attributes.subscriber.town_id') %></th>
-      <th><%= t('activerecord.attributes.subscriber.active')%></th>
+      <th align="center"><%= t('activerecord.attributes.subscriber.active')%></th>
     </tr>
   </thead>
 
@@ -30,9 +30,9 @@
         <td><%= subscriber.try(:office).try(:name) %></td>
         <td><%= subscriber.try(:center).try(:town).try(:name) %></td>
         <% if subscriber.try(:active) %>
-          <td><i class="icon-thumbs-up"></i></td>
+          <td align="center"><i class="icon-thumbs-up"></i></td>
         <% else %>
-          <td><i class="icon-thumbs-down"></i></td>
+          <td align="center"><i class="icon-thumbs-down"></i></td>
         <% end %>
       </tr>
     <% end %>
