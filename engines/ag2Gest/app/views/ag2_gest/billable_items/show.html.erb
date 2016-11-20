@@ -1,6 +1,6 @@
 <%= render '/layouts/ag2_gest/billableitemsbreadcrumb' %>
 
-<h3><%= t('.title') %> - <%=@billable_item.try(:billable_concept).try(:name) %></h3>
+<h3><%= t('.title') %></h3>
 <table class="table">
   <tbody>
     <tr>
@@ -9,15 +9,15 @@
     </tr>
     <tr>
       <td><%= t('activerecord.attributes.billable_item.billable_concept_id') %>:</td>
-      <td><%= link_to @billable_item.try(:billable_concept).try(:name), ag2_gest.billable_concept_path(@billable_item.billable_concept_id) %></td>
+      <td><%= link_to @billable_item.try(:billable_concept).try(:to_label), ag2_gest.billable_concept_path(@billable_item.billable_concept_id) %></td>
       <td><%= t('activerecord.attributes.billable_item.biller_id') %>:</td>
-      <td><%= link_to @billable_item.try(:biller).try(:name), ag2_admin.company_path(@billable_item.biller_id) %></td>
+      <td><%= @billable_item.try(:biller).try(:name) %></td>
     </tr>
     <tr>
       <td><%= t('activerecord.attributes.billable_item.office_id') %>:</td>
-      <td><%= link_to @billable_item.try(:project).try(:office).try(:name), ag2_admin.office_path(@billable_item.project.office_id) %></td>
+      <td><%= @billable_item.try(:project).try(:office).try(:name) %></td>
       <td><%= t('activerecord.attributes.billable_item.project_id') %>:</td>
-      <td><%= link_to @billable_item.try(:project).try(:name), ag2_tech.project_path(@billable_item.project_id) %></td>
+      <td><%= @billable_item.try(:project).try(:full_name) %></td>
     </tr>
     <tr>
       <td><%= t('activerecord.attributes.billable_item.regulation_id') %>:</td>

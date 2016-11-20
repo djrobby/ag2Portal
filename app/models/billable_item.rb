@@ -14,9 +14,10 @@ class BillableItem < ActiveRecord::Base
   validates :billable_concept_id, uniqueness: { scope: :project_id }
 
   before_save :check_sum
+  before_destroy :check_for_dependent_records
 
   def to_label
-    "#{billable_concept.name} ( #{billable_concept.code} ) - #{biller.name}"
+    "#{billable_concept.name} (#{billable_concept.code}) - #{biller.name}"
   end
 
   def office
@@ -36,8 +37,15 @@ class BillableItem < ActiveRecord::Base
 
   private
 
-    def check_sum
-       self.tariffs_by_caliber = true if billable_concept.try(:code) == "SUM"
-    end
+  def check_sum
+     self.tariffs_by_caliber = true if billable_concept.try(:code) == "SUM"
+  end
 
+  def check_for_dependent_records
+    # Check for tariffs
+    if tariffs.count > 0
+      errors.add(:base, I18n.t('activerecord.models.billable_item.check_for_tariffs'))
+      return false
+    end
+  end
 end

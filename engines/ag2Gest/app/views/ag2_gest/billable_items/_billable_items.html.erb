@@ -11,30 +11,27 @@
   <thead>
     <tr>
       <th><%= sortable "id", t('activerecord.attributes.billable_item.id') %></th>
-      <th><%= sortable "project_id", t('activerecord.attributes.billable_item.project_id') %></th>
       <th><%= sortable "billable_concept_id", t('activerecord.attributes.billable_item.billable_concept_id') %></th>
+      <th><%= sortable "project_id", t('activerecord.attributes.billable_item.project_id') %></th>
       <th><%= sortable "office_id", t('activerecord.attributes.billable_item.office_id') %></th>
       <th><%= sortable "biller_id", t('activerecord.attributes.billable_item.biller_id') %></th>
       <th><%= t('activerecord.attributes.billable_item.tariffs_by_caliber') %></th>
+      <th></th>
     </tr>
   </thead>
   <tbody>
     <% @billable_items.each do |billable| %>
       <tr>
-        <td><%= link_to billable.try(:id), billable_item_path(billable) %></td>
+        <td><%= billable.try(:id) %></td>
+        <td><%= billable.try(:billable_concept).try(:code) %></td>
         <td><%= billable.try(:project).try(:name) %></td>
-        <td><%= billable.try(:billable_concept).try(:name) %></td>
         <td><%= billable.try(:office).try(:name) %></td>
         <td><%= billable.try(:biller).try(:name) %></td>
         <td><% if billable.try(:tariffs_by_caliber) %> <i class="icon-thumbs-up"></i> <% else %> <i class="icon-thumbs-down"></i> <% end %></td>
         <td>
-          <%= link_to edit_billable_item_path(billable), class: "btn btn-mini" do%>
-            <i class="icon-edit"></i>
-          <% end %>
-
-          <%= link_to billable, class: "btn btn-mini", method: :delete, data: { confirm: 'Are you sure?' } do %>
-            <i class="icon-trash"></i>
-          <% end %>
+          <%= render :partial => '/layouts/crud/read', :locals => { :model => BillableItem, :path => billable_item_path(billable) } %>
+          <%= render :partial => '/layouts/crud/edit', :locals => { :model => BillableItem, :path => edit_billable_item_path(billable) } %>
+          <%= render :partial => '/layouts/crud/delete', :locals => { :model => BillableItem, :path => billable, :msg => t("activerecord.models.billable_item.one"), :txt => billable.to_label } %>
         </td>
       </tr>
     <% end %>

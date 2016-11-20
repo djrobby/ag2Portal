@@ -433,7 +433,7 @@ module Ag2Gest
       # reading_types_ids = @subscriber.readings.map(&:reading_type_id).uniq
       # @reading_types = ReadingType.where(id: reading_types_ids) #ReadingTypes associated
 
-      # @project_dropdown = session[:company].blank? ? Project.all : Project.where(company_id: session[:company])
+      @project_dropdown = session[:company].blank? ? Project.all : Project.where(company_id: session[:company])
 
       # @subscriber_readings = @subscriber.readings.paginate(:page => params[:page], :per_page => 5)
       @subscriber_accounts = @subscriber.client.client_bank_accounts.paginate(:page => params[:page], :per_page => 10)

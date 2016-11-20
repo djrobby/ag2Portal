@@ -10,6 +10,7 @@ en:
       service_point:
         id: "Id"
         name: "Descripción"
+        code: "Code"
         service_point_type_id: "Tipo de punto de servicio"
         service_point_location_id: "Emplazamiento"
         service_point_purpose_id: "Propósito"

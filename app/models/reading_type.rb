@@ -13,8 +13,24 @@ class ReadingType < ActiveRecord::Base
 
   validates :name,         :presence => true
 
+  before_destroy :check_for_dependent_records
+
   def to_label
     "#{name}"
   end
 
+  private
+
+  def check_for_dependent_records
+    # Check for pre_readings
+    if pre_readings.count > 0
+      errors.add(:base, I18n.t('activerecord.models.reading_type.check_for_readings'))
+      return false
+    end
+    # Check for readings
+    if readings.count > 0
+      errors.add(:base, I18n.t('activerecord.models.reading_type.check_for_readings'))
+      return false
+    end
+  end
 end
