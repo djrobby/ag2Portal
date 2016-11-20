@@ -102,14 +102,22 @@ class WorkOrder < ActiveRecord::Base
   validate :completed_at_cannot_be_less_than_started_at
   validate :closed_at_cannot_be_less_than_completed_at
 
-  # Scopes
-  scope :by_no, -> { order(:order_no) }
   #
+  # Scopes
+  #
+  scope :by_no, -> { order(:order_no) }
+  # by Project
   scope :belongs_to_project, -> project { where("project_id = ?", project).by_no }
   scope :belongs_to_project_unclosed, -> project { where("project_id = ? AND closed_at IS NULL", project).by_no }
-  scope :belongs_to_organization_unclosed, -> org { where("organization_id = ? AND closed_at IS NULL", org).by_no }
   scope :belongs_to_project_unclosed_without_this, -> project, this { where("project_id = ? AND closed_at IS NULL AND id <> ?", project, this).by_no }
+  scope :belongs_to_project_unclosed_without_suborders, -> project { where("project_id = ? AND closed_at IS NULL AND master_order_id IS NULL", project).by_no }
+  scope :belongs_to_project_unclosed_without_this_and_suborders, -> project, this { where("project_id = ? AND closed_at IS NULL AND id <> ? AND master_order_id IS NULL", project, this).by_no }
+  # by Organization
+  scope :belongs_to_organization, -> org { where("organization_id = ?", org).by_no }
+  scope :belongs_to_organization_unclosed, -> org { where("organization_id = ? AND closed_at IS NULL", org).by_no }
   scope :belongs_to_organization_unclosed_without_this, -> org, this { where("organization_id = ? AND closed_at IS NULL AND id <> ?", org, this).by_no }
+  scope :belongs_to_organization_unclosed_without_suborders, -> org { where("organization_id = ? AND closed_at IS NULL AND master_order_id IS NULL", org).by_no }
+  scope :belongs_to_organization_unclosed_without_this_and_suborders, -> org, this { where("organization_id = ? AND closed_at IS NULL AND id <> ? AND master_order_id IS NULL", org, this).by_no }
 
   before_destroy :check_for_dependent_records
   before_save :update_status_based_on_dates
@@ -130,7 +138,7 @@ class WorkOrder < ActiveRecord::Base
   end
 
   def full_no
-    # Order no (Project code & year & sequential number) => PPPPPPPPPPPP-YYYY-NNNNNN
+    # Order no (Project code & year & sequential number) => PPPPPPPPPPPP-YYYY-NNNNNN M
     order_no.blank? ? "" : order_no[0..11] + '-' + order_no[12..15] + '-' + order_no[16..21] + complete_full_no_if_suborders
   end
 
@@ -276,7 +284,7 @@ class WorkOrder < ActiveRecord::Base
     suborders.unclosed_only.count > 0 ? true : false
   end
 
-  # Are there unclosed linked suborders?
+  # Have suborders?
   def have_suborders?
     suborders.count > 0 ? true : false
   end
@@ -325,7 +333,16 @@ class WorkOrder < ActiveRecord::Base
     end
   end
 
-  # Unclosed withoout current
+  # Unclosed without suborders
+  def self.unclosed_only_without_suborders(project = nil)
+    if project.blank?
+      where('closed_at IS NULL AND master_order_id IS NULL').by_no
+    else
+      where('project_id = ? AND closed_at IS NULL AND master_order_id IS NULL', project).by_no
+    end
+  end
+
+  # Unclosed without current
   def self.unclosed_only_without_this(project = nil, this = nil)
     if project.blank?
       if this.blank?
@@ -338,6 +355,23 @@ class WorkOrder < ActiveRecord::Base
         where('project_id = ? AND closed_at IS NULL', project).by_no
       else
         where('project_id = ? AND closed_at IS NULL AND id <> ?', project, this).by_no
+      end
+    end
+  end
+
+  # Unclosed without current & suborders
+  def self.unclosed_only_without_this_and_suborders(project = nil, this = nil)
+    if project.blank?
+      if this.blank?
+        where('closed_at IS NULL AND master_order_id IS NULL').by_no
+      else
+        where('closed_at IS NULL AND master_order_id IS NULL AND id <> ?', this).by_no
+      end
+    else
+      if this.blank?
+        where('project_id = ? AND closed_at IS NULL AND master_order_id IS NULL', project).by_no
+      else
+        where('project_id = ? AND closed_at IS NULL AND master_order_id IS NULL AND id <> ?', project, this).by_no
       end
     end
   end

@@ -423,23 +423,92 @@ module Ag2Tech
     #
     # Main form
     #
-    # Update account select at view from project select
+    # Update project select, master order select and other fields at view from organization select
+    def wo_update_project_textfields_from_organization
+      organization = params[:org]
+      id = params[:id] != '0' ? params[:id] : nil
+      is_new = id.blank? ? true : false
+      if organization != '0'
+        @organization = Organization.find(organization)
+        @projects = @organization.blank? ? projects_dropdown : @organization.projects.order(:project_code)
+        @woareas = @organization.blank? ? work_order_areas_dropdown : @organization.work_order_areas.order(:name)
+        @types = @organization.blank? ? work_order_types_dropdown : @organization.work_order_types.order(:name)
+        @labors = @organization.blank? ? work_order_labors_dropdown : @organization.work_order_labors.order(:name)
+        @infrastructures = @organization.blank? ? infrastructures_dropdown : @organization.infrastructures.order(:code)
+        @clients = @organization.blank? ? clients_dropdown : @organization.clients.order(:client_code)
+        @charge_accounts = @organization.blank? ? charge_accounts_dropdown : @organization.charge_accounts.expenditures
+        @stores = @organization.blank? ? stores_dropdown : @organization.stores.order(:name)
+        @workers = @organization.blank? ? workers_dropdown : @organization.workers.order(:worker_code)
+        @areas = @organization.blank? ? areas_dropdown : organization_areas(@organization)
+        @products = @organization.blank? ? products_dropdown : @organization.products.order(:product_code)
+        @suppliers = @organization.blank? ? suppliers_dropdown : @organization.suppliers.order(:supplier_code)
+        @orders = @organization.blank? ? orders_dropdown : @organization.purchase_orders.order(:supplier_id, :order_no, :id)
+        @tools = @organization.blank? ? tools_dropdown : @organization.tools.order(:serial_no)
+        @vehicles = @organization.blank? ? vehicles_dropdown : @organization.vehicles.order(:registration)
+        @subscribers = @organization.blank? ? subscribers_dropdown : @organization.subscribers.by_code
+        @meters = @organization.blank? ? meters_dropdown : @organization.meters.order(:meter_code)
+        #@master_order = @organization.blank? ? master_orders_dropdown(nil, nil, id, is_new) : @organization.work_orders.unclosed_only_without_this(nil, id == '0' ? nil : id)
+        @master_order = @organization.blank? ? master_orders_dropdown(nil, nil, id, is_new) : master_orders_dropdown(nil, @organization, id, is_new)
+      else
+        @projects = projects_dropdown
+        @woareas = work_order_areas_dropdown
+        @types = work_order_types_dropdown
+        @labors = work_order_labors_dropdown
+        @infrastructures = infrastructures_dropdown
+        @clients = clients_dropdown
+        @charge_accounts = charge_accounts_dropdown
+        @stores = stores_dropdown
+        @workers = workers_dropdown
+        @areas = areas_dropdown
+        @products = products_dropdown
+        @suppliers = suppliers_dropdown
+        @orders = orders_dropdown
+        @tools = tools_dropdown
+        @vehicles = vehicles_dropdown
+        @subscribers = subscribers_dropdown
+        @meters = meters_dropdown
+        @master_order = master_orders_dropdown(nil, nil, id, is_new)
+      end
+      # Areas array
+      @areas_dropdown = areas_array(@areas)
+      # Products array
+      @products_dropdown = products_array(@products)
+      # Tools array
+      @tools_dropdown = tools_array(@tools)
+      # Vehicles array
+      @vehicles_dropdown = vehicles_array(@vehicles)
+      # Work orders array
+      @orders_dropdown = orders_array(@master_order)
+      # Setup JSON
+      @json_data = { "project" => @projects, "woarea" => @woareas,
+                     "type" => @types, "labor" => @labors, "infrastructure" => @infrastructures,
+                     "client" => @clients, "charge_account" => @charge_accounts,
+                     "store" => @stores, "worker" => @workers,
+                     "area" => @areas_dropdown, "product" => @products_dropdown,
+                     "supplier" => @suppliers, "order" => @orders,
+                     "tool" => @tools_dropdown, "vehicle" => @vehicles_dropdown,
+                     "subscriber" => @subscribers, "meter" => @meters, "master_order" => @orders_dropdown }
+      render json: @json_data
+    end
+
+    # Update account & master order selects at view from project select
     def wo_update_account_textfield_from_project
       project = params[:project]
-      organization = params[:org]
-      id = params[:id]
+      organization = params[:org] != '0' ? params[:org] : nil
+      id = params[:id] != '0' ? params[:id] : nil
+      is_new = id.blank? ? true : false
       projects = projects_dropdown
       if project != '0'
         @project = Project.find(project)
         @charge_account = @project.blank? ? projects_charge_accounts(projects) : charge_accounts_dropdown_edit(@project)
         @store = project_stores(@project)
         @worker = project_workers(@project)
-        @master_order = master_orders_dropdown(@project, organization == '0' ? nil : organization, id == '0' ? nil : id)
+        @master_order = master_orders_dropdown(@project, organization, id, is_new)
       else
         @charge_account = projects_charge_accounts(projects)
         @store = stores_dropdown
         @worker = workers_dropdown
-        @master_order = master_orders_dropdown(nil, organization == '0' ? nil : organization, id == '0' ? nil : id)
+        @master_order = master_orders_dropdown(nil, organization, id, is_new)
       end
       # Work orders array
       @orders_dropdown = orders_array(@master_order)
@@ -508,72 +577,6 @@ module Ag2Tech
       end
       # Setup JSON
       @json_data = { "labor" => @labors, "account" => account, "subscriber_meter" => required }
-      render json: @json_data
-    end
-
-    # Update project text and other fields at view from organization select
-    def wo_update_project_textfields_from_organization
-      organization = params[:org]
-      id = params[:id]
-      if organization != '0'
-        @organization = Organization.find(organization)
-        @projects = @organization.blank? ? projects_dropdown : @organization.projects.order(:project_code)
-        @woareas = @organization.blank? ? work_order_areas_dropdown : @organization.work_order_areas.order(:name)
-        @types = @organization.blank? ? work_order_types_dropdown : @organization.work_order_types.order(:name)
-        @labors = @organization.blank? ? work_order_labors_dropdown : @organization.work_order_labors.order(:name)
-        @infrastructures = @organization.blank? ? infrastructures_dropdown : @organization.infrastructures.order(:code)
-        @clients = @organization.blank? ? clients_dropdown : @organization.clients.order(:client_code)
-        @charge_accounts = @organization.blank? ? charge_accounts_dropdown : @organization.charge_accounts.expenditures
-        @stores = @organization.blank? ? stores_dropdown : @organization.stores.order(:name)
-        @workers = @organization.blank? ? workers_dropdown : @organization.workers.order(:worker_code)
-        @areas = @organization.blank? ? areas_dropdown : organization_areas(@organization)
-        @products = @organization.blank? ? products_dropdown : @organization.products.order(:product_code)
-        @suppliers = @organization.blank? ? suppliers_dropdown : @organization.suppliers.order(:supplier_code)
-        @orders = @organization.blank? ? orders_dropdown : @organization.purchase_orders.order(:supplier_id, :order_no, :id)
-        @tools = @organization.blank? ? tools_dropdown : @organization.tools.order(:serial_no)
-        @vehicles = @organization.blank? ? vehicles_dropdown : @organization.vehicles.order(:registration)
-        @subscribers = @organization.blank? ? subscribers_dropdown : @organization.subscribers.by_code
-        @meters = @organization.blank? ? meters_dropdown : @organization.meters.order(:meter_code)
-        @master_order = @organization.blank? ? master_orders_dropdown(nil, nil, id == '0' ? nil : id) : @organization.work_orders.unclosed_only_without_this(nil, id == '0' ? nil : id)
-      else
-        @projects = projects_dropdown
-        @woareas = work_order_areas_dropdown
-        @types = work_order_types_dropdown
-        @labors = work_order_labors_dropdown
-        @infrastructures = infrastructures_dropdown
-        @clients = clients_dropdown
-        @charge_accounts = charge_accounts_dropdown
-        @stores = stores_dropdown
-        @workers = workers_dropdown
-        @areas = areas_dropdown
-        @products = products_dropdown
-        @suppliers = suppliers_dropdown
-        @orders = orders_dropdown
-        @tools = tools_dropdown
-        @vehicles = vehicles_dropdown
-        @subscribers = subscribers_dropdown
-        @meters = meters_dropdown
-        @master_order = master_orders_dropdown(nil, nil, id == '0' ? nil : id)
-      end
-      # Areas array
-      @areas_dropdown = areas_array(@areas)
-      # Products array
-      @products_dropdown = products_array(@products)
-      # Tools array
-      @tools_dropdown = tools_array(@tools)
-      # Vehicles array
-      @vehicles_dropdown = vehicles_array(@vehicles)
-      # Work orders array
-      @orders_dropdown = orders_array(@master_order)
-      # Setup JSON
-      @json_data = { "project" => @projects, "woarea" => @woareas,
-                     "type" => @types, "labor" => @labors, "infrastructure" => @infrastructures,
-                     "client" => @clients, "charge_account" => @charge_accounts,
-                     "store" => @stores, "worker" => @workers,
-                     "area" => @areas_dropdown, "product" => @products_dropdown,
-                     "supplier" => @suppliers, "order" => @orders,
-                     "tool" => @tools_dropdown, "vehicle" => @vehicles_dropdown,
-                     "subscriber" => @subscribers, "meter" => @meters, "master_order" => @orders_dropdown }
       render json: @json_data
     end
 
@@ -716,7 +719,7 @@ module Ag2Tech
       @meter_locations = meter_locations_dropdown
       @readings = readings_dropdown(nil, nil, nil)
       @subscriber_meter = 'false'
-      @master_order = master_orders_dropdown
+      @master_order = master_orders_dropdown(nil, nil, nil, true)
       # Form & Sub-forms
       @workers = workers_dropdown
       # Sub-forms
@@ -754,7 +757,7 @@ module Ag2Tech
       @meter_locations = meter_locations_dropdown
       @readings = readings_dropdown(@work_order.project, @work_order.meter, @work_order.subscriber)
       @subscriber_meter = subscriber_meter_required(@work_order)
-      @master_order = master_orders_dropdown(@work_order.project, nil, @work_order)
+      @master_order = master_orders_dropdown(@work_order.project, nil, @work_order.id, false)
       # Form & Sub-forms
       @workers = project_workers(@work_order.project)
       # Sub-forms
@@ -801,7 +804,7 @@ module Ag2Tech
           @tools = tools_dropdown
           @vehicles = vehicles_dropdown
           @subscriber_meter = false
-          @master_order = master_orders_dropdown
+          @master_order = master_orders_dropdown(nil, nil, nil, true)
           format.html { render action: "new" }
           format.json { render json: @work_order.errors, status: :unprocessable_entity }
         end
@@ -952,7 +955,7 @@ module Ag2Tech
             @tools = tools_dropdown_edit(@work_order)
             @vehicles = vehicles_dropdown_edit(@work_order)
             @subscriber_meter = subscriber_meter_required(@work_order)
-            @master_order = master_orders_dropdown(@work_order.project, nil, @work_order)
+            @master_order = master_orders_dropdown(@work_order.project, nil, @work_order.id, false)
             format.html { render action: "edit" }
             format.json { render json: @work_order.errors, status: :unprocessable_entity }
           end
@@ -1401,24 +1404,99 @@ module Ag2Tech
       end
     end
 
-    def master_orders_dropdown(_project = nil, _organization = nil, _this = nil)
-      # Master work orders by project or organization
+    # Master work orders by project or organization
+    # WARNING: Cannot includes dependent suborders when editing!
+    def master_orders_dropdown(_project = nil, _organization = nil, _this = nil, _is_new = false)
+      if _is_new
+        # New: Return work orders including suborders
+        if !_project.blank?
+          # Project's orders
+          if !_this.blank?
+            # Not including current order
+            WorkOrder.belongs_to_project_unclosed_without_this(_project, _this)
+          else
+            # All project's orders
+            WorkOrder.belongs_to_project_unclosed(_project)
+          end
+        elsif !_organization.blank?
+          # Project not passed: Organization's orders
+          if !_this.blank?
+            # Not including current order
+            WorkOrder.belongs_to_organization_unclosed_without_this(_organization, _this)
+          else
+            # All organization's orders
+            WorkOrder.belongs_to_organization_unclosed(_organization)
+          end
+        else
+          # Project & organization not passed: All orders
+          if !_this.blank?
+            # All orders, not including current order (unless organization is active in session)
+            session[:organization] != '0' ? WorkOrder.belongs_to_organization_unclosed_without_this(session[:organization].to_i, _this) : WorkOrder.unclosed_only_without_this(_this)
+          else
+            # All orders (unless organization is active in session)
+            session[:organization] != '0' ? WorkOrder.belongs_to_organization_unclosed(session[:organization].to_i) : WorkOrder.unclosed_only
+          end
+        end
+      else
+        # Existing: If master, cannot includes suborders
+        if !_project.blank?
+          # Project's orders
+          if !_this.blank?
+            # Not including current order
+            WorkOrder.belongs_to_project_unclosed_without_this_and_suborders(_project, _this)
+          else
+            # All project's orders
+            WorkOrder.belongs_to_project_unclosed_without_suborders(_project)
+          end
+        elsif !_organization.blank?
+          # Project not passed: Organization's orders
+          if !_this.blank?
+            # Not including current order
+            WorkOrder.belongs_to_organization_unclosed_without_this_and_suborders(_organization, _this)
+          else
+            # All organization's orders
+            WorkOrder.belongs_to_organization_unclosed_without_suborders(_organization)
+          end
+        else
+          # Project & organization not passed: All orders
+          if !_this.blank?
+            # All orders, not including current order (unless organization is active in session)
+            session[:organization] != '0' ? WorkOrder.belongs_to_organization_unclosed_without_this_and_suborders(session[:organization].to_i, _this) : WorkOrder.unclosed_only_without_this_and_suborders(_this)
+          else
+            # All orders (unless organization is active in session)
+            session[:organization] != '0' ? WorkOrder.belongs_to_organization_unclosed_without_suborders(session[:organization].to_i) : WorkOrder.unclosed_only_without_suborders
+          end
+        end
+      end
+    end
+
+    # WARNING: Do not use! (includes dependent suborders)
+    def master_orders_dropdown_dont_use(_project = nil, _organization = nil, _this = nil)
       if !_project.blank?
+        # Project's orders
         if !_this.blank?
+          # Not including current order
           WorkOrder.belongs_to_project_unclosed_without_this(_project, _this)
         else
+          # All project's orders
           WorkOrder.belongs_to_project_unclosed(_project)
         end
       elsif !_organization.blank?
+        # Project not passed: Organization's orders
         if !_this.blank?
+          # Not including current order
           WorkOrder.belongs_to_organization_unclosed_without_this(_organization, _this)
         else
+          # All organization's orders
           WorkOrder.belongs_to_organization_unclosed(_organization)
         end
       else
+        # Project & organization not passed: All orders
         if !_this.blank?
+          # All orders, not including current order (unless organization is active in session)
           session[:organization] != '0' ? WorkOrder.belongs_to_organization_unclosed_without_this(session[:organization].to_i, _this) : WorkOrder.unclosed_only_without_this(_this)
         else
+          # All orders (unless organization is active in session)
           session[:organization] != '0' ? WorkOrder.belongs_to_organization_unclosed(session[:organization].to_i) : WorkOrder.unclosed_only
         end
       end
