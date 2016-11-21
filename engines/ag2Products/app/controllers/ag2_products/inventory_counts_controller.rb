@@ -15,7 +15,8 @@ module Ag2Products
                                                :ic_update_from_organization,
                                                :inventory_count_form,
                                                :inventory_counts_report,
-                                               :ic_products_from_organization]
+                                               :ic_products_from_organization,
+                                               :new_nc, :edit_nc]
     # Helper methods for
     # => allow edit (hide buttons)
     helper_method :cannot_edit
