@@ -1,6 +1,8 @@
-<h1>Editing complaint_status</h1>
+<%= render '/layouts/ag2_gest/complaintstatusesbreadcrumb' %>
+
+<h3><%=t '.title' %></h3>
 
 <%= render 'form' %>
 
-<%= link_to 'Show', @complaint_status %> |
-<%= link_to 'Back', complaint_statuses_path %>
+<%= link_to t(".btn_show"), @complaint_status %> |
+<%= link_to t("ag2_gest.complaint_statuses.back_to_main_page"), complaint_statuses_path %>

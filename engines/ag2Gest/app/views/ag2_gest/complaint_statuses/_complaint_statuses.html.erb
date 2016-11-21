@@ -12,6 +12,7 @@
     <tr>
       <th><%= sortable "id", 'Id' %></th>
       <th><%= sortable "name", t('activerecord.attributes.complaint_status.name') %></th>
+      <th align="right"><%= sortable "name", t('activerecord.attributes.complaint_status.action') %></th>
       <th></th>
     </tr>
   </thead>
@@ -20,6 +21,7 @@
     <tr>
       <td><%= type.id %></td>
       <td><%= link_to type.name, type %></td>
+      <td align="right"><%= type.action unless type.action.blank? %></td>
       <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => ComplaintStatus, :path => edit_complaint_status_path(type) } %>
       <%= render :partial => '/layouts/crud/delete', :locals => { :model => ComplaintStatus, :path => type, :msg => t("activerecord.models.complaint_status.one"), :txt => type.name } %> </td>
     </tr>
@@ -28,4 +30,4 @@
 </table>
 <%= render :partial => '/layouts/pagination', :locals => { :ivar => @complaint_statuses } %>
 <%= render :partial => '/layouts/crud/new', :locals => { :model => ComplaintStatus, :path => new_complaint_status_path, :txt => t("ag2_gest.complaint_statuses.index.btn_new") } %>
-<%= link_to t("ag2_gest.complaint_statuses.index.back_to_root"), ag2_gest.root_path %>
+<%= link_to t("ag2_gest.complaint_statuses.index.back_to_management"), ag2_gest.complaint_management_path %>

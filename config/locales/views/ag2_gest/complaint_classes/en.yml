@@ -1,0 +1,20 @@
+en:
+  ag2_gest:
+    complaint_classes:
+      index:
+        title: "Complaint classes"
+        btn_new: "New Class"
+        back_to_root: "Back to ag2Gest"
+        back_to_management: "Back to Complaints"
+      show:
+        title: "Complaint class"
+        btn_edit: "Edit Class"
+        btn_delete: "Delete Class"
+        subtable_title: "Complaint class Complaints"
+        return_to: "Back to Complaint class"
+      edit:
+        title: "Edit Complaint class"
+        btn_show: "Show Complaint class"
+      new:
+        title: "New Complaint class"
+      back_to_main_page: "Back to Complaint classes"

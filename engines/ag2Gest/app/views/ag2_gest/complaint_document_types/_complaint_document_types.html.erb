@@ -28,4 +28,4 @@
 </table>
 <%= render :partial => '/layouts/pagination', :locals => { :ivar => @complaint_document_types } %>
 <%= render :partial => '/layouts/crud/new', :locals => { :model => ComplaintDocumentType, :path => new_complaint_document_type_path, :txt => t("ag2_gest.complaint_document_types.index.btn_new") } %>
-<%= link_to t("ag2_gest.complaint_document_types.index.back_to_root"), ag2_gest.root_path %>
+<%= link_to t("ag2_gest.complaint_document_types.index.back_to_management"), ag2_gest.complaint_management_path %>

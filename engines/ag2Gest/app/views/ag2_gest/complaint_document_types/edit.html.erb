@@ -1,6 +1,8 @@
-<h1>Editing complaint_document_type</h1>
+<%= render '/layouts/ag2_gest/complaintdocumenttypesbreadcrumb' %>
+
+<h3><%=t '.title' %></h3>
 
 <%= render 'form' %>
 
-<%= link_to 'Show', @complaint_document_type %> |
-<%= link_to 'Back', complaint_document_types_path %>
+<%= link_to t(".btn_show"), @complaint_document_type %> |
+<%= link_to t("ag2_gest.complaint_document_types.back_to_main_page"), complaint_document_types_path %>

@@ -1,0 +1,13 @@
+es:
+  activerecord:
+    models:
+      complaint_status:
+        zero:  Estados de reclamación
+        one:   Estado de reclamación
+        few:   Estados de reclamación
+        other: Estados de reclamación
+        check_for_complaints: "Estado no puede ser eliminado mientras existan reclamaciones vinculadas."
+    attributes:
+      complaint_status:
+        name: "Descripción"
+        action: "Acción"

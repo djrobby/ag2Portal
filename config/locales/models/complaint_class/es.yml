@@ -1,0 +1,12 @@
+es:
+  activerecord:
+    models:
+      complaint_class:
+        zero:  Clases de reclamación
+        one:   Clase de reclamación
+        few:   Clases de reclamación
+        other: Clases de reclamación
+        check_for_complaints: "Clase no puede ser eliminada mientras existan reclamaciones vinculadas."
+    attributes:
+      complaint_class:
+        name: "Descripción"

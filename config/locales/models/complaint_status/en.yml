@@ -1,0 +1,13 @@
+en:
+  activerecord:
+    models:
+      complaint_status:
+        zero:  Complaint statuses
+        one:   Complaint status
+        few:   Complaint statuses
+        other: Complaint statuses
+        check_for_complaints: "Status cannot be destroyed while linked complaints exist."
+    attributes:
+      complaint_status:
+        name: "Description"
+        action: "Action"

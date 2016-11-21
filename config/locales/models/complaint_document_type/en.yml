@@ -1,0 +1,12 @@
+en:
+  activerecord:
+    models:
+      complaint_document_type:
+        zero:  Complaint document types
+        one:   Complaint document type
+        few:   Complaint document types
+        other: Complaint document types
+        check_for_complaint_documents: "Document type cannot be destroyed while linked documents exist."
+    attributes:
+      complaint_document_type:
+        name: "Description"

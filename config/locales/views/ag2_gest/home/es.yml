@@ -16,6 +16,7 @@ es:
         bill_management: "Facturación"
         debt_claim_management: "Gestión de Deudas"
         formality_management: "Trámites"
+        complaint_management: "Reclamaciones"
         sale_offers: "Ofertas"
         client_payments: "Cobros"
         sale_offer_statuses: "Estados Ofertas"
@@ -24,7 +25,6 @@ es:
         centers: "Núcleos Urbanos"
         street_directories: "Callejeros"
         frauds: "Fraudes"
-        complaints: "Reclamaciones"
       tariff:
         schemes: "Esquemas"
         tariffs: "Tarifas"
@@ -83,3 +83,8 @@ es:
         claims: "Reclamaciones de Deuda"
         phases: "Fases RD"
         statuses: "Estados RD"
+      complaint:
+        complaints: "Reclamaciones"
+        classes: "Clases Reclamación"
+        statuses: "Estados Reclamación"
+        document_types: "Tipos Documentación"

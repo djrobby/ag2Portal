@@ -1,0 +1,20 @@
+es:
+  ag2_gest:
+    complaint_statuses:
+      index:
+        title: "Estados de reclamación"
+        btn_new: "Nuevo Estado"
+        back_to_root: "Volver a ag2Gest"
+        back_to_management: "Volver a Reclamaciones"
+      show:
+        title: "Estado de reclamación"
+        btn_edit: "Editar Estado"
+        btn_delete: "Borrar Estado"
+        subtable_title: "Reclamaciones del Estado"
+        return_to: "Volver a Estado de reclamación"
+      edit:
+        title: "Editar Estado de reclamación"
+        btn_show: "Ver Estado de reclamación"
+      new:
+        title: "Nuevo Estado de reclamación"
+      back_to_main_page: "Volver a Estados de reclamación"

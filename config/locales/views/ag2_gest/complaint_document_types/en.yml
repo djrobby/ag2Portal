@@ -1,0 +1,20 @@
+en:
+  ag2_gest:
+    complaint_document_types:
+      index:
+        title: "Documentation types"
+        btn_new: "New Type"
+        back_to_root: "Back to ag2Gest"
+        back_to_management: "Back to Complaints"
+      show:
+        title: "Documentation type"
+        btn_edit: "Edit Type"
+        btn_delete: "Delete Type"
+        subtable_title: "Documentation type Complaints"
+        return_to: "Back to Documentation type"
+      edit:
+        title: "Edit Documentation type"
+        btn_show: "Show Documentation type"
+      new:
+        title: "New Documentation type"
+      back_to_main_page: "Back to Documentation types"

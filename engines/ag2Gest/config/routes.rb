@@ -67,6 +67,7 @@ Ag2Gest::Engine.routes.draw do
     match "bill_management", controller: "home", action: 'bill_management'
     match "formality_management", controller: "home", action: 'formality_management'
     match "debt_claim_management", controller: "home", action: 'debt_claim_management'
+    match "complaint_management", controller: "home", action: 'complaint_management'
     #
     # Contracting request
     match 'contracting_requests/update_bank_offices_from_bank/:id', :controller => 'contracting_requests', :action => 'update_bank_offices_from_bank'
@@ -259,6 +260,10 @@ Ag2Gest::Engine.routes.draw do
     #
     resources :debt_claim_phases
     resources :debt_claim_statuses
+    #
+    resources :complaint_classes
+    resources :complaint_statuses
+    resources :complaint_document_types
 
     # Root
     root :to => 'home#index'

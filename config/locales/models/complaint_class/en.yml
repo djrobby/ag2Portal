@@ -1,0 +1,12 @@
+en:
+  activerecord:
+    models:
+      complaint_class:
+        zero:  Complaint classes
+        one:   Complaint class
+        few:   Complaint classes
+        other: Complaint classes
+        check_for_complaints: "Class cannot be destroyed while linked complaints exist."
+    attributes:
+      complaint_class:
+        name: "Description"

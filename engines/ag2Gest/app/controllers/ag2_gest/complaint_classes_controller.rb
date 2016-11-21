@@ -25,6 +25,7 @@ module Ag2Gest
     def show
       @breadcrumb = 'read'
       @complaint_class = ComplaintClass.find(params[:id])
+      @complaints = @complaint_class.complaints.by_no
 
       respond_to do |format|
         format.html # show.html.erb
@@ -55,6 +56,7 @@ module Ag2Gest
     def create
       @breadcrumb = 'create'
       @complaint_class = ComplaintClass.new(params[:complaint_class])
+      @complaint_class.created_by = current_user.id if !current_user.nil?
 
       respond_to do |format|
         if @complaint_class.save
@@ -72,6 +74,7 @@ module Ag2Gest
     def update
       @breadcrumb = 'update'
       @complaint_class = ComplaintClass.find(params[:id])
+      @complaint_class.updated_by = current_user.id if !current_user.nil?
 
       respond_to do |format|
         if @complaint_class.update_attributes(params[:complaint_class])

@@ -1,0 +1,20 @@
+es:
+  ag2_gest:
+    complaint_document_types:
+      index:
+        title: "Tipos de Documentación"
+        btn_new: "Nuevo Tipo"
+        back_to_root: "Volver a ag2Gest"
+        back_to_management: "Volver a Reclamaciones"
+      show:
+        title: "Tipo de Documentación"
+        btn_edit: "Editar Tipo"
+        btn_delete: "Borrar Tipo"
+        subtable_title: "Reclamaciones del Tipo"
+        return_to: "Volver a Tipo de Documentación"
+      edit:
+        title: "Editar Tipo de Documentación"
+        btn_show: "Ver Tipo de Documentación"
+      new:
+        title: "Nuevo Tipo de Documentación"
+      back_to_main_page: "Volver a Tipos de Documentación"

@@ -16,6 +16,7 @@ en:
         bill_management: "Billing"
         debt_claim_management: "Debt Management"
         formality_management: "Formalities"
+        complaint_management: "Complaints"
         sale_offers: "Sale Offers"
         client_payments: "Bill Collection"
         sale_offer_statuses: "Sale Offer Statuses"
@@ -24,7 +25,6 @@ en:
         centers: "Urban Centers"
         street_directories: "Street Directories"
         frauds: "Frauds"
-        complaints: "Complaints"
       tariff:
         schemes: "Schemes"
         tariffs: "Tariffs"
@@ -83,3 +83,8 @@ en:
         claims: "Debt Claims"
         phases: "DC Phases"
         statuses: "DC Statuses"
+      complaint:
+        complaints: "Complaints"
+        classes: "Complaint Classes"
+        statuses: "Complaint Statuses"
+        document_types: "Documentation Types"

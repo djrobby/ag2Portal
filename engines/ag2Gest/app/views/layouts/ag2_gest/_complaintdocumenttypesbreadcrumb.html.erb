@@ -1,6 +1,6 @@
-<% content_for :title, "aGestiona2 | ag2GestReadingIncidenceTypes" %>
+<% content_for :title, "aGestiona2 | ag2GestComplaintDocumentTypes" %>
 <% content_for :icon, "/assets/icon/TableA.png" %>
-<% content_for :alt, "ag2GestReadingIncidenceType" %>
+<% content_for :alt, "ag2GestComplaintDocumentTypes" %>
 
 <ul class="breadcrumb">
   <li>
@@ -10,19 +10,19 @@
     <a href="<%= ag2_gest.root_path %>">ag2Gest</a><span class="divider">></span>
   </li>
   <li>
-    <a href="<%= ag2_gest.reading_management_path %>"><%= t "ag2_gest.home.index.reading_management" %></a><span class="divider">></span>
+    <a href="<%= ag2_gest.complaint_management_path %>"><%= t "ag2_gest.home.index.complaint_management" %></a><span class="divider">></span>
   </li>
-  <% if @reading_incidence_types %>
+  <% if @complaint_document_types %>
   <li>
-    <%=t "ag2_gest.breadcrumb.reading_incidence_types.items" %>
+    <%=t "ag2_gest.breadcrumb.complaint_document_types.items" %>
   </li>
   <% end %>
-  <% if @reading_incidence_type %>
+  <% if @complaint_document_type %>
   <li>
-    <a href="<%= reading_incidence_types_path %>"><%=t :"ag2_gest.breadcrumb.reading_incidence_types.items" %></a><span class="divider">></span>
+    <a href="<%= complaint_document_types_path %>"><%=t :"ag2_gest.breadcrumb.complaint_document_types.items" %></a><span class="divider">></span>
   </li>
   <% if @breadcrumb == 'read' || @breadcrumb == 'update' %>
-  <%=t :"ag2_gest.breadcrumb.reading_incidence_types.item" %>
+  <%=t :"ag2_gest.breadcrumb.complaint_document_types.item" %>
   <% end %>
   <% if @breadcrumb == 'create' %>
   <li>

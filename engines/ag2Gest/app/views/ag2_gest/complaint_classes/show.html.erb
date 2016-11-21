@@ -1,5 +1,35 @@
-<p id="notice"><%= notice %></p>
+<%= render '/layouts/ag2_gest/complaintclassesbreadcrumb' %>
 
+<h3><%=t '.title' %></h3>
+<table class="table odd_even_table">
+  <tbody>
+    <tr>
+      <td>Id:</td>
+      <td><%= @complaint_class.id %></td>
+      <td><%=t 'activerecord.attributes.complaint_class.name' %>:</td>
+      <td><%= @complaint_class.name %></td>
+    </tr>
+    <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @complaint_class } %>
+    <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @complaint_class } %>
+  </tbody>
+</table>
 
-<%= link_to 'Edit', edit_complaint_class_path(@complaint_class) %> |
-<%= link_to 'Back', complaint_classes_path %>
+<%= render partial: '/layouts/crud/update_delete_new', locals:
+{ model: ComplaintClass, update_path: edit_complaint_class_path(@complaint_class), update_txt: t('.btn_edit'),
+delete_path: @complaint_class, delete_txt: t('.btn_delete'), msg: t("activerecord.models.complaint_class.one"), txt: @complaint_class.name,
+new_path: new_complaint_class_path, new_txt: t('ag2_gest.complaint_classes.index.btn_new') } %>
+
+<% if (@complaints.count > 0) %>
+<h4><%=t '.subtable_title' %></h4>
+<table class="table table-condensed table-striped">
+  <thead>
+    <%= render '/layouts/ag2_gest/complaintssheader' %>
+  </thead>
+  <tbody>
+    <%= render :partial => '/layouts/ag2_gest/complaints', :locals => { :complaints => @complaints } %>
+  </tbody>
+</table>
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @complaints } %>
+<% end %>
+
+<%= link_to t("ag2_gest.complaint_classes.back_to_main_page"), complaint_classes_path %>

@@ -1,0 +1,20 @@
+en:
+  ag2_gest:
+    complaint_statuses:
+      index:
+        title: "Complaint statuses"
+        btn_new: "New Status"
+        back_to_root: "Back to ag2Gest"
+        back_to_management: "Back to Complaints"
+      show:
+        title: "Complaint status"
+        btn_edit: "Edit Status"
+        btn_delete: "Delete Status"
+        subtable_title: "Complaint status Complaints"
+        return_to: "Back to Complaint status"
+      edit:
+        title: "Edit Complaint status"
+        btn_show: "Show Complaint status"
+      new:
+        title: "New Complaint status"
+      back_to_main_page: "Back to Complaint statuses"

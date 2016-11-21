@@ -1,5 +1,35 @@
-<p id="notice"><%= notice %></p>
+<%= render '/layouts/ag2_gest/complaintdocumenttypesbreadcrumb' %>
 
+<h3><%=t '.title' %></h3>
+<table class="table odd_even_table">
+  <tbody>
+    <tr>
+      <td>Id:</td>
+      <td><%= @complaint_document_type.id %></td>
+      <td><%=t 'activerecord.attributes.complaint_document_type.name' %>:</td>
+      <td><%= @complaint_document_type.name unless @complaint_document_type.name.blank? %></td>
+    </tr>
+    <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @complaint_document_type } %>
+    <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @complaint_document_type } %>
+  </tbody>
+</table>
 
-<%= link_to 'Edit', edit_complaint_document_type_path(@complaint_document_type) %> |
-<%= link_to 'Back', complaint_document_types_path %>
+<%= render partial: '/layouts/crud/update_delete_new', locals:
+{ model: ComplaintClass, update_path: edit_complaint_document_type_path(@complaint_document_type), update_txt: t('.btn_edit'),
+delete_path: @complaint_document_type, delete_txt: t('.btn_delete'), msg: t("activerecord.models.complaint_document.type.one"), txt: @complaint_document_type.name,
+new_path: new_complaint_document_type_path, new_txt: t('ag2_gest.complaint_document_types.index.btn_new') } %>
+
+<% if (@complaint_documents.count > 0) %>
+<h4><%=t '.subtable_title' %></h4>
+<table class="table table-condensed table-striped">
+  <thead>
+    <%= render '/layouts/ag2_gest/complaintssheader' %>
+  </thead>
+  <tbody>
+    <%= render :partial => '/layouts/ag2_gest/complaints', :locals => { :documents => @complaint_documents } %>
+  </tbody>
+</table>
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @complaint_documents } %>
+<% end %>
+
+<%= link_to t("ag2_gest.complaint_document_types.back_to_main_page"), complaint_document_types_path %>

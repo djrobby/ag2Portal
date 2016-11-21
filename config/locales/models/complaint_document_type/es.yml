@@ -1,0 +1,12 @@
+es:
+  activerecord:
+    models:
+      complaint_document_type:
+        zero:  Tipos de documento de reclamación
+        one:   Tipo de documento de reclamación
+        few:   Tipos de documento de reclamación
+        other: Tipos de documento de reclamación
+        check_for_complaint_documents: "Tipo de documento no puede ser eliminado mientras existan documentos vinculados."
+    attributes:
+      complaint_document_type:
+        name: "Descripción"

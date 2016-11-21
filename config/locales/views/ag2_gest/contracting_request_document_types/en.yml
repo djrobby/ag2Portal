@@ -1,6 +1,6 @@
 en:
   ag2_gest:
-    contracting_requests:
+    contracting_request_document_types:
       index:
         title: "Contracting Requests"
         label_others: "Others"

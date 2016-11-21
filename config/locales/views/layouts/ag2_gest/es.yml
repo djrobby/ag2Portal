@@ -148,3 +148,12 @@ es:
       debt_claim_statuses:
         items: "Estados RD"
         item: "Estado"
+      complaint_classes:
+        items: "Clases reclamación"
+        item: "Clase"
+      complaint_document_types:
+        items: "Tipos de documentación"
+        item: "Tipo"
+      complaint_statuses:
+        items: "Estados reclamación"
+        item: "Estado"

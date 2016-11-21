@@ -1,5 +1,41 @@
-<p id="notice"><%= notice %></p>
+<%= render '/layouts/ag2_gest/complaintstatusesbreadcrumb' %>
 
+<h3><%=t '.title' %></h3>
+<table class="table odd_even_table">
+  <tbody>
+    <tr>
+      <td>Id:</td>
+      <td><%= @complaint_status.id %></td>
+      <td><%=t 'activerecord.attributes.complaint_status.action' %>:</td>
+      <td><%= @complaint_status.action unless @complaint_status.action.blank? %></td>
+    </tr>
+    <tr>
+      <td><%=t 'activerecord.attributes.complaint_status.name' %>:</td>
+      <td><%= @complaint_status.name %></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @complaint_status } %>
+    <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @complaint_status } %>
+  </tbody>
+</table>
 
-<%= link_to 'Edit', edit_complaint_status_path(@complaint_status) %> |
-<%= link_to 'Back', complaint_statuses_path %>
+<%= render partial: '/layouts/crud/update_delete_new', locals:
+{ model: ComplaintStatus, update_path: edit_complaint_status_path(@complaint_status), update_txt: t('.btn_edit'),
+delete_path: @complaint_status, delete_txt: t('.btn_delete'), msg: t("activerecord.models.complaint_status.one"), txt: @complaint_status.name,
+new_path: new_complaint_status_path, new_txt: t('ag2_gest.complaint_statuses.index.btn_new') } %>
+
+<% if (@complaints.count > 0) %>
+<h4><%=t '.subtable_title' %></h4>
+<table class="table table-condensed table-striped">
+  <thead>
+    <%= render '/layouts/ag2_gest/complaintssheader' %>
+  </thead>
+  <tbody>
+    <%= render :partial => '/layouts/ag2_gest/complaints', :locals => { :complaints => @complaints } %>
+  </tbody>
+</table>
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @complaints } %>
+<% end %>
+
+<%= link_to t("ag2_gest.complaint_statuses.back_to_main_page"), complaint_statuses_path %>

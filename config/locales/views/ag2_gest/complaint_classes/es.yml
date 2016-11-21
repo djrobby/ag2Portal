@@ -1,0 +1,20 @@
+es:
+  ag2_gest:
+    complaint_classes:
+      index:
+        title: "Clases de reclamación"
+        btn_new: "Nueva Clase"
+        back_to_root: "Volver a ag2Gest"
+        back_to_management: "Volver a Reclamaciones"
+      show:
+        title: "Clase de reclamación"
+        btn_edit: "Editar Clase"
+        btn_delete: "Borrar"
+        subtable_title: "Reclamaciones de la Clase"
+        return_to: "Volver a Clase de reclamación"
+      edit:
+        title: "Editar Clase de reclamación"
+        btn_show: "Ver Clase de reclamación"
+      new:
+        title: "Nueva Clase de reclamación"
+      back_to_main_page: "Volver a Clases de reclamación"

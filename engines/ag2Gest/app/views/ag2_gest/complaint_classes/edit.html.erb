@@ -1,6 +1,8 @@
-<h1>Editing complaint_class</h1>
+<%= render '/layouts/ag2_gest/complaintclassesbreadcrumb' %>
+
+<h3><%=t '.title' %></h3>
 
 <%= render 'form' %>
 
-<%= link_to 'Show', @complaint_class %> |
-<%= link_to 'Back', complaint_classes_path %>
+<%= link_to t(".btn_show"), @complaint_class %> |
+<%= link_to t("ag2_gest.complaint_classes.back_to_main_page"), complaint_classes_path %>

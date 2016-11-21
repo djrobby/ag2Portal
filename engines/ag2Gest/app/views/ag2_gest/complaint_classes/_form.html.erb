@@ -1,17 +1,6 @@
-<%= form_for(@complaint_class) do |f| %>
-  <% if @complaint_class.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@complaint_class.errors.count, "error") %> prohibited this complaint_class from being saved:</h2>
-
-      <ul>
-      <% @complaint_class.errors.full_messages.each do |msg| %>
-        <li><%= msg %></li>
-      <% end %>
-      </ul>
-    </div>
-  <% end %>
-
-  <div class="actions">
-    <%= f.submit %>
-  </div>
+<%= simple_form_for @complaint_class, :html => {:class => 'form-vertical well' } do |f| %>
+<%= f.error_notification %>
+<%= display_base_errors resource %>
+<%= f.input :name, :autofocus => true, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %>
+<%= f.button :submit, :class => 'btn-primary' %>
 <% end %>
