@@ -726,9 +726,9 @@ module Ag2Gest
 
     def clients_dropdown
       if session[:organization] != '0'
-        Client.where(organization_id: session[:organization])
+        Client.belongs_to_organization(session[:organization].to_i)
       else
-        Client.order("created_at DESC")
+        Client.by_code
       end
     end
 
@@ -742,9 +742,9 @@ module Ag2Gest
 
     def subscribers_dropdown
       if session[:office_id] != '0'
-        Subscriber.where(office_id: session[:office_id]).order("subscriber_code")
+        Subscriber.belongs_to_office(session[:office_id].to_i)
       else
-        Subscriber.order("subscriber_code")
+        Subscriber.by_code
       end
     end
 

@@ -1,5 +1,81 @@
-<p id="notice"><%= notice %></p>
+<%= render '/layouts/ag2_purchase/invoicesbreadcrumb' %>
 
+<h3><%=t '.title' %></h3>
+<table class="table odd_even_table">
+  <tbody>
+    <tr>
+      <td>Id:</td>
+      <td id="id"><%= @invoice.id %></td>
+      <td><%=t 'activerecord.attributes.invoice.invoice_no' %>:</td>
+      <td class="highlighted bolded"><%= @invoice.invoice_no %></td>
+    </tr>
+    <tr>
+      <td><%=t 'activerecord.attributes.invoice.invoice_date' %>:</td>
+      <td><%= formatted_date(@invoice.invoice_date) unless @invoice.invoice_date.blank? %></td>
+      <td><%=t 'activerecord.attributes.invoice.receipt_note' %>:</td>
+      <td><%= @invoice.receipt_note.receipt_no unless @invoice.receipt_note.blank? %></td>
+    </tr>
+    <tr>
+      <td><%=t 'activerecord.attributes.invoice.supplier' %>:</td>
+      <td><%= @invoice.supplier.full_name %></td>
+      <td><%=t 'activerecord.attributes.invoice.payment_method' %>:</td>
+      <td> <%= @invoice.payment_method.description %> </td>
+    </tr>
+    <tr>
+      <td><%=t 'activerecord.attributes.invoice.project' %>:</td>
+      <td><%= @invoice.project.full_name unless @invoice.project.blank? %></td>
+      <td><%=t 'activerecord.attributes.invoice.work_order' %>:</td>
+      <td><%= @invoice.work_order.full_name unless @invoice.work_order.blank? %></td>
+    </tr>
+    <tr>
+      <td><%=t 'activerecord.attributes.invoice.charge_account' %>:</td>
+      <td><%= @invoice.charge_account.full_name unless @invoice.charge_account.blank? %> </td>
+      <td class="highlighted bolded"><%= t "activerecord.attributes.invoice.debt" %>:</td>
+      <td class="highlighted bolded"><%= number_with_precision(@invoice.debt, precision: 4, delimiter: I18n.locale == :es ? "." : ",") unless @invoice.debt.blank? %></td>
+    </tr>
+    <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @invoice } %>
+    <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @invoice } %>
+  </tbody>
+</table>
 
-<%= link_to 'Edit', edit_invoice_path(@invoice) %> |
-<%= link_to 'Back', invoices_path %>
+<!-- Items -->
+<table class="form-table">
+  <tbody>
+    <tr class="form-tr underlined-tr">
+      <td class="form-td-two left-winged">
+        <h4><%= t 'ag2_purchase.invoices.items_info' %></h4>
+      </td>
+      <td class="form-td-two right-winged">
+        <a href="#" id="print_report_btn" class="btn btn-warning"><i class="icon-print icon-white"></i> <%= t '.print' %></a>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<% if (@items.count > 0) %>
+<table class="table table-condensed table-striped shrinked">
+  <thead>
+    <%= render 'items_header' %>
+  </thead>
+  <tfoot>
+    <%= render partial: 'items_footer', :locals => { note: @invoice } %>
+  </tfoot>
+  <tbody>
+    <%= render partial: 'item', collection: @items %>
+  </tbody>
+</table>
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @items } %>
+<% else %>
+<%= render :partial => '/layouts/paginationunbordered', :locals => { :ivar => @items } %>
+<% end %> <!-- end @items.count > 0 -->
+
+<!-- Remarks -->
+<table class="table">
+  <tbody>
+    <tr>
+      <td style="width: 12%"><%= t :"activerecord.attributes.invoice.remarks" %>:</td>
+      <td style="width: 88%"><%= @invoice.remarks unless @invoice.remarks.blank? %></td>
+    </tr>
+  </tbody>
+</table>
+
+<%= link_to t("ag2_purchase.invoices.back_to_main_page"), invoices_path %>

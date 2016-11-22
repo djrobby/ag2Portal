@@ -42,9 +42,11 @@ module Ag2Gest
     def confirm
       # @bills = Bill.where(id: params[:bills][:ids].split("[\"")[1].split("\"]")[0].split("\", \""))
       @pre_bills = PreBill.where(pre_group_no: params[:pre_bill][:ids], bill_id: nil)
+      pre_bills_count = @pre_bills.count
       by_user = current_user.nil? ? nil : current_user.id
       payday_limit = params[:pre_bill][:payday_limit]
       invoice_date = params[:pre_bill][:invoice_date]
+      final_bills = []
       @pre_bills.each do |pre_bill|
         @bill = Bill.create!( bill_no: bill_next_no(pre_bill.project),
           project_id: pre_bill.reading.project_id,
@@ -113,8 +115,20 @@ module Ag2Gest
           end
         end
         pre_bill.update_attributes(bill_id: @bill.id,confirmation_date: params[:pre_bill][:confirmation_date])
+        final_bills << @bill
       end
-      redirect_to pre_index_bills_path,notice: "Facturas confirmadas"
+      # params for modal
+      redirect_to pre_index_bills_path( modal: "true",
+                                        pre_bill_no: params[:pre_bill][:ids],
+                                        total: final_bills.sum(&:total),
+                                        pre_bills: pre_bills_count,
+                                        count: final_bills.count,
+                                        consumptions: final_bills.map{|b| b.reading_2}.sum(&:consumption),
+                                        invoice_date: invoice_date,
+                                        payday_limit: payday_limit,
+                                        first_bill: (final_bills.first.full_no unless final_bills.blank?),
+                                        last_bill: (final_bills.last.full_no unless final_bills.blank?)
+                                      )
     end
 
     def get_subscribers
@@ -177,6 +191,10 @@ module Ag2Gest
         @pre_bills = PreBill.where(project_id: current_projects_ids).where("bill_date >= ?", from.to_date).group_by{|p| p.pre_group_no }.to_a.paginate(:page => params[:page] || 1, :per_page => 10)
       else
         @pre_bills = PreBill.where(project_id: current_projects_ids).group_by{|p| p.pre_group_no }.to_a.paginate(:page => params[:page] || 1, :per_page => 10)
+      end
+      # Resume info
+      if !params[:pre_bill_no].blank?
+        @invoices_by_biller = PreBill.where("pre_group_no = ? AND bill_id IS NOT NULL", params[:pre_bill_no]).map(&:bill).map(&:invoices).flatten.group_by(&:biller_id)
       end
 
       respond_to do |format|

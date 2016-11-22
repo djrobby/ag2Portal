@@ -7,6 +7,13 @@ class BillingPeriod < ActiveRecord::Base
 
   has_many :readings
   has_many :pre_readings
+  has_many :invoices
+
+  # Scopes
+  scope :by_period, -> { order(:period) }
+  #
+  scope :belongs_to_project, -> project { where("project_id = ?", project).by_period }
+  scope :belongs_to_projects, -> projects { where(project_id: projects).by_period }
 
   def period_to_date
     year = period.to_s[0..3].to_i
@@ -31,6 +38,7 @@ class BillingPeriod < ActiveRecord::Base
   end
 
   private
+
   def time_freq
     billing_frequency.months == 0 ? billing_frequency.days.days : billing_frequency.months.months
   end
@@ -42,5 +50,4 @@ class BillingPeriod < ActiveRecord::Base
   def date_to_period(date)
     date.strftime("%Y") + format('%02d',(((date.month - 1) / month_freq) + 1))
   end
-
 end

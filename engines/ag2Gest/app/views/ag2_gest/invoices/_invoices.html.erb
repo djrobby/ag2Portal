@@ -1,0 +1,43 @@
+<script>
+  $(document).ready(function() {
+    $("#div_table th a, #div_table #pages a").on("click", function() {
+      $.getScript(this.href);
+      return false;
+    });
+  }); 
+</script>
+
+<table class="table table-condensed table-striped shrinked">
+  <thead>
+    <tr>
+      <th>Id</th>
+      <th><%= t 'activerecord.attributes.invoice.invoice_no' %></th>
+      <th align="center"><%= t 'activerecord.attributes.invoice.invoice_date' %></th>
+      <th><%= t 'activerecord.attributes.invoice.supplier' %></th>
+      <th><%= t 'activerecord.attributes.invoice.project' %></th>
+      <th align="right"><%= t 'activerecord.attributes.invoice.total' %></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @invoices.each do |invoice| %>
+    <% if invoice.invoice_approvals.count > 0 %>
+      <tr class="approved-tr">
+    <% else %>
+      <tr>
+    <% end %>
+      <td><%= invoice.id %></td>
+      <td><%= link_to invoice.invoice_no, invoice %>
+        <% if !invoice.attachment.blank? %><i class="icon-paperclip-black" style="margin-left: 0.2em;"><% end %>
+      </td>
+      <td align="center"><%= formatted_date(invoice.invoice_date) unless invoice.invoice_date.blank? %></td>
+      <td><%= invoice.supplier.full_name[0,40] unless invoice.supplier.blank? %></td>
+      <td><%= invoice.project.full_code unless invoice.project.blank? %></td>
+      <td align="right"><%= number_with_precision(invoice.total, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless invoice.total.blank? %></td>
+      <td> <%= render :partial => '/layouts/crud/edit', :locals => { :model => Invoice, :path => edit_invoice_path(invoice) } %>
+      <%= render :partial => '/layouts/crud/delete', :locals => { :model => Invoice, :path => invoice, :msg => t("activerecord.models.invoice.one"), :txt => invoice.invoice_no } %> </td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @invoices } %>

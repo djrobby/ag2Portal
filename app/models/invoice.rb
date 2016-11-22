@@ -5,7 +5,6 @@ class Invoice < ActiveRecord::Base
   belongs_to :invoice_operation
   belongs_to :tariff_scheme
   belongs_to :biller, :class_name => 'Company'
-  belongs_to :original_invoice, :class_name => 'Invoice'
   belongs_to :billing_period
   belongs_to :charge_account
 
@@ -19,6 +18,15 @@ class Invoice < ActiveRecord::Base
 
   has_many :invoice_items, dependent: :destroy
   has_many :client_payments
+
+  # Self join
+  has_many :credits_rebills, class_name: 'Invoice', foreign_key: 'original_invoice_id'
+  belongs_to :original_invoice, :class_name => 'Invoice'
+
+  has_paper_trail
+
+  # Scopes
+  scope :by_no, -> { order(:invoice_no) }
 
   before_validation :item_repeat, :on => :create
   after_save :bill_status
@@ -126,6 +134,35 @@ class Invoice < ActiveRecord::Base
     client_payments.sum("amount")
   end
 
+
+  searchable do
+    text :invoice_no
+    string :invoice_no, :multiple => true   # Multiple search values accepted in one search (inverse_no_search)
+    integer :id
+    integer :original_invoice_id
+    integer :bill_id
+    integer :invoice_status_id
+    integer :invoice_type_id
+    integer :invoice_operation_id
+    integer :tariff_scheme_id
+    integer :biller_id
+    integer :billing_period_id
+    integer :charge_account_id
+    date :invoice_date
+    integer :client_id do
+      bill.client_id
+    end
+    integer :subscriber_id do
+      bill.subscriber_id
+    end
+    integer :project_id do
+      bill.project_id
+    end
+    string :sort_no do
+      invoice_no
+    end
+  end
+
   private
 
   def item_repeat
@@ -140,5 +177,4 @@ class Invoice < ActiveRecord::Base
   def assign_payday_limit
     self.payday_limit = self.invoice_date if self.payday_limit.nil?
   end
-
 end

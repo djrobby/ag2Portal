@@ -26,7 +26,7 @@
         <td align="right"><%=l pre_bill[1].first.bill_date %></td>
         <td align="right"><%= pre_bill[1].count %></td>
         <td align="right"><% if pre_bill[1].select{|p| !p.bill.nil?}.count != 0 %><i class="icon-thumbs-up"></i> <% else %> <i class="icon-thumbs-down"></i> <% end %> </td>
-        <td align="right"><%= pre_bill[1].sum{|b| b.total} %></td>
+        <td align="right"><%= number_with_precision(pre_bill[1].sum{|b| b.total}, precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></td>
         <td align="right"><%= link_to bills_path(:bills => pre_bill[1].first.pre_group_no), class: "btn btn-mini" do %><i class="icon-eye-open"></i><% end %></td>
       </tr>
     <% end %>

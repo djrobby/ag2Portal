@@ -63,7 +63,7 @@
         <%#= link_to "Confirmar PreFacturas", bills_path, class: "btn btn-primary" %>
         <br><br>
         <!-- Back -->
-        <%= link_to t("ag2_gest.billable_items.index.back_to_management"), ag2_gest.bill_management_path %>
+        <%= link_to t("ag2_gest.bills.index.back_to_management"), ag2_gest.bill_management_path %>
       </div>
     </div><!-- /.span3 -->
 
@@ -76,3 +76,39 @@
 
   </div><!-- /.row-fluid -->
 </div><!-- /.container-fluid -->
+
+<!-- MODAL RESMUE TOTAL -->
+<% if !params[:modal].blank? %>
+  <div class="modalTotal modal hide fade">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+      <h3><%= "Resumen Facturado" %></h3>
+    </div>
+    <div class="modal-body">
+          <h5><%= I18n.t('ag2_gest.bills.index.count') %>: <b><%= params[:count] %></b></h5>
+          <h5><%= I18n.t('ag2_gest.bills.index.pre_bills') %>: <b><%= params[:pre_bills] %></b></h5>
+          <hr>
+          <h5><%= I18n.t('ag2_gest.bills.index.consumptions') %>: <b><%= params[:consumptions] %></b></h5>
+          <h5><%= I18n.t('ag2_gest.bills.index.total') %>: <b><%= number_with_precision(params[:total], precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></b></h5>
+          <hr>
+          <h5><%= I18n.t('ag2_gest.bills.index.invoice_date') %>: <b><%= params[:invoice_date] %></b></h5>
+          <h5><%= I18n.t('ag2_gest.bills.index.payday_limit') %>: <b><%= params[:payday_limit] %></b></h5>
+          <hr>
+          <h5><%= I18n.t('ag2_gest.bills.index.first_bill') %>: <b><%= params[:first_bill] %></b></h5>
+          <h5><%= I18n.t('ag2_gest.bills.index.last_bill') %>: <b><%= params[:last_bill] %></b></h5>
+      <% @invoices_by_biller.each do |invoices| %>
+        <hr>
+        <h5><%= I18n.t('ag2_gest.bills.index.biller') %>: <%= Company.find(invoices[0]).try(:name) %></h5>
+        <h5><%= I18n.t('ag2_gest.bills.index.first_invoice') %>: <b><%= invoices[1].try(:first).try(:invoice_no) %></b></h5>
+        <h5><%= I18n.t('ag2_gest.bills.index.last_invoice') %>: <b><%= invoices[1].try(:last).try(:invoice_no) %></b></h5>
+        <h5><%= I18n.t('ag2_gest.bills.index.total') %>: <b><%= number_with_precision(invoices[1].sum(&:total), precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless invoices[1].blank? %></b></h5>
+      <% end %>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-primary" data-dismiss="modal"><%= t('activerecord.attributes.subscriber.close') %></button>
+    </div>
+  </div>
+  <script>
+    $(".modalTotal").modal('show');
+  </script>
+<% end %>
