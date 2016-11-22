@@ -83,10 +83,10 @@ project_id = @reading_report.first.project_id
 	report.page.list(:default).add_row do |row|
 		report.page.values project_c: I18n.t("activerecord.attributes.reading.project_id")+": "
 		report.page.values project: i.project.name
-		row.item(:period).value i.billing_period.period
+		row.item(:period).value i.billing_period.period unless i.billing_period.blank?
 		row.item(:date_lect).value formatted_date(i.reading_date) unless i.reading_date.blank?
-		row.item(:index).value i.reading_index
-		row.item(:incidence).value i.incidences
+		row.item(:index).value i.reading_index unless i.reading_index.blank?
+		row.item(:incidence).value i.incidences unless i.incidences.blank?
 		if !i.reading_1_id.blank?
 			period = i.reading_1.billing_period.period
 			date = formatted_date(i.reading_1.reading_date) 

@@ -65,11 +65,11 @@
   <!-- Apps 3 -->
   <li class="span4">
     <% if (session[:resolution] == "LD")%>
-    <a href="<%= sale_offers_path %>" class="thumbnail centered"><img src="/assets/icon/ag2SaleOffers.png" width="48" height="48" alt="ag2SaleOffers" /><h5 class="h5-narrow"><%=t ".sale_offers" %></h5></a>
+    <a data-toggle="modal" href="#notfound" class="thumbnail centered"><img src="/assets/icon/ag2SaleOffers.png" width="48" height="48" alt="ag2SaleOffers" /><h5 class="h5-narrow"><%=t ".sale_offers" %></h5></a>
     <% elsif session[:resolution] == "SD" %>
-    <a href="<%= sale_offers_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/ag2SaleOffers.png" width="96" height="96" alt="ag2SaleOffers" /><h5 class="h5-narrow"><%=t ".sale_offers" %></h5></a>
+    <a data-toggle="modal" href="#notfound" class="thumbnail centered"><img src="/assets/pict/ag2/ag2SaleOffers.png" width="96" height="96" alt="ag2SaleOffers" /><h5 class="h5-narrow"><%=t ".sale_offers" %></h5></a>
     <% else %>
-    <a href="<%= sale_offers_path %>" class="thumbnail centered"><img src="/assets/pict/ag2SaleOffers.png" width="128" height="128" alt="ag2SaleOffers" /><h5 class="h5-narrow"><%=t ".sale_offers" %></h5></a>
+    <a data-toggle="modal" href="#notfound" class="thumbnail centered"><img src="/assets/pict/ag2SaleOffers.png" width="128" height="128" alt="ag2SaleOffers" /><h5 class="h5-narrow"><%=t ".sale_offers" %></h5></a>
     <% end %>
   </li>
   <li class="span4">

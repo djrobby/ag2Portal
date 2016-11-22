@@ -36,7 +36,7 @@ report.layout.config.list(:default) do |c|
 		e.section.item(:sum_rows_title).value(I18n.t("ag2_gest.ag2_gest_track.subscriber_report.sum_rows_title"))
 		e.section.item(:sum_rows_debt).value(I18n.t("ag2_gest.ag2_gest_track.subscriber_report.sum_rows_debt"))
 		e.section.item(:sum_rows).value(e.store.page_rows)
-		e.section.item(:full_debt).value(e.store.page_debt)
+		e.section.item(:full_debt).value number_with_precision((e.store.page_debt), precision: 4, delimiter: I18n.locale == :es ? "." : ",")
 		# Initialize subtotals to 0
 		#e.store.page_rows = 0
 	end
@@ -95,7 +95,7 @@ office_id = @subscriber_eco_report.first.office_id
 		row.item(:end_at).value formatted_date(i.ending_at) unless i.ending_at.blank?
 		row.item(:contract).value i.water_supply_contract.contracting_request.full_no
 		row.item(:tariff_scheme).value i.tariff_scheme.name
-		row.item(:debt).value i.total_debt_unpaid
+		row.item(:debt).value number_with_precision(i.total_debt_unpaid, precision: 4, delimiter: I18n.locale == :es ? "." : ",") unless i.total_debt_unpaid.blank?
 	end
 
 	# Store page subtotals

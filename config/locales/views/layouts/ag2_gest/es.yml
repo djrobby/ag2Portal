@@ -118,6 +118,9 @@ es:
       bills:
         items: "Facturas"
         item: "Factura"
+      invoices:
+        items: "Facturas"
+        item: "Factura"
       invoice_types:
         items: "Tipos de factura"
         item: "Tipo"

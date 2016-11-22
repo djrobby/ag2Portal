@@ -18,6 +18,9 @@ class ClientPayment < ActiveRecord::Base
                   :bill_id, :invoice_id, :client_id, :client_bank_account_id, :subscriber_id,
                   :instalment_id, :charge_account_id, :payment_method_id
 
+  after_save :reindex_instalment
+  after_destroy :reindex_instalment
+
   searchable do
     integer :payment_type
     text :bill_no do
@@ -50,6 +53,12 @@ class ClientPayment < ActiveRecord::Base
     string :sort_no do
       bill.bill_no
     end
+  end
+
+  private
+
+  def reindex_instalment
+    Sunspot.index(instalment) if instalment
   end
 
 end

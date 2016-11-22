@@ -28,7 +28,7 @@ module Ag2Gest
       @routes = routes_dropdown if @routes.nil?
 
       @search = Reading.search do
-        with :project_id, current_projects_ids
+        with :project_id, current_projects_ids unless current_projects_ids.blank?
         if !subscriber.blank?
           with :subscriber_id, subscriber
         end

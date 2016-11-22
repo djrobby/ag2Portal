@@ -299,9 +299,9 @@ $(document).ready(function () {
         <div class="span6 text-center"><h4>Facturas</h4></div>
         <div class="span6 text-center"><h4>Cobros</h4></div>
         <ul class="nav nav-tabs" id="payments-tabs">
-          <li class="active" style="width:16%"><a href="#pendings">Pendientes</a></li>
-          <li style="width:16%"><a href="#unpaid">Impagadas</a></li>
-          <li style="width:16%"><a href="#charged">Cobradas</a></li>
+          <li class="active" style="width:25%"><a href="#pendings">Pendientes</a></li>
+          <!-- <li style="width:16%"><a href="#unpaid">Impagadas</a></li> -->
+          <li style="width:25%"><a href="#charged">Cobradas</a></li>
           <li class="pull-right"><a href="#fractionated">Aplazamientos</a></li>
           <li class="pull-right"><a href="#others">Otros</a></li>
           <li class="pull-right"><a href="#banks">Bancos</a></li>
@@ -316,9 +316,9 @@ $(document).ready(function () {
           </div>
 
           <!-- IMPAID TAB -->
-          <div class="tab-pane" id="unpaid">
-            <%= render 'bills_unpaid' %>
-          </div>
+          <!-- <div class="tab-pane" id="unpaid">
+            <%#= render 'bills_unpaid' %>
+          </div> -->
 
           <!-- CHARGED TAB -->
           <div class="tab-pane" id="charged">
@@ -362,7 +362,7 @@ $(document).ready(function () {
           <div class="control-group string required meter_manufacturing_date">
             <label class="string control-label">Total</label>
             <div class="controls">
-              <span class="debt-total">0</span> 
+              <span class="debt-total">0</span>
             </div>
           </div>
           <%= f.input :amount, label: I18n.t("ag2_gest.client_payments.index.amount"), as: "decimal", inline_label: "Yes" %>
@@ -370,7 +370,7 @@ $(document).ready(function () {
           <div class="control-group string required meter_manufacturing_date">
             <label class="string control-label">Vuelta</label>
             <div class="controls">
-              <span class="cash-return">0</span> 
+              <span class="cash-return">0</span>
             </div>
           </div>
         </div>
@@ -392,7 +392,7 @@ $(document).ready(function () {
           <div class="control-group string required meter_manufacturing_date">
             <label class="string control-label">Total</label>
             <div class="controls">
-              <span class="debt-total">0</span> 
+              <span class="debt-total">0</span>
             </div>
           </div>
           <%= f.input :receipt_no, label: I18n.t("ag2_gest.client_payments.index.receipt_no"), as: "string", inline_label: "Yes" %>
@@ -415,7 +415,7 @@ $(document).ready(function () {
           <div class="control-group string required meter_manufacturing_date">
             <label class="string control-label">Total</label>
             <div class="controls">
-              <span class="debt-total">0</span> 
+              <span class="debt-total">0</span>
             </div>
           </div>
           <%= f.input :number_inst, label: "Plazos", as: "string", inline_label: "Yes" %>
@@ -446,14 +446,14 @@ $(document).ready(function () {
           <div class="control-group string required meter_manufacturing_date">
             <label class="string control-label">Total cobrado</label>
             <div class="controls">
-              <span id="total-cash"><%= @client_payments_cash.sum{|c| c.amount} %></span> 
+              <span id="total-cash"><%= @client_payments_cash.sum{|c| c.amount} %></span>
             </div>
           </div>
 
           <div class="control-group string required meter_manufacturing_date">
             <label class="string control-label">Saldo de cierre</label>
             <div class="controls">
-              <span id="ending-cash" size="50" type="number" step="0.01"><%= @client_payments_cash.sum{|c| c.amount} %></span> 
+              <span id="ending-cash" size="50" type="number" step="0.01"><%= @client_payments_cash.sum{|c| c.amount} %></span>
             </div>
           </div>
 

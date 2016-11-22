@@ -38,6 +38,11 @@
     $("#Project").select2("val", "<%= params[:Project] %>");
     $("#Client").select2("val", "<%= params[:Client] %>");
     $("#Subscriber").select2("val", "<%= params[:Subscriber] %>");
+    $("#Status").select2("val", "<%= params[:Status] %>");
+    $("#Type").select2("val", "<%= params[:Type] %>");
+    $("#Operation").select2("val", "<%= params[:Operation] %>");
+    $("#Biller").select2("val", "<%= params[:Biller] %>");
+    $("#Period").select2("val", "<%= params[:Period] %>");
   });
 
   jQuery(function($) {
@@ -47,6 +52,11 @@
       $("#Project").select2("val", "");
       $("#Client").select2("val", "");
       $("#Subscriber").select2("val", "");
+      $("#Status").select2("val", "");
+      $("#Type").select2("val", "");
+      $("#Operation").select2("val", "");
+      $("#Biller").select2("val", "");
+      $("#Period").select2("val", "");
       $("#search").val("");
       // no AJAX
       //_thisForm.submit();
@@ -75,26 +85,26 @@
         <%= label_tag I18n.t("ag2_gest.invoices.index.label_project"), nil, :class => 'form-label-under-sel2' %>
         <%= select_tag "Project", options_from_collection_for_select(@projects, "id", "full_name"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
         <!-- Client -->
-        <%= label_tag I18n.t("ag2_gest.invoices.index.label_supplier"), nil, :class => 'form-label' %>
-        <%= select_tag "Client", options_from_collection_for_select(@suppliers, "id", "full_name"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
+        <%= label_tag I18n.t("ag2_gest.invoices.index.label_client"), nil, :class => 'form-label' %>
+        <%= select_tag "Client", options_from_collection_for_select(@clients, "id", "to_label"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
         <!-- Subscriber -->
-        <%= label_tag I18n.t("ag2_gest.invoices.index.label_supplier"), nil, :class => 'form-label' %>
-        <%= select_tag "Subscriber", options_from_collection_for_select(@suppliers, "id", "full_name"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
+        <%= label_tag I18n.t("ag2_gest.invoices.index.label_subscriber"), nil, :class => 'form-label' %>
+        <%= select_tag "Subscriber", options_from_collection_for_select(@clients, "id", "full_name"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
         <!-- Status -->
-        <%= label_tag I18n.t("ag2_gest.invoices.index.label_project"), nil, :class => 'form-label-under-sel2' %>
+        <%= label_tag I18n.t("ag2_gest.invoices.index.label_status"), nil, :class => 'form-label-under-sel2' %>
         <%= select_tag "Status", options_from_collection_for_select(@projects, "id", "full_name"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
         <!-- Type -->
-        <%= label_tag I18n.t("ag2_gest.invoices.index.label_supplier"), nil, :class => 'form-label' %>
-        <%= select_tag "TaxType", options_from_collection_for_select(@suppliers, "id", "full_name"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
+        <%= label_tag I18n.t("ag2_gest.invoices.index.label_type"), nil, :class => 'form-label' %>
+        <%= select_tag "Type", options_from_collection_for_select(@clients, "id", "full_name"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
         <!-- Operation -->
-        <%= label_tag I18n.t("ag2_gest.invoices.index.label_supplier"), nil, :class => 'form-label' %>
-        <%= select_tag "Operation", options_from_collection_for_select(@suppliers, "id", "full_name"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
+        <%= label_tag I18n.t("ag2_gest.invoices.index.label_operation"), nil, :class => 'form-label' %>
+        <%= select_tag "Operation", options_from_collection_for_select(@clients, "id", "full_name"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
         <!-- Biller -->
-        <%= label_tag I18n.t("ag2_gest.invoices.index.label_supplier"), nil, :class => 'form-label' %>
-        <%= select_tag "Biller", options_from_collection_for_select(@suppliers, "id", "full_name"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
+        <%= label_tag I18n.t("ag2_gest.invoices.index.label_biller"), nil, :class => 'form-label' %>
+        <%= select_tag "Biller", options_from_collection_for_select(@clients, "id", "full_name"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
         <!-- Period -->
-        <%= label_tag I18n.t("ag2_gest.invoices.index.label_supplier"), nil, :class => 'form-label' %>
-        <%= select_tag "Period", options_from_collection_for_select(@suppliers, "id", "full_name"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
+        <%= label_tag I18n.t("ag2_gest.invoices.index.label_period"), nil, :class => 'form-label' %>
+        <%= select_tag "Period", options_from_collection_for_select(@clients, "id", "full_name"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
         <!-- Others -->
         <%= label_tag I18n.t("ag2_gest.invoices.index.label_others"), nil, :class => 'form-label-under-sel2' %>
         <%= text_field_tag :search, params[:search], :class => 'x-large-text-field shrinked' %>
@@ -103,7 +113,7 @@
         <!-- Remove filter -->
         <button id="removeFilter" type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><%= t :clear_filter_button %></button>
         <% end %>
-        <%= link_to t(".back_to_root"), ag2_gest.root_path %>
+        <%= link_to t(".back_to_management"), ag2_gest.bill_management_path %>
       </div><!-- /.sidebar-nav -->
     </div><!-- /.span3 -->
 
@@ -115,26 +125,3 @@
     </div><!-- /.span9 -->
   </div><!-- /.row-fluid -->
 </div><!-- /.container-fluid -->
-
-
-<h1>Listing invoices</h1>
-
-<table>
-  <tr>
-    <th></th>
-    <th></th>
-    <th></th>
-  </tr>
-
-<% @invoices.each do |invoice| %>
-  <tr>
-    <td><%= link_to 'Show', invoice %></td>
-    <td><%= link_to 'Edit', edit_invoice_path(invoice) %></td>
-    <td><%= link_to 'Destroy', invoice, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-  </tr>
-<% end %>
-</table>
-
-<br />
-
-<%= link_to 'New Invoice', new_invoice_path %>

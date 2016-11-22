@@ -1,22 +1,34 @@
 en:
   ag2_gest:
-    payment_methods:
+    client_payments:
       index:
-        title: "Payment methods"
-        btn_new: "New Payment method"
+        title: "Bill Collections"
+        btn_new: "New Bill Collection"
         back_to_root: "Back to ag2Gest"
-        collection_only: "For collections"
-        payment_only: "For payments"
-        all: "All"
+        amount: "Amount"
+        receipt_no: "Lot#"
+        all: "Todos"
+        total: "Invoices"
+        total_consumptions: "Total consumos"
+        total_bills: "Total Amount"
+        count_payments: "Collections Qty"
+        total_payments: "Amount total"
+        count_instalments: "Instalments Qty"
       show:
-        title: "Payment method"
-        btn_edit: "Edit Payment method"
-        btn_delete: "Delete Payment method"
-        subtable_title: "Payment method Suppliers"
-        return_to: "Back to Payment method"
+        title: "Bill Collection"
+        btn_edit: "Edit Bill Collection"
+        btn_delete: "Delete Bill Collection"
+        return_to: "Back to Bill Collection"
       edit:
-        title: "Edit Payment method"
-        btn_show: "Show Payment method"
+        title: "Edit Bill Collection"
+        btn_show: "Show Bill Collection"
       new:
-        title: "New Payment method"
-      back_to_main_page: "Back to Payment methods"
+        title: "New Bill Collection"
+      report:
+        report: "Choose Report:"
+        bill_report: "Invoices"
+        bill_pending_report: "Pending Invoices"
+        bill_unpaid_report: "Unpaid Invoices"
+        bill_charged_report: "Collected Invoices"
+        client_payment_report: "Bill Collections"
+      back_to_main_page: "Back to Bill Collections"

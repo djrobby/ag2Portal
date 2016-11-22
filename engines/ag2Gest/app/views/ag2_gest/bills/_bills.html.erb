@@ -135,7 +135,9 @@
 <%= render :partial => '/layouts/pagination', :locals => { :ivar => @bills } %>
 
 <br/>
-<a href="#confirm-bills" role="button" class="btn btn-primary" data-toggle="modal">Confirmar facturas</a>
+<% if @bills and @bills.first.bill_id.nil? %>
+  <a href="#confirm-bills" role="button" class="btn btn-primary" data-toggle="modal">Confirmar facturas</a>
+<% end %>
 <br/>
 <br/>
 <%= link_to t("ag2_gest.bills.index.back_to_pre_index"), ag2_gest.pre_index_bills_path %>

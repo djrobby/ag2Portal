@@ -33,7 +33,7 @@
   <div class="span12">
     <%= link_to t('ag2_gest.subscribers.show.all'), controller: "subscribers", action: "show", ifilter: "all", :remote => true %> |
     <%= link_to t('ag2_gest.subscribers.show.pendig_only'), controller: "subscribers", action: "show", ifilter: "pending", :remote => true %> |
-    <%= link_to t('ag2_gest.subscribers.show.unpaid_only'), controller: "subscribers", action: "show", ifilter: "unpaid", :remote => true %> |
+    <!-- <%#= link_to t('ag2_gest.subscribers.show.unpaid_only'), controller: "subscribers", action: "show", ifilter: "unpaid", :remote => true %> | -->
     <%= link_to t('ag2_gest.subscribers.show.charged_only'), controller: "subscribers", action: "show", ifilter: "charged", :remote => true %>
     <button id="collapse-init" class="btn btn-mini btn-primary pull-right" style="margin-left:5px;"><%= "Ver todos" %></button>
     <a href="#new-bill" role="button" class="btn btn-mini btn-primary pull-right" style="margin-left:5px;" data-toggle="modal">Nueva factura</a>
@@ -60,7 +60,7 @@
   </div>
 </div>
 <% @subscriber_bills.each do |bill| %>
-  <% unless (session[:ifilter] == "pending" and bill.unpaid?) or (session[:ifilter] == "unpaid" and bill.payable?) %>
+  <%# unless (session[:ifilter] == "pending" and bill.unpaid?) or (session[:ifilter] == "unpaid" and bill.payable?) %>
     <!-- Make two Render (Example Controller) -->
     <% if !bill.water_supply_contract.nil? %>
       <!-- RENDER1 RECIBO DE CONTRATACIÓN-->
@@ -70,7 +70,7 @@
       <!-- RENDER2 FACTURA DE SUMINISTRO-->
       <%= render 'bill_reading', :bill => bill %>
     <% end %>
-  <% end %>
+  <%# end %>
 
 <% end %>
 <%= render :partial => '/layouts/pagination', :locals => { :ivar => @subscriber_bills } %>

@@ -118,6 +118,9 @@ en:
       bills:
         items: "Bills"
         item: "Bill"
+      invoices:
+        items: "Invoices"
+        item: "Invoice"
       invoice_types:
         items: "Invoice types"
         item: "Type"
