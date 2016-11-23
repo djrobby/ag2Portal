@@ -1,4 +1,22 @@
-<%= render '/layouts/ag2_purchase/invoicesbreadcrumb' %>
+<script>
+  $(document).ready(function() {
+  });
+
+  jQuery(function($) {
+    // when #print_report_btn is clicked
+    $("#print_report_btn").click(function() {
+      // make a POST call and get report
+      var id = $('#id').html();
+      if (id == "")
+        return;
+      //window.open("invoice_form.pdf?id=" + id, "_blank");
+      $("#notfound").modal('show');
+      return false;
+    });
+  });
+</script>
+
+<%= render '/layouts/ag2_gest/invoicesbreadcrumb' %>
 
 <h3><%=t '.title' %></h3>
 <table class="table odd_even_table">

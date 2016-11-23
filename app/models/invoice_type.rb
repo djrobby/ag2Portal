@@ -6,9 +6,13 @@ class InvoiceType < ActiveRecord::Base
   COMMERCIAL = 4
   OTHER = 5
 
-	has_many :invoices
-
   attr_accessible :name
+
+  has_many :invoices
+
+  has_paper_trail
+
+  validates :name,  :presence => true
 
   def code
     case self.id

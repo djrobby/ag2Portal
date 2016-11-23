@@ -80,7 +80,7 @@ module Ag2Gest
 
       respond_to do |format|
         if @invoice_type.update_attributes(params[:invoice_type])
-          format.html { redirect_to @invoice_type, notice: t('activerecord.attributes.invoice_type.successfully') }
+          format.html { redirect_to @invoice_type, notice: crud_notice('created', @invoice_type) }
           format.json { head :no_content }
         else
           format.html { render action: "edit" }
@@ -93,11 +93,16 @@ module Ag2Gest
     # DELETE /invoice_types/1.json
     def destroy
       @invoice_type = InvoiceType.find(params[:id])
-      @invoice_type.destroy
 
       respond_to do |format|
-        format.html { redirect_to invoice_types_url }
-        format.json { head :no_content }
+        if @invoice_type.destroy
+          format.html { redirect_to @invoice_type,
+                        notice: (crud_notice('updated', @invoice_type) + "#{undo_link(@invoice_type)}").html_safe }
+          format.json { head :no_content }
+        else
+          format.html { redirect_to invoice_types_url, alert: "#{@invoice_type.errors[:base].to_s}".gsub('["', '').gsub('"]', '') }
+          format.json { render json: @invoice_type.errors, status: :unprocessable_entity }
+        end
       end
     end
 

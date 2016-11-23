@@ -63,7 +63,7 @@ module Ag2Gest
 
           respond_to do |format|
             if @invoice_operation.save
-              format.html { redirect_to @invoice_operation, notice: t('activerecord.attributes.invoice_operation.create') }
+              format.html { redirect_to @invoice_operation, notice: crud_notice('created', @invoice_operation) }
               format.json { render json: @invoice_operation, operation: :created, location: @invoice_operation }
             else
               format.html { render action: "new" }
@@ -81,7 +81,8 @@ module Ag2Gest
 
           respond_to do |format|
             if @invoice_operation.update_attributes(params[:invoice_operation])
-              format.html { redirect_to @invoice_operation, notice: t('activerecord.attributes.invoice_operation.successfully') }
+              format.html { redirect_to @invoice_operation,
+                            notice: (crud_notice('updated', @invoice_operation) + "#{undo_link(@invoice_operation)}").html_safe }
               format.json { head :no_content }
             else
               format.html { render action: "edit" }
@@ -94,11 +95,16 @@ module Ag2Gest
         # DELETE /invoice_operations/1.json
         def destroy
           @invoice_operation = InvoiceOperation.find(params[:id])
-          @invoice_operation.destroy
 
           respond_to do |format|
-            format.html { redirect_to invoice_operations_url }
-            format.json { head :no_content }
+            if @invoice_operation.destroy
+              format.html { redirect_to invoice_operations_url,
+                          notice: (crud_notice('destroyed', @invoice_operation) + "#{undo_link(@invoice_operation)}").html_safe }
+              format.json { head :no_content }
+            else
+              format.html { redirect_to invoice_operations_url, alert: "#{@invoice_operation.errors[:base].to_s}".gsub('["', '').gsub('"]', '') }
+              format.json { render json: @invoice_operation.errors, status: :unprocessable_entity }
+            end
           end
         end
 

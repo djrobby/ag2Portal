@@ -53,6 +53,17 @@ class Invoice < ActiveRecord::Base
   #
   # Calculated fields
   #
+  def item_discount_present?
+    present = false
+    invoice_items.each do |i|
+      if i.discount_present?
+        present = true
+        break
+      end
+    end
+    present
+  end
+
   def unpaid?
     if payday_limit.nil?
       false

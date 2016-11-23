@@ -12,7 +12,7 @@ es:
         create: "Tipo de factura se ha creado correctamente."
         id: "Id"
         name: "Descripción"
-        code_1: "A"
+        code_1: "S"
         code_2: "T"
         code_3: "C"
         code_4: "L"

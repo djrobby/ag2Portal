@@ -1,13 +1,13 @@
 en:
   activerecord:
     models:
-      invoice_operations:
+      invoice_operation:
         zero:  Invoice operations
         one:   Invoice operation
         few:   Invoice operations
         other: Invoice operations
     attributes:
-      invoice_operations:
+      invoice_operation:
         successfully: "Invoice operation se ha actualizado correctamente."
         create: "Invoice operation se ha creado correctamente."
         id: "Id"

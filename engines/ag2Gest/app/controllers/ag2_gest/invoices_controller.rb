@@ -286,6 +286,36 @@ module Ag2Gest
       elsif session[:Subscriber]
         params[:Subscriber] = session[:Subscriber]
       end
+      # status
+      if params[:Status]
+        session[:Status] = params[:Status]
+      elsif session[:Status]
+        params[:Status] = session[:Status]
+      end
+      # type
+      if params[:Type]
+        session[:Type] = params[:Type]
+      elsif session[:Type]
+        params[:Type] = session[:Type]
+      end
+      # operation
+      if params[:Operation]
+        session[:Operation] = params[:Operation]
+      elsif session[:Operation]
+        params[:Operation] = session[:Operation]
+      end
+      # biller
+      if params[:Biller]
+        session[:Biller] = params[:Biller]
+      elsif session[:Biller]
+        params[:Biller] = session[:Biller]
+      end
+      # period
+      if params[:Period]
+        session[:Period] = params[:Period]
+      elsif session[:Period]
+        params[:Period] = session[:Period]
+      end
     end
   end
 end

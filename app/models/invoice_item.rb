@@ -13,6 +13,9 @@ class InvoiceItem < ActiveRecord::Base
   #
   # Calculated fields
   #
+  def discount_present?
+    !discount.blank? && discount != 0
+  end
 
   def net_price
     price - discount

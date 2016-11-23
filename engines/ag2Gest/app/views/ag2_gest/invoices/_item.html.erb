@@ -5,7 +5,7 @@
   <td><%= item.try(:measure).try(:description) %></td>
   <td align="right"><%= number_with_precision(item.quantity, precision: 4) %></td>
   <td align="right"><%= number_with_precision(item.price, precision: 4) %></td>
-  <% if !item.discount.blank? %>
+  <% if item.discount_present? %>
   <td align="right"><%= number_with_precision(item.discount_pct, precision: 2) %></td>
   <td align="right"><%= number_with_precision(item.discount, precision: 4) %></td>
   <% else %>

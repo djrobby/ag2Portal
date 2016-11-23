@@ -26,6 +26,6 @@ es:
         btn_show: "Ver Factura"
       new:
         title: "Nueva Factura"
-      back_to_main_page: "Volver facturas"
+      back_to_main_page: "Volver a Facturas"
       items_info: "Items de la Factura"
       

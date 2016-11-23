@@ -62,7 +62,7 @@ module Ag2Gest
 
       respond_to do |format|
         if @invoice_status.save
-          format.html { redirect_to @invoice_status, notice: t('activerecord.attributes.invoice_status.create') }
+          format.html { redirect_to @invoice_status, notice: crud_notice('created', @invoice_status) }
           format.json { render json: @invoice_status, status: :created, location: @invoice_status }
         else
           format.html { render action: "new" }
@@ -80,7 +80,8 @@ module Ag2Gest
 
       respond_to do |format|
         if @invoice_status.update_attributes(params[:invoice_status])
-          format.html { redirect_to @invoice_status, notice: t('activerecord.attributes.invoice_status.successfully') }
+          format.html { redirect_to @invoice_status,
+                        notice: (crud_notice('updated', @invoice_status) + "#{undo_link(@invoice_status)}").html_safe }
           format.json { head :no_content }
         else
           format.html { render action: "edit" }
@@ -93,11 +94,16 @@ module Ag2Gest
     # DELETE /invoice_statuses/1.json
     def destroy
       @invoice_status = InvoiceStatus.find(params[:id])
-      @invoice_status.destroy
 
       respond_to do |format|
-        format.html { redirect_to invoice_statuses_url }
-        format.json { head :no_content }
+        if @invoice_status.destroy
+          format.html { redirect_to invoice_statuses_url,
+                      notice: (crud_notice('destroyed', @invoice_status) + "#{undo_link(@invoice_status)}").html_safe }
+          format.json { head :no_content }
+        else
+          format.html { redirect_to invoice_statuses_url, alert: "#{@invoice_status.errors[:base].to_s}".gsub('["', '').gsub('"]', '') }
+          format.json { render json: @invoice_status.errors, status: :unprocessable_entity }
+        end
       end
     end
 
