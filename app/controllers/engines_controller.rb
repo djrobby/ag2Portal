@@ -28,12 +28,16 @@ class EnginesController < ApplicationController
     # Ag2Finance
     # ...
     # Ag2Gest
-    session[:ReadingRoute]
-    session[:Meter]
-    session[:Caliber]
-    session[:RequestType]
-    session[:RequestStatus]
-    session[:ClientInfo]
+    session[:ReadingRoute] = nil
+    session[:Meter] = nil
+    session[:Caliber] = nil
+    session[:RequestType] = nil
+    session[:RequestStatus] = nil
+    session[:ClientInfo] = nil
+    session[:Client] = nil
+    session[:Subscriber] = nil
+    session[:Operation] = nil
+    session[:Biller] = nil
     # Ag2HelpDesk
     session[:Id] = nil
     session[:User] = nil

@@ -8,34 +8,45 @@
 </script>
 
 <table class="table table-condensed table-striped shrinked">
+  <!-- no -->
+  <col width="15%" />
+  <!-- codes -->
+  <col width="5%" />
+  <!-- date -->
+  <col width="9%" />
+  <!-- bill -->
+  <col width="21%" />
+  <!-- biller -->
+  <col width="20%" />
+  <!-- client -->
+  <col width="20%" />
+  <!-- total -->
+  <col width="10%" />
   <thead>
     <tr>
-      <th>Id</th>
       <th><%= t 'activerecord.attributes.invoice.invoice_no' %></th>
+      <th><%= t 'activerecord.attributes.invoice.codes' %></th>
       <th align="center"><%= t 'activerecord.attributes.invoice.invoice_date' %></th>
-      <th><%= t 'activerecord.attributes.invoice.supplier' %></th>
-      <th><%= t 'activerecord.attributes.invoice.project' %></th>
+      <th><%= t 'activerecord.attributes.invoice.bill' %></th>
+      <th><%= t 'activerecord.attributes.invoice.biller' %></th>
+      <th><%= t 'activerecord.attributes.bill.client' %></th>
       <th align="right"><%= t 'activerecord.attributes.invoice.total' %></th>
       <th></th>
     </tr>
   </thead>
   <tbody>
     <% @invoices.each do |invoice| %>
-    <% if invoice.invoice_approvals.count > 0 %>
-      <tr class="approved-tr">
-    <% else %>
-      <tr>
-    <% end %>
-      <td><%= invoice.id %></td>
-      <td><%= link_to invoice.invoice_no, invoice %>
-        <% if !invoice.attachment.blank? %><i class="icon-paperclip-black" style="margin-left: 0.2em;"><% end %>
+      <td><%= link_to invoice.full_no, invoice %></td>
+      <td>
+        <span class="blue"><%= invoice.invoice_type.code unless invoice.invoice_type.blank? %></span>
+        <span class="yellow"><%= invoice.invoice_status.code unless invoice.invoice_status.blank? %></span>
+        <span class="brown"><%= invoice.invoice_operation.code unless invoice.invoice_operation.blank? %></span>
       </td>
       <td align="center"><%= formatted_date(invoice.invoice_date) unless invoice.invoice_date.blank? %></td>
-      <td><%= invoice.supplier.full_name[0,40] unless invoice.supplier.blank? %></td>
-      <td><%= invoice.project.full_code unless invoice.project.blank? %></td>
+      <td><%= invoice.bill.to_label unless invoice.bill.blank? %></td>
+      <td><%= invoice.biller.name[0,40] unless invoice.biller.blank? %></td>
+      <td><%= invoice.try(:bill).try(:client).try(:full_name_or_company_and_code) %></td>
       <td align="right"><%= number_with_precision(invoice.total, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless invoice.total.blank? %></td>
-      <td> <%= render :partial => '/layouts/crud/edit', :locals => { :model => Invoice, :path => edit_invoice_path(invoice) } %>
-      <%= render :partial => '/layouts/crud/delete', :locals => { :model => Invoice, :path => invoice, :msg => t("activerecord.models.invoice.one"), :txt => invoice.invoice_no } %> </td>
     </tr>
     <% end %>
   </tbody>

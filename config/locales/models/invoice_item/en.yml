@@ -2,13 +2,37 @@ en:
   activerecord:
     models:
       invoice_item:
-        zero:  Ítems de factura
-        one:   Ítem de factura
-        few:   Ítems de factura
-        other: Ítems de factura
+        zero:  Invoice items
+        one:   Invoice item
+        few:   Invoice items
+        other: Invoice items
     attributes:
       invoice_item:
+        successfully: "Invoice item updated correctly."
+        create: "Invoice item created correctly."
         id: "Id"
-        invoice_id: "Factura"
-        successfully: "Ítem de factura se ha actualizado correctamente."
-        create: "Ítem de factura se ha creado correctamente."
+        invoice: "Invoice"
+        invoice_id: "Invoice"
+        tariff: "Tariff"
+        tariff_id: "Tariff"
+        product: "Product"
+        product_id: "Product"
+        code: "Code"
+        subcode: "Subcode"
+        description: "Concept"
+        measure: "Measure"
+        measure_id: "Measure"
+        quantity: "Quantity"
+        quantity_c: "Qty."
+        price_c: "Price"
+        price: "Price €"
+        discount_pct: "Disc.%"
+        discount_pct_c: "D%"
+        discount_c: "Disc."
+        discount: "Disc.€"
+        tax_type: "Tax T."
+        tax_type_id: "Tax T."
+        amount_c: "Amount"
+        amount: "Amount €"
+        tax_c: "Tax"
+        tax: "Tax €"

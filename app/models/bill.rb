@@ -41,11 +41,11 @@ class Bill < ActiveRecord::Base
   end
 
   def full_no
-    # Order no (Project code & year & sequential number) => PPPPPPPPPPPP-YYYY-NNNNNN
+    # Order no (Project code & year & sequential number) => PPPPPPPPPPPP-YYYY-NNNNNNN
     if bill_no == "$err"
-      "000000000000-000-00000"
+      "000000000000-0000-0000000"
     else
-      bill_no.blank? ? "" : bill_no[0..11] + '-' + bill_no[12..15] + '-' + bill_no[16..21]
+      bill_no.blank? ? "" : bill_no[0..11] + '-' + bill_no[12..15] + '-' + bill_no[16..22]
     end
   end
 
@@ -87,6 +87,16 @@ class Bill < ActiveRecord::Base
       end
     end
     taxes
+  end
+
+  def taxable
+    taxable = 0
+    invoices.each do |i|
+      if !i.taxable.blank?
+        taxable += i.taxable
+      end
+    end
+    taxable
   end
 
   def unpaid?

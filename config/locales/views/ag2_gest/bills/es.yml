@@ -33,6 +33,7 @@ es:
         title: "Recibo"
         btn_edit: "Editar Recibo"
         btn_delete: "Borrar Recibo"
+        subtable_title: "Facturas del Recibo"
         return_to: "Volver a Recibo"
       edit:
         title: "Editar Recibo"

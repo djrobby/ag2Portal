@@ -19,7 +19,7 @@
       $('.ndate_picker').datepicker('hide');
     });
     // Initialized form variable
-    _thisForm = $("#Supplier").closest('form')[0];
+    _thisForm = $("#Client").closest('form')[0];
   }); 
 
   $(document).ajaxStart(function() {
@@ -82,29 +82,29 @@
         <%= label_tag I18n.t("activerecord.attributes.invoice.invoice_no"), nil, :class => 'form-label' %>
         <%= text_field_tag "No", nil, :class => 'x-large-text-field shrinked number-text-field', onkeyup: "caps(this)" %>
         <!-- Project -->
-        <%= label_tag I18n.t("ag2_gest.invoices.index.label_project"), nil, :class => 'form-label-under-sel2' %>
+        <%= label_tag I18n.t("ag2_gest.invoices.index.label_project"), nil, :class => 'form-label' %>
         <%= select_tag "Project", options_from_collection_for_select(@projects, "id", "full_name"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
         <!-- Client -->
-        <%= label_tag I18n.t("ag2_gest.invoices.index.label_client"), nil, :class => 'form-label' %>
+        <%= label_tag I18n.t("ag2_gest.invoices.index.label_client"), nil, :class => 'form-label-under-sel2' %>
         <%= select_tag "Client", options_from_collection_for_select(@clients, "id", "to_label"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
         <!-- Subscriber -->
-        <%= label_tag I18n.t("ag2_gest.invoices.index.label_subscriber"), nil, :class => 'form-label' %>
-        <%= select_tag "Subscriber", options_from_collection_for_select(@clients, "id", "full_name"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
+        <%= label_tag I18n.t("ag2_gest.invoices.index.label_subscriber"), nil, :class => 'form-label-under-sel2' %>
+        <%= select_tag "Subscriber", options_from_collection_for_select(@subscribers, "id", "to_label"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
+        <!-- Type -->
+        <%= label_tag I18n.t("ag2_gest.invoices.index.label_type"), nil, :class => 'form-label-under-sel2' %>
+        <%= select_tag "Type", options_from_collection_for_select(@types, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
         <!-- Status -->
         <%= label_tag I18n.t("ag2_gest.invoices.index.label_status"), nil, :class => 'form-label-under-sel2' %>
-        <%= select_tag "Status", options_from_collection_for_select(@projects, "id", "full_name"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
-        <!-- Type -->
-        <%= label_tag I18n.t("ag2_gest.invoices.index.label_type"), nil, :class => 'form-label' %>
-        <%= select_tag "Type", options_from_collection_for_select(@clients, "id", "full_name"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
+        <%= select_tag "Status", options_from_collection_for_select(@status, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
         <!-- Operation -->
-        <%= label_tag I18n.t("ag2_gest.invoices.index.label_operation"), nil, :class => 'form-label' %>
-        <%= select_tag "Operation", options_from_collection_for_select(@clients, "id", "full_name"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
+        <%= label_tag I18n.t("ag2_gest.invoices.index.label_operation"), nil, :class => 'form-label-under-sel2' %>
+        <%= select_tag "Operation", options_from_collection_for_select(@operations, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
         <!-- Biller -->
-        <%= label_tag I18n.t("ag2_gest.invoices.index.label_biller"), nil, :class => 'form-label' %>
-        <%= select_tag "Biller", options_from_collection_for_select(@clients, "id", "full_name"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
+        <%= label_tag I18n.t("ag2_gest.invoices.index.label_biller"), nil, :class => 'form-label-under-sel2' %>
+        <%= select_tag "Biller", options_from_collection_for_select(@billers, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
         <!-- Period -->
-        <%= label_tag I18n.t("ag2_gest.invoices.index.label_period"), nil, :class => 'form-label' %>
-        <%= select_tag "Period", options_from_collection_for_select(@clients, "id", "full_name"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
+        <%= label_tag I18n.t("ag2_gest.invoices.index.label_period"), nil, :class => 'form-label-under-sel2' %>
+        <%= select_tag "Period", options_from_collection_for_select(@periods, "id", "to_label"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
         <!-- Others -->
         <%= label_tag I18n.t("ag2_gest.invoices.index.label_others"), nil, :class => 'form-label-under-sel2' %>
         <%= text_field_tag :search, params[:search], :class => 'x-large-text-field shrinked' %>

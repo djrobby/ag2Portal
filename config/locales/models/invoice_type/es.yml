@@ -8,7 +8,12 @@ es:
         other: Tipos de factura
     attributes:
       invoice_type:
-        id: "Id"
-        name: "Descripción"
         successfully: "Tipo de factura se ha actualizado correctamente."
         create: "Tipo de factura se ha creado correctamente."
+        id: "Id"
+        name: "Descripción"
+        code_1: "A"
+        code_2: "T"
+        code_3: "C"
+        code_4: "L"
+        code_4: "O"

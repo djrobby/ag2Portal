@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20161118112142) do
+ActiveRecord::Schema.define(:version => 20161123152723) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -245,6 +245,7 @@ ActiveRecord::Schema.define(:version => 20161118112142) do
     t.integer  "updated_by"
     t.integer  "reading_1_id"
     t.integer  "reading_2_id"
+    t.string   "remarks"
   end
 
   add_index "bills", ["client_id"], :name => "index_bills_on_client_id"
@@ -1443,6 +1444,7 @@ ActiveRecord::Schema.define(:version => 20161118112142) do
     t.datetime "reading_2_date"
     t.integer  "reading_1_index"
     t.integer  "reading_2_index"
+    t.string   "remarks"
   end
 
   add_index "invoices", ["bill_id"], :name => "index_invoices_on_bill_id"
@@ -3078,30 +3080,30 @@ ActiveRecord::Schema.define(:version => 20161118112142) do
   add_index "supplier_invoice_approvals", ["supplier_invoice_id"], :name => "index_supplier_invoice_approvals_on_supplier_invoice_id"
 
   create_table "supplier_invoice_debts", :id => false, :force => true do |t|
-    t.integer "supplier_invoice_id",                                 :default => 0, :null => false
+    t.integer "supplier_invoice_id", :limit => 8
     t.integer "organization_id"
     t.integer "supplier_id"
     t.string  "invoice_no"
-    t.decimal "subtotal",            :precision => 47, :scale => 8
-    t.decimal "taxes",               :precision => 65, :scale => 20
-    t.decimal "bonus",               :precision => 57, :scale => 14
-    t.decimal "taxable",             :precision => 58, :scale => 14
-    t.decimal "total",               :precision => 65, :scale => 20
-    t.decimal "paid",                :precision => 35, :scale => 4
-    t.decimal "debt",                :precision => 65, :scale => 20
+    t.decimal "subtotal",                         :precision => 47, :scale => 8
+    t.decimal "taxes",                            :precision => 65, :scale => 20
+    t.decimal "bonus",                            :precision => 57, :scale => 14
+    t.decimal "taxable",                          :precision => 58, :scale => 14
+    t.decimal "total",                            :precision => 65, :scale => 20
+    t.decimal "paid",                             :precision => 35, :scale => 4
+    t.decimal "debt",                             :precision => 65, :scale => 20
   end
 
   create_table "supplier_invoice_debts_manual", :id => false, :force => true do |t|
-    t.integer "id",                                              :default => 0, :null => false
+    t.integer "id",              :limit => 8
     t.integer "organization_id"
     t.string  "invoice_no"
-    t.decimal "subtotal",        :precision => 47, :scale => 8
-    t.decimal "taxes",           :precision => 65, :scale => 20
-    t.decimal "bonus",           :precision => 57, :scale => 14
-    t.decimal "taxable",         :precision => 58, :scale => 14
-    t.decimal "total",           :precision => 65, :scale => 20
-    t.decimal "paid",            :precision => 35, :scale => 4
-    t.decimal "debt",            :precision => 65, :scale => 20
+    t.decimal "subtotal",                     :precision => 47, :scale => 8
+    t.decimal "taxes",                        :precision => 65, :scale => 20
+    t.decimal "bonus",                        :precision => 57, :scale => 14
+    t.decimal "taxable",                      :precision => 58, :scale => 14
+    t.decimal "total",                        :precision => 65, :scale => 20
+    t.decimal "paid",                         :precision => 35, :scale => 4
+    t.decimal "debt",                         :precision => 65, :scale => 20
   end
 
   create_table "supplier_invoice_items", :force => true do |t|

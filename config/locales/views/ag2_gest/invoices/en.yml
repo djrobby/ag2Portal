@@ -6,14 +6,26 @@ en:
         btn_new: "Nueva Factura"
         back_to_root: "Volver a ag2Gest"
         back_to_management: "Back to Billing"
+        label_project: "Project"
+        label_client: "Client"
+        label_subscriber: "Subscriber"
+        label_status: "Status"
+        label_type: "Type"
+        label_operation: "Operation"
+        label_biller: "Biller"
+        label_period: "Period"
+        label_others: "Others"
       show:
         title: "Factura"
         btn_edit: "Editar Factura"
         btn_delete: "Borrar Factura"
         return_to: "Volver a Factura"
+        print: "Print"
       edit:
         title: "Editar Factura"
         btn_show: "Ver Factura"
       new:
         title: "Nueva Factura"
       back_to_main_page: "Volver facturas"
+      items_info: "Invoice Items"
+      

@@ -8,7 +8,11 @@ es:
         other: Operaciones factura
     attributes:
       invoice_operation:
-        id: "Id"
-        name: "Descripción"
         successfully: "Operación factura se ha actualizado correctamente."
         create: "Operación factura se ha creado correctamente."
+        id: "Id"
+        name: "Descripción"
+        code_1: "F"
+        code_2: "A"
+        code_3: "R"
+        code_4: "P"

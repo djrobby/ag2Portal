@@ -8,7 +8,12 @@ en:
         other: Invoice types
     attributes:
       invoice_type:
-        id: "Id"
-        name: "Description"
         successfully: "Invoice type se ha actualizado correctamente."
         create: "Invoice type se ha creado correctamente."
+        id: "Id"
+        name: "Description"
+        code_1: "W"
+        code_2: "T"
+        code_3: "C"
+        code_4: "L"
+        code_4: "O"

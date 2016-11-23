@@ -1,16 +1,17 @@
 <tr>
-  <% if @breadcrumb == 'create' || @breadcrumb == 'update' %>
+  <th><%= t "activerecord.attributes.invoice_item.code" %></th>
+  <th><%= t "activerecord.attributes.invoice_item.subcode" %></th>
+  <th><%= t "activerecord.attributes.invoice_item.description" %></th>
+  <th><%= t "activerecord.attributes.invoice_item.measure" %></th>
+  <th align="right"><%= t "activerecord.attributes.invoice_item.quantity_c" %></th>
+  <th align="right"><%= t "activerecord.attributes.invoice_item.price_c" %></th>
+  <% if !invoice.discount_pct.blank? %>
+  <th align="right"><%= t "activerecord.attributes.invoice_item.discount_pct_c" %></th>
+  <th align="right"><%= t "activerecord.attributes.invoice_item.discount_c" %></th>
+  <% else %>
+  <th></th>
   <th></th>
   <% end %>
-  <th><%= t "activerecord.attributes.supplier_invoice_item.product_c" %></th>
-  <th><%= t "activerecord.attributes.supplier_invoice_item.description_c" %></th>
-  <th align="right"><%= t "activerecord.attributes.supplier_invoice_item.quantity_c" %></th>
-  <th align="right"><%= t "activerecord.attributes.supplier_invoice_item.price_c" %></th>
-  <th align="right"><%= t "activerecord.attributes.supplier_invoice_item.discount_pct_c" %></th>
-  <th align="right"><%= t "activerecord.attributes.supplier_invoice_item.discount_c" %></th>
-  <th align="right"><%= t "activerecord.attributes.supplier_invoice_item.amount_c" %></th>
-  <th align="right"><%= t "activerecord.attributes.supplier_invoice_item.tax_c" %></th>
-  <% if @breadcrumb == 'create' || @breadcrumb == 'update' %>
-  <th></th>
-  <% end %>
+  <th align="right"><%= t "activerecord.attributes.invoice_item.amount_c" %></th>
+  <th align="right"><%= t "activerecord.attributes.invoice_item.tax_c" %></th>
 </tr>

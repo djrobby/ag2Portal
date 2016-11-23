@@ -19,4 +19,12 @@ class InvoiceOperation < ActiveRecord::Base
     end
   end
 
+  def code
+    case self.id
+    when 1 then I18n.t('activerecord.attributes.invoice_operation.code_1')
+    when 2 then I18n.t('activerecord.attributes.invoice_operation.code_2')
+    when 3 then I18n.t('activerecord.attributes.invoice_operation.code_3')
+    when 4 then I18n.t('activerecord.attributes.invoice_operation.code_4')
+    end
+  end
 end

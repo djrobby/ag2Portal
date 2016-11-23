@@ -8,7 +8,13 @@ es:
         other: Estados de factura
     attributes:
       invoice_status:
-        id: "Id"
-        name: "Descripción"
         successfully: "Estado de factura se ha actualizado correctamente."
         create: "Estado de factura se ha creado correctamente."
+        id: "Id"
+        name: "Descripción"
+        code_1: "P"
+        code_2: "C"
+        code_3: "B"
+        code_4: "D"
+        code_5: "A"
+        code_99: "X"

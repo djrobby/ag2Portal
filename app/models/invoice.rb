@@ -32,6 +32,11 @@ class Invoice < ActiveRecord::Base
   after_save :bill_status
   before_create :assign_payday_limit
 
+  def full_no
+    # Invoice no (Invoice code & year & sequential number) => SSSS-YYYY-NNNNNNN
+    invoice_no.blank? ? "" : invoice_no[0..3] + '-' + invoice_no[4..7] + '-' + invoice_no[8..14]
+  end
+
   def invoiced_concepts
     _codes = ""
     _ii = invoice_items.group(:code)

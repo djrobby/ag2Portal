@@ -657,10 +657,10 @@ end
       year = year.rjust(4, '0')
       last_no = Bill.where("bill_no LIKE ?", "#{project}#{year}%").order(:bill_no).maximum(:bill_no)
       if last_no.nil?
-        code = project + year + '000001'
+        code = project + year + '0000001'
       else
-        last_no = last_no[16..21].to_i + 1
-        code = project + year + last_no.to_s.rjust(6, '0')
+        last_no = last_no[16..22].to_i + 1
+        code = project + year + last_no.to_s.rjust(7, '0')
       end
     end
     code
@@ -680,10 +680,10 @@ end
       year = year.rjust(4, '0')
       last_no = Invoice.where("invoice_no LIKE ?", "#{company}#{year}%").order(:invoice_no).maximum(:invoice_no)
       if last_no.nil?
-        code = company + year + '000001'
+        code = company + year + '0000001'
       else
         last_no = last_no[8..14].to_i + 1
-        code = company + year + last_no.to_s.rjust(6, '0')
+        code = company + year + last_no.to_s.rjust(7, '0')
       end
     end
     code

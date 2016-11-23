@@ -14,12 +14,22 @@ module Ag2Gest
       project = params[:Project]
       client = params[:Client]
       subscriber = params[:Subscriber]
+      status = params[:Status]
+      type = params[:Type]
+      operation = params[:Operation]
+      biller = params[:Biller]
+      period = params[:Period]
       # OCO
       init_oco if !session[:organization]
       # Initialize select_tags
       @projects = projects_dropdown if @projects.nil?
       @clients = clients_dropdown if @clients.nil?
       @subscribers = subscribers_dropdown if @subscribers.nil?
+      @status = invoice_statuses_dropdown if @status.nil?
+      @types = invoice_types_dropdown if @types.nil?
+      @operations = invoice_operations_dropdown if @operations.nil?
+      @billers = billers_dropdown if @billers.nil?
+      @periods = billing_periods_dropdown if @periods.nil?
 
       # Arrays for search
       current_projects = @projects.blank? ? [0] : current_projects_for_index(@projects)
@@ -44,6 +54,21 @@ module Ag2Gest
         end
         if !project.blank?
           with :project_id, project
+        end
+        if !status.blank?
+          with :invoice_status_id, status
+        end
+        if !type.blank?
+          with :invoice_type_id, type
+        end
+        if !operation.blank?
+          with :invoice_operation_id, operation
+        end
+        if !biller.blank?
+          with :biller_id, biller
+        end
+        if !period.blank?
+          with :billing_period_id, period
         end
         order_by :sort_no, :asc
         paginate :page => params[:page] || 1, :per_page => per_page || 10
@@ -202,6 +227,22 @@ module Ag2Gest
 
     def billing_periods_dropdown
       !this_current_projects_ids.blank? ? BillingPeriod.belongs_to_projects(this_current_projects_ids) : BillingPeriod.by_period
+    end
+
+    def invoice_statuses_dropdown
+      InvoiceStatus.all
+    end
+
+    def invoice_types_dropdown
+      InvoiceType.all
+    end
+
+    def invoice_operations_dropdown
+      InvoiceOperation.all
+    end
+
+    def billers_dropdown
+      session[:organization] != '0' ? Company.where(organization_id: session[:organization].to_i).order(:name) : Company.order(:name)
     end
 
     # Returns _array from _ret table/model filled with _id attribute

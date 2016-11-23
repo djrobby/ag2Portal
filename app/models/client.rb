@@ -109,7 +109,7 @@ class Client < ActiveRecord::Base
     if !self.last_name.blank? && !self.first_name.blank?
       full_name_or_company = full_name
     else
-      full_name_or_company = company
+      full_name_or_company = company[0,40]
     end
     full_name_or_company
   end

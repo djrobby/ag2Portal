@@ -8,7 +8,11 @@ en:
         other: Invoice operations
     attributes:
       invoice_operations:
-        id: "Id"
-        name: "Description"
         successfully: "Invoice operation se ha actualizado correctamente."
         create: "Invoice operation se ha creado correctamente."
+        id: "Id"
+        name: "Description"
+        code_1: "I"
+        code_2: "C"
+        code_3: "R"
+        code_4: "P"

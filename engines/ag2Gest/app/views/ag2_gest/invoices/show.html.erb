@@ -7,25 +7,31 @@
       <td>Id:</td>
       <td id="id"><%= @invoice.id %></td>
       <td><%=t 'activerecord.attributes.invoice.invoice_no' %>:</td>
-      <td class="highlighted bolded"><%= @invoice.invoice_no %></td>
+      <td class="highlighted bolded"><%= @invoice.full_no %></td>
     </tr>
     <tr>
       <td><%=t 'activerecord.attributes.invoice.invoice_date' %>:</td>
       <td><%= formatted_date(@invoice.invoice_date) unless @invoice.invoice_date.blank? %></td>
-      <td><%=t 'activerecord.attributes.invoice.receipt_note' %>:</td>
-      <td><%= @invoice.receipt_note.receipt_no unless @invoice.receipt_note.blank? %></td>
+      <td><%=t 'activerecord.attributes.invoice.bill' %>:</td>
+      <td><%= @invoice.try(:bill).try(:to_label) %></td>
     </tr>
     <tr>
-      <td><%=t 'activerecord.attributes.invoice.supplier' %>:</td>
-      <td><%= @invoice.supplier.full_name %></td>
-      <td><%=t 'activerecord.attributes.invoice.payment_method' %>:</td>
-      <td> <%= @invoice.payment_method.description %> </td>
+      <td><%=t 'activerecord.attributes.bill.client' %>:</td>
+      <td><%= @invoice.try(:bill).try(:client).try(:full_name_or_company_and_code) %></td>
+      <td><%=t 'activerecord.attributes.bill.subscriber' %>:</td>
+      <td><%= @invoice.try(:bill).try(:subscriber).try(:to_label) %></td>
     </tr>
     <tr>
-      <td><%=t 'activerecord.attributes.invoice.project' %>:</td>
-      <td><%= @invoice.project.full_name unless @invoice.project.blank? %></td>
-      <td><%=t 'activerecord.attributes.invoice.work_order' %>:</td>
-      <td><%= @invoice.work_order.full_name unless @invoice.work_order.blank? %></td>
+      <td><%=t 'activerecord.attributes.bill.project' %>:</td>
+      <td><%= @invoice.try(:bill).try(:project).try(:to_label) %></td>
+      <td><%=t 'activerecord.attributes.invoice.invoice_type' %>:</td>
+      <td><%= @invoice.try(:invoice_type).try(:name) %></td>
+    </tr>
+    <tr>
+      <td><%=t 'activerecord.attributes.invoice.invoice_status' %>:</td>
+      <td><%= @invoice.try(:invoice_status).try(:name) %></td>
+      <td><%=t 'activerecord.attributes.invoice.invoice_operation' %>:</td>
+      <td><%= @invoice.try(:invoice_operation).try(:name) %></td>
     </tr>
     <tr>
       <td><%=t 'activerecord.attributes.invoice.charge_account' %>:</td>
@@ -43,7 +49,7 @@
   <tbody>
     <tr class="form-tr underlined-tr">
       <td class="form-td-two left-winged">
-        <h4><%= t 'ag2_purchase.invoices.items_info' %></h4>
+        <h4><%= t 'ag2_gest.invoices.items_info' %></h4>
       </td>
       <td class="form-td-two right-winged">
         <a href="#" id="print_report_btn" class="btn btn-warning"><i class="icon-print icon-white"></i> <%= t '.print' %></a>
@@ -54,10 +60,10 @@
 <% if (@items.count > 0) %>
 <table class="table table-condensed table-striped shrinked">
   <thead>
-    <%= render 'items_header' %>
+    <%= render partial: 'items_header', :locals => { invoice: @invoice } %>
   </thead>
   <tfoot>
-    <%= render partial: 'items_footer', :locals => { note: @invoice } %>
+    <%= render partial: 'items_footer', :locals => { invoice: @invoice } %>
   </tfoot>
   <tbody>
     <%= render partial: 'item', collection: @items %>
@@ -78,4 +84,4 @@
   </tbody>
 </table>
 
-<%= link_to t("ag2_purchase.invoices.back_to_main_page"), invoices_path %>
+<%= link_to t("ag2_gest.invoices.back_to_main_page"), invoices_path %>
