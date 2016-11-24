@@ -1,0 +1,407 @@
+if @work_order.nil?
+	return
+end
+
+# Localization for numbers
+delimiter = I18n.locale == :es ? "." : ","
+
+report.set_layout tlf: 'reports/work_order_form_sm', layout_options: { default: true }
+
+#
+# Report events
+#
+# On page create
+report.events.on :page_create do |e|
+	# Set page-number
+	e.page.item(:page_no).value(e.page.no)
+end
+# On report generate
+report.events.on :generate do |e|
+	e.pages.each do |page|
+		# Set total-page-number
+		page.item(:page_count).value(e.report.page_count)
+	end
+end
+
+#
+# Lists configuration (stores & events)
+#
+# Items
+report.layout.config.list(:default) do |c|
+	# Define the variables used in list
+	c.use_stores i_page_quantity: 0, i_page_costs: 0, i_page_amount: 0, i_page_tax: 0
+
+	# On list page footer insertion
+	c.events.on :page_footer_insert do |e|
+		# Display page subtotals
+		e.section.item(:i_page_subtotals).value(I18n.t("every_report.page_subtotals"))
+		e.section.item(:i_page_quantity).value(number_with_precision(e.store.i_page_quantity, precision: 4))
+		e.section.item(:i_page_costs).value(number_with_precision(e.store.i_page_costs, precision: 4))
+		e.section.item(:i_page_amount).value(number_with_precision(e.store.i_page_amount, precision: 4))
+		e.section.item(:i_page_tax).value(number_with_precision(e.store.i_page_tax, precision: 4))
+		# Initialize subtotals to 0
+		e.store.i_page_quantity = 0
+		e.store.i_page_costs = 0
+		e.store.i_page_amount = 0
+		e.store.i_page_tax = 0
+	end
+	# On list footer insertion
+	c.events.on :footer_insert do |e|
+		# Display list totals
+		e.section.item(:i_costs_c).value(I18n.t("activerecord.attributes.work_order.item_costs_title"))
+		e.section.item(:i_subtotal_c).value(I18n.t("activerecord.attributes.work_order.subtotal"))
+		e.section.item(:i_taxable_c).value(I18n.t("activerecord.attributes.work_order.taxable"))
+		e.section.item(:i_taxes_c).value(I18n.t("activerecord.attributes.work_order.taxes"))
+		e.section.item(:i_total_c).value(I18n.t("activerecord.attributes.work_order.total").upcase)
+		e.section.item(:i_costs).value(number_with_precision(@work_order.item_costs, precision: 2, delimiter: delimiter))
+		e.section.item(:i_subtotal).value(number_with_precision(@work_order.subtotal, precision: 2, delimiter: delimiter))
+		e.section.item(:i_taxable).value(number_with_precision(@work_order.taxable, precision: 2, delimiter: delimiter))
+		e.section.item(:i_taxes).value(number_with_precision(@work_order.taxes, precision: 2, delimiter: delimiter))
+		e.section.item(:i_total).value(number_with_precision(@work_order.total, precision: 2, delimiter: delimiter))
+		# Display tax details
+		e.section.item(:i_tax_details).value(I18n.t("activerecord.attributes.work_order.tax_breakdown"))
+		@work_order.tax_breakdown.each do |tb|
+			e.section.item(:i_tax_list).value(tb[0].to_s.rjust(2, '0') + " " + tb[1] + ": " +
+											number_with_precision(tb[3], precision: 2, delimiter: delimiter) + " × " +
+											number_with_precision(tb[2], precision: 2, delimiter: delimiter) + "% = " +
+											number_with_precision(tb[4], precision: 2, delimiter: delimiter) + "\n")
+		end
+	end
+end
+
+# Workers
+report.layout.config.list(:workers) do |c|
+	# Define the variables used in list
+	c.use_stores w_page_hours: 0, w_page_costs: 0
+
+	# On list page footer insertion
+	c.events.on :page_footer_insert do |e|
+		# Display page subtotals
+		e.section.item(:w_page_subtotals).value(I18n.t("every_report.page_subtotals"))
+		e.section.item(:w_page_hours).value(number_with_precision(e.store.w_page_hours, precision: 4))
+		e.section.item(:w_page_costs).value(number_with_precision(e.store.w_page_costs, precision: 4))
+		# Initialize subtotals to 0
+		e.store.w_page_hours = 0
+		e.store.w_page_costs = 0
+	end
+	# On list footer insertion
+	c.events.on :footer_insert do |e|
+		# Display list totals
+		e.section.item(:w_hours_c).value(I18n.t("activerecord.attributes.work_order.hours"))
+		e.section.item(:w_costs_c).value(I18n.t("activerecord.attributes.work_order.worker_costs_title"))
+		e.section.item(:w_hours).value(number_with_precision(@work_order.hours, precision: 4, delimiter: delimiter))
+		e.section.item(:w_costs).value(number_with_precision(@work_order.worker_costs, precision: 2, delimiter: delimiter))
+	end
+end
+
+# Subcontractors
+report.layout.config.list(:subcontractors) do |c|
+	# Define the variables used in list
+	c.use_stores s_page_costs: 0
+
+	# On list page footer insertion
+	c.events.on :page_footer_insert do |e|
+		# Display page subtotals
+		e.section.item(:s_page_subtotals).value(I18n.t("every_report.page_subtotals"))
+		e.section.item(:s_page_costs).value(number_with_precision(e.store.s_page_costs, precision: 4))
+		# Initialize subtotals to 0
+		e.store.s_page_costs = 0
+	end
+	# On list footer insertion
+	c.events.on :footer_insert do |e|
+		# Display list totals
+		e.section.item(:s_costs_c).value(I18n.t("activerecord.attributes.work_order.subcontractor_costs_title"))
+		e.section.item(:s_costs).value(number_with_precision(@work_order.subcontractor_costs, precision: 2, delimiter: delimiter))
+	end
+end
+
+# Tools
+report.layout.config.list(:tools) do |c|
+	# Define the variables used in list
+	c.use_stores t_page_minutes: 0, t_page_costs: 0
+
+	# On list page footer insertion
+	c.events.on :page_footer_insert do |e|
+		# Display page subtotals
+		e.section.item(:t_page_subtotals).value(I18n.t("every_report.page_subtotals"))
+		e.section.item(:t_page_minutes).value(number_with_precision(e.store.t_page_minutes, precision: 2))
+		e.section.item(:t_page_costs).value(number_with_precision(e.store.t_page_costs, precision: 4))
+		# Initialize subtotals to 0
+		e.store.t_page_minutes = 0
+		e.store.t_page_costs = 0
+	end
+	# On list footer insertion
+	c.events.on :footer_insert do |e|
+		# Display list totals
+		e.section.item(:t_costs_c).value(I18n.t("activerecord.attributes.work_order.tool_costs_title"))
+		e.section.item(:t_costs).value(number_with_precision(@work_order.tool_costs, precision: 2, delimiter: delimiter))
+	end
+end
+
+# Vehicles
+report.layout.config.list(:vehicles) do |c|
+	# Define the variables used in list
+	c.use_stores v_page_distance: 0, v_page_costs: 0
+
+	# On list page footer insertion
+	c.events.on :page_footer_insert do |e|
+		# Display page subtotals
+		e.section.item(:v_page_subtotals).value(I18n.t("every_report.page_subtotals"))
+		e.section.item(:v_page_distance).value(number_with_precision(e.store.v_page_distance, precision: 2))
+		e.section.item(:v_page_costs).value(number_with_precision(e.store.v_page_costs, precision: 4))
+		# Initialize subtotals to 0
+		e.store.v_page_distance = 0
+		e.store.v_page_costs = 0
+	end
+	# On list footer insertion
+	c.events.on :footer_insert do |e|
+		# Display list totals
+		e.section.item(:v_costs_c).value(I18n.t("activerecord.attributes.work_order.vehicle_costs_title"))
+		e.section.item(:v_costs).value(number_with_precision(@work_order.vehicle_costs, precision: 2, delimiter: delimiter))
+	end
+end
+
+
+# New page & start
+report.start_new_page
+
+# Page header: Image block for Logo
+report.page.values company_logo: "public/" + @work_order.project.company.logo.url(:original).split("?").first unless @work_order.project.company.logo.blank?
+# Page header: Company
+report.page.values(company_name: @work_order.project.company.name,
+				   company_address_1: @work_order.project.company.address_1,
+				   company_address_2: @work_order.project.company.address_2,
+				   company_phones: @work_order.project.company.phone_and_fax,
+				   company_email: @work_order.project.company.email_and_website,
+				   company_fiscal_id: I18n.t("activerecord.attributes.company.fiscal_id_c") + ": " + @work_order.project.company.fiscal_id)
+# Page header: Possibly null values
+report.page.values master_order: @work_order.master_order.full_no unless @work_order.master_order.blank?
+report.page.values started_at: @work_order.started_at.strftime("%d/%m/%Y") unless @work_order.started_at.blank?
+report.page.values completed_at: @work_order.completed_at.strftime("%d/%m/%Y") unless @work_order.completed_at.blank?
+report.page.values closed_at: @work_order.closed_at.strftime("%d/%m/%Y") unless @work_order.closed_at.blank?
+report.page.values reported_at: @work_order.reported_at.strftime("%d/%m/%Y %H:%M:%S") unless @work_order.reported_at.blank?
+report.page.values approved_at: @work_order.approved_at.strftime("%d/%m/%Y %H:%M:%S") unless @work_order.approved_at.blank?
+report.page.values certified_at: @work_order.certified_at.strftime("%d/%m/%Y") unless @work_order.certified_at.blank?
+report.page.values posted_at: @work_order.posted_at.strftime("%d/%m/%Y") unless @work_order.posted_at.blank?
+report.page.values client: @work_order.client.full_name unless @work_order.client.blank?
+report.page.values area: @work_order.area.full_name unless @work_order.area.blank?
+report.page.values store: @work_order.store.name unless @work_order.store.blank?
+report.page.values charge_account: @work_order.charge_account.full_name unless @work_order.charge_account.blank?
+# Page header: Others
+report.page.values(form_title: I18n.t("activerecord.models.work_order.one"),
+				   order_no_title: I18n.t("activerecord.attributes.work_order.order_no_report") + ":",
+				   order_no: @work_order.full_no,
+				   order_date_title: I18n.t("activerecord.attributes.work_order.created_at") + ":",
+				   order_date: @work_order.created_at.strftime("%d/%m/%Y"),
+				   master_order_title: I18n.t("activerecord.attributes.work_order.master_order_report") + ":",
+				   description_title: I18n.t("activerecord.attributes.work_order.description") + ":",
+				   description: @work_order.description,
+				   project_title: I18n.t("activerecord.attributes.work_order.project") + ":",
+				   project: @work_order.project.full_name,
+				   woarea_title: I18n.t("activerecord.attributes.work_order.work_order_area") + ":",
+				   woarea: @work_order.work_order_area.name,
+				   type_title: I18n.t("activerecord.attributes.work_order.work_order_type") + ":",
+				   type: @work_order.work_order_type.name,
+				   labor_title: I18n.t("activerecord.attributes.work_order.work_order_labor") + ":",
+				   labor: @work_order.work_order_labor.name,
+				   area_title: I18n.t("activerecord.attributes.work_order.area") + ":",
+				   in_charge_title: I18n.t("activerecord.attributes.work_order.in_charge") + ":",
+				   in_charge: @work_order.in_charge.full_name,
+				   charge_account_title: I18n.t("activerecord.attributes.work_order.charge_account_report") + ":",
+				   store_title: I18n.t("activerecord.attributes.work_order.store") + ":",
+				   client_title: I18n.t("activerecord.attributes.work_order.client") + ":",
+				   petitioner_title: I18n.t("activerecord.attributes.work_order.petitioner") + ":",
+				   petitioner: @work_order.petitioner,
+				   location_title: I18n.t("activerecord.attributes.work_order.location") + ":",
+				   location: @work_order.location,
+				   pub_record_title: I18n.t("activerecord.attributes.work_order.pub_record_report") + ":",
+				   pub_record: @work_order.pub_record,
+				   status_title: I18n.t("activerecord.attributes.work_order.work_order_status") + ":",
+				   status: @work_order.work_order_status.name,
+				   started_at_title: I18n.t("activerecord.attributes.work_order.started_at_report") + ":",
+				   completed_at_title: I18n.t("activerecord.attributes.work_order.completed_at_report") + ":",
+				   closed_at_title: I18n.t("activerecord.attributes.work_order.closed_at_report") + ":",
+				   reported_at_title: I18n.t("activerecord.attributes.work_order.reported_at_report") + ":",
+				   approved_at_title: I18n.t("activerecord.attributes.work_order.approved_at_report") + ":",
+				   certified_at_title: I18n.t("activerecord.attributes.work_order.certified_at_report") + ":",
+				   posted_at_title: I18n.t("activerecord.attributes.work_order.posted_at_report") + ":"
+				  )
+# Subscriber & meter: Possibly null values
+report.page.values(
+				   subscriber_name_title: I18n.t("activerecord.attributes.work_order.subscriber") + ":",
+				   subscriber_fiscal_id_title: I18n.t("activerecord.attributes.subscriber.fiscal_id_c") + ":",
+				   subscriber_address_1_title: I18n.t("activerecord.attributes.subscriber.address_1_c") + ":",
+				   meter_code_title: I18n.t("activerecord.attributes.work_order.meter_code_c") + ":",
+				   meter_model_title: I18n.t("activerecord.attributes.work_order.meter_model_c") + ":",
+				   caliber_title: I18n.t("activerecord.attributes.work_order.caliber") + ":",
+				   meter_type_title: I18n.t("activerecord.attributes.work_order.meter_type_c") + ":",
+				   meter_owner_title: I18n.t("activerecord.attributes.work_order.meter_owner_c") + ":",
+				   meter_location_title: I18n.t("activerecord.attributes.work_order.meter_location_c") + ":",
+				   last_reading_title: I18n.t("activerecord.attributes.work_order.last_reading_c") + ":",
+				   current_reading_title: I18n.t("activerecord.attributes.work_order.current_reading_c") + ":"
+				  )
+if !@work_order.subscriber.blank?
+	report.page.values subscriber_name: @work_order.subscriber.full_no
+	report.page.values subscriber_fiscal_id: @work_order.subscriber.fiscal_id
+	report.page.values subscriber_address_1: @work_order.subscriber.address_1
+	report.page.values subscriber_address_2: @work_order.subscriber.address_2
+end
+report.page.values meter_code: @work_order.meter_code unless @work_order.meter_code.blank?
+report.page.values meter_model: @work_order.meter_model.full_name unless @work_order.meter_model.blank?
+report.page.values caliber: @work_order.caliber.caliber unless @work_order.caliber.blank?
+report.page.values meter_type: @work_order.meter_model.meter_type.name unless @work_order.meter_model.blank?
+report.page.values meter_owner: @work_order.meter_owner.name unless @work_order.meter_owner.blank?
+report.page.values meter_location: @work_order.meter_location.name unless @work_order.meter_location.blank?
+# Page footer
+report.page.values(printed_at: Time.now,
+				   pt: I18n.t("every_report.pt"),
+				   pd: I18n.t("every_report.pd"),
+				   currency_note: I18n.t("every_report.currency_note"),
+				   remarks_title: I18n.t("activerecord.attributes.work_order.remarks"),
+				   remarks: @work_order.remarks,
+				   total_costs_title: I18n.t("activerecord.attributes.work_order.total_costs") + ":",
+				   total_costs: number_with_precision(@work_order.this_total_costs, precision: 2, delimiter: delimiter))
+
+#
+# Lists
+#
+# Items
+report.page.list(:default).header do |header|
+	header.item(:i_title).value I18n.t("ag2_tech.work_orders.items_title")
+	header.item(:i_no_c).value "#"
+	header.item(:i_product_c).value I18n.t("activerecord.attributes.work_order_item.code")
+	header.item(:i_description_c).value I18n.t("activerecord.attributes.work_order_item.description_c")
+	header.item(:i_quantity_c).value I18n.t("activerecord.attributes.work_order_item.quantity_c")
+	header.item(:i_cost_c).value I18n.t("activerecord.attributes.work_order_item.cost_c")
+	header.item(:i_costs_c).value I18n.t("activerecord.attributes.work_order_item.costs_c")
+	header.item(:i_price_c).value I18n.t("activerecord.attributes.work_order_item.price_c")
+	header.item(:i_amount_c).value I18n.t("activerecord.attributes.work_order_item.amount_c")
+	header.item(:i_tax_c).value I18n.t("activerecord.attributes.work_order_item.tax_c")
+end
+no = 0
+@items.each do |i|
+	no = no + 1
+	report.page.list(:default).add_row do |row|
+    	row.item(:i_no).value no
+    	row.item(:i_product).value i.product.full_code unless i.product.blank?
+    	row.item(:i_description).value i.description unless i.description.blank?
+    	row.item(:i_quantity).value number_with_precision(i.quantity, precision: 4) unless i.quantity.blank?
+    	row.item(:i_cost).value number_with_precision(i.cost, precision: 4) unless i.cost.blank?
+    	row.item(:i_costs).value number_with_precision(i.costs, precision: 4) unless i.costs.blank?
+    	row.item(:i_price).value number_with_precision(i.price, precision: 4) unless i.price.blank?
+    	row.item(:i_amount).value number_with_precision(i.amount, precision: 4) unless i.amount.blank?
+    	row.item(:i_tax).value number_with_precision(i.tax, precision: 4) unless i.tax.blank?
+	end
+	# Store page subtotals
+    report.page.list(:default) do |list|
+		list.store.i_page_quantity += i.quantity
+		list.store.i_page_costs += i.costs
+		list.store.i_page_amount += i.amount
+		list.store.i_page_tax += i.tax
+    end
+end
+
+# Workers
+report.page.list(:workers).header do |header|
+	header.item(:w_title).value I18n.t("ag2_tech.work_orders.workers_title")
+	header.item(:w_no_c).value "#"
+	header.item(:w_worker_c).value I18n.t("activerecord.attributes.work_order_worker.worker")
+	header.item(:w_hours_c).value I18n.t("activerecord.attributes.work_order_worker.hours")
+	header.item(:w_cost_c).value I18n.t("activerecord.attributes.work_order_worker.cost")
+	header.item(:w_costs_c).value I18n.t("activerecord.attributes.work_order_worker.costs")
+end
+no = 0
+@workers.each do |i|
+	no = no + 1
+	report.page.list(:workers).add_row do |row|
+    	row.item(:w_no).value no
+    	row.item(:w_worker).value i.worker.full_name unless i.worker.blank?
+    	row.item(:w_hours).value number_with_precision(i.hours, precision: 4) unless i.hours.blank?
+    	row.item(:w_cost).value number_with_precision(i.cost, precision: 4) unless i.cost.blank?
+    	row.item(:w_costs).value number_with_precision(i.costs, precision: 4) unless i.costs.blank?
+	end
+	# Store page subtotals
+    report.page.list(:workers) do |list|
+		list.store.w_page_hours += i.hours
+		list.store.w_page_costs += i.costs
+    end
+end
+
+# Subcontractors
+report.page.list(:subcontractors).header do |header|
+	header.item(:s_title).value I18n.t("ag2_tech.work_orders.subcontractors_title")
+	header.item(:s_no_c).value "#"
+	header.item(:s_supplier_c).value I18n.t("activerecord.attributes.work_order_subcontractor.supplier")
+	header.item(:s_order_c).value I18n.t("activerecord.attributes.work_order_subcontractor.purchase_order")
+	header.item(:s_enforcement_pct_c).value I18n.t("activerecord.attributes.work_order_subcontractor.enforcement_pct")
+	header.item(:s_cost_c).value I18n.t("activerecord.attributes.work_order_subcontractor.cost")
+	header.item(:s_costs_c).value I18n.t("activerecord.attributes.work_order_subcontractor.costs")
+end
+no = 0
+@subcontractors.each do |i|
+	no = no + 1
+	report.page.list(:subcontractors).add_row do |row|
+    	row.item(:s_no).value no
+    	row.item(:s_supplier).value i.supplier.full_name unless i.supplier.blank?
+    	row.item(:s_order).value i.purchase_order.full_no unless i.purchase_order.blank?
+    	row.item(:s_enforcement_pct).value number_with_precision(i.enforcement_pct, precision: 2) unless i.enforcement_pct.blank?
+    	row.item(:s_cost).value number_with_precision(i.cost, precision: 4) unless i.cost.blank?
+    	row.item(:s_costs).value number_with_precision(i.costs, precision: 4) unless i.costs.blank?
+	end
+	# Store page subtotals
+    report.page.list(:subcontractors) do |list|
+		list.store.s_page_costs += i.costs
+    end
+end
+
+# Tools
+report.page.list(:tools).header do |header|
+	header.item(:t_title).value I18n.t("ag2_tech.work_orders.tools_title")
+	header.item(:t_no_c).value "#"
+	header.item(:t_tool_c).value I18n.t("activerecord.attributes.work_order_tool.tool")
+	header.item(:t_minutes_c).value I18n.t("activerecord.attributes.work_order_tool.minutes")
+	header.item(:t_cost_c).value I18n.t("activerecord.attributes.work_order_tool.cost")
+	header.item(:t_costs_c).value I18n.t("activerecord.attributes.work_order_tool.costs")
+end
+no = 0
+@tools.each do |i|
+	no = no + 1
+	report.page.list(:tools).add_row do |row|
+    	row.item(:t_no).value no
+    	row.item(:t_tool).value i.tool.full_name unless i.tool.blank?
+    	row.item(:t_minutes).value number_with_precision(i.minutes, precision: 2) unless i.minutes.blank?
+    	row.item(:t_cost).value number_with_precision(i.cost, precision: 4) unless i.cost.blank?
+    	row.item(:t_costs).value number_with_precision(i.costs, precision: 4) unless i.costs.blank?
+	end
+	# Store page subtotals
+    report.page.list(:tools) do |list|
+		list.store.t_page_minutes += i.minutes
+		list.store.t_page_costs += i.costs
+    end
+end
+
+# Vehicles
+report.page.list(:vehicles).header do |header|
+	header.item(:v_title).value I18n.t("ag2_tech.work_orders.vehicles_title")
+	header.item(:v_no_c).value "#"
+	header.item(:v_vehicle_c).value I18n.t("activerecord.attributes.work_order_vehicle.vehicle")
+	header.item(:v_distance_c).value I18n.t("activerecord.attributes.work_order_vehicle.distance")
+	header.item(:v_cost_c).value I18n.t("activerecord.attributes.work_order_vehicle.cost")
+	header.item(:v_costs_c).value I18n.t("activerecord.attributes.work_order_vehicle.costs")
+end
+no = 0
+@vehicles.each do |i|
+	no = no + 1
+	report.page.list(:vehicles).add_row do |row|
+    	row.item(:v_no).value no
+    	row.item(:v_vehicle).value i.vehicle.full_name unless i.vehicle.blank?
+    	row.item(:v_distance).value number_with_precision(i.distance, precision: 2) unless i.distance.blank?
+    	row.item(:v_cost).value number_with_precision(i.cost, precision: 4) unless i.cost.blank?
+    	row.item(:v_costs).value number_with_precision(i.costs, precision: 4) unless i.costs.blank?
+	end
+	# Store page subtotals
+    report.page.list(:vehicles) do |list|
+		list.store.v_page_distance += i.distance
+		list.store.v_page_costs += i.costs
+    end
+end

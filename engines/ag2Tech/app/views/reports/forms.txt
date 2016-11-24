@@ -1,0 +1,15 @@
+work_order_ok:
+default			207.7,511.1				(718.8)
+workers			330,74		207.7,122.3	(330)
+subcontractors	410,60		341.5,122.3	(458.9)
+tools			475,60		475.3,122.3	(587.8)
+vehicles			540,60		594.4,122.3	(716.7)
+
+work_order_sm_ok:
+default			305,413.8				(718.8)
+workers			330,74		305,98		(403)
+subcontractors	410,60		409.6,98		(507.6)
+tools			475,60		514.2,98		(613.7)
+vehicles			540,60		618.8,98		(716.8)
+
+total_costs frame: 724.8

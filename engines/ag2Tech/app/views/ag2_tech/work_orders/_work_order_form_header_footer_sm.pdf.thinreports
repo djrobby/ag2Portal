@@ -1,0 +1,26 @@
+# Subscriber & meter: Possibly null values
+report.page.values(
+				   subscriber_name_title: I18n.t("activerecord.attributes.work_order.subscriber") + ":",
+				   subscriber_fiscal_id_title: I18n.t("activerecord.attributes.subscriber.fiscal_id_c") + ":",
+				   subscriber_address_1_title: I18n.t("activerecord.attributes.subscriber.address_1_c") + ":",
+				   meter_code_title: I18n.t("activerecord.attributes.work_order.meter_code_c") + ":",
+				   meter_model_title: I18n.t("activerecord.attributes.work_order.meter_model_c") + ":",
+				   caliber_title: I18n.t("activerecord.attributes.work_order.caliber") + ":",
+				   meter_type_title: I18n.t("activerecord.attributes.work_order.meter_type_c") + ":",
+				   meter_owner_title: I18n.t("activerecord.attributes.work_order.meter_owner_c") + ":",
+				   meter_location_title: I18n.t("activerecord.attributes.work_order.meter_location_c") + ":",
+				   last_reading_title: I18n.t("activerecord.attributes.work_order.last_reading_c") + ":",
+				   current_reading_title: I18n.t("activerecord.attributes.work_order.current_reading_c") + ":"
+				  )
+if !@work_order.subscriber.blank?
+	report.page.values subscriber_name: @work_order.subscriber.full_no
+	report.page.values subscriber_fiscal_id: @work_order.subscriber.fiscal_id
+	report.page.values subscriber_address_1: @work_order.subscriber.address_1
+	report.page.values subscriber_address_2: @work_order.subscriber.address_2
+end
+report.page.values meter_code: @work_order.meter_code unless @work_order.meter_code.blank?
+report.page.values meter_model: @work_order.meter_model.full_name unless @work_order.meter_model.blank?
+report.page.values caliber: @work_order.caliber.caliber unless @work_order.caliber.blank?
+report.page.values meter_type: @work_order.meter_model.meter_type.name unless @work_order.meter_model.blank?
+report.page.values meter_owner: @work_order.meter_owner.name unless @work_order.meter_owner.blank?
+report.page.values meter_location: @work_order.meter_location.name unless @work_order.meter_location.blank?
