@@ -56,6 +56,9 @@
 delete_path: @meter, delete_txt: t('.btn_delete'), msg: t("activerecord.models.meter.one"), :txt => @meter.meter_code,
 new_path: new_meter_path, new_txt: t('ag2_gest.meters.index.btn_new') } %>
 
+<% if !session[:return_to_contracting_request].nil? %>
+  <%= link_to session[:return_to_contracting_request], session[:return_to_contracting_request_url] %> |
+<% end %>
 <% if !session[:return_to_subscriber].nil? %>
   <%= link_to session[:return_to_subscriber], session[:return_to_subscriber_url] %> |
 <% end %>

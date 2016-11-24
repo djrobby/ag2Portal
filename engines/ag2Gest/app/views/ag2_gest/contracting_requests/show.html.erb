@@ -1,3 +1,6 @@
+<% session[:return_to_contracting_request] = "Volver a Solicitud" %>
+<% session[:return_to_contracting_request_url] = "#{request.protocol}#{request.host_with_port}#{request.fullpath}" %>
+
 <%= render '/layouts/ag2_gest/crequestsbreadcrumb' %>
 
 <h3><%= t('.title')%></h3>

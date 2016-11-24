@@ -77,7 +77,8 @@ module Ag2Gest
 
       respond_to do |format|
         if @billing_frequency.update_attributes(params[:billing_frequency])
-          format.html { redirect_to @billing_frequency, notice: t('activerecord.attributes.billing_frequency.successfully') }
+          format.html { redirect_to @billing_frequency,
+                        notice: (crud_notice('updated', @billing_frequency) + "#{undo_link(@billing_frequency)}").html_safe }
           format.json { head :no_content }
         else
           format.html { render action: "edit" }
@@ -90,11 +91,15 @@ module Ag2Gest
     # DELETE /billing_frequencies/1.json
     def destroy
       @billing_frequency = BillingFrequency.find(params[:id])
-      @billing_frequency.destroy
 
       respond_to do |format|
-        format.html { redirect_to billing_frequencies_url }
-        format.json { head :no_content }
+        if @billing_frequency.destroy
+          format.html { redirect_to billing_frequencies_path, notice: (crud_notice('destroyed', @billing_frequency) + "#{undo_link(@billing_frequency)}").html_safe }
+          format.json { head :no_content }
+        else
+          format.html { redirect_to billing_frequencies_url, alert: "#{@billing_frequency.errors[:base].to_s}".gsub('["', '').gsub('"]', '') }
+          format.json { render json: @billing_frequency.errors, status: :unprocessable_entity }
+        end
       end
     end
 

@@ -10,6 +10,7 @@
 <table class="table table-condensed table-striped">
   <thead>
     <tr>
+      <th><%= sortable "code", t('activerecord.attributes.service_point.code') %></th>
       <th><%= sortable "street_type_id", t('activerecord.attributes.service_point.direction') %></th>
       <th><%= sortable "name", t('activerecord.attributes.service_point.name') %></th>
       <th><%= sortable "diameter", t('activerecord.attributes.service_point.diameter') %></th>
@@ -17,12 +18,14 @@
       <th><%= sortable "reading_variant", t('activerecord.attributes.service_point.reading_variant_acr') %></th>
       <th><%= sortable "cadastral_reference", t('activerecord.attributes.service_point.cadastral_reference') %></th>
       <th><%= t('activerecord.attributes.service_point.available_for_contract') %>:</th>
+      <th></th>
     </tr>
   </thead>
   <tbody>
     <% @service_points.each do |service_point| %>
       <tr>
-        <td><%= link_to "#{service_point.try(:street_directory).try(:to_full_label)}, #{service_point.try(:street_number)}", service_point_path(service_point) %></td>
+        <td><%= link_to service_point.try(:code), service_point_path(service_point) %></td>
+        <td><%= "#{service_point.try(:street_directory).try(:to_full_label)}, #{service_point.try(:street_number)}"%></td>
         <td><%= service_point.try(:name)%></td>
         <td><%= service_point.try(:diameter) %></td>
         <td><%= service_point.try(:gis_id) %></td>

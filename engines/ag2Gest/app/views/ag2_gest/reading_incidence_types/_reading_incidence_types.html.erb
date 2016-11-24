@@ -10,15 +10,16 @@
 <table class="table table-condensed table-striped">
   <thead>
     <tr>
-      <th><%= sortable "code", t('activerecord.attributes.reading_incidence_type.code') %></th>
-      <th><%= sortable "name", t('activerecord.attributes.reading_incidence_type.name') %></th>
+      <th><%= sortable "code", t('activerecord.attributes.reading_incidence_type.name') %></th>
+      <th><%= sortable "name", t('activerecord.attributes.reading_incidence_type.code') %></th>
       <th><%= t('activerecord.attributes.reading_incidence_type.should_estimate') %></th>
+      <th></th>
     </tr>
   </thead>
   <tbody>
     <% @reading_incidence_types.each do |reading_incidence_type| %>
     <tr>
-      <td><%= link_to reading_incidence_type.try(:code), reading_incidence_type_path(reading_incidence_type) %></td>
+      <td><%= reading_incidence_type.try(:code)  %></td>
       <td><%= reading_incidence_type.try(:name) %></td>
       <td>
         <% if reading_incidence_type.try(:should_estimate) == true %>
@@ -28,14 +29,9 @@
         <% end %>
       </td>
       <td>
-        <%= link_to edit_reading_incidence_type_path(reading_incidence_type), class: "btn btn-mini" do %>
-          <i class="icon-edit"></i>
-        <% end %>
-
-        <%= link_to reading_incidence_type, class: "btn btn-mini", method: :delete, data: { confirm: 'Are you sure?' } do %>
-          <i class="icon-trash"></i>
-        <% end %>
-
+        <%= render :partial => '/layouts/crud/read', :locals => { :model => ReadingIncidenceType, :path => reading_incidence_type_path(reading_incidence_type) } %>
+        <%= render :partial => '/layouts/crud/edit', :locals => { :model => ReadingIncidenceType, :path => edit_reading_incidence_type_path(reading_incidence_type) } %>
+        <%= render :partial => '/layouts/crud/delete', :locals => { :model => ReadingIncidenceType, :path => reading_incidence_type, :msg => t("activerecord.models.reading_incidence_type.one"), :txt => reading_incidence_type.name } %>
       </td>
     </tr>
    <% end %>

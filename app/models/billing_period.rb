@@ -9,6 +9,8 @@ class BillingPeriod < ActiveRecord::Base
   has_many :pre_readings
   has_many :invoices
 
+  has_paper_trail
+
   # Scopes
   scope :by_period, -> { order(:period) }
   #

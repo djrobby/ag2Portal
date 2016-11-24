@@ -17,12 +17,13 @@
     </tr>
   </thead>
   <tbody>
-  	<% @street_directories.each do |street| %>
+    <% @street_directories.each do |street| %>
       <tr>
         <td><%= street.try(:street_type).try(:street_type_description) %></td>
-        <td><%= link_to street.try(:street_name), street_directory_path(street) %></td>
-        <td><%= street.try(:town).try(:name) %></td>
-        <td> <%= render :partial => '/layouts/crud/edit', :locals => { :model => StreetDirectory, :path => edit_street_directory_path(street) } %>
+        <td><%= street.try(:street_name) %></td>
+        <td><%= street.try(:town).try(:to_label) %></td>
+        <td> <%= link_to street_directory_path(street), class: "btn btn-mini" do %><i class="icon-eye-open"></i><% end %>
+        <%= render :partial => '/layouts/crud/edit', :locals => { :model => StreetDirectory, :path => edit_street_directory_path(street) } %>
         <%= render :partial => '/layouts/crud/delete', :locals => { :model => StreetDirectory, :path => street, :msg => t("activerecord.models.street_directory.one"), :txt => street.to_label } %> </td>
       </tr>
    <% end %>

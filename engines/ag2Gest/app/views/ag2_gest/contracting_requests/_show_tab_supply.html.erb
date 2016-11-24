@@ -477,7 +477,7 @@
           <td><b><%= t('activerecord.attributes.contracting_request.tariff_scheme') %></b></td>
           <td>
             <% if @water_supply_contract.tariff_scheme %>
-              <%= link_to @water_supply_contract.tariff_scheme.name, tariff_scheme_path(@water_supply_contract.tariff_scheme) %>
+              <%= link_to @water_supply_contract.tariff_scheme.name, tariff_scheme_path(@water_supply_contract.tariff_scheme) unless @water_supply_contract.tariff_scheme.blank? %>
             <% else %>
               <a id="tariff_scheme" href="#"><%=  %>
             <% end %>
@@ -502,11 +502,11 @@
       <tbody>
         <tr>
           <td><b>Referencia</b></td>
-          <td><%= link_to @contracting_request.service_point.code, ag2_gest.service_point_path(@contracting_request.service_point) unless @contracting_request.service_point.blank?  %></td>
+          <td><%= link_to @contracting_request.service_point.code, ag2_gest.service_point_path(@contracting_request.service_point) unless @contracting_request.service_point.blank? %></td>
         </tr>
         <tr>
           <td><b>Dirección</b></td>
-          <td><%= @contracting_request.service_point.to_full_label unless @contracting_request.service_point.blank?  %></td>
+          <td><%= @contracting_request.service_point.to_full_label unless @contracting_request.service_point.blank? %></td>
         </tr>
       </tbody>
     </table>

@@ -13,21 +13,19 @@
       <th><%= sortable "caliber", t('activerecord.attributes.caliber.caliber') %></th>
       <th><%= sortable "letter_id", t('activerecord.attributes.caliber.letter_id') %></th>
       <th><%= sortable "nominal_flow", t('activerecord.attributes.caliber.nominal_flow') %></th>
+      <th></th>
     </tr>
   </thead>
   <tbody>
     <% @calibers.each do |calib| %>
       <tr>
-        <td><%= link_to calib.try(:caliber), caliber_path(calib) %></td>
+        <td><%= calib.try(:caliber) %></td>
         <td><%= calib.try(:letter_id) %></td>
         <td><%= calib.try(:nominal_flow) %></td>
         <td>
-          <%= link_to edit_caliber_path(calib), class: "btn btn-mini" do %>
-            <i class="icon-edit"></i>
-          <% end %>
-          <%= link_to calib, class: "btn btn-mini", method: :delete, data: { confirm: 'Are you sure?' } do %>
-            <i class="icon-trash"></i>
-          <% end %>
+          <%= render :partial => '/layouts/crud/read', :locals => { :model => Caliber, :path => caliber_path(calib) } %>
+          <%= render :partial => '/layouts/crud/edit', :locals => { :model => Caliber, :path => edit_caliber_path(calib) } %>
+          <%= render :partial => '/layouts/crud/delete', :locals => { :model => Caliber, :path => calib, :msg => t("activerecord.models.caliber.one"), :txt => calib.to_label } %>
         </td>
       </tr>
     <% end %>

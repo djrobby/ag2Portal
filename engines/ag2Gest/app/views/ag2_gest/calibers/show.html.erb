@@ -1,6 +1,6 @@
 <%= render '/layouts/ag2_gest/caliberbreadcrumb' %>
 
-<h3><%= t('activerecord.attributes.caliber.caliber') %></h3>
+<h3><%= t('.title') %></h3>
 <table class="table">
   <tbody>
     <tr>
@@ -24,7 +24,13 @@
 delete_path: @caliber, delete_txt: t('.btn_delete'), msg: t("activerecord.models.caliber.one"), :txt => @caliber.id,
 new_path: new_caliber_path, new_txt: t('ag2_gest.calibers.index.btn_new') } %>
 
+<% if !session[:return_to_contracting_request].nil? %>
+  <%= link_to session[:return_to_contracting_request], session[:return_to_contracting_request_url] %> |
+<% end %>
 <% if !session[:return_to_subscriber].nil? %>
   <%= link_to session[:return_to_subscriber], session[:return_to_subscriber_url] %> |
+<% end %>
+<% if !session[:return_to_meter].nil? %>
+  <%= link_to session[:return_to_meter], session[:return_to_meter_url] %> |
 <% end %>
 <%= link_to I18n.t('ag2_gest.calibers.back_to_main_page'), calibers_path %>

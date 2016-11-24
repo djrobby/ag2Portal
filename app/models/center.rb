@@ -4,6 +4,8 @@ class Center < ActiveRecord::Base
 
   has_many :subscribers
 
+  has_paper_trail
+
   validates :town,        :presence => true
   validates :name,        :presence => true
 

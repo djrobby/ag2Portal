@@ -13,3 +13,4 @@ es:
         name: "Descripción"
         approval: ¿Requiere aprobación?
         notification: ¿Notifica?
+        create: "Estado de oferta se ha creado correctamente."

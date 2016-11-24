@@ -10,9 +10,11 @@ class ContractingRequestStatus < ActiveRecord::Base
 
   has_many :contracting_requests
 
+  has_paper_trail
+
   validates :name,  :presence => true
 
-  before_validation :fields_to_uppercase
+  #before_validation :fields_to_uppercase
 
   def fields_to_uppercase
     if !self.name.blank?

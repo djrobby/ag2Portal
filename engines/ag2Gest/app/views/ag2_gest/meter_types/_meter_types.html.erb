@@ -15,6 +15,7 @@
   <thead>
     <tr>
       <th><%= sortable "name", "Nombre" %></th>
+      <th></th>
     </tr>
   </thead>
   <tbody>
@@ -22,12 +23,8 @@
     <tr>
       <td><%= link_to met_type.try(:name), meter_type_path(met_type) %></td>
       <td>
-        <%= link_to edit_meter_type_path(met_type), class: "btn btn-mini" do %>
-          <i class="icon-edit"></i>
-        <% end %>
-        <%= link_to met_type, class: "btn btn-mini", method: :delete, data: { confirm: 'Are you sure?' } do %>
-          <i class="icon-trash"></i>
-        <% end %>
+        <%= render :partial => '/layouts/crud/edit', :locals => { :model => MeterType, :path => edit_meter_type_path(met_type) } %>
+        <%= render :partial => '/layouts/crud/delete', :locals => { :model => MeterType, :path => met_type, :msg => t("activerecord.models.meter_type.one"), :txt => met_type.name } %>
       </td>
     </tr>
    <% end %>

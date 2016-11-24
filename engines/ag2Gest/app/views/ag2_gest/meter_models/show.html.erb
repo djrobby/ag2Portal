@@ -36,4 +36,7 @@ new_path: new_meter_model_path, new_txt: t('ag2_gest.meter_models.index.btn_new'
 <% if !session[:return_to_subscriber].nil? %>
   <%= link_to session[:return_to_subscriber], session[:return_to_subscriber_url] %> |
 <% end %>
+<% if !session[:return_to_meter].nil? %>
+  <%= link_to session[:return_to_meter], session[:return_to_meter_url] %> |
+<% end %>
 <%= link_to I18n.t('ag2_gest.meter_models.back_to_main_page'), meter_models_path %>

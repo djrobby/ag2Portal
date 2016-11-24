@@ -15,6 +15,7 @@
   <thead>
     <tr>
       <th><%= sortable "name", "Nombre" %></th>
+      <th></th>
     </tr>
   </thead>
   <tbody>
@@ -22,12 +23,8 @@
     <tr>
       <td><%= link_to met_owner.try(:name), meter_owner_path(met_owner) %></td>
       <td>
-        <%= link_to edit_meter_owner_path(met_owner), class: "btn btn-mini" do %>
-          <i class="icon-edit"></i>
-        <% end %>
-        <%= link_to met_owner, class: "btn btn-mini", method: :delete, data: { confirm: 'Are you sure?' } do %>
-          <i class="icon-trash"></i>
-        <% end %>
+        <%= render :partial => '/layouts/crud/edit', :locals => { :model => MeterOwner, :path => edit_meter_owner_path(met_owner) } %>
+        <%= render :partial => '/layouts/crud/delete', :locals => { :model => MeterOwner, :path => met_owner, :msg => t("activerecord.models.meter_owner.one"), :txt => met_owner.name } %>
       </td>
     </tr>
    <% end %>
@@ -35,5 +32,5 @@
 </table>
 
 <%= render :partial => '/layouts/pagination', :locals => { :ivar => @meter_owners } %>
-<%= render :partial => '/layouts/crud/new', :locals => { :model => MeterType, :path => new_meter_owner_path, :txt => t("ag2_gest.meter_owners.index.btn_new") } %>
+<%= render :partial => '/layouts/crud/new', :locals => { :model => MeterOwner, :path => new_meter_owner_path, :txt => t("ag2_gest.meter_owners.index.btn_new") } %>
 <%= link_to t("ag2_gest.meter_owners.index.back_to_management"), ag2_gest.meter_management_path %>

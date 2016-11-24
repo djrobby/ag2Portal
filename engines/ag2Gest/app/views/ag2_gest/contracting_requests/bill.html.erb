@@ -6,6 +6,9 @@
 		border-top: 1px solid white !important;
 	}
 </style>
+
+<%= render '/layouts/ag2_gest/billmbreadcrumb' %>
+
 <h3><%= t("activerecord.attributes.contracting_request.bill_name") %></h3>
 
 <%= link_to "<i class='icon-print icon-white'></i> Imprimir".html_safe, biller_pdf_contracting_request_path(@contracting_request, :format => :pdf), class: "btn btn-warning pull-right", target: "_blank" %>
@@ -20,7 +23,7 @@
 		<thead>
 			<th><%= t("activerecord.attributes.contracting_request.code") %></th>
 			<th><%= t("activerecord.attributes.contracting_request.description") %></th>
-			<th><%= t("activerecord.attributes.contracting_request.quantity") %></th> 
+			<th><%= t("activerecord.attributes.contracting_request.quantity") %></th>
 			<th><%= t("activerecord.attributes.contracting_request.price") %></th>
 			<th><%= t("activerecord.attributes.contracting_request.amount") %></th>
 			<th><%= t("activerecord.attributes.contracting_request.tax") %></th>
@@ -67,3 +70,11 @@
 	<hr style="border-width: 2px; border-top: 1px solid #000000;">
 
 <% end %>
+
+<% if !session[:return_to_contracting_request].nil? %>
+  <%= link_to session[:return_to_contracting_request], session[:return_to_contracting_request_url] %> |
+<% end %>
+<% if !session[:return_to_subscriber].nil? %>
+  <%= link_to session[:return_to_subscriber], session[:return_to_subscriber_url] %>
+<% end %>
+<%#= link_to I18n.t('ag2_gest.bills.back_to_main_page'), bills_path %>

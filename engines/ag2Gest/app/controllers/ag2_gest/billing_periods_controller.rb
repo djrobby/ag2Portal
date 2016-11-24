@@ -92,7 +92,8 @@ module Ag2Gest
 
       respond_to do |format|
         if @billing_period.update_attributes(params[:billing_period])
-          format.html { redirect_to @billing_period, notice: t('activerecord.attributes.billing_period.successfully') }
+          format.html { redirect_to @billing_period,
+                        notice: (crud_notice('updated', @billing_period) + "#{undo_link(@billing_period)}").html_safe }
           format.json { head :no_content }
         else
           format.html { render action: "edit" }
@@ -105,11 +106,16 @@ module Ag2Gest
     # DELETE /billing_periods/1.json
     def destroy
       @billing_period = BillingPeriod.find(params[:id])
-      @billing_period.destroy
 
       respond_to do |format|
-        format.html { redirect_to billing_periods_url }
-        format.json { head :no_content }
+        if @billing_period.destroy
+          format.html { redirect_to billing_periods_url,
+                      notice: (crud_notice('destroyed', @billing_period) + "#{undo_link(@billing_period)}").html_safe }
+          format.json { head :no_content }
+        else
+          format.html { redirect_to billing_periods_url, alert: "#{@billing_period.errors[:base].to_s}".gsub('["', '').gsub('"]', '') }
+          format.json { render json: @billing_period.errors, status: :unprocessable_entity }
+        end
       end
     end
 

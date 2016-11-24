@@ -1,4 +1,4 @@
-<% session[:return_to_subscriber] = "Volver a abonado" %>
+<% session[:return_to_subscriber] = "Volver a Abonado" %>
 <% session[:return_to_subscriber_url] = "#{request.protocol}#{request.host_with_port}#{request.fullpath}" %>
 
 <style>
@@ -54,9 +54,6 @@
 
 <%= link_to t('activerecord.attributes.subscriber.print'), subscriber_pdf_subscriber_path(:format => :pdf), class: "btn btn-warning btn-mini pull-right", target: "_blank" %>
 
-<% if !session[:return_to_reading].nil? %>
-  <%= link_to session[:return_to_reading], session[:return_to_reading_url] %><br />
-<% end %>
 <h3><%= t('.title') %></h3>
 <table class="table">
   <tbody>
@@ -72,7 +69,7 @@
       <td><b><%= t('activerecord.attributes.subscriber.subscriber_code') %>:</b></td>
       <td><%= @subscriber.try(:full_code) %></td>
       <td><b><%= t('activerecord.attributes.subscriber.client_id') %>:</b></td>
-      <td colspan="3"><%= link_to @subscriber.try(:client).try(:full_code), ag2_gest.client_path(@subscriber.client_id) %></td>
+      <td colspan="3"><%= link_to @subscriber.try(:client).try(:full_code), ag2_gest.client_path(@subscriber.client_id) unless @subscriber.try(:client).blank? %></td>
     </tr>
     <tr>
       <td><b><%= t('activerecord.attributes.subscriber.starting_at') %>:</b></td>
@@ -108,10 +105,20 @@
       <td><b><%= t('activerecord.attributes.subscriber.country_id') %>:</b></td>
       <td><%= @subscriber.try(:center).try(:town).try(:province).try(:region).try(:country).try(:name) %></td>
       <td><b><%= t('activerecord.attributes.subscriber.center_id') %>:</b></td>
-      <td><%= link_to @subscriber.try(:center).try(:name), ag2_gest.center_path(@subscriber.center_id) %></td>
+      <td><%= link_to @subscriber.try(:center).try(:name), ag2_gest.center_path(@subscriber.center_id) unless @subscriber.try(:center).blank? %></td>
     </tr>
   </tbody>
 </table>
+
+<% if !session[:return_to_reading].nil? %>
+  <%= link_to session[:return_to_reading], session[:return_to_reading_url] %> |
+<% end %>
+<% if !session[:return_to_contracting_request].nil? %>
+  <%= link_to session[:return_to_contracting_request], session[:return_to_contracting_request_url] %> |
+<% end %>
+<%= link_to t("ag2_gest.subscribers.back_to_main_page"), subscribers_path %>
+<br/>
+<br/>
 
 <ul class="nav nav-tabs" id="myTab">
   <li class="active"><a href="#details" data-toggle="tab"><%= t('activerecord.attributes.subscriber.detail') %></a></li>
@@ -130,29 +137,27 @@
       <tbody>
         <tr>
           <td><b><%= t('activerecord.attributes.subscriber.contract') %>:</b></td>
-          <td colspan="5"><%= link_to @subscriber.water_supply_contract.contracting_request.try(:full_no), ag2_gest.water_supply_contract_path(@subscriber.water_supply_contract) %></td>
-        <!--   <td><b><%#= t('activerecord.attributes.subscriber.tariff') %>:</b></td>
-          <td><%#= (link_to @subscriber.try(:tariff_scheme).try(:name), ag2_gest.tariff_scheme_path(@subscriber.tariff_scheme)) if @subscriber.tariff_scheme %></td>
-         --></tr>
+          <td colspan="5"><%= link_to @subscriber.water_supply_contract.contracting_request.try(:full_no), ag2_gest.water_supply_contract_path(@subscriber.water_supply_contract) unless @subscriber.try(:water_supply_contract).blank? %></td>
+        </tr>
         <tr>
           <td><b><%= t('activerecord.attributes.subscriber.meter_id') %>:</b></td>
           <td id="info_meter"><%= link_to @subscriber.try(:meter).try(:meter_code), ag2_gest.meter_path(@subscriber.meter_id) unless @subscriber.try(:meter).blank? %></td>
           <td><b><%= t('activerecord.attributes.subscriber.model') %>:</b></td>
-          <td id="info_brand"><%= link_to @subscriber.meter.meter_model.full_name, ag2_gest.meter_model_path(@subscriber.meter.meter_model) unless @subscriber.meter.nil? %></td>
+          <td id="info_brand"><%= link_to @subscriber.meter.meter_model.full_name, ag2_gest.meter_model_path(@subscriber.meter.meter_model) unless @subscriber.meter.blank? %></td>
           <td><b><%= t('activerecord.attributes.subscriber.caliber') %>:</b></td>
-          <td id="info_caliber"><%= link_to @subscriber.try(:meter).try(:caliber).try(:caliber), ag2_gest.caliber_path(@subscriber.meter.caliber_id) if @subscriber.try(:meter) %></td>
+          <td id="info_caliber"><%= link_to @subscriber.try(:meter).try(:caliber).try(:caliber), ag2_gest.caliber_path(@subscriber.meter.caliber_id) unless @subscriber.try(:meter).try(:caliber).blank? %></td>
         </tr>
         <tr>
           <td><b><%= t('activerecord.attributes.subscriber.tariff_scheme_id') %>:</b></td>
-          <td><%= link_to @subscriber.try(:tariff_scheme).try(:name), tariff_scheme_path(@subscriber.tariff_scheme) if @subscriber.tariff_scheme %></td>
+          <td><%= link_to @subscriber.try(:tariff_scheme).try(:name), tariff_scheme_path(@subscriber.tariff_scheme) unless @subscriber.tariff_scheme.blank? %></td>
           <td><b><%= t('activerecord.attributes.subscriber.tariff_type_id') %>:</b></td>
-          <td><%= link_to @subscriber.try(:tariff_scheme).try(:tariff_type).try(:name), ag2_gest.tariff_type_path(@subscriber.tariff_scheme.tariff_type_id) %></td>
+          <td><%= link_to @subscriber.try(:tariff_scheme).try(:tariff_type).try(:name), ag2_gest.tariff_type_path(@subscriber.tariff_scheme.tariff_type_id) unless @subscriber.try(:tariff_scheme).try(:tariff_type).blank? %></td>
           <td><b><%= t('activerecord.attributes.subscriber.billing_frequency_id') %>:</b></td>
-          <td><%= link_to @subscriber.try(:billing_frequency).try(:name), billing_frequency_path(@subscriber.billing_frequency_id) if @subscriber.billing_frequency %></td>
+          <td><%= link_to @subscriber.try(:billing_frequency).try(:name), billing_frequency_path(@subscriber.billing_frequency_id) unless @subscriber.try(:billing_frequency).blank? %></td>
         </tr>
         <tr>
           <td><b><%= t('activerecord.attributes.subscriber.reading_route_id') %>:</b></td>
-          <td><%= link_to @subscriber.try(:reading_route).try(:to_label), reading_route_path(@subscriber.reading_route) if @subscriber.reading_route %></td>
+          <td><%= link_to @subscriber.try(:reading_route).try(:to_label), reading_route_path(@subscriber.reading_route) unless @subscriber.reading_route.blank? %></td>
           <td><b><%= t('activerecord.attributes.subscriber.reading_sequence') %>:</b></td>
           <td><%= @subscriber.try(:reading_sequence) %></td>
           <td><b><%= t('activerecord.attributes.subscriber.reading_variant') %>:</b></td>
@@ -160,7 +165,7 @@
         </tr>
         <tr>
           <td><b><%= t('activerecord.attributes.subscriber.service_point_id') %>:</b></td>
-          <td><%= link_to @subscriber.try(:service_point).try(:to_full_label), service_point_path(@subscriber.service_point) if @subscriber.service_point %></td>
+          <td><%= link_to @subscriber.try(:service_point).try(:to_full_label), service_point_path(@subscriber.service_point) unless @subscriber.service_point.blank? %></td>
           <td><b><%= t('activerecord.attributes.subscriber.cadastral_reference') %>:</b></td>
           <td><%= @subscriber.try(:cadastral_reference) %></td>
           <td><b><%= t('activerecord.attributes.subscriber.gis_id_wc') %>:</b></td>

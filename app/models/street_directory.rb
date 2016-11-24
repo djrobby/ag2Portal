@@ -6,6 +6,8 @@ class StreetDirectory < ActiveRecord::Base
 
   has_many :service_points
 
+  has_paper_trail
+
   validates :town,        :presence => true
   validates :street_type, :presence => true
   validates :street_name, :presence => true,

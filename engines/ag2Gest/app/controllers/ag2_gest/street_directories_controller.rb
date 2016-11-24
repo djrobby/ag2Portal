@@ -75,10 +75,11 @@ module Ag2Gest
       @breadcrumb = 'update'
       @street_directory = StreetDirectory.find(params[:id])
       @street_directory.updated_by = current_user.id if !current_user.nil?
-      
+
       respond_to do |format|
         if @street_directory.update_attributes(params[:street_directory])
-          format.html { redirect_to @street_directory, notice: t('activerecord.attributes.street_directory.successfully') }
+          format.html { redirect_to @street_directory,
+                        notice: (crud_notice('updated', @street_directory) + "#{undo_link(@street_directory)}").html_safe }
           format.json { head :no_content }
         else
           format.html { render action: "edit" }
@@ -91,11 +92,16 @@ module Ag2Gest
     # DELETE /street_directories/1.json
     def destroy
       @street_directory = StreetDirectory.find(params[:id])
-      @street_directory.destroy
 
       respond_to do |format|
-        format.html { redirect_to street_directories_url }
-        format.json { head :no_content }
+        if @street_directory.destroy
+          format.html { redirect_to street_directories_url,
+                      notice: (crud_notice('destroyed', @street_directory) + "#{undo_link(@street_directory)}").html_safe }
+          format.json { head :no_content }
+        else
+          format.html { redirect_to street_directories_url, alert: "#{@street_directory.errors[:base].to_s}".gsub('["', '').gsub('"]', '') }
+          format.json { render json: @street_directory.errors, status: :unprocessable_entity }
+        end
       end
     end
 

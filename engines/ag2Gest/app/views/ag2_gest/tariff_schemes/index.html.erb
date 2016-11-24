@@ -125,7 +125,7 @@
       <%= label_tag "Esquema a duplicar", nil, :class => 'form-label-under-sel2' %>
       <%= select_tag "tariff_schemes", options_from_collection_for_select(TariffScheme.belongs_to_projects(@project_ids).actives, "id", "to_label"), :prompt => "", :class => 'x-large-text-field shrinked sel2', required: "required" %>
 
-      <%= label_tag "Incremento porcentual", nil, :class => 'form-label' %>
+      <%= label_tag "Incremento porcentual", nil, :class => 'form-label-under-sel2' %>
       <%= text_field_tag "pct_value", nil, :class => 'x-large-text-field shrinked number-text-field', onkeyup: "caps(this)", type: "number", step: "any", required: "required" %>
 
       <%= label_tag "Fecha inicio de vigencia", nil, :class => 'form-label' %>

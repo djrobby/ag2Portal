@@ -10,26 +10,21 @@
 <table class="table table-condensed table-striped">
   <thead>
     <tr>
-      <th><%= sortable "id", t('activerecord.attributes.reading_route.id') %></th>
-      <th><%= sortable "project_id", t('activerecord.attributes.reading_route.project_id') %></th>
       <th><%= sortable "route_code", t('activerecord.attributes.reading_route.route_code') %></th>
       <th><%= sortable "name", t('activerecord.attributes.reading_route.name') %></th>
+      <th><%= sortable "project_id", t('activerecord.attributes.reading_route.project_id') %></th>
+      <th></th>
     </tr>
   </thead>
   <tbody>
     <% @reading_routes.each do |reading_route| %>
     <tr>
-      <td><%= link_to reading_route.try(:id), reading_route_path(reading_route) %></td>
-      <td><%= reading_route.try(:project).try(:name) %></td>
-      <td><%= reading_route.try(:route_code) %></td>
+      <td><%= link_to reading_route.try(:route_code), reading_route_path(reading_route) %></td>
       <td><%= reading_route.try(:name) %></td>
+      <td><%= reading_route.try(:project).try(:name) %></td>
       <td>
-        <%= link_to edit_reading_route_path(reading_route), class: "btn btn-mini" do%>
-          <i class="icon-edit"></i>
-        <% end %>
-        <%= link_to reading_route, class: "btn btn-mini", method: :delete, data: { confirm: 'Are you sure?' } do %>
-          <i class="icon-trash"></i>
-        <% end %>
+        <%= render :partial => '/layouts/crud/edit', :locals => { :model => ReadingRoute, :path => edit_reading_route_path(reading_route)} %>
+        <%= render :partial => '/layouts/crud/delete', :locals => { :model => ReadingRoute, :path => reading_route, :msg => t("activerecord.models.reading_route.one"), :txt => reading_route.to_label } %>
       </td>
     </tr>
    <% end %>

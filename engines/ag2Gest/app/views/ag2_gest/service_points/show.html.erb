@@ -6,62 +6,62 @@
     <tr>
       <td><%= t('activerecord.attributes.service_point.id') %>:</td>
       <td><%= @service_point.try(:id) %></td>
+      <td><%= t('activerecord.attributes.service_point.code') %>:</td>
+      <td><%= @service_point.try(:code) %></td>
+    </tr>
+    <tr>
       <td><%= t('activerecord.attributes.service_point.name') %>:</td>
       <td><%= @service_point.try(:name) %></td>
-    </tr>
-    <tr>
       <td><%= t('activerecord.attributes.service_point.gis_id') %>:</td>
       <td><%= @service_point.try(:gis_id) %></td>
+    </tr>
+    <tr>
       <td><%= t('activerecord.attributes.service_point.cadastral_reference') %>:</td>
       <td><%= @service_point.try(:cadastral_reference) %></td>
-    </tr>
-    <tr>
       <td><%= t('activerecord.attributes.service_point.service_point_type_id') %>:</td>
       <td><%= @service_point.try(:service_point_type).try(:name) %></td>
+    </tr>
+    <tr> 
       <td><%= t('activerecord.attributes.service_point.street_type_id') %>:</td>
       <td><%= @service_point.try(:street_directory).try(:street_type).try(:street_type_description) %></td>
-    </tr>
-    <tr>
       <td><%= t('activerecord.attributes.service_point.street_directory_id') %>:</td>
       <td><%= @service_point.try(:street_directory).try(:to_full_label) %></td>
+     </tr>
+    <tr>
       <td><%= t('activerecord.attributes.service_point.street_name') %>:</td>
       <td><%= @service_point.try(:street_directory).try(:street_name) %></td>
-    </tr>
-    <tr>
       <td><%= t('activerecord.attributes.service_point.street_number') %>:</td>
       <td><%= @service_point.try(:street_number) %></td>
+    </tr>
+    <tr> 
       <td><%= t('activerecord.attributes.service_point.building') %>:</td>
       <td><%= @service_point.try(:building) %></td>
-    </tr>
-    <tr>
       <td><%= t('activerecord.attributes.service_point.floor') %>:</td>
       <td><%= @service_point.try(:floor) %></td>
+    </tr>
+    <tr>
       <td><%= t('activerecord.attributes.service_point.floor_office') %>:</td>
       <td><%= @service_point.try(:floor_office) %></td>
-    </tr>
-    <tr>
       <td><%= t('activerecord.attributes.service_point.zipcode_id') %>:</td>
       <td><%= @service_point.try(:zipcode).try(:to_label) %></td>
+    </tr>
+    <tr> 
       <td><%= t('activerecord.attributes.service_point.town_id') %>:</td>
       <td><%= @service_point.try(:street_directory).try(:town).try(:name) %></td>
-    </tr>
-    <tr>
       <td><%= t('activerecord.attributes.service_point.province_id') %>:</td>
       <td><%= @service_point.try(:street_directory).try(:town).try(:province).try(:name) %></td>
+    </tr>
+    <tr>
       <td><%= t('activerecord.attributes.service_point.region_id') %>:</td>
       <td><%= @service_point.try(:street_directory).try(:town).try(:province).try(:region).try(:name) %></td>
-    </tr>
-    <tr>
       <td><%= t('activerecord.attributes.service_point.country_id') %>:</td>
       <td><%= @service_point.try(:street_directory).try(:town).try(:province).try(:region).try(:country).try(:name) %></td>
-      <td><%= t('activerecord.attributes.service_point.service_point_location_id') %>:</td>
-      <td><%= @service_point.try(:service_point_location).try(:name) %></td>
     </tr>
     <tr>
+      <td><%= t('activerecord.attributes.service_point.service_point_location_id') %>:</td>
+      <td><%= @service_point.try(:service_point_location).try(:name) %></td>
       <td><%= t('activerecord.attributes.service_point.service_point_purpose_id') %>:</td>
       <td><%= @service_point.try(:service_point_purpose).try(:name) %></td>
-      <td><%= t('activerecord.attributes.service_point.diameter') %>:</td>
-      <td><%= @service_point.try(:diameter) %></td>
     </tr>
     <tr>
       <td><%= t('activerecord.attributes.service_point.verified') %>:</td>
@@ -82,6 +82,12 @@
       </td>
     </tr>
     <tr>
+      <td><%= t('activerecord.attributes.service_point.diameter') %>:</td>
+      <td><%= @service_point.try(:diameter) %></td>
+      <td><%= t('activerecord.attributes.service_point.reading_variant') %>:</td>
+      <td><%= @service_point.try(:reading_variant) %></td>
+    </tr>
+    <tr>
       <td><%= t('activerecord.attributes.service_point.reading_route_id') %>:</td>
       <td><%= @service_point.try(:reading_route).try(:name) unless @service_point.reading_route.nil? %></td>
       <td><%= t('activerecord.attributes.service_point.reading_sequence') %>:</td>
@@ -91,7 +97,7 @@
       <td><%= t('activerecord.attributes.service_point.company_id') %>:</td>
       <td><%= @service_point.try(:company).try(:name) %></td>
       <td><%= t('activerecord.attributes.service_point.office_id') %>:</td>
-      <td><%= @service_point.try(:office).try(:name) %></td>
+      <td><%= @service_point.try(:office).try(:to_label) %></td>
     </tr>
 
     <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @service_point } %>
@@ -104,6 +110,9 @@
 delete_path: @service_point, delete_txt: t('.btn_delete'), msg: t("activerecord.models.service_point.one"), :txt => @service_point.id,
 new_path: new_service_point_path, new_txt: t('ag2_gest.service_points.index.btn_new') } %>
 
+<% if !session[:return_to_contracting_request].nil? %>
+  <%= link_to session[:return_to_contracting_request], session[:return_to_contracting_request_url] %> |
+<% end %>
 <% if !session[:return_to_subscriber].nil? %>
   <%= link_to session[:return_to_subscriber], session[:return_to_subscriber_url] %> |
 <% end %>

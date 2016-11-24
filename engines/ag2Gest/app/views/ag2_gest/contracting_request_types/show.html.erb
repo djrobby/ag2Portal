@@ -15,7 +15,7 @@
 </table>
 
 <%= render partial: '/layouts/crud/update_delete_new', locals:
-{ model: TariffScheme, update_path: edit_contracting_request_type_path(@contracting_request_type), update_txt: t('.btn_edit'),
+{ model: ContractingRequestType, update_path: edit_contracting_request_type_path(@contracting_request_type), update_txt: t('.btn_edit'),
 delete_path: @contracting_request_type, delete_txt: t('.btn_delete'), msg: t("activerecord.models.contracting_request_type.one"), :txt => @contracting_request_type.description,
 new_path: new_contracting_request_type_path, new_txt: t('ag2_gest.contracting_request_types.index.btn_new') } %>
 

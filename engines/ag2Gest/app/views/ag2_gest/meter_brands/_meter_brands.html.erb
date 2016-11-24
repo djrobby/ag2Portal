@@ -17,6 +17,7 @@
       <th><%= sortable "brand", "Marca" %></th>
       <th><%= sortable "manufacturer", "Fabricante" %></th>
       <th><%= sortable "letter_id", "Letra" %></th>
+      <th></th>
     </tr>
   </thead>
   <tbody>
@@ -26,12 +27,8 @@
       <td><%= met_brand.manufacturer.name %></td>
       <td><%= met_brand.letter_id %></td>
       <td>
-        <%= link_to edit_meter_brand_path(met_brand), class: "btn btn-mini" do %>
-          <i class="icon-edit"></i>
-        <% end %>
-        <%= link_to met_brand, class: "btn btn-mini", method: :delete, data: { confirm: 'Are you sure?' } do %>
-          <i class="icon-trash"></i>
-        <% end %>
+        <%= render :partial => '/layouts/crud/edit', :locals => { :model => MeterBrand, :path => edit_meter_brand_path(met_brand) } %>
+        <%= render :partial => '/layouts/crud/delete', :locals => { :model => MeterBrand, :path => met_brand, :msg => t("activerecord.models.meter_brand.one"), :txt => met_brand.brand } %>
       </td>
     </tr>
    <% end %>

@@ -1,6 +1,6 @@
 <%= render '/layouts/ag2_gest/sdirectorybreadcrumb' %>
 
-<h3><%=@street_directory.try(:street_type).try(:street_type_code) + " " + @street_directory.try(:street_name) %></h3>
+<h3><%= t('.title') %></h3>
 <table class="table">
   <tbody>
     <tr>
@@ -13,7 +13,7 @@
       <td><%= t('activerecord.attributes.street_directory.street_type') %></td>
       <td><%= @street_directory.try(:street_type).try(:street_type_description) %></td>
       <td><%= t('activerecord.attributes.street_directory.town') %></td>
-      <td><%= @street_directory.try(:town).try(:name)%></td>
+      <td><%= @street_directory.try(:town).try(:to_label)%></td>
     </tr>
     <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @street_directory } %>
     <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @street_directory } %>

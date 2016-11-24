@@ -78,7 +78,8 @@ module Ag2Gest
 
       respond_to do |format|
         if @center.update_attributes(params[:center])
-          format.html { redirect_to @center, notice: t('activerecord.attributes.center.successfully') }
+          format.html { redirect_to @center,
+                        notice: (crud_notice('updated', @center) + "#{undo_link(@center)}").html_safe }
           format.json { head :no_content }
         else
           format.html { render action: "edit" }
@@ -91,11 +92,16 @@ module Ag2Gest
     # DELETE /centers/1.json
     def destroy
       @center = Center.find(params[:id])
-      @center.destroy
 
       respond_to do |format|
-        format.html { redirect_to centers_url }
-        format.json { head :no_content }
+        if @center.destroy
+          format.html { redirect_to centers_url,
+                      notice: (crud_notice('destroyed', @center) + "#{undo_link(@center)}").html_safe }
+          format.json { head :no_content }
+        else
+          format.html { redirect_to centers_url, alert: "#{@center.errors[:base].to_s}".gsub('["', '').gsub('"]', '') }
+          format.json { render json: @center.errors, status: :unprocessable_entity }
+        end
       end
     end
 

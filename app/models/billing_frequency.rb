@@ -10,8 +10,10 @@ class BillingFrequency < ActiveRecord::Base
 
   validate :days_xor_months
 
+  has_paper_trail
+
   def total_months
-    months.nil? ? days / 30 : months 
+    months.nil? ? days / 30 : months
   end
 
   def to_label

@@ -1,6 +1,6 @@
 <%= render '/layouts/ag2_gest/readingroutesbreadcrumb' %>
 
-<h3><%=@reading_route.try(:name) %></h3>
+<h3><%=t '.title' %></h3>
 <table class="table">
   <tbody>
 
@@ -11,9 +11,9 @@
 
     <tr>
       <td><%= t('activerecord.attributes.reading_route.project_id') %>:</td>
-      <td><%= link_to @reading_route.try(:project).try(:name), ag2_tech.project_path(@reading_route.project_id) if @reading_route.project %></td>
+      <td><%= @reading_route.try(:project).try(:full_name) %></td>
       <td><%= t('activerecord.attributes.reading_route.office_id') %>:</td>
-      <td><%= link_to @reading_route.try(:office).try(:name), ag2_admin.office_path(@reading_route.office_id) if @reading_route.office %></td>
+      <td><%= @reading_route.try(:office).try(:to_label)%></td>
     </tr>
 
     <tr>

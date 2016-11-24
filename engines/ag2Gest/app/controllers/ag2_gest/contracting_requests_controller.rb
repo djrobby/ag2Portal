@@ -865,7 +865,8 @@ module Ag2Gest
 
       respond_to do |format|
         if @contracting_request.update_attributes(params[:contracting_request])
-          format.html { redirect_to @contracting_request, notice: t('activerecord.attributes.contracting_request.successfully') }
+          format.html { redirect_to @contracting_request,
+                        notice: (crud_notice('updated', @contracting_request) + "#{undo_link(@contracting_request)}").html_safe }
           format.json { head :no_content }
         else
           format.html { render action: "edit" }
@@ -878,11 +879,15 @@ module Ag2Gest
     # DELETE /contracting_requests/1.json
     def destroy
       @contracting_request = ContractingRequest.find(params[:id])
-      @contracting_request.destroy
-
       respond_to do |format|
-        format.html { redirect_to contracting_requests_url }
-        format.json { head :no_content }
+        if @contracting_request.destroy
+          format.html { redirect_to contracting_requests_url,
+                      notice: (crud_notice('destroyed', @contracting_request) + "#{undo_link(@contracting_request)}").html_safe }
+          format.json { head :no_content }
+        else
+          format.html { redirect_to contracting_requests_url, alert: "#{@contracting_request.errors[:base].to_s}".gsub('["', '').gsub('"]', '') }
+          format.json { render json: @contracting_request.errors, status: :unprocessable_entity }
+        end
       end
     end
 
