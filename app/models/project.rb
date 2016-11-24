@@ -82,6 +82,10 @@ class Project < ActiveRecord::Base
     closed_at.blank? ? I18n.t(:yes_on) : I18n.t(:no_off)
   end
 
+  def has_analytical_plan?
+    charge_accounts.count > 0 ? true : false
+  end
+
   #
   # Class (self) user defined methods
   #

@@ -13,6 +13,8 @@ es:
         title: "Proyecto"
         btn_edit: "Editar Proyecto"
         btn_delete: "Borrar Proyecto"
+        subtable_title: "Cuentas del Proyecto"
+        return_to: "Volver a Proyecto"
       edit:
         title: "Editar Proyecto"
         btn_show: "Ver Proyecto"
@@ -22,3 +24,5 @@ es:
       generate_code_btn: "Código de Proyecto"
       code_error: "Imposible generar Código de Proyecto: No has elegido Empresa o Tipo."
       commercial_info: "Información Comercial"
+      add_plan_btn: "Agregar Plan Analítico"
+      from_project: "Proyecto a Clonar"

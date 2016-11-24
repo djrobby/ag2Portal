@@ -34,12 +34,12 @@ new_path: new_charge_group_path, new_txt: t('ag2_tech.charge_groups.index.btn_ne
 <h4><%=t '.subtable_title' %></h4>
 <table class="table table-condensed table-striped shrinked">
   <thead>
-    <%= render '/layouts/ag2_tech/accountsheader' %>
+    <%= render :partial => '/layouts/ag2_tech/accountsheader', :locals => { :from => 'G' } %>
   </thead>
   <tbody>
     <% session[:return_to] = I18n.t('ag2_tech.charge_groups.show.return_to') %>
     <% session[:return_to_url] = "#{request.protocol}#{request.host_with_port}#{request.fullpath}" %>
-    <%= render :partial => '/layouts/ag2_tech/accounts', :locals => { :accounts => @charge_accounts } %>
+    <%= render :partial => '/layouts/ag2_tech/accounts', :locals => { :accounts => @charge_accounts, :from => 'G' } %>
   </tbody>
 </table>
 <%= render :partial => '/layouts/pagination', :locals => { :ivar => @charge_accounts } %>

@@ -53,9 +53,7 @@
                 <li>
                   <a data-toggle="modal" href="#notfound"><i class="ico-commercialbilling"></i> <%= t("ag2_gest.home.bill.commercial_billing") %></a>
                 </li>
-                <li>
-                  <a data-toggle="modal" href="#notfound"><i class="ico-billing"></i> <%= t("ag2_gest.home.bill.invoices") %></a>
-                </li>
+                <li><%= link_to_resetting_filters(Ag2Gest, ag2_gest.invoices_path, '<i class="ico-billing"></i>'.html_safe + " " + t("ag2_gest.home.bill.invoices")) %></li>
                 <!--<li><%#= link_to_resetting_filters(Ag2Gest, ag2_gest.new_bill_path, '<i class="ico-commercialbilling"></i>'.html_safe + " " + t("ag2_gest.home.bill.commercial_billing")) %></li>-->
               </ul>
             </li>

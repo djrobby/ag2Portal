@@ -2,7 +2,11 @@
 <tr>
   <td><%= link_to account.full_code, account %></td>
   <td><%= account.name %></td>
+  <% if from == 'G' %>
   <td><%= account.project.full_code unless account.project.blank? %></td>
+  <% else %>
+  <td><%= account.charge_group.full_name unless account.project.blank? %></td>
+  <% end %>
   <td align="center"><%= account.opened_at.strftime("%d/%m/%Y") unless account.opened_at.blank? %></td>
   <td align="center"><%= account.closed_at.strftime("%d/%m/%Y") unless account.closed_at.blank? %></td>
 </tr>

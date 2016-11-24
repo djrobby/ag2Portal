@@ -1,7 +1,11 @@
 <tr>
   <th><%= t 'activerecord.attributes.charge_account.account_code' %></th>
   <th><%= t 'activerecord.attributes.charge_account.name' %></th>
+  <% if from == 'G' %>
   <th><%= t 'activerecord.attributes.charge_account.project' %></th>
+  <% else %>
+  <th><%= t 'activerecord.attributes.charge_account.charge_group' %></th>
+  <% end %>
   <th align="center"><%= t 'activerecord.attributes.charge_account.opened_at' %></th>
   <th align="center"><%= t 'activerecord.attributes.charge_account.closed_at' %></th>
 </tr>

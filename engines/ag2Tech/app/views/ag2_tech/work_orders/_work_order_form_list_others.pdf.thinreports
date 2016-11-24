@@ -1,0 +1,107 @@
+#
+# Lists
+#
+# Workers
+report.page.list(:workers).header do |header|
+	header.item(:w_title).value I18n.t("ag2_tech.work_orders.workers_title")
+	header.item(:w_no_c).value "#"
+	header.item(:w_worker_c).value I18n.t("activerecord.attributes.work_order_worker.worker")
+	header.item(:w_hours_c).value I18n.t("activerecord.attributes.work_order_worker.hours")
+	header.item(:w_cost_c).value I18n.t("activerecord.attributes.work_order_worker.cost")
+	header.item(:w_costs_c).value I18n.t("activerecord.attributes.work_order_worker.costs")
+end
+no = 0
+@workers.each do |i|
+	no = no + 1
+	report.page.list(:workers).add_row do |row|
+    	row.item(:w_no).value no
+    	row.item(:w_worker).value i.worker.full_name unless i.worker.blank?
+    	row.item(:w_hours).value number_with_precision(i.hours, precision: 4) unless i.hours.blank?
+    	row.item(:w_cost).value number_with_precision(i.cost, precision: 4) unless i.cost.blank?
+    	row.item(:w_costs).value number_with_precision(i.costs, precision: 4) unless i.costs.blank?
+	end
+	# Store page subtotals
+    report.page.list(:workers) do |list|
+		list.store.w_page_hours += i.hours
+		list.store.w_page_costs += i.costs
+    end
+end
+
+# Subcontractors
+report.page.list(:subcontractors).header do |header|
+	header.item(:s_title).value I18n.t("ag2_tech.work_orders.subcontractors_title")
+	header.item(:s_no_c).value "#"
+	header.item(:s_supplier_c).value I18n.t("activerecord.attributes.work_order_subcontractor.supplier")
+	header.item(:s_order_c).value I18n.t("activerecord.attributes.work_order_subcontractor.purchase_order")
+	header.item(:s_enforcement_pct_c).value I18n.t("activerecord.attributes.work_order_subcontractor.enforcement_pct")
+	header.item(:s_cost_c).value I18n.t("activerecord.attributes.work_order_subcontractor.cost")
+	header.item(:s_costs_c).value I18n.t("activerecord.attributes.work_order_subcontractor.costs")
+end
+no = 0
+@subcontractors.each do |i|
+	no = no + 1
+	report.page.list(:subcontractors).add_row do |row|
+    	row.item(:s_no).value no
+    	row.item(:s_supplier).value i.supplier.full_name unless i.supplier.blank?
+    	row.item(:s_order).value i.purchase_order.full_no unless i.purchase_order.blank?
+    	row.item(:s_enforcement_pct).value number_with_precision(i.enforcement_pct, precision: 2) unless i.enforcement_pct.blank?
+    	row.item(:s_cost).value number_with_precision(i.cost, precision: 4) unless i.cost.blank?
+    	row.item(:s_costs).value number_with_precision(i.costs, precision: 4) unless i.costs.blank?
+	end
+	# Store page subtotals
+    report.page.list(:subcontractors) do |list|
+		list.store.s_page_costs += i.costs
+    end
+end
+
+# Tools
+report.page.list(:tools).header do |header|
+	header.item(:t_title).value I18n.t("ag2_tech.work_orders.tools_title")
+	header.item(:t_no_c).value "#"
+	header.item(:t_tool_c).value I18n.t("activerecord.attributes.work_order_tool.tool")
+	header.item(:t_minutes_c).value I18n.t("activerecord.attributes.work_order_tool.minutes")
+	header.item(:t_cost_c).value I18n.t("activerecord.attributes.work_order_tool.cost")
+	header.item(:t_costs_c).value I18n.t("activerecord.attributes.work_order_tool.costs")
+end
+no = 0
+@tools.each do |i|
+	no = no + 1
+	report.page.list(:tools).add_row do |row|
+    	row.item(:t_no).value no
+    	row.item(:t_tool).value i.tool.full_name unless i.tool.blank?
+    	row.item(:t_minutes).value number_with_precision(i.minutes, precision: 2) unless i.minutes.blank?
+    	row.item(:t_cost).value number_with_precision(i.cost, precision: 4) unless i.cost.blank?
+    	row.item(:t_costs).value number_with_precision(i.costs, precision: 4) unless i.costs.blank?
+	end
+	# Store page subtotals
+    report.page.list(:tools) do |list|
+		list.store.t_page_minutes += i.minutes
+		list.store.t_page_costs += i.costs
+    end
+end
+
+# Vehicles
+report.page.list(:vehicles).header do |header|
+	header.item(:v_title).value I18n.t("ag2_tech.work_orders.vehicles_title")
+	header.item(:v_no_c).value "#"
+	header.item(:v_vehicle_c).value I18n.t("activerecord.attributes.work_order_vehicle.vehicle")
+	header.item(:v_distance_c).value I18n.t("activerecord.attributes.work_order_vehicle.distance")
+	header.item(:v_cost_c).value I18n.t("activerecord.attributes.work_order_vehicle.cost")
+	header.item(:v_costs_c).value I18n.t("activerecord.attributes.work_order_vehicle.costs")
+end
+no = 0
+@vehicles.each do |i|
+	no = no + 1
+	report.page.list(:vehicles).add_row do |row|
+    	row.item(:v_no).value no
+    	row.item(:v_vehicle).value i.vehicle.full_name unless i.vehicle.blank?
+    	row.item(:v_distance).value number_with_precision(i.distance, precision: 2) unless i.distance.blank?
+    	row.item(:v_cost).value number_with_precision(i.cost, precision: 4) unless i.cost.blank?
+    	row.item(:v_costs).value number_with_precision(i.costs, precision: 4) unless i.costs.blank?
+	end
+	# Store page subtotals
+    report.page.list(:vehicles) do |list|
+		list.store.v_page_distance += i.distance
+		list.store.v_page_costs += i.costs
+    end
+end

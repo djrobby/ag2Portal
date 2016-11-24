@@ -1,3 +1,29 @@
+<script>
+  $(document).ready(function() {
+    // Hide send_messages div
+    $("#send_mesages").hide();
+
+    $('.nsel2').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      allowClear: true
+    });
+  });
+
+  jQuery(function($) {
+    // when #add_plan_btn is clicked
+    $("#add_plan_btn").click(function() {
+      // make modal visible
+      $("#add-plan").modal('show');
+      return false;
+    });
+  });
+</script>
+
+<div id="send_mesages" class="alert alert-warning">
+  <a class="close">&#215;</a>
+  <%= content_tag :div, "", :id => "flash" %>  
+</div>
+
 <%= render '/layouts/ag2_tech/projectsbreadcrumb' %>
 
 <h3><%=t '.title' %></h3>
@@ -5,7 +31,7 @@
   <tbody>
     <tr>
       <td>Id:</td>
-      <td><%= @project.id %></td>
+      <td id="id"><%= @project.id %></td>
       <td><%=t 'activerecord.attributes.project.project_code' %>:</td>
       <td class="highlighted bolded"><%= @project.full_code %></td>
     </tr>
@@ -50,4 +76,27 @@
 delete_path: @project, delete_txt: t('.btn_delete'), msg: t("activerecord.models.project.one"), txt: @project.full_name,
 new_path: new_project_path, new_txt: t('ag2_tech.projects.index.btn_new') } %>
 
+<% if (@charge_accounts.count > 0) %>
+<h4><%=t '.subtable_title' %></h4>
+<table class="table table-condensed table-striped shrinked">
+  <thead>
+    <%= render :partial => '/layouts/ag2_tech/accountsheader', :locals => { :from => 'P' } %>
+  </thead>
+  <tbody>
+    <% session[:return_to] = I18n.t('ag2_tech.projects.show.return_to') %>
+    <% session[:return_to_url] = "#{request.protocol}#{request.host_with_port}#{request.fullpath}" %>
+    <%= render :partial => '/layouts/ag2_tech/accounts', :locals => { :accounts => @charge_accounts, :from => 'P' } %>
+  </tbody>
+</table>
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @charge_accounts } %>
+<% else %>
+<!-- Add analytical plan from existing project -->
+<!-- Button -->
+<a href="#" id="add_plan_btn" class="btn btn-warning"><i class="icon-download icon-white"></i> <%=t "ag2_tech.projects.add_plan_btn" %></a>
+<br /><br />
+<!-- Modal -->
+<%= render 'add_plan' %>
+<% end %>
+
 <%= link_to t("ag2_tech.projects.back_to_main_page"), projects_path %>
+

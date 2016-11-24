@@ -70,6 +70,8 @@ en:
   check: "Check"
   send_error: "<b>Oh oh!</b> Your e-mail could not be sent."
   send_ok: "Your e-mail has been sent."
+  process_error: "<b>¡Oh oh!</b> Your process request ended with error."
+  process_ok: "Your process request completed successfully."
   receive_meters: "Meters"
   hours_type:
     regular: "Regular"

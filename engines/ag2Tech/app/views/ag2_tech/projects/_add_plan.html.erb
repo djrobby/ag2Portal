@@ -1,0 +1,77 @@
+<!-- Modal -->
+<script>
+  var processed = false;
+
+  $(document).ready(function() {
+    $("#notify_mesage").hide();
+  });
+
+  jQuery(function($) {
+    $('#btn_accept').click(function() {
+      var project = $('#Project_ :selected').val();
+      var id = $('#id').html();
+      if ((id == "") || (project == "")) {
+        // Error
+        alert('<%= I18n.t(:mandatory_subtitle) %>');
+        return false;
+      }
+      // Show message
+      $("#notify_mesage").show();
+      // make the POST call
+      jQuery.getJSON('pr_add_plan/' + id + '/' + project, function(data) {
+        if (data.code == "$err") {
+          $("#notify_mesage").removeClass('alert-info').addClass('alert-warning')
+        } else {
+          $("#notify_mesage").removeClass('alert-warning').addClass('alert-info')
+        }
+        $("#notify_mesage").html(data.message);
+        $('#btn_accept').hide();
+        processed = true;
+        /*
+        // Hide message
+        $("#notify_mesage").hide();
+        // Refresh page
+        //location.href=location.href;
+        // Go on based on result
+        if (data.code == "$err") {
+          $("#send_mesages").removeClass('alert-info').addClass('alert-warning')
+        } else {
+          $("#send_mesages").removeClass('alert-warning').addClass('alert-info')
+        }
+        // Hide the modal and exit
+        $("#add-plan").modal('hide');
+        $("#flash").html(data.message);
+        $("#send_mesages").show();
+        */
+      });
+      return false;
+    });
+
+    $('#btn_close').click(function() {
+      if (processed) {
+        // Refresh page
+        location.href=location.href;
+      }
+    });
+  });
+</script>
+
+<div id="add-plan" class="modal hide fade" data-backdrop="static" style="display: none;">
+  <div id="notify_mesage" class="alert alert-info">
+    <%= t(:generating) %>
+  </div>
+  <div class="modal-header">
+    <a class="close" data-dismiss="modal">&#215;</a>
+    <h3><%= t("ag2_tech.projects.add_plan_btn") %></h3>
+    <span class="shrinked"><%= I18n.t(:mandatory_subtitle) %></span>
+  </div>
+  <div class="modal-body">
+    <!-- Project -->
+    <label for="Project_" class="form-label"> <abbr title="requerido">*</abbr> <%= I18n.t("ag2_tech.projects.from_project") %></label>
+    <%= select_tag "Project_", options_from_collection_for_select(@current_projects, "id", "to_label"), :prompt => "", :class => 'x-large-text-field nsel2' %>
+  </div>
+  <div class="modal-footer">
+    <a class="btn btn-primary" href="#" id="btn_accept"><%= t :generate %></a>
+    <a class="btn btn-primary" data-dismiss="modal" href="#" id="btn_close"><%= t :close_button %></a>
+  </div>
+</div>

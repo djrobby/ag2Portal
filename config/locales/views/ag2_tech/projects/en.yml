@@ -13,6 +13,8 @@ en:
         title: "Project"
         btn_edit: "Edit Project"
         btn_delete: "Delete Project"
+        subtable_title: "Project Accounts"
+        return_to: "Back to Project"
       edit:
         title: "Edit Project"
         btn_show: "Show Project"
@@ -22,3 +24,5 @@ en:
       generate_code_btn: "Project Code"
       code_error: "Unable to generate Project Code: No Company or Type chosen."
       commercial_info: "Commercial Info"
+      add_plan_btn: "Add Analytical Plan"
+      from_project: "Project to Clone"

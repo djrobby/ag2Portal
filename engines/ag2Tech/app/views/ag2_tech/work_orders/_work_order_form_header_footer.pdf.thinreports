@@ -1,0 +1,72 @@
+# New page & start
+report.start_new_page
+# Page header: Image block for Logo
+report.page.values company_logo: "public/" + @work_order.project.company.logo.url(:original).split("?").first unless @work_order.project.company.logo.blank?
+# Page header: Company
+report.page.values(company_name: @work_order.project.company.name,
+				   company_address_1: @work_order.project.company.address_1,
+				   company_address_2: @work_order.project.company.address_2,
+				   company_phones: @work_order.project.company.phone_and_fax,
+				   company_email: @work_order.project.company.email_and_website,
+				   company_fiscal_id: I18n.t("activerecord.attributes.company.fiscal_id_c") + ": " + @work_order.project.company.fiscal_id)
+# Page header: Possibly null values
+report.page.values master_order: @work_order.master_order.full_no unless @work_order.master_order.blank?
+report.page.values started_at: @work_order.started_at.strftime("%d/%m/%Y") unless @work_order.started_at.blank?
+report.page.values completed_at: @work_order.completed_at.strftime("%d/%m/%Y") unless @work_order.completed_at.blank?
+report.page.values closed_at: @work_order.closed_at.strftime("%d/%m/%Y") unless @work_order.closed_at.blank?
+report.page.values reported_at: @work_order.reported_at.strftime("%d/%m/%Y %H:%M:%S") unless @work_order.reported_at.blank?
+report.page.values approved_at: @work_order.approved_at.strftime("%d/%m/%Y %H:%M:%S") unless @work_order.approved_at.blank?
+report.page.values certified_at: @work_order.certified_at.strftime("%d/%m/%Y") unless @work_order.certified_at.blank?
+report.page.values posted_at: @work_order.posted_at.strftime("%d/%m/%Y") unless @work_order.posted_at.blank?
+report.page.values client: @work_order.client.full_name unless @work_order.client.blank?
+report.page.values area: @work_order.area.full_name unless @work_order.area.blank?
+report.page.values store: @work_order.store.name unless @work_order.store.blank?
+report.page.values charge_account: @work_order.charge_account.full_name unless @work_order.charge_account.blank?
+# Page header: Others
+report.page.values(form_title: I18n.t("activerecord.models.work_order.one"),
+				   order_no_title: I18n.t("activerecord.attributes.work_order.order_no_report") + ":",
+				   order_no: @work_order.full_no,
+				   order_date_title: I18n.t("activerecord.attributes.work_order.created_at") + ":",
+				   order_date: @work_order.created_at.strftime("%d/%m/%Y"),
+				   master_order_title: I18n.t("activerecord.attributes.work_order.master_order_report") + ":",
+				   description_title: I18n.t("activerecord.attributes.work_order.description") + ":",
+				   description: @work_order.description,
+				   project_title: I18n.t("activerecord.attributes.work_order.project") + ":",
+				   project: @work_order.project.full_name,
+				   woarea_title: I18n.t("activerecord.attributes.work_order.work_order_area") + ":",
+				   woarea: @work_order.work_order_area.name,
+				   type_title: I18n.t("activerecord.attributes.work_order.work_order_type") + ":",
+				   type: @work_order.work_order_type.name,
+				   labor_title: I18n.t("activerecord.attributes.work_order.work_order_labor") + ":",
+				   labor: @work_order.work_order_labor.name,
+				   area_title: I18n.t("activerecord.attributes.work_order.area") + ":",
+				   in_charge_title: I18n.t("activerecord.attributes.work_order.in_charge") + ":",
+				   in_charge: @work_order.in_charge.full_name,
+				   charge_account_title: I18n.t("activerecord.attributes.work_order.charge_account_report") + ":",
+				   store_title: I18n.t("activerecord.attributes.work_order.store") + ":",
+				   client_title: I18n.t("activerecord.attributes.work_order.client") + ":",
+				   petitioner_title: I18n.t("activerecord.attributes.work_order.petitioner") + ":",
+				   petitioner: @work_order.petitioner,
+				   location_title: I18n.t("activerecord.attributes.work_order.location") + ":",
+				   location: @work_order.location,
+				   pub_record_title: I18n.t("activerecord.attributes.work_order.pub_record_report") + ":",
+				   pub_record: @work_order.pub_record,
+				   status_title: I18n.t("activerecord.attributes.work_order.work_order_status") + ":",
+				   status: @work_order.work_order_status.name,
+				   started_at_title: I18n.t("activerecord.attributes.work_order.started_at_report") + ":",
+				   completed_at_title: I18n.t("activerecord.attributes.work_order.completed_at_report") + ":",
+				   closed_at_title: I18n.t("activerecord.attributes.work_order.closed_at_report") + ":",
+				   reported_at_title: I18n.t("activerecord.attributes.work_order.reported_at_report") + ":",
+				   approved_at_title: I18n.t("activerecord.attributes.work_order.approved_at_report") + ":",
+				   certified_at_title: I18n.t("activerecord.attributes.work_order.certified_at_report") + ":",
+				   posted_at_title: I18n.t("activerecord.attributes.work_order.posted_at_report") + ":"
+				  )
+# Page footer
+report.page.values(printed_at: Time.now,
+				   pt: I18n.t("every_report.pt"),
+				   pd: I18n.t("every_report.pd"),
+				   currency_note: I18n.t("every_report.currency_note"),
+				   remarks_title: I18n.t("activerecord.attributes.work_order.remarks"),
+				   remarks: @work_order.remarks,
+				   total_costs_title: I18n.t("activerecord.attributes.work_order.total_costs") + ":",
+				   total_costs: number_with_precision(@work_order.this_total_costs, precision: 2, delimiter: delimiter))

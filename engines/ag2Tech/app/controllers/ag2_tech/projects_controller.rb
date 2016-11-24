@@ -9,7 +9,8 @@ module Ag2Tech
                                                :pr_update_company_and_office_textfields_from_organization,
                                                :pr_generate_code,
                                                :pr_update_offices_select_from_company,
-                                               :pr_update_total_and_price]
+                                               :pr_update_total_and_price,
+                                               :pr_add_plan]
 
     # Update company text field at view from office select
     def pr_update_company_textfield_from_office
@@ -87,6 +88,36 @@ module Ag2Tech
       render json: @offices
     end
 
+    # Add analytical plan to current project from chosen one
+    def pr_add_plan
+      code = '$ok'
+      new_id = params[:id].to_i
+      frm_id = params[:project]
+      frm_prj = Project.find(frm_id)
+      if !frm_prj.blank?
+        accounts = frm_prj.charge_accounts.by_code
+        accounts.each do |a|
+          charge_account = ChargeAccount.new
+          charge_account.name = a.name
+          charge_account.opened_at = DateTime.now.to_date
+          charge_account.project_id = new_id
+          charge_account.created_by = current_user.id if !current_user.nil?
+          charge_account.account_code = a.account_code[0..3] + params[:id].rjust(3, '0') + a.account_code[7..8]
+          charge_account.organization_id = a.organization_id
+          charge_account.charge_group_id = a.charge_group_id
+          charge_account.ledger_account_id = a.ledger_account_id
+          if !charge_account.save
+            # Can't save charge account
+            code = '$err'
+            break
+          end
+        end
+      end
+      message = code == '$err' ? t(:process_error) : t(:process_ok)
+      @json_data = { "code" => code, "message" => message }
+      render json: @json_data
+    end
+
     #
     # Default Methods
     #
@@ -153,6 +184,9 @@ module Ag2Tech
     def show
       @breadcrumb = 'read'
       @project = Project.find(params[:id])
+      @charge_accounts = @project.charge_accounts.paginate(:page => params[:page], :per_page => per_page).by_code
+      # Existing projects to generate new Analytical plan
+      @current_projects = projects_dropdown
 
       respond_to do |format|
         format.html # show.html.erb
@@ -288,7 +322,54 @@ module Ag2Tech
     end
 
     def offices_by_company(_company)
-      _offices = Office.where(company_id: _company).order(:name)
+      Office.where(company_id: _company).order(:name)
+    end
+
+    def projects_dropdown
+      _array = []
+      _projects = nil
+      _offices = nil
+      _companies = nil
+
+      if session[:office] != '0'
+        _projects = Project.where(office_id: session[:office].to_i).order(:project_code)
+      elsif session[:company] != '0'
+        _offices = current_user.offices
+        if _offices.count > 1 # If current user has access to specific active company offices (more than one: not exclusive, previous if)
+          _projects = Project.where('company_id = ? AND office_id IN (?)', session[:company].to_i, _offices)
+        else
+          _projects = Project.where(company_id: session[:company].to_i).order(:project_code)
+        end
+      else
+        _offices = current_user.offices
+        _companies = current_user.companies
+        if _companies.count > 1 and _offices.count > 1 # If current user has access to specific active organization companies or offices (more than one: not exclusive, previous if)
+          _projects = Project.where('company_id IN (?) AND office_id IN (?)', _companies, _offices)
+        else
+          _projects = session[:organization] != '0' ? Project.where(organization_id: session[:organization].to_i).order(:project_code) : Project.order(:project_code)
+        end
+      end
+
+      # Project with Analytical Plan
+      if !_projects.nil?
+        _projects.each do |_r|
+          if _r.has_analytical_plan?
+            _array = _array << _r.read_attribute('id') unless _array.include? _r.read_attribute('id')
+          end
+        end
+      end
+
+      # Returning founded projects
+      _projects = Project.where(id: _array).order(:project_code)
+    end
+
+    # Returns _array from _ret table/model filled with _id attribute
+    def ret_array(_array, _ret, _id)
+      if !_ret.nil?
+        _ret.each do |_r|
+          _array = _array << _r.read_attribute(_id) unless _array.include? _r.read_attribute(_id)
+        end
+      end
     end
 
     # Keeps filter state
