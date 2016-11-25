@@ -151,3 +151,6 @@ en:
       debt_claim_statuses:
         items: "DC Statuses"
         item: "Status"
+      commercial_billings:
+        items: "Commercial Bills"
+        item: "Bill"

@@ -241,6 +241,7 @@ Ag2Gest::Engine.routes.draw do
     resources :invoice_types
     resources :invoice_statuses
     resources :invoice_operations
+    resources :commercial_billings
     #
     resources :regulations
     resources :regulation_types

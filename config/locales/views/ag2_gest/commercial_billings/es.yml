@@ -1,0 +1,31 @@
+es:
+  ag2_gest:
+    commercial_billings:
+      index:
+        title: "Facturas Comerciales"
+        btn_new: "Nueva Factura"
+        back_to_root: "Volver a ag2Gest"
+        back_to_management: "Volver a Facturación"
+        label_project: "Proyecto"
+        label_client: "Cliente"
+        label_subscriber: "Abonado"
+        label_status: "Estado"
+        label_type: "Tipo"
+        label_operation: "Operación"
+        label_biller: "Facturante"
+        label_period: "Período"
+        label_others: "Otros"
+      show:
+        title: "Factura Comercial"
+        btn_edit: "Editar Factura"
+        btn_delete: "Borrar Factura"
+        return_to: "Volver a Factura"
+        print: "Imprimir"
+      edit:
+        title: "Editar Factura Comercial"
+        btn_show: "Ver Factura Comercial"
+      new:
+        title: "Nueva Factura Comercial"
+      back_to_main_page: "Volver a Facturas Comerciales"
+      items_info: "Items de la Factura"
+      

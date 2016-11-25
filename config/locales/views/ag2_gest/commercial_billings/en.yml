@@ -1,0 +1,31 @@
+en:
+  ag2_gest:
+    commercial_billings:
+      index:
+        title: "Commercial Billings"
+        btn_new: "New Bill"
+        back_to_root: "Back to ag2Gest"
+        back_to_management: "Back to Billing"
+        label_project: "Project"
+        label_client: "Client"
+        label_subscriber: "Subscriber"
+        label_status: "Status"
+        label_type: "Type"
+        label_operation: "Operation"
+        label_biller: "Biller"
+        label_period: "Period"
+        label_others: "Others"
+      show:
+        title: "Commercial Bill"
+        btn_edit: "Edit Bill"
+        btn_delete: "Delete Bill"
+        return_to: "Volver a Bill"
+        print: "Print"
+      edit:
+        title: "Edit Commercial Bill"
+        btn_show: "Show Commercial Bill"
+      new:
+        title: "New Commercial Bill"
+      back_to_main_page: "Back to Commercial Billings"
+      items_info: "Bill Items"
+      

@@ -1,13 +1,14 @@
 require_dependency "ag2_gest/application_controller"
 
 module Ag2Gest
-  class InvoicesController < ApplicationController
+  class CommercialBillingsController < ApplicationController
     include ActionView::Helpers::NumberHelper
     before_filter :authenticate_user!
-    load_and_authorize_resource
+    #load_and_authorize_resource (error: model class does not exist)
+    # Must authorize manually for every action in this controller
 
-    # GET /invoices
-    # GET /invoices.json
+    # GET /commercial_billings
+    # GET /commercial_billings.json
     def index
       manage_filter_state
       no = params[:No]
@@ -33,10 +34,12 @@ module Ag2Gest
 
       # Arrays for search
       current_projects = @projects.blank? ? [0] : current_projects_for_index(@projects)
+      current_types = @types.blank? ? [0] : current_types_for_index(@types)
       # If inverse no search is required
       no = !no.blank? && no[0] == '%' ? inverse_no_search(no) : no
 
       @search = Invoice.search do
+        with :invoice_type_id, current_types
         with :project_id, current_projects
         fulltext params[:search]
         if !no.blank?
@@ -73,86 +76,95 @@ module Ag2Gest
         order_by :sort_no, :asc
         paginate :page => params[:page] || 1, :per_page => per_page || 10
       end
-      @invoices = @search.results
+      @commercial_billings = @search.results
+      authorize! :index, @commercial_billings
 
       respond_to do |format|
         format.html # index.html.erb
-        format.json { render json: @invoices }
+        format.json { render json: @commercial_billings }
         format.js
       end
     end
 
-    # GET /invoices/1
-    # GET /invoices/1.json
+    # GET /commercial_billings/1
+    # GET /commercial_billings/1.json
     def show
       @breadcrumb = 'read'
-      @invoice = Invoice.find(params[:id])
-      @bill = @invoice.bill
-      @items = @invoice.invoice_items.paginate(:page => params[:page], :per_page => per_page).order('id')
+      @commercial_billing = Invoice.find(params[:id])
 
       respond_to do |format|
         format.html # show.html.erb
-        format.json { render json: @invoice }
+        format.json { render json: @commercial_billing }
       end
     end
 
-    # GET /invoices/new
-    # GET /invoices/new.json
+    # GET /commercial_billings/new
+    # GET /commercial_billings/new.json
     def new
-      @invoice = Invoice.new
+      @breadcrumb = 'create'
+      @commercial_billing = Invoice.new
 
       respond_to do |format|
         format.html # new.html.erb
-        format.json { render json: @invoice }
+        format.json { render json: @commercial_billing }
       end
     end
 
-    # GET /invoices/1/edit
+    # GET /commercial_billings/1/edit
     def edit
-      @invoice = Invoice.find(params[:id])
+      @breadcrumb = 'update'
+      @commercial_billing = Invoice.find(params[:id])
     end
 
-    # POST /invoices
-    # POST /invoices.json
+    # POST /commercial_billings
+    # POST /commercial_billings.json
     def create
-      @invoice = Invoice.new(params[:invoice])
+      @breadcrumb = 'create'
+      @commercial_billing = Invoice.new(params[:commercial_billing])
 
       respond_to do |format|
-        if @invoice.save
-          format.html { redirect_to @invoice, notice: t('activerecord.attributes.invoice.create') }
-          format.json { render json: @invoice, status: :created, location: @invoice }
+        if @commercial_billing.save
+          format.html { redirect_to @commercial_billing, notice: crud_notice('created', @commercial_billing) }
+          format.json { render json: @commercial_billing, status: :created, location: @commercial_billing }
         else
           format.html { render action: "new" }
-          format.json { render json: @invoice.errors, status: :unprocessable_entity }
+          format.json { render json: @commercial_billing.errors, status: :unprocessable_entity }
         end
       end
     end
 
-    # PUT /invoices/1
-    # PUT /invoices/1.json
+    # PUT /commercial_billings/1
+    # PUT /commercial_billings/1.json
     def update
-      @invoice = Invoice.find(params[:id])
+      @breadcrumb = 'update'
+      @commercial_billing = Invoice.find(params[:id])
 
       respond_to do |format|
-        if @invoice.update_attributes(params[:invoice])
-          format.html { redirect_to @invoice, notice: t('activerecord.attributes.invoice.successfully') }
+        if @commercial_billing.update_attributes(params[:commercial_billing])
+          format.html { redirect_to @commercial_billing,
+                        notice: (crud_notice('updated', @commercial_billing) + "#{undo_link(@commercial_billing)}").html_safe }
           format.json { head :no_content }
         else
           format.html { render action: "edit" }
-          format.json { render json: @invoice.errors, status: :unprocessable_entity }
+          format.json { render json: @commercial_billing.errors, status: :unprocessable_entity }
         end
       end
     end
 
-    # DELETE /invoices/1
-    # DELETE /invoices/1.json
+    # DELETE /commercial_billings/1
+    # DELETE /commercial_billings/1.json
     def destroy
-      @invoice = Invoice.find(params[:id])
-      @invoice.destroy
+      @commercial_billing = Invoice.find(params[:id])
 
       respond_to do |format|
-        format.html { redirect_to invoices_url }
-        format.json { head :no_content }
+        if @commercial_billing.destroy
+          format.html { redirect_to commercial_billings_url,
+                      notice: (crud_notice('destroyed', @commercial_billing) + "#{undo_link(@commercial_billing)}").html_safe }
+          format.json { head :no_content }
+        else
+          format.html { redirect_to commercial_billings_url, alert: "#{@commercial_billing.errors[:base].to_s}".gsub('["', '').gsub('"]', '') }
+          format.json { render json: @commercial_billing.errors, status: :unprocessable_entity }
+        end
       end
     end
 
@@ -164,6 +176,14 @@ module Ag2Gest
         _current_projects = _current_projects << i.id
       end
       _current_projects
+    end
+
+    def current_types_for_index(_types)
+      _current_types = []
+      _types.each do |i|
+        _current_types = _current_types << i.id
+      end
+      _current_types
     end
 
     def inverse_no_search(no)
@@ -234,7 +254,7 @@ module Ag2Gest
     end
 
     def invoice_types_dropdown
-      InvoiceType.all
+      InvoiceType.commercial
     end
 
     def invoice_operations_dropdown

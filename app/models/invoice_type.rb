@@ -14,6 +14,9 @@ class InvoiceType < ActiveRecord::Base
 
   validates :name,  :presence => true
 
+  # Scopes
+  scope :commercial, -> { where("id != 1 AND id != 3") }
+
   def code
     case self.id
     when 1 then I18n.t('activerecord.attributes.invoice_type.code_1')

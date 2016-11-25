@@ -160,3 +160,6 @@ es:
       complaint_statuses:
         items: "Estados reclamación"
         item: "Estado"
+      commercial_billings:
+        items: "Facturas Comerciales"
+        item: "Factura"
