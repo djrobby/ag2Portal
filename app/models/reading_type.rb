@@ -5,6 +5,7 @@ class ReadingType < ActiveRecord::Base
   CONTROL = 3
   INSTALACION = 4
   RETIRADA = 5
+  AUTO = 6
 
   attr_accessible :name
 
