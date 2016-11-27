@@ -1,4 +1,5 @@
 class Invoice < ActiveRecord::Base
+  belongs_to :organization
   belongs_to :bill
   belongs_to :invoice_status
   belongs_to :invoice_type
@@ -14,7 +15,7 @@ class Invoice < ActiveRecord::Base
                   :discount_pct, :exemption, :payday_limit,
                   :bill_id, :invoice_status_id, :invoice_type_id, :tariff_scheme_id, :invoice_operation_id,
                   :biller_id, :original_invoice_id, :billing_period_id, :charge_account_id,
-                  :created_by, :updated_by, :reading_1_date, :reading_2_date, :reading_1_index, :reading_2_index
+                  :created_by, :updated_by, :reading_1_date, :reading_2_date, :reading_1_index, :reading_2_index, :organization_id
 
   has_many :invoice_items, dependent: :destroy
   has_many :client_payments
@@ -24,6 +25,8 @@ class Invoice < ActiveRecord::Base
   belongs_to :original_invoice, :class_name => 'Invoice'
 
   has_paper_trail
+
+  #validates :organization,       :presence => true
 
   # Scopes
   scope :by_no, -> { order(:invoice_no) }

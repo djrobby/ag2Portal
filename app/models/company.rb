@@ -10,7 +10,7 @@ class Company < ActiveRecord::Base
                   :zipcode_id, :town_id, :province_id, :phone, :fax, :cellular, :email, :logo,
                   :invoice_code, :invoice_header, :invoice_footer, :invoice_left_margin,
                   :created_by, :updated_by, :organization_id, :hd_email, :website,
-                  :max_order_total, :max_order_price, :overtime_pct
+                  :max_order_total, :max_order_price, :overtime_pct, :commercial_bill_code
   has_attached_file :logo, :styles => { :original => "160x160>", :medium => "120x120>", :small => "80x80>" }, :default_url => "/images/missing/:style/company.png"
   attr_accessible :company_notifications_attributes
 
@@ -35,16 +35,20 @@ class Company < ActiveRecord::Base
 
   has_paper_trail
 
-  validates :name,         :presence => true
-  validates :fiscal_id,    :presence => true,
-                           :length => { :minimum => 8 },
-                           :uniqueness => { :scope => :organization_id }
-  validates :street_type,  :presence => true
-  validates :zipcode,      :presence => true
-  validates :town,         :presence => true
-  validates :province,     :presence => true
-  validates :invoice_code, :presence => true
-  validates :organization, :presence => true
+  validates :name,                  :presence => true
+  validates :fiscal_id,             :presence => true,
+                                    :length => { :minimum => 8 },
+                                    :uniqueness => { :scope => :organization_id }
+  validates :street_type,           :presence => true
+  validates :zipcode,               :presence => true
+  validates :town,                  :presence => true
+  validates :province,              :presence => true
+  validates :invoice_code,          :presence => true,
+                                    :length => { :minimum => 2, :maximum => 4 },
+                                    :uniqueness => { :scope => :organization_id }
+  validates :commercial_bill_code,  :length => { :minimum => 2, :maximum => 4 }, :if => "!commercial_bill_code.blank?",
+                                    :uniqueness => { :scope => :organization_id }
+  validates :organization,          :presence => true
 
   validates_attachment_content_type :logo, :content_type => /\Aimage\/.*\Z/
 

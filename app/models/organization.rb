@@ -18,6 +18,8 @@ class Organization < ActiveRecord::Base
   has_many :meters
   has_many :subscribers, through: :offices
   has_many :service_points
+  has_many :bills
+  has_many :invoices
   # helpdesk
   has_many :technicians
   has_many :tickets

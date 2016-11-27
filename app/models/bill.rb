@@ -1,4 +1,5 @@
 class Bill < ActiveRecord::Base
+  belongs_to :organization
   belongs_to :project
   belongs_to :invoice_status
   belongs_to :subscriber
@@ -23,6 +24,8 @@ class Bill < ActiveRecord::Base
   has_many :instalments
   has_one :water_supply_contract
   has_one :pre_bill
+
+  #validates :organization,       :presence => true
 
   def bill_operation
     try(:invoices).try(:first).try(:invoice_operation_id)

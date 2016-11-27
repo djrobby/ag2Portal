@@ -6,7 +6,7 @@ class BillableItem < ActiveRecord::Base
 
   has_many :tariffs
 
-  attr_accessible :biller_id, :project_id, :billable_concept_id, :tariffs_by_caliber, :regulation_id
+  attr_accessible :biller_id, :project_id, :billable_concept_id, :tariffs_by_caliber, :regulation_id, :organization_id
 
   validates :project,           :presence => true
   validates :billable_concept,  :presence => true

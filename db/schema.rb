@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20161123152723) do
+ActiveRecord::Schema.define(:version => 20161127093443) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -246,11 +246,13 @@ ActiveRecord::Schema.define(:version => 20161123152723) do
     t.integer  "reading_1_id"
     t.integer  "reading_2_id"
     t.string   "remarks"
+    t.integer  "organization_id"
   end
 
   add_index "bills", ["client_id"], :name => "index_bills_on_client_id"
   add_index "bills", ["country_id"], :name => "index_bills_on_country_id"
   add_index "bills", ["invoice_status_id"], :name => "index_bills_on_invoice_status_id"
+  add_index "bills", ["organization_id"], :name => "index_bills_on_organization_id"
   add_index "bills", ["project_id"], :name => "index_bills_on_project_id"
   add_index "bills", ["province_id"], :name => "index_bills_on_province_id"
   add_index "bills", ["region_id"], :name => "index_bills_on_region_id"
@@ -583,8 +585,8 @@ ActiveRecord::Schema.define(:version => 20161123152723) do
   create_table "companies", :force => true do |t|
     t.string   "name"
     t.string   "fiscal_id"
-    t.datetime "created_at",                                                          :null => false
-    t.datetime "updated_at",                                                          :null => false
+    t.datetime "created_at",                                                           :null => false
+    t.datetime "updated_at",                                                           :null => false
     t.integer  "street_type_id"
     t.string   "street_name"
     t.string   "street_number"
@@ -610,12 +612,14 @@ ActiveRecord::Schema.define(:version => 20161123152723) do
     t.integer  "updated_by"
     t.integer  "organization_id"
     t.string   "hd_email"
-    t.decimal  "max_order_total",     :precision => 13, :scale => 4, :default => 0.0, :null => false
-    t.decimal  "max_order_price",     :precision => 12, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "max_order_total",      :precision => 13, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "max_order_price",      :precision => 12, :scale => 4, :default => 0.0, :null => false
     t.string   "website"
-    t.decimal  "overtime_pct",        :precision => 6,  :scale => 2, :default => 0.0, :null => false
+    t.decimal  "overtime_pct",         :precision => 6,  :scale => 2, :default => 0.0, :null => false
+    t.string   "commercial_bill_code"
   end
 
+  add_index "companies", ["commercial_bill_code"], :name => "index_companies_on_commercial_bill_code"
   add_index "companies", ["fiscal_id"], :name => "index_companies_on_fiscal_id"
   add_index "companies", ["invoice_code"], :name => "index_companies_on_invoice_code"
   add_index "companies", ["organization_id", "fiscal_id"], :name => "index_companies_on_organization_id_and_fiscal_id", :unique => true
@@ -1445,6 +1449,7 @@ ActiveRecord::Schema.define(:version => 20161123152723) do
     t.integer  "reading_1_index"
     t.integer  "reading_2_index"
     t.string   "remarks"
+    t.integer  "organization_id"
   end
 
   add_index "invoices", ["bill_id"], :name => "index_invoices_on_bill_id"
@@ -1456,6 +1461,7 @@ ActiveRecord::Schema.define(:version => 20161123152723) do
   add_index "invoices", ["invoice_operation_id"], :name => "index_invoices_on_invoice_operation_id"
   add_index "invoices", ["invoice_status_id"], :name => "index_invoices_on_invoice_status_id"
   add_index "invoices", ["invoice_type_id"], :name => "index_invoices_on_invoice_type_id"
+  add_index "invoices", ["organization_id"], :name => "index_invoices_on_organization_id"
   add_index "invoices", ["original_invoice_id"], :name => "index_invoices_on_original_invoice_id"
   add_index "invoices", ["tariff_scheme_id"], :name => "index_invoices_on_tariff_scheme_id"
 

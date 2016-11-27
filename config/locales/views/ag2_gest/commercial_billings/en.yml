@@ -2,7 +2,7 @@ en:
   ag2_gest:
     commercial_billings:
       index:
-        title: "Commercial Billings"
+        title: "Commercial Bills"
         btn_new: "New Bill"
         back_to_root: "Back to ag2Gest"
         back_to_management: "Back to Billing"
@@ -26,6 +26,22 @@ en:
         btn_show: "Show Commercial Bill"
       new:
         title: "New Commercial Bill"
-      back_to_main_page: "Back to Commercial Billings"
+      back_to_main_page: "Back to Commercial Bills"
       items_info: "Bill Items"
+      generate_code_btn: "Bill No."
+      code_error: "Unable to generate Bill No.: No Company chosen."
+      delete_item: "Delete this Item"
+      add_item: "Add new Item"
+      add_item_to: "Bill %{var}"
+      btn_new_item: "New Item"
+      btn_add_item: "Add"
+      item_error: "can't be blank"
+      approvals_info: "Bill Approvals"
+      delete_approval: "Delete this Approval"
+      add_approval: "Add new Approval"
+      btn_new_approval: "New Approval"
+      approval_error: "Total approved must not be greater than the amount due (%{var}) or pending approval amount (%{bal})."
+      generate_invoice_error: "Bill can not be generated: Offer invalid."
+      generate_invoice_write: "Unable to save new Bill."
+      generate_invoice_ok: "Bill %{var} has been generated."
       

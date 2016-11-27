@@ -12,12 +12,12 @@
   <li>
     <a href="<%= ag2_gest.bill_management_path %>"><%= t "ag2_gest.home.index.bill_management" %></a><span class="divider">></span>
   </li>
-  <% if @commercial_billings %>
+  <% if @invoices %>
   <li>
     <%=t "ag2_gest.breadcrumb.commercial_billings.items" %>
   </li>
   <% end %>
-  <% if @commercial_billing %>
+  <% if @invoice %>
   <li>
     <a href="<%= commercial_billings_path %>"><%=t :"ag2_gest.breadcrumb.commercial_billings.items" %></a><span class="divider">></span>
   </li>

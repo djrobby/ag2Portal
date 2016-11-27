@@ -76,12 +76,12 @@ module Ag2Gest
         order_by :sort_no, :asc
         paginate :page => params[:page] || 1, :per_page => per_page || 10
       end
-      @commercial_billings = @search.results
-      authorize! :index, @commercial_billings
+      @invoices = @search.results
+      authorize! :index, @invoices
 
       respond_to do |format|
         format.html # index.html.erb
-        format.json { render json: @commercial_billings }
+        format.json { render json: @invoices }
         format.js
       end
     end
@@ -90,11 +90,13 @@ module Ag2Gest
     # GET /commercial_billings/1.json
     def show
       @breadcrumb = 'read'
-      @commercial_billing = Invoice.find(params[:id])
+      @invoice = Invoice.find(params[:id])
+      @bill = @invoice.bill
+      @items = @invoice.invoice_items.paginate(:page => params[:page], :per_page => per_page).order('id')
 
       respond_to do |format|
         format.html # show.html.erb
-        format.json { render json: @commercial_billing }
+        format.json { render json: @invoice }
       end
     end
 
@@ -102,33 +104,33 @@ module Ag2Gest
     # GET /commercial_billings/new.json
     def new
       @breadcrumb = 'create'
-      @commercial_billing = Invoice.new
+      @invoice = Invoice.new
 
       respond_to do |format|
         format.html # new.html.erb
-        format.json { render json: @commercial_billing }
+        format.json { render json: @invoice }
       end
     end
 
     # GET /commercial_billings/1/edit
     def edit
       @breadcrumb = 'update'
-      @commercial_billing = Invoice.find(params[:id])
+      @invoice = Invoice.find(params[:id])
     end
 
     # POST /commercial_billings
     # POST /commercial_billings.json
     def create
       @breadcrumb = 'create'
-      @commercial_billing = Invoice.new(params[:commercial_billing])
+      @invoice = Invoice.new(params[:commercial_billing])
 
       respond_to do |format|
-        if @commercial_billing.save
-          format.html { redirect_to @commercial_billing, notice: crud_notice('created', @commercial_billing) }
-          format.json { render json: @commercial_billing, status: :created, location: @commercial_billing }
+        if @invoice.save
+          format.html { redirect_to @invoice, notice: crud_notice('created', @invoice) }
+          format.json { render json: @invoice, status: :created, location: @invoice }
         else
           format.html { render action: "new" }
-          format.json { render json: @commercial_billing.errors, status: :unprocessable_entity }
+          format.json { render json: @invoice.errors, status: :unprocessable_entity }
         end
       end
     end
@@ -137,16 +139,16 @@ module Ag2Gest
     # PUT /commercial_billings/1.json
     def update
       @breadcrumb = 'update'
-      @commercial_billing = Invoice.find(params[:id])
+      @invoice = Invoice.find(params[:id])
 
       respond_to do |format|
-        if @commercial_billing.update_attributes(params[:commercial_billing])
-          format.html { redirect_to @commercial_billing,
-                        notice: (crud_notice('updated', @commercial_billing) + "#{undo_link(@commercial_billing)}").html_safe }
+        if @invoice.update_attributes(params[:commercial_billing])
+          format.html { redirect_to @invoice,
+                        notice: (crud_notice('updated', @invoice) + "#{undo_link(@invoice)}").html_safe }
           format.json { head :no_content }
         else
           format.html { render action: "edit" }
-          format.json { render json: @commercial_billing.errors, status: :unprocessable_entity }
+          format.json { render json: @invoice.errors, status: :unprocessable_entity }
         end
       end
     end
@@ -154,16 +156,16 @@ module Ag2Gest
     # DELETE /commercial_billings/1
     # DELETE /commercial_billings/1.json
     def destroy
-      @commercial_billing = Invoice.find(params[:id])
+      @invoice = Invoice.find(params[:id])
 
       respond_to do |format|
-        if @commercial_billing.destroy
+        if @invoice.destroy
           format.html { redirect_to commercial_billings_url,
-                      notice: (crud_notice('destroyed', @commercial_billing) + "#{undo_link(@commercial_billing)}").html_safe }
+                      notice: (crud_notice('destroyed', @invoice) + "#{undo_link(@invoice)}").html_safe }
           format.json { head :no_content }
         else
-          format.html { redirect_to commercial_billings_url, alert: "#{@commercial_billing.errors[:base].to_s}".gsub('["', '').gsub('"]', '') }
-          format.json { render json: @commercial_billing.errors, status: :unprocessable_entity }
+          format.html { redirect_to commercial_billings_url, alert: "#{@invoice.errors[:base].to_s}".gsub('["', '').gsub('"]', '') }
+          format.json { render json: @invoice.errors, status: :unprocessable_entity }
         end
       end
     end

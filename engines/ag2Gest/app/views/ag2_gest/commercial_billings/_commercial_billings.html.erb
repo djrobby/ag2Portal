@@ -35,7 +35,7 @@
     </tr>
   </thead>
   <tbody>
-    <% @commercial_billings.each do |invoice| %>
+    <% @invoices.each do |invoice| %>
       <td><%= link_to invoice.full_no, invoice %></td>
       <td>
         <span class="blue"><%= invoice.invoice_type.code unless invoice.invoice_type.blank? %></span>
@@ -47,8 +47,10 @@
       <td><%= invoice.biller.name[0,40] unless invoice.biller.blank? %></td>
       <td><%= invoice.try(:bill).try(:client).try(:full_name_or_company_and_code) %></td>
       <td align="right"><%= number_with_precision(invoice.total, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless invoice.total.blank? %></td>
+      <td> <%= render :partial => '/layouts/crud/edit', :locals => { :model => Invoice, :path => edit_commercial_billing_path(invoice) } %>
+      <%= render :partial => '/layouts/crud/delete', :locals => { :model => Invoice, :path => invoice, :msg => t("activerecord.models.commercial_billing.one"), :txt => invoice.invoice_no } %> </td>
     </tr>
     <% end %>
   </tbody>
 </table>
-<%= render :partial => '/layouts/pagination', :locals => { :ivar => @commercial_billings } %>
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @invoices } %>
