@@ -40,8 +40,8 @@ class Invoice < ActiveRecord::Base
   before_create :assign_payday_limit
 
   def full_no
-    # Invoice no (Invoice code & year & sequential number) => SSSS-YYYY-NNNNNNN
-    invoice_no.blank? ? "" : invoice_no[0..3] + '-' + invoice_no[4..7] + '-' + invoice_no[8..14]
+    # Invoice no (Invoice code & year & sequential number) => SSSSS-YYYY-NNNNNNN
+    invoice_no.blank? ? "" : invoice_no[0..4] + '-' + invoice_no[5..8] + '-' + invoice_no[9..15]
   end
 
   def invoiced_concepts

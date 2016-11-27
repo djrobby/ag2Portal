@@ -44,9 +44,9 @@ class Company < ActiveRecord::Base
   validates :town,                  :presence => true
   validates :province,              :presence => true
   validates :invoice_code,          :presence => true,
-                                    :length => { :minimum => 2, :maximum => 4 },
+                                    :length => { :minimum => 2, :maximum => 3 },
                                     :uniqueness => { :scope => :organization_id }
-  validates :commercial_bill_code,  :length => { :minimum => 2, :maximum => 4 }, :if => "!commercial_bill_code.blank?",
+  validates :commercial_bill_code,  :length => { :minimum => 2, :maximum => 3 }, :if => "!commercial_bill_code.blank?",
                                     :uniqueness => { :scope => :organization_id }
   validates :organization,          :presence => true
 

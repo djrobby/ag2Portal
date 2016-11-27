@@ -667,23 +667,51 @@ end
   end
 
   # Invoice no
-  def invoice_next_no(company)
+  def invoice_next_no(company, office = nil)
     year = Time.new.year
     code = ''
+    serial = ''
+    office_code = office.nil? ? '00' : office.to_s.rjust(2, '0')
     # Builds code, if possible
     company_code = Company.find(company).invoice_code rescue '$'
     if company_code == '$'
       code = '$err'
     else
-      company = company_code.rjust(4, '0')
+      serial = company_code.rjust(3, '0') + office_code
       year = year.to_s if year.is_a? Fixnum
       year = year.rjust(4, '0')
-      last_no = Invoice.where("invoice_no LIKE ?", "#{company}#{year}%").order(:invoice_no).maximum(:invoice_no)
+      last_no = Invoice.where("invoice_no LIKE ?", "#{serial}#{year}%").order(:invoice_no).maximum(:invoice_no)
       if last_no.nil?
-        code = company + year + '0000001'
+        code = serial + year + '0000001'
       else
-        last_no = last_no[8..14].to_i + 1
-        code = company + year + last_no.to_s.rjust(7, '0')
+        last_no = last_no[9..15].to_i + 1
+        code = serial + year + last_no.to_s.rjust(7, '0')
+      end
+    end
+    code
+  end
+
+  # Commercial bill no
+  # serial length must be 5 and code must returns 15 chars
+  def commercial_bill_next_no(company, office = nil)
+    year = Time.new.year
+    code = ''
+    serial = ''
+    office_code = office.nil? ? '00' : office.to_s.rjust(2, '0')
+    # Builds code, if possible
+    company_code = Company.find(company).commercial_bill_code rescue '$'
+    if company_code == '$'
+      code = '$err'
+    else
+      serial = company_code.rjust(3, '0') + office_code
+      year = year.to_s if year.is_a? Fixnum
+      year = year.rjust(4, '0')
+      last_no = Invoice.where("invoice_no LIKE ?", "#{serial}#{year}%").order(:invoice_no).maximum(:invoice_no)
+      if last_no.nil?
+        code = serial + year + '0000001'
+      else
+        last_no = last_no[9..15].to_i + 1
+        code = serial + year + last_no.to_s.rjust(7, '0')
       end
     end
     code
@@ -704,7 +732,6 @@ end
     end
     code
   end
-
 
   #
   # Privates

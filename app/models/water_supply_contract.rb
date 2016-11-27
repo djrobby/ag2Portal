@@ -64,7 +64,7 @@ class WaterSupplyContract < ActiveRecord::Base
                           # bill_date: Date.today,
                           # subscriber_id: subscriber_id)
       tariff_scheme.tariffs_contract(caliber_id).each do |tariffs_biller|
-        invoice = Invoice.create( invoice_no: invoice_next_no(contracting_request.try(:project).try(:company_id)),
+        invoice = Invoice.create( invoice_no: invoice_next_no(contracting_request.try(:project).try(:company_id), contracting_request.try(:project).try(:office_id)),
                                 bill_id: bill.id,
                                 invoice_status_id: InvoiceStatus::PENDING,
                                 invoice_type_id: InvoiceType::CONTRACT,
@@ -105,53 +105,4 @@ class WaterSupplyContract < ActiveRecord::Base
       return nil
     end
   end
-
-  private
-
-  # Bill no
-  def bill_next_no(project)
-    year = Time.new.year
-    code = ''
-    # Builds code, if possible
-    project_code = Project.find(project).project_code rescue '$'
-    if project_code == '$'
-      code = '$err'
-    else
-      project = project_code.rjust(12, '0')
-      year = year.to_s if year.is_a? Fixnum
-      year = year.rjust(4, '0')
-      last_no = Bill.where("bill_no LIKE ?", "#{project}#{year}%").order(:bill_no).maximum(:bill_no)
-      if last_no.nil?
-        code = project + year + '0000001'
-      else
-        last_no = last_no[16..22].to_i + 1
-        code = project + year + last_no.to_s.rjust(7, '0')
-      end
-    end
-    code
-  end
-
-  # Invoice no
-  def invoice_next_no(company)
-    year = Time.new.year
-    code = ''
-    # Builds code, if possible
-    company_code = Company.find(company).invoice_code rescue '$'
-    if company_code == '$'
-      code = '$err'
-    else
-      company = company_code.rjust(4, '0')
-      year = year.to_s if year.is_a? Fixnum
-      year = year.rjust(4, '0')
-      last_no = Invoice.where("invoice_no LIKE ?", "#{company}#{year}%").order(:invoice_no).maximum(:invoice_no)
-      if last_no.nil?
-        code = company + year + '0000001'
-      else
-        last_no = last_no[8..14].to_i + 1
-        code = company + year + last_no.to_s.rjust(7, '0')
-      end
-    end
-    code
-  end
-
 end

@@ -74,7 +74,7 @@ module Ag2Gest
           reading_2_id: pre_bill.reading_2_id
         )
         pre_bill.pre_invoices.map do |pre_invoice|
-          @invoice = Invoice.create!(invoice_no: invoice_next_no(pre_bill.project.company_id),
+          @invoice = Invoice.create!(invoice_no: invoice_next_no(pre_bill.project.company_id, pre_bill.project.office_id),
             bill_id: @bill.id,
             invoice_status_id: InvoiceStatus::PENDING,
             invoice_type_id: InvoiceType::WATER,

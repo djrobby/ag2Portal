@@ -858,7 +858,7 @@ module Ag2Gest
       if bill_cancel.save
         bill.invoices.each do |invoice|
           new_invoice = invoice.dup
-          new_invoice.invoice_no = invoice_next_no(bill.project.company_id)
+          new_invoice.invoice_no = invoice_next_no(bill.project.company_id, bill.project.office_id)
           new_invoice.bill_id = bill_cancel.id
           new_invoice.invoice_operation_id = InvoiceOperation::CANCELATION
           new_invoice.original_invoice_id = invoice.id
