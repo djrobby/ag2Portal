@@ -21,6 +21,7 @@ class EnginesController < ApplicationController
     session[:Status] = nil
     session[:WrkrCompany] = nil
     session[:WrkrOffice] = nil
+    session[:Petitioner] = nil
     # Ag2Admin
     # ...
     # Ag2Directory

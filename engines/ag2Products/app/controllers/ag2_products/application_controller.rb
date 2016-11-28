@@ -24,6 +24,7 @@ module Ag2Products
       session[:Companies] = nil
       session[:sort] = nil
       session[:direction] = nil
+      session[:Petitioner] = nil
     end
   end
 end

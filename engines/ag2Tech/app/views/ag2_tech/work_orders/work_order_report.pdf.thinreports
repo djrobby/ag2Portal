@@ -57,9 +57,13 @@ report.page.values(printed_at: formatted_timestamp(Time.now),
 report.page.list(:default).header do |header|
   header.item(:order_no_c).value I18n.t("activerecord.attributes.work_order.order_no")
   header.item(:description_c).value I18n.t("activerecord.attributes.work_order.description")
-  header.item(:atl_ot_c).value I18n.t("activerecord.attributes.work_order.work_order_area") + " - " + I18n.t("activerecord.attributes.work_order.work_order_type") + " - " + I18n.t("activerecord.attributes.work_order.work_order_labor")
-  header.item(:area_c).value I18n.t("activerecord.attributes.work_order.area")
+  header.item(:petitioner_c).value I18n.t("activerecord.attributes.work_order.petitioner")
   header.item(:status_c).value I18n.t("activerecord.attributes.work_order.work_order_status")
+  header.item(:account_c).value I18n.t("activerecord.attributes.work_order.charge_account_report")
+  header.item(:area_c).value I18n.t("activerecord.attributes.work_order.area")
+  header.item(:atl_ot_c).value I18n.t("activerecord.attributes.work_order.work_order_area") + " - " + I18n.t("activerecord.attributes.work_order.work_order_type") + " - " + I18n.t("activerecord.attributes.work_order.work_order_labor")
+  header.item(:created_at_c).value I18n.t("activerecord.attributes.work_order.created_at")
+  header.item(:close_at_c).value I18n.t("activerecord.attributes.work_order.closed_at")
   header.item(:total_c).value I18n.t("activerecord.attributes.work_order.total_costs")
 end
 
@@ -82,7 +86,11 @@ project_id = @work_order_report.first.project_id
     report.page.values project_c: I18n.t("activerecord.attributes.work_order.project")+": "
     report.page.values project: i.project.name
     row.item(:order_no).value i.full_no
-    row.item(:description).value i.description
+    row.item(:description).value i.summary
+    row.item(:petitioner).value i.petitioner unless i.petitioner.blank? 
+    row.item(:status).value i.work_order_status.name unless i.work_order_status.blank?
+    row.item(:account).value i.charge_account.full_code unless i.charge_account.blank?
+    row.item(:area).value i.area.name unless i.area.blank?
     atl = ""
     if !i.work_order_area.blank?
       atl += i.work_order_area.short_name
@@ -94,14 +102,14 @@ project_id = @work_order_report.first.project_id
       atl += atl.blank? ? i.work_order_labor.short_name : " - " + i.work_order_labor.short_name
     end
     row.item(:atl_ot).value atl
-    row.item(:area).value i.area.name unless i.area.blank?
-    row.item(:status).value i.work_order_status.name unless i.work_order_status.blank?
+    row.item(:created_at).value i.created_at.strftime("%d/%m/%Y") unless i.created_at.blank?
+    row.item(:close_at).value i.closed_at.strftime("%d/%m/%Y") unless i.closed_at.blank?
     row.item(:total).value number_with_precision(i.total_costs, precision: 4, delimiter: I18n.locale == :es ? "." : ",") unless i.total_costs.blank?
 	end
 
 	# Store page subtotals
   report.page.list(:default) do |list|
 		list.store.page_rows += 1
-		list.store.p_total += i.total_costs
+		list.store.p_total += i.total_costs.round(2)
 	end
 end

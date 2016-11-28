@@ -629,6 +629,7 @@ module Ag2Purchase
       family = params[:Family]
       product = params[:Products]
       status = params[:Status]
+      petitioner = params[:Petitioner]
       # OCO
       init_oco if !session[:organization]
       # Initialize select_tags
@@ -637,6 +638,7 @@ module Ag2Purchase
       @families = families_dropdown if @families.nil?
       @products = products_dropdown if @products.nil?
       @statuses = OrderStatus.order('id') if @statuses.nil?
+      @petitioners = PurchaseOrder.petitioners if @petitioners.nil?
 
       # Arrays for search
       current_projects = @projects.blank? ? [0] : current_projects_for_index(@projects)
@@ -674,6 +676,9 @@ module Ag2Purchase
         end
         if !status.blank?
           with :order_status_id, status
+        end
+        if !petitioner.blank?
+          with :created_by, petitioner
         end
         order_by :sort_no, :desc
         paginate :page => params[:page] || 1, :per_page => per_page
@@ -903,6 +908,7 @@ module Ag2Purchase
       project = params[:Project]
       supplier = params[:Supplier]
       status = params[:Status]
+      petitioner = params[:Petitioner]
       # OCO
       init_oco if !session[:organization]
       projects = projects_dropdown
@@ -933,6 +939,9 @@ module Ag2Purchase
         end
         if !status.blank?
           with :order_status_id, status
+        end
+        if !petitioner.blank?
+          with :created_by, petitioner
         end
         order_by :sort_no, :asc
         paginate :page => params[:page] || 1, :per_page => PurchaseOrder.count
@@ -1332,6 +1341,12 @@ module Ag2Purchase
         session[:Status] = params[:Status]
       elsif session[:Status]
         params[:Status] = session[:Status]
+      end
+      # petitioner
+      if params[:Petitioner]
+        session[:Petitioner] = params[:Petitioner]
+      elsif session[:Petitioner]
+        params[:Petitioner] = session[:Petitioner]
       end
     end
   end

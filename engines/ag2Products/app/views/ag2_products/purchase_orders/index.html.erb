@@ -29,6 +29,7 @@
     $("#Supplier").select2("val", "<%= params[:Supplier] %>");
     $("#Family").select2("val", "<%= params[:Family] %>");
     $("#Products").select2("val", "<%= params[:Products] %>");
+    $("#Petitioner").select2("val", "<%= params[:Petitioner] %>");
     $("#Status").val("<%= params[:Status] %>");
   });
 
@@ -40,6 +41,7 @@
       $("#Supplier").select2("val", "");
       $("#Family").select2("val", "");
       $("#Products").select2("val", "");
+      $("#Petitioner").select2("val", "");
       $("#Status").val("");
       $("#search").val("");
       // no AJAX
@@ -84,6 +86,9 @@
         <!-- Product -->
         <%= label_tag I18n.t("ag2_purchase.purchase_orders.index.label_product"), nil, :class => 'form-label-under-sel2' %>
         <%= select_tag "Products", options_from_collection_for_select(@products, "id", "full_name"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
+        <!-- Petitioner -->
+        <%= label_tag I18n.t("ag2_purchase.purchase_orders.index.label_petitioner"), nil, :class => 'form-label-under-sel2' %>
+        <%= select_tag "Petitioner", options_from_collection_for_select(@petitioners, "id", "to_label"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
         <!-- Status -->
         <%= label_tag I18n.t("ag2_purchase.purchase_orders.index.label_status"), nil, :class => 'form-label-under-sel2' %>
         <%= select_tag "Status", options_from_collection_for_select(@statuses, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked' %>

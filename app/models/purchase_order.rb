@@ -11,11 +11,12 @@ class PurchaseOrder < ActiveRecord::Base
   belongs_to :charge_account
   belongs_to :organization
   belongs_to :approver, class_name: 'User'
+  belongs_to :petitioner, class_name: 'User', foreign_key: 'created_by'
   attr_accessible :discount, :discount_pct, :order_date, :order_no, :remarks, :supplier_offer_no,
                   :supplier_id, :payment_method_id, :order_status_id, :project_id, :offer_id,
                   :store_id, :work_order_id, :charge_account_id, :retention_pct, :retention_time,
                   :organization_id, :approver_id, :approval_date,
-                  :store_address_1, :store_address_2, :store_phones
+                  :store_address_1, :store_address_2, :store_phones, :created_by
   attr_accessible :purchase_order_items_attributes
 
   has_many :purchase_order_items, dependent: :destroy
@@ -157,6 +158,10 @@ class PurchaseOrder < ActiveRecord::Base
   #
   # Class (self) user defined methods
   #
+  def self.petitioners
+    User.where(id: PurchaseOrder.joins(:petitioner).group(:created_by).select('purchase_orders.created_by'))
+  end
+
   def self.undelivered(organization, _ordered)
     if !organization.blank?
       if !_ordered
@@ -240,6 +245,7 @@ class PurchaseOrder < ActiveRecord::Base
     integer :offer_id
     date :order_date
     integer :organization_id
+    integer :created_by
     string :sort_no do
       order_no
     end

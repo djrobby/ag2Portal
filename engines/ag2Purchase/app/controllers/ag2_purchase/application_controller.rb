@@ -18,6 +18,7 @@ module Ag2Purchase
       session[:sort] = nil
       session[:direction] = nil
       session[:ifilter] = nil
+      session[:Petitioner] = nil
     end
   end
 end

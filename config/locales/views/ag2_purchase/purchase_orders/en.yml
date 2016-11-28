@@ -11,6 +11,7 @@ en:
         label_product: "Product"
         label_family: "Family"
         label_status: "Status"
+        label_petitioner: "Petitioner"
         label_others: "Others"
         btn_apply: "Apply Filter"
       show:
