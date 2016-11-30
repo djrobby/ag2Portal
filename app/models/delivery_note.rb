@@ -15,7 +15,7 @@ class DeliveryNote < ActiveRecord::Base
   attr_accessible :delivery_note_items_attributes
 
   has_many :delivery_note_items, dependent: :destroy
-  has_many :client_invoice_items
+  #has_many :invoice_items
 
   # Nested attributes
   accepts_nested_attributes_for :delivery_note_items,
@@ -34,7 +34,7 @@ class DeliveryNote < ActiveRecord::Base
   validates :project,         :presence => true
   validates :organization,    :presence => true
 
-  before_destroy :check_for_dependent_records
+  #before_destroy :check_for_dependent_records
 
   def to_label
     "#{full_name}"
@@ -169,7 +169,7 @@ class DeliveryNote < ActiveRecord::Base
 
   def check_for_dependent_records
     # Check for client invoice items
-    if client_invoice_items.count > 0
+    if invoice_items.count > 0
       errors.add(:base, I18n.t('activerecord.models.delivery_note.check_for_client_invoices'))
       return false
     end

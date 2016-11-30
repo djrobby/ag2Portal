@@ -217,6 +217,9 @@ class DeliveryNoteItem < ActiveRecord::Base
           errors.add(:description, I18n.t("activerecord.models.delivery_note_item.quantity_greater_than_stock_item", stock: _stock.current))
           _check_stock = false
         end
+      else
+        errors.add(:description, I18n.t("activerecord.models.delivery_note_item.no_stock_store"))
+        _check_stock = false
       end
     end
     _check_stock

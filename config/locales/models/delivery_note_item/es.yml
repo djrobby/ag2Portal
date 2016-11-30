@@ -10,6 +10,7 @@ es:
         quantity_greater_than_stock: "¡La cantidad introducida (%{qty}) es mayor que las existencias actuales (%{stock})!"
         quantity_greater_than_stock_item: "Cant. mayor que existencias actuales (%{stock})"
         quantity_greater_than_minimum: "La cantidad introducida (%{qty}) dejará las existencias en/bajo mínimo (%{minimum})"
+        no_stock_store: "¡Sin existencias para el almacén indicado!"
     attributes:
       delivery_note_item:
         delivery_note: "Nota de entrega"

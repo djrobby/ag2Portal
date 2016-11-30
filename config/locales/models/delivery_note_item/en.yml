@@ -10,6 +10,7 @@ en:
         quantity_greater_than_stock: "The amount entered (%{qty}) is greater than the current stock (%{stock})!"
         quantity_greater_than_stock_item: "Qty. greater than current stock (%{stock})"
         quantity_greater_than_minimum: "The amount entered (%{qty}) will leave stocks at/under minimum (%{minimum})!"
+        no_stock_store: "No stock for designated store!"
     attributes:
       delivery_note_item:
         delivery_note: "Delivery note"

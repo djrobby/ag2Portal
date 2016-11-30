@@ -317,6 +317,8 @@ module Ag2Products
             minimum = number_with_precision(minimum.round(4), precision: 4, delimiter: I18n.locale == :es ? "." : ",")
             alert = I18n.t("activerecord.models.delivery_note_item.quantity_greater_than_minimum", qty: qty, minimum: minimum)
           end
+        else
+          alert = I18n.t("activerecord.models.delivery_note_item.no_stock_store")
         end
       end
       # Setup JSON
