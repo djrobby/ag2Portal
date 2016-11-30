@@ -10,3 +10,7 @@ en:
     attributes:
       work_order_status:
         name: "Description"
+        code_1: "NST"
+        code_2: "STR"
+        code_3: "FIN"
+        code_4: "CLS"

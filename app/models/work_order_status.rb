@@ -9,6 +9,16 @@ class WorkOrderStatus < ActiveRecord::Base
 
   before_destroy :check_for_dependent_records
 
+  def code
+    case self.id
+    when 1 then I18n.t('activerecord.attributes.work_order_status.code_1')
+    when 2 then I18n.t('activerecord.attributes.work_order_status.code_2')
+    when 3 then I18n.t('activerecord.attributes.work_order_status.code_3')
+    when 4 then I18n.t('activerecord.attributes.work_order_status.code_4')
+    else name[0,3].delete(' ').upcase
+    end
+  end
+
   private
 
   def check_for_dependent_records

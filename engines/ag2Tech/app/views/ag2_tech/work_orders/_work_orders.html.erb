@@ -8,15 +8,32 @@
 </script>
 
 <table class="table table-condensed table-striped shrinked">
+  <!-- no -->
+  <col width="15%" />
+  <!-- description -->
+  <col width="20%" />
+  <!-- area-type -->
+  <col width="17%" />
+  <!-- status -->
+  <col width="5%" />
+  <!-- location -->
+  <col width="15%" />
+  <!-- started at -->
+  <col width="9%" />
+  <!-- completed at -->
+  <col width="9%" />
+  <!-- total -->
+  <col width="10%" />
   <thead>
     <tr>
       <th><%= t 'activerecord.attributes.work_order.order_no' %></th>
       <th><%= t 'activerecord.attributes.work_order.description' %></th>
-      <th><%= t 'activerecord.attributes.work_order.work_order_area' %></th>
-      <th><%= t 'activerecord.attributes.work_order.work_order_type' %></th>
-      <th><%= t 'activerecord.attributes.work_order.work_order_status' %></th>
-      <th align="center"><%= t 'activerecord.attributes.work_order.started_at' %></th>
-      <th align="center"><%= t 'activerecord.attributes.work_order.completed_at' %></th>
+      <th><%= t 'activerecord.attributes.work_order.area_type' %></th>
+      <th align="center"><%= t 'activerecord.attributes.work_order.work_order_status_code' %></th>
+      <th><%= t 'activerecord.attributes.work_order.location' %></th>
+      <th align="center"><%= t 'activerecord.attributes.work_order.started_at_report' %></th>
+      <th align="center"><%= t 'activerecord.attributes.work_order.completed_at_report' %></th>
+      <th align="right"><%= t 'activerecord.attributes.work_order.costs_c' %></th>
       <th></th>
     </tr>
   </thead>
@@ -31,11 +48,12 @@
         <%= link_to order.full_no, order %>
       </td>
       <td><%= order.summary[0,20] %></td>
-      <td><%= order.work_order_area.short_name unless order.work_order_area.blank? %></td>
-      <td><%= order.work_order_type.short_name unless order.work_order_type.blank? %></td>
-      <td><%= order.work_order_status.name unless order.work_order_status.blank? %></td>
+      <td><%= order.area_type %></td>
+      <td align="center"><%= order.work_order_status.code unless order.work_order_status.blank? %></td>
+      <td><%= order.location[0,10] unless order.location.blank? %></td>
       <td align="center"><%= order.started_at.strftime("%d/%m/%Y") unless order.started_at.blank? %></td>
       <td align="center"><%= order.completed_at.strftime("%d/%m/%Y") unless order.completed_at.blank? %></td>
+      <td align="right"><%= number_with_precision(order.this_total_costs, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless order.total_costs.blank? %></td>
       <td> <%= render :partial => '/layouts/crud/edit', :locals => { :model => WorkOrder, :path => edit_work_order_path(order) } %>
       <%= render :partial => '/layouts/crud/delete', :locals => { :model => WorkOrder, :path => order, :msg => t("activerecord.models.work_order.one"), :txt => order.order_no } %> </td>
     </tr>

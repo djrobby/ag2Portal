@@ -154,6 +154,31 @@ class WorkOrder < ActiveRecord::Base
     end
   end
 
+  def area_type_labor
+    atl = ""
+    if !work_order_area.blank?
+      atl += work_order_area.short_name
+    end
+    if !work_order_type.blank?
+      atl += atl.blank? ? work_order_type.short_name : " - " + work_order_type.short_name
+    end
+    if !work_order_labor.blank?
+      atl += atl.blank? ? work_order_labor.short_name : " - " + work_order_labor.short_name
+    end
+    atl
+  end
+
+  def area_type
+    atl = ""
+    if !work_order_area.blank?
+      atl += work_order_area.short_name
+    end
+    if !work_order_type.blank?
+      atl += atl.blank? ? work_order_type.short_name : "-" + work_order_type.short_name
+    end
+    atl
+  end
+
   #
   # Calculated fields
   #

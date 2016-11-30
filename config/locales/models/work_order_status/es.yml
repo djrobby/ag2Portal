@@ -10,3 +10,7 @@ es:
     attributes:
       work_order_status:
         name: "Descripción"
+        code_1: "SIN"
+        code_2: "INI"
+        code_3: "COM"
+        code_4: "CER"
