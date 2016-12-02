@@ -49,6 +49,12 @@
       // AJAX
       $("#submit_btn").trigger("click");
     });
+    // when #print_report_btn is clicked
+    $("#print_report_btn").click(function() {
+      // make a POST call and get report
+      window.open("meter_view_report.pdf", "_blank");
+      return false;
+    });
   });
 
 </script>
@@ -97,6 +103,9 @@
 			  <% end %>
 			  <!-- Buttons -->
 			  <%= render :partial => '/layouts/crud/new', :locals => { :model => Meter, :path => new_meter_path, :txt => t("ag2_gest.meters.index.btn_new") } %>
+
+        <a href="#" id="print_report_btn" class="btn btn-warning"><i class="icon-print icon-white"></i> <%= t 'ag2_gest.home.index.control' %></a>
+        <br /><br />
 			  <!-- Back -->
 			  <%= link_to t("ag2_gest.meters.index.back_to_management"), ag2_gest.meter_management_path %>
 			</div>

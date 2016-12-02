@@ -741,6 +741,8 @@ module Ag2Gest
       client_info = params[:ClientInfo]
       sort = params[:sort]
       direction = params[:direction]
+      from = params[:From]
+      to = params[:To]
 
       @projects = projects_dropdown if @project.nil?
       @request_statuses = request_statuses_dropdown if @request_status.nil?
@@ -765,6 +767,18 @@ module Ag2Gest
         end
         if !request_type.blank?
           with :contracting_request_type_id, request_type
+        end
+        if !from.blank?
+          any_of do
+            with(:request_date).greater_than(from)
+            with :request_date, from
+          end
+        end
+        if !to.blank?
+          any_of do
+            with(:request_date).less_than(to)
+            with :request_date, to
+          end
         end
         if !sort.blank? and !direction.blank?
           order_by sort, direction
@@ -894,36 +908,59 @@ module Ag2Gest
      # contracting request report
     def contracting_request_report
       manage_filter_state
-      request_type = params[:RequestType]
+
       no = params[:No]
+      client_info = params[:ClientInfo]
       project = params[:Project]
       request_status = params[:RequestStatus]
-      client_info = params[:ClientInfo]
+      request_type = params[:RequestType]
       sort = params[:sort]
-      direction = params[:direction]
+      from = params[:From]
+      to = params[:To]
 
+      projects = projects_dropdown 
+      request_statuses = request_statuses_dropdown
+      request_types = request_types_dropdown 
 
+      # Arrays for search
+      current_projects = projects.blank? ? [0] : current_projects_for_index(projects)
       # If inverse no search is required
       no = !no.blank? && no[0] == '%' ? inverse_no_search(no) : no
 
       @search = ContractingRequest.search do
-        with(:contracting_request_status_id, 0..10)
-        # fulltext
-        if !client_info.blank?
-          fulltext client_info
-        end
-        if !no.blank?
-          with :request_no, no
-        end
-        if !request_type.blank?
-          with :contracting_request_type_id, request_type
-        end
-        if !sort.blank? and !direction.blank?
-          order_by sort, direction
+        if :contracting_request_status_id == 11
+          return
         else
-          order_by :request_no, :desc
+          with :contracting_request_status_id, (0..10)
+          with :project_id, current_projects
+          fulltext params[:search]
+          if !client_info.blank?
+            with :client_info, client_info
+          end
+          if !no.blank?
+            with :request_no, no
+          end
+          if !request_status.blank?
+            with :contracting_request_status_id, request_status
+          end
+          if !request_type.blank?
+            with :contracting_request_type_id, request_type
+          end
+          if !from.blank?
+            any_of do
+              with(:request_date).greater_than(from)
+              with :request_date, from
+            end
+          end
+          if !to.blank?
+            any_of do
+              with(:request_date).less_than(to)
+              with :request_date, to
+            end
+          end
+          order_by :sort_no, :desc
+          paginate :page => params[:page] || 1, :per_page => ContractingRequest.count
         end
-        paginate :page => params[:page] || 1, :per_page => ContractingRequest.count
       end
       @contracting_request_report = @search.results
 
@@ -944,36 +981,59 @@ module Ag2Gest
      # contracting request complete report
     def contracting_request_complete_report
       manage_filter_state
-      request_type = params[:RequestType]
+
       no = params[:No]
+      client_info = params[:ClientInfo]
       project = params[:Project]
       request_status = params[:RequestStatus]
-      client_info = params[:ClientInfo]
+      request_type = params[:RequestType]
       sort = params[:sort]
-      direction = params[:direction]
+      from = params[:From]
+      to = params[:To]
 
+      projects = projects_dropdown 
+      request_statuses = request_statuses_dropdown
+      request_types = request_types_dropdown 
 
+      # Arrays for search
+      current_projects = projects.blank? ? [0] : current_projects_for_index(projects)
       # If inverse no search is required
       no = !no.blank? && no[0] == '%' ? inverse_no_search(no) : no
 
       @search = ContractingRequest.search do
-        with :contracting_request_status_id, 11
-        # fulltext
-        if !client_info.blank?
-          fulltext client_info
-        end
-        if !no.blank?
-          with :request_no, no
-        end
-        if !request_type.blank?
-          with :contracting_request_type_id, request_type
-        end
-        if !sort.blank? and !direction.blank?
-          order_by sort, direction
+        if :contracting_request_status_id == 0..10
+          return
         else
-          order_by :request_no, :desc
+          with :contracting_request_status_id, 11
+          with :project_id, current_projects
+          fulltext params[:search]
+          if !client_info.blank?
+            with :client_info, client_info
+          end
+          if !no.blank?
+            with :request_no, no
+          end
+          if !request_status.blank?
+            with :contracting_request_status_id, request_status
+          end
+          if !request_type.blank?
+            with :contracting_request_type_id, request_type
+          end
+          if !from.blank?
+            any_of do
+              with(:request_date).greater_than(from)
+              with :request_date, from
+            end
+          end
+          if !to.blank?
+            any_of do
+              with(:request_date).less_than(to)
+              with :request_date, to
+            end
+          end
+          order_by :sort_no, :desc
+          paginate :page => params[:page] || 1, :per_page => ContractingRequest.count
         end
-        paginate :page => params[:page] || 1, :per_page => ContractingRequest.count
       end
       @contracting_request_complete_report = @search.results
 
@@ -1009,13 +1069,54 @@ module Ag2Gest
     end
 
     def manage_filter_state
-      # id_fiscal
-      if params[:IdFiscal]
-        session[:IdFiscal] = params[:IdFiscal]
-      elsif session[:IdFiscal]
-        params[:IdFiscal] = session[:IdFiscal]
+      # search
+      if params[:search]
+        session[:search] = params[:search]
+      elsif session[:search]
+        params[:search] = session[:search]
       end
-
+      # no
+      if params[:No]
+        session[:No] = params[:No]
+      elsif session[:No]
+        params[:No] = session[:No]
+      end
+      # client
+      if params[:ClientInfo]
+        session[:ClientInfo] = params[:ClientInfo]
+      elsif session[:ClientInfo]
+        params[:ClientInfo] = session[:ClientInfo]
+      end
+      # project
+      if params[:Project]
+        session[:Project] = params[:Project]
+      elsif session[:Project]
+        params[:Project] = session[:Project]
+      end
+      # RequestType
+      if params[:RequestType]
+        session[:RequestType] = params[:RequestType]
+      elsif session[:RequestType]
+        params[:RequestType] = session[:RequestType]
+      end
+      # RequestStatus
+      if params[:RequestStatus]
+        session[:RequestStatus] = params[:RequestStatus]
+      elsif session[:RequestStatus]
+        params[:RequestStatus] = session[:RequestStatus]
+      end
+      # From
+      if params[:From]
+        session[:From] = params[:From]
+      elsif session[:From]
+        params[:From] = session[:From]
+      end
+      # To
+      if params[:To]
+        session[:To] = params[:To]
+      elsif session[:To]
+        params[:To] = session[:To]
+      end
       # sort
       if params[:sort]
         session[:sort] = params[:sort]

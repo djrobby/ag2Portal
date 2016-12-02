@@ -11,10 +11,13 @@ es:
         label_budget_period: "Periodo presupuestario"
       project_report:
         report_title: "Proyectos"
+        sum_rows_title: "Total Filas:"
       budget_report:
         report_title: "Presupuestos"
+        sum_rows_title: "Total Filas:"
       work_report:
         report_title: "Ordenes de trabajo"
+        sum_rows_title: "Total Filas:"
       every_report:
         pt: "Página"
         pd: "de"

@@ -13,6 +13,8 @@ es:
         label_entity: "Entidad"
         label_bank_account: "Cuenta Bancaria"
         label_billing_period: "Periodo"
+        label_from: "Desde"
+        label_to: "Hasta"
         btn_new: "Nueva Solicitud Servicios"
         btn_new2: "Nueva Solicitud Acometida"
         back_to_root: "Volver a ag2Gest"

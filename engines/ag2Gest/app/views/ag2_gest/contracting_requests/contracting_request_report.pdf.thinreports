@@ -45,6 +45,10 @@ report.start_new_page
 
 # Page header
 report.page.values report_title: I18n.t("ag2_gest.contracting_requests.index.title")
+report.page.values from_title: I18n.t("every_report.from_title")
+report.page.values to_title: I18n.t("every_report.to_title")
+report.page.values from: @from
+report.page.values to: @to
 
 # Page footer
 report.page.values(printed_at: formatted_timestamp(Time.now),

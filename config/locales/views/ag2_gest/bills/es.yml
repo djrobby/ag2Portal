@@ -29,6 +29,7 @@ es:
         last_invoice: "Nº de la última factura"
         last_invoice_total: "Importe total"
         biller: "Facturante"
+        calc_consumptions: "Calcular Consumos"
       show:
         title: "Recibo"
         btn_edit: "Editar Recibo"

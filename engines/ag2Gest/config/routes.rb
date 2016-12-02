@@ -22,11 +22,15 @@ Ag2Gest::Engine.routes.draw do
     match 'bill_pending_report', :controller => 'client_payments', :action => 'bill_pending_report'
     match 'bill_unpaid_report', :controller => 'client_payments', :action => 'bill_unpaid_report'
     match 'bill_charged_report', :controller => 'client_payments', :action => 'bill_charged_report'
+    # report invoice
+    match 'invoice_report', :controller => 'invoices', :action => 'invoice_report'
     # report client_payment
     match 'client_payment_report', :controller => 'client_payments', :action => 'client_payment_report'
     # report contracting_request
     match 'contracting_request_report', :controller => 'contracting_requests', :action => 'contracting_request_report'
     match 'contracting_request_complete_report', :controller => 'contracting_requests', :action => 'contracting_request_complete_report'
+    # report meter
+    match 'meter_view_report', :controller => 'meters', :action => 'meter_view_report'
 
     # Routes for jQuery POSTs
     #

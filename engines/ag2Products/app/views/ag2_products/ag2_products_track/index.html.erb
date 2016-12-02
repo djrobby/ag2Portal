@@ -30,6 +30,7 @@
           hide("#Order", "<%= t(".label_work_order") %>");
           hide("#Account", "<%= t(".label_charge_account") %>");
           hide("#Status", "<%= t(".label_order_status") %>");
+          hide("#User", "<%= t(".label_petitioner") %>");
           show("#Family", "<%= t(".label_family") %>");
           hide("#Product", "<%= t(".label_product") %>");
           $('#report_btn').show();
@@ -42,6 +43,7 @@
           show("#Order", "<%= t(".label_work_order") %>");
           show("#Account", "<%= t(".label_charge_account") %>");
           show("#Status", "<%= t(".label_order_status") %>");
+          show("#User", "<%= t(".label_petitioner") %>");
           hide("#Family", "<%= t(".label_family") %>");
           hide("#Product", "<%= t(".label_product") %>");
           $('#report_btn').show();
@@ -54,6 +56,7 @@
           show("#Order", "<%= t(".label_work_order") %>");
           show("#Account", "<%= t(".label_charge_account") %>");
           hide("#Status", "<%= t(".label_order_status") %>");
+          hide("#User", "<%= t(".label_petitioner") %>");
           hide("#Family", "<%= t(".label_family") %>");
           hide("#Product", "<%= t(".label_product") %>");
           $('#report_btn').show();
@@ -66,6 +69,7 @@
           show("#Order", "<%= t(".label_work_order") %>");
           show("#Account", "<%= t(".label_charge_account") %>");
           hide("#Status", "<%= t(".label_order_status") %>");
+          hide("#User", "<%= t(".label_petitioner") %>");
           hide("#Family", "<%= t(".label_family") %>");
           hide("#Product", "<%= t(".label_product") %>");
           $('#report_btn').show();
@@ -78,6 +82,7 @@
           hide("#Order", "<%= t(".label_work_order") %>");
           hide("#Account", "<%= t(".label_charge_account") %>");
           hide("#Status", "<%= t(".label_order_status") %>");
+          hide("#User", "<%= t(".label_petitioner") %>");
           show("#Family", "<%= t(".label_family") %>");
           show("#Product", "<%= t(".label_product") %>");
           $('#report_btn').show();
@@ -91,6 +96,7 @@
           hide("#Order", "<%= t(".label_work_order") %>");
           hide("#Account", "<%= t(".label_charge_account") %>");
           hide("#Status", "<%= t(".label_order_status") %>");
+          hide("#User", "<%= t(".label_petitioner") %>");
           show("#Family", "<%= t(".label_family") %>");
           show("#Product", "<%= t(".label_product") %>");
           $('#report_btn').show();
@@ -102,6 +108,7 @@
           show("#Order", "<%= t(".label_work_order") %>");
           show("#Account", "<%= t(".label_charge_account") %>");
           show("#Status", "<%= t(".label_order_status") %>");
+          show("#User", "<%= t(".label_petitioner") %>");
           show("#Family", "<%= t(".label_family") %>");
           show("#Product", "<%= t(".label_product") %>");
           $('#report_btn').hide();
@@ -228,13 +235,14 @@
           var order = $('select#Order :selected').val();
           var account = $('select#Account :selected').val();
           var status = $('select#Status :selected').val();
+          var petitioner = $('select#User :selected').val();
      //mj var product = $('select#Product :selected').val();
-          if ((project == "") && (supplier == "") && (store == "") && (order == "") && (account == "") && (status == ""))
+          if ((project == "") && (supplier == "") && (store == "") && (order == "") && (account == "") && (status == "") && (petitioner == ""))
             return;
           if (detailed == ""){
-          	window.open("order_report.pdf?detailed=" + detailed + "&project=" + project + "&from=" + from + "&to=" + to + "&supplier=" + supplier + "&store=" + store + "&order=" + order + "&account=" + account + "&status=" + status, "_blank");
+          	window.open("order_report.pdf?detailed=" + detailed + "&project=" + project + "&petitioner=" + petitioner + "&from=" + from + "&to=" + to + "&supplier=" + supplier + "&store=" + store + "&order=" + order + "&account=" + account + "&status=" + status, "_blank");
           }else {
-          	window.open("order_items_report.pdf?detailed=" + detailed + "&project=" + project + "&from=" + from + "&to=" + to + "&supplier=" + supplier + "&store=" + store + "&order=" + order + "&account=" + account + "&status=" + status, "_blank");
+          	window.open("order_items_report.pdf?detailed=" + detailed + "&project=" + project + "&petitioner=" + petitioner + "&from=" + from + "&to=" + to + "&supplier=" + supplier + "&store=" + store + "&order=" + order + "&account=" + account + "&status=" + status, "_blank");
           }
           break;
         case 3:
@@ -367,6 +375,9 @@
       <!-- Purchase order Status -->
       <%= label_tag t(".label_order_status"), nil, :class => 'form-label' %>
       <%= select_tag "Status", options_from_collection_for_select(@statuses, "id", "name"), :prompt => "", :class => 'x-large-text-field sel2' %>
+      <!-- Petitioner -->
+      <%= label_tag t(".label_petitioner"), nil, :class => 'form-label' %>
+      <%= select_tag "User", options_from_collection_for_select(@petitioners, "id", "to_label"), :prompt => "", :class => 'x-large-text-field sel2' %>      
       <!-- Product Family -->
       <%= label_tag t(".label_family"), nil, :class => 'form-label-under-sel2' %>
       <%= select_tag "Family", options_from_collection_for_select(@families, "id", "full_name"), :prompt => "", :class => 'x-large-text-field sel2' %>

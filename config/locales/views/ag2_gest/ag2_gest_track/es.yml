@@ -21,6 +21,8 @@ es:
         sum_rows_title: "Total Filas:"
       contracting_reques_report:
         sum_rows_title: "Total Filas:"
+      meter_report:
+        sum_rows_title: "Total Filas:"
       every_report:
         pt: "Página"
         pd: "de"

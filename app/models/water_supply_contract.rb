@@ -105,4 +105,54 @@ class WaterSupplyContract < ActiveRecord::Base
       return nil
     end
   end
+
+  private
+
+  # Bill no
+  def bill_next_no(project)
+    year = Time.new.year
+    code = ''
+    # Builds code, if possible
+    project_code = Project.find(project).project_code rescue '$'
+    if project_code == '$'
+      code = '$err'
+    else
+      project = project_code.rjust(12, '0')
+      year = year.to_s if year.is_a? Fixnum
+      year = year.rjust(4, '0')
+      last_no = Bill.where("bill_no LIKE ?", "#{project}#{year}%").order(:bill_no).maximum(:bill_no)
+      if last_no.nil?
+        code = project + year + '0000001'
+      else
+        last_no = last_no[16..22].to_i + 1
+        code = project + year + last_no.to_s.rjust(7, '0')
+      end
+    end
+    code
+  end
+
+  # Invoice no
+  def invoice_next_no(company, office = nil)
+    year = Time.new.year
+    code = ''
+    serial = ''
+    office_code = office.nil? ? '00' : office.to_s.rjust(2, '0')
+    # Builds code, if possible
+    company_code = Company.find(company).invoice_code rescue '$'
+    if company_code == '$'
+      code = '$err'
+    else
+      serial = company_code.rjust(3, '0') + office_code
+      year = year.to_s if year.is_a? Fixnum
+      year = year.rjust(4, '0')
+      last_no = Invoice.where("invoice_no LIKE ?", "#{serial}#{year}%").order(:invoice_no).maximum(:invoice_no)
+      if last_no.nil?
+        code = serial + year + '0000001'
+      else
+        last_no = last_no[9..15].to_i + 1
+        code = serial + year + last_no.to_s.rjust(7, '0')
+      end
+    end
+    code
+  end
 end

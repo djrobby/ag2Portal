@@ -24,6 +24,9 @@
       dropdownAutoWidth: true,
       allowClear: true
     });
+    $('.date_picker').datepicker({
+     format:'dd/mm/yyyy',weekStart:1
+    });
     // Initialized form variable
     _thisForm = $("#removeFilter").closest('form')[0];
   });
@@ -46,6 +49,8 @@
     $("#Project").select2("val", "<%= params[:Project] %>");
     $("#RequestStatus").val("<%= params[:RequestStatus] %>");
     $("#ClientInfo").val("<%= params[:ClientInfo] %>");
+    $("#From").val("<%= params[:From] %>");
+    $("#To").val("<%= params[:To] %>");
   });
 
   jQuery(function($) {
@@ -55,6 +60,8 @@
       $("#RequestType").val("");
       $("#RequestStatus").val("");
       $("#ClientInfo").val("");
+      $("#From").val("");
+      $("#To").val("");
       // no AJAX
       //_thisForm.submit();
       // AJAX
@@ -106,7 +113,7 @@
 
           <!-- Project -->
           <%= label_tag I18n.t("ag2_gest.contracting_requests.index.label_project"), nil, :class => 'form-label' %>
-          <%= select_tag "Project", options_from_collection_for_select(@projects, "id", "project_code"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
+          <%= select_tag "Project", options_from_collection_for_select(@projects, "id", "full_name"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
 
           <!-- Request Status -->
           <%= label_tag I18n.t("ag2_gest.contracting_requests.index.label_request_status"), nil, :class => 'form-label-under-sel2' %>
@@ -115,6 +122,12 @@
           <!-- Request Type -->
           <%= label_tag I18n.t("ag2_gest.contracting_requests.index.label_request_type"), nil, :class => 'form-label' %>
           <%= select_tag "RequestType", options_from_collection_for_select(@request_types, "id", "description"), :prompt => "", :class => 'x-large-text-field shrinked' %>
+ 
+          <!-- Dates -->
+          <%= label_tag I18n.t("ag2_gest.contracting_requests.index.label_from"), nil, :class => 'form-label' %>
+          <%= text_field_tag "From", params[:date], :class =>  'x-large-text-field shrinked date_picker' %>
+          <%= label_tag I18n.t("ag2_gest.contracting_requests.index.label_to"), nil, :class => 'form-label' %>
+          <%= text_field_tag "To", params[:date], :class =>  'x-large-text-field shrinked date_picker' %>
 
           <!-- Submit -->
           <%= submit_tag I18n.t(:apply_filter_button), :class => 'btn btn-primary', :id => 'submit_btn' %>

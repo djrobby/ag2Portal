@@ -19,6 +19,8 @@ module Ag2Gest
       operation = params[:Operation]
       biller = params[:Biller]
       period = params[:Period]
+      from = params[:From]
+      to = params[:To]
       # OCO
       init_oco if !session[:organization]
       # Initialize select_tags
@@ -69,6 +71,18 @@ module Ag2Gest
         end
         if !period.blank?
           with :billing_period_id, period
+        end
+        if !from.blank?
+          any_of do
+            with(:invoice_date).greater_than(from)
+            with :invoice_date, from
+          end
+        end
+        if !to.blank?
+          any_of do
+            with(:invoice_date).less_than(to)
+            with :invoice_date, to
+          end
         end
         order_by :sort_no, :asc
         paginate :page => params[:page] || 1, :per_page => per_page || 10
@@ -155,6 +169,90 @@ module Ag2Gest
         format.json { head :no_content }
       end
     end
+
+     # invoice report
+    def invoice_report
+      manage_filter_state
+      no = params[:No]
+      project = params[:Project]
+      client = params[:Client]
+      subscriber = params[:Subscriber]
+      status = params[:Status]
+      type = params[:Type]
+      operation = params[:Operation]
+      biller = params[:Biller]
+      period = params[:Period]
+      from = params[:From]
+      to = params[:To]
+      # OCO
+      init_oco if !session[:organization]
+  
+       no = !no.blank? && no[0] == '%' ? inverse_no_search(no) : no
+
+      @search = Invoice.search do
+        fulltext params[:search]
+        if !no.blank?
+          if no.class == Array
+            with :invoice_no, no
+          else
+            with(:invoice_no).starting_with(no)
+          end
+        end
+        if !client.blank?
+          with :client_id, client
+        end
+        if !subscriber.blank?
+          with :subscriber_id, subscriber
+        end
+        if !project.blank?
+          with :project_id, project
+        end
+        if !status.blank?
+          with :invoice_status_id, status
+        end
+        if !type.blank?
+          with :invoice_type_id, type
+        end
+        if !operation.blank?
+          with :invoice_operation_id, operation
+        end
+        if !biller.blank?
+          with :biller_id, biller
+        end
+        if !period.blank?
+          with :billing_period_id, period
+        end
+        if !from.blank?
+          any_of do
+            with(:invoice_date).greater_than(from)
+            with :invoice_date, from
+          end
+        end
+        if !to.blank?
+          any_of do
+            with(:invoice_date).less_than(to)
+            with :invoice_date, to
+          end
+        end
+        order_by :sort_no, :asc
+        paginate :page => params[:page] || 1, :per_page => Invoice.count
+      end
+      @invoice_report = @search.results
+
+      if !@invoice_report.blank?
+        title = t("activerecord.models.invoice.few")
+        @from = formatted_date(@invoice_report.first.created_at)
+        @to = formatted_date(@invoice_report.last.created_at)
+        respond_to do |format|
+          # Render PDF
+          format.pdf { send_data render_to_string,
+                       filename: "#{title}_#{@from}-#{@to}.pdf",
+                       type: 'application/pdf',
+                       disposition: 'inline' }
+        end
+      end
+    end
+
 
     private
 
@@ -315,6 +413,18 @@ module Ag2Gest
         session[:Period] = params[:Period]
       elsif session[:Period]
         params[:Period] = session[:Period]
+      end
+      # From
+      if params[:From]
+        session[:From] = params[:From]
+      elsif session[:From]
+        params[:From] = session[:From]
+      end
+      # To
+      if params[:To]
+        session[:To] = params[:To]
+      elsif session[:To]
+        params[:To] = session[:To]
       end
     end
   end

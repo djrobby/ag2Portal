@@ -5,7 +5,7 @@ end
 # Localization for numbers
 delimiter = I18n.locale == :es ? "." : ","
 
-report.set_layout tlf: 'reports/work_order_report', layout_options: { default: true }
+report.set_layout tlf: 'reports/work_order_view_report', layout_options: { default: true }
 
 #
 # Report events
@@ -62,6 +62,7 @@ report.page.list(:default).header do |header|
   header.item(:account_c).value I18n.t("activerecord.attributes.work_order.charge_account_report")
   header.item(:area_c).value I18n.t("activerecord.attributes.work_order.area")
   header.item(:atl_ot_c).value I18n.t("activerecord.attributes.work_order.work_order_area") + " - " + I18n.t("activerecord.attributes.work_order.work_order_type") + " - " + I18n.t("activerecord.attributes.work_order.work_order_labor")
+  header.item(:location_c).value I18n.t("activerecord.attributes.work_order.location")
   header.item(:created_at_c).value I18n.t("activerecord.attributes.work_order.created_at")
   header.item(:close_at_c).value I18n.t("activerecord.attributes.work_order.closed_at")
   header.item(:total_c).value I18n.t("activerecord.attributes.work_order.total_costs")
@@ -102,6 +103,7 @@ project_id = @work_order_report.first.project_id
       atl += atl.blank? ? i.work_order_labor.short_name : " - " + i.work_order_labor.short_name
     end
     row.item(:atl_ot).value atl
+    row.item(:location).value i.location unless i.location.blank?    
     row.item(:created_at).value i.created_at.strftime("%d/%m/%Y") unless i.created_at.blank?
     row.item(:close_at).value i.closed_at.strftime("%d/%m/%Y") unless i.closed_at.blank?
     row.item(:total).value number_with_precision(i.total_costs, precision: 4, delimiter: I18n.locale == :es ? "." : ",") unless i.total_costs.blank?

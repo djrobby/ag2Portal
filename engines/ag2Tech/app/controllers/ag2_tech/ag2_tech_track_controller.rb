@@ -25,6 +25,7 @@ module Ag2Tech
       render json: @json_data
     end
 
+
     # Projects report
     def project_report
       detailed = params[:detailed]
@@ -39,19 +40,18 @@ module Ag2Tech
         return
       end
 
-      # Search necessary data
-      #@worker = Worker.find(worker)
-      
-      # Format dates
-      from = Time.parse(@from).strftime("%Y-%m-%d")
-      to = Time.parse(@to).strftime("%Y-%m-%d")
-      # Setup filename
+     from = Time.parse(@from).strftime("%Y-%m-%d")
+     to = Time.parse(@to).strftime("%Y-%m-%d")
+
+      if project.blank?
+        @project_report = Project.where("created_at >= ? AND created_at <= ?",from,to).order(:company_id)
+      else
+        @project_report = Project.where("id >= ? AND created_at >= ? AND created_at <= ?",project,from,to).order(:company_id)
+      end
+
       title = t("activerecord.models.project.few") + "_#{from}_#{to}.pdf"      
       
       respond_to do |format|
-        # Execute procedure and load aux table
-        ActiveRecord::Base.connection.execute("CALL generate_timerecord_reports(#{worker}, '#{from}', '#{to}', 0);")
-        @time_records = TimerecordReport.all
         # Render PDF
         format.pdf { send_data render_to_string,
                      filename: "#{title}.pdf",
@@ -85,7 +85,7 @@ module Ag2Tech
       
       respond_to do |format|
         # Execute procedure and load aux table
-        ActiveRecord::Base.connection.execute("CALL generate_timerecord_reports(#{worker}, '#{from}', '#{to}', 0);")
+        ActiveRecord::Base.connection.execute("CALL generate_timerecord_reports('#{from}', '#{to}', 0);")
         @time_records = TimerecordReport.all
         # Render PDF
         format.pdf { send_data render_to_string,
@@ -109,19 +109,18 @@ module Ag2Tech
         return
       end
 
-      # Search necessary data
-      #@worker = Worker.find(worker)
-      
-      # Format dates
-      from = Time.parse(@from).strftime("%Y-%m-%d")
-      to = Time.parse(@to).strftime("%Y-%m-%d")
-      # Setup filename
+     from = Time.parse(@from).strftime("%Y-%m-%d")
+     to = Time.parse(@to).strftime("%Y-%m-%d")
+
+      if !project.blank? 
+        @work_report = WorkOrder.where("project_id >= ? AND created_at >= ? AND created_at <= ?",project,from,to).order(:project_id)
+      elsif project.blank? 
+        @work_report = WorkOrder.where("created_at >= ? AND created_at <= ?",from,to).order(:project_id)
+      end
+
       title = t("activerecord.models.work_order.few") + "_#{from}_#{to}.pdf"      
       
       respond_to do |format|
-        # Execute procedure and load aux table
-        ActiveRecord::Base.connection.execute("CALL generate_timerecord_reports(#{worker}, '#{from}', '#{to}', 0);")
-        @time_records = TimerecordReport.all
         # Render PDF
         format.pdf { send_data render_to_string,
                      filename: "#{title}.pdf",

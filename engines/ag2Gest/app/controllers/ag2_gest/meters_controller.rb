@@ -153,6 +153,76 @@ module Ag2Gest
       end
     end
 
+     # meter report
+    def meter_view_report
+      manage_filter_state
+
+      code = params[:Code]
+      model = params[:Model]
+      brand = params[:Brand]
+      caliber = params[:Caliber]
+      from = params[:From]
+      to = params[:To]
+      # OCO
+      init_oco if !session[:organization]
+
+      # If inverse no search is required
+      meter_code = !meter_code.blank? && meter_code[0] == '%' ? inverse_no_search(meter_code) : meter_code
+
+      @search = Meter.search do
+        if session[:office] != '0'
+          with :office_id, session[:office]
+        elsif session[:organization] != '0'
+          with :organization_id, session[:organization]
+        end
+        if !code.blank?
+          if code.class == Array
+            with :meter_code, code
+          else
+            with(:meter_code).starting_with(code)
+          end
+        end
+        if !model.blank?
+          with :meter_model_id, model
+        end
+        if !brand.blank?
+          with :meter_brand_id, brand
+        end
+        if !caliber.blank?
+          with :caliber_id, caliber
+        end
+        if !from.blank?
+          any_of do
+            with(:purchase_date).greater_than(from)
+            with :purchase_date, from
+          end
+        end
+        if !to.blank?
+          any_of do
+            with(:purchase_date).less_than(to)
+            with :purchase_date, to
+          end
+        end
+          order_by sort_column, sort_direction
+          paginate :page => params[:page] || 1, :per_page => Meter.count
+      end
+
+      @meter_report = @search.results
+
+      if !@meter_report.blank?
+        title = t("activerecord.models.meter.few")
+        @from = formatted_date(@meter_report.first.created_at)
+        @to = formatted_date(@meter_report.last.created_at)
+        respond_to do |format|
+          # Render PDF
+          format.pdf { send_data render_to_string,
+                       filename: "#{title}_#{@from}-#{@to}.pdf",
+                       type: 'application/pdf',
+                       disposition: 'inline' }
+        end
+      end
+    end
+
     private
 
     def sort_column

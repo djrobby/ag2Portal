@@ -1107,8 +1107,8 @@ module Ag2Tech
 
       if !@work_order_report.blank?
         title = t("activerecord.models.work_order.few")
-        @to = formatted_date(@work_order_report.first.created_at)
-        @from = formatted_date(@work_order_report.last.created_at)
+        @from = formatted_date(@work_order_report.first.created_at)
+        @to = formatted_date(@work_order_report.last.created_at)
         respond_to do |format|
           # Render PDF
           format.pdf { send_data render_to_string,

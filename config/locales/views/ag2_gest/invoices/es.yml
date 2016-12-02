@@ -15,6 +15,8 @@ es:
         label_biller: "Facturante"
         label_period: "Período"
         label_others: "Otros"
+        label_from: "Desde"
+        label_to: "Hasta"
       show:
         title: "Factura"
         btn_edit: "Editar Factura"

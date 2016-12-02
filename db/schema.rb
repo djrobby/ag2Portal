@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20161128093156) do
+ActiveRecord::Schema.define(:version => 20161202122546) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -735,6 +735,22 @@ ActiveRecord::Schema.define(:version => 20161128093156) do
   add_index "contract_types", ["nomina_id"], :name => "index_contract_types_on_nomina_id"
   add_index "contract_types", ["organization_id", "ct_code"], :name => "index_contract_types_on_organization_id_and_ct_code", :unique => true
   add_index "contract_types", ["organization_id"], :name => "index_contract_types_on_organization_id"
+
+  create_table "contracted_tariffs", :force => true do |t|
+    t.integer  "water_supply_contract_id"
+    t.integer  "tariff_id"
+    t.datetime "created_at",               :null => false
+    t.datetime "updated_at",               :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+    t.date     "starting_at"
+    t.date     "ending_at"
+  end
+
+  add_index "contracted_tariffs", ["ending_at"], :name => "index_contracted_tariffs_on_ending_at"
+  add_index "contracted_tariffs", ["starting_at"], :name => "index_contracted_tariffs_on_starting_at"
+  add_index "contracted_tariffs", ["tariff_id"], :name => "index_contracted_tariffs_on_tariff_id"
+  add_index "contracted_tariffs", ["water_supply_contract_id"], :name => "index_contracted_tariffs_on_water_supply_contract_id"
 
   create_table "contracting_request_document_types", :force => true do |t|
     t.string   "name"
@@ -2058,16 +2074,6 @@ ActiveRecord::Schema.define(:version => 20161128093156) do
     t.decimal "current",           :precision => 34, :scale => 4
   end
 
-  create_table "product_family_stocks_manual", :id => false, :force => true do |t|
-    t.integer "family_id",                                  :default => 0, :null => false
-    t.string  "family_code"
-    t.string  "family_name"
-    t.integer "store_id"
-    t.string  "store_name"
-    t.decimal "initial",     :precision => 34, :scale => 4
-    t.decimal "current",     :precision => 34, :scale => 4
-  end
-
   create_table "product_types", :force => true do |t|
     t.string   "description"
     t.datetime "created_at",  :null => false
@@ -2940,6 +2946,22 @@ ActiveRecord::Schema.define(:version => 20161128093156) do
   add_index "subscriber_annotations", ["subscriber_annotation_id"], :name => "index_subscriber_annotations_on_subscriber_annotation_id"
   add_index "subscriber_annotations", ["subscriber_id"], :name => "index_subscriber_annotations_on_subscriber_id"
 
+  create_table "subscriber_tariffs", :force => true do |t|
+    t.integer  "subscriber_id"
+    t.integer  "tariff_id"
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+    t.date     "starting_at"
+    t.date     "ending_at"
+  end
+
+  add_index "subscriber_tariffs", ["ending_at"], :name => "index_subscriber_tariffs_on_ending_at"
+  add_index "subscriber_tariffs", ["starting_at"], :name => "index_subscriber_tariffs_on_starting_at"
+  add_index "subscriber_tariffs", ["subscriber_id"], :name => "index_subscriber_tariffs_on_subscriber_id"
+  add_index "subscriber_tariffs", ["tariff_id"], :name => "index_subscriber_tariffs_on_tariff_id"
+
   create_table "subscribers", :force => true do |t|
     t.integer  "client_id"
     t.integer  "office_id"
@@ -2982,6 +3004,7 @@ ActiveRecord::Schema.define(:version => 20161128093156) do
     t.string   "km"
     t.string   "gis_id_wc"
     t.string   "pub_record"
+    t.integer  "use_id"
   end
 
   add_index "subscribers", ["billing_frequency_id"], :name => "index_subscribers_on_billing_frequency_id"
@@ -3008,6 +3031,7 @@ ActiveRecord::Schema.define(:version => 20161128093156) do
   add_index "subscribers", ["street_directory_id"], :name => "index_subscribers_on_street_directory_id"
   add_index "subscribers", ["subscriber_code"], :name => "index_subscribers_on_subscriber_code"
   add_index "subscribers", ["tariff_scheme_id"], :name => "index_subscribers_on_tariff_scheme_id"
+  add_index "subscribers", ["use_id"], :name => "index_subscribers_on_use_id"
   add_index "subscribers", ["zipcode_id"], :name => "index_subscribers_on_zipcode_id"
 
   create_table "supplier_bank_accounts", :force => true do |t|
@@ -3087,30 +3111,17 @@ ActiveRecord::Schema.define(:version => 20161128093156) do
   add_index "supplier_invoice_approvals", ["supplier_invoice_id"], :name => "index_supplier_invoice_approvals_on_supplier_invoice_id"
 
   create_table "supplier_invoice_debts", :id => false, :force => true do |t|
-    t.integer "supplier_invoice_id", :limit => 8
+    t.integer "supplier_invoice_id",                                 :default => 0, :null => false
     t.integer "organization_id"
     t.integer "supplier_id"
     t.string  "invoice_no"
-    t.decimal "subtotal",                         :precision => 47, :scale => 8
-    t.decimal "taxes",                            :precision => 65, :scale => 20
-    t.decimal "bonus",                            :precision => 57, :scale => 14
-    t.decimal "taxable",                          :precision => 58, :scale => 14
-    t.decimal "total",                            :precision => 65, :scale => 20
-    t.decimal "paid",                             :precision => 35, :scale => 4
-    t.decimal "debt",                             :precision => 65, :scale => 20
-  end
-
-  create_table "supplier_invoice_debts_manual", :id => false, :force => true do |t|
-    t.integer "id",              :limit => 8
-    t.integer "organization_id"
-    t.string  "invoice_no"
-    t.decimal "subtotal",                     :precision => 47, :scale => 8
-    t.decimal "taxes",                        :precision => 65, :scale => 20
-    t.decimal "bonus",                        :precision => 57, :scale => 14
-    t.decimal "taxable",                      :precision => 58, :scale => 14
-    t.decimal "total",                        :precision => 65, :scale => 20
-    t.decimal "paid",                         :precision => 35, :scale => 4
-    t.decimal "debt",                         :precision => 65, :scale => 20
+    t.decimal "subtotal",            :precision => 47, :scale => 8
+    t.decimal "taxes",               :precision => 65, :scale => 20
+    t.decimal "bonus",               :precision => 57, :scale => 14
+    t.decimal "taxable",             :precision => 58, :scale => 14
+    t.decimal "total",               :precision => 65, :scale => 20
+    t.decimal "paid",                :precision => 35, :scale => 4
+    t.decimal "debt",                :precision => 65, :scale => 20
   end
 
   create_table "supplier_invoice_items", :force => true do |t|
@@ -3635,6 +3646,17 @@ ActiveRecord::Schema.define(:version => 20161128093156) do
 
   add_index "users_roles", ["user_id", "role_id"], :name => "index_users_roles_on_user_id_and_role_id"
 
+  create_table "uses", :force => true do |t|
+    t.string   "code"
+    t.string   "name"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  add_index "uses", ["code"], :name => "index_uses_on_code", :unique => true
+
   create_table "vehicles", :force => true do |t|
     t.integer  "organization_id"
     t.integer  "company_id"
@@ -3742,6 +3764,7 @@ ActiveRecord::Schema.define(:version => 20161128093156) do
     t.datetime "updated_at",                                         :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
+    t.integer  "use_id"
   end
 
   add_index "water_supply_contracts", ["bill_id"], :name => "index_water_supply_contracts_on_bill_id"
@@ -3752,6 +3775,7 @@ ActiveRecord::Schema.define(:version => 20161128093156) do
   add_index "water_supply_contracts", ["reading_route_id"], :name => "index_water_supply_contracts_on_reading_route_id"
   add_index "water_supply_contracts", ["subscriber_id"], :name => "index_water_supply_contracts_on_subscriber_id"
   add_index "water_supply_contracts", ["tariff_scheme_id"], :name => "index_water_supply_contracts_on_tariff_scheme_id"
+  add_index "water_supply_contracts", ["use_id"], :name => "index_water_supply_contracts_on_use_id"
   add_index "water_supply_contracts", ["work_order_id"], :name => "index_water_supply_contracts_on_work_order_id"
 
   create_table "work_order_areas", :force => true do |t|

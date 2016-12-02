@@ -274,6 +274,54 @@ module Ag2Tech
       end
     end
 
+    def project_view_report
+       manage_filter_state
+       no = params[:No]
+       company = params[:WrkrCompany]
+       office = params[:WrkrOffice]
+       # OCO
+       init_oco if !session[:organization]
+
+       # If inverse no search is required
+       no = !no.blank? && no[0] == '%' ? inverse_no_search(no) : no
+
+       @search = Project.search do
+         fulltext params[:search]
+         if session[:organization] != '0'
+           with :organization_id, session[:organization]
+         end
+         if !no.blank?
+           if no.class == Array
+             with :project_code, no
+           else
+             with(:project_code).starting_with(no)
+           end
+         end
+         if !company.blank?
+           with :company_id, company
+         end
+         if !office.blank?
+           with :office_id, office
+         end
+         order_by :sort_no, :asc
+         paginate :page => params[:page] || 1, :per_page => Project.count
+       end
+       @project_report = @search.results
+
+       if !@project_report.blank?
+         title = t("activerecord.models.project.few")
+         @from = formatted_date(@project_report.first.created_at)
+         @to = formatted_date(@project_report.last.created_at)
+         respond_to do |format|
+           # Render PDF
+           format.pdf { send_data render_to_string,
+                        filename: "#{title}_#{@from}-#{@to}.pdf",
+                        type: 'application/pdf',
+                        disposition: 'inline' }
+         end
+       end
+    end
+
     private
 
     def inverse_no_search(no)

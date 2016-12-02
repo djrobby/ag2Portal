@@ -1,0 +1,87 @@
+if @meter_report.blank?
+	return
+end
+
+# Localization for numbers
+delimiter = I18n.locale == :es ? "." : ","
+
+report.set_layout tlf: 'reports/meter_view_report', layout_options: { default: true }
+
+#
+# Report events
+#
+# On page create
+report.events.on :page_create do |e|
+	# Set page-number
+	e.page.item(:page_no).value(e.page.no)
+end
+# On report generate
+report.events.on :generate do |e|
+	e.pages.each do |page|
+		# Set total-page-number
+		page.item(:page_count).value(e.report.page_count)
+	end
+end
+
+#
+# List configuration (stores & events)
+#
+report.layout.config.list(:default) do |c|
+	# Define the variables used in list
+	c.use_stores page_rows: 0
+
+	# On list page footer insertion
+	c.events.on :page_footer_insert do |e|
+		# Display page sutotals
+		e.section.item(:sum_rows_title).value(I18n.t("ag2_gest.ag2_gest_track.meter_report.sum_rows_title"))
+		e.section.item(:sum_rows).value(e.store.page_rows)
+		# Initialize subtotals to 0
+		#e.store.page_rows = 0
+	end
+end
+
+# New page & start
+report.start_new_page
+
+# Page header
+report.page.values report_title: I18n.t("ag2_gest.meters.index.title")
+
+# Page footer
+report.page.values(printed_at: formatted_timestamp(Time.now),
+				   pt: I18n.t("every_report.pt"),
+				   pd: I18n.t("every_report.pd"))
+
+
+# List header
+report.page.list(:default).header do |header|
+	header.item(:code_c).value I18n.t("activerecord.attributes.meter.meter_code")
+	header.item(:brand_c).value I18n.t("activerecord.attributes.meter.meter_model_id")
+	header.item(:cal_c).value I18n.t("activerecord.attributes.meter.caliber_id")
+	header.item(:manufacturing_year_c).value I18n.t("activerecord.attributes.meter.manufacturing_year_min")
+	header.item(:expiry_date_c).value I18n.t("activerecord.attributes.meter.expiry_date_min")
+	header.item(:purchase_date_c).value I18n.t("activerecord.attributes.meter.purchase_date")
+end
+
+
+# Page Title list
+#route_id = @meter_report.first.subscriber.reading_route_id
+
+# List detail
+@meter_report.each do |i|
+
+
+	report.page.list(:default).add_row do |row|
+		report.page.values reading_route_c: I18n.t("activerecord.attributes.meter.route")+": "
+		row.item(:code).value i.meter_code
+		row.item(:brand).value i.meter_model.full_name unless i.meter_model.blank?
+		row.item(:cal).value i.caliber.caliber unless i.caliber.blank?
+		row.item(:manufacturing_year).value i.manufacturing_year unless i.manufacturing_year.blank?
+		row.item(:expiry_date).value formatted_date(i.expiry_date) unless i.expiry_date.blank? 
+		row.item(:purchase_date).value formatted_date(i.purchase_date) unless i.purchase_date.blank?
+	end
+
+	# Store page subtotals
+  report.page.list(:default) do |list|
+		list.store.page_rows += 1
+	end
+end

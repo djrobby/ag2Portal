@@ -64,7 +64,7 @@
           <%= g.input :ids, label: 'Abonados', collection: [], required: true, :label_html => { :class => 'form-label' }, input_html: {class: "x-large-text-field", multiple: "multiple", id: "select-subscribers"} %>
         </div>
       </div>
-      <%= g.button :submit, "Ver consumos", :class => 'btn-primary' %>
+      <%= g.button :submit, t("ag2_gest.bills.index.calc_consumptions"), :class => 'btn-primary' %>
       <br /><br />
       <%= link_to t("ag2_gest.bills.index.back_to_pre_index"), ag2_gest.pre_index_bills_path %>
     <% end %>

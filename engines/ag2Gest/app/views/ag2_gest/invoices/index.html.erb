@@ -18,6 +18,9 @@
     }).on('changeDate', function(e){
       $('.ndate_picker').datepicker('hide');
     });
+    $('.date_picker').datepicker({
+     format:'dd/mm/yyyy',weekStart:1
+    });
     // Initialized form variable
     _thisForm = $("#Client").closest('form')[0];
   }); 
@@ -43,6 +46,8 @@
     $("#Operation").select2("val", "<%= params[:Operation] %>");
     $("#Biller").select2("val", "<%= params[:Biller] %>");
     $("#Period").select2("val", "<%= params[:Period] %>");
+    $("#From").val("<%= params[:From] %>");
+    $("#To").val("<%= params[:To] %>");
   });
 
   jQuery(function($) {
@@ -57,12 +62,21 @@
       $("#Operation").select2("val", "");
       $("#Biller").select2("val", "");
       $("#Period").select2("val", "");
+      $("#From").val("");
+      $("#To").val("");
       $("#search").val("");
       // no AJAX
       //_thisForm.submit();
       // AJAX
       $("#submit_btn").trigger("click");
     });
+    // when #print_report_btn is clicked
+    $("#print_report_btn").click(function() {
+      // make a POST call and get report
+      window.open("invoice_report.pdf", "_blank");
+      return false;
+    });
+
   });
 </script>
 
@@ -89,7 +103,7 @@
         <%= select_tag "Client", options_from_collection_for_select(@clients, "id", "to_label"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
         <!-- Subscriber -->
         <%= label_tag I18n.t("ag2_gest.invoices.index.label_subscriber"), nil, :class => 'form-label-under-sel2' %>
-        <%= select_tag "Subscriber", options_from_collection_for_select(@subscribers, "id", "to_label"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
+        <%= select_tag "Subscriber", options_from_collection_for_select(@subscribers, "id", "full_name"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
         <!-- Type -->
         <%= label_tag I18n.t("ag2_gest.invoices.index.label_type"), nil, :class => 'form-label-under-sel2' %>
         <%= select_tag "Type", options_from_collection_for_select(@types, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
@@ -105,14 +119,23 @@
         <!-- Period -->
         <%= label_tag I18n.t("ag2_gest.invoices.index.label_period"), nil, :class => 'form-label-under-sel2' %>
         <%= select_tag "Period", options_from_collection_for_select(@periods, "id", "to_label"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
+
+        <!-- Dates -->
+        <%= label_tag I18n.t("ag2_gest.invoices.index.label_from"), nil, :class => 'form-label-under-sel2' %>
+        <%= text_field_tag "From", params[:date], :class =>  'x-large-text-field shrinked date_picker' %>
+        <%= label_tag I18n.t("ag2_gest.invoices.index.label_to"), nil, :class => 'form-label' %>
+        <%= text_field_tag "To", params[:date], :class =>  'x-large-text-field shrinked date_picker' %>
+
         <!-- Others -->
-        <%= label_tag I18n.t("ag2_gest.invoices.index.label_others"), nil, :class => 'form-label-under-sel2' %>
+        <%= label_tag I18n.t("ag2_gest.invoices.index.label_others"), nil, :class => 'form-label' %>
         <%= text_field_tag :search, params[:search], :class => 'x-large-text-field shrinked' %>
         <!-- Submit -->
         <%= submit_tag I18n.t(:apply_filter_button), :class => 'btn btn-primary', :id => 'submit_btn' %>
         <!-- Remove filter -->
         <button id="removeFilter" type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><%= t :clear_filter_button %></button>
         <% end %>
+        <a href="#" id="print_report_btn" class="btn btn-warning"><i class="icon-print icon-white"></i> <%= t 'ag2_gest.home.index.control' %></a>
+        <br /><br />
         <%= link_to t(".back_to_management"), ag2_gest.bill_management_path %>
       </div><!-- /.sidebar-nav -->
     </div><!-- /.span3 -->

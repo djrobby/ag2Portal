@@ -457,7 +457,7 @@ module Ag2Gest
 
       @search_readings = Reading.search do
         with :subscriber_id, params[:id]
-        order_by :created_at, :asc
+        order_by :reading_date, :desc
         paginate :page => params[:page] || 1, :per_page => 5
       end
 

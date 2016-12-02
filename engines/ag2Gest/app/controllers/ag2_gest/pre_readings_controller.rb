@@ -48,7 +48,8 @@ module Ag2Gest
                               reading_index_2: pre_reading.reading_index_2,
                               reading_incidence_types: pre_reading.reading_incidence_types,
                               reading_1: pre_reading.reading_1,
-                              reading_2: pre_reading.reading_2 )
+                              reading_2: pre_reading.reading_2,
+                              created_by: (current_user.id if !current_user.nil?))
         if reading.save
           pre_reading.destroy
         end
@@ -110,11 +111,17 @@ module Ag2Gest
         subscribers = Subscriber.where(reading_route_id: @routes).availables.where("meter_id IS NOT NULL").order(&:reading_sequence).group_by(&:reading_route_id)
         subscribers.each do |subs|
           subs[1].each do |s|
-            if s.pre_readings.where(billing_period_id: billing_period.id).blank?
-              pervious_period_id = BillingPeriod.find_by_period_and_billing_frequency_id(billing_period.previous_period,billing_period.billing_frequency_id).try(:id)
-              pervious_year_id = BillingPeriod.find_by_period_and_billing_frequency_id(billing_period.year_period,billing_period.billing_frequency_id).try(:id)
-              reading1 = Reading.where(subscriber_id: s.id, reading_type_id: ReadingType::NORMAL, billing_period_id: pervious_period_id).first || s.readings.where(reading_type_id: 4).last #s.readings.find_by_reading_type_id(4)
-              reading2 = Reading.where(subscriber_id: s.id, reading_type_id: ReadingType::NORMAL, billing_period_id: pervious_year_id).first
+
+            # pervious_period_id = BillingPeriod.find_by_period_and_billing_frequency_id(billing_period.previous_period,billing_period.billing_frequency_id).try(:id)
+            reading1 = set_reading_1_to_reading(s,s.meter,billing_period) #Reading.where(subscriber_id: s.id, reading_type_id: ReadingType::NORMAL, billing_period_id: pervious_period_id).first || s.readings.where(reading_type_id: 4).last #s.readings.find_by_reading_type_id(4)
+
+            # pervious_year_id = BillingPeriod.find_by_period_and_billing_frequency_id(billing_period.year_period,billing_period.billing_frequency_id).try(:id)
+            reading2 = set_reading_2_to_reading(s,s.meter,billing_period) #Reading.where(subscriber_id: s.id, reading_type_id: ReadingType::NORMAL, billing_period_id: pervious_year_id).first
+
+            reading_billing_period = s.readings.where(billing_period_id: billing_period.id, reading_type_id: ReadingType::NORMAL)
+            prereading_billing_period = s.pre_readings.where(billing_period_id: billing_period.id)
+
+            if prereading_billing_period.blank? and reading_billing_period.blank? and !reading1.nil?
               pre_reading = PreReading.new(
                 project_id: billing_period.project_id,
                 billing_period_id: billing_period.id,
@@ -128,7 +135,8 @@ module Ag2Gest
                 reading_1: reading1,
                 reading_2: reading2,
                 reading_index_1: reading1.try(:reading_index),
-                reading_index_2: reading2.try(:reading_index)
+                reading_index_2: reading2.try(:reading_index),
+                created_by: (current_user.id if !current_user.nil?)
               )
               pre_reading.save(:validate => false)
             end

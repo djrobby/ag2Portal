@@ -30,10 +30,17 @@
     <div class="row-fluid">
 
       <%= f.association :reading_type, label: t('activerecord.attributes.reading.reading_type_id'),:required => true, collection: ReadingType.all(), :input_html => { :class => 'sel2 x-large-text-field' }, label_method: lambda { |st| st.name }, value_method: :id, :label_html => { :class => 'form-label' }, wrapper_html: {class: "span4"} %>
+      <% if @breadcrumb == 'create'%>
+        <%= f.association :meter, label: t('activerecord.attributes.reading.meter_id'),:required => true, collection: Meter.all(), :input_html => { :class => 'sel2 x-large-text-field' }, label_method: lambda { |st| st.meter_code }, value_method: :id, :label_html => { :class => 'form-label' }, wrapper_html: {class: "span4"} %>
+      <% else %>
+        <%= f.input :meter_id, :as => :hidden %>
+      <% end %>
 
-      <%= f.association :meter, label: t('activerecord.attributes.reading.meter_id'),:required => true, collection: Meter.all(), :input_html => { :class => 'sel2 x-large-text-field' }, label_method: lambda { |st| st.meter_code }, value_method: :id, :label_html => { :class => 'form-label' }, wrapper_html: {class: "span4"} %>
-
-      <%= f.association :subscriber, label: t('activerecord.attributes.reading.subscriber_id'),:required => true, collection: Subscriber.all(), :input_html => { :class => 'sel2 x-large-text-field' }, label_method: lambda { |st| st.to_label }, value_method: :id, :label_html => { :class => 'form-label' }, wrapper_html: {class: "span4"} %>
+      <% if @breadcrumb == 'create'%>
+        <%= f.association :subscriber, label: t('activerecord.attributes.reading.subscriber_id'),:required => true, collection: Subscriber.all(), :input_html => { :class => 'sel2 x-large-text-field' }, label_method: lambda { |st| st.to_label }, value_method: :id, :label_html => { :class => 'form-label' }, wrapper_html: {class: "span4"} %>
+      <% else %>
+        <%= f.input :subscriber_id, :as => :hidden %>
+      <% end %>
 
     </div>
 

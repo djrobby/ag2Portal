@@ -64,6 +64,7 @@ report.page.list(:default).header do |header|
 	report.page.values approver_c: I18n.t("activerecord.attributes.purchase_order.approver")
 	header.item(:full_code_items_c).value I18n.t("activerecord.attributes.purchase_order_item.product_c")
 	header.item(:description_items_c).value I18n.t("activerecord.attributes.purchase_order_item.description_c")
+	header.item(:ir_c).value I18n.t("activerecord.attributes.stock.rotation_rate_c")
 	header.item(:quantity_items_c).value I18n.t("activerecord.attributes.purchase_order_item.quantity_c")
 	header.item(:net_price_items_c).value I18n.t("activerecord.attributes.purchase_order_item.price_c")
 	header.item(:amount_items_c).value I18n.t("activerecord.attributes.purchase_order_item.amount_c")
@@ -95,6 +96,7 @@ order_number = @order_items_report.first.purchase_order.order_no
 		report.page.values approver: i.purchase_order.approver.email unless i.purchase_order.approver.blank?
 		row.item(:full_code_items).value i.product.full_code
 		row.item(:description_items).value i.description
+		row.item(:ir).value number_with_precision(i.product.rotation_rate, precision: 4) unless i.product.rotation_rate.blank?
 		row.item(:quantity_items).value number_with_precision(i.quantity, precision: 4)
 		row.item(:net_price_items).value number_with_precision(i.net_price, precision: 4)
 		row.item(:amount_items).value number_with_precision(i.amount, precision: 4)

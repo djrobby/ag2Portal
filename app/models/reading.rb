@@ -21,6 +21,7 @@ class Reading < ActiveRecord::Base
   attr_accessor :reading_index_add, :reading_date_add
 
   has_many :reading_incidences
+  has_one :bill, foreign_key: "reading_2_id"
 
   has_paper_trail
 
@@ -58,6 +59,11 @@ class Reading < ActiveRecord::Base
     _codes
   end
 
+  def billable?
+    # reading_type_id != 4 and (bill.nil? or !Invoice.where(original_invoice_id: bill.try(:invoices).try(:first).try(:id)).blank?)
+    bill.nil? or !Invoice.where(original_invoice_id: bill.try(:invoices).try(:first).try(:id)).blank?
+  end
+
   def consumption
     unless reading_index_1.nil? or reading_index.nil?
       if reading_index_1 <= reading_index
@@ -67,8 +73,10 @@ class Reading < ActiveRecord::Base
         ((10 ** meter.meter_model.digits) - reading_index_1) + reading_index
       end
     else
-      nil
+      0
     end
+  rescue
+    0
   end
 
   def price(tariff)

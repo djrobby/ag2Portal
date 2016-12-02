@@ -107,6 +107,9 @@ module Ag2Products
       @order_items_dropdown = order_items_array(@order_items)
       # Products array
       @products_dropdown = products_array(@products)
+      # Confirms that instance variables has data
+      @charge_accounts = @charge_accounts.blank? ? charge_accounts_dropdown : @charge_accounts
+      @stores = @stores.blank? ? stores_dropdown : @stores
       # Setup JSON
       @json_data = { "project" => @projects, "work_order" => @orders_dropdown,
                      "charge_account" => @charge_accounts, "store" => @stores,

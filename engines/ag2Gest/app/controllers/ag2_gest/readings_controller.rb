@@ -108,58 +108,45 @@ module Ag2Gest
       @meter = Meter.find(params[:reading][:meter_id])
       @project = Project.find(params[:reading][:project_id])
       @billing_period = BillingPeriod.find(params[:reading][:billing_period_id])
+      @reading_exits = Reading.where( meter_id: params[:reading][:meter_id],
+                                      project_id: params[:reading][:project_id],
+                                      billing_period_id: params[:reading][:billing_period_id],
+                                      reading_type_id: params[:reading][:reading_type_id]).
+                              where("date(reading_date) = ?", params[:reading][:reading_date].split(' ')[0].to_date)
 
-      @billing_frequency = BillingFrequency.find(params[:reading][:billing_frequency_id])
-      @reading_route = ReadingRoute.find(params[:reading][:reading_route_id])
-
-      @reading_type = ReadingType.find(params[:reading][:reading_type_id])
-
-      @reading_incidence_types = params[:incidence_type_ids]
-
-      #Update JavaScript
-      if !@reading_incidence_types.blank? #True
-        @reading_incidence_types = ReadingIncidenceType.where(id: @reading_incidence_types).map(&:name)
-      else #False
-        @reading_incidence_types = []
-      end
-
-      #@reading_incidence_types = ReadingIncidenceType.find(params[:incidence_type_ids])
-      #@reading.reading_incidence_types.create(params[:incidence_type_ids])
-      #@reading = Reading.new(params[:reading].merge(:reading_incidence_type_ids => params[:incidence_type_ids]))
-      #params[:incidence_type_ids].each do |reading_incidence_type_id|
-        #@reading.reading_incidence_types.build(reading_incidence_type_id: reading_incidence_type_id)
-      #end
-      #params.require(:reading).permit(:subscriber_id, :meter_id, :billing_frequency_id, :reading_route_id, :project_id, :billing_period_id, :reading_type_id, :reading_date, :reading_index, {:reading_incidence_types_ids => params[:incidence_type_ids]})
 
       @reading = Reading.new(params[:reading])
-
-      if params[:incidence_type_ids].blank? #[]
-
-      else
-        @my_read_inci_type = ReadingIncidenceType.find(params[:incidence_type_ids])
+      if !params[:incidence_type_ids].blank? #[]
+        @my_read_inci_type = ReadingIncidenceType.where(id: params[:incidence_type_ids])
         @reading.reading_incidence_types << @my_read_inci_type
       end
 
-      if @reading.save
+      rdg_1 = set_reading_1_to_reading(@subscriber,@meter,@billing_period)
+      rdg_2 = set_reading_2_to_reading(@subscriber,@meter,@billing_period)
+      @reading.reading_1 = rdg_1
+      @reading.reading_index_1 = rdg_1.try(:reading_index)
+      @reading.reading_2 = rdg_2
+      @reading.reading_index_2 = rdg_2.try(:reading_index)
+      @reading.reading_sequence = @subscriber.reading_sequence
+      @reading.reading_variant = @subscriber.reading_variant
+      @reading.created_by = current_user.id if !current_user.nil?
 
-        response_hash = {reading: @reading}
-        response_hash[:project] = @project
-        response_hash[:subscriber] = @subscriber
-        response_hash[:meter] = @meter
-        response_hash[:billing_period] = @billing_period
-        response_hash[:billing_frequency] = @billing_frequency
-        response_hash[:reading_type] = @reading_type
-        response_hash[:reading_route] = @reading_route
-        response_hash[:reading_incidence_types] = @reading_incidence_types
+      if @reading_exits.blank? and @reading.save
 
         respond_to do |format|
-          format.html { redirect_to @reading.subscriber, notice: crud_notice('created', @reading) }
-          format.json { render json: response_hash, status: :created, location: @reading.subscriber }
+          if session[:return_to_subscriber].nil?
+            format.html { redirect_to @reading, notice: t('activerecord.attributes.reading.successfully') }
+          else
+            format.html { redirect_to session[:return_to_subscriber_url], notice: t('activerecord.attributes.reading.successfully') }
+          end
         end
       else
         respond_to do |format|
-          format.html { redirect_to @reading.subscriber, notice: crud_notice('created', @reading) }
-          format.json { render json: @reading.errors, status: :unprocessable_entity }
+          if session[:return_to_subscriber].nil?
+            format.html { redirect_to @reading, alert: t('activerecord.attributes.reading.repeat') }
+          else
+            format.html { redirect_to session[:return_to_subscriber_url], alert: t('activerecord.attributes.reading.repeat') }
+          end
         end
       end
 
@@ -187,7 +174,11 @@ module Ag2Gest
 
       respond_to do |format|
         if @reading.update_attributes(params[:reading])
-          format.html { redirect_to @reading, notice: t('activerecord.attributes.reading.successfully') }
+          if session[:return_to_subscriber].nil?
+            format.html { redirect_to @reading, notice: t('activerecord.attributes.reading.successfully') }
+          else
+            format.html { redirect_to session[:return_to_subscriber_url], notice: t('activerecord.attributes.reading.successfully') }
+          end
           format.json { head :no_content }
         else
           format.html { render action: "edit" }

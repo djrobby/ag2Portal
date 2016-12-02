@@ -11,10 +11,13 @@ en:
         label_budget_period: "Budget period"
       project_report:
         report_title: "Projects"
+        sum_rows_title: "Total Rows:"
       budget_report:
         report_title: "Budgets"
+        sum_rows_title: "Total Rows:"
       work_report:
         report_title: "Work orders"
+        sum_rows_title: "Total Rows:"
       every_report:
         pt: "Page"
         pd: "of"
