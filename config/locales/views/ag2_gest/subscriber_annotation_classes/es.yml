@@ -1,0 +1,20 @@
+es:
+  ag2_gest:
+    subscriber_annotation_classes:
+      index:
+        title: "Clases de Anotación"
+        btn_new: "Nuevo Clase de Anotación"
+        back_to_root: "Volver a ag2Gest"
+        back_to_management: "Volver a Gestión Tarifaria"
+      show:
+        title: "Clase de Anotación"
+        btn_edit: "Editar Clase de Anotación"
+        btn_delete: "Borrar Clase de Anotación"
+        subtable_title: "Anotaciones de la Clase"
+        return_to: "Volver a Clases de Anotación"
+      edit:
+        title: "Editar Clase de Anotación"
+        btn_show: "Ver Clase de Anotación"
+      new:
+        title: "Nuevo Clase de Anotación"
+      back_to_main_page: "Volver a Clases de Anotación"

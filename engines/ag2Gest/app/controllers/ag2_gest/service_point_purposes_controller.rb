@@ -2,7 +2,7 @@ require_dependency "ag2_gest/application_controller"
 
 module Ag2Gest
   class ServicePointPurposesController < ApplicationController
-    
+
     before_filter :authenticate_user!
     load_and_authorize_resource
     helper_method :sort_column
@@ -10,9 +10,9 @@ module Ag2Gest
     # GET /service_point_purposes
     def index
       manage_filter_state
-      
+
       @service_point_purposes = ServicePointPurpose.paginate(:page => params[:page], :per_page => 10).order(sort_column + ' ' + sort_direction)
-  
+
       respond_to do |format|
         format.html # index.html.erb
         format.json { render json: @service_point_purposes }
@@ -24,7 +24,7 @@ module Ag2Gest
     def show
       @breadcrumb = 'read'
       @service_point_purpose = ServicePointPurpose.find(params[:id])
-  
+
       respond_to do |format|
         format.html # show.html.erb
         format.json { render json: @service_point_purpose }
@@ -35,7 +35,7 @@ module Ag2Gest
     def new
       @breadcrumb = 'create'
       @service_point_purpose = ServicePointPurpose.new
-  
+
       respond_to do |format|
         format.html # new.html.erb
         format.json { render json: @service_point_purpose }
@@ -52,7 +52,8 @@ module Ag2Gest
     def create
       @breadcrumb = 'create'
       @service_point_purpose = ServicePointPurpose.new(params[:service_point_purpose])
-  
+      @service_point_purpose.created_by = current_user.id if !current_user.nil?
+
       respond_to do |format|
         if @service_point_purpose.save
           format.html { redirect_to @service_point_purpose, notice: t('activerecord.attributes.service_point_purpose.create') }
@@ -68,10 +69,12 @@ module Ag2Gest
     def update
       @breadcrumb = 'update'
       @service_point_purpose = ServicePointPurpose.find(params[:id])
-  
+      @service_point_purpose.updated_by = current_user.id if !current_user.nil?
+
       respond_to do |format|
         if @service_point_purpose.update_attributes(params[:service_point_purpose])
-          format.html { redirect_to @service_point_purpose, notice: t('activerecord.attributes.service_point_purpose.successfully') }
+          format.html { redirect_to @service_point_purpose,
+                        notice: (crud_notice('updated', @service_point_purpose) + "#{undo_link(@service_point_purpose)}").html_safe }
           format.json { head :no_content }
         else
           format.html { render action: "edit" }
@@ -83,20 +86,25 @@ module Ag2Gest
     # DELETE /service_point_purposes/1
     def destroy
       @service_point_purpose = ServicePointPurpose.find(params[:id])
-      @service_point_purpose.destroy
-  
+
       respond_to do |format|
-        format.html { redirect_to service_point_purposes_url }
-        format.json { head :no_content }
+        if @service_point_purpose.destroy
+          format.html { redirect_to service_point_purposes_url,
+                      notice: (crud_notice('destroyed', @service_point_purpose) + "#{undo_link(@service_point_purpose)}").html_safe }
+          format.json { head :no_content }
+        else
+          format.html { redirect_to service_point_purposes_url, alert: "#{@service_point_purpose.errors[:base].to_s}".gsub('["', '').gsub('"]', '') }
+          format.json { render json: @service_point_purpose.errors, status: :unprocessable_entity }
+        end
       end
     end
 
     private
-    
+
     def sort_column
       ServicePointPurpose.column_names.include?(params[:sort]) ? params[:sort] : "id"
     end
-  
+
     # Keeps filter state
     def manage_filter_state
       # sort
@@ -111,7 +119,7 @@ module Ag2Gest
       elsif session[:direction]
         params[:direction] = session[:direction]
       end
-    end  
-    
+    end
+
   end
 end

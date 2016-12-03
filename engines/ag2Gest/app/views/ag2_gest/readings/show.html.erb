@@ -1,4 +1,4 @@
-<% session[:return_to_reading] = "Volver a Lectura" %>
+<% session[:return_to_reading] = I18n.t('ag2_gest.readings.show.return_to') %>
 <% session[:return_to_reading_url] = "#{request.protocol}#{request.host_with_port}#{request.fullpath}" %>
 
 <%= render '/layouts/ag2_gest/readingsbreadcrumb' %>
@@ -75,7 +75,7 @@
   <tbody>
     <tr>
       <td><%= t('activerecord.attributes.subscriber.subscriber_code') %>:</td>
-      <td><%= link_to @reading.try(:subscriber).try(:full_code), ag2_gest.subscriber_path(@reading.subscriber_id, reading: @reading.id) %></td>
+      <td><%= link_to @reading.try(:subscriber).try(:full_code), ag2_gest.subscriber_path(@reading.subscriber_id, reading: @reading.id) unless @reading.subscriber.blank? %></td>
       <td><%= t 'activerecord.attributes.subscriber.full_name' %>:</td>
       <td colspan="3"><%= @reading.try(:subscriber).try(:full_name) %></td>
     </tr>
@@ -108,7 +108,7 @@
 <table class="table">
     <tr>
       <td><%= t 'activerecord.attributes.meter.meter_code' %>:</td>
-      <td colspan="3"><%= link_to @reading.try(:meter).try(:meter_code), ag2_gest.meter_path(@reading.meter_id, reading: @reading.id) %></td>
+      <td colspan="3"><%= link_to @reading.try(:meter).try(:meter_code), ag2_gest.meter_path(@reading.meter_id, reading: @reading.id) unless @reading.meter.blank?%></td>
     </tr>
     <tr>
       <td><%= t('activerecord.attributes.meter.meter_model_id') %>:</td>

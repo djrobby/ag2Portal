@@ -24,8 +24,8 @@
 delete_path: @caliber, delete_txt: t('.btn_delete'), msg: t("activerecord.models.caliber.one"), :txt => @caliber.id,
 new_path: new_caliber_path, new_txt: t('ag2_gest.calibers.index.btn_new') } %>
 
-<% if !session[:return_to_contracting_request].nil? %>
-  <%= link_to session[:return_to_contracting_request], session[:return_to_contracting_request_url] %> |
+<% if !session[:return_to].nil? %>
+  <%= link_to session[:return_to], session[:return_to_url] %> |
 <% end %>
 <% if !session[:return_to_subscriber].nil? %>
   <%= link_to session[:return_to_subscriber], session[:return_to_subscriber_url] %> |

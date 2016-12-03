@@ -4,6 +4,8 @@ class TariffType < ActiveRecord::Base
   has_many :tariff_schemes
   has_many :tariffs
 
+  has_paper_trail
+
   validates :name, :presence => true
   validates :code, :presence => true,
                    :length => { :is => 3 },
@@ -16,7 +18,7 @@ class TariffType < ActiveRecord::Base
   end
 
   private
-  
+
   def fields_to_uppercase
     if !self.code.blank?
       self[:code].upcase!

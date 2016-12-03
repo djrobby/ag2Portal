@@ -1,3 +1,10 @@
+<% session[:return_to] = nil %>
+<% session[:return_to_url] = nil %>
+<% session[:return_to_subscriber] = nil %>
+<% session[:return_to_subscriber_url] = nil %>
+<% session[:return_to_meter] = nil %>
+<% session[:return_to_meter_url] = nil %>
+
 <%= render '/layouts/ag2_gest/caliberbreadcrumb' %>
 
 <%#= render :partial => '/layouts/searchhead_remote', :locals => { :title => t(".title"), :path => calibers_path } %>

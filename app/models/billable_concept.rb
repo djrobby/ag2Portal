@@ -7,6 +7,8 @@ class BillableConcept < ActiveRecord::Base
 
   has_many :billable_items
 
+  has_paper_trail
+
   validates :name, :presence => true
   validates :billable_document, :presence => true
   validates :code, :presence => true,

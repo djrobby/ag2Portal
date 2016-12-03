@@ -132,7 +132,8 @@ module Ag2Gest
 
       respond_to do |format|
         if @meter.update_attributes(params[:meter])
-          format.html { redirect_to @meter, notice: t('activerecord.attributes.meter.successfully') }
+          format.html { redirect_to @meter,
+                        notice: (crud_notice('updated', @meter) + "#{undo_link(@meter)}").html_safe }
           format.json { head :no_content }
         else
           format.html { render action: "edit" }
@@ -145,11 +146,16 @@ module Ag2Gest
     # DELETE /meters/1.json
     def destroy
       @meter = Meter.find(params[:id])
-      @meter.destroy
 
       respond_to do |format|
-        format.html { redirect_to meters_url }
-        format.json { head :no_content }
+        if @meter.destroy
+          format.html { redirect_to meters_url,
+                      notice: (crud_notice('destroyed', @meter) + "#{undo_link(@meter)}").html_safe }
+          format.json { head :no_content }
+        else
+          format.html { redirect_to meters_url, alert: "#{@meter.errors[:base].to_s}".gsub('["', '').gsub('"]', '') }
+          format.json { render json: @meter.errors, status: :unprocessable_entity }
+        end
       end
     end
 
@@ -165,6 +171,7 @@ module Ag2Gest
       to = params[:To]
       # OCO
       init_oco if !session[:organization]
+
 
       # If inverse no search is required
       meter_code = !meter_code.blank? && meter_code[0] == '%' ? inverse_no_search(meter_code) : meter_code
@@ -203,11 +210,11 @@ module Ag2Gest
             with :purchase_date, to
           end
         end
-          order_by sort_column, sort_direction
+          #order_by :order_route, :desc
           paginate :page => params[:page] || 1, :per_page => Meter.count
       end
 
-      @meter_report = @search.results
+      @meter_report = @search.results.sort_by(&:order_route)
 
       if !@meter_report.blank?
         title = t("activerecord.models.meter.few")
@@ -224,6 +231,7 @@ module Ag2Gest
     end
 
     private
+
 
     def sort_column
       Meter.column_names.include?(params[:sort]) ? params[:sort] : "meter_code"

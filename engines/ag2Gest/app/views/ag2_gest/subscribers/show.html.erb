@@ -1,4 +1,4 @@
-<% session[:return_to_subscriber] = "Volver a Abonado" %>
+<% session[:return_to_subscriber] = I18n.t('ag2_gest.subscribers.show.return_to') %>
 <% session[:return_to_subscriber_url] = "#{request.protocol}#{request.host_with_port}#{request.fullpath}" %>
 
 <style>
@@ -113,8 +113,8 @@
 <% if !session[:return_to_reading].nil? %>
   <%= link_to session[:return_to_reading], session[:return_to_reading_url] %> |
 <% end %>
-<% if !session[:return_to_contracting_request].nil? %>
-  <%= link_to session[:return_to_contracting_request], session[:return_to_contracting_request_url] %> |
+<% if !session[:return_to].nil? %>
+  <%= link_to session[:return_to], session[:return_to_url] %> |
 <% end %>
 <%= link_to t("ag2_gest.subscribers.back_to_main_page"), subscribers_path %>
 <br/>

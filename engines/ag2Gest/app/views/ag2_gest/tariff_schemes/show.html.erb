@@ -24,13 +24,13 @@
     </tr>
     <tr>
       <td><%= t('activerecord.attributes.tariff_scheme.project_id') %>:</td>
-      <td><%= link_to @tariff_scheme.try(:project).try(:full_name), ag2_tech.project_path(@tariff_scheme.project) %></td>
+      <td><%= @tariff_scheme.try(:project).try(:full_name) %></td>
       <td><%= t('activerecord.attributes.tariff_scheme.office') %>:</td>
-      <td><%= link_to @tariff_scheme.try(:project).try(:office).try(:to_label), ag2_admin.office_path(@tariff_scheme.project.office) %></td>
+      <td><%= @tariff_scheme.try(:project).try(:office).try(:to_label) unless @tariff_scheme.try(:project).try(:office).blank? %></td>
     </tr>
     <tr>
       <td><%= t('activerecord.attributes.tariff_scheme.company') %>:</td>
-      <td><%= link_to @tariff_scheme.try(:project).try(:company).try(:name), ag2_admin.company_path(@tariff_scheme.project.company) %></td>
+      <td><%= @tariff_scheme.try(:project).try(:company).try(:name) unless @tariff_scheme.try(:project).try(:company).blank? %></td>
       <td><%= t('activerecord.attributes.tariff_scheme.tariff_type_id') %>:</td>
       <td ><%= link_to @tariff_scheme.try(:tariff_type).try(:name), ag2_gest.tariff_type_path(@tariff_scheme.tariff_type_id) %></td>
     </tr>
@@ -42,6 +42,7 @@
     </tr>
 
       <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @tariff_scheme } %>
+      <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @tariff_scheme } %>
   </tbody>
 </table>
 
@@ -50,8 +51,8 @@
 delete_path: @tariff_scheme, delete_txt: t('.btn_delete'), msg: t("activerecord.models.tariff_scheme.one"), :txt => @tariff_scheme.name,
 new_path: new_tariff_scheme_path, new_txt: t('ag2_gest.tariff_schemes.index.btn_new') } %>
 
-<% if !session[:return_to_contracting_request].nil? %>
-  <%= link_to session[:return_to_contracting_request], session[:return_to_contracting_request_url] %> |
+<% if !session[:return_to].nil? %>
+  <%= link_to session[:return_to], session[:return_to_url] %> |
 <% end %>
 <% if !session[:return_to_subscriber].nil? %>
   <%= link_to session[:return_to_subscriber], session[:return_to_subscriber_url] %> |

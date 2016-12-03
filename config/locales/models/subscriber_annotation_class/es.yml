@@ -1,0 +1,14 @@
+es:
+  activerecord:
+    models:
+      subscriber_annotation_class:
+        zero:  Clases de anotación
+        one:   Clase de anotación
+        few:   Clases de anotación
+        other: Clases de anotación
+        check_for_subscriber_annotations: "Clase no puede ser eliminada mientras existan anotaciones vinculadas."
+    attributes:
+      subscriber_annotation_class:
+        code: "Código"
+        name: "Descripción"
+        type: "Tipo"

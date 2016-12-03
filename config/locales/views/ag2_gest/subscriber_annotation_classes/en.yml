@@ -1,0 +1,20 @@
+en:
+  ag2_gest:
+    subscriber_annotation_classes:
+      index:
+        title: "Annotation Classes"
+        btn_new: "New Annotation Class"
+        back_to_root: "Back to ag2Gest"
+        back_to_management: "Back to Tariff Management"
+      show:
+        title: "Annotation Class"
+        btn_edit: "Edit Annotation Class"
+        btn_delete: "Delete Annotation Class"
+        subtable_title: "Class Anotations"
+        return_to: "Back to Annotation Classes"
+      edit:
+        title: "Edit Annotation Class"
+        btn_show: "Show Annotation Class"
+      new:
+        title: "New Annotation Class"
+      back_to_main_page: "Back to Annotation Classes"

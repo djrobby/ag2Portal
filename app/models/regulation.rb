@@ -6,6 +6,8 @@ class Regulation < ActiveRecord::Base
 
   has_many :billable_items
 
+  has_paper_trail
+
   validates :project,         :presence => true
   validates :regulation_type, :presence => true
   validates :description,     :presence => true

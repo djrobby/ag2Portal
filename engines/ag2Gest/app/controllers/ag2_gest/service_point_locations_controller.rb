@@ -2,7 +2,7 @@ require_dependency "ag2_gest/application_controller"
 
 module Ag2Gest
   class ServicePointLocationsController < ApplicationController
-    
+
     before_filter :authenticate_user!
     load_and_authorize_resource
     helper_method :sort_column
@@ -10,9 +10,9 @@ module Ag2Gest
     # GET /service_point_locations
     def index
       manage_filter_state
-      
+
       @service_point_locations = ServicePointLocation.paginate(:page => params[:page], :per_page => 10).order(sort_column + ' ' + sort_direction)
-  
+
       respond_to do |format|
         format.html # index.html.erb
         format.json { render json: @service_point_locations }
@@ -24,7 +24,7 @@ module Ag2Gest
     def show
       @breadcrumb = 'read'
       @service_point_location = ServicePointLocation.find(params[:id])
-  
+
       respond_to do |format|
         format.html # show.html.erb
         format.json { render json: @service_point_location }
@@ -35,7 +35,7 @@ module Ag2Gest
     def new
       @breadcrumb = 'create'
       @service_point_location = ServicePointLocation.new
-  
+
       respond_to do |format|
         format.html # new.html.erb
         format.json { render json: @service_point_location }
@@ -52,7 +52,8 @@ module Ag2Gest
     def create
       @breadcrumb = 'create'
       @service_point_location = ServicePointLocation.new(params[:service_point_location])
-  
+      @service_point_location.created_by = current_user.id if !current_user.nil?
+
       respond_to do |format|
         if @service_point_location.save
           format.html { redirect_to @service_point_location, notice: t('activerecord.attributes.service_point_location.create') }
@@ -68,10 +69,12 @@ module Ag2Gest
     def update
       @breadcrumb = 'update'
       @service_point_location = ServicePointLocation.find(params[:id])
-  
+      @service_point_location.updated_by = current_user.id if !current_user.nil?
+
       respond_to do |format|
         if @service_point_location.update_attributes(params[:service_point_location])
-          format.html { redirect_to @service_point_location, notice: t('activerecord.attributes.service_point_location.successfully') }
+          format.html { redirect_to @service_point_location,
+                        notice: (crud_notice('updated', @service_point_location) + "#{undo_link(@service_point_location)}").html_safe }
           format.json { head :no_content }
         else
           format.html { render action: "edit" }
@@ -83,20 +86,25 @@ module Ag2Gest
     # DELETE /service_point_locations/1
     def destroy
       @service_point_location = ServicePointLocation.find(params[:id])
-      @service_point_location.destroy
-  
+
       respond_to do |format|
-        format.html { redirect_to service_point_locations_url }
-        format.json { head :no_content }
+        if @service_point_location.destroy
+          format.html { redirect_to service_point_locations_url,
+                      notice: (crud_notice('destroyed', @service_point_location) + "#{undo_link(@service_point_location)}").html_safe }
+          format.json { head :no_content }
+        else
+          format.html { redirect_to service_point_locations_url, alert: "#{@service_point_location.errors[:base].to_s}".gsub('["', '').gsub('"]', '') }
+          format.json { render json: @service_point_location.errors, status: :unprocessable_entity }
+        end
       end
     end
 
     private
-    
+
     def sort_column
       ServicePointLocation.column_names.include?(params[:sort]) ? params[:sort] : "id"
     end
-  
+
     # Keeps filter state
     def manage_filter_state
       # sort

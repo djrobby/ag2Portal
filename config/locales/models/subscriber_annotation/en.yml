@@ -1,0 +1,15 @@
+en:
+  activerecord:
+    models: 
+      subscriber_annotation:
+        zero:  Annotations
+        one:   Annotation
+        few:   Annotations
+        other: Annotations
+    attributes:
+      subscriber_annotation:
+        subscriber: "Subscriber"
+        subscriber_id: "Subscriber"
+        subscriber_annotation_class: "Class"
+        subscriber_annotation_class_id: "Class"
+        annotation: "Annotation"

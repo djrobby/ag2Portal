@@ -77,7 +77,8 @@ module Ag2Gest
 
       respond_to do |format|
         if @reading_incidence_type.update_attributes(params[:reading_incidence_type])
-          format.html { redirect_to @reading_incidence_type, notice: t('activerecord.attributes.reading_incidence_type.successfully') }
+          format.html { redirect_to @reading_incidence_type,
+                        notice: (crud_notice('updated', @reading_incidence_type) + "#{undo_link(@reading_incidence_type)}").html_safe }
           format.json { head :no_content }
         else
           format.html { render action: "edit" }
@@ -90,11 +91,16 @@ module Ag2Gest
     # DELETE /reading_incidence_types/1.json
     def destroy
       @reading_incidence_type = ReadingIncidenceType.find(params[:id])
-      @reading_incidence_type.destroy
 
       respond_to do |format|
-        format.html { redirect_to reading_incidence_types_url }
-        format.json { head :no_content }
+        if @reading_incidence_type.destroy
+          format.html { redirect_to reading_incidence_types_url,
+                      notice: (crud_notice('destroyed', @reading_incidence_type) + "#{undo_link(@reading_incidence_type)}").html_safe }
+          format.json { head :no_content }
+        else
+          format.html { redirect_to reading_incidence_types_url, alert: "#{@reading_incidence_type.errors[:base].to_s}".gsub('["', '').gsub('"]', '') }
+          format.json { render json: @reading_incidence_type.errors, status: :unprocessable_entity }
+        end
       end
     end
 

@@ -10,6 +10,8 @@ class ReadingRoute < ActiveRecord::Base
   has_many :service_points
   has_many :water_supply_contracts
 
+  has_paper_trail
+
   # validates :route_code,         :presence => true
 
   validates :office_id, :presence => true

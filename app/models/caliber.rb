@@ -13,12 +13,19 @@ class Caliber < ActiveRecord::Base
   scope :by_caliber, -> { order(:caliber) }
 
   before_destroy :check_for_dependent_records
+  before_validation :fields_to_uppercase
 
   def to_label
     caliber
   end
 
   private
+
+  def fields_to_uppercase
+    if !self.letter_id.blank?
+      self[:letter_id].upcase!
+    end
+  end
 
   # Before destroy
   def check_for_dependent_records

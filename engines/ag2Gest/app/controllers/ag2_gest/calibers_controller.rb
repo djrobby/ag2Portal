@@ -79,7 +79,8 @@ module Ag2Gest
 
       respond_to do |format|
         if @caliber.update_attributes(params[:caliber])
-          format.html { redirect_to @caliber, notice: t('activerecord.attributes.caliber.successfully') }
+          format.html { redirect_to @caliber,
+                        notice: (crud_notice('updated', @caliber) + "#{undo_link(@caliber)}").html_safe }
           format.json { head :no_content }
         else
           format.html { render action: "edit" }
@@ -92,11 +93,16 @@ module Ag2Gest
     # DELETE /calibers/1.json
     def destroy
       @caliber = Caliber.find(params[:id])
-      @caliber.destroy
 
       respond_to do |format|
-        format.html { redirect_to calibers_url }
-        format.json { head :no_content }
+        if @caliber.destroy
+          format.html { redirect_to calibers_url,
+                      notice: (crud_notice('destroyed', @caliber) + "#{undo_link(@caliber)}").html_safe }
+          format.json { head :no_content }
+        else
+          format.html { redirect_to calibers_url, alert: "#{@caliber.errors[:base].to_s}".gsub('["', '').gsub('"]', '') }
+          format.json { render json: @caliber.errors, status: :unprocessable_entity }
+        end
       end
     end
 

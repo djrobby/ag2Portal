@@ -1,0 +1,14 @@
+en:
+  activerecord:
+    models: 
+      subscriber_annotation_class:
+        zero:  Annotation Classes
+        one:   Annotation Class
+        few:   Annotation Classes
+        other: Annotation Classes
+        check_for_subscriber_annotations: "Class cannot be destroyed while linked annotations exist."
+    attributes:
+      subscriber_annotation_class:
+        code: "Code"
+        name: "Description"
+        type: "Type"

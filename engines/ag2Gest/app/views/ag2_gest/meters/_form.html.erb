@@ -24,7 +24,7 @@
     </div>
 
     <div class="span4">
-      <%= f.association :office, :required => true, label: t('activerecord.attributes.meter.office_id'), collection: (session[:office].blank? ? Office.all : Office.where(id: session[:office]) ), include_blank: nil, :input_html => { :class => 'sel2 x-large-text-field' }, label_method: lambda { |st| st.to_label }, value_method: :id, :label_html => { :class => 'form-label' } %>
+      <%= f.association :office, :required => true, label: t('activerecord.attributes.meter.office_id'), collection: (session[:office]=="0" ? Office.all : Office.where(id: session[:office]) ), include_blank: nil, :input_html => { :class => 'sel2 x-large-text-field' }, label_method: lambda { |st| st.to_label }, value_method: :id, :label_html => { :class => 'form-label' } %>
     </div>
   </div>
 

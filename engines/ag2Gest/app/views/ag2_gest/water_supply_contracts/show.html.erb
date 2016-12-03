@@ -9,31 +9,31 @@
     </tr>
     <tr>
       <td><%=t 'activerecord.attributes.water_supply_contract.contracting_request_id' %>:</td>
-      <td><%= link_to @water_supply_contract.contracting_request.to_label, @water_supply_contract.contracting_request unless @water_supply_contract.contracting_request.blank? %></td>
+      <td><%= @water_supply_contract.contracting_request.try(:to_label) %></td>
       <td><%=t 'activerecord.attributes.water_supply_contract.client_id' %>:</td>
-      <td><%= link_to @water_supply_contract.client.to_label, @water_supply_contract.client unless @water_supply_contract.client.blank? %></td>
+      <td><%= @water_supply_contract.client.try(:to_label) %></td>
     </tr>
     <tr>
       <td><%=t 'activerecord.attributes.water_supply_contract.subscriber_id' %>:</td>
-      <td><%= link_to @water_supply_contract.subscriber.to_label, @water_supply_contract.subscriber unless @water_supply_contract.subscriber.blank? %></td>
+      <td><%= @water_supply_contract.subscriber.try(:to_label) %></td>
       <td><%=t 'activerecord.attributes.water_supply_contract.reading_route_id' %>:</td>
-      <td><%= link_to @water_supply_contract.reading_route.to_label, @water_supply_contract.reading_route unless @water_supply_contract.reading_route.blank? %></td>
+      <td><%= @water_supply_contract.reading_route.try(:to_label) %></td>
     </tr>
     <tr>
       <td><%=t 'activerecord.attributes.water_supply_contract.work_order_id' %>:</td>
-      <td><%= link_to @water_supply_contract.work_order.to_label, @water_supply_contract.work_order unless @water_supply_contract.work_order.blank? %></td>
+      <td><%= @water_supply_contract.work_order.try(:to_label) %></td>
       <td><%=t 'activerecord.attributes.water_supply_contract.meter_id' %>:</td>
-      <td><%= link_to @water_supply_contract.meter.to_label, @water_supply_contract.meter unless @water_supply_contract.meter.blank? %></td>
+      <td><%= @water_supply_contract.meter.try(:to_label) %></td>
     </tr>
     <tr>
       <td><%=t 'activerecord.attributes.water_supply_contract.tariff_scheme_id' %>:</td>
-      <td><%= link_to @water_supply_contract.tariff_scheme.to_label, @water_supply_contract.tariff_scheme unless @water_supply_contract.tariff_scheme.blank? %></td>
+      <td><%= @water_supply_contract.tariff_scheme.try(:to_label) %></td>
       <td><%=t 'activerecord.attributes.water_supply_contract.bill_id' %>:</td>
-      <td><%= link_to @water_supply_contract.bill.to_label, @water_supply_contract.bill unless @water_supply_contract.bill.blank? %></td>
+      <td><%= @water_supply_contract.bill.try(:to_label) %></td>
     </tr>
     <tr>
       <td><%=t 'activerecord.attributes.water_supply_contract.caliber_id' %>:</td>
-      <td><%= link_to @water_supply_contract.caliber.to_label, @water_supply_contract.caliber unless @water_supply_contract.caliber.blank? %></td>
+      <td><%= @water_supply_contract.caliber.try(:to_label) %></td>
       <td><%=t 'activerecord.attributes.water_supply_contract.contract_date' %>:</td>
       <td><%= @water_supply_contract.contract_date %></td>
     </tr>

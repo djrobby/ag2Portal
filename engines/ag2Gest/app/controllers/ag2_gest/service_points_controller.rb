@@ -162,9 +162,7 @@ module Ag2Gest
     def new
       @breadcrumb = 'create'
       @service_point = ServicePoint.new
-      @company = Company.find_by_id session[:company]
-
-      @offices = @company.nil? ? [] : @company.offices
+      set_office_company
 
       respond_to do |format|
         format.html # new.html.erb
@@ -176,12 +174,15 @@ module Ag2Gest
     def edit
       @breadcrumb = 'update'
       @service_point = ServicePoint.find(params[:id])
+      set_office_company
     end
 
     # POST /service
     def create
       @breadcrumb = 'create'
       @service_point = ServicePoint.new(params[:service_point])
+      @service_point.created_by = current_user.id if !current_user.nil?
+      set_office_company
 
       respond_to do |format|
         if @service_point.save
@@ -198,10 +199,13 @@ module Ag2Gest
     def update
       @breadcrumb = 'update'
       @service_point = ServicePoint.find(params[:id])
+      @service_point.updated_by = current_user.id if !current_user.nil?
+      set_office_company
 
       respond_to do |format|
         if @service_point.update_attributes(params[:service_point])
-          format.html { redirect_to @service_point, notice: t('activerecord.attributes.service_point.successfully') }
+          format.html { redirect_to @service_point,
+                        notice: (crud_notice('updated', @service_point) + "#{undo_link(@service_point)}").html_safe }
           format.json { head :no_content }
         else
           format.html { render action: "edit" }
@@ -216,12 +220,23 @@ module Ag2Gest
       @service_point.destroy
 
       respond_to do |format|
-        format.html { redirect_to service_points_url }
-        format.json { head :no_content }
+        if @service_point.destroy
+          format.html { redirect_to service_points_url,
+                      notice: (crud_notice('destroyed', @service_point) + "#{undo_link(@service_point)}").html_safe }
+          format.json { head :no_content }
+        else
+          format.html { redirect_to service_points_url, alert: "#{@service_point.errors[:base].to_s}".gsub('["', '').gsub('"]', '') }
+          format.json { render json: @service_point.errors, status: :unprocessable_entity }
+        end
       end
     end
 
     private
+
+    def set_office_company
+      @company = Company.find_by_id session[:company]
+      @offices = @company.nil? ? Office.all : @company.offices
+    end
 
     def sort_column
       ServicePoint.column_names.include?(params[:sort]) ? params[:sort] : "id"

@@ -64,14 +64,25 @@ end
 
 
 # Page Title list
-#route_id = @meter_report.first.subscriber.reading_route_id
+	route_id = @meter_report.first.details
 
 # List detail
 @meter_report.each do |i|
-
+	if i.details != route_id
+		report.page.list(:default).page_break
+		report.page.list(:default) do |list|	
+			list.store.page_rows = 0
+		end
+		route_id = i.details
+	end
 
 	report.page.list(:default).add_row do |row|
 		report.page.values reading_route_c: I18n.t("activerecord.attributes.meter.route")+": "
+		if route_id != "Sin ruta"
+			report.page.values reading_route: i.details unless i.subscriber.reading_route.blank?
+		else
+			report.page.values reading_route: "Sin ruta"
+		end
 		row.item(:code).value i.meter_code
 		row.item(:brand).value i.meter_model.full_name unless i.meter_model.blank?
 		row.item(:cal).value i.caliber.caliber unless i.caliber.blank?

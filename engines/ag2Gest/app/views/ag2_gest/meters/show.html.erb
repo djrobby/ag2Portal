@@ -1,5 +1,3 @@
-<!-- Link to return here -->
-<!-- I18n.t('ag2_gest.meters.show.return_to') -->
 <% session[:return_to_meter] = I18n.t('ag2_gest.meters.show.return_to') %>
 <% session[:return_to_meter_url] = "#{request.protocol}#{request.host_with_port}#{request.fullpath}" %>
 
@@ -42,12 +40,9 @@
       <td><%= t('activerecord.attributes.meter.office_id') %>:</td>
       <td><%= @meter.try(:office).try(:name) %></td>
     </tr>
-    <!-- <tr>
-      <td><%#= t('activerecord.attributes.meter.last_withdrawal_date') %>:</td>
-      <td colspan="3"><%#=l @meter.try(:last_withdrawal) unless @meter.try(:last_withdrawal).blank? %></td>
-    </tr> -->
-      <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @meter } %>
+
       <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @meter } %>
+      <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @meter } %>
   </tbody>
 </table>
 
@@ -56,8 +51,8 @@
 delete_path: @meter, delete_txt: t('.btn_delete'), msg: t("activerecord.models.meter.one"), :txt => @meter.meter_code,
 new_path: new_meter_path, new_txt: t('ag2_gest.meters.index.btn_new') } %>
 
-<% if !session[:return_to_contracting_request].nil? %>
-  <%= link_to session[:return_to_contracting_request], session[:return_to_contracting_request_url] %> |
+<% if !session[:return_to].nil? %>
+  <%= link_to session[:return_to], session[:return_to_url] %> |
 <% end %>
 <% if !session[:return_to_subscriber].nil? %>
   <%= link_to session[:return_to_subscriber], session[:return_to_subscriber_url] %> |

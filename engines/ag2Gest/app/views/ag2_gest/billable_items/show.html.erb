@@ -1,3 +1,5 @@
+<% session[:return_to_billable_item] = I18n.t('ag2_gest.billable_items.back_to_main_page') %>
+<% session[:return_to_billable_item_url] = "#{request.protocol}#{request.host_with_port}#{request.fullpath}" %>
 <%= render '/layouts/ag2_gest/billableitemsbreadcrumb' %>
 
 <h3><%= t('.title') %></h3>

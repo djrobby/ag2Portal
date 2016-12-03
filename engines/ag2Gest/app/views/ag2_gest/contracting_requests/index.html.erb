@@ -1,5 +1,7 @@
-<% session[:return_to_contracting_request] = nil %>
-<% session[:return_to_contracting_request_url] = nil %>
+<% session[:return_to] = nil %>
+<% session[:return_to_url] = nil %>
+<% session[:return_to_subscriber] = nil %>
+<% session[:return_to_subscriber_url] = nil %>
 
 <style>
   .pagination {
@@ -67,6 +69,7 @@
       // AJAX
       $("#submit_btn").trigger("click");
     });
+
    // when #report_btn is clicked
     $("#print_report_btn").click(function() {
       // make a POST call and get report
@@ -88,8 +91,7 @@
       }
       return false;
   });
-  });
-
+});
 </script>
 <%= render '/layouts/ag2_gest/crequestsbreadcrumb' %>
 
@@ -139,14 +141,13 @@
         <!-- Buttons -->
         <%= render :partial => '/layouts/crud/new', :locals => { :model => ContractingRequest, :path => new_contracting_request_path, :txt => I18n.t("ag2_gest.contracting_requests.index.btn_new") } %>
         <%= render :partial => '/layouts/crud/new', :locals => { :model => ContractingRequest, :path => new_contracting_request_path, :txt => I18n.t("ag2_gest.contracting_requests.index.btn_new2") } %>
-      <!-- Report -->
-      <%= label_tag I18n.t("ag2_gest.contracting_requests.report.report"), nil, :class => 'form-label-under-sel2' %>
-      <%= select_tag "Report", options_for_select(@reports), :prompt => "", :class => 'x-large-text-field shrinked sel3' %>
+        <!-- Report -->
+        <%= label_tag I18n.t("ag2_gest.contracting_requests.report.report"), nil, :class => 'form-label-under-sel2' %>
+        <%= select_tag "Report", options_for_select(@reports), :prompt => "", :class => 'x-large-text-field shrinked sel3' %>
         <br /><br />
         <!-- Control&Tracking -->
         <a href="#" id="print_report_btn" class="btn btn-warning"><i class="icon-print icon-white"></i> <%= t 'ag2_gest.home.index.control' %></a>
         <br /><br />
-        <!-- <br /> -->
         <%= link_to t(".back_to_management"), ag2_gest.contracting_management_path %>
       </div><!-- /.sidebar-nav -->
     </div><!-- /.span3 -->

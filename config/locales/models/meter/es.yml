@@ -1,0 +1,33 @@
+es:
+  activerecord:
+    models:
+      meter:
+        zero:  Contadores
+        one:   Contador
+        few:   Contadores
+        other: Contadores
+        check_for_work_orders: "Contador no puede ser eliminado mientras existan ordenes de trabajo vinculadas."
+        check_for_subscribers: "Contador no puede ser eliminado mientras existan abonados vinculados."
+    attributes:
+      meter:
+        id: "Id"
+        meter_code: "Código"
+        meter_model: "Modelo"
+        meter_model_id: "Modelo"
+        caliber: "Calibre"
+        caliber_id: "Calibre"
+        meter_owner: "Propietario"
+        meter_owner_id: "Propietario"
+        manufacturing_date: "Fecha fabricación"
+        manufacturing_year: "Año fabricación"
+        manufacturing_year_min: "Año Fab"
+        expiry_date: "Fecha caducidad"
+        expiry_date_min: "Fecha Cad"
+        purchase_date: "Fecha compra"
+        first_installation_date: "Primera instalación"
+        last_withdrawal_date: "Última retirada"
+        organization: "Organización"
+        organization_id: "Organización"
+        office_id: "Oficina"
+        company_id: "Empresa"
+        route: "Ruta"

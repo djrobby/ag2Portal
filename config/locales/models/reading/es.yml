@@ -1,0 +1,49 @@
+es:
+  activerecord:
+    models:
+      reading:
+        zero:  Lecturas
+        one:   Lectura
+        few:   Lecturas
+        other: Lecturas
+    attributes:
+      reading:
+        id: "Id"
+        project_id: "Proyecto"
+        billing_period_id: "Periodo de lectura"
+        billing_period_1: "Periodo de lectura anterior"
+        billing_frequency_id: "Frecuencia de lectura"
+        reading_type_id: "Tipo"
+        meter_id: "Contador"
+        subscriber_id: "Abonado"
+        reading_route_id: "Ruta"
+        reading_date: "Fecha de lectura"
+        reading: "Índice de lectura"
+        reading_1: "Lectura periodo anterior"
+        reading_2: "Lectura año anterior"
+        sequence: "Secuencia"
+        variant: "Variante"
+        successfully: "Lectura se ha actualizado correctamente."
+        repeat: "Ya exite lectura para ese periodo, tipo, proyecto, contador y fecha"
+        create: "Lectura se ha creado correctamente."
+        consumption: "Consumo"
+        reading_1_index: "Indice periodo anterior"
+        reading_1_date: "Fecha periodo anterior"
+        reading_2_index: "Indice año anterior"
+        reading_2_date: "Fecha año anterior"
+    report:
+      reading:
+        cod_route: "Cod. ruta"
+        num_route: "Nº ruta"
+        meter_header: "Contador"
+        subs_name: "Abonado"
+        read_header_last: "Lect. año ant."
+        period_header_last: "Lect. per. ant."
+        period_header: "Periodo"
+        date_header: "Fecha"
+        index_header: "Índice"
+        period_header_1: "Periodo ant."
+        date_header_1: "Fecha ant."
+        index_header_1: "Índice ant."
+        incidences: "Incidencias"
+        incidences_1: "Incidencias ant."

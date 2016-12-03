@@ -1,0 +1,19 @@
+es:
+  ag2_gest:
+    subscriber_annotations:
+      index:
+        title: "Anotaciones"
+        btn_new: "Nuevo Anotación"
+        back_to_root: "Volver a ag2Gest"
+        back_to_management: "Volver a Gestión Tarifaria"
+      show:
+        title: "Anotación"
+        btn_edit: "Editar Anotación"
+        btn_delete: "Borrar Anotación"
+        return_to: "Volver a Anotaciones"
+      edit:
+        title: "Editar Anotación"
+        btn_show: "Ver Anotación"
+      new:
+        title: "Nuevo Anotación"
+      back_to_main_page: "Volver a Anotaciones"

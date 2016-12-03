@@ -79,7 +79,8 @@ module Ag2Gest
 
       respond_to do |format|
         if @regulation.update_attributes(params[:regulation])
-          format.html { redirect_to @regulation, notice: t('activerecord.attributes.regulation.successfully') }
+          format.html { redirect_to @regulation,
+                        notice: (crud_notice('updated', @regulation) + "#{undo_link(@regulation)}").html_safe }
           format.json { head :no_content }
         else
           format.html { render action: "edit" }
@@ -91,11 +92,16 @@ module Ag2Gest
     # DELETE /regulations/1
     def destroy
       @regulation = Regulation.find(params[:id])
-      @regulation.destroy
 
       respond_to do |format|
-        format.html { redirect_to regulations_url }
-        format.json { head :no_content }
+        if @regulation.destroy
+          format.html { redirect_to regulations_url,
+                      notice: (crud_notice('destroyed', @regulation) + "#{undo_link(@regulation)}").html_safe }
+          format.json { head :no_content }
+        else
+          format.html { redirect_to regulations_url, alert: "#{@regulation.errors[:base].to_s}".gsub('["', '').gsub('"]', '') }
+          format.json { render json: @regulation.errors, status: :unprocessable_entity }
+        end
       end
     end
 
@@ -108,6 +114,8 @@ module Ag2Gest
           @projects = Organization.find(session[:organization]).projects.order('name') #Array de projects
         elsif session[:company] != '0'
           @projects = Company.find(session[:company]).projects.order('name') #Array de projects
+        else
+          @projects = Project.all
         end
       end
 

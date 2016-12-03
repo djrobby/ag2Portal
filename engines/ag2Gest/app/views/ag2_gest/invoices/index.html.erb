@@ -70,6 +70,7 @@
       // AJAX
       $("#submit_btn").trigger("click");
     });
+
     // when #print_report_btn is clicked
     $("#print_report_btn").click(function() {
       // make a POST call and get report
@@ -134,6 +135,7 @@
         <!-- Remove filter -->
         <button id="removeFilter" type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><%= t :clear_filter_button %></button>
         <% end %>
+        <!-- Control&Tracking -->
         <a href="#" id="print_report_btn" class="btn btn-warning"><i class="icon-print icon-white"></i> <%= t 'ag2_gest.home.index.control' %></a>
         <br /><br />
         <%= link_to t(".back_to_management"), ag2_gest.bill_management_path %>

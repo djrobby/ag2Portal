@@ -215,7 +215,8 @@ module Ag2Gest
 
       respond_to do |format|
         if @tariff_scheme.update_attributes(params[:tariff_scheme])
-          format.html { redirect_to tariff_scheme_path(@tariff_scheme), notice: t('activerecord.attributes.tariff_scheme.successfully') }
+          format.html { redirect_to @tariff_scheme,
+                        notice: (crud_notice('updated', @tariff_scheme) + "#{undo_link(@tariff_scheme)}").html_safe }
           format.json { head :no_content }
         else
           format.html { redirect_to tariff_scheme_path(@tariff_scheme), alert: @tariff_scheme.errors }
@@ -228,11 +229,16 @@ module Ag2Gest
     # DELETE /tariff_schemes/1.json
     def destroy
       @tariff_scheme = TariffScheme.find(params[:id])
-      @tariff_scheme.destroy
 
       respond_to do |format|
-        format.html { redirect_to tariff_schemes_url }
-        format.json { head :no_content }
+        if @tariff_scheme.destroy
+          format.html { redirect_to tariff_schemes_url,
+                      notice: (crud_notice('destroyed', @tariff_scheme) + "#{undo_link(@tariff_scheme)}").html_safe }
+          format.json { head :no_content }
+        else
+          format.html { redirect_to tariff_schemes_url, alert: "#{@tariff_scheme.errors[:base].to_s}".gsub('["', '').gsub('"]', '') }
+          format.json { render json: @tariff_scheme.errors, status: :unprocessable_entity }
+        end
       end
     end
 

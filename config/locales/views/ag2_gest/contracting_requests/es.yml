@@ -24,7 +24,7 @@ es:
         btn_new: "Nueva Contratación"
         btn_edit: "Editar Contratación"
         btn_delete: "Borrar Contratación"
-        return_to: "Volver a Contrataciones"
+        return_to: "Volver a Solicitud"
         entity: "Solicitante"
         client: "Correo"
         subscriber: "Domicilio"

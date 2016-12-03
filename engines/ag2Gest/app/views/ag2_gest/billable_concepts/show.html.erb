@@ -26,4 +26,7 @@
 delete_path: @billable_concept, delete_txt: t('.btn_delete'), msg: t("activerecord.models.billable_concept.one"), :txt => @billable_concept.name,
 new_path: new_billable_concept_path, new_txt: t('ag2_gest.billable_concepts.index.btn_new') } %>
 
+<% if !session[:return_to_billable_item].nil? %>
+  <%= link_to session[:return_to_billable_item], session[:return_to_billable_item_url] %> |
+<% end %>
 <%= link_to I18n.t('ag2_gest.billable_concepts.back_to_main_page'), billable_concepts_path %>

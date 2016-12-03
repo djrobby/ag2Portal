@@ -102,7 +102,8 @@ module Ag2Gest
 
       respond_to do |format|
         if @reading_route.update_attributes(params[:reading_route])
-          format.html { redirect_to @reading_route, notice: t('activerecord.attributes.reading_route.successfully') }
+          format.html { redirect_to @reading_route,
+                        notice: (crud_notice('updated', @reading_route) + "#{undo_link(@reading_route)}").html_safe }
           format.json { head :no_content }
         else
           format.html { render action: "edit" }
@@ -115,11 +116,16 @@ module Ag2Gest
     # DELETE /reading_routes/1.json
     def destroy
       @reading_route = ReadingRoute.find(params[:id])
-      @reading_route.destroy
 
       respond_to do |format|
-        format.html { redirect_to reading_routes_url }
-        format.json { head :no_content }
+        if @reading_route.destroy
+          format.html { redirect_to reading_routes_url,
+                      notice: (crud_notice('destroyed', @reading_route) + "#{undo_link(@reading_route)}").html_safe }
+          format.json { head :no_content }
+        else
+          format.html { redirect_to reading_routes_url, alert: "#{@reading_route.errors[:base].to_s}".gsub('["', '').gsub('"]', '') }
+          format.json { render json: @reading_route.errors, status: :unprocessable_entity }
+        end
       end
     end
 

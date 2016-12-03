@@ -37,6 +37,23 @@ class Meter < ActiveRecord::Base
   before_validation :fields_to_uppercase
   before_destroy :check_for_dependent_records
 
+  def details
+    if subscriber.blank? || subscriber.reading_route.blank?
+      "Sin ruta"
+    else
+      subscriber.reading_route.to_label unless subscriber.reading_route.blank?
+    end
+  end
+
+  def order_route
+    if subscriber.blank?
+      0
+    else
+      subscriber.reading_route_id 
+    end
+  end
+
+
   def fields_to_uppercase
     if !self.meter_code.blank?
       self[:meter_code].upcase!
@@ -116,8 +133,8 @@ class Meter < ActiveRecord::Base
       errors.add(:base, I18n.t('activerecord.models.meter.check_for_work_orders'))
       return false
     end
-    # Check for subscribers
-    if subscribers.count > 0
+    # Check for subscriber
+    if !subscriber.blank?
       errors.add(:base, I18n.t('activerecord.models.meter.check_for_subscribers'))
       return false
     end

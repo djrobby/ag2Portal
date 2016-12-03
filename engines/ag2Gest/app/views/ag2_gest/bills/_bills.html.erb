@@ -58,7 +58,7 @@
         <%= link_to b.subscriber.to_label, subscriber_path(b.subscriber) %>
       </div>
       <div class="span1 soft-padding">
-        <%= link_to b.subscriber.try(:meter).try(:meter_code), meter_path(b.subscriber.meter) %>
+        <%= link_to b.subscriber.try(:meter).try(:meter_code), meter_path(b.subscriber.meter) unless b.subscriber.try(:meter).blank? %>
       </div>
       <div align="right" class="span1 soft-padding">
         <%= b.reading.try(:consumption) || 0 %>

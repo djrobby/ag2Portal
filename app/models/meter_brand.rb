@@ -12,6 +12,7 @@ class MeterBrand < ActiveRecord::Base
 
   before_validation :fields_to_uppercase
   before_destroy :check_for_dependent_records
+  before_validation :fields_to_uppercase
 
   def fields_to_uppercase
     if !self.brand.blank?
@@ -35,6 +36,12 @@ class MeterBrand < ActiveRecord::Base
   end
 
   private
+
+  def fields_to_uppercase
+    if !self.letter_id.blank?
+      self[:letter_id].upcase!
+    end
+  end
 
   # Before destroy
   def check_for_dependent_records

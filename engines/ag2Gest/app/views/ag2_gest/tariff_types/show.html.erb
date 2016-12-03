@@ -27,4 +27,7 @@ new_path: new_tariff_type_path, new_txt: t('ag2_gest.tariff_types.index.btn_new'
 <% if !session[:return_to_subscriber].nil? %>
   <%= link_to session[:return_to_subscriber], session[:return_to_subscriber_url] %> |
 <% end %>
+<% if !session[:return_to_tariff_scheme].nil? %>
+  <%= link_to session[:return_to_tariff_scheme], session[:return_to_tariff_scheme_url] %> |
+<% end %>
 <%= link_to I18n.t('ag2_gest.tariff_types.back_to_main_page'), tariff_types_path %>

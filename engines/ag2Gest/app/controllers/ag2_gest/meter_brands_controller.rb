@@ -78,7 +78,8 @@ module Ag2Gest
 
       respond_to do |format|
         if @meter_brand.update_attributes(params[:meter_brand])
-          format.html { redirect_to @meter_brand, notice: t('activerecord.attributes.meter_brand.successfully') }
+          format.html { redirect_to @meter_brand,
+                        notice: (crud_notice('updated', @meter_brand) + "#{undo_link(@meter_brand)}").html_safe }
           format.json { head :no_content }
         else
           format.html { render action: "edit" }
@@ -91,11 +92,16 @@ module Ag2Gest
     # DELETE /meter_brands/1.json
     def destroy
       @meter_brand = MeterBrand.find(params[:id])
-      @meter_brand.destroy
 
       respond_to do |format|
-        format.html { redirect_to meter_brands_url }
-        format.json { head :no_content }
+        if @meter_brand.destroy
+          format.html { redirect_to meter_brands_url,
+                      notice: (crud_notice('destroyed', @meter_brand) + "#{undo_link(@meter_brand)}").html_safe }
+          format.json { head :no_content }
+        else
+          format.html { redirect_to meter_brands_url, alert: "#{@meter_brand.errors[:base].to_s}".gsub('["', '').gsub('"]', '') }
+          format.json { render json: @meter_brand.errors, status: :unprocessable_entity }
+        end
       end
     end
 

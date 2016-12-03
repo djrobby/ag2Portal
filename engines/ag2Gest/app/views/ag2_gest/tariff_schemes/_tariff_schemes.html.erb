@@ -33,7 +33,7 @@
         <td class="center"><%=l tscheme.try(:starting_at) unless tscheme.try(:starting_at).blank? %></td>
         <td class="center"><%=l tscheme.try(:ending_at) unless tscheme.try(:ending_at).blank? %></td>
         <td>
-          <%= render :partial => '/layouts/crud/edit', :locals => { :model => TariffScheme, :path => edit_tariff_scheme_path(tscheme) } %>
+          <%= render :partial => '/layouts/crud/edit', :locals => { :model => TariffScheme, :path => simple_edit_tariff_scheme_path(tscheme) } %>
           <%= render :partial => '/layouts/crud/delete', :locals => { :model => TariffScheme, :path => tscheme, :msg => t("activerecord.models.meter.one"), :txt => tscheme.to_label } %>
         </td>
       </tr>

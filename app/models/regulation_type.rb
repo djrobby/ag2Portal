@@ -3,6 +3,8 @@ class RegulationType < ActiveRecord::Base
 
   has_many :regulations
 
+  has_paper_trail
+
   validates :description, :presence => true
 
   before_validation :fields_to_uppercase

@@ -80,7 +80,8 @@ module Ag2Gest
 
       respond_to do |format|
         if @billable_concept.update_attributes(params[:billable_concept])
-          format.html { redirect_to @billable_concept, notice: t('activerecord.attributes.billable_concept.successfully') }
+          format.html { redirect_to @billable_concept,
+                        notice: (crud_notice('updated', @billable_concept) + "#{undo_link(@billable_concept)}").html_safe }
           format.json { head :no_content }
         else
           format.html { render action: "edit" }
@@ -93,11 +94,16 @@ module Ag2Gest
     # DELETE /billable_concepts/1.json
     def destroy
       @billable_concept = BillableConcept.find(params[:id])
-      @billable_concept.destroy
 
       respond_to do |format|
-        format.html { redirect_to billable_concepts_url }
-        format.json { head :no_content }
+        if @billable_concept.destroy
+          format.html { redirect_to billable_concepts_url,
+                      notice: (crud_notice('destroyed', @billable_concept) + "#{undo_link(@billable_concept)}").html_safe }
+          format.json { head :no_content }
+        else
+          format.html { redirect_to billable_concepts_url, alert: "#{@billable_concept.errors[:base].to_s}".gsub('["', '').gsub('"]', '') }
+          format.json { render json: @billable_concept.errors, status: :unprocessable_entity }
+        end
       end
     end
 

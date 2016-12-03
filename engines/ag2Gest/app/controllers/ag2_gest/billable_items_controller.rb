@@ -110,7 +110,8 @@ module Ag2Gest
 
       respond_to do |format|
         if @billable_item.update_attributes(params[:billable_item])
-          format.html { redirect_to @billable_item, notice: t('activerecord.attributes.billable_item.successfully') }
+          format.html { redirect_to @billable_item,
+                        notice: (crud_notice('updated', @billable_item) + "#{undo_link(@billable_item)}").html_safe }
           format.json { head :no_content }
         else
           format.html { render action: "edit" }
@@ -123,11 +124,16 @@ module Ag2Gest
     # DELETE /billable_items/1.json
     def destroy
       @billable_item = BillableItem.find(params[:id])
-      @billable_item.destroy
 
       respond_to do |format|
-        format.html { redirect_to billable_items_url }
-        format.json { head :no_content }
+        if @billable_item.destroy
+          format.html { redirect_to billable_items_url,
+                      notice: (crud_notice('destroyed', @billable_item) + "#{undo_link(@billable_item)}").html_safe }
+          format.json { head :no_content }
+        else
+          format.html { redirect_to billable_items_url, alert: "#{@billable_item.errors[:base].to_s}".gsub('["', '').gsub('"]', '') }
+          format.json { render json: @billable_item.errors, status: :unprocessable_entity }
+        end
       end
     end
 
@@ -146,6 +152,10 @@ module Ag2Gest
         @projects = Company.find(session[:company]).projects.order('name') #Array de projects
         @companies = Company.find(session[:company]) #Company
         @regulations = @projects.map(&:regulations).flatten
+      else
+        @projects = Project.all
+        @companies = Company.all
+        @regulations = Regulation.all
       end
     end
 

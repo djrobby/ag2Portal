@@ -19,11 +19,6 @@ class MeterModel < ActiveRecord::Base
   before_validation :fields_to_uppercase
   before_destroy :check_for_dependent_records
 
-  def fields_to_uppercase
-    if !self.model.blank?
-      self[:model].upcase!
-    end
-  end
 
   def to_label
     "#{full_name}"
@@ -41,6 +36,15 @@ class MeterModel < ActiveRecord::Base
   end
 
   private
+
+  def fields_to_uppercase
+    if !self.model.blank?
+      self[:model].upcase!
+    end
+    if !self.letter_id.blank?
+      self[:letter_id].upcase!
+    end
+  end
 
   # Before destroy
   def check_for_dependent_records

@@ -1,3 +1,10 @@
+<% session[:return_to_meter] = nil %>
+<% session[:return_to_meter_url] = nil %>
+<% session[:return_to_reading] = nil %>
+<% session[:return_to_reading_url] = nil %>
+<% session[:return_to_subscriber] = nil %>
+<% session[:return_to_subscriber_url] = nil %>
+
 <script>
   var _thisForm = '';
   var changing = false;
@@ -68,9 +75,6 @@
     });
   });
 </script>
-
-<% session[:return_to_reading] = nil %>
-<% session[:return_to_reading_url] = nil %>
 
 <%= render '/layouts/ag2_gest/readingsbreadcrumb' %>
 <h3><%= t '.title' %></h3>

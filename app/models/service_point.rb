@@ -16,6 +16,8 @@ class ServicePoint < ActiveRecord::Base
                   :water_connection_id, :organization_id, :company_id, :office_id, :center_id,
                   :street_directory_id, :zipcode_id, :reading_route_id, :km
 
+  has_paper_trail
+
   has_many :subscribers
 
   validates :code,                    :presence => true
@@ -34,4 +36,3 @@ class ServicePoint < ActiveRecord::Base
     end
   end
 end
-

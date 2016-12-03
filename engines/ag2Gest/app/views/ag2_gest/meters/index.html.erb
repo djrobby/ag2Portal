@@ -1,3 +1,12 @@
+<% session[:return_to] = nil %>
+<% session[:return_to] = nil %>
+<% session[:return_to_reading] = nil %>
+<% session[:return_to_reading_url] = nil %>
+<% session[:return_to_subscriber] = nil %>
+<% session[:return_to_subscriber_url] = nil %>
+<% session[:return_to_meter] = nil %>
+<% session[:return_to_meter_url] = nil %>
+
 <script type="text/javascript">
   var _thisForm = '';
   var changing = false;
@@ -59,10 +68,6 @@
 
 </script>
 
-
-<% session[:return_to_meter] = nil %>
-<% session[:return_to_meter_url] = nil %>
-
 <%= render '/layouts/ag2_gest/metersbreadcrumb' %>
 
 <h3><%=t '.title' %></h3>
@@ -103,7 +108,7 @@
 			  <% end %>
 			  <!-- Buttons -->
 			  <%= render :partial => '/layouts/crud/new', :locals => { :model => Meter, :path => new_meter_path, :txt => t("ag2_gest.meters.index.btn_new") } %>
-
+        <!-- Control&Tracking -->
         <a href="#" id="print_report_btn" class="btn btn-warning"><i class="icon-print icon-white"></i> <%= t 'ag2_gest.home.index.control' %></a>
         <br /><br />
 			  <!-- Back -->

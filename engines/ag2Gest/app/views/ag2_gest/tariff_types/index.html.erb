@@ -1,3 +1,8 @@
+<% session[:return_to_subscriber] = nil %>
+<% session[:return_to_subscriber_url] = nil %>
+<% session[:return_to_tariff_scheme] = nil %>
+<% session[:return_to_tariff_scheme_url] = nil %>
+
 <%= render '/layouts/ag2_gest/tarifftypesbreadcrumb' %>
 
 <%#= render :partial => '/layouts/searchhead_remote', :locals => { :title => t(".title"), :path => tariff_types_path } %>

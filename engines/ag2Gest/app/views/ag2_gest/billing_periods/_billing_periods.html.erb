@@ -22,12 +22,6 @@
 	    <th class="center"><%= sortable "reading_starting_date", t('activerecord.attributes.billing_period.reading_starting_date') %></th>
 	    <th class="center"><%= sortable "reading_ending_date", t('activerecord.attributes.billing_period.reading_ending_date') %></th>
       <th></th>
-<!-- 	    <th><%#= sortable "prebilling_starting_date", t('activerecord.attributes.billing_period.prebilling_starting_date') %></th>
-	    <th><%#= sortable "prebilling_ending_date", t('activerecord.attributes.billing_period.prebilling_ending_date') %></th>
-			<th><%#= sortable "billing_starting_date", t('activerecord.attributes.billing_period.billing_starting_date') %></th>
-	    <th><%#= sortable "billing_ending_date", t('activerecord.attributes.billing_period.billing_ending_date') %></th>
-	    <th><%#= sortable "charging_starting_date", t('activerecord.attributes.billing_period.charging_starting_date') %></th>
-	    <th><%#= sortable "charging_ending_date", t('activerecord.attributes.billing_period.charging_ending_date') %></th> -->
 	  </tr>
 	</thead>
 	<tbody>
@@ -39,12 +33,6 @@
 		    <td><%= billper.try(:billing_frequency).try(:name) %></td>
 		    <td class="center"><%=l billper.try(:reading_starting_date) unless billper.try(:reading_starting_date).blank? %></td>
 				<td class="center"><%=l billper.try(:reading_ending_date) unless billper.try(:reading_ending_date).blank? %></td>
-<!-- 				<td><%#= billper.try(:prebilling_starting_date) %></td>
-				<td><%#= billper.try(:prebilling_ending_date) %></td>
-				<td><%#= billper.try(:billing_starting_date) %></td>
-				<td><%#= billper.try(:billing_ending_date) %></td>
-				<td><%#= billper.try(:charging_starting_date) %></td>
-				<td><%#= billper.try(:charging_ending_date) %></td> -->
         <td> <%= render :partial => '/layouts/crud/edit', :locals => { :model => BillingPeriod, :path => edit_billing_period_path(billper) } %>
         <%= render :partial => '/layouts/crud/delete', :locals => { :model => BillingPeriod, :path => billper, :msg => t("activerecord.models.billing_period.one"), :txt => billper.to_label } %> </td>
 		  </tr>

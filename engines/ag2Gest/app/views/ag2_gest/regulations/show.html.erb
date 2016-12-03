@@ -19,9 +19,9 @@
       <td><%= t('activerecord.attributes.regulation.starting_at') %>:</td>
       <td><%= formatted_timestamp(@regulation.starting_at) %></td>
       <td><%= t('activerecord.attributes.regulation.ending_at') %>:</td>
-      <td><%= formatted_timestamp(@regulation.ending_at) if @regulation.ending_at %></td>
+      <td><%= formatted_timestamp(@regulation.ending_at) unless @regulation.ending_at.blank? %></td>
     </tr>
-    	<%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @regulation } %>
+      <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @regulation } %>
       <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @regulation } %>
   </tbody>
 </table>

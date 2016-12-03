@@ -4,6 +4,8 @@ class ReadingIncidenceType < ActiveRecord::Base
   has_many :reading_incidences
   has_many :pre_reading_incidences
 
+  has_paper_trail
+
   validates :name,  :presence => true
   validates :code,  :presence => true,
                     :length => { :minimum => 1, :maximum => 2 },
@@ -11,12 +13,19 @@ class ReadingIncidenceType < ActiveRecord::Base
                     :uniqueness => true
 
   before_destroy :check_for_dependent_records
+  before_validation :fields_to_uppercase
 
   def to_label
     "#{name}"
   end
 
   private
+
+  def fields_to_uppercase
+    if !self.code.blank?
+      self[:code].upcase!
+    end
+  end
 
   def check_for_dependent_records
     # Check for reading incidences

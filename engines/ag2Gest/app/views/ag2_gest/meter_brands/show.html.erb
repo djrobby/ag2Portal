@@ -11,7 +11,7 @@
     </tr>
     <tr>
       <td><%= t('activerecord.attributes.meter_brand.manufacturer') %>:</td>
-      <td><%= @meter_brand.manufacturer.name %></td>
+      <td><%= @meter_brand.try(:manufacturer).try(:name) %></td>
       <td><%= t('activerecord.attributes.meter_brand.letter_id') %>:</td>
       <td><%= @meter_brand.letter_id %></td>
     </tr>

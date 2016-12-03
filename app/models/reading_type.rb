@@ -12,6 +12,8 @@ class ReadingType < ActiveRecord::Base
   has_many :pre_readings
   has_many :readings
 
+  has_paper_trail
+
   validates :name,         :presence => true
 
   before_destroy :check_for_dependent_records

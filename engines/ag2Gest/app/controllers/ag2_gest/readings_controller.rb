@@ -175,7 +175,8 @@ module Ag2Gest
       respond_to do |format|
         if @reading.update_attributes(params[:reading])
           if session[:return_to_subscriber].nil?
-            format.html { redirect_to @reading, notice: t('activerecord.attributes.reading.successfully') }
+            format.html { redirect_to @reading,
+                          notice: (crud_notice('updated', @reading) + "#{undo_link(@reading)}").html_safe }
           else
             format.html { redirect_to session[:return_to_subscriber_url], notice: t('activerecord.attributes.reading.successfully') }
           end
@@ -191,12 +192,20 @@ module Ag2Gest
     # DELETE /readings/1.json
     def destroy
       @reading = Reading.find(params[:id])
-      @subscriber = @reading.subscriber
-      @reading.destroy
 
       respond_to do |format|
-        format.html { redirect_to subscriber_path(@subscriber) }
-        format.json { head :no_content }
+        if @reading.update_attributes(params[:reading])
+          if session[:return_to_subscriber].nil?
+            format.html { redirect_to @reading,
+                          notice: (crud_notice('updated', @reading) + "#{undo_link(@reading)}").html_safe }
+          else
+            format.html { redirect_to session[:return_to_subscriber_url], notice: t('activerecord.attributes.reading.successfully') }
+          end
+          format.json { head :no_content }
+        else
+          format.html { redirect_to readings_url, alert: "#{@reading.errors[:base].to_s}".gsub('["', '').gsub('"]', '') }
+          format.json { render json: @reading.errors, status: :unprocessable_entity }
+        end
       end
     end
 

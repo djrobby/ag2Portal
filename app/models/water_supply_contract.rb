@@ -1,5 +1,4 @@
 class WaterSupplyContract < ActiveRecord::Base
-
   belongs_to :bill
   belongs_to :caliber
   belongs_to :client
@@ -9,11 +8,12 @@ class WaterSupplyContract < ActiveRecord::Base
   belongs_to :subscriber
   belongs_to :tariff_scheme
   belongs_to :work_order
+  belongs_to :use
 
   attr_accessible :bill_id, :cadastral_reference, :caliber_id, :client_id, :contract_date,
                   :contracting_request_id, :endowments, :gis_id, :inhabitants,
-                  :installation_date, :meter_id, :reading_route_id, :reading_sequence,
-                  :remarks, :subscriber_id, :tariff_scheme_id, :work_order_id, :installation_index
+                  :installation_date, :meter_id, :reading_route_id, :reading_sequence, :installation_index,
+                  :remarks, :subscriber_id, :tariff_scheme_id, :work_order_id, :use_id
 
   searchable do
     integer :id

@@ -75,7 +75,8 @@ module Ag2Gest
 
       respond_to do |format|
         if @regulation_type.update_attributes(params[:regulation_type])
-          format.html { redirect_to @regulation_type, notice: t('activerecord.attributes.regulation_type.successfully') }
+          format.html { redirect_to @regulation_type,
+                        notice: (crud_notice('updated', @regulation_type) + "#{undo_link(@regulation_type)}").html_safe }
           format.json { head :no_content }
         else
           format.html { render action: "edit" }
@@ -87,11 +88,16 @@ module Ag2Gest
     # DELETE /regulations/1
     def destroy
       @regulation_type = RegulationType.find(params[:id])
-      @regulation_type.destroy
 
       respond_to do |format|
-        format.html { redirect_to regulation_types_url }
-        format.json { head :no_content }
+        if @regulation_type.destroy
+          format.html { redirect_to regulation_types_url,
+                      notice: (crud_notice('destroyed', @regulation_type) + "#{undo_link(@regulation_type)}").html_safe }
+          format.json { head :no_content }
+        else
+          format.html { redirect_to regulation_types_url, alert: "#{@regulation_type.errors[:base].to_s}".gsub('["', '').gsub('"]', '') }
+          format.json { render json: @regulation_type.errors, status: :unprocessable_entity }
+        end
       end
     end
 

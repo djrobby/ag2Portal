@@ -80,7 +80,8 @@ module Ag2Gest
 
       respond_to do |format|
         if @invoice_type.update_attributes(params[:invoice_type])
-          format.html { redirect_to @invoice_type, notice: crud_notice('created', @invoice_type) }
+          format.html { redirect_to @invoice_type,
+                        notice: (crud_notice('updated', @invoice_type) + "#{undo_link(@invoice_type)}").html_safe }
           format.json { head :no_content }
         else
           format.html { render action: "edit" }
