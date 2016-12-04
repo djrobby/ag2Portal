@@ -1,0 +1,6 @@
+<% complaints.each do |w| %>
+<tr>
+  <td><%= link_to w.complaint_no, w %></td>
+  <td><%= w.description %></td>
+</tr>
+<% end %>

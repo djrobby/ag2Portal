@@ -1,21 +1,6 @@
-<h1>Listing subscriber_annotation_classes</h1>
+<%= render '/layouts/ag2_gest/annotationclassesbreadcrumb' %>
 
-<table>
-  <tr>
-    <th></th>
-    <th></th>
-    <th></th>
-  </tr>
-
-<% @subscriber_annotation_classes.each do |subscriber_annotation_class| %>
-  <tr>
-    <td><%= link_to 'Show', subscriber_annotation_class %></td>
-    <td><%= link_to 'Edit', edit_subscriber_annotation_class_path(subscriber_annotation_class) %></td>
-    <td><%= link_to 'Destroy', subscriber_annotation_class, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-  </tr>
-<% end %>
-</table>
-
-<br />
-
-<%= link_to 'New Subscriber annotation class', new_subscriber_annotation_class_path %>
+<h3><%=t '.title' %></h3>
+<div class="span7" id="div_table">
+  <%= render 'subscriber_annotation_classes' %>
+</div>

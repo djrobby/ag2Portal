@@ -154,3 +154,6 @@ en:
       commercial_billings:
         items: "Commercial Bills"
         item: "Bill"
+      subscriber_annotation_classes:
+        items: "Annotation classes"
+        item: "Class"

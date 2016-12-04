@@ -41,8 +41,8 @@ $(document).ready(function () {
   $(window).bind("load", function() {
     $("#bill_no").val("<%= params[:bill_no] %>");
     $("#project").select2("val", "<%= params[:project] %>");
-    $("#client").select2("val", "<%= params[:client] %>");
-    $("#subscriber").select2("val", "<%= params[:subscriber] %>");
+    $("#Client").select2("val", "<%= params[:Client] %>");
+    $("#Subscriber").select2("val", "<%= params[:Subscriber] %>");
     $("#entity").select2("val", "<%= params[:entity] %>");
     $("#bank_account").select2("val", "<%= params[:bank_account] %>");
     $("#billing_period").select2("val", "<%= params[:billing_period] %>");
@@ -53,8 +53,8 @@ $(document).ready(function () {
     $("#removeFilter").click(function() {
       $("#bill_no").val("");
       $("#project").select2("val", "");
-      $("#client").select2("val", "");
-      $("#subscriber").select2("val", "");
+      $("#Client").select2("val", "");
+      $("#Subscriber").select2("val", "");
       $("#entity").select2("val", "");
       $("#bank_account").select2("val", "");
       $("#billing_period").select2("val", "");
@@ -249,7 +249,7 @@ $(document).ready(function () {
 
           <!-- Subscriber -->
           <%= label_tag I18n.t("ag2_gest.contracting_requests.index.label_subscriber"), nil, :class => 'form-label-under-sel2' %>
-          <%= select_tag "subscriber", options_from_collection_for_select(@subscribers, "id", "to_label"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
+          <%= select_tag "Subscriber", options_from_collection_for_select(@subscribers, "id", "code_full_name_or_company_address"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
 
           <!-- Entity -->
           <%= label_tag I18n.t("ag2_gest.contracting_requests.index.label_entity"), nil, :class => 'form-label-under-sel2' %>

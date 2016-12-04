@@ -1,5 +1,35 @@
-<p id="notice"><%= notice %></p>
+<%= render '/layouts/ag2_gest/complaintclassesbreadcrumb' %>
 
+<h3><%=t '.title' %></h3>
+<table class="table odd_even_table">
+  <tbody>
+    <tr>
+      <td>Id:</td>
+      <td><%= @subscriber_annotation_class.id %></td>
+      <td><%=t 'activerecord.attributes.subscriber_annotation_class.name' %>:</td>
+      <td><%= @subscriber_annotation_class.name %></td>
+    </tr>
+    <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @subscriber_annotation_class } %>
+    <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @subscriber_annotation_class } %>
+  </tbody>
+</table>
 
-<%= link_to 'Edit', edit_subscriber_annotation_class_path(@subscriber_annotation_class) %> |
-<%= link_to 'Back', subscriber_annotation_classes_path %>
+<%= render partial: '/layouts/crud/update_delete_new', locals:
+{ model: SubscriberAnnotationClass, update_path: edit_subscriber_annotation_class_path(@subscriber_annotation_class), update_txt: t('.btn_edit'),
+delete_path: @subscriber_annotation_class, delete_txt: t('.btn_delete'), msg: t("activerecord.models.subscriber_annotation_class.one"), txt: @subscriber_annotation_class.code,
+new_path: new_subscriber_annotation_class_path, new_txt: t('ag2_gest.subscriber_annotation_classes.index.btn_new') } %>
+
+<% if (@annotations.count > 0) %>
+<h4><%=t '.subtable_title' %></h4>
+<table class="table table-condensed table-striped">
+  <thead>
+    <%= render '/layouts/ag2_gest/annotationssheader' %>
+  </thead>
+  <tbody>
+    <%= render :partial => '/layouts/ag2_gest/annotations', :locals => { :annotations => @annotations } %>
+  </tbody>
+</table>
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @annotations } %>
+<% end %>
+
+<%= link_to t("ag2_gest.subscriber_annotation_classes.back_to_main_page"), subscriber_annotation_classes_path %>

@@ -152,7 +152,7 @@ es:
         items: "Estados RD"
         item: "Estado"
       complaint_classes:
-        items: "Clases reclamación"
+        items: "Clases de reclamación"
         item: "Clase"
       complaint_document_types:
         items: "Tipos de documentación"
@@ -163,3 +163,6 @@ es:
       commercial_billings:
         items: "Facturas Comerciales"
         item: "Factura"
+      subscriber_annotation_classes:
+        items: "Clases de anotación"
+        item: "Clase"

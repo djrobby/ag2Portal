@@ -83,10 +83,10 @@ class Subscriber < ActiveRecord::Base
   end
 
   def full_name
+    full_name = ""
     if !company.blank?
-      company
+      full_name = company
     else
-      full_name = ""
       if !self.last_name.blank?
         full_name += self.last_name
       end
@@ -106,6 +106,24 @@ class Subscriber < ActiveRecord::Base
       full_name += ", " + self.first_name
     end
     full_name = full_code + " " + full_name[0,40]
+  end
+
+  def full_name_or_company
+    full_name_or_company = ""
+    if !self.last_name.blank? || !self.first_name.blank?
+      full_name_or_company = full_name
+    else
+      full_name_or_company = company[0,40] if !company.blank?
+    end
+    full_name_or_company
+  end
+
+  def full_name_or_company_and_code
+    full_code + " " + full_name_or_company
+  end
+
+  def code_full_name_or_company_address
+    full_code + " " + full_name_or_company + " - " + address_1
   end
 
   def full_code
@@ -132,16 +150,16 @@ class Subscriber < ActiveRecord::Base
       _ret += street_directory.street_name + " "
     end
     if !street_number.blank?
-      _ret += street_number + ", "
+      _ret += street_number
     end
     if !building.blank?
-      _ret += building.titleize + ", "
+      _ret += ", " + building.titleize
     end
     if !floor.blank?
-      _ret += floor_human + " "
+      _ret += ", " + floor_human
     end
     if !floor_office.blank?
-      _ret += floor_office
+      _ret += " " + floor_office
     end
     _ret
   end
@@ -173,6 +191,7 @@ class Subscriber < ActiveRecord::Base
   def total_debt_unpaid
     bills.map(&:invoices).flatten.map{|i| i.debt if !i.payday_limit or i.payday_limit < Date.today}.compact.sum{|i| i}
   end
+
   #
   # Class (self) user defined methods
   #

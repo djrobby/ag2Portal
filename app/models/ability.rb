@@ -243,6 +243,16 @@ class Ability
       can :crud, Instalment
       can :crud, InstalmentPlan
       can :crud, ClientBankAccount
+      can :crud, BillingIncidenceType
+      can :crud, ComplaintClass
+      can :crud, ComplaintDocumentType
+      can :crud, ComplaintStatus
+      can :crud, Complaint
+      can :crud, DebtClaimPhase
+      can :crud, DebtClaimStatus
+      can :crud, DebtClaim
+      can :crud, Formality
+      can :crud, FormalityType
     elsif user.has_role? :ag2Gest_Guest
       can :read, Client
       can :read, PaymentMethod
@@ -307,6 +317,16 @@ class Ability
       can :read, Instalment
       can :read, InstalmentPlan
       can :read, ClientBankAccount
+      can :read, BillingIncidenceType
+      can :read, ComplaintClass
+      can :read, ComplaintDocumentType
+      can :read, ComplaintStatus
+      can :read, Complaint
+      can :read, DebtClaimPhase
+      can :read, DebtClaimStatus
+      can :read, DebtClaim
+      can :read, Formality
+      can :read, FormalityType
     elsif user.has_role? :ag2Gest_Banned
       cannot :manage, Client
       cannot :manage, PaymentMethod
@@ -373,6 +393,16 @@ class Ability
       cannot :manage, Instalment
       cannot :manage, InstalmentPlan
       cannot :manage, ClientBankAccount
+      cannot :manage, BillingIncidenceType
+      cannot :manage, ComplaintClass
+      cannot :manage, ComplaintDocumentType
+      cannot :manage, ComplaintStatus
+      cannot :manage, Complaint
+      cannot :manage, DebtClaimPhase
+      cannot :manage, DebtClaimStatus
+      cannot :manage, DebtClaim
+      cannot :manage, Formality
+      cannot :manage, FormalityType
     end
     # ag2HelpDesk
     if user.has_role? :ag2HelpDesk_User

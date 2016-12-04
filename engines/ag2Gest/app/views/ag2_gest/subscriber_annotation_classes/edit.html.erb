@@ -1,6 +1,8 @@
-<h1>Editing subscriber_annotation_class</h1>
+<%= render '/layouts/ag2_gest/annotationclassesbreadcrumb' %>
+
+<h3><%=t '.title' %></h3>
 
 <%= render 'form' %>
 
-<%= link_to 'Show', @subscriber_annotation_class %> |
-<%= link_to 'Back', subscriber_annotation_classes_path %>
+<%= link_to t(".btn_show"), @subscriber_annotation_class %> |
+<%= link_to t("ag2_gest.subscriber_annotation_classes.back_to_main_page"), subscriber_annotation_classes_path %>

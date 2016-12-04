@@ -145,8 +145,8 @@ module Ag2Gest
     def index
       manage_filter_state
       bill_no = params[:bill_no]
-      client = params[:client]
-      subscriber = params[:subscriber]
+      client = params[:Client]
+      subscriber = params[:Subscriber]
       entity = params[:entity]
       project = params[:project]
       bank_account = params[:bank_account] == "SI" ? true : false
@@ -367,6 +367,7 @@ module Ag2Gest
         format.js
       end
     end
+
     # bill report
     def bill_report
       manage_filter_state
@@ -741,8 +742,8 @@ module Ag2Gest
     end
 
     def subscribers_dropdown
-      if session[:office_id] != '0'
-        Subscriber.belongs_to_office(session[:office_id].to_i)
+      if session[:office] != '0'
+        Subscriber.belongs_to_office(session[:office].to_i)
       else
         Subscriber.by_code
       end
@@ -761,16 +762,16 @@ module Ag2Gest
         params[:bill_no] = session[:bill_no]
       end
       # client
-      if params[:client]
-        session[:client] = params[:client]
-      elsif session[:client]
-        params[:client] = session[:client]
+      if params[:Client]
+        session[:Client] = params[:Client]
+      elsif session[:Client]
+        params[:Client] = session[:Client]
       end
       # subscriber
-      if params[:subscriber]
-        session[:subscriber] = params[:subscriber]
-      elsif session[:subscriber]
-        params[:subscriber] = session[:subscriber]
+      if params[:Subscriber]
+        session[:Subscriber] = params[:Subscriber]
+      elsif session[:Subscriber]
+        params[:Subscriber] = session[:Subscriber]
       end
       # entity
       if params[:entity]
