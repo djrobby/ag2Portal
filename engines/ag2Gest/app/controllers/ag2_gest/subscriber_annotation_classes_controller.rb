@@ -23,8 +23,9 @@ module Ag2Gest
     # GET /subscriber_annotation_classes/1
     # GET /subscriber_annotation_classes/1.json
     def show
+      @breadcrumb = 'read'
       @subscriber_annotation_class = SubscriberAnnotationClass.find(params[:id])
-      @annotations = @subscriber_annotation_class.subscriber_annotation.by_subscriber_class
+      @annotations = @subscriber_annotation_class.subscriber_annotations.by_subscriber_class
 
       respond_to do |format|
         format.html # show.html.erb

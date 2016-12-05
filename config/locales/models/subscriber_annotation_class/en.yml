@@ -11,6 +11,6 @@ en:
       subscriber_annotation_class:
         code: "Code"
         name: "Description"
-        type: "Type"
+        class_type: "Type"
         type_1: "Incidence"
         type_2: "Note"

@@ -1,4 +1,4 @@
-<%= render '/layouts/ag2_gest/complaintclassesbreadcrumb' %>
+<%= render '/layouts/ag2_gest/annotationclassesbreadcrumb' %>
 
 <h3><%=t '.title' %></h3>
 <table class="table odd_even_table">
@@ -7,7 +7,13 @@
       <td>Id:</td>
       <td><%= @subscriber_annotation_class.id %></td>
       <td><%=t 'activerecord.attributes.subscriber_annotation_class.name' %>:</td>
-      <td><%= @subscriber_annotation_class.name %></td>
+      <td><%= @subscriber_annotation_class.code %></td>
+    </tr>
+    <tr>
+      <td><%=t 'activerecord.attributes.subscriber_annotation_class.name' %>:</td>
+      <td><%= @subscriber_annotation_class.name unless @subscriber_annotation_class.name.blank? %></td>
+      <td><%=t 'activerecord.attributes.subscriber_annotation_class.class_type' %>:</td>
+      <td><%= @subscriber_annotation_class.type_label unless @subscriber_annotation_class.class_type.blank? %></td>
     </tr>
     <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @subscriber_annotation_class } %>
     <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @subscriber_annotation_class } %>

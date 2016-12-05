@@ -1,17 +1,9 @@
-<%= form_for(@use) do |f| %>
-  <% if @use.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@use.errors.count, "error") %> prohibited this use from being saved:</h2>
-
-      <ul>
-      <% @use.errors.full_messages.each do |msg| %>
-        <li><%= msg %></li>
-      <% end %>
-      </ul>
-    </div>
-  <% end %>
-
-  <div class="actions">
-    <%= f.submit %>
-  </div>
+<%= simple_form_for @use, :html => {:class => 'form-vertical well' } do |f| %>
+<%= f.error_notification %>
+<%= display_base_errors resource %>
+<div>
+  <label class="multi-field-label-two"> <%= f.input :code, input_html: { class: 'large-text-field', maxlength: 3 }, label_html: { class: 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.input :name, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %> </label>
+</div>
+<%= f.button :submit, :class => 'btn-primary' %>
 <% end %>

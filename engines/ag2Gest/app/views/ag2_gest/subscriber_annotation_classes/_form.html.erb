@@ -5,5 +5,10 @@
   <label class="multi-field-label-two"> <%= f.input :code, input_html: { class: 'large-text-field', maxlength: 3 }, label_html: { class: 'form-label' } %> </label>
   <label class="multi-field-label-two"> <%= f.input :name, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %> </label>
 </div>
+<%= f.input :class_type,
+  collection: [[1, t('activerecord.attributes.subscriber_annotation_class.type_1')],
+               [2, t('activerecord.attributes.subscriber_annotation_class.type_2')]],
+               as: :radio_buttons, label_method: :last, value_method: :first, label_html: { class: 'form-label' }, item_wrapper_class: 'inline' %>
+<br />
 <%= f.button :submit, :class => 'btn-primary' %>
 <% end %>

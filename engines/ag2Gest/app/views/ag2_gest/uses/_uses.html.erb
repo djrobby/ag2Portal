@@ -1,0 +1,31 @@
+<script>
+  $(document).ready(function() {
+    $("#div_table th a, #div_table #pages a").on("click", function() {
+      $.getScript(this.href);
+      return false;
+    });
+  }); 
+</script>
+
+<table class="table table-condensed table-striped">
+  <thead>
+    <tr>
+      <th><%= sortable "code", t('activerecord.attributes.use.code') %></th>
+      <th><%= sortable "name", t('activerecord.attributes.use.name') %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @uses.each do |use| %>
+    <tr>
+      <td><%= link_to use.try(:code), use_path(use) %></td>
+      <td><%= use.try(:name) %></td>
+      <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => Use, :path => edit_use_path(use) } %>
+      <%= render :partial => '/layouts/crud/delete', :locals => { :model => Use, :path => use, :msg => t("activerecord.models.use.one"), :txt => use.code } %> </td>
+    </tr>
+   <% end %>
+  </tbody>
+</table>
+
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @uses } %>
+<%= render :partial => '/layouts/crud/new', :locals => { :model => Use, :path => new_use_path, :txt => t("ag2_gest.uses.index.btn_new") } %>
+<%= link_to t("ag2_gest.uses.index.back_to_management"), ag2_gest.tariff_management_path %>

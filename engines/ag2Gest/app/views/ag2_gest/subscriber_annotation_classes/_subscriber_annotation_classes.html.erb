@@ -10,8 +10,9 @@
 <table class="table table-condensed table-striped">
   <thead>
     <tr>
-      <th><%= sortable "code", t('activerecord.attributes.subscriber_annotation_class.name') %></th>
+      <th><%= sortable "code", t('activerecord.attributes.subscriber_annotation_class.code') %></th>
       <th><%= sortable "name", t('activerecord.attributes.subscriber_annotation_class.name') %></th>
+      <th><%= sortable "class_type", t('activerecord.attributes.subscriber_annotation_class.class_type') %></th>
       <th></th>
     </tr>
   </thead>
@@ -20,6 +21,7 @@
     <tr>
       <td><%= link_to type.code, type %></td>
       <td><%= type.name unless type.name.blank? %></td>
+      <td><%= type.type_label %></td>
       <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => SubscriberAnnotationClass, :path => edit_subscriber_annotation_class_path(type) } %>
       <%= render :partial => '/layouts/crud/delete', :locals => { :model => SubscriberAnnotationClass, :path => type, :msg => t("activerecord.models.subscriber_annotation_class.one"), :txt => type.name } %> </td>
     </tr>

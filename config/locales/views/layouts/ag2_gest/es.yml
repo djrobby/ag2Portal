@@ -23,14 +23,20 @@ es:
         items: "Tipos de documentación"
         item: "Tipo"
       tariff_schemes:
-        items: "Esquemas tarifarios"
+        items: "Esquemas Tarifarios (contratación)"
         item: "Esquema"
+      tariffs:
+        items: "Tarifas Generales"
+        item: "Tarifa"
       tariff_types:
         items: "Tipos de tarifa"
         item: "Tipo"
       billable_concepts:
         items: "Conceptos facturables"
         item: "Concepto"
+      uses:
+        items: "Usos"
+        item: "Uso"
       sale_offer_statuses:
         items: "Estados de oferta"
         item: "Estado"

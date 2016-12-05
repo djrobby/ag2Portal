@@ -2,7 +2,7 @@ es:
   ag2_gest:
     tariff_schemes:
       index:
-        title: "Esquemas Tarifarios"
+        title: "Esquemas Tarifarios (contratación)"
         btn_new: "Nuevo Esquema Tarifario"
         back_to_root: "Volver a ag2Gest"
         back_to_management: "Volver a Gestión Tarifaria"
@@ -29,7 +29,7 @@ es:
         btn_update: "Actualizar Esquema Tarifario"
       new:
         title: "Nuevo Esquema Tarifario"
-      back_to_main_page: "Volver a Esquemas Tarifarios"
+      back_to_main_page: "Volver a Esquemas Tarifarios (contratación)"
       # generate_code_btn: "Código de Esquema tarifario"
       # personal_info: "Información del Cliente"
       # commercial_info: "Información Contable y Comercial"

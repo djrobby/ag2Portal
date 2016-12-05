@@ -6,13 +6,13 @@
   <tbody>
     <tr>
       <td><%= t('activerecord.attributes.tariff_type.id') %>:</td>
-      <td colspan="3"><%= @tariff_type.try(:id) %></td>
+      <td><%= @tariff_type.try(:id) %></td>
+      <td><%= t('activerecord.attributes.tariff_type.code') %>:</td>
+      <td class="highlighted bolded"><%= @tariff_type.try(:code) %></td>
     </tr>
     <tr>
-      <td><%= t('activerecord.attributes.tariff_type.code') %>:</td>
-      <td><%= @tariff_type.try(:code) %></td>
       <td><%= t('activerecord.attributes.tariff_type.name') %>:</td>
-      <td><%= @tariff_type.try(:name) %></td>
+      <td colspan="3"><%= @tariff_type.try(:name) %></td>
     </tr>
       <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @tariff_type } %>
       <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @tariff_type } %>

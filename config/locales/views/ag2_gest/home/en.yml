@@ -26,10 +26,11 @@ en:
         street_directories: "Street Directories"
         frauds: "Frauds"
       tariff:
-        schemes: "Schemes"
-        tariffs: "Tariffs"
+        schemes: "Schemes (contracting)"
+        tariffs: "General Tariffs"
         tariff_types: "Tariff Types"
         billable_concepts: "Billable Concepts"
+        uses: "Uses"
       meter:
         meters: "Meters"
         meter_types: "Types"

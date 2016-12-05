@@ -1,0 +1,20 @@
+en:
+  ag2_gest:
+    uses:
+      index:
+        title: "Uses"
+        btn_new: "New Use"
+        back_to_root: "Back to ag2Gest"
+        back_to_management: "Back to Tariff Management"
+      show:
+        title: "Use"
+        btn_edit: "Edit Use"
+        btn_delete: "Delete Use"
+        subtable_title: "Use Subscribers"
+        return_to: "Back to Uses"
+      edit:
+        title: "Edit Use"
+        btn_show: "Show Use"
+      new:
+        title: "New Use"
+      back_to_main_page: "Back to Uses"

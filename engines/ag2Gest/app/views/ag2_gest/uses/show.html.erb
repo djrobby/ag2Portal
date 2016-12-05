@@ -1,5 +1,29 @@
-<p id="notice"><%= notice %></p>
+<%= render '/layouts/ag2_gest/usesbreadcrumb' %>
 
+<h3><%= t('.title') %></h3>
+<table class="table">
+  <tbody>
+    <tr>
+      <td><%= t('activerecord.attributes.use.id') %>:</td>
+      <td><%= @use.try(:id) %></td>
+      <td><%= t('activerecord.attributes.use.code') %>:</td>
+      <td class="highlighted bolded"><%= @use.try(:code) %></td>
+    </tr>
+    <tr>
+      <td><%= t('activerecord.attributes.use.name') %>:</td>
+      <td colspan="3"><%= @use.try(:name) %></td>
+    </tr>
+      <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @use } %>
+      <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @use } %>
+  </tbody>
+</table>
 
-<%= link_to 'Edit', edit_use_path(@use) %> |
-<%= link_to 'Back', uses_path %>
+<%= render partial: '/layouts/crud/update_delete_new', locals:
+{ model: Use, update_path: edit_use_path(@use), update_txt: t('.btn_edit'),
+delete_path: @use, delete_txt: t('.btn_delete'), msg: t("activerecord.models.use.one"), :txt => @use.code,
+new_path: new_use_path, new_txt: t('ag2_gest.uses.index.btn_new') } %>
+
+<% if !session[:return_to_subscriber].nil? %>
+  <%= link_to session[:return_to_subscriber], session[:return_to_subscriber_url] %> |
+<% end %>
+<%= link_to I18n.t('ag2_gest.uses.back_to_main_page'), uses_path %>

@@ -11,6 +11,6 @@ es:
       subscriber_annotation_class:
         code: "Código"
         name: "Descripción"
-        type: "Tipo"
+        class_type: "Tipo"
         type_1: "Incidencia"
         type_2: "Nota"

@@ -26,10 +26,11 @@ es:
         street_directories: "Callejeros"
         frauds: "Fraudes"
       tariff:
-        schemes: "Esquemas"
-        tariffs: "Tarifas"
+        schemes: "Esquemas (contratación)"
+        tariffs: "Tarifas Generales"
         tariff_types: "Tipos de Tarifa"
         billable_concepts: "Conceptos Facturables"
+        uses: "Usos"
       meter:
         meters: "Contadores"
         meter_types: "Tipos"

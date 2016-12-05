@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20161205085207) do
+ActiveRecord::Schema.define(:version => 20161205150033) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -2929,15 +2929,15 @@ ActiveRecord::Schema.define(:version => 20161205085207) do
   create_table "subscriber_annotation_classes", :force => true do |t|
     t.string   "code"
     t.string   "name"
-    t.integer  "type",       :limit => 1, :default => 1, :null => false
     t.datetime "created_at",                             :null => false
     t.datetime "updated_at",                             :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
+    t.integer  "class_type", :limit => 1, :default => 1, :null => false
   end
 
+  add_index "subscriber_annotation_classes", ["class_type"], :name => "index_subscriber_annotation_classes_on_class_type"
   add_index "subscriber_annotation_classes", ["code"], :name => "index_subscriber_annotation_classes_on_code"
-  add_index "subscriber_annotation_classes", ["type"], :name => "index_subscriber_annotation_classes_on_type"
 
   create_table "subscriber_annotations", :force => true do |t|
     t.integer  "subscriber_id"
