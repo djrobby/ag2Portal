@@ -45,7 +45,10 @@
                 <li><%= link_to_resetting_filters(Ag2Gest, ag2_gest.readings_path, '<i class="ico-readings"></i>'.html_safe + " " + t("ag2_gest.home.reading.readings")) %></li>
               </ul>
             </li>
-            <li><%= link_to_resetting_filters(Ag2Gest, ag2_gest.sale_offers_path, '<i class="ico-saleoffers"></i>'.html_safe + " " + t("ag2_gest.home.index.sale_offers")) %></li>
+            <li>
+              <a data-toggle="modal" href="#notfound"><i class="ico-saleoffers"></i> <%= t("ag2_gest.home.sale_offer.sale_offers") %></a>
+            </li>
+            <!--<li><%#= link_to_resetting_filters(Ag2Gest, ag2_gest.sale_offers_path, '<i class="ico-saleoffers"></i>'.html_safe + " " + t("ag2_gest.home.index.sale_offer.sale_offers")) %></li>-->
             <li class="dropdown-submenu">
               <a href="<%= ag2_gest.bill_management_path %>"><i class="ico-billing"></i> <%= t "ag2_gest.home.index.bill_management" %></a>
               <ul class="dropdown-menu dropdown-menu-submenu" role="menu">

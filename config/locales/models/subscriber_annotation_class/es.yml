@@ -12,3 +12,5 @@ es:
         code: "Código"
         name: "Descripción"
         type: "Tipo"
+        type_1: "Incidencia"
+        type_2: "Nota"

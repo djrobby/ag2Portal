@@ -45,4 +45,4 @@
 
 <%= render :partial => '/layouts/pagination', :locals => { :ivar => @sale_offer_statuses } %>
 <%= render :partial => '/layouts/crud/new', :locals => { :model => SaleOfferStatus, :path => new_sale_offer_status_path, :txt => t("ag2_gest.sale_offer_statuses.index.btn_new") } %>
-<%= link_to t("ag2_gest.sale_offer_statuses.index.back_to_root"), ag2_gest.root_path %>
+<%= link_to t("ag2_gest.sale_offer_statuses.index.back_to_management"), ag2_gest.sale_offer_management_path %>

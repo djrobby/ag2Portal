@@ -1,0 +1,14 @@
+es:
+  activerecord:
+    models:
+      use:
+        zero:  Usos
+        one:   Uso
+        few:   Usos
+        other: Usos
+        check_for_water_supply_contracts: "Uso no puede ser eliminado mientras existan contratos vinculados."
+        check_for_subscribers: "Uso no puede ser eliminado mientras existan abonados vinculados."
+    attributes:
+      use:
+        code: "Código"
+        name: "Descripción"

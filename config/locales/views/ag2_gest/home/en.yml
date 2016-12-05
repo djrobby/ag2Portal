@@ -17,9 +17,9 @@ en:
         debt_claim_management: "Debt Management"
         formality_management: "Formalities"
         complaint_management: "Complaints"
-        sale_offers: "Sale Offers"
+        sale_offer_management: "Sale Offers Management"
         client_payments: "Bill Collection"
-        sale_offer_statuses: "Sale Offer Statuses"
+        subscriber_annotation_classes: "Annotation Classes"
         billing_periods: "Periods"
         billing_frequencies: "Frequencies"
         centers: "Urban Centers"
@@ -88,3 +88,6 @@ en:
         classes: "Complaint Classes"
         statuses: "Complaint Statuses"
         document_types: "Documentation Types"
+      sale_offer:
+        sale_offers: "Sale Offers"
+        statuses: "Offer Statuses"

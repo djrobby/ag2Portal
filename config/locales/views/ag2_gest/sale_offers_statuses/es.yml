@@ -5,6 +5,7 @@ es:
         title: "Estados de Oferta (venta)"
         btn_new: "Nuevo Estado de Oferta"
         back_to_root: "Volver a ag2Gest"
+        back_to_management: "Volver a Gestión de Ofertas"
       show:
         title: "Estado de Oferta (venta)"
         btn_edit: "Editar Estado de Oferta"

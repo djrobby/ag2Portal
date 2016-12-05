@@ -11,6 +11,9 @@ class TariffType < ActiveRecord::Base
                    :length => { :is => 3 },
                    :uniqueness => true
 
+  # Scopes
+  scope :by_code, -> { order(:code) }
+
   before_validation :fields_to_uppercase
 
   def to_label

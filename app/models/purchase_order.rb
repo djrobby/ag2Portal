@@ -212,6 +212,15 @@ class PurchaseOrder < ActiveRecord::Base
     end
   end
 
+  # Orders with pending balance (and projects)
+  def self.pending_balance(_projects = nil)
+    if !_projects.blank?
+      joins(:purchase_order_item_balances).where("purchase_orders.project_id IN (?)", _projects).group('purchase_orders.id').having('sum(purchase_order_item_balances.balance) > ?', 0)
+    else
+      joins(:purchase_order_item_balances).group('purchase_orders.id').having('sum(purchase_order_item_balances.balance) > ?', 0)
+    end
+  end
+
   #
   # Records navigator
   #

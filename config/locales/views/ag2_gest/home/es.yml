@@ -17,9 +17,9 @@ es:
         debt_claim_management: "Gestión de Deudas"
         formality_management: "Trámites"
         complaint_management: "Reclamaciones"
-        sale_offers: "Ofertas"
+        sale_offer_management: "Gestión de Ofertas"
         client_payments: "Cobros"
-        sale_offer_statuses: "Estados Ofertas"
+        subscriber_annotation_classes: "Clases Anotación"
         billing_frequencies: "Frecuencias"
         billing_periods: "Períodos"
         centers: "Núcleos Urbanos"
@@ -88,3 +88,6 @@ es:
         classes: "Clases Reclamación"
         statuses: "Estados Reclamación"
         document_types: "Tipos Documentación"
+      sale_offer:
+        sale_offers: "Ofertas"
+        statuses: "Estados Oferta"

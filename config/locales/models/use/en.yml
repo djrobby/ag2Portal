@@ -1,0 +1,14 @@
+en:
+  activerecord:
+    models: 
+      use:
+        zero:  Uses
+        one:   Use
+        few:   Uses
+        other: Uses
+        check_for_water_supply_contracts: "Use cannot be destroyed while linked contracts exist."
+        check_for_subscribers: "Use cannot be destroyed while linked subscribers exist."
+    attributes:
+      use:
+        code: "Code"
+        name: "Description"

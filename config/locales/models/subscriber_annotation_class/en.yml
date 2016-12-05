@@ -12,3 +12,5 @@ en:
         code: "Code"
         name: "Description"
         type: "Type"
+        type_1: "Incidence"
+        type_2: "Note"

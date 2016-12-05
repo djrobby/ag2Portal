@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20161203082834) do
+ActiveRecord::Schema.define(:version => 20161205085207) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -747,8 +747,6 @@ ActiveRecord::Schema.define(:version => 20161203082834) do
     t.date     "ending_at"
   end
 
-  add_index "contracted_tariffs", ["ending_at"], :name => "index_contracted_tariffs_on_ending_at"
-  add_index "contracted_tariffs", ["starting_at"], :name => "index_contracted_tariffs_on_starting_at"
   add_index "contracted_tariffs", ["tariff_id"], :name => "index_contracted_tariffs_on_tariff_id"
   add_index "contracted_tariffs", ["water_supply_contract_id"], :name => "index_contracted_tariffs_on_water_supply_contract_id"
 
@@ -2984,8 +2982,8 @@ ActiveRecord::Schema.define(:version => 20161203082834) do
     t.date     "starting_at"
     t.date     "ending_at"
     t.integer  "street_directory_id"
-    t.datetime "created_at",                                         :null => false
-    t.datetime "updated_at",                                         :null => false
+    t.datetime "created_at",                                                                          :null => false
+    t.datetime "updated_at",                                                                          :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
     t.string   "street_number"
@@ -3009,12 +3007,14 @@ ActiveRecord::Schema.define(:version => 20161203082834) do
     t.string   "remarks"
     t.string   "cadastral_reference"
     t.string   "gis_id"
-    t.integer  "endowments",             :limit => 2, :default => 0, :null => false
-    t.integer  "inhabitants",            :limit => 2, :default => 0, :null => false
+    t.integer  "endowments",             :limit => 2,                                :default => 0,   :null => false
+    t.integer  "inhabitants",            :limit => 2,                                :default => 0,   :null => false
     t.string   "km"
     t.string   "gis_id_wc"
     t.string   "pub_record"
     t.integer  "use_id"
+    t.decimal  "m2",                                  :precision => 12, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "equiv_dwelling",                      :precision => 12, :scale => 4, :default => 0.0, :null => false
   end
 
   add_index "subscribers", ["billing_frequency_id"], :name => "index_subscribers_on_billing_frequency_id"
@@ -3343,8 +3343,8 @@ ActiveRecord::Schema.define(:version => 20161203082834) do
     t.integer  "tariff_type_id"
     t.integer  "caliber_id"
     t.integer  "billing_frequency_id"
-    t.decimal  "fixed_fee",                     :precision => 10, :scale => 4, :default => 0.0, :null => false
-    t.decimal  "variable_fee",                  :precision => 10, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "fixed_fee",                     :precision => 12, :scale => 6, :default => 0.0, :null => false
+    t.decimal  "variable_fee",                  :precision => 12, :scale => 6, :default => 0.0, :null => false
     t.decimal  "percentage_fee",                :precision => 6,  :scale => 2, :default => 0.0, :null => false
     t.string   "percentage_applicable_formula"
     t.integer  "block1_limit"
@@ -3355,14 +3355,14 @@ ActiveRecord::Schema.define(:version => 20161203082834) do
     t.integer  "block6_limit"
     t.integer  "block7_limit"
     t.integer  "block8_limit"
-    t.decimal  "block1_fee",                    :precision => 10, :scale => 4, :default => 0.0, :null => false
-    t.decimal  "block2_fee",                    :precision => 10, :scale => 4, :default => 0.0, :null => false
-    t.decimal  "block3_fee",                    :precision => 10, :scale => 4, :default => 0.0, :null => false
-    t.decimal  "block4_fee",                    :precision => 10, :scale => 4, :default => 0.0, :null => false
-    t.decimal  "block5_fee",                    :precision => 10, :scale => 4, :default => 0.0, :null => false
-    t.decimal  "block6_fee",                    :precision => 10, :scale => 4, :default => 0.0, :null => false
-    t.decimal  "block7_fee",                    :precision => 10, :scale => 4, :default => 0.0, :null => false
-    t.decimal  "block8_fee",                    :precision => 10, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "block1_fee",                    :precision => 12, :scale => 6, :default => 0.0, :null => false
+    t.decimal  "block2_fee",                    :precision => 12, :scale => 6, :default => 0.0, :null => false
+    t.decimal  "block3_fee",                    :precision => 12, :scale => 6, :default => 0.0, :null => false
+    t.decimal  "block4_fee",                    :precision => 12, :scale => 6, :default => 0.0, :null => false
+    t.decimal  "block5_fee",                    :precision => 12, :scale => 6, :default => 0.0, :null => false
+    t.decimal  "block6_fee",                    :precision => 12, :scale => 6, :default => 0.0, :null => false
+    t.decimal  "block7_fee",                    :precision => 12, :scale => 6, :default => 0.0, :null => false
+    t.decimal  "block8_fee",                    :precision => 12, :scale => 6, :default => 0.0, :null => false
     t.decimal  "discount_pct_f",                :precision => 6,  :scale => 2, :default => 0.0, :null => false
     t.decimal  "discount_pct_v",                :precision => 6,  :scale => 2, :default => 0.0, :null => false
     t.decimal  "discount_pct_p",                :precision => 6,  :scale => 2, :default => 0.0, :null => false
