@@ -1,0 +1,16 @@
+en:
+  activerecord:
+    models: 
+      contracted_tariff:
+        zero:  Contracted tariffs
+        one:   Contracted tariff
+        few:   Contracted tariffs
+        other: Contracted tariffs
+    attributes:
+      contracted_tariff:
+        water_supply_contract: "Contract"
+        water_supply_contract_id: "Contract"
+        tariff: "Tariff"
+        tariff_id: "Tariff"
+        starting_at: "Effective since"
+        ending_at: "Valid until"

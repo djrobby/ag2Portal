@@ -1,28 +1,38 @@
 class TariffScheme < ActiveRecord::Base
   belongs_to :project
   belongs_to :tariff_type
-
-  has_many :tariffs, dependent: :destroy
-  has_many :invoices
-
+  belongs_to :use
   attr_accessible :ending_at, :name, :starting_at, :project_id, :tariff_type_id,
-                  :tariff, :tariffs_attributes, :created_by, :updated_by
+                  :tariff, :tariffs_attributes, :use_id,
+                  :created_by, :updated_by
+  attr_accessible :tariff_scheme_items_attributes
+
+  #has_many :tariffs, dependent: :destroy
+  has_many :invoices
+  has_many :tariff_scheme_items, dependent: :destroy
 
   # Nested attributes
-  accepts_nested_attributes_for :tariffs,
+  # accepts_nested_attributes_for :tariffs,
+  #                               :reject_if => :all_blank,
+  #                               :allow_destroy => true
+  accepts_nested_attributes_for :tariff_scheme_items,
                                 :reject_if => :all_blank,
                                 :allow_destroy => true
 
   has_paper_trail
 
-  validates_associated :tariffs
+  # validates_associated :tariffs
+  validates_associated :tariff_scheme_items
 
   validates :project,     :presence => true
-  validates :tariff_type, :presence => true
   validates :name,        :presence => true
   validates :starting_at, :presence => true
+  # validates :tariff_type, :presence => true
+  # validates :use,         :presence => true
 
   validate :end_after_start
+
+  before_destroy :check_for_dependent_records
 
   # Scopes
   scope :belongs_to_projects, -> projects { where(project_id: projects) }
@@ -114,4 +124,12 @@ class TariffScheme < ActiveRecord::Base
     end
   end
 
+  # Before destroy
+  def check_for_dependent_records
+    # Check for invoices
+    if invoices.count > 0
+      errors.add(:base, I18n.t('activerecord.models.tariff.check_for_invoices'))
+      return false
+    end
+  end
 end

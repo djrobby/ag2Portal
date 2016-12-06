@@ -31,6 +31,10 @@ es:
         reading_1_date: "Fecha periodo anterior"
         reading_2_index: "Indice año anterior"
         reading_2_date: "Fecha año anterior"
+        bill: "Recibo"
+        bill_id: "Recibo"
+        lat: "Latitud"
+        long: "Longitud"
     report:
       reading:
         cod_route: "Cod. ruta"

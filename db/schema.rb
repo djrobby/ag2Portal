@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20161205150033) do
+ActiveRecord::Schema.define(:version => 20161206081814) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -747,6 +747,8 @@ ActiveRecord::Schema.define(:version => 20161205150033) do
     t.date     "ending_at"
   end
 
+  add_index "contracted_tariffs", ["ending_at"], :name => "index_contracted_tariffs_on_ending_at"
+  add_index "contracted_tariffs", ["starting_at"], :name => "index_contracted_tariffs_on_starting_at"
   add_index "contracted_tariffs", ["tariff_id"], :name => "index_contracted_tariffs_on_tariff_id"
   add_index "contracted_tariffs", ["water_supply_contract_id"], :name => "index_contracted_tariffs_on_water_supply_contract_id"
 
@@ -2005,10 +2007,12 @@ ActiveRecord::Schema.define(:version => 20161205150033) do
     t.integer  "reading_2_id"
     t.integer  "reading_index_1"
     t.integer  "reading_index_2"
-    t.datetime "created_at",           :null => false
-    t.datetime "updated_at",           :null => false
+    t.datetime "created_at",                                          :null => false
+    t.datetime "updated_at",                                          :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
+    t.decimal  "lat",                  :precision => 10, :scale => 0
+    t.decimal  "lng",                  :precision => 10, :scale => 0
   end
 
   add_index "pre_readings", ["billing_frequency_id"], :name => "index_pre_readings_on_billing_frequency_id"
@@ -2430,9 +2434,9 @@ ActiveRecord::Schema.define(:version => 20161205150033) do
     t.integer  "reading_sequence"
     t.string   "reading_variant"
     t.datetime "reading_date"
-    t.integer  "reading_index",        :default => 0, :null => false
-    t.datetime "created_at",                          :null => false
-    t.datetime "updated_at",                          :null => false
+    t.integer  "reading_index",                                       :default => 0, :null => false
+    t.datetime "created_at",                                                         :null => false
+    t.datetime "updated_at",                                                         :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
     t.integer  "invoice_id"
@@ -2440,8 +2444,12 @@ ActiveRecord::Schema.define(:version => 20161205150033) do
     t.integer  "reading_index_2"
     t.integer  "reading_1_id"
     t.integer  "reading_2_id"
+    t.integer  "bill_id"
+    t.decimal  "lat",                  :precision => 10, :scale => 0
+    t.decimal  "lng",                  :precision => 10, :scale => 0
   end
 
+  add_index "readings", ["bill_id"], :name => "index_readings_on_bill_id"
   add_index "readings", ["billing_frequency_id"], :name => "index_readings_on_billing_frequency_id"
   add_index "readings", ["billing_period_id"], :name => "index_readings_on_billing_period_id"
   add_index "readings", ["invoice_id"], :name => "index_readings_on_invoice_id"
@@ -3311,6 +3319,16 @@ ActiveRecord::Schema.define(:version => 20161205150033) do
 
   add_index "suppliers_activities", ["supplier_id", "activity_id"], :name => "index_suppliers_activities_on_supplier_id_and_activity_id"
 
+  create_table "tariff_scheme_items", :force => true do |t|
+    t.integer  "tariff_scheme_id"
+    t.integer  "tariff_id"
+    t.datetime "created_at",       :null => false
+    t.datetime "updated_at",       :null => false
+  end
+
+  add_index "tariff_scheme_items", ["tariff_id"], :name => "index_tariff_scheme_items_on_tariff_id"
+  add_index "tariff_scheme_items", ["tariff_scheme_id"], :name => "index_tariff_scheme_items_on_tariff_scheme_id"
+
   create_table "tariff_schemes", :force => true do |t|
     t.integer  "project_id"
     t.string   "name"
@@ -3321,10 +3339,12 @@ ActiveRecord::Schema.define(:version => 20161205150033) do
     t.datetime "updated_at",     :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
+    t.integer  "use_id"
   end
 
   add_index "tariff_schemes", ["project_id"], :name => "index_tariff_schemes_on_project_id"
   add_index "tariff_schemes", ["tariff_type_id"], :name => "index_tariff_schemes_on_tariff_type_id"
+  add_index "tariff_schemes", ["use_id"], :name => "index_tariff_schemes_on_use_id"
 
   create_table "tariff_types", :force => true do |t|
     t.string   "code"
@@ -3375,6 +3395,8 @@ ActiveRecord::Schema.define(:version => 20161205150033) do
     t.datetime "updated_at",                                                                    :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
+    t.date     "starting_at"
+    t.date     "ending_at"
   end
 
   add_index "tariffs", ["billable_item_id"], :name => "index_tariffs_on_billable_item_id"

@@ -1,0 +1,14 @@
+en:
+  activerecord:
+    models:
+      tariff_scheme_item:
+        zero:  Tariff scheme items
+        one:   Tariff scheme item
+        few:   Tariff scheme items
+        other: Tariff scheme items
+    attributes:
+      tariff_scheme_item:
+        tariff_scheme: "Scheme"
+        tariff_scheme_id: "Scheme"
+        tariff: "Tariff"
+        tariff_id: "Tariff"

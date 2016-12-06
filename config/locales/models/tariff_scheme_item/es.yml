@@ -1,0 +1,14 @@
+es:
+  activerecord:
+    models:
+      tariff_scheme_item:
+        zero:  Ítems de esquema tarifario
+        one:   Ítem de esquema tarifario
+        few:   Ítems de esquema tarifario
+        other: Ítems de esquema tarifario
+    attributes:
+      tariff_scheme_item:
+        tariff_scheme: "Esquema"
+        tariff_scheme_id: "Esquema"
+        tariff: "Tarifa"
+        tariff_id: "Tarifa"

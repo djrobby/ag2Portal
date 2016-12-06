@@ -1,0 +1,17 @@
+es:
+  activerecord:
+    models:
+      subscriber_tariff:
+        zero:  Tarifas abonado
+        one:   Tarifa abonado
+        few:   Tarifas abonado
+        other: Tarifas abonado
+        check_for_invoices: "Tarifa no puede ser eliminada mientras existan facturas vinculadas."
+    attributes:
+      subscriber_tariff:
+        subscriber: "Abonado"
+        subscriber_id: "Abonado"
+        tariff: "Tarifa"
+        tariff_id: "Tarifa"
+        starting_at: "Vigente desde"
+        ending_at: "Vigente hasta"

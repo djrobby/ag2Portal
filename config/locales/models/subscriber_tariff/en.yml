@@ -1,0 +1,17 @@
+en:
+  activerecord:
+    models: 
+      subscriber_tariff:
+        zero:  Subscriber tariffs
+        one:   Subscriber tariff
+        few:   Subscriber tariffs
+        other: Subscriber tariffs
+        check_for_invoices: "Tariff cannot be destroyed while linked invoices exist."
+    attributes:
+      subscriber_tariff:
+        subscriber: "Subscriber"
+        subscriber_id: "Subscriber"
+        tariff: "Tariff"
+        tariff_id: "Tariff"
+        starting_at: "Effective since"
+        ending_at: "Valid until"

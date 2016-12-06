@@ -12,10 +12,13 @@ en:
         # check_for_client_charges: "Cliente no puede ser eliminado mientras existan cobros vinculados."
     attributes:
       billable_item:
-        biller_id: "Id Biller"
+        successfully: "Concepto facturable se ha actualizado correctamente."
+        create: "Concepto facturable se ha creado correctamente."
+        id: "Id"
+        tariffs_by_caliber: "By caliber?"
+        biller_id: "Biller"
+        regulation_id: "Regulation"
         project_id: "Project"
         billable_concept_id: "Billable concept"
         company_id: "Company"
         office_id: "Office"
-        successfully: "Billable item was successfully updated."
-        create: "Billable item was successfully created."

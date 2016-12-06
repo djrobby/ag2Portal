@@ -1,6 +1,6 @@
 class Reading < ActiveRecord::Base
-
   belongs_to :project
+  belongs_to :bill
   belongs_to :billing_period
   belongs_to :billing_frequency
   belongs_to :reading_type
@@ -13,8 +13,9 @@ class Reading < ActiveRecord::Base
 
   attr_accessible :reading_date, :reading_index, :reading_sequence, :reading_variant,
                   :project_id, :billing_period_id, :billing_frequency_id, :reading_type_id,
-                  :meter_id, :subscriber_id, :reading_route_id, :reading_index_1,
-                  :reading_index_2, :reading_incidence_types, :reading_1, :reading_2, :reading_1_id, :reading_2_id, :created_by, :updated_by
+                  :meter_id, :subscriber_id, :reading_route_id, :reading_index_1, :bill_id,
+                  :reading_index_2, :reading_incidence_types, :reading_1, :reading_2, :reading_1_id, :reading_2_id,
+                  :created_by, :updated_by, :lat, :lng
 
   #:reading_incidence_types_attributtes
 

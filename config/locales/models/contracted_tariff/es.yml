@@ -1,0 +1,16 @@
+es:
+  activerecord:
+    models:
+      contracted_tariff:
+        zero:  Tarifas contratadas
+        one:   Tarifa contratada
+        few:   Tarifas contratadas
+        other: Tarifas contratadas
+    attributes:
+      contracted_tariff:
+        water_supply_contract: "Contrato"
+        water_supply_contract_id: "Contrato"
+        tariff: "Tarifa"
+        tariff_id: "Tarifa"
+        starting_at: "Vigente desde"
+        ending_at: "Vigente hasta"

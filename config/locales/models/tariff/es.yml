@@ -1,21 +1,66 @@
 es:
   activerecord:
     models:
-      tariff_type:
-        zero:  Tipos de tarifas
-        one:   Tipo de tarifa
-        few:   Tipos de tarifas
-        other: Tipos de tarifas
-        # check_for_delivery_notes: "Cliente no puede ser eliminado mientras existan notas de entrega vinculadas."
-        # check_for_sale_offers: "Cliente no puede ser eliminado mientras existan presupuestos vinculados."
-        # check_for_client_invoices: "Cliente no puede ser eliminado mientras existan facturas C vinculadas."
-        # check_for_client_charges: "Cliente no puede ser eliminado mientras existan cobros vinculados."
+      tariff:
+        zero:  Tarifas
+        one:   Tarifa
+        few:   Tarifas
+        other: Tarifas
+        check_for_subscriber_tariffs: "Tarifa no puede ser eliminada mientras existan tarifas de abonado vinculadas."
+        check_for_contracted_tariffs: "Tarifa no puede ser eliminada mientras existan tarifas contratadas vinculadas."
+        check_for_tariff_scheme_items: "Tarifa no puede ser eliminada mientras existan tarifas de esquema vinculadas."
     attributes:
-      tariff_type:
-        id: "Id"
-        code: "Código"
-        name: "Descripción"
-        successfully: "Tipo de tarifa se ha actualizado correctamente."
-        create: "Tipo de tarifa se ha creado correctamente."
+      tariff:
+        billable_item: "Item facturable"
+        billable_item_id: "Item facturable"
+        tariff_type: "Tipo"
+        tariff_type_id: "Tipo"
+        caliber: "Calibre"
+        caliber_id: "Calibre"
+        billing_frequency_id: "Frecuencia"
+        billing_frequency_id: "Frequency"
+        fixed_fee: "Cuota fija"
+        block1_limit: "Límite B1"
+        block2_limit: "Límite B2"
+        block3_limit: "Límite B3"
+        block4_limit: "Límite B4"
+        block5_limit: "Límite B5"
+        block6_limit: "Límite B6"
+        block7_limit: "Límite B7"
+        block8_limit: "Límite B8"
+        block1_fee: "B1 price"
+        block2_fee: "B2 price"
+        block3_fee: "B3 price"
+        block4_fee: "B4 price"
+        block5_fee: "B5 price"
+        block6_fee: "B6 price"
+        block7_fee: "B7 price"
+        block8_fee: "B8 price"
+        variable_fee: "Cuota variable"
+        percentage_fee: "Variable %"
+        percentage_applicable_formula: "Fórmula V%"
+        discount_pct_f: "%Dto. CF"
+        discount_pct_b: "%Dto. CVB"
+        discount_pct_v: "%Dto. CV"
+        discount_pct_p: "%Dto. CV%"
+        tax_type_f_id: "Impto. CF"
+        tax_type_b_id: "Impto. CVB"
+        tax_type_v_id: "Impto. CV"
+        tax_type_p_id: "Impto. CV%"
         starting_at: "Vigente desde"
         ending_at: "Vigente hasta"
+
+        blocks: "Bloques"
+        price: "Precio"
+        limit: "Límite"
+        block1: "B1"
+        block2: "B2"
+        block3: "B3"
+        block4: "B4"
+        block5: "B5"
+        block6: "B6"
+        block7: "B7"
+        block8: "B8"
+        discounts: "Descuentos"
+        tax: "Impuesto"
+        taxes: "Impuestos"
