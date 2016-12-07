@@ -1,5 +1,4 @@
 class Invoice < ActiveRecord::Base
-  belongs_to :organization
   belongs_to :bill
   belongs_to :invoice_status
   belongs_to :invoice_type
@@ -8,6 +7,9 @@ class Invoice < ActiveRecord::Base
   belongs_to :biller, :class_name => 'Company'
   belongs_to :billing_period
   belongs_to :charge_account
+  belongs_to :organization
+  belongs_to :payment_method
+  belongs_to :sale_offer
 
   alias_attribute :company, :biller
 
@@ -15,10 +17,12 @@ class Invoice < ActiveRecord::Base
                   :discount_pct, :exemption, :payday_limit,
                   :bill_id, :invoice_status_id, :invoice_type_id, :tariff_scheme_id, :invoice_operation_id,
                   :biller_id, :original_invoice_id, :billing_period_id, :charge_account_id,
-                  :created_by, :updated_by, :reading_1_date, :reading_2_date, :reading_1_index, :reading_2_index, :organization_id
+                  :created_by, :updated_by, :reading_1_date, :reading_2_date, :reading_1_index, :reading_2_index,
+                  :remarks, :organization_id, :payment_method_id, :sale_offer_id
 
   has_many :invoice_items, dependent: :destroy
   has_many :client_payments
+  has_one :invoice_debt
 
   # Self join
   has_many :credits_rebills, class_name: 'Invoice', foreign_key: 'original_invoice_id'
@@ -157,7 +161,6 @@ class Invoice < ActiveRecord::Base
     client_payments.sum("amount")
   end
 
-
   searchable do
     text :invoice_no
     string :invoice_no, :multiple => true   # Multiple search values accepted in one search (inverse_no_search)
@@ -184,6 +187,8 @@ class Invoice < ActiveRecord::Base
     string :sort_no do
       invoice_no
     end
+    integer :organization_id
+    integer :payment_method_id
   end
 
   private

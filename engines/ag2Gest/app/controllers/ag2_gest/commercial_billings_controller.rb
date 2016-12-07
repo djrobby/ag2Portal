@@ -105,6 +105,13 @@ module Ag2Gest
     def new
       @breadcrumb = 'create'
       @invoice = Invoice.new
+      @sale_offers = sale_offers_dropdown
+      @projects = projects_dropdown
+      @charge_accounts = projects_charge_accounts(@projects)
+      @clients = clients_dropdown
+      @payment_methods = payment_methods_dropdown
+      @products = products_dropdown
+      @offer_items = []
 
       respond_to do |format|
         format.html # new.html.erb
@@ -116,19 +123,43 @@ module Ag2Gest
     def edit
       @breadcrumb = 'update'
       @invoice = Invoice.find(params[:id])
+      @sale_offers = @invoice.bill.client.blank? ? sale_offers_dropdown : @invoice.bill.client.sale_offers.unbilled(@invoice.organization_id, true)
+      @projects = projects_dropdown_edit(@invoice.bill.project)
+      @charge_accounts = charge_accounts_dropdown_edit(@invoice.bill.project)
+      @clients = clients_dropdown
+      @payment_methods = @invoice.organization.blank? ? payment_methods_dropdown : collection_payment_methods(@invoice.organization_id)
+      @offer_items = @invoice.sale_offer.blank? ? [] : offer_items_dropdown(@invoice.sale_offer)
+      if @offer_items.blank?
+        @products = @invoice.organization.blank? ? products_dropdown : @invoice.organization.products(:product_code)
+      else
+        @products = @offer_items.first.sale_offer.products.group(:product_code)
+      end
     end
 
     # POST /commercial_billings
     # POST /commercial_billings.json
     def create
       @breadcrumb = 'create'
-      @invoice = Invoice.new(params[:commercial_billing])
+      @invoice = Invoice.new(params[:invoice])
+      @invoice.created_by = current_user.id if !current_user.nil?
 
       respond_to do |format|
+        #
+        # Must create associated bill before
+        #
+        # bill_create()
+        # Go on
         if @invoice.save
           format.html { redirect_to @invoice, notice: crud_notice('created', @invoice) }
           format.json { render json: @invoice, status: :created, location: @invoice }
         else
+          @sale_offers = sale_offers_dropdown
+          @projects = projects_dropdown
+          @charge_accounts = projects_charge_accounts(@projects)
+          @clients = clients_dropdown
+          @payment_methods = payment_methods_dropdown
+          @products = products_dropdown
+          @offer_items = []
           format.html { render action: "new" }
           format.json { render json: @invoice.errors, status: :unprocessable_entity }
         end
@@ -141,14 +172,71 @@ module Ag2Gest
       @breadcrumb = 'update'
       @invoice = Invoice.find(params[:id])
 
+      items_changed = false
+      if params[:invoice][:invoice_items_attributes]
+        params[:invoice][:invoice_items_attributes].values.each do |new_item|
+          current_item = InvoiceItem.find(new_item[:id]) rescue nil
+          if ((current_item.nil?) || (new_item[:_destroy] != "false") ||
+             ((current_item.product_id.to_i != new_item[:product_id].to_i) ||
+              (current_item.description != new_item[:description]) ||
+              (current_item.code != new_item[:code]) ||
+              (current_item.subcode != new_item[:subcode]) ||
+              (current_item.quantity.to_f != new_item[:quantity].to_f) ||
+              (current_item.price.to_f != new_item[:price].to_f) ||
+              (current_item.discount_pct.to_f != new_item[:discount_pct].to_f) ||
+              (current_item.discount.to_f != new_item[:discount].to_f) ||
+              (current_item.tax_type_id.to_i != new_item[:tax_type_id].to_i) ||
+              (current_item.sale_offer_id.to_i != new_item[:sale_offer_id].to_i) ||
+              (current_item.sale_offer_item_id.to_i != new_item[:sale_offer_item_id].to_i) ||
+              (current_item.measure_id.to_i != new_item[:measure_id].to_i)))
+            items_changed = true
+            break
+          end
+        end
+      end
+      master_changed = false
+      if ((params[:invoice][:organization_id].to_i != @supplier_invoice.organization_id.to_i) ||
+          (params[:invoice][:invoice_no].to_s != @supplier_invoice.invoice_no) ||
+          (params[:invoice][:invoice_date].to_date != @supplier_invoice.invoice_date) ||
+          #(params[:invoice][:client_id].to_i != @supplier_invoice.client_id.to_i) ||
+          (params[:invoice][:sale_offer_id].to_i != @supplier_invoice.sale_offer_id.to_i) ||
+          (params[:invoice][:charge_account_id].to_i != @supplier_invoice.charge_account_id.to_i) ||
+          (params[:invoice][:payment_method_id].to_i != @supplier_invoice.payment_method_id.to_i) ||
+          (params[:invoice][:discount_pct].to_f != @supplier_invoice.discount_pct.to_f) ||
+          (params[:invoice][:remarks].to_s != @supplier_invoice.remarks))
+        master_changed = true
+      end
+
       respond_to do |format|
-        if @invoice.update_attributes(params[:commercial_billing])
-          format.html { redirect_to @invoice,
-                        notice: (crud_notice('updated', @invoice) + "#{undo_link(@invoice)}").html_safe }
-          format.json { head :no_content }
+        if master_changed || items_changed
+          @invoice.updated_by = current_user.id if !current_user.nil?
+          if @invoice.update_attributes(params[:invoice])
+            #
+            # Must update associated bill after
+            #
+            # bill_update()
+            # Go on
+            format.html { redirect_to @invoice,
+                          notice: (crud_notice('updated', @invoice) + "#{undo_link(@invoice)}").html_safe }
+            format.json { head :no_content }
+          else
+            @sale_offers = @invoice.bill.client.blank? ? sale_offers_dropdown : @invoice.bill.client.sale_offers.unbilled(@invoice.organization_id, true)
+            @projects = projects_dropdown_edit(@invoice.bill.project)
+            @charge_accounts = charge_accounts_dropdown_edit(@invoice.bill.project)
+            @clients = clients_dropdown
+            @payment_methods = @invoice.organization.blank? ? payment_methods_dropdown : collection_payment_methods(@invoice.organization_id)
+            @offer_items = @invoice.sale_offer.blank? ? [] : offer_items_dropdown(@invoice.sale_offer)
+            if @offer_items.blank?
+              @products = @invoice.organization.blank? ? products_dropdown : @invoice.organization.products(:product_code)
+            else
+              @products = @offer_items.first.sale_offer.products.group(:product_code)
+            end
+            format.html { render action: "edit" }
+            format.json { render json: @invoice.errors, status: :unprocessable_entity }
+          end
         else
-          format.html { render action: "edit" }
-          format.json { render json: @invoice.errors, status: :unprocessable_entity }
+          format.html { redirect_to @invoice }
+          format.json { head :no_content }
         end
       end
     end
@@ -160,6 +248,11 @@ module Ag2Gest
 
       respond_to do |format|
         if @invoice.destroy
+          #
+          # Must delete associated bill after
+          #
+          @invoice.bill.delete
+          # Go on
           format.html { redirect_to commercial_billings_url,
                       notice: (crud_notice('destroyed', @invoice) + "#{undo_link(@invoice)}").html_safe }
           format.json { head :no_content }
@@ -227,24 +320,58 @@ module Ag2Gest
       _projects = Project.where(id: _array).order(:project_code)
     end
 
+    def projects_dropdown_edit(_project)
+      _projects = projects_dropdown
+      if _projects.blank?
+        _projects = Project.where(id: _project)
+      end
+      _projects
+    end
+
     def this_current_projects_ids
       projects_dropdown.pluck(:id)
     end
 
-    def clients_dropdown
-      if session[:organization] != '0'
-        Client.belongs_to_organization(session[:organization].to_i)
-      else
-        Client.order("created_at DESC")
+    # Charge accounts belonging to projects
+    def projects_charge_accounts(_projects)
+      _array = []
+      _ret = nil
+
+      # Adding charge accounts belonging to current projects
+      _projects.each do |i|
+        _ret = ChargeAccount.incomes(i.id)
+        ret_array(_array, _ret, 'id')
       end
+
+      # Adding global charge accounts belonging to projects organizations
+      _sort_projects_by_organization = _projects.sort { |a,b| a.organization_id <=> b.organization_id }
+      _previous_organization = _sort_projects_by_organization.first.organization_id
+      _sort_projects_by_organization.each do |i|
+        if _previous_organization != i.organization_id
+          # when organization changes, process previous
+          _ret = ChargeAccount.incomes.where('(project_id IS NULL AND charge_accounts.organization_id = ?)', _previous_organization)
+          ret_array(_array, _ret, 'id')
+          _previous_organization = i.organization_id
+        end
+      end
+      # last organization, process previous
+      _ret = ChargeAccount.incomes.where('(project_id IS NULL AND charge_accounts.organization_id = ?)', _previous_organization)
+      ret_array(_array, _ret, 'id')
+
+      # Returning founded charge accounts
+      _ret = ChargeAccount.where(id: _array).order(:account_code)
+    end
+
+    def charge_accounts_dropdown_edit(_project)
+      ChargeAccount.incomes.where('project_id = ? OR (project_id IS NULL AND charge_accounts.organization_id = ?)', _project, _project.organization_id)
+    end
+
+    def clients_dropdown
+      session[:organization] != '0' ? Client.belongs_to_organization(session[:organization].to_i) : Client.by_code
     end
 
     def subscribers_dropdown
-      if session[:office_id] != '0'
-        Subscriber.belongs_to_office(session[:office_id].to_i)
-      else
-        Subscriber.by_code
-      end
+      session[:office_id] != '0' ? Subscriber.belongs_to_office(session[:office_id].to_i) : Subscriber.by_code
     end
 
     def billing_periods_dropdown
@@ -265,6 +392,26 @@ module Ag2Gest
 
     def billers_dropdown
       session[:organization] != '0' ? Company.where(organization_id: session[:organization].to_i).order(:name) : Company.order(:name)
+    end
+
+    def sale_offers_dropdown
+      session[:organization] != '0' ? SaleOffer.unbilled(session[:organization].to_i, true) : SaleOffer.unbilled(nil, true)
+    end
+
+    def payment_methods_dropdown
+      session[:organization] != '0' ? collection_payment_methods(session[:organization].to_i) : collection_payment_methods(0)
+    end
+
+    def collection_payment_methods(_organization)
+      _organization != 0 ? PaymentMethod.collections_belong_to_organization(_organization) : PaymentMethod.collections
+    end
+
+    def products_dropdown
+      session[:organization] != '0' ? Product.belongs_to_organization(session[:organization].to_i) : Product.by_code
+    end
+
+    def offer_items_dropdown(_offer)
+      _offer.sale_offer_items.joins(:sale_offer_item_balance).where('sale_offer_item_balances.balance > ?', 0)
     end
 
     # Returns _array from _ret table/model filled with _id attribute

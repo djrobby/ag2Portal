@@ -19,6 +19,8 @@ class Client < ActiveRecord::Base
   has_many :sale_offers
   has_many :client_bank_accounts
   has_many :bills
+  has_many :client_payments
+  has_many :invoice_debts
 
   has_paper_trail
 

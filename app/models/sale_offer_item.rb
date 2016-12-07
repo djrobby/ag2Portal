@@ -11,6 +11,8 @@ class SaleOfferItem < ActiveRecord::Base
                   :charge_account_id
 
   has_many :delivery_note_items
+  has_many :invoice_items
+  has_one :sale_offer_item_balance
 
   has_paper_trail
 
@@ -50,7 +52,7 @@ class SaleOfferItem < ActiveRecord::Base
   def net_tax
     tax - (tax * (sale_offer.discount_pct / 100)) if !sale_offer.discount_pct.blank?
   end
-    
+
   def balance
     quantity - delivery_note_items.sum("quantity")
   end

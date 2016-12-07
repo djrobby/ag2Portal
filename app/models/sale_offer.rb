@@ -1,6 +1,6 @@
 class SaleOffer < ActiveRecord::Base
   include ModelsModule
-  
+
   belongs_to :client
   belongs_to :payment_method
   belongs_to :sale_offer_status
@@ -15,11 +15,14 @@ class SaleOffer < ActiveRecord::Base
   attr_accessible :sale_offer_items_attributes
 
   has_many :sale_offer_items, dependent: :destroy
+  has_many :sale_offer_item_balances, through: :sale_offer_items
   has_many :delivery_notes
   has_many :delivery_note_items
+  has_many :products, through: :sale_offer_items
+  has_many :invoice_items
 
   # Nested attributes
-  accepts_nested_attributes_for :sale_offer_items,                                 
+  accepts_nested_attributes_for :sale_offer_items,
                                 :reject_if => :all_blank,
                                 :allow_destroy => true
 
@@ -84,7 +87,7 @@ class SaleOffer < ActiveRecord::Base
   def bonus
     (discount_pct / 100) * subtotal if !discount_pct.blank?
   end
-  
+
   def taxable
     subtotal - bonus - discount
   end
@@ -100,13 +103,13 @@ class SaleOffer < ActiveRecord::Base
   end
 
   def total
-    taxable + taxes  
+    taxable + taxes
   end
 
   def quantity
     sale_offer_items.sum("quantity")
   end
-  
+
   def balance
     balance = 0
     sale_offer_items.each do |i|
@@ -116,7 +119,7 @@ class SaleOffer < ActiveRecord::Base
     end
     balance
   end
-  
+
   def delivery_avg
     avg, cnt = 0, 0
     sale_offer_items.each do |i|
@@ -126,6 +129,25 @@ class SaleOffer < ActiveRecord::Base
       end
     end
     cnt > 0 ? Date.parse(Time.at(avg / cnt).to_s) : nil
+  end
+
+  #
+  # Class (self) user defined methods
+  #
+  def self.unbilled(organization, _ordered)
+    if !organization.blank?
+      if !_ordered
+        joins(:sale_offer_item_balances).where('sale_offers.organization_id = ?', organization).group('sale_offers.id').having('sum(sale_offer_item_balances.balance) > ?', 0)
+      else
+        joins(:sale_offer_item_balances).where('sale_offers.organization_id = ?', organization).group('sale_offers.client_id, sale_offers.offer_no, sale_offers.id').having('sum(sale_offer_item_balances.balance) > ?', 0)
+      end
+    else
+      if !_ordered
+        joins(:sale_offer_item_balances).group('sale_offers.id').having('sum(sale_offer_item_balances.balance) > ?', 0)
+      else
+        joins(:sale_offer_item_balances).group('sale_offers.client_id, sale_offers.offer_no, sale_offers.id').having('sum(sale_offer_item_balances.balance) > ?', 0)
+      end
+    end
   end
 
   #

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20161206081814) do
+ActiveRecord::Schema.define(:version => 20161207101208) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -247,12 +247,14 @@ ActiveRecord::Schema.define(:version => 20161206081814) do
     t.integer  "reading_2_id"
     t.string   "remarks"
     t.integer  "organization_id"
+    t.integer  "payment_method_id"
   end
 
   add_index "bills", ["client_id"], :name => "index_bills_on_client_id"
   add_index "bills", ["country_id"], :name => "index_bills_on_country_id"
   add_index "bills", ["invoice_status_id"], :name => "index_bills_on_invoice_status_id"
   add_index "bills", ["organization_id"], :name => "index_bills_on_organization_id"
+  add_index "bills", ["payment_method_id"], :name => "index_bills_on_payment_method_id"
   add_index "bills", ["project_id"], :name => "index_bills_on_project_id"
   add_index "bills", ["province_id"], :name => "index_bills_on_province_id"
   add_index "bills", ["region_id"], :name => "index_bills_on_region_id"
@@ -1388,6 +1390,20 @@ ActiveRecord::Schema.define(:version => 20161206081814) do
   add_index "inventory_movements", ["store_id", "product_id", "type", "parent_id", "item_id"], :name => "index_inventory_movements_unique", :unique => true
   add_index "inventory_movements", ["store_id"], :name => "index_inventory_movements_on_store_id"
 
+  create_table "invoice_debts", :id => false, :force => true do |t|
+    t.integer "invoice_id",      :limit => 8
+    t.integer "organization_id"
+    t.integer "client_id"
+    t.string  "invoice_no"
+    t.decimal "subtotal",                     :precision => 47, :scale => 8
+    t.decimal "taxes",                        :precision => 65, :scale => 20
+    t.decimal "bonus",                        :precision => 57, :scale => 14
+    t.decimal "taxable",                      :precision => 58, :scale => 14
+    t.decimal "total",                        :precision => 65, :scale => 20
+    t.decimal "paid",                         :precision => 34, :scale => 4
+    t.decimal "debt",                         :precision => 65, :scale => 20
+  end
+
   create_table "invoice_items", :force => true do |t|
     t.integer  "invoice_id"
     t.integer  "tariff_id"
@@ -1396,20 +1412,24 @@ ActiveRecord::Schema.define(:version => 20161206081814) do
     t.string   "subcode"
     t.string   "description"
     t.integer  "measure_id"
-    t.decimal  "quantity",     :precision => 12, :scale => 4, :default => 1.0, :null => false
-    t.decimal  "price",        :precision => 12, :scale => 4, :default => 0.0, :null => false
-    t.decimal  "discount_pct", :precision => 6,  :scale => 2, :default => 0.0, :null => false
-    t.decimal  "discount",     :precision => 12, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "quantity",           :precision => 12, :scale => 4, :default => 1.0, :null => false
+    t.decimal  "price",              :precision => 12, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "discount_pct",       :precision => 6,  :scale => 2, :default => 0.0, :null => false
+    t.decimal  "discount",           :precision => 12, :scale => 4, :default => 0.0, :null => false
     t.integer  "tax_type_id"
-    t.datetime "created_at",                                                   :null => false
-    t.datetime "updated_at",                                                   :null => false
+    t.datetime "created_at",                                                         :null => false
+    t.datetime "updated_at",                                                         :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
+    t.integer  "sale_offer_id"
+    t.integer  "sale_offer_item_id"
   end
 
   add_index "invoice_items", ["invoice_id"], :name => "index_invoice_items_on_invoice_id"
   add_index "invoice_items", ["measure_id"], :name => "index_invoice_items_on_measure_id"
   add_index "invoice_items", ["product_id"], :name => "index_invoice_items_on_product_id"
+  add_index "invoice_items", ["sale_offer_id"], :name => "index_invoice_items_on_sale_offer_id"
+  add_index "invoice_items", ["sale_offer_item_id"], :name => "index_invoice_items_on_sale_offer_item_id"
   add_index "invoice_items", ["tariff_id"], :name => "index_invoice_items_on_tariff_id"
   add_index "invoice_items", ["tax_type_id"], :name => "index_invoice_items_on_tax_type_id"
 
@@ -1466,6 +1486,8 @@ ActiveRecord::Schema.define(:version => 20161206081814) do
     t.integer  "reading_2_index"
     t.string   "remarks"
     t.integer  "organization_id"
+    t.integer  "payment_method_id"
+    t.integer  "sale_offer_id"
   end
 
   add_index "invoices", ["bill_id"], :name => "index_invoices_on_bill_id"
@@ -1479,6 +1501,8 @@ ActiveRecord::Schema.define(:version => 20161206081814) do
   add_index "invoices", ["invoice_type_id"], :name => "index_invoices_on_invoice_type_id"
   add_index "invoices", ["organization_id"], :name => "index_invoices_on_organization_id"
   add_index "invoices", ["original_invoice_id"], :name => "index_invoices_on_original_invoice_id"
+  add_index "invoices", ["payment_method_id"], :name => "index_invoices_on_payment_method_id"
+  add_index "invoices", ["sale_offer_id"], :name => "index_invoices_on_sale_offer_id"
   add_index "invoices", ["tariff_scheme_id"], :name => "index_invoices_on_tariff_scheme_id"
 
   create_table "ledger_accounts", :force => true do |t|
@@ -2598,6 +2622,13 @@ ActiveRecord::Schema.define(:version => 20161206081814) do
   add_index "salary_concepts", ["name"], :name => "index_salary_concepts_on_name"
   add_index "salary_concepts", ["nomina_id"], :name => "index_salary_concepts_on_nomina_id"
   add_index "salary_concepts", ["organization_id"], :name => "index_salary_concepts_on_organization_id"
+
+  create_table "sale_offer_item_balances", :id => false, :force => true do |t|
+    t.integer "sale_offer_item_id",                                      :default => 0,   :null => false
+    t.decimal "sale_offer_item_quantity", :precision => 12, :scale => 4, :default => 0.0, :null => false
+    t.decimal "invoiced_quantity",        :precision => 34, :scale => 4
+    t.decimal "balance",                  :precision => 35, :scale => 4
+  end
 
   create_table "sale_offer_items", :force => true do |t|
     t.integer  "sale_offer_id"

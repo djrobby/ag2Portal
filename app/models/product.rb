@@ -48,6 +48,11 @@ class Product < ActiveRecord::Base
 
   validates_attachment_content_type :image, :content_type => /\Aimage\/.*\Z/, :message => :attachment_invalid
 
+  # Scopes
+  scope :by_code, -> { order(:product_code) }
+  #
+  scope :belongs_to_organization, -> o { where("organization_id = ?", o).by_code }
+
   before_validation :fields_to_uppercase
   before_destroy :check_for_dependent_records
   before_save :update_sell_price

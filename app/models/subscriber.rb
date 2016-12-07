@@ -29,6 +29,7 @@ class Subscriber < ActiveRecord::Base
   has_many :pre_readings
   has_many :pre_bills
   has_many :bills
+  has_many :client_payments
 
   # Nested attributes
   accepts_nested_attributes_for :readings

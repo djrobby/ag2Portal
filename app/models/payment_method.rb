@@ -20,6 +20,14 @@ class PaymentMethod < ActiveRecord::Base
                             :numericality => { :only_integer => true, :greater_than => 0, :less_than_or_equal_to => 3 }
   validates :organization,  :presence => true
 
+  # Scopes
+  scope :by_description, -> { order(:description) }
+  #
+  scope :collections, -> { where("flow = 1 OR flow = 2").by_description }
+  scope :payments, -> { where("flow = 3 OR flow = 2").by_description }
+  scope :collections_belong_to_organization, -> o { where("flow = 1 OR flow = 2 AND organization_id = ?", o).by_description }
+  scope :payments_belong_to_organization, -> o { where("flow = 3 OR flow = 2 AND organization_id = ?", o).by_description }
+
   before_destroy :check_for_dependent_records
 
   def to_label
@@ -34,7 +42,7 @@ class PaymentMethod < ActiveRecord::Base
       else 'N/A'
     end
   end
-  
+
   private
 
   def check_for_dependent_records

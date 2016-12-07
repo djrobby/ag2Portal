@@ -1,5 +1,6 @@
 class Bill < ActiveRecord::Base
   belongs_to :organization
+  belongs_to :payment_method
   belongs_to :project
   belongs_to :invoice_status
   belongs_to :subscriber
@@ -17,9 +18,9 @@ class Bill < ActiveRecord::Base
                   :project_id, :invoice_status_id, :subscriber_id, :client_id,
                   :street_type_id, :street_name, :street_number, :building, :floor, :floor_office,
                   :zipcode_id, :town_id, :province_id, :region_id, :country_id, :created_by, :updated_by,
-                  :reading_1_id, :reading_2_id
+                  :reading_1_id, :reading_2_id, :organization_id, :payment_method_id
 
-  has_many :invoices
+  has_many :invoices, dependent: :destroy
   has_many :client_payments
   has_many :instalments
   has_one :water_supply_contract
@@ -137,8 +138,9 @@ class Bill < ActiveRecord::Base
       bill_no
     end
     date :created_at
+    integer :organization_id
+    integer :payment_method_id
   end
-
 end
 
 
