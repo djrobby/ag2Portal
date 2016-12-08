@@ -58,3 +58,5 @@ es:
         debt: "Deuda"
         codes: "T E O"
         remarks: "Observaciones"
+        sale_offer: "Oferta"
+        sale_offer_id: "Oferta"

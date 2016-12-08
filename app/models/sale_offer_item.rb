@@ -56,4 +56,8 @@ class SaleOfferItem < ActiveRecord::Base
   def balance
     quantity - delivery_note_items.sum("quantity")
   end
+
+  def unbilled_balance
+    sale_offer_item_balance.balance
+  end
 end

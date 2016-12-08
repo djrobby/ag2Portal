@@ -186,7 +186,7 @@ module Ag2Gest
       to = params[:To]
       # OCO
       init_oco if !session[:organization]
-  
+
        no = !no.blank? && no[0] == '%' ? inverse_no_search(no) : no
 
       @search = Invoice.search do
@@ -316,11 +316,7 @@ module Ag2Gest
     end
 
     def subscribers_dropdown
-      if session[:office_id] != '0'
-        Subscriber.belongs_to_office(session[:office_id].to_i)
-      else
-        Subscriber.by_code
-      end
+      session[:office] != '0' ? Subscriber.belongs_to_office(session[:office_id].to_i) : Subscriber.by_code
     end
 
     def billing_periods_dropdown

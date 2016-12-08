@@ -1,5 +1,5 @@
 <script>
-  var _supplier;
+  var _client;
 
   $(document).ready(function() {
     $('.isel2').select2({
@@ -9,9 +9,9 @@
       containerCssClass: 'sub-select2-field'
     });
 
-    // Supplier
-    _supplier = $('#supplier_invoice_supplier_id :selected').val();
-    if (_supplier == "") _supplier = "0";
+    // Client
+    _client = $('#invoice_client_id :selected').val();
+    if (_client == "") _client = "0";
 
     // Trigger to display totals at table foot
     $('#items-table').bind('totals', function(event) {
@@ -60,7 +60,7 @@
         qty = "0";
       // Right formatted for passing as REST parameter
       qty = parseInt(right_number(qty, 4) * 10000);
-      jQuery.getJSON('si_update_description_prices_from_product/' + product + '/' + qty + '/' + _supplier + '/' + tbl, function(data) {
+      jQuery.getJSON('ci_update_description_prices_from_product/' + product + '/' + qty + '/' + _supplier + '/' + tbl, function(data) {
         $(_this).closest('tr').find('.fnt-description').val(data.description);
         $(_this).closest('tr').find('.fnt-price').val(data.price);
         $(_this).closest('tr').find('.fnt-amount').val(data.amount);
@@ -87,13 +87,13 @@
       if (qty == "")
         qty = "0";
       qty = parseInt(right_number(qty, 4) * 10000);
-      jQuery.getJSON('rn_item_balance_check/' + i + '/' + qty, function(data) {
+      jQuery.getJSON('ci_item_balance_check/' + i + '/' + qty, function(data) {
         if (data.alert != "") {
           alert(data.alert);
         }
       });
       // recalculate & format
-      recalculate_si_table(_this);
+      recalculate_ci_table(_this);
       return false;
     });
 
@@ -101,7 +101,7 @@
     $(".fnt-price").change(function() {
       // preserve the current object
       var _this = (this);
-      recalculate_si_table(_this);
+      recalculate_ci_table(_this);
       return false;
     });
 
@@ -109,7 +109,7 @@
     $(".fnt-discount-pct").change(function() {
       // preserve the current object
       var _this = (this);
-      recalculate_si_table(_this);
+      recalculate_ci_table(_this);
       return false;
     });
 
@@ -117,12 +117,12 @@
     $(".fnt-discount").change(function() {
       // preserve the current object
       var _this = (this);
-      recalculate_si_table(_this);
+      recalculate_ci_table(_this);
       return false;
     });
     
     // Recalculate amounts & prices
-    function recalculate_si_table(_this) {
+    function recalculate_ci_table(_this) {
       // make a POST call and replace the content
       var tbl = true;
       var price = $(_this).closest('tr').find('.fnt-price').val();
@@ -148,7 +148,7 @@
       qty = parseInt(right_number(qty, 4) * 10000);
       discount_p = parseInt(right_number(discount_p, 2) * 100);
       discount = parseInt(right_number(discount, 4) * 10000);
-      jQuery.getJSON('si_update_amount_from_price_or_quantity/' + price + '/' + qty + '/' + tax_type + '/' + discount_p + '/' + discount + '/' + product + "/" + tbl, function(data) {
+      jQuery.getJSON('ci_update_amount_from_price_or_quantity/' + price + '/' + qty + '/' + tax_type + '/' + discount_p + '/' + discount + '/' + product + "/" + tbl, function(data) {
         $(_this).closest('tr').find('.fnt-quantity').val(data.quantity);
         $(_this).closest('tr').find('.fnt-price').val(data.price);
         $(_this).closest('tr').find('.fnt-amount').val(data.amount);

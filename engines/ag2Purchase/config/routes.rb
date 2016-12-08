@@ -55,7 +55,6 @@ Ag2Purchase::Engine.routes.draw do
     match 'suppliers/su_update_textfields_from_organization/:org', :controller => 'suppliers', :action => 'su_update_textfields_from_organization'
     match 'su_update_textfields_from_organization/:org', :controller => 'suppliers', :action => 'su_update_textfields_from_organization'
     match 'suppliers/:id/su_update_textfields_from_organization/:org', :controller => 'suppliers', :action => 'su_update_textfields_from_organization'
-
     match 'suppliers/su_check_iban/:country/:dc/:bank/:office/:account', :controller => 'suppliers', :action => 'su_check_iban'
     match 'su_check_iban/:country/:dc/:bank/:office/:account', :controller => 'suppliers', :action => 'su_check_iban'
     match 'suppliers/:id/su_check_iban/:country/:dc/:bank/:office/:account', :controller => 'suppliers', :action => 'su_check_iban'

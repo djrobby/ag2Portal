@@ -40,3 +40,7 @@ es:
         delivery_avg: "Promedio entrega est."
         organization: "Organización"
         organization_id: "Organización"
+        balance: "No entregado"
+        balance_c: "No entregado oferta elegida"
+        unbilled_balance: "No faturado"
+        unbilled_balance_c: "No facturado oferta elegida"

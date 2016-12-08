@@ -89,7 +89,7 @@
         <%= select_tag "Client", options_from_collection_for_select(@clients, "id", "to_label"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
         <!-- Subscriber -->
         <%= label_tag I18n.t("ag2_gest.commercial_billings.index.label_subscriber"), nil, :class => 'form-label-under-sel2' %>
-        <%= select_tag "Subscriber", options_from_collection_for_select(@subscribers, "id", "to_label"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
+        <%= select_tag "Subscriber", options_from_collection_for_select(@subscribers, "id", "code_full_name_or_company_address"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
         <!-- Type -->
         <%= label_tag I18n.t("ag2_gest.commercial_billings.index.label_type"), nil, :class => 'form-label-under-sel2' %>
         <%= select_tag "Type", options_from_collection_for_select(@types, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
@@ -115,6 +115,10 @@
         <% end %>
         <!-- Buttons -->
         <%= render :partial => '/layouts/crud/new', :locals => { :model => Invoice, :path => new_commercial_billing_path, :txt => t(".btn_new") } %>
+        <% if can? :update, Invoice %>
+        <button id="new_from_sale_offer" type="button" class="btn btn-warning" data-dismiss="modal" aria-hidden="true"><%= t(".btn_new_from_sale_offer") %></button>
+        <br /><br />
+        <% end %>
         <%= link_to t(".back_to_management"), ag2_gest.bill_management_path %>
       </div><!-- /.sidebar-nav -->
     </div><!-- /.span3 -->
@@ -127,3 +131,5 @@
     </div><!-- /.span9 -->
   </div><!-- /.row-fluid -->
 </div><!-- /.container-fluid -->
+<!-- Modal: New invoice from sale offer -->
+<%= render 'new_invoice_from_offer' %>

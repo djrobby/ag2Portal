@@ -138,7 +138,7 @@ Ag2Gest::Engine.routes.draw do
     match "billable_concepts/show_test", controller: "billable_concepts", action: 'show_test'
     match "contracting_requests/show_test", controller: "contracting_requests", action: 'show_test'
     #
-    #service point
+    # Service point
     match 'service_points/update_offices_textfield_from_company/:id', :controller => 'service_points', :action => 'update_offices_textfield_from_company'
     match 'service_points/:id/update_offices_textfield_from_company/:id', :controller => 'service_points', :action => 'update_offices_textfield_from_company'
     match 'service_points/update_province_textfield_from_town/:id', :controller => 'service_points', :action => 'update_province_textfield_from_town'
@@ -151,8 +151,8 @@ Ag2Gest::Engine.routes.draw do
     match 'service_points/:id/update_region_textfield_from_province/:id', :controller => 'service_points', :action => 'update_region_textfield_from_province'
     match 'service_points/update_province_textfield_from_street_directory/:id', :controller => 'service_points', :action => 'update_province_textfield_from_street_directory'
     match 'service_points/:id/update_province_textfield_from_street_directory/:id', :controller => 'service_points', :action => 'update_province_textfield_from_street_directory'
-
-    #Subscriber
+    #
+    # Subscriber
     match 'subscribers/add_meter/:id', :controller => 'subscribers', :action => 'add_meter', :via => [:post]
     match 'subscribers/:id/add_meter/:id', :controller => 'subscribers', :action => 'add_meter', :via => [:post]
     match 'subscribers/quit_meter/:id', :controller => 'subscribers', :action => 'quit_meter'#, :via => [:post]
@@ -161,6 +161,53 @@ Ag2Gest::Engine.routes.draw do
     match 'subscribers/:id/change_meter/:id', :controller => 'subscribers', :action => 'change_meter', :via => [:post]
     match 'subscribers/:id/void/:bill_id', :controller => 'subscribers', :action => 'void', :via => [:get], as: "void_subscriber_bill"
     match 'subscribers/:id/rebilling/:bill_id', :controller => 'subscribers', :action => 'rebilling', :via => [:get], as: "rebilling_subscriber_bill"
+    #
+    # Commercial billing
+    match 'commercial_billings/ci_generate_no/:project', :controller => 'commercial_billings', :action => 'ci_generate_no'
+    match 'ci_generate_no/:project', :controller => 'commercial_billings', :action => 'ci_generate_no'
+    match 'commercial_billings/:id/ci_generate_no/:project', :controller => 'commercial_billings', :action => 'ci_generate_no'
+    match 'commercial_billings/ci_update_selects_from_organization/:org', :controller => 'commercial_billings', :action => 'ci_update_selects_from_organization'
+    match 'ci_update_selects_from_organization/:org', :controller => 'commercial_billings', :action => 'ci_update_selects_from_organization'
+    match 'commercial_billings/:id/ci_update_selects_from_organization/:org', :controller => 'commercial_billings', :action => 'ci_update_selects_from_organization'
+    match 'commercial_billings/ci_update_offer_select_from_client/:supplier', :controller => 'commercial_billings', :action => 'ci_update_offer_select_from_client'
+    match 'ci_update_offer_select_from_client/:supplier', :controller => 'commercial_billings', :action => 'ci_update_offer_select_from_client'
+    match 'commercial_billings/:id/ci_update_offer_select_from_client/:supplier', :controller => 'commercial_billings', :action => 'ci_update_offer_select_from_client'
+    match 'commercial_billings/ci_update_selects_from_project/:order', :controller => 'commercial_billings', :action => 'ci_update_selects_from_project'
+    match 'ci_update_selects_from_project/:price/:qty/:order', :controller => 'commercial_billings', :action => 'ci_update_selects_from_project'
+    match 'commercial_billings/:id/ci_update_selects_from_project/:order', :controller => 'commercial_billings', :action => 'ci_update_selects_from_project'
+    match 'commercial_billings/ci_format_number/:num', :controller => 'commercial_billings', :action => 'ci_format_number'
+    match 'ci_format_number/:num', :controller => 'commercial_billings', :action => 'ci_format_number'
+    match 'commercial_billings/:id/ci_format_number/:num', :controller => 'commercial_billings', :action => 'ci_format_number'
+    match 'commercial_billings/ci_format_number_4/:num', :controller => 'commercial_billings', :action => 'ci_format_number_4'
+    match 'ci_format_number_4/:num', :controller => 'commercial_billings', :action => 'ci_format_number_4'
+    match 'commercial_billings/:id/ci_format_number_4/:num', :controller => 'commercial_billings', :action => 'ci_format_number_4'
+    match 'commercial_billings/ci_item_totals/:qty/:amount/:tax/:discount_p', :controller => 'commercial_billings', :action => 'ci_item_totals'
+    match 'ci_item_totals/:qty/:amount/:tax/:discount_p', :controller => 'commercial_billings', :action => 'ci_item_totals'
+    match 'commercial_billings/:id/ci_item_totals/:qty/:amount/:tax/:discount_p', :controller => 'commercial_billings', :action => 'ci_item_totals'
+    match 'commercial_billings/send_invoice_form/:id', :controller => 'commercial_billings', :action => 'send_invoice_form'
+    match 'send_invoice_form/:id', :controller => 'commercial_billings', :action => 'send_invoice_form'
+    match 'commercial_billings/:id/send_invoice_form/:id', :controller => 'commercial_billings', :action => 'send_invoice_form'
+    match 'commercial_billings/ci_update_description_prices_from_product/:product/:qty/:supplier/:tbl', :controller => 'commercial_billings', :action => 'ci_update_description_prices_from_product'
+    match 'ci_update_description_prices_from_product/:product/:qty/:supplier/:tbl', :controller => 'commercial_billings', :action => 'ci_update_description_prices_from_product'
+    match 'commercial_billings/:id/ci_update_description_prices_from_product/:product/:qty/:supplier/:tbl', :controller => 'commercial_billings', :action => 'ci_update_description_prices_from_product'
+    match 'commercial_billings/ci_update_product_select_from_offer_item/:i', :controller => 'commercial_billings', :action => 'ci_update_product_select_from_offer_item'
+    match 'ci_update_product_select_from_offer_item/:i', :controller => 'commercial_billings', :action => 'ci_update_product_select_from_offer_item'
+    match 'commercial_billings/:id/ci_update_product_select_from_offer_item/:i', :controller => 'commercial_billings', :action => 'ci_update_product_select_from_offer_item'
+    match 'commercial_billings/ci_update_amount_from_price_or_quantity/:price/:qty/:tax_type/:discount_p/:discount/:product/:tbl', :controller => 'commercial_billings', :action => 'ci_update_amount_from_price_or_quantity'
+    match 'ci_update_amount_from_price_or_quantity/:price/:qty/:tax_type/:discount_p/:discount/:product/:tbl', :controller => 'commercial_billings', :action => 'ci_update_amount_from_price_or_quantity'
+    match 'commercial_billings/:id/ci_update_amount_from_price_or_quantity/:price/:qty/:tax_type/:discount_p/:discount/:product/:tbl', :controller => 'commercial_billings', :action => 'ci_update_amount_from_price_or_quantity'
+    match 'commercial_billings/ci_item_balance_check/:i/:qty', :controller => 'commercial_billings', :action => 'ci_item_balance_check'
+    match 'ci_item_balance_check/:i/:qty', :controller => 'commercial_billings', :action => 'ci_item_balance_check'
+    match 'commercial_billings/:id/ci_item_balance_check/:i/:qty', :controller => 'commercial_billings', :action => 'ci_item_balance_check'
+    match 'commercial_billings/ci_item_totals/:qty/:amount/:tax/:discount_p', :controller => 'commercial_billings', :action => 'ci_item_totals'
+    match 'ci_item_totals/:qty/:amount/:tax/:discount_p', :controller => 'commercial_billings', :action => 'ci_item_totals'
+    match 'commercial_billings/:id/ci_item_totals/:qty/:amount/:tax/:discount_p', :controller => 'commercial_billings', :action => 'ci_item_totals'
+    match 'commercial_billings/ci_generate_invoice/:supplier/:request/:offer_no/:offer_date', :controller => 'commercial_billings', :action => 'ci_generate_invoice'
+    match 'ci_generate_invoice/:supplier/:request/:offer_no/:offer_date', :controller => 'commercial_billings', :action => 'ci_generate_invoice'
+    match 'commercial_billings/:id/ci_generate_invoice/:supplier/:request/:offer_no/:offer_date', :controller => 'commercial_billings', :action => 'ci_generate_invoice'
+    match 'commercial_billings/ci_current_balance/:order', :controller => 'commercial_billings', :action => 'ci_current_balance'
+    match 'ci_current_balance/:order', :controller => 'commercial_billings', :action => 'ci_current_balance'
+    match 'commercial_billings/:id/ci_current_balance/:order', :controller => 'commercial_billings', :action => 'ci_current_balance'
 
     # Resources
     resources :clients
@@ -247,7 +294,9 @@ Ag2Gest::Engine.routes.draw do
     resources :invoice_types
     resources :invoice_statuses
     resources :invoice_operations
-    resources :commercial_billings
+    resources :commercial_billings do
+      get 'invoice_form', on: :collection
+    end
     #
     resources :regulations
     resources :regulation_types

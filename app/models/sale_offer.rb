@@ -120,6 +120,10 @@ class SaleOffer < ActiveRecord::Base
     balance
   end
 
+  def unbilled_balance
+    sale_offer_item_balances.sum("balance")
+  end
+
   def delivery_avg
     avg, cnt = 0, 0
     sale_offer_items.each do |i|

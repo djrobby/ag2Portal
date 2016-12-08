@@ -87,7 +87,7 @@
       if (qty == "")
         qty = "0";
       qty = parseInt(right_number(qty, 4) * 10000);
-      jQuery.getJSON('rn_item_balance_check/' + i + '/' + qty, function(data) {
+      jQuery.getJSON('si_item_balance_check/' + i + '/' + qty, function(data) {
         if (data.alert != "") {
           alert(data.alert);
         }

@@ -104,7 +104,7 @@
         <%= select_tag "Client", options_from_collection_for_select(@clients, "id", "to_label"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
         <!-- Subscriber -->
         <%= label_tag I18n.t("ag2_gest.invoices.index.label_subscriber"), nil, :class => 'form-label-under-sel2' %>
-        <%= select_tag "Subscriber", options_from_collection_for_select(@subscribers, "id", "full_name"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
+        <%= select_tag "Subscriber", options_from_collection_for_select(@subscribers, "id", "code_full_name_or_company_address"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
         <!-- Type -->
         <%= label_tag I18n.t("ag2_gest.invoices.index.label_type"), nil, :class => 'form-label-under-sel2' %>
         <%= select_tag "Type", options_from_collection_for_select(@types, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
