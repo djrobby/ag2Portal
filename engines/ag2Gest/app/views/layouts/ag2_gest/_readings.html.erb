@@ -1,0 +1,22 @@
+<% readings.each do |reading| %>
+<tr>
+  <% if source == 'M' %>
+  <td><%= reading.try(:subscriber).try(:to_label) %></td>
+  <% else %>
+  <td><%= reading.try(:meter).try(:meter_code) %></td>
+  <% end %>
+  <td><%= reading.try(:billing_period).try(:period) %></td>
+  <td><%= reading.try(:billing_frequency).try(:name) %></td>
+  <td><%= reading.try(:reading_type).try(:name) %></td>
+  <td align="center"><%= formatted_timestamp(reading.reading_date) unless reading.reading_date.blank? %></td>
+  <td align="right"><%= reading.try(:reading_index) %></td>
+  <td>
+    <% unless reading.try(:reading_incidence_types).blank? %>
+      <i title="<%= reading.reading_incidence_types.pluck(:name).join(", ") %>" class="icon-warning-sign"></i>
+    <% end %>
+  </td>
+  <td align="right"><%= reading.try(:reading_1).try(:reading_index) %></td>
+  <td align="right"><%= reading.try(:consumption) %></td>
+  <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => Reading, :path => edit_reading_path(reading) } %></td>
+</tr>
+<% end %>

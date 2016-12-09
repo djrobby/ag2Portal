@@ -51,6 +51,14 @@ class Tariff < ActiveRecord::Base
     end
   end
 
+  def get_code_formula
+    if percentage_applicable_formula.blank?
+      nil
+    else
+      BillableConcept.find(percentage_applicable_formula).try(:code)
+    end
+  end
+
   #
   # Records navigator
   #

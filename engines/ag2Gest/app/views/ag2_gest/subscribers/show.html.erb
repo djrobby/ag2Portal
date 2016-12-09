@@ -304,7 +304,7 @@
   </div>
   <div class="modal-body">
     <%= simple_form_for :bills, url: simple_bill_subscriber_path(@subscriber), remote: true do |f| %>
-      <%= f.input :billing_period_id, label: 'Periodo', collection: @billing_periods, input_html: {class: "large-text-field"}, :label_html => { :class => 'form-label' } %>
+      <%= f.input :billing_period_id, label: 'Periodo', collection: @billing_periods, input_html: {class: "large-text-field sel2"}, :label_html => { :class => 'form-label' } %>
       <%= f.submit "Crear factura", class: "btn btn-primary" %>
       <button class="btn" data-dismiss="modal" aria-hidden="true">Cancelar</button>
     <% end %>

@@ -81,7 +81,9 @@ module Ag2Gest
     def create
       @breadcrumb = 'create'
       @reading_route = ReadingRoute.new(params[:reading_route])
+      @reading_route.created_by = current_user.id if !current_user.nil?
       set_projects_offices
+
       respond_to do |format|
         if @reading_route.save
           format.html { redirect_to @reading_route, notice: t('activerecord.attributes.reading_route.create') }
@@ -98,6 +100,7 @@ module Ag2Gest
     def update
       @breadcrumb = 'update'
       @reading_route = ReadingRoute.find(params[:id])
+      @reading_route.updated_by = current_user.id if !current_user.nil?
       set_projects_offices
 
       respond_to do |format|

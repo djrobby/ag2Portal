@@ -32,7 +32,7 @@
       <td><%= t('activerecord.attributes.tariff_scheme.company') %>:</td>
       <td><%= @tariff_scheme.try(:project).try(:company).try(:name) unless @tariff_scheme.try(:project).try(:company).blank? %></td>
       <td><%= t('activerecord.attributes.tariff_scheme.tariff_type_id') %>:</td>
-      <td ><%= link_to @tariff_scheme.try(:tariff_type).try(:name), ag2_gest.tariff_type_path(@tariff_scheme.tariff_type_id) %></td>
+      <td ><%= @tariff_scheme.try(:tariff_type).try(:name) %></td>
     </tr>
     <tr>
       <td><%= t('activerecord.attributes.tariff_scheme.starting_at') %>:</td>
@@ -173,7 +173,7 @@ new_path: new_tariff_scheme_path, new_txt: t('ag2_gest.tariff_schemes.index.btn_
                     <td class="block8_fee"><%= tariff.try(:block8_fee) %></td>
                     <td class="variable_fee"><%= tariff.try(:variable_fee) %></td>
                     <td class="percentage_fee"><%= tariff.try(:percentage_fee) %></td>
-                    <td class="percentage_applicable_formula"><%= tariff.try(:percentage_applicable_formula) %></td>
+                    <td class="percentage_applicable_formula" data-concept="<%= tariff.percentage_applicable_formula %>"><%= tariff.try(:get_code_formula) %></td>
                     <td class="discount_pct_f"><%= tariff.try(:discount_pct_f) %></td>
                     <td class="discount_pct_b"><%= tariff.try(:discount_pct_b) %></td>
                     <td class="discount_pct_v"><%= tariff.try(:discount_pct_v) %></td>
@@ -259,7 +259,7 @@ new_path: new_tariff_scheme_path, new_txt: t('ag2_gest.tariff_schemes.index.btn_
         <%= p.input :fixed_fee, label_html: { class: 'form-label' }, label: t('activerecord.attributes.tariff_scheme.fixed_fee') %>
         <%= p.input :variable_fee, label_html: { class: 'form-label' }, label: t('activerecord.attributes.tariff_scheme.variable_fee') %>
         <%= p.input :percentage_fee, label_html: { class: 'form-label' }, label: t('activerecord.attributes.tariff_scheme.percentage_fee') %>
-        <%= p.input :percentage_applicable_formula, required: false, label_html: { class: 'form-label' }, label: t('activerecord.attributes.tariff_scheme.percentage_applicable_formula') %>
+        <%= p.input :percentage_applicable_formula, collection: @billable_concept_percentage, required: false, label_html: { class: 'form-label' }, label: t('activerecord.attributes.tariff_scheme.percentage_applicable_formula') %>
       </div>
 
       <div class="span3">
@@ -345,7 +345,7 @@ $(document).ready(function () {
     $("#tariff_block8_fee").val(row.find('.block8_fee').text());
     $("#tariff_variable_fee").val(row.find('.variable_fee').text());
     $("#tariff_percentage_fee").val(row.find('.percentage_fee').text());
-    $("#tariff_percentage_applicable_formula").val(row.find('.percentage_applicable_formula').text());
+    $("#tariff_percentage_applicable_formula").val(row.find('.percentage_applicable_formula').data('concept'));
     $("#tariff_discount_pct_f").val(row.find('.discount_pct_f').text());
     $("#tariff_discount_pct_b").val(row.find('.discount_pct_b').text());
     $("#tariff_discount_pct_v").val(row.find('.discount_pct_v').text());

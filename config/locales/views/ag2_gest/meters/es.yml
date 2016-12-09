@@ -17,6 +17,8 @@ es:
         btn_edit: "Editar Contador"
         btn_delete: "Borrar Contador"
         return_to: "Volver a Contador"
+        subtable_title_details: "Movimientos"
+        subtable_title_readings: "Lecturas"
       edit:
         show: "Mostrar"
         back: "Atrás"

@@ -3,6 +3,7 @@ es:
     bills:
       index:
         title: "Confirmar Facturación Masiva de Servicios"
+        titlebill: "Facturación Masiva de Servicios"
         btn_new: "Nueva Recibo"
         back_to_root: "Volver a ag2Gest"
         collection_only: "Para cobros"
@@ -29,6 +30,7 @@ es:
         last_invoice: "Nº de la última factura"
         last_invoice_total: "Importe total"
         biller: "Facturante"
+        no_pre_group: "No hay prefacturas para ese grupo"
         calc_consumptions: "Calcular Consumos"
       show:
         title: "Recibo"

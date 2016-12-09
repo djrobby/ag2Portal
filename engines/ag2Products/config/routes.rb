@@ -15,6 +15,8 @@ Ag2Products::Engine.routes.draw do
     match 'inventory_items_report', :controller => 'ag2_products_track', :action => 'inventory_items_report'
     match 'order_report', :controller => 'ag2_products_track', :action => 'order_report'
     match 'order_items_report', :controller => 'ag2_products_track', :action => 'order_items_report'
+    match 'order_pending_report', :controller => 'ag2_products_track', :action => 'order_pending_report'
+    match 'order_pending_items_report', :controller => 'ag2_products_track', :action => 'order_pending_items_report'
     match 'receipt_report', :controller => 'ag2_products_track', :action => 'receipt_report'
     match 'receipt_items_report', :controller => 'ag2_products_track', :action => 'receipt_items_report'
     match 'delivery_report', :controller => 'ag2_products_track', :action => 'delivery_report'

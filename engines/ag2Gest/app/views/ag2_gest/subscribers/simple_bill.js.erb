@@ -18,7 +18,8 @@ var content = '';
 
     /*form.append('<h3><%= invoice.company.name %></h3>');*/
     content+= '<tr><th><%= t("activerecord.attributes.contracting_request.code") %></th><th><%= t("activerecord.attributes.contracting_request.subcode") %></th><th><%= t("activerecord.attributes.contracting_request.quantity") %></th><th><%= t("activerecord.attributes.contracting_request.price") %></th><th><%= t("activerecord.attributes.contracting_request.amount") %></th><th><%= t("activerecord.attributes.contracting_request.tax") %></th><th><%= t("activerecord.attributes.contracting_request.discount") %></th><th><%= t("activerecord.attributes.contracting_request.discount_pct") %></th><th><%= t("activerecord.attributes.contracting_request.total") %></th></tr>';
-    <% invoice.pre_invoice_items.each do |item, index| %>
+
+    <% invoice.pre_invoice_items.each do |item| %>
       content+= '<tr class="in_item in_item<%= item.id %>">';
       content+= '<td><%= item.code %></td>';
       content+= '<td><%= item.subcode %></td>';
@@ -35,7 +36,7 @@ var content = '';
 
       /*Add Subtotal etc dinamyc*/
       content+= '<tr class="subtotal">';
-      content+= '<td colspan="6" class="no-boder"></td>';
+      content+= '<td colspan="7" class="no-boder"></td>';
       content+= '<td class="subtotal black-border"><b><%= t("activerecord.attributes.contracting_request.subtotal").upcase %></b></td>';
       content+= '<td class="subtotal<%= index %> black-border"><%= invoice.subtotal %></td>';
       content+= '</tr>';
@@ -43,7 +44,7 @@ var content = '';
     <% invoice.tax_breakdown.each do |tax| %>
 
       content+= '<tr class="breakdown">';
-      content+= '<td colspan="3" class="no-boder"></td>';
+      content+= '<td colspan="4" class="no-boder"></td>';
       content+= '<td class="no-boder" colspan="2"><b><%= t("activerecord.attributes.contracting_request.base_imp") %>: </b> <%= tax[1] %></td>';
       content+= `<td class="no-boder"><%= "#{pluralize(tax[3], 'artículo')}"  %></td>`;
       content+= '<td><b>IVA (<%= tax[0] %>%)</b></td>';
@@ -53,7 +54,7 @@ var content = '';
     <% end %>
 
     content+= '<tr>';
-    content+= '<td colspan="6" class="black-border"></td>';
+    content+= '<td colspan="7" class="black-border"></td>';
     content+= '<td class="black-border"><b>TOTAL</b></td>';
     content+= '<td class="black-border total_invoice"><%= invoice.total %></td>';
     content+= '</tr>';
@@ -69,7 +70,6 @@ var content = '';
 
   <% end %> /*End Bill.invoices*/
 <% end %> /*End if*/
-console.log(content)
 $("#new-bill").modal("hide");
 $("#bill-supply-modal").modal("show");
 
@@ -241,6 +241,10 @@ $(document).ready(function() {
     invoice_total += subtotal;
     $(invoice + " .total_invoice").get(0).innerHTML = invoice_total.toFixed(4);
 
+  });
+
+  $("#bill-supply-modal").on("hidden.bs.modal", function(){
+    $("form.simple_bill").html("");
   });
 
 });

@@ -47,151 +47,111 @@ module Ag2Gest
     end
 
     def add_meter
+      debugger
 
       @subscriber = Subscriber.find(params[:id])
-      @subscriber.meter_id = params[:reading][:meter_id]
+      @meter = Meter.find params[:reading][:meter_id]
+      @billing_period = BillingPeriod.find params[:reading][:billing_period_id]
 
-      ######ReadingIncidenceTypes##########
-      @reading_incidence_types = params[:incidence_type_ids]
+      # #Create Reading
+      @reading = Reading.new( project_id: params[:reading][:project_id],
+                   billing_period_id: @billing_period.id,
+                   reading_type_id: 4, #ReadingType Installation
+                   meter_id: @meter.id,
+                   subscriber_id: @subscriber.id,
+                   reading_date: params[:reading][:reading_date],
+                   reading_index: params[:reading][:reading_index],
+                   reading_route_id: @subscriber.reading_route_id,
+                   reading_sequence: @subscriber.reading_sequence,
+                   reading_variant: @subscriber.reading_variant,
+                   billing_frequency_id: @billing_period.billing_frequency_id,
+                   reading_1: nil,
+                   reading_2: nil,
+                   reading_index_1: nil,
+                   reading_index_2: nil )
+      @reading.reading_incidence_types << ReadingIncidenceType.find_all_by_id(params[:incidence_type_ids])
 
-      #Update JavaScript
-      if !@reading_incidence_types.blank? #True
-        @reading_incidence_types = ReadingIncidenceType.where(id: @reading_incidence_types).map(&:name)
-      else #False
-        @reading_incidence_types = []
-      end
-
-      #Get last Reading
-      last_reading = @subscriber.readings.order(:reading_date).last
-
-      #Update caliber WaterSupplyContract
-      water_supply_contract = @subscriber.contracting_request.water_supply_contract #WaterSupplyContract.where(subscriber_id: @subscriber.id)
-      water_supply_contract.caliber_id = Meter.find(params[:reading][:meter_id]).caliber_id
-
-      #Create MeterDetail
-      @meter_detail = MeterDetail.new( meter_id: params[:reading][:meter_id],
-                                       subscriber_id: params[:id],
+      # #Create MeterDetail
+      @meter_detail = MeterDetail.new( meter_id: @meter.id,
+                                       subscriber_id: @subscriber.id,
                                        installation_date:  params[:reading][:reading_date],
                                        installation_reading: params[:reading][:reading_index],
+                                       meter_location_id: params[:reading][:meter_location_id],
                                        withdrawal_date: nil,
                                        withdrawal_reading: nil )
 
-      #Create Reading
-      @reading = Reading.new( project_id: last_reading.project_id,
-                   billing_period_id: nil,
-                   billing_frequency_id: last_reading.billing_frequency_id,
-                   reading_type_id: ReadingType.find(4).id, #ReadingType Installation
-                   meter_id: params[:reading][:meter_id],
-                   subscriber_id: @subscriber.id,
-                   reading_route_id: last_reading.reading_route_id,
-                   reading_date: params[:reading][:reading_date],
-                   reading_index: params[:reading][:reading_index],
-                   reading_sequence: last_reading.reading_sequence,
-                   reading_variant: nil,
-                   reading_index_1: nil,
-                   reading_index_2: nil )
+      # #Update caliber WaterSupplyContract
+      @water_supply_contract = @subscriber.water_supply_contract #WaterSupplyContract.where(subscriber_id: @subscriber.id)
+      @water_supply_contract.caliber_id = @meter.caliber_id
 
-      #Add ReadingIncidenceTypes to Reading
-      if params[:incidence_type_ids].blank? #[]
-      else
-        @my_read_inci_type = ReadingIncidenceType.find(params[:incidence_type_ids])
-        @reading.reading_incidence_types << @my_read_inci_type
-      end
-
-      #Save all
-      water_supply_contract.save
-      @meter_detail.save
-      @reading.save
-      @subscriber.save
-
-      response_hash = { subscriber: @subscriber }
-      response_hash[:reading] = @reading
-      response_hash[:reading_type_name] = @reading.reading_type.name
-      response_hash[:reading_incidence_types] = @reading_incidence_types
-      response_hash[:meter] = @subscriber.meter
-      response_hash[:meter_model] = @subscriber.meter.meter_model
-      response_hash[:caliber] = @subscriber.meter.caliber
+      # Assign meter
+      @subscriber.meter_id = @meter.id
 
       respond_to do |format|
-        format.html # index.html.erb
-        format.json { render json: response_hash }
-        format.js
+        if @subscriber.save and @meter_detail.save and @water_supply_contract.save and @reading.save
+          format.html { redirect_to @subscriber, notice: t('activerecord.attributes.subscriber.add_meter_successful') }
+          format.json { render json: @reading, status: :created, location: @reading }
+        else
+          format.html { redirect_to @subscriber, alert: t('activerecord.attributes.subscriber.add_meter_failure') }
+          format.json { render json: @reading.errors, status: :unprocessable_entity }
+        end
       end
     end
 
 
     def quit_meter
 
-      ######ReadingIncidenceTypes##########
-      @reading_incidence_types = params[:incidence_type_ids]
-
-      #Update JavaScript
-      if !@reading_incidence_types.blank? #True
-        @reading_incidence_types = ReadingIncidenceType.where(id: @reading_incidence_types).map(&:name)
-      else #False
-        @reading_incidence_types = []
-      end
-
       @subscriber = Subscriber.find(params[:id])
+      @billing_period = BillingPeriod.find(params[:reading][:billing_period_id])
 
-      #Get last Reading
-      last_reading = @subscriber.readings.order(:reading_date).last
+      #Create Reading
+      @reading = Reading.new( project_id: params[:reading][:project_id],
+                   billing_period_id: params[:reading][:billing_period_id],
+                   reading_type_id: 5, #ReadingType Withdrawal
+                   meter_id: @subscriber.meter_id,
+                   subscriber_id: @subscriber.id,
+                   reading_date: params[:reading][:reading_date],
+                   reading_index: params[:reading][:reading_index]
+                )
+
+      rdg_1 = set_reading_1_to_reading(@subscriber,@subscriber.meter,@billing_period)
+      rdg_2 = set_reading_2_to_reading(@subscriber,@subscriber.meter,@billing_period)
+      @reading.reading_1 = rdg_1
+      @reading.reading_index_1 = rdg_1.try(:reading_index)
+      @reading.reading_2 = rdg_2
+      @reading.reading_index_2 = rdg_2.try(:reading_index)
+      @reading.reading_sequence = @subscriber.reading_sequence
+      @reading.reading_variant = @subscriber.reading_variant
+      @reading.reading_route_id = @subscriber.reading_route_id
+      @reading.billing_frequency_id = @billing_period.try(:billing_frequency_id)
+      @reading.created_by = current_user.id if !current_user.nil?
+
+      @reading.reading_incidence_types << ReadingIncidenceType.find_all_by_id(params[:incidence_type_ids])
 
       #Update MeterDetail associated
-      @meter_details = MeterDetail.where(meter_id: @subscriber.meter_id)
-      @meter_detail = @meter_details.where(withdrawal_date: nil).first
+      @meter_detail = MeterDetail.where(subscriber_id: @subscriber.id, meter_id: @subscriber.meter_id, withdrawal_date: nil).first
       @meter_detail.withdrawal_date = params[:reading][:reading_date]
       @meter_detail.withdrawal_reading = params[:reading][:reading_index]
 
-      #Create Reading
-      @reading = Reading.new( project_id: last_reading.project_id,
-                   billing_period_id: nil,
-                   billing_frequency_id: last_reading.billing_frequency_id,
-                   reading_type_id: ReadingType.find(5).id, #ReadingType Withdrawal
-                   meter_id: @subscriber.meter_id,
-                   subscriber_id: @subscriber.id,
-                   reading_route_id: last_reading.reading_route_id,
-                   reading_date: params[:reading][:reading_date],
-                   reading_index: params[:reading][:reading_index],
-                   reading_sequence: last_reading.reading_sequence,
-                   reading_variant: nil,
-                   reading_index_1: nil,
-                   reading_index_2: nil )
-
       #Put Caliber Nil
-      water_supply_contract = @subscriber.water_supply_contract #WaterSupplyContract.where(subscriber_id: @subscriber.id)
-      water_supply_contract.caliber_id = nil
+      @water_supply_contract = @subscriber.water_supply_contract
+      @water_supply_contract.caliber_id = nil
 
       #Subscriber Quit Meter associated
       @subscriber.meter_id = nil
 
-      #Add ReadingIncidenceTypes to Reading
-      if params[:incidence_type_ids].blank? #[]
-      else
-        @my_read_inci_type = ReadingIncidenceType.find(params[:incidence_type_ids])
-        @reading.reading_incidence_types << @my_read_inci_type
-      end
-
-      #Save all
-      @meter_detail.save
-      water_supply_contract.save
-      @reading.save
-      @subscriber.save
-
-      #BillingPeriod ¿?
-      #Return reading_type.name
-
-      response_hash = { subscriber: @subscriber }
-      response_hash[:reading] = @reading
-      response_hash[:reading_type_name] = @reading.reading_type.name
-      response_hash[:reading_incidence_types] = @reading_incidence_types
-
       respond_to do |format|
-        format.html # index.html.erb
-        format.json { render json: response_hash }
-        format.js
+        if @subscriber.save and @meter_detail.save and @water_supply_contract.save and @reading.save
+          format.html { redirect_to @subscriber, notice: t('activerecord.attributes.subscriber.quit_meter_successful') }
+          format.json { render json: @reading, status: :created, location: @reading }
+        else
+          format.html { redirect_to @subscriber, alert: t('activerecord.attributes.subscriber.quit_meter_failure') }
+          format.json { render json: @reading.errors, status: :unprocessable_entity }
+        end
       end
     end
+
+
 
     def change_meter
 
@@ -421,6 +381,7 @@ module Ag2Gest
       @subscriber = Subscriber.find(params[:id])
       @reading = Reading.new
       @client_bank_account = ClientBankAccount.new
+      @billing_periods = BillingPeriod.where(billing_frequency_id: @subscriber.billing_frequency_id).order("period DESC")
 
       #@subscriberreadings = Reading.where(:subscriber_id => @subscriber.id).paginate(:page => 10, :per_page => per_page)
       # @reading_types = ReadingType.all
@@ -452,13 +413,13 @@ module Ag2Gest
         end
         with :subscriber_id, params[:id]
         order_by :created_at, :asc
-        paginate :page => params[:page] || 1, :per_page => 5
+        paginate :page => params[:page] || 1, :per_page => 10
       end
 
       @search_readings = Reading.search do
         with :subscriber_id, params[:id]
         order_by :reading_date, :desc
-        paginate :page => params[:page] || 1, :per_page => 5
+        paginate :page => params[:page] || 1, :per_page => 10
       end
 
       @subscriber_readings = @search_readings.results
@@ -645,7 +606,7 @@ module Ag2Gest
 
     def simple_bill
       @subscriber = Subscriber.find params[:id]
-      @reading = @subscriber.readings.find_by_billing_period_id_and_reading_type_id(params[:bills][:billing_period_id], ReadingType::NORMAL)
+      @reading = @subscriber.readings.where(billing_period_id: params[:bills][:billing_period_id], reading_type_id: [1,2,5,6]).order(:reading_date).last
       @pre_bill = @reading.generate_pre_bill
       respond_to do |format|
         format.js { }

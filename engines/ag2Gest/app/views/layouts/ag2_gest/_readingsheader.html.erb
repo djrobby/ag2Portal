@@ -1,0 +1,16 @@
+<tr>
+  <% if source == 'M' %>
+  <th><%= t('activerecord.attributes.reading.subscriber_id') %></th>
+  <% else %>
+  <th><%= t('activerecord.attributes.reading.meter_id') %></th>
+  <% end %>
+  <th><%= t('activerecord.attributes.reading.billing_period_c') %></th>
+  <th><%= t('activerecord.attributes.reading.billing_frequency_c') %></th>
+  <th><%= t('activerecord.attributes.reading.reading_type_id') %></th>
+  <th align="center"><%= t('activerecord.attributes.reading.reading_date') %></th>
+  <th align="right"><%= t('activerecord.attributes.reading.reading') %></th>
+  <th></th>
+  <th align="right"><%= t('activerecord.attributes.reading.reading_1_index_c') %></th>
+  <th align="right"><%= t('activerecord.attributes.reading.consumption') %></th>
+  <th></th>
+</tr>

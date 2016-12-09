@@ -24,6 +24,10 @@ class PreBill < ActiveRecord::Base
   has_one :water_supply_contract
   has_many :client_payments
 
+  def total_by_concept(billable_concept)
+    pre_invoices.map(&:pre_invoice_items).flatten.select{|item| item.tariff.billable_item.billable_concept_id == billable_concept.to_i}.sum(&:amount)
+  end
+
   def reading
     reading_2
   end

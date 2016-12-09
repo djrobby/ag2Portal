@@ -20,7 +20,7 @@
   <thead>
     <tr>
       <th><%= sortable "meter_code", t('activerecord.attributes.meter.meter_code') %></th>
-      <th class="center"><%= sortable "meter_model_id", t('activerecord.attributes.meter.meter_model_id') %></th>
+      <th><%= sortable "meter_model_id", t('activerecord.attributes.meter.meter_model_id') %></th>
       <th class="center"><%= sortable "caliber_id", t('activerecord.attributes.meter.caliber_id') %></th>
       <th class="center"><%= t('activerecord.attributes.meter.manufacturing_year') %></th>
       <th class="center"><%= t('activerecord.attributes.meter.expiry_date') %></th>
@@ -31,7 +31,7 @@
     <% @meters.each do |meter| %>
     <tr>
       <td><%= link_to meter.try(:meter_code), ag2_gest.meter_path(meter) %></td>
-      <td class="center"><%= meter.try(:meter_model).try(:full_name) %></td>
+      <td><%= meter.try(:meter_model).try(:full_name) %></td>
       <td class="center"><%= meter.try(:caliber).try(:caliber) %></td>
       <td class="center"><%= meter.try(:manufacturing_year) %></td>
       <td class="center"><%=l meter.try(:expiry_date) unless meter.try(:expiry_date).blank?  %></td>

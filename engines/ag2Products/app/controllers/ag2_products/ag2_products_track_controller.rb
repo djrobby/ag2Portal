@@ -183,9 +183,9 @@ module Ag2Products
       elsif project.blank? && supplier.blank? && store.blank? && order.blank? && !account.blank? && status.blank? && petitioner.blank?
         @order_report = PurchaseOrder.where("charge_account_id = ? AND order_date >= ? AND order_date <= ?",account,from,to).order(:order_no)
       elsif project.blank? && supplier.blank? && store.blank? && order.blank? && account.blank? && !status.blank? && petitioner.blank?
-        @order_items_report = PurchaseOrder.where("order_status_id = ? AND order_date >= ? AND order_date <= ?",status,from,to).order(:order_no)
+        @order_report = PurchaseOrder.where("order_status_id = ? AND order_date >= ? AND order_date <= ?",status,from,to).order(:order_no)
       elsif project.blank? && supplier.blank? && store.blank? && order.blank? && account.blank? && status.blank? && !petitioner.blank?
-        @order_items_report = PurchaseOrder.where("created_by = ? AND order_date >= ? AND order_date <= ?",petitioner,from,to).order(:order_no)
+        @order_report = PurchaseOrder.where("created_by = ? AND order_date >= ? AND order_date <= ?",petitioner,from,to).order(:order_no)
       end
 
       # Setup filename
@@ -276,6 +276,164 @@ module Ag2Products
                      disposition: 'inline' }
       end
     end
+
+    # Purchase orders pending balance report
+    def order_pending_report
+      detailed = params[:detailed]
+      project = params[:project]
+      @from = params[:from]
+      @to = params[:to]
+      supplier = params[:supplier]
+      store = params[:store]
+      order = params[:order]
+      account = params[:account]
+      status = params[:status]
+      product = params[:product]
+      petitioner = params[:petitioner]
+
+
+      # Dates are mandatory
+      if @from.blank? || @to.blank?
+        return
+      end
+
+      # Format dates
+      from = Time.parse(@from).strftime("%Y-%m-%d")
+      to = Time.parse(@to).strftime("%Y-%m-%d")
+
+      if !project.blank? && !supplier.blank? && !store.blank? && !order.blank? && !account.blank? && !status.blank? && !petitioner.blank?
+        @order_report = PurchaseOrder.pending_balance.where("purchase_orders.project_id = ? AND purchase_orders.supplier_id = ? AND purchase_orders.store_id = ? AND purchase_orders.work_order_id = ? AND purchase_orders.charge_account_id = ? AND purchase_orders.order_status_id = ? AND purchase_orders.created_by = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,supplier,store,order,account,status,petitioner,from,to).order(:order_no)
+      elsif !project.blank? && !supplier.blank? && !store.blank? && !order.blank? && !account.blank? && !status.blank? && petitioner.blank?
+        @order_report = PurchaseOrder.pending_balance.where("purchase_orders.project_id = ? AND purchase_orders.supplier_id = ? AND purchase_orders.store_id = ? AND purchase_orders.work_order_id = ? AND purchase_orders.charge_account_id = ? AND purchase_orders.order_status_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,supplier,store,order,account,status,from,to).order(:order_no)
+      elsif !project.blank? && !supplier.blank? && !store.blank? && !order.blank? && !account.blank? && status.blank? && petitioner.blank?
+        @order_report = PurchaseOrder.pending_balance.where("purchase_orders.project_id = ? AND purchase_orders.supplier_id = ? AND purchase_orders.store_id = ? AND purchase_orders.work_order_id = ? AND purchase_orders.charge_account_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,supplier,store,order,account,from,to).order(:order_no)
+      elsif !project.blank? && !supplier.blank? && !store.blank? && !order.blank? && account.blank? && status.blank? && petitioner.blank?
+        @order_report = PurchaseOrder.pending_balance.where("purchase_orders.project_id = ? AND purchase_orders.supplier_id = ? AND purchase_orders.store_id = ? AND purchase_orders.work_order_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,supplier,store,order,from,to).order(:order_no)
+      elsif !project.blank? && !supplier.blank? && !store.blank? && order.blank? && account.blank? && status.blank? && petitioner.blank?
+        @order_report = PurchaseOrder.pending_balance.where("purchase_orders.project_id = ? AND purchase_orders.supplier_id = ? AND purchase_orders.store_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,supplier,store,from,to).order(:order_no)
+      elsif !project.blank? && !supplier.blank? && store.blank? && order.blank? && account.blank? && status.blank? && petitioner.blank?
+        @order_report = PurchaseOrder.pending_balance.where("purchase_orders.project_id = ? AND purchase_orders.supplier_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,supplier,from,to).order(:order_no)
+      elsif !project.blank? && supplier.blank? && store.blank? && order.blank? && account.blank? && status.blank? && petitioner.blank?
+        @order_report = PurchaseOrder.pending_balance.where("purchase_orders.project_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,from,to).order(:order_no)
+
+
+      elsif !project.blank? && supplier.blank? && !store.blank? && order.blank? && account.blank? && status.blank? && petitioner.blank?
+        @order_report = PurchaseOrder.pending_balance.where("purchase_orders.project_id = ? AND purchase_orders.store_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,store,from,to).order(:order_no)
+
+      elsif !project.blank? && supplier.blank? && !store.blank? && !order.blank? && account.blank? && status.blank? && petitioner.blank?
+        @order_report = PurchaseOrder.pending_balance.where("purchase_orders.project_id = ? AND purchase_orders.store_id = ? AND purchase_orders.work_order_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,store,order,from,to).order(:order_no)
+      elsif !project.blank? && supplier.blank? && !store.blank? && order.blank? && !account.blank? && status.blank? && petitioner.blank?
+        @order_report = PurchaseOrder.pending_balance.where("purchase_orders.project_id = ? AND purchase_orders.store_id = ? AND purchase_orders.charge_account_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,store,account,from,to).order(:order_no)
+      elsif !project.blank? && supplier.blank? && !store.blank? && order.blank? && account.blank? && !status.blank? && petitioner.blank?
+        @order_report = PurchaseOrder.pending_balance.where("purchase_orders.project_id = ? AND purchase_orders.store_id = ? AND purchase_orders.order_status_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,store,status,from,to).order(:order_no)
+      elsif !project.blank? && supplier.blank? && !store.blank? && order.blank? && account.blank? && status.blank? && !petitioner.blank?
+        @order_report = PurchaseOrder.pending_balance.where("purchase_orders.project_id = ? AND purchase_orders.store_id = ? AND purchase_orders.created_by = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,store,petitioner,from,to).order(:order_no)
+
+      elsif project.blank? && !supplier.blank? && store.blank? && order.blank? && account.blank? && status.blank? && petitioner.blank?
+        @order_report = PurchaseOrder.pending_balance.where("purchase_orders.supplier_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",supplier,from,to).order(:order_no)
+      elsif project.blank? && supplier.blank? && store.blank? && !order.blank? && !account.blank? && !status.blank? && petitioner.blank?
+        @order_report = PurchaseOrder.pending_balance.where("purchase_orders.work_order_id = ? AND purchase_orders.charge_account_id = ? AND purchase_orders.order_status_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",order,account,status,from,to).order(:order_no)
+      elsif project.blank? && supplier.blank? && store.blank? && !order.blank? && !account.blank? && !status.blank? && !petitioner.blank?
+        @order_report = PurchaseOrder.pending_balance.where("purchase_orders.work_order_id = ? AND purchase_orders.charge_account_id = ? AND purchase_orders.order_status_id = ? AND purchase_orders.created_by = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",order,account,status,petitioner,from,to).order(:order_no)
+      elsif project.blank? && supplier.blank? && store.blank? && !order.blank? && account.blank? && status.blank? && petitioner.blank?
+        @order_report = PurchaseOrder.pending_balance.where("purchase_orders.work_order_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",order,from,to).order(:order_no)
+      elsif project.blank? && supplier.blank? && store.blank? && order.blank? && !account.blank? && status.blank? && petitioner.blank?
+        @order_report = PurchaseOrder.pending_balance.where("purchase_orders.charge_account_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",account,from,to).order(:order_no)
+      elsif project.blank? && supplier.blank? && store.blank? && order.blank? && account.blank? && !status.blank? && petitioner.blank?
+        @order_report = PurchaseOrder.pending_balance.where("purchase_orders.order_status_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",status,from,to).order(:order_no)
+      elsif project.blank? && supplier.blank? && store.blank? && order.blank? && account.blank? && status.blank? && !petitioner.blank?
+        @order_report = PurchaseOrder.pending_balance.where("purchase_orders.created_by = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",petitioner,from,to).order(:order_no)
+      end
+
+      # Setup filename
+      title = t("activerecord.models.purchase_order.few") + "_#{from}_#{to}.pdf"
+
+      respond_to do |format|
+        # Render PDF
+        format.pdf { send_data render_to_string,
+                     filename: "#{title}.pdf",
+                     type: 'application/pdf',
+                     disposition: 'inline' }
+      end
+    end
+
+    # Orders pending Items report
+    def order_pending_items_report
+      detailed = params[:detailed]
+      project = params[:project]
+      @from = params[:from]
+      @to = params[:to]
+      supplier = params[:supplier]
+      store = params[:store]
+      order = params[:order]
+      account = params[:account]
+      status = params[:status]
+      product = params[:product]
+      petitioner = params[:petitioner]
+
+      # Dates are mandatory
+      if @from.blank? || @to.blank?
+        return
+      end
+
+      # Format dates
+      from = Time.parse(@from).strftime("%Y-%m-%d")
+      to = Time.parse(@to).strftime("%Y-%m-%d")
+
+      if !project.blank? && !supplier.blank? && !store.blank? && !order.blank? && !account.blank? && !status.blank? && !petitioner.blank?
+        @order_items_report = PurchaseOrderItem.joins(:purchase_order => :purchase_order_item_balances).group('purchase_orders.id').having('sum(purchase_order_item_balances.balance) > ?', 0).where("purchase_orders.project_id = ? AND purchase_orders.supplier_id = ? AND purchase_orders.purchase_orders.store_id = ? AND purchase_orders.work_order_id = ? AND purchase_orders.charge_account_id = ? AND purchase_orders.order_status_id = ? AND purchase_orders.created_by = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,supplier,store,order,account,status,petitioner,from,to).order(:order_no)
+      elsif !project.blank? && !supplier.blank? && !store.blank? && !order.blank? && !account.blank? && !status.blank? && petitioner.blank?
+        @order_items_report = PurchaseOrderItem.joins(:purchase_order => :purchase_order_item_balances).group('purchase_orders.id').having('sum(purchase_order_item_balances.balance) > ?', 0).where("purchase_orders.project_id = ? AND purchase_orders.supplier_id = ? AND purchase_orders.purchase_orders.store_id = ? AND purchase_orders.work_order_id = ? AND purchase_orders.charge_account_id = ? AND purchase_orders.order_status_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,supplier,store,order,account,status,from,to).order(:order_no)
+      elsif !project.blank? && !supplier.blank? && !store.blank? && !order.blank? && !account.blank? && status.blank? && petitioner.blank?
+        @order_items_report = PurchaseOrderItem.joins(:purchase_order => :purchase_order_item_balances).group('purchase_orders.id').having('sum(purchase_order_item_balances.balance) > ?', 0).where("purchase_orders.project_id = ? AND purchase_orders.supplier_id = ? AND purchase_orders.purchase_orders.store_id = ? AND purchase_orders.work_order_id = ? AND purchase_orders.charge_account_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,supplier,store,order,account,from,to).order(:order_no)
+      elsif !project.blank? && !supplier.blank? && !store.blank? && !order.blank? && account.blank? && status.blank? && petitioner.blank?
+        @order_items_report = PurchaseOrderItem.joins(:purchase_order => :purchase_order_item_balances).group('purchase_orders.id').having('sum(purchase_order_item_balances.balance) > ?', 0).where("purchase_orders.project_id = ? AND purchase_orders.supplier_id = ? AND purchase_orders.store_id = ? AND purchase_orders.work_order_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,supplier,store,order,from,to).order(:order_no)
+      elsif !project.blank? && !supplier.blank? && !store.blank? && order.blank? && account.blank? && status.blank? && petitioner.blank?
+        @order_items_report = PurchaseOrderItem.joins(:purchase_order => :purchase_order_item_balances).group('purchase_orders.id').having('sum(purchase_order_item_balances.balance) > ?', 0).where("purchase_orders.project_id = ? AND purchase_orders.supplier_id = ? AND purchase_orders.store_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,supplier,store,from,to).order(:order_no)
+      elsif !project.blank? && !supplier.blank? && store.blank? && order.blank? && account.blank? && status.blank? && petitioner.blank?
+        @order_items_report = PurchaseOrderItem.joins(:purchase_order => :purchase_order_item_balances).group('purchase_orders.id').having('sum(purchase_order_item_balances.balance) > ?', 0).where("purchase_orders.project_id = ? AND purchase_orders.supplier_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,supplier,from,to).order(:order_no)
+      elsif !project.blank? && supplier.blank? && store.blank? && order.blank? && account.blank? && status.blank? && petitioner.blank?
+        @order_items_report = PurchaseOrderItem.joins(:purchase_order => :purchase_order_item_balances).group('purchase_orders.id').having('sum(purchase_order_item_balances.balance) > ?', 0).where("purchase_orders.project_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,from,to).order(:order_no)
+      elsif !project.blank? && supplier.blank? && !store.blank? && order.blank? && account.blank? && status.blank? && petitioner.blank?
+        @order_items_report = PurchaseOrderItem.joins(:purchase_order => :purchase_order_item_balances).group('purchase_orders.id').having('sum(purchase_order_item_balances.balance) > ?', 0).where("purchase_orders.project_id = ? AND purchase_orders.store_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,store,from,to).order(:order_no)
+
+      elsif !project.blank? && supplier.blank? && !store.blank? && !order.blank? && account.blank? && status.blank? && petitioner.blank?
+        @order_items_report = PurchaseOrderItem.joins(:purchase_order => :purchase_order_item_balances).group('purchase_orders.id').having('sum(purchase_order_item_balances.balance) > ?', 0).where("purchase_orders.project_id = ? AND purchase_orders.store_id = ? AND purchase_orders.work_order_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,store,order,from,to).order(:order_no)
+      elsif !project.blank? && supplier.blank? && !store.blank? && order.blank? && !account.blank? && status.blank? && petitioner.blank?
+        @order_items_report = PurchaseOrderItem.joins(:purchase_order => :purchase_order_item_balances).group('purchase_orders.id').having('sum(purchase_order_item_balances.balance) > ?', 0).where("purchase_orders.project_id = ? AND purchase_orders.store_id = ? AND purchase_orders.charge_account_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,store,account,from,to).order(:order_no)
+      elsif !project.blank? && supplier.blank? && !store.blank? && order.blank? && account.blank? && !status.blank? && petitioner.blank?
+        @order_items_report = PurchaseOrderItem.joins(:purchase_order => :purchase_order_item_balances).group('purchase_orders.id').having('sum(purchase_order_item_balances.balance) > ?', 0).where("purchase_orders.project_id = ? AND purchase_orders.store_id = ? AND purchase_orders.order_status_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,store,status,from,to).order(:order_no)
+      elsif !project.blank? && supplier.blank? && !store.blank? && order.blank? && account.blank? && status.blank? && !petitioner.blank?
+        @order_items_report = PurchaseOrderItem.joins(:purchase_order => :purchase_order_item_balances).group('purchase_orders.id').having('sum(purchase_order_item_balances.balance) > ?', 0).where("purchase_orders.project_id = ? AND purchase_orders.store_id = ? AND purchase_orders.created_by = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,store,petitioner,from,to).order(:order_no)
+
+      elsif project.blank? && !supplier.blank? && store.blank? && order.blank? && account.blank? && status.blank? && petitioner.blank?
+        @order_items_report = PurchaseOrderItem.joins(:purchase_order => :purchase_order_item_balances).group('purchase_orders.id').having('sum(purchase_order_item_balances.balance) > ?', 0).where("purchase_orders.supplier_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",supplier,from,to).order(:order_no)
+      elsif project.blank? && supplier.blank? && store.blank? && !order.blank? && !account.blank? && !status.blank? && petitioner.blank?
+        @order_items_report = PurchaseOrderItem.joins(:purchase_order => :purchase_order_item_balances).group('purchase_orders.id').having('sum(purchase_order_item_balances.balance) > ?', 0).where("purchase_orders.work_order_id = ? AND purchase_orders.charge_account_id = ? AND purchase_orders.order_status_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",order,account,status,from,to).order(:order_no)
+      elsif project.blank? && supplier.blank? && store.blank? && !order.blank? && !account.blank? && !status.blank? && !petitioner.blank?
+        @order_items_report = PurchaseOrderItem.joins(:purchase_order => :purchase_order_item_balances).group('purchase_orders.id').having('sum(purchase_order_item_balances.balance) > ?', 0).where("purchase_orders.work_order_id = ? AND purchase_orders.charge_account_id = ? AND purchase_orders.order_status_id = ? AND purchase_orders.created_by = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",order,account,status,petitioner,from,to).order(:order_no)
+      elsif project.blank? && supplier.blank? && store.blank? && !order.blank? && account.blank? && status.blank? && petitioner.blank?
+        @order_items_report = PurchaseOrderItem.joins(:purchase_order => :purchase_order_item_balances).group('purchase_orders.id').having('sum(purchase_order_item_balances.balance) > ?', 0).where("purchase_orders.work_order_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",order,from,to).order(:order_no)
+      elsif project.blank? && supplier.blank? && store.blank? && order.blank? && !account.blank? && status.blank? && petitioner.blank?
+        @order_items_report = PurchaseOrderItem.joins(:purchase_order => :purchase_order_item_balances).group('purchase_orders.id').having('sum(purchase_order_item_balances.balance) > ?', 0).where("purchase_orders.charge_account_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",account,from,to).order(:order_no)
+      elsif project.blank? && supplier.blank? && store.blank? && order.blank? && account.blank? && !status.blank? && petitioner.blank?
+        @order_items_report = PurchaseOrderItem.joins(:purchase_order => :purchase_order_item_balances).group('purchase_orders.id').having('sum(purchase_order_item_balances.balance) > ?', 0).where("purchase_orders.order_status_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",status,from,to).order(:order_no)
+      elsif project.blank? && supplier.blank? && store.blank? && order.blank? && account.blank? && status.blank? && !petitioner.blank?
+        @order_items_report = PurchaseOrderItem.joins(:purchase_order => :purchase_order_item_balances).group('purchase_orders.id').having('sum(purchase_order_item_balances.balance) > ?', 0).where("purchase_orders.created_by = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",petitioner,from,to).order(:order_no)
+      end
+
+      # Setup filename
+      title = t("activerecord.models.purchase_order.few") + "_#{from}_#{to}.pdf"
+
+      respond_to do |format|
+        # Render PDF
+        format.pdf { send_data render_to_string,
+                     filename: "#{title}.pdf",
+                     type: 'application/pdf',
+                     disposition: 'inline' }
+      end
+    end
+
 
     # Receipt notes report
     def receipt_report
@@ -649,6 +807,7 @@ module Ag2Products
       _array = []
       _array = _array << t("activerecord.models.inventory_count.few")
       _array = _array << t("activerecord.models.purchase_order.few")
+      _array = _array << t("activerecord.models.purchase_order.pending")
       _array = _array << t("activerecord.models.receipt_note.few")
       _array = _array << t("activerecord.models.delivery_note.few")
       _array = _array << t("ag2_products.ag2_products_track.stock_report.report_title")

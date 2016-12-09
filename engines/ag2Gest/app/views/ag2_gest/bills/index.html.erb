@@ -13,8 +13,8 @@ $(document).ready(function () {
 
 <%= render '/layouts/ag2_gest/billsbreadcrumb' %>
 
+<% if @bills.first.bill %> <h3><%= t(".titlebill") %></h3> <% else %> <h3><%= t(".title") %></h3> <% end %>
 
-<h3><%= t(".title") %></h3>
 <div class="span12">
   <div id="loader"></div>
   <div id="div_table">

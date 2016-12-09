@@ -76,8 +76,8 @@ module Ag2Gest
     def show
       @breadcrumb = 'read'
       @meter = Meter.find(params[:id])
-      @details = @meter.meter_details.by_dates
-      @readings = @meter.readings.by_period_date
+      @details = @meter.meter_details.paginate(:page => params[:page], :per_page => per_page).by_dates
+      @readings = @meter.readings.paginate(:page => params[:page], :per_page => per_page).by_period_date
 
       respond_to do |format|
         format.html # show.html.erb
@@ -114,7 +114,7 @@ module Ag2Gest
       @meter.created_by = current_user.id if !current_user.nil?
       respond_to do |format|
         if @meter.save
-          format.html { redirect_to @meter, notice: t('activerecord.attributes.meter.create') }
+          format.html { redirect_to @meter, notice: crud_notice('created', @meter) }
           format.json { render json: @meter, status: :created, location: @meter }
         else
           format.html { render action: "new" }

@@ -6,6 +6,7 @@ es:
         one:   Pedido
         few:   Pedidos
         other: Pedidos
+        pending: Pedidos Pendientes
         check_for_receipt_notes: "Pedido no puede ser eliminado mientras existan notas de recepción vinculadas."
     attributes:
       purchase_order:

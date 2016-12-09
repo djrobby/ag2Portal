@@ -101,6 +101,7 @@ class TariffScheme < ActiveRecord::Base
     unless tariffs.blank?
       tariffs.select{|t| t.try(:billable_item).try(:billable_concept).try(:billable_document).to_s == '1'}
       .select{|t| t.caliber_id.nil? || t.caliber.try(:id) == caliber_id}
+      .sort{|a,b| a.percentage_applicable_formula && b.percentage_applicable_formula ? a.percentage_applicable_formula <=> b.percentage_applicable_formula : a.percentage_applicable_formula ? 1 : -1 }
       .group_by{|t| t.try(:billable_item).try(:biller_id)}
     else
       []

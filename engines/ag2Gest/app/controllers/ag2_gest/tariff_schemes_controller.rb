@@ -76,6 +76,8 @@ module Ag2Gest
     def show
       @breadcrumb = 'read'
       @tariff_scheme = TariffScheme.find(params[:id])
+      @billable_items = @tariff_scheme.project.billable_items.joins(:billable_concept).order("billable_concepts.billable_document")
+      @billable_concept_percentage = @billable_items.where("billable_concepts.billable_document = 1").map(&:billable_concept)
 
       #Call Method Model, group if contains any tariff_active
       @tariffs = @tariff_scheme.contain_tariffs_active
@@ -104,6 +106,7 @@ module Ag2Gest
       @breadcrumb = 'update'
       @tariff_scheme = TariffScheme.find(params[:id])
       @billable_items = @tariff_scheme.project.billable_items.joins(:billable_concept).order("billable_concepts.billable_document")
+      @billable_concept_percentage = @billable_items.where("billable_concepts.billable_document = 1").map(&:billable_concept)
       @caliber = Caliber.all
       @billable_items.each do |b|
         if b.tariffs_by_caliber

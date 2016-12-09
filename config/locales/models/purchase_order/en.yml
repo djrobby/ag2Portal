@@ -6,6 +6,7 @@ en:
         one:   Purchase order
         few:   Purchase orders
         other: Purchase orders
+        pending: Pending Purchase orders
         check_for_receipt_notes: "Purchase order cannot be destroyed while linked receipt notes exist."
     attributes:
       purchase_order:

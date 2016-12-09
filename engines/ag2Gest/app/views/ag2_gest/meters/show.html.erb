@@ -51,6 +51,35 @@
 delete_path: @meter, delete_txt: t('.btn_delete'), msg: t("activerecord.models.meter.one"), :txt => @meter.meter_code,
 new_path: new_meter_path, new_txt: t('ag2_gest.meters.index.btn_new') } %>
 
+<!-- Details -->
+<% if (@details.count > 0) %>
+<h4><%=t '.subtable_title_details' %></h4>
+<table class="table table-condensed table-striped shrinked">
+  <thead>
+    <%= render '/layouts/ag2_gest/meter_detailsheader' %>
+  </thead>
+  <tbody>
+    <%= render :partial => '/layouts/ag2_gest/meter_details', :locals => { :details => @details } %>
+  </tbody>
+</table>
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @details } %>
+<% end %>
+
+<!-- Readings -->
+<% if (@readings.count > 0) %>
+<h4><%=t '.subtable_title_readings' %></h4>
+<table class="table table-condensed table-striped shrinked">
+  <thead>
+    <%= render :partial => '/layouts/ag2_gest/readingsheader', :locals => { :source => 'M' } %>
+  </thead>
+  <tbody>
+    <%= render :partial => '/layouts/ag2_gest/readings', :locals => { :readings => @readings, :source => 'M' } %>
+  </tbody>
+</table>
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @readings } %>
+<% end %>
+
+<!-- Return to links -->
 <% if !session[:return_to].nil? %>
   <%= link_to session[:return_to], session[:return_to_url] %> |
 <% end %>
@@ -60,75 +89,5 @@ new_path: new_meter_path, new_txt: t('ag2_gest.meters.index.btn_new') } %>
 <% if !session[:return_to_reading].nil? %>
   <%= link_to session[:return_to_reading], session[:return_to_reading_url] %> |
 <% end %>
+
 <%= link_to I18n.t('ag2_gest.meters.back_to_main_page'), meters_path %>
-
-<!-- Associated MeterDetails -->
-<% unless @meter.meter_details.blank? %>
-
-  <!-- <h4>Histórico de contador</h4> -->
-  <h4>Lecturas</h4>
-  <div class="row-fluid">
-    <div class="span12">
-      <!-- <table class="table table-condensed table-striped">
-        <thead>
-          <tr>
-            <th><%= t('activerecord.attributes.meter_detail.id') %></th>
-            <th><%= t('activerecord.attributes.meter_detail.subscriber_id') %></th>
-            <th><%= t('activerecord.attributes.meter_detail.meter_location_id') %></th>
-            <th class="center"><%= t('activerecord.attributes.meter_detail.installation_reading') %></th>
-            <th class="center"><%= t('activerecord.attributes.meter_detail.withdrawal_reading') %></th>
-            <th class="center"><%= t('activerecord.attributes.meter_detail.installation_date') %></th>
-            <th class="center"><%= t('activerecord.attributes.meter_detail.withdrawal_date') %></th>
-          </tr>
-        </thead>
-        <tbody> -->
-      <table class="table table-condensed table-striped shrinked">
-        <thead>
-          <tr>
-            <th><%= t('activerecord.attributes.reading.subscriber_id') %></th>
-            <th><%= t('activerecord.attributes.reading.meter_id') %></th>
-            <th><%= t('activerecord.attributes.reading.billing_period_id') %></th>
-            <th><%= t('activerecord.attributes.reading.reading_date') %></th>
-            <th align="right"><%= t('activerecord.attributes.reading.reading') %></th>
-            <th></th>
-            <th align="right"><%= t('activerecord.attributes.reading.reading_1') %></th>
-            <th align="right"><%= t('activerecord.attributes.reading.consumption') %></th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          <%# @meter.meter_details.order("installation_date DESC").each do |meter| %>
-            <!-- <tr>
-              <td><%#=meter_detail.try(:id)%></td>
-              <td><%#= link_to meter_detail.try(:subscriber).try(:to_label), ag2_gest.subscriber_path(meter_detail.subscriber) %></td>
-              <td><%#=meter_detail.try(:meter_location).try(:name)%></td>
-              <td class="center"><%#= meter_detail.try(:installation_reading) %></td>
-              <td class="center"><%#= meter_detail.try(:withdrawal_reading) %></td>
-              <td class="center"><%#=l meter_detail.try(:installation_date) unless meter_detail.try(:installation_date).blank? %></td>
-              <td class="center"><%#=l meter_detail.try(:withdrawal_date) unless meter_detail.try(:withdrawal_date).blank? %></td>
-            </tr> -->
-          <% @meter.readings.order("reading_date DESC").each do |reading| %>
-            <tr>
-              <td><%= reading.try(:subscriber).try(:to_label) %></td> <!-- subscriber.name -->
-              <td><%= reading.try(:meter).try(:meter_code) %></td>
-              <td><%= reading.try(:billing_period).try(:period) %></td>
-              <td><%= reading.try(:reading_date).strftime("%d/%m/%Y %H:%M") unless reading.try(:reading_date).blank? %></td>
-              <td align="right"><%= reading.try(:reading_index) %></td>
-              <td>
-                <% unless reading.try(:reading_incidence_types).blank? %>
-                  <i title="<%= reading.reading_incidence_types.pluck(:name).join(", ") %>" class="icon-warning-sign"></i>
-                <% end %>
-              </td>
-              <td align="right"><%= reading.try(:reading_1).try(:reading_index) %></td>
-              <td align="right"><%= reading.try(:consumption) %></td>
-              <td><%= link_to reading_path(reading), class: "btn btn-mini" do %><i class="icon-eye-open"></i><% end %>
-              <%= render :partial => '/layouts/crud/edit', :locals => { :model => Reading, :path => edit_reading_path(reading) } %>
-              <%= render :partial => '/layouts/crud/delete', :locals => { :model => Reading, :path => reading, :msg => t("activerecord.models.reading.one"), :txt => reading.id } %> </td>
-            </tr>
-          <% end %>
-        </tbody>
-      </table>
-    </div>
-  </div>
-
-<% end %>

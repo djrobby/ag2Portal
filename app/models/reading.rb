@@ -19,7 +19,7 @@ class Reading < ActiveRecord::Base
 
   #:reading_incidence_types_attributtes
 
-  attr_accessor :reading_index_add, :reading_date_add
+  attr_accessor :reading_index_add, :reading_date_add, :meter_location_id
 
   has_many :reading_incidences
   has_one :bill, foreign_key: "reading_2_id"
@@ -137,8 +137,8 @@ class Reading < ActiveRecord::Base
         payday_limit: billing_period.try(:prebilling_ending_date),
         invoice_operation_id: operation_id,
         billing_period_id: billing_period_id,
-        consumption: consumption,
-        consumption_real: consumption,
+        consumption: consumption_total_period,
+        consumption_real: consumption_total_period,
         consumption_estimated: nil,#¿¿¿???
         consumption_other: nil,#¿¿¿???
         biller_id: tariffs_biller[0],
@@ -158,8 +158,8 @@ class Reading < ActiveRecord::Base
             code: tariff.try(:billable_item).try(:billable_concept).try(:code),
             description: tariff.try(:billable_item).try(:billable_concept).try(:name),
             tariff_id: tariff.id,
-            price: tariff.fixed_fee,
-            quantity: billing_frequency.total_months,
+            price: (tariff.fixed_fee / tariff.billing_frequency.total_months),
+            quantity: subscriber.billing_frequency.total_months,
             tax_type_id: tariff.try(:tax_type_f_id),
             discount_pct: tariff.try(:discount_pct_f),
             discount: 0.0,#¿¿¿???
@@ -167,44 +167,84 @@ class Reading < ActiveRecord::Base
             subcode: "CF",
             measure_id: tariff.billing_frequency.fix_measure_id)
         end
-        limit_before = 0
-        (1..8).each do |i|
-          # if limit nil (last block) or limit > consumption
-          if tariff.instance_eval("block#{i}_limit").nil? || tariff.instance_eval("block#{i}_limit") > (consumption || 0)
-            PreInvoiceItem.create(
-              pre_invoice_id: pre_invoice.id,
-              code: tariff.try(:billable_item).try(:billable_concept).try(:code),
-              description: tariff.try(:billable_item).try(:billable_concept).try(:name),
-              tariff_id: tariff.id,
-              price:  tariff.instance_eval("block#{i}_fee"),
-              quantity: ((consumption || 0) - limit_before),
-              tax_type_id: tariff.try(:tax_type_b_id),
-              discount_pct: tariff.try(:discount_pct_b),
-              discount: 0.0,#¿¿¿???
-              product_id: nil,
-              subcode: "BL"+i.to_s,
-              measure_id: tariff.billing_frequency.var_measure_id)
-            break
-          else
-            PreInvoiceItem.create(
-              pre_invoice_id: pre_invoice.id,
-              code: tariff.try(:billable_item).try(:billable_concept).try(:code),
-              description: tariff.try(:billable_item).try(:billable_concept).try(:name),
-              tariff_id: tariff.id,
-              price:  tariff.instance_eval("block#{i}_fee"),
-              quantity: tariff.instance_eval("block#{i}_limit") - limit_before,
-              tax_type_id: tariff.try(:tax_type_b_id),
-              discount_pct: tariff.try(:discount_pct_b),
-              discount: 0.0,#¿¿¿???
-              product_id: nil,
-              subcode: "BL"+i.to_s,
-              measure_id: tariff.billing_frequency.var_measure_id)
-            limit_before = tariff.instance_eval("block#{i}_limit")
+        if tariff.block1_fee > 0
+          limit_before = 0
+          (1..8).each do |i|
+            # if limit nil (last block) or limit > consumption
+            if tariff.instance_eval("block#{i}_limit").nil? || tariff.instance_eval("block#{i}_limit") > (consumption_total_period || 0)
+              PreInvoiceItem.create(
+                pre_invoice_id: pre_invoice.id,
+                code: tariff.try(:billable_item).try(:billable_concept).try(:code),
+                description: tariff.try(:billable_item).try(:billable_concept).try(:name),
+                tariff_id: tariff.id,
+                price:  tariff.instance_eval("block#{i}_fee"),
+                quantity: ((consumption_total_period || 0) - limit_before),
+                tax_type_id: tariff.try(:tax_type_b_id),
+                discount_pct: tariff.try(:discount_pct_b),
+                discount: 0.0,#¿¿¿???
+                product_id: nil,
+                subcode: "BL"+i.to_s,
+                measure_id: tariff.billing_frequency.var_measure_id)
+              break
+            else
+              PreInvoiceItem.create(
+                pre_invoice_id: pre_invoice.id,
+                code: tariff.try(:billable_item).try(:billable_concept).try(:code),
+                description: tariff.try(:billable_item).try(:billable_concept).try(:name),
+                tariff_id: tariff.id,
+                price:  tariff.instance_eval("block#{i}_fee"),
+                quantity: tariff.instance_eval("block#{i}_limit") - limit_before,
+                tax_type_id: tariff.try(:tax_type_b_id),
+                discount_pct: tariff.try(:discount_pct_b),
+                discount: 0.0,#¿¿¿???
+                product_id: nil,
+                subcode: "BL"+i.to_s,
+                measure_id: tariff.billing_frequency.var_measure_id)
+              limit_before = tariff.instance_eval("block#{i}_limit")
+            end
           end
+        elsif tariff.percentage_fee > 0 and !tariff.percentage_applicable_formula.blank?
+          PreInvoiceItem.create(
+            pre_invoice_id: pre_invoice.id,
+            code: tariff.try(:billable_item).try(:billable_concept).try(:code),
+            description: tariff.try(:billable_item).try(:billable_concept).try(:name),
+            tariff_id: tariff.id,
+            price:  (tariff.percentage_fee/100),
+            quantity: pre_bill.total_by_concept(tariff.percentage_applicable_formula),
+            tax_type_id: tariff.try(:tax_type_p_id),
+            discount_pct: tariff.try(:discount_pct_p),
+            discount: 0.0,#¿¿¿???
+            product_id: nil,
+            subcode: "VP",
+            measure_id: tariff.billing_frequency.var_measure_id)
+        elsif tariff.variable_fee > 0
+          PreInvoiceItem.create(
+            pre_invoice_id: pre_invoice.id,
+            code: tariff.try(:billable_item).try(:billable_concept).try(:code),
+            description: tariff.try(:billable_item).try(:billable_concept).try(:name),
+            tariff_id: tariff.id,
+            price:  tariff.variable_fee,
+            quantity: consumption_total_period,
+            tax_type_id: tariff.try(:tax_type_v_id),
+            discount_pct: tariff.try(:discount_pct_v),
+            discount: 0.0,#¿¿¿???
+            product_id: nil,
+            subcode: "CV",
+            measure_id: tariff.billing_frequency.var_measure_id)
         end
       end
     end
     return pre_bill
+  end
+
+  def consumption_total_period
+    # @readings = Reading.where(billing_period_id: billing_period_id, subscriber_id: subscriber_ids).where('reading_type_id NOT IN (?)',[1,2,5,6]).group_by(&:reading_1_id)
+    readings = subscriber.readings.where(billing_period_id: billing_period_id).where('reading_type_id IN (?)',[1,2,5,6]).order(:reading_date).group_by(&:reading_1_id)
+    total = 0
+    readings.each do |reading|
+      total += reading[1].last.consumption
+    end
+    return total
   end
 
   searchable do

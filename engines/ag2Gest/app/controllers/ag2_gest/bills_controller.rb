@@ -157,7 +157,11 @@ module Ag2Gest
       # period = Period.find(params[:subscribers][:period])
       billing_period_id = params[:subscribers][:period]
       subscriber_ids = params[:subscribers][:ids].reject(&:empty?)
-      @readings = Reading.where(billing_period_id: billing_period_id).where(subscriber_id: subscriber_ids).where('reading_type_id NOT IN (?)',ReadingType::INSTALACION)
+      @readings = [] #Reading.where(billing_period_id: billing_period_id, subscriber_id: subscriber_ids).where('reading_type_id NOT IN (?)',[1,2,5,6]).order(:reading_date)
+      subscribers  = Subscriber.where(id: subscriber_ids)
+      subscribers.each do |subscriber|
+        @readings << subscriber.readings.where(billing_period_id: billing_period_id).where('reading_type_id IN (?)',[1,2,5,6]).order(:reading_date).last
+      end
     end
 
     def index
@@ -170,11 +174,14 @@ module Ag2Gest
           @bills = PreBill.all.paginate(:page => params[:page] || 1, :per_page => 20)
         end
       end
-
-      respond_to do |format|
-        format.html # index.html.erb
-        format.json { render json: @bills }
-        format.js
+      if @bills.empty?
+        redirect_to pre_index_bills_path, notice: I18n.t("ag2_gest.bills.index.no_pre_group")
+      else
+        respond_to do |format|
+          format.html # index.html.erb
+          format.json { render json: @bills }
+          format.js
+        end
       end
     end
 

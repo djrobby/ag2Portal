@@ -181,6 +181,10 @@ es:
         confirm: "Confirmar"
         cancel: "Cancelar"
         accept: "Aceptar"
+        add_meter_successful: "Contador añadido correctamente"
+        add_meter_failure: "No se ha podido añadir el contador"
+        quit_meter_successful: "Contador añadido correctamente"
+        quit_meter_failure: "No se ha podido añadir el contador"
 
     report:
       subscriber:

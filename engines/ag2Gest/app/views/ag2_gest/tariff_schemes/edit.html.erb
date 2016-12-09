@@ -117,7 +117,7 @@
       			<%= p.input :fixed_fee, label_html: { class: 'form-label' }, label: t('activerecord.attributes.tariff_scheme.fixed_fee') %>
 			  		<%= p.input :variable_fee, label_html: { class: 'form-label' }, label: t('activerecord.attributes.tariff_scheme.variable_fee') %>
 			  		<%= p.input :percentage_fee, label_html: { class: 'form-label' }, label: t('activerecord.attributes.tariff_scheme.percentage_fee') %>
-			  		<%= p.input :percentage_applicable_formula, label_html: { class: 'form-label' }, label: t('activerecord.attributes.tariff_scheme.percentage_applicable_formula') %>
+			  		<%= p.input :percentage_applicable_formula, collection: @billable_concept_percentage, label_html: { class: 'form-label' }, label: t('activerecord.attributes.tariff_scheme.percentage_applicable_formula') %>
       		</div>
 
       		<div class="span3">

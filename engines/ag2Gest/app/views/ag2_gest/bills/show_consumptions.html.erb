@@ -20,29 +20,29 @@
 <h3>Facturación masiva - Consumos</h3>
 <div class="container-fluid">
   <div class="row-fluid">
-		<div class="span12" id="div_table">
-			<table class="table table-condensed table-striped shrinked stu">
-			  <thead>
-			    <tr>
-			      <th>Ruta</th>
-			      <th>Orden</th>
+    <div class="span12" id="div_table">
+      <table class="table table-condensed table-striped shrinked stu">
+        <thead>
+          <tr>
+            <th>Ruta</th>
+            <th>Orden</th>
             <th>Abonado</th>
             <th>Dirección suministro</th>
             <th>Contador</th>
             <th>Periodo</th>
-			      <th align="right">Lec. año ant.</th>
-			      <th align="right">Lec. per. ant.</th>
+            <th align="right">Lec. año ant.</th>
+            <th align="right">Lec. per. ant.</th>
             <th align="right">Lectura</th>
             <th align="right">Consumo</th>
-			    </tr>
-			  </thead>
-			  <tbody>
-			    <% @readings.each do |reading| %>
-			    	<tr>
-  			    		<td>
+          </tr>
+        </thead>
+        <tbody>
+          <% @readings.each do |reading| %>
+            <tr>
+                <td>
                   <%= reading.try(:reading_route).try(:route_code) %>
                 </td>
-  				      <td>
+                <td>
                   <%= reading.reading_sequence %>
                 </td>
                 <td>
@@ -51,29 +51,29 @@
                 <td>
                   <%= reading.try(:subscriber).try(:street_directory).try(:street_name) %>
                 </td>
-  				      <td>
+                <td>
                   <%= reading.try(:meter).try(:meter_code) %>
                 </td>
                 <td>
                   <%= reading.try(:billing_period).try(:period) %>
                 </td>
-  				      <td align="right">
+                <td align="right">
                   <%= "#{reading.reading_index_2}"  %>
                 </td>
-  				      <td align="right">
+                <td align="right">
                   <%= "#{reading.reading_index_1}" %>
                 </td>
                 <td align="right">
                   <%= "#{reading.reading_index}" %>
                 </td>
                 <td align="right">
-                  <%= "#{reading.consumption}" %>
+                  <%= "#{reading.consumption_total_period}" %>
                 </td>
             </tr>
-			    <% end %>
-			  </tbody>
-			</table>
-		</div>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
     <div class="row">
       <a class="btn btn-warning pull-right">Exportar Google Sheets</a>
       <%= simple_form_for :bill, url: bills_path, method: :post do |f| %>

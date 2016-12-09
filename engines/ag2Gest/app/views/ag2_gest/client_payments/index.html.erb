@@ -160,46 +160,52 @@ $(document).ready(function () {
     $.getScript(this.href);
     return false;
   });
-
-   // when #report_btn is clicked
+    // when #print_report_btn is clicked
     $("#print_report_btn").click(function() {
       // make a POST call and get report
-      var report = $('#Report :selected').index();
-      if (report == "")
-        return;
-      switch (report) {
-        case 1:
-          // bill
-          window.open("bill_report.pdf", "_blank");
-          return false;
-          break;
-
-          case 2:
-          // bill pending
-          window.open("bill_pending_report.pdf", "_blank");
-          return false;
-          break;
-
-          case 3:
-          // bill unpaid
-          window.open("bill_unpaid_report.pdf", "_blank");
-          return false;
-          break;
-
-          case 4:
-          // bill charged
-          window.open("bill_charged_report.pdf", "_blank");
-          return false;
-          break;
-
-          case 5:
-          // client_payment
-          window.open("client_payment_report.pdf", "_blank");
-          return false;
-          break;
-      }
+      window.open("client_payment_report.pdf", "_blank");
       return false;
-  });
+    });
+
+  //  // when #report_btn is clicked
+  //   $("#print_report_btn").click(function() {
+  //     // make a POST call and get report
+  //     var report = $('#Report :selected').index();
+  //     if (report == "")
+  //       return;
+  //     switch (report) {
+  //       case 1:
+  //         // bill
+  //         window.open("bill_report.pdf", "_blank");
+  //         return false;
+  //         break;
+
+  //         case 2:
+  //         // bill pending
+  //         window.open("bill_pending_report.pdf", "_blank");
+  //         return false;
+  //         break;
+
+  //         case 3:
+  //         // bill unpaid
+  //         window.open("bill_unpaid_report.pdf", "_blank");
+  //         return false;
+  //         break;
+
+  //         case 4:
+  //         // bill charged
+  //         window.open("bill_charged_report.pdf", "_blank");
+  //         return false;
+  //         break;
+
+  //         case 5:
+  //         // client_payment
+  //         window.open("client_payment_report.pdf", "_blank");
+  //         return false;
+  //         break;
+  //     }
+  //     return false;
+  // });
 
 });
 </script>
@@ -282,9 +288,10 @@ $(document).ready(function () {
         <% end %>
 
       <!-- Report -->
-      <%= label_tag I18n.t("ag2_gest.client_payments.report.report"), nil, :class => 'form-label-under-sel2' %>
-      <%= select_tag "Report", options_for_select(@reports), :prompt => "", :class => 'x-large-text-field shrinked sel3' %>
-        <br /><br />
+      <!--
+      <%#= label_tag I18n.t("ag2_gest.client_payments.report.report"), nil, :class => 'form-label-under-sel2' %>
+      <%#= select_tag "Report", options_for_select(@reports), :prompt => "", :class => 'x-large-text-field shrinked sel3' %>
+        <br /><br /> -->
         <!-- Control&Tracking -->
         <a href="#" id="print_report_btn" class="btn btn-warning"><i class="icon-print icon-white"></i> <%= t 'ag2_gest.home.index.control' %></a>
         <br /><br />

@@ -115,29 +115,33 @@ module Ag2Gest
                               where("date(reading_date) = ?", params[:reading][:reading_date].split(' ')[0].to_date)
 
 
-      @reading = Reading.new(params[:reading])
-      if !params[:incidence_type_ids].blank? #[]
-        @my_read_inci_type = ReadingIncidenceType.where(id: params[:incidence_type_ids])
-        @reading.reading_incidence_types << @my_read_inci_type
-      end
+      if @reading_exits.blank?
 
-      rdg_1 = set_reading_1_to_reading(@subscriber,@meter,@billing_period)
-      rdg_2 = set_reading_2_to_reading(@subscriber,@meter,@billing_period)
-      @reading.reading_1 = rdg_1
-      @reading.reading_index_1 = rdg_1.try(:reading_index)
-      @reading.reading_2 = rdg_2
-      @reading.reading_index_2 = rdg_2.try(:reading_index)
-      @reading.reading_sequence = @subscriber.reading_sequence
-      @reading.reading_variant = @subscriber.reading_variant
-      @reading.created_by = current_user.id if !current_user.nil?
+        @reading = Reading.new(params[:reading])
+        if !params[:incidence_type_ids].blank? #[]
+          @my_read_inci_type = ReadingIncidenceType.where(id: params[:incidence_type_ids])
+          @reading.reading_incidence_types << @my_read_inci_type
+        end
 
-      if @reading_exits.blank? and @reading.save
+        rdg_1 = set_reading_1_to_reading(@subscriber,@meter,@billing_period)
+        rdg_2 = set_reading_2_to_reading(@subscriber,@meter,@billing_period)
+        @reading.reading_1 = rdg_1
+        @reading.reading_index_1 = rdg_1.try(:reading_index)
+        @reading.reading_2 = rdg_2
+        @reading.reading_index_2 = rdg_2.try(:reading_index)
+        @reading.reading_sequence = @subscriber.reading_sequence
+        @reading.reading_variant = @subscriber.reading_variant
+        @reading.reading_route_id = @subscriber.reading_route_id
+        @reading.billing_frequency_id = @billing_period.try(:billing_frequency_id)
+        @reading.created_by = current_user.id if !current_user.nil?
 
-        respond_to do |format|
-          if session[:return_to_subscriber].nil?
-            format.html { redirect_to @reading, notice: t('activerecord.attributes.reading.successfully') }
-          else
-            format.html { redirect_to session[:return_to_subscriber_url], notice: t('activerecord.attributes.reading.successfully') }
+        if @reading.save
+          respond_to do |format|
+            if session[:return_to_subscriber].nil?
+              format.html { redirect_to @reading, notice: t('activerecord.attributes.reading.successfully') }
+            else
+              format.html { redirect_to session[:return_to_subscriber_url], notice: t('activerecord.attributes.reading.successfully') }
+            end
           end
         end
       else
@@ -167,23 +171,55 @@ module Ag2Gest
     def update
       @breadcrumb = 'update'
       @reading = Reading.find(params[:id])
-      incidences = params[:reading][:reading_incidences_ids]
-      params[:reading].delete :reading_incidences_ids
+      @subscriber = Subscriber.find(params[:reading][:subscriber_id])
+      @meter = Meter.find(params[:reading][:meter_id])
+      @project = Project.find(params[:reading][:project_id])
+      @billing_period = BillingPeriod.find(params[:reading][:billing_period_id])
+      @reading_exits = Reading.where( meter_id: params[:reading][:meter_id],
+                                      project_id: params[:reading][:project_id],
+                                      billing_period_id: params[:reading][:billing_period_id],
+                                      reading_type_id: params[:reading][:reading_type_id]).
+                              where("date(reading_date) = ?", params[:reading][:reading_date].split(' ')[0].to_date)
 
-      @reading.reading_incidence_types = ReadingIncidenceType.find_all_by_id incidences
+      @reading_exits -= [@reading]
+      if @reading_exits.blank?
 
-      respond_to do |format|
-        if @reading.update_attributes(params[:reading])
-          if session[:return_to_subscriber].nil?
-            format.html { redirect_to @reading,
-                          notice: (crud_notice('updated', @reading) + "#{undo_link(@reading)}").html_safe }
+        incidences = params[:reading][:reading_incidences_ids]
+        params[:reading].delete :reading_incidences_ids
+
+        @reading.assign_attributes params[:reading]
+        @reading.reading_incidence_types = ReadingIncidenceType.find_all_by_id incidences
+
+        rdg_1 = set_reading_1_to_reading(@subscriber,@meter,@billing_period)
+        rdg_2 = set_reading_2_to_reading(@subscriber,@meter,@billing_period)
+        @reading.reading_1 = rdg_1
+        @reading.reading_index_1 = rdg_1.try(:reading_index)
+        @reading.reading_2 = rdg_2
+        @reading.reading_index_2 = rdg_2.try(:reading_index)
+        @reading.billing_frequency_id = @billing_period.try(:billing_frequency_id)
+        @reading.updated_by = current_user.id if !current_user.nil?
+
+        respond_to do |format|
+          if @reading.save
+            if session[:return_to_subscriber].nil?
+              format.html { redirect_to @reading,
+                            notice: (crud_notice('updated', @reading) + "#{undo_link(@reading)}").html_safe }
+            else
+              format.html { redirect_to session[:return_to_subscriber_url], notice: (crud_notice('updated', @reading) + "#{undo_link(@reading)}").html_safe }
+            end
+            format.json { head :no_content }
           else
-            format.html { redirect_to session[:return_to_subscriber_url], notice: t('activerecord.attributes.reading.successfully') }
+            format.html { render action: "edit" }
+            format.json { render json: @reading.errors, status: :unprocessable_entity }
           end
-          format.json { head :no_content }
-        else
-          format.html { render action: "edit" }
-          format.json { render json: @reading.errors, status: :unprocessable_entity }
+        end
+      else
+        respond_to do |format|
+          if session[:return_to_subscriber].nil?
+            format.html { redirect_to @reading, alert: t('activerecord.attributes.reading.repeat') }
+          else
+            format.html { redirect_to session[:return_to_subscriber_url], alert: t('activerecord.attributes.reading.repeat') }
+          end
         end
       end
     end
@@ -194,12 +230,12 @@ module Ag2Gest
       @reading = Reading.find(params[:id])
 
       respond_to do |format|
-        if @reading.update_attributes(params[:reading])
+        if @reading.destroy
           if session[:return_to_subscriber].nil?
-            format.html { redirect_to @reading,
-                          notice: (crud_notice('updated', @reading) + "#{undo_link(@reading)}").html_safe }
+            format.html { redirect_to readings_url,
+                        notice: (crud_notice('destroyed', @reading) + "#{undo_link(@reading)}").html_safe }
           else
-            format.html { redirect_to session[:return_to_subscriber_url], notice: t('activerecord.attributes.reading.successfully') }
+            format.html { redirect_to session[:return_to_subscriber_url], notice: crud_notice('destroyed', @reading) }
           end
           format.json { head :no_content }
         else

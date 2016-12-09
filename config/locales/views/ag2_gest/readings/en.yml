@@ -2,25 +2,31 @@ en:
   ag2_gest:
     readings:
       index:
-        title: "Billable items"
-        btn_new: "New Billable item"
+        title: "Readings"
+        btn_new: "New Reading"
         back_to_root: "Back to ag2Gest"
+        label_project: "Proyecto"
+        label_subscribers: "Abonados"
+        label_meters: "Contadores"
+        label_periods: "Periodos"
+        label_routes: "Rutas"
+        label_request_status: "Petición de contrato"
+        label_from: "Desde"
+        label_to: "Hasta"
         back_to_management: "Back to Reading Management"
       show:
-        title: "Billable item"
-        btn_edit: "Edit Billable item"
-        btn_delete: "Delete Billable item"
-        return_to: "Back to Billable item"
+        title: "Reading"
+        subscriber: "Datos abonado"
+        meter: "Datos contador"
+        incidences: "Incidencias"
+        btn_edit: "Edit Reading"
+        btn_delete: "Delete Reading"
+        return_to: "Back to Reading"
       edit:
-        title: "Edit Billable item"
-        btn_show: "Show Billable item"
+        show: "Mostrar"
+        back: "Atrás"
+        title: "Edit Reading"
+        btn_show: "Show Reading"
       new:
-        title: "New Billable item"
-      back_to_main_page: "Back to Billable items"
-      # generate_code_btn: "billable_item Code"
-      # personal_info: "billable_item Info"
-      # commercial_info: "Accounting & Commercial Info"
-      # fiscal_error: "Wrong Fiscal Id or Entity (TaxPayer) does not exist."
-      # code_error: "Unable to generate billable_item Code: No Organization chosen."
-
-      # {:office=>{:one=>"Oficina", :other=>"Oficinas"}, :company=>"Empresa"}
+        title: "New Reading"
+      back_to_main_page: "Back to Readings"

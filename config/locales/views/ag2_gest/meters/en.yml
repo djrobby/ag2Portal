@@ -11,6 +11,8 @@ en:
         btn_edit: "Edit Meter"
         btn_delete: "Delete Meter"
         return_to: "Back to Meter"
+        subtable_title_details: "Movements"
+        subtable_title_readings: "Readings"
       edit:
         title: "Edit Meter"
         btn_show: "Show Meter"

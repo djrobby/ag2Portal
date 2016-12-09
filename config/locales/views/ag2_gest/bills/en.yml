@@ -3,6 +3,7 @@ en:
     bills:
       index:
         title: "Confirm Mass Billing of Services"
+        titlebill: "Mass Billing of Services"
         btn_new: "New Bill"
         back_to_root: "Back to ag2Gest"
         collection_only: "For collections"
@@ -29,6 +30,8 @@ en:
         last_invoice: "Nº de la última factura"
         last_invoice_total: "Importe total"
         biller: "Facturante"
+        no_pre_group: "No hay prefacturas para ese grupo"
+        calc_consumptions: "Calcular Consumos"
       show:
         title: "Bill"
         btn_edit: "Edit Bill"

@@ -62,7 +62,7 @@ report.page.list(:default).header do |header|
 	header.item(:amount_c).value I18n.t("activerecord.attributes.client_payment.amount")
 	header.item(:total_c).value I18n.t("activerecord.attributes.client_payment.total")
 	header.item(:type_c).value I18n.t("activerecord.attributes.client_payment.charged")
-	header.item(:subscriber_c).value I18n.t("activerecord.attributes.client_payment.subscriber")
+	header.item(:subscriber_c).value I18n.t("activerecord.attributes.client_payment.client")
 end
 
 

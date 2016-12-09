@@ -171,7 +171,7 @@ module Ag2Gest
     end
 
      # invoice report
-    def invoice_report
+    def invoice_view_report
       manage_filter_state
       no = params[:No]
       project = params[:Project]
@@ -316,7 +316,7 @@ module Ag2Gest
     end
 
     def subscribers_dropdown
-      session[:office] != '0' ? Subscriber.belongs_to_office(session[:office_id].to_i) : Subscriber.by_code
+      session[:office] != '0' ? Subscriber.belongs_to_office(session[:office].to_i) : Subscriber.by_code
     end
 
     def billing_periods_dropdown
