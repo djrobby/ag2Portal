@@ -21,6 +21,7 @@ class Tariff < ActiveRecord::Base
   has_many :subscriber_tariffs
   has_many :contracted_tariffs
   has_many :tariff_scheme_items
+  has_one :active_tariff
 
   #validates :tariff_scheme,     :presence => true
   validates :billable_item,     :presence => true
@@ -40,6 +41,9 @@ class Tariff < ActiveRecord::Base
   # end
 
   # Scopes
+  scope :belongs_to_project, -> p { joins(:billable_item).where('billable_items.project_id = ?', p) }
+  scope :belongs_to_type, -> t { where(tariff_type_id: t) }
+  scope :belongs_to_project_type, -> p,t { joins(:billable_item).where('billable_items.project_id = ? AND tariff_type_id = ?', p, t) }
 
   before_destroy :check_for_dependent_records
 
@@ -58,6 +62,10 @@ class Tariff < ActiveRecord::Base
       BillableConcept.find(percentage_applicable_formula).try(:code)
     end
   end
+
+  #
+  # Class (self) user defined methods
+  #
 
   #
   # Records navigator

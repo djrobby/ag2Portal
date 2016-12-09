@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20161207101208) do
+ActiveRecord::Schema.define(:version => 20161209202102) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -23,6 +23,32 @@ ActiveRecord::Schema.define(:version => 20161207101208) do
   end
 
   add_index "accounting_groups", ["code"], :name => "index_accounting_groups_on_code", :unique => true
+
+  create_table "active_tariffs", :id => false, :force => true do |t|
+    t.integer "tariff_id",                                                          :default => 0,   :null => false
+    t.integer "project_id"
+    t.string  "project_code"
+    t.integer "tariff_type_id"
+    t.string  "tariff_type_code"
+    t.integer "billable_concept_id"
+    t.string  "billable_concept_code"
+    t.integer "caliber_id"
+    t.integer "caliber",                :limit => 2,                                :default => 0,   :null => false
+    t.integer "billing_frequency_id"
+    t.string  "billing_frequency_name"
+    t.date    "starting_at"
+    t.decimal "fixed_fee",                           :precision => 12, :scale => 6, :default => 0.0, :null => false
+    t.decimal "variable_fee",                        :precision => 12, :scale => 6, :default => 0.0, :null => false
+    t.decimal "percentage_fee",                      :precision => 6,  :scale => 2, :default => 0.0, :null => false
+    t.decimal "block1_fee",                          :precision => 12, :scale => 6, :default => 0.0, :null => false
+    t.decimal "block2_fee",                          :precision => 12, :scale => 6, :default => 0.0, :null => false
+    t.decimal "block3_fee",                          :precision => 12, :scale => 6, :default => 0.0, :null => false
+    t.decimal "block4_fee",                          :precision => 12, :scale => 6, :default => 0.0, :null => false
+    t.decimal "block5_fee",                          :precision => 12, :scale => 6, :default => 0.0, :null => false
+    t.decimal "block6_fee",                          :precision => 12, :scale => 6, :default => 0.0, :null => false
+    t.decimal "block7_fee",                          :precision => 12, :scale => 6, :default => 0.0, :null => false
+    t.decimal "block8_fee",                          :precision => 12, :scale => 6, :default => 0.0, :null => false
+  end
 
   create_table "activities", :force => true do |t|
     t.string   "description"
@@ -749,6 +775,8 @@ ActiveRecord::Schema.define(:version => 20161207101208) do
     t.date     "ending_at"
   end
 
+  add_index "contracted_tariffs", ["ending_at"], :name => "index_contracted_tariffs_on_ending_at"
+  add_index "contracted_tariffs", ["starting_at"], :name => "index_contracted_tariffs_on_starting_at"
   add_index "contracted_tariffs", ["tariff_id"], :name => "index_contracted_tariffs_on_tariff_id"
   add_index "contracted_tariffs", ["water_supply_contract_id"], :name => "index_contracted_tariffs_on_water_supply_contract_id"
 

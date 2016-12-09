@@ -1,11 +1,18 @@
 class ReadingType < ActiveRecord::Base
-  # CONSTANTS
+  # CONSTANTS (bad, change to right!)
   NORMAL = 1
   OCTAVILLA = 2
   CONTROL = 3
   INSTALACION = 4
   RETIRADA = 5
   AUTO = 6
+  # CONSTANTS (right)
+  # INSTALACION = 1
+  # NORMAL = 2
+  # AUTO = 3
+  # OCTAVILLA = 4
+  # CONTROL = 5
+  # RETIRADA = 6
 
   attr_accessible :name
 

@@ -15,6 +15,9 @@ class BillableConcept < ActiveRecord::Base
                    :length => { :is => 3 },
                    :uniqueness => true
 
+  # Scopes
+  scope :by_code, -> { order(:code) }
+
   before_validation :fields_to_uppercase
   before_destroy :check_for_dependent_records
 

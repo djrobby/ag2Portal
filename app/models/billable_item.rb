@@ -15,6 +15,11 @@ class BillableItem < ActiveRecord::Base
   validates :biller,            :presence => true
   validates :billable_concept_id, uniqueness: { scope: :project_id }
 
+  # Scopes
+  scope :by_code_id, -> { includes(:billable_concept).order('billable_concepts.code, billable_items.id') }
+  #
+  scope :belongs_to_project, -> p { where(project_id: p).by_code_id }
+
   before_save :check_sum
   before_destroy :check_for_dependent_records
 
