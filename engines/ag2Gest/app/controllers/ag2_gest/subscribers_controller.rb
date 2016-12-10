@@ -46,6 +46,9 @@ module Ag2Gest
       end
     end
 
+    #
+    # Meter installation
+    #
     def add_meter
       debugger
 
@@ -56,7 +59,7 @@ module Ag2Gest
       # #Create Reading
       @reading = Reading.new( project_id: params[:reading][:project_id],
                    billing_period_id: @billing_period.id,
-                   reading_type_id: 4, #ReadingType Installation
+                   reading_type_id: ReadingType::INSTALACION, #ReadingType Installation
                    meter_id: @meter.id,
                    subscriber_id: @subscriber.id,
                    reading_date: params[:reading][:reading_date],
@@ -79,6 +82,10 @@ module Ag2Gest
                                        meter_location_id: params[:reading][:meter_location_id],
                                        withdrawal_date: nil,
                                        withdrawal_reading: nil )
+      # Update Meter first_installation_date if appropiate
+      if @meter.first_installation_date.blank? || @meter_detail.installation_date < @meter.first_installation_date
+        @meter.first_installation_date = @meter_detail.installation_date
+      end
 
       # #Update caliber WaterSupplyContract
       @water_supply_contract = @subscriber.water_supply_contract #WaterSupplyContract.where(subscriber_id: @subscriber.id)
@@ -87,8 +94,21 @@ module Ag2Gest
       # Assign meter
       @subscriber.meter_id = @meter.id
 
+      # Try to save everything
+      save_all_ok = false
+      if (@subscriber.save and @meter_detail.save and @water_supply_contract.save and @reading.save)
+        save_all_ok = true
+        if @meter.first_installation_date != @meter.first_installation_date_was # first_installation_date has changed, save it
+          if !@meter.save
+            save_all_ok = false
+          end
+        end
+      else
+        save_all_ok = false
+      end
+
       respond_to do |format|
-        if @subscriber.save and @meter_detail.save and @water_supply_contract.save and @reading.save
+        if save_all_ok
           format.html { redirect_to @subscriber, notice: t('activerecord.attributes.subscriber.add_meter_successful') }
           format.json { render json: @reading, status: :created, location: @reading }
         else
@@ -98,16 +118,18 @@ module Ag2Gest
       end
     end
 
-
+    #
+    # Meter withdrawal
+    #
     def quit_meter
-
       @subscriber = Subscriber.find(params[:id])
       @billing_period = BillingPeriod.find(params[:reading][:billing_period_id])
+      @meter = @subscriber.meter
 
       #Create Reading
       @reading = Reading.new( project_id: params[:reading][:project_id],
                    billing_period_id: params[:reading][:billing_period_id],
-                   reading_type_id: 5, #ReadingType Withdrawal
+                   reading_type_id: ReadingType::RETIRADA, #ReadingType Withdrawal
                    meter_id: @subscriber.meter_id,
                    subscriber_id: @subscriber.id,
                    reading_date: params[:reading][:reading_date],
@@ -128,20 +150,37 @@ module Ag2Gest
 
       @reading.reading_incidence_types << ReadingIncidenceType.find_all_by_id(params[:incidence_type_ids])
 
-      #Update MeterDetail associated
+      # Update MeterDetail associated
       @meter_detail = MeterDetail.where(subscriber_id: @subscriber.id, meter_id: @subscriber.meter_id, withdrawal_date: nil).first
       @meter_detail.withdrawal_date = params[:reading][:reading_date]
       @meter_detail.withdrawal_reading = params[:reading][:reading_index]
+      # Update Meter last_withdrawal_date if appropiate
+      if @meter.last_withdrawal_date.blank? || @meter_detail.withdrawal_date > @meter.last_withdrawal_date
+        @meter.last_withdrawal_date = @meter_detail.withdrawal_date
+      end
 
-      #Put Caliber Nil
-      @water_supply_contract = @subscriber.water_supply_contract
-      @water_supply_contract.caliber_id = nil
+      #Put Caliber Nil (NO!!! contract is historical info)
+      #@water_supply_contract = @subscriber.water_supply_contract
+      #@water_supply_contract.caliber_id = nil
 
-      #Subscriber Quit Meter associated
+      # Remove meter from subscriber
       @subscriber.meter_id = nil
 
+      # Try to save everything
+      save_all_ok = false
+      if (@subscriber.save and @meter_detail.save and @water_supply_contract.save and @reading.save)
+        save_all_ok = true
+        if @meter.last_withdrawal_date != @meter.last_withdrawal_date_was # last_withdrawal_date has changed, save it
+          if !@meter.save
+            save_all_ok = false
+          end
+        end
+      else
+        save_all_ok = false
+      end
+
       respond_to do |format|
-        if @subscriber.save and @meter_detail.save and @water_supply_contract.save and @reading.save
+        if save_all_ok
           format.html { redirect_to @subscriber, notice: t('activerecord.attributes.subscriber.quit_meter_successful') }
           format.json { render json: @reading, status: :created, location: @reading }
         else
@@ -151,13 +190,14 @@ module Ag2Gest
       end
     end
 
-
-
+    #
+    # Meter change
+    #
     def change_meter
-
       @subscriber = Subscriber.find(params[:id])
+      @meter = @subscriber.meter
 
-      ############### QUIT METER ########################
+      ############### METER WITHDRAWAL ########################
 
       #ReadingIncidenTypes
       @reading_incidence_types_quit = params[:incidence_type_ids_quit]
@@ -172,11 +212,15 @@ module Ag2Gest
       #Get last Reading
       last_reading = @subscriber.readings.order(:reading_date).last
 
-      #Update MeterDetail associated
+      # Update MeterDetail associated
       @meter_details = MeterDetail.where(meter_id: @subscriber.meter_id)
       @meter_detail = @meter_details.where(withdrawal_date: nil).first
       @meter_detail.withdrawal_date = params[:reading][:reading_date]
       @meter_detail.withdrawal_reading = params[:reading][:reading_index]
+      # Update Meter last_withdrawal_date if appropiate
+      if @meter.last_withdrawal_date.blank? || @meter_detail.withdrawal_date > @meter.last_withdrawal_date
+        @meter.last_withdrawal_date = @meter_detail.withdrawal_date
+      end
 
       #Create Reading
       @reading_quit = Reading.new( project_id: last_reading.project_id,
@@ -200,20 +244,23 @@ module Ag2Gest
         @reading_quit.reading_incidence_types << @my_read_inci_type
       end
 
-      #Put Caliber Nil
-      water_supply_contract = @subscriber.contracting_request.water_supply_contract #WaterSupplyContract.where(subscriber_id: @subscriber.id)
-      water_supply_contract.caliber_id = nil
+      #Put Caliber Nil (NO!!! contract is historical info)
+      #water_supply_contract = @subscriber.contracting_request.water_supply_contract #WaterSupplyContract.where(subscriber_id: @subscriber.id)
+      #water_supply_contract.caliber_id = nil
 
-      #Subscriber Quit Meter associated
+      # Remove meter from subscriber
       @subscriber.meter_id = nil
 
-      #Save all
+      # Save all
       @meter_detail.save
       water_supply_contract.save
       @reading_quit.save
       @subscriber.save
+      if @meter.last_withdrawal_date != @meter.last_withdrawal_date_was # last_withdrawal_date has changed, save it
+        @meter.save
+      end
 
-      ################# ADD METER ###############################333
+      ################# ADD METER ###############################
 
       #ReadingIncidenTypes
       @reading_incidence_types_add = params[:incidence_type_ids_add]
@@ -226,6 +273,7 @@ module Ag2Gest
       end
 
       @subscriber.meter_id = params[:reading][:meter_id]
+      @meter = Meter.find(params[:reading][:meter_id])
 
       #Get last Reading
       last_reading = @subscriber.readings.order(:reading_date).last
@@ -241,6 +289,10 @@ module Ag2Gest
                                        installation_reading: params[:reading][:reading_index_add],
                                        withdrawal_date: nil,
                                        withdrawal_reading: nil )
+      # Update Meter first_installation_date if appropiate
+      if @meter.first_installation_date.blank? || @meter_detail.installation_date < @meter.first_installation_date
+        @meter.first_installation_date = @meter_detail.installation_date
+      end
 
       #Create Reading
       @reading = Reading.new( project_id: last_reading.project_id,
@@ -269,6 +321,9 @@ module Ag2Gest
       @meter_detail.save
       @reading.save
       @subscriber.save
+      if @meter.first_installation_date != @meter.first_installation_date_was # first_installation_date has changed, save it
+        @meter.save
+      end
 
       response_hash = { subscriber: @subscriber }
       response_hash[:reading] = @reading
@@ -288,7 +343,6 @@ module Ag2Gest
         format.json { render json: response_hash }
         format.js
       end
-
     end
 
     # GET /subscribers
