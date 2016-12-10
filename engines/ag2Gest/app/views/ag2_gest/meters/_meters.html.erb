@@ -20,17 +20,19 @@
   <thead>
     <tr>
       <th><%= sortable "meter_code", t('activerecord.attributes.meter.meter_code') %></th>
+      <th></th>
       <th><%= sortable "meter_model_id", t('activerecord.attributes.meter.meter_model_id') %></th>
       <th class="center"><%= sortable "caliber_id", t('activerecord.attributes.meter.caliber_id') %></th>
-      <th class="center"><%= t('activerecord.attributes.meter.manufacturing_year') %></th>
-      <th class="center"><%= t('activerecord.attributes.meter.expiry_date') %></th>
-      <th class="center"><%= t('activerecord.attributes.meter.purchase_date') %></th>
+      <th class="center"><%= t('activerecord.attributes.meter.manufacturing_year_min') %></th>
+      <th class="center"><%= t('activerecord.attributes.meter.expiry_date_min') %></th>
+      <th class="center"><%= t('activerecord.attributes.meter.purchase_date_min') %></th>
     </tr>
   </thead>
   <tbody>
     <% @meters.each do |meter| %>
     <tr>
       <td><%= link_to meter.try(:meter_code), ag2_gest.meter_path(meter) %></td>
+      <td><% if meter.is_installed_now? %><i class="icon-thumbs-up"></i><% else %><i class="icon-thumbs-down"></i><% end %></td>      
       <td><%= meter.try(:meter_model).try(:full_name) %></td>
       <td class="center"><%= meter.try(:caliber).try(:caliber) %></td>
       <td class="center"><%= meter.try(:manufacturing_year) %></td>

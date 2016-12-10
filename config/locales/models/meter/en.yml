@@ -8,6 +8,7 @@ en:
         other: Meters
         check_for_work_orders: "Meter cannot be destroyed while linked work orders exist."
         check_for_subscribers: "Meter cannot be destroyed while linked subscribers exist."
+        check_for_readings: "Meter cannot be destroyed while linked readings exist."
     attributes:
       meter:
         id: "Id"
@@ -20,10 +21,11 @@ en:
         meter_owner_id: "Owner"
         manufacturing_date: "Manufacturing date"
         manufacturing_year: "Manufacturing year"
-        manufacturing_year_min: "Manuf. Year"
+        manufacturing_year_min: "Manuf.Year"
         expiry_date: "Expiry date"
-        expiry_date_min: "Exp. Date"
+        expiry_date_min: "Exp.Date"
         purchase_date: "Purchase date"
+        purchase_date_min: "Pur.Date"
         first_installation_date: "First installation"
         last_withdrawal_date: "Last withdrawal"
         organization: "Organization"
@@ -31,3 +33,4 @@ en:
         office_id: "Office"
         company_id: "Company"
         route: "Route"
+        is_installed_now: "Is installed now?"

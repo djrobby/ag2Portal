@@ -49,7 +49,7 @@ class Meter < ActiveRecord::Base
     if subscriber.blank?
       0
     else
-      subscriber.reading_route_id 
+      subscriber.reading_route_id
     end
   end
 
@@ -76,6 +76,10 @@ class Meter < ActiveRecord::Base
       full_name += " " + self.caliber.caliber.to_s
     end
     full_name
+  end
+
+  def is_installed_now?
+    !first_installation_date.blank? && last_withdrawal_date.blank?
   end
 
   #
@@ -136,6 +140,11 @@ class Meter < ActiveRecord::Base
     # Check for subscriber
     if !subscriber.blank?
       errors.add(:base, I18n.t('activerecord.models.meter.check_for_subscribers'))
+      return false
+    end
+    # Check for readings
+    if readings.count > 0
+      errors.add(:base, I18n.t('activerecord.models.meter.check_for_readings'))
       return false
     end
   end

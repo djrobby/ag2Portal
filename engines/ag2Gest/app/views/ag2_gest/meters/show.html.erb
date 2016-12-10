@@ -8,19 +8,21 @@
   <tbody>
     <tr>
       <td><%= t('activerecord.attributes.meter.id') %>:</td>
-      <td colspan="3"><%= @meter.try(:id) %></td>
-    </tr>
-    <tr>
+      <td><%= @meter.try(:id) %></td>
       <td><%= t('activerecord.attributes.meter.meter_code') %>:</td>
-      <td><%= @meter.try(:meter_code) %></td>
-      <td><%= t('activerecord.attributes.meter.meter_owner_id') %>:</td>
-      <td><%= @meter.try(:meter_owner).try(:name) %></td>
+      <td class="highlighted bolded"><%= @meter.try(:meter_code) %></td>
     </tr>
     <tr>
       <td><%= t('activerecord.attributes.meter.meter_model_id') %>:</td>
-      <td><%= link_to @meter.try(:meter_model).try(:model), ag2_gest.meter_model_path(@meter.meter_model_id) %></td>
+      <td><%= link_to @meter.try(:meter_model).try(:full_name), ag2_gest.meter_model_path(@meter.meter_model_id) %></td>
       <td><%= t('activerecord.attributes.meter.caliber_id') %>:</td>
       <td><%= link_to @meter.try(:caliber).try(:caliber), ag2_gest.caliber_path(@meter.caliber_id) %></td>
+    </tr>
+    <tr>
+      <td><%= t('activerecord.attributes.meter.meter_owner_id') %>:</td>
+      <td><%= @meter.try(:meter_owner).try(:name) %></td>
+      <td><%= t('activerecord.attributes.meter.is_installed_now') %>:</td>
+      <td><% if @meter.is_installed_now? %> <i class="icon-thumbs-up"></i> <% else %> <i class="icon-thumbs-down"></i> <% end %> </td>
     </tr>
     <tr>
       <td><%= t('activerecord.attributes.meter.manufacturing_year') %>:</td>
