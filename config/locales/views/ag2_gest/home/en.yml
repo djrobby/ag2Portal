@@ -75,6 +75,7 @@ en:
         invoice_types: "Invoice Types"
         invoice_statuses: "Invoice Statuses"
         invoice_operations: "Invoice Operations"
+        billing_incidence_types: "Incidence Types"
         billable_items: "Billable Items"
       formality:
         formalities_query: "Formalities Query"

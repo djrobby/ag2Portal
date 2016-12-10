@@ -1,0 +1,15 @@
+en:
+  activerecord:
+    models:
+      billing_incidence_type:
+        zero:  Billing incidence types
+        one:   Billing incidence type
+        few:   Billing incidence types
+        other: Billing incidence types
+        check_for_reading_incidences: "Incidence type cannot be destroyed while linked incidences exist."
+        check_for_pre_reading_incidences: "Incidence type cannot be destroyed while linked incidences exist."
+    attributes:
+      billing_incidence_type:
+        name: "Description"
+        code: "Code"
+        is_main: "Main?"

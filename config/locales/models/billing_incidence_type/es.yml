@@ -1,0 +1,16 @@
+es:
+  activerecord:
+    models:
+      billing_incidence_type:
+        zero:  Tipos incidencia de facturación
+        one:   Tipo incidencia de facturación
+        few:   Tipos incidencia de facturación
+        other: Tipos incidencia de facturación
+        check_for_reading_incidences: "Tipo incidencia no puede ser eliminado mientras existan incidencias vinculadas."
+        check_for_pre_reading_incidences: "Tipo incidencia no puede ser eliminado mientras existan incidencias vinculadas."
+    attributes:
+      billing_incidence_type:
+        id: "Id"
+        name: "Descripción"
+        code: "Código"
+        is_main: "¿Principal?"

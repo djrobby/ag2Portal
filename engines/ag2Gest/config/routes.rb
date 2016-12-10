@@ -291,6 +291,7 @@ Ag2Gest::Engine.routes.draw do
     resources :billable_items
     resources :billing_periods
     resources :billing_frequencies
+    resources :billing_incidence_types
     resources :invoice_types
     resources :invoice_statuses
     resources :invoice_operations

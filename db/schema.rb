@@ -25,7 +25,8 @@ ActiveRecord::Schema.define(:version => 20161209202102) do
   add_index "accounting_groups", ["code"], :name => "index_accounting_groups_on_code", :unique => true
 
   create_table "active_tariffs", :id => false, :force => true do |t|
-    t.integer "tariff_id",                                                          :default => 0,   :null => false
+    t.integer "tariff_id",                                                                 :default => 0,   :null => false
+    t.integer "billable_item_id"
     t.integer "project_id"
     t.string  "project_code"
     t.integer "tariff_type_id"
@@ -33,21 +34,38 @@ ActiveRecord::Schema.define(:version => 20161209202102) do
     t.integer "billable_concept_id"
     t.string  "billable_concept_code"
     t.integer "caliber_id"
-    t.integer "caliber",                :limit => 2,                                :default => 0,   :null => false
+    t.integer "caliber",                       :limit => 2,                                :default => 0,   :null => false
     t.integer "billing_frequency_id"
     t.string  "billing_frequency_name"
     t.date    "starting_at"
-    t.decimal "fixed_fee",                           :precision => 12, :scale => 6, :default => 0.0, :null => false
-    t.decimal "variable_fee",                        :precision => 12, :scale => 6, :default => 0.0, :null => false
-    t.decimal "percentage_fee",                      :precision => 6,  :scale => 2, :default => 0.0, :null => false
-    t.decimal "block1_fee",                          :precision => 12, :scale => 6, :default => 0.0, :null => false
-    t.decimal "block2_fee",                          :precision => 12, :scale => 6, :default => 0.0, :null => false
-    t.decimal "block3_fee",                          :precision => 12, :scale => 6, :default => 0.0, :null => false
-    t.decimal "block4_fee",                          :precision => 12, :scale => 6, :default => 0.0, :null => false
-    t.decimal "block5_fee",                          :precision => 12, :scale => 6, :default => 0.0, :null => false
-    t.decimal "block6_fee",                          :precision => 12, :scale => 6, :default => 0.0, :null => false
-    t.decimal "block7_fee",                          :precision => 12, :scale => 6, :default => 0.0, :null => false
-    t.decimal "block8_fee",                          :precision => 12, :scale => 6, :default => 0.0, :null => false
+    t.decimal "fixed_fee",                                  :precision => 12, :scale => 6, :default => 0.0, :null => false
+    t.decimal "variable_fee",                               :precision => 12, :scale => 6, :default => 0.0, :null => false
+    t.decimal "percentage_fee",                             :precision => 6,  :scale => 2, :default => 0.0, :null => false
+    t.string  "percentage_applicable_formula"
+    t.integer "block1_limit"
+    t.integer "block2_limit"
+    t.integer "block3_limit"
+    t.integer "block4_limit"
+    t.integer "block5_limit"
+    t.integer "block6_limit"
+    t.integer "block7_limit"
+    t.integer "block8_limit"
+    t.decimal "block1_fee",                                 :precision => 12, :scale => 6, :default => 0.0, :null => false
+    t.decimal "block2_fee",                                 :precision => 12, :scale => 6, :default => 0.0, :null => false
+    t.decimal "block3_fee",                                 :precision => 12, :scale => 6, :default => 0.0, :null => false
+    t.decimal "block4_fee",                                 :precision => 12, :scale => 6, :default => 0.0, :null => false
+    t.decimal "block5_fee",                                 :precision => 12, :scale => 6, :default => 0.0, :null => false
+    t.decimal "block6_fee",                                 :precision => 12, :scale => 6, :default => 0.0, :null => false
+    t.decimal "block7_fee",                                 :precision => 12, :scale => 6, :default => 0.0, :null => false
+    t.decimal "block8_fee",                                 :precision => 12, :scale => 6, :default => 0.0, :null => false
+    t.decimal "discount_pct_f",                             :precision => 6,  :scale => 2, :default => 0.0, :null => false
+    t.decimal "discount_pct_v",                             :precision => 6,  :scale => 2, :default => 0.0, :null => false
+    t.decimal "discount_pct_p",                             :precision => 6,  :scale => 2, :default => 0.0, :null => false
+    t.decimal "discount_pct_b",                             :precision => 6,  :scale => 2, :default => 0.0, :null => false
+    t.integer "tax_type_f_id"
+    t.integer "tax_type_v_id"
+    t.integer "tax_type_p_id"
+    t.integer "tax_type_b_id"
   end
 
   create_table "activities", :force => true do |t|

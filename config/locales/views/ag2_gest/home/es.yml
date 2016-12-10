@@ -75,6 +75,7 @@ es:
         invoice_types: "Tipos de Factura"
         invoice_statuses: "Estados de Factura"
         invoice_operations: "Operaciones Factura"
+        billing_incidence_types: "Tipos de Incidencia"
         billable_items: "Items Facturables"
       formality:
         formalities_query: "Consulta de Trámites"

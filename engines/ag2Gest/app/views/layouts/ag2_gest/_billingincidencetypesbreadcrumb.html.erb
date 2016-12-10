@@ -1,6 +1,6 @@
-<% content_for :title, "aGestiona2 | ag2GestReadingIncidenceTypes" %>
+<% content_for :title, "aGestiona2 | ag2GestBillingIncidenceTypes" %>
 <% content_for :icon, "/assets/icon/TableA.png" %>
-<% content_for :alt, "ag2GestReadingIncidenceType" %>
+<% content_for :alt, "ag2GestBillingIncidenceTypes" %>
 
 <ul class="breadcrumb">
   <li>
@@ -10,19 +10,19 @@
     <a href="<%= ag2_gest.root_path %>">ag2Gest</a><span class="divider">></span>
   </li>
   <li>
-    <a href="<%= ag2_gest.reading_management_path %>"><%= t "ag2_gest.home.index.reading_management" %></a><span class="divider">></span>
+    <a href="<%= ag2_gest.bill_management_path %>"><%= t "ag2_gest.home.index.bill_management" %></a><span class="divider">></span>
   </li>
-  <% if @reading_incidence_types %>
+  <% if @billing_incidence_types %>
   <li>
-    <%=t "ag2_gest.breadcrumb.reading_incidence_types.items" %>
+    <%=t "ag2_gest.breadcrumb.billing_incidence_types.items" %>
   </li>
   <% end %>
-  <% if @reading_incidence_type %>
+  <% if @billing_incidence_type %>
   <li>
-    <a href="<%= reading_incidence_types_path %>"><%=t :"ag2_gest.breadcrumb.reading_incidence_types.items" %></a><span class="divider">></span>
+    <a href="<%= billing_incidence_types_path %>"><%=t :"ag2_gest.breadcrumb.billing_incidence_types.items" %></a><span class="divider">></span>
   </li>
   <% if @breadcrumb == 'read' || @breadcrumb == 'update' %>
-  <%=t :"ag2_gest.breadcrumb.reading_incidence_types.item" %>
+  <%=t :"ag2_gest.breadcrumb.billing_incidence_types.item" %>
   <% end %>
   <% if @breadcrumb == 'create' %>
   <li>
