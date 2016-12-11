@@ -6,6 +6,7 @@ en:
         one:   Invoice item
         few:   Invoice items
         other: Invoice items
+        quantity_greater_than_balance: "The amount entered (%{qty}) is greater than the unbilled balance (%{bal})!"
     attributes:
       invoice_item:
         successfully: "Invoice item updated correctly."
@@ -17,6 +18,7 @@ en:
         tariff_id: "Tariff"
         product: "Product"
         product_id: "Product"
+        product_c: "Prd."
         code: "Code"
         subcode: "Subcode"
         description: "Concept"

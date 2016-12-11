@@ -48,15 +48,15 @@ module Ag2Gest
       organization = params[:org]
       if organization != '0'
         @organization = Organization.find(organization)
-        @suppliers = @organization.blank? ? suppliers_dropdown : @organization.suppliers.order(:supplier_code)
+        @clients = @organization.blank? ? clients_dropdown : @organization.clients.order(:supplier_code)
         @projects = @organization.blank? ? projects_dropdown : @organization.projects.order(:project_code)
         @work_orders = @organization.blank? ? work_orders_dropdown : @organization.work_orders.order(:order_no)
         @charge_accounts = @organization.blank? ? charge_accounts_dropdown : @organization.charge_accounts.expenditures
         @stores = @organization.blank? ? stores_dropdown : @organization.stores.order(:name)
-        @payment_methods = @organization.blank? ? payment_methods_dropdown : payment_payment_methods(@organization.id)
+        @payment_methods = @organization.blank? ? payment_methods_dropdown : collection_payment_methods(@organization.id)
         @products = @organization.blank? ? products_dropdown : @organization.products.order(:product_code)
       else
-        @suppliers = suppliers_dropdown
+        @clients = clients_dropdown
         @projects = projects_dropdown
         @work_orders = work_orders_dropdown
         @charge_accounts = charge_accounts_dropdown
@@ -69,7 +69,7 @@ module Ag2Gest
       # Products array
       @products_dropdown = products_array(@products)
       # Setup JSON
-      @json_data = { "supplier" => @suppliers, "project" => @projects, "work_order" => @orders_dropdown,
+      @json_data = { "client" => @clients, "project" => @projects, "work_order" => @orders_dropdown,
                      "charge_account" => @charge_accounts, "store" => @stores,
                      "payment_method" => @payment_methods, "product" => @products_dropdown }
       render json: @json_data
@@ -77,18 +77,17 @@ module Ag2Gest
 
     # Update sale offer select at view from client
     def ci_update_offer_select_from_client
-      supplier = params[:supplier]
-      if supplier != '0'
-        @supplier = Supplier.find(supplier)
-        @receipt_notes = @supplier.blank? ? receipts_dropdown : @supplier.receipt_notes.unbilled(@supplier.organization_id, true)
-        #@notes = @supplier.blank? ? receipts_dropdown : @supplier.receipt_notes.order(:supplier_id, :receipt_no, :id)
+      client = params[:client]
+      if client != '0'
+        @client = Client.find(client)
+        @sale_offers = @client.blank? ? sale_offers_dropdown : @client.sale_offers.unbilled_balance(@client.organization_id, true)
       else
-        @receipt_notes = receipts_dropdown
+        @sale_offers = sale_offers_dropdown
       end
       # Notes array
-      @notes_dropdown = notes_array(@receipt_notes)
+      @offers_dropdown = offers_array(@sale_offers)
       # Setup JSON
-      @json_data = { "note" => @notes_dropdown }
+      @json_data = { "note" => @offers_dropdown }
       render json: @json_data
     end
 
@@ -101,17 +100,17 @@ module Ag2Gest
       store_id = 0
       payment_method_id = 0
       if o != '0'
-        @receipt_note = ReceiptNote.find(o)
-        @note_items = @receipt_note.blank? ? [] : note_items_dropdown(@receipt_note)
-        @projects = @receipt_note.blank? ? projects_dropdown : @receipt_note.project
-        @work_orders = @receipt_note.blank? ? work_orders_dropdown : WorkOrder.where(id: @receipt_note.work_order)
-        @charge_accounts = @receipt_note.blank? ? charge_accounts_dropdown : @receipt_note.charge_account
-        @stores = @receipt_note.blank? ? stores_dropdown : @receipt_note.store
-        @payment_methods = @receipt_note.blank? ? payment_methods_dropdown : @receipt_note.payment_method
-        if @note_items.blank?
-          @products = @receipt_note.blank? ? products_dropdown : @receipt_note.organization.products.order(:product_code)
+        @sale_offer = SaleOffer.find(o)
+        @offer_items = @sale_offer.blank? ? [] : offer_items_dropdown(@sale_offer)
+        @projects = @sale_offer.blank? ? projects_dropdown : @sale_offer.project
+        @work_orders = @sale_offer.blank? ? work_orders_dropdown : WorkOrder.where(id: @sale_offer.work_order)
+        @charge_accounts = @sale_offer.blank? ? charge_accounts_dropdown : @sale_offer.charge_account
+        @stores = @sale_offer.blank? ? stores_dropdown : @sale_offer.store
+        @payment_methods = @sale_offer.blank? ? payment_methods_dropdown : @sale_offer.payment_method
+        if @offer_items.blank?
+          @products = @sale_offer.blank? ? products_dropdown : @sale_offer.organization.products.order(:product_code)
         else
-          @products = @receipt_note.products.group(:product_code)
+          @products = @sale_offer.products.group(:product_code)
         end
         project_id = @projects.id rescue 0
         work_order_id = @work_orders.id rescue 0
@@ -119,7 +118,7 @@ module Ag2Gest
         store_id = @stores.id rescue 0
         payment_method_id = @payment_methods.id rescue 0
       else
-        @note_items = []
+        @offer_items = []
         @projects = projects_dropdown
         @work_orders = work_orders_dropdown
         @charge_accounts = charge_accounts_dropdown
@@ -129,8 +128,8 @@ module Ag2Gest
       end
       # Work orders array
       @orders_dropdown = orders_array(@work_orders)
-      # Note items array
-      @note_items_dropdown = note_items_array(@note_items)
+      # Offer items array
+      @offer_items_dropdown = offer_items_array(@offer_items)
       # Products array
       @products_dropdown = products_array(@products)
       # Setup JSON
@@ -139,7 +138,7 @@ module Ag2Gest
                      "payment_method" => @payment_methods, "product" => @products_dropdown,
                      "project_id" => project_id, "work_order_id" => work_order_id,
                      "charge_account_id" => charge_account_id, "store_id" => store_id,
-                     "payment_method_id" => payment_method_id, "note_item" => @note_items_dropdown }
+                     "payment_method_id" => payment_method_id, "note_item" => @offer_items_dropdown }
       render json: @json_data
     end
 
@@ -208,7 +207,6 @@ module Ag2Gest
     # Update description and prices text fields at view from product select
     def ci_update_description_prices_from_product
       product = params[:product]
-      supplier = params[:supplier]
       tbl = params[:tbl]
       description = ""
       qty = 0
@@ -225,11 +223,8 @@ module Ag2Gest
         # Assignment
         description = @product.main_description[0,40]
         qty = params[:qty].to_f / 10000
-        # Use purchase price, if any. Otherwise, the reference price
-        price, discount_p, code = product_price_to_apply(@product, supplier)
-        if discount_p > 0
-          discount = price * (discount_p / 100)
-        end
+        price = @product.sell_price
+        code = @product.product_code
         amount = qty * (price - discount)
         tax_type_id = @product.tax_type.id
         tax_type_tax = @product.tax_type.tax
@@ -253,7 +248,7 @@ module Ag2Gest
       i = params[:i]
       product_id = 0
       if i != '0'
-        @item = ReceiptNoteItem.find(i)
+        @item = SaleOfferItem.find(i)
         product_id = @item.blank? ? 0 : @item.product_id
       end
       # Setup JSON
@@ -305,7 +300,7 @@ module Ag2Gest
         if qty > bal
           qty = number_with_precision(qty.round(4), precision: 4, delimiter: I18n.locale == :es ? "." : ",")
           bal = number_with_precision(bal.round(4), precision: 4, delimiter: I18n.locale == :es ? "." : ",")
-          alert = I18n.t("activerecord.models.supplier_invoice_item.quantity_greater_than_balance", qty: qty, bal: bal)
+          alert = I18n.t("activerecord.models.invoice_item.quantity_greater_than_balance", qty: qty, bal: bal)
         end
       end
       # Setup JSON
@@ -844,6 +839,37 @@ module Ag2Gest
       _ret = ChargeAccount.where(id: _array).order(:account_code)
     end
 
+    # Stores belonging to selected project
+    def project_stores(_project)
+      _array = []
+      _stores = nil
+
+      # Adding stores belonging to current project only
+      # Stores with exclusive office
+      if !_project.company.blank? && !_project.office.blank?
+        _stores = Store.where("(company_id = ? AND office_id = ?)", _project.company.id, _project.office.id)
+      elsif !_project.company.blank? && _project.office.blank?
+        _stores = Store.where("(company_id = ?)", _project.company.id)
+      elsif _project.company.blank? && !_project.office.blank?
+        _stores = Store.where("(office_id = ?)", _project.office.id)
+      else
+        _stores = nil
+      end
+      ret_array(_array, _stores, 'id')
+      # Stores with multiple offices
+      if !_project.office.blank?
+        _stores = StoreOffice.where("office_id = ?", _project.office.id)
+        ret_array(_array, _stores, 'store_id')
+      end
+
+      # Returning founded stores
+      _stores = Store.where(id: _array).order(:name)
+    end
+
+    def charge_accounts_dropdown
+      session[:organization] != '0' ? ChargeAccount.incomes.where(organization_id: session[:organization].to_i) : ChargeAccount.incomes
+    end
+
     def charge_accounts_dropdown_edit(_project)
       ChargeAccount.incomes.where('project_id = ? OR (project_id IS NULL AND charge_accounts.organization_id = ?)', _project, _project.organization_id)
     end
@@ -894,6 +920,50 @@ module Ag2Gest
 
     def offer_items_dropdown(_offer)
       _offer.sale_offer_items.joins(:sale_offer_item_balance).where('sale_offer_item_balances.balance > ?', 0)
+    end
+
+    def work_orders_dropdown
+      session[:organization] != '0' ? WorkOrder.where(organization_id: session[:organization].to_i).order(:order_no) : WorkOrder.order(:order_no)
+    end
+
+    def stores_dropdown
+      session[:organization] != '0' ? Store.where(organization_id: session[:organization].to_i).order(:name) : Store.order(:name)
+    end
+
+    def offers_array(_offers)
+      _array = []
+      _offers.each do |i|
+        _array = _array << [i.id, i.offer_no, formatted_date(i.offer_date), i.client.full_name]
+      end
+      _array
+    end
+
+    def offer_items_array(_offer_items)
+      _array = []
+      _offer_items.each do |i|
+        _array = _array << [ i.id, i.id.to_s + ":", i.product.full_code, i.description[0,20],
+                           (!i.quantity.blank? ? formatted_number(i.quantity, 4) : formatted_number(0, 4)),
+                           (!i.net_price.blank? ? formatted_number(i.net_price, 4) : formatted_number(0, 4)),
+                           (!i.amount.blank? ? formatted_number(i.amount, 4) : formatted_number(0, 4)),
+                           "(" + (!i.unbilled_balance.blank? ? formatted_number(i.unbilled_balance, 4) : formatted_number(0, 4)) + ")" ]
+      end
+      _array
+    end
+
+    def products_array(_products)
+      _array = []
+      _products.each do |i|
+        _array = _array << [i.id, i.full_code, i.main_description[0,40]]
+      end
+      _array
+    end
+
+    def orders_array(_orders)
+      _array = []
+      _orders.each do |i|
+        _array = _array << [i.id, i.full_name]
+      end
+      _array
     end
 
     # Returns _array from _ret table/model filled with _id attribute

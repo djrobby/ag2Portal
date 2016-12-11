@@ -32,7 +32,7 @@
       if (discount_p == "")
         discount_p = "0";
       discount_p = parseInt(right_number(discount_p, 2) * 100);
-      jQuery.getJSON('si_item_totals/' + qty + '/' + amount + '/' + tax + '/' + discount_p, function(data) {
+      jQuery.getJSON('ci_item_totals/' + qty + '/' + amount + '/' + tax + '/' + discount_p, function(data) {
         document.getElementById('foot-quantity').innerHTML = data.qty;
         document.getElementById('foot-amount').innerHTML = data.amount;
         document.getElementById('foot-tax').innerHTML = data.tax;
@@ -60,7 +60,7 @@
         qty = "0";
       // Right formatted for passing as REST parameter
       qty = parseInt(right_number(qty, 4) * 10000);
-      jQuery.getJSON('ci_update_description_prices_from_product/' + product + '/' + qty + '/' + _supplier + '/' + tbl, function(data) {
+      jQuery.getJSON('ci_update_description_prices_from_product/' + product + '/' + qty + '/' + tbl, function(data) {
         $(_this).closest('tr').find('.fnt-description').val(data.description);
         $(_this).closest('tr').find('.fnt-price').val(data.price);
         $(_this).closest('tr').find('.fnt-amount').val(data.amount);
@@ -80,7 +80,7 @@
       // preserve the current object
       var _this = (this);
       // balance check
-      var i = $(_this).closest('tr').find('select.fnt-receipt-note-item :selected').val();
+      var i = $(_this).closest('tr').find('select.fnt-sale-offer-item :selected').val();
       if (i == "")
         i = "0";
       var qty = $(_this).closest('tr').find('.fnt-quantity').val();
@@ -203,12 +203,13 @@
     <%= render 'items_table_footer', f: f %>
   </tfoot>
   <tbody>
-    <%= f.simple_fields_for :supplier_invoice_items, defaults: { input_html: { class: 'sub-form' } } do |i| %>
+    <%= f.simple_fields_for :invoice_items, defaults: { input_html: { class: 'sub-form' } } do |i| %>
     <tr class="fields">
       <td><%= i.input :product_id, label: false, wrapper: false, as: :hidden, input_html: { class: 'sub-alfanumeric-text-field sub-disabled-field fnt-product' } %></td>
       <td><%= i.input :thing, readonly: true, label: false, wrapper: false, as: :string, input_html: { value: (i.object.product.full_name if i.object.product_id), class: 'iconify_item sub-alfanumeric-text-field sub-disabled-field fnt-thing' } %></td>
       <td><%= i.input :description, label: false, wrapper: false, input_html: { onkeyup: "caps(this)", class: 'sub-alfanumeric-text-field fnt-description', maxlength: 40 } %></td>
       <td style="display:none;"><%= i.input :code, label: false, wrapper: false, input_html: { class: 'sub-alfanumeric-text-field fnt-code' } %></td>
+      <td style="display:none;"><%= i.input :subcode, label: false, wrapper: false, input_html: { class: 'sub-alfanumeric-text-field fnt-subcode' } %></td>
       <td><%= i.input :quantity, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.quantity, precision: 4) if i.object.quantity), class: 'sub-number-text-field fnt-quantity' } %></td>
       <td><%= i.input :price, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.price, precision: 4) if i.object.price), class: 'sub-number-text-field fnt-price' } %></td>
       <td><%= i.input :discount_pct, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.discount_pct, precision: 2) if i.object.discount_pct), class: 'sub-number-text-field fnt-discount-pct' } %></td>
@@ -216,11 +217,8 @@
       <td><%= i.input :amount, disabled: true, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.amount, precision: 4) if i.object.amount), class: 'sub-number-text-field sub-disabled-field fnt-amount' } %></td>
       <td style="display:none;"><%= i.association :tax_type, label: false, wrapper: false, input_html: { class: 'sub-alfanumeric-text-field fnt-tax-type' } %></td>
       <td><%= i.input :tax, disabled: true, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.tax, precision: 4) if i.object.tax), class: 'sub-number-text-field sub-disabled-field fnt-tax' } %></td>
-      <td style="display:none;"><%= i.association :work_order, label: false, wrapper: false, input_html: { class: 'isel2 fnt-work-order' } %></td>
-      <td style="display:none;"><%= i.association :project, label: false, wrapper: false, input_html: { class: 'isel2 fnt-project' } %></td>
-      <td style="display:none;"><%= i.association :charge_account, label: false, wrapper: false, input_html: { class: 'isel2 fnt-charge-account' } %></td>
-      <td style="display:none;"><%= i.association :receipt_note, label: false, wrapper: false, input_html: { class: 'isel2 fnt-receipt-note' } %></td>
-      <td style="display:none;"><%= i.association :receipt_note_item, label: false, wrapper: false, input_html: { class: 'isel2 fnt-receipt-note-item' } %></td>
+      <td style="display:none;"><%= i.association :sale_offer, label: false, wrapper: false, input_html: { class: 'isel2 fnt-sale-offer' } %></td>
+      <td style="display:none;"><%= i.association :sale_offer_item, label: false, wrapper: false, input_html: { class: 'isel2 fnt-sale-offer-item' } %></td>
       <% if @breadcrumb == 'create' || @breadcrumb == 'update' %>
       <td><%= link_to_remove_fields('<i class="icon-trash"></i>'.html_safe, i) %></td>
       <% end %>

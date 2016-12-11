@@ -38,7 +38,7 @@ class SaleOfferItem < ActiveRecord::Base
   # Calculated fields
   #
   def amount
-    quantity * (price - discount)
+    quantity * net_price
   end
 
   def tax
@@ -51,6 +51,10 @@ class SaleOfferItem < ActiveRecord::Base
 
   def net_tax
     tax - (tax * (sale_offer.discount_pct / 100)) if !sale_offer.discount_pct.blank?
+  end
+
+  def net_price
+    price - discount
   end
 
   def balance

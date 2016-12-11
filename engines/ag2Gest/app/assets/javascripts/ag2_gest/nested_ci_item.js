@@ -135,10 +135,8 @@ var ci_rowBuilder = function() {
                 // Add new column to row
                 td = $('<td/>').append($(this));
                 // ...hiding this if applicable
-                if (id === 'fnt-code' || id === 'fnt-delivery-date' ||
-                  id === 'fnt-work-order' || id === 'fnt-project' ||
-                  id === 'fnt-charge-account' || id === 'fnt-store' ||
-                  id === 'fnt-receipt-note' || id === 'fnt-receipt-note-item' ||
+                if (id === 'fnt-code' || id === 'fnt-subcode' ||
+                  id === 'fnt-sale-offer' || id === 'fnt-sale-offer-item' ||
                   id === 'fnt-tax-type') {
                   td = $('<td style="display:none;"/>').append($(this));
                 }

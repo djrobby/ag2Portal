@@ -6,6 +6,7 @@ es:
         one:   Item de factura
         few:   Items de factura
         other: Items de factura
+        quantity_greater_than_balance: "¡La cantidad introducida (%{qty}) es mayor que el saldo no facturado (%{bal})!"
     attributes:
       invoice_item:
         successfully: "Item de factura se ha actualizado correctamente."
@@ -17,6 +18,7 @@ es:
         tariff_id: "Tarifa"
         product: "Producto"
         product_id: "Producto"
+        product_c: "Prd."
         code: "Código"
         subcode: "Subcódigo"
         description: "Concepto"
