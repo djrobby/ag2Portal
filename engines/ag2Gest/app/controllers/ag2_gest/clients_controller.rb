@@ -98,6 +98,9 @@ module Ag2Gest
       id = ''
       fiscal_id = ''
       name = ''
+      first_name = ''
+      last_name = ''
+      company = ''
       street_type_id = ''
       street_name = ''
       street_number = ''
@@ -114,6 +117,7 @@ module Ag2Gest
       cellular = ''
       email = ''
       organization_id = ''
+      entity_type = ''
 
       if params[:id] == '0'
         id = '$err'
@@ -130,9 +134,13 @@ module Ag2Gest
         else
           id = @entity.id
           fiscal_id = @entity.fiscal_id
+          entity_type = @entity.entity_type_id
           if @entity.entity_type_id < 2
+            first_name = @entity.first_name
+            last_name = @entity.last_name
             name = @entity.full_name
           else
+            company = @entity.company
             name = @entity.company
           end
           street_type_id = @entity.street_type_id
@@ -162,7 +170,9 @@ module Ag2Gest
                      "province_id" => province_id, "region_id" => region_id,
                      "country_id" => country_id, "phone" => phone,
                      "fax" => fax, "cellular" => cellular, "email" => email,
-                     "organization_id" => organization_id }
+                     "organization_id" => organization_id, "company" => company,
+                     "first_name" => first_name, "last_name" => last_name,
+                     "entity_type" => entity_type }
 
       respond_to do |format|
         format.html # validate_fiscal_id_textfield.html.erb does not exist! JSON only
