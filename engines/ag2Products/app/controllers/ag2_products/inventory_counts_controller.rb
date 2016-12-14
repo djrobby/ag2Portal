@@ -14,6 +14,7 @@ module Ag2Products
                                                :ic_update_from_product_store,
                                                :ic_update_from_organization,
                                                :inventory_count_form,
+                                               :inventory_count_form_dif,
                                                :inventory_counts_report,
                                                :ic_products_from_organization,
                                                :new_nc, :edit_nc]
