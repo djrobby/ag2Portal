@@ -1,0 +1,31 @@
+<script>
+  $(document).ready(function() {
+    $("#div_table th a, #div_table #pages a").on("click", function() {
+      $.getScript(this.href);
+      return false;
+    });
+  }); 
+</script>
+
+<table class="table table-condensed table-striped">
+  <thead>
+    <tr>
+      <th><%= sortable "id", t('activerecord.attributes.water_connection_type.id') %></th>
+      <th><%= sortable "name", t('activerecord.attributes.water_connection_type.name') %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @water_connection_types.each do |water_connection_type| %>
+      <tr>
+        <td><%= water_connection_type.try(:id) %></td>
+        <td><%= link_to water_connection_type.try(:name), water_connection_type_path(water_connection_type) %></td>
+        <td> <%= render :partial => '/layouts/crud/edit', :locals => { :model => WaterConnectionType, :path => edit_water_connection_type_path(water_connection_type) } %>
+        <%= render :partial => '/layouts/crud/delete', :locals => { :model => WaterConnectionType, :path => water_connection_type, :msg => t("activerecord.models.water_connection_type.one"), :txt => water_connection_type.name } %> </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @water_connection_types } %>
+<%= render :partial => '/layouts/crud/new', :locals => { :model => WaterConnectionType, :path => new_water_connection_type_path, :txt => t("ag2_gest.water_connection_types.index.btn_new") } %>
+<%= link_to t("ag2_gest.water_connection_types.index.back_to_management"), ag2_gest.service_point_management_path %>

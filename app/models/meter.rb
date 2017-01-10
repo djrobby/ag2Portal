@@ -46,7 +46,7 @@ class Meter < ActiveRecord::Base
   end
 
   def order_route
-    if subscriber.blank?
+    if subscriber.blank? || subscriber.reading_route.blank?
       0
     else
       subscriber.reading_route_id

@@ -11,6 +11,7 @@ Ag2Products::Engine.routes.draw do
     match 'pr_track_family_has_changed/:order', :controller => 'ag2_products_track', :action => 'pr_track_family_has_changed'
     # Reports
     # From Control&Tracking
+    match 'product_items_report', :controller => 'ag2_products_track', :action => 'product_items_report'
     match 'inventory_report', :controller => 'ag2_products_track', :action => 'inventory_report'
     match 'inventory_items_report', :controller => 'ag2_products_track', :action => 'inventory_items_report'
     match 'order_report', :controller => 'ag2_products_track', :action => 'order_report'

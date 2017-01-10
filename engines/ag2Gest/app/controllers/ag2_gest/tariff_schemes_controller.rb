@@ -105,18 +105,21 @@ module Ag2Gest
     def edit
       @breadcrumb = 'update'
       @tariff_scheme = TariffScheme.find(params[:id])
-      @billable_items = @tariff_scheme.project.billable_items.joins(:billable_concept).order("billable_concepts.billable_document")
+      tariffs =
+      @billable_items = @tariff_scheme.project.billable_items.joins(:billable_concept).where("billable_concepts.billable_document=2")#.order("billable_concepts.billable_document")
       @billable_concept_percentage = @billable_items.where("billable_concepts.billable_document = 1").map(&:billable_concept)
       @caliber = Caliber.all
-      @billable_items.each do |b|
-        if b.tariffs_by_caliber
-          @caliber.each do |c|
-            @tariff_scheme.tariffs.build(tariff_type_id: @tariff_scheme.tariff_type_id, caliber_id: c.id, billable_item_id: b.id)
-          end
-        else
-          @tariff_scheme.tariffs.build(tariff_type_id: @tariff_scheme.tariff_type_id, caliber_id: nil, billable_item_id: b.id)
-        end
-      end
+      # @billable_items.each do |b|
+      #   if b.tariffs_by_caliber
+      #     @caliber.each do |c|
+      #       @tariff_scheme.tariffs.build(tariff_type_id: @tariff_scheme.tariff_type_id, caliber_id: c.id, billable_item_id: b.id, starting_at: @tariff_scheme.starting_at, ending_at: @tariff_scheme.ending_at)
+      #     end
+      #   else
+      #     @tariff_scheme.tariffs.build(tariff_type_id: @tariff_scheme.tariff_type_id, caliber_id: nil, billable_item_id: b.id, starting_at: @tariff_scheme.starting_at, ending_at: @tariff_scheme.ending_at)
+      #   end
+      # end
+      tariffs = Tariff.availables_to_project_type_document(@tariff_scheme.project_id,@tariff_scheme.tariff_type_id,2)
+      @tariff_scheme.tariffs << tariffs
     end
 
     def simple_edit
@@ -139,7 +142,9 @@ module Ag2Gest
 
       respond_to do |format|
         if @tariff_scheme.save
-          format.html { redirect_to edit_tariff_scheme_path(@tariff_scheme), notice: t('activerecord.attributes.tariff_scheme.create') }
+          tariffs = Tariff.availables_to_project_type_document(@tariff_scheme.project_id,@tariff_scheme.tariff_type_id,2)
+          @tariff_scheme.tariffs << tariffs
+          format.html { redirect_to tariff_scheme_path(@tariff_scheme), notice: t('activerecord.attributes.tariff_scheme.create') }
           format.json { render json: @tariff_scheme, status: :created, location: @tariff_scheme }
         else
           format.html { render action: "new" }

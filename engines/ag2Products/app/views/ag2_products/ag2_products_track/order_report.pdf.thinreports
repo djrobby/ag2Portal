@@ -74,7 +74,7 @@ end
 		row.item(:order_no).value i.full_no
 		row.item(:order_date).value formatted_date(i.order_date) unless i.order_date.blank?
 		row.item(:order_status).value i.order_status.name
-		row.item(:supplier).value i.supplier.full_code
+		row.item(:supplier).value i.supplier.partial_name
 		row.item(:quantity).value number_with_precision(i.quantity, precision: 2) unless i.quantity.blank?
 		row.item(:balance).value number_with_precision(i.balance, precision: 2) unless i.quantity.blank?
 		row.item(:total).value number_with_precision(i.total, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless i.total.blank?

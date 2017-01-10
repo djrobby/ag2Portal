@@ -32,6 +32,12 @@
       <td><%= @water_supply_contract.bill.try(:to_label) %></td>
     </tr>
     <tr>
+      <td><%=t 'activerecord.attributes.water_supply_contract.tariff_type' %>:</td>
+      <td><%= @water_supply_contract.try(:tariff_type).try(:name) %></td>
+      <td><%=t 'activerecord.attributes.water_supply_contract.use' %>:</td>
+      <td><%= @water_supply_contract.try(:use).try(:name) %></td>
+    </tr>
+    <tr>
       <td><%=t 'activerecord.attributes.water_supply_contract.caliber_id' %>:</td>
       <td><%= @water_supply_contract.caliber.try(:to_label) %></td>
       <td><%=t 'activerecord.attributes.water_supply_contract.contract_date' %>:</td>

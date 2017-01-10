@@ -1,6 +1,8 @@
-<h1>Editing water_connection_type</h1>
+<%= render '/layouts/ag2_gest/waterconnectiontypebreadcrumb' %>
+
+<h3><%=t '.title' %></h3>
 
 <%= render 'form' %>
 
-<%= link_to 'Show', @water_connection_type %> |
-<%= link_to 'Back', water_connection_types_path %>
+<%= link_to t('.show'), @water_connection_type %> |
+<%= link_to t('.back'), water_connection_types_path %>

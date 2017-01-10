@@ -11,7 +11,7 @@ class PreReading < ActiveRecord::Base
   attr_accessible :reading_1, :reading_2, :reading_date, :reading_index, :reading_index_1, :reading_index_2,
                   :reading_sequence, :reading_variant,
                   :project_id, :billing_period_id, :billing_frequency_id, :reading_type_id,
-                  :meter_id, :subscriber_id, :reading_route_id, :reading_1_id, :reading_2_id
+                  :meter_id, :subscriber_id, :reading_route_id, :reading_1_id, :reading_2_id, :created_by, :updated_by
 
   has_many :pre_reading_incidences
   has_and_belongs_to_many :reading_incidence_types, join_table: "pre_reading_incidences"

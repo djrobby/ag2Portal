@@ -18,10 +18,13 @@ class Tariff < ActiveRecord::Base
                   :billable_item_id, :caliber_id, :tariff_scheme_id, :billing_frequency_id,
                   :starting_at, :ending_at
 
+  has_one :active_tariff
+  has_one :billable_concept, through: :billable_item
+
   has_many :subscriber_tariffs
   has_many :contracted_tariffs
   has_many :tariff_scheme_items
-  has_one :active_tariff
+  has_many :subscribers, through: :subscriber_tariffs
 
   #validates :tariff_scheme,     :presence => true
   validates :billable_item,     :presence => true
@@ -29,8 +32,9 @@ class Tariff < ActiveRecord::Base
   validates :caliber,           :presence => true, :if => :concept_is_sum?
   validates :billing_frequency, :presence => true
   validates :billing_frequency, :presence => true
-  #validates :starting_at,       :presence => true
+  validates :starting_at,       :presence => true
   #validates :tariff_scheme_id, uniqueness: {scope: [:billable_item_id, :tariff_type_id, :caliber_id, :billing_frequency_id]}
+  validates :starting_at, uniqueness: {scope: [:billable_item_id, :tariff_type_id, :caliber_id, :billing_frequency_id]}
 
   # tariffs for water supply contract
   # def self.by_contract(water_supply_contract)
@@ -44,14 +48,43 @@ class Tariff < ActiveRecord::Base
   scope :belongs_to_project, -> p { joins(:billable_item).where('billable_items.project_id = ?', p) }
   scope :belongs_to_type, -> t { where(tariff_type_id: t) }
   scope :belongs_to_project_type, -> p,t { joins(:billable_item).where('billable_items.project_id = ? AND tariff_type_id = ?', p, t) }
+  scope :availables_to_project, -> p { joins(:billable_item).where("billable_items.project_id IN (?) AND (tariffs.ending_at IS NULL OR tariffs.ending_at < ?)", p, Date.today)}
+  scope :availables_to_project_type, -> p,t { joins(:billable_item).where("billable_items.project_id = ? AND tariffs.tariff_type_id = ? AND (tariffs.ending_at IS NULL OR tariffs.ending_at < ?)", p, t, Date.today)}
+  scope :availables_to_project_type_document, -> p,t,d { joins(:billable_item).joins(:billable_concept).where("billable_items.project_id = ? AND tariffs.tariff_type_id = ? AND billable_concepts.billable_document = ? AND (tariffs.ending_at IS NULL OR tariffs.ending_at < ?)", p, t, d, Date.today)}
+  scope :availables_to_project_type_document_caliber, -> p,t,d,c { joins(:billable_item).joins(:billable_concept).where("billable_items.project_id = ? AND tariffs.tariff_type_id = ? AND billable_concepts.billable_document = ? AND (tariffs.caliber_id IS NULL OR tariffs.caliber_id = ? ) AND (tariffs.ending_at IS NULL OR tariffs.ending_at < ?)", p, t, d, c, Date.today)}
 
   before_destroy :check_for_dependent_records
+  after_save :assing_ending_at, :reindex_tariff
+  after_destroy :reindex_tariff
+
+  has_paper_trail
+
+  searchable do
+    integer :id
+    integer :project_id do
+      billable_item.project_id
+    end
+    integer :tariff_type_id
+    integer :billable_item_id
+    integer :caliber_id
+    integer :billing_frequency_id
+    time :ending_at
+    time :starting_at
+  end
 
   def tariff_active
     if block1_fee == 0.0 && block2_fee == 0.0 && block3_fee == 0.0 && block4_fee == 0.0 && block5_fee == 0.0 && block6_fee == 0.0 && block7_fee == 0.0 && block8_fee == 0.0 && fixed_fee == 0.0 && variable_fee == 0.0 && percentage_fee == 0.0
       return false
     else
       return true
+    end
+  end
+
+  def get_code_formula
+    if percentage_applicable_formula.blank?
+      nil
+    else
+      BillableConcept.find(percentage_applicable_formula).try(:code)
     end
   end
 
@@ -87,6 +120,17 @@ class Tariff < ActiveRecord::Base
   end
 
   private
+
+  def reindex_tariff
+    Sunspot.index(self)
+  end
+
+  def assing_ending_at
+    if !ending_at.blank?
+      subscriber_tariffs.update_all(ending_at: ending_at)
+      contracted_tariffs.update_all(ending_at: ending_at)
+    end
+  end
 
   def concept_is_sum?
     billable_item and billable_item.billable_concept.code == "SUM"

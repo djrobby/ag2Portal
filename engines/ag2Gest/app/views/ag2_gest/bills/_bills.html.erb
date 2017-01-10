@@ -70,9 +70,7 @@
         <% if b.bill %> <i class="icon-thumbs-up"></i> <% else %> <i class="icon-thumbs-down"></i> <% end %>
       </div>
       <div class="span1 soft-padding pull-right">
-        <%= link_to bill_path(b, bills: b.pre_group_no), class: "btn btn-mini", method: :delete, data: { confirm: 'Are you sure?' } do %>
-          <i class="icon-trash"></i>
-        <% end %>
+        <%= render :partial => '/layouts/crud/delete', :locals => { :model => PreBill, :path => bill_path(b, bills: b.pre_group_no), :msg => t("activerecord.models.bill.one"), :txt => b.id } %>
       </div>
     </div>
     <div id="collapse-<%= b.id %>" class="accordion-body collapse">

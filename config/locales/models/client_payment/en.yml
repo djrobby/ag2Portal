@@ -1,51 +1,35 @@
-en:
+es:
   activerecord:
     models:
-      client:
-        zero:  Clients
-        one:   Client
-        few:   Clients
-        other: Clients
-        check_for_delivery_notes: "Client cannot be destroyed while linked delivery notes exist."
-        check_for_sale_offers: "Client cannot be destroyed while linked offers exist."
-        check_for_client_invoices: "Client cannot be destroyed while linked C invoices exist."
-        check_for_client_charges: "Client cannot be destroyed while linked charges exist."
+      client_payment:
+        zero:  Client payments
+        one:   Client payment
+        few:   Client payments
+        other: Client payments
+        # check_for_delivery_notes: "Cliente no puede ser eliminado mientras existan notas de entrega vinculadas."
+        # check_for_sale_offers: "Cliente no puede ser eliminado mientras existan presupuestos vinculados."
+        # check_for_client_invoices: "Cliente no puede ser eliminado mientras existan facturas C vinculadas."
+        # check_for_client_charges: "Cliente no puede ser eliminado mientras existan cobros vinculados."
     attributes:
-      client:
-        entity: "Entity Id"
-        entity_id: "Entity Id"
-        client_code: "Code"
-        name: "Name"
-        fiscal_id: "Fiscal Id"
-        fiscal_id_c: "Fiscal Id"
-        province: "Province"
-        province_id: "Province"
-        town: "Town"
-        town_id: "Town"
-        zipcode: "Zip Code"
-        zipcode_id: "Zip Code"
-        street_type: "Street Type"
-        street_type_id: "Street Type"
-        street_name: "Street name"
-        street_number: "Number"
-        building: "Building"
-        floor: "Floor"
-        floor_office: "Office"
-        region: "Region"
-        region_id: "Region"
-        country: "Country"
-        country_id: "Country"
-        phone: "Phone"
-        fax: "Fax"
-        cellular: "Cellular"
-        email: "Email"
-        active: "Active?"
-        remarks: "Remarks"
-        address: "Address"
-        organization: "Organization"
-        organization_id: "Organization"
-        is_contact: "Is contact?"
-        ledger_account: "Ledger account"
-        ledger_account_id: "Ledger account"
-        payment_method: "Payment method"
-        payment_method_id: "Payment method"
+      client_payment:
+        id: "Id"
+        bill_id: "Documento"
+        invoice_id: "Factura"
+        payment_method_id: "Forma de pago"
+        payment_date: "Fecha de pago"
+        created_at: "Fecha de registro"
+        amount: "Importe"
+        iban: "Cuenta IBAN"
+        country_code: "País"
+        iban_dc: "DC IBAN"
+        cb: "Banco"
+        cs: "Sucursal"
+        ccc: "dc CCCC"
+        account_no: "Nº de cuenta"
+        receipt_no: "Nº Recibi"
+        total: "Total Cobrado"
+        charged: "Cobrada por:"
+        client: "Cliente"
+
+        successfully: "Client payment se ha actualizado correctamente."
+        create: "Client payment se ha creado correctamente."

@@ -7,6 +7,7 @@ module Ag2Products
                                                :order_report,
                                                :receipt_report,
                                                :delivery_report,
+                                               :product_items_report,
                                                :stock_report,
                                                :stock_companies_report,
                                                :pr_track_project_has_changed,
@@ -658,6 +659,40 @@ module Ag2Products
       end
     end
 
+    # product report
+    def product_items_report
+      detailed = params[:detailed]  # Not used!
+      store = params[:store]
+      family = params[:family]
+
+      # Dates are mandatory
+      from = Date.today.to_s
+      # if @from.blank? || @to.blank?
+      #   return
+      # end
+
+      # Format dates (must use to only!)
+      # from = Time.parse(@from).strftime("%Y-%m-%d")
+      # to = Time.parse(@to).strftime("%Y-%m-%d")
+
+      if !family.blank?
+        @product_items_report = Product.where("product_family_id = ?",family).order(:product_family_id)
+      elsif family.blank?
+        @product_items_report = Product.order(:product_family_id)
+      end
+
+      # Setup filename
+      title = t("activerecord.models.product.few" + "_#{from}")
+
+      respond_to do |format|
+        # Render PDF
+        format.pdf { send_data render_to_string,
+                     filename: "#{title}.pdf",
+                     type: 'application/pdf',
+                     disposition: 'inline' }
+      end
+    end
+
     # Stock report
     def stock_report
       detailed = params[:detailed]  # Not used!
@@ -804,12 +839,13 @@ module Ag2Products
     private
 
     def reports_array()
-      _array = []
+      _array = []   
       _array = _array << t("activerecord.models.inventory_count.few")
       _array = _array << t("activerecord.models.purchase_order.few")
       _array = _array << t("activerecord.models.purchase_order.pending")
       _array = _array << t("activerecord.models.receipt_note.few")
       _array = _array << t("activerecord.models.delivery_note.few")
+      _array = _array << t("activerecord.models.product.few")  
       _array = _array << t("ag2_products.ag2_products_track.stock_report.report_title")
       _array = _array << t("ag2_products.ag2_products_track.stock_company_report.report_title")
       _array

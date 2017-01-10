@@ -29,6 +29,7 @@ es:
         receipt_no: "Nº Recibi"
         total: "Total Cobrado"
         charged: "Cobrada por:"
+        client: "Cliente"
 
         successfully: "Pago de cliente se ha actualizado correctamente."
         create: "Pago de cliente se ha creado correctamente."

@@ -2,23 +2,23 @@ es:
   ag2_gest:
     water_connections:
       index:
-        title: "Tipos de Acometida"
-        btn_new: "Nuevo Tipo de Acometida"
+        title: "Acometida"
+        btn_new: "Nueva Acometida"
         back_to_root: "Volver a ag2Gest"
         back_to_management: "Volver a Puntos de Servicio"
       show:
-        title: "Tipo de Acometida"
-        btn_edit: "Editar Tipo de Acometida"
-        btn_delete: "Borrar Tipo de Acometida"
-        return_to: "Volver a Tipo de Acometida"
+        title: "Acometida"
+        btn_edit: "Editar Acometida"
+        btn_delete: "Borrar Acometida"
+        return_to: "Volver a Acometida"
       edit:
         show: "Mostrar"
         back: "Atrás"
-        title: "Editar Tipo de Acometida"
-        btn_show: "Ver Tipo de Acometida"
+        title: "Editar Acometida"
+        btn_show: "Ver Acometida"
       new:
-        title: "Nuevo Tipo de Acometida"
-      back_to_main_page: "Volver a Tipo de acometidas"
+        title: "Nueva Acometida"
+      back_to_main_page: "Volver a acometidas"
       # generate_code_btn: "Código de Tipo de acometida"
       # personal_info: "Información del Cliente"
       # commercial_info: "Información Contable y Comercial"

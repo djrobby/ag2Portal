@@ -30,6 +30,8 @@ class Subscriber < ActiveRecord::Base
   has_many :pre_bills
   has_many :bills
   has_many :client_payments
+  has_many :subscriber_tariffs
+  has_many :tariffs, through: :subscriber_tariffs
 
   # Nested attributes
   accepts_nested_attributes_for :readings
@@ -61,6 +63,17 @@ class Subscriber < ActiveRecord::Base
 
   before_validation :fields_to_uppercase
   before_destroy :check_for_dependent_records
+
+  def tariffs_supply
+    unless tariffs.blank?
+      tariffs
+      .where("subscriber_tariffs.ending_at IS NULL")
+      .sort{|a,b| a.percentage_applicable_formula && b.percentage_applicable_formula ? a.percentage_applicable_formula <=> b.percentage_applicable_formula : a.percentage_applicable_formula ? 1 : -1 }
+      .group_by{|t| t.try(:billable_item).try(:biller_id)}
+    else
+      []
+    end
+  end
 
   def total_debt_unpaid
     bills.map(&:invoices).flatten.map{|i| i.debt if !i.payday_limit or i.payday_limit < Date.today}.compact.sum{|i| i}

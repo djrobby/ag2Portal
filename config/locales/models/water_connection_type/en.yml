@@ -6,6 +6,7 @@ en:
         one:   Connection type
         few:   Connection types
         other: Connection types
+        check_for_water_connections: "Connection types cannot be destroyed while linked water connections exist."
     attributes:
       water_connection_type:
         id: "Id"

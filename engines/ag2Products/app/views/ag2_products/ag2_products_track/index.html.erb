@@ -88,6 +88,19 @@
           $('#report_btn').show();
           break;
         case 6:
+          // Product
+          hide("#Project", "<%= t(".label_project") %>");
+          hide("#Supplier", "<%= t(".label_supplier") %>");
+          hide("#Store", "<%= t(".label_store") %>");
+          hide("#Order", "<%= t(".label_work_order") %>");
+          hide("#Account", "<%= t(".label_charge_account") %>");
+          hide("#Status", "<%= t(".label_order_status") %>");
+          hide("#User", "<%= t(".label_petitioner") %>");
+          show("#Family", "<%= t(".label_family") %>");
+          hide("#Product", "<%= t(".label_product") %>");
+          $('#report_btn').show();
+          break;
+        case 7:
           // Stock
           hide("#Project", "<%= t(".label_project") %>");
           hide("#Supplier", "<%= t(".label_supplier") %>");
@@ -101,7 +114,7 @@
           $('#report_btn').show();
           break;
         // MJ
-        case 7:
+        case 8:
           // Stock by Company
           hide("#Project", "<%= t(".label_project") %>");
           hide("#Supplier", "<%= t(".label_supplier") %>");
@@ -237,7 +250,7 @@
           if (detailed == ""){
            window.open("inventory_report.pdf?detailed=" + detailed + "&from=" + from + "&to=" + to + "&store=" + store + "&family=" + family, "_blank");
           }else {
-		   window.open("inventory_items_report.pdf?detailed=" + detailed + "&from=" + from + "&to=" + to + "&store=" + store + "&family=" + family, "_blank");
+		        window.open("inventory_items_report.pdf?detailed=" + detailed + "&from=" + from + "&to=" + to + "&store=" + store + "&family=" + family, "_blank");
           }
           break;
         case 2:
@@ -308,6 +321,11 @@
           }
           break;
         case 6:
+          // Product
+          var family = $('select#Family :selected').val();
+          window.open("product_items_report.pdf?detailed=" + detailed + "&from=" + from + "&to=" + to + "&family=" + family, "_blank");
+          break;
+        case 7:
           // Stock valued by global PMP
           var store = $('select#Store :selected').val();
           var family = $('select#Family :selected').val();
@@ -317,7 +335,7 @@
           window.open("stock_report.pdf?detailed=" + detailed + "&from=" + from + "&to=" + to + "&store=" + store + "&family=" + family + "&product=" + product, "_blank");
           break;
          // MJ
-         case 7:
+         case 8:
           // Stock valued by company PMP
           var store = $('select#Store :selected').val();
           var family = $('select#Family :selected').val();

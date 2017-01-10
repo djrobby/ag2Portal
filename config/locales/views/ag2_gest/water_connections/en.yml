@@ -2,21 +2,21 @@ en:
   ag2_gest:
     water_connections:
       index:
-        title: "Connection Types"
-        btn_new: "New Billable item"
+        title: "Connections"
+        btn_new: "New Connection"
         back_to_root: "Back to ag2Gest"
         back_to_management: "Back to Service Points"
       show:
-        title: "Billable item"
-        btn_edit: "Edit Billable item"
-        btn_delete: "Delete Billable item"
-        return_to: "Back to Billable item"
+        title: "Connection"
+        btn_edit: "Edit Connection"
+        btn_delete: "Delete Connection"
+        return_to: "Back to Connection"
       edit:
-        title: "Edit Billable item"
-        btn_show: "Show Billable item"
+        title: "Edit Connection"
+        btn_show: "Show Connection"
       new:
-        title: "New Billable item"
-      back_to_main_page: "Back to Billable items"
+        title: "New Connections"
+      back_to_main_page: "Back to Connections"
       # generate_code_btn: "billable_item Code"
       # personal_info: "billable_item Info"
       # commercial_info: "Accounting & Commercial Info"

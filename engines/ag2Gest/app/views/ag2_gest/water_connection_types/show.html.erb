@@ -1,5 +1,22 @@
-<p id="notice"><%= notice %></p>
+<%= render '/layouts/ag2_gest/waterconnectiontypebreadcrumb' %>
 
+<h3><%= t('.title') %></h3>
+<table class="table">
+  <tbody>
+    <tr>
+      <td><%= t('activerecord.attributes.water_connection_type.id') %>:</td>
+      <td><%= @water_connection_type.try(:id) %></td>
+      <td><%= t('activerecord.attributes.water_connection_type.name') %>:</td>
+      <td><%= @water_connection_type.try(:name) %></td>
+    </tr>
+    	<%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @water_connection_type } %>
+    	<%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @water_connection_type } %>
+  </tbody>
+</table>
 
-<%= link_to 'Edit', edit_water_connection_type_path(@water_connection_type) %> |
-<%= link_to 'Back', water_connection_types_path %>
+<%= render partial: '/layouts/crud/update_delete_new', locals:
+{ model: WaterConnectionType, update_path: edit_water_connection_type_path(@water_connection_type), update_txt: t('.btn_edit'),
+delete_path: @water_connection_type, delete_txt: t('.btn_delete'), msg: t("activerecord.models.water_connection_type.one"), :txt => @water_connection_type.name,
+new_path: new_water_connection_type_path, new_txt: t('ag2_gest.water_connection_types.index.btn_new') } %>
+
+<%= link_to I18n.t('ag2_gest.water_connection_types.back_to_main_page'), water_connection_types_path %>

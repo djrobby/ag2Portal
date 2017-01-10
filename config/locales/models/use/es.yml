@@ -10,5 +10,6 @@ es:
         check_for_subscribers: "Uso no puede ser eliminado mientras existan abonados vinculados."
     attributes:
       use:
+        id: "Id"
         code: "Código"
         name: "Descripción"

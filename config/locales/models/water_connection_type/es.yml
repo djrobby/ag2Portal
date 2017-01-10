@@ -6,6 +6,7 @@ es:
         one:   Tipo de acometida
         few:   Tipos de acometida
         other: Tipos de acometida
+        check_for_water_connections: "Tipo de acometida no puede ser eliminada mientras existan acometidas vinculadas."
     attributes:
       water_connection_type:
         id: "Id"

@@ -6,4 +6,13 @@ class SubscriberTariff < ActiveRecord::Base
   validates :subscriber,  :presence => true
   validates :tariff,      :presence => true
   validates :starting_at, :presence => true
+
+  before_validation :assign_at
+
+  private
+
+  def assign_at
+    self.starting_at = tariff.starting_at
+    self.ending_at = tariff.ending_at
+  end
 end

@@ -18,19 +18,37 @@
   </li>
   <% end %>
   <% if @tariff_scheme %>
-  <li>
-    <a href="<%= tariff_schemes_path %>"><%=t :"ag2_gest.breadcrumb.tariff_schemes.items" %></a><span class="divider">></span>
-  </li>
-  <% if @breadcrumb == 'read' || @breadcrumb == 'update' %>
-  <%=t :"ag2_gest.breadcrumb.tariff_schemes.item" %>
+    <li>
+      <a href="<%= tariff_schemes_path %>"><%=t :"ag2_gest.breadcrumb.tariff_schemes.items" %></a><span class="divider">></span>
+    </li>
+    <% if @breadcrumb == 'read' || @breadcrumb == 'update' %>
+      <%=t :"ag2_gest.breadcrumb.tariff_schemes.item" %>
+    <% end %>
+    <% if @breadcrumb == 'create' %>
+      <li>
+        <%= t :"breadcrumb.new" %>
+      </li>
+    <% end %>
   <% end %>
-  <% if @breadcrumb == 'create' %>
+  <% if @tariffs %>
   <li>
-    <%= t :"breadcrumb.new" %>
+    <%=t "ag2_gest.breadcrumb.tariffs.items" %>
   </li>
+  <% end %>
+  <% if @tariff %>
+    <li>
+      <a href="<%= tariffs_path %>"><%=t :"ag2_gest.breadcrumb.tariffs.items" %></a><span class="divider">></span>
+    </li>
+    <% if @breadcrumb == 'read' || @breadcrumb == 'update' %>
+      <%=t :"ag2_gest.breadcrumb.tariffs.item" %>
+    <% end %>
+    <% if @breadcrumb == 'create' %>
+      <li>
+        <%= t :"breadcrumb.new" %>
+      </li>
+    <% end %>
   <% end %>
 
-  <% end %>
   <!-- Close -->
   <a class="close" href="<%= ag2_gest.root_path %>">&#215;</a>
 </ul>

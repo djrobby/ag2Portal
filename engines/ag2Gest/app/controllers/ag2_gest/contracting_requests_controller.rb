@@ -805,6 +805,7 @@ module Ag2Gest
       @subscriber = @contracting_request.try(:subscriber) || Subscriber.new
       @projects = current_projects
       @projects_ids = current_projects_ids
+      @tariff_types_availables = Tariff.availables_to_project(@contracting_request.project_id).map(&:tariff_type).uniq
 
       respond_to do |format|
         format.html # show.html.erb
@@ -918,9 +919,9 @@ module Ag2Gest
       from = params[:From]
       to = params[:To]
 
-      projects = projects_dropdown 
+      projects = projects_dropdown
       request_statuses = request_statuses_dropdown
-      request_types = request_types_dropdown 
+      request_types = request_types_dropdown
 
       # Arrays for search
       current_projects = projects.blank? ? [0] : current_projects_for_index(projects)
@@ -991,9 +992,9 @@ module Ag2Gest
       from = params[:From]
       to = params[:To]
 
-      projects = projects_dropdown 
+      projects = projects_dropdown
       request_statuses = request_statuses_dropdown
-      request_types = request_types_dropdown 
+      request_types = request_types_dropdown
 
       # Arrays for search
       current_projects = projects.blank? ? [0] : current_projects_for_index(projects)

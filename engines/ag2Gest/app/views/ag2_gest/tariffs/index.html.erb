@@ -1,21 +1,142 @@
-<h1>Listing tariffs</h1>
+<script type="text/javascript">
+  var _thisForm = '';
+  var changing = false;
 
-<table>
-  <tr>
-    <th></th>
-    <th></th>
-    <th></th>
-  </tr>
+  $(document).ready(function() {
+    $('.sel2').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      dropdownCssClass: 'shrinked',
+      dropdownAutoWidth: true,
+      allowClear: true
+    });
+    $('.date_picker').datepicker({
+     format:'dd/mm/yyyy',weekStart:1
+    });
+    // Initialized form variable
+    _thisForm = $("#removeFilter").closest('form')[0];
+  });
 
-<% @tariffs.each do |tariff| %>
-  <tr>
-    <td><%= link_to 'Show', tariff %></td>
-    <td><%= link_to 'Edit', edit_tariff_path(tariff) %></td>
-    <td><%= link_to 'Destroy', tariff, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-  </tr>
-<% end %>
-</table>
 
-<br />
+  $(document).ajaxStart(function() {
+    // show loader on start
+    if (changing == false) {
+      $("#div_table").html("");
+      $("#loader").show();
+    }
+  }).ajaxSuccess(function() {
+    // hide loader on success
+    $("#loader").hide();
+  });
 
-<%= link_to 'New Tariff', new_tariff_path %>
+  $(window).bind("load", function() {
+    $("#Project").select2("val", "<%= params[:Project] %>");
+    $("#Item").select2("val", "<%= params[:Item] %>");
+    $("#Type").select2("val", "<%= params[:Type] %>");
+    $("#Caliber").select2("val", "<%= params[:Caliber] %>");
+    $("#Frequency").select2("val", "<%= params[:Frequency] %>");
+    $("#From").val("<%= params[:From] %>");
+    $("#To").val("<%= params[:To] %>");
+  });
+
+  jQuery(function($) {
+    $("#removeFilter").click(function() {
+      $("#Project").select2("val", "");
+      $("#Item").select2("val", "");
+      $("#Type").select2("val", "");
+      $("#Caliber").select2("val", "");
+      $("#Frequency").select2("val", "");
+      $("#From").val("");
+      $("#To").val("");
+      // no AJAX
+      //_thisForm.submit();
+      // AJAX
+      $("#submit_btn").trigger("click");
+    });
+  });
+
+</script>
+
+<%= render '/layouts/ag2_gest/tariffschemesbreadcrumb' %>
+
+<h3><%= t(".title") %></h3>
+
+<div class="container-fluid">
+  <div class="row-fluid">
+
+    <div class="span3">
+      <div class="well sidebar-nav">
+        <!-- Refresh -->
+        <%= link_to ag2_gest.tariffs_path, title: I18n.t(:refresh), class: "icon-refresh-link", remote: true do %> <i class="icon-refresh"></i> <% end %>
+        <!-- Search form -->
+        <%= form_tag "tariffs", :method => 'get', :remote => true do %>
+        <!-- Project -->
+        <%= label_tag I18n.t("ag2_gest.tariffs.index.label_project"), nil, :class => 'form-label' %>
+        <%= select_tag "Project", options_from_collection_for_select(@projects, "id", "to_label"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
+        <!-- Item -->
+        <%= label_tag I18n.t("ag2_gest.tariffs.index.label_item"), nil, :class => 'form-label-under-sel2' %>
+        <%= select_tag "Item", options_from_collection_for_select(@items, "id", "to_label"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
+        <!-- Type -->
+        <%= label_tag I18n.t("ag2_gest.tariffs.index.label_type"), nil, :class => 'form-label-under-sel2' %>
+        <%= select_tag "Type", options_from_collection_for_select(@types, "id", "to_label"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
+        <!-- Caliber -->
+        <%= label_tag I18n.t("ag2_gest.tariffs.index.label_caliber"), nil, :class => 'form-label-under-sel2' %>
+        <%= select_tag "Caliber", options_from_collection_for_select(@calibers, "id", "to_label"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
+        <!-- Frequency -->
+        <%= label_tag I18n.t("ag2_gest.tariffs.index.label_frequency"), nil, :class => 'form-label-under-sel2' %>
+        <%= select_tag "Frequency", options_from_collection_for_select(@frequencies, "id", "to_label"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
+        <!-- Dates -->
+        <%= label_tag I18n.t("ag2_gest.tariffs.index.label_from"), nil, :class => 'form-label-under-sel2' %>
+        <%= text_field_tag "From", params[:date], :class =>  'x-large-text-field shrinked date_picker' %>
+        <%= label_tag I18n.t("ag2_gest.tariffs.index.label_to"), nil, :class => 'form-label' %>
+        <%= text_field_tag "To", params[:date], :class =>  'x-large-text-field shrinked date_picker' %>
+        <br><br>
+        <!-- Submit -->
+        <%= submit_tag I18n.t(:apply_filter_button), :class => 'btn btn-primary', :id => 'submit_btn' %>
+        <!-- Remove filter -->
+        <button id="removeFilter" type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><%= t :clear_filter_button %></button>
+        <% end %>
+        <!-- Buttons -->
+        <%= render :partial => '/layouts/crud/new', :locals => { :model => Tariff, :path => new_tariff_path, :txt => t("ag2_gest.tariffs.index.btn_new") } %>
+        <a href="#new-tariff-pct" role="button" class="btn btn-warning" data-toggle="modal">Nuevas tarifas por tipo</a>
+      </div><!-- /.sidebar-nav -->
+    </div><!-- /.span3 -->
+
+
+    <div class="span9">
+      <div id="loader"></div>
+      <div id="div_table">
+        <%= render 'tariffs' %>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Modal -->
+<div id="new-tariff-pct" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <%= form_tag create_pct_tariffs_path, :method=>'post' do%>
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+      <h3 id="myModalLabel">Nueva Tarifa</h3>
+    </div>
+    <div class="modal-body">
+
+      <%= label_tag "Proyecto", nil, :class => 'form-label-under-sel2' %>
+      <%= select_tag "project_id", options_from_collection_for_select(@projects, "id", "to_label"), :prompt => "", :class => 'x-large-text-field shrinked sel2', required: "required" %>
+
+      <%= label_tag "Tipo Tarifa a duplicar", nil, :class => 'form-label-under-sel2' %>
+      <%= select_tag "tariff_types", options_from_collection_for_select(Tariff.availables_to_project(@projects.pluck(:id)).map(&:tariff_type).uniq, "id", "to_label"), :prompt => "", :class => 'x-large-text-field shrinked sel2', required: "required" %>
+
+      <%= label_tag "Incremento porcentual", nil, :class => 'form-label-under-sel2' %>
+      <%= text_field_tag "pct_value", nil, :class => 'x-large-text-field shrinked number-text-field', onkeyup: "caps(this)", type: "number", step: "any", required: "required" %>
+
+      <%= label_tag "Fecha inicio de vigencia", nil, :class => 'form-label' %>
+      <%= text_field_tag "init_date", nil, :class => 'x-large-text-field shrinked number-text-field date_picker', onkeyup: "caps(this)", required: "required" %>
+
+    </div>
+    <div class="modal-footer">
+      <%= submit_tag "Crear Tarifa", :class => 'btn btn-primary', :id => 'submit_btn' %>
+      <button class="btn" data-dismiss="modal" aria-hidden="true">Cerrar</button>
+    </div>
+  <% end %>
+</div>

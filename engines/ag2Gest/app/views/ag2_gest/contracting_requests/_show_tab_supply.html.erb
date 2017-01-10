@@ -393,7 +393,7 @@
       <%# if @contracting_request.water_supply_contract.nil? %>
         <!-- <a id="initial-billing" class="btn btn-primary nextBtn disabled" data-remote="true" href="#">Completa suministro</a> -->
       <%# else %>
-        <a id="initial-billing" class="btn btn-primary nextBtn <%= 'disabled' if @contracting_request.water_supply_contract.nil? %>" href="<%= params[:id] %>/initial_billing" data-remote="true" data-type="json" ><%= t('activerecord.attributes.contracting_request.invoice_create') %></a>
+        <a id="initial-billing" class="btn btn-primary nextBtn <%= 'disabled' if @contracting_request.water_supply_contract.nil? or @contracting_request.water_supply_contract.tariffs.blank? %>" href="<%= params[:id] %>/initial_billing" data-remote="true" data-type="json" ><%= t('activerecord.attributes.contracting_request.invoice_create') %></a>
         <%# if @contracting_request.contracting_request_type_id == 2 %>
           <!-- <a id="initial-complete" class="btn btn-primary nextBtn" href="<%= params[:id] %>/initial_complete" data-remote="true" >Finalizar subrogación</a> -->
         <%# end %>
@@ -407,7 +407,7 @@
       <%# if @contracting_request.water_supply_contract.nil? %>
         <!-- <a id="inspection-billing" class="btn btn-primary btn-block nextBtn disabled" data-remote="true" href="#">Completa suministro</a> -->
       <%# else %>
-        <a id="inspection-billing" class="btn btn-primary nextBtn <%= 'disabled' if @contracting_request.water_supply_contract.nil? %>" href="<%= params[:id] %>/inspection_billing" data-remote="true" ><%= t('activerecord.attributes.contracting_request.invoice_create') %></a>
+        <a id="inspection-billing" class="btn btn-primary nextBtn <%= 'disabled' if @contracting_request.water_supply_contract.nil? or @contracting_request.water_supply_contract.tariffs.blank? %>" href="<%= params[:id] %>/inspection_billing" data-remote="true" ><%= t('activerecord.attributes.contracting_request.invoice_create') %></a>
       <%# end %>
     </div>
     <!-- step 3 -->
@@ -479,13 +479,17 @@
             <% if @water_supply_contract.tariff_scheme %>
               <%= link_to @water_supply_contract.tariff_scheme.name, tariff_scheme_path(@water_supply_contract.tariff_scheme) unless @water_supply_contract.tariff_scheme.blank? %>
             <% else %>
-              <a id="tariff_scheme" href="#"><%=  %>
+              <a id="tariff_scheme" href="#"></a>
             <% end %>
           </td>
         </tr>
         <tr>
+          <td><b><%= t('activerecord.attributes.contracting_request.tariff_type') %></b></td>
+          <td id="tariff_type"><%= @water_supply_contract.try(:tariff_type).try(:name) unless @water_supply_contract.tariff_type.blank? %></td>
+        </tr>
+        <tr>
           <td><b><%= t('activerecord.attributes.contracting_request.use') %></b></td>
-          <td id="tariff_type"><%= @water_supply_contract.try(:tariff_scheme).try(:tariff_type).try(:name) unless @water_supply_contract.tariff_scheme.blank? %></td>
+          <td id="use"><%= @water_supply_contract.try(:use).try(:name) %></td>
         </tr>
         <!-- <tr>
           <td><b>Importe fijo contratación</b></td>
@@ -649,6 +653,105 @@
     </table>
   </div>
 </div>
+<% if !@water_supply_contract.tariffs.blank? %>
+  <div class="row-fluid">
+    <div class="span12">
+      <h4><%= t('activerecord.attributes.water_supply_contract.tariff_association') %></h4>
+      <table class="table table-condensed table-striped">
+        <thead>
+          <tr>
+            <!-- <th></th> -->
+            <th></th>
+            <th><%= t('activerecord.attributes.tariff_scheme.caliber_id') %></th>
+            <th><%= t('activerecord.attributes.tariff_scheme.billable_concept') %></th>
+            <th><%= t('activerecord.attributes.tariff_scheme.tariff_type_id') %></th>
+            <th><%= t('activerecord.attributes.tariff_scheme.billing_frequency_id') %></th>
+            <th><%= t('activerecord.attributes.tariff_scheme.fixed_fee') %></th>
+            <th><%= t('activerecord.attributes.tariff_scheme.block1_limit') %></th>
+            <th><%= t('activerecord.attributes.tariff_scheme.block1_fee') %></th>
+            <th><%= t('activerecord.attributes.tariff_scheme.block2_limit') %></th>
+            <th><%= t('activerecord.attributes.tariff_scheme.block2_fee') %></th>
+            <th><%= t('activerecord.attributes.tariff_scheme.block3_limit') %></th>
+            <th><%= t('activerecord.attributes.tariff_scheme.block3_fee') %></th>
+            <th><%= t('activerecord.attributes.tariff_scheme.block4_limit') %></th>
+            <th><%= t('activerecord.attributes.tariff_scheme.block4_fee') %></th>
+            <th><%= t('activerecord.attributes.tariff_scheme.block5_limit') %></th>
+            <th><%= t('activerecord.attributes.tariff_scheme.block5_fee') %></th>
+            <th><%= t('activerecord.attributes.tariff_scheme.block6_limit') %></th>
+            <th><%= t('activerecord.attributes.tariff_scheme.block6_fee') %></th>
+            <th><%= t('activerecord.attributes.tariff_scheme.block7_limit') %></th>
+            <th><%= t('activerecord.attributes.tariff_scheme.block7_fee') %></th>
+            <th><%= t('activerecord.attributes.tariff_scheme.block8_limit') %></th>
+            <th><%= t('activerecord.attributes.tariff_scheme.block8_fee') %></th>
+            <th><%= t('activerecord.attributes.tariff_scheme.variable_fee') %></th>
+            <th><%= t('activerecord.attributes.tariff_scheme.percentage_fee') %></th>
+            <th><%= t('activerecord.attributes.tariff_scheme.percentage_applicable_formula') %></th>
+            <th><%= t('activerecord.attributes.tariff_scheme.discount_pct_f') %></th>
+            <th><%= t('activerecord.attributes.tariff_scheme.discount_pct_b') %></th>
+            <th><%= t('activerecord.attributes.tariff_scheme.discount_pct_v') %></th>
+            <th><%= t('activerecord.attributes.tariff_scheme.discount_pct_p') %></th>
+            <th><%= t('activerecord.attributes.tariff_scheme.tax_type_f_id') %></th>
+            <th><%= t('activerecord.attributes.tariff_scheme.tax_type_b_id') %></th>
+            <th><%= t('activerecord.attributes.tariff_scheme.tax_type_v_id') %></th>
+            <th><%= t('activerecord.attributes.tariff_scheme.tax_type_p_id') %></th>
+          </tr>
+        </thead>
+        <tbody>
+
+          <% @water_supply_contract.tariffs.each do |tariff| %>
+            <%# if tariff.tariff_active %>
+              <!-- <tr style="<%= 'display:none' unless tariff.tariff_active %>"> -->
+              <tr>
+                <td>
+                  <% if @water_supply_contract.bill.nil? %>
+                    <% contracted_tariff = ContractedTariff.where(water_supply_contract_id: @water_supply_contract.id, tariff_id: tariff.id).first %>
+                    <%= link_to contracted_tariff, class: "btn btn-mini", method: :delete, data: { confirm: 'Are you sure?' } do %>
+                      <i class="icon-trash"></i>
+                    <% end %>
+                  <% end %>
+                </td>
+                <td class="caliber"><%= tariff.try(:caliber).try(:caliber) %></td>
+                <td class="billable_concept"><%= tariff.try(:billable_concept).try(:name) %></td>
+                <td class="tariff_type"><%= tariff.try(:tariff_type).try(:name) %></td>
+                <td class="billing_frequency" data-id="<%= tariff.try(:billing_frequency).try(:id) %>"><%= tariff.try(:billing_frequency).try(:name) %></td>
+                <td class="fixed_fee"><%= tariff.try(:fixed_fee) %></td>
+                <td class="block1_limit"><%= tariff.try(:block1_limit) %></td>
+                <td class="block1_fee"><%= tariff.try(:block1_fee) %></td>
+                <td class="block2_limit"><%= tariff.try(:block2_limit) %></td>
+                <td class="block2_fee"><%= tariff.try(:block2_fee) %></td>
+                <td class="block3_limit"><%= tariff.try(:block3_limit) %></td>
+                <td class="block3_fee"><%= tariff.try(:block3_fee) %></td>
+                <td class="block4_limit"><%= tariff.try(:block4_limit) %></td>
+                <td class="block4_fee"><%= tariff.try(:block4_fee) %></td>
+                <td class="block5_limit"><%= tariff.try(:block5_limit) %></td>
+                <td class="block5_fee"><%= tariff.try(:block5_fee) %></td>
+                <td class="block6_limit"><%= tariff.try(:block6_limit) %></td>
+                <td class="block6_fee"><%= tariff.try(:block6_fee) %></td>
+                <td class="block7_limit"><%= tariff.try(:block7_limit) %></td>
+                <td class="block7_fee"><%= tariff.try(:block7_fee) %></td>
+                <td class="block8_limit"><%= tariff.try(:block8_limit) %></td>
+                <td class="block8_fee"><%= tariff.try(:block8_fee) %></td>
+                <td class="variable_fee"><%= tariff.try(:variable_fee) %></td>
+                <td class="percentage_fee"><%= tariff.try(:percentage_fee) %></td>
+                <td class="percentage_applicable_formula" data-concept="<%= tariff.percentage_applicable_formula %>"><%= tariff.try(:get_code_formula) %></td>
+                <td class="discount_pct_f"><%= tariff.try(:discount_pct_f) %></td>
+                <td class="discount_pct_b"><%= tariff.try(:discount_pct_b) %></td>
+                <td class="discount_pct_v"><%= tariff.try(:discount_pct_v) %></td>
+                <td class="discount_pct_p"><%= tariff.try(:discount_pct_p) %></td>
+                <td class="tax_type_f" data-tax-id="<%= tariff.try(:tax_type_f).try(:id) %>"><%= tariff.try(:tax_type_f).try(:tax) %></td>
+                <td class="tax_type_b" data-tax-id="<%= tariff.try(:tax_type_b).try(:id) %>"><%= tariff.try(:tax_type_b).try(:tax) %></td>
+                <td class="tax_type_v" data-tax-id="<%= tariff.try(:tax_type_v).try(:id) %>"><%= tariff.try(:tax_type_v).try(:tax) %></td>
+                <td class="tax_type_p" data-tax-id="<%= tariff.try(:tax_type_p).try(:id) %>"><%= tariff.try(:tax_type_p).try(:tax) %></td>
+              </tr>
+            <%# end %>
+          <% end %>
+
+        </tbody>
+      </table>
+
+    </div>
+  </div>
+<% end %>
 
 <%= render '/ag2_gest/contracting_requests/modals/new_water_supply_contract' %>
 

@@ -125,8 +125,8 @@ class Reading < ActiveRecord::Base
                         reading_1_id: reading_1.try(:id),
                         reading_2_id: id)
 
-    subscriber.tariff_scheme.tariffs_supply(meter.caliber_id).each do |tariffs_biller|
-
+    #subscriber.tariff_scheme.tariffs_supply(meter.caliber_id).each do |tariffs_biller|
+    subscriber.tariffs_supply.each do |tariffs_biller|
       pre_invoice = PreInvoice.create(
         invoice_no: nil, #invoice_next_no(project.company_id),
         pre_bill_id: pre_bill.id,
@@ -159,7 +159,7 @@ class Reading < ActiveRecord::Base
             description: tariff.try(:billable_item).try(:billable_concept).try(:name),
             tariff_id: tariff.id,
             price: (tariff.fixed_fee / tariff.billing_frequency.total_months),
-            quantity: subscriber.billing_frequency.total_months,
+            quantity: billing_frequency.total_months,
             tax_type_id: tariff.try(:tax_type_f_id),
             discount_pct: tariff.try(:discount_pct_f),
             discount: 0.0,#¿¿¿???
@@ -209,8 +209,8 @@ class Reading < ActiveRecord::Base
             code: tariff.try(:billable_item).try(:billable_concept).try(:code),
             description: tariff.try(:billable_item).try(:billable_concept).try(:name),
             tariff_id: tariff.id,
-            price:  (tariff.percentage_fee/100),
-            quantity: pre_bill.total_by_concept(tariff.percentage_applicable_formula),
+            price:  (tariff.percentage_fee/100) * pre_bill.total_by_concept(tariff.percentage_applicable_formula) / consumption_total_period,
+            quantity: consumption_total_period,
             tax_type_id: tariff.try(:tax_type_p_id),
             discount_pct: tariff.try(:discount_pct_p),
             discount: 0.0,#¿¿¿???

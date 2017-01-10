@@ -10,5 +10,6 @@ en:
         check_for_subscribers: "Use cannot be destroyed while linked subscribers exist."
     attributes:
       use:
+        id: "Id"
         code: "Code"
         name: "Description"

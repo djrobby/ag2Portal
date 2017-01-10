@@ -561,6 +561,7 @@ module Ag2Gest
           #contracting_request_id: @contracting_request.id
         )
         if @subscriber.save
+          @subscriber.tariffs << @contracting_request.water_supply_contract.tariffs
           billing_frequency = @billing_period.billing_frequency_id
           @reading = Reading.create(
             subscriber_id: @subscriber.id,
@@ -710,7 +711,6 @@ module Ag2Gest
           with :tariff_type_id, tariff_type
         end
         order_by :sort_no, :asc
-        order_by :sort_no, :asc
         paginate :page => params[:page] || 1, :per_page => Subscriber.count
       end
 
@@ -774,7 +774,6 @@ module Ag2Gest
           with :tariff_type_id, tariff_type
         end
         order_by :sort_no, :asc
-        order_by :sort_no, :asc
         paginate :page => params[:page] || 1, :per_page => Subscriber.count
       end
 
@@ -836,7 +835,6 @@ module Ag2Gest
         if !tariff_type.blank?
           with :tariff_type_id, tariff_type
         end
-        order_by :sort_no, :asc
         order_by :sort_no, :asc
         paginate :page => params[:page] || 1, :per_page => Subscriber.count
       end

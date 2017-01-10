@@ -162,6 +162,8 @@
 						<%= p.input :tariff_type_id, :as => :hidden, :input_html => { :value => p.object.tariff_type_id } %>
 						<%= p.input :caliber_id, :as => :hidden, :input_html => { :value => p.object.caliber_id } if  p.object.caliber_id %>
 						<%= p.input :billable_item_id, :as => :hidden, :input_html => { :value => p.object.billable_item_id } %>
+            <%= p.input :starting_at, :as => :hidden, :input_html => { :value => p.object.starting_at } %>
+            <%= p.input :ending_at, :as => :hidden, :input_html => { :value => p.object.ending_at } %>
 					</div>
       	</div>
 

@@ -1,0 +1,104 @@
+if @product_items_report.blank?
+	return
+end
+
+# Localization for numbers
+delimiter = I18n.locale == :es ? "." : ","
+
+report.set_layout tlf: 'reports/product_items_report', layout_options: { default: true }
+
+#
+# Report events
+#
+# On page create
+report.events.on :page_create do |e|
+	# Set page-number
+	e.page.item(:page_no).value(e.page.no)
+end
+# On report generate
+report.events.on :generate do |e|
+	e.pages.each do |page|
+		# Set total-page-number
+		page.item(:page_count).value(e.report.page_count)
+	end
+end
+#
+# List configuration (stores & events)
+#
+report.layout.config.list(:default) do |c|
+	# Define the variables used in list
+	c.use_stores page_rows: 0, p_ir: 0, p_ref:0, p_ave: 0, p_sell: 0
+
+	# On list page footer insertion
+	c.events.on :page_footer_insert do |e|
+		# Display page sutotals
+		e.section.item(:sum_rows_title).value(I18n.t("ag2_products.ag2_products_track.stock_report.sum_rows_title"))
+		e.section.item(:sum_rows).value(e.store.page_rows)
+		e.section.item(:full_total_c).value I18n.t("ag2_products.ag2_products_track.every_report.cumulative_total")
+		e.section.item(:ir_total).value(number_with_precision(e.store.p_ir, precision: 2))
+		e.section.item(:ref_price_total).value(number_with_precision(e.store.p_ref, precision: 2))
+		e.section.item(:average_price_total).value(number_with_precision(e.store.p_ave, precision: 2))
+		e.section.item(:sell_price_total).value(number_with_precision(e.store.p_sell, precision: 2))
+		# Initialize subtotals to 0
+		#e.store.page_rows = 0
+	end
+end
+
+# New page & start
+report.start_new_page
+
+# Page header
+report.page.values report_title: I18n.t("ag2_products.products.index.title")
+
+# Page footer
+report.page.values(printed_at: formatted_timestamp(Time.now),
+				   pt: I18n.t("every_report.pt"),
+				   pd: I18n.t("every_report.pd"))
+
+# List header
+report.page.list(:default).header do |header|
+	header.item(:full_code_items_c).value I18n.t("activerecord.attributes.product.product_code")
+	header.item(:description_items_c).value I18n.t("activerecord.attributes.product.main_description")
+	header.item(:ir_c).value I18n.t("activerecord.attributes.stock.rotation_rate")
+	header.item(:ref_price_items_c).value I18n.t("activerecord.attributes.product.reference_price_c")
+	header.item(:average_price_items_c).value I18n.t("activerecord.attributes.product.average_price_c")
+	header.item(:sell_price_items_c).value I18n.t("activerecord.attributes.product.sell_price_c")
+end
+
+# Page Title list
+family_id = @product_items_report.first.product_family_id
+
+
+# List detail
+@product_items_report.each do |i|
+	if !i.product_family_id.blank? && (i.product_family_id != family_id)
+		report.page.list(:default).page_break
+		report.page.list(:default) do |list|
+			list.store.page_rows = 0
+			list.store.p_ir = 0
+			list.store.p_ref = 0	
+			list.store.p_ave = 0
+			list.store.p_sell = 0
+		end
+		family_id = i.product_family_id
+	end
+
+	report.page.list(:default).add_row do |row|
+		report.page.values family_items_c: I18n.t("activerecord.attributes.product.product_family")+": "
+		report.page.values family_items: i.product_family.full_name
+		row.item(:full_code_items).value i.full_code
+		row.item(:description_items).value i.main_description
+		row.item(:ir).value number_with_precision(i.rotation_rate, precision: 4, delimiter: I18n.locale == :es ? "." : ",") unless i.rotation_rate.blank?
+		row.item(:ref_price_items).value number_with_precision(i.reference_price, precision: 4, delimiter: I18n.locale == :es ? "." : ",") unless i.reference_price.blank? 
+		row.item(:average_price_items).value number_with_precision(i.average_price, precision: 4, delimiter: I18n.locale == :es ? "." : ",") unless i.average_price.blank?
+		row.item(:sell_price_items).value number_with_precision(i.sell_price, precision: 4, delimiter: I18n.locale == :es ? "." : ",") unless i.sell_price.blank? 
+	end
+	# Store page subtotals
+  report.page.list(:default) do |list|
+		list.store.page_rows += 1
+		list.store.p_ir += i.rotation_rate
+		list.store.p_ref += i.reference_price
+		list.store.p_ave += i.average_price
+		list.store.p_sell += i.sell_price
+	end
+end

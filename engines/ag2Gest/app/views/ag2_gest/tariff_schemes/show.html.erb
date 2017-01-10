@@ -63,13 +63,12 @@ new_path: new_tariff_scheme_path, new_txt: t('ag2_gest.tariff_schemes.index.btn_
 <% billable_document = "" %>
 
 <h4><%= t('activerecord.attributes.tariff_scheme.tariff_association') %></h4>
-<div class="row-fluid">
+<!-- <div class="row-fluid">
   <div class="span12">
     <a href="#" id="all-calibers" class="btn btn-primary">Mostrar todos los calibres</a>
   </div>
-</div>
+</div> -->
 <% @tariffs.each do |tariffs| %> <!-- Array de tariffs with index agrupadas -->
-
   <% if billable_document != BillableItem.find(tariffs.first).billable_concept.billable_document %>
     <% unless billable_document == "" %>
       </div></div></div>
@@ -101,7 +100,7 @@ new_path: new_tariff_scheme_path, new_txt: t('ag2_gest.tariff_schemes.index.btn_
           <table class="table table-condensed table-striped">
             <thead>
               <tr>
-                <th></th>
+                <!-- <th></th> -->
                 <th></th>
                 <th><%= t('activerecord.attributes.tariff_scheme.id') %></th>
                 <th><%= t('activerecord.attributes.tariff_scheme.caliber_id') %></th>
@@ -142,11 +141,12 @@ new_path: new_tariff_scheme_path, new_txt: t('ag2_gest.tariff_schemes.index.btn_
               <% tariffs[1].each do |tariff| %>
                 <%# if tariff.tariff_active %>
                   <tr style="<%= 'display:none' unless tariff.tariff_active %>">
-                    <td>
+                    <!-- <td>
                       <a href="#" role="button" class="btn btn-mini btn-edit-tariff" data-tariff="<%= tariff.id %>"><i class="icon-edit"></i></a>
-                    </td>
+                    </td> -->
                     <td>
-                      <%= link_to tariff, class: "btn btn-mini", method: :delete, data: { confirm: 'Are you sure?' } do %>
+                      <% tariff_scheme_item = TariffSchemeItem.where(tariff_scheme_id: @tariff_scheme.id, tariff_id: tariff.id).first %>
+                      <%= link_to tariff_scheme_item, class: "btn btn-mini", method: :delete, data: { confirm: 'Are you sure?' } do %>
                         <i class="icon-trash"></i>
                       <% end %>
                     </td>
@@ -266,7 +266,7 @@ new_path: new_tariff_scheme_path, new_txt: t('ag2_gest.tariff_schemes.index.btn_
         <h4><%= t('activerecord.attributes.tariff_scheme.discounts') %></h4>
         <div class="row-fluid">
           <div class="span2"><h5><%= t('activerecord.attributes.tariff_scheme.f') %></h5></div>
-          <div class="span10"><%= p.input_field :discount_pct_f, label: false %></div>
+          <div class="span10"><%= p.input :discount_pct_f, label: false %></div>
         </div>
         <div class="row-fluid">
           <div class="span2"><h5><%= t('activerecord.attributes.tariff_scheme.b') %></h5></div>

@@ -23,7 +23,7 @@ Ag2Gest::Engine.routes.draw do
     match 'bill_unpaid_report', :controller => 'client_payments', :action => 'bill_unpaid_report'
     match 'bill_charged_report', :controller => 'client_payments', :action => 'bill_charged_report'
     # report invoice
-    match 'invoice_report', :controller => 'invoices', :action => 'invoice_report'
+    match 'invoice_view_report', :controller => 'invoices', :action => 'invoice_view_report'
     # report client_payment
     match 'client_payment_report', :controller => 'client_payments', :action => 'client_payment_report'
     # report contracting_request
@@ -243,7 +243,9 @@ Ag2Gest::Engine.routes.draw do
       post 'create_pct', on: :collection
       get 'simple_edit', on: :member
     end
-    resources :tariffs
+    resources :tariffs do
+      post 'create_pct', on: :collection
+    end
     resources :tariff_types
     resources :billable_concepts
     resources :uses
@@ -323,6 +325,9 @@ Ag2Gest::Engine.routes.draw do
     resources :complaint_document_types
     #
     resources :subscriber_annotation_classes
+
+    resources :tariff_scheme_items, only: :destroy
+    resources :contracted_tariffs, only: :destroy
 
     # Root
     root :to => 'home#index'

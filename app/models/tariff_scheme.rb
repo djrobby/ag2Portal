@@ -7,7 +7,7 @@ class TariffScheme < ActiveRecord::Base
                   :created_by, :updated_by
   attr_accessible :tariff_scheme_items_attributes
 
-  #has_many :tariffs, dependent: :destroy
+  has_many :tariffs, through: :tariff_scheme_items
   has_many :invoices
   has_many :tariff_scheme_items, dependent: :destroy
 
@@ -15,9 +15,9 @@ class TariffScheme < ActiveRecord::Base
   # accepts_nested_attributes_for :tariffs,
   #                               :reject_if => :all_blank,
   #                               :allow_destroy => true
-  accepts_nested_attributes_for :tariff_scheme_items,
-                                :reject_if => :all_blank,
-                                :allow_destroy => true
+  # accepts_nested_attributes_for :tariff_scheme_items,
+  #                               :reject_if => :all_blank,
+  #                               :allow_destroy => true
 
   has_paper_trail
 
@@ -89,8 +89,7 @@ class TariffScheme < ActiveRecord::Base
 
   def tariffs_contract(caliber_id)
     unless tariffs.blank?
-      tariffs.select{|t| t.try(:billable_item).try(:billable_concept).try(:billable_document).to_s == '2'}
-      .select{|t| t.caliber_id.nil? || t.caliber.try(:id) == caliber_id}
+      tariffs.select{|t| t.caliber_id.nil? || t.caliber.try(:id) == caliber_id}
       .group_by{|t| t.try(:billable_item).try(:biller_id)}
     else
       []

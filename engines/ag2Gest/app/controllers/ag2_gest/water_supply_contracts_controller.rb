@@ -104,6 +104,8 @@ module Ag2Gest
       # @water_supply_contract.tariff_id = @tariff.try(:id)
       @water_supply_contract.created_by = current_user.id if !current_user.nil?
       if @water_supply_contract.save
+        tariffs = Tariff.availables_to_project_type_document_caliber(@contracting_request.project_id,@water_supply_contract.tariff_type_id,1,@caliber.id)
+        @water_supply_contract.tariffs << tariffs
         @meters_availables_subscriber = Meter.from_office(session[:office]).availables(@contracting_request.try(:old_subscriber).try(:meter_id)).select{|m| m.caliber_id == @water_supply_contract.caliber_id}
         data_meters = Array.new
         @meters_availables_subscriber.each{|m| data_meters << {id: m.id, text: m.to_label}}
@@ -148,6 +150,9 @@ module Ag2Gest
       # @water_supply_contract.tariff_id = @tariff.try(:id)
       @water_supply_contract.updated_by = current_user.id if !current_user.nil?
       if @water_supply_contract.update_attributes(params[:water_supply_contract])
+        @water_supply_contract.contracted_tariffs.destroy_all
+        tariffs = Tariff.availables_to_project_type_document_caliber(@contracting_request.project_id,@water_supply_contract.tariff_type_id,1,@caliber.id)
+        @water_supply_contract.tariffs << tariffs
         response_hash = { water_supply_contract: @water_supply_contract }
         response_hash[:tariff_scheme] = @tariff_scheme
         response_hash[:caliber] = @caliber.caliber

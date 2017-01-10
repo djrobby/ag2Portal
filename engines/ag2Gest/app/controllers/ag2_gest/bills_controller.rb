@@ -132,17 +132,16 @@ module Ag2Gest
     end
 
     def get_subscribers
-      # if params[:bill][:subscribers].reject(&:empty?).empty?
-        subscribers_filter = Subscriber.where(office_id: session[:office].to_i).order(:id)
-        subscribers_filter = subscribers_filter.where(reading_route_id: params[:bill][:reading_routes]) unless params[:bill][:reading_routes].reject(&:empty?).empty?
-        subscribers_filter = subscribers_filter.where(center_id: params[:bill][:centers]) unless params[:bill][:centers].reject(&:empty?).empty?
-        subscribers_ids = subscribers_filter.map(&:id)
-        readings = Reading.where(subscriber_id: subscribers_ids).where(billing_period_id: params[:bill][:period])
-        subscribers = readings.map(&:subscriber).uniq
-      # else
-      #   subscribers = Subscriber.where(id: params[:bill][:subscribers].reject(&:empty?))
-      #   readings = Reading.where(subscriber_id: params[:bill][:subscribers].reject(&:empty?)).where(billing_period_id: params[:bill][:period])
-      # end
+
+      _reading_routes = params[:bill][:reading_routes].reject(&:empty?)
+      reading_routes = _reading_routes.blank? ? ReadingRoute.pluck(:id) : _reading_routes
+      _offices = current_offices_ids
+      offices = _offices.blank? ? Office.pluck(:id) : _offices
+      _centers = params[:bill][:centers].reject(&:empty?)
+      centers = _centers.blank? ? Center.pluck(:id) : _centers
+      period = params[:bill][:period]
+
+      subscribers = Subscriber.joins(:readings).where("subscribers.reading_route_id IN (?) AND subscribers.office_id IN (?) AND subscribers.center_id IN (?) AND readings.billing_period_id = ? AND readings.reading_type_id IN (?)",reading_routes, offices, centers, period, [ReadingType::NORMAL, ReadingType::OCTAVILLA, ReadingType::RETIRADA, ReadingType::AUTO])
 
       subscribers_label = subscribers.map{|s| [s.id, "#{s.to_label} #{s.address_1}"]}
 

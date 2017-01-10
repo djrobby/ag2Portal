@@ -10,5 +10,8 @@ es:
       water_connection:
         id: "Id"
         name: "Nombre"
+        code: "Codigo"
+        gis_id: "Gis"
+        water_connection_type_id: "Tipo de Acometida"
         successfully: "Tipo de acometida se ha actualizado correctamente."
         create: "Tipo de acometida se ha creado correctamente."

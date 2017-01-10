@@ -1,5 +1,122 @@
-<p id="notice"><%= notice %></p>
+<%= render '/layouts/ag2_gest/tariffschemesbreadcrumb' %>
 
+<h3><%= t('.title') %></h3>
+<table class="table">
+  <tbody>
+    <tr>
+      <td><%= t('activerecord.attributes.tariff.id') %>:</td>
+      <td colspan="3"><%= @tariff.try(:id) %></td>
+    </tr>
+    <tr>
+      <td><%= t('activerecord.attributes.tariff.billable_item_id') %>:</td>
+      <td ><%= @tariff.try(:billable_item).try(:to_label) %></td>
+      <td><%= t('activerecord.attributes.tariff.tariff_type_id') %>:</td>
+      <td ><%= @tariff.try(:tariff_type).try(:to_label) %></td>
+    </tr>
+    <tr>
+      <td><%= t('activerecord.attributes.tariff.caliber_id') %>:</td>
+      <td ><%= @tariff.try(:caliber).try(:to_label) %></td>
+      <td><%= t('activerecord.attributes.tariff.billing_frequency_id') %>:</td>
+      <td ><%= @tariff.try(:billing_frequency).try(:to_label) %></td>
+    </tr>
+    <tr>
+      <td><%= t('activerecord.attributes.tariff.starting_at') %>:</td>
+      <td ><%=l @tariff.starting_at if @tariff.starting_at %></td>
+      <td><%= t('activerecord.attributes.tariff.ending_at') %>:</td>
+      <td ><%=l @tariff.ending_at if @tariff.ending_at %></td>
+    </tr>
+    <tr>
+      <td><%= t('activerecord.attributes.tariff.fixed_fee') %>:</td>
+      <td ><%= @tariff.try(:fixed_fee) %></td>
+      <td><%= t('activerecord.attributes.tariff.variable_fee') %>:</td>
+      <td ><%= @tariff.try(:variable_fee) %></td>
+    </tr>
+    <tr>
+      <td><%= t('activerecord.attributes.tariff.percentage_fee') %>:</td>
+      <td ><%= @tariff.try(:percentage_fee) %></td>
+      <td><%= t('activerecord.attributes.tariff.percentage_applicable_formula') %>:</td>
+      <td ><%= @tariff.try(:get_code_formula)  %></td>
+    </tr>
+    <tr>
+      <td><%= t('activerecord.attributes.tariff.block1_limit') %>:</td>
+      <td ><%= @tariff.try(:block1_limit) %></td>
+      <td><%= t('activerecord.attributes.tariff.block1_fee') %>:</td>
+      <td ><%= @tariff.try(:block1_fee) %></td>
+    </tr>
+    <tr>
+      <td><%= t('activerecord.attributes.tariff.block2_limit') %>:</td>
+      <td ><%= @tariff.try(:block2_limit) %></td>
+      <td><%= t('activerecord.attributes.tariff.block2_fee') %>:</td>
+      <td ><%= @tariff.try(:block2_fee) %></td>
+    </tr>
+    <tr>
+      <td><%= t('activerecord.attributes.tariff.block3_limit') %>:</td>
+      <td ><%= @tariff.try(:block3_limit) %></td>
+      <td><%= t('activerecord.attributes.tariff.block3_fee') %>:</td>
+      <td ><%= @tariff.try(:block3_fee) %></td>
+    </tr>
+    <tr>
+      <td><%= t('activerecord.attributes.tariff.block4_limit') %>:</td>
+      <td ><%= @tariff.try(:block4_limit) %></td>
+      <td><%= t('activerecord.attributes.tariff.block4_fee') %>:</td>
+      <td ><%= @tariff.try(:block4_fee) %></td>
+    </tr>
+    <tr>
+      <td><%= t('activerecord.attributes.tariff.block5_limit') %>:</td>
+      <td ><%= @tariff.try(:block5_limit) %></td>
+      <td><%= t('activerecord.attributes.tariff.block5_fee') %>:</td>
+      <td ><%= @tariff.try(:block5_fee) %></td>
+    </tr>
+    <tr>
+      <td><%= t('activerecord.attributes.tariff.block6_limit') %>:</td>
+      <td ><%= @tariff.try(:block6_limit) %></td>
+      <td><%= t('activerecord.attributes.tariff.block6_fee') %>:</td>
+      <td ><%= @tariff.try(:block6_fee) %></td>
+    </tr>
+    <tr>
+      <td><%= t('activerecord.attributes.tariff.block7_limit') %>:</td>
+      <td ><%= @tariff.try(:block7_limit) %></td>
+      <td><%= t('activerecord.attributes.tariff.block7_fee') %>:</td>
+      <td ><%= @tariff.try(:block7_fee) %></td>
+    </tr>
+    <tr>
+      <td><%= t('activerecord.attributes.tariff.block8_limit') %>:</td>
+      <td ><%= @tariff.try(:block8_limit) %></td>
+      <td><%= t('activerecord.attributes.tariff.block8_fee') %>:</td>
+      <td ><%= @tariff.try(:block8_fee) %></td>
+    </tr>
+    <tr>
+      <td><%= t('activerecord.attributes.tariff.discount_pct_f') %>:</td>
+      <td ><%= @tariff.try(:discount_pct_f) %></td>
+      <td><%= t('activerecord.attributes.tariff.discount_pct_v') %>:</td>
+      <td ><%= @tariff.try(:discount_pct_v) %></td>
+    </tr>
+    <tr>
+      <td><%= t('activerecord.attributes.tariff.discount_pct_p') %>:</td>
+      <td ><%= @tariff.try(:discount_pct_p) %></td>
+      <td><%= t('activerecord.attributes.tariff.discount_pct_b') %>:</td>
+      <td ><%= @tariff.try(:discount_pct_b) %></td>
+    </tr>
+    <tr>
+      <td><%= t('activerecord.attributes.tariff.tax_type_f_id') %>:</td>
+      <td ><%= @tariff.try(:tax_type_f).try(:to_label) %></td>
+      <td><%= t('activerecord.attributes.tariff.tax_type_v_id') %>:</td>
+      <td ><%= @tariff.try(:tax_type_v).try(:to_label) %></td>
+    </tr>
+    <tr>
+      <td><%= t('activerecord.attributes.tariff.tax_type_p_id') %>:</td>
+      <td ><%= @tariff.try(:tax_type_p).try(:to_label) %></td>
+      <td><%= t('activerecord.attributes.tariff.tax_type_b_id') %>:</td>
+      <td ><%= @tariff.try(:tax_type_b).try(:to_label) %></td>
+    </tr>
+    <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @tariff } %>
+    <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @tariff } %>
+  </tbody>
+</table>
 
-<%= link_to 'Edit', edit_tariff_path(@tariff) %> |
-<%= link_to 'Back', tariffs_path %>
+<%= render partial: '/layouts/crud/update_delete_new', locals:
+{ model: Tariff, update_path: edit_tariff_path(@tariff), update_txt: t('.btn_edit'),
+delete_path: @tariff_scheme, delete_txt: t('.btn_delete'), msg: t("activerecord.models.tariff.one"), :txt => @tariff.id,
+new_path: new_tariff_path, new_txt: t('ag2_gest.tariffs.index.btn_new') } %>
+
+<%= link_to I18n.t('ag2_gest.tariffs.back_to_main_page'), tariffs_path %>

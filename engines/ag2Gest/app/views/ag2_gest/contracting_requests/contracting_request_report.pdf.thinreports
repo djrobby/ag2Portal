@@ -33,7 +33,7 @@ report.layout.config.list(:default) do |c|
 	# On list page footer insertion
 	c.events.on :page_footer_insert do |e|
 		# Display page sutotals
-		e.section.item(:sum_rows_title).value(I18n.t("ag2_gest.ag2_gest_track.contracting_request_report.sum_rows_title"))
+		e.section.item(:sum_rows_title).value(I18n.t("ag2_gest.ag2_gest_track.every_report.cumulative_total"))
 		e.section.item(:sum_rows).value(e.store.page_rows)
 		# Initialize subtotals to 0
 		#e.store.page_rows = 0

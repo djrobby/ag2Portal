@@ -1,0 +1,41 @@
+<script>
+  $(document).ready(function() {
+    $("#div_table th a, #div_table #pages a").on("click", function() {
+      $.getScript(this.href);
+      return false;
+    });
+  });
+</script>
+
+<table class="table table-condensed table-striped">
+  <thead>
+    <tr>
+      <th><%= t("activerecord.attributes.tariff.billable_item_id") %></th>
+      <th><%= t("activerecord.attributes.tariff.tariff_type_id") %></th>
+      <th><%= t("activerecord.attributes.tariff.billing_frequency_id") %></th>
+      <th align="center"><%= t("activerecord.attributes.tariff.caliber_id") %></th>
+      <th><%= t('activerecord.attributes.tariff.starting_at') %></th>
+      <th><%= t('activerecord.attributes.tariff.ending_at') %></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @tariffs.each do |tariff| %>
+      <tr>
+        <td><%= tariff.try(:billable_item).try(:billable_concept).try(:name) %></td>
+        <td><%= tariff.try(:tariff_type).try(:name) %></td>
+        <td><%= tariff.try(:billing_frequency).try(:to_label) %></td>
+        <td align="center"><%= tariff.try(:caliber).try(:caliber) %></td>
+        <td align="center"><%=l tariff.try(:starting_at) unless tariff.try(:starting_at).blank? %></td>
+        <td align="center"><%=l tariff.try(:ending_at) unless tariff.try(:ending_at).blank? %></td>
+        <td>
+          <%= render :partial => '/layouts/crud/read', :locals => { :model => Tariff, :path => tariff_path(tariff) } %>
+          <%= render :partial => '/layouts/crud/edit', :locals => { :model => Tariff, :path => edit_tariff_path(tariff) } %>
+          <%= render :partial => '/layouts/crud/delete', :locals => { :model => Tariff, :path => tariff, :msg => t("activerecord.models.tariff.one"), :txt => tariff.id } %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @tariffs } %>

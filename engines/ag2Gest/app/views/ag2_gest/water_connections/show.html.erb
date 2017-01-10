@@ -1,5 +1,34 @@
-<p id="notice"><%= notice %></p>
+<%= render '/layouts/ag2_gest/waterconnectionbreadcrumb' %>
 
+<h3><%= t('.title') %></h3>
+<table class="table">
+  <tbody>
+    <tr>
+      <td><%= t('activerecord.attributes.water_connection.id') %>:</td>
+      <td><%= @water_connection.try(:id) %></td>
+      <td><%= t('activerecord.attributes.water_connection.code') %>:</td>
+      <td><%= @water_connection.try(:code) %></td>
+    </tr>
+    <tr>
+      <td><%= t('activerecord.attributes.water_connection.name') %>:</td>
+      <td><%= @water_connection.try(:name) %></td>
+      <td><%= t('activerecord.attributes.water_connection.gis_id') %>:</td>
+      <td><%= @water_connection.try(:gis_id) %></td>
+    </tr>
+    <tr>
+      <td><%= t('activerecord.attributes.water_connection.water_connection_type_id') %>:</td>
+      <td><%= @water_connection.try(:water_connection_type).try(:name) %></td>
+      <td></td>
+      <td></td>
+    </tr>
+    	<%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @water_connection } %>
+    	<%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @water_connection } %>
+  </tbody>
+</table>
 
-<%= link_to 'Edit', edit_water_connection_path(@water_connection) %> |
-<%= link_to 'Back', water_connections_path %>
+<%= render partial: '/layouts/crud/update_delete_new', locals:
+{ model: WaterConnection, update_path: edit_water_connection_path(@water_connection), update_txt: t('.btn_edit'),
+delete_path: @water_connection, delete_txt: t('.btn_delete'), msg: t("activerecord.models.water_connection.one"), :txt => @water_connection.code,
+new_path: new_water_connection_path, new_txt: t('ag2_gest.water_connections.index.btn_new') } %>
+
+<%= link_to I18n.t('ag2_gest.water_connections.back_to_main_page'), water_connections_path %>

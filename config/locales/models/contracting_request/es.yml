@@ -105,7 +105,7 @@ es:
         subscriber_id:
         successfully: "Contratación se ha actualizado correctamente."
         create: "Contratación se ha creado correctamente."
-        tariff_scheme: "Esquema tarifario"
+        tariff_scheme: "Esquema tarifario (contratación)"
         code_meter: "Código contador"
         type: "Tipo"
         client: "Cliente"
@@ -176,6 +176,7 @@ es:
         info_name: "Apellidos, Nombre / Empresa"
         documents_gest: "Gestor de documentos"
         use: "Uso"
+        tariff_type: "Tipo de tarifa"
         brand_model: "Marca/Modelo"
         state_work_order: "Estado orden de trabajo"
         data_installation_meter: "Datos instalación contador"

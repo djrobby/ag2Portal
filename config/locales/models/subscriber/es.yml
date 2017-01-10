@@ -69,10 +69,11 @@ es:
         name: "Nombre"
         street_directory_id: "Callejero"
         address_data: "Domicilio de suministro"
-        tariff_type_id: "Uso/Tipo tarifa"
+        tariff_type_id: "Tipo tarifa"
+        use: "Uso"
         starting_at: "Fecha de alta"
         ending_at: "Fecha de baja"
-        tariff_scheme_id: "Tarifa aplicada"
+        tariff_scheme_id: "Esquema tarifario (contratación)"
         billing_frequency_id: "Frecuencia de facturación"
         meter_id: "Medidor/Contador"
         reading_route_id: "Ruta de lectura"
@@ -91,6 +92,7 @@ es:
         m2: "M2"
         equiv_dwelling: "Vivienda equivalente"
         direction: "Dirección"
+        tariffs: "Tarifas"
 
         detail: 'Detalle'
         invoices: "Facturas"
@@ -181,6 +183,11 @@ es:
         confirm: "Confirmar"
         cancel: "Cancelar"
         accept: "Aceptar"
+        add_meter_successful: "Contador añadido correctamente"
+        add_meter_failure: "No se ha podido añadir el contador"
+        quit_meter_successful: "Contador añadido correctamente"
+        quit_meter_failure: "No se ha podido añadir el contador"
+
         add_meter_successful: "Contador añadido correctamente"
         add_meter_failure: "No se ha podido añadir el contador"
         quit_meter_successful: "Contador añadido correctamente"

@@ -84,6 +84,8 @@
       <h4><%= t('activerecord.attributes.contracting_request.tariff_data') %></h4>
 
       <%= f.association :tariff_scheme, required: true, collection: TariffScheme.where(project_id: @contracting_request.project_id), input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' }, include_blank: true %>
+      <%= f.association :tariff_type, required: true, collection: @tariff_types_availables, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' }, include_blank: true %>
+      <%= f.association :use, collection: Use.all, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' }, include_blank: true %>
       <%= f.input :endowments, :input_html => { :class => 'x-large-text-field', :id => 'wsc_endowments' }, :label_html => { :class => 'form-label' } %>
       <%= f.input :inhabitants, :input_html => { :class => 'x-large-text-field', :id => 'wsc_inhabitants' }, :label_html => { :class => 'form-label' } %>
       <h4><%= t('activerecord.attributes.contracting_request.measuring_device') %></h4>

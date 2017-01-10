@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20161209202102) do
+ActiveRecord::Schema.define(:version => 20170110150207) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -793,8 +793,6 @@ ActiveRecord::Schema.define(:version => 20161209202102) do
     t.date     "ending_at"
   end
 
-  add_index "contracted_tariffs", ["ending_at"], :name => "index_contracted_tariffs_on_ending_at"
-  add_index "contracted_tariffs", ["starting_at"], :name => "index_contracted_tariffs_on_starting_at"
   add_index "contracted_tariffs", ["tariff_id"], :name => "index_contracted_tariffs_on_tariff_id"
   add_index "contracted_tariffs", ["water_supply_contract_id"], :name => "index_contracted_tariffs_on_water_supply_contract_id"
 
@@ -3885,6 +3883,7 @@ ActiveRecord::Schema.define(:version => 20161209202102) do
     t.integer  "created_by"
     t.integer  "updated_by"
     t.integer  "use_id"
+    t.integer  "tariff_type_id"
   end
 
   add_index "water_supply_contracts", ["bill_id"], :name => "index_water_supply_contracts_on_bill_id"
@@ -3895,6 +3894,7 @@ ActiveRecord::Schema.define(:version => 20161209202102) do
   add_index "water_supply_contracts", ["reading_route_id"], :name => "index_water_supply_contracts_on_reading_route_id"
   add_index "water_supply_contracts", ["subscriber_id"], :name => "index_water_supply_contracts_on_subscriber_id"
   add_index "water_supply_contracts", ["tariff_scheme_id"], :name => "index_water_supply_contracts_on_tariff_scheme_id"
+  add_index "water_supply_contracts", ["tariff_type_id"], :name => "index_water_supply_contracts_on_tariff_type_id"
   add_index "water_supply_contracts", ["use_id"], :name => "index_water_supply_contracts_on_use_id"
   add_index "water_supply_contracts", ["work_order_id"], :name => "index_water_supply_contracts_on_work_order_id"
 

@@ -20,12 +20,12 @@ class PreBill < ActiveRecord::Base
                   :pre_group_no, :street_name, :street_number, :building, :floor, :floor_office, :created_by, :updated_by,
                   :reading_1_id, :reading_2_id
 
-  has_many :pre_invoices
+  has_many :pre_invoices, dependent: :destroy
   has_one :water_supply_contract
   has_many :client_payments
 
   def total_by_concept(billable_concept)
-    pre_invoices.map(&:pre_invoice_items).flatten.select{|item| item.tariff.billable_item.billable_concept_id == billable_concept.to_i}.sum(&:amount)
+    pre_invoices.map(&:pre_invoice_items).flatten.select{|item| item.tariff.billable_item.billable_concept_id == billable_concept.to_i and item.subcode != 'CF'}.sum(&:amount)
   end
 
   def reading

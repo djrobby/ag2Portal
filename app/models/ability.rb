@@ -253,6 +253,8 @@ class Ability
       can :crud, DebtClaim
       can :crud, Formality
       can :crud, FormalityType
+      can :crud, TariffSchemeItem
+      can :crud, ContractedTariff
     elsif user.has_role? :ag2Gest_Guest
       can :read, Client
       can :read, PaymentMethod
@@ -327,6 +329,8 @@ class Ability
       can :read, DebtClaim
       can :read, Formality
       can :read, FormalityType
+      can :read, TariffSchemeItem
+      can :read, ContractedTariff
     elsif user.has_role? :ag2Gest_Banned
       cannot :manage, Client
       cannot :manage, PaymentMethod
@@ -403,6 +407,8 @@ class Ability
       cannot :manage, DebtClaim
       cannot :manage, Formality
       cannot :manage, FormalityType
+      cannot :manage, TariffSchemeItem
+      cannot :manage, ContractedTariff
     end
     # ag2HelpDesk
     if user.has_role? :ag2HelpDesk_User

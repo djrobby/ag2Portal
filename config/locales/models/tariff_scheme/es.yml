@@ -23,6 +23,7 @@ es:
         use_id: "Uso"
         caliber_id: "Calibre"
         billing_frequency_id: "Frecuencia"
+        billable_concept: "Concepto"
 
         block1_limit: "Límite B1"
         block2_limit: "Límite B2"
@@ -77,4 +78,4 @@ es:
         v: "V."
         p: "P."
 
-        tariff_association: "Tarifas asociadas"
+        tariff_association: "Tarifas asociadas (contratación)"
