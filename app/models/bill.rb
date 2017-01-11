@@ -45,7 +45,7 @@ class Bill < ActiveRecord::Base
   end
 
   def full_no
-    # Order no (Project code & year & sequential number) => PPPPPPPPPPPP-YYYY-NNNNNNN
+    # Bill no (Project code & year & sequential number) => PPPPPPPPPPPP-YYYY-NNNNNNN
     if bill_no == "$err"
       "000000000000-0000-0000000"
     else

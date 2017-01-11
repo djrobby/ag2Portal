@@ -107,7 +107,7 @@ class ClientBankAccount < ActiveRecord::Base
   end
 
   def p_format
-    _f = "IBAN "
+    _f = ""
     if !self.country.blank?
       _f += self.country.code.strip
     end
@@ -125,6 +125,9 @@ class ClientBankAccount < ActiveRecord::Base
     end
     if !self.account_no.blank?
       _f += self.account_no[0,2] + " " + self.account_no[2,4] + " " + self.account_no[6,4]
+    end
+    if !_f.blank?
+      _f = "IBAN " + _f
     end
     _f
   end

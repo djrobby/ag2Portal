@@ -30,7 +30,7 @@ es:
       back_to_main_page: "Volver a Facturas Comerciales"
       items_info: "Items de la Factura"
       generate_code_btn: "Nº de Factura"
-      no_error: "Imposible generar Nº de Factura: No has elegido Proyecto."
+      no_error: "Imposible generar Nº de Factura: No has elegido Proyecto o Código inválido."
       delete_item: "Borrar este Item"
       add_item: "Agregar nuevo Item"
       add_item_to: "Factura %{var}"

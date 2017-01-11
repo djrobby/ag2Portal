@@ -19,4 +19,5 @@
 //= require ag2_tech
 //= require ag2_products
 //= require ag2_admin
+//= require ag2_gest
 //= require_tree .

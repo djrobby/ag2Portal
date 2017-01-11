@@ -60,3 +60,7 @@ es:
         remarks: "Observaciones"
         sale_offer: "Oferta"
         sale_offer_id: "Oferta"
+        organization: "Organización"
+        organization_id: "Organización"
+        payment_method: "Forma de pago"
+        payment_method_id: "Forma de pago"

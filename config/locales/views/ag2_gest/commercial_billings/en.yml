@@ -30,7 +30,7 @@ en:
       back_to_main_page: "Back to Commercial Bills"
       items_info: "Bill Items"
       generate_code_btn: "Bill No."
-      no_error: "Unable to generate Invoice No.: No Project chosen."
+      no_error: "Unable to generate Invoice No.: No Project chosen or Invalid code."
       delete_item: "Delete this Item"
       add_item: "Add new Item"
       add_item_to: "Bill %{var}"

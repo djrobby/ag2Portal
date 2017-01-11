@@ -19,10 +19,16 @@ class Invoice < ActiveRecord::Base
                   :biller_id, :original_invoice_id, :billing_period_id, :charge_account_id,
                   :created_by, :updated_by, :reading_1_date, :reading_2_date, :reading_1_index, :reading_2_index,
                   :remarks, :organization_id, :payment_method_id, :sale_offer_id
+  attr_accessible :invoice_items_attributes
 
   has_many :invoice_items, dependent: :destroy
   has_many :client_payments
   has_one :invoice_debt
+
+  # Nested attributes
+  accepts_nested_attributes_for :invoice_items,
+                                :reject_if => :all_blank,
+                                :allow_destroy => true
 
   # Self join
   has_many :credits_rebills, class_name: 'Invoice', foreign_key: 'original_invoice_id'
@@ -30,6 +36,7 @@ class Invoice < ActiveRecord::Base
 
   has_paper_trail
 
+  validates_associated :invoice_items
   #validates :organization,       :presence => true
 
   # Scopes

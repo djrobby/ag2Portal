@@ -20,6 +20,7 @@ class ApplicationController < ActionController::Base
   helper_method :sort_direction
   helper_method :init_oco
   helper_method :current_oco
+  helper_method :organizations_according_oco
   helper_method :formatted_date
   helper_method :formatted_timestamp
   helper_method :formatted_time
@@ -113,6 +114,20 @@ class ApplicationController < ActionController::Base
       end
     end
     oco
+  end
+
+  def organizations_according_oco
+    if session[:organization] != '0'
+      _org = Organization.where("id = ?", "#{session[:organization]}").all
+      _include_blank = false
+    elsif current_user.organizations.count > 0
+      _org = current_user.organizations.order('name')
+      _include_blank = false
+    else
+      _org = Organization.order('name')
+      _include_blank = true
+    end
+    return _org, _include_blank
   end
 
   #
@@ -700,6 +715,7 @@ end
     office_code = office.nil? ? '00' : office.to_s.rjust(2, '0')
     # Builds code, if possible
     company_code = Company.find(company).commercial_bill_code rescue '$'
+    company_code = company_code.nil? ? '$' : company_code
     if company_code == '$'
       code = '$err'
     else

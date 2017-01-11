@@ -48,7 +48,7 @@ module Ag2Gest
       organization = params[:org]
       if organization != '0'
         @organization = Organization.find(organization)
-        @clients = @organization.blank? ? clients_dropdown : @organization.clients.order(:supplier_code)
+        @clients = @organization.blank? ? clients_dropdown : @organization.clients.order(:client_code)
         @projects = @organization.blank? ? projects_dropdown : @organization.projects.order(:project_code)
         @work_orders = @organization.blank? ? work_orders_dropdown : @organization.work_orders.order(:order_no)
         @charge_accounts = @organization.blank? ? charge_accounts_dropdown : @organization.charge_accounts.expenditures
@@ -560,11 +560,15 @@ module Ag2Gest
     def new
       @breadcrumb = 'create'
       @invoice = Invoice.new
+      @organizations, @include_blank = organizations_according_oco
       @sale_offers = sale_offers_dropdown
       @projects = projects_dropdown
       @charge_accounts = projects_charge_accounts(@projects)
       @clients = clients_dropdown
       @payment_methods = payment_methods_dropdown
+      @status = invoice_statuses_dropdown if @status.nil?
+      @types = invoice_types_dropdown if @types.nil?
+      @operations = invoice_operations_dropdown if @operations.nil?
       @products = products_dropdown
       @offer_items = []
 
@@ -581,11 +585,15 @@ module Ag2Gest
     def edit
       @breadcrumb = 'update'
       @invoice = Invoice.find(params[:id])
+      @organizations, @include_blank = organizations_according_oco
       @sale_offers = @invoice.bill.client.blank? ? sale_offers_dropdown : @invoice.bill.client.sale_offers.unbilled(@invoice.organization_id, true)
       @projects = projects_dropdown_edit(@invoice.bill.project)
       @charge_accounts = charge_accounts_dropdown_edit(@invoice.bill.project)
       @clients = clients_dropdown
       @payment_methods = @invoice.organization.blank? ? payment_methods_dropdown : collection_payment_methods(@invoice.organization_id)
+      @status = invoice_statuses_dropdown if @status.nil?
+      @types = invoice_types_dropdown if @types.nil?
+      @operations = invoice_operations_dropdown if @operations.nil?
       @offer_items = @invoice.sale_offer.blank? ? [] : offer_items_dropdown(@invoice.sale_offer)
       if @offer_items.blank?
         @products = @invoice.organization.blank? ? products_dropdown : @invoice.organization.products(:product_code)
