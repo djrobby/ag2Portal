@@ -140,7 +140,7 @@
           <td><b><%= t('activerecord.attributes.subscriber.contract') %>:</b></td>
           <td colspan="3"><%= link_to @subscriber.water_supply_contract.contracting_request.try(:full_no), ag2_gest.water_supply_contract_path(@subscriber.water_supply_contract) unless @subscriber.try(:water_supply_contract).blank? %></td>
           <td><b><%= t('activerecord.attributes.subscriber.use') %>:</b></td>
-          <td colspan="3"><%= @subscriber.water_supply_contract.use.try(:name)%></td>
+          <td colspan="3"><%= @subscriber.try(:use).try(:name) %></td>
         </tr>
         <tr>
           <td><b><%= t('activerecord.attributes.subscriber.tariff_scheme_id') %>:</b></td>

@@ -10,12 +10,13 @@ class Subscriber < ActiveRecord::Base
   belongs_to :meter
   belongs_to :reading_route
   belongs_to :contracting_request
+  belongs_to :use
   attr_accessible :company, :first_name, :fiscal_id, :last_name, :subscriber_code,
                   :starting_at, :ending_at, :created_by, :updated_by,
                   :client_id, :office_id, :center_id, :street_directory_id, :street_number,
                   :building, :floor, :floor_office, :zipcode_id, :phone, :fax, :cellular, :email,
                   :service_point_id, :active, :tariff_scheme_id, :billing_frequency_id, :meter_id,
-                  :reading_route_id, :reading_sequence, :reading_variant, :contracting_request_id,
+                  :reading_route_id, :reading_sequence, :reading_variant, :contracting_request_id, :use_id,
                   :remarks, :cadastral_reference, :gis_id, :endowments, :inhabitants, :km, :gis_id_wc,
                   :readings_attributes, :meter_details_attributes
 
@@ -259,10 +260,10 @@ class Subscriber < ActiveRecord::Base
       tariff_scheme.tariff_type_id
     end
     text :street_name do
-      street_directory.street_name
+      street_directory.street_name unless street_directory.blank?
     end
     text :meter_code do
-      meter.meter_code
+      meter.meter_code unless meter.blank?
     end
     string :sort_no do
       subscriber_code
