@@ -34,6 +34,8 @@ module Ag2Gest
       session[:RequestStatus] = nil
       session[:ClientInfo] = nil
 
+      session[:ServicePoint] = nil
+      session[:StreetName] = nil
     end
 
     def current_projects

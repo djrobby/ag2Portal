@@ -61,6 +61,8 @@ es:
         fiscal_id: "Id Fiscal CIF/NIF"
         fiscal_id_c: "CIF/NIF"
         service_point_id: "Punto de Servicio"
+        meter: "Contador"
+        meter_id: "Contador"
         debt: "Deuda"
         data_contract: "Datos de contrato"
 
@@ -146,7 +148,7 @@ es:
         paid: "Cobrada"
 
         invoice_number: "Nº Factura"
-        subscriber_code: "Cód. Abonado"
+        subscriber_code2: "Cód. Abonado"
         class_invoice: "Clase Factura"
 
         wire_transfer: "Transferencia bancaria"

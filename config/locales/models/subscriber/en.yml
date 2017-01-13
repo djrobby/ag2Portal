@@ -61,10 +61,14 @@ en:
         fiscal_id: "Fiscal Id"
         fiscal_id_c: "Fiscal Id"
         service_point_id: "Service Point"
+        meter: "Meter"
+        meter_id: "Meter"
+        debt: "Debt"
+        data_contract: "Contract data"
 
-        subscriber_code0: "Código"
+        subscriber_code0: "Code"
         subscriber_code1: "Código de identificación asignado"
-        name: "Nombre"
+        name: "Name"
         street_directory_id: "Street directory"
         address_data: "Domicilio de suministro"
         tariff_type_id: "Tipo de tarifa"
@@ -141,7 +145,7 @@ en:
         paid: "Cobrada"
 
         invoice_number: "Nº Factura"
-        subscriber_code: "Cód. Abonado"
+        subscriber_code2: "Cód. Abonado"
         class_invoice: "Clase Factura"
 
         wire_transfer: "Transferencia bancaria"

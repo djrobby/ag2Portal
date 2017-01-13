@@ -350,7 +350,7 @@ module Ag2Gest
     def index
       manage_filter_state
       subscriber_code = params[:SubscriberCode]
-      service_point = params[:ServicePoint]
+      street_name = params[:StreetName]
       meter = params[:Meter]
       billing_frequency = params[:BillingFrequency]
       tariff_type = params[:TariffType]
@@ -358,8 +358,8 @@ module Ag2Gest
       # OCO
       init_oco if !session[:organization]
       # Initialize select_tags
-      @service_points = service_points_dropdown if @service_points.nil?
-      @meters = meters_dropdown if @meters.nil?
+      #@service_points = service_points_dropdown if @service_points.nil?
+      #@meters = meters_dropdown if @meters.nil?
 
       # If inverse no search is required
       subscriber_code = !subscriber_code.blank? && subscriber_code[0] == '%' ? inverse_no_search(subscriber_code) : subscriber_code
@@ -379,11 +379,13 @@ module Ag2Gest
             with(:subscriber_code).starting_with(subscriber_code)
           end
         end
-        if !service_point.blank?
-          with :service_point_id, service_point
+        if !street_name.blank?
+          fulltext street_name
+          #with :street_name, street_name
         end
         if !meter.blank?
-          with :meter_id, meter
+          fulltext meter
+          #with :meter_code, meter
         end
         if !billing_frequency.blank?
           with :billing_frequency_id, billing_frequency
@@ -959,11 +961,11 @@ module Ag2Gest
       elsif session[:SubscriberCode]
         params[:SubscriberCode] = session[:SubscriberCode]
       end
-      # service_point
-      if params[:ServicePoint]
-        session[:ServicePoint] = params[:ServicePoint]
-      elsif session[:ServicePoint]
-        params[:ServicePoint] = session[:ServicePoint]
+      # street_name
+      if params[:StreetName]
+        session[:StreetName] = params[:StreetName]
+      elsif session[:StreetName]
+        params[:StreetName] = session[:StreetName]
       end
       # meter
       if params[:Meter]

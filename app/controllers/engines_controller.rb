@@ -39,6 +39,8 @@ class EnginesController < ApplicationController
     session[:Subscriber] = nil
     session[:Operation] = nil
     session[:Biller] = nil
+    session[:ServicePoint] = nil
+    session[:StreetName] = nil
     # Ag2HelpDesk
     session[:Id] = nil
     session[:User] = nil

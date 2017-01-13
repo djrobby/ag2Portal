@@ -22,14 +22,14 @@
         <!-- Code -->
         <%= label_tag I18n.t("ag2_gest.subscribers.index.subscriber_code"), nil, :class => 'form-label' %>
         <%= text_field_tag "SubscriberCode", nil, :class => 'x-large-text-field shrinked number-text-field', onkeyup: "caps(this)" %>
-        <!-- ServicePoint -->
-        <%= label_tag I18n.t("ag2_gest.subscribers.index.service_point"), nil, :class => 'form-label' %>
-        <%= select_tag "ServicePoint", options_from_collection_for_select(@service_points, "id", "to_full_label"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
+        <!-- Street name -->
+        <%= label_tag I18n.t("ag2_gest.subscribers.index.street_name"), nil, :class => 'form-label' %>
+        <%= text_field_tag "StreetName", nil, :class => 'x-large-text-field shrinked' %>
         <!-- Meter -->
-        <%= label_tag I18n.t("ag2_gest.subscribers.index.meter"), nil, :class => 'form-label-under-sel2' %>
-        <%= select_tag "Meter", options_from_collection_for_select(@meters, "id", "to_label"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
+        <%= label_tag I18n.t("ag2_gest.subscribers.index.meter"), nil, :class => 'form-label' %>
+        <%= text_field_tag "Meter", nil, :class => 'x-large-text-field shrinked', onkeyup: "caps(this)" %>
         <!-- BillingFrequency -->
-        <%= label_tag I18n.t("ag2_gest.subscribers.index.billing_frequency"), nil, :class => 'form-label-under-sel2' %>
+        <%= label_tag I18n.t("ag2_gest.subscribers.index.billing_frequency"), nil, :class => 'form-label' %>
         <%= select_tag "BillingFrequency", options_from_collection_for_select(BillingFrequency.order(:name), "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
         <!-- TariffType -->
         <%= label_tag I18n.t("ag2_gest.subscribers.index.tariff_type"), nil, :class => 'form-label-under-sel2' %>
@@ -101,19 +101,18 @@
 
   $(window).bind("load", function() {
     $("#SubscriberCode").val("<%= params[:SubscriberCode] %>");
-    $("#ServicePoint").val("<%= params[:ServicePoint] %>");
-    $("#Meter").select2("val", "<%= params[:Meter] %>");
+    $("#StreetName").val("<%= params[:StreetName] %>");
+    $("#Meter").val("<%= params[:Meter] %>");
     $("#BillingFrequency").val("<%= params[:BillingFrequency] %>");
     $("#TariffType").val("<%= params[:TariffType] %>");
   });
-
 
   jQuery(function($) {
     // when the #removeFilter button clicked
     $("#removeFilter").click(function() {
       $("#SubscriberCode").val("");
-      $("#ServicePoint").select2("val", "");
-      $("#Meter").select2("val", "");
+      $("#StreetName").val("");
+      $("#Meter").val("");
       $("#BillingFrequency").select2("val", "");
       $("#TariffType").select2("val", "");
       $("#search").val("");
@@ -150,7 +149,5 @@
       }
       return false;
     });
-
-
   });
 </script>

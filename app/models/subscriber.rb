@@ -206,6 +206,10 @@ class Subscriber < ActiveRecord::Base
     bills.map(&:invoices).flatten.map{|i| i.debt if !i.payday_limit or i.payday_limit < Date.today}.compact.sum{|i| i}
   end
 
+  def meter_code
+    meter.blank? ? "" : meter.meter_code
+  end
+
   #
   # Class (self) user defined methods
   #
@@ -253,6 +257,12 @@ class Subscriber < ActiveRecord::Base
     integer :office_id
     integer :tariff_type_id do
       tariff_scheme.tariff_type_id
+    end
+    text :street_name do
+      street_directory.street_name
+    end
+    text :meter_code do
+      meter.meter_code
     end
     string :sort_no do
       subscriber_code
