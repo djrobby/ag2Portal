@@ -28,7 +28,7 @@
       amount = parseInt(right_number(amount.toString(), 4) * 10000);
       tax = parseInt(right_number(tax.toString(), 4) * 10000);
       // Bonus
-      var discount_p = $('#supplier_invoice_discount_pct').val();
+      var discount_p = $('#invoice_discount_pct').val();
       if (discount_p == "")
         discount_p = "0";
       discount_p = parseInt(right_number(discount_p, 2) * 100);
