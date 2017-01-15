@@ -473,8 +473,8 @@ module Ag2Gest
       init_oco if !session[:organization]
       # Initialize select_tags
       @projects = projects_dropdown if @projects.nil?
-      @clients = clients_dropdown if @clients.nil?
-      @subscribers = subscribers_dropdown if @subscribers.nil?
+      # @clients = clients_dropdown if @clients.nil?
+      # @subscribers = subscribers_dropdown if @subscribers.nil?
       @status = invoice_statuses_dropdown if @status.nil?
       @types = invoice_types_dropdown if @types.nil?
       @operations = invoice_operations_dropdown if @operations.nil?
@@ -500,10 +500,10 @@ module Ag2Gest
           end
         end
         if !client.blank?
-          with :client_id, client
+          fulltext client
         end
         if !subscriber.blank?
-          with :subscriber_id, subscriber
+          fulltext subscriber
         end
         if !project.blank?
           with :project_id, project

@@ -141,6 +141,10 @@ class Subscriber < ActiveRecord::Base
     full_code + " " + full_name_or_company + " - " + address_1
   end
 
+  def code_full_name_or_company_address_fiscal
+    subscriber_code + " " + full_name_or_company + " " + address_1 + " " + fiscal_id
+  end
+
   def full_code
     # Subscriber code (Office id & sequential number) => OOOO-NNNNNNN
     subscriber_code.blank? ? "" : subscriber_code[0..3] + '-' + subscriber_code[4..10]
@@ -250,6 +254,12 @@ class Subscriber < ActiveRecord::Base
 
   searchable do
     text :subscriber_code, :to_label, :fiscal_id, :phone, :full_name
+    text :street_name do
+      street_directory.street_name unless street_directory.blank?
+    end
+    text :meter_code do
+      meter.meter_code unless meter.blank?
+    end
     string :subscriber_code, :multiple => true   # Multiple search values accepted in one search (inverse_no_search)
     string :full_name
     integer :service_point_id
@@ -258,12 +268,6 @@ class Subscriber < ActiveRecord::Base
     integer :office_id
     integer :tariff_type_id do
       tariff_scheme.tariff_type_id
-    end
-    text :street_name do
-      street_directory.street_name unless street_directory.blank?
-    end
-    text :meter_code do
-      meter.meter_code unless meter.blank?
     end
     string :sort_no do
       subscriber_code

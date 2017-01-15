@@ -120,6 +120,10 @@ class Client < ActiveRecord::Base
     full_code + " " + full_name_or_company
   end
 
+  def full_name_or_company_code_fiscal
+    client_code + " " + full_name_or_company + " " + fiscal_id
+  end
+
   def full_code
     # Client code (Organization id & sequential number) => OOOO-NNNNNNN
     client_code.blank? ? "" : client_code[0..3] + '-' + client_code[4..10]
