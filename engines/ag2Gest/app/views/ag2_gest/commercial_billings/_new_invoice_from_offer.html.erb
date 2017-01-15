@@ -9,11 +9,10 @@
 
   jQuery(function($) {
     $('#btn_accept').click(function() {
-      var supplier = $('#Supplier_ :selected').val();
-      var request = $('#Request_ :selected').val();
-      var offer_no = $('#No_').val();
+      var supplier = $('#Client_ :selected').val();
+      var request = $('#Offer_ :selected').val();
       var offer_date = $('#Date_').val();
-      if ((supplier == "") || (request == "")  || (offer_no == "")  || (offer_date == "")) {
+      if ((supplier == "") || (request == "") || (offer_date == "")) {
         // Error
         alert('<%= I18n.t(:mandatory_subtitle) %>');
         return false;
@@ -23,7 +22,7 @@
       // Show message
       $("#proc_mesage").show();
       // make the POST call
-      jQuery.getJSON('ci_generate_invoice/' + supplier + '/' + request + '/' + offer_no + '/' + offer_date, function(data) {
+      jQuery.getJSON('ci_generate_invoice/' + supplier + '/' + request + '/' + offer_date, function(data) {
         // Hide message
         $("#proc_mesage").hide();
         // AJAX refresh index table is necessary
@@ -36,32 +35,32 @@
         } else {
           // Hide the modal and exit
           alert(data.code);
-          $("#new-invoice-from-receipt").modal('hide');
+          $("#new-invoice-from-offer").modal('hide');
           //window.location = "<%= ag2_gest.commercial_billings_path %>";
         }
       });
       return false;
     });
 
-    // when the #Supplier_ field changes
-    $("#Supplier_").change(function() {
+    // when the #Client_ field changes
+    $("#Client_").change(function() {
       // make a POST call and replace the content
-      var supplier = $('#Supplier_ :selected').val();
+      var supplier = $('#Client_ :selected').val();
       if (supplier == "") supplier = 0;
       jQuery.getJSON('ci_update_offer_select_from_client/' + supplier, function(data) {
         var r = data.note;
-        $("#Request_").html("");
-        $("#Request_").select2("val", "");
-        $("#Request_").append($('<option></option>').val("").html(""));
+        $("#Offer_").html("");
+        $("#Offer_").select2("val", "");
+        $("#Offer_").append($('<option></option>').val("").html(""));
         if (!r.length) {
           $.each(data, function(id, option) {
             if (id == 'note' && option != "") {
-              $("#Request_").append($('<option></option>').val(option[0]).html(option[1] + " " + option[2] + " " + option[3]));
+              $("#Offer_").append($('<option></option>').val(option[0]).html(option[1] + " " + option[2] + " " + option[3]));
             }
           });
         } else {
           $.each(r, function(id, option) {
-            $("#Request_").append($('<option></option>').val(option[0]).html(option[1] + " " + option[2] + " " + option[3]));
+            $("#Offer_").append($('<option></option>').val(option[0]).html(option[1] + " " + option[2] + " " + option[3]));
           });
         }
       });
@@ -70,10 +69,10 @@
       return false;
     });
 
-    // when the #Request_ field changes
-    $("#Request_").change(function() {
+    // when the #Offer_ field changes
+    $("#Offer_").change(function() {
       // make a POST call and replace the content
-      var order = $('#Request_ :selected').val();
+      var order = $('#Offer_ :selected').val();
       if (order == "") order = 0;
       jQuery.getJSON('si_current_balance/' + order, function(data) {
         $("#current-balance").html(data.balance);
@@ -91,19 +90,16 @@
   </div>
   <div class="modal-header">
     <a class="close" data-dismiss="modal">&#215;</a>
-    <h3><%= t('ag2_gest.commercial_billings.index.btn_new_from_receipt_note') %></h3>
+    <h3><%= t('ag2_gest.commercial_billings.index.btn_new_from_sale_offer') %></h3>
     <span class="shrinked"><%= I18n.t(:mandatory_subtitle) %></span>
   </div>
   <div class="modal-body">
-    <!-- Supplier -->
-    <label for="Supplier_" class="form-label"> <abbr title="requerido">*</abbr> <%= I18n.t("activerecord.attributes.bill.client") %></label>
-    <%= select_tag "Supplier_", options_from_collection_for_select(@clients, "id", "full_name"), :prompt => "", :class => 'x-large-text-field nsel2' %>
-    <!-- Receipt note -->
-    <label for="Request_" class="form-label-under-sel2"> <abbr title="requerido">*</abbr> <%= I18n.t("activerecord.attributes.commercial_billing.sale_offer") %></label>
-    <%= select_tag "Request_", options_from_collection_for_select(@sale_offers, "id", "full_name"), :prompt => "", :class => 'x-large-text-field nsel2' %>
-    <!-- Invoice No -->
-    <label for="No_" class="form-label-under-sel2"> <abbr title="requerido">*</abbr> <%= I18n.t("activerecord.attributes.commercial_billing.invoice_no") %></label>
-    <%= text_field_tag "No_", nil, :class => 'x-large-text-field' %>
+    <!-- Client -->
+    <label for="Client_" class="form-label"> <abbr title="requerido">*</abbr> <%= I18n.t("activerecord.attributes.bill.client") %></label>
+    <%= select_tag "Client_", options_from_collection_for_select(@clients, "id", "full_name"), :prompt => "", :class => 'x-large-text-field nsel2' %>
+    <!-- Sale offer -->
+    <label for="Offer_" class="form-label-under-sel2"> <abbr title="requerido">*</abbr> <%= I18n.t("activerecord.attributes.commercial_billing.sale_offer") %></label>
+    <%= select_tag "Offer_", options_from_collection_for_select(@sale_offers, "id", "full_name"), :prompt => "", :class => 'x-large-text-field nsel2' %>
     <!-- Invoice date -->
     <label for="Date_" class="form-label"> <abbr title="requerido">*</abbr> <%= I18n.t("activerecord.attributes.commercial_billing.invoice_date") %></label>
     <%= text_field_tag "Date_", nil, class: 'mid-text-field ndate_picker' %>
