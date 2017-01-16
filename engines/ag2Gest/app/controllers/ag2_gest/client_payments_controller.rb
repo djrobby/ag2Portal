@@ -147,8 +147,8 @@ module Ag2Gest
       bill_no = params[:bill_no]
       client = params[:Client]
       subscriber = params[:Subscriber]
-      entity = params[:entity]
-      project = params[:project]
+      # entity = params[:entity]
+      project = params[:Project]
       bank_account = params[:bank_account] == "SI" ? true : false
       billing_period = params[:billing_period]
       reading_routes = params[:reading_routes]
@@ -158,10 +158,10 @@ module Ag2Gest
       # Initialize select_tags
       @billing_periods = billing_periods_dropdown if @billing_periods.nil?
       @reading_routes = reading_routes_dropdown if @reading_routes.nil?
-      @clients = clients_dropdown if @clients.nil?
       @projects  = projects_dropdown if @projects.nil?
-      @subscribers  = subscribers_dropdown if @subscribers.nil?
-      @entities  = entities_dropdown if @entities.nil?
+      # @clients = clients_dropdown if @clients.nil?
+      # @subscribers  = subscribers_dropdown if @subscribers.nil?
+      # @entities  = entities_dropdown if @entities.nil?
 
       # If inverse no search is required
       bill_no = !bill_no.blank? && bill_no[0] == '%' ? inverse_no_search(bill_no) : bill_no
@@ -179,14 +179,17 @@ module Ag2Gest
           end
         end
         if !client.blank?
-          with :client_id, client
+          fulltext client
         end
         if !subscriber.blank?
-          with :subscriber_id, subscriber
+          fulltext subscriber
         end
-        if !entity.blank?
-          with :entity_id, entity
-        end
+        # if !entity.blank?
+        #   fulltext entity
+        # end
+        # if !entity.blank?
+        #   with :entity_id, entity
+        # end
         if !bank_account.blank?
           with :bank_account, bank_account
         end
@@ -210,14 +213,14 @@ module Ag2Gest
           end
         end
         if !client.blank?
-          with :client_id, client
+          fulltext client
         end
         if !subscriber.blank?
-          with :subscriber_id, subscriber
+          fulltext subscriber
         end
-        if !entity.blank?
-          with :entity_id, entity
-        end
+        # if !entity.blank?
+        #   fulltext entity
+        # end
         if !bank_account.blank?
           with :bank_account, bank_account
         end
@@ -241,14 +244,14 @@ module Ag2Gest
           end
         end
         if !client.blank?
-          with :client_id, client
+          fulltext client
         end
         if !subscriber.blank?
-          with :subscriber_id, subscriber
+          fulltext subscriber
         end
-        if !entity.blank?
-          with :entity_id, entity
-        end
+        # if !entity.blank?
+        #   fulltext entity
+        # end
         if !bank_account.blank?
           with :bank_account, bank_account
         end
@@ -272,14 +275,14 @@ module Ag2Gest
           end
         end
         if !client.blank?
-          with :client_id, client
+          fulltext client
         end
         if !subscriber.blank?
-          with :subscriber_id, subscriber
+          fulltext subscriber
         end
-        if !entity.blank?
-          with :entity_id, entity
-        end
+        # if !entity.blank?
+        #   fulltext entity
+        # end
         if !bank_account.blank?
           with :bank_account, bank_account
         end
@@ -303,14 +306,14 @@ module Ag2Gest
           end
         end
         if !client.blank?
-          with :client_id, client
+          fulltext client
         end
         if !subscriber.blank?
-          with :subscriber_id, subscriber
+          fulltext subscriber
         end
-        if !entity.blank?
-          with :entity_id, entity
-        end
+        # if !entity.blank?
+        #   fulltext entity
+        # end
         if !bank_account.blank?
           with :bank_account, bank_account
         end
@@ -334,14 +337,14 @@ module Ag2Gest
           end
         end
         if !client.blank?
-          with :client_id, client
+          fulltext client
         end
         if !subscriber.blank?
-          with :subscriber_id, subscriber
+          fulltext subscriber
         end
-        if !entity.blank?
-          with :entity_id, entity
-        end
+        # if !entity.blank?
+        #   fulltext entity
+        # end
         if !bank_account.blank?
           with :bank_account, bank_account
         end
@@ -354,13 +357,12 @@ module Ag2Gest
 
       @bills_pending = @search_pending.results
       @bills_charged = @search_charged.results
-
       @client_payments_cash = @search_cash.results
       @client_payments_bank = @search_bank.results
       @client_payments_others = @search_others.results
-
       @instalments = @search_instalment.results
       #@reports = reports_array
+
       respond_to do |format|
         format.html # index.html.erb
         format.json { render json: {bills_pending: @bills_pending, bills_charged: @bills_charged, client_payments_cash: @client_payments_cash, client_payments_bank: @client_payments_bank, client_payments_others: @client_payments_others, instalments: @instalments } }
@@ -761,6 +763,12 @@ module Ag2Gest
       elsif session[:bill_no]
         params[:bill_no] = session[:bill_no]
       end
+      # project
+      if params[:Project]
+        session[:Project] = params[:Project]
+      elsif session[:Project]
+        params[:Project] = session[:Project]
+      end
       # client
       if params[:Client]
         session[:Client] = params[:Client]
@@ -778,12 +786,6 @@ module Ag2Gest
         session[:entity] = params[:entity]
       elsif session[:entity]
         params[:entity] = session[:entity]
-      end
-      # project
-      if params[:project]
-        session[:project] = params[:project]
-      elsif session[:project]
-        params[:project] = session[:project]
       end
       # bank_account
       if params[:bank_account]

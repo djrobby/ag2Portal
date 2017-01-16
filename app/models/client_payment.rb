@@ -22,13 +22,23 @@ class ClientPayment < ActiveRecord::Base
   after_destroy :reindex_instalment
 
   searchable do
-    integer :payment_type
+    text :receipt_no
     text :bill_no do
       bill.bill_no
+    end
+    text :client_code_name_fiscal do
+      bill.client.full_name_or_company_code_fiscal unless bill.client.blank?
+    end
+    text :subscriber_code_name_address_fiscal do
+      bill.subscriber.code_full_name_or_company_address_fiscal unless bill.subscriber.blank?
+    end
+    text :entity_name_fiscal do
+      bill.client.entity.full_name_or_company_fiscal unless bill.client.entity.blank?
     end
     string :bill_no, :multiple => true do
       bill.bill_no
     end   # Multiple search values accepted in one search (inverse_no_search)
+    integer :payment_type
     integer :project_id, :multiple => true do
       bill.project_id
     end

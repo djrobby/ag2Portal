@@ -25,6 +25,7 @@ module Ag2Gest
       session[:Subscriber] = nil
       session[:Operation] = nil
       session[:Biller] = nil
+      session[:entity] = nil
 
       session[:ReadingRoute] = nil
       session[:Meter] = nil

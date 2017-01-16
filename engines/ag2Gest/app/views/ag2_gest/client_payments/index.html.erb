@@ -40,10 +40,13 @@ $(document).ready(function () {
 
   $(window).bind("load", function() {
     $("#bill_no").val("<%= params[:bill_no] %>");
-    $("#project").select2("val", "<%= params[:project] %>");
-    $("#Client").select2("val", "<%= params[:Client] %>");
-    $("#Subscriber").select2("val", "<%= params[:Subscriber] %>");
-    $("#entity").select2("val", "<%= params[:entity] %>");
+    $("#Project").select2("val", "<%= params[:Project] %>");
+    // $("#Client").select2("val", "<%= params[:Client] %>");
+    // $("#Subscriber").select2("val", "<%= params[:Subscriber] %>");
+    // $("#entity").select2("val", "<%= params[:entity] %>");
+    $("#Client").val("<%= params[:Client] %>");
+    $("#Subscriber").val("<%= params[:Subscriber] %>");
+    $("#entity").val("<%= params[:entity] %>");
     $("#bank_account").select2("val", "<%= params[:bank_account] %>");
     $("#billing_period").select2("val", "<%= params[:billing_period] %>");
     $("#reading_routes").select2("val", "<%= params[:reading_routes] %>");
@@ -52,10 +55,13 @@ $(document).ready(function () {
   jQuery(function($) {
     $("#removeFilter").click(function() {
       $("#bill_no").val("");
-      $("#project").select2("val", "");
-      $("#Client").select2("val", "");
-      $("#Subscriber").select2("val", "");
-      $("#entity").select2("val", "");
+      $("#Project").select2("val", "");
+      // $("#Client").select2("val", "");
+      // $("#Subscriber").select2("val", "");
+      // $("#entity").select2("val", "");
+      $("#Client").val("");
+      $("#Subscriber").val("");
+      $("#entity").val("");
       $("#bank_account").select2("val", "");
       $("#billing_period").select2("val", "");
       $("#reading_routes").select2("val", "");
@@ -246,27 +252,31 @@ $(document).ready(function () {
         <!-- Search form -->
         <%= form_tag "client_payments", :method => 'get', :remote => true do %>
 
+          <!-- Bill No -->
           <%= label_tag "Factura", nil, :class => 'form-label' %>
           <%= text_field_tag "bill_no", nil, :class => 'x-large-text-field shrinked number-text-field', onkeyup: "caps(this)" %>
 
+          <!-- Project -->
+          <%= label_tag I18n.t("ag2_gest.contracting_requests.index.label_project"), nil, :class => 'form-label' %>
+          <%= select_tag "Project", options_from_collection_for_select(@projects, "id", "project_code"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
+
           <!-- Client -->
-          <%= label_tag I18n.t("ag2_gest.contracting_requests.index.label_client"), nil, :class => 'form-label' %>
-          <%= select_tag "client", options_from_collection_for_select(@clients, "id", "to_label"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
+          <%= label_tag I18n.t("ag2_gest.contracting_requests.index.label_client"), nil, :class => 'form-label-under-sel2' %>
+          <%= text_field_tag "Client", nil, :class => 'x-large-text-field shrinked' %>
+          <!--<%#= select_tag "client", options_from_collection_for_select(@clients, "id", "to_label"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>-->
 
           <!-- Subscriber -->
-          <%= label_tag I18n.t("ag2_gest.contracting_requests.index.label_subscriber"), nil, :class => 'form-label-under-sel2' %>
-          <%= select_tag "Subscriber", options_from_collection_for_select(@subscribers, "id", "code_full_name_or_company_address"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
+          <%= label_tag I18n.t("ag2_gest.contracting_requests.index.label_subscriber"), nil, :class => 'form-label' %>
+          <%= text_field_tag "Subscriber", nil, :class => 'x-large-text-field shrinked' %>
+          <!--<%#= select_tag "Subscriber", options_from_collection_for_select(@subscribers, "id", "code_full_name_or_company_address"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>-->
 
           <!-- Entity -->
-          <%= label_tag I18n.t("ag2_gest.contracting_requests.index.label_entity"), nil, :class => 'form-label-under-sel2' %>
-          <%= select_tag "entity", options_from_collection_for_select(@entities, "id", "to_label"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
-
-          <!-- Project -->
-          <%= label_tag I18n.t("ag2_gest.contracting_requests.index.label_project"), nil, :class => 'form-label-under-sel2' %>
-          <%= select_tag "project", options_from_collection_for_select(@projects, "id", "project_code"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
+          <!--<%#= label_tag I18n.t("ag2_gest.contracting_requests.index.label_entity"), nil, :class => 'form-label' %>-->
+          <!--<%#= text_field_tag "entity", nil, :class => 'x-large-text-field shrinked' %>-->
+          <!--<%#= select_tag "entity", options_from_collection_for_select(@entities, "id", "to_label"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>-->
 
           <!-- BankAccount -->
-          <%= label_tag I18n.t("ag2_gest.contracting_requests.index.label_bank_account"), nil, :class => 'form-label-under-sel2' %>
+          <%= label_tag I18n.t("ag2_gest.contracting_requests.index.label_bank_account"), nil, :class => 'form-label' %>
           <%= select_tag "bank_account", options_for_select([ "SI", "NO" ]), include_blank: true, :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
 
           <!-- Period -->

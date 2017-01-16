@@ -38,7 +38,6 @@ class Subscriber < ActiveRecord::Base
   accepts_nested_attributes_for :readings
   accepts_nested_attributes_for :meter_details
 
-
   has_paper_trail
 
   validates :client,            :presence => true

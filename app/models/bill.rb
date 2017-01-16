@@ -117,6 +117,15 @@ class Bill < ActiveRecord::Base
 
   searchable do
     text :bill_no #, :to_label, :fiscal_id, :phone, :full_name
+    text :client_code_name_fiscal do
+      client.full_name_or_company_code_fiscal unless client.blank?
+    end
+    text :subscriber_code_name_address_fiscal do
+      subscriber.code_full_name_or_company_address_fiscal unless subscriber.blank?
+    end
+    text :entity_name_fiscal do
+      client.entity.full_name_or_company_fiscal unless client.entity.blank?
+    end
     string :bill_no, :multiple => true   # Multiple search values accepted in one search (inverse_no_search)
     integer :project_id, :multiple => true
     integer :invoice_status_id

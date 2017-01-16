@@ -13,11 +13,17 @@ class Instalment < ActiveRecord::Base
 
 
   searchable do
-    integer :client_payment do
-      client_payment.nil? ? nil : client_payment.id
-    end
     text :bill_no do
       bill.bill_no
+    end
+    text :client_code_name_fiscal do
+      bill.client.full_name_or_company_code_fiscal unless bill.client.blank?
+    end
+    text :subscriber_code_name_address_fiscal do
+      bill.subscriber.code_full_name_or_company_address_fiscal unless bill.subscriber.blank?
+    end
+    integer :client_payment do
+      client_payment.nil? ? nil : client_payment.id
     end
     string :bill_no, :multiple => true do
       bill.bill_no
