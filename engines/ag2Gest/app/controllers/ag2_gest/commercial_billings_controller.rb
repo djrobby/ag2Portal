@@ -22,7 +22,8 @@ module Ag2Gest
                                                :ci_generate_invoice,
                                                :ci_current_balance,
                                                :send_invoice_form,
-                                               :invoice_form]
+                                               :invoice_form,
+                                               :bill_create, :bill_update]
     # Helper methods for
     # => allow edit (hide buttons)
     helper_method :cannot_edit
@@ -619,7 +620,8 @@ module Ag2Gest
         #
         # Must create associated bill before
         #
-        # bill_create()
+        bill_create()
+
         # Go on
         if @invoice.save
           format.html { redirect_to @invoice, notice: crud_notice('created', @invoice) }
@@ -689,7 +691,8 @@ module Ag2Gest
             #
             # Must update associated bill after
             #
-            # bill_update()
+            bill_update(@invoice.bill)
+
             # Go on
             format.html { redirect_to @invoice,
                           notice: (crud_notice('updated', @invoice) + "#{undo_link(@invoice)}").html_safe }
@@ -1006,6 +1009,58 @@ module Ag2Gest
       end
 
       code
+    end
+
+    # Create associated Bill
+    def bill_create
+      _r = false
+      _bill = Bill.new
+      _bill.created_by = current_user.id if !current_user.nil?
+      _bill.bill_no
+      bill_assign
+      if _bill.save
+        _r = true
+      end
+      _r
+    end
+
+    # Update associated Bill
+    def bill_update(_b)
+      _r = false
+      _bill = Bill.find(_b) rescue nil
+      if !_bill.nil?
+        _bill.updated_by = current_user.id if !current_user.nil?
+        bill_assign
+        if _bill.save
+          _r = true
+        end
+      end
+      _r
+    end
+
+    def bill_assign(_bill)
+      _bill.project_id
+      _bill.client_id
+      _bill.bill_date
+      _bill.invoice_status_id = 1
+      _bill.last_name
+      _bill.first_name
+      _bill.company
+      _bill.fiscal_id
+      _bill.street_type_id
+      _bill.street_name
+      _bill.street_number
+      _bill.building
+      _bill.floor
+      _bill.floor_office
+      _bill.zipcode_id
+      _bill.town_id
+      _bill.province_id
+      _bill.region_id
+      _bill.country_id
+      _bill.organization_id
+      _bill.payment_method_id
+      _bill.remarks
     end
 
     # Keeps filter state
