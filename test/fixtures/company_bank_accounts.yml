@@ -1,0 +1,31 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  company: 
+  bank_account_class: 
+  country: 
+  iban_dc: MyString
+  bank: 
+  bank_office: 
+  ccc_dc: MyString
+  account_no: MyString
+  holder_fiscal_id: MyString
+  holder_name: MyString
+  starting_at: 2017-01-17
+  ending_at: 2017-01-17
+  bank_suffix: MyString
+
+two:
+  company: 
+  bank_account_class: 
+  country: 
+  iban_dc: MyString
+  bank: 
+  bank_office: 
+  ccc_dc: MyString
+  account_no: MyString
+  holder_fiscal_id: MyString
+  holder_name: MyString
+  starting_at: 2017-01-17
+  ending_at: 2017-01-17
+  bank_suffix: MyString

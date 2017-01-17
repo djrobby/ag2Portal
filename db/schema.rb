@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20170110150207) do
+ActiveRecord::Schema.define(:version => 20170117153905) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -674,6 +674,35 @@ ActiveRecord::Schema.define(:version => 20170110150207) do
   add_index "companies", ["street_type_id"], :name => "index_companies_on_street_type_id"
   add_index "companies", ["town_id"], :name => "index_companies_on_town_id"
   add_index "companies", ["zipcode_id"], :name => "index_companies_on_zipcode_id"
+
+  create_table "company_bank_accounts", :force => true do |t|
+    t.integer  "company_id"
+    t.integer  "bank_account_class_id"
+    t.integer  "country_id"
+    t.string   "iban_dc"
+    t.integer  "bank_id"
+    t.integer  "bank_office_id"
+    t.string   "ccc_dc"
+    t.string   "account_no"
+    t.string   "holder_fiscal_id"
+    t.string   "holder_name"
+    t.date     "starting_at"
+    t.date     "ending_at"
+    t.string   "bank_suffix"
+    t.datetime "created_at",            :null => false
+    t.datetime "updated_at",            :null => false
+  end
+
+  add_index "company_bank_accounts", ["account_no"], :name => "index_company_bank_accounts_on_account_no"
+  add_index "company_bank_accounts", ["bank_account_class_id"], :name => "index_company_bank_accounts_on_bank_account_class_id"
+  add_index "company_bank_accounts", ["bank_id"], :name => "index_company_bank_accounts_on_bank_id"
+  add_index "company_bank_accounts", ["bank_office_id"], :name => "index_company_bank_accounts_on_bank_office_id"
+  add_index "company_bank_accounts", ["bank_suffix"], :name => "index_company_bank_accounts_on_bank_suffix"
+  add_index "company_bank_accounts", ["company_id", "bank_account_class_id", "country_id", "iban_dc", "bank_id", "bank_office_id", "ccc_dc", "account_no"], :name => "index_company_bank_accounts_on_company_and_class_and_no", :unique => true
+  add_index "company_bank_accounts", ["company_id"], :name => "index_company_bank_accounts_on_company_id"
+  add_index "company_bank_accounts", ["country_id"], :name => "index_company_bank_accounts_on_country_id"
+  add_index "company_bank_accounts", ["holder_fiscal_id"], :name => "index_company_bank_accounts_on_holder_fiscal_id"
+  add_index "company_bank_accounts", ["holder_name"], :name => "index_company_bank_accounts_on_holder_name"
 
   create_table "company_notifications", :force => true do |t|
     t.integer  "company_id"
