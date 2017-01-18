@@ -4,8 +4,8 @@ en:
       supplier_bank_account:
         zero:  Supplier bank accounts
         one:   Supplier bank account
-        few:   Suppliers bank accounts
-        other: Suppliers bank accounts
+        few:   Supplier bank accounts
+        other: Supplier bank accounts
     attributes:
       supplier_bank_account:
         supplier: "Supplier"

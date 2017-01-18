@@ -9,14 +9,15 @@ module Ag2Admin
                                                :update_province_textfield_from_zipcode,
                                                :co_update_attachment,
                                                :co_update_total_and_price,
-                                               :co_update_from_organization]
+                                               :co_update_from_organization,
+                                               :co_update_office_select_from_bank]
     # Helper methods for
     # => sorting
     # => allow edit (hide buttons)
     helper_method :sort_column, :cannot_edit
     # Public attachment for drag&drop
     $attachment = nil
-  
+
     # Update attached file from drag&drop
     def co_update_attachment
       if !$attachment.nil?
@@ -85,6 +86,22 @@ module Ag2Admin
       render json: @json_data
     end
 
+    # Update office select at view from bank select
+    def co_update_office_select_from_bank
+      bank = params[:bank]
+      if bank != '0'
+        @bank = Bank.find(bank)
+        @offices = @bank.blank? ? bank_offices_dropdown : @bank.bank_offices.order(:bank_id, :code)
+      else
+        @offices = bank_offices_dropdown
+      end
+      # Offers array
+      @offices_dropdown = bank_offices_array(@offices)
+      # Setup JSON
+      @json_data = { "office" => @offices_dropdown }
+      render json: @json_data
+    end
+
     #
     # Default Methods
     #
@@ -112,6 +129,7 @@ module Ag2Admin
       @company = Company.find(params[:id])
       @offices = @company.offices.paginate(:page => params[:page], :per_page => per_page).order(:office_code)
       @notifications = @company.company_notifications.paginate(:page => params[:page], :per_page => per_page).order('id')
+      @accounts = @company.company_bank_accounts.paginate(:page => params[:page], :per_page => per_page).order(:id)
 
       respond_to do |format|
         format.html # show.html.erb
@@ -126,6 +144,10 @@ module Ag2Admin
       @company = Company.new
       @notifications = notifications_dropdown
       @users = users_dropdown
+      @classes = bank_account_classes_dropdown
+      @countries = countries_dropdown
+      @banks = banks_dropdown
+      @offices = bank_offices_dropdown
       $attachment = Attachment.new
       destroy_attachment
 
@@ -141,6 +163,10 @@ module Ag2Admin
       @company = Company.find(params[:id])
       @notifications = notifications_dropdown
       @users = users_dropdown
+      @classes = bank_account_classes_dropdown
+      @countries = countries_dropdown
+      @banks = banks_dropdown
+      @offices = bank_offices_dropdown
       $attachment = Attachment.new
       destroy_attachment
     end
@@ -165,6 +191,10 @@ module Ag2Admin
         else
           @notifications = notifications_dropdown
           @users = users_dropdown
+          @classes = bank_account_classes_dropdown
+          @countries = countries_dropdown
+          @banks = banks_dropdown
+          @offices = bank_offices_dropdown
           $attachment.destroy
           $attachment = Attachment.new
           format.html { render action: "new" }
@@ -194,6 +224,10 @@ module Ag2Admin
         else
           @notifications = notifications_dropdown
           @users = users_dropdown
+          @classes = bank_account_classes_dropdown
+          @countries = countries_dropdown
+          @banks = banks_dropdown
+          @offices = bank_offices_dropdown
           $attachment.destroy
           $attachment = Attachment.new
           format.html { render action: "edit" }
@@ -229,10 +263,34 @@ module Ag2Admin
       User.order(:email)
     end
 
+    def bank_account_classes_dropdown
+      BankAccountClass.where('id >= ?', 6).order(:id)
+    end
+
+    def countries_dropdown
+      Country.order(:code)
+    end
+
+    def banks_dropdown
+      Bank.order(:code)
+    end
+
+    def bank_offices_dropdown
+      BankOffice.order(:bank_id, :code)
+    end
+
+    def bank_offices_array(_offices)
+      _array = []
+      _offices.each do |i|
+        _array = _array << [i.id, i.code, i.name, "(" + i.bank.code + ")"]
+      end
+      _array
+    end
+
     def sort_column
       Company.column_names.include?(params[:sort]) ? params[:sort] : "fiscal_id"
     end
-    
+
     def cannot_edit(_company)
       session[:company] != '0' && _company != session[:company].to_i
     end

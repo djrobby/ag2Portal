@@ -135,3 +135,21 @@ en:
           attributes:
             code:
               code_invalid: "invalid (must be alphanumeric)"
+        client_bank_account:
+          iban_invalid: "Invalid IBAN."
+          attributes:
+            iban_dc:
+              dc_invalid: "invalid (must be two numeric digits)"
+            ccc_dc:
+              dc_invalid: "invalid (must be two numeric digits)"
+            account_no:
+              code_invalid: "invalid (must be twelve numeric digits)"
+        company_bank_account:
+          iban_invalid: "Invalid IBAN."
+          attributes:
+            iban_dc:
+              dc_invalid: "invalid (must be two numeric digits)"
+            ccc_dc:
+              dc_invalid: "invalid (must be two numeric digits)"
+            account_no:
+              code_invalid: "invalid (must be twelve numeric digits)"

@@ -143,3 +143,21 @@ es:
           attributes:
             code:
               code_invalid: "inválido (debe ser alfanumérico)"
+        client_bank_account:
+          iban_invalid: "IBAN inválido."
+          attributes:
+            iban_dc:
+              dc_invalid: "inválido (deben ser dos dígitos numéricos)"
+            ccc_dc:
+              dc_invalid: "inválido (deben ser dos dígitos numéricos)"
+            account_no:
+              code_invalid: "inválido (deben ser doce dígitos numéricos)"
+        company_bank_account:
+          iban_invalid: "IBAN inválido."
+          attributes:
+            iban_dc:
+              dc_invalid: "inválido (deben ser dos dígitos numéricos)"
+            ccc_dc:
+              dc_invalid: "inválido (deben ser dos dígitos numéricos)"
+            account_no:
+              code_invalid: "inválido (deben ser doce dígitos numéricos)"

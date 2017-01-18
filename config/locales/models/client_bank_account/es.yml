@@ -2,30 +2,43 @@ es:
   activerecord:
     models:
       client_bank_account:
-        zero:  Cuentas bancarias de clientes
+        zero:  Cuentas bancarias de cliente
         one:   Cuenta bancaria de cliente
-        few:   Cuentas bancarias de clientes
-        other: Cuentas bancarias de clientes
-        # check_for_delivery_notes: "Cliente no puede ser eliminado mientras existan notas de entrega vinculadas."
-        # check_for_sale_offers: "Cliente no puede ser eliminado mientras existan presupuestos vinculados."
-        # check_for_client_invoices: "Cliente no puede ser eliminado mientras existan facturas C vinculadas."
-        # check_for_client_charges: "Cliente no puede ser eliminado mientras existan cobros vinculados."
+        few:   Cuentas bancarias de cliente
+        other: Cuentas bancarias de cliente
     attributes:
       client_bank_account:
         id: "Id"
+        client: "Cliente"
         client_id: "Cliente"
+        subscriber: "Abonado"
         subscriber_id: "Abonado"
-        bank_account_class_id: "Clase de cuenta"
-        iban: "Cuenta IBAN"
+        bank_account_class: "Clase"
+        bank_account_class_id: "Clase"
+        country: "País"
+        country_id: "País"
         country_code: "País"
+        iban: "IBAN"
         iban_dc: "DC IBAN"
+        iban_dc_c: "DC"
+        bank: "Banco"
+        bank_id: "Banco"
+        bank_office: "Oficina"
+        bank_office_id: "Oficina"
+        ccc_dc: "DC CCC"
+        ccc_dc_c: "CCC"
         cb: "Banco"
-        cs: "Sucursal"
-        ccc: "dc CCCC"
-        account_no: "Nº de cuenta"
-        fiscal_id: "Identificación fiscal (CIF/NIF/NIE)"
-        name: "Nombre del titular"
-        starting_at: "Fecha de alta"
-        ending_at: "Fecha de baja"
+        cs: "Oficina"
+        ccc: "DC CCC"
+        account_no: "Nº Cuenta"
+        holder_name: "Titular"
+        name: "Titular"
+        holder_fiscal_id: "Id Fiscal CIF/NIF"
+        holder_fiscal_id_c: "CIF/NIF"
+        fiscal_id: "Id Fiscal CIF/NIF"
+        e_format: "Cuenta"
+        p_format: "Cuenta"
+        starting_at: "Activada el"
+        ending_at: "Expiró el"
         successfully: "Cuenta bancaria de cliente se ha actualizado correctamente."
         create: "Cuenta bancaria de cliente se ha creado correctamente."

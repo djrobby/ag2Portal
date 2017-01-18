@@ -1,24 +1,19 @@
 en:
   activerecord:
     models:
-      client_bank_account:
-        zero:  Client bank accounts
-        one:   Client bank account
-        few:   Client bank accounts
-        other: Client bank accounts
+      company_bank_account:
+        zero:  Company bank accounts
+        one:   Company bank account
+        few:   Company bank accounts
+        other: Company bank accounts
     attributes:
-      client_bank_account:
-        id: "Id"
-        client: "Client"
-        client_id: "Client"
-        subscriber: "Subscriber"
-        subscriber_id: "Subscriber"
+      company_bank_account:
+        supplier: "Supplier"
+        supplier_id: "Supplier"
         bank_account_class: "Class"
         bank_account_class_id: "Class"
         country: "Country"
         country_id: "Country"
-        country_code: "Country"
-        iban: "IBAN"
         iban_dc: "IBAN CD"
         iban_dc_c: "CD"
         bank: "Bank"
@@ -27,18 +22,12 @@ en:
         bank_office_id: "Office"
         ccc_dc: "CCC CD"
         ccc_dc_c: "CCC"
-        cb: "Bank"
-        cs: "Office"
-        ccc: "CCC CD"
         account_no: "Account No"
         holder_name: "Holder"
-        name: "Holder"
         holder_fiscal_id: "Fiscal Id"
         holder_fiscal_id_c: "Fiscal Id"
-        fiscal_id: "Fiscal Id"
         e_format: "Account"
         p_format: "Account"
         starting_at: "Activated on"
         ending_at: "Expired on"
-        successfully: "Client bank account has been updated successfully."
-        create: "Client bank account has been created successfully."
+        bank_suffix: "Suffix"

@@ -1,0 +1,33 @@
+es:
+  activerecord:
+    models:
+      company_bank_account:
+        zero:  Cuentas bancarias de empresa
+        one:   Cuenta bancaria de empresa
+        few:   Cuentas bancarias de empresa
+        other: Cuentas bancarias de empresa
+    attributes:
+      company_bank_account:
+        supplier: "Proveedor"
+        supplier_id: "Proveedor"
+        bank_account_class: "Clase"
+        bank_account_class_id: "Clase"
+        country: "País"
+        country_id: "País"
+        iban_dc: "DC IBAN"
+        iban_dc_c: "DC"
+        bank: "Banco"
+        bank_id: "Banco"
+        bank_office: "Oficina"
+        bank_office_id: "Oficina"
+        ccc_dc: "DC CCC"
+        ccc_dc_c: "CCC"
+        account_no: "Nº Cuenta"
+        holder_name: "Titular"
+        holder_fiscal_id: "Id Fiscal CIF/NIF"
+        holder_fiscal_id_c: "CIF/NIF"
+        e_format: "Cuenta"
+        p_format: "Cuenta"
+        starting_at: "Activada el"
+        ending_at: "Expiró el"
+        bank_suffix: "Sufijo"

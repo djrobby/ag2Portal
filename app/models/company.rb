@@ -12,7 +12,7 @@ class Company < ActiveRecord::Base
                   :created_by, :updated_by, :organization_id, :hd_email, :website,
                   :max_order_total, :max_order_price, :overtime_pct, :commercial_bill_code
   has_attached_file :logo, :styles => { :original => "160x160>", :medium => "120x120>", :small => "80x80>" }, :default_url => "/images/missing/:style/company.png"
-  attr_accessible :company_notifications_attributes
+  attr_accessible :company_notifications_attributes, :company_bank_accounts_attributes
 
   has_many :offices
   has_many :workers
@@ -20,6 +20,7 @@ class Company < ActiveRecord::Base
   has_many :corp_contacts, :order => 'last_name, first_name'
   has_many :projects
   has_many :company_notifications, dependent: :destroy
+  has_many :company_bank_accounts, dependent: :destroy
   has_many :stores
   has_many :product_company_prices
   has_many :product_valued_stock_by_companies
@@ -32,8 +33,13 @@ class Company < ActiveRecord::Base
   accepts_nested_attributes_for :company_notifications,
                                 :reject_if => :all_blank,
                                 :allow_destroy => true
+  accepts_nested_attributes_for :company_bank_accounts,
+                                :reject_if => :all_blank,
+                                :allow_destroy => true
 
   has_paper_trail
+
+  validates_associated :company_bank_accounts
 
   validates :name,                  :presence => true
   validates :fiscal_id,             :presence => true,

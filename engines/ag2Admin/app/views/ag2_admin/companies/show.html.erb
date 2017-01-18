@@ -145,6 +145,45 @@
   </tbody>
 </table>
 
+<!-- Bank accounts -->
+<% if (@accounts.count > 0) %>
+<table class="form-table">
+  <tbody>
+    <tr class="form-tr underlined-tr">
+      <td class="form-td-two left-winged">
+        <h4><%= t 'ag2_admin.companies.accounts_info' %></h4>
+      </td>
+      <td class="form-td-two right-winged">
+        <a href="#" id="print_report_btn"><i class="icon-arrow-up"></i></a>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<table class="table table-condensed table-striped shrinked">
+  <!-- class -->
+  <col width="15%" />
+  <!-- account e_format -->
+  <col width="20%" />
+  <!-- holder name -->
+  <col width="25%" />
+  <!-- holder fiscal_id -->
+  <col width="15%" />
+  <!-- suffix -->
+  <col width="5%" />
+  <!-- starting_at -->
+  <col width="10%" />
+  <!-- ending_at -->
+  <col width="10%" />
+  <thead>
+    <%= render 'accounts_header' %>
+  </thead>
+  <tbody>
+    <%= render partial: 'account', collection: @accounts %>
+  </tbody>
+</table>
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @accounts } %>
+<% end %> <!-- end @accounts.count > 0 -->
+
 <%= render :partial => '/layouts/crud/update_delete_new', locals:
 { model: Company, update_path: edit_company_path(@company), update_txt: t('ag2_admin.companies.show.btn_edit'),
 delete_path: @company, delete_txt: t('ag2_admin.companies.show.btn_delete'), msg: t("activerecord.models.company.one"), :txt => @company.name,

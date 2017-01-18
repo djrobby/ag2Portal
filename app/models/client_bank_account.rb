@@ -8,8 +8,6 @@ class ClientBankAccount < ActiveRecord::Base
   attr_accessible :client_id, :subscriber_id, :bank_account_class_id, :account_no, :cb, :ccc_dc, :country_code, :cs,
                   :ending_at, :fiscal_id, :iban, :iban_dc, :name, :starting_at, :country_id, :bank_id, :bank_office_id, :holder_fiscal_id, :holder_name
 
-  scope :active, -> { where("ending_at IS NULL") }
-
   alias_attribute :cb, :bank_id
   alias_attribute :cs, :bank_office_id
   alias_attribute :fiscal_id, :holder_fiscal_id
@@ -26,9 +24,9 @@ class ClientBankAccount < ActiveRecord::Base
                                   :format => { with: /\A\d+\Z/, message: :dc_invalid }
   validates :bank,                :presence => true
   validates :bank_office,         :presence => true
-  validates :ccc_dc,              :presence => true,
-                                  :length => { :is => 2 },
-                                  :format => { with: /\A\d+\Z/, message: :dc_invalid }
+  # validates :ccc_dc,              :presence => true,
+  #                                 :length => { :is => 2 },
+  #                                 :format => { with: /\A\d+\Z/, message: :dc_invalid }
   validates :account_no,          :presence => true,
                                   :length => { :is => 10 },
                                   :format => { with: /\A\d+\Z/, message: :code_invalid },
@@ -38,6 +36,9 @@ class ClientBankAccount < ActiveRecord::Base
                                   :length => { :minimum => 8 }
   validates :holder_name,         :presence => true
   validates :starting_at,         :presence => true
+
+  # Scopes
+  scope :active, -> { where("ending_at IS NULL OR ending_at > ?", Date.today) }
 
   before_validation :fields_to_uppercase
 

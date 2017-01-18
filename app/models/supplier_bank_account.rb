@@ -30,6 +30,9 @@ class SupplierBankAccount < ActiveRecord::Base
   validates :holder_name,         :presence => true
   validates :starting_at,         :presence => true
 
+  # Scopes
+  scope :active, -> { where("ending_at IS NULL OR ending_at > ?", Date.today) }
+
   before_validation :fields_to_uppercase
 
   def fields_to_uppercase

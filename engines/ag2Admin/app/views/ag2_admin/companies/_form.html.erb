@@ -224,6 +224,20 @@
 <div>
   <label class="multi-field-label-two"> <%= f.input :overtime_pct, as: :string, input_html: { value: (number_with_precision(f.object.overtime_pct, precision: 2) if f.object.overtime_pct), class: 'large-text-field number-text-field' }, label_html: { class: 'form-label' } %> </label>
 </div>
+<!-- Bank accounts -->
+<table class="form-table">
+  <tbody>
+    <tr class="form-tr underlined-tr">
+      <td class="form-td-two left-winged">
+        <h4><%= t 'ag2_admin.companies.accounts_info' %></h4>
+      </td>
+      <td class="form-td-two right-winged">
+        <%= link_to_add_fields(t("ag2_admin.companies.btn_new_account"), f, :company_bank_accounts, "account_fields", "new-account-fields", class: "btn btn-warning fnt-new-btn") %>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<%= render 'accounts_table', f: f %>
 <!-- Notifications -->
 <% if can? :crud, CompanyNotification %>
   <table class="form-table">

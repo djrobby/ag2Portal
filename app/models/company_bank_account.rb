@@ -23,7 +23,7 @@ class CompanyBankAccount < ActiveRecord::Base
   validates :account_no,          :presence => true,
                                   :length => { :is => 12 },
                                   :format => { with: /\A\d+\Z/, message: :code_invalid },
-                                  :uniqueness => { :scope => [:supplier_id, :bank_account_class_id, :country_id,
+                                  :uniqueness => { :scope => [:company_id, :bank_account_class_id, :country_id,
                                                               :iban_dc, :bank_id, :bank_office_id] }
   validates :holder_fiscal_id,    :presence => true,
                                   :length => { :minimum => 8 }
@@ -32,6 +32,9 @@ class CompanyBankAccount < ActiveRecord::Base
   validates :bank_suffix,         :presence => true,
                                   :length => { :is => 3 },
                                   :format => { with: /\A\d+\Z/, message: :suffix_invalid }
+
+  # Scopes
+  scope :active, -> { where("ending_at IS NULL OR ending_at > ?", Date.today) }
 
   before_validation :fields_to_uppercase
 
