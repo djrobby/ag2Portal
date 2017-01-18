@@ -38,7 +38,6 @@ module Ag2Gest
       end
     end
 
-
     def confirm
       # @bills = Bill.where(id: params[:bills][:ids].split("[\"")[1].split("\"]")[0].split("\", \""))
       @pre_bills = PreBill.where(pre_group_no: params[:pre_bill][:ids], bill_id: nil)
@@ -377,6 +376,5 @@ module Ag2Gest
         ActiveRecord::Base.connection.close
       end
     end
-
   end
 end

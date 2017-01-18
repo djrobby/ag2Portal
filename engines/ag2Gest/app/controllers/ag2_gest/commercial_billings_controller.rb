@@ -618,9 +618,12 @@ module Ag2Gest
 
       respond_to do |format|
         #
-        # Must create associated bill before
+        # Must create associated bill
         #
-        bill_create()
+        bill_create(params[:Project],
+                    params[:Client],
+                    params[:invoice][:invoice_date].to_date,
+                    params[:invoice][:payment_method_id].to_i)
 
         # Go on
         if @invoice.save
@@ -672,7 +675,6 @@ module Ag2Gest
       if ((params[:invoice][:organization_id].to_i != @supplier_invoice.organization_id.to_i) ||
           (params[:invoice][:invoice_no].to_s != @supplier_invoice.invoice_no) ||
           (params[:invoice][:invoice_date].to_date != @supplier_invoice.invoice_date) ||
-          #(params[:invoice][:client_id].to_i != @supplier_invoice.client_id.to_i) ||
           (params[:invoice][:sale_offer_id].to_i != @supplier_invoice.sale_offer_id.to_i) ||
           (params[:invoice][:charge_account_id].to_i != @supplier_invoice.charge_account_id.to_i) ||
           (params[:invoice][:payment_method_id].to_i != @supplier_invoice.payment_method_id.to_i) ||
@@ -689,9 +691,13 @@ module Ag2Gest
           @invoice.updated_by = current_user.id if !current_user.nil?
           if @invoice.update_attributes(params[:invoice])
             #
-            # Must update associated bill after
+            # Must update associated bill
             #
-            bill_update(@invoice.bill)
+            bill_update(@invoice.bill,
+                        params[:Project],
+                        params[:Client],
+                        params[:invoice][:invoice_date].to_date,
+                        params[:invoice][:payment_method_id].to_i)
 
             # Go on
             format.html { redirect_to @invoice,
@@ -999,7 +1005,7 @@ module Ag2Gest
       title = t("activerecord.models.invoice.one") + "_" + @invoice.full_no + ".pdf"
       pdf = render_to_string(filename: "#{title}", type: 'application/pdf')
       from = !current_user.nil? ? User.find(current_user.id).email : User.find(@invoice.created_by).email
-      to = !@invoice.client.email.blank? ? @invoice.client.email : nil
+      to = !@invoice.bill.client.email.blank? ? @invoice.bill.client.email : nil
 
       if from.blank? || to.blank?
         code = "$err"
@@ -1012,12 +1018,12 @@ module Ag2Gest
     end
 
     # Create associated Bill
-    def bill_create
+    def bill_create(_project, _client, _date, _payment_method)
       _r = false
       _bill = Bill.new
       _bill.created_by = current_user.id if !current_user.nil?
-      _bill.bill_no
-      bill_assign
+      _bill.bill_no = bill_next_no(_project)
+      bill_assign(_bill, _project, _client, _date, _payment_method)
       if _bill.save
         _r = true
       end
@@ -1025,12 +1031,12 @@ module Ag2Gest
     end
 
     # Update associated Bill
-    def bill_update(_b)
+    def bill_update(_b, _project, _client, _date, _payment_method)
       _r = false
       _bill = Bill.find(_b) rescue nil
       if !_bill.nil?
         _bill.updated_by = current_user.id if !current_user.nil?
-        bill_assign
+        bill_assign(_bill, _project, _client, _date, _payment_method)
         if _bill.save
           _r = true
         end
@@ -1038,29 +1044,32 @@ module Ag2Gest
       _r
     end
 
-    def bill_assign(_bill)
-      _bill.project_id
-      _bill.client_id
-      _bill.bill_date
-      _bill.invoice_status_id = 1
-      _bill.last_name
-      _bill.first_name
-      _bill.company
-      _bill.fiscal_id
-      _bill.street_type_id
-      _bill.street_name
-      _bill.street_number
-      _bill.building
-      _bill.floor
-      _bill.floor_office
-      _bill.zipcode_id
-      _bill.town_id
-      _bill.province_id
-      _bill.region_id
-      _bill.country_id
-      _bill.organization_id
-      _bill.payment_method_id
-      _bill.remarks
+    def bill_assign(_bill, _project, _client, _date, _payment_method)
+      _c = Client.find(_client) rescue nil
+      _p = Project.find(_project) rescue nil
+      if !_c.nil? && !_p.nil?
+        _bill.project_id = _project
+        _bill.client_id = _client
+        _bill.bill_date = _date
+        _bill.invoice_status_id = InvoiceStatus::PENDING
+        _bill.last_name = _c.last_name
+        _bill.first_name = _c.first_name
+        _bill.company = _c.company
+        _bill.fiscal_id = _c.fiscal_id
+        _bill.street_type_id = _c.street_type_id
+        _bill.street_name = _c.street_name
+        _bill.street_number = _c.street_number
+        _bill.building = _c.building
+        _bill.floor = _c.floor
+        _bill.floor_office = _c.floor_office
+        _bill.zipcode_id = _c.zipcode_id
+        _bill.town_id = _c.town_id
+        _bill.province_id = _c.province_id
+        _bill.region_id = _c.region_id
+        _bill.country_id = _c.country_id
+        _bill.organization_id = _p.organization_id
+        _bill.payment_method_id = _payment_method
+      end
     end
 
     # Keeps filter state
