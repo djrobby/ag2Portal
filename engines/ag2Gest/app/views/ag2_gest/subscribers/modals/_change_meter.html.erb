@@ -96,7 +96,8 @@
       //Put values to 0
       $('#reading_index_quit').val("");
       $('#reading_date_quit').val("");
-      $('#meter_add').select2("val", "");
+      //$('#meter_add').select2("val", "");
+      $('#meter_add').val("");
       $('#reading_index_add').val("");
       $('#reading_date_add').val("");
 
@@ -233,7 +234,8 @@
   
       <h3><%= t('activerecord.attributes.subscriber.data_discharge_meter') %></h3>
 
-      <%= f.association :meter, required: true, collection: Meter.filter_organization(session[:organization], current_user), input_html: { class: 'x-large-text-field sel2', :id => 'meter_add' }, label_html: { class: 'form-label' }, include_blank: true, label: t('activerecord.attributes.contracting_request.meter') %>
+      <%= f.input :meter, required: true, input_html: { class: 'x-large-text-field', :id => 'meter_add' }, label_html: { class: 'form-label' }, include_blank: true, label: t('activerecord.attributes.contracting_request.meter') %>
+      <%#= f.association :meter, required: true, collection: Meter.filter_organization(session[:organization], current_user), input_html: { class: 'x-large-text-field sel2', :id => 'meter_add' }, label_html: { class: 'form-label' }, include_blank: true, label: t('activerecord.attributes.contracting_request.meter') %>
       
       <%= f.input :reading_index_add, :required => true, label: t('activerecord.attributes.reading.reading'), :input_html => { :class => 'x-large-text-field', :id => 'reading_index_add' }, :label_html => { :class => 'form-label' } %>
       

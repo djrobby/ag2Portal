@@ -65,7 +65,7 @@
       //Put Values to 0
       $('#form_add_meter').find('[type=checkbox]').prop('checked', false);
       $('#sel2_association').select2("val", "");
-      $('#input_add_reading_index, #input_add_reading_date').val("");
+      $('#input_add_reading_index, #input_add_reading_date, #input_add_meter').val("");
 
       //Hide Collapse Options //=> doesn't work
       //$('#collapseAddMeter').collapse('hide');
@@ -88,7 +88,8 @@
 
       <%= f.association :project, collection: @project_dropdown, label: t('activerecord.attributes.subscriber.project'), input_html: { class: 'x-large-text-field sel2', :id => "project" }, :required => true, label_html: { class: 'form-label' }, include_blank: true %>
 
-      <%= f.association :meter, required: true, collection: Meter.from_office(session[:office]).availables, input_html: { class: 'x-large-text-field sel2', id: 'sel2_association' }, label_html: { class: 'form-label' }, include_blank: true, label: t('activerecord.attributes.contracting_request.meter') %>
+      <%= f.input :meter, required: true, input_html: { class: 'mid-text-field', id: 'input_add_meter' }, label_html: { class: 'form-label' }, label: t('activerecord.attributes.contracting_request.meter') %>
+      <%#= f.association :meter, required: true, collection: Meter.from_office(session[:office]).availables, input_html: { class: 'x-large-text-field sel2', id: 'sel2_association' }, label_html: { class: 'form-label' }, include_blank: true, label: t('activerecord.attributes.contracting_request.meter') %>
 
       <%= f.input :meter_location_id, required: true, collection: MeterLocation.all, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' }, include_blank: true, label: t('activerecord.attributes.meter_detail.meter_location') %>
 
