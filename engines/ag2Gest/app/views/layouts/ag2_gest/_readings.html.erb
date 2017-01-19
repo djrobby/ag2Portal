@@ -17,6 +17,6 @@
   </td>
   <td align="right"><%= reading.try(:reading_1).try(:reading_index) %></td>
   <td align="right"><%= reading.try(:consumption) %></td>
-  <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => Reading, :path => edit_reading_path(reading) } %></td>
+  <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => Reading, :path => edit_reading_path(reading) } if reading.billable? %></td>
 </tr>
 <% end %>

@@ -107,11 +107,12 @@ module Ag2Gest
     # PDF Contracting Request
     def contracting_request_pdf
       @contracting_request = ContractingRequest.find(params[:id])
+      title = t("activerecord.models.contracting_request.few")
       #@water_supply_contract = @contracting_request.water_supply_contract
       #@bill = @water_supply_contract.bill
       respond_to do |format|
         format.pdf {
-          send_data render_to_string, filename: "SCR-#{@contracting_request.full_no}.pdf", type: 'application/pdf', disposition: 'inline'
+          send_data render_to_string, filename: "#{title}_#{@contracting_request.full_no}.pdf", type: 'application/pdf', disposition: 'inline'
         }
       end
     end
@@ -445,8 +446,15 @@ module Ag2Gest
     # Update subscriber data if old subscriber exits
     def update_old_subscriber
       @subscriber = Subscriber.find(params[:id])
+      @street_directory = @subscriber.street_directory
       # @contracting_request = @subscriber.try(:water_supply_contract).try(:contracting_request)
-      @json_data = { "subscriber" => @subscriber }
+      @json_data = { "subscriber" => @subscriber,
+                     "street_directory" => @street_directory,
+                     "town" => @street_directory.town,
+                     "province" => @street_directory.town.province,
+                     "region" => @street_directory.town.province.region,
+                     "country" => @street_directory.town.province.region.country,
+                    }
 
       respond_to do |format|
         format.html # update_province_textfield.html.erb does not exist! JSON only
@@ -862,7 +870,7 @@ module Ag2Gest
       @contracting_request.created_by = current_user.id if !current_user.nil?
       respond_to do |format|
         if @contracting_request.save
-          @contracting_request.to_subrogation if @contracting_request.contracting_request_type_id == ContractingRequestType::SUBROGATION
+          @contracting_request.to_subrogation if @contracting_request.contracting_request_type_id == ContractingRequestType::CHANGE_OWNERSHIP
           format.html { redirect_to @contracting_request, notice: t('activerecord.attributes.contracting_request.create')}
           format.json { render json: @contracting_request, status: :created, location: @contracting_request }
         else

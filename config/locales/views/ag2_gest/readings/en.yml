@@ -22,6 +22,7 @@ en:
         btn_edit: "Edit Reading"
         btn_delete: "Delete Reading"
         return_to: "Back to Reading"
+        no_edit: "Not Editable"
       edit:
         show: "Mostrar"
         back: "Atrás"

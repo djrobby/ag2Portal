@@ -118,7 +118,7 @@
           // Enable fields
           $('.entity-field').prop('disabled', false);
 
-          if($('.contracting_request_type_id').select2("val") != "<%= ContractingRequestType::SUBROGATION %>"){
+          if($('.contracting_request_type_id').select2("val") != "<%= ContractingRequestType::CHANGE_OWNERSHIP %>"){
             $("#contracting_request_subscriber_street_type_id").val(data.street_type_id);
             $("#contracting_request_subscriber_street_name").val(data.street_name);
             $("#s2id_contracting_request_subscriber_street_directory").select2("val", data.street_directory_id);
@@ -264,7 +264,7 @@
 
     // when the .contracting_request_type_id field changes
     $('.contracting_request_type_id').select2().on("change", function(e) {
-      if($('.contracting_request_type_id').select2("val") == "<%= ContractingRequestType::SUBROGATION %>"){
+      if($('.contracting_request_type_id').select2("val") == "<%= ContractingRequestType::CHANGE_OWNERSHIP %>"){
         $("#row-old-subscriber").show();
         $("#contracting_request_subscriber_id").attr("required", "required");
         // $(".subscriber-field").prop('disabled', true);
@@ -318,21 +318,17 @@
         // $('.contracting_request_type_id').prop('disabled', true);
       }
       jQuery.getJSON('update_old_subscriber/' + subscriber, function(data) {
-        $("#contracting_request_subscriber_street_type_id").val(data.subscriber.street_type_id);
-        $("#contracting_request_subscriber_street_directory_id").select2("val",data.subscriber.street_directory_id);
-        $("#contracting_request_subscriber_street_name").val(data.subscriber.street_name);
+        $("#contracting_request_subscriber_street_type_id").val(data.street_directory.street_type_id);
+        $("#contracting_request_subscriber_street_directory").select2("val",data.street_directory.id);
         $("#contracting_request_subscriber_street_number").val(data.subscriber.street_number);
         $("#contracting_request_subscriber_building").val(data.subscriber.building);
         $("#contracting_request_subscriber_floor").val(data.subscriber.floor);
         $("#contracting_request_subscriber_floor_office").val(data.subscriber.floor_office);
-        $("#contracting_request_subscriber_zipcode_id").val(data.subscriber.zipcode_id);
-        $("#contracting_request_subscriber_town_id").val(data.subscriber.town_id);
-        $("#contracting_request_subscriber_province_id").val(data.subscriber.province_id);
         $("#contracting_request_subscriber_zipcode_id").select2("val", data.subscriber.zipcode_id);
-        $("#contracting_request_subscriber_town_id").select2("val", data.subscriber.town_id);
-        $("#contracting_request_subscriber_province_id").select2("val", data.subscriber.province_id);
-        $("#contracting_request_subscriber_region_id").select2("val", data.subscriber.region_id);
-        $("#contracting_request_subscriber_country_id").select2("val", data.subscriber.country_id);
+        $("#contracting_request_subscriber_town_id").select2("val", data.town.id);
+        $("#contracting_request_subscriber_province_id").select2("val", data.province.id);
+        $("#contracting_request_subscriber_region_id").select2("val", data.region.id);
+        $("#contracting_request_subscriber_country_id").select2("val", data.country.id);
         $("#contracting_request_subscriber_center_id").select2("val", data.subscriber.center_id);
         $("#contracting_request_service_point_id").select2("val", data.subscriber.service_point_id);
       })

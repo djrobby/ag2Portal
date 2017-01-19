@@ -2,8 +2,8 @@ var form = $("form.simple_bill");
 var content = '';
     //content += '<h1>Initial Billing</h1>';
     //content += `<tbody>`;
-<% unless @pre_bill.pre_invoices.blank?  %>
-    <% @pre_bill.pre_invoices.each_with_index do |invoice, index| %>
+<% unless @bill.invoices.blank?  %>
+    <% @bill.invoices.each_with_index do |invoice, index| %>
 
     content += '<h5><%= t("activerecord.attributes.contracting_request.invoice_number") %>: <%= invoice.try(:invoice_no) %></h5>';
     content += '<h5><%= invoice.try(:company).try(:name) %> | <%= t("activerecord.attributes.contracting_request.fiscal_id") %> <%= invoice.try(:company).try(:fiscal_id) %></h5>';
@@ -19,7 +19,7 @@ var content = '';
     /*form.append('<h3><%= invoice.company.name %></h3>');*/
     content+= '<tr><th><%= t("activerecord.attributes.contracting_request.code") %></th><th><%= t("activerecord.attributes.contracting_request.subcode") %></th><th><%= t("activerecord.attributes.contracting_request.quantity") %></th><th><%= t("activerecord.attributes.contracting_request.price") %></th><th><%= t("activerecord.attributes.contracting_request.amount") %></th><th><%= t("activerecord.attributes.contracting_request.tax") %></th><th><%= t("activerecord.attributes.contracting_request.discount") %></th><th><%= t("activerecord.attributes.contracting_request.discount_pct") %></th><th><%= t("activerecord.attributes.contracting_request.total") %></th></tr>';
 
-    <% invoice.pre_invoice_items.each do |item| %>
+    <% InvoiceItem.where(invoice_id: invoice.id).each do |item| %>
       content+= '<tr class="in_item in_item<%= item.id %>">';
       content+= '<td><%= item.code %></td>';
       content+= '<td><%= item.subcode %></td>';
@@ -66,7 +66,7 @@ var content = '';
 
     content += '<hr style="border-width: 2px; border-top: 1px solid #000000;">';
     form.append(content);
-    // form.attr("action", "bills/<%= @pre_bill.id %>")
+    // form.attr("action", "bills/<%= @bill.id %>")
 
   <% end %> /*End Bill.invoices*/
 <% end %> /*End if*/
@@ -74,6 +74,10 @@ $("#new-bill").modal("hide");
 $("#bill-supply-modal").modal("show");
 
 $(document).ready(function() {
+  $('#bill-supply-modal').on('hidden', function () {
+    $("#bills").html("<%= escape_javascript(render('show_tab_bills')) %>");
+  })
+
 
   $("#bill-suply-form input, #bill-suply-form select").change(function() {
 

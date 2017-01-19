@@ -105,7 +105,7 @@ es:
         subscriber_id:
         successfully: "Contratación se ha actualizado correctamente."
         create: "Contratación se ha creado correctamente."
-        tariff_scheme: "Esquema tarifario (contratación)"
+        tariff_scheme: "Esquema de contratación"
         code_meter: "Código contador"
         type: "Tipo"
         client: "Cliente"

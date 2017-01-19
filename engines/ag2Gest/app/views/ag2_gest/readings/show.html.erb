@@ -127,7 +127,7 @@
 
 
 <%= render partial: '/layouts/crud/update_delete_new', locals:
-{ model: Reading, update_path: edit_reading_path(@reading), update_txt: t('.btn_edit'),
+{ model: Reading, update_path: @reading.billable? ? edit_reading_path(@reading) : "#", update_txt: @reading.billable? ? t('.btn_edit') : t(".no_edit"),
 delete_path: @reading, delete_txt: t('.btn_delete'), msg: t("activerecord.models.reading.one"), :txt => @reading.id,
 new_path: new_reading_path, new_txt: t('ag2_gest.readings.index.btn_new') } %>
 

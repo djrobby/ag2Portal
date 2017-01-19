@@ -22,10 +22,10 @@ module Ag2Gest
     def update_simple
       @subscriber = Subscriber.find params[:id]
       params[:invoice_item].each do |obj_inv|
-        pre_invoice_item = PreInvoiceItem.find(obj_inv[0])
+        pre_invoice_item = InvoiceItem.find(obj_inv[0])
         pre_invoice_item.update_attributes(obj_inv[1])
       end
-      redirect_to subscriber_path(@subscriber), notice: "PreFactura actualizada correctamente"
+      redirect_to subscriber_path(@subscriber), notice: "Factura actualizada correctamente"
     end
 
     def void
@@ -39,8 +39,16 @@ module Ag2Gest
       @subscriber = Subscriber.find params[:id]
       @bill = Bill.find params[:bill_id]
       @reading = @bill.reading_2
-      void_bill(@bill)
-      @pre_bill = @reading.generate_pre_bill(nil,nil,3)
+      @bill_voided = void_bill(@bill)
+      @bill = @reading.generate_bill(bill_next_no(@reading.project), current_user.try(:id), 3, @bill_voided.try(:invoices).try(:first).try(:payday_limit), @bill_voided.try(:invoices).try(:first).try(:invoice_date))
+      # @reading.generate_pre_bill(nil,nil,3)
+      Sunspot.index! [@bill]
+      @search_bills = Bill.search do
+        with :subscriber_id, params[:id]
+        order_by :created_at, :asc
+        paginate :page => params[:page] || 1, :per_page => 10
+      end
+      @subscriber_bills = @search_bills.results
       respond_to do |format|
         format.js { render "simple_bill" }
       end
@@ -437,7 +445,8 @@ module Ag2Gest
       @subscriber = Subscriber.find(params[:id])
       @reading = Reading.new
       @client_bank_account = ClientBankAccount.new
-      @billing_periods = BillingPeriod.where(billing_frequency_id: @subscriber.billing_frequency_id).order("period DESC")
+      # @billing_periods = BillingPeriod.where(billing_frequency_id: @subscriber.billing_frequency_id).order("period DESC")
+      @billing_periods_reading = @subscriber.readings.select{|r| [ReadingType::NORMAL, ReadingType::OCTAVILLA, ReadingType::RETIRADA, ReadingType::AUTO].include? r.reading_type_id and r.billable?}.map(&:billing_period).uniq #BillingPeriod.where(billing_frequency_id: @subscriber.billing_frequency_id).order("period DESC")
 
       #@subscriberreadings = Reading.where(:subscriber_id => @subscriber.id).paginate(:page => 10, :per_page => per_page)
       # @reading_types = ReadingType.all
@@ -581,7 +590,7 @@ module Ag2Gest
           )
           # SUBROGATION
           if @contracting_request.old_subscriber
-            @contracting_request.old_subscriber.update_attributes(ending_at: Date.today, meter_id: nil)
+            @contracting_request.old_subscriber.update_attributes(ending_at: Date.today, active: false, meter_id: nil)
             # update meter details withdrawal
             @contracting_request.old_subscriber.meter_details.last.update_attributes(withdrawal_date: Date.today ,
                                                                 withdrawal_reading: @contracting_request.old_subscriber.readings.last.reading_index)
@@ -664,8 +673,19 @@ module Ag2Gest
     def simple_bill
       @subscriber = Subscriber.find params[:id]
       @reading = @subscriber.readings.where(billing_period_id: params[:bills][:billing_period_id], reading_type_id: [1,2,5,6]).order(:reading_date).last
-      @pre_bill = @reading.generate_pre_bill
+      payday_limit = params[:bills][:payday_limit].blank? ? @reading.billing_period.billing_starting_date : params[:bills][:payday_limit]
+      invoice_date = params[:bills][:invoice_date].blank? ? @reading.billing_period.billing_ending_date : params[:bills][:invoice_date]
+      @bill = @reading.generate_bill(bill_next_no(@reading.project),current_user.try(:id),1,payday_limit,invoice_date)
+      Sunspot.index! [@bill]
+      @search_bills = Bill.search do
+        with :subscriber_id, params[:id]
+        order_by :created_at, :asc
+        paginate :page => params[:page] || 1, :per_page => 10
+      end
+      @subscriber_bills = @search_bills.results
+      # @subscriber_bills = Bill.where(subscriber_id: params[:id])
       respond_to do |format|
+        format.json { render json: @subscriber_bills }
         format.js { }
       end
     end
@@ -903,6 +923,7 @@ module Ag2Gest
             new_item.save
           end
         end
+        return bill_cancel
       else
         return false
       end

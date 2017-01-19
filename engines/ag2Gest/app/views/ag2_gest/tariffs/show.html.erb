@@ -119,4 +119,10 @@
 delete_path: @tariff_scheme, delete_txt: t('.btn_delete'), msg: t("activerecord.models.tariff.one"), :txt => @tariff.id,
 new_path: new_tariff_path, new_txt: t('ag2_gest.tariffs.index.btn_new') } %>
 
+<% if !session[:return_to_subscriber].nil? %>
+  <%= link_to session[:return_to_subscriber], session[:return_to_subscriber_url] %> |
+<% end %>
+<% if !session[:return_to].nil? %>
+  <%= link_to session[:return_to], session[:return_to_url] %> |
+<% end %>
 <%= link_to I18n.t('ag2_gest.tariffs.back_to_main_page'), tariffs_path %>

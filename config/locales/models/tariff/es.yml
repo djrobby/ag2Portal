@@ -16,6 +16,7 @@ es:
         create: "Tarifa se ha creado correctamente."
         billable_item: "Item facturable"
         billable_item_id: "Item facturable"
+        billable_concept: "Concepto"
         tariff_type: "Tipo"
         tariff_type_id: "Tipo"
         caliber: "Calibre"

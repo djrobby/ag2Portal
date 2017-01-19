@@ -1,6 +1,6 @@
 class Reading < ActiveRecord::Base
   belongs_to :project
-  belongs_to :bill
+  # belongs_to :bill
   belongs_to :billing_period
   belongs_to :billing_frequency
   belongs_to :reading_type
@@ -237,6 +237,148 @@ class Reading < ActiveRecord::Base
     return pre_bill
   end
 
+  def generate_bill(next_bill_no=nil,user_id=nil,operation_id=1,payday_limit=nil,invoice_date=nil)
+    @bill = Bill.create!(
+      bill_no: next_bill_no,
+      project_id: project_id,
+      invoice_status_id: InvoiceStatus::PENDING,
+      bill_date: invoice_date,
+      subscriber_id: subscriber_id,
+      client_id: subscriber.client_id,
+      last_name: subscriber.client.last_name,
+      first_name: subscriber.client.first_name,
+      company: subscriber.client.company,
+      fiscal_id: subscriber.client.fiscal_id,
+      street_type_id: subscriber.client.street_type_id,
+      street_name: subscriber.client.street_name,
+      street_number: subscriber.client.street_number,
+      building: subscriber.client.building,
+      floor: subscriber.client.floor,
+      floor_office: subscriber.client.floor_office,
+      zipcode_id: subscriber.client.zipcode_id,
+      town_id: subscriber.client.town_id,
+      province_id: subscriber.client.province_id,
+      region_id: subscriber.client.region_id,
+      country_id: subscriber.client.country_id,
+      created_by: user_id,
+      reading_1_id: reading_1.try(:id),
+      reading_2_id: id
+    )
+    subscriber.tariffs_supply.each do |tariffs_biller|
+      @invoice = Invoice.create!(
+        invoice_no: invoice_next_no(project.company_id, project.office_id),
+        bill_id: @bill.id,
+        invoice_status_id: InvoiceStatus::PENDING,
+        invoice_type_id: InvoiceType::WATER,
+        invoice_date: invoice_date,
+        tariff_scheme_id: nil,
+        payday_limit: payday_limit.blank? ? invoice_date : payday_limit,
+        invoice_operation_id: operation_id,
+        billing_period_id: billing_period_id,
+        consumption: consumption_total_period,
+        consumption_real: consumption_total_period,
+        consumption_estimated: nil,
+        consumption_other: nil,
+        biller_id: tariffs_biller[0],
+        discount_pct: 0.0,
+        exemption: 0.0,
+        charge_account_id: 1,
+        created_by: user_id,
+        reading_1_date: reading_1.try(:reading_date),
+        reading_2_date: reading_date,
+        reading_1_index: reading_1.try(:reading_index),
+        reading_2_index: reading_index
+      )
+      tariffs_biller[1].each do |tariff|
+        unless tariff.fixed_fee.zero?
+          InvoiceItem.create(
+            invoice_id: @invoice.id,
+            code: tariff.try(:billable_item).try(:billable_concept).try(:code),
+            description: tariff.try(:billable_item).try(:billable_concept).try(:name),
+            tariff_id: tariff.id,
+            price: (tariff.fixed_fee / tariff.billing_frequency.total_months),
+            quantity: billing_frequency.total_months,
+            tax_type_id: tariff.try(:tax_type_f_id),
+            discount_pct: tariff.try(:discount_pct_f),
+            discount: 0.0,#¿¿¿???
+            product_id: nil,
+            subcode: "CF",
+            measure_id: tariff.billing_frequency.fix_measure_id)
+        end
+        if tariff.block1_fee > 0
+          limit_before = 0
+          (1..8).each do |i|
+            # if limit nil (last block) or limit > consumption
+            if tariff.instance_eval("block#{i}_limit").nil? || tariff.instance_eval("block#{i}_limit") > (consumption_total_period || 0)
+              InvoiceItem.create(
+                invoice_id: @invoice.id,
+                code: tariff.try(:billable_item).try(:billable_concept).try(:code),
+                description: tariff.try(:billable_item).try(:billable_concept).try(:name),
+                tariff_id: tariff.id,
+                price:  tariff.instance_eval("block#{i}_fee"),
+                quantity: ((consumption_total_period || 0) - limit_before),
+                tax_type_id: tariff.try(:tax_type_b_id),
+                discount_pct: tariff.try(:discount_pct_b),
+                discount: 0.0,#¿¿¿???
+                product_id: nil,
+                subcode: "BL"+i.to_s,
+                measure_id: tariff.billing_frequency.var_measure_id,
+                created_by: user_id)
+              break
+            else
+              InvoiceItem.create(
+                invoice_id: @invoice.id,
+                code: tariff.try(:billable_item).try(:billable_concept).try(:code),
+                description: tariff.try(:billable_item).try(:billable_concept).try(:name),
+                tariff_id: tariff.id,
+                price:  tariff.instance_eval("block#{i}_fee"),
+                quantity: tariff.instance_eval("block#{i}_limit") - limit_before,
+                tax_type_id: tariff.try(:tax_type_b_id),
+                discount_pct: tariff.try(:discount_pct_b),
+                discount: 0.0,#¿¿¿???
+                product_id: nil,
+                subcode: "BL"+i.to_s,
+                measure_id: tariff.billing_frequency.var_measure_id,
+                created_by: user_id)
+              limit_before = tariff.instance_eval("block#{i}_limit")
+            end
+          end
+        elsif tariff.percentage_fee > 0 and !tariff.percentage_applicable_formula.blank?
+          InvoiceItem.create(
+            invoice_id: @invoice.id,
+            code: tariff.try(:billable_item).try(:billable_concept).try(:code),
+            description: tariff.try(:billable_item).try(:billable_concept).try(:name),
+            tariff_id: tariff.id,
+            price:  (tariff.percentage_fee/100) * @bill.total_by_concept(tariff.percentage_applicable_formula) / consumption_total_period,
+            quantity: consumption_total_period,
+            tax_type_id: tariff.try(:tax_type_p_id),
+            discount_pct: tariff.try(:discount_pct_p),
+            discount: 0.0,#¿¿¿???
+            product_id: nil,
+            subcode: "VP",
+            measure_id: tariff.billing_frequency.var_measure_id,
+            created_by: user_id)
+        elsif tariff.variable_fee > 0
+          InvoiceItem.create(
+            invoice_id: @invoice.id,
+            code: tariff.try(:billable_item).try(:billable_concept).try(:code),
+            description: tariff.try(:billable_item).try(:billable_concept).try(:name),
+            tariff_id: tariff.id,
+            price:  tariff.variable_fee,
+            quantity: consumption_total_period,
+            tax_type_id: tariff.try(:tax_type_v_id),
+            discount_pct: tariff.try(:discount_pct_v),
+            discount: 0.0,#¿¿¿???
+            product_id: nil,
+            subcode: "CV",
+            measure_id: tariff.billing_frequency.var_measure_id,
+            created_by: user_id)
+        end
+      end
+    end
+    return @bill
+  end
+
   def consumption_total_period
     # @readings = Reading.where(billing_period_id: billing_period_id, subscriber_id: subscriber_ids).where('reading_type_id NOT IN (?)',[1,2,5,6]).group_by(&:reading_1_id)
     readings = subscriber.readings.where(billing_period_id: billing_period_id).where('reading_type_id IN (?)',[1,2,5,6]).order(:reading_date).group_by(&:reading_1_id)
@@ -259,5 +401,32 @@ class Reading < ActiveRecord::Base
       subscriber_id
     end
     date :created_at
+  end
+
+  private
+
+  # Invoice no
+  def invoice_next_no(company, office = nil)
+    year = Time.new.year
+    code = ''
+    serial = ''
+    office_code = office.nil? ? '00' : office.to_s.rjust(2, '0')
+    # Builds code, if possible
+    company_code = Company.find(company).invoice_code rescue '$'
+    if company_code == '$'
+      code = '$err'
+    else
+      serial = company_code.rjust(3, '0') + office_code
+      year = year.to_s if year.is_a? Fixnum
+      year = year.rjust(4, '0')
+      last_no = Invoice.where("invoice_no LIKE ?", "#{serial}#{year}%").order(:invoice_no).maximum(:invoice_no)
+      if last_no.nil?
+        code = serial + year + '0000001'
+      else
+        last_no = last_no[9..15].to_i + 1
+        code = serial + year + last_no.to_s.rjust(7, '0')
+      end
+    end
+    code
   end
 end

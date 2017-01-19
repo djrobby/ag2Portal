@@ -28,6 +28,14 @@ class Bill < ActiveRecord::Base
 
   #validates :organization,       :presence => true
 
+  def total_by_concept(billable_concept)
+    invoices.map(&:invoice_items).flatten.select{|item| item.tariff.billable_item.billable_concept_id == billable_concept.to_i and item.subcode != 'CF'}.sum(&:amount)
+  end
+
+  def total_by_invoice_concept(billable_concept)
+    invoices.map(&:invoice_items).flatten.select{|item| item.tariff.billable_item.billable_concept_id == billable_concept.to_i}.sum(&:amount)
+  end
+
   def bill_operation
     try(:invoices).try(:first).try(:invoice_operation_id)
   end
@@ -61,6 +69,16 @@ class Bill < ActiveRecord::Base
       end
     end
     total
+  end
+
+  def debt
+    debt = 0
+    invoices.each do |i|
+      if !i.debt.blank?
+        debt += i.debt
+      end
+    end
+    debt
   end
 
   def subtotal

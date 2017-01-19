@@ -94,7 +94,8 @@ module Ag2Gest
       @breadcrumb = 'create'
       @contracting_request = ContractingRequest.find(params[:water_supply_contract][:contracting_request_id])
       @tariff_scheme = TariffScheme.find(params[:water_supply_contract][:tariff_scheme_id])
-      @meter = Meter.find params[:water_supply_contract][:meter_id]
+      #@meter = Meter.find params[:water_supply_contract][:meter_id]
+      @meter = Meter.where(id: params[:water_supply_contract][:meter_id]).first
       @meter_model = @meter.try(:meter_model)
       @meter_brand = @meter_model.meter_brand unless @meter_model.blank?
       @caliber = @meter.blank? ? Caliber.find(params[:water_supply_contract][:caliber_id]) : @meter.try(:caliber)

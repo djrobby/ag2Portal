@@ -461,7 +461,7 @@
         </tr>
         <% if @contracting_request.old_subscriber %>
           <tr>
-            <td><b>Antiguo abonado</b></td>
+            <td><b><%= t('ag2_gest.contracting_requests.show.old_subscriber') %></b></td>
             <td><%= link_to @contracting_request.old_subscriber.to_label, subscriber_path(@contracting_request.old_subscriber) %></td>
           </tr>
         <% end %>
@@ -662,38 +662,10 @@
           <tr>
             <!-- <th></th> -->
             <th></th>
-            <th><%= t('activerecord.attributes.tariff_scheme.caliber_id') %></th>
             <th><%= t('activerecord.attributes.tariff_scheme.billable_concept') %></th>
             <th><%= t('activerecord.attributes.tariff_scheme.tariff_type_id') %></th>
-            <th><%= t('activerecord.attributes.tariff_scheme.billing_frequency_id') %></th>
-            <th><%= t('activerecord.attributes.tariff_scheme.fixed_fee') %></th>
-            <th><%= t('activerecord.attributes.tariff_scheme.block1_limit') %></th>
-            <th><%= t('activerecord.attributes.tariff_scheme.block1_fee') %></th>
-            <th><%= t('activerecord.attributes.tariff_scheme.block2_limit') %></th>
-            <th><%= t('activerecord.attributes.tariff_scheme.block2_fee') %></th>
-            <th><%= t('activerecord.attributes.tariff_scheme.block3_limit') %></th>
-            <th><%= t('activerecord.attributes.tariff_scheme.block3_fee') %></th>
-            <th><%= t('activerecord.attributes.tariff_scheme.block4_limit') %></th>
-            <th><%= t('activerecord.attributes.tariff_scheme.block4_fee') %></th>
-            <th><%= t('activerecord.attributes.tariff_scheme.block5_limit') %></th>
-            <th><%= t('activerecord.attributes.tariff_scheme.block5_fee') %></th>
-            <th><%= t('activerecord.attributes.tariff_scheme.block6_limit') %></th>
-            <th><%= t('activerecord.attributes.tariff_scheme.block6_fee') %></th>
-            <th><%= t('activerecord.attributes.tariff_scheme.block7_limit') %></th>
-            <th><%= t('activerecord.attributes.tariff_scheme.block7_fee') %></th>
-            <th><%= t('activerecord.attributes.tariff_scheme.block8_limit') %></th>
-            <th><%= t('activerecord.attributes.tariff_scheme.block8_fee') %></th>
-            <th><%= t('activerecord.attributes.tariff_scheme.variable_fee') %></th>
-            <th><%= t('activerecord.attributes.tariff_scheme.percentage_fee') %></th>
-            <th><%= t('activerecord.attributes.tariff_scheme.percentage_applicable_formula') %></th>
-            <th><%= t('activerecord.attributes.tariff_scheme.discount_pct_f') %></th>
-            <th><%= t('activerecord.attributes.tariff_scheme.discount_pct_b') %></th>
-            <th><%= t('activerecord.attributes.tariff_scheme.discount_pct_v') %></th>
-            <th><%= t('activerecord.attributes.tariff_scheme.discount_pct_p') %></th>
-            <th><%= t('activerecord.attributes.tariff_scheme.tax_type_f_id') %></th>
-            <th><%= t('activerecord.attributes.tariff_scheme.tax_type_b_id') %></th>
-            <th><%= t('activerecord.attributes.tariff_scheme.tax_type_v_id') %></th>
-            <th><%= t('activerecord.attributes.tariff_scheme.tax_type_p_id') %></th>
+          <th><%= t('activerecord.attributes.tariff.starting_at') %></th>
+          <th><%= t('activerecord.attributes.tariff.ending_at') %></th>
           </tr>
         </thead>
         <tbody>
@@ -710,38 +682,11 @@
                     <% end %>
                   <% end %>
                 </td>
-                <td class="caliber"><%= tariff.try(:caliber).try(:caliber) %></td>
                 <td class="billable_concept"><%= tariff.try(:billable_concept).try(:name) %></td>
                 <td class="tariff_type"><%= tariff.try(:tariff_type).try(:name) %></td>
-                <td class="billing_frequency" data-id="<%= tariff.try(:billing_frequency).try(:id) %>"><%= tariff.try(:billing_frequency).try(:name) %></td>
-                <td class="fixed_fee"><%= tariff.try(:fixed_fee) %></td>
-                <td class="block1_limit"><%= tariff.try(:block1_limit) %></td>
-                <td class="block1_fee"><%= tariff.try(:block1_fee) %></td>
-                <td class="block2_limit"><%= tariff.try(:block2_limit) %></td>
-                <td class="block2_fee"><%= tariff.try(:block2_fee) %></td>
-                <td class="block3_limit"><%= tariff.try(:block3_limit) %></td>
-                <td class="block3_fee"><%= tariff.try(:block3_fee) %></td>
-                <td class="block4_limit"><%= tariff.try(:block4_limit) %></td>
-                <td class="block4_fee"><%= tariff.try(:block4_fee) %></td>
-                <td class="block5_limit"><%= tariff.try(:block5_limit) %></td>
-                <td class="block5_fee"><%= tariff.try(:block5_fee) %></td>
-                <td class="block6_limit"><%= tariff.try(:block6_limit) %></td>
-                <td class="block6_fee"><%= tariff.try(:block6_fee) %></td>
-                <td class="block7_limit"><%= tariff.try(:block7_limit) %></td>
-                <td class="block7_fee"><%= tariff.try(:block7_fee) %></td>
-                <td class="block8_limit"><%= tariff.try(:block8_limit) %></td>
-                <td class="block8_fee"><%= tariff.try(:block8_fee) %></td>
-                <td class="variable_fee"><%= tariff.try(:variable_fee) %></td>
-                <td class="percentage_fee"><%= tariff.try(:percentage_fee) %></td>
-                <td class="percentage_applicable_formula" data-concept="<%= tariff.percentage_applicable_formula %>"><%= tariff.try(:get_code_formula) %></td>
-                <td class="discount_pct_f"><%= tariff.try(:discount_pct_f) %></td>
-                <td class="discount_pct_b"><%= tariff.try(:discount_pct_b) %></td>
-                <td class="discount_pct_v"><%= tariff.try(:discount_pct_v) %></td>
-                <td class="discount_pct_p"><%= tariff.try(:discount_pct_p) %></td>
-                <td class="tax_type_f" data-tax-id="<%= tariff.try(:tax_type_f).try(:id) %>"><%= tariff.try(:tax_type_f).try(:tax) %></td>
-                <td class="tax_type_b" data-tax-id="<%= tariff.try(:tax_type_b).try(:id) %>"><%= tariff.try(:tax_type_b).try(:tax) %></td>
-                <td class="tax_type_v" data-tax-id="<%= tariff.try(:tax_type_v).try(:id) %>"><%= tariff.try(:tax_type_v).try(:tax) %></td>
-                <td class="tax_type_p" data-tax-id="<%= tariff.try(:tax_type_p).try(:id) %>"><%= tariff.try(:tax_type_p).try(:tax) %></td>
+                <td class="starting_at"><%=l tariff.try(:starting_at) unless tariff.try(:starting_at).blank? %></td>
+                <td class="ending_at"><%=l tariff.try(:ending_at) unless tariff.try(:ending_at).blank? %></td>
+                <td><%= render :partial => '/layouts/crud/read', :locals => { :model => Tariff, :path => tariff_path(tariff) } %></td>
               </tr>
             <%# end %>
           <% end %>

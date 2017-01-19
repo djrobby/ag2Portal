@@ -96,6 +96,10 @@ module Ag2Gest
     def edit
       @breadcrumb = 'update'
       @reading = Reading.find(params[:id])
+      unless @reading.billable?
+        url_return = session[:return_to_subscriber_url].blank? ? @reading : session[:return_to_subscriber_url]
+        redirect_to url_return, alert: "No se puede modificar lecturas facturadas" and return
+      end
     end
 
     # POST /readings
