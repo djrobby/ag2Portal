@@ -9,18 +9,18 @@ module Ag2Gest
     # GET /water_supply_contracts.json
     def index
       manage_filter_state
-
+      no = params[:No]
       subscriber = params[:Subscriber]
-      readingRoute = params[:ReadingRoute]
       meter = params[:Meter]
       order = params[:Order]
       caliber = params[:Caliber]
+      from = params[:From]
+      to = params[:To]
       # OCO
       init_oco if !session[:organization]
       # Initialize select_tags
-      @subscribers = subscribers_dropdown if @subscribers.nil?
-      @reading_routes = reading_routes_dropdown if @reading_routes.nil?
-      @meters = meters_dropdown if @meters.nil?
+      # @subscribers = subscribers_dropdown if @subscribers.nil?
+      # @meters = meters_dropdown if @meters.nil?
       @tariff_schemes = tariff_schemes_dropdown if @tariff_schemes.nil?
       @calibers = calibers_dropdown if @calibers.nil?
 
@@ -32,20 +32,32 @@ module Ag2Gest
           with :contracting_request_id, current_contracting_request
         end
         fulltext params[:search]
-        if !subscriber.blank?
-          with :subscriber_id, subscriber
+        if !no.blank?
+          with(:request_no).starting_with(no)
         end
-        if !readingRoute.blank?
-          with :reading_route_id, readingRoute
+        if !subscriber.blank?
+          fulltext subscriber
         end
         if !meter.blank?
-          with :meter_id, meter
+          fulltext meter
         end
         if !order.blank?
           with :tariff_scheme_id, order
         end
         if !caliber.blank?
           with :caliber_id, caliber
+        end
+        if !from.blank?
+          any_of do
+            with(:invoice_date).greater_than(from)
+            with :invoice_date, from
+          end
+        end
+        if !to.blank?
+          any_of do
+            with(:invoice_date).less_than(to)
+            with :invoice_date, to
+          end
         end
         order_by :id, :desc
         paginate :page => params[:page] || 1, :per_page => per_page
@@ -198,16 +210,16 @@ module Ag2Gest
         params[:search] = session[:search]
       end
       # no
+      if params[:No]
+        session[:No] = params[:No]
+      elsif session[:No]
+        params[:No] = session[:No]
+      end
+      # subscriber
       if params[:Subscriber]
         session[:Subscriber] = params[:Subscriber]
       elsif session[:Subscriber]
         params[:Subscriber] = session[:Subscriber]
-      end
-      # reading_routes
-      if params[:ReadingRoute]
-        session[:ReadingRoute] = params[:ReadingRoute]
-      elsif session[:ReadingRoute]
-        params[:ReadingRoute] = session[:ReadingRoute]
       end
       # meters
       if params[:Meter]
@@ -226,6 +238,18 @@ module Ag2Gest
         session[:Caliber] = params[:Caliber]
       elsif session[:Caliber]
         params[:Caliber] = session[:Caliber]
+      end
+      # From
+      if params[:From]
+        session[:From] = params[:From]
+      elsif session[:From]
+        params[:From] = session[:From]
+      end
+      # To
+      if params[:To]
+        session[:To] = params[:To]
+      elsif session[:To]
+        params[:To] = session[:To]
       end
     end
 
@@ -257,6 +281,5 @@ module Ag2Gest
     def calibers_dropdown
       Caliber.all
     end
-
   end
 end

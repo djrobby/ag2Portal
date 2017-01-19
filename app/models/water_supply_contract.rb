@@ -19,7 +19,17 @@ class WaterSupplyContract < ActiveRecord::Base
                   :installation_date, :meter_id, :reading_route_id, :reading_sequence, :installation_index,
                   :remarks, :subscriber_id, :tariff_scheme_id, :work_order_id, :use_id, :tariff_type_id
 
+  def request_no
+    contracting_request.request_no
+  end
+
   searchable do
+    text :subscriber_code_name_address_fiscal do
+      subscriber.code_full_name_or_company_address_fiscal unless subscriber.blank?
+    end
+    text :meter_code do
+      meter.meter_code unless meter.blank?
+    end
     integer :id
     integer :contracting_request_id
     integer :subscriber_id
@@ -28,6 +38,9 @@ class WaterSupplyContract < ActiveRecord::Base
     integer :tariff_scheme_id
     integer :caliber_id
     date :contract_date
+    string :request_no do
+      request_no
+    end
   end
   # def tariffs_contract
   #   tariffs = tariff_scheme.try(:tariffs)

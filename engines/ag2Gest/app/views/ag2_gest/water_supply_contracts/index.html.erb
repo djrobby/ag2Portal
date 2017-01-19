@@ -21,6 +21,9 @@
     }).on('changeDate', function(e){
       $('.ndate_picker').datepicker('hide');
     });
+    $('.date_picker').datepicker({
+     format:'dd/mm/yyyy',weekStart:1
+    });
     // Initialized form variable
     _thisForm = $("#Supplier").closest('form')[0];
   });
@@ -37,22 +40,25 @@
   });
 
   $(window).bind("load", function() {
-    $("#Subscriber").select2("val", "<%= params[:Supplier] %>");
-    $("#ReadingRoute").select2("val", "<%= params[:Project] %>");
-    $("#Meter").select2("val", "<%= params[:Order] %>");
+    $("#No").val("<%= params[:No] %>");
+    $("#Subscriber").val("<%= params[:Subscriber] %>");
+    $("#Meter").select2("val", "<%= params[:Meter] %>");
     $("#Order").select2("val", "<%= params[:Order] %>");
-    $("#Caliber").select2("val", "<%= params[:Order] %>");
+    $("#Caliber").select2("val", "<%= params[:Caliber] %>");
+    $("#From").val("<%= params[:From] %>");
+    $("#To").val("<%= params[:To] %>");
   });
 
   jQuery(function($) {
     // when the #removeFilter button clicked
     $("#removeFilter").click(function() {
-      $("#Gis").val("");
-      $("#Subscriber").select2("val", "");
-      $("#ReadingRoute").select2("val", "");
-      $("#Meter").select2("val", "");
+      $("#No").val("");
+      $("#Subscriber").val("");
+      $("#Meter").val("");
       $("#Order").select2("val", "");
       $("#Caliber").select2("val", "");
+      $("#From").val("");
+      $("#To").val("");
       $("#search").val("");
       // no AJAX
       //_thisForm.submit();
@@ -74,23 +80,28 @@
         <%= link_to ag2_gest.water_supply_contracts_path, title: I18n.t(:refresh), class: "icon-refresh-link", remote: true do %> <i class="icon-refresh"></i> <% end %>
         <!-- Search form -->
         <%= form_tag "water_supply_contracts", :method => 'get', :remote => true do %>
+        <!-- No -->
+        <%= label_tag I18n.t("activerecord.attributes.invoice.invoice_no"), nil, :class => 'form-label' %>
+        <%= text_field_tag "No", nil, :class => 'x-large-text-field shrinked number-text-field', onkeyup: "caps(this)" %>
         <!-- Subscriber -->
-        <%= label_tag I18n.t("activerecord.attributes.water_supply_contract.subscriber_id"), nil, :class => 'form-label-under-sel2' %>
-        <%= select_tag "Subscriber", options_from_collection_for_select(@subscribers, "id", "to_label"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
-        <!-- Reading Route -->
-        <%= label_tag I18n.t("activerecord.attributes.water_supply_contract.reading_route_id"), nil, :class => 'form-label-under-sel2' %>
-        <%= select_tag "ReadingRoute", options_from_collection_for_select(@reading_routes, "id", "to_label"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
+        <%= label_tag I18n.t("activerecord.attributes.water_supply_contract.subscriber_id"), nil, :class => 'form-label' %>
+        <%= text_field_tag "Subscriber", nil, :class => 'x-large-text-field shrinked' %>
         <!-- Meter -->
-        <%= label_tag I18n.t("activerecord.attributes.water_supply_contract.meter_id"), nil, :class => 'form-label-under-sel2' %>
-        <%= select_tag "Meter", options_from_collection_for_select(@meters, "id", "to_label"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
+        <%= label_tag I18n.t("activerecord.attributes.water_supply_contract.meter_id"), nil, :class => 'form-label' %>
+        <%= text_field_tag "Meter", nil, :class => 'x-large-text-field shrinked', onkeyup: "caps(this)" %>
         <!-- Tariff Scheme -->
-        <%= label_tag I18n.t("activerecord.attributes.water_supply_contract.tariff_scheme_id"), nil, :class => 'form-label-under-sel2' %>
+        <%= label_tag I18n.t("activerecord.attributes.water_supply_contract.tariff_scheme_id"), nil, :class => 'form-label' %>
         <%= select_tag "Order", options_from_collection_for_select(@tariff_schemes, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
         <!-- Caliber -->
         <%= label_tag I18n.t("activerecord.attributes.water_supply_contract.caliber_id"), nil, :class => 'form-label-under-sel2' %>
         <%= select_tag "Caliber", options_from_collection_for_select(@calibers, "id", "to_label"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
+        <!-- Dates -->
+        <%= label_tag I18n.t("ag2_gest.invoices.index.label_from"), nil, :class => 'form-label-under-sel2' %>
+        <%= text_field_tag "From", params[:date], :class =>  'x-large-text-field shrinked date_picker' %>
+        <%= label_tag I18n.t("ag2_gest.invoices.index.label_to"), nil, :class => 'form-label' %>
+        <%= text_field_tag "To", params[:date], :class =>  'x-large-text-field shrinked date_picker' %>
         <!-- Others -->
-        <%= label_tag I18n.t("activerecord.attributes.water_supply_contract.label_others"), nil, :class => 'form-label-under-sel2' %>
+        <%= label_tag I18n.t("activerecord.attributes.water_supply_contract.label_others"), nil, :class => 'form-label' %>
         <%= text_field_tag :search, params[:search], :class => 'x-large-text-field shrinked' %>
         <!-- Submit -->
         <%= submit_tag I18n.t(:apply_filter_button), :class => 'btn btn-primary', :id => 'submit_btn' %>
