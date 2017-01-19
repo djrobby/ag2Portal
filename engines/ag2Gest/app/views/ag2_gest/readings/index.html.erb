@@ -34,8 +34,8 @@
   });
 
   $(window).bind("load", function() {
-    $("#Subscriber").select2("val", "<%= params[:Subscriber] %>");
-    $("#Meter").select2("val", "<%= params[:Meter] %>");
+    $("#Subscriber").val("<%= params[:Subscriber] %>");
+    $("#Meter").val("<%= params[:Meter] %>");
     $("#ReadingDate").select2("val", "<%= params[:ReadingDate] %>");
     $("#Period").select2("val", "<%= params[:Period] %>");
     $("#Route").select2("val", "<%= params[:Route] %>");
@@ -49,17 +49,13 @@
   jQuery(function($) {
     // when the #removeFilter button clicked
     $("#removeFilter").click(function() {
-      $("#Subscriber").select2("val", "");
-      $("#Meter").select2("val", "");
+      $("#Subscriber").val("");
+      $("#Meter").val("");
       $("#ReadingDate").select2("val", "");
       $("#Period").select2("val", "");
       $("#Route").select2("val", "");
       $("#From").val("");
       $("#To").val("");
-      // $("#No").val("");
-      // $("#Supplier").select2("val", "");
-      // $("#Invoice").select2("val", "");
-      // $("#search").val("");
       // no AJAX
       //_thisForm.submit();
       // AJAX
@@ -91,10 +87,10 @@
         <%= form_tag "readings", :method => 'get', :remote => true do %>
         <!-- Subscriber -->
         <%= label_tag I18n.t("ag2_gest.readings.index.label_subscribers"), nil, :class => 'form-label-under-sel2' %>
-        <%= select_tag "Subscriber", options_from_collection_for_select(@subscribers, "id", "to_label"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
+        <%= text_field_tag "Subscriber", nil, :class => 'x-large-text-field shrinked' %>
         <!-- Meter -->
         <%= label_tag I18n.t("ag2_gest.readings.index.label_meters"), nil, :class => 'form-label-under-sel2' %>
-        <%= select_tag "Meter", options_from_collection_for_select(@meters, "id", "to_label"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
+        <%= text_field_tag "Meter", nil, :class => 'x-large-text-field shrinked', onkeyup: "caps(this)" %>
         <!-- Dates -->
         <%= label_tag I18n.t("ag2_gest.readings.index.label_from"), nil, :class => 'form-label-under-sel2' %>
         <%= text_field_tag "From", params[:date], :class =>  'x-large-text-field shrinked date_picker' %>

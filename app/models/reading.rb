@@ -390,6 +390,12 @@ class Reading < ActiveRecord::Base
   end
 
   searchable do
+    text :subscriber_code_name_address_fiscal do
+      subscriber.code_full_name_or_company_address_fiscal unless subscriber.blank?
+    end
+    text :meter_code do
+      meter.meter_code unless meter.blank?
+    end
     integer :id, :multiple => true          # Multiple search values accepted in one search (current_projects)
     integer :subscriber_id
     integer :meter_id

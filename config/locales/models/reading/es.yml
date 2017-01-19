@@ -23,6 +23,8 @@ es:
         reading: "Índice"
         reading_1: "Lectura periodo anterior"
         reading_2: "Lectura año anterior"
+        reading_1_c: "Lect.anterior"
+        reading_2_c: "Lect.año ant."
         sequence: "Secuencia"
         variant: "Variante"
         successfully: "Lectura se ha actualizado correctamente."

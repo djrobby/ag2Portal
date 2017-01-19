@@ -9,9 +9,7 @@ module Ag2Gest
     # GET /readings
     # GET /readings.json
     def index
-
       manage_filter_state
-
       subscriber = params[:Subscriber]
       meter = params[:Meter]
       reading_date = params[:ReadingDate]
@@ -22,18 +20,18 @@ module Ag2Gest
       # OCO
       init_oco if !session[:organization]
       # Initialize select_tags
-      @subscribers = subscribers_dropdown if @subscribers.nil?
-      @meters = meters_dropdown if @meters.nil?
+      # @subscribers = subscribers_dropdown if @subscribers.nil?
+      # @meters = meters_dropdown if @meters.nil?
       @periods = periods_dropdown if @periods.nil?
       @routes = routes_dropdown if @routes.nil?
 
       @search = Reading.search do
         with :project_id, current_projects_ids unless current_projects_ids.blank?
         if !subscriber.blank?
-          with :subscriber_id, subscriber
+          fulltext subscriber
         end
         if !meter.blank?
-          with :meter_id, meter
+          fulltext meter
         end
         if !from.blank?
           any_of do
@@ -63,8 +61,6 @@ module Ag2Gest
         format.json { render json: @readings }
         format.js
       end
-
-
     end
 
     # GET /readings/1

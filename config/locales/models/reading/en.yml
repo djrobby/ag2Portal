@@ -23,6 +23,8 @@ en:
         reading: "Index"
         reading_1: "Prv.Period Read"
         reading_2: "Prv.Year Read"
+        reading_1_c: "Prv.Read"
+        reading_2_c: "Prv.Year Read"
         sequence: "Sequence"
         variant: "Variant"
         successfully: "Lectura se ha actualizado correctamente."
