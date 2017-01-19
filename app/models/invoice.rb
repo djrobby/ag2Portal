@@ -68,6 +68,20 @@ class Invoice < ActiveRecord::Base
     _codes
   end
 
+  def invoiced_subtotals_by_concept
+    _codes = []
+    _aux = []
+    _ii = invoice_items.group(:tariff_id)
+    _ii.each do |r|
+      _aux = _aux << r.tariff.billable_concept.id
+      _aux = _aux << r.tariff.billable_concept.name
+      _aux = _aux << invoice_items.where(tariff_id: r.tariff_id).sum(&:amount)
+      _codes = _codes << _aux
+      _aux = []
+    end
+    _codes
+  end
+
   #
   # Calculated fields
   #
