@@ -10,7 +10,8 @@ module Ag2Admin
                                                :co_update_attachment,
                                                :co_update_total_and_price,
                                                :co_update_from_organization,
-                                               :co_update_office_select_from_bank]
+                                               :co_update_office_select_from_bank,
+                                               :co_check_iban]
     # Helper methods for
     # => sorting
     # => allow edit (hide buttons)
@@ -99,6 +100,14 @@ module Ag2Admin
       @offices_dropdown = bank_offices_array(@offices)
       # Setup JSON
       @json_data = { "office" => @offices_dropdown }
+      render json: @json_data
+    end
+
+    # Check IBAN
+    def co_check_iban
+      iban = check_iban(params[:country], params[:dc], params[:bank], params[:office], params[:account])
+      # Setup JSON
+      @json_data = { "iban" => iban }
       render json: @json_data
     end
 

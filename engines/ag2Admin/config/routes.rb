@@ -32,6 +32,9 @@ Ag2Admin::Engine.routes.draw do
     match 'companies/co_update_office_select_from_bank/:bank', :controller => 'companies', :action => 'co_update_office_select_from_bank'
     match 'co_update_office_select_from_bank/:bank', :controller => 'companies', :action => 'co_update_office_select_from_bank'
     match 'companies/:id/co_update_office_select_from_bank/:bank', :controller => 'companies', :action => 'co_update_office_select_from_bank'
+    match 'companies/co_check_iban/:country/:dc/:bank/:office/:account', :controller => 'companies', :action => 'co_check_iban'
+    match 'co_check_iban/:country/:dc/:bank/:office/:account', :controller => 'companies', :action => 'co_check_iban'
+    match 'companies/:id/co_check_iban/:country/:dc/:bank/:office/:account', :controller => 'companies', :action => 'co_check_iban'
     #
     # Offices
     match 'offices/update_province_textfield_from_town/:id', :controller => 'offices', :action => 'update_province_textfield_from_town'

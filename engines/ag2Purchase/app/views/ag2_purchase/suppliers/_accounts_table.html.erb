@@ -56,8 +56,7 @@
       var bank = $(this).closest('tr').find('select.fnt-bank :selected').val();
       var office = $(this).closest('tr').find('select.fnt-office :selected').val();
       var account = $(this).closest('tr').find('.fnt-account').val();
-      var isValidIBAN = validate_iban(invalidIBAN, tryAgain, country, dc, bank, office, account);
-      if (isValidIBAN) alert('OK');
+      var isValidIBAN = validate_iban(invalidIBAN, tryAgain, country, dc, bank, office, account, 'su_check_iban');
       return false;
     });
 

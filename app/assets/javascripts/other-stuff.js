@@ -125,7 +125,7 @@ function goToAnchorModal(aid) {
 /*
  * IBAN Validator
  */
-function validate_iban(invalidIBAN, tryAgain, c, d, b, o, a) {
+function validate_iban(invalidIBAN, tryAgain, c, d, b, o, a, udf) {
   var isValid = true;
 
   var country = c;
@@ -143,12 +143,14 @@ function validate_iban(invalidIBAN, tryAgain, c, d, b, o, a) {
   var account = a;
   if (account == "")
     account = "0";
-  jQuery.getJSON('su_check_iban/' + country + '/' + dc + '/' + bank + '/' + office + '/' + account, function(data) {
+  jQuery.getJSON(udf + '/' + country + '/' + dc + '/' + bank + '/' + office + '/' + account, function(data) {
     var iban = data.iban
     jQuery.getJSON('https://openiban.com/validate/' + iban, function(data) {
+      isValid = data.valid
       if (data.valid == false) {
         alert(data.iban + ' ' + invalidIBAN + '\n' + tryAgain);
-        isValid = data.valid
+      } else {
+        alert(data.iban + ' OK');        
       }
     });
   });
