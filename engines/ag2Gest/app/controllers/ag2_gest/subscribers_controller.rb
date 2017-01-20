@@ -12,6 +12,7 @@ module Ag2Gest
                                                 :add_meter,
                                                 :quit_meter,
                                                 :change_meter,
+                                                :su_find_meter,
                                                 :simple_bill,
                                                 :void,
                                                 :subscriber_report,
@@ -63,9 +64,10 @@ module Ag2Gest
       @subscriber = Subscriber.find(params[:id])
       @meter = Meter.find params[:reading][:meter_id]
       @billing_period = BillingPeriod.find params[:reading][:billing_period_id]
+      project = params[:reading][:project_id] || @billing_period.project_id
 
       # #Create Reading
-      @reading = Reading.new( project_id: params[:reading][:project_id],
+      @reading = Reading.new( project_id: project,
                    billing_period_id: @billing_period.id,
                    reading_type_id: ReadingType::INSTALACION, #ReadingType Installation
                    meter_id: @meter.id,
@@ -353,6 +355,45 @@ module Ag2Gest
       end
     end
 
+    #
+    # Look for meter
+    #
+    def su_find_meter
+      m = params[:meter]
+      alert = ""
+      code = ''
+      meter_id = 0
+      if m != '0'
+        meter = Meter.find_by_meter_code(m) rescue nil
+        if !meter.nil?
+          s = Subscriber.find_by_meter_id(meter.id) rescue nil
+          if s.nil?
+            # Meter available
+            alert = I18n.t("activerecord.errors.models.meter.available", var: m)
+            meter_id = meter.id
+          else
+            # Meter installed and unavailable
+            alert = I18n.t("activerecord.errors.models.meter.installed", var: m)
+            code = '$err'
+          end
+        else
+          # Meter code not found
+          alert = I18n.t("activerecord.errors.models.meter.code_not_found", var: m)
+          code = '$err'
+        end
+      else
+        # Wrong meter code
+        alert = I18n.t("activerecord.errors.models.meter.code_wrong", var: m)
+        code = '$err'
+      end
+      # Setup JSON
+      @json_data = { "code" => code, "alert" => alert, "meter_id" => meter_id.to_s }
+      render json: @json_data
+    end
+
+    #
+    # Default Methods
+    #
     # GET /subscribers
     # GET /subscribers.json
     def index

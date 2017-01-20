@@ -1,11 +1,19 @@
 <script type="text/javascript">
-  $(document).ready(function(){
+  var text_field_color;
 
+  $(document).ready(function(){
     $('select.sel2').select2({
       formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
       allowClear: true
     });
 
+    // Save default text color
+    text_field_color = $("#alert").css('color')
+
+    // Set focus
+    $(".modal").on('shown', function() {
+      $(this).find(".form-label:first").focus();
+    });
   });
 
   jQuery(function($) {
@@ -64,40 +72,61 @@
 
       //Put Values to 0
       $('#form_add_meter').find('[type=checkbox]').prop('checked', false);
-      $('#sel2_association').select2("val", "");
+      //$('#sel2_association').select2("val", "");
+      $('#sel2_association').val("");
       $('#input_add_reading_index, #input_add_reading_date, #input_add_meter').val("");
 
       //Hide Collapse Options //=> doesn't work
       //$('#collapseAddMeter').collapse('hide');
 
     });
+    
+    // when #input_add_meter changes
+    $("#input_add_meter").change(function() {
+      // make a POST call and replace the content
+      var meter = $('#input_add_meter').val();
+      if (meter == "")
+        meter = "$";
+      jQuery.getJSON('su_find_meter/' + meter, function(data) {
+        $("#alert").html(data.alert);
+        if (data.code == "$err") {
+          $("#alert").css('color', 'red');
+          alert('<%= I18n.t("activerecord.errors.models.meter.installation_error") %>\n' + data.alert);
+          $('#input_add_meter').select();
+        } else {
+          $("#alert").css('color', text_field_color);
+          $('#sel2_association').val(data.meter_id);
+        }
+      });
+      return false;
+    });
+  });
 
-  });//End jQuery function, exclusive $ jQuery function
-
+  //End jQuery function, exclusive $ jQuery function
 </script>
 
 <!-- AddMeter -->
-<div id="addMeter" class="modal modalMeter hide fade">
+<div id="addMeter" class="modal modalMeter hide fade" data-backdrop="static">
   <div class="modal-header">
-    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-    <h3><%= t('activerecord.attributes.subscriber.data_add_meter') %></h3>
+    <a class="close" data-dismiss="modal">×</a>
+    <h3><%= t('activerecord.attributes.subscriber.add_meter') %></h3>
+    <span class="shrinked"><%= I18n.t(:mandatory_subtitle) %></span>
   </div>
   <%= simple_form_for @reading, url: { action: :add_meter, controller: 'subscribers'},  :method => :post, :html => { :class => 'form-inline', :id => 'form_add_meter' } do |f| %>
     <div class="modal-body">
-      <h4><%= t('activerecord.attributes.contracting_request.data_meter') %></h4>
+      <%#= f.association :project, collection: @project_dropdown, label: t('activerecord.attributes.subscriber.project'), input_html: { class: 'x-large-text-field sel2', :id => "project" }, :required => true, label_html: { class: 'form-label' }, include_blank: true %>
 
-      <%= f.association :project, collection: @project_dropdown, label: t('activerecord.attributes.subscriber.project'), input_html: { class: 'x-large-text-field sel2', :id => "project" }, :required => true, label_html: { class: 'form-label' }, include_blank: true %>
-
-      <%= f.input :meter, required: true, input_html: { class: 'mid-text-field', id: 'input_add_meter' }, label_html: { class: 'form-label' }, label: t('activerecord.attributes.contracting_request.meter') %>
+      <%= f.input :meter, required: true, input_html: { class: 'mid-text-field', maxlength: 20, id: 'input_add_meter' }, label_html: { class: 'form-label' }, label: t('activerecord.attributes.meter.meter_code_f') %>
+      <%= f.input :meter_id, as: :hidden, input_html: { id: 'sel2_association' } %>
       <%#= f.association :meter, required: true, collection: Meter.from_office(session[:office]).availables, input_html: { class: 'x-large-text-field sel2', id: 'sel2_association' }, label_html: { class: 'form-label' }, include_blank: true, label: t('activerecord.attributes.contracting_request.meter') %>
 
       <%= f.input :meter_location_id, required: true, collection: MeterLocation.all, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' }, include_blank: true, label: t('activerecord.attributes.meter_detail.meter_location') %>
 
-      <%= f.input :reading_index, label: t('activerecord.attributes.reading.reading'), :required => true, :autofocus => true, :input_html => { :class => 'x-large-text-field', id: 'input_add_reading_index' }, :label_html => { :class => 'form-label' } %>
+      <%= f.input :reading_index, label: t('activerecord.attributes.reading.reading'), :required => true, :input_html => { :class => 'mid-text-field', id: 'input_add_reading_index' }, :label_html => { :class => 'form-label' } %>
 
       <%= f.input :reading_date, :as => :hidden, :required => true, :start_year => Time.now.year - 100, :end_year => Time.now.year + 100, :as => :string, :input_html => { :value => (f.object.reading_date.strftime("%d/%m/%Y") if f.object.reading_date), :class => 'mid-text-field date_picker', id: 'input_add_reading_date' }, :label_html => { :class => 'form-label' } %>
 
-      <%= f.association :billing_period, collection: BillingPeriod.all, label: t('activerecord.attributes.subscriber.billing_period'), :required => true, input_html: { class: 'x-large-text-field sel2', :id => "billing_period" }, label_html: { class: 'form-label' }, include_blank: true %>
+      <%= f.association :billing_period, collection: BillingPeriod.all, label: t('activerecord.attributes.subscriber.reading_period'), :required => true, input_html: { class: 'x-large-text-field sel2', :id => "billing_period" }, label_html: { class: 'form-label' }, include_blank: true %>
 
       <div class="accordion-group">
         <div class="accordion-heading">
@@ -121,8 +150,9 @@
 
     </div>
     <div class="modal-footer">
+      <span class="left-floated shrinked" style="vertical-align: bottom" id="alert"></span>
       <%= f.submit t('activerecord.attributes.subscriber.accept'), :class => "btn btn-primary", :id => "btn_submit" %>
-      <button class="btn btn-primary" data-dismiss="modal"><%= t('activerecord.attributes.subscriber.close') %></button>
+      <button id="cancelButton" type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><%= t :close_button %></button>
     </div>
   <% end %>
 </div>

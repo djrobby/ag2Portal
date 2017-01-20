@@ -123,6 +123,15 @@ es:
           attributes:
             code:
               code_invalid: "inválido"
+        meter:
+          installation_error: "Error al instalar contador:"
+          code_not_found: "%{var} no hallado."
+          code_wrong: "%{var} no es correcto."
+          installed: "%{var} ya se encuentra instalado (no disponible)."
+          available: "%{var} está disponible para ser instalado."
+          attributes:
+            meter_code:
+              code_invalid: "inválido (debe ser alfanumérico)"
         meter_detail:
           attributes:
             installation_reading:
@@ -131,14 +140,6 @@ es:
           attributes:
             reading_index:
               reading_invalid: "inválido (deber ser entero mayor que 0)"
-        meter:
-          attributes:
-            meter_code:
-              code_invalid: "inválido (debe ser alfanumérico)"
-        meter:
-          attributes:
-            meter_code:
-              code_invalid: "inválido (debe ser alfanumérico)"
         formality:
           attributes:
             code:

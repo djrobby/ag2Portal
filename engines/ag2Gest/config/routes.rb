@@ -161,6 +161,9 @@ Ag2Gest::Engine.routes.draw do
     match 'subscribers/:id/change_meter/:id', :controller => 'subscribers', :action => 'change_meter', :via => [:post]
     match 'subscribers/:id/void/:bill_id', :controller => 'subscribers', :action => 'void', :via => [:get], as: "void_subscriber_bill"
     match 'subscribers/:id/rebilling/:bill_id', :controller => 'subscribers', :action => 'rebilling', :via => [:get], as: "rebilling_subscriber_bill"
+    match 'subscribers/su_find_meter/:meter', :controller => 'subscribers', :action => 'su_find_meter'
+    match 'subscribers/:id/su_find_meter/:meter', :controller => 'subscribers', :action => 'su_find_meter'
+    match 'su_find_meter/:meter', :controller => 'subscribers', :action => 'su_find_meter'
     #
     # Commercial billing
     match 'commercial_billings/ci_generate_no/:project', :controller => 'commercial_billings', :action => 'ci_generate_no'

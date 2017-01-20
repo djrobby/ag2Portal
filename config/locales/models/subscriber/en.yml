@@ -120,8 +120,9 @@ en:
         total: "Total"
 
         reading_new: "Nueva lectura"
-        remove_meter: "Retirar contador"
-        change_meter: "Cambiar contador"
+        add_meter: "Install meter"
+        remove_meter: "Withdraw meter"
+        change_meter: "Change contador"
         period: "Periodo"
         reading_type: "Tipo de lectura"
         type: "Tipo"
@@ -172,16 +173,21 @@ en:
 
         show_all: "Mostrar todos"
         billing_period: "Periodo de facturación"
+        reading_period: "Period"
         reading_date: "Fecha de lectura"
         new_reading: "Nueva lectura"
         quit_meter: "Retirar contador"
         change_meter: "Cambio de contador"
-        data_deregister_meter: "Datos de baja de contador"
-        data_discharge_meter: "Datos de alta de contador"
+        data_deregister_meter: "Withdrawal"
+        data_discharge_meter: "Installation"
         data_add_meter: "Añadir contador"
         confirm: "Confirmar"
         cancel: "Cancelar"
         accept: "Aceptar"
+        add_meter_successful: "Meter successfully installed"
+        add_meter_failure: "Unable to install specified meter"
+        quit_meter_successful: "Meter successfully withdrawn"
+        quit_meter_failure: "Unable to withdraw currently installed meter"
 
     report:
       subscriber:

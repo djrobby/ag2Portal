@@ -124,6 +124,7 @@ es:
         total: "Total"
 
         reading_new: "Nueva lectura"
+        add_meter: "Instalar contador"
         remove_meter: "Retirar contador"
         change_meter: "Cambiar contador"
         period: "Periodo"
@@ -176,25 +177,20 @@ es:
 
         show_all: "Mostrar todos"
         billing_period: "Periodo de facturación"
+        reading_period: "Periodo"
         reading_date: "Fecha de lectura"
         new_reading: "Nueva lectura"
         quit_meter: "Retirar contador"
-        change_meter: "Cambio de contador"
-        data_deregister_meter: "Datos de baja de contador"
-        data_discharge_meter: "Datos de alta de contador"
+        data_deregister_meter: "Retirada"
+        data_discharge_meter: "Instalación"
         data_add_meter: "Añadir contador"
         confirm: "Confirmar"
         cancel: "Cancelar"
         accept: "Aceptar"
-        add_meter_successful: "Contador añadido correctamente"
-        add_meter_failure: "No se ha podido añadir el contador"
-        quit_meter_successful: "Contador añadido correctamente"
-        quit_meter_failure: "No se ha podido añadir el contador"
-
-        add_meter_successful: "Contador añadido correctamente"
-        add_meter_failure: "No se ha podido añadir el contador"
-        quit_meter_successful: "Contador añadido correctamente"
-        quit_meter_failure: "No se ha podido añadir el contador"
+        add_meter_successful: "Contador instalado exitosamente"
+        add_meter_failure: "No se ha podido instalar el contador indicado"
+        quit_meter_successful: "Contador retirado exitosamente"
+        quit_meter_failure: "No se ha podido retirar el contador actualmente instalado"
 
     report:
       subscriber:

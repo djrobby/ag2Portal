@@ -13,6 +13,7 @@ en:
       meter:
         id: "Id"
         meter_code: "Code"
+        meter_code_f: "Meter Code"
         meter_model: "Model"
         meter_model_id: "Model"
         caliber: "Caliber"
