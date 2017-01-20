@@ -42,6 +42,7 @@ class Reading < ActiveRecord::Base
   scope :by_date_asc, -> { order(:reading_date) }
   scope :by_date_desc, -> { order('reading_date desc') }
   scope :by_period_date, -> { order('billing_period_id desc, reading_date desc, reading_index') }
+  scope :by_id_desc, -> { order('id desc') }
 
   def to_label
     "#{reading_index} - #{reading_date.strftime("%d/%m/%Y %H:%M")}" if reading_date
@@ -94,6 +95,10 @@ class Reading < ActiveRecord::Base
       end
     end
     return total + tariff.fixed_fee
+  end
+
+  def sort_id
+    self.id
   end
 
   def generate_pre_bill(group_no=nil,user_id=nil,operation_id=1)
@@ -403,10 +408,14 @@ class Reading < ActiveRecord::Base
     integer :project_id, :multiple => true  # Multiple search values accepted in one search (current_projects)
     integer :reading_route_id
     time :reading_date
+    integer :reading_index
+    date :created_at
     string :sort_no do
       subscriber_id
     end
-    date :created_at
+    integer :sort_id do
+      sort_id
+    end
   end
 
   private

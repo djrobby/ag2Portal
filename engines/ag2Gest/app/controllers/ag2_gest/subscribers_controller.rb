@@ -97,16 +97,16 @@ module Ag2Gest
         @meter.first_installation_date = @meter_detail.installation_date
       end
 
-      # #Update caliber WaterSupplyContract
-      @water_supply_contract = @subscriber.water_supply_contract #WaterSupplyContract.where(subscriber_id: @subscriber.id)
-      @water_supply_contract.caliber_id = @meter.caliber_id
+      # #Update caliber WaterSupplyContract (NO!!! contract is historical info)
+      # @water_supply_contract = @subscriber.water_supply_contract
+      # @water_supply_contract.caliber_id = @meter.caliber_id
 
       # Assign meter
       @subscriber.meter_id = @meter.id
 
       # Try to save everything
       save_all_ok = false
-      if (@subscriber.save and @meter_detail.save and @water_supply_contract.save and @reading.save)
+      if (@subscriber.save and @meter_detail.save and @reading.save)
         save_all_ok = true
         if @meter.first_installation_date != @meter.first_installation_date_was # first_installation_date has changed, save it
           if !@meter.save
@@ -135,9 +135,10 @@ module Ag2Gest
       @subscriber = Subscriber.find(params[:id])
       @billing_period = BillingPeriod.find(params[:reading][:billing_period_id])
       @meter = @subscriber.meter
+      project = params[:reading][:project_id] || @billing_period.project_id
 
       #Create Reading
-      @reading = Reading.new( project_id: params[:reading][:project_id],
+      @reading = Reading.new( project_id: project,
                    billing_period_id: params[:reading][:billing_period_id],
                    reading_type_id: ReadingType::RETIRADA, #ReadingType Withdrawal
                    meter_id: @subscriber.meter_id,
@@ -178,7 +179,7 @@ module Ag2Gest
 
       # Try to save everything
       save_all_ok = false
-      if (@subscriber.save and @meter_detail.save and @water_supply_contract.save and @reading.save)
+      if (@subscriber.save and @meter_detail.save and @reading.save)
         save_all_ok = true
         if @meter.last_withdrawal_date != @meter.last_withdrawal_date_was # last_withdrawal_date has changed, save it
           if !@meter.save
@@ -206,6 +207,7 @@ module Ag2Gest
     def change_meter
       @subscriber = Subscriber.find(params[:id])
       @meter = @subscriber.meter
+      @billing_period = BillingPeriod.find params[:reading][:billing_period_id]
 
       ############### METER WITHDRAWAL ########################
 
@@ -231,12 +233,14 @@ module Ag2Gest
       if @meter.last_withdrawal_date.blank? || @meter_detail.withdrawal_date > @meter.last_withdrawal_date
         @meter.last_withdrawal_date = @meter_detail.withdrawal_date
       end
+      # Save meter location for installation
+      last_meter_location = @meter_detail.meter_location_id
 
       #Create Reading
       @reading_quit = Reading.new( project_id: last_reading.project_id,
-                   billing_period_id: nil,
+                   billing_period_id: @billing_period.id,
                    billing_frequency_id: last_reading.billing_frequency_id,
-                   reading_type_id: ReadingType.find(5).id, #ReadingType Withdrawal
+                   reading_type_id: ReadingType::RETIRADA, #ReadingType Withdrawal
                    meter_id: @subscriber.meter_id,
                    subscriber_id: @subscriber.id,
                    reading_route_id: last_reading.reading_route_id,
@@ -263,7 +267,7 @@ module Ag2Gest
 
       # Save all
       @meter_detail.save
-      water_supply_contract.save
+      # water_supply_contract.save (NO!!! contract is historical info)
       @reading_quit.save
       @subscriber.save
       if @meter.last_withdrawal_date != @meter.last_withdrawal_date_was # last_withdrawal_date has changed, save it
@@ -288,15 +292,16 @@ module Ag2Gest
       #Get last Reading
       last_reading = @subscriber.readings.order(:reading_date).last
 
-      #Update caliber WaterSupplyContract
-      water_supply_contract = @subscriber.contracting_request.water_supply_contract #WaterSupplyContract.where(subscriber_id: @subscriber.id)
-      water_supply_contract.caliber_id = Meter.find(params[:reading][:meter_id]).caliber_id
+      #Update caliber WaterSupplyContract (NO!!! contract is historical info)
+      # water_supply_contract = @subscriber.contracting_request.water_supply_contract
+      # water_supply_contract.caliber_id = Meter.find(params[:reading][:meter_id]).caliber_id
 
       #Create MeterDetail
       @meter_detail = MeterDetail.new( meter_id: params[:reading][:meter_id],
                                        subscriber_id: params[:id],
                                        installation_date:  params[:reading][:reading_date_add],
                                        installation_reading: params[:reading][:reading_index_add],
+                                       meter_location_id: last_meter_location,
                                        withdrawal_date: nil,
                                        withdrawal_reading: nil )
       # Update Meter first_installation_date if appropiate
@@ -306,9 +311,9 @@ module Ag2Gest
 
       #Create Reading
       @reading = Reading.new( project_id: last_reading.project_id,
-                   billing_period_id: nil,
+                   billing_period_id: @billing_period.id,
                    billing_frequency_id: last_reading.billing_frequency_id,
-                   reading_type_id: ReadingType.find(4).id, #ReadingType Installation
+                   reading_type_id: ReadingType::INSTALACION, #ReadingType Installation
                    meter_id: params[:reading][:meter_id],
                    subscriber_id: @subscriber.id,
                    reading_route_id: last_reading.reading_route_id,
@@ -327,7 +332,7 @@ module Ag2Gest
       end
 
       #Save all
-      water_supply_contract.save
+      # water_supply_contract.save (NO!!! contract is historical info)
       @meter_detail.save
       @reading.save
       @subscriber.save
@@ -524,7 +529,10 @@ module Ag2Gest
 
       @search_readings = Reading.search do
         with :subscriber_id, params[:id]
-        order_by :reading_date, :desc
+        # order_by :billing_period_id, :desc
+        # order_by :reading_date, :desc
+        # order_by :reading_index
+        order_by :sort_id, :desc
         paginate :page => params[:page] || 1, :per_page => 10
       end
 

@@ -5,7 +5,7 @@
   <td><%= detail.try(:meter_location).try(:name)%></td>
   <td><%= detail.try(:meter).try(:meter_code) %></td>
   <td><%= detail.try(:subscriber).try(:to_label) %></td>
-  <td class="center"><%=formatted_date(detail.withdrawal_date) unless detail.withdrawal_date.blank? %></td>
-  <td class="right"><%= detail.withdrawal_reading unless detail.withdrawal_date.blank? %></td>
+  <td align="center"><%=formatted_date(detail.withdrawal_date) unless detail.withdrawal_date.blank? %></td>
+  <td align="right"><%= detail.withdrawal_reading unless detail.withdrawal_date.blank? %></td>
 </tr>
 <% end %>

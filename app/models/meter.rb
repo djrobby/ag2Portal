@@ -53,7 +53,6 @@ class Meter < ActiveRecord::Base
     end
   end
 
-
   def fields_to_uppercase
     if !self.meter_code.blank?
       self[:meter_code].upcase!

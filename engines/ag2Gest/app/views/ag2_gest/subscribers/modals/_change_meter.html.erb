@@ -9,6 +9,13 @@
       formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
       allowClear: true
     });
+    $('.date_picker_change').datepicker({
+      format : 'dd/mm/yyyy',
+      weekStart : 1
+    }).on('changeDate', function(e){
+      $('.date_picker_change').datepicker('hide');
+      $("#reading_date_add").datepicker('setValue', $("#reading_date_quit").val());
+    });
 
     $('#reading_index_add').prop('disabled', true);
     $('#reading_date_add').prop('disabled', true);
@@ -18,12 +25,13 @@
     $('#cancel_data').prop('disabled', true);
     
     $('#change_meter').on('click', function(){
-
       //Put values to 0
       $('#reading_index_quit').val("");
       $('#reading_date_quit').val("");
-
     });
+
+    // Save default text color
+    text_field_color = $("#alert").css('color')
 
     // Set focus
     $(".modal").on('shown', function() {
@@ -195,21 +203,19 @@
       if (meter == "")
         meter = "$";
       jQuery.getJSON('su_find_meter/' + meter, function(data) {
-        $("#alert").html(data.alert);
+        $("#alert_change").html(data.alert);
         if (data.code == "$err") {
-          $("#alert").css('color', 'red');
+          $("#alert_change").css('color', 'red');
           alert('<%= I18n.t("activerecord.errors.models.meter.installation_error") %>\n' + data.alert);
           $('#meter_add_change').select();
         } else {
-          $("#alert").css('color', text_field_color);
-          $('#sel2_association').val(data.meter_id);
+          $("#alert_change").css('color', text_field_color);
+          $('#meter_add').val(data.meter_id);
         }
       });
       return false;
     });
-
-  });//End jQuery function, exclusive $ jQuery function
-
+  }); //End jQuery function, exclusive $ jQuery function
 </script>
 
 <!-- ChangeMeter -->
@@ -225,7 +231,7 @@
             
       <%= f.input :reading_index, label: t('activerecord.attributes.reading.reading'), :required => true, :as => :integer, :input_html => { :class => 'mid-text-field', :id => "reading_index_quit" }, :label_html => { :class => 'form-label' } %>
       
-      <%= f.input :reading_date, :required => true, :start_year => Time.now.year - 100, :end_year => Time.now.year + 100, :as => :string, :input_html => { :value => (f.object.reading_date.strftime("%d/%m/%Y") if f.object.reading_date), :class => 'mid-text-field date_picker', :id => "reading_date_quit" }, :label_html => { :class => 'form-label' } %> 
+      <%= f.input :reading_date, :required => true, :start_year => Time.now.year - 100, :end_year => Time.now.year + 100, :as => :string, :input_html => { :value => (f.object.reading_date.strftime("%d/%m/%Y") if f.object.reading_date), :class => 'mid-text-field date_picker_change', :id => "reading_date_quit" }, :label_html => { :class => 'form-label' } %> 
 
       <div class="accordion-group">
         <div class="accordion-heading">
@@ -260,6 +266,8 @@
       
       <%= f.input :reading_date_add, label: t('activerecord.attributes.subscriber.reading_date'), :required => true, :start_year => Time.now.year - 100, :end_year => Time.now.year + 100, :as => :string, :input_html => { :value => (f.object.reading_date.strftime("%d/%m/%Y") if f.object.reading_date), :class => 'mid-text-field date_picker', :id => 'reading_date_add' }, :label_html => { :class => 'form-label' } %> 
 
+      <%= f.association :billing_period, collection: BillingPeriod.all, label: t('activerecord.attributes.subscriber.reading_period'), :required => true, input_html: { class: 'x-large-text-field sel2', :id => "billing_period" }, label_html: { class: 'form-label' }, include_blank: true %>
+
       <div class="accordion-group">
         <div class="accordion-heading">
           <a class="accordion-toggle" data-toggle="collapse" href="#collapseChangeAdd"><%= t('activerecord.attributes.subscriber.incidences') %></a>
@@ -281,7 +289,7 @@
       </div>
     </div>
     <div class="modal-footer">
-      <span class="left-floated shrinked" style="vertical-align: bottom" id="alert"></span>
+      <span class="left-floated shrinked" style="vertical-align: bottom" id="alert_change"></span>
       <%= f.submit t('activerecord.attributes.subscriber.accept'), :class => "btn btn-primary", :id => "button_accept" %>
       <button id="cancelButton" type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><%= t :close_button %></button>
     </div>

@@ -4,12 +4,17 @@
       $.getScript(this.href);
       return false;
     });
+    $('.date_picker').datepicker({
+      format : 'dd/mm/yyyy',
+      weekStart : 1
+    }).on('changeDate', function(e){
+      $('.date_picker').datepicker('hide');
+    });
   });
 </script>
 
 <div class="row-fluid">
   <div class="span4">
-
     <% unless @subscriber.meter.blank? %>
       <a href="#newReadingModal" id="link_reading" role="button" class="btn btn-mini btn-primary" data-toggle="modal"><%= t('activerecord.attributes.subscriber.reading_new') %></a>
       <a href="#quitMeter" id="quit_meter" role="button" class="btn btn-mini btn-primary" data-toggle="modal"><%= t('activerecord.attributes.subscriber.remove_meter') %></a>
@@ -18,17 +23,9 @@
       <a href="#addMeter" id="add_meter" role="button" class="btn btn-mini btn-primary" data-toggle="modal"><%= t('activerecord.attributes.subscriber.add_meter') %></a>
     <% end %>
   </div>
-  <div class="span3">
-    <%#= label_tag "Periodo de facturación", nil, :class => 'form-label' %>
-    <%#= select_tag "billing_period", options_from_collection_for_select(@billing_periods, "id", "period"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
-  </div>
-  <div class="span3">
-    <%#= label_tag t('activerecord.attributes.subscriber.reading_type'), nil, :class => 'form-label' %>
-    <%#= select_tag "reading_type", options_from_collection_for_select(@reading_types, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
-  </div>
+  <div align="right" class="span7"><h5><b><%= I18n.t("ag2_gest.subscribers.show.total_consumptions") %>:</b> <%= @subscriber_readings.sum{|r| r.consumption } %></h5></div>
 </div>
 
-<div align="right" class="span11"><h5><b><%= I18n.t("ag2_gest.subscribers.show.total_consumptions") %>:</b> <%= @subscriber_readings.sum{|r| r.consumption } %></h5></div>
 
 <table class="table table-condensed table-striped shrinked">
   <thead>
