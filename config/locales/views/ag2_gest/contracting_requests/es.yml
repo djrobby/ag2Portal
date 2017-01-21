@@ -90,3 +90,4 @@ es:
       fiscal_error: "Id Fiscal erróneo o Entidad (Sujeto Pasivo) no existe."
       code_error: "Imposible generar Código de Contratación: No has elegido Proyecto."
       required_error: "Faltan campos por rellenar"
+      label_subscriber_search: "Buscar Abonado anterior"

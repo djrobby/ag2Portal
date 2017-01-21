@@ -307,10 +307,10 @@
       return false;
     });
 
-    // when the #row-old-subscriber field changes
-    $('#row-old-subscriber select').select2().on("change", function(e) {
+    // when the #old-subscriber field changes
+    $('#old-subscriber select').select2().on("change", function(e) {
       // make a POST call and replace the content
-      var subscriber = $('#row-old-subscriber select').select2("val");
+      var subscriber = $('#old-subscriber select').select2("val");
       if (subscriber == ""){
         subscriber = "0";
         $('.contracting_request_type_id').prop('disabled', false);
@@ -452,12 +452,14 @@
 </div>
 
 <!-- 1.5º ROW -->
-<div class="row-fluid" >
-  <%= f.input :subscriber_id, collection: @subscribers.collect {|c| [ c.to_label, c.id ] }, include_blank: true, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: {id: 'row-old-subscriber' }, label: 'Abonado anterior' if @subscribers %>
+<div class="row-fluid" id="row-old-subscriber">
+  <label class="multi-field-label-two">
+  <!-- Subscriber search -->
+    <%= label_tag I18n.t("ag2_gest.contracting_requests.label_subscriber_search"), nil, :class => 'form-label' %>
+    <%= text_field_tag "Subscriber", nil, :class => 'x-large-text-field shrinked' %>
+  </label>
+  <label class="multi-field-label-two"> <%= f.input :subscriber_id, collection: @subscribers.collect {|c| [ c.to_label, c.id ] }, include_blank: true, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { id: 'old-subscriber' }, label: I18n.t("activerecord.attributes.contracting_request.subscriber_id") %> </label>
 </div>
-
-
-
 
 
 <!-- 2º ROW -->
