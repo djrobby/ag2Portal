@@ -112,6 +112,15 @@ Ag2Gest::Engine.routes.draw do
     match 'contracting_requests/:id/billing_complete', :controller => 'contracting_requests', :action => 'billing_complete'
     #Comment Route Update Server
     match 'contracting_requests/dn_update_from_invoice/:arr_invoice', :controller => 'contracting_requests', :action => 'dn_update_from_invoice'
+    match 'contracting_requests/cr_find_meter/:meter', :controller => 'contracting_requests', :action => 'cr_find_meter'
+    match 'contracting_requests/:id/cr_find_meter/:meter', :controller => 'contracting_requests', :action => 'cr_find_meter'
+    match 'cr_find_meter/:meter', :controller => 'contracting_requests', :action => 'cr_find_meter'
+    match 'contracting_requests/cr_find_subscriber/:subscriber', :controller => 'contracting_requests', :action => 'cr_find_subscriber'
+    match 'contracting_requests/:id/cr_find_subscriber/:subscriber', :controller => 'contracting_requests', :action => 'cr_find_subscriber'
+    match 'cr_find_subscriber/:subscriber', :controller => 'contracting_requests', :action => 'cr_find_subscriber'
+    match 'contracting_requests/cr_find_service_point/:service_point', :controller => 'contracting_requests', :action => 'cr_find_service_point'
+    match 'contracting_requests/:id/cr_find_service_point/:service_point', :controller => 'contracting_requests', :action => 'cr_find_service_point'
+    match 'cr_find_service_point/:service_point', :controller => 'contracting_requests', :action => 'cr_find_service_point'
     #
     # Prototype
     match "sale_offers/show_test", controller: "sale_offers", action: 'show_test'

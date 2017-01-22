@@ -59,8 +59,6 @@ module Ag2Gest
     # Meter installation
     #
     def add_meter
-      debugger
-
       @subscriber = Subscriber.find(params[:id])
       @meter = Meter.find params[:reading][:meter_id]
       @billing_period = BillingPeriod.find params[:reading][:billing_period_id]
@@ -378,6 +376,7 @@ module Ag2Gest
             meter_id = meter.id
           else
             # Meter installed and unavailable
+            # Meter can be tested for been installed using meter.is_installed_now?
             alert = I18n.t("activerecord.errors.models.meter.installed", var: m)
             code = '$err'
           end

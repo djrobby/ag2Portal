@@ -21,6 +21,7 @@ class Client < ActiveRecord::Base
   has_many :bills
   has_many :client_payments
   has_many :invoice_debts
+  has_many :water_supply_contracts
 
   has_paper_trail
 
@@ -150,16 +151,16 @@ class Client < ActiveRecord::Base
       _ret += street_name + " "
     end
     if !street_number.blank?
-      _ret += street_number + ", "
+      _ret += street_number
     end
     if !building.blank?
-      _ret += building.titleize + ", "
+      _ret += ", " + building.titleize
     end
     if !floor.blank?
-      _ret += floor_human + " "
+      _ret += ", " + floor_human
     end
     if !floor_office.blank?
-      _ret += floor_office
+      _ret += " " + floor_office
     end
     _ret
   end

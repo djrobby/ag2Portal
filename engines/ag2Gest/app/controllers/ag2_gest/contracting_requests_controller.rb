@@ -31,8 +31,10 @@ module Ag2Gest
                                                 :update_old_subscriber,
                                                 :dn_update_from_invoice,
                                                 :initial_complete,
-                                                :billing_complete
-                                              ]
+                                                :billing_complete,
+                                                :cr_find_meter,
+                                                :cr_find_subscriber,
+                                                :cr_find_service_point ]
 
     helper_method :sort_column
 
@@ -738,6 +740,131 @@ module Ag2Gest
       render json: @json_data
     end
 
+    #
+    # Look for meter
+    #
+    def cr_find_meter
+      m = params[:meter]
+      alert = ""
+      code = ''
+      meter_id = 0
+      if m != '0'
+        meter = Meter.find_by_meter_code(m) rescue nil
+        if !meter.nil?
+          s = Subscriber.find_by_meter_id(meter.id) rescue nil
+          if s.nil?
+            # Meter available
+            alert = I18n.t("activerecord.errors.models.meter.available", var: m)
+            meter_id = meter.id
+          else
+            # Meter installed and unavailable
+            # Meter can be tested for been installed using meter.is_installed_now?
+            alert = I18n.t("activerecord.errors.models.meter.installed", var: m)
+            code = '$err'
+          end
+        else
+          # Meter code not found
+          alert = I18n.t("activerecord.errors.models.meter.code_not_found", var: m)
+          code = '$err'
+        end
+      else
+        # Wrong meter code
+        alert = I18n.t("activerecord.errors.models.meter.code_wrong", var: m)
+        code = '$err'
+      end
+      # Setup JSON
+      @json_data = { "code" => code, "alert" => alert, "meter_id" => meter_id.to_s }
+      render json: @json_data
+    end
+
+    #
+    # Look for subscriber
+    #
+    def cr_find_subscriber
+      m = params[:subscriber]
+      alert = ""
+      code = ''
+      meter_id = 0
+      if m != '0'
+        meter = Meter.find_by_meter_code(m) rescue nil
+        if !meter.nil?
+          s = Subscriber.find_by_meter_id(meter.id) rescue nil
+          if s.nil?
+            # Meter available
+            alert = I18n.t("activerecord.errors.models.meter.available", var: m)
+            meter_id = meter.id
+          else
+            # Meter installed and unavailable
+            # Meter can be tested for been installed using meter.is_installed_now?
+            alert = I18n.t("activerecord.errors.models.meter.installed", var: m)
+            code = '$err'
+          end
+        else
+          # Meter code not found
+          alert = I18n.t("activerecord.errors.models.meter.code_not_found", var: m)
+          code = '$err'
+        end
+      else
+        # Wrong meter code
+        alert = I18n.t("activerecord.errors.models.meter.code_wrong", var: m)
+        code = '$err'
+      end
+      # Setup JSON
+      @json_data = { "code" => code, "alert" => alert, "meter_id" => meter_id.to_s }
+      render json: @json_data
+    end
+
+    #
+    # Look for service point
+    #
+    def cr_find_service_point
+      m = params[:service_point]
+      alert = ""
+      code = ''
+      service_point_id = 0
+      service_points = nil
+
+      if m != '0'
+        search = ServicePoint.search do
+          fulltext m
+          with :office_id, current_offices_ids
+          with :available_for_contract, true
+          order_by :street_directory_id
+          order_by :code
+        end
+        service_points = search.results
+        # @service_points = ServicePoint.where(office_id: current_offices_ids, available_for_contract: true).select{|s| s.subscribers.empty?}
+
+        if !service_points.nil?
+          s = Subscriber.find_by_service_point_id(meter.id) rescue nil
+          if s.nil?
+            # Meter available
+            alert = I18n.t("activerecord.errors.models.meter.available", var: m)
+            service_point_id = meter.id
+          else
+            # Meter installed and unavailable
+            # Meter can be tested for been installed using meter.is_installed_now?
+            alert = I18n.t("activerecord.errors.models.meter.installed", var: m)
+            code = '$err'
+          end
+        else
+          # Meter code not found
+          alert = I18n.t("activerecord.errors.models.meter.code_not_found", var: m)
+          code = '$err'
+        end
+      else
+        # Wrong meter code
+        alert = I18n.t("activerecord.errors.models.meter.code_wrong", var: m)
+        code = '$err'
+      end
+      # Setup JSON
+      @json_data = { "code" => code, "alert" => alert, "service_point_id" => service_point_id.to_s }
+      render json: @json_data
+    end
+
+    #
+    # Default Methods
+    #
     # GET /requests
     # GET /requests.json
     def index

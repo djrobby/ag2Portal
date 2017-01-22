@@ -23,7 +23,7 @@ class ContractingRequest < ActiveRecord::Base
   belongs_to :subscriber_zipcode, :class_name => 'Zipcode', :foreign_key => 'subscriber_zipcode_id'
   belongs_to :subscriber_center, :class_name => 'Center', :foreign_key => 'subscriber_center_id'
   belongs_to :entity
-  belongs_to :old_subscriber, :class_name => 'Subscriber',:foreign_key => "subscriber_id"
+  belongs_to :old_subscriber, :class_name => 'Subscriber', :foreign_key => "subscriber_id"
   belongs_to :project
   belongs_to :contracting_request_status
   belongs_to :contracting_request_type
@@ -110,13 +110,24 @@ class ContractingRequest < ActiveRecord::Base
 
   # Searchable attributes
   searchable do
-    integer :id
-    string :request_no
     text :request_no
     text :client_info
+    text :client_code_name_fiscal do
+      water_supply_contract.client.full_name_or_company_code_fiscal unless (water_supply_contract.blank? || water_supply_contract.client.blank?)
+    end
+    text :old_subscriber_code_name_address_fiscal do
+      old_subscriber.code_full_name_or_company_address_fiscal unless old_subscriber.blank?
+    end
+    text :service_point_full_address do
+      service_point.full_address unless service_point.blank?
+    end
+    integer :id
+    string :request_no
     string :contracting_request_type_id
     string :project_id
     string :contracting_request_status_id
+    integer :subscriber_id
+    integer :service_point_id
     date :request_date
     string :sort_no do
       request_no

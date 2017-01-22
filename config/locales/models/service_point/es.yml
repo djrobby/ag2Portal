@@ -6,6 +6,7 @@ es:
         one: "Punto de suministro"
         few:   "Puntos de suministro"
         other: "Puntos de suministro"
+        no_street_directory_error: "Callejero no disponible"
     attributes:
       service_point:
         id: "Id"

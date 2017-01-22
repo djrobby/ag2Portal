@@ -6,6 +6,7 @@ en:
         one: "Supply point"
         few:   "Supply points"
         other: "Supply points"
+        no_street_directory_error: "Street directory unavailable"
     attributes:
       service_point:
         id: "Id"

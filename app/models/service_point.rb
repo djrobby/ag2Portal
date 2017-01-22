@@ -30,9 +30,82 @@ class ServicePoint < ActiveRecord::Base
 
   def to_full_label
     if street_directory.nil?
-      "No calle asignada (id:#{id})"
+      I18n.t("activerecord.models.service_point.no_street_directory_error") + " (id:#{id})"
     else
       "#{street_directory.street_type.street_type_code} #{street_directory.street_name}, #{street_number} #{floor} #{floor_office}, (#{street_directory.town.name})"
     end
+  end
+
+  def full_address
+    address_1 + " - " + address_2
+  end
+
+  def address_1
+    _ret = ""
+    if !street_directory.blank?
+      if !street_directory.street_type.blank?
+        _ret += street_directory.street_type.street_type_code.titleize + ". "
+      end
+      if !street_directory.street_name.blank?
+        _ret += street_directory.street_name + " "
+      end
+      if !street_number.blank?
+        _ret += street_number
+      end
+      if !building.blank?
+        _ret += ", " + building.titleize
+      end
+      if !floor.blank?
+        _ret += ", " + floor_human
+      end
+      if !floor_office.blank?
+        _ret += " " + floor_office
+      end
+    end
+    _ret
+  end
+
+  def address_2
+    _ret = ""
+    if !zipcode.blank?
+      _ret += zipcode.zipcode + " "
+      if !zipcode.town.blank?
+        _ret += zipcode.town.name + ", "
+      end
+      if !zipcode.province.blank?
+        _ret += zipcode.province.name + " "
+        if !zipcode.province.region.country.blank?
+          _ret += "(" + zipcode.province.region.country.name + ")"
+        end
+      end
+    end
+    _ret
+  end
+
+  def floor_human
+    _ret = floor
+    _floor_is_numeric = true if Float(floor) rescue false
+    if _floor_is_numeric
+      _ret = floor.strip + "\xBA".force_encoding('ISO-8859-1').encode('UTF-8')
+    end
+    _ret
+  end
+
+  # Searchable attributes
+  searchable do
+    text :code
+    text :service_point_full_address do
+      full_address
+    end
+    integer :id
+    string :code
+    boolean :available_for_contract
+    integer :office_id
+    integer :service_point_type_id
+    integer :service_point_location_id
+    integer :service_point_purpose_id
+    integer :street_directory_id
+    integer :zipcode_id
+    integer :reading_route_id
   end
 end
