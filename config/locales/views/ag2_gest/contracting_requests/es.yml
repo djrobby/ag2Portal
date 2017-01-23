@@ -53,7 +53,7 @@ es:
         representative: "Representante"
         iban: "Cuenta IBAN"
         documents: "Documentos"
-        service_point: "Punto de suministro"
+        service_point: "Punto de Servicio"
       new_water_supply_contract:
         title: "Contrato de Suministro"
         tariff_scheme: "Esquema tarifario"
@@ -91,3 +91,4 @@ es:
       code_error: "Imposible generar Código de Contratación: No has elegido Proyecto."
       required_error: "Faltan campos por rellenar"
       label_subscriber_search: "Buscar Abonado anterior"
+      label_service_point_search: "Buscar Punto/s de suministro"

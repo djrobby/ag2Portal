@@ -448,7 +448,26 @@ module Ag2Gest
     # Update subscriber data if old subscriber exits
     def update_old_subscriber
       @subscriber = Subscriber.find(params[:id])
+      service_points = []
+      service_point = nil
+      service_point_code = ''
       @street_directory = @subscriber.street_directory
+      service_point = @subscriber.service_point rescue nil
+      if !service_point.nil?
+        service_point_code = service_point.code
+        search = ServicePoint.search do
+          fulltext service_point_code
+          with :office_id, current_offices_ids
+          with :available_for_contract, true
+          order_by :street_directory_id
+          order_by :code
+        end
+        service_points = search.results
+        if !service_points.empty?
+          # Service points array
+          search_array = service_points_array(service_points)
+        end
+      end
       # @contracting_request = @subscriber.try(:water_supply_contract).try(:contracting_request)
       @json_data = { "subscriber" => @subscriber,
                      "street_directory" => @street_directory,
@@ -456,6 +475,8 @@ module Ag2Gest
                      "province" => @street_directory.town.province,
                      "region" => @street_directory.town.province.region,
                      "country" => @street_directory.town.province.region.country,
+                     "ServicePoint" => service_point_code,
+                     "service_point" => search_array
                     }
 
       respond_to do |format|
@@ -784,33 +805,33 @@ module Ag2Gest
       m = params[:subscriber]
       alert = ""
       code = ''
-      meter_id = 0
-      if m != '0'
-        meter = Meter.find_by_meter_code(m) rescue nil
-        if !meter.nil?
-          s = Subscriber.find_by_meter_id(meter.id) rescue nil
-          if s.nil?
-            # Meter available
-            alert = I18n.t("activerecord.errors.models.meter.available", var: m)
-            meter_id = meter.id
-          else
-            # Meter installed and unavailable
-            # Meter can be tested for been installed using meter.is_installed_now?
-            alert = I18n.t("activerecord.errors.models.meter.installed", var: m)
-            code = '$err'
-          end
-        else
-          # Meter code not found
-          alert = I18n.t("activerecord.errors.models.meter.code_not_found", var: m)
+      subscribers = nil
+      search_array = []
+
+      if m != '$'
+        search = Subscriber.search do
+          fulltext m
+          with :office_id, current_offices_ids
+          with :ending_at, nil
+          order_by :sort_no
+        end
+        subscribers = search.results
+
+        if subscribers.empty?
+          # No subscribers found
+          alert = I18n.t("activerecord.errors.models.contracting_request.subscriber_not_found")
           code = '$err'
+        else
+          # Subscribers array
+          search_array = subscribers_array(subscribers)
         end
       else
-        # Wrong meter code
-        alert = I18n.t("activerecord.errors.models.meter.code_wrong", var: m)
+        # Invalid search string
+        alert = I18n.t("activerecord.errors.models.contracting_request.invalid_search_string")
         code = '$err'
       end
       # Setup JSON
-      @json_data = { "code" => code, "alert" => alert, "meter_id" => meter_id.to_s }
+      @json_data = { "code" => code, "alert" => alert, "subscriber" => search_array }
       render json: @json_data
     end
 
@@ -821,10 +842,10 @@ module Ag2Gest
       m = params[:service_point]
       alert = ""
       code = ''
-      service_point_id = 0
       service_points = nil
+      search_array = []
 
-      if m != '0'
+      if m != '$'
         search = ServicePoint.search do
           fulltext m
           with :office_id, current_offices_ids
@@ -833,32 +854,22 @@ module Ag2Gest
           order_by :code
         end
         service_points = search.results
-        # @service_points = ServicePoint.where(office_id: current_offices_ids, available_for_contract: true).select{|s| s.subscribers.empty?}
 
-        if !service_points.nil?
-          s = Subscriber.find_by_service_point_id(meter.id) rescue nil
-          if s.nil?
-            # Meter available
-            alert = I18n.t("activerecord.errors.models.meter.available", var: m)
-            service_point_id = meter.id
-          else
-            # Meter installed and unavailable
-            # Meter can be tested for been installed using meter.is_installed_now?
-            alert = I18n.t("activerecord.errors.models.meter.installed", var: m)
-            code = '$err'
-          end
-        else
-          # Meter code not found
-          alert = I18n.t("activerecord.errors.models.meter.code_not_found", var: m)
+        if service_points.empty?
+          # No service points found
+          alert = I18n.t("activerecord.errors.models.contracting_request.service_point_not_found")
           code = '$err'
+        else
+          # Service points array
+          search_array = service_points_array(service_points)
         end
       else
-        # Wrong meter code
-        alert = I18n.t("activerecord.errors.models.meter.code_wrong", var: m)
+        # Invalid search string
+        alert = I18n.t("activerecord.errors.models.contracting_request.invalid_search_string")
         code = '$err'
       end
       # Setup JSON
-      @json_data = { "code" => code, "alert" => alert, "service_point_id" => service_point_id.to_s }
+      @json_data = { "code" => code, "alert" => alert, "service_point" => search_array }
       render json: @json_data
     end
 
@@ -959,9 +970,11 @@ module Ag2Gest
       @contracting_request = ContractingRequest.new
       @projects = current_projects
       @projects_ids = current_projects_ids
-      _subscribers = Subscriber.where(office_id: current_offices_ids)
-      @subscribers = Subscriber.where(office_id: current_offices_ids).availables if !_subscribers.empty?
-      @service_points = ServicePoint.where(office_id: current_offices_ids, available_for_contract: true).select{|s| s.subscribers.empty?}
+      # _subscribers = Subscriber.where(office_id: current_offices_ids)
+      # @subscribers = Subscriber.where(office_id: current_offices_ids).availables if !_subscribers.empty?
+      @subscribers = []
+      # @service_points = ServicePoint.where(office_id: current_offices_ids, available_for_contract: true).select{|s| s.subscribers.empty?}
+      @service_points = []
       @offices = current_offices
       respond_to do |format|
         format.html # new.html.erb
@@ -1202,6 +1215,22 @@ module Ag2Gest
         _current_projects = _current_projects << i.id
       end
       _current_projects
+    end
+
+    def subscribers_array(_m)
+      _array = []
+      _m.each do |i|
+        _array = _array << [i.id, i.to_label]
+      end
+      _array
+    end
+
+    def service_points_array(_m)
+      _array = []
+      _m.each do |i|
+        _array = _array << [i.id, i.to_label]
+      end
+      _array
     end
 
     def manage_filter_state

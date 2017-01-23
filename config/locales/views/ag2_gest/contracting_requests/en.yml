@@ -28,6 +28,10 @@ en:
         btn_show: "Show Contracting Request"
       new:
         title: "New Contracting Request"
+        service_point: "Service Point"
+      new_water_supply_contract:
+        title: "Supply Contract"
+        tariff_scheme: "Tariff scheme"
       back_to_main_page: "Back to Contracting Requests"
       generate_code_btn: "Contracting Request Code"
       personal_info: "Contracting Request Info"
@@ -36,3 +40,4 @@ en:
       code_error: "Unable to generate Contracting Request Code: No Organization chosen."
       required_error: "Requiered fields are empty"
       label_subscriber_search: "Search Previous subscriber"
+      label_service_point_search: "Search Supply point(s)"

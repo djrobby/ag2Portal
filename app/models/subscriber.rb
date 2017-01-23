@@ -264,7 +264,9 @@ class Subscriber < ActiveRecord::Base
     integer :service_point_id
     integer :meter_id
     integer :billing_frequency_id
-    integer :office_id
+    integer :office_id, :multiple => true
+    time :starting_at
+    time :ending_at
     integer :tariff_type_id do
       tariff_scheme.tariff_type_id
     end

@@ -17,7 +17,7 @@ class ContractingRequestType < ActiveRecord::Base
 
   def fields_to_uppercase
     if !self.description.blank?
-      self[:description].replace(self[:description].mb_chars.upcase!.to_s)
+      self[:description].upcase!
     end
   end
 end

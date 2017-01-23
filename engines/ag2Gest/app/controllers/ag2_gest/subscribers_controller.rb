@@ -366,7 +366,7 @@ module Ag2Gest
       alert = ""
       code = ''
       meter_id = 0
-      if m != '0'
+      if m != '$'
         meter = Meter.find_by_meter_code(m) rescue nil
         if !meter.nil?
           s = Subscriber.find_by_meter_id(meter.id) rescue nil

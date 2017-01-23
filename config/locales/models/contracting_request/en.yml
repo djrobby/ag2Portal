@@ -197,6 +197,8 @@ en:
         items: "Artículos"
         taxable: "Base imponible"
         billing_period_id: "Periodo de facturación"
+        service_point: "Supply Point"
+        service_point_id: "Supply Point"
     report:
       contracting_request:
         id: "Id"

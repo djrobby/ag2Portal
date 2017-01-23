@@ -28,6 +28,16 @@ class ServicePoint < ActiveRecord::Base
   validates :center,                  :presence => true
   validates :street_directory,        :presence => true
 
+  def to_label
+    _ret = code
+    if street_directory.nil?
+      _ret = _ret + " " + I18n.t("activerecord.models.service_point.no_street_directory_error") + " (id:#{id})"
+    else
+      _ret = _ret + " " + address_1
+    end
+    _ret
+  end
+
   def to_full_label
     if street_directory.nil?
       I18n.t("activerecord.models.service_point.no_street_directory_error") + " (id:#{id})"
@@ -89,6 +99,10 @@ class ServicePoint < ActiveRecord::Base
       _ret = floor.strip + "\xBA".force_encoding('ISO-8859-1').encode('UTF-8')
     end
     _ret
+  end
+
+  def assigned_to_subscriber?
+    subscribers.empty? ? false : true
   end
 
   # Searchable attributes
