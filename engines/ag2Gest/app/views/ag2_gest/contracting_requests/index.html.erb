@@ -107,11 +107,11 @@
         <!-- Search form -->
         <%= form_tag "contracting_requests", :method => 'get', :remote => true do %>
 
-          <%= label_tag I18n.t("activerecord.attributes.project.project_code"), nil, :class => 'form-label' %>
+          <%= label_tag I18n.t("activerecord.attributes.contracting_request.request_no"), nil, :class => 'form-label' %>
           <%= text_field_tag "No", nil, :class => 'x-large-text-field shrinked number-text-field', onkeyup: "caps(this)" %>
 
           <%= label_tag I18n.t("ag2_gest.contracting_requests.index.label_client"), nil, :class => 'form-label' %>
-          <%= text_field_tag "ClientInfo", nil, :class => 'x-large-text-field shrinked number-text-field', onkeyup: "caps(this)" %>
+          <%= text_field_tag "ClientInfo", nil, :class => 'x-large-text-field shrinked', onkeyup: "caps(this)" %>
 
           <!-- Project -->
           <%= label_tag I18n.t("ag2_gest.contracting_requests.index.label_project"), nil, :class => 'form-label' %>

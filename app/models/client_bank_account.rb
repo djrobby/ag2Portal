@@ -132,4 +132,30 @@ class ClientBankAccount < ActiveRecord::Base
     end
     _f
   end
+
+  def p_format_view
+    _f = ""
+    if !self.country.blank?
+      _f += self.country.code.strip
+    end
+    if !self.iban_dc.blank?
+      _f += self.iban_dc.strip
+    end
+    if !self.bank.blank?
+      _f += " " + self.bank.code.strip
+    end
+    if !self.bank_office.blank?
+      _f += " " + self.bank_office.code.strip
+    end
+    if !self.ccc_dc.blank?
+      _f += " " + self.ccc_dc.strip
+    end
+    if !self.account_no.blank?
+      _f += self.account_no[0,2] + " " + self.account_no[2,2] + " " +  self.account_no[4,2].tr(account_no, "*") + " " +self.account_no[6,4].tr(account_no, "*")
+    end
+    if !_f.blank?
+      _f = "IBAN " + _f
+    end
+    _f
+  end
 end

@@ -11,6 +11,34 @@ class PreInvoiceItem < ActiveRecord::Base
   #
   # Calculated fields
   #
+  def subcode_name
+    _subcode = " "
+      if subcode == "CF"
+            _subcode = I18n.t("activerecord.attributes.invoice_item.cf")
+          elsif subcode == "CV"
+            _subcode = I18n.t("activerecord.attributes.invoice_item.cv")
+          elsif subcode == "VP"
+            _subcode = I18n.t("activerecord.attributes.invoice_item.vp")
+          elsif subcode == "BL1"
+            _subcode = I18n.t("activerecord.attributes.invoice_item.bl1")
+          elsif subcode == "BL2"
+            _subcode = I18n.t("activerecord.attributes.invoice_item.bl2")
+          elsif subcode == "BL3"
+            _subcode = I18n.t("activerecord.attributes.invoice_item.bl3")
+          elsif subcode == "BL4"
+            _subcode = I18n.t("activerecord.attributes.invoice_item.bl4")
+          elsif subcode == "BL5"
+            _subcode = I18n.t("activerecord.attributes.invoice_item.bl5")
+          elsif subcode == "BL6"
+            _subcode = I18n.t("activerecord.attributes.invoice_item.bl6")
+          elsif subcode == "BL7"
+            _subcode = I18n.t("activerecord.attributes.invoice_item.bl7")
+          elsif subcode == "BL8"
+            _subcode = I18n.t("activerecord.attributes.invoice_item.bl8")
+      end
+      _subcode
+  end
+
   def net_price
     price - discount
   end

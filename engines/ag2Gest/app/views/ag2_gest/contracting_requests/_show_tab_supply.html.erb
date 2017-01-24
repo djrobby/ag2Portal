@@ -661,32 +661,24 @@
         <thead>
           <tr>
             <!-- <th></th> -->
-            <th></th>
             <th><%= t('activerecord.attributes.tariff_scheme.billable_concept') %></th>
             <th><%= t('activerecord.attributes.tariff_scheme.tariff_type_id') %></th>
-          <th><%= t('activerecord.attributes.tariff.starting_at') %></th>
-          <th><%= t('activerecord.attributes.tariff.ending_at') %></th>
+            <th><%= t('activerecord.attributes.tariff.billing_frequency_id') %>:</th>
+            <th><%= t('activerecord.attributes.tariff.starting_at') %></th>
+            <th><%= t('activerecord.attributes.tariff.ending_at') %></th>
+            <th></th>
           </tr>
         </thead>
         <tbody>
 
-          <% @water_supply_contract.tariffs.each do |tariff| %>
-            <%# if tariff.tariff_active %>
-              <!-- <tr style="<%= 'display:none' unless tariff.tariff_active %>"> -->
+          <% SubscriberTariff.availables_to_subscriber(@subscriber.id).each do |t| %>
               <tr>
-                <td>
-                  <% if @water_supply_contract.bill.nil? %>
-                    <% contracted_tariff = ContractedTariff.where(water_supply_contract_id: @water_supply_contract.id, tariff_id: tariff.id).first %>
-                    <%= link_to contracted_tariff, class: "btn btn-mini", method: :delete, data: { confirm: 'Are you sure?' } do %>
-                      <i class="icon-trash"></i>
-                    <% end %>
-                  <% end %>
-                </td>
-                <td class="billable_concept"><%= tariff.try(:billable_concept).try(:name) %></td>
-                <td class="tariff_type"><%= tariff.try(:tariff_type).try(:name) %></td>
-                <td class="starting_at"><%=l tariff.try(:starting_at) unless tariff.try(:starting_at).blank? %></td>
-                <td class="ending_at"><%=l tariff.try(:ending_at) unless tariff.try(:ending_at).blank? %></td>
-                <td><%= render :partial => '/layouts/crud/read', :locals => { :model => Tariff, :path => tariff_path(tariff) } %></td>
+                  <td class="billable_concept"><%= t.tariff.try(:billable_concept).try(:name) %></td>
+                  <td class="tariff_type"><%= t.tariff.try(:tariff_type).try(:name) %></td>
+                  <td class="billing_frequency"><%= t.tariff.try(:billing_frequency).try(:to_label) %></td>
+                  <td class="starting_at"><%=l t.try(:starting_at) unless t.try(:starting_at).blank? %></td>
+                  <td class="ending_at"><%=l t.try(:ending_at) unless t.try(:ending_at).blank? %></td>
+                  <td><%= render :partial => '/layouts/crud/read', :locals => { :model => Tariff, :path => tariff_path(t.tariff) } %></td>
               </tr>
             <%# end %>
           <% end %>

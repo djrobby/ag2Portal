@@ -19,6 +19,7 @@ es:
         meter_id: "Contador"
         subscriber_id: "Abonado"
         reading_route_id: "Ruta"
+        reading_route: "Ruta de lectura"
         reading_date: "Fecha"
         reading: "Índice"
         reading_1: "Lectura periodo anterior"
@@ -40,6 +41,13 @@ es:
         bill_id: "Recibo"
         lat: "Latitud"
         long: "Longitud"
+        lec_ant: "Lect. Anterior"
+        lec_act: "Lect. Actual"
+        reg: "M3 registrados"
+        est: "M3 estimados"
+        other: "Otros consumos"
+        fac: "M3 facturados"
+        con: "Consumo medio"
     report:
       reading:
         cod_route: "Cod. ruta"

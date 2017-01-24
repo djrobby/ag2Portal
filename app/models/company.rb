@@ -70,6 +70,14 @@ class Company < ActiveRecord::Base
     end
   end
 
+  def full_name
+    _name = name + " - " + I18n.t("activerecord.report.biller.loc_fiscal") + ": " + fiscal_id
+    if !invoice_footer.blank?
+      _name += " - " + invoice_footer
+    end
+    _name
+  end
+
   def address_1
     _ret = ""
     if !street_type.blank?

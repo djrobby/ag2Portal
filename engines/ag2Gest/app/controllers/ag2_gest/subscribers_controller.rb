@@ -617,7 +617,9 @@ module Ag2Gest
           last_name: @contracting_request.entity.last_name,
           company: @contracting_request.entity.company,
           service_point_id: @contracting_request.service_point_id,
-          #contracting_request_id: @contracting_request.id
+          contracting_request_id: @contracting_request.id,
+          use_id: @contracting_request.water_supply_contract.use_id,
+          created_by: (current_user.id if !current_user.nil?)
         )
         if @subscriber.save
           @subscriber.tariffs << @contracting_request.water_supply_contract.tariffs

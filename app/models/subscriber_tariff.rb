@@ -26,7 +26,7 @@ class SubscriberTariff < ActiveRecord::Base
   private
 
   def assign_at
-    self.starting_at = tariffs.starting_at
-    self.ending_at = tariffs.ending_at
+    self.starting_at = tariff.starting_at
+    self.ending_at = tariff.ending_at
   end
 end

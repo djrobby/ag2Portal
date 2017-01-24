@@ -40,13 +40,13 @@
     <%= display_base_errors resource %>
       <div class="row-fluid">
         <div class="span4">
-          <%= f.input :period, label: 'Periodo', collection: @billing_periods, input_html: {class: "large-text-field"}, :label_html => { :class => 'form-label' } %>
+          <%= f.input :period, label: t('activerecord.attributes.reading.billing_period_id'), collection: @billing_periods, input_html: {class: "large-text-field"}, :label_html => { :class => 'form-label' } %>
         </div>
         <div class="span4">
-          <%= f.input :reading_routes, label: 'Rutas de lecturas', collection: @reading_routes, required: false, input_html: {class: "large-text-field", multiple: "multiple"}, :label_html => { :class => 'form-label' } %>
+          <%= f.input :reading_routes, label: t('activerecord.attributes.reading.reading_route'), collection: @reading_routes, required: false, input_html: {class: "large-text-field", multiple: "multiple"}, :label_html => { :class => 'form-label' } %>
         </div>
         <div class="span4">
-          <%= f.input :centers, label: 'Núcleo urbano', collection: @centers, required: false, input_html: {class: "sel2 large-text-field multiple", multiple: "multiple"}, :label_html => { :class => 'form-label' } %>
+          <%= f.input :centers, label: t('activerecord.models.center.one'), collection: @centers, required: false, input_html: {class: "sel2 large-text-field multiple", multiple: "multiple"}, :label_html => { :class => 'form-label' } %>
         </div>
       </div>
       <%= f.button :submit, "Cargar abonados", :class => 'btn-primary' %>

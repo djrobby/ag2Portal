@@ -1038,6 +1038,78 @@ module Ag2Gest
       end
     end
 
+    def subrogation
+      old_subcriber = Subscriber.find params[:subrogation][:subscriber_id]
+      contracting_request = old_subcriber.water_supply_contract.contracting_request
+      water_supply_contract = contracting_request.water_supply_contract
+      new_entity = Entity.find params[:subrogation][:entity_id]
+      ActiveRecord::Base.transaction do
+        client = new_entity.client || Client.create!(
+          active: true,
+          building: params[:subrogation][:client_building],
+          cellular: params[:subrogation][:client_cellular],
+          client_code: Client.cl_next_code(contracting_request.project.organization.id),
+          email: params[:subrogation][:client_email],
+          fax: params[:subrogation][:client_fax],
+          fiscal_id: new_entity.fiscal_id,
+          floor: params[:subrogation][:client_floor],
+          floor_office: params[:subrogation][:client_floor_office],
+          first_name: new_entity.first_name,
+          last_name: new_entity.last_name,
+          company: new_entity.company,
+          phone: params[:subrogation][:client_phone],
+          street_name: params[:subrogation][:client_street_name],
+          street_number: params[:subrogation][:client_street_number],
+          organization_id: contracting_request.project.organization.id,
+          entity_id: params[:subrogation][:entity_id],
+          street_type_id: params[:subrogation][:client_street_type_id],
+          zipcode_id: params[:subrogation][:client_zipcode_id],
+          town_id: params[:subrogation][:client_town_id],
+          province_id: params[:subrogation][:client_province_id],
+          region_id: params[:subrogation][:client_region_id],
+          country_id: params[:subrogation][:client_country_id],
+          created_by: current_user.try(:id),
+          payment_method_id: 1
+        )
+
+        contracting_request.update_attributes!(
+          contracting_request_type_id: ContractingRequestType::SUBROGATION,
+          entity_id: params[:subrogation][:entity_id],
+          client_street_type_id: client.street_type_id,
+          client_street_name: client.street_name,
+          client_street_number: client.street_number,
+          client_building: client.building,
+          client_floor: client.floor,
+          client_floor_office: client.floor_office,
+          client_zipcode_id: client.zipcode_id,
+          client_town_id: client.town_id,
+          client_province_id: client.province_id,
+          client_region_id: client.region_id,
+          client_country_id: client.country_id,
+          client_phone: client.phone,
+          client_fax: client.fax,
+          client_cellular: client.cellular,
+          client_email: client.email
+        )
+
+        old_subcriber.update_attributes!(
+          client_id: client.id,
+          first_name: client.last_name,
+          last_name: client.first_name,
+          company: client.company,
+          fiscal_id: client.fiscal_id,
+          updated_by: current_user.id
+        )
+
+        water_supply_contract.update_attributes!(
+          client_id: client.id
+        )
+      end
+      redirect_to contracting_requests_path, notice: "Subrogacion realizada con exito"
+    rescue ActiveRecord::RecordInvalid => invalid
+       redirect_to contracting_requests_path, alert: "Error al realizar subrogacion"
+    end
+
     # DELETE /contracting_requests/1
     # DELETE /contracting_requests/1.json
     def destroy

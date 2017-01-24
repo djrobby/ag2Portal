@@ -18,10 +18,10 @@ $(document).ready(function() {
 
 <div class="row-fluid">
   <div class="span6">
-    <%= f.input :period, collection: @billing_periods, input_html: {class: "mid-text-field"}, :label_html => { :class => 'form-label' } %>
+    <%= f.input :period, label: t('activerecord.attributes.reading.billing_period_id'), collection: @billing_periods, input_html: {class: "mid-text-field"}, :label_html => { :class => 'form-label' } %>
   </div>
   <div class="span6">
-    <%= f.input :reading_routes, collection: @reading_routes, input_html: {class: "sel2 mid-text-field multiple", multiple: "multiple"}, :label_html => { :class => 'form-label' } %>
+    <%= f.input :reading_routes, label: t('activerecord.attributes.reading.reading_route'), collection: @reading_routes, input_html: {class: "sel2 mid-text-field multiple", multiple: "multiple"}, :label_html => { :class => 'form-label' } %>
   </div>
 </div>
 

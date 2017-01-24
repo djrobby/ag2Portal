@@ -50,6 +50,10 @@ class Invoice < ActiveRecord::Base
   after_save :bill_status
   before_create :assign_payday_limit
 
+  def total_by_invoice_concept(billable_concept)
+    invoice_items.flatten.select{|item| item.tariff.billable_item.billable_concept_id == billable_concept.to_i}.sum(&:amount)
+  end
+
   def full_no
     # Invoice no (Invoice code & year & sequential number) => SSSSS-YYYY-NNNNNNN
     invoice_no.blank? ? "" : invoice_no[0..4] + '-' + invoice_no[5..8] + '-' + invoice_no[9..15]

@@ -46,7 +46,7 @@ es:
         title: "Editar Contratación"
         btn_show: "Ver Contratación"
       new:
-        title: "Nueva Contratación de Suministro"
+        title: "Nueva Solicitud de Contratación"
         claimant: "Datos Fiscales"
         client: "Datos de Notificación"
         address_subscriber: "Domicilio Suministro"

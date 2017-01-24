@@ -1,5 +1,6 @@
 require_dependency "ag2_gest/application_controller"
 require 'will_paginate/array'
+require_relative 'thinreports-with-text-rotation'
 
 module Ag2Gest
   class BillsController < ApplicationController
@@ -37,6 +38,19 @@ module Ag2Gest
         }
       end
     end
+
+    # add mj
+    # PDF Biller
+    def biller_pdf
+      @biller_printer = Bill.find(params[:id])
+      title = t("activerecord.models.bill.few")
+      respond_to do |format|
+        format.pdf {
+          send_data render_to_string, filename: "#{title}_#{@biller_printer.full_no}.pdf", type: 'application/pdf', disposition: 'inline'
+        }
+      end
+    end 
+    # add mj
 
     def confirm
       # @bills = Bill.where(id: params[:bills][:ids].split("[\"")[1].split("\"]")[0].split("\", \""))
@@ -114,6 +128,9 @@ module Ag2Gest
           end
         end
         pre_bill.update_attributes(bill_id: @bill.id,confirmation_date: params[:pre_bill][:confirmation_date])
+        # add mj
+        pre_invoice.update_attributes(invoice_id: @invoice.id,confirmation_date: params[:pre_bill][:confirmation_date])
+        # add mj
         final_bills << @bill
       end
       # params for modal
@@ -376,5 +393,6 @@ module Ag2Gest
         ActiveRecord::Base.connection.close
       end
     end
+
   end
 end
