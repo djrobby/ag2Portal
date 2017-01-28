@@ -145,12 +145,22 @@ class PurchaseOrder < ActiveRecord::Base
 
   # Reception status based on current balance
   def reception_status
-    if balance <= 0
+    if balance <= 0           # fully received
       _status = I18n.t("activerecord.attributes.purchase_order.reception_status_total")
-    elsif balance == quantity
-      _status = ""
-    else
+    elsif balance == quantity # unreceived
+      _status = I18n.t("activerecord.attributes.purchase_order.reception_status_unreceived")
+    else                      # partially received
       _status = I18n.t("activerecord.attributes.purchase_order.reception_status_partial")
+    end
+    _status
+  end
+  def reception_status_id
+    if balance <= 0           # 0
+      _status = 0
+    elsif balance == quantity # 2
+      _status = 2
+    else                      # 1
+      _status = 1
     end
     _status
   end
@@ -255,6 +265,9 @@ class PurchaseOrder < ActiveRecord::Base
     date :order_date
     integer :organization_id
     integer :created_by
+    integer :reception_status_id
+    float :quantity
+    float :balance
     string :sort_no do
       order_no
     end

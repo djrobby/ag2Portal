@@ -31,6 +31,7 @@
     $("#Products").select2("val", "<%= params[:Products] %>");
     $("#Petitioner").select2("val", "<%= params[:Petitioner] %>");
     $("#Status").val("<%= params[:Status] %>");
+    $("#Balance").val("<%= params[:Status] %>");
   });
 
   jQuery(function($) {
@@ -43,6 +44,7 @@
       $("#Products").select2("val", "");
       $("#Petitioner").select2("val", "");
       $("#Status").val("");
+      $("#Balance").val("");
       $("#search").val("");
       // no AJAX
       //_thisForm.submit();
@@ -92,6 +94,9 @@
         <!-- Status -->
         <%= label_tag I18n.t("ag2_purchase.purchase_orders.index.label_status"), nil, :class => 'form-label-under-sel2' %>
         <%= select_tag "Status", options_from_collection_for_select(@statuses, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked' %>
+        <!-- Reception status -->
+        <%= label_tag I18n.t("activerecord.attributes.purchase_order.reception_status"), nil, :class => 'form-label' %>
+        <%= select_tag "Balance", options_for_select(@balances), :prompt => "", :class => 'x-large-text-field shrinked' %>
         <!-- Others -->
         <%= label_tag I18n.t("ag2_purchase.purchase_orders.index.label_others"), nil, :class => 'form-label' %>
         <%= text_field_tag :search, params[:search], :class => 'x-large-text-field shrinked' %>

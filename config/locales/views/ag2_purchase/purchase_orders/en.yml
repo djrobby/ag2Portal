@@ -12,6 +12,7 @@ en:
         label_family: "Family"
         label_status: "Status"
         label_petitioner: "Petitioner"
+        label_balance: "Balance"
         label_others: "Others"
         btn_apply: "Apply Filter"
       show:

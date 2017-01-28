@@ -19,6 +19,7 @@ module Ag2Purchase
       session[:direction] = nil
       session[:ifilter] = nil
       session[:Petitioner] = nil
+      session[:Balance] = nil
     end
   end
 end

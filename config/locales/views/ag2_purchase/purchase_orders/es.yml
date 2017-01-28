@@ -12,6 +12,7 @@ es:
         label_family: "Familia"
         label_status: "Estado"
         label_petitioner: "Peticionario"
+        label_balance: "Saldo"
         label_others: "Otros"
         btn_apply: "Aplicar Filtro"
       show:

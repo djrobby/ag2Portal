@@ -630,6 +630,7 @@ module Ag2Products
       product = params[:Products]
       status = params[:Status]
       petitioner = params[:Petitioner]
+      balance = params[:Balance]
       # OCO
       init_oco if !session[:organization]
       # Initialize select_tags
@@ -639,6 +640,7 @@ module Ag2Products
       @products = products_dropdown if @products.nil?
       @statuses = OrderStatus.order('id') if @statuses.nil?
       @petitioners = PurchaseOrder.petitioners if @petitioners.nil?
+      @balances = balances_dropdown if @balances.nil?
 
       # Arrays for search
       current_projects = @projects.blank? ? [0] : current_projects_for_index(@projects)
@@ -679,6 +681,21 @@ module Ag2Products
         end
         if !petitioner.blank?
           with :created_by, petitioner
+        end
+        if !balance.blank?
+          with :reception_status_id, balance
+          # case balance
+          # when I18n.t("activerecord.attributes.purchase_order.reception_status_total")
+          #   with :reception_status_id, 0
+          #   # any_of do
+          #   #   with(:balance).less_than(0)
+          #   #   with :balance, 0
+          #   # end
+          # when I18n.t("activerecord.attributes.purchase_order.reception_status_unreceived")
+          #   with :reception_status_id, 2
+          # else
+          #   with :reception_status_id, 1
+          # end
         end
         order_by :sort_no, :desc
         paginate :page => params[:page] || 1, :per_page => per_page
@@ -1169,6 +1186,14 @@ module Ag2Products
       session[:organization] != '0' ? ProductFamily.where(organization_id: session[:organization].to_i).order(:family_code) : ProductFamily.order(:family_code)
     end
 
+    def balances_dropdown
+      _array = []
+      _array = _array << [I18n.t("activerecord.attributes.purchase_order.reception_status_total"), 0]
+      _array = _array << [I18n.t("activerecord.attributes.purchase_order.reception_status_partial"), 1]
+      _array = _array << [I18n.t("activerecord.attributes.purchase_order.reception_status_unreceived"), 2]
+      _array
+    end
+
     def offers_array(_offers)
       _array = []
       _offers.each do |i|
@@ -1347,6 +1372,12 @@ module Ag2Products
         session[:Petitioner] = params[:Petitioner]
       elsif session[:Petitioner]
         params[:Petitioner] = session[:Petitioner]
+      end
+      # balance
+      if params[:Balance]
+        session[:Balance] = params[:Balance]
+      elsif session[:Balance]
+        params[:Balance] = session[:Balance]
       end
     end
   end
