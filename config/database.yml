@@ -1,5 +1,5 @@
 # MySQL.  Versions 4.1 and 5.0 are recommended.
-# 
+#
 # Install the MYSQL driver
 #   gem install mysql2
 #
@@ -40,4 +40,4 @@ production:
   username: root
   password: root
   socket: /tmp/mysql.sock
-  host: ag2back
+  host: lamp
