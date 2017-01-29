@@ -22,7 +22,8 @@ end
 # Gems used only for development and not required
 # in production environments by default.
 group :development do
-
+  gem "better_errors", '~> 1.1.0'
+  gem "binding_of_caller", :platforms=>[:mri_19, :rbx]
 end
 
 gem 'jquery-rails'

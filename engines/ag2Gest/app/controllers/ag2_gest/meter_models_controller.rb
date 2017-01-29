@@ -11,7 +11,7 @@ module Ag2Gest
     # GET /meter_models.json
     def index
       manage_filter_state
-      @meter_models = MeterModel.paginate(:page => params[:page], :per_page => 10).order(sort_column + ' ' + sort_direction)
+      @meter_models = MeterModel.paginate(:page => params[:page], :per_page => per_page || 10).order(sort_column + ' ' + sort_direction)
 
       respond_to do |format|
         format.html # index.html.erb
@@ -91,7 +91,7 @@ module Ag2Gest
     # DELETE /meter_models/1.json
     def destroy
       @meter_model = MeterModel.find(params[:id])
-      
+
       respond_to do |format|
         if @meter_model.destroy
           format.html { redirect_to meter_models_url,

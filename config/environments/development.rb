@@ -53,4 +53,7 @@ Ag2Portal::Application.configure do
     :password       => "ag2Robot.tic",
     :enable_starttls_auto => true
   }
+
+  # BetterErrors
+  BetterErrors.editor = :sublime
 end

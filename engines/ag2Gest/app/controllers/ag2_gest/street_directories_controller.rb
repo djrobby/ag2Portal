@@ -12,7 +12,7 @@ module Ag2Gest
       manage_filter_state
 
       #@street_directories = StreetDirectory.paginate(:page => params[:page], :per_page => per_page).order(sort_column + ' ' + sort_direction)
-      @street_directories = StreetDirectory.paginate(:page => params[:page], :per_page => 15).order(sort_column + ' ' + sort_direction)
+      @street_directories = StreetDirectory.paginate(:page => params[:page], :per_page => per_page || 10).order(sort_column + ' ' + sort_direction)
 
       respond_to do |format|
         format.html # index.html.erb

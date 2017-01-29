@@ -133,12 +133,10 @@ module Ag2Gest
       manage_filter_state
 
       if session[:company] != '0'
-        @service_points = ServicePoint.where(company_id: session[:company]).paginate(:page => params[:page], :per_page => 10).order(sort_column + ' ' + sort_direction) #Array de ServicePoints
+        @service_points = ServicePoint.where(company_id: session[:company]).paginate(:page => params[:page], :per_page => per_page || 10).order(sort_column + ' ' + sort_direction) #Array de ServicePoints
       else
-        @service_points = ServicePoint.paginate(:page => params[:page], :per_page => 10).order(sort_column + ' ' + sort_direction)
+        @service_points = ServicePoint.paginate(:page => params[:page], :per_page => per_page || 10).order(sort_column + ' ' + sort_direction)
       end
-
-      #@service_points = ServicePoint.paginate(:page => params[:page], :per_page => 10).order(sort_column + ' ' + sort_direction)
 
       respond_to do |format|
         format.html # index.html.erb

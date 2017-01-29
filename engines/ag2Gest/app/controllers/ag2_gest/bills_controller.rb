@@ -49,7 +49,7 @@ module Ag2Gest
           send_data render_to_string, filename: "#{title}_#{@biller_printer.full_no}.pdf", type: 'application/pdf', disposition: 'inline'
         }
       end
-    end 
+    end
     # add mj
 
     def confirm
@@ -181,12 +181,12 @@ module Ag2Gest
 
     def index
       if params[:bills]
-        @bills = PreBill.where(pre_group_no: params[:bills]).paginate(:page => params[:page] || 1, :per_page => per_page || 20)
+        @bills = PreBill.where(pre_group_no: params[:bills]).paginate(:page => params[:page] || 1, :per_page => per_page || 10)
       else
         if session[:office] != '0'
-          @bills = Office.find(session[:office]).subscribers.map(&:pre_bills).flatten.paginate(:page => params[:page] || 1, :per_page => 20)
+          @bills = Office.find(session[:office]).subscribers.map(&:pre_bills).flatten.paginate(:page => params[:page] || 1, :per_page => per_page || 10)
         else
-          @bills = PreBill.all.paginate(:page => params[:page] || 1, :per_page => 20)
+          @bills = PreBill.all.paginate(:page => params[:page] || 1, :per_page => per_page || 10)
         end
       end
       if @bills.empty?
@@ -206,13 +206,13 @@ module Ag2Gest
       # OCO
       init_oco if !session[:organization]
       if !to.blank? and !from.blank?
-        @pre_bills = PreBill.where(project_id: current_projects_ids).where("bill_date >= ? AND bill_date <= ?",from.to_date, to.to_date).group_by{|p| p.pre_group_no }.to_a.paginate(:page => params[:page] || 1, :per_page => 10)
+        @pre_bills = PreBill.where(project_id: current_projects_ids).where("bill_date >= ? AND bill_date <= ?",from.to_date, to.to_date).group_by{|p| p.pre_group_no }.to_a.paginate(:page => params[:page] || 1, :per_page => per_page || 10)
       elsif !to.blank?
-        @pre_bills = PreBill.where(project_id: current_projects_ids).where("bill_date <= ?", to.to_date).group_by{|p| p.pre_group_no }.to_a.paginate(:page => params[:page] || 1, :per_page => 10)
+        @pre_bills = PreBill.where(project_id: current_projects_ids).where("bill_date <= ?", to.to_date).group_by{|p| p.pre_group_no }.to_a.paginate(:page => params[:page] || 1, :per_page => per_page || 10)
       elsif !from.blank?
-        @pre_bills = PreBill.where(project_id: current_projects_ids).where("bill_date >= ?", from.to_date).group_by{|p| p.pre_group_no }.to_a.paginate(:page => params[:page] || 1, :per_page => 10)
+        @pre_bills = PreBill.where(project_id: current_projects_ids).where("bill_date >= ?", from.to_date).group_by{|p| p.pre_group_no }.to_a.paginate(:page => params[:page] || 1, :per_page => per_page || 10)
       else
-        @pre_bills = PreBill.where(project_id: current_projects_ids).group_by{|p| p.pre_group_no }.to_a.paginate(:page => params[:page] || 1, :per_page => 10)
+        @pre_bills = PreBill.where(project_id: current_projects_ids).group_by{|p| p.pre_group_no }.to_a.paginate(:page => params[:page] || 1, :per_page => per_page || 10)
       end
       # Resume info
       if !params[:pre_bill_no].blank?

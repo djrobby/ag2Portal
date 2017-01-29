@@ -32,9 +32,9 @@ module Ag2Gest
     def index
       manage_filter_state
       if session[:office]
-        @reading_routes = ReadingRoute.find_all_by_project_id(current_projects_ids).paginate(:page => params[:page], :per_page => 10)
+        @reading_routes = ReadingRoute.find_all_by_project_id(current_projects_ids).paginate(:page => params[:page], :per_page => per_page || 10)
       else
-        @reading_routes = ReadingRoute.paginate(:page => params[:page], :per_page => 10).order(sort_column + ' ' + sort_direction)
+        @reading_routes = ReadingRoute.paginate(:page => params[:page], :per_page => per_page || 10).order(sort_column + ' ' + sort_direction)
       end
 
       respond_to do |format|

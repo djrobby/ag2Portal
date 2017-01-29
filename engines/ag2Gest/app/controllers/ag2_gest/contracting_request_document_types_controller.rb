@@ -12,7 +12,7 @@ module Ag2Gest
     def index
 
       manage_filter_state
-      @contracting_request_document_types = ContractingRequestDocumentType.paginate(:page => params[:page], :per_page => 10).order(sort_column + ' ' + sort_direction)
+      @contracting_request_document_types = ContractingRequestDocumentType.paginate(:page => params[:page], :per_page => per_page || 10).order(sort_column + ' ' + sort_direction)
 
       respond_to do |format|
         format.html # index.html.erb

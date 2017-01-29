@@ -12,7 +12,7 @@ module Ag2Gest
 
       manage_filter_state
 
-      @regulations = Regulation.paginate(:page => params[:page], :per_page => 10).order(sort_column + ' ' + sort_direction)
+      @regulations = Regulation.paginate(:page => params[:page], :per_page => per_page || 10).order(sort_column + ' ' + sort_direction)
 
       respond_to do |format|
         format.html # index.html.erb

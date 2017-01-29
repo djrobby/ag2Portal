@@ -47,7 +47,7 @@ module Ag2Gest
       @search_bills = Bill.search do
         with :subscriber_id, params[:id]
         order_by :created_at, :asc
-        paginate :page => params[:page] || 1, :per_page => 10
+        paginate :page => params[:page] || 1, :per_page => per_page || 10
       end
       @subscriber_bills = @search_bills.results
       respond_to do |format|
@@ -507,7 +507,7 @@ module Ag2Gest
       @project_dropdown = session[:company].blank? ? Project.all : Project.where(company_id: session[:company])
 
       # @subscriber_readings = @subscriber.readings.paginate(:page => params[:page], :per_page => 5)
-      @subscriber_accounts = @subscriber.client.client_bank_accounts.paginate(:page => params[:page], :per_page => 10)
+      @subscriber_accounts = @subscriber.client.client_bank_accounts.paginate(:page => params[:page], :per_page => per_page || 10)
       # @subscriber_bills = @subscriber.bills.order("created_at DESC").paginate(:page => params[:page], :per_page => 5)
 
       #@alliance_towns = @alliance.players.towns.order("rank ASC").paginate(:page => params[:page], :per_page => 1)
@@ -523,7 +523,7 @@ module Ag2Gest
         end
         with :subscriber_id, params[:id]
         order_by :created_at, :asc
-        paginate :page => params[:page] || 1, :per_page => 10
+        paginate :page => params[:page] || 1, :per_page => per_page || 10
       end
 
       @search_readings = Reading.search do
@@ -532,7 +532,7 @@ module Ag2Gest
         # order_by :reading_date, :desc
         # order_by :reading_index
         order_by :sort_id, :desc
-        paginate :page => params[:page] || 1, :per_page => 10
+        paginate :page => params[:page] || 1, :per_page => per_page || 10
       end
 
       @subscriber_readings = @search_readings.results
@@ -730,7 +730,7 @@ module Ag2Gest
       @search_bills = Bill.search do
         with :subscriber_id, params[:id]
         order_by :created_at, :asc
-        paginate :page => params[:page] || 1, :per_page => 10
+        paginate :page => params[:page] || 1, :per_page => per_page || 10
       end
       @subscriber_bills = @search_bills.results
       # @subscriber_bills = Bill.where(subscriber_id: params[:id])

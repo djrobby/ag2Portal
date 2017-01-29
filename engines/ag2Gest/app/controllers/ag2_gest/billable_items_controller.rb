@@ -26,7 +26,7 @@ module Ag2Gest
       end
       @billable_items = @billable_items.sort_by(&:"#{sort_column}") unless sort_column == "tariffs_by_caliber"
       @billable_items = @billable_items.reverse if sort_direction == 'desc'
-      @billable_items = @billable_items.paginate(:page => params[:page], :per_page => 10)
+      @billable_items = @billable_items.paginate(:page => params[:page], :per_page => per_page || 10)
       #@billable_items.paginate(:page => params[:page], :per_page => 15)
       #@search = @billable_items.search do
         #fulltext params[:search]

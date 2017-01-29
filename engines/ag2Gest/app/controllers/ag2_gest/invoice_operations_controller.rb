@@ -14,7 +14,7 @@ module Ag2Gest
         # GET /invoice_operations.json
         def index
           manage_filter_state
-          @invoice_operations = InvoiceOperation.paginate(:page => params[:page], :per_page => 10).order(sort_column + ' ' + sort_direction)
+          @invoice_operations = InvoiceOperation.paginate(:page => params[:page], :per_page => per_page || 10).order(sort_column + ' ' + sort_direction)
 
           respond_to do |format|
             format.html # index.html.erb

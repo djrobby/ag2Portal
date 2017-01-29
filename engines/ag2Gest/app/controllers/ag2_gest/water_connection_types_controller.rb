@@ -11,7 +11,7 @@ module Ag2Gest
     def index
       manage_filter_state
 
-      @water_connection_types = WaterConnectionType.paginate(:page => params[:page], :per_page => 10).order(sort_column + ' ' + sort_direction)
+      @water_connection_types = WaterConnectionType.paginate(:page => params[:page], :per_page => per_page || 10).order(sort_column + ' ' + sort_direction)
 
       respond_to do |format|
         format.html # index.html.erb
@@ -19,7 +19,7 @@ module Ag2Gest
         format.js
       end
     end
-  
+
     # GET /water_connection_types/1
     def show
       @breadcrumb = 'read'
@@ -30,7 +30,7 @@ module Ag2Gest
         format.json { render json: @water_connection_type }
       end
     end
-  
+
     # GET /water_connection_types/new
     def new
       @breadcrumb = 'create'
@@ -47,7 +47,7 @@ module Ag2Gest
       @breadcrumb = 'update'
       @water_connection_type = WaterConnectionType.find(params[:id])
     end
-  
+
     # POST /water_connection_types
     def create
       @breadcrumb = 'create'
@@ -64,7 +64,7 @@ module Ag2Gest
         end
       end
     end
-  
+
     # PUT /water_connection_types/1
     def update
       @breadcrumb = 'update'
@@ -82,7 +82,7 @@ module Ag2Gest
         end
       end
     end
-  
+
     # DELETE /water_connection_types/1
     def destroy
       @water_connection_type = WaterConnectionType.find(params[:id])

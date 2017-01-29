@@ -11,7 +11,7 @@ module Ag2Gest
     # GET /meter_brands.json
     def index
       manage_filter_state
-      @meter_brands = MeterBrand.paginate(:page => params[:page], :per_page => 10).order(sort_column + ' ' + sort_direction)
+      @meter_brands = MeterBrand.paginate(:page => params[:page], :per_page => per_page || 10).order(sort_column + ' ' + sort_direction)
 
       respond_to do |format|
         format.html # index.html.erb

@@ -11,7 +11,7 @@ module Ag2Gest
     # GET /sale_offer_statuses_statuses.json
     def index
       manage_filter_state
-      @sale_offer_statuses = SaleOfferStatus.paginate(:page => params[:page], :per_page => 10).order(sort_column + ' ' + sort_direction)
+      @sale_offer_statuses = SaleOfferStatus.paginate(:page => params[:page], :per_page => per_page || 10).order(sort_column + ' ' + sort_direction)
 
       respond_to do |format|
         format.html # index.html.erb

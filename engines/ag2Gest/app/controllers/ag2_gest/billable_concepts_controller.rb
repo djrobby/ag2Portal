@@ -13,7 +13,7 @@ module Ag2Gest
     def index
       manage_filter_state
 
-      @billable_concepts = BillableConcept.paginate(:page => params[:page], :per_page => 10).order(sort_column + ' ' + sort_direction)
+      @billable_concepts = BillableConcept.paginate(:page => params[:page], :per_page => per_page || 10).order(sort_column + ' ' + sort_direction)
       #BillableConcept.joins(:billable_document).order('billable_documents.name')
 
       respond_to do |format|
