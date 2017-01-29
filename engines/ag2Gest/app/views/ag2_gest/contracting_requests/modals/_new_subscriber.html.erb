@@ -49,7 +49,7 @@
     <%= f.simple_fields_for :meter_details, @subscriber.meter_details.build do |m| %>
       <%= m.input :installation_date, required: true, start_year: Time.now.year - 100, end_year: Time.now.year + 100, as: :string, input_html: { value: Date.today.strftime("%d/%m/%Y"), class: 'x-large-text-field date_picker' }, label_html: { class: 'form-label' } %>
       <%= m.input :installation_reading, required: true, input_html: { class: 'x-large-text-field', value: @contracting_request.try(:old_subscriber).try(:readings).try(:last).try(:reading_index) }, label_html: { class: 'form-label' } %>
-      <%= m.association :meter_location, required: true, collection: MeterLocation.all, selected: @contracting_request.old_subscriber.meter_details.last.meter_location_id, input_html: { class: 'x-large-text-field sel2', value: @contracting_request.try(:old_subscriber).try(:meter_details).try(:last).try(:meter_location).try(:name) }, label_html: { class: 'form-label' }, include_blank: true, label: 'Localización contador' %>
+      <%= m.association :meter_location, required: true, collection: MeterLocation.all, selected: @contracting_request.try(:old_subscriber).try(:meter_details).try(:last).try(:meter_location_id), input_html: { class: 'x-large-text-field sel2', value: @contracting_request.try(:old_subscriber).try(:meter_details).try(:last).try(:meter_location).try(:name) }, label_html: { class: 'form-label' }, include_blank: true, label: 'Localización contador' %>
     <% end %>
 
     <%= f.simple_fields_for :readings, @subscriber.readings.build do |s| %>

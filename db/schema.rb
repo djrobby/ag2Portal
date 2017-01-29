@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20170117153905) do
+ActiveRecord::Schema.define(:version => 20170127123349) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -206,7 +206,7 @@ ActiveRecord::Schema.define(:version => 20170117153905) do
 
   add_index "billable_items", ["billable_concept_id"], :name => "index_billable_items_on_billable_concept_id"
   add_index "billable_items", ["biller_id"], :name => "index_billable_items_on_biller_id"
-  add_index "billable_items", ["project_id", "billable_concept_id"], :name => "index_billable_items_unique", :unique => true
+  add_index "billable_items", ["project_id", "billable_concept_id", "biller_id"], :name => "index_billable_items_unique", :unique => true
   add_index "billable_items", ["project_id"], :name => "index_billable_items_on_project_id"
   add_index "billable_items", ["regulation_id"], :name => "index_billable_items_on_regulation_id"
 
@@ -2115,7 +2115,7 @@ ActiveRecord::Schema.define(:version => 20170117153905) do
   add_index "pre_readings", ["billing_frequency_id"], :name => "index_pre_readings_on_billing_frequency_id"
   add_index "pre_readings", ["billing_period_id"], :name => "index_pre_readings_on_billing_period_id"
   add_index "pre_readings", ["meter_id"], :name => "index_pre_readings_on_meter_id"
-  add_index "pre_readings", ["project_id", "billing_period_id", "reading_type_id", "meter_id", "reading_date"], :name => "index_pre_readings_unique", :unique => true
+  add_index "pre_readings", ["project_id", "billing_period_id", "reading_type_id", "meter_id", "subscriber_id", "reading_date"], :name => "index_pre_readings_unique", :unique => true
   add_index "pre_readings", ["project_id"], :name => "index_pre_readings_on_project_id"
   add_index "pre_readings", ["reading_1_id"], :name => "index_pre_readings_on_reading_1_id"
   add_index "pre_readings", ["reading_2_id"], :name => "index_pre_readings_on_reading_2_id"
@@ -2541,7 +2541,7 @@ ActiveRecord::Schema.define(:version => 20170117153905) do
   add_index "readings", ["billing_period_id"], :name => "index_readings_on_billing_period_id"
   add_index "readings", ["invoice_id"], :name => "index_readings_on_invoice_id"
   add_index "readings", ["meter_id"], :name => "index_readings_on_meter_id"
-  add_index "readings", ["project_id", "billing_period_id", "reading_type_id", "meter_id", "reading_date"], :name => "index_readings_unique", :unique => true
+  add_index "readings", ["project_id", "billing_period_id", "reading_type_id", "meter_id", "subscriber_id", "reading_date"], :name => "index_readings_unique", :unique => true
   add_index "readings", ["project_id"], :name => "index_readings_on_project_id"
   add_index "readings", ["reading_date"], :name => "index_readings_on_reading_date"
   add_index "readings", ["reading_route_id"], :name => "index_readings_on_reading_route_id"
