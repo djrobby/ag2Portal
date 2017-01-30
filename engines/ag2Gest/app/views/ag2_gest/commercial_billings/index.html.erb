@@ -77,7 +77,7 @@
         <!-- Refresh -->
         <%= link_to ag2_gest.commercial_billings_path, title: I18n.t(:refresh), class: "icon-refresh-link", remote: true do %> <i class="icon-refresh"></i> <% end %>
         <!-- Search form -->
-        <%= form_tag "invoices", :method => 'get', :remote => true do %>
+        <%= form_tag "commercial_billings", :method => 'get', :remote => true do %>
         <!-- No -->
         <%= label_tag I18n.t("activerecord.attributes.commercial_billing.invoice_no"), nil, :class => 'form-label' %>
         <%= text_field_tag "No", nil, :class => 'x-large-text-field shrinked number-text-field', onkeyup: "caps(this)" %>

@@ -142,7 +142,7 @@ class Bill < ActiveRecord::Base
       subscriber.code_full_name_or_company_address_fiscal unless subscriber.blank?
     end
     text :entity_name_fiscal do
-      client.entity.full_name_or_company_fiscal unless client.entity.blank?
+      client.entity.full_name_or_company_fiscal unless (client.blank? || client.entity.blank?)
     end
     string :bill_no, :multiple => true   # Multiple search values accepted in one search (inverse_no_search)
     integer :project_id, :multiple => true
@@ -150,10 +150,10 @@ class Bill < ActiveRecord::Base
     integer :client_id
     integer :subscriber_id
     integer :entity_id do
-      client.entity_id
+      client.entity_id unless (client.blank? || client.entity_id.blank?)
     end
     boolean :bank_account do
-      client.active_bank_accounts?
+      client.active_bank_accounts? unless client.blank?
     end
     integer :billing_period do
       reading_2.nil? ? nil : reading_2.billing_period_id
