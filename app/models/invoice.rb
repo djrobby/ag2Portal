@@ -189,10 +189,10 @@ class Invoice < ActiveRecord::Base
   searchable do
     text :invoice_no
     text :client_code_name_fiscal do
-      bill.client.full_name_or_company_code_fiscal unless bill.client.blank?
+      bill.client.full_name_or_company_code_fiscal unless (bill.blank? || bill.client.blank?)
     end
     text :subscriber_code_name_address_fiscal do
-      bill.subscriber.code_full_name_or_company_address_fiscal unless bill.subscriber.blank?
+      bill.subscriber.code_full_name_or_company_address_fiscal unless (bill.blank? || bill.subscriber.blank?)
     end
     string :invoice_no, :multiple => true   # Multiple search values accepted in one search (inverse_no_search)
     integer :id
@@ -207,13 +207,13 @@ class Invoice < ActiveRecord::Base
     integer :charge_account_id
     date :invoice_date
     integer :client_id do
-      bill.client_id
+      bill.client_id unless (bill.blank? || bill.client_id.blank?)
     end
     integer :subscriber_id do
-      bill.subscriber_id
+      bill.subscriber_id unless (bill.blank? || bill.subscriber_id.blank?)
     end
     integer :project_id do
-      bill.project_id
+      bill.project_id unless (bill.blank? || bill.project_id.blank?)
     end
     string :sort_no do
       invoice_no
@@ -229,8 +229,8 @@ class Invoice < ActiveRecord::Base
   end
 
   def bill_status
-    b = self.bill
-    b.update_attributes(invoice_status_id: b.invoices.map(&:invoice_status_id).min)
+    b = self.bill rescue nil
+    b.update_attributes(invoice_status_id: b.invoices.map(&:invoice_status_id).min) unless b.nil?
   end
 
   def assign_payday_limit

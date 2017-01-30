@@ -15,13 +15,15 @@
   <!-- date -->
   <col width="9%" />
   <!-- bill -->
-  <col width="21%" />
+  <col width="20%" />
   <!-- biller -->
-  <col width="20%" />
+  <col width="18%" />
   <!-- client -->
-  <col width="20%" />
+  <col width="18%" />
   <!-- total -->
   <col width="10%" />
+  <!-- buttons -->
+  <col width="5%" />
   <thead>
     <tr>
       <th><%= t 'activerecord.attributes.commercial_billing.invoice_no' %></th>
@@ -36,7 +38,7 @@
   </thead>
   <tbody>
     <% @invoices.each do |invoice| %>
-      <td><%= link_to invoice.full_no, invoice %></td>
+      <td><%= link_to invoice.full_no, commercial_billing_path(invoice) %></td>
       <td>
         <span class="blue"><%= invoice.invoice_type.code unless invoice.invoice_type.blank? %></span>
         <span class="yellow"><%= invoice.invoice_status.code unless invoice.invoice_status.blank? %></span>
@@ -44,8 +46,8 @@
       </td>
       <td align="center"><%= formatted_date(invoice.invoice_date) unless invoice.invoice_date.blank? %></td>
       <td><%= invoice.bill.to_label unless invoice.bill.blank? %></td>
-      <td><%= invoice.biller.name[0,40] unless invoice.biller.blank? %></td>
-      <td><%= invoice.try(:bill).try(:client).try(:full_name_or_company_and_code) %></td>
+      <td><%= invoice.biller.name[0,30] unless invoice.biller.blank? %></td>
+      <td><%= client_name(invoice) %></td>
       <td align="right"><%= number_with_precision(invoice.total, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless invoice.total.blank? %></td>
       <td> <%= render :partial => '/layouts/crud/edit', :locals => { :model => Invoice, :path => edit_commercial_billing_path(invoice) } %>
       <%= render :partial => '/layouts/crud/delete', :locals => { :model => Invoice, :path => invoice, :msg => t("activerecord.models.commercial_billing.one"), :txt => invoice.invoice_no } %> </td>

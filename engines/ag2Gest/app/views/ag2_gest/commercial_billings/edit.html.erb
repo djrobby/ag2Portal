@@ -4,5 +4,65 @@
 
 <%= render 'form' %>
 
+<%= simple_form_for @invoice, :url => ag2_gest.edit_commercial_billing_path(@invoice), :method => :put, html: { class: 'form-vertical well' } do |f| %>
+<%= f.error_notification %>
+<%= display_base_errors resource %>
+<div>
+  <label class="multi-field-label-two"> <%= f.association :organization, required: true, label: I18n.t("activerecord.attributes.commercial_billing.organization"), collection: @organizations, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' }, include_blank: @include_blank %> </label>
+  <label class="multi-field-label-two">
+    <%= label_tag I18n.t("ag2_gest.commercial_billings.index.label_project"), nil, :class => 'form-label' %>
+    <%= select_tag "Project", options_from_collection_for_select(@projects, "id", "full_name"), :prompt => "", :class => 'x-large-text-field sel2' %>
+  </label>
+</div>
+<div>
+  <label class="multi-field-label-two"> <%= f.input :invoice_no, label: I18n.t("activerecord.attributes.commercial_billing.invoice_no"), input_html: { class: 'mid-text-field iconify' }, label_html: { class: 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.input :invoice_date, label: I18n.t("activerecord.attributes.commercial_billing.invoice_date"), start_year: Time.now.year - 100, end_year: Time.now.year + 100, as: :string, input_html: { value: (f.object.invoice_date.strftime("%d/%m/%Y") if f.object.invoice_date), class: 'mid-text-field date_picker' }, label_html: { class: 'form-label' } %> </label>
+</div>
+<div>
+  <label class="multi-field-label-two"> <%= f.association :invoice_status, label: I18n.t("activerecord.attributes.commercial_billing.invoice_status"), collection: @status, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.association :invoice_type, label: I18n.t("activerecord.attributes.commercial_billing.invoice_type"), collection: @types, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
+</div>
+<div>
+  <label class="multi-field-label-two">
+    <%= label_tag I18n.t("ag2_gest.commercial_billings.index.label_client"), nil, :class => 'form-label' %>
+    <%= select_tag "Client", options_from_collection_for_select(@clients, "id", "to_label"), :prompt => "", :class => 'x-large-text-field sel2' %>
+  </label>
+  <label class="multi-field-label-two"> <%= f.association :sale_offer, label: I18n.t("activerecord.attributes.commercial_billing.sale_offer"), collection: @sale_offers, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
+</div>
+<div>
+  <label class="multi-field-label-two"> <%= f.association :charge_account, label: I18n.t("activerecord.attributes.commercial_billing.charge_account"), collection: @charge_accounts, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.association :payment_method, label: I18n.t("activerecord.attributes.commercial_billing.payment_method"), collection: @payment_methods, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
+</div>
+<!-- Items -->
+<table class="form-table">
+  <tbody>
+    <tr class="form-tr underlined-tr">
+      <td class="form-td-two left-winged">
+        <h4><%= t 'ag2_gest.commercial_billings.items_info' %></h4>
+      </td>
+      <td class="form-td-two right-winged">
+        <%= link_to_add_fields('<i class="icon-plus icon-white"></i>'.html_safe + " " + t("ag2_gest.commercial_billings.btn_new_item"), f, :invoice_items, "item_fields", "new-item-fields", class: "btn btn-warning fnt-new-btn") %>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<%= render 'items_table', f: f %>
+<!-- Remarks -->
+<%= f.input :remarks, as: :text, input_html: { class: 'x-large-text-field', rows: 3 }, label_html: { class: 'form-label' } %>
+<!-- Special hidden Id -->
+<%= f.input :id, as: :hidden, input_html: { id: 'hidden_id' } %>
+<!-- Buttons -->
+<table class="form-table">
+  <tbody>
+    <tr class="form-tr">
+      <td class="form-td-three left-winged"> <%= f.button :submit, class: 'btn-primary', id: 'submit_btn' %> </td>
+      <% if @breadcrumb == 'create'%>
+      <td class="form-td-three right-winged"><a href="#" id="generate_code_btn" class="btn btn-warning"><%=t 'ag2_gest.commercial_billings.generate_code_btn' %></a></td>
+      <% end %>
+    </tr>
+  </tbody>
+</table>
+<% end %>
+
 <%= link_to t(".btn_show"), @commercial_billing %> |
 <%= link_to t("ag2_gest.commercial_billings.back_to_main_page"), commercial_billings_path %>

@@ -27,6 +27,8 @@ module Ag2Gest
     # Helper methods for
     # => allow edit (hide buttons)
     helper_method :cannot_edit
+    # => returns client code & full name
+    helper_method :client_name
 
     # Update invoice number at view (generate_code_btn)
     def ci_generate_no
@@ -589,8 +591,10 @@ module Ag2Gest
       @organizations, @include_blank = organizations_according_oco
       @sale_offers = @invoice.bill.client.blank? ? sale_offers_dropdown : @invoice.bill.client.sale_offers.unbilled(@invoice.organization_id, true)
       @projects = projects_dropdown_edit(@invoice.bill.project)
+      @project = @invoice.bill.project_id
       @charge_accounts = charge_accounts_dropdown_edit(@invoice.bill.project)
       @clients = clients_dropdown
+      @client = @invoice.bill.client_id
       @payment_methods = @invoice.organization.blank? ? payment_methods_dropdown : collection_payment_methods(@invoice.organization_id)
       @status = invoice_statuses_dropdown if @status.nil?
       @types = invoice_types_dropdown if @types.nil?
@@ -620,21 +624,28 @@ module Ag2Gest
         #
         # Must create associated bill
         #
-        bill_create(params[:Project],
-                    params[:Client],
-                    params[:invoice][:invoice_date].to_date,
-                    params[:invoice][:payment_method_id].to_i)
+        bill_id = bill_create(params[:Project],
+                              params[:Client],
+                              params[:invoice][:invoice_date].to_date,
+                              params[:invoice][:payment_method_id].to_i)
+        @invoice.bill_id = bill_id == 0 ? nil : bill_id
+        @invoice.invoice_operation_id = InvoiceOperation::INVOICE
 
         # Go on
         if @invoice.save
-          format.html { redirect_to @invoice, notice: crud_notice('created', @invoice) }
+          format.html { redirect_to commercial_billing_path(@invoice), notice: crud_notice('created', @invoice) }
+          # format.html { redirect_to @invoice, notice: crud_notice('created', @invoice) }
           format.json { render json: @invoice, status: :created, location: @invoice }
         else
+          @organizations, @include_blank = organizations_according_oco
           @sale_offers = sale_offers_dropdown
           @projects = projects_dropdown
           @charge_accounts = projects_charge_accounts(@projects)
           @clients = clients_dropdown
           @payment_methods = payment_methods_dropdown
+          @status = invoice_statuses_dropdown if @status.nil?
+          @types = invoice_types_dropdown if @types.nil?
+          @operations = invoice_operations_dropdown if @operations.nil?
           @products = products_dropdown
           @offer_items = []
           format.html { render action: "new" }
@@ -757,6 +768,11 @@ module Ag2Gest
     # => Invoice is charged
     def cannot_edit(_invoice)
       !session[:is_administrator] && _invoice.invoice_statuses_id != InvoiceStatus::PENDING
+    end
+
+    def client_name(_invoice)
+      _name = _invoice.bill.client.full_name_or_company_and_code rescue nil
+      _name.blank? ? '' : _name[0,40]
     end
 
     def current_projects_for_index(_projects)
@@ -1019,13 +1035,13 @@ module Ag2Gest
 
     # Create associated Bill
     def bill_create(_project, _client, _date, _payment_method)
-      _r = false
+      _r = 0
       _bill = Bill.new
       _bill.created_by = current_user.id if !current_user.nil?
       _bill.bill_no = bill_next_no(_project)
       bill_assign(_bill, _project, _client, _date, _payment_method)
       if _bill.save
-        _r = true
+        _r = _bill.id
       end
       _r
     end

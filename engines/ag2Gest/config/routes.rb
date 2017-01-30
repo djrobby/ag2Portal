@@ -185,7 +185,7 @@ Ag2Gest::Engine.routes.draw do
     match 'ci_update_offer_select_from_client/:client', :controller => 'commercial_billings', :action => 'ci_update_offer_select_from_client'
     match 'commercial_billings/:id/ci_update_offer_select_from_client/:client', :controller => 'commercial_billings', :action => 'ci_update_offer_select_from_client'
     match 'commercial_billings/ci_update_selects_from_project/:order', :controller => 'commercial_billings', :action => 'ci_update_selects_from_project'
-    match 'ci_update_selects_from_project/:price/:qty/:order', :controller => 'commercial_billings', :action => 'ci_update_selects_from_project'
+    match 'ci_update_selects_from_project/:order', :controller => 'commercial_billings', :action => 'ci_update_selects_from_project'
     match 'commercial_billings/:id/ci_update_selects_from_project/:order', :controller => 'commercial_billings', :action => 'ci_update_selects_from_project'
     match 'commercial_billings/ci_format_number/:num', :controller => 'commercial_billings', :action => 'ci_format_number'
     match 'ci_format_number/:num', :controller => 'commercial_billings', :action => 'ci_format_number'
