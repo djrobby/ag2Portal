@@ -40,4 +40,4 @@ es:
       generate_invoice_error: "Imposible generar Factura: Oferta inválida."
       generate_invoice_write: "Imposible guardar nueva Factura."
       generate_invoice_ok: "Factura %{var} ha sido generada."
-      
+
