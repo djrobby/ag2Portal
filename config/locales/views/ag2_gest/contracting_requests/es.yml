@@ -63,6 +63,8 @@ es:
         contracting_request_complete_report: "Solicitudes de Contratación completadas"
         abast_c: "Abastecimiento"
         san_c: "Saneamiento"
+        dep_c: "Depuración"
+        other_c: "Otros"
         baja_c: "Baja"
         change_c: "Cambio de Titularidad"
         alta_c: "Alta/Cambio de Titularidad"

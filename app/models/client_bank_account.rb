@@ -133,7 +133,7 @@ class ClientBankAccount < ActiveRecord::Base
     _f
   end
 
-  def p_format_view
+  def p_format_hiden_account
     _f = ""
     if !self.country.blank?
       _f += self.country.code.strip

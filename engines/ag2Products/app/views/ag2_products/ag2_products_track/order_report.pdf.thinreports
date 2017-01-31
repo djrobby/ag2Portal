@@ -72,6 +72,13 @@ end
 @order_report.each do |i|
 	report.page.list(:default).add_row do |row|
 		row.item(:order_no).value i.full_no
+		if i.balance <= 0
+			row.item(:img).value(URI.decode('app/assets/images/icon/glyph/black/star-point.png'))
+       elsif i.balance == i.quantity
+			row.item(:img).value(URI.decode('app/assets/images/icon/glyph/black/warning-sign.png'))
+       else
+			row.item(:img).value(URI.decode('app/assets/images/icon/glyph/black/empty-star.png'))
+		end
 		row.item(:order_date).value formatted_date(i.order_date) unless i.order_date.blank?
 		row.item(:order_status).value i.order_status.name
 		row.item(:supplier).value i.supplier.partial_name

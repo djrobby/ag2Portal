@@ -109,9 +109,20 @@ module Ag2Gest
     # PDF Contracting Request
     def contracting_request_pdf
       @contracting_request = ContractingRequest.find(params[:id])
-      title = t("activerecord.models.contracting_request.few")
+      title = t("activerecord.models.contracting_request.one")
       #@water_supply_contract = @contracting_request.water_supply_contract
       #@bill = @water_supply_contract.bill
+      respond_to do |format|
+        format.pdf {
+          send_data render_to_string, filename: "#{title}_#{@contracting_request.full_no}.pdf", type: 'application/pdf', disposition: 'inline'
+        }
+      end
+    end
+
+    def contract_pdf
+      @contracting_request = ContractingRequest.find(params[:id])
+      @water_supply_contract = @contracting_request.water_supply_contract
+      title = t("activerecord.models.water_supply_contract.one")
       respond_to do |format|
         format.pdf {
           send_data render_to_string, filename: "#{title}_#{@contracting_request.full_no}.pdf", type: 'application/pdf', disposition: 'inline'

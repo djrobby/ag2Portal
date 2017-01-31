@@ -1,0 +1,264 @@
+if @contracting_request.blank?
+	return
+end
+
+# Localization for numbers
+delimiter = I18n.locale == :es ? "." : ","
+
+report.set_layout tlf: 'reports/contract_pdf', layout_options: { default: true }
+
+#
+# Report events
+#
+# On page create
+report.events.on :page_create do |e|
+	# Set page-number
+	e.page.item(:page_no).value(e.page.no)
+end
+# On report generate
+report.events.on :generate do |e|
+	e.pages.each do |page|
+		# Set total-page-number
+		page.item(:page_count).value(e.report.page_count)
+	end
+end
+
+# New page & start
+report.start_new_page
+
+# Page header: Image block for Logo
+report.page.values company_logo: "public/" + @contracting_request.project.company.logo.url(:original).split("?").first unless @contracting_request.project.company.logo.blank?
+
+# Page header: Company
+report.page.values(company_name: @contracting_request.project.company.name,
+				   company_address_1: @contracting_request.project.company.address_1,
+				   company_address_2: @contracting_request.project.company.address_2,
+				   company_phones: @contracting_request.project.company.phone_and_fax,
+				   company_email: @contracting_request.project.company.email_and_website,
+				   company_fiscal_id: I18n.t("activerecord.attributes.company.fiscal_id_c") + ": " + @contracting_request.project.company.fiscal_id
+				   )
+
+# Page header
+var_contract_date = @water_supply_contract.contract_date.strftime("%d/%m/%Y") unless @water_supply_contract.contract_date.blank?
+report.page.values(form_title: I18n.t("activerecord.models.water_supply_contract.one"),
+				   request_no_c: I18n.t("activerecord.attributes.water_supply_contract.code") + ":",
+				   request_no: @water_supply_contract.contracting_request.full_no,
+				   request_date_c: I18n.t("activerecord.attributes.contracting_request.request_date") + ":",
+				   request_date: var_contract_date
+				  )
+# Page footer
+var_full_date = I18n.l(@water_supply_contract.contract_date, format: :long_whit_day) unless @water_supply_contract.contract_date.blank?
+report.page.values(printed_at: Time.now,
+				   pt: I18n.t("every_report.pt"),
+				   pd: I18n.t("every_report.pd"),
+				   currency_note: @contracting_request.project.company.invoice_footer,
+				   full_date: @contracting_request.project.company.town.name + ", " + var_full_date.to_s,
+				   company_sign: I18n.t("activerecord.attributes.water_supply_contract.company_sign"),
+				   subscriber_sign: I18n.t("activerecord.attributes.water_supply_contract.subscriber_sign"),
+				   special_condition_c: I18n.t("activerecord.attributes.water_supply_contract.special_condition_c"),
+				   special_condition: I18n.t("activerecord.attributes.water_supply_contract.special_condition") + @contracting_request.contracting_request_type.description.upcase + I18n.t("activerecord.attributes.water_supply_contract.special_condition2")
+				   )
+#
+# Lists
+if @contracting_request.contracting_request_type_id == 2
+	var_master = WaterSupplyContract.where(:subscriber_id => @water_supply_contract.subscriber_id).where('client_id != ?', @water_supply_contract.client_id).order(:contract_date)
+		report.page.values(contract_title: I18n.t("activerecord.attributes.water_supply_contract.title_contract_subrogation").upcase
+		)
+	if !var_master.last.blank?
+		report.page.values(request_no_c_master: I18n.t("activerecord.attributes.water_supply_contract.master_contract") + ":",
+				   					 request_no_master: var_master.last.contracting_request.full_no,
+				   					 old_subscriber: I18n.t("activerecord.attributes.water_supply_contract.old_contract"),
+									 old_subscriber_code_c: I18n.t("activerecord.attributes.report.client_code") + ": ",
+				  					 old_subscriber_code: var_master.last.client.full_code,
+									 old_fiscal_id_c: I18n.t("activerecord.attributes.client.fiscal_id") + ":",
+									 old_fiscal_id: var_master.last.client.fiscal_id,
+									 old_name_c: I18n.t("activerecord.attributes.contracting_request.info_name") + ":",
+									 old_name: var_master.last.client.full_name,
+									 old_street_c: I18n.t("activerecord.report.subscriber.direction") + ":",
+									 old_street: var_master.last.client.address_1,
+									 old_phone_c: I18n.t("activerecord.attributes.client.phone") + ":",
+									 old_phone: var_master.last.client.phone,
+									 old_zipcode_c: I18n.t("activerecord.attributes.client.zipcode") + ":",
+									 old_zipcode: var_master.last.client.address_2,
+			   						)
+	end
+	if !var_master.last.subscriber.total_debt_unpaid.blank?
+		report.layout.config.list(:default) do |c|
+		# On list footer insertion
+			c.events.on :footer_insert do |e|
+			# Display page sutotals
+				e.section.item(:debt_subrogation).value "* " + I18n.t("activerecord.attributes.water_supply_contract.debt_subrogation") + ":"
+				e.section.item(:debt).value number_with_precision(var_master.last.subscriber.total_debt_unpaid, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
+			end
+		end
+		report.page.item(:special_condition_subrogation).style(:bold, true).value(" *" + I18n.t("activerecord.attributes.water_supply_contract.special_condition_subrogation"))
+	end
+elsif @contracting_request.contracting_request_type_id == 4
+	var_master = WaterSupplyContract.where(subscriber_id: @contracting_request.old_subscriber)
+	report.page.values(contract_title: I18n.t("activerecord.attributes.water_supply_contract.title_contract").upcase ,
+									 request_no_c_master: I18n.t("activerecord.attributes.water_supply_contract.master_contract") + ":",
+				   					 request_no_master: var_master.first.contracting_request.full_no)
+else
+	report.page.values(contract_title: I18n.t("activerecord.attributes.water_supply_contract.title_contract").upcase)
+end
+#
+#
+var_array = ""
+SubscriberTariff.availables_to_subscriber(@water_supply_contract.subscriber_id).each do |t|
+      if var_array == ""
+        var_array += t.tariff.billable_concept.code
+      else
+        var_array += ("-" + t.tariff.billable_concept.code)
+      end
+var_array 
+end
+
+var_billable_concept_array = var_array.split("-")
+var_billable_concept_array_destroy = var_billable_concept_array -= %w{SUM SAN DEP} 
+
+
+var_sum = var_array.split("-").include? "SUM" 
+var_sum_img = var_sum == true ? "app/assets/images/icon/glyph/black/ok.png" : ""
+var_san = var_array.split("-").include? "SAN"
+var_san_img = var_san == true ? "app/assets/images/icon/glyph/black/ok.png" : ""
+var_dep = var_array.split("-").include? "DEP"
+var_dep_img = var_dep == true ? "app/assets/images/icon/glyph/black/ok.png" : ""
+var_other_img = !var_billable_concept_array_destroy.blank? ? "app/assets/images/icon/glyph/black/ok.png" : ""
+
+var_change_owner_img = @contracting_request.contracting_request_type_id == 2 || @contracting_request.contracting_request_type_id == 4 ? "app/assets/images/icon/glyph/black/ok.png" : ""
+#
+# details
+report.page.values(sum: I18n.t("ag2_gest.contracting_requests.report.abast_c"),
+									 sum_img: var_sum_img,
+									 san: I18n.t("ag2_gest.contracting_requests.report.san_c"),
+									 san_img: var_san_img,
+									 dep: I18n.t("ag2_gest.contracting_requests.report.dep_c"),
+									 dep_img: var_dep_img,
+									 other: I18n.t("ag2_gest.contracting_requests.report.other_c") + " ( " + var_billable_concept_array_destroy.join(', ') + " )",
+									 other_img: var_other_img,
+									 change_owner: I18n.t("ag2_gest.contracting_requests.report.change_c"),
+									 change_owner_img: var_change_owner_img
+									 )
+#
+# r_client
+report.page.values(r_client_c: I18n.t("ag2_gest.contracting_requests.show.r_entity_description"),
+									 r_fiscal_id_c: I18n.t("activerecord.attributes.contracting_request.r_fiscal_id") + ":",
+									 r_fiscal_id: @contracting_request.try(:r_fiscal_id),
+									 r_name_c: I18n.t("activerecord.attributes.contracting_request.info_name") + ":",
+									 r_name: @contracting_request.entity_info,
+									 r_remark: "* " + I18n.t("activerecord.attributes.water_supply_contract.r_remark")
+									 )
+#
+# client
+report.page.values(client_c: I18n.t("activerecord.attributes.water_supply_contract.info_contract"),
+									 subscriber_code_c: I18n.t("activerecord.attributes.report.client_code") + ": ",
+				  					 subscriber_code: @contracting_request.subscriber.full_code,
+									 fiscal_id_c: I18n.t("activerecord.attributes.client.fiscal_id") + ":",
+									 fiscal_id: @contracting_request.client.fiscal_id,
+									 name_c: I18n.t("activerecord.attributes.contracting_request.info_name") + ":",
+									 name: @contracting_request.try(:client).try(:full_name),
+									 street_c: I18n.t("activerecord.report.subscriber.direction") + ":",
+									 street: @contracting_request.try(:client).try(:address_1),
+									 phone_c: I18n.t("activerecord.attributes.client.phone") + ":",
+									 phone: @contracting_request.try(:client).try(:phone),
+									 zipcode_c: I18n.t("activerecord.attributes.client.zipcode") + ":",
+									 zipcode: @contracting_request.try(:client).try(:address_2),
+									 cellular_c: I18n.t("activerecord.attributes.client.cellular") + ":",
+									 cellular: @contracting_request.try(:client).try(:cellular),
+									 email_c: I18n.t("activerecord.attributes.client.email") + ":",
+									 email:  @contracting_request.try(:client).try(:email)
+									 )
+#
+# service_point
+report.page.values(service_point_c: I18n.t("ag2_gest.contracting_requests.show.info_service_point"),
+									 street_c_sp: I18n.t("activerecord.report.subscriber.direction") + ":",
+									 street_sp: @contracting_request.subscriber_info_street,
+									 zipcode_c_sp: I18n.t("activerecord.attributes.contracting_request.subscriber_zipcode_id") + ":",
+									 zipcode_sp: @contracting_request.try(:subscriber_zipcode).try(:to_label),
+									 center_c_sp: I18n.t("activerecord.attributes.contracting_request.subscriber_center_id") + ":",
+									 center_sp: @contracting_request.try(:subscriber_center).try(:name),
+									 town_c_sp: I18n.t("activerecord.attributes.contracting_request.subscriber_town_id") + ":",
+									 town_sp: @contracting_request.try(:subscriber_town).try(:name),
+									 region_c_sp: I18n.t("activerecord.attributes.contracting_request.subscriber_region_id") + ":",
+									 region_sp: @contracting_request.try(:subscriber_region).try(:name),
+									 country_c_sp: I18n.t("activerecord.attributes.contracting_request.subscriber_country_id") + ":",
+									 country_sp:  @contracting_request.try(:subscriber_country).try(:name)
+									 )
+
+#
+var_meter_date = @contracting_request.subscriber.meter_details.last.installation_date.strftime("%d/%m/%Y") unless @contracting_request.subscriber.meter_details.last.installation_date.blank?
+# data service_point
+report.page.values(sp_c: I18n.t("activerecord.attributes.water_supply_contract.info_service_point"),
+									spl_c: I18n.t("activerecord.attributes.service_point.service_point_location_id") + ":",
+									 spl: @contracting_request.try(:service_point).try(:service_point_location).try(:name),
+									 spp_c: I18n.t("activerecord.attributes.service_point.service_point_purpose_id") + ":",
+									 spp: @contracting_request.try(:service_point).try(:service_point_purpose).try(:name),
+									 diametre_c: I18n.t("activerecord.attributes.meter.caliber_id") + ":",
+									 diametre: @contracting_request.try(:water_supply_contract).try(:meter).try(:caliber).try(:caliber),
+									 nominal_flow_c: I18n.t("activerecord.attributes.caliber.nominal_flow") + ":",
+									 nominal_flow: @contracting_request.try(:water_supply_contract).try(:meter).try(:caliber).try(:nominal_flow),
+									 sp_code_c: I18n.t("activerecord.attributes.service_point.code") + ":",
+									 sp_code: @contracting_request.try(:service_point).try(:code),
+									 tariff_type_c: I18n.t("activerecord.models.tariff_type.one") + ":",
+									 tariff_type: @water_supply_contract.try(:tariff_type).try(:name),
+									 use_c: I18n.t("activerecord.attributes.subscriber.use") + ": ",
+									 use: @water_supply_contract.try(:subscriber).try(:use).try(:name),
+									 info_meter: I18n.t("activerecord.attributes.water_supply_contract.info_meter"),
+									 meter_code_c: I18n.t("activerecord.attributes.meter.meter_code") + ":",
+									 meter_code: @water_supply_contract.try(:meter).try(:meter_code),
+									 meter_model_c: I18n.t("activerecord.attributes.meter.meter_model") + ":",
+									 meter_model: @water_supply_contract.try(:meter).try(:meter_model).try(:meter_brand).try(:brand) + "/ " + @water_supply_contract.try(:meter).try(:meter_model).try(:model),
+									 meter_date_c: I18n.t("activerecord.attributes.contracting_request.installation_date") + ":",
+									 meter_date: var_meter_date,
+									 instalation_index_c: I18n.t("activerecord.attributes.contracting_request.initial_reading") + ":",
+									 instalation_index: @contracting_request.try(:subscriber).try(:meter_details).try(:last).try(:installation_reading)
+									 )
+#
+# pay method
+var_client_bank = ClientBankAccount.where(subscriber_id: @water_supply_contract.subscriber_id,ending_at: nil)
+var_client_bank_full = var_client_bank.first.try(:p_format_hiden_account)
+if var_client_bank.blank?
+	var_client_bank_full = @water_supply_contract.client.payment_method.to_label
+end
+report.page.values(pay_method: I18n.t("activerecord.models.payment_method.one"),
+									pay_bank: var_client_bank_full
+									)
+
+#
+#
+# Factura
+#
+report.layout.config.list(:default) do |c|
+	# On list page footer insertion
+	c.events.on :page_footer_insert do |e|
+		# Display page sutotals
+		e.section.item(:total_c).value(I18n.t("activerecord.attributes.water_supply_contract.total_pay") + ":")
+		e.section.item(:total).value number_with_precision(@water_supply_contract.bill.invoices.first.total, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless @water_supply_contract.bill.total.blank?
+	end
+end
+#
+report.page.list(:default).header do |header|
+	header.item(:title2).value I18n.t("activerecord.attributes.water_supply_contract.ecom_condition_c")
+end
+#
+#
+a = @water_supply_contract.bill.invoices.first
+	a.invoiced_subtotals_by_concept.each do |sub_concept|
+		report.page.list(:default).add_row do |row|
+			row.item(:tariff).value I18n.t("activerecord.attributes.contracting_request.amount_title") + sub_concept[1]
+			row.item(:price).value number_with_precision(sub_concept[2], precision: 2, delimiter: I18n.locale == :es ? "." : ",")
+		end
+	end
+	report.page.list(:default).add_row do |row|
+		row.item(:subtotal_c).value (I18n.t("activerecord.attributes.bill.subtotal"))
+		row.item(:subtotal).value  number_with_precision(a.subtotal, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless a.subtotal.blank?
+	end
+	a.tax_breakdown.each do |tax|
+		if tax[0] == 0
+		else
+			report.page.list(:default).add_row do |row|
+				row.item(:iva_c).value I18n.t("activerecord.attributes.contracting_request.iva_c") + " " + "(#{tax[0]}%" + " de " + number_with_precision(tax[1], precision: 2) + ")"
+				row.item(:iva).value number_with_precision(tax[2], precision: 2)
+			end
+		end
+	end	

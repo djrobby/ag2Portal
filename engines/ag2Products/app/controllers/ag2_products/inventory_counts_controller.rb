@@ -650,11 +650,16 @@ module Ag2Products
       family = params[:Family]
       # OCO
       init_oco if !session[:organization]
+      # Initialize stores for array search
+      stores = stores_dropdown
 
+      # Arrays for search
+      current_stores = stores.blank? ? [0] : current_stores_for_index(stores)
       # If inverse no search is required
       no = !no.blank? && no[0] == '%' ? inverse_no_search(no) : no
 
       @search = InventoryCount.search do
+        with :store_id, current_stores
         fulltext params[:search]
         if session[:organization] != '0'
           with :organization_id, session[:organization]

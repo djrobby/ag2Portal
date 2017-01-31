@@ -86,6 +86,13 @@ order_number = @order_items_report.first.purchase_order.order_no
 
 	report.page.list(:default).add_row do |row|
 		report.page.values order_no: i.purchase_order.full_no
+		if i.purchase_order.balance <= 0
+			report.page.values img: (URI.decode('app/assets/images/icon/glyph/black/star-point.png'))
+        elsif i.purchase_order.balance == i.purchase_order.quantity
+			report.page.values img: (URI.decode('app/assets/images/icon/glyph/black/warning-sign.png'))
+        else
+			report.page.values img: (URI.decode('app/assets/images/icon/glyph/black/empty-star.png'))
+		end
 		report.page.values order_date: formatted_date(i.purchase_order.order_date) unless i.purchase_order.order_date.blank?
 		report.page.values order_status: i.purchase_order.order_status.name
 		report.page.values supplier: i.purchase_order.supplier.partial_name

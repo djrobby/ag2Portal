@@ -238,6 +238,7 @@ Ag2Gest::Engine.routes.draw do
     #
     resources :contracting_requests do
       get 'contracting_request_pdf', on: :member
+      get 'contract_pdf', on: :member
       get 'bill', on: :member
       get 'biller_pdf', on: :member
       get 'contracting_subscriber_pdf', on: :member

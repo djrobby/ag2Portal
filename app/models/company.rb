@@ -70,7 +70,15 @@ class Company < ActiveRecord::Base
     end
   end
 
-  def full_name
+  def invoice_left_margin_complete
+    _name = name + " - " + I18n.t("activerecord.report.biller.loc_fiscal") + ": " + fiscal_id
+    if !invoice_left_margin.blank?
+      _name += " - " + invoice_left_margin
+    end
+    _name
+  end
+
+  def invoice_footer_complete
     _name = name + " - " + I18n.t("activerecord.report.biller.loc_fiscal") + ": " + fiscal_id
     if !invoice_footer.blank?
       _name += " - " + invoice_footer

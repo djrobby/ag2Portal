@@ -659,7 +659,7 @@ module Ag2Gest
           if @meter_details.save
             @contracting_request.status_control
             if @contracting_request.save
-              @contracting_request.water_supply_contract.update_attributes(subscriber_id: @subscriber.id) if @contracting_request.water_supply_contract
+              @contracting_request.water_supply_contract.update_attributes(subscriber_id: @subscriber.id, contract_date: @subscriber.starting_at) if @contracting_request.water_supply_contract
               @contracting_request.water_supply_contract.bill.update_attributes(subscriber_id: @subscriber.id) if @contracting_request.water_supply_contract and @contracting_request.water_supply_contract.bill
               response_hash = { subscriber: @subscriber }
               response_hash[:reading] = @reading
