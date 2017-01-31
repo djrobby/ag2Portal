@@ -349,12 +349,8 @@
       $('tr.fields').each(function() {
         qty = $(this).find('input.fnt-quantity').val().replace(",", ".");
         price = $(this).find('input.fnt-price').val().replace(",", ".");
-        discount_p = $(this).find('input.fnt-discount-pct').val().replace(",", ".");
-        discount = $(this).find('input.fnt-discount').val().replace(",", ".");
         $(this).find('input.fnt-quantity').val(qty);
         $(this).find('input.fnt-price').val(price);
-        $(this).find('input.fnt-discount-pct').val(discount_p);
-        $(this).find('input.fnt-discount').val(discount);
       });
       // Must change decimal separator, if comma, in numeric fields
       var num = $('#offer_request_discount_pct').val().replace(",", ".");
