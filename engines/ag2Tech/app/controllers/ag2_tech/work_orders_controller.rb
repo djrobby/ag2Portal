@@ -503,17 +503,23 @@ module Ag2Tech
         @charge_account = @project.blank? ? projects_charge_accounts(projects) : charge_accounts_dropdown_edit(@project)
         @store = project_stores(@project)
         @worker = project_workers(@project)
+        @area = @project.blank? ? areas_dropdown : project_areas(@project)
         @master_order = master_orders_dropdown(@project, organization, id, is_new)
       else
         @charge_account = projects_charge_accounts(projects)
         @store = stores_dropdown
         @worker = workers_dropdown
+        @area = areas_dropdown
         @master_order = master_orders_dropdown(nil, organization, id, is_new)
       end
+      # Areas array
+      @areas_dropdown = areas_array(@area)
       # Work orders array
       @orders_dropdown = orders_array(@master_order)
       # Setup JSON
-      @json_data = { "charge_account" => @charge_account, "store" => @store, "worker" => @worker, "master_order" => @orders_dropdown }
+      @json_data = { "charge_account" => @charge_account, "store" => @store,
+                     "worker" => @worker, "master_order" => @orders_dropdown,
+                     "area" => @areas_dropdown }
       render json: @json_data
     end
 
@@ -745,7 +751,7 @@ module Ag2Tech
       @types = work_order_types_dropdown_edit(@work_order.work_order_type)
       @labors = work_order_labors_dropdown_edit(@work_order.work_order_labor)
       @infrastructures = infrastructures_dropdown
-      @areas = areas_dropdown
+      @areas = @work_order.project.blank? ? areas_dropdown : project_areas(@work_order.project)
       @charge_accounts = @work_order.project.blank? ? projects_charge_accounts(@projects) : charge_accounts_dropdown_edit(@work_order.project)
       @stores = project_stores(@work_order.project)
       @clients = clients_dropdown
@@ -1196,6 +1202,17 @@ module Ag2Tech
       _worker
     end
 
+    # Areas belonging to selected project
+    def project_areas(_project)
+      if !_project.company.blank?
+        Department.find_by_company_id(_project.company_id).areas.order(:name) rescue Area.order(:name)
+      elsif !_project.organization.blank?
+        Department.find_by_organization_id(_project.organization_id).areas.order(:name) rescue Area.order(:name)
+      else
+        Area.order(:name)
+      end
+    end
+
     # Charge accounts belonging to projects
     def projects_charge_accounts(_projects)
       _array = []
@@ -1350,7 +1367,17 @@ module Ag2Tech
     end
 
     def workers_dropdown
-      session[:organization] != '0' ? Worker.where(organization_id: session[:organization].to_i).order(:worker_code) : Worker.order(:worker_code)
+      if session[:company] != '0' && session[:office] != '0'  # Company & office
+        company_office_workers(session[:company].to_i, session[:office].to_i)
+      elsif session[:company] != '0'                          # Company
+        company_workers(session[:company].to_i)
+      elsif session[:office] != '0'                           # Office
+        office_workers(session[:company].to_i, session[:office].to_i)
+      elsif session[:organization] != '0'                     # Organization
+        Worker.where(organization_id: session[:organization].to_i).order(:worker_code)
+      else                                                    # All
+        Worker.order(:worker_code)
+      end
     end
 
     def stores_dropdown
@@ -1374,7 +1401,13 @@ module Ag2Tech
     end
 
     def areas_dropdown
-      session[:organization] != '0' ? Area.joins(:department).where(departments: { organization_id: session[:organization].to_i }).order(:name) : Area.order(:name)
+      if session[:company] != '0'
+        Department.find_by_company_id(session[:company].to_i).areas.order(:name) rescue Area.order(:name)
+      elsif session[:organization] != '0'
+        Department.find_by_organization_id(session[:organization].to_i).areas.order(:name) rescue Area.order(:name)
+      else
+        Area.order(:name)
+      end
     end
 
     def clients_dropdown

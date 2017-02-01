@@ -359,6 +359,7 @@
         var s = data.store;
         var w = data.worker;
         var m = data.master_order;
+        var a = data.area
         // Charge account
         $("#work_order_charge_account_id").html("");
         $("#work_order_charge_account_id").select2("val", "");
@@ -402,6 +403,21 @@
         } else {
           $.each(w, function(id, option) {
             $("#work_order_in_charge_id").append($('<option></option>').val(option.id).html(option.last_name + ', ' + option.first_name));
+          });
+        }
+        // Area
+        $("#work_order_area_id").html("");
+        $("#work_order_area_id").select2("val", "");
+        $("#work_order_area_id").append($('<option></option>').val("").html(""));
+        if (!a.length) {
+          $.each(data, function(id, option) {
+            if (id == 'area' && option != "") {
+              $("#work_order_area_id").append($('<option></option>').val(option[0]).html(option[1] + " (" + option[2] + ")"));
+            }
+          });
+        } else {
+          $.each(a, function(id, option) {
+            $("#work_order_area_id").append($('<option></option>').val(option[0]).html(option[1] + " (" + option[2] + ")"));
           });
         }
         // Should change #work_order_workers_worker_id

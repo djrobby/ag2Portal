@@ -15,6 +15,7 @@ class Company < ActiveRecord::Base
   attr_accessible :company_notifications_attributes, :company_bank_accounts_attributes
 
   has_many :offices
+  has_many :departments
   has_many :workers
   has_many :worker_items
   has_many :corp_contacts, :order => 'last_name, first_name'
