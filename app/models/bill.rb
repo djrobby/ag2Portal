@@ -26,7 +26,14 @@ class Bill < ActiveRecord::Base
   has_one :water_supply_contract
   has_one :pre_bill
 
-  #validates :organization,       :presence => true
+  validates :bill_no,         :presence => true,
+                              :length => { :is => 23 },
+                              :format => { with: /\A[a-zA-Z\d]+\Z/, message: :code_invalid },
+                              :uniqueness => { :scope => :organization_id }
+  validates :order_date,      :presence => true
+  validates :organization,    :presence => true
+  validates :project,         :presence => true
+  validates :client,          :presence => true
 
   def total_by_concept(billable_concept)
     invoices.map(&:invoice_items).flatten.select{|item| item.tariff.billable_item.billable_concept_id == billable_concept.to_i and item.subcode != 'CF'}.sum(&:amount)

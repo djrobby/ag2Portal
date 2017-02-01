@@ -8,19 +8,20 @@
 <%= f.error_notification %>
 <%= display_base_errors resource %>
 <div>
-  <label class="multi-field-label-two"> <%= f.association :organization, required: true, label: I18n.t("activerecord.attributes.commercial_billing.organization"), collection: @organizations, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' }, include_blank: @include_blank %> </label>
+  <label class="multi-field-label-two"> <%= f.association :organization, label: I18n.t("activerecord.attributes.commercial_billing.organization"), collection: @organizations, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' }, include_blank: @include_blank %> </label>
   <label class="multi-field-label-two">
     <%= label_tag I18n.t("ag2_gest.commercial_billings.index.label_project"), nil, :class => 'form-label required_' %>
     <%= select_tag "Project", options_from_collection_for_select(@projects, "id", "full_name", @project), :prompt => "", :class => 'x-large-text-field sel2' %>
   </label>
 </div>
 <div>
-  <label class="multi-field-label-two"> <%= f.input :invoice_no, required: true, label: I18n.t("activerecord.attributes.commercial_billing.invoice_no"), input_html: { class: 'mid-text-field iconify' }, label_html: { class: 'form-label' } %> </label>
-  <label class="multi-field-label-two"> <%= f.input :invoice_date, required: true, label: I18n.t("activerecord.attributes.commercial_billing.invoice_date"), start_year: Time.now.year - 100, end_year: Time.now.year + 100, as: :string, input_html: { value: (f.object.invoice_date.strftime("%d/%m/%Y") if f.object.invoice_date), class: 'mid-text-field date_picker' }, label_html: { class: 'form-label' } %> </label>
+  <label class="multi-field-label-three"> <%= f.input :invoice_no, label: I18n.t("activerecord.attributes.commercial_billing.invoice_no"), input_html: { class: 'mid-text-field iconify' }, label_html: { class: 'form-label' } %> </label>
+  <label class="multi-field-label-three"> <%= f.input :invoice_date, label: I18n.t("activerecord.attributes.commercial_billing.invoice_date"), start_year: Time.now.year - 100, end_year: Time.now.year + 100, as: :string, input_html: { value: (f.object.invoice_date.strftime("%d/%m/%Y") if f.object.invoice_date), class: 'mid-text-field date_picker' }, label_html: { class: 'form-label' } %> </label>
+  <label class="multi-field-label-three"> <%= f.input :payday_limit, label: I18n.t("activerecord.attributes.commercial_billing.payday_limit"), start_year: Time.now.year - 100, end_year: Time.now.year + 100, as: :string, input_html: { value: (f.object.payday_limit.strftime("%d/%m/%Y") if f.object.payday_limit), class: 'large-text-field date_picker' }, label_html: { class: 'form-label' } %> </label>
 </div>
 <div>
-  <label class="multi-field-label-two"> <%= f.association :invoice_status, required: true, label: I18n.t("activerecord.attributes.commercial_billing.invoice_status"), collection: @status, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
-  <label class="multi-field-label-two"> <%= f.association :invoice_type, required: true, label: I18n.t("activerecord.attributes.commercial_billing.invoice_type"), collection: @types, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.association :invoice_status, label: I18n.t("activerecord.attributes.commercial_billing.invoice_status"), collection: @status, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.association :invoice_type, label: I18n.t("activerecord.attributes.commercial_billing.invoice_type"), collection: @types, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
 </div>
 <div>
   <label class="multi-field-label-two">
@@ -30,8 +31,8 @@
   <label class="multi-field-label-two"> <%= f.association :sale_offer, label: I18n.t("activerecord.attributes.commercial_billing.sale_offer"), collection: @sale_offers, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
 </div>
 <div>
-  <label class="multi-field-label-two"> <%= f.association :charge_account, required: true, label: I18n.t("activerecord.attributes.commercial_billing.charge_account"), collection: @charge_accounts, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
-  <label class="multi-field-label-two"> <%= f.association :payment_method, required: true, label: I18n.t("activerecord.attributes.commercial_billing.payment_method"), collection: @payment_methods, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.association :charge_account, label: I18n.t("activerecord.attributes.commercial_billing.charge_account"), collection: @charge_accounts, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.association :payment_method, label: I18n.t("activerecord.attributes.commercial_billing.payment_method"), collection: @payment_methods, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
 </div>
 <!-- Items -->
 <table class="form-table">

@@ -14,7 +14,15 @@ class InvoiceItem < ActiveRecord::Base
 
   has_paper_trail
 
-  validates :sale_offer_item, :presence => true, :if => "!sale_offer_id.blank?"
+  validates :code,                :presence => true
+  validates :description,         :presence => true,
+                                  :length => { :maximum => 40 }
+  validates :tariff,              :presence => true, :if => "product_id.blank?"
+  validates :product,             :presence => true, :if => "tariff_id.blank?"
+  validates :tax_type,            :presence => true
+  validates :quantity,            :numericality => true
+  validates :price,               :numericality => true
+  validates :sale_offer_item,     :presence => true, :if => "!sale_offer_id.blank?"
 
   before_validation :item_repeat, :on => :create
 

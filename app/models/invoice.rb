@@ -37,7 +37,15 @@ class Invoice < ActiveRecord::Base
   has_paper_trail
 
   validates_associated :invoice_items
-  #validates :organization,       :presence => true
+
+  validates :invoice_no,      :presence => true,
+                              :length => { :is => 16 },
+                              :format => { with: /\A[a-zA-Z\d]+\Z/, message: :code_invalid },
+                              :uniqueness => { :scope => :organization_id }
+  validates :invoice_date,    :presence => true
+  validates :organization,    :presence => true
+  validates :invoice_status,  :presence => true
+  validates :invoice_type,    :presence => true
 
   # Scopes
   scope :by_no, -> { order(:invoice_no) }
