@@ -267,8 +267,8 @@ class Reading < ActiveRecord::Base
       country_id: subscriber.client.country_id,
       created_by: user_id,
       reading_1_id: reading_1.try(:id),
-      reading_2_id: id
-    )
+      reading_2_id: id,
+      organization_id: project.organization_id )
     subscriber.tariffs_supply.each do |tariffs_biller|
       @invoice = Invoice.create!(
         invoice_no: invoice_next_no(project.company_id, project.office_id),
@@ -292,8 +292,8 @@ class Reading < ActiveRecord::Base
         reading_1_date: reading_1.try(:reading_date),
         reading_2_date: reading_date,
         reading_1_index: reading_1.try(:reading_index),
-        reading_2_index: reading_index
-      )
+        reading_2_index: reading_index,
+        organization_id: project.organization_id )
       tariffs_biller[1].each do |tariff|
         unless tariff.fixed_fee.zero?
           InvoiceItem.create(
@@ -308,7 +308,8 @@ class Reading < ActiveRecord::Base
             discount: 0.0,#¿¿¿???
             product_id: nil,
             subcode: "CF",
-            measure_id: tariff.billing_frequency.fix_measure_id)
+            measure_id: tariff.billing_frequency.fix_measure_id,
+            created_by: user_id )
         end
         if tariff.block1_fee > 0
           limit_before = 0
@@ -328,7 +329,7 @@ class Reading < ActiveRecord::Base
                 product_id: nil,
                 subcode: "BL"+i.to_s,
                 measure_id: tariff.billing_frequency.var_measure_id,
-                created_by: user_id)
+                created_by: user_id )
               break
             else
               InvoiceItem.create(
@@ -344,7 +345,7 @@ class Reading < ActiveRecord::Base
                 product_id: nil,
                 subcode: "BL"+i.to_s,
                 measure_id: tariff.billing_frequency.var_measure_id,
-                created_by: user_id)
+                created_by: user_id )
               limit_before = tariff.instance_eval("block#{i}_limit")
             end
           end
@@ -362,7 +363,7 @@ class Reading < ActiveRecord::Base
             product_id: nil,
             subcode: "VP",
             measure_id: tariff.billing_frequency.var_measure_id,
-            created_by: user_id)
+            created_by: user_id )
         elsif tariff.variable_fee > 0
           InvoiceItem.create(
             invoice_id: @invoice.id,
@@ -377,7 +378,7 @@ class Reading < ActiveRecord::Base
             product_id: nil,
             subcode: "CV",
             measure_id: tariff.billing_frequency.var_measure_id,
-            created_by: user_id)
+            created_by: user_id )
         end
       end
     end

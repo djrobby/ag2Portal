@@ -68,5 +68,4 @@ class PreBill < ActiveRecord::Base
     end
     code
   end
-
 end

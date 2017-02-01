@@ -53,7 +53,6 @@ module Ag2Gest
     # add mj
 
     def confirm
-      # @bills = Bill.where(id: params[:bills][:ids].split("[\"")[1].split("\"]")[0].split("\", \""))
       @pre_bills = PreBill.where(pre_group_no: params[:pre_bill][:ids], bill_id: nil)
       pre_bills_count = @pre_bills.count
       by_user = current_user.nil? ? nil : current_user.id
@@ -62,7 +61,8 @@ module Ag2Gest
       final_bills = []
       @pre_bills.each do |pre_bill|
         @bill = Bill.create!( bill_no: bill_next_no(pre_bill.project),
-          project_id: pre_bill.reading.project_id,
+          project_id: pre_bill.project_id,
+          # project_id: pre_bill.reading.project_id,
           invoice_status_id: InvoiceStatus::PENDING,
           bill_date: invoice_date,
           subscriber_id: pre_bill.subscriber_id,
@@ -84,10 +84,10 @@ module Ag2Gest
           country_id: pre_bill.country_id,
           created_by: by_user,
           reading_1_id: pre_bill.reading_1_id,
-          reading_2_id: pre_bill.reading_2_id
-        )
+          reading_2_id: pre_bill.reading_2_id,
+          organization_id: pre_bill.project.organization_id )
         pre_bill.pre_invoices.map do |pre_invoice|
-          @invoice = Invoice.create!(invoice_no: invoice_next_no(pre_bill.project.company_id, pre_bill.project.office_id),
+          @invoice = Invoice.create!( invoice_no: invoice_next_no(pre_bill.project.company_id, pre_bill.project.office_id),
             bill_id: @bill.id,
             invoice_status_id: InvoiceStatus::PENDING,
             invoice_type_id: InvoiceType::WATER,
@@ -108,8 +108,8 @@ module Ag2Gest
             reading_1_date: pre_invoice.reading_1_date,
             reading_2_date: pre_invoice.reading_2_date,
             reading_1_index: pre_invoice.reading_1_index,
-            reading_2_index: pre_invoice.reading_2_index
-          )
+            reading_2_index: pre_invoice.reading_2_index,
+            organization_id: pre_bill.project.organization_id )
           pre_invoice.pre_invoice_items.map do |pre_invoice_item|
             InvoiceItem.create!( invoice_id: @invoice.id,
               code: pre_invoice_item.code,

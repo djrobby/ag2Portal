@@ -74,12 +74,9 @@ class WaterSupplyContract < ActiveRecord::Base
                         town_id: client.town_id,
                         province_id: client.province_id,
                         region_id: client.region_id,
-                        country_id: client.country_id)
-                          # project_id: contracting_request.project_id,
-                          # invoice_status_id: 1, #Nestor
-                          # bill_no: bill_next_no(contracting_request.project),
-                          # bill_date: Date.today,
-                          # subscriber_id: subscriber_id)
+                        country_id: client.country_id,
+                        organization_id: contracting_request.project.organization_id,
+                        created_by: contracting_request.try(:created_by) )
       tariff_scheme.tariffs_contract(caliber_id).each do |tariffs_biller|
         invoice = Invoice.create( invoice_no: invoice_next_no(contracting_request.try(:project).try(:company_id), contracting_request.try(:project).try(:office_id)),
                                 bill_id: bill.id,
@@ -98,8 +95,9 @@ class WaterSupplyContract < ActiveRecord::Base
                                 discount_pct: 0.0,
                                 exemption: 0.0,
                                 original_invoice_id: nil,
-                                charge_account_id: client.client_bank_accounts.active.first.try(:id),
-                                )
+                                charge_account_id: contracting_request.project.try(:charge_accounts).first.try(:id),
+                                organization_id: contracting_request.project.organization_id,
+                                created_by: contracting_request.try(:created_by) )
         tariffs_biller[1].each do |tariff|
           InvoiceItem.create( invoice_id: invoice.id,
                               code: tariff.try(:billable_item).try(:billable_concept).try(:code),
@@ -112,7 +110,8 @@ class WaterSupplyContract < ActiveRecord::Base
                               discount: 0.0,
                               product_id: nil,
                               subcode: tariff.try(:billable_item).try(:billable_concept).try(:code),
-                              measure_id: tariff.billing_frequency.fix_measure_id)
+                              measure_id: tariff.billing_frequency.fix_measure_id,
+                              created_by: contracting_request.try(:created_by) )
       end
     end
     self.bill_id = bill.id

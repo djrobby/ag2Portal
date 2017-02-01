@@ -30,7 +30,7 @@ class Bill < ActiveRecord::Base
                               :length => { :is => 23 },
                               :format => { with: /\A[a-zA-Z\d]+\Z/, message: :code_invalid },
                               :uniqueness => { :scope => :organization_id }
-  validates :order_date,      :presence => true
+  validates :bill_date,       :presence => true
   validates :organization,    :presence => true
   validates :project,         :presence => true
   validates :client,          :presence => true
