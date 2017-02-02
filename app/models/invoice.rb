@@ -23,8 +23,11 @@ class Invoice < ActiveRecord::Base
 
   has_many :invoice_items, dependent: :destroy
   has_many :client_payments
-  has_one :invoice_debt
   has_one :pre_invoice
+  has_one :invoice_debt
+  has_one :invoice_bill
+  has_one :invoice_credit
+  has_one :invoice_rebill
 
   # Nested attributes
   accepts_nested_attributes_for :invoice_items,
