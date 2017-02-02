@@ -14,8 +14,12 @@ module Ag2Human
       type = params[:Type]
       code = params[:Code]
 
-      # Sunspot re-index at ag2_timerecord_controller
-      
+      # Sunspot re-index is on ag2_timerecord_controller
+      if session[:reindex] == true
+        timerecord_reindex
+        session[:reindex] = nil
+      end
+
       @search = TimeRecord.search do
         if !worker.blank?
           with :worker_id, worker

@@ -17,5 +17,11 @@ module Ag2Human
       session[:sort] = nil
       session[:direction] = nil
     end
+
+    def timerecord_reindex
+      TimeRecord.find_in_batches do |b|
+        Sunspot.index(b)
+      end
+    end
   end
 end

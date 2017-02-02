@@ -7,10 +7,10 @@ module Ag2Human
     def index
       authorize! :update, TimeRecord
       session[:Worker] = nil
-      session[:From] = nil      
+      session[:From] = nil
       session[:To] = nil
-      session[:Type] = nil      
-      session[:Code] = nil      
+      session[:Type] = nil
+      session[:Code] = nil
 
       # Sunspot special:
       # Must use Sunspot index always for update/re-index current data,
@@ -25,9 +25,10 @@ module Ag2Human
       #   TimeRecord.index
       # Faster in-batches re-index:
       if session[:reindex] == true
-        TimeRecord.find_in_batches do |b|
-          Sunspot.index(b)
-        end
+        timerecord_reindex
+        # TimeRecord.find_in_batches do |b|
+        #   Sunspot.index(b)
+        # end
       end
       session[:reindex] = nil
     end

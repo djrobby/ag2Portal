@@ -1,5 +1,6 @@
 <script>
   var _thisForm = '';
+  var changing = false;
 
   $(document).ready(function() {
     $('.date_picker').datepicker({
@@ -16,6 +17,17 @@
     // Initialized form variable
     _thisForm = $("#Worker").closest('form')[0];
   }); 
+
+  $(document).ajaxStart(function() {
+    // show loader on start
+    if (changing == false) {
+      $("#div_table").html("");
+      $("#loader").show();
+    }
+  }).ajaxSuccess(function() {
+    // hide loader on success
+    $("#loader").hide();
+  });
 
   $(window).bind("load", function() {
     $("#Worker").select2("val", "<%= params[:Worker] %>");
@@ -38,6 +50,11 @@
       // AJAX
       $("#submit_btn").trigger("click");
     });
+
+    // when the .icon-refresh-link button clicked
+    $(".icon-refresh-link").click(function() {
+      a = "<%= session[:reindex] = true %>";
+    });
   });
 </script>
 
@@ -50,6 +67,9 @@
 
     <div class="span3">
       <div class="well sidebar-nav">
+        <!-- Refresh -->
+        <%= link_to ag2_human.time_records_path, title: I18n.t(:refresh), class: "icon-refresh-link", remote: true do %> <i class="icon-refresh"></i> <% end %>
+        <!-- Search form -->
         <%= form_tag time_records_path, :method => 'get', :remote => true do %>
         <!-- Worker -->
         <%= label_tag I18n.t("ag2_human.time_records.index.label_worker"), nil, :class => 'form-label' %>
@@ -75,8 +95,11 @@
       </div><!-- /.sidebar-nav -->
     </div><!-- /.span3 -->
 
-    <div class="span9" id="div_table">
-      <%= render 'time_records' %>
+    <div class="span9">
+      <div id="loader"></div>
+      <div id="div_table">
+        <%= render 'time_records' %>
+      </div>
     </div><!-- /.span9 -->
   </div><!-- /.row-fluid -->
 </div><!-- /.container-fluid -->

@@ -1,9 +1,21 @@
 <script>
   var _thisForm = '';
-
+  var changing = false;
+  
   $(document).ready(function() {
     // Initialized form variable
     _thisForm = $("#removeFilter").closest('form')[0];
+  });
+
+  $(document).ajaxStart(function() {
+    // show loader on start
+    if (changing == false) {
+      $("#div_table").html("");
+      $("#loader").show();
+    }
+  }).ajaxSuccess(function() {
+    // hide loader on success
+    $("#loader").hide();
   });
 
   $(window).bind("load", function() {
@@ -18,14 +30,25 @@
       var worker = $('#WrkrCompany :selected').val();
       if (worker == "")
         worker = "0";
+      changing = true;
       jQuery.getJSON('update_offices_select_from_company/' + worker, function(data) {
+        var m = data.office
         $("#WrkrOffice").html("");
-        //$("#WrkrOffice").select2("val", "");
+        $("#WrkrOffice").val("");
         $("#WrkrOffice").append($('<option></option>').val("").html(""));
-        $.each(data, function(id, option) {
-          $("#WrkrOffice").append($('<option></option>').val(option.id).html(option.name));
-        });
-      })
+        if (!m.length) {
+          $.each(data, function(id, option) {
+            if (id == 'office' && option != "") {
+              $("#WrkrOffice").append($('<option></option>').val(option.id).html(option.name));
+            }
+          });
+        } else {
+          $.each(m, function(id, option) {
+            $("#WrkrOffice").append($('<option></option>').val(option.id).html(option.name));
+          });
+        }
+      });
+      changing = false;
       return false;
     });
     
@@ -34,6 +57,7 @@
       $("#WrkrCompany").val("");
       $("#WrkrOffice").val("");
       $("#search").val("");
+      $("#WrkrCompany").trigger("change");
       // no AJAX
       //_thisForm.submit();
       // AJAX
@@ -53,6 +77,9 @@
 
     <div class="span3">
       <div class="well sidebar-nav">
+        <!-- Refresh -->
+        <%= link_to ag2_human.workers_path, title: I18n.t(:refresh), class: "icon-refresh-link", remote: true do %> <i class="icon-refresh"></i> <% end %>
+        <!-- Search form -->
         <%= form_tag workers_path, :method => 'get', :remote => true do %>
         <!-- Company -->
         <%= label_tag I18n.t("ag2_human.workers.index.label_company"), nil, :class => 'form-label' %>
@@ -83,8 +110,11 @@
       </div><!-- /.sidebar-nav -->
     </div><!-- /.span3 -->
 
-    <div class="span9" id="div_table">
-      <%= render 'workers' %>
+    <div class="span9">
+      <div id="loader"></div>
+      <div id="div_table">
+        <%= render 'workers' %>
+      </div>
     </div><!-- /.span9 -->
   </div><!-- /.row-fluid -->
 </div><!-- /.container-fluid -->

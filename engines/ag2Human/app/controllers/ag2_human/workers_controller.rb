@@ -19,7 +19,7 @@ module Ag2Human
 
     # Public attachment for drag&drop
     $attachment = nil
-  
+
     # Update attached file from drag&drop
     def wk_update_attachment
       if !$attachment.nil?
@@ -142,20 +142,17 @@ module Ag2Human
     # Update offices from company select
     def update_offices_select_from_company
       if params[:com] == '0'
-        @offices = Office.order('name')
+        offices = Office.order('name')
       else
         company = Company.find(params[:com])
         if !company.nil?
-          @offices = company.offices.order('name')
+          offices = company.offices.order('name')
         else
-          @offices = Office.order('name')
+          offices = Office.order('name')
         end
       end
-
-      respond_to do |format|
-        format.html # update_offices_select_from_company.html.erb does not exist! JSON only
-        format.json { render json: @offices }
-      end
+      @json_data = { "office" => offices }
+      render json: @json_data
     end
 
     # Validate fiscal id
@@ -444,7 +441,7 @@ end
     end
 
     private
-    
+
     def current_items_for_index(_items)
       _current_items = []
       # Add items found
@@ -460,7 +457,7 @@ end
       end
       _current_items
     end
-    
+
     def cannot_edit(_worker)
       _worker.worker_count < 1 ? false : !oco_can_access(_worker)
     end
@@ -497,7 +494,7 @@ end
         params[:letter] = session[:letter]
       end
     end
-    
+
     def oco_can_access(_worker)
       _b = true
       # check by organization
@@ -532,7 +529,7 @@ end
                   end
                 end   # end loop
               end
-            end            
+            end
           end
         end
       end
