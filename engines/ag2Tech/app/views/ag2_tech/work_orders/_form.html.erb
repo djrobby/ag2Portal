@@ -311,12 +311,12 @@
         if (!a.length) {
           $.each(data, function(id, option) {
             if (id == 'area' && option != "") {
-              $("#work_order_area_id").append($('<option></option>').val(option[0]).html(option[1] + " (" + option[2] + ")"));
+              $("#work_order_area_id").append($('<option></option>').val(option[0]).html(option[1]));
             }
           });
         } else {
           $.each(a, function(id, option) {
-            $("#work_order_area_id").append($('<option></option>').val(option[0]).html(option[1] + " (" + option[2] + ")"));
+            $("#work_order_area_id").append($('<option></option>').val(option[0]).html(option[1]));
           });
         }
         // Work order
@@ -412,12 +412,12 @@
         if (!a.length) {
           $.each(data, function(id, option) {
             if (id == 'area' && option != "") {
-              $("#work_order_area_id").append($('<option></option>').val(option[0]).html(option[1] + " (" + option[2] + ")"));
+              $("#work_order_area_id").append($('<option></option>').val(option[0]).html(option[1]));
             }
           });
         } else {
           $.each(a, function(id, option) {
-            $("#work_order_area_id").append($('<option></option>').val(option[0]).html(option[1] + " (" + option[2] + ")"));
+            $("#work_order_area_id").append($('<option></option>').val(option[0]).html(option[1]));
           });
         }
         // Should change #work_order_workers_worker_id

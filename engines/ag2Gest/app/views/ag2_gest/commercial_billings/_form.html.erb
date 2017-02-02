@@ -16,6 +16,8 @@
   }
   
   $(document).ready(function() {
+    $("#notify_mesage").hide();
+
     $('select.sel2').select2({
       formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
       allowClear: true
@@ -331,7 +333,18 @@
       $('#items-table').trigger('totals');
       return false;
     });
-    
+
+    // when the #submit_btn button clicked, test Project & Client content
+    $("#submit_btn").click(function() {
+      var p = $('select#Project :selected').val();
+      var c = $('select#Client :selected').val();
+      if (c == "" || p == "") {
+        // Show message
+        $("#notify_mesage").show();
+        return false;
+      }
+    });
+
     // when submit    
     $(_thisForm).on('submit', function() {
       var price = '';
@@ -356,3 +369,5 @@
     });
   });
 </script>
+
+<%= render '/layouts/ag2_gest/cbillingsbreadcrumb' %>

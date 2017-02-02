@@ -18,6 +18,12 @@ class Department < ActiveRecord::Base
                             :uniqueness => { :scope => :organization_id }
   validates :organization,  :presence => true
 
+  # Scopes
+  scope :by_code, -> { order(:code) }
+  #
+  scope :belongs_to_organization, -> b { where("organization_id = ?", b).by_code }
+  scope :belongs_to_company, -> b { where("company_id = ?", b).by_code }
+
   before_validation :fields_to_uppercase
   before_destroy :check_for_dependent_records
 

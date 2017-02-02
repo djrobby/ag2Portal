@@ -20,7 +20,7 @@
     <% @areas.each do |t| %>
     <tr>
       <td><%= link_to t.name, t %></td>
-      <td><%= t.department.name %></td>
+      <td><%= t.department.name_and_company %></td>
       <td><%= t.worker.full_name unless t.worker.blank? %></td>
       <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => Area, :path => edit_area_path(t) } unless cannot_edit(t.department) %>
       <%= render :partial => '/layouts/crud/delete', :locals => { :model => Area, :path => t, :msg => I18n.t("activerecord.models.area.one"), :txt => t.name } unless cannot_edit(t.department) %> </td>

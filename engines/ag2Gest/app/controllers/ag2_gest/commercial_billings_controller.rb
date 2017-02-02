@@ -634,7 +634,6 @@ module Ag2Gest
         # Go on
         if @invoice.save
           format.html { redirect_to commercial_billing_path(@invoice), notice: crud_notice('created', @invoice) }
-          # format.html { redirect_to @invoice, notice: crud_notice('created', @invoice) }
           format.json { render json: @invoice, status: :created, location: @invoice }
         else
           @organizations, @include_blank = organizations_according_oco
@@ -683,14 +682,14 @@ module Ag2Gest
         end
       end
       master_changed = false
-      if ((params[:invoice][:organization_id].to_i != @supplier_invoice.organization_id.to_i) ||
-          (params[:invoice][:invoice_no].to_s != @supplier_invoice.invoice_no) ||
-          (params[:invoice][:invoice_date].to_date != @supplier_invoice.invoice_date) ||
-          (params[:invoice][:sale_offer_id].to_i != @supplier_invoice.sale_offer_id.to_i) ||
-          (params[:invoice][:charge_account_id].to_i != @supplier_invoice.charge_account_id.to_i) ||
-          (params[:invoice][:payment_method_id].to_i != @supplier_invoice.payment_method_id.to_i) ||
-          (params[:invoice][:discount_pct].to_f != @supplier_invoice.discount_pct.to_f) ||
-          (params[:invoice][:remarks].to_s != @supplier_invoice.remarks))
+      if ((params[:invoice][:organization_id].to_i != @invoice.organization_id.to_i) ||
+          (params[:invoice][:invoice_no].to_s != @invoice.invoice_no) ||
+          (params[:invoice][:invoice_date].to_date != @invoice.invoice_date) ||
+          (params[:invoice][:sale_offer_id].to_i != @invoice.sale_offer_id.to_i) ||
+          (params[:invoice][:charge_account_id].to_i != @invoice.charge_account_id.to_i) ||
+          (params[:invoice][:payment_method_id].to_i != @invoice.payment_method_id.to_i) ||
+          (params[:invoice][:discount_pct].to_f != @invoice.discount_pct.to_f) ||
+          (params[:invoice][:remarks].to_s != @invoice.remarks))
         master_changed = true
       end
 
@@ -711,7 +710,7 @@ module Ag2Gest
                         params[:invoice][:payment_method_id].to_i)
 
             # Go on
-            format.html { redirect_to @invoice,
+            format.html { redirect_to commercial_billing_path(@invoice),
                           notice: (crud_notice('updated', @invoice) + "#{undo_link(@invoice)}").html_safe }
             format.json { head :no_content }
           else
@@ -730,7 +729,7 @@ module Ag2Gest
             format.json { render json: @invoice.errors, status: :unprocessable_entity }
           end
         else
-          format.html { redirect_to @invoice }
+          format.html { redirect_to commercial_billing_path(@invoice) }
           format.json { head :no_content }
         end
       end

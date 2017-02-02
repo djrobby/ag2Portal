@@ -1205,9 +1205,9 @@ module Ag2Tech
     # Areas belonging to selected project
     def project_areas(_project)
       if !_project.company.blank?
-        Department.find_by_company_id(_project.company_id).areas.order(:name) rescue Area.order(:name)
+        Area.where(department_id: Department.belongs_to_company(_project.company_id)).order(:name) rescue Area.order(:name)
       elsif !_project.organization.blank?
-        Department.find_by_organization_id(_project.organization_id).areas.order(:name) rescue Area.order(:name)
+        Area.where(department_id: Department.belongs_to_organization(_project.organization_id)).order(:name) rescue Area.order(:name)
       else
         Area.order(:name)
       end
@@ -1666,7 +1666,7 @@ module Ag2Tech
     def areas_array(_areas)
       _array = []
       _areas.each do |i|
-        _array = _array << [i.id, i.name, i.department.name]
+        _array = _array << [i.id, i.full_name]
       end
       _array
     end
