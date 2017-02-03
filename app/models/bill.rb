@@ -47,6 +47,10 @@ class Bill < ActiveRecord::Base
     try(:invoices).try(:first).try(:invoice_operation_id)
   end
 
+  def bill_period
+    try(:invoices).try(:first).try(:billing_period_id)
+  end
+
   def to_label
     full_no
   end
