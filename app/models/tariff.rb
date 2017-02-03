@@ -35,6 +35,10 @@ class Tariff < ActiveRecord::Base
   validates :starting_at,       :presence => true
   #validates :tariff_scheme_id, uniqueness: {scope: [:billable_item_id, :tariff_type_id, :caliber_id, :billing_frequency_id]}
   validates :starting_at, uniqueness: {scope: [:billable_item_id, :tariff_type_id, :caliber_id, :billing_frequency_id]}
+  validates :tax_type_b,        :presence => true, :if => "!block1_fee.blank?"
+  validates :tax_type_f,        :presence => true, :if => "!fixed_fee.blank?"
+  validates :tax_type_p,        :presence => true, :if => "!percentage_fee.blank?"
+  validates :tax_type_v,        :presence => true, :if => "!variable_fee.blank?"
 
   # tariffs for water supply contract
   # def self.by_contract(water_supply_contract)
