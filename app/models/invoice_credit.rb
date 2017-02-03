@@ -7,10 +7,11 @@ class InvoiceCredit < ActiveRecord::Base
   belongs_to :client
   belongs_to :subscriber
   belongs_to :billing_period
+  belongs_to :invoice_type
 
   attr_accessible :invoice_id, :organization_id, :project_id,
                   :client_id, :subscriber_id, :billing_period_id,
-                  :invoice_no, :invoice_date,
+                  :invoice_no, :invoice_date, :invoice_type_id,
                   :subtotal, :taxes, :bonus, :taxable, :total,
                   :original_invoice_id
 
