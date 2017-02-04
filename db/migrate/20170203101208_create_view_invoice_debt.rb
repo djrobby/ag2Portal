@@ -1,7 +1,7 @@
 class CreateViewInvoiceDebt < ActiveRecord::Migration
   def up
     execute 'create view invoice_debts as
-    select `invoices`.`id` AS `invoice_id`,`invoices`.`organization_id` AS `organization_id`,`bills`.`client_id` AS `client_id`,`invoices`.`invoice_no` AS `invoice_no`,
+    select `invoices`.`id` AS `invoice_id`,`invoices`.`organization_id` AS `organization_id`,`bills`.`client_id` AS `client_id`,`bills`.`subscriber_id` AS `subscriber_id`,`invoices`.`invoice_no` AS `invoice_no`,
     coalesce(sum((`invoice_items`.`quantity` * (`invoice_items`.`price` - `invoice_items`.`discount`))),0) AS `subtotal`,
     (case when ((`invoices`.`discount_pct` = 0) or isnull(`invoices`.`discount_pct`)) then coalesce(sum(((`invoice_items`.`quantity` * (`invoice_items`.`price` - `invoice_items`.`discount`)) * (`tax_types`.`tax` / 100))),0) else (coalesce(sum(((`invoice_items`.`quantity` * (`invoice_items`.`price` - `invoice_items`.`discount`)) * (`tax_types`.`tax` / 100))),0) * (`invoices`.`discount_pct` / 100)) end) AS `taxes`,
     (case when ((`invoices`.`discount_pct` = 0) or isnull(`invoices`.`discount_pct`)) then 0 else (coalesce(sum((`invoice_items`.`quantity` * (`invoice_items`.`price` - `invoice_items`.`discount`))),0) * (`invoices`.`discount_pct` / 100)) end) AS `bonus`,

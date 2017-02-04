@@ -8,6 +8,12 @@ class BillingPeriod < ActiveRecord::Base
   has_many :readings
   has_many :pre_readings
   has_many :invoices
+  has_many :cancelled_invoices
+  has_many :active_invoices
+  has_many :active_supply_invoices
+  has_many :invoice_bills
+  has_many :invoice_credits
+  has_many :invoice_rebills
 
   has_paper_trail
 

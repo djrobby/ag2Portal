@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20170203193813) do
+ActiveRecord::Schema.define(:version => 20170204072152) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -33,6 +33,18 @@ ActiveRecord::Schema.define(:version => 20170203193813) do
     t.integer "bill_id",              :default => 0, :null => false
     t.integer "invoice_id",           :default => 0, :null => false
     t.integer "original_invoice_id"
+  end
+
+  create_table "active_supply_invoices", :id => false, :force => true do |t|
+    t.integer "billing_period_id"
+    t.integer "client_id"
+    t.integer "subscriber_id"
+    t.integer "invoice_type_id"
+    t.integer "invoice_operation_id"
+    t.integer "bill_id",              :default => 0, :null => false
+    t.integer "invoice_id",           :default => 0, :null => false
+    t.integer "original_invoice_id"
+    t.integer "pre_invoice_id",       :default => 0, :null => false
   end
 
   create_table "active_tariffs", :id => false, :force => true do |t|
@@ -1523,6 +1535,7 @@ ActiveRecord::Schema.define(:version => 20170203193813) do
     t.integer "invoice_id",                                      :default => 0, :null => false
     t.integer "organization_id"
     t.integer "client_id"
+    t.integer "subscriber_id"
     t.string  "invoice_no"
     t.decimal "subtotal",        :precision => 47, :scale => 8
     t.decimal "taxes",           :precision => 65, :scale => 20

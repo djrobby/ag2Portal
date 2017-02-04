@@ -4,7 +4,8 @@ class InvoiceDebt < ActiveRecord::Base
   belongs_to :invoice
   belongs_to :organization
   belongs_to :client
-  attr_accessible :invoice_id, :organization_id, :client_id,
+  belongs_to :subscriber
+  attr_accessible :invoice_id, :organization_id, :client_id, :subscriber_id,
                   :invoice_no, :subtotal, :taxes, :bonus, :taxable, :total, :paid, :debt
 
   def to_label

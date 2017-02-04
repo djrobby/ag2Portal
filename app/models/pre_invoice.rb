@@ -14,10 +14,10 @@ class PreInvoice < ActiveRecord::Base
                   :pre_bill_id, :invoice_status_id, :invoice_type_id, :tariff_scheme_id, :invoice_operation_id,
                   :biller_id, :billing_period_id, :charge_account_id, :invoice_id,
                   :payday_limit, :reading_1_date, :reading_2_date, :reading_1_index, :reading_2_index
+  alias_attribute :company, :biller
 
   has_many :pre_invoice_items, dependent: :destroy
-
-  alias_attribute :company, :biller
+  has_one :active_supply_invoice
 
   #
   # Calculated fields

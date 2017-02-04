@@ -33,6 +33,13 @@ class Subscriber < ActiveRecord::Base
   has_many :client_payments
   has_many :subscriber_tariffs
   has_many :tariffs, through: :subscriber_tariffs
+  has_many :cancelled_invoices
+  has_many :active_invoices
+  has_many :active_supply_invoices
+  has_many :invoice_debts
+  has_many :invoice_bills
+  has_many :invoice_credits
+  has_many :invoice_rebills
 
   # Nested attributes
   accepts_nested_attributes_for :readings

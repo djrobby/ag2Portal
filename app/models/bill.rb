@@ -25,6 +25,9 @@ class Bill < ActiveRecord::Base
   has_many :instalments
   has_one :water_supply_contract
   has_one :pre_bill
+  has_many :cancelled_invoices
+  has_many :active_invoices
+  has_many :active_supply_invoices
 
   validates :bill_no,         :presence => true,
                               :length => { :is => 23 },

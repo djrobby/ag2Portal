@@ -8,6 +8,9 @@ class InvoiceOperation < ActiveRecord::Base
   attr_accessible :name
 
   has_many :invoices
+  has_many :cancelled_invoices
+  has_many :active_invoices
+  has_many :active_supply_invoices
 
   has_paper_trail
 

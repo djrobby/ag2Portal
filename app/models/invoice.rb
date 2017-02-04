@@ -28,6 +28,9 @@ class Invoice < ActiveRecord::Base
   has_one :invoice_bill
   has_one :invoice_credit
   has_one :invoice_rebill
+  has_one :active_invoice
+  has_one :cancelled_invoice
+  has_one :active_supply_invoice
 
   # Nested attributes
   accepts_nested_attributes_for :invoice_items,

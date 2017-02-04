@@ -20,6 +20,10 @@ class Organization < ActiveRecord::Base
   has_many :service_points
   has_many :bills
   has_many :invoices
+  has_many :invoice_debts
+  has_many :invoice_bills
+  has_many :invoice_credits
+  has_many :invoice_rebills
   # helpdesk
   has_many :technicians
   has_many :tickets
