@@ -34,7 +34,7 @@ class SupplierPayment < ActiveRecord::Base
   # Calculated fields
   #
   def invoice_debt
-    supplier_invoice.debt
+    supplier_invoice.nil? ? 0 : supplier_invoice.debt
   end
 
   #

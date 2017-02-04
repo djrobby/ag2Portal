@@ -90,7 +90,7 @@ module Ag2Purchase
       if approval != '0'
         @approval = SupplierInvoiceApproval.find(approval)
         approver = @approval.approver_id rescue 0
-        amount = @approval.approved_amount rescue 0
+        amount = @approval.debt rescue 0
       end
       amount = number_with_precision(amount.round(4), precision: 4)
       # Setup JSON
@@ -191,9 +191,9 @@ module Ag2Purchase
       @breadcrumb = 'update'
       @supplier_payment = SupplierPayment.find(params[:id])
       @suppliers = suppliers_dropdown
-      invoices = invoices_dropdown
+      invoices = invoices_dropdown_edit(@supplier_payment.supplier_id)
       @supplier_invoices = invoices
-      @approvals = approvals_dropdown_on_model(invoices)
+      @approvals = approvals_dropdown_on_model_edit(@supplier_payment.supplier_invoice)
       @users = User.all
       @payment_methods = payment_methods_dropdown
     end
@@ -236,9 +236,9 @@ module Ag2Purchase
           format.json { head :no_content }
         else
           @suppliers = suppliers_dropdown
-          invoices = invoices_dropdown
+          invoices = invoices_dropdown_edit(@supplier_payment.supplier_id)
           @supplier_invoices = invoices
-          @approvals = approvals_dropdown_on_model(invoices)
+          @approvals = approvals_dropdown_on_model_edit(@supplier_payment.supplier_invoice)
           @users = User.all
           @payment_methods = payment_methods_dropdown
           format.html { render action: "edit" }
@@ -283,6 +283,10 @@ module Ag2Purchase
       session[:organization] != '0' ? SupplierInvoiceDebt.where(organization_id: session[:organization].to_i).order(:supplier_invoice_id) : SupplierInvoiceDebt.order(:supplier_invoice_id)
     end
 
+    def invoices_dropdown_edit(_supplier)
+      invoices_dropdown.where(supplier_id: _supplier)
+    end
+
     def invoices_array(_invoices) # based on SupplierInvoiceDebt
       _array = []
       _invoices.each do |i|
@@ -305,6 +309,19 @@ module Ag2Purchase
             if a.debt > 0
               _array = _array << a
             end
+          end
+        end
+      end
+      _array
+    end
+
+    def approvals_dropdown_on_model_edit(_invoice)  # returns array of model
+      _array = []
+      approvals = _invoice.supplier_invoice_approvals
+      if approvals.count > 0
+        approvals.each do |a|       # a = SupplierInvoiceApproval
+          if a.debt > 0
+            _array = _array << a
           end
         end
       end

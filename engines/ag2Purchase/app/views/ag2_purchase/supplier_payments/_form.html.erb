@@ -306,7 +306,9 @@
         // Approver
         if (r != 0) $("#supplier_payment_approver_id").select2("val", r);
         // Amount
-        $("#supplier_payment_amount").val(t);
+        if ('<%= @breadcrumb %>' != "update") {
+          $("#supplier_payment_amount").val(t);
+        }
       });
       return false;
     });
@@ -350,10 +352,10 @@
 </div>
 <div>
   <label class="multi-field-label-two"> <%= f.association :supplier, collection: @suppliers, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
-  <label class="multi-field-label-two"> <%= f.association :supplier_invoice, collection: @supplier_invoices, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.association :supplier_invoice, collection: @supplier_invoices, value_method: :supplier_invoice_id, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
 </div>
 <div>
-  <label class="multi-field-label-two"> <%= f.association :supplier_invoice_approval, collection: @approvals, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.association :supplier_invoice_approval, collection: @approvals, value_method: :supplier_invoice_id, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
   <label class="multi-field-label-two"> <%= f.association :approver, collection: @users, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
 </div>
 <div>
