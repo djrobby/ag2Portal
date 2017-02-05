@@ -22,11 +22,11 @@ module Ag2Gest
     end
 
     def impute_readings
-      @pre_readings = @pre_readings.paginate(:page => params[:page], :per_page => 30)
+      @pre_readings = @pre_readings.paginate(:page => params[:page], :per_page => per_page)
     end
 
     def list
-      @pre_readings = @pre_readings.paginate(:page => params[:page], :per_page => 30)
+      @pre_readings = @pre_readings.paginate(:page => params[:page], :per_page => per_page)
     end
 
     def to_reading
@@ -64,7 +64,7 @@ module Ag2Gest
          send_data render_to_string, filename: "SCR.pdf", type: 'application/pdf', disposition: 'inline'
        }
      end
-   end
+    end
 
     # GET /prereadings
     # GET /prereadings.json
@@ -194,11 +194,11 @@ module Ag2Gest
     end
 
     def billing_periods_dropdown
-      _billing_periods = BillingPeriod.where(project_id: current_projects_ids).order("period DESC")
+      BillingPeriod.where(project_id: current_projects_ids).order("period DESC")
     end
 
     def reading_routes_dropdown
-      _reading_routes = ReadingRoute.where(project_id: current_projects_ids).order("name")
+      ReadingRoute.where(project_id: current_projects_ids).order("name")
     end
 
   end
