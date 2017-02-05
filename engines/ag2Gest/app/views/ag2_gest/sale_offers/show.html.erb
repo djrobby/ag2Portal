@@ -1,3 +1,156 @@
+<script>
+  $(document).ready(function() {
+    $("#proc_mesage").hide();
+    // Show generate_order_btn based on approval
+    approver = $('#approver').html();
+    if (approver == "") {
+      $('#generate_order_btn').hide();
+    } else {
+      $('#generate_order_btn').show();
+    }
+  });
+
+  jQuery(function($) {
+    // when #generate_invoice_btn is clicked
+    $("#generate_invoice_btn").click(function() {
+      // Show message
+      $("#proc_mesage").show();
+      // make a POST call and replace the content
+      var offer = $('#id').html();
+      if (offer == "")
+        offer = "0";
+      jQuery.getJSON('of_generate_order/' + offer, function(data) {
+        // Hide message
+        $("#proc_mesage").hide();
+        // Go on based on result
+        if (data.code == "$err") {
+          alert('<%= I18n.t("ag2_gest.sale_offers.generate_order_error") %>');
+        } else if (data.code == "$write") {
+          alert('<%= I18n.t("ag2_gest.sale_offers.generate_order_write") %>');
+        } else {
+          alert(data.code);
+          $('#generate_order_btn').hide();
+          window.location = data.path;
+        }
+      });
+      return false;
+    });
+
+    // when #print_report_btn is clicked
+    $("#print_report_btn").click(function() {
+      // make a POST call and get report
+      var id = $('#id').html();
+      if (id == "")
+        return;
+      //window.open("offer_form.pdf?id=" + id, "_blank");
+      return false;
+    });
+  });  
+</script>
+
+<div id="proc_mesage" class="alert alert-info">
+  <%= t(:processing) %>
+</div>
+
+<%= render '/layouts/ag2_gest/offersbreadcrumb' %>
+
+<h3><%=t '.title' %></h3>
+<table class="table odd_even_table">
+  <tbody>
+    <tr>
+      <td>Id:</td>
+      <td id="id"><%= @sale_offer.id %></td>
+      <td><%=t 'activerecord.attributes.offer.offer_no' %>:</td>
+      <% if !@sale_offer.attachment.blank? %>
+      <td class="highlighted bolded"><%= @sale_offer.offer_no %><a style="margin-left: 1em;" href="#attachment"><i class="icon-paperclip-black"></i></a></td>
+      <% else %>
+      <td class="highlighted bolded"><%= @sale_offer.offer_no %></td>
+      <% end %>
+    </tr>
+    <tr>
+      <td><%=t 'activerecord.attributes.offer.offer_date' %>:</td>
+      <td><%= formatted_date(@sale_offer.offer_date) unless @sale_offer.offer_date.blank? %></td>
+      <td><%=t 'activerecord.attributes.offer.payment_method' %>:</td>
+      <td> <%= @sale_offer.payment_method.description %> </td>
+    </tr>
+    <tr>
+      <td><%=t 'activerecord.attributes.offer.supplier' %>:</td>
+      <td><%= @sale_offer.supplier.full_name unless @sale_offer.supplier.blank? %></td>
+      <td><%=t 'activerecord.attributes.offer.offer_request' %>:</td>
+      <td><%= @sale_offer.offer_request.full_name unless @sale_offer.offer_request.blank? %></td>
+    </tr>
+    <tr>
+      <td><%=t 'activerecord.attributes.offer.project' %>:</td>
+      <td><%= @sale_offer.project.full_name unless @sale_offer.project.blank? %></td>
+      <td><%=t 'activerecord.attributes.offer.work_order' %>:</td>
+      <td><%= @sale_offer.work_order.full_name unless @sale_offer.work_order.blank? %></td>
+    </tr>
+    <tr>
+      <td><%=t 'activerecord.attributes.offer.charge_account' %>:</td>
+      <td> <%= @sale_offer.charge_account.full_name unless @sale_offer.charge_account.blank? %> </td>
+      <td><%=t 'activerecord.attributes.offer.store' %>:</td>
+      <td> <%= @sale_offer.store.name unless @sale_offer.store.blank? %> </td>
+    </tr>
+    <tr>
+      <td><%=t 'activerecord.attributes.offer.approval_date' %>:</td>
+      <td><%= formatted_timestamp(@sale_offer.approval_date.utc.getlocal) unless @sale_offer.approval_date.blank? %></td>
+      <td><%=t 'activerecord.attributes.offer.approver' %>:</td>
+      <td id="approver"><%= @sale_offer.approver.email unless @sale_offer.approver.blank? %></td>
+    </tr>
+    <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @sale_offer } %>
+    <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @sale_offer } %>
+  </tbody>
+</table>
+
+<!-- Items -->
+<table class="form-table">
+  <tbody>
+    <tr class="form-tr underlined-tr">
+      <td class="form-td-two left-winged">
+        <h4><%= t 'ag2_gest.sale_offers.items_info' %></h4>
+      </td>
+      <td class="form-td-two right-winged">
+        <a href="#" id="print_report_btn" class="btn btn-warning"><i class="icon-print icon-white"></i> <%= t '.print' %></a>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<% if (@items.count > 0) %>
+<table class="table table-condensed table-striped shrinked">
+  <thead>
+    <%= render 'items_header' %>
+  </thead>
+  <tfoot>
+    <%= render partial: 'items_footer', :locals => { note: @sale_offer } %>
+  </tfoot>
+  <tbody>
+    <%= render partial: 'item', collection: @items %>
+  </tbody>
+</table>
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @items } %>
+<% else %>
+<%= render :partial => '/layouts/paginationunbordered', :locals => { :ivar => @items } %>
+<% end %> <!-- end @items.count > 0 -->
+
+<!-- Remarks -->
+<table class="table">
+  <tbody>
+    <tr>
+      <td style="width: 12%"><%= t :"activerecord.attributes.offer.remarks" %>:</td>
+      <td style="width: 88%"><%= @sale_offer.remarks unless @sale_offer.remarks.blank? %></td>
+    </tr>
+  </tbody>
+</table>
+
+<%= render partial: '/layouts/crud/update_delete_new_no_br', locals:
+{ model: SaleOffer, update_path: edit_offer_path(@sale_offer), update_txt: t('.btn_edit'),
+delete_path: @sale_offer, delete_txt: t('.btn_delete'), msg: t("activerecord.models.offer.one"), txt: @sale_offer.offer_no,
+new_path: new_offer_path, new_txt: t('ag2_gest.sale_offers.index.btn_new') } %>
+
+<%= link_to t('ag2_gest.sale_offers.show.show_to'), @sale_offer.offer_request %> |
+<%= link_to t("ag2_gest.sale_offers.back_to_main_page"), sale_offers_path %>
+
+
 <p id="notice"><%= notice %></p>
 
 

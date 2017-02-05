@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20170204072152) do
+ActiveRecord::Schema.define(:version => 20170205084213) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -857,8 +857,6 @@ ActiveRecord::Schema.define(:version => 20170204072152) do
     t.date     "ending_at"
   end
 
-  add_index "contracted_tariffs", ["ending_at"], :name => "index_contracted_tariffs_on_ending_at"
-  add_index "contracted_tariffs", ["starting_at"], :name => "index_contracted_tariffs_on_starting_at"
   add_index "contracted_tariffs", ["tariff_id"], :name => "index_contracted_tariffs_on_tariff_id"
   add_index "contracted_tariffs", ["water_supply_contract_id"], :name => "index_contracted_tariffs_on_water_supply_contract_id"
 
@@ -2835,21 +2833,23 @@ ActiveRecord::Schema.define(:version => 20170204072152) do
     t.string   "offer_no"
     t.date     "offer_date"
     t.string   "remarks"
-    t.decimal  "discount_pct",         :precision => 6,  :scale => 2, :default => 0.0, :null => false
-    t.decimal  "discount",             :precision => 13, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "discount_pct",           :precision => 6,  :scale => 2, :default => 0.0, :null => false
+    t.decimal  "discount",               :precision => 13, :scale => 4, :default => 0.0, :null => false
     t.integer  "project_id"
     t.integer  "store_id"
     t.integer  "work_order_id"
     t.integer  "charge_account_id"
     t.integer  "organization_id"
-    t.datetime "created_at",                                                           :null => false
-    t.datetime "updated_at",                                                           :null => false
+    t.datetime "created_at",                                                             :null => false
+    t.datetime "updated_at",                                                             :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
+    t.integer  "contracting_request_id"
   end
 
   add_index "sale_offers", ["charge_account_id"], :name => "index_sale_offers_on_charge_account_id"
   add_index "sale_offers", ["client_id"], :name => "index_sale_offers_on_client_id"
+  add_index "sale_offers", ["contracting_request_id"], :name => "index_sale_offers_on_contracting_request_id"
   add_index "sale_offers", ["offer_date"], :name => "index_sale_offers_on_offer_date"
   add_index "sale_offers", ["offer_no"], :name => "index_sale_offers_on_offer_no"
   add_index "sale_offers", ["organization_id", "offer_no"], :name => "index_sale_offers_on_organization_id_and_offer_no", :unique => true

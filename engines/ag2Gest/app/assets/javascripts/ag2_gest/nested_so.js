@@ -1,5 +1,5 @@
 /*
- * Methods to add 'fields' to the Commercial billing Items table 
+ * Methods to add 'fields' to the Sale Offer Items table 
  * Very important!!:
  *  1. remove_fields() & add_fields() are in main nested.js!!
  *  1. Modal window must be named (ie, 'new-item-fields')
@@ -9,30 +9,30 @@
  * >> This global methods are in main nested.js!!
  */
 
-var ci_itemFieldsUI = {
+var so_itemFieldsUI = {
     init: function(sel2NoMatches) {
         var validationSettings = {
             errorMessagePosition : 'element'
         };
 
         $('#addButton').on('click', function(e) {
-            var isValid = $(ci_cfg.formId).validate(false, validationSettings);
+            var isValid = $('#new-item-fields').validate(false, validationSettings);
             if(!isValid) {
                 e.stopPropagation();
                 return false;
             }
-            ci_formHandler.appendFields(sel2NoMatches);
-            ci_formHandler.hideForm();
+            so_formHandler.appendFields(sel2NoMatches);
+            so_formHandler.hideForm();
         });
 
         $('#cancelButton').on('click', function(e) {
-          ci_formHandler.removeFields();
-          ci_formHandler.hideForm();
+          so_formHandler.removeFields();
+          so_formHandler.hideForm();
         });
     }
 };
 
-var ci_cfg = {
+var so_cfg = {
     formId: '#new-item-fields',
     tableId: '#items-table',
     inputFieldClassSelector: '.field',
@@ -41,16 +41,16 @@ var ci_cfg = {
     }
 };
 
-var ci_formHandler = {
+var so_formHandler = {
     // Public method for adding a new row to the table.
     appendFields: function (sel2NoMatches) {
         // Get a handle on all the input fields in the form and detach them from
 		    // the DOM (we'll attach them later).
-        var inputFields = $(ci_cfg.formId + ' ' + ci_cfg.inputFieldClassSelector);
+        var inputFields = $(so_cfg.formId + ' ' + so_cfg.inputFieldClassSelector);
         inputFields.detach();
 
         // Build the row and add it to the end of the table.
-        ci_rowBuilder.addRow(ci_cfg.getTBodySelector(), inputFields);
+        so_rowBuilder.addRow(so_cfg.getTBodySelector(), inputFields);
 
         // Apply select2 to added row selects
         $('select.isel2').select2('destroy');
@@ -66,7 +66,7 @@ var ci_formHandler = {
     removeFields: function () {
         // Get a handle on all the input fields in the form and detach them from
         // the DOM (we'll attach them later).
-        var inputFields = $(ci_cfg.formId + ' ' + ci_cfg.inputFieldClassSelector);
+        var inputFields = $(so_cfg.formId + ' ' + so_cfg.inputFieldClassSelector);
         inputFields.detach();
 
         // Change value of _destroy field
@@ -80,13 +80,13 @@ var ci_formHandler = {
     // Public method for hiding the data entry fields.
     hideForm: function() {
         // Update and display totals
-        $(ci_cfg.tableId).trigger('totals');
+        $('#items-table').trigger('totals');
         // Hide modal
-        $(ci_cfg.formId).modal('hide');
+        $(so_cfg.formId).modal('hide');
     }
 };
 
-var ci_rowBuilder = function() {
+var so_rowBuilder = function() {
     // Private property that define the default <TR> element text.
     var row = $('<tr>', { class: 'fields' });
 
@@ -135,8 +135,9 @@ var ci_rowBuilder = function() {
                 // Add new column to row
                 td = $('<td/>').append($(this));
                 // ...hiding this if applicable
-                if (id === 'fnt-code' || id === 'fnt-subcode' ||
-                  id === 'fnt-sale-offer' || id === 'fnt-sale-offer-item' ||
+                if (id === 'fnt-delivery-date' ||
+                  id === 'fnt-work-order' || id === 'fnt-project' ||
+                  id === 'fnt-charge-account' || id === 'fnt-store' ||
                   id === 'fnt-tax-type') {
                   td = $('<td style="display:none;"/>').append($(this));
                 }

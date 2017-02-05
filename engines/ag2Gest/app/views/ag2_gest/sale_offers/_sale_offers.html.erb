@@ -1,0 +1,45 @@
+<script>
+  $(document).ready(function() {
+    $("#div_table th a, #div_table #pages a").on("click", function() {
+      $.getScript(this.href);
+      return false;
+    });
+  }); 
+</script>
+
+<table class="table table-condensed table-striped shrinked">
+  <thead>
+    <tr>
+      <th>Id</th>
+      <th></th>
+      <th><%= t 'activerecord.attributes.offer.offer_no' %></th>
+      <th align="center"><%= t 'activerecord.attributes.offer.offer_date' %></th>
+      <th><%= t 'activerecord.attributes.offer.supplier' %></th>
+      <th><%= t 'activerecord.attributes.offer.offer_request' %></th>
+      <th align="right"><%= t 'activerecord.attributes.offer.total' %></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @sale_offers.each do |offer| %>
+    <% if !offer.approver_id.blank? %>
+      <tr class="approved-tr">
+    <% else %>
+      <tr>
+    <% end %>
+      <td><%= offer.id %></td>
+      <td><%= offer.purchase_orders.count unless offer.purchase_orders.count == 0 %></td>
+      <td><%= link_to offer.offer_no, offer %>
+        <% if !offer.attachment.blank? %><i class="icon-paperclip-black" style="margin-left: 0.2em;"><% end %>
+      </td>
+      <td align="center"><%= formatted_date(offer.offer_date) unless offer.offer_date.blank? %></td>
+      <td><%= offer.supplier.partial_name unless offer.supplier.blank? %></td>
+      <td><%= offer.offer_request.full_no unless offer.offer_request.blank? %></td>
+      <td align="right"><%= number_with_precision(offer.total, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless offer.total.blank? %></td>
+      <td> <%= render :partial => '/layouts/crud/edit', :locals => { :model => SaleOffer, :path => edit_offer_path(offer) } %>
+      <%= render :partial => '/layouts/crud/delete', :locals => { :model => SaleOffer, :path => offer, :msg => t("activerecord.models.offer.one"), :txt => offer.offer_no } %> </td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @sale_offers } %>

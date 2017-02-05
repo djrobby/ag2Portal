@@ -6,9 +6,10 @@ class SaleOfferItem < ActiveRecord::Base
   belongs_to :store
   belongs_to :work_order
   belongs_to :charge_account
+  attr_accessor :thing
   attr_accessible :delivery_date, :description, :discount, :discount_pct, :price, :quantity,
                   :sale_offer_id, :product_id, :tax_type_id, :project_id, :store_id, :work_order_id,
-                  :charge_account_id
+                  :charge_account_id, :thing
 
   has_many :delivery_note_items
   has_many :invoice_items
@@ -16,7 +17,6 @@ class SaleOfferItem < ActiveRecord::Base
 
   has_paper_trail
 
-  #validates :sale_offer,      :presence => true
   validates :description,     :presence => true,
                               :length => { :maximum => 40 }
   validates :product,         :presence => true
