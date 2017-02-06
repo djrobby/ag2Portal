@@ -102,7 +102,11 @@ invoices<script>
   </tbody>
 </table>
 
-<%= render partial: '/layouts/crud/update_delete_new', locals:
+<% if cannot_edit(@invoice) %>
+<%= render partial: '/layouts/crud/new_no_br', locals: { model: Invoice, path: new_commercial_billing_path, txt: t('ag2_gest.commercial_billings.index.btn_new') } %>
+<% else %>
+<%= render partial: '/layouts/crud/update_delete_new_no_br', locals:
 { model: Invoice, update_path: edit_commercial_billing_path(@invoice), update_txt: t('.btn_edit'),
 delete_path: @invoice, delete_txt: t('.btn_delete'), msg: t("activerecord.models.commercial_billing.one"), txt: @invoice.invoice_no,
 new_path: new_commercial_billing_path, new_txt: t('ag2_gest.commercial_billings.index.btn_new') } %>
+<% end %>

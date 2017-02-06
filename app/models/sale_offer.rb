@@ -21,6 +21,7 @@ class SaleOffer < ActiveRecord::Base
   has_many :delivery_notes
   has_many :delivery_note_items
   has_many :products, through: :sale_offer_items
+  has_many :invoices
   has_many :invoice_items
 
   # Nested attributes
