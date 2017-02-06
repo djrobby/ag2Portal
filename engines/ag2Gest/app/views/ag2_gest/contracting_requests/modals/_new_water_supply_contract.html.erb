@@ -89,7 +89,8 @@
       <%= f.input :endowments, :input_html => { :class => 'x-large-text-field', :id => 'wsc_endowments' }, :label_html => { :class => 'form-label' } %>
       <%= f.input :inhabitants, :input_html => { :class => 'x-large-text-field', :id => 'wsc_inhabitants' }, :label_html => { :class => 'form-label' } %>
       <h4><%= t('activerecord.attributes.contracting_request.measuring_device') %></h4>
-      <%= f.association :meter, collection: Meter.from_office(session[:office]).availables(@contracting_request.try(:old_subscriber).try(:meter_id)), input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' }, include_blank: true, label: t('activerecord.attributes.contracting_request.meter') %>
+      <!--<%#= f.association :meter, collection: Meter.from_office(session[:office]).availables(@contracting_request.try(:old_subscriber).try(:meter_id)), input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' }, include_blank: true, label: t('activerecord.attributes.contracting_request.meter') %>-->
+      <%= f.association :meter, collection: @meters_for_contract, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' }, include_blank: true, label: t('activerecord.attributes.contracting_request.meter') %>
       <%= f.association :caliber, required: true, collection: Caliber.order(:caliber).map{|c| [c.caliber,c.id]}, :input_html => { :class => 'x-large-text-field sel2', :id => 'wsc_meter' }, :label_html => { :class => 'form-label' } %>
       <h4><%= t('activerecord.attributes.contracting_request.others') %></h4>
       <%= f.input :cadastral_reference, :input_html => { :class => 'x-large-text-field', :id => 'wsc_cadastral_reference' }, :label_html => { :class => 'form-label' } %>

@@ -9,12 +9,12 @@ module Ag2Admin
                                                :tt_update_tax]
     # Helper methods for sorting
     helper_method :sort_column
-    
+
     # Update expiration and create new (expire_btn)
     def expire
       expire_type = @tax_type
       new_type = TaxType.new
-      
+
       # Create new tax type based on current
       new_type.description = expire_type.description
       new_type.tax = expire_type.tax
@@ -28,7 +28,7 @@ module Ag2Admin
 
       # Update linked tables with the new tax type created
       expire_type.products.where(active: true).update_all(tax_type_id: new_type.id)
-      
+
       respond_to do |format|
         format.html # expire.html.erb does not exist! JSON only
         format.json { render json: @json_data }
@@ -56,57 +56,57 @@ module Ag2Admin
       if filter == "all"
         @tax_types = TaxType.paginate(:page => params[:page], :per_page => per_page).order(sort_column + ' ' + sort_direction)
       elsif filter == "current"
-        @tax_types = TaxType.where("expiration IS NULL").paginate(:page => params[:page], :per_page => per_page).order(sort_column + ' ' + sort_direction)
+        @tax_types = TaxType.current.paginate(:page => params[:page], :per_page => per_page).order(sort_column + ' ' + sort_direction)
       elsif filter == "expired"
-        @tax_types = TaxType.where("NOT expiration IS NULL").paginate(:page => params[:page], :per_page => per_page).order(sort_column + ' ' + sort_direction)
+        @tax_types = TaxType.expired.paginate(:page => params[:page], :per_page => per_page).order(sort_column + ' ' + sort_direction)
       else
         @tax_types = TaxType.paginate(:page => params[:page], :per_page => per_page).order(sort_column + ' ' + sort_direction)
       end
-  
+
       respond_to do |format|
         format.html # index.html.erb
         format.json { render json: @tax_types }
         format.js
       end
     end
-  
+
     # GET /tax_types/1
     # GET /tax_types/1.json
     def show
       @breadcrumb = 'read'
       @tax_type = TaxType.find(params[:id])
-  
+
       respond_to do |format|
         format.html # show.html.erb
         format.json { render json: @tax_type }
       end
     end
-  
+
     # GET /tax_types/new
     # GET /tax_types/new.json
     def new
       @breadcrumb = 'create'
       @tax_type = TaxType.new
-  
+
       respond_to do |format|
         format.html # new.html.erb
         format.json { render json: @tax_type }
       end
     end
-  
+
     # GET /tax_types/1/edit
     def edit
       @breadcrumb = 'update'
       @tax_type = TaxType.find(params[:id])
     end
-  
+
     # POST /tax_types
     # POST /tax_types.json
     def create
       @breadcrumb = 'create'
       @tax_type = TaxType.new(params[:tax_type])
       @tax_type.created_by = current_user.id if !current_user.nil?
-  
+
       respond_to do |format|
         if @tax_type.save
           format.html { redirect_to @tax_type, notice: crud_notice('created', @tax_type) }
@@ -117,14 +117,14 @@ module Ag2Admin
         end
       end
     end
-  
+
     # PUT /tax_types/1
     # PUT /tax_types/1.json
     def update
       @breadcrumb = 'update'
       @tax_type = TaxType.find(params[:id])
       @tax_type.updated_by = current_user.id if !current_user.nil?
-  
+
       respond_to do |format|
         if @tax_type.update_attributes(params[:tax_type])
           format.html { redirect_to @tax_type,
@@ -136,7 +136,7 @@ module Ag2Admin
         end
       end
     end
-  
+
     # DELETE /tax_types/1
     # DELETE /tax_types/1.json
     def destroy

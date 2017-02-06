@@ -102,7 +102,11 @@ class ServicePoint < ActiveRecord::Base
   end
 
   def assigned_to_subscriber?
-    subscribers.empty? ? false : true
+    !subscribers.empty?
+  end
+
+  def to_label_and_assigned
+    to_label + (assigned_to_subscriber? ? '*' : '')
   end
 
   # Searchable attributes
@@ -114,6 +118,9 @@ class ServicePoint < ActiveRecord::Base
     integer :id
     string :code
     boolean :available_for_contract
+    boolean :assigned_to_subscriber do
+      assigned_to_subscriber?
+    end
     integer :office_id
     integer :service_point_type_id
     integer :service_point_location_id

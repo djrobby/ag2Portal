@@ -12,7 +12,7 @@ class Meter < ActiveRecord::Base
   has_many :meter_details, dependent: :destroy
   has_many :work_orders
   has_many :readings
-  has_one :subscriber
+  has_many :subscribers
 
   has_paper_trail
 
@@ -31,8 +31,22 @@ class Meter < ActiveRecord::Base
 
   # Scopes
   scope :by_code, -> { order(:meter_code) }
-  scope :from_office, ->(office_id) {where(office_id: office_id)}
-  scope :availables, ->(old_subscriber=nil) { select{|m| m.subscriber.nil? or m.id == old_subscriber} }
+  scope :from_office, ->(office_id) { where(office_id: office_id).by_code }
+  # BAD, it's too slow!!
+  # scope :availables, ->(old_subscriber_meter=nil) { select{|m| m.subscribers.empty? or m.id == old_subscriber_meter} }
+  # BETTER, only one SELECT from DB is faster
+  scope :availables, ->(old_subscriber_meter_id=nil) {
+    joins("LEFT JOIN `subscribers` ON subscribers.meter_id=meters.id")
+    .select("meters.*")
+    .where("(subscribers.meter_id IS NULL OR subscribers.meter_id=0) OR meters.id = ?", old_subscriber_meter_id)
+    .by_code
+  }
+  scope :availables_by_caliber, ->(old_subscriber_meter_id=nil,cal) {
+    joins("LEFT JOIN `subscribers` ON subscribers.meter_id=meters.id")
+    .select("meters.*")
+    .where("((subscribers.meter_id IS NULL OR subscribers.meter_id=0) AND meters.caliber_id = ?) OR meters.id = ?", cal, old_subscriber_meter_id)
+    .by_code
+  }
 
   before_validation :fields_to_uppercase
   before_destroy :check_for_dependent_records
@@ -81,6 +95,10 @@ class Meter < ActiveRecord::Base
     !first_installation_date.blank? && last_withdrawal_date.blank?
   end
 
+  def assigned_to_subscriber?
+    !subscribers.empty?
+  end
+
   #
   # Class (self) user defined methods
   #
@@ -121,6 +139,9 @@ class Meter < ActiveRecord::Base
     integer :meter_model_id
     integer :meter_brand_id do
       meter_model.meter_brand_id
+    end
+    boolean :assigned_to_subscriber do
+      assigned_to_subscriber?
     end
     integer :caliber_id
     integer :meter_owner_id

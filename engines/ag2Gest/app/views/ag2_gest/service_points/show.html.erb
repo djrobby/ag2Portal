@@ -7,7 +7,7 @@
       <td><%= t('activerecord.attributes.service_point.id') %>:</td>
       <td><%= @service_point.try(:id) %></td>
       <td><%= t('activerecord.attributes.service_point.code') %>:</td>
-      <td><%= @service_point.try(:code) %></td>
+      <td class="highlighted bolded"><%= @service_point.code %></td>
     </tr>
     <tr>
       <td><%= t('activerecord.attributes.service_point.name') %>:</td>
@@ -84,14 +84,14 @@
     <tr>
       <td><%= t('activerecord.attributes.service_point.diameter') %>:</td>
       <td><%= @service_point.try(:diameter) %></td>
-      <td><%= t('activerecord.attributes.service_point.reading_variant') %>:</td>
-      <td><%= @service_point.try(:reading_variant) %></td>
+      <td><%= t('activerecord.attributes.service_point.reading_route_id') %>:</td>
+      <td><%= @service_point.try(:reading_route).try(:to_label) unless @service_point.reading_route.nil? %></td>
     </tr>
     <tr>
-      <td><%= t('activerecord.attributes.service_point.reading_route_id') %>:</td>
-      <td><%= @service_point.try(:reading_route).try(:name) unless @service_point.reading_route.nil? %></td>
       <td><%= t('activerecord.attributes.service_point.reading_sequence') %>:</td>
       <td><%= @service_point.try(:reading_sequence) %></td>
+      <td><%= t('activerecord.attributes.service_point.reading_variant') %>:</td>
+      <td><%= @service_point.try(:reading_variant) %></td>
     </tr>
     <tr>
       <td><%= t('activerecord.attributes.service_point.company_id') %>:</td>

@@ -17,6 +17,10 @@ class TaxType < ActiveRecord::Base
   validates :description, :presence => true
   validates :tax,         :presence => true
 
+  # Scopes
+  scope :current, -> { where("expiration IS NULL") }
+  scope :expired, -> { where("NOT expiration IS NULL") }
+
   before_destroy :check_for_dependent_records
 
   def to_label
@@ -24,7 +28,7 @@ class TaxType < ActiveRecord::Base
   end
 
   private
-  
+
   def check_for_dependent_records
     # Check for products
     if products.count > 0

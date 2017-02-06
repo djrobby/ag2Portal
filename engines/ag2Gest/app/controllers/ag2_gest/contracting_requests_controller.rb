@@ -861,6 +861,7 @@ module Ag2Gest
           fulltext m
           with :office_id, current_offices_ids
           with :available_for_contract, true
+          # with :assigned_to_subscriber, false
           order_by :street_directory_id
           order_by :code
         end
@@ -963,6 +964,8 @@ module Ag2Gest
       @projects = current_projects
       @projects_ids = current_projects_ids
       @tariff_types_availables = Tariff.availables_to_project(@contracting_request.project_id).map(&:tariff_type).uniq
+      @meters_for_contract = available_meters_for_contract(@contracting_request)
+      @meters_for_subscriber = available_meters_for_subscriber(@contracting_request)
 
       respond_to do |format|
         format.html # show.html.erb
@@ -987,6 +990,7 @@ module Ag2Gest
       # @service_points = ServicePoint.where(office_id: current_offices_ids, available_for_contract: true).select{|s| s.subscribers.empty?}
       @service_points = []
       @offices = current_offices
+
       respond_to do |format|
         format.html # new.html.erb
         format.json { render json: @contracting_request }
@@ -1116,9 +1120,9 @@ module Ag2Gest
           client_id: client.id
         )
       end
-      redirect_to contracting_requests_path, notice: "Subrogacion realizada con exito"
-    rescue ActiveRecord::RecordInvalid => invalid
-       redirect_to contracting_requests_path, alert: "Error al realizar subrogacion"
+      redirect_to contracting_requests_path, notice: t("ag2_gest.contracting_requests.subrogation_notice")
+    rescue ActiveRecord::RecordInvalid
+       redirect_to contracting_requests_path, alert: t("ag2_gest.contracting_requests.subrogation_alert")
     end
 
     # DELETE /contracting_requests/1
@@ -1285,6 +1289,22 @@ module Ag2Gest
 
     private
 
+    def available_meters_for_contract(_request)
+      if session[:office] != '0'
+        Meter.from_office(session[:office]).availables(_request.try(:old_subscriber).try(:meter_id))
+      else
+        Meter.availables(_request.try(:old_subscriber).try(:meter_id))
+      end
+    end
+
+    def available_meters_for_subscriber(_request)
+      if session[:office] != '0'
+        Meter.from_office(session[:office]).availables_by_caliber(_request.try(:old_subscriber).try(:meter_id), _request.water_supply_contract.caliber_id)
+      else
+        Meter.availables_by_caliber(_request.try(:old_subscriber).try(:meter_id), _request.water_supply_contract.caliber_id)
+      end
+    end
+
     def reports_array()
       _array = []
       _array = _array << t("ag2_gest.contracting_requests.report.contracting_request_report")
@@ -1311,9 +1331,35 @@ module Ag2Gest
     def service_points_array(_m)
       _array = []
       _m.each do |i|
-        _array = _array << [i.id, i.to_label]
+        _array = _array << [i.id, i.to_label_and_assigned]
       end
       _array
+    end
+
+    def projects_dropdown
+      if session[:office] != '0'
+        _projects = Project.where(office_id: session[:office].to_i).order(:project_code)
+      elsif session[:company] != '0'
+        _projects = Project.where(company_id: session[:company].to_i).order(:project_code)
+      else
+        _projects = session[:organization] != '0' ? Project.where(organization_id: session[:organization].to_i).order(:project_code) : Project.order(:project_code)
+      end
+    end
+
+    def request_statuses_dropdown
+      ContractingRequestStatus.order(:name)
+    end
+
+    def request_types_dropdown
+      ContractingRequestType.order(:description)
+    end
+
+    def work_orders_dropdown
+      WorkOrder.order(:order_no)
+    end
+
+    def sort_column
+      ContractingRequest.column_names.include?(params[:sort]) ? params[:sort] : "request_no"
     end
 
     def manage_filter_state
@@ -1377,34 +1423,6 @@ module Ag2Gest
       elsif session[:direction]
         params[:direction] = session[:direction]
       end
-
     end
-
-    def sort_column
-      ContractingRequest.column_names.include?(params[:sort]) ? params[:sort] : "request_no"
-    end
-
-    def projects_dropdown
-      if session[:office] != '0'
-        _projects = Project.where(office_id: session[:office].to_i).order(:project_code)
-      elsif session[:company] != '0'
-        _projects = Project.where(company_id: session[:company].to_i).order(:project_code)
-      else
-        _projects = session[:organization] != '0' ? Project.where(organization_id: session[:organization].to_i).order(:project_code) : Project.order(:project_code)
-      end
-    end
-
-    def request_statuses_dropdown
-      _request_statuses = ContractingRequestStatus.order(:name)
-    end
-
-    def request_types_dropdown
-      _request_types = ContractingRequestType.order(:description)
-    end
-
-    def work_orders_dropdown
-      _work_orders = WorkOrder.order(:order_no)
-    end
-
   end
 end

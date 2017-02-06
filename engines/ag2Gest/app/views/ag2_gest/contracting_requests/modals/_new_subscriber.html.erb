@@ -7,11 +7,14 @@
   <div class="modal-body">
 
     <h4><%= t('activerecord.attributes.contracting_request.data_meter') %></h4>
-    <% if !session[:office].blank? %>
-      <%= f.association :meter, required: true, collection: Meter.from_office(session[:office]).availables(@contracting_request.try(:old_subscriber).try(:meter_id)).select{|m| m.caliber_id == @water_supply_contract.caliber_id}, selected: @water_supply_contract.meter_id, input_html: { class: 'x-large-text-field sel2', value: @water_supply_contract.try(:meter_id) }, label_html: { class: 'form-label' }, include_blank: true, label: t('activerecord.attributes.contracting_request.meter') %>
-    <% else %>
-      <%= f.association :meter, required: true, collection: Meter.availables(@contracting_request.try(:old_subscriber).try(:meter_id)).select{|m| m.caliber_id == @water_supply_contract.caliber_id}, selected: @water_supply_contract.meter_id, input_html: { class: 'x-large-text-field sel2', value: @water_supply_contract.try(:meter_id) }, label_html: { class: 'form-label' }, include_blank: true, label: t('activerecord.attributes.contracting_request.meter') %>
-    <% end %>
+    <%= f.association :meter, required: true, collection: @meters_for_subscriber, selected: @water_supply_contract.meter_id, input_html: { class: 'x-large-text-field sel2', value: @water_supply_contract.try(:meter_id) }, label_html: { class: 'form-label' }, include_blank: true, label: t('activerecord.attributes.contracting_request.meter') %>
+    <!--
+    <%# if !session[:office].blank? %>
+      <%#= f.association :meter, required: true, collection: Meter.from_office(session[:office]).availables(@contracting_request.try(:old_subscriber).try(:meter_id)).select{|m| m.caliber_id == @water_supply_contract.caliber_id}, selected: @water_supply_contract.meter_id, input_html: { class: 'x-large-text-field sel2', value: @water_supply_contract.try(:meter_id) }, label_html: { class: 'form-label' }, include_blank: true, label: t('activerecord.attributes.contracting_request.meter') %>
+    <%# else %>
+      <%#= f.association :meter, required: true, collection: Meter.availables(@contracting_request.try(:old_subscriber).try(:meter_id)).select{|m| m.caliber_id == @water_supply_contract.caliber_id}, selected: @water_supply_contract.meter_id, input_html: { class: 'x-large-text-field sel2', value: @water_supply_contract.try(:meter_id) }, label_html: { class: 'form-label' }, include_blank: true, label: t('activerecord.attributes.contracting_request.meter') %>
+    <%# end %>
+    -->
     <% if @contracting_request.old_subscriber.blank? %>
       <%= f.association :reading_route, required: true, collection: ReadingRoute.where(project_id: @contracting_request.project_id), selected: (@contracting_request.service_point.reading_route_id  unless @contracting_request.service_point.blank?), input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' }, include_blank: true, label: t('activerecord.attributes.contracting_request.reading_route') %>
     <% else %>
