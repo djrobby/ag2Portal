@@ -29,8 +29,6 @@
     if ($('#offer_offer_date').val() == "") {
       $('#offer_offer_date').datepicker('setValue', es_date(new Date()));
     }
-    // Setup drag & drop
-    dd_import_files('#dd_files', '#image_content', 'of_update_attachment');
 
     // Save default text color
     text_field_color = $("#offer_offer_no").css('color')
@@ -52,13 +50,6 @@
   });
   
   jQuery(function($) {
-    // when the #offer_attachment field changes
-    $("#offer_attachment").change(function() {
-      readImageFromInput(this, '#dd_files');
-      jQuery.getJSON('of_attachment_changed', function(data) {
-      });
-    });
-
     // when the #offer_offer_no field changes
     $("#offer_offer_no").change(function() {
       var order = $('#offer_offer_no').val();
@@ -80,7 +71,7 @@
       if (order == "")
         order = "0";
       jQuery.getJSON('of_update_project_textfields_from_organization/' + order, function(data) {
-        var c = data.supplier;
+        var c = data.client;
         var r = data.offer_request;
         var p = data.project;
         var w = data.work_order;
@@ -88,19 +79,19 @@
         var s = data.store
         var m = data.payment_method
         var prods = data.product
-        // Supplier
-        $("#offer_supplier_id").html("");
-        $("#offer_supplier_id").select2("val", "");
-        $("#offer_supplier_id").append($('<option></option>').val("").html(""));
+        // client
+        $("#offer_client_id").html("");
+        $("#offer_client_id").select2("val", "");
+        $("#offer_client_id").append($('<option></option>').val("").html(""));
         if (!c.length) {
           $.each(data, function(id, option) {
-            if (id == 'supplier' && option != "") {
-              $("#offer_supplier_id").append($('<option></option>').val(option.id).html(option.supplier_code.substring(0,4) + "-" + option.supplier_code.substring(4,8) + "-" + option.supplier_code.substring(8,14) + " " + option.name));
+            if (id == 'client' && option != "") {
+              $("#offer_client_id").append($('<option></option>').val(option.id).html(option.client_code.substring(0,4) + "-" + option.client_code.substring(4,8) + "-" + option.client_code.substring(8,14) + " " + option.name));
             }
           });
         } else {
           $.each(c, function(id, option) {
-            $("#offer_supplier_id").append($('<option></option>').val(option.id).html(option.supplier_code.substring(0,4) + "-" + option.supplier_code.substring(4,8) + "-" + option.supplier_code.substring(8,14) + " " + option.name));
+            $("#offer_client_id").append($('<option></option>').val(option.id).html(option.client_code.substring(0,4) + "-" + option.client_code.substring(4,8) + "-" + option.client_code.substring(8,14) + " " + option.name));
           });
         }
         // Offer request
@@ -201,13 +192,13 @@
       return false;
     });
 
-    // when the #offer_supplier_id field changes
-    $("#offer_supplier_id").change(function() {
+    // when the #offer_client_id field changes
+    $("#offer_client_id").change(function() {
       // make a POST call and replace the content
-      var supplier = $('select#offer_supplier_id :selected').val();
-      if (supplier == "")
-        supplier = "0";
-      jQuery.getJSON('of_update_request_select_from_supplier/' + supplier, function(data) {
+      var client = $('select#offer_client_id :selected').val();
+      if (client == "")
+        client = "0";
+      jQuery.getJSON('of_update_request_select_from_client/' + client, function(data) {
         var r = data.offer_request;
         $("#offer_offer_request_id").html("");
         $("#offer_offer_request_id").select2("val", "");
@@ -511,7 +502,7 @@
 <%= f.association :organization, collection: Organization.order('name'), input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %>
 <% end %>
 <div>
-  <label class="multi-field-label-two"> <%= f.association :client, collection: @suppliers, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label-under-sel2' } %> </label>
+  <label class="multi-field-label-two"> <%= f.association :client, collection: @clients, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label-under-sel2' } %> </label>
   <label class="multi-field-label-two"> <%= f.association :contracting_request, collection: @sale_offer_requests, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
 </div>
 <div>

@@ -1144,10 +1144,10 @@ module Ag2Gest
         params[:Biller] = session[:Biller]
       end
       # period
-      if params[:Period]
-        session[:Period] = params[:Period]
-      elsif session[:Period]
-        params[:Period] = session[:Period]
+      if params[:Request]
+        session[:Request] = params[:Request]
+      elsif session[:Request]
+        params[:Request] = session[:Request]
       end
     end
   end

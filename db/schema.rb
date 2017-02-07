@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20170205084213) do
+ActiveRecord::Schema.define(:version => 20170207152258) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -857,8 +857,6 @@ ActiveRecord::Schema.define(:version => 20170205084213) do
     t.date     "ending_at"
   end
 
-  add_index "contracted_tariffs", ["ending_at"], :name => "index_contracted_tariffs_on_ending_at"
-  add_index "contracted_tariffs", ["starting_at"], :name => "index_contracted_tariffs_on_starting_at"
   add_index "contracted_tariffs", ["tariff_id"], :name => "index_contracted_tariffs_on_tariff_id"
   add_index "contracted_tariffs", ["water_supply_contract_id"], :name => "index_contracted_tariffs_on_water_supply_contract_id"
 
@@ -3391,15 +3389,19 @@ ActiveRecord::Schema.define(:version => 20170205084213) do
     t.string   "attachment_content_type"
     t.integer  "attachment_file_size"
     t.datetime "attachment_updated_at"
+    t.decimal  "withholding",             :precision => 13, :scale => 4, :default => 0.0, :null => false
+    t.string   "internal_no"
   end
 
   add_index "supplier_invoices", ["charge_account_id"], :name => "index_supplier_invoices_on_charge_account_id"
+  add_index "supplier_invoices", ["internal_no"], :name => "index_supplier_invoices_on_internal_no"
   add_index "supplier_invoices", ["invoice_date"], :name => "index_supplier_invoices_on_invoice_date"
   add_index "supplier_invoices", ["invoice_no"], :name => "index_supplier_invoices_on_invoice_no"
   add_index "supplier_invoices", ["organization_id", "supplier_id", "invoice_no"], :name => "index_supplier_invoices_on_organization_and_supplier_and_no", :unique => true
   add_index "supplier_invoices", ["organization_id"], :name => "index_supplier_invoices_on_organization_id"
   add_index "supplier_invoices", ["payment_method_id"], :name => "index_supplier_invoices_on_payment_method_id"
   add_index "supplier_invoices", ["posted_at"], :name => "index_supplier_invoices_on_posted_at"
+  add_index "supplier_invoices", ["project_id", "internal_no"], :name => "index_supplier_invoices_on_project_and_internal_no", :unique => true
   add_index "supplier_invoices", ["project_id"], :name => "index_supplier_invoices_on_project_id"
   add_index "supplier_invoices", ["receipt_note_id"], :name => "index_supplier_invoices_on_receipt_note_id"
   add_index "supplier_invoices", ["supplier_id"], :name => "index_supplier_invoices_on_supplier_id"

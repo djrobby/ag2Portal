@@ -74,7 +74,7 @@ es:
         contracting_request_status: "Estado"
         contracting_request_type_id: "Tipo"
         contracting_request_type: "Tipo"
-        subscriber_id: "Abonado anterior"
+        subscriber_id: "Abonado que causa baja"
         subscriber_center: "Núcleo"
         subscriber_center_id: "Núcleo"
         subscriber_building: "Edificio/Bloque"

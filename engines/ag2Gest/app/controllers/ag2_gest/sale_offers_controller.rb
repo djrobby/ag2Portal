@@ -2,21 +2,84 @@ require_dependency "ag2_gest/application_controller"
 
 module Ag2Gest
   class SaleOffersController < ApplicationController
-
+    include ActionView::Helpers::NumberHelper
     before_filter :authenticate_user!
     load_and_authorize_resource
-    helper_method :sort_column
-
-
+    skip_load_and_authorize_resource :only => [:ci_generate_no,
+                                               :ci_update_selects_from_organization,
+                                               :ci_update_offer_select_from_client,
+                                               :ci_update_selects_from_offer,
+                                               :ci_update_selects_from_project,
+                                               :ci_format_number,
+                                               :ci_format_number_4,
+                                               :ci_item_totals,
+                                               :ci_update_description_prices_from_product,
+                                               :ci_update_product_select_from_offer_item,
+                                               :ci_update_amount_from_price_or_quantity,
+                                               :ci_item_balance_check,
+                                               :ci_item_totals,
+                                               :ci_generate_invoice,
+                                               :ci_current_balance,
+                                               :send_invoice_form,
+                                               :invoice_form,
+                                               :bill_create, :bill_update]
+    # Helper methods for
+    # => allow edit (hide buttons)
+    helper_method :cannot_edit
+    # => returns client code & full name
+    helper_method :client_name
 
     # GET /sale_offers
     # GET /sale_offers.json
     def index
-      @sale_offers = SaleOffer.all
+      manage_filter_state
+      no = params[:No]
+      client = params[:Client]
+      project = params[:Project]
+      status = params[:Status]
+      order = params[:Order]
+      request = params[:Request]
+      # OCO
+      init_oco if !session[:organization]
+      # Initialize select_tags
+      @projects = projects_dropdown if @projects.nil?
+      @status = sale_offer_statuses_dropdown if @status.nil?
+      @work_orders = sale_offer_statuses_dropdown if @work_orders.nil?
+      @contracting_requests = sale_offer_statuses_dropdown if @contracting_requests.nil?
+
+      # Arrays for search
+      current_projects = @projects.blank? ? [0] : current_projects_for_index(@projects)
+      # If inverse no search is required
+      no = !no.blank? && no[0] == '%' ? inverse_no_search(no) : no
+
+      @search = SaleOffer.search do
+        with :project_id, current_projects
+        fulltext params[:search]
+        if !no.blank?
+          if no.class == Array
+            with :offer_no, no
+          else
+            with(:offer_no).starting_with(no)
+          end
+        end
+        if !client.blank?
+          fulltext client
+        end
+        if !project.blank?
+          with :project_id, project
+        end
+        if !status.blank?
+          with :sale_offer_status_id, status
+        end
+        order_by :sort_no, :asc
+        paginate :page => params[:page] || 1, :per_page => per_page || 10
+      end
+      @sale_offers = @search.results
 
       respond_to do |format|
         format.html # index.html.erb
         format.json { render json: @sale_offers }
+        format.js
       end
     end
 
@@ -111,6 +174,104 @@ module Ag2Gest
         _current_projects = _current_projects << i.id
       end
       _current_projects
+    end
+
+    def inverse_no_search(no)
+      _numbers = []
+      # Add numbers found
+      SaleOffer.where('offer_no LIKE ?', "#{no}").each do |i|
+        _numbers = _numbers << i.offer_no
+      end
+      _numbers = _numbers.blank? ? no : _numbers
+    end
+
+    def projects_dropdown
+      _array = []
+      _projects = nil
+      _offices = nil
+      _companies = nil
+
+      if session[:office] != '0'
+        _projects = Project.where(office_id: session[:office].to_i).order(:project_code)
+      elsif session[:company] != '0'
+        _offices = current_user.offices
+        if _offices.count > 1 # If current user has access to specific active company offices (more than one: not exclusive, previous if)
+          _projects = Project.where('company_id = ? AND office_id IN (?)', session[:company].to_i, _offices)
+        else
+          _projects = Project.where(company_id: session[:company].to_i).order(:project_code)
+        end
+      else
+        _offices = current_user.offices
+        _companies = current_user.companies
+        if _companies.count > 1 and _offices.count > 1 # If current user has access to specific active organization companies or offices (more than one: not exclusive, previous if)
+          _projects = Project.where('company_id IN (?) AND office_id IN (?)', _companies, _offices)
+        else
+          _projects = session[:organization] != '0' ? Project.where(organization_id: session[:organization].to_i).order(:project_code) : Project.order(:project_code)
+        end
+      end
+
+      # Returning founded projects
+      ret_array(_array, _projects, 'id')
+      _projects = Project.where(id: _array).order(:project_code)
+    end
+
+    def sale_offer_statuses_dropdown
+      SaleOfferStatus.all
+    end
+
+    # Returns _array from _ret table/model filled with _id attribute
+    def ret_array(_array, _ret, _id)
+      if !_ret.nil?
+        _ret.each do |_r|
+          _array = _array << _r.read_attribute(_id) unless _array.include? _r.read_attribute(_id)
+        end
+      end
+    end
+
+    # Keeps filter state
+    def manage_filter_state
+      # search
+      if params[:search]
+        session[:search] = params[:search]
+      elsif session[:search]
+        params[:search] = session[:search]
+      end
+      # no
+      if params[:No]
+        session[:No] = params[:No]
+      elsif session[:No]
+        params[:No] = session[:No]
+      end
+      # project
+      if params[:Project]
+        session[:Project] = params[:Project]
+      elsif session[:Project]
+        params[:Project] = session[:Project]
+      end
+      # client
+      if params[:Client]
+        session[:Client] = params[:Client]
+      elsif session[:Client]
+        params[:Client] = session[:Client]
+      end
+      # status
+      if params[:Status]
+        session[:Status] = params[:Status]
+      elsif session[:Status]
+        params[:Status] = session[:Status]
+      end
+      # order
+      if params[:Order]
+        session[:Order] = params[:Order]
+      elsif session[:Order]
+        params[:Order] = session[:Order]
+      end
+      # request
+      if params[:Period]
+        session[:Period] = params[:Period]
+      elsif session[:Period]
+        params[:Period] = session[:Period]
+      end
     end
   end
 end

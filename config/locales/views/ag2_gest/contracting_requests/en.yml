@@ -91,7 +91,7 @@ en:
       fiscal_error: "Wrong Fiscal Id or Entity (TaxPayer) does not exist."
       code_error: "Unable to generate Contracting Request Code: No Organization chosen."
       required_error: "Requiered fields are empty"
-      label_subscriber_search: "Search Previous subscriber"
+      label_subscriber_search: "Search Subscriber to unsubscribe"
       label_service_point_search: "Search Supply point(s)"
       subrogation_alert: "Unable to process your subrogation request."
       subrogation_notice: "Subrogation request was successfully created."

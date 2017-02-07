@@ -36,6 +36,8 @@ module Ag2Gest
                                                 :cr_find_subscriber,
                                                 :cr_find_service_point ]
     # Helper methods for
+    # => sort
+    helper_method :sort_column
     helper_method :sort_column
     # => search available meters
     helper_method :available_meters_for_contract
@@ -1300,7 +1302,7 @@ module Ag2Gest
 
     def available_meters_for_subscriber(_request)
       if _request.water_supply_contract.blank? || _request.water_supply_contract.caliber_id.blank?
-        available_for_contract(_request)
+        available_meters_for_contract(_request)
       else
         if session[:office] != '0'
           Meter.from_office(session[:office]).availables_by_caliber(_request.try(:old_subscriber).try(:meter_id), _request.water_supply_contract.caliber_id)

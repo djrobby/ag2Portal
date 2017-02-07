@@ -20,13 +20,11 @@ module Ag2Gest
       session[:Period] = nil
       session[:Group] = nil
       session[:Project] = nil
-
       session[:Client] = nil
-      session[:Subscriber] = nil
       session[:Operation] = nil
       session[:Biller] = nil
       session[:entity] = nil
-
+      session[:Request] = nil
       session[:ReadingRoute] = nil
       session[:Meter] = nil
       session[:Order] = nil

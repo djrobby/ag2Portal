@@ -73,7 +73,7 @@ en:
         contracting_request_status: "Estado"
         contracting_request_type_id: "Tipo"
         contracting_request_type: "Tipo"
-        subscriber_id: "Previous subscriber"
+        subscriber_id: "Subscriber to unsubscribe"
         subscriber_center: "Núcleo"
         subscriber_center_id: "Núcleo"
         subscriber_building: "Edificio/Bloque"

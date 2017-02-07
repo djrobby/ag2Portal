@@ -19,7 +19,7 @@
       $('.ndate_picker').datepicker('hide');
     });
     // Initialized form variable
-    _thisForm = $("#Supplier").closest('form')[0];
+    _thisForm = $("#Client").closest('form')[0];
   }); 
 
   $(document).ajaxStart(function() {
@@ -35,18 +35,22 @@
 
   $(window).bind("load", function() {
     $("#No").val("<%= params[:No] %>");
-    $("#Supplier").select2("val", "<%= params[:Supplier] %>");
+    $("#Client").select2("val", "<%= params[:Client] %>");
     $("#Project").select2("val", "<%= params[:Project] %>");
+    $("#Status").select2("val", "<%= params[:Status] %>");
     $("#Order").select2("val", "<%= params[:Order] %>");
+    $("#Request").select2("val", "<%= params[:Request] %>");
   });
 
   jQuery(function($) {
     // when the #removeFilter button clicked
     $("#removeFilter").click(function() {
       $("#No").val("");
-      $("#Supplier").select2("val", "");
+      $("#Client").select2("val", "");
       $("#Project").select2("val", "");
+      $("#Status").select2("val", "");
       $("#Order").select2("val", "");
+      $("#Request").select2("val", "");
       $("#search").val("");
       // no AJAX
       //_thisForm.submit();
@@ -71,15 +75,21 @@
         <!-- No -->
         <%= label_tag I18n.t("activerecord.attributes.sale_offer.offer_no"), nil, :class => 'form-label' %>
         <%= text_field_tag "No", nil, :class => 'x-large-text-field shrinked number-text-field', onkeyup: "caps(this)" %>
-        <!-- Supplier -->
-        <%= label_tag I18n.t("ag2_gest.sale_offers.index.label_supplier"), nil, :class => 'form-label' %>
-        <%= select_tag "Supplier", options_from_collection_for_select(@suppliers, "id", "full_name"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
+        <!-- Client -->
+        <%= label_tag I18n.t("ag2_gest.sale_offers.index.label_client"), nil, :class => 'form-label' %>
+        <%= text_field_tag "Client", nil, :class => 'x-large-text-field shrinked' %>
         <!-- Project -->
         <%= label_tag I18n.t("ag2_gest.sale_offers.index.label_project"), nil, :class => 'form-label-under-sel2' %>
         <%= select_tag "Project", options_from_collection_for_select(@projects, "id", "full_name"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
+        <!-- Status -->
+        <%= label_tag I18n.t("ag2_gest.sale_offers.index.label_status"), nil, :class => 'form-label-under-sel2' %>
+        <%= select_tag "Status", options_from_collection_for_select(@status, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
         <!-- Work order -->
         <%= label_tag I18n.t("ag2_gest.sale_offers.index.label_work_order"), nil, :class => 'form-label-under-sel2' %>
         <%= select_tag "Order", options_from_collection_for_select(@work_orders, "id", "full_name"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
+        <!-- Contracting request -->
+        <%= label_tag I18n.t("ag2_gest.sale_offers.index.label_contracting_request"), nil, :class => 'form-label-under-sel2' %>
+        <%= select_tag "Request", options_from_collection_for_select(@contracting_requests, "id", "full_name"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
         <!-- Others -->
         <%= label_tag I18n.t("ag2_gest.sale_offers.index.label_others"), nil, :class => 'form-label-under-sel2' %>
         <%= text_field_tag :search, params[:search], :class => 'x-large-text-field shrinked' %>
