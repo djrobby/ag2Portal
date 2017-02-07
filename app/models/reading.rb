@@ -387,7 +387,7 @@ class Reading < ActiveRecord::Base
 
   def consumption_total_period
     # @readings = Reading.where(billing_period_id: billing_period_id, subscriber_id: subscriber_ids).where('reading_type_id NOT IN (?)',[1,2,5,6]).group_by(&:reading_1_id)
-    readings = subscriber.readings.where(billing_period_id: billing_period_id).where('reading_type_id IN (?)',[1,2,5,6]).order(:reading_date).group_by(&:reading_1_id)
+    readings = subscriber.readings.where(billing_period_id: billing_period_id).where('reading_type_id IN (?)',[ReadingType::NORMAL,ReadingType::OCTAVILLA,ReadingType::RETIRADA,ReadingType::AUTO]).order(:reading_date).group_by(&:reading_1_id)
     total = 0
     readings.each do |reading|
       total += reading[1].last.consumption

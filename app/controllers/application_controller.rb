@@ -750,7 +750,7 @@ end
   end
 
   def set_reading_1_to_reading(subscriber,meter,billing_period)
-    reading = meter.readings.where(meter_id: meter.id, reading_type_id: 4, billing_period_id: billing_period.id ,subscriber_id: subscriber.id).order(:reading_date).last
+    reading = meter.readings.where(meter_id: meter.id, reading_type_id: ReadingType::INSTALACION, billing_period_id: billing_period.id ,subscriber_id: subscriber.id).order(:reading_date).last
     if !reading.blank?
       return reading
     else
@@ -760,7 +760,7 @@ end
         # reading.billing_period_id == billing_period.id ? reading : nil
         nil
       else
-        Reading.where(meter_id: meter.id, reading_type_id: [1,2,5,6], billing_period_id: pervious_period_id, subscriber_id: subscriber.id).order(:reading_date).last || Reading.where(meter_id: meter.id, reading_type_id: 4, billing_period_id: pervious_period_id).order(:reading_date).last
+        Reading.where(meter_id: meter.id, reading_type_id: [ReadingType::NORMAL,ReadingType::OCTAVILLA,ReadingType::RETIRADA,ReadingType::AUTO], billing_period_id: pervious_period_id, subscriber_id: subscriber.id).order(:reading_date).last || Reading.where(meter_id: meter.id, reading_type_id: ReadingType::INSTALACION, billing_period_id: pervious_period_id).order(:reading_date).last
       end
     end
   end
@@ -770,7 +770,7 @@ end
     if pervious_year_id.blank?
       nil
     else
-      Reading.where(meter_id: meter.id, reading_type_id: [1,2,4,5,6], billing_period_id: pervious_year_id, subscriber_id: subscriber.id).order(:reading_date).last
+      Reading.where(meter_id: meter.id, reading_type_id: [ReadingType::NORMAL,ReadingType::OCTAVILLA,ReadingType::INSTALACION,ReadingType::RETIRADA,ReadingType::AUTO], billing_period_id: pervious_year_id, subscriber_id: subscriber.id).order(:reading_date).last
     end
   end
 

@@ -299,8 +299,9 @@ class ContractingRequest < ActiveRecord::Base
       created_by: created_by,
       payment_method_id: 1
     )
+    client.client_bank_accounts.where(ending_at: nil).update_all(ending_at: Date.today)
     ClientBankAccount.create(client_id: client.id,
-                              bank_account_class_id: 2,
+                              bank_account_class_id: BankAccountClass::SERVICIO,
                               starting_at: Date.today,
                               country_id: country_id,
                               iban_dc: iban_dc,

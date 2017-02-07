@@ -4,6 +4,8 @@ class ContractingRequestType < ActiveRecord::Base
   SUBROGATION = 2
   CONNECTION = 3
   CHANGE_OWNERSHIP = 4
+  CHANGE_USE_AND_TARIFF = 5 #Cambio de uso y se cambiaran tarifas // Cambio de tarifa por cambio de calibre del contador y no tiene por que cambiar el uso.
+  CANCELLATION = 6 #Baja de servicio.
 
   attr_accessible :description
 

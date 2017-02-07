@@ -1,4 +1,13 @@
 class BankAccountClass < ActiveRecord::Base
+  # CONSTANTS (right)
+  SERVICIO = 1
+  TCA = 2
+  CONTRATACION = 3
+  FRACCIONAMIENTO = 4
+  TODAS = 5
+  PROVEEDOR = 6
+  OTRAS = 7
+
   attr_accessible :name
 
   has_many :supplier_bank_accounts

@@ -16,7 +16,7 @@ class Tariff < ActiveRecord::Base
                   :fixed_fee, :percentage_applicable_formula, :percentage_fee, :tax_type_b_id,
                   :tax_type_f_id, :tax_type_p_id, :tax_type_v_id, :variable_fee, :tariff_type_id,
                   :billable_item_id, :caliber_id, :tariff_scheme_id, :billing_frequency_id,
-                  :starting_at, :ending_at
+                  :starting_at, :ending_at, :tariff_ids
 
   has_one :active_tariff
   has_one :billable_concept, through: :billable_item
@@ -74,6 +74,10 @@ class Tariff < ActiveRecord::Base
     integer :billing_frequency_id
     time :ending_at
     time :starting_at
+  end
+
+  def to_label
+    "#{tariff_type.name} #{try(:billable_item).try(:billable_concept).try(:name)} - #{caliber.try(:caliber)} (#{I18n.l(starting_at)})"
   end
 
   # THIS METHOD IS CONCEPTUALLY WRONG!!
