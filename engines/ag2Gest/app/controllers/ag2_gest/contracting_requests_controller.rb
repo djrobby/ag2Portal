@@ -35,12 +35,13 @@ module Ag2Gest
                                                 :cr_find_meter,
                                                 :cr_find_subscriber,
                                                 :cr_find_service_point ]
-
+    # Helper methods for
     helper_method :sort_column
+    # => search available meters
+    helper_method :available_meters_for_contract
+    helper_method :available_meters_for_subscriber
 
     def dn_update_from_invoice
-
-
       invoice_items = JSON.parse(params[:arr_invoice]) #INVOICEITEM TOTAL
       #parsed_json = ActiveSupport::JSON.decode(params[:arr_invoice])
 
@@ -964,8 +965,8 @@ module Ag2Gest
       @projects = current_projects
       @projects_ids = current_projects_ids
       @tariff_types_availables = Tariff.availables_to_project(@contracting_request.project_id).map(&:tariff_type).uniq
-      @meters_for_contract = available_meters_for_contract(@contracting_request)
-      @meters_for_subscriber = available_meters_for_subscriber(@contracting_request)
+      # @meters_for_contract = available_meters_for_contract(@contracting_request)
+      # @meters_for_subscriber = available_meters_for_subscriber(@contracting_request)
 
       respond_to do |format|
         format.html # show.html.erb
@@ -1298,10 +1299,14 @@ module Ag2Gest
     end
 
     def available_meters_for_subscriber(_request)
-      if session[:office] != '0'
-        Meter.from_office(session[:office]).availables_by_caliber(_request.try(:old_subscriber).try(:meter_id), _request.water_supply_contract.caliber_id)
+      if _request.water_supply_contract.blank? || _request.water_supply_contract.caliber_id.blank?
+        available_for_contract(_request)
       else
-        Meter.availables_by_caliber(_request.try(:old_subscriber).try(:meter_id), _request.water_supply_contract.caliber_id)
+        if session[:office] != '0'
+          Meter.from_office(session[:office]).availables_by_caliber(_request.try(:old_subscriber).try(:meter_id), _request.water_supply_contract.caliber_id)
+        else
+          Meter.availables_by_caliber(_request.try(:old_subscriber).try(:meter_id), _request.water_supply_contract.caliber_id)
+        end
       end
     end
 
