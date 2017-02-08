@@ -79,7 +79,7 @@
         <%= label_tag I18n.t("ag2_gest.sale_offers.index.label_client"), nil, :class => 'form-label' %>
         <%= text_field_tag "Client", nil, :class => 'x-large-text-field shrinked' %>
         <!-- Project -->
-        <%= label_tag I18n.t("ag2_gest.sale_offers.index.label_project"), nil, :class => 'form-label-under-sel2' %>
+        <%= label_tag I18n.t("ag2_gest.sale_offers.index.label_project"), nil, :class => 'form-label' %>
         <%= select_tag "Project", options_from_collection_for_select(@projects, "id", "full_name"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
         <!-- Status -->
         <%= label_tag I18n.t("ag2_gest.sale_offers.index.label_status"), nil, :class => 'form-label-under-sel2' %>
@@ -100,7 +100,7 @@
         <% end %>
         <!-- Buttons -->
         <%= render :partial => '/layouts/crud/new', :locals => { :model => Offer, :path => new_sale_offer_path, :txt => t(".btn_new") } %>
-        <%= link_to t(".back_to_root"), ag2_gest.root_path %>
+        <%= link_to t(".back_to_management"), ag2_gest.sale_offer_management_path %>
       </div><!-- /.sidebar-nav -->
     </div><!-- /.span3 -->
 

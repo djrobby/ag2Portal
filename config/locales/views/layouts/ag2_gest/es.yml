@@ -40,6 +40,9 @@ es:
       sale_offer_statuses:
         items: "Estados de oferta"
         item: "Estado"
+      sale_offers:
+        items: "Ofertas de venta"
+        item: "Oferta"
       billing_periods:
         items: "Períodos"
         item: "Período"

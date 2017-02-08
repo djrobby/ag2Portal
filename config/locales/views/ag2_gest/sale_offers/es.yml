@@ -2,19 +2,27 @@ es:
   ag2_gest:
     sale_offers:
       index:
-        title: "Ofertas (venta)"
+        title: "Ofertas de venta"
         btn_new: "Nueva Oferta"
         back_to_root: "Volver a ag2Gest"
+        back_to_management: "Volver a Gestión de Ofertas"
+        label_client: "Cliente"
+        label_project: "Proyecto"
+        label_status: "Estado"
+        label_work_order: "Orden de trabajo"
+        label_contracting_request: "Solicitud contratación"
+        label_others: "Otros"
+        btn_apply: "Aplicar Filtro"
       show:
-        title: "Oferta (venta)"
+        title: "Oferta de venta"
         btn_edit: "Editar Oferta"
         btn_delete: "Borrar Oferta"
         return_to: "Volver a Oferta"
       edit:
-        title: "Editar Oferta (venta)"
+        title: "Editar Oferta de venta"
         btn_show: "Ver Oferta"
       new:
-        title: "Nuevo Oferta (venta)"
+        title: "Nueva Oferta de venta"
       back_to_main_page: "Volver a Ofertas"
       generate_code_btn: "Nº de Oferta"
       fiscal_error: "Id Fiscal erróneo o Entidad (Sujeto Pasivo) no existe."

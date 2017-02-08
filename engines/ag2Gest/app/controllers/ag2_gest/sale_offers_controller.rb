@@ -44,8 +44,8 @@ module Ag2Gest
       # Initialize select_tags
       @projects = projects_dropdown if @projects.nil?
       @status = sale_offer_statuses_dropdown if @status.nil?
-      @work_orders = sale_offer_statuses_dropdown if @work_orders.nil?
-      @contracting_requests = sale_offer_statuses_dropdown if @contracting_requests.nil?
+      @work_orders = work_orders_dropdown if @work_orders.nil?
+      @contracting_requests = contracting_requests_dropdown if @contracting_requests.nil?
 
       # Arrays for search
       current_projects = @projects.blank? ? [0] : current_projects_for_index(@projects)
@@ -217,6 +217,14 @@ module Ag2Gest
 
     def sale_offer_statuses_dropdown
       SaleOfferStatus.all
+    end
+
+    def work_orders_dropdown
+      session[:organization] != '0' ? WorkOrder.where(organization_id: session[:organization].to_i).order(:order_no) : WorkOrder.order(:order_no)
+    end
+
+    def contracting_requests_dropdown
+      session[:organization] != '0' ? ContractingRequest.belongs_to_organization(session[:organization].to_i) : ContractingRequest.by_no
     end
 
     # Returns _array from _ret table/model filled with _id attribute

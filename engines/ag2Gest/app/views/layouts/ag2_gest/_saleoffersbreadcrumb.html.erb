@@ -1,14 +1,16 @@
 <% content_for :title, "aGestiona2 | ag2SaleOffers" %>
-<% content_for :icon, "/assets/icon/ag2Orders.png" %>
+<% content_for :icon, "/assets/icon/ag2SaleOffers.png" %>
 <% content_for :alt, "ag2SaleOffers" %>
 
-<!-- Breadcrumb -->
 <ul class="breadcrumb">
   <li>
     <a href="<%= main_app.root_path %>"><i class="icon-home"></i></a><span class="divider">></span>
   </li>
   <li>
     <a href="<%= ag2_gest.root_path %>">ag2Gest</a><span class="divider">></span>
+  </li>
+  <li>
+    <a href="<%= ag2_gest.sale_offer_management_path %>"><%= t "ag2_gest.home.index.sale_offer_management" %></a><span class="divider">></span>
   </li>
   <% if @sale_offers %>
   <li>

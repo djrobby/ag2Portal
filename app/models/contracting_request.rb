@@ -105,6 +105,10 @@ class ContractingRequest < ActiveRecord::Base
   validates :subscriber_zipcode,          :presence => true
   # validates :subscriber_id, presence: true, if: "contracting_request_type_id==2"
 
+  # Scopes
+  scope :by_no, -> { order(:request_no) }
+  scope :belongs_to_organization, -> org { joins(:project).where("projects.organization_id = ?", org).by_no }
+
   # CALLBACKS
   after_create :to_client #create/assign client after create contracting_request
 
