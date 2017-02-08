@@ -10,11 +10,16 @@ class WaterSupplyContract < ActiveRecord::Base
   belongs_to :work_order
   belongs_to :use
   belongs_to :tariff_type
+  belongs_to :unsubscribe_bill, :class_name => 'Bill'
+  belongs_to :bailback_bill, :class_name => 'Bill'
 
   has_many :contracted_tariffs
   has_many :tariffs, through: :contracted_tariffs
 
-  attr_accessible :bill_id, :cadastral_reference, :caliber_id, :client_id, :contract_date,
+  attr_accessible :bill_id,                 # Contract bill for: New contracting or change of holder (to NEW subscriber)
+                  :unsubscribe_bill_id,     # Service bill for: Change of holder or unsubscribe (to OLD subscriber, meter withdrawal)
+                  :bailback_bill_id,        # Contract bill for: Change of holder or unsubscribe (return of deposit to OLD subscriber)
+                  :cadastral_reference, :caliber_id, :client_id, :contract_date,
                   :contracting_request_id, :endowments, :gis_id, :inhabitants,
                   :installation_date, :meter_id, :reading_route_id, :reading_sequence, :installation_index,
                   :remarks, :subscriber_id, :tariff_scheme_id, :work_order_id, :use_id, :tariff_type_id
