@@ -34,7 +34,11 @@
       <% end %>
       <td><%= formatted_timestamp(ticket.created_at.utc.getlocal) %></td>
       <td><%= User.find(ticket.created_by).email unless ticket.created_by.blank? %></td>
-      <td><%= ticket.ticket_subject %></td>
+      <% if ticket.ticket_status_id == 4 %>
+        <td><%= ticket.ticket_subject %></td>
+      <% else %>
+        <td title="<%= ticket.short_ticket_message %>"><%= ticket.ticket_subject %></td>
+      <% end %>
       <td><%= ticket.ticket_status.name.titleize unless ticket.ticket_status.blank? %></td>
       <td> <%= render :partial => '/layouts/ag2_help_desk/crud/ticket_status', :locals => { :ticket => ticket } %>
       <%= render :partial => '/layouts/crud/edit', :locals => { :model => Ticket, :path => edit_ticket_path(ticket) } %>

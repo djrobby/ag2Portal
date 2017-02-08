@@ -25,11 +25,18 @@ class Ticket < ActiveRecord::Base
   validates_attachment_content_type :attachment, :content_type => /\Aimage\/.*\Z/, :message => :attachment_invalid
   #validates_attachment_content_type :attachment, :content_type => [/\Aimage\/.*\Z/, 'application/pdf'], :message => :attachment_invalid
   #validates_attachment_content_type :attachment, :content_type => ['image/jpeg', 'image/png', 'image/gif', 'application/pdf']
-  
+
   before_create :assign_default_status_and_office
   after_create :send_create_email
   before_update :status_changed
 
+  def short_ticket_message
+    ticket_message.blank? ? '...' : (ticket_message.length>200 ? ticket_message[0,200]+'...' : ticket_message)
+  end
+
+  #
+  # Class (self) user defined methods
+  #
   def self.destinations
     destinations = []
     # loop thru existing tickets
@@ -38,13 +45,13 @@ class Ticket < ActiveRecord::Base
       exists = false
       for i in 0...destinations.size
         if u.hd_email == destinations[i]
-          exists = true          
+          exists = true
         end
       end
       if exists == false
         destinations = destinations << u.hd_email
       end
-    end        
+    end
     destinations
   end
 
@@ -80,7 +87,7 @@ class Ticket < ActiveRecord::Base
       false
     end
   end
-  
+
   def assign_default_status_and_office
     # Assign default status
     if self.ticket_status_id.blank?
