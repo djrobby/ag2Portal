@@ -20,9 +20,12 @@
 
   $(document).ready(function() {
     // Select2
-    $('select.sel2').select2({
+    $('select.custom-sel2').select2({
       formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
-      allowClear: true
+      allowClear: true,
+      formatSelection: function(country){
+        return '<span>' + country.text.split(' ')[0] + '</span>';
+      },
     });
 
     // DatePicker
@@ -297,24 +300,28 @@
       return false;
     });
 
-    // when the #contracting_request_service_point_id field changes
+    // when the #contracting_request_bank_id field changes
     $("#contracting_request_bank_id").change(function() {
       // make a POST call and replace the content
-      var contact = $('select#contracting_request_bank_id :selected').val();
-      if (contact == "")
-        contact = "0";
-      jQuery.getJSON('update_bank_offices_from_bank/' + contact, function(data) {
-        // debugger
-        // $("#contracting_request_bank_id").select2({data:data[$(this).val()]});}).trigger('change');
-        // .select2(data,data.bank_offices);
-        // $("contracting_request_bank_office_id").select2('destroy').empty()
-        // $.each(data.bank_offices, function(index) {
-        //   $("contracting_request_bank_office_id").select2({data: [{id: $(this)[0], text: $(this)[1]}]});
-        // });
-        // debugger
-        $("#contracting_request_bank_office_id").select2({
-          data: data.bank_offices
-        })
+      var bank = $('select#contracting_request_bank_id :selected').val();
+      if (bank == "")
+        bank = "0";
+      jQuery.getJSON('update_bank_offices_from_bank/' + bank, function(data) {
+        var o = data.office;
+        $("#contracting_request_bank_office_id").html("");
+        $("#contracting_request_bank_office_id").select2("val", "");
+        $("#contracting_request_bank_office_id").append($('<option></option>').val("").html(""));
+        if (!o.length) {
+          $.each(data, function(id, option) {
+            if (id == 'office' && option != "") {
+              $("#contracting_request_bank_office_id").append($('<option></option>').val(option[0]).html(option[1] + " " + option[2] + " " + option[3]));
+            }
+          });
+        } else {
+          $.each(o, function(id, option) {
+            $("#contracting_request_bank_office_id").append($('<option></option>').val(option[0]).html(option[1] + " " + option[2] + " " + option[3]));
+          });
+        }
       });
       return false;
     });
@@ -865,17 +872,17 @@
   <h4><%=t 'ag2_gest.contracting_requests.new.iban' %></h4>
   <div class="row-fluid">
     <!-- COUNTRY CODE -->
-    <%= f.input :country_id, collection: Country.all(order: 'code'), label_method: :full_name, value_method: :id, :input_html => { :class => 'x-large-text-field sel2', maxlength: "2" }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span2" } %>
+    <%= f.input :country_id, collection: Country.all(order: 'code'), label_method: :full_name, value_method: :id, :input_html => { :class => 'x-large-text-field custom-sel2', maxlength: "2" }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span2" } %>
     <!-- IBAN DC -->
     <%= f.input :iban_dc, :input_html => { :class => 'x-large-text-field', maxlength: "2" }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span1" } %>
     <!-- BANK -->
-    <%= f.input :bank_id, collection: Bank.all(order: 'code'), label_method: :full_name, value_method: :id, :input_html => { :class => 'x-large-text-field sel2', maxlength: "4" }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span2" } %>
+    <%= f.input :bank_id, collection: Bank.all(order: 'code'), label_method: :full_name, value_method: :id, :input_html => { :class => 'x-large-text-field custom-sel2', maxlength: "4" }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span2" } %>
     <!-- BANK OFFICE -->
-    <%= f.input :bank_office_id, collection: BankOffice.all(order: 'code'), label_method: :full_name, value_method: :id, :input_html => { :class => 'x-large-text-field sel2', maxlength: "4" }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span2" } %>
+    <%= f.input :bank_office_id, collection: BankOffice.order(:bank_id, :code), label_method: :full_name, value_method: :id, :input_html => { :class => 'x-large-text-field custom-sel2', maxlength: "4" }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span2" } %>
     <!-- DC -->
-    <%= f.input :ccc_dc, :input_html => { :class => 'x-large-text-field', maxlength: "2" }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span1" } %>
+    <%#= f.input :ccc_dc, :input_html => { :class => 'x-large-text-field', maxlength: "2" }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span1" } %>
     <!-- ACCOUNT NO -->
-    <%= f.input :account_no, :input_html => { :class => 'x-large-text-field', maxlength: "10" }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span4" } %>
+    <%= f.input :account_no, :input_html => { :class => 'x-large-text-field', maxlength: "12" }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span5" } %>
   </div>
 </div>
 

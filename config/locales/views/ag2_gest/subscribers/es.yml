@@ -12,6 +12,7 @@ es:
         billing_frequency: "Frequencia de facturación"
         tariff_type: "Tipo de tarifa"
         label_others: "Otros"
+        add_tariff: "Modificar tarifas"
       show:
         title: "Abonado"
         btn_edit: "Editar Abonado"

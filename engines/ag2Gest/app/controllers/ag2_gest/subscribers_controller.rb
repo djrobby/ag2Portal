@@ -20,6 +20,17 @@ module Ag2Gest
                                                 :subscriber_eco_report,
                                                 :rebilling ]
 
+    def update_tariffs
+      @subscriber = Subscriber.find params[:id]
+      tariffs_delete = Tariff.where("ending_at IS NULL AND tariff_type_id = ?", @subscriber.water_supply_contract.try(:tariff_type_id)).select{|t| t.billable_item.billable_concept.billable_document == "1"}
+      @subscriber.tariffs.delete(tariffs_delete)
+      params[:subscriber][:tariff_ids].reject { |c| c.empty? }.each do |t|
+         s = SubscriberTariff.new(subscriber_id: @subscriber.id, tariff_id: t)
+         s.save
+       end
+      redirect_to subscriber_path(@subscriber), notice: "Tarifas actualizada correctamente"
+    end
+
     def update_simple
       @subscriber = Subscriber.find params[:id]
       params[:invoice_item].each do |obj_inv|
@@ -492,6 +503,7 @@ module Ag2Gest
       @client_bank_account = ClientBankAccount.new
       # @billing_periods = BillingPeriod.where(billing_frequency_id: @subscriber.billing_frequency_id).order("period DESC")
       @billing_periods_reading = @subscriber.readings.select{|r| [ReadingType::NORMAL, ReadingType::OCTAVILLA, ReadingType::RETIRADA, ReadingType::AUTO].include? r.reading_type_id and r.billable?}.map(&:billing_period).uniq #BillingPeriod.where(billing_frequency_id: @subscriber.billing_frequency_id).order("period DESC")
+      @tariffs_dropdown = Tariff.where("ending_at IS NULL AND tariff_type_id = ?", @subscriber.water_supply_contract.try(:tariff_type_id)).select{|t| t.billable_item.billable_concept.billable_document == "1"}
 
       #@subscriberreadings = Reading.where(:subscriber_id => @subscriber.id).paginate(:page => 10, :per_page => per_page)
       # @reading_types = ReadingType.all
@@ -624,12 +636,34 @@ module Ag2Gest
         if @subscriber.save
           @subscriber.tariffs << @contracting_request.water_supply_contract.tariffs
           billing_frequency = @billing_period.billing_frequency_id
+          #lectura de retirada
+        if @contracting_request.contracting_request_type_id == ContractingRequestType::CHANGE_OWNERSHIP && @contracting_request.old_subscriber
+            @reading = Reading.create(
+              subscriber_id: @contracting_request.old_subscriber.id,
+              project_id: @contracting_request.project_id,
+              billing_period_id: params_readings[:billing_period_id],
+              billing_frequency_id: billing_frequency,
+              reading_type_id: ReadingType::RETIRADA,
+              meter_id: @contracting_request.old_subscriber.meter_id,
+              reading_route_id: @contracting_request.old_subscriber.reading_route_id,
+              reading_sequence: @contracting_request.old_subscriber.reading_sequence,
+              reading_variant:  @contracting_request.old_subscriber.reading_variant,
+              reading_date: params_meter_details[:installation_date],
+              reading_index: params_meter_details[:installation_reading],
+              reading_index_1: @contracting_request.old_subscriber.readings.last.reading_index,
+              reading_index_2: @contracting_request.old_subscriber.readings.last.reading_index_1,
+              reading_1: @contracting_request.old_subscriber.readings.last,
+              reading_2: @contracting_request.old_subscriber.readings.last.reading_1,
+              created_by: (current_user.id if !current_user.nil?)
+            ) 
+          end       
+          # lectura de instalacion
           @reading = Reading.create(
             subscriber_id: @subscriber.id,
             project_id: @contracting_request.project_id,
             billing_period_id: params_readings[:billing_period_id],
             billing_frequency_id: billing_frequency,
-            reading_type_id: 4,
+            reading_type_id: ReadingType::INSTALACION,
             meter_id: @subscriber.meter_id,
             reading_route_id: @subscriber.reading_route_id,
             reading_sequence: @subscriber.reading_sequence,
@@ -638,7 +672,7 @@ module Ag2Gest
             reading_index: params_meter_details[:installation_reading],
             created_by: (current_user.id if !current_user.nil?)
           )
-          # SUBROGATION
+          # CHANGE_OWNERS
           if @contracting_request.old_subscriber
             @contracting_request.old_subscriber.update_attributes(ending_at: Date.today, active: false, meter_id: nil)
             # update meter details withdrawal
@@ -647,6 +681,9 @@ module Ag2Gest
           end
           # @meter_details = @subscriber.meter_details.build(params_meter_details)
           # @meter_details.assign_attributes(meter_id: @subscriber.meter_id)
+          if @subscriber.meter.first_installation_date.blank?
+            @subscriber.meter.update_attributes(first_installation_date: params_meter_details[:installation_date])
+          end
           @meter_details = MeterDetail.new(
             meter_id: @subscriber.meter_id,
             subscriber_id: @subscriber.id,
@@ -722,7 +759,7 @@ module Ag2Gest
 
     def simple_bill
       @subscriber = Subscriber.find params[:id]
-      @reading = @subscriber.readings.where(billing_period_id: params[:bills][:billing_period_id], reading_type_id: [1,2,5,6]).order(:reading_date).last
+      @reading = @subscriber.readings.where(billing_period_id: params[:bills][:billing_period_id], reading_type_id: [ReadingType::NORMAL,ReadingType::OCTAVILLA,ReadingType::RETIRADA,ReadingType::AUTO]).order(:reading_date).last
       payday_limit = params[:bills][:payday_limit].blank? ? @reading.billing_period.billing_starting_date : params[:bills][:payday_limit]
       invoice_date = params[:bills][:invoice_date].blank? ? @reading.billing_period.billing_ending_date : params[:bills][:invoice_date]
       @bill = @reading.generate_bill(bill_next_no(@reading.project),current_user.try(:id),1,payday_limit,invoice_date)

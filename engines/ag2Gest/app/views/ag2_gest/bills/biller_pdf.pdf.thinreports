@@ -283,7 +283,7 @@ end
 				else
 					row.item(:concept).hide
 				end
-				row.item(:items).value item.subcode_name
+				row.item(:subcode).value item.subcode_name
 				row.item(:measure).value item.try(:measure).try(:description)
 				row.item(:quantity).value number_with_precision(item.quantity, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
 				row.item(:price).value number_with_precision(item.price, precision: 2, delimiter: I18n.locale == :es ? "." : ",")

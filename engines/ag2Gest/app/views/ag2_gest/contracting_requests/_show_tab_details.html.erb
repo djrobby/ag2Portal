@@ -23,10 +23,10 @@
     </thead>
     <tbody>
       <tr>
-      	<td><%= @contracting_request.try(:country_id) %></td>
+      	<td><%= @contracting_request.try(:country).try(:full_name) %></td>
       	<td><%= @contracting_request.try(:iban_dc) %></td>
-      	<td><%= @contracting_request.try(:bank_id) %></td>
-      	<td><%= @contracting_request.try(:bank_office_id) %></td>
+      	<td><%= @contracting_request.try(:bank).try(:full_name) %></td>
+      	<td><%= @contracting_request.try(:bank_office).try(:full_name) %></td>
       	<td><%= @contracting_request.try(:ccc_dc) %></td>
       	<td><%= @contracting_request.try(:account_no) %></td>
       </tr>

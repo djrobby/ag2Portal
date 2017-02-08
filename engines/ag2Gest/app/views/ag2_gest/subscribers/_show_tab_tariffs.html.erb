@@ -1,0 +1,56 @@
+<style>
+.checkbox_container{
+  display: block;
+  margin: 10px 0px;
+}
+.checkbox_container input, .checkbox_container label {
+  display: inline !important;
+  margin-top: -2px;
+  margin-left: 7px;
+}
+</style>
+<!-- Button to trigger modal -->
+<a href="#add_tariff" role="button" class="btn btn-warning btn-mini" data-toggle="modal"><%=t "ag2_gest.subscribers.index.add_tariff" %></a>
+
+<!-- Modal -->
+<div id="add_tariff" class="modal hide fade" tabindex="-1" role="dialog" aria-hidden="true">
+
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h3 id="myModalLabel"><%=t "ag2_gest.subscribers.index.add_tariff" %></h3>
+  </div>
+  <%= form_for @subscriber, url: update_tariffs_subscriber_path(@subscriber), method: :post do |f| %>
+    <div class="modal-body">
+        <%= f.collection_check_boxes(:tariff_ids, @tariffs_dropdown, :id, :to_label, :item_wrapper_class => 'checkbox_container') %>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" data-dismiss="modal" aria-hidden="true">Cerrar</button>
+      <input type="submit" class="btn btn-primary" value='<%=t "ag2_gest.subscribers.index.add_tariff" %>'>
+    </div>
+  <% end %>
+
+</div>
+   <table class="table table-condensed table-striped">
+      <thead>
+        <tr>
+          <th><%= t('activerecord.attributes.tariff_scheme.billable_concept') %></th>
+          <th><%= t('activerecord.attributes.tariff_scheme.tariff_type_id') %></th>
+          <th><%= t('activerecord.attributes.tariff.billing_frequency_id') %>:</th>
+          <th><%= t('activerecord.attributes.tariff.starting_at') %></th>
+          <th><%= t('activerecord.attributes.tariff.ending_at') %></th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% SubscriberTariff.availables_to_subscriber(@subscriber.id).each do |t| %>
+          <tr>
+            <td class="billable_concept"><%= t.tariff.try(:billable_concept).try(:name) %></td>
+            <td class="tariff_type"><%= t.tariff.try(:tariff_type).try(:name) %></td>
+            <td class="billing_frequency"><%= t.tariff.try(:billing_frequency).try(:to_label) %></td>
+            <td class="starting_at"><%=l t.try(:starting_at) unless t.try(:starting_at).blank? %></td>
+            <td class="ending_at"><%=l t.try(:ending_at) unless t.try(:ending_at).blank? %></td>
+            <td><%= render :partial => '/layouts/crud/read', :locals => { :model => Tariff, :path => tariff_path(t.tariff) } %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>

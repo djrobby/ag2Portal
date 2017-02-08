@@ -378,7 +378,7 @@
   <!-- fixed buttons -->
   <div class="span4">
     <%= link_to "<i class='icon-print icon-white'></i> #{t('activerecord.attributes.contracting_request.request')}".html_safe, contracting_request_pdf_contracting_request_path(@contracting_request, :format => :pdf), class: "btn btn-warning", target: "_blank"  %>
-    <% if !@contracting_request.water_supply_contract.blank? && !@contracting_request.water_supply_contract.bill.blank?%>
+    <% if !@contracting_request.water_supply_contract.blank? && !@contracting_request.water_supply_contract.bill.blank? && !@contracting_request.water_supply_contract.bill.invoices.blank?%>
       <%= link_to "<i class='icon-print icon-white'></i> #{t('activerecord.attributes.contracting_request.biller')}".html_safe, biller_pdf_bill_path(@contracting_request.water_supply_contract.bill_id, :format => :pdf), id: "bill-doc", class: "btn btn-warning #{'hide' unless @contracting_request.try(:water_supply_contract).try(:bill)}", target: "_blank" %>
     <% end %>
   </div>

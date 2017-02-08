@@ -59,12 +59,13 @@ module Ag2Gest
 
     def to_pdf
      #Ordenar array por código de ruta
+     title = t("activerecord.models.pre_reading.few")
      respond_to do |format|
        format.pdf {
-         send_data render_to_string, filename: "SCR.pdf", type: 'application/pdf', disposition: 'inline'
+         send_data render_to_string, filename: "#{title}_#{Date.today}.pdf", type: 'application/pdf', disposition: 'inline'
        }
      end
-    end
+   end
 
     # GET /prereadings
     # GET /prereadings.json
@@ -126,7 +127,7 @@ module Ag2Gest
                 project_id: billing_period.project_id,
                 billing_period_id: billing_period.id,
                 billing_frequency_id: billing_period.billing_frequency_id,
-                reading_type_id: 1,
+                reading_type_id: ReadingType::NORMAL,
                 meter_id: s.meter_id,
                 subscriber_id: s.id,
                 reading_route_id: s.reading_route_id,

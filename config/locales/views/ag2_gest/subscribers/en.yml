@@ -12,6 +12,7 @@ en:
         billing_frequency: "Billing frequency"
         tariff_type: "Tariff type"
         label_others: "Otros"
+        add_tariff: "Edit Tariff"
       show:
         title: "Subscriber"
         btn_edit: "Editar Subscriber"

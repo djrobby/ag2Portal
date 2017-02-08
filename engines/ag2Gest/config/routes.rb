@@ -228,6 +228,7 @@ Ag2Gest::Engine.routes.draw do
       post 'change_meter', on: :member
       post 'simple_bill', on: :member
       post 'update_simple', on: :member
+      post 'update_tariffs', on: :member
     end
     #
     resources :centers

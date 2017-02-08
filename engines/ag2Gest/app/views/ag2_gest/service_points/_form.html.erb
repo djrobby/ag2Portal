@@ -224,7 +224,7 @@
       <%= f.input :floor_office, :input_html => { :class => 'x-medium-text-field' }, :label_html => { :class => 'form-label' } %>
     </div>
     <div class="span3">
-      <%= f.association :zipcode, label: t('activerecord.attributes.service_point.zipcode_id'), collection: Zipcode.all(), :input_html => { :class => 'sel2 x-large-text-field', :id => 'fnt_zipcode' }, label_method: lambda { |st| st.zipcode }, value_method: :id, :label_html => { :class => 'form-label' }%>
+    <%= f.association :zipcode, label: t('activerecord.attributes.service_point.zipcode_id'), collection: Zipcode.all(order: 'zipcode'), :input_html => { :class => 'sel2 x-large-text-field' }, label_method: lambda { |zc| zc.to_label }, value_method: :id, :label_html => { :class => 'form-label' }%>
     </div>
   </div>
 

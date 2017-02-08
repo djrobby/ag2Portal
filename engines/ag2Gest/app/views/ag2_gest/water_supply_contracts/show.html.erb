@@ -1,6 +1,17 @@
 <%= render '/layouts/ag2_gest/watersupplycontractsbreadcrumb' %>
 
-<h3><%=t '.title' %></h3>
+<table class="form-table">
+  <tbody>
+    <tr class="form-tr underlined-tr">
+      <td class="form-td-two left-winged">
+        <h3><%=t '.title' %></h3>
+      </td>
+      <td class="form-td-two right-winged">
+        <%= link_to "<i class='icon-print icon-white'></i> #{t('activerecord.attributes.contracting_request.show_contract')}".html_safe, contract_pdf_contracting_request_path(@water_supply_contract.contracting_request_id, :format => :pdf), class: "btn btn-warning", target: "_blank"  %>
+      </td>
+    </tr>
+  </tbody>
+</table>
 <table class="table odd_even_table">
   <tbody>
     <tr>

@@ -126,10 +126,10 @@ module Ag2Gest
               created_by: by_user
             )
           end
+          pre_bill.update_attributes(bill_id: @bill.id,confirmation_date: params[:pre_bill][:confirmation_date])
+          # add mj
+          pre_invoice.update_attributes(invoice_id: @invoice.id,confirmation_date: params[:pre_bill][:confirmation_date])
         end
-        pre_bill.update_attributes(bill_id: @bill.id,confirmation_date: params[:pre_bill][:confirmation_date])
-        # add mj
-        pre_invoice.update_attributes(invoice_id: @invoice.id,confirmation_date: params[:pre_bill][:confirmation_date])
         # add mj
         final_bills << @bill
       end
@@ -156,8 +156,10 @@ module Ag2Gest
       _centers = params[:bill][:centers].reject(&:empty?)
       centers = _centers.blank? ? Center.pluck(:id) : _centers
       period = params[:bill][:period]
+      _uses = params[:bill][:use].reject(&:empty?)
+      uses = _uses.blank? ? Use.pluck(:id) : _uses
 
-      subscribers = Subscriber.joins(:readings).where("subscribers.reading_route_id IN (?) AND subscribers.office_id IN (?) AND subscribers.center_id IN (?) AND readings.billing_period_id = ? AND readings.reading_type_id IN (?)",reading_routes, offices, centers, period, [ReadingType::NORMAL, ReadingType::OCTAVILLA, ReadingType::RETIRADA, ReadingType::AUTO])
+      subscribers = Subscriber.joins(:readings).where("subscribers.use_id IN (?) AND subscribers.reading_route_id IN (?) AND subscribers.office_id IN (?) AND subscribers.center_id IN (?) AND readings.billing_period_id = ? AND readings.reading_type_id IN (?)",uses, reading_routes, offices, centers, period, [ReadingType::NORMAL, ReadingType::OCTAVILLA, ReadingType::RETIRADA, ReadingType::AUTO])
 
       subscribers_label = subscribers.map{|s| [s.id, "#{s.to_label} #{s.address_1}"]}
 
@@ -175,7 +177,7 @@ module Ag2Gest
       @readings = [] #Reading.where(billing_period_id: billing_period_id, subscriber_id: subscriber_ids).where('reading_type_id NOT IN (?)',[1,2,5,6]).order(:reading_date)
       subscribers  = Subscriber.where(id: subscriber_ids)
       subscribers.each do |subscriber|
-        @readings << subscriber.readings.where(billing_period_id: billing_period_id).where('reading_type_id IN (?)',[1,2,5,6]).order(:reading_date).last
+        @readings << subscriber.readings.where(billing_period_id: billing_period_id).where('reading_type_id IN (?)',[ReadingType::NORMAL,ReadingType::OCTAVILLA,ReadingType::RETIRADA,ReadingType::AUTO]).order(:reading_date).last
       end
     end
 
@@ -259,6 +261,7 @@ module Ag2Gest
     def new
       @breadcrumb = 'create'
       @billing_periods = billing_periods_dropdown #.select{|b| b.pre_readings.empty?}
+      @uses = uses_dropdown
       @reading_routes = reading_routes_dropdown #.select{|r| r.pre_readings.empty?}
       @centers = Center.all
       # @bill = Bill.new
@@ -379,8 +382,23 @@ module Ag2Gest
     #   end
     # end
 
+    # def billing_periods_dropdown
+    #   _a = Invoice.joins("inner join pre_invoices on invoices.id = pre_invoices.invoice_id")
+    #   _b = _a.where(invoice_type_id: 1)
+    #   _c = _b.group(:billing_period_id)
+    #   _j = []
+    #   _c.each do |l|
+    #     _j = _j << l.billing_period_id
+    #   end
+    #   _billing_periods = BillingPeriod.where("NOT id IN (?)",_j).order("period DESC")
+    # end
+
     def billing_periods_dropdown
       _billing_periods = BillingPeriod.where(project_id: current_projects_ids).order("period DESC")
+    end
+
+    def uses_dropdown
+      _uses = Use.order("code DESC")
     end
 
     def reading_routes_dropdown

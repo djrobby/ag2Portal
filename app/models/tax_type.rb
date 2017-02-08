@@ -21,13 +21,28 @@ class TaxType < ActiveRecord::Base
   validates :tax,         :presence => true
 
   # Scopes
-  scope :current, -> { where("expiration IS NULL") }
-  scope :expired, -> { where("NOT expiration IS NULL") }
+  scope :current, -> { where("expiration >= ? OR expiration IS NULL", Date.today).order('tax') }
+  scope :expired, -> { where("NOT expiration IS NULL AND expiration < ?", Date.today).order('tax') }
 
   before_destroy :check_for_dependent_records
 
   def to_label
     "#{description} (#{tax})"
+  end
+
+  #
+  # Class (self) user defined methods
+  #
+  def self.exempt
+    _tt = nil
+    # current & 0
+    _tt = TaxType.where('(expiration >= ? OR expiration IS NULL) AND tax = 0', Date.today).first
+    # if current does not exist, expired & 0
+    _tt = _tt.nil? ? TaxType.where('(NOT expiration IS NULL AND expiration < ?) AND tax = 0', Date.today).first : _tt
+  end
+
+  def self.exempt_id
+    self.exempt || 0
   end
 
   private

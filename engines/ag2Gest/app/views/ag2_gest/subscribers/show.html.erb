@@ -190,30 +190,7 @@
 
   <!-- TARIFFS -->
   <div class="tab-pane fade active" id="tariffs">
-    <table class="table table-condensed table-striped">
-      <thead>
-        <tr>
-          <th><%= t('activerecord.attributes.tariff_scheme.billable_concept') %></th>
-          <th><%= t('activerecord.attributes.tariff_scheme.tariff_type_id') %></th>
-          <th><%= t('activerecord.attributes.tariff.billing_frequency_id') %>:</th>
-          <th><%= t('activerecord.attributes.tariff.starting_at') %></th>
-          <th><%= t('activerecord.attributes.tariff.ending_at') %></th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        <% SubscriberTariff.availables_to_subscriber(@subscriber.id).each do |t| %>
-          <tr>
-            <td class="billable_concept"><%= t.tariff.try(:billable_concept).try(:name) %></td>
-            <td class="tariff_type"><%= t.tariff.try(:tariff_type).try(:name) %></td>
-            <td class="billing_frequency"><%= t.tariff.try(:billing_frequency).try(:to_label) %></td>
-            <td class="starting_at"><%=l t.try(:starting_at) unless t.try(:starting_at).blank? %></td>
-            <td class="ending_at"><%=l t.try(:ending_at) unless t.try(:ending_at).blank? %></td>
-            <td><%= render :partial => '/layouts/crud/read', :locals => { :model => Tariff, :path => tariff_path(t.tariff) } %></td>
-          </tr>
-        <% end %>
-      </tbody>
-    </table>
+    <%= render 'show_tab_tariffs' %>
   </div>
 
   <!-- READINGS -->
@@ -295,14 +272,17 @@
             <tr>
               <td><%= client_bank_account.name %></td>
               <td><%= client_bank_account.try(:client).try(:fiscal_id) %></td>
-              <td><%= client_bank_account.try(:fiscal_id) %></td>
-              <td><%= client_bank_account.try(:bank_account_class) %></td>
-              <td><%= client_bank_account.try(:bank) %></td>
-              <td><%= client_bank_account.try(:bank_office) %></td>
-              <td><%= client_bank_account.try(:country_code) %></td>
-              <td><%= client_bank_account.try(:country_code) %></td>
-              <td><%#= I18n.localize(@client_bank_account.try(:ending_at)) %></td>
-              <td><!-- fecha de caducidad active de la tarjeta o boolean model¿??¿?¿ --></td>
+              <td><%= client_bank_account.try(:bank_account_class).try(:name) %></td>
+              <td><%= client_bank_account.try(:bank).try(:full_name) %></td>
+              <td><%= client_bank_account.try(:bank_office).try(:full_name) %></td>
+              <td><%= client_bank_account.try(:ccc_dc) %></td>
+              <td><%= client_bank_account.try(:account_no) %></td>
+              <td><%= client_bank_account.try(:ending_at) %></td>
+              <% if client_bank_account.ending_at.blank? %>
+                <td align="center"><i class="icon-thumbs-up"></i></td>
+              <% else %>
+                <td align="center"><i class="icon-thumbs-down"></i></td>
+              <% end %>
             </tr>
           <% end %>
         </tbody>

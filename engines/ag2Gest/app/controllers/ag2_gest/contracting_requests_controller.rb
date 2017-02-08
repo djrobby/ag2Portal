@@ -36,14 +36,14 @@ module Ag2Gest
                                                 :cr_find_subscriber,
                                                 :cr_find_service_point ]
     # Helper methods for
-    # => sort
-    helper_method :sort_column
     helper_method :sort_column
     # => search available meters
     helper_method :available_meters_for_contract
     helper_method :available_meters_for_subscriber
 
     def dn_update_from_invoice
+
+
       invoice_items = JSON.parse(params[:arr_invoice]) #INVOICEITEM TOTAL
       #parsed_json = ActiveSupport::JSON.decode(params[:arr_invoice])
 
@@ -421,16 +421,18 @@ module Ag2Gest
     end
 
     def update_bank_offices_from_bank
-      @banks = [Bank.find(params[:id])] || Bank.all
-      @bank_offices = @banks.map(&:bank_offices).flatten.map{|bo| {id:bo.id, text:bo.name }}
-      respond_to do |format|
-        format.html # update_bank_offices_from_bank.html.erb does not exist! JSON only
-        format.json { render json: { "bank_offices" => @bank_offices }  }
+      bank = params[:id]
+      if bank != '0'
+        @bank = Bank.find(bank)
+        @offices = @bank.blank? ? BankOffice.order(:bank_id, :code) : @bank.bank_offices.order(:bank_id, :code)
+      else
+        @offices = BankOffice.order(:bank_id, :code)
       end
-      rescue ActiveRecord::RecordNotFound
-        respond_to do |format|
-          format.json { render json: { "bank_offices" => "" }}
-        end
+      # Offers array
+      @offices_dropdown = bank_offices_array(@offices)
+      # Setup JSON
+      @json_data = { "office" => @offices_dropdown }
+      render json: @json_data
     end
 
     # Update subscriber from service point
@@ -993,7 +995,6 @@ module Ag2Gest
       # @service_points = ServicePoint.where(office_id: current_offices_ids, available_for_contract: true).select{|s| s.subscribers.empty?}
       @service_points = []
       @offices = current_offices
-
       respond_to do |format|
         format.html # new.html.erb
         format.json { render json: @contracting_request }
@@ -1024,6 +1025,9 @@ module Ag2Gest
       @service_points = ServicePoint.where(office_id: current_offices_ids, available_for_contract: true).select{|s| s.subscribers.empty?}
       @offices = current_offices
       @contracting_request = ContractingRequest.new(params[:contracting_request])
+      @account_no = @contracting_request.account_no
+      @contracting_request.ccc_dc = @account_no[0..1] unless @account_no.blank?
+      @contracting_request.account_no = @account_no[2..11] unless @account_no.blank?
       @contracting_request.contracting_request_status_id = 1
       @contracting_request.created_by = current_user.id if !current_user.nil?
       respond_to do |format|
@@ -1292,7 +1296,7 @@ module Ag2Gest
 
     private
 
-    def available_meters_for_contract(_request)
+   def available_meters_for_contract(_request)
       if session[:office] != '0'
         Meter.from_office(session[:office]).availables(_request.try(:old_subscriber).try(:meter_id))
       else
@@ -1367,6 +1371,14 @@ module Ag2Gest
 
     def sort_column
       ContractingRequest.column_names.include?(params[:sort]) ? params[:sort] : "request_no"
+    end
+
+    def bank_offices_array(_offices)
+      _array = []
+      _offices.each do |i|
+        _array = _array << [i.id, i.code, i.name, "(" + i.bank.code + ")"]
+      end
+      _array
     end
 
     def manage_filter_state

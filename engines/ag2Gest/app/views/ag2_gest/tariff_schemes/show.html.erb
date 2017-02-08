@@ -146,9 +146,7 @@ new_path: new_tariff_scheme_path, new_txt: t('ag2_gest.tariff_schemes.index.btn_
                     </td> -->
                     <td>
                       <% tariff_scheme_item = TariffSchemeItem.where(tariff_scheme_id: @tariff_scheme.id, tariff_id: tariff.id).first %>
-                      <%= link_to tariff_scheme_item, class: "btn btn-mini", method: :delete, data: { confirm: 'Are you sure?' } do %>
-                        <i class="icon-trash"></i>
-                      <% end %>
+                      <%= render :partial => '/layouts/crud/delete', :locals => { :model => TariffSchemeItem, :path => tariff_scheme_item, :msg => t("activerecord.models.tariff_scheme_item.one"), :txt => tariff.id} %> 
                     </td>
                     <td class="id"><%= tariff.try(:id) %></td>
                     <td class="caliber"><%= tariff.try(:caliber).try(:caliber) %></td>

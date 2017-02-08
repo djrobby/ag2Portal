@@ -185,7 +185,7 @@
               <td><input class="mid-text-field input-sm" name="invoice_item[<%= item.id %>]quantity" type="number" value="<%= item.quantity %>"></td>
               <td><input class="mid-text-field input-sm" name="invoice_item[<%= item.id %>]price" type="number" value="<%= item.price %>"></td>
               <td class="td-amount<%= item.id %> amount"><%= item.amount %></td>
-              <td><%= collection_select("invoice_item["+item.id.to_s+"]", :tax_type_id, TaxType.all, :id, :tax, {include_blank: true, selected: item.tax_type_id}, {:class=>'x-large-text-field'}) %></td>
+              <td><%= collection_select("invoice_item["+item.id.to_s+"]", :tax_type_id, TaxType.where("expiration >= 'Date.today' OR expiration IS NULL").order('description'), :id, :tax, {include_blank: true, selected: item.tax_type_id}, {:class=>'x-large-text-field'}) %></td>
               <td><input class="mid-text-field input-sm" name="invoice_item[<%= item.id %>]discount" type="number" value="<%= item.discount %>"></td>
               <td><input class="mid-text-field input-sm" name="invoice_item[<%= item.id %>]discount_pct" type="number" value="<%= item.discount_pct %>"></td>
               <td class="total total<%= item.id %>"><%= item.total %></td>

@@ -138,6 +138,7 @@ module Ag2Gest
       @breadcrumb = 'create'
       @tariff = Tariff.new
       @tariff_types = tariff_type_dropdown
+      @tax_type = tax_type_dropdown
       @billable_items = billable_item_dropdown.joins(:billable_concept)#.where("billable_concepts.billable_document = 1")
       @calibers = caliber_dropdown
       @billing_frequencies = billing_frequency_dropdown
@@ -153,6 +154,7 @@ module Ag2Gest
       @breadcrumb = 'update'
       @tariff = Tariff.find(params[:id])
       @tariff_types = tariff_type_dropdown
+      @tax_type = tax_type_dropdown
       @billable_items = billable_item_dropdown.joins(:billable_concept)#.where("billable_concepts.billable_document = 1")
       @calibers = caliber_dropdown
       @billing_frequencies = billing_frequency_dropdown
@@ -162,6 +164,7 @@ module Ag2Gest
     def create
       @breadcrumb = 'create'
       @tariff_types = tariff_type_dropdown
+      @tax_type = tax_type_dropdown
       @billable_items = billable_item_dropdown.joins(:billable_concept).where("billable_concepts.billable_document = 1")
       @calibers = caliber_dropdown
       @billing_frequencies = billing_frequency_dropdown
@@ -183,26 +186,28 @@ module Ag2Gest
     # PUT /tariffs/1
     # PUT /tariffs/1.json
     def update
+      @breadcrumb = 'update'
       @tariff = Tariff.find(params[:id])
-      # @tariff_scheme = @tariff.tariff_scheme
+      @tariff.updated_by = current_user.id if !current_user.nil?
+      @tariff_types = tariff_type_dropdown
+      @tax_type = tax_type_dropdown
+      @billable_items = billable_item_dropdown.joins(:billable_concept)#.where("billable_concepts.billable_document = 1")
+      @calibers = caliber_dropdown
+      @billing_frequencies = billing_frequency_dropdown
+      @billable_concept_percentage = billable_item_dropdown.joins(:billable_concept).where("billable_concepts.billable_document = 1").map(&:billable_concept)
 
       respond_to do |format|
         if @tariff.update_attributes(params[:tariff])
-          # if @tariff_scheme.nil?
-            format.html { redirect_to @tariff,
-              notice: (crud_notice('updated', @tariff) + "#{undo_link(@tariff)}").html_safe }
-            format.json { head :no_content }
-          # else
-          #   format.html { redirect_to tariff_scheme_url(@tariff_scheme),
-          #     notice: (crud_notice('updated', @tariff) + "#{undo_link(@tariff)}").html_safe }
-          #   format.json { head :no_content }
-          # end
+          format.html { redirect_to @tariff,
+                        notice: (crud_notice('updated', @tariff) + "#{undo_link(@tariff)}").html_safe }
+          format.json { head :no_content }
         else
-          format.html { redirect_to tariff_scheme_url(@tariff_scheme), alert: "Error al modificar la tarifa" }
+          format.html { render action: "edit" }
           format.json { render json: @tariff.errors, status: :unprocessable_entity }
         end
       end
     end
+
 
     # DELETE /tariffs/1
     # DELETE /tariffs/1.json
@@ -250,6 +255,10 @@ module Ag2Gest
 
     def tariff_type_dropdown
       TariffType.all
+    end
+
+    def tax_type_dropdown
+      TaxType.current
     end
 
     def billable_item_dropdown
