@@ -78,7 +78,7 @@ module Ag2Products
         @order = PurchaseOrder.find(o)
         @order_items = @order.blank? ? [] : order_items_dropdown(@order)
         @projects = @order.blank? ? projects_dropdown : @order.project
-        @work_orders = @order.blank? ? work_orders_dropdown : WorkOrder.where(id: @order.work_order)
+        @work_orders = @order.blank? ? work_orders_dropdown_new : WorkOrder.where(id: @order.work_order)
         @charge_accounts = @order.blank? ? charge_accounts_dropdown : @order.charge_account
         @stores = @order.blank? ? stores_dropdown : @order.store
         @payment_methods = @order.blank? ? payment_methods_dropdown : @order.payment_method
@@ -95,7 +95,7 @@ module Ag2Products
       else
         @order_items = []
         @projects = projects_dropdown
-        @work_orders = work_orders_dropdown
+        @work_orders = work_orders_dropdown_new
         @charge_accounts = charge_accounts_dropdown
         @stores = stores_dropdown
         @payment_methods = payment_methods_dropdown
@@ -337,11 +337,11 @@ module Ag2Products
       projects = projects_dropdown
       if project != '0'
         @project = Project.find(project)
-        @work_order = @project.blank? ? work_orders_dropdown : @project.work_orders.order(:order_no)
+        @work_order = @project.blank? ? work_orders_dropdown_new : @project.work_orders.by_no
         @charge_account = @project.blank? ? projects_charge_accounts(projects) : charge_accounts_dropdown_edit(@project)
         @store = project_stores(@project)
       else
-        @work_order = work_orders_dropdown
+        @work_order = work_orders_dropdown_new
         @charge_account = projects_charge_accounts(projects)
         @store = stores_dropdown
       end
@@ -382,7 +382,7 @@ module Ag2Products
         @organization = Organization.find(organization)
         @suppliers = @organization.blank? ? suppliers_dropdown : @organization.suppliers.order(:supplier_code)
         @projects = @organization.blank? ? projects_dropdown : @organization.projects.order(:project_code)
-        @work_orders = @organization.blank? ? work_orders_dropdown : @organization.work_orders.order(:order_no)
+        @work_orders = @organization.blank? ? work_orders_dropdown_new : @organization.work_orders.by_no
         @charge_accounts = @organization.blank? ? charge_accounts_dropdown : @organization.charge_accounts.expenditures
         @stores = @organization.blank? ? stores_dropdown : @organization.stores.order(:name)
         @payment_methods = @organization.blank? ? payment_methods_dropdown : payment_payment_methods(@organization.id)
@@ -390,7 +390,7 @@ module Ag2Products
       else
         @suppliers = suppliers_dropdown
         @projects = projects_dropdown
-        @work_orders = work_orders_dropdown
+        @work_orders = work_orders_dropdown_new
         @charge_accounts = charge_accounts_dropdown
         @stores = stores_dropdown
         @payment_methods = payment_methods_dropdown
@@ -517,7 +517,7 @@ module Ag2Products
       # Initialize select_tags
       @projects = projects_dropdown if @projects.nil?
       @suppliers = suppliers_dropdown if @suppliers.nil?
-      @work_orders = work_orders_dropdown if @work_orders.nil?
+      @work_orders = work_orders_dropdown_new if @work_orders.nil?
       @orders = orders_dropdown if @orders.nil?
 
       # Arrays for search
@@ -582,7 +582,8 @@ module Ag2Products
       destroy_attachment
       @orders = orders_dropdown
       @projects = projects_dropdown
-      @work_orders = work_orders_dropdown
+      # @work_orders = work_orders_dropdown
+      @work_orders = work_orders_dropdown_new
       @charge_accounts = projects_charge_accounts(@projects)
       @stores = stores_dropdown
       @suppliers = suppliers_dropdown
@@ -605,7 +606,8 @@ module Ag2Products
       destroy_attachment
       @orders = @receipt_note.supplier.blank? ? orders_dropdown : @receipt_note.supplier.purchase_orders.undelivered(@receipt_note.organization_id, true)
       @projects = projects_dropdown_edit(@receipt_note.project)
-      @work_orders = @receipt_note.project.blank? ? work_orders_dropdown : @receipt_note.project.work_orders.order(:order_no)
+      # @work_orders = @receipt_note.project.blank? ? work_orders_dropdown : @receipt_note.project.work_orders.order(:order_no)
+      @work_orders = @receipt_note.project.blank? ? work_orders_dropdown_new : work_orders_dropdown_edit(@receipt_note)
       @charge_accounts = work_order_charge_account(@receipt_note)
       @stores = work_order_store(@receipt_note)
       @suppliers = @receipt_note.organization.blank? ? suppliers_dropdown : @receipt_note.organization.suppliers(:supplier_code)
@@ -642,7 +644,7 @@ module Ag2Products
           $attachment = Attachment.new
           @orders = orders_dropdown
           @projects = projects_dropdown
-          @work_orders = work_orders_dropdown
+          @work_orders = work_orders_dropdown_new
           @charge_accounts = projects_charge_accounts(@projects)
           @stores = stores_dropdown
           @suppliers = suppliers_dropdown
@@ -726,7 +728,7 @@ module Ag2Products
             $attachment = Attachment.new
             @orders = @receipt_note.supplier.blank? ? orders_dropdown : @receipt_note.supplier.purchase_orders.undelivered(@receipt_note.organization_id, true)
             @projects = projects_dropdown_edit(@receipt_note.project)
-            @work_orders = @receipt_note.project.blank? ? work_orders_dropdown : @receipt_note.project.work_orders.order(:order_no)
+            @work_orders = @receipt_note.project.blank? ? work_orders_dropdown_new : work_orders_dropdown_edit(@receipt_note)
             @charge_accounts = work_order_charge_account(@receipt_note)
             @stores = work_order_store(@receipt_note)
             @suppliers = @receipt_note.organization.blank? ? suppliers_dropdown : @receipt_note.organization.suppliers(:supplier_code)

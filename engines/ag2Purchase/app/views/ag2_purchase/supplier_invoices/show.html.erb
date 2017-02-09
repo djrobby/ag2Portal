@@ -33,7 +33,11 @@
     </tr>
     <tr>
       <td><%=t 'activerecord.attributes.supplier_invoice.charge_account' %>:</td>
-      <td><%= @supplier_invoice.charge_account.full_name unless @supplier_invoice.charge_account.blank? %> </td>
+      <td colspan="3"><%= @supplier_invoice.charge_account.full_name unless @supplier_invoice.charge_account.blank? %> </td>
+    </tr>
+    <tr>
+      <td><%=t 'activerecord.attributes.supplier_invoice.internal_no' %>:</td>
+      <td><%= @supplier_invoice.internal_no unless @supplier_invoice.internal_no.blank? %> </td>
       <td class="highlighted bolded"><%= t "activerecord.attributes.supplier_invoice.debt" %>:</td>
       <td class="highlighted bolded"><%= number_with_precision(@supplier_invoice.debt, precision: 4, delimiter: I18n.locale == :es ? "." : ",") unless @supplier_invoice.debt.blank? %></td>
     </tr>

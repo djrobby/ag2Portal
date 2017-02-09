@@ -45,3 +45,5 @@ es:
         receipt_note: "Nota de recepción"
         receipt_note_id: "Nota de recepción"
         attachment: "Adjunto (Imágen)"
+        internal_no: "Nº interno"
+        withholding: "Retención"

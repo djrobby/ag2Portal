@@ -12,10 +12,9 @@
 </tr>
 <tr>
   <td></td>
+  <td colspan="2" align="right"><%= t :"activerecord.attributes.supplier_invoice.withholding" %> | <%= t :"activerecord.attributes.supplier_invoice.bonus" %> | <%= t :"activerecord.attributes.supplier_invoice.taxable" %> | <%= t :"activerecord.attributes.supplier_invoice.taxes" %></td>
   <td></td>
-  <td align="right"><%= t :"activerecord.attributes.supplier_invoice.bonus" %> | <%= t :"activerecord.attributes.supplier_invoice.taxable" %> | <%= t :"activerecord.attributes.supplier_invoice.taxes" %></td>
-  <td></td>
-  <td></td>
+  <td align="right"><%= f.input :withholding, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(f.object.withholding, precision: 4) if f.object.withholding), class: 'sub-number-text-field' } %></td>
   <td align="right"><%= f.input :discount_pct, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(f.object.discount_pct, precision: 2) if f.object.discount_pct), class: 'sub-number-text-field' } %></td>
   <td align="right" id="foot-discount"><%= number_with_precision('0', precision: 4) %></td>
   <td align="right" id="foot-taxable"><%= number_with_precision('0', precision: 4) %></td>
