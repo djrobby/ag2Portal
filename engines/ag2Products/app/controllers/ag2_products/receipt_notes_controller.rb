@@ -1009,15 +1009,27 @@ module Ag2Products
     end
 
     def stores_dropdown
-      _stores = session[:organization] != '0' ? Store.where(organization_id: session[:organization].to_i).order(:name) : Store.order(:name)
+      session[:organization] != '0' ? Store.where(organization_id: session[:organization].to_i).order(:name) : Store.order(:name)
     end
 
     def work_orders_dropdown
-      _orders = session[:organization] != '0' ? WorkOrder.where(organization_id: session[:organization].to_i).order(:order_no) : WorkOrder.order(:order_no)
+      session[:organization] != '0' ? WorkOrder.where(organization_id: session[:organization].to_i).order(:order_no) : WorkOrder.order(:order_no)
+    end
+
+    def work_orders_dropdown_new
+      session[:organization] != '0' ? WorkOrder.belongs_to_organization_unclosed(session[:organization].to_i) : WorkOrder.unclosed_only
+    end
+
+    def work_orders_dropdown_edit(_receipt_note)
+      _array = []
+      _items = _receipt_note.receipt_note_items.where('NOT work_order_id IS NULL')
+      _array = _array << _receipt_note.work_order_id unless _receipt_note.work_order.blank?
+      ret_array(_array, _items, 'work_order_id')
+      WorkOrder.belongs_to_project_unclosed_and_this(_receipt_note.project_id, _array)
     end
 
     def payment_methods_dropdown
-      _methods = session[:organization] != '0' ? payment_payment_methods(session[:organization].to_i) : payment_payment_methods(0)
+      session[:organization] != '0' ? payment_payment_methods(session[:organization].to_i) : payment_payment_methods(0)
     end
 
     def payment_payment_methods(_organization)

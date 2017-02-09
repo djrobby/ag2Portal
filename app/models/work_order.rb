@@ -112,12 +112,14 @@ class WorkOrder < ActiveRecord::Base
   scope :belongs_to_project_unclosed_without_this, -> project, this { where("project_id = ? AND closed_at IS NULL AND id <> ?", project, this).by_no }
   scope :belongs_to_project_unclosed_without_suborders, -> project { where("project_id = ? AND closed_at IS NULL AND master_order_id IS NULL", project).by_no }
   scope :belongs_to_project_unclosed_without_this_and_suborders, -> project, this { where("project_id = ? AND closed_at IS NULL AND id <> ? AND master_order_id IS NULL", project, this).by_no }
+  scope :belongs_to_project_unclosed_and_this, -> project, this { where("(project_id = ? AND closed_at IS NULL) OR id = ?", project, this).by_no }
   # by Organization
   scope :belongs_to_organization, -> org { where("organization_id = ?", org).by_no }
   scope :belongs_to_organization_unclosed, -> org { where("organization_id = ? AND closed_at IS NULL", org).by_no }
   scope :belongs_to_organization_unclosed_without_this, -> org, this { where("organization_id = ? AND closed_at IS NULL AND id <> ?", org, this).by_no }
   scope :belongs_to_organization_unclosed_without_suborders, -> org { where("organization_id = ? AND closed_at IS NULL AND master_order_id IS NULL", org).by_no }
   scope :belongs_to_organization_unclosed_without_this_and_suborders, -> org, this { where("organization_id = ? AND closed_at IS NULL AND id <> ? AND master_order_id IS NULL", org, this).by_no }
+  scope :belongs_to_organization_unclosed_and_this, -> org, this { where("(organization_id = ? AND closed_at IS NULL) OR id = ?", org, this).by_no }
 
   before_destroy :check_for_dependent_records
   before_save :update_status_based_on_dates
