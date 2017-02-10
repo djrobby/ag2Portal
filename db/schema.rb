@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20170208185020) do
+ActiveRecord::Schema.define(:version => 20170210125113) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -857,6 +857,8 @@ ActiveRecord::Schema.define(:version => 20170208185020) do
     t.date     "ending_at"
   end
 
+  add_index "contracted_tariffs", ["ending_at"], :name => "index_contracted_tariffs_on_ending_at"
+  add_index "contracted_tariffs", ["starting_at"], :name => "index_contracted_tariffs_on_starting_at"
   add_index "contracted_tariffs", ["tariff_id"], :name => "index_contracted_tariffs_on_tariff_id"
   add_index "contracted_tariffs", ["water_supply_contract_id"], :name => "index_contracted_tariffs_on_water_supply_contract_id"
 
@@ -2914,6 +2916,7 @@ ActiveRecord::Schema.define(:version => 20170208185020) do
     t.integer  "updated_by"
     t.string   "km"
     t.integer  "center_id"
+    t.string   "pub_record"
   end
 
   add_index "service_points", ["cadastral_reference"], :name => "index_service_points_on_cadastral_reference"
@@ -2924,6 +2927,7 @@ ActiveRecord::Schema.define(:version => 20170208185020) do
   add_index "service_points", ["name"], :name => "index_service_points_on_name"
   add_index "service_points", ["office_id"], :name => "index_service_points_on_office_id"
   add_index "service_points", ["organization_id"], :name => "index_service_points_on_organization_id"
+  add_index "service_points", ["pub_record"], :name => "index_service_points_on_pub_record"
   add_index "service_points", ["reading_route_id"], :name => "index_service_points_on_reading_route_id"
   add_index "service_points", ["reading_sequence"], :name => "index_service_points_on_reading_sequence"
   add_index "service_points", ["reading_variant"], :name => "index_service_points_on_reading_variant"
