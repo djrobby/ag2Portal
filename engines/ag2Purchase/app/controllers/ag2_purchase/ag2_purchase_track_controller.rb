@@ -58,19 +58,19 @@ module Ag2Purchase
       product = params[:product]
 
       # Dates are mandatory
-      if @from.blank? || @to.blank? 
+      if @from.blank? || @to.blank?
         return
       end
 
       # Search necessary data
       #@worker = Worker.find(worker)
-      
+
       # Format dates
       from = Time.parse(@from).strftime("%Y-%m-%d")
       to = Time.parse(@to).strftime("%Y-%m-%d")
       # Setup filename
-      title = t("activerecord.models.offer_request.few") + "_#{from}_#{to}.pdf"      
-      
+      title = t("activerecord.models.offer_request.few") + "_#{from}_#{to}.pdf"
+
       respond_to do |format|
         # Execute procedure and load aux table
         ActiveRecord::Base.connection.execute("CALL generate_timerecord_reports(#{worker}, '#{from}', '#{to}', 0);")
@@ -96,19 +96,19 @@ module Ag2Purchase
       product = params[:product]
 
       # Dates are mandatory
-      if @from.blank? || @to.blank? 
+      if @from.blank? || @to.blank?
         return
       end
 
       # Search necessary data
       #@worker = Worker.find(worker)
-      
+
       # Format dates
       from = Time.parse(@from).strftime("%Y-%m-%d")
       to = Time.parse(@to).strftime("%Y-%m-%d")
       # Setup filename
-      title = t("activerecord.models.offer.few") + "_#{from}_#{to}.pdf"      
-      
+      title = t("activerecord.models.offer.few") + "_#{from}_#{to}.pdf"
+
       respond_to do |format|
         # Execute procedure and load aux table
         ActiveRecord::Base.connection.execute("CALL generate_timerecord_reports(#{worker}, '#{from}', '#{to}', 0);")
@@ -135,19 +135,19 @@ module Ag2Purchase
       product = params[:product]
 
       # Dates are mandatory
-      if @from.blank? || @to.blank? 
+      if @from.blank? || @to.blank?
         return
       end
 
       # Search necessary data
       #@worker = Worker.find(worker)
-      
+
       # Format dates
       from = Time.parse(@from).strftime("%Y-%m-%d")
       to = Time.parse(@to).strftime("%Y-%m-%d")
       # Setup filename
-      title = t("activerecord.models.purchase_order.few") + "_#{from}_#{to}.pdf"      
-      
+      title = t("activerecord.models.purchase_order.few") + "_#{from}_#{to}.pdf"
+
       respond_to do |format|
         # Execute procedure and load aux table
         ActiveRecord::Base.connection.execute("CALL generate_timerecord_reports(#{worker}, '#{from}', '#{to}', 0);")
@@ -172,19 +172,19 @@ module Ag2Purchase
       product = params[:product]
 
       # Dates are mandatory
-      if @from.blank? || @to.blank? 
+      if @from.blank? || @to.blank?
         return
       end
 
       # Search necessary data
       #@worker = Worker.find(worker)
-      
+
       # Format dates
       from = Time.parse(@from).strftime("%Y-%m-%d")
       to = Time.parse(@to).strftime("%Y-%m-%d")
       # Setup filename
-      title = t("activerecord.models.supplier_invoice.few") + "_#{from}_#{to}.pdf"      
-      
+      title = t("activerecord.models.supplier_invoice.few") + "_#{from}_#{to}.pdf"
+
       respond_to do |format|
         # Execute procedure and load aux table
         ActiveRecord::Base.connection.execute("CALL generate_timerecord_reports(#{worker}, '#{from}', '#{to}', 0);")
@@ -206,19 +206,19 @@ module Ag2Purchase
       supplier = params[:supplier]
 
       # Dates are mandatory
-      if @from.blank? || @to.blank? 
+      if @from.blank? || @to.blank?
         return
       end
 
       # Search necessary data
       #@worker = Worker.find(worker)
-      
+
       # Format dates
       from = Time.parse(@from).strftime("%Y-%m-%d")
       to = Time.parse(@to).strftime("%Y-%m-%d")
       # Setup filename
-      title = t("activerecord.models.supplier_payment.few") + "_#{from}_#{to}.pdf"      
-      
+      title = t("activerecord.models.supplier_payment.few") + "_#{from}_#{to}.pdf"
+
       respond_to do |format|
         # Execute procedure and load aux table
         ActiveRecord::Base.connection.execute("CALL generate_timerecord_reports(#{worker}, '#{from}', '#{to}', 0);")
@@ -240,19 +240,19 @@ module Ag2Purchase
       supplier = params[:supplier]
 
       # Dates are mandatory
-      if @from.blank? || @to.blank? 
+      if @from.blank? || @to.blank?
         return
       end
 
       # Search necessary data
       #@worker = Worker.find(worker)
-      
+
       # Format dates
       from = Time.parse(@from).strftime("%Y-%m-%d")
       to = Time.parse(@to).strftime("%Y-%m-%d")
       # Setup filename
-      title = t("activerecord.models.supplier.few") + "_#{from}_#{to}.pdf"      
-      
+      title = t("activerecord.models.supplier.few") + "_#{from}_#{to}.pdf"
+
       respond_to do |format|
         # Execute procedure and load aux table
         ActiveRecord::Base.connection.execute("CALL generate_timerecord_reports(#{worker}, '#{from}', '#{to}', 0);")
@@ -274,7 +274,7 @@ module Ag2Purchase
       if session[:organization] != '0'
         @organization = Organization.find(session[:organization].to_i)
       end
-      
+
       @projects = projects_dropdown
       @suppliers = suppliers_dropdown
       @stores = projects_stores(@projects)
@@ -284,9 +284,9 @@ module Ag2Purchase
       #@families = families_dropdown
       @products = products_dropdown
     end
-    
+
     private
-    
+
     def reports_array()
       _array = []
       _array = _array << t("activerecord.models.offer_request.few")
@@ -306,7 +306,7 @@ module Ag2Purchase
       else
         _projects = session[:organization] != '0' ? Project.where(organization_id: session[:organization].to_i).order(:project_code) : Project.order(:project_code)
       end
-    end    
+    end
 
     def suppliers_dropdown
       _suppliers = session[:organization] != '0' ? Supplier.where(organization_id: session[:organization].to_i).order(:supplier_code) : Supplier.order(:supplier_code)
@@ -315,7 +315,7 @@ module Ag2Purchase
     def stores_dropdown
       session[:organization] != '0' ? Store.where(organization_id: session[:organization].to_i).order(:name) : Store.order(:name)
     end
-    
+
     # Stores belonging to current project
     def project_stores(_project)
       _array = []
@@ -391,10 +391,12 @@ module Ag2Purchase
       _ret = nil
 
       # Adding work orders belonging to current projects
-      _projects.each do |i|
-        _ret = WorkOrder.where(project_id: i.id)
-        ret_array(_array, _ret)
-      end
+      _ret = WorkOrder.where(project_id: _projects)
+      ret_array(_array, _ret)
+      # _projects.each do |i|
+      #   _ret = WorkOrder.where(project_id: i.id)
+      #   ret_array(_array, _ret)
+      # end
 
       # Returning founded work orders
       _ret = WorkOrder.where(id: _array).order(:order_no)
@@ -414,10 +416,12 @@ module Ag2Purchase
       _ret = nil
 
       # Adding charge accounts belonging to current projects
-      _projects.each do |i|
-        _ret = ChargeAccount.where(project_id: i.id)
-        ret_array(_array, _ret)
-      end
+      _ret = ChargeAccount.where(project_id: _projects)
+      ret_array(_array, _ret)
+      # _projects.each do |i|
+      #   _ret = ChargeAccount.where(project_id: i.id)
+      #   ret_array(_array, _ret)
+      # end
 
       # Adding global charge accounts
       _ret = ChargeAccount.where('project_id IS NULL')
@@ -426,23 +430,23 @@ module Ag2Purchase
       # Returning founded charge accounts
       _ret = ChargeAccount.where(id: _array).order(:account_code)
     end
-    
+
     def families_dropdown
-      _families = session[:organization] != '0' ? ProductFamily.where(organization_id: session[:organization].to_i).order(:family_code) : ProductFamily.order(:family_code)  
+      _families = session[:organization] != '0' ? ProductFamily.where(organization_id: session[:organization].to_i).order(:family_code) : ProductFamily.order(:family_code)
     end
 
     def products_dropdown
       session[:organization] != '0' ? Product.where(organization_id: session[:organization].to_i).order(:product_code) : Product.order(:product_code)
-    end    
-    
+    end
+
     def products_array(_products)
       _array = []
       _products.each do |i|
-        _array = _array << [i.id, i.full_code, i.main_description[0,40]] 
+        _array = _array << [i.id, i.full_code, i.main_description[0,40]]
       end
       _array
     end
-    
+
     def ret_array(_array, _ret)
       _ret.each do |_r|
         _array = _array << _r.id unless _array.include? _r.id

@@ -1050,10 +1050,12 @@ module Ag2Products
       _ret = nil
 
       # Adding charge accounts belonging to current projects
-      _projects.each do |i|
-        _ret = ChargeAccount.expenditures.where(project_id: i.id)
-        ret_array(_array, _ret, 'id')
-      end
+      _ret = ChargeAccount.expenditures.where(project_id: _projects)
+      ret_array(_array, _ret, 'id')
+      # _projects.each do |i|
+      #   _ret = ChargeAccount.expenditures.where(project_id: i.id)
+      #   ret_array(_array, _ret, 'id')
+      # end
 
       # Adding global charge accounts belonging to projects organizations
       _sort_projects_by_organization = _projects.sort { |a,b| a.organization_id <=> b.organization_id }

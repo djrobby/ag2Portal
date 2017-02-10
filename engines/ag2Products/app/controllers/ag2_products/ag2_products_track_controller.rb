@@ -839,13 +839,13 @@ module Ag2Products
     private
 
     def reports_array()
-      _array = []   
+      _array = []
       _array = _array << t("activerecord.models.inventory_count.few")
       _array = _array << t("activerecord.models.purchase_order.few")
       _array = _array << t("activerecord.models.purchase_order.pending")
       _array = _array << t("activerecord.models.receipt_note.few")
       _array = _array << t("activerecord.models.delivery_note.few")
-      _array = _array << t("activerecord.models.product.few")  
+      _array = _array << t("activerecord.models.product.few")
       _array = _array << t("ag2_products.ag2_products_track.stock_report.report_title")
       _array = _array << t("ag2_products.ag2_products_track.stock_company_report.report_title")
       _array
@@ -944,10 +944,12 @@ module Ag2Products
       _ret = nil
 
       # Adding work orders belonging to current projects
-      _projects.each do |i|
-        _ret = WorkOrder.where(project_id: i.id)
-        ret_array(_array, _ret)
-      end
+      _ret = WorkOrder.where(project_id: _projects)
+      ret_array(_array, _ret)
+      # _projects.each do |i|
+      #   _ret = WorkOrder.where(project_id: i.id)
+      #   ret_array(_array, _ret)
+      # end
 
       # Returning founded work orders
       _ret = WorkOrder.where(id: _array).order(:order_no)
@@ -967,10 +969,12 @@ module Ag2Products
       _ret = nil
 
       # Adding charge accounts belonging to current projects
-      _projects.each do |i|
-        _ret = ChargeAccount.where(project_id: i.id)
-        ret_array(_array, _ret)
-      end
+      _ret = ChargeAccount.where(project_id: _projects)
+      ret_array(_array, _ret)
+      # _projects.each do |i|
+      #   _ret = ChargeAccount.where(project_id: i.id)
+      #   ret_array(_array, _ret)
+      # end
 
       # Adding global charge accounts
       _ret = ChargeAccount.where('project_id IS NULL')
