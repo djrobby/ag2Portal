@@ -44,6 +44,8 @@ es:
         organization: "Organización"
         organization_id: "Organización"
         supplier: "Proveedor"
+        suppliers: "Proveedores"
+        families: "Familias"
         office_c: "Solicitante"
         tax_breakdown: "Detalle desglose impositivo"
         other_notes: "* Fecha límite para recepción de ofertas"

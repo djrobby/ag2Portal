@@ -4,6 +4,7 @@ es:
       index:
         title: "Solicitudes de oferta"
         btn_new: "Nueva Solicitud"
+        btn_new_auto_request: "Nueva Solicitud automática"
         back_to_root: "Volver a ag2Purchase"
         label_supplier: "Proveedor"
         label_project: "Proyecto"
@@ -34,6 +35,7 @@ es:
       btn_add_item: "Agregar"
       item_error: "no puede estar en blanco"
       suppliers_info: "Proveedores invitados a ofertar"
+      families_info: "Familias a incluir"
       delete_supplier: "Borrar este Proveedor"
       add_supplier: "Agregar nuevo Proveedor"
       btn_new_supplier: "Nuevo Proveedor"
@@ -42,3 +44,6 @@ es:
       approve_offer_write: "Imposible guardar Solicitud u Oferta."
       approve_offer_warn: "Ya existe una Oferta aprobada."
       disapprove_offer_warn: "No existe una Oferta previa aprobada."
+      generate_request_error: "Imposible generar Solicitud: Proveedor o Familia inválida."
+      generate_request_write: "Imposible guardar nueva Solicitud."
+      generate_request_ok: "Solicitud %{var} ha sido generada."

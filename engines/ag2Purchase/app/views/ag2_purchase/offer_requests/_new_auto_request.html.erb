@@ -1,0 +1,72 @@
+<!-- Modal -->
+<script>
+  $(document).ready(function() {
+    $("#proc_mesage").hide();
+    if ($('#Date_').val() == "") {
+      $('#Date_').datepicker('setValue', es_date(new Date()));
+    }
+  });
+
+  jQuery(function($) {
+    $('#btn_accept').click(function() {
+      var supplier = $('#Supplier_').val();
+      if (supplier == null) supplier = "";
+      var request = $('#Request_').val();
+      if (request == null) request = "";
+      var offer_date = $('#Date_').val();
+      if ((supplier == "") || (request == "") || (offer_date == "")) {
+        // Error
+        alert('<%= I18n.t(:mandatory_subtitle) %>');
+        return false;
+      }
+      // Right formatted date
+      offer_date = right_date(offer_date, "<%= I18n.locale %>");
+      // Show message
+      $("#proc_mesage").show();
+      // make the POST call
+      jQuery.getJSON('or_generate_request?supplier=' + supplier + '&request=' + request + '&offer_date=' + offer_date, function(data) {
+        // Hide message
+        $("#proc_mesage").hide();
+        // AJAX refresh index table is necessary
+        $(".icon-refresh-link").click();
+        // Go on based on result
+        if (data.code == "$err") {
+          alert('<%= I18n.t("ag2_purchase.offer_requests.generate_request_error") %>');
+        } else if (data.code == "$write") {
+          alert('<%= I18n.t("ag2_purchase.offer_requests.generate_request_write") %>');
+        } else {
+          // Hide the modal and exit
+          alert(data.code);
+          $("#new-auto-request").modal('hide');
+        }
+      });
+      return false;
+    });
+  });
+</script>
+
+<div id="new-auto-request" class="modal hide fade" data-backdrop="static" style="display: none;">
+  <div id="proc_mesage" class="alert alert-info">
+    <%= t(:generating) %>
+  </div>
+  <div class="modal-header">
+    <a class="close" data-dismiss="modal">&#215;</a>
+    <h3><%= t('ag2_purchase.offer_requests.index.btn_new_auto_request') %></h3>
+    <span class="shrinked"><%= I18n.t(:mandatory_subtitle) %></span>
+  </div>
+  <div class="modal-body">
+    <!-- Supplier -->
+    <label for="Supplier_" class="form-label"> <abbr title="requerido">*</abbr> <%= I18n.t("ag2_purchase.offer_requests.suppliers_info") %></label>
+    <%= select_tag "Supplier_", options_from_collection_for_select(@suppliers, "id", "full_name"), :prompt => "", :class => 'x-large-text-field nsel2', multiple: true %>
+    <!-- Family -->
+    <label for="Family_" class="form-label-under-sel2"> <abbr title="requerido">*</abbr> <%= I18n.t("ag2_purchase.offer_requests.families_info") %></label>
+    <%= select_tag "Family_", options_from_collection_for_select(@families, "id", "full_name"), :prompt => "", :class => 'x-large-text-field nsel2', multiple: true %>
+    <!-- Request date -->
+    <label for="Date_" class="form-label-under-sel2"> <abbr title="requerido">*</abbr> <%= I18n.t("activerecord.attributes.offer.offer_date") %></label>
+    <%= text_field_tag "Date_", nil, class: 'mid-text-field ndate_picker' %>
+  </div>
+  <div class="modal-footer">
+    <a class="btn btn-primary" href="#" id="btn_accept"><%= t :generate %></a>
+    <a class="btn btn-primary" data-dismiss="modal" href="#" id="btn_close"><%= t :close_button %></a>
+  </div>
+</div>

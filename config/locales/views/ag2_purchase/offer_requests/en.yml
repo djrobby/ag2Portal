@@ -4,6 +4,7 @@ en:
       index:
         title: "Offer requests"
         btn_new: "New Request"
+        btn_new_auto_request: "New automatic Request"
         back_to_root: "Back to ag2Purchase"
         label_supplier: "Supplier"
         label_project: "Project"
@@ -34,6 +35,7 @@ en:
       btn_add_item: "Add"
       item_error: "can't be blank"
       suppliers_info: "Suppliers invited to tender"
+      families_info: "Families to include"
       delete_supplier: "Delete this Supplier"
       add_supplier: "Add new Supplier"
       btn_new_supplier: "New Supplier"
@@ -42,3 +44,6 @@ en:
       approve_offer_write: "Unable to save Request or Offer."
       approve_offer_warn: "There is an offer already approved."
       disapprove_offer_warn: "There isn't previous offer approved."
+      generate_request_error: "Request can not be generated: Supplier or Family invalid."
+      generate_request_write: "Unable to save new Request."
+      generate_request_ok: "Request %{var} has been generated."

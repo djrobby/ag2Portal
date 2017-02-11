@@ -8,6 +8,10 @@
       dropdownCssClass: 'shrinked',
       dropdownAutoWidth: true
     });
+    $('.nsel2').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      allowClear: true
+    });
     // Initialized form variable
     _thisForm = $("#Supplier").closest('form')[0];
   }); 
@@ -42,6 +46,11 @@
       //_thisForm.submit();
       // AJAX
       $("#submit_btn").trigger("click");
+    });
+
+    // when the #new_auto button clicked
+    $("#new_auto").click(function() {
+      $("#new-auto-request").modal('show');
     });
   });
 </script>
@@ -80,6 +89,10 @@
         <% end %>
         <!-- Buttons -->
         <%= render :partial => '/layouts/crud/new', :locals => { :model => OfferRequest, :path => new_offer_request_path, :txt => t(".btn_new") } %>
+        <% if can? :update, OfferRequest %>
+        <button id="new_auto" type="button" class="btn btn-warning" data-dismiss="modal" aria-hidden="true"><%= t(".btn_new_auto_request") %></button>
+        <br /><br />
+        <% end %>
         <%= link_to t(".back_to_root"), ag2_purchase.root_path %>
       </div><!-- /.sidebar-nav -->
     </div><!-- /.span3 -->
@@ -92,3 +105,5 @@
     </div><!-- /.span9 -->
   </div><!-- /.row-fluid -->
 </div><!-- /.container-fluid -->
+<!-- Modal: New auto request -->
+<%= render 'new_auto_request' %>

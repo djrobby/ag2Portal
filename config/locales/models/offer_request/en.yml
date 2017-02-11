@@ -44,6 +44,8 @@ en:
         organization: "Organization"
         organization_id: "Organization"
         supplier: "Supplier"
+        suppliers: "Suppliers"
+        families: "Families"
         office_c: "Petitioner"
         tax_breakdown: "Tax breakdown detail"
         other_notes: "* Deadline for receipt of tenders"
