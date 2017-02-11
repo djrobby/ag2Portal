@@ -52,9 +52,11 @@
       <td>Id:</td>
       <td id="id"><%= @work_order.id %></td>
       <td><%=t 'activerecord.attributes.work_order.order_no' %>:</td>
-      <td class="highlighted bolded">
-        <%= @work_order.full_no %>
-      </td>
+      <% if @work_order.have_suborders? %>
+      <td class="highlighted bolded"><%= @work_order.full_no %><a style="margin-left: 1em;" href="#suborders"><i class="icon-paperclip-black"></i></a></td>
+      <% else %>
+      <td class="highlighted bolded"><%= @work_order.full_no %></td>
+      <% end %>
     </tr>
     <tr>
       <td><%=t 'activerecord.attributes.work_order.description' %>:</td>
@@ -373,6 +375,7 @@ delete_path: @work_order, delete_txt: t('.btn_delete'), msg: t("activerecord.mod
 new_path: new_work_order_path, new_txt: t('ag2_tech.work_orders.index.btn_new') } %>
 
 <% if (@suborders.count > 0) %>
+<a name="suborders"></a>
 <table class="form-table">
   <tbody>
     <tr class="form-tr underlined-tr">

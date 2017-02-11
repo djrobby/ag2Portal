@@ -40,13 +40,14 @@
   <tbody>
     <% @work_orders.each do |order| %>
     <% if order.closed_at.blank? %>
-    <tr>
-      <% else %>
-    <tr class="inactive-row">
+      <tr>
+      <% if order.have_suborders? %>
+        <tr class="attention-row">
       <% end %>
-      <td>
-        <%= link_to order.full_no, order %>
-      </td>
+    <% else %>
+      <tr class="inactive-row">
+    <% end %>
+      <td><%= link_to order.full_no, order %></td>
       <td><%= order.summary[0,20] %></td>
       <td><%= order.area_type %></td>
       <td align="center"><%= order.work_order_status.code unless order.work_order_status.blank? %></td>
